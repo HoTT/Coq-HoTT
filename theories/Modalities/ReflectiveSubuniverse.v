@@ -1421,9 +1421,7 @@ Question: is there a definition of connectedness (say, for n-types) that neither
 
 (** We give annotations to reduce the number of universe parameters. *)
 Class IsConnected (O : ReflectiveSubuniverse@{u a}) (A : Type@{i})
-  (** Since [Contr] is a [Notation], we can't annotate it for universes (see https://coq.inria.fr/bugs/show_bug.cgi?id=3825); thus we write [IsTrunc -2] explicitly instead. *)
-  := isconnected_contr_O : IsTrunc@{i} (-2) (O A).
-Check IsConnected@{u a i}.
+  := isconnected_contr_O : Contr@{i} (O A).
 
 Global Existing Instance isconnected_contr_O.
 
