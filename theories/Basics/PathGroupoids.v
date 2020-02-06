@@ -732,7 +732,7 @@ Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a 
   : D x2 (p # y) (p # z)
   :=
   match p with idpath => w end.
-
+(** ap011 is defined in Overture.v *)
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
 
 Definition ap011D {A B C} (f : forall (a:A), B a -> C)
