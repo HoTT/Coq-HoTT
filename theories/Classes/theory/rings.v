@@ -111,7 +111,7 @@ Section semiring_props.
   etransitivity;[|etransitivity].
   - apply mult_comm.
   - apply distribute_l.
-  - apply ap2;apply mult_comm.
+  - apply ap011;apply mult_comm.
   Qed.
 
   Lemma plus_mult_distr_l : LeftDistribute (.*.) (+).
@@ -243,7 +243,7 @@ Section ring_props.
     + apply symmetry.
       rewrite <-distribute_r. rewrite right_inverse.
       apply left_absorb.
-    + apply ap2;try reflexivity.
+    + apply ap011;try reflexivity.
       apply left_identity.
   Qed.
 

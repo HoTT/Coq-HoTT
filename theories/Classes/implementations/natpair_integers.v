@@ -454,7 +454,7 @@ first [change sg_op with mult; change mon_unit with 1|
   rewrite plus_0_l,plus_0_r. apply plus_comm.
 - apply (Z_ind2 _).
   intros a b;apply Z_path;red;simpl.
-  apply ap2;apply plus_comm.
+  apply ap011;apply plus_comm.
 - apply (Z_ind3 _).
   intros [pa na] [pb nb] [pc nc];apply Z_path;red;simpl.
   ring_with_nat.

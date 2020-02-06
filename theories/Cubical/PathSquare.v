@@ -629,19 +629,10 @@ Definition equiv_sq_dp {A B : Type} (f g : A -> B) {a1 a2 : A} (p : a1 = a2)
   : DPath (fun x => f x = g x) p q1 q2 <~> PathSquare q1 q2 (ap f p) (ap g p)
   := Build_Equiv _ _ (@sq_dp A B f g a1 a2 p q1 q2) _.
 
-(* ap2 fits into a square *)
-Definition sq_ap2 {A B C} (f : A -> B -> C)
+(* ap011 fits into a square *)
+Definition sq_ap011 {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
   : PathSquare (ap (fun x => f x b) p) (ap (fun x => f x b') p)
     (ap (f a) q) (ap (f a') q)
   := sq_dp (dp_apD (fun y => ap (fun x => f x y) _) _).
-
-(* The function in ap2 can be uncurried *)
-Definition ap_uncurry {A B C} (f : A -> B -> C) {a a' : A} (p : a = a')
-  {b b' : B} (q : b = b')
-  : PathSquare (ap (uncurry f) (path_prod' p q)) (ap2 f p q) 1 1.
-Proof.
-  by destruct p, q.
-Defined.
-
 

@@ -516,7 +516,7 @@ split;[apply _|split|].
   destruct (dec (apart x₁ x₂)) as [?|ex];apply tr;auto.
   right. apply tight_apart in ex.
   apply trivial_apart. intros ey.
-  apply E. apply ap2;trivial.
+  apply E. apply ap011;trivial.
 - unfold PropHolds.
   intros a b Ea Eb.
   apply nonzero_gt_0. intros E.

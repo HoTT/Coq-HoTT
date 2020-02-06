@@ -58,7 +58,7 @@ Lemma eval_ext {V:Type0} (vs vs' : Vars V) :
   pointwise_paths@{Set U} vs vs' ->
   pointwise_paths@{Set U} (eval vs) (eval vs').
 Proof.
-intros E e;induction e;simpl;auto;apply ap2;auto.
+intros E e;induction e;simpl;auto;apply ap011;auto.
 Qed.
 
 Definition noVars : Vars Empty.
@@ -108,7 +108,7 @@ Fixpoint expr_map {V W:Type0 } (f : V -> W) (e : Expr V) : Expr W :=
 Lemma eval_map {V W:Type0 } (f : V -> W) v e
   : eval v (expr_map f e) = eval (Compose@{Set Set U} v f) e.
 Proof.
-induction e;simpl;try reflexivity;apply ap2;auto.
+induction e;simpl;try reflexivity;apply ap011;auto.
 Qed.
 
 Section Quote.
@@ -152,7 +152,7 @@ Section Quote.
   simpl.
   rewrite <-(eval_quote n), <-(eval_quote m),
     2!eval_map.
-  apply ap2;apply eval_ext.
+  apply ap011;apply eval_ext.
   - intros [?|?];reflexivity.
   - intros [[?|?]|?];reflexivity.
   Qed.
@@ -174,7 +174,7 @@ Section Quote.
   simpl.
   rewrite <-(eval_quote n), <-(eval_quote m),
     2!eval_map.
-  apply ap2;apply eval_ext.
+  apply ap011;apply eval_ext.
   - intros [?|?];reflexivity.
   - intros [[?|?]|?];reflexivity.
   Qed.

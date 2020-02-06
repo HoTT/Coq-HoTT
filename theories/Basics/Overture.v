@@ -412,10 +412,13 @@ Defined.
 
 Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
 
-Definition ap2 {A B C} (f : A -> B -> C) {x1 x2 y1 y2}:
-  x1 = x2 -> y1 = y2 -> f x1 y1 = f x2 y2.
+(** *** [ap] for multivariable functions *)
+
+Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
+  : f x y = f x' y'.
 Proof.
-intros H1 H2;destruct H1,H2;reflexivity.
+  destruct p, q.
+  reflexivity.
 Defined.
 
 (** See above for the meaning of [simpl nomatch]. *)

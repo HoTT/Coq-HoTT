@@ -395,3 +395,13 @@ Proof.
   - apply inr; intros [x1 _]; exact (y1 x1).
   - apply inr; intros [x1 _]; exact (y1 x1).
 Defined.
+
+(** Interaction of ap and uncurry *)
+
+(* The function in ap011 can be uncurried *)
+Definition ap_uncurry {A B C} (f : A -> B -> C) {a a' : A} (p : a = a')
+  {b b' : B} (q : b = b')
+  : ap (uncurry f) (path_prod' p q) = ap011 f p q.
+Proof.
+  by destruct q, p.
+Defined.
