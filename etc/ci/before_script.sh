@@ -8,6 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd "$DIR" 1>/dev/null
 
 # install autoreconf
+sudo apt-get update
 sudo apt-get install -q autoconf
 
 # install coq
