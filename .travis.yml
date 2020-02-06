@@ -51,7 +51,7 @@ env:
    - UPDATE_HTML="yes"
    - VALIDATE="yes"
    - FORCE_COQ_VERSION=""       BUILD_COQ="yes"
-   - FORCE_COQ_VERSION="master" BUILD_COQ="yes" 
+   - FORCE_COQ_VERSION="master" BUILD_COQ="yes"
 
  global:
 # encrypted version of deploy key for pushing
