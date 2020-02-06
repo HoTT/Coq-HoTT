@@ -977,6 +977,14 @@ Ltac ntc_constructor :=
                  ntc_rapply build
   end.
 
+(** [case_path] is a HoTT replacement for [case_eq]; [case_path x] is like [destruct x], but it remembers the original value of [x] in an equation to be introduced. *)
+Ltac case_path x :=
+  let x' := fresh "x" in
+  set (x' := x);
+    generalize (idpath : x' = x);
+    clearbody x';
+    destruct x'.
+
 (** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)
 Ltac revert_opaque x :=
   revert x;
