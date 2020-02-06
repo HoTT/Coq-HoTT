@@ -1,7 +1,7 @@
 (** * Building blocks for a globally nameless style of tactic reasoning *)
 
 (** ** [hyp] returns any hypothesis, with subsequent failures backtracking through all hypotheses *)
-Ltac hyp := multimatch goal with H : _ |- _ => constr:H end.
+Ltac hyp := multimatch goal with H : _ |- _ => constr:(H) end.
 
 (** ** [enforce foo] ensures that [foo] is well-typed *)
 Tactic Notation "enforce" open_constr(term) := idtac.
