@@ -8,6 +8,7 @@ then # autoreconf found
     autoreconf -fvi
 else
     echo 'Error: autoreconf not found.  Try installing autoconf or autoreconf.'
+    exit 1
 fi
 
 if [ "$1" != "-skip-submodules" ] && command -v git >/dev/null 2>&1
