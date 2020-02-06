@@ -7,29 +7,8 @@ if command -v autoreconf >/dev/null 2>&1
 then # autoreconf found
     autoreconf -fvi
 else
-    echo 'Warning: autoreconf not found.  Falling back on git.'
-    echo 'This fallback may not work for building older versions of the library.  In that case, try installing autoconf or autoreconf.'
-    if test -d .git
-    then
-	git remote update
-	FILES=`cat etc/autoreconf-files`
-	BRANCH=`cat etc/autoreconf-branch`
-	git checkout $BRANCH $FILES
-	if test $? -ne 0 # we failed to find the branch, so try to get it remotely
-	then
-	    git remote add autogen-temp-upstream git://github.com/HoTT/HoTT.git
-	    git remote update
-	    git checkout autogen-temp-upstream/$BRANCH $FILES
-	    if test $? -ne 0
-	    then
-		echo 'Error: Failed to get autoreconf files.  Try installing autoconf or autoreconf.'
-	    fi
-	    git remote rm autogen-temp-upstream
-	fi
-        git rm --cached $FILES
-    else
-	echo 'Error: autoreconf failed, and you are not using git.  Try installing autoconf or autoreconf.'
-    fi
+    echo 'Error: autoreconf not found.  Try installing autoconf or autoreconf.'
+    exit 1
 fi
 
 if [ "$1" != "-skip-submodules" ] && command -v git >/dev/null 2>&1
