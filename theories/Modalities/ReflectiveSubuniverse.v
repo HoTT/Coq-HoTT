@@ -2122,19 +2122,17 @@ Section Separated.
     : O (x = y) <~> (to O' A x = to O' A y)
     := Build_Equiv _ _ _ (isequiv_path_SepO x y).
 
-  (** Lemma 2.27 of CORS.  This is the proof given in CORS, which requires funext.  An alternative proof not requiring funext should be possible, using the fact that [to O' X] is [O]-connected. *)
-  Global Instance O_inverts_functor_sigma_to_SepO@{i j jplus} `{Funext}
+  (** Lemma 2.27 of CORS. *)
+  Global Instance O_inverts_functor_sigma_to_SepO@{i j}
          {X : Type@{i} } (P : O' X -> Type@{j})
     : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
   Proof.
-    apply (O_inverts_by_yoneda@{Ou Oa j j j j jplus j j j j} O).
-    intros Z ?.
-    serapply isequiv_homotopic'.
-    { refine (_ oE _ oE _).
-      3:apply equiv_inverse.
-      1,3: serapply equiv_sigT_ind@{i j j jplus}.
-      serapply equiv_toSepO_inO@{i j j jplus}. }
-    reflexivity.
+    apply O_inverts_conn_map@{Ou Oa i i i i i i i i i}.
+    apply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i i i i i i i i Ou i i}.
+    1: exact _.
+    apply conn_map_from_extension_elim@{Ou Oa i i i i}.
+    intros Q f h.
+    exact (fst (extendable_toSepO_inO@{i i i Ou Ou Ou} _ 1%nat) h).
   Defined.
 
   Definition equiv_functor_sigma_to_SepO@{i j jplus} `{Funext}
