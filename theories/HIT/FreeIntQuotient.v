@@ -66,7 +66,7 @@ Section FreeIntAction.
                    (Wtil Unit Unit idmap idmap (unit_name R) (unit_name f))
                    (cct tt) (fun r0 : R => (ppt tt r0)^) r).
         symmetry; apply inv_V.
-    - refine (equiv_functor_sigma' 1 _); intros x.
+    - apply equiv_functor_sigma_id; intros x.
       apply equiv_path.
       revert x; refine (S1_ind _ 1 _); cbn.
       rewrite transport_paths_FlFr, concat_p1.

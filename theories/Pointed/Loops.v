@@ -143,28 +143,33 @@ Proof.
   induction n as [|n IHn]; [ assumption | apply loops_2functor, IHn ].
 Defined.
 
+(** The fiber of [loops_functor f] is equivalent to a fiber of [ap f]. *)
+Definition hfiber_loops_functor {A B : pType} (f : A ->* B) (p : loops B)
+  : {q : loops A & ap f q = (point_eq f @ p) @ (point_eq f)^}
+    <~> hfiber (loops_functor f) p.
+Proof.
+  apply equiv_functor_sigma_id; intros q.
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  apply equiv_moveR_pM.
+Defined.
+
 (** The loop space functor decreases the truncation level by one.  *)
 Global Instance istrunc_loops_functor {n} (A B : pType) (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (loops_functor f).
 Proof.
-  intro p.
-  refine (trunc_equiv' _ (equiv_functor_sigma' 1
-    (fun q => equiv_moveR_Vp _ _ _))).
-  refine (trunc_equiv' _ (equiv_functor_sigma' 1
-    (fun q => equiv_moveR_pM _ _ _))).
+  intro p. apply (trunc_equiv' _ (hfiber_loops_functor f p)).
 Defined.
 
 (** And likewise the connectedness.  *)
-(* Note: We give the definition explicitly since it was slow before. *)
 Global Instance isconnected_loops_functor `{Univalence} {n : trunc_index}
   (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
-  : IsConnMap n (loops_functor f)
-  := fun (p : loops B) =>
-    isconnected_equiv' n _
-      (equiv_functor_sigma' 1 (fun q => equiv_moveR_Vp _ p _))
-      (isconnected_equiv' n _
-        (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))
-        (isconnected_equiv' n _ (hfiber_ap _)^-1 (isconnected_paths _ _))).
+  : IsConnMap n (loops_functor f).
+Proof.
+  intros p; eapply isconnected_equiv'.
+  - refine (hfiber_loops_functor f p oE _).
+    symmetry; apply hfiber_ap.
+  - exact _.
+Defined.
 
 (** It follows that loop spaces "commute with images". *)
 Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)

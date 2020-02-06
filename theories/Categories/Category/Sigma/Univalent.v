@@ -227,8 +227,8 @@ Section on_both.
   : (Pmor_iso_T (x; xp) (x; xp') 1 1 (left_identity _ _ _ _) (right_identity _ _ _ _))
       <~> Pmor_iso_T' xp xp'.
   Proof.
-    refine (equiv_functor_sigma' (equiv_idmap _) _); intro.
-    refine (equiv_functor_sigma' (equiv_idmap _) _); intro.
+    refine (equiv_functor_sigma_id _); intro.
+    refine (equiv_functor_sigma_id _); intro.
     refine (equiv_functor_sigma' (equiv_iff_hprop _ _) (fun _ => equiv_iff_hprop _ _));
       cbn; intro H';
       first [ apply moveL_transport_V in H'

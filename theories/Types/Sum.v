@@ -119,7 +119,7 @@ Global Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' 1
+              (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inl x) (inl a)))).
   - refine (trunc_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
@@ -130,7 +130,7 @@ Global Instance decidable_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' 1
+              (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inl x) (inl a))) _).
   - refine (decidable_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1 _).
@@ -143,7 +143,7 @@ Proof.
   - refine (trunc_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1).
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' 1
+              (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
 
@@ -154,7 +154,7 @@ Proof.
   - refine (decidable_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1 _).
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' 1
+              (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inr x) (inr b))) _).
 Defined.
 

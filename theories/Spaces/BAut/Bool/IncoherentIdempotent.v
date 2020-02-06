@@ -15,9 +15,10 @@ Section IncoherentQuasiIdempotent.
   : IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool)))
     := negb_center2_baut_baut_bool.
 
-  Let s := retract_sect (splitting_preidem_retractof_qidem (preidem_idmap (BAut (BAut Bool)))).
-  Let r := retract_retr (splitting_preidem_retractof_qidem (preidem_idmap (BAut (BAut Bool)))).
-  Let issect := retract_issect (splitting_preidem_retractof_qidem (preidem_idmap (BAut (BAut Bool)))) : r o s == idmap.
+  Let ret := splitting_preidem_retractof_qidem (preidem_idmap (BAut (BAut Bool))).
+  Let s := retract_sect ret.
+  Let r := retract_retr ret.
+  Let issect := retract_issect ret : r o s == idmap.
 
   (** Since the space of splittings of the identity pre-idempotent is contractible, nontriviality of this 2-central element implies that not every quasi-idempotence witness of the identity is recoverable from its own splitting. *)
   Definition splitting_preidem_notequiv_qidem_baut_baut_bool

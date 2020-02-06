@@ -70,14 +70,10 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                    glue q0 @ (glue q1)^ = r } }
           <~> ap left s = r.
     Proof.
-      refine (_ oE (equiv_sigma_assoc
-                      (fun q0 => transport _ s q0 = q1)
-                      (fun qt => glue qt.1 @ (glue q1)^ = r))).
+      refine (_ oE equiv_sigma_assoc' _ _).
       refine (_ oE equiv_functor_sigma'
                 (Q := fun qt => glue qt.1 @ (glue q1)^ = r)
-                (equiv_functor_sigma'
-                   (Q := fun q0 => q0 = transport _ s^ q1)
-                   equiv_idmap
+                (equiv_functor_sigma_id
                    (fun q0 : Q x0 y =>
                       equiv_moveL_transport_V
                         (fun x => Q x y) s q0 q1))
@@ -199,7 +195,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
           refine ((equiv_sigma_pushout _ _ _ _ _)^-1 oE _).
           srefine (equiv_pushout _ _ _ _ _).
           - unfold Ocodeleft2a.
-            srefine ((equiv_functor_sigma' equiv_idmap _) oE _).
+            srefine (equiv_functor_sigma_id _ oE _).
             + intros [y0 [q00 [q10 u]]].
               exact { s  : x0 = x1 &
                     { sq : transport (fun x => Q x y0) s q00 = q10 &
@@ -213,11 +209,11 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                 refine (equiv_sigma_assoc _ _).
             + cbn.
               refine (equiv_sigma_symm _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _); intros s.
+              apply equiv_functor_sigma_id; intros s.
               refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _ oE _).
+              refine (equiv_functor_sigma_id _ oE _).
               * intros y0.
-                refine (equiv_functor_sigma' equiv_idmap _ oE _).
+                refine (equiv_functor_sigma_id _ oE _).
                 { intros ?.
                   refine (equiv_sigma_symm _). }
                 refine (equiv_sigma_symm _).
@@ -225,18 +221,18 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                 refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma' equiv_idmap _); intros q01; cbn.
-                refine (equiv_functor_sigma' equiv_idmap _ oE _).
+                refine (equiv_functor_sigma_id _); intros q01; cbn.
+                refine (equiv_functor_sigma_id _ oE _).
                 { intros ?; apply (equiv_sigma_symm0 _ _). }
                 refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma' equiv_idmap _ oE _).
+                refine (equiv_functor_sigma_id _ oE _).
                 { intros q; cbn; apply equiv_sigma_symm. }
                 cbn.
                 refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 apply equiv_sigma_symm0.
           - unfold Ocodeleft2b.
-            srefine ((equiv_functor_sigma' equiv_idmap _) oE _).
+            srefine (equiv_functor_sigma_id _ oE _).
             + intros [y0 [q00 [q10 u]]].
               exact { s  : x0 = x1 &
                     (* sq : *) transport (fun x => Q x y0) s q00 = q10 }.
@@ -244,16 +240,16 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
               refine (equiv_path_sigma _ (x0;q00) (x1;q10)).
             + cbn.
               refine (equiv_sigma_symm _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _); intros s.
+              apply equiv_functor_sigma_id; intros s.
               refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _); intros y0.
+              apply equiv_functor_sigma_id; intros y0.
               refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _); intros q00.
+              apply equiv_functor_sigma_id; intros q00.
               refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _); intros q10.
+              apply equiv_functor_sigma_id; intros q10.
               apply equiv_sigma_symm0.
           - unfold Ocodeleft2c.
-            srefine ((equiv_functor_sigma' equiv_idmap _) oE _).
+            srefine (equiv_functor_sigma_id _ oE _).
             + intros [y0 [q00 [q10 u]]].
               exact { t  : y0 = y1 &
                            transport (Q x1) t q10 = q11 }.
@@ -261,15 +257,15 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
               refine (equiv_path_sigma _ (y0;q10) (y1;q11)).
             + cbn.
               refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma' equiv_idmap _ oE _).
+              refine (equiv_functor_sigma_id _ oE _).
               { intros y0; apply equiv_sigma_symm. }
               cbn.
               refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma' equiv_idmap _); intros q01; cbn.
+                apply equiv_functor_sigma_id; intros q01; cbn.
                 refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma' equiv_idmap _ oE _).
+                refine (equiv_functor_sigma_id _ oE _).
                 { intros q; cbn; apply equiv_sigma_symm0. }
                 cbn.
                 refine ((equiv_sigma_assoc' _ _)^-1 oE _).
@@ -297,14 +293,14 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
         Definition Ocodeleft02b : codeleft0 <~> Ocodeleft2b.
         Proof.
           unfold codeleft0, Ocodeleft2b.
-          refine (equiv_functor_sigma' equiv_idmap _); intros s.
-          refine (equiv_functor_sigma' equiv_idmap _); intros y0.
+          apply equiv_functor_sigma_id; intros s.
+          apply equiv_functor_sigma_id; intros y0.
           refine (_ oE equiv_sigma_symm _).
-          refine (equiv_functor_sigma' equiv_idmap _); intros q00.
+          apply equiv_functor_sigma_id; intros q00.
           refine (_ oE equiv_sigma_symm _).
-          refine (equiv_functor_sigma' equiv_idmap _); intros q10.
+          apply equiv_functor_sigma_id; intros q10.
           refine (_ oE equiv_sigma_symm _).
-          refine (equiv_functor_sigma' equiv_idmap _); intros w.
+          apply equiv_functor_sigma_id; intros w.
           refine (_ oE equiv_sigma_symm _).
           refine (equiv_sigma_contr _).
         Defined.
@@ -347,7 +343,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
         Definition Ocodeleft2a1 : Ocodeleft2a <~> codeleft1.
         Proof.
           unfold Ocodeleft2a, codeleft1.
-          refine (equiv_functor_sigma' equiv_idmap _); intros s; cbn.
+          apply equiv_functor_sigma_id; intros s; cbn.
           (** Here's frobnicate showing up again! *)
           apply frobnicate.
         Defined.
@@ -454,7 +450,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
         Proof.
           unfold coderight, Ocodeleft2c.
           apply equiv_O_functor.
-          refine (equiv_functor_sigma' equiv_idmap _); intros q01.
+          apply equiv_functor_sigma_id; intros q01.
           apply equiv_moveL_pM.
         Defined.
 

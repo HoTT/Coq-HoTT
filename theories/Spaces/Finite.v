@@ -704,7 +704,7 @@ Proof.
   apply finite_choice in g.
   strip_truncations.
   unfold finplus.
-  refine (fcard_equiv' (equiv_functor_sigma' (equiv_idmap X) g)).
+  refine (fcard_equiv' (equiv_functor_sigma_id g)).
 Defined.
 
 (** The sum of a finite constant family is the product by its cardinality. *)
@@ -895,7 +895,7 @@ Section DecidableQuotients.
     apply ap, path_arrow; intros z; revert z.
     refine (Quotient_ind_hprop _ _ _); intros x; simpl.
     apply fcard_equiv'; unfold hfiber.
-    refine (equiv_functor_sigma' 1 _); intros y; simpl.
+    refine (equiv_functor_sigma_id _); intros y; simpl.
     symmetry.
     refine (path_quotient R y x oE _).
     apply equiv_iff_hprop; apply symmetry.

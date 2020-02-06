@@ -22,7 +22,7 @@ Definition equiv_baut_image_unit X
 : BAut X <~> image (Tr (-1)) (unit_name X).
 Proof.
   unfold BAut, image; simpl.
-  refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Z; simpl.
+  apply equiv_functor_sigma_id; intros Z; simpl.
   apply equiv_O_functor; unfold hfiber.
   refine ((equiv_contr_sigma _)^-1 oE _).
   apply equiv_path_inverse.
