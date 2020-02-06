@@ -2126,11 +2126,11 @@ Section Separated.
     : IsConnMap O (to O' X).
   Proof.
     apply conn_map_from_extension_elim@{Ou Oa i i i i}.
-    intros Q f h.
+    intros Q Q_inO h.
     exact (fst (extendable_toSepO_inO@{i i i Ou Ou Ou} _ 1%nat) h).
   Defined.
 
-  (** Lemma 2.27 of CORS. *)
+  (** Lemma 2.27 of CORS.  We provide a different proof that doesn't require [Funext]. *)
   Global Instance O_inverts_functor_sigma_to_SepO@{i j}
          {X : Type@{i} } (P : O' X -> Type@{j})
     : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
