@@ -76,7 +76,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
   Proof.
     apply isconnected_sigma; [ exact _ | intros a ].
     refine (isconnected_equiv O (hfiber g (f a))
-                              (equiv_functor_sigma' (equiv_idmap _)
+                              (equiv_functor_sigma_id
                               (fun b => equiv_path_inverse _ _))
                               _).
   Defined.
@@ -319,7 +319,7 @@ Module Lex_Reflective_Subuniverses
       refine (_ oE Build_Equiv _ _
                 (O_functor_hfiber O (@pr1 A B) (g x)) _).
       unfold hfiber.
-      refine (equiv_functor_sigma' 1 _). intros y; cbn.
+      apply equiv_functor_sigma_id. intros y; cbn.
       refine (_ oE (equiv_moveR_equiv_V _ _)).
       apply equiv_concat_l.
       apply moveL_equiv_V.

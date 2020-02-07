@@ -71,13 +71,11 @@ Definition issig_pequiv' (A B : pType)
 Proof.
   transitivity { f : A ->* B & IsEquiv f }.
   2: issig.
-  refine ((equiv_functor_sigma' (P := fun f => IsEquiv f.1)
-    (issig_pmap A B) (fun f => equiv_idmap _)) oE _).
-  refine (_ oE (equiv_functor_sigma' (Q := fun f => f.1 (point A) = point B)
-    (issig_equiv A B)^-1 (fun f => equiv_idmap _))).
+  refine (equiv_functor_sigma_pb (issig_pmap A B) oE _).
+  refine (_ oE (equiv_functor_sigma_pb (issig_equiv A B))^-1).
   refine (_ oE (equiv_sigma_assoc _ _)^-1).
   refine (equiv_sigma_assoc _ _ oE _).
-  refine (equiv_functor_sigma' 1 _).
+  apply equiv_functor_sigma_id.
   intro; cbn; apply equiv_sigma_symm0.
 Defined.
 

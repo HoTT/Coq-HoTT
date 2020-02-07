@@ -66,8 +66,8 @@ Section Extensions.
               (fun a b c => forall x:A, c (f x) = gd x @ (b x)^)
               g (fun y:B => idpath (g y))).
     refine (contr_equiv' {p:g o f == d & gd == p} _). cbn.
-    refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
-    refine (equiv_functor_forall' (equiv_idmap _) _); intros x; cbn.
+    refine (equiv_functor_sigma_id _); intros p.
+    refine (equiv_functor_forall_id _); intros x; cbn.
     refine (_ oE equiv_path_inverse _ _).
     symmetry; apply equiv_moveR_1M.
   Defined.

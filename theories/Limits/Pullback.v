@@ -33,8 +33,8 @@ Definition equiv_pullback_symm {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g <~> Pullback g f.
 Proof.
   refine (_ oE equiv_sigma_symm (fun b c => f b = g c)).
-  refine (equiv_functor_sigma' 1 _); intros c.
-  refine (equiv_functor_sigma' 1 _); intros b.
+  apply equiv_functor_sigma_id; intros c.
+  apply equiv_functor_sigma_id; intros b.
   apply equiv_path_inverse.
 Defined.
 
@@ -93,12 +93,9 @@ Proof.
   unfold hfiber, Pullback.
   refine (_ oE (equiv_sigma_assoc _ _)^-1).
   simpl.
-  refine (_ oE (@equiv_functor_sigma'
-                 B (fun b' => {_ : {c:C & f b' = g c} & b' = b})
-                 B (fun b' => {_ : b' = b & {c:C & f b' = g c}})
-                 1
-                 (fun b' => equiv_sigma_symm0 {c:C & f b' = g c} (b' = b)))).
-  refine (_ oE (equiv_sigma_assoc' _ _)).
+  refine (_ oE equiv_functor_sigma_id _).
+  2:intros; apply equiv_sigma_symm0.
+  refine (_ oE equiv_sigma_assoc' _ _).
   refine (_ oE equiv_contr_sigma _).
   exact (equiv_functor_sigma_id (fun c => equiv_path_inverse _ _)).
 Defined.
@@ -117,14 +114,11 @@ Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 Proof.
   unfold hfiber, Pullback.
   refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  refine (equiv_functor_sigma' 1 _); intros b.
+  apply equiv_functor_sigma_id; intros b.
   refine (_ oE (equiv_sigma_assoc _ _)^-1).
   simpl.
-  refine (_ oE (@equiv_functor_sigma'
-                 C (fun c' => {_ : f b = g c' & c' = c})
-                 C (fun c' => {_ : c' = c & f b = g c'})
-                 1
-                 (fun c' => equiv_sigma_symm0 (f b = g c') (c' = c)))).
+  refine (_ oE equiv_functor_sigma_id _).
+  2:intros; apply equiv_sigma_symm0.
   refine (_ oE equiv_sigma_assoc' _ _).
   refine (_ oE equiv_contr_sigma _).
   apply equiv_idmap.
@@ -150,21 +144,19 @@ Section Functor_Pullback.
   Proof.
     destruct z as [b2 [c2 e2]].
     refine (_ oE hfiber_functor_sigma _ _ _ _ _ _).
-    refine (equiv_functor_sigma' 1 _).
+    apply equiv_functor_sigma_id.
     intros [b1 e1]; simpl.
-    refine (_ oE (equiv_transport (fun x => hfiber (functor_sigma l _) x) _ _
-                                 (transport_sigma' e1^ (c2; e2)))).
+    refine (_ oE (equiv_transport _ _ _ (transport_sigma' e1^ (c2; e2)))).
     refine (_ oE hfiber_functor_sigma _ _ _ _ _ _); simpl.
-    refine (equiv_functor_sigma' 1 _).
+    apply equiv_functor_sigma_id.
     intros [c1 e3]; simpl.
-    refine (_ oE (equiv_transport (hfiber (fun e0 => (p b1 @ ap h e0) @ (q c1)^)) _ _
-                                 (ap (fun e => e3^ # e) (transport_paths_Fl e1^ e2)))).
-    refine (_ oE (equiv_transport (hfiber (fun e0 => (p b1 @ ap h e0) @ (q c1)^)) _ _
-                                 (transport_paths_Fr e3^ _))).
+    refine (_ oE (equiv_transport _ _ _
+                   (ap (fun e => e3^ # e) (transport_paths_Fl e1^ e2)))).
+    refine (_ oE (equiv_transport _ _ _ (transport_paths_Fr e3^ _))).
     unfold functor_hfiber; simpl.
     refine (equiv_concat_l (transport_sigma' e2 _) _ oE _); simpl.
     refine (equiv_path_sigma _ _ _ oE _); simpl.
-    refine (equiv_functor_sigma' 1 _); intros e0; simpl.
+    apply equiv_functor_sigma_id; intros e0; simpl.
     refine (equiv_concat_l (transport_paths_Fl e0 _) _ oE _).
     refine (equiv_concat_l (whiskerL (ap h e0)^ (transport_paths_r e2 _)) _ oE _).
     refine (equiv_moveR_Vp _ _ _ oE _).
@@ -212,17 +204,17 @@ Section PullbackSigma.
   Proof.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     refine (equiv_sigma_assoc _ _ oE _).
-    apply (equiv_functor_sigma' equiv_idmap); intro y.
+    apply equiv_functor_sigma_id; intro y.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
-    refine (equiv_functor_sigma' equiv_idmap _ oE _).
+    refine (equiv_functor_sigma_id _ oE _).
     1: intro; apply equiv_sigma_assoc.
     refine (equiv_sigma_symm _ oE _).
-    refine (equiv_functor_sigma' equiv_idmap _); intro z.
+    refine (equiv_functor_sigma_id _); intro z.
     refine (_ oE _).
-    { refine (equiv_functor_sigma' equiv_idmap _); intro b.
-      refine (equiv_functor_sigma' equiv_idmap _); intro c.
+    { refine (equiv_functor_sigma_id _); intro b.
+      refine (equiv_functor_sigma_id _); intro c.
       apply equiv_path_sigma. }
-    refine (equiv_functor_sigma' equiv_idmap _ oE _).
+    refine (equiv_functor_sigma_id _ oE _).
     1: intro b; cbn; apply equiv_sigma_symm.
     cbn; apply equiv_sigma_symm.
   Defined.

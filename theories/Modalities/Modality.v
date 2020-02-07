@@ -628,7 +628,7 @@ Section ModalFact.
     simple refine (Build_PathFactorization fact fact' _ _ _ _).
     - refine (_ oE equiv_fibration_replacement (factor2 fact)).
       refine ((equiv_fibration_replacement (factor2 fact'))^-1 oE _).
-      refine (equiv_functor_sigma' 1 _); intros b; simpl.
+      apply equiv_functor_sigma_id; intros b; simpl.
       apply equiv_O_factor_hfibers.
     - intros a; exact (pr1_path (equiv_O_factor_hfibers_beta f fact fact' a)).
     - intros x.

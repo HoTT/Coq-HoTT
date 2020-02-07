@@ -18,10 +18,10 @@ Section AssumeFunext.
     (* We will show that if [IsEquiv] is inhabited, then it is contractible, because it is equivalent to a sigma of a pointed path-space over a pointed path-space, both of which are contractible. *)
     refine (contr_equiv' { g : B -> A & g = f^-1 } _).
     equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); apply equiv_inverse.
-    1:exact (equiv_functor_sigma' 1 (fun _ => equiv_sigma_contr _ )).
+    1:exact (equiv_functor_sigma_id (fun _ => equiv_sigma_contr _ )).
     (* First we apply [issig], peel off the first component, and convert to pointwise paths. *)
     refine (_ oE (issig_isequiv f)^-1).
-    refine (equiv_functor_sigma' (equiv_idmap (B -> A)) _); intros g; simpl.
+    refine (equiv_functor_sigma_id _); intros g; simpl.
     equiv_via ({ r : g == f^-1 & { s : g == f^-1 & r == s }}).
     (* Now the idea is that if [f] is an equivalence, then [g f == 1] and [f g == 1] are both equivalent to [g == f^-1]. *)
     { refine (equiv_functor_sigma'

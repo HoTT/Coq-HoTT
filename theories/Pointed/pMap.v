@@ -16,7 +16,7 @@ Proof.
   intros [f feq]; cbn.
   contr_sigsig f (fun a:A => idpath (f a)); cbn.
   refine (contr_equiv' {feq' : f (point A) = point B & feq = feq'} _).
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
+  apply equiv_functor_sigma_id; intros p.
   refine (equiv_path_inverse _ _ oE _).
   apply equiv_concat_r. symmetry; apply concat_1p.
 Defined.

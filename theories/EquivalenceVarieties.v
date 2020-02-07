@@ -64,7 +64,7 @@ Proof.
   (* First we turn homotopies into paths. *)
   refine (contr_equiv' { g : B -> A & f o g = idmap } _).
   - symmetry.
-    refine (equiv_functor_sigma' 1 _); intros g.
+    apply equiv_functor_sigma_id; intros g.
     exact (equiv_path_forall (f o g) idmap).
     (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
   - apply fcontr_isequiv; exact _.
@@ -76,7 +76,7 @@ Proof.
   (* This proof is just like the previous one. *)
   refine (contr_equiv' { g : B -> A & g o f = idmap } _).
   - symmetry.
-    refine (equiv_functor_sigma' 1 _); intros g.
+    apply equiv_functor_sigma_id; intros g.
     exact (equiv_path_forall (g o f) idmap).
   - apply fcontr_isequiv; exact _.
 Defined.
@@ -89,33 +89,26 @@ Proof.
   (* Get rid of that pesky record. *)
   refine (contr_equiv _ (issig_isequiv f)).
   (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
-  refine (contr_equiv' {g : B -> A & Sect g f}
-    (equiv_functor_sigma' 1
-      (fun g => (@equiv_sigma_contr (Sect g f)
-        (fun r => {s : Sect f g & forall x, r (f x) = ap f (s x) })
-        _)))^-1).
-  (* What remains afterwards is just the type of sections of [f]. *)
-  2:apply contr_sect_equiv; assumption.
-  intros r.
+  serapply (contr_equiv' {g : B -> A & Sect g f}).
+  2:apply contr_sect_equiv; assumption.  (* What remains afterwards is just the type of sections of [f]. *)
+  apply equiv_functor_sigma_id; intros g.
+  symmetry; apply equiv_sigma_contr; intros r.
   (* Now we claim this is equivalent to a certain space of paths. *)
   refine (contr_equiv'
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
     _^-1).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
-  - refine (_ oE (equiv_sigT_coind (fun x => g (f x) = x)
-                                   (fun x p => r (f x) = ap f p))).
-    refine (equiv_functor_forall' 1 _); intros a; simpl.
+  - refine (_ oE (equiv_sigT_coind _ (fun x p => r (f x) = ap f p))).
+    apply equiv_functor_forall_id; intros a; simpl.
     refine (equiv_path_inverse _ _ oE _).
-    refine ((equiv_path_sigma (fun x => f x = f a)
-                              (g (f a) ; r (f a)) (a ; 1%path)) oE _); simpl.
-    refine (equiv_functor_sigma' 1 _); intros p; simpl.
+    refine ((equiv_path_sigma _ _ _) oE _); simpl.
+    apply equiv_functor_sigma_id; intros p; simpl.
     rewrite (transport_compose (fun y => y = f a) f), transport_paths_l.
     refine (equiv_moveR_Vp _ _ _ oE _).
       by rewrite concat_p1; apply equiv_idmap.
-      (* Finally, this is a space of paths in a fiber of [f]. *)
-  - refine (@contr_forall _ _ _ _); intros a.
-    refine (@contr_paths_contr _ _ _ _).
-      by refine (fcontr_isequiv f _ _).
+    (* Finally, this is a space of paths in a fiber of [f]. *)
+  - pose (fun a => fcontr_isequiv f _ (f a)).
+    exact _.
 Qed.
 
 (** Now since [IsEquiv f] and the assertion that its fibers are contractible are both HProps, logical equivalence implies equivalence. *)
@@ -134,52 +127,34 @@ Local Definition equiv_fcontr_isequiv' `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
 Proof.
   (* First we get rid of those pesky records. *)
-  refine (_ oE (equiv_functor_forall_id 
-    (fun b => (issig_contr {a : A & f a = b})^-1))).
+  refine (_ oE (equiv_functor_forall_id _)).
+  2:intros; symmetry; apply issig_contr.
   refine (issig_isequiv f oE _).
+  symmetry.
   (* Now we can really get to work.
      First we peel off the inverse function and the [eisretr]. *)
-  refine (_ oE (equiv_sigT_coind _ _)^-1).
-  refine (_ oE
-    (@equiv_functor_sigma' _ _ _ (fun f0 => forall x y, f0 x = y)
-      (equiv_sigT_coind _ _)
-      (fun fg => equiv_idmap (forall x y,
-        (equiv_sigT_coind _ (fun b a => f a = b) fg x = y))))^-1).
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  refine (equiv_sigT_coind _ _ oE _).
+  refine (equiv_functor_sigma_pb (equiv_sigT_coind _ _) oE _).
+  refine (equiv_sigma_assoc _ _ oE _).
   refine (equiv_functor_sigma_id _). intros g.
   refine (equiv_functor_sigma_id _). intros r. simpl.
   (* Now we use the fact that Paulin-Mohring J is an equivalence. *)
-  refine (_ oE (@equiv_functor_forall' _ _
-    (fun x => forall a (y : f a = x),
-      (existT (fun a => f a = x) (g x) (r x)) = (a;y))
-    _ _ 1
-    (fun x:B => equiv_sigT_ind
-      (fun y:exists a:A, f a = x => (g x;r x) = y)))^-1).
-  refine (_ oE equiv_flip _).
-  refine (_ oE (@equiv_functor_forall' _ _
-    (fun a => existT (fun a' => f a' = f a) (g (f a)) (r (f a)) = (a;1%path))
-    _ _ 1
-    (fun a => equiv_paths_ind (f a)
-      (fun b y => (existT (fun a => f a = b) (g b) (r b)) = (a;y))))^-1).
-  (* We identify the paths in a Sigma-type. *)
-  refine (_ oE (@equiv_functor_forall' _ _
-    (fun a =>
-      exists p, transport (fun a' : A => f a' = f a) p (r (f a)) = 1%path)
-    _ _ 1
-    (fun a => equiv_path_sigma (fun a' => f a' = f a)
-      (g (f a);r (f a)) (a;1%path)))^-1).
+  refine (equiv_functor_forall_id _ oE _).
+  1:intros; apply equiv_sigT_ind.
+  refine (equiv_flip _ oE _).
+  refine (equiv_functor_forall_id _ oE _). 
+  1:{ intros.
+      refine (equiv_paths_ind (f a) (fun b y => (g b;r b) = (a;y)) oE _).
+      (* We identify the paths in a Sigma-type. *)
+      apply equiv_path_sigma. }
   (* Now we can peel off the [eissect]. *)
-  refine (_ oE (equiv_sigT_coind
-    (fun a => g (f a) = a)
-    (fun a p => transport (fun a' => f a' = f a) p (r (f a)) = 1%path))^-1).
-  refine (equiv_functor_sigma' 1 _). intros s.
+  refine (equiv_sigT_coind _ _ oE _).
+  refine (equiv_functor_sigma_id _). intros s.
   (* And what's left is the [eisadj]. *)
-  refine (equiv_functor_forall' 1 _). intros a; simpl.
-  refine (_ oE (equiv_concat_l
-             (transport_compose (fun b => b = f a) f (s a) (r (f a))
-              @ transport_paths_l (ap f (s a)) (r (f a)))^ 1%path)).
-  exact ((equiv_concat_r (concat_p1 _) _)
-           oE ((equiv_moveR_Vp (r (f a)) 1 (ap f (s a)))^-1)).
+  refine (equiv_functor_forall_id _). intros a; simpl.
+  refine (equiv_concat_l (transport_compose _ _ _ _ @ transport_paths_l _ _) _ oE _).
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  exact (equiv_concat_r (concat_p1 _)^ _).
 Defined.
 
 (** ** Bi-invertible maps *)
