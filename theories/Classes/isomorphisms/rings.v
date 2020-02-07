@@ -52,9 +52,9 @@ repeat apply path_prod;simpl;try
   apply path_forall;intros y;rewrite transport_arrow);
 rewrite transport_path_universe, ?transport_path_universe_V.
 - rewrite (preserves_plus (f:=f)).
-  apply ap2;apply eisretr.
+  apply ap011;apply eisretr.
 - rewrite (preserves_mult (f:=f)).
-  apply ap2;apply eisretr.
+  apply ap011;apply eisretr.
 - apply preserves_0.
 - apply preserves_1.
 Qed.
@@ -119,9 +119,9 @@ repeat apply path_prod;simpl;try
   try (apply path_forall;intros y;rewrite transport_arrow));
 rewrite transport_path_universe, ?transport_path_universe_V.
 - rewrite (preserves_plus (f:=f)).
-  apply ap2;apply eisretr.
+  apply ap011;apply eisretr.
 - rewrite (preserves_mult (f:=f)).
-  apply ap2;apply eisretr.
+  apply ap011;apply eisretr.
 - apply preserves_0.
 - apply preserves_1.
 - rewrite (preserves_negate (f:=f)).

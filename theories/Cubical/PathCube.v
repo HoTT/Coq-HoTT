@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Cubical.DPath.
 Require Import Cubical.PathSquare.
 Require Import Cubical.DPathSquare.
-Require Import Types.Paths.
+Require Import Types.Paths Types.Prod.
 
 Declare Scope cube_scope.
 Delimit Scope cube_scope with cube.
@@ -699,8 +699,9 @@ Defined.
 (* Uncurry a function in sq_ap2 *)
 Definition sq_ap_uncurry {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
-  : PathCube (sq_ap (uncurry f) (sq_prod hr vr)) (sq_ap2 f p q)
-  (ap_uncurry _ _ _) (ap_uncurry _ _ _) (ap_uncurry _ _ _) (ap_uncurry _ _ _).
+  : PathCube (sq_ap (uncurry f) (sq_prod hr vr)) (sq_ap011 f p q)
+    (sq_G1 (ap_uncurry _ _ _)) (sq_G1 (ap_uncurry _ _ _))
+    (sq_G1 (ap_uncurry _ _ _)) (sq_G1 (ap_uncurry _ _ _)).
 Proof.
   by destruct p, q.
 Defined.

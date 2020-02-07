@@ -79,7 +79,7 @@ change eqb with Peqb in E;simpl in E.
   apply andb_true in E2. destruct E2 as [E2 E3].
   simpl.
   apply compare_eqb_eq,tricho_compare_eq in E1.
-  apply ap2;auto. apply ap2;auto.
+  apply ap011;auto. apply ap011;auto.
 Qed.
 
 Definition eval_eqb@{} := ltac:(first [exact eval_eqb'@{Ularge}|
@@ -140,7 +140,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
   pose proof (tricho_compare_eq v w) as E.
   destruct (v ?= w);[clear E|rewrite <-E by split;clear E w|clear E].
   + simpl. rewrite IH2.
-    rewrite 2!plus_assoc. apply ap2;trivial.
+    rewrite 2!plus_assoc. apply ap011;trivial.
     apply plus_comm.
   + simpl. rewrite eval_addC.
     rewrite plus_mult_distr_r.
@@ -260,7 +260,7 @@ induction P as [c|P1 IH1 w P2 IH2].
   destruct (v ?= w);[clear E|rewrite <-E by split;clear E w|clear E].
   + simpl.
     rewrite plus_mult_distr_r,IH1,IH2.
-    apply ap2;trivial.
+    apply ap011;trivial.
     rewrite <-2!mult_assoc;apply ap,mult_comm.
   + simpl. rewrite (preserves_0 (f:=phi)),plus_0_r.
     reflexivity.
@@ -298,7 +298,7 @@ destruct Q as [d | Q1 w Q2].
   repeat (rewrite eval_add || rewrite eval_mulX).
   rewrite plus_mult_distr_r,(plus_mult_distr_l (eval vs P2)).
   rewrite IHP1,IHP2.
-  apply ap2;apply ap2.
+  apply ap011;apply ap011.
   + rewrite <-!mult_assoc.
     apply ap.
     rewrite (mult_comm (vs v)). apply mult_assoc.

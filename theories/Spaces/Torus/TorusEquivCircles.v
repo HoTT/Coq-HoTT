@@ -59,10 +59,10 @@ Section TorusEquivCircle.
   Definition c2t'_beta :
     {bl1 : PathSquare (ap (fun y => c2t' base y) loop) loop_b 1 1 &
     {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &
-    PathCube (sq_ap2 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
+    PathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
   Proof.
     refine (_;_;_).
-    unfold sq_ap2.
+    unfold sq_ap011.
     (* 1. Unfusing ap *)
     refine (cu_concat_lr (cu_ds (dp_apD_nat
       (fun y => ap_compose _ (fun f => f y) _) _)) _
@@ -140,9 +140,9 @@ Section TorusEquivCircle.
 
   Local Notation apcs := (ap_compose_sq _ _ _).
 
-  Definition sq_ap2_compose {A B C D : Type} (f : A -> B -> C) (g : C -> D)
+  Definition sq_ap011_compose {A B C D : Type} (f : A -> B -> C) (g : C -> D)
     {a a' : A} (p : a = a') {b b' : B} (q : b = b')
-    : PathCube (sq_ap2 (fun x y => g (f x y)) p q) (sq_ap g (sq_ap2 f p q))
+    : PathCube (sq_ap011 (fun x y => g (f x y)) p q) (sq_ap g (sq_ap011 f p q))
         apcs apcs apcs apcs.
   Proof.
     by destruct p, q.
@@ -168,7 +168,7 @@ Section TorusEquivCircle.
     apply cu_rot_tb_fb.
     refine (cu_ccGGGG _ _ _ _ _).
     1,2,3,4: exact (eisretr _ _)^.
-    refine((sq_ap2_compose c2t' t2c loop loop)
+    refine((sq_ap011_compose c2t' t2c loop loop)
       @lr (cu_ap t2c (c2t'_beta.2.2))
       @lr (Torus_rec_beta_surf _ _ _ _ _)
       @lr (cu_flip_lr (sq_ap_idmap _))

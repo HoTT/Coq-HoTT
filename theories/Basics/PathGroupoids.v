@@ -733,11 +733,14 @@ Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a 
   :=
   match p with idpath => w end.
 
-(** *** [ap] for multivariable functions *)
+(** *** [ap] for curried two variable functions *)
 
 Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
-: f x y = f x' y'
-:= ap11 (ap f p) q.
+  : f x y = f x' y'.
+Proof.
+  destruct p, q.
+  reflexivity.
+Defined.
 
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
 

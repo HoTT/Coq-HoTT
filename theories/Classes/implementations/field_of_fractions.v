@@ -97,10 +97,10 @@ Qed.
 Lemma pl_assoc@{} : forall q r t, equiv (pl q (pl r t)) (pl (pl q r) t).
 Proof.
 intros;unfold equiv;simpl.
-apply ap2;[|apply symmetry,associativity].
+apply ap011;[|apply symmetry,associativity].
 rewrite plus_mult_distr_r.
 rewrite (plus_mult_distr_r _ _ (den t)).
-rewrite plus_assoc. apply ap2;[apply ap2|].
+rewrite plus_assoc. apply ap011;[apply ap011|].
 - apply associativity.
 - rewrite <-(associativity (num r)), <-(associativity (num r) (den q)).
   rewrite (mult_comm (den t)). reflexivity.
