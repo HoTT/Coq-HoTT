@@ -20,7 +20,7 @@ Defined.
 
 Definition hset_axiomK {A} `{axiomK A} : IsHSet A.
 Proof.
-  intros x y H.
+  intros x y.
   apply @hprop_allpath.
   intros p q.
   by induction p.

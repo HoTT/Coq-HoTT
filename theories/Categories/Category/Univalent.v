@@ -20,6 +20,7 @@ Notation isotoid C s d := (@equiv_inv _ _ (@idtoiso C s d) _).
 Global Instance trunc_category `{IsCategory C} : IsTrunc 1 C | 10000.
 Proof.
   intros ? ?.
+  change (IsHSet (x = y)).
   eapply trunc_equiv';
   [ symmetry;
     esplit;

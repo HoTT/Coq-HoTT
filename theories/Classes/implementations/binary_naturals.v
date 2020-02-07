@@ -326,7 +326,7 @@ Section naturals.
     - split; try intros m n; try apply nat_full.
       + split; try intros m n; try apply nat_full.
         * split; try intros m n; try apply nat_full.
-          -- apply _.
+          -- change (IsHProp (m = n)); exact _.
           -- apply cotransitive.
           -- split; intros E.
              ++ assert (X : unary m = unary n) by by apply tight_apart.

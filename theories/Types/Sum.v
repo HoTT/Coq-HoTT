@@ -882,7 +882,7 @@ Global Instance trunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.
-  intros a b.
+  intros a b. change (IsTrunc n'.+1 (a = b)).
   eapply trunc_equiv';
     [ exact (equiv_path_sum _ _) | ].
   destruct a, b; simpl in *;

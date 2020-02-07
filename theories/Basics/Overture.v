@@ -488,16 +488,100 @@ Notation "f ^-1" := (@equiv_inv _ _ f _) : function_scope.
 Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
   := ap10 (ap equiv_fun h).
 
-(** ** Contractibility and truncation levels *)
+(** ** Empty and Unit types *)
 
-(** Truncation measures how complicated a type is.  In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
+(** We put [Empty] here, instead of in [Empty.v], because we need it for accessible subuniverses and for [Ltac done]. *)
+Inductive Empty : Type0 := .
 
-In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
+Scheme Empty_ind := Induction for Empty Sort Type.
+Scheme Empty_rec := Minimality for Empty Sort Type.
+Definition Empty_rect := Empty_ind.
 
-- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
+Definition not (A:Type) : Type := A -> Empty.
+Notation "~ x" := (not x) : type_scope.
+Notation "~~ x" := (~ ~x) : type_scope.
+Hint Unfold not: core.
+Notation "x <> y  :>  T" := (not (x = y :> T)) : type_scope.
+Notation "x <> y" := (x <> y :> _) : type_scope.
 
-- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
-*)
+Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
+  := fun np p => np (p^).
+
+Definition complement {A} (R : Relation A) : Relation A :=
+  fun x y => ~ (R x y).
+
+Typeclasses Opaque complement.
+
+Class Irreflexive {A} (R : Relation A) :=
+  irreflexivity : Reflexive (complement R).
+
+Class Asymmetric {A} (R : Relation A) :=
+  asymmetry : forall {x y}, R x y -> (complement R y x : Type).
+
+(** Likewise, we put [Unit] here, instead of in [Unit.v], because accessible subuniverses and [Trunc] use it. *)
+Inductive Unit : Type0 :=
+    tt : Unit.
+
+Scheme Unit_ind := Induction for Unit Sort Type.
+Scheme Unit_rec := Minimality for Unit Sort Type.
+Definition Unit_rect := Unit_ind.
+
+(** A [Unit] goal should be resolved by [auto] and [trivial]. *)
+Hint Resolve tt : core.
+
+(** ** Accessible subuniverses and modalities *)
+
+(** *** Subuniverses *)
+
+Record Subuniverse@{i} := { In_internal : Type@{i} -> Type@{i} }.
+
+(** Due to a Coq bug, a field of a record can't be an [Existing Class]. *)
+Class In (O : Subuniverse) (A : Type) :=
+  in_in_internal : In_internal O A.
+
+(** *** Extendability *)
+
+(** Given [C : B -> Type] and [f : A -> B], an extension of [g : forall a, C (f a)] along [f] is a section [h : forall b, C b] such that [h (f a) = g a] for all [a:A].  This is equivalently the existence of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is sometimes more convenient.  In this file we study the type of such extensions.  One of its crucial properties is that a path between extensions is equivalently an extension in a fibration of paths.
+
+This turns out to be useful for several reasons.  For instance, by iterating it, we can to formulate universal properties without needing [Funext].  It also gives us a way to "quantify" a universal property by the connectedness of the type of extensions. *)
+
+Definition ExtensionAlong {A B : Type} (f : A -> B)
+           (P : B -> Type) (d : forall x:A, P (f x))
+  := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
+  (** [ExtensionAlong] takes 5 universe parameters:
+      - the size of A
+      - the size of B
+      - the size of P
+      - >= max(B,P)
+      - >= max(A,P). *)
+
+(** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole codomain.  It can also be considered as an equivalent form of an [hfiber] of precomposition-with-[f] that replaces paths by pointwise paths, thereby avoiding [Funext]. *)
+
+Fixpoint ExtendableAlong@{i j k l}
+         (n : nat) {A : Type@{i}} {B : Type@{j}}
+         (f : A -> B) (C : B -> Type@{k}) : Type@{l}
+  := match n with
+     | 0 => Unit
+     | S n => (forall (g : forall a, C (f a)),
+                  ExtensionAlong@{i j k l l} f C g) *
+              forall (h k : forall b, C b),
+                ExtendableAlong n f (fun b => h b = k b)
+     end.
+(** [ExtendableAlong] takes 4 universe parameters:
+      - size of A
+      - size of B
+      - size of C
+      - size of result (>= A,B,C) *)
+
+Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
+
+Definition ooExtendableAlong@{i j k l}
+           {A : Type@{i}} {B : Type@{j}}
+           (f : A -> B) (C : B -> Type@{k}) : Type@{l}
+  := forall n : nat, ExtendableAlong@{i j k l} n f C.
+(** Universe parameters are the same as for [ExtendableAlong]. *)
+
+Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
 
 (** *** Contractibility *)
 
@@ -510,6 +594,39 @@ Class Contr_internal (A : Type) := Build_Contr {
 }.
 
 Arguments center A {_}.
+
+(** *** Accessible reflective subuniverses *)
+
+Inductive AccRSU@{i} :=
+| ContrRSU : AccRSU
+| IdentityRSU : AccRSU
+| MeetRSU : forall (I : Type@{i}), (I -> AccRSU) -> AccRSU
+| LocRSU : forall (A B : Type@{i}), (A -> B) -> AccRSU
+| SepRSU : AccRSU -> AccRSU.
+
+Fixpoint subuniv_accrsu (L : AccRSU) : Subuniverse
+  := Build_Subuniverse
+       (fun A =>
+          match L with
+          | ContrRSU => Contr_internal A
+          | IdentityRSU => Unit
+          | MeetRSU J Ls => forall (i:J), In (subuniv_accrsu (Ls i)) A
+          | LocRSU A B f => ooExtendableAlong f (fun _ => A)
+          | SepRSU L => forall (x y:A), In (subuniv_accrsu L) (x = y)
+          end).
+
+Coercion subuniv_accrsu : AccRSU >-> Subuniverse.
+
+(** ** Contractibility and truncation levels *)
+
+(** Truncation measures how complicated a type is.  In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
+
+In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
+
+- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
+
+- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
+*)
 
 (** *** Truncation levels *)
 
@@ -583,32 +700,26 @@ Definition trunc_index_to_int n :=
 
 Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
 
-Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
-  match n with
-    | -2 => Contr_internal A
-    | n'.+1 => forall (x y : A), IsTrunc_internal n' (x = y)
-  end.
+Fixpoint Tr (n : trunc_index) : AccRSU
+  := match n with
+     | -2 => ContrRSU
+     | m.+1 => SepRSU (Tr m)
+     end.
 
-Arguments IsTrunc_internal n A : simpl nomatch.
+Arguments Tr : simpl never.
 
-Class IsTrunc (n : trunc_index) (A : Type) : Type :=
-  Trunc_is_trunc : IsTrunc_internal n A.
+Notation IsTrunc n := (In (subuniv_accrsu (Tr n))).
 
 (** We use the priciple that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
 
-Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
-
-Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
+Global Instance inO_paths_SepO (A : Type) (O : AccRSU)
+       `{H : In (SepRSU O) A} (x y : A)
+  : In O (x = y)
+  := H x y.
 
 Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
 : IsTrunc n (x = y)
   := H x y. (* but do fold [IsTrunc] *)
-
-Existing Class IsTrunc_internal.
-
-Hint Extern 0 (IsTrunc_internal _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
-
-Hint Extern 0 (IsTrunc _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
 
 (** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
 Hint Extern 10 =>
@@ -625,6 +736,11 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
          end : core.
 
+(*
+Notation Contr := (In ContrRSU).
+Notation IsHProp := (In (SepRSU ContrRSU)).
+Notation IsHSet := (In (SepRSU (SepRSU ContrRSU))).
+*)
 Notation Contr := (IsTrunc (-2)).
 Notation IsHProp := (IsTrunc (-1)).
 Notation IsHSet := (IsTrunc 0).
@@ -685,45 +801,6 @@ Hint Resolve @idpath : core.
 
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
-
-(** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type0 := .
-
-Scheme Empty_ind := Induction for Empty Sort Type.
-Scheme Empty_rec := Minimality for Empty Sort Type.
-Definition Empty_rect := Empty_ind.
-
-Definition not (A:Type) : Type := A -> Empty.
-Notation "~ x" := (not x) : type_scope.
-Notation "~~ x" := (~ ~x) : type_scope.
-Hint Unfold not: core.
-Notation "x <> y  :>  T" := (not (x = y :> T)) : type_scope.
-Notation "x <> y" := (x <> y :> _) : type_scope.
-
-Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
-  := fun np p => np (p^).
-
-Definition complement {A} (R : Relation A) : Relation A :=
-  fun x y => ~ (R x y).
-
-Typeclasses Opaque complement.
-
-Class Irreflexive {A} (R : Relation A) :=
-  irreflexivity : Reflexive (complement R).
-
-Class Asymmetric {A} (R : Relation A) :=
-  asymmetry : forall {x y}, R x y -> (complement R y x : Type).
-
-(** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
-Inductive Unit : Type0 :=
-    tt : Unit.
-
-Scheme Unit_ind := Induction for Unit Sort Type.
-Scheme Unit_rec := Minimality for Unit Sort Type.
-Definition Unit_rect := Unit_ind.
-
-(** A [Unit] goal should be resolved by [auto] and [trivial]. *)
-Hint Resolve tt : core.
 
 (** *** Pointed types *)
 

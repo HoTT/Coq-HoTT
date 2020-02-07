@@ -371,7 +371,7 @@ Proof.
   intro tr_loops.
   intros x y p.
   destruct p.
-  apply tr_loops.
+  rapply tr_loops.
 Defined.
 
 (* This is slightly different to 7.2.9 in that we ommit n = -1, which is

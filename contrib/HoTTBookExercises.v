@@ -716,7 +716,7 @@ Lemma Book_3_11 `{Univalence} : ~ (forall A, Trunc (-1) A -> A).
   {
     intros A.
     apply Book_3_4_solution_1.
-    apply Trunc_is_trunc.
+    exact _.
   }
 
   (** There are no fixpoints of the fix-point free autoequivalence of 2 (called

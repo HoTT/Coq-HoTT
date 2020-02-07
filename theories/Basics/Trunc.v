@@ -250,7 +250,7 @@ Definition trunc_equiv A {B} (f : A -> B)
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.
-  simple_induction n n IH; simpl; intros A ? B f ?.
+  simple_induction n n IH; simpl; intros A H B f ?.
   - exact (contr_equiv _ f).
   - intros x y.
     exact (IH (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y))
@@ -307,7 +307,7 @@ Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
 Proof.
   exists x.
   intro y.
-  apply center, H.
+  apply center; rapply H.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)

@@ -19,7 +19,7 @@ Lemma istrunc_nullhomotopy {n : trunc_index}
 Proof.
   apply @trunc_sigma; auto.
   intros y. apply (@trunc_forall _).
-  intros x. apply trunc_succ.
+  intros x. serapply trunc_succ.
 Defined.
 
 End NullHomotopy.

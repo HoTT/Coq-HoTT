@@ -29,6 +29,7 @@ Module Export Core.
     induction n; [ typeclasses eauto |].
     induction n; [ typeclasses eauto |].
     intros [x|x] [y|y];
+      change (In (SepRSU ContrRSU)) with (IsHProp);
       typeclasses eauto.
   Qed.
 

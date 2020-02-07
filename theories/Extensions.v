@@ -9,32 +9,11 @@ Require Import HoTT.Tactics.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
-(** Given [C : B -> Type] and [f : A -> B], an extension of [g : forall a, C (f a)] along [f] is a section [h : forall b, C b] such that [h (f a) = g a] for all [a:A].  This is equivalently the existence of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is sometimes more convenient.  In this file we study the type of such extensions.  One of its crucial properties is that a path between extensions is equivalently an extension in a fibration of paths.
-
-This turns out to be useful for several reasons.  For instance, by iterating it, we can to formulate universal properties without needing [Funext].  It also gives us a way to "quantify" a universal property by the connectedness of the type of extensions. *)
-
 Section Extensions.
 
+  (** ** Facts about [ExtensionAlong] *)
+
   (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
-
-  (** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole codomain.  It can also be considered as an equivalent form of an [hfiber] of precomposition-with-[f] that replaces paths by pointwise paths, thereby avoiding [Funext]. *)
-
-  Definition ExtensionAlong {A B : Type} (f : A -> B)
-             (P : B -> Type) (d : forall x:A, P (f x))
-    := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
-  (** [ExtensionAlong] takes 5 universe parameters:
-      - the size of A
-      - the size of B
-      - the size of P
-      - >= max(B,P)
-      - >= max(A,P).
-    The following [Check] verifies that this is in fact the case. *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtensionAlong@{a b p m n} : True@{Set}.
-  Proof.
-    Check ExtensionAlong@{a b p m n}.
-  Abort.
-  (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
   (** It's occasionally useful to be able to modify those max universes. *)
   Definition lift_extensionalong@{a b p m1 n1 m2 n2} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
@@ -89,30 +68,7 @@ Section Extensions.
     exact _.
   Defined.
 
-  (** Here is the iterated version. *)
-
-  Fixpoint ExtendableAlong@{i j k l}
-           (n : nat) {A : Type@{i}} {B : Type@{j}}
-           (f : A -> B) (C : B -> Type@{k}) : Type@{l}
-    := match n with
-         | 0 => Unit
-         | S n => (forall (g : forall a, C (f a)),
-                     ExtensionAlong@{i j k l l} f C g) *
-                  forall (h k : forall b, C b),
-                    ExtendableAlong n f (fun b => h b = k b)
-       end.
-  (** [ExtendableAlong] takes 4 universe parameters:
-      - size of A
-      - size of B
-      - size of C
-      - size of result (>= A,B,C) *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtendableAlong@{a b c r} : True@{Set}.
-  Proof.
-    Check ExtendableAlong@{a b c r}.
-  Abort.
-
-  Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
+  (** ** Facts about [ExtendableAlong] *)
 
   (** We can modify the universes, as with [ExtensionAlong]. *)
   Definition lift_extendablealong@{i j k l1 l2}
@@ -319,20 +275,7 @@ Section Extensions.
       apply IHn, ext.
   Defined.
 
-  (** And the oo-version. *)
-
-  Definition ooExtendableAlong@{i j k l}
-             {A : Type@{i}} {B : Type@{j}}
-             (f : A -> B) (C : B -> Type@{k}) : Type@{l}
-    := forall n : nat, ExtendableAlong@{i j k l} n f C.
-  (** Universe parameters are the same as for [ExtendableAlong]. *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ooExtendableAlong@{a b c r} : True@{Set}.
-  Proof.
-    Check ooExtendableAlong@{a b c r}.
-  Abort.
-
-  Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
+  (** ** Facts about [ooExtendableAlong] *)
 
   (** Universe modification. *)
   Definition lift_ooextendablealong@{i j k l1 l2}

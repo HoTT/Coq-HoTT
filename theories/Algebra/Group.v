@@ -101,7 +101,8 @@ Defined.
 Global Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
   : IsHSet (GroupHomomorphism G H).
 Proof.
-  intros f g; apply (trunc_equiv' _ equiv_path_grouphomomorphism).
+  intros f g. change (IsHProp (f = g)).
+  apply (trunc_equiv' _ equiv_path_grouphomomorphism).
 Defined.
 
 (** * Some basic properties of group homomorphisms *)

@@ -196,6 +196,7 @@ Proof.
   intros x y.
   assert (p := merely_path_is0connected S1 base x).
   assert (q := merely_path_is0connected S1 base y).
+  change (IsHSet (x = y)).
   strip_truncations.
   destruct p, q.
   refine (trunc_equiv' (n := 0) Int equiv_loopS1_int^-1).
@@ -231,5 +232,3 @@ Proof.
   apply dp_apD_path_transport.
   exact (S1_ind_beta_loop _ _ _).
 Defined.
-
-

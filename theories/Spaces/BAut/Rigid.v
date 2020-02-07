@@ -28,7 +28,7 @@ Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
   : Contr (BAut A).
 Proof.
   refine (contr_trunc_conn (Tr 0)).
-  intros Z W; baut_reduce.
+  intros Z W; change (IsHProp (Z = W)); baut_reduce.
   refine (trunc_equiv (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).
 Defined.
