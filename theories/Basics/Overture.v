@@ -595,7 +595,7 @@ Class Contr_internal (A : Type) := Build_Contr {
 
 Arguments center A {_}.
 
-(** *** Accessible reflective subuniverses *)
+(** *** Accessible reflective subuniverses and modalities *)
 
 Inductive AccRSU@{i} :=
 | ContrRSU : AccRSU
@@ -616,6 +616,24 @@ Fixpoint subuniv_accrsu (L : AccRSU) : Subuniverse
           end).
 
 Coercion subuniv_accrsu : AccRSU >-> Subuniverse.
+
+Inductive AccModality@{i} :=
+| ContrModality : AccModality
+| IdentityModality : AccModality
+| MeetModality : forall (I : Type@{i}), (I -> AccModality) -> AccModality
+| NulModality : Type@{i} -> AccModality
+| SepModality : AccModality -> AccModality.
+
+Fixpoint accrsu_modality (M : AccModality) : AccRSU
+  := match M with
+     | ContrModality => ContrRSU
+     | IdentityModality => IdentityRSU
+     | MeetModality J Ms => MeetRSU J (fun i => accrsu_modality (Ms i))
+     | NulModality T => LocRSU T Unit (fun _ => tt)
+     | SepModality M => SepRSU (accrsu_modality M)
+     end.
+
+Coercion accrsu_modality : AccModality >-> AccRSU.
 
 (** ** Contractibility and truncation levels *)
 
@@ -700,15 +718,15 @@ Definition trunc_index_to_int n :=
 
 Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
 
-Fixpoint Tr (n : trunc_index) : AccRSU
+Fixpoint Tr (n : trunc_index) : AccModality
   := match n with
-     | -2 => ContrRSU
-     | m.+1 => SepRSU (Tr m)
+     | -2 => ContrModality
+     | m.+1 => SepModality (Tr m)
      end.
 
 Arguments Tr : simpl never.
 
-Notation IsTrunc n := (In (subuniv_accrsu (Tr n))).
+Notation IsTrunc n := (In (subuniv_accrsu (accrsu_modality (Tr n)))).
 
 (** We use the priciple that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
 
