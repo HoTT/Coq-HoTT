@@ -43,7 +43,7 @@ Definition IsAbelianization {G : Group} (G_ab : AbGroup)
 
 Existing Class IsAbelianization.
 
-(** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following to maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
+(** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
 
 From this we can show that Abel G is an abelian group.
 
@@ -77,14 +77,14 @@ Section Abel.
       (uncurry2 (fun a b c => a * (b * c)))
       (uncurry2 (fun a b c => a * (c * b)))).
 
-  (** We have a natural map from G to Abel G *)
+  (** We have a natural map from G to Abel G. *)
   Definition ab : G -> Abel.
   Proof.
     intro g.
     apply tr, coeq, g.
   Defined.
 
-  (** This map has to satisfy the condition ab_comm *)
+  (** This map satisfies the condition ab_comm. *)
   Definition ab_comm a b c
     : ab (a * (b * c)) = ab (a * (c * b)).
   Proof.
@@ -110,7 +110,7 @@ Section Abel.
     apply c.
   Defined.
 
-  (** The computation rule can also be prove. *)
+  (** The computation rule can also be proven. *)
   Definition Abel_ind_beta_ab_comm (P : Abel -> Type)
     `{forall x, IsHSet (P x)}(a : forall x, P (ab x))
     (c : forall x y z, DPath P (ab_comm x y z)
@@ -137,7 +137,7 @@ Section Abel.
     intros; apply dp_const, c.
   Defined.
 
-  (** Here is a simpler version of Abel_ind when our target is a HProp. This lets us discard all the higher paths. *)
+  (** Here is a simpler version of Abel_ind when our target is an HProp. This lets us discard all the higher paths. *)
   Definition Abel_ind_hprop (P : Abel -> Type) `{forall x, IsHProp (P x)} 
     (a : forall x, P (ab x)) : forall (x : Abel), P x.
   Proof.
@@ -160,7 +160,7 @@ End Abel.
 Arguments ab {_}.
 Arguments ab_comm {_}.
 
-(** Now we can show that Abel G is infact an abelian group. *)
+(** Now we can show that Abel G is in fact an abelian group. *)
 
 Section AbelGroup.
 
@@ -177,26 +177,20 @@ Section AbelGroup.
       { intro b.
         exact (ab (a * b)). }
       intros b c d; cbn.
+      refine (ap _ (associativity _ _ _) @ _).
       refine (ab_comm _ _ _ @ _).
-      refine (ap _ _ @ _).
-      { refine (ap _ (associativity _ _ _)^ @ _).
-        refine (associativity _ _ _). }
-      refine (ab_comm _ _ _ @ _).
-      refine (ap _ (associativity _ _ _)^ @ _).
-      refine (ab_comm _ _ _ @ _).
-      refine (ap _ (ap _ (associativity _ _ _)^)). }
+      refine (ap _ (associativity _ _ _)^). }
     intros a b c.
     apply path_forall.
     serapply Abel_ind_hprop.
     cbn; intro d.
+    (* The pattern seems to be to alternate associativity and ab_comm. *)
     refine (ap _ (associativity _ _ _)^ @ _).
-    refine (ap _ (ap _ (associativity _ _ _)^) @ _).
     refine (ab_comm _ _ _ @ _).
-    refine (ap _ (ap _ (associativity _ _ _)^) @ _).
     refine (ap _ (associativity _ _ _) @ _).
     refine (ab_comm _ _ _ @ _).
     refine (ap _ (associativity _ _ _)^ @ _).
-    refine (ap _ (ap _ (associativity _ _ _)) @ _).
+    refine (ab_comm _ _ _ @ _).
     refine (ap _ (associativity _ _ _)).
   Defined.
 
@@ -243,7 +237,7 @@ Section AbelGroup.
   Defined.
 
   (** Now we can define the negation. This is just
-        - (ab g) := (ab (g^-1) 
+        - (ab g) := (ab (g^-1))
       However when checking that it respects ab_comm we have to show the following:
         ab (- z * - y * - x) = ab (- y * - z * - x)
       there is no obvious way to do this, but we note that ab (x * y) is exactly the definition of ab x + ab y! Hence by commutativity we can show this. *)
@@ -274,7 +268,7 @@ Section AbelGroup.
   (** Thus Abel G is a group *)
   Global Instance isgroup_abel : IsGroup (Abel G) := {}.
 
-  (** And since the operation is commutative and abelian group. *)
+  (** And since the operation is commutative, an abelian group. *)
   Global Instance isabgroup_abel : IsAbGroup (Abel G) := {}.
 
   (** By definition, the map ab is also a group homomorphism. *)
@@ -396,22 +390,22 @@ Proof.
     (conn_map_homotopic _ _ _ p _)).
 Qed.
 
-Global Instance isequiv_abgroup_abelianization `{U : Univalence}
-  (A B : AbGroup) (eta : GroupHomomorphism A B) {H : IsAbelianization B eta}
+Global Instance isabelianization_identity `{Funext} (A : AbGroup) : IsAbelianization A grp_homo_id.
+Proof.
+  unfold IsAbelianization.
+  intros B h.
+  apply (Build_Contr _ (h; fun _ => idpath)).
+  intros [g p].
+  apply path_sigma_hprop; cbn.
+  by apply equiv_path_grouphomomorphism.
+Defined.
+
+Global Instance isequiv_abgroup_abelianization `{Funext}
+  (A B : AbGroup) (eta : GroupHomomorphism A B) {x : IsAbelianization B eta}
   : IsEquiv eta.
 Proof.
-  destruct (H A grp_homo_id) as [[a ah] ac].
-  serapply (isequiv_adjointify eta a).
-  + simpl.
-    Require HIT.epi.
-    apply ap10.
-    pose (epi.issurj_isepi eta _) as i.
-    refine (i _ _ idmap _).
-    apply path_forall.
-    intro x.
-    apply ap.
-    symmetry.
-    apply ah.
-  + change (a o eta == idmap); symmetry.
-    apply ah.
+  serapply isequiv_homotopic.  
+  - serapply (groupiso_isabelianization A B grp_homo_id eta).
+  - exact _.
+  - symmetry; apply homotopic_isabelianization.
 Defined.
