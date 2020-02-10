@@ -4,7 +4,6 @@ Require Import HIT.Coeq.
 Require Import Algebra.Group.
 Require Import Algebra.Subgroup.
 Require Import Cubical.
-Require HIT.epi.
 Import TrM.
 
 Local Open Scope mc_mult_scope.
@@ -405,8 +404,8 @@ Global Instance isequiv_abgroup_abelianization `{Funext}
   (A B : AbGroup) (eta : GroupHomomorphism A B) {x : IsAbelianization B eta}
   : IsEquiv eta.
 Proof.
-  serapply isequiv_homotopic.  
-  - serapply (groupiso_isabelianization A B grp_homo_id eta).
+  srapply isequiv_homotopic.  
+  - srapply (groupiso_isabelianization A B grp_homo_id eta).
   - exact _.
   - symmetry; apply homotopic_isabelianization.
 Defined.
