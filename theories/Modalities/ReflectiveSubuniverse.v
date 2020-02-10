@@ -2130,22 +2130,16 @@ Section Separated.
     exact (fst (extendable_toSepO_inO@{i i i Ou Ou Ou} _ 1%nat) h).
   Defined.
 
+  (** A strengthening of Lemma 2.27 of CORS.  We provide a different proof that doesn't require [Funext]. *)
   Global Instance conn_map_functor_sigma_toSepO@{i j}
          {X : Type@{i} } (P : O' X -> Type@{j})
-    : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
-  Proof.
-    serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i i i i i i i i Ou i i}.
-  Defined.
-
-  (** Lemma 2.27 of CORS.  We provide a different proof that doesn't require [Funext]. *)
-  Global Instance O_inverts_functor_sigma_to_SepO@{i j}
-         {X : Type@{i} } (P : O' X -> Type@{j})
-    : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)) := _.
+    : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap))
+    := conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i i i i i i i i Ou i i} _ _ _.
 
   Definition equiv_functor_sigma_to_SepO@{i j}
              {X : Type@{i} } (P : O' X -> Type@{j})
     : (O {x : X & P (to O' X x)}) <~> (O {ox : O' X & P ox})
-    := Build_Equiv _ _ _ (O_inverts_functor_sigma_to_SepO@{i j} P).
+    := Build_Equiv _ _ (O_functor O (functor_sigma@{i j i j} _ _)) _.
 
   (** Corollary 2.29 of CORS *)
   Global Instance SepO_inverts_functor_hfiber `{Univalence}
