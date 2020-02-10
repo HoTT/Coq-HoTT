@@ -2122,25 +2122,26 @@ Section Separated.
     : O (x = y) <~> (to O' A x = to O' A y)
     := Build_Equiv _ _ _ (isequiv_path_SepO x y).
 
-  (** Lemma 2.27 of CORS.  This is the proof given in CORS, which requires funext.  An alternative proof not requiring funext should be possible, using the fact that [to O' X] is [O]-connected. *)
-  Global Instance O_inverts_functor_sigma_to_SepO@{i j jplus} `{Funext}
-         {X : Type@{i} } (P : O' X -> Type@{j})
-    : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
+  Global Instance conn_map_toSepO@{i} {X : Type@{i} }
+    : IsConnMap O (to O' X).
   Proof.
-    apply (O_inverts_by_yoneda@{Ou Oa j j j j jplus j j j j} O).
-    intros Z ?.
-    serapply isequiv_homotopic'.
-    { refine (_ oE _ oE _).
-      3:apply equiv_inverse.
-      1,3: serapply equiv_sigT_ind@{i j j jplus}.
-      serapply equiv_toSepO_inO@{i j j jplus}. }
-    reflexivity.
+    apply conn_map_from_extension_elim@{Ou Oa i i i i}.
+    intros Q Q_inO h.
+    exact (fst (extendable_toSepO_inO@{i i i Ou Ou Ou} _ 1%nat) h).
   Defined.
 
-  Definition equiv_functor_sigma_to_SepO@{i j jplus} `{Funext}
+  (** A strengthening of Lemma 2.27 of CORS.  We provide a different proof that doesn't require [Funext]. *)
+  Global Instance conn_map_functor_sigma_toSepO@{i j}
+         {X : Type@{i} } (P : O' X -> Type@{j})
+    : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
+  Proof.
+    serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
+  Defined.
+
+  Definition equiv_functor_sigma_to_SepO@{i j}
              {X : Type@{i} } (P : O' X -> Type@{j})
     : (O {x : X & P (to O' X x)}) <~> (O {ox : O' X & P ox})
-    := Build_Equiv _ _ _ (O_inverts_functor_sigma_to_SepO@{i j jplus} P).
+    := Build_Equiv _ _ (O_functor O (functor_sigma@{i j i j} _ _)) _.
 
   (** Corollary 2.29 of CORS *)
   Global Instance SepO_inverts_functor_hfiber `{Univalence}
@@ -2150,7 +2151,7 @@ Section Separated.
     serapply isequiv_homotopic'.
     - unfold hfiber.
       refine (_ oE (equiv_inverse (equiv_O_sigma_O O _))).
-      refine (equiv_functor_sigma_to_SepO@{i i iplus} _ oE _).
+      refine (equiv_functor_sigma_to_SepO@{i i} _ oE _).
       apply equiv_O_functor.
       apply equiv_functor_sigma_id; intros y; cbn.
       refine (_ oE equiv_path_SepO (f y) x).
@@ -2158,11 +2159,11 @@ Section Separated.
     - apply O_indpaths.
       intros [y p]; cbn.
       abstract (
-      rewrite O_rec_beta;
-      rewrite !(to_O_natural O _ _);
-      apply ap; refine (path_sigma' _ 1 _); cbn;
-      unfold path_SepO;
-      rewrite O_rec_beta, inv_V; reflexivity
+        rewrite O_rec_beta;
+        rewrite !(to_O_natural O _ _);
+        apply ap; refine (path_sigma' _ 1 _); cbn;
+        unfold path_SepO;
+        rewrite O_rec_beta, inv_V; reflexivity
       ).
   Defined.
 
