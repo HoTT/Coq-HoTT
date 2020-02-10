@@ -2135,7 +2135,7 @@ Section Separated.
          {X : Type@{i} } (P : O' X -> Type@{j})
     : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
   Proof.
-    serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
+    srapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
   Defined.
 
   Definition equiv_functor_sigma_to_SepO@{i j}
