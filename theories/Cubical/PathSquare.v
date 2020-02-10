@@ -59,7 +59,7 @@ Global Instance isequiv_PathSquare_ind `{Funext} {A}
     (p1 : a00 = a01) (p2 : a10 = a11),
     PathSquare p p0 p1 p2 -> Type) : IsEquiv (PathSquare_ind P).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1: intros X ?; apply X.
   2: intro; reflexivity.
   intro.
@@ -86,7 +86,7 @@ Global Instance isequiv_sq_path {A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
 : IsEquiv (@sq_path _ _ _ _ _ px0 px1 p0x p1x).
 Proof.
-  serapply isequiv_adjointify; try by intros [].
+  srapply isequiv_adjointify; try by intros [].
   destruct p0x, p1x.
   intros e.
   pattern e.
@@ -112,7 +112,7 @@ Global Instance istrunc_sq n
   {p0x : a00 = a01} {p1x : a10 = a11}
   : IsTrunc n (PathSquare px0 px1 p0x p1x).
 Proof.
-  serapply (trunc_equiv _ sq_path).
+  srapply (trunc_equiv _ sq_path).
 Defined.
 
 (* We can give degenerate squares *)
@@ -218,7 +218,7 @@ Global Instance isequiv_sq_tr {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : IsEquiv (sq_tr px0 px1 p0x p1x).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1: apply sq_tr.
   1,2: exact sq_tr_sq_tr.
 Defined.
@@ -338,7 +338,7 @@ Section MovePaths.
     : PathSquare f10 (f12'' @ f12') f01 f21 <~> PathSquare f10 f12' (f01 @ f12'') f21.
   Proof.
     clear f12. destruct f12''. 
-    serapply Build_Equiv. 
+    srapply Build_Equiv. 
     + refine (fun s => sq_ccGc (concat_p1 _)^ (sq_cGcc (concat_1p _) s)).
     + exact _.
   Defined.
@@ -347,7 +347,7 @@ Section MovePaths.
     : PathSquare (f10'' @ f10') f12 f01 f21 <~> PathSquare f10'' f12 f01 (f10' @ f21).
   Proof.
     clear f10. destruct f10'. 
-    serapply Build_Equiv. 
+    srapply Build_Equiv. 
     + refine (fun s => sq_cccG (concat_1p _)^ (sq_Gccc (concat_p1 _) s)).
     + exact _.
   Defined.
@@ -356,7 +356,7 @@ Section MovePaths.
     : PathSquare f10 (f12'' @ f12'^) f01 f21 <~> PathSquare f10 f12'' f01 (f21 @ f12').
   Proof.
     clear f12. destruct f12'. 
-    serapply Build_Equiv. 
+    srapply Build_Equiv. 
     + refine (fun s => sq_cccG (concat_p1 _)^ (sq_cGcc (concat_p1 _) s)).
     + exact _.
   Defined.
@@ -366,7 +366,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12'. 
     symmetry.
-    serapply Build_Equiv. 
+    srapply Build_Equiv. 
     + refine (fun s => sq_cccG (concat_p1 _)^ (sq_cGcc (concat_p1 _) s)).
     + exact _.
   Defined.
@@ -375,7 +375,7 @@ Section MovePaths.
     : PathSquare (f10''^ @ f10') f12 f01 f21 <~> PathSquare f10' f12 (f10'' @ f01) f21.
   Proof.
     clear f10. destruct f10''. 
-    serapply Build_Equiv. 
+    srapply Build_Equiv. 
     + refine (fun s => sq_ccGc (concat_1p _)^ (sq_Gccc (concat_1p _) s)).
     + exact _.
   Defined.
@@ -567,7 +567,7 @@ Definition equiv_sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
     <~> PathSquare (path_prod' px0 qx0) (path_prod' px1 qx1)
         (path_prod' p0x q0x) (path_prod' p1x q1x).
 Proof.
-  serapply equiv_adjointify.
+  srapply equiv_adjointify.
   1: apply uncurry, sq_prod.
   { intro c.
     destruct p1x, q1x, p0x, q0x.

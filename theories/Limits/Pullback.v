@@ -68,7 +68,7 @@ Definition equiv_ispullback {A B C D}
 Definition ispullback_sigprod {D : Type} (P Q : D -> Type)
   : IsPullback (fun z:{d:D & P d * Q d} => 1%path : (z.1;fst z.2).1 = (z.1;snd z.2).1).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   - intros [[d1 p] [[d2 q] e]]; cbn in e.
     exists d1. exact (p, e^ # q).
   - intros [[d1 p] [[d2 q] e]]; unfold pullback_corec; cbn in *.

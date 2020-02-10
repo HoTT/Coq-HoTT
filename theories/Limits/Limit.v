@@ -44,7 +44,7 @@ Arguments limp {_ _}.
 
 Definition cone_limit `(D : Diagram G) : Cone (Limit D) D.
 Proof.
-  serapply Build_Cone.
+  srapply Build_Cone.
   + intros i x.
     apply (lim x i).
   + intros i j g x.
@@ -54,10 +54,10 @@ Defined.
 Global Instance unicone_limit `(D : Diagram G)
   : UniversalCone (cone_limit D).
 Proof.
-  serapply Build_UniversalCone; intro Y.
-  serapply isequiv_adjointify.
+  srapply Build_UniversalCone; intro Y.
+  srapply isequiv_adjointify.
   { intros c y.
-    serapply Build_Limit.
+    srapply Build_Limit.
     { intro i.
       apply (legs c i y). }
     intros i j g.
@@ -80,7 +80,7 @@ Section FunctorialityLimit.
     : IsLimit D Q' -> IsLimit D Q.
   Proof.
     intros HQ.
-    serapply (Build_IsLimit (cone_precompose HQ f) _).
+    srapply (Build_IsLimit (cone_precompose HQ f) _).
     apply cone_precompose_equiv_universality, HQ.
   Defined.
 
@@ -88,7 +88,7 @@ Section FunctorialityLimit.
     {Q : Type} : IsLimit D1 Q -> IsLimit D2 Q.
   Proof.
     intros HQ.
-    serapply (Build_IsLimit (cone_postcompose m HQ) _).
+    srapply (Build_IsLimit (cone_postcompose m HQ) _).
     apply cone_postcompose_equiv_universality, HQ.
   Defined.
 
@@ -119,7 +119,7 @@ Section FunctorialityLimit.
            (functor_limit m HQ1 HQ2).
   Proof.
     apply ap10.
-    serapply (equiv_inj (cone_precompose HQ2) _).
+    srapply (equiv_inj (cone_precompose HQ2) _).
     1: apply HQ2.
     etransitivity.
     2:symmetry; apply cone_precompose_identity.
@@ -135,7 +135,7 @@ Section FunctorialityLimit.
            (functor_limit (diagram_equiv_inv m) HQ2 HQ1).
   Proof.
     apply ap10.
-    serapply (equiv_inj (cone_precompose HQ1) _).
+    srapply (equiv_inj (cone_precompose HQ1) _).
     1: apply HQ1.
     etransitivity.
     2:symmetry; apply cone_precompose_identity.
@@ -164,8 +164,8 @@ Theorem limit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsLimit D Q1) (HQ2 : IsLimit D Q2)
   : Q1 <~> Q2.
 Proof.
-  serapply equiv_functor_limit.
-  serapply (Build_diagram_equiv (diagram_idmap D)).
+  srapply equiv_functor_limit.
+  srapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 
 (** * Limits are right adjoint to constant diagram *)
@@ -173,15 +173,15 @@ Defined.
 Theorem limit_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
   : (C -> Limit D) <~> DiagramMap (diagram_const C) D.
 Proof.
-  serapply equiv_adjointify.
+  srapply equiv_adjointify.
   { intro f.
-    serapply Build_DiagramMap.
+    srapply Build_DiagramMap.
     { intros i c.
       apply lim, f, c. }
     intros i j g x.
     apply limp. }
   { intros [f p] c.
-    serapply Build_Limit.
+    srapply Build_Limit.
     { intro i.
       apply f, c. }
     intros i j g.

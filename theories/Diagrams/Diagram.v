@@ -50,7 +50,7 @@ Section Diagram.
       = D2 _f g (transport idmap (path_obj i) x))
     : D1 = D2.
   Proof.
-    serapply path_diagram_naive; funext i.
+    srapply path_diagram_naive; funext i.
     1: apply path_obj.
     funext j g x.
     rewrite 3 transport_forall_constant, transport_arrow.

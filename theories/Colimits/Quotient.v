@@ -86,7 +86,7 @@ Definition Quotient_rec_beta_qglue @{i j k l}
   : ap (Quotient_rec@{i j k l} R P pclass peq) (qglue p) = peq x y p.
 Proof.
   refine ((ap_compose tr _ _)^ @ _).
-  serapply Coeq_rec_beta_cglue.
+  srapply Coeq_rec_beta_cglue.
 Defined.
 
 Arguments Quotient : simpl never.
@@ -105,14 +105,14 @@ Section Equiv.
   (* The proposition of being in a given class in a quotient. *)
   Definition in_class : A / R -> A -> hProp.
   Proof.
-    serapply Quotient_ind.
+    srapply Quotient_ind.
     { intros a b.
       exact (BuildhProp (R a b)). }
     intros x y p.
     refine (transport_const _ _ @ _).
     funext z.
     apply path_hprop.
-    serapply equiv_iff_hprop; cbn.
+    srapply equiv_iff_hprop; cbn.
     1: apply (transitivity (symmetry _ _ p)).
     apply (transitivity p).
   Defined.
@@ -122,7 +122,7 @@ Section Equiv.
     (P : A / R -> Type) `{forall x, IsHProp (P x)}
     (dclass : forall x, P (class_of R x)) : forall q, P q.
   Proof.
-    serapply (Quotient_ind R P dclass).
+    srapply (Quotient_ind R P dclass).
     all: try (intro; apply trunc_succ).
     intros x y p.
     apply path_ishprop.
@@ -132,13 +132,13 @@ Section Equiv.
   Global Instance decidable_in_class `{forall x y, Decidable (R x y)}
   : forall x a, Decidable (in_class x a).
   Proof.
-    by serapply Quotient_ind_hprop.
+    by srapply Quotient_ind_hprop.
   Defined.
 
   (* if x is in a class q, then the class of x is equal to q. *)
   Lemma path_in_class_of : forall q x, in_class q x -> q = class_of R x.
   Proof.
-    serapply Quotient_ind.
+    srapply Quotient_ind.
     { intros x y p.
       apply (qglue p). }
     intros x y p.
@@ -170,15 +170,15 @@ Section Equiv.
       R y y' -> dclass x y = dclass x' y'}
     : A / R -> A / R -> B.
   Proof.
-    serapply Quotient_rec.
+    srapply Quotient_rec.
     { intro a.
-      serapply Quotient_rec.
+      srapply Quotient_rec.
       { revert a.
         assumption. }
       by apply (dequiv a a). }
     intros x y p.
     apply path_forall.
-    serapply Quotient_ind.
+    srapply Quotient_ind.
     { cbn; intro a.
       by apply dequiv. }
     intros a b q.
@@ -190,7 +190,7 @@ Section Equiv.
     (dclass : forall x, P (class_of _ x)) : forall y, P y.
   Proof.
     apply Quotient_ind with dclass.
-    { serapply Quotient_ind.
+    { srapply Quotient_ind.
       1: intro; apply trunc_succ.
       intros ???; apply path_ishprop. }
     intros; apply path_ishprop.
@@ -200,7 +200,7 @@ Section Equiv.
   Global Instance issurj_class_of : IsSurjection (class_of R).
   Proof.
     apply BuildIsSurjection.
-    serapply Quotient_ind_hprop.
+    srapply Quotient_ind_hprop.
     intro x.
     apply tr.
     by exists x.
@@ -211,7 +211,7 @@ Section Equiv.
   Theorem equiv_quotient_ump (B : hSet)
     : (A / R -> B) <~> {f : A -> B & forall x y, R x y -> f x = f y}.
   Proof.
-    serapply equiv_adjointify.
+    srapply equiv_adjointify.
     + intro f.
       exists (compose f (class_of R)).
       intros; f_ap.
@@ -222,7 +222,7 @@ Section Equiv.
       by apply equiv_path_sigma_hprop.
     + intros f.
       apply path_forall.
-      serapply Quotient_ind_hprop.
+      srapply Quotient_ind_hprop.
       reflexivity.
   Defined.
 
@@ -258,7 +258,7 @@ Section Functoriality.
     {A : Type} {R : Relation A}
     : Quotient_functor R R idmap (fun x y => idmap) == idmap.
   Proof.
-    by serapply Quotient_ind_hprop.
+    by srapply Quotient_ind_hprop.
   Defined.
 
   Definition Quotient_functor_compose
@@ -270,7 +270,7 @@ Section Functoriality.
     : Quotient_functor R T (g o f) (fun x y => (gresp _ _) o (fresp x y))
     == Quotient_functor S T g gresp o Quotient_functor R S f fresp.
   Proof.
-    by serapply Quotient_ind_hprop.
+    by srapply Quotient_ind_hprop.
   Defined.
 
   Context {A : Type} (R : Relation A)
@@ -280,11 +280,11 @@ Section Functoriality.
     (fresp : forall x y, R x y <-> S (f x) (f y)) `{IsEquiv _ _ f}
     : IsEquiv (Quotient_functor R S f (fun x y => fst (fresp x y))).
   Proof.
-    serapply (isequiv_adjointify _ (Quotient_functor S R f^-1 _)).
+    srapply (isequiv_adjointify _ (Quotient_functor S R f^-1 _)).
     { intros u v s.
       apply (snd (fresp _ _)).
       abstract (do 2 rewrite eisretr; apply s). }
-    all: serapply Quotient_ind.
+    all: srapply Quotient_ind.
     + intros b; simpl.
       apply ap, eisretr.
     + intros; apply path_ishprop.
@@ -339,10 +339,10 @@ Section Kernel.
     intros [x q] [y p'].
     apply path_sigma_hprop; simpl.
     revert x y q p'.
-    serapply Quotient_ind.
+    srapply Quotient_ind.
     2: intros; apply path_ishprop.
     intro a.
-    serapply Quotient_ind.
+    srapply Quotient_ind.
     2: intros; apply path_ishprop.
     intros a' p p'.
     apply qglue, is_ker.

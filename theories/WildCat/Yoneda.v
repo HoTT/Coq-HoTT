@@ -118,11 +118,11 @@ Proof.
   - refine ((isnat (fun a => (f.1 a)^-1$) (f.1 a (Id a)) (Id b))^ @ _); cbn.
     refine (_ @ cate_issect (f.1 a) (Id a)); cbn.
     apply ap.
-    serapply cat_idr_strong.
+    srapply cat_idr_strong.
   - refine ((isnat f.1 (f^-1$.1 b (Id b)) (Id a))^ @ _); cbn.
     refine (_ @ cate_isretr (f.1 b) (Id b)); cbn.
     apply ap.
-    serapply cat_idr_strong.
+    srapply cat_idr_strong.
 Defined.
 
 (** ** The contravariant Yoneda lemma *)

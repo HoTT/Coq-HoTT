@@ -13,7 +13,7 @@ Local Open Scope int_scope.
 Definition loopexp_pos {A : Type} {x : A} (p : x = x) (n : Pos) : (x = x).
 Proof.
   revert n.
-  serapply pos_peano_ind.
+  srapply pos_peano_ind.
   + exact p.
   + intros n q.
     exact (q @ p).
@@ -30,7 +30,7 @@ Lemma loopexp_pos_inv {A : Type} {x : A} (p : x = x) (n : Pos)
   : loopexp_pos p^ n = (loopexp_pos p n)^.
 Proof.
   revert n.
-  serapply pos_peano_ind; cbn; trivial.
+  srapply pos_peano_ind; cbn; trivial.
   unfold loopexp_pos.
   intros n q.
   rewrite 2 pos_peano_ind_beta_pos_succ, q.
@@ -38,7 +38,7 @@ Proof.
   apply ap.
   clear q.
   revert n.
-  serapply pos_peano_ind; cbn; trivial.
+  srapply pos_peano_ind; cbn; trivial.
   intros n q.
   by rewrite pos_peano_ind_beta_pos_succ, concat_p_pp, q.
 Qed.
@@ -47,7 +47,7 @@ Definition ap_loopexp_pos {A B} (f : A -> B) {x : A} (p : x = x) (n : Pos)
   : ap f (loopexp_pos p n) = loopexp_pos (ap f p) n.
 Proof.
   revert n.
-  serapply pos_peano_ind; cbn; trivial.
+  srapply pos_peano_ind; cbn; trivial.
   unfold loopexp_pos.
   intros n q.
   rewrite 2 pos_peano_ind_beta_pos_succ.

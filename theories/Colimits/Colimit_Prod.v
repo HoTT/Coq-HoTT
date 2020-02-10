@@ -18,7 +18,7 @@ Section ColimitProd.
 
   Definition prod_diagram : Diagram G.
   Proof.
-    serapply Build_Diagram.
+    srapply Build_Diagram.
     - exact (fun i => A * (D i)).
     - simpl; intros i j f x.
       exact (fst x, D _f f (snd x)).
@@ -28,7 +28,7 @@ Section ColimitProd.
     : sigma_diagram (fun _ : A => D) ~d~ prod_diagram.
   Proof.
     unshelve econstructor.
-    - serapply Build_DiagramMap; cbn.
+    - srapply Build_DiagramMap; cbn.
       + intro i; apply equiv_sigma_prod0.
       + reflexivity.
     - intro i; cbn.

@@ -194,7 +194,7 @@ Lemma pos_iter_succ_r {A} (f : A -> A) p a
   : pos_iter f (pos_succ p) a = pos_iter f p (f a).
 Proof.
   revert p f a.
-  serapply pos_peano_ind.
+  srapply pos_peano_ind.
   1: hnf; intros; trivial.
   hnf; intros p q f a.
   refine (_ @ _ @ _^).

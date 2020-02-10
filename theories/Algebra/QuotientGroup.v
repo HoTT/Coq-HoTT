@@ -19,9 +19,9 @@ Section GroupCongruenceQuotient.
   Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
     intros x.
-    serapply Quotient_rec.
+    srapply Quotient_rec.
     { intro y; revert x.
-      serapply Quotient_rec.
+      srapply Quotient_rec.
       { intros x.
         apply class_of.
         exact (x * y). }
@@ -31,7 +31,7 @@ Section GroupCongruenceQuotient.
       by apply iscong. }
     intros a b r.
     revert x.
-    serapply Quotient_ind_hprop.
+    srapply Quotient_ind_hprop.
     intro x.
     apply qglue.
     by apply iscong.
@@ -44,7 +44,7 @@ Section GroupCongruenceQuotient.
 
   Instance congquot_negate : Negate CongruenceQuotient.
   Proof.
-    serapply Quotient_functor.
+    srapply Quotient_functor.
     1: apply negate.
     intros x y p.
     rewrite <- (left_identity (-x)).
@@ -62,9 +62,9 @@ Section GroupCongruenceQuotient.
   Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
     intros x y.
-    serapply Quotient_ind_hprop; intro a; revert y.
-    serapply Quotient_ind_hprop; intro b; revert x.
-    serapply Quotient_ind_hprop; intro c.
+    srapply Quotient_ind_hprop; intro a; revert y.
+    srapply Quotient_ind_hprop; intro b; revert x.
+    srapply Quotient_ind_hprop; intro c.
     simpl; by rewrite associativity.
   Defined.
 
@@ -73,14 +73,14 @@ Section GroupCongruenceQuotient.
   Instance congquot_leftidentity
     : LeftIdentity congquot_sgop congquot_mon_unit.
   Proof.
-    serapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_identity.
   Defined.
 
   Instance congquot_rightidentity
     : RightIdentity congquot_sgop congquot_mon_unit.
   Proof.
-    serapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite right_identity.
   Defined.
 
@@ -89,14 +89,14 @@ Section GroupCongruenceQuotient.
   Instance quotientgroup_leftinverse
     : LeftInverse congquot_sgop congquot_negate congquot_mon_unit.
   Proof.
-    serapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_inverse.
   Defined.
 
   Instance quotientgroup_rightinverse
     : RightInverse congquot_sgop congquot_negate congquot_mon_unit.
   Proof.
-    serapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite right_inverse.
   Defined.
 
@@ -112,20 +112,20 @@ Section QuotientGroup.
 
   Instance iscongruence_in_cosetL: IsCongruence in_cosetL.
   Proof.
-    serapply Build_IsCongruence.
+    srapply Build_IsCongruence.
     intros; by apply in_cosetL_cong.
   Defined.
 
   Instance iscongruence_in_cosetR: IsCongruence in_cosetR.
   Proof.
-    serapply Build_IsCongruence.
+    srapply Build_IsCongruence.
     intros; by apply in_cosetR_cong.
   Defined.
 
   (** Now we have to make a choice whether to pick the left or right cosets. Due to existing convention we shall pick left cosets but we note that we could equally have picked right. *)
   Definition QuotientGroup : Group.
   Proof.
-    erapply (Build_Group (G / in_cosetL)).
+    rapply (Build_Group (G / in_cosetL)).
     apply isgroup_quotientgroup.
   Defined.
 

@@ -32,7 +32,7 @@ Section Coequalizer.
 
   Definition cocone_Coeq : Cocone (parallel_pair f g) (Coeq f g).
   Proof.
-    serapply Build_Cocone.
+    srapply Build_Cocone.
     + intros []; [exact (coeq o g)| exact coeq].
     + intros i j phi x; destruct i, j, phi; simpl;
       [ exact (cglue x) | reflexivity ].
@@ -41,19 +41,19 @@ Section Coequalizer.
   Lemma iscoequalizer_Coeq `{Funext}
     : IsColimit (parallel_pair f g) (Coeq f g).
   Proof.
-    serapply (Build_IsColimit cocone_Coeq).
-    serapply Build_UniversalCocone.
+    srapply (Build_IsColimit cocone_Coeq).
+    srapply Build_UniversalCocone.
     intros X.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     - intros C.
-      serapply Coeq_rec.
+      srapply Coeq_rec.
       + exact (legs C false).
       + intros b.
         etransitivity.
         * exact (legs_comm C true false true b).
         * exact (legs_comm C true false false b)^.
     - intros C.
-      serapply path_cocone.
+      srapply path_cocone.
       + intros i x; destruct i; simpl.
         * exact (legs_comm C true false false x).
         * reflexivity.
@@ -80,7 +80,7 @@ Section Coequalizer.
   Definition equiv_Coeq_Coequalizer `{Funext}
     : Coeq f g <~> Coequalizer f g.
   Proof.
-    serapply colimit_unicity.
+    srapply colimit_unicity.
     3: eapply iscoequalizer_Coeq.
     eapply iscolimit_colimit.
   Defined.

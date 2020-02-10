@@ -7,7 +7,7 @@ Require Import Diagrams.Diagram.
 
 Definition span_graph : Graph.
 Proof.
-  serapply (Build_Graph (Unit + Bool)).
+  srapply (Build_Graph (Unit + Bool)).
   intros [i|i] [j|j].
   2: exact Unit.
   all: exact Empty.
@@ -23,7 +23,7 @@ Section Span.
 
   Definition span (f : A -> B) (g : A -> C) : Diagram span_graph.
   Proof.
-    serapply Build_Diagram.
+    srapply Build_Diagram.
     - intros [i|i].
       + exact A.
       + exact (if i then B else C).

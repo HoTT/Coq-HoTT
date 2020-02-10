@@ -67,7 +67,7 @@ Section Cocone.
     : (X -> Y) -> Cocone D Y.
   Proof.
     intros f.
-    serapply Build_Cocone; intro i.
+    srapply Build_Cocone; intro i.
     1: exact (f o C i).
     intros j g x.
     exact (ap f (legs_comm _ i j g x)).
@@ -101,7 +101,7 @@ Section FunctorialityCocone.
   Definition cocone_postcompose_identity {D : Diagram G} `(C : Cocone _ D X)
     : cocone_postcompose C idmap = C.
   Proof.
-    serapply path_cocone; intro i.
+    srapply path_cocone; intro i.
     1: reflexivity.
     intros j g x; simpl.
     refine (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
@@ -112,7 +112,7 @@ Section FunctorialityCocone.
     : cocone_postcompose C (g o f)
       = cocone_postcompose (cocone_postcompose C f) g.
   Proof.
-    serapply path_cocone; intro i.
+    srapply path_cocone; intro i.
     1: reflexivity.
     intros j h x; simpl.
     refine (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
@@ -126,7 +126,7 @@ Section FunctorialityCocone.
     : (Cocone D2 X) -> (Cocone D1 X).
   Proof.
     intro C.
-    serapply Build_Cocone; intro i.
+    srapply Build_Cocone; intro i.
     1: exact (C i o m i).
     intros j g x; simpl.
     etransitivity.
@@ -141,7 +141,7 @@ Section FunctorialityCocone.
   Definition cocone_precompose_identity (D : Diagram G) (X : Type)
     : cocone_precompose (X:=X) (diagram_idmap D) == idmap.
   Proof.
-    intro C; serapply path_cocone; simpl.
+    intro C; srapply path_cocone; simpl.
     1: reflexivity.
     intros; simpl.
     refine (concat_p1 _).
@@ -153,7 +153,7 @@ Section FunctorialityCocone.
       == cocone_precompose (diagram_comp m2 m1).
   Proof.
     intro C; simpl.
-    serapply path_cocone.
+    srapply path_cocone.
     1: reflexivity.
     intros i j g x; simpl.
     refine (concat_p1 _ @ _ @ (concat_1p _)^).
@@ -175,7 +175,7 @@ Section FunctorialityCocone.
     : cocone_postcompose (cocone_precompose m C) f
       = cocone_precompose m (cocone_postcompose C f).
   Proof.
-    serapply path_cocone; intro i.
+    srapply path_cocone; intro i.
     1: reflexivity.
     intros j g x; simpl.
     refine (concat_p1 _ @ _ @ (concat_1p _)^).
@@ -191,7 +191,7 @@ Section FunctorialityCocone.
   Global Instance cocone_precompose_equiv {D1 D2 : Diagram G}
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cocone_precompose (X:=X) m).
   Proof.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     1: apply (cocone_precompose (diagram_equiv_inv m)).
     + intros C.
       etransitivity.
@@ -210,7 +210,7 @@ Section FunctorialityCocone.
   Global Instance cocone_postcompose_equiv {D : Diagram G} `(f : X <~> Y)
     : IsEquiv (fun C : Cocone D X => cocone_postcompose C f).
   Proof.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     1: exact (fun C => cocone_postcompose C f^-1).
     + intros C.
       etransitivity.
@@ -238,18 +238,18 @@ Section FunctorialityCocone.
     (m: D1 ~d~ D2) {X} (C : Cocone D2 X) (_ : UniversalCocone C)
     : UniversalCocone (cocone_precompose (X:=X) m C).
   Proof.
-    serapply Build_UniversalCocone; intro.
+    srapply Build_UniversalCocone; intro.
     rewrite (path_forall _ _ (fun f => cocone_precompose_postcompose m f C)).
-    serapply isequiv_compose.
+    srapply isequiv_compose.
   Defined.
 
   Global Instance cocone_postcompose_equiv_universality {D: Diagram G} `(f: X <~> Y)
     (C : Cocone D X) (_ : UniversalCocone C)
     : UniversalCocone (cocone_postcompose C f).
   Proof.
-    serapply Build_UniversalCocone; intro.
+    srapply Build_UniversalCocone; intro.
     rewrite <- (path_forall _ _ (fun g => cocone_postcompose_comp f g C)).
-    serapply isequiv_compose.
+    srapply isequiv_compose.
   Defined.
 
 End FunctorialityCocone.

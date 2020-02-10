@@ -156,7 +156,7 @@ Proof.
   rewrite negate_involutive.
   rewrite (right_identity (-y * x)).
   change (in_cosetL y x <~> in_cosetL x y).
-  serapply equiv_iff_hprop;
+  srapply equiv_iff_hprop;
   by intro; symmetry.
 Defined.
 
@@ -175,7 +175,7 @@ Definition equiv_in_cosetL_symm {G : Group} `{!IsSubgroup N G}
   : forall x y, in_cosetL x y <~> in_cosetL y x.
 Proof.
   intros x y.
-  serapply equiv_iff_hprop.
+  srapply equiv_iff_hprop.
   all: by intro.
 Defined.
 
@@ -183,7 +183,7 @@ Definition equiv_in_cosetR_symm {G : Group} `{!IsSubgroup N G}
   : forall x y, in_cosetR x y <~> in_cosetR y x.
 Proof.
   intros x y.
-  serapply equiv_iff_hprop.
+  srapply equiv_iff_hprop.
   all: by intro.
 Defined.
 

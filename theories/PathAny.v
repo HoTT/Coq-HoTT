@@ -37,7 +37,7 @@ Definition equiv_path_issig_contr {A B : Type} {P : A -> A -> Type}
 Proof.
   apply (equiv_path_along_equiv e).
   intro a0.
-  serapply equiv_path_from_contr.
+  srapply equiv_path_from_contr.
   apply Prefl.
 Defined.
 

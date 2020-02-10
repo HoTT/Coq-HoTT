@@ -29,8 +29,8 @@ Qed.
 
 Global Instance isconnected_Torus `{Univalence} : IsConnected 0 Torus.
 Proof.
-  serapply (isconnected_equiv' _ _ equiv_torus_prod_S1^-1).
-  serapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).
+  srapply (isconnected_equiv' _ _ equiv_torus_prod_S1^-1).
+  srapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).
 Qed.
 
 (** We give these notations for the pointed versions. *)
@@ -43,16 +43,16 @@ Proof.
   srefine (_ o*E _).
   1: exact (loops (S1 * S1)).
   1: apply pequiv_loops_functor.
-  { serapply Build_pEquiv.
-    1: serapply Build_pMap.
+  { srapply Build_pEquiv.
+    1: srapply Build_pMap.
     1: exact equiv_torus_prod_S1.
     1: reflexivity.
     exact _. }
   srefine (_ o*E _).
   1: exact (loops S1 * loops S1).
   1: apply loops_prod.
-  simple notypeclasses refine (Build_pEquiv _ _ _ _).
-  1: serapply Build_pMap.
+  snrapply Build_pEquiv.
+  1: srapply Build_pMap.
   { apply functor_prod.
     1,2: apply equiv_loopS1_int. }
   1: reflexivity.
@@ -61,7 +61,7 @@ Defined.
 
 Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
 Proof.
-  serapply Build_pEquiv'.
+  srapply Build_pEquiv'.
   1: apply equiv_torus_prod_S1.
   reflexivity.
 Defined.

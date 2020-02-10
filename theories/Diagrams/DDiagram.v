@@ -7,7 +7,7 @@ Require Import Diagrams.Diagram.
 
 Definition integral {G : Graph} (D : Diagram G) : Graph.
 Proof.
-  serapply Build_Graph.
+  srapply Build_Graph.
   + exact {i : G & D i}.
   + intros i j.
     exact {g : G i.1 j.1 & D _f g i.2 = j.2}.
@@ -23,7 +23,7 @@ Definition DDiagram {G : Graph} (D : Diagram G)
   Definition diagram_sigma {G : Graph} {D : Diagram G} (E : DDiagram D)
     : Diagram G.
   Proof.
-    serapply Build_Diagram.
+    srapply Build_Diagram.
     - intro i.
       exact {x : D i & E (i; x)}.
     - intros i j g x. simpl in *.

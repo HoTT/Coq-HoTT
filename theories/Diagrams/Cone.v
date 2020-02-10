@@ -68,7 +68,7 @@ Section Cone.
 
   Definition cone_precompose (C : Cone X D) {Y : Type} (f : Y -> X) : Cone Y D.
   Proof.
-    serapply Build_Cone; intro i.
+    srapply Build_Cone; intro i.
     1: exact (C i o f).
     intros j g x.
     apply legs_comm.
@@ -101,7 +101,7 @@ Section FunctorialityCone.
   Definition cone_precompose_identity {D : Diagram G} `(C : Cone X _ D)
     : cone_precompose C idmap = C.
   Proof.
-    serapply path_cone; intro i.
+    srapply path_cone; intro i.
     1: reflexivity.
     intros j g x; simpl.
     refine (concat_p1 _ @ (concat_1p _)^).
@@ -112,7 +112,7 @@ Section FunctorialityCone.
     : cone_precompose C (g o f)
     = cone_precompose (cone_precompose C g) f.
   Proof.
-    serapply path_cone; intro i.
+    srapply path_cone; intro i.
     1: reflexivity.
     intros j h x; simpl.
     refine (concat_p1 _ @ (concat_1p _)^).
@@ -126,7 +126,7 @@ Section FunctorialityCone.
     : (Cone X D1) -> (Cone X D2).
   Proof.
     intro C.
-    serapply Build_Cone; intro i.
+    srapply Build_Cone; intro i.
     1: exact (m i o C i).
     intros j g x; simpl.
     etransitivity.
@@ -139,7 +139,7 @@ Section FunctorialityCone.
   Definition cone_postcompose_identity (D : Diagram G) (X : Type)
     : cone_postcompose (X:=X) (diagram_idmap D) == idmap.
   Proof.
-    intro C; serapply path_cone; simpl.
+    intro C; srapply path_cone; simpl.
     1: reflexivity.
     intros; simpl.
     refine (_ @ (concat_1p _)^).
@@ -152,7 +152,7 @@ Section FunctorialityCone.
       == cone_postcompose (diagram_comp m2 m1).
   Proof.
     intro C; simpl.
-    serapply path_cone.
+    srapply path_cone.
     1: reflexivity.
     intros i j g x; simpl.
     refine (concat_p1 _ @ _ @ (concat_1p _)^).
@@ -172,7 +172,7 @@ Section FunctorialityCone.
     : cone_precompose (cone_postcompose m C) f
       = cone_postcompose m (cone_precompose C f).
   Proof.
-    serapply path_cone; intro i.
+    srapply path_cone; intro i.
     1: reflexivity.
     intros j g x; simpl.
     refine (concat_p1 _ @ _ @ (concat_1p _)^).
@@ -184,7 +184,7 @@ Section FunctorialityCone.
   Global Instance cone_precompose_equiv {D1 D2 : Diagram G}
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cone_postcompose (X:=X) m).
   Proof.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     1: apply (cone_postcompose (diagram_equiv_inv m)).
     + intros C.
       etransitivity.
@@ -203,7 +203,7 @@ Section FunctorialityCone.
   Global Instance cone_postcompose_equiv {D : Diagram G} `(f : Y <~> X)
     : IsEquiv (fun C : Cone X D => cone_precompose C f).
   Proof.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     1: exact (fun C => cone_precompose C f^-1).
     + intros C.
       etransitivity.
@@ -231,18 +231,18 @@ Section FunctorialityCone.
     (m: D1 ~d~ D2) {X} (C : Cone X D1) (_ : UniversalCone C)
     : UniversalCone (cone_postcompose (X:=X) m C).
   Proof.
-    serapply Build_UniversalCone; intro.
+    srapply Build_UniversalCone; intro.
     rewrite (path_forall _ _ (fun f => cone_postcompose_precompose m f C)).
-    serapply isequiv_compose.
+    srapply isequiv_compose.
   Defined.
 
   Global Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y <~> X)
     (C : Cone X D) (_ : UniversalCone C)
     : UniversalCone (cone_precompose C f).
   Proof.
-    serapply Build_UniversalCone; intro.
+    srapply Build_UniversalCone; intro.
     rewrite <- (path_forall _ _ (fun g => cone_precompose_comp g f C)).
-    serapply isequiv_compose.
+    srapply isequiv_compose.
   Defined.
 
 End FunctorialityCone.

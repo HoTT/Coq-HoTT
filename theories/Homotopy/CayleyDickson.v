@@ -55,7 +55,7 @@ End CayleyDicksonSpherioid_Properties.
 Global Instance conjugate_susp (A : Type) `(Negate A)
   : Conjugate (Susp A).
 Proof.
-  serapply Susp_rec.
+  srapply Susp_rec.
   + exact North.
   + exact South.
   + intro a.
@@ -65,7 +65,7 @@ Defined.
 Global Instance negate_susp (A : Type) `(Negate A)
   : Negate (Susp A).
 Proof.
-  serapply Susp_rec.
+  srapply Susp_rec.
   + exact South.
   + exact North.
   + intro a.
@@ -85,7 +85,7 @@ Class CayleyDicksonImaginaroid (A : Type) := {
 Global Instance involutive_negate_susp {A} `(CayleyDicksonImaginaroid A)
   : Involutive (negate_susp A cdi_negate).
 Proof.
-  serapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind_dp; try reflexivity.
   intro x.
   apply dp_paths_FFlr.
   rewrite concat_p1.
@@ -100,7 +100,7 @@ Defined.
 Global Instance involutive_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
   : Involutive (conjugate_susp A cdi_negate).
 Proof.
-  serapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind_dp; try reflexivity.
   intro x.
   apply dp_paths_FFlr.
   rewrite concat_p1.
@@ -117,7 +117,7 @@ Defined.
 Global Instance swapop_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
   : SwapOp negate (conjugate_susp A cdi_negate).
 Proof.
-  serapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind_dp; try reflexivity.
   intro x.
   apply dp_paths_FlFr.
   rewrite concat_p1.
@@ -137,13 +137,13 @@ Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
 Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
-  serapply cds_conjug_left_inv.
+  srapply cds_conjug_left_inv.
 Defined.
 
 Global Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
   : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
-  serapply cds_conjug_right_inv.
+  srapply cds_conjug_right_inv.
 Defined.
 
 Global Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
@@ -161,7 +161,7 @@ Defined.
 Global Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
   : FactorNegLeft (negate_susp A cdi_negate) hspace_op.
 Proof.
-  serapply cds_factorneg_l.
+  srapply cds_factorneg_l.
 Defined.
 
 (** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to a H-space structure on the join of the suspension of A with itself. *)
@@ -231,9 +231,9 @@ Section ImaginaroidHSpace.
   Global Instance cd_op
     : SgOp (Build_pType (Join (Susp A) (Susp A)) (joinl (point _))).
   Proof.
-    serapply Join_rec; hnf.
+    srapply Join_rec; hnf.
     { intro a.
-      serapply Join_rec; hnf.
+      srapply Join_rec; hnf.
       - intro c.
         exact (joinl (hspace_op a c)).
       - intro d.
@@ -241,7 +241,7 @@ Section ImaginaroidHSpace.
       - intros x y.
         apply jglue. }
     { intro b.
-      serapply Join_rec; hnf.
+      srapply Join_rec; hnf.
       - intro c.
         exact (joinr (hspace_op c b)).
       - intro d.
@@ -251,11 +251,11 @@ Section ImaginaroidHSpace.
         apply jglue. }
     intros a b.
     apply path_forall.
-    serapply Join_ind.
+    srapply Join_ind.
     1: intro; apply jglue.
     1: intro; cbn; symmetry; apply jglue.
     intros c d.
-    serapply sq_dp^-1.
+    srapply sq_dp^-1.
     refine (sq_ccGG _^ _^ _).
     1,2: apply Join_rec_beta_jglue.
     change (PathSquare (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
@@ -264,7 +264,7 @@ Section ImaginaroidHSpace.
        <- (lemma3 b c), <- (lemma4 a b c d).
     refine (sq_GGGG _ _ _ _ _).
     2,4: apply ap.
-    1,2,3,4: serapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
+    1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
     refine (sq_cGcG _ _ _).
     1,2: exact (ap_V _ (jglue _ _ )).
     refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
@@ -273,7 +273,7 @@ Section ImaginaroidHSpace.
     clear a b c d.
     change (forall s : Susp A,
       Diamond (-mon_unit) s (mon_unit) s).
-    serapply Susp_ind_dp; hnf.
+    srapply Susp_ind_dp; hnf.
     1: by apply diamond_v.
     1: by apply diamond_h.
     intro a.
@@ -283,11 +283,11 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op (point _).
   Proof.
-    serapply Join_ind; simpl.
+    srapply Join_ind; simpl.
     { intro a; apply ap.
-      serapply hspace_left_identity. }
+      srapply hspace_left_identity. }
     { intro b; apply ap.
-      serapply hspace_left_identity. }
+      srapply hspace_left_identity. }
     intros a b.
     apply sq_dp^-1.
     rewrite ap_idmap, Join_rec_beta_jglue.
@@ -297,11 +297,11 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_right_identity
     : RightIdentity cd_op (point _).
   Proof.
-    serapply Join_ind; simpl.
+    srapply Join_ind; simpl.
     { intro a; apply ap.
-      serapply hspace_right_identity. }
+      srapply hspace_right_identity. }
     { intro b; apply ap.
-      serapply hspace_left_identity. }
+      srapply hspace_left_identity. }
     intros a b.
     apply sq_dp^-1.
     rewrite ap_idmap.

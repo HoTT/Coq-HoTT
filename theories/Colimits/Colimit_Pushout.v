@@ -24,7 +24,7 @@ Section PO.
              (pp' : inl' o f == inr' o g)
     : Cocone (span f g) Z.
   Proof.
-    serapply Build_Cocone.
+    srapply Build_Cocone.
     - intros [|[]]; [ exact (inr' o g) | exact inl' | exact inr' ].
     - intros [] [] []; cbn. destruct b.
       + exact pp'.
@@ -60,7 +60,7 @@ Section PO.
     (r' : forall c, P (por c)) (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall w, P w.
   Proof.
-    serapply Colimit_ind.
+    srapply Colimit_ind.
     - intros [[]|[]] x; cbn.
       + exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
       + exact (l' x).
@@ -130,13 +130,13 @@ Section PO.
   Global Instance PO_of_equiv (Hf : IsEquiv f)
     : IsEquiv por.
   Proof.
-    serapply isequiv_adjointify.
-    - serapply PO_rec.
+    srapply isequiv_adjointify.
+    - srapply PO_rec.
       + exact (g o f^-1).
       + exact idmap.
       + intro x.
         apply ap, eissect.
-    - serapply PO_ind; cbn.
+    - srapply PO_ind; cbn.
       + intro.
         refine ((popp _)^ @ _).
         apply ap, eisretr.
@@ -164,20 +164,20 @@ Section is_PO_pushout.
 
   Definition is_PO_pushout : is_PO f g (Pushout f g).
   Proof.
-    serapply Build_IsColimit.
-    - serapply Build_span_cocone.
+    srapply Build_IsColimit.
+    - srapply Build_span_cocone.
       + exact (push o inl).
       + exact (push o inr).
       + exact pglue.
-    - serapply Build_UniversalCocone.
-      intro Y; serapply isequiv_adjointify.
+    - srapply Build_UniversalCocone.
+      intro Y; srapply isequiv_adjointify.
       + intro Co.
-        serapply Pushout_rec.
+        srapply Pushout_rec.
         * exact (pol' Co).
         * exact (por' Co).
         * exact (popp' Co).
       + intros [Co Co'].
-        serapply path_cocone; cbn.
+        srapply path_cocone; cbn.
         * intros [[]|[]] x; simpl.
           1: apply (Co' (inl tt) (inr false) tt).
           all: reflexivity.
@@ -188,7 +188,7 @@ Section is_PO_pushout.
           hott_simpl.
       + intro h.
         apply path_forall.
-        serapply Pushout_ind; cbn.
+        srapply Pushout_ind; cbn.
         1,2: reflexivity.
         intro a; cbn.
         rewrite transport_paths_FlFr, concat_p1.
@@ -200,7 +200,7 @@ Section is_PO_pushout.
 
   Definition equiv_pushout_PO : Pushout f g <~> PO f g.
   Proof.
-    serapply colimit_unicity.
+    srapply colimit_unicity.
     3: eapply is_PO_pushout.
     eapply iscolimit_colimit.
   Defined.

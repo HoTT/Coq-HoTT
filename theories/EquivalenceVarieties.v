@@ -89,7 +89,7 @@ Proof.
   (* Get rid of that pesky record. *)
   refine (contr_equiv _ (issig_isequiv f)).
   (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
-  serapply (contr_equiv' {g : B -> A & Sect g f}).
+  srapply (contr_equiv' {g : B -> A & Sect g f}).
   2:apply contr_sect_equiv; assumption.  (* What remains afterwards is just the type of sections of [f]. *)
   apply equiv_functor_sigma_id; intros g.
   symmetry; apply equiv_sigma_contr; intros r.

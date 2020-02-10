@@ -10,7 +10,7 @@ Local Open Scope int_scope.
 
 Definition Z : AbGroup.
 Proof.
-  serapply (Build_AbGroup Int); repeat split.
+  srapply (Build_AbGroup Int); repeat split.
   + (** Operation *)
     exact int_add.
   + (** Unit *)

@@ -64,7 +64,7 @@ Module Export Colimit.
   Definition Colimit_rec {G : Graph} {D : Diagram G} (P : Type) (C : Cocone D P)
     : Colimit D -> P.
   Proof.
-    serapply (Colimit_ind _ C).
+    srapply (Colimit_ind _ C).
     intros i j g x.
     refine (transport_const _ _ @ _).
     apply legs_comm.
@@ -76,8 +76,8 @@ Module Export Colimit.
   Proof.
     unfold Colimit_rec, Colimit_ind.
     eapply (cancelL (transport_const (colimp i j g x) _)).
-    serapply ((apD_const (Colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
-    serapply (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
+    srapply ((apD_const (Colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
+    srapply (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
   Defined.
 
 End Colimit.
@@ -87,22 +87,22 @@ End Colimit.
 Global Instance isequiv_colimit_rec `{Funext} {G : Graph}
   {D : Diagram G} (P : Type) : IsEquiv (Colimit_rec (D:=D) P).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   { intro f.
-    serapply Build_Cocone.
+    srapply Build_Cocone.
     1: intros i g; apply f, (colim i g).
     intros i j g x.
     apply ap, colimp. }
   { intro.
     apply path_forall.
-    serapply Colimit_ind.
+    srapply Colimit_ind.
     1: reflexivity.
     intros ????; cbn.
     rewrite transport_paths_FlFr.
     rewrite Colimit_rec_beta_colimp.
     hott_simpl. }
   { intros [].
-    serapply path_cocone.
+    srapply path_cocone.
     1: reflexivity.
     intros ????; cbn.
     rewrite Colimit_rec_beta_colimp.
@@ -120,17 +120,17 @@ Definition cocone_colimit {G : Graph} (D : Diagram G) : Cocone D (Colimit D)
 Global Instance unicocone_colimit `{Funext} {G : Graph} (D : Diagram G)
   : UniversalCocone (cocone_colimit D).
 Proof.
-  serapply Build_UniversalCocone; intro Y.
-  serapply (isequiv_adjointify _ (Colimit_rec Y) _ _).
+  srapply Build_UniversalCocone; intro Y.
+  srapply (isequiv_adjointify _ (Colimit_rec Y) _ _).
   - intros C.
-    serapply path_cocone.
+    srapply path_cocone.
     1: reflexivity.
     intros i j f x; simpl.
     refine (concat_p1 _ @ _ @ (concat_1p _)^).
     apply Colimit_rec_beta_colimp.
   - intro f.
     apply path_forall.
-    serapply Colimit_ind.
+    srapply Colimit_ind.
     1: reflexivity.
     intros i j g x; simpl.
     rewrite transport_paths_FlFr.
@@ -155,7 +155,7 @@ Section FunctorialityColimit.
     : IsColimit D2 Q -> IsColimit D1 Q.
   Proof.
     intros HQ.
-    serapply (Build_IsColimit (cocone_precompose m HQ) _).
+    srapply (Build_IsColimit (cocone_precompose m HQ) _).
     apply cocone_precompose_equiv_universality, HQ.
   Defined.
 
@@ -163,7 +163,7 @@ Section FunctorialityColimit.
     : IsColimit D Q -> IsColimit D Q'.
   Proof.
     intros HQ.
-    serapply (Build_IsColimit (cocone_postcompose HQ f) _).
+    srapply (Build_IsColimit (cocone_postcompose HQ f) _).
     apply cocone_postcompose_equiv_universality, HQ.
   Defined.
 
@@ -194,7 +194,7 @@ Section FunctorialityColimit.
            (functor_colimit m HQ1 HQ2).
   Proof.
     apply ap10.
-    serapply (equiv_inj (cocone_postcompose HQ2) _).
+    srapply (equiv_inj (cocone_postcompose HQ2) _).
     1: apply HQ2.
     etransitivity.
     2:symmetry; apply cocone_postcompose_identity.
@@ -210,7 +210,7 @@ Section FunctorialityColimit.
            (functor_colimit (diagram_equiv_inv m) HQ2 HQ1).
   Proof.
     apply ap10.
-    serapply (equiv_inj (cocone_postcompose HQ1) _).
+    srapply (equiv_inj (cocone_postcompose HQ1) _).
     1: apply HQ1.
     etransitivity.
     2:symmetry; apply cocone_postcompose_identity.
@@ -239,8 +239,8 @@ Theorem colimit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsColimit D Q1) (HQ2 : IsColimit D Q2)
   : Q1 <~> Q2.
 Proof.
-  serapply equiv_functor_colimit.
-  serapply (Build_diagram_equiv (diagram_idmap D)).
+  srapply equiv_functor_colimit.
+  srapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 
 (** * Colimits are left adjoint to constant diagram *)

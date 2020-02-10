@@ -404,7 +404,7 @@ Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   - apply moveL_transport_V.
   - intro q; apply moveR_moveL_transport_V.
   - intro q; apply moveL_moveR_transport_p.
@@ -434,7 +434,7 @@ Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   - apply moveL_transport_p.
   - intro q; apply moveR_moveL_transport_p.
   - intro q; apply moveL_moveR_transport_V.
@@ -449,7 +449,7 @@ Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   - apply moveR_transport_p.
   - intro q; apply moveL_moveR_transport_p.
   - intro q; apply moveR_moveL_transport_V.
@@ -464,7 +464,7 @@ Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   - apply moveR_transport_V.
   - intro q; apply moveL_moveR_transport_V.
   - intro q; apply moveR_moveL_transport_p.

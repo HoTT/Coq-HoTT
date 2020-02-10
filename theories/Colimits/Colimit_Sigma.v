@@ -17,7 +17,7 @@ Section ColimitSigma.
 
   Definition sigma_diagram : Diagram G.
   Proof.
-    serapply Build_Diagram.
+    srapply Build_Diagram.
     - exact (fun i => {y: Y & D y i}).
     - simpl; intros i j g x.
       exact (x.1; D x.1 _f g x.2).
@@ -27,7 +27,7 @@ Section ColimitSigma.
 
   Definition sigma_diagram_map (y: Y) : DiagramMap (D y) sigma_diagram.
   Proof.
-    serapply Build_DiagramMap.
+    srapply Build_DiagramMap.
     { intros i x.
       exists y.
       exact x. }
@@ -41,10 +41,10 @@ Section ColimitSigma.
   Definition sigma_cocone (C : forall y, Cocone (D y) (Q y))
     : Cocone sigma_diagram (sig Q).
   Proof.
-    serapply Build_Cocone; simpl; intros i x.
+    srapply Build_Cocone; simpl; intros i x.
     1: exact (x.1; legs (C x.1) i x.2).
     simpl; intros g x'.
-    serapply path_sigma'.
+    srapply path_sigma'.
     1: reflexivity.
     apply legs_comm.
   Defined.
@@ -55,18 +55,18 @@ Section ColimitSigma.
   : IsColimit sigma_diagram (sig Q).
   Proof.
     pose (SigmaC := sigma_cocone (fun y => HQ y)).
-    serapply (Build_IsColimit SigmaC).
-    serapply Build_UniversalCocone.
-    intros X; serapply isequiv_adjointify.
+    srapply (Build_IsColimit SigmaC).
+    srapply Build_UniversalCocone.
+    intros X; srapply isequiv_adjointify.
     - intros CX x.
-      serapply (cocone_postcompose_inv (HQ x.1) _ x.2).
-      serapply (cocone_precompose _ CX).
+      srapply (cocone_postcompose_inv (HQ x.1) _ x.2).
+      srapply (cocone_precompose _ CX).
       apply sigma_diagram_map.
     - intro CX.
       pose (CXy := fun y => cocone_precompose (sigma_diagram_map y) CX).
       change (cocone_postcompose SigmaC
         (fun x => cocone_postcompose_inv (HQ x.1) (CXy x.1) x.2) = CX).
-      serapply path_cocone; simpl.
+      srapply path_cocone; simpl.
       + intros i x.
         change (legs (cocone_postcompose (HQ x.1)
                  (cocone_postcompose_inv (HQ x.1) (CXy x.1))) i x.2 = CX i x).
@@ -106,9 +106,9 @@ Section ColimitSigma.
     - intros f.
       apply path_forall; intros [y x]; simpl.
       rewrite <- cocone_precompose_postcompose.
-      serapply (apD10 (g := fun x => f (y; x)) _ x).
-      serapply equiv_moveR_equiv_V.
-      serapply path_cocone.
+      srapply (apD10 (g := fun x => f (y; x)) _ x).
+      srapply equiv_moveR_equiv_V.
+      srapply path_cocone.
       1: reflexivity.
       intros i j g x'; simpl.
       hott_simpl.
@@ -126,12 +126,12 @@ Section SigmaDiagram.
   Definition sigma_diagram_functor (m : forall y, DiagramMap (D1 y) (D2 y))
   : DiagramMap (sigma_diagram D1) (sigma_diagram D2).
   Proof.
-    serapply Build_DiagramMap.
+    srapply Build_DiagramMap.
     - intros i.
-      serapply (functor_sigma idmap _).
+      srapply (functor_sigma idmap _).
       intros y; apply m.
     - intros i j g x; simpl in *.
-    serapply path_sigma'.
+    srapply path_sigma'.
     1: reflexivity.
     simpl.
     apply (DiagramMap_comm (m x.1)).
@@ -140,9 +140,9 @@ Section SigmaDiagram.
   Definition sigma_diag_functor_equiv (m : forall y, (D1 y) ~d~ (D2 y))
     : (sigma_diagram D1) ~d~ (sigma_diagram D2).
   Proof.
-    serapply (Build_diagram_equiv (sigma_diagram_functor m)).
+    srapply (Build_diagram_equiv (sigma_diagram_functor m)).
     intros i.
-    serapply isequiv_functor_sigma.
+    srapply isequiv_functor_sigma.
     intros y; apply m.
   Defined.
 

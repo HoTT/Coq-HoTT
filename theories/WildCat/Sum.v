@@ -8,7 +8,7 @@ Require Import WildCat.Core.
 Global Instance is01cat_sum A B `{ Is01Cat A } `{ Is01Cat B}
   : Is01Cat (A + B).
 Proof.
-  serapply Build_Is01Cat.
+  srapply Build_Is01Cat.
   - intros [a1 | b1] [a2 | b2].
     + exact (a1 $-> a2).
     + exact Empty.
@@ -23,20 +23,20 @@ Defined.
 Global Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
   : Is1Cat (A + B).
 Proof.
-  serapply Build_Is1Cat.
+  srapply Build_Is1Cat.
   - intros x y.
-    serapply Build_Is01Cat;
+    srapply Build_Is01Cat;
     destruct x as [a1 | b1], y as [a2 | b2];
     try contradiction; cbn;
     (apply Hom || apply Id || intros a b c; apply cat_comp).
-  - intros x y; serapply Build_Is0Gpd.
+  - intros x y; srapply Build_Is0Gpd.
     destruct x as [a1 | b1], y as [a2 | b2];
     try contradiction; cbn; intros f g; apply gpd_rev.
-  - intros x y z h; serapply Build_Is0Functor.
+  - intros x y z h; srapply Build_Is0Functor.
     intros f g p.
     destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
     try contradiction; cbn in *; change (f $== g) in p; exact (h $@L p).
-  - intros x y z h; serapply Build_Is0Functor.
+  - intros x y z h; srapply Build_Is0Functor.
     intros f g p.
     destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
     try contradiction; cbn in *; change (f $== g) in p; exact (p $@R h).

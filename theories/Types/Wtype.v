@@ -82,6 +82,6 @@ Proof.
   { transitivity {p : a = a0 & transport (fun a => B a -> W A B) p w = w0}.
     { apply equiv_functor_sigma_id; intro p; induction p.
       by apply equiv_path_forall. }
-    by erapply (equiv_path_sigma _ (a;w) (a0;w0)). }
+    by rapply (equiv_path_sigma _ (a;w) (a0;w0)). }
   apply (@trunc_sigma _ _ _ (ac a a0)); intro p; rapply @trunc_forall.
 Defined.

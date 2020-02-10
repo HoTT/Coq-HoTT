@@ -34,7 +34,7 @@ Section Join.
     (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
     : forall (x : Join A B), P x.
   Proof.
-    serapply (Pushout_ind P P_A P_B).
+    srapply (Pushout_ind P P_A P_B).
     intros [a b].
     apply dp_path_transport^-1.
     exact (P_g a b).
@@ -46,13 +46,13 @@ Section Join.
     : dp_apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
     apply dp_apD_path_transport.
-    serapply Pushout_ind_beta_pglue.
+    srapply Pushout_ind_beta_pglue.
   Defined.
 
   Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
     (P_g : forall a b, P_A a = P_B b) : Join A B -> P.
   Proof.
-    serapply (Pushout_rec P P_A P_B).
+    srapply (Pushout_rec P P_A P_B).
     intros [a b].
     apply P_g.
   Defined.
@@ -61,7 +61,7 @@ Section Join.
     (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a b
     : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
-    serapply Pushout_rec_beta_pglue.
+    srapply Pushout_rec_beta_pglue.
   Defined.
 
   (** Joining with a contractible type produces a contractible type *)
@@ -106,7 +106,7 @@ Section Join.
   Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D.
   Proof.
-    serapply Join_rec.
+    srapply Join_rec.
     1: intro a; apply joinl, f, a.
     1: intro b; apply joinr, g, b.
     intros a b.
@@ -117,7 +117,7 @@ Section Join.
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
     : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
   Proof.
-    serapply Join_ind.
+    srapply Join_ind.
     1,2: reflexivity.
     intros a b.
     simpl.
@@ -132,7 +132,7 @@ Section Join.
   Definition functor_join_idmap {A}
     : functor_join idmap idmap == (idmap : Join A A -> Join A A).
   Proof.
-    serapply Join_ind.
+    srapply Join_ind.
     1,2: reflexivity.
     intros a b.
     cbn; apply dp_paths_FlFr.
@@ -145,9 +145,9 @@ Section Join.
     (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
     : IsEquiv (functor_join f g).
   Proof.
-    serapply isequiv_adjointify.
+    srapply isequiv_adjointify.
     1: apply (functor_join f^-1 g^-1).
-    1,2: serapply Join_ind.
+    1,2: srapply Join_ind.
     1,2: intro; simpl; apply ap, eisretr.
     2,3: intro; simpl; apply ap, eissect.
     1,2: intros c d.

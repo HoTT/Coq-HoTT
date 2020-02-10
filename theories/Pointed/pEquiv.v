@@ -19,7 +19,7 @@ Defined.
    a pointed equivalence *)
 Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
 Proof.
-  serapply Build_pEquiv.
+  srapply Build_pEquiv.
   1: apply (Build_pMap _ _ f^-1).
   1: apply moveR_equiv_V; symmetry; apply point_eq.
   exact _.
@@ -139,9 +139,9 @@ Qed.
 Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : pSect f' f) (s : pSect f f') : A <~>* B.
 Proof.
-  serapply Build_pEquiv.
+  srapply Build_pEquiv.
   1: assumption.
-  serapply (isequiv_adjointify f f').
+  srapply (isequiv_adjointify f f').
   1: apply r.
   apply s.
 Defined.
@@ -151,9 +151,9 @@ Defined.
 Definition pequiv_adjointify' {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : Sect f' f) (s : Sect f f') : A <~>* B.
 Proof.
-  serapply Build_pEquiv.
+  srapply Build_pEquiv.
   1: assumption.
-  serapply (isequiv_adjointify f f').
+  srapply (isequiv_adjointify f f').
   1: apply r.
   apply s.
 Defined.

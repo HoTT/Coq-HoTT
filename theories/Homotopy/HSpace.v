@@ -31,7 +31,7 @@ Section HSpaceProperties.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
     + apply Unit_ind.
-      serapply (isequiv_homotopic idmap).
+      srapply (isequiv_homotopic idmap).
       intro a; symmetry.
       apply left_identity.
   Defined.
@@ -42,7 +42,7 @@ Section HSpaceProperties.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
     + apply Unit_ind.
-      serapply (isequiv_homotopic idmap).
+      srapply (isequiv_homotopic idmap).
       intro a; symmetry.
       apply right_identity.
   Defined.

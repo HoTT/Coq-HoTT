@@ -92,9 +92,9 @@ Defined.
 
 Lemma pequiv_pSph1_to_S1 : psphere 1 <~>* (Build_pType S1 Circle.base).
 Proof.
-  serapply Build_pEquiv.
-  1: serapply Build_pMap.
-  1: serapply Sph1_to_S1.
+  srapply Build_pEquiv.
+  1: srapply Build_pMap.
+  1: srapply Sph1_to_S1.
   1: reflexivity.
   exact _.
 Defined.
@@ -239,19 +239,19 @@ Defined.
 (** S0 is 0-truncated. *)
 Global Instance istrunc_s0 : IsHSet (Sphere 0).
 Proof.
-  serapply (trunc_equiv _ Sph0_to_Bool^-1).
+  srapply (trunc_equiv _ Sph0_to_Bool^-1).
 Defined.
 
 (** S1 is 1-truncated. *)
 Global Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).
 Proof.
-  serapply (trunc_equiv _ Sph1_to_S1^-1).
+  srapply (trunc_equiv _ Sph1_to_S1^-1).
 Defined.
 
 Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
 Proof.
   induction n.
-  { serapply contr_inhabited_hprop.
+  { srapply contr_inhabited_hprop.
     apply tr, North. }
   apply isconnected_susp.
 Defined.

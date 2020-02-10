@@ -193,9 +193,9 @@ Definition isesssurj_iff_commsq {A B C D : Type}
   : SplEssSurj F <-> SplEssSurj G.
 Proof.
   split; intros ?.
-  - serapply (cancelR_isesssurj G H); try exact _.
+  - srapply (cancelR_isesssurj G H); try exact _.
     apply (isesssurj_transf (fun a => (p a)^$)).
-  - serapply (cancelL_isesssurj K F); try exact _.
+  - srapply (cancelL_isesssurj K F); try exact _.
     apply (isesssurj_transf p).
 Defined.
 
@@ -207,9 +207,9 @@ Definition isequiv0gpd_iff_commsq {A B C D : Type}
   : IsEquiv0Gpd F <-> IsEquiv0Gpd G.
 Proof.
   split; intros ?.
-  - serapply (cancelR_isequiv0gpd G H); try exact _.
+  - srapply (cancelR_isequiv0gpd G H); try exact _.
     apply (isequiv0gpd_transf (fun a => (p a)^$)).
-  - serapply (cancelL_isequiv0gpd K F); try exact _.
+  - srapply (cancelL_isequiv0gpd K F); try exact _.
     apply (isequiv0gpd_transf p).
 Defined.
 

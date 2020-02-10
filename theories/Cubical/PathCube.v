@@ -105,7 +105,7 @@ Global Instance isequiv_cu_path {A}
   {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : IsEquiv (cu_path s0ii s1ii sii0 sii1 si0i si1i).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1,2: by intros [].
   destruct sii0, sii1.
   cbn.
@@ -234,7 +234,7 @@ Global Instance isequiv_cu_rot_tb_fb
   {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : IsEquiv (cu_rot_tb_fb s0ii s1ii sii0 sii1 si0i si1i).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1,2 : by intros [].
   unfold Sect.
   rewrite <- (eissect tr s0ii).
