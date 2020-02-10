@@ -2133,8 +2133,10 @@ Section Separated.
   (** A strengthening of Lemma 2.27 of CORS.  We provide a different proof that doesn't require [Funext]. *)
   Global Instance conn_map_functor_sigma_toSepO@{i j}
          {X : Type@{i} } (P : O' X -> Type@{j})
-    : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap))
-    := conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i i i i i i i i Ou i i} _ _ _.
+    : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
+  Proof.
+    serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
+  Defined.
 
   Definition equiv_functor_sigma_to_SepO@{i j}
              {X : Type@{i} } (P : O' X -> Type@{j})
