@@ -1071,30 +1071,27 @@ where they are defined.
 - `issig`: Defined in `Types/Record`, this tactic proves automatically
   that a record type is equivalent to a nested sigma-type.
 
+- `nrefine`, `srefine`, `snrefine`:
+  Defined in `Basics/Overture`, these are shorthands for
+  `notypeclasses refine`, `simple refine`, and `simple notypeclasses refine`.
+
 - `rapply`, `nrapply`, `srapply`, `snrapply`:
-  Defined in `Basics/Overture`, these tactics are more well-behaved
-  variants of `apply` for theorems with fewer than 30 arguments.
-  (It is trivial to extend it to *n* arguments for any finite
-  fixed *n*.) They use `refine` with prefixes `simple`, `notypeclasses`. 
+  Defined in `Basics/Overture`, these tactics use `refine`,
+  `nrefine`, `srefine` and `snrefine`, except that additional holes
+  are added to the function so they behave like `apply` does.
   The unification algorithm used by `apply` is different and often
   less powerful than the one used by `refine`, though it is
   occasionally better at pattern matching.
-  
+ 
   Here are some tips:
   - If `apply` fails with a unification error you think it shouldn't
     have, try `rapply`.
-  - If `rapply` loops on, say, typeclass resolution, try `rapply'` or
+  - If `rapply` loops on typeclass resolution, try `rapply'` or
     `nrapply'`. The former starts with as many arguments as possible
-    and tries a decreasing amount. The latter will stop coq from doing
-    a typeclass search.
-  - If you want the goals that coq thinks it can guess shown add an `s`
-    to your command to make it a simple version.
-  
-  `srapply` is a "simple" version of `rapply` and will generate
-  goals for all holes. `nrapply` is a version of `rapply` that doesn't
-  do a typeclass search. These can be combined into `snrapply`. Any off
-  these followed by a dash `rapply'` will try as many holes as possible
-  first.
+    and tries decreasing the number. The latter will stop Coq from doing
+    a typeclass search.  Similarly, if `refine` loops, try `nrefine`.
+  - If you don't want Coq to create evars for certain subgoals,
+    add an `s` to the tactic name to make it use `simple refine`.
 
   
 ## Contributing to the library ##
