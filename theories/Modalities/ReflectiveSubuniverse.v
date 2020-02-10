@@ -2139,7 +2139,7 @@ Section Separated.
     serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i i i i i i i i Ou i i}.
   Defined.
 
-  Definition equiv_functor_sigma_to_SepO@{i j jplus}
+  Definition equiv_functor_sigma_to_SepO@{i j}
              {X : Type@{i} } (P : O' X -> Type@{j})
     : (O {x : X & P (to O' X x)}) <~> (O {ox : O' X & P ox})
     := Build_Equiv _ _ _ (O_inverts_functor_sigma_to_SepO@{i j} P).
