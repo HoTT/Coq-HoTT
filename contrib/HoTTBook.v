@@ -1536,6 +1536,7 @@ Proof.
     + refine (H' a b).
     + apply H.
   - intros H' a b.
+    change (IsHProp (a = b)).
     eapply trunc_equiv.
     + apply (H' a b).
     + apply (@isequiv_inverse _ _ _ (H _ _)).
