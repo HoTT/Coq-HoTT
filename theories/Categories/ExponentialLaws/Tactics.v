@@ -11,7 +11,7 @@ Ltac exp_laws_misc_t' :=
   match goal with
     | _ => reflexivity
     | _ => progress intros
-    | _ => progress simpl in *
+    | _ => progress cbn in *
     | _ => apply (@path_forall _); intro
     | _ => rewrite !identity_of
     | _ => progress autorewrite with morphism
@@ -62,17 +62,17 @@ Ltac exp_laws_handle_transport' :=
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))
     | _ => progress transport_path_forall_hammer
     | [ |- context[components_of (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
     | [ |- context[object_of (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => object_of) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => object_of) z)
     | [ |- context[morphism_of (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => morphism_of) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => morphism_of) z)
     | [ |- context[fst (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => fst) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => fst) z)
     | [ |- context[snd (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => snd) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => snd) z)
     | [ |- context[pr1 (transport ?P ?p ?z)] ]
-      => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => pr1) z)
+      => cbn; rewrite (@ap_transport _ P _ _ _ p (fun _ => pr1) z)
   end.
 
 Ltac exp_laws_t' :=
