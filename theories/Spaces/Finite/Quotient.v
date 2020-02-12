@@ -4,7 +4,7 @@ Require Import HSet.
 Require Import Colimits.Quotient.
 Require Import Spaces.Nat.
 Require Import Spaces.Finite.Core.
-Require Import Spaces.Finite.IsFinite.
+Require Import Spaces.Finite.Finite.
 Require Import Truncations.
 Require Import UnivalenceImpliesFunext.
 Import TrM.
@@ -17,12 +17,12 @@ Section DecidableQuotients.
 
   Context
    `{Univalence}
-    {X : Type} `{IsFinite X}
+    {X : Type} `{Finite X}
     (R : Relation X) `{is_mere_relation X R}
    `{!Reflexive R} `{!Transitive R} `{!Symmetric R}
     {Rd : forall x y, Decidable (R x y)}.
 
-  Global Instance isfinite_quotient : IsFinite (Quotient R).
+  Global Instance finite_quotient : Finite (Quotient R).
   Proof.
     assert (e := merely_equiv_fin X).
     strip_truncations.
@@ -33,12 +33,12 @@ Section DecidableQuotients.
     assert (Transitive R') by (intros ? ? ?; unfold R'; apply transitivity).
     assert (R'd : forall x y, Decidable (R' x y))
       by (intros ? ?; unfold R'; apply Rd).
-    srefine (isfinite_equiv _ (equiv_quotient_functor R' R e^-1 _) _).
+    srefine (finite_equiv _ (equiv_quotient_functor R' R e^-1 _) _).
     1: by try (intros; split).
     clearbody R'; clear e.
     generalize dependent (fcard X);
       intros n; induction n as [|n IH]; intros R' ? ? ? ? ?.
-    { refine (isfinite_isequiv Empty _^-1 _).
+    { refine (finite_isequiv Empty _^-1 _).
       refine (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)). }
     pose (R'' x y := R' (inl x) (inl y)).
     assert (is_mere_relation _ R'') by exact _.
@@ -51,7 +51,7 @@ Section DecidableQuotients.
     destruct (dec (merely {x:Fin n & R' (inl x) (inr tt)})) as [p|np].
     { strip_truncations.
       destruct p as [x r].
-      refine (isfinite_equiv (Quotient R'') _ _).
+      refine (finite_equiv (Quotient R'') _ _).
       refine (Build_Equiv _ _ (Quotient_functor R'' R' inl inlresp) _).
       apply isequiv_surj_emb.
       - apply BuildIsSurjection.
@@ -66,7 +66,7 @@ Section DecidableQuotients.
         simpl; intros q.
         apply qglue; unfold R''.
         exact (related_quotient_paths R' (inl u) (inl v) q). }
-    refine (isfinite_equiv (Quotient R'' + Unit) _ _).
+    refine (finite_equiv (Quotient R'' + Unit) _ _).
     refine (Build_Equiv _ _ (sum_ind (fun _ => Quotient R')
                                     (Quotient_functor R'' R' inl inlresp)
                                     (fun _ => class_of R' (inr tt))) _).

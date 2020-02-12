@@ -101,7 +101,6 @@ theories/Cubical/DPathCube.v
 
 theories/Spaces/Nat.v
 theories/Spaces/Cantor.v
-theories/Spaces/Finite.v
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
 
@@ -130,9 +129,11 @@ theories/Spaces/Torus/Torus.v
 theories/Spaces/Torus/TorusEquivCircles.v
 theories/Spaces/Torus/TorusHomotopy.v
 
+
+theories/Spaces/Finite.v
 theories/Spaces/Finite/Core.v
 theories/Spaces/Finite/Equiv.v
-theories/Spaces/Finite/IsFinite.v
+theories/Spaces/Finite/Finite.v
 theories/Spaces/Finite/Quotient.v
 
 #
