@@ -501,9 +501,9 @@ Global Instance conn_map_functor_hfiber `{Univalence} {O O' : Modality} `{IsSepF
 Proof.
   intros [oy p].
   rewrite <- (inv_V p).
-  ntc_refine (isconnected_equiv' O _
+  nrefine (isconnected_equiv' O _
                (hfiber_functor_hfiber (to_O_natural O' f) oy x p^) _).
-  ntc_refine (isconnected_hfiber_conn_map
+  nrefine (isconnected_hfiber_conn_map
                 (f := (functor_hfiber (to_O_natural O' f) oy)) (x;p^)).
   apply conn_map_SepO_inverts.
   (* Actually typeclasss search can do the rest by itself, but to help the human reader we show what's going on.  (As a byproduct this makes it marginally faster too). *)

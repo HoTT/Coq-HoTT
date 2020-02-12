@@ -1071,31 +1071,29 @@ where they are defined.
 - `issig`: Defined in `Types/Record`, this tactic proves automatically
   that a record type is equivalent to a nested sigma-type.
 
-- `rapply`, `rapply'`, `erapply`, `erapply'`, `serapply`, `ntc_rapply`:
-  Defined in `coq/theories/Program/Tactics` and `Basics/Overture`, these
-  tactics are more well-behaved variants of `apply` for theorems with
-  fewer than 16 arguments.  (It is trivial to extend it to *n* arguments
-  for any finite fixed *n*.)  The unification algorithm used by `apply`
-  is different and often less powerful than the one used by `refine`,
-  though it is occasionally better at pattern matching.  If `apply`
-  fails with a unification error you think it shouldn't have, try
-  `rapply` or `erapply`.  If `rapply` or `erapply` loops on, say,
-  typeclass resolution, try `rapply'` or `erapply'`.  In particular,
-  when the lemma you are applying constructs an equivalence,
-  `(e)rapply` will tend to apply the underlying function to the goal,
-  while `(e)rapply'` will tend to apply the construction of the
-  equivalence itself.
+- `nrefine`, `srefine`, `snrefine`:
+  Defined in `Basics/Overture`, these are shorthands for
+  `notypeclasses refine`, `simple refine`, and `simple notypeclasses refine`.
 
-  The difference between `rapply(')` and `erapply(')` is that
-  `rapply(')` only accepts lemmas with no holes (and will do typeclass
-  inference early), while `erapply(')` accepts lemmas with holes (such
-  as `ap f`, i.e., `@ap _ _ f _ _`), and does typeclass inference
-  late.
+- `rapply`, `nrapply`, `srapply`, `snrapply`:
+  Defined in `Basics/Overture`, these tactics use `refine`,
+  `nrefine`, `srefine` and `snrefine`, except that additional holes
+  are added to the function so they behave like `apply` does.
+  The unification algorithm used by `apply` is different and often
+  less powerful than the one used by `refine`, though it is
+  occasionally better at pattern matching.
+ 
+  Here are some tips:
+  - If `apply` fails with a unification error you think it shouldn't
+    have, try `rapply`.
+  - If `rapply` loops on typeclass resolution, try `rapply'` or
+    `nrapply'`. The former starts with as many arguments as possible
+    and tries decreasing the number. The latter will stop Coq from doing
+    a typeclass search.  Similarly, if `refine` loops, try `nrefine`.
+  - If you don't want Coq to create evars for certain subgoals,
+    add an `s` to the tactic name to make it use `simple refine`.
 
-  `serapply` is a "simple" version of `erapply` and will generate
-  goals for all holes. `ntc_rapply` is a version of `rapply` that
-  doesn't do a typeclass search.
-
+  
 ## Contributing to the library ##
 
 ### Fork & Pull ###

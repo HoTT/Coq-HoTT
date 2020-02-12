@@ -160,7 +160,7 @@ Definition functor_pushout
            (p : k o f == f' o h) (q : l o g == g' o h)
   : Pushout f g -> Pushout f' g'.
 Proof.
-  unfold Pushout; serapply functor_coeq.
+  unfold Pushout; srapply functor_coeq.
   - exact h.
   - exact (functor_sum k l).
   - intros a; cbn.
@@ -210,7 +210,7 @@ Global Instance contr_pushout {A B C : Type} `{Contr A, Contr B, Contr C}
   : Contr (Pushout f g).
 Proof.
   exists (pushl (center B)).
-  serapply Pushout_ind.
+  srapply Pushout_ind.
   - intros b; apply ap, path_contr.
   - intros c.
     refine (_ @ pglue (center A) @ _).

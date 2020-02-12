@@ -139,7 +139,7 @@ Definition Build_GroupHomomorphism {G H : Group}
   (f : G -> H) {h : IsSemiGroupPreserving f}
   : GroupHomomorphism G H.
 Proof.
-  serapply (Build_GroupHomomorphism' _ _ f).
+  srapply (Build_GroupHomomorphism' _ _ f).
   split.
   1: exact h.
   unfold IsUnitPreserving.
@@ -154,12 +154,12 @@ Definition grp_homo_compose {G H K : Group}
   : GroupHomomorphism H K -> GroupHomomorphism G H -> GroupHomomorphism G K.
 Proof.
   intros f g.
-  serapply (Build_GroupHomomorphism (f o g)).
+  srapply (Build_GroupHomomorphism (f o g)).
 Defined.
 
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
 Proof.
-  serapply (Build_GroupHomomorphism idmap).
+  srapply (Build_GroupHomomorphism idmap).
 Defined.
 
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
@@ -177,8 +177,8 @@ Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
   intros [f e].
-  serapply Build_GroupIsomorphism.
-  - serapply (Build_GroupHomomorphism f^-1).
+  srapply Build_GroupIsomorphism.
+  - srapply (Build_GroupHomomorphism f^-1).
   - exact _.
 Defined.
 
@@ -187,8 +187,8 @@ Definition Build_GroupIsomorphism' {G H : Group}
   (f : G <~> H) (h : IsSemiGroupPreserving f)
   : GroupIsomorphism G H.
 Proof.
-  serapply Build_GroupIsomorphism.
-  1: serapply Build_GroupHomomorphism.
+  srapply Build_GroupIsomorphism.
+  1: srapply Build_GroupHomomorphism.
   exact _.
 Defined.
 
@@ -197,7 +197,7 @@ Global Instance reflexive_groupisomorphism
   : Reflexive GroupIsomorphism.
 Proof.
   intro x.
-  by serapply Build_GroupIsomorphism'.
+  by srapply Build_GroupIsomorphism'.
 Defined.
 
 (** Group Isomorphisms are a symmetric relation *)
@@ -205,15 +205,15 @@ Global Instance symmetric_groupisomorphism
   : Symmetric GroupIsomorphism.
 Proof.
   intros G H.
-  serapply grp_iso_inverse.
+  srapply grp_iso_inverse.
 Defined.
 
 Global Instance transitive_groupisomorphism
   : Transitive GroupIsomorphism.
 Proof.
   intros G H K f g.
-  serapply Build_GroupIsomorphism.
-  1: serapply grp_homo_compose.
+  srapply Build_GroupIsomorphism.
+  1: srapply grp_homo_compose.
   exact _.
 Defined.
 
@@ -270,7 +270,7 @@ Global Instance isequiv_group_left_op `{IsGroup G}
   : forall x, IsEquiv (x *.).
 Proof.
   intro x.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1: exact (-x *.).
   all: intro y.
   all: refine (associativity _ _ _ @ _ @ left_identity y).
@@ -284,7 +284,7 @@ Global Instance isequiv_group_right_op `{IsGroup G}
   : forall x:G, IsEquiv (fun y => y * x).
 Proof.
   intro x.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1: exact (fun y => y * - x).
   all: intro y.
   all: refine ((associativity _ _ _)^ @ _ @ right_identity y).
@@ -303,7 +303,7 @@ Definition right_mult_equiv `{IsGroup G} : G -> G <~> G
 Global Instance isequiv_group_inverse `{IsGroup G}
   : IsEquiv (-).
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   1: apply (-).
   all: intro; apply negate_involutive.
 Defined.
@@ -313,7 +313,7 @@ Defined.
 Definition group_prod : Group -> Group -> Group.
 Proof.
   intros G H.
-  serapply (Build_Group (G * H)).
+  srapply (Build_Group (G * H)).
   (** Operation *)
   { intros [g1 h1] [g2 h2].
     exact (g1 * g2, h1 * h2). }
@@ -323,11 +323,11 @@ Proof.
   { intros [g h].
     exact (-g, -h). }
   (** Group laws *)
-  serapply Build_IsGroup.
+  srapply Build_IsGroup.
   (** Monoid laws *)
-  { serapply Build_IsMonoid.
+  { srapply Build_IsMonoid.
     (** Semigroup lawss *)
-    { serapply Build_IsSemiGroup.
+    { srapply Build_IsSemiGroup.
       (** Associativity *)
       intros [g1 h1] [g2 h2] [g3 h3].
       apply path_prod; cbn.
@@ -355,8 +355,8 @@ Definition grp_iso_prod {A B C D : Group}
     -> GroupIsomorphism (group_prod A C) (group_prod B D).
 Proof.
   intros f g.
-  serapply Build_GroupIsomorphism'.
-  1: serapply (equiv_functor_prod (f:=f) (g:=g)).
+  srapply Build_GroupIsomorphism'.
+  1: srapply (equiv_functor_prod (f:=f) (g:=g)).
   simpl.
   unfold functor_prod.
   intros x y.
@@ -400,11 +400,10 @@ Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.
-  simple notypeclasses refine (isequiv_homotopic ((equiv_path_grouphomomorphism)^-1) _). 
-  1,3: exact _.
-(*   1: exact _. *)
-  1: apply equiv_isequiv.
-  intros []. reflexivity. 
+  snrapply @isequiv_homotopic.
+  1: exact equiv_path_grouphomomorphism^-1.
+  1: exact _.
+  intros []; reflexivity. 
 Defined.
 
 Global Instance hasequivs_group : HasEquivs Group.

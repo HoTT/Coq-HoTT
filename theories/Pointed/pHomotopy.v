@@ -8,7 +8,7 @@ Local Open Scope pointed_scope.
 Global Instance phomotopy_reflexive {A B} : Reflexive (@pHomotopy A B).
 Proof.
   intro.
-  serapply Build_pHomotopy.
+  srapply Build_pHomotopy.
   + intro. reflexivity.
   + apply concat_1p.
 Defined.

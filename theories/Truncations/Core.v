@@ -311,29 +311,29 @@ Proof.
   + assert (l := trunc_index_min_leq_right n m).
     destruct p^; clear p.
     symmetry.
-    serapply equiv_adjointify.
-    { serapply Trunc_rec.
+    srapply equiv_adjointify.
+    { srapply Trunc_rec.
       exact (fun x => tr (tr x)). }
-    { serapply Trunc_rec.
-      serapply Trunc_rec.
-      1: serapply trunc_leq.
+    { srapply Trunc_rec.
+      srapply Trunc_rec.
+      1: srapply trunc_leq.
       exact tr. }
-    { serapply Trunc_ind.
+    { srapply Trunc_ind.
       simpl.
-      serapply (Trunc_ind (n:=m)).
+      srapply (Trunc_ind (n:=m)).
       2: reflexivity.
       intro.
       apply istrunc_paths.
-      serapply (trunc_leq (m:=n)).
+      srapply (trunc_leq (m:=n)).
       by apply trunc_index_leq_succ'. }
-    serapply Trunc_ind; reflexivity.
+    srapply Trunc_ind; reflexivity.
   + set (min := trunc_index_min n m).
     refine (paths_ind _
       (fun m _ => Tr n (Tr m X) <~> Tr min X) _ m q).
     unfold min; clear min.
     symmetry.
-    serapply equiv_tr.
-    serapply trunc_leq.
+    srapply equiv_tr.
+    srapply trunc_leq.
     3: exact _.
     apply trunc_index_min_leq_left.
 Defined.

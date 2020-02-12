@@ -58,7 +58,7 @@ Definition Susp_ind {X : Type} (P : Susp X -> Type)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
   : forall (y : Susp X), P y.
 Proof.
-  serapply Pushout_ind.
+  srapply Pushout_ind.
   - exact (Unit_ind H_N).
   - exact (Unit_ind H_S).
   - exact (H_merid).
@@ -69,7 +69,7 @@ Definition Susp_ind_dp {X : Type} (P : Susp X -> Type)
   (H_merid : forall x:X, DPath P (merid x) H_N H_S)
   : forall (y : Susp X), P y.
 Proof.
-  serapply Susp_ind.
+  srapply Susp_ind.
   - exact H_N.
   - exact H_S.
   - intro x.
@@ -82,7 +82,7 @@ Definition Susp_ind_beta_merid {X : Type}
   (H_merid : forall x:X, (merid x) # H_N = H_S) (x : X)
   : apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
-  serapply Pushout_ind_beta_pglue.
+  srapply Pushout_ind_beta_pglue.
 Defined.
 
 Definition Susp_ind_dp_beta_merid {X : Type}
@@ -91,7 +91,7 @@ Definition Susp_ind_dp_beta_merid {X : Type}
   : dp_apD (Susp_ind_dp P H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   apply dp_apD_path_transport.
-  serapply Susp_ind_beta_merid.
+  srapply Susp_ind_beta_merid.
 Defined.
 
 (** We want to allow the user to forget that we've defined suspension in this way. *)
@@ -151,7 +151,7 @@ Proof.
   apply (equiv_inj dp_path_transport).
   refine (dp_path_transport_apD _ _ @ _). 
   refine (_ @ (dp_path_transport_apD f (merid x))^).
-  serapply Susp_ind_dp_beta_merid.
+  srapply Susp_ind_dp_beta_merid.
 Defined.
 
 Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
@@ -179,7 +179,7 @@ Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
 Definition functor_susp {X Y : Type} (f : X -> Y)
   : Susp X -> Susp Y.
 Proof.
-  serapply Susp_rec.
+  srapply Susp_rec.
   - exact North.
   - exact South.
   - intros x; exact (merid (f x)).
@@ -188,7 +188,7 @@ Defined.
 Definition ap_functor_susp_merid {X Y : Type} (f : X -> Y) (x : X)
   : ap (functor_susp f) (merid x) = merid (f x).
 Proof.
-  serapply Susp_rec_beta_merid.
+  srapply Susp_rec_beta_merid.
 Defined.
 
 (** ** Universal property *)
@@ -276,7 +276,7 @@ Section UnivProp.
       intros x; cbn.
       apply Susp_ind_dp_beta_merid.
     - intros f g [p q]; cbn in *.
-      serapply Susp_ind_dp; cbn.
+      srapply Susp_ind_dp; cbn.
       1:exact (ap fst p).
       1:exact (ap snd p).
       intros x; specialize (q x).
@@ -337,7 +337,7 @@ Section UnivPropNat.
   Definition functor_Susp_ind_data' (NS : P North * P South)
     : Susp_ind_data'' NS -> Susp_ind_data' X (P o functor_susp f) NS.
   Proof.
-    serapply (functor_forall idmap); intros x.
+    srapply (functor_forall idmap); intros x.
     apply equiv_Susp_ind_data'.
   Defined.
 

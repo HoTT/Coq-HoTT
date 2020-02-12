@@ -34,8 +34,8 @@ Theorem WeakUnivalence_implies_Univalence :
 Proof.
   intros [etop H] A.
   apply isequiv_from_functor_sigma.
-  serapply isequiv_contr_contr.
-  serapply (contr_retracttype
+  srapply isequiv_contr_contr.
+  srapply (contr_retracttype
             (Build_RetractOf _ _
                              (fun Be => (Be.1 ; equiv_path A Be.1 Be.2))
                              (fun Bf => (Bf.1 ; etop A Bf.1 Bf.2))

@@ -80,11 +80,11 @@ Section Smash.
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr)
     : forall x : Smash X Y, P x.
   Proof.
-    serapply Pushout_ind.
+    srapply Pushout_ind.
     + intros [a b].
       apply Psm.
     + apply (Bool_ind _ Pr Pl).
-    + serapply sum_ind; intro; apply dp_path_transport^-1.
+    + srapply sum_ind; intro; apply dp_path_transport^-1.
       - apply Pgl.
       - apply Pgr.
   Defined.
@@ -169,7 +169,7 @@ Section Smash.
     unfold Smash_rec.
     refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
       (fun x : Y => dp_const (Pgr x))) (gluel a))^ @ _).
-    erapply Smash_ind_beta_gluel.
+    rapply Smash_ind_beta_gluel.
   Qed.
 
   Definition smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
@@ -181,7 +181,7 @@ Section Smash.
     unfold Smash_rec.
     refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
       (fun x : Y => dp_const (Pgr x))) (gluer b))^ @ _).
-    erapply Smash_ind_beta_gluer.
+    rapply Smash_ind_beta_gluer.
   Qed.
 
   Definition Smash_rec_beta_gluel' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}

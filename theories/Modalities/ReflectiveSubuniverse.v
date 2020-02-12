@@ -372,10 +372,10 @@ Section Reflective_Subuniverse.
     Proof.
       intros x.
       transitivity (O_functor (f o pi1) x).
-      - symmetry; erapply O_functor_compose.
+      - symmetry; rapply O_functor_compose.
       - transitivity (O_functor (g o pi2) x).
         * apply O_functor_homotopy, comm.
-        * erapply O_functor_compose.
+        * rapply O_functor_compose.
     Defined.
 
     (** Functoriality on identities *)
@@ -596,16 +596,16 @@ Section Reflective_Subuniverse.
                (e : forall (Z:Type@{k}), In O Z -> ExtendableAlong@{i j k l} 2 f (fun _ => Z))
       : O_inverts f.
     Proof.
-      serapply isequiv_adjointify.
+      srapply isequiv_adjointify.
       - exact (O_rec (fst (e (O A) _) (to O A)).1).
-      - serapply O_indpaths. intros b.
+      - srapply O_indpaths. intros b.
         rewrite O_rec_beta.
         assert (e1 := fun h k => fst (snd (e (O B) _) h k)). cbn in e1.
         refine ((e1 (fun y => O_functor f ((fst (e (O A) _) (to O A)).1 y)) (to O B) _).1 b).
         intros a.
         rewrite ((fst (e (O A) (O_inO A)) (to O A)).2 a).
         apply to_O_natural.
-      - serapply O_indpaths. intros a.
+      - srapply O_indpaths. intros a.
         rewrite to_O_natural, O_rec_beta.
         exact ((fst (e (O A) (O_inO A)) (to O A)).2 a).
     Defined.
@@ -804,7 +804,7 @@ Section Reflective_Subuniverse.
            `{In O A} `{In O B} `{In O C}
       : In O (Pullback f g).
     Proof.
-      serapply inO_to_O_retract.
+      srapply inO_to_O_retract.
       - intros op.
         exists (O_rec pr1 op).
         exists (O_rec (fun p => p.2.1) op).
@@ -812,10 +812,10 @@ Section Reflective_Subuniverse.
         refine (ap f (O_rec_beta _ _) @ _); cbn.
         refine (a @ ap g (O_rec_beta _ _)^).
       - intros [b [c a]]; cbn.
-        serapply path_sigma'.
+        srapply path_sigma'.
         { apply O_rec_beta. }
         refine (transport_sigma' _ _ @ _); cbn.
-        serapply path_sigma'.
+        srapply path_sigma'.
         { apply O_rec_beta. }
         abstract (
           rewrite transport_paths_Fr;
@@ -869,7 +869,7 @@ Section Reflective_Subuniverse.
       intros a. unfold eqid.
       refine (_ @ pr2_path (O_rec_beta g' a)).
       refine (ap@{i k} (fun p => transport B p (O_rec g' (to O A a)).2) _).
-      serapply O_indpaths_beta.
+      srapply O_indpaths_beta.
     Defined.
 
     (** We then deduce the general version from this.  Note that although here we see three universe parameters, after the section closes this definition ends up with five universe parameters [Ou Oa i j k]. *)
@@ -896,7 +896,7 @@ Section Reflective_Subuniverse.
       pose (W := sigT (fun a => B a * B a)).
       refine (inO_equiv_inO' (Pullback (A := W) (fun a:O A => (a;(h a,k a)))
                                        (fun z:Z => (z.1;(z.2,z.2)))) _).
-      { serapply inO_pullback.
+      { srapply inO_pullback.
         exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
       unfold Pullback.
       (** The rest is just contracting a couple of based path spaces.  It seems like it should be less work than this. *)
@@ -1998,7 +1998,7 @@ Section ConnectedMaps.
     : IsConnMap O (O_functor O f).
   Proof.
     unfold O_functor.
-    erapply conn_map_compose.
+    rapply conn_map_compose.
   Defined.
 
 End ConnectedMaps.
@@ -2075,7 +2075,7 @@ Section Separated.
     assert (Pb := fun y => (O_rec_beta@{Ou Oa i j j i j} Oxeq y)..1).
     set (P := O_rec Oxeq) in *; subst Oxeq; cbn in *.
     (* We will first construct an equivalence [P y' <~> (to O' X x = y')] by a version of encode-decode, then show that when [y' = to O' X y] this equivalence is homotopic to [path_SepO]. *)
-    serapply isequiv_homotopic'.
+    srapply isequiv_homotopic'.
     { (* First we generalize from [y:X] to [y':O' X]. *)
       refine (_ oE equiv_path _ _ (Pb y)^).
       generalize (to O' X y) as y'; clear y.
@@ -2135,7 +2135,7 @@ Section Separated.
          {X : Type@{i} } (P : O' X -> Type@{j})
     : IsConnMap O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
   Proof.
-    serapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
+    srapply conn_map_functor_sigma@{Ou Oa i i i i i i i i i i i i i i Ou i i i i i i i Ou i i}.
   Defined.
 
   Definition equiv_functor_sigma_to_SepO@{i j}
@@ -2148,7 +2148,7 @@ Section Separated.
          {Y X : Type@{i} } (f : Y -> X) (x : X)
     : O_inverts O (functor_hfiber@{i i i i} (fun y => (to_O_natural O' f y)^) x).
   Proof.
-    serapply isequiv_homotopic'.
+    srapply isequiv_homotopic'.
     - unfold hfiber.
       refine (_ oE (equiv_inverse (equiv_O_sigma_O O _))).
       refine (equiv_functor_sigma_to_SepO@{i i} _ oE _).

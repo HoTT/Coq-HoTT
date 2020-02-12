@@ -27,7 +27,7 @@ Coercion abgroup_type : AbGroup >-> Sortclass.
 Definition group_abgroup : AbGroup -> Group.
 Proof.
   intros [G ? ? ? [l ?]].
-  ntc_rapply (Build_Group G _ _ _ l).
+  nrapply (Build_Group G _ _ _ l).
 Defined.
 
 (** We also want abelian groups to be coerced to the underlying group. *)
@@ -101,12 +101,12 @@ Section Abel.
       (a (x * (y * z))) (a (x * (z * y))))
     : forall (x : Abel), P x.
   Proof.
-    serapply Trunc_ind.
-    serapply Coeq_ind.
+    srapply Trunc_ind.
+    srapply Coeq_ind.
     1: apply a.
     intros [[x y] z].
     refine (transport_compose _ _ _ _ @ _).
-    serapply dp_path_transport^-1.
+    srapply dp_path_transport^-1.
     apply c.
   Defined.
 
@@ -141,7 +141,7 @@ Section Abel.
   Definition Abel_ind_hprop (P : Abel -> Type) `{forall x, IsHProp (P x)} 
     (a : forall x, P (ab x)) : forall (x : Abel), P x.
   Proof.
-    serapply (Abel_ind _ a).
+    srapply (Abel_ind _ a).
     intros; apply dp_path_transport.
     apply path_ishprop.
   Defined.
@@ -171,9 +171,9 @@ Section AbelGroup.
       But we need to also check that it preserves ab_comm in the appropriate way. *)
   Global Instance abel_sgop : SgOp (Abel G).
   Proof.
-    serapply Abel_rec.
+    srapply Abel_rec.
     { intro a.
-      serapply Abel_rec.
+      srapply Abel_rec.
       { intro b.
         exact (ab (a * b)). }
       intros b c d; cbn.
@@ -182,7 +182,7 @@ Section AbelGroup.
       refine (ap _ (associativity _ _ _)^). }
     intros a b c.
     apply path_forall.
-    serapply Abel_ind_hprop.
+    srapply Abel_ind_hprop.
     cbn; intro d.
     (* The pattern seems to be to alternate associativity and ab_comm. *)
     refine (ap _ (associativity _ _ _)^ @ _).
@@ -197,9 +197,9 @@ Section AbelGroup.
   (** We can now easily show that this operation is associative by associativity in G and the fact that being associative is a proposition. *)
   Global Instance abel_sgop_associative : Associative abel_sgop.
   Proof.
-    serapply Abel_ind_hprop; intro x.
-    serapply Abel_ind_hprop; intro y.
-    serapply Abel_ind_hprop; intro z.
+    srapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro y.
+    srapply Abel_ind_hprop; intro z.
     cbn; apply ap, associativity.
   Defined.
 
@@ -212,13 +212,13 @@ Section AbelGroup.
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
   Global Instance abel_leftidentity : LeftIdentity abel_sgop abel_mon_unit.
   Proof.
-    serapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro x.
     cbn; apply ap, left_identity.
   Defined.
 
   Global Instance abel_rightidentity : RightIdentity abel_sgop abel_mon_unit.
   Proof.
-    serapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro x.
     cbn; apply ap, right_identity.
   Defined.
 
@@ -228,8 +228,8 @@ Section AbelGroup.
   (** We can also prove that the operation is commutative! This will come in handy later. *)
   Global Instance abel_commutative : Commutative abel_sgop.
   Proof.
-    serapply Abel_ind_hprop; intro x.
-    serapply Abel_ind_hprop; intro y.
+    srapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro y.
     cbn.
     rewrite <- (left_identity (x * y)).
     rewrite <- (left_identity (y * x)).
@@ -243,7 +243,7 @@ Section AbelGroup.
       there is no obvious way to do this, but we note that ab (x * y) is exactly the definition of ab x + ab y! Hence by commutativity we can show this. *)
   Global Instance abel_negate : Negate (Abel G).
   Proof.
-    serapply Abel_rec.
+    srapply Abel_rec.
     { intro g.
       exact (ab (-g)). }
     intros x y z; cbn.
@@ -255,13 +255,13 @@ Section AbelGroup.
   (** Again by Abel_ind_hprop and the corresponding laws for G we can prove the left and right inverse laws. *)
   Global Instance abel_leftinverse : LeftInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    serapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro x.
     cbn; apply ap; apply left_inverse.
   Defined.
 
   Instance abel_rightinverse : RightInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    serapply Abel_ind_hprop; intro x.
+    srapply Abel_ind_hprop; intro x.
     cbn; apply ap; apply right_inverse.
   Defined.
 
@@ -282,7 +282,7 @@ End AbelGroup.
 (** We can easily prove that ab is a surjection. *)
 Global Instance issurj_ab `{Funext} {G : Group} : IsSurjection ab.
 Proof.
-  serapply Abel_ind_hprop.
+  srapply Abel_ind_hprop.
   intro x; cbn.
   exists (tr (x; @idpath _ (ab x))).
   apply path_ishprop.
@@ -297,14 +297,14 @@ Section Abelianization.
   Definition abel : Group -> AbGroup.
   Proof.
     intro G.
-    serapply (Build_AbGroup (Abel G)).
+    srapply (Build_AbGroup (Abel G)).
   Defined.
 
   (** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
   Definition abel_unit (X : Group)
     : GroupHomomorphism X (abel X).
   Proof.
-    simple notypeclasses refine (Build_GroupHomomorphism _).
+    snrapply @Build_GroupHomomorphism.
     + exact ab.
     + exact _.
   Defined.
@@ -314,23 +314,23 @@ Section Abelianization.
     : IsAbelianization (abel G) (abel_unit G).
   Proof.
     intros A h.
-    serapply Build_Contr.
+    srapply Build_Contr.
     { srefine (_;_).
-      { simple notypeclasses refine (Build_GroupHomomorphism _).
-        { serapply (Abel_rec _ _ h).
+      { snrapply @Build_GroupHomomorphism.
+        { srapply (Abel_rec _ _ h).
           intros x y z.
           refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
           apply (ap (_ *.)).
           refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
           apply commutativity. }
-        serapply Abel_ind_hprop; intro x.
-        serapply Abel_ind_hprop; intro y.
+        srapply Abel_ind_hprop; intro x.
+        srapply Abel_ind_hprop; intro y.
         apply grp_homo_op. }
       cbn; reflexivity. }
     intros [g p].
     apply path_sigma_hprop; cbn.
     apply equiv_path_grouphomomorphism.
-    serapply Abel_ind_hprop.
+    srapply Abel_ind_hprop.
     exact p.
   Defined.
 
@@ -349,8 +349,8 @@ Proof.
   destruct (y A eta1) as [[b bh] bc].
   destruct (x A eta1) as [[c ch] cc].
   destruct (y B eta2) as [[d dh] dc].
-  serapply (Build_GroupIsomorphism _ _ a).
-  serapply (isequiv_adjointify _ b).
+  srapply (Build_GroupIsomorphism _ _ a).
+  srapply (isequiv_adjointify _ b).
   { apply ap10.
     change (@grp_homo_map _ _ (grp_homo_compose a b)
       = @grp_homo_map _ _ grp_homo_id).
@@ -404,8 +404,8 @@ Global Instance isequiv_abgroup_abelianization `{Funext}
   (A B : AbGroup) (eta : GroupHomomorphism A B) {x : IsAbelianization B eta}
   : IsEquiv eta.
 Proof.
-  serapply isequiv_homotopic.  
-  - serapply (groupiso_isabelianization A B grp_homo_id eta).
+  srapply isequiv_homotopic.  
+  - srapply (groupiso_isabelianization A B grp_homo_id eta).
   - exact _.
   - symmetry; apply homotopic_isabelianization.
 Defined.

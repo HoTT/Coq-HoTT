@@ -32,7 +32,7 @@ Global Instance isequiv_dp_path_transport {A} (P : A -> Type) {a0 a1}
   (p : a0 = a1) (b0 : P a0) (b1 : P a1)
   : IsEquiv (@dp_path_transport A P a0 a1 p b0 b1).
 Proof.
-  serapply isequiv_adjointify; by destruct p.
+  srapply isequiv_adjointify; by destruct p.
 Defined.
 
 Definition equiv_dp_path_transport {A : Type} (P : A -> Type)
@@ -339,10 +339,10 @@ Global Instance isequiv_path_sigma_dp_uncurried
   {A P} {x x' : A} {y : P x} {y' : P x'}
   : IsEquiv (@path_sigma_dp_uncurried A P x x' y y').
 Proof.
-  serapply isequiv_adjointify.
+  srapply isequiv_adjointify.
   { intro r.
     exists (ap pr1 r).
-    serapply dp_compose.
+    srapply dp_compose.
     apply (dp_apD pr2 r). }
   { intros r.
     set (xy := (x; y)) in *.
@@ -374,7 +374,7 @@ Proof.
   refine (equiv_compose' _ (equiv_apD10 _ _ _)).
   apply equiv_functor_forall_id.
   intro a.
-  serapply equiv_adjointify.
+  srapply equiv_adjointify.
   + by intros ? ? [].
   + intro F; exact (F a 1).
   + repeat (intro; apply path_forall).
@@ -425,9 +425,9 @@ Proof.
   simpl.
   intro nm.
   apply path_sigma_dp_uncurried.
-  erapply equiv_functor_sigma_id.
+  rapply equiv_functor_sigma_id.
   { intro p.
-    symmetry; serapply (dp_compose (exist B x1)). }
+    symmetry; srapply (dp_compose (exist B x1)). }
   apply nm.
 Defined.
 

@@ -35,7 +35,7 @@ Definition fmap11 {A B C : Type} `{IsGraph A} `{IsGraph B} `{IsGraph C}
 Global Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
  : Is0Gpd (A * B).
 Proof. 
-  serapply Build_Is0Gpd.
+  srapply Build_Is0Gpd.
   intros [x1 x2] [y1 y2] [f1 f2].
   cbn in *.
   exact ( (f1^$, f2^$) ).
@@ -44,7 +44,7 @@ Defined.
 Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
-  serapply (Build_Is1Cat).
+  srapply (Build_Is1Cat).
   - intros [x1 x2] [y1 y2].
     rapply is01cat_prod.
   - intros [x1 x2] [y1 y2].
@@ -54,11 +54,11 @@ Proof.
     + cbn.
       apply isgpd_hom.
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
-    serapply Build_Is0Functor.  
+    srapply Build_Is0Functor.  
     intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
     exact ( h1 $@L p1 , h2 $@L p2 ).
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
-    serapply Build_Is0Functor.  
+    srapply Build_Is0Functor.  
     intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
     exact ( p1 $@R h1 , p2 $@R h2 ).
   - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].

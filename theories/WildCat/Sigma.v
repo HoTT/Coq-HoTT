@@ -9,7 +9,7 @@ Global Instance is01cat_sigma (A : Type) (B : A -> Type)
   {c : forall a, Is01Cat (B a)}
   : Is01Cat (sig B).
 Proof.
-  serapply Build_Is01Cat.
+  srapply Build_Is01Cat.
   + intros [x u] [y v].
     exact {p : x = y & p # u $-> v}.
   + intros [x u].

@@ -181,7 +181,7 @@ Global Instance isconnected_trunc {X : Type} n m `{IsConnected n X}
   : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.
-  serapply (contr_equiv' _ (Trunc_swap n m X)^-1).
+  srapply (contr_equiv' _ (Trunc_swap n m X)^-1).
 Defined.
 
 Section Wedge_Incl_Conn.

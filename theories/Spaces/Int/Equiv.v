@@ -23,7 +23,7 @@ Definition int_iter_succ_l {A} (f : A -> A) `{IsEquiv _ _ f}
 Proof.
   destruct n as [n| |n]; trivial.
   + revert n f H a.
-    serapply pos_peano_ind.
+    srapply pos_peano_ind.
     { intros f H a.
       symmetry.
       apply eisretr. }
@@ -33,10 +33,10 @@ Proof.
     1: exact (eisretr int_succ (neg n)).
     apply moveL_equiv_M.
     cbn; symmetry.
-    serapply pos_iter_succ_l.
+    srapply pos_iter_succ_l.
   + cbn.
     rewrite pos_add_1_r.
-    serapply pos_iter_succ_l.
+    srapply pos_iter_succ_l.
 Qed.
 
 Definition int_iter_succ_r {A} (f : A -> A) `{IsEquiv _ _ f}
@@ -44,7 +44,7 @@ Definition int_iter_succ_r {A} (f : A -> A) `{IsEquiv _ _ f}
 Proof.
    destruct n as [n| |n]; trivial.
 + revert n f H a.
-  serapply pos_peano_ind.
+  srapply pos_peano_ind.
   { intros f H a.
     symmetry.
     apply eissect. }
@@ -58,7 +58,7 @@ Proof.
   reflexivity.
 + cbn.
   rewrite pos_add_1_r.
-  serapply pos_iter_succ_r.
+  srapply pos_iter_succ_r.
 Qed.
 
 Definition iter_int_pred_l {A} (f : A -> A) `{IsEquiv _ _ f}
@@ -69,7 +69,7 @@ Proof.
   + cbn; rewrite pos_add_1_r.
     by rewrite pos_iter_succ_l.
   + revert n.
-    serapply pos_peano_ind.
+    srapply pos_peano_ind.
     - cbn; symmetry; apply eissect.
     - hnf; intros p q.
       rewrite <- pos_add_1_r.

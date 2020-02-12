@@ -43,5 +43,5 @@ Proof.
   - intros n.
     exact ((ptr_loops _ (E n.+1)) o*E (ptr_pequiv _ (equiv_glue E n))).
   - intros n. unfold glue.
-    serapply isequiv_compose.
+    srapply isequiv_compose.
 Defined.

@@ -12,7 +12,7 @@ Local Open Scope path_scope.
 
 Definition sequence_graph : Graph.
 Proof.
-  serapply (Build_Graph nat).
+  srapply (Build_Graph nat).
   intros n m; exact (S n = m).
 Defined.
 
@@ -23,7 +23,7 @@ Definition Build_Sequence
   (f : forall n, X n -> X n.+1)
   : Sequence.
 Proof.
-  serapply Build_Diagram.
+  srapply Build_Diagram.
   1: exact X.
   intros ? ? p.
   destruct p.
@@ -38,7 +38,7 @@ Definition equiv_sequence (D1 D2 : Sequence)
     {e' : (D1 n.+1) <~> (D2 n.+1) & (D2 _f 1) o e == e' o (D1 _f 1)})
   : D1 ~d~ D2.
 Proof.
-  serapply (Build_diagram_equiv (Build_DiagramMap _ _)); intro n; simpl.
+  srapply (Build_diagram_equiv (Build_DiagramMap _ _)); intro n; simpl.
   - apply equiv_fun.
     induction n.
     + apply H0.

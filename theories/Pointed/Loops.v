@@ -66,7 +66,7 @@ Definition loops_functor_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
   : (loops_functor (pmap_compose g f))
   ==* (pmap_compose (loops_functor g) (loops_functor f)).
 Proof.
-  serapply Build_pHomotopy.
+  srapply Build_pHomotopy.
   { intros p.
     pointed_reduce.
     apply ap_compose. }
@@ -77,7 +77,7 @@ Defined.
 Definition loops_functor_idmap (A : pType)
   : loops_functor (@pmap_idmap A) ==* pmap_idmap.
 Proof.
-  serapply Build_pHomotopy.
+  srapply Build_pHomotopy.
   { intro p.
     refine (concat_1p _ @ concat_p1 _ @ ap_idmap _). }
   reflexivity.
@@ -96,7 +96,7 @@ Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
   : (loops_functor f) ==* (loops_functor g).
 Proof.
   pointed_reduce.
-  serapply Build_pHomotopy; cbn.
+  srapply Build_pHomotopy; cbn.
   { intro q.
     refine (_ @ (concat_p1 _)^ @ (concat_1p _)^).
     apply moveR_Vp, concat_Ap. }
@@ -195,7 +195,7 @@ Defined.
 (** Loop inversion is a pointed equivalence *)
 Definition loops_inv (A : pType) : loops A <~>* loops A.
 Proof.
-  serapply Build_pEquiv.
+  srapply Build_pEquiv.
   1: exact (Build_pMap (loops A) (loops A) inverse 1).
   apply isequiv_path_inverse.
 Defined.
@@ -205,7 +205,7 @@ Definition pequiv_loops_functor {A B : pType}
   : A <~>* B -> loops A <~>* loops B.
 Proof.
   intro f.
-  serapply pequiv_adjointify.
+  srapply pequiv_adjointify.
   1: apply loops_functor, f.
   1: apply loops_functor, (pequiv_inverse f).
   1,2: refine ((loops_functor_compose _ _)^* @* _ @* loops_functor_idmap _).
@@ -367,7 +367,7 @@ Defined.
 Theorem equiv_istrunc_istrunc_loops `{Univalence} n X
   : IsTrunc n.+2 X <~> forall x, IsTrunc n.+1 (loops (X, x)).
 Proof.
-  serapply equiv_iff_hprop.
+  srapply equiv_iff_hprop.
   intro tr_loops.
   intros x y p.
   destruct p.
@@ -388,7 +388,7 @@ Proof.
   intro A.
   transitivity (forall x, IsTrunc n (loops (A, x))).
   1: destruct n; apply equiv_istrunc_istrunc_loops.
-  serapply equiv_functor_forall_id.
+  srapply equiv_functor_forall_id.
   intro a.
   apply (equiv_composeR' (IHn (loops (A, a)))).
   cbn; refine (equiv_iff_hprop _ _).
@@ -407,7 +407,7 @@ Proof.
   { srefine (Build_pEquiv' _ _).
     1: exact (equiv_ap (equiv_concat_r _ _) _ _).
     reflexivity. }
-  serapply Build_pEquiv'.
+  srapply Build_pEquiv'.
   { apply equiv_concat_lr.
     1: symmetry; apply concat_pV.
     apply concat_pV. }

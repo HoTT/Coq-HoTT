@@ -33,7 +33,7 @@ Section FreeIntAction.
                                   (fun _ => R) (fun _ => f))^-1
               oE _));
     try exact _.
-    - unshelve erapply equiv_adjointify.
+    - unshelve rapply equiv_adjointify.
       + simple refine (Wtil_rec _ _ _).
         * intros u r; exact (coeq r).
         * intros u r; cbn. exact ((cglue r)^).

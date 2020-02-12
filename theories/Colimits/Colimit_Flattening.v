@@ -32,7 +32,7 @@ Section Flattening.
     - exact (fun i x => E (i; x)).
     - intros i j g x; cbn.
       symmetry.
-      serapply (path_universe (E_f _ _)).
+      srapply (path_universe (E_f _ _)).
   Defined.
 
   (** ** Helper lemmas *)
@@ -70,12 +70,12 @@ Section Flattening.
 
   Definition cocone_E' : Cocone (diagram_sigma E) (sig E').
   Proof.
-    serapply Build_Cocone; cbn.
+    srapply Build_Cocone; cbn.
     - intros i w.
       exists (colim i w.1); cbn.
       exact w.2.
     - intros i j g x; cbn.
-      serapply path_sigma'.
+      srapply path_sigma'.
       + apply colimp.
       + apply transport_E'.
   Defined.
@@ -86,11 +86,11 @@ Section Flattening.
 
   Global Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
   Proof.
-    serapply Build_UniversalCocone.
-    intro Z; serapply isequiv_adjointify.
+    srapply Build_UniversalCocone.
+    intro Z; srapply isequiv_adjointify.
     - intros [q qq]; cbn in *.
       intros [x y]; revert x y.
-      serapply Colimit_ind; cbn.
+      srapply Colimit_ind; cbn.
       + intros i x y; exact (q i (x; y)).
       + intros i j g x; cbn.
         funext y.
@@ -100,7 +100,7 @@ Section Flattening.
         refine (path_sigma' _ 1 _); cbn.
         apply transport_E'_V.
     - intros [q qq].
-      serapply path_cocone.
+      srapply path_cocone.
       + intros i x; reflexivity.
       + intros i j g [x y].
         rewrite concat_1p, concat_p1.
@@ -122,7 +122,7 @@ Section Flattening.
     - intro f.
       funext [x y].
       revert x y; cbn.
-      serapply Colimit_ind; cbn.
+      srapply Colimit_ind; cbn.
       + reflexivity.
       + intros i j g x; cbn.
         funext y.
@@ -159,10 +159,10 @@ Section Flattening.
             (transport_pV E' (colimp i j g x) y)^).
           { subst p1; clear.
             etransitivity.
-            1: serapply moveL_transport_V_1.
+            1: srapply moveL_transport_V_1.
             etransitivity.
-            { serapply inverse2.
-              2: serapply transport_VpV. }
+            { srapply inverse2.
+              2: srapply transport_VpV. }
             symmetry; apply ap_V. }
           rewrite X; clear X p1.
           rewrite <- ap_compose; cbn.
@@ -213,9 +213,9 @@ Section Flattening.
 
   Definition flattening_lemma : Colimit (diagram_sigma E) <~> sig E'.
   Proof.
-    serapply colimit_unicity.
+    srapply colimit_unicity.
     3: apply iscolimit_colimit.
-    erapply Build_IsColimit.
+    rapply Build_IsColimit.
     apply unicocone_cocone_E'.
   Defined.
 

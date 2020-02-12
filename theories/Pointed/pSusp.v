@@ -41,7 +41,7 @@ Definition psusp_functor_compose {X Y Z : pType} (g : Y ->* Z) (f : X ->* Y)
   : psusp_functor (g o* f) ==* psusp_functor g o* psusp_functor f.
 Proof.
   pointed_reduce; srefine (Build_pHomotopy _ _); cbn.
-  { serapply Susp_ind; try reflexivity; cbn.
+  { srapply Susp_ind; try reflexivity; cbn.
     intros x.
     refine (transport_paths_FlFr _ _ @ _).
     rewrite concat_p1; apply moveR_Vp.
@@ -53,8 +53,8 @@ Qed.
 Definition psusp_functor_idmap {X : pType}
   : psusp_functor (@pmap_idmap X) ==* pmap_idmap.
 Proof.
-  serapply Build_pHomotopy.
-  { serapply Susp_ind; try reflexivity.
+  srapply Build_pHomotopy.
+  { srapply Susp_ind; try reflexivity.
     intro x.
     refine (transport_paths_FFlr _ _ @ _).
     by rewrite ap_idmap, Susp_rec_beta_merid,
@@ -66,9 +66,9 @@ Definition psusp_2functor {X Y} {f g : X ->* Y} (p : f ==* g)
   : psusp_functor f ==* psusp_functor g.
 Proof.
   pointed_reduce.
-  serapply Build_pHomotopy.
+  srapply Build_pHomotopy.
   { simpl.
-    serapply Susp_ind.
+    srapply Susp_ind.
     1,2: reflexivity.
     intro x; cbn.
     rewrite transport_paths_FlFr.
@@ -82,7 +82,7 @@ Defined.
 Definition pequiv_psusp_functor {X Y : pType} (f : X <~>* Y)
   : psusp X <~>* psusp Y.
 Proof.
-  serapply pequiv_adjointify.
+  srapply pequiv_adjointify.
   1: apply psusp_functor, f.
   1: apply psusp_functor, f^-1*.
   1,2: refine ((psusp_functor_compose _ _)^* @* _ @* psusp_functor_idmap).
@@ -166,7 +166,7 @@ Defined.
 Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
-  serapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
+  srapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
   { apply ptr_functor.
     apply loop_susp_unit. }
   exact _.

@@ -84,7 +84,7 @@ Section UnivalenceImpliesFunext.
     (** If we compose [d] and [e] with [free_path_target], we get [f] and [g], respectively. So, if we had a path from [d] to [e], we would get one from [f] to [g]. *)
     change f with ((snd o pr1) o d).
     change g with ((snd o pr1) o e).
-    erapply (ap (fun g => snd o pr1 o g)).
+    rapply (ap (fun g => snd o pr1 o g)).
     (** Since composition with [src] is an equivalence, we can freely compose with [src]. *)
     pose (fun A B x y=> @equiv_inv _ _ _ (@isequiv_ap _ _ _ (@isequiv_src_compose A B) x y)) as H'.
     apply H'.

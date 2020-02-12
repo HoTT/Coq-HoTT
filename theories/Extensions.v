@@ -55,7 +55,7 @@ Section Extensions.
     <~> ext = ext'.
   Proof.
     revert ext'.
-    serapply equiv_path_from_contr.
+    srapply equiv_path_from_contr.
     { unfold ExtensionAlong; cbn.
       exists (fun y => 1%path).
       intros x; symmetry; apply concat_pV. }

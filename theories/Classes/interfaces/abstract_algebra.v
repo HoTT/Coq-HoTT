@@ -306,9 +306,9 @@ Global Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}
   `{SgOp B} `{IsHSet B} `{MonUnit A} `{MonUnit B} (f : A -> B)
   : IsHProp (IsMonoidPreserving f).
 Proof.
-  serapply (trunc_equiv' _ issig_IsMonoidPreserving).
-  serapply (trunc_equiv' _ (equiv_sigma_prod0 _ _)^-1).
-  serapply trunc_prod.
+  srapply (trunc_equiv' _ issig_IsMonoidPreserving).
+  srapply (trunc_equiv' _ (equiv_sigma_prod0 _ _)^-1).
+  srapply trunc_prod.
   unfold IsUnitPreserving.
   exact _.
 Defined.
@@ -324,18 +324,18 @@ Proof.
   set (a' := (issig_issemigroup x y)^-1 a).
   set (b' := (issig_issemigroup x y)^-1 b).
   clearbody a' b'; clear a b.
-  serapply (contr_equiv _ (ap (issig_issemigroup x y))).
+  srapply (contr_equiv _ (ap (issig_issemigroup x y))).
   rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
   rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
   set (a := equiv_sigma_prod0 _ _ a').
   set (b := equiv_sigma_prod0 _ _ b').
   clearbody a b; clear a' b'.
-  serapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  serapply (contr_equiv _ (equiv_path_prod _ _)).
-  serapply contr_prod.
+  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
+  srapply (contr_equiv _ (equiv_path_prod _ _)).
+  srapply contr_prod.
   destruct a as [a' a], b as [b' b].
-  do 3 (ntc_refine (contr_equiv' _ (@equiv_path_forall H _ _ _ _));
-  ntc_refine (@contr_forall H _ _ _); intro).
+  do 3 (nrefine (contr_equiv' _ (@equiv_path_forall H _ _ _ _));
+  nrefine (@contr_forall H _ _ _); intro).
   exact _.
 Defined.
 
@@ -349,28 +349,28 @@ Proof.
   set (a' := (issig_ismonoid x y z)^-1 a).
   set (b' := (issig_ismonoid x y z)^-1 b).
   clearbody a' b'; clear a b.
-  serapply (contr_equiv _ (ap (issig_ismonoid x y z))).
+  srapply (contr_equiv _ (ap (issig_ismonoid x y z))).
   rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
   rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
   set (a := equiv_sigma_prod0 _ _ a').
   set (b := equiv_sigma_prod0 _ _ b').
   clearbody a b; clear a' b'.
-  serapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  serapply (contr_equiv _ (equiv_path_prod _ _)).
-  serapply contr_prod.
+  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
+  srapply (contr_equiv _ (equiv_path_prod _ _)).
+  srapply contr_prod.
   destruct a as [a' a], b as [b' b]; cbn.
   rewrite <- (eissect (equiv_sigma_prod0 _ _) a).
   rewrite <- (eissect (equiv_sigma_prod0 _ _) b).
   set (a'' := equiv_sigma_prod0 _ _ a).
   set (b'' := equiv_sigma_prod0 _ _ b).
   clearbody a'' b''; clear a b.
-  serapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  serapply (contr_equiv _ (equiv_path_prod _ _)).
+  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
+  srapply (contr_equiv _ (equiv_path_prod _ _)).
   destruct a'' as [a a''], b'' as [b b'']; cbn.
-  serapply contr_prod.
-  all: serapply contr_paths_contr.
-  all: serapply contr_inhabited_hprop.
-  all: serapply trunc_forall.
+  srapply contr_prod.
+  all: srapply contr_paths_contr.
+  all: srapply contr_inhabited_hprop.
+  all: srapply trunc_forall.
 Defined.
 
 Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).
@@ -383,28 +383,28 @@ Proof.
   set (a' := (issig_isgroup w x y z)^-1 a).
   set (b' := (issig_isgroup w x y z)^-1 b).
   clearbody a' b'; clear a b.
-  serapply (contr_equiv _ (ap (issig_isgroup w x y z))).
+  srapply (contr_equiv _ (ap (issig_isgroup w x y z))).
   rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
   rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
   set (a := equiv_sigma_prod0 _ _ a').
   set (b := equiv_sigma_prod0 _ _ b').
   clearbody a b; clear a' b'.
-  serapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  serapply (contr_equiv _ (equiv_path_prod _ _)).
-  serapply contr_prod.
+  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
+  srapply (contr_equiv _ (equiv_path_prod _ _)).
+  srapply contr_prod.
   destruct a as [a' a], b as [b' b]; cbn.
   rewrite <- (eissect (equiv_sigma_prod0 _ _) a).
   rewrite <- (eissect (equiv_sigma_prod0 _ _) b).
   set (a'' := equiv_sigma_prod0 _ _ a).
   set (b'' := equiv_sigma_prod0 _ _ b).
   clearbody a'' b''; clear a b.
-  serapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  serapply (contr_equiv _ (equiv_path_prod _ _)).
+  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
+  srapply (contr_equiv _ (equiv_path_prod _ _)).
   destruct a'' as [a a''], b'' as [b b'']; cbn.
-  serapply contr_prod.
-  all: serapply contr_paths_contr.
-  all: serapply contr_inhabited_hprop.
-  all: serapply trunc_forall.
+  srapply contr_prod.
+  all: srapply contr_paths_contr.
+  all: srapply contr_inhabited_hprop.
+  all: srapply trunc_forall.
 Defined.
 
 End extras.

@@ -19,14 +19,14 @@ Definition isequiv_issurj_tr0_isequiv_ap
   : IsEquiv f.
 Proof.
   apply (equiv_isequiv_ap_isembedding f)^-1 in ii.
-  serapply isequiv_surj_emb.
-  serapply BuildIsSurjection.
+  srapply isequiv_surj_emb.
+  srapply BuildIsSurjection.
   cbn; intro b.
   pose proof (@center _ (i (tr b))) as p.
   revert p.
   apply Trunc_functor.
   apply sig_ind.
-  serapply Trunc_ind.
+  srapply Trunc_ind.
   intros a p.
   apply (equiv_path_Tr _ _)^-1 in p.
   strip_truncations.
@@ -41,7 +41,7 @@ Definition isequiv_isbij_tr0_isequiv_loops
            {ii : forall x, IsEquiv (loops_functor (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
-  serapply (isequiv_issurj_tr0_isequiv_ap f).
+  srapply (isequiv_issurj_tr0_isequiv_ap f).
   intros x y.
   apply isequiv_inhab_codomain.
   intro p.
@@ -54,7 +54,7 @@ Proof.
   strip_truncations.
   destruct q.
   cbn in ii.
-  serapply isequiv_homotopic.
+  srapply isequiv_homotopic.
   { intro p.
     exact (1 @ (ap f p @ 1)). }
   1: apply (ii x).
@@ -74,14 +74,14 @@ Proof.
   induction n as [|n IHn].
   1: intros; apply isequiv_contr_contr.
   intros A B H0 H1 f i ii.
-  ntc_refine (@isequiv_isbij_tr0_isequiv_loops ua _ _ f i _).
+  nrefine (@isequiv_isbij_tr0_isequiv_loops ua _ _ f i _).
   intro x.
-  ntc_refine (isequiv_homotopic (@ap _ _ f x x) _).
+  nrefine (isequiv_homotopic (@ap _ _ f x x) _).
   2:{intros p; cbn.
      symmetry; exact (concat_1p _ @ concat_p1 _). }
   pose proof (@istrunc_paths _ _ H0 x x) as h0.
   pose proof (@istrunc_paths _ _ H1 (f x) (f x)) as h1.
-  ntc_refine (IHn (x=x) (f x=f x) h0 h1 (@ap _ _ f x x) _ _).
+  nrefine (IHn (x=x) (f x=f x) h0 h1 (@ap _ _ f x x) _ _).
   - pose proof (ii x 0) as h2.
     unfold pi_functor in h2; cbn in h2.
     refine (@isequiv_homotopic _ _ _ _ h2 _).
@@ -92,12 +92,12 @@ Proof.
                IsEquiv (pi_functor k.+1 (pmap_from_point (@ap _ _ f x y) q))).
     2:exact (h3 x).
     intros y q. destruct q.
-    ntc_refine (isequiv_homotopic (pi_functor k.+1 (loops_functor (pmap_from_point f x))) _).
+    nrefine (isequiv_homotopic (pi_functor k.+1 (loops_functor (pmap_from_point f x))) _).
     2:{ apply pi_2functor; srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           refine (concat_1p _ @ concat_p1 _).
         - reflexivity. }
-    ntc_refine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 (pmap_from_point f x))).
+    nrefine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 (pmap_from_point f x))).
     2-3:refine (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.

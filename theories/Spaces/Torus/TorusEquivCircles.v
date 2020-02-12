@@ -28,7 +28,7 @@ Section TorusEquivCircle.
   (* We define the map from the Torus to the Circles *)
   Definition t2c : Torus -> S1 * S1.
   Proof.
-    serapply Torus_rec.
+    srapply Torus_rec.
     + exact (base, base). (* The point of the torus is taken to (base, base *)
     + exact (path_prod' loop 1). (* loop_a is taken to loop in the first *)
     + exact (path_prod' 1 loop). (* loop_b is taken to loop in the second *)
@@ -38,14 +38,14 @@ Section TorusEquivCircle.
   (* We now define the curried function from the circles to the torus *)
   Definition c2t' : S1 -> S1 -> Torus.
   Proof.
-    serapply S1_rec.
-    + serapply S1_rec.    (* Double circle recursion *)
+    srapply S1_rec.
+    + srapply S1_rec.    (* Double circle recursion *)
       - exact tbase.      (* The basepoint is sent to the point of the torus *)
       - exact loop_b.     (* The second loop is sent to loop_b *)
     + apply path_forall.  (* We use function extensionality here to induct *)
-      serapply S1_ind_dp. (* Circle induction as a DPath *)
+      srapply S1_ind_dp. (* Circle induction as a DPath *)
       - exact loop_a.     (* The first loop is sent to loop_a *)
-      - serapply sq_dp^-1. (* This DPath is actually a square *)
+      - srapply sq_dp^-1. (* This DPath is actually a square *)
         apply (pr1 c2t_square_and_cube). (* We apply the cap we found above *)
   Defined.
 

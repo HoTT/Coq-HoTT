@@ -53,7 +53,7 @@ Proof.
   revert P a f.
   induction p; trivial.
   intros P a f.
-  serapply IHp.
+  srapply IHp.
 Qed.
 
 (** ** Properties of constructors *)

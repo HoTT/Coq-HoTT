@@ -127,7 +127,7 @@ Proof.
   refine (equiv_functor_sigma_id _ oE _).
   1:{ intros; symmetry; etransitivity.
       - apply equiv_sigT_ind'.
-      - serapply equiv_contr_forall. }
+      - srapply equiv_contr_forall. }
   cbn.
   refine (equiv_functor_sigma'
             (P := fun (e : P X) => forall q:X=X, transport P q^ e = e)

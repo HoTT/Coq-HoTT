@@ -503,7 +503,7 @@ Global Instance contr_basedequiv' {X : Type}
 : Contr {Y : Type & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
-  serapply Build_Contr.
+  srapply Build_Contr.
   - exact (X; equiv_idmap).
   - intros [Y f]; revert Y f.
     refine (equiv_induction_inv _ idpath).

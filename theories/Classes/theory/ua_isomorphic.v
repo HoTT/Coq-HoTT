@@ -71,7 +71,7 @@ Lemma path_isomorphic `{Funext} {σ : Signature} {A B : Algebra σ}
   : F = G.
 Proof.
   apply (ap (issig_isomorphic A B)^-1)^-1.
-  serapply path_sigma.
+  srapply path_sigma.
   - exact a.
   - apply path_sigma_hprop.
     refine (ap _ (transport_sigma _ _) @ _).

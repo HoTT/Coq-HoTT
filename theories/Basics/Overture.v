@@ -750,98 +750,100 @@ Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 
-(** A variant of [apply] using [refine], doing as much conversion as necessary, instantiating as few arguments as possible.  This is useful if your lemma constructs an equivalence, and you want to use that equivalence, rather than the underlying function. *)
+(** Applying a tactic to a term with increasingly many arguments *)
+Tactic Notation "do_with_holes" tactic3(x) uconstr(p) :=
+  x uconstr:(p) ||
+  x uconstr:(p _) ||
+  x uconstr:(p _ _) ||
+  x uconstr:(p _ _ _) ||
+  x uconstr:(p _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
 
-Ltac rapply p :=
-  refine p ||
-  refine (p _) ||
-  refine (p _ _) ||
-  refine (p _ _ _) ||
-  refine (p _ _ _ _) ||
-  refine (p _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+(** Same thing but starting with many holes first *)
+Tactic Notation "do_with_holes'" tactic3(x) uconstr(p) :=
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _) ||
+  x uconstr:(p _ _ _) ||
+  x uconstr:(p _ _) ||
+  x uconstr:(p _) ||
+  x uconstr:(p).
 
-(** An alternative version that instead instantiates as *many* arguments as possible.  This is what the Coq standard library calls [rapply], but for us it seems that the other version is more useful, hence deserves the unprimed name. *)
-
-Ltac rapply' p :=
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _) ||
-  refine (p _ _ _ _) ||
-  refine (p _ _ _) ||
-  refine (p _ _) ||
-  refine (p _) ||
-  refine p.
-
-
-(** [erapply lem] is like [apply lem] (rather, [rapply lem]), but it allows holes in [lem] *)
-Tactic Notation "erapply" open_constr(term) := rapply term.
-
-(** [erapply' lem] is like [apply lem] (rather, [rapply' lem]), but it allows holes in [lem] *)
-Tactic Notation "erapply'" open_constr(term) := rapply' term.
-
-(** A shorter name for [simple refine], useful for things like [isequiv_adjointify]. *)
+(** A shorter name for [simple refine]. *)
 Tactic Notation "srefine" uconstr(term) := simple refine term.
-
-(** An alternative version of [rapply] using [simple refine]. *)
-Ltac srapply p :=
-  srefine p ||
-  srefine (p _) ||
-  srefine (p _ _) ||
-  srefine (p _ _ _) ||
-  srefine (p _ _ _ _) ||
-  srefine (p _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
-
-Tactic Notation "serapply" uconstr(term) := srapply term.
-
 (** A shorter name for [notypeclasses refine]. *)
-Tactic Notation "ntc_refine" uconstr(term) := notypeclasses refine term.
+Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term.
+(** A shorter name for [simple notypeclasses refine]. *)
+Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term.
 
-(* An alternative version of [rapply] using [notypeclasses refine]. *)
-Ltac ntc_rapply p :=
-  ntc_refine p ||
-  ntc_refine (p _) ||
-  ntc_refine (p _ _) ||
-  ntc_refine (p _ _ _) ||
-  ntc_refine (p _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+Tactic Notation "rapply" uconstr(term)
+  := do_with_holes ltac:(fun x => refine x) term.
+Tactic Notation "rapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => refine x) term.
+
+Tactic Notation "srapply" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine x) term.
+Tactic Notation "srapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => srefine x) term.
+
+Tactic Notation "nrapply" uconstr(term)
+  := do_with_holes ltac:(fun x => nrefine x) term.
+Tactic Notation "nrapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => nrefine x) term.
+
+Tactic Notation "snrapply" uconstr(term)
+  := do_with_holes ltac:(fun x => snrefine x) term.
+Tactic Notation "snrapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => snrefine x) term.
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
@@ -857,6 +859,7 @@ Ltac done :=
     | match goal with
       H : ~ _ |- _ => solve [destruct H; trivial]
       end ].
+
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
@@ -968,7 +971,7 @@ Ltac get_constructor_head T :=
 Ltac ntc_constructor :=
   lazymatch goal with
   | [ |- ?G ] => let build := get_constructor_head G in
-                 ntc_rapply build
+                 nrapply build
   end.
 
 (** [case_path] is a HoTT replacement for [case_eq]; [case_path x] is like [destruct x], but it remembers the original value of [x] in an equation to be introduced. *)
@@ -1100,7 +1103,7 @@ Local Ltac unify_with_projections term u :=
 (* Completely destroys v into it's pieces and trys to put pieces in sigma. *)
 Local Ltac refine_with_existT_as_much_as_needed_then_destruct v :=
   ((destruct v; shelve) +
-   (simple notypeclasses refine (_ ; _);
+   (snrefine (_ ; _);
     [ destruct v; shelve
     | refine_with_existT_as_much_as_needed_then_destruct v ])).
 
@@ -1114,7 +1117,7 @@ Ltac issig :=
   let u := fresh "u" in
   let v := fresh "v" in
   (** We build an equivalence with 5 holes. *)
-  simple notypeclasses refine  (* We don't want typeclass search running. *)
+  snrefine  (* We don't want typeclass search running. *)
     (Build_Equiv A B _ (Build_IsEquiv A B (fun u => _) (fun v => _)
       (fun v => _) (fun u => _) (fun _ => _)));
   (** Going from a sigma type to a record *)

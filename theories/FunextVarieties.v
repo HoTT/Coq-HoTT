@@ -88,7 +88,7 @@ Section Homotopies.
     pose (s := fun (g : forall x, B x) (h : f == g) x => (g x ; h x)).
     (* Because of judgemental eta-conversion, the retraction is actually definitional, so we can just replace the goal. *)
     change (r (fun x => (f x ; idpath (f x))) = r (s g h)).
-    apply ap; serapply path_contr.
+    apply ap; srapply path_contr.
   Defined.
 
   (** This enables us to prove that pointwise homotopies have the same elimination rule as the identity type. *)

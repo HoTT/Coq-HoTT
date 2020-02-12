@@ -96,7 +96,7 @@ Section Eliminators.
     1: intro; apply dp_const, bloop', x.
     intros x y.
     apply ds_const'.
-    erapply sq_GGcc.
+    rapply sq_GGcc.
     2: refine (_ @ ap _ (dp_const_pp _ _)).
     1,2: symmetry; apply eissect.
     by apply sq_G1.
@@ -124,14 +124,14 @@ Section Eliminators.
     refine (ClassifyingSpace_ind P bbase' bloop' _).
     intros.
     apply ds_G1, dp_path_transport.
-    serapply path_ishprop.
+    srapply path_ishprop.
   Defined.
 
   Definition ClassifyingSpace_rec_hset
     (P : Type) `{IsTrunc 0 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
     : ClassifyingSpace G -> P.
   Proof.
-    serapply (ClassifyingSpace_rec P bbase' bloop' _).
+    srapply (ClassifyingSpace_rec P bbase' bloop' _).
     intros; apply path_ishprop.
   Defined.
 
@@ -142,8 +142,8 @@ Global Instance isconnected_classifyingspace {G : Group}
   : IsConnected 0 (ClassifyingSpace G).
 Proof.
   exists (tr bbase).
-  serapply Trunc_ind.
-  serapply ClassifyingSpace_ind_hset; cbn.
+  srapply Trunc_ind.
+  srapply ClassifyingSpace_ind_hset; cbn.
   1: reflexivity.
   intro x.
   apply dp_paths_FlFr.
@@ -191,8 +191,8 @@ Section EncodeDecode.
 
   Local Definition codes : B G -> 0 -Type.
   Proof.
-    serapply ClassifyingSpace_rec.
-    + serapply (BuildhSet G).
+    srapply ClassifyingSpace_rec.
+    + srapply (BuildhSet G).
     + intro x.
       apply path_trunctype.
       apply (right_mult_equiv x).
@@ -222,7 +222,7 @@ Section EncodeDecode.
 
   Local Definition decode : forall (z : B G), codes z -> bbase = z.
   Proof.
-    serapply ClassifyingSpace_ind_hset.
+    srapply ClassifyingSpace_ind_hset.
     + exact bloop.
     + intro x.
       apply dp_arrow.
@@ -243,7 +243,7 @@ Section EncodeDecode.
   (** Universal property of BG *)
   Lemma equiv_loops_bg_g : loops (B G) <~> G.
   Proof.
-    serapply equiv_adjointify.
+    srapply equiv_adjointify.
     + exact (encode _).
     + exact bloop.
     + intro x.
@@ -257,7 +257,7 @@ Section EncodeDecode.
   Lemma pequiv_loops_bg_g
     : loops (B G) <~>* Build_pType G _.
   Proof.
-    serapply Build_pEquiv'.
+    srapply Build_pEquiv'.
     1: apply equiv_loops_bg_g.
     reflexivity.
   Defined.
@@ -271,11 +271,11 @@ Section HSpace_bg.
 
   Definition bg_mul : B G -> B G -> B G.
   Proof.
-    serapply ClassifyingSpace_rec.
+    srapply ClassifyingSpace_rec.
     1: exact idmap.
     { intro x.
       apply path_forall.
-      serapply ClassifyingSpace_ind_hset.
+      srapply ClassifyingSpace_ind_hset.
       1: exact (bloop x).
       cbn; intro y.
       apply dp_paths_lr.
@@ -287,11 +287,11 @@ Section HSpace_bg.
     rewrite <- path_forall_pp.
     apply ap; cbn.
     apply path_forall.
-    serapply ClassifyingSpace_ind_hset.
+    srapply ClassifyingSpace_ind_hset.
     1: exact (bloop_pp x y).
     intro z.
-    serapply dp_paths_FlFr_D.
-    serapply path_ishprop.
+    srapply dp_paths_FlFr_D.
+    srapply path_ishprop.
   Defined.
 
   Definition bg_mul_beta x
@@ -304,8 +304,8 @@ Section HSpace_bg.
 
   Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.
   Proof.
-    serapply ClassifyingSpace_ind_hset.
-    { serapply ClassifyingSpace_ind_hset.
+    srapply ClassifyingSpace_ind_hset.
+    { srapply ClassifyingSpace_ind_hset.
       1: reflexivity.
       intro x.
       apply sq_dp^-1, sq_1G.
@@ -315,7 +315,7 @@ Section HSpace_bg.
     intro.
     apply dp_forall_domain.
     intro y; apply dp_paths_FlFr; revert y.
-    serapply ClassifyingSpace_ind_hset.
+    srapply ClassifyingSpace_ind_hset.
     { cbn; rewrite concat_p1.
       rewrite ap_idmap.
       apply moveR_Vp.
@@ -330,7 +330,7 @@ Section HSpace_bg.
   Definition bg_mul_left_id
     : forall a : B G, bg_mul (point (B G)) a = a.
   Proof.
-    serapply ClassifyingSpace_ind_hset.
+    srapply ClassifyingSpace_ind_hset.
     1: reflexivity.
     intro; cbn; apply dp_paths_lr.
     refine (concat_pp_p _ _ _ @ _).
