@@ -236,4 +236,51 @@ Proof.
     exact (snd (fin_equiv_inv n m e)).
 Qed.
 
+(** Definition of the permutation [Fin n -> Fin n] which reverses the
+    order of the elements, [0 ↦ n-1], [1 ↦ n-2], etc. *)
+Fixpoint fin_rev {n : nat} : Fin n -> Fin n :=
+  match n with
+  | O => idmap
+  | S n' =>
+    fun i =>
+      match i with
+      | inl i' => fin_succ_inject n' (fin_rev i')
+      | inr tt => fin_zero n'
+      end
+  end.
 
+Lemma path_fin_rev_fin_zero (n : nat) : fin_rev (fin_zero n) = inr tt.
+Proof.
+  induction n.
+  - reflexivity.
+  - cbn in *. by destruct IHn^.
+Defined.
+
+Lemma path_fin_rev_fin_succ_inject {n : nat}
+  : forall i : Fin n, fin_rev (fin_succ_inject n i) = inl (fin_rev i).
+Proof.
+  induction n.
+  - contradiction.
+  - cbn in *; intros [i|u].
+    + by destruct (IHn i)^.
+    + by destruct u.
+Defined.
+
+Lemma is_involution_fin_rev {n : nat}
+  : forall (i : Fin n), fin_rev (fin_rev i) = i.
+Proof.
+  induction n.
+  - reflexivity.
+  - intros [i|u].
+    + rewrite path_fin_rev_fin_succ_inject. f_ap; apply IHn.
+    + destruct u. by rewrite path_fin_rev_fin_zero.
+Defined.
+
+Global Instance isequiv_fin_rev (n : nat) : IsEquiv (@fin_rev n).
+Proof.
+  srapply (isequiv_adjointify fin_rev fin_rev);
+    intro i; apply is_involution_fin_rev.
+Defined.
+
+Definition equiv_fin_rev (n : nat) : Fin n <~> Fin n
+  := Build_Equiv _ _ fin_rev _.

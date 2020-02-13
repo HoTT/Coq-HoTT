@@ -53,22 +53,23 @@ Fixpoint fin_zero (n : nat)
       | S n' => inl (fin_zero n')
       end.
 
-(** There is an injection from the n element finite set into the n.+1 element finite set. *)
-Fixpoint fin_finS_inject (n : nat)
+(** There is an injection from the n element finite set into the n.+1 element finite set,
+    mapping [i : Fin n] to the successor of [i] in [Fin n.+1]. *)
+Fixpoint fin_succ_inject (n : nat)
   : Fin n -> Fin n.+1
   := match n with
       | O => Empty_rec
       | S n' =>
         fun i : Fin (S n') =>
           match i with
-          | inl i' => inl (fin_finS_inject n' i')
+          | inl i' => inl (fin_succ_inject n' i')
           | inr tt => inr tt
           end
       end.
 
 (** This actually is an embedding (by showing it is an injection). *)
-Lemma isembedding_fin_finS_inject (n : nat)
-  : IsEmbedding (fin_finS_inject n).
+Lemma isembedding_fin_succ_inject (n : nat)
+  : IsEmbedding (fin_succ_inject n).
 Proof.
   apply isembedding_isinj_hset.
   induction n.
