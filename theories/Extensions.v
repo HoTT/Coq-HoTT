@@ -350,10 +350,11 @@ Section Extensions.
              (f : A -> B) (C : B -> Type@{k})
     := lift_ooextendablealong@{i j k e1 e2} f C.
 
+  (** We take part of the data from [ps 1] and part from [ps 2] so that the inverse chosen is the expected one. *)
   Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C -> IsEquiv (fun g => g oD f)
-    := fun ps => isequiv_extendable 0 (ps 2).
+    := fun ps => isequiv_extendable 0 (fst (ps 1%nat), snd (ps 2)).
 
   Definition equiv_ooextendable_pathsplit `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)

@@ -281,6 +281,12 @@ Definition equiv_o_to_O `{Funext}
 : (O P -> Q) <~> (P -> Q)
 := Build_Equiv _ _ (fun g : O P -> Q => g o to O P) _.
 
+(** [isequiv_ooextendable] is defined in a way that makes [O_rec] definitionally equal to the inverse of [equiv_o_to_O]. *)
+Global Instance isequiv_O_rec_to_O `{Funext}
+       (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
+  : IsEquiv (fun g : P -> Q => O_rec g)
+  := (equiv_isequiv (equiv_o_to_O O P Q)^-1).
+
 (** ** Properties of Reflective Subuniverses *)
 
 (** We now prove a bunch of things about an arbitrary reflective subuniverse. *)
