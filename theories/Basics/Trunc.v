@@ -6,9 +6,78 @@ Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
-(** ** Arithmetic on truncation-levels. *)
+(** ** Notation for truncation-levels. *)
 Open Scope trunc_scope.
-Check -2.
+
+(* Increase a truncation index by a natural number. *)
+Definition trunc_index_inc (k : trunc_index)
+  : nat -> trunc_index
+  := fix inner (n : nat) : trunc_index := match n with
+      | O => k
+      | S m => (inner m).+1
+    end.
+
+(* This is a variation that inserts the successor operations in
+   the other order.  This is sometimes convenient. *)
+Fixpoint trunc_index_inc' (k : trunc_index) (n : nat)
+  : trunc_index
+  := match n with
+      | O => k
+      | S m => (trunc_index_inc' k.+1 m)
+    end.
+
+Definition trunc_index_inc'_succ (n : nat) (k : trunc_index)
+  : trunc_index_inc' k.+1 n = (trunc_index_inc' k n).+1.
+Proof.
+  revert k; induction n; intro k.
+  - reflexivity.
+  - apply (IHn k.+1).
+Defined.
+
+Definition trunc_index_inc_agree (k : trunc_index) (n : nat)
+  : trunc_index_inc k n = trunc_index_inc' k n.
+Proof.
+  induction n.
+  - reflexivity.
+  - simpl.
+    refine (ap _ IHn @ _).
+    symmetry; apply trunc_index_inc'_succ.
+Defined.
+
+Definition nat_to_trunc_index (n : nat) : trunc_index
+  := trunc_index_inc minus_two.+2 n.
+
+Coercion nat_to_trunc_index : nat >-> trunc_index.
+
+Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
+  := match v with
+     | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))
+     | Decimal.Neg d => match Nat.of_uint d with
+                        | 2%nat => Some minus_two
+                        | 1%nat => Some (minus_two.+1)
+                        | 0%nat => Some (minus_two.+2)
+                        | _ => None
+                        end
+     end.
+
+Fixpoint trunc_index_to_little_uint n acc :=
+  match n with
+  | minus_two => acc
+  | minus_two.+1 => acc
+  | minus_two.+2 => acc
+  | trunc_S n => trunc_index_to_little_uint n (Decimal.Little.succ acc)
+  end.
+
+Definition trunc_index_to_int n :=
+  match n with
+  | minus_two => Decimal.Neg (Nat.to_uint 2)
+  | minus_two.+1 => Decimal.Neg (Nat.to_uint 1)
+  | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
+  end.
+
+Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
+
+(** ** Arithmetic on truncation-levels. *)
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
   := match m with
        | -2 => n
@@ -52,43 +121,6 @@ Global Instance trunc_index_leq_minus_two_n n : -2 <= n := tt.
 Global Instance trunc_index_leq_succ n : n <= n.+1.
 Proof.
   by induction n as [|n IHn] using trunc_index_ind.
-Defined.
-
-(* Increase a truncation index by a natural number.
-   This has the property that [trunc_index_inc minus_two.+2 n] is
-   definitionally equal to the coercion [nat_to_trunc_index n]. *)
-Definition trunc_index_inc (k : trunc_index)
-  : nat -> trunc_index
-  := fix inner (n : nat) : trunc_index := match n with
-      | O => k
-      | S m => (inner m).+1
-    end.
-
-(* This is a variation that inserts the successor operations in
-   the other order.  This is sometimes convenient. *)
-Fixpoint trunc_index_inc' (k : trunc_index) (n : nat)
-  : trunc_index
-  := match n with
-      | O => k
-      | S m => (trunc_index_inc' k.+1 m)
-    end.
-
-Definition trunc_index_inc'_succ (n : nat) (k : trunc_index)
-  : trunc_index_inc' k.+1 n = (trunc_index_inc' k n).+1.
-Proof.
-  revert k; induction n; intro k.
-  - reflexivity.
-  - apply (IHn k.+1).
-Defined.
-
-Definition trunc_index_inc_agree (k : trunc_index) (n : nat)
-  : trunc_index_inc k n = trunc_index_inc' k n.
-Proof.
-  induction n.
-  - reflexivity.
-  - simpl.
-    refine (ap _ IHn @ _).
-    symmetry; apply trunc_index_inc'_succ.
 Defined.
 
 Definition trunc_index_pred : trunc_index -> trunc_index.
