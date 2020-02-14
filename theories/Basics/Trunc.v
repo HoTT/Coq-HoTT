@@ -10,11 +10,11 @@ Generalizable Variables A B m n f.
 Open Scope trunc_scope.
 
 (* Increase a truncation index by a natural number. *)
-Definition trunc_index_inc (k : trunc_index)
-  : nat -> trunc_index
-  := fix inner (n : nat) : trunc_index := match n with
+Fixpoint trunc_index_inc (k : trunc_index) (n : nat)
+  : trunc_index
+  := match n with
       | O => k
-      | S m => (inner m).+1
+      | S m => (trunc_index_inc k m).+1
     end.
 
 (* This is a variation that inserts the successor operations in
