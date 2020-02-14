@@ -54,12 +54,42 @@ Proof.
   by induction n as [|n IHn] using trunc_index_ind.
 Defined.
 
-Fixpoint trunc_index_inc (n : nat) (k : trunc_index)
+(* Increase a truncation index by a natural number.
+   This has the property that [trunc_index_inc minus_two.+2 n] is
+   definitionally equal to the coercion [nat_to_trunc_index n]. *)
+Definition trunc_index_inc (k : trunc_index)
+  : nat -> trunc_index
+  := fix inner (n : nat) : trunc_index := match n with
+      | O => k
+      | S m => (inner m).+1
+    end.
+
+(* This is a variation that inserts the successor operations in
+   the other order.  This is sometimes convenient. *)
+Fixpoint trunc_index_inc' (k : trunc_index) (n : nat)
   : trunc_index
   := match n with
       | O => k
-      | S m => (trunc_index_inc m k).+1
+      | S m => (trunc_index_inc' k.+1 m)
     end.
+
+Definition trunc_index_inc'_succ (n : nat) (k : trunc_index)
+  : trunc_index_inc' k.+1 n = (trunc_index_inc' k n).+1.
+Proof.
+  revert k; induction n; intro k.
+  - reflexivity.
+  - apply (IHn k.+1).
+Defined.
+
+Definition trunc_index_inc_agree (k : trunc_index) (n : nat)
+  : trunc_index_inc k n = trunc_index_inc' k n.
+Proof.
+  induction n.
+  - reflexivity.
+  - simpl.
+    refine (ap _ IHn @ _).
+    symmetry; apply trunc_index_inc'_succ.
+Defined.
 
 Definition trunc_index_pred : trunc_index -> trunc_index.
 Proof.
@@ -193,23 +223,6 @@ Proof.
   - apply contr_paths_contr.
   - apply IH, H.
 Qed.
-
-(* Nat to trunc index offset by 2 *)
-Definition nat_to_trunc_index_2 (n : nat) : trunc_index.
-Proof.
-  induction n.
-  + exact (-2).
-  + exact IHn.+1.
-Defined.
-
-Lemma nat_to_trunc_index_2_eq n
-  : nat_to_trunc_index_2 n.+2 = nat_to_trunc_index n.
-Proof.
-  induction n.
-  1: reflexivity.
-  cbn; apply ap.
-  assumption.
-Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
 Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A}

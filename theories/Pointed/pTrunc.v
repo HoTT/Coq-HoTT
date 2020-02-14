@@ -88,19 +88,16 @@ Defined.
 
 Definition ptr_iterated_loops `{Univalence} (n : trunc_index)
   (k : nat) (A : pType)
-  : pTr n (iterated_loops k A) <~>* iterated_loops k (pTr (n +2+ k).-2 A).
+  : pTr n (iterated_loops k A) <~>* iterated_loops k (pTr (trunc_index_inc' n k) A).
 Proof.
   revert A n.
   induction k.
   { intros A n; cbn.
-    rewrite 2 (trunc_index_add_succ n).
-    rewrite trunc_index_add_minus_two.
     reflexivity. }
   intros A n.
   cbn; etransitivity.
   1: apply ptr_loops.
   apply pequiv_loops_functor.
-  rewrite trunc_index_add_succ.
   apply IHk.
 Defined.
 

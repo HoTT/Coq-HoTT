@@ -322,7 +322,7 @@ Defined.
 
 (* Loops neutralise sigmas when truncated *)
 Lemma loops_psigma_trunc (n : nat) : forall (Aa : pType)
-  (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (nat_to_trunc_index_2 n) Pp),
+  (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (trunc_index_inc minus_two n) Pp),
   iterated_loops n (psigma Pp)
   <~>* iterated_loops n Aa.
 Proof.
