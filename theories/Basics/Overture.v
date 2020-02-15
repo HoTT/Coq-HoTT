@@ -547,45 +547,12 @@ Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
 Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.
 Local Open Scope trunc_scope.
-Fixpoint nat_to_trunc_index (n : nat) : trunc_index
-  := match n with
-       | 0%nat => minus_two.+2
-       | S n' => (nat_to_trunc_index n').+1
-     end.
 
-Coercion nat_to_trunc_index : nat >-> trunc_index.
-
-Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
-  := match v with
-     | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))
-     | Decimal.Neg d => match Nat.of_uint d with
-                        | 2%nat => Some minus_two
-                        | 1%nat => Some (minus_two.+1)
-                        | 0%nat => Some (minus_two.+2)
-                        | _ => None
-                        end
-     end.
-
-Fixpoint trunc_index_to_little_uint n acc :=
-  match n with
-  | minus_two => acc
-  | minus_two.+1 => acc
-  | minus_two.+2 => acc
-  | trunc_S n => trunc_index_to_little_uint n (Decimal.Little.succ acc)
-  end.
-
-Definition trunc_index_to_int n :=
-  match n with
-  | minus_two => Decimal.Neg (Nat.to_uint 2)
-  | minus_two.+1 => Decimal.Neg (Nat.to_uint 1)
-  | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
-  end.
-
-Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
+(** Further notation for truncation levels is introducted in Trunc.v. *)
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
-    | -2 => Contr_internal A
+    | minus_two => Contr_internal A
     | n'.+1 => forall (x y : A), IsTrunc_internal n' (x = y)
   end.
 
@@ -594,7 +561,7 @@ Arguments IsTrunc_internal n A : simpl nomatch.
 Class IsTrunc (n : trunc_index) (A : Type) : Type :=
   Trunc_is_trunc : IsTrunc_internal n A.
 
-(** We use the priciple that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
+(** We use the principle that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
 
 Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
 
@@ -625,9 +592,9 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
          end : core.
 
-Notation Contr := (IsTrunc (-2)).
-Notation IsHProp := (IsTrunc (-1)).
-Notation IsHSet := (IsTrunc 0).
+Notation Contr := (IsTrunc (minus_two)).
+Notation IsHProp := (IsTrunc (minus_two.+1)).
+Notation IsHSet := (IsTrunc minus_two.+2).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
