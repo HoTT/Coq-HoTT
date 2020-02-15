@@ -180,6 +180,20 @@ Section Extensions.
     - apply equiv_pathsplit_isequiv.
   Defined.
 
+  (* Without [Funext], we can prove a small part of the above equivalence.
+     We suspect that the rest requires [Funext]. *)
+  Definition extension_isequiv_precompose
+           {A : Type} {B : Type}
+           (f : A -> B) (C : B -> Type)
+    : IsEquiv (fun (g : forall b, C b) => g oD f) -> forall g, ExtensionAlong f C g.
+  Proof.
+    intros E g.
+    pose (e := Build_Equiv _ _ _ E).
+    exists (e^-1 g).
+    apply apD10.
+    exact (eisretr e g).
+  Defined.
+
   (** Postcomposition with a known equivalence.  Note that this does not require funext to define, although showing that it is an equivalence would require funext. *)
   Definition extendable_postcompose' (n : nat)
              {A B : Type} (C D : B -> Type) (f : A -> B)
