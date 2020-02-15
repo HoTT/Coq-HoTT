@@ -629,6 +629,31 @@ Section Reflective_Subuniverse.
       rapply e.
     Defined.
 
+    (** The converse is also true.  This the first half of Lemma 1.23 of RSS. *)
+    Definition ooextendable_O_inverts
+               {A B : Type} (f : A -> B) `{O_inverts f}
+               (Z : Type) `{In O Z}
+      : ooExtendableAlong f (fun _ => Z).
+    Proof.
+      refine (cancelL_ooextendable _ _ (to O B) _ _).
+      1:srapply extendable_to_O.
+      refine (ooextendable_homotopic _ (O_functor f o to O A) _ _).
+      1:apply to_O_natural.
+      refine (ooextendable_compose _ (to O A) (O_functor f) _ _).
+      2:srapply extendable_to_O.
+      srapply ooextendable_equiv.
+    Defined.
+
+    (** And now the funext version *)
+    Definition isequiv_precompose_O_inverts `{Funext}
+               {A B : Type} (f : A -> B) `{O_inverts f}
+               (Z : Type) `{In O Z}
+      : IsEquiv (fun g:B->Z => g o f).
+    Proof.
+      srapply (equiv_extendable_isequiv 0).
+      exact (ooextendable_O_inverts f Z 2).
+    Defined.
+
     Definition to_O_inv_natural {A B : Type} `{In O A} `{In O B}
                (f : A -> B)
     : (to O B)^-1 o (O_functor f) == f o (to O A)^-1.
