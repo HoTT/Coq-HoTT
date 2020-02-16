@@ -79,12 +79,14 @@ Require Export HoTT.Colimits.Colimit_Sigma.
 Require Export HoTT.Modalities.ReflectiveSubuniverse.
 Require Export HoTT.Modalities.Modality.
 Require Export HoTT.Modalities.Accessible.
-Require Export HoTT.Modalities.Lex.
-Require Export HoTT.Modalities.Topological.
 Require Export HoTT.Modalities.Notnot.
 Require Export HoTT.Modalities.Identity.
 Require Export HoTT.Modalities.Localization.
 Require Export HoTT.Modalities.Nullification.
+Require Export HoTT.Modalities.Descent.
+Require Export HoTT.Modalities.Separated.
+Require Export HoTT.Modalities.Lex.
+Require Export HoTT.Modalities.Topological.
 Require Export HoTT.Modalities.Open.
 Require Export HoTT.Modalities.Closed.
 Require Export HoTT.Modalities.Fracture.

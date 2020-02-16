@@ -137,6 +137,8 @@ theories/Spaces/Torus/TorusHomotopy.v
 theories/Modalities/ReflectiveSubuniverse.v
 theories/Modalities/Modality.v
 theories/Modalities/Accessible.v
+theories/Modalities/Descent.v
+theories/Modalities/Separated.v
 theories/Modalities/Lex.v
 theories/Modalities/Topological.v
 theories/Modalities/Notnot.v
