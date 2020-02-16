@@ -10,7 +10,6 @@ Require Import HIT.Coeq.
 Require Import Modalities.Modality Truncations.
 Require Import Cubical.DPath.
 
-Import TrM.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
@@ -179,7 +178,7 @@ Definition equiv_loopS1_int : (base = base) <~> Int
 (** ** Connectedness and truncatedness *)
 
 (** The circle is 0-connected. *)
-Global Instance isconnected_S1 : IsConnected 0 S1.
+Global Instance isconnected_S1 : IsConnected (Tr 0) S1.
 Proof.
   apply is0connected_merely_allpath.
   - exact (tr base).
@@ -200,6 +199,7 @@ Proof.
   destruct p, q.
   refine (trunc_equiv' (n := 0) Int equiv_loopS1_int^-1).
 Defined.
+
 
 (** ** Iteration of equivalences *)
 

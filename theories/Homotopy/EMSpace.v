@@ -10,7 +10,6 @@ Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 (* Formalisation of Eilenberg-MacLane spaces *)
 
@@ -32,7 +31,7 @@ By coherent H-space we mean that left and right identity laws at the unit are th
 Section LicataFinsterLemma.
 
   Context `{Univalence} (X : pType)
-    `{IsConnected 0 X} `{IsTrunc 1 X} `{IsHSpace X}
+    `{IsConnected (Tr 0) X} `{IsTrunc 1 X} `{IsHSpace X}
     {coh : left_identity mon_unit = right_identity mon_unit}.
 
   (** This encode-decode style proof is detailed in Eilenberg-MacLane Spaces in Homotopy Type Theory by Dan Licata and Eric Finster *)
@@ -218,7 +217,7 @@ Section EilenbergMacLane.
   Defined.
 
   Global Instance isconnected_em {G : Group} (n : nat)
-    : IsConnected n K(G, n.+1).
+    : IsConnected (Tr n) K(G, n.+1).
   Proof.
     induction n; exact _.
   Defined.
@@ -231,7 +230,7 @@ Section EilenbergMacLane.
   Proof.
     srapply Build_pEquiv'.
     { notypeclasses refine (Build_Equiv _ _ (Trunc_functor _ tr) _).
-      notypeclasses refine (isequiv_conn_map_ino n.+2 _).
+      notypeclasses refine (isequiv_conn_map_ino (Tr n.+2) _).
       1,2: exact _.
       apply conn_map_O_functor.
       intro x.
@@ -244,7 +243,7 @@ Section EilenbergMacLane.
         apply ap, ap.
         destruct n; reflexivity. }
       destruct p.
-      apply conn_map_to_O. }
+      rapply conn_map_to_O. }
     all: reflexivity.
   Defined.
 

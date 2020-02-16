@@ -454,7 +454,7 @@ Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
 (* ================================================== thm:prop-equiv-trunc *)
 (** Lemma 3.9.1 *)
 
-Definition Book_3_9_1 := @HoTT.Truncations.Core.TrM.RSU.isequiv_to_O_inO (-1)%trunc.
+Definition Book_3_9_1 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_to_O_inO (Tr (-1)).
 
 (* ================================================== cor:UC *)
 (** Corollary 3.9.2 *)
@@ -490,7 +490,7 @@ Definition Book_3_11_6 := @HoTT.Types.Forall.trunc_forall.
 (** Lemma 3.11.7 *)
 
 Definition Book_3_11_7a := @HoTT.Idempotents.contr_retracttype.
-Definition Book_3_11_7 := @HoTT.Truncations.Core.TrM.RSU.inO_to_O_retract (-2)%trunc.
+Definition Book_3_11_7 := @HoTT.Modalities.ReflectiveSubuniverse.inO_to_O_retract (Tr (-2)).
 
 (* ================================================== thm:contr-paths *)
 (** Lemma 3.11.8 *)
@@ -639,7 +639,7 @@ Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap (-1).
 (* ================================================== thm:mono-surj-equiv *)
 (** Theorem 4.6.3 *)
 
-Definition Book_4_6_3 := @HoTT.Truncations.Core.TrM.RSU.isequiv_conn_ino_map.
+Definition Book_4_6_3 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_conn_ino_map.
 
 (* ================================================== thm:two-out-of-three *)
 (** Theorem 4.7.1 *)
@@ -862,7 +862,7 @@ Definition Book_6_9_1 := @HoTT.Truncations.Core.Trunc.Trunc_ind 0.
 (* ================================================== thm:trunc0-lump *)
 (** Lemma 6.9.2 *)
 
-Definition Book_6_9_2 := @HoTT.Truncations.Core.TrM.isequiv_o_to_O.
+Definition Book_6_9_2 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_o_to_O.
 
 (* ================================================== thm:set-pushout *)
 (** Lemma 6.9.3 *)
@@ -1107,7 +1107,7 @@ Definition Book_7_3_12 := @HoTT.Truncations.Core.equiv_path_Tr.
 (* ================================================== cor:totrunc-is-connected *)
 (** Corollary 7.5.8 *)
 
-Definition Book_7_5_8 := @HoTT.Truncations.Core.TrM.conn_map_to_O.
+Definition Book_7_5_8 := @HoTT.Modalities.Modality.conn_map_to_O.
 
 (* ================================================== thm:nconn-to-ntype-const *)
 (** Corollary 7.5.9 *)

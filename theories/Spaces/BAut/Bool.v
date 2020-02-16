@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Constant Factorization UnivalenceImpliesFunext.
 Require Import Modalities.Modality HoTT.Truncations.
-Import TrM.
 Require Import Spaces.BAut.
 
 Local Open Scope trunc_scope.
@@ -92,7 +91,7 @@ Section AssumeUnivalence.
   (** ** Connectedness *)
 
   Global Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
-  : IsConnected (-1) Z.
+  : IsConnected (Tr (-1)) Z.
   Proof.
     baut_reduce.
     apply contr_inhabited_hprop; try exact _.

@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp UnivalenceImpliesFunext Fibrations.
 Require Import Modalities.Modality HoTT.Truncations.
-Import TrM.
 Require Import Spaces.BAut Spaces.BAut.Rigid.
 Require Import ExcludedMiddle.
 
@@ -121,8 +120,8 @@ Defined.
 
 Definition equiv_swap_prod_rigid  `{Univalence} `{ExcludedMiddle}
            (X A B : Type) (n : trunc_index) (ne : ~(X*A <~> X*B))
-           `{IsRigid A} `{IsConnected n.+1 A}
-           `{IsRigid B} `{IsConnected n.+1 B}
+           `{IsRigid A} `{IsConnected (Tr n.+1) A}
+           `{IsRigid B} `{IsConnected (Tr n.+1) B}
            `{IsTrunc n.+1 X}
   : Type <~> Type.
 Proof.

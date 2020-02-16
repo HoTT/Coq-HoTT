@@ -10,7 +10,6 @@ Require Import HIT.Circle.
 Require Import Truncations.
 Require Import Homotopy.HomotopyGroup.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 Require Import Torus.
 Require Import TorusEquivCircles.
@@ -27,7 +26,7 @@ Qed.
 
 (** The torus is 0-connected *)
 
-Global Instance isconnected_Torus `{Univalence} : IsConnected 0 Torus.
+Global Instance isconnected_Torus `{Univalence} : IsConnected (Tr 0) Torus.
 Proof.
   srapply (isconnected_equiv' _ _ equiv_torus_prod_S1^-1).
   srapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).

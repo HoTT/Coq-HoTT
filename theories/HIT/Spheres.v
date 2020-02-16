@@ -8,7 +8,6 @@ Require Import HProp NullHomotopy.
 Require Import Homotopy.Suspension HIT.Circle HIT.TwoSphere.
 Require Import Pointed.pSusp Pointed.Core.
 Require Import Truncations.
-Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -248,7 +247,7 @@ Proof.
   srapply (trunc_equiv _ Sph1_to_S1^-1).
 Defined.
 
-Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
+Global Instance isconnected_sn n : IsConnected (Tr n.+1) (Sphere n.+2).
 Proof.
   induction n.
   { srapply contr_inhabited_hprop.

@@ -8,7 +8,6 @@ Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import Truncations.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -139,7 +138,7 @@ End Eliminators.
 
 (** We can prove that the classifying space is 0-connected. *)
 Global Instance isconnected_classifyingspace {G : Group}
-  : IsConnected 0 (ClassifyingSpace G).
+  : IsConnected (Tr 0) (ClassifyingSpace G).
 Proof.
   exists (tr bbase).
   srapply Trunc_ind.

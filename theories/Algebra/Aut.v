@@ -4,7 +4,6 @@ Require Import Types.
 Require Import Truncations.
 Require Import Factorization.
 Require Import Algebra.ooGroup.
-Import TrM.
 
 Local Open Scope path_scope.
 
@@ -23,13 +22,13 @@ Definition equiv_baut_image_unit X
 Proof.
   unfold BAut, image; simpl.
   apply equiv_functor_sigma_id; intros Z; simpl.
-  apply equiv_O_functor; unfold hfiber.
+  apply Trunc_functor_equiv; unfold hfiber.
   refine ((equiv_contr_sigma _)^-1 oE _).
   apply equiv_path_inverse.
 Defined.
 
 (** Now we can define [Aut X], by proving that [BAut X] is connected. *)
-Definition Aut (X : Type@{i}) : ooGroup@{j u a}.
+Definition Aut (X : Type) : ooGroup.
 Proof.
   refine (Build_ooGroup
             (Build_pType { Z : Type & merely (Z = X) } (X ; tr 1)) _).

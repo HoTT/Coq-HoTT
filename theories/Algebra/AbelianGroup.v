@@ -4,7 +4,6 @@ Require Import HIT.Coeq.
 Require Import Algebra.Group.
 Require Import Algebra.Subgroup.
 Require Import Cubical.
-Import TrM.
 
 Local Open Scope mc_mult_scope.
 

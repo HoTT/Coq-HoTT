@@ -2,7 +2,6 @@ Require Import Basics.
 Require Import Types.
 Require Import Truncations UnivalenceImpliesFunext.
 Require Export Classes.interfaces.abstract_algebra.
-Import TrM.
 
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
@@ -23,12 +22,12 @@ Section HSpaceProperties.
    `{Univalence}
     {A : pType}
    `{IsHSpace A}
-   `{IsConnected 0 A}.
+   `{IsConnected (Tr 0) A}.
 
   Global Instance isequiv_hspace_left_op
     : forall (a : A), IsEquiv (fun x => a * x).
   Proof.
-    refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
+    refine (conn_map_elim (Tr (-1)) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
     + apply Unit_ind.
       srapply (isequiv_homotopic idmap).
@@ -39,7 +38,7 @@ Section HSpaceProperties.
   Global Instance isequiv_hspace_right_op
     : forall (a : A), IsEquiv (fun x => x * a).
   Proof.
-    refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
+    refine (conn_map_elim (Tr (-1)) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
     + apply Unit_ind.
       srapply (isequiv_homotopic idmap).

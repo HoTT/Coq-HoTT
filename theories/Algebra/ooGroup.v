@@ -5,8 +5,6 @@ Require Import Pointed.
 Require Import Truncations.
 Require Import Colimits.Quotient.
 
-Import TrM.
-
 Local Open Scope path_scope.
 
 (** Keyed unification makes [rewrite !loops_functor_group] take a really long time.  See https://coq.inria.fr/bugs/show_bug.cgi?id=4544 for more discussion. *)
@@ -19,8 +17,8 @@ Local Unset Keyed Unification.
 (** ** Definition *)
 
 Record ooGroup :=
-  { classifying_space : pType@{i} ;
-    isconn_classifying_space : IsConnected@{u a i} 0 classifying_space
+  { classifying_space : pType ;
+    isconn_classifying_space : IsConnected (Tr 0) classifying_space
   }.
 
 Global Existing Instance isconn_classifying_space.
@@ -46,7 +44,7 @@ Proof.
                { x:X & merely (x = point X) }
                (existT (fun x:X => merely (x = point X)) x0 (tr 1)))).
   (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
-  cut (IsConnected 0 BG).
+  cut (IsConnected (Tr 0) BG).
   { exact (Build_ooGroup BG). }
   cut (IsSurjection (unit_name (point BG))).
   { intros; refine (conn_pointed_type (point _)). }

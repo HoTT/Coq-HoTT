@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp UnivalenceImpliesFunext Fibrations.
 Require Import Modalities.Modality Truncations.
-Import TrM.
 Require Import Spaces.BAut.
 
 Local Open Scope trunc_scope.
@@ -29,7 +28,7 @@ Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
 Proof.
   refine (contr_trunc_conn (Tr 0)).
   intros Z W; baut_reduce.
-  refine (trunc_equiv (A <~> A)
+  refine (trunc_equiv (n := -1) (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).
 Defined.
 
@@ -78,7 +77,7 @@ Defined.
 
 Definition baut_prod_rigid_equiv `{Univalence}
            (X A : Type) (n : trunc_index)
-           `{IsTrunc n.+1 X} `{IsRigid A} `{IsConnected n.+1 A}
+           `{IsTrunc n.+1 X} `{IsRigid A} `{IsConnected (Tr n.+1) A}
   : BAut X <~> BAut (X * A).
 Proof.
   refine (Build_Equiv _ _ (baut_prod_r X A) _).

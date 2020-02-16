@@ -24,17 +24,6 @@ Check (@ispointed_susp Set).
 (** Check that nested sigma-type notation didn't get clobbered by surreal cuts *)
 Check ({ l : Unit & { n : Unit & Unit }}).
 
-(** Regression check issue #744 *)
-Module Foo (Os : ReflectiveSubuniverses).
-  Module Import Os_Theory := ReflectiveSubuniverses_Theory Os.
-  Goal Unit.
-    let lem' := preconcat_any @to_O_natural_compose in
-    pose proof lem' as H.
-    let test := left_associate_concat_in H in
-    pose test.
-  Admitted.
-End Foo.
-
 (** Test 1 from issue #754 *)
 Module Issue754_1.
   Inductive nat : Type1 :=

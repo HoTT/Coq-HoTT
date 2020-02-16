@@ -6,7 +6,6 @@ Require Import EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import Algebra.Group.
 Require Import Homotopy.HomotopyGroup.
 Require Import Truncations.
-Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.
@@ -85,7 +84,7 @@ Proof.
   - pose proof (ii x 0) as h2.
     unfold pi_functor in h2; cbn in h2.
     refine (@isequiv_homotopic _ _ _ _ h2 _).
-    apply O_functor_homotopy; intros p.
+    apply (O_functor_homotopy (Tr 0)); intros p.
     exact (concat_1p _ @ concat_p1 _).
   - intros p k; revert p.
     assert (h3 : forall (y:A) (q:x=y),

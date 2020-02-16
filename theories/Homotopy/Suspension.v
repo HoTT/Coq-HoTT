@@ -5,9 +5,9 @@ Require Import Cubical.
 Require Import WildCat.
 Require Import Colimits.Pushout.
 Require Import NullHomotopy.
-Require Import Truncations.
+Require Import Truncations.Core.
+Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
 Require Import Extensions.
-Import TrM.
 
 (** * The suspension of a type *)
 
@@ -527,12 +527,12 @@ Defined.
 (** ** Connectedness of the suspension *)
 
 Global Instance isconnected_susp {n : trunc_index} {X : Type}
-  `{H : IsConnected n X} : IsConnected n.+1 (Susp X).
+  `{H : IsConnected (Tr n) X} : IsConnected (Tr n.+1) (Susp X).
 Proof.
   apply isconnected_from_elim.
   intros C H' f. exists (f North).
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
-    as [p0 allpath_p0] by (apply (isconnected_elim n); apply H').
+    as [p0 allpath_p0] by (apply (isconnected_elim (Tr n)); rapply H').
   apply (Susp_ind (fun a => f a = f North) 1 p0^).
   intros x.
   apply (concat (transport_paths_Fl _ _)).

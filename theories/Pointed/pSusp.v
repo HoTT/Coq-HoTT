@@ -9,7 +9,6 @@ Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Freudenthal.
 Require Import Truncations.
-Import TrM.
 
 Generalizable Variables X A B f g n.
 
@@ -156,17 +155,17 @@ Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
 (** By Freudenthal, we have that this map is 2n-connected for a n-connected X *)
-Instance conn_map_loop_susp_unit `{Univalence} (X : pType) `{IsConnected n.+1 X}
-  : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
+Instance conn_map_loop_susp_unit `{Univalence} (X : pType) `{IsConnected (Tr n.+1) X}
+  : IsConnMap (Tr (n +2+ n)) (fun x => merid x @ (merid (point X))^).
 Proof.
   refine (conn_map_compose _ _ (equiv_concat_r (merid (point _))^ _)).
 Defined.
 
 (** We also have this corollary *)
-Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
+Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected (Tr n.+1) X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
-  srapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
+  srapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (Tr (n +2+ n)) _)).
   { apply ptr_functor.
     apply loop_susp_unit. }
   exact _.
