@@ -490,7 +490,7 @@ Section Reflective_Subuniverse.
                (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
     Defined.
 
-    (** If [f] is inverted by [O], then mapping out of it into any modal type is an equivalence.  First we prove a version not requiring funext.  For use in [O_inverts_O_leq] below, we allow the types [A], [B], and [Z] to perhaps live in smaller universes than the one [i] on which our subuniverse lives. *)
+    (** If [f] is inverted by [O], then mapping out of it into any modal type is an equivalence.  First we prove a version not requiring funext.  For use in [O_inverts_O_leq] below, we allow the types [A], [B], and [Z] to perhaps live in smaller universes than the one [i] on which our subuniverse lives.  This the first half of Lemma 1.23 of RSS. *)
     Definition ooextendable_O_inverts@{a b z i}
                {A : Type@{a}} {B : Type@{b}} (f : A -> B) `{O_inverts f}
                (Z : Type@{z}) `{In@{i} O Z}
@@ -547,37 +547,12 @@ Section Reflective_Subuniverse.
       rapply ((equiv_extendable_isequiv 0 _ _)^-1%equiv).
     Defined.
 
-    (** The converse is also true.  This the first half of Lemma 1.23 of RSS. *)
-    Definition ooextendable_O_inverts
-               {A B : Type} (f : A -> B) `{O_inverts f}
-               (Z : Type) `{In O Z}
-      : ooExtendableAlong f (fun _ => Z).
-    Proof.
-      refine (cancelL_ooextendable _ _ (to O B) _ _).
-      1:srapply extendable_to_O.
-      refine (ooextendable_homotopic _ (O_functor f o to O A) _ _).
-      1:apply to_O_natural.
-      refine (ooextendable_compose _ (to O A) (O_functor f) _ _).
-      2:srapply extendable_to_O.
-      srapply ooextendable_equiv.
-    Defined.
-
-    (** And now the funext version *)
-    Definition isequiv_precompose_O_inverts `{Funext}
-               {A B : Type} (f : A -> B) `{O_inverts f}
-               (Z : Type) `{In O Z}
-      : IsEquiv (fun g:B->Z => g o f).
-    Proof.
-      srapply (equiv_extendable_isequiv 0).
-      exact (ooextendable_O_inverts f Z 2).
-    Defined.
-
     (** This property also characterizes the types in the subuniverse, which is the other half of Lemma 1.23. *)
     Definition inO_ooextendable_O_inverts (Z:Type@{k})
                (E : forall (A : Type@{i}) (B : Type@{j}) (f : A -> B)
                       (Oif : O_inverts f),
                    ooExtendableAlong f (fun _ => Z))
-      : In@{Ou Oa k} O Z.
+      : In O Z.
     Proof.
       pose (EZ := fst (E Z (O Z) (to O Z) _ 1%nat) idmap).
       exact (inO_to_O_retract _ EZ.1 EZ.2).
