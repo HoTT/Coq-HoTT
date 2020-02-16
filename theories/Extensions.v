@@ -18,33 +18,29 @@ Section Extensions.
   (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
   (** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole codomain.  It can also be considered as an equivalent form of an [hfiber] of precomposition-with-[f] that replaces paths by pointwise paths, thereby avoiding [Funext]. *)
-
-  Definition ExtensionAlong {A B : Type} (f : A -> B)
-             (P : B -> Type) (d : forall x:A, P (f x))
-    := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
-  (** [ExtensionAlong] takes 5 universe parameters:
+  Definition ExtensionAlong@{a b p m} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+             (P : B -> Type@{p}) (d : forall x:A, P (f x))
+    := (* { s : forall y:B, P y & forall x:A, s (f x) = d x }. *)
+       sig@{m m} (fun (s : forall y:B, P y) => forall x:A, s (f x) = d x).
+   (** [ExtensionAlong] takes 4 universe parameters:
       - the size of A
       - the size of B
       - the size of P
-      - >= max(B,P)
-      - >= max(A,P).
-    The following [Check] verifies that this is in fact the case. *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtensionAlong@{a b p m n} : True@{Set}.
-  Proof.
-    Check ExtensionAlong@{a b p m n}.
-  Abort.
-  (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
+      - >= max(A,B,P)
+   *)
 
-  (** It's occasionally useful to be able to modify those max universes. *)
-  Definition lift_extensionalong@{a b p m1 n1 m2 n2} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
-             (P : B -> Type@{p}) (d : forall x:A, P (f x))
-  : ExtensionAlong@{a b p m1 n1} f P d -> ExtensionAlong@{a b p m2 n2} f P d
-    := fun ext => (ext.1 ; ext.2).
+  (** It's occasionally useful to be able to modify those universes.  For each of the universes [a], [b], [p], we give an initial one, a final one, and a "minimum" one smaller than both and where the type actually lives. *)
+  Definition lift_extensionalong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2} {A : Type@{amin}} {B : Type@{bmin}} (f : A -> B)
+             (P : B -> Type@{pmin}) (d : forall x:A, P (f x))
+    : ExtensionAlong@{a1 b1 p1 m1} f P d -> ExtensionAlong@{a2 b2 p2 m2} f P d.
+  Proof.
+    intros ext.
+    (** If we just give [ext], it will collapse the universes.  (Anyone stepping through this proof should do [Set Printing Universes] and look at the universes to see that they're different in [ext] and in the goal.)  So we decompose [ext] into two components and give them separately. *)
+    assert (e2 := ext.2); set (e1 := ext.1) in e2.
+    cbn in e2. (** Curiously, without this line we get a spurious universe inequality [p1 <= m2]. *)
+    exact (e1;e2).
+  Defined.
   (** We called it [lift_extensionalong], but in fact it doesn't require the new universes to be bigger than the old ones, only that they both satisfy the max condition. *)
-  Definition lower_extensionalong@{a b p e0 e1} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
-             (P : B -> Type@{p}) (d : forall x:A, P (f x))
-    := lift_extensionalong@{a b p e0 e1 e0 e1} f P d.
 
   Definition equiv_path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
@@ -97,7 +93,7 @@ Section Extensions.
     := match n with
          | 0 => Unit
          | S n => (forall (g : forall a, C (f a)),
-                     ExtensionAlong@{i j k l l} f C g) *
+                     ExtensionAlong@{i j k l} f C g) *
                   forall (h k : forall b, C b),
                     ExtendableAlong n f (fun b => h b = k b)
        end.
@@ -106,36 +102,24 @@ Section Extensions.
       - size of B
       - size of C
       - size of result (>= A,B,C) *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtendableAlong@{a b c r} : True@{Set}.
-  Proof.
-    Check ExtendableAlong@{a b c r}.
-  Abort.
 
   Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
 
   (** We can modify the universes, as with [ExtensionAlong]. *)
-  Definition lift_extendablealong@{i j k l1 l2}
-             (n : nat) {A : Type@{i}} {B : Type@{j}}
-             (f : A -> B) (C : B -> Type@{k})
-  : ExtendableAlong@{i j k l1} n f C -> ExtendableAlong@{i j k l2} n f C.
+  Definition lift_extendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2}
+             (n : nat) {A : Type@{amin}} {B : Type@{bmin}}
+             (f : A -> B) (P : B -> Type@{pmin})
+  : ExtendableAlong@{a1 b1 p1 m1} n f P -> ExtendableAlong@{a2 b2 p2 m2} n f P.
   Proof.
-    revert C; simple_induction n n IH; intros C.
+    revert P; simple_induction n n IH; intros P.
     - intros _; exact tt.
     - intros ext; split.
-      + intros g; exact (lift_extensionalong _ _ _ (fst ext g)).
-      + intros h k; exact (IH _ (snd ext h k)).
+      + intros g; exact (lift_extensionalong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2} _ _ _ (fst ext g)).
+      + intros h k. 
+        (** Unles we give the universe explicitly here, [kmin] gets collapsed to [k1]. *)
+        pose (P' := (fun b => h b = k b) : B -> Type@{pmin}).
+        exact (IH P' (snd ext h k)).
   Defined.
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_lift_extendablealong@{i j k l1 l2} : True@{Set}.
-  Proof.
-    Check lift_extendablealong@{i j k l1 l2}.
-  Abort.
-
-  Definition lower_extendablealong@{i j k e}
-             (n : nat) {A : Type@{i}} {B : Type@{j}}
-             (f : A -> B) (C : B -> Type@{k})
-    := lift_extendablealong@{i j k e e} n f C.
 
   Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
@@ -340,29 +324,15 @@ Section Extensions.
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := forall n : nat, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ooExtendableAlong@{a b c r} : True@{Set}.
-  Proof.
-    Check ooExtendableAlong@{a b c r}.
-  Abort.
 
   Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
 
   (** Universe modification. *)
-  Definition lift_ooextendablealong@{i j k l1 l2}
-             {A : Type@{i}} {B : Type@{j}}
-             (f : A -> B) (C : B -> Type@{k})
-  : ooExtendableAlong@{i j k l1} f C -> ooExtendableAlong@{i j k l2} f C
-    := fun ext n => lift_extendablealong n f C (ext n).
-  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ooextendablealong@{i j k l1 l2} : True@{Set}.
-  Proof.
-    Check lift_ooextendablealong@{i j k l1 l2}.
-  Abort.
-  Definition lower_ooextendablealong@{i j k e1 e2}
-             {A : Type@{i}} {B : Type@{j}}
-             (f : A -> B) (C : B -> Type@{k})
-    := lift_ooextendablealong@{i j k e1 e2} f C.
+  Definition lift_ooextendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2}
+             {A : Type@{amin}} {B : Type@{bmin}}
+             (f : A -> B) (P : B -> Type@{pmin})
+  : ooExtendableAlong@{a1 b1 p1 m1} f P -> ooExtendableAlong@{a2 b2 p2 m2} f P
+    := fun ext n => lift_extendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2} n f P (ext n).
 
   (** We take part of the data from [ps 1] and part from [ps 2] so that the inverse chosen is the expected one. *)
   Definition isequiv_ooextendable `{Funext}
