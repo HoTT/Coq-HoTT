@@ -22,7 +22,7 @@ Global Instance lex_topological `{Univalence}
   : Lex O.
 Proof.
     snrapply lex_from_inO_typeO; [ exact _ | intros i ].
-    apply ((equiv_ooextendable_isequiv _ _)^-1).
+    apply ((equiv_ooextendable_isequiv _ _)^-1%equiv).
     srapply isequiv_adjointify; cbn.
     - intros B _.
       refine ((forall a, B a) ; _).

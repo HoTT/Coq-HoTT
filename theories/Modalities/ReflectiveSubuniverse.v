@@ -59,8 +59,8 @@ Definition path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
   := path_sigma_hprop@{j i j} T T' p.
 
 Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O)
-: (paths@{j} T.1 T'.1) <~> (T = T')
-:= equiv_path_sigma_hprop@{j i j j} T T'.
+  : (paths@{j} T.1 T'.1) <~> (T = T')
+  := equiv_path_sigma_hprop@{j i j j} T T'.
 
 (** Types in [TypeO] are always in [O]. *)
 Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
@@ -92,7 +92,7 @@ Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
 {
   extendable_to_O : forall {Q : Type@{i}} {Q_inO : In O Q},
       ooExtendableAlong (to O T) (fun _ => Q)
-}.  
+}.
 
 Arguments extendable_to_O O {T _ _ Q Q_inO}.
 
@@ -130,32 +130,32 @@ Section ORecursion.
   Context {O : Subuniverse} {P Q : Type} {Q_inO : In O Q} `{Reflects O P}.
 
   Definition O_rec (f : P -> Q)
-  : O_reflector O P -> Q
-  := (fst (extendable_to_O O 1%nat) f).1.
+    : O_reflector O P -> Q
+    := (fst (extendable_to_O O 1%nat) f).1.
 
   Definition O_rec_beta (f : P -> Q) (x : P)
-  : O_rec f (to O P x) = f x
-  := (fst (extendable_to_O O 1%nat) f).2 x.
+    : O_rec f (to O P x) = f x
+    := (fst (extendable_to_O O 1%nat) f).2 x.
 
   Definition O_indpaths (g h : O_reflector O P -> Q)
              (p : g o to O P == h o to O P)
-  : g == h
-  := (fst (snd (extendable_to_O O 2) g h) p).1.
+    : g == h
+    := (fst (snd (extendable_to_O O 2) g h) p).1.
 
   Definition O_indpaths_beta (g h : O_reflector O P -> Q)
              (p : g o (to O P) == h o (to O P)) (x : P)
-  : O_indpaths g h p (to O P x) = p x
-  := (fst (snd (extendable_to_O O 2) g h) p).2 x.
+    : O_indpaths g h p (to O P x) = p x
+    := (fst (snd (extendable_to_O O 2) g h) p).2 x.
 
   Definition O_ind2paths {g h : O_reflector O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P))
-  : p == q
-  := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).1.
+    : p == q
+    := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).1.
 
   Definition O_ind2paths_beta {g h : O_reflector O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P)) (x : P)
-  : O_ind2paths p q r (to O P x) = r x
-  := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).2 x.
+    : O_ind2paths p q r (to O P x) = r x
+    := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).2 x.
 
   (** Clearly we can continue indefinitely as needed. *)
 
@@ -196,7 +196,7 @@ Section Reflective_Subuniverse.
   Definition O_rec_homotopy {P Q : Type} `{In O Q} (f g : P -> Q) (pi : f == g)
   : O_rec (O := O) f == O_rec g.
   Proof.
-    srapply O_indpaths; intro x.
+    apply O_indpaths; intro x.
     etransitivity.
     { apply O_rec_beta. }
     { etransitivity.
@@ -484,7 +484,7 @@ Section Reflective_Subuniverse.
     Proof.
       apply isequiv_O_inverts.
       refine (cancelR_isequiv (O_functor (to O A))).
-      refine (isequiv_homotopic (O_functor (O_rec f o to O A))
+      nrefine (isequiv_homotopic (O_functor (O_rec f o to O A))
                                 (O_functor_compose _ _)).
       refine (isequiv_homotopic (O_functor f)
                (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
@@ -544,8 +544,7 @@ Section Reflective_Subuniverse.
     Proof.
       apply O_inverts_from_extendable.
       intros Z ?.
-      apply (equiv_extendable_isequiv 0 _ _)^-1.
-      rapply e.
+      rapply ((equiv_extendable_isequiv 0 _ _)^-1%equiv).
     Defined.
 
     (** The converse is also true.  This the first half of Lemma 1.23 of RSS. *)

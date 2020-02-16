@@ -46,7 +46,7 @@ End ClosedModalTypes.
 (** Exercise 7.13(ii): Closed modalities *)
 Definition Cl (U : hProp) : Modality.
 Proof.
-  srapply Build_Modality.
+  snrapply Build_Modality.
   - intros X; exact (U -> Contr X).
   - intros T B T_inO f feq.
     cbn; intros u; pose (T_inO u).

@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 
 Definition Op `{Funext} (U : hProp) : Modality.
 Proof.
-  srapply easy_modality.
+  snrapply easy_modality.
   - intros X; exact (U -> X).
   - intros T x; cbn.
     exact (fun _ => x).

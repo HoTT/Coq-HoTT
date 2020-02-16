@@ -226,7 +226,7 @@ Proof.
   - apply p.
   - refine (ap _ (q (x1;x2)) @ _).
     unfold g; simpl. exact (transport_pV B _ _).
-Defined.        
+Defined.
 
 (** Specialized to a modality, this yields the implication (ii) => (i) from Theorem 7.7.4 of the book, and also Corollary 7.7.8, part 2. *)
 Global Instance inO_sigma (O : Modality)
