@@ -629,6 +629,53 @@ Section Reflective_Subuniverse.
       rapply e.
     Defined.
 
+    (** The converse is also true.  This the first half of Lemma 1.23 of RSS. *)
+    Definition ooextendable_O_inverts
+               {A B : Type} (f : A -> B) `{O_inverts f}
+               (Z : Type) `{In O Z}
+      : ooExtendableAlong f (fun _ => Z).
+    Proof.
+      refine (cancelL_ooextendable _ _ (to O B) _ _).
+      1:srapply extendable_to_O.
+      refine (ooextendable_homotopic _ (O_functor f o to O A) _ _).
+      1:apply to_O_natural.
+      refine (ooextendable_compose _ (to O A) (O_functor f) _ _).
+      2:srapply extendable_to_O.
+      srapply ooextendable_equiv.
+    Defined.
+
+    (** And now the funext version *)
+    Definition isequiv_precompose_O_inverts `{Funext}
+               {A B : Type} (f : A -> B) `{O_inverts f}
+               (Z : Type) `{In O Z}
+      : IsEquiv (fun g:B->Z => g o f).
+    Proof.
+      srapply (equiv_extendable_isequiv 0).
+      exact (ooextendable_O_inverts f Z 2).
+    Defined.
+
+    (** This property also characterizes the types in the subuniverse, which is the other half of Lemma 1.23. *)
+    Definition inO_ooextendable_O_inverts (Z:Type@{k})
+               (E : forall (A : Type@{i}) (B : Type@{j}) (f : A -> B)
+                      (Oif : O_inverts f),
+                   ooExtendableAlong f (fun _ => Z))
+      : In@{Ou Oa k} O Z.
+    Proof.
+      pose (EZ := fst (E Z (O Z) (to O Z) _ 1%nat) idmap).
+      exact (inO_to_O_retract _ EZ.1 EZ.2).
+    Defined.
+
+    (** A version with the equivalence form of the extension condition. *)
+    Definition inO_isequiv_precompose_O_inverts (Z:Type)
+               (Yo : forall (A : Type) (B : Type) (f : A -> B)
+                       (Oif : O_inverts f),
+                   IsEquiv (fun g:B->Z => g o f))
+      : In O Z.
+    Proof.
+      pose (EZ := extension_isequiv_precompose (to O Z) _ (Yo Z (O Z) (to O Z) _) idmap).
+      exact (inO_to_O_retract _ EZ.1 EZ.2).
+    Defined.
+
     Definition to_O_inv_natural {A B : Type} `{In O A} `{In O B}
                (f : A -> B)
     : (to O B)^-1 o (O_functor f) == f o (to O A)^-1.
