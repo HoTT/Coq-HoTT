@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import EquivalenceVarieties.
-Require Import Spaces.Finite.Core.
+Require Import Spaces.Finite.Fin.
 
 (** ** Equivalences between canonical finite sets *)
 

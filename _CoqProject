@@ -131,10 +131,9 @@ theories/Spaces/Torus/TorusHomotopy.v
 
 
 theories/Spaces/Finite.v
-theories/Spaces/Finite/Core.v
-theories/Spaces/Finite/Equiv.v
+theories/Spaces/Finite/Fin.v
+theories/Spaces/Finite/FinEquiv.v
 theories/Spaces/Finite/Finite.v
-theories/Spaces/Finite/Quotient.v
 
 #
 #   Modalities

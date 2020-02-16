@@ -1,4 +1,3 @@
-Require Export Spaces.Finite.Core.
-Require Export Spaces.Finite.Equiv.
+Require Export Spaces.Finite.Fin.
+Require Export Spaces.Finite.FinEquiv.
 Require Export Spaces.Finite.Finite.
-Require Export Spaces.Finite.Quotient.
