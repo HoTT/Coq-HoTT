@@ -307,6 +307,10 @@ Proof.
   intros x y. apply isequiv_fcontr,_.
 Defined.
 
+Definition equiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f} (x y : A)
+  : (x = y) <~> (f x = f y)
+  := Build_Equiv _ _ (ap f) _.
+
 Definition isembedding_isequiv_ap {A B} (f : A -> B) `{!forall x y, IsEquiv (@ap _ _ f x y)}
   : IsEmbedding f.
 Proof.

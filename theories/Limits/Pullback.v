@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Cubical.PathSquare.
+Require Import Fibrations EquivalenceVarieties Cubical.PathSquare.
 
 Local Open Scope path_scope.
 
@@ -64,6 +64,16 @@ Definition equiv_ispullback {A B C D}
   : A <~> Pullback k g
   := Build_Equiv _ _ (pullback_corec p) ip.
 
+(** This is equivalent to the transposed square being a pullback. *)
+Definition ispullback_symm {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : g o h == k o f) (pb : IsPullback (fun a => (p a)^))
+  : IsPullback p.
+Proof.
+  rapply (cancelL_isequiv (equiv_pullback_symm g k)).
+  apply pb.
+Defined.
+
 (** The pullback of the projections [{d:D & P d} -> D <- {d:D & Q d}] is equivalent to [{d:D & P d * Q d}]. *)
 Definition ispullback_sigprod {D : Type} (P Q : D -> Type)
   : IsPullback (fun z:{d:D & P d * Q d} => 1%path : (z.1;fst z.2).1 = (z.1;snd z.2).1).
@@ -79,6 +89,35 @@ Defined.
 Definition equiv_sigprod_pullback {D : Type} (P Q : D -> Type)
   : {d:D & P d * Q d} <~> Pullback (@pr1 D P) (@pr1 D Q)
   := Build_Equiv _ _ _ (ispullback_sigprod P Q).
+
+(** If the induced map on fibers is an equivalence, then a square is a pullback. *)
+Definition ispullback_isequiv_functor_hfiber {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h)
+           (e : forall b:B, IsEquiv (functor_hfiber p b))
+  : IsPullback p.
+Proof.
+  unfold IsPullback.
+  apply isequiv_fcontr; intros [b [c q]].
+  unfold pullback_corec; cbn.
+  assert (ctr := fcontr_isequiv (functor_hfiber p b) _).
+  refine (@contr_equiv' _ _ _ (ctr (c;q^))).
+  unfold hfiber, functor_hfiber, functor_sigma.
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  apply equiv_functor_sigma_id; intros a.
+  refine (_ oE equiv_functor_sigma_id _).
+  2:intros; symmetry; apply equiv_path_sigma.
+  refine ((equiv_path_sigma _ _ _) oE _); cbn.
+  apply equiv_functor_sigma_id; intros r.
+  rewrite transport_sigma'; cbn.
+  refine ((equiv_path_sigma _ _ _) oE _); cbn.
+  apply equiv_functor_sigma_id; intros s.
+  refine (_ oE equiv_ap (equiv_path_inverse _ _)^-1 _ _); cbn.
+  rewrite inv_V. apply equiv_concat_l.
+  rewrite !transport_paths_Fr, !transport_paths_Fl.
+  rewrite !inv_pp, !inv_V.
+  reflexivity.
+Defined.
 
 (** The pullback of a map along another one *)
 Definition pullback_along {A B C} (f : B -> A) (g : C -> A)
