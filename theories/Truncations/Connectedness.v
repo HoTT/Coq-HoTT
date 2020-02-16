@@ -133,7 +133,7 @@ Proof.
 Defined.
 
 Definition is0connected_merely_allpath `{Univalence}
-           (A : Type) {ma : merely A}
+           (A : Type) `{merely A}
            (p : forall (x y:A), merely (x = y))
 : IsConnected 0 A.
 Proof.

@@ -47,6 +47,11 @@ Definition inO_equiv_inO {O : Subuniverse} (T : Type) {U : Type}
   : In O U
   := @inO_equiv_inO_internal O T U T_inO f _.
 
+Definition inO_equiv_inO' {O : Subuniverse}
+           (T : Type) {U : Type} `{In O T} (f : T <~> U)
+  : In O U
+  := inO_equiv_inO T f.
+
 (** The universe of types in the subuniverse *)
 Definition Type_@{i j} (O : Subuniverse@{i}) : Type@{j}
   := @sig@{j i} Type@{i} (fun (T : Type@{i}) => In O T).
@@ -65,11 +70,6 @@ Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O)
 (** Types in [TypeO] are always in [O]. *)
 Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
   := A.2.
-
-Definition inO_equiv_inO' {O : Subuniverse}
-           (T : Type) {U : Type} `{In O T} (f : T <~> U)
-  : In O U
-  := inO_equiv_inO T f.
 
 (** *** Reflections *)
 
@@ -205,9 +205,8 @@ Section Reflective_Subuniverse.
   Defined.
 
   (** If [T] is in the subuniverse, then [to O T] is an equivalence. *)
-  Definition isequiv_to_O_inO@{u a i} (T : Type@{i}) `{In O T} : IsEquiv@{i i} (to O T).
+  Definition isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
   Proof.
-    (** Using universe annotations to reduce superfluous universes *)
     pose (g := O_rec idmap : O T -> T).
     refine (isequiv_adjointify (to O T) g _ _).
     - refine (O_indpaths (to O T o g) idmap _).
@@ -483,7 +482,7 @@ Section Reflective_Subuniverse.
     : IsEquiv (O_rec (O := O) f).
     Proof.
       apply isequiv_O_inverts.
-      refine (cancelR_isequiv (O_functor (to O A))).
+      nrefine (cancelR_isequiv (O_functor (to O A))); [ exact _ | ].
       nrefine (isequiv_homotopic (O_functor (O_rec f o to O A))
                                 (O_functor_compose _ _)).
       refine (isequiv_homotopic (O_functor f)

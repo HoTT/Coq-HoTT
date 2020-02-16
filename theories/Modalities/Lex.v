@@ -328,12 +328,11 @@ Proof.
   { intros x; subst g; apply O_rec_beta. }
   apply inO_isequiv_to_O.
   apply isequiv_fcontr; intros x.
-  refine (contr_equiv' _ (hfiber_hfiber_compose_map@{k k i k k k k k} _ g x)).
+  refine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
   apply fcontr_isequiv.
   unfold hfiber_compose_map.
-  transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
-                                (hfiber@{k i} g (g x)))).
-  { refine (_ oE equiv_to_O@{u a k k} O _).
+  transparent assert (h : (hfiber (@pr1 A B) (g x) <~> hfiber g (g x))).
+  { refine (_ oE equiv_to_O O _).
     refine (_ oE Build_Equiv _ _
               (O_functor_hfiber O (@pr1 A B) (g x)) _).
     unfold hfiber.
