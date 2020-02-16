@@ -170,7 +170,7 @@ Definition pi_functor_loops (n : nat) {X Y : pType} (f : X ->* Y)
     == (pi_functor n (loops_functor f)) o (pi_loops n X).
 Proof.
   destruct n; intros x.
-  all:refine ((O_functor_compose (Tr 0) _ _ _)^ @ _ @ (O_functor_compose (Tr 0) _ _ _)).
+  all:refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
   all:apply O_functor_homotopy.
   - reflexivity.
   - exact (pointed_htpy (unfold_iterated_loops_functor n.+1 f)).

@@ -556,7 +556,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 Defined.
 
 Lemma Qpos_is_enumerator :
-  IsConnMap@{UQ} (Tr (trunc_S minus_two)) Qpos_enumerator.
+  IsConnMap@{UQ} (trunc_S minus_two) Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.
 unfold hfiber.

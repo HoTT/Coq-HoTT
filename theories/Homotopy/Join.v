@@ -184,8 +184,8 @@ Section Join.
 
   (** Joins add connectivity *)
   Global Instance isconnected_join `{Univalence} {m n : trunc_index}
-         (A B : Type) `{IsConnected (Tr m) A} `{IsConnected (Tr n) B}
-    : IsConnected (Tr (m +2+ n)) (Join A B).
+         (A B : Type) `{IsConnected m A} `{IsConnected n B}
+    : IsConnected (m +2+ n) (Join A B).
   Proof.
     apply isconnected_from_elim; intros C ? k.
     pose proof (istrunc_extension_along_conn
@@ -196,7 +196,7 @@ Section Join.
     { intros a; exists (fun _ => k (pushl a)); intros b.
       exact (ap k (jglue a b)). }
     assert (h := isconnected_elim
-                   (Tr m) {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
+                   m {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
     srefine (Pushout_ind _ _ _ _).

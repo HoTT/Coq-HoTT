@@ -178,7 +178,7 @@ Definition equiv_loopS1_int : (base = base) <~> Int
 (** ** Connectedness and truncatedness *)
 
 (** The circle is 0-connected. *)
-Global Instance isconnected_S1 : IsConnected (Tr 0) S1.
+Global Instance isconnected_S1 : IsConnected 0 S1.
 Proof.
   apply is0connected_merely_allpath.
   - exact (tr base).

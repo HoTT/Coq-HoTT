@@ -113,7 +113,7 @@ Definition cconst_wconst_hset `{Funext} {X Y : Type} (f : X -> Y)
 Proof.
   assert (Ys' : merely X -> IsHSet Y).
   { apply Trunc_rec. intros x; exact (Ys x). }
-  simple refine (cconst_factors_hprop f (image (Tr (-1)) f) _ _ _).
+  simple refine (cconst_factors_hprop f (image (-1) f) _ _ _).
   - apply hprop_allpath; intros [y1 p1] [y2 p2].
     apply path_sigma_hprop; simpl.
     pose proof (Ys' (Trunc_functor (-1) pr1 p1)).

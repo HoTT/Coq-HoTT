@@ -18,7 +18,7 @@ Local Unset Keyed Unification.
 
 Record ooGroup :=
   { classifying_space : pType ;
-    isconn_classifying_space : IsConnected (Tr 0) classifying_space
+    isconn_classifying_space : IsConnected 0 classifying_space
   }.
 
 Global Existing Instance isconn_classifying_space.
@@ -44,7 +44,7 @@ Proof.
                { x:X & merely (x = point X) }
                (existT (fun x:X => merely (x = point X)) x0 (tr 1)))).
   (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
-  cut (IsConnected (Tr 0) BG).
+  cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }
   cut (IsSurjection (unit_name (point BG))).
   { intros; refine (conn_pointed_type (point _)). }

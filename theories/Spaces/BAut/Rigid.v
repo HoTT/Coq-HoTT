@@ -77,7 +77,7 @@ Defined.
 
 Definition baut_prod_rigid_equiv `{Univalence}
            (X A : Type) (n : trunc_index)
-           `{IsTrunc n.+1 X} `{IsRigid A} `{IsConnected (Tr n.+1) A}
+           `{IsTrunc n.+1 X} `{IsRigid A} `{IsConnected n.+1 A}
   : BAut X <~> BAut (X * A).
 Proof.
   refine (Build_Equiv _ _ (baut_prod_r X A) _).

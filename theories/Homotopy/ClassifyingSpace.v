@@ -138,7 +138,7 @@ End Eliminators.
 
 (** We can prove that the classifying space is 0-connected. *)
 Global Instance isconnected_classifyingspace {G : Group}
-  : IsConnected (Tr 0) (ClassifyingSpace G).
+  : IsConnected 0 (ClassifyingSpace G).
 Proof.
   exists (tr bbase).
   srapply Trunc_ind.

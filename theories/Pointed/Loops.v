@@ -37,7 +37,7 @@ Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
 
 (** Similarly for connectedness. *)
 Definition isconnected_loops `{Univalence} {n} (A : pType)
-  `{IsConnected (Tr n.+1) A} : IsConnected (Tr n) (loops A) := _.
+  `{IsConnected n.+1 A} : IsConnected n (loops A) := _.
 
 (** ** Functoriality of loop spaces *)
 
@@ -159,10 +159,9 @@ Proof.
 Defined.
 
 (** And likewise the connectedness.  *)
-(*
 Global Instance isconnected_loops_functor `{Univalence} {n : trunc_index}
-  (A B : pType) (f : A ->* B) `{IsConnMap (Tr n.+1) _ _ f}
-  : IsConnMap (Tr n) (loops_functor f).
+  (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
+  : IsConnMap n (loops_functor f).
 Proof.
   intros p; eapply isconnected_equiv'.
   - refine (hfiber_loops_functor f p oE _).
@@ -184,15 +183,15 @@ Defined.
 
 (** It follows that loop spaces "commute with images". *)
 Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)
-  : loops (Build_pType (image (Tr n.+1) f) (factor1 (image (Tr n.+1) f) (point A)))
-  <~> image (Tr n) (loops_functor f).
+  : loops (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))
+  <~> image n (loops_functor f).
 Proof.
-  set (C := (Build_pType (image (Tr n.+1) f) (factor1 (image (Tr n.+1) f) (point A)))).
-  pose (g := Build_pMap A C (factor1 (image (Tr n.+1) f)) 1).
-  pose (h := Build_pMap C B (factor2 (image (Tr n.+1) f)) (point_eq f)).
+  set (C := (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))).
+  pose (g := Build_pMap A C (factor1 (image n.+1 f)) 1).
+  pose (h := Build_pMap C B (factor2 (image n.+1 f)) (point_eq f)).
   transparent assert (I : (Factorization
-    (@IsConnMap (Tr n)) (@MapIn (Tr n)) (loops_functor f))).
-  { refine (@Build_Factorization (@IsConnMap (Tr n)) (@MapIn (Tr n))
+    (@IsConnMap n) (@MapIn n) (loops_functor f))).
+  { refine (@Build_Factorization (@IsConnMap n) (@MapIn n)
       (loops A) (loops B) (loops_functor f) (loops C)
       (loops_functor g) (loops_functor h) _ _ _).
     intros x; symmetry.
@@ -202,7 +201,6 @@ Proof.
   exact (path_intermediate (path_factor (O_factsys n) (loops_functor f) I
     (image n (loops_functor f)))).
 Defined.
-*)
 
 (** Loop inversion is a pointed equivalence *)
 Definition loops_inv (A : pType) : loops A <~>* loops A.

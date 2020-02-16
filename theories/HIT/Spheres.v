@@ -247,7 +247,7 @@ Proof.
   srapply (trunc_equiv _ Sph1_to_S1^-1).
 Defined.
 
-Global Instance isconnected_sn n : IsConnected (Tr n.+1) (Sphere n.+2).
+Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
 Proof.
   induction n.
   { srapply contr_inhabited_hprop.

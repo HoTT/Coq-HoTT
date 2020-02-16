@@ -42,15 +42,15 @@ Section Extensions.
 
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
 Lemma istrunc_extension_along_conn {m n : trunc_index}
-  {A B : Type} (f : A -> B) `{IsConnMap (Tr n) _ _ f}
+  {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc (m +2+ n) (P b)}
   (d : forall a:A, P (f a))
 : IsTrunc m (ExtensionAlong f P d).
 Proof.
   revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
   (* m = –2 *)
-  - exists (extension_conn_map_elim (Tr n) f P d).
-    intros y. apply (allpath_extension_conn_map (Tr n)); assumption.
+  - exists (extension_conn_map_elim n f P d).
+    intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
   - intros e e'. refine (trunc_equiv _ (path_extension e e')).
 (* magically infers: paths in extensions = extensions into paths,
@@ -63,21 +63,16 @@ Defined.
 
 (** We can't make both of these [Instance]s, as that would result in infinite loops. *)
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
-       `{IsConnMap (Tr n) _ _ (unit_name a0)}
-  : IsConnected (Tr n.+1) A | 1000.
+       `{IsConnMap n _ _ (unit_name a0)}
+  : IsConnected n.+1 A | 1000.
 Proof.
-(*
-  apply isconnected_from_elim.
-  intros C HC f. exists (f a0).
-  refine (conn_map_elim (Tr n) (unit_name a0) _ (fun _ => idpath)).
-*)
   apply isconnected_conn_map_to_unit.
   rapply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
 Defined.
 
 Definition conn_point_incl {n : trunc_index} {A : Type} (a0:A)
-           `{IsConnected (Tr n.+1) A}
-  : IsConnMap (Tr n) (unit_name a0).
+           `{IsConnected n.+1 A}
+  : IsConnMap n (unit_name a0).
 Proof.
   rapply (OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
   apply O_lex_leq_Tr.
@@ -92,15 +87,15 @@ End Extensions.
 (** ** Decreasing connectedness *)
 
 (** An [n.+1]-connected type is also [n]-connected.  This obviously can't be an [Instance]! *)
-Definition isconnected_pred n A `{IsConnected (Tr n.+1) A}
-: IsConnected (Tr n) A.
+Definition isconnected_pred n A `{IsConnected n.+1 A}
+: IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
-  refine (isconnected_elim (Tr n.+1) C f).
+  refine (isconnected_elim n.+1 C f).
 Defined.
 
 (** By induction, an [n.+1]-connected type is also [-1]-connected. *)
-Definition merely_isconnected n A `{IsConnected (Tr n.+1) A}
+Definition merely_isconnected n A `{IsConnected n.+1 A}
   : merely A.
 Proof.
   induction n as [|n IHn].
@@ -108,8 +103,8 @@ Proof.
   - apply IHn, isconnected_pred; assumption.
 Defined.
 
-Definition isconnected_pred_add n m A `{H : IsConnected (Tr (n +2+ m)) A}
-  : IsConnected (Tr m) A.
+Definition isconnected_pred_add n m A `{H : IsConnected (n +2+ m) A}
+  : IsConnected m A.
 Proof.
   induction n.
   1: assumption.
@@ -121,8 +116,8 @@ Defined.
 (** ** Connectedness of path spaces *)
 
 Global Instance isconnected_paths `{Univalence} {n A}
-       `{IsConnected (Tr n.+1) A} (x y : A)
-: IsConnected (Tr n) (x = y).
+       `{IsConnected n.+1 A} (x y : A)
+: IsConnected n (x = y).
 Proof.
   refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
 Defined.
@@ -131,7 +126,7 @@ Defined.
 
 (** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  TODO: This should also be generalized to separated subuniverses (CORS Remark 2.35).  *)
 Definition merely_path_is0connected `{Univalence}
-           (A : Type) `{IsConnected (Tr 0) A} (x y : A)
+           (A : Type) `{IsConnected 0 A} (x y : A)
 : merely (x = y).
 Proof.
   refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
@@ -140,7 +135,7 @@ Defined.
 Definition is0connected_merely_allpath `{Univalence}
            (A : Type) {ma : merely A}
            (p : forall (x y:A), merely (x = y))
-: IsConnected (Tr 0) A.
+: IsConnected 0 A.
 Proof.
   strip_truncations.
   apply (contr_inhabited_hprop).
@@ -152,10 +147,10 @@ Defined.
 
 (** 0-connected types are indecomposable *)
 Global Instance indecomposable_0connected `{Univalence}
-       (X : Type) `{IsConnected (Tr 0) X}
+       (X : Type) `{IsConnected 0 X}
 : Indecomposable X.
 Proof.
-  assert (IsConnected (Tr (-1)) X) by refine (isconnected_pred (-1) X).
+  assert (IsConnected (-1) X) by refine (isconnected_pred (-1) X).
   constructor.
   - intros A B f.
     assert (z := center (merely X) : merely X); generalize z.
@@ -176,8 +171,8 @@ Proof.
 Defined.
 
 (* Truncation preserves connectedness. Note that this is for different levels. *)
-Global Instance isconnected_trunc {X : Type} n m `{IsConnected (Tr n) X}
-  : IsConnected (Tr n) (Tr m X).
+Global Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
+  : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.
   srapply (contr_equiv' _ (Trunc_swap n m X)^-1).
@@ -193,8 +188,8 @@ Once again, we believe that the type of the conclusion is an hprop (though we do
 
 Context `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (Tr m.+1) A}
-  {B : Type} (b0 : B) `{IsConnected (Tr n.+1) B}
+  {A : Type} (a0 : A) `{IsConnected m.+1 A}
+  {B : Type} (b0 : B) `{IsConnected n.+1 B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m +2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
@@ -210,7 +205,7 @@ Proof.
     ExtensionAlong (unit_name a0)
       (fun a => ExtensionAlong (unit_name b0) (P a) (unit_name (f_b0 a)))
       (unit_name (f_a0 ; (unit_name f_a0b0)))).
-  - apply (extension_conn_map_elim (Tr m)).
+  - apply (extension_conn_map_elim m).
     + apply (conn_point_incl a0).
     + intros a.
       apply (istrunc_extension_along_conn (n := n)).
@@ -247,8 +242,8 @@ End Wedge_Incl_Conn.
 
 Definition wedge_incl_elim_uncurried `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (Tr m.+1) A}
-  {B : Type} (b0 : B) `{IsConnected (Tr n.+1) B}
+  {A : Type} (a0 : A) `{IsConnected m.+1 A}
+  {B : Type} (b0 : B) `{IsConnected n.+1 B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m +2+ n) (P a b)}
   (fs : {f_a0 : forall b:B, P a0 b
         & { f_b0 : forall a:A, P a b0

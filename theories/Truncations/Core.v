@@ -63,6 +63,11 @@ Proof.
   - intros; reflexivity.
 Defined.
 
+(** We don't usually declare modalities as coercions, but this particular one is convenient so that lemmas about (for instance) connected maps can be applied to truncation modalities without the user/reader needing to be (particularly) aware of the general notion of modality. *)
+Coercion Tr : trunc_index >-> Modality.
+(** However, if the coercion is not printed, then we get things like [Trunc (-1) X] being printed as [(-1) X], which is terribly confusing.  So we tell Coq to always print this coercion. *)
+Add Printing Coercion Tr.
+
 Section TruncationModality.
   Context (n : trunc_index).
 

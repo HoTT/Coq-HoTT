@@ -602,12 +602,12 @@ End GBM.
 
 Global Instance blakers_massey `{Univalence} (m n : trunc_index)
            {X Y : Type} (Q : X -> Y -> Type)
-           `{forall y, IsConnected (Tr m.+1) { x : X & Q x y } }
-           `{forall x, IsConnected (Tr n.+1) { y : Y & Q x y } }
+           `{forall y, IsConnected m.+1 { x : X & Q x y } }
+           `{forall x, IsConnected n.+1 { y : Y & Q x y } }
            (x : X) (y : Y)
-  : IsConnMap (Tr (m +2+ n)) (@spglue X Y Q x y).
+  : IsConnMap (m +2+ n) (@spglue X Y Q x y).
 Proof.
   intros r.
-  srefine (contr_code_inhab Q (Tr (m +2+ n)) _ x
+  srefine (contr_code_inhab Q (m +2+ n) _ x
                             (merely_isconnected n _) (spushr Q y) r).
 Defined.
