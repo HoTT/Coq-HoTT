@@ -149,8 +149,8 @@ Section AccessibleModalities.
     : In O A.
     Proof.
       apply (snd (inO_iff_isnull O A)); intros i.
-      apply (equiv_ooextendable_isequiv _ _)^-1.
-      simple refine (isequiv_adjointify _ _ _ _).
+      apply ((equiv_ooextendable_isequiv _ _)^-1%equiv).
+      snrapply isequiv_adjointify.
       - intros f []; exact (c i f).1.
       - intros f; apply path_arrow; intros x.
         simpl; unfold composeD.
