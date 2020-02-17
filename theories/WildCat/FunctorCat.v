@@ -24,7 +24,7 @@ Definition NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
 
 (** Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
-Global Instance is0cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (Fun01 A B).
+Global Instance is01cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (Fun01 A B).
 Proof.
   srapply Build_Is01Cat.
   - intros [F ?] [G ?].
@@ -34,6 +34,12 @@ Proof.
   - intros [F ?] [G ?] [K ?] [gamma ?] [alpha ?]; cbn in *.
     exists (comp_transformation gamma alpha); exact _.
 Defined.
+
+Definition fun01_inducingmap
+           {A B : Type} (f : A -> B) `{Is01Cat B}
+           (Acat := induced_01cat f)
+  : Fun01 A B
+  := Build_Fun01 A B _ _ f (inducingmap_is0functor f).
 
 (** In fact, in this case it is automatically also a 0-coherent 2-category and a 1-coherent 1-category, with a totally incoherent notion of 2-cell between 1-coherent natural transformations. *)
 

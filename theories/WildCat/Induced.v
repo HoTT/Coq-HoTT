@@ -53,6 +53,24 @@ Section Induced_category.
       intros u. apply cat_idr.
   Defined.
 
+  Local Instance induced_1cat_strong `{Is1Cat_Strong B} : Is1Cat_Strong A.
+  Proof.
+    snrapply Build_Is1Cat_Strong.
+    + intros a b. cbn in *. exact _.
+    + intros a b. cbn in *.
+      exact (@isgpd_hom _ _ (is1cat_is1cat_strong B) _ _).
+    + intros a b c g. cbn in *.
+      exact (is0functor_postcomp (f a) (f b) (f c) g).
+    + intros a b c h.
+      exact (is0functor_precomp (f a) (f b) (f c) h).
+    + intros a b c d; cbn in *. 
+      intros u v w. apply cat_assoc_strong.
+    + intros a b; cbn in *.
+      intros u. apply cat_idl_strong.
+    + intros a b; cbn in *.
+      intros u. apply cat_idr_strong.
+  Defined.
+
   Local Instance inducingmap_is1functor `{Is1Cat B} : Is1Functor f.
   Proof.
     srapply Build_Is1Functor.

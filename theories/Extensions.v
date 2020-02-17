@@ -340,6 +340,12 @@ Section Extensions.
   : ooExtendableAlong f C -> IsEquiv (fun g => g oD f)
     := fun ps => isequiv_extendable 0 (fst (ps 1%nat), snd (ps 2)).
 
+  Definition equiv_ooextendable `{Funext}
+             {A B : Type} (C : B -> Type) (f : A -> B)
+             (ext : ooExtendableAlong f C)
+    : (forall b, C b) <~> (forall a, C (f a))
+    := Build_Equiv _ _ _ (isequiv_ooextendable C f ext).
+
   Definition equiv_ooextendable_pathsplit `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C <~>
