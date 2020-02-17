@@ -255,6 +255,7 @@ theories/PathAny.v
 theories/Utf8.v
 theories/HoTT.v
 theories/Tests.v
+theories/Todo.v
 
 #
 #   Metatheory
@@ -633,6 +634,8 @@ theories/Classes/interfaces/naturals.v
 theories/Classes/interfaces/rationals.v
 theories/Classes/interfaces/canonical_names.v
 theories/Classes/interfaces/orders.v
+theories/Classes/interfaces/archimedean.v
+theories/Classes/interfaces/cauchy.v
 theories/Classes/interfaces/integers.v
 theories/Classes/interfaces/ua_algebra.v
 theories/Classes/interfaces/ua_setalgebra.v
