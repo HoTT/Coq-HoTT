@@ -7,8 +7,6 @@ Require Import Homotopy.Join.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.BlakersMassey.
 
-Import TrM.
-
 (** * The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  The only real work is to relate the span-pushout that we used for Blakers-Massey to the naive pushout that we used to define suspension. *)

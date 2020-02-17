@@ -25,10 +25,6 @@ We will prove the fracture theorem holds under the assumptions that [O2] is lex,
 
 It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is trivial.  This is naturally expressed in the context of the fracture theorem by saying that [O2]-modal types are [O1]-connected, i.e. the converse of the second hypothesis of our fracture theorem.  When this also holds, we can show that the universe [Type] can actually be reconstructed, up to equivalence, from the universes of [O1]- and [O2]-modal types and the [O2]-reflection from the first to the second, using the "Artin gluing construction" from topos theory.  *)
 
-Module Fracture (Os : Modalities).
-
-  Module Export OsL := Lex_Modalities_Theory Os.
-
   (** ** The fracture theorem *)
 
   Section FractureTheorem.
@@ -49,8 +45,10 @@ Module Fracture (Os : Modalities).
     Definition ispullback_fracture_square A
     : IsPullback (fracture_square A).
     Proof.
-      refine (ispullback_connmap_mapino_commsq O2 _).
-      (** And typeclass magic finds everything except the one we need our hypothesis for. *)
+      apply ispullback_symm.
+      nrefine (ispullback_connmap_mapino_commsq O2 _).
+      1-3:exact _.
+      2:rapply mapinO_between_inO.
       intros x; refine (ino2_isconnectedo1 _ _).
     Defined.
 
@@ -156,17 +154,9 @@ Module Fracture (Os : Modalities).
 
   End FractureTheorem.
 
-End Fracture.
-
 (** ** The propositional fracture theorem *)
 
-(** An easy example of the lex-modal fracture theorem is supplied by the open and closed modalities for an hprop [U].  In order to consider these together, we need to build their union as a family of modalities. *)
-
-Module Open_And_Closed_Modalities
-  := Modalities_FamUnion OpenModalities ClosedModalities.
-Module Import OpClM := Lex_Modalities_Theory Open_And_Closed_Modalities.
-Module Import Propositional_Fracture
-  := Fracture Open_And_Closed_Modalities.
+(** An easy example of the lex-modal fracture theorem is supplied by the open and closed modalities for an hprop [U]. *)
 
 Definition gluable_open_closed `{Funext} (U : hProp)
 : Gluable (Op U) (Cl U).
@@ -189,10 +179,6 @@ Defined.
 
 (** We can also prove the same thing without funext if we use the nullification versions of these modalities. *)
 
-Import NulM.
-Module Import Propositional_Fracture'
-  := Fracture Nullification_Modalities.
-
 Definition gluable_open_closed' (U : hProp)
 : Gluable (Op' U) (Cl' U).
 Proof.
@@ -207,7 +193,7 @@ Proof.
     - refine (isequiv_adjointify _ (to (Op' U) A) _ _).
       + intros a; apply O_rec_beta.
       + intros oa; revert oa; apply O_indpaths; intros a; simpl.
-        apply ap, O_rec_beta. }
+        apply ap. rapply O_rec_beta. }
   apply ooextendable_contr; exact _.
 Defined.
 

@@ -8,7 +8,6 @@ Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
 Require Import Truncations.
-Import TrM.
 
 Local Open Scope path_scope.
 

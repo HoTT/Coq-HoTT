@@ -3,7 +3,6 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HProp FunextVarieties.
 Require Import Extensions Factorization Modalities.Modality.
 Require Import HoTT.Truncations.
-Import TrM.
 
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.

@@ -2,7 +2,6 @@ Require Import Basics.
 Require Import Types.
 Require Import Truncations UnivalenceImpliesFunext.
 Require Export Classes.interfaces.abstract_algebra.
-Import TrM.
 
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.

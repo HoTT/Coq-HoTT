@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Cubical.PathSquare.
+Require Import Fibrations EquivalenceVarieties Cubical.PathSquare.
 
 Local Open Scope path_scope.
 
@@ -64,6 +64,16 @@ Definition equiv_ispullback {A B C D}
   : A <~> Pullback k g
   := Build_Equiv _ _ (pullback_corec p) ip.
 
+(** This is equivalent to the transposed square being a pullback. *)
+Definition ispullback_symm {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : g o h == k o f) (pb : IsPullback (fun a => (p a)^))
+  : IsPullback p.
+Proof.
+  rapply (cancelL_isequiv (equiv_pullback_symm g k)).
+  apply pb.
+Defined.
+
 (** The pullback of the projections [{d:D & P d} -> D <- {d:D & Q d}] is equivalent to [{d:D & P d * Q d}]. *)
 Definition ispullback_sigprod {D : Type} (P Q : D -> Type)
   : IsPullback (fun z:{d:D & P d * Q d} => 1%path : (z.1;fst z.2).1 = (z.1;snd z.2).1).
@@ -79,6 +89,42 @@ Defined.
 Definition equiv_sigprod_pullback {D : Type} (P Q : D -> Type)
   : {d:D & P d * Q d} <~> Pullback (@pr1 D P) (@pr1 D Q)
   := Build_Equiv _ _ _ (ispullback_sigprod P Q).
+
+(** For any commutative square, the fiber of the fibers is equivalent to the fiber of the "gap map" [pullback_corec]. *)
+Definition hfiber_pullback_corec {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h) (b : B) (c : C) (q : k b = g c)
+  : hfiber (pullback_corec p) (b; c; q) <~> hfiber (functor_hfiber p b) (c; q^).
+Proof.
+  unfold hfiber, functor_hfiber, functor_sigma.
+  refine (equiv_sigma_assoc _ _ oE _).
+  apply equiv_functor_sigma_id; intros a; cbn.
+  refine (_ oE (equiv_path_sigma _ _ _)^-1); cbn.
+  apply equiv_functor_sigma_id; intro p0; cbn.
+  rewrite transport_sigma'; cbn.
+  refine ((equiv_path_sigma _ _ _) oE _ oE (equiv_path_sigma _ _ _)^-1); cbn.
+  apply equiv_functor_sigma_id; intro p1; cbn.
+  rewrite !transport_paths_Fr, !transport_paths_Fl.
+  refine (_ oE (equiv_ap (equiv_path_inverse _ _) _ _)); cbn.
+  apply equiv_concat_l.
+  refine (_ @ (inv_pp _ _)^).  apply whiskerL.
+  refine (_ @ (inv_pp _ _)^).  apply whiskerL.
+  symmetry; apply inv_V.
+Defined.
+
+(** If the induced map on fibers is an equivalence, then a square is a pullback. *)
+Definition ispullback_isequiv_functor_hfiber {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h)
+           (e : forall b:B, IsEquiv (functor_hfiber p b))
+  : IsPullback p.
+Proof.
+  unfold IsPullback.
+  apply isequiv_fcontr; intro x.
+  rapply contr_equiv'.
+  - symmetry; apply hfiber_pullback_corec.
+  - apply fcontr_isequiv, e.
+Defined.
 
 (** The pullback of a map along another one *)
 Definition pullback_along {A B C} (f : B -> A) (g : C -> A)

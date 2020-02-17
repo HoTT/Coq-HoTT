@@ -9,7 +9,6 @@ Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Freudenthal.
 Require Import Truncations.
-Import TrM.
 
 Generalizable Variables X A B f g n.
 

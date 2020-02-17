@@ -8,7 +8,6 @@ Require Import HProp NullHomotopy.
 Require Import Homotopy.Suspension HIT.Circle HIT.TwoSphere.
 Require Import Pointed.pSusp Pointed.Core.
 Require Import Truncations.
-Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

@@ -3,8 +3,6 @@ Require Import HSet Fibrations Factorization HoTT.Truncations HProp.
 Require Import UnivalenceImpliesFunext.
 Require Import Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.pHomotopy.
 
-Import TrM.
-
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
 

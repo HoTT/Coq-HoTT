@@ -5,7 +5,6 @@ Require Import Pointed.pMap.
 Require Import Pointed.pEquiv.
 Require Import Pointed.Loops.
 Require Import Truncations.
-Import TrM.
 
 Local Open Scope pointed_scope.
 
@@ -113,4 +112,3 @@ Proof.
   { apply ptr_functor, e. }
   exact _.
 Defined.
-

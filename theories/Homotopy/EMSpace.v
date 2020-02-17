@@ -10,7 +10,6 @@ Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 (* Formalisation of Eilenberg-MacLane spaces *)
 
@@ -244,7 +243,7 @@ Section EilenbergMacLane.
         apply ap, ap.
         destruct n; reflexivity. }
       destruct p.
-      apply conn_map_to_O. }
+      rapply conn_map_to_O. }
     all: reflexivity.
   Defined.
 

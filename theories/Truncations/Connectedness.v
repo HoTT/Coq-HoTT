@@ -9,9 +9,9 @@ Require Import HProp.
 Require Import EquivalenceVarieties.
 Require Import Extensions.
 Require Import Factorization.
-Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
+Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
+Require Import Modalities.Descent Modalities.Separated.
 Require Import Truncations.Core.
-Import TrM.
 
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.
@@ -63,30 +63,24 @@ Defined.
 
 (** We can't make both of these [Instance]s, as that would result in infinite loops. *)
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
- `{IsConnMap n _ _ (unit_name a0)} : IsConnected n.+1 A | 1000.
+       `{IsConnMap n _ _ (unit_name a0)}
+  : IsConnected n.+1 A | 1000.
 Proof.
-  apply isconnected_from_elim.
-  intros C HC f. exists (f a0).
-  refine (conn_map_elim n (unit_name a0) _ (fun _ => idpath)).
+  apply isconnected_conn_map_to_unit.
+  rapply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
 Defined.
 
 Definition conn_point_incl {n : trunc_index} {A : Type} (a0:A)
-       `{IsConnected n.+1 A} : IsConnMap n (unit_name a0).
+           `{IsConnected n.+1 A}
+  : IsConnMap n (unit_name a0).
 Proof.
-  apply conn_map_from_extension_elim.
-  intros P ?. set (PP := fun a => BuildTruncType n (P a)).
-  assert (QQ := isconnected_elim n.+1 (TruncType n) PP).
-  destruct QQ as [[Q0 HQ] e].
-  assert (e' := fun a => ap trunctype_type (e a)); simpl in e'. clear HQ e.
-  intros d. set (d0 := d tt).
-  exists (fun a => (transport idmap (e' a0 @ (e' a)^) d0)).
-  intros []. change (d tt) with (transport idmap 1 d0).
-  apply ap10, ap, concat_pV.
+  rapply (OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
+  apply O_lex_leq_Tr.
 Defined.
 
 Hint Immediate conn_point_incl : typeclass_instances.
 
-(** TODO: generalise the above to any map with a section. *)
+(** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
 
 End Extensions.
 
@@ -130,7 +124,7 @@ Defined.
 
 (** ** 0-connectedness *)
 
-(** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  *)
+(** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  TODO: This should also be generalized to separated subuniverses (CORS Remark 2.35).  *)
 Definition merely_path_is0connected `{Univalence}
            (A : Type) `{IsConnected 0 A} (x y : A)
 : merely (x = y).
@@ -177,7 +171,7 @@ Proof.
 Defined.
 
 (* Truncation preserves connectedness. Note that this is for different levels. *)
-Global Instance isconnected_trunc {X : Type} n m `{IsConnected n X}
+Global Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
   : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.

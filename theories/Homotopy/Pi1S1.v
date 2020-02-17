@@ -10,7 +10,6 @@ Require Import HIT.Spheres.
 Require Import Truncations.
 Require Import Algebra.Z.
 Require Import Truncations.
-Import TrM.
 
 (* Calculation of Pi 1 S1 *)
 

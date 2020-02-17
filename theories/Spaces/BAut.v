@@ -3,7 +3,6 @@ Require Import HoTT.Basics HoTT.Types HProp.
 Require Import Constant Factorization UnivalenceImpliesFunext.
 Require Import Modalities.Modality HoTT.Truncations.
 Require Export Algebra.ooGroup Algebra.Aut.
-Import TrM.
 
 Local Open Scope path_scope.
 

@@ -8,7 +8,6 @@ Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import Truncations.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

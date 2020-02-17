@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext TruncType HSet.
 Require Import HoTT.Truncations.
-Import TrM.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

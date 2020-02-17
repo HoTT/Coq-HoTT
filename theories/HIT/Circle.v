@@ -10,7 +10,6 @@ Require Import HIT.Coeq.
 Require Import Modalities.Modality Truncations.
 Require Import Cubical.DPath.
 
-Import TrM.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
@@ -200,6 +199,7 @@ Proof.
   destruct p, q.
   refine (trunc_equiv' (n := 0) Int equiv_loopS1_int^-1).
 Defined.
+
 
 (** ** Iteration of equivalences *)
 

@@ -3,7 +3,6 @@ Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
 Require Import TruncType HProp HSet.
 Require Import Spaces.Int.
 Require Import HIT.Coeq HIT.Circle HIT.Flattening Truncations.
-Import TrM.
 
 Local Open Scope path_scope.
 

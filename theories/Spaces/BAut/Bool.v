@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Constant Factorization UnivalenceImpliesFunext.
 Require Import Modalities.Modality HoTT.Truncations.
-Import TrM.
 Require Import Spaces.BAut.
 
 Local Open Scope trunc_scope.

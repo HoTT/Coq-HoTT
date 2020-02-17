@@ -7,8 +7,6 @@ Require Import Truncations.
 Require Import Spaces.Nat.
 Require Import Modalities.ReflectiveSubuniverse.
 
-Import TrM.
-
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
 
@@ -146,7 +144,7 @@ Proof.
   - cbn; apply Trunc_functor_compose.
   - etransitivity.
     + apply O_functor_homotopy, iterated_loops_functor_compose.
-    + refine (O_functor_compose 0%trunc _ _ x).
+    + refine (O_functor_compose (Tr 0) _ _ x).
 Defined.
 
 Definition pi_2functor (n : nat)

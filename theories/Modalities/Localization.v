@@ -4,7 +4,6 @@
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
 Require Import Extensions EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Accessible.
-Require Import Homotopy.Suspension.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -264,25 +263,18 @@ Definition islocal_equiv_islocal (f : LocalGenerators@{a})
 Proof.
   intros i.
   (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
-  apply lift_ooextendablealong@{a a j k j'}.
+  apply lift_ooextendablealong@{a a a a a a j j j k j'}.
   refine (ooextendable_postcompose@{a a i j k k k k k k}
             _ _ (f i) (fun _ => g) _).
-  apply lift_ooextendablealong@{a a i i' k}.
+  apply lift_ooextendablealong@{a a a a a a i i i i' k}.
   apply Xloc.
-Defined.
-
-(** A basic operation on local generators is the pointwise suspension. *)
-Definition susp_localgen (f : LocalGenerators@{a}) : LocalGenerators@{a}.
-Proof.
-  econstructor; intros i.
-  exact (functor_susp@{a a a a a a a a a a a a} (f i)).
 Defined.
 
 (** ** Localization as a HIT *)
 
 Module Export LocalizationHIT.
 
-  Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
+  Cumulative Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
   : Type@{max(a,i)} :=
   | loc : X -> Localize f X.
 
@@ -352,96 +344,24 @@ Section Localization.
 
 End Localization.
 
-(** We define a wrapper around [LocalGenerators].  See the comments in HIT/Truncations for an explanation.  Unlike there, here we make the wrapper a [Record] rather than a [Definition], so that a projection has to be inserted to convert one to the other.  This forces us to write [Loc f] as a parameter to all reflective-subuniverse functions, which is really entirely reasonable; we only allowed ourselves to write [n] rather than [Tr n] in the case of truncations because things like connectedness are traditionally defined only for the truncation modality, so users may prefer not to have to think about the fact that there is a modality present. *)
-Record Localization_ReflectiveSubuniverse := Loc { unLoc : LocalGenerators }.
-
-Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
-
-  (** Here we have to use the extra universe parameter that we built into the definition of [ReflectiveSubuniverse]: a set of localization generators is parametrized by the universe that it lives in, but also by the universe that the *generators* live in, which must be smaller. *)
-  Definition ReflectiveSubuniverse : Type@{u} := Localization_ReflectiveSubuniverse@{a}.
-  Check ReflectiveSubuniverse@{u a}.
-
-  Definition O_reflector : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
-    := fun O => Localize@{a i} (unLoc O).
-
-  Definition In : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
-    := fun O X => IsLocal@{i i a} (unLoc O) X.
-
-  Definition O_inO :
-    forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-      In O (O_reflector O T)
-    := fun O => islocal_localize@{a i i} (unLoc O).
-
-  Definition to :
-    forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}), T -> O_reflector O T
-    := fun O => @loc@{a i} (unLoc O).
-
-  Definition inO_equiv_inO :
-    forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j}),
-      In@{u a i} O T -> forall f : T -> U, IsEquiv f ->
-      In@{u a j} O U
-    := fun O => islocal_equiv_islocal@{a i j i j k} (unLoc O).
-
-  Definition hprop_inO@{u a i} `{Funext}
-             (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
-  : IsHProp (In@{u a i} O T).
-  Proof.
-    apply (@trunc_forall@{a i i} _); intros i.
-    apply ishprop_ooextendable@{a a i i i  i i i i i  i i i}.
-  Defined.
-
-  Definition extendable_to_O
-             (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}}
-             {Q : Type@{j}} {Q_inO : In@{u a j} O Q}
-  : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
-  Proof.
-    apply ext_localize_ind@{a i j i k}; intros ?.
+Definition Loc@{a i} (f : LocalGenerators@{a}) : ReflectiveSubuniverse@{i}.
+Proof.
+  simple notypeclasses refine (Build_ReflectiveSubuniverse
+                                 (Build_Subuniverse (IsLocal f) _ _)
+                                 (fun A => Build_PreReflects _ A (Localize f A) _ (@loc f A))
+                                 (fun A => Build_Reflects _ _ _ _)).
+  - (** Typeclass inference can find this, but we give it explicitly to prevent extra universes from cropping up. *)
+    intros ? T; unfold IsLocal.
+    nrefine (trunc_forall@{a i i}); try assumption.
+    intros i.
+    apply ishprop_ooextendable@{a a i i i i i i i i i i i}.
+  - apply islocal_equiv_islocal.
+  - apply islocal_localize.
+  - cbn. intros Q Q_inO.
+    apply ext_localize_ind; intros ?.
     apply ooextendable_over_const.
     apply Q_inO.
-  Defined.
-
-  (** The separated subuniverse corresponding to localization at [f] is localization at the pointwise suspension of [f].  This (and the following two definitions that prove it) is CORS Lemma 2.15, except that we can't use exactly the same proof since we have to avoid funext.  Instead we use the non-funext version proven using wild 0-groupoids in [Homotopy.Suspension]. *)
-  Definition IsSepFor@{u a} (O' O : ReflectiveSubuniverse@{u a}) : Type@{u}
-    := paths@{u} (Loc (susp_localgen (unLoc O))) O'.
-
-  Definition inO_paths_from_inSepO@{u a i iplus}
-             (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
-             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A)
-    : In@{u a i} O (x = y).
-  Proof.
-    destruct O as [f]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
-    specialize (A_inO i).
-    (** Unfortunately, [ooextendable_iff_functor_susp] has a ridiculous number of universe parameters.  Fortunately, most of them can be [i], and it's fairly easy to figure out which have to be [a].  But a few of them have to be something strictly larger than [i], which is why we included such a universe parameter [iplus] in these fields of [ReflectiveSubuniverse]. *)
-    assert (e := fst (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (f i) _) A_inO (x,y)).
-    cbn in e.
-    refine (ooextendable_postcompose' _ _ _ _ e).
-    intros b.
-    symmetry; apply equiv_dp_const.
-  Defined.
-
-  Definition inSepO_from_inO_paths@{u a i iplus}
-             (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
-             (A : Type@{i}) (e : forall (x y : A), In@{u a i} O (x = y))
-    : In@{u a i} O' A.
-  Proof.
-    destruct O as [f]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
-    apply (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (f i)).  
-    intros [x y].
-    refine (ooextendable_postcompose' _ _ _ _ (e x y i)).
-    intros b.
-    apply equiv_dp_const.
-  Defined.
-
-End Localization_ReflectiveSubuniverses.
-
-
-(** If you import the following module [LocM], then you can call all the reflective subuniverse functions with a [LocalGenerators] as the parameter. *)
-Module Import LocM := ReflectiveSubuniverses_Theory Localization_ReflectiveSubuniverses.
-(** If you don't import it, then you'll need to write [LocM.function_name]. *)
-Export LocM.Coercions.
-
-Coercion Localization_ReflectiveSubuniverse_to_ReflectiveSubuniverse := idmap
-  : Localization_ReflectiveSubuniverse -> ReflectiveSubuniverse.
+Defined.
 
 (** Here is the "real" definition of the notation [IsLocal].  Defining it this way allows it to inherit typeclass inference from [In], unlike (for instance) the slightly annoying case of [IsTrunc n] versus [In (Tr n)]. *)
 Notation IsLocal f := (In (Loc f)).
@@ -498,38 +418,97 @@ Arguments local_indpaths_beta : simpl never.
 
 (** ** Localization and accessibility *)
 
-(** Localization subuniverses are accessible, essentially by definition. *)
-Module Accessible_Localization
-  <: Accessible_ReflectiveSubuniverses Localization_ReflectiveSubuniverses.
+(** Localization subuniverses are accessible, essentially by definition.  Without the universe annotations, [a] and [i] get collapsed. *)
+Global Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc@{a i} f).
+Proof.
+  unshelve econstructor.
+  - exact f.
+  - intros; split; apply idmap.
+Defined.
 
-  Import Localization_ReflectiveSubuniverses.
+(** Conversely, if a subuniverse is accessible, then the corresponding localization subuniverse is equivalent to it, and moreover exists at every universe level and satisfies its computation rules judgmentally.  This is called [lift_accrsu] but in fact it works equally well to *lower* the universe level, as long as both levels are no smaller than the size [a] of the generators. *)
+Definition lift_accrsu@{a i j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+  : ReflectiveSubuniverse@{j}
+  := Loc@{a j} (acc_lgen O).
 
-  Definition acc_gen : ReflectiveSubuniverse -> LocalGenerators
-    := unLoc.
+(** The lifted universe agrees with the original one, on any universe contained in both [i] and [j] *)
+Global Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+  : O_eq@{i j k} O (lift_accrsu@{a i j} O).
+Proof.
+  (** Anyone stepping through this proof should do [Set Printing Universes]. *)
+  split; intros A A_inO. 
+  - intros i.
+    assert (e := fst (inO_iff_islocal O A) A_inO i).
+    apply (lift_ooextendablealong@{a a a a a a i j k i j} (acc_lgen O i) (fun _ => A)).
+    exact e.
+  - apply (inO_iff_islocal O).
+    intros i.
+    pose (e := A_inO i).
+    apply (lift_ooextendablealong@{a a a a a a j i k j i} (acc_lgen O i) (fun _ => A)).
+    exact e.
+Defined.
 
-  Definition inO_iff_islocal
-             (O : ReflectiveSubuniverse@{u a}) (X : Type@{i})
-  : iff@{i i i} (In O X) (IsLocal (acc_gen O) X)
-    := (idmap , idmap).
+Definition O_leq_lift_accrsu@{a i1 i2}
+           (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
+           `{O_leq@{i1 i2 i2} O1 O2}
+  : O_leq@{i2 i2 i2} (lift_accrsu@{a i1 i2} O1) O2.
+Proof.
+  intros B B_inO1.
+  apply (inO_leq@{i1 i2 i2} O1 O2).
+  apply (snd (inO_iff_islocal O1 B)).
+  intros i. specialize (B_inO1 i).
+  apply (lift_ooextendablealong@{a a a a a a i2 i1 i2 i2 i1} (acc_lgen O1 i) (fun _ => B)).
+  exact B_inO1.
+Defined.
 
-End Accessible_Localization.
+(** Similarly, because localization is a HIT that has an elimination rule into types in *all* universes, for accessible reflective subuniverses we can show that containment implies connectedness properties with the universe containments in the other order. *)
+Definition isconnected_O_leq'@{a i1 i2}
+           (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
+           (** Compared to [O_leq@{i1 i2 i1}] and [A : Type@{i1}] in [isconnected_O_leq], these two lines are what make [i2 <= i1] instead of vice versa. *)
+           `{O_leq@{i1 i2 i2} O1 O2} (A : Type@{i2}) 
+           `{IsConnected O2 A}
+  : IsConnected O1 A.
+Proof.
+  (** Anyone stepping through this proof should do [Set Printing Universes]. *)
+  srefine (isconnected_O_leq O1 (lift_accrsu@{a i1 i1} O1) A).
+  1-2:exact _.
+  change (Contr@{i1} (Localize@{a i2} (acc_lgen@{a i1} O1) A)).
+  (** At this point you should also do [Unset Printing Notations] to see the universe annotation on [IsTrunc] change. *)
+  refine (contr_equiv'@{i2 i1} _ 1%equiv).
+  change (IsConnected@{i2} (lift_accrsu@{a i1 i2} O1) A).
+  srapply (isconnected_O_leq _ O2).
+  rapply O_leq_lift_accrsu.
+Defined.
 
-(** Conversely, if a reflective subuniverse is accessible, then it can be "nudged" to an equivalent localization.  The nudged version has the advantages of satisfying its computation rules judgmentally. *)
+(** And similarly for connected maps. *)
+Definition conn_map_O_leq'@{a i1 i2}
+           (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
+           `{O_leq@{i1 i2 i2} O1 O2} {A B : Type@{i2}}
+           (f : A -> B) `{IsConnMap O2 A B f}
+  : IsConnMap O1 f.
+Proof.
+  (** Anyone stepping through this proof should do [Set Printing Universes]. *)
+  intros b.
+  apply (isconnected_equiv' O1 (hfiber@{i2 i2} f b)).
+  - srapply equiv_adjointify.
+    1-2:intros [u p]; exact (u;p).
+    all:intros [u p]; reflexivity.
+  - apply (isconnected_O_leq' O1 O2).
+    apply isconnected_hfiber_conn_map.
+Defined.
 
-Module Nudge_ReflectiveSubuniverses
-       (Os : ReflectiveSubuniverses)
-       (Acc : Accessible_ReflectiveSubuniverses Os).
-
-  (** Once again, we are annoyed that "application of modules is restricted to paths". *)
-  Module Data <: ReflectiveSubuniverses_Restriction_Data
-                   Localization_ReflectiveSubuniverses.
-    Definition New_ReflectiveSubuniverse := Os.ReflectiveSubuniverse.
-    Definition ReflectiveSubuniverses_restriction
-    : New_ReflectiveSubuniverse -> Localization_ReflectiveSubuniverses.ReflectiveSubuniverse
-      := fun O => Loc (Acc.acc_gen O).
-  End Data.
-
-  Module Nudged <: ReflectiveSubuniverses
-    := ReflectiveSubuniverses_Restriction Localization_ReflectiveSubuniverses Data.
-
-End Nudge_ReflectiveSubuniverses.
+(** The same is true for inverted maps, too. *)
+Definition O_inverts_O_leq'@{a i1 i2}
+           (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
+           `{O_leq@{i1 i2 i2} O1 O2} {A B : Type@{i2}}
+           (f : A -> B) `{O_inverts O2 f}
+  : O_inverts O1 f.
+Proof.
+  assert (oleq := O_leq_lift_accrsu O1 O2).
+  assert (e := O_inverts_O_leq (lift_accrsu@{a i1 i2} O1) O2 f); clear oleq.
+  nrapply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
+  1:exact _.
+  (** It looks like we can say [exact e], but that would collapse the universes [i1] and [i2].  You can check with [Set Printing Universes. Unset Printing Notations.] that [e] and the goal have different universes.  So instead we do this: *)
+  refine (@isequiv_homotopic _ _ _ _ e _).
+  apply O_indpaths; intros x; reflexivity.
+Defined.

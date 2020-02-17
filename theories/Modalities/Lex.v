@@ -1,182 +1,279 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext.
-Require Import Modality Accessible.
+Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext PathAny.
+Require Import Modality Accessible Localization Descent Separated.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
-
+Local Open Scope subuniverse_scope.
 
 (** * Lex modalities *)
 
-(** ** Basic theory *)
+(** A lex modality is one that preserves finite limits, or equivalently pullbacks.  Many equivalent characterizations of this can be found in Theorem 3.1 of RSS.
 
-(** A lex modality is one that preserves finite limits, or equivalently pullbacks.  It turns out that a more basic and useful way to say this is that all path-spaces of connected types are connected.  Note how different this is from the behavior of, say, truncation modalities!
+We choose as our definition that a lex modality to be a reflective subuniverse such that [O <<< O], which is close to (but not quite the same as) RSS Theorem 3.1 (xiii).
 
-  This is a "large" definition, and we don't know of any small one that's equivalent to it (see <https://mathoverflow.net/questions/185980/a-small-definition-of-sub-∞-1-topoi>.  However, so far we never need to apply it "at multiple universes at once".  Thus, rather than making it a module type, we can make it a typeclass and rely on ordinary universe polymorphism. *)
+Note that since this includes [O << O] as a precondition, such an [O] must indeed be a modality (and since modalities coerce to reflective subuniverses, in the following notation [O] could be either an element of [ReflectiveSubuniverse] or of [Modality]). *)
+Notation Lex O := (O <<< O).
 
-Module Lex_Modalities_Theory (Os : Modalities).
+(** ** Properties of lex modalities *)
 
-  Module Export Os_Theory := Modalities_Theory Os.
+(** We now show that lex modalities have all the other properties from RSS Theorem 3.1 (which are equivalent to lex-ness).  All of them are simple specializations of properties from [Descent.v] to the case [O' = O] (although in the general case they are not known to be equivalent). *)
+Section LexModality.
+  Context (O : Modality) `{Lex O}.
 
-  Class Lex (O : Modality@{u a})
-    := isconnected_paths : forall (A : Type@{i}) (x y : A),
-                             IsConnected@{u a i} O A ->
-                             IsConnected@{u a i} O (x = y).
+  (** RSS Theorem 3.1 (i) *)
+  Definition isconnected_paths
+             {A : Type} `{IsConnected O A} (x y : A)
+    : IsConnected O (x = y)
+    := OO_isconnected_paths O O x y.
 
-  Global Existing Instance isconnected_paths.
+  (** RSS Theorem 3.1 (iii) *)
+  Definition conn_map_lex
+             {Y X : Type} `{IsConnected O Y, IsConnected O X} (f : Y -> X)
+    : IsConnMap O f
+    := OO_conn_map_isconnected O O f.
 
-  (** The following numbered lemmas are all actually equivalent characterizations of lex-ness.  We prove this for some of them, but we don't make the reverse implications Instances; usually [isconnected_paths] is the easier way to prove lexness. *)
+  (** RSS Theorem 3.1 (iv) *)
+  Global Instance isequiv_mapino_isconnected
+         {Y X : Type} `{IsConnected O Y, IsConnected O X}
+         (f : Y -> X) `{MapIn O _ _ f}
+    : IsEquiv f
+    := OO_isequiv_mapino_isconnected O O f.
 
-  (** 1. Every map between connected types is a connected map. *)
-  Global Instance conn_map_lex {O : Modality} `{Lex O}
-         {A : Type@{i}} {B : Type@{j}} {f : A -> B}
-         `{IsConnected O A} `{IsConnected O B}
-  : IsConnMap O f.
+  (** RSS Theorem 3.1 (vi) *)
+  Definition conn_map_functor_hfiber {A B C D : Type}
+             {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+             `{IsConnMap O _ _ h, IsConnMap O _ _ k}
+             (p : k o f == g o h) (b : B)
+    : IsConnMap O (functor_hfiber p b)
+    := OO_conn_map_functor_hfiber O O p b.
+
+  (** RSS Theorem 3.1 (vii) *)
+  Definition ispullback_connmap_mapino_commsq
+             {A B C D : Type} {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+             (p : k o f == g o h)
+             `{O_inverts O h, O_inverts O k, MapIn O _ _ f, MapIn O _ _ g}
+    : IsPullback p
+    := OO_ispullback_connmap_mapino O O p.
+
+  (** RSS Theorem 3.1 (viii) *)
+  Global Instance conn_map_functor_hfiber_to_O
+         {Y X : Type} (f : Y -> X) (x : X)
+    : IsConnMap O (functor_hfiber (fun y => (to_O_natural O f y)^) x)
+    := OO_conn_map_functor_hfiber_to_O O O f x.
+
+  Global Instance isequiv_O_functor_hfiber
+         {A B} (f : A -> B) (b : B)
+    : IsEquiv (O_functor_hfiber O f b).
   Proof.
-    intros b; refine (isconnected_sigma O).
-  Defined.
-
-  Definition lex_from_conn_map_lex {O : Modality}
-             (H : forall A B (f : A -> B),
-                         (IsConnected O A) -> (IsConnected O B) ->
-                         IsConnMap O f)
-    : Lex O.
-  Proof.
-    intros A x y AC.
-    refine (isconnected_equiv' O (hfiber (unit_name x) y) _ _).
-    unfold hfiber.
-    refine (equiv_contr_sigma (fun _ => x = y)).
-  Defined.
-
-  (** 2. Connected maps are left- as well as right-cancellable. *)
-  Definition cancelL_conn_map (O : Modality) `{Lex O}
-             {A B C : Type} (f : A -> B) (g : B -> C)
-  : IsConnMap O g -> IsConnMap O (g o f) -> IsConnMap O f.
-  Proof.
-    intros ? ? b.
-    refine (isconnected_equiv O _ (hfiber_hfiber_compose_map f g b) _).
-  Defined.
-
-  (** 3. Every map inverted by [O] is [O]-connected. *)
-  Definition isconnected_O_inverts (O : Modality) `{Lex O}
-             {A B : Type} (f : A -> B) `{O_inverts O f}
-  : IsConnMap O f.
-  Proof.
-    refine (cancelL_conn_map O f (to O B) _ _).
-    refine (conn_map_homotopic O _ _ (to_O_natural O f) _).
-    (** Typeclass magic! *)
-  Defined.
-
-  (** 4. Connected types are closed under pullbacks.  (Closure under fibers is [conn_map_lex] above. *)
-  Global Instance isconnected_pullback (O : Modality) `{Lex O}
-         {A B C : Type} {f : A -> C} {g : B -> C}
-         `{IsConnected O A} `{IsConnected O B} `{IsConnected O C}
-  : IsConnected O (Pullback f g).
-  Proof.
-    apply isconnected_sigma; [ exact _ | intros a ].
-    refine (isconnected_equiv O (hfiber g (f a))
-                              (equiv_functor_sigma_id
-                              (fun b => equiv_path_inverse _ _))
-                              _).
-  Defined.
-
-  (** 5. The reflector preserves pullbacks.  This justifies the terminology "lex". *)
-  Definition O_functor_pullback (O : Modality) `{Lex O}
-             {A B C} (f : B -> A) (g : C -> A)
-  : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).
-  Proof.
-    refine (isequiv_O_inverts O _).
-    refine (O_inverts_conn_map O _).
-    refine (cancelR_conn_map O (to O (Pullback f g)) _).
-    refine (conn_map_homotopic O
-             (functor_pullback f g (O_functor O f) (O_functor O g)
-                               (to O A) (to O B) (to O C)
-                               (to_O_natural O f) (to_O_natural O g))
-             _ _ _).
-    (** This *seems* like it ought to be the easier goal, but it turns out to involve lots of naturality wrangling.  If we ever want to make real use of this theorem, we might want to separate out this goal into an opaque lemma so we could make the main theorem transparent. *)
-    - intros [b [c e]];
-        unfold functor_pullback, functor_sigma, pullback_corec;
-        simpl.
-      refine (path_sigma' _ (to_O_natural O pullback_pr1 (b;(c;e)))^ _).
-      rewrite transport_sigma'; simpl.
-      refine (path_sigma' _ (to_O_natural O pullback_pr2 (b;(c;e)))^ _).
-      rewrite transport_paths_Fl.
-      rewrite transport_paths_Fr.
-      Open Scope long_path_scope.
-      unfold O_functor_square.
-      rewrite ap_V, inv_V, O_functor_homotopy_beta, !concat_p_pp.
-      unfold pullback_commsq; simpl.
-      rewrite to_O_natural_compose, !concat_pp_p.
-      do 3 apply whiskerL.
-      rewrite ap_V, <- inv_pp.
-      rewrite <- (inv_V (O_functor_compose _ _ _ _)), <- inv_pp.
-      apply inverse2, to_O_natural_compose.
-      Close Scope long_path_scope.
-    (** By contrast, this goal, which seems to contain all the mathematical content, is solved fairly easily by [hfiber_functor_pullback] and typeclass magic invoking [isconnected_pullback]. *)
-    - intros [ob [oc oe]].
-      refine (isconnected_equiv O _
-                (hfiber_functor_pullback _ _ _ _ _ _ _ _ _ _)^-1 _).
-  Qed.
-
-  (** 6. The reflector preserves fibers.  This is a slightly simpler version of the previous. *)
-  Global Instance isequiv_O_functor_hfiber (O : Modality) `{Lex O}
-             {A B} (f : A -> B) (b : B)
-  : IsEquiv (O_functor_hfiber O f b).
-  Proof.
-    refine (isequiv_O_inverts O _).
+    apply (isequiv_O_rec_O_inverts O).
     apply O_inverts_conn_map.
-    refine (cancelR_conn_map O (to O _) _).
-    unfold O_functor_hfiber.
-    refine (conn_map_homotopic O
-             (@functor_hfiber _ _ _ _ f (O_functor O f)
-                               (to O A) (to O B)
-                               (fun x => (to_O_natural O f x)^) b)
-             _ _ _).
-    - intros [a p].
-      rewrite O_rec_beta.
-      unfold functor_hfiber, functor_sigma. apply ap.
-      apply whiskerR, inv_V.
-    - intros [oa p].
-      refine (isconnected_equiv O _
-               (hfiber_functor_hfiber _ _ _ _)^-1 _).
+    refine (conn_map_homotopic
+              O (functor_hfiber (fun x => (to_O_natural O f x)^) b)
+              _ _ _).
+    intros [a p].
+    unfold functor_hfiber, functor_sigma. apply ap.
+    apply whiskerR, inv_V.
   Defined.
 
-  Definition equiv_O_functor_hfiber (O : Modality) `{Lex O}
+  Definition equiv_O_functor_hfiber
              {A B} (f : A -> B) (b : B)
-  : O (hfiber f b) <~> hfiber (O_functor O f) (to O B b)
+    : O (hfiber f b) <~> hfiber (O_functor O f) (to O B b)
     := Build_Equiv _ _ (O_functor_hfiber O f b) _.
 
-  (** 7. Lex modalities preserve path-spaces. *)
-  Definition O_path_cmp (O : Modality) {A} (x y : A)
-  : O (x = y) -> (to O A x = to O A y)
-    := O_rec (ap (to O A)).
+  (** RSS Theorem 3.1 (ix) *)
+  Global Instance isequiv_path_O
+         {X : Type@{i}} (x y : X)
+    : IsEquiv (path_OO O O x y)
+    := isequiv_path_OO O O x y.
 
-  Global Instance isequiv_O_path_cmp {O : Modality} `{Lex O} {A} (x y : A)
-  : IsEquiv (O_path_cmp O x y).
+  Definition equiv_path_O {X : Type@{i}} (x y : X)
+    : O (x = y) <~> (to O X x = to O X y)
+    := equiv_path_OO O O x y.
+
+  (** RSS Theorem 3.1 (x).  This justifies the term "left exact". *)
+  Global Instance O_inverts_functor_pullback_to_O
+         {A B C : Type} (f : B -> A) (g : C -> A)
+    : O_inverts O (functor_pullback f g (O_functor O f) (O_functor O g)
+                                    (to O A) (to O B) (to O C)
+                                    (to_O_natural O f) (to_O_natural O g))
+    := OO_inverts_functor_pullback_to_O O O f g.
+
+  Definition equiv_O_pullback {A B C : Type} (f : B -> A) (g : C -> A)
+    : O (Pullback f g) <~> O (Pullback (O_functor O f) (O_functor O g))
+    := equiv_OO_pullback O O f g.
+
+  Definition O_functor_pullback
+             {A B C : Type} (f : B -> A) (g : C -> A)
+    : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).
   Proof.
-    refine (isequiv_conn_ino_map O _).
-    refine (cancelR_conn_map O (to O (x = y)) _).
-    refine (conn_map_homotopic O (ap (to O A)) _ _ _).
-    - intros ?; symmetry; by apply O_rec_beta.
-    - intros p.
-      refine (isconnected_equiv O _ (hfiber_ap p)^-1 _).
+    unfold IsPullback.
+    nrapply (isequiv_homotopic
+               (O_rec (functor_pullback _ _ _ _ _ _ _
+                                        (to_O_natural O f) (to_O_natural O g)))).
+    1:apply isequiv_O_rec_O_inverts; exact _.
+    apply O_indpaths; intros [b [c e]].
+    refine (O_rec_beta _ _ @ _).
+    (** This *seems* like it ought to be the easier goal, but it turns out to involve lots of naturality wrangling.  If we ever want to make real use of this theorem, we might want to separate out this goal into an opaque lemma so we could make the main theorem transparent. *)
+    unfold functor_pullback, functor_sigma, pullback_corec; simpl.
+    refine (path_sigma' _ (to_O_natural O pullback_pr1 (b;(c;e)))^ _).
+    rewrite transport_sigma'; simpl.
+    refine (path_sigma' _ (to_O_natural O pullback_pr2 (b;(c;e)))^ _).
+    rewrite transport_paths_Fl.
+    rewrite transport_paths_Fr.
+    Open Scope long_path_scope.
+    unfold O_functor_square.
+    rewrite ap_V, inv_V, O_functor_homotopy_beta, !concat_p_pp.
+    unfold pullback_commsq; simpl.
+    rewrite to_O_natural_compose, !concat_pp_p.
+    do 3 apply whiskerL.
+    rewrite ap_V, <- inv_pp.
+    rewrite <- (inv_V (O_functor_compose _ _ _ _)), <- inv_pp.
+    apply inverse2, to_O_natural_compose.
+    Close Scope long_path_scope.
+  Qed.
+
+  (** RSS Theorem 3.1 (xi) *)
+  Definition cancelL_conn_map
+             {Y X Z : Type} (f : Y -> X) (g : X -> Z)
+             `{IsConnMap O _ _ (g o f)} `{IsConnMap O _ _ g}
+    : IsConnMap O f
+    := OO_cancelL_conn_map O O f g.
+
+  (** RSS Theorem 3.1 (xii) *)
+  Global Instance conn_map_O_inverts
+         {A B : Type} (f : A -> B) `{O_inverts O f}
+    : IsConnMap O f
+    := conn_map_OO_inverts O O f.
+
+  (** RSS Theorem 3.1 (xiii) *)
+  Definition modal_over_connected_isconst_lex
+             (A : Type) `{IsConnected O A}
+             (P : A -> Type) `{forall x, In O (P x)}
+    : {Q : Type & In O Q * forall x, Q <~> P x}.
+  Proof.
+    pose proof (O_inverts_isconnected O (fun _:A => tt)).
+    exists (OO_descend_O_inverts O O (fun _:A => tt) P tt); split.
+    - apply OO_descend_O_inverts_inO.
+    - intros; rapply OO_descend_O_inverts_beta.
+  Defined.  
+
+  (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)
+  Global Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
+    : In (lift_accrsu O) (Type_ O)
+    := _.
+
+  (** Part of RSS Corollary 3.9: lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types.  With a little more work, this can probably be proven without [Funext]. *)
+  Global Instance istrunc_O_lex `{Funext}
+         {n : trunc_index} {A : Type} `{IsTrunc n A}
+    : IsTrunc n (O A).
+  Proof.
+    generalize dependent A; simple_induction n n IHn; intros A ?.
+    - exact _.               (** Already proven for all modalities. *)
+    - refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
+      refine (O_ind (fun y => IsTrunc n (to O A x = y)) _); intros y.
+      refine (trunc_equiv _ (equiv_path_O x y)).
   Defined.
 
-  (** 8. Any modal map between connected types is an equivalence. *)
-  Global Instance isequiv_ismodal_isconnected_types
-         {O : Modality} `{Lex O} {A B} {f : A -> B}
-         `{IsConnected O A} `{IsConnected O B} `{MapIn O _ _ f}
-    : IsEquiv f.
+End LexModality.
+
+(** ** Equivalent characterizations of lex-ness *)
+
+(** We will not prove that *all* of the above properties from RSS Theorem 3.1 are equivalent to lex-ness, but we will do it for some of them. *)
+
+Section ImpliesLex.
+  Context {O : Modality}.
+
+  (** RSS 3.1 (xiii) implies lexness *)
+  Definition lex_from_modal_over_connected_isconst
+             (H : forall (A : Type) (A_isC : IsConnected O A)
+                         (P : A -> Type) (P_inO : forall x, In O (P x)),
+                 {Q : Type & In O Q * forall x, Q <~> P x})
+    : Lex O.
   Proof.
-    apply (isequiv_conn_ino_map O); exact _.
+    intros A; unshelve econstructor; intros P P_inO.
+    all:pose (Q := fun z:O A => H (hfiber (to O A) z) _ (P o pr1) _).
+    - exact (fun z => (Q z).1).
+    - exact (fun z => fst (Q z).2).
+    - intros x; cbn.
+      exact (snd (Q (to O A x)).2 (x;1)).
   Defined.
 
-  Definition lex_from_isequiv_ismodal_isconnected_types
-             {O : Modality}
+  (** RSS 3.11 (iii), the universe is modal, implies lex-ness *)
+  Definition lex_from_inO_typeO `{IsAccRSU O} `{In (lift_accrsu O) (Type_ O)}
+    : Lex O.
+  Proof.
+    apply (O_lex_leq_inO_TypeO O O).
+  Defined.
+
+  (** RSS Theorem 3.1 (xi) implies lex-ness *)
+  Definition lex_from_cancelL_conn_map
+             (cancel : forall {Y X Z : Type} (f : Y -> X) (g : X -> Z),
+                 (IsConnMap O (g o f)) -> (IsConnMap O g)
+                 -> IsConnMap O f)
+    : Lex O.
+  Proof.
+    apply lex_from_modal_over_connected_isconst; intros.
+    exists (O {x:A & P x}); split; [ exact _ | intros x; symmetry ].
+    refine (Build_Equiv _ _ (fun p => to O _ (x ; p)) _).
+    nrefine (isequiv_conn_map_ino O _). 1-2:exact _.
+    revert x; apply conn_map_fiber.
+    nrefine (cancel _ _ _ _ (fun z:{x:A & O {x : A & P x}} => z.2) _ _).
+    1: clear cancel; exact _.
+    intros z.
+    refine (isconnected_equiv' O A _ _).
+    unfold hfiber.
+    refine (equiv_adjointify (fun x => ((x ; z) ; 1))
+                             (fun y => y.1.1) _ _). 
+    - intros [[x y] []]; reflexivity.
+    - intros x; reflexivity.
+  Defined.
+
+  (** RSS Theorem 3.1 (iii) implies lex-ness *)
+  Definition lex_from_conn_map_lex
              (H : forall A B (f : A -> B),
-                         (IsConnected O A) -> (IsConnected O B) -> 
-                         (MapIn O f) -> IsEquiv f)
+                 (IsConnected O A) -> (IsConnected O B) ->
+                 IsConnMap O f)
+    : Lex O.
+  Proof.
+    apply lex_from_cancelL_conn_map.
+    intros Y X Z f g gfc gc x.
+    pose (h := @functor_hfiber Y Z X Z (g o f) g f idmap (fun a => 1%path)).
+    assert (cc := H _ _ (h (g x)) (gfc (g x)) (gc (g x))).
+    refine (isconnected_equiv' O _ _ (cc (x;1))).
+    unfold hfiber.
+    subst h; unfold functor_hfiber, functor_sigma; cbn.
+    refine (_ oE (equiv_sigma_assoc _ _)^-1).
+    apply equiv_functor_sigma_id; intros y; cbn.
+    refine (_ oE (equiv_functor_sigma_id _)).
+    2:intros; symmetry; apply equiv_path_sigma.
+    cbn.
+    refine (_ oE equiv_sigma_symm _).
+    apply equiv_sigma_contr; intros p.
+    destruct p; cbn.
+    refine (contr_equiv' { p : g (f y) = g (f y) & p = 1%path } _).
+    apply equiv_functor_sigma_id; intros p; cbn.
+    apply equiv_concat_l.
+    exact (concat_1p _ @ ap_idmap _).
+  Defined.
+
+  (** RSS Theorem 3.1 (i) implies lex-ness *)
+  Definition lex_from_isconnected_paths
+             (H : forall (A : Type) (Ac : IsConnected O A) (x y : A),
+                 IsConnected O (x = y))
+    : Lex O.
+  Proof.
+    apply lex_from_conn_map_lex.
+    intros A B f Ac Bc c.
+    rapply isconnected_sigma.
+  Defined.
+
+  (** RSS Theorem 3.1 (iv) implies lex-ness *)
+  Definition lex_from_isequiv_ismodal_isconnected_types
+             (H : forall A B (f : A -> B),
+                 (IsConnected O A) -> (IsConnected O B) -> 
+                 (MapIn O f) -> IsEquiv f)
     : Lex O.
   Proof.
     apply lex_from_conn_map_lex.
@@ -189,21 +286,8 @@ Module Lex_Modalities_Theory (Os : Modalities).
     apply (cancelR_conn_map O (factor1 (image O f)) (const tt)).
   Defined.
 
-  (** 9. Any commutative square with connected maps in one direction and modal ones in the other must necessarily be a pullback. *)
-  Definition ispullback_connmap_mapino_commsq (O : Modality) `{Lex O} {A B C D}
-             {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
-             `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
-             `{MapIn O _ _ h} `{MapIn O _ _ k}
-             (p : k o f == g o h)
-  : IsPullback p.
-  Proof.
-    refine (isequiv_conn_ino_map O (pullback_corec p)).
-    - refine (cancelL_conn_map O (pullback_corec p) (k^* g) _ _).
-    - refine (cancelL_mapinO O _ (equiv_pullback_symm k g) _ _).
-      refine (cancelL_mapinO O _ (g^* k) _ _).
-  Defined.
-
-  Definition lex_from_ispullback_connmap_mapino_commsq (O : Modality)
+  (** RSS Theorem 3.1 (vii) implies lex-ness *)
+  Definition lex_from_ispullback_connmap_mapino_commsq
              (H : forall {A B C D}
                          (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D),
                  (IsConnMap O f) -> (IsConnMap O g) ->
@@ -214,7 +298,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     apply lex_from_isequiv_ismodal_isconnected_types.
     intros A B f AC BC fM.
     specialize (H A Unit B Unit (const tt) (const tt) f idmap _ _ _ _
-               (fun _ => 1)).
+                  (fun _ => 1)).
     unfold IsPullback, pullback_corec in H.
     refine (@isequiv_compose _ _ _ H _ (fun x => x.2.1) _).
     unfold Pullback.
@@ -226,187 +310,58 @@ Module Lex_Modalities_Theory (Os : Modalities).
     apply (equiv_isequiv (prod_unit_l B)).
   Defined.
 
-  (** 10. Families of modal types indexed by connected types are constant. *)
-  Definition modal_over_connected_isconst_lex (O : Modality) `{Lex O}
-             (A : Type) `{IsConnected O A} (P : A -> Type) `{forall x, In O (P x)}
-    : {Q : Type & In O Q * forall x, P x <~> Q}.
-  Proof.
-    exists (O {x:A & P x}); split; [ exact _ | intros x].
-    refine (Build_Equiv _ _ (fun p => to O _ (x ; p)) _).
-    refine (isequiv_conn_map_ino O _).
-    revert x.
-    apply conn_map_fiber.
-    refine (cancelL_conn_map O _ (fun z:{x:A & O {x : A & P x}} => z.2) _ _).
-    intros z.
-    refine (isconnected_equiv' O A _ _).
-    unfold hfiber.
-    refine (equiv_adjointify (fun x => ((x ; z) ; 1))
-                             (fun y => y.1.1) _ _). 
-    - intros [[x y] []]; reflexivity.
-    - intros x; reflexivity.
-  Defined.
-
-  (** And conversely. *)
-  Definition lex_from_modal_over_connected_isconst (O : Modality)
-             (H : forall (A : Type) (P : A -> Type),
-                 (IsConnected O A) -> (forall x, In O (P x)) ->
-                 {Q : Type & In O Q * forall x, P x <~> Q})
-    : Lex O.
-  Proof.
-    intros A x y ?.
-    apply isconnected_from_elim_to_O.
-    (** By assumption, [fun y => O (x = y) : A -> Type_ O] is constant.  Thus, [to O (x=x) 1] can be transported around to make it contractible everywhere. *)
-    specialize (H A (fun z => O (x = z)) _ _).
-    destruct H as [Q [? H]].
-    unfold NullHomotopy.
-    exists ((H y)^-1 ((H x) (to O _ 1))).
-    intros [].
-    symmetry; apply eissect.
-  Defined.
-
-  (** Lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types. *)
-  Global Instance istrunc_O_lex `{Funext} {O : Modality} `{Lex O}
-         {n} {A} `{IsTrunc n A}
-  : IsTrunc n (O A).
-  Proof.
-    generalize dependent A; simple_induction n n IHn; intros A ?.
-    - exact _.               (** Already proven for all modalities. *)
-    - refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
-      refine (O_ind (fun y => IsTrunc n (to O A x = y)) _); intros y.
-      refine (trunc_equiv _ (O_path_cmp O x y)).
-  Defined.
-
-End Lex_Modalities_Theory.
+End ImpliesLex.
 
 (** ** Lex reflective subuniverses *)
 
 (** A reflective subuniverse that preserves fibers is in fact a modality (and hence lex). *)
-Module Type Preserves_Fibers (Os : ReflectiveSubuniverses).
-
-  Export Os.
-  Module Export Os_Theory := ReflectiveSubuniverses_Theory Os.
-
-  Parameter isequiv_O_functor_hfiber :
-     forall (O : ReflectiveSubuniverse) {A B} (f : A -> B) (b : B),
-       IsEquiv (O_functor_hfiber O f b).
-  Existing Instance isequiv_O_functor_hfiber.
-
-End Preserves_Fibers.
-
-Module Lex_Reflective_Subuniverses
-       (Os : ReflectiveSubuniverses) (Opf : Preserves_Fibers Os)
-  <: SigmaClosed Os.
-
-  Import Opf.
-
-  Definition inO_sigma@{u a i j k} (O : ReflectiveSubuniverse@{u a})
-             (A:Type@{i}) (B:A -> Type@{j})
-             (A_inO : In@{u a i} O A)
-             (B_inO : forall a, In@{u a j} O (B a))
-  : In@{u a k} O {x:A & B x}.
-  Proof.
-    pose (g := O_rec@{u a k i k k i} pr1 : O {x : A & B x} -> A).
-    transparent assert (p : (forall x, g (to O _ x) = x.1)).
-    { intros x; subst g; apply O_rec_beta. }
-    apply inO_isequiv_to_O@{u a k k}.
-    apply isequiv_fcontr; intros x.
-    refine (contr_equiv' _ (hfiber_hfiber_compose_map@{k k i k k k k k} _ g x)).
-    apply fcontr_isequiv.
-    unfold hfiber_compose_map.
-    transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
-                                         (hfiber@{k i} g (g x)))).
-    { refine (_ oE equiv_to_O@{u a k k} O _).
-      refine (_ oE Build_Equiv _ _
-                (O_functor_hfiber O (@pr1 A B) (g x)) _).
-      unfold hfiber.
-      apply equiv_functor_sigma_id. intros y; cbn.
-      refine (_ oE (equiv_moveR_equiv_V _ _)).
-      apply equiv_concat_l.
-      apply moveL_equiv_V.
-      unfold g, O_functor.
-      revert y; apply O_indpaths@{u a k i i k k}; intros [a q]; cbn.
-      refine (_ @ (O_rec_beta _ _)^).
-      apply ap, O_rec_beta. }
-    refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
-    intros [[a b] q]; cbn. clear h.
-    unfold O_functor_hfiber.
-    rewrite O_rec_beta.
-    unfold functor_sigma; cbn.
-    refine (path_sigma' _ 1 _).
-    rewrite O_indpaths_beta; cbn.
-    unfold moveL_equiv_V, moveR_equiv_V.
-    Open Scope long_path_scope.
-    Local Opaque eissect. (* work around bug 4533 *)
-    set (k := @eissect); change @eissect with k; subst k. (* work around bug 4543 *)
-    rewrite !ap_pp, !concat_p_pp, !ap_V.
-    unfold to_O_natural.
-    rewrite concat_pV_p.
-    subst p.
-    rewrite concat_pp_V.
-    rewrite concat_pp_p; apply moveR_Vp.
-    rewrite <- !(ap_compose (to O A) (to O A)^-1).
-    rapply @concat_A1p.
-    Local Transparent eissect. (* work around bug 4533 *)
-    Close Scope long_path_scope.
-  Qed.
-
-End Lex_Reflective_Subuniverses.
-
-(** ** Accessible lex modalities *)
-
-(** We now restrict to lex modalities that are also accessible. *)
-Module Accessible_Lex_Modalities_Theory
-       (Os : Modalities)
-       (Acc : Accessible_Modalities Os).
-
-  Module Export Acc_Theory := Accessible_Modalities_Theory Os Acc.
-  Module Export Lex_Theory := Lex_Modalities_Theory Os.
-
-  (** Unfortunately, another subtlety of modules bites us here.  It appears that each application of a parametrized module to arguments creates a *new* module, and Coq has no algorithm (not even syntactic identity) for considering two such modules "the same".  In particular, the applications [Module Os_Theory := Modalities_Theory Os] that occur in both [Accessible_Modalities_Theory Os Acc] and [Lex_Modalities_Theory Os] create two *different* modules, which appear here as [Acc_Theory.Os_Theory] and [Lex_Theory.Os_Theory].  Thus, for instance, we have two different definitions [Acc_Theory.Os_Theory.O_ind] and [Lex_Theory.Os_Theory.O_ind], etc.
-
-  Fortunately, since these duplicate pairs of definitions each have the same body *and are (usually) transparent*, Coq is willing to consider them identical.  Thus, this doesn't cause a great deal of trouble.  However, there are certain contexts in which this doesn't apply.  For instance, if any definition in [Modalities_Theory] is opaque, then Coq will be unable to notice that its duplicate copies in [Acc_Theory.Os_Theory] and [Lex_Theory.Os_Theory] were identical, potentially causing problems.  But since we generally only make definitions opaque if we aren't going to depend on their actual value anywhere else, this is unlikely to be much of an issue.
-
-  A more serious issue is that there are some declarations that function up to a syntactic equality that is stricter than judgmental conversion.  For instance, [Inductive] and [Record] definitions, like modules, always create a new object not convertible to any previously existing one.  There are no [Inductive] or [Record] definitions in [Modalities_Theory], but there are [Class] declarations, and these function similarly.  In particular, typeclass search is unable to use [Instance]s defined in [Acc_Theory] to instantiate typeclasses from [Modalities_Theory] (such as [IsConnected]) needed by functions in [Lex_Theory], and vice versa.
-
-  Fortunately, all the typeclasses defined in [Modalities_Theory] are *singleton* or *definitional* classes (defined with `:= unique_field` rather than `{ field1 ; field2 ; ... }`), which means that they do not actually introduce a new record wrapper.  Thus, the [Instance]s from [Acc_Theory] can in fact be typechecked to *belong* to the typeclasses needed by [Lex_Theory], and hence can be supplied (or [assert]ed) explicitly. *)
-
-  (** Probably the most important thing about an accessible lex modality is that the universe of modal types is again modal.  Here by "the universe" we mean a universe large enough to contain the generating family; this is why we need accessibility. *)
-  Global Instance inO_typeO `{Univalence} (O : Modality) `{Lex O}
-  : In O (Type_ O).
-  Proof.
-    apply (snd (inO_iff_isnull O _)); intros i n; simpl in *.
-    assert (Lex_Theory.Os_Theory.RSU.IsConnected O (acc_gen O i))
-      by exact (isconnected_acc_gen O i).
-    destruct n; [ exact tt | split ].
-    - intros P.
-      (** The case [n=0] is basically just one of the above characterizations of lex-ness. *)
-      destruct (modal_over_connected_isconst_lex O (acc_gen O i) P)
-        as [Q [QinO f]].
-      exists (fun _ => (Q ; QinO)).
-      intros x; symmetry; apply path_TypeO. 
-      refine (path_universe (f x)).
-    - intros A B.
-      (** The case [n>0] is actually quite easy, using univalence and the fact that modal types are closed under [Equiv]. *)
-      refine (extendable_postcompose' n _ _ _
-                (fun b => (equiv_path_TypeO O (A b) (B b))
-                            oE (equiv_path_universe (A b) (B b)))
-                _).
-      refine (extendable_conn_map_inO O n (@const (acc_gen O i) Unit tt)
-                                      (fun b => A b <~> B b)).
-      (** Typeclass magic! *)
-  Defined.
-
-  (** [inO_typeO] is also an equivalent characterization of lex-ness for a modality, by the converse of the characterization of lex-ness we used above. *)
-  Definition lex_inO_typeO (O : Modality) `{In O (Type_ O)}
-  : Lex O.
-  Proof.
-    apply lex_from_modal_over_connected_isconst.
-    intros A P ? PO.
-    destruct (isconnected_elim O (Type_ O) (fun x => (P x ; PO x)))
-      as [Q f].
-    exists Q; split; [ exact _ | intros x ].
-    apply equiv_path. 
-    exact (ap pr1 (f x)).
-  Defined.
-
-End Accessible_Lex_Modalities_Theory.
+Definition ismodality_isequiv_O_functor_hfiber (O : ReflectiveSubuniverse)
+           (H : forall {A B : Type} (f : A -> B) (b : B),
+               IsEquiv (O_functor_hfiber O f b))
+  : IsModality O.
+Proof.
+  intros A'; rapply reflectsD_from_inO_sigma.
+  intros B B_inO.
+  pose (A := O A').
+  pose (g := O_rec pr1 : O {x : A & B x} -> A).
+  transparent assert (p : (forall x, g (to O _ x) = x.1)).
+  { intros x; subst g; apply O_rec_beta. }
+  apply inO_isequiv_to_O.
+  apply isequiv_fcontr; intros x.
+  refine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
+  apply fcontr_isequiv.
+  unfold hfiber_compose_map.
+  transparent assert (h : (hfiber (@pr1 A B) (g x) <~> hfiber g (g x))).
+  { refine (_ oE equiv_to_O O _).
+    refine (_ oE Build_Equiv _ _
+              (O_functor_hfiber O (@pr1 A B) (g x)) _).
+    unfold hfiber.
+    apply equiv_functor_sigma_id. intros y; cbn.
+    refine (_ oE (equiv_moveR_equiv_V _ _)).
+    apply equiv_concat_l.
+    apply moveL_equiv_V.
+    unfold g, O_functor.
+    revert y; apply O_indpaths; intros [a q]; cbn.
+    refine (_ @ (O_rec_beta _ _)^).
+    apply ap, O_rec_beta. }
+  refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
+  intros [[a b] q]; cbn. clear h.
+  unfold O_functor_hfiber.
+  rewrite O_rec_beta.
+  unfold functor_sigma; cbn.
+  refine (path_sigma' _ 1 _).
+  rewrite O_indpaths_beta; cbn.
+  unfold moveL_equiv_V, moveR_equiv_V.
+  Open Scope long_path_scope.
+  Local Opaque eissect. (* work around bug 4533 *)
+  rewrite !ap_pp, !concat_p_pp, !ap_V.
+  unfold to_O_natural.
+  rewrite concat_pV_p.
+  subst p.
+  rewrite concat_pp_V.
+  rewrite concat_pp_p; apply moveR_Vp.
+  rewrite <- !(ap_compose (to O A) (to O A)^-1).
+  rapply @concat_A1p.
+  Local Transparent eissect. (* work around bug 4533 *)
+  Close Scope long_path_scope.
+Qed.

@@ -3,7 +3,6 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations FunextVarieties UnivalenceImpliesFunext EquivalenceVarieties Constant.
 Require Import HoTT.Truncations.
 Require Import PathAny.
-Import TrM.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

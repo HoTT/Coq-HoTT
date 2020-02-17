@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext.
 Require Import Modalities.Modality Modalities.Open.
-Import OpM.
 
 Local Open Scope path_scope.
 
