@@ -195,10 +195,10 @@ Section JoinConstruction.
   Global Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
 End JoinConstruction.
 
-(** Universe inconsistency *)
+(** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)
 Fail Instance: forall (O : ReflectiveSubuniverse), In (Sep O) (Type_ O).
 
-(** Lemma 2.19 of CORS *)
+(** Instead, we do as in Lemma 2.19 of CORS and prove the morally-equivalent "descent" property, using Lemma 2.18 and the join construction. *)
 Global Instance SepO_lex_leq `{Univalence}
        (O : ReflectiveSubuniverse) {X : Type} `{Reflects (Sep O) X}
   : Descends (Sep O) O X.
@@ -234,7 +234,7 @@ Proof.
   exact ((jc_factors P ls x)..1).
 Defined.
 
-(** Once we know that [Sep O] is a reflective subuniverse, this will imply [O <<< Sep O]. *)
+(** Once we know that [Sep O] is a reflective subuniverse, this will imply [O <<< Sep O], and that if [Sep O] is accessible (such as if [O] is) then [Type_ O] belongs to its accessible lifting (see [inO_TypeO_lex_leq]. *)
 
 
 (** ** Reflectiveness of [Sep O] *)

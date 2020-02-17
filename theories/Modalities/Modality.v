@@ -55,10 +55,9 @@ Proof.
   split.
   - intros g.
     exists (OO_ind' Q _ g).
-    intros a; exact (OO_ind_beta' Q _ g a).
+    rapply OO_ind_beta'.
   - intros h k.
-    apply IHn.
-    intros z; apply inO_paths', Q_inO.
+    rapply IHn.
 Defined.
 
 (** In particular, this is the case if [O] is a reflective subuniverse. *)
@@ -150,10 +149,15 @@ Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse
 (** Unfortunately, sometimes [modality_subuniv] pops up anyway.  The following hint helps typeclass inference look through it. *)
 Hint Extern 0 (In (modality_subuniv _) _) => progress change modality_subuniv with (rsu_subuniv o modality_to_reflective_subuniverse) in * : typeclass_instances.
 
-(** Modalities are precise the reflective subuniverses that are [<<] themselves.  *)
+(** Modalities are precisely the reflective subuniverses that are [<<] themselves.  *)
 Global Instance ismodality_modality (O : Modality) : IsModality O.
 Proof.
   intros A; exact _.
+Defined.
+
+Definition modality_ismodality (O : ReflectiveSubuniverse) `{IsModality O} : Modality.
+Proof.
+  rapply Build_Modality'.
 Defined.
 
 (** Of course, modalities have dependent eliminators. *)
@@ -167,9 +171,9 @@ Arguments O_ind_beta {O A _ _} B {B_inO} f a.
 (** Conversely, as remarked above, we can build a modality from a dependent eliminator as long as we assume the modal types are closed under paths.  This is probably the most common way to define a modality, and one might argue that this would be a better definition of the bundled type [Modality].  For now we simply respect that by dignifying it with the unprimed constructor name [Build_Modality]. *)
 Definition Build_Modality
            (In' : Type -> Type)
+           (hprop_inO' : Funext -> forall T : Type, IsHProp (In' T))
            (inO_equiv_inO' : forall T U : Type,
                In' T -> forall f : T -> U, IsEquiv f -> In' U)
-           (hprop_inO' : Funext -> forall T : Type, IsHProp (In' T))
            (O_reflector' : Type -> Type)
            (O_inO' : forall T, In' (O_reflector' T))
            (to' : forall T, T -> O_reflector' T)
@@ -182,7 +186,7 @@ Definition Build_Modality
                                  (B_inO : forall oa, In' (B oa))
                                  (f : forall a, B (to' A a)) (a : A),
                O_ind' A B B_inO f (to' A a) = f a)
-           (minO_paths' : forall (A : Type) (A_inO : In' A) (z z' : A),
+           (inO_paths' : forall (A : Type) (A_inO : In' A) (z z' : A),
                In' (z = z'))
   : Modality.
 Proof.
@@ -190,9 +194,9 @@ Proof.
   simple refine (Build_Modality' O _ _); intros T.
   - exact (Build_PreReflects O T (O_reflector' T) (O_inO' T) (to' T)).
   - srapply reflectsD_from_OO_ind. 
-    + intros B B_inO f oa. exact (O_ind' T B B_inO f oa).
-    + intros B B_inO f oa. exact (O_ind_beta' T B B_inO f oa).
-    + intros B B_inO z z'. exact (minO_paths' B B_inO z z').
+    + rapply O_ind'.
+    + rapply O_ind_beta'.
+    + rapply inO_paths'.
 Defined.
 
 (** When combined with [isequiv_oD_to_O], this yields Theorem 7.7.7 in the book. *)
@@ -248,7 +252,7 @@ Corollary equiv_sigma_inO_O {O : Modality} {A : Type} `{In O A} (P : A -> Type)
   : {x:A & O (P x)} <~> O {x:A & P x}.
 Proof.
   transitivity (O {x:A & O (P x)}).
-  - apply equiv_to_O; exact _.
+  - rapply equiv_to_O.
   - apply equiv_O_sigma_O.
 Defined.
 
@@ -282,10 +286,10 @@ Proof.
   intros n; generalize dependent A.
   induction n as [|n IHn]; intros; [ exact tt | cbn ].
   refine (extension_from_inO_sigma O B , _).
-  intros h k; rapply IHn.
+  intros h k; nrapply IHn.
   set (Z := sigT B) in *.
   pose (W := sigT (fun a => B a * B a)).
-  refine (inO_equiv_inO' (Pullback (A := W) (fun a:O_reflector O' A => (a;(h a,k a)))
+  nrefine (inO_equiv_inO' (Pullback (A := W) (fun a:O_reflector O' A => (a;(h a,k a)))
                                    (fun z:Z => (z.1;(z.2,z.2)))) _).
   { refine (inO_pullback O' _ _).
     exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
@@ -389,7 +393,7 @@ Section EasyModalities.
                     (B : O_reflector A -> Type@{i})
                     (f : forall a, O_reflector (B (to A a))) (a : A),
               O_indO A B f (to A a) = f a)
-          (minO_pathsO
+          (inO_pathsO
            : forall (A : Type@{i}) (z z' : O_reflector A),
               IsEquiv (to (z = z'))).
 
@@ -424,7 +428,7 @@ Section EasyModalities.
     refine (isequiv_adjointify (to (O_reflector A))
              (O_indO (O_reflector A) (fun _ => A) idmap) _ _).
     - intros x; pattern x; apply O_ind_easy.
-      + intros oa; apply minO_pathsO.
+      + intros oa; apply inO_pathsO.
       + intros a; apply ap.
         exact (O_indO_beta (O_reflector A) (fun _ => A) idmap a).
     - intros a.
@@ -446,25 +450,25 @@ Section EasyModalities.
         intros x.
       + apply O_inO_easy.
       + pattern x; refine (O_ind_easy B _ _ _ x); intros.
-        * apply minO_pathsO.
+        * apply inO_pathsO.
         * simpl; abstract (repeat rewrite O_ind_easy_beta; apply ap, eisretr).
       + pattern x; refine (O_ind_easy A _ _ _ x); intros.
-        * apply minO_pathsO.
+        * apply inO_pathsO.
         * simpl; abstract (repeat rewrite O_ind_easy_beta; apply ap, eissect).
   Defined.
 
-  Local Definition minO_paths_easy (A : Type) (A_inO : In_easy A) (a a' : A)
+  Local Definition inO_paths_easy (A : Type) (A_inO : In_easy A) (a a' : A)
     : In_easy (a = a').
   Proof.
     simple refine (inO_equiv_inO_easy (to A a = to A a') _ _
                                       (@ap _ _ (to A) a a')^-1 _).
-    - apply minO_pathsO.
+    - apply inO_pathsO.
     - refine (@isequiv_ap _ _ _ A_inO _ _).
     - apply isequiv_inverse.
   Defined.
 
   Definition easy_modality : Modality
-    := Build_Modality In_easy inO_equiv_inO_easy _ O_reflector O_inO_easy to O_ind_easy O_ind_easy_beta minO_paths_easy.
+    := Build_Modality In_easy _ inO_equiv_inO_easy O_reflector O_inO_easy to O_ind_easy O_ind_easy_beta inO_paths_easy.
 
 End EasyModalities.
 

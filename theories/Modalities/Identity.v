@@ -12,12 +12,10 @@ Local Open Scope path_scope.
 Definition purely : Modality.
 Proof.
   srapply (Build_Modality (fun _ => Unit) _ _ idmap).
-  - intros; exact tt.
-  - intros; exact tt.
+  1-2,6:intros; exact tt.
   - intros; assumption.
   - intros ? ? ? f z; exact (f z).
   - intros; reflexivity.
-  - intros; exact tt.
 Defined.
 
 Global Instance accmodality_purely : IsAccModality purely.

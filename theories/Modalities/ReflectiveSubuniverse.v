@@ -2008,9 +2008,3 @@ Global Instance inO_paths_SepO (O : Subuniverse)
        {A : Type} {A_inO : In (Sep O) A} (x y : A)
   : In O (x = y)
   := A_inO x y.
-
-Global Instance O_leq_SepO (O : ReflectiveSubuniverse)
-  : O <= Sep O.
-Proof.
-  intros A A_inO x y; exact _.
-Defined.
