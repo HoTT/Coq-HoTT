@@ -13,6 +13,7 @@ Require Import
         HoTT.Classes.interfaces.integers
         HoTT.Classes.interfaces.rationals
         HoTT.Classes.interfaces.cauchy
+        HoTT.Classes.theory.orders
         HoTT.Classes.theory.rationals.
 
 Section locator.
@@ -32,8 +33,16 @@ Section locator.
 
   Context `{Funext} `{Univalence}.
 
-  Let qinc : Cast Q F := rationals_to_field Q F.
+  Section rats_inclusion.
+
+    Definition qinc : Cast Q F := rationals_to_field Q F.
+
+    Axiom cast_pres_ordering : StrictlyOrderPreserving qinc.
+
+  End rats_inclusion.
+
   Existing Instance qinc.
+  Existing Instance cast_pres_ordering.
 
   (* Definition of a locator for a fixed real number. *)
   Definition locator (x : F) := forall q r : Q, q < r -> (' q < x) + (x < ' r).
@@ -47,8 +56,11 @@ Section locator.
       case (LEM (' q < x)).
       - refine _.
       - exact inl.
-      - todo (~ ' q < x -> (' q < x) + (x < ' r)).
-    Admitted.
+      - intros notlt.
+        refine (inr _).
+        assert (ltqr' : ' q < ' r) by auto.
+        exact (pseudo_not_lt_lt notlt ltqr').
+    Qed.
 
   End classical.
 

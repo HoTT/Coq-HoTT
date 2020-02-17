@@ -644,6 +644,7 @@ theories/Classes/interfaces/ua_congruence.v
 theories/Classes/theory/premetric.v
 theories/Classes/theory/int_abs.v
 theories/Classes/theory/rings.v
+theories/Classes/theory/orders.v
 theories/Classes/theory/additional_operations.v
 theories/Classes/theory/apartness.v
 theories/Classes/theory/dec_fields.v
