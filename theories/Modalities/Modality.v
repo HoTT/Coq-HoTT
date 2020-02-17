@@ -509,9 +509,9 @@ Section ModalFact.
     refine (_ oE
              (equiv_O_functor O
                (hfiber_compose (factor1 fact) (factor2 fact) b))).
-    refine (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)) oE _).
+    nrefine (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)) oE _).
     - intros w; exact (inclass1 fact w.1).
-    - refine ((equiv_sigma_inO_O (fun w => hfiber (factor1 fact) w.1))^-1)%equiv.
+    - nrefine ((equiv_sigma_inO_O (fun w => hfiber (factor1 fact) w.1))^-1)%equiv.
       exact (inclass2 fact b).
   Defined.
 
@@ -533,7 +533,7 @@ Section ModalFact.
     - apply moveL_equiv_V.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
-      + simpl; repeat rewrite O_rec_beta; reflexivity.
+      + cbn; repeat rewrite O_rec_beta; reflexivity.
       + symmetry; apply to_O_natural.
   Qed.
 

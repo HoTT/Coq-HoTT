@@ -616,7 +616,7 @@ Section Reflective_Subuniverse.
           rewrite (to_O_natural (O_functor Ou)^-1 x).
           refine (to_O_natural f _ @ _).
           set (y := (O_functor Ou)^-1 x).
-          transitivity (O_functor Ou y); try apply eisretr.
+          transitivity (O_functor Ou y); [ | apply eisretr].
           unfold f, O_functor.
           apply O_rec_postcompose.
         - refine (O_indpaths _ _ _); intros x.
@@ -628,7 +628,7 @@ Section Reflective_Subuniverse.
       simple refine (path_sigma _ _ _ _ _); cbn.
       - exact (path_universe f).
       - rewrite transport_sigma.
-        simple refine (path_sigma _ _ _ _ _); cbn; try apply path_ishprop.
+        simple refine (path_sigma _ _ _ _ _); cbn; [ | apply path_ishprop].
         apply path_arrow; intros x.
         rewrite transport_arrow_fromconst.
         rewrite transport_path_universe.
@@ -821,11 +821,11 @@ Section Reflective_Subuniverse.
         exact (to O _ (a;p)).
       - apply O_rec; intros [a p].
         exact (to O _ (a ; to O _ p)).
-      - unfold Sect; apply O_indpaths; try exact _.
+      - unfold Sect; rapply O_indpaths.
         intros [a p]; simpl.
         abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
-      - unfold Sect; apply O_indpaths; try exact _.
-        intros [a op]; revert op; apply O_indpaths; try exact _; intros p; simpl.
+      - unfold Sect; rapply O_indpaths.
+        intros [a op]; revert op; rapply O_indpaths; intros p; simpl.
         abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
     Defined.
 
@@ -859,9 +859,9 @@ Section Reflective_Subuniverse.
         1:rewrite ap_fst_path_prod.
         2:rewrite ap_snd_path_prod.
         all:apply path_forall; intros x; rewrite ap10_path_arrow; reflexivity.
-      - intros [[f [g h]] p]; cbn. 
+      - intros fghp. cbn.
         apply (path_sigma' _ 1); cbn.
-        refine (_ @ eta_path_prod p); apply ap011; apply eta_path_arrow.
+        refine (_ @ eta_path_prod (pr2 fghp)); apply ap011; apply eta_path_arrow.
     Defined.
 
     (** ** Paths *)
@@ -971,15 +971,14 @@ Section Reflective_Subuniverse.
           rewrite <- (apD (O_indpaths _ _ _) (to_O_natural g b)^).
           rewrite !O_indpaths_beta, !transport_paths_FlFr.
           Open Scope long_path_scope.
-          rewrite !ap_V, !inv_V, !concat_p_pp.
           rewrite (ap_compose _ (O_functor coeq_to)).
           rewrite Coeq_rec_beta_cglue.
-          rewrite !ap_pp, !concat_p_pp.
           unfold O_functor_homotopy; rewrite O_indpaths_beta.
-          rewrite !ap_pp, !concat_p_pp.
+          rewrite !ap_pp.
           pose (p := O_functor_compose_compose g coeq coeq_to (to O B b)).
           apply moveL_pV in p; rewrite concat_pp_p in p; apply moveR_Vp in p.
           rewrite@A <- p. clear p.
+          rewrite !ap_V, !inv_V.
           rewrite@A (to_O_natural_compose g
                        (fun x => @coeq _ _ (O_functor f) (O_functor g)
                                        (to O A x)) b).
@@ -989,23 +988,23 @@ Section Reflective_Subuniverse.
                                      (to O A x)) b).
           rewrite <- inv_pp.
           rewrite (O_functor_compose_compose f coeq coeq_to (to O B b)).
-          rewrite inv_pp, ap_V.
-          rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
+          rewrite inv_pp.
+          rewrite !concat_pp_p; apply whiskerL; rewrite concat_p_pp.
           (** The trick here is to notice that [(fun x => coeq (to O A (f x)))] is definitionally equal to [(fun x => coeq_to (coeq (f x)))]. *)
           rewrite <- (to_O_natural_compose
                         (fun x => coeq (f x)) coeq_to b).
           rewrite <- ap_compose.
-          rewrite !concat_pp_p; apply whiskerL, moveR_Mp; rewrite !concat_p_pp.
+          rewrite concat_pp_p; apply whiskerL, moveR_Mp; rewrite concat_p_pp.
           rewrite <- (concat_Ap (fun x => (to_O_natural coeq_to x)^) (cglue b)).
-          rewrite !concat_pp_p; apply moveL_Mp; rewrite !concat_p_pp.
-          rewrite ap_V, <- !inv_pp, @to_O_natural_compose.
+          rewrite concat_pp_p; apply moveL_Mp; rewrite !concat_p_pp.
+          rewrite <- !inv_pp, @to_O_natural_compose.
           rewrite concat_p_Vp, concat_Vp, concat_1p.
           rewrite (ap_compose coeq_to (to O (Coeq (O_functor f) (O_functor g)))).
           subst coeq_to; rewrite functor_coeq_beta_cglue.
           rewrite !ap_pp, <- !ap_compose, !inv_pp, !concat_p_pp, !ap_V, !inv_V.
-          rewrite concat_pp_V, concat_pV_p; reflexivity.
+          rewrite concat_pp_V. apply concat_pV_p.
           Close Scope long_path_scope.
-      Qed.
+      Qed.  (* This Qed is quite slow (~2s on one machine), and many of the rewrites above are slow too. *)
 
       Local Definition O_coeq_cmp_eissect
       : Sect O_coeq_cmp O_coeq_cmp_inverse.
@@ -1316,7 +1315,7 @@ Section ConnectedTypes.
   Proof.
     intros nh.
     exists (nh .1).
-    apply O_indpaths; try exact _.
+    rapply O_indpaths.
     intros x; symmetry; apply (nh .2).
   Defined.
 
@@ -1676,7 +1675,7 @@ Section ConnectedMaps.
   Proof.
     apply isequiv_fcontr; intros d.
     apply contr_inhabited_hprop.
-    - refine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
+    - nrefine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
       { refine (equiv_functor_sigma_id _); intros g.
         apply equiv_path_forall. }
       apply hprop_allpath. intros g h.
@@ -1824,14 +1823,14 @@ Section ConnectedMaps.
     simple refine (isequiv_adjointify _ _ _ _).
     - apply O_rec; intros y.
       exact (O_functor O pr1 (center (O (hfiber f y)))).
-    - unfold Sect; apply O_indpaths; try exact _; intros b.
+    - unfold Sect; rapply O_indpaths; intros b.
       refine (ap (O_functor O f) (O_rec_beta _ b) @ _).
       refine ((O_functor_compose _ _ _ _)^ @ _).
       set (x := (center (O (hfiber f b)))).
-      clearbody x; revert x; apply O_indpaths; try exact _; intros [a p].
+      clearbody x; revert x; rapply O_indpaths; intros [a p].
       refine (O_rec_beta (to O B o (f o pr1)) (a;p) @ _).
       exact (ap (to O B) p).
-    - unfold Sect; apply O_indpaths; try exact _; intros a.
+    - unfold Sect; rapply O_indpaths; intros a.
       refine (ap (O_rec _) (to_O_natural O f a) @ _).
       refine (O_rec_beta _ _ @ _).
       transitivity (O_functor O pr1 (to O (hfiber f (f a)) (a;1))).

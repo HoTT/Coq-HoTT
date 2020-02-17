@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath.
-Require Import EquivalenceVarieties HProp Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext PathAny.
+Require Import Fibrations Extensions Factorization UnivalenceImpliesFunext.
 Require Import ReflectiveSubuniverse Modality Accessible Localization Descent.
 Require Import Truncations.Core.
 Require Import Homotopy.Suspension.
@@ -114,6 +114,7 @@ Proof.
   intros [x u] [y v].
   specialize (A_inO x y).
   pose proof (fun p:x=y => B_inO y (p # u) v).
+  pose @inO_sigma.  (* Speed up typeclass search. *)
   refine (inO_equiv_inO' _ (equiv_path_sigma B _ _)).
 Defined.
 

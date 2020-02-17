@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext PathAny.
+Require Import HoTT.Basics HoTT.Types.
+Require Import Fibrations Extensions Pullback UnivalenceImpliesFunext.
 Require Import ReflectiveSubuniverse Modality Accessible Localization.
 
 Local Open Scope path_scope.
@@ -328,6 +328,7 @@ Proof.
   simple notypeclasses refine (OO_inverts_functor_sigma _ _).
   1:exact _.
   intros c1; cbn.
+  pose @isequiv_compose. (* Speed up typeclass search. *)
   refine (isequiv_homotopic (O_functor O (fun r => r @ (q c1)^) o O_functor O (concat (p b1)) o O_functor O (@ap _ _ h (f1 b1) (g1 c1))) _).
   intros r; symmetry. 
   refine (_ @ _).
@@ -373,7 +374,7 @@ Proof.
   apply conn_map_from_extension_elim.
   intros P P_inO h.
   exists (conn_map_elim O' (g o f) P (h o f)).
-  refine (conn_map_elim O f _ _).
+  nrefine (conn_map_elim O f _ _); [ exact _ | .. ].
   - intros x.
     pose proof (fun z => inO_leq O' (Sep O) (P z) (P_inO z)).
     exact _.
