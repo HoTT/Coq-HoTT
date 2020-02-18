@@ -8,7 +8,6 @@ Require Import Fibrations.
 Require Import Factorization.
 Require Import Colimits.Quotient.
 Require Import UnivalenceImpliesFunext.
-Import TrM.
 
 Require Import Spaces.Finite.Fin.
 Require Import Spaces.Finite.FinEquiv.
@@ -514,7 +513,7 @@ Proof.
   intros x.
   refine (decidable_equiv _ (hfiber_fibration x P)^-1 _).
   refine (detachable_image_finite pr1 x).
-  by apply mapinO_pr1. (* Why can't Coq find this? *)
+  apply (mapinO_pr1 (-1)%trunc). (* Why can't Coq find this? *)
 Defined.
 
 (** ** Injections *)
