@@ -45,7 +45,7 @@ Proof.
   elim (f (inr tt)).
 Defined.
 
-(** The zero element in a non-empty finite set is the right most element. *)
+(** The zero element in a non-empty finite set is the left most element. *)
 Fixpoint fin_zero (n : nat)
   : Fin n.+1
   := match n with
