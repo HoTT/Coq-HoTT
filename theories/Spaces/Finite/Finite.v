@@ -513,7 +513,7 @@ Proof.
   intros x.
   refine (decidable_equiv _ (hfiber_fibration x P)^-1 _).
   refine (detachable_image_finite pr1 x).
-  apply (mapinO_pr1 (-1)%trunc). (* Why can't Coq find this? *)
+  apply (mapinO_pr1 (-1)%trunc). (* Why can't Coq find this instance? *)
 Defined.
 
 (** ** Injections *)
@@ -725,5 +725,4 @@ Section Enumeration.
   Defined.
 
 End Enumeration.
-
 
