@@ -50,7 +50,7 @@ Record WildCat :=
   cat_is1cat : Is1Cat cat_carrier
 }.
 
-(* note for morgan: this allows us to consider WildCats as types. *)
+(* This allows us to consider WildCats as types. *)
 Coercion cat_carrier : WildCat >-> Sortclass. 
 
 Global Existing Instance cat_isgraph.
