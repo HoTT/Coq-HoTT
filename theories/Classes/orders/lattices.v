@@ -2,6 +2,8 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
   HoTT.Classes.orders.maps
+  HoTT.Classes.orders.semirings
+  HoTT.Classes.theory.rings
   HoTT.Classes.theory.lattices.
 
 Generalizable Variables K L f.
@@ -127,8 +129,7 @@ Section join_semilattice_order.
 
   Lemma join_le x y z : x ≤ z -> y ≤ z -> x ⊔ y ≤ z.
   Proof.
-  intros. rewrite <-(idempotency (⊔) z).
-  apply join_le_compat;trivial.
+    apply join_lub.
   Qed.
 
   Section total_join.
@@ -155,6 +156,18 @@ Section join_semilattice_order.
   Qed.
   End total_join.
 
+  Lemma join_idempotent x : x ⊔ x = x.
+  Proof.
+    assert (le1 : x ⊔ x ≤ x).
+    {
+      refine (join_lub _ _ _ _ _); apply reflexivity.
+    }
+    assert (le2 : x ≤ x ⊔ x).
+    {
+      refine (join_ub_l _ _).
+    }
+    refine (antisymmetry _ _ _ le1 le2).
+  Qed.
 End join_semilattice_order.
 
 Section bounded_join_semilattice.
@@ -290,7 +303,7 @@ Section meet_semilattice_order.
 
   Lemma meet_le x y z : z ≤ x -> z ≤ y -> z ≤ x ⊓ y.
   Proof.
-  intros. rewrite <-(idempotency (⊓) z). apply meet_le_compat;trivial.
+    apply meet_glb.
   Qed.
 
   Section total_meet.
@@ -317,7 +330,20 @@ Section meet_semilattice_order.
   Qed.
   End total_meet.
 
-End meet_semilattice_order.
+  Lemma meet_idempotent x : x ⊓ x = x.
+  Proof.
+    assert (le1 : x ⊓ x ≤ x).
+    {
+      refine (meet_lb_l _ _).
+    }
+    assert (le2 : x ≤ x ⊓ x).
+    {
+      refine (meet_glb _ _ _ _ _); apply reflexivity.
+    }
+    refine (antisymmetry _ _ _ le1 le2).
+  Qed.
+
+  End meet_semilattice_order.
 
 Section lattice_order.
   Context `{LatticeOrder L}.
@@ -515,3 +541,130 @@ Section order_preserving_meet_sl_mor.
     apply (order_preserving _). trivial.
   Qed.
 End order_preserving_meet_sl_mor.
+
+Section strict_ordered_field.
+
+  (* Context {L : Type}. *)
+  Context `{OrderedField L}.
+  (* Generalizable Variables Lap Lplus Lmult Lzero Lone Lneg Lrecip Lle Llt Ljoin Lmeet. *)
+  (* Context `{Lorderedfield : @OrderedField L Llt Lle Lap Lzero Lone Lplus Lneg Lmult Lap Lzero Lrecip Ljoin Lmeet}. *)
+
+  (* Lemma interpolate x z : x < z -> {y | x < y < z}. *)
+  (* Proof. *)
+  (*   intros ltxz. *)
+  (*   assert (pos2 : ApartZero L). *)
+  (*   { *)
+  (*     exists 2. *)
+  (*     apply apart_0_2. *)
+  (*   } *)
+  (*   exists ((x+z)//(pos2)). *)
+  (*   split. *)
+
+  Lemma join_lt_l_l x y z : z < x -> z < x ⊔ y.
+  Proof.
+    intros ltzx.
+    refine (lt_le_trans z x _ _ _); try assumption.
+    apply join_ub_l.
+  Qed.
+
+  Lemma join_lt_l_r x y z : z < y -> z < x ⊔ y.
+  Proof.
+    intros ltzy.
+    refine (lt_le_trans z y _ _ _); try assumption.
+    apply join_ub_r.
+  Qed.
+
+  Lemma join_lt_r x y z : x < z -> y < z -> x ⊔ y < z.
+  Proof.
+    intros ltxz ltyz.
+    set (disj := cotransitive ltxz (x ⊔ y)).
+    refine (Trunc_rec _ disj); intros [ltxxy|ltxyz].
+    - set (disj' := cotransitive ltyz (x ⊔ y)).
+      refine (Trunc_rec _ disj'); intros [ltyxy|ltxyz].
+      + assert (ineqx : ~ x ⊔ y = x).
+        {
+          apply lt_ne_flip; assumption.
+        }
+        assert (nleyx : ~ y ≤ x)
+          by exact (functor_arrow (join_l x y) (@id Empty) ineqx).
+        assert (lexy : x ≤ y).
+        {
+          apply le_iff_not_lt_flip.
+          intros ltyx.
+          refine (nleyx (lt_le _ _ _)).
+        }
+        assert (ineqy : ~ x ⊔ y = y).
+        {
+          apply lt_ne_flip; assumption.
+        }
+        assert (nlexy : ~ x ≤ y)
+          by exact (functor_arrow (join_r x y) (@id Empty) ineqy).
+        assert (leyx : y ≤ x).
+        {
+          apply le_iff_not_lt_flip.
+          intros ltxy.
+          refine (nlexy (lt_le _ _ _)).
+        }
+        assert (eqxy : x = y)
+          by refine (antisymmetry _ _ _ lexy leyx).
+        rewrite <- eqxy in ineqx.
+        destruct (ineqx (join_idempotent x)).
+      + assumption.
+    - assumption.
+  Qed.
+
+  Lemma meet_lt_r_l x y z : x < z -> x  ⊓ y < z.
+  Proof.
+    intros ltxz.
+    refine (le_lt_trans _ x _ _ _); try assumption.
+    apply meet_lb_l.
+  Qed.
+
+  Lemma meet_lt_r_r x y z : y < z -> x  ⊓ y < z.
+  Proof.
+    intros ltyz.
+    refine (le_lt_trans _ y _ _ _); try assumption.
+    apply meet_lb_r.
+  Qed.
+
+  Lemma meet_lt_l x y z : x < y -> x < z -> x < y ⊓ z.
+  Proof.
+    intros ltxy ltxz.
+    set (disj := cotransitive ltxy (y ⊓ z)).
+    refine (Trunc_rec _ disj); intros [ltxyy|ltyzy].
+    - assumption.
+    - set (disj' := cotransitive ltxz (y ⊓ z)).
+      refine (Trunc_rec _ disj'); intros [ltxyz|ltyzz].
+      + assumption.
+      + assert (ineqy : ~ y ⊓ z = y).
+        {
+          apply lt_ne; assumption.
+        }
+        assert (nleyz : ~ y ≤ z)
+          by exact (functor_arrow (meet_l y z) (@id Empty) ineqy).
+        assert (lezy : z ≤ y).
+        {
+          apply le_iff_not_lt_flip.
+          intros ltzy.
+          refine (nleyz (lt_le _ _ _)).
+        }
+        assert (ineqz : ~ y ⊓ z = z).
+        {
+          apply lt_ne; assumption.
+        }
+        assert (nlezy : ~ z ≤ y)
+          by exact (functor_arrow (meet_r y z) (@id Empty) ineqz).
+        assert (leyz : y ≤ z).
+        {
+          apply le_iff_not_lt_flip.
+          intros ltzy.
+          refine (nlezy (lt_le _ _ _)).
+        }
+        assert (eqyz : y = z)
+          by refine (antisymmetry _ _ _ leyz lezy).
+        rewrite <- eqyz in ineqy.
+        destruct (ineqy (meet_idempotent y)).
+  Qed.
+
+
+End strict_ordered_field.

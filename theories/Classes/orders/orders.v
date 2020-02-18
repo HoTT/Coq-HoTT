@@ -518,3 +518,41 @@ Lemma lt_eq_trans `{Lt A} : forall x y z, x < y -> y = z -> x < z.
 Proof.
 intros ???? [];trivial.
 Qed.
+
+Section pseudo.
+  Context {A : Type}.
+  Context `{PseudoOrder A}.
+
+  Lemma nlt_lt_trans {x y z : A} : ~ y < x -> y < z -> x < z.
+  Proof.
+    intros nltyx ltyz.
+    assert (disj := cotransitive ltyz x).
+    strip_truncations.
+    destruct disj as [ltyx|ltxz].
+    - destruct (nltyx ltyx).
+    - exact ltxz.
+  Qed.
+
+  Lemma lt_nlt_trans {x y z : A} : x < y -> ~ z < y -> x < z.
+  Proof.
+    intros ltxy nltzy.
+    assert (disj := cotransitive ltxy z).
+    strip_truncations.
+    destruct disj as [ltxz|ltzy].
+    - exact ltxz.
+    - destruct (nltzy ltzy).
+  Qed.
+
+  Lemma lt_transitive : Transitive (_ : Lt A).
+  Proof.
+    intros x y z ltxy ltyz.
+    assert (ltxyz := cotransitive ltxy z).
+    strip_truncations.
+    destruct ltxyz as [ltxz|ltzy].
+    - assumption.
+    - destruct (pseudo_order_antisym y z (ltyz , ltzy)).
+  Qed.
+
+  Global Existing Instance lt_transitive.
+
+End pseudo.

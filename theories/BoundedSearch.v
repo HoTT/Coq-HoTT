@@ -110,3 +110,31 @@ Section bounded_search.
   Defined.
 
 End bounded_search.
+
+Section bounded_search_alt_type.
+  Context `{Funext}.
+  Context (X : Type)
+          (e : nat <~> X)
+          (P : X -> Type)
+          {P_hprop : forall x, IsHProp (P x)}
+          (P_dec : forall x, Decidable (P x))
+          (P_inhab : hexists (fun x => P x)).
+
+  Definition minimal_n_alt_type : {x : X & P x}.
+  Proof.
+    set (P' n := P (e n)).
+    assert (P'_hprop : forall n, IsHProp (P' n)) by apply _.
+    assert (P'_dec : forall n, Decidable (P' n)) by apply _.
+    assert (P'_inhab : hexists (fun n => P' n)).
+    {
+      strip_truncations. apply tr.
+      destruct P_inhab as [x p].
+      exists (e ^-1 x).
+      unfold P'.
+      rewrite (eisretr e). exact p.
+    }
+    destruct (minimal_n P' P'_dec P'_inhab) as [n p'].
+    exists (e n). exact p'.
+  Defined.
+
+End bounded_search_alt_type.

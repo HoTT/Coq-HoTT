@@ -16,7 +16,10 @@ Section property.
   field. *)
   Context {Achar : FieldCharacteristic F 0}.
 
+  Definition qinc : Cast Q F := rationals_to_field Q F.
+  Existing Instance qinc.
+
   Class ArchimedeanProperty := archimedean_property
-    : forall x y, x < y -> hexists (fun q => x < (rationals_to_field Q F q) < y).
+    : forall x y, x < y -> hexists (fun q => x < ' q < y).
 
 End property.
