@@ -21,7 +21,7 @@ Record WildCat01 :=
   cat01_is01cat : Is01Cat cat01_carrier;
 }.
 
-(* note for morgan: this allows us to consider WildCats as types. *)
+(* This allows us to consider WildCats as types. *)
 Coercion cat01_carrier : WildCat01 >-> Sortclass.
 
 Global Existing Instance cat01_is01cat.
