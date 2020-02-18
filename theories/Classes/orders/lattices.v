@@ -544,21 +544,9 @@ End order_preserving_meet_sl_mor.
 
 Section strict_ordered_field.
 
-  (* Context {L : Type}. *)
-  Context `{OrderedField L}.
-  (* Generalizable Variables Lap Lplus Lmult Lzero Lone Lneg Lrecip Lle Llt Ljoin Lmeet. *)
-  (* Context `{Lorderedfield : @OrderedField L Llt Lle Lap Lzero Lone Lplus Lneg Lmult Lap Lzero Lrecip Ljoin Lmeet}. *)
-
-  (* Lemma interpolate x z : x < z -> {y | x < y < z}. *)
-  (* Proof. *)
-  (*   intros ltxz. *)
-  (*   assert (pos2 : ApartZero L). *)
-  (*   { *)
-  (*     exists 2. *)
-  (*     apply apart_0_2. *)
-  (*   } *)
-  (*   exists ((x+z)//(pos2)). *)
-  (*   split. *)
+  Generalizable Variables Lle Llt Lmeet Ljoin Lapart.
+  Context `{@LatticeOrder L Lle Lmeet Ljoin}.
+  Context `{@FullPseudoOrder L Lapart Lle Llt}.
 
   Lemma join_lt_l_l x y z : z < x -> z < x ⊔ y.
   Proof.
