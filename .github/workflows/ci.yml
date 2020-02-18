@@ -1,17 +1,95 @@
+## This is the name of the CI
 name: CI
 
+## These are the actions that trigger the CI to run
 on: [push, pull_request]
 
 jobs:
   build:
+    # TODO: Eventually include different OS's in the matrix
 
+    strategy:
+      matrix:
+        env:
+        - { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
+        - { LABEL: "update dep graphs", UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+        - { LABEL: "update quick doc", UPDATE_QUICK_DOC: "yes" }
+        - { LABEL: "update html", UPDATE_HTML: "yes", UPDATE_QUICK_DOC: "" }
+        - { LABEL: "validate", VALIDATE: "yes"   , UPDATE_QUICK_DOC: "" }
+        - { LABEL: "with submodule coq", FORCE_COQ_VERSION: ""      , BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+        - { LABEL: "building coq master", FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+
+    env: ${{ matrix.env }}
+
+    # The operating system
     runs-on: ubuntu-latest
 
+    # Here is the main script
     steps:
+    # First we set up Python 2.7
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v1.1.1
+      with:
+        python-version: 2.7
+
     - uses: actions/checkout@v2
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
+
+    # We update the submodules
+    - name: submodules-init
+      uses: snickerbockers/submodules-init@v4
+
+    - name: Add repositories to apt
+      ## TODO: Cache dependencies?
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        # echo Adding repositories...
+        # sudo add-apt-repository avsm
+        # sudo add-apt-repository -y 'ppa:jgross-h/graphviz'
+        sudo add-apt-repository -y 'ppa:jgross-h/coq-master-daily'
+
+    - name: Update apt
+      run: sudo apt-get update
+
+    - name: Installing dependencies
+      run: |
+        sudo apt-get install -y --allow-unauthenticated npm aspcud ghc cabal-install graphviz xsltproc python-lxml python-pexpect libxml2-dev libxslt1-dev time ocaml camlp5 camlp4 ocaml-findlib libocamlgraph-ocaml-dev lua5.1
+
+    - name: Upgrade and autoremove packages
+      run: |
+        # This will take a very long time
+        # sudo apt-get -y upgrade
+        sudo apt-get autoremove
+
+    - name: Before script information
+      run: |
+        lscpu
+        uname -a
+        lsb_release -a
+        etc/ci/before_script.sh
+        coqc --version
+        echo | coqtop
+        export COMMITISH="$(git rev-list HEAD -1)"
+
+    - name: Run ./autogen.sh
+      run: ./autogen.sh
+
+    - name: Run ./configure
+      run: ./configure
+
+    - name: make strict-test
+      run: make strict-test
+      if: env.UPDATE_QUICK_DOC == ''
+
+    - name: Build with timing
+      run: |
+        etc/coq-scripts/timing/make-pretty-timed.sh -j2
+        make
+      if: env.UPDATE_QUICK_DOC == ''
+
+    - name: Test install target
+      run: etc/ci/test-install-target.sh
+      if: env.UPDATE_QUICK_DOC == ''
+
+    - name: After success script
+      run: etc/ci/after_success.sh
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}

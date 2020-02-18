@@ -48,7 +48,7 @@ git add -f file-dep-graphs/*.svg file-dep-graphs/index.html # file-dep-graphs/*.
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
-"$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
+"$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS || exit $?
 
 # checkout the original commit
 echo '$ git checkout '"$COMMITISH"

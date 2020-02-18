@@ -11,6 +11,12 @@ pushd "$DIR" 1>/dev/null
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR" 1>/dev/null
 
-npm install -g doctoc
+# Stop npm from failing
+sudo -E npm config set strict-ssl false
+
+# Update npm
+sudo -E npm i -g npm
+
+sudo -E npm install -g doctoc || exit $?
 
 popd 1>/dev/null

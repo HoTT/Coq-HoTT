@@ -11,25 +11,33 @@ pushd "$DIR" 1>/dev/null
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null
 
-# don't leak the OAUTH Token
+# Don't leak secrets
 set +x
-
-if [ -z "$OAUTH_TOKEN" ]; then
-    echo 'Error: Not pushing because $OAUTH_TOKEN is empty'
-    exit 1
+if [ ! -z "$OAUTH_TOKEN" ]; then
+    echo "Updating ~/.netrc file"
+    echo >> ~/.netrc
+    echo "machine github.com login $OAUTH_TOKEN" >> ~/.netrc
+elif [ ! -z "$ACTIONS_DEPLOY_KEY" ]; then
+    echo "Updating ~/.ssh/id_rsa"
+    echo "$ACTIONS_DEPLOY_KEY" > ~/.ssh/id_rsa
+else
+    echo 'Error: Not pushing because $OAUTH_TOKEN and $ACTIONS_DEPLOY_KEY are empty'
+    exit 0
 fi
-
-echo "Updating ~/.netrc file"
-echo >> ~/.netrc
-echo "machine github.com login $OAUTH_TOKEN" >> ~/.netrc
 set -x
 
-"$DIR"/configure_commit.sh
+echo "Configuring git for commit"
+if [ -z "$(git config --global user.name)" ]; then
+    git config --global user.name "CI Bot"
+fi
+if [ -z "$(git config --global user.email)" ]; then
+    git config --global user.email "CI-Bot@fake.fake"
+fi
 
 REPO="$(git remote -v | grep -o 'origin\s\+\(.*\?\)\s\+(push)' | sed s'/origin\s\+//g' | sed s'/\s\+(push)//g' | sed s'#git://github.com/#https://github.com/#g')"
 
 echo '$ git push '"$REPO ""$@"
-git push $REPO "$@"
+git push $REPO "$@" || exit $?
 
 popd 1>/dev/null
 popd 1>/dev/null
