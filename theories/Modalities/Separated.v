@@ -38,14 +38,14 @@ Proof.
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:apply inO_iff_islocal; exact (A_inO x y).
     intros b.
-    apply equiv_dp_const. }
+    apply dp_const. }
   { intros x y.
     apply (inO_iff_islocal O); intros i.
     specialize (A_inO i).
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:exact (fst (ooextendable_iff_functor_susp (acc_lgen O i) _) A_inO (x,y)).
     intros b.
-    symmetry; apply equiv_dp_const. }
+    symmetry; apply dp_const. }
 Defined.
 
 Definition susp_nullgen (S : NullGenerators@{a}) : NullGenerators@{a}.
@@ -67,7 +67,7 @@ Proof.
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:apply inO_iff_isnull; exact (A_inO x y).
     intros b.
-    apply equiv_dp_const. }
+    apply dp_const. }
   { intros x y.
     apply (inO_iff_isnull O); intros i.
     specialize (A_inO i).
@@ -79,7 +79,7 @@ Proof.
     cbn in e.
     refine (ooextendable_postcompose' _ _ _ _ e).
     intros b.
-    symmetry; apply equiv_dp_const. }
+    symmetry; apply dp_const. }
 Defined.
 
 (** Remark 2.16(1) of CORS *)
