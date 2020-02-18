@@ -132,6 +132,11 @@ Section locator.
       - apply inl. exact (locates_right_true l' nu yes).
       - apply inr. exact (locates_right_false l' nu no).
     Defined.
+  End logic.
+
+  Section logic2.
+
+    Context {x : F}.
 
     Coercion locator_locator' : locator >-> locator'.
 
@@ -165,7 +170,7 @@ Section locator.
         destruct (nono no).
     Defined.
 
-  End logic.
+  End logic2.
 
   Section bounds.
     (* Given a real with a locator, we can find (integer) bounds. *)
