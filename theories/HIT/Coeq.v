@@ -52,7 +52,7 @@ Defined.
 
 Definition Coeq_unrec {B A} (f g : B -> A) {P}
            (h : Coeq f g -> P)
-  : {h : A -> P & h o f == h o g}.
+  : {k : A -> P & k o f == k o g}.
 Proof.
   exists (h o coeq).
   intros b. exact (ap h (cglue b)).
