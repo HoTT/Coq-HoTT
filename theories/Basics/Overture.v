@@ -594,8 +594,8 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
          end : core.
 
-Notation Contr := (IsTrunc (minus_two)).
-Notation IsHProp := (IsTrunc (minus_two.+1)).
+Notation Contr := (IsTrunc minus_two).
+Notation IsHProp := (IsTrunc minus_two.+1).
 Notation IsHSet := (IsTrunc minus_two.+2).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
