@@ -3,10 +3,15 @@ Require Import WildCat.Core.
 
 (** Unit category *)
 
+Global Instance isgraph_unit : IsGraph Unit.
+Proof.
+  apply Build_IsGraph.
+  intros; exact Unit.
+Defined.
+
 Global Instance is01cat_unit : Is01Cat Unit.
 Proof.
   srapply Build_Is01Cat.
-  1: intros; exact Unit.
   all: intros; exact tt.
 Defined.
 

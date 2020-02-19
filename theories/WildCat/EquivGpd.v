@@ -13,7 +13,7 @@ Class SplEssSurj {A B : Type} `{Is0Gpd A, Is0Gpd B}
       (F : A -> B) `{!Is0Functor F} 
   := esssurj : forall b:B, { a:A & F a $== b }.
 
-Arguments esssurj {A B _ _ _ _} F {_ _} b.
+Arguments esssurj {A B _ _ _ _ _ _} F {_ _} b.
 
 (** A 0-functor between 0-groupoids is an equivalence if it is essentially surjective and reflects the existence of morphisms.  This is "surjective and injective" in setoid-language.  (To define essential surjectivity for non-groupoids, we would need [HasEquivs] from [WildCat.Equiv]. *)
 Class IsEquiv0Gpd {A B : Type} `{Is0Gpd A, Is0Gpd B}
@@ -24,7 +24,7 @@ Class IsEquiv0Gpd {A B : Type} `{Is0Gpd A, Is0Gpd B}
 }.
 
 Global Existing Instance esssurj_isequiv0gpd.
-Arguments essinj0 {A B _ _ _ _} F {_ _ x y} f.
+Arguments essinj0 {A B _ _ _ _ _ _} F {_ _ x y} f.
 
 Definition equiv0gpd_inv {A B : Type} (F : A -> B) `{IsEquiv0Gpd A B F} : B -> A
   := fun b => (esssurj F b).1.
@@ -216,10 +216,9 @@ Defined.
 (** Equivalences and essential surjectivity are preserved by sigmas (for now, just over constant bases), and essential surjectivity at least is also reflected. *)
 
 Definition isesssurj_iff_sigma {A : Type} (B C : A -> Type)
-       {bc : forall a, Is01Cat (B a)} {bg : forall a, Is0Gpd (B a)}
-       {cc : forall a, Is01Cat (C a)} {cg : forall a, Is0Gpd (C a)}
-       (F : forall a, B a -> C a)
-       {ff : forall a, Is0Functor (F a)}
+ `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
+ `{forall a, IsGraph (C a)} `{forall a, Is01Cat (C a)} `{forall a, Is0Gpd (C a)}
+  (F : forall a, B a -> C a) {ff : forall a, Is0Functor (F a)}
   : SplEssSurj (fun (x:sig B) => (x.1 ; F x.1 x.2))
     <-> (forall a, SplEssSurj (F a)).
 Proof.
@@ -237,10 +236,10 @@ Proof.
 Defined.
 
 Definition isequiv0gpd_sigma {A : Type} (B C : A -> Type)
-       {bc : forall a, Is01Cat (B a)} {bg : forall a, Is0Gpd (B a)}
-       {cc : forall a, Is01Cat (C a)} {cg : forall a, Is0Gpd (C a)}
-       (F : forall a, B a -> C a)
-       {ff : forall a, Is0Functor (F a)} {fs : forall a, IsEquiv0Gpd (F a)}
+ `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
+ `{forall a, IsGraph (C a)} `{forall a, Is01Cat (C a)} `{forall a, Is0Gpd (C a)}
+  (F : forall a, B a -> C a)
+  `{forall a, Is0Functor (F a)} `{forall a, IsEquiv0Gpd (F a)}
   : IsEquiv0Gpd (fun (x:sig B) => (x.1 ; F x.1 x.2)).
 Proof.
   constructor.

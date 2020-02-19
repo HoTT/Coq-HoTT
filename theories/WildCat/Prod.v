@@ -18,7 +18,7 @@ Global Instance isgraph_prod A B `{IsGraph A} `{IsGraph B}
 Global Instance is01cat_prod A B `{Is01Cat A} `{Is01Cat B}
   : Is01Cat (A * B).
 Proof.
-  refine (Build_Is01Cat (A * B) (fun x y => (fst x $-> fst y) * (snd x $-> snd y)) _ _).
+  econstructor.
   - intros [a b]; exact (Id a, Id b).
   - intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2]; cbn in *.
     exact (f1 $o f2 , g1 $o g2).
@@ -30,7 +30,6 @@ Definition fmap11 {A B C : Type} `{IsGraph A} `{IsGraph B} `{IsGraph C}
   {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2)
   : F a1 b1 $-> F a2 b2
   := @fmap _ _ _ _ (uncurry F) H2 (a1, b1) (a2, b2) (f1, f2).
-
 
 Global Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
  : Is0Gpd (A * B).
@@ -45,6 +44,8 @@ Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
   srapply (Build_Is1Cat).
+  - intros [x1 x2] [y1 y2].
+    rapply isgraph_prod.
   - intros [x1 x2] [y1 y2].
     rapply is01cat_prod.
   - intros [x1 x2] [y1 y2].
@@ -62,7 +63,7 @@ Proof.
     intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
     exact ( p1 $@R h1 , p2 $@R h2 ).
   - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
-    cbn in *. 
+    cbn in *.
     exact(cat_assoc f1 g1 h1, cat_assoc f2 g2 h2).
   - intros [a1 a2] [b1 b2] [f1 f2].
     cbn in *.
@@ -70,9 +71,7 @@ Proof.
   - intros [a1 a2] [b1 b2] [g1 g2].
     cbn in *.
     exact (cat_idr _, cat_idr _). 
-Defined. 
-
-
+Defined.
 
 
 (** Product categories inherit equivalences *)
@@ -80,7 +79,7 @@ Defined.
 Global Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
   : HasEquivs (A * B).
 Proof.
-  srefine (Build_HasEquivs (A * B) _ _
+  srefine (Build_HasEquivs (A * B) _ _ _
              (fun a b => (fst a $<~> fst b) * (snd a $<~> snd b))
              _ _ _ _ _ _ _ _ _).
   1:intros a b f; exact (CatIsEquiv (fst f) * CatIsEquiv (snd f)).
@@ -91,9 +90,9 @@ Proof.
     + exact (Build_CatEquiv (fst f)).
     + exact (Build_CatEquiv (snd f)).
   - intros [fe1 fe2]; cbn; split; apply cate_buildequiv_fun.
-  - intros [fe1 fe2]; split; [ exact ((fst f)^-1$) | exact ((snd f)^-1$) ].
-  - intros [fe1 fe2]; split; apply cate_issect.
-  - intros [fe1 fe2]; split; apply cate_isretr.
+  - split; [ exact ((fst f)^-1$) | exact ((snd f)^-1$) ].
+  - split; apply cate_issect.
+  - split; apply cate_isretr.
   - intros g r s; split.
     + exact (catie_adjointify (fst f) (fst g) (fst r) (fst s)).
     + exact (catie_adjointify (snd f) (snd g) (snd r) (snd s)).
@@ -102,7 +101,7 @@ Defined.
 Global Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
        {a1 a2 : A} {b1 b2 : B} {f : a1 $-> a2} {g : b1 $-> b2}
        {ef : CatIsEquiv f} {eg : CatIsEquiv g}
-  : @CatIsEquiv (A*B) _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
+  : @CatIsEquiv (A*B) _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
 
 (** More coherent two-variable functors. *)
 
@@ -111,17 +110,16 @@ Definition fmap22 {A B C : Type} `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
   {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2) (g1 : a1 $-> a2) (g2 : b1 $-> b2)
   (alpha : f1 $== g1) (beta : f2 $== g2)
   : (fmap11 F f1 f2) $== (fmap11 F g1 g2)
-  := @fmap2 _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) (g1, g2) (alpha, beta).
+  := @fmap2 _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) (g1, g2) (alpha, beta).
 
 Global Instance iemap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
            (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
-           {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2)
-           {f1e : CatIsEquiv f1} {f2e : CatIsEquiv f2}
+           {a1 a2 : A} {b1 b2 : B} (f1 : a1 $<~> a2) (f2 : b1 $<~> b2)
   : CatIsEquiv (fmap11 F f1 f2)
-  := @iemap _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) _.
+  := @iemap _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2).
 
 Definition emap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
            (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
            {a1 a2 : A} {b1 b2 : B} (fe1 : a1 $<~> a2)
            (fe2 : b1 $<~> b2) : (F a1 b1) $<~> (F a2 b2)
-  := @emap _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).
+  := @emap _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).

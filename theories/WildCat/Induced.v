@@ -12,12 +12,17 @@ This needs to be separate from Core because of HasEquivs usage.  We don't make t
 
 Section Induced_category.
   Context {A B : Type} (f : A -> B).
-  
-  Local Instance induced_01cat `{Is01Cat B}: Is01Cat A.
+
+  Local Instance induced_graph `{IsGraph B} : IsGraph A.
+  Proof.
+    srapply Build_IsGraph.
+    intros a1 a2. 
+    exact (f a1 $-> f a2).
+  Defined.
+
+  Local Instance induced_01cat `{Is01Cat B} : Is01Cat A.
   Proof.
     srapply Build_Is01Cat.
-    + intros a1 a2. 
-      exact (f a1 $-> f a2).
     + intro a. cbn in *. 
       exact (Id (f a)).
     + intros a b c; cbn in *; intros g1 g2.
@@ -42,6 +47,7 @@ Section Induced_category.
     srapply Build_Is1Cat.
     + intros a b. cbn in *. exact _.
     + intros a b. cbn in *. exact _.
+    + intros a b. cbn in *. exact _.
     + intros a b c. cbn in *. exact _.
     + intros a b c h.
       exact (is0functor_precomp (f a) (f b) (f c) h).
@@ -61,9 +67,9 @@ Section Induced_category.
     + intros a b c g h. cbn in *. exact (Id _). 
   Defined.
 
-  Instance induced_hasmorext `{HasMorExt B} : HasMorExt A.
+  Instance induced_hasmorext `{X : HasMorExt B} : HasMorExt A.
   Proof.
-    constructor. intros. apply H1.
+    constructor. intros. apply X.
   Defined.
 
   Definition induced_hasequivs `{HasEquivs B} : HasEquivs A.

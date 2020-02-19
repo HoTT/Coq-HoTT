@@ -16,15 +16,13 @@ Notation "a $-> b" := (Hom a b).
 (** ** 0-categorical structures *)
 
 (** A wild (0,1)-category has 1-morphisms and operations on them, but no coherence. *)
-Class Is01Cat (A : Type) := Build_Is01Cat'
+Class Is01Cat (A : Type) `{IsGraph A} :=
 {
-  isgraph_1cat : IsGraph A;
   Id  : forall (a : A), a $-> a;
   cat_comp : forall (a b c : A), (b $-> c) -> (a $-> b) -> (a $-> c);
 }.
 
-Global Existing Instance isgraph_1cat.
-Arguments cat_comp {A _ a b c} _ _.
+Arguments cat_comp {A _ _ a b c} _ _.
 Notation "g $o f" := (cat_comp g f).
 
 Definition cat_postcomp {A} `{Is01Cat A} (a : A) {b c : A} (g : b $-> c)
@@ -34,13 +32,6 @@ Definition cat_postcomp {A} `{Is01Cat A} (a : A) {b c : A} (g : b $-> c)
 Definition cat_precomp {A} `{Is01Cat A} {a b : A} (c : A) (f : a $-> b)
   : (b $-> c) -> (a $-> c)
   := fun g => g $o f.
-
-Definition Build_Is01Cat A
-           (Hom' : A -> A -> Type)
-           (Id'  : forall (a : A), Hom' a a)
-           (cat_comp' : forall (a b c : A), Hom' b c -> Hom' a b -> Hom' a c)
-  : Is01Cat A
-  := Build_Is01Cat' A (Build_IsGraph A Hom') Id' cat_comp'.
 
 (** A wild 0-groupoid is a wild (0,1)-category whose morphisms can be reversed.  This is also known as a setoid. *)
 Class Is0Gpd (A : Type) `{Is01Cat A} :=
@@ -82,26 +73,27 @@ Arguments fmap {_ _ _ _} F {_ _ _} f.
 
 
 (** ** Wild 1-categorical structures *)
-
-(** A wild 1-category (a.k.a. (1,1)-category) has its hom-types enhanced to 0-groupoids, its composition operations to 0-functors in each variable separately (providing whiskering operations), and its composition associative and unital up to these 2-cells. *)
-Class Is1Cat (A : Type) `{Is01Cat A} :=
+Class Is1Cat (A : Type) `{!IsGraph A, !Is01Cat A} :=
 {
+  isgraph_hom : forall (a b : A), IsGraph (a $-> b) ;
   is01cat_hom : forall (a b : A), Is01Cat (a $-> b) ;
   isgpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
   is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
   is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
-  cat_assoc : forall a b c d (f : a $-> b) (g : b $-> c) (h : c $-> d),
+  cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $== h $o (g $o f);
-  cat_idl : forall a b (f : a $-> b), Id b $o f $== f;
-  cat_idr : forall a b (f : a $-> b), f $o Id a $== f;
+  cat_idl : forall (a b : A) (f : a $-> b), Id b $o f $== f;
+  cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
+
+Global Existing Instance isgraph_hom.
 Global Existing Instance is01cat_hom.
 Global Existing Instance isgpd_hom.
 Global Existing Instance is0functor_postcomp.
 Global Existing Instance is0functor_precomp.
-Arguments cat_assoc {_ _ _ _ _ _ _} f g h.
-Arguments cat_idl {_ _ _ _ _} f.
-Arguments cat_idr {_ _ _ _ _} f.
+Arguments cat_assoc {_ _ _ _ _ _ _ _} f g h.
+Arguments cat_idl {_ _ _ _ _ _} f.
+Arguments cat_idr {_ _ _ _ _ _} f.
 
 Definition cat_assoc_opp {A : Type} `{Is1Cat A}
            {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
@@ -133,6 +125,7 @@ Notation "p $@R h" := (cat_prewhisker p h).
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type) `{Is01Cat A} := 
 {
+  isgraph_hom_strong : forall (a b : A), IsGraph (a $-> b) ;
   is01cat_hom_strong : forall (a b : A), Is01Cat (a $-> b) ;
   isgpd_hom_strong : forall (a b : A), Is0Gpd (a $-> b) ;
   is0functor_postcomp_strong : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
@@ -144,9 +137,9 @@ Class Is1Cat_Strong (A : Type) `{Is01Cat A} :=
   cat_idr_strong : forall (a b : A) (f : a $-> b), f $o Id a = f;
 }.
 
-Arguments cat_assoc_strong {_ _ _ _ _ _ _} f g h.
-Arguments cat_idl_strong {_ _ _ _ _} f.
-Arguments cat_idr_strong {_ _ _ _ _} f.
+Arguments cat_assoc_strong {_ _ _ _ _ _ _ _} f g h.
+Arguments cat_idl_strong {_ _ _ _ _ _} f.
+Arguments cat_idr_strong {_ _ _ _ _ _} f.
 
 Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
            {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
@@ -156,8 +149,9 @@ Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
 Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
   : Is1Cat A.
 Proof.
-  srefine (Build_Is1Cat A _ _ _ _ _ _ _ _).
-  all:intros a b.
+  srapply Build_Is1Cat.
+  all: intros a b.
+  - apply isgraph_hom_strong.
   - apply is01cat_hom_strong.
   - apply isgpd_hom_strong.
   - apply is0functor_postcomp_strong.
@@ -178,17 +172,20 @@ Definition IsTerminal {A : Type} `{Is1Cat A} (y : A)
 Existing Class IsTerminal.
 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
-Class HasMorExt (A : Type) `{Is1Cat A} :=
-  { isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ f g) }.
+Class HasMorExt (A : Type) `{Is1Cat A} := {
+  isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
+}.
+
 Global Existing Instance isequiv_Htpy_path.
 
-Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g) : f = g
+Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
+  : f = g
   := GpdHom_path^-1 p.
 
 (** A 1-functor acts on 2-cells (satisfying no axioms) and also preserves composition and identities up to a 2-cell. *)
-Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
   (* The [!] tells Coq to use typeclass search to find the [IsGraph] parameters of [Is0Functor] instead of assuming additional copies of them. *)
-      (F : A -> B) `{!Is0Functor F} :=
+Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
+  (F : A -> B) `{!Is0Functor F} :=
 {
   fmap2 : forall a b (f g : a $-> b), (f $== g) -> (fmap F f $== fmap F g) ;
   fmap_id : forall a, fmap F (Id a) $== Id (F a);
@@ -196,11 +193,9 @@ Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
     fmap F (g $o f) $== fmap F g $o fmap F f;
 }.
 
-Arguments fmap2 {A B _ _ _ _} F {_ _ _ _ _ _} p.
-Arguments fmap_id {A B _ _ _ _} F {_ _} a.
-Arguments fmap_comp {A B _ _ _ _} F {_ _ _ _ _} f g.
-
-
+Arguments fmap2 {A B _ _ _ _ _ _} F {_ _ _ _ _ _} p.
+Arguments fmap_id {A B _ _ _ _ _ _} F {_ _} a.
+Arguments fmap_comp {A B _ _ _ _ _ _} F {_ _ _ _ _} f g.
 
 
 (** Identity functor *)
@@ -236,7 +231,7 @@ Section ConstantFunctor.
   Defined.
 
   Global Instance is1functor_const
-         `{Is1Cat A} `{Is1Cat B} (x : B)
+   `{Is1Cat A} `{Is1Cat B} (x : B)
     : Is1Functor (fun _ : A => x).
   Proof.
     srapply Build_Is1Functor.
@@ -311,7 +306,7 @@ Defined.
 Definition gpd_moveL_V1 {A : Type} `{Is1Gpd A} {x y : A} {p : x $-> y}
   {q : y $-> x} (r : p $o q $== Id _) : p^$ $== q.
 Proof.
-  refine ((cat_idr (p^$))^$ $@ ((p^$) $@L (r^$)) $@ _).
+  refine ((cat_idr p^$)^$ $@ (p^$ $@L r^$) $@ _).
   apply gpd_V_hh.
 Defined.
 
@@ -328,12 +323,12 @@ Definition gpd_moveR_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
 Definition gpd_moveL_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
   : p $== r $o q^$ 
-  := (gpd_moveR_hV (s^$))^$.
+  := (gpd_moveR_hV s^$)^$.
 
 Definition gpd_moveL_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
   : q $== p^$ $o r 
-  := (gpd_moveR_Vh (s^$))^$.
+  := (gpd_moveR_Vh s^$)^$.
 
 Definition gpd_rev2 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $== q) : p^$ $== q^$.
@@ -346,5 +341,5 @@ Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b)
   : (f $o g)^$ $== g^$ $o f^$.
 Proof.
   apply gpd_moveL_V1.
-  refine (cat_assoc _ _ _ $@ (f $@L gpd_h_Vh g (f^$)) $@ gpd_isretr f).
+  refine (cat_assoc _ _ _ $@ (f $@L gpd_h_Vh g f^$) $@ gpd_isretr f).
 Defined.
