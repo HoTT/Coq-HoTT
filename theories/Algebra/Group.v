@@ -365,10 +365,10 @@ Proof.
 Defined.
 
 (** The wild cat of Groups *)
-Global Instance isgraph_Group : IsGraph Group
+Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
-Global Instance is01cat_Group : Is01Cat Group :=
+Global Instance is01cat_group : Is01Cat Group :=
   (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
 
 Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
