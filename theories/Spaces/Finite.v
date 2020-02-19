@@ -1073,7 +1073,25 @@ Section Enumeration.
 
 End Enumeration.
 
-Fixpoint fsucc {n : nat} : Fin n -> Fin n
+(** fsucc is the successor function mod n *)
+Definition fsucc {n : nat} : Fin n -> Fin n.
+Proof.
+  induction n as [|n' fsucc].
+  1: apply Empty_rec.
+  intros [r|].
+  + destruct n' as [|n''].
+    1: revert r; apply Empty_rec.
+    destruct r as [r|].
+    - hnf; apply inl.
+      apply fsucc.
+      hnf; apply inl.
+      exact r.
+    - exact (inr tt).
+  + exact (fin_zero n').
+Defined.
+
+(** Here is an almost definitionally equal version of fsucc to compare.*)
+(* Fixpoint fsucc' {n : nat} : Fin n -> Fin n
   := match n with
       | 0 => Empty_rec : Fin 0 -> Fin 0
       | S n' => fun r =>
@@ -1085,20 +1103,30 @@ Fixpoint fsucc {n : nat} : Fin n -> Fin n
             fun F r'' =>
               match r'' with
                 | inl r''' => inl (F (inl r'''))
-                | inr tt => inr tt
+                | inr _ => inr tt
               end
           end (@fsucc n') r'
         | inr _ => fin_zero n'
         end
       end.
 
+Goal forall n:nat, @fsucc' n = @fsucc n.
+intros [].
+1: reflexivity.
+reflexivity.
+Abort. *)
+
+(** fsucc allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
 Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
   := match m with
       | 0 => fin_zero n
       | S m => fsucc (fin_nat m)
      end.
 
-Notation "[ n ]" := (fin_nat n).
+(** TODO: Would this notation be useful? *)
+(* Notation "[ n ]" := (fin_nat n). *)
+
+(** ** Tactics *)
 
 Ltac FinIndOn X := repeat
   match type of X with
@@ -1109,4 +1137,6 @@ Ltac FinIndOn X := repeat
   | ?L + Unit => destruct X as [X|X]
   end.
 
+(** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
+
