@@ -1220,7 +1220,7 @@ made to the central repository.
 
 When you submit a PR to github, Github Actions will start running in
 the background. You can see the checks at the bottom by clicking
-`Show all checks` or by clicking the `Checks` tab at the top inbetween
+`Show all checks` or by clicking the `Checks` tab at the top in between
 `Commits` and `Files changed`.
 
 There should be 7 different jobs with the following names. Here is
