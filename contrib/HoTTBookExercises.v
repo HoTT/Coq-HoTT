@@ -490,6 +490,11 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 
 
 
+(* ================================================== ex:dep-htpy-natural *)
+(** Exercise 2.18 *)
+
+
+
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
 
@@ -1153,7 +1158,6 @@ Proof.
   exact (allqinv_coherent qua2 B B (idmap ; (idmap ; (fun A:B => 1 , u)))).
 Defined.
 
-
 (* ================================================== ex:embedding-cancellable *)
 (** Exercise 4.7 *)
 
@@ -1161,6 +1165,11 @@ Defined.
 
 (* ================================================== ex:cancellable-from-bool *)
 (** Exercise 4.8 *)
+
+
+
+(* ================================================== ex:funext-from-nondep *)
+(** Exercise 4.9 *)
 
 
 
@@ -1586,6 +1595,21 @@ Definition Book_7_13_part_ii := @HoTT.Modalities.Closed.Cl.
 
 
 
+(* ================================================== ex:fiber-map-not-conn *)
+(** Exercise 7.17 *)
+
+
+
+(* ================================================== ex:is-conn-trunc-functor *)
+(** Exercise 7.18 *)
+
+
+
+(* ================================================== ex:categorical-connectedness *)
+(** Exercise 7.19 *)
+
+
+
 (* ================================================== ex:homotopy-groups-resp-prod *)
 (** Exercise 8.1 *)
 
@@ -1786,6 +1810,11 @@ Definition Book_7_13_part_ii := @HoTT.Modalities.Closed.Cl.
 
 
 
+(* ================================================== ex:monos-are-split-monos-iff-LEM-holds *)
+(** Exercise 10.18 *)
+
+
+
 (* ================================================== ex:alt-dedekind-reals *)
 (** Exercise 11.1 *)
 
@@ -1873,3 +1902,11 @@ Definition Book_7_13_part_ii := @HoTT.Modalities.Closed.Cl.
 
 (* ================================================== ex:pseudo-ordinals *)
 (** Exercise 11.18 *)
+
+
+
+(* ================================================== ex:double-No-recursion *)
+(** Exercise 11.19 *)
+
+
+
