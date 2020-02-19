@@ -29,14 +29,11 @@ Section locator.
   Generalizable Variables Fap Fplus Fmult Fzero Fone Fneg Frecip Fle Flt Fjoin Fmeet.
   Context (Q : Type).
   Context `{Qrats : @Rationals Q Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field}.
+  Context {Qdec_paths : DecidablePaths Q}.
+  Context {Qtriv : @TrivialApart Q Qap}.
   Context `{!Trichotomy (<)}.
   Context (F : Type).
   Context `{Forderedfield : @OrderedField F Flt Fle Fap Fzero Fone Fplus Fneg Fmult Fap Fzero Frecip Fjoin Fmeet}.
-  (* We are assuming `F` to be of characteristic 0 because this is
-  what `rationals_to_field` requires. But this requirement should
-  eventually simply be implemented by the fact that F is an ordered
-  field. *)
-  Context {Fchar : FieldCharacteristic F 0}.
   Context {Fabs : Abs F}.
   Context {Farchimedean : ArchimedeanProperty Q F}.
   Context {Fcomplete : IsComplete Q F}.
@@ -402,5 +399,38 @@ Section locator.
     Defined.
 
   End binary_ops_todo.
+
+  Section limit.
+
+    Context {xs : nat -> F}.
+    Generalizable Variable M.
+    Context {M} {M_ismod : CauchyModulus Q F xs M}.
+    Context (ls : forall n, locator (xs n)).
+
+    Lemma limit {l} : IsLimit _ _ xs l -> locator l.
+    Proof.
+      intros islim.
+      intros q r ltqr.
+      set (epsilon' := (r-q)/3).
+      (* TODO since q<r, epsilon is positive *)
+      assert (eps_pos : 0 < epsilon') by admit.
+      set (epsilon := mkQpos epsilon'  eps_pos).
+      (* TODO we are doing trisection so we have the inequality: *)
+      assert (ltqepsreps : q + ' epsilon < r - ' epsilon) by admit.
+      destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
+        as [ltqepsxs|ltxsreps].
+      + apply inl.
+        (* TODO if a + b < c then a < c - b *)
+        assert (ltqxseps : ' q < xs (M (epsilon / 2)) - ' (' epsilon)) by admit.
+        refine (transitivity ltqxseps _).
+        apply (modulus_close_limit _ _ _ _ _).
+      + apply inr.
+        (* TODO if a < b - c then a + c < b *)
+        assert (ltxsepsr : xs (M (epsilon / 2)) + ' (' epsilon) < ' r) by admit.
+        refine (transitivity _ ltxsepsr).
+        apply (modulus_close_limit _ _ _ _ _).
+    Admitted.
+
+  End limit.
 
 End locator.
