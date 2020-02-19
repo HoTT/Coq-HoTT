@@ -51,12 +51,14 @@ Proof.
   elim (f (inr tt)).
 Defined.
 
+(** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by termsize. *)
 Fixpoint fin_zero (n : nat) : Fin n.+1 :=
   match n with
   | O => inr tt
   | S n' => inl (fin_zero n')
   end.
 
+(** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
 Fixpoint fin_finS_inject (n : nat) : Fin n -> Fin n.+1 :=
   match n with
   | O => Empty_rec
@@ -68,6 +70,7 @@ Fixpoint fin_finS_inject (n : nat) : Fin n -> Fin n.+1 :=
       end
   end.
 
+(** This injection is an injection/embedding *)
 Lemma isembedding_fin_finS_inject (n : nat) : IsEmbedding (fin_finS_inject n).
 Proof.
   apply isembedding_isinj_hset.
