@@ -75,3 +75,4 @@ contrib/*.bak.*
 
 
 *.crashcoqide
+.vscode/
