@@ -48,6 +48,37 @@ Proof.
   refine (Coeq_ind_beta_cglue (fun _ => P) _ _ _).
 Defined.
 
+(** ** Universal property *)
+
+Definition Coeq_unrec {B A} (f g : B -> A) {P}
+           (h : Coeq f g -> P)
+  : {k : A -> P & k o f == k o g}.
+Proof.
+  exists (h o coeq).
+  intros b. exact (ap h (cglue b)).
+Defined.
+
+Definition isequiv_Coeq_rec `{Funext} {B A} (f g : B -> A) P
+  : IsEquiv (fun p : {h : A -> P & h o f == h o g} => Coeq_rec P p.1 p.2).
+Proof.
+  srapply (isequiv_adjointify _ (Coeq_unrec f g)).
+  - intros h.
+    apply path_arrow.
+    srapply Coeq_ind; intros b.
+    1:reflexivity.
+    cbn.
+    abstract (rewrite transport_paths_FlFr, concat_p1, Coeq_rec_beta_cglue, concat_Vp; reflexivity).
+  - intros [h q]; srapply path_sigma'.
+    + reflexivity.
+    + cbn.
+      rapply path_forall; intros b.
+      apply Coeq_rec_beta_cglue.
+Defined.
+
+Definition equiv_Coeq_rec `{Funext} {B A} (f g : B -> A) P
+  : {h : A -> P & h o f == h o g} <~> (Coeq f g -> P)
+  := Build_Equiv _ _ _ (isequiv_Coeq_rec f g P).
+
 (** ** Functoriality *)
 
 Definition functor_coeq {B A f g B' A' f' g'}

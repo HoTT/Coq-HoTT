@@ -905,142 +905,101 @@ Section Reflective_Subuniverse.
 
     (** ** Coproducts *)
 
-    Definition equiv_O_sum {A B} :
-      O (A + B) <~> O (O A + O B).
+    Local Notation O_inverts f := (IsEquiv (O_functor f)).
+
+    Definition O_inverts_sum `{Funext} {A B A' B'} (f : A -> A') (g : B -> B')
+               `{O_inverts f} `{O_inverts g}
+      : O_inverts (functor_sum f g).
     Proof.
-      simple refine (equiv_adjointify _ _ _ _).
-      - apply O_rec; intros x.
-        exact (to O _ (functor_sum (to O A) (to O B) x)).
-      - apply O_rec; intros [x|x].
-        + (* Work around https://coq.inria.fr/bugs/show_bug.cgi?id=4525, stack overflow in exact *)
-          let lem := constr:(fun A B => to O _ o @inl A B) in
-          exact (O_rec (lem _ _) x).
-        + let lem := constr:(fun A B => to O _ o @inr A B) in
-          exact (O_rec (lem _ _) x).
-      - apply O_indpaths; intros [x|x].
-        all:revert x; apply O_indpaths; intros x.
-        all:abstract (rewrite !O_rec_beta; reflexivity).
-      - apply O_indpaths; intros [x|x].
-        all:abstract (rewrite !O_rec_beta; cbn;
-                      rewrite !O_rec_beta; reflexivity).
+      apply O_inverts_from_isequiv_precompose.
+      intros Z Z_inO.
+      srapply isequiv_commsq'; cbn.
+      4,5: rapply ((equiv_sum_ind (fun _ => Z))^-1).
+      { srapply equiv_functor_prod'.
+        - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts f Z)).
+        - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts g Z)). }
+      1: reflexivity.
+      all: try exact _.
     Defined.
+
+    Definition equiv_O_functor_sum `{Funext} {A B A' B'} (f : A -> A') (g : B -> B')
+               `{O_inverts f} `{O_inverts g}
+      : O (A + B) <~> O (A' + B')
+      := Build_Equiv _ _ _ (O_inverts_sum f g).
+
+    Definition equiv_O_sum `{Funext} {A B} :
+      O (A + B) <~> O (O A + O B)
+      := equiv_O_functor_sum (to O A) (to O B).
 
     (** ** Coequalizers *)
 
     Section OCoeq.
-      Context {B A : Type} (f g : B -> A).
+      Context `{Funext} {B A : Type} (f g : B -> A).
 
-      Definition O_coeq_cmp
-      : O (Coeq f g) -> O (Coeq (O_functor f) (O_functor g)).
+      Local Notation O_inverts f := (IsEquiv (O_functor f)).
+
+      Definition O_inverts_functor_coeq
+                 {B' A' : Type} (f' g' : B' -> A')
+                 (h : B -> B') (k : A -> A')
+                 (p : k o f == f' o h) (q : k o g == g' o h)
+                 `{O_inverts k} `{O_inverts h}
+        : O_inverts (functor_coeq h k p q).
       Proof.
-        apply O_functor.
-        exact (functor_coeq (to O B) (to O A)
-                            (fun y => (to_O_natural f y)^)
-                            (fun y => (to_O_natural g y)^)).
+        apply O_inverts_from_isequiv_precompose.
+        intros Z Z_inO.
+        srapply isequiv_commsq'.
+        4,5: rapply ((equiv_Coeq_rec _ _ _)^-1).
+        { srapply equiv_functor_sigma'.
+          - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts k Z)).
+          - intro h'; cbn.
+            refine (_ oE _).
+            2: { nrefine (Build_Equiv _ _ (fun r => r oD h : h' o f' o h == h' o g' o h) _).
+                 rapply (isequiv_extendable 0).
+                 exact (snd (ooextendable_O_inverts h Z 3) _ _). }
+            srapply equiv_functor_forall_id.
+            intro b; cbn.
+            exact (equiv_concat_r (ap h' (q b))^ _ oE equiv_concat_l (ap h' (p b)) _).
+        }
+        { cbn.
+          intros t.
+          srapply path_sigma; cbn.
+          - reflexivity.
+          - cbn.
+            funext b.
+            unfold functor_forall, functor_coeq, "oD".
+            refine (_ @ (ap_compose _ _ _)^).
+            refine (_ @ (ap (ap t) _)^).
+            2: rapply Coeq_rec_beta_cglue.
+            refine (_ @ (ap_pp _ _ _)^).
+            apply concat2.
+            2: refine ((ap_V _ _)^ @ (ap_compose _ t _)).
+            refine (_ @ (ap_pp _ _ _)^).
+            apply whiskerR; rapply ap_compose.
+        }
+        all: try exact _.
       Defined.
 
-      Definition O_coeq_cmp_inverse
-      : O (Coeq (O_functor f) (O_functor g)) -> O (Coeq f g).
+      Definition equiv_O_functor_coeq
+                 {B' A' : Type} (f' g' : B' -> A')
+                 (h : B -> B') (k : A -> A')
+                 (p : k o f == f' o h) (q : k o g == g' o h)
+                 `{O_inverts k} `{O_inverts h}
+        : O (Coeq f g) <~> O (Coeq f' g')
+        := Build_Equiv _ _ _ (O_inverts_functor_coeq f' g' h k p q).
+
+      Definition coeq_cmp : Coeq f g -> Coeq (O_functor f) (O_functor g)
+        := functor_coeq (to O B) (to O A)
+                       (fun y => (to_O_natural f y)^)
+                       (fun y => (to_O_natural g y)^).
+
+      Global Instance isequiv_O_coeq_cmp : O_inverts coeq_cmp.
       Proof.
-        apply O_rec; simple refine (Coeq_rec _ _ _).
-        - apply O_functor, coeq.
-        - intros b.
-          refine ((O_functor_compose f coeq b)^ @ _).
-          refine (_ @ (O_functor_compose g coeq b)).
-          apply O_functor_homotopy.
-          intros z; apply cglue.
+        rapply O_inverts_functor_coeq.
       Defined.
-
-      Local Definition O_coeq_cmp_eisretr
-      : Sect O_coeq_cmp_inverse O_coeq_cmp.
-      Proof.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse.
-        apply O_indpaths; intros z.
-        rewrite O_rec_beta.
-        revert z; simple refine (Coeq_ind _ _ _).
-        - cbn; intros a.
-          refine ((O_functor_compose _ _ _)^ @ _); cbn.
-          revert a; apply O_indpaths, to_O_natural.
-        - set (coeq_to :=
-                 functor_coeq (to O B) (to O A)
-                              (fun y : B => (to_O_natural f y)^)
-                              (fun y : B => (to_O_natural g y)^)).
-          apply O_ind2paths; intros b; unfold composeD; cbn.
-          rewrite transport_paths_FlFr, concat_pp_p; apply moveR_Vp.
-          rewrite <- (apD (O_indpaths _ _ _) (to_O_natural f b)^).
-          rewrite <- (apD (O_indpaths _ _ _) (to_O_natural g b)^).
-          rewrite !O_indpaths_beta, !transport_paths_FlFr.
-          Open Scope long_path_scope.
-          rewrite (ap_compose _ (O_functor coeq_to)).
-          rewrite Coeq_rec_beta_cglue.
-          unfold O_functor_homotopy; rewrite O_indpaths_beta.
-          rewrite !ap_pp.
-          pose (p := O_functor_compose_compose g coeq coeq_to (to O B b)).
-          apply moveL_pV in p; rewrite concat_pp_p in p; apply moveR_Vp in p.
-          rewrite@A <- p. clear p.
-          rewrite !ap_V, !inv_V.
-          rewrite@A (to_O_natural_compose g
-                       (fun x => @coeq _ _ (O_functor f) (O_functor g)
-                                       (to O A x)) b).
-          rewrite concat_pp_V.
-          rewrite@A (to_O_natural_compose f
-                     (fun x => @coeq _ _ (O_functor f) (O_functor g)
-                                     (to O A x)) b).
-          rewrite <- inv_pp.
-          rewrite (O_functor_compose_compose f coeq coeq_to (to O B b)).
-          rewrite inv_pp.
-          rewrite !concat_pp_p; apply whiskerL; rewrite concat_p_pp.
-          (** The trick here is to notice that [(fun x => coeq (to O A (f x)))] is definitionally equal to [(fun x => coeq_to (coeq (f x)))]. *)
-          rewrite <- (to_O_natural_compose
-                        (fun x => coeq (f x)) coeq_to b).
-          rewrite <- ap_compose.
-          rewrite concat_pp_p; apply whiskerL, moveR_Mp; rewrite concat_p_pp.
-          rewrite <- (concat_Ap (fun x => (to_O_natural coeq_to x)^) (cglue b)).
-          rewrite concat_pp_p; apply moveL_Mp; rewrite !concat_p_pp.
-          rewrite <- !inv_pp, @to_O_natural_compose.
-          rewrite concat_p_Vp, concat_Vp, concat_1p.
-          rewrite (ap_compose coeq_to (to O (Coeq (O_functor f) (O_functor g)))).
-          subst coeq_to; rewrite functor_coeq_beta_cglue.
-          rewrite !ap_pp, <- !ap_compose, !inv_pp, !concat_p_pp, !ap_V, !inv_V.
-          rewrite concat_pp_V. apply concat_pV_p.
-          Close Scope long_path_scope.
-      Qed.  (* This Qed is quite slow (~2s on one machine), and many of the rewrites above are slow too. *)
-
-      Local Definition O_coeq_cmp_eissect
-      : Sect O_coeq_cmp O_coeq_cmp_inverse.
-      Proof.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse.
-        apply O_indpaths; intros z.
-        rewrite to_O_natural, O_rec_beta.
-        revert z; simple refine (Coeq_ind _ _ _).
-        - intros a. cbn.
-          apply to_O_natural.
-        - intros b; cbn.
-          rewrite transport_paths_FlFr, ap_compose.
-          rewrite functor_coeq_beta_cglue.
-          rewrite !ap_pp, <- !ap_compose; cbn.
-          rewrite Coeq_rec_beta_cglue.
-          Open Scope long_path_scope.
-          rewrite !inv_pp, !concat_p_pp, !ap_V, !inv_V.
-          apply moveR_pM; rewrite !concat_pp_p.
-          rewrite (to_O_natural_compose f (@coeq B A f g) b).
-          rewrite concat_p_Vp.
-          rewrite <- O_functor_homotopy_V.
-          rewrite O_functor_homotopy_beta.
-          rewrite concat_pV_p, !concat_p_pp, ap_V; apply whiskerR.
-          rewrite !concat_pp_p; apply moveR_Vp.
-          symmetry; apply to_O_natural_compose.
-          Close Scope long_path_scope.
-      Qed.
-
-      Global Instance isequiv_O_coeq_cmp
-      : IsEquiv O_coeq_cmp
-        := isequiv_adjointify _ O_coeq_cmp_inverse
-                              O_coeq_cmp_eisretr O_coeq_cmp_eissect.
 
       Definition equiv_O_coeq
       : O (Coeq f g) <~> O (Coeq (O_functor f) (O_functor g))
-        := Build_Equiv _ _ O_coeq_cmp _.
+        := Build_Equiv _ _ (O_functor coeq_cmp) _.
 
       Definition equiv_O_coeq_to_O (a : A)
         : equiv_O_coeq (to O (Coeq f g) (coeq a))
@@ -1061,25 +1020,24 @@ Section Reflective_Subuniverse.
     (** ** Pushouts *)
 
     Section OPushout.
-      Context {A B C : Type} (f : A -> B) (g : A -> C).
+      Context `{Funext} {A B C : Type} (f : A -> B) (g : A -> C).
 
       Definition equiv_O_pushout
         : O (Pushout f g) <~> O (Pushout (O_functor f) (O_functor g)).
       Proof.
         unfold Pushout.
-        refine (_ oE equiv_O_coeq (inl o f) (inr o g)).
-        refine ((equiv_O_coeq _ _)^-1 oE _).
-        apply equiv_O_functor.
-        srefine (@equiv_functor_coeq'
-                   _ _ (O_functor (inl o f)) (O_functor (inr o g))
-                   _ _ (O_functor (inl o O_functor f))
-                   (O_functor (inr o O_functor g)) _ _ _ _).
-        - apply equiv_to_O; exact _.
-        - apply equiv_O_sum.
-        - srefine (O_indpaths _ _ _); intros a; cbn.
-          abstract (rewrite !to_O_natural, O_rec_beta; reflexivity).
-        - srefine (O_indpaths _ _ _); intros a; cbn.
-          abstract (rewrite !to_O_natural, O_rec_beta; reflexivity).
+        srapply equiv_O_functor_coeq.
+        - exact (to O A).
+        - intros [b | c]; [ exact (inl (to O B b)) | exact (inr (to O C c)) ].
+        - intro a.
+          apply (ap inl).
+          unfold O_functor.
+          symmetry; apply (O_rec_beta ((to O B) o f)).
+        - intro a.
+          apply (ap inr).
+          symmetry; apply (O_rec_beta ((to O C) o g)).
+        - rapply O_inverts_sum.
+        - exact _.
       Defined.
 
       Definition equiv_O_pushout_to_O_pushl (b : B)
@@ -1087,30 +1045,16 @@ Section Reflective_Subuniverse.
           = to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushl, push.
-        rewrite to_O_natural.
-        rewrite to_O_natural.
-        rewrite O_rec_beta.
-        cbn.
-        rewrite O_rec_beta.
-        rewrite to_O_natural.
-        reflexivity.
-      Qed.
+        rapply to_O_natural.
+      Defined.
 
       Definition equiv_O_pushout_to_O_pushr (c : C)
         : equiv_O_pushout (to O (Pushout f g) (pushr c))
           = to O (Pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushr, push.
-        rewrite to_O_natural.
-        rewrite to_O_natural.
-        rewrite O_rec_beta.
-        cbn.
-        rewrite O_rec_beta.
-        rewrite to_O_natural.
-        reflexivity.
-      Qed.
+        rapply to_O_natural.
+      Defined.
 
       Definition inverse_equiv_O_pushout_to_O_pushl (b : B)
         : equiv_O_pushout^-1 (to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
