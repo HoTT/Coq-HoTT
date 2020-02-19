@@ -54,7 +54,7 @@
     - [Approval of pull requests](#approval-of-pull-requests)
     - [Commit messages](#commit-messages)
     - [Creating new files](#creating-new-files)
-    - [Travis](#travis)
+    - [Github Actions](#github-actions)
     - [Git rebase](#git-rebase)
     - [Timing scripts](#timing-scripts)
   - [Bugs in Coq](#bugs-in-coq)
@@ -131,8 +131,8 @@ They are currently in several groups:
 
 A dependency graph of all the files in the library can be found on the
 [wiki][wiki]; this may be helpful in avoiding circular dependencies.
-It is updated automatically by Travis (see below) on every push to the
-master branch.
+It is updated automatically by Github Actions (see below) on every
+push to the master branch.
 
 [wiki]: https://github.com/HoTT/HoTT/wiki
 
@@ -394,13 +394,21 @@ names `H`, your name will result in a conflict.  Conversely, we
 sometimes give a hypothesis a name that won't be used, to pre-empt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
 
-One gotcha about typeclass arguments is that they cannot be inferred automatically when preceeded by non-implicit arguments.  So for instance if we write
+One gotcha about typeclass arguments is that they cannot be inferred
+automatically when preceeded by non-implicit arguments.  So for
+instance if we write
 
 ```coq
 Definition foo (A : Type) `{Funext}
 ```
 
-then the `Funext` argument will not generally be inferrable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
+then the `Funext` argument will not generally be inferrable.  Thus,
+typeclass arguments should generally come first if possible.  In
+addition, note that when section variables are generalized at the
+close of a section, they appear first.  Thus, if anything in a section
+requires `Funext` or `Univalence`, those hypotheses should go in the
+`Context` at the top of the section in order that they'll come first
+in the eventual argument lists.
 
 ### Truncation ###
 
@@ -740,7 +748,8 @@ Sometimes binders without type annotations, like `forall n, foo n`
 where `foo : nat -> Type0`, will produce a fresh universe for
 the variable's type, eg `forall n : (? : Type@{fresh}), foo n`,
 which will remain in the definition as a phantom type:
-`fresh |= forall n : nat, foo n`. Annotating the binder will get rid of it.
+`fresh |= forall n : nat, foo n`. Annotating the binder will get rid
+of it.
 See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### Lifting and lowering ###
@@ -1138,19 +1147,19 @@ comment such as LGTM ("Looks Good To Me").  Currently the rules are:
   merging (which doesn't always mean making the changes, but a
   discussion must be had and resolved).
 
-- In general, a pull request should not be merged unless Travis CI
-  confirms that it builds successfully.  Exceptions to this rule
-  sometimes have to be made if the Travis configuration is broken for
-  some unrelated reason, but in that case it is better if the
-  person(s) approving the pull request confirms locally that it builds
-  successfully.
+- In general, a pull request should not be merged unless the Github
+  Actions CI confirms that it builds successfully.  Exceptions to this
+  rule sometimes have to be made if the Github Actions configuration
+  is broken for some unrelated reason, but in that case it is better
+  if the person(s) approving the pull request confirms locally that it
+  builds successfully.
 
-  Note also that Travis doesn't automatically restart itself on a pull
-  request when the master branch changes.  Thus, if other pull
-  requests have been merged in the interval since a given pull request
-  was first submitted, it may be necessary to rebase that pull request
-  against the new master, to make
-  sure before merging it that it won't break the master branch.
+  Note also that Github Actions doesn't automatically restart itself
+  on a pull request when the master branch changes.  Thus, if other
+  pull requests have been merged in the interval since a given pull
+  request was first submitted, it may be necessary to rebase that pull
+  request against the new master, to make sure before merging it that
+  it won't break the master branch.
 
 - In the absence of objections, two approvals suffice for a pull
   request to be merged.  Thus, instead of giving a second approval one
@@ -1200,16 +1209,44 @@ You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
 for some other reason.
 
-### Travis ###
+### Github Actions ###
 
-We use the [Travis Continuous Integration Platform][travis] to check
-that pull requests do not break anything, and also to automatically
-update various things (such as the documentation, proviola, and
-dependency graph liked on the [project wiki][wiki]).  Normally you
-shouldn't need to know anything about this; Travis automatically
-checks every pull request made to the central repository.
+We use [Github Actions][actions] to check that pull requests do not
+break anything, and also to automatically update various things (such
+as the documentation, proviola, and dependency graph linked on the
+[project wiki][wiki]).  Normally you shouldn't need to know anything
+about this; Github Actions automatically checks every pull request
+made to the central repository.
 
-[travis]: https://travis-ci.org/
+When you submit a PR to github, Github Actions will start running in
+the background. You can see the checks at the bottom by clicking
+`Show all checks` or by clicking the `Checks` tab at the top inbetween
+`Commits` and `Files changed`.
+
+There should be 7 different jobs with the following names. Here is
+also a description of what they do.
+
+1. **CI / build (pull_request)** This is the main job. It simply
+installs the library and checks that everything compiles with the
+recommended version of coq. This takes around ~5m.
+2. **CI / build (update dep graphs, yes, yes) (pull_request)** This
+builds the dependency graphs which can be viewed on the
+[project wiki][wiki]. This takes around ~12m.
+3. **CI / build (update quick doc, yes) (pull_request)** This updates
+the documentation and takes around ~7m.
+4. **CI / build (update html, yes) (pull_request)** This updates the
+proviola documentation. This can take up to ~30m.
+5. **CI / build (validate, yes) (pull_request)** Builds the library
+and then validates it afterwards. Takes around ~5m.
+6. **CI / build (with submodule coq, yes) (pull_request)** This builds
+the library with the recommended version of coq in the submodule, then
+ fastforwards it to the master version of coq to check if it still
+ compiles. This takes around ~11m.
+7. **CI / build (building coq master, master, yes) (pull_request)**
+This builds the library with coq master. This takes around ~8m.
+
+
+[actions]: https://github.com/features/actions
 
 [wiki]: https://github.com/HoTT/HoTT/wiki
 
