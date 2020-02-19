@@ -978,23 +978,23 @@ Section Reflective_Subuniverse.
                        (fun y => (to_O_natural f y)^)
                        (fun y => (to_O_natural g y)^).
 
-      Global Instance isequiv_O_coeq_cmp `{Funext} : O_inverts coeq_cmp.
+      Global Instance isequiv_O_coeq_cmp : O_inverts coeq_cmp.
       Proof.
         rapply O_inverts_functor_coeq.
       Defined.
 
-      Definition equiv_O_coeq `{Funext}
+      Definition equiv_O_coeq
       : O (Coeq f g) <~> O (Coeq (O_functor f) (O_functor g))
         := Build_Equiv _ _ (O_functor coeq_cmp) _.
 
-      Definition equiv_O_coeq_to_O `{Funext} (a : A)
+      Definition equiv_O_coeq_to_O (a : A)
         : equiv_O_coeq (to O (Coeq f g) (coeq a))
           = to O (Coeq (O_functor f) (O_functor g)) (coeq (to O A a)).
       Proof.
         refine (to_O_natural _ _).
       Defined.
 
-      Definition inverse_equiv_O_coeq_to_O `{Funext} (a : A)
+      Definition inverse_equiv_O_coeq_to_O (a : A)
         : equiv_O_coeq^-1 (to O (Coeq (O_functor f) (O_functor g)) (coeq (to O A a)))
           = to O (Coeq f g) (coeq a).
       Proof.
