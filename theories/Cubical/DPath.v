@@ -270,23 +270,29 @@ Proof.
 Defined.
 
 Definition dp_compose' {A B} (f : A -> B) (P : B -> Type) {x y : A}
-  {p : x = y} {q : f x = f y} (r : ap f p = q) (u : P (f x)) (v : P (f y))
+  {p : x = y} {q : f x = f y} (r : ap f p = q) {u : P (f x)} {v : P (f y)}
   : DPath (fun x => P (f x)) p u v <~> DPath P q u v.
 Proof.
   by destruct r, p.
 Defined.
 
 Definition dp_compose {A B} (f : A -> B) (P : B -> Type) {x y : A}
-  (p : x = y) (u : P (f x)) (v : P (f y))
+  (p : x = y) {u : P (f x)} {v : P (f y)}
   : DPath (fun x => P (f x)) p u v <~> DPath P (ap f p) u v
-  := dp_compose' f P (idpath (ap f p)) u v.
+  := dp_compose' f P (idpath (ap f p)).
+
+Definition dp_apD_compose' {A B : Type} (f : A -> B) (P : B -> Type)
+           {x y : A} {p : x = y} {q : f x = f y} (r : ap f p = q) (g : forall b:B, P b)
+  : dp_apD (g o f) p = (dp_compose' f P r)^-1 (dp_apD g q).
+Proof.
+  by destruct r, p.
+Defined.
 
 Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} (p : x = y) (g : forall b:B, P b)
-  : dp_apD (g o f) p = (dp_compose f P p (g (f x)) (g (f y)))^-1 (dp_apD g (ap f p)).
-Proof.
-  by destruct p.
-Defined.
+  : dp_apD (g o f) p = (dp_compose f P p)^-1 (dp_apD g (ap f p))
+  := dp_apD_compose' f P (idpath (ap f p)) g.
+
 
 (* Type constructors *)
 
