@@ -112,3 +112,28 @@ Proof.
   { apply ptr_functor, e. }
   exact _.
 Defined.
+
+(* This lemma generalizes a goal that appears in [ptr_loops_commutes], allowing us to prove it by path induction. *)
+Definition path_Tr_commutes (n : trunc_index) (A : Type) (a0 a1 : A)
+  : (@path_Tr n A a0 a1) o tr == ap tr.
+Proof.
+  intro p; induction p.
+  reflexivity.
+Defined.
+
+(* [ptr_loops] commutes with the two [ptr] maps. *)
+Definition ptr_loops_commutes `{Univalence} (n : trunc_index) (A : pType)
+  : (ptr_loops n A) o* ptr ==* loops_functor ptr.
+Proof.
+  srapply Build_pHomotopy.
+  - intro p.
+    simpl.
+    refine (_ @ _).
+    + apply path_Tr_commutes.
+    + symmetry; refine (_ @ _).
+      * apply concat_1p.
+      * apply concat_p1.
+  - simpl.
+    reflexivity.
+Defined.
+
