@@ -40,6 +40,9 @@ Section locator.
 
   Context `{Funext} `{Univalence}.
 
+  (* Assume we have an enumeration of the rationals. *)
+  Axiom Q_eq : nat <~> Q.
+
   Section rats_inclusion.
 
     Definition qinc : Cast Q F := rationals_to_field Q F.
@@ -146,11 +149,8 @@ Section locator.
       destruct (l q r nu); auto.
     Defined.
 
-    (* TODO prove an equality in a Record type. *)
-    Axiom locator'_locator_locator' : forall (l' : locator' x), locator_locator' (locator'_locator l') = l'.
-
     Let locsig : _ <~> locator' x := ltac:(issig).
-    Lemma locator'_locator_locator'' (l' : locator' x): locator_locator' (locator'_locator l') = l'.
+    Lemma locator'_locator_locator' (l' : locator' x): locator_locator' (locator'_locator l') = l'.
     Proof.
       enough (p : locsig ^-1 (locator_locator' (locator'_locator l')) = locsig ^-1 l').
       - refine (equiv_inj (locsig ^-1) p).
@@ -164,6 +164,8 @@ Section locator.
         rewrite (path_dec (locates_right0 q r nu)).
         destruct (dec (locates_right0 q r nu)); auto.
     Defined.
+
+    (* TODO build the equivalence object *)
 
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
     Proof.
@@ -191,15 +193,13 @@ Section locator.
             (l : locator x).
 
     Axiom ltN1 : forall q : Q, q - 1 < q.
-    (* Assume we have an enumeration of the rationals. *)
-    Axiom Q_eq : nat <~> Q.
-    Let P (q : Q) : Type := locates_right l (ltN1 q).
-    Definition P_prop {k} : IsHProp (P k).
+    Let P_lower (q : Q) : Type := locates_right l (ltN1 q).
+    Definition P_lower_prop {k} : IsHProp (P_lower k).
     Proof.
       apply _.
     Qed.
     Axiom ltxN1 : x - 1 < x.
-    Let P_inhab : hexists (fun q => P q).
+    Let P_lower_inhab : hexists (fun q => P_lower q).
     Proof.
       assert (hqlt : hexists (fun q => ' q < x)).
       {
@@ -212,23 +212,56 @@ Section locator.
       induction hqlt' as [q lt].
       apply tr.
       exists q.
-      unfold P.
+      unfold P_lower.
       apply nltxr_locates_right.
       apply lt_flip; assumption.
     Defined.
 
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
-      assert (qP : {q : Q | P q}) by refine (minimal_n_alt_type Q Q_eq P _ P_inhab).
-      destruct qP as [q Pq].
+      assert (qP_lower : {q : Q | P_lower q}) by refine (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
+      destruct qP_lower as [q Pq].
       exists (q - 1).
-      unfold P in Pq. simpl in *.
+      unfold P_lower in Pq. simpl in *.
       apply (un_inl _ Pq).
     Defined.
 
-    (* TODO By symmetry, we get: *)
-    Axiom upper_bound : forall l : locator x, {r : Q | x < ' r}.
+    Axiom lt1N : forall r : Q, r < r + 1.
+    (* Assume we have an enumeration of the rationals. *)
+    Let P_upper (r : Q) : DHProp := locates_left l (lt1N r).
+    Definition P_upper_prop {k} : IsHProp (P_upper k).
+    Proof.
+      apply _.
+    Qed.
+    Axiom ltx1N : x < x + 1.
+    Let P_upper_inhab : hexists (fun r => P_upper r).
+    Proof.
+      assert (hqlt : hexists (fun r => x < ' r)).
+      {
+        assert (hex := archimedean_property Q F x (x+1) ltx1N).
+        refine (Trunc_rec _ hex); intros hex'.
+        apply tr.
+        destruct hex' as [r [ltxr ltrx1]]; exists r; assumption.
+      }
+      refine (Trunc_rec _ hqlt); intros hqlt'.
+      induction hqlt' as [r lt].
+      apply tr.
+      exists r.
+      unfold P_upper.
+      apply nltqx_locates_left.
+      apply lt_flip; assumption.
+    Defined.
 
+    Definition upper_bound : {r : Q | x < ' r}.
+    Proof.
+      assert (rP_upper : {r : Q | P_upper r}) by refine (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
+      destruct rP_upper as [r Pr].
+      exists (r + 1).
+      unfold P_upper in Pr. simpl in *.
+      destruct (l r (r + 1) (lt1N r)).
+      - simpl in Pr. destruct (Pr tt).
+      - assumption.
+    Defined.
 
     (* TODO prove using Sperner's Lemma *)
     Axiom tight_bound : forall (l : locator x) (epsilon : Qpos Q), {u : Q | ' u < x < ' (u + ' epsilon)}.
@@ -285,13 +318,14 @@ Section locator.
         assert (yeq : q + epsilon = t) by admit.
         rewrite yeq. apply lt_flip; assumption.
     Admitted.
+    (* TODO enumerate pairs of ordered rationals *)
+    Axiom QQpos_eq : nat <~> Q * Qpos Q.
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
       assert (R : sigT P).
       {
         apply minimal_n_alt_type.
-        - (* TODO enumerate the rationals *)
-          todo (nat <~> Q * Qpos Q).
+        - apply QQpos_eq.
         - apply P_isHProp.
         - apply P_dec.
         - apply P_inhab.
@@ -301,7 +335,7 @@ Section locator.
       exists q; split.
       - refine (locates_right_false l _ lleft).
       - refine (locates_right_true  m _ mright).
-    Admitted.
+    Defined.
 
   End arch_struct.
 
@@ -321,6 +355,7 @@ Section locator.
 
     Context (nu : x ≶ 0).
 
+    (* TODO somehow obtain this instance from the DecRecip Q *)
     Axiom qrecip : Recip Q.
     Existing Instance qrecip.
 
