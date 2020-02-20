@@ -1628,6 +1628,12 @@ Section ConnectedMaps.
       apply path_forall; intros x; apply conn_map_comp.
   Defined.
 
+  Definition equiv_o_conn_map
+          {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
+          (P : B -> Type) `{forall b:B, In O (P b)}
+  : (forall b, P b) <~> (forall a, P (f a))
+  := Build_Equiv _ _ _ (isequiv_o_conn_map f P).
+
   (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book. *)
   Lemma conn_map_from_extension_elim {A B : Type} (f : A -> B)
   : (forall (P : B -> Type) {P_inO : forall b:B, In O (P b)}
