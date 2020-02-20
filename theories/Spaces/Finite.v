@@ -59,19 +59,19 @@ Fixpoint fin_zero (n : nat) : Fin n.+1 :=
   end.
 
 (** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
-Fixpoint fin_finS_inject (n : nat) : Fin n -> Fin n.+1 :=
+Fixpoint fsucc (n : nat) : Fin n -> Fin n.+1 :=
   match n with
   | O => Empty_rec
   | S n' =>
     fun i : Fin (S n') =>
       match i with
-      | inl i' => inl (fin_finS_inject n' i')
+      | inl i' => inl (fsucc n' i')
       | inr tt => inr tt
       end
   end.
 
 (** This injection is an injection/embedding *)
-Lemma isembedding_fin_finS_inject (n : nat) : IsEmbedding (fin_finS_inject n).
+Lemma isembedding_fsucc (n : nat) : IsEmbedding (fsucc n).
 Proof.
   apply isembedding_isinj_hset.
   induction n.
@@ -1076,8 +1076,8 @@ Section Enumeration.
 
 End Enumeration.
 
-(** fsucc is the successor function mod n *)
-Definition fsucc {n : nat} : Fin n -> Fin n.
+(** [fsucc_mod] is the successor function mod n *)
+Definition fsucc_mod {n : nat} : Fin n -> Fin n.
 Proof.
   induction n as [|n' fsucc].
   1: apply Empty_rec.
@@ -1093,8 +1093,8 @@ Proof.
   + exact (fin_zero n').
 Defined.
 
-(** Here is an almost definitionally equal version of fsucc to compare.*)
-(* Fixpoint fsucc' {n : nat} : Fin n -> Fin n
+(** Here is an almost definitionally equal version of fsucc_mod to compare.*)
+(* Fixpoint fsucc_mod' {n : nat} : Fin n -> Fin n
   := match n with
       | 0 => Empty_rec : Fin 0 -> Fin 0
       | S n' => fun r =>
@@ -1108,12 +1108,12 @@ Defined.
                 | inl r''' => inl (F (inl r'''))
                 | inr _ => inr tt
               end
-          end (@fsucc n') r'
+          end (@fsucc_mod' n') r'
         | inr _ => fin_zero n'
         end
       end.
 
-Goal forall n:nat, @fsucc' n = @fsucc n.
+Goal forall n:nat, @fsucc_mod' n = @fsucc_mod n.
 intros [].
 1: reflexivity.
 reflexivity.
@@ -1123,7 +1123,7 @@ Abort. *)
 Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
   := match m with
       | 0 => fin_zero n
-      | S m => fsucc (fin_nat m)
+      | S m => fsucc_mod (fin_nat m)
      end.
 
 (** TODO: Would this notation be useful? *)
