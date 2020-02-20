@@ -26,6 +26,17 @@ Fixpoint Fin (n : nat) : Type
        | S n => Fin n + Unit
      end.
 
+Fixpoint fin_to_nat {n} : Fin n -> nat
+  := match n with
+     | 0 => Empty_rec
+     | S n' =>
+       fun k =>
+         match k with
+         | inl k' => fin_to_nat k'
+         | inr tt => n'
+         end
+     end.
+
 Global Instance decidable_fin (n : nat)
 : Decidable (Fin n).
 Proof.

@@ -16,6 +16,8 @@ Require Import
         HoTT.Classes.interfaces.rationals
         HoTT.Classes.interfaces.cauchy
         HoTT.Classes.interfaces.archimedean
+        HoTT.Classes.interfaces.round
+        HoTT.Classes.interfaces.naturals
         HoTT.Classes.orders.orders
         HoTT.Classes.orders.archimedean
         HoTT.Classes.orders.rings
@@ -37,6 +39,7 @@ Section locator.
   Context {Fabs : Abs F}.
   Context {Farchimedean : ArchimedeanProperty Q F}.
   Context {Fcomplete : IsComplete Q F}.
+  Context {Qroundup : @RoundUpStrict Q _ _ _ _ _ _ _ _ _ _ _}.
 
   Context `{Funext} `{Univalence}.
 
@@ -215,7 +218,7 @@ Section locator.
       unfold P_lower.
       apply nltxr_locates_right.
       apply lt_flip; assumption.
-    Defined.
+    Qed.
 
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
@@ -250,7 +253,7 @@ Section locator.
       unfold P_upper.
       apply nltqx_locates_left.
       apply lt_flip; assumption.
-    Defined.
+    Qed.
 
     Definition upper_bound : {r : Q | x < ' r}.
     Proof.
@@ -265,6 +268,16 @@ Section locator.
 
     (* TODO prove using Sperner's Lemma *)
     Axiom tight_bound : forall (l : locator x) (epsilon : Qpos Q), {u : Q | ' u < x < ' (u + ' epsilon)}.
+    Lemma tight_bound' (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
+    Proof.
+      destruct lower_bound as [q ltqx], upper_bound as [r ltxr].
+      destruct (round_up_strict Q (3*(r-q))) as [n lt3rqn].
+      set (grid (k : Fin n.+3) := q + (Peano.nat_iter (fin_to_nat k) (+1) (-1))*'epsilon/3 : Q).
+
+      assert (lt : forall k, grid (fin_inc_l k) < grid (fin_succ k)).
+      set (f k := locates_right l (q + (Peano.nat_iter k (+1) (-1))*'epsilon/3) (q + (Peano.nat_iter (k+1) (+1) (-1))*epsilon/3)).
+    Abort.
+
 
   End bounds.
 
@@ -301,21 +314,24 @@ Section locator.
       assert (hs := (archimedean_property Q F x y ltxy)).
       refine (Trunc_ind _ _ hs); intros [s [ltxs ltsy]].
       assert (ht := (archimedean_property Q F ('s) y ltsy)).
-      refine (Trunc_ind _ _ ht); intros [t [ltst ltty]].
+      refine (Trunc_ind _ _ ht); intros [t [ltst' ltty]].
       set (q := (t + s) / 2).
-      set (epsilon := (t - s) / 2).
-      (* TODO since s<t, we have 0<epsilon *)
-      assert (eps_pos : 0 < epsilon) by admit.
+      assert (ltst : s < t).
+      {
+        Existing Instance full_pseudo_order_reflecting.
+        refine (strictly_order_reflecting _ _ _ ltst').
+      }
+      set (epsilon := (Qpos_diff s t ltst) / 2).
       apply tr.
-      exists (q,mkQpos epsilon eps_pos).
+      exists (q, epsilon).
       unfold P; split.
       - apply nltqx_locates_left.
         (* TODO we took some averages; show some basic algebra. *)
-        assert (xeq : q - epsilon = s) by admit.
+        assert (xeq : q - ' epsilon = s) by admit.
         rewrite xeq. apply lt_flip; assumption.
       - apply nltxr_locates_right.
         (* TODO we took some averages; show some basic algebra. *)
-        assert (yeq : q + epsilon = t) by admit.
+        assert (yeq : q + ' epsilon = t) by admit.
         rewrite yeq. apply lt_flip; assumption.
     Admitted.
     (* TODO enumerate pairs of ordered rationals *)
@@ -401,22 +417,19 @@ Section locator.
     Definition plus : locator (x + y).
     Proof.
       intros q r ltqr.
-      set (epsilon' := (r-q)/2).
-      (* TODO `epsilon'` is positive since q<r *)
-      assert (eps_pos : 0 < epsilon') by admit.
-      set (epsilon := mkQpos epsilon' eps_pos).
+      set (epsilon := (Qpos_diff q r ltqr) / 2).
       (* TODO we took the average so we get a midpoint *)
       assert (q+'epsilon=r-'epsilon) by admit.
       destruct (tight_bound m epsilon) as [u [ltuy ltyuepsilon]].
       (* TODO simple algebra: s=q-u so q-s=u *)
       set (s := q-u). assert (qsltx : 'q-'s<y) by admit.
       (* TODO 0<epsilon so s<s+epsilon *)
-      assert (sltseps : s<s+epsilon') by admit.
-      destruct (l s (s+epsilon') sltseps) as [ltsx|ltxseps].
+      assert (sltseps : s<s+' epsilon) by admit.
+      destruct (l s (s+' epsilon) sltseps) as [ltsx|ltxseps].
       - apply inl. apply char_plus_left. apply tr; exists s; split; try assumption.
         rewrite preserves_minus; assumption.
       - apply inr. apply char_plus_right. apply tr.
-        set (t := s + epsilon'); exists t.
+        set (t := s + ' epsilon); exists t.
         split; try assumption.
         (* TODO show that r-(q-u+(r-q)/2)=u+(r-q)-(r-q)/2=u+epsilon *)
         todo (y < ' (r - t)).
@@ -462,10 +475,7 @@ Section locator.
     Proof.
       intros islim.
       intros q r ltqr.
-      set (epsilon' := (r-q)/3).
-      (* TODO since q<r, epsilon is positive *)
-      assert (eps_pos : 0 < epsilon') by admit.
-      set (epsilon := mkQpos epsilon'  eps_pos).
+      set (epsilon := (Qpos_diff q r ltqr) / 3).
       (* TODO we are doing trisection so we have the inequality: *)
       assert (ltqepsreps : q + ' epsilon < r - ' epsilon) by admit.
       destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
