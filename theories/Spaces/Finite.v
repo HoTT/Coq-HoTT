@@ -26,6 +26,27 @@ Fixpoint Fin (n : nat) : Type
        | S n => Fin n + Unit
      end.
 
+Fixpoint Fin_left {n : nat} : Fin (S n)
+  := match n with
+     | 0 => inr tt
+     | S n => inl Fin_left
+     end.
+
+Definition Fin_right {n : nat} : Fin (S n) := inr tt.
+
+Definition Fin_inc_l {n : nat} (k : Fin n) : Fin (S n) := inl k.
+Fixpoint Fin_inc_r {n : nat} : Fin n -> Fin (S n)
+  := match n with
+     | 0 => fun k =>
+              match k with
+              end
+     | S n => fun k =>
+                match k with
+                | inl l => inl (Fin_inc_r l)
+                | inr tt => inr tt
+                end
+     end.
+
 Global Instance decidable_fin (n : nat)
 : Decidable (Fin n).
 Proof.
@@ -1108,3 +1129,22 @@ Ltac FinIndOn X := repeat
 
 (** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
+
+Section Sperner.
+
+  Fixpoint sperners_lemma_1d {n} : forall (f : Fin (n.+2) -> DHProp)
+        (left_true : f Fin_left)
+        (right_false : ~ f Fin_right),
+    {k : Fin n.+1 & f (Fin_inc_l k) /\ ~ f (Fin_inc_r k)}.
+  Proof.
+    intros ???.
+    destruct n as [|n].
+    - exists Fin_left. split; assumption.
+    - destruct (dec (f (Fin_inc_l Fin_right))) as [prev_true|prev_false].
+      + exists Fin_right. split; assumption.
+      + destruct (sperners_lemma_1d _ (f o Fin_inc_l) left_true prev_false) as [k' [fleft fright]].
+        exists (Fin_inc_l k').
+        split; assumption.
+  Defined.
+
+End Sperner.
