@@ -432,3 +432,35 @@ Section Extensions.
   Defined.
 
 End Extensions.
+
+(** Extendability along [functor_sum] *)
+
+Definition extendable_functor_sum (n : nat)
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' + B' -> Type)
+           (ef : ExtendableAlong n f (P o inl))
+           (eg : ExtendableAlong n g (P o inr))
+  : ExtendableAlong n (functor_sum f g) P.
+Proof.
+  revert P ef eg; induction n as [|n IH]; intros P ef eg; [ exact tt | split ].
+  - intros h.
+    srefine (sum_ind _ _ _ ; sum_ind _ _ _).
+    + exact (fst ef (h o inl)).1.
+    + exact (fst eg (h o inr)).1.
+    + exact (fst ef (h o inl)).2.
+    + exact (fst eg (h o inr)).2.
+  - intros h k.
+    apply IH.
+    + exact (snd ef (h o inl) (k o inl)).
+    + exact (snd eg (h o inr) (k o inr)).
+Defined.
+
+Definition ooextendable_functor_sum
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' + B' -> Type)
+           (ef : ooExtendableAlong f (P o inl))
+           (eg : ooExtendableAlong g (P o inr))
+  : ooExtendableAlong (functor_sum f g) P.
+Proof.
+  intros n; apply extendable_functor_sum; [ apply ef | apply eg ].
+Defined.

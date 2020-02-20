@@ -907,27 +907,20 @@ Section Reflective_Subuniverse.
 
     Local Notation O_inverts f := (IsEquiv (O_functor f)).
 
-    Definition O_inverts_sum `{Funext} {A B A' B'} (f : A -> A') (g : B -> B')
+    Definition O_inverts_sum {A B A' B'} (f : A -> A') (g : B -> B')
                `{O_inverts f} `{O_inverts g}
       : O_inverts (functor_sum f g).
     Proof.
-      apply O_inverts_from_isequiv_precompose.
-      intros Z Z_inO.
-      srapply isequiv_commsq'; cbn.
-      4,5: rapply ((equiv_sum_ind (fun _ => Z))^-1).
-      { srapply equiv_functor_prod'.
-        - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts f Z)).
-        - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts g Z)). }
-      1: reflexivity.
-      all: try exact _.
+      apply O_inverts_from_extendable; intros.
+      apply extendable_functor_sum; apply ooextendable_O_inverts; assumption.
     Defined.
 
-    Definition equiv_O_functor_sum `{Funext} {A B A' B'} (f : A -> A') (g : B -> B')
+    Definition equiv_O_functor_sum {A B A' B'} (f : A -> A') (g : B -> B')
                `{O_inverts f} `{O_inverts g}
       : O (A + B) <~> O (A' + B')
       := Build_Equiv _ _ _ (O_inverts_sum f g).
 
-    Definition equiv_O_sum `{Funext} {A B} :
+    Definition equiv_O_sum {A B} :
       O (A + B) <~> O (O A + O B)
       := equiv_O_functor_sum (to O A) (to O B).
 
