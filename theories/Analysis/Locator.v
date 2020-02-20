@@ -119,7 +119,7 @@ Section locator.
       - intros q r nu. simpl. apply un_inl.
       - intros q r nu. simpl. destruct (l q r nu) as [ltqx|].
         + simpl; intros f; destruct (f tt).
-        + auto.
+        + intros ?; assumption.
     Defined.
 
     Definition locator'_locator : locator' x -> locator x.
@@ -148,6 +148,22 @@ Section locator.
 
     (* TODO prove an equality in a Record type. *)
     Axiom locator'_locator_locator' : forall (l' : locator' x), locator_locator' (locator'_locator l') = l'.
+
+    Let locsig : _ <~> locator' x := ltac:(issig).
+    Lemma locator'_locator_locator'' (l' : locator' x): locator_locator' (locator'_locator l') = l'.
+    Proof.
+      enough (p : locsig ^-1 (locator_locator' (locator'_locator l')) = locsig ^-1 l').
+      - refine (equiv_inj (locsig ^-1) p).
+      - unfold locsig; clear locsig; simpl.
+        destruct l'; unfold locator'_locator, locator_locator'; simpl.
+        apply path_sigma_hprop; simpl.
+        apply path_forall; intro q;
+          apply path_forall; intro r;
+            apply path_arrow; intro nu.
+        apply equiv_path_dhprop; simpl.
+        rewrite (path_dec (locates_right0 q r nu)).
+        destruct (dec (locates_right0 q r nu)); auto.
+    Defined.
 
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
     Proof.
