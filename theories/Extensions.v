@@ -533,7 +533,7 @@ Defined.
 
 (** The path algebra in these proofs is terrible on its own.  But by replacing the maps with cofibrations so that many equalities hold definitionally, and modifying the extensions to also be strict, it becomes manageable with a bit of dependent-path technology. *)
 
-(** First we show that if we can extend in [C] along [k], and we can extend in appropriate dependent path-types of [C] along [h], then we can extend in [C] along [functor_coeq].  This is where the hard work is. *)
+(** First we show that if we can extend in [C] along [k], and we can extend in appropriate path-types of [C] along [h], then we can extend in [C] along [functor_coeq].  This is where the hard work is. *)
 Definition extension_functor_coeq {B A f g B' A' f' g'}
            {h : B -> B'} {k : A -> A'}
            {p : k o f == f' o h} {q : k o g == g' o h}
@@ -624,7 +624,7 @@ Definition ooextendable_functor_coeq
   : ooExtendableAlong (functor_coeq h k p q) C
   := fun n => extendable_functor_coeq n (ek n) (fun u v => eh u v n).
 
-(** In addition, to extend at level [n] into path-types of [C], it suffices to extend at level [n.+1] into [C] itself. *)
+(** Since extending at level [n.+1] into [C] implies extending at level [n] into path-types of [C], we get the following corollary. *)
 Definition extendable_functor_coeq' (n : nat)
            {B A f g B' A' f' g'}
            {h : B -> B'} {k : A -> A'}
