@@ -87,8 +87,7 @@ Section MappingCylinder.
         symmetry; apply cyglue.
       + intros b; reflexivity.
       + intros a; cbn.
-        apply dp_path_transport.
-        rewrite transport_paths_FFlr.
+        apply dp_paths_FFlr.
         rewrite Cyl_rec_beta_cyglue.
         apply concat_pV_p.
     - intros b; reflexivity.
