@@ -23,28 +23,16 @@ Arguments DPath _ / _ _ _ : simpl nomatch.
 (* We can prove they are equivalent anyway *)
 Definition dp_path_transport {A : Type} {P : A -> Type}
            {a0 a1 : A} {p : a0 = a1} {b0 : P a0} {b1 : P a1}
-  : transport P p b0 = b1 -> DPath P p b0 b1.
+  : transport P p b0 = b1 <~> DPath P p b0 b1.
 Proof.
   by destruct p.
 Defined.
-
-Global Instance isequiv_dp_path_transport {A} (P : A -> Type) {a0 a1}
-  (p : a0 = a1) (b0 : P a0) (b1 : P a1)
-  : IsEquiv (@dp_path_transport A P a0 a1 p b0 b1).
-Proof.
-  srapply isequiv_adjointify; by destruct p.
-Defined.
-
-Definition equiv_dp_path_transport {A : Type} (P : A -> Type)
-           {a0 a1 : A} (p : a0 = a1) (b0 : P a0) (b1 : P a1)
-  : transport P p b0 = b1 <~> DPath P p b0 b1
-  := Build_Equiv _ _ (@dp_path_transport A P a0 a1 p b0 b1) _.
 
 Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
  {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
   `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1).
 Proof.
-  apply (trunc_equiv _ dp_path_transport).
+  refine (trunc_equiv' _ dp_path_transport).
 Defined.
 
 Definition dp_ishprop {A : Type} (P : A -> Type) {a0 a1} {p : a0 = a1}
@@ -91,20 +79,10 @@ Defined.
 
 (* A DPath over a constant family is just a path *)
 Definition dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
-  : (x = y) -> DPath (fun _ => C) p x y.
+  : (x = y) <~> DPath (fun _ => C) p x y.
 Proof.
   by destruct p.
 Defined.
-
-Global Instance isequiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
-  : IsEquiv (@dp_const _ C _ _ p x y).
-Proof.
-  destruct p; exact _.
-Defined.
-
-Definition equiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
-  : (x = y) <~> DPath (fun _ => C) p x y
-  := Build_Equiv _ _ dp_const _.
 
 (* dp_apD of a non-dependent map is just a constant DPath *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}
@@ -318,55 +296,29 @@ Defined.
    to keep such lemmas seperate, since it is difficult to otherwise search
    for a DPath lemma if they are all written using transports. *)
 
-(** A version of [path_sigma] for [DPath]s *)
+(** A version of [equiv_path_sigma] for [DPath]s *)
 Definition path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
-  (p : x = x') (q : DPath P p y y') : (x; y) = (x'; y').
+  : {p : x = x' & DPath P p y y'} <~> (x; y) = (x'; y').
 Proof.
-  destruct p.
-  apply (ap _ q).
+  refine (equiv_path_sigma _ _ _ oE _).
+  apply equiv_functor_sigma_id.
+  intro p.
+  symmetry.
+  apply dp_path_transport.
 Defined.
 
-(** An uncurried version *)
-Definition path_sigma_dp_uncurried {A P} {x x' : A} {y : P x} {y' : P x'}
-  : {p : x = x' & DPath P p y y'} -> (x; y) = (x'; y').
-Proof.
-  intros [p q].
-  exact (path_sigma_dp p q).
-Defined.
-
-(** This is an equivalnece. "A path in a sigma type is a sigma type of paths" *)
-Global Instance isequiv_path_sigma_dp_uncurried
-  {A P} {x x' : A} {y : P x} {y' : P x'}
-  : IsEquiv (@path_sigma_dp_uncurried A P x x' y y').
-Proof.
-  srapply isequiv_adjointify.
-  { intro r.
-    exists (ap pr1 r).
-    srapply dp_compose.
-    apply (dp_apD pr2 r). }
-  { intros r.
-    set (xy := (x; y)) in *.
-    set (x'y':= (x';y')) in *.
-    change x with xy.1; change y with xy.2;
-    change x' with x'y'.1; change y' with x'y'.2.
-    clearbody xy x'y'; clear x y x' y'.
-    by destruct r. }
-  intros [p q].
-  by destruct p, q.
-Defined.
-
-Lemma ap_pr1_path_sigma_dp {A : Type} {P : A -> Type}
+Definition ap_pr1_path_sigma_dp {A : Type} {P : A -> Type}
   {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : DPath P p y y')
-  : ap pr1 (path_sigma_dp p q) = p.
+  : ap pr1 (path_sigma_dp (p; q)) = p.
 Proof.
-  by destruct p, q.
+  apply ap_pr1_path_sigma.
 Defined.
 
 (* DPath over a forall *)
 Definition dp_forall `{Funext} {A : Type} {B : A -> Type} {C : sig B -> Type}
   {a1 a2 : A} {p : a1 = a2} {f : forall x, C (a1; x)} {g : forall x, C (a2; x)}
   : (forall (x : B a1) (y : B a2) (q : DPath B p x y),
-    DPath C (path_sigma_dp p q) (f x) (g y))
+    DPath C (path_sigma_dp (p; q)) (f x) (g y))
     <~> DPath (fun a => forall x, C (a; x)) p f g.
 Proof.
   symmetry.
@@ -402,43 +354,19 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-(** Necessery data to give a dependent path over a sigma type. *)
 Definition dp_sigma {A : Type} {B : A -> Type}
   {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
-  {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
-  (n : DPath B p y1.1 y2.1) (m : DPath C (path_sigma_dp p n) y1.2 y2.2)
-  : DPath (fun x => { y : B x & C (x; y) }) p y1 y2.
-Proof.
-  destruct p.
-  apply (path_sigma_dp n).
-  by apply dp_compose.
-Defined.
-
-(** Uncurried version of dp_sigma *)
-Definition dp_sigma_uncurried {A : Type} {B : A -> Type}
-  {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
   (y1 : { y : B x1 & C (x1; y) }) (y2 : { y : B x2 & C (x2; y) })
-  : {n : DPath B p y1.1 y2.1 & DPath C (path_sigma_dp p n) y1.2 y2.2}
-    -> DPath (fun x => { y : B x & C (x; y) }) p y1 y2.
+  : {n : DPath B p y1.1 y2.1 & DPath C (path_sigma_dp (p; n)) y1.2 y2.2}
+    <~> DPath (fun x => { y : B x & C (x; y) }) p y1 y2.
 Proof.
   destruct p.
-  simpl.
-  intro nm.
-  apply path_sigma_dp_uncurried.
-  rapply equiv_functor_sigma_id.
-  { intro p.
-    symmetry; srapply (dp_compose (exist B x1)). }
-  apply nm.
-Defined.
-
-(** This is an equivlance. "A DPath of sigmas is a sigma of DPaths" *)
-Global Instance isequiv_dp_sigma_uncurried {A : Type} {B : A -> Type}
-  {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
-  {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
-  : IsEquiv (@dp_sigma_uncurried A B C x1 x2 p y1 y2).
-Proof.
-  destruct p.
-  exact _.
+  refine (path_sigma_dp oE _).
+  apply equiv_functor_sigma_id.
+  cbn; intro q.
+  destruct y1 as [y11 y12], y2 as [y21 y22].
+  cbn in *.
+  by destruct q.
 Defined.
 
 (* Useful for turning computation rules of HITs written with transports to
