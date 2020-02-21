@@ -55,7 +55,7 @@ Defined.
 Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   match n with
   | O => inr tt
-  | S n' => inl (@fin_zero n')
+  | S n' => inl fin_zero
   end.
 
 (** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
@@ -65,13 +65,13 @@ Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
   | S n' =>
     fun i : Fin (S n') =>
       match i with
-      | inl i' => inl (@fsucc n' i')
+      | inl i' => inl (fsucc i')
       | inr tt => inr tt
       end
   end.
 
 (** This injection is an injection/embedding *)
-Lemma isembedding_fsucc (n : nat) : IsEmbedding (@fsucc n).
+Lemma isembedding_fsucc {n : nat} : IsEmbedding (@fsucc n).
 Proof.
   apply isembedding_isinj_hset.
   induction n.
@@ -1109,4 +1109,3 @@ Ltac FinIndOn X := repeat
 
 (** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
-
