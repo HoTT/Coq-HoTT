@@ -52,26 +52,26 @@ Proof.
 Defined.
 
 (** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by termsize. *)
-Fixpoint fin_zero (n : nat) : Fin n.+1 :=
+Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   match n with
   | O => inr tt
-  | S n' => inl (fin_zero n')
+  | S n' => inl (@fin_zero n')
   end.
 
 (** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
-Fixpoint fsucc (n : nat) : Fin n -> Fin n.+1 :=
+Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
   match n with
   | O => Empty_rec
   | S n' =>
     fun i : Fin (S n') =>
       match i with
-      | inl i' => inl (fsucc n' i')
+      | inl i' => inl (@fsucc n' i')
       | inr tt => inr tt
       end
   end.
 
 (** This injection is an injection/embedding *)
-Lemma isembedding_fsucc (n : nat) : IsEmbedding (fsucc n).
+Lemma isembedding_fsucc (n : nat) : IsEmbedding (@fsucc n).
 Proof.
   apply isembedding_isinj_hset.
   induction n.
@@ -1079,50 +1079,17 @@ End Enumeration.
 (** [fsucc_mod] is the successor function mod n *)
 Definition fsucc_mod {n : nat} : Fin n -> Fin n.
 Proof.
-  induction n as [|n' fsucc].
-  1: apply Empty_rec.
-  intros [r|].
-  + destruct n' as [|n''].
-    1: revert r; apply Empty_rec.
-    destruct r as [r|].
-    - hnf; apply inl.
-      apply fsucc.
-      hnf; apply inl.
-      exact r.
-    - exact (inr tt).
-  + exact (fin_zero n').
+  destruct n.
+  1: exact idmap.
+  intros [x|].
+  - exact (fsucc x).
+  - exact fin_zero.
 Defined.
-
-(** Here is an almost definitionally equal version of fsucc_mod to compare.*)
-(* Fixpoint fsucc_mod' {n : nat} : Fin n -> Fin n
-  := match n with
-      | 0 => Empty_rec : Fin 0 -> Fin 0
-      | S n' => fun r =>
-        match r with
-        | inl r' =>
-          match n' as n' return (Fin n' -> Fin n') -> Fin n' -> Fin n'.+1 with
-          | 0 => fun _ => Empty_rec
-          | S n'' =>
-            fun F r'' =>
-              match r'' with
-                | inl r''' => inl (F (inl r'''))
-                | inr _ => inr tt
-              end
-          end (@fsucc_mod' n') r'
-        | inr _ => fin_zero n'
-        end
-      end.
-
-Goal forall n:nat, @fsucc_mod' n = @fsucc_mod n.
-intros [].
-1: reflexivity.
-reflexivity.
-Abort. *)
 
 (** fsucc allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
 Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
   := match m with
-      | 0 => fin_zero n
+      | 0 => fin_zero
       | S m => fsucc_mod (fin_nat m)
      end.
 
