@@ -6,3 +6,4 @@ Require Export Pointed.pEquiv.
 Require Export Pointed.pTrunc.
 Require Export Pointed.pHomotopy.
 Require Export Pointed.pSusp.
+Require Export Pointed.pType.

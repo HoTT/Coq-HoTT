@@ -5,18 +5,24 @@ Require Import WildCat.Core.
 
 (** ** Sum categories *)
 
+Global Instance isgraph_sum A B `{IsGraph A} `{IsGraph B}
+  : IsGraph (A + B).
+Proof.
+  econstructor.
+  intros [a1 | b1] [a2 | b2].
+  + exact (a1 $-> a2).
+  + exact Empty.
+  + exact Empty.
+  + exact (b1 $-> b2).
+Defined.
+
 Global Instance is01cat_sum A B `{ Is01Cat A } `{ Is01Cat B}
   : Is01Cat (A + B).
 Proof.
   srapply Build_Is01Cat.
-  - intros [a1 | b1] [a2 | b2].
-    + exact (a1 $-> a2).
-    + exact Empty.
-    + exact Empty.
-    + exact (b1 $-> b2).
-  - intros [a | b]; apply Id.
+  - intros [a | b]; cbn; apply Id.
   - intros [a | b] [a1 | b1] [a2 | b2];
-    try contradiction; apply cat_comp.
+    try contradiction; cbn; apply cat_comp.
 Defined.
 
 (* Note: [try contradiction] deals with empty cases. *)
@@ -24,11 +30,14 @@ Global Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
   : Is1Cat (A + B).
 Proof.
   srapply Build_Is1Cat.
+  - intros x y; apply Build_IsGraph.
+    destruct x as [a1 | b1], y as [a2 | b2];
+    try contradiction; cbn; apply Hom.
   - intros x y.
     srapply Build_Is01Cat;
     destruct x as [a1 | b1], y as [a2 | b2];
     try contradiction; cbn;
-    (apply Hom || apply Id || intros a b c; apply cat_comp).
+    (apply Id || intros a b c; apply cat_comp).
   - intros x y; srapply Build_Is0Gpd.
     destruct x as [a1 | b1], y as [a2 | b2];
     try contradiction; cbn; intros f g; apply gpd_rev.

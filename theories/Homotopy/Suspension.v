@@ -220,6 +220,9 @@ Section UnivProp.
   (** Here is the domain of the equivalence: sections of [P] over [Susp X]. *)
   Definition Susp_ind_type := forall z:Susp X, P z.
 
+  Local Instance isgraph_Susp_ind_type : IsGraph Susp_ind_type.
+  Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
+
   Local Instance is01cat_Susp_ind_type : Is01Cat Susp_ind_type.
   Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.
 
@@ -229,6 +232,9 @@ Section UnivProp.
   (** The codomain is a sigma-groupoid of this family, consisting of input data for [Susp_ind]. *)
   Definition Susp_ind_data' (NS : P North * P South)
     := forall x:X, DPath P (merid x) (fst NS) (snd NS).
+
+  Local Instance isgraph_Susp_ind_data' NS : IsGraph (Susp_ind_data' NS).
+  Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
 
   Local Instance is01cat_Susp_ind_data' NS : Is01Cat (Susp_ind_data' NS).
   Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.
@@ -297,11 +303,14 @@ Section UnivPropNat.
   Context {X Y : Type} (f : X -> Y) (P : Susp Y -> Type).
 
   (** We recall all those instances from the previous section. *)
-  Local Existing Instances is01cat_Susp_ind_type is0gpd_Susp_ind_type is01cat_Susp_ind_data' is0gpd_Susp_ind_data' is01cat_Susp_ind_data is0gpd_Susp_ind_data.
+  Local Existing Instances isgraph_Susp_ind_type is01cat_Susp_ind_type is0gpd_Susp_ind_type isgraph_Susp_ind_data' is01cat_Susp_ind_data' is0gpd_Susp_ind_data' is01cat_Susp_ind_data is0gpd_Susp_ind_data.
 
   (** Here is an intermediate family of groupoids that we have to use, since precomposition with [f] doesn't land in quite the right place. *)
   Definition Susp_ind_data'' (NS : P North * P South)
     := forall x:X, DPath P (merid (f x)) (fst NS) (snd NS).
+
+  Local Instance isgraph_Susp_ind_data'' NS : IsGraph (Susp_ind_data'' NS).
+  Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
 
   Local Instance is01cat_Susp_ind_data'' NS : Is01Cat (Susp_ind_data'' NS).
   Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.

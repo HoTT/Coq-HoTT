@@ -364,27 +364,32 @@ Proof.
   1,2: apply grp_homo_op.
 Defined.
 
-(** Group forms a 01Cat *)
-Global Instance is01cat_Group : Is01Cat Group :=
-  (Build_Is01Cat Group GroupHomomorphism (@grp_homo_id) (@grp_homo_compose)).
+(** The wild cat of Groups *)
+Global Instance isgraph_group : IsGraph Group
+  := Build_IsGraph Group GroupHomomorphism.
 
-Global Instance is01cat_GroupHomomorphism {A B : Group} : Is01Cat (A $-> B) :=
-  induced_01cat (@grp_homo_map A B).
+Global Instance is01cat_group : Is01Cat Group :=
+  (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
 
-Global Instance is0gpd_GroupHomomorphism {A B : Group}: Is0Gpd (A $-> B) := 
-  induced_0gpd (@grp_homo_map A B).
+Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
+  := induced_graph (@grp_homo_map A B).
 
-Global Instance is0functor_postcomp_GroupHomomorphism
-       {A B C : Group} (h : B $-> C)
-  : Is0Functor (@cat_postcomp Group _ A B C h).
+Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
+  := induced_01cat (@grp_homo_map A B).
+
+Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
+  := induced_0gpd (@grp_homo_map A B).
+
+Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
+  : Is0Functor (@cat_postcomp Group _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
   intros [f ?] [g ?] p a ; exact (ap h (p a)).
 Defined.
 
-Global Instance is0functor_precomp_GroupHomomorphism
+Global Instance is0functor_precomp_grouphomomorphism
        {A B C : Group} (h : A $-> B)
-  : Is0Functor (@cat_precomp Group _ A B C h).
+  : Is0Functor (@cat_precomp Group _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
   intros [f ?] [g ?] p a ; exact (p (h a)).
@@ -393,7 +398,7 @@ Defined.
 (** Group forms a 1Cat *)
 Global Instance is1cat_group : Is1Cat Group.
 Proof.
-  srapply Build_Is1Cat; cbn; intros; reflexivity.
+  by rapply Build_Is1Cat.
 Defined.
 
 Instance hasmorext_group `{Funext} : HasMorExt Group.
@@ -408,24 +413,16 @@ Defined.
 
 Global Instance hasequivs_group : HasEquivs Group.
 Proof.
-  srefine (Build_HasEquivs Group _ _ GroupIsomorphism (fun G H f => IsEquiv f) _ _ _ _ _ _ _ _); intros A B f.
-  - exact f.
-  - cbn. exact _.
-  - apply Build_GroupIsomorphism.
-  - intro fe. reflexivity.
-  - intro fe. exact (grp_iso_inverse (Build_GroupIsomorphism _ _ f fe)).
-  - cbn. intros ? x; apply eissect.
-  - cbn. intros ? x; apply eisretr.
-  - intros g r s; refine (isequiv_adjointify f g r s).
+  unshelve econstructor.
+  + exact GroupIsomorphism.
+  + exact (fun G H f => IsEquiv f).
+  + intros G H f; exact f.
+  + exact Build_GroupIsomorphism.
+  + intros G H; exact grp_iso_inverse.
+  + cbn; exact _.
+  + reflexivity.
+  + intros ????; apply eissect.
+  + intros ????; apply eisretr.
+  + intros G H f g p q.
+    exact (isequiv_adjointify f g p q).
 Defined.
-
-
-(** TODO: If #1140 gets resolved, include this: *)
-(* Module GroupUtf8.
-
-  Import Basics.Utf8.
-  Infix "≅" := GroupIsomorphism.
-  Infix "×" := group_prod.
-
-End GroupUtf8.
- *)

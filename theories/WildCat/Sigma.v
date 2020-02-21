@@ -5,13 +5,23 @@ Require Import WildCat.Core.
 
 (** ** Indexed sum of categories *)
 
-Global Instance is01cat_sigma (A : Type) (B : A -> Type)
-  {c : forall a, Is01Cat (B a)}
-  : Is01Cat (sig B).
+Section Sigma.
+
+  Context (A : Type) (B : A -> Type)
+    `{forall a, IsGraph (B a)}
+    `{forall a, Is01Cat (B a)}
+    `{forall a, Is0Gpd (B a)}.
+
+Global Instance isgraph_sigma : IsGraph (sig B).
+Proof.
+  srapply Build_IsGraph.
+  intros [x u] [y v].
+  exact {p : x = y & p # u $-> v}.
+Defined.
+
+Global Instance is01cat_sigma : Is01Cat (sig B).
 Proof.
   srapply Build_Is01Cat.
-  + intros [x u] [y v].
-    exact {p : x = y & p # u $-> v}.
   + intros [x u].
     exists idpath. exact (Id u).
   + intros [x u] [y v] [z w] [q g] [p f].
@@ -20,9 +30,7 @@ Proof.
     exact (g $o f).
 Defined.
 
-Global Instance is0gpd_sigma (A : Type) (B : A -> Type)
-  `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
-  : Is0Gpd (sig B).
+Global Instance is0gpd_sigma : Is0Gpd (sig B).
 Proof.
   constructor.
   intros [x u] [y v] [p f].
@@ -31,8 +39,11 @@ Proof.
   exact (f^$).
 Defined.
 
+End Sigma.
+
 Global Instance is0functor_sigma {A : Type} (B C : A -> Type)
-       {bc : forall a, Is01Cat (B a)} {cc : forall a, Is01Cat (C a)}
+       `{forall a, IsGraph (B a)} `{forall a, IsGraph (C a)}
+       `{forall a, Is01Cat (B a)} `{forall a, Is01Cat (C a)}
        (F : forall a, B a -> C a) {ff : forall a, Is0Functor (F a)}
   : Is0Functor (fun (x:sig B) => (x.1 ; F x.1 x.2)).
 Proof.

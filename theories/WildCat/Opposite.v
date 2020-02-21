@@ -1,12 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(* Don't import the old WildCat *)
-Require Import Basics.Overture.
-Require Import Basics.PathGroupoids.
-Require Import Basics.Notations.
-Require Import Basics.Contractible.
-Require Import Basics.Equivalences.
-
+Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.NatTrans.
@@ -19,30 +13,48 @@ Notation "A ^op" := (op A).
 (** This stops typeclass search from trying to unfold op. *)
 Typeclasses Opaque op.
 
-Global Instance is01cat_op A `{Is01Cat A} : Is01Cat (A ^op)
-  := Build_Is01Cat A (fun a b => b $-> a) Id (fun a b c g f => f $o g).
+Section Op.
 
-Global Instance is1cat_op A `{Is1Cat A} : Is1Cat A^op.
-Proof.
-  srapply Build_Is1Cat; unfold op in *; cbn in *.
-  - intros a b.
-    apply is01cat_hom.
-  - intros a b.
-    apply isgpd_hom.
-  - intros a b c h.
-    srapply Build_Is0Functor.
-    intros f g p.
-    cbn in *.
-    exact (p $@R h).
-  - intros a b c h.
-    srapply Build_Is0Functor.
-    intros f g p.
-    cbn in *.
-    exact (h $@L p).
-  - intros a b c d f g h; exact (cat_assoc_opp h g f).
-  - intros a b f; exact (cat_idr f).
-  - intros a b f; exact (cat_idl f).
- Defined.
+  Context (A : Type) `{Is1Cat A}.
+
+  Global Instance isgraph_op : IsGraph A^op.
+  Proof.
+    apply Build_IsGraph.
+    unfold op; exact (fun a b => b $-> a).
+  Defined.
+
+  Global Instance is01cat_op : Is01Cat A^op.
+  Proof.
+    apply Build_Is01Cat.
+    + cbv; exact Id.
+    + cbv; exact (fun a b c g f => f $o g).
+  Defined.
+
+  Global Instance is1cat_op : Is1Cat A^op.
+  Proof.
+    srapply Build_Is1Cat; unfold op in *; cbv in *.
+    - intros a b.
+      apply isgraph_hom.
+    - intros a b.
+      apply is01cat_hom.
+    - intros a b.
+      apply isgpd_hom.
+    - intros a b c h.
+      srapply Build_Is0Functor.
+      intros f g p.
+      cbn in *.
+      exact (p $@R h).
+    - intros a b c h.
+      srapply Build_Is0Functor.
+      intros f g p.
+      cbn in *.
+      exact (h $@L p).
+    - intros a b c d f g h; exact (cat_assoc_opp h g f).
+    - intros a b f; exact (cat_idr f).
+    - intros a b f; exact (cat_idl f).
+   Defined.
+
+End Op.
 
 Global Instance is1cat_strong_op A `{Is1Cat_Strong A}
   : Is1Cat_Strong (A ^op).
@@ -136,8 +148,8 @@ Defined.
 
 Definition transformation_op {A} {B} `{Is01Cat B}
            (F : A -> B) (G : A -> B) (alpha : F $=> G)
-  : (@Transformation (A^op) (B^op) (@isgraph_1cat _ (is01cat_op B))
-                     (G : (A^op) -> (B^op)) (F : (A^op) -> (B^op))).
+  : @Transformation A^op B^op _
+                     (G : A^op -> B^op) (F : A^op -> B^op).
 Proof.
   unfold op in *.
   cbn in *.
@@ -156,8 +168,7 @@ Proof.
   unfold transformation_op.
   cbn.
   intros a b f.
-  apply isnat_tr.
-  assumption.
+  srapply isnat_tr.
 Defined.
 
 (** Opposite categories preserve having equivalences. *)
@@ -179,7 +190,7 @@ Defined.
 
 Global Instance isequivs_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
-  : @CatIsEquiv A^op _ _ _ b a f.
+  : @CatIsEquiv A^op _ _ _ _ b a f.
 Proof.
   assumption.
 Defined.
