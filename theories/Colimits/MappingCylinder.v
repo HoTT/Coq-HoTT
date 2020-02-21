@@ -20,7 +20,6 @@ Section MappingCylinder.
 
   Definition cyl (a : A) : Cyl f
     := pushl a.
-  
   Definition cyr (b : B) : Cyl f
     := pushr b.
 
