@@ -14,13 +14,16 @@ Require Import
         HoTT.Classes.interfaces.orders
         HoTT.Classes.interfaces.integers
         HoTT.Classes.interfaces.rationals
+        HoTT.Classes.interfaces.naturals
         HoTT.Classes.interfaces.cauchy
         HoTT.Classes.interfaces.archimedean
         HoTT.Classes.interfaces.round
         HoTT.Classes.interfaces.naturals
+        HoTT.Classes.implementations.peano_naturals
         HoTT.Classes.orders.orders
         HoTT.Classes.orders.archimedean
         HoTT.Classes.orders.rings
+        HoTT.Classes.orders.dec_fields
         HoTT.Classes.orders.semirings
         HoTT.Classes.orders.lattices
         HoTT.Classes.theory.rings
@@ -175,7 +178,13 @@ Section locator.
       assert (f := locates_right_true l' ltqr).
       assert (contra := functor_arrow f (@id Empty)).
       assumption.
-    Defined.
+    Qed.
+
+    Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : x < ' q -> locates_left l' ltqr.
+    Proof.
+      intros ltxq. apply nltqx_locates_left.
+      apply lt_flip; assumption.
+    Qed.
 
     Lemma nltxr_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ x < ' r -> locates_right l' ltqr.
     Proof.
@@ -186,7 +195,13 @@ Section locator.
         assert (contra := functor_arrow f (@id Empty)).
         assert (nono := contra nltxr).
         destruct (nono no).
-    Defined.
+    Qed.
+
+    Lemma ltrx_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : 'r < x -> locates_right l' ltqr.
+    Proof.
+      intros ltrx. apply nltxr_locates_right.
+      apply lt_flip; assumption.
+    Qed.
 
   End logic2.
 
@@ -216,8 +231,7 @@ Section locator.
       apply tr.
       exists q.
       unfold P_lower.
-      apply nltxr_locates_right.
-      apply lt_flip; assumption.
+      apply ltrx_locates_right; assumption.
     Qed.
 
     Definition lower_bound : {q : Q | ' q < x}.
@@ -251,8 +265,7 @@ Section locator.
       apply tr.
       exists r.
       unfold P_upper.
-      apply nltqx_locates_left.
-      apply lt_flip; assumption.
+      apply ltxq_locates_left; assumption.
     Qed.
 
     Definition upper_bound : {r : Q | x < ' r}.
@@ -266,18 +279,160 @@ Section locator.
       - assumption.
     Defined.
 
-    (* TODO prove using Sperner's Lemma *)
-    Axiom tight_bound : forall (l : locator x) (epsilon : Qpos Q), {u : Q | ' u < x < ' (u + ' epsilon)}.
-    Lemma tight_bound' (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
+    Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
+
+    Instance inc_fin_N {n} : Cast (Fin n) nat := fin_to_nat.
+
+    Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
     Proof.
       destruct lower_bound as [q ltqx], upper_bound as [r ltxr].
-      destruct (round_up_strict Q (3*(r-q))) as [n lt3rqn].
-      set (grid (k : Fin n.+3) := q + (Peano.nat_iter (fin_to_nat k) (+1) (-1))*'epsilon/3 : Q).
-
-      assert (lt : forall k, grid (fin_inc_l k) < grid (fin_succ k)).
-      set (f k := locates_right l (q + (Peano.nat_iter k (+1) (-1))*'epsilon/3) (q + (Peano.nat_iter (k+1) (+1) (-1))*epsilon/3)).
-    Abort.
-
+      destruct (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
+      assert (lt0 : 0 < 'epsilon / 3).
+      {
+        apply pos_mult.
+        - apply epsilon.
+        - apply pos_dec_recip_compat.
+          apply lt_0_3.
+      }
+      assert (lt0' : 0 < 3 / ' epsilon).
+      {
+        apply pos_mult.
+        - apply lt_0_3.
+        - apply pos_dec_recip_compat, epsilon.
+      }
+      assert (ap30 : (3 : Q) <> 0).
+      {
+        apply lt_ne_flip. apply lt_0_3.
+      }
+      assert (ltn3eps : r < q + ' n * ' epsilon / 3).
+      {
+        rewrite (commutativity q (' n * ' epsilon / 3)).
+        apply flip_lt_minus_l.
+        apply (pos_mult_reflect_r (3 / ' epsilon) lt0').
+        rewrite (commutativity (r-q) (3 / ' epsilon)).
+        rewrite <- (associativity ('n) ('epsilon) (/3)).
+        rewrite <- (associativity ('n) (' epsilon / 3) (3 / ' epsilon)).
+        rewrite <- (associativity ('epsilon) (/3) (3/'epsilon)).
+        rewrite (@associativity Q Q Q Q Q Q mult mult mult mult _ (/3) 3 (/'epsilon)).
+        rewrite (commutativity (/3) 3).
+        rewrite (dec_recip_inverse 3 ap30).
+        rewrite mult_1_l.
+        assert (apepsilon0 : 'epsilon <> 0).
+        {
+          apply lt_ne_flip. apply epsilon.
+        }
+        rewrite (dec_recip_inverse ('epsilon) apepsilon0).
+        rewrite mult_1_r.
+        assumption.
+      }
+      set (grid (k : Fin n.+3) := q + (' (' k) - 1)*('epsilon/3) : Q).
+      assert (lt_grid : forall k : Fin _, grid (fin_incl k) < grid (fsucc k)).
+      {
+        intros k. unfold grid.
+        change (' fin_incl k) with (fin_to_nat (fin_incl k)); rewrite path_nat_fin_incl.
+        change (' fsucc k) with (fin_to_nat (fsucc k)); rewrite path_nat_fsucc.
+        assert (eq1 : ' (S (' k)) = (' (' k) + 1)).
+        {
+          rewrite S_nat_plus_1.
+          rewrite (preserves_plus (' k) 1).
+          rewrite preserves_1.
+          reflexivity.
+        }
+        rewrite eq1.
+        assert (eq2 : ' (' k) + 1 - 1 = ' (' k) - 1 + 1).
+        {
+          rewrite <- (associativity _ 1 (-1)).
+          rewrite (commutativity 1 (-1)).
+          rewrite (associativity _ (-1) 1).
+          reflexivity.
+        }
+        rewrite eq2.
+        assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1).
+        {
+          apply pos_plus_lt_compat_r.
+          apply lt_0_1.
+        }
+        assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
+        {
+          nrefine (pos_mult_lt_r ('epsilon/3) _ (' (' k) - 1) (' (' k) - 1 + 1) _); try apply _.
+          apply lt1.
+        }
+        apply pseudo_srorder_plus.
+        exact lt2.
+      }
+      (* set (P k := Build_DHProp (BuildhProp (locates_right l (lt_grid (fin_incl k)) *)
+      (*                                       /\ locates_left l (lt_grid (fsucc k)))) _). *)
+      set (P k := locates_right l (lt_grid k)).
+      assert (left_true : P fin_zero).
+      {
+        apply ltrx_locates_right.
+        unfold grid.
+        change (' fsucc fin_zero) with (fin_to_nat (@fsucc (S n) fin_zero)).
+        rewrite path_nat_fsucc, path_nat_fin_zero.
+        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
+        rewrite plus_negate_r.
+        rewrite mult_0_l.
+        rewrite plus_0_r.
+        assumption.
+      }
+      assert (right_false : ~ P fin_last).
+      {
+        apply ltxq_locates_left.
+        unfold grid.
+        change (' fin_incl fin_last) with (fin_to_nat (@fin_incl (S (S n)) fin_last)).
+        rewrite path_nat_fin_incl, path_nat_fin_last.
+        rewrite S_nat_plus_1.
+        rewrite (preserves_plus n 1).
+        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
+        rewrite <- (associativity (' n) 1 (-1)).
+        rewrite plus_negate_r.
+        rewrite plus_0_r.
+        rewrite (associativity ('n) ('epsilon) (/3)).
+        transitivity ('r).
+        - exact ltxr.
+        - apply (@strictly_order_preserving Q F _ _ _ cast_pres_ordering).
+          exact ltn3eps.
+      }
+      destruct (sperners_lemma_1d P left_true right_false) as [u [Pltux Pltxueps]].
+      exists (grid (fin_incl (fin_incl u))).
+      unfold P in Pltux, Pltxueps.
+      split.
+      - apply (locates_right_true l (lt_grid (fin_incl u)) Pltux).
+      - set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
+        unfold grid in *.
+        change (' fin_incl (fin_incl u)) with (fin_to_nat (fin_incl (fin_incl u))).
+        rewrite path_nat_fin_incl, path_nat_fin_incl.
+        change (' fsucc (fsucc u)) with (fin_to_nat (fsucc (fsucc u))) in ltxbla.
+        rewrite path_nat_fsucc, path_nat_fsucc in ltxbla.
+        rewrite S_nat_plus_1, S_nat_plus_1 in ltxbla.
+        rewrite (preserves_plus (fin_to_nat u + 1) 1) in ltxbla.
+        rewrite (preserves_plus (fin_to_nat u) 1) in ltxbla.
+        rewrite preserves_1 in ltxbla.
+        rewrite <- (associativity (' fin_to_nat u) 1 1) in ltxbla.
+        rewrite <- (associativity (' fin_to_nat u) 2 (-1)) in ltxbla.
+        rewrite (commutativity 2 (-1)) in ltxbla.
+        rewrite (associativity (' fin_to_nat u) (-1) 2) in ltxbla.
+        rewrite plus_mult_distr_r in ltxbla.
+        rewrite (associativity q ((' fin_to_nat u - 1) * (' epsilon / 3)) (2 * (' epsilon / 3))) in ltxbla.
+        refine (transitivity ltxbla _).
+        apply (@strictly_order_preserving Q F _ _ _ cast_pres_ordering).
+        apply pseudo_srorder_plus.
+        rewrite (associativity 2 ('epsilon) (/3)).
+        rewrite (commutativity 2 ('epsilon)).
+        rewrite <- (mult_1_r ('epsilon)).
+        rewrite <- (associativity ('epsilon) 1 2).
+        rewrite (mult_1_l 2).
+        rewrite <- (associativity ('epsilon) 2 (/3)).
+        apply pos_mult_lt_l.
+        + apply epsilon.
+        + nrefine (@pos_mult_reflect_r Q Qap Qplus Qmult Qzero Qone Qlt _ _ (3 : Q) lt_0_3 _ _ _); try apply _.
+          rewrite <- (associativity 2 (/3) 3).
+          rewrite (commutativity (/3) 3).
+          rewrite (dec_recip_inverse (3 : Q) ap30).
+          rewrite (mult_1_r 2).
+          rewrite (mult_1_l 3).
+          exact lt_2_3.
+    Qed.
 
   End bounds.
 
@@ -325,14 +480,14 @@ Section locator.
       apply tr.
       exists (q, epsilon).
       unfold P; split.
-      - apply nltqx_locates_left.
+      - apply ltxq_locates_left.
         (* TODO we took some averages; show some basic algebra. *)
         assert (xeq : q - ' epsilon = s) by admit.
-        rewrite xeq. apply lt_flip; assumption.
-      - apply nltxr_locates_right.
+        rewrite xeq; assumption.
+      - apply ltrx_locates_right.
         (* TODO we took some averages; show some basic algebra. *)
         assert (yeq : q + ' epsilon = t) by admit.
-        rewrite yeq. apply lt_flip; assumption.
+        rewrite yeq; assumption.
     Admitted.
     (* TODO enumerate pairs of ordered rationals *)
     Axiom QQpos_eq : nat <~> Q * Qpos Q.

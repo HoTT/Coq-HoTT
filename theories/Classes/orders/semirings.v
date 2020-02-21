@@ -323,6 +323,13 @@ Section strict_semiring_order.
   apply flip_neg_mult_l;trivial.
   Qed.
 
+  Lemma pos_mult x y : 0 < x -> 0 < y -> 0 < x * y.
+  Proof.
+    intros xpos ypos.
+    rewrite <-(mult_0_r x).
+    apply (pos_mult_lt_l); assumption.
+  Qed.
+
   Lemma neg_pos_mult x y : x < 0 -> 0 < y -> x * y < 0.
   Proof.
   intros.
@@ -805,7 +812,7 @@ Section dec_semiring_order.
 
   Instance dec_pseudo_srorder: PseudoSemiRingOrder (<).
   Proof.
-  split; try apply _. 
+  split; try apply _.
   - intros x y E. apply srorder_partial_minus, not_lt_le_flip;trivial.
   - intros z. repeat (split; try apply _).
     intros x y E. apply lt_correct in E;apply lt_correct.
@@ -902,7 +909,7 @@ Section another_semiring_strict.
   - rewrite Ez2, (preserves_plus (f:=f)). trivial.
   Qed.
 
-  Instance preserves_pos `{!StrictlyOrderPreserving f} x 
+  Instance preserves_pos `{!StrictlyOrderPreserving f} x
    : PropHolds (0 < x) -> PropHolds (0 < f x).
   Proof.
   intros. rewrite <-(preserves_0 (f:=f)).

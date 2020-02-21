@@ -99,6 +99,38 @@ Proof.
     + destruct u, u0; reflexivity.
 Qed.
 
+Lemma path_fin_fsucc_incl {n : nat} : forall k : Fin n, fsucc (fin_incl k) = fin_incl (fsucc k).
+Proof.
+  trivial.
+Qed.
+
+Lemma path_nat_fin_incl {n : nat} : forall k : Fin n, fin_to_nat (fin_incl k) = fin_to_nat k.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma path_nat_fsucc {n : nat} : forall k : Fin n, fin_to_nat (fsucc k) = S (fin_to_nat k).
+Proof.
+  induction n as [|n' IHn].
+  - intros [].
+  - intros [k'|[]].
+    + rewrite path_fin_fsucc_incl, path_nat_fin_incl.
+      apply IHn.
+    + reflexivity.
+Qed.
+
+Lemma path_nat_fin_zero {n} : fin_to_nat (@fin_zero n) = 0.
+Proof.
+  induction n as [|n' IHn].
+  - reflexivity.
+  - trivial.
+Qed.
+
+Lemma path_nat_fin_last {n} : fin_to_nat (@fin_last n) = n.
+Proof.
+  reflexivity.
+Qed.
+
 (** ** Transposition equivalences *)
 
 (** To prove some basic facts about canonical finite sets, we need some standard automorphisms of them.  Here we define some transpositions and prove that they in fact do the desired things. *)
