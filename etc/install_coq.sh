@@ -11,9 +11,9 @@ pushd "$DIR" 1>/dev/null || exit 1
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null || exit 1
 
-if test ! -d .git
+if ! ( [ -d .git ] || [ -f .git ] )
 then
-    echo 'Error: .git directory does not exist.'
+    echo 'Error: we do not seem to be in a git working tree.'
     echo 'This script only works on a git clone of the HoTT repository.'
     exit 1
 fi

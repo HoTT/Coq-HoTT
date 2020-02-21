@@ -13,7 +13,7 @@ fi
 
 if [ "$1" != "-skip-submodules" ] && command -v git >/dev/null 2>&1
 then # git found
-    if test -d .git
+    if [ -d .git ] || [ -f .git ]
     then # we're in a git repository
 	git submodule sync # update possibly changed urls
 	git submodule update --init --recursive
