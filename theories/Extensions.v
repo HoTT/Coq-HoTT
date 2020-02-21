@@ -443,7 +443,7 @@ Definition cyl_extension {A B} (f : A -> B) (C : Cyl f -> Type)
            (ext : ExtensionAlong cyl C g)
   : ExtensionAlong cyl C g.
 Proof.
-  srefine (Cyl_ind C g (ext.1 o cyr) _ ; _); intros a.
+  srefine (Cyl_ind_dp C g (ext.1 o cyr) _ ; _); intros a.
   + pose (p := dp_apD ext.1 (cyglue a)).
     exact (transport (fun u => DPath C _ u _) (ext.2 a) p).
   + reflexivity. (** The point is that this equality is now definitional. *)

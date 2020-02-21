@@ -33,7 +33,7 @@ Section MappingCylinder.
             (cylb : forall b, P (cyr b))
             (cylg : forall a, DPath P (cyglue a) (cyla a) (cylb (f a))).
 
-    Definition Cyl_ind : forall c, P c.
+    Definition Cyl_ind_dp : forall c, P c.
     Proof.
       srapply Pushout_ind.
       - apply cyla.
@@ -41,10 +41,10 @@ Section MappingCylinder.
       - intros a; apply dp_path_transport^-1, cylg.
     Defined.
 
-    Definition Cyl_ind_beta_cyglue (a : A)
-      : dp_apD Cyl_ind (cyglue a) = cylg a.
+    Definition Cyl_ind_dp_beta_cyglue (a : A)
+      : dp_apD Cyl_ind_dp (cyglue a) = cylg a.
     Proof.
-      unfold Cyl_ind.
+      unfold Cyl_ind_dp.
       refine ((dp_path_transport_apD _ _)^ @ _).
       apply moveR_equiv_M.
       rapply Pushout_ind_beta_pglue.
@@ -82,7 +82,7 @@ Section MappingCylinder.
       + exact f.
       + exact idmap.
       + reflexivity.
-    - srapply Cyl_ind.
+    - srapply Cyl_ind_dp.
       + intros a; cbn.
         symmetry; apply cyglue.
       + intros b; reflexivity.
