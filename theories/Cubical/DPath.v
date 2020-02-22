@@ -43,8 +43,7 @@ Proof.
 Defined.
 
 (* Here is a notation for DPaths that can make it easier to use *)
-Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) (at level 10)
-  : dpath_scope.
+Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) : dpath_scope.
 
 (* We have reflexivity for DPaths, this helps coq guess later *)
 Definition dp_id {A} {P : A -> Type} {a : A} {x : P a} : DPath P 1 x x := 1%path.
