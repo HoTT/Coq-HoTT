@@ -589,7 +589,7 @@ Definition HomotopyExtensionAlong {A B} {Q : B -> Type}
   := { q : forall (b:B) (v:Q b), C (b;v) & forall a v, q (f a) v = p a v }.
 
 Fixpoint HomotopyExtendableAlong (n : nat)
-         {A B} {Q : B -> Type} (f : A -> B) (C : sig Q -> Type)
+         {A B} {Q : B -> Type} (f : A -> B) (C : sig Q -> Type) : Type
   := match n with
      | 0 => Unit
      | S n => ((forall (p : forall (a:A) (v:Q (f a)), C (f a;v)),
