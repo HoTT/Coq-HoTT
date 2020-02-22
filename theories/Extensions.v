@@ -496,7 +496,176 @@ Definition cyl_ooextendable'
   := fun n => cyl_extendable' n f C (ext n).
 
 
+(** ** Extendability along [functor_prod] *)
+
+Definition extension_functor_prod
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' * B' -> Type)
+           (ef : forall b', ExtendableAlong 1 f (fun a' => P (a',b')))
+           (eg : forall a', ExtendableAlong 1 g (fun b' => P (a',b')))
+           (s : forall z, P (functor_prod f g z))
+  : ExtensionAlong (functor_prod f g) P s.
+Proof.
+  srefine (_;_).
+  - intros [a' b']; revert b'.
+    refine ((fst (eg a') _).1).
+    intros b; revert a'.
+    refine ((fst (ef (g b)) _).1).
+    intros a.
+    exact (s (a,b)).
+  - intros [a b]; cbn.
+    refine ((fst (eg (f a)) _).2 b @ _).
+    exact ((fst (ef (g b)) _).2 a).
+Defined.
+
+Definition extendable_functor_prod (n : nat)
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' * B' -> Type)
+           (ef : forall b', ExtendableAlong n f (fun a' => P (a',b')))
+           (eg : forall a', ExtendableAlong n g (fun b' => P (a',b')))
+  : ExtendableAlong n (functor_prod f g) P.
+Proof.
+  revert P ef eg; simple_induction n n IH; intros P ef eg; [ exact tt | split ].
+  - apply extension_functor_prod.
+    + intros b'; exact (fst (ef b'), fun _ _ => tt).
+    + intros a'; exact (fst (eg a'), fun _ _ => tt).
+  - intros h k; apply IH.
+    + intros b'; apply (snd (ef b')).
+    + intros a'; apply (snd (eg a')).
+Defined.
+
+Definition ooextendable_functor_prod
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' * B' -> Type)
+           (ef : forall b', ooExtendableAlong f (fun a' => P (a',b')))
+           (eg : forall a', ooExtendableAlong g (fun b' => P (a',b')))
+  : ooExtendableAlong (functor_prod f g) P
+  := fun n => extendable_functor_prod n f g P (fun b' => ef b' n) (fun a' => eg a' n).
+
+
+(** ** Extendability along [functor_sigma] *)
+
+Definition extension_functor_sigma_id
+           {A} {P Q : A -> Type} (f : forall a, P a -> Q a)
+           (C : sig Q -> Type)
+           (ef : forall a, ExtendableAlong 1 (f a) (fun v => C (a;v)))
+           (s : forall z, C (functor_sigma idmap f z))
+  : ExtensionAlong (functor_sigma idmap f) C s.
+Proof.
+  srefine (_;_).
+  - intros [a v]; revert v.
+    refine ((fst (ef a) _).1).
+    intros u.
+    exact (s (a;u)).
+  - intros [a u]; cbn.
+    exact ((fst (ef a) _).2 u).
+Defined.
+
+Definition extendable_functor_sigma_id n
+           {A} {P Q : A -> Type} (f : forall a, P a -> Q a)
+           (C : sig Q -> Type)
+           (ef : forall a, ExtendableAlong n (f a) (fun v => C (a;v)))
+  : ExtendableAlong n (functor_sigma idmap f) C.
+Proof.
+  revert C ef; simple_induction n n IH; intros C ef; [ exact tt | split ].
+  - apply extension_functor_sigma_id.
+    intros a; exact (fst (ef a) , fun _ _ => tt).
+  - intros h k; apply IH.
+    intros a; apply (snd (ef a)).
+Defined.
+
+Definition ooextendable_functor_sigma_id
+           {A} {P Q : A -> Type} (f : forall a, P a -> Q a)
+           (C : sig Q -> Type)
+           (ef : forall a, ooExtendableAlong (f a) (fun v => C (a;v)))
+  : ooExtendableAlong (functor_sigma idmap f) C
+  := fun n => extendable_functor_sigma_id n f C (fun a => ef a n).
+
+(** Unfortunately, the technology of [ExtensionAlong] seems to be insufficient to state a general, funext-free version of [extension_functor_sigma] with a nonidentity map on the bases; the hypothesis on the fiberwise map would have to be the existence of an extension in a function-type "up to pointwise equality".  With wild oo-groupoids we could probably manage it.  For now, we say something a bit hacky. *)
+
+Definition HomotopyExtensionAlong {A B} {Q : B -> Type}
+           (f : A -> B) (C : sig Q -> Type)
+           (p : forall (a:A) (v:Q (f a)), C (f a;v))
+  := { q : forall (b:B) (v:Q b), C (b;v) & forall a v, q (f a) v = p a v }.
+
+Fixpoint HomotopyExtendableAlong (n : nat)
+         {A B} {Q : B -> Type} (f : A -> B) (C : sig Q -> Type) : Type
+  := match n with
+     | 0 => Unit
+     | S n => ((forall (p : forall (a:A) (v:Q (f a)), C (f a;v)),
+                   HomotopyExtensionAlong f C p) *
+               (forall (h k : forall z, C z),
+                   HomotopyExtendableAlong n f (fun z => h z = k z)))
+     end.
+
+Definition ooHomotopyExtendableAlong
+           {A B} {Q : B -> Type} (f : A -> B) (C : sig Q -> Type)
+  := forall n, HomotopyExtendableAlong n f C.
+
+Definition extension_functor_sigma
+           {A B} {P : A -> Type} {Q : B -> Type}
+           (f : A -> B) (g : forall a, P a -> Q (f a))
+           (C : sig Q -> Type)
+           (ef : HomotopyExtendableAlong 1 f C)
+           (eg : forall a, ExtendableAlong 1 (g a) (fun v => C (f a ; v)))
+           (s : forall z, C (functor_sigma f g z))
+  : ExtensionAlong (functor_sigma f g) C s.
+Proof.
+  srefine (_;_).
+  - intros [b v]; revert b v.
+    refine ((fst ef _).1).
+    intros a.
+    refine ((fst (eg a) _).1).
+    intros u.
+    exact (s (a;u)).
+  - intros [a u]; cbn.
+    refine ((fst ef _).2 _ _ @ _).
+    exact ((fst (eg a) _).2 u).
+Defined.
+
+Definition extendable_functor_sigma (n : nat)
+           {A B} {P : A -> Type} {Q : B -> Type}
+           (f : A -> B) (g : forall a, P a -> Q (f a))
+           (C : sig Q -> Type)
+           (ef : HomotopyExtendableAlong n f C)
+           (eg : forall a, ExtendableAlong n (g a) (fun v => C (f a ; v)))
+  : ExtendableAlong n (functor_sigma f g) C.
+Proof.
+  revert C ef eg; simple_induction n n IH; intros C ef eg; [ exact tt | split ].
+  - apply extension_functor_sigma.
+    + exact (fst ef, fun _ _ => tt).
+    + intros a; exact (fst (eg a) , fun _ _ => tt).
+  - intros h k; apply IH.
+    + exact (snd ef h k).
+    + intros a; apply (snd (eg a)).
+Defined.
+
+Definition ooextendable_functor_sigma
+           {A B} {P : A -> Type} {Q : B -> Type}
+           (f : A -> B) (g : forall a, P a -> Q (f a))
+           (C : sig Q -> Type)
+           (ef : ooHomotopyExtendableAlong f C)
+           (eg : forall a, ooExtendableAlong (g a) (fun v => C (f a ; v)))
+  : ooExtendableAlong (functor_sigma f g) C
+  := fun n => extendable_functor_sigma n f g C (ef n) (fun a => eg a n).
+
+
 (** ** Extendability along [functor_sum] *)
+
+Definition extension_functor_sum
+           {A B A' B'} (f : A -> A') (g : B -> B')
+           (P : A' + B' -> Type)
+           (ef : ExtendableAlong 1 f (P o inl))
+           (eg : ExtendableAlong 1 g (P o inr))
+           (h : forall z, P (functor_sum f g z))
+  : ExtensionAlong (functor_sum f g) P h.
+Proof.
+  srefine (sum_ind _ _ _ ; sum_ind _ _ _).
+  + exact (fst ef (h o inl)).1.
+  + exact (fst eg (h o inr)).1.
+  + exact (fst ef (h o inl)).2.
+  + exact (fst eg (h o inr)).2.
+Defined.
 
 Definition extendable_functor_sum (n : nat)
            {A B A' B'} (f : A -> A') (g : B -> B')
@@ -506,12 +675,9 @@ Definition extendable_functor_sum (n : nat)
   : ExtendableAlong n (functor_sum f g) P.
 Proof.
   revert P ef eg; induction n as [|n IH]; intros P ef eg; [ exact tt | split ].
-  - intros h.
-    srefine (sum_ind _ _ _ ; sum_ind _ _ _).
-    + exact (fst ef (h o inl)).1.
-    + exact (fst eg (h o inr)).1.
-    + exact (fst ef (h o inl)).2.
-    + exact (fst eg (h o inr)).2.
+  - intros h; apply extension_functor_sum.
+    + exact (fst ef, fun _ _ => tt).
+    + exact (fst eg, fun _ _ => tt).
   - intros h k.
     apply IH.
     + exact (snd ef (h o inl) (k o inl)).

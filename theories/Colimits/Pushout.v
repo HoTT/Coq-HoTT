@@ -154,8 +154,8 @@ equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pusho
 (** ** Functoriality *)
 
 Definition functor_pushout
-           {A B C} (f : A -> B) (g : A -> C)
-           {A' B' C'} (f' : A' -> B') (g' : A' -> C')
+           {A B C} {f : A -> B} {g : A -> C}
+           {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
            (h : A -> A') (k : B -> B') (l : C -> C')
            (p : k o f == f' o h) (q : l o g == g' o h)
   : Pushout f g -> Pushout f' g'.
