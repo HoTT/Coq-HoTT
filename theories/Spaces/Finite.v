@@ -51,6 +51,38 @@ Proof.
   elim (f (inr tt)).
 Defined.
 
+(** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by termsize. *)
+Fixpoint fin_zero {n : nat} : Fin n.+1 :=
+  match n with
+  | O => inr tt
+  | S n' => inl fin_zero
+  end.
+
+(** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
+Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
+  match n with
+  | O => Empty_rec
+  | S n' =>
+    fun i : Fin (S n') =>
+      match i with
+      | inl i' => inl (fsucc i')
+      | inr tt => inr tt
+      end
+  end.
+
+(** This injection is an injection/embedding *)
+Lemma isembedding_fsucc {n : nat} : IsEmbedding (@fsucc n).
+Proof.
+  apply isembedding_isinj_hset.
+  induction n.
+  - intro i. elim i.
+  - intros [] []; intro p.
+    + f_ap. apply IHn. eapply path_sum_inl. exact p.
+    + destruct u. elim (inl_ne_inr _ _ p).
+    + destruct u. elim (inr_ne_inl _ _ p).
+    + destruct u, u0; reflexivity.
+Qed.
+
 (** ** Transposition equivalences *)
 
 (** To prove some basic facts about canonical finite sets, we need some standard automorphisms of them.  Here we define some transpositions and prove that they in fact do the desired things. *)
@@ -1044,6 +1076,28 @@ Section Enumeration.
 
 End Enumeration.
 
+(** [fsucc_mod] is the successor function mod n *)
+Definition fsucc_mod {n : nat} : Fin n -> Fin n.
+Proof.
+  destruct n.
+  1: exact idmap.
+  intros [x|].
+  - exact (fsucc x).
+  - exact fin_zero.
+Defined.
+
+(** fsucc allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
+Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
+  := match m with
+      | 0 => fin_zero
+      | S m => fsucc_mod (fin_nat m)
+     end.
+
+(** TODO: Would this notation be useful? *)
+(* Notation "[ n ]" := (fin_nat n). *)
+
+(** ** Tactics *)
+
 Ltac FinIndOn X := repeat
   match type of X with
   | Fin 0 => destruct X
@@ -1053,4 +1107,5 @@ Ltac FinIndOn X := repeat
   | ?L + Unit => destruct X as [X|X]
   end.
 
+(** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
