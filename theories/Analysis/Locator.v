@@ -48,16 +48,11 @@ Section locator.
 
   (* Assume we have an enumeration of the rationals. *)
   Axiom Q_eq : nat <~> Q.
+  (* TODO enumerate pairs of ordered rationals *)
+  Axiom QQpos_eq : nat <~> Q * Qpos Q.
 
-  Section rats_inclusion.
-
-    Definition qinc : Cast Q F := rationals_to_field Q F.
-
-    Axiom cast_pres_ordering : StrictlyOrderPreserving qinc.
-
-  End rats_inclusion.
-
-  Existing Instance qinc.
+  Instance qinc: Cast Q F := rationals_to_field Q F.
+  Axiom cast_pres_ordering : StrictlyOrderPreserving qinc.
   Existing Instance cast_pres_ordering.
 
   (* Definition of a locator for a fixed real number. *)
@@ -205,18 +200,21 @@ Section locator.
 
   End logic2.
 
+  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q := (fst (pos_minus_lt_compat_r q ('eps)) (is_pos eps)).
+  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps := (fst (pos_plus_lt_compat_r q ('eps)) (is_pos eps)).
+
   Section bounds.
     (* Given a real with a locator, we can find (integer) bounds. *)
     Context {x : F}
             (l : locator x).
 
-    Axiom ltN1 : forall q : Q, q - 1 < q.
+    Let ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
     Let P_lower (q : Q) : Type := locates_right l (ltN1 q).
     Definition P_lower_prop {k} : IsHProp (P_lower k).
     Proof.
       apply _.
     Qed.
-    Axiom ltxN1 : x - 1 < x.
+    Let ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
     Let P_lower_inhab : hexists (fun q => P_lower q).
     Proof.
       assert (hqlt : hexists (fun q => ' q < x)).
@@ -243,14 +241,14 @@ Section locator.
       apply (un_inl _ Pq).
     Defined.
 
-    Axiom lt1N : forall r : Q, r < r + 1.
+    Let lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
     (* Assume we have an enumeration of the rationals. *)
     Let P_upper (r : Q) : DHProp := locates_left l (lt1N r).
     Definition P_upper_prop {k} : IsHProp (P_upper k).
     Proof.
       apply _.
     Qed.
-    Axiom ltx1N : x < x + 1.
+    Let ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
     Let P_upper_inhab : hexists (fun r => P_upper r).
     Proof.
       assert (hqlt : hexists (fun r => x < ' r)).
@@ -443,9 +441,6 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
-    (* TODO since 0 < eps, we have q - eps < q < q + eps *)
-    Axiom ltQnegQ : forall q : Q, forall eps : Qpos Q, q - 'eps < q.
-    Axiom ltQposQ : forall q : Q, forall eps : Qpos Q, q < q + 'eps.
     Let P (qeps' : Q * Qpos Q) : Type :=
       match qeps' with
       | (q' , eps') =>
@@ -489,8 +484,6 @@ Section locator.
         assert (yeq : q + ' epsilon = t) by admit.
         rewrite yeq; assumption.
     Admitted.
-    (* TODO enumerate pairs of ordered rationals *)
-    Axiom QQpos_eq : nat <~> Q * Qpos Q.
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
       assert (R : sigT P).
@@ -526,9 +519,9 @@ Section locator.
 
     Context (nu : x ≶ 0).
 
-    (* TODO somehow obtain this instance from the DecRecip Q *)
-    Axiom qrecip : Recip Q.
-    Existing Instance qrecip.
+    (* Note: If you are going to attemp to fill in the foles, you may
+    be interested in `dec_recip_to_recip` in
+    `Classes.theory.dec_fields` *)
 
     Definition recip : locator (recip (x ; nu)).
     Proof.
@@ -544,15 +537,16 @@ Section locator.
         + apply inl. rewrite qzero, preserves_0.
           (* TODO if 0 < x then 0 < 1/x *)
           todo (0 < // (x ; nu)).
-        + assert (qap0 : q ≶ 0) by apply (pseudo_order_lt_apart_flip _ _ qpos).
+        + assert (qap0 : q ≶ 0)
+            by apply (pseudo_order_lt_apart_flip _ _ qpos).
           assert (rap0 : r ≶ 0).
           {
             refine (pseudo_order_lt_apart_flip _ _ _).
             apply (transitivity qpos ltqr).
           }
           (* TODO if 0 < q < r then 1/r < 1/q *)
-          assert (ltrrrq : // (r ; rap0) < // (q ; qap0)) by admit.
-          destruct (l (// (r ; rap0)) (// (q ; qap0)) ltrrrq) as [ltrrx|ltxrq].
+          assert (ltrrrq : / r < / q) by admit.
+          destruct (l (/r) (/q) ltrrrq) as [ltrrx|ltxrq].
           * apply inr.
             (* TODO if 1/r < x then 1/x < r *)
             todo (// (x ; nu) < ' r).
@@ -576,10 +570,21 @@ Section locator.
       (* TODO we took the average so we get a midpoint *)
       assert (q+'epsilon=r-'epsilon) by admit.
       destruct (tight_bound m epsilon) as [u [ltuy ltyuepsilon]].
-      (* TODO simple algebra: s=q-u so q-s=u *)
-      set (s := q-u). assert (qsltx : 'q-'s<y) by admit.
-      (* TODO 0<epsilon so s<s+epsilon *)
-      assert (sltseps : s<s+' epsilon) by admit.
+      set (s := q-u).
+      assert (qsltx : 'q-'s<y).
+      {
+        unfold s.
+        rewrite (preserves_plus q (-u)).
+        rewrite negate_plus_distr.
+        rewrite (associativity ('q) (-'q) (-'(-u))).
+        rewrite plus_negate_r.
+        rewrite plus_0_l.
+        rewrite (preserves_negate u).
+        rewrite negate_involutive.
+        assumption.
+      }
+      assert (sltseps : s<s+' epsilon)
+        by apply ltQposQ.
       destruct (l s (s+' epsilon) sltseps) as [ltsx|ltxseps].
       - apply inl. apply char_plus_left. apply tr; exists s; split; try assumption.
         rewrite preserves_minus; assumption.
@@ -636,13 +641,16 @@ Section locator.
       destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
         as [ltqepsxs|ltxsreps].
       + apply inl.
-        (* TODO if a + b < c then a < c - b *)
-        assert (ltqxseps : ' q < xs (M (epsilon / 2)) - ' (' epsilon)) by admit.
+        rewrite preserves_plus in ltqepsxs.
+        assert (ltqxseps : ' q < xs (M (epsilon / 2)) - ' (' epsilon))
+          by (apply flip_lt_minus_r; assumption).
         refine (transitivity ltqxseps _).
         apply (modulus_close_limit _ _ _ _ _).
       + apply inr.
-        (* TODO if a < b - c then a + c < b *)
-        assert (ltxsepsr : xs (M (epsilon / 2)) + ' (' epsilon) < ' r) by admit.
+        rewrite (preserves_plus r (-'epsilon)) in ltxsreps.
+        rewrite (preserves_negate ('epsilon)) in ltxsreps.
+        assert (ltxsepsr : xs (M (epsilon / 2)) + ' (' epsilon) < ' r)
+          by (apply flip_lt_minus_r; assumption).
         refine (transitivity _ ltxsepsr).
         apply (modulus_close_limit _ _ _ _ _).
     Admitted.

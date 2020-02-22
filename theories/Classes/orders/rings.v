@@ -236,6 +236,22 @@ Section strict_ring_order.
   trivial.
   Qed.
 
+  Lemma pos_minus_lt_compat_r x z : 0 < z <-> x - z < x.
+  Proof.
+    pattern x at 2;apply (transport _ (plus_0_r x)).
+    split; intros.
+    - apply (strictly_order_preserving _), flip_pos_negate; assumption.
+    - apply flip_pos_negate, (strictly_order_reflecting (x+)); assumption.
+  Qed.
+
+  Lemma pos_minus_lt_compat_l x z : 0 < z <-> - z + x < x.
+  Proof.
+    split; intros ltz.
+    - rewrite (commutativity (-z) x); apply pos_minus_lt_compat_r; assumption.
+    - rewrite (commutativity (-z) x) in ltz.
+      apply (snd (pos_minus_lt_compat_r x z)); assumption.
+  Qed.
+
   Lemma between_pos (x : R) : 0 < x -> -x < x.
   Proof.
   intros E.
