@@ -9,6 +9,7 @@ jobs:
     # TODO: Eventually include different OS's in the matrix
 
     strategy:
+      fail-fast: false
       matrix:
         env:
         - { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
