@@ -83,7 +83,8 @@ Section locator.
       - exact inl.
       - intros notlt.
         apply inr.
-        assert (ltqr' : ' q < ' r) by auto.
+        assert (ltqr' : ' q < ' r)
+          by auto.
         exact (nlt_lt_trans notlt ltqr').
     Qed.
 
@@ -306,10 +307,8 @@ Section locator.
         - apply lt_0_3.
         - apply pos_dec_recip_compat, epsilon.
       }
-      assert (ap30 : (3 : Q) <> 0).
-      {
-        apply lt_ne_flip, lt_0_3.
-      }
+      assert (ap30 : (3 : Q) <> 0)
+        by apply lt_ne_flip, lt_0_3.
       clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths H.
       assert (ltn3eps : r < q + ' n * ' epsilon / 3).
       {
@@ -324,10 +323,8 @@ Section locator.
         rewrite (commutativity (/3) 3).
         rewrite (dec_recip_inverse 3 ap30).
         rewrite mult_1_l.
-        assert (apepsilon0 : 'epsilon <> 0).
-        {
-          apply lt_ne_flip. apply epsilon.
-        }
+        assert (apepsilon0 : 'epsilon <> 0)
+          by apply lt_ne_flip, epsilon.
         rewrite (dec_recip_inverse ('epsilon) apepsilon0).
         rewrite mult_1_r.
         assumption.
@@ -354,10 +351,8 @@ Section locator.
           reflexivity.
         }
         rewrite eq2.
-        assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1).
-        {
-          apply pos_plus_lt_compat_r, lt_0_1.
-        }
+        assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1)
+          by apply pos_plus_lt_compat_r, lt_0_1.
         assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
         {
           nrefine (pos_mult_lt_r ('epsilon/3) _ (' (' k) - 1) (' (' k) - 1 + 1) _); try apply _.
@@ -486,11 +481,13 @@ Section locator.
       unfold P; split.
       - apply ltxq_locates_left.
         (* TODO we took some averages; show some basic algebra. *)
-        assert (xeq : q - ' epsilon = s) by admit.
+        assert (xeq : q - ' epsilon = s)
+          by admit.
         rewrite xeq; assumption.
       - apply ltrx_locates_right.
         (* TODO we took some averages; show some basic algebra. *)
-        assert (yeq : q + ' epsilon = t) by admit.
+        assert (yeq : q + ' epsilon = t)
+          by admit.
         rewrite yeq; assumption.
     Admitted.
     Definition archimedean_structure : {q : Q | x < 'q < y}.
@@ -554,7 +551,8 @@ Section locator.
             apply (transitivity qpos ltqr).
           }
           (* TODO if 0 < q < r then 1/r < 1/q *)
-          assert (ltrrrq : / r < / q) by admit.
+          assert (ltrrrq : / r < / q)
+            by admit.
           destruct (l (/r) (/q) ltrrrq) as [ltrrx|ltxrq].
           * apply inr.
             (* TODO if 1/r < x then 1/x < r *)
@@ -577,7 +575,8 @@ Section locator.
       intros q r ltqr.
       set (epsilon := (Qpos_diff q r ltqr) / 2).
       (* TODO we took the average so we get a midpoint *)
-      assert (q+'epsilon=r-'epsilon) by admit.
+      assert (q+'epsilon=r-'epsilon)
+        by admit.
       destruct (tight_bound m epsilon) as [u [ltuy ltyuepsilon]].
       set (s := q-u).
       assert (qsltx : 'q-'s<y).
@@ -646,7 +645,8 @@ Section locator.
       intros q r ltqr.
       set (epsilon := (Qpos_diff q r ltqr) / 3).
       (* TODO we are doing trisection so we have the inequality: *)
-      assert (ltqepsreps : q + ' epsilon < r - ' epsilon) by admit.
+      assert (ltqepsreps : q + ' epsilon < r - ' epsilon)
+        by admit.
       destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
         as [ltqepsxs|ltxsreps].
       + apply inl.
