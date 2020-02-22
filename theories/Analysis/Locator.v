@@ -68,7 +68,7 @@ Section locator.
   Arguments locates_right_true  [x] _ [q] [r] _.
   Arguments locates_right_false [x] _ [q] [r] _.
   Check (locates_right : forall x : F, locator' x -> forall q r : Q, q < r -> DHProp).
-  Context `{Funext}.
+
   Definition locates_left {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
     fun nu => Build_DHProp (BuildhProp (~ (locates_right l nu))) _.
 
@@ -79,10 +79,10 @@ Section locator.
     Proof.
       intros q r ltqr.
       case (LEM (' q < x)).
-      - refine _.
+      - apply _.
       - exact inl.
       - intros notlt.
-        refine (inr _).
+        apply inr.
         assert (ltqr' : ' q < ' r) by auto.
         exact (nlt_lt_trans notlt ltqr').
     Qed.
@@ -166,7 +166,12 @@ Section locator.
         destruct (dec (locates_right0 q r nu)); auto.
     Defined.
 
-    (* TODO build the equivalence object *)
+    Definition equiv_locator_locator' : locator x <~> locator' x
+      := equiv_adjointify
+           locator_locator'
+           locator'_locator
+           locator'_locator_locator'
+           locator_locator'_locator.
 
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
     Proof.
@@ -234,7 +239,8 @@ Section locator.
 
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
-      assert (qP_lower : {q : Q | P_lower q}) by refine (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
+      assert (qP_lower : {q : Q | P_lower q})
+        by refine (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
       destruct qP_lower as [q Pq].
       exists (q - 1).
       unfold P_lower in Pq. simpl in *.
@@ -268,7 +274,8 @@ Section locator.
 
     Definition upper_bound : {r : Q | x < ' r}.
     Proof.
-      assert (rP_upper : {r : Q | P_upper r}) by refine (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
+      assert (rP_upper : {r : Q | P_upper r})
+        by refine (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
       destruct rP_upper as [r Pr].
       exists (r + 1).
       unfold P_upper in Pr. simpl in *.
@@ -283,14 +290,15 @@ Section locator.
 
     Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
     Proof.
-      destruct lower_bound as [q ltqx], upper_bound as [r ltxr].
-      destruct (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
+      destruct
+        lower_bound as [q ltqx]
+      , upper_bound as [r ltxr]
+      , (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
       assert (lt0 : 0 < 'epsilon / 3).
       {
         apply pos_mult.
         - apply epsilon.
-        - apply pos_dec_recip_compat.
-          apply lt_0_3.
+        - apply pos_dec_recip_compat, lt_0_3.
       }
       assert (lt0' : 0 < 3 / ' epsilon).
       {
@@ -300,8 +308,9 @@ Section locator.
       }
       assert (ap30 : (3 : Q) <> 0).
       {
-        apply lt_ne_flip. apply lt_0_3.
+        apply lt_ne_flip, lt_0_3.
       }
+      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths H.
       assert (ltn3eps : r < q + ' n * ' epsilon / 3).
       {
         rewrite (commutativity q (' n * ' epsilon / 3)).
@@ -347,8 +356,7 @@ Section locator.
         rewrite eq2.
         assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1).
         {
-          apply pos_plus_lt_compat_r.
-          apply lt_0_1.
+          apply pos_plus_lt_compat_r, lt_0_1.
         }
         assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
         {
@@ -396,7 +404,8 @@ Section locator.
       unfold P in Pltux, Pltxueps.
       split.
       - apply (locates_right_true l (lt_grid (fin_incl u)) Pltux).
-      - set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
+      - clear - Pltxueps Qtriv Qdec_paths ap30.
+        set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
         unfold grid in *.
         change (' fin_incl (fin_incl u)) with (fin_to_nat (fin_incl (fin_incl u))).
         rewrite path_nat_fin_incl, path_nat_fin_incl.
@@ -497,8 +506,8 @@ Section locator.
       unfold P in R.
       destruct R as [[q eps] [lleft mright]].
       exists q; split.
-      - refine (locates_right_false l _ lleft).
-      - refine (locates_right_true  m _ mright).
+      - nrefine (locates_right_false l _ lleft).
+      - nrefine (locates_right_true  m _ mright).
     Defined.
 
   End arch_struct.
