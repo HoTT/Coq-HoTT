@@ -448,10 +448,10 @@ Section Reflective_Subuniverse.
 
   End Replete.
 
-  Section OInverts.
+  (** The maps that are inverted by the reflector.  Note that this notation is not (yet) global (because notations in a section cannot be made global); it only exists in this section.  After the section is over, we will redefine it globally. *)
+  Local Notation O_inverts f := (IsEquiv (O_functor f)).
 
-    (** The maps that are inverted by the reflector.  Note that this notation is NOT (yet) GLOBAL; it only exists in this section. *)
-    Local Notation O_inverts f := (IsEquiv (O_functor f)).
+  Section OInverts.
 
     Global Instance O_inverts_O_unit (A : Type)
     : O_inverts (to O A).
@@ -905,8 +905,6 @@ Section Reflective_Subuniverse.
 
     (** ** Coproducts *)
 
-    Local Notation O_inverts f := (IsEquiv (O_functor f)).
-
     Definition O_inverts_sum {A B A' B'} (f : A -> A') (g : B -> B')
                `{O_inverts f} `{O_inverts g}
       : O_inverts (functor_sum f g).
@@ -927,9 +925,7 @@ Section Reflective_Subuniverse.
     (** ** Coequalizers *)
 
     Section OCoeq.
-      Context `{Funext} {B A : Type} (f g : B -> A).
-
-      Local Notation O_inverts f := (IsEquiv (O_functor f)).
+      Context {B A : Type} (f g : B -> A).
 
       Definition O_inverts_functor_coeq
                  {B' A' : Type} (f' g' : B' -> A')
@@ -938,38 +934,10 @@ Section Reflective_Subuniverse.
                  `{O_inverts k} `{O_inverts h}
         : O_inverts (functor_coeq h k p q).
       Proof.
-        apply O_inverts_from_isequiv_precompose.
+        apply O_inverts_from_extendable.
         intros Z Z_inO.
-        srapply isequiv_commsq'.
-        4,5: rapply ((equiv_Coeq_rec _ _ _)^-1).
-        { srapply equiv_functor_sigma'.
-          - srapply (Build_Equiv _ _ _ (isequiv_precompose_O_inverts k Z)).
-          - intro h'; cbn.
-            refine (_ oE _).
-            2: { nrefine (Build_Equiv _ _ (fun r => r oD h : h' o f' o h == h' o g' o h) _).
-                 rapply (isequiv_extendable 0).
-                 exact (snd (ooextendable_O_inverts h Z 3) _ _). }
-            srapply equiv_functor_forall_id.
-            intro b; cbn.
-            exact (equiv_concat_r (ap h' (q b))^ _ oE equiv_concat_l (ap h' (p b)) _).
-        }
-        { cbn.
-          intros t.
-          srapply path_sigma; cbn.
-          - reflexivity.
-          - cbn.
-            funext b.
-            unfold functor_forall, functor_coeq, "oD".
-            refine (_ @ (ap_compose _ _ _)^).
-            refine (_ @ (ap (ap t) _)^).
-            2: rapply Coeq_rec_beta_cglue.
-            refine (_ @ (ap_pp _ _ _)^).
-            apply concat2.
-            2: refine ((ap_V _ _)^ @ (ap_compose _ t _)).
-            refine (_ @ (ap_pp _ _ _)^).
-            apply whiskerR; rapply ap_compose.
-        }
-        all: try exact _.
+        apply extendable_functor_coeq'.
+        all:nrapply ooextendable_O_inverts; assumption.
       Defined.
 
       Definition equiv_O_functor_coeq
@@ -1013,7 +981,7 @@ Section Reflective_Subuniverse.
     (** ** Pushouts *)
 
     Section OPushout.
-      Context `{Funext} {A B C : Type} (f : A -> B) (g : A -> C).
+      Context {A B C : Type} (f : A -> B) (g : A -> C).
 
       Definition equiv_O_pushout
         : O (Pushout f g) <~> O (Pushout (O_functor f) (O_functor g)).
@@ -1199,7 +1167,7 @@ Section Reflective_Subuniverse.
 
 End Reflective_Subuniverse.
 
-(** Make the [O_inverts] notation global. *)
+(** Now we make the [O_inverts] notation global. *)
 Notation O_inverts O f := (IsEquiv (O_functor O f)).
 
 (** ** Modally connected types *)
@@ -1950,3 +1918,21 @@ Global Instance inO_paths_SepO (O : Subuniverse)
        {A : Type} {A_inO : In (Sep O) A} (x y : A)
   : In O (x = y)
   := A_inO x y.
+
+(** TODO: Where to put this?  Morally it goes with the study of [<<] in [Modality.v] and [<<<] in [Descent.v] and [Sep] in [Separated.v], but it doesn't actually need any of those relations, only [O' <= Sep O], and it would also be nice to have it next to  [O_inverts_functor_coeq].  It's a variation on the latter: if [O' <= Sep O], then for [O'] to invert [functor_coeq h k] it suffices that it invert [k] and that [h] be [O]-connected (by [conn_map_OO_inverts], which has different hypotheses but applies in many of the same examples, that is a weaker assumption). *)
+Definition OO_inverts_functor_coeq
+           (O O' : ReflectiveSubuniverse) `{O' <= Sep O}
+           {B A : Type} (f g : B -> A)
+           {B' A' : Type} (f' g' : B' -> A')
+           (h : B -> B') (k : A -> A')
+           (p : k o f == f' o h) (q : k o g == g' o h)
+           `{O_inverts O' k} `{IsConnMap O _ _ h}
+  : O_inverts O' (functor_coeq h k p q).
+Proof.
+  apply O_inverts_from_extendable.
+  intros Z Z_inO.
+  apply extendable_functor_coeq.
+  - nrapply (ooextendable_O_inverts O'); assumption.
+  - pose (inO_leq O' (Sep O)).
+    intros u v; rapply (extendable_conn_map_inO O).
+Defined.

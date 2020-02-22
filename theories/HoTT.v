@@ -68,6 +68,8 @@ Require Export HoTT.Limits.Limit.
 
 Require Export HoTT.Colimits.Pushout.
 Require Export HoTT.Colimits.SpanPushout.
+Require Export HoTT.Colimits.Quotient.
+Require Export HoTT.Colimits.MappingCylinder.
 Require Export HoTT.Colimits.Colimit.
 Require Export HoTT.Colimits.Colimit_Pushout.
 Require Export HoTT.Colimits.Colimit_Coequalizer.

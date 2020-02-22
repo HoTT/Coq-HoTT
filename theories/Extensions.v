@@ -5,6 +5,8 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp FunextVarieties EquivalenceVarieties PathAny.
 Require Import HoTT.Tactics.
+Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
+Require Import HIT.Coeq Colimits.MappingCylinder.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -433,7 +435,68 @@ Section Extensions.
 
 End Extensions.
 
-(** Extendability along [functor_sum] *)
+(** ** Extendability along cofibrations *)
+
+(** If a family is extendable along a cofibration (i.e. a mapping cylinder), it is extendable definitionally. *)
+Definition cyl_extension {A B} (f : A -> B) (C : Cyl f -> Type)
+           (g : forall a, C (cyl a))
+           (ext : ExtensionAlong cyl C g)
+  : ExtensionAlong cyl C g.
+Proof.
+  srefine (Cyl_ind_dp C g (ext.1 o cyr) _ ; _); intros a.
+  + refine ((ext.2 a)^ @Dl _)%dpath.
+    apply dp_apD.
+  + reflexivity. (** The point is that this equality is now definitional. *)
+Defined.
+
+Definition cyl_extendable (n : nat)
+           {A B} (f : A -> B) (C : Cyl f -> Type)
+           (ext : ExtendableAlong n cyl C)
+  : ExtendableAlong n cyl C.
+Proof.
+  revert C ext; simple_induction n n IH; intros C ext; [ exact tt | split ].
+  - intros g.
+    apply cyl_extension.
+    exact (fst ext g).
+  - intros h k; apply IH.
+    exact (snd ext h k).
+Defined.
+
+Definition cyl_ooextendable
+           {A B} (f : A -> B) (C : Cyl f -> Type)
+           (ext : ooExtendableAlong cyl C)
+  : ooExtendableAlong cyl C
+  := fun n => cyl_extendable n f C (ext n).
+
+Definition cyl_extension'
+           {A B} (f : A -> B) (C : B -> Type)
+           (g : forall a, C (pr_cyl (cyl a)))
+           (ext : ExtensionAlong f C g)
+  : ExtensionAlong cyl (C o pr_cyl) g.
+Proof.
+  rapply cyl_extension.
+  exists (ext.1 o pr_cyl).
+  intros x; apply ext.2.
+Defined.
+
+Definition cyl_extendable' (n : nat)
+           {A B} (f : A -> B) (C : B -> Type)
+           (ext : ExtendableAlong n f C)
+  : ExtendableAlong n cyl (C o (pr_cyl' f)).
+Proof.
+  rapply cyl_extendable.
+  refine (cancelL_extendable n C cyl pr_cyl _ ext).
+  rapply extendable_equiv.
+Defined.
+
+Definition cyl_ooextendable'
+           {A B} (f : A -> B) (C : B -> Type)
+           (ext : ooExtendableAlong f C)
+  : ooExtendableAlong cyl (C o (pr_cyl' f))
+  := fun n => cyl_extendable' n f C (ext n).
+
+
+(** ** Extendability along [functor_sum] *)
 
 Definition extendable_functor_sum (n : nat)
            {A B A' B'} (f : A -> A') (g : B -> B')
@@ -464,3 +527,124 @@ Definition ooextendable_functor_sum
 Proof.
   intros n; apply extendable_functor_sum; [ apply ef | apply eg ].
 Defined.
+
+
+(** ** Extendability along [functor_coeq] *)
+
+(** The path algebra in these proofs is terrible on its own.  But by replacing the maps with cofibrations so that many equalities hold definitionally, and modifying the extensions to also be strict, it becomes manageable with a bit of dependent-path technology. *)
+
+(** First we show that if we can extend in [C] along [k], and we can extend in appropriate path-types of [C] along [h], then we can extend in [C] along [functor_coeq].  This is where the hard work is. *)
+Definition extension_functor_coeq {B A f g B' A' f' g'}
+           {h : B -> B'} {k : A -> A'}
+           {p : k o f == f' o h} {q : k o g == g' o h}
+           {C : Coeq f' g' -> Type}
+           (ek : ExtendableAlong 1 k (C o coeq))
+           (eh : forall (u v : forall x : B', C (coeq (g' x))),
+               ExtendableAlong 1 h (fun x => u x = v x))
+           (s : forall x, C (functor_coeq h k p q x))
+  : ExtensionAlong (functor_coeq h k p q) C s.
+Proof.
+  (** We start by change the problem to involve [CylCoeq] with cofibrations. *)
+  set (C' := C o pr_cylcoeq p q).
+  set (s' x := pr_cyl_cylcoeq p q x # s x).
+  assert (e : ExtensionAlong (cyl_cylcoeq p q) C' s').
+  2:{ pose (ex := fst (extendable_equiv 1 C (pr_cylcoeq p q)) e.1).
+      exists (ex.1); intros x.
+      apply (equiv_inj (transport C (pr_cyl_cylcoeq p q x))).
+      exact (apD _ (pr_cyl_cylcoeq p q x) @ ex.2 _ @ e.2 x). }
+  (** We have to transfer the hypotheses along those equivalences too.  We do it using [cyl_extendable] so that the resulting extensions compute definitionally.  Note that this means we never need to refer to the [.2] parts of the extensions, since they are identity paths. *)
+  pose (ea1 := fun u => (fst (cyl_extendable' 1 _ _ ek) u).1).
+  assert (eb'' : forall u v,
+             ExtendableAlong 1 cyl (fun x:Cyl h => DPath C' (cglue x) (u x) (v x))).
+  { intros u v.
+    rapply extendable_postcompose'.
+    2:{ rapply (cancelL_extendable 1 _ cyl pr_cyl).
+        - rapply extendable_equiv.
+        - exact (eh (fun x => cglue x # u (cyr x)) (v o cyr)). }
+    intros x; subst C'.
+    refine (_ oE dp_path_transport).
+    refine ((dp_compose (pr_cylcoeq p q) C _)^-1 oE _).
+    symmetry; srapply equiv_ds_fill_lr.
+    3:rapply ap_pr_cylcoeq_cglue.
+    all:srapply (transport (fun r => DPath C r _ _)).
+    3:exact (dp_inverse (dp_compose _ C _ (dp_apD u (eissect pr_cyl x)))).
+    4:exact (dp_inverse (dp_compose _ C _ (dp_apD v (eissect pr_cyl x)))).
+    1:change (fun y => pr_cylcoeq p q (coeq (functor_cyl p y)))
+      with (fun y => coeq (f := f') (g := g') (pr_cyl (functor_cyl p y))).
+    2:change (fun y => pr_cylcoeq p q (coeq (functor_cyl q y)))
+      with (fun y => coeq (f := f') (g := g') (pr_cyl (functor_cyl q y))).
+    all:refine ((ap_V _ (eissect pr_cyl x))^ @ _).
+    all:rapply ap_compose. }
+  pose (eb1 := fun u v w => (fst (cyl_extendable _ _ _ (eb'' u v)) w).1).
+  (** Now we construct an extension using Coeq-induction, and prove that it *is* an extension also using Coeq-induction. *)
+  srefine (_;_); srapply Coeq_ind_dp.
+  + exact (ea1 (s' o coeq)).
+  + apply eb1; intros b.
+    rapply (dp_compose' _ _ (ap_cyl_cylcoeq_cglue p q b)).
+    exact (dp_apD s' (cglue b)).
+  + (** Since we're using cofibrations, this holds definitionally. *)
+    intros a; reflexivity.
+  + (** And this one is much simpler than it would be otherwise. *)
+    intros b.
+    apply ds_dp.
+    rapply ds_G1.
+    refine (dp_apD_compose' _ _ (ap_cyl_cylcoeq_cglue p q b) _ @ _).
+    apply moveR_equiv_V.
+    rapply (Coeq_ind_dp_beta_cglue C').
+Defined.
+
+(** Now we can easily iterate into higher extendability. *)
+Definition extendable_functor_coeq (n : nat)
+           {B A f g B' A' f' g'}
+           {h : B -> B'} {k : A -> A'}
+           {p : k o f == f' o h} {q : k o g == g' o h}
+           {C : Coeq f' g' -> Type}
+           (ek : ExtendableAlong n k (C o coeq))
+           (eh : forall (u v : forall x : B', C (coeq (g' x))),
+               ExtendableAlong n h (fun x => u x = v x))
+  : ExtendableAlong n (functor_coeq h k p q) C.
+Proof.
+  revert C ek eh; simple_induction n n IH; intros C ek eh; [ exact tt | split ].
+  - apply extension_functor_coeq.
+    + exact (fst ek , fun _ _ => tt).
+    + exact (fun u v => (fst (eh u v) , fun _ _ => tt)).
+  - intros u v; apply IH.
+    + exact (snd ek (u o coeq) (v o coeq)).
+    + exact (snd (eh (u o coeq o g') (v o coeq o g'))).
+Defined.
+
+Definition ooextendable_functor_coeq
+           {B A f g B' A' f' g'}
+           {h : B -> B'} {k : A -> A'}
+           {p : k o f == f' o h} {q : k o g == g' o h}
+           {C : Coeq f' g' -> Type}
+           (ek : ooExtendableAlong k (C o coeq))
+           (eh : forall (u v : forall x : B', C (coeq (g' x))),
+               ooExtendableAlong h (fun x => u x = v x))
+  : ooExtendableAlong (functor_coeq h k p q) C
+  := fun n => extendable_functor_coeq n (ek n) (fun u v => eh u v n).
+
+(** Since extending at level [n.+1] into [C] implies extending at level [n] into path-types of [C], we get the following corollary. *)
+Definition extendable_functor_coeq' (n : nat)
+           {B A f g B' A' f' g'}
+           {h : B -> B'} {k : A -> A'}
+           {p : k o f == f' o h} {q : k o g == g' o h}
+           {C : Coeq f' g' -> Type}
+           (ek : ExtendableAlong n k (C o coeq))
+           (eh : ExtendableAlong n.+1 h (C o coeq o g'))
+  : ExtendableAlong n (functor_coeq h k p q) C.
+Proof.
+  apply extendable_functor_coeq.
+  1:assumption.
+  exact (snd eh).
+Defined.
+
+Definition ooextendable_functor_coeq'
+           {B A f g B' A' f' g'}
+           {h : B -> B'} {k : A -> A'}
+           {p : k o f == f' o h} {q : k o g == g' o h}
+           {C : Coeq f' g' -> Type}
+           (ek : ooExtendableAlong k (C o coeq))
+           (eh : ooExtendableAlong h (C o coeq o g'))
+  : ooExtendableAlong (functor_coeq h k p q) C
+  := fun n => extendable_functor_coeq' n (ek n) (eh n.+1).

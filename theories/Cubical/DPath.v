@@ -43,7 +43,7 @@ Proof.
 Defined.
 
 (* Here is a notation for DPaths that can make it easier to use *)
-Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) (at level 10)
+Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) (at level 25)
   : dpath_scope.
 
 (* We have reflexivity for DPaths, this helps coq guess later *)
@@ -108,8 +108,26 @@ Proof.
   exact concat.
 Defined.
 
-(* TODO: Is level correct? *)
-Notation "x '@D' y" := (dp_concat x y) (at level 10) : dpath_scope.
+Notation "x '@D' y" := (dp_concat x y) (at level 20) : dpath_scope.
+
+(* Concatenation of dependent paths with non-dependent paths *)
+Definition dp_concat_r {A} {P : A -> Type} {a0 a1}
+  {p : a0 = a1} {b0 : P a0} {b1 b2 : P a1}
+  : DPath P p b0 b1 -> (b1 = b2) -> DPath P p b0 b2.
+Proof.
+  destruct p; exact concat.
+Defined.
+
+Notation "x '@Dr' y" := (dp_concat_r x y) (at level 20) : dpath_scope.
+
+Definition dp_concat_l {A} {P : A -> Type} {a1 a2}
+  {q : a1 = a2} {b0 b1 : P a1} {b2 : P a2}
+  : (b0 = b1) -> DPath P q b1 b2 -> DPath P q b0 b2.
+Proof.
+  destruct q; exact concat.
+Defined.
+
+Notation "x '@Dl' y" := (dp_concat_l x y) (at level 20) : dpath_scope.
 
 (* Inverse of dependent paths *)
 Definition dp_inverse {A} {P : A -> Type} {a0 a1} {p : a0 = a1}
@@ -120,7 +138,7 @@ Proof.
 Defined.
 
 (* TODO: Is level correct? *)
-Notation "x '^D'" := (dp_inverse x) (at level 20) : dpath_scope.
+Notation "x '^D'" := (dp_inverse x) (at level 3) : dpath_scope.
 
 (* dp_apD distributes over concatenation *)
 Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)
@@ -270,23 +288,29 @@ Proof.
 Defined.
 
 Definition dp_compose' {A B} (f : A -> B) (P : B -> Type) {x y : A}
-  {p : x = y} {q : f x = f y} (r : ap f p = q) (u : P (f x)) (v : P (f y))
+  {p : x = y} {q : f x = f y} (r : ap f p = q) {u : P (f x)} {v : P (f y)}
   : DPath (fun x => P (f x)) p u v <~> DPath P q u v.
 Proof.
   by destruct r, p.
 Defined.
 
 Definition dp_compose {A B} (f : A -> B) (P : B -> Type) {x y : A}
-  (p : x = y) (u : P (f x)) (v : P (f y))
+  (p : x = y) {u : P (f x)} {v : P (f y)}
   : DPath (fun x => P (f x)) p u v <~> DPath P (ap f p) u v
-  := dp_compose' f P (idpath (ap f p)) u v.
+  := dp_compose' f P (idpath (ap f p)).
+
+Definition dp_apD_compose' {A B : Type} (f : A -> B) (P : B -> Type)
+           {x y : A} {p : x = y} {q : f x = f y} (r : ap f p = q) (g : forall b:B, P b)
+  : dp_apD (g o f) p = (dp_compose' f P r)^-1 (dp_apD g q).
+Proof.
+  by destruct r, p.
+Defined.
 
 Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} (p : x = y) (g : forall b:B, P b)
-  : dp_apD (g o f) p = (dp_compose f P p (g (f x)) (g (f y)))^-1 (dp_apD g (ap f p)).
-Proof.
-  by destruct p.
-Defined.
+  : dp_apD (g o f) p = (dp_compose f P p)^-1 (dp_apD g (ap f p))
+  := dp_apD_compose' f P (idpath (ap f p)) g.
+
 
 (* Type constructors *)
 
