@@ -46,18 +46,21 @@ Section locator.
 
   Context `{Funext} `{Univalence}.
 
-  (* Assume we have an enumeration of the rationals. *)
-  Axiom Q_eq : nat <~> Q.
-  (* TODO enumerate pairs of ordered rationals *)
-  Axiom QQpos_eq : nat <~> Q * Qpos Q.
+  (* Assume we have enumerations of the rationals, and of pairs of
+  ordered rationals. *)
+  Context (Q_eq : nat <~> Q).
+  Context (QQpos_eq : nat <~> Q * Qpos Q).
 
   Instance qinc: Cast Q F := rationals_to_field Q F.
+  (* TODO The following should probably come from the `Rationals`
+  instance. *)
   Axiom cast_pres_ordering : StrictlyOrderPreserving qinc.
   Existing Instance cast_pres_ordering.
 
   (* Definition of a locator for a fixed real number. *)
   Definition locator (x : F) := forall q r : Q, q < r -> (' q < x) + (x < ' r).
 
+  (* Alternative definition; see equivalence below *)
   Record locator' (x : F) :=
     { locates_right : forall q r : Q, q < r -> DHProp
     ; locates_right_true : forall q r : Q, forall nu : q < r, locates_right q r nu -> ' q < x
@@ -67,7 +70,6 @@ Section locator.
   Arguments locates_right       [x] _ [q] [r] _.
   Arguments locates_right_true  [x] _ [q] [r] _.
   Arguments locates_right_false [x] _ [q] [r] _.
-  Check (locates_right : forall x : F, locator' x -> forall q r : Q, q < r -> DHProp).
 
   Definition locates_left {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
     fun nu => Build_DHProp (BuildhProp (~ (locates_right l nu))) _.
@@ -149,7 +151,7 @@ Section locator.
       apply path_forall; intros nu.
       unfold locator'_locator, locator_locator'. simpl.
       destruct (l q r nu); auto.
-    Defined.
+    Qed.
 
     Let locsig : _ <~> locator' x := ltac:(issig).
     Lemma locator'_locator_locator' (l' : locator' x): locator_locator' (locator'_locator l') = l'.
@@ -165,7 +167,7 @@ Section locator.
         apply equiv_path_dhprop; simpl.
         rewrite (path_dec (locates_right0 q r nu)).
         destruct (dec (locates_right0 q r nu)); auto.
-    Defined.
+    Qed.
 
     Definition equiv_locator_locator' : locator x <~> locator' x
       := equiv_adjointify
@@ -319,7 +321,7 @@ Section locator.
         rewrite <- (associativity ('n) ('epsilon) (/3)).
         rewrite <- (associativity ('n) (' epsilon / 3) (3 / ' epsilon)).
         rewrite <- (associativity ('epsilon) (/3) (3/'epsilon)).
-        rewrite (@associativity Q Q Q Q Q Q mult mult mult mult _ (/3) 3 (/'epsilon)).
+        rewrite (associativity (/3) 3 (/'epsilon)).
         rewrite (commutativity (/3) 3).
         rewrite (dec_recip_inverse 3 ap30).
         rewrite mult_1_l.
@@ -335,22 +337,20 @@ Section locator.
         intros k. unfold grid.
         change (' fin_incl k) with (fin_to_nat (fin_incl k)); rewrite path_nat_fin_incl.
         change (' fsucc k) with (fin_to_nat (fsucc k)); rewrite path_nat_fsucc.
-        assert (eq1 : ' (S (' k)) = (' (' k) + 1)).
+        assert (' (S (' k)) = (' (' k) + 1)) as ->.
         {
           rewrite S_nat_plus_1.
           rewrite (preserves_plus (' k) 1).
           rewrite preserves_1.
           reflexivity.
         }
-        rewrite eq1.
-        assert (eq2 : ' (' k) + 1 - 1 = ' (' k) - 1 + 1).
+        assert (' (' k) + 1 - 1 = ' (' k) - 1 + 1) as ->.
         {
           rewrite <- (associativity _ 1 (-1)).
           rewrite (commutativity 1 (-1)).
           rewrite (associativity _ (-1) 1).
           reflexivity.
         }
-        rewrite eq2.
         assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1)
           by apply pos_plus_lt_compat_r, lt_0_1.
         assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
@@ -361,8 +361,6 @@ Section locator.
         apply pseudo_srorder_plus.
         exact lt2.
       }
-      (* set (P k := Build_DHProp (BuildhProp (locates_right l (lt_grid (fin_incl k)) *)
-      (*                                       /\ locates_left l (lt_grid (fsucc k)))) _). *)
       set (P k := locates_right l (lt_grid k)).
       assert (left_true : P fin_zero).
       {
@@ -480,16 +478,28 @@ Section locator.
       exists (q, epsilon).
       unfold P; split.
       - apply ltxq_locates_left.
-        (* TODO we took some averages; show some basic algebra. *)
-        assert (xeq : q - ' epsilon = s)
-          by admit.
-        rewrite xeq; assumption.
+        assert (q - ' epsilon = s) as ->.
+        {
+          unfold q; cbn.
+          rewrite <- path_avg_split_diff_l.
+          rewrite <- (plus_assoc s ((t-s)/2) (-((t-s)/2))).
+          rewrite plus_negate_r.
+          rewrite plus_0_r.
+          reflexivity.
+        }
+        assumption.
       - apply ltrx_locates_right.
-        (* TODO we took some averages; show some basic algebra. *)
-        assert (yeq : q + ' epsilon = t)
-          by admit.
-        rewrite yeq; assumption.
-    Admitted.
+        assert (q + ' epsilon = t) as ->.
+        {
+          unfold q; cbn.
+          rewrite <- path_avg_split_diff_r.
+          rewrite <- (plus_assoc t (-((t-s)/2)) ((t-s)/2)).
+          rewrite plus_negate_l.
+          rewrite plus_0_r.
+          reflexivity.
+        }
+        assumption.
+    Qed.
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
       assert (R : sigT P).
@@ -523,17 +533,16 @@ Section locator.
       - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
     Defined.
 
-    Context (nu : x ≶ 0).
+    Section recip_pos.
+      Context (xpos : 0 < x).
+      Let nu := positive_apart_zero x xpos.
 
-    (* Note: If you are going to attemp to fill in the foles, you may
-    be interested in `dec_recip_to_recip` in
-    `Classes.theory.dec_fields` *)
+      (* Note: If you are going to attemp to fill in the foles, you may
+         be interested in `dec_recip_to_recip` in
+         `Classes.theory.dec_fields` *)
 
-    Definition recip : locator (recip (x ; nu)).
-    Proof.
-      destruct (apart_total_lt x 0 nu) as [xneg | xpos].
-      - admit. (* TODO prove the case `x < 0` *)
-      - (* In case `0 < x`: *)
+      Definition recip_pos : locator (// (x ; nu)).
+      Proof.
         intros q r ltqr. destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
         + apply inl. refine (transitivity _ _).
           * apply (strictly_order_preserving _). exact qneg.
@@ -560,9 +569,53 @@ Section locator.
           * apply inl.
             (* TODO if x < 1/q then q < 1/x *)
             todo (' q < // (x ; nu)).
-    Admitted.
+      Admitted.
+    End recip_pos.
 
   End unary_ops.
+
+  Section recip_neg.
+    Context {x : F}
+            (l : locator x)
+            (xneg : x < 0).
+
+    Let nu := negative_apart_zero x xneg.
+
+    Require Import
+            HoTT.Classes.theory.fields.
+
+    Definition recip_neg : locator (// (x ; nu)).
+    Proof.
+      assert (negxpos : 0 < (-x))
+        by (apply flip_neg_negate; assumption).
+      assert (l' := minus (recip_pos (minus l) negxpos)).
+      rewrite (recip_negate (-x)) in l'.
+      unfold negate_apart in l'.
+      rewrite (recip_proper_alt (- - x) x (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu) in l'.
+      - assumption.
+      - apply negate_involutive.
+    Defined.
+
+  End recip_neg.
+
+  Section unary_ops2.
+
+    Context {x : F}
+            (l : locator x)
+            (nu : x ≶ 0).
+
+    Definition recip : locator (// (x ; nu)).
+    Proof.
+      destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
+      - set (l' := recip_neg l xneg).
+        rewrite (recip_proper_alt x x (negative_apart_zero x xneg) nu) in l';
+          try reflexivity; exact l'.
+      - set (l' := recip_pos l xpos).
+        rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
+          try reflexivity; exact l'.
+    Defined.
+
+  End unary_ops2.
 
   Section binary_ops.
 
@@ -574,9 +627,8 @@ Section locator.
     Proof.
       intros q r ltqr.
       set (epsilon := (Qpos_diff q r ltqr) / 2).
-      (* TODO we took the average so we get a midpoint *)
       assert (q+'epsilon=r-'epsilon)
-        by admit.
+        by (rewrite path_avg_split_diff_l, path_avg_split_diff_r; reflexivity).
       destruct (tight_bound m epsilon) as [u [ltuy ltyuepsilon]].
       set (s := q-u).
       assert (qsltx : 'q-'s<y).
@@ -599,9 +651,28 @@ Section locator.
       - apply inr. apply char_plus_right. apply tr.
         set (t := s + ' epsilon); exists t.
         split; try assumption.
-        (* TODO show that r-(q-u+(r-q)/2)=u+(r-q)-(r-q)/2=u+epsilon *)
-        todo (y < ' (r - t)).
-    Admitted.
+        assert (r-(q-u+(r-q)/2)=u+'epsilon) as ->.
+        {
+          change ((r - q) / 2) with ('epsilon).
+          rewrite negate_plus_distr.
+          rewrite <- negate_swap_l.
+          rewrite (plus_comm (-q) u).
+          rewrite (plus_assoc r (u-q) (-'epsilon)).
+          rewrite (plus_assoc r u (-q)).
+          rewrite (plus_comm r u).
+          rewrite <- (plus_assoc u r (-q)).
+          rewrite <- (plus_assoc u (r-q) (-'epsilon)).
+          rewrite (plus_comm r (-q)).
+          rewrite <- (plus_assoc (-q) r (-'epsilon)).
+          rewrite path_avg_split_diff_r.
+          rewrite <- path_avg_split_diff_l.
+          rewrite (plus_assoc (-q) q ((r-q)/2)).
+          rewrite (plus_negate_l q).
+          rewrite (plus_0_l _).
+          reflexivity.
+        }
+        assumption.
+    Defined.
 
   End binary_ops.
 
@@ -614,20 +685,20 @@ Section locator.
         locator (meet x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
-      - apply inl. apply meet_lt_l; assumption.
-      - apply inr. apply meet_lt_r_r; assumption.
-      - apply inr. apply meet_lt_r_l; assumption.
-      - apply inr. apply meet_lt_r_r; assumption.
+      - apply inl, meet_lt_l; assumption.
+      - apply inr, meet_lt_r_r; assumption.
+      - apply inr, meet_lt_r_l; assumption.
+      - apply inr, meet_lt_r_r; assumption.
     Defined.
 
     Lemma join {x y} (l : locator x) (m : locator y):
         locator (join x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
-      - apply inl. apply join_lt_l_l; assumption.
-      - apply inl. apply join_lt_l_l; assumption.
-      - apply inl. apply join_lt_l_r; assumption.
-      - apply inr. apply join_lt_r; assumption.
+      - apply inl, join_lt_l_l; assumption.
+      - apply inl, join_lt_l_l; assumption.
+      - apply inl, join_lt_l_r; assumption.
+      - apply inr, join_lt_r; assumption.
     Defined.
 
   End binary_ops_todo.

@@ -24,6 +24,19 @@ apply Sigma.path_sigma with E.
 apply path_ishprop.
 Qed.
 
+Lemma recip_proper x y Py : x // (y;Py) = 1 -> x = y.
+Proof.
+  intros eqxy.
+  rewrite <- (mult_1_r y).
+  rewrite <- eqxy.
+  rewrite (mult_assoc y x (//(y;Py))).
+  rewrite (mult_comm y x).
+  rewrite <- (mult_assoc x y (//(y;Py))).
+  rewrite (recip_inverse (y;Py)).
+  rewrite (mult_1_r x).
+  reflexivity.
+Qed.
+
 Lemma recip_irrelevant x Px1 Px2 : // (x;Px1) = // (x;Px2).
 Proof.
 apply recip_proper_alt. reflexivity.
@@ -192,6 +205,40 @@ apply (left_cancellation_ne_0 (.*.) (x * y)).
     rewrite <-simple_associativity.
     reflexivity.
 Qed.
+
+Lemma apart_negate (x : F) (Px : x ≶ 0) : (-x) ≶ 0.
+Proof.
+  (* Have: x <> 0 *)
+  (* Want to show: -x <> 0 *)
+  (* Since x=x+0 <> 0=x-x, have x<>x or 0<>-x *)
+  assert (ap : x + 0 ≶ x - x).
+  {
+    rewrite (plus_0_r x).
+    rewrite (plus_negate_r x).
+    assumption.
+  }
+  refine (Trunc_rec _ (field_plus_ext F x 0 x (-x) ap)).
+  intros [apxx|ap0x].
+  - destruct (apart_ne x x apxx); reflexivity.
+  - symmetry; assumption.
+Qed.
+Definition negate_apart : ApartZero F -> ApartZero F.
+Proof.
+  intros [x Px].
+  exists (-x).
+  exact ((apart_negate x Px)).
+Defined.
+Lemma recip_negate (x : F) (Px : x ≶ 0) : (-//(x;Px))=//(negate_apart(x;Px)).
+Proof.
+  apply (left_cancellation (.*.) x).
+  rewrite <- negate_mult_distr_r.
+  rewrite reciperse_alt.
+  apply flip_negate.
+  rewrite negate_mult_distr_l.
+  refine (_^).
+  apply reciperse_alt.
+Qed.
+
 End field_properties.
 
 (* Due to bug #2528 *)
