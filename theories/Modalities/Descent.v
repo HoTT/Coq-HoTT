@@ -94,7 +94,7 @@ Proof.
   - refine (equiv_O_sigma_O O _ oE _ oE (equiv_O_sigma_O O _)^-1).
     refine (Build_Equiv _ _ (O_functor O (functor_sigma f (fun x => O_functor O (g x)))) _).
   - apply O_indpaths. intros [x u]; cbn.
-    rewrite O_rec_beta, to_O_natural, O_rec_beta; cbn.
+    rewrite !to_O_natural, O_rec_beta; cbn.
     rewrite !to_O_natural, O_rec_beta.
     reflexivity.
 Defined.

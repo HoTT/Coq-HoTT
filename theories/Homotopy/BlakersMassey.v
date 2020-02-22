@@ -321,9 +321,11 @@ Section GBM.
           unfold equiv_Ocodeleft2.
           Opaque equiv_Ocodeleft2plus.
           cbn.
-          rewrite to_O_natural, O_rec_beta, to_O_natural.
-          apply ap; cbn.
-          apply Ocodeleft02plus_02b.
+          refine (ap _ (ap _ (to_O_natural _ _ _)) @ _).
+          refine (ap _ (to_O_natural _ _ _) @ _).
+          refine (to_O_natural _ _ _ @ _).
+          apply ap.
+          rapply Ocodeleft02plus_02b.
         Qed.
 
         (** Thus, our pushout in which one vertex is itself a pushout can be written as a "double pushout"
