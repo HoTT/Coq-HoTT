@@ -11,6 +11,10 @@ Section field_properties.
 Context `{IsField F}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
+Lemma recip_inverse' (x : F) (Px : x ≶ 0) : x // (x; Px) = 1.
+Proof.
+  apply (recip_inverse (x;Px)).
+Qed.
 
 Lemma reciperse_alt (x : F) Px : x // (x;Px) = 1.
 Proof.
@@ -237,6 +241,30 @@ Proof.
   rewrite negate_mult_distr_l.
   refine (_^).
   apply reciperse_alt.
+Qed.
+Lemma recip_apart (x : F) (Px : x ≶ 0) : // (x;Px) ≶ 0.
+Proof.
+  apply (strong_extensionality (x*.) (// (x; Px)) 0).
+  rewrite (recip_inverse (x;Px)).
+  rewrite mult_0_r.
+  solve_propholds.
+Qed.
+Definition recip_on_apart (x : ApartZero F) : ApartZero F.
+Proof.
+  exists (//x).
+  apply recip_apart.
+Defined.
+Global Instance recip_involutive: Involutive recip_on_apart.
+Proof.
+  intros [x apx0].
+  apply path_sigma_hprop.
+  unfold recip_on_apart.
+  cbn.
+  apply (left_cancellation (.*.) (// (x; apx0))).
+  rewrite (recip_inverse' (// (x; apx0)) (recip_apart x apx0)).
+  rewrite mult_comm.
+  rewrite (recip_inverse (x;apx0)).
+  reflexivity.
 Qed.
 
 End field_properties.

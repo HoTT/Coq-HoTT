@@ -29,6 +29,13 @@ Require Import
         HoTT.Classes.theory.rings
         HoTT.Classes.theory.rationals.
 
+(* Strangely, it seems that combining the next import with the above
+list breaks some instance search? *)
+Require Import
+        HoTT.Classes.orders.fields
+        HoTT.Classes.theory.fields
+        HoTT.Classes.theory.dec_fields.
+
 Section locator.
   Generalizable Variables Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field.
   Generalizable Variables Fap Fplus Fmult Fzero Fone Fneg Frecip Fle Flt Fjoin Fmeet.
@@ -51,11 +58,13 @@ Section locator.
   Context (Q_eq : nat <~> Q).
   Context (QQpos_eq : nat <~> Q * Qpos Q).
 
-  Instance qinc: Cast Q F := rationals_to_field Q F.
+  Instance qinc : Cast Q F := rationals_to_field Q F.
   (* TODO The following should probably come from the `Rationals`
   instance. *)
   Axiom cast_pres_ordering : StrictlyOrderPreserving qinc.
+  Axiom qinc_strong_presving : IsSemiRingStrongPreserving qinc.
   Existing Instance cast_pres_ordering.
+  Existing Instance qinc_strong_presving.
 
   (* Definition of a locator for a fixed real number. *)
   Definition locator (x : F) := forall q r : Q, q < r -> (' q < x) + (x < ' r).
@@ -543,15 +552,13 @@ Section locator.
 
       Definition recip_pos : locator (// (x ; nu)).
       Proof.
+        assert (recippos : 0 < // (x ; nu))
+          by apply pos_recip_compat.
         intros q r ltqr. destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
         + apply inl. refine (transitivity _ _).
           * apply (strictly_order_preserving _). exact qneg.
-          * rewrite preserves_0.
-            (* TODO if 0 < x then 0 < 1/x *)
-            todo (0 < // (x ; nu)).
-        + apply inl. rewrite qzero, preserves_0.
-          (* TODO if 0 < x then 0 < 1/x *)
-          todo (0 < // (x ; nu)).
+          * rewrite preserves_0; assumption.
+        + apply inl. rewrite qzero, preserves_0; assumption.
         + assert (qap0 : q ≶ 0)
             by apply (pseudo_order_lt_apart_flip _ _ qpos).
           assert (rap0 : r ≶ 0).
@@ -559,17 +566,33 @@ Section locator.
             refine (pseudo_order_lt_apart_flip _ _ _).
             apply (transitivity qpos ltqr).
           }
-          (* TODO if 0 < q < r then 1/r < 1/q *)
           assert (ltrrrq : / r < / q)
-            by admit.
+            by (apply flip_lt_dec_recip; assumption).
           destruct (l (/r) (/q) ltrrrq) as [ltrrx|ltxrq].
           * apply inr.
-            (* TODO if 1/r < x then 1/x < r *)
-            todo (// (x ; nu) < ' r).
+            assert (rpos : 0 < r)
+              by (transitivity q; assumption).
+            assert (rpos' : 0 < ' r).
+            {
+              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
+              apply strictly_order_preserving; try apply _; assumption.
+            }
+            rewrite (dec_recip_to_recip r (positive_apart_zero ('r) rpos')) in ltrrx.
+            assert (ltxrr := flip_lt_recip_l x ('r) rpos' ltrrx).
+            cbn in ltxrr.
+            rewrite (recip_irrelevant x (positive_apart_zero x (transitivity (pos_recip_compat (' r) rpos') ltrrx)) nu) in ltxrr.
+            exact ltxrr.
           * apply inl.
-            (* TODO if x < 1/q then q < 1/x *)
-            todo (' q < // (x ; nu)).
-      Admitted.
+            assert (qpos' : 0 < ' q).
+            {
+              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
+              apply strictly_order_preserving; try apply _; assumption.
+            }
+            rewrite (dec_recip_to_recip q (positive_apart_zero ('q) qpos')) in ltxrq.
+            assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).
+            rewrite (recip_irrelevant x (positive_apart_zero x xpos) nu) in ltrqx.
+            exact ltrqx.
+      Defined.
     End recip_pos.
 
   End unary_ops.
@@ -581,8 +604,6 @@ Section locator.
 
     Let nu := negative_apart_zero x xneg.
 
-    Require Import
-            HoTT.Classes.theory.fields.
 
     Definition recip_neg : locator (// (x ; nu)).
     Proof.

@@ -616,6 +616,7 @@ theories/Classes/orders/orders.v
 theories/Classes/orders/nat_int.v
 theories/Classes/orders/integers.v
 theories/Classes/orders/archimedean.v
+theories/Classes/orders/fields.v
 
 theories/Classes/implementations/assume_rationals.v
 theories/Classes/implementations/peano_naturals.v

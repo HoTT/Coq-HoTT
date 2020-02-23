@@ -72,8 +72,6 @@ Section strict_field_order.
                           )
                    ).
 
-  Axiom positive_apart_zero : forall (z : F), 0 < z -> z ≶ 0.
-  Axiom negative_apart_zero : forall (z : F), z < 0 -> z ≶ 0.
   Axiom char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
     'q < recip (z ; positive_apart_zero z nu) <-> ' q * z < 1.
   Axiom char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),

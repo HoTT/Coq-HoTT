@@ -258,7 +258,18 @@ Section strict_ring_order.
   transitivity 0; trivial.
   apply flip_pos_negate. trivial.
   Qed.
+
 End strict_ring_order.
+
+Section strict_ring_apart.
+  Context `{FullPseudoSemiRingOrder R}.
+
+  Definition positive_apart_zero (z : R) (Pz : 0 < z) : z ≶ 0
+    := pseudo_order_lt_apart_flip 0 z Pz.
+  Definition negative_apart_zero (z : R) (Nz : z < 0) : z ≶ 0
+    := pseudo_order_lt_apart z 0 Nz.
+
+End strict_ring_apart.
 
 Section another_ring_order.
   Context `{IsRing R1} `{!SemiRingOrder R1le} `{IsRing R2} `{R2le : Le R2}
