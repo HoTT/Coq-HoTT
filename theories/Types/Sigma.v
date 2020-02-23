@@ -490,6 +490,11 @@ Proof.
     apply transport_pV.
 Defined.
 
+Definition equiv_contr_sigma' {A : Type} (P : A -> Type) `{Contr A} (a : A)
+  : { x : A & P x } <~> P a
+  := equiv_transport P _ _ (contr a) oE equiv_contr_sigma P.
+
+
 (** ** Associativity *)
 
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
