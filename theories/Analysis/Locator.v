@@ -526,7 +526,7 @@ Section locator.
     Context {x : F}
             (l : locator x).
 
-    Definition minus : locator (-x).
+    Definition locator_minus : locator (-x).
     Proof.
       intros q r ltqr.
       assert (ltnrnq := snd (flip_lt_negate q r) ltqr : -r < -q).
@@ -543,7 +543,7 @@ Section locator.
          be interested in `dec_recip_to_recip` in
          `Classes.theory.dec_fields` *)
 
-      Definition recip_pos : locator (// (x ; nu)).
+      Definition locator_recip_pos : locator (// (x ; nu)).
       Proof.
         assert (recippos : 0 < // (x ; nu))
           by apply pos_recip_compat.
@@ -598,11 +598,11 @@ Section locator.
     Let nu := negative_apart_zero x xneg.
 
 
-    Definition recip_neg : locator (// (x ; nu)).
+    Definition locator_recip_neg : locator (// (x ; nu)).
     Proof.
       assert (negxpos : 0 < (-x))
         by (apply flip_neg_negate; assumption).
-      assert (l' := minus (recip_pos (minus l) negxpos)).
+      assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
       rewrite (recip_negate (-x)) in l'.
       unfold negate_apart in l'.
       rewrite (recip_proper_alt (- - x) x (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu) in l'.
@@ -618,13 +618,13 @@ Section locator.
             (l : locator x)
             (nu : x ≶ 0).
 
-    Definition recip : locator (// (x ; nu)).
+    Definition locator_recip : locator (// (x ; nu)).
     Proof.
       destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
-      - set (l' := recip_neg l xneg).
+      - set (l' := locator_recip_neg l xneg).
         rewrite (recip_proper_alt x x (negative_apart_zero x xneg) nu) in l';
           try reflexivity; exact l'.
-      - set (l' := recip_pos l xpos).
+      - set (l' := locator_recip_pos l xpos).
         rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
           try reflexivity; exact l'.
     Qed.
@@ -637,7 +637,7 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
-    Definition plus : locator (x + y).
+    Definition locator_plus : locator (x + y).
     Proof.
       intros q r ltqr.
       set (epsilon := (Qpos_diff q r ltqr) / 2).
@@ -692,10 +692,11 @@ Section locator.
 
   Section binary_ops_todo.
 
-    Axiom times : forall x y (l : locator x) (m : locator y),
+    (* TODO construct locators for multiplications. *)
+    Axiom locator_times : forall x y (l : locator x) (m : locator y),
       locator (x * y).
 
-    Lemma meet {x y} (l : locator x) (m : locator y):
+    Lemma locator_meet {x y} (l : locator x) (m : locator y):
         locator (meet x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
@@ -705,7 +706,7 @@ Section locator.
       - apply inr, meet_lt_r_r; assumption.
     Qed.
 
-    Lemma join {x y} (l : locator x) (m : locator y):
+    Lemma locator_join {x y} (l : locator x) (m : locator y):
         locator (join x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
@@ -724,7 +725,7 @@ Section locator.
     Context {M} {M_ismod : CauchyModulus Q F xs M}.
     Context (ls : forall n, locator (xs n)).
 
-    Lemma limit {l} : IsLimit _ _ xs l -> locator l.
+    Lemma locator_limit {l} : IsLimit _ _ xs l -> locator l.
     Proof.
       intros islim.
       intros q r ltqr.
