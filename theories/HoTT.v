@@ -17,7 +17,7 @@ Require Export HoTT.HSet.
 Require Export HoTT.EquivGroupoids.
 Require Export HoTT.EquivalenceVarieties.
 
-Require Export HoTT.FunextVarieties.
+(* Require Export HoTT.FunextVarieties. *)
 Require Export HoTT.UnivalenceVarieties.
 Require Export HoTT.Extensions.
 Require Export HoTT.Misc.

@@ -18,15 +18,13 @@ Section AssumeFunext.
     apply hprop_inhabited_contr; intros feq.
     nrefine (contr_equiv' _ (issig_isequiv f oE (equiv_sigma_assoc' _ _)^-1)).
     snrefine (contr_equiv' _ (equiv_contr_sigma' _ (f^-1 ; eisretr f))^-1); only 2: exact _.
-    (** Each of these types is equivalent to a based path space. *)
-    - refine (contr_equiv' { g : B -> A & g = f^-1 } _).
+    (** Each of these types is equivalent to a based homotopy space. *)
+    - refine (contr_equiv' { g : B -> A & g == f^-1 } _).
       apply equiv_functor_sigma_id; intros g.
-      refine (_ oE equiv_ap10 _ _).
       apply equiv_functor_forall_id; intros b.
       apply equiv_moveR_equiv_M.
-    - refine (contr_equiv' { s : f^-1 o f == idmap & eissect f = s } _).
+    - refine (contr_equiv' { s : f^-1 o f == idmap & eissect f == s } _).
       apply equiv_functor_sigma_id; intros s; cbn.
-      refine (_ oE equiv_apD10 _ _ _).
       apply equiv_functor_forall_id; intros a.
       refine (equiv_concat_l (eisadj f a) _ oE _).
       rapply equiv_ap.

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations FunextVarieties UnivalenceImpliesFunext EquivalenceVarieties Constant.
+Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties Constant.
 Require Import HoTT.Truncations.
 Require Import PathAny.
 
