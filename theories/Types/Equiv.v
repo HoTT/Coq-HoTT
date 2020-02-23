@@ -14,48 +14,22 @@ Section AssumeFunext.
   Global Instance hprop_isequiv {A B} `(f : A -> B)
   : IsHProp (IsEquiv f).
   Proof.
+    (** We will show that assuming [f] is an equivalence, [IsEquiv f] decomposes into a sigma of two contractible types. *)
     apply hprop_inhabited_contr; intros feq.
-    (* We will show that if [IsEquiv] is inhabited, then it is contractible, because it is equivalent to a sigma of a pointed path-space over a pointed path-space, both of which are contractible. *)
-    refine (contr_equiv' { g : B -> A & g = f^-1 } _).
-    equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); apply equiv_inverse.
-    1:exact (equiv_functor_sigma_id (fun _ => equiv_sigma_contr _ )).
-    (* First we apply [issig], peel off the first component, and convert to pointwise paths. *)
-    refine (_ oE (issig_isequiv f)^-1).
-    refine (equiv_functor_sigma_id _); intros g; simpl.
-    equiv_via ({ r : g == f^-1 & { s : g == f^-1 & r == s }}).
-    (* Now the idea is that if [f] is an equivalence, then [g f == 1] and [f g == 1] are both equivalent to [g == f^-1]. *)
-    { refine (equiv_functor_sigma'
-                (equiv_functor_forall idmap (fun b p => (ap f)^-1 (p @ (eisretr f b)^)))
-                (fun r => equiv_functor_sigma'
-                            (equiv_functor_forall f (fun a p => p @ (eissect f a)))^-1 _));
-      intros s; simpl.
-      (* What remains is to show that under these equivalences, the remaining datum [eisadj] reduces simply to [r == s].  Pleasingly, Coq can compute for us exactly what this means. *)
-      apply equiv_inverse;
-        refine (equiv_functor_forall' (Build_Equiv _ _ f _) _);
-        intros a; simpl; unfold functor_forall.
-      rewrite transport_paths_FlFr.
-      (* At this point it's just naturality wrangling, potentially automatable.  It's a little unusual because what we have to prove is not just the existence of some path, but that one path-type is equivalent to another one, but we can mostly still use [rewrite]. *)
-      Open Scope long_path_scope.
-      rewrite ap_pp, !concat_p_pp, eisadj, <- !ap_V, <- !ap_compose.
-      rewrite (concat_pA1_p (eissect f) (eissect f a)^).
-      rewrite (concat_A1p s (eissect f a)^).
-      rewrite (concat_pp_A1 (fun x => (eissect f x)^) (eissect f a)).
-      (* Here instead of [whiskerR] we have to be a bit fancier. *)
-      refine (_ oE (equiv_ap (equiv_concat_r (eissect f a)^ _) _ _)^-1).
-      rewrite concat_pV_p.
-      refine (_ oE equiv_ap (ap f) _ _).
-      (* Now we can get rid of the [<~>] and reduce the question to constructing some path. *)
-      apply equiv_concat_l.
-      rewrite !ap_pp, !ap_V, <- !eisadj, <- ap_compose.
-      rewrite_moveL_Vp_p.
-      symmetry; exact (concat_A1p (eisretr f) (r (f a))).
-      Close Scope long_path_scope. }
-    (* The leftover goal is just nested applications of funext. *)
-    { refine (equiv_functor_sigma' (equiv_path_arrow g f^-1)
-                                   (fun r => equiv_functor_sigma' (equiv_path_arrow g f^-1) _));
-      intros s; simpl.
-      refine (_ oE equiv_path_forall r s).
-      exact (equiv_ap (path_forall g f^-1) r s). }
+    refine (contr_equiv' _ (issig_isequiv f oE (equiv_sigma_assoc' _ _)^-1)).
+    srefine (contr_equiv' _ (equiv_contr_sigma' _ (f^-1 ; eisretr f))^-1); only 2: exact _.
+    (** Each of these types is equivalent to a based path space. *)
+    - refine (contr_equiv' { g : B -> A & g = f^-1 } _).
+      apply equiv_functor_sigma_id; intros g.
+      refine (_ oE equiv_ap10 _ _).
+      apply equiv_functor_forall_id; intros b.
+      apply equiv_moveR_equiv_M.
+    - refine (contr_equiv' { s : f^-1 o f == idmap & eissect f = s } _).
+      apply equiv_functor_sigma_id; intros s; cbn.
+      refine (_ oE equiv_apD10 _ _ _).
+      apply equiv_functor_forall_id; intros a.
+      refine (equiv_concat_l (eisadj f a) _ oE _).
+      rapply equiv_ap.
   Qed.
 
   (** Thus, paths of equivalences are equivalent to paths of functions. *)
