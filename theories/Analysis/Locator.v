@@ -26,6 +26,7 @@ Require Import
         HoTT.Classes.orders.semirings
         HoTT.Classes.orders.lattices
         HoTT.Classes.theory.rings
+        HoTT.Classes.theory.apartness
         HoTT.Classes.theory.rationals.
 
 (* Strangely, it seems that combining the next import with the above
@@ -108,7 +109,7 @@ Section locator.
       - apply inl. apply (strictly_order_preserving _); assumption.
       - rewrite eqqs in ltqr. apply inr, (strictly_order_preserving _); assumption.
       - apply inr, (strictly_order_preserving _), (transitivity ltsq ltqr); assumption.
-    Defined.
+    Qed.
 
     Definition locator_second : locator (' s).
     Proof.
@@ -117,7 +118,7 @@ Section locator.
       - apply inr, (strictly_order_preserving _); assumption.
       - rewrite <- eqsr in ltqr. apply inl, (strictly_order_preserving _); assumption.
       - apply inl, (strictly_order_preserving _), (transitivity ltqr ltrs).
-    Defined.
+    Qed.
 
   End rational.
 
@@ -250,7 +251,7 @@ Section locator.
       exists (q - 1).
       unfold P_lower in Pq. simpl in *.
       apply (un_inl _ Pq).
-    Defined.
+    Qed.
 
     Let lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
     (* Assume we have an enumeration of the rationals. *)
@@ -287,7 +288,7 @@ Section locator.
       destruct (l r (r + 1) (lt1N r)).
       - simpl in Pr. destruct (Pr tt).
       - assumption.
-    Defined.
+    Qed.
 
     Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
 
@@ -517,7 +518,7 @@ Section locator.
       exists q; split.
       - nrefine (locates_right_false l _ lleft).
       - nrefine (locates_right_true  m _ mright).
-    Defined.
+    Qed.
 
   End arch_struct.
 
@@ -533,7 +534,7 @@ Section locator.
       destruct (l _ _ ltnrnq) as [ltnrx|ltxnq].
       - apply inr. apply char_minus_left. rewrite <- preserves_negate. assumption.
       - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
-    Defined.
+    Qed.
 
     Section recip_pos.
       Context (xpos : 0 < x).
@@ -585,7 +586,7 @@ Section locator.
             assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).
             rewrite (recip_irrelevant x (positive_apart_zero x xpos) nu) in ltrqx.
             exact ltrqx.
-      Defined.
+      Qed.
     End recip_pos.
 
   End unary_ops.
@@ -608,7 +609,7 @@ Section locator.
       rewrite (recip_proper_alt (- - x) x (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu) in l'.
       - assumption.
       - apply negate_involutive.
-    Defined.
+    Qed.
 
   End recip_neg.
 
@@ -627,7 +628,7 @@ Section locator.
       - set (l' := recip_pos l xpos).
         rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
           try reflexivity; exact l'.
-    Defined.
+    Qed.
 
   End unary_ops2.
 
@@ -686,7 +687,7 @@ Section locator.
           reflexivity.
         }
         assumption.
-    Defined.
+    Qed.
 
   End binary_ops.
 
@@ -703,7 +704,7 @@ Section locator.
       - apply inr, meet_lt_r_r; assumption.
       - apply inr, meet_lt_r_l; assumption.
       - apply inr, meet_lt_r_r; assumption.
-    Defined.
+    Qed.
 
     Lemma join {x y} (l : locator x) (m : locator y):
         locator (join x y).
@@ -713,7 +714,7 @@ Section locator.
       - apply inl, join_lt_l_l; assumption.
       - apply inl, join_lt_l_r; assumption.
       - apply inr, join_lt_r; assumption.
-    Defined.
+    Qed.
 
   End binary_ops_todo.
 
@@ -730,8 +731,31 @@ Section locator.
       intros q r ltqr.
       set (epsilon := (Qpos_diff q r ltqr) / 3).
       (* TODO we are doing trisection so we have the inequality: *)
-      assert (ltqepsreps : q + ' epsilon < r - ' epsilon)
-        by admit.
+      assert (ltqepsreps : q + ' epsilon < r - ' epsilon).
+      {
+        apply (strictly_order_reflecting (+'epsilon)).
+        rewrite <- (plus_assoc r (-'epsilon) ('epsilon)).
+        rewrite plus_negate_l.
+        rewrite plus_0_r.
+        rewrite <- (plus_assoc q ('epsilon) ('epsilon)).
+        apply (strictly_order_reflecting ((-q)+)).
+        rewrite (plus_assoc (-q) q _).
+        rewrite plus_negate_l, plus_0_l.
+        rewrite (plus_comm (-q) r).
+        rewrite <- (mult_1_r ('epsilon)).
+        rewrite <- plus_mult_distr_l.
+        unfold epsilon, cast, Qpos_diff; cbn.
+        rewrite <- (mult_assoc (r-q) (/3) 2).
+        pattern (r-q) at 2.
+        rewrite <- (mult_1_r (r-q)).
+        assert (rqpos : 0 < r-q) by apply (Qpos_diff q r ltqr).
+        apply (strictly_order_preserving ((r-q)*.)).
+        apply (strictly_order_reflecting (3*.)).
+        rewrite (mult_assoc 3 (/3) 2).
+        rewrite (dec_recip_inverse 3).
+        - rewrite mult_1_r, mult_1_l. exact lt_2_3.
+        - apply apart_ne, positive_apart_zero, lt_0_3.
+      }
       destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
         as [ltqepsxs|ltxsreps].
       + apply inl.
@@ -747,7 +771,7 @@ Section locator.
           by (apply flip_lt_minus_r; assumption).
         refine (transitivity _ ltxsepsr).
         apply (modulus_close_limit _ _ _ _ _).
-    Admitted.
+    Qed.
 
   End limit.
 
