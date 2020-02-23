@@ -186,6 +186,7 @@ theories/Limits/Pullback.v
 
 theories/Colimits/Pushout.v
 theories/Colimits/SpanPushout.v
+theories/Colimits/MappingCylinder.v
 theories/Colimits/Quotient.v
 
 theories/Colimits/Colimit.v

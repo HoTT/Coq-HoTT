@@ -139,7 +139,7 @@ Section GBM.
       (** *** Codes for glue *)
 
       Section CodeGlue.
-        Context `{Funext} {y1 : Y} (q11 : Q x1 y1).
+        Context {y1 : Y} (q11 : Q x1 y1).
 
         (** We prove that codes respect glue as a chain of equivalences between types built from pushouts and double-pushouts.  The first step is to add the data of our hypothesized-to-be-connected type inside [codeleft2]. *)
 
@@ -321,9 +321,11 @@ Section GBM.
           unfold equiv_Ocodeleft2.
           Opaque equiv_Ocodeleft2plus.
           cbn.
-          rewrite to_O_natural, O_rec_beta, to_O_natural.
-          apply ap; cbn.
-          apply Ocodeleft02plus_02b.
+          refine (ap _ (ap _ (to_O_natural _ _ _)) @ _).
+          refine (ap _ (to_O_natural _ _ _) @ _).
+          refine (to_O_natural _ _ _ @ _).
+          apply ap.
+          rapply Ocodeleft02plus_02b.
         Qed.
 
         (** Thus, our pushout in which one vertex is itself a pushout can be written as a "double pushout"
@@ -554,7 +556,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       (** Then we notice that if we tried rewriting with [code_beta_glue] here, the unmanageable-looking result is actually fully general over the path [glue q01], so we can prove by path induction that it equals the nicer expression we'd like to see.  This is the purpose of the lemma [transport_singleton]. *)
       rewrite (transport_singleton
                  code (glue q01) _
-                 (fun r => @codeglue x0 x0 r _ y1 q01) (* Funext _ in the middle. *)
+                 (fun r => @codeglue x0 x0 r y1 q01)
                  (code_beta_glue x0 y1 q01 (glue q01))).
       unfold codeglue.
       (** Now we evaluate [codeglue] step by step using our lemmas. *)

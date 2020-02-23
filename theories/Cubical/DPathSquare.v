@@ -149,11 +149,50 @@ Section Kan.
     destruct s; apply sq_fill_l.
   Defined.
 
+  Definition ds_fill_l_uniq {qx1 : DPath P px1 b01 b11}
+             {q0x : DPath P p0x b00 b01} {q1x : DPath P p1x b10 b11}
+             {qx0 : DPath P px0 b00 b10}
+             (t : DPathSquare P s qx0 qx1 q0x q1x)
+             {qx0' : DPath P px0 b00 b10}
+             (t' : DPathSquare P s qx0' qx1 q0x q1x)
+    : qx0 = qx0'.
+  Proof.
+    destruct s.
+    exact (sq_fill_l_uniq t t').
+  Defined.
+
   Definition ds_fill_r (qx0 : DPath P px0 b00 b10)
              (q0x : DPath P p0x b00 b01) (q1x : DPath P p1x b10 b11)
     : {qx1 : DPath P px1 b01 b11 & DPathSquare P s qx0 qx1 q0x q1x}.
   Proof.
     destruct s; apply sq_fill_r.
+  Defined.
+
+  Definition ds_fill_r_uniq {qx0 : DPath P px0 b00 b10}
+             {q0x : DPath P p0x b00 b01} {q1x : DPath P p1x b10 b11}
+             {qx1 : DPath P px1 b01 b11}
+             (t : DPathSquare P s qx0 qx1 q0x q1x)
+             {qx1' : DPath P px1 b01 b11}
+             (t' : DPathSquare P s qx0 qx1' q0x q1x)
+    : qx1 = qx1'.
+  Proof.
+    destruct s.
+    exact (sq_fill_r_uniq t t').
+  Defined.
+
+  Definition equiv_ds_fill_lr
+             {q0x : DPath P p0x b00 b01} {q1x : DPath P p1x b10 b11}
+    : (DPath P px0 b00 b10) <~> (DPath P px1 b01 b11).
+  Proof.
+    srapply equiv_adjointify.
+    - intros qx0; exact (ds_fill_r qx0 q0x q1x).1.
+    - intros qx1; exact (ds_fill_l qx1 q0x q1x).1.
+    - intros qx1.
+      exact (ds_fill_r_uniq (ds_fill_r _ q0x q1x).2
+                            (ds_fill_l qx1 q0x q1x).2).
+    - intros qx0.
+      exact (ds_fill_l_uniq (ds_fill_l _ q0x q1x).2
+                            (ds_fill_r qx0 q0x q1x).2).
   Defined.
 
   Definition ds_fill_t (qx0 : DPath P px0 b00 b10)

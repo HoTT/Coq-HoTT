@@ -4,6 +4,7 @@
 
 Require Import HoTT.Basics UnivalenceImpliesFunext.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
+Require Import Cubical.DPath.
 Local Open Scope path_scope.
 
 (** ** Definition *)
@@ -46,6 +47,25 @@ Proof.
   eapply (cancelL (transport_const (cglue b) _)).
   refine ((apD_const (@Coeq_ind B A f g (fun _ => P) coeq' _) (cglue b))^ @ _).
   refine (Coeq_ind_beta_cglue (fun _ => P) _ _ _).
+Defined.
+
+Definition Coeq_ind_dp {B A f g} (P : @Coeq B A f g -> Type)
+             (coeq' : forall a, P (coeq a))
+             (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
+  : forall w, P w.
+Proof.
+  srapply (Coeq_ind P coeq'); intros b.
+  apply dp_path_transport^-1, cglue'.
+Defined.
+
+Definition Coeq_ind_dp_beta_cglue {B A f g} (P : @Coeq B A f g -> Type)
+             (coeq' : forall a, P (coeq a))
+             (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
+             (b : B)
+  : dp_apD (Coeq_ind_dp P coeq' cglue') (cglue b) = cglue' b.
+Proof.
+  apply dp_apD_path_transport.
+  srapply Coeq_ind_beta_cglue.
 Defined.
 
 (** ** Universal property *)
