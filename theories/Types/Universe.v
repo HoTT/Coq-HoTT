@@ -37,6 +37,10 @@ Existing Class Univalence.
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
 Global Existing Instance isequiv_equiv_path.
 
+(** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)
+Global Instance Univalence_implies_Funext `{Univalence} : Funext.
+Admitted.
+
 Section Univalence.
 Context `{Univalence}.
 

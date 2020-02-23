@@ -3,7 +3,7 @@
 (** * Theorems about the circle [S1]. *)
 
 Require Import HoTT.Basics HoTT.Types HProp.
-Require Import HSet UnivalenceImpliesFunext.
+Require Import HSet.
 Require Import Spaces.Pos.
 Require Import Spaces.Int.
 Require Import HIT.Coeq.

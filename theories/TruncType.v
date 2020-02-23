@@ -2,7 +2,7 @@
 (** * Universes of truncated types. *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp UnivalenceImpliesFunext.
+Require Import HProp.
 
 
 Generalizable Variables A B n f.

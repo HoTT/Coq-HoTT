@@ -4,7 +4,6 @@ Require Import Basics.
 Require Import Types.
 Require Import TruncType.
 
-Require Import UnivalenceImpliesFunext.
 Require Import HProp.
 Require Import EquivalenceVarieties.
 Require Import Extensions.

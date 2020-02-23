@@ -8,7 +8,6 @@ Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
 Require Import Colimits.Colimit_Pushout.
 Require Import Colimits.Colimit_Flattening.
-Require Import UnivalenceImpliesFunext.
 
 (** * Pushout case *)
 

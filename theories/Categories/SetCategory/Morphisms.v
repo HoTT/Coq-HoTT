@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Morphisms NaturalTransformation.Paths.
 Require Import Category.Univalent.
 Require Import SetCategory.Core.
-Require Import HoTT.Basics HoTT.Types HProp HSet Equivalences UnivalenceImpliesFunext TruncType.
+Require Import HoTT.Basics HoTT.Types HProp HSet Equivalences TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

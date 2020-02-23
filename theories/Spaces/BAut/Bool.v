@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Constant Factorization UnivalenceImpliesFunext.
+Require Import Constant Factorization.
 Require Import Modalities.Modality HoTT.Truncations.
 Require Import Spaces.BAut.
 

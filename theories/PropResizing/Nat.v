@@ -2,7 +2,6 @@
 (** * Defining the natural numbers from univalence and propresizing. *)
 Require Import Basics.
 Require Import Types.
-Require Import UnivalenceImpliesFunext.
 Require Import HProp.
 Require Import PropResizing.PropResizing.
 Require Import PropResizing.ImpredicativeTruncation.

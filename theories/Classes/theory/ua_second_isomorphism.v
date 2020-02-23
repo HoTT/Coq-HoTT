@@ -5,7 +5,6 @@ Require Import
   HoTT.Types.Universe
   HoTT.HSet
   HoTT.HIT.quotient
-  HoTT.UnivalenceImpliesFunext
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.theory.ua_isomorphic
   HoTT.Classes.theory.ua_subalgebra

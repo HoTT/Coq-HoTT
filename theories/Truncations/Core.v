@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
 Require Import Basics Types.
-Require Import TruncType HProp UnivalenceImpliesFunext.
+Require Import TruncType HProp.
 Require Import Modalities.Modality Modalities.Identity Modalities.Descent.
 
 (** * Truncations of types, in all dimensions. *)

@@ -11,8 +11,7 @@ Require Import
   HoTT.Fibrations
   HoTT.HProp
   HoTT.HSet
-  HoTT.Tactics
-  UnivalenceImpliesFunext.
+  HoTT.Tactics.
 
 Import algebra_notations ne_list.notations.
 

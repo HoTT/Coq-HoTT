@@ -108,6 +108,4 @@ Definition Univalence_type_implies_Funext_type
   := NaiveNondepFunext_implies_Funext
        (@Univalence_implies_FunextNondep ua).
 
-(** As justified by the above proof, we may assume [Univalence -> Funext]. *)
-Global Instance Univalence_implies_Funext `{Univalence} : Funext.
-Admitted.
+(** The above proof justifies assuming [Univalence -> Funext], which we did axiomatically in [Types/Universe.v]. *)

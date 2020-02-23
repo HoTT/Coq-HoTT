@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Algebra.Group.
 Require Import Algebra.Subgroup.
 Require Import Algebra.Congruence.

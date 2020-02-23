@@ -1,6 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HSet Fibrations Factorization HoTT.Truncations HProp.
-Require Import UnivalenceImpliesFunext.
 Require Import Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.pHomotopy.
 
 Local Open Scope pointed_scope.

@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types HProp UnivalenceImpliesFunext.
+Require Import HoTT.Basics HoTT.Types HProp.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import Homotopy.Join.

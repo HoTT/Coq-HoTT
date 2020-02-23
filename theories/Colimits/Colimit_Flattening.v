@@ -5,7 +5,6 @@ Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
 Require Import Diagrams.DDiagram.
 Require Import Colimits.Colimit.
-Require Import UnivalenceImpliesFunext.
 
 Local Open Scope path_scope.
 

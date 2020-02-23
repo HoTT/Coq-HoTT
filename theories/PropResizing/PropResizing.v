@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Propositional resizing *)
 
-Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext HProp.
+Require Import HoTT.Basics HoTT.Types HProp.
 Local Open Scope path_scope.
 
 (** See the note by [Funext] in Overture.v regarding classes for axioms *)

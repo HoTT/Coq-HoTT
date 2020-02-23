@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Types.
-Require Import Truncations UnivalenceImpliesFunext.
+Require Import Truncations.
 Require Export Classes.interfaces.abstract_algebra.
 
 Local Open Scope trunc_scope.

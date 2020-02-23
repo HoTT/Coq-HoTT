@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext PathAny.
+Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization PathAny.
 Require Import Modality Accessible Localization Descent Separated.
 Require Import HoTT.Tactics.
 

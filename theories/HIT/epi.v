@@ -3,7 +3,6 @@ Require Import Types.
 Require Import HProp.
 Require Import HSet.
 Require Import TruncType.
-Require Import UnivalenceImpliesFunext.
 Require Import Colimits.Pushout Truncations HIT.SetCone.
 
 Local Open Scope path_scope.

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HSet HProp UnivalenceImpliesFunext TruncType.
+Require Import HSet HProp TruncType.
 Require Import HIT.epi Truncations.
 
 Local Open Scope path_scope.
