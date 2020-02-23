@@ -6,8 +6,7 @@ Require Import
         HoTT.Types.Sum
         HoTT.Types.Arrow
         HoTT.Spaces.Finite
-        HoTT.ExcludedMiddle
-        HoTT.Todo.
+        HoTT.ExcludedMiddle.
 
 Require Import
         HoTT.Classes.interfaces.abstract_algebra
@@ -47,7 +46,7 @@ Section locator.
   Context {Fabs : Abs F}.
   Context {Farchimedean : ArchimedeanProperty Q F}.
   Context {Fcomplete : IsComplete Q F}.
-  Context {Qroundup : @RoundUpStrict Q _ _ _ _ _ _ _ _ _ _ _}.
+  Context {Qroundup : RoundUpStrict Q}.
 
   Context `{Funext} `{Univalence}.
 
@@ -186,8 +185,7 @@ Section locator.
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
     Proof.
       assert (f := locates_right_true l' ltqr).
-      assert (contra := functor_arrow f (@id Empty)).
-      assumption.
+      exact (functor_arrow f (@id Empty)).
     Qed.
 
     Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : x < ' q -> locates_left l' ltqr.
@@ -199,12 +197,9 @@ Section locator.
     Lemma nltxr_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ x < ' r -> locates_right l' ltqr.
     Proof.
       intros nltxr.
-      destruct (dec (locates_right l' ltqr)) as [yes|no].
-      - assumption.
-      - assert (f := locates_right_false l' ltqr).
-        assert (contra := functor_arrow f (@id Empty)).
-        assert (nono := contra nltxr).
-        destruct (nono no).
+      apply stable.
+      assert (f := locates_right_false l' ltqr).
+      exact (functor_arrow f (@id Empty) nltxr).
     Qed.
 
     Lemma ltrx_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : 'r < x -> locates_right l' ltqr.
@@ -396,7 +391,7 @@ Section locator.
         rewrite (associativity ('n) ('epsilon) (/3)).
         transitivity ('r).
         - exact ltxr.
-        - apply (@strictly_order_preserving Q F _ _ _ cast_pres_ordering).
+        - apply strictly_order_preserving; try apply _.
           exact ltn3eps.
       }
       destruct (sperners_lemma_1d P left_true right_false) as [u [Pltux Pltxueps]].
@@ -422,7 +417,7 @@ Section locator.
         rewrite plus_mult_distr_r in ltxbla.
         rewrite (associativity q ((' fin_to_nat u - 1) * (' epsilon / 3)) (2 * (' epsilon / 3))) in ltxbla.
         refine (transitivity ltxbla _).
-        apply (@strictly_order_preserving Q F _ _ _ cast_pres_ordering).
+        apply strictly_order_preserving; try apply _.
         apply pseudo_srorder_plus.
         rewrite (associativity 2 ('epsilon) (/3)).
         rewrite (commutativity 2 ('epsilon)).

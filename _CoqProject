@@ -255,7 +255,6 @@ theories/PathAny.v
 theories/Utf8.v
 theories/HoTT.v
 theories/Tests.v
-theories/Todo.v
 
 #
 #   Metatheory
