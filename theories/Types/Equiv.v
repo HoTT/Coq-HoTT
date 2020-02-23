@@ -16,8 +16,8 @@ Section AssumeFunext.
   Proof.
     (** We will show that assuming [f] is an equivalence, [IsEquiv f] decomposes into a sigma of two contractible types. *)
     apply hprop_inhabited_contr; intros feq.
-    refine (contr_equiv' _ (issig_isequiv f oE (equiv_sigma_assoc' _ _)^-1)).
-    srefine (contr_equiv' _ (equiv_contr_sigma' _ (f^-1 ; eisretr f))^-1); only 2: exact _.
+    nrefine (contr_equiv' _ (issig_isequiv f oE (equiv_sigma_assoc' _ _)^-1)).
+    snrefine (contr_equiv' _ (equiv_contr_sigma' _ (f^-1 ; eisretr f))^-1); only 2: exact _.
     (** Each of these types is equivalent to a based path space. *)
     - refine (contr_equiv' { g : B -> A & g = f^-1 } _).
       apply equiv_functor_sigma_id; intros g.
