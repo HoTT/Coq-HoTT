@@ -37,15 +37,13 @@ Require Import
         HoTT.Classes.theory.dec_fields.
 
 Section locator.
-  Generalizable Variables Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field.
-  Generalizable Variables Fap Fplus Fmult Fzero Fone Fneg Frecip Fle Flt Fjoin Fmeet.
   Context (Q : Type).
-  Context `{Qrats : @Rationals Q Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field}.
+  Context `{Qrats : Rationals Q}.
   Context {Qdec_paths : DecidablePaths Q}.
-  Context {Qtriv : @TrivialApart Q Qap}.
+  Context {Qtriv : TrivialApart Q}.
   Context `{!Trichotomy (<)}.
   Context (F : Type).
-  Context `{Forderedfield : @OrderedField F Flt Fle Fap Fzero Fone Fplus Fneg Fmult Fap Fzero Frecip Fjoin Fmeet}.
+  Context `{Forderedfield : OrderedField F}.
   Context {Fabs : Abs F}.
   Context {Farchimedean : ArchimedeanProperty Q F}.
   Context {Fcomplete : IsComplete Q F}.
@@ -434,7 +432,7 @@ Section locator.
         rewrite <- (associativity ('epsilon) 2 (/3)).
         apply pos_mult_lt_l.
         + apply epsilon.
-        + nrefine (@pos_mult_reflect_r Q Qap Qplus Qmult Qzero Qone Qlt _ _ (3 : Q) lt_0_3 _ _ _); try apply _.
+        + nrefine (pos_mult_reflect_r (3 : Q) lt_0_3 _ _ _); try apply _.
           rewrite <- (associativity 2 (/3) 3).
           rewrite (commutativity (/3) 3).
           rewrite (dec_recip_inverse (3 : Q) ap30).

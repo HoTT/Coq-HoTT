@@ -10,6 +10,8 @@ Generalizable Variables F f.
 Section field_properties.
 Context `{IsField F}.
 
+Definition recip' (x : F) (apx : x ≶ 0) : F := //(x;apx).
+
 (* Add Ring F : (stdlib_ring_theory F). *)
 Lemma recip_inverse' (x : F) (Px : x ≶ 0) : x // (x; Px) = 1.
 Proof.

@@ -8,14 +8,12 @@ From HoTT.Classes Require Import
      theory.rationals.
 
 Section cauchy.
-  Generalizable Variables Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field.
-  Generalizable Variables Fap Fplus Fmult Fzero Fone Fneg Frecip Fle Flt Fjoin Fmeet.
   Context (Q : Type).
-  Context `{Qrats : @Rationals Q Qap Qplus Qmult Qzero Qone Qneg Qrecip Qle Qlt Qrats_to_field}.
+  Context `{Rationals Q}.
   Context {Q_dec_paths : DecidablePaths Q}.
-  Context {Qtriv : @TrivialApart Q Qap}.
+  Context {Qtriv : TrivialApart Q}.
   Context (F : Type).
-  Context `{Forderedfield : @OrderedField F Flt Fle Fap Fzero Fone Fplus Fneg Fmult Fap Fzero Frecip Fjoin Fmeet}.
+  Context `{Forderedfield : OrderedField F}.
   Context {Fabs : Abs F}.
   Let qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.

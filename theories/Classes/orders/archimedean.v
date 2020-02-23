@@ -6,16 +6,16 @@ Require Import
   HoTT.Classes.theory.groups
   HoTT.Classes.theory.rationals
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.fields
   HoTT.Classes.orders.rings.
 
 Generalizable Variables Q F.
 
 Section strict_field_order.
   Context `{Rationals Q}.
-  Context `{LatticeOrder Q}.
+  Context {Qmeet} {Qjoin} `{@LatticeOrder Q (_ : Le Q) Qmeet Qjoin}.
   Context `{OrderedField F}.
-  (* Context `{FieldCharacteristic F 0}. *)
-  Context `{ArchimedeanProperty Q F}.
+  Context {archim : ArchimedeanProperty Q F}.
 
   Definition qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.
@@ -50,7 +50,6 @@ Section strict_field_order.
     := hexists (fun xyzw => match xyzw with
                             | ((x , y) , (z , w)) => f x y z w
                             end).
-  Check (_ : Join Q).
 
   Axiom char_times_left : forall (q : Q) (x y : F),
           ' q < x * y
@@ -71,15 +70,14 @@ Section strict_field_order.
                              (' c < y < ' d)
                           )
                    ).
-
   Axiom char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
-    'q < recip (z ; positive_apart_zero z nu) <-> ' q * z < 1.
+    'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
   Axiom char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),
-    recip (z ; positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
+    recip' z (positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
   Axiom char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
-    'q < recip (w ; negative_apart_zero w nu) <-> ' q * w < 1.
+    'q < recip' w (negative_apart_zero w nu) <-> ' q * w < 1.
   Axiom char_recip_neg_right : forall (r : Q) (w : F) (nu : w < 0),
-    recip (w ; negative_apart_zero w nu) < ' r <-> ' r * w < 1.
+    recip' w (negative_apart_zero w nu) < ' r <-> ' r * w < 1.
 
   Axiom char_meet_left : forall (q : Q) (x y : F),
       ' q < meet x y <-> ' q < x /\ ' q < y.
