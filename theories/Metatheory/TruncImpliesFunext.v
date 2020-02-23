@@ -2,8 +2,8 @@
 
 (** * Theorems about trunctions *)
 
-Require Import HoTT.Basics FunextVarieties.
-Require Import HoTT.Truncations HoTT.Types.Bool.
+Require Import HoTT.Basics HoTT.Truncations HoTT.Types.Bool.
+Require Import Metatheory.Core Metatheory.FunextVarieties.
 
 (** ** We can construct an interval type as [Trunc -1 Bool] *)
 
@@ -31,7 +31,3 @@ Definition funext_type_from_trunc : Funext_type
       let h := fun (x:interval) (a:A) =>
         interval_rec _ (f a) (g a) (p a) x
         in ap h seg)).
-
-(** As justified by the above proof, we may assume [Funext] given [Trunc]. *)
-Global Instance funext_from_trunc : Funext.
-Admitted.

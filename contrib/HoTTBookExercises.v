@@ -24,7 +24,7 @@
 *)
 
 Require Import HoTT Coq.Init.Peano.
-Require Import FunextVarieties UnivalenceImpliesFunext.
+Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties HoTT.Metatheory.UnivalenceImpliesFunext.
 
 Local Open Scope path_scope.
 
