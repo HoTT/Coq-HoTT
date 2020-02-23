@@ -382,6 +382,23 @@ Notation "e ^-1" := (@equiv_inverse _ _ e) : equiv_scope.
 
 Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 
+(** Inversion respects composition *)
+Definition equiv_inverse_compose {A B C} (f : A <~> B) (g : B <~> C)
+  : (g oE f)^-1 == f^-1 oE g^-1.
+Proof.
+  intros x; reflexivity.
+Defined.
+
+(** Inversion respects homotopies *)
+Definition equiv_inverse_homotopy {A B} (f g : A <~> B) (p : f == g)
+  : g^-1 == f^-1.
+Proof.
+  intros x; refine (_ @ _ @ _).
+  1:symmetry; apply (eissect f).
+  1:apply ap, p.
+  apply ap, eisretr.
+Defined.
+
 (** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
 Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
   `{IsEquiv A B f} `{IsEquiv A C (g o f)}
