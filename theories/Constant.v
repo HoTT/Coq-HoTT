@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp FunextVarieties.
+Require Import HProp.
 Require Import Extensions Factorization Modalities.Modality.
 Require Import HoTT.Truncations.
 

@@ -427,6 +427,33 @@ Proof.
   refine (isequiv_homotopic _ p).
 Defined.
 
+(** Based homotopy spaces *)
+
+Global Instance contr_basedhomotopy `{Funext}
+       {A:Type} {B : A -> Type} (f : forall x, B x)
+: Contr {g : forall x, B x & f == g }.
+Proof.
+  refine (contr_equiv' { g : forall x, B x & f = g } _).
+  srapply equiv_adjointify; intros [g h].
+  - exact (g; apD10 h).
+  - exact (g; path_forall _ _ h).
+  - apply ap, eisretr.
+  - apply ap, eissect.
+Defined.
+
+Global Instance contr_basedhomotopy' `{Funext}
+       {A:Type} {B : A -> Type} (f : forall x, B x)
+: Contr {g : forall x, B x & g == f }.
+Proof.
+  refine (contr_equiv' { g : forall x, B x & g = f } _).
+  srapply equiv_adjointify; intros [g h].
+  - exact (g; apD10 h).
+  - exact (g; path_forall _ _ h).
+  - apply ap, eisretr.
+  - apply ap, eissect.
+Defined.
+
+
 (** The function [equiv_ind] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
 In fibrational terms, if we have a fibration over [B] which has a section once pulled back along an equivalence [f : A <~> B], then it has a section over all of [B].  *)
