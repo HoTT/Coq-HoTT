@@ -78,16 +78,14 @@ Definition hfiber_functor_hfiber {A B C D}
   <~> hfiber (functor_hfiber (fun x => (p x)^) c) (b;q^).
 Proof.
   unfold hfiber, functor_hfiber, functor_sigma.
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  refine (equiv_sigma_assoc _ _ oE _).
-  apply equiv_functor_sigma_id; intros a; cbn.
-  refine (_ oE (equiv_functor_sigma_id _)^-1).
-  2:intros; apply equiv_path_sigma.
-  refine (equiv_functor_sigma_id _ oE _).
-  1:intros; apply equiv_path_sigma. cbn.
-  refine (equiv_sigma_symm _ oE _).
-  apply equiv_functor_sigma_id; intros r.
-  apply equiv_functor_sigma_id; intros s; cbn.
+  rapply (equiv_functor_sigma_id _ oE _ oE equiv_functor_sigma_id _).
+  1:intros; rapply equiv_path_sigma.
+  2:intros; symmetry; rapply equiv_path_sigma.
+  cbn.
+  transitivity {ar : {a : A & f a = b} & {s : h ar.1 = c & transport (fun x : B => k x = g c) ar.2 (((p ar.1)^)^ @ ap g s) = q^}}.
+  2:make_equiv.
+  apply equiv_functor_sigma_id; intros [a r].
+  apply equiv_functor_sigma_id; intros s.
   refine (equiv_concat_l (transport_paths_Fl _ _) _ oE _).
   refine (_ oE (equiv_concat_l (transport_paths_Fl _ _) _)^-1).
   refine ((equiv_ap inverse _ _)^-1 oE _).
@@ -140,30 +138,23 @@ Section UnstableOctahedral.
   : hfiber (hfiber_compose_map b) (b;1) <~> hfiber f b.
   Proof.
     unfold hfiber, hfiber_compose_map.
+    refine (_ oE equiv_functor_sigma_id
+              (fun p => (equiv_path_sigma _ _ _)^-1)); cbn.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     apply equiv_functor_sigma_id; intros a; simpl.
-    refine (_ oE _); revgoals.
-    - refine (equiv_functor_sigma_id
-                (fun p => (equiv_path_sigma _ _ _)^-1)).
-    - cbn. refine (_ oE equiv_sigma_symm _).
-      apply equiv_sigma_contr; intros p.
-      destruct p; simpl; exact _.
+    refine (_ oE equiv_sigma_symm _).
+    apply equiv_sigma_contr; intros p.
+    destruct p; simpl; exact _.
   Defined.
 
   Definition hfiber_compose (c : C)
   : hfiber (g o f) c <~> { w : hfiber g c & hfiber f w.1 }.
   Proof.
     unfold hfiber.
-    refine (equiv_sigma_assoc _ _ oE _).
-    refine (equiv_functor_sigma_id _ oE _).
-    1: intros; apply equiv_sigma_symm.
-    refine (equiv_sigma_symm _ oE _).
-    apply equiv_functor_sigma_id; intros a; cbn.
-    refine (equiv_functor_sigma_id _ oE _).
-    1: intros; apply equiv_sigma_symm0.
-    refine ((equiv_sigma_assoc' _ _)^-1 oE _).
-    symmetry.
-    refine (_ oE equiv_contr_sigma _).
+    transitivity {a:A & {bp : {b:B & f a = b} & g bp.1 = c}}.
+    2:make_equiv.
+    apply equiv_functor_sigma_id; intros a.
+    symmetry; refine (_ oE equiv_contr_sigma _).
     reflexivity.
   Defined.
 
@@ -198,10 +189,8 @@ Proof.
   unfold hfiber, functor_sigma.
   refine (_ oE equiv_functor_sigma_id _).
   2:intros; symmetry; apply equiv_path_sigma.
-  refine (_ oE (equiv_sigma_assoc P _)^-1).
-  refine (_ oE equiv_functor_sigma_id _).
-  2:intros a; cbn; apply equiv_sigma_symm.
-  refine (_ oE equiv_sigma_assoc' _ _).
+  transitivity {w : {x : A & f x = b} & {x : P w.1 & (w.2) # (g w.1 x) = v}}.
+  1:make_equiv.
   apply equiv_functor_sigma_id; intros [a p]; simpl.
   apply equiv_functor_sigma_id; intros u; simpl.
   apply equiv_moveL_transport_V.

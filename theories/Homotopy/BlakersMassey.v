@@ -199,34 +199,17 @@ Section GBM.
                            transport (Q x1) t q10 = q11 } } }.
             + intros [y0 [q00 [q10 u]]]; cbn.
               refine (equiv_functor_prod' _ _ oE _).
-              * apply equiv_path_sigma.
-              * apply equiv_path_sigma.
-              * refine (equiv_sigma_prod0 _ _ oE _); cbn.
-                refine (equiv_sigma_assoc _ _).
-            + cbn.
-              refine (equiv_sigma_symm _ oE _).
+              1-2:apply equiv_path_sigma.
+              exact (equiv_sigma_prod0 _ _ oE equiv_sigma_assoc _ _).
+            + transitivity {s : x0 = x1 & {ap : {a : Y & a = y1} & {b : {q00 : Q x0 ap.1 & {q10 : Q x1 ap.1 & glue q00 @ (glue q10)^ = r}} & {_ : transport (fun x : X => Q x ap.1) s b.1 = (b.2).1 & ap.2 # (b.2).1 = q11}}}}.
+              2:make_equiv.
               apply equiv_functor_sigma_id; intros s.
-              refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma_id _ oE _).
-              * intros y0.
-                refine (equiv_functor_sigma_id _ oE _).
-                { intros ?.
-                  refine (equiv_sigma_symm _). }
-                refine (equiv_sigma_symm _).
-              * cbn.
-                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
-                refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-                refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma_id _); intros q01; cbn.
-                refine (equiv_functor_sigma_id _ oE _).
-                { intros ?; apply (equiv_sigma_symm0 _ _). }
-                refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma_id _ oE _).
-                { intros q; cbn; apply equiv_sigma_symm. }
-                cbn.
-                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
-                refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-                apply equiv_sigma_symm0.
+              refine ((equiv_contr_sigma _)^-1 oE _); cbn.
+              transitivity {q01 : Q x0 y1 & {ap : {a : Q x1 y1 & a = q11} & {_ : glue q01 @ (glue ap.1)^ = r & transport (fun x : X => Q x y1) s q01 = ap.1}}}.
+              2:make_equiv.
+              refine (equiv_functor_sigma_id _); intros q01.
+              refine ((equiv_contr_sigma _)^-1 oE _); cbn.
+              apply equiv_sigma_symm0.
           - unfold Ocodeleft2b.
             srefine (equiv_functor_sigma_id _ oE _).
             + intros [y0 [q00 [q10 u]]].
@@ -234,16 +217,7 @@ Section GBM.
                     (* sq : *) transport (fun x => Q x y0) s q00 = q10 }.
             + intros [y0 [q00 [q10 u]]]; cbn.
               refine (equiv_path_sigma _ (x0;q00) (x1;q10)).
-            + cbn.
-              refine (equiv_sigma_symm _ oE _).
-              apply equiv_functor_sigma_id; intros s.
-              refine (equiv_sigma_assoc _ _ oE _).
-              apply equiv_functor_sigma_id; intros y0.
-              refine (equiv_sigma_assoc _ _ oE _).
-              apply equiv_functor_sigma_id; intros q00.
-              refine (equiv_sigma_assoc _ _ oE _).
-              apply equiv_functor_sigma_id; intros q10.
-              apply equiv_sigma_symm0.
+            + make_equiv.
           - unfold Ocodeleft2c.
             srefine (equiv_functor_sigma_id _ oE _).
             + intros [y0 [q00 [q10 u]]].
@@ -251,22 +225,13 @@ Section GBM.
                            transport (Q x1) t q10 = q11 }.
             + intros [y0 [q00 [q10 u]]]; cbn.
               refine (equiv_path_sigma _ (y0;q10) (y1;q11)).
-            + cbn.
-              refine (equiv_sigma_assoc _ _ oE _).
-              refine (equiv_functor_sigma_id _ oE _).
-              { intros y0; apply equiv_sigma_symm. }
-              cbn.
-              refine ((equiv_sigma_assoc' _ _)^-1 oE _).
-                refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-                refine (equiv_sigma_assoc _ _ oE _).
-                apply equiv_functor_sigma_id; intros q01; cbn.
-                refine (equiv_sigma_assoc _ _ oE _).
-                refine (equiv_functor_sigma_id _ oE _).
-                { intros q; cbn; apply equiv_sigma_symm0. }
-                cbn.
-                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
-                refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-                apply equiv_idmap.
+            + transitivity {ap : {a : Y & a = y1} & {b : {q00 : Q x0 ap.1 & {q10 : Q x1 ap.1 & glue q00 @ (glue q10)^ = r}} & transport (Q x1) ap.2 (b.2).1 = q11}}.
+              2:make_equiv.
+              refine ((equiv_contr_sigma _)^-1 oE _); cbn.
+              transitivity {q01 : Q x0 y1 & {ap : {a : Q x1 y1 & a = q11} & glue q01 @ (glue ap.1)^ = r}}.
+              2:make_equiv.
+              apply equiv_functor_sigma_id; intros q01.
+              refine ((equiv_contr_sigma _)^-1 oE _); reflexivity.
           - intros [s [q01 [w u]]]; reflexivity.
           - intros [s [q01 [w u]]]; reflexivity.
         Defined.

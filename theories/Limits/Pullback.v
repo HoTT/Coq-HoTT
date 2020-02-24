@@ -136,12 +136,8 @@ Notation "f ^*" := (pullback_along f) : function_scope.
 Definition hfiber_pullback_along {A B C} (f : B -> A) (g : C -> A) (b:B)
 : hfiber (f ^* g) b <~> hfiber g (f b).
 Proof.
-  unfold hfiber, Pullback.
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  simpl.
-  refine (_ oE equiv_functor_sigma_id _).
-  2:intros; apply equiv_sigma_symm0.
-  refine (_ oE equiv_sigma_assoc' _ _).
+  transitivity {ap : {a : B & a = b} & {c : C & f ap.1 = g c}}.
+  1:make_equiv.
   refine (_ oE equiv_contr_sigma _).
   exact (equiv_functor_sigma_id (fun c => equiv_path_inverse _ _)).
 Defined.
@@ -158,16 +154,10 @@ Notation "g ^*'" := (pullback_along' g) : function_scope.
 Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 : hfiber (g ^*' f) c <~> hfiber f (g c).
 Proof.
-  unfold hfiber, Pullback.
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  transitivity {b:B & {ap : {a : C & a = c} & f b = g ap.1}}.
+  1:make_equiv.
   apply equiv_functor_sigma_id; intros b.
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  simpl.
-  refine (_ oE equiv_functor_sigma_id _).
-  2:intros; apply equiv_sigma_symm0.
-  refine (_ oE equiv_sigma_assoc' _ _).
-  refine (_ oE equiv_contr_sigma _).
-  apply equiv_idmap.
+  refine (_ oE equiv_contr_sigma _); reflexivity.
 Defined.
 
 Section Functor_Pullback.
@@ -248,21 +238,12 @@ Section PullbackSigma.
     : {p : Pullback f g & Pullback (transport A p.2.2 o r p.1) (s p.2.1)}
       <~> Pullback (functor_sigma f r) (functor_sigma g s).
   Proof.
-    refine (_ oE (equiv_sigma_assoc _ _)^-1).
-    refine (equiv_sigma_assoc _ _ oE _).
-    apply equiv_functor_sigma_id; intro y.
-    refine (_ oE (equiv_sigma_assoc _ _)^-1).
-    refine (equiv_functor_sigma_id _ oE _).
-    1: intro; apply equiv_sigma_assoc.
-    refine (equiv_sigma_symm _ oE _).
-    refine (equiv_functor_sigma_id _); intro z.
-    refine (_ oE _).
-    { refine (equiv_functor_sigma_id _); intro b.
-      refine (equiv_functor_sigma_id _); intro c.
-      apply equiv_path_sigma. }
-    refine (equiv_functor_sigma_id _ oE _).
-    1: intro b; cbn; apply equiv_sigma_symm.
-    cbn; apply equiv_sigma_symm.
+    unfold Pullback, functor_sigma.
+    transitivity {b:{y:Y & B y} & {c:{z:Z & C z} & { p : f b.1 = g c.1 & p # (r b.1 b.2) = s c.1 c.2 }}}.
+    1:make_equiv.
+    apply equiv_functor_sigma_id; intros.
+    apply equiv_functor_sigma_id; intros.
+    refine (equiv_path_sigma _ _ _ oE _); reflexivity.
   Defined.
 
 End PullbackSigma.

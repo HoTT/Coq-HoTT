@@ -24,13 +24,8 @@ Definition pfiber2_loops {A B : pType} (f : A ->* B)
 : pfiber (pfib f) <~>* loops B.
 Proof.
   apply issig_pequiv'; simple refine (_;_).
-  - simpl; unfold hfiber.
-    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
-    refine (_ oE (equiv_functor_sigma'
-                   (P := fun a => {_ : f a = point B & a = point A})
-                   (Q := fun a => {_ : a = point A & f a = point B })
-                   1 (fun a => equiv_sigma_symm0 _ _))).
-    refine (_ oE equiv_sigma_assoc' _ _).
+  - transitivity {ap : {a : A & a = point A} & f ap.1 = point B}.
+    1:make_equiv.
     refine (_ oE equiv_contr_sigma _); simpl.
     apply equiv_concat_l.
     symmetry; apply point_eq.

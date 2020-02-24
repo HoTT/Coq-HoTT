@@ -68,14 +68,7 @@ Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
 Definition issig_pequiv' (A B : pType)
   : { f : A <~> B & f (point A) = point B } <~> (A <~>* B).
 Proof.
-  transitivity { f : A ->* B & IsEquiv f }.
-  2: issig.
-  refine (equiv_functor_sigma_pb (issig_pmap A B) oE _).
-  refine (_ oE (equiv_functor_sigma_pb (issig_equiv A B))^-1).
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  refine (equiv_sigma_assoc _ _ oE _).
-  apply equiv_functor_sigma_id.
-  intro; cbn; apply equiv_sigma_symm0.
+  make_equiv.
 Defined.
 
 (* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed *)

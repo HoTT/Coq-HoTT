@@ -102,21 +102,14 @@ Module Book_Loop_Susp_Adjunction.
     refine (_ oE (equiv_functor_sigma_pb
                  (Q := fun NSm => fst NSm.1 = point B)
                  (equiv_Susp_rec A B))).
-    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
-    refine (_ oE equiv_functor_sigma_id _).
-    2:intros; apply equiv_sigma_symm0.
-    refine (_ oE (equiv_sigma_prod _)^-1); simpl.
-    refine (_ oE equiv_functor_sigma_id _).
-    2:intros; apply equiv_sigma_symm.
-    refine (_ oE equiv_sigma_assoc' _ _).
+    transitivity {bp : {b:B & b = point B} & {b:B & A -> bp.1 = b} }.
+    1:make_equiv.
     refine (_ oE equiv_contr_sigma _); simpl.
     refine (_ oE (equiv_sigma_contr
                    (A := {p : B & A -> point B = p})
                    (fun pm => { q : point B = pm.1 & pm.2 (point A) = q }))^-1).
-    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
-    refine (_ oE equiv_functor_sigma_id _).
-    2:intros; apply equiv_sigma_symm.
-    refine (_ oE equiv_sigma_assoc' _ _).
+    transitivity {bp : {b:B & point B = b} & {f : A -> point B = bp.1 & f (point A) = bp.2} }.
+    1:make_equiv.
     refine (_ oE equiv_contr_sigma _); simpl.
     refine (issig_pmap A (loops B)).
   Defined.
@@ -130,7 +123,7 @@ Module Book_Loop_Susp_Adjunction.
     ==* loops_functor g o* loop_susp_adjoint A B f.
   Proof.
     pointed_reduce.
-    refine (Build_pHomotopy _ _).
+    srefine (Build_pHomotopy _ _).
     - intros a. simpl.
       refine (_ @ (concat_1p _)^).
       refine (_ @ (concat_p1 _)^).

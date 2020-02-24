@@ -542,3 +542,45 @@ Ltac ev_equiv :=
            | [ |- context[equiv_fun (equiv_inverse ?f) ?a] ] =>
              change ((equiv_inverse f) a) with (f^-1 a)
          end.
+
+(** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
+
+(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. *)
+Ltac decomposing_intros :=
+  let x := fresh in
+  intros x; cbn in x;
+  try match type of x with
+  | ?a = ?b => fail 1           (** Don't destruct paths *)
+  | forall y:?A, ?B => fail 1   (** Don't apply functions *)
+  | _ => elim x; clear x
+  end;
+  try decomposing_intros.
+
+(* A multi-success version of [assumption].  That is, like [assumption], but if there are multiple hypotheses that match the type of the goal, then after choosing the first one, if a later tactic fails we can backtrack and choose another one. *)
+Ltac multi_assumption :=
+  multimatch goal with
+    [ H : ?A |- _ ] => exact H
+  end.
+
+(* Build an element of a possibly-nested record type out of hypotheses in the context. *)
+Ltac build_record :=
+  first [ cbn; multi_assumption
+        | unshelve econstructor; build_record ].
+
+(* Construct an equivalence between two possibly-nested record/sigma types that differ only by associativity and permutation of their components.  We could use [Build_Equiv] and directly construct [eisadj] by decomposing to reflexivity as well, but often with large nested types it seems to be faster to adjointify. *)
+Ltac make_equiv :=
+  snrapply equiv_adjointify;
+    [ decomposing_intros; build_record
+    | decomposing_intros; build_record
+    | decomposing_intros; reflexivity
+    | decomposing_intros; reflexivity ].
+
+(** In case anyone ever needs it, here's the version that doesn't adjointify. *)
+Ltac make_equiv_without_adjointification :=
+  snrapply Build_Equiv;
+    [ decomposing_intros; build_record |
+      snrapply Build_IsEquiv;
+      [ decomposing_intros; build_record
+      | decomposing_intros; reflexivity
+      | decomposing_intros; reflexivity
+      | decomposing_intros; reflexivity ] ].

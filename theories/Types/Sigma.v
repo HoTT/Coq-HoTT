@@ -493,66 +493,44 @@ Defined.
 
 (** ** Associativity *)
 
+(** All of the following lemmas are proven easily with the [make_equiv] tactic.  If you have a more complicated rearrangement of sigma-types to do, it is usually possible to do it by putting together these equivalences, but it is often simpler and faster to just use [make_equiv] directly. *)
+
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
-: {a : A & {p : P a & Q (a;p)}} <~> sigT Q
-  := @Build_Equiv
-       _ _ _
-       (@Build_IsEquiv
-          {a : A & {p : P a & Q (a;p)}} (sigT Q)
-          (fun apq => ((apq.1; apq.2.1); apq.2.2))
-          (fun apq => (apq.1.1; (apq.1.2; apq.2)))
-          (fun _ => 1)
-          (fun _ => 1)
-          (fun _ => 1)).
+  : {a : A & {p : P a & Q (a;p)}} <~> sigT Q.
+Proof.
+  make_equiv.
+Defined.
 
 Definition equiv_sigma_assoc' `(P : A -> Type) (Q : forall a : A, P a -> Type)
-: {a : A & {p : P a & Q a p}} <~> {ap : sigT P & Q ap.1 ap.2}
-  := @Build_Equiv
-       _ _ _
-       (@Build_IsEquiv
-          {a : A & {p : P a & Q a p}} {ap : sigT P & Q ap.1 ap.2}
-          (fun apq => ((apq.1; apq.2.1); apq.2.2))
-          (fun apq => (apq.1.1; (apq.1.2; apq.2)))
-          (fun _ => 1)
-          (fun _ => 1)
-          (fun _ => 1)).
+  : {a : A & {p : P a & Q a p}} <~> {ap : sigT P & Q ap.1 ap.2}.
+Proof.
+  make_equiv.
+Defined.
 
 Definition equiv_sigma_prod `(Q : (A * B) -> Type)
-: {a : A & {b : B & Q (a,b)}} <~> sigT Q
-  := @Build_Equiv
-       _ _ _
-       (@Build_IsEquiv
-          {a : A & {b : B & Q (a,b)}} (sigT Q)
-          (fun apq => ((apq.1, apq.2.1); apq.2.2))
-          (fun apq => (fst apq.1; (snd apq.1; apq.2)))
-          (fun _ => 1)
-          (fun _ => 1)
-          (fun _ => 1)).
+  : {a : A & {b : B & Q (a,b)}} <~> sigT Q.
+Proof.
+  make_equiv.
+Defined.
 
-Definition equiv_sigma_prod0 A B
-: {a : A & B} <~> A * B
-  := Build_Equiv _ _ _
-       (Build_IsEquiv
-          {a : A & B} (A * B)
-          (fun (ab : {a:A & B}) => (ab.1 , ab.2))
-          (fun (ab : A*B) => (fst ab ; snd ab))
-          (fun _ => 1) (fun _ => 1) (fun _ => 1)).
+Definition equiv_sigma_prod0 (A B : Type)
+  : {a : A & B} <~> A * B.
+Proof.
+  make_equiv.
+Defined.
 
 (** ** Symmetry *)
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
-: {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}
-  := ((equiv_sigma_prod (fun x => P (snd x) (fst x)))^-1)
-       oE (equiv_functor_sigma' (equiv_prod_symm A B)
-                                (fun x => equiv_idmap (P (fst x) (snd x))))
-       oE (equiv_sigma_prod (fun x => P (fst x) (snd x))).
+  : {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}.
+Proof.
+  make_equiv.
+Defined.
 
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.
 Proof.
-  refine (Build_Equiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
-  simple refine (Build_IsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
-                       _ _ _); intros [x y]; reflexivity.
+  make_equiv.
 Defined.
 
 (** ** Universal mapping properties *)
