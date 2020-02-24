@@ -77,21 +77,16 @@ Definition hfiber_functor_hfiber {A B C D}
 : hfiber (functor_hfiber p b) (c;q)
   <~> hfiber (functor_hfiber (fun x => (p x)^) c) (b;q^).
 Proof.
-  unfold hfiber, functor_hfiber, functor_sigma.
-  rapply (equiv_functor_sigma_id _ oE _ oE equiv_functor_sigma_id _).
-  1:intros; rapply equiv_path_sigma.
-  2:intros; symmetry; rapply equiv_path_sigma.
-  cbn.
-  transitivity {ar : {a : A & f a = b} & {s : h ar.1 = c & transport (fun x : B => k x = g c) ar.2 (((p ar.1)^)^ @ ap g s) = q^}}.
-  2:make_equiv.
-  apply equiv_functor_sigma_id; intros [a r].
-  apply equiv_functor_sigma_id; intros s.
-  refine (equiv_concat_l (transport_paths_Fl _ _) _ oE _).
-  refine (_ oE (equiv_concat_l (transport_paths_Fl _ _) _)^-1).
+  rapply (equiv_functor_sigma_id _ oE _ oE (equiv_functor_sigma_id _)^-1).
+  1,3:intros; rapply equiv_path_sigma.
+  refine (equiv_sigma_assoc _ _ oE _ oE (equiv_sigma_assoc _ _)^-1).
+  apply equiv_functor_sigma_id; intros a; cbn.
+  refine (equiv_sigma_symm _ oE _).
+  do 2 (apply equiv_functor_sigma_id; intro).
   refine ((equiv_ap inverse _ _)^-1 oE _).
   refine (equiv_concat_r (inv_V q)^ _ oE _).
   apply equiv_concat_l.
-  abstract (rewrite !inv_pp, !inv_V, concat_pp_p; reflexivity).
+  abstract (rewrite !transport_paths_Fl, !inv_pp, !inv_V, concat_pp_p; reflexivity).
 Defined.
 
 (** ** Replacing a map with a fibration *)
@@ -138,13 +133,14 @@ Section UnstableOctahedral.
   : hfiber (hfiber_compose_map b) (b;1) <~> hfiber f b.
   Proof.
     unfold hfiber, hfiber_compose_map.
-    refine (_ oE equiv_functor_sigma_id
-              (fun p => (equiv_path_sigma _ _ _)^-1)); cbn.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     apply equiv_functor_sigma_id; intros a; simpl.
-    refine (_ oE equiv_sigma_symm _).
-    apply equiv_sigma_contr; intros p.
-    destruct p; simpl; exact _.
+    refine (_ oE _); revgoals.
+    - refine (equiv_functor_sigma_id
+                (fun p => (equiv_path_sigma _ _ _)^-1)).
+    - cbn; refine (_ oE equiv_sigma_symm _).
+      apply equiv_sigma_contr; intros p.
+      destruct p; simpl; exact _.
   Defined.
 
   Definition hfiber_compose (c : C)
