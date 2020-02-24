@@ -243,12 +243,13 @@ Section ImpliesLex.
     refine (isconnected_equiv' O _ _ (cc (x;1))).
     unfold hfiber.
     subst h; unfold functor_hfiber, functor_sigma; cbn.
+    refine (_ oE (equiv_sigma_assoc _ _)^-1).
+    apply equiv_functor_sigma_id; intros y; cbn.
     refine (_ oE (equiv_functor_sigma_id _)).
     2:intros; symmetry; apply equiv_path_sigma.
     cbn.
-    transitivity {yp : {y:Y & f y = x} & {q : g (f yp.1) = g x & transport (fun x' => g x' = g x) yp.2 (1 @ ap idmap q) = idpath } }.
-    1:make_equiv.
-    apply equiv_sigma_contr; intros [y p].
+    refine (_ oE equiv_sigma_symm _).
+    apply equiv_sigma_contr; intros p.
     destruct p; cbn.
     refine (contr_equiv' { p : g (f y) = g (f y) & p = 1%path } _).
     apply equiv_functor_sigma_id; intros p; cbn.
