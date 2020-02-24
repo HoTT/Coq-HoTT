@@ -574,7 +574,7 @@ Section strict_ordered_field.
           apply lt_ne_flip; assumption.
         }
         assert (nleyx : ~ y ≤ x)
-          by exact (functor_arrow (join_l x y) (@id Empty) ineqx).
+          by exact (not_contrapositive (join_l x y) ineqx).
         assert (lexy : x ≤ y).
         {
           apply le_iff_not_lt_flip.
@@ -586,7 +586,7 @@ Section strict_ordered_field.
           apply lt_ne_flip; assumption.
         }
         assert (nlexy : ~ x ≤ y)
-          by exact (functor_arrow (join_r x y) (@id Empty) ineqy).
+          by exact (not_contrapositive (join_r x y) ineqy).
         assert (leyx : y ≤ x).
         {
           apply le_iff_not_lt_flip.
@@ -629,7 +629,7 @@ Section strict_ordered_field.
           apply lt_ne; assumption.
         }
         assert (nleyz : ~ y ≤ z)
-          by exact (functor_arrow (meet_l y z) (@id Empty) ineqy).
+          by exact (not_contrapositive (meet_l y z) ineqy).
         assert (lezy : z ≤ y).
         {
           apply le_iff_not_lt_flip.
@@ -641,7 +641,7 @@ Section strict_ordered_field.
           apply lt_ne; assumption.
         }
         assert (nlezy : ~ z ≤ y)
-          by exact (functor_arrow (meet_r y z) (@id Empty) ineqz).
+          by exact (not_contrapositive (meet_r y z) ineqz).
         assert (leyz : y ≤ z).
         {
           apply le_iff_not_lt_flip.

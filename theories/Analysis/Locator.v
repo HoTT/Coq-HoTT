@@ -186,7 +186,7 @@ Section locator.
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
     Proof.
       assert (f := locates_right_true l' ltqr).
-      exact (functor_arrow f (@id Empty)).
+      exact (not_contrapositive f).
     Qed.
 
     Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : x < ' q -> locates_left l' ltqr.
@@ -200,7 +200,7 @@ Section locator.
       intros nltxr.
       apply stable.
       assert (f := locates_right_false l' ltqr).
-      exact (functor_arrow f (@id Empty) nltxr).
+      exact (not_contrapositive f nltxr).
     Qed.
 
     Lemma ltrx_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : 'r < x -> locates_right l' ltqr.

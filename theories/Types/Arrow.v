@@ -161,6 +161,10 @@ Definition functor_arrow `(f : B -> A) `(g : C -> D)
   : (A -> C) -> (B -> D)
   := @functor_forall A (fun _ => C) B (fun _ => D) f (fun _ => g).
 
+Definition not_contrapositive `(f : B -> A)
+  : not A -> not B
+  := functor_arrow f idmap.
+
 Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   (h h' : A -> C) (p : h == h')
   : ap (functor_arrow f g) (path_arrow _ _ p)
