@@ -343,7 +343,7 @@ Section meet_semilattice_order.
     refine (antisymmetry _ _ _ le1 le2).
   Qed.
 
-  End meet_semilattice_order.
+End meet_semilattice_order.
 
 Section lattice_order.
   Context `{LatticeOrder L}.

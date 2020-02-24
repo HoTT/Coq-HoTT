@@ -44,12 +44,6 @@ Proof.
   rewrite (recip_inverse' y), mult_1_l; assumption.
 Qed.
 
-(* Lemma flip_lt_recip_l' x y (Py : 0 < y) (ltyx : //(y;pseudo_order_lt_apart_flip 0 y Py) < x) : x ≶ 0. *)
-(* Proof. *)
-(*   apply pseudo_order_lt_apart_flip. *)
-(*   refine (transitivity _ ltyx). *)
-(*   apply pos_recip_compat. *)
-(* Defined. *)
 Lemma flip_lt_recip_l x y (Py : 0 < y) (ltyx : //(y;positive_apart_zero y Py) < x) :
   let apx0 := positive_apart_zero x (transitivity (pos_recip_compat y Py) ltyx) in
   //(x;apx0) < y.
