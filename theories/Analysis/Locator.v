@@ -216,10 +216,14 @@ Section locator.
 
   End logic2.
 
-  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q
-    := (fst (pos_minus_lt_compat_r q ('eps)) (is_pos eps)).
-  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps
-    := (fst (pos_plus_lt_compat_r q ('eps)) (is_pos eps)).
+  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q.
+  Proof.
+    apply (pos_minus_lt_compat_r q ('eps)), eps.
+  Qed.
+  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
+  Proof.
+    apply (pos_plus_lt_compat_r q ('eps)), eps.
+  Qed.
 
   Section bounds.
     (* Given a real with a locator, we can find (integer) bounds. *)
