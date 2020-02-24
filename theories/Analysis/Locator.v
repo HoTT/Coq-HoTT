@@ -161,7 +161,8 @@ Section locator.
     Qed.
 
     Let locsig : _ <~> locator' x := ltac:(issig).
-    Lemma locator'_locator_locator' (l' : locator' x): locator_locator' (locator'_locator l') = l'.
+    Lemma locator'_locator_locator' (l' : locator' x)
+      : locator_locator' (locator'_locator l') = l'.
     Proof.
       enough (p : locsig ^-1 (locator_locator' (locator'_locator l')) = locsig ^-1 l').
       - refine (equiv_inj (locsig ^-1) p).
@@ -183,19 +184,22 @@ Section locator.
            locator'_locator_locator'
            locator_locator'_locator.
 
-    Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ ' q < x -> locates_left l' ltqr.
+    Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
+      : ~ ' q < x -> locates_left l' ltqr.
     Proof.
       assert (f := locates_right_true l' ltqr).
       exact (not_contrapositive f).
     Qed.
 
-    Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r) : x < ' q -> locates_left l' ltqr.
+    Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
+      : x < ' q -> locates_left l' ltqr.
     Proof.
       intros ltxq. apply nltqx_locates_left.
       apply lt_flip; assumption.
     Qed.
 
-    Lemma nltxr_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : ~ x < ' r -> locates_right l' ltqr.
+    Lemma nltxr_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r)
+      : ~ x < ' r -> locates_right l' ltqr.
     Proof.
       intros nltxr.
       apply stable.
@@ -203,7 +207,8 @@ Section locator.
       exact (not_contrapositive f nltxr).
     Qed.
 
-    Lemma ltrx_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r) : 'r < x -> locates_right l' ltqr.
+    Lemma ltrx_locates_right {q r : Q} (l' : locator' x) (ltqr : q < r)
+      : 'r < x -> locates_right l' ltqr.
     Proof.
       intros ltrx. apply nltxr_locates_right.
       apply lt_flip; assumption.
@@ -211,8 +216,10 @@ Section locator.
 
   End logic2.
 
-  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q := (fst (pos_minus_lt_compat_r q ('eps)) (is_pos eps)).
-  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps := (fst (pos_plus_lt_compat_r q ('eps)) (is_pos eps)).
+  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q
+    := (fst (pos_minus_lt_compat_r q ('eps)) (is_pos eps)).
+  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps
+    := (fst (pos_plus_lt_compat_r q ('eps)) (is_pos eps)).
 
   Section bounds.
     (* Given a real with a locator, we can find (integer) bounds. *)
@@ -338,8 +345,10 @@ Section locator.
       assert (lt_grid : forall k : Fin _, grid (fin_incl k) < grid (fsucc k)).
       {
         intros k. unfold grid.
-        change (' fin_incl k) with (fin_to_nat (fin_incl k)); rewrite path_nat_fin_incl.
-        change (' fsucc k) with (fin_to_nat (fsucc k)); rewrite path_nat_fsucc.
+        change (' fin_incl k) with (fin_to_nat (fin_incl k));
+          rewrite path_nat_fin_incl.
+        change (' fsucc k) with (fin_to_nat (fsucc k));
+          rewrite path_nat_fsucc.
         assert (' (S (' k)) = (' (' k) + 1)) as ->.
         {
           rewrite S_nat_plus_1.
@@ -573,7 +582,12 @@ Section locator.
             rewrite (dec_recip_to_recip r (positive_apart_zero ('r) rpos')) in ltrrx.
             assert (ltxrr := flip_lt_recip_l x ('r) rpos' ltrrx).
             cbn in ltxrr.
-            rewrite (recip_irrelevant x (positive_apart_zero x (transitivity (pos_recip_compat (' r) rpos') ltrrx)) nu) in ltxrr.
+            rewrite
+              (recip_irrelevant
+                 x
+                 (positive_apart_zero
+                    x
+                    (transitivity (pos_recip_compat (' r) rpos') ltrrx)) nu) in ltxrr.
             exact ltxrr.
           * apply inl.
             assert (qpos' : 0 < ' q).
@@ -605,7 +619,12 @@ Section locator.
       assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
       rewrite (recip_negate (-x)) in l'.
       unfold negate_apart in l'.
-      rewrite (recip_proper_alt (- - x) x (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu) in l'.
+      rewrite
+        (recip_proper_alt
+           (- - x)
+           x
+           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu)
+        in l'.
       - assumption.
       - apply negate_involutive.
     Qed.
@@ -700,7 +719,8 @@ Section locator.
 
     Lemma locator_meet : locator (meet x y).
     Proof.
-      intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
+      intros q r ltqr.
+      destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
       - apply inl, meet_lt_l; assumption.
       - apply inr, meet_lt_r_r; assumption.
       - apply inr, meet_lt_r_l; assumption.
@@ -709,7 +729,8 @@ Section locator.
 
     Lemma locator_join : locator (join x y).
     Proof.
-      intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
+      intros q r ltqr.
+      destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
       - apply inl, join_lt_l_l; assumption.
       - apply inl, join_lt_l_l; assumption.
       - apply inl, join_lt_l_r; assumption.
