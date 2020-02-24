@@ -694,17 +694,11 @@ Section locator.
         assumption.
     Qed.
 
-  End binary_ops.
-
-  Section binary_ops_todo.
-
     (* TODO construct locators for multiplications. *)
-    Lemma locator_times : forall x y (l : locator x) (m : locator y),
-      locator (x * y).
+    Lemma locator_times : locator (x * y).
     Proof. Abort.
 
-    Lemma locator_meet {x y} (l : locator x) (m : locator y):
-        locator (meet x y).
+    Lemma locator_meet : locator (meet x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
       - apply inl, meet_lt_l; assumption.
@@ -713,8 +707,7 @@ Section locator.
       - apply inr, meet_lt_r_r; assumption.
     Qed.
 
-    Lemma locator_join {x y} (l : locator x) (m : locator y):
-        locator (join x y).
+    Lemma locator_join : locator (join x y).
     Proof.
       intros q r ltqr. destruct (l q r ltqr, m q r ltqr) as [[ltqx|ltxr] [ltqy|ltyr]].
       - apply inl, join_lt_l_l; assumption.
@@ -723,12 +716,11 @@ Section locator.
       - apply inr, join_lt_r; assumption.
     Qed.
 
-  End binary_ops_todo.
+  End binary_ops.
 
   Section limit.
 
     Context {xs : nat -> F}.
-    Generalizable Variable M.
     Context {M} {M_ismod : CauchyModulus Q F xs M}.
     Context (ls : forall n, locator (xs n)).
 
