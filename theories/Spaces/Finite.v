@@ -1115,6 +1115,11 @@ Ltac FinIndOn X := repeat
 (** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
 
+(** The 1-dimensional version of Sperner's lemma says that given any
+finite sequence of decidable hProps, where the sequence starts with
+true and ends with false, we can find a point in the sequence where
+the sequence changes from true to false. This is like a discrete
+intermediate value theorem. *)
 Section Sperner.
 
   Fixpoint sperners_lemma_1d {n} : forall (f : Fin (n.+2) -> DHProp)
