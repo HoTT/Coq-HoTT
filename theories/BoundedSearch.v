@@ -120,6 +120,7 @@ Section bounded_search_alt_type.
           (P_dec : forall x, Decidable (P x))
           (P_inhab : hexists (fun x => P x)).
 
+  (** Bounded search works for types equivalent to the naturals even without full univalence. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
     set (P' n := P (e n)).

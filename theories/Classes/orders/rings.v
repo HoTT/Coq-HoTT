@@ -185,6 +185,16 @@ Section strict_ring_order.
     rewrite <-(negate_involutive x), <-(negate_involutive y); auto.
   Qed.
 
+  Lemma flip_lt_negate_r x y : y < - x -> x < - y.
+  Proof.
+    pattern y at 1. rewrite <- (@involutive _ (-) _ y).
+    apply flip_lt_negate.
+  Qed.
+  Lemma flip_lt_negate_l x y : - x < y -> - y < x.
+  Proof.
+    pattern y at 1. rewrite <- (@involutive _ (-) _ y).
+    apply flip_lt_negate.
+  Qed.
   Lemma flip_pos_negate x : 0 < x <-> -x < 0.
   Proof.
   split; intros E.

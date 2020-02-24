@@ -91,4 +91,14 @@ Proof.
   rewrite (recip_irrelevant (//(x;apx0)) (positive_apart_zero (// (x; apx0)) (transitivity (pos_recip_compat (// (y; apy0)) ltry) ltyx)) (recip_apart x apx0)) in ltxy.
   assumption.
 Qed.
+
+Lemma field_split2 (x : F) : (x * recip'  2 (positive_apart_zero 2 lt_0_2)) + (x * recip' 2 (positive_apart_zero 2 lt_0_2)) = x.
+Proof.
+  rewrite <- plus_mult_distr_l.
+  rewrite <- (mult_1_l (recip' 2 (positive_apart_zero 2 lt_0_2))).
+  rewrite <- plus_mult_distr_r.
+  rewrite (recip_inverse' 2 (positive_apart_zero 2 lt_0_2)).
+  rewrite mult_1_r.
+  reflexivity.
+Qed.
 End contents.
