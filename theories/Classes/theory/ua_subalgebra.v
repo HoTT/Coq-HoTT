@@ -3,7 +3,6 @@ Require Import
   HoTT.TruncType
   HoTT.HProp
   HoTT.Types
-  HoTT.UnivalenceImpliesFunext
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.

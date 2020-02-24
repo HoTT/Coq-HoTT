@@ -6,7 +6,6 @@ Require Import SetCategory.Core.
 Require Import Grothendieck.ToSet.Core Grothendieck.ToSet.Morphisms.
 Require Import HoTT.Basics.Equivalences HoTT.Basics.Trunc.
 Require Import HoTT.Types.Universe HoTT.Types.Paths HoTT.Types.Sigma.
-Require Import HoTT.UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

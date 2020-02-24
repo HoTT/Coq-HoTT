@@ -2,8 +2,9 @@
 
 (** * Theorems about the homotopical interval. *)
 
-Require Import HoTT.Basics FunextVarieties.
+Require Import HoTT.Basics.
 Require Import HIT.Interval.
+Require Import Metatheory.Core Metatheory.FunextVarieties.
 
 (** ** From an interval type, we can prove function extensionality. *)
 
@@ -13,6 +14,3 @@ Definition funext_type_from_interval : Funext_type
       let h := fun (x:interval) (a:A) =>
         interval_rec _ (f a) (g a) (p a) x
         in ap h seg)).
-(** As justified by the above proof, we may assume [Funext] given the interval. *)
-Global Instance funext_from_interval : Funext.
-Admitted.

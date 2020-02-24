@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Idempotents.
 Require Import HoTT.Truncations Spaces.BAut Spaces.Cantor.
 

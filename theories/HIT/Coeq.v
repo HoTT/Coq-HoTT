@@ -2,7 +2,7 @@
 
 (** * Homotopy coequalizers *)
 
-Require Import HoTT.Basics UnivalenceImpliesFunext.
+Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
 Require Import Cubical.DPath.
 Local Open Scope path_scope.

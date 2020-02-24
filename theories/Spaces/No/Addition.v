@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
+Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Spaces.No.Core HoTT.Spaces.No.Negation.
 
 Local Open Scope path_scope.

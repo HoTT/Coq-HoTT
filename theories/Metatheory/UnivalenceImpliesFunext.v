@@ -1,16 +1,10 @@
-Require Import HoTT.Basics Types.Universe Types.Paths Types.Unit FunextVarieties.
+Require Import HoTT.Basics.
+Require Import Types.Universe Types.Paths Types.Unit.
+Require Import Metatheory.Core Metatheory.FunextVarieties.
 
 Generalizable All Variables.
 
 (** * Univalence Implies Functional Extensionality *)
-
-(** Here we prove that univalence implies function extensionality. *)
-Set Printing Universes.
-(** We define an axiom-free variant of [Univalence] *)
-Definition Univalence_type := forall (A B : Type@{i}), IsEquiv (equiv_path A B).
-
-(** Univalence is a property of a single universe; its statement lives in a higher universe *)
-Check Univalence_type@{i iplusone} : Type@{iplusone}.
 
 Section UnivalenceImpliesFunext.
   Context `{ua : Univalence_type}.
@@ -108,6 +102,4 @@ Definition Univalence_type_implies_Funext_type
   := NaiveNondepFunext_implies_Funext
        (@Univalence_implies_FunextNondep ua).
 
-(** As justified by the above proof, we may assume [Univalence -> Funext]. *)
-Global Instance Univalence_implies_Funext `{Univalence} : Funext.
-Admitted.
+(** The above proof justifies assuming [Univalence -> Funext], which we did axiomatically in [Types/Universe.v]. *)

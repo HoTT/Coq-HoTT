@@ -2,7 +2,6 @@ Require Import Basics.
 Require Import Types.
 Require Import HSet.
 Require Import HProp.
-Require Import UnivalenceImpliesFunext.
 Require Import TruncType.
 Require Import HIT.epi.
 Require Import HIT.Coeq.

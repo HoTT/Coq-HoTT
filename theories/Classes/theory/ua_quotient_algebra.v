@@ -7,7 +7,6 @@ Require Import
   HoTT.HSet
   HoTT.HIT.quotient
   HoTT.Truncations
-  HoTT.UnivalenceImpliesFunext
   HoTT.Classes.implementations.list
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.theory.ua_homomorphism.

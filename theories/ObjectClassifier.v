@@ -3,7 +3,7 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations HProp EquivalenceVarieties UnivalenceImpliesFunext Pullback.
+Require Import Fibrations HProp EquivalenceVarieties Pullback.
 
 Local Open Scope path_scope.
 

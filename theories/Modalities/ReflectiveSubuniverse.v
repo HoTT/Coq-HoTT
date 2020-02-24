@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
+Require Import EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
 Require Import HoTT.Tactics PathAny.
 Require Import HIT.Coeq Colimits.Pushout.
 Require Import Tactics.RewriteModuloAssociativity.

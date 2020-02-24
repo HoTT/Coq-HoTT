@@ -1,6 +1,6 @@
 (** * Propositional self-duality of groupoid categories *)
 Require Import Category.Core GroupoidCategory.Core Category.Paths Category.Dual.
-Require Import HoTT.Types HoTT.UnivalenceImpliesFunext.
+Require Import HoTT.Types.
 Require Import Basics.Trunc.
 
 Set Universe Polymorphism.

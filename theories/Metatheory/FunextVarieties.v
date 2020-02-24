@@ -1,7 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
+
 (** * Varieties of function extensionality *)
 
 Require Import HoTT.Basics HoTT.Types EquivalenceVarieties.
+Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.
@@ -28,11 +30,6 @@ Definition WeakFunext :=
   forall (A : Type) (P : A -> Type),
     (forall x, Contr (P x)) -> Contr (forall x, P x).
 Check WeakFunext@{i j max}.
-
-(** We define a variant of [Funext] which does not invoke an axiom. *)
-Definition Funext_type :=
-  forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
-Check Funext_type@{i j max}.
 
 (** The obvious implications are
    Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.

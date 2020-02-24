@@ -3,7 +3,7 @@
 (** * Decidable propositions *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import TruncType HProp UnivalenceImpliesFunext.
+Require Import TruncType HProp.
 Require Import HoTT.Truncations.
 
 Local Open Scope path_scope.

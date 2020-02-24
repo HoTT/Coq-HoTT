@@ -3,7 +3,6 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import UnivalenceImpliesFunext.
 Require Import HoTT.Truncations Homotopy.Suspension.
 
 Local Open Scope path_scope.

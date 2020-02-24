@@ -3,7 +3,6 @@ Require Import Basics Types.
 Require Import Pointed.Core.
 Require Import WildCat.
 Require Import pHomotopy pMap pEquiv.
-Require Import UnivalenceImpliesFunext.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.

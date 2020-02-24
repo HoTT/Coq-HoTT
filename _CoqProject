@@ -156,12 +156,10 @@ theories/Comodalities/CoreflectiveSubuniverse.v
 #
 
 theories/HIT/Circle.v
-theories/HIT/TruncImpliesFunext.v
 theories/HIT/Coeq.v
 theories/HIT/FreeIntQuotient.v
 theories/HIT/Flattening.v
 theories/HIT/Interval.v
-theories/HIT/IntervalImpliesFunext.v
 theories/HIT/Spheres.v
 theories/HIT/TwoSphere.v
 theories/HIT/epi.v
@@ -232,11 +230,8 @@ theories/Fibrations.v
 theories/Conjugation.v
 theories/HProp.v
 theories/EquivalenceVarieties.v
-theories/FunextVarieties.v
-theories/UnivalenceVarieties.v
 theories/Extensions.v
 theories/HSet.v
-theories/UnivalenceImpliesFunext.v
 theories/TruncType.v
 theories/DProp.v
 theories/Functorish.v
@@ -253,6 +248,17 @@ theories/PathAny.v
 theories/Utf8.v
 theories/HoTT.v
 theories/Tests.v
+
+#
+#   Metatheory
+#
+theories/Metatheory/Core.v
+theories/Metatheory/FunextVarieties.v
+theories/Metatheory/TruncImpliesFunext.v
+theories/Metatheory/IntervalImpliesFunext.v
+theories/Metatheory/UnivalenceImpliesFunext.v
+theories/Metatheory/UnivalenceVarieties.v
+
 
 #
 #   Contrib

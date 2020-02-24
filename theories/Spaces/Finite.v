@@ -8,7 +8,6 @@ Require Import Spaces.Nat.
 Require Import Fibrations.
 Require Import Factorization.
 Require Import EquivalenceVarieties.
-Require Import UnivalenceImpliesFunext.
 Require Import Truncations.
 Require Import Colimits.Quotient.
 

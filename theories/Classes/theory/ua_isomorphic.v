@@ -6,7 +6,6 @@ Require Export HoTT.Classes.theory.ua_homomorphism.
 Require Import
   HoTT.Basics
   HoTT.Types
-  HoTT.UnivalenceImpliesFunext
   HoTT.HProp
   HoTT.Tactics.
 

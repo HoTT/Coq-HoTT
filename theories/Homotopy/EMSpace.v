@@ -9,7 +9,6 @@ Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
-Require Import UnivalenceImpliesFunext.
 
 (* Formalisation of Eilenberg-MacLane spaces *)
 

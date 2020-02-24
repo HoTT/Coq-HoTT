@@ -58,7 +58,7 @@
 *)
 
 Require Import HoTT.
-Require Import HoTT.HIT.IntervalImpliesFunext.
+Require Import HoTT.Metatheory.Core HoTT.Metatheory.IntervalImpliesFunext HoTT.Metatheory.UnivalenceImpliesFunext.
 Require HoTT.Categories.
 From HoTT.Classes Require
   interfaces.abstract_algebra
@@ -701,12 +701,12 @@ Definition Book_4_8_4 := @HoTT.ObjectClassifier.objclasspb_is_fibrantreplacement
 (* ================================================== weakfunext *)
 (** Definition 4.9.1 *)
 
-Definition Book_4_9_1 := @HoTT.FunextVarieties.WeakFunext.
+Definition Book_4_9_1 := @HoTT.Metatheory.FunextVarieties.WeakFunext.
 
 (* ================================================== UA-eqv-hom-eqv *)
 (** Lemma 4.9.2 *)
 
-Definition Book_4_9_2 := @HoTT.UnivalenceImpliesFunext.univalence_isequiv_postcompose.
+Definition Book_4_9_2 := @HoTT.Metatheory.UnivalenceImpliesFunext.univalence_isequiv_postcompose.
 
 (* ================================================== contrfamtotalpostcompequiv *)
 (** Corollary 4.9.3 *)
@@ -716,12 +716,12 @@ Definition Book_4_9_2 := @HoTT.UnivalenceImpliesFunext.univalence_isequiv_postco
 (* ================================================== uatowfe *)
 (** Theorem 4.9.4 *)
 
-Definition Book_4_9_4 := @HoTT.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.
+Definition Book_4_9_4 := @HoTT.Metatheory.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.
 
 (* ================================================== wfetofe *)
 (** Theorem 4.9.5 *)
 
-Definition Book_4_9_5 := @HoTT.FunextVarieties.WeakFunext_implies_Funext.
+Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Funext.
 
 (* ================================================== thm:nat-uniq *)
 (** Theorem 5.1.1 *)
@@ -807,7 +807,7 @@ Definition Book_6_3_1 := @HoTT.HIT.Interval.contr_interval.
 (* ================================================== thm:interval-funext *)
 (** Lemma 6.3.2 *)
 
-Definition Book_6_3_2 := @HoTT.HIT.IntervalImpliesFunext.funext_type_from_interval.
+Definition Book_6_3_2 := @HoTT.Metatheory.IntervalImpliesFunext.funext_type_from_interval.
 
 (* ================================================== thm:loop-nontrivial *)
 (** Lemma 6.4.1 *)
