@@ -136,10 +136,8 @@ Notation "f ^*" := (pullback_along f) : function_scope.
 Definition hfiber_pullback_along {A B C} (f : B -> A) (g : C -> A) (b:B)
 : hfiber (f ^* g) b <~> hfiber g (f b).
 Proof.
-  transitivity {ap : {a : B & a = b} & {c : C & f ap.1 = g c}}.
-  1:make_equiv.
-  refine (_ oE equiv_contr_sigma _).
-  exact (equiv_functor_sigma_id (fun c => equiv_path_inverse _ _)).
+  refine (equiv_functor_sigma_id (fun c => equiv_path_inverse _ _) oE _).
+  make_equiv_contr_basedpaths.
 Defined.
 
 (** And the dual sort of pullback *)
@@ -154,10 +152,7 @@ Notation "g ^*'" := (pullback_along' g) : function_scope.
 Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 : hfiber (g ^*' f) c <~> hfiber f (g c).
 Proof.
-  transitivity {b:B & {ap : {a : C & a = c} & f b = g ap.1}}.
-  1:make_equiv.
-  apply equiv_functor_sigma_id; intros b.
-  refine (_ oE equiv_contr_sigma _); reflexivity.
+  make_equiv_contr_basedpaths.
 Defined.
 
 Section Functor_Pullback.
@@ -238,12 +233,9 @@ Section PullbackSigma.
     : {p : Pullback f g & Pullback (transport A p.2.2 o r p.1) (s p.2.1)}
       <~> Pullback (functor_sigma f r) (functor_sigma g s).
   Proof.
-    unfold Pullback, functor_sigma.
-    transitivity {b:{y:Y & B y} & {c:{z:Z & C z} & { p : f b.1 = g c.1 & p # (r b.1 b.2) = s c.1 c.2 }}}.
-    1:make_equiv.
-    apply equiv_functor_sigma_id; intros.
-    apply equiv_functor_sigma_id; intros.
-    refine (equiv_path_sigma _ _ _ oE _); reflexivity.
+    refine (equiv_functor_sigma_id (fun _ => equiv_functor_sigma_id _) oE _).
+    - intros; rapply equiv_path_sigma.
+    - make_equiv.
   Defined.
 
 End PullbackSigma.

@@ -710,6 +710,14 @@ Proof.
   (* subst u. rewrite X. *)
 Defined.
 
+(** Occasionally [paths_rect] shows up; this lets us turn it into transport. *)
+Definition paths_rect_transport {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x)
+  : paths_rect A x (fun a _ => P a) u y p = transport P p u.
+Proof.
+  by destruct p.
+Defined.           
+
 
 (** ** [ap11] *)
 

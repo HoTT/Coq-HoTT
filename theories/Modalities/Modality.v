@@ -299,11 +299,7 @@ Proof.
   2:intros; symmetry; apply equiv_path_sigma.
   refine (_ oE equiv_functor_sigma_id (fun z => equiv_functor_sigma_id (fun p => _))).
   2:symmetry; apply equiv_path_prod.
-  transitivity {xp : { x : O_reflector O' A & z = x } & { bq : { b : B xp.1 & snd (transport (fun a => B a * B a) xp.2 (h z, k z)) = b } & fst (transport (fun a => B a * B a) xp.2 (h z, k z)) = bq.1 }}.
-  1:make_equiv.
-  refine (_ oE equiv_contr_sigma _); cbn.
-  refine (_ oE equiv_contr_sigma _); cbn.
-  reflexivity.
+  cbn. make_equiv_contr_basedpaths.
 Defined.
 
 (** Thus, if this holds for all sigma-types, we get the dependent universal property.  Making this an [Instance] causes typeclass search to spin.  Note the slightly different hypotheses, which mean that we can't just use the previous result: here we need only assume that the [O']-reflection of [A] exists rather than that [O'] is fully reflective, at the cost of assuming that [O] is fully reflective (although actually, closed under path-spaces would suffice). *)
@@ -528,7 +524,7 @@ Section ModalFact.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
       + cbn; repeat rewrite O_rec_beta; reflexivity.
-      + symmetry; apply to_O_natural.
+      + destruct p; symmetry; apply to_O_natural.
   Qed.
 
   Section TwoFactorizations.

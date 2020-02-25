@@ -138,7 +138,7 @@ Section UnstableOctahedral.
     refine (_ oE _); revgoals.
     - refine (equiv_functor_sigma_id
                 (fun p => (equiv_path_sigma _ _ _)^-1)).
-    - cbn; refine (_ oE equiv_sigma_symm _).
+    - cbn. refine (_ oE equiv_sigma_symm _).
       apply equiv_sigma_contr; intros p.
       destruct p; simpl; exact _.
   Defined.
@@ -146,12 +146,7 @@ Section UnstableOctahedral.
   Definition hfiber_compose (c : C)
   : hfiber (g o f) c <~> { w : hfiber g c & hfiber f w.1 }.
   Proof.
-    unfold hfiber.
-    transitivity {a:A & {bp : {b:B & f a = b} & g bp.1 = c}}.
-    2:make_equiv.
-    apply equiv_functor_sigma_id; intros a.
-    symmetry; refine (_ oE equiv_contr_sigma _).
-    reflexivity.
+    make_equiv_contr_basedpaths.
   Defined.
 
   Global Instance istruncmap_compose `{!IsTruncMap n g} `{!IsTruncMap n f}

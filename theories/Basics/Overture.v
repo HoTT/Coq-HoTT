@@ -251,6 +251,17 @@ Proof.
   apply H.
 Defined.
 
+(** And here's the "right-sided" Paulin-Mohring eliminator. *)
+
+Definition paths_ind_r {A : Type} (a : A)
+           (P : forall b : A, b = a -> Type) (u : P a idpath)
+  : forall (y : A) (p : y = a), P y p.
+Proof.
+  intros y p.
+  destruct p.
+  exact u.
+Defined.                                  
+
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
 (** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)

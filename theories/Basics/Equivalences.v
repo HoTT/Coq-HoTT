@@ -584,3 +584,48 @@ Ltac make_equiv_without_adjointification :=
       | decomposing_intros; reflexivity
       | decomposing_intros; reflexivity
       | decomposing_intros; reflexivity ] ].
+
+(** This version is willing to destruct paths as well, but only as a (multisuccess) second choice. *)
+Ltac decomposing_intros_with_paths :=
+  let x := fresh in
+  intros x; cbn in x;
+  multimatch type of x with
+  | ?a = ?b =>
+    (** Don't destruct paths *)
+    try decomposing_intros_with_paths
+  | forall y:?A, ?B =>
+    (** Don't apply functions *)
+    try decomposing_intros_with_paths
+  | _ =>
+    try (elim x; clear x);
+    try decomposing_intros_with_paths
+  | ?a = ?b =>
+    (** Destruct paths as a second choice *)
+    first [ destruct x
+          | move x before b;
+            generalize dependent b;
+            refine (paths_ind _ _ _)
+          | move x before a;
+            generalize dependent a;
+            refine (paths_ind_r _ _ _)
+          ];
+    try decomposing_intros_with_paths
+  | _ =>
+    try decomposing_intros_with_paths
+  end.
+
+(** This version is willing to create evars in hopes that a later idpath will determine them. *)
+Ltac build_record_with_evars :=
+  first [ cbn; multi_assumption
+        | unshelve econstructor; build_record_with_evars
+        | match goal with
+            |- ?G => let x := fresh in evar (x : G); exact x
+          end; build_record_with_evars ].
+
+Ltac make_equiv_contr_basedpaths :=
+  simple notypeclasses refine (equiv_adjointify _ _ _ _);
+    (** [solve [ unshelve X ]] ensures that [X] succeeds without leaving any leftover evars. *)
+    [ decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
+    | decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
+    | decomposing_intros_with_paths; reflexivity
+    | decomposing_intros_with_paths; reflexivity ].
