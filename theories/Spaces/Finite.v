@@ -57,6 +57,12 @@ Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   | S n' => inl fin_zero
   end.
 
+(** Where `fin_zero` computes the first element of Fin (S n), `fin_last` computes the last. *)
+Definition fin_last {n : nat} : Fin (S n) := inr tt.
+
+(** Injection Fin n -> Fin n.+1 mapping the kth element to the kth element. *)
+Definition fin_incl {n : nat} (k : Fin n) : Fin (S n) := inl k.
+
 (** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
 Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
   match n with
@@ -1108,3 +1114,20 @@ Ltac FinIndOn X := repeat
 
 (** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
+
+(** The 1-dimensional version of Sperner's lemma says that given any finite sequence of decidable hProps, where the sequence starts with true and ends with false, we can find a point in the sequence where the sequence changes from true to false. This is like a discrete intermediate value theorem. *)
+Fixpoint sperners_lemma_1d {n} :
+  forall (f : Fin (n.+2) -> DHProp)
+         (left_true : f fin_zero)
+         (right_false : ~ f fin_last),
+    {k : Fin n.+1 & f (fin_incl k) /\ ~ f (fsucc k)}.
+Proof.
+  intros ???.
+  destruct n as [|n].
+  - exists fin_zero. split; assumption.
+  - destruct (dec (f (fin_incl fin_last))) as [prev_true|prev_false].
+    + exists fin_last. split; assumption.
+    + destruct (sperners_lemma_1d _ (f o fin_incl) left_true prev_false) as [k' [fleft fright]].
+      exists (fin_incl k').
+      split; assumption.
+Defined.
