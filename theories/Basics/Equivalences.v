@@ -559,13 +559,14 @@ Ltac decomposing_intros :=
 (* A multi-success version of [assumption].  That is, like [assumption], but if there are multiple hypotheses that match the type of the goal, then after choosing the first one, if a later tactic fails we can backtrack and choose another one. *)
 Ltac multi_assumption :=
   multimatch goal with
+    (* If we wrote [ H : ?A |- ?A ] here instead, it would prevent Coq from choosing an assumption that would require instantiating evars, which it has to do in the contr_basedpaths case below. *)
     [ H : ?A |- _ ] => exact H
   end.
 
 (* Build an element of a possibly-nested record type out of hypotheses in the context. *)
 Ltac build_record :=
   first [ cbn; multi_assumption
-        | unshelve econstructor; build_record ].
+        | cbn; unshelve econstructor; build_record ].
 
 (* Construct an equivalence between two possibly-nested record/sigma types that differ only by associativity and permutation of their components.  We could use [Build_Equiv] and directly construct [eisadj] by decomposing to reflexivity as well, but often with large nested types it seems to be faster to adjointify. *)
 Ltac make_equiv :=
@@ -588,7 +589,7 @@ Ltac make_equiv_without_adjointification :=
 (** This version is willing to destruct paths as well, but only as a (multisuccess) second choice. *)
 Ltac decomposing_intros_with_paths :=
   let x := fresh in
-  intros x; hnf in x;
+  intros x; cbn in x;
   multimatch type of x with
   | ?a = ?b =>
     (** Don't destruct paths *)
@@ -599,30 +600,25 @@ Ltac decomposing_intros_with_paths :=
   | _ =>
     try (elim x; clear x);
     try decomposing_intros_with_paths
-  | _ = _ =>
+  | ?a = ?b =>
     (** Destruct paths as a second choice *)
-    cbn in x;  (** Ensure the free endpoint is visible *)
-    match type of x with
-      | ?a = ?b =>
-        first [ destruct x
-              (* Sometimes [destruct] isn't smart enough to generalize the other hypotheses that use the free endpoint. *)
-              | move x before b;
-                generalize dependent b;
-                refine (paths_ind _ _ _)
-              | move x before a;
-                generalize dependent a;
-                refine (paths_ind_r _ _ _)
-              ]
-    end;
+    (* Sometimes [destruct] isn't smart enough to generalize the other hypotheses that use the free endpoint. *)
+    ((move x before b;
+      generalize dependent b;
+      refine (paths_ind _ _ _)) +
+     (* We do a multisuccess choice here because if [b] is a section variable, [generalize dependent] appears to succeed but doesn't actually do the correct thing (since the implicit dependence of the goal on that variable can't be generalized while inside the section), so in that case we want to be able to backtrack into trying to generalize [a] instead. *)
+     (move x before a;
+      generalize dependent a;
+      refine (paths_ind_r _ _ _)));
     try decomposing_intros_with_paths
   | _ =>
     try decomposing_intros_with_paths
   end.
 
-(** This version is willing to create evars in hopes that a later idpath will determine them. *)
+(** This version is willing to create evars, in hopes that a later idpath will determine them.  Note that if there are other fields that depend on this one that occur before the idpath, the evar will -- and, indeed, must -- get instantiated by them instead.  This is why [multi_assumption], above, must be willing to instantiate evars. *)
 Ltac build_record_with_evars :=
   first [ cbn; multi_assumption
-        | unshelve econstructor; build_record_with_evars
+        | cbn; unshelve econstructor; build_record_with_evars
         | match goal with
             |- ?G => let x := fresh in evar (x : G); exact x
           end; build_record_with_evars ].

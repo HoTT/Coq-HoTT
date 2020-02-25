@@ -81,6 +81,8 @@ Section GBM.
       exact (equiv_concat_l (concat_pp_V _ _)^ _).
       (** Although we proved this lemma with [rewrite], we make it transparent, not so that *we* can reason about it, but so that Coq can evaluate it. *)
     Defined.
+    (* But except in one place, we don't want it to try (otherwise things get really slow). *)
+    Opaque frobnicate.
 
     (** ** Codes *)
 
@@ -184,7 +186,7 @@ Section GBM.
           exact (q01;u).
         Defined.
 
-        (** This proof is long, but most of it is just rearranging Sigma-types and paths in Sigma-types. *)
+        (** This proof is basically just rearranging Sigma-types and paths in Sigma-types and contracting based path spaces. *)
         Definition equiv_Ocodeleft2plus
           : Pushout Ocodeleft2ab Ocodeleft2ac <~> codeleft2plus.
         Proof.
@@ -192,23 +194,13 @@ Section GBM.
           srefine (equiv_pushout _ _ _ _ _).
           - srefine (equiv_functor_sigma_id _ oE _).
             2:intro; refine (equiv_functor_prod' _ _); apply equiv_path_sigma.
-            transitivity {s : x0 = x1 & { yp : { y0 : Y & y0 = y1} & {q00 : Q x0 yp.1 & { q10p : { q10 : Q x1 yp.1 & transport (fun y => Q x1 y) yp.2 q10 = q11 } & { _ : transport (fun x => Q x yp.1) s q00 = q10p.1 & glue q00 @ (glue q10p.1)^ = r }}}}}.
-            2:make_equiv.
-            apply equiv_functor_sigma_id; intros s.
-            refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-            refine (equiv_functor_sigma_id _); intros q01.
-            refine ((equiv_contr_sigma _)^-1 oE _).
-            cbn. reflexivity.
+            make_equiv_contr_basedpaths.
           - srefine (equiv_functor_sigma_id _ oE _).
             2:intro; apply equiv_path_sigma.
             make_equiv.
           - srefine (equiv_functor_sigma_id _ oE _).
             2:intro; apply equiv_path_sigma.
-            transitivity {yp : {y0 : Y & y0 = y1} & {qp : {q10 : Q x1 yp.1 & transport (Q x1) yp.2 q10 = q11} & {q00 : Q x0 yp.1 & glue q00 @ (glue qp.1)^ = r}}}.
-            2:make_equiv.
-            refine ((equiv_contr_sigma _)^-1 oE _); cbn.
-            refine ((equiv_contr_sigma _)^-1 oE _).
-            reflexivity.
+            make_equiv_contr_basedpaths.
           - intros [s [q01 [w u]]]; reflexivity.
           - intros [s [q01 [w u]]]; reflexivity.
         Defined.
@@ -252,7 +244,7 @@ Section GBM.
           destruct c as [s [y0 [v [q00 [q10 [w [u d]]]]]]].
           unfold equiv_Ocodeleft2.
           Opaque equiv_Ocodeleft2plus.
-          cbn.
+          cbn. (* This is really slow, but without it the subsequent [refine] fails. *)
           refine (ap _ (ap _ (to_O_natural _ _ _)) @ _).
           refine (ap _ (to_O_natural _ _ _) @ _).
           refine (to_O_natural _ _ _ @ _).
@@ -500,7 +492,9 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       apply ap; unfold hfiber; rewrite transport_sigma'.
       apply ap; rewrite transport_paths_r.
       (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to... something that's almost fully path-general!  So with just a little bit of further work, we can reduce it also to something we can prove with path-induction. *)
-      cbn.
+      Transparent frobnicate.
+      cbn. (* This is slow, but without it we can't [rewrite]. *)
+      Opaque frobnicate.
       rewrite (transport_compose (fun q => glue q @ (glue q01)^ = 1%path) pr1).
       unfold path_sigma'; rewrite ap_V, ap_pr1_path_sigma, transport_1.
       destruct (glue q01); reflexivity.
