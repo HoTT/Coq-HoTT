@@ -548,7 +548,7 @@ Ltac ev_equiv :=
 (* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. *)
 Ltac decomposing_intros :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x;
   try match type of x with
   | ?a = ?b => fail 1           (** Don't destruct paths *)
   | forall y:?A, ?B => fail 1   (** Don't apply functions *)
@@ -572,8 +572,8 @@ Ltac make_equiv :=
   snrapply equiv_adjointify;
     [ decomposing_intros; build_record
     | decomposing_intros; build_record
-    | decomposing_intros; reflexivity
-    | decomposing_intros; reflexivity ].
+    | decomposing_intros; exact idpath
+    | decomposing_intros; exact idpath ].
 
 (** In case anyone ever needs it, here's the version that doesn't adjointify. *)
 Ltac make_equiv_without_adjointification :=
@@ -581,14 +581,14 @@ Ltac make_equiv_without_adjointification :=
     [ decomposing_intros; build_record |
       snrapply Build_IsEquiv;
       [ decomposing_intros; build_record
-      | decomposing_intros; reflexivity
-      | decomposing_intros; reflexivity
-      | decomposing_intros; reflexivity ] ].
+      | decomposing_intros; exact idpath
+      | decomposing_intros; exact idpath
+      | decomposing_intros; exact idpath ] ].
 
 (** This version is willing to destruct paths as well, but only as a (multisuccess) second choice. *)
 Ltac decomposing_intros_with_paths :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x;
   multimatch type of x with
   | ?a = ?b =>
     (** Don't destruct paths *)
@@ -599,16 +599,21 @@ Ltac decomposing_intros_with_paths :=
   | _ =>
     try (elim x; clear x);
     try decomposing_intros_with_paths
-  | ?a = ?b =>
+  | _ = _ =>
     (** Destruct paths as a second choice *)
-    first [ destruct x
-          | move x before b;
-            generalize dependent b;
-            refine (paths_ind _ _ _)
-          | move x before a;
-            generalize dependent a;
-            refine (paths_ind_r _ _ _)
-          ];
+    cbn in x;  (** Ensure the free endpoint is visible *)
+    match type of x with
+      | ?a = ?b =>
+        first [ destruct x
+              (* Sometimes [destruct] isn't smart enough to generalize the other hypotheses that use the free endpoint. *)
+              | move x before b;
+                generalize dependent b;
+                refine (paths_ind _ _ _)
+              | move x before a;
+                generalize dependent a;
+                refine (paths_ind_r _ _ _)
+              ]
+    end;
     try decomposing_intros_with_paths
   | _ =>
     try decomposing_intros_with_paths
@@ -627,5 +632,5 @@ Ltac make_equiv_contr_basedpaths :=
     (** [solve [ unshelve X ]] ensures that [X] succeeds without leaving any leftover evars. *)
     [ decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
     | decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
-    | decomposing_intros_with_paths; reflexivity
-    | decomposing_intros_with_paths; reflexivity ].
+    | decomposing_intros_with_paths; exact idpath
+    | decomposing_intros_with_paths; exact idpath ].
