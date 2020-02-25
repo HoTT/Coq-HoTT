@@ -1115,26 +1115,19 @@ Ltac FinIndOn X := repeat
 (** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)
 Ltac FinInd := let X := fresh "X" in intro X; FinIndOn X.
 
-(** The 1-dimensional version of Sperner's lemma says that given any
-finite sequence of decidable hProps, where the sequence starts with
-true and ends with false, we can find a point in the sequence where
-the sequence changes from true to false. This is like a discrete
-intermediate value theorem. *)
-Section Sperner.
-
-  Fixpoint sperners_lemma_1d {n} : forall (f : Fin (n.+2) -> DHProp)
-        (left_true : f fin_zero)
-        (right_false : ~ f fin_last),
+(** The 1-dimensional version of Sperner's lemma says that given any finite sequence of decidable hProps, where the sequence starts with true and ends with false, we can find a point in the sequence where the sequence changes from true to false. This is like a discrete intermediate value theorem. *)
+Fixpoint sperners_lemma_1d {n} :
+  forall (f : Fin (n.+2) -> DHProp)
+         (left_true : f fin_zero)
+         (right_false : ~ f fin_last),
     {k : Fin n.+1 & f (fin_incl k) /\ ~ f (fsucc k)}.
-  Proof.
-    intros ???.
-    destruct n as [|n].
-    - exists fin_zero. split; assumption.
-    - destruct (dec (f (fin_incl fin_last))) as [prev_true|prev_false].
-      + exists fin_last. split; assumption.
-      + destruct (sperners_lemma_1d _ (f o fin_incl) left_true prev_false) as [k' [fleft fright]].
-        exists (fin_incl k').
-        split; assumption.
-  Defined.
-
-End Sperner.
+Proof.
+  intros ???.
+  destruct n as [|n].
+  - exists fin_zero. split; assumption.
+  - destruct (dec (f (fin_incl fin_last))) as [prev_true|prev_false].
+    + exists fin_last. split; assumption.
+    + destruct (sperners_lemma_1d _ (f o fin_incl) left_true prev_false) as [k' [fleft fright]].
+      exists (fin_incl k').
+      split; assumption.
+Defined.
