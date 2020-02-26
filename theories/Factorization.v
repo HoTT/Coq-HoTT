@@ -4,7 +4,6 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp Extensions PathAny.
-Require Import HoTT.Tactics.
 Local Open Scope path_scope.
 
 

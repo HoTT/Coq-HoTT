@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization PathAny.
 Require Import Modality Accessible Localization Descent Separated.
-Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
 Local Open Scope subuniverse_scope.

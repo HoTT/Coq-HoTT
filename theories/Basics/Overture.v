@@ -719,6 +719,21 @@ Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 
+(** Clear a hypothesis and also its dependencies.  Taken from Coq stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)
+Tactic Notation "clear" "dependent" hyp(h) :=
+  let rec depclear h :=
+  clear h ||
+  lazymatch goal with
+   | H : context [ h ] |- _ => depclear H; depclear h
+  end ||
+  fail "hypothesis to clear is used in the conclusion (maybe indirectly)"
+ in depclear h.
+
+
+(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq stdlib. *)
+Tactic Notation "revert" "dependent" hyp(h) :=
+  generalize dependent h.
+
 (** Applying a tactic to a term with increasingly many arguments *)
 Tactic Notation "do_with_holes" tactic3(x) uconstr(p) :=
   x uconstr:(p) ||
@@ -794,6 +809,7 @@ Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term.
 (** A shorter name for [simple notypeclasses refine]. *)
 Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term.
 
+(** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
 Tactic Notation "rapply" uconstr(term)
   := do_with_holes ltac:(fun x => refine x) term.
 Tactic Notation "rapply'" uconstr(term)
@@ -860,21 +876,21 @@ Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_in
 Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)
   := funext a; funext b; funext c; funext d; funext e; funext f.
 
+(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq stdlib. *)
+Ltac assert_fails tac :=
+  tryif (once tac) then gfail 0 tac "succeeds" else idtac.
+Ltac assert_succeeds tac :=
+  tryif (assert_fails tac) then gfail 0 tac "fails" else idtac.
+Tactic Notation "assert_succeeds" tactic3(tac) :=
+  assert_succeeds tac.
+Tactic Notation "assert_fails" tactic3(tac) :=
+  assert_fails tac.
 
-
-(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
-Tactic Notation "not" tactic3(tac) :=
-  (tryif tac then fail 0 tac "succeeds" else idtac); (* error if the tactic solved all goals *) [].
-
-(** Test if a tactic succeeds, but always roll-back the results *)
-Tactic Notation "test" tactic3(tac) := tryif not tac then fail 0 tac "fails" else idtac.
-
-(** Removed auto. We can write "by (path_induction;auto with path_hints)"
- if we want to.*)
+(** This tactic doesn't end with [auto], but you can always write "by (path_induction;auto with path_hints)" if you want.*)
 Ltac path_induction :=
   intros; repeat progress (
     match goal with
-      | [ p : ?x = ?y  |- _ ] => not constr_eq x y; induction p
+      | [ p : ?x = ?y  |- _ ] => assert_fails constr_eq x y; induction p
     end
   ).
 
@@ -911,7 +927,7 @@ Ltac atomic x :=
     | match _ with _ => _ end => fail 1 x "is not atomic (match)"
     | _ => is_fix x; fail 1 x "is not atomic (fix)"
     | _ => is_cofix x; fail 1 x "is not atomic (cofix)"
-    | context[?E] => (* catch-all *) (not constr_eq E x); fail 1 x "is not atomic (has subterm" E ")"
+    | context[?E] => (* catch-all *) (assert_fails constr_eq E x); fail 1 x "is not atomic (has subterm" E ")"
     | _ => idtac
   end.
 
