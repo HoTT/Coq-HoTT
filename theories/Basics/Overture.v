@@ -719,16 +719,16 @@ Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 
-(** Clear a hypothesis and also its dependencies.  Taken from Coq stdlib. *)
-
+(** Clear a hypothesis and also its dependencies.  Taken from Coq stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)
 Tactic Notation "clear" "dependent" hyp(h) :=
   let rec depclear h :=
   clear h ||
-  match goal with
+  lazymatch goal with
    | H : context [ h ] |- _ => depclear H; depclear h
   end ||
   fail "hypothesis to clear is used in the conclusion (maybe indirectly)"
  in depclear h.
+
 
 (** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq stdlib. *)
 Tactic Notation "revert" "dependent" hyp(h) :=
