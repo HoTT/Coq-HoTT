@@ -2,7 +2,7 @@
 
 (** * Accessible subuniverses and modalities *)
 
-Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions NullHomotopy EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Modality.
 

@@ -1,9 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
-Require Import HoTT.Tactics PathAny.
+Require Import PathAny.
 Require Import HIT.Coeq Colimits.Pushout.
-Require Import Tactics.RewriteModuloAssociativity.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -832,10 +831,10 @@ Section Reflective_Subuniverse.
         exact (functor_sigma idmap (fun x => to O (P x))).
       - unfold Sect, O_functor; rapply O_indpaths.
         intros [a p]; simpl.
-        abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+        abstract (repeat (rewrite O_rec_beta); reflexivity).
       - unfold Sect, O_functor; rapply O_indpaths.
         intros [a op]; revert op; rapply O_indpaths; intros p; simpl.
-        abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+        abstract (repeat (rewrite O_rec_beta); reflexivity).
     Defined.
 
     (** ** Equivalences *)

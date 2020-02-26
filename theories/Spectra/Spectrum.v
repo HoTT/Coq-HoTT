@@ -3,7 +3,6 @@
 (** * Spectra *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Tactics.
 Require Import Pointed.
 Require Import HoTT.Truncations.
 

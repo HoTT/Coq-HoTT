@@ -3,7 +3,6 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp.
-Require Import HoTT.Tactics.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
