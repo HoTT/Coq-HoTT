@@ -737,13 +737,13 @@ Ltac decomposing_intros_with_paths :=
   | ?a = ?b =>
     (** Destruct paths as a second choice.  But sometimes [destruct] isn't smart enough to generalize the other hypotheses that use the free endpoint, so we manually apply [paths_ind], or its right-handed version, instead. *)
     ((move x before b; (** Ensure that [b] and [x] come first in the [forall] goal resulting from [generalize dependent], so that [paths_ind] can apply to it. *)
-      generalize dependent b;
-      not (move b at top); (** Check that [b] was actually reverted.  (If it's a section variable that the goal depends on, [generalize dependent b] will "succeed", but actually fail to generalize the goal over [b] (since that can't be done within the section) and not clear [b] from the context.)  *)
+      revert dependent b;
+      assert_fails (move b at top); (** Check that [b] was actually reverted.  (If it's a section variable that the goal depends on, [generalize dependent b] will "succeed", but actually fail to generalize the goal over [b] (since that can't be done within the section) and not clear [b] from the context.)  *)
       refine (paths_ind _ _ _)) +
      (** Try the other endpoint too. *)
      (move x before a;
-      generalize dependent a;
-      not (move a at top);
+      revert dependent a;
+      assert_fails (move a at top);
       refine (paths_ind_r _ _ _)));
     try decomposing_intros_with_paths
   end.
