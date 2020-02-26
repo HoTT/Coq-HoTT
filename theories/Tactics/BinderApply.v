@@ -5,8 +5,8 @@ Require Import Basics.Overture Tactics.EvalIn.
 (** There are some cases where [apply lem] will fail, but [intros; apply lem] will succeed.  The tactic [binder apply] is like [intros; apply lem], but it cleans up after itself by [revert]ing the things it introduced.  The tactic [binder apply lem in H] is to [binder apply lem], as [apply lem in H] is to [apply lem].  Note, however, that the implementation of [binder apply lem in H] is completely different and significantly more complicated. *)
 
 Ltac can_binder_apply apply_tac fail1_tac :=
-  first [ test apply_tac
-        | test (intro; can_binder_apply apply_tac fail1_tac)
+  first [ assert_succeeds apply_tac
+        | assert_succeeds (intro; can_binder_apply apply_tac fail1_tac)
         | fail1_tac ].
 Ltac binder_apply apply_tac fail1_tac :=
   can_binder_apply apply_tac fail1_tac;
