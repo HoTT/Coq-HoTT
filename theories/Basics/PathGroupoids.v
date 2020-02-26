@@ -710,14 +710,23 @@ Proof.
   (* subst u. rewrite X. *)
 Defined.
 
-(** Occasionally [paths_rect] shows up; this lets us turn it into transport. *)
+(** Occasionally the induction principles for the identity type show up explicitly; these let us turn them into transport. *)
 Definition paths_rect_transport {A : Type} (P : A -> Type) {x y : A}
            (p : x = y) (u : P x)
-  : paths_rect A x (fun a _ => P a) u y p = transport P p u.
+  : paths_rect A x (fun a _ => P a) u y p = transport P p u
+  := 1.
+
+Definition paths_ind_transport {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x)
+  : paths_ind x (fun a _ => P a) u y p = transport P p u
+  := 1.
+
+Definition paths_ind_r_transport {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P y)
+  : paths_ind_r y (fun b _ => P b) u x p = transport P p^ u.
 Proof.
   by destruct p.
-Defined.           
-
+Defined.
 
 (** ** [ap11] *)
 

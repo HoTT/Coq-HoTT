@@ -41,12 +41,12 @@ Proof.
   simple refine (Build_pHomotopy _ _).
   - intros [[[x p] q] r]. simpl in *.
     (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)
-    move q before x; generalize dependent x;
+    move q before x; revert dependent x;
       refine (paths_ind_r _ _ _); intros p r; cbn.
     rewrite !concat_1p, concat_p1.
-    rewrite paths_rect_transport.
-    rewrite transport_paths_Fl, concat_p1.
-    rewrite ap_V; apply inverse2.
+    rewrite paths_ind_r_transport.
+    rewrite transport_arrow_toconst, transport_paths_Fl. 
+    rewrite concat_p1, inv_V, ap_V. apply inverse2.
     refine (((r^)..2)^ @ _).
     rewrite transport_paths_Fl; cbn.
     rewrite concat_p1, pr1_path_V, ap_V, inv_V; reflexivity.
