@@ -716,7 +716,7 @@ Defined.
 >>
 *)
 
-(** Some "real-world" examples where [make_equiv] simplifies things a lot include  the associativity/symmetry proofs in [Types/Sigma.v], [issig_pequiv'] in [Pointed/pEquiv.v], and [loop_susp_adjoint] in [Pointed/pSusp.v]. *)
+(** Some "real-world" examples where [make_equiv] simplifies things a lot include the associativity/symmetry proofs in [Types/Sigma.v], [issig_pequiv'] in [Pointed/pEquiv.v], and [loop_susp_adjoint] in [Pointed/pSusp.v]. *)
 
 (** Now we give a version of [make_equiv] that can also prove equivalences of nested sigma- and record types that involve contracting based path-spaces on either or both sides.  The basepoint and the path don't have to appear together, but can be in arbitrarily separated parts of the nested structure.  It does this by selectively applying path-induction to based paths appearing on both sides, if needed. *)
 
