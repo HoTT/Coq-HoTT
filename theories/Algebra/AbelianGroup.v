@@ -151,7 +151,7 @@ Section Abel.
 
 End Abel.
 
-(** The first argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but the second usually cannot, so this tactic makes the common case fast. *)
+(** The [IsHProp] argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but [srapply] is slow, so we use this tactic instead. *)
 Local Ltac Abel_ind_hprop x := snrapply Abel_ind_hprop; [exact _ | intro x].
 
 (** We make sure that G is implicit in the arguments of ab and ab_comm. *)
@@ -288,8 +288,6 @@ Defined.
 
 (** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
 
-(* Section Abelianization.  Removed as closing the section is slow. *)
-
   (** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
   Definition abel `{Funext} : Group -> AbGroup.
   Proof.
@@ -330,8 +328,6 @@ Defined.
     Abel_ind_hprop x.
     apply p.
   Defined.
-
-(* End Abelianization. *)
 
 Theorem groupiso_isabelianization {G : Group}
   (A B : AbGroup)
