@@ -134,10 +134,13 @@ Proof.
   assumption.
 Defined.
 
-(** Instead, we make the latter an immediate instance. *)
-Hint Immediate istrunc_inO_tr : typeclass_instances.
+(** Instead, we make the latter an immediate instance, but with high cost (i.e. low priority) so that it doesn't override the ordinary lemmas about truncation.  Unfortunately, [Hint Immediate] doesn't allow specifying a cost, so we use [Hint Extern] instead. *)
+(** Hint Immediate istrunc_inO_tr : typeclass_instances. *)
+(** See https://github.com/coq/coq/issues/11697 *)
+Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.
+(** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though; see the comment in the proof of [Trunc_min] below.  *)
 
-(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc]. *)
+(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
 Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
@@ -166,8 +169,6 @@ Local Open Scope trunc_scope.
 (** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
 
 Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Tr (-1) A).
-
-(** Note that we define [merely] using [Trunc -1] rather than [Tr -1].  These are of course judgmentally equal, but our choice introduces fewer universe parameters, resulting in faster compilation times.  The other choice might in theory give Coq an easier time applying general modality theorems to [merely], but currently things seem to be transparent enough that it doesn't matter. *)
 
 Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 
@@ -243,7 +244,9 @@ Proof.
     symmetry.
     srapply equiv_tr.
     srapply trunc_leq.
-    3: exact _.
+    3:{ (** Strangely, if [istrunc_inO_tr] were a [Hint Immediate], rather than our [Hint Extern], then typeclass inference would be able to find this all on its own, although the documentation for [Hint Immediate] suggests that it shouldn't because the following tactic doesn't solve it completely. *)
+        simple apply istrunc_inO_tr; trivial.
+        exact _. }
     apply trunc_index_min_leq_left.
 Defined.
 

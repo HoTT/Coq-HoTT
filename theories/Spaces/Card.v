@@ -4,6 +4,8 @@ Require Import HoTT.Basics HoTT.Types HoTT.HSet HoTT.TruncType.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 Require Import HoTT.Truncations.
 
+Opaque trunc_equiv. (** This speeds things up considerably *)
+
 (** ** Definitions and operations *)
 
 Definition Card := Trunc 0 hSet.

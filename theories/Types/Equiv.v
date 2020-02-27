@@ -17,9 +17,10 @@ Section AssumeFunext.
     (** We will show that assuming [f] is an equivalence, [IsEquiv f] decomposes into a sigma of two contractible types. *)
     apply hprop_inhabited_contr; intros feq.
     nrefine (contr_equiv' _ (issig_isequiv f oE (equiv_sigma_assoc' _ _)^-1)).
-    snrefine (contr_equiv' _ (equiv_contr_sigma' _ (f^-1 ; eisretr f))^-1); only 2: exact _.
+    srefine (contr_equiv' _ (equiv_contr_sigma _)^-1).
     (** Each of these types is equivalent to a based homotopy space. *)
-    - refine (contr_equiv' { g : B -> A & g == f^-1 } _).
+    - refine (contr_change_center (f^-1 ; eisretr f)).
+      refine (contr_equiv' { g : B -> A & g == f^-1 } _).
       apply equiv_functor_sigma_id; intros g.
       apply equiv_functor_forall_id; intros b.
       apply equiv_moveR_equiv_M.

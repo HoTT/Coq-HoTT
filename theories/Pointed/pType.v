@@ -58,7 +58,7 @@ Defined.
 Global Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
   srapply Build_HasMorExt; intros A B f g.
-  refine (isequiv_homotopic (equiv_path_pmap f g)^-1 _).
+  refine (isequiv_homotopic (equiv_path_pmap f g)^-1%equiv _).
   intros []; reflexivity.
 Defined.
 

@@ -300,7 +300,7 @@ Proof.
   - intros x y.
     exact (IH (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y))
       (x = y) ((ap (f^-1))^-1) _).
-Qed.
+Defined.
 
 Definition trunc_equiv' A {B} (f : A <~> B) `{IsTrunc n A}
   : IsTrunc n B

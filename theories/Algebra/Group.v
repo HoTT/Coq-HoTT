@@ -406,7 +406,7 @@ Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.
   snrapply @isequiv_homotopic.
-  1: exact equiv_path_grouphomomorphism^-1.
+  1: exact (equiv_path_grouphomomorphism^-1%equiv).
   1: exact _.
   intros []; reflexivity. 
 Defined.
