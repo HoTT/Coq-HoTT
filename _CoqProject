@@ -149,7 +149,7 @@ theories/Modalities/Open.v
 theories/Modalities/Closed.v
 theories/Modalities/Fracture.v
 
-theories/Comodalities/CoreflectiveSubuniverse.v
+theories/Modalities/CoreflectiveSubuniverse.v
 
 #
 #   HIT
