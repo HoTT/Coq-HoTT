@@ -288,46 +288,46 @@ Defined.
 
 (** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
 
-  (** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
-  Definition abel `{Funext} : Group -> AbGroup.
-  Proof.
-    intro G.
-    srapply (Build_AbGroup (Abel G)).
-  Defined.
+(** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
+Definition abel `{Funext} : Group -> AbGroup.
+Proof.
+  intro G.
+  srapply (Build_AbGroup (Abel G)).
+Defined.
 
-  (** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
-  Definition abel_unit `{Funext} (X : Group)
-    : GroupHomomorphism X (abel X).
-  Proof.
-    snrapply @Build_GroupHomomorphism.
-    + exact ab.
-    + exact _.
-  Defined.
+(** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
+Definition abel_unit `{Funext} (X : Group)
+  : GroupHomomorphism X (abel X).
+Proof.
+  snrapply @Build_GroupHomomorphism.
+  + exact ab.
+  + exact _.
+Defined.
 
-  (** Finally we can prove that our construction abel is an abelianization. *)
-  Global Instance isabelianization_abel `{Funext} {G : Group}
-    : IsAbelianization (abel G) (abel_unit G).
-  Proof.
-    intros A h.
-    srapply Build_Contr.
-    { srefine (_;_).
-      { snrapply @Build_GroupHomomorphism.
-        { srapply (Abel_rec _ _ h).
-          intros x y z.
-          refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-          apply (ap (_ *.)).
-          refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-          apply commutativity. }
-        Abel_ind_hprop x.
-        Abel_ind_hprop y.
-        apply grp_homo_op. }
-      cbn; reflexivity. }
-    intros [g p].
-    apply path_sigma_hprop. (* unfold ".1". Slows down defined at end a bit. *)
-    apply equiv_path_grouphomomorphism.
-    Abel_ind_hprop x.
-    apply p.
-  Defined.
+(** Finally we can prove that our construction abel is an abelianization. *)
+Global Instance isabelianization_abel `{Funext} {G : Group}
+  : IsAbelianization (abel G) (abel_unit G).
+Proof.
+  intros A h.
+  srapply Build_Contr.
+  { srefine (_;_).
+    { snrapply @Build_GroupHomomorphism.
+      { srapply (Abel_rec _ _ h).
+        intros x y z.
+        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+        apply (ap (_ *.)).
+        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+        apply commutativity. }
+      Abel_ind_hprop x.
+      Abel_ind_hprop y.
+      apply grp_homo_op. }
+    cbn; reflexivity. }
+  intros [g p].
+  apply path_sigma_hprop. (* unfold ".1". Slows down defined at end a bit. *)
+  apply equiv_path_grouphomomorphism.
+  Abel_ind_hprop x.
+  apply p.
+Defined.
 
 Theorem groupiso_isabelianization {G : Group}
   (A B : AbGroup)
