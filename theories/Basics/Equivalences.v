@@ -578,7 +578,7 @@ Ltac make_equiv :=
     | decomposing_intros; exact idpath
     | decomposing_intros; exact idpath ].
 
-(** In case anyone ever needs it, here's the version that doesn't adjointify. *)
+(** In case anyone ever needs it, here's the version that doesn't adjointify. It's not the default, because it can be slow. *)
 Ltac make_equiv_without_adjointification :=
   simple notypeclasses refine (Build_Equiv _ _ _ _);
     [ decomposing_intros; build_record |
