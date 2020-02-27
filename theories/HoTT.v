@@ -91,7 +91,7 @@ Require Export HoTT.Modalities.Open.
 Require Export HoTT.Modalities.Closed.
 Require Export HoTT.Modalities.Fracture.
 
-Require Export HoTT.Comodalities.CoreflectiveSubuniverse.
+Require Export HoTT.Modalities.CoreflectiveSubuniverse.
 
 Require Export HoTT.Spaces.Nat.
 Require Export HoTT.Spaces.Int.
