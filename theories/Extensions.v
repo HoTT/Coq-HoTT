@@ -81,10 +81,8 @@ Section Extensions.
   Global Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
          {P : B -> Type} {d : forall x:A, P (f x)}
          (ext ext' : ExtensionAlong f P d)
-  : IsEquiv (path_extension ext ext') | 0.
-  Proof.
-    exact _.
-  Defined.
+    : IsEquiv (path_extension ext ext') | 0
+    := equiv_isequiv _.
 
   (** Here is the iterated version. *)
 

@@ -172,17 +172,33 @@ Definition moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
   : (f x = y)
   := ap f p @ eisretr f y.
 
+Definition moveR_equiv_M' `(f : A <~> B) (x : A) (y : B) (p : x = f^-1 y)
+  : (f x = y)
+  := moveR_equiv_M x y p.
+
 Definition moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   : (y = f x)
   := (eisretr f y)^ @ ap f p.
+
+Definition moveL_equiv_M' `(f : A <~> B) (x : A) (y : B) (p : f^-1 y = x)
+  : (y = f x)
+  := moveL_equiv_M x y p.
 
 Definition moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A) (p : x = f y)
   : (f^-1 x = y)
   := ap (f^-1) p @ eissect f y.
 
+Definition moveR_equiv_V' `(f : A <~> B) (x : B) (y : A) (p : x = f y)
+  : (f^-1 x = y)
+  := moveR_equiv_V x y p.
+
 Definition moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A) (p : f y = x)
   : (y = f^-1 x)
   := (eissect f y)^ @ ap (f^-1) p.
+
+Definition moveL_equiv_V' `(f : A <~> B) (x : B) (y : A) (p : f y = x)
+  : (y = f^-1 x)
+  := moveL_equiv_V x y p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
 Lemma contr_equiv A {B} (f : A -> B) `{IsEquiv A B f} `{Contr A}
@@ -192,7 +208,7 @@ Proof.
   intro y.
   apply moveR_equiv_M.
   apply contr.
-Qed.
+Defined.
 
 Definition contr_equiv' A {B} `(f : A <~> B) `{Contr A}
   : Contr B

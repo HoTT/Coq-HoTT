@@ -26,13 +26,13 @@ Definition path_pmap `{Funext} {A B : pType} {f g : A ->* B}
 
 (* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so.  *)
 Definition equiv_inverse_path_pmap_1 `{Funext} {A B} {f : A ->* B}
-  : (equiv_path_pmap f f)^-1 1%path = reflexivity f
+  : (equiv_path_pmap f f)^-1%equiv 1%path = reflexivity f
   := 1.
 
 Definition equiv_path_pmap_1 `{Funext} {A B} {f : A ->* B}
   : path_pmap (reflexivity f) = 1%path.
 Proof.
-  apply moveR_equiv_M.
+  apply moveR_equiv_M'.
   reflexivity.
 Defined.
 

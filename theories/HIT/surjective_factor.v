@@ -15,7 +15,7 @@ Section surjective_factor.
   Proof.
     intros. apply Sigma.ishprop_sigma_disjoint.
     intros c1 c2 E1 E2.
-    generalize (center _ (Esurj b));apply (Trunc_ind _).
+    generalize (@center _ (Esurj b)); apply (Trunc_ind _).
     intros [a p];destruct p.
     path_via (f a).
   Qed.

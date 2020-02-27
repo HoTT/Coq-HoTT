@@ -188,6 +188,7 @@ Section Join.
     : IsConnected (m +2+ n) (Join A B).
   Proof.
     apply isconnected_from_elim; intros C ? k.
+    pose @istrunc_inO_tr.
     pose proof (istrunc_extension_along_conn
                   (fun b:B => tt) (fun _ => C) (k o pushr)).
     unfold ExtensionAlong in *.

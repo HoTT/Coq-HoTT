@@ -560,7 +560,7 @@ Lemma Qpos_is_enumerator :
 Proof.
 apply BuildIsSurjection.
 unfold hfiber.
-intros e;generalize (center _ (enumerator_issurj Q (' e))). apply (Trunc_ind _).
+intros e;generalize (@center _ (enumerator_issurj Q (' e))). apply (Trunc_ind _).
 intros [n E]. apply tr;exists n.
 unfold Qpos_enumerator. destruct (le_or_lt (enumerator Q n) 0) as [E1|E1].
 - destruct (irreflexivity lt 0). apply lt_le_trans with (enumerator Q n);trivial.
