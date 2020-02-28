@@ -105,7 +105,7 @@ Section Abel.
     1: apply a.
     intros [[x y] z].
     refine (transport_compose _ _ _ _ @ _).
-    srapply dp_path_transport^-1.
+    srapply dp_path_transport^-1%equiv.
     apply c.
   Defined.
 
@@ -116,10 +116,9 @@ Section Abel.
       (a (x * (y * z))) (a (x * (z * y))))
     (x y z : G) : dp_apD (Abel_ind P a c) (ab_comm x y z) = c x y z.
   Proof.
-    unfold ab_comm.
     apply dp_apD_path_transport.
-    rewrite (apD_compose' tr).
-    rewrite (Coeq_ind_beta_cglue _ _ _ (x, y, z)).
+    refine (apD_compose' tr _ _ @ _).
+    refine (ap _ (Coeq_ind_beta_cglue _ _ _ (x, y, z)) @ _).
     apply concat_V_pp.
   Defined.
 
@@ -162,43 +161,45 @@ Arguments ab_comm {_}.
 
 Section AbelGroup.
 
-  Context `{Funext} (G : Group).
+  Context (G : Group).
 
   (** Firstly we derive the operation on Abel G. This is defined as follows:
         ab x + ab y := ab (x y)
       But we need to also check that it preserves ab_comm in the appropriate way. *)
   Global Instance abel_sgop : SgOp (Abel G).
   Proof.
+    intro a.
     srapply Abel_rec.
-    { intro a.
+    { intro b.
+      revert a.
       srapply Abel_rec.
-      { intro b.
+      { intro a.
         exact (ab (a * b)). }
-      intros b c d; cbn.
+      intros a c d; hnf.
+      (* The pattern seems to be to alternate associativity and ab_comm. *)
+      refine (ap _ (associativity _ _ _)^ @ _).
+      refine (ab_comm _ _ _ @ _).
       refine (ap _ (associativity _ _ _) @ _).
       refine (ab_comm _ _ _ @ _).
-      refine (ap _ (associativity _ _ _)^). }
-    intros a b c.
-    apply path_forall.
-    Abel_ind_hprop d.
-    cbn.
-    (* The pattern seems to be to alternate associativity and ab_comm. *)
-    refine (ap _ (associativity _ _ _)^ @ _).
-    refine (ab_comm _ _ _ @ _).
+      refine (ap _ (associativity _ _ _)^ @ _).
+      refine (ab_comm _ _ _ @ _).
+      refine (ap _ (associativity _ _ _)). }
+    intros b c d.
+    revert a.
+    Abel_ind_hprop a; cbn.
     refine (ap _ (associativity _ _ _) @ _).
     refine (ab_comm _ _ _ @ _).
-    refine (ap _ (associativity _ _ _)^ @ _).
-    refine (ab_comm _ _ _ @ _).
-    refine (ap _ (associativity _ _ _)).
+    refine (ap _ (associativity _ _ _)^).
   Defined.
 
   (** We can now easily show that this operation is associative by associativity in G and the fact that being associative is a proposition. *)
   Global Instance abel_sgop_associative : Associative abel_sgop.
   Proof.
-    Abel_ind_hprop x.
-    Abel_ind_hprop y.
-    Abel_ind_hprop z.
-    cbn; apply ap, associativity.
+    intros x y.
+    Abel_ind_hprop z; revert y.
+    Abel_ind_hprop y; revert x.
+    Abel_ind_hprop x; cbn.
+    apply ap, associativity.
   Defined.
 
   (** From this we know that Abel G is a semigroup. *)
@@ -226,11 +227,13 @@ Section AbelGroup.
   (** We can also prove that the operation is commutative! This will come in handy later. *)
   Global Instance abel_commutative : Commutative abel_sgop.
   Proof.
-    Abel_ind_hprop x.
+    intro x.
     Abel_ind_hprop y.
+    revert x.
+    Abel_ind_hprop x.
     cbn.
-    rewrite <- (left_identity (x * y)).
-    rewrite <- (left_identity (y * x)).
+    refine ((ap ab (left_identity _))^ @ _).
+    refine (_ @ (ap ab (left_identity _))).
     apply ab_comm.
   Defined.
 
@@ -289,14 +292,14 @@ Defined.
 (** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
 
 (** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
-Definition abel `{Funext} : Group -> AbGroup.
+Definition abel : Group -> AbGroup.
 Proof.
   intro G.
   srapply (Build_AbGroup (Abel G)).
 Defined.
 
 (** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
-Definition abel_unit `{Funext} (X : Group)
+Definition abel_unit (X : Group)
   : GroupHomomorphism X (abel X).
 Proof.
   snrapply @Build_GroupHomomorphism.
@@ -397,7 +400,7 @@ Global Instance isequiv_abgroup_abelianization `{Funext}
   (A B : AbGroup) (eta : GroupHomomorphism A B) {x : IsAbelianization B eta}
   : IsEquiv eta.
 Proof.
-  srapply isequiv_homotopic.  
+  srapply isequiv_homotopic.
   - srapply (groupiso_isabelianization A B grp_homo_id eta).
   - exact _.
   - symmetry; apply homotopic_isabelianization.
