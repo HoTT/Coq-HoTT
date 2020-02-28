@@ -232,8 +232,8 @@ Section AbelGroup.
     revert x.
     Abel_ind_hprop x.
     cbn.
-    rewrite <- (left_identity (x * y)).
-    rewrite <- (left_identity (y * x)).
+    refine ((ap ab (left_identity _))^ @ _).
+    refine (_ @ (ap ab (left_identity _))).
     apply ab_comm.
   Defined.
 
