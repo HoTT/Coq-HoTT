@@ -42,9 +42,6 @@ Proof.
   apply dp_path_transport, path_ishprop.
 Defined.
 
-(* Here is a notation for DPaths that can make it easier to use *)
-Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) : dpath_scope.
-
 (* We have reflexivity for DPaths, this helps coq guess later *)
 Definition dp_id {A} {P : A -> Type} {a : A} {x : P a} : DPath P 1 x x := 1%path.
 
@@ -167,25 +164,29 @@ Section DGroupoid.
   Context {A} {P : A -> Type} {a0 a1} {p : a0 = a1}
     {b0 : P a0} {b1 : P a1} {dp : DPath P p b0 b1}.
 
-  Definition dp_concat_p1 : (dp @D 1) =[concat_p1 _] dp.
+  Definition dp_concat_p1
+    : DPath (fun t => DPath _ t _ _) (concat_p1 _) (dp @D 1) dp.
   Proof.
     destruct p.
     apply concat_p1.
   Defined.
 
-  Definition dp_concat_1p : (1 @D dp) =[concat_1p _] dp.
+  Definition dp_concat_1p
+    : DPath (fun t => DPath _ t _ _) (concat_1p _) (1 @D dp) dp.
   Proof.
     destruct p.
     apply concat_1p.
   Defined.
 
-  Definition dp_concat_Vp : dp^D @D dp =[concat_Vp _] 1.
+  Definition dp_concat_Vp
+    : DPath (fun t => DPath _ t _ _) (concat_Vp _) (dp^D @D dp) 1.
   Proof.
     destruct p.
     apply concat_Vp.
   Defined.
 
-  Definition dp_concat_pV : dp @D (dp^D) =[concat_pV _] 1.
+  Definition dp_concat_pV
+    : DPath (fun t => DPath _ t _ _) (concat_pV _) (dp @D dp^D) 1.
   Proof.
     destruct p.
     apply concat_pV.
@@ -198,14 +199,16 @@ Section DGroupoid.
        (dq : DPath P q b1 b2) (dr : DPath P  r b2 b3).
 
     Definition dp_concat_pp_p
-      : ((dp @D dq) @D dr) =[concat_pp_p _ _ _] (dp @D (dq @D dr)).
+      : DPath (fun t => DPath _ t _ _) (concat_pp_p _ _ _)
+        ((dp @D dq) @D dr) (dp @D (dq @D dr)).
     Proof.
       destruct p, q, r.
       apply concat_pp_p.
     Defined.
 
     Definition dp_concat_p_pp
-      : (dp @D (dq @D dr)) =[concat_p_pp _ _ _] ((dp @D dq) @D dr).
+      : DPath (fun t => DPath _ t _ _) (concat_p_pp _ _ _)
+        (dp @D (dq @D dr)) ((dp @D dq) @D dr).
     Proof.
       destruct p, q, r.
       apply concat_p_pp.

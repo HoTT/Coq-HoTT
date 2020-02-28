@@ -75,8 +75,9 @@ Reserved Notation "f ^-1$" (at level 3, format "f '^-1$'").
 Reserved Notation "f ^$" (at level 3, format "f '^$'").
 
 (** Cubical *)
-Reserved Notation "x =[ q ] y" (at level 25).
-Reserved Notation "x '@lr' y"  (at level 10).
+Reserved Infix "@@h" (at level 30).
+Reserved Infix "@@v" (at level 30).
+Reserved Infix "@lr" (at level 30).
 
 (** Other / Not sorted yet *)
 
