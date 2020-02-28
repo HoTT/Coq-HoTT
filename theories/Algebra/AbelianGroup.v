@@ -120,11 +120,7 @@ Section Abel.
     apply dp_apD_path_transport.
     rewrite (apD_compose' tr).
     rewrite (Coeq_ind_beta_cglue _ _ _ (x, y, z)).
-    unfold Abel_ind.
-    refine (_ @ concat_1p _).
-    refine (concat_p_pp _ _ _ @ _).
-    apply whiskerR.
-    apply concat_Vp.
+    apply concat_V_pp.
   Defined.
 
   (** We also have a recursion princple. *)
@@ -155,6 +151,9 @@ Section Abel.
 
 End Abel.
 
+(** The [IsHProp] argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but [srapply] is slow, so we use this tactic instead. *)
+Local Ltac Abel_ind_hprop x := snrapply Abel_ind_hprop; [exact _ | intro x].
+
 (** We make sure that G is implicit in the arguments of ab and ab_comm. *)
 Arguments ab {_}.
 Arguments ab_comm {_}.
@@ -181,8 +180,8 @@ Section AbelGroup.
       refine (ap _ (associativity _ _ _)^). }
     intros a b c.
     apply path_forall.
-    srapply Abel_ind_hprop.
-    cbn; intro d.
+    Abel_ind_hprop d.
+    cbn.
     (* The pattern seems to be to alternate associativity and ab_comm. *)
     refine (ap _ (associativity _ _ _)^ @ _).
     refine (ab_comm _ _ _ @ _).
@@ -196,9 +195,9 @@ Section AbelGroup.
   (** We can now easily show that this operation is associative by associativity in G and the fact that being associative is a proposition. *)
   Global Instance abel_sgop_associative : Associative abel_sgop.
   Proof.
-    srapply Abel_ind_hprop; intro x.
-    srapply Abel_ind_hprop; intro y.
-    srapply Abel_ind_hprop; intro z.
+    Abel_ind_hprop x.
+    Abel_ind_hprop y.
+    Abel_ind_hprop z.
     cbn; apply ap, associativity.
   Defined.
 
@@ -211,13 +210,13 @@ Section AbelGroup.
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
   Global Instance abel_leftidentity : LeftIdentity abel_sgop abel_mon_unit.
   Proof.
-    srapply Abel_ind_hprop; intro x.
+    Abel_ind_hprop x.
     cbn; apply ap, left_identity.
   Defined.
 
   Global Instance abel_rightidentity : RightIdentity abel_sgop abel_mon_unit.
   Proof.
-    srapply Abel_ind_hprop; intro x.
+    Abel_ind_hprop x.
     cbn; apply ap, right_identity.
   Defined.
 
@@ -227,8 +226,8 @@ Section AbelGroup.
   (** We can also prove that the operation is commutative! This will come in handy later. *)
   Global Instance abel_commutative : Commutative abel_sgop.
   Proof.
-    srapply Abel_ind_hprop; intro x.
-    srapply Abel_ind_hprop; intro y.
+    Abel_ind_hprop x.
+    Abel_ind_hprop y.
     cbn.
     rewrite <- (left_identity (x * y)).
     rewrite <- (left_identity (y * x)).
@@ -254,13 +253,13 @@ Section AbelGroup.
   (** Again by Abel_ind_hprop and the corresponding laws for G we can prove the left and right inverse laws. *)
   Global Instance abel_leftinverse : LeftInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    srapply Abel_ind_hprop; intro x.
+    Abel_ind_hprop x.
     cbn; apply ap; apply left_inverse.
   Defined.
 
   Instance abel_rightinverse : RightInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    srapply Abel_ind_hprop; intro x.
+    Abel_ind_hprop x.
     cbn; apply ap; apply right_inverse.
   Defined.
 
@@ -281,59 +280,54 @@ End AbelGroup.
 (** We can easily prove that ab is a surjection. *)
 Global Instance issurj_ab `{Funext} {G : Group} : IsSurjection ab.
 Proof.
-  srapply Abel_ind_hprop.
-  intro x; cbn.
+  Abel_ind_hprop x.
+  cbn.
   exists (tr (x; @idpath _ (ab x))).
   apply path_ishprop.
 Defined.
 
 (** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
-Section Abelianization.
 
-  Context `{Funext}.
+(** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
+Definition abel `{Funext} : Group -> AbGroup.
+Proof.
+  intro G.
+  srapply (Build_AbGroup (Abel G)).
+Defined.
 
-  (** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
-  Definition abel : Group -> AbGroup.
-  Proof.
-    intro G.
-    srapply (Build_AbGroup (Abel G)).
-  Defined.
+(** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
+Definition abel_unit `{Funext} (X : Group)
+  : GroupHomomorphism X (abel X).
+Proof.
+  snrapply @Build_GroupHomomorphism.
+  + exact ab.
+  + exact _.
+Defined.
 
-  (** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
-  Definition abel_unit (X : Group)
-    : GroupHomomorphism X (abel X).
-  Proof.
-    snrapply @Build_GroupHomomorphism.
-    + exact ab.
-    + exact _.
-  Defined.
-
-  (** Finally we can prove that our construction abel is an abelianization. *)
-  Global Instance isabelianization_abel {G : Group}
-    : IsAbelianization (abel G) (abel_unit G).
-  Proof.
-    intros A h.
-    srapply Build_Contr.
-    { srefine (_;_).
-      { snrapply @Build_GroupHomomorphism.
-        { srapply (Abel_rec _ _ h).
-          intros x y z.
-          refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-          apply (ap (_ *.)).
-          refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-          apply commutativity. }
-        srapply Abel_ind_hprop; intro x.
-        srapply Abel_ind_hprop; intro y.
-        apply grp_homo_op. }
-      cbn; reflexivity. }
-    intros [g p].
-    apply path_sigma_hprop; cbn.
-    apply equiv_path_grouphomomorphism.
-    srapply Abel_ind_hprop.
-    exact p.
-  Defined.
-
-End Abelianization.
+(** Finally we can prove that our construction abel is an abelianization. *)
+Global Instance isabelianization_abel `{Funext} {G : Group}
+  : IsAbelianization (abel G) (abel_unit G).
+Proof.
+  intros A h.
+  srapply Build_Contr.
+  { srefine (_;_).
+    { snrapply @Build_GroupHomomorphism.
+      { srapply (Abel_rec _ _ h).
+        intros x y z.
+        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+        apply (ap (_ *.)).
+        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+        apply commutativity. }
+      Abel_ind_hprop x.
+      Abel_ind_hprop y.
+      apply grp_homo_op. }
+    cbn; reflexivity. }
+  intros [g p].
+  apply path_sigma_hprop. (* unfold ".1". Slows down defined at end a bit. *)
+  apply equiv_path_grouphomomorphism.
+  Abel_ind_hprop x.
+  apply p.
+Defined.
 
 Theorem groupiso_isabelianization {G : Group}
   (A B : AbGroup)
