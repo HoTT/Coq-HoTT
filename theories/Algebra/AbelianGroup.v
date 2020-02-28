@@ -317,8 +317,8 @@ Defined.
 Global Instance isabelianization_abel {G : Group}
   : IsAbelianization (abel G) (abel_unit G).
 Proof.
-  intros A; constructor.
-  { intros h; srefine (_;_).
+  intros A. constructor.
+  { intros h. srefine (_;_).
     { snrapply @Build_GroupHomomorphism.
       { srapply (Abel_rec _ _ h).
         intros x y z.
@@ -330,7 +330,7 @@ Proof.
       Abel_ind_hprop x; revert y.
       Abel_ind_hprop y.
       apply grp_homo_op. }
-    cbn; reflexivity. }
+    cbn. reflexivity. }
   intros g h p.
   Abel_ind_hprop x.
   exact (p x).
@@ -378,11 +378,11 @@ Proof.
   pose (homotopic_isabelianization A (abel G) eta (abel_unit G)) as p.
   refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
-Qed.
+Defined.
 
 Global Instance isabelianization_identity (A : AbGroup) : IsAbelianization A grp_homo_id.
 Proof.
-  intros B; constructor.
+  intros B. constructor.
   - intros h; exact (h ; fun _ => idpath).
   - intros g h p; exact p.
 Defined.
