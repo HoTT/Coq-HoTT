@@ -293,22 +293,13 @@ Proof.
   { refine (inO_pullback O' _ _).
     exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
   unfold Pullback.
-  (** The rest is just contracting a couple of based path spaces.  It seems like it should be less work than this. *)
+  (** The rest is just extracting paths from sigma- and product types and contracting a couple of based path spaces. *)
   apply equiv_functor_sigma_id; intros z; cbn. 
   refine (_ oE equiv_functor_sigma_id _).
   2:intros; symmetry; apply equiv_path_sigma.
-  refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv); cbn.
-  refine (_ oE equiv_functor_sigma_id _).
-  2:intros; apply equiv_sigma_symm.
-  refine (_ oE (equiv_sigma_assoc' _ _)). 
-  refine (_ oE equiv_contr_sigma _); cbn.
-  refine (_ oE equiv_functor_sigma_id _).
-  2:{ intros; symmetry; etransitivity; revgoals.
-      - apply equiv_path_prod.
-      - apply equiv_sigma_prod0. }
-  refine (_ oE equiv_sigma_assoc' _ _).
-  refine (_ oE equiv_contr_sigma _); cbn.
-  apply equiv_path_inverse.
+  refine (_ oE equiv_functor_sigma_id (fun z => equiv_functor_sigma_id (fun p => _))).
+  2:symmetry; apply equiv_path_prod.
+  cbn. make_equiv_contr_basedpaths.
 Defined.
 
 (** Thus, if this holds for all sigma-types, we get the dependent universal property.  Making this an [Instance] causes typeclass search to spin.  Note the slightly different hypotheses, which mean that we can't just use the previous result: here we need only assume that the [O']-reflection of [A] exists rather than that [O'] is fully reflective, at the cost of assuming that [O] is fully reflective (although actually, closed under path-spaces would suffice). *)
@@ -533,7 +524,7 @@ Section ModalFact.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
       + cbn; repeat rewrite O_rec_beta; reflexivity.
-      + symmetry; apply to_O_natural.
+      + destruct p; symmetry; apply to_O_natural.
   Qed.
 
   Section TwoFactorizations.

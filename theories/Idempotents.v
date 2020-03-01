@@ -831,40 +831,25 @@ Definition contr_splitting_preidem_idmap {ua : Univalence} (X : Type)
 : Contr (Splitting_PreIdempotent (preidem_idmap X)).
 Proof.
   refine (contr_equiv' {Y : Type & X <~> Y} _).
-  unfold Splitting_PreIdempotent, Splitting; simpl.
-  refine (equiv_sigma_assoc _ _ oE _); simpl.
-  simple refine (equiv_functor_sigma' (issig_retractof X) _ oE _).
-  - intros [A [r [s H]]]; simpl in *.
-    exact {p : s o r == idmap &
-           forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)
-                        @ ap s (H (r x))) @ p x = isidem idmap x }.
-  - intros [A [r [s H]]]; simpl. apply equiv_idmap.
-  - refine (equiv_sigma_assoc _ _ oE _); simpl.
-    apply equiv_functor_sigma_id; intros Y; simpl.
-    refine (equiv_sigma_assoc _ _ oE _); simpl.
-    refine (_ oE (issig_equiv X Y)^-1).
-    apply equiv_functor_sigma_id; intros r; simpl.
-    refine (equiv_sigma_assoc _ _ oE _).
-    refine (_ oE (issig_isequiv r)^-1).
-    apply equiv_functor_sigma_id; intros s; simpl.
-    unfold Sect.
-    apply equiv_functor_sigma_id; intros eta; simpl.
-    apply equiv_functor_sigma_id; intros ep; simpl.
-    apply equiv_functor_forall_id.
-    intros x; unfold isidem, ispreidem_idmap; simpl.
-    rewrite ap_idmap, !concat_pp_p.
-    refine (equiv_moveR_Vp _ _ _ oE _).
-    rewrite concat_p1, concat_p_pp.
-    refine (equiv_concat_r (concat_1p _) _ oE _).
-    refine (equiv_whiskerR _ _ _ oE _).
-    refine (equiv_moveR_Vp _ _ _ oE _).
-    rewrite concat_p1.
-    refine (equiv_concat_r (y := ap s (ap r (ep x))) _ _ oE _).
-    { refine (cancelR _ _ (ep x) _).
-      rewrite <- ap_compose.
-      refine (concat_A1p ep (ep x)). }
-    pose (isequiv_adjointify s r ep eta).
-    exact (equiv_ap (ap s) _ _).
+  transitivity { S : Splitting (preidem_idmap X) &
+                     forall x : X, (retract_issect S.1) (retract_retr S.1 x) = ap (retract_retr S.1) (S.2 x) }.
+  1:make_equiv.
+  apply equiv_functor_sigma_id; intros [[Y r s eta] ep]; cbn in *.
+  apply equiv_functor_forall_id; intros x.
+  unfold ispreidem_idmap; simpl.
+  rewrite ap_idmap, !concat_pp_p.
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  rewrite concat_p1, concat_p_pp.
+  refine (equiv_concat_r (concat_1p _) _ oE _).
+  refine (equiv_whiskerR _ _ _ oE _).
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  rewrite concat_p1.
+  pose (isequiv_adjointify s r ep eta).
+  refine (_ oE equiv_ap (ap s) _ _).
+  apply equiv_concat_r.
+  refine (cancelR _ _ (ep x) _).
+  rewrite <- ap_compose.
+  refine (concat_A1p ep (ep x)).
 Qed.
 
 (** Therefore, there is a unique coherentification of the canonical witness [preidem_idmap] of pre-idempotency for the identity.  Hence, to show that not every quasi-idempotent is coherent, it suffices to give a witness of quasi-idempotency extending [preidem_idmap] which is nontrivial (i.e. not equal to [qidem_idmap]).  Such a witness is exactly an element of the 2-center, and we know that some types such as [BAut (BAut Bool)] have nontrivial 2-centers.  In [Spaces.BAut.Bool.IncoherentIdempotent] we use this to construct an explicit counterexample. *)

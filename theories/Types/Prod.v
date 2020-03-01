@@ -270,30 +270,18 @@ Definition iff_functor_prod {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
 
 (** This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
 
-Definition equiv_prod_symm (A B : Type) : A * B <~> B * A
-  := Build_Equiv
-       _ _ _
-       (Build_IsEquiv
-          (A*B) (B*A)
-          (fun ab => (snd ab, fst ab))
-          (fun ba => (snd ba, fst ba))
-          (fun _ => 1)
-          (fun _ => 1)
-          (fun _ => 1)).
+Definition equiv_prod_symm (A B : Type) : A * B <~> B * A.
+Proof.
+  make_equiv.
+Defined.
 
 (** ** Associativity *)
 
 (** This, too, is a special property of [prod], of course, not an instance of a general family of facts about types. *)
-Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
-  := Build_Equiv
-       _ _ _
-       (Build_IsEquiv
-          (A * (B * C)) ((A * B) * C)
-          (fun abc => ((fst abc, fst (snd abc)), snd (snd abc)))
-          (fun abc => (fst (fst abc), (snd (fst abc), snd abc)))
-          (fun _ => 1)
-          (fun _ => 1)
-          (fun _ => 1)).
+Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C.
+Proof.
+  make_equiv.
+Defined.
 
 (** ** Unit and annihilation *)
 
