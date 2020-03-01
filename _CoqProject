@@ -221,6 +221,14 @@ theories/Truncations/Core.v
 theories/Truncations/Connectedness.v
 
 #
+#   Varieties of Equivalence
+#
+
+theories/Equiv/BiInv.v
+theories/Equiv/PathSplit.v
+theories/Equiv/Relational.v
+
+#
 #   Other
 #
 
@@ -229,7 +237,6 @@ theories/EquivGroupoids.v
 theories/Fibrations.v
 theories/Conjugation.v
 theories/HProp.v
-theories/EquivalenceVarieties.v
 theories/Extensions.v
 theories/HSet.v
 theories/TruncType.v

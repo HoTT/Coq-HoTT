@@ -7,7 +7,7 @@ Require Import DProp.
 Require Import Spaces.Nat.
 Require Import Fibrations.
 Require Import Factorization.
-Require Import EquivalenceVarieties.
+Require Import Equiv.PathSplit.
 Require Import Truncations.
 Require Import Colimits.Quotient.
 

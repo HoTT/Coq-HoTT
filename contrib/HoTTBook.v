@@ -594,17 +594,17 @@ Definition Book_4_2_13 := @HoTT.Types.Equiv.hprop_isequiv.
 (* ================================================== defn:biinv *)
 (** Definition 4.3.1 *)
 
-Definition Book_4_3_1  := @HoTT.EquivalenceVarieties.BiInv.
+Definition Book_4_3_1  := @HoTT.Equiv.BiInv.BiInv.
 
 (* ================================================== thm:isprop-biinv *)
 (** Theorem 4.3.2 *)
 
-Definition Book_4_3_2  := @HoTT.EquivalenceVarieties.isprop_biinv.
+Definition Book_4_3_2  := @HoTT.Equiv.BiInv.isprop_biinv.
 
 (* ================================================== thm:equiv-biinv-isequiv *)
 (** Corollary 4.3.3 *)
 
-Definition Book_4_3_3  := @HoTT.EquivalenceVarieties.equiv_biinv_isequiv.
+Definition Book_4_3_3  := @HoTT.Equiv.BiInv.equiv_biinv_isequiv.
 
 (* ================================================== defn:equivalence *)
 (** Definition 4.4.1 *)

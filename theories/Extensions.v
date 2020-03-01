@@ -3,7 +3,7 @@
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp EquivalenceVarieties PathAny.
+Require Import HProp Equiv.PathSplit PathAny.
 Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
 Require Import HIT.Coeq Colimits.MappingCylinder.
 

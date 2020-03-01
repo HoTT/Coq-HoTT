@@ -2,7 +2,7 @@
 
 (** * Varieties of function extensionality *)
 
-Require Import HoTT.Basics HoTT.Types EquivalenceVarieties.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
