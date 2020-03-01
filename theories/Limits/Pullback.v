@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations EquivalenceVarieties Cubical.PathSquare.
+Require Import Fibrations Cubical.PathSquare.
 
 Local Open Scope path_scope.
 
@@ -120,10 +120,10 @@ Definition ispullback_isequiv_functor_hfiber {A B C D}
   : IsPullback p.
 Proof.
   unfold IsPullback.
-  apply isequiv_fcontr; intro x.
+  apply isequiv_contr_hfiber; intro x.
   rapply contr_equiv'.
   - symmetry; apply hfiber_pullback_corec.
-  - apply fcontr_isequiv, e.
+  - apply contr_hfiber_isequiv, e.
 Defined.
 
 (** The pullback of a map along another one *)

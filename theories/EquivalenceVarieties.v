@@ -12,149 +12,8 @@ Generalizable Variables A B f.
 Section AssumeFunext.
 Context `{Funext}.
 
-(** In this file we show that several different definitions of "equivalence" are all equivalent to the one we have chosen.  This also yields alternative proofs that [IsEquiv f] is an hprop. *)
+(** In this file we show that several different definitions of "equivalence" are all equivalent to the one we have chosen.  We already observed in [Types/Equiv.v] that a map is an equivalence iff all of its homotopy fibers are contractible.  This was Voevodsky's first definition of equivalences in homotopy type theory.  *)
 
-(** ** Contractible maps *)
-
-(** We say a map is "contractible" if all of its homotopy fibers are contractible.  (More generally, a map is n-truncated if all of its homotopy fibers are n-truncated.)  This was Voevodsky's first definition of equivalences in homotopy type theory.
-
-   It is fairly straightforward to show that this definition is *logically* equivalent to the one we have given.
-*)
-
-Definition fcontr_isequiv `(f : A -> B)
-  : IsEquiv f -> (forall b:B, Contr {a : A & f a = b}).
-Proof.
-  intros ? b.  exists (f^-1 b ; eisretr f b).  intros [a p].
-  refine (path_sigma' _ ((ap f^-1 p)^ @ eissect f a) _).
-  rewrite (transport_compose (fun y => y = b) f _ _), transport_paths_l.
-  rewrite ap_pp, ap_V, <- ap_compose, inv_Vp, concat_pp_p.
-  rewrite (concat_A1p (eisretr f) p).
-  rewrite eisadj.  by apply concat_V_pp.
-Defined.
-
-Definition isequiv_fcontr `(f : A -> B)
-  : (forall b:B, Contr {a : A & f a = b}) -> IsEquiv f.
-Proof.
-  intros ?. refine (Build_IsEquiv _ _ _
-    (fun b => (center {a : A & f a = b}).1)
-    (fun b => (center {a : A & f a = b}).2)
-    (fun a => (@contr {x : A & f x = f a} _ (a;1))..1)
-    _).
-  intros a. apply moveL_M1.
-  rewrite <- transport_paths_l, <- transport_compose.
-  exact ((@contr {x : A & f x = f a} _ (a;1))..2).
-Defined.
-
-(** It follows that when proving a map is an equivalence, we may assume its codomain is inhabited. *)
-Definition isequiv_inhab_codomain
-           `(f : A -> B) (feq : B -> IsEquiv f)
-: IsEquiv f.
-Proof.
-  apply isequiv_fcontr.
-  intros b.
-  apply fcontr_isequiv, (feq b).
-Defined.
-
-(** Therefore, since both are hprops, they are equivalent by [equiv_iff_hprop].  However, we can also use this to *prove* that [IsEquiv] is an hprop.  We begin by showing that if [f] is an equivalence, then the type of sections of [f] and the type of retractions of [f] are both contractible. *)
-
-Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
-  : Contr {g : B -> A & Sect g f}.
-Proof.
-  (* First we turn homotopies into paths. *)
-  refine (contr_equiv' { g : B -> A & f o g = idmap } _).
-  - symmetry.
-    apply equiv_functor_sigma_id; intros g.
-    exact (equiv_path_forall (f o g) idmap).
-    (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
-  - apply fcontr_isequiv; exact _.
-Defined.
-
-Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
-  : Contr {g : B -> A & Sect f g}.
-Proof.
-  (* This proof is just like the previous one. *)
-  refine (contr_equiv' { g : B -> A & g o f = idmap } _).
-  - symmetry.
-    apply equiv_functor_sigma_id; intros g.
-    exact (equiv_path_forall (g o f) idmap).
-  - apply fcontr_isequiv; exact _.
-Defined.
-
-(** Using this, we can prove that [IsEquiv f] is an h-proposition.  We make this a [Local Definition] since we already have a [Global Instance] of it available in [types/Equiv].  *)
-
-Local Definition hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
-Proof.
-  apply hprop_inhabited_contr; intros ?.
-  (* Get rid of that pesky record. *)
-  refine (contr_equiv _ (issig_isequiv f)).
-  (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
-  srapply (contr_equiv' {g : B -> A & Sect g f}).
-  2:apply contr_sect_equiv; assumption.  (* What remains afterwards is just the type of sections of [f]. *)
-  apply equiv_functor_sigma_id; intros g.
-  symmetry; apply equiv_sigma_contr; intros r.
-  (* Now we claim this is equivalent to a certain space of paths. *)
-  refine (contr_equiv'
-    (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
-    _^-1).
-  (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
-  - refine (_ oE (equiv_sigT_coind _ (fun x p => r (f x) = ap f p))).
-    apply equiv_functor_forall_id; intros a; simpl.
-    refine (equiv_path_inverse _ _ oE _).
-    refine ((equiv_path_sigma _ _ _) oE _); simpl.
-    apply equiv_functor_sigma_id; intros p; simpl.
-    rewrite (transport_compose (fun y => y = f a) f), transport_paths_l.
-    refine (equiv_moveR_Vp _ _ _ oE _).
-      by rewrite concat_p1; apply equiv_idmap.
-    (* Finally, this is a space of paths in a fiber of [f]. *)
-  - pose (fun a => fcontr_isequiv f _ (f a)).
-    exact _.
-Qed.
-
-(** Now since [IsEquiv f] and the assertion that its fibers are contractible are both HProps, logical equivalence implies equivalence. *)
-
-Definition equiv_fcontr_isequiv `(f : A -> B)
-  : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
-Proof.
-  apply equiv_iff_hprop.
-  - by apply isequiv_fcontr.
-  - by apply fcontr_isequiv.
-Defined.
-
-(** Alternatively, we could also construct this equivalence directly, and derive the fact that [IsEquiv f] is an HProp from that.  *)
-
-Local Definition equiv_fcontr_isequiv' `(f : A -> B)
-  : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
-Proof.
-  (* First we get rid of those pesky records. *)
-  refine (_ oE (equiv_functor_forall_id _)).
-  2:intros; symmetry; apply issig_contr.
-  refine (issig_isequiv f oE _).
-  symmetry.
-  (* Now we can really get to work.
-     First we peel off the inverse function and the [eisretr]. *)
-  refine (equiv_sigT_coind _ _ oE _).
-  refine (equiv_functor_sigma_pb (equiv_sigT_coind _ _) oE _).
-  refine (equiv_sigma_assoc _ _ oE _).
-  refine (equiv_functor_sigma_id _). intros g.
-  refine (equiv_functor_sigma_id _). intros r. simpl.
-  (* Now we use the fact that Paulin-Mohring J is an equivalence. *)
-  refine (equiv_functor_forall_id _ oE _).
-  1:intros; apply equiv_sigT_ind.
-  refine (equiv_flip _ oE _).
-  refine (equiv_functor_forall_id _ oE _). 
-  1:{ intros.
-      refine (equiv_paths_ind (f a) (fun b y => (g b;r b) = (a;y)) oE _).
-      (* We identify the paths in a Sigma-type. *)
-      apply equiv_path_sigma. }
-  (* Now we can peel off the [eissect]. *)
-  refine (equiv_sigT_coind _ _ oE _).
-  refine (equiv_functor_sigma_id _). intros s.
-  (* And what's left is the [eisadj]. *)
-  refine (equiv_functor_forall_id _). intros a; simpl.
-  refine (equiv_concat_l (transport_compose _ _ _ _ @ transport_paths_l _ _) _ oE _).
-  refine (equiv_moveR_Vp _ _ _ oE _).
-  exact (equiv_concat_r (concat_p1 _)^ _).
-Defined.
 
 (** ** Bi-invertible maps *)
 
@@ -213,7 +72,7 @@ Proof.
   pose (hs := fun x y => (fun p => (fst (k x y) p).2)
                          : Sect (h x y) (ap f)).
   clearbody hs; clearbody h; clear k.
-  apply isequiv_fcontr; intros b.
+  apply isequiv_contr_hfiber; intros b.
   apply contr_inhabited_hprop.
   2:exact (g b).
   apply hprop_allpath; intros [a p] [a' p'].
@@ -235,7 +94,7 @@ Proof.
   - exact _.
   - refine contr_prod.
     refine contr_forall.
-    intros; apply fcontr_isequiv; exact _.
+    intros; apply contr_hfiber_isequiv; exact _.
 Defined.
 
 Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)

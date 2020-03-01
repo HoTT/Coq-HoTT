@@ -3,7 +3,7 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations HProp EquivalenceVarieties Pullback.
+Require Import Fibrations Pullback.
 
 Local Open Scope path_scope.
 
@@ -60,12 +60,13 @@ Defined.
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (Pullback P (@pr1 _ (fun u :Type => u))).
 Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
-apply isequiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p].
-- apply idpath.
-- destruct p as [[T t] p].
+srapply isequiv_adjointify.
+- exact (help_objclasspb_is_fibrantreplacement2 P).
+- intros [a [[T t] p]].
   refine (path_sigma' _ (idpath a) _).
   simpl in p. by path_induction.
-Qed.
+- intros [a p]; apply idpath.
+Defined.
 
 End FamPow.
 
