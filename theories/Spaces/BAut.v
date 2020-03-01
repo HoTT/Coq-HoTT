@@ -121,31 +121,17 @@ Proof.
   unfold WeaklyConstant.
   (** Now we peel away a bunch of contractible types. *)
   refine (equiv_sigT_coind _ _ oE _).
-  srefine ((equiv_functor_sigma_pb _) oE _).
-  2: symmetry; apply equiv_sigT_ind'.
-  refine (equiv_functor_sigma_id _ oE _).
-  1:{ intros; symmetry; etransitivity.
-      - apply equiv_sigT_ind'.
-      - srapply equiv_contr_forall. }
-  cbn.
-  refine (equiv_functor_sigma'
-            (P := fun (e : P X) => forall q:X=X, transport P q^ e = e)
-            ((equiv_contr_forall
-                (fun (Zp:{Z:Type & Z=X}) => P Zp.1))^-1)
-            (fun f => equiv_functor_forall' (equiv_idmap (X=X)) _) oE _).
-  { intros g; simpl.
-    refine (equiv_path_inverse _ _ oE _).
-    apply equiv_concat_l.
-    refine (transport_compose P pr1 (path_contr (X;1) (X;g)) f @ _).
-    apply transport2.
-    refine (ap_pr1_path_contr_basedpaths' _ _ @ concat_1p g^). }
-  refine (equiv_functor_sigma_id _); intros e.
-  refine (equiv_functor_forall' (equiv_path_universe X X)^-1 _).
-  intros g; simpl.
-  refine (equiv_moveR_transport_V _ _ _ _ oE _).
-  refine (equiv_path_inverse _ _ oE _).
-  apply equiv_concat_l, transport2.
-  symmetry; apply (eissect (equiv_path X X)).
+  srapply equiv_functor_sigma'.
+  1:apply (equiv_paths_ind_r X (fun x _ => P x)).
+  intros p; cbn.
+  refine (equiv_paths_ind_r X _ oE _).
+  srapply equiv_functor_forall'.
+  1:apply equiv_equiv_path.
+  intros e; cbn.
+  refine (_ oE equiv_moveL_transport_V _ _ _ _). 
+  apply equiv_concat_r.
+  rewrite path_universe_transport_idmap, paths_ind_r_transport.
+  reflexivity.
 Defined.
 
 (** This implies that if [X] is a set, then the center of [BAut X] is the set of automorphisms of [X] that commute with every other automorphism (i.e. the center, in the usual sense, of the group of automorphisms of [X]). *)

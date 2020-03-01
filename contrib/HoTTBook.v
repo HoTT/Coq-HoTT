@@ -552,7 +552,7 @@ Definition Book_4_2_5 := @HoTT.Fibrations.equiv_path_hfiber.
 (* ================================================== thm:contr-hae *)
 (** Theorem 4.2.6 *)
 
-Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_hfiber_isequiv.
+Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_map_isequiv.
 
 (* ================================================== defn:linv-rinv *)
 (** Definition 4.2.7 *)
@@ -614,7 +614,7 @@ Definition Book_4_4_1 := @HoTT.Basics.Trunc.IsTruncMap (-2).
 (* ================================================== thm:lequiv-contr-hae *)
 (** Theorem 4.4.3 *)
 
-Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_hfiber.
+Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_map.
 
 (* ================================================== thm:contr-hprop *)
 (** Lemma 4.4.4 *)
@@ -624,7 +624,7 @@ Definition Book_4_4_4 := @HoTT.Basics.Trunc.hprop_trunc.
 (* ================================================== thm:equiv-contr-hae *)
 (** Theorem 4.4.5 *)
 
-Definition Book_4_4_5 := @HoTT.Types.Equiv.equiv_contr_hfiber_isequiv.
+Definition Book_4_4_5 := @HoTT.Types.Equiv.equiv_contr_map_isequiv.
 
 (* ================================================== thm:equiv-inhabcod *)
 (** Corollary 4.4.6 *)

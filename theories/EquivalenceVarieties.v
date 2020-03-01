@@ -72,7 +72,7 @@ Proof.
   pose (hs := fun x y => (fun p => (fst (k x y) p).2)
                          : Sect (h x y) (ap f)).
   clearbody hs; clearbody h; clear k.
-  apply isequiv_contr_hfiber; intros b.
+  apply isequiv_contr_map; intros b.
   apply contr_inhabited_hprop.
   2:exact (g b).
   apply hprop_allpath; intros [a p] [a' p'].
@@ -92,9 +92,7 @@ Proof.
   generalize dependent B; revert A.
   simple_induction n n IHn; intros A B f ?.
   - exact _.
-  - refine contr_prod.
-    refine contr_forall.
-    intros; apply contr_hfiber_isequiv; exact _.
+  - apply contr_prod.
 Defined.
 
 Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
@@ -194,14 +192,7 @@ Section relational.
   Definition relequiv_of_equiv {A B} (e : A <~> B) : RelEquiv A B.
   Proof.
     refine {| equiv_rel a b := e a = b |}.
-    { intro b.
-      exists (e^-1 b; eisretr e b).
-      intros [a H].
-      destruct H.
-      simple refine (path_sigma _ _ _ _ _).
-      { simpl; apply eissect. }
-      { simpl.
-        abstract (rewrite eisadj; destruct (eissect e a); reflexivity). } }
+    (** The rest is found by typeclass inference! *)
   Defined.
 
   Definition equiv_of_relequiv {A B} (e : RelEquiv A B) : A <~> B.

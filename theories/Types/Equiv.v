@@ -10,15 +10,15 @@ Local Open Scope path_scope.
 Section AssumeFunext.
   Context `{Funext}.
 
-  Definition contr_hfiber_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f} (b : B)
-    : Contr {a : A & f a = b}.
+  Global Instance contr_map_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f}
+    : IsTruncMap (-2) f.
   Proof.
-    refine (contr_equiv' {a : A & a = f^-1 b} _).
+    intros b; refine (contr_equiv' {a : A & a = f^-1 b} _).
     apply equiv_functor_sigma_id; intros a.
     apply equiv_moveR_equiv_M.
   Defined.
 
-  Definition isequiv_contr_hfiber {A B} (f : A -> B) `{forall b:B, Contr {a : A & f a = b}}
+  Definition isequiv_contr_map {A B} (f : A -> B) `{IsTruncMap (-2) A B f}
     : IsEquiv f.
   Proof.
     srapply Build_IsEquiv.
@@ -30,13 +30,16 @@ Section AssumeFunext.
       exact ((@contr {x : A & f x = f a} _ (a;1))..2).
   Defined.
 
+  (** As usual, we can't make both of these [Instances]. *)
+  Hint Immediate isequiv_contr_map : typeclass_instances.
+
   (** It follows that when proving a map is an equivalence, we may assume its codomain is inhabited. *)
   Definition isequiv_inhab_codomain {A B} (f : A -> B) (feq : B -> IsEquiv f)
     : IsEquiv f.
   Proof.
-    apply isequiv_contr_hfiber.
+    apply isequiv_contr_map.
     intros b.
-    apply contr_hfiber_isequiv, (feq b).
+    pose (feq b); exact _.
   Defined.
 
   Global Instance contr_sect_equiv {A B} (f : A -> B) `{IsEquiv A B f}
@@ -44,10 +47,9 @@ Section AssumeFunext.
   Proof.
     refine (contr_change_center (f^-1 ; eisretr f)).
     refine (contr_equiv' { g : B -> A & f o g = idmap } _).
-    - apply equiv_functor_sigma_id; intros g.
-      apply equiv_ap10.
-    (* This is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
-    - apply contr_hfiber_isequiv; exact _.
+    (* Typeclass inference finds this contractible instance: it's the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
+    apply equiv_functor_sigma_id; intros g.
+    apply equiv_ap10.
   Defined.
 
   Global Instance contr_retr_equiv {A B} (f : A -> B) `{IsEquiv A B f}
@@ -55,9 +57,8 @@ Section AssumeFunext.
   Proof.
     refine (contr_change_center (f^-1 ; eissect f)).
     refine (contr_equiv' { g : B -> A & g o f = idmap } _).
-    - apply equiv_functor_sigma_id; intros g.
-      apply equiv_ap10.
-    - apply contr_hfiber_isequiv; exact _.
+    apply equiv_functor_sigma_id; intros g.
+    apply equiv_ap10.
   Defined.
 
   (** We begin by showing that, assuming function extensionality, [IsEquiv f] is an hprop. *)
@@ -80,12 +81,11 @@ Section AssumeFunext.
   Qed.
 
   (** Now since [IsEquiv f] and the assertion that its fibers are contractible are both HProps, logical equivalence implies equivalence. *)
-  Definition equiv_contr_hfiber_isequiv {A B} (f : A -> B)
-    : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
+  Definition equiv_contr_map_isequiv {A B} (f : A -> B)
+    : IsTruncMap (-2) f <~> IsEquiv f.
   Proof.
     rapply equiv_iff_hprop.
-    - apply isequiv_contr_hfiber.
-    - apply contr_hfiber_isequiv.
+    (** Both directions are found by typeclass inference! *)
   Defined.
 
   (** Thus, paths of equivalences are equivalent to paths of functions. *)

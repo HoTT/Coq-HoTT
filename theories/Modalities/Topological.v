@@ -114,7 +114,7 @@ Proof.
         intros a; cbn in a; cbn.
         apply ((equiv_ooextendable_isequiv
                   (unit_name X) (fun _:B a => tt))^-1).
-        apply isequiv_contr_hfiber; intros f; cbn in f.
+        apply isequiv_contr_map; intros f; cbn in f.
         refine (contr_equiv' { x:X & forall u:B a, x = f u } _).
         { refine (equiv_functor_sigma' (equiv_unit_rec X) _).
           intros x; unfold composeD; cbn.

@@ -1324,9 +1324,7 @@ Section ModalMaps.
   Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : MapIn O f.
   Proof.
-    intros b.
-    pose (contr_hfiber_isequiv f b).
-    exact _.
+    intros b; exact _.
   Defined.
 
   (** Anything homotopic to a modal map is modal. *)
@@ -1456,9 +1454,7 @@ Section ConnectedMaps.
   Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsConnMap O f.
   Proof.
-    intros b.
-    pose (contr_hfiber_isequiv f b).
-    unfold IsConnected; exact _.
+    intros b; exact _.
   Defined.
 
   (** Anything homotopic to a connected map is connected. *)
@@ -1535,7 +1531,7 @@ Section ConnectedMaps.
              `{IsConnMap O _ _ f} `{MapIn O _ _ f}
   : IsEquiv f.
   Proof.
-    apply isequiv_contr_hfiber. intros b.
+    apply isequiv_contr_map. intros b.
     apply (contr_trunc_conn O).
   Defined.
 
@@ -1584,7 +1580,7 @@ Section ConnectedMaps.
           (P : B -> Type) `{forall b:B, In O (P b)}
   : IsEquiv (fun (g : forall b:B, P b) => g oD f).
   Proof.
-    apply isequiv_contr_hfiber; intros d.
+    apply isequiv_contr_map; intros d.
     apply contr_inhabited_hprop.
     - nrefine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
       { refine (equiv_functor_sigma_id _); intros g.

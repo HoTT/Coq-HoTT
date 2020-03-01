@@ -120,10 +120,10 @@ Definition ispullback_isequiv_functor_hfiber {A B C D}
   : IsPullback p.
 Proof.
   unfold IsPullback.
-  apply isequiv_contr_hfiber; intro x.
+  apply isequiv_contr_map; intro x.
   rapply contr_equiv'.
   - symmetry; apply hfiber_pullback_corec.
-  - apply contr_hfiber_isequiv, e.
+  - exact _.
 Defined.
 
 (** The pullback of a map along another one *)
