@@ -110,3 +110,14 @@ Proof.
   exists a.
   intros; apply path_contr.
 Defined.
+
+(** If a type is contractible, then so is its type of contractions. *)
+Global Instance contr_contr `{Funext} (A : Type) `{Contr A}
+  : Contr (Contr A) | 100.
+Proof.
+  exists _; intros [a2 c2].
+  destruct (contr a2).
+  apply (ap (Build_Contr _ (center A))).
+  apply path_forall; intros x.
+  apply path2_contr.
+Defined.

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization PathAny.
+Require Import Fibrations Extensions Pullback NullHomotopy Factorization PathAny.
 Require Import Modality Accessible Localization Descent Separated.
 
 Local Open Scope path_scope.
@@ -326,9 +326,9 @@ Proof.
   transparent assert (p : (forall x, g (to O _ x) = x.1)).
   { intros x; subst g; apply O_rec_beta. }
   apply inO_isequiv_to_O.
-  apply isequiv_fcontr; intros x.
-  refine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
-  apply fcontr_isequiv.
+  apply isequiv_contr_map; intros x.
+  snrefine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
+  apply contr_map_isequiv.
   unfold hfiber_compose_map.
   transparent assert (h : (hfiber (@pr1 A B) (g x) <~> hfiber g (g x))).
   { refine (_ oE equiv_to_O O _).

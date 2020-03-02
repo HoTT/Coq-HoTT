@@ -28,7 +28,7 @@ Proof.
     1:make_equiv_contr_basedpaths.
     apply equiv_concat_l.
     symmetry; apply point_eq.
-  - simpl.
+  - cbn.
     apply concat_Vp.
 Defined.
 

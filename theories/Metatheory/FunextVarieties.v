@@ -2,7 +2,7 @@
 
 (** * Varieties of function extensionality *)
 
-Require Import HoTT.Basics HoTT.Types EquivalenceVarieties.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
@@ -144,8 +144,6 @@ Theorem NaiveNondepFunext_implies_WeakFunext
 Proof.
   intros nf X P H.
   pose (T := (hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap)).
-  assert (X1 : Contr T).
-  { apply fcontr_isequiv; exact _. }
   exact (@contr_retract T _ _
            (fun fp x => transport P (ap10 fp.2 x) (fp.1 x).2)
            (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).

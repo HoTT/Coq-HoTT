@@ -406,12 +406,12 @@ Definition Book_3_3_4 := @HoTT.Basics.Trunc.trunc_succ (-1).
 (* ================================================== thm:isprop-isset *)
 (** Lemma 3.3.5 *)
 
-Definition Book_3_3_5_i := @HoTT.HProp.hprop_trunc.
+Definition Book_3_3_5_i := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:isprop-isprop *)
 (** Lemma 3.3.5 *)
 
-Definition Book_3_3_5_ii := @HoTT.HProp.hprop_trunc.
+Definition Book_3_3_5_ii := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== defn:decidable-equality *)
 (** Definition 3.4.3 *)
@@ -474,12 +474,12 @@ Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.
 (* ================================================== thm:isprop-iscontr *)
 (** Lemma 3.11.4 *)
 
-Definition Book_3_11_4 := @HoTT.HProp.hprop_trunc.
+Definition Book_3_11_4 := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:contr-contr *)
 (** Corollary 3.11.5 *)
 
-Definition Book_3_11_5 := @HoTT.HProp.contr_contr.
+Definition Book_3_11_5 := @HoTT.Basics.Contractible.contr_contr.
 
 (* ================================================== thm:contr-forall *)
 (** Lemma 3.11.6 *)
@@ -552,7 +552,7 @@ Definition Book_4_2_5 := @HoTT.Fibrations.equiv_path_hfiber.
 (* ================================================== thm:contr-hae *)
 (** Theorem 4.2.6 *)
 
-Definition Book_4_2_6 := @HoTT.EquivalenceVarieties.fcontr_isequiv.
+Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_map_isequiv.
 
 (* ================================================== defn:linv-rinv *)
 (** Definition 4.2.7 *)
@@ -568,8 +568,8 @@ Definition Book_4_2_8_ii := @HoTT.Basics.Equivalences.isequiv_precompose.
 (* ================================================== lem:inv-hprop *)
 (** Lemma 4.2.9 *)
 
-Definition Book_4_2_9_i  := @HoTT.EquivalenceVarieties.contr_sect_equiv.
-Definition Book_4_2_9_ii := @HoTT.EquivalenceVarieties.contr_retr_equiv.
+Definition Book_4_2_9_i  := @HoTT.Types.Equiv.contr_sect_equiv.
+Definition Book_4_2_9_ii := @HoTT.Types.Equiv.contr_retr_equiv.
 
 (* ================================================== defn:lcoh-rcoh *)
 (** Definition 4.2.10 *)
@@ -594,17 +594,17 @@ Definition Book_4_2_13 := @HoTT.Types.Equiv.hprop_isequiv.
 (* ================================================== defn:biinv *)
 (** Definition 4.3.1 *)
 
-Definition Book_4_3_1  := @HoTT.EquivalenceVarieties.BiInv.
+Definition Book_4_3_1  := @HoTT.Equiv.BiInv.BiInv.
 
 (* ================================================== thm:isprop-biinv *)
 (** Theorem 4.3.2 *)
 
-Definition Book_4_3_2  := @HoTT.EquivalenceVarieties.isprop_biinv.
+Definition Book_4_3_2  := @HoTT.Equiv.BiInv.isprop_biinv.
 
 (* ================================================== thm:equiv-biinv-isequiv *)
 (** Corollary 4.3.3 *)
 
-Definition Book_4_3_3  := @HoTT.EquivalenceVarieties.equiv_biinv_isequiv.
+Definition Book_4_3_3  := @HoTT.Equiv.BiInv.equiv_biinv_isequiv.
 
 (* ================================================== defn:equivalence *)
 (** Definition 4.4.1 *)
@@ -614,22 +614,22 @@ Definition Book_4_4_1 := @HoTT.Basics.Trunc.IsTruncMap (-2).
 (* ================================================== thm:lequiv-contr-hae *)
 (** Theorem 4.4.3 *)
 
-Definition Book_4_4_3 := @HoTT.EquivalenceVarieties.isequiv_fcontr.
+Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_map.
 
 (* ================================================== thm:contr-hprop *)
 (** Lemma 4.4.4 *)
 
-Definition Book_4_4_4 := @HoTT.HProp.hprop_trunc.
+Definition Book_4_4_4 := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:equiv-contr-hae *)
 (** Theorem 4.4.5 *)
 
-Definition Book_4_4_5 := @HoTT.EquivalenceVarieties.equiv_fcontr_isequiv.
+Definition Book_4_4_5 := @HoTT.Types.Equiv.equiv_contr_map_isequiv.
 
 (* ================================================== thm:equiv-inhabcod *)
 (** Corollary 4.4.6 *)
 
-Definition Book_4_4_6 := @HoTT.EquivalenceVarieties.isequiv_inhab_codomain.
+Definition Book_4_4_6 := @HoTT.Types.Equiv.isequiv_inhab_codomain.
 
 (* ================================================== defn:surj-emb *)
 (** Definition 4.6.1 *)

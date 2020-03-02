@@ -2,7 +2,7 @@
 (** * Localization *)
 
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
-Require Import Extensions EquivalenceVarieties.
+Require Import Extensions.
 Require Import ReflectiveSubuniverse Accessible.
 
 Local Open Scope nat_scope.

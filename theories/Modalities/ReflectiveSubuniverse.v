@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
+Require Import Equiv.BiInv Extensions HProp Fibrations NullHomotopy Pullback.
 Require Import PathAny.
 Require Import HIT.Coeq Colimits.Pushout.
 
@@ -846,7 +846,7 @@ Section Reflective_Subuniverse.
     Proof.
       refine (inO_equiv_inO _ (issig_equiv@{i j k} A B)).
       refine (inO_equiv_inO _ (equiv_functor_sigma equiv_idmap@{k}
-                                 (fun f => equiv_biinv_isequiv@{i j k l} f))).
+                                 (fun f => equiv_biinv_isequiv@{i j k} f))).
       transparent assert (c : (prod@{k k} (A->B) (prod@{k k} (B->A) (B->A)) -> prod@{k k} (A -> A) (B -> B))).
       { intros [f [g h]]; exact (h o f, f o g). }
       pose (U := hfiber@{k k} c (idmap, idmap)).
@@ -1324,9 +1324,7 @@ Section ModalMaps.
   Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : MapIn O f.
   Proof.
-    intros b.
-    pose (fcontr_isequiv f _ b).
-    exact _.
+    intros b; exact _.
   Defined.
 
   (** Anything homotopic to a modal map is modal. *)
@@ -1456,9 +1454,7 @@ Section ConnectedMaps.
   Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsConnMap O f.
   Proof.
-    intros b.
-    pose (fcontr_isequiv f _ b).
-    unfold IsConnected; exact _.
+    intros b; exact _.
   Defined.
 
   (** Anything homotopic to a connected map is connected. *)
@@ -1535,7 +1531,7 @@ Section ConnectedMaps.
              `{IsConnMap O _ _ f} `{MapIn O _ _ f}
   : IsEquiv f.
   Proof.
-    apply isequiv_fcontr. intros b.
+    apply isequiv_contr_map. intros b.
     apply (contr_trunc_conn O).
   Defined.
 
@@ -1584,7 +1580,7 @@ Section ConnectedMaps.
           (P : B -> Type) `{forall b:B, In O (P b)}
   : IsEquiv (fun (g : forall b:B, P b) => g oD f).
   Proof.
-    apply isequiv_fcontr; intros d.
+    apply isequiv_contr_map; intros d.
     apply contr_inhabited_hprop.
     - nrefine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
       { refine (equiv_functor_sigma_id _); intros g.

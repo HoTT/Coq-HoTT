@@ -5,7 +5,6 @@ Require Import Types.
 Require Import TruncType.
 
 Require Import HProp.
-Require Import EquivalenceVarieties.
 Require Import Extensions.
 Require Import Factorization.
 Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)

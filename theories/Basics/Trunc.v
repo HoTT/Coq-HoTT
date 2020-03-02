@@ -400,4 +400,33 @@ Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   : (A -> B) -> (B -> A) -> (A <~> B)
   := fun f g => equiv_iff_hprop_uncurried (f, g).
 
+(** Truncatedness is an hprop. *)
+Global Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
+  : IsHProp (IsTrunc n A) | 0.
+Proof.
+  apply hprop_inhabited_contr.
+  revert A.
+  simple_induction n n IH; unfold IsTrunc; simpl.
+  - intros A ?.
+    exact _.
+  - intros A AH1.
+    exists AH1.
+    intro AH2.
+    apply path_forall; intro x.
+    apply path_forall; intro y.
+    apply @path_contr.
+    apply IH, AH1.
+Qed.
+
+(** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
+
+(** Similarly, a map being truncated is also a proposition. *)
+Global Instance ishprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
+: IsHProp (IsTruncMap n f).
+Proof.
+  apply hprop_allpath; intros s t.
+  apply path_forall; intros x.
+  apply path_ishprop.
+Defined.
+
 (** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)

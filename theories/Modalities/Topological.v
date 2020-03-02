@@ -1,7 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types HProp.
-Require Import EquivalenceVarieties Extensions.
-Require Import HoTT.Truncations.
+Require Import Extensions HoTT.Truncations.
 Require Import Modality Accessible Lex Nullification.
 
 Local Open Scope path_scope.
@@ -115,7 +114,7 @@ Proof.
         intros a; cbn in a; cbn.
         apply ((equiv_ooextendable_isequiv
                   (unit_name X) (fun _:B a => tt))^-1).
-        apply isequiv_fcontr; intros f; cbn in f.
+        apply isequiv_contr_map; intros f; cbn in f.
         refine (contr_equiv' { x:X & forall u:B a, x = f u } _).
         { refine (equiv_functor_sigma' (equiv_unit_rec X) _).
           intros x; unfold composeD; cbn.

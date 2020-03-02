@@ -2,7 +2,7 @@
 (** * Varieties of univalence *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Idempotents EquivalenceVarieties.
+Require Import Fibrations Idempotents.
 Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
@@ -70,7 +70,7 @@ Proof.
     - apply ap, path_arrow; intros a.
       symmetry; rapply (contract vwu).
     - apply ap, path_arrow; intros b.
-      apply (contract vwu), fcontr_isequiv; exact _. }
+      apply (contract vwu); exact _. }
   { intros A B f.
     apply path_equiv, path_arrow; intros a; cbn.
     rewrite !transport_pp.

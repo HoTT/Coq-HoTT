@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Basic facts about fibrations *)
 
-Require Import HoTT.Basics HoTT.Types HProp EquivalenceVarieties.
+Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -222,9 +222,9 @@ Definition isequiv_from_functor_sigma {A} (P Q : A -> Type)
            `{IsEquiv _ _ (functor_sigma idmap g)}
 : forall (a : A), IsEquiv (g a).
 Proof.
-  intros a; apply isequiv_fcontr.
+  intros a; apply isequiv_contr_map.
   apply istruncmap_from_functor_sigma.
-  red; by apply fcontr_isequiv.
+  exact _.
 Defined.
 
 (** Theorem 4.7.7 *)
@@ -284,7 +284,7 @@ Definition equiv_istruncmap_ap `{Funext} {A B} n (f:A -> B)
 Global Instance isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
   : forall x y, IsEquiv (@ap _ _ f x y).
 Proof.
-  intros x y. apply isequiv_fcontr,_.
+  intros x y. apply isequiv_contr_map,_.
 Defined.
 
 Definition equiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f} (x y : A)
@@ -294,7 +294,7 @@ Definition equiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f} (x y : A)
 Definition isembedding_isequiv_ap {A B} (f : A -> B) `{!forall x y, IsEquiv (@ap _ _ f x y)}
   : IsEmbedding f.
 Proof.
-  apply istruncmap_from_ap. intros x y;red;apply fcontr_isequiv,_.
+  rapply istruncmap_from_ap.
 Defined.
 
 Definition equiv_isequiv_ap_isembedding `{Funext} {A B} (f : A -> B)
