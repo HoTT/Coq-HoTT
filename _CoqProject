@@ -233,7 +233,6 @@ theories/Equiv/Relational.v
 #
 
 theories/BoundedSearch.v
-theories/EquivGroupoids.v
 theories/Fibrations.v
 theories/Conjugation.v
 theories/HProp.v
