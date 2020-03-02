@@ -406,12 +406,12 @@ Definition Book_3_3_4 := @HoTT.Basics.Trunc.trunc_succ (-1).
 (* ================================================== thm:isprop-isset *)
 (** Lemma 3.3.5 *)
 
-Definition Book_3_3_5_i := @HoTT.Basics.Trunc.hprop_trunc.
+Definition Book_3_3_5_i := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:isprop-isprop *)
 (** Lemma 3.3.5 *)
 
-Definition Book_3_3_5_ii := @HoTT.Basics.Trunc.hprop_trunc.
+Definition Book_3_3_5_ii := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== defn:decidable-equality *)
 (** Definition 3.4.3 *)
@@ -474,7 +474,7 @@ Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.
 (* ================================================== thm:isprop-iscontr *)
 (** Lemma 3.11.4 *)
 
-Definition Book_3_11_4 := @HoTT.Basics.Trunc.hprop_trunc.
+Definition Book_3_11_4 := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:contr-contr *)
 (** Corollary 3.11.5 *)
@@ -619,7 +619,7 @@ Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_map.
 (* ================================================== thm:contr-hprop *)
 (** Lemma 4.4.4 *)
 
-Definition Book_4_4_4 := @HoTT.Basics.Trunc.hprop_trunc.
+Definition Book_4_4_4 := @HoTT.Basics.Trunc.ishprop_istrunc.
 
 (* ================================================== thm:equiv-contr-hae *)
 (** Theorem 4.4.5 *)

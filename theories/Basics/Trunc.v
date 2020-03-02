@@ -401,7 +401,7 @@ Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   := fun f g => equiv_iff_hprop_uncurried (f, g).
 
 (** Truncatedness is an hprop. *)
-Global Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
+Global Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
   apply hprop_inhabited_contr.
@@ -421,7 +421,7 @@ Qed.
 (** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
 
 (** Similarly, a map being truncated is also a proposition. *)
-Global Instance isprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
+Global Instance ishprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
 : IsHProp (IsTruncMap n f).
 Proof.
   apply hprop_allpath; intros s t.
