@@ -76,7 +76,7 @@ Definition cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
   (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
   (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
-  : (tr (fv s0ii)) @h (si0i @h (tr s1ii)) =
+  : sq_concat_h (tr (fv s0ii)) (sq_concat_h si0i (tr s1ii)) =
       sq_ccGG
         (moveL_Vp _ _ _ (sq_path^-1 sii0))
         (moveL_Vp _ _ _ (sq_path^-1 sii1)) si1i
@@ -233,7 +233,7 @@ Section PathCubesFromPaths.
   Proof.
     destruct s.
     refine (cu_path oE _).
-    refine (equiv_concat_l (sq_concat_h_1s (1%square @h (tr s'))
+    refine (equiv_concat_l (sq_concat_h_1s (sq_concat_h 1%square (tr s'))
       (p0y:=1) (p1y:=1)) _ oE _).
     refine (equiv_concat_l (sq_concat_h_1s (tr s')
       (p0y:=1) (p1y:=1)) _ oE _).
@@ -533,7 +533,7 @@ Section PathCubeConcat.
 End PathCubeConcat.
 
 (* Notation for left right concatenation *)
-Notation "x '@lr' y" := (cu_concat_lr x y) (at level 10) : cube_scope.
+Notation "x '@lr' y" := (cu_concat_lr x y) : cube_scope.
 
 Local Notation apc := (ap_compose_sq _ _ _).
 

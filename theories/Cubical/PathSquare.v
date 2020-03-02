@@ -362,6 +362,8 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
+  Infix "@@h" := sq_concat_h : square_scope.
+
   (* Vertical concatenation of squares *)
   Definition sq_concat_v {a20 a21 : A}
     {py0 : a10 = a20} {py1 : a11 = a21} {p2x : a20 = a21}
@@ -374,11 +376,9 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-End PathSquareConcat.
+  Infix "@@v" := sq_concat_v : square_scope.
 
-(* Notations for horizontal and vertical concatenation *)
-Infix "@h" := sq_concat_h (at level 10) : square_scope.
-Infix "@v" := sq_concat_v (at level 10) : square_scope.
+End PathSquareConcat.
 
 (* Horizontal groupoid laws for concatenation *)
 Section GroupoidLawsH.
@@ -396,20 +396,20 @@ Section GroupoidLawsH.
   Local Open Scope square_scope.
   Notation hr := (sq_refl_h _).
 
-  Definition sq_concat_h_s1 : s @h hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
+  Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
     by destruct s.
   Defined.
 
-  Definition sq_concat_h_1s : hr @h s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
+  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
 
   Context (t : PathSquare px1 px2 p0y p1y) (u : PathSquare px2 px3 p0z p1z).
 
-  Definition sq_concat_h_ss_s : (s @h t) @h u
-    = sq_ccGG (concat_p_pp _ _ _) (concat_p_pp _ _ _) (s @h (t @h u)).
+  Definition sq_concat_h_ss_s : sq_concat_h (sq_concat_h s t) u
+    = sq_ccGG (concat_p_pp _ _ _) (concat_p_pp _ _ _) (sq_concat_h s (sq_concat_h t u)).
   Proof.
     by destruct s, u, (sq_1G^-1 t), p0y.
   Defined.
