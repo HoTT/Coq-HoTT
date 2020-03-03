@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Cubical.PathSquare.
+Require Import Fibrations PathAny Cubical.PathSquare.
 
 Local Open Scope path_scope.
 
@@ -240,3 +240,60 @@ Section PullbackSigma.
 
 End PullbackSigma.
 
+(** ** Paths in pullbacks *)
+
+Definition equiv_path_pullback {A B C} (f : B -> A) (g : C -> A)
+           (x y : Pullback f g)
+  : { p : x.1 = y.1 & { q : x.2.1 = y.2.1 & PathSquare (ap f p) (ap g q) x.2.2 y.2.2 } }
+      <~> (x = y).
+Proof.
+  revert y; rapply equiv_path_from_contr.
+  { exists idpath. exists idpath.
+    cbn. apply sq_refl_v. }
+  destruct x as [b [c p]]; unfold Pullback; cbn.
+  contr_sigsig b (idpath b).
+  contr_sigsig c (idpath c).
+  cbn.
+  rapply (contr_equiv' {p' : f b = g c & p = p'}).
+  apply equiv_functor_sigma_id; intros p'.
+  apply sq_1G.
+Defined.
+
+(** The 3x3 Lemma *)
+
+Section Pullback3x3.
+
+  Context
+    (A00 A02 A04 A20 A22 A24 A40 A42 A44 : Type)
+    (f01 : A00 -> A02) (f03 : A04 -> A02)
+    (f10 : A00 -> A20) (f12 : A02 -> A22) (f14 : A04 -> A24)
+    (f21 : A20 -> A22) (f23 : A24 -> A22)
+    (f30 : A40 -> A20) (f32 : A42 -> A22) (f34 : A44 -> A24)
+    (f41 : A40 -> A42) (f43 : A44 -> A42)
+    (H11 : f12 o f01 == f21 o f10) (H13 : f12 o f03 == f23 o f14)
+    (H31 : f32 o f41 == f21 o f30) (H33 : f32 o f43 == f23 o f34).
+
+  Let fX1 := functor_pullback f10 f30 f12 f32 f21 f01 f41 H11 H31.
+  Let fX3 := functor_pullback f14 f34 f12 f32 f23 f03 f43 H13 H33.
+  Let f1X := functor_pullback f01 f03 f21 f23 f12 f10 f14 (symmetry _ _ H11) (symmetry _ _ H13).
+  Let f3X := functor_pullback f41 f43 f21 f23 f32 f30 f34 (symmetry _ _ H31) (symmetry _ _ H33).
+
+  Theorem pullback3x3 : Pullback fX1 fX3 <~> Pullback f1X f3X.
+  Proof.
+    refine (_ oE _ oE _).
+    1,3:do 2 (rapply equiv_functor_sigma_id; intro).
+    1:apply equiv_path_pullback.
+    1:symmetry; apply equiv_path_pullback.
+    refine (_ oE _).
+    { do 4 (rapply equiv_functor_sigma_id; intro).
+      refine (sq_tr oE _).
+      refine (sq_move_14^-1 oE _).
+      refine (sq_move_31 oE _).
+      refine (sq_move_24^-1 oE _).
+      refine (sq_move_23^-1 oE _).
+      rewrite 2 inv_V.
+      reflexivity. }
+    make_equiv.
+  Defined.
+
+End Pullback3x3.
