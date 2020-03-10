@@ -234,7 +234,6 @@ theories/Equiv/Relational.v
 
 theories/BoundedSearch.v
 theories/Fibrations.v
-theories/Conjugation.v
 theories/HProp.v
 theories/Extensions.v
 theories/HSet.v
