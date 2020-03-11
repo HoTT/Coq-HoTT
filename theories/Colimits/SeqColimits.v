@@ -1,12 +1,12 @@
 Require Import Basics.
 Require Import Types.
-Require Import Sequence.
-Require Import Colimit.
-Require Import Diagram.
-Require Import DDiagram.
-Require Import Nat.
-Require Import Graph.
-Require Import Cocone.
+Require Import Diagrams.Graph.
+Require Import Diagrams.Diagram.
+Require Import Diagrams.Sequence.
+Require Import Diagrams.DDiagram.
+Require Import Diagrams.Cocone.
+Require Import Colimits.Colimit.
+Require Import Spaces.Nat.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
