@@ -8,6 +8,7 @@ Require Import Nat.
 Require Import Graph.
 Require Import Cocone.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 Definition functor_forall_equiv_pb {A B : Type} {P : B -> Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -77,7 +78,7 @@ Section TypeSeq.
 
   Context {A : TypeSeq}.
 
-  Let f := typeSeqArr A.
+  Local Definition f := typeSeqArr A.
 
   Definition pair_lift (x : sig A) : sig A := match x with (n;a) => (n.+1; f n a) end.
 
@@ -230,7 +231,7 @@ Section FibTypeSeq.
 
   Notation coe := (transport idmap).
 
-  Let Beta {X Y F G} {x1 x2 : X} (p : x1 = x2)
+  Local Definition Beta {X Y F G} {x1 x2 : X} (p : x1 = x2)
     : coe (ap Y (ap F p)) o G x1 == G x2 o coe (ap Y p).
   Proof.
     destruct p; exact (fun _ => 1).
@@ -278,13 +279,13 @@ Section FibTypeSeq.
     srapply (transport_idmap_path_universe_uncurried _).
   Defined.
 
-  Let Delta {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) (y : Y x1)
+  Local Definition Delta {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) (y : Y x1)
     : (x1;y) = (x2;F y).
   Proof.
     destruct p; destruct psi; exact 1.
   Defined.
 
-  Let Delta_proj {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) (y : Y x1)
+  Local Definition Delta_proj {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) (y : Y x1)
     : ap pr1 (Delta p psi y) = p.
   Proof.
     destruct p; destruct psi; exact 1.
@@ -320,7 +321,7 @@ Section FibTypeSeq.
     Context (t : forall n a b, ap seqColimSumToSumSeqColim (glue sigTypeSeq n (a;b)) #
       e n.+1 (f n a) (g (n;a) b) = e n a b).
 
-    Let Eta {X Y Z} {x : X} {y1 y2 : Y x} {z : sig Y} {p : y1 = y2}
+    Local Definition Eta {X Y Z} {x : X} {y1 y2 : Y x} {z : sig Y} {p : y1 = y2}
       {q1 : z = (x;y1)} {q2 : z = (x;y2)} (theta : q2 = q1 @ ap _ p)
       : transport (Z o exist Y x) p o transport Z q1 == transport Z q2.
     Proof.
@@ -328,7 +329,7 @@ Section FibTypeSeq.
       exact (fun _ => 1).
     Defined.
 
-    Let Xi {X Y Z} G {x : X} {y1 y2 : Y x} {z : sig Y} {p : y1 = y2}
+    Local Definition Xi {X Y Z} G {x : X} {y1 y2 : Y x} {z : sig Y} {p : y1 = y2}
       {q1 : z = (x;y1)} {q2 : z = (x;y2)} (theta : q2 = q1 @ ap _ p)
       : apD (G o exist Y x) p = ap (transport (Z o exist Y x) p) (apD G q1)^ @
         Eta theta (G z) @ apD G q2.
@@ -338,7 +339,7 @@ Section FibTypeSeq.
       destruct p; exact 1.
     Defined.
 
-    Let I {X Y Z} {x1 x2 : X} {p : x1 = x2} {F} {G1} {G2} (psi : coe (ap Y p) = F)
+    Local Definition I {X Y Z} {x1 x2 : X} {p : x1 = x2} {F} {G1} {G2} (psi : coe (ap Y p) = F)
       : transport (fun x => forall y, Z (x;y)) p G1 = G2 <~>
         forall y, G2 (F y) = Delta p psi y # G1 y.
     Proof.
@@ -346,7 +347,7 @@ Section FibTypeSeq.
       srapply (equiv_compose' (equiv_apD10 _ _ _) (equiv_path_inverse _ _)).
     Defined.
 
-    Let Epsilon {X Y Z} {x1 x2 : X} {y1 y2 w z} {F} (p : x1 = x2) {q : y1 = y2}
+    Local Definition Epsilon {X Y Z} {x1 x2 : X} {y1 y2 w z} {F} (p : x1 = x2) {q : y1 = y2}
       {psi : coe (ap Y p) = F} {r1 : F y1 = w} {r2 : w = F y2} (theta : ap F q = r1 @ r2)
       : r2 # transport (Z o exist Y x2) r1 (Delta p psi y1 # z) =
         Delta p psi y2 # transport (Z o exist Y x1) q z.
@@ -355,7 +356,7 @@ Section FibTypeSeq.
       destruct q; destruct r1; exact 1.
     Defined.
 
-    Let Phi {X Y Z} {x1 x2 : X} {y1 y2 w} {F} (p : x1 = x2) {q : y1 = y2}
+    Local Definition Phi {X Y Z} {x1 x2 : X} {y1 y2 w} {F} (p : x1 = x2) {q : y1 = y2}
       {psi : coe (ap Y p) = F} {G1 : forall y, Z (x1;y)} {G2 : forall y, Z (x2;y)}
       {r1 : F y1 = w} {r2 : w = F y2} (theta : ap F q = r1 @ r2)
       : forall u1 u2, 
@@ -369,7 +370,7 @@ Section FibTypeSeq.
       intro s; apply inverse in s; revert s; apply moveL_1M.
     Defined.
 
-    Let Mu {X Y Z} {x1 x2 : X} (p : x1 = x2) {F} (G : forall z, Z z) {psi : coe (ap Y p) = F}
+    Local Definition Mu {X Y Z} {x1 x2 : X} (p : x1 = x2) {F} (G : forall z, Z z) {psi : coe (ap Y p) = F}
       {q} (theta : I psi (apD (fun x y => G (x;y)) p) = q) y
       : apD G (Delta p psi y) = (q y)^.
     Proof.
@@ -377,7 +378,7 @@ Section FibTypeSeq.
     Defined. 
 
     (** The point-point case of the nested induction. *)
-    Let Q k : forall n a b, E (inj _ n a; inj _ k b).
+    Local Definition Q k : forall n a b, E (inj _ n a; inj _ k b).
     Proof.
       induction k as [ | k h].
       - exact e.
@@ -386,14 +387,14 @@ Section FibTypeSeq.
     Defined.
 
     (** The path-point case of the nested induction. *)
-    Let Q_beta k n a b
+    Local Definition Q_beta k n a b
       : Q k.+1 n a _ = Delta _ (fibTypeSeqToTypeFam_beta n a) _ # Q k n.+1 (f n a) b.
     Proof.
       srapply (functor_forall_equiv_pb_beta _).
     Defined.
 
     (** The point-path case of the nested induction. *)
-    Let R k : forall n a b,
+    Local Definition R k : forall n a b,
       transport (E o exist _ (inj A n a)) (glue _ k b) (Q k.+1 n a _) = Q k n a b.
     Proof.
       induction k as [ | k h].
@@ -409,11 +410,11 @@ Section FibTypeSeq.
     Defined.
 
     (** The point case of the nested induction. *)
-    Let F n a : forall x, E (inj _ n a; x)
+    Local Definition F n a : forall x, E (inj _ n a; x)
       := SeqColimit_ind _ _ (fun k => Q k n a) (fun k => R k n a).
 
     (** The path case of the nested induction. *)
-    Let G n a y : F n a _ = Delta _ (fibTypeSeqToTypeFam_beta n a) y # F n.+1 (f n a) y.
+    Local Definition G n a y : F n a _ = Delta _ (fibTypeSeqToTypeFam_beta n a) y # F n.+1 (f n a) y.
     Proof.
       revert y; srapply (SeqColimit_ind _ _ (fun k => Q_beta k n a)); intros k b.
       srapply (Phi (glue A n a) (fib_seq_lift_colim_equiv_beta _ _ _)).
