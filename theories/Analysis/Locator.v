@@ -160,13 +160,13 @@ Section locator.
       destruct (l q r nu); auto.
     Qed.
 
-    Let locsig : _ <~> locator' x := ltac:(issig).
+    Local Definition locsig : _ <~> locator' x := ltac:(issig).
     Lemma locator'_locator_locator' (l' : locator' x)
       : locator_locator' (locator'_locator l') = l'.
     Proof.
       enough (p : locsig ^-1 (locator_locator' (locator'_locator l')) = locsig ^-1 l').
       - refine (equiv_inj (locsig ^-1) p).
-      - unfold locsig; clear locsig; simpl.
+      - unfold locsig; simpl.
         destruct l'; unfold locator'_locator, locator_locator'; simpl.
         apply path_sigma_hprop; simpl.
         apply path_forall; intro q;
@@ -216,11 +216,11 @@ Section locator.
 
   End logic2.
 
-  Let ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q.
+  Local Definition ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q.
   Proof.
     apply (pos_minus_lt_compat_r q ('eps)), eps.
   Qed.
-  Let ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
+  Local Definition ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
   Proof.
     apply (pos_plus_lt_compat_r q ('eps)), eps.
   Qed.
@@ -230,14 +230,14 @@ Section locator.
     Context {x : F}
             (l : locator x).
 
-    Let ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
-    Let P_lower (q : Q) : Type := locates_right l (ltN1 q).
+    Local Definition ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
+    Local Definition P_lower (q : Q) : Type := locates_right l (ltN1 q).
     Definition P_lower_prop {k} : IsHProp (P_lower k).
     Proof.
       apply _.
     Qed.
-    Let ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
-    Let P_lower_inhab : hexists (fun q => P_lower q).
+    Local Definition ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
+    Local Definition P_lower_inhab : hexists (fun q => P_lower q).
     Proof.
       assert (hqlt : hexists (fun q => ' q < x)).
       {
@@ -264,15 +264,15 @@ Section locator.
       apply (un_inl _ Pq).
     Qed.
 
-    Let lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
+    Local Definition lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
     (* Assume we have an enumeration of the rationals. *)
-    Let P_upper (r : Q) : DHProp := locates_left l (lt1N r).
+    Local Definition P_upper (r : Q) : DHProp := locates_left l (lt1N r).
     Definition P_upper_prop {k} : IsHProp (P_upper k).
     Proof.
       apply _.
     Qed.
-    Let ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
-    Let P_upper_inhab : hexists (fun r => P_upper r).
+    Local Definition ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
+    Local Definition P_upper_inhab : hexists (fun r => P_upper r).
     Proof.
       assert (hqlt : hexists (fun r => x < ' r)).
       {
@@ -458,25 +458,25 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
-    Let P (qeps' : Q * Qpos Q) : Type :=
+    Local Definition P (qeps' : Q * Qpos Q) : Type :=
       match qeps' with
       | (q' , eps') =>
         (prod
            (locates_left l (ltQnegQ q' eps'))
            (locates_right m (ltQposQ q' eps')))
       end.
-    Let P_isHProp qeps' : IsHProp (P qeps').
+    Local Definition P_isHProp qeps' : IsHProp (P qeps').
     Proof.
       destruct qeps' as [q eps'].
       apply trunc_prod.
     Qed.
-    Let P_dec qeps' : Decidable (P qeps').
+    Local Definition P_dec qeps' : Decidable (P qeps').
     Proof.
       destruct qeps' as [q eps'].
       unfold P.
       apply _.
     Qed.
-    Let P_inhab : hexists P.
+    Local Definition P_inhab : hexists P.
     Proof.
       assert (hs := (archimedean_property Q F x y ltxy)).
       refine (Trunc_ind _ _ hs); intros [s [ltxs ltsy]].
@@ -550,15 +550,15 @@ Section locator.
 
     Section recip_pos.
       Context (xpos : 0 < x).
-      Let nu := positive_apart_zero x xpos.
+      Local Definition recip_nu := positive_apart_zero x xpos.
 
       (* Note: If you are going to attemp to fill in the foles, you may
          be interested in `dec_recip_to_recip` in
          `Classes.theory.dec_fields` *)
 
-      Definition locator_recip_pos : locator (// (x ; nu)).
+      Definition locator_recip_pos : locator (// (x ; recip_nu)).
       Proof.
-        assert (recippos : 0 < // (x ; nu))
+        assert (recippos : 0 < // (x ; recip_nu))
           by apply pos_recip_compat.
         intros q r ltqr. destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
         + apply inl. refine (transitivity _ _).
@@ -591,7 +591,7 @@ Section locator.
                  x
                  (positive_apart_zero
                     x
-                    (transitivity (pos_recip_compat (' r) rpos') ltrrx)) nu) in ltxrr.
+                    (transitivity (pos_recip_compat (' r) rpos') ltrrx)) recip_nu) in ltxrr.
             exact ltxrr.
           * apply inl.
             assert (qpos' : 0 < ' q).
@@ -601,7 +601,7 @@ Section locator.
             }
             rewrite (dec_recip_to_recip q (positive_apart_zero ('q) qpos')) in ltxrq.
             assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).
-            rewrite (recip_irrelevant x (positive_apart_zero x xpos) nu) in ltrqx.
+            rewrite (recip_irrelevant x (positive_apart_zero x xpos) recip_nu) in ltrqx.
             exact ltrqx.
       Qed.
     End recip_pos.
@@ -613,10 +613,10 @@ Section locator.
             (l : locator x)
             (xneg : x < 0).
 
-    Let nu := negative_apart_zero x xneg.
+    Local Definition recip_neg_nu := negative_apart_zero x xneg.
 
 
-    Definition locator_recip_neg : locator (// (x ; nu)).
+    Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
       assert (negxpos : 0 < (-x))
         by (apply flip_neg_negate; assumption).
@@ -627,7 +627,7 @@ Section locator.
         (recip_proper_alt
            (- - x)
            x
-           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) nu)
+           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) recip_neg_nu)
         in l'.
       - assumption.
       - apply negate_involutive.
