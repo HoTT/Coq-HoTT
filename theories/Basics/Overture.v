@@ -711,7 +711,7 @@ Hint Resolve tt : core.
 
 (** The natural numbers are defined in [Coq.Init.Datatypes] (we weren't able to excise them from the stdlib), and studied further in [Spaces.Nat].  But her we give some basic definitions. *)
 
-Fixpoint pred (n : nat) : nat
+Definition pred (n : nat) : nat
   := match n with
      | 0 => 0
      | S n => n
