@@ -16,9 +16,9 @@ Inductive Laxity :=
 
 Notation oplax := colax (only parsing).
 
-CoFixpoint all_pseudo : Stream Laxity := SCons pseudo all_pseudo.
-Definition one_lax : Stream Laxity := SCons lax all_pseudo.
-Definition one_colax : Stream Laxity := SCons colax all_pseudo.
+CoFixpoint all_pseudo : Stream Laxity := scons pseudo all_pseudo.
+Definition one_lax : Stream Laxity := scons lax all_pseudo.
+Definition one_colax : Stream Laxity := scons colax all_pseudo.
 
 (** It may seem backwards for [colax] to mean a morphism "forwards" and [lax] a morphism "backwards", but that's what matches the standard terminology for natural transformations. *)
 Definition lHom (l : Laxity) `{HasEquivs n A} (a b : A) :=

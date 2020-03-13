@@ -741,18 +741,18 @@ Bind Scope bool_scope with Bool.
 
 (** ** Coinductive streams *)
 
-CoInductive Stream (A : Type) := SCons
+CoInductive Stream (A : Type) := scons
 {
   head : A ;
   tail : Stream A
 }.
 
-Arguments SCons {A} _ _.
+Arguments scons {A} _ _.
 Arguments head {A} _.
 Arguments tail {A} _.
 
 CoFixpoint const_stream {A} (a : A) : Stream A
-  := SCons a (const_stream a).
+  := scons a (const_stream a).
 
 
 (** *** Typeclasses for case analysis *)

@@ -41,7 +41,7 @@ Global Existing Instance isdglob_gendinserter.
 Definition colax_pseudo_inserter
            (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
            (F G : A -> B) `{!IsFunctor0 F, !IsFunctor0 G} (a : A)
-  : (GenDInserter (SCons pseudo ls) F G a) -> (GenDInserter (SCons colax ls) F G a)
+  : (GenDInserter (scons pseudo ls) F G a) -> (GenDInserter (scons colax ls) F G a)
   := fun f => cate_fun f.
 
 Global Instance isdfunctor0_colax_pseudo_inserter
@@ -60,7 +60,7 @@ Defined.
 Definition colax_lax_inserter
            (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
            (F G : A -> B) `{!IsFunctor0 F, !IsFunctor0 G} (a : A)
-  : (GenDInserter (SCons lax ls) G F a) -> (GenDInserter (SCons colax ls) F G a)
+  : (GenDInserter (scons lax ls) G F a) -> (GenDInserter (scons colax ls) F G a)
   := fun f => f.
 
 Global Instance isdfunctor0_colax_lax_inserter
@@ -151,14 +151,14 @@ Definition Transformation {A} `{IsGlob n B} (F G : A -> B)
 Notation "F $=> G" := (Transformation F G).
 
 Notation IsGenNatural1 l F G :=
-  (@IsCatSect0 _ _ _ (GenDInserter (SCons colax l) F G) _ _).
+  (@IsCatSect0 _ _ _ (GenDInserter (scons colax l) F G) _ _).
 
 Definition isgennat (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
       {F : A -> B} `{!IsFunctor0 F} {G : A -> B} `{!IsFunctor0 G}
       (alpha : F $=> G) {alnat : IsGenNatural1 ls F G alpha}
       {x y : A} (f : x $-> y)
   : lHom (head ls) (alpha y $o fmap F f) (fmap G f $o alpha x)
-  := fmapD (B := GenDInserter (SCons colax ls) F G) alpha f.
+  := fmapD (B := GenDInserter (scons colax ls) F G) alpha f.
 
 Notation IsNatural1 F G := (IsGenNatural1 all_pseudo F G).
 
@@ -172,21 +172,21 @@ Definition isnat `{IsGlob m A} `{HasEquivs n B}
 Global Instance isgennat_iscolaxnat (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
       {F : A -> B} `{!IsFunctor0 F} {G : A -> B} `{!IsFunctor0 G}
       (alpha : F $=> G)
-      {alnat : IsGenNatural1 (SCons colax ls) F G alpha}
+      {alnat : IsGenNatural1 (scons colax ls) F G alpha}
       (x y : A)
   : IsGenNatural1 ls ((cat_postcomp (F x) (alpha y)) o (fmap' F x y))
                   ((cat_precomp (G y) (alpha x)) o (fmap' G x y))
-                  (isgennat (SCons colax ls) alpha)
+                  (isgennat (scons colax ls) alpha)
   := iscatsect0_fmapD alpha alnat x y.
 
 Global Instance isgennat_ispseudonat (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
       {F : A -> B} `{!IsFunctor0 F} {G : A -> B} `{!IsFunctor0 G}
       (alpha : F $=> G)
-      {alnat : IsGenNatural1 (SCons pseudo ls) F G alpha}
+      {alnat : IsGenNatural1 (scons pseudo ls) F G alpha}
       (x y : A)
   : IsGenNatural1 ls ((cat_postcomp (F x) (alpha y)) o (fmap' F x y))
                   ((cat_precomp (G y) (alpha x)) o (fmap' G x y))
-                  (fun f => cate_fun (isgennat (SCons pseudo ls) alpha f)).
+                  (fun f => cate_fun (isgennat (scons pseudo ls) alpha f)).
 Proof.
   (** We have to nudge this from a section of the iso-inserter to a section of the inserter. *)
   pose (iscatsect0_fmapD alpha alnat x y).
@@ -199,11 +199,11 @@ Defined.
 Global Instance isgennat_islaxnat (ls : Stream Laxity) `{IsGlob m A} `{HasEquivs n B}
       {F : A -> B} `{!IsFunctor0 F} {G : A -> B} `{!IsFunctor0 G}
       (alpha : F $=> G)
-      {alnat : IsGenNatural1 (SCons lax ls) F G alpha}
+      {alnat : IsGenNatural1 (scons lax ls) F G alpha}
       (x y : A)
   : IsGenNatural1 ls ((cat_precomp (G y) (alpha x)) o (fmap' G x y))
                   ((cat_postcomp (F x) (alpha y)) o (fmap' F x y))
-                  (isgennat (SCons lax ls) alpha).
+                  (isgennat (scons lax ls) alpha).
 Proof.
   (** Similarly here, we have to nudge from a section of the lax inserter in one direction to a section of the colax inserter in the other direction. *)
   pose (iscatsect0_fmapD alpha alnat x y).
