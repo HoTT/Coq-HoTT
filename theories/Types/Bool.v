@@ -6,24 +6,6 @@ Require Import Types.Prod Types.Equiv.
 
 Local Open Scope path_scope.
 
-(* coq calls it "bool", we call it "Bool" *)
-Local Unset Elimination Schemes.
-Inductive Bool : Type0 :=
-  | true : Bool
-  | false : Bool.
-Scheme Bool_ind := Induction for Bool Sort Type.
-Scheme Bool_rec := Minimality for Bool Sort Type.
-(* For compatibility with Coq's [induction] *)
-Definition Bool_rect := Bool_ind.
-
-Add Printing If Bool.
-
-Declare Scope bool_scope.
-
-Delimit Scope bool_scope with Bool.
-
-Bind Scope bool_scope with Bool.
-
 Definition andb (b1 b2 : Bool) : Bool := if b1 then b2 else false.
 
 Definition orb (b1 b2 : Bool) : Bool := if b1 then true else b2.
