@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Constant.
+Require Import HFiber Constant.
 Require Import HoTT.Truncations.
 Require Import PathAny.
 

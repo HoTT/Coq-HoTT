@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Types.
-Require Import Fibrations.
+Require Import HFiber.
 Require Import Pointed.Core.
 Require Import Pointed.pEquiv.
 Require Import Pointed.Loops.

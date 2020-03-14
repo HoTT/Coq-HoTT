@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations PathAny Cubical.PathSquare.
+Require Import HFiber PathAny Cubical.PathSquare.
 
 Local Open Scope path_scope.
 

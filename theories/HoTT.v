@@ -9,8 +9,8 @@ Require Export HoTT.WildCat.
 Require Export HoTT.Cubical.
 Require Export HoTT.Pointed.
 Require Export HoTT.Truncations.
-Require Export HoTT.Fibrations.
 
+Require Export HoTT.HFiber.
 Require Export HoTT.HProp.
 Require Export HoTT.HSet.
 
