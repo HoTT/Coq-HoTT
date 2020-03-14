@@ -990,9 +990,17 @@ Proof.
 Defined.
 
 (** 2-dimensional path inversion *)
+
 Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
 := ap inverse h.
+
+Definition inv_concat2 {A} {x y z : A} {p q : x = y} {r s : y = z}
+           {h : p = q} {k : r = s}
+  : (h @@ k)^ = h^ @@ k^.
+Proof.
+  path_induction; reflexivity.
+Defined.
 
 (** Some higher coherences *)
 
@@ -1187,6 +1195,38 @@ Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p =
       (concat_1p _)^
     end
   end.
+
+(** [concat2] can equivalently be defined in terms of whiskering. *)
+Definition concat2_is_whiskerL_whiskerR
+           {A} {x y z : A} {p q : x = y} {r s : y = z}
+           {h : p = q} {k : r = s}
+  : (h @@ k) = (h @@ idpath) @ (idpath @@ k).
+Proof.
+  by destruct h, k.
+Defined.
+
+(** In two ways. *)
+Definition concat2_is_whiskerR_whiskerL
+           {A} {x y z : A} {p q : x = y} {r s : y = z}
+           {h : p = q} {k : r = s}
+  : (h @@ k) = (idpath @@ k) @ (h @@ idpath).
+Proof.
+  by destruct h, k.
+Defined.
+
+(** And whiskering can equivalently be defined in terms of [ap]. *)
+Definition ap_concat_r {A} {x y z : A} {p q : x = y} (s : p = q) (r : y = z)
+  : ap (fun t => t @ r) s = whiskerR s r.
+Proof.
+  by destruct s.
+Defined.
+
+Definition ap_concat_l {A} {x y z : A} (p : x = y) {q r : y = z} (s : q = r)
+  : ap (fun t => p @ t) s = whiskerL p s.
+Proof.
+  by destruct s.
+Defined.
+
 
 (** Structure corresponding to the coherence equations of a bicategory. *)
 

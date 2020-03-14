@@ -83,6 +83,7 @@ theories/ooCat/Paths.v
 theories/ooCat/Sigma.v
 theories/ooCat/Forall.v
 theories/ooCat/Type.v
+theories/ooCat/pType.v
 
 
 

@@ -29,3 +29,5 @@ Proof.
     exact (dcat_id u).
   - intros [a u] [b v] [c w] [g q].
 Abort.
+
+(* Global Existing Instance iscat0_sigma. *)
