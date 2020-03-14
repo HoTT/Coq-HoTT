@@ -50,7 +50,7 @@ Section DPathSquareConstructors.
 End DPathSquareConstructors.
 
 (* DPathSquares can be given by 2-dimensional DPaths *)
-Definition ds_dpath {A} (P : A -> Type) {a00 a10 a01 a11 : A}
+Definition equiv_ds_dpath {A} (P : A -> Type) {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
   (s : px0 @ p1x = p0x @ px1) {b00 b10 b01 b11}
@@ -65,6 +65,8 @@ Proof.
   destruct s'; cbn.
   apply sq_path.
 Defined.
+
+Notation ds_dpath := equiv_ds_dpath.
 
 (* We have an apD for DPathSquares *)
 Definition ds_apD {A} {B : A -> Type} (f : forall a, B a) {a00 a10 a01 a11 : A}
@@ -89,7 +91,7 @@ Defined.
 (* This could be achieved with some clever rewriting of squares and DPathSquares *)
 (* It seems that writing it like this might get in the way, Cube.v has
    some examples of this. *)
-Definition ds_const' {A P : Type} {a00 a10 a01 a11 : A}
+Definition equiv_ds_const' {A P : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   {s : PathSquare px0 px1 p0x p1x} {b00 b10 b01 b11 : P}
   {qx0 : DPath (fun _ => P) px0 b00 b10}
@@ -103,6 +105,8 @@ Proof.
   by destruct s.
 Defined.
 
+Notation ds_const' := equiv_ds_const'.
+
 (* dp_apD fits into a natural square *)
 Definition dp_apD_nat {A} {P : A -> Type} {f g : forall x, P x} {x y : A}
   (q : f == g) (p : x = y)
@@ -112,19 +116,21 @@ Proof.
   by apply sq_1G.
 Defined.
 
-Definition ds_G1 {A} (P : A -> Type) {a00 a10 }
+Definition equiv_ds_G1 {A} (P : A -> Type) {a00 a10 }
   {px0 px1 : a00 = a10} {p : px0 = px1} {b00 b10}
   (qx0 : DPath P px0 b00 b10) (qx1 : DPath P px1 b00 b10)
   : DPath (fun x => DPath P x b00 b10) p qx0 qx1
-      <~>  DPathSquare P (sq_G1 p) qx0 qx1 1 1.
+      <~> DPathSquare P (sq_G1 p) qx0 qx1 1 1.
 Proof.
   destruct p, px0.
   apply sq_G1.
 Defined.
 
+Notation ds_G1 := equiv_ds_G1.
+
 (** A DPath in a path-type is naturally a DPathSquare.  *)
 
-Definition ds_dp {A : Type} {B : A -> Type} (f g : forall a : A, B a)
+Definition equiv_ds_dp {A : Type} {B : A -> Type} (f g : forall a : A, B a)
   {x1 x2 : A} (p : x1 = x2) (q1 : f x1 = g x1) (q2 : f x2 = g x2)
   : DPath (fun x : A => f x = g x) p q1 q2
     <~> DPathSquare B (sq_refl_h p) (dp_apD f p) (dp_apD g p) q1 q2.
@@ -132,6 +138,8 @@ Proof.
   destruct p.
   exact sq_1G.
 Defined.
+
+Notation ds_dp := equiv_ds_dp.
 
 (** Dependent Kan operations *)
 
@@ -212,7 +220,7 @@ Section Kan.
 End Kan.
 
 (** Another equivalent formulation of a dependent square over reflexivity *)
-Definition ds_transport_dpath {A} {a0 a1 : A} {p : a0 = a1}
+Definition equiv_ds_transport_dpath {A} {a0 a1 : A} {p : a0 = a1}
            {P : A -> Type} {b00 b10 b01 b11}
            (qx0 : DPath P p b00 b10) (qx1 : DPath P p b01 b11)
            (q0x : b00 = b01) (q1x : b10 = b11)
@@ -229,3 +237,5 @@ Proof.
   refine (equiv_concat_l _ _).
   apply transport_paths_r.
 Defined.
+
+Notation ds_transport_dpath := equiv_ds_transport_dpath.
