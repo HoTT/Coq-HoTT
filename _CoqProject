@@ -194,7 +194,7 @@ theories/Colimits/Colimit_Pushout.v
 theories/Colimits/Colimit_Coequalizer.v
 theories/Colimits/Colimit_Flattening.v
 theories/Colimits/Colimit_Pushout_Flattening.v
-theories/Colimits/SeqColimits.v
+theories/Colimits/Sequential.v
 
 #
 #   Diagrams
