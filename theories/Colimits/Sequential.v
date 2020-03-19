@@ -8,18 +8,6 @@ Require Import Spaces.Nat.
 
 Local Open Scope path_scope.
 
-Definition functor_forall_equiv_pb {A B : Type} {P : B -> Type} (f : A -> B) `{IsEquiv _ _ f}
-  : (forall a, P (f a)) -> (forall b, P b)
-  := fun h b => eisretr f b # h (f^-1 b).
-
-Definition functor_forall_equiv_pb_beta {A B : Type} {P : B -> Type} (f : A -> B)
-  `{!IsEquiv f} (h : forall a, P (f a))
-  : forall a, functor_forall_equiv_pb f h (f a) = h a.
-Proof.
-  intro a; srapply (_ @ apD h (eissect f a)); srapply (_ @ (transport_compose _ _ _ _)^).
-  srapply ap10; apply ap; apply eisadj.
-Defined.
-
 Section Lift.
 
   Context {A : Sequence}.
