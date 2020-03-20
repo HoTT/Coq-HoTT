@@ -11,8 +11,6 @@ Git and make can be installed through your package manager.  On Debian
 or any distribution with `apt-get` you can run the script
 `./etc/install_coq_deps.sh` in the HoTT directory (see step 2) which
 installs some dependencies automatically.
-(Beware: on Ubuntu you also need the dependencies `m4` and `autoconf`,
-and `libgtksourceviewmm-3.0-dev`.)
 
 On OSX you can instead use the brew package manager:
 
