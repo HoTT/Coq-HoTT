@@ -347,3 +347,42 @@ Global Instance isequiv_int_succ : IsEquiv int_succ | 0
 
 Definition equiv_int_succ : Int <~> Int
   := Build_Equiv _ _ _ isequiv_int_succ.
+
+(** ** Commutativity of multplication *)
+Lemma int_mul_comm n m : n * m = m * n.
+Proof.
+  destruct n, m; cbn; try reflexivity;
+  apply ap; apply pos_mul_comm.
+Qed.
+
+(** Distributivity of multiplication over addition *)
+
+Lemma int_pos_sub_mul_pos n m p
+  : int_pos_sub n m * pos p = int_pos_sub (n * p)%pos (m * p)%pos.
+Proof.
+Admitted.
+
+Lemma int_pos_sub_mul_neg n m p
+  : int_pos_sub m n  * neg p = int_pos_sub (n * p)%pos (m * p)%pos.
+Proof.
+Admitted.
+
+Lemma int_mul_add_distr_r n m p : (n + m) * p = n * p + m * p.
+Proof.
+  induction p; destruct n, m; cbn; trivial; try f_ap;
+  try apply pos_mul_add_distr_r;
+  try apply int_pos_sub_mul_neg;
+  try apply int_pos_sub_mul_pos;
+  apply int_mul_0_r.
+Qed.
+
+Lemma int_mul_add_distr_l n m p : n * (m + p) = n * m + n * p.
+Proof.
+  rewrite 3 (int_mul_comm n); apply int_mul_add_distr_r.
+Qed.
+
+Lemma int_mul_assoc n m p : n * (m * p) = n * m * p.
+Proof.
+  destruct n, m, p; cbn; trivial; f_ap; apply pos_mul_assoc.
+Qed.
+

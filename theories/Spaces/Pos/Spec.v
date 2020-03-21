@@ -245,15 +245,15 @@ Proof.
   apply pos_add_comm.
 Qed.
 
-Theorem mul_add_distr_r p q r :
+Theorem pos_mul_add_distr_r p q r :
   (p + q) * r = p * r + q * r.
 Proof.
   rewrite 3 (pos_mul_comm _ r); apply pos_mul_add_distr_l.
 Qed.
 
 (** ** Associativity of multiplication *)
-Theorem mul_assoc p q r : p * (q * r) = p * q * r.
+Theorem pos_mul_assoc p q r : p * (q * r) = p * q * r.
 Proof.
   induction p; simpl; rewrite ?IHp; trivial.
-  by rewrite mul_add_distr_r.
+  by rewrite pos_mul_add_distr_r.
 Qed.
