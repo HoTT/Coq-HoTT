@@ -77,8 +77,8 @@ Proof.
   rapply (simple_distribute_r a b c).
 Defined.
 
-Definition rng_zero_mul {A : CRing} (a : A) : 0 * a = 0 :=
-left_absorb a.
+Definition rng_zero_mul {A : CRing} (a : A) : 0 * a = 0
+  := left_absorb a.
 
-Definition rng_mul_zero {A : CRing} (a : A) : a * 0 = 0 :=
-right_absorb a.
+Definition rng_mul_zero {A : CRing} (a : A) : a * 0 = 0
+  := right_absorb a.
