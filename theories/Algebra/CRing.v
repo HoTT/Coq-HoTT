@@ -82,3 +82,9 @@ Definition rng_zero_mul {A : CRing} (a : A) : 0 * a = 0
 
 Definition rng_mul_zero {A : CRing} (a : A) : a * 0 = 0
   := right_absorb a.
+
+(** Underlying abelian groups of rings *)
+Definition abgroup_cring : CRing -> AbGroup
+  := fun A => Build_AbGroup A _ _ _ _.
+
+Coercion abgroup_cring : CRing >-> AbGroup.

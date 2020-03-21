@@ -3,6 +3,8 @@ Require Import Truncations.
 Require Import HIT.Coeq.
 Require Import Algebra.Group.
 Require Import Algebra.Subgroup.
+Require Import Colimits.Quotient.
+Require Import Algebra.QuotientGroup.
 Require Import Cubical.
 Require Import WildCat.
 

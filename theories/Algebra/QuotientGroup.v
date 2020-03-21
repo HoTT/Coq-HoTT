@@ -16,7 +16,7 @@ Section GroupCongruenceQuotient.
 
   Definition CongruenceQuotient := G / R.
 
-  Instance congquot_sgop : SgOp CongruenceQuotient.
+  Global Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
     intros x.
     srapply Quotient_rec.
@@ -37,12 +37,12 @@ Section GroupCongruenceQuotient.
     by apply iscong.
   Defined.
 
-  Instance congquot_mon_unit : MonUnit CongruenceQuotient.
+  Global Instance congquot_mon_unit : MonUnit CongruenceQuotient.
   Proof.
     apply class_of, mon_unit.
   Defined.
 
-  Instance congquot_negate : Negate CongruenceQuotient.
+  Global Instance congquot_negate : Negate CongruenceQuotient.
   Proof.
     srapply Quotient_functor.
     1: apply negate.
@@ -59,7 +59,7 @@ Section GroupCongruenceQuotient.
     by symmetry.
   Defined.
 
-  Instance congquot_sgop_associative : Associative congquot_sgop.
+  Global Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
     intros x y.
     srapply Quotient_ind_hprop; intro a; revert y.
@@ -68,32 +68,32 @@ Section GroupCongruenceQuotient.
     simpl; by rewrite associativity.
   Defined.
 
-  Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
+  Global Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
 
-  Instance congquot_leftidentity
+  Global Instance congquot_leftidentity
     : LeftIdentity congquot_sgop congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_identity.
   Defined.
 
-  Instance congquot_rightidentity
+  Global Instance congquot_rightidentity
     : RightIdentity congquot_sgop congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite right_identity.
   Defined.
 
-  Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
+  Global Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
 
-  Instance quotientgroup_leftinverse
+  Global Instance quotientgroup_leftinverse
     : LeftInverse congquot_sgop congquot_negate congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_inverse.
   Defined.
 
-  Instance quotientgroup_rightinverse
+  Global Instance quotientgroup_rightinverse
     : RightInverse congquot_sgop congquot_negate congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
@@ -110,13 +110,13 @@ Section QuotientGroup.
 
   Context (G : Group) (N : Subgroup G) `{!IsNormalSubgroup N}.
 
-  Instance iscongruence_in_cosetL: IsCongruence in_cosetL.
+  Global Instance iscongruence_in_cosetL: IsCongruence in_cosetL.
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetL_cong.
   Defined.
 
-  Instance iscongruence_in_cosetR: IsCongruence in_cosetR.
+  Global Instance iscongruence_in_cosetR: IsCongruence in_cosetR.
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetR_cong.
@@ -126,7 +126,6 @@ Section QuotientGroup.
   Definition QuotientGroup : Group.
   Proof.
     rapply (Build_Group (G / in_cosetL)).
-    apply isgroup_quotientgroup.
   Defined.
 
 End QuotientGroup.
