@@ -29,6 +29,9 @@ Class CRing := {
   cring_isring : IsRing cring_type;
 }.
 
+(** [issig_CRing] is a standard lemma associated with records which shows that a given record, in this case [CRing] is equivalent to a sigma type. We use records/classes because they are more performant than nested sigma types, especially ones this large. We have a special tactic [issig] that can automatically prove these kinds of lemmas so we only have to write succinct lemmas like this. *)
+Definition issig_CRing : _ <~> CRing := ltac:(issig).
+
 (** We coerce rings to their underlying type. *)
 Coercion cring_type : CRing >-> Sortclass.
 (** All fields which are typeclasses are global instances *)
@@ -39,6 +42,9 @@ Class CRingHomomorphism (A B : CRing) := {
   rng_homo_map : A -> B;
   rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
 }.
+
+Definition issig_CRingHomomorphism {A B : CRing} : _ <~> CRingHomomorphism A B
+  := ltac:(issig).
 
 (** We coerce ring homomorphisms to their underlyig maps *)
 Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
