@@ -7,7 +7,7 @@ Require Export Classes.theory.rings.
 
 (** TODO: in reality we should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup.
 
-But since 
+But since we are only interested in commutative rings for the time being, it makes sense to only consider them.
 *)
 
 
@@ -59,6 +59,5 @@ Proof.
   1: exact (f o g).
   rapply compose_sr_morphism.
 Defined.
-
 
 
