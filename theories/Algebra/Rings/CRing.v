@@ -1,8 +1,15 @@
 Require Import Basics Types.
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbelianGroup.
+Require Export Classes.theory.rings.
 
 (** Theory of commutative rings *)
+
+(** TODO: in reality we should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup.
+
+But since 
+*)
+
 
 (** A commutative ring consists of the following data *)
 Class CRing := {
@@ -33,9 +40,19 @@ Class CRingHomomorphism (A B : CRing) := {
   rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
 }.
 
+(** We coerce ring homomorphisms to their underlyig maps *)
+Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
+(** And we make rng_homo_ishomo a global instance. *)
+Global Existing Instance rng_homo_ishomo.
 
-
-
+Definition rng_homo_compose {A B C : CRing}
+  (f : CRingHomomorphism B C) (g : CRingHomomorphism A B)
+  : CRingHomomorphism A C.
+Proof.
+  snrapply Build_CRingHomomorphism.
+  1: exact (f o g).
+  rapply compose_sr_morphism.
+Defined.
 
 
 
