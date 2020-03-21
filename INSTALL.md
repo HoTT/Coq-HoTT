@@ -35,7 +35,14 @@ You can then initialize opam with
     opam init
 
 It is recommended to allow opam to change your .profile file when it
-asks for permission.  You may also need to run
+asks for permission.
+
+After that switch to ocaml version 4.07.1 using
+
+    opam switch create 4.07.1
+    opam switch 4.07.1
+
+You may also need to run
 
     eval `opam env`
 
@@ -43,10 +50,6 @@ to continue working in the same terminal.  Then you can install the
 required dependencies:
 
     opam install ocaml camlp5 lablgtk3 lablgtk3-sourceview3 ocamlfind num
-
-If opam complains that you do not have a switch installed, run
-
-    opam switch create 4.0.7`.
 
 [1]:https://opam.ocaml.org/doc/Install.html
 
