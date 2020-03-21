@@ -43,6 +43,8 @@ Class CRingHomomorphism (A B : CRing) := {
   rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
 }.
 
+Arguments Build_CRingHomomorphism {_ _} _ _.
+
 Definition issig_CRingHomomorphism {A B : CRing} : _ <~> CRingHomomorphism A B
   := ltac:(issig).
 
@@ -50,6 +52,9 @@ Definition issig_CRingHomomorphism {A B : CRing} : _ <~> CRingHomomorphism A B
 Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
 (** And we make rng_homo_ishomo a global instance. *)
 Global Existing Instance rng_homo_ishomo.
+
+Definition rng_homo_id (A : CRing) : CRingHomomorphism A A
+  := Build_CRingHomomorphism idmap _.
 
 Definition rng_homo_compose {A B C : CRing}
   (f : CRingHomomorphism B C) (g : CRingHomomorphism A B)
@@ -60,4 +65,20 @@ Proof.
   rapply compose_sr_morphism.
 Defined.
 
+Lemma rng_dist_l {A : CRing} (a b c : A)
+  : a * (b + c) = a * b + a * c.
+Proof.
+  rapply (simple_distribute_l a b c).
+Defined.
 
+Lemma rng_dist_r {A : CRing} (a b c : A)
+  : (a + b) * c = a * c + b * c.
+Proof.
+  rapply (simple_distribute_r a b c).
+Defined.
+
+Definition rng_zero_mul {A : CRing} (a : A) : 0 * a = 0 :=
+left_absorb a.
+
+Definition rng_mul_zero {A : CRing} (a : A) : a * 0 = 0 :=
+right_absorb a.
