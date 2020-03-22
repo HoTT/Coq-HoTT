@@ -360,12 +360,55 @@ Qed.
 Lemma int_pos_sub_mul_pos n m p
   : int_pos_sub n m * pos p = int_pos_sub (n * p)%pos (m * p)%pos.
 Proof.
-Admitted.
+  rewrite int_mul_comm.
+  rewrite 2 (pos_mul_comm _ p).
+  induction p.
+  { rewrite 2 pos_mul_1_l.
+    apply int_mul_1_l. }
+  { cbn.
+    rewrite <- IHp.
+    set (int_pos_sub n m) as k.
+    by destruct k. }
+  cbn.
+  rewrite int_pos_sub_add.
+  rewrite <- (int_pos_sub_negation _ (x0 _)).
+  rewrite int_pos_sub_add.
+  rewrite int_negation_add_distr.
+  rewrite int_pos_sub_negation.
+  rewrite int_add_assoc.
+  cbn.
+  rewrite <- IHp.
+  set (int_pos_sub n m) as k.
+  by destruct k.
+Qed.
 
 Lemma int_pos_sub_mul_neg n m p
   : int_pos_sub m n  * neg p = int_pos_sub (n * p)%pos (m * p)%pos.
 Proof.
-Admitted.
+  rewrite int_mul_comm.
+  rewrite 2 (pos_mul_comm _ p).
+  induction p.
+  { rewrite 2 pos_mul_1_l.
+    rewrite <- int_pos_sub_negation.
+    by destruct (int_pos_sub n m). }
+  { cbn.
+    rewrite <- IHp.
+    rewrite <- int_pos_sub_negation.
+    set (int_pos_sub n m) as k.
+    by destruct k. }
+  cbn.
+  rewrite int_pos_sub_add.
+  rewrite <- (int_pos_sub_negation _ (x0 _)).
+  rewrite int_pos_sub_add.
+  rewrite int_negation_add_distr.
+  rewrite int_pos_sub_negation.
+  rewrite int_add_assoc.
+  cbn.
+  rewrite <- IHp.
+  rewrite <- (int_pos_sub_negation m).
+  set (int_pos_sub m n) as k.
+  by destruct k.
+Qed.
 
 Lemma int_mul_add_distr_r n m p : (n + m) * p = n * p + m * p.
 Proof.
