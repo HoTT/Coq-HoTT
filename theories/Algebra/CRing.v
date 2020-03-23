@@ -30,6 +30,14 @@ Record CRing := {
   cring_isring : IsRing cring_type;
 }.
 
+Arguments cring_type {_}.
+Arguments cring_plus {_}.
+Arguments cring_mult {_}.
+Arguments cring_zero {_}.
+Arguments cring_one {_}.
+Arguments cring_negate {_}.
+Arguments cring_isring {_}.
+
 (** [issig_CRing] is a standard lemma associated with records which shows that a given record, in this case [CRing] is equivalent to a sigma type. We use records/classes because they are more performant than nested sigma types, especially ones this large. We have a special tactic [issig] that can automatically prove these kinds of lemmas so we only have to write succinct lemmas like this. *)
 Definition issig_CRing : _ <~> CRing := ltac:(issig).
 
