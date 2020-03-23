@@ -471,12 +471,12 @@ Lemma int_peano_ind_beta_int_pred
 Proof.
 Admitted.
 
-Lemma int_peano_ind_beta_pos_succ
+(* Lemma int_peano_ind_beta_pos_succ
   (Q : Int -> Type) (N : forall x, Q x -> Q (int_pred x))
   (B : Q 0) (P : forall x, Q x -> Q (int_succ x)) (z : Pos)
   : int_peano_ind Q N B P (pos (pos_succ z))
     = P (pos z) (int_peano_ind Q N B P (pos z)).
 Proof.
-Admitted.
+Admitted. *)
 
 
