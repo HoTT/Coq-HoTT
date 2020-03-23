@@ -1,8 +1,8 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Algebra.Group.
-Require Import Algebra.Subgroup.
+Require Import Algebra.Groups.Group.
+Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Congruence.
-Require Import Colimits.Quotient.
+Require Export Colimits.Quotient.
 
 (** * Quotient groups *)
 

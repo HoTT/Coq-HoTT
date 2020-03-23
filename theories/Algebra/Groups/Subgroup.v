@@ -1,7 +1,5 @@
-Require Import Basics.
-Require Import Types.
-Require Import HSet.
-Require Import Algebra.Group.
+Require Import Basics Types HSet.
+Require Import Algebra.Groups.Group.
 
 Local Open Scope mc_mult_scope.
 Generalizable Variables G H A B C N f g.

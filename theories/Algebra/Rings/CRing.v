@@ -1,7 +1,7 @@
 Require Import Basics Types.
 Require Import WildCat.
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Algebra.AbelianGroup.
+Require Import Algebra.Groups.AbelianGroup.
 Require Export Classes.theory.rings.
 
 (** Theory of commutative rings *)

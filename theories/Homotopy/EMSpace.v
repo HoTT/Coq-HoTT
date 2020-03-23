@@ -1,9 +1,6 @@
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.
+Require Import Basics Types Pointed.
 Require Import Cubical.DPath.
-Require Import Algebra.Group.
-Require Import Algebra.AbelianGroup.
+Require Import Algebra.Groups.
 Require Import Truncations.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.

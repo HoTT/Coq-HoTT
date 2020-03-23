@@ -1,30 +1,8 @@
 Require Import Basics Types.
-Require Import Algebra.CRing.
-Require Import Algebra.Group.
-Require Import Algebra.AbelianGroup.
-Require Import Algebra.Subgroup.
-Require Import Algebra.QuotientGroup.
-Require Import Colimits.Quotient.
 Require Import Algebra.Congruence.
-
-
-Local Open Scope mc_scope.
-
-(** In this file we Ideals *)
-
-(** An additive subgroup I of a ring R is an ideal when: *)
-Class IsIdeal {R : CRing} (I : Subgroup R) := {
-  (** Forall r : R and x : I, there exists an a : I, such that a = r * x inside R *)
-  isideal : forall r x, exists a, issubgroup_incl a = r * issubgroup_incl x;
-}.
-
-Class Ideal (R : CRing) := {
-  ideal_subgroup : Subgroup R;
-  ideal_isideal : IsIdeal ideal_subgroup;
-}.
-
-Coercion ideal_subgroup : Ideal >-> Subgroup.
-Global Existing Instances ideal_isideal.
+Require Import Algebra.Groups.
+Require Import Algebra.Rings.CRing.
+Require Import Algebra.Rings.Ideal.
 
 Section QuotientRing.
 

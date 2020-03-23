@@ -1,40 +1,13 @@
 Require Import Basics Types.
 Require Import Spaces.Int Spaces.Pos.
 Require Import Algebra.Groups.
-Require Import Algebra.Rings.
+Require Import Algebra.Rings.CRing.
 Require Import WildCat.
-
-(** The group of integers. *)
-
-Definition Z : AbGroup.
-Proof.
-  srapply (Build_AbGroup Int); repeat split.
-  + (** Operation *)
-    exact int_add.
-  + (** Unit *)
-    exact 0%int.
-  + (** Negation *)
-    exact int_negation.
-  + (** IsHSet *)
-    exact _.
-  + (** Associativity *)
-    exact int_add_assoc.
-  + (** Left identity *)
-    exact int_add_0_l.
-  + (** Right identity *)
-    exact int_add_0_r.
-  + (** Left inverse *)
-    exact int_add_negation_l.
-  + (** Right inverse *)
-    exact int_add_negation_r.
-  + (** Commutativity *)
-    exact int_add_comm.
-Defined.
 
 (** The ring of integers *)
 Definition cring_Z : CRing.
 Proof.
-  snrapply (Build_CRing Z).
+  snrapply (Build_CRing abgroup_Z).
   6: split; [exact _ | repeat split | ].
   + (** Multiplication *)
     exact int_mul.
