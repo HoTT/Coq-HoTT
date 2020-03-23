@@ -273,3 +273,21 @@ Proof.
   apply grp_homo_op.
 Defined.
 
+Definition isnormalsubgroup_of_cong_mem {G : Group} (N : Subgroup G)
+  (h : forall g : G, forall n : N, exists m : N, - g * issubgroup_incl n * g = issubgroup_incl m)
+  : IsNormalSubgroup N.
+ Proof.
+  srapply Build_IsNormalSubgroup.
+  intros x y.
+  apply equiv_iff_hprop; intros [m p].
+  1: specialize (h (-y) (-m)).
+  2: specialize (h y (-m)).
+  1-2: destruct h as [m' p'].
+  1-2: exists m'.
+  1-2: rewrite <- p'.
+  1-2: f_ap.
+  1-2: rewrite grp_homo_inv, p, negate_sg_op, involutive. 
+  1: rewrite associativity, involutive, (negate_r G y).
+  2: rewrite (associativity (-y)), (negate_l G y).
+  1-2: rewrite (left_identity _); reflexivity.
+Defined.

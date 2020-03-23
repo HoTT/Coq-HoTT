@@ -54,3 +54,45 @@ Proof.
   hnf; cbn; intros x y p.
   by apply path_sigma_hprop.
 Defined.
+
+Definition grp_homo_kernel_pr1 {A B : Group} (f : A $-> B)
+  : (grp_kernel f) $-> A.
+Proof.
+  srapply Build_GroupHomomorphism.
+  - apply pr1.
+  - intros a b; reflexivity.
+Defined.
+
+Global Instance isinjective_grp_homo_kernel_pr1 {A B : Group}
+  (f : A $-> B) : IsInjective (grp_homo_kernel_pr1 f).
+Proof.
+  intros a b.
+  apply path_sigma_hprop.
+Defined.
+
+Global Instance issubgroup_grp_kernel {A B : Group}
+  (f : A $-> B) : IsSubgroup (grp_kernel f) A.
+Proof.
+  srapply Build_IsSubgroup.
+  + exact (grp_homo_kernel_pr1 f).
+  + exact (isinjective_grp_homo_kernel_pr1 _).
+Defined.
+
+Definition Kernel {A B : Group} (f : A $-> B)
+  : Subgroup A := Build_Subgroup A (grp_kernel f) _.
+
+Locate IsNormalSubgroup.
+
+Global Instance isnormal_kernel {A B : Group} (f : A $-> B)
+  : IsNormalSubgroup (Kernel f).
+Proof.
+  apply isnormalsubgroup_of_cong_mem.
+  intros g n.
+  srefine ((_ ; _ ); _).
+  3: reflexivity.
+  simpl.
+  rewrite grp_homo_op, grp_homo_op, grp_homo_inv.
+  rewrite (pr2 n), (right_identity (- f g)).
+  rewrite (negate_l _).
+  reflexivity.
+Defined.
