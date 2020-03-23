@@ -63,7 +63,7 @@ Defined.
 (* Fundamental group of Torus *)
 
 Theorem Pi1Torus `{Univalence}
-  : GroupIsomorphism (Pi 1 T) (group_prod abgroup_Z abgroup_Z).
+  : GroupIsomorphism (Pi 1 T) (grp_prod abgroup_Z abgroup_Z).
 Proof.
   etransitivity.
   { apply groupiso_pi_functor.

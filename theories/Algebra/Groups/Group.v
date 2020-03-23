@@ -8,6 +8,8 @@ Require Basics.Utf8.
 
 Generalizable Variables G H A B C f g.
 
+Declare Scope group_scope.
+
 (** ** Groups *)
 
 Local Open Scope pointed_scope.
@@ -174,6 +176,21 @@ Coercion grp_iso_homo : GroupIsomorphism >-> GroupHomomorphism.
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
 
+Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
+  (f g : GroupIsomorphism G H)
+  : f == g <~> f = g.
+Proof.
+  refine ((equiv_ap (issig_GroupIsomorphism G H)^-1 _ _)^-1 oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_grouphomomorphism.
+Defined.
+
+Definition ishset_groupisomorphism `{F : Funext} {G H : Group}
+  : IsHSet (GroupIsomorphism G H).
+Proof.
+  intros f g; apply (trunc_equiv' _ (equiv_path_groupisomorphism _ _)).
+Defined.
+
 Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
@@ -309,9 +326,16 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
+(** Trivial group *)
+Global Instance grp_trivial : Group.
+Proof.
+  refine (Build_Group Unit (fun _ _ => tt) tt (fun _ => tt) _).
+  repeat split; try exact _; by intros [].
+Defined.
+
 (** * Direct product of group *)
 
-Definition group_prod : Group -> Group -> Group.
+Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
   srapply (Build_Group (G * H)).
@@ -353,7 +377,7 @@ Defined.
 
 Definition grp_iso_prod {A B C D : Group}
   : GroupIsomorphism A B -> GroupIsomorphism C D
-    -> GroupIsomorphism (group_prod A C) (group_prod B D).
+    -> GroupIsomorphism (grp_prod A C) (grp_prod B D).
 Proof.
   intros f g.
   srapply Build_GroupIsomorphism'.
@@ -426,4 +450,26 @@ Proof.
   + intros ????; apply eisretr.
   + intros G H f g p q.
     exact (isequiv_adjointify f g p q).
+Defined.
+
+Global Instance isinitial_grp_trivial : IsInitial grp_trivial.
+Proof.
+  intro G.
+  snrefine (_;_).
+  { snrapply Build_GroupHomomorphism.
+    1: exact (fun _ => group_unit).
+    intros ??; symmetry; apply left_identity. }
+  intros g [].
+  apply (grp_homo_unit g).
+Defined.
+
+Global Instance isterminal_grp_trivial : IsTerminal grp_trivial.
+Proof.
+  intro G.
+  snrefine (_;_).
+  { snrapply Build_GroupHomomorphism.
+    1: exact (fun _ => tt).
+    intros ??; symmetry; apply left_identity. }
+  intros g x.
+  apply path_contr.
 Defined.

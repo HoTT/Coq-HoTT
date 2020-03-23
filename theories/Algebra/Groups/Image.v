@@ -68,3 +68,6 @@ Proof.
   (** We know that the first components of this sigma type are equal and since the second component is a proposition we are done. *)
   apply path_sigma_hprop.
 Defined.
+
+Global Instance ishset_grp_image {A B : Group} (f : A $-> B)
+  : IsHSet (grp_image f) := _.
