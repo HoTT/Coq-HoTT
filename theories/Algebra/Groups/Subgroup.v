@@ -8,9 +8,11 @@ Generalizable Variables G H A B C N f g.
 
 (** The property of being a subgroup *)
 Class IsSubgroup (G H : Group) := {
-  issubgroup_incl :> GroupHomomorphism G H;
-  isinj_issubgroup_incl :> IsInjective issubgroup_incl;
+  issubgroup_incl : GroupHomomorphism G H;
+  isinj_issubgroup_incl : IsInjective issubgroup_incl;
 }.
+
+Global Existing Instance isinj_issubgroup_incl.
 
 (* Subgroup inclusion is an embedding. *)
 Global Instance isembedding_issubgroup_incl `{!IsSubgroup G H}
@@ -25,11 +27,12 @@ Definition issig_issubgroup G H : _ <~> IsSubgroup G H
 
 (** A subgroup of a group H is a group G which is a subgroup of H. *) 
 Class Subgroup (H : Group) := {
-  subgroup_group :> Group;
-  subgroup_issubgroup :> IsSubgroup subgroup_group H;
+  subgroup_group : Group;
+  subgroup_issubgroup : IsSubgroup subgroup_group H;
 }.
 
 Coercion subgroup_group : Subgroup >-> Group.
+Global Existing Instance subgroup_issubgroup.
 
 Section Cosets.
 
@@ -192,7 +195,7 @@ Class IsNormalSubgroup {G : Group} (N : Subgroup G) := {
 
 (* Inverses are then respected *)
 Definition in_cosetL_inv {G : Group} `{!IsNormalSubgroup N}
-  : forall x y, in_cosetL (-x) (-y) <~> in_cosetL x y.
+  : forall x y : G, in_cosetL (-x) (-y) <~> in_cosetL x y.
 Proof.
   intros x y.
   refine (_ oE (in_cosetL_unit _ _)^-1).
@@ -203,7 +206,7 @@ Proof.
 Defined.
 
 Definition in_cosetR_inv {G : Group} `{!IsNormalSubgroup N}
-  : forall x y, in_cosetR (-x) (-y) <~> in_cosetR x y.
+  : forall x y : G, in_cosetR (-x) (-y) <~> in_cosetR x y.
 Proof.
   intros x y.
   refine (_ oE (in_cosetR_unit _ _)^-1).
@@ -242,7 +245,7 @@ Defined.
 
 (* This let's us prove that left and right coset relations are congruences. *)
 Definition in_cosetL_cong {G : Group} `{!IsNormalSubgroup N}
-  : forall x x' y y', in_cosetL x y -> in_cosetL x' y' -> in_cosetL (x * x') (y * y').
+  : forall x x' y y' : G, in_cosetL x y -> in_cosetL x' y' -> in_cosetL (x * x') (y * y').
 Proof.
   intros x x' y y' [a p] [b q].
   eexists ?[c].
@@ -258,7 +261,7 @@ Proof.
 Defined.
 
 Definition in_cosetR_cong {G : Group} `{!IsNormalSubgroup N}
-  : forall x x' y y', in_cosetR x y -> in_cosetR x' y' -> in_cosetR (x * x') (y * y').
+  : forall x x' y y' : G, in_cosetR x y -> in_cosetR x' y' -> in_cosetR (x * x') (y * y').
 Proof.
   intros x x' y y' [a p] [b q].
   eexists ?[c].

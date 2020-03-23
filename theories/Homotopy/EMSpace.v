@@ -119,7 +119,7 @@ Section LicataFinsterLemma.
   Local Definition merid_mu (x y : X)
     : tr (n:=1) (merid (x * y)) = tr (merid y @ (merid mon_unit)^ @ merid x).
   Proof.
-    set (Q := fun a b => tr (n:=1) (merid (a * b))
+    set (Q := fun a b : X => tr (n:=1) (merid (a * b))
       = tr (merid b @ (merid mon_unit)^ @ merid a)).
     srapply (@wedge_incl_elim_uncurried _ (-1) (-1) _
       mon_unit _ _ mon_unit _ Q _ _ x y).
@@ -149,7 +149,7 @@ Section LicataFinsterLemma.
     rewrite <- coh.
     rewrite ? concat_p_pp.
     apply whiskerR.
-    generalize (merid mon_unit).
+    generalize (merid (mon_unit : X)).
     by intros [].
   Defined.
 

@@ -18,16 +18,23 @@ Local Open Scope mc_mult_scope.
 (** * Definition of Group *)
 
 (** A group consists of a type, and operation on that type, and unit and an inverse, such that they satisfy the group axioms in IsGroup. *)
-Class Group := {
+Record Group := {
   group_type : Type;
-  group_sgop :> SgOp group_type;
-  group_unit :> MonUnit group_type;
-  group_inverse :> Negate group_type;
-  group_isgroup :> IsGroup group_type;
+  group_sgop : SgOp group_type;
+  group_unit : MonUnit group_type;
+  group_inverse : Negate group_type;
+  group_isgroup : IsGroup group_type;
 }.
+
+Arguments group_type {_}.
+Arguments group_sgop {_}.
+Arguments group_unit {_}.
+Arguments group_inverse {_}.
+Arguments group_isgroup {_}.
 
 (** We coerce groups back to types. *)
 Coercion group_type : Group >-> Sortclass.
+Global Existing Instances group_sgop group_unit group_inverse group_isgroup.
 
 Definition issig_group : _ <~> Group
   := ltac:(issig).
@@ -77,7 +84,7 @@ Defined.
 (** Definition of Group Homomorphism *)
 
 (* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
-Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
+Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
   grp_homo_map : G -> H;
   grp_homo_ishomo :> IsMonoidPreserving grp_homo_map;
 }.
@@ -89,6 +96,7 @@ Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
   := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
+Global Existing Instance grp_homo_ishomo.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).
@@ -166,12 +174,13 @@ Proof.
 Defined.
 
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
-Class GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
-  grp_iso_homo :> GroupHomomorphism G H;
-  isequiv_group_iso :> IsEquiv grp_iso_homo;
+Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
+  grp_iso_homo : GroupHomomorphism G H;
+  isequiv_group_iso : IsEquiv grp_iso_homo;
 }.
 
 Coercion grp_iso_homo : GroupIsomorphism >-> GroupHomomorphism.
+Global Existing Instance isequiv_group_iso.
 
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
@@ -231,7 +240,7 @@ Global Instance transitive_groupisomorphism
 Proof.
   intros G H K f g.
   srapply Build_GroupIsomorphism.
-  1: srapply grp_homo_compose.
+  1: srapply (grp_homo_compose g f).
   exact _.
 Defined.
 
@@ -327,7 +336,7 @@ Proof.
 Defined.
 
 (** Trivial group *)
-Global Instance grp_trivial : Group.
+Definition grp_trivial : Group.
 Proof.
   refine (Build_Group Unit (fun _ _ => tt) tt (fun _ => tt) _).
   repeat split; try exact _; by intros [].

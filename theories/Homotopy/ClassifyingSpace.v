@@ -24,17 +24,19 @@ Module Export ClassifyingSpace.
 
   Section ClassifyingSpace.
 
-    Private Inductive ClassifyingSpace {G : Group} :=
-      | bbase : ClassifyingSpace.
+    Private Inductive ClassifyingSpace (G : Group) :=
+      | bbase : ClassifyingSpace G.
 
     Context {G : Group}.
 
-    Axiom bloop : G -> bbase = bbase.
+    Axiom bloop : G -> bbase G = bbase G.
+
+    Global Arguments bbase {_}.
 
     Axiom bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
 
     Global Instance istrunc_ClassifyingSpace
-      : IsTrunc 1 ClassifyingSpace.
+      : IsTrunc 1 (ClassifyingSpace G).
     Proof. Admitted.
 
   End ClassifyingSpace.
@@ -158,7 +160,7 @@ End ClassifyingSpaceNotation.
 Import ClassifyingSpaceNotation.
 
 (** We can show that [bloop] takes the unit of the group to reflexivity. *)
-Definition bloop_id {G : Group} : bloop mon_unit = idpath.
+Definition bloop_id {G : Group} : bloop (mon_unit : G) = idpath.
 Proof.
   symmetry.
   apply (cancelL (bloop mon_unit)).
@@ -168,7 +170,7 @@ Proof.
 Defined.
 
 (** We can show that [bloop] "preserves inverses" by taking inverses in G to inverses of paths in BG *)
-Definition bloop_inv {G : Group} : forall x, bloop (-x) = (bloop x)^.
+Definition bloop_inv {G : Group} : forall x : G, bloop (-x) = (bloop x)^.
 Proof.
   intro x.
   refine (_ @ concat_p1 _).

@@ -86,8 +86,8 @@ Section Abel.
   (** The type Abel is defined to be the set coequalizer of the following maps G^3 -> G. *)
   Definition Abel
     := Tr 0 (Coeq
-      (uncurry2 (fun a b c => a * (b * c)))
-      (uncurry2 (fun a b c => a * (c * b)))).
+      (uncurry2 (fun a b c : G => a * (b * c)))
+      (uncurry2 (fun a b c : G => a * (c * b)))).
 
   (** We have a natural map from G to Abel G. *)
   Definition ab : G -> Abel.
@@ -294,7 +294,7 @@ Section AbelGroup.
 End AbelGroup.
 
 (** We can easily prove that ab is a surjection. *)
-Global Instance issurj_ab {G : Group} : IsSurjection ab.
+Global Instance issurj_ab {G : Group} : IsSurjection (@ab G).
 Proof.
   apply BuildIsSurjection.
   Abel_ind_hprop x.
