@@ -340,6 +340,8 @@ theories/Algebra/Groups/Group.v
 theories/Algebra/Groups/Subgroup.v
 theories/Algebra/Groups/QuotientGroup.v
 theories/Algebra/Groups/AbelianGroup.v
+theories/Algebra/Groups/Image.v
+theories/Algebra/Groups/Kernel.v
 theories/Algebra/Groups/Z.v
 
 #
