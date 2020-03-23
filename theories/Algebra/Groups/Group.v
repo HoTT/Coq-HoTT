@@ -262,7 +262,7 @@ Proof.
         (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
        _ _).
   all: intros [[]]; reflexivity.
-Defined.  
+Defined.
 
 (** * Simple group equivalences *)
 

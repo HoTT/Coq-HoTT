@@ -29,16 +29,6 @@ Defined.
 
 Local Open Scope mc_scope.
 
-(** TODO: move to Pos.Spec *)
-Definition pos_peano_rec (P : Type)
-  : P -> (Core.Pos -> P -> P) -> Core.Pos -> P
-  := pos_peano_ind (fun _ => P).
-
-Definition pos_peano_rec_beta_pos_succ (P : Type)
-  (a : P) (f : Core.Pos -> P -> P) (p : Core.Pos)
-  : pos_peano_rec P a f (pos_succ p) = f p (pos_peano_rec P a f p)
-  := pos_peano_ind_beta_pos_succ (fun _ => P) a f p.
-
 (** Standard integer operations on commutative rings *)
 Definition cring_int_mul {R : CRing} (z : Int) : R
   := match z with
@@ -146,8 +136,8 @@ Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
       (cring_int_mul : cring_Z -> R).
 Proof.
   hnf. intros [x| |x] [y| |y].
-  2,5,8: symmetry; apply rng_mul_zero.
-  3,4: cbn; symmetry; rewrite (commutativity 0); apply rng_mul_zero.
+  2,5,8: symmetry; apply rng_mult_zero_r.
+  3,4: cbn; symmetry; rewrite (commutativity 0); apply rng_mult_zero_r.
   { simpl.
     revert y.
     induction x as [|x IHx] using pos_peano_ind; intro y.
@@ -172,31 +162,6 @@ Proof.
   repeat split; exact _.
 Defined.
 
-(** TODO: move to CRing *)
-Section Preserves.
-
-  Context (A B : CRing) (f : A $-> B) (x y : A).
-
-  Definition rng_homo_plus : f (x + y) = f x + f y
-    := preserves_plus x y.
-
-  Definition rng_homo_mult : f (x * y) = f x * f y
-    := preserves_mult x y.
-
-  Definition rng_homo_zero : f 0 = 0
-    := preserves_0.
-
-  Definition rng_homo_one : f 1 = 1
-    := preserves_1.
-
-  Definition rng_homo_negate : f (-x) = -(f x)
-    := preserves_negate x.
-
-  Definition rng_homo_minus_one : f (-1) = -1
-    := preserves_negate 1%mc @ ap negate preserves_1.
-
-End Preserves.
-
 (** The integers are the initial commutative ring *)
 Global Instance isinitial_cring_Z : IsInitial cring_Z.
 Proof.
@@ -215,10 +180,3 @@ Proof.
     rewrite IHx.
     by rewrite rng_homo_one.
 Defined.
-
-
-
-
-
-
-

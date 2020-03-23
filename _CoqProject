@@ -321,8 +321,6 @@ theories/Spectra/Coinductive.v
 #   Algebra
 #
 
-
-
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
