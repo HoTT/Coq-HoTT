@@ -220,7 +220,7 @@ Defined.
 (** Homotopy groups preserve products *)
 Lemma pi_prod (X Y : pType) {n : nat}
   : GroupIsomorphism (Pi n.+1 (X * Y))
-      (group_prod (Pi n.+1 X) (Pi n.+1 Y)).
+      (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
   srapply Build_GroupIsomorphism'.
   { refine (equiv_O_prod_cmp _ _ _ oE _).
