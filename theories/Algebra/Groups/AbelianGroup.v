@@ -458,3 +458,39 @@ Proof.
   intros g x; cbn.
   apply path_unit.
 Defined.
+
+Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G)
+  : AbGroup := Build_AbGroup (QuotientGroup G H) _ _ _ _.
+
+
+(** The wild category of abelian groups *)
+
+Global Instance isgraph_abgroup : IsGraph AbGroup
+  := induced_graph group_abgroup.
+
+Global Instance is01cat_AbGroup : Is01Cat AbGroup
+  := induced_01cat group_abgroup.
+
+Global Instance is01cat_GroupHomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
+  := induced_01cat (@grp_homo_map A B).
+
+Global Instance is0gpd_GroupHomomorphism {A B : AbGroup}: Is0Gpd (A $-> B)
+  := induced_0gpd (@grp_homo_map A B).
+
+(** AbGroup forms a 1Cat *)
+Global Instance is1cat_abgroup : Is1Cat AbGroup
+  := induced_1cat _.
+
+Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
+  := induced_hasmorext _.
+
+Global Instance hasequivs_abgroup : HasEquivs AbGroup
+  := induced_hasequivs _.
+
+(** Zero object of AbGroup *)
+
+Definition TrivialAbGroup : AbGroup.
+Proof.
+  refine (Build_AbGroup Unit (fun _ _ => tt) tt (fun _ => tt) _).
+  repeat split; try exact _; by intros [].
+Defined.
