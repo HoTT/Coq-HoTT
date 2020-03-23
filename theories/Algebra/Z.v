@@ -75,6 +75,7 @@ Definition cring_int_mul {R : CRing} (z : Int) : R
      | pos z => pos_peano_rec R 1 (fun n nr => 1 + nr) z
      end.
 
+(** TODO: clean up *)
 (** Preservation of + *)
 Instance issemigrouppreserving_cring_int_mul_plus (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_plus) (Bop:=cring_plus)
@@ -95,13 +96,100 @@ Proof.
     rewrite pos_add_succ_r.
     rewrite 2 pos_peano_rec_beta_pos_succ.
     rewrite simple_associativity.
-(*     rewrite  *)
-Admitted.
+    rewrite (commutativity _ (-1)).
+    rewrite <- simple_associativity.
+    f_ap.
+  - cbn.
+    revert x.
+    induction y as [|y IHy] using pos_peano_ind; intro x.
+    { cbn.
+      induction x as [|x] using pos_peano_ind.
+      1: symmetry; cbn; apply left_inverse.
+      rewrite pos_peano_rec_beta_pos_succ.
+      rewrite int_pos_sub_succ_r.
+      cbn; rewrite <- simple_associativity.
+      apply moveL_equiv_M.
+      cbn; rewrite involutive.
+      apply commutativity. }
+    induction x as [|x IHx] using pos_peano_ind.
+    { rewrite int_pos_sub_succ_l.
+      cbn; apply moveL_equiv_M.
+      cbn; rewrite involutive.
+      by rewrite pos_peano_rec_beta_pos_succ. }
+    rewrite int_pos_sub_succ_succ.
+    rewrite IHy.
+    rewrite 2 pos_peano_rec_beta_pos_succ.
+    rewrite (commutativity (-1)).
+    rewrite simple_associativity.
+    rewrite <- (simple_associativity _ _ 1).
+    rewrite left_inverse.
+    f_ap.
+    symmetry.
+    apply right_identity.
+  - cbn.
+    revert x.
+    induction y as [|y IHy] using pos_peano_ind; intro x.
+    { induction x as [|x] using pos_peano_ind.
+      1: symmetry; cbn; apply right_inverse.
+      rewrite pos_peano_rec_beta_pos_succ.
+      rewrite (commutativity 1).
+      rewrite <- simple_associativity.
+      rewrite int_pos_sub_succ_l.
+      cbn; by rewrite right_inverse, right_identity. }
+    induction x as [|x IHx] using pos_peano_ind.
+    { rewrite int_pos_sub_succ_r.
+      rewrite pos_peano_rec_beta_pos_succ.
+      rewrite simple_associativity.
+      cbn.
+      rewrite (right_inverse 1).
+      symmetry.
+      apply left_identity. }
+    rewrite int_pos_sub_succ_succ.
+    rewrite IHy.
+    rewrite 2 pos_peano_rec_beta_pos_succ.
+    rewrite (commutativity 1).
+    rewrite simple_associativity.
+    rewrite <- (simple_associativity _ _ (-1)).
+    rewrite (right_inverse 1).
+    f_ap; symmetry.
+    apply right_identity.
+  - cbn.
+    induction y as [|y IHy] using pos_peano_ind.
+    { cbn.
+      rewrite pos_add_1_r.
+      rewrite pos_peano_rec_beta_pos_succ.
+      apply commutativity. }
+    rewrite pos_add_succ_r.
+    rewrite 2 pos_peano_rec_beta_pos_succ.
+    rewrite simple_associativity.
+    rewrite IHy.
+    rewrite simple_associativity.
+    rewrite (commutativity 1).
+    reflexivity.
+Defined.
 
+(** Preservation of * *)
 Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_mult) (Bop:=cring_mult)
       (cring_int_mul : cring_Z -> R).
 Proof.
+  hnf. intros [x| |x] [y| |y].
+  2,5,8: symmetry; apply rng_mul_zero.
+  3,4: cbn; symmetry; rewrite (commutativity 0); apply rng_mul_zero.
+  { simpl.
+    revert y.
+    induction x as [|x IHx] using pos_peano_ind; intro y.
+    { cbn.
+      induction y as [|y IHy] using pos_peano_ind.
+      { refine (_^ @ negate_mult (-1)).
+        apply involutive. }
+      rewrite 2 pos_peano_rec_beta_pos_succ.
+      rewrite IHy.
+      rewrite (simple_distribute_l (-1)).
+      f_ap.
+      refine (_^ @ negate_mult (-1)).
+      apply involutive. }
+    
 Admitted.
 
 (** This is a ring homomorphism *)
@@ -113,9 +201,29 @@ Proof.
 Defined.
 
 (** TODO: move to CRing *)
-Definition rng_homo_plus (A B : CRing) (f : A $-> B)
-  : forall x y, f (x + y) = f x + f y
-  := preserves_plus.
+Section Preserves.
+
+  Context (A B : CRing) (f : A $-> B) (x y : A).
+
+  Definition rng_homo_plus : f (x + y) = f x + f y
+    := preserves_plus x y.
+
+  Definition rng_homo_mult : f (x * y) = f x * f y
+    := preserves_mult x y.
+
+  Definition rng_homo_zero : f 0 = 0
+    := preserves_0.
+
+  Definition rng_homo_one : f 1 = 1
+    := preserves_1.
+
+  Definition rng_homo_negate : f (-x) = -(f x)
+    := preserves_negate x.
+
+  Definition rng_homo_minus_one : f (-1) = -1
+    := preserves_negate 1%mc @ ap negate preserves_1.
+
+End Preserves.
 
 (** The integers are the initial commutative ring *)
 Global Instance isinitial_cring_Z : IsInitial cring_Z.
@@ -128,11 +236,13 @@ Proof.
   + unfold int_pred.
     rewrite 2 rng_homo_plus.
     rewrite IHx.
-    f_ap.
-    
-  intros [x| |x].
-  
-Admitted.
+    by rewrite 2 rng_homo_minus_one.
+  + by rewrite 2 rng_homo_zero.
+  + unfold int_succ.
+    rewrite 2 rng_homo_plus.
+    rewrite IHx.
+    by rewrite rng_homo_one.
+Defined.
 
 
 
