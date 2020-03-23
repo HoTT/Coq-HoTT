@@ -33,7 +33,7 @@ Section QuotientRing.
   Instance plus_quotient_abgroup : Plus (QuotientAbGroup R I) := abgroup_sgop.
 
   Instance iscong_mult_incosetL
-    : @IsCongruence R cring_mult (@in_cosetL R I _).
+    : @IsCongruence R (cring_mult _) (@in_cosetL R I _).
   Proof.
     snrapply Build_IsCongruence.
     intros x x' y y' [i p] [j q].

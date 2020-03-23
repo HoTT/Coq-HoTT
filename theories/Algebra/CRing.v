@@ -1,4 +1,5 @@
 Require Import Basics Types.
+Require Import WildCat.
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbelianGroup.
 Require Export Classes.theory.rings.
@@ -12,7 +13,7 @@ But since we are only interested in commutative rings for the time being, it mak
 
 
 (** A commutative ring consists of the following data *)
-Class CRing := {
+Record CRing := {
   (** A type *)
   cring_type : Type;
   (** A plus operation *)
@@ -38,20 +39,29 @@ Coercion cring_type : CRing >-> Sortclass.
 Global Existing Instances cring_plus cring_mult cring_zero cring_one cring_negate cring_isring.
 
 (** A ring homomorphism between commutative rings is a map of the underlying type and a proof that this map is a ring homomorphism. *)
-Class CRingHomomorphism (A B : CRing) := {
+Record CRingHomomorphism (A B : CRing) := {
   rng_homo_map : A -> B;
   rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
 }.
 
 Arguments Build_CRingHomomorphism {_ _} _ _.
 
-Definition issig_CRingHomomorphism {A B : CRing} : _ <~> CRingHomomorphism A B
+Definition issig_CRingHomomorphism (A B : CRing)
+  : _ <~> CRingHomomorphism A B
   := ltac:(issig).
 
 (** We coerce ring homomorphisms to their underlyig maps *)
 Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
 (** And we make rng_homo_ishomo a global instance. *)
 Global Existing Instance rng_homo_ishomo.
+
+Definition equiv_path_cringhomomorphism `{Funext} {A B : CRing}
+  {f g : CRingHomomorphism A B} : f == g <~> f = g.
+Proof.
+  refine ((equiv_ap (issig_CRingHomomorphism A B)^-1 _ _)^-1 oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_forall.
+Defined.
 
 Definition rng_homo_id (A : CRing) : CRingHomomorphism A A
   := Build_CRingHomomorphism idmap _.
@@ -88,3 +98,54 @@ Definition abgroup_cring : CRing -> AbGroup
   := fun A => Build_AbGroup A _ _ _ _.
 
 Coercion abgroup_cring : CRing >-> AbGroup.
+
+(** Wild category of commutative rings *)
+
+Global Instance isgraph_cring : IsGraph CRing
+  := Build_IsGraph _ CRingHomomorphism.
+
+Global Instance is01cat_cring : Is01Cat CRing
+  := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).
+
+Global Instance isgraph_cringhomomorphism {A B : CRing} : IsGraph (A $-> B)
+  := induced_graph (@rng_homo_map A B).
+
+Global Instance is01cat_cringhomomorphism {A B : CRing} : Is01Cat (A $-> B)
+  := induced_01cat (@rng_homo_map A B).
+
+Global Instance is0gpd_cringhomomorphism {A B : CRing}: Is0Gpd (A $-> B)
+  := induced_0gpd (@rng_homo_map A B).
+
+Global Instance is0functor_postcomp_cringhomomorphism {A B C : CRing} (h : B $-> C)
+  : Is0Functor (@cat_postcomp CRing _ _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (ap h (p a)).
+Defined.
+
+Global Instance is0functor_precomp_cringhomomorphism
+       {A B C : CRing} (h : A $-> B)
+  : Is0Functor (@cat_precomp CRing _ _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (p (h a)).
+Defined.
+
+(** CRing forms a 1Cat *)
+Global Instance is1cat_cring : Is1Cat CRing.
+Proof.
+  by rapply Build_Is1Cat.
+Defined.
+
+Global Instance hasmorext_cring `{Funext} : HasMorExt CRing.
+Proof.
+  srapply Build_HasMorExt.
+  intros A B f g; cbn in *.
+  snrapply @isequiv_homotopic.
+  1: exact (equiv_path_cringhomomorphism^-1%equiv).
+  1: exact _.
+  intros []; reflexivity. 
+Defined.
+
+
+

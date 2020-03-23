@@ -70,6 +70,12 @@ Proof.
   by destruct p.
 Qed.
 
+(** ** Permutation of pos and pos_succ *)
+Lemma int_pos_pos_succ p : pos (pos_succ p) = int_succ (pos p).
+Proof.
+  by destruct p.
+Qed.
+
 (** ** Negation of a doubled positive integer *)
 Lemma int_negation_double a
   : - (int_double a) = int_double (- a).
@@ -428,4 +434,49 @@ Lemma int_mul_assoc n m p : n * (m * p) = n * m * p.
 Proof.
   destruct n, m, p; cbn; trivial; f_ap; apply pos_mul_assoc.
 Qed.
+
+(** Induction principle for the integers *)
+
+Lemma int_peano_ind
+  (Q : Int -> Type) (N : forall x, Q x -> Q (int_pred x))
+  (B : Q 0) (P : forall x, Q x -> Q (int_succ x))
+  : forall z, Q z.
+Proof.
+  intro z.
+  destruct z as [z| |z].
+  + induction z as [|z IHz] using pos_peano_ind.
+    - apply (N 0), B.
+    - rewrite int_neg_pos_succ.
+      apply (N (neg z)), IHz.
+  + exact B.
+  + induction z as [|z IHz] using pos_peano_ind.
+    - apply (P 0), B.
+    - rewrite int_pos_pos_succ.
+      apply (P (pos z)), IHz.
+Defined.
+
+Arguments int_peano_ind : simpl never.
+
+Lemma int_peano_ind_beta_int_succ
+  (Q : Int -> Type) (N : forall x, Q x -> Q (int_pred x))
+  (B : Q 0) (P : forall x, Q x -> Q (int_succ x)) (z : Int)
+  : int_peano_ind Q N B P (int_succ z) = P z (int_peano_ind Q N B P z).
+Proof.
+Admitted.
+
+Lemma int_peano_ind_beta_int_pred
+  (Q : Int -> Type) (N : forall x, Q x -> Q (int_pred x))
+  (B : Q 0) (P : forall x, Q x -> Q (int_succ x)) (z : Int)
+  : int_peano_ind Q N B P (int_pred z) = N z (int_peano_ind Q N B P z).
+Proof.
+Admitted.
+
+Lemma int_peano_ind_beta_pos_succ
+  (Q : Int -> Type) (N : forall x, Q x -> Q (int_pred x))
+  (B : Q 0) (P : forall x, Q x -> Q (int_succ x)) (z : Pos)
+  : int_peano_ind Q N B P (pos (pos_succ z))
+    = P (pos z) (int_peano_ind Q N B P (pos z)).
+Proof.
+Admitted.
+
 
