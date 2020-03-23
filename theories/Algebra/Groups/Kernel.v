@@ -55,36 +55,8 @@ Proof.
   by apply path_sigma_hprop.
 Defined.
 
-Definition grp_homo_kernel_pr1 {A B : Group} (f : A $-> B)
-  : (grp_kernel f) $-> A.
-Proof.
-  srapply Build_GroupHomomorphism.
-  - apply pr1.
-  - intros a b; reflexivity.
-Defined.
-
-Global Instance isinjective_grp_homo_kernel_pr1 {A B : Group}
-  (f : A $-> B) : IsInjective (grp_homo_kernel_pr1 f).
-Proof.
-  intros a b.
-  apply path_sigma_hprop.
-Defined.
-
-Global Instance issubgroup_grp_kernel {A B : Group}
-  (f : A $-> B) : IsSubgroup (grp_kernel f) A.
-Proof.
-  srapply Build_IsSubgroup.
-  + exact (grp_homo_kernel_pr1 f).
-  + exact (isinjective_grp_homo_kernel_pr1 _).
-Defined.
-
-Definition Kernel {A B : Group} (f : A $-> B)
-  : Subgroup A := Build_Subgroup A (grp_kernel f) _.
-
-Locate IsNormalSubgroup.
-
 Global Instance isnormal_kernel {A B : Group} (f : A $-> B)
-  : IsNormalSubgroup (Kernel f).
+  : IsNormalSubgroup (grp_kernel f).
 Proof.
   apply isnormalsubgroup_of_cong_mem.
   intros g n.
@@ -96,3 +68,37 @@ Proof.
   rewrite (negate_l _).
   reflexivity.
 Defined.
+
+(** TODO: move *)
+Global Instance ishprop_isinjective `{Funext} {A B : Type} {f : A -> B}
+  `{IsHSet A, IsHSet B}
+  : IsHProp (IsInjective f).
+Proof.
+  apply trunc_forall.
+Defined.
+
+(** A group homomoorphism is injective if and only if it's kernel is trivial. *)
+Definition equiv_isinj_grp_kernel_trivial `{Funext} {A B : Group} (f : A $-> B)
+  : IsInjective f <~> (GroupIsomorphism (grp_kernel f) grp_trivial).
+Proof.
+  rapply equiv_iff_hprop.
+  { nrapply trunc_equiv'.
+    1: apply issig_GroupIsomorphism.
+    apply trunc_sigma. }
+  { intro inj.
+    snrapply Build_GroupIsomorphism.
+    1: rapply (pr1 (isterminal_grp_trivial (grp_kernel f))) .
+    srapply isequiv_adjointify.
+    1: exact (pr1 (isinitial_grp_trivial (grp_kernel f))).
+    1: by intros [].
+    intros [x p].
+    apply path_sigma_hprop.
+    apply inj.
+    refine (_ @ p^).
+    apply grp_homo_unit. }
+  intro h.
+  intros x y p.
+  destruct h as [[h isp] ise].
+  cbn in h.
+  unfold hfiber in h.
+Admitted.

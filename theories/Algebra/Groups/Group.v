@@ -463,6 +463,18 @@ Proof.
   apply (grp_homo_unit g).
 Defined.
 
+Global Instance contr_grp_homo_trivial_source `{Funext} G
+  : Contr (GroupHomomorphism grp_trivial G).
+Proof.
+  snrapply Build_Contr.
+  1: exact (pr1 (isinitial_grp_trivial _)).
+  intros g.
+  rapply equiv_path_grouphomomorphism.
+  intros [].
+  symmetry.
+  rapply grp_homo_unit.
+Defined.
+
 Global Instance isterminal_grp_trivial : IsTerminal grp_trivial.
 Proof.
   intro G.
@@ -471,5 +483,16 @@ Proof.
     1: exact (fun _ => tt).
     intros ??; symmetry; apply left_identity. }
   intros g x.
+  apply path_contr.
+Defined.
+
+Global Instance contr_grp_homo_trivial_target `{Funext} G
+  : Contr (GroupHomomorphism G grp_trivial).
+Proof.
+  snrapply Build_Contr.
+  1: exact (pr1 (isterminal_grp_trivial _)).
+  intros g.
+  rapply equiv_path_grouphomomorphism.
+  intros x.
   apply path_contr.
 Defined.

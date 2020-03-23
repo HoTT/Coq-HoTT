@@ -3,6 +3,9 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Congruence.
 Require Export Colimits.Quotient.
+Require Export Algebra.Groups.Image.
+Require Export Algebra.Groups.Kernel.
+Require Import WildCat.
 
 (** * Quotient groups *)
 
@@ -128,4 +131,55 @@ Section QuotientGroup.
     rapply (Build_Group (G / in_cosetL)).
   Defined.
 
+  Definition grp_quotient_map : G $-> QuotientGroup.
+  Proof.
+    snrapply Build_GroupHomomorphism.
+    1: exact (class_of _).
+    intros ??; reflexivity.
+  Defined.
+
 End QuotientGroup.
+
+Arguments grp_quotient_map {_ _ _}.
+
+Notation "G / N" := (QuotientGroup G N) : group_scope.
+
+Local Open Scope group_scope.
+
+(** First isomorphism theorem *)
+
+Theorem grp_first_isomorphism {A B : Group} (phi : A $-> B)
+  : GroupIsomorphism (grp_image phi) (A / grp_kernel phi).
+Proof.
+  symmetry.
+  snrapply Build_GroupIsomorphism.
+  { snrapply Build_GroupHomomorphism.
+    { srapply Quotient_rec.
+      { intro a.
+        exists (phi a).
+        apply tr.
+        exists a.
+        reflexivity. }
+      intros x y p.
+      apply path_sigma_hprop.
+      destruct p as [[a p] q].
+      symmetry.
+      rewrite <- right_identity.
+      apply moveL_equiv_M; cbn.
+      rewrite <- grp_homo_inv.
+      rewrite <- grp_homo_op.
+      exact (ap phi q^ @ p). }
+    hnf; intros x.
+    snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
+    srapply Quotient_ind_hprop; intro x.
+    simpl.
+    apply path_sigma_hprop.
+    apply grp_homo_op. }
+  snrapply isequiv_adjointify.
+  { intro b.
+    apply class_of.
+    cbv in b.
+    
+ 
+Admitted.
+
