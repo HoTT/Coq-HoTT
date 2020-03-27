@@ -1,6 +1,7 @@
 (** Theory *)
 
 Require Export HoTT.Algebra.AbGroups.AbelianGroup.
+Require Export HoTT.Algebra.AbGroups.Abelianization.
 
 (** Examples *)
 
