@@ -1,10 +1,12 @@
 Require Import HoTT.Basics HoTT.Types.
+Require Import HSet.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Congruence.
 Require Export Colimits.Quotient.
 Require Export Algebra.Groups.Image.
 Require Export Algebra.Groups.Kernel.
+Require Import HSet.
 Require Import WildCat.
 
 (** * Quotient groups *)
@@ -138,6 +140,30 @@ Section QuotientGroup.
     intros ??; reflexivity.
   Defined.
 
+  Definition grp_quotient_rec {H : Group} (f : G $-> H)
+    (h : forall n : N, f (issubgroup_incl n) = mon_unit) : QuotientGroup $-> H.
+  Proof.
+    snrapply Build_GroupHomomorphism.
+    { srapply Quotient_rec.
+      + exact f.
+      + intros x y [n p].
+        apply (ap f) in p.
+        rewrite h in p.
+        refine ((right_identity _)^ @ _).
+        apply moveR_equiv_M; cbn.
+        refine (p @ _).
+        refine (grp_homo_op f _ _ @ _).
+        f_ap.
+        apply grp_homo_inv. }
+    intro x.
+    refine (Quotient_ind_hprop _ _ _).
+    intro y. revert x.
+    refine (Quotient_ind_hprop _ _ _).
+    intro x.
+    simpl.
+    apply grp_homo_op.
+  Defined.
+
 End QuotientGroup.
 
 Arguments grp_quotient_map {_ _ _}.
@@ -146,40 +172,77 @@ Notation "G / N" := (QuotientGroup G N) : group_scope.
 
 Local Open Scope group_scope.
 
-(** First isomorphism theorem *)
-
-Theorem grp_first_isomorphism {A B : Group} (phi : A $-> B)
-  : GroupIsomorphism (grp_image phi) (A / grp_kernel phi).
+Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) `{!IsNormalSubgroup N} (H : Group)
+  : {f : G $-> H & forall n:N, f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
 Proof.
-  symmetry.
-  snrapply Build_GroupIsomorphism.
-  { snrapply Build_GroupHomomorphism.
-    { srapply Quotient_rec.
-      { intro a.
-        exists (phi a).
-        apply tr.
-        exists a.
-        reflexivity. }
-      intros x y p.
-      apply path_sigma_hprop.
-      destruct p as [[a p] q].
-      symmetry.
-      rewrite <- right_identity.
-      apply moveL_equiv_M; cbn.
-      rewrite <- grp_homo_inv.
-      rewrite <- grp_homo_op.
-      exact (ap phi q^ @ p). }
-    hnf; intros x.
-    snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
-    srapply Quotient_ind_hprop; intro x.
+  srapply equiv_adjointify.
+  { intros [f p].
+    exact (grp_quotient_rec _ _ f p). }
+  { intro f.
+    exists (f $o grp_quotient_map).
+    intro n.
     simpl.
-    apply path_sigma_hprop.
-    apply grp_homo_op. }
-  snrapply isequiv_adjointify.
-  { intro b.
-    apply class_of.
-    cbv in b.
-    
- 
-Admitted.
+    etransitivity.
+    2: apply (grp_homo_unit f).
+    apply ap.
+    apply qglue.
+    unfold in_cosetL.
+    unfold class_of.
+    exists (-n).
+    symmetry.
+    etransitivity.
+    1: apply right_identity.
+    symmetry.
+    apply grp_homo_inv. }
+  { intros f.
+    rapply equiv_path_grouphomomorphism.
+    srapply Quotient_ind_hprop.
+    intro x.
+    reflexivity. }
+  { intros [f p].
+    srapply path_sigma_hprop.
+    rapply equiv_path_grouphomomorphism.
+    reflexivity. }
+Defined.
 
+Section First.
+
+  Context `{Funext} {A B : Group} (phi : A $-> B).
+
+  (** First we define a map from the quotient by the kernel of phi into the image of phi *)
+  Definition grp_image_quotient : GroupHomomorphism (A / grp_kernel phi) (grp_image phi).
+  Proof.
+    srapply grp_quotient_rec.
+    + srapply grp_image_in.
+    + intro n.
+      apply path_sigma_hprop.
+      exact (pr2 n).
+  Defined.
+
+  (** The underlying map of this homomorphism is an equivalence *)
+  Global Instance isequiv_group : IsEquiv grp_image_quotient.
+  Proof.
+    snrapply isequiv_surj_emb.
+    { srapply cancelR_conn_map. }
+    { srapply isembedding_isinj_hset.
+      intro x.
+      refine (Quotient_ind_hprop _ _ _).
+      intro y. revert x.
+      refine (Quotient_ind_hprop _ _ _).
+      intros x h.
+      srapply qglue.
+      simpl in h.
+      srefine (_; _).
+      + exists (-x * y).
+        apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
+        rewrite grp_homo_op, grp_homo_inv, h.
+        srapply negate_l.
+      + reflexivity. }
+  Defined.
+
+  Theorem grp_first_iso : GroupIsomorphism (A / grp_kernel phi) (grp_image phi) .
+  Proof.
+    exact (Build_GroupIsomorphism _ _ grp_image_quotient _).
+  Defined.
+
+End First.

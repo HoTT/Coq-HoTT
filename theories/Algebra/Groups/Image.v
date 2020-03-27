@@ -71,3 +71,16 @@ Defined.
 
 Global Instance ishset_grp_image {A B : Group} (f : A $-> B)
   : IsHSet (grp_image f) := _.
+
+Definition grp_image_in {A B : Group} (f : A $-> B) : A $-> grp_image f.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  { intro x.
+    exists (f x).
+    srapply tr.
+    exists x.
+    reflexivity. }
+  { intros x y.
+    apply path_sigma_hprop.
+    apply grp_homo_op. }  
+Defined.
