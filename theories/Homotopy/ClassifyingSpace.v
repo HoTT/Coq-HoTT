@@ -1,5 +1,5 @@
 Require Import Basics Types Pointed Cubical.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import Truncations.

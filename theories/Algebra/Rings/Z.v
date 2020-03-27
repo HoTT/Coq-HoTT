@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Int Spaces.Pos.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import WildCat.
 
@@ -39,7 +39,7 @@ Definition cring_int_mul {R : CRing} (z : Int) : R
 
 (** TODO: clean up *)
 (** Preservation of + *)
-Instance issemigrouppreserving_cring_int_mul_plus (R : CRing)
+Global Instance issemigrouppreserving_cring_int_mul_plus (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_plus) (Bop:=cring_plus)
       (cring_int_mul : cring_Z -> R).
 Proof.
@@ -131,7 +131,7 @@ Proof.
 Defined.
 
 (** Preservation of * *)
-Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
+Global Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_mult) (Bop:=cring_mult)
       (cring_int_mul : cring_Z -> R).
 Proof.

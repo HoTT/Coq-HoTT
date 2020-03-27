@@ -1,10 +1,12 @@
 Require Import Basics Types.
 Require Import Algebra.Rings.CRing.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 
 Local Open Scope mc_scope.
 
-(** In this file we Ideals *)
+(** In this file we define Ideals *)
+
+(** TODO: In the future it might be useful to define ideals as submodules *)
 
 (** An additive subgroup I of a ring R is an ideal when: *)
 Class IsIdeal {R : CRing} (I : Subgroup R) := {
@@ -12,7 +14,7 @@ Class IsIdeal {R : CRing} (I : Subgroup R) := {
   isideal : forall r x, exists a, issubgroup_incl a = r * issubgroup_incl x;
 }.
 
-Class Ideal (R : CRing) := {
+Record Ideal (R : CRing) := {
   ideal_subgroup : Subgroup R;
   ideal_isideal : IsIdeal ideal_subgroup;
 }.

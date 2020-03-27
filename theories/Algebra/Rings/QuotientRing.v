@@ -1,8 +1,10 @@
 Require Import Basics Types.
 Require Import Algebra.Congruence.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.
+
+(** In this file we define the quotient of a commuative ring by an ideal *)
 
 Section QuotientRing.
 
@@ -102,3 +104,5 @@ Section QuotientRing.
     := Build_CRing (QuotientAbGroup R I) _ _ _ _ _ _.
 
 End QuotientRing.
+
+(** TODO: First iso theorem *)

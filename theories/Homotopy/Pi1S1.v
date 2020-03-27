@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.
 Require Import Spaces.Int.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import HIT.Circle.
 Require Import HIT.Spheres.

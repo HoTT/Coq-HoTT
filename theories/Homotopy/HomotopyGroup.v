@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.
 Require Import Truncations.
 Require Import Spaces.Nat.
 Require Import Modalities.ReflectiveSubuniverse.

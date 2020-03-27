@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Int.
-Require Import Algebra.Groups.AbelianGroup.
+Require Import Algebra.AbGroups.AbelianGroup.
 
 (** The group of integers. *)
 
