@@ -5,6 +5,8 @@ Require Import WildCat.
 Require Import Truncations.
 Require Import Factorization.
 
+(** Image of group homomorphisms *)
+
 Local Open Scope mc_add_scope.
 
 (** The image of a group homomorphisms between groups is a subgroup *)

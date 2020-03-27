@@ -3,7 +3,7 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
 
-(** Kernels of groups *)
+(** Kernels of group homomorphisms *)
 
 Local Open Scope mc_scope.
 
