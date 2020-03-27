@@ -220,7 +220,7 @@ Section First.
   Defined.
 
   (** The underlying map of this homomorphism is an equivalence *)
-  Global Instance isequiv_group : IsEquiv grp_image_quotient.
+  Global Instance isequiv_grp_image_quotient : IsEquiv grp_image_quotient.
   Proof.
     snrapply isequiv_surj_emb.
     { srapply cancelR_conn_map. }
