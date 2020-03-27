@@ -172,8 +172,10 @@ Notation "G / N" := (QuotientGroup G N) : group_scope.
 
 Local Open Scope group_scope.
 
-Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) `{!IsNormalSubgroup N} (H : Group)
-  : {f : G $-> H & forall n:N, f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
+(** The universal mapping property for groups *)
+Theorem equiv_grp_quotient_ump {F : Funext}
+  {G : Group} (N : Subgroup G) `{!IsNormalSubgroup N} (H : Group)
+  : {f : G $-> H & forall n, f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
   { intros [f p].
@@ -205,7 +207,7 @@ Proof.
     reflexivity. }
 Defined.
 
-Section First.
+Section FirstIso.
 
   Context `{Funext} {A B : Group} (phi : A $-> B).
 
@@ -223,26 +225,24 @@ Section First.
   Global Instance isequiv_grp_image_quotient : IsEquiv grp_image_quotient.
   Proof.
     snrapply isequiv_surj_emb.
-    { srapply cancelR_conn_map. }
-    { srapply isembedding_isinj_hset.
-      intro x.
-      refine (Quotient_ind_hprop _ _ _).
-      intro y. revert x.
-      refine (Quotient_ind_hprop _ _ _).
-      intros x h.
-      srapply qglue.
-      simpl in h.
-      srefine (_; _).
-      + exists (-x * y).
-        apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
-        rewrite grp_homo_op, grp_homo_inv, h.
-        srapply negate_l.
-      + reflexivity. }
+    1: srapply cancelR_conn_map.
+    srapply isembedding_isinj_hset.
+    refine (Quotient_ind_hprop _ _ _); intro x.
+    refine (Quotient_ind_hprop _ _ _); intro y.
+    intros h; simpl in h.
+    apply qglue.
+    srefine (_;_).
+    { exists (-x * y).
+      apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
+      rewrite grp_homo_op, grp_homo_inv, h.
+      srapply negate_l. }
+    reflexivity.
   Defined.
 
+  (** First isomorphism theorem for groups *)
   Theorem grp_first_iso : GroupIsomorphism (A / grp_kernel phi) (grp_image phi) .
   Proof.
     exact (Build_GroupIsomorphism _ _ grp_image_quotient _).
   Defined.
 
-End First.
+End FirstIso.
