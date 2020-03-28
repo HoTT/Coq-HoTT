@@ -149,6 +149,13 @@ Definition abgroup_cring : CRing -> AbGroup
 
 Coercion abgroup_cring : CRing >-> AbGroup.
 
+(** Underlying group homomorphism of a ring homomorphism *)
+Definition grp_homo_rng_homo {R S : CRing}
+  : CRingHomomorphism R S -> GroupHomomorphism R S
+  := fun f => @Build_GroupHomomorphism R S f _.
+
+Coercion grp_homo_rng_homo : CRingHomomorphism >-> GroupHomomorphism.
+
 (** Wild category of commutative rings *)
 
 Global Instance isgraph_cring : IsGraph CRing

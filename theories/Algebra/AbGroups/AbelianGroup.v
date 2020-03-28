@@ -270,4 +270,7 @@ Proof.
   repeat split; try exact _; by intros [].
 Defined.
 
+(** Image of group homomorphisms between abelian groups *)
+Definition abgroup_image {A B : AbGroup} (f : A $-> B) : AbGroup
+  := Build_AbGroup (grp_image f) _ _ _ _.
 

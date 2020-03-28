@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import Basics Types WildCat.
 Require Import Algebra.Congruence.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
@@ -105,4 +105,79 @@ Section QuotientRing.
 
 End QuotientRing.
 
-(** TODO: First iso theorem *)
+(** TODO; move *)
+(** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
+Definition Build_CRing' (R : AbGroup)
+  `(Mult R, One R, LeftDistribute R mult abgroup_sgop)
+  (iscomm : @IsCommutativeMonoid R mult one)
+  : CRing
+  := Build_CRing R abgroup_sgop _ abgroup_unit _
+      abgroup_inverse (Build_IsRing _ _ _ _).
+
+(** TODO: move *)
+Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
+Proof.
+  snrapply (Build_CRing' (abgroup_image f)).
+  { simpl.
+    intros [x p] [y q].
+    exists (x * y).
+    strip_truncations; apply tr.
+    destruct p as [p p'], q as [q q'].
+    exists (p * q).
+    refine (rng_homo_mult _ _ _ @ _).
+    f_ap. }
+  { exists 1.
+    apply tr.
+    exists 1.
+    exact (rng_homo_one f). }
+  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
+  2: repeat split.
+  2: exact _.
+  all: intros [].
+  1,2,5: intros [].
+  1,2: intros [].
+  all: apply path_sigma_hprop; cbn.
+  1: apply distribute_l.
+  1: apply associativity.
+  1: apply commutativity.
+  1: apply left_identity.
+  apply right_identity.
+Defined.
+
+(** First isomorphism theorem for rings *)
+Section FirstIso.
+
+  Context `{Funext} {A B : CRing} (phi : A $-> B).
+
+  (** First we define a map from the quotient by the kernel of phi into the image of phi *)
+  Definition rng_image_quotient
+    : CRingHomomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
+  Proof.
+  Admitted.
+
+  (** The underlying map of this homomorphism is an equivalence *)
+  Global Instance isequiv_grp_image_quotient : IsEquiv rng_image_quotient.
+  Proof.
+(*     snrapply isequiv_surj_emb.
+    1: srapply cancelR_conn_map.
+    srapply isembedding_isinj_hset.
+    refine (Quotient_ind_hprop _ _ _); intro x.
+    refine (Quotient_ind_hprop _ _ _); intro y.
+    intros h; simpl in h.
+    apply qglue.
+    srefine (_;_).
+    { exists (-x * y).
+      apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
+      rewrite grp_homo_op, grp_homo_inv, h.
+      srapply negate_l. }
+    reflexivity. *)
+  Admitted.
+
+  (** First isomorphism theorem for commutative rings *)
+  Theorem rng_first_iso
+    : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
+  Proof.
+    exact (Build_CRingIsomorphism _ _ rng_image_quotient _).
+  Defined.
+
+End FirstIso.
