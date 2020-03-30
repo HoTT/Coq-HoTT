@@ -185,6 +185,12 @@ Global Existing Instance isequiv_group_iso.
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
 
+Definition equiv_groupisomorphism (G H : Group)
+  : GroupIsomorphism G H -> G <~> H
+  := fun f => Build_Equiv G H f _.
+
+Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
+
 Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
   (f g : GroupIsomorphism G H)
   : f == g <~> f = g.

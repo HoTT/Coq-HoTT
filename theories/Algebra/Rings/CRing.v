@@ -123,6 +123,12 @@ Global Existing Instance isequiv_rng_iso_homo.
 Definition issig_CRingIsomorphism {A B : CRing}
   : _ <~> CRingIsomorphism A B := ltac:(issig).
 
+(** We can construct a ring isomorphism from an equivalence that preserves addition and multiplication. *)
+Definition Build_CRingIsomorphism' (A B : CRing) (e : A <~> B)
+  `{!IsSemiRingPreserving e}
+  : CRingIsomorphism A B
+  := Build_CRingIsomorphism A B (Build_CRingHomomorphism e _) _.
+
 (** The inverse of a CRing isomorphism *)
 Definition rng_iso_inverse {A B : CRing}
   : CRingIsomorphism A B -> CRingIsomorphism B A.
@@ -159,6 +165,20 @@ Definition grp_homo_rng_homo {R S : CRing}
   := fun f => @Build_GroupHomomorphism R S f _.
 
 Coercion grp_homo_rng_homo : CRingHomomorphism >-> GroupHomomorphism.
+
+(** We can construct a ring homomorphism a group homomorphism that preserves multiplication *)
+Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
+  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
+    (Aunit:=one) (Bunit:=one) map}
+  : CRingHomomorphism A B
+  := Build_CRingHomomorphism map
+      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).
+
+(** We can construct a ring isomorphism from a group isomorphism that preserves multiplication *)
+Definition Build_CRingIsomorphism'' (A B : CRing) (e : GroupIsomorphism A B)
+  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult) (Aunit:=one) (Bunit:=one) e}
+  : CRingIsomorphism A B
+  := @Build_CRingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).
 
 (** Wild category of commutative rings *)
 

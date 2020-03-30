@@ -71,7 +71,7 @@ Section GroupCongruenceQuotient.
     srapply Quotient_ind_hprop; intro b; revert x.
     srapply Quotient_ind_hprop; intro c.
     simpl; by rewrite associativity.
-  Defined.
+  Qed.
 
   Global Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
 
@@ -80,14 +80,14 @@ Section GroupCongruenceQuotient.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_identity.
-  Defined.
+  Qed.
 
   Global Instance congquot_rightidentity
     : RightIdentity congquot_sgop congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite right_identity.
-  Defined.
+  Qed.
 
   Global Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
 
@@ -96,14 +96,14 @@ Section GroupCongruenceQuotient.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite left_inverse.
-  Defined.
+  Qed.
 
   Global Instance quotientgroup_rightinverse
     : RightInverse congquot_sgop congquot_negate congquot_mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     by simpl; rewrite right_inverse.
-  Defined.
+  Qed.
 
   Global Instance isgroup_quotientgroup : IsGroup CongruenceQuotient := {}.
 

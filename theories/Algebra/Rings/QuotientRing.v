@@ -144,47 +144,23 @@ Proof.
   apply right_identity.
 Defined.
 
-Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
-  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
-    (Aunit:=one) (Bunit:=one) map}
-  : CRingHomomorphism A B
-  := Build_CRingHomomorphism map
-      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).
-
-(** First isomorphism theorem for rings *)
-Section FirstIso.
-
-  Context `{Funext} {A B : CRing} (phi : A $-> B).
-
-  (** First we define a map from the quotient by the kernel of phi into the image of phi *)
-  Definition rng_image_quotient
-    : CRingHomomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
-  Proof.
-    snrapply Build_CRingHomomorphism'.
-    { apply grp_iso_homo.
-      etransitivity.
-      2: exact (grp_first_iso phi).
-      snrapply Build_GroupIsomorphism'.
-      { snrapply equiv_quotient_functor; [exact idmap | exact _ |].
-        intros x y.
-        reflexivity. }
-      srapply Quotient_ind_hprop; intro x.
-      srapply Quotient_ind_hprop; intro y.
-      reflexivity. }
-    split.
-    { srapply Quotient_ind_hprop; intro x.
-      srapply Quotient_ind_hprop; intro y.
-      srapply path_sigma_hprop.
-      exact (rng_homo_mult _ _ _). }
+(** First isomorphism theorem for commutative rings *)
+Definition rng_first_iso `{Funext} {A B : CRing} (phi : A $-> B)
+  : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
+ Proof.
+  snrapply Build_CRingIsomorphism''.
+  { etransitivity.
+    2: exact (grp_first_iso phi).
+    snrapply Build_GroupIsomorphism'.
+    1: reflexivity.
+    srapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro y.
+    cbv; reflexivity. }
+  split.
+  { srapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro y.
     srapply path_sigma_hprop.
-    exact (rng_homo_one _).
-  Defined.
-
-  (** First isomorphism theorem for commutative rings *)
-  Theorem rng_first_iso
-    : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
-  Proof.
-    exact (Build_CRingIsomorphism _ _ rng_image_quotient _).
-  Defined.
-
-End FirstIso.
+    exact (rng_homo_mult _ _ _). }
+  srapply path_sigma_hprop.
+  exact (rng_homo_one _).
+Defined.

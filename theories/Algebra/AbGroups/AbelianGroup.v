@@ -167,7 +167,6 @@ Global Instance is01cat_AbGroup : Is01Cat AbGroup
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
-  srapply Build_IsNormalSubgroup.
   intros x y.
   unfold in_cosetL, in_cosetR.
   refine (equiv_functor_sigma' (Build_Equiv _ _ group_inverse _) _).
@@ -273,4 +272,19 @@ Defined.
 (** Image of group homomorphisms between abelian groups *)
 Definition abgroup_image {A B : AbGroup} (f : A $-> B) : AbGroup
   := Build_AbGroup (grp_image f) _ _ _ _.
+
+(* (** First isomorphism theorem of abelian groups *)
+Definition abgroup_first_iso `{Funext} {A B : AbGroup} (f : A $-> B)
+  : GroupIsomorphism (QuotientAbGroup A (grp_kernel f)) (abgroup_image f).
+Proof.
+  etransitivity.
+  2: rapply grp_first_iso.
+  (** This should be reflexivity, but coq has used a different proof that the subgroup is nomral i.e. because it is abelian, as opposed to the one used in grp_first_iso which stems from kernels being normal. *)
+  snrapply Build_GroupIsomorphism'.
+  1: reflexivity.
+  abstract (
+    srapply Quotient_ind_hprop; intro x;
+    srapply Quotient_ind_hprop; intro y;
+    cbv; reflexivity ).
+Defined. *)
 

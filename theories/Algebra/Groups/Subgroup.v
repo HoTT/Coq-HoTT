@@ -189,9 +189,16 @@ Proof.
 Defined.
 
 (* A subgroup is normal if being in a left coset is equivalent to being in a right coset represented by the same element. *)
-Class IsNormalSubgroup {G : Group} (N : Subgroup G) := {
-  isnormal {x y} : in_cosetL x y <~> in_cosetR x y;
+Class IsNormalSubgroup {G : Group} (N : Subgroup G)
+  := isnormal : forall {x y}, in_cosetL x y <~> in_cosetR x y.
+
+Record NormalSubgroup (G : Group) := {
+  normalsubgroup_subgroup : Subgroup G;
+  normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_subgroup;
 }.
+
+Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
+
 
 (* Inverses are then respected *)
 Definition in_cosetL_inv {G : Group} `{!IsNormalSubgroup N}
@@ -280,7 +287,6 @@ Definition isnormalsubgroup_of_cong_mem {G : Group} (N : Subgroup G)
   (h : forall g : G, forall n : N, exists m : N, - g * issubgroup_incl n * g = issubgroup_incl m)
   : IsNormalSubgroup N.
  Proof.
-  srapply Build_IsNormalSubgroup.
   intros x y.
   apply equiv_iff_hprop; intros [m p].
   1: specialize (h (-y) (-m)).
