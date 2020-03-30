@@ -1,7 +1,7 @@
 Require Import Basics Types.
-Require Import Spaces.Int Spaces.Pos.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
+Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.
 
 (** The ring of integers *)
@@ -30,7 +30,7 @@ Defined.
 Local Open Scope mc_scope.
 
 (** Standard integer operations on commutative rings *)
-Definition cring_int_mul {R : CRing} (z : Int) : R
+Definition cring_int_mul (R : CRing) (z : cring_Z) : R
   := match z with
      | neg z => pos_peano_rec R (-1) (fun n nr => -1 + nr) z
      | 0%int => 0
@@ -41,7 +41,7 @@ Definition cring_int_mul {R : CRing} (z : Int) : R
 (** Preservation of + *)
 Global Instance issemigrouppreserving_cring_int_mul_plus (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_plus) (Bop:=cring_plus)
-      (cring_int_mul : cring_Z -> R).
+      (cring_int_mul R : cring_Z -> R).
 Proof.
   (** Unfortunately, due to how we have defined things we need to seperate this out into 9 cases. *)
   hnf. intros [x| |x] [y| |y].
@@ -50,8 +50,8 @@ Proof.
   3,4: symmetry; apply left_identity.
   (** This leaves us with four cases to consider *)
   (** x < 0 , y < 0 *)
-  { change (@cring_int_mul R ((neg x) + (neg y))%int
-      = (cring_int_mul (neg x)) + (cring_int_mul (neg y))).
+  { change (cring_int_mul R ((neg x) + (neg y))%int
+      = (cring_int_mul R (neg x)) + (cring_int_mul R (neg y))).
     induction y as [|y IHy] using pos_peano_ind.
     { simpl.
       rewrite pos_add_1_r.
@@ -134,44 +134,70 @@ Proof.
     reflexivity.
 Qed.
 
+Lemma cring_int_mul_negate {R} x
+  : cring_int_mul R (- x) = - cring_int_mul R x.
+Proof.
+  snrapply (groups.preserves_negate _).
+  1-6: exact _.
+  snrapply Build_IsMonoidPreserving.
+  1: exact _.
+  split.
+Defined.
+
+Lemma cring_int_mul_pos_mult {R} x y
+  : cring_int_mul R (pos x * pos y)%int
+    = cring_int_mul R (pos x) * cring_int_mul R (pos y).
+Proof.
+  revert y.
+  induction x as [|x IHx] using pos_peano_ind; intro y.
+  { symmetry.
+    apply left_identity. }
+  change (cring_int_mul R (pos (pos_succ x * y)%pos)
+    = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
+  rewrite pos_mul_succ_l.
+  change (cring_int_mul R ((pos (x * y)%pos : cring_Z) + pos y)
+    = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
+  refine (issemigrouppreserving_cring_int_mul_plus
+    R (pos (x * y)%pos) (pos y) @ _).
+  change (cring_int_mul R (pos (x * y)%pos) + cring_int_mul R (pos y)
+    = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
+  rewrite IHx.
+  transitivity ((1 + cring_int_mul R (pos x)) * cring_int_mul R (pos y)).
+  2: simpl; by rewrite pos_peano_rec_beta_pos_succ.
+  rewrite rng_dist_r.
+  rewrite rng_mult_one_l.
+  apply commutativity.
+Qed.
+
 (** Preservation of * *)
 Global Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_mult) (Bop:=cring_mult)
-      (cring_int_mul : cring_Z -> R).
+      (cring_int_mul R : cring_Z -> R).
 Proof.
   hnf. intros [x| |x] [y| |y].
   2,5,8: symmetry; apply rng_mult_zero_r.
   3,4: cbn; symmetry; rewrite (commutativity 0); apply rng_mult_zero_r.
-  { change (@cring_int_mul R (neg x * neg y)%int
-      = cring_int_mul (neg x) * cring_int_mul (neg y)).
-    
-(*     simpl. *)
-    revert y.
-    induction x as [|x IHx] using pos_peano_ind; intro y.
-    { cbn.
-      induction y as [|y IHy] using pos_peano_ind.
-      { refine (_^ @ negate_mult (-1)).
-        apply involutive. }
-      rewrite 2 pos_peano_rec_beta_pos_succ.
-      rewrite IHy.
-      rewrite (simple_distribute_l (-1)).
-      f_ap.
-      refine (_^ @ negate_mult (-1)).
-      apply involutive. }
-    rewrite pos_mul_succ_l.
-    rewrite pos_peano_rec_beta_pos_succ.
-    unfold sg_op, cring_mult.
-    
-    rewrite (pos_mul_add_distr_r (-1)).
-    rewrite <- (pos_add_assoc (-1)).
-    Search pos_add pos_succ.
-Admitted.
+  { change (cring_int_mul R (pos (x * y)%pos)
+      = cring_int_mul R (- (pos x : cring_Z))
+        * cring_int_mul R (- (pos y : cring_Z))).
+    by rewrite 2 cring_int_mul_negate, cring_int_mul_pos_mult,
+      rng_mult_negate_negate. }
+  { change (cring_int_mul R (- (pos (x * y)%pos : cring_Z))
+      = cring_int_mul R (- (pos x : cring_Z))
+        * cring_int_mul R (pos y)).
+    by rewrite 2 cring_int_mul_negate, cring_int_mul_pos_mult, rng_mult_negate_l. }
+  { change (cring_int_mul R (- (pos (x * y)%pos : cring_Z))
+      = cring_int_mul R (pos x)
+        * cring_int_mul R (- (pos y : cring_Z))).
+    by rewrite 2 cring_int_mul_negate, cring_int_mul_pos_mult, rng_mult_negate_r. }
+  apply cring_int_mul_pos_mult.
+Qed.
 
 (** This is a ring homomorphism *)
 Definition rng_homo_int (R : CRing) : cring_Z $-> R.
 Proof.
   snrapply Build_CRingHomomorphism.
-  1: exact cring_int_mul.
+  1: exact (cring_int_mul R).
   repeat split; exact _.
 Defined.
 
