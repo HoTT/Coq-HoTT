@@ -7,7 +7,7 @@ Require Import WildCat.
 
 Local Open Scope mc_scope.
 
-Definition grp_kernel {A B : Group} (f : A $-> B) : Subgroup A.
+Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : Subgroup A.
 Proof.
   snrapply Build_Subgroup.
   { srapply (Build_Group (hfiber f group_unit)); repeat split.
@@ -55,7 +55,7 @@ Proof.
   by apply path_sigma_hprop.
 Defined.
 
-Global Instance isnormal_kernel {A B : Group} (f : A $-> B)
+Global Instance isnormal_kernel {A B : Group} (f : GroupHomomorphism A B)
   : IsNormalSubgroup (grp_kernel f).
 Proof.
   apply isnormalsubgroup_of_cong_mem.

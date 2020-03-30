@@ -102,6 +102,13 @@ Proof.
   reflexivity.
 Defined.
 
+(** This instance helps typeclass search by selecting a proof of normality, so that quotient rings, which are defined as quotient groups, are not confused. *)
+Global Instance isnormal_ideal_kernel {R S} (f : CRingHomomorphism R S)
+  : IsNormalSubgroup (ideal_kernel f).
+Proof.
+  apply isnormal_ab_subgroup.
+Defined.
+
 (** Properties of ideals *)
 
 (** TODO: Maximal ideals *)

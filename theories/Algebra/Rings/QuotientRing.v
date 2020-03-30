@@ -10,7 +10,7 @@ Section QuotientRing.
 
   Context (R : CRing) (I : Ideal R).
 
-  Instance plus_quotient_abgroup : Plus (QuotientAbGroup R I) := abgroup_sgop.
+  Instance plus_quotient_group : Plus (QuotientGroup R I) := group_sgop.
 
   Instance iscong_mult_incosetL
     : @IsCongruence R cring_mult (@in_cosetL R I _).
@@ -38,7 +38,7 @@ Section QuotientRing.
     rapply grp_homo_op.
   Defined.
 
-  Instance mult_quotient_abgroup : Mult (QuotientAbGroup R I).
+  Instance mult_quotient_group : Mult (QuotientGroup R I).
   Proof.
     intro x.
     srapply Quotient_rec.
@@ -59,10 +59,10 @@ Section QuotientRing.
     by rapply iscong.
   Defined.
 
-  Instance zero_quotient_abgroup : Zero (QuotientAbGroup R I) := class_of _ zero.
-  Instance one_quotient_abgroup : One (QuotientAbGroup R I) := class_of _ one.
+  Instance zero_quotient_abgroup : Zero (QuotientGroup R I) := class_of _ zero.
+  Instance one_quotient_abgroup : One (QuotientGroup R I) := class_of _ one.
 
-  Instance isring_quotient_abgroup : IsRing (QuotientAbGroup R I).
+  Instance isring_quotient_abgroup : IsRing (QuotientGroup R I).
   Proof.
     split.
     1: exact _.
@@ -73,12 +73,12 @@ Section QuotientRing.
       snrapply Quotient_ind_hprop; [exact _ | intro z; revert y].
       snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
       snrapply Quotient_ind_hprop; [exact _ | intro x ].
-      unfold sg_op, mult_is_sg_op, mult_quotient_abgroup; simpl.
+      unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
       apply ap.
       apply associativity. }
     (* Left and right identity follow from the underlying structure *)
     1,2: snrapply Quotient_ind_hprop; [exact _ | intro x].
-    1-2: unfold sg_op, mult_is_sg_op, mult_quotient_abgroup; simpl.
+    1-2: unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
     1-2: apply ap.
     1: apply left_identity.
     1: apply right_identity.
@@ -86,7 +86,7 @@ Section QuotientRing.
     { intros x.
       snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
       snrapply Quotient_ind_hprop; [exact _ | intro x].
-      unfold sg_op, mult_is_sg_op, mult_quotient_abgroup; simpl.
+      unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
       apply ap.
       apply commutativity. }
     (** Finally distributivity also follows *)
@@ -94,14 +94,14 @@ Section QuotientRing.
       snrapply Quotient_ind_hprop; [exact _ | intro z; revert y].
       snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
       snrapply Quotient_ind_hprop; [exact _ | intro x ].
-      unfold sg_op, mult_is_sg_op, mult_quotient_abgroup,
-        plus, mult, plus_quotient_abgroup; simpl.
+      unfold sg_op, mult_is_sg_op, mult_quotient_group,
+        plus, mult, plus_quotient_group; simpl.
       apply ap.
       apply simple_distribute_l. }
   Defined.
 
   Definition QuotientRing : CRing 
-    := Build_CRing (QuotientAbGroup R I) _ _ _ _ _ _.
+    := Build_CRing (QuotientGroup R I) _ _ _ _ _ _.
 
 End QuotientRing.
 
@@ -144,6 +144,13 @@ Proof.
   apply right_identity.
 Defined.
 
+Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
+  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
+    (Aunit:=one) (Bunit:=one) map}
+  : CRingHomomorphism A B
+  := Build_CRingHomomorphism map
+      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).
+
 (** First isomorphism theorem for rings *)
 Section FirstIso.
 
@@ -153,25 +160,25 @@ Section FirstIso.
   Definition rng_image_quotient
     : CRingHomomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
   Proof.
-  Admitted.
-
-  (** The underlying map of this homomorphism is an equivalence *)
-  Global Instance isequiv_grp_image_quotient : IsEquiv rng_image_quotient.
-  Proof.
-(*     snrapply isequiv_surj_emb.
-    1: srapply cancelR_conn_map.
-    srapply isembedding_isinj_hset.
-    refine (Quotient_ind_hprop _ _ _); intro x.
-    refine (Quotient_ind_hprop _ _ _); intro y.
-    intros h; simpl in h.
-    apply qglue.
-    srefine (_;_).
-    { exists (-x * y).
-      apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
-      rewrite grp_homo_op, grp_homo_inv, h.
-      srapply negate_l. }
-    reflexivity. *)
-  Admitted.
+    snrapply Build_CRingHomomorphism'.
+    { apply grp_iso_homo.
+      etransitivity.
+      2: exact (grp_first_iso phi).
+      snrapply Build_GroupIsomorphism'.
+      { snrapply equiv_quotient_functor; [exact idmap | exact _ |].
+        intros x y.
+        reflexivity. }
+      srapply Quotient_ind_hprop; intro x.
+      srapply Quotient_ind_hprop; intro y.
+      reflexivity. }
+    split.
+    { srapply Quotient_ind_hprop; intro x.
+      srapply Quotient_ind_hprop; intro y.
+      srapply path_sigma_hprop.
+      exact (rng_homo_mult _ _ _). }
+    srapply path_sigma_hprop.
+    exact (rng_homo_one _).
+  Defined.
 
   (** First isomorphism theorem for commutative rings *)
   Theorem rng_first_iso
