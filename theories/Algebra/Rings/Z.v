@@ -49,19 +49,23 @@ Proof.
   2,5,8: cbn; by rewrite right_identity.
   3,4: symmetry; apply left_identity.
   (** This leaves us with four cases to consider *)
-  - cbn.
+  (** x < 0 , y < 0 *)
+  { change (@cring_int_mul R ((neg x) + (neg y))%int
+      = (cring_int_mul (neg x)) + (cring_int_mul (neg y))).
     induction y as [|y IHy] using pos_peano_ind.
-    { cbn.
+    { simpl.
       rewrite pos_add_1_r.
       rewrite pos_peano_rec_beta_pos_succ.
       apply commutativity. }
+    simpl.
     rewrite pos_add_succ_r.
     rewrite 2 pos_peano_rec_beta_pos_succ.
     rewrite simple_associativity.
     rewrite (commutativity _ (-1)).
     rewrite <- simple_associativity.
-    f_ap.
-  - cbn.
+    f_ap. }
+  (** x < 0 , y > 0 *)
+  { cbn.
     revert x.
     induction y as [|y IHy] using pos_peano_ind; intro x.
     { cbn.
@@ -87,7 +91,7 @@ Proof.
     rewrite left_inverse.
     f_ap.
     symmetry.
-    apply right_identity.
+    apply right_identity. }
   - cbn.
     revert x.
     induction y as [|y IHy] using pos_peano_ind; intro x.
@@ -128,7 +132,7 @@ Proof.
     rewrite simple_associativity.
     rewrite (commutativity 1).
     reflexivity.
-Defined.
+Qed.
 
 (** Preservation of * *)
 Global Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
@@ -138,7 +142,10 @@ Proof.
   hnf. intros [x| |x] [y| |y].
   2,5,8: symmetry; apply rng_mult_zero_r.
   3,4: cbn; symmetry; rewrite (commutativity 0); apply rng_mult_zero_r.
-  { simpl.
+  { change (@cring_int_mul R (neg x * neg y)%int
+      = cring_int_mul (neg x) * cring_int_mul (neg y)).
+    
+(*     simpl. *)
     revert y.
     induction x as [|x IHx] using pos_peano_ind; intro y.
     { cbn.
@@ -151,7 +158,13 @@ Proof.
       f_ap.
       refine (_^ @ negate_mult (-1)).
       apply involutive. }
+    rewrite pos_mul_succ_l.
+    rewrite pos_peano_rec_beta_pos_succ.
+    unfold sg_op, cring_mult.
     
+    rewrite (pos_mul_add_distr_r (-1)).
+    rewrite <- (pos_add_assoc (-1)).
+    Search pos_add pos_succ.
 Admitted.
 
 (** This is a ring homomorphism *)
