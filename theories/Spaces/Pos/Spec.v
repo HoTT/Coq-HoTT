@@ -257,3 +257,17 @@ Proof.
   induction p; simpl; rewrite ?IHp; trivial.
   by rewrite pos_mul_add_distr_r.
 Qed.
+
+(** ** pos_succ and pos_mul *)
+
+Lemma pos_mul_succ_l p q
+  : (pos_succ p) * q = p * q + q.
+Proof.
+  by rewrite <- pos_add_1_r, pos_mul_add_distr_r, pos_mul_1_l.
+Qed.
+
+Lemma pos_mul_succ_r p q
+  : p * (pos_succ q) = p + p * q.
+Proof.
+  by rewrite <- pos_add_1_l, pos_mul_add_distr_l, pos_mul_1_r.
+Qed.
