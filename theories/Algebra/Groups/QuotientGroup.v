@@ -172,6 +172,19 @@ Notation "G / N" := (QuotientGroup G N) : group_scope.
 
 Local Open Scope group_scope.
 
+(** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
+Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
+  {k k' : IsNormalSubgroup H}
+  : GroupIsomorphism (@QuotientGroup G H k) (@QuotientGroup G H k').
+Proof.
+  snrapply Build_GroupIsomorphism'.
+  1: reflexivity.
+  intro x.
+  srapply Quotient_ind_hprop; intro y; revert x.
+  srapply Quotient_ind_hprop; intro x.
+  reflexivity.
+Defined.
+
 (** The universal mapping property for groups *)
 Theorem equiv_grp_quotient_ump {F : Funext}
   {G : Group} (N : Subgroup G) `{!IsNormalSubgroup N} (H : Group)

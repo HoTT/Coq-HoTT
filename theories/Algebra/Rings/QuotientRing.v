@@ -105,7 +105,6 @@ Section QuotientRing.
 
 End QuotientRing.
 
-(** TODO; move *)
 (** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
 Definition Build_CRing' (R : AbGroup)
   `(Mult R, One R, LeftDistribute R mult abgroup_sgop)
@@ -114,7 +113,7 @@ Definition Build_CRing' (R : AbGroup)
   := Build_CRing R abgroup_sgop _ abgroup_unit _
       abgroup_inverse (Build_IsRing _ _ _ _).
 
-(** TODO: move *)
+(** The image of a ring homomorphism *)
 Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
 Proof.
   snrapply (Build_CRing' (abgroup_image f)).
@@ -144,6 +143,7 @@ Proof.
   apply right_identity.
 Defined.
 
+(** TODO: why is this taking so long? *)
 (** First isomorphism theorem for commutative rings *)
 Definition rng_first_iso `{Funext} {A B : CRing} (phi : A $-> B)
   : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
@@ -151,14 +151,11 @@ Definition rng_first_iso `{Funext} {A B : CRing} (phi : A $-> B)
   snrapply Build_CRingIsomorphism''.
   { etransitivity.
     2: exact (grp_first_iso phi).
-    snrapply Build_GroupIsomorphism'.
-    1: reflexivity.
-    srapply Quotient_ind_hprop; intro x.
-    srapply Quotient_ind_hprop; intro y.
-    cbv; reflexivity. }
+    apply grp_iso_quotient_normal. }
   split.
-  { srapply Quotient_ind_hprop; intro x.
-    srapply Quotient_ind_hprop; intro y.
+  { intros x.
+    srapply Quotient_ind_hprop; intro y; revert x.
+    srapply Quotient_ind_hprop; intro x.
     srapply path_sigma_hprop.
     exact (rng_homo_mult _ _ _). }
   srapply path_sigma_hprop.
