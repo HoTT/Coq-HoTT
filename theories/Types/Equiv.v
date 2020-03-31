@@ -164,4 +164,25 @@ Section AssumeFunext.
   : (A <~> B) <~> (B <~> A)
     := Build_Equiv _ _ (@equiv_inverse A B) _.
 
+  (** If [functor_sigma idmap g] is an equivalence then so is g *)
+  Definition isequiv_from_functor_sigma {A} (P Q : A -> Type)
+    (g : forall a, P a -> Q a) `{!IsEquiv (functor_sigma idmap g)}
+    : forall (a : A), IsEquiv (g a).
+  Proof.
+    intros a; apply isequiv_contr_map.
+    apply istruncmap_from_functor_sigma.
+    exact _.
+  Defined.
+
+  (** Theorem 4.7.7 *)
+  (** [functor_sigma idmap g] is an equivalence if and only if g is *)
+  Definition equiv_total_iff_equiv_fiberwise {A} (P Q : A -> Type)
+           (g : forall a, P a -> Q a)
+    : IsEquiv (functor_sigma idmap g) <-> forall a, IsEquiv (g a).
+  Proof.
+    split.
+    - apply isequiv_from_functor_sigma.
+    - intro K. apply isequiv_functor_sigma.
+  Defined.
+
 End AssumeFunext.

@@ -671,12 +671,12 @@ Definition Book_4_7_5 := @HoTT.Types.Sigma.functor_sigma.
 (* ================================================== fibwise-fiber-total-fiber-equiv *)
 (** Theorem 4.7.6 *)
 
-Definition Book_4_7_6 := @HoTT.HFiber.hfiber_functor_sigma.
+Definition Book_4_7_6 := @HoTT.Types.Sigma.hfiber_functor_sigma.
 
 (* ================================================== thm:total-fiber-equiv *)
 (** Theorem 4.7.7 *)
 
-Definition Book_4_7_7 := @HoTT.HFiber.equiv_total_iff_equiv_fiberwise.
+Definition Book_4_7_7 := @HoTT.Types.Equiv.equiv_total_iff_equiv_fiberwise.
 
 (* ================================================== thm:fiber-of-a-fibration *)
 (** Lemma 4.8.1 *)
