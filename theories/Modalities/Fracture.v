@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Extensions Pullback NullHomotopy.
+Require Import Extensions Pullback NullHomotopy.
 Require Import Modality Lex Open Closed Nullification.
 
 Local Open Scope path_scope.
