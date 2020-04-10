@@ -5,7 +5,7 @@ Require Import HSet.
 Require Import HProp.
 Require Import DProp.
 Require Import Spaces.Nat.
-Require Import Fibrations.
+Require Import HFiber.
 Require Import Factorization.
 Require Import Equiv.PathSplit.
 Require Import Truncations.

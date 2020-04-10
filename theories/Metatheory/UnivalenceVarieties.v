@@ -2,7 +2,7 @@
 (** * Varieties of univalence *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Idempotents.
+Require Import Idempotents.
 Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
