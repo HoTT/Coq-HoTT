@@ -107,7 +107,7 @@ Defined.
 Definition pforall {A : Type} (F : A -> pType) : pType
   := Build_pType (forall (a : A), pointed_type (F a)) (ispointed_type o F).
 
-(** The following tactics often allows us to "pretend" that pointed maps and homotopies preserve basepoints strictly.  We have carefully defined [pMap] and [pHomotopy] so that when destructed, their second components are paths with right endpoints free, to which we can apply Paulin-Morhing path-induction. *)
+(** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly.  We have carefully defined [pMap] and [pHomotopy] so that when destructed, their second components are paths with right endpoints free, to which we can apply Paulin-Morhing path-induction. *)
 
 (** First a version with no rewrites, which leaves some cleanup to be done but which can be used in transparent proofs. *)
 Ltac pointed_reduce' :=

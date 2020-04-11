@@ -83,7 +83,7 @@ Definition opyoneda_issect {A : Type} `{Is1Cat A} (a : A)
   : un_opyoneda a F (opyoneda a F x) = x
   := fmap_id F a x.
 
-(** We assume for the converse that the coherences in [A] are equalities (this is a weak funext-type assumption).  Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [yoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
+(** We assume for the converse that the coherences in [A] are equalities (this is a weak funext-type assumption).  Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
 Definition opyoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
            (F : A -> Type) `{!Is0Functor F, !Is1Functor F}
            (alpha : opyon a $=> F) {alnat : Is1Natural (opyon a) F alpha}
