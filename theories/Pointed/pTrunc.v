@@ -71,7 +71,7 @@ Proof.
   srapply Build_pHomotopy.
   { intro x.
     by strip_truncations. }
-  by pointed_reduce.
+  by pointed_reduce'.
 Defined.
 
 Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
