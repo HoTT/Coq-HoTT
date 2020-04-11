@@ -106,24 +106,24 @@ Arguments pSect _ _ / _ _.
 (* A pointed equivalence is a section of its inverse *)
 Definition peissect {A B : pType} (f : A <~>* B) : pSect f f^-1*.
 Proof.
-  pointed_reduce.
+  pointed_reduce_pmap f.
   srefine (Build_pHomotopy _ _).
   1: apply (eissect f).
-  pointed_reduce.
-  unfold moveR_equiv_V.
-  apply inverse, concat_1p.
-Qed.
+  unfold moveR_equiv_V; cbn.
+  refine (concat_p1 _ @ (concat_1p _)^ @ (concat_1p _)^).
+Defined.
 
 (* A pointed equivalence is a retraction of its inverse *)
 Definition peisretr {A B : pType} (f : A <~>* B) : pSect f^-1* f.
 Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eisretr f).
-  pointed_reduce.
-  unfold moveR_equiv_V.
-  hott_simpl.
+  pointed_reduce_pmap f.
+  unfold moveR_equiv_V; cbn.
+  apply whiskerR.
+  refine (_ @ (ap _ (concat_1p _))^).
   apply eisadj.
-Qed.
+Defined.
 
 (* A version of equiv_adjointify for pointed equivalences
   where all data is pointed. There is a lot of unecessery data here
