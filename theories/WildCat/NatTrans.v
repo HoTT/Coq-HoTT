@@ -8,7 +8,7 @@ Definition Transformation {A B : Type} `{IsGraph B} (F : A -> B) (G : A -> B)
 
 Notation "F $=> G" := (Transformation F G).
 
-(** A 1-natural transformation is natural up to a 2-cell, so its domain must be a 1-category. *)
+(** A 1-natural transformation is natural up to a 2-cell, so its codomain must be a 1-category. *)
 Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
       (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
       (alpha : F $=> G) :=
