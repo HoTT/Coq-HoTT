@@ -1258,7 +1258,7 @@ Section ConnectedTypes.
     apply contr_O_contr; exact _.
   Defined.    
 
-  (** A type which is both connected and truncated is contractible. *)
+  (** A type which is both connected and modal is contractible. *)
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
   : Contr A.
   Proof.
@@ -1436,7 +1436,7 @@ End ModalMaps.
 
 (** ** Modally connected maps *)
 
-(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
+(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against modal types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
 Class IsConnMap (O : ReflectiveSubuniverse@{i})
       {A : Type@{i}} {B : Type@{i}} (f : A -> B)
@@ -1499,7 +1499,7 @@ Section ConnectedMaps.
     apply trunc_forall.
   Defined.
 
-  (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
+  (** Connected maps are orthogonal to modal maps (i.e. familes of modal types). *)
   Definition conn_map_elim
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
              (P : B -> Type) `{forall b:B, In O (P b)}
