@@ -309,7 +309,6 @@ theories/Pointed/pEquiv.v
 theories/Pointed/pTrunc.v
 theories/Pointed/pHomotopy.v
 theories/Pointed/pSusp.v
-theories/Pointed/pType.v
 
 #
 #   Spectra
