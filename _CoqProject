@@ -63,6 +63,7 @@ theories/WildCat/FunctorCat.v
 theories/WildCat/Yoneda.v
 theories/WildCat/TwoOneCat.v
 theories/WildCat/NatTrans.v
+theories/WildCat/PointedCat.v
 
 #
 #   Types

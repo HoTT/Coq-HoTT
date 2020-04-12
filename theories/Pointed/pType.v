@@ -16,7 +16,7 @@ Global Instance is01cat_ptype : Is01Cat pType
   := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
 
 Global Instance isgraph_pmap (A B : pType) : IsGraph (A $-> B)
-  := Build_IsGraph _ (@pHomotopy A B).
+  := Build_IsGraph _ (@pHomotopy A (pfam_const B)).
 
 Global Instance is01cat_pmap (A B : pType) : Is01Cat (A $-> B).
 Proof.
