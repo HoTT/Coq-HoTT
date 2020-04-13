@@ -39,20 +39,20 @@ Section Addition.
   Section Inner.
 
     Context {L R : Type@{i} } {Sx : InSort@{i} S L R}
-            (xL : L -> No@{i}) (xR : R -> No@{i})
+            (xL : L -> No) (xR : R -> No)
             (xcut : forall (l : L) (r : R), xL l < xR r).
 
-    Let A := {g : No@{i} -> No@{i} &
-              (forall x y : No@{i}, x <= y -> g x <= g y) *
-              (forall x y : No@{i}, x < y -> g x < g y)}.
+    Let A := {g : No -> No &
+              (forall x y : No, x <= y -> g x <= g y) *
+              (forall x y : No, x < y -> g x < g y)}.
 
     Context (xL_plus : L -> A) (xR_plus : R -> A)
             (xL_lt_xR_plus : forall (l : L) (r : R) (x : No),
                                (xL_plus l).1 x < (xR_plus r).1 x).
 
     Definition plus_inner
-    : { g : forall (y : No@{i}),
-              { x_plus_y : No@{i} &
+    : { g : forall (y : No),
+              { x_plus_y : No &
                 (forall l, (xL_plus l).1 y < x_plus_y) *
                 (forall r, x_plus_y < (xR_plus r).1 y) } &
         (forall y z : No, y <= z -> (g y).1 <= (g z).1) *
@@ -129,7 +129,7 @@ Section Addition.
     (** We now prove a computation law for [plus_inner].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
     Definition plus_inner_cut
                {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
-               (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l : L') (r : R'), yL l < yR r)
     : let L'' := L + L' in
       let R'' := R + R' in
@@ -154,7 +154,7 @@ Section Addition.
   End Inner.
 
   Definition plus_outer
-  : { f : No@{i} -> { g : No@{i} -> No@{i} &
+  : { f : No -> { g : No -> No &
                   (forall x y, x <= y -> g x <= g y) *
                   (forall x y, x <  y -> g x <  g y) } &
       (forall x y, x <= y -> forall z, (f x).1 z <= (f y).1 z) *
@@ -234,29 +234,29 @@ Section Addition.
 
   Infix "+" := plus : surreal_scope.
 
-  Definition plus_le_l (x x' y : No@{i}) (p : x <= x')
+  Definition plus_le_l (x x' y : No) (p : x <= x')
   : (x + y) <= (x' + y)
     := fst (plus_outer.2) x x' p y.
 
-  Definition plus_lt_l (x x' y : No@{i}) (p : x < x')
+  Definition plus_lt_l (x x' y : No) (p : x < x')
   : (x + y) < (x' + y)
     := snd (plus_outer.2) x x' p y.
 
-  Definition plus_le_r (x y y' : No@{i}) (p : y <= y')
+  Definition plus_le_r (x y y' : No) (p : y <= y')
   : (x + y) <= (x + y')
     := fst (plus_outer.1 x).2 y y' p.
 
-  Definition plus_lt_r (x y y' : No@{i}) (p : y < y')
+  Definition plus_lt_r (x y y' : No) (p : y < y')
   : (x + y) < (x + y')
     := snd (plus_outer.1 x).2 y y' p.
 
   (** See the remarks above [plus_inner_cut] to explain the type of this lemma. *)
   Definition plus_cut
              {L R : Type@{i} } {Sx : InSort@{i} S L R}
-             (xL : L -> No@{i}) (xR : R -> No@{i})
+             (xL : L -> No) (xR : R -> No)
              (xcut : forall (l : L) (r : R), xL l < xR r)
              {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
-             (yL : L' -> No@{i}) (yR : R' -> No@{i})
+             (yL : L' -> No) (yR : R' -> No)
              (ycut : forall (l : L') (r : R'), yL l < yR r)
   : let L'' := (L + L')%type in
     let R'' := (R + R')%type in
