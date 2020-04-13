@@ -61,10 +61,8 @@ Coercion pointed_fun : pForall >-> Funclass.
 
 (** ** Pointed functions *)
 
-(** A pointed map is a map with a proof that it preserves the point. We define it as a non-dependent version of [pForall]. *)
-Definition pMap (A B : pType) := pForall A (pfam_const B).
-
-Infix "->*" := pMap : pointed_scope.
+(** A pointed map is a map with a proof that it preserves the point. We define it as as a notion for a non-dependent version of [pForall]. *)
+Notation "A ->* B" := (pForall A (pfam_const B)) : pointed_scope.
 
 Definition Build_pMap (A B : pType) (f : A -> B) (p : f (point A) = point B)
   : A ->* B
@@ -159,7 +157,6 @@ Ltac pointed_reduce' :=
   repeat match goal with
            | [ X : pType |- _ ] => destruct X as [X ?point]
            | [ P : pFam ?X |- _ ] => destruct P as [P ?]
-           | [ phi : pMap ?X ?Y |- _ ] => destruct phi as [phi ?]
            | [ phi : pForall ?X ?Y |- _ ] => destruct phi as [phi ?]
            | [ alpha : pHomotopy ?f ?g |- _ ] => let H := fresh in destruct alpha as [alpha H]; try (apply moveR_pM in H)
            | [ equiv : pEquiv ?X ?Y |- _ ] => destruct equiv as [equiv ?iseq]
@@ -614,7 +611,7 @@ Defined.
 
 (** pType is a graph *)
 Global Instance isgraph_ptype : IsGraph pType
-  := Build_IsGraph pType pMap.
+  := Build_IsGraph pType (fun X Y => X ->* Y).
 
 (** pType is a 0-coherent 1-category *)
 Global Instance is01cat_ptype : Is01Cat pType

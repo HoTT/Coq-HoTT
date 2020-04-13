@@ -22,8 +22,9 @@ Definition HomotopyGroup_type (n : nat) : Type
 (* Every homotopy group is, in particular, a pointed type. *)
 Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
   := match n return HomotopyGroup_type n -> pType with
-     | 0    => fun X => X
-     | n.+1 => fun G => G       (* This works because [ptype_group] is already a coercion. *)
+     | 0 => fun X => X
+     (* This works because [ptype_group] is already a coercion. *)
+     | n.+1 => fun G => G
      end.
 
 Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
@@ -110,13 +111,13 @@ Definition pi_functor_type (n : nat) (X Y : pType) : Type
      end.
 
 (* Every such map is, in particular, a pointed map. *)
-Definition pi_functor_type_pmap {n X Y} : pi_functor_type n X Y -> (pForall (Pi n X) (pfam_const (Pi n Y)))
+Definition pi_functor_type_pmap {n X Y}
+  : pi_functor_type n X Y -> Pi n X ->* Pi n Y
   := match n return pi_functor_type n X Y -> (Pi n X ->* Pi n Y) with
-     | 0    => fun f => f
-     | n.+1 => fun f => f       (* This works because [pmap_GroupHomomorphism] is already a coercion. *)
+     | 0 => fun f => f
+     (* This works because [pmap_GroupHomomorphism] is already a coercion. *)
+     | n.+1 => fun f => f
      end.
-(* Note: because we define pMap as a special case of pForall, we must declare
-  all coercions into pForall, *not* into pMap. *)
 Coercion pi_functor_type_pmap : pi_functor_type >-> pForall.
 
 (** For the same reason as for [Pi1] we first define [pi1_functor]. *)

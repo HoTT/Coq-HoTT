@@ -83,9 +83,10 @@ Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
 
 (* Group homomorphisms are pointed maps *)
-Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : pMap G H
+Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H)
+  : pForall G (pfam_const H)
   := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
-Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pMap.
+Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).

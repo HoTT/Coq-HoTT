@@ -87,7 +87,7 @@ Proof.
 Defined.
 
 (* Loops functor distributes over concatenation *)
-Lemma loops_functor_pp {X Y : pType} (f : pMap X Y) (x y : loops X)
+Lemma loops_functor_pp {X Y : pType} (f : X ->* Y) (x y : loops X)
   : loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
 Proof.
   pointed_reduce.
@@ -135,7 +135,7 @@ Proof.
   apply loops_2functor, IHn.
 Defined.
 
-Lemma iterated_loops_functor_pp {X Y : pType} (f : pMap X Y) n
+Lemma iterated_loops_functor_pp {X Y : pType} (f : X ->* Y) n
   (x y : iterated_loops n.+1 X) : iterated_loops_functor n.+1 f (x @ y)
     = iterated_loops_functor n.+1 f x @ iterated_loops_functor n.+1 f y.
 Proof.
