@@ -113,11 +113,6 @@ Proof.
   exact (dpoint_eq h).
 Defined.
 
-(** The underlying homotopy of a pointed homotopy between non-dependent pointed maps. *)
-Definition pointed_htpy' {A B} (f g : A ->* B) (p : pHomotopy f g)
-  : forall x:A, f x = g x
-  := fun x => pointed_htpy p x.
-
 (** ** Pointed equivalences *)
 
 (* A pointed equivalence is a pointed map and a proof that it is
@@ -346,18 +341,12 @@ Definition path_pforall_phomotopy_path `{Funext} {A : pType} {P : pFam A}
   : path_pforall (phomotopy_path p) = p
   := eisretr (equiv_path_pforall f g) p.
 
-Definition equiv_path_pmap `{Funext} {A B : pType} (f g : A ->* B)
-  : (f ==* g) <~> (f = g) := equiv_path_pforall f g.
-
-Definition path_pmap `{Funext} {A B : pType} {f g : A ->* B}
-  : (f ==* g) -> (f = g) := equiv_path_pmap f g.
-
 (* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so. *)
 Definition equiv_inverse_path_pforall_1 `{Funext} {A : pType} {P : pFam A} (f : pForall A P)
   : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
   := 1.
 
-Definition path_pforall_1 `{Funext} {A} {P : pFam A} {f : pForall A P}
+Definition path_pforall_1 `{Funext} {A : pType} {P : pFam A} {f : pForall A P}
   : equiv_path_pforall _ _ (reflexivity f) = 1%path
   := moveR_equiv_M _ _ (equiv_inverse_path_pforall_1 f)^.
 
@@ -477,7 +466,7 @@ Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
 Proof.
   transitivity ((issig_pequiv A B)^-1 f = (issig_pequiv A B)^-1 g).
   - refine (equiv_path_sigma_hprop _ _ oE _).
-    apply (equiv_path_pmap f g).
+    apply (equiv_path_pforall f g).
   - symmetry; exact (equiv_ap' (issig_pequiv A B)^-1 f g).
 Defined.
 
@@ -503,8 +492,10 @@ Definition ppMap (A B : pType) : pType
   := ppForall A (fun _ => B).
 
 Infix "->**" := ppMap : pointed_scope.
-Notation "'ppforall'  x .. y , P" := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
-  (at level 200, x binder, y binder, right associativity) : pointed_scope.
+Notation "'ppforall'  x .. y , P"
+  := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
+     (at level 200, x binder, y binder, right associativity)
+     : pointed_scope.
 
 (** ** 1-categorical properties of [pForall]. *)
 (** TODO: remove funext *)
@@ -654,7 +645,7 @@ Defined.
 Global Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
   srapply Build_HasMorExt; intros A B f g.
-  refine (isequiv_homotopic (equiv_path_pmap f g)^-1 % equiv _).
+  refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
   intros []; reflexivity.
 Defined.
 

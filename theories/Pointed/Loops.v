@@ -35,9 +35,9 @@ Defined.
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
   : IsTrunc n (loops A) := _.
 
-(* (** Similarly for connectedness. *)
+(** Similarly for connectedness. *)
 Definition isconnected_loops `{Univalence} {n} (A : pType)
-  `{IsConnected n.+1 A} : IsConnected n (loops A) := _. *)
+  `{IsConnected n.+1 A} : IsConnected n (loops A) := _.
 
 (** ** Functoriality of loop spaces *)
 
@@ -366,17 +366,17 @@ Defined.
 Local Notation "( X , x )" := (Build_pType X x).
 
 (* We can convert between families of loops in a type and loops in Type at that type. *)
-Definition loops_type@{u0 u1 u2} `{Univalence} (A : Type@{u0})
-  : pEquiv@{u1 u1 u2} (loops (Type@{u0},A)) (A <~> A, equiv_idmap).
+Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
+  : pEquiv@{j j k} (loops@{j} (Type@{i}, A)) (A <~> A, equiv_idmap).
 Proof.
   apply issig_pequiv'.
   exists (equiv_equiv_path A A).
   reflexivity.
 Defined.
 
-Lemma local_global_looping `{Univalence} (A : Type@{u0}) (n : nat)
-  : (iterated_loops@{u1} n.+2 (Type@{u0}, A))
-    <~>* (pproduct@{u1 u1 u1} (fun a => iterated_loops@{u1} n.+1 (A, a))).
+Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : nat)
+  : iterated_loops@{j} n.+2 (Type@{i}, A)
+    <~>* pproduct (fun a => iterated_loops@{j} n.+1 (A, a)).
 Proof.
   induction n.
   { refine (_ o*E pequiv_loops_functor (loops_type A)).

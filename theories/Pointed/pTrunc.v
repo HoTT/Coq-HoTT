@@ -45,7 +45,7 @@ Proof.
     apply (ap (Build_pMap _ _ f)).
     apply concat_1p. }
   intro f.
-  apply path_pmap.
+  apply path_pforall.
   srapply Build_pHomotopy.
   1: intro; by strip_truncations.
   cbn.

@@ -163,7 +163,8 @@ Proof.
   destruct n; intros x.
   - apply Trunc_functor_idmap.
   - etransitivity.
-    + apply O_functor_homotopy. exact (iterated_loops_functor_idmap _ (n.+1)).
+    + apply O_functor_homotopy.
+      exact (iterated_loops_functor_idmap _ n.+1).
     + apply O_functor_idmap.
 Defined.
 

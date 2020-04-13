@@ -50,7 +50,7 @@ Defined.
 
 (* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so.  *)
 Definition equiv_inverse_path_pmap_1 `{Funext} {A B} {f : A ->* B}
-  : (equiv_path_pmap f f)^-1%equiv 1%path = reflexivity f
+  : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
   := 1.
 
 (** If we have a fiberwise pointed map, with a variable as codomain, this is an

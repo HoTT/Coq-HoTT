@@ -264,14 +264,14 @@ Proof.
   refine (equiv_adjointify
             (fun f => loops_functor f o* loop_susp_unit A)
             (fun g => loop_susp_counit B o* psusp_functor g) _ _).
-  - intros g. apply path_pmap.
+  - intros g. apply path_pforall.
     refine (pmap_prewhisker _ (loops_functor_compose _ _) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
     apply pmap_postcompose_idmap.
-  - intros f. apply path_pmap.
+  - intros f. apply path_pforall.
     refine (pmap_postwhisker _ (psusp_functor_compose _ _) @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
