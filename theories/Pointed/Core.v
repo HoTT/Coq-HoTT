@@ -731,7 +731,7 @@ Proof.
   apply Build_Is0Functor. intros. exact f.
 Defined.
 
-(** The forgetful map from pType to Type is a forgetful 1-functor *)
+(** The forgetful map from pType to Type is a 1-functor *)
 Global Instance is1functor_pointed_type : Is1Functor pointed_type.
 Proof.
   apply Build_Is1Functor.
