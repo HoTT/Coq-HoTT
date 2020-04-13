@@ -5,7 +5,7 @@ Require Import WildCat.
 
 Local Open Scope pointed_scope.
 
-(** TODO: in various places we pointed_reduce. We should avoid doing so. *)
+(** TODO: in various places we use pointed_reduce. We should avoid doing so. *)
 
 (** Some higher homotopies *)
 

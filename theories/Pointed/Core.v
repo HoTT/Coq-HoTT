@@ -27,10 +27,10 @@ Global Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
 Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
   := (point A, point B).
 
-(** We override the notion for products in pointed_scope *)
+(** We override the notation for products in pointed_scope *)
 Notation "X * Y" := (Build_pType (X * Y) ispointed_prod) : pointed_scope.
 
-(** A pointed type family consists of a type family over a pointed type and a section of that family at a point. *)
+(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. *)
 Definition pFam (A : pType) := {P : A -> Type & P (point A)}.
 
 (** We make the first projection of a [pFam] a coercion. *)
@@ -725,7 +725,7 @@ Proof.
   + intros ? ? p. exact (phomotopy_compose_Vp p).
 Defined.
 
-(** The forgetful map from pType to Type is a forgetful 0-functor *)
+(** The forgetful map from pType to Type is a 0-functor *)
 Global Instance is0functor_pointed_type : Is0Functor pointed_type.
 Proof.
   apply Build_Is0Functor. intros. exact f.
