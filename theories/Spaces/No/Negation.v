@@ -52,7 +52,7 @@ Section HasNegation.
   (** More useful is the following rewriting lemma. *)
   Definition negate_cut
              {L R : Type@{i} } {Sx : InSort@{i} S L R}
-             (xL : L -> No@{i}) (xR : R -> No@{i})
+             (xL : L -> No) (xR : R -> No)
              (xcut : forall (l : L) (r : R), xL l < xR r)
     : { nxcut : forall r l, negate (xR r) < negate (xL l) &
         negate {{ xL | xR // xcut }} =
