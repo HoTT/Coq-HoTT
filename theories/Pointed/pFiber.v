@@ -104,4 +104,24 @@ Definition square_pequiv_pfiber {A B C D}
            (p : k o* f ==* g o* h)
   : h o* pfib f ==* pfib g o* pequiv_pfiber h k p
   := square_functor_pfiber p.
-  
+
+(** The triple-fiber functor is equal to the negative of the loopspace functor. *)
+Definition pfiber2_loops_functor {A B : pType} (f : A ->* B)
+: loops_inv _ o* pfiber2_loops f o* pfib (pfib (pfib f))
+  ==* loops_functor f o* pfiber2_loops (pfib f).
+Proof.
+  pointed_reduce.
+  simple refine (Build_pHomotopy _ _).
+  - intros [[[x p] q] r]. simpl in *.
+    (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)
+    move q before x; revert dependent x;
+      refine (paths_ind_r _ _ _); intros p r; cbn.
+    rewrite !concat_1p, concat_p1.
+    rewrite paths_ind_r_transport.
+    rewrite transport_arrow_toconst, transport_paths_Fl. 
+    rewrite concat_p1, inv_V, ap_V. apply inverse2.
+    refine (((r^)..2)^ @ _).
+    rewrite transport_paths_Fl; cbn.
+    rewrite concat_p1, pr1_path_V, ap_V, inv_V; reflexivity.
+  - reflexivity.
+Qed.
