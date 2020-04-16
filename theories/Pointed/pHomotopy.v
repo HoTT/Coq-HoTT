@@ -10,7 +10,7 @@ Local Open Scope pointed_scope.
 (** Some higher homotopies *)
 
 Definition phomotopy_inverse_1 {A : pType} {P : pFam A} {f : pForall A P}
-  : (phomotopy_refl f) ^* ==* phomotopy_refl f.
+  : (phomotopy_reflexive f)^* ==* phomotopy_reflexive f.
 Proof.
   srapply Build_pHomotopy.
   + reflexivity.
@@ -57,12 +57,6 @@ Proof.
   induction q. reflexivity.
 Defined.
 
-Infix "@*" := phomotopy_compose : pointed_scope.
-
-(* pointed homotopy is a transitive relation *)
-Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B)
-  := @phomotopy_compose A B.
-
 (** [phomotopy_path] sends inverses to inverses.*)
 Definition phomotopy_path_V `{Funext} {A : pType} {P : pFam A}
   {f g : pForall A P} (p : f = g)
@@ -78,5 +72,4 @@ Proof.
   exact ((s $@R p) $@ (q' $@L r)).
 Defined.
 
-Reserved Infix "@@*" (at level 30).
 Notation "p @@* q" := (phomotopy_hcompose p q).

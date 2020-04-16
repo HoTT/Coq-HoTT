@@ -121,9 +121,9 @@ Defined.
 Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
   (g : forall a, B a -> C a) (g₀ : g (point A) (dpoint B) = dpoint C)
   (f : pForall A B)
-  : functor2_pforall_right (fun a => reflexivity (g a)) (phomotopy_refl f)
+  : functor2_pforall_right (fun a => reflexivity (g a)) (phomotopy_reflexive f)
       (concat_1p _)
-    ==* phomotopy_refl (functor_pforall_right g g₀ f).
+    ==* phomotopy_reflexive (functor_pforall_right g g₀ f).
 Proof.
   pointed_reduce. reflexivity.
 Defined.
@@ -171,17 +171,17 @@ Defined.
 Definition pmap_compose_ppforall2_left {A : pType} {P Q : A -> pType} {g g' : forall (a : A), P a ->* Q a}
   (f : ppforall (a : A), P a) (p : forall a, g a ==* g' a)
   : pmap_compose_ppforall g f ==* pmap_compose_ppforall g' f :=
-  pmap_compose_ppforall2 p (phomotopy_refl f).
+  pmap_compose_ppforall2 p (phomotopy_reflexive f).
 
 Definition pmap_compose_ppforall2_right {A : pType} {P Q : A -> pType} (g : forall (a : A), P a ->* Q a)
   {f f' : ppforall (a : A), P a} (q : f ==* f')
   : pmap_compose_ppforall g f ==* pmap_compose_ppforall g f' :=
-  pmap_compose_ppforall2 (fun a => phomotopy_refl (g a)) q.
+  pmap_compose_ppforall2 (fun a => phomotopy_reflexive (g a)) q.
 
 Definition pmap_compose_ppforall2_refl `{Funext} {A : pType} {P Q : A -> pType}
   (g : forall (a : A), P a ->* Q a) (f : ppforall (a : A), P a)
-  : pmap_compose_ppforall2 (fun a => phomotopy_refl (g a)) (phomotopy_refl f)
-    ==* phomotopy_refl _.
+  : pmap_compose_ppforall2 (fun a => phomotopy_reflexive (g a)) (phomotopy_reflexive f)
+    ==* phomotopy_reflexive _.
 Proof.
   simpl.
   unfold pmap_compose_ppforall2.

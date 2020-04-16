@@ -205,43 +205,32 @@ Definition issig_pequiv' (A B : pType)
 
 (** ** Various operations with pointed homotopies *)
 
-Definition phomotopy_refl {A : pType} {P : pFam A} (f : pForall A P) : f ==* f
-  := Build_pHomotopy (fun x => 1) (concat_pV _)^.
-
 (** [pHomotopy] is a reflexive relation *)
 Global Instance phomotopy_reflexive {A : pType} {P : pFam A}
   : Reflexive (@pHomotopy A P)
-  := phomotopy_refl.
+  := fun X => Build_pHomotopy (fun x => 1) (concat_pV _)^.
 
-(** Composition of pointed homotopies *)
-Definition phomotopy_compose {A : pType} {P : pFam A} {f g h : pForall A P}
-  (p : f ==* g) (q : g ==* h) : f ==* h.
+(** [pHomotopy] is a symmetric relation *)
+Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B).
 Proof.
+  intros f g p.
+  snrefine (Build_pHomotopy _ _); cbn.
+  - intros x; exact ((p x)^).
+  - refine (inverse2 (dpoint_eq p) @ inv_pV _ _).
+Defined.
+
+Notation "p ^*" := (phomotopy_symmetric _ _ p) : pointed_scope.
+
+(** [pHomotopy] is a transitive relation *)
+Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B).
+Proof.
+  intros x y z p q.
   snrefine (Build_pHomotopy (fun x => p x @ q x) _).
   nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).
   nrapply whiskerL; nrapply concat_V_pp.
 Defined.
 
-Infix "@*" := phomotopy_compose : pointed_scope.
-
-(** [pHomotopy] is a transitive relation *)
-Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B)
-  := @phomotopy_compose A B.
-
-(** The inverse of a pHomotopy *)
-Definition phomotopy_inverse {A : pType} {P : pFam A} {f g : pForall A P}
-  : (f ==* g) -> (g ==* f).
-Proof.
-  intros p; snrefine (Build_pHomotopy _ _); cbn.
-  - intros x; exact ((p x)^).
-  - refine (inverse2 (dpoint_eq p) @ inv_pV _ _).
-Defined.
-
-(** [pHomotopy] is a symmetric relation *)
-Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B)
-  := @phomotopy_inverse A B.
-
-Notation "p ^*" := (phomotopy_inverse p) : pointed_scope.
+Notation "p @* q" := (phomotopy_transitive _ _ _ p q) : pointed_scope.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
 
@@ -330,11 +319,6 @@ Definition path_pforall `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
 
 Definition phomotopy_path `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
   : (f = g) -> (f ==* g) := (equiv_path_pforall f g)^-1 % equiv.
-
-Definition phomotopy_path_path_pforall `{Funext} {A : pType} {P : pFam A}
-  {f g : pForall A P} (p : f ==* g)
-  : phomotopy_path (path_pforall p) ==* p
-  := phomotopy_path (eissect (equiv_path_pforall f g) p).
 
 Definition path_pforall_phomotopy_path `{Funext} {A : pType} {P : pFam A}
   {f g : pForall A P} (p : f = g)
@@ -561,7 +545,7 @@ Proof.
 Defined.
 
 Definition phomotopy_compose_pV `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
- (p : f ==* g) : p @* p ^* ==* phomotopy_refl f.
+ (p : f ==* g) : p @* p ^* ==* phomotopy_reflexive f.
 Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_pV.
@@ -570,7 +554,7 @@ Proof.
 Defined.
 
 Definition phomotopy_compose_Vp `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
- (p : f ==* g) : p ^* @* p ==* phomotopy_refl g.
+ (p : f ==* g) : p ^* @* p ==* phomotopy_reflexive g.
 Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_Vp.
@@ -616,14 +600,14 @@ Global Instance isgraph_pforall (A : pType) (P : pFam A) : IsGraph (pForall A P)
 Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
 Proof.
   econstructor.
-  - exact phomotopy_refl.
-  - intros a b c f g. exact (phomotopy_compose g f).
+  - exact phomotopy_reflexive.
+  - intros a b c f g. exact (phomotopy_transitive _ _ _ g f).
 Defined.
 
 (** pForall is a 0-coherent 1-groupoid *)
 Global Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
 Proof.
-  srapply Build_Is0Gpd. intros ? ? h. exact (phomotopy_inverse h).
+  srapply Build_Is0Gpd. intros ? ? h. exact (phomotopy_symmetric _ _ h).
 Defined.
 
 (** pType is a 1-coherent 1-category *)

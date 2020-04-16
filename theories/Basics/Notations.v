@@ -16,6 +16,7 @@ Reserved Notation "m +2+ n" (at level 50, left associativity).
 
 (** Pointed *)
 Reserved Infix "@*" (at level 30).
+Reserved Infix "@@*" (at level 30).
 Reserved Infix "<~>*" (at level 85).
 Reserved Infix "->*" (at level 99).
 Reserved Infix "->**" (at level 99).
