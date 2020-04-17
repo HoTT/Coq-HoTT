@@ -85,15 +85,15 @@ Definition Build_pHomotopy_pForall `{Funext} {A B : pType} {C : B -> pType}
   (q : p (point A) ==* phomotopy_path (point_eq f) @* (phomotopy_path (point_eq g))^*)
   : f ==* g.
 Proof.
-  srapply Build_pHomotopy.
-  + intro a. exact (path_pforall (p a)).
-  + apply ((equiv_ap (equiv_path_pforall _ _)^-1 % equiv) _ _).
-    refine (eissect _ _ @ _).
-    refine (path_pforall (q @* _)).
-    symmetry.
-    refine (phomotopy_path_pp _ _ @* _).
-    refine (reflexivity _ @@* _).
-    apply phomotopy_path_V.
+  snrapply Build_pHomotopy.
+  1: intro a; exact (path_pforall (p a)).
+  hnf; rapply moveR_equiv_M'.
+  refine (_^ @ ap10 _ _).
+  2: exact path_equiv_path_pforall_phomotopy_path.
+  apply path_pforall.
+  refine (phomotopy_path_pp _ _ @* _ @* q^*).
+  apply phomotopy_prewhisker.
+  apply phomotopy_path_V.
 Defined.
 
 (** Operations on dependent pointed maps *)

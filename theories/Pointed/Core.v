@@ -317,13 +317,15 @@ Defined.
 Definition path_pforall `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
   : (f ==* g) -> (f = g) := equiv_path_pforall f g.
 
-Definition phomotopy_path `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
-  : (f = g) -> (f ==* g) := (equiv_path_pforall f g)^-1 % equiv.
+(** Here is the inverse map without assuming funext *)
+Definition phomotopy_path {A : pType} {P : pFam A} {f g : pForall A P}
+  : (f = g) -> (f ==* g) := ltac:(by intros []).
 
-Definition path_pforall_phomotopy_path `{Funext} {A : pType} {P : pFam A}
-  {f g : pForall A P} (p : f = g)
-  : path_pforall (phomotopy_path p) = p
-  := eisretr (equiv_path_pforall f g) p.
+(** And we prove that it agrees with the inverse of [equiv_path_pforall] *)
+Definition path_equiv_path_pforall_phomotopy_path `{Funext} {A : pType}
+  {P : pFam A} {f g : pForall A P}
+  : phomotopy_path (f:=f) (g:=g) = (equiv_path_pforall f g)^-1%equiv
+  := ltac:(by funext []).
 
 (* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so. *)
 Definition equiv_inverse_path_pforall_1 `{Funext} {A : pType} {P : pFam A} (f : pForall A P)
