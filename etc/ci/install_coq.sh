@@ -37,6 +37,8 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
+echo '$ git log -1'
+git log -1
 echo '$ ./configure '"$@"
 ./configure "$@" || exit $?
 echo '$ make states tools coqlight plugins'
