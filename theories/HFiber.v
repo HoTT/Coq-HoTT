@@ -65,15 +65,12 @@ Proof.
   - intros a e; exact ((p a)^ @ ap k e).
 Defined.
 
-(* This doesn't really need to be defined as an instance, since typeclass search can already find it, but we state it for the reader's benefit. *)
-Global Instance isequiv_functor_hfiber {A B C D}
+(** This doesn't need to be defined as an instance, since typeclass search can already find it, but we state it here for the reader's benefit. *)
+Definition isequiv_functor_hfiber {A B C D}
            {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
            `{IsEquiv A C h} `{IsEquiv B D k}
            (p : k o f == g o h) (b : B)
-: IsEquiv (functor_hfiber p b).
-Proof.
-  exact _.
-Defined.
+: IsEquiv (functor_hfiber p b) := _.
 
 Definition equiv_functor_hfiber {A B C D}
            {f : A -> B} {g : C -> D} {h : A <~> C} {k : B <~> D}
