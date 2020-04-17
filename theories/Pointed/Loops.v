@@ -365,6 +365,8 @@ Defined.
 (* We declare this local notation to make it easier to write pointed types *)
 Local Notation "( X , x )" := (Build_pType X x).
 
+(** In the following lemmas we have used universe annotations explicitly as without them, coq cannot guess the universe levels correctly. Defining pointed maps as a special case of pForall has the side effect of raising the universe level since pForall requires a bigger universe for the type family. Hopefully in the future, coq's "universe guessing" will be smarter and we can drop the annotations here. *)
+
 (* We can convert between families of loops in a type and loops in Type at that type. *)
 Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
   : pEquiv@{j j k} (loops@{j} (Type@{i}, A)) (A <~> A, equiv_idmap).
