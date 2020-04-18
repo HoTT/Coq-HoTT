@@ -1,6 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HSet HFiber Factorization HoTT.Truncations HProp.
 Require Import Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.pHomotopy.
+Require Import WildCat.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
@@ -41,15 +42,15 @@ Definition isconnected_loops `{Univalence} {n} (A : pType)
 (** ** Functoriality of loop spaces *)
 
 Definition loops_functor {A B : pType} (f : A ->* B)
-: (loops A) ->* (loops B).
+  : (loops A) ->* (loops B).
 Proof.
   refine (Build_pMap (loops A) (loops B)
             (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
-  apply moveR_Vp; simpl.
-  refine (concat_1p _ @ (concat_p1 _)^).
+  refine (_ @ concat_Vp (point_eq f)).
+  apply whiskerL. apply concat_1p.
 Defined.
 
-Definition iterated_loops_functor {A B : pType} (n : nat) 
+Definition iterated_loops_functor {A B : pType} (n : nat)
   : (A ->* B) -> (iterated_loops n A) ->* (iterated_loops n B).
 Proof.
   induction n as [|n IHn].
@@ -64,8 +65,13 @@ Definition loops_functor_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
   ==* (pmap_compose (loops_functor g) (loops_functor f)).
 Proof.
   srapply Build_pHomotopy.
-  { intros p.
-    pointed_reduce.
+  { intros p. cbn.
+    refine ((inv_pp _ _ @@ 1) @ concat_pp_p _ _ _ @ _).
+    apply whiskerL.
+    refine (((ap_V _ _)^ @@ 1) @ _ @ concat_p_pp _ _ _ @ ((ap_pp _ _ _)^ @@ 1)).
+    apply whiskerL.
+    refine (_ @ concat_p_pp _ _ _ @ ((ap_pp _ _ _)^ @@ 1)).
+    apply whiskerR.
     apply ap_compose. }
   by pointed_reduce.
 Defined.
@@ -81,11 +87,18 @@ Proof.
 Defined.
 
 (* Loops functor distributes over concatenation *)
-Lemma loops_functor_pp {X Y : pType} (f : pMap X Y) (x y : loops X)
+Lemma loops_functor_pp {X Y : pType} (f : X ->* Y) (x y : loops X)
   : loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
 Proof.
   pointed_reduce.
   apply ap_pp.
+Defined.
+
+Lemma loops_functor_pconst {A B : pType} : loops_functor (@pconst A B) ==* pconst.
+Proof.
+  srapply Build_pHomotopy.
+  + intro p. refine (concat_1p _ @ concat_p1 _ @ ap_const _ _).
+  + reflexivity.
 Defined.
 
 (* Loops functor preserves pointed homotopies *)
@@ -97,7 +110,8 @@ Proof.
   { intro q.
     refine (_ @ (concat_p1 _)^ @ (concat_1p _)^).
     apply moveR_Vp, concat_Ap. }
-  hott_simpl.
+  simpl. generalize (p point0). generalize (g point0).
+  intros _ []. reflexivity.
 Defined.
 
 (* Iterated loops functor respects composition *)
@@ -121,7 +135,7 @@ Proof.
   apply loops_2functor, IHn.
 Defined.
 
-Lemma iterated_loops_functor_pp {X Y : pType} (f : pMap X Y) n
+Lemma iterated_loops_functor_pp {X Y : pType} (f : X ->* Y) n
   (x y : iterated_loops n.+1 X) : iterated_loops_functor n.+1 f (x @ y)
     = iterated_loops_functor n.+1 f x @ iterated_loops_functor n.+1 f y.
 Proof.
@@ -194,7 +208,7 @@ Proof.
       (loops A) (loops B) (loops_functor f) (loops C)
       (loops_functor g) (loops_functor h) _ _ _).
     intros x; symmetry.
-    refine (_ @ pointed_htpy (loops_functor_compose h g) x).
+    refine (_ @ loops_functor_compose h g x).
     simpl.
     abstract (rewrite !concat_1p; reflexivity). }
   exact (path_intermediate (path_factor (O_factsys n) (loops_functor f) I
@@ -242,7 +256,7 @@ Proof.
   induction n.
   - srefine (Build_pHomotopy _ _).
     + reflexivity.
-    + cbn.
+    + cbn. apply moveL_pV.
       refine (concat_1p _ @ _).
       refine (concat_1p _ @ _).
       refine (_ @ (concat_p1 _)^).
@@ -264,6 +278,7 @@ Proof.
 Defined.
 
 (** Since that was a separate induction, its underlying function is only homotopic to [iterated_loops_functor n], not definitionally equal. *)
+
 Definition pequiv_iterated_loops_functor_is_iterated_loops_functor {A B} n (f : A <~>* B)
   : pequiv_iterated_loops_functor n f ==* iterated_loops_functor n f.
 Proof.
@@ -310,22 +325,22 @@ Proof.
   reflexivity.
 Defined.
 
-(* pforall and loops 'commute' *)
-Lemma loops_pforall_commute `{Funext} (A : Type) (F : A -> pType)
-  : loops (pforall F) <~>* pforall (loops o F).
+(* product and loops 'commute' *)
+Lemma loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType)
+  : loops (pproduct F) <~>* pproduct (loops o F).
 Proof.
   srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
   1: apply equiv_apD10.
   reflexivity.
 Defined.
 
-(* pforall and iterated loops commute *)
-Lemma iterated_loops_pforall_commute `{Funext} (A : Type) (F : A -> pType) (n : nat)
-  : iterated_loops n (pforall F) <~>* pforall (iterated_loops n o F).
+(* product and iterated loops commute *)
+Lemma iterated_loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType) (n : nat)
+  : iterated_loops n (pproduct F) <~>* pproduct (iterated_loops n o F).
 Proof.
   induction n.
   1: reflexivity.
-  refine (loops_pforall_commute _ _ o*E _).
+  refine (loops_pproduct_commute _ _ o*E _).
   apply pequiv_loops_functor, IHn.
 Defined.
 
@@ -350,18 +365,20 @@ Defined.
 (* We declare this local notation to make it easier to write pointed types *)
 Local Notation "( X , x )" := (Build_pType X x).
 
+(** In the following lemmas we have used universe annotations explicitly as without them, coq cannot guess the universe levels correctly. Defining pointed maps as a special case of pForall has the side effect of raising the universe level since pForall requires a bigger universe for the type family. Hopefully in the future, coq's "universe guessing" will be smarter and we can drop the annotations here. *)
+
 (* We can convert between families of loops in a type and loops in Type at that type. *)
-Definition loops_type `{Univalence} (A : Type)
-  : loops (Type,A) <~>* (A <~> A, equiv_idmap).
+Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
+  : pEquiv@{j j k} (loops@{j} (Type@{i}, A)) (A <~> A, equiv_idmap).
 Proof.
   apply issig_pequiv'.
   exists (equiv_equiv_path A A).
   reflexivity.
 Defined.
-  
-Lemma local_global_looping `{Univalence} (A : Type) (n : nat)
-  : iterated_loops n.+2 (Type, A)
-  <~>* pforall (fun a => iterated_loops n.+1 (A, a)).
+
+Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : nat)
+  : iterated_loops@{j} n.+2 (Type@{i}, A)
+    <~>* pproduct (fun a => iterated_loops@{j} n.+1 (A, a)).
 Proof.
   induction n.
   { refine (_ o*E pequiv_loops_functor (loops_type A)).
@@ -369,7 +386,7 @@ Proof.
     exists (equiv_inverse (equiv_path_arrow 1%equiv 1%equiv)
             oE equiv_inverse (equiv_path_equiv 1%equiv 1%equiv)).
     reflexivity. }
-  exact (loops_pforall_commute _ _ o*E pequiv_loops_functor IHn).
+  exact (loops_pproduct_commute _ _ o*E pequiv_loops_functor IHn).
 Defined.
 
 (* 7.2.7 *)
@@ -422,3 +439,55 @@ Proof.
     apply concat_pV. }
   cbn; by rewrite concat_p1, concat_Vp.
 Qed.
+
+(** [loops] and [iterated_loops] are 1-functors *)
+Global Instance is0functor_loops
+  : Is0Functor loops.
+Proof.
+  apply Build_Is0Functor. intros. exact (loops_functor f).
+Defined.
+
+Global Instance is1functor_loops : Is1Functor loops.
+Proof.
+  apply Build_Is1Functor.
+  + intros ? ? ? ? h. exact (loops_2functor h).
+  + intros. apply loops_functor_idmap.
+  + intros. apply loops_functor_compose.
+Defined.
+
+Global Instance is0functor_iterated_loops (n : nat)
+  : Is0Functor (iterated_loops n).
+Proof.
+  apply Build_Is0Functor. intros. exact (iterated_loops_functor n f).
+Defined.
+
+Global Instance is1functor_iterated_loops (n : nat)
+  : Is1Functor (iterated_loops n).
+Proof.
+  apply Build_Is1Functor.
+  + intros ? ? ? ? h. exact (iterated_loops_2functor n h).
+  + intros. apply iterated_loops_functor_idmap.
+  + intros. apply iterated_loops_functor_compose.
+Defined.
+
+(** [loops_inv] is a natural transformation. *)
+Global Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
+Proof.
+  apply Build_Is1Natural. intros A B f.
+  srapply Build_pHomotopy.
+  + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
+    refine (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
+  + pointed_reduce. pointed_reduce. reflexivity.
+Defined.
+
+(** Loops on the pointed type of dependent pointed maps correspond to
+  pointed dependent maps into a family of loops. *)
+(* We define this in this direction, because the forward map is pointed by
+  reflexivity. *)
+Definition equiv_loops_ppforall `{Funext} {A : pType} (B : A -> pType)
+  : loops (ppforall x : A, B x) <~>* (ppforall x : A, loops (B x)).
+Proof.
+  srapply Build_pEquiv'.
+  1: symmetry; exact (equiv_path_pforall (point_pforall B) (point_pforall B)).
+  reflexivity.
+Defined.

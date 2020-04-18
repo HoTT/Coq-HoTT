@@ -18,3 +18,5 @@ Require Export WildCat.Forall.
 Require Export WildCat.Sigma.
 (* Higher categories *)
 Require Export WildCat.TwoOneCat.
+(* Pointed categories *)
+Require Export WildCat.PointedCat.

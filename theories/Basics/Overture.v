@@ -37,12 +37,15 @@ Definition Relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : Relation A) :=
   reflexivity : forall x : A, R x x.
+Arguments reflexivity {A R} _.
 
 Class Symmetric {A} (R : Relation A) :=
   symmetry : forall x y, R x y -> R y x.
+Arguments symmetry {A R _ _}.
 
 Class Transitive {A} (R : Relation A) :=
   transitivity : forall x y z, R x y -> R y z -> R x z.
+Arguments transitivity {A R _ _ _}.
 
 (** A [PreOrder] is both Reflexive and Transitive. *)
 Class PreOrder {A} (R : Relation A) :=

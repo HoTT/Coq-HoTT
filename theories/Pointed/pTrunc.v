@@ -45,10 +45,11 @@ Proof.
     apply (ap (Build_pMap _ _ f)).
     apply concat_1p. }
   intro f.
-  apply path_pmap.
+  apply path_pforall.
   srapply Build_pHomotopy.
   1: intro; by strip_truncations.
-  reflexivity.
+  cbn.
+  symmetry; apply concat_pp_V.
 Defined.
 
 Definition ptr_functor {X Y : pType} (n : trunc_index) (f : X ->* Y)
@@ -65,6 +66,14 @@ Proof.
   reflexivity.
 Defined.
 
+Definition ptr_functor_pconst {X Y : pType} n
+  : ptr_functor n (@pconst X Y) ==* pconst.
+Proof.
+  srapply Build_pHomotopy.
+  - intros x; strip_truncations; reflexivity.
+  - reflexivity.
+Defined.
+
 Definition ptr_functor_pmap_compose n {X Y Z : pType} (f : X ->* Y) (g : Y ->* Z)
   : ptr_functor n (g o* f) ==* ptr_functor n g o* ptr_functor n f.
 Proof.
@@ -72,6 +81,17 @@ Proof.
   { intro x.
     by strip_truncations. }
   by pointed_reduce'.
+Defined.
+
+Definition ptr_functor_homotopy {X Y : pType} (n : trunc_index)
+           {f g : X ->* Y} (p : f ==* g)
+  : ptr_functor n f ==* ptr_functor n g.
+Proof.
+  srapply Build_pHomotopy.
+  - intros x; strip_truncations; cbn.
+    change (@tr n Y (f x) = tr (g x)).
+    apply ap, p.
+  - exact (ap _ (dpoint_eq p) @ ap_pp (@tr n _) _ _ @ whiskerL _ (ap_V _ _)). 
 Defined.
 
 Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
