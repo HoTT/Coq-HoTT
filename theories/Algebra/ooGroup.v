@@ -172,14 +172,14 @@ Defined.
 
 (** *** Homomorphic properties *)
 
-(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce] (see Pointed.v). *)
+(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce_rewrite] (see Pointed.v). *)
 Ltac grouphom_reduce :=
   unfold grouphom_fun; cbn;
   repeat match goal with
            | [ G : ooGroup |- _ ] => destruct G as [G ?]
            | [ phi : ooGroupHom ?G ?H |- _ ] => destruct phi as [phi ?]
          end;
-  pointed_reduce.
+  pointed_reduce_rewrite.
 
 Definition compose_grouphom {G H K : ooGroup}
            (psi : ooGroupHom H K) (phi : ooGroupHom G H)

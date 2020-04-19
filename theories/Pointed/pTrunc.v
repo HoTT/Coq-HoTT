@@ -80,7 +80,7 @@ Proof.
   srapply Build_pHomotopy.
   { intro x.
     by strip_truncations. }
-  by pointed_reduce'.
+  by pointed_reduce.
 Defined.
 
 Definition ptr_functor_homotopy {X Y : pType} (n : trunc_index)

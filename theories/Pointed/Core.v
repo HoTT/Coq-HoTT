@@ -145,7 +145,7 @@ Definition pproduct {A : Type} (F : A -> pType) : pType
 (** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
 
 (** First a version with no rewrites, which leaves some cleanup to be done but which can be used in transparent proofs. *)
-Ltac pointed_reduce' :=
+Ltac pointed_reduce :=
   (*TODO: are these correct? *)
   unfold pointed_fun, pointed_htpy;
   cbn in *;
@@ -160,8 +160,8 @@ Ltac pointed_reduce' :=
   path_induction; cbn.
 
 (** Next a version that uses [rewrite], and should only be used in opaque proofs. *)
-Ltac pointed_reduce :=
-  pointed_reduce';
+Ltac pointed_reduce_rewrite :=
+  pointed_reduce;
   rewrite ?concat_p1, ?concat_1p.
 
 (** Finally, a version that just strictifies a single map or equivalence.  This has the advantage that it leaves the context more readable. *)
@@ -408,7 +408,7 @@ Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eissect f). 
   simpl. unfold moveR_equiv_V.
-  pointed_reduce'.
+  pointed_reduce.
   symmetry.
   refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
 Defined.
@@ -418,7 +418,7 @@ Definition peisretr {A B : pType} (f : A <~>* B) : pSect (pequiv_inverse f) f.
 Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eisretr f).
-  pointed_reduce'.
+  pointed_reduce.
   unfold moveR_equiv_V.
   refine (eisadj f _ @ _).
   symmetry.
@@ -495,7 +495,7 @@ Proof.
   revert p' r. srapply phomotopy_ind.
   revert h q. srapply phomotopy_ind.
   revert g p. srapply phomotopy_ind.
-  pointed_reduce'. reflexivity.
+  pointed_reduce. reflexivity.
 Defined.
 
 Definition phomotopy_prewhisker `{Funext} {A : pType} {P : pFam A}
@@ -507,7 +507,7 @@ Proof.
   revert q' s. srapply phomotopy_ind.
   revert h q. srapply phomotopy_ind.
   revert g p. srapply phomotopy_ind.
-  pointed_reduce'. reflexivity.
+  pointed_reduce. reflexivity.
 Defined.
 
 Definition phomotopy_compose_assoc `{Funext} {A : pType} {P : pFam A}
@@ -519,7 +519,7 @@ Proof.
   revert k r. srapply phomotopy_ind.
   revert h q. srapply phomotopy_ind.
   revert g p. srapply phomotopy_ind.
-  pointed_reduce'. reflexivity.
+  pointed_reduce. reflexivity.
 Defined.
 
 Definition phomotopy_compose_p1 {A : pType} {P : pFam A} {f g : pForall A P}
@@ -527,7 +527,7 @@ Definition phomotopy_compose_p1 {A : pType} {P : pFam A} {f g : pForall A P}
 Proof.
   srapply Build_pHomotopy.
   1: intro; apply concat_p1.
-  pointed_reduce'.
+  pointed_reduce.
   rewrite (concat_pp_V H (concat_p1 _))^. generalize (H @ concat_p1 _).
   clear H. intros H. destruct H.
   generalize (p point); generalize (g point).
@@ -539,7 +539,7 @@ Definition phomotopy_compose_1p {A : pType} {P : pFam A} {f g : pForall A P}
 Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_1p.
-  + pointed_reduce'.
+  + pointed_reduce.
     rewrite (concat_pp_V H (concat_p1 _))^. generalize (H @ concat_p1 _).
     clear H. intros H. destruct H.
     generalize (p point). generalize (g point).
@@ -552,7 +552,7 @@ Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_pV.
   + revert g p. srapply phomotopy_ind.
-    pointed_reduce'. reflexivity.
+    pointed_reduce. reflexivity.
 Defined.
 
 Definition phomotopy_compose_Vp `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
@@ -561,7 +561,7 @@ Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_Vp.
   + revert g p. srapply phomotopy_ind.
-    pointed_reduce'. reflexivity.
+    pointed_reduce. reflexivity.
 Defined.
 
 (** ** The pointed category structure of [pType] *)

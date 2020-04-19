@@ -12,7 +12,7 @@ Definition phomotopy_inverse_1 {A : pType} {P : pFam A} {f : pForall A P}
 Proof.
   srapply Build_pHomotopy.
   + reflexivity.
-  + pointed_reduce'. reflexivity.
+  + pointed_reduce. reflexivity.
 Defined.
 
 (** [phomotopy_path] sends concatenation to composition of pointed homotopies.*)
@@ -30,7 +30,7 @@ Definition pmap_postwhisker {A B C : pType} {f g : A ->* B}
 Proof.
   snrapply Build_pHomotopy; cbn.
   1: intros a; apply ap, p.
-  pointed_reduce'.
+  pointed_reduce.
   symmetry.
   simpl.
   refine (concat_p1 _ @ concat_p1 _ @ ap _ _).
@@ -42,7 +42,7 @@ Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
 Proof.
   snrapply Build_pHomotopy; cbn.
   1: intros a; apply p.
-  pointed_reduce'.
+  pointed_reduce.
   symmetry.
   refine (concat_p1 _ @ concat_1p _ @ concat_p1 _).
 Defined.

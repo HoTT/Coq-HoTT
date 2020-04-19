@@ -115,7 +115,7 @@ Definition functor2_pforall_right {A : pType} {B C : pFam A}
 Proof.
   srapply Build_pHomotopy.
   1: { intro a. refine (p a (f a) @ ap (g' a) (q a)). }
-  pointed_reduce. symmetry. apply concat_Ap.
+  pointed_reduce_rewrite. symmetry. apply concat_Ap.
 Defined.
 
 Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
@@ -125,7 +125,7 @@ Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
       (concat_1p _)
     ==* phomotopy_reflexive (functor_pforall_right g g₀ f).
 Proof.
-  pointed_reduce'. reflexivity.
+  pointed_reduce. reflexivity.
 Defined.
 
 (* functorial action of [pForall A (pointed_fam B)] in [B]. *)
