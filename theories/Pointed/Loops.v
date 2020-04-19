@@ -73,7 +73,7 @@ Proof.
     refine (_ @ concat_p_pp _ _ _ @ ((ap_pp _ _ _)^ @@ 1)).
     apply whiskerR.
     apply ap_compose. }
-  by pointed_reduce.
+  by pointed_reduce'.
 Defined.
 
 (* Loops functor respects identity *)
@@ -105,11 +105,12 @@ Defined.
 Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
   : (loops_functor f) ==* (loops_functor g).
 Proof.
-  pointed_reduce.
+  pointed_reduce'.
   srapply Build_pHomotopy; cbn.
   { intro q.
     refine (_ @ (concat_p1 _)^ @ (concat_1p _)^).
-    apply moveR_Vp, concat_Ap. }
+    apply moveR_Vp.
+    apply (concat_Ap (fun x => p x @ 1)). }
   simpl. generalize (p point0). generalize (g point0).
   intros _ []. reflexivity.
 Defined.
@@ -477,7 +478,7 @@ Proof.
   srapply Build_pHomotopy.
   + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
     refine (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
-  + pointed_reduce. pointed_reduce. reflexivity.
+  + pointed_reduce'. reflexivity.
 Defined.
 
 (** Loops on the pointed type of dependent pointed maps correspond to

@@ -64,7 +64,7 @@ Qed.
 Definition psusp_2functor {X Y} {f g : X ->* Y} (p : f ==* g)
   : psusp_functor f ==* psusp_functor g.
 Proof.
-  pointed_reduce.
+  pointed_reduce'.
   srapply Build_pHomotopy.
   { simpl.
     srapply Susp_ind.
@@ -168,7 +168,7 @@ Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   : loop_susp_unit Y o* f
   ==* loops_functor (psusp_functor f) o* loop_susp_unit X.
 Proof.
-  pointed_reduce.
+  pointed_reduce'.
   simple refine (Build_pHomotopy _ _); cbn.
   - intros x; symmetry.
     refine (concat_1p _@ (concat_p1 _ @ _)).
@@ -201,7 +201,7 @@ Definition loop_susp_counit_natural {X Y : pType} (f : X ->* Y)
   : f o* loop_susp_counit X
   ==* loop_susp_counit Y o* psusp_functor (loops_functor f).
 Proof.
-  pointed_reduce.
+  pointed_reduce'.
   simple refine (Build_pHomotopy _ _); simpl.
   - simple refine (Susp_ind _ _ _ _); cbn; try reflexivity; intros p.
     rewrite transport_paths_FlFr, ap_compose, concat_p1.

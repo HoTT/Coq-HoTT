@@ -46,7 +46,7 @@ Proof.
     refine (_ oE equiv_path_inverse _ _).
     apply equiv_concat_l.
     apply transport_paths_Fl. }
-  by pointed_reduce.
+  by pointed_reduce'.
 Defined.
 
 Definition pr1_pfiber_loops_functor {A B} (f : A ->* B)
@@ -110,7 +110,7 @@ Definition pfiber2_loops_functor {A B : pType} (f : A ->* B)
 : loops_inv _ o* pfiber2_loops f o* pfib (pfib (pfib f))
   ==* loops_functor f o* pfiber2_loops (pfib f).
 Proof.
-  pointed_reduce.
+  pointed_reduce'.
   simple refine (Build_pHomotopy _ _).
   - intros [[[x p] q] r]. simpl in *.
     (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)

@@ -125,7 +125,7 @@ Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
       (concat_1p _)
     ==* phomotopy_reflexive (functor_pforall_right g g₀ f).
 Proof.
-  pointed_reduce. reflexivity.
+  pointed_reduce'. reflexivity.
 Defined.
 
 (* functorial action of [pForall A (pointed_fam B)] in [B]. *)
@@ -183,7 +183,6 @@ Definition pmap_compose_ppforall2_refl `{Funext} {A : pType} {P Q : A -> pType}
   : pmap_compose_ppforall2 (fun a => phomotopy_reflexive (g a)) (phomotopy_reflexive f)
     ==* phomotopy_reflexive _.
 Proof.
-  simpl.
   unfold pmap_compose_ppforall2.
   revert Q g. refine (fiberwise_pointed_map_rec _ _). intros Q g.
   srapply functor2_pforall_right_refl.
