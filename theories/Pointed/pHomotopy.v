@@ -8,19 +8,17 @@ Local Open Scope pointed_scope.
 (** Some higher homotopies *)
 
 Definition phomotopy_inverse_1 {A : pType} {P : pFam A} {f : pForall A P}
-  : (phomotopy_reflexive f)^* ==* phomotopy_reflexive f.
+  : (phomotopy_reflexive f)^* = phomotopy_reflexive f.
 Proof.
-  srapply Build_pHomotopy.
-  + reflexivity.
-  + pointed_reduce. reflexivity.
+  pointed_reduce.  reflexivity.
 Defined.
 
 (** [phomotopy_path] sends concatenation to composition of pointed homotopies.*)
 Definition phomotopy_path_pp {A : pType} {P : pFam A}
   {f g h : pForall A P} (p : f = g) (q : g = h)
-  : phomotopy_path (p @ q) ==* phomotopy_path p @* phomotopy_path q.
+  : phomotopy_path (p @ q) = phomotopy_path p @* phomotopy_path q.
 Proof.
-  induction p. induction q. symmetry. apply phomotopy_compose_p1.
+  pointed_reduce.  reflexivity.
 Defined.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
@@ -50,7 +48,7 @@ Defined.
 (** ** Composition of pointed homotopies *)
 Definition phomotopy_path2 {A : pType} {P : pFam A}
   {f g : pForall A P} {p p' : f = g} (q : p = p')
-  : phomotopy_path p ==* phomotopy_path p'.
+  : phomotopy_path p = phomotopy_path p'.
 Proof.
   induction q. reflexivity.
 Defined.
@@ -58,7 +56,7 @@ Defined.
 (** [phomotopy_path] sends inverses to inverses.*)
 Definition phomotopy_path_V {A : pType} {P : pFam A}
   {f g : pForall A P} (p : f = g)
-  : phomotopy_path (p^) ==* (phomotopy_path p)^*.
+  : phomotopy_path (p^) = (phomotopy_path p)^*.
 Proof.
   induction p. simpl. symmetry. apply phomotopy_inverse_1.
 Defined.

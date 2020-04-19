@@ -24,26 +24,22 @@ Definition pforall_from_pointed {A : pType} {B : A -> Type} (f : forall x, B x)
 
 (* precomposing the zero map is the zero map *)
 Lemma precompose_pconst {A B C : pType} (f : B ->* C)
-  : f o* @pconst A B ==* pconst.
+  : f o* @pconst A B = pconst.
 Proof.
-  srapply Build_pHomotopy.
-  1: intro; apply point_eq.
-  exact (concat_p1 _ @ concat_1p _)^.
+  pointed_reduce_pmap f.  reflexivity.
 Defined.
 
 (* postcomposing the zero map is the zero map *)
 Lemma postcompose_pconst {A B C : pType} (f : A ->* B)
-  : pconst o* f ==* @pconst A C.
+  : pconst o* f = @pconst A C.
 Proof.
-  srapply Build_pHomotopy.
-  1: reflexivity.
-  exact (concat_p1 _ @ concat_p1 _ @ ap_const _ _)^.
+  pointed_reduce_pmap f. reflexivity.
 Defined.
 
 Lemma pconst_factor {A B : pType} {f : pUnit ->* B} {g : A ->* pUnit}
   : f o* g ==* pconst.
 Proof.
-  refine (_ @* precompose_pconst f).
+  refine (_ @* phomotopy_path (precompose_pconst f)).
   apply pmap_postwhisker.
   apply pmap_punit_pconst.
 Defined.
@@ -90,9 +86,11 @@ Proof.
   hnf; rapply moveR_equiv_M'.
   refine (_^ @ ap10 _ _).
   2: exact path_equiv_path_pforall_phomotopy_path.
+  refine (phomotopy_path_pp _ _ @ _).
   apply path_pforall.
-  refine (phomotopy_path_pp _ _ @* _ @* q^*).
+  refine (_ @* q^*).
   apply phomotopy_prewhisker.
+  apply phomotopy_path.
   apply phomotopy_path_V.
 Defined.
 
@@ -149,13 +147,17 @@ Defined.
 Definition pmap_compose_ppforall_compose {A : pType} {P Q R : A -> pType}
   (h : forall (a : A), Q a ->* R a) (g : forall (a : A), P a ->* Q a)
   (f : ppforall a, P a)
-  : pmap_compose_ppforall (fun a => h a o* g a) f ==* pmap_compose_ppforall h (pmap_compose_ppforall g f).
+  : pmap_compose_ppforall (fun a => h a o* g a) f = pmap_compose_ppforall h (pmap_compose_ppforall g f).
 Proof.
-  srapply Build_pHomotopy.
+  unfold pmap_compose_ppforall, functor_pforall_right; simpl.
+  srefine ((equiv_ap' (issig_pforall _ _)^-1 _ _)^-1 _).
+  srapply path_sigma; simpl.
   + reflexivity.
-  + simpl. refine ((whiskerL _ (inverse2 _)) @ concat_pV _)^.
-    refine (whiskerR _ _ @ concat_pp_p _ _ _).
-    refine (ap_pp _ _ _ @ whiskerR (ap_compose _ _ _)^ _).
+  + simpl.
+    refine (concat_p_pp _ _ _ @ _).
+    apply whiskerR.
+    refine (_ @ (ap_pp _ _ _)^).
+    apply whiskerR, ap_compose.
 Defined.
 
 Definition pmap_compose_ppforall2 {A : pType} {P Q : A -> pType} {g g' : forall (a : A), P a ->* Q a}
