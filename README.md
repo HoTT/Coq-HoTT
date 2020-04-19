@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/HoTT/HoTT.png?branch=master)](https://travis-ci.org/HoTT/HoTT)
+![Github Actions CI](https://github.com/HoTT/HoTT/workflows/CI/badge.svg)
 
 [Homotopy Type Theory](http://homotopytypetheory.org/) is an interpretation of
 Martin-Löf’s intensional type theory into abstract homotopy theory. Propositional equality
