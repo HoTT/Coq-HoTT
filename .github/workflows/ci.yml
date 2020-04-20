@@ -52,6 +52,8 @@ jobs:
 
     - name: Installing dependencies
       run: |
+        # Work around issue with npm as per https://bugs.launchpad.net/ubuntu/+source/npm/+bug/1809828 and https://askubuntu.com/a/1092849/223605
+        sudo apt-get install -y --allow-unauthenticated nodejs-dev node-gyp libssl1.0-dev
         sudo apt-get install -y --allow-unauthenticated npm aspcud ghc cabal-install graphviz xsltproc python-lxml python-pexpect libxml2-dev libxslt1-dev time ocaml camlp5 camlp4 ocaml-findlib libocamlgraph-ocaml-dev lua5.1
 
     - name: Upgrade and autoremove packages
