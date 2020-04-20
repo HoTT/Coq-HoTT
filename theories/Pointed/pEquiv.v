@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import UnivalenceImpliesFunext.
 Require Import WildCat.
 Require Import Pointed.Core Pointed.pMap Pointed.pHomotopy.
 

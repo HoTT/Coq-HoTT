@@ -90,7 +90,7 @@ Defined.
 Lemma loops_functor_pp {X Y : pType} (f : X ->* Y) (x y : loops X)
   : loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
 Proof.
-  pointed_reduce.
+  pointed_reduce_rewrite.
   apply ap_pp.
 Defined.
 
@@ -109,7 +109,8 @@ Proof.
   srapply Build_pHomotopy; cbn.
   { intro q.
     refine (_ @ (concat_p1 _)^ @ (concat_1p _)^).
-    apply moveR_Vp, concat_Ap. }
+    apply moveR_Vp.
+    apply (concat_Ap (fun x => p x @ 1)). }
   simpl. generalize (p point0). generalize (g point0).
   intros _ []. reflexivity.
 Defined.
@@ -477,7 +478,7 @@ Proof.
   srapply Build_pHomotopy.
   + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
     refine (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
-  + pointed_reduce. pointed_reduce. reflexivity.
+  + pointed_reduce. reflexivity.
 Defined.
 
 (** Loops on the pointed type of dependent pointed maps correspond to

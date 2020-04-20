@@ -57,7 +57,7 @@ Proof.
   - intros [u v].
     refine (concat_1p _ @ concat_p1 _ @ _).
     exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A;point_eq f) _ _).
-  - abstract (pointed_reduce; reflexivity).
+  - abstract (pointed_reduce_rewrite; reflexivity).
 Defined.
 
 Definition pfiber_iterated_loops_functor {A B : pType} (n : nat) (f : A ->* B)

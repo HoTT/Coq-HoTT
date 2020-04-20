@@ -39,7 +39,7 @@ Definition psusp_functor {X Y : pType} (f : X ->* Y) : psusp X ->* psusp Y
 Definition psusp_functor_compose {X Y Z : pType} (g : Y ->* Z) (f : X ->* Y)
   : psusp_functor (g o* f) ==* psusp_functor g o* psusp_functor f.
 Proof.
-  pointed_reduce; srefine (Build_pHomotopy _ _); cbn.
+  pointed_reduce_rewrite; srefine (Build_pHomotopy _ _); cbn.
   { srapply Susp_ind; try reflexivity; cbn.
     intros x.
     refine (transport_paths_FlFr _ _ @ _).
@@ -122,7 +122,7 @@ Module Book_Loop_Susp_Adjunction.
   : loop_susp_adjoint A B' (g o* f)
     ==* loops_functor g o* loop_susp_adjoint A B f.
   Proof.
-    pointed_reduce.
+    pointed_reduce_rewrite.
     srefine (Build_pHomotopy _ _).
     - intros a. simpl.
       refine (_ @ (concat_1p _)^).

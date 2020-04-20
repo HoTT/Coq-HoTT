@@ -145,7 +145,7 @@ Definition pproduct {A : Type} (F : A -> pType) : pType
 (** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
 
 (** First a version with no rewrites, which leaves some cleanup to be done but which can be used in transparent proofs. *)
-Ltac pointed_reduce' :=
+Ltac pointed_reduce :=
   (*TODO: are these correct? *)
   unfold pointed_fun, pointed_htpy;
   cbn in *;
@@ -160,8 +160,8 @@ Ltac pointed_reduce' :=
   path_induction; cbn.
 
 (** Next a version that uses [rewrite], and should only be used in opaque proofs. *)
-Ltac pointed_reduce :=
-  pointed_reduce';
+Ltac pointed_reduce_rewrite :=
+  pointed_reduce;
   rewrite ?concat_p1, ?concat_1p.
 
 (** Finally, a version that just strictifies a single map or equivalence.  This has the advantage that it leaves the context more readable. *)
@@ -408,7 +408,7 @@ Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eissect f). 
   simpl. unfold moveR_equiv_V.
-  pointed_reduce'.
+  pointed_reduce.
   symmetry.
   refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
 Defined.
@@ -418,7 +418,7 @@ Definition peisretr {A B : pType} (f : A <~>* B) : pSect (pequiv_inverse f) f.
 Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eisretr f).
-  pointed_reduce'.
+  pointed_reduce.
   unfold moveR_equiv_V.
   refine (eisadj f _ @ _).
   symmetry.

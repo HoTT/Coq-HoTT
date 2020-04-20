@@ -115,7 +115,7 @@ Definition functor2_pforall_right {A : pType} {B C : pFam A}
 Proof.
   srapply Build_pHomotopy.
   1: { intro a. refine (p a (f a) @ ap (g' a) (q a)). }
-  pointed_reduce. symmetry. apply concat_Ap.
+  pointed_reduce_rewrite. symmetry. apply concat_Ap.
 Defined.
 
 Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
@@ -183,7 +183,6 @@ Definition pmap_compose_ppforall2_refl `{Funext} {A : pType} {P Q : A -> pType}
   : pmap_compose_ppforall2 (fun a => phomotopy_reflexive (g a)) (phomotopy_reflexive f)
     ==* phomotopy_reflexive _.
 Proof.
-  simpl.
   unfold pmap_compose_ppforall2.
   revert Q g. refine (fiberwise_pointed_map_rec _ _). intros Q g.
   srapply functor2_pforall_right_refl.
