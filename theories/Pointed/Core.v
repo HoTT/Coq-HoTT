@@ -224,9 +224,9 @@ Notation "p ^*" := (phomotopy_symmetric _ _ p) : pointed_scope.
 (** [pHomotopy] is a transitive relation *)
 Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B).
 Proof.
-  intros x y z p q.
+  intros f g h p q.
   snrefine (Build_pHomotopy (fun x => p x @ q x) _).
-  nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).
+  nrefine (dpoint_eq p @@ dpoint_eq q @ (concat_pp_p _ _ _ @ _)).
   nrapply whiskerL; nrapply concat_V_pp.
 Defined.
 
