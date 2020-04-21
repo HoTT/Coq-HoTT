@@ -107,11 +107,11 @@ End QuotientRing.
 
 (** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
 Definition Build_CRing' (R : AbGroup)
-  `(Mult R, One R, LeftDistribute R mult abgroup_sgop)
+  `(Mult R, One R, LeftDistribute R mult (abgroup_sgop R))
   (iscomm : @IsCommutativeMonoid R mult one)
   : CRing
-  := Build_CRing R abgroup_sgop _ abgroup_unit _
-      abgroup_inverse (Build_IsRing _ _ _ _).
+  := Build_CRing R (abgroup_sgop R) _ (abgroup_unit R) _
+       (abgroup_inverse R) (Build_IsRing _ _ _ _).
 
 (** The image of a ring homomorphism *)
 Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.

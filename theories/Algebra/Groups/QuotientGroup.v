@@ -113,25 +113,23 @@ End GroupCongruenceQuotient.
 
 Section QuotientGroup.
 
-  Context (G : Group) (N : Subgroup G) `{!IsNormalSubgroup N}.
+  Context (G : Group) (N : Group) `{IsNormalSubgroup N G}.
 
-  Global Instance iscongruence_in_cosetL: IsCongruence in_cosetL.
+  Global Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetL_cong.
   Defined.
 
-  Global Instance iscongruence_in_cosetR: IsCongruence in_cosetR.
+  Global Instance iscongruence_in_cosetR: IsCongruence (in_cosetR N).
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetR_cong.
   Defined.
 
   (** Now we have to make a choice whether to pick the left or right cosets. Due to existing convention we shall pick left cosets but we note that we could equally have picked right. *)
-  Definition QuotientGroup : Group.
-  Proof.
-    rapply (Build_Group (G / in_cosetL)).
-  Defined.
+  Definition QuotientGroup : Group
+    := Build_Group (G / (in_cosetL N)) _ _ _ _.
 
   Definition grp_quotient_map : G $-> QuotientGroup.
   Proof.
@@ -140,8 +138,8 @@ Section QuotientGroup.
     intros ??; reflexivity.
   Defined.
 
-  Definition grp_quotient_rec {H : Group} (f : G $-> H)
-    (h : forall n : N, f (issubgroup_incl n) = mon_unit) : QuotientGroup $-> H.
+  Definition grp_quotient_rec {A : Group} (f : G $-> A)
+    (h : forall n : N, f (issubgroup_incl n) = mon_unit) : QuotientGroup $-> A.
   Proof.
     snrapply Build_GroupHomomorphism.
     { srapply Quotient_rec.
@@ -166,16 +164,16 @@ Section QuotientGroup.
 
 End QuotientGroup.
 
-Arguments grp_quotient_map {_ _ _}.
+Arguments grp_quotient_map {_ _ _ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.
 
 Local Open Scope group_scope.
 
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
-Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
-  {k k' : IsNormalSubgroup H}
-  : GroupIsomorphism (@QuotientGroup G H k) (@QuotientGroup G H k').
+Definition grp_iso_quotient_normal (G : Group) (H : Group) `{IsSubgroup H G}
+  {k k' : @IsNormalSubgroup H G _}
+  : GroupIsomorphism (@QuotientGroup G H _ k) (@QuotientGroup G H _ k').
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.
@@ -186,9 +184,8 @@ Proof.
 Defined.
 
 (** The universal mapping property for groups *)
-Theorem equiv_grp_quotient_ump {F : Funext}
-  {G : Group} (N : Subgroup G) `{!IsNormalSubgroup N} (H : Group)
-  : {f : G $-> H & forall n, f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
+Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) (H : Group) `{IsNormalSubgroup N G}
+  : {f : G $-> H & forall (n : N), f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
   { intros [f p].

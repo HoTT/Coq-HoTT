@@ -11,7 +11,8 @@ Local Open Scope mc_scope.
 (** An additive subgroup I of a ring R is an ideal when: *)
 Class IsIdeal {R : CRing} (I : Subgroup R) := {
   (** Forall r : R and x : I, there exists an a : I, such that a = r * x inside R *)
-  isideal : forall r x, exists a, issubgroup_incl a = r * issubgroup_incl x;
+  isideal (r : R) (x : I)
+    : exists (a : I), issubgroup_incl a = r * issubgroup_incl x;
 }.
 
 Record Ideal (R : CRing) := {
@@ -102,20 +103,12 @@ Proof.
   reflexivity.
 Defined.
 
-(** This instance helps typeclass search by selecting a proof of normality, so that quotient rings, which are defined as quotient groups, are not confused. *)
-Global Instance isnormal_ideal_kernel {R S} (f : CRingHomomorphism R S)
-  : IsNormalSubgroup (ideal_kernel f).
-Proof.
-  apply isnormal_ab_subgroup.
-Defined.
-
 (** Properties of ideals *)
 
 (** TODO: Maximal ideals *)
 (** TODO: Principal ideal *)
 (** TODO: Prime ideals *)
 (** TODO: Radical ideals *)
-
 (** TODO: Minimal ideals *)
 (** TODO: Primary ideals *)
 

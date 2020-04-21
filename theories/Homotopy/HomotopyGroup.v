@@ -124,7 +124,7 @@ Definition pi1_functor {X Y : pType}
   : (X ->* Y) -> Pi1 X $-> Pi1 Y.
 Proof.
   intro f.
-  srapply Build_GroupHomomorphism.
+  snrapply Build_GroupHomomorphism.
   { apply Trunc_functor.
     apply loops_functor.
     assumption. }
