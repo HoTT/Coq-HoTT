@@ -185,7 +185,7 @@ Section EncodeDecode.
 
   Context `{Univalence} {G : Group}.
 
-  Local Definition codes : B G -> 0 -Type.
+  Local Definition codes : B G -> 0-Type.
   Proof.
     srapply ClassifyingSpace_rec.
     + srapply (BuildhSet G).
@@ -256,6 +256,24 @@ Section EncodeDecode.
     srapply Build_pEquiv'.
     1: apply equiv_loops_bg_g.
     reflexivity.
+  Defined.
+
+  Local Lemma encode_pp' (x : B G) (p q : bbase = x)
+    : encode _ (p @ q^) = transport (fun x : B G => codes x) q^ (encode x p).
+  Proof.
+    destruct q; cbn.
+    f_ap; apply concat_p1.
+  Defined.
+
+  Local Lemma encode_pp (p q : bbase = bbase)
+    : encode _ (p @ q) = encode _ p * encode _ q.
+  Proof.
+    refine (_ @ codes_transport _ _).
+    refine (_ @ transport2 codes _^ (encode bbase p)).
+    2: rapply decode_encode.
+    rewrite <- (inv_V q).
+    generalize q^; intro q'; clear q.
+    apply encode_pp'.
   Defined.
 
 End EncodeDecode.
