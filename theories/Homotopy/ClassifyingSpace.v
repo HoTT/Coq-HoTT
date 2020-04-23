@@ -278,9 +278,29 @@ Section EncodeDecode.
 
 End EncodeDecode.
 
+(** We also have that the equivalence is a group isomorphism. *)
+
+(** First we show that the loop space of a pointed 1-type is a group *)
+Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
+  := Build_Group (loops X) concat idpath inverse
+    (Build_IsGroup _ _ _ _
+      (Build_IsMonoid _ _ _
+        (Build_IsSemiGroup _ _ _ concat_p_pp) concat_1p concat_p1)
+      concat_Vp concat_pV).
+
+Definition grp_iso_loopgroup_bg `{Univalence} (G : Group)
+  : GroupIsomorphism (LoopGroup (B G)) G.
+Proof.
+  snrapply Build_GroupIsomorphism'.
+  1: exact equiv_loops_bg_g.
+  intros x y.
+  apply encode_pp.
+Defined.
+
 (** When G is an abelian group, BG is a H-space. *)
 Section HSpace_bg.
 
+  (** TODO: funext can probably be avoided here *)
   Context `{Funext} {G : AbGroup}.
 
   Definition bg_mul : B G -> B G -> B G.
