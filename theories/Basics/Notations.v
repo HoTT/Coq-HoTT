@@ -64,7 +64,12 @@ Reserved Infix "=n" (at level 70, no associativity).
 Reserved Infix "$->" (at level 99).
 Reserved Infix "$<~>" (at level 85).
 Reserved Infix "$o" (at level 40).
+Reserved Infix "$oD" (at level 40).
 Reserved Infix "$oE" (at level 40).
+Reserved Infix "$<o" (at level 30).
+Reserved Infix "$o>" (at level 30).
+Reserved Infix "$<oD" (at level 30).
+Reserved Infix "$o>D" (at level 30).
 Reserved Infix "$==" (at level 70).
 Reserved Infix "$o@" (at level 30).
 Reserved Infix "$@" (at level 30).
@@ -73,7 +78,10 @@ Reserved Infix "$@R" (at level 30).
 Reserved Infix "$=>" (at level 99).
 Reserved Notation "T ^op" (at level 3, format "T ^op").
 Reserved Notation "f ^-1$" (at level 3, format "f '^-1$'").
+Reserved Notation "f ^-1'$" (at level 3, format "f '^-1'$'").
+Reserved Notation "f ^-1D$" (at level 3, format "f '^-1D$'").
 Reserved Notation "f ^$" (at level 3, format "f '^$'").
+Reserved Notation "f ^D$" (at level 3, format "f '^D$'").
 
 (** Cubical *)
 Reserved Infix "@@h" (at level 30).

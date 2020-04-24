@@ -172,7 +172,7 @@ Notation "x .2" := (pr2 x) : fibration_scope.
 
 Definition uncurry {A B C} (f : A -> B -> C) (p : A * B) : C := f (fst p) (snd p).
 
-(** Composition of functions. *)
+(** *** Composition of functions. *)
 
 Notation compose := (fun g f x => g (f x)).
 
@@ -697,6 +697,8 @@ Class Irreflexive {A} (R : Relation A) :=
 Class Asymmetric {A} (R : Relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
+(** *** Unit type *)
+
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
 Inductive Unit : Type0 :=
     tt : Unit.
@@ -707,6 +709,90 @@ Definition Unit_rect := Unit_ind.
 
 (** A [Unit] goal should be resolved by [auto] and [trivial]. *)
 Hint Resolve tt : core.
+
+(** ** Natural numbers *)
+
+(** The natural numbers are defined in [Coq.Init.Datatypes] (we weren't able to excise them from the stdlib), and studied further in [Spaces.Nat].  But her we give some basic definitions. *)
+
+Definition pred (n : nat) : nat
+  := match n with
+     | 0 => 0
+     | S n => n
+     end.
+
+Notation "n .-1" := (pred n) : nat_scope.
+
+(** *** Booleans *)
+
+(* coq calls it "bool", we call it "Bool" *)
+Local Unset Elimination Schemes.
+Inductive Bool : Type0 :=
+  | true : Bool
+  | false : Bool.
+Scheme Bool_ind := Induction for Bool Sort Type.
+Scheme Bool_rec := Minimality for Bool Sort Type.
+(* For compatibility with Coq's [induction] *)
+Definition Bool_rect := Bool_ind.
+
+Add Printing If Bool.
+
+Declare Scope bool_scope.
+
+Delimit Scope bool_scope with Bool.
+
+Bind Scope bool_scope with Bool.
+
+(** ** Coinductive streams *)
+
+CoInductive Stream (A : Type) := scons
+{
+  head : A ;
+  tail : Stream A
+}.
+
+Arguments scons {A} _ _.
+Arguments head {A} _.
+Arguments tail {A} _.
+
+CoFixpoint const_stream {A} (a : A) : Stream A
+  := scons a (const_stream a).
+
+
+(** *** Typeclasses for case analysis *)
+
+(** Versions of [n = 0] and [n > 0] that are typeclasses and can be found automatically. *)
+Definition IsZeroNat (n : nat) : Type :=
+  match n with
+  | O => Unit
+  | S _ => Empty
+  end.
+Existing Class IsZeroNat.
+Global Instance iszeronat : IsZeroNat 0 := tt.
+
+Definition IsPosNat (n : nat) : Type :=
+  match n with
+  | O => Empty
+  | S _ => Unit
+  end.
+Existing Class IsPosNat.
+Global Instance isposnat (n : nat) : IsPosNat (S n) := tt.
+
+Definition IsTrue (b : Bool) : Type :=
+  match b with
+  | true => Unit
+  | false => Empty
+  end.
+Existing Class IsTrue.
+Global Instance istrue : IsTrue true := tt.
+
+Definition IsFalse (b : Bool) : Type :=
+  match b with
+  | true => Empty
+  | false => Unit
+  end.
+Existing Class IsFalse.
+Global Instance isfalse : IsFalse false := tt.
+
 
 (** *** Pointed types *)
 

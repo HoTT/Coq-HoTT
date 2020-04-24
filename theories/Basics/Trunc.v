@@ -133,6 +133,15 @@ Defined.
 Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
 Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
 
+(** A version of [n = -2] that's a typeclass. *)
+Definition IsMinusTwo (n : trunc_index) : Type :=
+  match n with
+  | minus_two => Unit
+  | trunc_S _ => Empty
+  end.
+Existing Class IsMinusTwo.
+Global Instance isminustwo : IsMinusTwo (-2) := tt.
+
 Definition trunc_index_leq_minus_two {n}
   : n <= -2 -> n = -2.
 Proof.

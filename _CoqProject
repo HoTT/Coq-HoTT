@@ -66,6 +66,29 @@ theories/WildCat/NatTrans.v
 theories/WildCat/PointedCat.v
 
 #
+#   ooCat
+#
+theories/ooCat/Glob.v
+theories/ooCat/Cat0.v
+theories/ooCat/Cat1.v
+#
+theories/ooCat/Core.v
+theories/ooCat/Laxity.v
+theories/ooCat/Transformation.v
+theories/ooCat/EquivCat.v
+theories/ooCat/Fibrations.v
+#
+theories/ooCat/Unit.v
+theories/ooCat/Prod.v
+theories/ooCat/Paths.v
+theories/ooCat/Sigma.v
+theories/ooCat/Forall.v
+theories/ooCat/Type.v
+theories/ooCat/pType.v
+
+
+
+#
 #   Types
 #
 
