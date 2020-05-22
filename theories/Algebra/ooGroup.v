@@ -6,6 +6,7 @@ Require Import Truncations.
 Require Import Colimits.Quotient.
 
 Local Open Scope path_scope.
+Local Open Scope pointed_scope.
 
 (** Keyed unification makes [rewrite !loops_functor_group] take a really long time.  See https://coq.inria.fr/bugs/show_bug.cgi?id=4544 for more discussion. *)
 Local Unset Keyed Unification.
@@ -67,7 +68,7 @@ Defined.
 (** *** Definition *)
 
 Definition ooGroupHom (G H : ooGroup)
-  := pMap (B G) (B H).
+  := B G ->* B H.
 
 Definition grouphom_fun {G H} (phi : ooGroupHom G H) : G -> H
   := loops_functor phi.
@@ -76,7 +77,7 @@ Coercion grouphom_fun : ooGroupHom >-> Funclass.
 
 (** The loop group functor takes values in oo-group homomorphisms. *)
 Definition group_loops_functor
-           {X Y : pType} (f : pMap X Y)
+           {X Y : pType} (f : X ->* Y)
 : ooGroupHom (group_loops X) (group_loops Y).
 Proof.
   simple refine (Build_pMap _ _ _ _); simpl.
@@ -90,7 +91,7 @@ Defined.
 
 (** And this functor "is" the same as the ordinary loop space functor. *)
 Definition loops_functor_group
-           {X Y : pType} (f : pMap X Y)
+           {X Y : pType} (f : X ->* Y)
 : loops_functor (group_loops_functor f) o loops_group X
   == loops_group Y o loops_functor f.
 Proof.
@@ -119,7 +120,7 @@ Definition grouphom_compose {G H K : ooGroup}
 
 Definition group_loops_functor_compose
            {X Y Z : pType}
-           (psi : pMap Y Z) (phi : pMap X Y)
+           (psi : Y ->* Z) (phi : X ->* Y)
 : grouphom_compose (group_loops_functor psi) (group_loops_functor phi)
   == group_loops_functor (pmap_compose psi phi).
 Proof.
@@ -156,7 +157,7 @@ Proof.
 Qed.
 
 Definition group_loops_2functor
-           {X Y : pType} {phi psi : pMap X Y}
+           {X Y : pType} {phi psi : X ->* Y}
            (theta : pHomotopy phi psi)
 : (group_loops_functor phi) == (group_loops_functor psi).
 Proof.
@@ -171,14 +172,14 @@ Defined.
 
 (** *** Homomorphic properties *)
 
-(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce] (see Pointed.v). *)
+(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce_rewrite] (see Pointed.v). *)
 Ltac grouphom_reduce :=
   unfold grouphom_fun; cbn;
   repeat match goal with
            | [ G : ooGroup |- _ ] => destruct G as [G ?]
            | [ phi : ooGroupHom ?G ?H |- _ ] => destruct phi as [phi ?]
          end;
-  pointed_reduce.
+  pointed_reduce_rewrite.
 
 Definition compose_grouphom {G H K : ooGroup}
            (psi : ooGroupHom H K) (phi : ooGroupHom G H)

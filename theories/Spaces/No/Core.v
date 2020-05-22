@@ -469,9 +469,9 @@ End NoRec.
 (** ** Conway's Theorem 0 *)
 
 (** First we prove that *if* a left option of [y] is [<=] itself, then it is [< y]. *)
-Lemma Conway_theorem0_lemma1 `{Funext} (x : No@{i}) (xle : x <= x)
+Lemma Conway_theorem0_lemma1 `{Funext} (x : No) (xle : x <= x)
       {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
-      (yL : L' -> No@{i}) (yR : R' -> No@{i})
+      (yL : L' -> No) (yR : R' -> No)
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (l : L') (p : x = yL l)
 : x < {{ yL | yR // ycut }}.
@@ -482,9 +482,9 @@ Proof.
 Defined.
 
 (** And dually *)
-Lemma Conway_theorem0_lemma2 `{Funext} (x : No@{i}) (xle : x <= x)
+Lemma Conway_theorem0_lemma2 `{Funext} (x : No) (xle : x <= x)
       {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
-      (yL : L' -> No@{i}) (yR : R' -> No@{i})
+      (yL : L' -> No) (yR : R' -> No)
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (r : R') (p : x = yR r)
 : {{ yL | yR // ycut }} < x.
@@ -510,7 +510,7 @@ Instance reflexive_le `{Funext} : Reflexive le
 (** Theorem 0 Part (ii), left half *)
 Theorem lt_lopt `{Funext}
         {L R : Type@{i}} {s : InSort@{i} S L R}
-        (xL : L -> No@{i}) (xR : R -> No@{i})
+        (xL : L -> No) (xR : R -> No)
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (l : L)
 : xL l < {{ xL | xR // xcut }}.
@@ -522,7 +522,7 @@ Defined.
 (** Theorem 0 Part (ii), right half *)
 Theorem lt_ropt `{Funext}
         {L R : Type@{i}} {s : InSort@{i} S L R}
-        (xL : L -> No@{i}) (xR : R -> No@{i})
+        (xL : L -> No) (xR : R -> No)
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (r : R)
 : {{ xL | xR // xcut }} < xR r.
@@ -606,7 +606,7 @@ Section NoCodes.
   Section Inner.
 
     Context {L R : Type@{i} } {s : InSort@{i} S L R}
-            (xL : L -> No@{i}) (xR : R -> No@{i})
+            (xL : L -> No) (xR : R -> No)
             (xcut : forall (l : L) (r : R), xL l < xR r)
             (xL_let : L -> A) (xR_let : R -> A)
             (x_lt_le : forall (l : L) (r : R) (y : No),
@@ -706,7 +706,7 @@ Section NoCodes.
     (** These computation laws hold definitionally, but it helps Coq out if we prove them explicitly and then rewrite along them later. *)
     Definition inner_cut_le
                (L' R' : Type@{i}) {s : InSort@{i} S L' R'}
-               (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : fst (inner {{ yL | yR // ycut }}).1 =
       (BuildhProp ((forall l, (xL_let l).2.1 {{ yL | yR // ycut }}) *
@@ -715,7 +715,7 @@ Section NoCodes.
 
     Definition inner_cut_lt
                (L' R' : Type@{i}) {s : InSort@{i} S L' R'}
-               (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : snd (inner {{ yL | yR // ycut }}).1 =
       (hor {l':L' & fst (inner (yL l')).1}

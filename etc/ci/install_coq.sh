@@ -37,10 +37,12 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
+echo '$ git log -1'
+git log -1
 echo '$ ./configure '"$@"
 ./configure "$@" || exit $?
-echo '$ make states tools coqlight plugins'
-make states tools coqlight plugins || exit $?
+echo '$ make coqocaml'
+make coqocaml || exit $?
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles

@@ -547,7 +547,7 @@ Definition Book_4_2_4 := @HoTT.Basics.Overture.hfiber.
 (* ================================================== lem:hfib *)
 (** Lemma 4.2.5 *)
 
-Definition Book_4_2_5 := @HoTT.Fibrations.equiv_path_hfiber.
+Definition Book_4_2_5 := @HoTT.HFiber.equiv_path_hfiber.
 
 (* ================================================== thm:contr-hae *)
 (** Theorem 4.2.6 *)
@@ -671,22 +671,22 @@ Definition Book_4_7_5 := @HoTT.Types.Sigma.functor_sigma.
 (* ================================================== fibwise-fiber-total-fiber-equiv *)
 (** Theorem 4.7.6 *)
 
-Definition Book_4_7_6 := @HoTT.Fibrations.hfiber_functor_sigma.
+Definition Book_4_7_6 := @HoTT.Types.Sigma.hfiber_functor_sigma.
 
 (* ================================================== thm:total-fiber-equiv *)
 (** Theorem 4.7.7 *)
 
-Definition Book_4_7_7 := @HoTT.Fibrations.equiv_total_iff_equiv_fiberwise.
+Definition Book_4_7_7 := @HoTT.Types.Equiv.equiv_total_iff_equiv_fiberwise.
 
 (* ================================================== thm:fiber-of-a-fibration *)
 (** Lemma 4.8.1 *)
 
-Definition Book_4_8_1 := @HoTT.Fibrations.hfiber_fibration.
+Definition Book_4_8_1 := @HoTT.HFiber.hfiber_fibration.
 
 (* ================================================== thm:total-space-of-the-fibers *)
 (** Lemma 4.8.2 *)
 
-Definition Book_4_8_2 := @HoTT.Fibrations.equiv_fibration_replacement.
+Definition Book_4_8_2 := @HoTT.HFiber.equiv_fibration_replacement.
 
 (* ================================================== thm:nobject-classifier-appetizer *)
 (** Theorem 4.8.3 *)
@@ -1147,7 +1147,7 @@ Definition Book_7_5_8 := @HoTT.Modalities.Modality.conn_map_to_O.
 (* ================================================== thm:modal-mono *)
 (** Lemma 7.6.2 *)
 
-Definition Book_7_6_2 := @HoTT.Fibrations.equiv_istruncmap_ap.
+Definition Book_7_6_2 := @HoTT.HFiber.equiv_istruncmap_ap.
 
 (* ================================================== defn:modal-image *)
 (** Definition 7.6.3 *)

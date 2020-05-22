@@ -709,3 +709,51 @@ Definition pr1_path_path_sigma_hprop {A : Type} {P : A -> Type}
            `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
 : (path_sigma_hprop u v p)..1 = p
   := eissect (path_sigma_hprop u v) p.
+
+(** ** Fibers of [functor_sigma] *)
+Definition hfiber_functor_sigma {A B} (P : A -> Type) (Q : B -> Type)
+           (f : A -> B) (g : forall a, P a -> Q (f a))
+           (b : B) (v : Q b)
+: (hfiber (functor_sigma f g) (b; v)) <~>
+  {w : hfiber f b & hfiber (g w.1) ((w.2)^ # v)}.
+Proof.
+  unfold hfiber, functor_sigma.
+  refine (_ oE equiv_functor_sigma_id _).
+  2:intros; symmetry; apply equiv_path_sigma.
+  transitivity {w : {x : A & f x = b} & {x : P w.1 & (w.2) # (g w.1 x) = v}}.
+  1:make_equiv.
+  apply equiv_functor_sigma_id; intros [a p]; simpl.
+  apply equiv_functor_sigma_id; intros u; simpl.
+  apply equiv_moveL_transport_V.
+Defined.
+
+Global Instance istruncmap_functor_sigma n {A B P Q}
+       (f : A -> B) (g : forall a, P a -> Q (f a))
+       {Hf : IsTruncMap n f} {Hg : forall a, IsTruncMap n (g a)}
+  : IsTruncMap n (functor_sigma f g).
+Proof.
+  intros [a b].
+  exact (trunc_equiv _ (hfiber_functor_sigma _ _ _ _ _ _)^-1).
+Defined.
+
+(** Theorem 4.7.6 *)
+Definition hfiber_functor_sigma_idmap {A} (P Q : A -> Type)
+           (g : forall a, P a -> Q a)
+           (b : A) (v : Q b)
+: (hfiber (functor_sigma idmap g) (b; v)) <~>
+   hfiber (g b) v.
+Proof.
+  refine (_ oE hfiber_functor_sigma P Q idmap g b v).
+  exact (equiv_contr_sigma
+           (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
+Defined.
+
+(** The converse and Theorem 4.7.7 can be found in Types/Equiv.v *)
+Definition istruncmap_from_functor_sigma n {A P Q}
+           (g : forall a : A, P a -> Q a)
+           `{!IsTruncMap n (functor_sigma idmap g)}
+  : forall a, IsTruncMap n (g a).
+Proof.
+  intros a v.
+  exact (trunc_equiv' _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
+Defined.

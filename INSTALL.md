@@ -35,7 +35,14 @@ You can then initialize opam with
     opam init
 
 It is recommended to allow opam to change your .profile file when it
-asks for permission.  You may also need to run
+asks for permission.
+
+After that switch to ocaml version 4.07.1 using
+
+    opam switch create 4.07.1
+    opam switch 4.07.1
+
+You may also need to run
 
     eval `opam env`
 
@@ -43,10 +50,6 @@ to continue working in the same terminal.  Then you can install the
 required dependencies:
 
     opam install ocaml camlp5 lablgtk3 lablgtk3-sourceview3 ocamlfind num
-
-If opam complains that you do not have a switch installed, run
-
-    opam switch create 4.0.7`.
 
 [1]:https://opam.ocaml.org/doc/Install.html
 
@@ -119,7 +122,7 @@ installing ocaml using opam instead, as described above.
 
 If you don't want to compile your own copy of Coq, then the HoTT
 library is compatible with [Coq
-8.10](https://github.com/coq/coq/releases/tag/V8.10.0), so you can
+8.11](https://github.com/coq/coq/releases/tag/V8.11.0), so you can
 also install a binary Coq package using a package manager or opam.
 Paths still need to be set manually.  On Debian/Ubuntu, you can also
 install the master development branch of Coq as your only version of

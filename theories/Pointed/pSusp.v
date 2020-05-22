@@ -39,7 +39,7 @@ Definition psusp_functor {X Y : pType} (f : X ->* Y) : psusp X ->* psusp Y
 Definition psusp_functor_compose {X Y Z : pType} (g : Y ->* Z) (f : X ->* Y)
   : psusp_functor (g o* f) ==* psusp_functor g o* psusp_functor f.
 Proof.
-  pointed_reduce; srefine (Build_pHomotopy _ _); cbn.
+  pointed_reduce_rewrite; srefine (Build_pHomotopy _ _); cbn.
   { srapply Susp_ind; try reflexivity; cbn.
     intros x.
     refine (transport_paths_FlFr _ _ @ _).
@@ -122,7 +122,7 @@ Module Book_Loop_Susp_Adjunction.
   : loop_susp_adjoint A B' (g o* f)
     ==* loops_functor g o* loop_susp_adjoint A B f.
   Proof.
-    pointed_reduce.
+    pointed_reduce_rewrite.
     srefine (Build_pHomotopy _ _).
     - intros a. simpl.
       refine (_ @ (concat_1p _)^).
@@ -158,10 +158,10 @@ Defined.
 Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
-  srapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
+  snrefine (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
   { apply ptr_functor.
     apply loop_susp_unit. }
-  exact _.
+  all:exact _.
 Defined.
 
 Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
@@ -176,7 +176,7 @@ Proof.
                   (merid x) (merid (point X))^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
     refine (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
-  - cbn. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
+  - cbn. apply moveL_pV. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
     apply moveL_Vp.
     refine (concat_pV_inverse2 _ _ (Susp_rec_beta_merid (point X)) @ _).
     apply moveL_Vp, moveL_Vp.
@@ -230,7 +230,7 @@ Proof.
     refine ((Susp_rec_beta_merid p
       @@ inverse2 (Susp_rec_beta_merid (point (loops X)))) @ _).
     exact (concat_p1 _).
-  - destruct X as [X x]; cbn; unfold point.
+  - apply moveL_pV. destruct X as [X x]; cbn; unfold point.
     apply whiskerR.
     rewrite (concat_pV_inverse2
                (ap (Susp_rec x x idmap) (merid 1))
@@ -264,14 +264,14 @@ Proof.
   refine (equiv_adjointify
             (fun f => loops_functor f o* loop_susp_unit A)
             (fun g => loop_susp_counit B o* psusp_functor g) _ _).
-  - intros g. apply path_pmap.
+  - intros g. apply path_pforall.
     refine (pmap_prewhisker _ (loops_functor_compose _ _) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
     apply pmap_postcompose_idmap.
-  - intros f. apply path_pmap.
+  - intros f. apply path_pforall.
     refine (pmap_postwhisker _ (psusp_functor_compose _ _) @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).

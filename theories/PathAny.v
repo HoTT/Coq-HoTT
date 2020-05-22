@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types Fibrations.
+Require Import Basics Types.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 

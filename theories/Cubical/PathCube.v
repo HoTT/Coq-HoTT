@@ -68,14 +68,14 @@ Local Notation tr := sq_tr.
 Local Notation fv := sq_flip_v.
 
 (* PathCubes form a path of squares up to retyping *)
-Definition cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+Definition equiv_cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
-  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
-  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : sq_concat_h (tr (fv s0ii)) (sq_concat_h si0i (tr s1ii)) =
       sq_ccGG
         (moveL_Vp _ _ _ (sq_path^-1 sii0))
@@ -104,7 +104,7 @@ Proof.
   by destruct X.
 Defined.
 
-Arguments cu_path {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
+Notation cu_path := equiv_cu_path.
 
 Section Reflexivity.
 
@@ -147,7 +147,7 @@ Section PathCubeRewriting.
     {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}.
 
   (* We write the most general version and derive special cases from this *)
-  Definition cu_GGGGGG {s0ii' s1ii' sii0' sii1' si0i' si1i'}
+  Definition equiv_cu_GGGGGG {s0ii' s1ii' sii0' sii1' si0i' si1i'}
     (t0ii : s0ii = s0ii') (t1ii : s1ii = s1ii') (tii0 : sii0 = sii0')
     (tii1 : sii1 = sii1') (ti0i : si0i = si0i') (ti1i : si1i = si1i')
     : PathCube s0ii s1ii sii0 sii1 si0i si1i
@@ -160,29 +160,42 @@ Section PathCubeRewriting.
     (t0ii : s0ii = s0ii') (t1ii : s1ii = s1ii') (tii0 : sii0 = sii0')
     (tii1 : sii1 = sii1') (ti0i : si0i = si0i') (ti1i : si1i = si1i').
 
-  Definition cu_Gccccc := cu_GGGGGG t0ii 1 1 1 1 1.
-  Definition cu_cGcccc := cu_GGGGGG 1 t1ii 1 1 1 1.
-  Definition cu_ccGccc := cu_GGGGGG 1 1 tii0 1 1 1.
-  Definition cu_cccGcc := cu_GGGGGG 1 1 1 tii1 1 1.
-  Definition cu_ccccGc := cu_GGGGGG 1 1 1 1 ti0i 1.
-  Definition cu_cccccG := cu_GGGGGG 1 1 1 1 1 ti1i.
-  Definition cu_ccGGGG := cu_GGGGGG 1 1 tii0 tii1 ti0i ti1i.
-  Definition cu_GGGGcc := cu_GGGGGG t0ii t1ii tii0 tii1 1 1.
-  Definition cu_GGcccc := cu_GGGGGG t0ii t1ii 1 1 1 1.
-  Definition cu_ccGGcc := cu_GGGGGG 1 1 tii0 tii1 1 1.
-  Definition cu_ccccGG := cu_GGGGGG 1 1 1 1 ti0i ti1i.
+  Definition equiv_cu_Gccccc := equiv_cu_GGGGGG t0ii 1 1 1 1 1.
+  Definition equiv_cu_cGcccc := equiv_cu_GGGGGG 1 t1ii 1 1 1 1.
+  Definition equiv_cu_ccGccc := equiv_cu_GGGGGG 1 1 tii0 1 1 1.
+  Definition equiv_cu_cccGcc := equiv_cu_GGGGGG 1 1 1 tii1 1 1.
+  Definition equiv_cu_ccccGc := equiv_cu_GGGGGG 1 1 1 1 ti0i 1.
+  Definition equiv_cu_cccccG := equiv_cu_GGGGGG 1 1 1 1 1 ti1i.
+  Definition equiv_cu_ccGGGG := equiv_cu_GGGGGG 1 1 tii0 tii1 ti0i ti1i.
+  Definition equiv_cu_GGGGcc := equiv_cu_GGGGGG t0ii t1ii tii0 tii1 1 1.
+  Definition equiv_cu_GGcccc := equiv_cu_GGGGGG t0ii t1ii 1 1 1 1.
+  Definition equiv_cu_ccGGcc := equiv_cu_GGGGGG 1 1 tii0 tii1 1 1.
+  Definition equiv_cu_ccccGG := equiv_cu_GGGGGG 1 1 1 1 ti0i ti1i.
 
 End PathCubeRewriting.
 
+Notation cu_GGGGGG := equiv_cu_GGGGGG.
+Notation cu_Gccccc := equiv_cu_Gccccc.
+Notation cu_cGcccc := equiv_cu_cGcccc.
+Notation cu_ccGccc := equiv_cu_ccGccc.
+Notation cu_cccGcc := equiv_cu_cccGcc.
+Notation cu_ccccGc := equiv_cu_ccccGc.
+Notation cu_cccccG := equiv_cu_cccccG.
+Notation cu_ccGGGG := equiv_cu_ccGGGG.
+Notation cu_GGGGcc := equiv_cu_GGGGcc.
+Notation cu_GGcccc := equiv_cu_GGcccc.
+Notation cu_ccGGcc := equiv_cu_ccGGcc.
+Notation cu_ccccGG := equiv_cu_ccccGG.
+
 (* Rotating top and bottom to front and back *)
-Definition cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+Definition equiv_cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
-  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
-  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : PathCube si0i si1i (sq_tr s0ii) (sq_tr s1ii) (sq_tr sii0) (sq_tr sii1)
     <~> PathCube s0ii s1ii sii0 sii1 si0i si1i.
 Proof.
@@ -218,64 +231,60 @@ Proof.
   by destruct e.
 Defined.
 
-Arguments cu_rot_tb_fb {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
+Notation cu_rot_tb_fb := equiv_cu_rot_tb_fb.
 
-Section PathCubesFromPaths.
+(* Degnerate cubes formed from paths between squares *)
 
-  (* Degnerate cubes formed from paths between squares *)
+(* The first case is easiest to prove and can be written as equivalences *)
+Definition equiv_cu_G11 {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+  : s = s' <~> PathCube s s' hr hr hr hr.
+Proof.
+  destruct s.
+  refine (cu_path oE _).
+  refine (equiv_concat_l (sq_concat_h_1s (sq_concat_h 1%square (tr s'))
+    (p0y:=1) (p1y:=1)) _ oE _).
+  refine (equiv_concat_l (sq_concat_h_1s (tr s')
+    (p0y:=1) (p1y:=1)) _ oE _).
+  refine (equiv_moveR_equiv_M (f:=tr) _ _ oE _).
+  apply equiv_path_inverse.
+Defined.
 
-  (* The first case is easiest to prove and can be written as equivalences *)
-  Definition cu_G11 {A} {a00 a10 a01 a11 : A}
-    {px0 : a00 = a10} {px1 : a01 = a11}
-    {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : PathSquare px0 px1 p0x p1x)
-    : s = s' <~> PathCube s s' hr hr hr hr.
-  Proof.
-    destruct s.
-    refine (cu_path oE _).
-    refine (equiv_concat_l (sq_concat_h_1s (sq_concat_h 1%square (tr s'))
-      (p0y:=1) (p1y:=1)) _ oE _).
-    refine (equiv_concat_l (sq_concat_h_1s (tr s')
-      (p0y:=1) (p1y:=1)) _ oE _).
-    refine (equiv_moveR_equiv_M (f:=tr) _ _ oE _).
-    apply equiv_path_inverse.
-  Defined.
+(* This case can be reduced to the first by rotating the cube
+   and rewriting some faces *)
+Definition equiv_cu_1G1 {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+: s = s' <~> PathCube hr hr s s' vr vr.
+Proof.
+  refine (cu_rot_tb_fb oE _).
+  refine (cu_rot_tb_fb oE _).
+  refine (cu_ccGGGG _ _ _ _ oE _).
+  1,2: exact sq_tr_refl_v^.
+  1,2: exact (eisretr tr _)^.
+  refine (_ oE equiv_ap' tr _ _).
+  apply equiv_cu_G11.
+Defined.
 
-  (* This case can be reduced to the first by rotating the cube
-     and rewriting some faces *)
-  Definition cu_1G1 {A} {a00 a10 a01 a11 : A}
-    {px0 : a00 = a10} {px1 : a01 = a11}
-    {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : PathSquare px0 px1 p0x p1x)
-  : s = s' <~> PathCube hr hr s s' vr vr.
-  Proof.
-    refine (cu_rot_tb_fb oE _).
-    refine (cu_rot_tb_fb oE _).
-    refine (cu_ccGGGG _ _ _ _ oE _).
-    1,2: exact sq_tr_refl_v^.
-    1,2: exact (eisretr tr _)^.
-    refine (_ oE equiv_ap' tr _ _).
-    apply cu_G11.
-  Defined.
+(* Finally this is an even simpler rotation *)
+Definition equiv_cu_11G {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+  : s = s' <~> PathCube vr vr vr vr s s'.
+Proof.
+  refine (cu_rot_tb_fb oE _).
+  refine (cu_ccGGGG _ _ _ _ oE _).
+  1-4: exact sq_tr_refl_v^.
+  by apply equiv_cu_G11.
+Defined.
 
-  (* Finally this is an even simpler rotation *)
-  Definition cu_11G {A} {a00 a10 a01 a11 : A}
-    {px0 : a00 = a10} {px1 : a01 = a11}
-    {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : PathSquare px0 px1 p0x p1x)
-    : s = s' <~> PathCube vr vr vr vr s s'.
-  Proof.
-    refine (cu_rot_tb_fb oE _).
-    refine (cu_ccGGGG _ _ _ _ oE _).
-    1,2,3,4: exact sq_tr_refl_v^.
-    by apply cu_G11.
-  Defined.
-
-End PathCubesFromPaths.
-
-Arguments cu_G11 {_ _ _ _ _ _ _ _ _ _ _}.
-Arguments cu_1G1 {_ _ _ _ _ _ _ _ _ _ _}.
-Arguments cu_11G {_ _ _ _ _ _ _ _ _ _ _}.
+Notation cu_G11 := equiv_cu_G11.
+Notation cu_1G1 := equiv_cu_1G1.
+Notation cu_11G := equiv_cu_11G.
 
 (* Degnerate cubes given by squares *)
 Section PathPathSquares.
@@ -284,7 +293,7 @@ Section PathPathSquares.
     (px0 : a00 = a10) (px1 : a01 = a11)
     (p0x : a00 = a01) (p1x : a10 = a11).
 
-  Definition cu_GG1
+  Definition equiv_cu_GG1
     : PathSquare px0 px1 p0x p1x
       <~> PathCube (sq_G1 px0) (sq_G1 px1) (sq_G1 p0x) (sq_G1 p1x) 1 1.
   Proof.
@@ -294,7 +303,7 @@ Section PathPathSquares.
     exact cu_G11.
   Defined.
 
-  Definition cu_1GG
+  Definition equiv_cu_1GG
     : PathSquare px0 px1 p0x p1x
     <~> PathCube 1 1 (sq_1G px0) (sq_1G px1) (sq_1G p0x) (sq_1G p1x).
   Proof.
@@ -304,7 +313,7 @@ Section PathPathSquares.
     exact cu_11G.
   Defined.
 
-  Definition cu_G1G : PathSquare px0 px1 p0x p1x
+  Definition equiv_cu_G1G : PathSquare px0 px1 p0x p1x
     <~> PathCube (sq_1G px0) (sq_1G px1) 1 1 (sq_G1 p0x) (sq_G1 p1x).
   Proof.
     destruct p0x, p1x, a10.
@@ -315,63 +324,59 @@ Section PathPathSquares.
 
 End PathPathSquares.
 
+Notation cu_GG1 := equiv_cu_GG1.
+Notation cu_G1G := equiv_cu_G1G.
+Notation cu_1GG := equiv_cu_1GG.
 Arguments cu_GG1 {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_G1G {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_1GG {_ _ _ _ _ _ _ _ _ _ _}.
 
-Section PathCubeDPathSquare.
+(* PathCubes can be given by DPathSquares over Paths*)
+Definition equiv_cu_ds
+  {A B} {f g : A -> B} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s : PathSquare px0 px1 p0x p1x}
+  {b00 : f a00 = g a00} {b01 : f a01 = g a01}
+  {b10 : f a10 = g a10} {b11 : f a11 = g a11}
+  {qx0 : DPath (fun x => f x = g x) px0 b00 b10}
+  {qx1 : DPath (fun x => f x = g x) px1 b01 b11}
+  {q0x : DPath (fun x => f x = g x) p0x b00 b01}
+  {q1x : DPath (fun x => f x = g x) p1x b10 b11}
+  : DPathSquare (fun x => f x = g x) s qx0 qx1 q0x q1x
+    <~> PathCube (sq_dp qx0) (sq_dp qx1) (sq_dp q0x) (sq_dp q1x)
+      (sq_ap f s) (sq_ap g s).
+Proof.
+  destruct s.
+  apply cu_GG1.
+Defined.
 
-  Context {A B} {f g : A -> B} {a00 a10 a01 a11 : A}
-    {px0 : a00 = a10} {px1 : a01 = a11}
-    {p0x : a00 = a01} {p1x : a10 = a11}.
+Notation cu_ds := equiv_cu_ds.
 
-  (* PathCubes can be given by DPathSquares over Paths*)
-  Definition cu_ds (s : PathSquare px0 px1 p0x p1x)
-    {b00 : f a00 = g a00} {b01 : f a01 = g a01}
-    {b10 : f a10 = g a10} {b11 : f a11 = g a11}
-    (qx0 : DPath (fun x => f x = g x) px0 b00 b10)
-    (qx1 : DPath (fun x => f x = g x) px1 b01 b11)
-    (q0x : DPath (fun x => f x = g x) p0x b00 b01)
-    (q1x : DPath (fun x => f x = g x) p1x b10 b11)
-    : DPathSquare (fun x => f x = g x) s qx0 qx1 q0x q1x
-      <~> PathCube (sq_dp qx0) (sq_dp qx1) (sq_dp q0x) (sq_dp q1x)
-        (sq_ap f s) (sq_ap g s).
-  Proof.
-    destruct s.
-    apply cu_GG1.
-  Defined.
+(* PathCubes can be given by DPaths over PathSquares *)
+Definition equiv_dp_cu {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -> B}
+  {px0 : a00 == a10} {px1 : a01 == a11} {p0x : a00 == a01} {p1x : a10 == a11}
+  {f1 : PathSquare (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
+  {f2 : PathSquare (px0 x2) (px1 x2) (p0x x2) (p1x x2)}
+  {p : x1 = x2} 
+  : PathCube f1 f2 (sq_dp (dp_apD px0 p)) (sq_dp (dp_apD px1 p))
+     (sq_dp (dp_apD p0x p)) (sq_dp (dp_apD p1x p))
+  <~> DPath (fun x => PathSquare (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.
+Proof.
+  destruct p; symmetry; exact cu_G11.
+Defined.
 
-End PathCubeDPathSquare.
-
-Arguments cu_ds {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
-
-Section PathCubeDPath.
-
-  Context {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -> B}
-    {px0 : a00 == a10} {px1 : a01 == a11} {p0x : a00 == a01} {p1x : a10 == a11}
-    {f1 : PathSquare (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
-    {f2 : PathSquare (px0 x2) (px1 x2) (p0x x2) (p1x x2)}.
-
-  (* PathCubes can be given by DPaths over PathSquares *)
-  Definition dp_cu {p : x1 = x2} 
-    : PathCube f1 f2 (sq_dp (dp_apD px0 p)) (sq_dp (dp_apD px1 p))
-       (sq_dp (dp_apD p0x p)) (sq_dp (dp_apD p1x p))
-    <~> DPath (fun x => PathSquare (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.
-  Proof.
-    destruct p; symmetry; exact cu_G11.
-  Defined.
-
-End PathCubeDPath.
+Notation dp_cu := equiv_dp_cu.
 
 (* Flipping a cube along the left right direction *)
-Definition cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+Definition equiv_cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
-  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
-  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : PathCube s0ii s1ii sii0 sii1 si0i si1i
     <~> PathCube s1ii s0ii (sq_flip_h sii0) (sq_flip_h sii1)
         (sq_flip_h si0i) (sq_flip_h si1i).
@@ -383,10 +388,10 @@ Proof.
   refine (sq_flip_h oE _).
   refine (cu_GG1^-1 oE _).
   refine (cu_GGGGcc _ _ _ _).
-  1,2,3,4: exact (eisretr sq_G1 _)^.
+  all: exact (eisretr sq_G1 _)^.
 Defined.
 
-Arguments cu_flip_lr {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
+Notation cu_flip_lr := equiv_cu_flip_lr.
 
 (* PathCube Kan fillers ~ Every open crate has a lid *)
 

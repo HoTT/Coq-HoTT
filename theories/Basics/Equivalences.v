@@ -822,4 +822,4 @@ End Examples.
 >>
 *)
 
-(** Some "real-world" examples where [make_equiv_contr_basedpaths] simplifies things a lot include [hfiber_compose] in [Fibrations.v], [hfiber_pullback_along] in [Limits/Pullback.v], and [equiv_Ocodeleft2plus] in [BlakersMassey.v]. *)
+(** Some "real-world" examples where [make_equiv_contr_basedpaths] simplifies things a lot include [hfiber_compose] in [HFiber.v], [hfiber_pullback_along] in [Limits/Pullback.v], and [equiv_Ocodeleft2plus] in [BlakersMassey.v]. *)
