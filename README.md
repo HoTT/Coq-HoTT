@@ -17,7 +17,7 @@ See also: [HoTT in Lean2](https://github.com/leanprover/lean2/tree/master/hott),
 [Spectral Sequences in Lean2](https://github.com/cmu-phil/Spectral), and
 [Cubical Agda](https://agda.readthedocs.io/en/v2.6.0.1/language/cubical.html).
 
-More information about this libary can be found in:
+More information about this library can be found in:
 
 - _The HoTT Library: A formalization of homotopy type theory in Coq_,
   Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
