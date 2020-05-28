@@ -1,3 +1,8 @@
+(** We present a proof of the conjecture that sequential colimits in HoTT apropriately
+    commute with Σ-types. As a corollary, we characterize the path space of a sequential
+    colimit as a sequential colimit of path spaces. For the written account of these results
+    see https://www.cs.cornell.edu/~ks858/papers/sequential_colimits_homotopy.pdf. *)
+
 Require Import Basics.
 Require Import Types.
 Require Import Diagrams.Diagram.
@@ -15,6 +20,7 @@ Section Sequence.
 
   Let f n := @arr _ A n _ 1.
 
+  (** Liftings; described in the paragraph after Lemma 3.7. *)
   Definition seqPairLift (x : sig A) : sig A.
   Proof.
     destruct x as [n a]; exact (n.+1; f n a).
@@ -33,7 +39,7 @@ Section Sequence.
   Definition seqPairLiftAssoc (x : sig A) (k : nat) : (x^+)^+k = x^+(k.+1).
   Proof.
     induction k as [ | k q].
-    - exact 1.
+    - reflexivity.
     - exact (ap seqPairLift q).
   Defined.
 
@@ -49,13 +55,14 @@ Section Sequence.
   Definition seqLiftPairZero (a : A 0) k : (0;a)^+k = (k;a^++k).
   Proof.
     induction k as [ | k q].
-    - exact 1.
+    - reflexivity.
     - exact (ap seqPairLift q).
   Defined.
 
   Notation inj A := (@colim sequence_graph A).
   Notation glue A := (fun n => @colimp sequence_graph A n n.+1 1).
 
+  (** The uniqueness principle for sequential colimits; Lemma 3.3. *)
   Definition seqColimitUniqueness E (F G : Colimit A -> E)
     (h : forall n, F o inj A n == G o inj A n)
     (H : forall n a, ap F (glue A n a) @ h n a = h n.+1 (f n a) @ ap G (glue A n a))
@@ -66,9 +73,11 @@ Section Sequence.
     intros p q; srefine ((concat_p1 _)^ @ _); srefine (_ @ (concat_1p _)); exact q^.
   Defined.
 
+  (** The successor sequence from Lemma 3.6. *)
   Definition succSeq : Sequence
     := Build_Sequence (fun k => A k.+1) (fun k => f k.+1).
 
+  (** The shifted sequence from Lemma 3.7. *)
   Definition shiftSeq n : Sequence
     := Build_Sequence (fun k => A (k+n)%nat) (fun k => f (k+n)%nat).
 
@@ -94,6 +103,8 @@ Section ColimitSuccSequence.
 
   Let f n := @arr _ A n _ 1.
 
+  (** The canonical equivalence between the colimit of the succesor sequence and the colimit
+      of the original sequence; Lemma 3.6. *)
   Definition colimitSuccSeqToColimitSeq : Colimit (succSeq A) -> Colimit A.
   Proof.
     srapply Colimit_rec; srapply Build_Cocone.
@@ -110,7 +121,7 @@ Section ColimitSuccSequence.
   Definition colimitSuccSeqToColimitSeq_ap_inj n (a1 a2 : succSeq A n) (p : a1 = a2)
     : ap colimitSuccSeqToColimitSeq (ap (inj _ n) p) = ap (inj _ n.+1) p.
   Proof.
-    destruct p; exact 1.
+    destruct p; reflexivity.
   Defined.
 
   Global Instance isequiv_colimitSuccSeqToColimitSeq
@@ -123,11 +134,11 @@ Section ColimitSuccSequence.
     + srapply seqColimitUniqueness.
       * exact (fun n a => glue _ n a).
       * intros n a; rewrite ap_idmap, ap_compose, Colimit_rec_beta_colimp.
-        rewrite colimitSuccSeqToColimitSeq_beta_glue; exact 1.
+        rewrite colimitSuccSeqToColimitSeq_beta_glue; reflexivity.
     + srapply seqColimitUniqueness.
       * exact (fun n a => glue _ n a).
       * intros n a; rewrite ap_idmap, ap_compose, Colimit_rec_beta_colimp.
-        rewrite (@Colimit_rec_beta_colimp _ A _ _ _ _ 1); exact 1.
+        rewrite (@Colimit_rec_beta_colimp _ A _ _ _ _ 1); reflexivity.
   Defined.
 
   Definition equiv_colimitSuccSeqToColimitSeq : Colimit (succSeq A) <~> Colimit A
@@ -141,6 +152,8 @@ Section ColimitShiftSequence.
 
   Let f n := @arr _ A n _ 1.
 
+  (** The canonical equivalence between the colimit of the shifted sequence and the colimit
+      of the original sequence; Lemma 3.6. *)
   Definition colimitShiftSeqToColimitSeq n : Colimit (shiftSeq A n) -> Colimit A.
   Proof.
     srapply Colimit_rec; srapply Build_Cocone.
@@ -157,64 +170,68 @@ Section ColimitShiftSequence.
   Definition colimitShiftSeqToColimitSeq_ap_inj n k (a1 a2 : shiftSeq A n k) (p : a1 = a2)
     : ap (colimitShiftSeqToColimitSeq n) (ap (inj _ k) p) = ap (inj _ (k+n)%nat) p.
   Proof.
-    destruct p; exact 1.
+    destruct p; reflexivity.
   Defined.
 
   Local Definition nat_plus_n_O n : (n + 0)%nat = n.
   Proof.
   induction n as [ | n p].
-    - exact 1.
+    - reflexivity.
     - exact (ap S p).
   Defined.
 
   Local Definition nat_plus_n_Sm n m : (n + m.+1)%nat = (n + m)%nat.+1.
   Proof.
   induction n as [ | n p].
-    - exact 1.
+    - reflexivity.
     - exact (ap S p).
   Defined.
 
-  Local Definition J {X Y Z} {x1 x2 : X} {y} (I : forall x, Y x -> Z) (p : x1 = x2) :
+  Local Definition J {X Y Z} {x1 x2 : X} {y} {I : forall x, Y x -> Z} (p : x1 = x2) :
     I x1 y = I x2 (coe (ap Y p) y).
   Proof.
-    destruct p; exact 1.
+    destruct p; reflexivity.
   Defined.
 
   Local Definition Kappa {X Y} {x1 x2 : X} {y} F G (p : x1 = x2) :
     G x2 (coe (ap Y p) y) = coe (ap Y (ap F p)) (G x1 y).
   Proof.
-    destruct p; exact 1.
+    destruct p; reflexivity.
+  Defined.
+
+  Local Definition L {X Y Z} {x1 x2 : X} {y} {F G} {I : forall x, Y x -> Z} {p : x1 = x2}
+    (Q : forall x y, I (F x) (G x y) = I x y)
+    : Q x1 y @ J p = J (ap F p) @ (ap (I (F x2)) (Kappa F G p)^ @ Q x2 (coe (ap Y p) y)).
+  Proof.
+    destruct p; rewrite !concat_1p, concat_p1; reflexivity.
   Defined.
 
   Global Instance isequiv_colimitShiftSeqToColimitSeq n
     : IsEquiv (colimitShiftSeqToColimitSeq n).
   Proof.
-    assert (L : forall k1 k2 p a, glue _ k1 a @ J (inj A) p = J (inj A) (ap S p) @
-                (ap (inj A k2.+1) (Kappa S f p)^ @ glue _ k2 (coe (ap A p) a))).
-    - intros k l p a; destruct p; rewrite !concat_1p, concat_p1; exact 1.
-    - induction n as [ | n e]; srapply isequiv_homotopic'.
-      -- srapply equiv_functor_colimit; srapply Build_diagram_equiv.
-        + srapply Build_DiagramMap.
-          * exact (fun k => coe (ap A (nat_plus_n_O k))).
-          * intros k l p a; destruct p; exact (Kappa S f (nat_plus_n_O k)).
-        + intro k; srapply isequiv_path.
-      -- symmetry; srapply seqColimitUniqueness.
-        + intros k a; exact (J (inj A) (nat_plus_n_O k)).
-        + intros k a; rewrite !Colimit_rec_beta_colimp; srapply L.
-      -- srapply (@equiv_compose' _ (Colimit (succSeq (shiftSeq A n)))).
-        + exact (equiv_compose' (Build_Equiv _ _ _ e) (equiv_colimitSuccSeqToColimitSeq _)).
-        + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
-          * srapply Build_DiagramMap.
-            ** exact (fun k => coe (ap A (nat_plus_n_Sm k n))).
-            ** intros k l p a; destruct p; exact (Kappa S f (nat_plus_n_Sm k n)).
-          * intro k; srapply isequiv_path.
-      -- symmetry; srapply seqColimitUniqueness.
-        + intros k a; exact (J (inj A) (nat_plus_n_Sm k n)).
-        + intros k a; rewrite Colimit_rec_beta_colimp; simpl.
-          rewrite 2(ap_compose' _ _ (glue _ k a)), Colimit_rec_beta_colimp, 2ap_pp.
-          rewrite colimitSuccSeqToColimitSeq_ap_inj, colimitShiftSeqToColimitSeq_ap_inj.
-          rewrite (colimitSuccSeqToColimitSeq_beta_glue (shiftSeq A n)).
-          rewrite colimitShiftSeqToColimitSeq_beta_glue; srapply L.
+    induction n as [ | n e]; srapply isequiv_homotopic'.
+    - srapply equiv_functor_colimit; srapply Build_diagram_equiv.
+      + srapply Build_DiagramMap.
+        * exact (fun k => coe (ap A (nat_plus_n_O k))).
+        * intros k l p a; destruct p; exact (Kappa _ f _).
+      + intro k; srapply isequiv_path.
+    - symmetry; srapply seqColimitUniqueness.
+      + intros k a; exact (J (nat_plus_n_O k)).
+      + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
+    - transitivity (Colimit (succSeq (shiftSeq A n))).
+      + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
+        * srapply Build_DiagramMap.
+          { exact (fun k => coe (ap A (nat_plus_n_Sm k n))). }
+          { intros k l p a; destruct p; exact (Kappa _ f _). }
+        * intro k; srapply isequiv_path.
+      + srefine (transitivity (equiv_colimitSuccSeqToColimitSeq _) (Build_Equiv _ _ _ e)).
+    - symmetry; srapply seqColimitUniqueness.
+      + intros k a; exact (J (nat_plus_n_Sm k n)).
+      + intros k a; rewrite Colimit_rec_beta_colimp; simpl.
+      rewrite 2(ap_compose' _ _ (glue _ k a)), Colimit_rec_beta_colimp, 2ap_pp.
+      rewrite colimitSuccSeqToColimitSeq_ap_inj, colimitShiftSeqToColimitSeq_ap_inj.
+      rewrite (colimitSuccSeqToColimitSeq_beta_glue (shiftSeq A n)).
+      rewrite colimitShiftSeqToColimitSeq_beta_glue; srapply (L (glue A)).
   Defined.
 
   Definition equiv_colimitShiftSeqToColimitSeq n : Colimit (shiftSeq A n) <~> Colimit A
@@ -222,23 +239,25 @@ Section ColimitShiftSequence.
 
 End ColimitShiftSequence.
 
+(** Corollary 7.7.1 for k := -2; implies Lemma 7.2. *)
 Definition contr_ColimitContrSeq `{Funext} (A : Sequence) :
   (forall k, Contr (A k)) -> Contr (Colimit A).
 Proof.
   intro h_seqcontr; pose (unit_seq := Build_Sequence (fun _ => Unit) (fun _ _ => tt)).
   srapply (contr_equiv' (Colimit unit_seq)).
-  - apply equiv_inverse; srapply equiv_functor_colimit.
+  - symmetry; srapply equiv_functor_colimit.
     srapply Build_diagram_equiv; srapply Build_DiagramMap.
     * exact (fun _ _ => tt).
-    * intros n m p a; destruct p; exact 1.
-  - srapply (Build_Contr _ (inj unit_seq 0 tt)); intro y; apply inverse; revert y.
+    * intros n m p a; destruct p; reflexivity.
+  - srapply (Build_Contr _ (inj unit_seq 0 tt)); intro y; symmetry; revert y.
     srapply seqColimitUniqueness.
     * intros n a; destruct a; induction n as [ | n r].
-      + exact 1.
+      + reflexivity.
       + exact (glue unit_seq n tt @ r).
-    * intro n; destruct a; rewrite ap_idmap, ap_const, concat_p1; exact 1.
+    * intro n; destruct a; rewrite ap_idmap, ap_const, concat_p1; reflexivity.
 Defined.
 
+(** Fibered sequences; Section 4. *)
 Record FibSequence (A : Sequence) := {
   fibSequence : sig A -> Type;
   fibSequenceArr x : fibSequence x -> fibSequence x^+
@@ -256,7 +275,7 @@ Section FibSequence.
   Let f n := @arr _ A n _ 1.
   Let g := fibSequenceArr B.
 
-  (** The Sigma of a fibered type sequence. *)
+  (** The Sigma of a fibered type sequence; Definition 4.3. *)
   Definition sigSequence : Sequence.
   Proof.
     srapply Build_Sequence.
@@ -264,8 +283,8 @@ Section FibSequence.
     - intros n [a b]; exact (f n a; g (n;a) b).
   Defined.
 
-  (** The canonical map from the sequential colimit of Sigmas to the sequential colimit
-      of the first component. *)
+  (** The canonical projection from the sequential colimit of Sigmas to the sequential colimit
+      of the first component; Definition 4.3. *)
   Definition seqColimSumToSeqColim_proj : Colimit sigSequence -> Colimit A.
   Proof.
     srapply Colimit_rec; srapply Build_Cocone.
@@ -273,7 +292,7 @@ Section FibSequence.
     - intros n m p [a b]; destruct p; exact (glue _ n a).
   Defined.
 
-  (** Each point x : sig A induces a new type sequence. *)
+  (** Each point x : sig A induces a new type sequence; Section 4. *)
   Definition fibSeqToSeq (x : sig A) : Sequence.
   Proof.
     srapply Build_Sequence; intro k; revert x; induction k as [ | k h].
@@ -283,7 +302,7 @@ Section FibSequence.
     * exact (fun x => h x^+).
   Defined.
 
-  (** This sequence can be equivalently described by using lifting. *)
+  (** This sequence can be equivalently described by using lifting; Lemma 7.1. *)
   Definition fibSeqToSeq' (x : sig A) : Sequence
     := Build_Sequence (fun k => B x^+k) (fun k => g x^+k).
 
@@ -296,13 +315,13 @@ Section FibSequence.
         ++ exact (fun x => coe (ap B (seqPairLiftAssoc x n)) o e x^+).
       * intros n m p; destruct p; revert x; induction n as [ | n p].
         ++ exact (fun _ _ => 1).
-        ++ exact (fun x b => Kappa _ _ (seqPairLiftAssoc x n) @ (ap _ (p (x^+) b))).
+        ++ exact (fun x b => Kappa _ _ _ @ (ap _ (p (x^+) b))).
     + intro n; revert x; induction n as [ | n e].
       * exact (fun _ => isequiv_idmap _).
       * intro x; srapply isequiv_compose.
   Defined.
 
-  (** A fibered type sequence defines a type family. *)
+  (** A fibered type sequence defines a type family; Section 4. *)
   Definition fibSeqToTypeFam : Colimit A -> Type.
   Proof.
     srapply Colimit_rec; srapply Build_Cocone.
@@ -322,17 +341,17 @@ Section FibSequence.
   Local Definition Delta {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) y
      : (x1;y) = (x2;F y).
   Proof.
-    destruct p; destruct psi; exact 1.
+    destruct p; destruct psi; reflexivity.
   Defined.
 
   Local Definition Delta_proj {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) y
     : ap pr1 (Delta p psi y) = p.
   Proof.
-    destruct p; destruct psi; exact 1.
+    destruct p; destruct psi; reflexivity.
   Defined.
 
   (** The canonical map from the sequential colimit of Sigmas to the Sigma of
-      sequential colimits. *)
+      sequential colimits; Definition 5.1. *)
   Definition seqColimSumToSumSeqColim : Colimit sigSequence -> sig fibSeqToTypeFam.
   Proof.
     srapply Colimit_rec; srapply Build_Cocone.
@@ -350,7 +369,7 @@ Section FibSequence.
     srapply Colimit_rec_beta_colimp.
   Defined.
 
-  (** An alternative induction principle for the sum of colimits. *)
+  (** An alternative induction principle for the sum of colimits; Lemma 5.2 and Section 6. *)
   Section SeqColimitSumInd.
 
     Context (E : sig fibSeqToTypeFam -> Type).
@@ -363,21 +382,21 @@ Section FibSequence.
                   forall y, G2 (F y) = Delta p psi y # G1 y.
     Proof.
       destruct p; destruct psi.
-      srapply (equiv_compose' (equiv_apD10 _ _ _) (equiv_path_inverse _ _)).
+      srefine (transitivity (equiv_path_inverse _ _) (equiv_apD10 _ _ _)).
     Defined.
 
     Local Definition Mu {X Y Z} {x1 x2 : X} (p : x1 = x2) {F} (G : forall z, Z z)
       {psi : coe (ap Y p) = F} {q} (theta : I psi (apD (fun x y => G (x;y)) p) = q) y
       : apD G (Delta p psi y) = (q y)^.
     Proof.
-      destruct p; destruct psi; destruct theta; exact 1.
+      destruct p; destruct psi; destruct theta; reflexivity.
     Defined.
 
     Local Definition Eta {X Y Z} {x : X} {y1 y2 : Y x} {z : sig Y} {p : y1 = y2}
       {q1 : z = (x;y1)} {q2 : z = (x;y2)} (theta : q2 = q1 @ ap _ p)
       : transport (Z o exist Y x) p o transport Z q1 == transport Z q2.
     Proof.
-      apply inverse in theta; destruct theta; destruct p; simpl; destruct q1.
+      symmetry in theta; destruct theta; destruct p; simpl; destruct q1.
       exact (fun _ => 1).
     Defined.
 
@@ -388,7 +407,7 @@ Section FibSequence.
     Proof.
       revert theta; srapply (equiv_ind (equiv_path_inverse _ _)); destruct x0.
       revert q1; srapply (equiv_ind (equiv_path_inverse _ _)); destruct x0.
-      destruct p; exact 1.
+      destruct p; reflexivity.
     Defined.
 
     Local Definition Epsilon {X Y Z} {x1 x2 : X} {y1 y2} {F} (p : x1 = x2) {q : y1 = y2}
@@ -396,7 +415,7 @@ Section FibSequence.
       : transport (Z o exist Y x2) r o transport Z (Delta p psi y1) ==
         transport Z (Delta p psi y2) o transport (Z o exist Y x1) q.
     Proof.
-      destruct theta; destruct q; intros z; exact 1.
+      destruct theta; destruct q; intros z; reflexivity.
     Defined.
 
     Local Definition Phi {X Y Z} {x1 x2 : X} {y1 y2} {F} (p : x1 = x2) {q : y1 = y2}
@@ -411,7 +430,7 @@ Section FibSequence.
       intro s; destruct s; srefine (concat_1p _).
     Defined.
 
-    (** The point-point case of the nested induction. *)
+    (** The point-point case of the nested induction; corresponds to "h" in the paper. *)
     Let Q k : forall n a b, E (inj _ n a; inj _ k b).
     Proof.
       induction k as [ | k h].
@@ -419,9 +438,10 @@ Section FibSequence.
       - intros n a b; exact (Delta _ (fibSeqToTypeFam_beta_glue n a) _ # h n.+1 (f n a) b).
     Defined.
 
-    (** The path-point case of the nested induction is just reflexivity. *)
+    (** The path-point case of the nested induction is just reflexivity; corresponds to
+        "mu" in the paper. *)
 
-    (** The point-path case of the nested induction. *)
+    (** The point-path case of the nested induction; corresponds to "H" in the paper. *)
     Let R k : forall n a b,
       transport (E o exist _ (inj A n a)) (glue _ k b) (Q k.+1 n a _) = Q k n a b.
     Proof.
@@ -432,7 +452,7 @@ Section FibSequence.
         srapply (Epsilon (glue A n a) (colimitSuccSeqToColimitSeq_beta_glue _ _ _)).
     Defined.
 
-    (** The point case of the nested induction. *)
+    (** The point case of the nested induction; correcponds to "g" in the paper. *)
     Let F n a : forall x, E (inj _ n a; x).
     Proof.
       srapply Colimit_ind.
@@ -440,7 +460,7 @@ Section FibSequence.
       - intros k l p; destruct p; exact (R k n a).
     Defined.
 
-    (** The path case of the nested induction. *)
+    (** The path case of the nested induction; corresponds to "omega" in the paper. *)
     Let G n a : forall y,
       F n a _ = Delta _ (fibSeqToTypeFam_beta_glue n a) y # F n.+1 (f n a) y.
     Proof.
@@ -450,10 +470,11 @@ Section FibSequence.
         snrapply (Phi (glue A n a) (colimitSuccSeqToColimitSeq_beta_glue _ _ _)).
         rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n a) _ _ _ 1).
         rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n.+1 (f n a)) _ _ _ 1).
-        rewrite concat_p1, concat_1p; exact 1.
+        rewrite concat_p1, concat_1p; reflexivity.
     Defined.
 
-    (** The alternative induction rule in curried form. *)
+    (** The alternative induction rule in curried form; corresponds to curried "G" in
+        the paper. *)
     Definition SeqColimitSum_ind_cur : forall x y, E (x;y).
     Proof.
       srapply (Colimit_ind _ F); intros n m p a; destruct p.
@@ -467,7 +488,7 @@ Section FibSequence.
       apply moveR_equiv_M; srapply Colimit_ind_beta_colimp.
     Defined.
 
-    (** The alternative induction rule. *)
+    (** The alternative induction rule; corresponds to "G" in the paper. *)
     Definition SeqColimitSum_ind : forall x, E x.
     Proof.
       intros [x y]; apply SeqColimitSum_ind_cur.
@@ -487,7 +508,7 @@ Section FibSequence.
 
   End SeqColimitSumInd.
 
-  (** An alternative recursion principle for the sum of colimits. *)
+  (** An alternative recursion principle for the sum of colimits; Lemma 5.3. *)
   Section SeqColimitSumRec.
 
     Context E (e : forall n a, B (n;a) -> E).
@@ -507,6 +528,7 @@ Section FibSequence.
 
   End SeqColimitSumRec.
 
+  (** Lemma 5.4. *)
   Definition seq_colimit_sum_uniqueness E (F G : sig fibSeqToTypeFam -> E)
     : F o seqColimSumToSumSeqColim == G o seqColimSumToSumSeqColim -> F == G.
   Proof.
@@ -515,7 +537,7 @@ Section FibSequence.
   Defined.
 
   (** The canonical map from the sequential colimit of Sigmas to the Sigma of
-      sequential colimits is an equivalence. *)
+      sequential colimits is an equivalence; Theorem 5.1. *)
   Global Instance isequiv_seqColimSumToSumSeqColim : IsEquiv seqColimSumToSumSeqColim.
   Proof.
     assert (L : {G : _ & Sect seqColimSumToSumSeqColim G}).
@@ -526,9 +548,9 @@ Section FibSequence.
       + srapply seqColimitUniqueness.
         * exact (fun n a => 1).
         * intros n a; rewrite concat_1p, concat_p1, ap_compose, ap_idmap.
-          rewrite SeqColimitSum_rec_beta_glue; exact 1.
+          rewrite SeqColimitSum_rec_beta_glue; reflexivity.
     - srapply (isequiv_adjointify _ L.1 _ L.2); srapply seq_colimit_sum_uniqueness.
-      intro x; rewrite L.2; exact 1.
+      intro x; rewrite L.2; reflexivity.
   Defined.
 
   Definition equiv_seqColimSumToSumSeqColim
@@ -536,7 +558,7 @@ Section FibSequence.
     := Build_Equiv _ _ seqColimSumToSumSeqColim _.
   
   (** The canonical map from the sequential colimit of Sigmas to the Sigma of
-      sequential colimits commutes with the first projection. *)
+      sequential colimits commutes with the first projection; Theorem 5.1. *)
   Definition seqColimSumToSumSeqColim_proj
     : pr1 o seqColimSumToSumSeqColim == seqColimSumToSeqColim_proj.
   Proof.
@@ -545,11 +567,12 @@ Section FibSequence.
     - intros n [a b]; rewrite concat_1p, concat_p1, ap_compose, !Colimit_rec_beta_colimp.
       rewrite ap_pp, (Delta_proj _ (fibSeqToTypeFam_beta_glue n a)).
       srapply (whiskerL _ _ @ concat_p1 _); rewrite (ap_compose _ _ _)^; simpl.
-      rewrite ap_const; exact 1.
+      rewrite ap_const; reflexivity.
   Defined.
 
 End FibSequence.
 
+(** Lemma 7.3; this probably belongs to a different file. *)
 Definition encode_decode `{Funext} {A} {B : A -> Type} a (b : B a) :
   Contr (sig B) <~> forall x, IsEquiv (fun p : a = x => p # b).
 Proof.
@@ -563,6 +586,7 @@ Proof.
     * exact (@eisretr _ _ _ (h_eq x) y).
 Defined.
 
+(** The characterization of path spaces in sequential colimits; Lemma 7.4. *)
 Section SeqColimitPathIndexZero.
 
   Context `{Univalence} (A : Sequence) (a1 a2 : A 0).
@@ -581,26 +605,28 @@ Section SeqColimitPathIndexZero.
  
   Let g := fibSequenceArr B.
 
+  (** Lemma 7.4, first part. *)
   Definition equiv_pathColimitIndexZero :
     (inj A 0 a1 = inj A 0 a2) <~> Colimit pathSeq.
   Proof.
-    srapply (@equiv_compose' _ (fibSeqToTypeFam B (inj A 0 a2))).
-    + srapply equiv_functor_colimit; srefine (transitivity (equiv_fibSeqToSeq B (0;a2)) _).
-      srapply Build_diagram_equiv.
-      * srapply Build_DiagramMap.
-        ** exact (fun n => coe (ap B (seqLiftPairZero A a2 n))).
-        ** intros n m p b; destruct p; srapply (Kappa _ _ (seqLiftPairZero A a2 n)).
-      * intro n; srapply isequiv_path.
+    transitivity (fibSeqToTypeFam B (inj A 0 a2)).
     + srefine (Build_Equiv _ _ _ (encode_decode _ (inj (fibSeqToSeq B (0;a1)) 0 1) _ _)).
       srefine (contr_equiv _ (seqColimSumToSumSeqColim B)).
       srapply contr_ColimitContrSeq; intro k; srapply contr_basedpaths.
+    + srapply equiv_functor_colimit; srefine (transitivity (equiv_fibSeqToSeq B (0;a2)) _).
+      srapply Build_diagram_equiv.
+      * srapply Build_DiagramMap.
+        - exact (fun n => coe (ap B (seqLiftPairZero A a2 n))).
+        - intros n m p b; destruct p; srapply (Kappa _ _ (seqLiftPairZero A a2 n)).
+      * intro n; srapply isequiv_path.
   Defined.
 
 End SeqColimitPathIndexZero.
 
+(** Lemma 7.4, second part. *)
 Definition equiv_pathColimitSameIndex `{Univalence} (A : Sequence) n (a1 a2 : A n) :
   (inj A n a1 = inj A n a2) <~> Colimit (pathSeq (shiftSeq A n) a1 a2).
 Proof.
-  srefine (equiv_compose' (equiv_pathColimitIndexZero _ _ _) _); symmetry.
+  srefine (transitivity _ (equiv_pathColimitIndexZero _ _ _)); symmetry.
   srapply (@equiv_ap _ _ (colimitShiftSeqToColimitSeq A n)).
 Defined.
