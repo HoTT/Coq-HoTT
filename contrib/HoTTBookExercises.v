@@ -124,7 +124,21 @@ End Book_1_3_sig.
 (* ================================================== ex:iterator *)
 (** Exercise 1.4 *)
 
+Section Book_1_4.
+  Variable C : Type.
 
+  Fixpoint iterN (c0 : C) (cs : C -> C) (n : nat) : C :=
+  match n with
+  | O => c0
+  | S n => cs(iterN c0 cs n)
+  end.
+
+  Fixpoint recN (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
+  match n with
+  | O => c0
+  | S n => cs n (recN c0 cs n)
+  end.
+End Book_1_4.
 
 (* ================================================== ex:sum-via-bool *)
 (** Exercise 1.5 *)
