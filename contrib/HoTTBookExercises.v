@@ -129,7 +129,26 @@ End Book_1_3_sig.
 (* ================================================== ex:sum-via-bool *)
 (** Exercise 1.5 *)
 
+Section Book_1_5.
+  Definition sum (A B : Type) := { x : Bool & if x then A else B }.
 
+  Notation "'inl' a" := (true; a) (at level 0).
+  Notation "'inr' b" := (false; b) (at level 0).
+
+  Definition ind (A B : Type) (C : sum A B -> Type) (f : forall a, C (inl a))
+   (g : forall b, C (inr b)) : forall x : sum A B, C x := fun x => match x with
+   | inl a => f a
+   | inr b => g b
+   end.
+
+  Theorem inl_red {A B : Type} {C : sum A B -> Type} f g { a : A }
+  : ind A B C f g (inl a) = f a.
+  Proof. reflexivity. Defined.
+
+  Theorem inr_red {A B : Type} {C : sum A B -> Type} f g { b : B }
+  : ind A B C f g (inr b) = g b.
+  Proof. reflexivity. Defined.
+End Book_1_5.
 
 (* ================================================== ex:prod-via-bool *)
 (** Exercise 1.6 *)
@@ -271,7 +290,7 @@ End Book_2_1_Proofs_Are_Equal.
 (** Exercise 2.2 *)
 
 Definition Book_2_2 :
-  forall {A : Type} {x y z : A} (p : x = y) (q : y = z), 
+  forall {A : Type} {x y z : A} (p : x = y) (q : y = z),
     (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) *1
     (Book_2_1_concatenation2_eq_Book_2_1_concatenation3 p q) =
     (Book_2_1_concatenation1_eq_Book_2_1_concatenation3 p q).
@@ -285,7 +304,7 @@ Defined.
 (* Since we have x_eq_y : x = y we can transport y_eq_z : y = z along
    x_eq_y⁻¹ : y = x in the type family λw.(w = z) to obtain a term
    of type x = z. *)
-Definition Book_2_1_concatenation4 
+Definition Book_2_1_concatenation4
     {A : Type} {x y z : A} : x = y -> y = z -> x = z :=
   fun x_eq_y y_eq_z => transport (fun w => w = z) (inverse x_eq_y) y_eq_z.
 
@@ -344,7 +363,7 @@ Definition Book_eq_2_3_7 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
     (HoTT.Basics.PathGroupoids.transport_const p (f x))^ @ fx_eq_fy.
 
 (* By induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
-   the above equations concatenate identity paths, which are units under 
+   the above equations concatenate identity paths, which are units under
    concatenation.
 
    [isequiv_adjointify] is one way to prove two functions form an equivalence,
@@ -377,7 +396,7 @@ Definition concat_right {A : Type} {x y : A} (z : A) (p : x = y)
   fun q => (inverse p) @ q.
 
 (* Again, by induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
-   the above equations concatenate identity paths, which are units under 
+   the above equations concatenate identity paths, which are units under
    concatenation. *)
 Definition Book_2_6 {A : Type} {x y z : A} (p : x = y)
   : IsEquiv (concat_left z p).
@@ -956,7 +975,7 @@ End Book_4_5.
 
 Section Book_4_6_i.
 
-  Definition is_qinv {A B : Type} (f : A -> B) 
+  Definition is_qinv {A B : Type} (f : A -> B)
     := { g : B -> A & (Sect g f * Sect f g)%type }.
   Definition qinv (A B : Type)
     := { f : A -> B & is_qinv f }.
@@ -966,7 +985,7 @@ Section Book_4_6_i.
     := fun p => match p with 1 => qinv_id _ end.
   Definition QInv_Univalence_type := forall (A B : Type@{i}),
       is_qinv (qinv_path A B).
-  Definition isequiv_qinv {A B} {f : A -> B} 
+  Definition isequiv_qinv {A B} {f : A -> B}
     : is_qinv f -> IsEquiv f.
   Proof.
     intros [g [s r]].
@@ -1063,7 +1082,7 @@ Section EquivFunctorFunextType.
   :=
   @equiv_inv _ _ (@apD10 A P f g) (fa _ _ _ _).
 
-  Local Instance ft_isequiv_functor_forall 
+  Local Instance ft_isequiv_functor_forall
         {A B:Type} `{P : A -> Type} `{Q : B -> Type}
           {f : B -> A} {g : forall b:B, P (f b) -> Q b}
         `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
@@ -1099,7 +1118,7 @@ Section EquivFunctorFunextType.
   : (forall a, P a) <~> (forall b, Q b)
     := Build_Equiv _ _ (functor_forall f g) _.
 
-  Definition ft_equiv_functor_forall_id 
+  Definition ft_equiv_functor_forall_id
         {A:Type} `{P : A -> Type} `{Q : A -> Type}
         (g : forall a, P a <~> Q a)
   : (forall a, P a) <~> (forall a, Q a)
@@ -1144,7 +1163,7 @@ Definition allqinv_coherent (qua : QInv_Univalence_type)
            (A B : Type) (f : qinv A B)
   : (fun x => ap f.2.1 (fst f.2.2 x)) = (fun x => snd f.2.2 (f.2.1 x)).
 Proof.
-  revert f. 
+  revert f.
   equiv_intro (equiv_qinv_path qua A B) p.
   destruct p; cbn; reflexivity.
 Defined.
@@ -1433,7 +1452,7 @@ Section Book_6_9.
 
   Definition AllExistsOther(X : Type) := forall x:X, { y:X | y <> x }.
 
-  Definition centerAllExOthBool : AllExistsOther Bool := 
+  Definition centerAllExOthBool : AllExistsOther Bool :=
     fun (b:Bool) => (negb b ; not_fixed_negb b).
 
   Lemma centralAllExOthBool `{Funext} (f: AllExistsOther Bool) : centerAllExOthBool = f.
