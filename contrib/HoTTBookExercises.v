@@ -129,7 +129,26 @@ End Book_1_3_sig.
 (* ================================================== ex:sum-via-bool *)
 (** Exercise 1.5 *)
 
+Section Book_1_5.
+  Definition sum (A B : Type) := { x : Bool & if x then A else B }.
 
+  Notation "'inl' a" := (true; a) (at level 0).
+  Notation "'inr' b" := (false; b) (at level 0).
+
+  Definition ind (A B : Type) (C : sum A B -> Type) (f : forall a, C (inl a))
+   (g : forall b, C (inr b)) : forall x : sum A B, C x := fun x => match x with
+   | inl a => f a
+   | inr b => g b
+   end.
+
+  Theorem inl_red {A B : Type} {C : sum A B -> Type} f g { a : A }
+  : ind A B C f g (inl a) = f a.
+  Proof. reflexivity. Defined.
+
+  Theorem inr_red {A B : Type} {C : sum A B -> Type} f g { b : B }
+  : ind A B C f g (inr b) = g b.
+  Proof. reflexivity. Defined.
+End Book_1_5.
 
 (* ================================================== ex:prod-via-bool *)
 (** Exercise 1.6 *)
