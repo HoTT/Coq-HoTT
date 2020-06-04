@@ -526,7 +526,7 @@ End TwoTen.
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
 
-
+Definition Book_2_12 := @HoTT.Limits.Pullback.ispullback_pasting_outer.
 
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
