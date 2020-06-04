@@ -418,7 +418,25 @@ Defined.
 (* ================================================== ex:ap-sigma *)
 (** Exercise 2.7 *)
 
+(* Already solved as ap_functor_sigma; there is a copy here for completeness *)
 
+Section Book_2_7.
+  Definition Book_2_7 {A B : Type} {P : A -> Type} {Q : B -> Type}
+            (f : A -> B) (g : forall a, P a -> Q (f a))
+            (u v : sigT P) (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : ap (functor_sigma f g) (path_sigma P u v p q)
+    = path_sigma Q (functor_sigma f g u) (functor_sigma f g v)
+                (ap f p)
+                ((transport_compose Q f p (g u.1 u.2))^
+                  @ (@ap_transport _ P (fun x => Q (f x)) _ _ p g u.2)^
+                  @ ap (g v.1) q).
+  Proof.
+    destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in p, q.
+    destruct p; simpl in q.
+    destruct q.
+    reflexivity.
+  Defined.
+End Book_2_7.
 
 (* ================================================== ex:ap-coprod *)
 (** Exercise 2.8 *)
