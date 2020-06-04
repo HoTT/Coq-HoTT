@@ -484,7 +484,14 @@ End TwoTen.
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
+(* Already solved as pullback_corec; we copy it here with different variable
+names for completeness *)
 
+Section Book_2_11.
+  Definition univ_ind_map {P A B C : Type} {f : A -> C} {g : B -> C}
+  {h : P -> A} {k : P -> B} (p : f o h == g o k) : P -> Pullback f g :=
+    fun a => (h a ; k a ; p a).
+End Book_2_11.
 
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
