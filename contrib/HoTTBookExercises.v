@@ -485,8 +485,12 @@ End TwoTen.
 (** Exercise 2.11 *)
 
 Section Book_2_11.
-  Definition p_is_pullback {P A B C : Type} {f : A -> C} {g : B -> C}
-  {h : P -> A} {k : P -> B} (p : f o h == g o k) := IsPullback p.
+  Definition pq_equiv {X A B : Type}
+  (p : X -> A) (q : X -> B) `{IsEquiv X A p} `{IsEquiv X B q} :=
+  equiv_compose p q^-1.
+  Definition pullback_equiv {X A B C : Type} (f : A -> C) (g : B -> C)
+  (k : X -> B) (h : X -> A) `{IsEquiv X B k} `{IsEquiv X A h}
+  (p : f o h == g o k) := pq_equiv h k.
 End Book_2_11.
 
 (* ================================================== ex:pullback-pasting *)
