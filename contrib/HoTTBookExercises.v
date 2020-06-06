@@ -134,7 +134,7 @@ Section Book_1_4.
   end.
 
   Definition recN (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
-  iterN c0 (fun c' => cs n c') n.
+  iterN c0 (fun _ => cs (pred n) (cs O c0)) n.
 End Book_1_4.
 
 (* ================================================== ex:sum-via-bool *)
