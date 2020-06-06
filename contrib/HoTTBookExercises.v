@@ -130,14 +130,11 @@ Section Book_1_4.
   Fixpoint iterN (c0 : C) (cs : C -> C) (n : nat) : C :=
   match n with
   | O => c0
-  | S n => cs(iterN c0 cs n)
+  | S n => cs (iterN c0 cs n)
   end.
 
-  Fixpoint recN (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
-  match n with
-  | O => c0
-  | S n => cs n (recN c0 cs n)
-  end.
+  Definition recN (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
+  iterN c0 (fun _ => cs n c0) n.
 End Book_1_4.
 
 (* ================================================== ex:sum-via-bool *)
