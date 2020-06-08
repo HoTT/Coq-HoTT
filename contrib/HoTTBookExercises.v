@@ -227,7 +227,14 @@ End Book_1_11.
 (* ================================================== ex:not-not-lem *)
 (** Exercise 1.13 *)
 
-
+Section Book_1_13.
+  Theorem not_not_lem : forall P, ~(~(P + ~P)).
+  Proof.
+    intros ? b.
+    apply b.
+    auto.
+  Defined.
+End Book_1_13.
 
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
