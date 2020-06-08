@@ -211,7 +211,7 @@ Definition Book_1_10 := ack.
 (** Exercise 1.11 *)
 
 Section Book_1_11.
-  Theorem dblneg : forall A, ~~~A -> ~A.
+  Theorem dblneg : forall A, (~~~A) -> ~A.
   Proof.
     intros A f a; apply f.
     intros g; apply g.
@@ -222,7 +222,26 @@ End Book_1_11.
 (* ================================================== ex:tautologies *)
 (** Exercise 1.12 *)
 
+Section Book_1_12.
+  Theorem Book_1_12_part1 : forall A B, A -> (B -> A).
+  Proof.
+    intros ? ? a ?.
+    exact a.
+  Defined.
 
+  Theorem Book_1_12_part2 : forall A, A -> ~~A.
+  Proof.
+    intros A a f.
+    exact (f a).
+  Defined.
+
+  Theorem Book_1_12_part3 : forall A B, ((~A) + (~B)) -> ~(A * B).
+  Proof.
+    intros A B [na | nb] [a b].
+    - exact (na a).
+    - exact (nb b).
+  Qed.
+End Book_1_12.
 
 (* ================================================== ex:not-not-lem *)
 (** Exercise 1.13 *)
