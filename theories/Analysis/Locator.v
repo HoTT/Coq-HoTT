@@ -29,8 +29,7 @@ Require Import
         HoTT.Classes.theory.apartness
         HoTT.Classes.theory.rationals.
 
-(* Strangely, it seems that combining the next import with the above
-list breaks some instance search? *)
+(* Strangely, it seems that combining the next import with the above list breaks some instance search? *)
 Require Import
         HoTT.Classes.orders.fields
         HoTT.Classes.theory.fields
@@ -51,14 +50,12 @@ Section locator.
 
   Context `{Funext} `{Univalence}.
 
-  (* Assume we have enumerations of the rationals, and of pairs of
-  ordered rationals. *)
+  (* Assume we have enumerations of the rationals, and of pairs of ordered rationals. *)
   Context (Q_eq : nat <~> Q).
   Context (QQpos_eq : nat <~> Q * Qpos Q).
 
   Instance qinc : Cast Q F := rationals_to_field Q F.
-  (* TODO The following two instances should probably come from the
-  `Rationals` instance. *)
+  (* TODO The following two instances should probably come from the `Rationals` instance. *)
   Context (cast_pres_ordering : StrictlyOrderPreserving qinc)
           (qinc_strong_presving : IsSemiRingStrongPreserving qinc).
   Existing Instance cast_pres_ordering.
@@ -161,6 +158,7 @@ Section locator.
     Qed.
 
     Local Definition locsig : _ <~> locator' x := ltac:(issig).
+
     Lemma locator'_locator_locator' (l' : locator' x)
       : locator_locator' (locator'_locator l') = l'.
     Proof.
@@ -220,6 +218,7 @@ Section locator.
   Proof.
     apply (pos_minus_lt_compat_r q ('eps)), eps.
   Qed.
+
   Local Definition ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
   Proof.
     apply (pos_plus_lt_compat_r q ('eps)), eps.
@@ -231,12 +230,16 @@ Section locator.
             (l : locator x).
 
     Local Definition ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
+
     Local Definition P_lower (q : Q) : Type := locates_right l (ltN1 q).
+
     Definition P_lower_prop {k} : IsHProp (P_lower k).
     Proof.
       apply _.
     Qed.
+
     Local Definition ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
+
     Local Definition P_lower_inhab : hexists (fun q => P_lower q).
     Proof.
       assert (hqlt : hexists (fun q => ' q < x)).
@@ -265,13 +268,16 @@ Section locator.
     Qed.
 
     Local Definition lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
-    (* Assume we have an enumeration of the rationals. *)
+
     Local Definition P_upper (r : Q) : DHProp := locates_left l (lt1N r).
+
     Definition P_upper_prop {k} : IsHProp (P_upper k).
     Proof.
       apply _.
     Qed.
+
     Local Definition ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
+
     Local Definition P_upper_inhab : hexists (fun r => P_upper r).
     Proof.
       assert (hqlt : hexists (fun r => x < ' r)).
@@ -465,17 +471,20 @@ Section locator.
            (locates_left l (ltQnegQ q' eps'))
            (locates_right m (ltQposQ q' eps')))
       end.
+
     Local Definition P_isHProp qeps' : IsHProp (P qeps').
     Proof.
       destruct qeps' as [q eps'].
       apply trunc_prod.
     Qed.
+
     Local Definition P_dec qeps' : Decidable (P qeps').
     Proof.
       destruct qeps' as [q eps'].
       unfold P.
       apply _.
     Qed.
+
     Local Definition P_inhab : hexists P.
     Proof.
       assert (hs := (archimedean_property Q F x y ltxy)).
@@ -515,6 +524,7 @@ Section locator.
         }
         assumption.
     Qed.
+
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
       assert (R : sigT P).
@@ -550,11 +560,8 @@ Section locator.
 
     Section recip_pos.
       Context (xpos : 0 < x).
-      Local Definition recip_nu := positive_apart_zero x xpos.
 
-      (* Note: If you are going to attemp to fill in the foles, you may
-         be interested in `dec_recip_to_recip` in
-         `Classes.theory.dec_fields` *)
+      Local Definition recip_nu := positive_apart_zero x xpos.
 
       Definition locator_recip_pos : locator (// (x ; recip_nu)).
       Proof.
@@ -614,7 +621,6 @@ Section locator.
             (xneg : x < 0).
 
     Local Definition recip_neg_nu := negative_apart_zero x xneg.
-
 
     Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
