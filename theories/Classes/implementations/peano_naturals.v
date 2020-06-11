@@ -537,6 +537,22 @@ Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
+Lemma le_nat_max_l n m : n <= Peano.max n m.
+Proof.
+  revert m.
+  induction n as [|n' IHn];
+  intros m; induction m as [|m' IHm]; try auto; cbn.
+  - apply zero_least.
+  - apply le_S_S. exact (IHn m').
+Qed.
+Lemma le_nat_max_r n m : m <= Peano.max n m.
+Proof.
+  revert m.
+  induction n as [|n' IHn];
+  intros m; induction m as [|m' IHm]; try auto; cbn.
+  - apply zero_least.
+  - apply le_S_S. exact (IHn m').
+Qed.
 Instance S_embedding : OrderEmbedding S.
 Proof.
 split.

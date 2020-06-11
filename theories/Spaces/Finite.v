@@ -26,6 +26,17 @@ Fixpoint Fin (n : nat) : Type
        | S n => Fin n + Unit
      end.
 
+Fixpoint fin_to_nat {n} : Fin n -> nat
+  := match n with
+     | 0 => Empty_rec
+     | S n' =>
+       fun k =>
+         match k with
+         | inl k' => fin_to_nat k'
+         | inr tt => n'
+         end
+     end.
+
 Global Instance decidable_fin (n : nat)
 : Decidable (Fin n).
 Proof.
@@ -86,6 +97,38 @@ Proof.
     + destruct u. elim (inl_ne_inr _ _ p).
     + destruct u. elim (inr_ne_inl _ _ p).
     + destruct u, u0; reflexivity.
+Qed.
+
+Lemma path_fin_fsucc_incl {n : nat} : forall k : Fin n, fsucc (fin_incl k) = fin_incl (fsucc k).
+Proof.
+  trivial.
+Qed.
+
+Lemma path_nat_fin_incl {n : nat} : forall k : Fin n, fin_to_nat (fin_incl k) = fin_to_nat k.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma path_nat_fsucc {n : nat} : forall k : Fin n, fin_to_nat (fsucc k) = S (fin_to_nat k).
+Proof.
+  induction n as [|n' IHn].
+  - intros [].
+  - intros [k'|[]].
+    + rewrite path_fin_fsucc_incl, path_nat_fin_incl.
+      apply IHn.
+    + reflexivity.
+Qed.
+
+Lemma path_nat_fin_zero {n} : fin_to_nat (@fin_zero n) = 0.
+Proof.
+  induction n as [|n' IHn].
+  - reflexivity.
+  - trivial.
+Qed.
+
+Lemma path_nat_fin_last {n} : fin_to_nat (@fin_last n) = n.
+Proof.
+  reflexivity.
 Qed.
 
 (** ** Transposition equivalences *)

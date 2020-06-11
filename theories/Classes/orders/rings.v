@@ -185,6 +185,16 @@ Section strict_ring_order.
     rewrite <-(negate_involutive x), <-(negate_involutive y); auto.
   Qed.
 
+  Lemma flip_lt_negate_r x y : y < - x -> x < - y.
+  Proof.
+    pattern y at 1. rewrite <- (@involutive _ (-) _ y).
+    apply flip_lt_negate.
+  Qed.
+  Lemma flip_lt_negate_l x y : - x < y -> - y < x.
+  Proof.
+    pattern y at 1. rewrite <- (@involutive _ (-) _ y).
+    apply flip_lt_negate.
+  Qed.
   Lemma flip_pos_negate x : 0 < x <-> -x < 0.
   Proof.
   split; intros E.
@@ -236,13 +246,40 @@ Section strict_ring_order.
   trivial.
   Qed.
 
+  Lemma pos_minus_lt_compat_r x z : 0 < z <-> x - z < x.
+  Proof.
+    pattern x at 2;apply (transport _ (plus_0_r x)).
+    split; intros.
+    - apply (strictly_order_preserving _), flip_pos_negate; assumption.
+    - apply flip_pos_negate, (strictly_order_reflecting (x+)); assumption.
+  Qed.
+
+  Lemma pos_minus_lt_compat_l x z : 0 < z <-> - z + x < x.
+  Proof.
+    split; intros ltz.
+    - rewrite (commutativity (-z) x); apply pos_minus_lt_compat_r; assumption.
+    - rewrite (commutativity (-z) x) in ltz.
+      apply (snd (pos_minus_lt_compat_r x z)); assumption.
+  Qed.
+
   Lemma between_pos (x : R) : 0 < x -> -x < x.
   Proof.
   intros E.
   transitivity 0; trivial.
   apply flip_pos_negate. trivial.
   Qed.
+
 End strict_ring_order.
+
+Section strict_ring_apart.
+  Context `{FullPseudoSemiRingOrder R}.
+
+  Definition positive_apart_zero (z : R) (Pz : 0 < z) : z ≶ 0
+    := pseudo_order_lt_apart_flip 0 z Pz.
+  Definition negative_apart_zero (z : R) (Nz : z < 0) : z ≶ 0
+    := pseudo_order_lt_apart z 0 Nz.
+
+End strict_ring_apart.
 
 Section another_ring_order.
   Context `{IsRing R1} `{!SemiRingOrder R1le} `{IsRing R2} `{R2le : Le R2}

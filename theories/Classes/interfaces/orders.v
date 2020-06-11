@@ -180,3 +180,14 @@ Class FullPseudoRingOrder `{Apart A} `{Plus A}
   ; pseudo_ringorder_plus :> forall z, StrictlyOrderPreserving (z +)
   ; pseudo_ringorder_mult : forall x y, 0 < x -> 0 < y -> 0 < x * y }.
 *)
+
+(* Next, a constructive definition of fields - the ordered fields from
+HoTT book chapter 11. *)
+
+Class OrderedField (A : Type) {Alt : Lt A} {Ale : Le A} {Aap : Apart A} {Azero : Zero A}
+      {Aone : One A} {Aplus : Plus A} {Anegate : Negate A} {Amult : Mult A}
+      {Arecip : Recip A} {Ajoin : Join A} {Ameet : Meet A} :=
+  { ordered_field_field :> @IsField A Aplus Amult Azero Aone Anegate Aap Arecip
+  ; ordered_field_lattice :> LatticeOrder Ale
+  ; ordered_field_fssro :> @FullPseudoSemiRingOrder A _ _ _ Azero _ _ _
+  }.

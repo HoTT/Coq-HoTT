@@ -98,6 +98,33 @@ Definition path_dprop `{Funext} {P Q : DProp}
 : (P = Q :> Type) -> (P = Q :> DProp)
   := equiv_path_dprop P Q.
 
+Definition issig_dhprop
+  : { X : hProp & Decidable X } <~> DHProp.
+Proof.
+  issig.
+Defined.
+
+Definition equiv_path_dhprop' `{Funext} (P Q : DHProp)
+: (P = Q :> hProp) <~> (P = Q :> DHProp).
+Proof.
+  destruct P as [P dP]. destruct Q as [Q dQ].
+  refine (((equiv_ap' issig_dhprop^-1 _ _)^-1)
+            oE _); cbn.
+  refine ((equiv_path_sigma_hprop (P; dP) (Q; dQ))).
+Defined.
+
+Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
+: (P = Q :> Type) <~> (P = Q :> DHProp).
+Proof.
+  assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> hProp)) by apply equiv_path_trunctype'.
+  assert (eq_hprop_dhprop : (P = Q :> hProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
+  refine (eq_hprop_dhprop oE eq_type_hprop).
+Defined.
+
+Definition path_dhprop `{Univalence} {P Q : DHProp}
+: (P = Q :> Type) -> (P = Q :> DHProp)
+  := equiv_path_dhprop P Q.
+
 Global Instance ishset_dprop `{Univalence} : IsHSet DProp.
 Proof.
   intros P Q.
@@ -283,4 +310,14 @@ Global Instance dimpl_true_false {P Q} `{IsTrue P} `{IsFalse Q}
 : IsFalse (P -> Q).
 Proof.
   intros f. exact (dprop_isfalse (f dprop_istrue)).
+Defined.
+
+Lemma path_dec (A :Type) `{IsHProp A} `{Decidable A} `{Univalence} : A = is_inl (dec A).
+Proof.
+  refine (path_universe_uncurried _).
+  apply equiv_iff_hprop_uncurried.
+  split.
+  - intros b. destruct (dec A); simpl; auto.
+  - destruct (dec A); simpl; auto.
+    intros [].
 Defined.

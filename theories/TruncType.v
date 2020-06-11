@@ -37,6 +37,12 @@ Proof.
   intros p; destruct p; reflexivity.
 Defined.
 
+Definition equiv_path_trunctype' {n : trunc_index} (A B : TruncType n)
+  : (A = B :> Type) <~> (A = B :> TruncType n).
+Proof.
+  exact ((Build_Equiv _ _ (@ap _ _ (@trunctype_type n) A B) _)^-1)%equiv.
+Defined.
+
 Definition equiv_path_trunctype {n : trunc_index} (A B : TruncType n)
   : (A <~> B) <~> (A = B :> TruncType n).
 Proof.
