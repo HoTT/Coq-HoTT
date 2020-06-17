@@ -46,10 +46,9 @@ Section contents.
    `{!IsBoundedJoinSemiLattice B} :
     IsBoundedJoinSemiLattice (A -> B).
   Proof.
-    repeat split; try apply _; try_solve_fun.
+    repeat split; try apply _; try_solve_fun; try apply commutativity.
     * apply left_identity.
     * apply right_identity.
-    * apply commutativity.
     * apply binary_idempotent.
   Defined.
 
