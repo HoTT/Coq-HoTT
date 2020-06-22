@@ -107,8 +107,8 @@ Definition square_pequiv_pfiber {A B C D}
 
 (** The triple-fiber functor is equal to the negative of the loopspace functor. *)
 Definition pfiber2_loops_functor {A B : pType} (f : A ->* B)
-: loops_inv _ o* pfiber2_loops f o* pfib (pfib (pfib f))
-  ==* loops_functor f o* pfiber2_loops (pfib f).
+: pfiber2_loops f o* pfib (pfib (pfib f))
+  ==* loops_functor f o* (loops_inv _ o* pfiber2_loops (pfib f)).
 Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _).
@@ -119,9 +119,10 @@ Proof.
     rewrite !concat_1p, concat_p1.
     rewrite paths_ind_r_transport.
     rewrite transport_arrow_toconst, transport_paths_Fl. 
-    rewrite concat_p1, inv_V, ap_V. apply inverse2.
+    rewrite concat_p1, inv_V, ap_V.
     refine (((r^)..2)^ @ _).
     rewrite transport_paths_Fl; cbn.
-    rewrite concat_p1, pr1_path_V, ap_V, inv_V; reflexivity.
+    rewrite pr1_path_V, !ap_V, !inv_V.
+    apply concat_p1.
   - reflexivity.
 Qed.
