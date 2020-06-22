@@ -295,6 +295,8 @@ theories/Homotopy/ClassifyingSpace.v
 theories/Homotopy/EMSpace.v
 theories/Homotopy/CayleyDickson.v
 
+theories/Homotopy/SuccessorStructure.v
+
 #
 #   Pointed
 #
