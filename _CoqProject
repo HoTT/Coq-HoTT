@@ -299,6 +299,7 @@ theories/Homotopy/EMSpace.v
 theories/Homotopy/CayleyDickson.v
 
 theories/Homotopy/SuccessorStructure.v
+theories/Homotopy/ExactSequence.v
 
 #
 #   Pointed
