@@ -7,6 +7,7 @@ Require Export WildCat.EquivGpd.
 Require Export WildCat.FunctorCat.
 Require Export WildCat.NatTrans.
 Require Export WildCat.Yoneda.
+Require Export WildCat.Square.
 (* Examples *)
 Require Export WildCat.Type.
 Require Export WildCat.Paths.
