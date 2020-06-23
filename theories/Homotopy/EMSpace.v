@@ -125,11 +125,9 @@ Section LicataFinsterLemma.
     set (Q := fun a b => tr (n:=1) (merid (a * b))
       = tr (merid b @ (merid mon_unit)^ @ merid a)).
     srapply (@wedge_incl_elim_uncurried _ (-1) (-1) _
-      mon_unit _ _ mon_unit _ Q _ _ x y).
-    { intros a b.
-      cbn; unfold Q.
-      apply istrunc_paths.
-      exact _. }
+      mon_unit _ _ mon_unit _ Q _ _ x y);
+    (* The try clause below is only needed for Coq <= 8.11 *)
+    try (intros a b; cbn; unfold Q; apply istrunc_paths; exact _).
     unfold Q.
     srefine (_;_;_).
     { intro b.

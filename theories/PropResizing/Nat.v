@@ -372,8 +372,8 @@ Section AssumeStuff.
   Proof.
     intros [n nrec].
     pose (Q := fun m:Graph => forall (mrec : in_N m), P (m;mrec)).
-    refine (resize_nrec n nrec Q _ _ _ nrec);clear n nrec.
-    - intros A; apply trunc_forall.
+    (* The try clause below is only needed for Coq <= 8.11 *)
+    refine (resize_nrec n nrec Q _ _ _ nrec);clear n nrec; try (intros A; apply trunc_forall).
     - intros zrec.
       refine (transport P _ P0).
       apply ap.
