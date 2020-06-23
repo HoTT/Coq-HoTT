@@ -793,7 +793,8 @@ Section Reflective_Subuniverse.
     Proof.
       refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
       (** TODO: Why doesn't Coq find this instance? *)
-      refine (inO_hfiber pr1 x); assumption.
+      (* This is #12571 and it is only needed for Coq <= 8.11 *)
+      all: refine (inO_hfiber pr1 x); assumption.
     Defined.
 
     Hint Immediate inO_unsigma : typeclass_instances.

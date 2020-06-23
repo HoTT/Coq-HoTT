@@ -875,8 +875,8 @@ Definition detachable_finite_subset {X} `{Finite X}
 Proof.
   intros x.
   refine (decidable_equiv _ (hfiber_fibration x P)^-1 _).
-  refine (detachable_image_finite pr1 x).
-  - assumption.                 (** Why doesn't Coq find this? *)
+  (* The try clause below is only needed for Coq <= 8.11 *)
+  refine (detachable_image_finite pr1 x); try assumption.
   - apply (mapinO_pr1 (Tr (-1))).  (** Why doesn't Coq find this? *)
 Defined.
 
