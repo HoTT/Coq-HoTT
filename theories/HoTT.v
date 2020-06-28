@@ -13,6 +13,7 @@ Require Export HoTT.Truncations.
 Require Export HoTT.HFiber.
 Require Export HoTT.HProp.
 Require Export HoTT.HSet.
+Require Export HoTT.EquivGroupoids.
 
 Require Export HoTT.Equiv.BiInv.
 Require Export HoTT.Equiv.PathSplit.
