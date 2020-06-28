@@ -33,7 +33,7 @@ Reserved Notation "p • q" (at level 20).
 Reserved Notation "p •' q" (at level 21, left associativity, format "'[v' p '/' '•''  q ']'").
 Reserved Notation "x ₁" (at level 3).
 Reserved Notation "x ₂" (at level 3).
-Reserved Notation "¬ x" (at level 75, right associativity).
+Reserved Notation "¬ x" (at level 35, right associativity).
 Reserved Notation "x ⇓ F" (at level 40, left associativity).
 Reserved Notation "x ⇑ F" (at level 40, left associativity).
 Reserved Notation "x ∈ v" (at level 30).
