@@ -29,7 +29,7 @@ Class IsApart A {Aap : Apart A} : Type :=
   ; apart_mere :> is_mere_relation _ apart
   ; apart_symmetric :> Symmetric (≶)
   ; apart_cotrans :> CoTransitive (≶)
-  ; tight_apart : forall x y, ~x ≶ y <-> x = y }.
+  ; tight_apart : forall x y, ~(x ≶ y) <-> x = y }.
 
 Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
 Proof.

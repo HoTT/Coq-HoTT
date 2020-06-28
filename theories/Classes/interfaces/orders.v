@@ -82,7 +82,7 @@ Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   { fullpseudo_le_hprop :> is_mere_relation A Ale
   ; full_pseudo_order_pseudo :> PseudoOrder Alt
-  ; le_iff_not_lt_flip : forall x y, x ≤ y <-> ~y < x }.
+  ; le_iff_not_lt_flip : forall x y, x ≤ y <-> ~(y < x) }.
 
 Section order_maps.
   Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A -> B).
@@ -139,7 +139,7 @@ Class StrictSemiRingOrder `{Plus A} `{Mult A}
 Class PseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=
   { pseudo_srorder_strict :> PseudoOrder Alt
-  ; pseudo_srorder_partial_minus : forall x y, ~y < x -> exists z, y = x + z
+  ; pseudo_srorder_partial_minus : forall x y, ~(y < x) -> exists z, y = x + z
   ; pseudo_srorder_plus :> forall z, StrictOrderEmbedding (z +)
   ; pseudo_srorder_mult_ext :> StrongBinaryExtensionality (.*.)
   ; pseudo_srorder_pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
@@ -149,7 +149,7 @@ Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=
   { full_pseudo_srorder_le_hprop :> is_mere_relation A Ale
   ; full_pseudo_srorder_pso :> PseudoSemiRingOrder Alt
-  ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x ≤ y <-> ~y < x }.
+  ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x ≤ y <-> ~(y < x) }.
 
 (* Due to bug #2528 *)
 Hint Extern 7 (PropHolds (0 < _ * _)) =>

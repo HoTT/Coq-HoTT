@@ -16,33 +16,33 @@ intros a b;destruct (decide_rel paths a b) as [E1|E1];split;intros E2;auto.
 - destruct (E1 E2).
 Qed.
 
-Lemma LT_EQ : ~ LT = EQ.
+Lemma LT_EQ : LT <> EQ.
 Proof.
 intros E.
 change ((fun r => match r with LT => Unit | _ => Empty end) EQ).
 rewrite <-E. split.
 Qed.
 
-Lemma LT_GT : ~ LT = GT.
+Lemma LT_GT : LT <> GT.
 Proof.
 intros E.
 change ((fun r => match r with LT => Unit | _ => Empty end) GT).
 rewrite <-E. split.
 Qed.
 
-Lemma EQ_LT : ~ EQ = LT.
+Lemma EQ_LT : EQ <> LT.
 Proof.
 apply symmetric_neq, LT_EQ.
 Qed.
 
-Lemma EQ_GT : ~ EQ = GT.
+Lemma EQ_GT : EQ <> GT.
 Proof.
 intros E.
 change ((fun r => match r with EQ => Unit | _ => Empty end) GT).
 rewrite <-E. split.
 Qed.
 
-Lemma GT_EQ : ~ GT = EQ.
+Lemma GT_EQ : GT <> EQ.
 Proof.
 apply symmetric_neq, EQ_GT.
 Qed.

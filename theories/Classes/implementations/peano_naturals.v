@@ -125,7 +125,7 @@ hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa].
   rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
 Qed.
 
-Global Instance S_neq_0 x : PropHolds (~ S x =N= 0).
+Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
 Proof.
 intros E.
 change ((fun a => match a with S _ => Unit | 0%nat => Empty end) 0).
@@ -219,7 +219,7 @@ red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 Qed.
 
 Instance nat_mult_cancel_l
-  : forall z : nat, PropHolds (~ z =N= 0) -> LeftCancellation@{N} (.*.) z.
+  : forall z : nat, PropHolds (~ (z =N= 0)) -> LeftCancellation@{N} (.*.) z.
 Proof.
 unfold PropHolds. unfold LeftCancellation.
 intros a Ea b c E;revert b c a Ea E.
@@ -296,7 +296,7 @@ induction a as [|a IHa].
     * right. apply le_S_S. trivial.
 Defined.
 
-Lemma not_lt_0 : forall a, ~ a < 0.
+Lemma not_lt_0 : forall a, ~ (a < 0).
 Proof.
 intros a E. apply le_exists in E.
 destruct E as [k E].
@@ -431,14 +431,14 @@ split.
     destruct E;trivial.
 Qed.
 
-Lemma nat_not_lt_le : forall a b, ~ a < b -> b <= a.
+Lemma nat_not_lt_le : forall a b, ~ (a < b) -> b <= a.
 Proof.
 intros ?? E.
 destruct (le_lt_dec b a);auto.
 destruct E;auto.
 Qed.
 
-Lemma nat_lt_not_le : forall a b : nat, a < b -> ~ b <= a.
+Lemma nat_lt_not_le : forall a b : nat, a < b -> ~ (b <= a).
 Proof.
 intros a b E1 E2.
 apply le_exists in E1;apply le_exists in E2.
@@ -465,7 +465,7 @@ Proof.
 intros;apply le_S_S,zero_least.
 Qed.
 
-Lemma nonzero_gt_0 : forall a, ~ a =N= 0 -> 0 < a.
+Lemma nonzero_gt_0 : forall a, ~ (a =N= 0) -> 0 < a.
 Proof.
 intros [|a] E.
 - destruct E;split.

@@ -23,7 +23,7 @@ Record Frac@{} : Type
 
 Lemma Frac_ishset' : IsHSet Frac.
 Proof.
-assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
+assert (E : sigT (fun n : R => sigT (fun d : R => d <> 0 )) <~> Frac).
 - issig.
 - apply (trunc_equiv' _ E).
 Qed.
@@ -136,7 +136,7 @@ unfold equiv;simpl;intros q r E.
 rewrite <-2!negate_mult_distr_l. rewrite E;reflexivity.
 Qed.
 
-Lemma nonzero_num@{} x : ~ equiv x 0 <-> num x <> 0.
+Lemma nonzero_num@{} x : ~ (equiv x 0) <-> num x <> 0.
 Proof.
 split; intros E F; apply E.
 - red. rewrite F. simpl. rewrite 2!mult_0_l. reflexivity.
@@ -408,12 +408,12 @@ Proof.
 apply classes_eq_related@{UR UR Ularge Ularge Uhuge};apply _.
 Qed.
 
-Lemma class_neq@{} : forall q r, ~ equiv q r -> ~ ' q = ' r.
+Lemma class_neq@{} : forall q r, ~ (equiv q r) -> ' q <> ' r.
 Proof.
 intros q r E1 E2;apply E1;apply classes_eq_related, E2.
 Qed.
 
-Lemma classes_neq_related@{} : forall q r, ~ ' q = ' r -> ~ equiv q r.
+Lemma classes_neq_related@{} : forall q r, ' q <> ' r -> ~ (equiv q r).
 Proof.
 intros q r E1 E2;apply E1,path,E2.
 Qed.
@@ -427,13 +427,13 @@ destruct (decide_rel paths 0 0) as [_|E].
 - destruct E;reflexivity.
 Qed.
 
-Lemma dec_recip_nonzero_aux@{} : forall q, ~ ' q = 0 -> ~ num q = 0.
+Lemma dec_recip_nonzero_aux@{} : forall q, ' q <> 0 -> num q <> 0.
 Proof.
 intros q E;apply classes_neq_related in E.
 apply Frac.nonzero_num in E. trivial.
 Qed.
 
-Lemma dec_recip_nonzero@{} : forall q (E : ~ ' q = 0),
+Lemma dec_recip_nonzero@{} : forall q (E : ' q <> 0),
   / (' q) = ' (frac (den q) (num q) (dec_recip_nonzero_aux q E)).
 Proof.
 intros. apply path.

@@ -85,7 +85,7 @@ Reserved Infix "@lr" (at level 30).
 Reserved Infix "oL" (at level 40, left associativity).
 Reserved Infix "oR" (at level 40, left associativity).
 
-Reserved Notation "~~ A" (at level 75, right associativity, only parsing).
+Reserved Notation "~~ A" (at level 35, right associativity, only parsing).
 Reserved Notation "a \ C" (at level 40, left associativity).
 Reserved Notation "a <=_{ x } b" (at level 70, no associativity).
 Reserved Notation "D1 ~d~ D2" (at level 65).
