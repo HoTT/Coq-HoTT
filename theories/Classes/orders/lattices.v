@@ -569,11 +569,11 @@ Section strict_ordered_field.
     refine (Trunc_rec _ disj); intros [ltxxy|ltxyz].
     - set (disj' := cotransitive ltyz (x ⊔ y)).
       refine (Trunc_rec _ disj'); intros [ltyxy|ltxyz].
-      + assert (ineqx : ~ x ⊔ y = x).
+      + assert (ineqx : x ⊔ y <> x).
         {
           apply lt_ne_flip; assumption.
         }
-        assert (nleyx : ~ y ≤ x)
+        assert (nleyx : ~ (y ≤ x))
           by exact (not_contrapositive (join_l x y) ineqx).
         assert (lexy : x ≤ y).
         {
@@ -581,11 +581,11 @@ Section strict_ordered_field.
           intros ltyx.
           refine (nleyx (lt_le _ _ _)).
         }
-        assert (ineqy : ~ x ⊔ y = y).
+        assert (ineqy : x ⊔ y <> y).
         {
           apply lt_ne_flip; assumption.
         }
-        assert (nlexy : ~ x ≤ y)
+        assert (nlexy : ~ (x ≤ y))
           by exact (not_contrapositive (join_r x y) ineqy).
         assert (leyx : y ≤ x).
         {
@@ -624,11 +624,11 @@ Section strict_ordered_field.
     - set (disj' := cotransitive ltxz (y ⊓ z)).
       refine (Trunc_rec _ disj'); intros [ltxyz|ltyzz].
       + assumption.
-      + assert (ineqy : ~ y ⊓ z = y).
+      + assert (ineqy : y ⊓ z <> y).
         {
           apply lt_ne; assumption.
         }
-        assert (nleyz : ~ y ≤ z)
+        assert (nleyz : ~ (y ≤ z))
           by exact (not_contrapositive (meet_l y z) ineqy).
         assert (lezy : z ≤ y).
         {
@@ -636,11 +636,11 @@ Section strict_ordered_field.
           intros ltzy.
           refine (nleyz (lt_le _ _ _)).
         }
-        assert (ineqz : ~ y ⊓ z = z).
+        assert (ineqz : y ⊓ z <> z).
         {
           apply lt_ne; assumption.
         }
-        assert (nlezy : ~ z ≤ y)
+        assert (nlezy : ~ (z ≤ y))
           by exact (not_contrapositive (meet_r y z) ineqz).
         assert (leyz : y ≤ z).
         {

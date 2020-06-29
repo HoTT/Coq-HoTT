@@ -759,7 +759,7 @@ apply Q_triangular_one with v.
 Qed.
 
 Lemma Qclose_separating_not_lt : forall q r : Q, (forall e, close e q r) ->
-  ~ q < r.
+  ~ (q < r).
 Proof.
 intros q r E1 E2.
 pose proof (E1 (Qpos_diff _ _ E2)) as E3.

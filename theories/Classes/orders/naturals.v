@@ -32,7 +32,7 @@ split; intros E.
   apply compose_le with z; [solve_propholds | trivial].
 Qed.
 
-Lemma nat_not_neg x : ~x < 0.
+Lemma nat_not_neg x : ~(x < 0).
 Proof. apply le_not_lt_flip, nat_nonneg. Qed.
 
 Lemma nat_0_or_pos x : x = 0 |_| 0 < x.

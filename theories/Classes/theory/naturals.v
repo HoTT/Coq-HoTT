@@ -166,7 +166,7 @@ Section borrowed_from_nat.
   Global Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
   refine (from_nat_stmt nat (fun s =>
-    forall z : s, PropHolds (~ z = 0) -> LeftCancellation mult z) _).
+    forall z : s, PropHolds (z <> 0) -> LeftCancellation mult z) _).
   simpl. apply nat_mult_cancel_l.
   Qed.
 
@@ -175,7 +175,7 @@ Section borrowed_from_nat.
 
   Instance nat_nontrivial: PropHolds ((1:N) <> 0).
   Proof.
-  refine (from_nat_stmt nat (fun s => PropHolds (~ (1:s) = 0)) _).
+  refine (from_nat_stmt nat (fun s => PropHolds ((1:s) <> 0)) _).
   apply _.
   Qed.
 

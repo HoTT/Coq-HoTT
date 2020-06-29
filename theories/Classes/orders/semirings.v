@@ -751,12 +751,12 @@ Section full_pseudo_semiring_order.
 
   Context `{PropHolds (1 ≶ 0)}.
 
-  Lemma not_le_1_0 : ~1 ≤ 0.
+  Lemma not_le_1_0 : ~(1 ≤ 0).
   Proof.
   apply lt_not_le_flip, lt_0_1.
   Qed.
 
-  Lemma not_le_2_0 : ~2 ≤ 0.
+  Lemma not_le_2_0 : ~(2 ≤ 0).
   Proof.
   apply lt_not_le_flip, lt_0_2.
   Qed.
