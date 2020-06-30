@@ -23,14 +23,14 @@ Proof.
   induction n.
   - reflexivity.
   - simpl; apply ap; assumption.
-Qed.
+Defined.
 
 Lemma nat_plus_n_Sm : forall n m:nat, (n + m).+1 = n + m.+1.
 Proof.
   intros n m; induction n; simpl.
   - reflexivity.
   - apply ap; assumption.
-Qed.
+Defined.
 
 Definition nat_plus_comm (n m : nat) : n + m = m + n.
 Proof.
