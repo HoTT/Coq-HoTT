@@ -854,6 +854,11 @@ proof term (at least if the proof is ended with `Defined.`).
 For a transparent subterm, use `refine` or `transparent assert` (the
 latter defined in `Basics/Overture`; see "Available tactics", below).
 
+## Imports/exports ##
+
+Most `Require` commands should be just `Require Import`: imports should not be re-exported, by default.
+
+However, if you can't imagine making practical use of file `Foo` without file `Bar`, then `Bar` may export `Foo` via `Require Export Foo`. For instance, `Modality` exports `ReflectiveSubuniverse` because so many of the theorems about modalities are actually theorems about reflective subuniverses.
 
 ## Formatting ##
 
