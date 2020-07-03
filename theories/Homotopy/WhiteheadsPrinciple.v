@@ -1,8 +1,6 @@
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.
+Require Import Basics Types Pointed.
 Require Import HFiber.
-Require Import Algebra.Group.
+Require Import Algebra.Groups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Truncations.
 

@@ -1,8 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import Algebra.Group.
-Require Import Algebra.AbelianGroup.
+Require Import Algebra.AbGroups.
 Require Import Truncations.
 Require Import Spaces.Nat.
 Require Import Modalities.ReflectiveSubuniverse.
@@ -125,7 +124,7 @@ Definition pi1_functor {X Y : pType}
   : (X ->* Y) -> Pi1 X $-> Pi1 Y.
 Proof.
   intro f.
-  srapply Build_GroupHomomorphism.
+  snrapply Build_GroupHomomorphism.
   { apply Trunc_functor.
     apply loops_functor.
     assumption. }
@@ -212,7 +211,7 @@ Definition groupiso_pi_functor (n : nat)
   {X Y : pType} (e : X <~>* Y)
   : Pi n.+1 X $<~> Pi n.+1 Y.
 Proof.
-  srapply Build_GroupIsomorphism.
+  snrapply Build_GroupIsomorphism.
   1: apply (pi_functor n.+1 e).
   nrefine (Trunc_functor_isequiv _ _).
   refine (isequiv_homotopic _ (pequiv_iterated_loops_functor_is_iterated_loops_functor n.+1 e)).
@@ -221,7 +220,7 @@ Defined.
 (** Homotopy groups preserve products *)
 Lemma pi_prod (X Y : pType) {n : nat}
   : GroupIsomorphism (Pi n.+1 (X * Y))
-      (group_prod (Pi n.+1 X) (Pi n.+1 Y)).
+      (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
   srapply Build_GroupIsomorphism'.
   { refine (equiv_O_prod_cmp _ _ _ oE _).
