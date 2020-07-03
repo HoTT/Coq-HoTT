@@ -1,45 +1,12 @@
-Require Import HoTT.Basics HoTT.Types.
+Require Import Basics Types Cubical WildCat.
 Require Import Truncations.
 Require Import HIT.Coeq.
-Require Import Algebra.Group.
-Require Import Algebra.Subgroup.
-Require Import Cubical.
-Require Import WildCat.
+Require Import Algebra.Groups.
+Require Import Algebra.AbGroups.AbelianGroup.
+
+(** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
 
 Local Open Scope mc_mult_scope.
-
-(** * Abelian groups *)
-
-(** Definition of an abelian group *)
-
-Class AbGroup := {
-  abgroup_type : Type;
-  abgroup_sgop :> SgOp abgroup_type;
-  abgroup_unit :> MonUnit abgroup_type;
-  abgroup_inverse :> Negate abgroup_type;
-  abgroup_isabgroup :> IsAbGroup abgroup_type;
-}.
-
-Definition Build_AbGroup' (G : Group) `{IsAbGroup G} : AbGroup
-  := Build_AbGroup G _ _ _ _.
-
-Existing Instance abgroup_sgop.
-Existing Instance abgroup_unit.
-Existing Instance abgroup_inverse.
-Existing Instance abgroup_isabgroup.
-
-(** We want abelian groups to be coerced to the underlying type. *)
-Coercion abgroup_type : AbGroup >-> Sortclass.
-
-(** The underlying group of an abelian group. *)
-Definition group_abgroup : AbGroup -> Group.
-Proof.
-  intros [G ? ? ? [l ?]].
-  nrapply (Build_Group G _ _ _ l).
-Defined.
-
-(** We also want abelian groups to be coerced to the underlying group. *)
-Coercion group_abgroup : AbGroup >-> Group.
 
 (** Definition of Abelianization.
 
@@ -85,8 +52,8 @@ Section Abel.
   (** The type Abel is defined to be the set coequalizer of the following maps G^3 -> G. *)
   Definition Abel
     := Tr 0 (Coeq
-      (uncurry2 (fun a b c => a * (b * c)))
-      (uncurry2 (fun a b c => a * (c * b)))).
+      (uncurry2 (fun a b c : G => a * (b * c)))
+      (uncurry2 (fun a b c : G => a * (c * b)))).
 
   (** We have a natural map from G to Abel G. *)
   Definition ab : G -> Abel.
@@ -293,7 +260,7 @@ Section AbelGroup.
 End AbelGroup.
 
 (** We can easily prove that ab is a surjection. *)
-Global Instance issurj_ab {G : Group} : IsSurjection ab.
+Global Instance issurj_ab {G : Group} : IsSurjection (@ab G).
 Proof.
   apply BuildIsSurjection.
   Abel_ind_hprop x.
@@ -403,57 +370,4 @@ Proof.
   - srapply (groupiso_isabelianization A B grp_homo_id eta).
   - exact _.
   - symmetry; apply homotopic_isabelianization.
-Defined.
-
-(** The wild category of abelian groups *)
-
-Global Instance isgraph_abgroup : IsGraph AbGroup
-  := induced_graph group_abgroup.
-
-Global Instance is01cat_AbGroup : Is01Cat AbGroup
-  := induced_01cat group_abgroup.
-
-Global Instance is01cat_GroupHomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
-  := induced_01cat (@grp_homo_map A B).
-
-Global Instance is0gpd_GroupHomomorphism {A B : AbGroup}: Is0Gpd (A $-> B)
-  := induced_0gpd (@grp_homo_map A B).
-
-(** AbGroup forms a 1Cat *)
-Global Instance is1cat_abgroup : Is1Cat AbGroup
-  := induced_1cat _.
-
-Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
-  := induced_hasmorext _.
-
-Global Instance hasequivs_abgroup : HasEquivs AbGroup
-  := induced_hasequivs _.
-
-(** Zero object of AbGroup *)
-Definition TrivialAbGroup : AbGroup.
-Proof.
-  refine (Build_AbGroup Unit (fun _ _ => tt) tt (fun _ => tt) _).
-  repeat split; try exact _; by intros [].
-Defined.
-
-(** AbGroup is a pointed category *)
-Global Instance ispointedcat_abgroup : IsPointedCat AbGroup.
-Proof.
-  snrapply Build_IsPointedCat.
-  1: exact TrivialAbGroup.
-  { intro A.
-    snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
-    1: exact _.
-    { intros [] [].
-      symmetry.
-      apply left_identity. }
-    intros g []; cbn.
-    exact (grp_homo_unit g). }
-  intro A.
-  snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
-  1: exact _.
-  { intros x y; symmetry.
-    apply left_identity. }
-  intros g x; cbn.
-  apply path_unit.
 Defined.
