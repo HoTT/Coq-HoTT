@@ -56,6 +56,15 @@ Proof.
   srapply IHp.
 Qed.
 
+Definition pos_peano_rec (P : Type)
+  : P -> (Pos -> P -> P) -> Pos -> P
+  := pos_peano_ind (fun _ => P).
+
+Definition pos_peano_rec_beta_pos_succ (P : Type)
+  (a : P) (f : Pos -> P -> P) (p : Pos)
+  : pos_peano_rec P a f (pos_succ p) = f p (pos_peano_rec P a f p)
+  := pos_peano_ind_beta_pos_succ (fun _ => P) a f p.
+
 (** ** Properties of constructors *)
 
 Definition x0_inj {z w : Pos} (p : x0 z = x0 w) : z = w
