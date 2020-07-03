@@ -123,6 +123,7 @@ Require Export HoTT.Algebra.Aut.
 Require Export HoTT.Algebra.ooAction.
 Require Export HoTT.Algebra.AbGroups.
 Require Export HoTT.Algebra.Groups.
+Require Export HoTT.Algebra.Rings.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.Pi1S1.
