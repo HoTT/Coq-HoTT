@@ -125,17 +125,17 @@ Global Instance hasequivs_abgroup : HasEquivs AbGroup
 
 (** Zero object of AbGroup *)
 
-Definition TrivialAbGroup : AbGroup.
+Definition abgroup_trivial : AbGroup.
 Proof.
-  refine (Build_AbGroup Unit (fun _ _ => tt) tt (fun _ => tt) _).
-  repeat split; try exact _; by intros [].
+  rapply (Build_AbGroup' grp_trivial).
+  by intros [].
 Defined.
 
 (** AbGroup is a pointed category *)
 Global Instance ispointedcat_abgroup : IsPointedCat AbGroup.
 Proof.
   snrapply Build_IsPointedCat.
-  1: exact TrivialAbGroup.
+  1: exact abgroup_trivial.
   { intro A.
     snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
     1: exact _.
