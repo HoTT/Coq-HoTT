@@ -181,7 +181,7 @@ Definition isexact_square_if n  {F F' X X' Y Y' : pType}
 Proof.
   pose (I := isexact_squaric_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
-  exists (iscomplex_homotopic_cancelR i' f' k cx_isexact).
+  exists (iscomplex_cancelR i' f' k cx_isexact).
   pose (e := (pequiv_pfiber (id_cate _) k (cat_idr _)^$ : pfiber f' <~>* pfiber (k o* f'))).
   nrefine (cancelR_isequiv_conn_map n _ e). 1: apply pointed_isequiv.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
