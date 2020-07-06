@@ -85,7 +85,7 @@ Proof.
   exact (pmap_prewhisker i ff @* cx).
 Defined.
 
-Definition iscomplex_homotopic_cancelR {F X Y Y' : pType}
+Definition iscomplex_cancelR {F X Y Y' : pType}
            (i : F ->* X) (f : X ->* Y) (e : Y <~>* Y') (cx : IsComplex i (e o* f))
   : IsComplex i f :=
   (compose_V_hh e (f o* i))^$ $@ 
