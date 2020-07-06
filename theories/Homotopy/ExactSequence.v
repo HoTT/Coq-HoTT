@@ -391,16 +391,12 @@ Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}
 
 (** ** LES of loop spaces and homotopy groups *)
 
-Local Notation "'0'" := (inl (inl (inr tt))).
-Local Notation "'1'" := (inl (inr tt)).
-Local Notation "'2'" := (inr tt).
-
 Definition loops_carrier (F X Y : pType) (n : N3) : pType :=
   match n with
   | (n, inl (inl (inl x))) => Empty_ind _ x
-  | (n, 0) => iterated_loops n Y
-  | (n, 1) => iterated_loops n X
-  | (n, 2) => iterated_loops n F
+  | (n, inl (inl (inr tt))) => iterated_loops n Y
+  | (n, inl (inr tt)) => iterated_loops n X
+  | (n, inr tt) => iterated_loops n F
   end.
 
 (** Starting from a fiber sequence, we can obtain a long oo-exact sequence of loop spaces. *)
