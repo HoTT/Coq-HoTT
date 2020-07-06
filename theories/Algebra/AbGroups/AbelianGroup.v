@@ -19,13 +19,17 @@ Record AbGroup := {
   abgroup_isabgroup : IsAbGroup abgroup_type;
 }.
 
-Definition Build_AbGroup' (G : Group) `{IsAbGroup G} : AbGroup
-  := Build_AbGroup G _ _ _ _.
-
 Existing Instances abgroup_sgop abgroup_unit abgroup_inverse abgroup_isabgroup.
 
 (** We want abelian groups to be coerced to the underlying type. *)
 Coercion abgroup_type : AbGroup >-> Sortclass.
+
+Definition Build_AbGroup' (G : Group) {H : Commutative (@group_sgop G)} : AbGroup.
+Proof.
+  srapply (Build_AbGroup G).
+  4: split.
+  1-5: exact _.
+Defined.
 
 (** The underlying group of an abelian group. *)
 Definition group_abgroup : AbGroup -> Group.
