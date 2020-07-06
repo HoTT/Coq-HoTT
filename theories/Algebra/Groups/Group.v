@@ -246,7 +246,7 @@ Global Instance transitive_groupisomorphism
 Proof.
   intros G H K f g.
   srapply Build_GroupIsomorphism.
-  1: srapply (grp_homo_compose g f).
+  1: exact (grp_homo_compose g f).
   exact _.
 Defined.
 
