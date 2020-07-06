@@ -155,7 +155,7 @@ Definition isexact_squaric_i n  {F F' X X' Y : pType}
   : IsExact n i' (f o* h).
 Proof.
   exists (iscomplex_squaric_i i i' g h p f cx_isexact); cbn.
-  simple notypeclasses refine (cancelR_equiv_conn_map n (C := pfiber f) _ _).
+  snrefine (cancelR_equiv_conn_map n (C := pfiber f) _ _).
   - exact (@equiv_functor_hfiber _ _ _ _ (f o h) f h equiv_idmap
              (fun x => 1%path) (point Y)).
   - cbn; unfold functor_hfiber, functor_sigma; cbn.
