@@ -92,7 +92,7 @@ Definition iscomplex_cancelR {F X Y Y' : pType}
     cat_postwhisker _ ((cat_assoc _ _ _)^$ $@ cx) $@ precompose_pconst _.
 
 (** And likewise passage across squares with equivalences *)
-Definition iscomplex_squaric_i {F F' X X' Y : pType}
+Definition iscomplex_equiv_i {F F' X X' Y : pType}
            (i : F ->* X) (i' : F' ->* X')
            (g : F' <~>* F) (h : X' <~>* X) (p : Square i' i g h)
            (f : X ->* Y)
@@ -147,14 +147,14 @@ Proof.
 Defined.
 
 (** And also passage across squares with equivalences. *)
-Definition isexact_squaric_i n  {F F' X X' Y : pType}
+Definition isexact_equiv_i n  {F F' X X' Y : pType}
            (i : F ->* X) (i' : F' ->* X')
            (g : F' <~>* F) (h : X' <~>* X) (p : Square i' i g h)
            (f : X ->* Y)
            `{IsExact n F X Y i f}
   : IsExact n i' (f o* h).
 Proof.
-  exists (iscomplex_squaric_i i i' g h p f cx_isexact); cbn.
+  exists (iscomplex_equiv_i i i' g h p f cx_isexact); cbn.
   snrefine (cancelR_equiv_conn_map n (C := pfiber f) _ _).
   - exact (@equiv_functor_hfiber _ _ _ _ (f o h) f h equiv_idmap
              (fun x => 1%path) (point Y)).
@@ -179,7 +179,7 @@ Definition isexact_square_if n  {F F' X X' Y Y' : pType}
            `{IsExact n F X Y i f}
   : IsExact n i' f'.
 Proof.
-  pose (I := isexact_squaric_i n i i' g h p f).
+  pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
   exists (iscomplex_cancelR i' f' k cx_isexact).
   pose (e := (pequiv_pfiber (id_cate _) k (cat_idr _)^$ : pfiber f' <~>* pfiber (k o* f'))).
@@ -346,7 +346,7 @@ Global Instance isexact_connect_R {F X Y} (i : F ->* X) (f : X ->* Y)
        `{IsExact oo F X Y i f}
   : IsExact oo (loops_functor f) (connecting_map i f).
 Proof.
-  refine (isexact_squaric_i (Y := F) oo
+  refine (isexact_equiv_i (Y := F) oo
           (pfib (pfib i)) (loops_functor f)
           (((loops_inv X) o*E
             (pfiber2_loops (pfib f)) o*E
