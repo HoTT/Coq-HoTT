@@ -8,6 +8,8 @@ Require Basics.Utf8.
 
 Generalizable Variables G H A B C f g.
 
+Declare Scope group_scope.
+
 (** ** Groups *)
 
 Local Open Scope pointed_scope.
@@ -16,16 +18,23 @@ Local Open Scope mc_mult_scope.
 (** * Definition of Group *)
 
 (** A group consists of a type, and operation on that type, and unit and an inverse, such that they satisfy the group axioms in IsGroup. *)
-Class Group := {
+Record Group := {
   group_type : Type;
-  group_sgop :> SgOp group_type;
-  group_unit :> MonUnit group_type;
-  group_inverse :> Negate group_type;
-  group_isgroup :> IsGroup group_type;
+  group_sgop : SgOp group_type;
+  group_unit : MonUnit group_type;
+  group_inverse : Negate group_type;
+  group_isgroup : IsGroup group_type;
 }.
+
+Arguments group_type {_}.
+Arguments group_sgop {_}.
+Arguments group_unit {_}.
+Arguments group_inverse {_}.
+Arguments group_isgroup {_}.
 
 (** We coerce groups back to types. *)
 Coercion group_type : Group >-> Sortclass.
+Global Existing Instances group_sgop group_unit group_inverse group_isgroup.
 
 Definition issig_group : _ <~> Group
   := ltac:(issig).
@@ -75,13 +84,14 @@ Defined.
 (** Definition of Group Homomorphism *)
 
 (* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
-Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
+Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
   grp_homo_map : G -> H;
   grp_homo_ishomo :> IsMonoidPreserving grp_homo_map;
 }.
 
 (* We coerce a homomorphism to its underlying map. *)
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
+Global Existing Instance grp_homo_ishomo.
 
 (* Group homomorphisms are pointed maps *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
@@ -164,15 +174,37 @@ Proof.
 Defined.
 
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
-Class GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
-  grp_iso_homo :> GroupHomomorphism G H;
-  isequiv_group_iso :> IsEquiv grp_iso_homo;
+Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
+  grp_iso_homo : GroupHomomorphism G H;
+  isequiv_group_iso : IsEquiv grp_iso_homo;
 }.
 
 Coercion grp_iso_homo : GroupIsomorphism >-> GroupHomomorphism.
+Global Existing Instance isequiv_group_iso.
 
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
+
+Definition equiv_groupisomorphism (G H : Group)
+  : GroupIsomorphism G H -> G <~> H
+  := fun f => Build_Equiv G H f _.
+
+Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
+
+Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
+  (f g : GroupIsomorphism G H)
+  : f == g <~> f = g.
+Proof.
+  refine ((equiv_ap (issig_GroupIsomorphism G H)^-1 _ _)^-1 oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_grouphomomorphism.
+Defined.
+
+Definition ishset_groupisomorphism `{F : Funext} {G H : Group}
+  : IsHSet (GroupIsomorphism G H).
+Proof.
+  intros f g; apply (trunc_equiv' _ (equiv_path_groupisomorphism _ _)).
+Defined.
 
 Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
@@ -214,7 +246,7 @@ Global Instance transitive_groupisomorphism
 Proof.
   intros G H K f g.
   srapply Build_GroupIsomorphism.
-  1: srapply grp_homo_compose.
+  1: exact (grp_homo_compose g f).
   exact _.
 Defined.
 
@@ -262,7 +294,7 @@ Proof.
         (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
        _ _).
   all: intros [[]]; reflexivity.
-Defined.  
+Defined.
 
 (** * Simple group equivalences *)
 
@@ -309,9 +341,16 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
+(** Trivial group *)
+Definition grp_trivial : Group.
+Proof.
+  refine (Build_Group Unit (fun _ _ => tt) tt (fun _ => tt) _).
+  repeat split; try exact _; by intros [].
+Defined.
+
 (** * Direct product of group *)
 
-Definition group_prod : Group -> Group -> Group.
+Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
   srapply (Build_Group (G * H)).
@@ -353,7 +392,7 @@ Defined.
 
 Definition grp_iso_prod {A B C D : Group}
   : GroupIsomorphism A B -> GroupIsomorphism C D
-    -> GroupIsomorphism (group_prod A C) (group_prod B D).
+    -> GroupIsomorphism (grp_prod A C) (grp_prod B D).
 Proof.
   intros f g.
   srapply Build_GroupIsomorphism'.
@@ -426,4 +465,49 @@ Proof.
   + intros ????; apply eisretr.
   + intros G H f g p q.
     exact (isequiv_adjointify f g p q).
+Defined.
+
+Global Instance isinitial_grp_trivial : IsInitial grp_trivial.
+Proof.
+  intro G.
+  snrefine (_;_).
+  { snrapply Build_GroupHomomorphism.
+    1: exact (fun _ => group_unit).
+    intros ??; symmetry; apply left_identity. }
+  intros g [].
+  apply (grp_homo_unit g).
+Defined.
+
+Global Instance contr_grp_homo_trivial_source `{Funext} G
+  : Contr (GroupHomomorphism grp_trivial G).
+Proof.
+  snrapply Build_Contr.
+  1: exact (pr1 (isinitial_grp_trivial _)).
+  intros g.
+  rapply equiv_path_grouphomomorphism.
+  intros [].
+  symmetry.
+  rapply grp_homo_unit.
+Defined.
+
+Global Instance isterminal_grp_trivial : IsTerminal grp_trivial.
+Proof.
+  intro G.
+  snrefine (_;_).
+  { snrapply Build_GroupHomomorphism.
+    1: exact (fun _ => tt).
+    intros ??; symmetry; apply left_identity. }
+  intros g x.
+  apply path_contr.
+Defined.
+
+Global Instance contr_grp_homo_trivial_target `{Funext} G
+  : Contr (GroupHomomorphism G grp_trivial).
+Proof.
+  snrapply Build_Contr.
+  1: exact (pr1 (isterminal_grp_trivial _)).
+  intros g.
+  rapply equiv_path_grouphomomorphism.
+  intros x.
+  apply path_contr.
 Defined.

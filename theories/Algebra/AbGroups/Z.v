@@ -1,14 +1,12 @@
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types.
 Require Import Spaces.Int.
-Require Import Algebra.Group.
-Require Import Algebra.AbelianGroup.
+Require Import Algebra.AbGroups.AbelianGroup.
 
 (** The group of integers. *)
 
 Local Open Scope int_scope.
 
-Definition Z : AbGroup.
+Definition abgroup_Z : AbGroup.
 Proof.
   srapply (Build_AbGroup Int); repeat split.
   + (** Operation *)

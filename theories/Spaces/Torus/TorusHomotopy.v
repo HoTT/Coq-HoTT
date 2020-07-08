@@ -1,17 +1,13 @@
-Require Import Basics.
-Require Import Types.
-Require Import Algebra.Group.
-Require Import Algebra.AbelianGroup.
+Require Import Basics Types Pointed.
+Require Import Algebra.AbGroups.
+Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Pi1S1.
-Require Import Algebra.Z.
-Require Import Pointed.
 Require Import Spaces.Int.
 Require Import HIT.Circle.
 Require Import Truncations.
-Require Import Homotopy.HomotopyGroup.
 
-Require Import Torus.
-Require Import TorusEquivCircles.
+Require Import Spaces.Torus.Torus.
+Require Import Spaces.Torus.TorusEquivCircles.
 
 Local Open Scope trunc_scope.
 Local Open Scope pointed_scope.
@@ -67,7 +63,7 @@ Defined.
 (* Fundamental group of Torus *)
 
 Theorem Pi1Torus `{Univalence}
-  : GroupIsomorphism (Pi 1 T) (group_prod Z Z).
+  : GroupIsomorphism (Pi 1 T) (grp_prod abgroup_Z abgroup_Z).
 Proof.
   etransitivity.
   { apply groupiso_pi_functor.
