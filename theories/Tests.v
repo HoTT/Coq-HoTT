@@ -56,3 +56,21 @@ Module Issue754_1.
     assumption.
   Qed.
 End Issue754_1.
+
+Module Issue_1358.
+
+  Axiom A@{i} : Type@{i}.
+
+  Axiom foo@{i} : A@{i} <~> A@{i}.
+
+  Definition bar@{i} : A@{i} <~> A@{i}.
+  Proof.
+    reflexivity.
+  Defined.
+
+  Definition bar'@{i} : A@{i} <~> A@{i}.
+  Proof.
+    exact equiv_idmap.
+  Defined.
+
+End Issue_1358.

@@ -24,6 +24,8 @@ Notation "1" := equiv_idmap : equiv_scope.
 
 Global Instance reflexive_equiv : Reflexive Equiv | 0 := @equiv_idmap.
 
+Arguments reflexive_equiv /.
+
 (** The composition of equivalences is an equivalence. *)
 Global Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
   : IsEquiv (compose g f) | 1000
