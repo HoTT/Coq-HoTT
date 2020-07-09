@@ -70,7 +70,7 @@ Ltac reflexivity :=
       let R := match goal with |- ?R ?x ?y => constr:(R) end in
       let pre_proof_term_head := constr:(@reflexivity _ R _) in
       let proof_term_head := (eval cbn in pre_proof_term_head) in
-      apply (pre_proof_term_head : forall x, R x x)).
+      apply (proof_term_head : forall x, R x x)).
 
 (** Even if we weren't using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)
 Ltac symmetry :=
