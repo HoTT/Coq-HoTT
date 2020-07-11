@@ -155,7 +155,7 @@ Section IsEquivGrpPullbackCorec.
     apply equiv_path_grouphomomorphism; reflexivity.
   Defined.
 
-  Theorem isequiv_grp_pullback_corec `{Funext} (X : Group)
+  Theorem isequiv_grp_pullback_corec (X : Group)
     : IsEquiv (grp_pullback_corec' f g X).
   Proof.
     snrapply isequiv_adjointify.
