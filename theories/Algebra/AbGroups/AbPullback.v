@@ -30,20 +30,21 @@ Section AbPullback.
               (p : f o b == g o c)
     : X $-> AbPullback.
   Proof.
-    exact ((grp_pullback_corec f g) b c p).
+    apply ((grp_pullback_corec f g) b c p).
   Defined.
 
-  Corollary ab_pullback_corec' {X : AbGroup}
+  Corollary ab_pullback_corec' (X : AbGroup)
     : {b : X $-> B & {c : X $-> C & f o b == g o c}}
       -> (X $-> AbPullback).
   Proof.
-    exact (grp_pullback_corec' f g).
-  Defined.
-
-  Theorem isequiv_ab_pullback_corec {X : AbGroup} `{Funext}
-    : IsEquiv (@ab_pullback_corec' X).
-  Proof.
-    exact (isequiv_grp_pullback_corec f g).
+    apply (grp_pullback_corec' f g).
   Defined.
 
 End AbPullback.
+
+Theorem isequiv_ab_pullback_corec `{Funext} {A B C X : AbGroup}
+        (f : B $-> A) (g : C $-> A)
+  : IsEquiv (ab_pullback_corec' f g X).
+Proof.
+  apply (isequiv_grp_pullback_corec f g).
+Defined.
