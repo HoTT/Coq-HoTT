@@ -90,17 +90,17 @@ Section GrpPullback.
 
   Global Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
 
-  Definition GrpPullback : Group
+  Definition grp_pullback : Group
     := Build_Group (Pullback f g) _ _ _ _.
 
-  Definition grp_pullback_pr1 : GrpPullback $-> B.
+  Definition grp_pullback_pr1 : grp_pullback $-> B.
   Proof.
     snrapply Build_GroupHomomorphism.
     - apply pullback_pr1.
     - intros x y. reflexivity.
   Defined.
 
-  Definition grp_pullback_pr2 : GrpPullback $-> C.
+  Definition grp_pullback_pr2 : grp_pullback $-> C.
   Proof.
     snrapply Build_GroupHomomorphism.
     - apply pullback_pr2.
@@ -110,7 +110,7 @@ Section GrpPullback.
   Proposition grp_pullback_corec {X : Group}
               (b : X $-> B) (c : X $-> C)
               (p : f o b == g o c)
-    : X $-> GrpPullback.
+    : X $-> grp_pullback.
   Proof.
     snrapply Build_GroupHomomorphism.
     - exact (fun x => (b x; c x; p x)).
@@ -127,7 +127,7 @@ Section GrpPullback.
 
   Corollary grp_pullback_corec' (X : Group)
     : {b : X $-> B & { c : X $-> C & f o b == g o c}}
-      -> (X $-> GrpPullback).
+      -> (X $-> grp_pullback).
   Proof.
     intros [b [c p]]; exact (grp_pullback_corec b c p).
   Defined.

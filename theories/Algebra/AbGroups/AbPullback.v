@@ -9,7 +9,7 @@ Section AbPullback.
   Context {A B C : AbGroup} (f : B $-> A) (g : C $-> A).
 
   Global Instance ab_pullback_commutative
-    : Commutative (@group_sgop (GrpPullback f g)).
+    : Commutative (@group_sgop (grp_pullback f g)).
   Proof.
     unfold Commutative.
     intros [b [c p]] [d [e q]].
@@ -20,12 +20,11 @@ Section AbPullback.
   Defined.
 
   Global Instance isabgroup_ab_pullback
-    : IsAbGroup (GrpPullback f g) := {}.
+    : IsAbGroup (grp_pullback f g) := {}.
 
-  Definition AbPullback
-    : AbGroup := Build_AbGroup (GrpPullback f g) _ _ _ _.
+  Definition ab_pullback
+    : AbGroup := Build_AbGroup (grp_pullback f g) _ _ _ _.
 
   (** The corecursion principle is inherited from Groups; use grp_pullback_corec and friends from Groups/GrpPullback.v. *)
 
 End AbPullback.
-  
