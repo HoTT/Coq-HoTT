@@ -25,26 +25,7 @@ Section AbPullback.
   Definition AbPullback
     : AbGroup := Build_AbGroup (GrpPullback f g) _ _ _ _.
 
-  Proposition ab_pullback_corec {X : AbGroup}
-              (b : X $-> B) (c : X $-> C)
-              (p : f o b == g o c)
-    : X $-> AbPullback.
-  Proof.
-    exact ((grp_pullback_corec f g) b c p).
-  Defined.
-
-  Corollary ab_pullback_corec' (X : AbGroup)
-    : {b : X $-> B & {c : X $-> C & f o b == g o c}}
-      -> (X $-> AbPullback).
-  Proof.
-    exact ((grp_pullback_corec' f g) X).
-  Defined.
+  (** The corecursion principle is inherited from Groups; use grp_pullback_corec and friends from Groups/GrpPullback.v. *)
 
 End AbPullback.
-
-Theorem isequiv_ab_pullback_corec `{Funext} {A B C X : AbGroup}
-        (f : B $-> A) (g : C $-> A)
-  : IsEquiv (ab_pullback_corec' f g X).
-Proof.
-  exact ((isequiv_grp_pullback_corec f g) X).
-Defined.
+  
