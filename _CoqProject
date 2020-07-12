@@ -333,6 +333,7 @@ theories/Algebra/Congruence.v
 theories/Algebra/AbGroups.v
 theories/Algebra/AbGroups/AbelianGroup.v
 theories/Algebra/AbGroups/Abelianization.v
+theories/Algebra/AbGroups/AbPullback.v
 theories/Algebra/AbGroups/Z.v
 
 theories/Algebra/Groups.v
@@ -341,6 +342,7 @@ theories/Algebra/Groups/Subgroup.v
 theories/Algebra/Groups/QuotientGroup.v
 theories/Algebra/Groups/Image.v
 theories/Algebra/Groups/Kernel.v
+theories/Algebra/Groups/GrpPullback.v
 
 #
 #   Tactics
