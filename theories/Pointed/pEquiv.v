@@ -108,3 +108,54 @@ Proof.
   apply pmap_postwhisker.
   symmetry; apply peisretr.
 Defined.
+
+Definition equiv_pequiv_precompose `{Funext} {A B C : pType} (f : A <~>* B)
+  : (B ->* C) <~> (A ->* C).
+Proof.
+  snrapply equiv_adjointify.
+  1: exact (fun g => g o* f).
+  1: exact (fun h => h o* f^-1*).
+  { intros g.
+    rapply equiv_path_pforall.
+    snrapply Build_pHomotopy.
+    { intro x; cbn.
+      apply ap, eissect. }
+    pointed_reduce.
+    unfold moveR_equiv_V.
+    hott_simpl. }
+  intros h.
+  rapply equiv_path_pforall.
+  snrapply Build_pHomotopy.
+  { intro x; cbn.
+    apply ap, eisretr. }
+  pointed_reduce.
+  unfold moveR_equiv_V.
+  hott_simpl.
+  refine (ap _ _ @ (ap_compose _ h _)^).
+  rapply eisadj.
+Defined.
+
+Definition equiv_pequiv_postcompose `{Funext} {A B C : pType} (f : B <~>* C)
+  : (A ->* B) <~> (A ->* C).
+Proof.
+  snrapply equiv_adjointify.
+  1: exact (fun g => f o* g).
+  1: exact (fun h => f^-1* o* h).
+  { intros g.
+    rapply equiv_path_pforall.
+    snrapply Build_pHomotopy.
+    { intro x; cbn.
+      apply eisretr. }
+    pointed_reduce.
+    unfold moveR_equiv_V.
+    hott_simpl.
+    apply eisadj. }
+  intros h.
+  rapply equiv_path_pforall.
+  snrapply Build_pHomotopy.
+  { intro x; cbn.
+    apply eissect. }
+  pointed_reduce.
+  unfold moveR_equiv_V.
+  hott_simpl.
+Defined.
