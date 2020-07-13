@@ -35,11 +35,26 @@ Proof.
   rapply equiv_isfreegroup_rec.
 Defined.
 
-(** TODO: Nielsen-Schreier theorem: Subgroups of free groups are free. Proofs of this statement are non-trivial. We can prove it using covering spaces which haven't yet been considered in this library. In fact, every known proof requires the axiom of choice in some crucical way. *)
+Global Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -> F)
+  : IsHProp (IsFreeGroupOn A F i).
+Proof.
+  unfold IsFreeGroupOn.
+  apply trunc_forall.
+Defined.
 
-(** Here is a sketch of such a proof. If F is a free group on a type X, then it is the fundamental group of the suspension of (X + 1) (This coule be by definition). A subgroup is then the fundamental group of a covering space of Susp (X + 1). This space is a connected 1-type and using choice we can show it has a spanning tree (since it is a topological graph). By shrinking the spanning tree we get that this cover is also the suspension of some non-empty type, hence is a free group. This "proof" is however a sketch and there may be serious problems when allowing groups to be free over arbitrary types. *)
-
-(** TODO: If F(A) $<~> F(B) then the cardinalities of [A] and [B] are the same. *)
-
-(** A proof might go like this: If F(A) $<~> F(B) then so are their abelianizations F(A)^ab $<~> F(B)^ab. It can be shown that F(A)^ab = Z^A hence we need only compare ranks of free abelian groups. It is not clear to me at the time of writing that this is now easier to prove however. *)
+(** Both ways of stating the universal property are equivalent. *)
+Definition equiv_isfregroupon_isequiv_precomp `{Funext} (F : Group) (A : Type) (i : A -> F)
+  : IsFreeGroupOn A F i <~> forall G, IsEquiv (fun f : F $-> G => f o i).
+Proof.
+  srapply equiv_iff_hprop.
+  1: intros k G; rapply (equiv_isequiv (equiv_isfreegroup_rec G F A i)).
+  intros k G g.
+  specialize (k G).
+  snrapply contr_equiv'.
+  1: exact (hfiber (fun f x => grp_homo_map F G f (i x)) g).
+  { rapply equiv_functor_sigma_id.
+    intro y; symmetry.
+    apply equiv_path_forall. }
+  exact _.
+Defined.
 
