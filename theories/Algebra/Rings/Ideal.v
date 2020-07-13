@@ -6,7 +6,7 @@ Local Open Scope mc_scope.
 
 (** In this file we define Ideals *)
 
-(** TODO: In the future it might be useful to define ideals as submodules *)
+(** TODO: In the future it might be useful to define ideals as submodules when we go about defining R-modules. *)
 
 (** An additive subgroup I of a ring R is an ideal when: *)
 Class IsIdeal {R : CRing} (I : Subgroup R) := {
@@ -23,8 +23,8 @@ Record Ideal (R : CRing) := {
 Coercion ideal_subgroup : Ideal >-> Subgroup.
 Global Existing Instances ideal_isideal.
 
-
-Global Instance issubgroup_trivial {G : Group} : IsSubgroup TrivialAbGroup G.
+(** TODO: Move to Group.v *)
+Global Instance issubgroup_trivial {G : Group} : IsSubgroup abgroup_trivial G.
 Proof.
   snrapply Build_IsSubgroup.
   { snrapply (Build_GroupHomomorphism (fun _ => group_unit)).
@@ -33,15 +33,20 @@ Proof.
   apply path_unit.
 Defined.
 
+(** TODO: Move somewhere more useful *)
 Global Instance isinj_idmap A : @IsInjective A A idmap
   := fun x y => idmap.
 
+(** TODO: Move to Subgroup.v *)
 Global Instance issubgroup_group {G : Group} : IsSubgroup G G
   := Build_IsSubgroup _ _ grp_homo_id _.
 
+(** TODO: Move to Subgroup.v *)
 Definition trivial_subgroup {G} : Subgroup G
-  := Build_Subgroup G TrivialAbGroup _.
+  := Build_Subgroup G abgroup_trivial _.
 
+(** TODO: Move to Subgroup.v *)
+(** TODO: Rename? *)
 Definition trivial_subgroup' {G} : Subgroup G
   := Build_Subgroup G G _.
 
