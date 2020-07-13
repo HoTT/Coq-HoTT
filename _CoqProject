@@ -351,6 +351,7 @@ theories/Algebra/Groups/GrpPullback.v
 theories/Algebra/Groups/FreeGroup.v
 
 theories/Algebra/Groups/FreeGroup/KrausAltenkirch.v
+theories/Algebra/Groups/FreeGroup/LoopSusp.v
 
 #
 #   Tactics
