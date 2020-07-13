@@ -149,12 +149,12 @@ Defined.
 (** Now we focus on the classifying space of a group. *)
 
 (** The classifying space of a group is the following pointed type. *)
-Definition pClassifingSpace (G : Group)
+Definition pClassifyingSpace (G : Group)
   := Build_pType (ClassifyingSpace G) bbase.
 
 (** To use the B G notation for pClassifyingSpace import this module. *)
 Module Import ClassifyingSpaceNotation.
-  Definition B G := pClassifingSpace G.
+  Definition B G := pClassifyingSpace G.
 End ClassifyingSpaceNotation.
 
 Import ClassifyingSpaceNotation.
