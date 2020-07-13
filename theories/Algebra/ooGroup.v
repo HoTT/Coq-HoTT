@@ -1,9 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types.
 Require Import Pointed.
 Require Import Truncations.
 Require Import Colimits.Quotient.
+Require Import Homotopy.ClassifyingSpace.
+Require Import Algebra.Groups.
+Require Import WildCat.
 
 Local Open Scope path_scope.
 Local Open Scope pointed_scope.
@@ -37,7 +39,7 @@ Coercion group_type : ooGroup >-> Sortclass.
 
 (** Every pointed type has a loop space that is an oo-group. *)
 Definition group_loops (X : pType)
-: ooGroup.
+  : ooGroup.
 Proof.
   (* Work around https://coq.inria.fr/bugs/show_bug.cgi?id=4256 *)
   pose (x0 := point X);
@@ -57,7 +59,7 @@ Defined.
 
 (** Unfortunately, the underlying type of that oo-group is not *definitionally* the same as the ordinary loop space, but it is equivalent to it. *)
 Definition loops_group (X : pType)
-: loops X <~> group_loops X.
+  : loops X <~> group_loops X.
 Proof.
   unfold loops, group_type. simpl.
   exact (equiv_path_sigma_hprop (point X ; tr 1) (point X ; tr 1)).
@@ -283,3 +285,34 @@ Section Subgroups.
   Definition cosets := Quotient in_coset.
 
 End Subgroups.
+
+(** The wild category of oo-groups is induced by the wild category of pTypes *)
+
+Global Instance isgraph_oogroup : IsGraph ooGroup := Build_IsGraph _ ooGroupHom.
+Global Instance is01cat_oogroup : Is01Cat ooGroup := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).
+Global Instance is1cat_oogroup : Is1Cat ooGroup := induced_1cat classifying_space.
+
+(** ** 1-groups as oo-groups *)
+
+Definition group_to_oogroup : Group -> ooGroup
+  := fun G => Build_ooGroup (pClassifyingSpace G) _.
+
+Global Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
+Proof.
+  snrapply Build_Is0Functor.
+  intros G H f.
+  by rapply functor_pclassifyingspace.
+Defined.
+
+Global Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
+Proof.
+  snrapply Build_Is1Functor.
+  1: exact @functor2_pclassifyingspace.
+  1: exact functor_pclassifyingspace_idmap.
+  exact functor_pclassifyingspace_compose.
+Defined.
+
+
+
+
+
