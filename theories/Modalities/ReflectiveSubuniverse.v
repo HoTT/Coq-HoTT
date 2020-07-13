@@ -1276,7 +1276,7 @@ Section ConnectedTypes.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
   Definition extendable_const_isconnected_inO (n : nat)
-             (A : Type) {conn_A : IsConnected O A}
+             (A : Type) `{IsConnected O A}
              (C : Type) `{In O C}
   : ExtendableAlong n (@const A Unit tt) (fun _ => C).
   Proof.
