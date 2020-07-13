@@ -264,3 +264,23 @@ Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : nat)
 Proof.
   srapply Build_pHomotopy. 1: reflexivity. apply path_ishprop.
 Defined.
+
+(** Homotopy groups of truncations *)
+
+(** The fundamental group 1st truncation of X is isomorphic to the fundamental group of X *) 
+Theorem grp_iso_pi1_Tr `{Univalence} (X : pType)
+  : GroupIsomorphism (Pi1 (pTr 1 X)) (Pi1 X).
+Proof.
+  symmetry.
+  snrapply Build_GroupIsomorphism'.
+  { unfold Pi1.
+    unfold group_type.
+    refine ((Trunc_functor_equiv _ _ )^-1%equiv oE _).
+    1: symmetry; rapply ptr_loops.
+    rapply equiv_tr. }
+  intros x y.
+  strip_truncations.
+  apply path_Tr, tr.
+  exact (ap_pp tr x y).
+Defined.
+
