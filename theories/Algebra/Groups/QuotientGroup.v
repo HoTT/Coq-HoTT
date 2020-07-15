@@ -170,6 +170,16 @@ Notation "G / N" := (QuotientGroup G N) : group_scope.
 
 Local Open Scope group_scope.
 
+(** Computation rule for grp_quotient_rec. *)
+Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
+          (N : Group) (H : Group) `{IsNormalSubgroup N G}
+          {A : Group} (f : G $-> A)
+          (h : forall n:N, f (issubgroup_incl n) = mon_unit)
+  : (grp_quotient_rec G N f h) $o grp_quotient_map = f.
+Proof.
+  apply equiv_path_grouphomomorphism; reflexivity.
+Defined.
+
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Group) `{IsSubgroup H G}
   {k k' : @IsNormalSubgroup H G _}
@@ -199,7 +209,6 @@ Proof.
     apply ap.
     apply qglue.
     unfold in_cosetL.
-    unfold class_of.
     exists (-n).
     symmetry.
     etransitivity.
@@ -212,9 +221,8 @@ Proof.
     intro x.
     reflexivity. }
   { intros [f p].
-    srapply path_sigma_hprop.
-    rapply equiv_path_grouphomomorphism.
-    reflexivity. }
+    srapply path_sigma_hprop; simpl.
+    exact (grp_quotient_rec_beta N H f p). }
 Defined.
 
 Section FirstIso.
