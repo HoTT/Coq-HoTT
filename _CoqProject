@@ -334,6 +334,7 @@ theories/Algebra/AbGroups.v
 theories/Algebra/AbGroups/AbelianGroup.v
 theories/Algebra/AbGroups/Abelianization.v
 theories/Algebra/AbGroups/AbPullback.v
+theories/Algebra/AbGroups/AbPushout.v
 theories/Algebra/AbGroups/Z.v
 
 theories/Algebra/Groups.v

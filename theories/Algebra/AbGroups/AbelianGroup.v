@@ -5,7 +5,7 @@ Require Export Algebra.Groups.
 Require Import Cubical.
 Require Import WildCat.
 
-Local Open Scope mc_mult_scope.
+Local Open Scope mc_add_scope.
 
 (** * Abelian groups *)
 
@@ -74,13 +74,13 @@ Proof.
     rewrite grp_homo_inv in p.
     apply moveL_equiv_V in p.
     rewrite p; cbn.
-    change (- (x * -y) = - x * y).
+    change (- (x + -y) = - x + y).
     rewrite negate_sg_op.
     rewrite (involutive y).
     apply commutativity.
 Defined.
 
-(** Quotients of abelian groups *)
+(** ** Quotients of abelian groups *)
 
 Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
   : IsAbGroup (QuotientGroup G H).
@@ -99,7 +99,7 @@ Defined.
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G)
   : AbGroup := Build_AbGroup (QuotientGroup G H) _ _ _ _.
 
-(** The wild category of abelian groups *)
+(** ** The wild category of abelian groups *)
 
 Global Instance isgraph_abgroup : IsGraph AbGroup
   := induced_graph group_abgroup.
@@ -166,3 +166,115 @@ Proof.
   apply grp_iso_quotient_normal.
 Defined.
 
+(** ** Biproducts of abelian groups *)
+
+Definition ab_biprod (A B : AbGroup) : AbGroup.
+Proof.
+  rapply (Build_AbGroup' (grp_prod A B)).
+  intros [a b] [a' b'].
+  apply path_prod; simpl; apply commutativity.
+Defined.
+
+Definition ab_biprod_inl {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_inl.
+Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
+
+(** Recursion principle *)
+Proposition ab_biprod_rec {A B Y : AbGroup}
+            (f : A $-> Y) (g : B $-> Y)
+  : (ab_biprod A B) $-> Y.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - intros [a b]; exact (f a + g b).
+  - intros [a b] [a' b']; simpl.
+    rewrite (grp_homo_op f).
+    rewrite (grp_homo_op g).
+    rewrite (associativity _ (g b) _).
+    rewrite <- (associativity _ (f a') _).
+    rewrite (commutativity (f a') _).
+    rewrite (associativity _ (g b) _).
+    exact (associativity _ (f a') _)^.
+Defined.
+
+Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A
+  := ab_biprod_rec grp_homo_id grp_homo_const.
+
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B
+  := ab_biprod_rec grp_homo_const grp_homo_id.
+
+Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
+  : (A $-> Y) * (B $-> Y)
+    -> (ab_biprod A B) $-> Y.
+Proof.
+  intros [f g]. exact (ab_biprod_rec f g).
+Defined.
+
+Proposition ab_biprod_rec_beta' {A B Y : AbGroup}
+            (u : ab_biprod A B $-> Y)
+  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.
+Proof.
+  intros [a b]; simpl.
+  refine ((grp_homo_op u _ _)^ @ _).
+  apply (ap u).
+  apply path_prod.
+  - exact (right_identity a).
+  - exact (left_identity b).
+Defined.
+
+Proposition ab_biprod_rec_beta `{Funext} {A B Y : AbGroup}
+            (u : ab_biprod A B $-> Y)
+  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) = u.
+Proof.
+  apply equiv_path_grouphomomorphism.
+  exact (ab_biprod_rec_beta' u).
+Defined.
+
+Proposition ab_biprod_rec_inl_beta `{Funext} {A B Y : AbGroup}
+            (a : A $-> Y) (b : B $-> Y)
+  : (ab_biprod_rec a b) $o ab_biprod_inl = a.
+Proof.
+  apply equiv_path_grouphomomorphism.
+  intro x; simpl.
+  rewrite (grp_homo_unit b).
+  exact (right_identity (a x)).
+Defined.
+
+Proposition ab_biprod_rec_inr_beta `{Funext} {A B Y : AbGroup}
+            (a : A $-> Y) (b : B $-> Y)
+  : (ab_biprod_rec a b) $o ab_biprod_inr = b.
+Proof.
+  apply equiv_path_grouphomomorphism.
+  intro y; simpl.
+  rewrite (grp_homo_unit a).
+  exact (left_identity (b y)).
+Defined.
+
+Theorem isequiv_ab_biprod_rec `{Funext} {A B Y : AbGroup}
+  : IsEquiv (@ab_biprod_rec_uncurried A B Y).
+Proof.
+  srapply isequiv_adjointify.
+  - intro phi.
+    exact (phi $o ab_biprod_inl, phi $o ab_biprod_inr).
+  - intro phi.
+    exact (ab_biprod_rec_beta phi).
+  - intros [a b].
+    apply path_prod.
+    + apply ab_biprod_rec_inl_beta.
+    + apply ab_biprod_rec_inr_beta.
+Defined.
+
+(** Corecursion principle, inherited from Groups/Group.v. *)
+Definition ab_biprod_corec {A B X : AbGroup}
+           (f : X $-> A) (g : X $-> B)
+  : X $-> ab_biprod A B := grp_prod_corec f g.
+
+(** The negation automorphism of an abelian group *)
+Definition ab_homo_negation { A : AbGroup } : GroupIsomorphism A A.
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - snrapply Build_GroupHomomorphism.
+    + exact (fun a => -a).
+    + exact negate_sg_op_distr.
+  - srapply isequiv_adjointify.
+    1: exact (fun a => -a).
+    1-2: exact negate_involutive.
+Defined.

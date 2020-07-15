@@ -173,6 +173,14 @@ Proof.
   srapply (Build_GroupHomomorphism idmap).
 Defined.
 
+Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun _ => mon_unit).
+  - intros x y.
+    exact (left_identity mon_unit)^.
+Defined.
+
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
 Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   grp_iso_homo : GroupHomomorphism G H;
@@ -389,6 +397,25 @@ Proof.
     apply path_prod; cbn.
     1,2: apply right_inverse. }
 Defined.
+
+Proposition grp_prod_corec {G H K : Group}
+            (f : GroupHomomorphism K G)
+            (g : GroupHomomorphism K H)
+  : GroupHomomorphism K (grp_prod G H).
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun x:K => (f x, g x)).
+  - intros x y.
+    refine (path_prod' _ _ ); try apply grp_homo_op.
+Defined.
+
+Definition grp_prod_inl {H K : Group}
+  : GroupHomomorphism H (grp_prod H K)
+  := grp_prod_corec grp_homo_id grp_homo_const.
+
+Definition grp_prod_inr {H K : Group}
+  : GroupHomomorphism K (grp_prod H K)
+  := grp_prod_corec grp_homo_const grp_homo_id.
 
 Definition grp_iso_prod {A B C D : Group}
   : GroupIsomorphism A B -> GroupIsomorphism C D
