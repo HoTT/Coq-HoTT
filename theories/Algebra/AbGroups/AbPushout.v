@@ -34,14 +34,14 @@ Proof.
   intros [b [c p]]; exact (ab_pushout_rec b c p).
 Defined.
 
-Definition ab_pushout_i1 {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
-  : B $-> ab_pushout f g := grp_quotient_map $o grp_prod_i1.
+Definition ab_pushout_inl {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
+  : B $-> ab_pushout f g := grp_quotient_map $o grp_prod_inl.
 
-Definition ab_pushout_i2 {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
-  : C $-> ab_pushout f g := grp_quotient_map $o grp_prod_i2.
+Definition ab_pushout_inr {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
+  : C $-> ab_pushout f g := grp_quotient_map $o grp_prod_inr.
 
 Proposition ab_pushout_commsq {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
-  : (@ab_pushout_i1 A B C f g) $o f == ab_pushout_i2 $o g.
+  : (@ab_pushout_inl A B C f g) $o f == ab_pushout_inr $o g.
 Proof.
   intro a.
   apply qglue.
@@ -58,7 +58,7 @@ Defined.
 Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
             {f : A $-> B} {g : A $-> C}
             (phi : ab_pushout f g $-> Y)
-  : ab_pushout_rec (phi $o ab_pushout_i1) (phi $o ab_pushout_i2)
+  : ab_pushout_rec (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
                    (fun a:A => ap phi (ab_pushout_commsq a)) = phi.
 Proof.
   pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
@@ -67,7 +67,7 @@ Proof.
   (* The goal is definitionally equivalent to:
 
     ab_pushout_rec
-       (phi $o ab_pushout_i1) (phi $o ab_pushout_i2)
+       (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
        (fun a : A => ap phi (ab_pushout_commsq a)) $o grp_quotient_map
        =  phi $o grp_quotient_map
 
@@ -83,7 +83,7 @@ Theorem isequiv_ab_pushout_rec `{Funext} {A B C Y : AbGroup}
 Proof.
   srapply isequiv_adjointify.
   - intro phi.
-    refine (phi $o ab_pushout_i1; phi $o ab_pushout_i2; _).
+    refine (phi $o ab_pushout_inl; phi $o ab_pushout_inr; _).
     intro a.
     apply (ap phi).
     exact (ab_pushout_commsq a).

@@ -409,11 +409,11 @@ Proof.
     refine (path_prod' _ _ ); try apply grp_homo_op.
 Defined.
 
-Definition grp_prod_i1 {H K : Group}
+Definition grp_prod_inl {H K : Group}
   : GroupHomomorphism H (grp_prod H K)
   := grp_prod_corec grp_homo_id grp_homo_const.
 
-Definition grp_prod_i2 {H K : Group}
+Definition grp_prod_inr {H K : Group}
   : GroupHomomorphism K (grp_prod H K)
   := grp_prod_corec grp_homo_const grp_homo_id.
 

@@ -170,14 +170,13 @@ Defined.
 
 Definition ab_biprod (A B : AbGroup) : AbGroup.
 Proof.
-  apply (Build_AbGroup (grp_prod A B) _ _ _).
-  srapply Build_IsAbGroup.
+  rapply (Build_AbGroup' (grp_prod A B)).
   intros [a b] [a' b'].
   apply path_prod; simpl; apply commutativity.
 Defined.
 
-Definition ab_biprod_i1 {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_i1.
-Definition ab_biprod_i2 {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_i2.
+Definition ab_biprod_inl {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_inl.
+Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
 
 (** Recursion principle *)
 Proposition ab_biprod_rec {A B Y : AbGroup}
@@ -196,10 +195,10 @@ Proof.
     exact (associativity _ (f a') _)^.
 Defined.
 
-Definition ab_biprod_p1 {A B : AbGroup} : ab_biprod A B $-> A
+Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A
   := ab_biprod_rec grp_homo_id grp_homo_const.
 
-Definition ab_biprod_p2 {A B : AbGroup} : ab_biprod A B $-> B
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B
   := ab_biprod_rec grp_homo_const grp_homo_id.
 
 Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
@@ -211,7 +210,7 @@ Defined.
 
 Proposition ab_biprod_rec_beta' {A B Y : AbGroup}
             (u : ab_biprod A B $-> Y)
-  : ab_biprod_rec (u $o ab_biprod_i1) (u $o ab_biprod_i2) == u.
+  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.
 Proof.
   intros [a b]; simpl.
   refine ((grp_homo_op u _ _)^ @ _).
@@ -223,15 +222,15 @@ Defined.
 
 Proposition ab_biprod_rec_beta `{Funext} {A B Y : AbGroup}
             (u : ab_biprod A B $-> Y)
-  : ab_biprod_rec (u $o ab_biprod_i1) (u $o ab_biprod_i2) = u.
+  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) = u.
 Proof.
   apply equiv_path_grouphomomorphism.
   exact (ab_biprod_rec_beta' u).
 Defined.
 
-Proposition ab_biprod_rec_i1_beta `{Funext} {A B Y : AbGroup}
+Proposition ab_biprod_rec_inl_beta `{Funext} {A B Y : AbGroup}
             (a : A $-> Y) (b : B $-> Y)
-  : (ab_biprod_rec a b) $o ab_biprod_i1 = a.
+  : (ab_biprod_rec a b) $o ab_biprod_inl = a.
 Proof.
   apply equiv_path_grouphomomorphism.
   intro x; simpl.
@@ -239,9 +238,9 @@ Proof.
   exact (right_identity (a x)).
 Defined.
 
-Proposition ab_biprod_rec_i2_beta `{Funext} {A B Y : AbGroup}
+Proposition ab_biprod_rec_inr_beta `{Funext} {A B Y : AbGroup}
             (a : A $-> Y) (b : B $-> Y)
-  : (ab_biprod_rec a b) $o ab_biprod_i2 = b.
+  : (ab_biprod_rec a b) $o ab_biprod_inr = b.
 Proof.
   apply equiv_path_grouphomomorphism.
   intro y; simpl.
@@ -254,13 +253,13 @@ Theorem isequiv_ab_biprod_rec `{Funext} {A B Y : AbGroup}
 Proof.
   srapply isequiv_adjointify.
   - intro phi.
-    exact (phi $o ab_biprod_i1, phi $o ab_biprod_i2).
+    exact (phi $o ab_biprod_inl, phi $o ab_biprod_inr).
   - intro phi.
     exact (ab_biprod_rec_beta phi).
   - intros [a b].
     apply path_prod.
-    + apply ab_biprod_rec_i1_beta.
-    + apply ab_biprod_rec_i2_beta.
+    + apply ab_biprod_rec_inl_beta.
+    + apply ab_biprod_rec_inr_beta.
 Defined.
 
 (** Corecursion principle, inherited from Groups/Group.v. *)
