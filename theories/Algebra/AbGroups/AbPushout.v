@@ -27,7 +27,8 @@ Proof.
     exact (right_inverse _).
 Defined.
 
-Corollary ab_pushout_rec_uncurried {A B C Y : AbGroup} {f : A $-> B} {g : A $-> C}
+Corollary ab_pushout_rec_uncurried {A B C : AbGroup}
+          (f : A $-> B) (g : A $-> C) (Y : AbGroup)
   : {b : B $-> Y & {c : C $-> Y & b o f == c o g}}
       -> (ab_pushout f g $-> Y).
 Proof.
@@ -64,14 +65,10 @@ Proof.
   pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
   apply (equiv_ap' (equiv_grp_quotient_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
   srapply path_sigma_hprop.
-  (* The goal is definitionally equivalent to:
-
-    ab_pushout_rec
-       (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
-       (fun a : A => ap phi (ab_pushout_commsq a)) $o grp_quotient_map
-       =  phi $o grp_quotient_map
-
-  However, Coq struggles to do this simplification. *)
+  change (ab_pushout_rec
+            (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
+            (fun a : A => ap phi (ab_pushout_commsq a)) $o grp_quotient_map
+          =  phi $o grp_quotient_map).
   refine (grp_quotient_rec_beta N Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
   exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
@@ -79,7 +76,7 @@ Defined.
 
 Theorem isequiv_ab_pushout_rec `{Funext} {A B C Y : AbGroup}
         {f : A $-> B} {g : A $-> C}
-  : IsEquiv (@ab_pushout_rec_uncurried A B C Y f g).
+  : IsEquiv (ab_pushout_rec_uncurried f g Y).
 Proof.
   srapply isequiv_adjointify.
   - intro phi.
