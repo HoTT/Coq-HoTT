@@ -2,7 +2,7 @@ Require Import Basics.
 
 (** * Comutative squares *)
 
-(** Commutative squares compose.
+(** Commutative squares compose vertically.
 
       A --f--> B
       |    //  |
@@ -24,6 +24,28 @@ Proof.
   intros x.
   path_via (g' (f' (h x))).
   apply ap, comm.
+Defined.
+
+(** Commutative squares compose horizontally.
+
+      A --k--> B --l--> C
+      |    //  |    //  |
+      f  comm  g  comm  h
+      |  //    |  //    |
+      V //     V //     V
+      X --i--> Y --j--> Z
+*)
+
+Lemma comm_square_comp' {A B C X Y Z : Type}
+    {k : A -> B} {l : B -> C}
+    {f : A -> X} {g : B -> Y} {h : C -> Z}
+    {i : X -> Y} {j : Y -> Z}
+    (H : i o f == g o k) (K : j o g == h o l)
+  : (j o i) o f == h o (l o k).
+Proof.
+  intros x.
+  path_via (j (g (k x))).
+  apply ap, H.
 Defined.
 
 (** Given any commutative square from [f] to [f'] whose verticals
