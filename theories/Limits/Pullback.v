@@ -113,7 +113,7 @@ Proof.
   symmetry; apply inv_V.
 Defined.
 
-(** If the induced maps on fibers is an equivalence, then a square is a pullback. *)
+(** If the induced maps on fibers are equivalences, then a square is a pullback. *)
 Definition ispullback_isequiv_functor_hfiber {A B C D : Type}
            {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
            (p : k o f == g o h)
