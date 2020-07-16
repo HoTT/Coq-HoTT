@@ -311,8 +311,3 @@ Proof.
   1: exact functor_pclassifyingspace_idmap.
   exact functor_pclassifyingspace_compose.
 Defined.
-
-
-
-
-
