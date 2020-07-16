@@ -353,7 +353,7 @@ Section Pasting.
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
     snrapply isequiv_commsq'.
     7: apply isequiv_idmap.
-    4: apply (functor_hfiber_compose b).
+    4: apply (functor_hfiber_compose H K b).
     1,2: exact _.
   Defined.
 
@@ -367,7 +367,7 @@ Section Pasting.
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
     snrapply isequiv_commsq'.
     9: apply isequiv_idmap.
-    4: symmetry; apply (functor_hfiber_compose b).
+    4: symmetry; apply (functor_hfiber_compose H K b).
     1,2: exact _.
   Defined.
 
