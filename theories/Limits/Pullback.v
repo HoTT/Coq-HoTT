@@ -1,6 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber PathAny Cubical.PathSquare.
+Require Import Diagrams.CommutativeSquares.
 
 Local Open Scope path_scope.
 
@@ -112,8 +113,8 @@ Proof.
   symmetry; apply inv_V.
 Defined.
 
-(** If the induced map on fibers is an equivalence, then a square is a pullback. *)
-Definition ispullback_isequiv_functor_hfiber {A B C D}
+(** If the induced maps on fibers is an equivalence, then a square is a pullback. *)
+Definition ispullback_isequiv_functor_hfiber {A B C D : Type}
            {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
            (p : k o f == g o h)
            (e : forall b:B, IsEquiv (functor_hfiber p b))
@@ -323,3 +324,51 @@ Section Pullback3x3.
   Defined.
 
 End Pullback3x3.
+
+(** Pasting for pullbacks (or 2-pullbacks lemma) *)
+
+Section Pasting.
+
+  (** Given the following diagram where the right square is a pullback square, then the outer square is a pullback square if and only if the left square is a pullback. *)
+  (* A --k--> B --l--> C
+     |    //  |    //  |
+     f  comm  g  comm  h
+     |  //    |  //    |
+     V //     V //     V
+     X --i--> Y --j--> Z *)
+  Context
+    {A B C X Y Z : Type}
+    {k : A -> B} {l : B -> C}
+    {f : A -> X} {g : B -> Y} {h : C -> Z}
+    {i : X -> Y} {j : Y -> Z}
+    (H : i o f == g o k) (K : j o g == h o l) {e1 : IsPullback K}.
+
+  Definition ispullback_pasting_left
+    : IsPullback (comm_square_comp' H K) -> IsPullback H.
+  Proof.
+    intro e2.
+    apply ispullback_isequiv_functor_hfiber.
+    intro b.
+    pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
+    pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
+    snrapply isequiv_commsq'.
+    7: apply isequiv_idmap.
+    4: apply (functor_hfiber_compose b).
+    1,2: exact _.
+  Defined.
+
+  Definition ispullback_pasting_outer
+    : IsPullback H -> IsPullback (comm_square_comp' H K).
+  Proof.
+    intro e2.
+    apply ispullback_isequiv_functor_hfiber.
+    intro b.
+    pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
+    pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
+    snrapply isequiv_commsq'.
+    9: apply isequiv_idmap.
+    4: symmetry; apply (functor_hfiber_compose b).
+    1,2: exact _.
+  Defined.
+
+End Pasting.
