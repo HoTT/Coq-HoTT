@@ -355,7 +355,3 @@ Section Reduction.
   Definition isfreegroup_freegrup `{Funext} : IsFreeGroup FreeGroup := _.
 
 End Reduction.
-
-
-
-

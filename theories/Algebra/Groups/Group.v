@@ -561,5 +561,3 @@ Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S
   {H : IsFreeGroupOn S F_S i}
   : IsFreeGroup F_S
   := (S; i; H).
-
-
