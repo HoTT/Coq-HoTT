@@ -126,6 +126,32 @@ Proof.
   - exact _.
 Defined.
 
+(** Conversely, if the square is a pullback then the induced maps on fibers are equivalences. *)
+Definition isequiv_functor_hfiber_ispullback {A B C D : Type}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h)
+           (e : IsPullback p)
+  : forall b:B, IsEquiv (functor_hfiber p b).
+Proof.
+  apply isequiv_from_functor_sigma.
+  unfold IsPullback in e.
+  snrapply isequiv_commsq'.
+  4: exact (equiv_fibration_replacement f)^-1%equiv.
+  1: exact (Pullback k g).
+  1: exact (pullback_corec p).
+  { apply (functor_sigma idmap); intro b.
+    apply (functor_sigma idmap); intro c.
+    apply inverse. }
+  { intros [x [y q]].
+    destruct q.
+    apply (path_sigma' _ idpath).
+    apply (path_sigma' _ idpath).
+    simpl.
+    refine (_^ @ (inv_Vp _ _)^).
+    apply concat_1p. }
+  all: exact _.
+Defined.
+
 (** The pullback of a map along another one *)
 Definition pullback_along {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g -> B
