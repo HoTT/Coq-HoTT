@@ -698,8 +698,7 @@ Class Asymmetric {A} (R : Relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
-Inductive Unit : Type0 :=
-    tt : Unit.
+Inductive Unit : Type0 := tt : Unit.
 
 Scheme Unit_ind := Induction for Unit Sort Type.
 Scheme Unit_rec := Minimality for Unit Sort Type.
@@ -707,6 +706,9 @@ Definition Unit_rect := Unit_ind.
 
 (** A [Unit] goal should be resolved by [auto] and [trivial]. *)
 Hint Resolve tt : core.
+
+Register Unit as core.IDProp.type.
+Register tt as core.IDProp.idProp.
 
 (** *** Pointed types *)
 
