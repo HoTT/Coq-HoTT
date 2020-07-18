@@ -27,6 +27,14 @@ Reserved Notation "f ^*" (at level 3, format "f '^*'").
 Reserved Notation "f ^-1*" (at level 3, format "f '^-1*'").
 Reserved Notation "p ^" (at level 3, format "p '^'").
 Reserved Notation "g o*E f" (at level 40, left associativity).
+Reserved Infix "$@h" (at level 35).
+Reserved Infix "$@v" (at level 35).
+Reserved Infix "$@hR" (at level 34).
+Reserved Infix "$@hL" (at level 34).
+Reserved Infix "$@vR" (at level 34).
+Reserved Infix "$@vL" (at level 34).
+Reserved Notation "s ^h$" (at level 20).
+Reserved Notation "s ^v$" (at level 20).
 
 (** Sigma type *)
 Reserved Notation "x .1" (at level 3, format "x '.1'").
