@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types.
+Require Import Basics Types Diagrams.CommutativeSquares.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -105,6 +105,20 @@ Definition equiv_functor_hfiber2 {A B C D}
   : hfiber f b <~> hfiber g b'
   := Build_Equiv _ _ (functor_hfiber2 p q) _.
 
+Definition functor_hfiber_compose {A B C X Y Z : Type} {k : A -> B} {l : B -> C}
+    {f : A -> X} {g : B -> Y} {h : C -> Z} {i : X -> Y} {j : Y -> Z}
+    (H : i o f == g o k) (K : j o g == h o l)
+  : forall x, functor_hfiber (comm_square_comp' H K) x
+    == (functor_hfiber K (i x)) o (functor_hfiber H x : hfiber f x -> _).
+Proof.
+  intros x [y p].
+  destruct p.
+  apply (path_sigma' _ idpath).
+  refine (concat_p1 _ @ _).
+  refine (inv_pp _ _ @ ap _ _).
+  refine ((ap_V _ _)^ @ ap _ _^).
+  apply concat_p1.
+Defined.
 
 (** ** The 3x3 lemma for fibrations *)
 Definition hfiber_functor_hfiber {A B C D}
