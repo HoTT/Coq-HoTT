@@ -1,8 +1,8 @@
 Require Export Coq.Unicode.Utf8.
 Require Export HoTT.Basics.Utf8.
-Require Import HoTT.Basics HoTT.Types.Arrow HoTT.Types.Prod HoTT.Types.Sum.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Modalities.Identity.
-Require Import HIT.Circle HIT.TwoSphere HoTT.Truncations Homotopy.Suspension.
+Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
@@ -39,8 +39,8 @@ Notation "m ≤ n" := (m <= n)%trunc : trunc_scope.
 (*Notation "p ..1" := (pr1_path p) (at level 3) : fibration_scope.*)
 (*Notation "p ..2" := (pr2_path p) (at level 3) : fibration_scope.*)
 
-Notation "'S¹'" := S1.
-Notation "'S²'" := S2.
+Notation "'S¹'" := Circle.
+Notation "'S²'" := TwoSphere.
 
 Notation "∥ A ∥₋₂" := (Trunc (-2) A).
 Notation "❘ a ❘₋₂" := (@tr (-2) _ a) : trunc_scope.

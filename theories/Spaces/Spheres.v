@@ -1,12 +1,12 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-
-(** * The spheres, in all dimensions. *)
-
 Require Import Basics Types.
 Require Import HProp NullHomotopy.
-Require Import Homotopy.Suspension HIT.Circle HIT.TwoSphere.
+Require Import Homotopy.Suspension.
 Require Import Pointed.
 Require Import Truncations.
+Require Import Spaces.Circle Spaces.TwoSphere.
+
+(** * The spheres, in all dimensions. *)
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

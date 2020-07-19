@@ -41,9 +41,7 @@ Require Export HoTT.PropResizing.PropResizing.
 Require Export HoTT.HIT.Interval.
 Require Export HoTT.HIT.Coeq.
 Require Export HoTT.HIT.Flattening.
-Require Export HoTT.HIT.Circle.
 Require Export HoTT.HIT.FreeIntQuotient.
-Require Export HoTT.HIT.Spheres.
 Require Export HoTT.HIT.SetCone.
 Require Export HoTT.HIT.epi.
 Require Export HoTT.HIT.unique_choice.
@@ -100,6 +98,10 @@ Require Export HoTT.Spaces.Int.
 Require Export HoTT.Spaces.Pos.
 
 Require Export HoTT.Spaces.Cantor.
+
+Require Export HoTT.Spaces.Circle.
+Require Export HoTT.Spaces.TwoSphere.
+Require Export HoTT.Spaces.Spheres.
 
 Require Export HoTT.Spaces.BAut.
 Require Export HoTT.Spaces.BAut.Cantor.

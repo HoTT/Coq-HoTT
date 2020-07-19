@@ -2,8 +2,8 @@ Require Import Basics.
 Require Import Types.
 Require Import Cubical.
 Require Import Homotopy.Suspension.
-Require Import HIT.Spheres.
-Require Import HSpace.
+Require Import Homotopy.HSpace.
+Require Import Spaces.Spheres.
 
 (** H-space structure on circle. *)
 
