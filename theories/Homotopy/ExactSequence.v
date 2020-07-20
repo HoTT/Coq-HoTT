@@ -94,7 +94,7 @@ Definition iscomplex_cancelR {F X Y Y' : pType}
 (** And likewise passage across squares with equivalences *)
 Definition iscomplex_equiv_i {F F' X X' Y : pType}
            (i : F ->* X) (i' : F' ->* X')
-           (g : F' <~>* F) (h : X' <~>* X) (p : Square i' i g h)
+           (g : F' <~>* F) (h : X' <~>* X) (p : Square g h i' i)
            (f : X ->* Y)
            (cx: IsComplex i f)
   : IsComplex i' (f o* h).
@@ -149,7 +149,7 @@ Defined.
 (** And also passage across squares with equivalences. *)
 Definition isexact_equiv_i n  {F F' X X' Y : pType}
            (i : F ->* X) (i' : F' ->* X')
-           (g : F' <~>* F) (h : X' <~>* X) (p : Square i' i g h)
+           (g : F' <~>* F) (h : X' <~>* X) (p : Square g h i' i)
            (f : X ->* Y)
            `{IsExact n F X Y i f}
   : IsExact n i' (f o* h).
@@ -174,8 +174,8 @@ Definition isexact_square_if n  {F F' X X' Y Y' : pType}
            {i : F ->* X} {i' : F' ->* X'}
            {f : X ->* Y} {f' : X' ->* Y'}
            (g : F' <~>* F) (h : X' <~>* X) (k : Y' <~>* Y) 
-           (p : Square i' i g h)
-           (q : Square f' f h k)
+           (p : Square g h i' i)
+           (q : Square h k f' f)
            `{IsExact n F X Y i f}
   : IsExact n i' f'.
 Proof.
@@ -321,7 +321,7 @@ Defined.
 Definition square_pfib_pequiv_cxfib
            {F X Y : pType} (i : F ->* X) (f : X ->* Y)
            `{IsExact oo F X Y i f}
-  : Square i (pfib f) (pequiv_cxfib) (pequiv_pmap_idmap).
+  : Square (pequiv_cxfib) (pequiv_pmap_idmap) i (pfib f).
 Proof.
   unfold Square.
   refine (pmap_postcompose_idmap _ @* _).
