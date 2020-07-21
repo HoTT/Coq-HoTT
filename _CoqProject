@@ -45,6 +45,7 @@ theories/Basics/Decidable.v
 #
 #   Wildcat
 #
+
 theories/WildCat.v
 theories/WildCat/Core.v
 theories/WildCat/UnitCat.v
@@ -64,6 +65,7 @@ theories/WildCat/Yoneda.v
 theories/WildCat/TwoOneCat.v
 theories/WildCat/NatTrans.v
 theories/WildCat/PointedCat.v
+theories/WildCat/Square.v
 
 #
 #   Types
