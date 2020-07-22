@@ -35,7 +35,7 @@ Definition loop : base = base := cglue tt.
 
 (** Here is a notation for the circle that can be imported. *)
 Module CircleNotation.
-  Notation S1 := Circle.
+  Notation S1 := Circle (only parsing).
 End CircleNotation.
 
 (** Circle induction *)
