@@ -1,8 +1,6 @@
-Require Import Basics.
+Require Import Basics Types.
 Require Import Cubical.
-Require Import Types.
-Require Import HIT.Circle.
-Require Import Torus.
+Require Import Spaces.Circle Spaces.Torus.Torus.
 
 (* In this file we:
     - Prove that the Torus is equivalent to the product of two circles
@@ -16,17 +14,17 @@ Section TorusEquivCircle.
   (* Here is a cube filler for help with circle recursion into the torus *)
   Definition c2t_square_and_cube
     : {s : PathSquare loop_a loop_a
-        (ap (S1_rec _ tbase loop_b) loop)
-        (ap (S1_rec _ tbase loop_b) loop)
+        (ap (Circle_rec _ tbase loop_b) loop)
+        (ap (Circle_rec _ tbase loop_b) loop)
       &  PathCube s surf hr hr
-         (sq_G1 (S1_rec_beta_loop _ _ _))
-         (sq_G1 (S1_rec_beta_loop _ _ _))}.
+         (sq_G1 (Circle_rec_beta_loop _ _ _))
+         (sq_G1 (Circle_rec_beta_loop _ _ _))}.
   Proof.
     apply cu_fill_left.
   Defined.
 
   (* We define the map from the Torus to the Circles *)
-  Definition t2c : Torus -> S1 * S1.
+  Definition t2c : Torus -> Circle * Circle.
   Proof.
     srapply Torus_rec.
     + exact (base, base). (* The point of the torus is taken to (base, base *)
@@ -36,21 +34,21 @@ Section TorusEquivCircle.
   Defined.
 
   (* We now define the curried function from the circles to the torus *)
-  Definition c2t' : S1 -> S1 -> Torus.
+  Definition c2t' : Circle -> Circle -> Torus.
   Proof.
-    srapply S1_rec.
-    + srapply S1_rec.     (* Double circle recursion *)
+    srapply Circle_rec.
+    + srapply Circle_rec.     (* Double circle recursion *)
       - exact tbase.      (* The basepoint is sent to the point of the torus *)
       - exact loop_b.     (* The second loop is sent to loop_b *)
     + apply path_forall.  (* We use function extensionality here to induct *)
-      srapply S1_ind_dp.  (* Circle induction as a DPath *)
+      srapply Circle_ind_dp.  (* Circle induction as a DPath *)
       - exact loop_a.     (* The first loop is sent to loop_a *)
       - srapply sq_dp^-1. (* This DPath is actually a square *)
         apply (pr1 c2t_square_and_cube). (* We apply the cap we found above *)
   Defined.
 
   (* Here is the uncurried version *)
-  Definition c2t : S1 * S1 -> Torus.
+  Definition c2t : Circle * Circle -> Torus.
   Proof.
     apply uncurry, c2t'.
   Defined.
@@ -69,13 +67,13 @@ Section TorusEquivCircle.
       (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).
     (* 2. Reducing c2t' on loop *)
     refine (cu_concat_lr (cu_ds (dp_apD_nat
-      (fun x => ap_apply_l _ _ @ apD10 (ap _(S1_rec_beta_loop _ _ _)) x) _)) _
+      (fun x => ap_apply_l _ _ @ apD10 (ap _(Circle_rec_beta_loop _ _ _)) x) _)) _
       (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).
     (* 3. Reducing ap10 on function extensionality *)
     refine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
       (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
-    (* 4. Reducing S1_ind_dp on loop *)
-    refine (cu_concat_lr (cu_G11 (ap _ (S1_ind_dp_beta_loop _ _ _))) _
+    (* 4. Reducing Circle_ind_dp on loop *)
+    refine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_dp_beta_loop _ _ _))) _
       (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
     (* 5. collapsing equivalence *)
     refine (cu_concat_lr (cu_G11 (eisretr _ _)) _
@@ -153,17 +151,17 @@ Section TorusEquivCircle.
   Proof.
     unfold Sect; apply prod_ind.
     (* Start with double circle induction *)
-    srefine (S1_ind_dp _ (S1_ind_dp _ 1 _) _).
+    srefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
     (* Change the second loop case into a square and shelve *)
     1: apply sq_dp^-1, sq_tr^-1; shelve.
     (* Take the forall out of the DPath *)
     apply dp_forall_domain.
     intro x; apply sq_dp^-1; revert x.
-    srefine (S1_ind_dp _ _ _).
+    srefine (Circle_ind_dp _ _ _).
     1: apply sq_tr^-1; shelve.
     apply dp_cu.
     refine (cu_ccGGcc _ _ _).
-    1,2: refine (ap sq_dp (S1_ind_dp_beta_loop _ _ _)
+    1,2: refine (ap sq_dp (Circle_ind_dp_beta_loop _ _ _)
       @ eisretr _ _)^.
     apply cu_rot_tb_fb.
     refine (cu_ccGGGG _ _ _ _ _).
@@ -185,7 +183,7 @@ Section TorusEquivCircle.
       (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
     apply sq_ap_uncurry. *)
 
-  Definition equiv_torus_prod_S1 : Torus <~> S1 * S1
+  Definition equiv_torus_prod_Circle : Torus <~> Circle * Circle
     := equiv_adjointify t2c c2t c2t2c t2c2t.
 
 End TorusEquivCircle.

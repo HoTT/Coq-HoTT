@@ -787,7 +787,7 @@ Definition Book_5_8_5_comp := @HoTT.Types.Universe.equiv_induction'_comp.
 (* ================================================== thm:S1rec *)
 (** Lemma 6.2.5 *)
 
-Definition Book_6_2_5 := @HoTT.HIT.Circle.S1_rec.
+Definition Book_6_2_5 := @HoTT.Spaces.Circle.Circle_rec.
 
 (* ================================================== thm:uniqueness-for-functions-on-S1 *)
 (** Lemma 6.2.8 *)
@@ -837,7 +837,7 @@ Definition Book_6_4_6 := @HoTT.Basics.PathGroupoids.apD02.
 (* ================================================== thm:suspbool *)
 (** Lemma 6.5.1 *)
 
-Definition Book_6_5_1 := @HoTT.HIT.Spheres.isequiv_Sph1_to_S1.
+Definition Book_6_5_1 := @HoTT.Spaces.Spheres.isequiv_S1_to_Circle.
 
 (* ================================================== lem:susp-loop-adj *)
 (** Lemma 6.5.4 *)

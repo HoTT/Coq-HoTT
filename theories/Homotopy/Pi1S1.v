@@ -1,36 +1,29 @@
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types.
 Require Import Pointed.
-Require Import Spaces.Int.
+Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
-Require Import HIT.Circle.
-Require Import HIT.Spheres.
 Require Import Truncations.
 
-(* Calculation of Pi 1 S1 *)
+(** The fundamental group of the 1-sphere *)
 
 Section Pi1S1.
   Context `{Univalence}.
 
   Local Notation "( A , a )" := (Build_pType A a).
 
-(*   Local Infix "≅" := GroupIsomorphism (at level 20).
-  Local Notation "'π'" := HomotopyGroup (at level 0).
-  Local Infix "×" := group_prod (at level 5).
- *)
   Local Open Scope int_scope.
   Local Open Scope pointed_scope.
 
-  Theorem Pi1Circle : GroupIsomorphism (Pi 1 (S1, base)) abgroup_Z.
+  Theorem Pi1Circle : GroupIsomorphism (Pi 1 (Circle, base)) abgroup_Z.
   Proof.
     (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
     symmetry.
     srapply Build_GroupIsomorphism'.
     { equiv_via (base = base).
-      2: exact (equiv_tr 0 (loops (S1, base))).
+      2: exact (equiv_tr 0 (loops (Circle, base))).
       symmetry.
-      exact equiv_loopS1_int. }
+      exact equiv_loopCircle_int. }
     intros a b.
     cbn; apply ap.
     apply loopexp_add.
@@ -41,7 +34,7 @@ Section Pi1S1.
     etransitivity.
     2: apply Pi1Circle.
     apply groupiso_pi_functor.
-    apply pequiv_pSph1_to_S1.
+    apply pequiv_S1_Circle.
   Defined.
 
 End Pi1S1.

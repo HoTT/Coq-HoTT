@@ -107,6 +107,9 @@ theories/Spaces/Cantor.v
 theories/Spaces/Finite.v
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
+theories/Spaces/Circle.v
+theories/Spaces/TwoSphere.v
+theories/Spaces/Spheres.v
 
 theories/Spaces/Int.v
 theories/Spaces/Int/Core.v
@@ -133,6 +136,7 @@ theories/Spaces/Torus/Torus.v
 theories/Spaces/Torus/TorusEquivCircles.v
 theories/Spaces/Torus/TorusHomotopy.v
 
+
 #
 #   Modalities
 #
@@ -158,13 +162,10 @@ theories/Modalities/CoreflectiveSubuniverse.v
 #   HIT
 #
 
-theories/HIT/Circle.v
 theories/HIT/Coeq.v
 theories/HIT/FreeIntQuotient.v
 theories/HIT/Flattening.v
 theories/HIT/Interval.v
-theories/HIT/Spheres.v
-theories/HIT/TwoSphere.v
 theories/HIT/epi.v
 theories/HIT/unique_choice.v
 theories/HIT/surjective_factor.v
