@@ -285,7 +285,7 @@ Module Export LocalizationHIT.
   : forall (f : LocalGenerators@{a}) (X : Type@{i}),
       IsLocal@{i k a} f (Localize f X).
 
-  Fixpoint Localize_ind
+  Definition Localize_ind
            (f : LocalGenerators@{a}) (X : Type@{i})
            (P : Localize f X -> Type@{j})
            (loc' : forall x, P (loc x))
@@ -293,7 +293,7 @@ Module Export LocalizationHIT.
                                    (f i) (fun _ => Localize@{a i} f X)
                                    (fun _ => P)
                                    (islocal_localize@{a i k} f X i))
-           (z : Localize f X) {struct z}
+           (z : Localize f X)
   : P z
     := match z with
          | loc x => fun _ => loc' x
