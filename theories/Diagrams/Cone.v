@@ -27,7 +27,7 @@ Section Cone.
   (** [path_cone] says when two cones are equals (up to funext). *)
 
   Definition path_cocone_naive {C1 C2 : Cone X D}
-    (P := fun q' => forall {i j : G} (g : G i j) (x : X),
+    (P := fun q' => forall (i j : G) (g : G i j) (x : X),
       D _f g (q' i x) = q' j x)
     (path_legs : legs C1 = legs C2)
     (path_legs_comm : transport P path_legs (legs_comm C1) = legs_comm C2)
