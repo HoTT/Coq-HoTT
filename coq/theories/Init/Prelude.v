@@ -13,6 +13,8 @@ Require Coq.Init.Nat.
 
 Declare ML Module "numeral_notation_plugin".
 
+Set Warnings "-decimal-numeral-notation".
+
 (* Parsing / printing of decimal numbers *)
 Arguments Nat.of_uint d%dec_uint_scope.
 Arguments Nat.of_int d%dec_int_scope.
