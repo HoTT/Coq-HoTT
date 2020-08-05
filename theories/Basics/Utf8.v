@@ -1,6 +1,6 @@
 Require Export Basics.Notations.
 
-Reserved Infix "∙" (at level 20, only parsing).
+Reserved Infix "∙" (at level 20).
 Reserved Infix "∘" (at level 40, left associativity).
 Reserved Infix "∘ˡ" (at level 40, left associativity).
 Reserved Infix "∘ʳ" (at level 40, left associativity).

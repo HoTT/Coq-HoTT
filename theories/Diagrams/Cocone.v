@@ -27,7 +27,7 @@ Section Cocone.
   (** [path_cocone] says when two cocones are equals (up to funext). *)
 
   Definition path_cocone_naive {C1 C2 : Cocone D X}
-    (P := fun q' => forall {i j : G} (g : G i j) (x : D i),
+    (P := fun q' => forall (i j : G) (g : G i j) (x : D i),
       q' j (D _f g x) = q' i x)
     (path_legs : legs C1 = legs C2)
     (path_legs_comm : transport P path_legs (legs_comm C1) = legs_comm C2)

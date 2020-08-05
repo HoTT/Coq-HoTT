@@ -43,7 +43,7 @@ Reserved Notation "x .2" (at level 3, format "x '.2'").
 (** Paths *)
 Reserved Notation "p @ q" (at level 20).
 Reserved Notation "p # x" (right associativity, at level 65).
-Reserved Notation "p # x" (right associativity, at level 65, only parsing).
+Reserved Notation "p # x" (right associativity, at level 65).
 Reserved Notation "p @@ q" (at level 20).
 Reserved Notation "p @' q" (at level 21, left associativity, format "'[v' p '/' '@''  q ']'").
 Reserved Notation "f == g" (at level 70, no associativity).
@@ -93,13 +93,13 @@ Reserved Infix "@lr" (at level 30).
 Reserved Infix "oL" (at level 40, left associativity).
 Reserved Infix "oR" (at level 40, left associativity).
 
-Reserved Notation "~~ A" (at level 35, right associativity, only parsing).
+Reserved Notation "~~ A" (at level 35, right associativity).
 Reserved Notation "a \ C" (at level 40, left associativity).
 Reserved Notation "a <=_{ x } b" (at level 70, no associativity).
 Reserved Notation "D1 ~d~ D2" (at level 65).
 Reserved Notation "D '_f' g" (at level 10).
 Reserved Notation "F '_0' x" (at level 10, no associativity).
-Reserved Notation "F '_0' x" (at level 10, no associativity, only parsing).
+Reserved Notation "F '_0' x" (at level 10, no associativity).
 Reserved Notation "F '_1' m" (at level 10, no associativity).
 Reserved Notation "F ^op" (at level 3, format "F ^op").
 Reserved Notation "'forall'  x .. y , P" (at level 200, x binder, y binder, right associativity).

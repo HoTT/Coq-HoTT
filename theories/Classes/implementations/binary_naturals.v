@@ -599,7 +599,7 @@ End trichotomy.
 
 Section minus.
 
-  Local Fixpoint Pred (m : binnat) : binnat :=
+  Local Definition Pred (m : binnat) : binnat :=
     match m with
     | bzero      => bzero
     | double1 m' => double m'
