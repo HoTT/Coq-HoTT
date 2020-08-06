@@ -6,7 +6,7 @@ Require Import HIT.Coeq.
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
-(** In this file we construct the free abelian group on a type [A] as a higher inductive type. This construction is due to Kraus and Altenkirch. Their construction is actually more general, but we set truncate it to suit our needs which is the free group as a set. *)
+(** In this file we construct the free abelian group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set truncate it to suit our needs which is the free group as a set. *)
 
 Section Reduction.
 
