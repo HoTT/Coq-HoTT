@@ -28,7 +28,7 @@ Proof.
   exact _.
 Defined.
 
-(** The above theorem is true regardless of the implementation of free groups. This let's us state the more specific theorem about the free groups themselves. This can be read as [FreeGroup] is left adjoint to the forgetful functor [group_type]. *)
+(** The above theorem is true regardless of the implementation of free groups. This lets us state the more specific theorem about the canonical free groups. This can be read as [FreeGroup] is left adjoint to the forgetful functor [group_type]. *)
 Theorem equiv_freegroup_rec `{Funext} (G : Group) (A : Type)
   : (FreeGroup A $-> G) <~> (A -> G).
 Proof.
@@ -57,4 +57,3 @@ Proof.
     apply equiv_path_forall. }
   exact _.
 Defined.
-
