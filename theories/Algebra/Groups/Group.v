@@ -26,7 +26,6 @@ Record Group := {
   group_isgroup : IsGroup group_type;
 }.
 
-(* Arguments group_type {_}. *)
 Arguments group_sgop {_}.
 Arguments group_unit {_}.
 Arguments group_inverse {_}.
