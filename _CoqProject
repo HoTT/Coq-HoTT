@@ -349,6 +349,7 @@ theories/Algebra/Groups/Image.v
 theories/Algebra/Groups/Kernel.v
 theories/Algebra/Groups/GrpPullback.v
 theories/Algebra/Groups/FreeProduct.v
+theories/Algebra/Groups/GroupCoeq.v
 theories/Algebra/Groups/FreeGroup.v
 
 theories/Algebra/Groups/FreeGroup/ListQuotient.v
