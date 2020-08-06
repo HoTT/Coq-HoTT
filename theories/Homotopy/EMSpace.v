@@ -199,7 +199,7 @@ Section EilenbergMacLane.
   Fixpoint EilenbergMacLane (G : Group) (n : nat) : pType
     := match n with
         | 0    => Build_pType G _
-        | 1    => pClassifingSpace G
+        | 1    => pClassifyingSpace G
         | m.+1 => pTr m.+1 (psusp (EilenbergMacLane G m))
        end.
 

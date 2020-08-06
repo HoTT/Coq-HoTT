@@ -26,11 +26,12 @@ Record Group := {
   group_isgroup : IsGroup group_type;
 }.
 
-Arguments group_type {_}.
 Arguments group_sgop {_}.
 Arguments group_unit {_}.
 Arguments group_inverse {_}.
 Arguments group_isgroup {_}.
+(** We never need to unfold the proof that something is a group *)
+Opaque group_isgroup.
 
 (** We coerce groups back to types. *)
 Coercion group_type : Group >-> Sortclass.
@@ -538,3 +539,24 @@ Proof.
   intros x.
   apply path_contr.
 Defined.
+
+(** ** Free groups *)
+
+Definition FactorsThroughFreeGroup (S : Type) (F_S : Group)
+  (i : S -> F_S) (A : Group) (g : S -> A) : Type
+  := {f : F_S $-> A & f o i == g}.
+
+(** Universal property of a free group on a set (type). *)
+Class IsFreeGroupOn (S : Type) (F_S : Group) (i : S -> F_S)
+  := contr_isfreegroupon : forall (A : Group) (g : S -> A),
+      Contr (FactorsThroughFreeGroup S F_S i A g).
+Global Existing Instance contr_isfreegroupon.
+
+(** A group is free if there exists a generating type on which it is a free group *)
+Class IsFreeGroup (F_S : Group)
+  := isfreegroup : {S : _ & {i : _ & IsFreeGroupOn S F_S i}}.
+
+Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S)
+  {H : IsFreeGroupOn S F_S i}
+  : IsFreeGroup F_S
+  := (S; i; H).

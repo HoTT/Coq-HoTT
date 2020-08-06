@@ -3,6 +3,8 @@ Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import Truncations.
+Require Import Homotopy.HomotopyGroup.
+Require Import Homotopy.WhiteheadsPrinciple.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -149,12 +151,12 @@ Defined.
 (** Now we focus on the classifying space of a group. *)
 
 (** The classifying space of a group is the following pointed type. *)
-Definition pClassifingSpace (G : Group)
+Definition pClassifyingSpace (G : Group)
   := Build_pType (ClassifyingSpace G) bbase.
 
 (** To use the B G notation for pClassifyingSpace import this module. *)
 Module Import ClassifyingSpaceNotation.
-  Definition B G := pClassifingSpace G.
+  Definition B G := pClassifyingSpace G.
 End ClassifyingSpaceNotation.
 
 Import ClassifyingSpaceNotation.
@@ -185,7 +187,7 @@ Section EncodeDecode.
 
   Context `{Univalence} {G : Group}.
 
-  Local Definition codes : B G -> 0 -Type.
+  Local Definition codes : B G -> 0-Type.
   Proof.
     srapply ClassifyingSpace_rec.
     + srapply (BuildhSet G).
@@ -258,11 +260,49 @@ Section EncodeDecode.
     reflexivity.
   Defined.
 
+  Local Lemma encode_pp' (x : B G) (p q : bbase = x)
+    : encode _ (p @ q^) = transport (fun x : B G => codes x) q^ (encode x p).
+  Proof.
+    destruct q; cbn.
+    f_ap; apply concat_p1.
+  Defined.
+
+  Local Lemma encode_pp (p q : bbase = bbase)
+    : encode _ (p @ q) = encode _ p * encode _ q.
+  Proof.
+    refine (_ @ codes_transport _ _).
+    refine (_ @ transport2 codes _^ (encode bbase p)).
+    2: rapply decode_encode.
+    rewrite <- (inv_V q).
+    generalize q^; intro q'; clear q.
+    apply encode_pp'.
+  Defined.
+
 End EncodeDecode.
+
+(** We also have that the equivalence is a group isomorphism. *)
+
+(** First we show that the loop space of a pointed 1-type is a group *)
+Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
+  := Build_Group (loops X) concat idpath inverse
+    (Build_IsGroup _ _ _ _
+      (Build_IsMonoid _ _ _
+        (Build_IsSemiGroup _ _ _ concat_p_pp) concat_1p concat_p1)
+      concat_Vp concat_pV).
+
+Definition grp_iso_loopgroup_bg `{Univalence} (G : Group)
+  : GroupIsomorphism (LoopGroup (B G)) G.
+Proof.
+  snrapply Build_GroupIsomorphism'.
+  1: exact equiv_loops_bg_g.
+  intros x y.
+  apply encode_pp.
+Defined.
 
 (** When G is an abelian group, BG is a H-space. *)
 Section HSpace_bg.
 
+  (** TODO: funext can probably be avoided here *)
   Context `{Funext} {G : AbGroup}.
 
   Definition bg_mul : B G -> B G -> B G.
@@ -349,3 +389,211 @@ Section HSpace_bg.
           bg_mul_right_id.
 
 End HSpace_bg.
+
+(** Functoriality of B(-) *)
+
+Definition functor_pclassifyingspace {G H : Group} (f : GroupHomomorphism G H)
+  : B G ->* B H.
+Proof.
+  snrapply Build_pMap.
+  { srapply ClassifyingSpace_rec.
+    1: exact (point _).
+    1: exact (bloop o f).
+    intros x y.
+    refine (ap bloop (grp_homo_op f x y) @ _).
+    apply bloop_pp. }
+  reflexivity.
+Defined.
+
+Definition functor2_pclassifyingspace {G H : Group} {f g : GroupHomomorphism G H}
+  : f == g -> functor_pclassifyingspace f ==* functor_pclassifyingspace g.
+Proof.
+  intro p.
+  snrapply Build_pHomotopy.
+  { srapply ClassifyingSpace_ind_hset.
+    1: reflexivity.
+    intro x.
+    unfold functor_pclassifyingspace.
+    rapply equiv_sq_dp^-1.
+    simpl.
+    rewrite 2 ClassifyingSpace_rec_beta_bloop.
+    apply sq_1G.
+    apply ap.
+    exact (p x). }
+  reflexivity.
+Defined.
+
+Definition functor_pclassifyingspace_idmap (G : Group)
+  : functor_pclassifyingspace (@grp_homo_id G) ==* pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  { srapply ClassifyingSpace_ind_hset.
+    1: reflexivity.
+    intro x.
+    rapply equiv_sq_dp^-1.
+    simpl.
+    rewrite ClassifyingSpace_rec_beta_bloop.
+    apply sq_1G.
+    symmetry.
+    apply ap_idmap. }
+  reflexivity.
+Defined.
+
+Definition functor_pclassifyingspace_compose (A B C : Group)
+  (g : GroupHomomorphism A B) (f : GroupHomomorphism B C)
+  : functor_pclassifyingspace (grp_homo_compose f g)
+  ==* functor_pclassifyingspace f o* functor_pclassifyingspace g.
+Proof.
+  snrapply Build_pHomotopy.
+  { srapply ClassifyingSpace_ind_hset.
+    1: reflexivity.
+    intro x.
+    rapply equiv_sq_dp^-1.
+    simpl.
+    rapply sq_ccGG.
+    1,2: symmetry.
+    2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =>
+      ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
+      @ ap _ _ @ _).
+    1-3: nrapply ClassifyingSpace_rec_beta_bloop.
+    apply sq_1G.
+    reflexivity. }
+  reflexivity.
+Defined.
+
+(** Interestingly, [functor_pclassifyingspace] is an equivalence *)
+Global Instance isequiv_functor_pclassifyingspace `{U : Univalence} (G H : Group)
+  : IsEquiv (@functor_pclassifyingspace G H).
+Proof.
+  snrapply isequiv_adjointify.
+  { intros f.
+    refine (grp_homo_compose _ (grp_homo_compose _ (grp_iso_inverse _))).
+    1,3: rapply grp_iso_loopgroup_bg.
+    snrapply Build_GroupHomomorphism.
+    1: by nrapply loops_functor.
+    intros x y.
+    apply loops_functor_pp. }
+  { intros f.
+    rapply equiv_path_pforall.
+    snrapply Build_pHomotopy.
+    { srapply ClassifyingSpace_ind_hset.
+      { cbn; symmetry.
+        rapply (point_eq f). }
+      { intro g.
+        rapply equiv_sq_dp^-1.
+        unfold functor_pclassifyingspace.
+        unfold Build_pMap.
+        unfold pointed_fun.
+        rewrite ClassifyingSpace_rec_beta_bloop.
+        simpl.
+        rapply sq_ccGc.
+        1: symmetry; rapply decode_encode.
+        apply equiv_sq_path.
+        hott_simpl. } }
+      symmetry; apply concat_1p. }
+  intros f.
+  rapply equiv_path_grouphomomorphism.
+  simpl; intro g.
+  rapply (moveR_equiv_M' equiv_loops_bg_g).
+  rewrite concat_1p, concat_p1.
+  rewrite ClassifyingSpace_rec_beta_bloop.
+  reflexivity.
+Defined.
+
+(** Hence we have that group homomorphisms are equivalent to pointed maps between their deloopings. *)
+Theorem equiv_grp_homo_pmap_bg `{U : Univalence} (G H : Group)
+  : (GroupHomomorphism G H) <~> (B G ->* B H).
+Proof.
+  snrapply Build_Equiv.
+  2: apply isequiv_functor_pclassifyingspace.
+Defined.
+
+(** TODO: clean up and speed up *)
+(** Using Whitehead's principle we can prove that B(Pi 1 X) = X for a 0-connected 1-truncated X. *)
+Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
+  (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
+  : B (Pi1 X) <~>* X.
+Proof.
+  snrapply Build_pEquiv'.
+  { snrapply Build_Equiv.
+    (** First we give the map inducing equivalences between homotopy groups. *)
+    { srapply ClassifyingSpace_rec.
+      1: exact (point _).
+      { apply Trunc_rec.
+        exact idmap. }
+      intros x y.
+      strip_truncations.
+      reflexivity. }
+    (** Now we apply Whitehead's principle *)
+    snrapply whiteheads_principle.
+    1: exact _.
+    1: exact 1.
+    1,2: exact _.
+    1: apply isequiv_contr_contr.
+    (** We need to show that this map induces equivalences for all homotopy groups *)
+    intros x n.
+    revert x.
+    snrapply ClassifyingSpace_ind_hset.
+    1: exact _.
+    2: intro x; apply equiv_dp_path_transport, path_ishprop.
+    hnf.
+    unfold pmap_from_point.
+    unfold Build_pMap.
+    (** The case for n = 1 follows from the universal property of BG *)
+    destruct n.
+    { simpl.
+      snrapply isequiv_homotopic'.
+      { simpl.
+        transitivity (loops (pClassifyingSpace (Pi1 X))).
+        1: symmetry; rapply equiv_tr.
+        rapply equiv_loops_bg_g. }
+      intro x.
+      strip_truncations.
+      simpl.
+      unfold Trunc_functor.
+      unfold O_functor.
+      unfold O_rec.
+      simpl.
+      revert x.
+      snrapply equiv_ind.
+      2: apply equiv_loops_bg_g.
+      1: exact _.
+      intro p.
+      simpl.
+      rewrite ClassifyingSpace_rec_beta_bloop.
+      unfold encode.
+      rewrite codes_transport.
+      strip_truncations.
+      apply path_Tr, tr.
+      hott_simpl. }
+    (** The case for n > 1 follows since higher homotopy groups are trivial *)
+    snrapply isequiv_contr_contr.
+    { nrapply contr_equiv'.
+      { apply equiv_tr.
+        Search IsTrunc Contr.
+        nrapply trunc_contr.
+        apply equiv_istrunc_contr_iterated_loops.
+        snrapply trunc_leq.
+        1: exact 1.
+        { induction n.
+          1: exact tt.
+          rapply trunc_index_leq_transitive. }
+        exact _. }
+      apply equiv_istrunc_contr_iterated_loops.
+      induction n; exact _. }
+    { nrapply contr_equiv'.
+      { apply equiv_tr.
+        Search IsTrunc Contr.
+        nrapply trunc_contr.
+        apply equiv_istrunc_contr_iterated_loops.
+        snrapply trunc_leq.
+        1: exact 1.
+        { induction n.
+          1: exact tt.
+          rapply trunc_index_leq_transitive. }
+        exact _. }
+      apply equiv_istrunc_contr_iterated_loops.
+      induction n; exact _. } }
+  (** Finally we need to show that this equivalence is pointed *)
+  reflexivity.
+Defined.

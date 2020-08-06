@@ -108,3 +108,11 @@ Proof.
   apply pmap_postwhisker.
   symmetry; apply peisretr.
 Defined.
+
+Definition equiv_pequiv_precompose `{Funext} {A B C : pType} (f : A <~>* B)
+  : (B ->* C) <~> (A ->* C)
+  := equiv_precompose_cat_equiv f.
+
+Definition equiv_pequiv_postcompose `{Funext} {A B C : pType} (f : B <~>* C)
+  : (A ->* B) <~> (A ->* C)
+  := equiv_postcompose_cat_equiv f.
