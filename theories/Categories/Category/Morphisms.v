@@ -374,7 +374,10 @@ Section EpiMono.
   End iso.
 End EpiMono.
 
-Hint Immediate @isepimorphism_identity @ismonomorphism_identity @ismonomorphism_compose @isepimorphism_compose : category morphism.
+Hint Immediate
+  isepimorphism_identity ismonomorphism_identity
+  ismonomorphism_compose isepimorphism_compose
+  : category morphism.
 
 (** ** Lemmas about [idtoiso] *)
 Section iso_lemmas.

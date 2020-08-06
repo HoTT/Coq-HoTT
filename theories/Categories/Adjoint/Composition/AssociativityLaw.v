@@ -47,4 +47,4 @@ Section composition_lemmas.
   Qed.
 End composition_lemmas.
 
-Hint Resolve @associativity : category.
+Hint Resolve associativity : category.

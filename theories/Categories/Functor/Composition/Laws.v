@@ -42,7 +42,7 @@ End identity_lemmas.
 
 Hint Rewrite @left_identity @right_identity : category.
 Hint Rewrite @left_identity @right_identity : functor.
-Hint Immediate @left_identity @right_identity : category functor.
+Hint Immediate left_identity right_identity : category functor.
 
 Section composition_lemmas.
   Context `{fs : Funext}.
@@ -65,7 +65,7 @@ Section composition_lemmas.
     := @path_functor_uncurried_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.
 End composition_lemmas.
 
-Hint Resolve @associativity : category functor.
+Hint Resolve associativity : category functor.
 
 Section coherence.
   Context `{fs : Funext}.

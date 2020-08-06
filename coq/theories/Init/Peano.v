@@ -34,8 +34,10 @@ Local Notation "0" := O.
 
 Definition eq_S := f_equal S.
 
-Hint Resolve (f_equal S): v62.
-Hint Resolve (f_equal (A:=nat)): core.
+Local Definition f_equal_S := f_equal S.
+Local Definition f_equal_nat := f_equal (A:=nat).
+Hint Resolve f_equal_S : v62.
+Hint Resolve f_equal_nat : core.
 
 (** The predecessor function *)
 
@@ -93,8 +95,10 @@ Fixpoint plus (n m:nat) : nat :=
 
 where "n + m" := (plus n m) : nat_scope.
 
-Hint Resolve (f_equal2 plus): v62.
-Hint Resolve (f_equal2 (A1:=nat) (A2:=nat)): core.
+Local Definition f_equal2_plus := f_equal2 plus.
+Local Definition f_equal2_nat := f_equal2 (A1:=nat) (A2:=nat).
+Hint Resolve f_equal2_plus : v62.
+Hint Resolve f_equal2_nat : core.
 
 Lemma plus_n_O : forall n:nat, n = n + 0.
 Proof.
@@ -133,7 +137,8 @@ Fixpoint mult (n m:nat) : nat :=
 
 where "n * m" := (mult n m) : nat_scope.
 
-Hint Resolve (f_equal2 mult): core.
+Local Definition f_equal2_mult := f_equal2 mult.
+Hint Resolve f_equal2_mult : core.
 
 Lemma mult_n_O : forall n:nat, 0 = n * 0.
 Proof.

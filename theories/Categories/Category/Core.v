@@ -113,9 +113,9 @@ Create HintDb category discriminated.
 (** create a hint db for morphisms in categories *)
 Create HintDb morphism discriminated.
 
-Hint Resolve @left_identity @right_identity @associativity : category morphism.
-Hint Rewrite @left_identity @right_identity : category.
-Hint Rewrite @left_identity @right_identity : morphism.
+Hint Resolve left_identity right_identity associativity : category morphism.
+Hint Rewrite left_identity right_identity : category.
+Hint Rewrite left_identity right_identity : morphism.
 
 (** ** Simple laws about the identity morphism *)
 Section identity_unique.

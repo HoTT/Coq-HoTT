@@ -229,4 +229,4 @@ Create HintDb pseuodnatural_transformation discriminated.
 Arguments p_components_of {_} {X}%category {F G}%pseudofunctor T%pseudonatural_transformation
           a%object : rename, simpl nomatch.
 
-Hint Resolve @p_commutes_respects_identity @p_commutes_respects_composition : category pseudonatural_transformation.
+Hint Resolve p_commutes_respects_identity p_commutes_respects_composition : category pseudonatural_transformation.

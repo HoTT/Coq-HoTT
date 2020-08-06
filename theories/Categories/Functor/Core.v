@@ -60,6 +60,6 @@ Module Export FunctorCoreNotations.
   Notation "F '_1' m" := (morphism_of F m) : morphism_scope.
 End FunctorCoreNotations.
 
-Hint Resolve @composition_of @identity_of : category functor.
-Hint Rewrite @identity_of : category.
-Hint Rewrite @identity_of : functor.
+Hint Resolve composition_of identity_of : category functor.
+Hint Rewrite identity_of : category.
+Hint Rewrite identity_of : functor.
