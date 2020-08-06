@@ -289,19 +289,28 @@ Section Reduction.
     exact (- s x).
   Defined.
 
-  Lemma words_rec_coh (G : Group) (s : A -> G) (a : A + A) (b c : Words)
-    : words_rec G s (map1 (b, a, c)) = words_rec G s (map2 (b, a, c)).
-  Proof.
-    
-  Admitted.
-
-  Lemma words_rec_pp  (G : Group) (s : A -> G)  (x y : Words)
+  Lemma words_rec_pp (G : Group) (s : A -> G)  (x y : Words)
     : words_rec G s (x @ y) = words_rec G s x * words_rec G s y.
   Proof.
     induction x.
     1: symmetry; apply left_identity.
     cbn; rewrite <- simple_associativity.
     f_ap.
+  Defined.
+
+  Lemma words_rec_coh (G : Group) (s : A -> G) (a : A + A) (b c : Words)
+    : words_rec G s (map1 (b, a, c)) = words_rec G s (map2 (b, a, c)).
+  Proof.
+    unfold map1, map2.
+    refine (concat _ (words_rec_pp G s _ _)^).
+    refine (concat (words_rec_pp G s _ _) _); f_ap.
+    refine (concat _ (right_identity _)).
+    refine (concat (ap _ (word_concat_w_ww _ _ _)^) _).
+    refine (concat (words_rec_pp G s _ _) _); f_ap.
+    refine (concat (concat (simple_associativity _ _ _) _) (left_identity mon_unit)).
+    destruct a; simpl; f_ap.
+    + apply right_inverse.
+    + apply left_inverse.
   Defined.
 
   (** Given a group [G] we can construct a group homomorphism [FreeGroup A -> G] if we have a map [A -> G] *)
