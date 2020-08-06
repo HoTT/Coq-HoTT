@@ -554,7 +554,7 @@ Global Existing Instance contr_isfreegroupon.
 
 (** A group is free if there exists a generating type on which it is a free group *)
 Class IsFreeGroup (F_S : Group)
-  := isfreegroup : exists S i, IsFreeGroupOn S F_S i.
+  := isfreegroup : {S : _ & {i : _ & IsFreeGroupOn S F_S i}}.
 
 Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S)
   {H : IsFreeGroupOn S F_S i}
