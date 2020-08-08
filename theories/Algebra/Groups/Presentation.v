@@ -3,6 +3,7 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.FreeGroup.
 Require Import Algebra.Groups.GroupCoeq.
 Require Import Spaces.Finite.
+Require Import WildCat.
 
 (** In this file we develop presentations of groups. *)
 
@@ -70,3 +71,46 @@ Class IsFinitelyPresented (G : Group) := {
   fp_presentation_fp : FinitePresentation fp_presentation;
 }.
 
+(** ** Fundamental theorem of presentations of groups *)
+
+(** A group homomorphism from a presented group is determined with how the underlying map acts on generators subject to the condition that relators are sent to the unit. *)
+Theorem grp_pres_rec {funext : Funext} (G : Group) (P : HasPresentation G) (H : Group)
+  : {f : gp_generators P -> H & forall r,
+      FreeGroup_rec _ _ f (gp_relators P r) = group_unit}
+    <~> GroupHomomorphism G H.
+Proof.
+  refine ((equiv_precompose_cat_equiv grp_iso_presentation)^-1 oE _).
+  refine (equiv_groupcoeq_rec _ _ oE _).
+  srefine (equiv_functor_sigma_pb _^-1 oE _).
+  2: apply equiv_freegroup_rec.
+  apply equiv_functor_sigma_id.
+  intros f.
+  srapply equiv_iff_hprop.
+  { intros p.
+    hnf.
+    rapply Trunc_ind.
+    srapply Coeq.Coeq.Coeq_ind.
+    2: intros; apply path_ishprop.
+    intros w; hnf.
+    induction w.
+    1: reflexivity.
+    simpl.
+    refine (_ @ _ @ _^).
+    1,3: exact (grp_homo_op (FreeGroup_rec _ _ _) _ _).
+    f_ap.
+    destruct a.
+    1: refine (p _ @ (grp_homo_unit _)^).
+    refine (grp_homo_inv _ _ @ ap _ _ @ (grp_homo_inv _ _)^).
+    refine (p _ @ (grp_homo_unit _)^). }
+  intros p r.
+  hnf in p.
+  pose (p' := p o freegroup_eta _).
+  clearbody p'; clear p.
+  specialize (p' (word_sing _ (inl r))).
+  refine (_ @ p').
+  clear p'.
+  symmetry.
+  refine (grp_homo_op _ _ _ @ _).
+  refine (_ @ right_identity _).
+  f_ap.
+Defined.
