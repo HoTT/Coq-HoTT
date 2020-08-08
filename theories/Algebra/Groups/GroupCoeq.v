@@ -44,8 +44,8 @@ Proof.
     symmetry.
     apply p. }
   { intros [k p] x.
-    pose proof (q1 := p (freeproduct_inl x)).
-    pose proof (q2 := p (freeproduct_inr x)).
+    assert (q1 := p (freeproduct_inl x)).
+    assert (q2 := p (freeproduct_inr x)).
     simpl in q1, q2.
     rewrite 2 right_identity in q1, q2.
     refine (q1^ @ q2). }
