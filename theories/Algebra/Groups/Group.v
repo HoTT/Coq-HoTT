@@ -357,6 +357,22 @@ Proof.
   repeat split; try exact _; by intros [].
 Defined.
 
+(** Map out of trivial group *)
+Definition grp_trivial_rec (G : Group) : GroupHomomorphism grp_trivial G.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fun _ => group_unit).
+  intros ??; symmetry; apply left_identity.
+Defined.
+
+(** Map into trivial group *)
+Definition grp_trivial_corec (G : Group) : GroupHomomorphism G grp_trivial.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fun _ => tt).
+  intros ??; symmetry; apply left_identity.
+Defined.
+
 (** * Direct product of group *)
 
 Definition grp_prod : Group -> Group -> Group.
@@ -498,10 +514,7 @@ Defined.
 Global Instance isinitial_grp_trivial : IsInitial grp_trivial.
 Proof.
   intro G.
-  snrefine (_;_).
-  { snrapply Build_GroupHomomorphism.
-    1: exact (fun _ => group_unit).
-    intros ??; symmetry; apply left_identity. }
+  exists (grp_trivial_rec _).
   intros g [].
   apply (grp_homo_unit g).
 Defined.
@@ -510,7 +523,7 @@ Global Instance contr_grp_homo_trivial_source `{Funext} G
   : Contr (GroupHomomorphism grp_trivial G).
 Proof.
   snrapply Build_Contr.
-  1: exact (pr1 (isinitial_grp_trivial _)).
+  1: exact (grp_trivial_rec _).
   intros g.
   rapply equiv_path_grouphomomorphism.
   intros [].
@@ -521,10 +534,7 @@ Defined.
 Global Instance isterminal_grp_trivial : IsTerminal grp_trivial.
 Proof.
   intro G.
-  snrefine (_;_).
-  { snrapply Build_GroupHomomorphism.
-    1: exact (fun _ => tt).
-    intros ??; symmetry; apply left_identity. }
+  exists (grp_trivial_corec _).
   intros g x.
   apply path_contr.
 Defined.
