@@ -716,6 +716,33 @@ Section FreeProduct.
 
 End FreeProduct.
 
+Definition FreeProduct (G H : Group) : Group
+  := AmalgamatedFreeProduct grp_trivial G H (grp_trivial_rec _) (grp_trivial_rec _).
 
+Definition freeproduct_inl {G H : Group} : GroupHomomorphism G (FreeProduct G H)
+  := amal_inl _ _ _ _ _.
 
+Definition freeproduct_inr {G H : Group} : GroupHomomorphism H (FreeProduct G H)
+  := amal_inr _ _ _ _ _.
 
+Definition FreeProduct_rec (G H K : Group)
+  (f : GroupHomomorphism G K) (g : GroupHomomorphism H K)
+  : GroupHomomorphism (FreeProduct G H) K.
+Proof.
+  snrapply (AmalgamatedFreeProduct_rec _ _ _ _ _ _ f g).
+  intros [].
+  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+Defined.
+
+Definition equiv_freeproduct_rec `{funext : Funext} (G H K : Group)
+  : (GroupHomomorphism G K) * (GroupHomomorphism H K)
+  <~> GroupHomomorphism (FreeProduct G H) K.
+Proof.
+  refine (equiv_amalgamatedfreeproduct_rec _ _ _ _ _  K oE _^-1).
+  refine (equiv_sigma_prod0 _ _ oE equiv_functor_sigma_id (fun _ => equiv_sigma_contr _)).
+  intros f.
+  rapply contr_forall.
+  intros []; apply contr_inhab_prop.
+  apply tr.
+  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+Defined.
