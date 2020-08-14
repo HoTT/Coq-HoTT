@@ -266,7 +266,7 @@ Proof.
   intros y p.
   destruct p.
   exact u.
-Defined.                                  
+Defined.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
@@ -671,6 +671,7 @@ Ltac path_via mid :=
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
+Register Empty as core.False.type.
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
@@ -708,7 +709,9 @@ Definition Unit_rect := Unit_ind.
 Hint Resolve tt : core.
 
 Register Unit as core.IDProp.type.
+Register Unit as core.True.type.
 Register tt as core.IDProp.idProp.
+Register tt as core.True.I.
 
 (** *** Pointed types *)
 
