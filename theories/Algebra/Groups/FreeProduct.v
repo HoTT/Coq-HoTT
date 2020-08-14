@@ -13,20 +13,21 @@ Local Open Scope mc_mult_scope.
 (** We wish to define the amalgamated free product of a span of group homomorphisms f : G -> H, g : G -> K as the following HIT:
 
   HIT M(f,g)
-   | eta : list (H + K) -> M(f,g)
+   | amal_eta : list (H + K) -> M(f,g)
    | mu_H : forall (x y : list (H + K)) (h1 h2 : H),
-      eta (x ++ [inl h1, inl h2] ++ y) = eta (x ++ [inl (h1 * h2)] ++ y)
+      amal_eta (x ++ [inl h1, inl h2] ++ y) = amal_eta (x ++ [inl (h1 * h2)] ++ y)
    | mu_K : forall (x y : list (H + K)) (k1 k2 : K),
-      eta (x ++ [inr k1, inr k2] ++ y) = eta (x ++ [inr (k1 * k2)] ++ y)
+      amal_eta (x ++ [inr k1, inr k2] ++ y) = amal_eta (x ++ [inr (k1 * k2)] ++ y)
    | tau : forall (x y : list (H + K)) (z : G),
-      eta (x ++ [inl (f z)] ++ y) = eta (x ++ [inr (g z)] ++ y)
+      amal_eta (x ++ [inl (f z)] ++ y) = amal_eta (x ++ [inr (g z)] ++ y)
    | omega_H : forall (x y : list (H + K)),
-      eta (x ++ [inl mon_unit] ++ y) = eta (x ++ y)
+      amal_eta (x ++ [inl mon_unit] ++ y) = amal_eta (x ++ y)
    | omega_K : forall (x y : list (H + K)),
-      eta (x ++ [inr mon_unit] ++ y) = eta (x ++ y).
+      amal_eta (x ++ [inr mon_unit] ++ y) = amal_eta (x ++ y).
 
   We will build this HIT up sucessively out of coequalizers. *)
 
+(** We will call M [amal_type] and prefix all the constructors with [amal_] (for amalgmated free product). *)
 
 (** Here are some operations on lists from the coq stdlib *)
 Section Fold_Left_Recursor.
@@ -189,7 +190,7 @@ Section FreeProduct.
   Defined.
 
   (** We can then define maps going into words consisting of the corresponding endpoints of the path constructors. *)
-  Definition map : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
+  Definition map1 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
   Proof.
     intros [[[[x|x]|x]|x]|x].
     + exact (m1 x).
@@ -199,7 +200,7 @@ Section FreeProduct.
     + exact (m5 x).
   Defined.
 
-  Definition map' : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
+  Definition map2 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
   Proof.
     intros [[[[x|x]|x]|x]|x].
     + exact (m1' x).
@@ -210,66 +211,66 @@ Section FreeProduct.
   Defined.
 
   (** Finally we can define our type as the 0-truncation of the coequalizer of these maps *)
-  Definition M : Type := Tr 0 (Coeq map map').
+  Definition amal_type : Type := Tr 0 (Coeq map1 map2).
 
   (** We can define the constructors *)
 
-  Definition eta : Words -> M := tr o coeq.
+  Definition amal_eta : Words -> amal_type := tr o coeq.
 
-  Definition mu_H (x y : Words) (h1 h2 : H)
-    : eta (x ++ (cons (inl h1) [inl h2]) ++ y) = eta (x ++ [inl (h1 * h2)] ++ y).
+  Definition amal_mu_H (x y : Words) (h1 h2 : H)
+    : amal_eta (x ++ (cons (inl h1) [inl h2]) ++ y) = amal_eta (x ++ [inl (h1 * h2)] ++ y).
   Proof.
-    unfold eta.
+    unfold amal_eta.
     apply path_Tr, tr.
     exact (cglue (inl (inl (inl (inl (x,h1,h2,y)))))).
   Defined.
 
-  Definition mu_K (x y : Words) (k1 k2 : K)
-    : eta (x ++ (cons (inr k1) [inr k2]) ++ y) = eta (x ++ [inr (k1 * k2)] ++ y).
+  Definition amal_mu_K (x y : Words) (k1 k2 : K)
+    : amal_eta (x ++ (cons (inr k1) [inr k2]) ++ y) = amal_eta (x ++ [inr (k1 * k2)] ++ y).
   Proof.
-    unfold eta.
+    unfold amal_eta.
     apply path_Tr, tr.
     exact (cglue (inl (inl (inl (inr (x,k1,k2,y)))))).
   Defined.
 
-  Definition tau (x y : Words) (z : G)
-    : eta (x ++ [inl (f z)] ++ y) = eta (x ++ [inr (g z)] ++ y).
+  Definition amal_tau (x y : Words) (z : G)
+    : amal_eta (x ++ [inl (f z)] ++ y) = amal_eta (x ++ [inr (g z)] ++ y).
   Proof.
-    unfold eta.
+    unfold amal_eta.
     apply path_Tr, tr.
     exact (cglue (inl (inl (inr (x,z,y))))).
   Defined.
 
-  Definition omega_H (x y : Words)
-    : eta (x ++ [inl mon_unit] ++ y) = eta (x ++ y).
+  Definition amal_omega_H (x y : Words)
+    : amal_eta (x ++ [inl mon_unit] ++ y) = amal_eta (x ++ y).
   Proof.
-    unfold eta.
+    unfold amal_eta.
     apply path_Tr, tr.
     exact (cglue (inl (inr (x,y)))).
   Defined.
 
-  Definition omega_K (x y : Words)
-    : eta (x ++ [inr mon_unit] ++ y) = eta (x ++ y).
+  Definition amal_omega_K (x y : Words)
+    : amal_eta (x ++ [inr mon_unit] ++ y) = amal_eta (x ++ y).
   Proof.
-    unfold eta.
+    unfold amal_eta.
     apply path_Tr, tr.
     exact (cglue (inr (x,y))).
   Defined.
 
   (** Now we can derive the dependent eliminator *)
 
-  Definition M_ind (P : M -> Type) `{forall x, IsHSet (P x)}
-    (e : forall w, P (eta w))
+  Definition amal_type_ind (P : amal_type -> Type) `{forall x, IsHSet (P x)}
+    (e : forall w, P (amal_eta w))
     (mh : forall (x y : Words) (h1 h2 : H),
-      DPath P (mu_H x y h1 h2) (e (x ++ (inl h1 :: [inl h2]) ++ y)) (e (x ++ [inl (h1 * h2)] ++ y)))
+      DPath P (amal_mu_H x y h1 h2) (e (x ++ (inl h1 :: [inl h2]) ++ y)) (e (x ++ [inl (h1 * h2)] ++ y)))
     (mk : forall (x y : Words) (k1 k2 : K),
-      DPath P (mu_K x y k1 k2) (e (x ++ (inr k1 :: [inr k2]) ++ y)) (e (x ++ [inr (k1 * k2)] ++ y)))
+      DPath P (amal_mu_K x y k1 k2) (e (x ++ (inr k1 :: [inr k2]) ++ y)) (e (x ++ [inr (k1 * k2)] ++ y)))
     (t : forall (x y : Words) (z : G),
-      DPath P (tau x y z) (e (x ++ [inl (f z)] ++ y)) (e (x ++ [inr (g z)] ++ y)))
+      DPath P (amal_tau x y z) (e (x ++ [inl (f z)] ++ y)) (e (x ++ [inr (g z)] ++ y)))
     (oh : forall (x y : Words),
-      DPath P (omega_H x y) (e (x ++ [inl mon_unit] ++ y)) (e (x ++ y)))
+      DPath P (amal_omega_H x y) (e (x ++ [inl mon_unit] ++ y)) (e (x ++ y)))
     (ok : forall (x y : Words),
-      DPath P (omega_K x y) (e (x ++ [inr mon_unit] ++ y)) (e (x ++ y)))
+      DPath P (amal_omega_K x y) (e (x ++ [inr mon_unit] ++ y)) (e (x ++ y)))
     : forall x, P x.
   Proof.
     snrapply Trunc_ind; [exact _|].
@@ -295,17 +296,17 @@ Section FreeProduct.
       exact (ok x y).
   Defined.
 
-  Definition M_ind_hprop (P : M -> Type) `{forall x, IsHProp (P x)}
-    (e : forall w, P (eta w))
+  Definition amal_type_ind_hprop (P : amal_type -> Type) `{forall x, IsHProp (P x)}
+    (e : forall w, P (amal_eta w))
     : forall x, P x.
   Proof.
-    srapply M_ind.
+    srapply amal_type_ind.
     1: exact e.
     all: intros; apply dp_path_transport, path_ishprop.
   Defined.
 
   (** From which we can derive the non-dependent eliminator / recursion principle *)
-  Definition M_rec (P : Type) `{IsHSet P} (e : Words -> P)
+  Definition amal_type_rec (P : Type) `{IsHSet P} (e : Words -> P)
     (eh : forall (x y : Words) (h1 h2 : H),
       e (x ++ (cons (inl h1) [inl h2]) ++ y) = e (x ++ [inl (h1 * h2)] ++ y))
     (ek : forall (x y : Words) (k1 k2 : K),
@@ -314,9 +315,9 @@ Section FreeProduct.
       e (x ++ [inl (f z)] ++ y) = e (x ++ [inr (g z)] ++ y))
     (oh : forall (x y : Words), e (x ++ [inl mon_unit] ++ y) = e (x ++ y))
     (ok : forall (x y : Words), e (x ++ [inr mon_unit] ++ y) = e (x ++ y))
-    : M -> P.
+    : amal_type -> P.
   Proof.
-    snrapply M_ind.
+    snrapply amal_type_ind.
     1: exact _.
     1: exact e.
     all: intros; apply dp_const.
@@ -330,95 +331,95 @@ Section FreeProduct.
   (** Now for the group structure *)
 
   (** The group operation is concatenation of the underlying list. Most of the work is spent showing that it respects the path constructors. *)
-  Global Instance sgop_m : SgOp M.
+  Global Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
-    srapply M_rec; intros x; revert y.
-    { srapply M_rec; intros y.
-      1: exact (eta (x ++ y)).
+    srapply amal_type_rec; intros x; revert y.
+    { srapply amal_type_rec; intros y.
+      1: exact (amal_eta (x ++ y)).
       { intros z h1 h2.
-        refine (ap eta _ @ _ @ ap eta _^).
+        refine (ap amal_eta _ @ _ @ ap amal_eta _^).
         1,3: apply word_concat_w_ww.
-        rapply mu_H. }
+        rapply amal_mu_H. }
       { intros z k1 k2.
-        refine (ap eta _ @ _ @ ap eta _^).
+        refine (ap amal_eta _ @ _ @ ap amal_eta _^).
         1,3: apply word_concat_w_ww.
-        rapply mu_K. }
+        rapply amal_mu_K. }
       { intros w z.
-        refine (ap eta _ @ _ @ ap eta _^).
+        refine (ap amal_eta _ @ _ @ ap amal_eta _^).
         1,3: apply word_concat_w_ww.
-        apply tau. }
+        apply amal_tau. }
       { intros z.
-        refine (ap eta _ @ _ @ ap eta _^).
+        refine (ap amal_eta _ @ _ @ ap amal_eta _^).
         1,3: apply word_concat_w_ww.
-        apply omega_H. }
+        apply amal_omega_H. }
       { intros z.
-        refine (ap eta _ @ _ @ ap eta _^).
+        refine (ap amal_eta _ @ _ @ ap amal_eta _^).
         1,3: apply word_concat_w_ww.
-        apply omega_K. } }
+        apply amal_omega_K. } }
     { intros r y h1 h2; revert r.
-      rapply M_ind_hprop; cbn.
+      rapply amal_type_ind_hprop; cbn.
       intros z;
-      change (eta ((x ++ ((inl h1 :: [inl h2]) ++ y)) ++ z)
-        = eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
-      refine (ap eta _^ @ _ @ ap eta _).
+      change (amal_eta ((x ++ ((inl h1 :: [inl h2]) ++ y)) ++ z)
+        = amal_eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      refine (ap eta (ap (app x) _)^ @ _ @ ap eta (ap (app x) _)).
+      refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
       1,3: apply word_concat_w_ww.
-      apply mu_H. }
+      apply amal_mu_H. }
     { intros r y k1 k2; revert r.
-      rapply M_ind_hprop; cbn.
+      rapply amal_type_ind_hprop; cbn.
       intros z;
-      change (eta ((x ++ ((inr k1 :: [inr k2]) ++ y)) ++ z)
-        = eta ((x ++ [inr (k1 * k2)] ++ y) ++ z)).
-      refine (ap eta _^ @ _ @ ap eta _).
+      change (amal_eta ((x ++ ((inr k1 :: [inr k2]) ++ y)) ++ z)
+        = amal_eta ((x ++ [inr (k1 * k2)] ++ y) ++ z)).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      refine (ap eta (ap (app x) _)^ @ _ @ ap eta (ap (app x) _)).
+      refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
       1,3: apply word_concat_w_ww.
-      apply mu_K. }
+      apply amal_mu_K. }
     { intros r y z; revert r.
-      rapply M_ind_hprop; cbn.
+      rapply amal_type_ind_hprop; cbn.
       intros w;
-      change (eta ((x ++ [inl (f z)] ++ y) ++ w)
-        = eta ((x ++ [inr (g z)] ++ y) ++ w)).
-      refine (ap eta _^ @ _ @ ap eta _).
+      change (amal_eta ((x ++ [inl (f z)] ++ y) ++ w)
+        = amal_eta ((x ++ [inr (g z)] ++ y) ++ w)).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      refine (ap eta (ap (app x) _)^ @ _ @ ap eta (ap (app x) _)).
+      refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
       1,3: apply word_concat_w_ww.
-      apply tau. }
+      apply amal_tau. }
     { intros r z; revert r.
-      rapply M_ind_hprop; cbn.
+      rapply amal_type_ind_hprop; cbn.
       intros w;
-      change (eta ((x ++ [inl mon_unit] ++ z) ++ w) = eta ((x ++ z) ++ w)).
-      refine (ap eta _^ @ _ @ ap eta _).
+      change (amal_eta ((x ++ [inl mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      refine (ap eta (ap (app x) _)^ @ _).
+      refine (ap amal_eta (ap (app x) _)^ @ _).
       1: apply word_concat_w_ww.
-      apply omega_H. }
+      apply amal_omega_H. }
     { intros r z; revert r.
-      rapply M_ind_hprop; cbn.
+      rapply amal_type_ind_hprop; cbn.
       intros w;
-      change (eta ((x ++ [inr mon_unit] ++ z) ++ w) = eta ((x ++ z) ++ w)).
-      refine (ap eta _^ @ _ @ ap eta _).
+      change (amal_eta ((x ++ [inr mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      refine (ap eta (ap (app x) _)^ @ _).
+      refine (ap amal_eta (ap (app x) _)^ @ _).
       1: apply word_concat_w_ww.
-      apply omega_K. }
+      apply amal_omega_K. }
   Defined.
 
   (** The identity element is the empty list *)
-  Global Instance monunit_m : MonUnit M.
+  Global Instance monunit_amal_type : MonUnit amal_type.
   Proof.
-    exact (eta nil).
+    exact (amal_eta nil).
   Defined.
 
-  Global Instance negate_m : Negate M.
+  Global Instance negate_amal_type : Negate amal_type.
   Proof.
-    srapply M_rec.
+    srapply amal_type_rec.
     { intros w.
-      exact (eta (word_inverse w)). }
+      exact (amal_eta (word_inverse w)). }
     { hnf; intros x y h1 h2.
-      refine (ap eta _ @ _ @ ap eta _^).
+      refine (ap amal_eta _ @ _ @ ap amal_eta _^).
       1,3: refine (word_inverse_ww _ _ @ ap (fun s => s ++ _) _).
       1: apply word_inverse_ww.
       { refine (word_inverse_ww _ _ @ _).
@@ -427,11 +428,11 @@ Section FreeProduct.
         apply ap.
         apply negate_sg_op. }
       simpl.
-      refine (ap eta _^ @ _ @ ap eta _).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      apply mu_H. }
+      apply amal_mu_H. }
     { hnf; intros x y k1 k2.
-      refine (ap eta _ @ _ @ ap eta _^).
+      refine (ap amal_eta _ @ _ @ ap amal_eta _^).
       1,3: refine (word_inverse_ww _ _ @ ap (fun s => s ++ _) _).
       1: apply word_inverse_ww.
       { refine (word_inverse_ww _ _ @ _).
@@ -440,145 +441,145 @@ Section FreeProduct.
         apply ap.
         apply negate_sg_op. }
       simpl.
-      refine (ap eta _^ @ _ @ ap eta _).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      apply mu_K. }
+      apply amal_mu_K. }
     { hnf; intros x y z.
-      refine (ap eta _ @ _ @ ap eta _^).
+      refine (ap amal_eta _ @ _ @ ap amal_eta _^).
       1,3: refine (word_inverse_ww _ _ @ ap (fun s => s ++ _) _).
       1,2: cbn; refine (ap _ _).
       1,2: rapply (ap (fun s => [s])).
       1,2: apply ap.
       1,2: symmetry; apply grp_homo_inv.
-      refine (ap eta _^ @ _ @ ap eta _).
+      refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply word_concat_w_ww.
-      apply tau. }
+      apply amal_tau. }
     { hnf; intros x z.
-      refine (ap eta _ @ _ @ ap eta _^).
+      refine (ap amal_eta _ @ _ @ ap amal_eta _^).
       1,3: apply word_inverse_ww.
-      refine (ap eta _ @ _).
+      refine (ap amal_eta _ @ _).
       { refine (ap (fun s => s ++ _) _).
         apply word_inverse_ww. }
-      refine (ap eta _^ @ _).
+      refine (ap amal_eta _^ @ _).
       1: apply word_concat_w_ww.
       simpl.
       rewrite negate_mon_unit.
-      apply omega_H. }
+      apply amal_omega_H. }
     { hnf; intros x z.
-      refine (ap eta _ @ _ @ ap eta _^).
+      refine (ap amal_eta _ @ _ @ ap amal_eta _^).
       1,3: apply word_inverse_ww.
-      refine (ap eta _ @ _).
+      refine (ap amal_eta _ @ _).
       { refine (ap (fun s => s ++ _) _).
         apply word_inverse_ww. }
-      refine (ap eta _^ @ _).
+      refine (ap amal_eta _^ @ _).
       1: apply word_concat_w_ww.
       simpl.
       rewrite negate_mon_unit.
-      apply omega_K. }
+      apply amal_omega_K. }
   Defined.
 
   Global Instance associative_sgop_m : Associative sg_op.
   Proof.
     intros x y.
-    rapply M_ind_hprop; intro z; revert y.
-    rapply M_ind_hprop; intro y; revert x.
-    rapply M_ind_hprop; intro x.
-    cbn; nrapply (ap eta).
+    rapply amal_type_ind_hprop; intro z; revert y.
+    rapply amal_type_ind_hprop; intro y; revert x.
+    rapply amal_type_ind_hprop; intro x.
+    cbn; nrapply (ap amal_eta).
     rapply word_concat_w_ww.
   Defined.
 
-  Global Instance leftidentity_sgop_m : LeftIdentity sg_op mon_unit.
+  Global Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
   Proof.
-    rapply M_ind_hprop; intro x.
+    rapply amal_type_ind_hprop; intro x.
     reflexivity.
   Defined.
 
-  Global Instance rightidentity_sgop_m : RightIdentity sg_op mon_unit.
+  Global Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
-    rapply M_ind_hprop; intro x.
-    cbn; nrapply (ap eta).
+    rapply amal_type_ind_hprop; intro x.
+    cbn; nrapply (ap amal_eta).
     apply word_concat_w_nil.
   Defined.
 
-  Lemma eta_word_concat_Vw (x : Words) : eta (word_inverse x ++ x) = mon_unit.
+  Lemma amal_eta_word_concat_Vw (x : Words) : amal_eta (word_inverse x ++ x) = mon_unit.
   Proof.
     induction x as [|x xs].
     1: reflexivity.
     destruct x as [h|k].
-    + change (eta (word_inverse ([inl h] ++ xs) ++ [inl h] ++ xs) = mon_unit).
+    + change (amal_eta (word_inverse ([inl h] ++ xs) ++ [inl h] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
       rewrite <- word_concat_w_ww.
-      refine (mu_H _ _ _ _ @ _).
+      refine (amal_mu_H _ _ _ _ @ _).
       rewrite left_inverse.
-      rewrite omega_H.
+      rewrite amal_omega_H.
       apply IHxs.
-    + change (eta (word_inverse ([inr k] ++ xs) ++ [inr k] ++ xs) = mon_unit).
+    + change (amal_eta (word_inverse ([inr k] ++ xs) ++ [inr k] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
       rewrite <- word_concat_w_ww.
-      refine (mu_K _ _ _ _ @ _).
+      refine (amal_mu_K _ _ _ _ @ _).
       rewrite left_inverse.
-      rewrite omega_K.
+      rewrite amal_omega_K.
       apply IHxs.
   Defined.
 
-  Lemma eta_word_concat_wV (x : Words) : eta (x ++ word_inverse x) = mon_unit.
+  Lemma amal_eta_word_concat_wV (x : Words) : amal_eta (x ++ word_inverse x) = mon_unit.
   Proof.
     induction x as [|x xs].
     1: reflexivity.
     destruct x as [h|k].
     + cbn.
       rewrite word_concat_w_ww.
-      change (eta ([inl h]) * eta ((xs ++ word_inverse xs)) * eta ([inl (- h)]) = mon_unit).
+      change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl (- h)]) = mon_unit).
       rewrite IHxs.
-      rewrite rightidentity_sgop_m.
+      rewrite rightidentity_sgop_amal_type.
       cbn.
       rewrite <- (word_concat_w_nil (cons _ _)).
-      change (eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
+      change (amal_eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
-      change (eta (nil ++ [inl h] ++ [inl (- h)] ++ nil) = mon_unit).
-      refine (mu_H _ _ _ _ @ _).
+      change (amal_eta (nil ++ [inl h] ++ [inl (- h)] ++ nil) = mon_unit).
+      refine (amal_mu_H _ _ _ _ @ _).
       refine (_ @ _).
       { apply ap, ap.
         rapply (ap (fun x => x ++ _)).
         rapply (ap (fun x => [x])).
         apply ap.
         apply right_inverse. }
-      apply omega_H.
+      apply amal_omega_H.
     +  cbn.
       rewrite word_concat_w_ww.
-      change (eta ([inr k]) * eta ((xs ++ word_inverse xs)) * eta ([inr (-k)]) = mon_unit).
+      change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr (-k)]) = mon_unit).
       rewrite IHxs.
-      rewrite rightidentity_sgop_m.
+      rewrite rightidentity_sgop_amal_type.
       cbn.
       rewrite <- (word_concat_w_nil (cons _ _)).
-      change (eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
+      change (amal_eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
-      change (eta (nil ++ [inr k] ++ [inr (- k)] ++ nil) = mon_unit).
-      refine (mu_K _ _ _ _ @ _).
+      change (amal_eta (nil ++ [inr k] ++ [inr (- k)] ++ nil) = mon_unit).
+      refine (amal_mu_K _ _ _ _ @ _).
       refine (_ @ _).
       { apply ap, ap.
         rapply (ap (fun x => x ++ _)).
         rapply (ap (fun x => [x])).
         apply ap.
         apply right_inverse. }
-      apply omega_K.
+      apply amal_omega_K.
   Defined.
 
-  Global Instance leftinverse_sgop_m : LeftInverse sg_op negate mon_unit.
+  Global Instance leftinverse_sgop_amal_type : LeftInverse sg_op negate mon_unit.
   Proof.
-    rapply M_ind_hprop; intro x.
-    apply eta_word_concat_Vw.
+    rapply amal_type_ind_hprop; intro x.
+    apply amal_eta_word_concat_Vw.
   Defined.
 
-  Global Instance rightinverse_sgop_m : RightInverse sg_op negate mon_unit.
+  Global Instance rightinverse_sgop_amal_type : RightInverse sg_op negate mon_unit.
   Proof.
-    rapply M_ind_hprop; intro x.
-    apply eta_word_concat_wV.
+    rapply amal_type_ind_hprop; intro x.
+    apply amal_eta_word_concat_wV.
   Defined.
 
   Definition AmalgamatedFreeProduct : Group.
   Proof.
-    snrapply (Build_Group M); repeat split; exact _.
+    snrapply (Build_Group amal_type); repeat split; exact _.
   Defined.
 
   (** Using foldr. It's important that we use foldr as foldl is near impossible to reason about. *)
@@ -587,7 +588,7 @@ Section FreeProduct.
     (p : h o f == k o g)
     : AmalgamatedFreeProduct -> X.
   Proof.
-    srapply M_rec.
+    srapply amal_type_rec.
     { intro w.
       refine (fold_right _ _ _ _ w).
       { intros [l|r] x.
@@ -628,8 +629,8 @@ Section FreeProduct.
     (p : h o f == k o g)
     : IsSemiGroupPreserving (AmalgamatedFreeProduct_rec' X h k p).
   Proof.
-    intros x; srapply M_ind_hprop; intro y; revert x;
-    srapply M_ind_hprop; intro x; simpl.
+    intros x; srapply amal_type_ind_hprop; intro y; revert x;
+    srapply amal_type_ind_hprop; intro x; simpl.
     rewrite fold_right_app.
     set (s := (fold_right X (H + K)
      (fun X0 : H + K => match X0 with
@@ -657,10 +658,10 @@ Section FreeProduct.
   Proof.
     snrapply Build_GroupHomomorphism.
     { intro x.
-      exact (eta [inl x]). }
+      exact (amal_eta [inl x]). }
     intros x y.
     rewrite <- (word_concat_w_nil [inl (x * y)]).
-    rewrite <- (mu_H nil nil x y).
+    rewrite <- (amal_mu_H nil nil x y).
     rewrite word_concat_w_nil.
     reflexivity.
   Defined.
@@ -669,10 +670,10 @@ Section FreeProduct.
   Proof.
     snrapply Build_GroupHomomorphism.
     { intro x.
-      exact (eta [inr x]). }
+      exact (amal_eta [inr x]). }
     intros x y.
     rewrite <- (word_concat_w_nil [inr (x * y)]).
-    rewrite <- (mu_K nil nil x y).
+    rewrite <- (amal_mu_K nil nil x y).
     rewrite word_concat_w_nil.
     reflexivity.
   Defined.
@@ -691,17 +692,17 @@ Section FreeProduct.
       simpl.
       rewrite <- (word_concat_w_nil [inl (f x)]).
       rewrite <- (word_concat_w_nil [inr (g x)]).
-      apply (tau nil nil x). }
+      apply (amal_tau nil nil x). }
     { intros r.
       apply equiv_path_grouphomomorphism.
-      srapply M_ind_hprop.
+      srapply amal_type_ind_hprop.
       intro x.
       induction x as [|a x].
       1: symmetry; apply (grp_homo_unit r).
       simpl in *.
       rewrite IHx.
       destruct a; symmetry;
-      rapply (grp_homo_op r (eta [_]) (eta x)). }
+      rapply (grp_homo_op r (amal_eta [_]) (amal_eta x)). }
     intro hkp.
     simpl.
     rapply (equiv_ap' (equiv_sigma_prod
