@@ -227,11 +227,13 @@ Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p.
 
 Register idpath as core.identity.refl.
+Register idpath as core.eq.refl.
 
 (* See comment above about the tactic [induction]. *)
 Definition paths_rect := paths_ind.
 
 Register paths_rect as core.identity.ind.
+Register paths_rect as core.eq.ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
@@ -244,6 +246,7 @@ Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
 Proof. rewrite -> H. exact X. Defined.
 
 Register paths as core.identity.type.
+Register paths as core.eq.type.
 
 Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
@@ -266,7 +269,7 @@ Proof.
   intros y p.
   destruct p.
   exact u.
-Defined.                                  
+Defined.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
@@ -280,6 +283,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
 Register inverse as core.identity.sym.
+Register inverse as core.eq.sym.
 
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
@@ -323,6 +327,7 @@ Global Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 Arguments transitive_paths / .
 
 Register concat as core.identity.trans.
+Register concat as core.eq.trans.
 
 (** Note that you can use the Coq tactics [reflexivity], [transitivity], [etransitivity], and [symmetry] when working with paths; we've redefined them above to use typeclasses and to unfold the instances so you get proof terms with [concat] and [inverse]. *)
 
@@ -368,6 +373,7 @@ Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
 Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
 
 Register ap as core.identity.congr.
+Register ap as core.eq.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
 
