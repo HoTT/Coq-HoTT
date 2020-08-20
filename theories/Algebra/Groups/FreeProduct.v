@@ -35,17 +35,17 @@ Section FreeProduct.
   Context (G H K : Group)
     (f : GroupHomomorphism G H) (g : GroupHomomorphism G K).
 
-  Definition Words : Type := list (H + K).
+  Local Definition Words : Type := list (H + K).
 
-  Notation "[ x ]" := (cons x nil).
+  Local Notation "[ x ]" := (cons x nil).
 
-  Definition word_concat_w_nil (x : Words) : x ++ nil = x.
+  Local Definition word_concat_w_nil (x : Words) : x ++ nil = x.
   Proof.
     induction x; trivial.
     cbn; f_ap.
   Defined.
 
-  Definition word_concat_w_ww (x y z : Words) : x ++ (y ++ z) = (x ++ y) ++ z.
+  Local Definition word_concat_w_ww (x y z : Words) : x ++ (y ++ z) = (x ++ y) ++ z.
   Proof.
     revert x z.
     induction y; intros x z.
@@ -58,7 +58,7 @@ Section FreeProduct.
     apply IHx, IHy.
   Defined.
 
-  Fixpoint word_inverse (x : Words) : Words.
+  Local Fixpoint word_inverse (x : Words) : Words.
   Proof.
     destruct x as [|x xs].
     1: exact nil.
@@ -68,7 +68,7 @@ Section FreeProduct.
   Defined.
 
   (** Inversion changes order of concatenation. *)
-  Definition word_inverse_ww (x y : Words)
+  Local Definition word_inverse_ww (x y : Words)
     : word_inverse (x ++ y) = word_inverse y ++ word_inverse x.
   Proof.
     induction x as [|x xs].
@@ -82,79 +82,79 @@ Section FreeProduct.
   (** There are five source types for the path constructors. We will construct this HIT as the colimit of five forks going into [Words]. We can bundle up this colimit as a single coequalizer. *)
 
   (** Source types of path constructors *)
-  Definition pc1 : Type := Words * H * H * Words.
-  Definition pc2 : Type := Words * K * K * Words.
-  Definition pc3 : Type := Words * G * Words.
-  Definition pc4 : Type := Words * Words.
-  Definition pc5 : Type := Words * Words.
+  Local Definition pc1 : Type := Words * H * H * Words.
+  Local Definition pc2 : Type := Words * K * K * Words.
+  Local Definition pc3 : Type := Words * G * Words.
+  Local Definition pc4 : Type := Words * Words.
+  Local Definition pc5 : Type := Words * Words.
 
   (** End points of the first path constructor *)
-  Definition m1 : pc1 -> Words.
+  Local Definition m1 : pc1 -> Words.
   Proof.
     intros [[[x h1] h2] y].
     exact (x ++ (inl h1 :: [inl h2]) ++ y).
   Defined.
 
-  Definition m1' : pc1 -> Words.
+  Local Definition m1' : pc1 -> Words.
   Proof.
     intros [[[x h1] h2] y].
     exact (x ++ [inl (h1 * h2)] ++ y).
   Defined.
 
   (** End points of the second path construct *)
-  Definition m2 : pc2 -> Words.
+  Local Definition m2 : pc2 -> Words.
   Proof.
     intros [[[x k1] k2] y].
     exact (x ++ (inr k1 :: [inr k2]) ++ y).
   Defined.
 
-  Definition m2' : pc2 -> Words.
+  Local Definition m2' : pc2 -> Words.
   Proof.
     intros [[[x k1] k2] y].
     exact (x ++ [inr (k1 * k2)] ++ y).
   Defined.
 
   (** End points of the third path constructor *)
-  Definition m3 : pc3 -> Words.
+  Local Definition m3 : pc3 -> Words.
   Proof.
     intros [[x z] y].
     exact (x ++ [inl (f z)] ++ y).
   Defined.
 
-  Definition m3' : pc3 -> Words.
+  Local Definition m3' : pc3 -> Words.
   Proof.
     intros [[x z] y].
     exact (x ++ [inr (g z)] ++ y).
   Defined.
 
   (** End points of the fourth path constructor *)
-  Definition m4 : pc4 -> Words.
+  Local Definition m4 : pc4 -> Words.
   Proof.
     intros [x y].
     exact (x ++ [inl mon_unit] ++ y).
   Defined.
 
-  Definition m4' : pc4 -> Words.
+  Local Definition m4' : pc4 -> Words.
   Proof.
     intros [x y].
     exact (x ++ y).
   Defined.
 
   (** End points of the fifth path constructor *)
-  Definition m5 : pc5 -> Words.
+  Local Definition m5 : pc5 -> Words.
   Proof.
     intros [x y].
     exact (x ++ [inr mon_unit] ++ y).
   Defined.
 
-  Definition m5' : pc5 -> Words.
+  Local Definition m5' : pc5 -> Words.
   Proof.
     intros [x y].
     exact (x ++ y).
   Defined.
 
   (** We can then define maps going into words consisting of the corresponding endpoints of the path constructors. *)
-  Definition map1 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
+  Local Definition map1 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
   Proof.
     intros [[[[x|x]|x]|x]|x].
     + exact (m1 x).
@@ -164,7 +164,7 @@ Section FreeProduct.
     + exact (m5 x).
   Defined.
 
-  Definition map2 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
+  Local Definition map2 : pc1 + pc2 + pc3 + pc4 + pc5 -> Words.
   Proof.
     intros [[[[x|x]|x]|x]|x].
     + exact (m1' x).
