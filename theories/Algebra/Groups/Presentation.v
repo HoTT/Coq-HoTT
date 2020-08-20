@@ -25,7 +25,7 @@ Proof.
   intros [X I R].
   exact (GroupCoeq
     (FreeGroup_rec I (FreeGroup X) R)
-    (FreeGroup_rec I (FreeGroup X) (fun x => mon_unit))).
+    (FreeGroup_rec I (FreeGroup X) (fun x => group_unit))).
 Defined.
 
 (** A group [G] has a presentation if there exists a group presentation whose presented group is isomorphic to [G]. *)
