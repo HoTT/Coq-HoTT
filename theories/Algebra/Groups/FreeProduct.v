@@ -1,8 +1,9 @@
 Require Import Basics Types.
-Require Import Algebra.Groups.Group.
 Require Import Cubical.
-Require Import Colimits.Pushout.
 Require Import HIT.Coeq.
+Require Import Spaces.List.
+Require Import Colimits.Pushout.
+Require Import Algebra.Groups.Group.
 
 Local Open Scope list_scope.
 Local Open Scope mc_scope.
@@ -28,43 +29,6 @@ Local Open Scope mc_mult_scope.
   We will build this HIT up sucessively out of coequalizers. *)
 
 (** We will call M [amal_type] and prefix all the constructors with [amal_] (for amalgmated free product). *)
-
-(** Here are some operations on lists from the coq stdlib *)
-Section Fold_Left_Recursor.
-  Variables (A : Type) (B : Type).
-  Variable f : A -> B -> A.
-
-  Fixpoint fold_left (l : list B) (a0 : A) : A :=
-    match l with
-      | nil => a0
-      | cons b t => fold_left t (f a0 b)
-    end.
-
-  Lemma fold_left_app : forall (l l' : list B) (i : A),
-    fold_left (l ++ l') i = fold_left l' (fold_left l i).
-  Proof.
-    induction l; simpl; auto.
-  Qed.
-
-End Fold_Left_Recursor.
-
-Section Fold_Right_Recursor.
-  Variables (A : Type) (B : Type).
-  Variable f : B -> A -> A.
-
-  Fixpoint fold_right (a0 : A) (l:list B) : A :=
-    match l with
-      | nil => a0
-      | cons b t => f b (fold_right a0 t)
-    end.
-
-  Lemma fold_right_app : forall l l' i,
-    fold_right i (l++l') = fold_right (fold_right i l') l.
-  Proof.
-    induction l; simpl; auto.
-  Qed.
-
-End Fold_Right_Recursor.
 
 Section FreeProduct.
 

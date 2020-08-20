@@ -103,6 +103,7 @@ theories/Cubical/DPathCube.v
 #
 
 theories/Spaces/Nat.v
+theories/Spaces/List.v
 theories/Spaces/Cantor.v
 theories/Spaces/Finite.v
 theories/Spaces/Universe.v
