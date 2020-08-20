@@ -17,7 +17,7 @@ Record GroupPresentation := {
   gp_relators : gp_rel_index -> FreeGroup gp_generators;
 }.
 
-(** Note: A relator is a relation in the form of "f(x) = 1", any relation "f(x) = g(x)" can become a relator "f(x)g(x)^-1 = 1". *)
+(** Note: A relator is a relation in the form of "w = 1", any relation "w = v" can become a relator "wv^-1 = 1" for words v and w. *)
 
 (** Given the data of a group presentation we can construct the group. This is sometimes called the presented group. *)
 Definition group_gp : GroupPresentation -> Group.
