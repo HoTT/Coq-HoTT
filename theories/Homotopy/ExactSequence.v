@@ -193,7 +193,7 @@ Proof.
   rewrite (concat_A1p (eisretr k)), concat_V_pp. reflexivity.
 Defined.
 
-(** When [n] is the identity modality [oo], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an purely-exact sequence. *)
+(** When [n] is the identity modality [purely], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an purely-exact sequence. *)
 
 Definition iscomplex_pfib {X Y} (f : X ->* Y)
   : IsComplex (pfib f) f.
