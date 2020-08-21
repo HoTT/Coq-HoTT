@@ -313,3 +313,17 @@ Proof.
   cbn; intros ???.
   apply path_unit.
 Defined.
+
+(** Every group is a subgroup of itself *)
+(** We make this a low priority instance so it doesn't get picked up before other subgroup instances. *)
+Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
+  := Build_IsSubgroup _ _ grp_homo_id _.
+
+(** Trivial subgroup (actual trivial group) *)
+Definition trivial_subgroup {G} : Subgroup G
+  := Build_Subgroup G grp_trivial _.
+
+(** The other trivial subgroup (the actual group itself) *)
+Definition trivial_subgroup' {G} : Subgroup G
+  := Build_Subgroup G G _.
+
