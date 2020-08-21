@@ -143,11 +143,10 @@ Proof.
   apply right_identity.
 Defined.
 
-(** TODO: why is this taking so long? *)
 (** First isomorphism theorem for commutative rings *)
 Definition rng_first_iso `{Funext} {A B : CRing} (phi : A $-> B)
   : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
- Proof.
+Proof.
   snrapply Build_CRingIsomorphism''.
   { etransitivity.
     2: exact (grp_first_iso phi).

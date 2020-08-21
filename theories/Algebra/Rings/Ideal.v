@@ -23,23 +23,6 @@ Record Ideal (R : CRing) := {
 Coercion ideal_subgroup : Ideal >-> Subgroup.
 Global Existing Instances ideal_isideal.
 
-(** TODO: Move somewhere more useful *)
-Global Instance isinj_idmap A : @IsInjective A A idmap
-  := fun x y => idmap.
-
-(** TODO: Move to Subgroup.v *)
-Global Instance issubgroup_group {G : Group} : IsSubgroup G G
-  := Build_IsSubgroup _ _ grp_homo_id _.
-
-(** TODO: Move to Subgroup.v *)
-Definition trivial_subgroup {G} : Subgroup G
-  := Build_Subgroup G abgroup_trivial _.
-
-(** TODO: Move to Subgroup.v *)
-(** TODO: Rename? *)
-Definition trivial_subgroup' {G} : Subgroup G
-  := Build_Subgroup G G _.
-
 Section Examples.
 
   Context (R : CRing).
@@ -75,9 +58,7 @@ Section Examples.
     := Build_Ideal R _ isideal_trivial_subgroup'.
 
 (** TODO: Intersection of ideals *)
-
 (** TODO: Sum of ideals *)
-
 (** TODO: Product of ideals *)
 
 End Examples.

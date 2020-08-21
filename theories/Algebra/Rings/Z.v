@@ -4,6 +4,8 @@ Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.
 
+(** In this file we define the ring Z of integers. The underlying abelian group is already defined in Algebra.AbGroups.Z. Many of the ring axioms are proven and made opaque. Typically, everything inside IsRing can be opaque since we will only ever rewrite along them and they are hprops. This also means we don't have to be too careful with how our proofs are structured. This allows us to freely use tactics such as rewrite. It would perhaps be possible to shorten many of the proofs here, but it would probably be unneeded due to the opacicty. *)
+
 (** The ring of integers *)
 Definition cring_Z : CRing.
 Proof.
@@ -37,7 +39,6 @@ Definition cring_int_mul (R : CRing) (z : cring_Z) : R
      | pos z => pos_peano_rec R 1 (fun n nr => 1 + nr) z
      end.
 
-(** TODO: clean up *)
 (** Preservation of + *)
 Global Instance issemigrouppreserving_cring_int_mul_plus (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_plus) (Bop:=cring_plus)
@@ -155,12 +156,8 @@ Proof.
   change (cring_int_mul R (pos (pos_succ x * y)%pos)
     = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
   rewrite pos_mul_succ_l.
-  change (cring_int_mul R ((pos (x * y)%pos : cring_Z) + pos y)
-    = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
   refine (issemigrouppreserving_cring_int_mul_plus
     R (pos (x * y)%pos) (pos y) @ _).
-  change (cring_int_mul R (pos (x * y)%pos) + cring_int_mul R (pos y)
-    = cring_int_mul R (pos (pos_succ x)) * cring_int_mul R (pos y)).
   rewrite IHx.
   transitivity ((1 + cring_int_mul R (pos x)) * cring_int_mul R (pos y)).
   2: simpl; by rewrite pos_peano_rec_beta_pos_succ.
@@ -169,7 +166,7 @@ Proof.
   apply commutativity.
 Qed.
 
-(** Preservation of * *)
+(** Preservation of * (multiplication) *)
 Global Instance issemigrouppreserving_cring_int_mul_mult (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_mult) (Bop:=cring_mult)
       (cring_int_mul R : cring_Z -> R).
