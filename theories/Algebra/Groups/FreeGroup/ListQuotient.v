@@ -13,37 +13,37 @@ Section Reduction.
   Context (A : Type).
 
   (** We define words (with inverses) on A to be lists of marked elements of A *)
-  Definition Words : Type := list (A + A).
+  Local Definition Words : Type := list (A + A).
 
   (** Given a marked element of A we can change its mark *)
-  Definition change_sign : A + A -> A + A
+  Local Definition change_sign : A + A -> A + A
     := fun x => match x with
                 | inl a => inr a
                 | inr a => inl a
                 end.
 
   (** We introduce a local notation for [change_sign]. It is only defined in this section however. *)
-  Notation "x ^" := (change_sign x).
+  Local Notation "x ^" := (change_sign x).
 
   (** Changing sign is an involution *)
-  Definition change_sign_inv a : a^^ = a.
+  Local Definition change_sign_inv a : a^^ = a.
   Proof.
     by destruct a.
   Defined.
 
   (** We can concatenate words using list concatenation *)
-  Definition word_concat : Words -> Words -> Words := @app _.
+  Local Definition word_concat : Words -> Words -> Words := @app _.
 
   (** We introduce a local notation for word_concat. *)
-  Infix "@" := word_concat.
+  Local Infix "@" := word_concat.
 
-  Definition word_concat_w_nil x : x @ nil = x.
+  Local Definition word_concat_w_nil x : x @ nil = x.
   Proof.
     induction x; trivial.
     cbn; f_ap.
   Defined.
 
-  Definition word_concat_w_ww x y z : x @ (y @ z) = (x @ y) @ z.
+  Local Definition word_concat_w_ww x y z : x @ (y @ z) = (x @ y) @ z.
   Proof.
     revert x z.
     induction y; intros x z.
@@ -57,9 +57,9 @@ Section Reduction.
   Defined.
 
   (** Singleton word *)
-  Definition word_sing (x : A + A) : Words := (cons x nil).
+  Local Definition word_sing (x : A + A) : Words := (cons x nil).
 
-  Notation "[ x ]" := (word_sing x).
+  Local Notation "[ x ]" := (word_sing x).
 
   (** We define an inductive family [Red] on [Words] which expresses whether a given word can be reduced to the empty list *)
   Inductive Red : Words -> Type :=
@@ -76,13 +76,13 @@ Section Reduction.
 
     Since we cannot write our HITs directly like this (without resorting to private inductive types), we will construct this HIT out of HITs we know. In fact, we can define N(A) as a coequalizer. *)
 
-  Definition map1 : Words * (A + A) * Words -> Words.
+  Local Definition map1 : Words * (A + A) * Words -> Words.
   Proof.
     intros [[x a] y].
     exact (x @ [a] @ [a^] @ y).
   Defined.
 
-  Definition map2 : Words * (A + A) * Words -> Words.
+  Local Definition map2 : Words * (A + A) * Words -> Words.
   Proof.
     intros [[x a] y].
     exact (x @ y).
