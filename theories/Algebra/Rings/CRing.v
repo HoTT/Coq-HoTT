@@ -5,8 +5,7 @@ Require Export Classes.theory.rings.
 
 (** Theory of commutative rings *)
 
-(** TODO: in reality we should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup. But since we are only interested in commutative rings for the time being, it makes sense to only consider them.
-*)
+(** TODO: in reality we should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup. But since we are only interested in commutative rings for the time being, it makes sense to only consider them. *)
 
 (** A commutative ring consists of the following data *)
 Record CRing := {
@@ -26,7 +25,6 @@ Record CRing := {
   cring_isring : IsRing cring_type;
 }.
 
-Arguments cring_type {_}.
 Arguments cring_plus {_}.
 Arguments cring_mult {_}.
 Arguments cring_zero {_}.
