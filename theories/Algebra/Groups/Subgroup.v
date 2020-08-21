@@ -304,3 +304,12 @@ Proof.
   2: rewrite (associativity (-y)), (negate_l G y).
   1-2: rewrite (left_identity _); reflexivity.
 Defined.
+
+(** The trivial group is always a subgroup *)
+Global Instance issubgroup_grp_trivial {G : Group} : IsSubgroup grp_trivial G.
+Proof.
+  snrapply Build_IsSubgroup.
+  1: apply grp_trivial_rec.
+  cbn; intros ???.
+  apply path_unit.
+Defined.

@@ -23,16 +23,6 @@ Record Ideal (R : CRing) := {
 Coercion ideal_subgroup : Ideal >-> Subgroup.
 Global Existing Instances ideal_isideal.
 
-(** TODO: Move to Group.v *)
-Global Instance issubgroup_trivial {G : Group} : IsSubgroup abgroup_trivial G.
-Proof.
-  snrapply Build_IsSubgroup.
-  { snrapply (Build_GroupHomomorphism (fun _ => group_unit)).
-    intros ??; symmetry; apply left_identity. }
-  cbn; intros ???.
-  apply path_unit.
-Defined.
-
 (** TODO: Move somewhere more useful *)
 Global Instance isinj_idmap A : @IsInjective A A idmap
   := fun x y => idmap.
