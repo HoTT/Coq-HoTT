@@ -275,7 +275,11 @@ Section jections.
     apply injective.
     assumption.
   Qed.
+
 End jections.
+
+Global Instance isinj_idmap A : @IsInjective A A idmap
+  := fun x y => idmap.
 
 Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
