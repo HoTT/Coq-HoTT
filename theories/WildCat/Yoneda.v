@@ -1,13 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Export Basics.
-Require Export WildCat.Core.
-Require Export WildCat.Equiv.
-Require Export WildCat.Type.
-Require Export WildCat.Opposite.
-Require Export WildCat.FunctorCat.
-Require Export WildCat.NatTrans.
-Require Export WildCat.Prod.
+Require Import Basics.
+Require Import WildCat.Core.
+Require Import WildCat.Equiv.
+Require Import WildCat.Type.
+Require Import WildCat.Opposite.
+Require Import WildCat.FunctorCat.
+Require Import WildCat.NatTrans.
+Require Import WildCat.Prod.
 
 (** ** Two-variable hom-functors *)
 

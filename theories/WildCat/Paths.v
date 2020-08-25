@@ -1,5 +1,5 @@
-Require Export Basics.
-Require Export WildCat.Core.
+Require Import Basics.
+Require Import WildCat.Core.
 
 (** * Path groupoids as wild categories *)
 

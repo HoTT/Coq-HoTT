@@ -7,6 +7,7 @@ Require Import Homotopy.ClassifyingSpace.
 Require Import Algebra.Groups.
 Require Import WildCat.
 
+Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope pointed_scope.
 

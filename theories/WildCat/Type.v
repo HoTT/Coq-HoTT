@@ -1,6 +1,6 @@
-Require Export Basics.
-Require Export WildCat.Core.
-Require Export WildCat.Equiv.
+Require Import Basics.
+Require Import WildCat.Core.
+Require Import WildCat.Equiv.
 
 (** ** The category of types *)
 
