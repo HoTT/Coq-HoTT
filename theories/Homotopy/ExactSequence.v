@@ -193,7 +193,7 @@ Proof.
   rewrite (concat_A1p (eisretr k)), concat_V_pp. reflexivity.
 Defined.
 
-(** When [n] is the identity modality [oo], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an oo-exact sequence. *)
+(** When [n] is the identity modality [purely], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an purely-exact sequence. *)
 
 Definition iscomplex_pfib {X Y} (f : X ->* Y)
   : IsComplex (pfib f) f.
@@ -204,7 +204,7 @@ Proof.
 Defined.
 
 Global Instance isexact_pfib {X Y} (f : X ->* Y)
-  : IsExact oo (pfib f) f.
+  : IsExact purely (pfib f) f.
 Proof.
   exists (iscomplex_pfib f).
   exact _.
@@ -217,8 +217,8 @@ Definition i_fiberseq {F X Y} (fs : FiberSeq F X Y)
   : F ->* X
   := pfib fs.1 o* fs.2.
 
-Global Instance isexact_oo_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
-  : IsExact oo (i_fiberseq fs) fs.1.
+Global Instance isexact_purely_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
+  : IsExact purely (i_fiberseq fs) fs.1.
 Proof.
   srapply Build_IsExact; [ srapply Build_pHomotopy | ].
   - intros u; cbn. 
@@ -235,7 +235,7 @@ Proof.
 Defined.
 
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
-           `{IsExact oo F X Y i f}
+           `{IsExact purely F X Y i f}
   : F <~>* pfiber f.
 Proof.
   refine (Build_pEquiv _ _ (cxfib cx_isexact) _).
@@ -243,12 +243,12 @@ Proof.
   rapply conn_map_isexact.
 Defined.
 
-Definition fiberseq_isexact_oo {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
+Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
+           `{IsExact purely F X Y i f}
   : FiberSeq F X Y
   := (f ; pequiv_cxfib).
 
-(** It's easier to show that loops preserve fiber sequences than that they preserve oo-exact sequences. *)
+(** It's easier to show that loops preserve fiber sequences than that they preserve purely-exact sequences. *)
 Definition fiberseq_loops {F X Y} (fs : FiberSeq F X Y)
   : FiberSeq (loops F) (loops X) (loops Y).
 Proof.
@@ -257,14 +257,13 @@ Proof.
   exact ((pfiber_loops_functor fs.1)^-1* ).
 Defined.
 
-(** Now we can deduce that they preserve oo-exact sequences.  The hardest part is modifying the first map back to [loops_functor i]. *)
+(** Now we can deduce that they preserve purely-exact sequences.  The hardest part is modifying the first map back to [loops_functor i]. *)
 Global Instance isexact_loops {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
-  : IsExact oo (loops_functor i) (loops_functor f).
+           `{IsExact purely F X Y i f}
+  : IsExact purely (loops_functor i) (loops_functor f).
 Proof.
-  refine (@isexact_homotopic_i
-            oo _ _ _ _ (loops_functor i) _ (loops_functor f)
-            (isexact_oo_fiberseq (fiberseq_loops (fiberseq_isexact_oo i f)))).
+  refine (@isexact_homotopic_i purely _ _ _ _ (loops_functor i) _ (loops_functor f)
+    (isexact_purely_fiberseq (fiberseq_loops (fiberseq_isexact_purely i f)))).
   transitivity (loops_functor (pfib f) o* loops_functor (cxfib cx_isexact)).
   - refine (_ @* loops_functor_compose _ _).
     apply loops_2functor.
@@ -276,8 +275,8 @@ Proof.
 Defined.
 
 Global Instance isexact_iterated_loops {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f} (n : nat)
-  : IsExact oo (iterated_loops_functor n i) (iterated_loops_functor n f).
+           `{IsExact purely F X Y i f} (n : nat)
+  : IsExact purely (iterated_loops_functor n i) (iterated_loops_functor n f).
 Proof.
   induction n as [|n IHn]; [ assumption | apply isexact_loops; assumption ].
 Defined.
@@ -305,8 +304,8 @@ Proof.
 Defined.
 
 (** In particular, (n.+1)-truncation takes fiber sequences to n-exact ones. *)
-Global Instance isexact_ptr_oo `{Univalence} (n : trunc_index)
-           {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact oo F X Y i f}
+Global Instance isexact_ptr_purely `{Univalence} (n : trunc_index)
+           {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : IsExact (Tr n) (ptr_functor n.+1 i) (ptr_functor n.+1 f).
 Proof.
   rapply isexact_ptr.
@@ -320,7 +319,7 @@ Defined.
 (** It's useful to see [pfib_cxfib] as a degenerate square. *)
 Definition square_pfib_pequiv_cxfib
            {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
+           `{IsExact purely F X Y i f}
   : Square (pequiv_cxfib) (pequiv_pmap_idmap) i (pfib f).
 Proof.
   unfold Square.
@@ -330,7 +329,7 @@ Defined.
 
 (** The connecting maps for the long exact sequence of loop spaces, defined as an extension to a fiber sequence. *)
 Definition connect_fiberseq {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
+           `{IsExact purely F X Y i f}
   : FiberSeq (loops Y) F X.
 Proof.
   exists i.
@@ -338,15 +337,15 @@ Proof.
 Defined.
 
 Definition connecting_map {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
+           `{IsExact purely F X Y i f}
   : loops Y ->* F
   := i_fiberseq (connect_fiberseq i f).
 
 Global Instance isexact_connect_R {F X Y} (i : F ->* X) (f : X ->* Y)
-       `{IsExact oo F X Y i f}
-  : IsExact oo (loops_functor f) (connecting_map i f).
+       `{IsExact purely F X Y i f}
+  : IsExact purely (loops_functor f) (connecting_map i f).
 Proof.
-  refine (isexact_equiv_i (Y := F) oo
+  refine (isexact_equiv_i (Y := F) purely
           (pfib (pfib i)) (loops_functor f)
           (((loops_inv X) o*E
             (pfiber2_loops (pfib f)) o*E
@@ -382,7 +381,7 @@ Global Existing Instance les_isexact.
 
 (** Long exact sequences are preserved by truncation. *)
 Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}
-           (S : LongExactSequence oo N)
+           (S : LongExactSequence purely N)
   : LongExactSequence (Tr k) N
   := Build_LongExactSequence
        (Tr k) N (fun n => pTr k.+1 (S n))
@@ -399,12 +398,12 @@ Definition loops_carrier (F X Y : pType) (n : N3) : pType :=
   | (n, inr tt) => iterated_loops n F
   end.
 
-(** Starting from a fiber sequence, we can obtain a long oo-exact sequence of loop spaces. *)
+(** Starting from a fiber sequence, we can obtain a long purely-exact sequence of loop spaces. *)
 Definition loops_les {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
-  : LongExactSequence oo (N3).
+           `{IsExact purely F X Y i f}
+  : LongExactSequence purely (N3).
 Proof.
-  srefine (Build_LongExactSequence oo (N3) (loops_carrier F X Y) _ _).
+  srefine (Build_LongExactSequence purely (N3) (loops_carrier F X Y) _ _).
   all:intros [n [[[[]|[]]|[]]|[]]]; cbn.
   { exact (iterated_loops_functor n f). }
   { exact (iterated_loops_functor n i). }
@@ -415,6 +414,6 @@ Defined.
 
 (** And from that, a long exact sequence of homotopy groups (though for now it is just a sequence of pointed sets). *)
 Definition Pi_les `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact oo F X Y i f}
+           `{IsExact purely F X Y i f}
   : LongExactSequence (Tr (-1)) (N3)
   := trunc_les (-1) (loops_les i f).
