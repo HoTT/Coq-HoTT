@@ -44,8 +44,8 @@ Section Examples.
     := Build_Ideal R _ isideal_trivial_subgroup.
 
   (** The unit ideal is an ideal *)
-  Global Instance isideal_trivial_subgroup'
-    : IsIdeal (R:=R) trivial_subgroup'.
+  Global Instance isideal_maximal_subgroup
+    : IsIdeal (R:=R) maximal_subgroup.
   Proof.
     split.
     cbn; intros r r'.
@@ -55,7 +55,7 @@ Section Examples.
 
   (** Unit ideal *)
   Definition ideal_unit : Ideal R
-    := Build_Ideal R _ isideal_trivial_subgroup'.
+    := Build_Ideal R _ isideal_maximal_subgroup.
 
 (** TODO: Intersection of ideals *)
 (** TODO: Sum of ideals *)

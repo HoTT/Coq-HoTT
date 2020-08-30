@@ -319,11 +319,11 @@ Defined.
 Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
   := Build_IsSubgroup _ _ grp_homo_id _.
 
-(** Trivial subgroup (actual trivial group) *)
+(** Trivial subgroup *)
 Definition trivial_subgroup {G} : Subgroup G
   := Build_Subgroup G grp_trivial _.
 
-(** The other trivial subgroup (the actual group itself) *)
-Definition trivial_subgroup' {G} : Subgroup G
+(**  THe maximal subgroup *)
+Definition maximal_subgroup {G} : Subgroup G
   := Build_Subgroup G G _.
 
