@@ -121,6 +121,13 @@ Proof.
   exact (ap pr1 q).
 Defined.
 
+Definition isinj_section {A B : Type} {s : A -> B} {r : B -> A}
+      (H : r o s == idmap) : isinj s.
+Proof.
+  intros a a' alpha.
+  exact ((H a)^ @ ap r alpha @ H a').
+Defined.
+
 Lemma isembedding_isinj_hset {A B : Type} `{IsHSet B} (m : A -> B)
 : isinj m -> IsEmbedding m.
 Proof.

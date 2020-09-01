@@ -98,6 +98,13 @@ Proof.
   refine (inO_equiv_inO' _ (equiv_ap_isembedding i x y)^-1).
 Defined.
 
+(* As a special case, if X embeds into an n-type for n >= -1 then X is an n-type. Note that this doesn't hold for n = -2. *)
+Corollary istrunc_embedding_trunc `{Funext} {X Y : Type} {n : trunc_index} `{IsTrunc n.+1 Y}
+      (i : X -> Y) `{IsEmbedding i} : IsTrunc n.+1 X.
+Proof.
+  exact (@in_SepO_embedding (Tr n) _ _ i IsEmbedding0 H0).
+Defined.
+
 Global Instance in_SepO_hprop (O : ReflectiveSubuniverse)
        {A : Type} `{IsHProp A}
   : In (Sep O) A.
@@ -105,6 +112,7 @@ Proof.
   srapply (in_SepO_embedding O (const tt)).
   intros x y; exact _.
 Defined.
+
 
 (** Remark 2.16(4) of CORS *)
 Definition sigma_closed_SepO (O : Modality) {A : Type} (B : A -> Type)

@@ -1619,6 +1619,7 @@ End Book_7_1.
 
 (* ================================================== ex:acnm-surjset *)
 (** Exercise 7.9 *)
+(* Solved for AC_(oo,-1) by projective_cover_AC in Spaces/Projective.v *)
 
 
 

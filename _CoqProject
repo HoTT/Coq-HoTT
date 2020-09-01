@@ -111,6 +111,7 @@ theories/Spaces/Card.v
 theories/Spaces/Circle.v
 theories/Spaces/TwoSphere.v
 theories/Spaces/Spheres.v
+theories/Spaces/Projective.v
 
 theories/Spaces/Int.v
 theories/Spaces/Int/Core.v
