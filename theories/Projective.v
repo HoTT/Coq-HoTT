@@ -1,23 +1,23 @@
-Require Import Basics Types HProp HSet HFiber Truncations.
+Require Import Basics Types HProp HFiber HSet.
+Require Import Truncations.
 Require Import Modalities.Descent Modalities.Separated.
-Require Import Limits.Pullback Spaces.Finite.
+Require Import Limits.Pullback.
 
 
 (** * Projective types *)
 
-Definition IsProjective (X : Type)
+Definition IsProjective (X : Type) : Type
   := forall A B : Type, forall f : X -> B, forall p : A -> B,
         IsSurjection p -> merely (exists s : X -> A, p o s == f).
 
 (** A type X is projective if and only if surjections into X merely split. *)
-Proposition equiv_isprojective_surjections_split `{Funext} (X : Type)
-  : IsProjective X <~>
-    (forall (Y:Type), forall (p : Y -> X),
+Proposition iff_isprojective_surjections_split (X : Type)
+  : IsProjective X <->
+    (forall (Y : Type), forall (p : Y -> X),
           IsSurjection p -> merely (exists s : X -> Y, p o s == idmap)).
 Proof.
-  srapply equiv_iff_hprop.
-  - intro isprojX. unfold IsProjective in isprojX.
-    intros Y p S.
+  split.
+  - intros isprojX Y p S; unfold IsProjective in isprojX.
     exact (isprojX Y X idmap p S).
   - intro splits. unfold IsProjective.
     intros A B f p S.
@@ -31,38 +31,28 @@ Proof.
     apply E.
 Defined.
 
+Corollary equiv_isprojective_surjections_split `{Funext} (X : Type)
+  : IsProjective X <~>
+    (forall (Y : Type), forall (p : Y -> X),
+          IsSurjection p -> merely (exists s : X -> Y, p o s == idmap)).
+Proof.
+  exact (equiv_iff_hprop_uncurried (iff_isprojective_surjections_split X)).
+Defined.
+
+
 (** ** Projectivity and choice *)
 
-Definition choice (X : Type) := forall P : X -> Type,
-      (forall x, merely (P x)) -> merely (forall x, P x).
-
-(* The following two lemmas make the proof of equiv_isprojective_choice below easier to follow. *)
-Lemma equiv_contr_hprop `{Funext} (A : Type) `{IsHProp A}
-  : Contr A <~> A.
-Proof.
-  rapply equiv_iff_hprop.
-  - apply center.
-  - rapply contr_inhabited_hprop.
-Defined.
-
-Lemma equiv_isconnmap_merely `{Funext} {X : Type} (P : X -> Type)
-  : IsConnMap (Tr (-1)) (pr1 : {x : X & P x} -> X) <~> forall x : X, merely (P x).
-Proof.
-  apply equiv_functor_forall_id; intro x.
-  unfold IsConnected.
-  refine (_ oE equiv_contr_hprop _).
-  apply Trunc_functor_equiv.
-  symmetry; apply hfiber_fibration.
-Defined.
+Definition Choice (X : Type) : Type := forall P : X -> Type,
+    (forall x, merely (P x)) -> merely (forall x, P x).
 
 Proposition equiv_isprojective_choice `{Funext} (X : Type)
-  : IsProjective X <~> choice X.
+  : IsProjective X <~> Choice X.
 Proof.
   refine (_ oE equiv_isprojective_surjections_split X).
   srapply equiv_iff_hprop.
   - intros splits P S.
     specialize splits with {x : X & P x} pr1.
-    pose proof (splits ((equiv_isconnmap_merely P)^-1%equiv S)) as M.
+    pose proof (splits ((equiv_merely_issurjection P) S)) as M.
     clear S splits.
     strip_truncations; apply tr.
     destruct M as [s p].
@@ -77,14 +67,7 @@ Proof.
     exact (fun x => (M x).2).
 Defined.
 
-(** Finite sets (as in Spaces/Finite.v) are projective. *)
-Theorem isprojective_fin_n `{Funext} (n : nat) : IsProjective (Fin n).
-Proof.
-  apply (equiv_isprojective_choice (Fin n))^-1.
-  rapply finite_choice.
-Defined.
-
-Proposition isprojective_unit `{Funext} : IsProjective Unit.
+Proposition isprojective_unit `{Univalence} : IsProjective Unit.
 Proof.
   apply (equiv_isprojective_choice Unit)^-1.
   intros P S.
@@ -94,12 +77,11 @@ Proof.
   exact S.
 Defined.
 
-
 Section AC_oo_neg1.
   (** ** Projectivity and AC_(oo,-1) (defined in HoTT book, Exercise 7.8) *)
   (* TODO: Generalize to n, m. *)
 
-  Context {AC : forall X : hSet, choice X}.
+  Context {AC : forall X : hSet, Choice X}.
 
   (** (Exercise 7.9) Assuming AC_(oo,-1) every type merely has a projective cover. *)
   Proposition projective_cover_AC `{Univalence} (A : Type)

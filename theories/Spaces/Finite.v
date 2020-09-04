@@ -10,6 +10,7 @@ Require Import Factorization.
 Require Import Equiv.PathSplit.
 Require Import Truncations.
 Require Import Colimits.Quotient.
+Require Import Projective.
 
 Local Open Scope path_scope.
 Local Open Scope nat_scope.
@@ -566,10 +567,10 @@ Proof.
   - refine (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).
 Defined.
 
-(** ** The finite axiom of choice *)
+(** ** The finite axiom of choice, and projectivity *)
 
 Definition finite_choice {X} `{Finite X} (P : X -> Type)
-: (forall x, merely (P x)) -> merely (forall x, P x).
+  : (forall x, merely (P x)) -> merely (forall x, P x).
 Proof.
   intros f.
   assert (e := merely_equiv_fin X).
@@ -586,6 +587,12 @@ Proof.
       assert (e := f (inr tt)).
       strip_truncations.
       exact (tr (sum_ind P IH (Unit_ind e))).
+Defined.
+
+Corollary isprojective_fin_n `{Funext} (n : nat) : IsProjective (Fin n).
+Proof.
+  apply (equiv_isprojective_choice (Fin n))^-1.
+  rapply finite_choice.
 Defined.
 
 (** ** Constructions on finite sets *)
