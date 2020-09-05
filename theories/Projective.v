@@ -52,7 +52,7 @@ Proof.
   srapply equiv_iff_hprop.
   - intros splits P S.
     specialize splits with {x : X & P x} pr1.
-    pose proof (splits ((equiv_merely_issurjection P) S)) as M.
+    pose proof (splits (equiv_merely_issurjection P S)) as M.
     clear S splits.
     strip_truncations; apply tr.
     destruct M as [s p].
@@ -67,7 +67,7 @@ Proof.
     exact (fun x => (M x).2).
 Defined.
 
-Proposition isprojective_unit `{Univalence} : IsProjective Unit.
+Proposition isprojective_unit `{Funext} : IsProjective Unit.
 Proof.
   apply (equiv_isprojective_choice Unit)^-1.
   intros P S.

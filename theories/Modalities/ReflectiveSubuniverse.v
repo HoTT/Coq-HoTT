@@ -108,6 +108,7 @@ Section Subuniverse.
     exact (inO_equiv_inO (B a) (hfiber_fibration a B)).
   Defined.
 
+  (** A family of types is local if and only if the associated projection map is local. *)
   Lemma equiv_forall_inO_mapinO_pr1 `{Funext} {A : Type} (B : A -> Type)
     : (forall a, In O (B a)) <~> MapIn O (@pr1 A B).
   Proof.
