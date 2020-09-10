@@ -45,14 +45,14 @@ Defined.
 Definition Choice (X : Type) : Type := forall P : X -> Type,
     (forall x, merely (P x)) -> merely (forall x, P x).
 
-Proposition equiv_isprojective_choice `{Funext} (X : Type)
-  : IsProjective X <~> Choice X.
+Proposition iff_isprojective_choice (X : Type)
+  : IsProjective X <-> Choice X.
 Proof.
-  refine (_ oE equiv_isprojective_surjections_split X).
-  srapply equiv_iff_hprop.
+  refine (iff_compose (iff_isprojective_surjections_split X) _).
+  split.
   - intros splits P S.
     specialize splits with {x : X & P x} pr1.
-    pose proof (splits (equiv_merely_issurjection P S)) as M.
+    pose proof (splits (fst (iff_merely_issurjection P) S)) as M.
     clear S splits.
     strip_truncations; apply tr.
     destruct M as [s p].
@@ -67,9 +67,15 @@ Proof.
     exact (fun x => (M x).2).
 Defined.
 
-Proposition isprojective_unit `{Funext} : IsProjective Unit.
+Proposition equiv_isprojective_choice `{Funext} (X : Type)
+  : IsProjective X <~> Choice X.
 Proof.
-  apply (equiv_isprojective_choice Unit)^-1.
+  exact (equiv_iff_hprop_uncurried (iff_isprojective_choice X)).
+Defined.
+
+Proposition isprojective_unit : IsProjective Unit.
+Proof.
+  apply (iff_isprojective_choice Unit).
   intros P S.
   specialize S with tt.
   strip_truncations; apply tr.

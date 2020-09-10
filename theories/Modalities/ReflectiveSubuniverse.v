@@ -51,14 +51,6 @@ Definition inO_equiv_inO' {O : Subuniverse}
   : In O U
   := inO_equiv_inO T f.
 
-Definition inO_equiv_inO'' `{Funext} (O : Subuniverse) {T U : Type} (f : T <~> U)
-  : In O T <~> In O U.
-Proof.
-  apply equiv_iff_hprop.
-  - intro T_inO; exact (inO_equiv_inO' T f).
-  - intro U_inO; exact (inO_equiv_inO' U f^-1%equiv).
-Defined.
-
 (** The universe of types in the subuniverse *)
 Definition Type_@{i j} (O : Subuniverse@{i}) : Type@{j}
   := @sig@{j i} Type@{i} (fun (T : Type@{i}) => In O T).
@@ -89,6 +81,13 @@ Global Existing Instance inO_hfiber_ino_map.
 Section Subuniverse.
   Context (O : Subuniverse).
 
+  (** Being a local map is an hprop *)
+  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
+  : IsHProp (MapIn O f).
+  Proof.
+    apply trunc_forall.
+  Defined.
+
   (** Anything homotopic to a local map is local. *)
   Definition mapinO_homotopic {A B : Type} (f : A -> B) {g : A -> B}
              (p : f == g) `{MapIn O _ _ f}
@@ -109,20 +108,21 @@ Section Subuniverse.
   Defined.
 
   (** A family of types is local if and only if the associated projection map is local. *)
+  Lemma iff_forall_inO_mapinO_pr1 {A : Type} (B : A -> Type)
+    : (forall a, In O (B a)) <-> MapIn O (@pr1 A B).
+  Proof.
+    split.
+    - exact _. (* Uses the instance mapinO_pr1 above. *)
+    - rapply functor_forall; intros a x.
+      exact (inO_equiv_inO (hfiber pr1 a)
+                           (hfiber_fibration a B)^-1%equiv).
+  Defined.
+
   Lemma equiv_forall_inO_mapinO_pr1 `{Funext} {A : Type} (B : A -> Type)
     : (forall a, In O (B a)) <~> MapIn O (@pr1 A B).
   Proof.
-    unfold MapIn.
-    apply equiv_functor_forall_id; intro a.
-    apply inO_equiv_inO''.
-    exact (hfiber_fibration a B).
-  Defined.
-
-  (** Being a local map is an hprop *)
-  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
-  : IsHProp (MapIn O f).
-  Proof.
-    apply trunc_forall.
+    apply equiv_iff_hprop_uncurried.
+    apply iff_forall_inO_mapinO_pr1.
   Defined.
 
 End Subuniverse.

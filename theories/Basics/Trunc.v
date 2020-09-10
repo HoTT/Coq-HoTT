@@ -400,12 +400,18 @@ Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   : (A -> B) -> (B -> A) -> (A <~> B)
   := fun f g => equiv_iff_hprop_uncurried (f, g).
 
+Corollary iff_contr_hprop (A : Type) `{IsHProp A}
+  : Contr A <-> A.
+Proof.
+  split.
+  - apply center.
+  - rapply contr_inhabited_hprop.
+Defined.
+
 Corollary equiv_contr_hprop (A : Type) `{Funext} `{IsHProp A}
   : Contr A <~> A.
 Proof.
-  rapply equiv_iff_hprop.
-  - apply center.
-  - rapply contr_inhabited_hprop.
+  exact (equiv_iff_hprop_uncurried (iff_contr_hprop A)).
 Defined.
 
 (** Truncatedness is an hprop. *)

@@ -589,9 +589,9 @@ Proof.
       exact (tr (sum_ind P IH (Unit_ind e))).
 Defined.
 
-Corollary isprojective_fin_n `{Funext} (n : nat) : IsProjective (Fin n).
+Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
 Proof.
-  apply (equiv_isprojective_choice (Fin n))^-1.
+  apply (iff_isprojective_choice (Fin n)).
   rapply finite_choice.
 Defined.
 

@@ -1620,16 +1620,10 @@ End Book_7_1.
 (* ================================================== ex:acnm-surjset *)
 (** Exercise 7.9 *)
 
-Section Book_7_9.
-  (** Solution for the case (oo,-1). *)
-
-  Axiom AC_oo_neg1 : forall X : hSet, Choice X.
-
-  Definition Book_7_9_oo_neg1 `{Univalence} (A : Type)
-    : merely (exists X : hSet, exists p : X -> A, IsSurjection p)
-    := @HoTT.Projective.projective_cover_AC AC_oo_neg1 _ A.
-
-End Book_7_9.
+(** Solution for the case (oo,-1). *)
+Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : hSet, Choice X) (A : Type)
+  : merely (exists X : hSet, exists p : X -> A, IsSurjection p)
+  := @HoTT.Projective.projective_cover_AC AC_oo_neg1 _ A.
 
 (* ================================================== ex:acconn *)
 (** Exercise 7.10 *)
