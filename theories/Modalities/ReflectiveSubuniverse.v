@@ -94,7 +94,7 @@ Section Subuniverse.
   : MapIn O g.
   Proof.
     intros b.
-    refine (inO_equiv_inO (hfiber f b)
+    exact (inO_equiv_inO (hfiber f b)
                           (equiv_hfiber_homotopic f g p b)).
   Defined.
 
