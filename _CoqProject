@@ -243,6 +243,7 @@ theories/HFiber.v
 theories/HProp.v
 theories/Extensions.v
 theories/HSet.v
+theories/Projective.v
 theories/TruncType.v
 theories/DProp.v
 theories/EquivGroupoids.v

@@ -70,6 +70,62 @@ Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O)
 Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
   := A.2.
 
+(** ** Properties of Subuniverses *)
+
+(** A map is O-local if all its fibers are. *)
+Class MapIn (O : Subuniverse) {A B : Type} (f : A -> B)
+  := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
+
+Global Existing Instance inO_hfiber_ino_map.
+
+Section Subuniverse.
+  Context (O : Subuniverse).
+
+  (** Being a local map is an hprop *)
+  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
+  : IsHProp (MapIn O f).
+  Proof.
+    apply trunc_forall.
+  Defined.
+
+  (** Anything homotopic to a local map is local. *)
+  Definition mapinO_homotopic {A B : Type} (f : A -> B) {g : A -> B}
+             (p : f == g) `{MapIn O _ _ f}
+  : MapIn O g.
+  Proof.
+    intros b.
+    exact (inO_equiv_inO (hfiber f b)
+                          (equiv_hfiber_homotopic f g p b)).
+  Defined.
+
+  (** The projection from a family of local types is local. *)
+  Global Instance mapinO_pr1 {A : Type} {B : A -> Type}
+         `{forall a, In O (B a)}
+  : MapIn O (@pr1 A B).
+  Proof.
+    intros a.
+    exact (inO_equiv_inO (B a) (hfiber_fibration a B)).
+  Defined.
+
+  (** A family of types is local if and only if the associated projection map is local. *)
+  Lemma iff_forall_inO_mapinO_pr1 {A : Type} (B : A -> Type)
+    : (forall a, In O (B a)) <-> MapIn O (@pr1 A B).
+  Proof.
+    split.
+    - exact _. (* Uses the instance mapinO_pr1 above. *)
+    - rapply functor_forall; intros a x.
+      exact (inO_equiv_inO (hfiber pr1 a)
+                           (hfiber_fibration a B)^-1%equiv).
+  Defined.
+
+  Lemma equiv_forall_inO_mapinO_pr1 `{Funext} {A : Type} (B : A -> Type)
+    : (forall a, In O (B a)) <~> MapIn O (@pr1 A B).
+  Proof.
+    exact (equiv_iff_hprop_uncurried (iff_forall_inO_mapinO_pr1 B)).
+  Defined.
+
+End Subuniverse.
+
 (** *** Reflections *)
 
 (** A pre-reflection is a map to a type in the subuniverse. *)
@@ -1210,6 +1266,14 @@ Section ConnectedTypes.
   : IsConnected O A -> IsConnected O B
     := isconnected_equiv A f.
 
+  (** The O-connected types form a subuniverse. *)
+  Definition Conn : Subuniverse.
+  Proof.
+    rapply (Build_Subuniverse (IsConnected O)).
+    simpl; intros T U isconnT f isequivf.
+    exact (isconnected_equiv T f isconnT).
+  Defined.
+
   (** Connectedness of a type [A] can equivalently be characterized by the fact that any map to an [O]-type [C] is nullhomotopic.  Here is one direction of that equivalence. *)
   Definition isconnected_elim {A : Type} `{IsConnected O A} (C : Type) `{In O C} (f : A -> C)
   : NullHomotopy f.
@@ -1310,13 +1374,6 @@ End ConnectedTypes.
 
 (** ** Modally truncated maps *)
 
-(** A map is "in [O]" if each of its fibers is. *)
-
-Class MapIn (O : ReflectiveSubuniverse) {A B : Type} (f : A -> B)
-  := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
-
-Global Existing Instance inO_hfiber_ino_map.
-
 Section ModalMaps.
   Context (O : ReflectiveSubuniverse).
 
@@ -1325,25 +1382,6 @@ Section ModalMaps.
   : MapIn O f.
   Proof.
     intros b; exact _.
-  Defined.
-
-  (** Anything homotopic to a modal map is modal. *)
-  Definition mapinO_homotopic {A B : Type} (f : A -> B) {g : A -> B}
-             (p : f == g) `{MapIn O _ _ f}
-  : MapIn O g.
-  Proof.
-    intros b.
-    refine (inO_equiv_inO (hfiber f b)
-                          (equiv_hfiber_homotopic f g p b)).
-  Defined.
-
-  (** The projection from a family of modal types is modal. *)
-  Global Instance mapinO_pr1 {A : Type} {B : A -> Type}
-         `{forall a, In O (B a)}
-  : MapIn O (@pr1 A B).
-  Proof.
-    intros a.
-    refine (inO_equiv_inO (B a) (hfiber_fibration a B)).
   Defined.
 
   (** A slightly specialized result: if [Empty] is modal, then a map with decidable hprop fibers (such as [inl] or [inr]) is modal. *)
@@ -1357,13 +1395,6 @@ Section ModalMaps.
     destruct (equiv_decidable_hprop (hfiber f b)) as [e|e].
     - exact (inO_equiv_inO Unit e^-1).
     - exact (inO_equiv_inO Empty e^-1).
-  Defined.
-
-  (** Being modal is an hprop *)
-  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
-  : IsHProp (MapIn O f).
-  Proof.
-    apply trunc_forall.
   Defined.
 
   (** Any map between modal types is modal. *)

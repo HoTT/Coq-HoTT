@@ -1620,7 +1620,10 @@ End Book_7_1.
 (* ================================================== ex:acnm-surjset *)
 (** Exercise 7.9 *)
 
-
+(** Solution for the case (oo,-1). *)
+Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : hSet, IsProjective' X) (A : Type)
+  : merely (exists X : hSet, exists p : X -> A, IsSurjection p)
+  := @HoTT.Projective.projective_cover_AC AC_oo_neg1 _ A.
 
 (* ================================================== ex:acconn *)
 (** Exercise 7.10 *)

@@ -12,6 +12,7 @@ Require Export HoTT.Truncations.
 
 Require Export HoTT.HFiber.
 Require Export HoTT.HProp.
+Require Export HoTT.Projective.
 Require Export HoTT.HSet.
 Require Export HoTT.EquivGroupoids.
 
