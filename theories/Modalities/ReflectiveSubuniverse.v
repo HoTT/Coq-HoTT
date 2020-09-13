@@ -121,8 +121,7 @@ Section Subuniverse.
   Lemma equiv_forall_inO_mapinO_pr1 `{Funext} {A : Type} (B : A -> Type)
     : (forall a, In O (B a)) <~> MapIn O (@pr1 A B).
   Proof.
-    apply equiv_iff_hprop_uncurried.
-    apply iff_forall_inO_mapinO_pr1.
+    exact (equiv_iff_hprop_uncurried (iff_forall_inO_mapinO_pr1 B)).
   Defined.
 
 End Subuniverse.

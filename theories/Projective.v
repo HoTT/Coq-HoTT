@@ -40,13 +40,14 @@ Proof.
 Defined.
 
 
-(** ** Projectivity and choice *)
+(** ** Projectivity and the axiom of choice *)
 
-Definition Choice (X : Type) : Type := forall P : X -> Type,
+(** In topos theory, an object X is said to be projective if the axiom of choice holds when making choices indexed by X. *)
+Definition IsProjective' (X : Type) : Type := forall P : X -> Type,
     (forall x, merely (P x)) -> merely (forall x, P x).
 
 Proposition iff_isprojective_choice (X : Type)
-  : IsProjective X <-> Choice X.
+  : IsProjective X <-> IsProjective' X.
 Proof.
   refine (iff_compose (iff_isprojective_surjections_split X) _).
   split.
@@ -68,7 +69,7 @@ Proof.
 Defined.
 
 Proposition equiv_isprojective_choice `{Funext} (X : Type)
-  : IsProjective X <~> Choice X.
+  : IsProjective X <~> IsProjective' X.
 Proof.
   exact (equiv_iff_hprop_uncurried (iff_isprojective_choice X)).
 Defined.
@@ -87,7 +88,7 @@ Section AC_oo_neg1.
   (** ** Projectivity and AC_(oo,-1) (defined in HoTT book, Exercise 7.8) *)
   (* TODO: Generalize to n, m. *)
 
-  Context {AC : forall X : hSet, Choice X}.
+  Context {AC : forall X : hSet, IsProjective' X}.
 
   (** (Exercise 7.9) Assuming AC_(oo,-1) every type merely has a projective cover. *)
   Proposition projective_cover_AC `{Univalence} (A : Type)
@@ -98,11 +99,8 @@ Section AC_oo_neg1.
     pose proof (P A X idmap tr _) as F; clear P.
     strip_truncations.
     destruct F as [f p].
-    apply tr; refine (X; (f; _)).
-    unfold IsConnMap, IsConnected.
-    intro a.
-    rapply contr_inhabited_hprop.
-    unfold hfiber.
+    refine (tr (X; (f; BuildIsSurjection f _))).
+    intro a; unfold hfiber.
     apply equiv_O_sigma_O.
     refine (tr (tr a; _)).
     rapply (equiv_path_Tr _ _)^-1%equiv.  (* Uses Univalence. *)
