@@ -9,19 +9,12 @@ Require Export Classes.theory.rings.
 
 (** A commutative ring consists of the following data *)
 Record CRing := {
-  (** A type *)
   cring_type : Type;
-  (** A plus operation *)
   cring_plus : Plus cring_type;
-  (** A mult operation *)
   cring_mult : Mult cring_type;
-  (** A zero *)
   cring_zero : Zero cring_type;
-  (** A one *)
   cring_one  : One  cring_type;
-  (** A negation *)
   cring_negate : Negate cring_type;
-  (** Such that this data satisfies the axioms of a commmutative ring. *)
   cring_isring : IsRing cring_type;
 }.
 
@@ -51,9 +44,8 @@ Definition issig_CRingHomomorphism (A B : CRing)
   : _ <~> CRingHomomorphism A B
   := ltac:(issig).
 
-(** We coerce ring homomorphisms to their underlyig maps *)
+(** We coerce ring homomorphisms to their underlying maps *)
 Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
-(** And we make rng_homo_ishomo a global instance. *)
 Global Existing Instance rng_homo_ishomo.
 
 Definition equiv_path_cringhomomorphism `{Funext} {A B : CRing}
@@ -80,7 +72,7 @@ Defined.
 
 Section RingLaws.
 
-  (** Many of these ring laws have already been prove. But we give them names here so that they are easy to find and use. *)
+  (** Many of these ring laws have already been proven. But we give them names here so that they are easy to find and use. *)
 
   Context {A B : CRing} (f : CRingHomomorphism A B) (x y z : A).
 
@@ -162,7 +154,7 @@ Definition grp_homo_rng_homo {R S : CRing}
 
 Coercion grp_homo_rng_homo : CRingHomomorphism >-> GroupHomomorphism.
 
-(** We can construct a ring homomorphism a group homomorphism that preserves multiplication *)
+(** We can construct a ring homomorphism from a group homomorphism that preserves multiplication *)
 Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
   {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
     (Aunit:=one) (Bunit:=one) map}

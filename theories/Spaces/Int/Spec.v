@@ -354,7 +354,7 @@ Global Instance isequiv_int_succ : IsEquiv int_succ | 0
 Definition equiv_int_succ : Int <~> Int
   := Build_Equiv _ _ _ isequiv_int_succ.
 
-(** ** Commutativity of multplication *)
+(** ** Commutativity of multiplication *)
 Lemma int_mul_comm n m : n * m = m * n.
 Proof.
   destruct n, m; cbn; try reflexivity;
@@ -434,4 +434,3 @@ Lemma int_mul_assoc n m p : n * (m * p) = n * m * p.
 Proof.
   destruct n, m, p; cbn; trivial; f_ap; apply pos_mul_assoc.
 Qed.
-

@@ -4,7 +4,7 @@ Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.
 
-(** In this file we define the quotient of a commuative ring by an ideal *)
+(** In this file we define the quotient of a commutative ring by an ideal *)
 
 Section QuotientRing.
 

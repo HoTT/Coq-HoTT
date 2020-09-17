@@ -31,7 +31,7 @@ Defined.
 
 Local Open Scope mc_scope.
 
-(** Standard integer operations on commutative rings *)
+(** Multiplication of a ring element by an integer. *)
 Definition cring_int_mul (R : CRing) (z : cring_Z) : R
   := match z with
      | neg z => pos_peano_rec R (-1) (fun n nr => -1 + nr) z
