@@ -275,7 +275,11 @@ Section jections.
     apply injective.
     assumption.
   Qed.
+
 End jections.
+
+Global Instance isinj_idmap A : @IsInjective A A idmap
+  := fun x y => idmap.
 
 Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
@@ -298,6 +302,10 @@ Proof.
   unfold IsSemiGroupPreserving; exact _.
 Defined.
 
+Definition issig_IsSemiRingPreserving {A B : Type}
+  `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B} {f : A -> B}
+  : _ <~> IsSemiRingPreserving f := ltac:(issig).
+
 Definition issig_IsMonoidPreserving {A B : Type} `{SgOp A} `{SgOp B}
   `{MonUnit A} `{MonUnit B} {f : A -> B} : _ <~> IsMonoidPreserving f
   := ltac:(issig).
@@ -310,6 +318,15 @@ Proof.
   srapply (trunc_equiv' _ (equiv_sigma_prod0 _ _)^-1).
   srapply trunc_prod.
   unfold IsUnitPreserving.
+  exact _.
+Defined.
+
+Global Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
+  `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B}
+  (f : A -> B)
+  : IsHProp (IsSemiRingPreserving f).
+Proof.
+  snrapply (trunc_equiv' _ issig_IsSemiRingPreserving).
   exact _.
 Defined.
 

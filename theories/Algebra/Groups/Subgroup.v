@@ -304,3 +304,26 @@ Proof.
   2: rewrite (associativity (-y)), (negate_l G y).
   1-2: rewrite (left_identity _); reflexivity.
 Defined.
+
+(** The trivial group is always a subgroup *)
+Global Instance issubgroup_grp_trivial {G : Group} : IsSubgroup grp_trivial G.
+Proof.
+  snrapply Build_IsSubgroup.
+  1: apply grp_trivial_rec.
+  cbn; intros ???.
+  apply path_unit.
+Defined.
+
+(** Every group is a subgroup of itself *)
+(** We make this a low priority instance so it doesn't get picked up before other subgroup instances. *)
+Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
+  := Build_IsSubgroup _ _ grp_homo_id _.
+
+(** Trivial subgroup *)
+Definition trivial_subgroup {G} : Subgroup G
+  := Build_Subgroup G grp_trivial _.
+
+(**  THe maximal subgroup *)
+Definition maximal_subgroup {G} : Subgroup G
+  := Build_Subgroup G G _.
+

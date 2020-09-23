@@ -23,7 +23,7 @@ Proof.
   induction p; destruct q; simpl; by apply ap.
 Qed.
 
-(** ** Commutativity *)
+(** ** Commutativity of [add] *)
 
 Theorem pos_add_comm p q : p + q = q + p.
 Proof.
@@ -204,3 +204,70 @@ Proof.
   apply q.
 Qed.
 
+(** ** Right reduction properties for multiplication *)
+Lemma mul_xO_r p q : p * q~0 = (p * q)~0.
+Proof.
+  induction p; simpl; f_ap; f_ap; trivial.
+Qed.
+
+Lemma mul_xI_r p q : p * q~1 = p + (p * q)~0.
+Proof.
+  induction p; simpl; trivial; f_ap.
+  rewrite IHp.
+  rewrite pos_add_assoc.
+  rewrite (pos_add_comm q p).
+  symmetry.
+  apply pos_add_assoc.
+Qed.
+
+(** ** Commutativity of multiplication *)
+Lemma pos_mul_comm p q : p * q = q * p.
+Proof.
+  induction q; simpl.
+  1: apply pos_mul_1_r.
+  + rewrite mul_xO_r.
+    f_ap.
+  + rewrite mul_xI_r.
+    f_ap; f_ap.
+Qed.
+
+(** ** Distributivity of addition over multiplication *)
+Theorem pos_mul_add_distr_l p q r :
+  p * (q + r) = p * q + p * r.
+Proof.
+  induction p; cbn; [reflexivity | f_ap | ].
+  rewrite IHp.
+  set (m:=(p*q)~0).
+  set (n:=(p*r)~0).
+  change ((p*q+p*r)~0) with (m+n).
+  rewrite 2 pos_add_assoc; f_ap.
+  rewrite <- 2 pos_add_assoc; f_ap.
+  apply pos_add_comm.
+Qed.
+
+Theorem pos_mul_add_distr_r p q r :
+  (p + q) * r = p * r + q * r.
+Proof.
+  rewrite 3 (pos_mul_comm _ r); apply pos_mul_add_distr_l.
+Qed.
+
+(** ** Associativity of multiplication *)
+Theorem pos_mul_assoc p q r : p * (q * r) = p * q * r.
+Proof.
+  induction p; simpl; rewrite ?IHp; trivial.
+  by rewrite pos_mul_add_distr_r.
+Qed.
+
+(** ** pos_succ and pos_mul *)
+
+Lemma pos_mul_succ_l p q
+  : (pos_succ p) * q = p * q + q.
+Proof.
+  by rewrite <- pos_add_1_r, pos_mul_add_distr_r, pos_mul_1_l.
+Qed.
+
+Lemma pos_mul_succ_r p q
+  : p * (pos_succ q) = p + p * q.
+Proof.
+  by rewrite <- pos_add_1_l, pos_mul_add_distr_l, pos_mul_1_r.
+Qed.
