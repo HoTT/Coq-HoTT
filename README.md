@@ -24,11 +24,11 @@ More information about this library can be found in:
 
 Other publications related to the library can be found [here](https://github.com/HoTT/HoTT/wiki/Publications-based-on-the-HoTT-library).
 
-## INSTALLATION
+## INSTALLATION Process
 
 Installation details are explained in the file [INSTALL.md](/INSTALL.md).
 
-## USAGE
+## USAGE of HoTT library
 
 It is possible to use the HoTT library directly on the command line with the `hoqtop`
 script, but who does that?
