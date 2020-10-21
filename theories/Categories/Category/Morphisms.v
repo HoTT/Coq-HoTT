@@ -148,7 +148,7 @@ Section iso_contr.
   Qed.
 
   (** *** Equality between isomorphisms is equivalent to by equality between their forward components *)
-  Global Instance isequiv_path_isomorphic
+  Global Instance isequiv_path_isomorphic {i j}
   : IsEquiv (path_isomorphic i j).
   Proof.
     intros.
