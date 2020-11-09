@@ -21,6 +21,7 @@ Variant numeral := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).
 Register uint as num.num_uint.type.
 Register int as num.num_int.type.
 Register numeral as num.numeral.type.
+Register numeral as num.number.type.
 
 (** Pseudo-conversion functions used when declaring
     Numeral Notations on [uint] and [int]. *)

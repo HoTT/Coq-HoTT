@@ -11,9 +11,10 @@ Require Coq.Init.Hexadecimal.
 Require Coq.Init.Numeral.
 Require Coq.Init.Nat.
 
-Declare ML Module "numeral_notation_plugin".
+Declare ML Module "number_string_notation_plugin".
 
 Set Warnings "-decimal-numeral-notation".
+Set Warnings "-numeral-notation".
 
 (* Parsing / printing of decimal numbers *)
 Arguments Nat.of_uint d%dec_uint_scope.
