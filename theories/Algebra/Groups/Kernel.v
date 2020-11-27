@@ -3,9 +3,10 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
 
-(** Kernels of group homomorphisms *)
+(** * Kernels of group homomorphisms *)
 
 Local Open Scope mc_scope.
+Local Open Scope mc_mult_scope.
 
 Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : Subgroup A.
 Proof.
@@ -67,4 +68,71 @@ Proof.
   rewrite (pr2 n), (right_identity (- f g)).
   rewrite (negate_l _).
   reflexivity.
+Defined.
+
+
+(** ** Corecursion principle for group kernels *)
+
+Proposition grp_kernel_corec {A B G : Group} {f : A $-> B} {g : G $-> A}
+            (h : f $o g == grp_homo_const) : G $-> grp_kernel f.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun x:G => (g x; h x)).
+  - intros x x'.
+    apply path_sigma_hprop; cbn.
+    apply grp_homo_op.
+Defined.
+
+Theorem equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
+  : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const).
+Proof.
+  srapply equiv_adjointify.
+  - intro k. refine (subgrp_incl _ _ $o k; _).
+    intro x; cbn.
+    exact (k x).2.
+  - intros [g p].
+    exact (grp_kernel_corec p).
+  - intros [g p].
+    apply path_sigma_hprop; unfold pr1.
+    apply equiv_path_grouphomomorphism; intro; reflexivity.
+  - intro k.
+    apply equiv_path_grouphomomorphism; intro x.
+    apply path_sigma_hprop; reflexivity.
+Defined.
+
+
+(** ** Characterisation of group embeddings *)
+
+Local Existing Instance ishprop_path_subgroup.
+
+Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
+  : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
+Proof.
+  srapply equiv_iff_hprop.
+  - intros phi b; unfold hfiber.
+    apply ishprop_sigma_disjoint.
+    intros a a' p q.
+    apply group_moveL_1M.
+    change mon_unit with (pr1 ((mon_unit; grp_homo_unit f) : grp_kernel f)).
+    pose proof (ap (fun g => g *  -(f a')) (p @ q^)) as P; cbn in P.
+    rewrite right_inverse in P.
+    rewrite <- (grp_homo_inv f) in P.
+    rewrite <- (grp_homo_op f) in P.
+    change (a * -a') with (pr1 ((a * -a'; P) : grp_kernel f)).
+    apply (ap pr1).
+    pose (phi' := ap (@group_type o (subgroup_group A)) phi); cbn in phi'.
+    apply (equiv_ap' (equiv_path _ _ phi')).
+    apply path_ishprop.
+  - unfold IsEmbedding.
+    intro isemb_f.
+    rapply equiv_path_subgroup.
+    srefine (grp_iso_inverse _; _).
+    + srapply Build_GroupIsomorphism.
+      * exact grp_homo_const.
+      * srapply isequiv_adjointify.
+        1: exact grp_homo_const.
+        all: intro x; apply path_ishprop.
+    + apply equiv_path_grouphomomorphism; intro x; cbn.
+      refine (ap pr1 (y:=(mon_unit; grp_homo_unit f)) _).
+      apply path_ishprop.
 Defined.

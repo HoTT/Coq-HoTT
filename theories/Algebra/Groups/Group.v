@@ -1,4 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
+Require Import HProp.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
@@ -70,6 +71,8 @@ Proof.
   apply left_identity.
 Defined.
 
+(** ** Group algebra *)
+
 (** Inverses are involutive *)
 (* Check negate_involutive. *)
 
@@ -82,7 +85,76 @@ Defined.
 (** Group elements can be cancelled on the right of an equation *)
 (* Check group_cancelR. *)
 
-(** Definition of Group Homomorphism *)
+(* jarlg: Below I've just implemented the moves I needed and their symmetries. *)
+Lemma group_moveL_1M {G : Group} (x y : G)
+  : x * (-y) = mon_unit -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelR (- y)).
+  exact (p @ (right_inverse y)^).
+Defined.
+
+Lemma group_moveL_M1 {G : Group} (x y : G)
+  : -y * x = mon_unit -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelL (- y)).
+  exact (p @ (left_inverse y)^).
+Defined.
+
+Lemma group_moveL_gM {G : Group} (x y z : G)
+  : x * -z = y -> x = y * z.
+Proof.
+  intro p.
+  apply (group_cancelR (- z)).
+  refine (_ @ associativity _ _ _).
+  exact (p @ (right_identity y)^ @ (ap (fun a => y * a) (right_inverse z))^).
+Defined.
+
+Lemma group_moveL_Mg {G : Group} (x y z : G)
+  : -y * x = z -> x = y * z.
+Proof.
+  intro p.
+  apply (group_cancelL (- y)).
+  refine (_ @ (associativity _ _ _)^).
+  exact (p @ (left_identity z)^ @ (ap (fun a => a * z) (left_inverse y))^).
+Defined.
+
+Lemma group_moveR_1M {G : Group} (x y : G)
+  : mon_unit = y * (-x) -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelR (- x)).
+  exact (right_inverse x @ p).
+Defined.
+
+Lemma group_moveR_M1 {G : Group} (x y : G)
+  : mon_unit = -x * y -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelL (- x)).
+  exact (left_inverse x @ p).
+Defined.
+
+Lemma group_moveR_gM {G : Group} (x y z : G)
+  : x = z * -y -> x * y = z.
+Proof.
+  intro p.
+  apply (group_cancelR (- y)).
+  refine ((associativity _ _ _)^ @ _).
+  exact (ap (fun a => x * a) (right_inverse y) @ right_identity _ @ p).
+Defined.
+
+Lemma group_moveR_Mg {G : Group} (x y z : G)
+  : y = -x * z -> x * y = z.
+Proof.
+  intro p.
+  apply (group_cancelL (- x)).
+ refine (associativity _ _ _ @ _).
+  exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
+Defined.
+
+(** ** Definition of Group Homomorphism *)
 
 (* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
 Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
@@ -169,19 +241,6 @@ Proof.
   srapply (Build_GroupHomomorphism (f o g)).
 Defined.
 
-Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
-Proof.
-  srapply (Build_GroupHomomorphism idmap).
-Defined.
-
-Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun _ => mon_unit).
-  - intros x y.
-    exact (left_identity mon_unit)^.
-Defined.
-
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
 Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   grp_iso_homo : GroupHomomorphism G H;
@@ -257,6 +316,19 @@ Proof.
   srapply Build_GroupIsomorphism.
   1: exact (grp_homo_compose g f).
   exact _.
+Defined.
+
+Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
+Proof.
+  srapply (Build_GroupHomomorphism idmap).
+Defined.
+
+Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun _ => mon_unit).
+  - intros x y.
+    exact (left_identity mon_unit)^.
 Defined.
 
 (** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
@@ -350,7 +422,8 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
-(** Trivial group *)
+(** ** The trivial group *)
+
 Definition grp_trivial : Group.
 Proof.
   refine (Build_Group Unit (fun _ _ => tt) tt (fun _ => tt) _).
@@ -511,6 +584,16 @@ Proof.
     exact (isequiv_adjointify f g p q).
 Defined.
 
+(** Under funext, Group forms a strong wild category. *)
+(* jarlg: This gives us cat_idr_strong which proves useful in Subgroup.v *)
+Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
+Proof.
+  rapply Build_Is1Cat_Strong.
+  all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
+Defined.
+
+(** *** Properties of maps to and from the trivial group *)
+
 Global Instance isinitial_grp_trivial : IsInitial grp_trivial.
 Proof.
   intro G.
@@ -548,6 +631,14 @@ Proof.
   rapply equiv_path_grouphomomorphism.
   intros x.
   apply path_contr.
+Defined.
+
+Global Instance ishprop_grp_iso_trivial `{Univalence} (G : Group)
+  : IsHProp (GroupIsomorphism G grp_trivial).
+Proof.
+  apply equiv_hprop_allpath.
+  intros f g.
+  apply equiv_path_groupisomorphism; intro; apply path_ishprop.
 Defined.
 
 (** ** Free groups *)

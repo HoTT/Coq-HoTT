@@ -1,4 +1,4 @@
-Require Import Basics Types HSet.
+Require Import Basics Types HProp HSet PathAny WildCat.
 Require Import Algebra.Groups.Group.
 
 Local Open Scope mc_mult_scope.
@@ -25,6 +25,14 @@ Defined.
 Definition issig_issubgroup G H : _ <~> IsSubgroup G H
   := ltac:(issig).
 
+(** Given two groups G and H, there is a set worth of ways H can be a subgroup of G, corresponding to the set of injections H $-> G. *)
+Global Instance ishset_issubgroup `{U : Univalence} {G H : Group}
+  : IsHSet (IsSubgroup G H).
+Proof.
+  rapply (transport IsHSet (x:= {g : G $-> H & IsInjective g})).
+  apply path_universe_uncurried; issig.
+Defined.
+
 (** A subgroup of a group H is a group G which is a subgroup of H. *) 
 Record Subgroup (H : Group) := {
   subgroup_group : Group;
@@ -34,6 +42,102 @@ Record Subgroup (H : Group) := {
 Coercion subgroup_group : Subgroup >-> Group.
 Global Existing Instance subgroup_issubgroup.
 (* Arguments subgroup_group {_}. *)
+
+Definition issig_subgroup {G : Group} : _ <~> Subgroup G
+  := ltac:(issig).
+
+Definition issig_subgroup' {G : Group}
+  : { H : Group & { i : H $-> G & IsInjective i}} <~> Subgroup G.
+Proof.
+  refine (issig_subgroup oE _).
+  apply equiv_functor_sigma_id; intro H.
+  apply issig_issubgroup.
+Defined.
+
+(* Useful shorthand for the inclusion of a subgroup. *)
+Definition subgrp_incl (H G : Group) `{S : !IsSubgroup H G}
+  : H $-> G := @issubgroup_incl H G S.
+
+(** The trivial group is always a subgroup *)
+Global Instance issubgroup_grp_trivial {G : Group} : IsSubgroup grp_trivial G.
+Proof.
+  snrapply Build_IsSubgroup.
+  1: apply grp_trivial_rec.
+  cbn; intros ???.
+  apply path_unit.
+Defined.
+
+(** Every group is a subgroup of itself *)
+(** We make this a low priority instance so it doesn't get picked up before other subgroup instances. *)
+Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
+  := Build_IsSubgroup _ _ grp_homo_id _.
+
+(** The trivial subgroup *)
+Definition trivial_subgroup {G} : Subgroup G
+  := Build_Subgroup G grp_trivial _.
+
+(**  The maximal subgroup *)
+Definition maximal_subgroup {G} : Subgroup G
+  := Build_Subgroup G G _.
+
+(** ** Characterization of paths between subgroups *)
+
+(* jdc: It takes too long for Coq to process the *statement* of this Lemma.
+I think you need to supply some implicit arguments to fix this. 
+I think the lemma might be ok here, since it is used twice below. *)
+(* jarlg: The processing of the statement is instant on my
+computer. What am I missing? Making the lemma local as the name isn't
+appropriate to be exported, and is only used here currently. *)
+Local Lemma transport_lemma `{U : Univalence} {G H K : Group} (f : H $-> G) (p : H = K)
+  : transport (fun x : Group => x $-> G) p f
+    = grp_homo_compose f (grp_iso_inverse (equiv_path_group^-1 p)).
+Proof.
+  induction p.
+  (* jarlg: "cbn." is slow, just giving the proof is fast: *)
+  exact (cat_idr_strong f)^.
+Defined.
+
+(** Paths between subgroups correspond to isomorphisms respecting the inclusions. *)
+Proposition equiv_path_subgroup `{U : Univalence} {G : Group} (H K : Subgroup G)
+  : (exists p : GroupIsomorphism H K, subgrp_incl H G = (subgrp_incl K G) $o p)
+      <~> H = K.
+Proof.
+  refine (equiv_ap_inv (@issig_subgroup' G) H K oE _).
+  refine ((equiv_path_sigma _ _ _) oE _); cbn.
+  refine (equiv_functor_sigma' equiv_path_group _).
+  intro phi.
+  refine (equiv_concat_l (transport_sigma _ _) _ oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _); unfold pr1.
+  refine (equiv_concat_l (transport_lemma _ _) _ oE _).
+  rewrite (eissect equiv_path_group phi).
+  refine ((equiv_ap' (equiv_precompose_cat_equiv phi) _ _)^-1%equiv oE _); cbn.
+  apply equiv_concat_l.
+  apply equiv_path_grouphomomorphism; intro x; cbn.
+  rewrite (eissect phi x).
+  reflexivity.
+Defined.
+
+Corollary ishprop_path_subgroup `{U : Univalence} {G : Group} {H K : Subgroup G}
+  : IsHProp (H = K).
+Proof.
+  rapply (equiv_transport IsHProp _ _).
+  - apply equiv_path_universe.
+    exact (equiv_path_subgroup H K).
+  - apply equiv_hprop_allpath.
+    intros [f p] [g q].
+    apply path_sigma_hprop; cbn.
+    apply equiv_path_groupisomorphism.
+    apply ap10.
+    rapply (ismono_isinj (subgrp_incl K G) (isinj_issubgroup_incl)); cbn.
+    exact (ap (grp_homo_map H G) (p^ @ q)).
+Defined.
+
+(** Any group has as set of subgroups. *)
+Corollary ishset_subgroup `{U: Univalence} {G : Group}
+  : IsHSet (Subgroup G).
+Proof.
+  intros H K; apply ishprop_path_subgroup.
+Defined.
 
 Section Cosets.
 
@@ -304,26 +408,3 @@ Proof.
   2: rewrite (associativity (-y)), (negate_l G y).
   1-2: rewrite (left_identity _); reflexivity.
 Defined.
-
-(** The trivial group is always a subgroup *)
-Global Instance issubgroup_grp_trivial {G : Group} : IsSubgroup grp_trivial G.
-Proof.
-  snrapply Build_IsSubgroup.
-  1: apply grp_trivial_rec.
-  cbn; intros ???.
-  apply path_unit.
-Defined.
-
-(** Every group is a subgroup of itself *)
-(** We make this a low priority instance so it doesn't get picked up before other subgroup instances. *)
-Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
-  := Build_IsSubgroup _ _ grp_homo_id _.
-
-(** Trivial subgroup *)
-Definition trivial_subgroup {G} : Subgroup G
-  := Build_Subgroup G grp_trivial _.
-
-(**  THe maximal subgroup *)
-Definition maximal_subgroup {G} : Subgroup G
-  := Build_Subgroup G G _.
-

@@ -417,6 +417,14 @@ Proof.
   apply ap, eisretr.
 Defined.
 
+Definition equiv_ap_inv `(f : A -> B) `{IsEquiv A B f} (x y : B)
+  : (f^-1 x = f^-1 y) <~> (x = y)
+  := (@equiv_ap B A f^-1 _ x y)^-1%equiv.
+
+Definition equiv_ap_inv' `(f : A <~> B) (x y : B)
+  : (f^-1 x = f^-1 y) <~> (x = y)
+  := (equiv_ap' f^-1%equiv x y)^-1%equiv.
+
 (** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
 Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
   `{IsEquiv A B f} `{IsEquiv A C (g o f)}
