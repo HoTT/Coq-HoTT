@@ -263,7 +263,7 @@ Section AssumeStuff.
       apply equiv_ap; try exact _.
       apply path_sigma_hprop, path_equiv@{s s s u}, path_arrow.
       intros [].
-    - clear B;intros B BC.
+    - try clear B;intros B BC.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
   Qed.
 
