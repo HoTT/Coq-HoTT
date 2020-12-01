@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp.
+Require Import HProp HFiber.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
@@ -71,7 +71,7 @@ Proof.
   apply left_identity.
 Defined.
 
-(** ** Group algebra *)
+(** ** Working with equations in groups *)
 
 (** Inverses are involutive *)
 (* Check negate_involutive. *)
@@ -85,7 +85,6 @@ Defined.
 (** Group elements can be cancelled on the right of an equation *)
 (* Check group_cancelR. *)
 
-(* jarlg: Below I've just implemented the moves I needed and their symmetries. *)
 Lemma group_moveL_1M {G : Group} (x y : G)
   : x * (-y) = mon_unit -> x = y.
 Proof.
@@ -154,7 +153,7 @@ Proof.
   exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
 Defined.
 
-(** ** Definition of Group Homomorphism *)
+(** ** Group homomorphisms *)
 
 (* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
 Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
@@ -422,6 +421,18 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
+(** Given a group element a0:A over b:B, multiplication by a establishes an equivalence between the kernel and the fiber over b. *)
+Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
+  : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
+Proof.
+  intros [a0 p].
+  refine (equiv_transport (hfiber f) _ _ (right_inverse b) oE _).
+  rapply (equiv_functor_hfiber (h:=right_mult_equiv (-a0)) (k:=right_mult_equiv (- b))).
+  intro a; cbn; symmetry.
+  refine (_ @ ap (fun x => f a * (- x)) p).
+  exact (grp_homo_op f _ _ @ ap (fun x => f a * x) (grp_homo_inv f a0)).
+Defined.
+
 (** ** The trivial group *)
 
 Definition grp_trivial : Group.
@@ -584,8 +595,6 @@ Proof.
     exact (isequiv_adjointify f g p q).
 Defined.
 
-(** Under funext, Group forms a strong wild category. *)
-(* jarlg: This gives us cat_idr_strong which proves useful in Subgroup.v *)
 Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
 Proof.
   rapply Build_Is1Cat_Strong.

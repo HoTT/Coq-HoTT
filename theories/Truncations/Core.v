@@ -2,7 +2,7 @@
 
 Require Import Basics Types.
 Require Import TruncType HProp.
-Require Import Modalities.Modality Modalities.Identity Modalities.Descent.
+Require Import Modalities.Modality Modalities.Descent.
 
 (** * Truncations of types, in all dimensions. *)
 

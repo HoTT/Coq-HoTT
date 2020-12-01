@@ -70,7 +70,6 @@ Proof.
   reflexivity.
 Defined.
 
-
 (** ** Corecursion principle for group kernels *)
 
 Proposition grp_kernel_corec {A B G : Group} {f : A $-> B} {g : G $-> A}
@@ -100,7 +99,6 @@ Proof.
     apply path_sigma_hprop; reflexivity.
 Defined.
 
-
 (** ** Characterisation of group embeddings *)
 
 Local Existing Instance ishprop_path_subgroup.
@@ -109,22 +107,12 @@ Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
   : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
 Proof.
   srapply equiv_iff_hprop.
-  - intros phi b; unfold hfiber.
-    apply ishprop_sigma_disjoint.
-    intros a a' p q.
-    apply group_moveL_1M.
-    change mon_unit with (pr1 ((mon_unit; grp_homo_unit f) : grp_kernel f)).
-    pose proof (ap (fun g => g *  -(f a')) (p @ q^)) as P; cbn in P.
-    rewrite right_inverse in P.
-    rewrite <- (grp_homo_inv f) in P.
-    rewrite <- (grp_homo_op f) in P.
-    change (a * -a') with (pr1 ((a * -a'; P) : grp_kernel f)).
-    apply (ap pr1).
-    pose (phi' := ap (@group_type o (subgroup_group A)) phi); cbn in phi'.
-    apply (equiv_ap' (equiv_path _ _ phi')).
-    apply path_ishprop.
-  - unfold IsEmbedding.
-    intro isemb_f.
+  - intros phi b.
+    apply hprop_inhabited_contr; intro a.
+    rapply (contr_equiv' _ (equiv_grp_hfiber _ _ a)^-1%equiv).
+    rapply (transport Contr (x:=grp_trivial)).
+    exact (ap (group_type o subgroup_group A) phi^).
+  - intro isemb_f.
     rapply equiv_path_subgroup.
     srefine (grp_iso_inverse _; _).
     + srapply Build_GroupIsomorphism.

@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types HoTT.Truncations.
 Require Import Modality Accessible.
 
 Local Open Scope path_scope.
@@ -26,4 +26,11 @@ Proof.
   - intros X; split.
     + intros _ [].
     + intros; exact tt.
+Defined.
+
+(** A purely connected map is an equivalence. *)
+Instance isequiv_purely_conn `{Funext} {A B : Type} (f : A -> B) {conn : IsConnMap purely f}
+  : IsEquiv f.
+Proof.
+  rapply equiv_contr_map_isequiv.
 Defined.

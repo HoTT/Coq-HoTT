@@ -82,18 +82,11 @@ Definition maximal_subgroup {G} : Subgroup G
 
 (** ** Characterization of paths between subgroups *)
 
-(* jdc: It takes too long for Coq to process the *statement* of this Lemma.
-I think you need to supply some implicit arguments to fix this. 
-I think the lemma might be ok here, since it is used twice below. *)
-(* jarlg: The processing of the statement is instant on my
-computer. What am I missing? Making the lemma local as the name isn't
-appropriate to be exported, and is only used here currently. *)
 Local Lemma transport_lemma `{U : Univalence} {G H K : Group} (f : H $-> G) (p : H = K)
   : transport (fun x : Group => x $-> G) p f
     = grp_homo_compose f (grp_iso_inverse (equiv_path_group^-1 p)).
 Proof.
   induction p.
-  (* jarlg: "cbn." is slow, just giving the proof is fast: *)
   exact (cat_idr_strong f)^.
 Defined.
 

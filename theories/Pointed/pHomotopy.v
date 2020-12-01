@@ -72,3 +72,11 @@ Proof.
 Defined.
 
 Notation "p @@* q" := (phomotopy_hcompose p q).
+
+(** Pointed homotopies in a set form an HProp. *)
+Instance ishprop_phomotopy_hset `{Univalence} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
+  : IsHProp (f ==* g).
+Proof.
+  rapply (transport IsHProp (x := {p : f == g & p (point X) = dpoint_eq f @ (dpoint_eq g)^})).
+  apply path_universe_uncurried; issig.
+Defined.
