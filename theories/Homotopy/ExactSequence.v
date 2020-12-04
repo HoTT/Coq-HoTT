@@ -120,7 +120,7 @@ Defined.
 Local Existing Instance ishprop_phomotopy_hset.
 
 (** If Y is a set, then IsComplex is an HProp. *)
-Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y} (i : F ->* X) (f : X ->* Y)
+Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y} (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsComplex i f) := {}.
 
 
@@ -139,7 +139,7 @@ Definition issig_isexact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->*
   : _ <~> IsExact n i f := ltac:(issig).
 
 (** If Y is a set, then IsExact is an HProp. *)
-Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y} (n : Modality) (i : F ->* X) (f : X ->* Y)
+Global Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y} (n : Modality) (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsExact n i f).
 Proof.
   rapply (transport IsHProp (x := { cx : IsComplex i f & IsConnMap n (cxfib cx) })).

@@ -29,7 +29,7 @@ Proof.
 Defined.
 
 (** A purely connected map is an equivalence. *)
-Instance isequiv_purely_conn `{Funext} {A B : Type} (f : A -> B) {conn : IsConnMap purely f}
+Global Instance isequiv_purely_conn `{Funext} {A B : Type} (f : A -> B) {conn : IsConnMap purely f}
   : IsEquiv f.
 Proof.
   rapply equiv_contr_map_isequiv.
