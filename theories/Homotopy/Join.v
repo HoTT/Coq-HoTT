@@ -147,8 +147,10 @@ Section Join.
     srapply isequiv_adjointify.
     1: apply (functor_join f^-1 g^-1).
     1,2: srapply Join_ind.
-    1,2: intro; simpl; apply ap, eisretr.
-    2,3: intro; simpl; apply ap, eissect.
+    1,2: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
+    1,2: apply ap, eisretr.
+    2,3: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
+    2,3: apply ap, eissect.
     1,2: intros c d; cbn.
     1,2: apply sq_dp^-1.
      1 : rewrite (ap_compose _ (functor_join f g)).

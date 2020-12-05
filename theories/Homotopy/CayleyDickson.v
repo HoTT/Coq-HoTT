@@ -283,13 +283,15 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op (point _).
   Proof.
-    srapply Join_ind; simpl.
-    { intro a; apply ap.
+    srapply Join_ind.
+    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl;
+        intro a; apply ap.
       srapply hspace_left_identity. }
-    { intro b; apply ap.
+    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind.
+      simpl; intro b; apply ap.
       srapply hspace_left_identity. }
     intros a b.
-    apply sq_dp^-1.
+     simpl. apply sq_dp^-1.
     rewrite ap_idmap, Join_rec_beta_jglue.
     apply join_natsq_v.
   Defined.
@@ -297,10 +299,12 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_right_identity
     : RightIdentity cd_op (point _).
   Proof.
-    srapply Join_ind; simpl.
-    { intro a; apply ap.
+    srapply Join_ind.
+    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl.
+      intro a; apply ap.
       srapply hspace_right_identity. }
-    { intro b; apply ap.
+    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl.
+      intro b; apply ap.
       srapply hspace_left_identity. }
     intros a b.
     apply sq_dp^-1.
