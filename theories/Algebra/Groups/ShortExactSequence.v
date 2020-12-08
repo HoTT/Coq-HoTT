@@ -25,7 +25,6 @@ Proof.
 Defined.
 
 Local Existing Instance ishprop_phomotopy_hset.
-Local Existing Instance isequiv_purely_conn.
 Local Existing Instance ishprop_isexact_hset.
 
 (** A complex 0 -> A -> B of groups is purely exact if and only if the map A -> B is an embedding. *)
@@ -41,6 +40,8 @@ Proof.
     + rapply (transport IsHProp (x:= grp_trivial)).
       apply path_universe_uncurried.
       rapply Build_Equiv.
+      apply isequiv_contr_map.
+      exact conn.
   - intro isemb_f.
     exists (grp_iscomplex_trivial f).
     intros y; rapply contr_inhabited_hprop.
