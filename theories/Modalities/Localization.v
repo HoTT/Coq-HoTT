@@ -354,7 +354,9 @@ Proof.
     intros ? T; unfold IsLocal.
     nrefine (trunc_forall@{a i i}); try assumption.
     intros i.
-    apply ishprop_ooextendable@{a a i i i i i i i i i i i}.
+    apply ishprop_ooextendable@{a a i i i
+                                i i i i i
+                                i i i i i}.
   - apply islocal_equiv_islocal.
   - apply islocal_localize.
   - cbn. intros Q Q_inO.

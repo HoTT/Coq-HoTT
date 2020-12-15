@@ -354,7 +354,7 @@ Proof.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
-  - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
+  - intros f g; apply (trunc_equiv@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
 Defined.
 
 (** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)
