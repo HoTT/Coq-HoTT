@@ -74,7 +74,7 @@ Section binary_equiv.
     - simpl. rewrite IHn. reflexivity.
   Qed.
 
-  Let unarybinary : Sect binary unary'.
+  Let unarybinary : unary' o binary == idmap.
   Proof.
     intros n; induction n as [|n IHn].
     - reflexivity.
@@ -97,7 +97,7 @@ Section binary_equiv.
       rewrite IHn. reflexivity.
   Qed.
 
-  Let binaryunary : Sect unary' binary.
+  Let binaryunary : binary o unary' == idmap.
   Proof.
     intros n; induction n.
     - reflexivity.

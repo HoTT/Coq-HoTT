@@ -491,9 +491,9 @@ Section Reflective_Subuniverse.
 
     (** Thus, [T] is in a subuniverse as soon as [to O T] admits a retraction. *)
     Definition inO_to_O_retract (T:Type) (mu : O T -> T)
-    : Sect (to O T) mu -> In O T.
+    : mu o (to O T) == idmap -> In O T.
     Proof.
-      unfold Sect; intros H.
+      intros H.
       apply inO_isequiv_to_O.
       apply isequiv_adjointify with (g:=mu).
       - refine (O_indpaths (to O T o mu) idmap _).
@@ -886,10 +886,10 @@ Section Reflective_Subuniverse.
         exact (to O _ (a;p)).
       - apply O_functor.
         exact (functor_sigma idmap (fun x => to O (P x))).
-      - unfold Sect, O_functor; rapply O_indpaths.
+      - unfold O_functor; rapply O_indpaths.
         intros [a p]; simpl.
         abstract (repeat (rewrite O_rec_beta); reflexivity).
-      - unfold Sect, O_functor; rapply O_indpaths.
+      - unfold O_functor; rapply O_indpaths.
         intros [a op]; revert op; rapply O_indpaths; intros p; simpl.
         abstract (repeat (rewrite O_rec_beta); reflexivity).
     Defined.

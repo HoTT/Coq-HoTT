@@ -149,7 +149,7 @@ Section Join.
     1,2: srapply Join_ind.
     1,2: intro; simpl; apply ap, eisretr.
     2,3: intro; simpl; apply ap, eissect.
-    1,2: intros c d.
+    1,2: intros c d; cbn.
     1,2: apply sq_dp^-1.
      1 : rewrite (ap_compose _ (functor_join f g)).
      2 : rewrite (ap_compose (functor_join f g)).

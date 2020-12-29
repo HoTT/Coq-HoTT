@@ -115,8 +115,8 @@ Section FunctorialityLimit.
     (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2).
 
   Definition functor_limit_eissect
-    : Sect (functor_limit (diagram_equiv_inv m) HQ2 HQ1)
-           (functor_limit m HQ1 HQ2).
+    : functor_limit m HQ1 HQ2
+      o functor_limit (diagram_equiv_inv m) HQ2 HQ1 == idmap.
   Proof.
     apply ap10.
     srapply (equiv_inj (cone_precompose HQ2) _).
@@ -131,8 +131,8 @@ Section FunctorialityLimit.
   Defined.
 
   Definition functor_limit_eisretr
-    : Sect (functor_limit m HQ1 HQ2)
-           (functor_limit (diagram_equiv_inv m) HQ2 HQ1).
+    : functor_limit (diagram_equiv_inv m) HQ2 HQ1
+      o functor_limit m HQ1 HQ2 == idmap.
   Proof.
     apply ap10.
     srapply (equiv_inj (cone_precompose HQ1) _).

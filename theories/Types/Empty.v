@@ -42,8 +42,8 @@ Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
   refine (Build_IsEquiv _ _ _ 
     (Empty_ind (fun _ => T))                (* := equiv_inf *)
-    (fun fals:Empty => match fals with end) (* : Sect equiv_inf f *)
-    (fun t:T => match (f t) with end)       (* : Sect f equiv_inf *)
+    (fun fals:Empty => match fals with end) (* : f o equiv_inf == idmap *)
+    (fun t:T => match (f t) with end)       (* : equiv_inf o f == idmap *)
     (_)                                     (* adjointify part *)  ).
   intro t. 
   exact (Empty_rec (f t)).

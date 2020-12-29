@@ -130,7 +130,7 @@ End EquivTransport.
 Section Adjointify.
 
   Context {A B : Type} (f : A -> B) (g : B -> A).
-  Context (isretr : Sect g f) (issect : Sect f g).
+  Context (isretr : f o g == idmap) (issect : g o f == idmap).
 
   (* This is the modified [eissect]. *)
   Let issect' := fun x =>
@@ -161,11 +161,11 @@ Arguments isequiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect
 Arguments equiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
 
 (** An involution is an endomap that is its own inverse. *)
-Definition isequiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+Definition isequiv_involution {X : Type} (f : X -> X) (isinvol : f o f == idmap)
 : IsEquiv f
   := isequiv_adjointify f f isinvol isinvol.
 
-Definition equiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+Definition equiv_involution {X : Type} (f : X -> X) (isinvol : f o f == idmap)
 : X <~> X
   := equiv_adjointify f f isinvol isinvol.
 

@@ -212,7 +212,6 @@ Proof.
     intro cube.
     by destruct cube. }
   1,2 : by intros [].
-  unfold Sect.
   rewrite <- (eissect tr s0ii).
   rewrite <- (eissect tr s1ii).
   rewrite <- (eissect tr sii0).

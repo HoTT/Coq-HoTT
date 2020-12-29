@@ -396,14 +396,9 @@ Proof.
   exact _.
 Defined.
 
-(** A pointed version of Sect (sometimes useful for proofs of some equivalences) *)
-Definition pSect {A B : pType} (s : A ->* B) (r : B ->* A) : Type
-  := r o* s ==* pmap_idmap.
-
-Arguments pSect _ _ / _ _.
-
 (* A pointed equivalence is a section of its inverse *)
-Definition peissect {A B : pType} (f : A <~>* B) : pSect f (pequiv_inverse f). 
+Definition peissect {A B : pType} (f : A <~>* B)
+  : (pequiv_inverse f) o* f ==* pmap_idmap. 
 Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eissect f). 
@@ -414,7 +409,8 @@ Proof.
 Defined.
 
 (* A pointed equivalence is a retraction of its inverse *)
-Definition peisretr {A B : pType} (f : A <~>* B) : pSect (pequiv_inverse f) f.
+Definition peisretr {A B : pType} (f : A <~>* B)
+  : f o* (pequiv_inverse f) ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
   1: apply (eisretr f).

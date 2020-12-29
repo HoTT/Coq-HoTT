@@ -409,7 +409,7 @@ Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
     : IsEquiv (Book_eq_2_3_6 p f).
 Proof.
   apply (isequiv_adjointify (Book_eq_2_3_6 p f) (Book_eq_2_3_7 p f));
-    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const, Sect;
+    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const;
     induction p;
     intros y;
     do 2 (rewrite concat_1p);
@@ -587,8 +587,9 @@ Proof.
   exact idmap.
 Defined.
 
-Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y)
-      :  p = (alpha x)^ @ (ap f (ap g p)) @ (alpha y).
+Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A)
+  (alpha : f o g == idmap) (x y : B) (p : x = y)
+  :  p = (alpha x)^ @ (ap f (ap g p)) @ (alpha y).
 Proof.
   destruct p.
   simpl.
@@ -598,7 +599,7 @@ Proof.
 Defined.
 
 Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A)
-      : Sect g f -> IsHSet A -> IsHSet B.
+      : f o g == idmap -> IsHSet A -> IsHSet B.
 Proof.
   intros retr_f_g isHSet_A.
   srapply hset_axiomK. unfold axiomK.
@@ -716,14 +717,14 @@ Lemma Book_3_9_solution_1 `{Univalence} : LEM -> hProp <~> Bool.
 Proof.
   intro lem.
   apply (equiv_adjointify (LEM_hProp_Bool lem) is_true).
-  - unfold Sect. intros []; simpl.
+  - intros []; simpl.
     + unfold LEM_hProp_Bool. elim (lem Unit_hp _).
       * exact (fun _ => 1).
       * intro nUnit. elim (nUnit tt).
     + unfold LEM_hProp_Bool. elim (lem False_hp _).
       * intro fals. elim fals.
       * exact (fun _ => 1).
-  - unfold Sect. intro hprop.
+  - intro hprop.
     unfold LEM_hProp_Bool.
     elim (lem hprop _).
     + intro p.
@@ -1035,7 +1036,7 @@ End Book_4_5.
 Section Book_4_6_i.
 
   Definition is_qinv {A B : Type} (f : A -> B)
-    := { g : B -> A & (Sect g f * Sect f g)%type }.
+    := { g : B -> A & ((f o g == idmap) * (g o f == idmap))%type }.
   Definition qinv (A B : Type)
     := { f : A -> B & is_qinv f }.
   Definition qinv_id A : qinv A A

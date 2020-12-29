@@ -86,9 +86,8 @@ Section TorusEquivCircle.
   Local Open Scope cube_scope.
 
   (* We now prove that t2c is a section of c2t *)
-  Definition t2c2t : Sect t2c c2t.
+  Definition t2c2t : c2t o t2c == idmap.
   Proof.
-    unfold Sect.
     (* We start with Torus induction *)
     refine (Torus_ind _ 1 _ _ _).
     (* Our DPathSquare is really just a cube *)
@@ -147,9 +146,9 @@ Section TorusEquivCircle.
   Defined.
 
   (* We now prove t2c is a retraction of c2t *)
-  Definition c2t2c : Sect c2t t2c.
+  Definition c2t2c : t2c o c2t == idmap.
   Proof.
-    unfold Sect; apply prod_ind.
+    rapply prod_ind.
     (* Start with double circle induction *)
     srefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
     (* Change the second loop case into a square and shelve *)

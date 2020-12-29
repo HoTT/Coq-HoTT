@@ -10,7 +10,7 @@ Generalizable Variables A B f.
 (** A map is "bi-invertible" if it has both a section and a retraction, not necessarily the same.  This definition of equivalence was proposed by Andre Joyal. *)
 
 Definition BiInv `(f : A -> B) : Type
-  := {g : B -> A & Sect f g} * {h : B -> A & Sect h f}.
+  := {g : B -> A & g o f == idmap} * {h : B -> A & f o h == idmap}.
 
 (** It seems that the easiest way to show that bi-invertibility is equivalent to being an equivalence is also to show that both are h-props and that they are logically equivalent. *)
 

@@ -61,7 +61,7 @@ Definition aut_homomorphism_end `{Funext} {X Y : Type}
            (MC : forall f g, M (g o f) == M g o M f)
   : (X <~> X) -> (Y <~> Y).
 Proof.
-  assert (MS : forall f g, Sect f g -> Sect (M f) (M g)).
+  assert (MS : forall f g, g o f == idmap -> (M g) o (M f) == idmap).
   { intros g f s x.
     transitivity (M (f o g) x).
     + symmetry. refine (MC g f x).

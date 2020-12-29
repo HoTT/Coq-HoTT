@@ -46,13 +46,13 @@ Definition Build_pEquiv' {A B : pType} (f : A <~> B)
   where all data is pointed. There is a lot of unecessery data here
   but sometimes it is easier to prove equivalences using this. *)
 Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
-  (r : pSect f' f) (s : pSect f f') : A <~>* B
+  (r : f o* f' ==* pmap_idmap) (s : f' o* f == pmap_idmap) : A <~>* B
   := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).
 
 (* In some situations you want the back and forth maps to be pointed
    but not the sections *)
 Definition pequiv_adjointify' {A B : pType} (f : A ->* B) (f' : B ->* A)
-  (r : Sect f' f) (s : Sect f f') : A <~>* B
+  (r : f o f' == idmap) (s : f' o f == idmap) : A <~>* B
   := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).
 
 (** Pointed versions of [moveR_equiv_M] and friends. *)

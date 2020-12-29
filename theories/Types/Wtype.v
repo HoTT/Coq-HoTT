@@ -38,7 +38,7 @@ Definition path_wtype_inv {A B} {u v : W A B} (pq : u = v)
 (** This lets us identify the path space of a W-type, up to equivalence. *)
 
 Definition eisretr_path_wtype {A B} {z z' : W A B}
-: Sect (@path_wtype_inv _ _ z z') (path_wtype z z')
+: (path_wtype z z') o (@path_wtype_inv _ _ z z') == idmap
   := fun p => match p as p in (_ = z') return
                     path_wtype z z' (path_wtype_inv p) = p
               with
@@ -50,7 +50,7 @@ Definition eisretr_path_wtype {A B} {z z' : W A B}
               end.
 
 Definition eissect_path_wtype {A B} {z z' : W A B}
-: Sect (path_wtype z z') (@path_wtype_inv _ _ z z').
+: (@path_wtype_inv _ _ z z') o  (path_wtype z z') == idmap.
 Proof.
   intro r; destruct z, z'; set (pq := (path_sigma_uncurried _ _ _)^-1 r).
   rewrite (eisretr _ _ : path_sigma_uncurried _ _ _ pq = r)^.

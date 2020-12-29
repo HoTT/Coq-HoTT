@@ -74,7 +74,7 @@ Definition path_sum_inr (A : Type) {B : Type} {x x' : B}
 (** This lets us identify the path space of a sum type, up to equivalence. *)
 
 Definition eisretr_path_sum {A B} {z z' : A + B}
-: Sect (@path_sum_inv _ _ z z') (path_sum z z')
+: (path_sum z z') o (@path_sum_inv _ _ z z') == idmap
   := fun p => match p as p in (_ = z') return
                     path_sum z z' (path_sum_inv p) = p
               with
@@ -87,7 +87,7 @@ Definition eisretr_path_sum {A B} {z z' : A + B}
               end.
 
 Definition eissect_path_sum {A B} {z z' : A + B}
-: Sect (path_sum z z') (@path_sum_inv _ _ z z').
+: (@path_sum_inv _ _ z z') o (path_sum z z') == idmap.
 Proof.
   intro p.
   destruct z, z', p; exact idpath.

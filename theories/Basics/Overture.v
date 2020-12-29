@@ -460,18 +460,12 @@ Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomat
 
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)
 
-(** The fact that [r] is a left inverse of [s]. As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
-Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
-  forall x : A, r (s x) = x.
-
-Global Arguments Sect {A B}%type_scope / (s r)%function_scope.
-
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
 Cumulative Class IsEquiv {A B : Type} (f : A -> B) := {
   equiv_inv : B -> A ;
-  eisretr : Sect equiv_inv f;
-  eissect : Sect f equiv_inv;
-  eisadj : forall x : A, eisretr (f x) = ap f (eissect x)
+  eisretr : f o equiv_inv == idmap ;
+  eissect : equiv_inv o f == idmap ;
+  eisadj : forall x : A, eisretr (f x) = ap f (eissect x) ;
 }.
 
 Arguments eisretr {A B}%type_scope f%function_scope {_} _.
@@ -1157,7 +1151,7 @@ Proof.
 Defined.
 
 Definition issig_isequiv {A B : Type} (f : A -> B)
-  : {g : B -> A & {r : Sect g f & { s : Sect f g
+  : {g : B -> A & {r : f o g == idmap & { s : g o f == idmap
     & forall x : A, r (f x) = ap f (s x)}}}
   <~> IsEquiv f.
 Proof.
