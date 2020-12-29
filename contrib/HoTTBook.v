@@ -557,7 +557,8 @@ Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_map_isequiv.
 (* ================================================== defn:linv-rinv *)
 (** Definition 4.2.7 *)
 
-Definition Book_4_2_7 := @HoTT.Basics.Overture.Sect.
+Definition Book_4_2_7_i {A B} (f : A -> B) := {g : B -> A & g o f == idmap }.
+Definition Book_4_2_7_ii {A B} (f : A -> B) := {g : B -> A & f o g == idmap }.
 
 (* ================================================== thm:equiv-compose-equiv *)
 (** Lemma 4.2.8 *)
