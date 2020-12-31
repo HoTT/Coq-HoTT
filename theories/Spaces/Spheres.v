@@ -51,7 +51,7 @@ Global Instance isequiv_S0_to_Bool : IsEquiv (S0_to_Bool) | 0.
 Proof.
   apply isequiv_adjointify with Bool_to_S0.
   - intros [ | ]; exact 1.
-  - unfold Sect. refine (Susp_ind _ 1 1 _). intros [].
+  - refine (Susp_ind _ 1 1 _). intros [].
 Defined.
 
 Definition equiv_S0_Bool : Sphere 0 <~> Bool
@@ -119,7 +119,7 @@ Proof.
                (merid North @ (merid South)^)))).
 Defined.
 
-Definition issect_TwoSphere_to_S2 : Sect TwoSphere_to_S2 S2_to_TwoSphere.
+Definition issect_TwoSphere_to_S2 : S2_to_TwoSphere o TwoSphere_to_S2 == idmap.
 Proof.
   refine (TwoSphere_ind _ 1 _). 
   refine (_ @ (concat_p1 _)).
@@ -188,7 +188,7 @@ Proof.
     refine (Susp_rec_beta_merid South).
 Defined.
 
-Definition issect_S2_to_TwoSphere : Sect S2_to_TwoSphere TwoSphere_to_S2.
+Definition issect_S2_to_TwoSphere : TwoSphere_to_S2 o S2_to_TwoSphere == idmap.
 Proof.
   intro x.
   refine ((Susp_rec_eta_homot (TwoSphere_to_S2 o S2_to_TwoSphere) x) @ _). symmetry.

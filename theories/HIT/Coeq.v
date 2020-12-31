@@ -170,10 +170,10 @@ Definition functor_coeq_sect {B A f g B' A' f' g'}
            (p : k o f == f' o h) (q : k o g == g' o h)
            (h' : B' -> B) (k' : A' -> A)
            (p' : k' o f' == f o h') (q' : k' o g' == g o h')
-           (r : Sect h h') (s : Sect k k')
+           (r : h' o h == idmap) (s : k' o k == idmap)
            (u : forall b, ap k' (p b) @ p' (h b) @ ap f (r b) = s (f b))
            (v : forall b, ap k' (q b) @ q' (h b) @ ap g (r b) = s (g b))
-: Sect (functor_coeq h k p q) (functor_coeq h' k' p' q').
+: (functor_coeq h' k' p' q') o (functor_coeq h k p q) == idmap.
 Proof.
   refine (Coeq_ind _ (fun a => ap coeq (s a)) _); cbn; intros b.
   refine (transport_paths_FFlr (cglue b) _ @ _).
@@ -213,7 +213,7 @@ Section IsEquivFunctorCoeq.
   Defined.
 
   Definition functor_coeq_eissect
-  : Sect functor_coeq_inverse (functor_coeq h k p q).
+  : (functor_coeq h k p q) o functor_coeq_inverse == idmap.
   Proof.
     Open Scope long_path_scope.
     refine (functor_coeq_sect _ _ _ _ _ _ _ _
@@ -231,7 +231,7 @@ Section IsEquivFunctorCoeq.
   Qed.
 
   Definition functor_coeq_eisretr
-  : Sect (functor_coeq h k p q) functor_coeq_inverse.
+  : functor_coeq_inverse o (functor_coeq h k p q) == idmap.
   Proof.
     Open Scope long_path_scope.
     refine (functor_coeq_sect _ _ _ _ _ _ _ _
@@ -398,11 +398,13 @@ End CoeqInd2.
 Definition Coeq_sym_map {B A} (f g : B -> A) : Coeq f g -> Coeq g f :=
   Coeq_rec (Coeq g f) coeq (fun b : B => (cglue b)^).
 
-Lemma sect_Coeq_sym_map {B A} {f g : B -> A} : Sect (Coeq_sym_map g f) (Coeq_sym_map f g).
+Lemma sect_Coeq_sym_map {B A} {f g : B -> A}
+  : (Coeq_sym_map f g) o (Coeq_sym_map g f) == idmap.
 Proof.
-  unfold Sect. srapply @Coeq_ind.
+  srapply @Coeq_ind.
   - reflexivity.
   - intro b.
+    simpl.
     abstract (rewrite transport_paths_FFlr, Coeq_rec_beta_cglue, ap_V, Coeq_rec_beta_cglue; hott_simpl).
 Defined.
 

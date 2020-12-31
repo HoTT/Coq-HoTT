@@ -331,7 +331,7 @@ Defined.
 Let e : Au -> Au' := fun a => pr1 (fst eq_img_untrunc a).
 Let inv_e : Au' -> Au := fun a' => pr1 (snd eq_img_untrunc a').
 
-Let hom1 : Sect inv_e e.
+Let hom1 : e o inv_e == idmap.
 Proof.
   intro a'.
   apply (isinj_embedding mu' mono').
@@ -340,7 +340,7 @@ Proof.
   - exact (pr2 (snd eq_img_untrunc a')).
 Defined.
 
-Let hom2 : Sect e inv_e.
+Let hom2 : inv_e o e == idmap.
 Proof.
   intro a.
   apply (isinj_embedding mu mono).

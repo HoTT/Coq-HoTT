@@ -27,7 +27,7 @@ Proof.
   intros [g k].
   pose (h := fun x y p => (fst (k x y) p).1).
   pose (hs := fun x y => (fun p => (fst (k x y) p).2)
-                         : Sect (h x y) (ap f)).
+                         : (ap f) o (h x y) == idmap).
   clearbody hs; clearbody h; clear k.
   apply isequiv_contr_map; intros b.
   apply contr_inhabited_hprop.

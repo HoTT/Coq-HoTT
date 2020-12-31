@@ -180,9 +180,9 @@ Definition mult : nat -> nat -> nat  :=
 Definition exp : nat -> nat -> nat  :=
   fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
 
-Example add_example: add 32 17 = 49. reflexivity. Defined.
-Example mult_example: mult 20 5 = 100. reflexivity. Defined.
-Example exp_example: exp 2 10 = 1024. reflexivity. Defined.
+Example add_example: add 32 17 = 49. Proof. reflexivity. Defined.
+Example mult_example: mult 20 5 = 100. Proof. reflexivity. Defined.
+Example exp_example: exp 2 10 = 1024. Proof. reflexivity. Defined.
 
 (* To do: proof that these form a semiring *)
 
@@ -269,6 +269,7 @@ End Book_1_12.
 (* Book_2_1_concatenation1 is equivalent to the proof given in the text *)
 Definition Book_2_1_concatenation1 :
     forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+Proof.
   intros A x y z x_eq_y y_eq_z.
   induction x_eq_y.
   induction y_eq_z.
@@ -277,6 +278,7 @@ Defined.
 
 Definition Book_2_1_concatenation2 :
     forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+Proof.
   intros A x y z x_eq_y y_eq_z.
   induction x_eq_y.
   exact y_eq_z.
@@ -284,6 +286,7 @@ Defined.
 
 Definition Book_2_1_concatenation3 :
     forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+Proof.
   intros A x y z x_eq_y y_eq_z.
   induction y_eq_z.
   exact x_eq_y.
@@ -297,16 +300,19 @@ Section Book_2_1_Proofs_Are_Equal.
   Context {A : Type} {x y z : A}.
   Variable (p : x = y) (q : y = z).
   Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation2 : p *1 q = p *2 q.
+  Proof.
     induction p, q.
     reflexivity.
   Defined.
 
   Definition Book_2_1_concatenation2_eq_Book_2_1_concatenation3 : p *2 q =  p *3 q.
+  Proof.
     induction p, q.
     reflexivity.
   Defined.
 
   Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation3 : p *1 q = p *3 q.
+  Proof.
     induction p, q.
     reflexivity.
   Defined.
@@ -320,6 +326,7 @@ Definition Book_2_2 :
     (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) *1
     (Book_2_1_concatenation2_eq_Book_2_1_concatenation3 p q) =
     (Book_2_1_concatenation1_eq_Book_2_1_concatenation3 p q).
+Proof.
   induction p, q.
   reflexivity.
 Defined.
@@ -337,6 +344,7 @@ Definition Book_2_1_concatenation4
 Local Notation "p *4 q" := (Book_2_1_concatenation4 p q) (at level 10).
 Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation4 :
     forall {A : Type} {x y z : A} (p : x = y) (q : y = z), (p *1 q = p *4 q).
+Proof.
   induction p, q.
   reflexivity.
 Defined.
@@ -355,6 +363,7 @@ Definition Book_2_4_npath : nat -> Type -> Type
    As we've defined them, every (n+1)-path is a path between two n-paths. *)
 Lemma npath_as_sig : forall {n : nat} {A : Type},
     (Book_2_4_npath (S n) A) = (exists (p1 p2 : Book_2_4_npath n A), p1 = p2).
+Proof.
   reflexivity.
 Defined.
 
@@ -398,8 +407,9 @@ Definition Book_eq_2_3_7 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
 Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
            {A B : Type} {x y : A} (p : x = y) (f : A -> B)
     : IsEquiv (Book_eq_2_3_6 p f).
+Proof.
   apply (isequiv_adjointify (Book_eq_2_3_6 p f) (Book_eq_2_3_7 p f));
-    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const, Sect;
+    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const;
     induction p;
     intros y;
     do 2 (rewrite concat_1p);
@@ -426,9 +436,10 @@ Definition concat_right {A : Type} {x y : A} (z : A) (p : x = y)
    concatenation. *)
 Definition Book_2_6 {A : Type} {x y z : A} (p : x = y)
   : IsEquiv (concat_left z p).
+Proof.
   apply (isequiv_adjointify (concat_left z p) (concat_right z p));
     induction p;
-    unfold Sect, concat_right, concat_left;
+    unfold concat_right, concat_left;
     intros y;
     do 2 (rewrite concat_1p);
     reflexivity.
@@ -480,6 +491,7 @@ Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
 
 Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
   apply (equiv_adjointify coprod_ump2 coprod_ump1).
+Proof.
   - intros f.
     apply path_forall.
     intros [a | b]; reflexivity.
@@ -506,6 +518,7 @@ Section TwoTen.
 
   Local Definition g210 : (exists (p : exists a : A, B a), (C p)) ->
                           (exists a : A, (exists b : B a, (C (a; b)))).
+  Proof.
     intros pairpair.
     induction pairpair as [pair c].
     induction pair as [a b].
@@ -514,6 +527,7 @@ Section TwoTen.
 
   Definition Book_2_10 : (exists a : A, (exists b : B a, (C (a; b)))) <~>
                          (exists (p : exists a : A, B a), (C p)).
+  Proof.
     apply (equiv_adjointify f210 g210); compute; reflexivity.
   Defined.
 End TwoTen.
@@ -573,8 +587,9 @@ Proof.
   exact idmap.
 Defined.
 
-Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y)
-      :  p = (alpha x)^ @ (ap f (ap g p)) @ (alpha y).
+Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A)
+  (alpha : f o g == idmap) (x y : B) (p : x = y)
+  :  p = (alpha x)^ @ (ap f (ap g p)) @ (alpha y).
 Proof.
   destruct p.
   simpl.
@@ -584,7 +599,7 @@ Proof.
 Defined.
 
 Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A)
-      : Sect g f -> IsHSet A -> IsHSet B.
+      : f o g == idmap -> IsHSet A -> IsHSet B.
 Proof.
   intros retr_f_g isHSet_A.
   srapply hset_axiomK. unfold axiomK.
@@ -702,14 +717,14 @@ Lemma Book_3_9_solution_1 `{Univalence} : LEM -> hProp <~> Bool.
 Proof.
   intro lem.
   apply (equiv_adjointify (LEM_hProp_Bool lem) is_true).
-  - unfold Sect. intros []; simpl.
+  - intros []; simpl.
     + unfold LEM_hProp_Bool. elim (lem Unit_hp _).
       * exact (fun _ => 1).
       * intro nUnit. elim (nUnit tt).
     + unfold LEM_hProp_Bool. elim (lem False_hp _).
       * intro fals. elim fals.
       * exact (fun _ => 1).
-  - unfold Sect. intro hprop.
+  - intro hprop.
     unfold LEM_hProp_Bool.
     elim (lem hprop _).
     + intro p.
@@ -776,6 +791,7 @@ Defined.
 (** For this proof, we closely follow the proof of Theorem 3.2.2
     from the text, replacing ¬¬A → A by ∥A∥ → A. *)
 Lemma Book_3_11 `{Univalence} : ~ (forall A, Trunc (-1) A -> A).
+Proof.
   (* The proof is by contradiction. We'll assume we have such a
      function, and obtain an element of 0. *)
   intros g.
@@ -1020,7 +1036,7 @@ End Book_4_5.
 Section Book_4_6_i.
 
   Definition is_qinv {A B : Type} (f : A -> B)
-    := { g : B -> A & (Sect g f * Sect f g)%type }.
+    := { g : B -> A & ((f o g == idmap) * (g o f == idmap))%type }.
   Definition qinv (A B : Type)
     := { f : A -> B & is_qinv f }.
   Definition qinv_id A : qinv A A

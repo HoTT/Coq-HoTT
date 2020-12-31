@@ -64,7 +64,7 @@ Defined.
 
 Definition isembedding_sect_ap {X Y} (f : X -> Y)
            (s : forall x1 x2, (f x1 = f x2) -> (x1 = x2))
-           (H : forall x1 x2, Sect (s x1 x2) (@ap X Y f x1 x2))
+           (H : forall x1 x2, (@ap X Y f x1 x2) o (s x1 x2) == idmap)
   : IsEmbedding f.
 Proof.
   intros y.

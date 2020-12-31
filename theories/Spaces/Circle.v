@@ -173,7 +173,7 @@ Section EncodeDecode.
   Proof.
    refine (isequiv_adjointify (Circle_encode x) (Circle_decode x) _ _).
     (* Here we induct on [x:Circle].  We just did the case when [x] is [base]. *)
-    - refine (Circle_ind (fun x => Sect (Circle_decode x) (Circle_encode x))
+    - refine (Circle_ind (fun x => (Circle_encode x) o (Circle_decode x) == idmap)
         Circle_encode_loopexp _ _).
       (* What remains is easy since [Int] is known to be a set. *)
       by apply path_forall; intros z; apply hset_path2.

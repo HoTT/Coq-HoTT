@@ -190,8 +190,8 @@ Section FunctorialityColimit.
     (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2).
 
   Definition functor_colimit_eissect
-    : Sect (functor_colimit (diagram_equiv_inv m) HQ2 HQ1)
-           (functor_colimit m HQ1 HQ2).
+    : functor_colimit m HQ1 HQ2
+      o functor_colimit (diagram_equiv_inv m) HQ2 HQ1 == idmap.
   Proof.
     apply ap10.
     srapply (equiv_inj (cocone_postcompose HQ2) _).
@@ -206,8 +206,8 @@ Section FunctorialityColimit.
   Defined.
 
   Definition functor_colimit_eisretr
-    : Sect (functor_colimit m HQ1 HQ2)
-           (functor_colimit (diagram_equiv_inv m) HQ2 HQ1).
+    : functor_colimit (diagram_equiv_inv m) HQ2 HQ1
+      o functor_colimit m HQ1 HQ2 == idmap.
   Proof.
     apply ap10.
     srapply (equiv_inj (cocone_postcompose HQ1) _).

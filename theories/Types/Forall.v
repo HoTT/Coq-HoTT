@@ -385,8 +385,8 @@ Global Instance isequiv_flip `{P : A -> B -> Type}
 Proof.
   set (flip_P := @flip _ _ P).
   set (flip_P_inv := @flip _ _ (flip P)).
-  set (flip_P_is_sect := (fun f => 1) : Sect flip_P flip_P_inv).
-  set (flip_P_is_retr := (fun g => 1) : Sect flip_P_inv flip_P).
+  set (flip_P_is_sect := (fun f => 1) : flip_P_inv o flip_P == idmap).
+  set (flip_P_is_retr := (fun g => 1) : flip_P o flip_P_inv == idmap).
   exists flip_P_inv flip_P_is_retr flip_P_is_sect.
   intro g.  exact 1.
 Defined.

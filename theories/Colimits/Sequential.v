@@ -495,7 +495,7 @@ Defined.
 Global Instance isequiv_seq_colim_sum_to_sum_seq_colim `{Univalence} {A} (B : FibSequence A)
   : IsEquiv (seq_colim_sum_to_sum_seq_colim B).
 Proof.
-  assert (L : {G : _ & Sect (seq_colim_sum_to_sum_seq_colim B) G}).
+  assert (L : {G : _ & G o seq_colim_sum_to_sum_seq_colim B == idmap}).
   - srapply (_;_).
     + srapply seq_colim_sum_rec.
       * exact (fun n a b => inj (sig_seq B) n (a;b)).

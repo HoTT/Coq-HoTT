@@ -112,7 +112,7 @@ Proof.
 Qed.
 
 (** ** int_succ is a retract of int_pred *)
-Definition int_succ_pred : Sect int_pred int_succ.
+Definition int_succ_pred : int_succ o int_pred == idmap.
 Proof.
   intros [n | | n]; [|trivial|].
   all: destruct n; trivial.
@@ -123,7 +123,7 @@ Proof.
 Qed.
 
 (** ** int_pred is a retract of int_succ *)
-Definition int_pred_succ : Sect int_succ int_pred.
+Definition int_pred_succ : int_pred o int_succ == idmap.
 Proof.
   intros [n | | n]; [|trivial|].
   all: destruct n; trivial.
