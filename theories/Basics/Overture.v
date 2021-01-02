@@ -712,6 +712,8 @@ Register tt as core.True.I.
 (** A space is pointed if that space has a point. *)
 Class IsPointed (A : Type) := point : A.
 
+Typeclasses Transparent IsPointed.
+
 Arguments point A {_}.
 
 Record pType :=

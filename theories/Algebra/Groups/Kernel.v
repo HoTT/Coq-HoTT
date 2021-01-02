@@ -106,14 +106,14 @@ Local Existing Instance ishprop_path_subgroup.
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
   : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
 Proof.
-  srapply equiv_iff_hprop.
+  apply equiv_iff_hprop.
   - intros phi b.
     apply hprop_inhabited_contr; intro a.
     rapply (contr_equiv' _ (equiv_grp_hfiber _ _ a)^-1%equiv).
     rapply (transport Contr (x:=grp_trivial)).
     exact (ap (group_type o subgroup_group A) phi^).
   - intro isemb_f.
-    rapply equiv_path_subgroup.
+    apply equiv_path_subgroup.
     srefine (grp_iso_inverse _; _).
     + srapply Build_GroupIsomorphism.
       * exact grp_homo_const.

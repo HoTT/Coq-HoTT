@@ -74,7 +74,8 @@ Section FreeIntAction.
       unfold loop.
       exact (Coeq_rec_beta_cglue _ _ _ _).
     - intros xu yv.
-      refine (trunc_equiv' (n := -1) _ (equiv_path_sigma _ xu yv)).
+      (** jarlg: This one finishes but takes a while without "n". *)
+      nrefine (trunc_equiv' (n := -1) _ (equiv_path_sigma _ xu yv)).
       destruct xu as [x u], yv as [y v]; cbn.
       apply hprop_allpath.
       intros [p r] [q s].

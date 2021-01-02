@@ -127,20 +127,15 @@ Proof.
   assumption.
 Defined.
 
-(** Having both of these as [Instance]s would cause infinite loops. *)
-Definition istrunc_inO_tr {n : trunc_index} (A : Type) `{In (Tr n) A}
-  : IsTrunc n A.
+Global Instance istrunc_inO_tr {n : trunc_index} (A : Type) `{In (Tr n) A}
+  : IsTrunc n A | 1000.
 Proof.
   assumption.
 Defined.
 
-(** Instead, we make the latter an immediate instance, but with high cost (i.e. low priority) so that it doesn't override the ordinary lemmas about truncation.  Unfortunately, [Hint Immediate] doesn't allow specifying a cost, so we use [Hint Extern] instead. *)
-(** Hint Immediate istrunc_inO_tr : typeclass_instances. *)
-(** See https://github.com/coq/coq/issues/11697 *)
-Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.
-(** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though; see the comment in the proof of [Trunc_min] below.  *)
-
-(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
+(** To avoid infinite loops we cut proofs which apply any of the above Instances twice. Note that the cuts match arbitrary applications of the Instances, so this disallows proofs that would non-circularly use the Instances with different hypotheses. In practice this rarely happens however. *)
+Hint Cut [( _* ) inO_tr_istrunc ( _* ) inO_tr_istrunc] : typeclass_instances.
+Hint Cut [( _* ) istrunc_inO_tr ( _* ) istrunc_inO_tr] : typeclass_instances.
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
 Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
@@ -150,14 +145,23 @@ Proof.
   assumption.
 Defined.
 
-Definition istruncmap_mapinO_tr {n : trunc_index} {A B : Type}
+Global Instance istruncmap_mapinO_tr {n : trunc_index} {A B : Type}
   (f : A -> B) `{MapIn (Tr n) _ _ f}
-  : IsTruncMap n f.
+  : IsTruncMap n f | 1000.
 Proof.
   assumption.
 Defined.
 
-Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
+(** See comment for the 'Hint Cut's above. *)
+Hint Cut [( _* ) mapinO_tr_istruncmap ( _* ) mapinO_tr_istruncmap] : typeclass_instances.
+Hint Cut [( _* ) istruncmap_mapinO_tr ( _* ) istruncmap_mapinO_tr] : typeclass_instances.
+
+(** jarlg: An example of what we gain by having the Instance istruncmap_mapinO_tr. *)
+Lemma isembedding_pr1_hset `{Funext} {X : Type} {Y : hSet} (f : X -> Y) (y : Y)
+  : IsEmbedding (pr1 : hfiber f y -> X).
+Proof.
+  exact _.
+Defined.
 
 (** ** A few special things about the (-1)-truncation. *)
 
@@ -256,9 +260,7 @@ Proof.
     symmetry.
     srapply equiv_tr.
     srapply trunc_leq.
-    3:{ (** Strangely, if [istrunc_inO_tr] were a [Hint Immediate], rather than our [Hint Extern], then typeclass inference would be able to find this all on its own, although the documentation for [Hint Immediate] suggests that it shouldn't because the following tactic doesn't solve it completely. *)
-        simple apply istrunc_inO_tr; trivial.
-        exact _. }
+    3: exact _.
     apply trunc_index_min_leq_left.
 Defined.
 
@@ -282,7 +284,7 @@ Global Instance O_eq_Tr (n : trunc_index)
 Proof.
   split; intros A A_inO.
   - intros x y; exact _.
-  - exact _.
+  - assumption.
 Defined.
 
 (** It follows that [Tr n <<< Tr n.+1].  However, it is easier to prove this directly than to go through separatedness. *)

@@ -113,7 +113,8 @@ Defined.
 Corollary ishprop_path_subgroup `{U : Univalence} {G : Group} {H K : Subgroup G}
   : IsHProp (H = K).
 Proof.
-  rapply (equiv_transport IsHProp _ _).
+  (** jarlg: Without "n" here, it unifies (IsHProp ?x) with (IsHprop Unit). Can that be avoided? *)
+  nrapply (transport IsHProp).
   - apply equiv_path_universe.
     exact (equiv_path_subgroup H K).
   - apply equiv_hprop_allpath.

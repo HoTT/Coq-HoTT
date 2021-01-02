@@ -180,7 +180,8 @@ Proof.
   intros p; eapply isconnected_equiv'.
   - refine (hfiber_loops_functor f p oE _).
     symmetry; apply hfiber_ap.
-  - exact _.
+    (** jarlg: "exact _." works here but is a bit slow. *)
+  - apply isconnected_paths.
 Defined.
 
 Definition isconnected_iterated_loops_functor `{Univalence}
