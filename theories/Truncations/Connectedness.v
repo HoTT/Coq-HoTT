@@ -128,7 +128,7 @@ Definition merely_path_is0connected `{Univalence}
 : merely (x = y).
 Proof.
   refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
-  exact H0.
+  assumption.
 Defined.
 
 Definition is0connected_merely_allpath `{Univalence}

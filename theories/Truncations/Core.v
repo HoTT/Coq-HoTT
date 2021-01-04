@@ -133,9 +133,11 @@ Proof.
   assumption.
 Defined.
 
-(** To avoid infinite loops we cut proofs which apply any of the above Instances twice. Note that the cuts match arbitrary applications of the Instances, so this disallows proofs that would non-circularly use the Instances with different hypotheses. In practice this rarely happens however. *)
-Hint Cut [( _* ) inO_tr_istrunc ( _* ) inO_tr_istrunc] : typeclass_instances.
+(** To avoid infinite loops we cut proofs which apply second Instance twice. Note that the cuts match arbitrary applications of the Instances, so this disallows proofs that would non-circularly use this Instance with different hypotheses. In practice this rarely happens. It turns out to slightly slow down compilation of the library to add the same cut rule for inO_tr_istrunc. *)
 Hint Cut [( _* ) istrunc_inO_tr ( _* ) istrunc_inO_tr] : typeclass_instances.
+(** The next two cuts are purely for efficiency, eliminating immediate round-trips between the two inverse Instances. *)
+Hint Cut [( _* ) inO_tr_istrunc istrunc_inO_tr] : typeclass_instances.
+Hint Cut [( _* ) istrunc_inO_tr inO_tr_istrunc] : typeclass_instances.
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
 Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
@@ -153,8 +155,9 @@ Proof.
 Defined.
 
 (** See comment for the 'Hint Cut's above. *)
-Hint Cut [( _* ) mapinO_tr_istruncmap ( _* ) mapinO_tr_istruncmap] : typeclass_instances.
 Hint Cut [( _* ) istruncmap_mapinO_tr ( _* ) istruncmap_mapinO_tr] : typeclass_instances.
+Hint Cut [( _* ) mapinO_tr_istruncmap istruncmap_mapinO_tr] : typeclass_instances.
+Hint Cut [( _* ) istruncmap_mapinO_tr mapinO_tr_istruncmap] : typeclass_instances.
 
 (** jarlg: An example of what we gain by having the Instance istruncmap_mapinO_tr. *)
 Lemma isembedding_pr1_hset `{Funext} {X : Type} {Y : hSet} (f : X -> Y) (y : Y)
