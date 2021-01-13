@@ -1628,6 +1628,22 @@ Section ConnectedMaps.
   : (forall b, P b) <~> (forall a, P (f a))
   := Build_Equiv _ _ _ (isequiv_o_conn_map f P).
 
+  (** When considering lexness properties, we often want to consider the property of the universe of modal types being modal.  We can't say this directly (except in the accessible, hence liftable, case) because it lives in a higher universe, but we can make a direct extendability statement.  Here we prove a lemma that oo-extendability into the universe follows from plain extendability, essentially because the type of equivalences between two [O]-modal types is [O]-modal. *)
+  Definition ooextendable_TypeO_from_extension
+             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
+             (extP : forall P : A -> Type_ O, ExtensionAlong f (fun _ : B => Type_ O) P)
+    : ooExtendableAlong f (fun _ => Type_ O).
+  Proof.
+    (** It suffices to show that maps into [Type_ O] extend along [f], and that sections of families of equivalences are [ooExtendableAlong] it.  However, due to the implementation of [ooExtendableAlong], we have to prove the first one twice (there should probably be a general cofixpoint lemma for this). *)
+    intros [|[|n]];
+      [ exact tt
+      | split; [ apply extP | intros; exact tt ]
+      | split; [ apply extP | ] ].
+    intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
+    - intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
+    - rapply ooextendable_conn_map_inO.
+  Defined.
+
   (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book. *)
   Lemma conn_map_from_extension_elim {A B : Type} (f : A -> B)
   : (forall (P : B -> Type) {P_inO : forall b:B, In O (P b)}
