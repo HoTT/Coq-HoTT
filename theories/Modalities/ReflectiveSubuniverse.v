@@ -1635,13 +1635,14 @@ Section ConnectedMaps.
     : ooExtendableAlong f (fun _ => Type_ O).
   Proof.
     (** It suffices to show that maps into [Type_ O] extend along [f], and that sections of families of equivalences are [ooExtendableAlong] it.  However, due to the implementation of [ooExtendableAlong], we have to prove the first one twice (there should probably be a general cofixpoint lemma for this). *)
-    intros [|[|n]];
-      [ exact tt
-      | split; [ apply extP | intros; exact tt ]
-      | split; [ apply extP | ] ].
-    intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
-    - intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
-    - rapply ooextendable_conn_map_inO.
+    intros [|[|n]].
+    - exact tt.                                 (* n = 0 *)
+    - split; [ apply extP | intros; exact tt ]. (* n = 1 *)
+    - split; [ apply extP | ].                  (* n > 1 *)
+      (** After applying the hypothesis [extP], what remains is to extend families of paths. *)
+      intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
+      + intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
+      + rapply ooextendable_conn_map_inO.
   Defined.
 
   (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book. *)
