@@ -49,7 +49,11 @@ You may also need to run
 to continue working in the same terminal.  Then you can install the
 required dependencies:
 
-    opam install ocaml camlp5 lablgtk3 lablgtk3-sourceview3 ocamlfind num zarith
+    opam install ocaml camlp5 ocamlfind num zarith
+
+and, if you want to build `coqide`:
+
+    opam install lablgtk3 lablgtk3-sourceview3
 
 [1]:https://opam.ocaml.org/doc/Install.html
 
