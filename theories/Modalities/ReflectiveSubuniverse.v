@@ -1634,12 +1634,13 @@ Section ConnectedMaps.
              (extP : forall P : A -> Type_ O, ExtensionAlong f (fun _ : B => Type_ O) P)
     : ooExtendableAlong f (fun _ => Type_ O).
   Proof.
-    (** It suffices to show that maps into [Type_ O] extend along [f], and that sections of families of equivalences are [ooExtendableAlong] it.  However, due to the implementation of [ooExtendableAlong], we have to prove the first one twice (there should probably be a general cofixpoint lemma for this). *)
+    (** By definition, in addition to our assumption [extP] that maps into [Type_ O] extend along [f], we must show that sections of families of equivalences are [ooExtendableAlong] it.  *)
     intros [|[|n]].
     - exact tt.                                 (* n = 0 *)
+    (** Note that due to the implementation of [ooExtendableAlong], we actually have to use [extP] twice (there should probably be a general cofixpoint lemma for this). *)
     - split; [ apply extP | intros; exact tt ]. (* n = 1 *)
     - split; [ apply extP | ].                  (* n > 1 *)
-      (** After applying the hypothesis [extP], what remains is to extend families of paths. *)
+      (** What remains is to extend families of paths. *)
       intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
       + intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
       + rapply ooextendable_conn_map_inO.
