@@ -133,22 +133,12 @@ Definition ooextendable_TypeO_lex_leq `{Univalence}
            {A B : Type} (f : A -> B) `{O_inverts O' f}
   : ooExtendableAlong f (fun _ => Type_ O).
 Proof.
-  (** It suffices to show that maps into [Type_ O] extend along [f], and that sections of families of equivalences are [ooExtendableAlong] it.  However, due to the implementation of [ooExtendableAlong], we have to prove the first one twice (there should probably be a general cofixpoint lemma for this). *)
-  intros [|[|n]];
-    [ exact tt
-    | split; [ intros P | intros; exact tt ]
-    | split; [ intros P | ] ].
-  (** The first follows from what we just proved. *)
-  1-2:exists (fun x => (OO_descend_O_inverts f P x ;
-                        OO_descend_O_inverts_inO f P x)).
-  1-2:intros x; apply path_TypeO, path_universe_uncurried; cbn. 
-  1-2:exact (OO_descend_O_inverts_beta f P x).
-  (** The second follows from the fact that the type of equivalences between two [O]-modal types is [O]-modal. *)
-  intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
-  - intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
-  - (** Typeclass inference spins on [rapply], I don't know why. *)
-    apply (ooextendable_conn_map_inO O); exact _.
-Defined.  
+  rapply ooextendable_TypeO_from_extension; intros P.
+  exists (fun x => (OO_descend_O_inverts f P x ;
+                    OO_descend_O_inverts_inO f P x)).
+  intros x; apply path_TypeO, path_universe_uncurried; cbn.
+  exact (OO_descend_O_inverts_beta f P x).
+Defined.
 
 (** We can also state it in terms of belonging to a subuniverse if we lift [O'] accessibly (an analogue of Theorem 3.11(iii) of RSS). *)
 Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}

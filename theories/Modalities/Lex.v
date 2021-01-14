@@ -364,3 +364,26 @@ Proof.
   Local Transparent eissect. (* work around bug 4533 *)
   Close Scope long_path_scope.
 Qed.
+
+(** ** Lexness via generators *)
+
+(** Here the characterization of when an accessible presentation yields a lex modality from Anel-Biederman-Finster-Joyal ("Higher Sheaves and Left-Exact Localizations of ∞-Topoi", arXiv:2101.02791): it's enough for path spaces of the generators to be connected. *)
+Definition lex_gen `{Univalence} (O : Modality) `{IsAccModality O}
+           (lexgen : forall (i : ngen_indices (acc_ngen O)) (x y : ngen_type (acc_ngen O) i),
+               IsConnected O (x = y))
+  : Lex O.
+Proof.
+  srapply lex_from_inO_typeO; [ exact _ | intros i ].
+  rapply ooextendable_TypeO_from_extension; intros P; srefine (_;_).
+  1:intros; exists (forall x, P x); exact _.
+  assert (wc : forall y z, P y <~> P z).
+  { intros y z.
+    (** Here we use the hypothesis [lexgen] (typeclass inference finds it automatically). *)
+    refine (pr1 (isconnected_elim O _ (equiv_transport P y z))). }
+  intros x; apply path_TypeO, path_universe_uncurried.
+  refine (equiv_adjointify (fun f => f x) (fun u y => wc x y ((wc x x)^-1 u)) _ _).
+  - intros u; apply eisretr.
+  - intros f; apply path_forall; intros y; apply moveR_equiv_M.
+    destruct (isconnected_elim O _ (fun y => (wc x y)^-1 (f y))) as [z p].
+    exact (p x @ (p y)^).
+Defined.
