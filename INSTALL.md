@@ -49,7 +49,7 @@ You may also need to run
 to continue working in the same terminal.  Then you can install the
 required dependencies:
 
-    opam install ocaml camlp5 lablgtk3 lablgtk3-sourceview3 ocamlfind num
+    opam install ocaml camlp5 lablgtk3 lablgtk3-sourceview3 ocamlfind num zarith
 
 [1]:https://opam.ocaml.org/doc/Install.html
 
