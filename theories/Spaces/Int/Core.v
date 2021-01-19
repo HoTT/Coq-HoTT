@@ -85,7 +85,7 @@ Definition int_of_decimal_int (d : Decimal.int) : Int :=
         end
   end.
 
-Numeral Notation Int int_of_decimal_int int_to_decimal_int : int_scope.
+Number Notation Int int_of_decimal_int int_to_decimal_int : int_scope.
 
 (* For some reason 0 can be parsed as an integer, but is printed as [zero]. This notation fixes that. *)
 Notation "0" := zero : int_scope.
