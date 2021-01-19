@@ -92,5 +92,5 @@ Section another_ring.
 End another_ring.
 End naturals_order.
 
-#[global]
+#[export]
 Hint Extern 20 (PropHolds (_ ≤ _)) => eapply @nat_nonneg : typeclass_instances.

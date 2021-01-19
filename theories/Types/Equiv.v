@@ -189,5 +189,5 @@ Section AssumeFunext.
 End AssumeFunext.
 
 (** We make this a global hint outside of the section. *)
-#[global]
+#[export]
 Hint Immediate isequiv_contr_map : typeclass_instances.

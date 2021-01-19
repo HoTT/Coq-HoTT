@@ -177,4 +177,4 @@ Proof.
   apply (h2 h1).
 Defined.
 
-#[global] Hint Resolve existT existT2: core.
+#[export] Hint Resolve existT existT2: core.

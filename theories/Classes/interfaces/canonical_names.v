@@ -48,7 +48,7 @@ Class TrivialApart A {Aap : Apart A} :=
   ; trivial_apart : forall x y, x ≶ y <-> x <> y }.
 
 Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := fun x y => x.1 ≶ y.1.
-#[global]
+#[export]
 Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 
 Class Cast A B := cast: A -> B.
@@ -92,11 +92,11 @@ Instance join_is_sg_op `{f : Join A} : SgOp A := f.
 Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
 Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
 
-#[global]
+#[export]
 Hint Extern 4 (Apart (ApartZero _)) => apply @sig_apart : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 4 (Apart (NonNeg _)) => apply @sig_apart : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
 
 (* Notations: *)
@@ -186,11 +186,11 @@ Ltac auto_trans := match goal with
                     [ H: ?R ?x ?y, I: ?R ?y ?z |- ?R ?x ?z] => apply (transitivity H I)
                   end.
 
-#[global]
+#[export]
 Hint Extern 2 (?x ≤ ?y) => reflexivity : core.
-#[global]
+#[export]
 Hint Extern 4 (?x ≤ ?z) => auto_trans : core.
-#[global]
+#[export]
 Hint Extern 4 (?x < ?z) => auto_trans : core.
 
 Class Abs A `{Le A} `{Zero A} `{Negate A}
@@ -419,7 +419,7 @@ Arguments enumerator_issurj A {_} _.
 *)
 Class PropHolds (P : Type) := prop_holds: P.
 
-#[global]
+#[export]
 Hint Extern 0 (PropHolds _) => assumption : typeclass_instances.
 
 Ltac solve_propholds :=

@@ -80,7 +80,7 @@ Defined.
 
 End Extensions.
 
-#[global] Hint Immediate conn_point_incl : typeclass_instances.
+#[export] Hint Immediate conn_point_incl : typeclass_instances.
 
 (** ** Decreasing connectedness *)
 

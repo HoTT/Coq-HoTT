@@ -68,7 +68,7 @@ Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
 Notation and := prod (only parsing).
 Notation conj := pair (only parsing).
 
-#[global] Hint Resolve pair inl inr : core.
+#[export] Hint Resolve pair inl inr : core.
 
 Definition prod_curry (A B C : Type) (f : A -> B -> C)
   (p : prod A B) : C := f (fst p) (snd p).
@@ -107,7 +107,7 @@ Inductive identity (A : Type) (a : A) : A -> Type :=
 
 Scheme identity_rect := Induction for identity Sort Type.
 
-#[global] Hint Resolve identity_refl: core.
+#[export] Hint Resolve identity_refl: core.
 
 Arguments identity {A} _ _.
 Arguments identity_refl {A a} , [A] a.

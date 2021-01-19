@@ -146,7 +146,7 @@ Defined.
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
 
 (** Unfortunately, sometimes [modality_subuniv] pops up anyway.  The following hint helps typeclass inference look through it. *)
-#[global]
+#[export]
 Hint Extern 0 (In (modality_subuniv _) _) => progress change modality_subuniv with (rsu_subuniv o modality_to_reflective_subuniverse) in * : typeclass_instances.
 
 (** Modalities are precisely the reflective subuniverses that are [<<] themselves.  *)

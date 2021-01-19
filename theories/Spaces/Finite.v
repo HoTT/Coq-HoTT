@@ -468,7 +468,7 @@ Proof.
   - refine (finite_equiv Empty nx^-1 _).
 Defined.
 
-#[global]
+#[export]
 Hint Immediate finite_decidable_hprop : typeclass_instances.
 
 (** It follows that the propositional truncation of any finite set is finite. *)

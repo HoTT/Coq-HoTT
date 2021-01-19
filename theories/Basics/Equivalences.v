@@ -386,7 +386,7 @@ Section EquivInverse.
 End EquivInverse.
 
 (** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
-#[global]
+#[export]
 Hint Extern 0 (IsEquiv _^-1) => apply @isequiv_inverse : typeclass_instances.
 
 (** [Equiv A B] is a symmetric relation. *)

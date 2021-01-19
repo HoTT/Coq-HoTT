@@ -33,5 +33,5 @@ Definition not (A:Type) : Type := A -> False.
 
 (* Notation "~ x" := (not x) : type_scope. *)
 
-#[global] Hint Unfold not : core.
-#[global] Hint Resolve I : core.
+#[export] Hint Unfold not : core.
+#[export] Hint Resolve I : core.

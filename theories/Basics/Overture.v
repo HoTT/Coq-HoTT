@@ -207,7 +207,7 @@ Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (
 
 Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
-#[global]
+#[export]
 Hint Unfold composeD : core.
 
 Notation "g 'oD' f" := (composeD g f) : function_scope.
@@ -405,7 +405,7 @@ Global Arguments reflexive_pointwise_paths /.
 Global Arguments transitive_pointwise_paths /.
 Global Arguments symmetric_pointwise_paths /.
 
-#[global]
+#[export]
 Hint Unfold pointwise_paths : typeclass_instances.
 
 Notation "f == g" := (pointwise_paths f g) : type_scope.
@@ -588,14 +588,14 @@ Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
 
 Existing Class IsTrunc_internal.
 
-#[global]
+#[export]
 Hint Extern 0 (IsTrunc_internal _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
 
-#[global]
+#[export]
 Hint Extern 0 (IsTrunc _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
 
 (** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
-#[global]
+#[export]
 Hint Extern 10 =>
 progress match goal with
            | [ H : forall x y : ?T, IsTrunc ?n (x = y) |- _ ]
@@ -614,7 +614,7 @@ Notation Contr := (IsTrunc minus_two).
 Notation IsHProp := (IsTrunc minus_two.+1).
 Notation IsHSet := (IsTrunc minus_two.+2).
 
-#[global]
+#[export]
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
 (** *** Simple induction *)
@@ -663,9 +663,9 @@ Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
    The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
 
 (** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
-#[global]
+#[export]
 Hint Resolve idpath inverse : path_hints.
-#[global]
+#[export]
 Hint Resolve idpath : core.
 
 Ltac path_via mid :=
@@ -682,7 +682,7 @@ Definition Empty_rect := Empty_ind.
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Notation "~~ x" := (~ ~x) : type_scope.
-#[global]
+#[export]
 Hint Unfold not: core.
 Notation "x <> y  :>  T" := (not (x = y :> T)) : type_scope.
 Notation "x <> y" := (x <> y :> _) : type_scope.
@@ -709,7 +709,7 @@ Scheme Unit_rec := Minimality for Unit Sort Type.
 Definition Unit_rect := Unit_ind.
 
 (** A [Unit] goal should be resolved by [auto] and [trivial]. *)
-#[global]
+#[export]
 Hint Resolve tt : core.
 
 Register Unit as core.IDProp.type.

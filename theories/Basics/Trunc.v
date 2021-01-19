@@ -283,11 +283,11 @@ Definition trunc_hset {n} {A} `{IsHSet A}
   := (@trunc_leq 0 n.+3 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
-#[global]
+#[export]
 Hint Immediate trunc_contr : typeclass_instances.
-#[global]
+#[export]
 Hint Immediate trunc_hprop : typeclass_instances.
-#[global]
+#[export]
 Hint Immediate trunc_hset : typeclass_instances.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).

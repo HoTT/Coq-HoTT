@@ -48,7 +48,7 @@ Section setoid_morphisms.
 End setoid_morphisms.
 
 (* HOTT TODO check if this is ok/useful *)
-#[global]
+#[export]
 Hint Extern 4 (?f _ = ?f _) => eapply (ap f) : core.
 
 Section setoid_binary_morphisms.
@@ -156,13 +156,13 @@ Section upper_classes.
 End upper_classes.
 
 (* Due to bug #2528 *)
-#[global]
+#[export]
 Hint Extern 4 (PropHolds (1 <> 0)) =>
   eapply @intdom_nontrivial : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 5 (PropHolds (1 ≶ 0)) =>
   eapply @field_nontrivial : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 5 (PropHolds (1 <> 0)) =>
   eapply @decfield_nontrivial : typeclass_instances.
 
@@ -172,7 +172,7 @@ Integers -> IntegralDomain -> Ring and sometimes directly. Making this an
 instance with a low priority instead of using intdom_ring:> IsRing forces Coq to
 take the right way 
 *)
-#[global]
+#[export]
 Hint Extern 10 (IsRing _) => apply @intdom_ring : typeclass_instances.
 
 Arguments recip_inverse {A Aplus Amult Azero Aone Anegate Aap Arecip IsField} _.
@@ -286,7 +286,7 @@ End jections.
 Global Instance isinj_idmap A : @IsInjective A A idmap
   := fun x y => idmap.
 
-#[global]
+#[export]
 Hint Unfold IsInjective : typeclass_instances.
 
 Section strong_injective.

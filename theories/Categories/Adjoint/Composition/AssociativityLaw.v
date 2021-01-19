@@ -47,5 +47,5 @@ Section composition_lemmas.
   Qed.
 End composition_lemmas.
 
-#[global]
+#[export]
 Hint Resolve associativity : category.

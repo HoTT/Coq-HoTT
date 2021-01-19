@@ -2062,6 +2062,6 @@ Proof.
     intros; rapply ooextendable_conn_map_inO.
 Defined.
 
-#[global] Hint Immediate inO_isequiv_to_O : typeclass_instances.
-#[global] Hint Immediate inO_unsigma : typeclass_instances.
-#[global] Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
+#[export] Hint Immediate inO_isequiv_to_O : typeclass_instances.
+#[export] Hint Immediate inO_unsigma : typeclass_instances.
+#[export] Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.

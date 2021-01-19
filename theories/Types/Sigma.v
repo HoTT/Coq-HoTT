@@ -629,7 +629,7 @@ Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u
 : IsEquiv (@path_sigma_hprop A P _ u v) | 100
   := isequiv_compose.
 
-#[global]
+#[export]
 Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
 
 Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
@@ -643,7 +643,7 @@ Definition isequiv_pr1_path_hprop {A} {P : A -> Type}
 : IsEquiv (@pr1_path A P x y)
   := _ : IsEquiv (path_sigma_hprop x y)^-1.
 
-#[global]
+#[export]
 Hint Immediate isequiv_pr1_path_hprop : typeclass_instances.
 
 (** We define this for ease of [SearchAbout IsEquiv ap pr1] *)

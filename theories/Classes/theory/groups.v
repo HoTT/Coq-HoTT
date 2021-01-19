@@ -293,23 +293,23 @@ Section compose_mor.
 
 End compose_mor.
 
-#[global]
+#[export]
 Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
   class_apply @compose_sg_morphism : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 4 (IsMonoidPreserving (_ ∘ _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
-#[global]
+#[export]
 Hint Extern 4 (IsSemiGroupPreserving (_ o _)) =>
   class_apply @compose_sg_morphism : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 4 (IsMonoidPreserving (_ o _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
-#[global]
+#[export]
 Hint Extern 4 (IsSemiGroupPreserving (_^-1)) =>
   class_apply @invert_sg_morphism : typeclass_instances.
-#[global]
+#[export]
 Hint Extern 4 (IsMonoidPreserving (_^-1)) =>
   class_apply @invert_monoid_morphism : typeclass_instances.

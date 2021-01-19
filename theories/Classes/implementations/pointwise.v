@@ -72,7 +72,7 @@ Section contents.
   Defined.
 End contents.
 
-#[global]
+#[export]
   Hint Resolve
        associativity
        absorption

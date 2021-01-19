@@ -297,9 +297,9 @@ Qed.
   End category.
 *)
 
-#[global]
+#[export]
 Hint Unfold compose identity : category.
-#[global]
+#[export]
 Hint Constructors morphism object : category.
 
 (** ** (co)slice category [(a / F)], [(F / a)] *)
