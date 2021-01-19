@@ -75,7 +75,7 @@ Definition trunc_index_to_int n :=
   | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
   end.
 
-Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
+Number Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope.
 
 (** ** Arithmetic on truncation-levels. *)
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
