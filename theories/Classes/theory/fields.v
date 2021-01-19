@@ -272,8 +272,10 @@ Qed.
 End field_properties.
 
 (* Due to bug #2528 *)
+#[global]
 Hint Extern 8 (PropHolds (// _ ≶ 0)) =>
   eapply @recip_apart_zero : typeclass_instances.
+#[global]
 Hint Extern 8 (PropHolds (_ * _ ≶ 0)) =>
   eapply @mult_apart_zero : typeclass_instances.
 

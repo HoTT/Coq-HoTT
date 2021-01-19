@@ -22,6 +22,7 @@ Arguments morphism_inverse {C s d} m {_}.
 
 Local Notation "m ^-1" := (morphism_inverse m) : morphism_scope.
 
+#[global]
 Hint Resolve left_inverse right_inverse : category morphism.
 Hint Rewrite @left_inverse @right_inverse : category.
 Hint Rewrite @left_inverse @right_inverse : morphism.
@@ -193,6 +194,7 @@ Section iso_equiv_relation.
     | abstract iso_comp_t @right_inverse ].
   Defined.
 
+  #[local]
   Hint Immediate isisomorphism_inverse : typeclass_instances.
 
   (** *** Being isomorphic is a reflexive relation *)
@@ -214,6 +216,7 @@ Section iso_equiv_relation.
        end.
 End iso_equiv_relation.
 
+#[global]
 Hint Immediate isisomorphism_inverse : typeclass_instances.
 
 (** ** Epimorphisms and Monomorphisms *)
@@ -374,6 +377,9 @@ Section EpiMono.
   End iso.
 End EpiMono.
 
+#[global] Hint Immediate isisomorphism_inverse : typeclass_instances.
+
+#[global]
 Hint Immediate
   isepimorphism_identity ismonomorphism_identity
   ismonomorphism_compose isepimorphism_compose
@@ -458,6 +464,7 @@ Section iso_lemmas.
   Defined.
 End iso_lemmas.
 
+#[global]
 Hint Extern 1 (@IsIsomorphism _ _ _ (@morphism_of ?C ?D ?F ?s ?d ?m))
 => apply (@iso_functor C D F s d m) : typeclass_instances.
 

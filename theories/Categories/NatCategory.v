@@ -54,6 +54,7 @@ Module Export Core.
   End NatCategoryCoreNotations.
 
   Typeclasses Transparent nat_category.
+  #[global]
   Hint Unfold nat_category : core.
   Arguments nat_category / .
 End Core.

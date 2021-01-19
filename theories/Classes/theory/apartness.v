@@ -23,6 +23,7 @@ Qed.
 End contents.
 
 (* Due to bug #2528 *)
+#[global]
 Hint Extern 3 (PropHolds (_ <> _)) => eapply @apart_ne : typeclass_instances.
 
 Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{IsHSet A}

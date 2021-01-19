@@ -70,9 +70,9 @@ Notation "'exists' x .. y , p" := (sigT (fun x => .. (sigT (fun y => p)) ..))
   : type_scope.
 
 Notation "'exists2' x , p & q" := (sigT2 (fun x => p) (fun x => q))
-  (at level 200, x ident, p at level 200, right associativity) : type_scope.
+  (at level 200, x name, p at level 200, right associativity) : type_scope.
 Notation "'exists2' x : t , p & q" := (sigT2 (fun x:t => p) (fun x:t => q))
-  (at level 200, x ident, t at level 200, p at level 200, right associativity,
+  (at level 200, x name, t at level 200, p at level 200, right associativity,
     format "'[' 'exists2'  '/  ' x  :  t ,  '/  ' '[' p  &  '/' q ']' ']'")
   : type_scope.
 
@@ -177,4 +177,4 @@ Proof.
   apply (h2 h1).
 Defined.
 
-Hint Resolve existT existT2: core.
+#[global] Hint Resolve existT existT2: core.

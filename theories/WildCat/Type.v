@@ -78,6 +78,7 @@ Proof.
   assumption.
 Defined.
 
+#[global]
 Hint Immediate catie_isequiv : typeclass_instances.
 
 Global Instance isinitial_zero : IsInitial Empty.

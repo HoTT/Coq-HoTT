@@ -31,6 +31,7 @@ Section AssumeFunext.
   Defined.
 
   (** As usual, we can't make both of these [Instances]. *)
+  #[local]
   Hint Immediate isequiv_contr_map : typeclass_instances.
 
   (** It follows that when proving a map is an equivalence, we may assume its codomain is inhabited. *)
@@ -186,3 +187,7 @@ Section AssumeFunext.
   Defined.
 
 End AssumeFunext.
+
+(** We make this a global hint outside of the section. *)
+#[global]
+Hint Immediate isequiv_contr_map : typeclass_instances.

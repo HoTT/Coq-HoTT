@@ -40,8 +40,6 @@ Proof.
     + rapply (transport IsHProp (x:= grp_trivial)).
       apply path_universe_uncurried.
       rapply Build_Equiv.
-      apply isequiv_contr_map.
-      exact conn.
   - intro isemb_f.
     exists (grp_iscomplex_trivial f).
     intros y; rapply contr_inhabited_hprop.
