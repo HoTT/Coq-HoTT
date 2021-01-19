@@ -66,7 +66,7 @@ Defined.
 Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   match n with
   | O => inr tt
-  | S n' => inl fin_zero
+  | S _ => inl fin_zero
   end.
 
 (** Where `fin_zero` computes the first element of Fin (S n), `fin_last` computes the last. *)
