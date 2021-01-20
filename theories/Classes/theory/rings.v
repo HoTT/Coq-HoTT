@@ -128,6 +128,7 @@ Section semiring_props.
 End semiring_props.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 3 (PropHolds (_ * _ <> 0)) => eapply @mult_ne_0 : typeclass_instances.
 
 Section semiringmor_props.
@@ -179,6 +180,7 @@ Section semiringmor_props.
 End semiringmor_props.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 12 (PropHolds (_ _ <> 0)) =>
   eapply @isinjective_ne_0 : typeclass_instances.
 
@@ -366,6 +368,7 @@ Section integral_domain_props.
 End integral_domain_props.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @intdom_nontrivial_apart : typeclass_instances.
 
@@ -466,7 +469,9 @@ Section morphism_composition.
   Qed.
 End morphism_composition.
 
+#[export]
 Hint Extern 4 (IsSemiRingPreserving (_ ∘ _)) =>
   class_apply @compose_sr_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsSemiRingPreserving (_^-1)) =>
   class_apply @invert_sr_morphism : typeclass_instances.

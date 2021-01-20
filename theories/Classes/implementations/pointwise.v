@@ -26,6 +26,7 @@ Section contents.
 
   (** Try to solve some of the lattice obligations automatically *)
   Create HintDb lattice_hints.
+  #[local]
   Hint Resolve
        associativity
        absorption
@@ -70,3 +71,10 @@ Section contents.
     repeat split; try apply _; reduce_fun; apply absorption.
   Defined.
 End contents.
+
+#[export]
+  Hint Resolve
+       associativity
+       absorption
+       commutativity | 1 : lattice_hints.
+

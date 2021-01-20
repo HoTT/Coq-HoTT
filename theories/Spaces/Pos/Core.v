@@ -404,5 +404,5 @@ Definition pos_to_uint p := Decimal.rev (pos_to_little_uint p).
 
 Definition pos_to_decimal_int n := Decimal.Pos (pos_to_uint n).
 
-Numeral Notation Pos pos_of_decimal_int pos_to_uint : positive_scope.
+Number Notation Pos pos_of_decimal_int pos_to_uint : positive_scope.
 

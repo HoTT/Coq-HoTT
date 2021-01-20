@@ -34,5 +34,5 @@ Ltac easy :=
 Tactic Notation "now" tactic(t) := t; easy.
 
 Create HintDb rewrite discriminated.
-Hint Variables Opaque : rewrite.
+#[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.

@@ -36,8 +36,8 @@ Definition eq_S := f_equal S.
 
 Local Definition f_equal_S := f_equal S.
 Local Definition f_equal_nat := f_equal (A:=nat).
-Hint Resolve f_equal_S : v62.
-Hint Resolve f_equal_nat : core.
+#[export] Hint Resolve f_equal_S : v62.
+#[export] Hint Resolve f_equal_nat : core.
 
 (** The predecessor function *)
 
@@ -55,13 +55,13 @@ Qed.
 (** Injectivity of successor *)
 
 Definition eq_add_S n m (H: S n = S m): n = m := f_equal pred H.
-Hint Immediate eq_add_S: core.
+#[export] Hint Immediate eq_add_S: core.
 
 Theorem not_eq_S : forall n m:nat, n <> m -> S n <> S m.
 Proof.
   red; auto.
 Qed.
-Hint Resolve not_eq_S: core.
+#[export] Hint Resolve not_eq_S: core.
 
 Definition IsSucc (n:nat) : Type :=
   match n with
@@ -97,14 +97,14 @@ where "n + m" := (plus n m) : nat_scope.
 
 Local Definition f_equal2_plus := f_equal2 plus.
 Local Definition f_equal2_nat := f_equal2 (A1:=nat) (A2:=nat).
-Hint Resolve f_equal2_plus : v62.
-Hint Resolve f_equal2_nat : core.
+#[export] Hint Resolve f_equal2_plus : v62.
+#[export] Hint Resolve f_equal2_nat : core.
 
 Lemma plus_n_O : forall n:nat, n = n + 0.
 Proof.
   induction n; simpl; auto.
 Qed.
-Hint Resolve plus_n_O: core.
+#[export] Hint Resolve plus_n_O: core.
 
 Lemma plus_O_n : forall n:nat, 0 + n = n.
 Proof.
@@ -115,7 +115,7 @@ Lemma plus_n_Sm : forall n m:nat, S (n + m) = n + S m.
 Proof.
   intros n m; induction n; simpl; auto.
 Qed.
-Hint Resolve plus_n_Sm: core.
+#[export] Hint Resolve plus_n_Sm: core.
 
 Lemma plus_Sn_m : forall n m:nat, S n + m = S (n + m).
 Proof.
@@ -138,13 +138,13 @@ Fixpoint mult (n m:nat) : nat :=
 where "n * m" := (mult n m) : nat_scope.
 
 Local Definition f_equal2_mult := f_equal2 mult.
-Hint Resolve f_equal2_mult : core.
+#[export] Hint Resolve f_equal2_mult : core.
 
 Lemma mult_n_O : forall n:nat, 0 = n * 0.
 Proof.
   induction n; simpl; auto.
 Qed.
-Hint Resolve mult_n_O: core.
+#[export] Hint Resolve mult_n_O: core.
 
 Lemma mult_n_Sm : forall n m:nat, n * m + n = n * S m.
 Proof.
@@ -152,7 +152,7 @@ Proof.
   destruct H; rewrite <- plus_n_Sm; apply eq_S.
   pattern m at 1 3; elim m; simpl; auto.
 Qed.
-Hint Resolve mult_n_Sm: core.
+#[export] Hint Resolve mult_n_Sm: core.
 
 (** Standard associated names *)
 
@@ -178,21 +178,21 @@ Inductive le (n:nat) : nat -> Type :=
   | le_S : forall m:nat, le n m -> le n (S m).
 Local Notation "n <= m" := (le n m) : nat_scope.
 
-Hint Constructors le: core.
+#[export] Hint Constructors le: core.
 (*i equivalent to : "Hints Resolve le_n le_S : core." i*)
 
 Definition lt (n m:nat) := S n <= m.
-Hint Unfold lt: core.
+#[export] Hint Unfold lt: core.
 
 Local Infix "<" := lt : nat_scope.
 
 Definition ge (n m:nat) := m <= n.
-Hint Unfold ge: core.
+#[export] Hint Unfold ge: core.
 
 Local Infix ">=" := ge : nat_scope.
 
 Definition gt (n m:nat) := m < n.
-Hint Unfold gt: core.
+#[export] Hint Unfold gt: core.
 
 Local Infix ">" := gt : nat_scope.
 

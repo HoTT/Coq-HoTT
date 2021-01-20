@@ -137,6 +137,7 @@ Defined.
 (** Instead, we make the latter an immediate instance, but with high cost (i.e. low priority) so that it doesn't override the ordinary lemmas about truncation.  Unfortunately, [Hint Immediate] doesn't allow specifying a cost, so we use [Hint Extern] instead. *)
 (** Hint Immediate istrunc_inO_tr : typeclass_instances. *)
 (** See https://github.com/coq/coq/issues/11697 *)
+#[export]
 Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.
 (** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though; see the comment in the proof of [Trunc_min] below.  *)
 
@@ -157,6 +158,7 @@ Proof.
   assumption.
 Defined.
 
+#[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
 (** ** A few special things about the (-1)-truncation. *)

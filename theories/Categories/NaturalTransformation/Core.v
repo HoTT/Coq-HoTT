@@ -64,6 +64,7 @@ Global Arguments components_of {C D}%category {F G}%functor T%natural_transforma
 Global Arguments commutes {C D F G} !T / _ _ _ : rename.
 Global Arguments commutes_sym {C D F G} !T / _ _ _ : rename.
 
+#[export]
 Hint Resolve commutes : category natural_transformation.
 
 (** ** Helper lemmas *)

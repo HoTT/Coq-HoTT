@@ -1288,6 +1288,7 @@ Defined.
 (** [concat], with arguments flipped. Useful mainly in the idiom [apply (concatR (expression))]. Given as a notation not a definition so that the resultant terms are literally instances of [concat], with no unfolding required. *)
 Notation concatR := (fun p q => concat q p).
 
+#[export]
 Hint Resolve
   concat_1p concat_p1 concat_p_pp
   inv_pp inv_V

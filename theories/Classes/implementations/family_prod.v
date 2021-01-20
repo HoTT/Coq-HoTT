@@ -43,7 +43,7 @@ Section family_prod.
       (P : ∀ i, F i -> Type) : FamilyProd F ℓ → Type :=
     match ℓ with
     | nil => λ _, True
-    | i :: ℓ' => λ '(x,s), P i x ∧ for_all_family_prod F P s
+    | i :: _ => λ '(x,s), P i x ∧ for_all_family_prod F P s
     end.
 
   (** [for_all_2_family_prod F G R (x1,...,xn,tt) (y1,...,yn,tt) = True]
@@ -54,7 +54,7 @@ Section family_prod.
       : FamilyProd F ℓ → FamilyProd G ℓ → Type :=
     match ℓ with
     | nil => λ _ _, True
-    | i :: ℓ' => λ '(x,s) '(y,t), R i x y ∧ for_all_2_family_prod F G R s t
+    | i :: _ => λ '(x,s) '(y,t), R i x y ∧ for_all_2_family_prod F G R s t
     end.
 
   (** If [R : ∀ i, relation (F i)] is a family of relations indexed by

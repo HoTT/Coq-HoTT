@@ -110,7 +110,9 @@ Section srorder_maps.
     ; strict_order_embedding_reflecting :> StrictlyOrderReflecting }.
 End srorder_maps.
 
+#[export]
 Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f) : core.
+#[export]
 Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f) : core.
 
 (*
@@ -152,8 +154,10 @@ Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
   ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x ≤ y <-> ~(y < x) }.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 7 (PropHolds (0 < _ * _)) =>
   eapply @pos_mult_compat : typeclass_instances.
+#[export]
 Hint Extern 7 (PropHolds (0 ≤ _ * _)) =>
   eapply @nonneg_mult_compat : typeclass_instances.
 

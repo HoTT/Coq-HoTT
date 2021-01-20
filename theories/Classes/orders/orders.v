@@ -314,10 +314,13 @@ Section full_partial_order.
 End full_partial_order.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 5 (PropHolds (_ <> _)) =>
   eapply @strict_po_apart_ne :  typeclass_instances.
+#[export]
 Hint Extern 10 (PropHolds (_ ≤ _)) =>
   eapply @lt_le : typeclass_instances.
+#[export]
 Hint Extern 20 (Decidable (_ < _)) =>
   eapply @lt_dec_slow : typeclass_instances.
 
@@ -412,11 +415,14 @@ Section full_pseudo_order.
   Defined.
 End full_pseudo_order.
 
+#[export]
 Hint Extern 8 (Decidable (_ < _)) => eapply @lt_dec : typeclass_instances.
 (*
 The following instances would be tempting, but turn out to be a bad idea.
 
+#[export]
 Hint Extern 10 (PropHolds (_ <> _)) => eapply @le_ne : typeclass_instances.
+#[export]
 Hint Extern 10 (PropHolds (_ <> _)) => eapply @le_ne_flip : typeclass_instances.
 
 It will then loop like:

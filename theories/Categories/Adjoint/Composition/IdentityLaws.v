@@ -52,4 +52,5 @@ Section identity_lemmas.
 End identity_lemmas.
 
 Hint Rewrite @left_identity @right_identity : category.
+#[export]
 Hint Immediate left_identity right_identity : category.

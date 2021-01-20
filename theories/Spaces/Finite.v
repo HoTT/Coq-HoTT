@@ -66,7 +66,7 @@ Defined.
 Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   match n with
   | O => inr tt
-  | S n' => inl fin_zero
+  | S _ => inl fin_zero
   end.
 
 (** Where `fin_zero` computes the first element of Fin (S n), `fin_last` computes the last. *)
@@ -468,6 +468,7 @@ Proof.
   - refine (finite_equiv Empty nx^-1 _).
 Defined.
 
+#[export]
 Hint Immediate finite_decidable_hprop : typeclass_instances.
 
 (** It follows that the propositional truncation of any finite set is finite. *)

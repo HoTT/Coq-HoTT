@@ -212,7 +212,7 @@ Section AdjunctionEquivalences'.
                _ _ _ _
                (equiv_isequiv
                   (equiv_hom_set_adjunction T (fst cd) (snd cd))^-1)).
-    Grab Existential Variables.
+    Unshelve.
     simpl.
     intros.
     exact (adjunction_hom__of__adjunction_unit__commutes T _ _ _ _ _ _).

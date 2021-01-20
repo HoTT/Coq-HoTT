@@ -106,6 +106,7 @@ Global Existing Instance istrunc_is_structure_homomorphism.
 
 Create HintDb structure_homomorphisms discriminated.
 
+#[export]
 Hint Resolve is_structure_homomorphism_identity is_structure_homomorphism_composition : structure_homomorphisms.
 
 (** When [(P, H)] is a notion of structure, for [α β : P x] we define

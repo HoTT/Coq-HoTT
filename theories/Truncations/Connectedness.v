@@ -76,11 +76,11 @@ Proof.
   apply O_lex_leq_Tr.
 Defined.
 
-Hint Immediate conn_point_incl : typeclass_instances.
-
 (** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
 
 End Extensions.
+
+#[export] Hint Immediate conn_point_incl : typeclass_instances.
 
 (** ** Decreasing connectedness *)
 

@@ -242,7 +242,9 @@ End with_a_ring.
 End contents.
 
 (* Due to bug #2528 *)
+#[export]
 Hint Extern 6 (PropHolds (1 <> 0)) =>
   eapply @nat_nontrivial : typeclass_instances.
+#[export]
 Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @nat_nontrivial_apart : typeclass_instances.

@@ -305,10 +305,13 @@ Section composition.
     OrderEmbedding f -> OrderEmbedding g -> OrderEmbedding (g ∘ f) := {}.
 End composition.
 
+#[export]
 Hint Extern 4 (OrderPreserving (_ ∘ _)) =>
   class_apply @compose_order_preserving : typeclass_instances.
+#[export]
 Hint Extern 4 (OrderReflecting (_ ∘ _)) =>
   class_apply @compose_order_reflecting : typeclass_instances.
+#[export]
 Hint Extern 4 (OrderEmbedding (_ ∘ _)) =>
   class_apply @compose_order_embedding : typeclass_instances.
 

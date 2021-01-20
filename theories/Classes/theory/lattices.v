@@ -229,19 +229,27 @@ Section morphism_composition.
   Qed.
 End morphism_composition.
 
+#[export]
 Hint Extern 4 (IsJoinPreserving (_ ∘ _)) =>
   class_apply @compose_join_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsMeetPreserving (_ ∘ _)) =>
   class_apply @compose_meet_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsBoundedJoinPreserving (_ ∘ _)) =>
   class_apply @compose_bounded_join_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsLatticePreserving (_ ∘ _)) =>
   class_apply @compose_lattice_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsJoinPreserving (_^-1)) =>
   class_apply @invert_join_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsMeetPreserving (_^-1)) =>
   class_apply @invert_meet_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsBoundedJoinPreserving (_^-1)) =>
   class_apply @invert_bounded_join_sl_morphism : typeclass_instances.
+#[export]
 Hint Extern 4 (IsLatticePreserving (_^-1)) =>
   class_apply @invert_lattice_morphism : typeclass_instances.

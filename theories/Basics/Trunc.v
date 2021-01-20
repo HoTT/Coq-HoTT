@@ -75,7 +75,7 @@ Definition trunc_index_to_int n :=
   | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
   end.
 
-Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
+Number Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope.
 
 (** ** Arithmetic on truncation-levels. *)
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
@@ -283,8 +283,11 @@ Definition trunc_hset {n} {A} `{IsHSet A}
   := (@trunc_leq 0 n.+3 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
+#[export]
 Hint Immediate trunc_contr : typeclass_instances.
+#[export]
 Hint Immediate trunc_hprop : typeclass_instances.
+#[export]
 Hint Immediate trunc_hset : typeclass_instances.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).

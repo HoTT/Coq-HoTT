@@ -113,6 +113,7 @@ Create HintDb category discriminated.
 (** create a hint db for morphisms in categories *)
 Create HintDb morphism discriminated.
 
+#[export]
 Hint Resolve left_identity right_identity associativity : category morphism.
 Hint Rewrite left_identity right_identity : category.
 Hint Rewrite left_identity right_identity : morphism.

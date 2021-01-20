@@ -28,22 +28,20 @@ Section HSpaceProperties.
     : forall (a : A), IsEquiv (fun x => a * x).
   Proof.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
-    + exact (conn_point_incl hspace_id).
-    + apply Unit_ind.
-      srapply (isequiv_homotopic idmap).
-      intro a; symmetry.
-      apply left_identity.
+    apply Unit_ind.
+    srapply (isequiv_homotopic idmap).
+    intro a; symmetry.
+    apply left_identity.
   Defined.
 
   Global Instance isequiv_hspace_right_op
     : forall (a : A), IsEquiv (fun x => x * a).
   Proof.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
-    + exact (conn_point_incl hspace_id).
-    + apply Unit_ind.
-      srapply (isequiv_homotopic idmap).
-      intro a; symmetry.
-      apply right_identity.
+    apply Unit_ind.
+    srapply (isequiv_homotopic idmap).
+    intro a; symmetry.
+    apply right_identity.
   Defined.
 
   Definition equiv_hspace_left_op (a : A) : A <~> A

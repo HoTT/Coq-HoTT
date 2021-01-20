@@ -481,6 +481,7 @@ Section Reflective_Subuniverse.
     := fun _ => inO_equiv_inO (O T) (to O T)^-1.
 
     (* We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis.  *)
+    #[local]
     Hint Immediate inO_isequiv_to_O : typeclass_instances.
 
     Definition inO_iff_isequiv_to_O (T:Type)
@@ -853,6 +854,7 @@ Section Reflective_Subuniverse.
       all: refine (inO_hfiber pr1 x); assumption.
     Defined.
 
+    #[local]
     Hint Immediate inO_unsigma : typeclass_instances.
 
     (** The reflector preserving hfibers is a characterization of lex modalities.  Here is the comparison map. *)
@@ -1704,6 +1706,7 @@ Section ConnectedMaps.
               (equiv_sigma_contr (fun a:A => const tt a = tt)) _).
   Defined.
 
+  #[local]
   Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
 
   Global Instance conn_map_to_unit_isconnected {A : Type}
@@ -2058,3 +2061,7 @@ Proof.
   - pose (inO_leq O' (Sep O));
     intros; rapply ooextendable_conn_map_inO.
 Defined.
+
+#[export] Hint Immediate inO_isequiv_to_O : typeclass_instances.
+#[export] Hint Immediate inO_unsigma : typeclass_instances.
+#[export] Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.

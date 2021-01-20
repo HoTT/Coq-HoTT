@@ -104,8 +104,7 @@ Proof.
     assert (MH : forall (a:A) (f:X*A -> X*A) (x:X),
                fst (f (x,a)) = fst (f (x,a0))).
     { refine (conn_map_elim (Tr n) (unit_name a0) _ _).
-      - apply conn_point_incl; assumption.
-      - intros; reflexivity. }
+      intros; reflexivity. }
     assert (MC : forall (f g :X*A -> X*A), M (g o f) == M g o M f).
     { intros f g x; unfold M.
       transitivity (fst (g (fst (f (x,a0)), snd (f (x,a0))))).
