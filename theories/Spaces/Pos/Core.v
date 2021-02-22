@@ -393,6 +393,12 @@ Definition pos_of_decimal_int (d:Decimal.int) : option Pos :=
   | Decimal.Neg _ => None
   end.
 
+Definition pos_of_number_uint (d:Number.int) : option Pos :=
+  match d with
+  | Number.IntDecimal d => pos_of_decimal_int d
+  | Number.IntHexadecimal _ => None
+  end.
+
 Fixpoint pos_to_little_uint p :=
   match p with
   | 1 => Decimal.D1 Decimal.Nil
@@ -404,5 +410,6 @@ Definition pos_to_uint p := Decimal.rev (pos_to_little_uint p).
 
 Definition pos_to_decimal_int n := Decimal.Pos (pos_to_uint n).
 
-Number Notation Pos pos_of_decimal_int pos_to_uint : positive_scope.
+Definition pos_to_number_uint p := Number.UIntDecimal (pos_to_uint p).
 
+Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.

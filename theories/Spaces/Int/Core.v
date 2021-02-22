@@ -60,6 +60,9 @@ Definition int_to_decimal_int (n : Int) : Decimal.int :=
     | pos m => Decimal.Pos (pos_to_uint m)
   end.
 
+Definition int_to_number_int (n : Int) : Number.int :=
+  Number.IntDecimal (int_to_decimal_int n).
+
 Fixpoint int_of_decimal_uint (d : Decimal.uint) : Int :=
   match d with
     | Decimal.Nil => zero
@@ -85,7 +88,13 @@ Definition int_of_decimal_int (d : Decimal.int) : Int :=
         end
   end.
 
-Number Notation Int int_of_decimal_int int_to_decimal_int : int_scope.
+Definition int_of_number_int (d:Number.int) :=
+  match d with
+  | Number.IntDecimal d => Some (int_of_decimal_int d)
+  | Number.IntHexadecimal _ => None
+  end.
+
+Number Notation Int int_of_number_int int_to_number_int : int_scope.
 
 (* For some reason 0 can be parsed as an integer, but is printed as [zero]. This notation fixes that. *)
 Notation "0" := zero : int_scope.
