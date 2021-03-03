@@ -23,7 +23,7 @@ jobs:
     env: ${{ matrix.env }}
 
     # The operating system
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     # Here is the main script
     steps:
