@@ -19,9 +19,10 @@ EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdow
 
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
+SRCCOQCORELIB=$(srcdir)/coq-core
 
 # Extra standard library replacements to install
-STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQLIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
+STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQCORELIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
 
 # Flags for hoqchk
 HOQCHKFLAGS=-silent -o

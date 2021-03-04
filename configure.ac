@@ -43,9 +43,12 @@ AS_IF([test "x$COQTOP" = "xno"],
        AC_MSG_RESULT([$COQVERSION])
        AC_MSG_CHECKING([Coq library path])
        COQLIB="`"$COQTOP" -where 2>/dev/null | tr -d '\r'`"
+       COQCORELIB="$COQLIB/../coq-core"
        AC_MSG_RESULT([$COQLIB])
+       AC_MSG_RESULT([$COQCORELIB])
        AC_SUBST([COQVERSION])
        AC_SUBST([COQLIB])
+       AC_SUBST([COQCORELIB])
 
        indicesmatter="`"$COQTOP" -help 2>&1 | grep -c -- -indices-matter`"
        AS_IF([test "$indicesmatter" = "0"],
@@ -230,10 +233,10 @@ AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # that the Makefile can manipulate them
 STDLIB_REPLACEMENT_DIRS=""
 for stdlibdir in dev kernel library plugins stm toplevel ide ; do
-    AS_IF([test -h "$srcdir/coq/$stdlibdir"], [rm -f "$srcdir/coq/$stdlibdir"],
-          [test -d "$srcdir/coq/$stdlibdir"], [rm -rf "$srcdir/coq/$stdlibdir"])
-    AS_IF([test -d "$COQLIB/$stdlibdir"],
-          [ln -s "$COQLIB/$stdlibdir" "$srcdir/coq"
+    AS_IF([test -h "$srcdir/coq-core/$stdlibdir"], [rm -f "$srcdir/coq-core/$stdlibdir"],
+          [test -d "$srcdir/coq-core/$stdlibdir"], [rm -rf "$srcdir/coq-core/$stdlibdir"])
+    AS_IF([test -d "$COQCORELIB/$stdlibdir"],
+          [ln -s "$COQCORELIB/$stdlibdir" "$srcdir/coq-core"
            STDLIB_REPLACEMENT_DIRS="$STDLIB_REPLACEMENT_DIRS $stdlibdir"
           ])
 done
@@ -245,8 +248,8 @@ AS_IF([test "$coqtop_out" = 0],
       [AC_MSG_RESULT([yes])],
       [AC_MSG_RESULT([no])
        AC_MSG_NOTICE([Falling back on making physical copies of the stdlib])
-       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins" "$srcdir/coq/stm" "$srcdir/coq/toplevel" "$srcdir/coq/ide"
-       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$COQLIB/toplevel" "$srcdir/coq"
+       rm -f "$srcdir/coq-core/dev" "$srcdir/coq-core/kernel" "$srcdir/coq-core/library" "$srcdir/coq-core/plugins" "$srcdir/coq-core/stm" "$srcdir/coq-core/toplevel" "$srcdir/coq/ide"
+       cp -R "$COQCORELIB/dev" "$COQCORELIB/kernel" "$COQCORELIB/library" "$COQCORELIB/plugins" "$COQCORELIB/stm" "$COQCORELIB/toplevel" "$srcdir/coq-core"
        AS_IF([test -d "$COQLIB/ide"],
              [cp -R "$COQLIB/ide" "$srcdir/coq"])])
 
