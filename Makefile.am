@@ -72,6 +72,7 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Decimal.v \
 	$(SRCCOQLIB)/theories/Init/Hexadecimal.v \
 	$(SRCCOQLIB)/theories/Init/Numeral.v \
+	$(SRCCOQLIB)/theories/Init/Number.v \
 	$(SRCCOQLIB)/theories/Init/Nat.v \
 	$(SRCCOQLIB)/theories/Init/Prelude.v \
 	$(SRCCOQLIB)/theories/Bool/Bool.v \

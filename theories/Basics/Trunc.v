@@ -60,6 +60,12 @@ Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
                         end
      end.
 
+Definition num_int_to_trunc_index (v : Number.int) : option trunc_index :=
+  match v with
+  | Number.IntDecimal v => int_to_trunc_index v
+  | Number.IntHexadecimal _ => None
+  end.
+
 Fixpoint trunc_index_to_little_uint n acc :=
   match n with
   | minus_two => acc
@@ -75,7 +81,11 @@ Definition trunc_index_to_int n :=
   | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
   end.
 
-Number Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope.
+Definition trunc_index_to_num_int n :=
+  Number.IntDecimal (trunc_index_to_int n).
+
+Number Notation trunc_index num_int_to_trunc_index trunc_index_to_num_int
+  : trunc_scope.
 
 (** ** Arithmetic on truncation-levels. *)
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index

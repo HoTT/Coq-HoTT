@@ -9,22 +9,20 @@ Require Export Specif.
 Require Coq.Init.Decimal.
 Require Coq.Init.Hexadecimal.
 Require Coq.Init.Numeral.
+Require Coq.Init.Number.
 Require Coq.Init.Nat.
 
 Declare ML Module "number_string_notation_plugin".
 
-Set Warnings "-decimal-numeral-notation".
-Set Warnings "-numeral-notation".
-
 (* Parsing / printing of decimal numbers *)
 Arguments Nat.of_uint d%dec_uint_scope.
 Arguments Nat.of_int d%dec_int_scope.
-Numeral Notation Decimal.uint Decimal.uint_of_uint Decimal.uint_of_uint
+Number Notation Number.uint Number.uint_of_uint Number.uint_of_uint
   : dec_uint_scope.
-Numeral Notation Decimal.int Decimal.int_of_int Decimal.int_of_int
+Number Notation Number.int Number.int_of_int Number.int_of_int
   : dec_int_scope.
 
 (* Parsing / printing of [nat] numbers *)
-Numeral Notation nat Nat.of_uint Nat.to_uint : nat_scope (abstract after 5000).
+Number Notation nat Nat.of_num_uint Nat.to_num_uint (abstract after 5001) : nat_scope.
 
 Add Search Blacklist "_admitted" "_subproof" "Private_".
