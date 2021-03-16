@@ -7,8 +7,8 @@ set -x
 n=0
 until [ $n -ge 10 ]
 do
-    cabal update && break
+    cabal v1-update && break
     n=$[$n+1]
     sleep 10
 done
-cabal install graphviz-2999.19.0.0 text
+cabal v1-install graphviz text
