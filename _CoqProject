@@ -327,6 +327,13 @@ theories/Spectra/Spectrum.v
 theories/Spectra/Coinductive.v
 
 #
+#   Universal Algebra
+#
+
+theories/Algebra/Universal/Algebra.v
+theories/Algebra/Universal/Homomorphism.v
+
+#
 #   Algebra
 #
 
