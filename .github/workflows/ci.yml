@@ -38,7 +38,8 @@ jobs:
 
     # We update the submodules
     - name: submodules-init
-      uses: snickerbockers/submodules-init@v4 
+      uses: snickerbockers/submodules-init@v4
+
     - name: Add repositories to apt
       ## TODO: Cache dependencies?
       run: |
@@ -53,7 +54,6 @@ jobs:
     - name: Installing dependencies
       run: |
         # Work around issue with npm as per https://bugs.launchpad.net/ubuntu/+source/npm/+bug/1809828 and https://askubuntu.com/a/1092849/223605
-        #
         sudo apt-get install -y --allow-unauthenticated libnode-dev node-gyp libssl-dev
         sudo apt-get install -y --allow-unauthenticated npm aspcud ghc cabal-install graphviz xsltproc python-lxml python-pexpect libxml2-dev libxslt1-dev time lua5.1 unzip ocaml
         sudo sh -c "yes | $(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)"
