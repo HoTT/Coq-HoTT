@@ -23,15 +23,16 @@ jobs:
     env: ${{ matrix.env }}
 
     # The operating system
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     # Here is the main script
     steps:
     # First we set up Python 2.7
     - name: Set up Python 2.7
-      uses: actions/setup-python@v2
-      with:
-        python-version: 2.7
+      run: |
+        sudo apt-get install -y python curl
+        sudo curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+        sudo python ./get-pip.py
 
     - uses: actions/checkout@v2
 
@@ -53,8 +54,13 @@ jobs:
     - name: Installing dependencies
       run: |
         # Work around issue with npm as per https://bugs.launchpad.net/ubuntu/+source/npm/+bug/1809828 and https://askubuntu.com/a/1092849/223605
-        sudo apt-get install -y --allow-unauthenticated nodejs-dev node-gyp libssl1.0-dev
-        sudo apt-get install -y --allow-unauthenticated npm aspcud ghc cabal-install graphviz xsltproc python-lxml python-pexpect libxml2-dev libxslt1-dev time ocaml camlp5 camlp4 ocaml-findlib libocamlgraph-ocaml-dev lua5.1 libzarith-ocaml-dev
+        sudo apt-get install -y --allow-unauthenticated libnode-dev node-gyp libssl-dev
+        sudo apt-get install -y --allow-unauthenticated npm aspcud ghc cabal-install graphviz xsltproc python-lxml python-pexpect libxml2-dev libxslt1-dev time lua5.1 unzip ocaml
+        sudo sh -c "yes | $(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)"
+        opam init --disable-sandboxing -y
+        opam update
+        sudo apt-get install -y libipc-system-simple-perl libstring-shellquote-perl
+        opam install -y camlp5 ocamlfind ocamlgraph zarith
 
     - name: Upgrade and autoremove packages
       run: |
@@ -64,6 +70,7 @@ jobs:
 
     - name: Before script information
       run: |
+        eval $(opam env)
         lscpu
         uname -a
         lsb_release -a
