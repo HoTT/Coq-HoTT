@@ -76,3 +76,6 @@ contrib/*.bak.*
 
 *.crashcoqide
 .vscode/
+
+# ignore dune _build directory
+_build/
