@@ -75,7 +75,6 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Number.v \
 	$(SRCCOQLIB)/theories/Init/Nat.v \
 	$(SRCCOQLIB)/theories/Init/Prelude.v \
-	$(SRCCOQLIB)/theories/Bool/Bool.v \
 	$(SRCCOQLIB)/theories/Unicode/Utf8_core.v \
 	$(SRCCOQLIB)/theories/Unicode/Utf8.v \
 	$(SRCCOQLIB)/theories/Program/Tactics.v
