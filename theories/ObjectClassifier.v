@@ -13,8 +13,8 @@ Context `{ua:Univalence}.
 Section FamPow.
 (** We consider Families and Powers over a fixed type [A] *)
 Variable A : Type.
-Definition Fam A:=sigT (fun I:Type  => I->A).
-Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; @pr1 _ _).
+Definition Fam A:=sig (fun I:Type  => I->A).
+Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sig Q) ; @pr1 _ _).
 Definition f2p: Fam A -> (A->Type):=
  fun F => let (I, f) := F in (fun a => (hfiber f a)).
 
@@ -32,7 +32,7 @@ Theorem FamequivPow : (A->Type)<~>(Fam A).
 Proof.
 apply (equiv_adjointify p2f f2p).
 (* Theorem right (F:Fam A) : F = (p2ff2p F) *)
- +intros [I f]. set (e:=equiv_path_sigma _ (@existT Type (fun I0 : Type => I0 -> A) I f)
+ +intros [I f]. set (e:=equiv_path_sigma _ (@exist Type (fun I0 : Type => I0 -> A) I f)
   ({a : A & hfiber f a} ; @pr1 _ _)). simpl in e.
   enough (X:{p : I = {a : A & @hfiber I A f a} &
      @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}) by apply (e X)^.
@@ -48,16 +48,16 @@ Defined.
 Definition topmap {B} (f:B->A) (b:B): pType :=
   Build_pType (hfiber f (f b)) (b ; idpath (f b)).
 
-Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P)->
+Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sig P)->
   (Pullback P (@pr1 _ (fun u :Type => u))):=
 (fun (X : {a : A & P a}) => (fun (a : A) (q : P a) => (a; ((P a; q); 1))) X.1 X.2).
 
 Local Definition help_objclasspb_is_fibrantreplacement2 (P:A-> Type):
- (Pullback P (@pr1 _ (fun u :Type => u))) -> (sigT P).
+ (Pullback P (@pr1 _ (fun u :Type => u))) -> (sig P).
 intros [a [[T t] p]]. exact (a;(transport (fun X => X) (p^) t)).
 Defined.
 
-Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (Pullback P (@pr1 _ (fun u :Type => u))).
+Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sig P) <~> (Pullback P (@pr1 _ (fun u :Type => u))).
 Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
 srapply isequiv_adjointify.

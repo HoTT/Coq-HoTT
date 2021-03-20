@@ -247,7 +247,7 @@ Lemma Qpos_le_lt_min : forall a b : Q+, ' a <= ' b ->
   exists c ca cb, a = c + ca /\ b = c + cb.
 Proof.
 intros a b E. exists (a/2),(a/2).
-simple refine (existT _ _ _);simpl.
+simple refine (exist _ _ _);simpl.
 - exists (' (a / 2) + (' b - ' a)).
   apply nonneg_plus_lt_compat_r.
   + apply (snd (flip_nonneg_minus _ _)). trivial.

@@ -326,7 +326,7 @@ Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.
 (* ================================================== thm:ttac *)
 (** Theorem 2.15.7 *)
 
-Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sigT_coind.
+Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sig_coind.
 
 (* ================================================== defn:set *)
 (** Definition 3.1.1 *)
@@ -943,7 +943,7 @@ Definition Book_6_12_5 := @HoTT.HIT.Flattening.sWtil_rec.
 (* ================================================== thm:ap-sigma-rect-path-pair *)
 (** Lemma 6.12.7 *)
 
-Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sigT_rec_path_sigma.
+Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sig_rec_path_sigma.
 
 (* ================================================== thm:flattening-rectnd-beta-ppt *)
 (** Lemma 6.12.8 *)

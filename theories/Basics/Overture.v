@@ -174,15 +174,108 @@ Open Scope core_scope.
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.
 
-(** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
-Notation "( x ; y )" := (existT _ x y) : fibration_scope.
-Notation "( x ; .. ; y ; z )" := (existT _ x .. (existT _ y z) ..) : fibration_scope.
-(** We bind [fibration_scope] with [sigT] so that we are automatically in [fibration_scope] when we are passing an argument of type [sigT]. *)
-Bind Scope fibration_scope with sigT.
+(** ** Sigma types *)
 
-(** We have unified [sig] and [sigT] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [projT1] and [projT2] nor the [_sig] in [proj1_sig] and [proj2_sig], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
-Notation pr1 := projT1.
-Notation pr2 := projT2.
+(** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
+    Similarly for [(sig2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
+
+Record sig {A} (P : A -> Type) := exist {
+  proj1 : A ;
+  proj2 : P proj1 ;
+}.
+
+Scheme sig_rect := Induction for sig Sort Type.
+Scheme sig_ind := Induction for sig Sort Type.
+Scheme sig_rec := Minimality for sig Sort Type.
+
+Arguments sig_ind {_ _}.
+
+(** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
+
+Arguments exist {A}%type P%type _ _.
+Arguments proj1 {A P} _ / .
+Arguments proj2 {A P} _ / .
+
+Arguments sig (A P)%type.
+
+Notation "{ x | P }" := (sig (fun x => P)) : type_scope.
+Notation "{ x : A | P }" := (sig (A := A) (fun x => P)) : type_scope.
+
+Notation "'exists' x .. y , p" := (sig (fun x => .. (sig (fun y => p)) ..))
+  (at level 200, x binder, right associativity,
+   format "'[' 'exists'  '/  ' x  ..  y ,  '/  ' p ']'")
+  : type_scope.
+
+Notation "{ x : A  & P }" := (sig (fun x:A => P)) : type_scope.
+
+Add Printing Let sig.
+
+
+
+
+(** TODO: Move to Types/Sigma.v *)
+(** Various forms of the axiom of choice for specifications *)
+
+Section Choice_lemmas.
+
+  Variables S S' : Type.
+  Variable R : S -> S' -> Type.
+  Variable R' : S -> S' -> Type.
+  Variables R1 R2 : S -> Type.
+
+  Lemma Choice :
+   (forall x:S, {y:S' & R' x y}) -> {f:S -> S' & forall z:S, R' z (f z)}.
+  Proof.
+    intro H.
+    exists (fun z => proj1 (H z)).
+    intro z; destruct (H z); assumption.
+  Defined.
+
+(*
+  Lemma bool_choice :
+   (forall x:S, (R1 x) + (R2 x)) ->
+     {f:S -> bool & forall x:S, (f x = true) * (R1 x) + (f x = false) * R2 x}.
+  Proof.
+    intro H.
+    exists (fun z:S => if H z then true else false).
+    intro z; destruct (H z); auto.
+  Defined.
+*)
+
+End Choice_lemmas.
+
+ (*
+Section Dependent_choice_lemmas.
+
+  Variables X : Type.
+  Variable R : X -> X -> Type.
+
+  Lemma dependent_choice :
+    (forall x:X, {y : _ & R x y}) ->
+    forall x0, {f : nat -> X & (f O = x0) * (forall n, R (f n) (f (S n)))}.
+  Proof.
+    intros H x0.
+    set (f:=fix f n := match n with O => x0 | S n' => proj1 (H (f n')) end).
+    exists f.
+    split. reflexivity.
+    induction n; simpl; apply proj2.
+  Defined.
+
+End Dependent_choice_lemmas.
+*)
+
+
+#[export] Hint Resolve exist : core.
+
+(** We define notation for dependent pairs because it is too annoying to write and see [exist P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
+Notation "( x ; y )" := (exist _ x y) : fibration_scope.
+Notation "( x ; .. ; y ; z )" := (exist _ x .. (exist _ y z) ..) : fibration_scope.
+(** We bind [fibration_scope] with [sig] so that we are automatically in [fibration_scope] when we are passing an argument of type [sig]. *)
+Bind Scope fibration_scope with sig.
+
+(** We have unified [sig] and [sig] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [proj1] and [proj2] nor the [_sig] in [proj1_sig] and [proj2], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
+Notation pr1 := proj1.
+Notation pr2 := proj2.
 
 (** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period".  We have added [format] specifiers in Notations.v so that it will display without an extra space, as [x.1] rather than as [x .1]. *)
 Notation "x .1" := (pr1 x) : fibration_scope.
@@ -893,7 +986,7 @@ Ltac by_extensionality x :=
   | [ |- ?f = ?g ] => eapply path_forall; intro x;
       match goal with
         | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
-        | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
+        | [ |- forall (_ : sig _ _), _ ] => intros [? ?]
         | _ => intros
     end;
     simpl; auto with path_hints
@@ -1099,7 +1192,7 @@ Local Ltac pi_to_sig ty :=
   lazymatch (eval cbv beta in ty) with
   | forall (x : ?T) (y : @?A x), @?P x y
     => let x' := fresh in
-       constr:(@sigT T (fun x' : T =>
+       constr:(@sig T (fun x' : T =>
         ltac:(let res := pi_to_sig
           (forall y : A x', P x' y) in exact res)))
   | ?T -> _ => T
@@ -1124,11 +1217,11 @@ Local Ltac unify_with_projections term u :=
    tryif has_evar term then fail 0 term "has evars remaining" else idtac).
 
 (* Completely destroys v into it's pieces and trys to put pieces in sigma. *)
-Local Ltac refine_with_existT_as_much_as_needed_then_destruct v :=
+Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=
   ((destruct v; shelve) +
    (snrefine (_ ; _);
     [ destruct v; shelve
-    | refine_with_existT_as_much_as_needed_then_destruct v ])).
+    | refine_with_exist_as_much_as_needed_then_destruct v ])).
 
 
 (* Finally we can define our issig tactic: *)
@@ -1153,7 +1246,7 @@ Ltac issig :=
     unify_with_projections built u;
     refine built
   (** Going from a record to a sigma type *)
-  | refine_with_existT_as_much_as_needed_then_destruct v
+  | refine_with_exist_as_much_as_needed_then_destruct v
   (** Proving eissect *)
   | destruct v; cbn [pr1 pr2]; reflexivity
   (** Proving eisretr *)

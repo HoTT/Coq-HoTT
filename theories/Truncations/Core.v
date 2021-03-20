@@ -169,7 +169,7 @@ Local Open Scope trunc_scope.
 
 Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Tr (-1) A).
 
-Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
+Definition hexists {X} (P : X -> Type) : hProp := merely (sig P).
 
 Definition hor (P Q : Type) : hProp := merely (P + Q).
 

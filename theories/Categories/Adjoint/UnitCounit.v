@@ -144,7 +144,7 @@ Section Adjunction.
 
     Definition adjunction_counit__op__adjunction_unit (A : AdjunctionUnit G^op F^op)
     : AdjunctionCounit F G
-      := existT
+      := exist
            (fun U : NaturalTransformation (F o G) 1 =>
               forall (c : C) (d : D) (g : morphism D (F c) d),
                 Contr {f : morphism C c (G d)
@@ -154,7 +154,7 @@ Section Adjunction.
 
     Definition adjunction_counit__op__adjunction_unit__inv (A : AdjunctionUnit G F)
     : AdjunctionCounit F^op G^op
-      := existT
+      := exist
            (fun U : NaturalTransformation (F^op o G^op) 1
             => forall (c : C^op) (d : D^op) (g : morphism D^op ((F^op)%functor c) d),
                  Contr {f : morphism C^op c ((G^op)%functor d)
@@ -164,7 +164,7 @@ Section Adjunction.
 
     Definition adjunction_unit__op__adjunction_counit (A : AdjunctionCounit G^op F^op)
     : AdjunctionUnit F G
-      := existT
+      := exist
            (fun T : NaturalTransformation 1 (G o F) =>
               forall (c : C) (d : D) (f : morphism C c (G d)),
                 Contr { g : morphism D (F c) d
@@ -174,7 +174,7 @@ Section Adjunction.
 
     Definition adjunction_unit__op__adjunction_counit__inv (A : AdjunctionCounit G F)
     : AdjunctionUnit F^op G^op
-      := existT
+      := exist
            (fun T : NaturalTransformation 1 (G^op o F^op)
             => forall (c : C^op) (d : D^op) (f : morphism C^op c ((G^op)%functor d)),
                  Contr {g : morphism D^op ((F^op)%functor c) d

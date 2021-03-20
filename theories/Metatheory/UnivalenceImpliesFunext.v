@@ -73,8 +73,8 @@ Section UnivalenceImpliesFunext.
   Proof.
     intros A B f g p.
     (** Consider the following maps. *)
-    pose (d := fun x : A => existT (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
-    pose (e := fun x : A => existT (fun xy => fst xy = snd xy) (f x, g x) (p x)).
+    pose (d := fun x : A => exist (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
+    pose (e := fun x : A => exist (fun xy => fst xy = snd xy) (f x, g x) (p x)).
     (** If we compose [d] and [e] with [free_path_target], we get [f] and [g], respectively. So, if we had a path from [d] to [e], we would get one from [f] to [g]. *)
     change f with ((snd o pr1) o d).
     change g with ((snd o pr1) o e).

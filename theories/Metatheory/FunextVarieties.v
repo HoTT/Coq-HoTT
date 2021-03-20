@@ -80,7 +80,7 @@ Section Homotopies.
     unfold WeakFunext in wf.    (* Allow typeclass inference to find it *)
     exists (f;idhtpy). intros [g h].
     (* The trick is to show that the type [{g : forall x, B x & f == g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
-    pose (r := fun k => existT (fun g => f == g)
+    pose (r := fun k => exist (fun g => f == g)
       (fun x => (k x).1) (fun x => (k x).2)).
     pose (s := fun (g : forall x, B x) (h : f == g) x => (g x ; h x)).
     (* Because of judgemental eta-conversion, the retraction is actually definitional, so we can just replace the goal. *)

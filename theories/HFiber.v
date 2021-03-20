@@ -155,10 +155,10 @@ Proof.
 Defined.
 
 Definition hfiber_fibration {X} (x : X) (P:X->Type)
-  : P x <~> @hfiber (sigT P) X pr1 x.
+  : P x <~> @hfiber (sig P) X pr1 x.
 Proof.
   snrefine (Build_Equiv _ _ _
-    (Build_IsEquiv (P x) { z : sigT P & z.1 = x }
+    (Build_IsEquiv (P x) { z : sig P & z.1 = x }
       (fun Px => ((x; Px); idpath))
       (fun Px => transport P Px.2 Px.1.2)
       _

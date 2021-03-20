@@ -87,7 +87,7 @@ Section Grothendieck.
     apply path_sigma_uncurried;
     simpl in *;
     let ex_hyp := match goal with
-                    | [ H : ?A = ?B |- @sigT (?B = ?A) _ ] => constr:(H)
+                    | [ H : ?A = ?B |- @sig (?B = ?A) _ ] => constr:(H)
                   end in
     (exists (inverse ex_hyp));
       simpl;
@@ -200,7 +200,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
            {x13 : p} {x3 : p0} {x6 : p1} {x10 : p2}
            {x14 : Category.Core.morphism p (f0 x10) x13} {x12 : Category.Core.morphism p2 (f1 x6) x10}
            {x8 : Category.Core.morphism p1 (f3 x3) x6},
-      existT (fun f5 : Category.Core.morphism C x x4 => Category.Core.morphism p ((f f5) x3) x13)
+      exist (fun f5 : Category.Core.morphism C x x4 => Category.Core.morphism p ((f f5) x3) x13)
              (x7 o x5 o x2)
              (x14 o (f0 _1 x12 o x9 x6) o (f4 _1 x8 o x16 x3)) =
       (x7 o (x5 o x2); x14 o (f0 _1 (x12 o (f1 _1 x8 o x15 x3)) o x11 x3)).
@@ -221,7 +221,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
            {H0' : IsIsomorphism x0}
            {H1' : IsIsomorphism x}
            {x3 : p} {x4 : p0} {f' : Category.Core.morphism p ((f0 f) x4) x3},
-      existT (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)
+      exist (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)
              (1 o f)
              (x x3 o (f1 _1 f' o x0 x4))
       = (f; f').
@@ -241,7 +241,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
                         (idtoiso (p0 -> p) (ap f0 fst_hyp) : Category.Core.morphism _ _ _) x3
                         = 1 o ((f0 f) _1 (x x3) o x0 x3))
            {x3 : p} {x4 : p0} {f' : Category.Core.morphism p ((f0 f) x4) x3},
-        existT (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)
+        exist (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)
                (f o 1)
                (f' o ((f0 f) _1 (x x4) o x0 x4))
         = (f; f').

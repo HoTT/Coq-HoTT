@@ -173,7 +173,7 @@ Section Flattening.
             => set (p1 := pp1); set (p2 := pp2) end; cbn in *.
           assert (p1 = path_sigma' E' 1 (transport_Vp _ _ _)).
           {  subst p1.
-            rewrite <- ap_existT.
+            rewrite <- ap_exist.
             rewrite (ap_compose (transport E' (colimp i j g x)^)
               (fun v => (colim j ((D _f g) x); v))).
             f_ap; set (colimp i j g x).

@@ -5,7 +5,6 @@ Require Export Notations.
 Require Export Logic.
 Require Export Datatypes.
 Require Export Coq.Init.Tactics.
-Require Export Specif.
 Require Coq.Init.Decimal.
 Require Coq.Init.Hexadecimal.
 Require Coq.Init.Numeral.

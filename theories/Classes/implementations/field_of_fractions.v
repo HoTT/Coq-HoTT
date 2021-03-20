@@ -23,7 +23,7 @@ Record Frac@{} : Type
 
 Lemma Frac_ishset' : IsHSet Frac.
 Proof.
-assert (E : sigT (fun n : R => sigT (fun d : R => d <> 0 )) <~> Frac).
+assert (E : sig (fun n : R => sig (fun d : R => d <> 0 )) <~> Frac).
 - issig.
 - apply (trunc_equiv' _ E).
 Qed.

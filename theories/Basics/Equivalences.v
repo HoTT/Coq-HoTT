@@ -241,7 +241,7 @@ Proof.
            (fun x => (x ; center (P x)))
            (fun x => 1)
            (fun xy => match xy with
-                      | existT x y => ap (exist _ x) (contr _)
+                      | exist x y => ap (exist _ x) (contr _)
                       end)).
   intros [x y].
   rewrite <- ap_compose.

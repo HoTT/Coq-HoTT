@@ -527,7 +527,7 @@ Section locator.
 
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      assert (R : sigT P).
+      assert (R : sig P).
       {
         apply minimal_n_alt_type.
         - apply QQpos_eq.

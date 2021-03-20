@@ -66,7 +66,6 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Logic.v \
 	$(SRCCOQLIB)/theories/Init/Datatypes.v \
 	$(SRCCOQLIB)/theories/Init/Tactics.v \
-	$(SRCCOQLIB)/theories/Init/Specif.v \
 	$(SRCCOQLIB)/theories/Init/Decimal.v \
 	$(SRCCOQLIB)/theories/Init/Hexadecimal.v \
 	$(SRCCOQLIB)/theories/Init/Numeral.v \

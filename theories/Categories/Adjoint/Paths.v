@@ -22,7 +22,7 @@ Section path_adjunction.
 
 
 
-  Notation adjunction_sigT :=
+  Notation adjunction_sig :=
     { eta : NaturalTransformation 1 (G o F)
     | { eps : NaturalTransformation (F o G) 1
       | { equ1 : forall Y : C, (eps (F Y) o F _1 (eta Y))%morphism = 1%morphism
@@ -30,7 +30,7 @@ Section path_adjunction.
 
   (** ** Equivalence between record and nested sigma for unit+counit adjunctions *)
   Lemma equiv_sig_adjunction
-  : adjunction_sigT <~> (F -| G).
+  : adjunction_sig <~> (F -| G).
   Proof.
     issig.
   Defined.

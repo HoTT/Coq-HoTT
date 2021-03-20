@@ -6,7 +6,7 @@ Definition atmost1P {X} (P:X->Type):=
 Definition hunique {X} (P:X->Type):=(hexists P) * (atmost1P P).
 
 Lemma atmost {X} {P : X -> Type}:
-  (forall x, IsHProp (P x)) -> (atmost1P P) -> atmost1 (sigT  P).
+  (forall x, IsHProp (P x)) -> (atmost1P P) -> atmost1 (sig  P).
 intros H H0 [x p] [y q].
 specialize (H0 x y p q).
 induction H0.
@@ -15,10 +15,10 @@ now induction H0.
 Qed.
 
 Lemma iota {X} (P:X-> Type):
-  (forall x, IsHProp (P x)) -> (hunique P) -> sigT P.
+  (forall x, IsHProp (P x)) -> (hunique P) -> sig P.
 Proof.
 intros H1 [H H0].
-apply (@Trunc_rec (-1) (sigT P) );auto.
+apply (@Trunc_rec (-1) (sig P) );auto.
 by apply hprop_allpath, atmost.
 Qed.
 

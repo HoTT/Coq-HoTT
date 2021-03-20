@@ -46,7 +46,7 @@ Proof.
   pose (x0 := point X);
   pose (BG := (Build_pType
                { x:X & merely (x = point X) }
-               (existT (fun x:X => merely (x = point X)) x0 (tr 1)))).
+               (exist (fun x:X => merely (x = point X)) x0 (tr 1)))).
   (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
   cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }

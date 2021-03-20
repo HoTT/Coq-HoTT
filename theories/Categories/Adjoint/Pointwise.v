@@ -44,7 +44,7 @@ Section AdjointPointwise.
     Proof.
       pose proof (A : AdjunctionUnit _ _) as A''.
       refine (_ o (((idtoiso (C := (_ -> _)) (Functor.Pointwise.Properties.identity_of _ _))^-1)%morphism : morphism _ _ _)).
-      refine (_ o NaturalTransformation.Pointwise.pointwise_r (Functor.Identity.identity E) (projT1 A'')).
+      refine (_ o NaturalTransformation.Pointwise.pointwise_r (Functor.Identity.identity E) (proj1 A'')).
       refine (((idtoiso
                   (C := (_ -> _))
                   (Functor.Pointwise.Properties.composition_of
@@ -61,7 +61,7 @@ Section AdjointPointwise.
     Proof.
       pose proof (A : AdjunctionCounit _ _) as A''.
       refine ((((idtoiso (C := (_ -> _)) (Functor.Pointwise.Properties.identity_of _ _)))%morphism : morphism _ _ _) o _).
-      refine (NaturalTransformation.Pointwise.pointwise_r (Functor.Identity.identity E) (projT1 A'') o _).
+      refine (NaturalTransformation.Pointwise.pointwise_r (Functor.Identity.identity E) (proj1 A'') o _).
       refine (_ o
                 (((idtoiso
                      (C := (_ -> _))
@@ -122,7 +122,7 @@ Section AdjointPointwise.
     Proof.
       pose proof (A : AdjunctionUnit _ _) as A''.
       refine (_ o (((idtoiso (C := (_ -> _)) (Functor.Pointwise.Properties.identity_of _ _))^-1)%morphism : morphism _ _ _)).
-      refine (_ o NaturalTransformation.Pointwise.pointwise_l (projT1 A'') (Functor.Identity.identity E)).
+      refine (_ o NaturalTransformation.Pointwise.pointwise_l (proj1 A'') (Functor.Identity.identity E)).
       refine (((idtoiso
                   (C := (_ -> _))
                   (Functor.Pointwise.Properties.composition_of
@@ -139,7 +139,7 @@ Section AdjointPointwise.
     Proof.
       pose proof (A : AdjunctionCounit _ _) as A''.
       refine ((((idtoiso (C := (_ -> _)) (Functor.Pointwise.Properties.identity_of _ _)))%morphism : morphism _ _ _) o _).
-      refine (NaturalTransformation.Pointwise.pointwise_l (projT1 A'') (Functor.Identity.identity E) o _).
+      refine (NaturalTransformation.Pointwise.pointwise_l (proj1 A'') (Functor.Identity.identity E) o _).
       refine (_ o
                 (((idtoiso
                      (C := (_ -> _))

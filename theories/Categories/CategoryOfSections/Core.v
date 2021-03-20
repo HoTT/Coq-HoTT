@@ -29,12 +29,12 @@ Section FunctorSectionCategory.
       section_of_functor_issect : R o section_of_functor_morphism = 1
     }.
 
-  Local Notation section_of_functor_sigT :=
+  Local Notation section_of_functor_sig :=
     { section_of_functor_morphism : Functor D C
     | R o section_of_functor_morphism = 1 }.
 
-  Lemma section_of_functor_sig
-  : section_of_functor_sigT <~> SectionOfFunctor.
+  Lemma section_of_functor_sig'
+  : section_of_functor_sig <~> SectionOfFunctor.
   Proof.
     issig.
   Defined.
@@ -62,6 +62,6 @@ Global Instance isstrict_category_of_sections `{Funext}
       (F : Functor C D)
 : IsStrictCategory (category_of_sections F) | 20.
 Proof.
-  eapply trunc_equiv; [ | apply section_of_functor_sig ].
+  eapply trunc_equiv; [ | apply section_of_functor_sig' ].
   typeclasses eauto.
 Qed.

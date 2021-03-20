@@ -189,19 +189,19 @@ Section Equiv.
 
   (** From Ch10 *)
   Definition quotient_ump' (B:hSet): (quotient R -> B) ->
-                                     (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
+                                     (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
     intro f. exists (compose f (class_of R) ).
     intros. f_ap. by apply related_classes_eq.
   Defined.
 
-  Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
+  Definition quotient_ump'' (B:hSet): (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
                                       -> quotient R -> B.
     intros [f H'].
     apply (quotient_rec _ H').
   Defined.
 
   Theorem quotient_ump (B:hSet): (quotient R -> B) <~>
-                                                   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
+                                                   (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
   Proof.
     refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
     - intros [f Hf].

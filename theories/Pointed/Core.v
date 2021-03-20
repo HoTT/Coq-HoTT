@@ -20,7 +20,7 @@ Definition pUnit : pType := (Build_pType Unit _).
 
 (** A sigma type of pointed components is pointed. *)
 Global Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
-: IsPointed (sigT B)
+: IsPointed (sig B)
   := (point A; point (B (point A))).
 
 (** A product of pointed types is pointed. *)

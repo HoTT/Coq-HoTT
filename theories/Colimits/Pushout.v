@@ -303,7 +303,7 @@ Section EquivSigmaPushout.
         rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
         rewrite (ap_compose (exist _ x) (esp2 o esp1)).
         rewrite (ap_compose esp1 esp2).
-        rewrite (ap_existT (fun x => Pushout (f x) (g x)) x _ _ (pglue a)).
+        rewrite (ap_exist (fun x => Pushout (f x) (g x)) x _ _ (pglue a)).
         rewrite esp1_beta_pglue, esp2_beta_pglue.
         reflexivity.
   Defined.

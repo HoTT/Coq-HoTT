@@ -111,7 +111,7 @@ Lemma baut_ind_hset `{Univalence} X
     forall g : X <~> X, transport P (path_universe g) e = e }
   <~> (forall (Z:BAut X), P Z).
 Proof.
-  refine (equiv_sigT_ind _ oE _).
+  refine (equiv_sig_ind _ oE _).
   (** We use the fact that maps out of a propositional truncation into an hset are equivalent to weakly constant functions. *)
   refine ((equiv_functor_forall'
              (P := fun Z => { f : (Z=X) -> P Z & WeaklyConstant f })
@@ -120,7 +120,7 @@ Proof.
   { intros p. change (IsHSet (P (BAut_pr1 X (Z ; tr p)))). exact _. }
   unfold WeaklyConstant.
   (** Now we peel away a bunch of contractible types. *)
-  refine (equiv_sigT_coind _ _ oE _).
+  refine (equiv_sig_coind _ _ oE _).
   srapply equiv_functor_sigma'.
   1:apply (equiv_paths_ind_r X (fun x _ => P x)).
   intros p; cbn.
@@ -163,7 +163,7 @@ Defined.
 
 (** We show that this equivalence takes the identity equivalence to the identity in the center.  We have to be careful in this proof never to [simpl] or [unfold] too many things, or Coq will produce gigantic terms that take it forever to compute with. *)
 Definition id_center_baut `{Univalence} X `{IsHSet X}
-: center_baut X (existT
+: center_baut X (exist
                    (fun (f:X<~>X) => forall (g:X<~>X), g o f == f o g)
                    (equiv_idmap X)
                    (fun (g:X<~>X) (x:X) => idpath (g x)))
@@ -214,7 +214,7 @@ Section Center2BAut.
 
   (** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing (or at least [cbn]ing), making this proof somewhat slower. *)
   Definition id_center2_baut `{Univalence} X `{IsTrunc 1 X}
-  : center2_baut X (existT
+  : center2_baut X (exist
                       (fun (f:forall x:X, x=x) =>
                          forall (g:X<~>X) (x:X), ap g (f x) = f (g x))
                       (fun x => idpath x)

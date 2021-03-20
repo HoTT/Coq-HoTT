@@ -50,7 +50,7 @@ Section equivalences.
           abstract unit_counit_of_t ].
       intros [? ?] [? ?].
       apply path_sigma_uncurried.
-      let A := match goal with |- @sigT ?A ?P => constr:(A) end in
+      let A := match goal with |- @sig ?A ?P => constr:(A) end in
       let H := fresh in
       assert (H : A);
         [

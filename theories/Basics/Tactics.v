@@ -63,10 +63,10 @@ Ltac destruct_one_ex :=
     match goal with
       (* | [H : (ex _) |- _] => tac H *)
       (* | [H : (sig ?P) |- _ ] => tac H *)
-      | [H : (sigT ?P) |- _ ] => tacT H
+      | [H : (sig ?P) |- _ ] => tacT H
       (* | [H : (ex2 _ _) |- _] => tac2 H *)
       (* | [H : (sig2 ?P _) |- _ ] => tac2 H *)
-      | [H : (sigT2 ?P _) |- _ ] => tacT2 H
+      | [H : (sig2 ?P _) |- _ ] => tacT2 H
     end.
 
 (** Repeateadly destruct existentials. *)

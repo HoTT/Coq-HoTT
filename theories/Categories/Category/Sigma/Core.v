@@ -7,19 +7,19 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Local Notation sigT_type := sigT.
+Local Notation sig_type := sig.
 
-(** We can generalize the notion of [sigT] to categories.  This is, essentially, a type-theoretic perspecitive on the Grothendieck construction. *)
+(** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspecitive on the Grothendieck construction. *)
 
-Section sigT_obj_mor.
+Section sig_obj_mor.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := (sigT Pobj).
+  Local Notation obj := (sig Pobj).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := (sigT (Pmor s d)).
+  Local Notation mor s d := (sig (Pmor s d)).
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -43,8 +43,8 @@ Section sigT_obj_mor.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  (** ** Definition of a [sigT]-precategory *)
-  Definition sigT : PreCategory.
+  (** ** Definition of a [sig]-precategory *)
+  Definition sig' : PreCategory.
   Proof.
     refine (@Build_PreCategory
               obj
@@ -59,27 +59,27 @@ Section sigT_obj_mor.
   Defined.
 
   (** ** First projection functor *)
-  Definition pr1 : Functor sigT A
+  Definition pr1' : Functor sig' A
     := Build_Functor
-         sigT A
+         sig' A
          (@pr1 _ _)
          (fun _ _ => @pr1 _ _)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
-End sigT_obj_mor.
+End sig_obj_mor.
 
-Arguments pr1 {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity}.
+Arguments pr1' {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity}.
 
-(** ** Variant of [sigT]-precategory when we are taking a subset of morphisms *)
-Section sigT_obj_mor_hProp.
+(** ** Variant of [sig']-precategory when we are taking a subset of morphisms *)
+Section sig_obj_mor_hProp.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := (sigT_type Pobj).
+  Local Notation obj := (sig_type Pobj).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := (sigT_type (Pmor s d)).
+  Local Notation mor s d := (sig_type (Pmor s d)).
   Context `(HPmor : forall s d m, IsHProp (Pmor s d m)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -128,12 +128,12 @@ Section sigT_obj_mor_hProp.
   (** *** Definition of [sig]-precategory *)
   Definition sig : PreCategory
     := Eval cbv delta [P_associativity P_left_identity P_right_identity]
-      in @sigT A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
+      in @sig' A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
 
   (** *** First projection functor *)
   Definition proj1_sig : Functor sig A
-    := pr1.
-End sigT_obj_mor_hProp.
+    := pr1'.
+End sig_obj_mor_hProp.
 
 Arguments proj1_sig {A Pobj Pmor HPmor Pidentity Pcompose}.
 
