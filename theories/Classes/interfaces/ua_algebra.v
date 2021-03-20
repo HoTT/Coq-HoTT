@@ -1,7 +1,7 @@
 (** This file defines [Algebra]. *)
 
 Require Export
-  Coq.Unicode.Utf8
+  HoTT.Utf8
   HoTT.Basics
   HoTT.Classes.implementations.ne_list
   HoTT.Classes.implementations.family_prod.

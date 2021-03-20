@@ -1,9 +1,26 @@
-Require Export Coq.Unicode.Utf8.
 Require Export HoTT.Basics.Utf8.
 Require Import HoTT.Basics HoTT.Types.
 Require Import Modalities.Identity.
 Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.
 
+(* Logic *)
+Notation "∀  x .. y , P" := (forall x, .. (forall y, P) ..)
+  (at level 200, x binder, y binder, right associativity) : type_scope.
+Notation "∃  x .. y , P" := (exists x, .. (exists y, P) ..)
+  (at level 200, x binder, y binder, right associativity) : type_scope.
+
+Notation "x ∧ y" := (x /\ y) (at level 80, right associativity) : type_scope.
+Notation "x → y" := (x -> y)
+  (at level 99, y at level 200, right associativity): type_scope.
+
+Notation "x ↔ y" := (x <-> y) (at level 95, no associativity): type_scope.
+(*Notation "¬ x" := (not x) (at level 75, right associativity) : type_scope.*)
+(*Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.*)
+
+(* Abstraction *)
+Notation "'λ'  x .. y , t" := (fun x => .. (fun y => t) ..)
+  (at level 200, x binder, y binder, right associativity).
+  
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
 Notation pr₂ := pr2.
@@ -50,7 +67,7 @@ Notation "∥ A ∥₋₁" := (Trunc (-1) A).
 Notation "❘ a ❘₋₁" := (@tr (-1) _ a) : trunc_scope.
 
 Notation "x ∨ y" := (hor x y) : type_scope.
-Notation "x ⊔ y" := (sum x y) : type_scope.
+(* Notation "x ⊔ y" := (sum x y) : type_scope. *)
 
 Notation "∥ A ∥₀" := (Trunc 0 A).
 Notation "❘ a ❘₀" := (@tr 0 _ a) : trunc_scope.

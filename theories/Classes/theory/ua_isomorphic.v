@@ -28,9 +28,7 @@ Global Existing Instance is_homomorphism_isomorphic.
 Global Existing Instance is_isomorphism_isomorphic.
 
 Module isomorphic_notations.
-  Global Notation "A ≅ B" := (Isomorphic A B)
-                             (at level 75, no associativity)
-                             : Algebra_scope.
+  Global Notation "A ≅ B" := (Isomorphic A B) : Algebra_scope.
 End isomorphic_notations.
 
 Import isomorphic_notations.

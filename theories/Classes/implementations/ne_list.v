@@ -1,5 +1,5 @@
 Require Import
-  Coq.Unicode.Utf8
+  HoTT.Utf8
   HoTT.Classes.implementations.list
   HoTT.Basics.Overture
   HoTT.Spaces.Nat.
