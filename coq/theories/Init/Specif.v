@@ -16,7 +16,6 @@ Set Implicit Arguments.
 
 Require Import Notations.
 Require Import Datatypes.
-Local Open Scope identity_scope.
 Require Import Logic.
 Local Unset Elimination Schemes.
 
@@ -133,6 +132,7 @@ Section Choice_lemmas.
 
 End Choice_lemmas.
 
+ (*
 Section Dependent_choice_lemmas.
 
   Variables X : Type.
@@ -150,7 +150,7 @@ Section Dependent_choice_lemmas.
   Defined.
 
 End Dependent_choice_lemmas.
-
+*)
 
  (** A result of type [(Exc A)] is either a normal value of type [A] or
      an [error] :
