@@ -1,18 +1,25 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-(** * Theorems about the natural numbers, depending on TruncType *)
+(** * Theorems about the natural numbers *)
 
 Require Import HoTT.Basics.
 Require Import HoTT.Types.Bool.
-Require Import HoTT.TruncType HoTT.DProp.
+Require Import HoTT.TruncType.
+Require Export HoTT.DProp. (* We need to export this so lemmas about DProp are available. *)
 
 (** Temp *)
 Require Import Coq.Init.Notations.
 Require Import Coq.Init.Datatypes.
-Require Import Coq.Init.Logic_Type.
-Require Coq.Init.Nat.
+Require Export Coq.Init.Nat.
 
 Open Scope nat_scope.
 Local Notation "0" := O.
+
+Definition eq_S := @ap _ _ S.
+
+Local Definition ap_S := @ap _ _ S.
+Local Definition ap_nat := @ap nat.
+#[export] Hint Resolve ap_S : v62.
+#[export] Hint Resolve ap_nat : core.
 
 Theorem pred_Sn : forall n:nat, n = pred (S n).
 Proof.
@@ -21,7 +28,7 @@ Qed.
 
 (** Injectivity of successor *)
 
-Definition eq_add_S n m (H: S n = S m): n = m := f_equal pred H.
+Definition eq_add_S n m (H: S n = S m): n = m := ap pred H.
 #[export] Hint Immediate eq_add_S: core.
 
 Theorem not_eq_S : forall n m:nat, n <> m -> S n <> S m.
@@ -38,34 +45,26 @@ Definition IsSucc (n:nat) : Type :=
 
 (** Zero is not the successor of a number *)
 
-(* XXX Andrej: Try to put back in, does not work with current Coq. *)
-(* Theorem O_S : forall n:nat, 0 <> S n. *)
-(* Proof. *)
-(*   discriminate. *)
-(* Qed. *)
-(* Hint Resolve O_S: core. *)
+Theorem O_S : forall n:nat, 0 <> S n.
+Proof.
+  discriminate.
+Qed.
+#[export] Hint Resolve O_S : core.
 
-(* XXX Andrej: Try to put back in, does not work with current Coq. *)
-(* Theorem n_Sn : forall n:nat, n <> S n. *)
-(* Proof. *)
-(*   induction n; auto. *)
-(* Qed. *)
-(* Hint Resolve n_Sn: core. *)
+Theorem n_Sn : forall n:nat, n <> S n.
+Proof.
+  induction n; auto.
+Qed.
+#[export] Hint Resolve n_Sn : core.
 
 (** addition *)
+(* TODO: remove and use one def *)
+Definition plus (n m:nat) : nat := add n m.
 
-Fixpoint plus (n m:nat) : nat :=
-  match n with
-  | O => m
-  | S p => S (p + m)
-  end
-
-where "n + m" := (plus n m) : nat_scope.
-
-Local Definition f_equal2_plus := f_equal2 plus.
-Local Definition f_equal2_nat := f_equal2 (A1:=nat) (A2:=nat).
-#[export] Hint Resolve f_equal2_plus : v62.
-#[export] Hint Resolve f_equal2_nat : core.
+Local Definition ap011_plus := @ap011 _ _ _ plus.
+Local Definition ap011_nat := @ap011 nat nat.
+#[export] Hint Resolve ap011_plus : v62.
+#[export] Hint Resolve ap011_nat : core.
 
 Lemma plus_n_O : forall n:nat, n = n + 0.
 Proof.
@@ -96,22 +95,17 @@ Notation plus_succ_r_reverse := plus_n_Sm (only parsing).
 
 (** Multiplication *)
 
-Fixpoint mult (n m:nat) : nat :=
-  match n with
-  | O => 0
-  | S p => m + p * m
-  end
+(** TODO: remove and use one def *)
+Definition mult (n m:nat) : nat := mul n m.
 
-where "n * m" := (mult n m) : nat_scope.
-
-Local Definition f_equal2_mult := f_equal2 mult.
-#[export] Hint Resolve f_equal2_mult : core.
+Local Definition ap011_mult := @ap011 _ _ _  mult.
+#[export] Hint Resolve ap011_mult : core.
 
 Lemma mult_n_O : forall n:nat, 0 = n * 0.
 Proof.
   induction n; simpl; auto.
 Qed.
-#[export] Hint Resolve mult_n_O: core.
+#[export] Hint Resolve mult_n_O : core.
 
 Lemma mult_n_Sm : forall n m:nat, n * m + n = n * S m.
 Proof.
@@ -128,30 +122,23 @@ Notation mult_succ_r_reverse := mult_n_Sm (only parsing).
 
 (** Truncated subtraction: [m-n] is [0] if [n>=m] *)
 
-Fixpoint minus (n m:nat) : nat :=
-  match n, m with
-  | O, _ => n
-  | S k, O => n
-  | S k, S l => k - l
-  end
-
-where "n - m" := (minus n m) : nat_scope.
+Definition minus (n m:nat) : nat := sub n m.
 
 (** Definition of the usual orders, the basic properties of [le] and [lt]
     can be found in files Le and Lt *)
 
-Inductive le (n:nat) : nat -> Type :=
-  | le_n : le n n
-  | le_S : forall m:nat, le n m -> le n (S m).
-Local Notation "n <= m" := (le n m) : nat_scope.
+Inductive le' (n:nat) : nat -> Type :=
+  | le_n : le' n n
+  | le_S : forall m:nat, le' n m -> le' n (S m).
+Local Notation "n <= m" := (le' n m) : nat_scope.
 
-#[export] Hint Constructors le: core.
+#[export] Hint Constructors le' : core.
 (*i equivalent to : "Hints Resolve le_n le_S : core." i*)
 
-Definition lt (n m:nat) := S n <= m.
-#[export] Hint Unfold lt: core.
+Definition lt' (n m:nat) := S n <= m.
+#[export] Hint Unfold lt' : core.
 
-Local Infix "<" := lt : nat_scope.
+Local Infix "<" := lt' : nat_scope.
 
 Definition ge (n m:nat) := m <= n.
 #[export] Hint Unfold ge: core.
@@ -369,10 +356,7 @@ Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
 Global Instance decidable_paths_nat : DecidablePaths nat
   := fun n m => decidable_equiv _ (@path_nat n m) _.
 
-Corollary hset_nat : IsHSet nat.
-Proof.
-  exact _.
-Defined.
+Global Instance hset_nat : IsHSet nat := _.
 
 (** ** Natural number ordering *)
 

@@ -1,5 +1,7 @@
-Require Import Coq.Init.Peano.
-Require Import HoTT.Basics HoTT.Truncations HoTT.HProp HoTT.Types HoTT.Spaces.Nat HoTT.DProp.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Truncations.
+Require Import HoTT.HProp HoTT.DProp.
+Require Import HoTT.Spaces.Nat.
 
 Section bounded_search.
 

@@ -23,9 +23,11 @@
 
 *)
 
-Require Import HoTT Coq.Init.Peano.
+Require Import HoTT.
+Require Import Spaces.Nat.
 Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties HoTT.Metatheory.UnivalenceImpliesFunext.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 (* END OF PREAMBLE *)
@@ -165,7 +167,7 @@ End Book_1_5.
 
 Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
   match n with
-    0 => c0
+    O => c0
   | S m => cs m (rec_nat' C c0 cs m)
   end.
 

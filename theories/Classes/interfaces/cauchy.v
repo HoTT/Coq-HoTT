@@ -56,12 +56,12 @@ Section cauchy.
       assert (lim_close := is_limit x (epsilon / 2));
         strip_truncations.
       destruct lim_close as [N isclose'].
-      set (n := Peano.max (M (epsilon / 2)) N).
+      set (n := Nat.max (M (epsilon / 2)) N).
       assert (leNn := le_nat_max_r (M (epsilon / 2)) N : N ≤ n).
       assert (isclose := isclose' n leNn).
       clear isclose'.
       assert (leMn := le_nat_max_l (M (epsilon / 2)) N : M (epsilon / 2) ≤ n).
-      assert (leMM : M (epsilon / 2) ≤ M (epsilon / 2) ) by apply (Peano.le_n).
+      assert (leMM : M (epsilon / 2) ≤ M (epsilon / 2) ) by apply (Nat.le_n).
       assert (x_close := cauchy_convergence x (epsilon/2) n (M (epsilon / 2)) leMn leMM).
       cbn in isclose, x_close.
       rewrite (@preserves_mult Q F _ _ _ _ _ _ _ _ _ _ _ _) in isclose, x_close.
