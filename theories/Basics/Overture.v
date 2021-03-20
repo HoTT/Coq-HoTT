@@ -7,6 +7,21 @@ Require Export Basics.Notations.
 (** Currently, Coq 8.12 complains when we use the numeral notations from the Decimal module. Since we only use a copy of the real standard library we will supress this warning. In the future, our copy of the standard library will be completely removed together with this warning. *)
 Global Set Warnings "-decimal-numeral-notation".
 
+Declare ML Module "number_string_notation_plugin".
+
+(* Parsing / printing of decimal numbers *)
+Arguments Nat.of_uint d%dec_uint_scope.
+Arguments Nat.of_int d%dec_int_scope.
+Number Notation Numeral.uint Numeral.uint_of_uint Numeral.uint_of_uint : dec_uint_scope.
+Number Notation Numeral.int Numeral.int_of_int Numeral.int_of_int : dec_int_scope.
+
+(* Parsing / printing of [nat] numbers *)
+Number Notation nat Nat.of_num_uint Nat.to_num_uint (abstract after 5001) : nat_scope.
+
+(** Keywords for blacklisting from search function *)
+Add Search Blacklist "_admitted" "_subproof" "Private_".
+
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
