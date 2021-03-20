@@ -264,7 +264,7 @@ Proof.
   simple_induction n n IH; simpl; intros A H x y.
   - apply contr_paths_contr.
   - apply IH, H.
-Qed.
+Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
 Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A}
