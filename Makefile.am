@@ -74,8 +74,7 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Numeral.v \
 	$(SRCCOQLIB)/theories/Init/Number.v \
 	$(SRCCOQLIB)/theories/Init/Nat.v \
-	$(SRCCOQLIB)/theories/Init/Prelude.v \
-	$(SRCCOQLIB)/theories/Program/Tactics.v
+	$(SRCCOQLIB)/theories/Init/Prelude.v
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
 

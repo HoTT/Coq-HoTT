@@ -1,16 +1,4 @@
-(************************************************************************)
-(*  v      *   The Coq Proof Assistant  /  The Coq Development Team     *)
-(* <O___,, *   INRIA - CNRS - LIX - LRI - PPS - Copyright 1999-2012     *)
-(*   \VV/  **************************************************************)
-(*    //   *      This file is distributed under the terms of the       *)
-(*         *       GNU Lesser General Public License Version 2.1        *)
-(************************************************************************)
-
-(************************************************************************)
-(*   This file has been modified for the purposes of the HoTT library.  *)
-(************************************************************************)
-
-Require Import Datatypes Specif Logic.
+Require Import Basics.Overture.
 
 (** This module implements various tactics used to simplify the goals produced by Program,
    which are also generally useful. *)
@@ -173,26 +161,6 @@ Ltac on_application f tac T :=
     | context [f ?x ?y] => tac (f x y)
     | context [f ?x] => tac (f x)
   end.
-
-(** A variant of [apply] using [refine], doing as much conversion as necessary. *)
-
-Ltac rapply p :=
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _ _) ||
-  refine (p _ _ _ _ _) ||
-  refine (p _ _ _ _) ||
-  refine (p _ _ _) ||
-  refine (p _ _) ||
-  refine (p _) ||
-  refine p.
 
 (** Tactical [on_call f tac] applies [tac] on any application of [f] in the hypothesis or goal. *)
 
