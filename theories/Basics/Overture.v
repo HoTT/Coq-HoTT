@@ -21,6 +21,32 @@ Number Notation nat Nat.of_num_uint Nat.to_num_uint (abstract after 5001) : nat_
 (** Keywords for blacklisting from search function *)
 Add Search Blacklist "_admitted" "_subproof" "Private_".
 
+(** Some basic tactics *)
+Ltac easy :=
+  let rec use_hyp H :=
+    match type of H with
+    | _ => try solve [inversion H]
+    end
+  with do_intro := let H := fresh in intro H; use_hyp H
+  with destruct_hyp H := case H; clear H; do_intro; do_intro in
+  let rec use_hyps :=
+    match goal with
+    | H : _ |- _ => solve [inversion H]
+    | _ => idtac
+    end in
+  let rec do_atom :=
+    solve [reflexivity | symmetry; trivial] ||
+    contradiction ||
+    (split; do_atom)
+  with do_ccl := trivial; repeat do_intro; do_atom in
+  (use_hyps; do_ccl) || fail "Cannot solve this goal".
+
+Tactic Notation "now" tactic(t) := t; easy.
+
+Create HintDb rewrite discriminated.
+#[export] Hint Variables Opaque : rewrite.
+Create HintDb typeclass_instances discriminated.
+
 
 (** ** Type classes *)
 
@@ -991,6 +1017,7 @@ Ltac by_extensionality x :=
     end;
     simpl; auto with path_hints
   end.
+
 
 (** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)
 (** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)
