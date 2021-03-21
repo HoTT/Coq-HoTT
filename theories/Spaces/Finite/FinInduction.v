@@ -51,3 +51,4 @@ Definition fin_rec (B : nat -> Type)
   : (forall n : nat, B n.+1) -> (forall (n : nat), Fin n -> B n -> B n.+1) ->
     forall {n : nat}, Fin n -> B n
   := fin_ind (fun n _ => B n).
+  
