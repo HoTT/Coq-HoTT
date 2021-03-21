@@ -11,6 +11,7 @@ Require Import Coq.Init.Notations.
 Require Import Coq.Init.Datatypes.
 Require Export Coq.Init.Nat.
 
+Close Scope trunc_scope.
 Open Scope nat_scope.
 Local Notation "0" := O.
 
@@ -130,37 +131,37 @@ Definition minus (n m:nat) : nat := sub n m.
 Inductive le' (n:nat) : nat -> Type :=
   | le_n : le' n n
   | le_S : forall m:nat, le' n m -> le' n (S m).
-Local Notation "n <= m" := (le' n m) : nat_scope.
+(* Local Notation "n <= m" := (le' n m) : nat_scope. *)
 
 #[export] Hint Constructors le' : core.
 (*i equivalent to : "Hints Resolve le_n le_S : core." i*)
 
-Definition lt' (n m:nat) := S n <= m.
+Definition lt' (n m:nat) := le' (S n) m.
 #[export] Hint Unfold lt' : core.
 
-Local Infix "<" := lt' : nat_scope.
+(* Local Infix "<" := lt' : nat_scope. *)
 
-Definition ge (n m:nat) := m <= n.
+Definition ge (n m:nat) := le' m n.
 #[export] Hint Unfold ge: core.
 
-Local Infix ">=" := ge : nat_scope.
+(* Local Infix ">=" := ge : nat_scope. *)
 
-Definition gt (n m:nat) := m < n.
+Definition gt (n m:nat) := lt' m n.
 #[export] Hint Unfold gt: core.
 
-Local Infix ">" := gt : nat_scope.
+(* Local Infix ">" := gt : nat_scope. *)
 
-Local Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
-Local Notation "x <= y < z" := (x <= y /\ y < z) : nat_scope.
-Local Notation "x < y < z" := (x < y /\ y < z) : nat_scope.
-Local Notation "x < y <= z" := (x < y /\ y <= z) : nat_scope.
+(* Local Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope. *)
+(* (* Local Notation "x <= y < z" := (x <= y /\ y < z) : nat_scope. *) *)
+(* Local Notation "x < y < z" := (x < y /\ y < z) : nat_scope. *)
+(* Local Notation "x < y <= z" := (x < y /\ y <= z) : nat_scope. *)
 
-Theorem le_pred : forall n m, n <= m -> pred n <= pred m.
+Theorem le_pred : forall n m, le' n m -> le' (pred n) (pred m).
 Proof.
 induction 1; auto. destruct m; simpl; auto.
 Qed.
 
-Theorem le_S_n : forall n m, S n <= S m -> n <= m.
+Theorem le_S_n : forall n m, le' (S n) (S m) -> le' n m.
 Proof.
 intros n m. exact (le_pred (S n) (S m)).
 Qed.

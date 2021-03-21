@@ -273,7 +273,7 @@ split;intros [k E];exists k.
 - rewrite add_S_r in E;apply (injective _) in E. trivial.
 Qed.
 
-Lemma lt_0_S : forall a, 0 < S a.
+Lemma lt_0_S : forall a : nat, 0 < S a.
 Proof.
 intros. apply le_S_S. apply zero_least.
 Qed.
