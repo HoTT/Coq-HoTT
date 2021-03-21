@@ -4,6 +4,31 @@
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations.
 
+Module Numeral.
+
+(** * Decimal or Hexadecimal numbers *)
+
+Require Import Decimal Hexadecimal.
+
+Variant uint := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).
+
+Variant int := IntDec (i:Decimal.int) | IntHex (i:Hexadecimal.int).
+
+Variant numeral := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).
+
+Register uint as num.num_uint.type.
+Register int as num.num_int.type.
+Register numeral as num.numeral.type.
+Register numeral as num.number.type.
+
+(** Pseudo-conversion functions used when declaring
+    Numeral Notations on [uint] and [int]. *)
+
+Definition uint_of_uint (i:uint) := i.
+Definition int_of_int (i:int) := i.
+
+End Numeral.
+
 (** Currently, Coq 8.12 complains when we use the numeral notations from the Decimal module. Since we only use a copy of the real standard library we will supress this warning. In the future, our copy of the standard library will be completely removed together with this warning. *)
 Global Set Warnings "-decimal-numeral-notation".
 
