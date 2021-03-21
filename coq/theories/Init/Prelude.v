@@ -7,4 +7,3 @@ Require Export Datatypes.
 Require Coq.Init.Decimal.
 Require Coq.Init.Hexadecimal.
 Require Coq.Init.Numeral.
-Require Coq.Init.Nat.
