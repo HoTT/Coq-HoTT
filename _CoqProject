@@ -105,7 +105,14 @@ theories/Cubical/DPathCube.v
 theories/Spaces/Nat.v
 theories/Spaces/List.v
 theories/Spaces/Cantor.v
+
+theories/Spaces/Finite/Fin.v
+theories/Spaces/Finite/FinNat.v
+theories/Spaces/Finite/FinInduction.v
+theories/Spaces/Finite/Finite.v
+theories/Spaces/Finite/Tactics.v
 theories/Spaces/Finite.v
+
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
 theories/Spaces/Circle.v
@@ -136,7 +143,6 @@ theories/Spaces/No/Addition.v
 theories/Spaces/Torus/Torus.v
 theories/Spaces/Torus/TorusEquivCircles.v
 theories/Spaces/Torus/TorusHomotopy.v
-
 
 #
 #   Modalities

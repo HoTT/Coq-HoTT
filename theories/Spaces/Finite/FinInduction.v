@@ -1,0 +1,54 @@
+Require Import
+  HoTT.Basics
+  HoTT.HSet
+  HoTT.Spaces.Nat
+  HoTT.Spaces.Finite.FinNat
+  HoTT.Spaces.Finite.Fin.
+
+Definition fin_ind (P : forall n : nat, Fin n -> Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
+  {n : nat} (k : Fin n)
+  : P n k.
+Proof.
+  refine (transport (P n) (homot_fin_to_finnat_to_fin k) _).
+  refine (finnat_ind (fun n u => P n (finnat_to_fin u)) _ _ _).
+  - intro. apply z.
+  - intros n' u c. apply s. exact c.
+Defined.
+
+Lemma compute_fin_ind_fin_zero (P : forall n : nat, Fin n -> Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k)) (n : nat)
+  : fin_ind P z s fin_zero = z n.
+Proof.
+  unfold fin_ind.
+  generalize (homot_fin_to_finnat_to_fin (@fin_zero n)).
+  induction (path_fin_to_finnat_fin_zero n)^.
+  intro p.
+  by induction (hset_path2 1 p).
+Defined.
+
+Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
+  {n : nat} (k : Fin n)
+  : fin_ind P z s (fsucc k) = s n k (fin_ind P z s k).
+Proof.
+  unfold fin_ind.
+  generalize (homot_fin_to_finnat_to_fin (fsucc k)).
+  induction (path_fin_to_finnat_fsucc k)^.
+  intro p.
+  refine (ap (transport (P n.+1) p) (compute_finnat_ind_succ _ _ _ _) @ _).
+  generalize dependent p.
+  induction (homot_fin_to_finnat_to_fin k).
+  induction (homot_fin_to_finnat_to_fin k)^.
+  intro p.
+  now induction (hset_path2 1 p).
+Defined.
+
+Definition fin_rec (B : nat -> Type)
+  : (forall n : nat, B n.+1) -> (forall (n : nat), Fin n -> B n -> B n.+1) ->
+    forall {n : nat}, Fin n -> B n
+  := fin_ind (fun n _ => B n).
+  
