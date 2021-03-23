@@ -16,7 +16,7 @@
     We represent numbers in base 10 as lists of decimal digits,
     in big-endian order (most significant digit comes first). *)
 
-(* Require Import Datatypes. *)
+Require Import Basics.Datatypes.
 
 (** Unsigned integers are just lists of digits.
     For instance, ten is (D1 (D0 Nil)) *)

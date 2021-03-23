@@ -3,4 +3,3 @@
 
 Require Export Notations.
 Require Export Logic.
-Require Export Datatypes.

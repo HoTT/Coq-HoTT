@@ -2,7 +2,7 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
-Require Export Basics.Notations.
+Require Export Basics.Notations Basics.Datatypes.
 Require Basics.Decimal Basics.Hexadecimal.
 
 Module Numeral.
@@ -28,8 +28,6 @@ Definition int_of_int (i:int) := i.
 
 End Numeral.
 
-(** Currently, Coq 8.12 complains when we use the numeral notations from the Decimal module. Since we only use a copy of the real standard library we will supress this warning. In the future, our copy of the standard library will be completely removed together with this warning. *)
-Global Set Warnings "-decimal-numeral-notation".
 
 Declare ML Module "number_string_notation_plugin".
 

@@ -43,6 +43,7 @@ theories/Basics/Trunc.v
 theories/Basics/Decidable.v
 theories/Basics/Hexadecimal.v
 theories/Basics/Decimal.v
+theories/Basics/Datatypes.v
 
 #
 #   Wildcat

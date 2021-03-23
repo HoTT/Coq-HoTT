@@ -8,7 +8,6 @@ Require Export HoTT.DProp. (* We need to export this so lemmas about DProp are a
 
 (** Temp *)
 Require Import Coq.Init.Notations.
-Require Import Coq.Init.Datatypes.
 
 Close Scope trunc_scope.
 Open Scope nat_scope.

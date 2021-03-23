@@ -8,10 +8,10 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Local Notation fst_type := Coq.Init.Datatypes.fst.
-Local Notation snd_type := Coq.Init.Datatypes.snd.
-Local Notation pair_type := Coq.Init.Datatypes.pair.
-Local Notation prod_type := Coq.Init.Datatypes.prod.
+Local Notation fst_type := Basics.Datatypes.fst.
+Local Notation snd_type := Basics.Datatypes.snd.
+Local Notation pair_type := Basics.Datatypes.pair.
+Local Notation prod_type := Basics.Datatypes.prod.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
