@@ -41,6 +41,8 @@ theories/Basics/Contractible.v
 theories/Basics/Equivalences.v
 theories/Basics/Trunc.v
 theories/Basics/Decidable.v
+theories/Basics/Hexadecimal.v
+theories/Basics/Decimal.v
 
 #
 #   Wildcat

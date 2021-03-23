@@ -3,12 +3,11 @@
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations.
+Require Basics.Decimal Basics.Hexadecimal.
 
 Module Numeral.
 
 (** * Decimal or Hexadecimal numbers *)
-
-Require Import Decimal Hexadecimal.
 
 Variant uint := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).
 

@@ -4,5 +4,3 @@
 Require Export Notations.
 Require Export Logic.
 Require Export Datatypes.
-Require Coq.Init.Decimal.
-Require Coq.Init.Hexadecimal.
