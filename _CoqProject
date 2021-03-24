@@ -44,6 +44,7 @@ theories/Basics/Decidable.v
 theories/Basics/Hexadecimal.v
 theories/Basics/Decimal.v
 theories/Basics/Datatypes.v
+theories/Basics/Logic.v
 
 #
 #   Wildcat

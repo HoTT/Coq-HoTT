@@ -2,4 +2,3 @@
     to start from scratch. *)
 
 Require Export Notations.
-Require Export Logic.

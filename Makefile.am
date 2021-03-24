@@ -63,7 +63,6 @@ CAMERA = python proviola/camera/camera.py
 
 STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Notations.v \
-	$(SRCCOQLIB)/theories/Init/Logic.v \
 	$(SRCCOQLIB)/theories/Init/Prelude.v
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
