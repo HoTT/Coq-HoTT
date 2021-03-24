@@ -183,7 +183,6 @@ Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.
 
-
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -242,10 +241,10 @@ Arguments transitivity {A R _} / {_ _ _} _ _.
 (** Above, we have made [reflexivity], [symmetry], and [transitivity] reduce under [cbn]/[simpl] to their underlying instances.  This allows the tactics to build proof terms referencing, e.g., [concat].  We use [change] after the fact to make sure that we didn't [cbn] away the original form of the relation.
 
     If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)
-
+    
 (** Overwrite [reflexivity] so that we use our version of [Reflexive] rather than having the tactic look for it in the standard library.  We make use of the built-in reflexivity to handle, e.g., single-constructor inductives. *)
-Ltac reflexivity :=
-  Coq.Init.Notations.reflexivity
+Ltac reflexivity ::=
+  HoTT.Basics.Notations.reflexivity
   || (intros;
       let R := match goal with |- ?R ?x ?y => constr:(R) end in
       let pre_proof_term_head := constr:(@reflexivity _ R _) in
@@ -253,7 +252,7 @@ Ltac reflexivity :=
       apply (proof_term_head : forall x, R x x)).
 
 (** Even if we weren't using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)
-Ltac symmetry :=
+Ltac symmetry ::=
   let R := match goal with |- ?R ?x ?y => constr:(R) end in
   let x := match goal with |- ?R ?x ?y => constr:(x) end in
   let y := match goal with |- ?R ?x ?y => constr:(y) end in
@@ -272,7 +271,7 @@ Tactic Notation "etransitivity" open_constr(y) :=
 Tactic Notation "etransitivity" := etransitivity _.
 
 (** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)
-Ltac transitivity x := etransitivity x.
+Ltac transitivity x ::= etransitivity x.
 
 
 (** ** Basic definitions *)
@@ -311,13 +310,20 @@ Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
 Notation idmap := (fun x => x).
 
 (** We define various scopes and open them in the order we expect to use them. *)
+Declare Scope core_scope.
+Declare Scope function_scope.
+Declare Scope type_scope.
 Declare Scope equiv_scope.
 Declare Scope function_scope.
 Declare Scope path_scope.
 Declare Scope fibration_scope.
 Declare Scope trunc_scope.
 Declare Scope long_path_scope.
+Declare Scope core_scope.
 
+Delimit Scope core_scope with core.
+Delimit Scope function_scope with function.
+Delimit Scope type_scope with type.
 Delimit Scope equiv_scope with equiv.
 Delimit Scope function_scope with function.
 Delimit Scope path_scope with path.
@@ -332,6 +338,9 @@ Open Scope nat_scope.
 Open Scope function_scope.
 Open Scope type_scope.
 Open Scope core_scope.
+
+Bind Scope function_scope with Funclass.
+Bind Scope type_scope with Sortclass.
 
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.

@@ -4,6 +4,81 @@ Notation "'forall'  x .. y , P" := (forall x , .. (forall y, P) ..) (at level 20
 (** Work around bug 5569, https://coq.inria.fr/bugs/show_bug.cgi?id=5569, Warning skip-spaces-curly,parsing seems bogus *)
 Local Set Warnings Append "-skip-spaces-curly".
 
+(** ML Tactic Notations *)
+Declare ML Module "ltac_plugin".
+Global Set Default Proof Mode "Classic".
+
+(** These are the notations whose level and associativity are imposed by Coq *)
+
+(** Notations for propositional connectives *)
+
+Reserved Notation "x -> y" (at level 99, right associativity, y at level 200).
+Reserved Notation "x <-> y" (at level 95, no associativity).
+Reserved Notation "x /\ y" (at level 80, right associativity).
+Reserved Notation "x \/ y" (at level 85, right associativity).
+Reserved Notation "x |_| y" (at level 85, right associativity).
+Reserved Notation "~ x" (at level 35, right associativity).
+
+(** Notations for equality and inequalities *)
+
+Reserved Notation "x = y  :>  T"
+(at level 70, y at next level, no associativity).
+Reserved Notation "x = y" (at level 70, no associativity).
+Reserved Notation "x = y = z"
+(at level 70, no associativity, y at next level).
+
+Reserved Notation "x <> y  :>  T"
+(at level 70, y at next level, no associativity).
+Reserved Notation "x <> y" (at level 70, no associativity).
+
+Reserved Notation "x <= y" (at level 70, no associativity).
+Reserved Notation "x < y" (at level 70, no associativity).
+Reserved Notation "x >= y" (at level 70, no associativity).
+Reserved Notation "x > y" (at level 70, no associativity).
+
+Reserved Notation "x <= y <= z" (at level 70, y at next level).
+Reserved Notation "x <= y < z" (at level 70, y at next level).
+Reserved Notation "x < y < z" (at level 70, y at next level).
+Reserved Notation "x < y <= z" (at level 70, y at next level).
+
+(** Arithmetical notations (also used for type constructors) *)
+
+Reserved Notation "x + y" (at level 50, left associativity).
+Reserved Notation "x - y" (at level 50, left associativity).
+Reserved Notation "x * y" (at level 40, left associativity).
+Reserved Notation "x / y" (at level 40, left associativity).
+Reserved Notation "- x" (at level 35, right associativity).
+Reserved Notation "/ x" (at level 35, right associativity).
+Reserved Notation "x ^ y" (at level 30, right associativity).
+
+(** Notations for booleans *)
+
+Reserved Notation "x || y" (at level 50, left associativity).
+Reserved Notation "x && y" (at level 40, left associativity).
+
+(** Notations for pairs *)
+
+Reserved Notation "( x , y , .. , z )" (at level 0).
+
+(** Notation "{ x }" is reserved and has a special status as component
+    of other notations such as "{ A } + { B }" and "A + { B }" (which
+    are at the same level as "x + y");
+    "{ x }" is at level 0 to factor with "{ x : A | P }" *)
+
+Reserved Notation "{ x }" (at level 0, x at level 99).
+
+(** Notations for sigma-types or subsets *)
+
+Reserved Notation "{ x  |  P }" (at level 0, x at level 99).
+Reserved Notation "{ x  |  P  & Q }" (at level 0, x at level 99).
+
+Reserved Notation "{ x : A  |  P }" (at level 0, x at level 99).
+Reserved Notation "{ x : A  |  P  & Q }" (at level 0, x at level 99).
+
+Reserved Notation "{ x : A  & P }" (at level 0, x at level 99).
+Reserved Notation "{ x : A  & P  & Q }" (at level 0, x at level 99).
+
+ 
 (** Numeric *)
 Reserved Notation "n .+1" (at level 2, left associativity, format "n .+1").
 Reserved Notation "n .+2" (at level 2, left associativity, format "n .+2").
@@ -53,7 +128,7 @@ Reserved Notation "A <~> B" (at level 85).
 Reserved Notation "f ^-1" (at level 3, format "f '^-1'").
 Reserved Notation "m ^-1" (at level 3, format "m '^-1'").
 Reserved Notation "g 'oE' f" (at level 40, left associativity).
-Reserved Notation "f *E g" (at level 40, no associativity).
+Reserved Notation "f *E g" (at level 40, left associativity).
 Reserved Notation "f +E g" (at level 50, left associativity).
 
 (** Categories *)

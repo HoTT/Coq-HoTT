@@ -62,7 +62,6 @@ CAMERA = python proviola/camera/camera.py
 # read the targets from _CoqMakefile, except for STD_VFILES
 
 STD_VFILES = \
-	$(SRCCOQLIB)/theories/Init/Notations.v \
 	$(SRCCOQLIB)/theories/Init/Prelude.v
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
