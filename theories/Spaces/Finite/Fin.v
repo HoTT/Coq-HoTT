@@ -112,14 +112,14 @@ Proof.
     + rewrite path_fin_fsucc_incl, path_nat_fin_incl.
       apply IHn.
     + reflexivity.
-Qed.
+Defined.
 
 Lemma path_nat_fin_zero {n} : fin_to_nat (@fin_zero n) = 0.
 Proof.
   induction n as [|n' IHn].
   - reflexivity.
   - trivial.
-Qed.
+Defined.
 
 Lemma path_nat_fin_last {n} : fin_to_nat (@fin_last n) = n.
 Proof.
