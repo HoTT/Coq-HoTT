@@ -6,9 +6,6 @@ Require Import HoTT.Types.Bool.
 Require Import HoTT.TruncType.
 Require Export HoTT.DProp. (* We need to export this so lemmas about DProp are available. *)
 
-(** Temp *)
-Require Import Coq.Init.Notations.
-
 Close Scope trunc_scope.
 Open Scope nat_scope.
 Local Notation "0" := O.
@@ -116,7 +113,7 @@ Definition modulo x y :=
   end.
 
 Infix "/" := div : nat_scope.
-Infix "mod" := modulo (at level 40, no associativity) : nat_scope.
+Infix "mod" := modulo : nat_scope.
 
 
 (** ** Greatest common divisor *)

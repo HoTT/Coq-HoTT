@@ -13,7 +13,7 @@ Require Import PathAny.
 Local Open Scope path_scope.
 
 Notation coe := (transport idmap).
-Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a) (at level 0).
+Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
 Definition seq_shift_from_zero_by {A : Sequence} (a : A 0) k : A k.
 Proof.
@@ -22,7 +22,7 @@ Proof.
   - exact q^+.
 Defined.
 
-Notation "a ^+ k" := (seq_shift_from_zero_by a k) (at level 0).
+Notation "a ^+ k" := (seq_shift_from_zero_by a k).
 
 (** Shiftings; described in the paragraph after Lemma 3.7. *)
 Definition seq_pair_shift {A : Sequence} (x : sig A) : sig A.
@@ -37,8 +37,8 @@ Proof.
   - exact (seq_pair_shift y).
 Defined.
 
-Notation "x ^++" := (seq_pair_shift x) (at level 0).
-Notation "x ^++ k" := (seq_pair_shift_by x k) (at level 0).
+Notation "x ^++" := (seq_pair_shift x).
+Notation "x ^++ k" := (seq_pair_shift_by x k).
 
 Definition seq_pair_shift_assoc {A : Sequence} (x : sig A) (k : nat)
   : (x^++)^++k = x^++(k.+1).
@@ -221,7 +221,7 @@ Coercion fibSequence : FibSequence  >-> Funclass.
 Arguments fibSequence {A}.
 Arguments fibSequenceArr {A}.
 
-Notation "b ^+f" := (fibSequenceArr _ _ b) (at level 0).
+Notation "b ^+f" := (fibSequenceArr _ _ b).
 
 (** The Sigma of a fibered type sequence; Definition 4.3. *)
 Definition sig_seq {A} (B : FibSequence A) : Sequence.

@@ -167,6 +167,8 @@ End slice_category_induced_functor.
 
 (** ** Functors [A → A'] functors [(cat / A) → (cat / A')] *)
 Section cat_over_induced_functor.
+  Local Open Scope type_scope.
+
   Context `{Funext}.
   Variable P : PreCategory -> Type.
   Context `{H0 : forall C D, P C -> P D -> IsHSet (Functor C D)}.

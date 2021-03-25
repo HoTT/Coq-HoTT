@@ -109,7 +109,7 @@ Proof.
   exact concat.
 Defined.
 
-Notation "x '@D' y" := (dp_concat x y) (at level 20) : dpath_scope.
+Notation "x '@D' y" := (dp_concat x y) : dpath_scope.
 
 (* Concatenation of dependent paths with non-dependent paths *)
 Definition dp_concat_r {A} {P : A -> Type} {a0 a1}
@@ -119,7 +119,7 @@ Proof.
   destruct p; exact concat.
 Defined.
 
-Notation "x '@Dr' y" := (dp_concat_r x y) (at level 20) : dpath_scope.
+Notation "x '@Dr' y" := (dp_concat_r x y) : dpath_scope.
 
 Definition dp_concat_l {A} {P : A -> Type} {a1 a2}
   {q : a1 = a2} {b0 b1 : P a1} {b2 : P a2}
@@ -128,7 +128,7 @@ Proof.
   destruct q; exact concat.
 Defined.
 
-Notation "x '@Dl' y" := (dp_concat_l x y) (at level 20) : dpath_scope.
+Notation "x '@Dl' y" := (dp_concat_l x y) : dpath_scope.
 
 (* Inverse of dependent paths *)
 Definition dp_inverse {A} {P : A -> Type} {a0 a1} {p : a0 = a1}
@@ -138,8 +138,7 @@ Proof.
   exact inverse.
 Defined.
 
-(* TODO: Is level correct? *)
-Notation "x '^D'" := (dp_inverse x) (at level 3) : dpath_scope.
+Notation "x '^D'" := (dp_inverse x) : dpath_scope.
 
 (* dp_apD distributes over concatenation *)
 Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)

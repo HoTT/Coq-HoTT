@@ -35,6 +35,8 @@ Require Import
         HoTT.Classes.theory.fields
         HoTT.Classes.theory.dec_fields.
 
+Local Open Scope type_scope.
+
 Section locator.
   Context (Q : Type).
   Context `{Qrats : Rationals Q}.
@@ -218,6 +220,8 @@ Section locator.
   Proof.
     apply (pos_minus_lt_compat_r q ('eps)), eps.
   Qed.
+  
+  Local Open Scope mc_scope.
 
   Local Definition ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
   Proof.

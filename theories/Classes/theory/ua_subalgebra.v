@@ -127,6 +127,7 @@ Section subalgebra.
 End subalgebra.
 
 Module subalgebra_notations.
+  (** Cannot reserve since it messes with sigma type notation *)
   Notation "A & P" := (Subalgebra A P)
                       (at level 50, left associativity)
                       : Algebra_scope.

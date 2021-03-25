@@ -16,7 +16,7 @@ Section nat_lift.
 Universe N.
 
 Let natpaths := @paths@{N} nat.
-Infix "=N=" := natpaths (at level 70, no associativity).
+Infix "=N=" := natpaths.
 Let natpaths_symm : Symmetric@{N N} natpaths.
 Proof. unfold natpaths;apply _. Qed.
 
@@ -542,7 +542,7 @@ Lemma le_nat_max_l n m : n <= Nat.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
-  intros m; induction m as [|m' IHm]; try auto; cbn.
+  intros m; induction m as [|m' IHm]; try reflexivity; cbn.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
@@ -550,7 +550,7 @@ Lemma le_nat_max_r n m : m <= Nat.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
-  intros m; induction m as [|m' IHm]; try auto; cbn.
+  intros m; induction m as [|m' IHm]; try reflexivity; cbn.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.

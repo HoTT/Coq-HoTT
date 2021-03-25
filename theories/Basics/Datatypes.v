@@ -109,7 +109,7 @@ Scheme list_rect := Induction for list Sort Type.
 
 Arguments nil {A}.
 Declare Scope list_scope.
-Infix "::" := cons (at level 60, right associativity) : list_scope.
+Infix "::" := cons : list_scope.
 Delimit Scope list_scope with list.
 Bind Scope list_scope with list.
 
@@ -123,4 +123,4 @@ Definition app (A : Type) : list A -> list A -> list A :=
    | a :: l1 => a :: app l1 m
   end.
 
-Infix "++" := app (right associativity, at level 60) : list_scope.
+Infix "++" := app : list_scope.

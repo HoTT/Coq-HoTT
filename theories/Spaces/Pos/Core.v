@@ -15,10 +15,8 @@ Delimit Scope positive_scope with pos.
 
 (** Here are some notations that let us right binary positive integers more easily. *)
 Notation "1" := xH : positive_scope.
-Notation "p ~ 1" := (x1 p)
- (at level 7, left associativity, format "p '~' '1'") : positive_scope.
-Notation "p ~ 0" := (x0 p)
- (at level 7, left associativity, format "p '~' '0'") : positive_scope.
+Notation "p ~ 1" := (x1 p) : positive_scope.
+Notation "p ~ 0" := (x0 p) : positive_scope.
 
 Local Open Scope positive_scope.
 

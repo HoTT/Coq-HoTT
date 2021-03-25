@@ -25,6 +25,7 @@ Local Open Scope category_scope.
 (** ** Functor from [(A → C)ᵒᵖ × (B → C)] to [cat / (A × B)] *)
 (** It sends [S : A → C ← B : T] to the category [(S / T)] and its projection functor to [A × B]. *)
 Section comma.
+  Local Open Scope type_scope.
   Context `{Funext}.
 
   Variable P : PreCategory -> Type.
@@ -38,6 +39,7 @@ Section comma.
   Hypothesis P_comma : forall (S : Functor A C) (T : Functor B C),
                          P (S / T).
 
+  Local Open Scope category_scope.
   Local Open Scope morphism_scope.
 
   Definition comma_category_projection_functor_object_of
@@ -128,6 +130,7 @@ Section comma.
 End comma.
 
 Section slice_category_projection_functor.
+  Local Open Scope type_scope.
   Context `{Funext}.
 
   Variable P : PreCategory -> Type.

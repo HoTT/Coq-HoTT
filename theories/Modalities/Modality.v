@@ -90,7 +90,7 @@ Class O_strong_leq (O1 O2 : ReflectiveSubuniverse)
   := reflectsD_strong_leq : forall A, ReflectsD O2 O1 A.
 Global Existing Instance reflectsD_strong_leq.
 
-Notation "O1 << O2" := (O_strong_leq O1 O2) (at level 70) : subuniverse_scope.
+Infix "<<" := O_strong_leq : subuniverse_scope.
 Open Scope subuniverse_scope.
 
 (** The strong order implies the weak order. *)

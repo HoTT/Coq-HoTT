@@ -1914,7 +1914,7 @@ Class O_eq@{i1 i2 j} (O1 : Subuniverse@{i1}) (O2 : Subuniverse@{i2}) :=
 
 Global Existing Instances O_eq_l O_eq_r.
 
-Notation "O1 <=> O2" := (O_eq O1 O2) (at level 70) : subuniverse_scope.
+Infix "<=>" := O_eq : subuniverse_scope.
 
 Definition issig_O_eq O1 O2 : _ <~> O_eq O1 O2 := ltac:(issig).
 

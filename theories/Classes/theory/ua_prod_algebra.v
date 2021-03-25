@@ -166,11 +166,7 @@ Section bin_prod_algebra.
 End bin_prod_algebra.
 
 Module prod_algebra_notations.
-
-  Global Notation "A × B" := (BinProdAlgebra A B)
-                             (at level 40, left associativity)
-                             : Algebra_scope.
-
+  Global Notation "A × B" := (BinProdAlgebra A B) : Algebra_scope.
 End prod_algebra_notations.
 
 Import prod_algebra_notations.

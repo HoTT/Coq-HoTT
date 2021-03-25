@@ -168,7 +168,7 @@ Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)
     Global Notation "[: x ; .. ; y ; z :]"
         := (cons x .. (cons y (one z)) ..) : ne_list_scope.
 
-    Global Infix ":::" := cons (at level 60, right associativity) : ne_list_scope.
+    Global Infix ":::" := cons : ne_list_scope.
 
   End notations.
 

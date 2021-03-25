@@ -85,7 +85,7 @@ Proof.
   - intros h.
     apply path_arrow.
     srapply Coeq_ind; intros b.
-    1:reflexivity.
+    1: cbn;reflexivity.
     cbn.
     abstract (rewrite transport_paths_FlFr, concat_p1, Coeq_rec_beta_cglue, concat_Vp; reflexivity).
   - intros [h q]; srapply path_sigma'.

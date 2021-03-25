@@ -37,7 +37,7 @@ Arguments OO_descend_beta O' O {T _ _ _} P {P_inO} x.
 Class O_lex_leq (O1 O2 : ReflectiveSubuniverse) `{O1 << O2} :=
   O_lex_leq_descends : forall A, Descends O2 O1 A.
 
-Notation "O1 <<< O2" := (O_lex_leq O1 O2) (at level 70) : subuniverse_scope.
+Infix "<<<" := O_lex_leq : subuniverse_scope.
 Global Existing Instance O_lex_leq_descends.
 
 (** Unfortunately, it seems that generalizing binders don't work on notations: writing [`{O <<< O'}] doesn't automatically add the precondition [O << O'], although writing [`{O_lex_leq O O'}] does. *)

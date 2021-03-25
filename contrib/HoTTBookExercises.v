@@ -28,6 +28,7 @@ Require Import Spaces.Nat.
 Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties HoTT.Metatheory.UnivalenceImpliesFunext.
 
 Local Open Scope nat_scope.
+Local Open Scope type_scope.
 Local Open Scope path_scope.
 
 (* END OF PREAMBLE *)
@@ -1276,6 +1277,7 @@ Section Book_5_2.
 End Book_5_2.
 
 Section Book_5_2'.
+  Local Open Scope nat_scope.
   (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same reucrrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
   Let ez : nat := 1.
   Let es : nat -> nat -> nat := fun _ => S.

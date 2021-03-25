@@ -12,7 +12,7 @@
 
 Set Implicit Arguments.
 
-Require Export Coq.Init.Notations.
+Require Export Basics.Notations.
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.

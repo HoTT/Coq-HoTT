@@ -87,7 +87,7 @@ Proof.
 Defined.
 
 Module PiUtf8.
-  Notation "'π'" := Pi (at level 0).
+  Notation "'π'" := Pi.
 End PiUtf8.
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)

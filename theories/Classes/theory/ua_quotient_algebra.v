@@ -163,9 +163,7 @@ Section quotient_algebra.
 End quotient_algebra.
 
 Module quotient_algebra_notations.
-  Global Notation "A / Φ" := (QuotientAlgebra A Φ)
-                             (at level 40, left associativity)
-                             : Algebra_scope.
+  Global Notation "A / Φ" := (QuotientAlgebra A Φ) : Algebra_scope.
 End quotient_algebra_notations.
 
 Import quotient_algebra_notations.

@@ -18,6 +18,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
+Local Open Scope type_scope.
 
 (** Quoting David Spivak:
 
