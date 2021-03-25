@@ -1,5 +1,5 @@
 (** This file continues the development of algebra [Operation]. It
-    gives an way to construct operations using (conventional) curried
+    gives a way to construct operations using (conventional) curried
     functions, and shows that such curried operations are equivalent
     to the uncurried operations [Operation]. *)
 
@@ -217,3 +217,4 @@ Definition equiv_operation_curry `{Funext} {σ} (A : Carriers σ)
   {n : nat} (ss : Vect n (Sort σ)) (t : Sort σ)
   : FiniteOperation A ss t <~> CurriedOperation A ss t
   := Build_Equiv _ _ (operation_curry A ss t) _.
+
