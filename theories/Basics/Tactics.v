@@ -61,12 +61,7 @@ Ltac destruct_one_ex :=
     (destruct H as [H ph ph'])
   in
     match goal with
-      (* | [H : (ex _) |- _] => tac H *)
-      (* | [H : (sig ?P) |- _ ] => tac H *)
       | [H : (sig ?P) |- _ ] => tacT H
-      (* | [H : (ex2 _ _) |- _] => tac2 H *)
-      (* | [H : (sig2 ?P _) |- _ ] => tac2 H *)
-      | [H : (sig2 ?P _) |- _ ] => tacT2 H
     end.
 
 (** Repeateadly destruct existentials. *)
@@ -284,7 +279,7 @@ Ltac refine_hyp c :=
    possibly using [program_simplify] to use standard goal-cleaning tactics. *)
 
 Ltac program_simplify :=
-simpl; intros ; destruct_all_rec_calls ; repeat (destruct_conjs; simpl proj1_sig in * );
+simpl; intros ; destruct_all_rec_calls ; repeat (destruct_conjs; simpl proj1 in * );
   subst*; autoinjections ; try discriminates ;
     try (solve [ red ; intros ; destruct_conjs ; autoinjections ; discriminates ]).
 
