@@ -1,4 +1,5 @@
 (** * Product Category *)
+Require Import Basics.Tactics.
 Require Import Category.Core Category.Strict.
 Require Import Types.Prod.
 

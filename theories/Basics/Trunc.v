@@ -1,7 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Truncatedness *)
 
-Require Import Overture PathGroupoids Contractible Equivalences.
+Require Import
+  Basics.Overture
+  Basics.PathGroupoids
+  Basics.Contractible
+  Basics.Equivalences
+  Basics.Tactics
+  Basics.Nat.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.

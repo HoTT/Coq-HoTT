@@ -1,12 +1,4 @@
-(************************************************************************)
-(*         *   The Coq Proof Assistant / The Coq Development Team       *)
-(*  v      *   INRIA, CNRS and contributors - Copyright 1999-2018       *)
-(* <O___,, *       (see CREDITS file for the list of authors)           *)
-(*   \VV/  **************************************************************)
-(*    //   *    This file is distributed under the terms of the         *)
-(*         *     GNU Lesser General Public License Version 2.1          *)
-(*         *     (see LICENSE file for the text of the license)         *)
-(************************************************************************)
+Require Import Basics.Overture.
 
 (** * Decimal numbers *)
 
@@ -15,8 +7,6 @@
     See the [Numeral Notation] command.
     We represent numbers in base 10 as lists of decimal digits,
     in big-endian order (most significant digit comes first). *)
-
-Require Import Basics.Datatypes.
 
 (** Unsigned integers are just lists of digits.
     For instance, ten is (D1 (D0 Nil)) *)

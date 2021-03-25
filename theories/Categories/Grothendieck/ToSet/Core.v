@@ -2,6 +2,7 @@
 Require Import Category.Core Functor.Core.
 Require Import SetCategory.Core.
 Require Import Basics.Trunc HSet Types.Sigma TruncType.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

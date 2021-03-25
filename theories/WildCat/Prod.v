@@ -1,10 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.Overture.
-Require Import Basics.PathGroupoids.
-Require Import Basics.Notations.
-Require Import Basics.Contractible.
-Require Import Basics.Equivalences.
+Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 

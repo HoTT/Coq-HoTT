@@ -7,6 +7,7 @@ Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require Import Trunc Types.Paths Types.Sigma.
+Require Import Basics.Tactics.
 
 Import Functor.Identity.FunctorIdentityNotations.
 

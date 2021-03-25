@@ -9,6 +9,7 @@ Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoi
 Require Import Adjoint.Composition.Core.
 Require Import Adjoint.Functorial.Parts.
 Require Import HProp Types.Sigma HoTT.Tactics.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -4,6 +4,7 @@ Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Dual.
 Require Import Functor.Composition.Core Functor.Identity NaturalTransformation.Composition.Core.
 Require Import HoTT.Tactics Basics.Trunc Types.Sigma.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

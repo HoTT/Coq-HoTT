@@ -4,7 +4,8 @@
 Require Import HoTT.Basics.
 Require Import HoTT.Types.Bool.
 Require Import HoTT.TruncType.
-Require Export HoTT.DProp. (* We need to export this so lemmas about DProp are available. *)
+Require Export HoTT.DProp.
+Require Export HoTT.Basics.Nat.
 
 Close Scope trunc_scope.
 Open Scope nat_scope.

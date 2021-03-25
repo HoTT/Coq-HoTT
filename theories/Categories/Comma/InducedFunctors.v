@@ -11,6 +11,7 @@ Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Require Import Comma.Projection.
 Require Import Types.Prod HoTT.Tactics Types.Unit.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

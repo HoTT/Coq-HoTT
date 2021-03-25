@@ -1,7 +1,12 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Equivalences *)
 
-Require Import Basics.Overture Basics.PathGroupoids Basics.Notations Basics.Contractible.
+Require Import
+  Basics.Overture
+  Basics.PathGroupoids
+  Basics.Notations
+  Basics.Contractible
+  Basics.Tactics.
 Local Open Scope path_scope.
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].

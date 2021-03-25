@@ -6,6 +6,7 @@ Require NaturalTransformation.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Core.
 Require Import Category.Morphisms.
 Require Import HoTT.Tactics.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -4,6 +4,7 @@ Require Import Functor.Composition.Core Functor.Identity.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.
 Require Import Types Trunc.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
