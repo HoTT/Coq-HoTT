@@ -158,7 +158,7 @@ Defined.
 Arguments path_path_algebra {_} {σ} {A B}%Algebra_scope (p q r)%path_scope.
 
 Module notations_algebra.
-  (** Conflicts with invers notation so cannot be reserved *)
+  (** Conflicts with inverse notation so cannot be reserved *)
   Global Notation "u ^^ A" := (operations A u)
                               (at level 6, no associativity)
                               : Algebra_scope.
