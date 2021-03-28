@@ -11,17 +11,17 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Local Notation sigT_type := Coq.Init.Specif.sigT.
+Local Notation sig_type := Overture.sig.
 Local Notation pr1_type := Overture.pr1.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
-Section sigT_mor.
+Section sig_mor.
   Variable A : PreCategory.
   Variable Pmor : forall s d, morphism A s d -> Type.
 
-  Local Notation mor s d := (sigT_type (Pmor s d)).
+  Local Notation mor s d := (sig_type (Pmor s d)).
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -45,8 +45,8 @@ Section sigT_mor.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  (** ** Definition of [sigT_mor]-precategory *)
-  Definition sigT_mor : PreCategory.
+  (** ** Definition of [sig_mor]-precategory *)
+  Definition sig_mor' : PreCategory.
   Proof.
     refine (@Build_PreCategory
               (object A)
@@ -61,44 +61,44 @@ Section sigT_mor.
   Defined.
 
   (** ** First projection functor *)
-  Definition pr1_mor : Functor sigT_mor A
+  Definition pr1_mor : Functor sig_mor' A
     := Build_Functor
-         sigT_mor A
+         sig_mor' A
          idmap
          (fun _ _ => @pr1_type _ _)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
-  Definition sigT_mor_as_sigT : PreCategory.
+  Definition sig_mor_as_sig : PreCategory.
   Proof.
-    refine (@sigT A (fun _ => Unit) (fun s d => @Pmor (pr1_type s) (pr1_type d)) _ (fun _ => Pidentity _) (fun _ _ _ _ _ m1 m2 => Pcompose m1 m2) _ _ _);
+    refine (@sig' A (fun _ => Unit) (fun s d => @Pmor (pr1_type s) (pr1_type d)) _ (fun _ => Pidentity _) (fun _ _ _ _ _ m1 m2 => Pcompose m1 m2) _ _ _);
     intros; trivial.
   Defined.
 
-  Definition sigT_functor_mor : Functor sigT_mor_as_sigT sigT_mor
+  Definition sig_functor_mor : Functor sig_mor_as_sig sig_mor'
     := Build_Functor
-         sigT_mor_as_sigT sigT_mor
+         sig_mor_as_sig sig_mor'
          (@pr1_type _ _)
          (fun _ _ => idmap)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
-  Definition sigT_functor_mor_inv : Functor sigT_mor sigT_mor_as_sigT
+  Definition sig_functor_mor_inv : Functor sig_mor' sig_mor_as_sig
     := Build_Functor
-         sigT_mor sigT_mor_as_sigT
-         (fun x => existT _ x tt)
+         sig_mor' sig_mor_as_sig
+         (fun x => exist _ x tt)
          (fun _ _ => idmap)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
   Local Open Scope functor_scope.
 
-  Lemma sigT_mor_eq `{Funext}
-  : sigT_functor_mor o sigT_functor_mor_inv = 1
-    /\ sigT_functor_mor_inv o sigT_functor_mor = 1.
+  Lemma sig_mor_eq `{Funext}
+  : sig_functor_mor o sig_functor_mor_inv = 1
+    /\ sig_functor_mor_inv o sig_functor_mor = 1.
   Proof.
     split; path_functor; simpl; trivial.
-    refine (existT
+    refine (exist
               _
               (path_forall
                  _
@@ -109,24 +109,24 @@ Section sigT_mor.
                      end))
               _).
     repeat (apply path_forall; intro).
-    destruct_head @sigT_type.
+    destruct_head @sig_type.
     destruct_head Unit.
     rewrite !transport_forall_constant.
     transport_path_forall_hammer.
     reflexivity.
   Qed.
 
-  Definition sigT_mor_compat : pr1_mor o sigT_functor_mor = pr1
+  Definition sig_mor_compat : pr1_mor o sig_functor_mor = pr1'
     := idpath.
-End sigT_mor.
+End sig_mor.
 
 Arguments pr1_mor {A Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity}.
 
-Section sigT_mor_hProp.
+Section sig_mor_hProp.
   Variable A : PreCategory.
   Variable Pmor : forall s d, morphism A s d -> Type.
 
-  Local Notation mor s d := (sigT_type (Pmor s d)).
+  Local Notation mor s d := (sig_type (Pmor s d)).
   Context `(HPmor : forall s d m, IsHProp (Pmor s d m)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -175,11 +175,11 @@ Section sigT_mor_hProp.
   (** ** Definition of [sig_mor]-precategory *)
   Definition sig_mor : PreCategory
     := Eval cbv delta [P_associativity P_left_identity P_right_identity]
-      in @sigT_mor A Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
+      in @sig_mor' A Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
 
   (** ** First projection functor *)
   Definition proj1_sig_mor : Functor sig_mor A
     := pr1_mor.
-End sigT_mor_hProp.
+End sig_mor_hProp.
 
 Arguments proj1_sig_mor {A Pmor HPmor Pidentity Pcompose}.

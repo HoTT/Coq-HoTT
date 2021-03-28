@@ -1,7 +1,8 @@
 Require Export
   HoTT.Basics
   HoTT.Types
-  HoTT.Truncations.
+  HoTT.Truncations
+  HoTT.Basics.Utf8.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
@@ -21,8 +22,7 @@ apply Trunc_ind.
 - exact E.
 Qed.
 
-Notation " g ∘ f " := (Compose g f)%mc
-  (at level 40, left associativity).
+Notation " g ∘ f " := (Compose g f)%mc.
 Notation "(∘)" := Compose (only parsing) : mc_scope.
 
 Definition id {A : Type} (a : A) := a.
@@ -36,7 +36,7 @@ Notation "( x <>)" := (fun y => x <> y) (only parsing) : mc_scope.
 Notation "(<> x )" := (fun y => y <> x) (only parsing) : mc_scope.
 
 Class Apart A := apart : Relation A.
-Infix "≶" := apart (at level 70, no associativity) : mc_scope.
+Infix "≶" := apart : mc_scope.
 Notation "(≶)" := apart (only parsing) : mc_scope.
 Notation "( x ≶)" := (apart x) (only parsing) : mc_scope.
 Notation "(≶ x )" := (fun y => apart y x) (only parsing) : mc_scope.
@@ -53,7 +53,7 @@ Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 
 Class Cast A B := cast: A -> B.
 Arguments cast _ _ {Cast} _.
-Notation "' x" := (cast _ _ x) (at level 20) : mc_scope.
+Notation "' x" := (cast _ _ x) : mc_scope.
 Typeclasses Transparent Cast.
 
 (* Other canonically named relations/operations/constants: *)
@@ -144,24 +144,24 @@ Notation "/ x" := (dec_recip x) : mc_scope.
 Notation "(/)" := dec_recip (only parsing) : mc_scope.
 Notation "x / y" := (x * /y) : mc_scope.
 
-Notation "// x" := (recip x) (at level 40, no associativity) : mc_scope.
+Notation "// x" := (recip x) : mc_scope.
 Notation "(//)" := recip (only parsing) : mc_scope.
-Notation "x // y" := (x * //y) (at level 40, left associativity) : mc_scope.
+Notation "x // y" := (x * //y) : mc_scope.
 
 Notation "⊤" := top : mc_scope.
 Notation "⊥" := bottom : mc_scope.
 
-Infix "⊓" := meet (at level 50, no associativity) : mc_scope.
+Infix "⊓" := meet : mc_scope.
 Notation "(⊓)" := meet (only parsing) : mc_scope.
 Notation "( X ⊓)" := (meet X) (only parsing) : mc_scope.
 Notation "(⊓ X )" := (fun Y => Y ⊓ X) (only parsing) : mc_scope.
 
-Infix "⊔" := join (at level 50, no associativity) : mc_scope.
+Infix "⊔" := join : mc_scope.
 Notation "(⊔)" := join (only parsing) : mc_scope.
 Notation "( X ⊔)" := (join X) (only parsing) : mc_scope.
 Notation "(⊔ X )" := (fun Y => Y ⊔ X) (only parsing) : mc_scope.
 
-Infix "≤" := le (at level 70, no associativity) : mc_scope.
+Infix "≤" := le : mc_scope.
 Notation "(≤)" := le (only parsing) : mc_scope.
 Notation "( x ≤)" := (le x) (only parsing) : mc_scope.
 Notation "(≤ x )" := (fun y => y ≤ x) (only parsing) : mc_scope.
@@ -176,10 +176,10 @@ Notation "(<)" := lt (only parsing) : mc_scope.
 Notation "( x <)" := (lt x) (only parsing) : mc_scope.
 Notation "(< x )" := (fun y => y < x) (only parsing) : mc_scope.
 
-Notation "x ≤ y ≤ z" := (x ≤ y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
-Notation "x ≤ y < z" := (x ≤ y /\ y < z) (at level 70, y at next level) : mc_scope.
-Notation "x < y < z" := (x < y /\ y < z) (at level 70, y at next level) : mc_scope.
-Notation "x < y ≤ z" := (x < y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
+Notation "x ≤ y ≤ z" := (x ≤ y /\ y ≤ z) : mc_scope.
+Notation "x ≤ y < z" := (x ≤ y /\ y < z) : mc_scope.
+Notation "x < y < z" := (x < y /\ y < z) : mc_scope.
+Notation "x < y ≤ z" := (x < y /\ y ≤ z) : mc_scope.
 
 (** It is likely that ≤ and < are transitive (and ≤ reflexive) so inform [auto] of this. *)
 Ltac auto_trans := match goal with
@@ -201,7 +201,7 @@ Definition abs `{Abs A} := fun x : A => (abs_sig x).1.
 (* Class Inverse `(A -> B) : Type := inverse: B -> A.
 Arguments inverse {A B} _ {Inverse} _.
 Typeclasses Transparent Inverse.
-Notation "f ⁻¹" := (inverse f) (at level 30) : mc_scope. *)
+Notation "f ⁻¹" := (inverse f) : mc_scope. *)
 
 Class Idempotent `(f: A -> A -> A) (x : A) : Type := idempotency: f x x = x.
 Arguments idempotency {A} _ _ {Idempotent}.
@@ -367,7 +367,7 @@ Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
 
 (** Additional operations **)
 Class CutMinus A := cut_minus : A -> A -> A.
-Infix "∸" := cut_minus (at level 50, left associativity) : mc_scope.
+Infix "∸" := cut_minus : mc_scope.
 Notation "(∸)" := cut_minus (only parsing) : mc_scope.
 Notation "( x ∸)" := (cut_minus x) (only parsing) : mc_scope.
 Notation "(∸ y )" := (fun x => x ∸ y) (only parsing) : mc_scope.
@@ -375,25 +375,25 @@ Notation "(∸ y )" := (fun x => x ∸ y) (only parsing) : mc_scope.
 Inductive comparison : Set := LT | EQ | GT.
 
 Class Compare A := compare : A -> A -> comparison.
-Infix "?=" := compare (at level 70, no associativity) : mc_scope.
+Infix "?=" := compare : mc_scope.
 Notation "(?=)" := compare (only parsing) : mc_scope.
 Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
 Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
 
 Class Eqb A := eqb : A -> A -> Bool.
-Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
+Infix "=?" := eqb : mc_scope.
 Notation "(=?)" := eqb (only parsing) : mc_scope.
 Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
 Notation "(=? y )" := (fun x => x =? y) (only parsing) : mc_scope.
 
 Class Ltb A := ltb : A -> A -> Bool.
-Infix "<?" := ltb (at level 70, no associativity) : mc_scope.
+Infix "<?" := ltb : mc_scope.
 Notation "(<?)" := ltb (only parsing) : mc_scope.
 Notation "( x <?)" := (ltb x) (only parsing) : mc_scope.
 Notation "(<? y )" := (fun x => x <? y) (only parsing) : mc_scope.
 
 Class Leb A := leb : A -> A -> Bool.
-Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
+Infix "<=?" := leb : mc_scope.
 Notation "(<=?)" := leb (only parsing) : mc_scope.
 Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.
 Notation "(<=? y )" := (fun x => x <=? y) (only parsing) : mc_scope.

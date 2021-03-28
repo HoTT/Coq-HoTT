@@ -83,7 +83,7 @@ intros.
     unfold SubPreCatCat.
     simpl in *.
     clear.
-    destruct_head_hnf @sigT.
+    destruct_head_hnf @sig.
     simpl in *.
     repeat match goal with
              | [ H : _ |- _ ] => revert H

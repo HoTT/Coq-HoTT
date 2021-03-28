@@ -60,8 +60,8 @@ Definition int_to_decimal_int (n : Int) : Decimal.int :=
     | pos m => Decimal.Pos (pos_to_uint m)
   end.
 
-Definition int_to_number_int (n : Int) : Number.int :=
-  Number.IntDecimal (int_to_decimal_int n).
+Definition int_to_number_int (n : Int) : Numeral.int :=
+  Numeral.IntDec (int_to_decimal_int n).
 
 Fixpoint int_of_decimal_uint (d : Decimal.uint) : Int :=
   match d with
@@ -88,10 +88,10 @@ Definition int_of_decimal_int (d : Decimal.int) : Int :=
         end
   end.
 
-Definition int_of_number_int (d:Number.int) :=
+Definition int_of_number_int (d:Numeral.int) :=
   match d with
-  | Number.IntDecimal d => Some (int_of_decimal_int d)
-  | Number.IntHexadecimal _ => None
+  | Numeral.IntDec d => Some (int_of_decimal_int d)
+  | Numeral.IntHex _ => None
   end.
 
 Number Notation Int int_of_number_int int_to_number_int : int_scope.

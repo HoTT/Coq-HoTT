@@ -8,20 +8,17 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B C f g n.
 
-Scheme sig_ind := Induction for sig Sort Type.
-Scheme sig_rec := Minimality for sig Sort Type.
-
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose base is [A] and whose fiber over [x] is [P x].
 
-From such a [P] we can build a total space over the base space [A] so that the fiber over [x : A] is [P x]. This is just Coq's dependent sum construction, written as [sigT P] or [{x : A & P x}]. The elements of [{x : A & P x}] are pairs, written [existT P x y] in Coq, where [x : A] and [y : P x].  In [Common.v] we defined the notation [(x;y)] to mean [existT _ x y].
+From such a [P] we can build a total space over the base space [A] so that the fiber over [x : A] is [P x]. This is just Coq's dependent sum construction, written as [sig P] or [{x : A & P x}]. The elements of [{x : A & P x}] are pairs, written [exist P x y] in Coq, where [x : A] and [y : P x].  In [Common.v] we defined the notation [(x;y)] to mean [exist _ x y].
 
 The base and fiber components of a point in the total space are extracted with the two projections [pr1] and [pr2]. *)
 
 (** ** Unpacking *)
 
-(** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(pr1 u ; pr2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
+(** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(pr1 u ; pr2 u)]. This is accomplished by [sig_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
-Definition unpack_sigma `{P : A -> Type} (Q : sigT P -> Type) (u : sigT P)
+Definition unpack_sigma `{P : A -> Type} (Q : sig P -> Type) (u : sig P)
 : Q (u.1; u.2) -> Q u
   := idmap.
 
@@ -29,21 +26,21 @@ Arguments unpack_sigma / .
 
 (** ** Eta conversion *)
 
-Definition eta_sigma `{P : A -> Type} (u : sigT P)
+Definition eta_sigma `{P : A -> Type} (u : sig P)
   : (u.1; u.2) = u
   := 1.
 
 Arguments eta_sigma / .
 
 Definition eta2_sigma `{P : forall (a : A) (b : B a), Type}
-           (u : sigT (fun a => sigT (P a)))
+           (u : sig (fun a => sig (P a)))
   : (u.1; u.2.1; u.2.2) = u
   := 1.
 
 Arguments eta2_sigma / .
 
 Definition eta3_sigma `{P : forall (a : A) (b : B a) (c : C a b), Type}
-           (u : sigT (fun a => sigT (fun b => sigT (P a b))))
+           (u : sig (fun a => sig (fun b => sig (P a b))))
   : (u.1; u.2.1; u.2.2.1; u.2.2.2) = u
   := 1.
 
@@ -54,7 +51,7 @@ Arguments eta3_sigma / .
 (** A path in a total space is commonly shown component wise. Because we use this over and over, we write down the proofs by hand to make sure they are what we think they should be. *)
 
 (** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
-Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
+Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sig P)
            (pq : {p : u.1 = v.1 & p # u.2 = v.2})
 : u = v
   := match pq.2 in (_ = v2) return u = (v.1; v2) with
@@ -64,13 +61,13 @@ Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
      end.
 
 (** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
-Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
+Definition path_sigma {A : Type} (P : A -> Type) (u v : sig P)
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : u = v
   := path_sigma_uncurried P u v (p;q).
 
 (** A contravariant instance of [path_sigma_uncurried] *)
-Definition path_sigma_uncurried_contra {A : Type} (P : A -> Type) (u v : sigT P)
+Definition path_sigma_uncurried_contra {A : Type} (P : A -> Type) (u v : sig P)
            (pq : {p : u.1 = v.1 & u.2 = p^ # v.2})
 : u = v
   := (path_sigma_uncurried P v u (pq.1^;pq.2^))^.
@@ -78,7 +75,7 @@ Definition path_sigma_uncurried_contra {A : Type} (P : A -> Type) (u v : sigT P)
 (** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
 Definition dpath_forall'
-           {A : Type } (P : A -> Type) (Q: sigT P -> Type) {x y : A} (h : x = y)
+           {A : Type } (P : A -> Type) (Q: sig P -> Type) {x y : A} (h : x = y)
            (f : forall p, Q (x ; p)) (g : forall p, Q (y ; p))
 :
   (forall p, transport Q (path_sigma P (x ; p) (y; _) h 1) (f p) = g (h # p))
@@ -99,7 +96,7 @@ Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x
 
 (** Projections of paths from a total space. *)
 
-Definition pr1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr1_path `{P : A -> Type} {u v : sig P} (p : u = v)
 : u.1 = v.1
   :=
     ap pr1 p.
@@ -107,7 +104,7 @@ Definition pr1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
 
 Notation "p ..1" := (pr1_path p) : fibration_scope.
 
-Definition pr2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr2_path `{P : A -> Type} {u v : sig P} (p : u = v)
 : p..1 # u.2 = v.2
   := (transport_compose P pr1 p u.2)^
      @ (@apD {x:A & P x} _ pr2 _ _ p).
@@ -116,7 +113,7 @@ Notation "p ..2" := (pr2_path p) : fibration_scope.
 
 (** Now we show how these things compute. *)
 
-Definition pr1_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+Definition pr1_path_sigma_uncurried `{P : A -> Type} {u v : sig P}
            (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
 : (path_sigma_uncurried _ _ _ pq)..1 = pq.1.
 Proof.
@@ -125,7 +122,7 @@ Proof.
   destruct p; simpl in q; destruct q; reflexivity.
 Defined.
 
-Definition pr2_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+Definition pr2_path_sigma_uncurried `{P : A -> Type} {u v : sig P}
            (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
 : (path_sigma_uncurried _ _ _ pq)..2
   = ap (fun s => transport P s u.2) (pr1_path_sigma_uncurried pq) @ pq.2.
@@ -135,7 +132,7 @@ Proof.
   destruct p; simpl in q; destruct q; reflexivity.
 Defined.
 
-Definition eta_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+Definition eta_path_sigma_uncurried `{P : A -> Type} {u v : sig P}
            (p : u = v)
 : path_sigma_uncurried _ _ _ (p..1; p..2) = p.
 Proof.
@@ -143,7 +140,7 @@ Proof.
 Defined.
 
 Lemma transport_pr1_path_sigma_uncurried
-      `{P : A -> Type} {u v : sigT P}
+      `{P : A -> Type} {u v : sig P}
       (pq : { p : u.1 = v.1 & transport P p u.2 = v.2 })
       Q
 : transport (fun x => Q x.1) (@path_sigma_uncurried A P u v pq)
@@ -154,29 +151,29 @@ Proof.
   reflexivity.
 Defined.
 
-Definition pr1_path_sigma `{P : A -> Type} {u v : sigT P}
+Definition pr1_path_sigma `{P : A -> Type} {u v : sig P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : (path_sigma _ _ _ p q)..1 = p
   := pr1_path_sigma_uncurried (p; q).
 
 (* Writing it the other way can help [rewrite]. *)
-Definition ap_pr1_path_sigma {A:Type} {P : A -> Type} {u v : sigT P}
+Definition ap_pr1_path_sigma {A:Type} {P : A -> Type} {u v : sig P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
   : ap pr1 (path_sigma _ _ _ p q) = p
   := pr1_path_sigma p q.
 
-Definition pr2_path_sigma `{P : A -> Type} {u v : sigT P}
+Definition pr2_path_sigma `{P : A -> Type} {u v : sig P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : (path_sigma _ _ _ p q)..2
   = ap (fun s => transport P s u.2) (pr1_path_sigma p q) @ q
   := pr2_path_sigma_uncurried (p; q).
 
-Definition eta_path_sigma `{P : A -> Type} {u v : sigT P} (p : u = v)
+Definition eta_path_sigma `{P : A -> Type} {u v : sig P} (p : u = v)
 : path_sigma _ _ _ (p..1) (p..2) = p
   := eta_path_sigma_uncurried p.
 
 Definition transport_pr1_path_sigma
-           `{P : A -> Type} {u v : sigT P}
+           `{P : A -> Type} {u v : sig P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
            Q
 : transport (fun x => Q x.1) (@path_sigma A P u v p q)
@@ -185,7 +182,7 @@ Definition transport_pr1_path_sigma
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
-Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
+Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sig P}
 : IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
   simple refine (Build_IsEquiv
@@ -199,12 +196,12 @@ Proof.
   all: reflexivity.
 Defined.
 
-Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
+Definition equiv_path_sigma `(P : A -> Type) (u v : sig P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := Build_Equiv _ _ (path_sigma_uncurried P u v) _.
 
 (* A contravariant version of [isequiv_path_sigma'] *)
-Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
+Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sig P}
   : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
   apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
         (fun r => match r with idpath => (1; 1) end)).
@@ -216,13 +213,13 @@ Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
 Defined.
 
 (* A contravariant version of [equiv_path_sigma] *)
-Definition equiv_path_sigma_contra {A : Type} `(P : A -> Type) (u v : sigT P)
+Definition equiv_path_sigma_contra {A : Type} `(P : A -> Type) (u v : sig P)
   : {p : u.1 = v.1 & u.2 = p^ # v.2} <~> (u = v)
   := Build_Equiv _ _ (path_sigma_uncurried_contra P u v) _.
 
 (** This identification respects path concatenation. *)
 
-Definition path_sigma_pp_pp {A : Type} (P : A -> Type) {u v w : sigT P}
+Definition path_sigma_pp_pp {A : Type} (P : A -> Type) {u v w : sig P}
            (p1 : u.1 = v.1) (q1 : p1 # u.2 = v.2)
            (p2 : v.1 = w.1) (q2 : p2 # v.2 = w.2)
 : path_sigma P u w (p1 @ p2)
@@ -255,24 +252,24 @@ Defined.
 
 (** [pr1_path] also commutes with the groupoid structure. *)
 
-Definition pr1_path_1 {A : Type} {P : A -> Type} (u : sigT P)
+Definition pr1_path_1 {A : Type} {P : A -> Type} (u : sig P)
 : (idpath u) ..1 = idpath (u .1)
   := 1.
 
-Definition pr1_path_pp {A : Type} {P : A -> Type} {u v w : sigT P}
+Definition pr1_path_pp {A : Type} {P : A -> Type} {u v w : sig P}
            (p : u = v) (q : v = w)
 : (p @ q) ..1 = (p ..1) @ (q ..1)
   := ap_pp _ _ _.
 
-Definition pr1_path_V {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr1_path_V {A : Type} {P : A -> Type} {u v : sig P} (p : u = v)
 : p^ ..1 = (p ..1)^
   := ap_V _ _.
 
-(** Applying [existT] to one argument is the same as [path_sigma] with reflexivity in the first place. *)
+(** Applying [exist] to one argument is the same as [path_sigma] with reflexivity in the first place. *)
 
-Definition ap_existT {A : Type} (P : A -> Type) (x : A) (y1 y2 : P x)
+Definition ap_exist {A : Type} (P : A -> Type) (x : A) (y1 y2 : P x)
            (q : y1 = y2)
-: ap (existT P x) q = path_sigma' P 1 q.
+: ap (exist P x) q = path_sigma' P 1 q.
 Proof.
   destruct q; reflexivity.
 Defined.
@@ -280,7 +277,7 @@ Defined.
 (** Dependent transport is the same as transport along a [path_sigma]. *)
 
 Definition transportD_is_transport
-           {A:Type} (B:A->Type) (C:sigT B -> Type)
+           {A:Type} (B:A->Type) (C:sig B -> Type)
            (x1 x2:A) (p:x1=x2) (y:B x1) (z:C (x1;y))
 : transportD B (fun a b => C (a;b)) p y z
   = transport C (path_sigma' B p 1) z.
@@ -314,12 +311,12 @@ Proof.
 Defined.
 
 
-(** Applying a function constructed with [sigT_ind] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
+(** Applying a function constructed with [sig_ind] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
 
-Definition ap_sigT_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
+Definition ap_sig_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
            (x1 x2:A) (p:x1=x2) (y1:P x1) (y2:P x2) (q:p # y1 = y2)
            (d : forall a, P a -> Q)
-: ap (sigT_ind (fun _ => Q) d) (path_sigma' P p q)
+: ap (sig_ind (fun _ => Q) d) (path_sigma' P p q)
   = (transport_const p _)^
     @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
 
@@ -334,7 +331,7 @@ Defined.
 (** A path between paths in a total space is commonly shown component wise. *)
 
 (** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
-Definition path_path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
+Definition path_path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sig P)
            (p q : u = v)
            (rs : {r : p..1 = q..1 & transport (fun x => transport P x u.2 = v.2) r p..2 = q..2})
 : p = q.
@@ -346,7 +343,7 @@ Proof.
 Defined.
 
 (** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
-Definition path_path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
+Definition path_path_sigma {A : Type} (P : A -> Type) (u v : sig P)
            (p q : u = v)
            (r : p..1 = q..1)
            (s : transport (fun x => transport P x u.2 = v.2) r p..2 = q..2)
@@ -392,12 +389,12 @@ Defined.
 
 Definition functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) (g : forall a, P a -> Q (f a))
-: sigT P -> sigT Q
+: sig P -> sig Q
   := fun u => (f u.1 ; g u.1 u.2).
 
 Definition ap_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) (g : forall a, P a -> Q (f a))
-           (u v : sigT P) (p : u.1 = v.1) (q : p # u.2 = v.2)
+           (u v : sig P) (p : u.1 = v.1) (q : p # u.2 = v.2)
 : ap (functor_sigma f g) (path_sigma P u v p q)
   = path_sigma Q (functor_sigma f g u) (functor_sigma f g v)
                (ap f p)
@@ -439,23 +436,23 @@ Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) `{IsEquiv A B f}
            (g : forall a, P a -> Q (f a))
            `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
-: sigT P <~> sigT Q
+: sig P <~> sig Q
   := Build_Equiv _ _ (functor_sigma f g) _.
 
 Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
            (f : A <~> B)
            (g : forall a, P a <~> Q (f a))
-: sigT P <~> sigT Q
+: sig P <~> sig Q
   := equiv_functor_sigma f g.
 
 Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
            (g : forall a, P a <~> Q a)
-: sigT P <~> sigT Q
+: sig P <~> sig Q
   := equiv_functor_sigma' 1 g.
 
 Definition equiv_functor_sigma_pb {A B : Type} {Q : B -> Type}
            (f : A <~> B)
-: sigT (Q o f) <~> sigT Q
+: sig (Q o f) <~> sig Q
   := equiv_functor_sigma f (fun a => 1%equiv).
 
 (** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
@@ -473,7 +470,7 @@ Defined.
 
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
            `{forall a, Contr (P a)}
-: sigT P <~> A
+: sig P <~> A
   := Build_Equiv _ _ pr1 _.
 
 (** Lemma 3.11.9(ii): Dually, summing up over a contractible type does nothing. *)
@@ -496,19 +493,19 @@ Defined.
 (** All of the following lemmas are proven easily with the [make_equiv] tactic.  If you have a more complicated rearrangement of sigma-types to do, it is usually possible to do it by putting together these equivalences, but it is often simpler and faster to just use [make_equiv] directly. *)
 
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
-  : {a : A & {p : P a & Q (a;p)}} <~> sigT Q.
+  : {a : A & {p : P a & Q (a;p)}} <~> sig Q.
 Proof.
   make_equiv.
 Defined.
 
 Definition equiv_sigma_assoc' `(P : A -> Type) (Q : forall a : A, P a -> Type)
-  : {a : A & {p : P a & Q a p}} <~> {ap : sigT P & Q ap.1 ap.2}.
+  : {a : A & {p : P a & Q a p}} <~> {ap : sig P & Q ap.1 ap.2}.
 Proof.
   make_equiv.
 Defined.
 
 Definition equiv_sigma_prod `(Q : (A * B) -> Type)
-  : {a : A & {b : B & Q (a,b)}} <~> sigT Q.
+  : {a : A & {b : B & Q (a,b)}} <~> sig Q.
 Proof.
   make_equiv.
 Defined.
@@ -536,66 +533,66 @@ Defined.
 (** ** Universal mapping properties *)
 
 (** *** The positive universal property. *)
-Global Instance isequiv_sigT_ind `{P : A -> Type}
-         (Q : sigT P -> Type)
-: IsEquiv (sigT_ind Q) | 0
+Global Instance isequiv_sig_ind `{P : A -> Type}
+         (Q : sig P -> Type)
+: IsEquiv (sig_ind Q) | 0
   := Build_IsEquiv
        _ _
-       (sigT_ind Q)
+       (sig_ind Q)
        (fun f x y => f (x;y))
        (fun _ => 1)
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_sigT_ind `{P : A -> Type}
-           (Q : sigT P -> Type)
+Definition equiv_sig_ind `{P : A -> Type}
+           (Q : sig P -> Type)
 : (forall (x:A) (y:P x), Q (x;y)) <~> (forall xy, Q xy)
-  := Build_Equiv _ _ (sigT_ind Q) _.
+  := Build_Equiv _ _ (sig_ind Q) _.
 
 (** And a curried version *)
-Definition equiv_sigT_ind' `{P : A -> Type}
+Definition equiv_sig_ind' `{P : A -> Type}
            (Q : forall a, P a -> Type)
 : (forall (x:A) (y:P x), Q x y) <~> (forall xy, Q xy.1 xy.2)
-  := equiv_sigT_ind (fun xy => Q xy.1 xy.2).
+  := equiv_sig_ind (fun xy => Q xy.1 xy.2).
 
 (** *** The negative universal property. *)
 
-Definition sigT_coind_uncurried
+Definition sig_coind_uncurried
            `{A : X -> Type} (P : forall x, A x -> Type)
 : { f : forall x, A x & forall x, P x (f x) }
-  -> (forall x, sigT (P x))
+  -> (forall x, sig (P x))
   := fun fg => fun x => (fg.1 x ; fg.2 x).
 
-Definition sigT_coind
+Definition sig_coind
            `{A : X -> Type} (P : forall x, A x -> Type)
            (f : forall x, A x) (g : forall x, P x (f x))
-: (forall x, sigT (P x))
-  := sigT_coind_uncurried P (f;g).
+: (forall x, sig (P x))
+  := sig_coind_uncurried P (f;g).
 
-Global Instance isequiv_sigT_coind
+Global Instance isequiv_sig_coind
          `{A : X -> Type} {P : forall x, A x -> Type}
-: IsEquiv (sigT_coind_uncurried P) | 0
+: IsEquiv (sig_coind_uncurried P) | 0
   := Build_IsEquiv
        _ _
-       (sigT_coind_uncurried P)
-       (fun h => existT (fun f => forall x, P x (f x))
+       (sig_coind_uncurried P)
+       (fun h => exist (fun f => forall x, P x (f x))
                         (fun x => (h x).1)
                         (fun x => (h x).2))
        (fun _ => 1)
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_sigT_coind
+Definition equiv_sig_coind
            `(A : X -> Type) (P : forall x, A x -> Type)
 : { f : forall x, A x & forall x, P x (f x) }
-    <~> (forall x, sigT (P x))
-  := Build_Equiv _ _ (sigT_coind_uncurried P) _.
+    <~> (forall x, sig (P x))
+  := Build_Equiv _ _ (sig_coind_uncurried P) _.
 
 (** ** Sigmas preserve truncation *)
 
 Global Instance trunc_sigma `{P : A -> Type}
          `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
-: IsTrunc n (sigT P) | 100.
+: IsTrunc n (sig P) | 100.
 Proof.
   generalize dependent A.
   induction n; simpl; intros A P ac Pc.
@@ -621,11 +618,11 @@ Defined.
 (** To prove equality in a subtype, we only need equality of the first component. *)
 Definition path_sigma_hprop {A : Type} {P : A -> Type}
            `{forall x, IsHProp (P x)}
-           (u v : sigT P)
+           (u v : sig P)
 : u.1 = v.1 -> u = v
   := path_sigma_uncurried P u v o pr1^-1.
 
-Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
+Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sig P}
 : IsEquiv (@path_sigma_hprop A P _ u v) | 100
   := isequiv_compose.
 
@@ -633,7 +630,7 @@ Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u
 Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
 
 Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
-           {HP : forall a, IsHProp (P a)} (u v : sigT P)
+           {HP : forall a, IsHProp (P a)} (u v : sig P)
 : (u.1 = v.1) <~> (u = v)
   := Build_Equiv _ _ (path_sigma_hprop _ _) _.
 
@@ -656,7 +653,7 @@ Definition isequiv_ap_pr1_hprop {A} {P : A -> Type}
 
 (** [path_sigma_hprop] is functorial *)
 Definition path_sigma_hprop_1 {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)} (u : sigT P)
+           `{forall x, IsHProp (P x)} (u : sig P)
 : path_sigma_hprop u u 1 = 1.
 Proof.
   unfold path_sigma_hprop.
@@ -696,19 +693,19 @@ Qed.
 
 (** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)
 Definition path_sigma_hprop_ap_pr1 {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+           `{forall x, IsHProp (P x)} (u v : sig P) (p : u = v)
 : path_sigma_hprop u v (ap pr1 p) = p
   := eisretr (path_sigma_hprop u v) p.
 Definition path_sigma_hprop_pr1_path {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+           `{forall x, IsHProp (P x)} (u v : sig P) (p : u = v)
 : path_sigma_hprop u v p..1 = p
   := eisretr (path_sigma_hprop u v) p.
 Definition ap_pr1_path_sigma_hprop {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+           `{forall x, IsHProp (P x)} (u v : sig P) (p : u.1 = v.1)
 : ap pr1 (path_sigma_hprop u v p) = p
   := eissect (path_sigma_hprop u v) p.
 Definition pr1_path_path_sigma_hprop {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+           `{forall x, IsHProp (P x)} (u v : sig P) (p : u.1 = v.1)
 : (path_sigma_hprop u v p)..1 = p
   := eissect (path_sigma_hprop u v) p.
 

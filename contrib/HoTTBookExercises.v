@@ -23,9 +23,12 @@
 
 *)
 
-Require Import HoTT Coq.Init.Peano.
+Require Import HoTT.
+Require Import Spaces.Nat.
 Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties HoTT.Metatheory.UnivalenceImpliesFunext.
 
+Local Open Scope nat_scope.
+Local Open Scope type_scope.
 Local Open Scope path_scope.
 
 (* END OF PREAMBLE *)
@@ -65,7 +68,7 @@ Section Book_1_2_prod.
 End Book_1_2_prod.
 
 (** Recursor as (dependent) equivalence. *)
-Definition Book_1_2_sig_lib := @HoTT.Types.Sigma.equiv_sigT_ind.
+Definition Book_1_2_sig_lib := @HoTT.Types.Sigma.equiv_sig_ind.
 Section Book_1_2_sig.
   Variable A : Type.
   Variable B : A -> Type.
@@ -104,7 +107,7 @@ Section Book_1_3_prod.
   Defined.
 End Book_1_3_prod.
 
-Definition Book_1_3_sig_lib := @Coq.Init.Specif.sigT_ind.
+Definition Book_1_3_sig_lib := @HoTT.Basics.Overture.sig_ind.
 Section Book_1_3_sig.
   Variable A : Type.
   Variable B : A -> Type.
@@ -165,7 +168,7 @@ End Book_1_5.
 
 Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
   match n with
-    0 => c0
+    O => c0
   | S m => cs m (rec_nat' C c0 cs m)
   end.
 
@@ -453,7 +456,7 @@ Defined.
 Section Book_2_7.
   Definition Book_2_7 {A B : Type} {P : A -> Type} {Q : B -> Type}
             (f : A -> B) (g : forall a, P a -> Q (f a))
-            (u v : sigT P) (p : u.1 = v.1) (q : p # u.2 = v.2)
+            (u v : sig P) (p : u.1 = v.1) (q : p # u.2 = v.2)
   : ap (functor_sigma f g) (path_sigma P u v p q)
     = path_sigma Q (functor_sigma f g u) (functor_sigma f g v)
                 (ap f p)
@@ -1118,8 +1121,8 @@ Section Book_4_6_i.
   : forall f g : A -> B, f == g -> f = g.
   Proof.
     intros f g p.
-    pose (d := fun x : A => existT (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
-    pose (e := fun x : A => existT (fun xy => fst xy = snd xy) (f x, g x) (p x)).
+    pose (d := fun x : A => exist (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
+    pose (e := fun x : A => exist (fun xy => fst xy = snd xy) (f x, g x) (p x)).
     change f with ((snd o pr1) o d).
     change g with ((snd o pr1) o e).
     rapply (ap (fun g => snd o pr1 o g)).
@@ -1196,7 +1199,7 @@ Proof.
   pose (K := forall (X:Type) (p:X=X), { q : X=X & p @ q = q @ p }).
   assert (e : K <~> forall A : { X : Type & X = X }, A = A).
   { unfold K.
-    refine (equiv_sigT_ind _ oE _).
+    refine (equiv_sig_ind _ oE _).
     refine (ft_equiv_functor_forall_id fa _); intros X.
     refine (ft_equiv_functor_forall_id fa _); intros p.
     refine (equiv_path_sigma _ _ _ oE _); cbn.
@@ -1274,6 +1277,7 @@ Section Book_5_2.
 End Book_5_2.
 
 Section Book_5_2'.
+  Local Open Scope nat_scope.
   (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same reucrrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
   Let ez : nat := 1.
   Let es : nat -> nat -> nat := fun _ => S.
@@ -1484,7 +1488,7 @@ Section Book_6_9.
         | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
       end.
     - refine (match H' _ with end).
-      eexists (existT (fun f : Bool <~> Bool =>
+      eexists (exist (fun f : Bool <~> Bool =>
                          ~(forall x, f x = x))
                       (Build_Equiv _ _ negb _)
                       (fun H => false_ne_true (H true)));

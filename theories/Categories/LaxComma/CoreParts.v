@@ -7,6 +7,7 @@ Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require Import Trunc Types.Paths Types.Sigma.
+Require Import Basics.Tactics.
 
 Import Functor.Identity.FunctorIdentityNotations.
 
@@ -18,6 +19,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
+Local Open Scope type_scope.
 
 (** Quoting David Spivak:
 

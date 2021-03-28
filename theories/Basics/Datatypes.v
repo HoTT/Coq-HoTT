@@ -12,7 +12,7 @@
 
 Set Implicit Arguments.
 
-Require Import Logic.
+Require Import Basics.Logic.
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.
@@ -95,44 +95,6 @@ Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
 Arguments S _%nat.
 
-Open Scope nat_scope. (* Originally in Peano.v *)
-
-
-(** [identity A a] is the family of datatypes on [A] whose sole non-empty
-    member is the singleton datatype [identity A a a] whose
-    sole inhabitant is denoted [refl_identity A a] *)
-
-Inductive identity (A : Type) (a : A) : A -> Type :=
-  identity_refl : identity a a.
-
-Scheme identity_rect := Induction for identity Sort Type.
-
-#[export] Hint Resolve identity_refl: core.
-
-Arguments identity {A} _ _.
-Arguments identity_refl {A a} , [A] a.
-
-Arguments identity_rect [A] a P f y i.
-
-
-(** Identity type *)
-
-(*
-Definition ID := forall A : Type, A -> A.
-Definition id : ID := fun A x => x.
-*)
-
-Declare Scope identity_scope.
-Delimit Scope identity_scope with identity.
-
-Notation "x = y :> A" := (@identity A x y)%identity : identity_scope.
-
-Notation "x = y" := (x = y :>_)%identity : identity_scope.
-Notation "x <> y  :> T" := (not (x = y :> T))%identity : identity_scope.
-Notation "x <> y" := (x <> y :>_)%identity : identity_scope.
-
-Local Open Scope identity_scope.
-
 (** Another way of interpreting booleans as propositions *)
 
 (* Definition is_true b := b = true. *)
@@ -147,7 +109,7 @@ Scheme list_rect := Induction for list Sort Type.
 
 Arguments nil {A}.
 Declare Scope list_scope.
-Infix "::" := cons (at level 60, right associativity) : list_scope.
+Infix "::" := cons : list_scope.
 Delimit Scope list_scope with list.
 Bind Scope list_scope with list.
 
@@ -161,4 +123,4 @@ Definition app (A : Type) : list A -> list A -> list A :=
    | a :: l1 => a :: app l1 m
   end.
 
-Infix "++" := app (right associativity, at level 60) : list_scope.
+Infix "++" := app : list_scope.

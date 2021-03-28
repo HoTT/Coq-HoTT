@@ -1,6 +1,7 @@
 (** * Discrete categories on [n] objects *)
 Require Import Category.Core DiscreteCategory IndiscreteCategory.
 Require Import Types.Unit Trunc Types.Sum Types.Empty.
+Require Import Basics.Nat.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

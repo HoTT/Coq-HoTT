@@ -23,7 +23,7 @@ Proof.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro Z.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro g.
   unfold equiv_idmap; simpl.
-  refine (transitivity (@equiv_sigT_ind _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
+  refine (transitivity (@equiv_sig_ind _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
@@ -85,7 +85,7 @@ Lemma issurj_isepi {X Y} (f:X->Y): IsSurjection f -> isepi f.
 Proof.
 intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y). pose (center (merely (hfiber f y))).
-apply (Trunc_rec (n:=-1) (A:=(sigT (fun x : X => f x = y))));
+apply (Trunc_rec (n:=-1) (A:=(sig (fun x : X => f x = y))));
   try assumption.
 intros [x p]. set (p0:=apD10 ep x).
 transitivity (g (f x)).
@@ -107,7 +107,7 @@ Proof.
   - specialize (epif _ g h).
     specialize (epif X1). clear X1.
     set (p:=apD10 epif y).
-    apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
+    apply (@minus1Trunc_map (sig (fun _ : Unit => sig (fun x : X => y = f x)))).
     + intros [ _ [x eq]].
       exists x.
         by symmetry.

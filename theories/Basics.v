@@ -6,3 +6,8 @@ Require Export Basics.Contractible.
 Require Export Basics.Equivalences.
 Require Export Basics.Trunc.
 Require Export Basics.Decidable.
+Require Export Basics.Utf8.
+Require Export Basics.Tactics.
+
+Require Export Basics.Nat.
+Require Export Basics.Numeral.

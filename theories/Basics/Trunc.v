@@ -1,7 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Truncatedness *)
 
-Require Import Overture PathGroupoids Contractible Equivalences.
+Require Import
+  Basics.Overture
+  Basics.PathGroupoids
+  Basics.Contractible
+  Basics.Equivalences
+  Basics.Tactics
+  Basics.Nat.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.
@@ -60,10 +66,10 @@ Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
                         end
      end.
 
-Definition num_int_to_trunc_index (v : Number.int) : option trunc_index :=
+Definition num_int_to_trunc_index (v : Numeral.int) : option trunc_index :=
   match v with
-  | Number.IntDecimal v => int_to_trunc_index v
-  | Number.IntHexadecimal _ => None
+  | Numeral.IntDec v => int_to_trunc_index v
+  | Numeral.IntHex _ => None
   end.
 
 Fixpoint trunc_index_to_little_uint n acc :=
@@ -82,7 +88,7 @@ Definition trunc_index_to_int n :=
   end.
 
 Definition trunc_index_to_num_int n :=
-  Number.IntDecimal (trunc_index_to_int n).
+  Numeral.IntDec (trunc_index_to_int n).
 
 Number Notation trunc_index num_int_to_trunc_index trunc_index_to_num_int
   : trunc_scope.

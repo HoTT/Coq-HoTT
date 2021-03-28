@@ -1,7 +1,7 @@
 (** * Laws about product categories *)
+Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 Require Import Category.Core Functor.Core InitialTerminalCategory.Core InitialTerminalCategory.Functors Category.Prod Functor.Prod Functor.Composition.Core Functor.Identity Functor.Prod.Universal Functor.Composition.Laws Functor.Prod.Universal.
 Require Import Functor.Paths.
-Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -11,10 +11,10 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
 
-Local Notation prod_type := Coq.Init.Datatypes.prod.
-Local Notation fst_type := Coq.Init.Datatypes.fst.
-Local Notation snd_type := Coq.Init.Datatypes.snd.
-Local Notation pair_type := Coq.Init.Datatypes.pair.
+Local Notation prod_type := Basics.Datatypes.prod.
+Local Notation fst_type := Basics.Datatypes.fst.
+Local Notation snd_type := Basics.Datatypes.snd.
+Local Notation pair_type := Basics.Datatypes.pair.
 
 (** ** Swap functor [C × D → D × C] *)
 Module Swap.

@@ -58,7 +58,7 @@ Qed.
 Instance sig_strong_setoid `{IsApart A} (P: A -> Type) `{forall x, IsHProp (P x)}
   : IsApart (sig P).
 Proof.
-apply (projected_strong_setoid (@proj1_sig _ P)).
+apply (projected_strong_setoid (@proj1 _ P)).
 - intros. split;apply Sigma.equiv_path_sigma_hprop.
 - intros;apply reflexivity.
 Qed.

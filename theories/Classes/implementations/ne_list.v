@@ -1,5 +1,5 @@
 Require Import
-  Coq.Unicode.Utf8
+  HoTT.Utf8
   HoTT.Classes.implementations.list
   HoTT.Basics.Overture
   HoTT.Spaces.Nat.
@@ -119,7 +119,7 @@ Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=
 
 Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
-  le (length (to_list x)) (length (to_list y)).
+  le' (length (to_list x)) (length (to_list y)).
 Proof with auto.
  induction y; cbn.
  - intros [[] | C].
@@ -168,7 +168,7 @@ Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)
     Global Notation "[: x ; .. ; y ; z :]"
         := (cons x .. (cons y (one z)) ..) : ne_list_scope.
 
-    Global Infix ":::" := cons (at level 60, right associativity) : ne_list_scope.
+    Global Infix ":::" := cons : ne_list_scope.
 
   End notations.
 

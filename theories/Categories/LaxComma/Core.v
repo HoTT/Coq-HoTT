@@ -139,6 +139,7 @@ Arguments oplax_coslice_category {_} [A] a S {_}.
 
 (** ** Definition of Lax (Co)Slice Category Over *)
 Section lax_slice_category_over.
+  Local Open Scope type_scope.
   Context `{Funext}.
 
   Variable P : PreCategory -> Type.
@@ -163,6 +164,7 @@ Arguments oplax_coslice_category_over {_} P {HF} a {_}.
 
 (** ** Definition of Lax (Co)Slice Arrow Category *)
 Section lax_arrow_category.
+  Local Open Scope type_scope.
   Context `{Funext}.
 
   Variable P : PreCategory -> Type.
@@ -181,6 +183,7 @@ Local Set Warnings Append "-notation-overridden". (* work around bug #5567, http
 Module Export LaxCommaCoreNotations.
   (** We play some games to get nice notations for lax comma categories. *)
   Section tc_notation_boiler_plate.
+    Local Open Scope type_scope.
     Class LCC_Builder {A B C} (x : A) (y : B) (z : C) := lcc_builder_dummy : True.
     Definition get_LCC `{@LCC_Builder A B C x y z} : C := z.
 

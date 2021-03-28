@@ -2,16 +2,17 @@
 Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition.Core Functor.Prod.Core.
 Require Import Functor.Paths.
 Require Import Types.Prod HoTT.Tactics Types.Forall Types.Sigma.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Local Notation fst_type := Coq.Init.Datatypes.fst.
-Local Notation snd_type := Coq.Init.Datatypes.snd.
-Local Notation pair_type := Coq.Init.Datatypes.pair.
-Local Notation prod_type := Coq.Init.Datatypes.prod.
+Local Notation fst_type := Basics.Datatypes.fst.
+Local Notation snd_type := Basics.Datatypes.snd.
+Local Notation pair_type := Basics.Datatypes.pair.
+Local Notation prod_type := Basics.Datatypes.prod.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.

@@ -11,6 +11,7 @@ Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Require Import Comma.Projection.
 Require Import Types.Prod HoTT.Tactics Types.Unit.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -167,6 +168,8 @@ End slice_category_induced_functor.
 
 (** ** Functors [A → A'] functors [(cat / A) → (cat / A')] *)
 Section cat_over_induced_functor.
+  Local Open Scope type_scope.
+
   Context `{Funext}.
   Variable P : PreCategory -> Type.
   Context `{H0 : forall C D, P C -> P D -> IsHSet (Functor C D)}.

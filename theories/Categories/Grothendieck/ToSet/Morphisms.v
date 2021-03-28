@@ -25,8 +25,8 @@ Section Grothendieck.
       simple refine (_; _).
       { exists (m : morphism _ _ _).1.
         exists (m^-1).1.
-        { exact (ap projT1 (@left_inverse _ _ _ m _)). }
-        { exact (ap projT1 (@right_inverse _ _ _ m _)). } }
+        { exact (ap proj1 (@left_inverse _ _ _ m _)). }
+        { exact (ap proj1 (@right_inverse _ _ _ m _)). } }
       { exact (m : morphism _ _ _).2. } }
     { intro m.
       exists (m.1 : morphism _ _ _ ; m.2).

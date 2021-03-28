@@ -1,3 +1,4 @@
+Require Import Basics.Overture.
 (** * Building blocks for a globally nameless style of tactic reasoning *)
 
 (** ** [hyp] returns any hypothesis, with subsequent failures backtracking through all hypotheses *)

@@ -20,7 +20,7 @@ Definition pUnit : pType := (Build_pType Unit _).
 
 (** A sigma type of pointed components is pointed. *)
 Global Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
-: IsPointed (sigT B)
+: IsPointed (sig B)
   := (point A; point (B (point A))).
 
 (** A product of pointed types is pointed. *)
@@ -476,7 +476,6 @@ Definition ppMap (A B : pType) : pType
 Infix "->**" := ppMap : pointed_scope.
 Notation "'ppforall'  x .. y , P"
   := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
-     (at level 200, x binder, y binder, right associativity)
      : pointed_scope.
 
 (** ** 1-categorical properties of [pForall]. *)

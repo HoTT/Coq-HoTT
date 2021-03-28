@@ -1,5 +1,5 @@
 Require Import
-        Coq.Init.Peano.
+        HoTT.Spaces.Nat.
 Require Import
         HoTT.Basics.Decidable
         HoTT.Basics.Equivalences

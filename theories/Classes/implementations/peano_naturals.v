@@ -1,5 +1,5 @@
-Require Coq.Init.Peano.
-Require Import HoTT.Basics.Decidable HoTT.Types.Sum.
+Require Import Basics Types.
+Require Spaces.Nat.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.naturals
@@ -16,27 +16,27 @@ Section nat_lift.
 Universe N.
 
 Let natpaths := @paths@{N} nat.
-Infix "=N=" := natpaths (at level 70, no associativity).
+Infix "=N=" := natpaths.
 Let natpaths_symm : Symmetric@{N N} natpaths.
 Proof. unfold natpaths;apply _. Qed.
 
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Peano.plus.
+Global Instance nat_plus: Plus@{N} nat := Nat.plus.
 
-Notation mul := Peano.mult.
+Notation mul := Nat.mult.
 
-Global Instance nat_mult: Mult@{N} nat := Peano.mult.
+Global Instance nat_mult: Mult@{N} nat := Nat.mult.
 
 Ltac simpl_nat :=
-  change (@plus nat _) with Peano.plus;
-  change (@mult nat _) with Peano.mult;
+  change (@plus nat _) with Nat.plus;
+  change (@mult nat _) with Nat.mult;
   simpl;
   change nat_plus with (@plus nat nat_plus);
-  change Peano.plus with (@plus nat nat_plus);
+  change Nat.plus with (@plus nat nat_plus);
   change nat_mult with (@mult nat nat_mult);
-  change Peano.mult with (@mult nat nat_mult).
+  change Nat.mult with (@mult nat nat_mult).
 
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
@@ -75,7 +75,7 @@ intros b;induction b as [|b IHb].
 - change (S b = S (b + 0)). apply ap,IHb.
 - apply (ap S),IHa.
 - change (S (a + S b) = S (b + S a)).
-  rewrite IHa,<-IHb. apply (ap S),(ap S),symmetry,IHa.
+  rewrite (IHa (S b)), <- (IHb ). apply (ap S),(ap S),symmetry,IHa.
 Qed.
 
 Local Instance add_mul_distr_l : LeftDistribute@{N}
@@ -102,6 +102,7 @@ apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
 - reflexivity.
 - simpl_nat. rewrite IHa.
   rewrite (simple_associativity b a).
+  change (((b + a) + (a * b)).+1 =N= (a + Nat.add b (a * b)).+1).
   rewrite (commutativity (f:=plus) b a), <-(associativity a b).
   reflexivity.
 Qed.
@@ -236,13 +237,13 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N N} nat := Peano.le.
-Global Instance nat_lt: Lt@{N N} nat := Peano.lt.
+Global Instance nat_le: Le@{N N} nat := Nat.le'.
+Global Instance nat_lt: Lt@{N N} nat := Nat.lt'.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
 induction k.
-- apply Peano.le_n.
+- apply Nat.le_n.
 - simpl_nat. constructor. assumption.
 Qed.
 
@@ -272,7 +273,7 @@ split;intros [k E];exists k.
 - rewrite add_S_r in E;apply (injective _) in E. trivial.
 Qed.
 
-Lemma lt_0_S : forall a, 0 < S a.
+Lemma lt_0_S : forall a : nat, 0 < S a.
 Proof.
 intros. apply le_S_S. apply zero_least.
 Qed.
@@ -537,19 +538,19 @@ Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
-Lemma le_nat_max_l n m : n <= Peano.max n m.
+Lemma le_nat_max_l n m : n <= Nat.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
-  intros m; induction m as [|m' IHm]; try auto; cbn.
+  intros m; induction m as [|m' IHm]; try reflexivity; cbn.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
-Lemma le_nat_max_r n m : m <= Peano.max n m.
+Lemma le_nat_max_r n m : m <= Nat.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
-  intros m; induction m as [|m' IHm]; try auto; cbn.
+  intros m; induction m as [|m' IHm]; try reflexivity; cbn.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
@@ -637,7 +638,7 @@ intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.minus.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.

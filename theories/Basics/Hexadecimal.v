@@ -7,6 +7,12 @@
 (*         *     GNU Lesser General Public License Version 2.1          *)
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
+ 
+(************************************************************************)
+(* This file has been modified for use in the HoTT library              *)
+(************************************************************************)
+
+Require Import Basics.Overture Basics.Decimal.
 
 (** * Hexadecimal numbers *)
 
@@ -15,8 +21,6 @@
     See the [Numeral Notation] command.
     We represent numbers in base 16 as lists of hexadecimal digits,
     in big-endian order (most significant digit comes first). *)
-
-Require Import Datatypes Decimal.
 
 (** Unsigned integers are just lists of digits.
     For instance, sixteen is (D1 (D0 Nil)) *)

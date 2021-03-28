@@ -5,6 +5,7 @@ Require Import Functor.Composition.Core.
 Require Import Category.Morphisms FunctorCategory.Morphisms.
 Require Import FunctorCategory.Core.
 Require Import NaturalTransformation.Paths.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

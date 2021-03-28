@@ -167,7 +167,7 @@ Section isequiv.
     intro.
     - match goal with
         | [ |- @pr1 ?A ?P ?x = ?y ]
-          => change (x.1 = (existT P y idpath).1)
+          => change (x.1 = (exist P y idpath).1)
       end.
       apply (ap pr1).
       apply contr.

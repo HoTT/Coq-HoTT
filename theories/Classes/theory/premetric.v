@@ -41,7 +41,7 @@ Class Triangular A `{Closeness A}
 
 Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
   := rounded : forall e u v, iff@{i j j} (close e u v)
-    (merely@{j} (sigT@{UQ j} (fun d => sigT@{UQ j} (fun d' =>
+    (merely@{j} (sig@{UQ j} (fun d => sig@{UQ j} (fun d' =>
       e = d + d' /\ close d u v)))).
 
 Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
@@ -292,7 +292,7 @@ Arguments uniform {A _ B _} f mu {_} _ _ _ _.
 Class Continuous@{UA UB}
   {A:Type@{UA} } `{Closeness A}
   {B:Type@{UB} } `{Closeness B} (f : A -> B)
-  := continuous : forall u e, merely@{Ularge} (sigT@{UQ Ularge}
+  := continuous : forall u e, merely@{Ularge} (sig@{UQ Ularge}
     (fun d => forall v, close d u v ->
     close e (f u) (f v))).
 Arguments continuous {A _ B _} f {_} _ _.
@@ -632,7 +632,7 @@ Section interval.
 Universe UA UALE.
 Context {A:Type@{UA} } {Ale : Le@{UA UALE} A}.
 
-Definition Interval a b := sigT (fun x : A => a <= x /\ x <= b).
+Definition Interval a b := sig (fun x : A => a <= x /\ x <= b).
 
 Definition interval_proj a b : Interval a b -> A := pr1.
 
@@ -651,7 +651,7 @@ split.
 Defined.
 
 Lemma Interval_restrict_pr : forall a b E x (E': a <= x /\ x <= b),
-  Interval_restrict a b E x = existT _ x E'.
+  Interval_restrict a b E x = exist _ x E'.
 Proof.
 intros a b E x E'.
 unfold Interval_restrict.
@@ -785,7 +785,7 @@ Proof.
 intros e q r;split.
 - intros E;apply Qclose_alt in E.
   pose proof (Q_average_between _ _ E) as [E1 E2].
-  apply tr;simple refine (existT _ (mkQpos ((abs (q - r) + ' e) / 2) _) _).
+  apply tr;simple refine (exist _ (mkQpos ((abs (q - r) + ' e) / 2) _) _).
   { apply pos_mult_compat;[|solve_propholds].
     red. apply pos_plus_le_lt_compat_r;[solve_propholds|apply Qabs_nonneg].
   }

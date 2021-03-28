@@ -1,7 +1,7 @@
 (** This file defines [Algebra]. *)
 
 Require Export
-  Coq.Unicode.Utf8
+  HoTT.Utf8
   HoTT.Basics
   HoTT.Classes.implementations.ne_list
   HoTT.Classes.implementations.family_prod.
@@ -242,7 +242,7 @@ Module algebra_notations.
 (** Given [A : Algebra σ] and function symbol [u : Symbol σ], we use
     the notation [u ^^ A] to refer to the corresponding algebra
     operation of type [Operation A (σ u)]. *)
-
+(** Note: We must reserve this notation here since it messes with the parsing of double inversion of paths *)
   Global Notation "u ^^ A" := (operations A u)
                               (at level 60, no associativity)
                               : Algebra_scope.

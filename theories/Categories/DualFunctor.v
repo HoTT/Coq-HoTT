@@ -69,7 +69,7 @@ Section opposite.
     simpl in *.
     hnf in *.
     subst_body.
-    destruct_head @sigT.
+    destruct_head @sig.
     destruct_head @Functor.
     destruct_head @PreCategory.
     reflexivity.

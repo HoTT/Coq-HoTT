@@ -113,6 +113,7 @@ Section BoolForall.
               || intros []
               || intro
               || apply path_forall).
+    
   Defined.
 End BoolForall.
 

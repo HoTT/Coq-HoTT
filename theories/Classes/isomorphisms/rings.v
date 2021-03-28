@@ -11,11 +11,11 @@ Require Import HoTT.Classes.theory.rings.
 Module SemiRings.
 
 Class Operations
-  := operations : sigT (fun T => Plus T * Mult T * Zero T * One T)%type.
+  := operations : sig (fun T => Plus T * Mult T * Zero T * One T)%type.
 
 Definition BuildOperations (T : Type) `{Plus T} `{Mult T} `{Zero T} `{One T}
   : Operations
-  := existT _ T (plus,mult,zero,one).
+  := exist _ T (plus,mult,zero,one).
 
 Coercion SR_carrier (s : Operations) : Type := s.1.
 Instance SR_plus (s : Operations) : Plus s := fst (fst (fst s.2)).
@@ -73,12 +73,12 @@ End SemiRings.
 Module Rings.
 
 Class Operations
-  := operations : sigT (fun T => Plus T * Mult T * Zero T * One T * Negate T)%type.
+  := operations : sig (fun T => Plus T * Mult T * Zero T * One T * Negate T)%type.
 
 Definition BuildOperations (T : Type)
   `{Plus T} `{Mult T} `{Zero T} `{One T} `{Negate T}
   : Operations
-  := existT _ T (plus,mult,zero,one,negate).
+  := exist _ T (plus,mult,zero,one,negate).
 
 Coercion R_carrier (s : Operations) : Type := s.1.
 Instance R_plus (s : Operations) : Plus s := fst (fst (fst (fst s.2))).

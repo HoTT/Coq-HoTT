@@ -4,6 +4,7 @@ Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Dual.
 Require Import Functor.Composition.Core Functor.Identity NaturalTransformation.Composition.Core.
 Require Import HoTT.Tactics Basics.Trunc Types.Sigma.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -50,7 +51,7 @@ Section equivalences.
           abstract unit_counit_of_t ].
       intros [? ?] [? ?].
       apply path_sigma_uncurried.
-      let A := match goal with |- @sigT ?A ?P => constr:(A) end in
+      let A := match goal with |- @sig ?A ?P => constr:(A) end in
       let H := fresh in
       assert (H : A);
         [

@@ -126,7 +126,7 @@ Proof.
   exact _.
 Defined.
 
-Global Instance Sn_trunctype: forall n, IsTrunc n.+1 (sigT (IsTrunc n)) |0.
+Global Instance Sn_trunctype: forall n, IsTrunc n.+1 (sig (IsTrunc n)) |0.
 Proof.
   intro n.
   apply (trunc_equiv' _ issig_trunctype^-1).

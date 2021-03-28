@@ -1,5 +1,18 @@
 Require Export Basics.Notations.
 
+Reserved Notation "'∀'  x .. y , P"
+  (at level 200, x binder, y binder, right associativity).
+Reserved Notation "'∃'  x .. y , P"
+  (at level 200, x binder, y binder, right associativity).
+Reserved Notation "'λ'  x .. y , t"
+  (at level 200, x binder, y binder, right associativity).
+
+Reserved Notation "x ∧ y" (at level 80, right associativity).
+Reserved Notation "x → y" (at level 99, y at level 200, right associativity).
+Reserved Notation "x ↔ y" (at level 95, no associativity).
+(*Notation "¬ x" (at level 75, right associativity).*)
+(*Notation "x ≠ y" (at level 70).*)
+
 Reserved Infix "∙" (at level 20).
 Reserved Infix "∘" (at level 40, left associativity).
 Reserved Infix "∘ˡ" (at level 40, left associativity).
@@ -19,8 +32,8 @@ Reserved Notation "'CAT' ⇑ a" (at level 40, left associativity).
 Reserved Notation "C 'ᵒᵖ'" (at level 3).
 Reserved Notation "C → D" (at level 99, D at level 200, right associativity).
 Reserved Notation "f '⁻¹'" (at level 3, format "f '⁻¹'").
-Reserved Notation "f ×ᴱ g" (at level 40, no associativity).
-Reserved Notation "f *ᴱ g" (at level 40, no associativity).
+(* Reserved Notation "f ×ᴱ g" (at level 40, no associativity). *)
+(* Reserved Notation "f *ᴱ g" (at level 40, no associativity). *)
 Reserved Notation "f +ᴱ g" (at level 50, left associativity).
 Reserved Notation "F ₁ m" (at level 10, no associativity).
 Reserved Notation "F ₀ x" (at level 10, no associativity).
@@ -42,6 +55,16 @@ Reserved Notation "x ≠ y" (at level 70).
 Reserved Notation "x ⇸ y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x ↠ y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x ↪ y" (at level 99, right associativity, y at level 200).
-Reserved Notation "∀  x .. y , P" (at level 200, x binder, y binder, right associativity).
+(* Reserved Notation "∀  x .. y , P" (at level 200, x binder, y binder, right associativity). *)
 Reserved Notation "x ∨ y" (at level 85, right associativity).
-Reserved Notation "x ⊔ y" (at level 85, right associativity).
+(* Reserved Notation "x ⊔ y" (at level 85, right associativity). *)
+
+Reserved Infix "≶" (at level 70, no associativity).
+Reserved Infix "⊓" (at level 50, no associativity).
+Reserved Infix "⊔" (at level 50, no associativity).
+Reserved Infix "∸" (at level 50, left associativity).
+Reserved Notation "x ≤ y ≤ z" (at level 70, y at next level).
+Reserved Notation "x ≤ y < z" (at level 70, y at next level).
+Reserved Notation "x < y ≤ z" (at level 70, y at next level).
+
+Reserved Notation "'π'" (at level 0).

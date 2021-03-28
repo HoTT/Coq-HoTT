@@ -184,7 +184,7 @@ Section sigma.
     { t. }
   Defined.
 
-  Global Instance: @respects_equivalence_db _ _ (@sigT) (@sigma_respects_equivalenceL) := tt.
+  Global Instance: @respects_equivalence_db _ _ (@sig) (@sigma_respects_equivalenceL) := tt.
 End sigma.
 
 Section equiv_transfer.

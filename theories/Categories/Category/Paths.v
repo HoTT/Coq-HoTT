@@ -1,6 +1,6 @@
 (** * Classification of path spaces of precategories *)
 Require Import Category.Core.
-Require Import HoTT.Basics.Equivalences HoTT.Basics.PathGroupoids HoTT.Basics.Trunc.
+Require Import HoTT.Basics.Equivalences HoTT.Basics.PathGroupoids HoTT.Basics.Trunc HoTT.Basics.Tactics.
 Require Import HoTT.Types.Sigma HoTT.Types.Arrow HoTT.Types.Forall HoTT.Types.Paths.
 Require Import HoTT.HProp HoTT.Tactics.
 

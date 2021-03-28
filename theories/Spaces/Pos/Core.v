@@ -15,10 +15,8 @@ Delimit Scope positive_scope with pos.
 
 (** Here are some notations that let us right binary positive integers more easily. *)
 Notation "1" := xH : positive_scope.
-Notation "p ~ 1" := (x1 p)
- (at level 7, left associativity, format "p '~' '1'") : positive_scope.
-Notation "p ~ 0" := (x0 p)
- (at level 7, left associativity, format "p '~' '0'") : positive_scope.
+Notation "p ~ 1" := (x1 p) : positive_scope.
+Notation "p ~ 0" := (x0 p) : positive_scope.
 
 Local Open Scope positive_scope.
 
@@ -393,10 +391,10 @@ Definition pos_of_decimal_int (d:Decimal.int) : option Pos :=
   | Decimal.Neg _ => None
   end.
 
-Definition pos_of_number_uint (d:Number.int) : option Pos :=
+Definition pos_of_number_uint (d:Numeral.int) : option Pos :=
   match d with
-  | Number.IntDecimal d => pos_of_decimal_int d
-  | Number.IntHexadecimal _ => None
+  | Numeral.IntDec d => pos_of_decimal_int d
+  | Numeral.IntHex _ => None
   end.
 
 Fixpoint pos_to_little_uint p :=
@@ -410,6 +408,6 @@ Definition pos_to_uint p := Decimal.rev (pos_to_little_uint p).
 
 Definition pos_to_decimal_int n := Decimal.Pos (pos_to_uint n).
 
-Definition pos_to_number_uint p := Number.UIntDecimal (pos_to_uint p).
+Definition pos_to_number_uint p := Numeral.UIntDec (pos_to_uint p).
 
 Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.

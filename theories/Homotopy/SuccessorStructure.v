@@ -30,8 +30,8 @@ Definition NatSucc : SuccStr := Build_SuccStr nat Nat.succ.
 (** Successor structure of integers *)
 Definition IntSucc : SuccStr := Build_SuccStr Int int_succ.
 
-Notation "'+N'" := NatSucc (at level 55) : succ_scope.
-Notation "'+Z'" := IntSucc (at level 55) : succ_scope.
+Notation "'+N'" := NatSucc : succ_scope.
+Notation "'+Z'" := IntSucc : succ_scope.
 
 (** Stratified successor structures *)
 
@@ -70,6 +70,6 @@ Proof.
 Defined.
 
 (** Nat and Int segmented by triples *)
-Notation "'N3'" := (Stratified (+N) 3) (at level 55) : succ_scope.
-Notation "'Z3'" := (Stratified (+Z) 3) (at level 55) : succ_scope.
+Notation "'N3'" := (Stratified (+N) 3) : succ_scope.
+Notation "'Z3'" := (Stratified (+Z) 3) : succ_scope.
 

@@ -1,4 +1,5 @@
 (** * Functoriality of functor category construction *)
+Require Import Basics.
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Pointwise.Core Functor.Pointwise.Properties Category.Dual Category.Prod Cat.Core ExponentialLaws.Law4.Functors.
 
 Set Universe Polymorphism.
@@ -7,6 +8,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
+Local Open Scope type_scope.
 
 (** ** [(_ → _)] is a functor [catᵒᵖ × cat → cat] *)
 Section functor.
@@ -19,6 +21,8 @@ Section functor.
   Local Notation cat := (sub_pre_cat P HF).
 
   Hypothesis has_functor_categories : forall C D : cat, P (C.1 -> D.1).
+
+  Local Open Scope category_scope.
 
   Definition functor_uncurried
   : object ((cat^op * cat) -> cat)

@@ -90,7 +90,7 @@ Class O_strong_leq (O1 O2 : ReflectiveSubuniverse)
   := reflectsD_strong_leq : forall A, ReflectsD O2 O1 A.
 Global Existing Instance reflectsD_strong_leq.
 
-Notation "O1 << O2" := (O_strong_leq O1 O2) (at level 70) : subuniverse_scope.
+Infix "<<" := O_strong_leq : subuniverse_scope.
 Open Scope subuniverse_scope.
 
 (** The strong order implies the weak order. *)
@@ -264,7 +264,7 @@ Definition extension_from_inO_sigma
            (g : forall x, B (to O' A x))
   : ExtensionAlong (to O' A) B g.
 Proof.
-  set (Z := sigT B) in *.
+  set (Z := sig B) in *.
   pose (g' := (fun a:A => (to O' A a ; g a)) : A -> Z).
   pose (f' := O_rec (O := O') g').
   pose (eqf := (O_rec_beta g')  : f' o to O' A == g').
@@ -287,8 +287,8 @@ Proof.
   induction n as [|n IHn]; intros; [ exact tt | cbn ].
   refine (extension_from_inO_sigma O B , _).
   intros h k; nrapply IHn.
-  set (Z := sigT B) in *.
-  pose (W := sigT (fun a => B a * B a)).
+  set (Z := sig B) in *.
+  pose (W := sig (fun a => B a * B a)).
   nrefine (inO_equiv_inO' (Pullback (A := W) (fun a:O_reflector O' A => (a;(h a,k a)))
                                    (fun z:Z => (z.1;(z.2,z.2)))) _).
   { refine (inO_pullback O' _ _).
@@ -518,11 +518,11 @@ Section ModalFact.
     unfold O_hfiber_O_fact.
     ev_equiv.
     apply moveL_equiv_M.
-    transitivity (existT (fun (w : hfiber h b) => O (hfiber g w.1))
+    transitivity (exist (fun (w : hfiber h b) => O (hfiber g w.1))
                          (g a; p) (to O (hfiber g (g a)) (a ; 1))).
     - apply moveR_equiv_V; reflexivity.
     - apply moveL_equiv_V.
-      transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
+      transitivity (to O _ (exist (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
       + cbn; repeat rewrite O_rec_beta; reflexivity.
       + destruct p; symmetry; apply to_O_natural.

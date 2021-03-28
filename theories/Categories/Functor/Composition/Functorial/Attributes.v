@@ -66,7 +66,7 @@ Section faithfull_precomposition_essential_surjective.
              | _ => progress strip_truncations
              | [ H : _ |- _ ] => apply ap10 in H
              | _ => progress path_natural_transformation
-             | [ H : sigT _ |- _ ] => destruct H
+             | [ H : sig _ |- _ ] => destruct H
              | [ H : _, t : _ |- _ ]
                => generalize dependent (H t); clear H
            end.

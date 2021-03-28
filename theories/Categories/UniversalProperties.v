@@ -8,6 +8,7 @@ Local Set Warnings Append "-notation-overridden". (* work around bug #5567, http
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Require Import Types.Unit Trunc Types.Sigma HProp HoTT.Tactics Equivalences.
+Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

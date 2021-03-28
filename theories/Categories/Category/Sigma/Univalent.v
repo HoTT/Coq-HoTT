@@ -27,14 +27,14 @@ Section onobjects.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Global Instance iscategory_sigT_obj `{forall a, IsHProp (Pobj a), A_cat : IsCategory A}
-  : IsCategory (sigT_obj A Pobj).
+  Global Instance iscategory_sig_obj `{forall a, IsHProp (Pobj a), A_cat : IsCategory A}
+  : IsCategory (sig_obj A Pobj).
   Proof.
     intros s d.
     (* This makes typeclass search go faster. *)
     pose @isequiv_compose.
     refine (isequiv_homotopic
-              ((issig_full_isomorphic (sigT_obj A Pobj) _ _ o (issig_full_isomorphic A _ _)^-1)
+              ((issig_full_isomorphic (sig_obj A Pobj) _ _ o (issig_full_isomorphic A _ _)^-1)
                  o (@idtoiso A s.1 d.1)
                  o pr1_path)
               _).
@@ -74,14 +74,14 @@ Section onmorphisms.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  Local Notation A' := (@sigT_mor A Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
+  Local Notation A' := (@sig_mor' A Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
 
   (** To have any hope of relating [IsCategory A] with [IsCategory
       A'], we assume that [Pmor] is automatically and uniquely true on
       isomorphisms. *)
   Context `{forall s d m, IsIsomorphism m -> Contr (Pmor s d m)}.
 
-  Definition iscategory_sigT_mor_helper {s d}
+  Definition iscategory_sig_mor_helper {s d}
   : @Isomorphic A' s d -> @Isomorphic A s d.
   Proof.
     refine ((issig_full_isomorphic A _ _) o _ o (issig_full_isomorphic A' _ _)^-1).
@@ -96,8 +96,8 @@ Section onmorphisms.
                        (fun _ => pr1_path)))).
   Defined.
 
-  Local Instance isequiv_iscategory_sigT_mor_helper s d
-  : IsEquiv (@iscategory_sigT_mor_helper s d).
+  Local Instance isequiv_iscategory_sig_mor_helper s d
+  : IsEquiv (@iscategory_sig_mor_helper s d).
   Proof.
     simple refine (isequiv_adjointify _ _ _ _).
     { intro e.
@@ -112,34 +112,34 @@ Section onmorphisms.
       exact (path_sigma' _ 1 (contr _)). }
   Defined.
 
-  Global Instance iscategory_sigT_mor `{A_cat : IsCategory A}
+  Global Instance iscategory_sig_mor `{A_cat : IsCategory A}
   : IsCategory A'.
   Proof.
     intros s d.
     (* Use [equiv_compose] rather than "o" to speed up typeclass search. *)
     refine (isequiv_homotopic
-              (equiv_compose iscategory_sigT_mor_helper^-1 (@idtoiso _ _ _))
+              (equiv_compose iscategory_sig_mor_helper^-1 (@idtoiso _ _ _))
               _).
     intro x; apply path_isomorphic; cbn.
     destruct x; refine (path_sigma' _ 1 (contr _)).
   Defined.
 
-  Definition iscategory_from_sigT_mor `{A'_cat : IsCategory A'}
+  Definition iscategory_from_sig_mor `{A'_cat : IsCategory A'}
   : IsCategory A.
   Proof.
     intros s d.
     refine (isequiv_homotopic
-              (iscategory_sigT_mor_helper
+              (iscategory_sig_mor_helper
                  o (@idtoiso A' _ _))
               _).
     intro x; apply path_isomorphic; cbn.
     destruct x; reflexivity.
   Defined.
 
-  Global Instance isequiv_iscategory_sigT_mor `{Funext}
-  : IsEquiv (@iscategory_sigT_mor).
+  Global Instance isequiv_iscategory_sig_mor `{Funext}
+  : IsEquiv (@iscategory_sig_mor).
   Proof.
-    refine (isequiv_iff_hprop _ (@iscategory_from_sigT_mor)).
+    refine (isequiv_iff_hprop _ (@iscategory_from_sig_mor)).
   Defined.
 End onmorphisms.
 
@@ -176,7 +176,7 @@ Section on_both.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  Local Notation A' := (@sigT A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
+  Local Notation A' := (@sig' A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
 
   (** We must assume some relation on the properties; we assume that
       the path space of the extra data on objects is classified by
@@ -331,7 +331,7 @@ Section on_both.
 
   Local Arguments Pmor_iso_T : simpl never.
 
-  Global Instance iscategory_sigT `{A_cat : IsCategory A}
+  Global Instance iscategory_sig `{A_cat : IsCategory A}
   : IsCategory A'.
   Proof.
     intros s d.

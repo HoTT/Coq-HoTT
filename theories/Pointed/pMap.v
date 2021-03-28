@@ -63,13 +63,13 @@ Definition fiberwise_pointed_map_rec `{H0 : Funext} {A : Type} {B : A -> pType}
   : forall (C : A -> pType) (g : forall a, B a ->* C a), P C g.
 Proof.
   equiv_intros (equiv_functor_arrow' (equiv_idmap A) issig_ptype oE
-    equiv_sigT_coind _ _) C.
+    equiv_sig_coind _ _) C.
   destruct C as [C c0].
   equiv_intros (@equiv_functor_forall_id _ A _ _
     (fun a => issig_pmap (B a) (Build_pType (C a) (c0 a))) oE
-    equiv_sigT_coind _ _) g.
+    equiv_sig_coind _ _) g.
   simpl in *. destruct g as [g g0].
-  unfold point in g0. unfold functor_forall, sigT_coind_uncurried. simpl.
+  unfold point in g0. unfold functor_forall, sig_coind_uncurried. simpl.
   (* now we need to apply path induction on the homotopy g0 *)
   pose (path_forall _ c0 g0).
   assert (p = path_forall (fun x : A => g x (ispointed_type (B x))) c0 g0).

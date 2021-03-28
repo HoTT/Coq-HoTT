@@ -34,13 +34,24 @@ theories/Basics.v
 
 theories/Basics/Notations.v
 theories/Basics/Utf8.v
+
 theories/Basics/Overture.v
-theories/Basics/UniverseLevel.v
 theories/Basics/PathGroupoids.v
+theories/Basics/UniverseLevel.v
 theories/Basics/Contractible.v
 theories/Basics/Equivalences.v
-theories/Basics/Trunc.v
 theories/Basics/Decidable.v
+theories/Basics/Datatypes.v
+theories/Basics/Logic.v
+
+theories/Basics/Tactics.v
+
+theories/Basics/Nat.v
+theories/Basics/Trunc.v
+theories/Basics/Numeral.v
+theories/Basics/Decimal.v
+theories/Basics/Hexadecimal.v
+
 
 #
 #   Wildcat

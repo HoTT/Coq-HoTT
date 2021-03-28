@@ -46,7 +46,7 @@ Proof.
 Defined.
 
 (* Sometimes we end up with a sigma of a one-sided path type that's not eta-expanded, which Coq doesn't seem able to match with the previous instance. *)
-Global Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sigT (@paths X x)) | 100
+Global Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sig (@paths X x)) | 100
   := contr_basedpaths x.
 
 Definition path_basedpaths' {X : Type} {x y : X} (p : y = x)

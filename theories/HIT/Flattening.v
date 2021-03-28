@@ -81,7 +81,7 @@ Let P : W' -> Type
 
 Let sWtil := { w:W' & P w }.
 
-Let scct (a:A) (x:C a) : sWtil := (existT P (coeq a) x).
+Let scct (a:A) (x:C a) : sWtil := (exist P (coeq a) x).
 
 Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y)
   := path_sigma' P (cglue b)
@@ -94,7 +94,7 @@ Definition sWtil_ind (Q : sWtil -> Type)
   (sppt' : forall b y, (sppt b y) # (scct' (f b) y) = scct' (g b) (D b y))
   : forall w, Q w.
 Proof.
-  apply sigT_ind.
+  apply sig_ind.
   refine (Coeq_ind (fun w => forall x:P w, Q (w;x))
     (fun a x => scct' a x) _).
   intros b.
@@ -109,7 +109,7 @@ Proof.
   rewrite transport_compose, <- transport_pp.
   refine (_ @ sppt' b y).
   apply ap10, ap.
-  refine (whiskerL _ (ap_existT P (coeq (g b)) _ _ q) @ _).
+  refine (whiskerL _ (ap_exist P (coeq (g b)) _ _ q) @ _).
   exact ((path_sigma_p1_1p' _ _ _)^).
 Defined.
 
@@ -152,7 +152,7 @@ Definition sWtil_rec (Q : Type)
   (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
   : sWtil -> Q.
 Proof.
-  apply sigT_ind.
+  apply sig_ind.
   refine (Coeq_ind (fun w => P w -> Q) (fun a x => scct' a x) _).
   intros b.
   refine (dpath_arrow P (fun _ => Q) _ _ _ _).
@@ -172,7 +172,7 @@ Definition sWtil_rec_beta_ppt (Q : Type)
   : ap (sWtil_rec Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rec, sppt.
-  refine (@ap_sigT_rec_path_sigma W' P Q _ _ (cglue b) _ _ _ _ @ _); simpl.
+  refine (@ap_sig_rec_path_sigma W' P Q _ _ (cglue b) _ _ _ _ @ _); simpl.
   rewrite (@Coeq_ind_beta_cglue B A f g).
   rewrite (ap10_dpath_arrow P (fun _ => Q) (cglue b) _ _ _ y).
   repeat rewrite concat_p_pp.
