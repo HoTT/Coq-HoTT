@@ -1,6 +1,7 @@
 -R theories HoTT
 -Q contrib ""
-COQC = hoqc
+-arg -noinit
+-arg -indices-matter
 
 #
 #   Table of contents:
