@@ -1,5 +1,7 @@
 -R theories HoTT
--Q contrib ""
+-Q contrib HoTT.Contrib
+
+#-arg -boot
 -arg -noinit
 -arg -indices-matter
 
