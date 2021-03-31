@@ -124,7 +124,7 @@ theories/Spaces/Finite/Fin.v
 theories/Spaces/Finite/FinNat.v
 theories/Spaces/Finite/FinInduction.v
 theories/Spaces/Finite/Finite.v
-theories/Spaces/Finite/Vect.v
+theories/Spaces/Finite/FinSeq.v
 theories/Spaces/Finite/Tactics.v
 theories/Spaces/Finite.v
 
