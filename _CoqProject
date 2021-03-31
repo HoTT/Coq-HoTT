@@ -101,6 +101,7 @@ theories/Types/Empty.v
 theories/Types/Bool.v
 theories/Types/Sum.v
 theories/Types/WType.v
+theories/Types/IWType.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
 
