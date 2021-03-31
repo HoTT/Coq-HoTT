@@ -100,7 +100,7 @@ theories/Types/Prod.v
 theories/Types/Empty.v
 theories/Types/Bool.v
 theories/Types/Sum.v
-theories/Types/Wtype.v
+theories/Types/WType.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
 
