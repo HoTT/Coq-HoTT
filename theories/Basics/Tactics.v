@@ -42,7 +42,6 @@ Ltac on_last_hyp tac :=
 
 Ltac destruct_one_pair :=
  match goal with
-   | [H : conj _ _ |- _] => destruct H
    | [H : prod _ _ |- _] => destruct H
  end.
 
@@ -53,14 +52,7 @@ Ltac destruct_pairs := repeat (destruct_one_pair).
 (** Destruct one existential package, keeping the name of the hypothesis for the first component. *)
 
 Ltac destruct_one_ex :=
-  let tac H := let ph := fresh "H" in (destruct H as [H ph]) in
-  let tac2 H := let ph := fresh "H" in let ph' := fresh "H" in
-    (destruct H as [H ph ph'])
-  in
   let tacT H := let ph := fresh "X" in (destruct H as [H ph]) in
-  let tacT2 H := let ph := fresh "X" in let ph' := fresh "X" in
-    (destruct H as [H ph ph'])
-  in
     match goal with
       | [H : (sig ?P) |- _ ] => tacT H
     end.
