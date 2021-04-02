@@ -56,7 +56,7 @@ Definition equiv_ds_dpath {A} (P : A -> Type) {a00 a10 a01 a11 : A}
   (s : px0 @ p1x = p0x @ px1) {b00 b10 b01 b11}
   {qx0 : DPath P px0 b00 b10} {qx1 : DPath P px1 b01 b11}
   {q0x : DPath P p0x b00 b01} {q1x : DPath P p1x b10 b11}
-  : DPath (fun p => DPath P p b00 b11) s (qx0 @D q1x) (q0x @D qx1)
+  : DPath (fun p => DPath P p b00 b11) s (qx0 @Dp q1x) (q0x @Dp qx1)
     <~> DPathSquare P (sq_path s) qx0 qx1 q0x q1x.
 Proof.
   set (s' := sq_path s).

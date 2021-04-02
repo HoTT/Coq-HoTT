@@ -172,7 +172,7 @@ Reserved Notation "s ^v$" (at level 20).
 Reserved Infix "@@h" (at level 30).
 Reserved Infix "@@v" (at level 30).
 Reserved Infix "@lr" (at level 30).
-Reserved Notation "x '@D' y"  (at level 20).
+Reserved Notation "x '@Dp' y"  (at level 20).
 Reserved Notation "x '@Dr' y" (at level 20).
 Reserved Notation "x '@Dl' y" (at level 20).
 Reserved Notation "x '^D'" (at level 3).
