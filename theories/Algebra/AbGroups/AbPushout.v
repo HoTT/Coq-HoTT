@@ -63,7 +63,7 @@ Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
                    (fun a:A => ap phi (ab_pushout_commsq a)) = phi.
 Proof.
   pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
-  apply (equiv_ap' (equiv_grp_quotient_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
+  rapply (equiv_ap' (equiv_grp_quotient_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
   srapply path_sigma_hprop.
   change (ab_pushout_rec
             (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)

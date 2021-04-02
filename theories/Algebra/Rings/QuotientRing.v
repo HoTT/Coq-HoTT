@@ -13,14 +13,14 @@ Section QuotientRing.
   Instance plus_quotient_group : Plus (QuotientGroup R I) := group_sgop.
 
   Instance iscong_mult_incosetL
-    : @IsCongruence R cring_mult (@in_cosetL R I _).
+    : @IsCongruence R cring_mult (in_cosetL I).
   Proof.
     snrapply Build_IsCongruence.
     intros x x' y y' [i p] [j q].
-    change (issubgroup_incl (H:=R) i = (- x) + x') in p.
-    change (issubgroup_incl (H:=R) j = (- y) + y') in q.
+    change (subgroup_incl I i = (- x) + x') in p.
+    change (subgroup_incl I j = (- y) + y') in q.
     unfold in_cosetL, hfiber.
-    change {m : I & issubgroup_incl (H:=R) m = - (x * y) + (x' * y')}.
+    change {m : I & subgroup_incl I m = - (x * y) + (x' * y')}.
     rewrite <- (left_identity (op:=(+)) (x' * y') : 0 + (x' * y') = x' * y').
     rewrite <- (right_inverse (op:=(+)) (x' * y) : (x' * y) - (x' * y) = 0).
     rewrite 2 simple_associativity.

@@ -10,50 +10,15 @@ Local Open Scope mc_mult_scope.
 
 Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : Subgroup A.
 Proof.
-  snrapply Build_Subgroup.
-  { srapply (Build_Group (hfiber f group_unit)); repeat split.
-    - (** Operation *)
-      intros [a p] [b q].
-      exists (sg_op a b).
-      rewrite grp_homo_op, p, q.
-      apply left_identity.
-    - (** Unit *)
-      exists mon_unit.
-      apply (grp_homo_unit f).
-    - (** Inverse *)
-      intros [a p].
-      exists (-a).
-      rewrite grp_homo_inv, p.
-      exact negate_mon_unit.
-    - (** HSet *)
-      exact _.
-    - (** Associativity *)
-      intros [a p] [b q] [c r].
-      srapply path_sigma_hprop.
-      cbn; apply associativity.
-    - (** Left identity *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply left_identity.
-    - (** Right identity *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply right_identity.
-    - (** Left inverse *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply left_inverse.
-    - (** Right inverse *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply right_inverse. }
-  (** The kernel is a subgroup of the source of the map *)
-  snrapply Build_IsSubgroup.
-  { snrapply Build_GroupHomomorphism.
-    1: exact pr1.
-    intros ??; reflexivity. }
-  hnf; cbn; intros x y p.
-  by apply path_sigma_hprop.
+  snrapply (Build_Subgroup A (fun x => f x = group_unit)).
+  repeat split.
+  1: exact _.
+  1: apply grp_homo_unit.
+  { intros x y p q.
+    refine (_ @ ap011 _ p q @ left_identity mon_unit).
+    apply grp_homo_op. }
+  intros x p.
+  exact (grp_homo_inv f x @ ap _ p @ negate_mon_unit).
 Defined.
 
 Global Instance isnormal_kernel {A B : Group} (f : GroupHomomorphism A B)
@@ -86,7 +51,9 @@ Theorem equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
   : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const).
 Proof.
   srapply equiv_adjointify.
-  - intro k. refine (subgrp_incl _ _ $o k; _).
+  - intro k.
+    srefine (_ $o k; _).
+    1: apply subgroup_incl.
     intro x; cbn.
     exact (k x).2.
   - intros [g p].
@@ -101,7 +68,8 @@ Defined.
 
 (** ** Characterisation of group embeddings *)
 
-Local Existing Instance ishprop_path_subgroup.
+(*
+(* Local Existing Instance ishprop_path_subgroup. *)
 
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
   : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
@@ -123,4 +91,4 @@ Proof.
     + apply equiv_path_grouphomomorphism; intro x; cbn.
       refine (ap pr1 (y:=(mon_unit; grp_homo_unit f)) _).
       apply path_ishprop.
-Defined.
+Defined.*)

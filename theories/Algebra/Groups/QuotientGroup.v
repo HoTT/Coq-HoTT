@@ -113,7 +113,7 @@ End GroupCongruenceQuotient.
 
 Section QuotientGroup.
 
-  Context (G : Group) (N : Group) `{IsNormalSubgroup N G}.
+  Context (G : Group) (N : Subgroup G) `{!IsNormalSubgroup N}.
 
   Global Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).
   Proof.
@@ -139,7 +139,7 @@ Section QuotientGroup.
   Defined.
 
   Definition grp_quotient_rec {A : Group} (f : G $-> A)
-    (h : forall n : N, f (issubgroup_incl n) = mon_unit) : QuotientGroup $-> A.
+    (h : forall n : N, f (subgroup_incl _ n) = mon_unit) : QuotientGroup $-> A.
   Proof.
     snrapply Build_GroupHomomorphism.
     { srapply Quotient_rec.
@@ -164,7 +164,7 @@ Section QuotientGroup.
 
 End QuotientGroup.
 
-Arguments grp_quotient_map {_ _ _ _}.
+Arguments grp_quotient_map {_ _ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.
 
@@ -172,18 +172,18 @@ Local Open Scope group_scope.
 
 (** Computation rule for grp_quotient_rec. *)
 Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
-          (N : Group) (H : Group) `{IsNormalSubgroup N G}
+          (N : Subgroup G) (H : Group) `{!IsNormalSubgroup N}
           {A : Group} (f : G $-> A)
-          (h : forall n:N, f (issubgroup_incl n) = mon_unit)
+          (h : forall n:N, f (subgroup_incl _ n) = mon_unit)
   : (grp_quotient_rec G N f h) $o grp_quotient_map = f.
 Proof.
   apply equiv_path_grouphomomorphism; reflexivity.
 Defined.
 
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
-Definition grp_iso_quotient_normal (G : Group) (H : Group) `{IsSubgroup H G}
-  {k k' : @IsNormalSubgroup H G _}
-  : GroupIsomorphism (@QuotientGroup G H _ k) (@QuotientGroup G H _ k').
+Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
+  {k k' : IsNormalSubgroup H}
+  : GroupIsomorphism (@QuotientGroup G H k) (@QuotientGroup G H k').
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.
@@ -194,8 +194,9 @@ Proof.
 Defined.
 
 (** The universal mapping property for groups *)
-Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) (H : Group) `{IsNormalSubgroup N G}
-  : {f : G $-> H & forall (n : N), f (issubgroup_incl n) = mon_unit} <~> (G / N $-> H).
+Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) (H : Group)
+  `{!IsNormalSubgroup N}
+  : {f : G $-> H & forall (n : N), f (subgroup_incl _ n) = mon_unit} <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
   { intros [f p].
@@ -252,7 +253,7 @@ Section FirstIso.
     srefine (_;_).
     { exists (-x * y).
       apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
-      rewrite grp_homo_op, grp_homo_inv, h.
+      cbn. rewrite grp_homo_op, grp_homo_inv, h.
       srapply negate_l. }
     reflexivity.
   Defined.

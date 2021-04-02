@@ -1,4 +1,4 @@
-Require Import Basics Types HProp HSet PathAny WildCat.
+Require Import Basics Types HProp HSet HFiber PathAny WildCat.
 Require Import Algebra.Groups.Group.
 
 Local Open Scope mc_mult_scope.
@@ -7,91 +7,130 @@ Generalizable Variables G H A B C N f g.
 (** * Subgroups *)
 
 (** The property of being a subgroup *)
-Class IsSubgroup (G H : Group) := {
-  issubgroup_incl : GroupHomomorphism G H;
-  isinj_issubgroup_incl : IsInjective issubgroup_incl;
+Class IsSubgroup {G : Group} (H : G -> Type) := {
+  ishprop_issubgroup : forall x, IsHProp (H x) ;
+  issubgroup_unit : H mon_unit ;
+  issubgroup_op : forall x y, H x -> H y -> H (x * y) ;
+  issubgroup_inv : forall x, H x -> H (- x) ;
+(*   issubgroup_incl : GroupHomomorphism G H; *)
+(*   isinj_issubgroup_incl : IsInjective issubgroup_incl; *)
 }.
 
-Global Existing Instance isinj_issubgroup_incl.
-
+Global Existing Instance ishprop_issubgroup.
+(* Global Existing Instance isinj_issubgroup_incl. *)
+(*
 (* Subgroup inclusion is an embedding. *)
 Global Instance isembedding_issubgroup_incl `{!IsSubgroup G H}
   : IsEmbedding (@issubgroup_incl G H _).
 Proof.
   apply isembedding_isinj_hset.
   apply isinj_issubgroup_incl.
-Defined.
+Defined. *)
 
-Definition issig_issubgroup G H : _ <~> IsSubgroup G H
+Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
   := ltac:(issig).
 
-(** Given two groups G and H, there is a set worth of ways H can be a subgroup of G, corresponding to the set of injections H $-> G. *)
-Global Instance ishset_issubgroup `{U : Univalence} {G H : Group}
-  : IsHSet (IsSubgroup G H).
+Global Instance ishset_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
+  : IsHProp (IsSubgroup H).
 Proof.
-  rapply (transport IsHSet (x:= {g : G $-> H & IsInjective g})).
-  apply path_universe_uncurried; issig.
+  exact (trunc_equiv' _ (issig_issubgroup H)).
 Defined.
 
-(** A subgroup of a group H is a group G which is a subgroup of H. *) 
-Record Subgroup (H : Group) := {
-  subgroup_group : Group;
-  subgroup_issubgroup : IsSubgroup subgroup_group H;
+Record Subgroup (G : Group) := {
+  subgroup_pred : G -> Type ;
+  subgroup_issubgroup : IsSubgroup subgroup_pred ;
 }.
 
-Coercion subgroup_group : Subgroup >-> Group.
+Coercion subgroup_pred : Subgroup >-> Funclass.
 Global Existing Instance subgroup_issubgroup.
-(* Arguments subgroup_group {_}. *)
+
+Definition subgroup_unit `(H : Subgroup G) : H mon_unit := issubgroup_unit.
+Definition subgroup_inv `(H : Subgroup G) x : H x -> H (- x) := issubgroup_inv x.
+Definition subgroup_op `(H : Subgroup G) x y : H x -> H y -> H (x * y)
+:= issubgroup_op x y.
+
+(** The group given by a subgroup *)
+Definition subgroup_group (G : Group) (H : Subgroup G) : Group.
+Proof.
+  snrefine (
+    Build_Group
+      (** The underlying type is the sigma type of the predicate. *)
+      (sig H)
+      (** The operation is the group operation on the first projection with the proof  of being in the subgroup given by the subgroup data. *)
+      (fun '(x ; p) '(y ; q) => (x * y ; issubgroup_op x y p q))
+      (** The unit *)
+      (mon_unit ; issubgroup_unit)
+      (** Inverse *)
+      (fun '(x ; p) => (- x ; issubgroup_inv _ p))
+      _).
+ (** Why isn't typeclasses able to pick these up earlier (without snrefine ofc)?? *)
+  1-3: exact _.
+  (** Finally we need to prove our group laws. *)
+  repeat split.
+  1: exact _.
+  all: grp_auto.
+Defined.
+
+Coercion subgroup_group : Subgroup >-> Group.
+
+Definition subgroup_incl {G : Group} (H : Subgroup G)
+  : GroupHomomorphism (subgroup_group G H) G.
+Proof.
+  snrapply Build_GroupHomomorphism'.
+  1: exact pr1.
+  repeat split.
+Defined.
+
+Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
+  : IsEmbedding (subgroup_incl H)
+  := fun _ => trunc_equiv' _ (hfiber_fibration _ _).
 
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
 
-Definition issig_subgroup' {G : Group}
-  : { H : Group & { i : H $-> G & IsInjective i}} <~> Subgroup G.
+(* Definition issig_subgroup' `{Univalence} {G : Group}
+  : {h : G -> hProp & IsSubgroup h} <~> Subgroup G.
 Proof.
-  refine (issig_subgroup oE _).
-  apply equiv_functor_sigma_id; intro H.
-  apply issig_issubgroup.
-Defined.
+  snrapply equiv_adjointify.
+  { intros [h p].
+    exact (Build_Subgroup G h p). }
+  { intros [h p].
+    exists (fun g => BuildTruncType (-1) (h g)).
+    exact _. }
+  1: intro x; reflexivity.
+  simpl.
+  hnf.
+  intros [h p].
+  srapply path_sigma.
+  1: funext x; rapply TruncType.path_iff_hprop; trivial.
+  rewrite trans *)
+  
 
-(* Useful shorthand for the inclusion of a subgroup. *)
-Definition subgrp_incl (H G : Group) `{S : !IsSubgroup H G}
-  : H $-> G := @issubgroup_incl H G S.
 
-(** The trivial group is always a subgroup *)
-Global Instance issubgroup_grp_trivial {G : Group} : IsSubgroup grp_trivial G.
+(** Trivial subgroup *)
+Definition trivial_subgroup {G} : Subgroup G.
 Proof.
-  snrapply Build_IsSubgroup.
-  1: apply grp_trivial_rec.
-  cbn; intros ???.
-  apply path_unit.
+  rapply (Build_Subgroup G (fun x => x = mon_unit)).
+  rapply Build_IsSubgroup.
+  1: reflexivity.
+  { intros x y p q.
+    rewrite p, q.
+    apply left_identity. }
+  intros x p.
+  rewrite p.
+  apply negate_mon_unit.
 Defined.
 
 (** Every group is a subgroup of itself *)
-(** We make this a low priority instance so it doesn't get picked up before other subgroup instances. *)
-Global Instance issubgroup_group {G : Group} : IsSubgroup G G | 100
-  := Build_IsSubgroup _ _ grp_homo_id _.
-
-(** The trivial subgroup *)
-Definition trivial_subgroup {G} : Subgroup G
-  := Build_Subgroup G grp_trivial _.
-
 (**  The maximal subgroup *)
-Definition maximal_subgroup {G} : Subgroup G
-  := Build_Subgroup G G _.
-
-(** ** Characterization of paths between subgroups *)
-
-Local Lemma transport_lemma `{U : Univalence} {G H K : Group} (f : H $-> G) (p : H = K)
-  : transport (fun x : Group => x $-> G) p f
-    = grp_homo_compose f (grp_iso_inverse (equiv_path_group^-1 p)).
+Definition maximal_subgroup {G} : Subgroup G.
 Proof.
-  induction p.
-  exact (cat_idr_strong f)^.
+  rapply (Build_Subgroup G (fun x => Unit)).
+  split; auto; exact _.
 Defined.
 
-(** Paths between subgroups correspond to isomorphisms respecting the inclusions. *)
-Proposition equiv_path_subgroup `{U : Univalence} {G : Group} (H K : Subgroup G)
+(* (** Paths between subgroups correspond to isomorphisms respecting the inclusions. *)
+Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
   : (exists p : GroupIsomorphism H K, subgrp_incl H G = (subgrp_incl K G) $o p)
       <~> H = K.
 Proof.
@@ -108,11 +147,25 @@ Proof.
   apply equiv_path_grouphomomorphism; intro x; cbn.
   rewrite (eissect phi x).
   reflexivity.
-Defined.
+Defined. *)
 
+Global Instance ishset_subgroup `{Funext} {G : Group} : IsHSet (Subgroup G).
+Proof.
+  refine (trunc_equiv' _ issig_subgroup).
+  rapply trunc_sigma.
+  
+
+(*   refine (trunc_equiv' _ (equiv_ap' issig_subgroup^-1 _ _)^-1). *)
+Admitted.
+(*
 Corollary ishprop_path_subgroup `{U : Univalence} {G : Group} {H K : Subgroup G}
   : IsHProp (H = K).
 Proof.
+  refine (trunc_equiv' _ (equiv_ap' issig_subgroup^-1%equiv _ _)^-1%equiv).
+  
+  apply istrunc_paths.
+  
+  exact _.
   rapply (equiv_transport IsHProp _ _).
   - apply equiv_path_universe.
     exact (equiv_path_subgroup H K).
@@ -131,43 +184,21 @@ Corollary ishset_subgroup `{U: Univalence} {G : Group}
 Proof.
   intros H K; apply ishprop_path_subgroup.
 Defined.
-
+*)
 Section Cosets.
 
   (** Left and right cosets give equivalence relations. *)
 
-  Context {G : Group} (H : Group) `{!IsSubgroup H G}.
+  Context {G : Group} (H : Subgroup G).
 
-  (* The relation of being in a left coset represented by an element. *)
-  Definition in_cosetL : Relation G.
-  Proof.
-    intros x y.
-    refine (hfiber issubgroup_incl _).
-    exact (-x * y).
-  Defined.
-
-  (* The relation of being in a right coset represented by an element. *)
-  Definition in_cosetR : Relation G.
-  Proof.
-    intros x y.
-    refine (hfiber issubgroup_incl _).
-    exact (x * -y).
-  Defined.
-
-  (* These are props *)
-
-  Global Instance ishprop_in_cosetL : is_mere_relation G in_cosetL.
-  Proof.
-    exact _.
-  Defined.
-
-  Global Instance ishprop_in_cosetR : is_mere_relation G in_cosetR.
-  Proof.
-    exact _.
-  Defined.
-
-  (* Infact they are both equivalence relations. *)
-
+  (** The relation of being in a left coset represented by an element. *)
+  Definition in_cosetL : Relation G := fun x y => hfiber (subgroup_incl H) (-x * y).
+  (** The relation of being in a right coset represented by an element. *)
+  Definition in_cosetR : Relation G := fun x y => hfiber (subgroup_incl H) (x * -y).
+  (** These are props *)
+  Global Instance ishprop_in_cosetL : is_mere_relation G in_cosetL := _.
+  Global Instance ishprop_in_cosetR : is_mere_relation G in_cosetR := _.
+  (** In fact, they are both equivalence relations. *)
   Global Instance reflexive_in_cosetL : Reflexive in_cosetL.
   Proof.
     intro x; hnf.
@@ -246,7 +277,7 @@ End Cosets.
 
 (** Identities related to the left and right cosets. *)
 
-Definition in_cosetL_unit {G : Group} `{!IsSubgroup N G}
+Definition in_cosetL_unit {G : Group} {N : Subgroup G}
   : forall x y, in_cosetL N (-x * y) mon_unit <~> in_cosetL N x y.
 Proof.
   intros x y.
@@ -259,7 +290,7 @@ Proof.
   by intro; symmetry.
 Defined.
 
-Definition in_cosetR_unit {G : Group} `{!IsSubgroup N G}
+Definition in_cosetR_unit {G : Group} {N : Subgroup G}
   : forall x y, in_cosetR N (x * -y) mon_unit <~> in_cosetR N x y.
 Proof.
   intros x y.
@@ -270,7 +301,7 @@ Proof.
 Defined.
 
 (** Symmetry is an equivalence. *)
-Definition equiv_in_cosetL_symm {G : Group} `{!IsSubgroup N G}
+Definition equiv_in_cosetL_symm {G : Group} {N : Subgroup G}
   : forall x y, in_cosetL N x y <~> in_cosetL N y x.
 Proof.
   intros x y.
@@ -278,7 +309,7 @@ Proof.
   all: by intro.
 Defined.
 
-Definition equiv_in_cosetR_symm {G : Group} `{!IsSubgroup N G}
+Definition equiv_in_cosetR_symm {G : Group} {N : Subgroup G}
   : forall x y, in_cosetR N x y <~> in_cosetR N y x.
 Proof.
   intros x y.
@@ -287,23 +318,19 @@ Proof.
 Defined.
 
 (* A subgroup is normal if being in a left coset is equivalent to being in a right coset represented by the same element. *)
-Class IsNormalSubgroup (N : Group) {G : Group} `{IsSubgroup N G}
-  := isnormal : forall {x y}, @in_cosetL G N _ x y <~> in_cosetR N x y.
+Class IsNormalSubgroup {G : Group} (N : Subgroup G)
+  := isnormal : forall {x y}, in_cosetL N x y <~> in_cosetR N x y.
 
 Record NormalSubgroup (G : Group) := {
-  normalsubgroup_group : Group;
-  normalsubgroup_issubgroup : IsSubgroup normalsubgroup_group G;
-  normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_group;
+  normalsubgroup_subgroup : Subgroup G ;
+  normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_subgroup ;
 }.
 
-Coercion normalsubgroup_subgroup (G : Group) : NormalSubgroup G -> Subgroup G.
-Proof.
-  intros [N H1 H2].
-  exact (Build_Subgroup G N H1).
-Defined.
+Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
+Global Existing Instance normalsubgroup_isnormal.
 
 (* Inverses are then respected *)
-Definition in_cosetL_inv `{IsNormalSubgroup N G}
+Definition in_cosetL_inv {G : Group} {N : Subgroup G} `{!IsNormalSubgroup N}
   : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
 Proof.
   intros x y.
@@ -314,7 +341,7 @@ Proof.
   by rewrite negate_involutive.
 Defined.
 
-Definition in_cosetR_inv `{IsNormalSubgroup N G}
+Definition in_cosetR_inv {G : Group} {N : Subgroup G} `{!IsNormalSubgroup N}
   : forall x y : G, in_cosetR N (-x) (-y) <~> in_cosetR N x y.
 Proof.
   intros x y.
@@ -326,10 +353,11 @@ Proof.
 Defined.
 
 (** There is always another element of the normal subgroup allowing us to commute with an element of the group. *)
-Definition normal_subgroup_swap `{IsNormalSubgroup N G} (x : G) (h : N)
-  : exists h' : N, x * issubgroup_incl h = issubgroup_incl h' * x.
+Definition normal_subgroup_swap {G : Group} {N : Subgroup G} `{!IsNormalSubgroup N}
+  (x : G) (h : N)
+  : exists h' : N, x * subgroup_incl N h = subgroup_incl N h' * x.
 Proof.
-  assert (X : in_cosetL N x (x * issubgroup_incl h)).
+  assert (X : in_cosetL N x (x * subgroup_incl _ h)).
   { exists h.
     rewrite simple_associativity.
     rewrite left_inverse.
@@ -352,7 +380,8 @@ Proof.
 Defined.
 
 (* This lets us prove that left and right coset relations are congruences. *)
-Definition in_cosetL_cong `{IsNormalSubgroup N G} (x x' y y' : G)
+Definition in_cosetL_cong {G : Group} {N : Subgroup G} `{!IsNormalSubgroup N}
+  (x x' y y' : G)
   : in_cosetL N x y -> in_cosetL N x' y' -> in_cosetL N (x * x') (y * y').
 Proof.
   intros [a p] [b q].
@@ -368,7 +397,8 @@ Proof.
   apply grp_homo_op.
 Defined.
 
-Definition in_cosetR_cong `{IsNormalSubgroup N G} (x x' y y' : G)
+Definition in_cosetR_cong  {G : Group} {N : Subgroup G} `{!IsNormalSubgroup N}
+  (x x' y y' : G)
   : in_cosetR N x y -> in_cosetR N x' y' -> in_cosetR N (x * x') (y * y').
 Proof.
   intros [a p] [b q].
@@ -384,8 +414,9 @@ Proof.
   apply grp_homo_op.
 Defined.
 
-Definition isnormalsubgroup_of_cong_mem {G : Group} (N : Subgroup G)
-  (h : forall g : G, forall n : N, exists m : N, - g * issubgroup_incl n * g = issubgroup_incl m)
+Definition isnormalsubgroup_of_cong_mem  {G : Group} {N : Subgroup G}
+  (h : forall (g : G) (n : N), exists m : N,
+    - g * subgroup_incl N n * g = subgroup_incl N m)
   : IsNormalSubgroup N.
 Proof.
   intros x y.

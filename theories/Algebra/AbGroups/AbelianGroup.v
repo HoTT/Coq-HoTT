@@ -50,10 +50,8 @@ Proof.
   nrapply Build_IsAbGroup.
   1: exact _.
   intros x y.
-  apply (injective issubgroup_incl).
-  refine (_ @ _ @ _^).
-  1,3: apply grp_homo_op.
-  apply commutativity.
+  apply path_sigma_hprop.
+  cbn. apply commutativity.
 Defined.
 
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
@@ -62,7 +60,7 @@ Proof.
   intros x y.
   unfold in_cosetL, in_cosetR.
   refine (equiv_functor_sigma' (Build_Equiv _ _ group_inverse _) _).
-  intros h; simpl.
+  intros h.
   srapply equiv_iff_hprop.
   + intros p.
     rewrite grp_homo_inv.

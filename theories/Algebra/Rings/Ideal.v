@@ -12,7 +12,7 @@ Local Open Scope mc_scope.
 Class IsIdeal {R : CRing} (I : Subgroup R) := {
   (** Forall r : R and x : I, there exists an a : I, such that a = r * x inside R *)
   isideal (r : R) (x : I)
-    : exists (a : I), issubgroup_incl a = r * issubgroup_incl x;
+    : exists (a : I), subgroup_incl _ a = r * subgroup_incl _ x;
 }.
 
 Record Ideal (R : CRing) := {
@@ -32,11 +32,10 @@ Section Examples.
     : IsIdeal (R:=R) trivial_subgroup.
   Proof.
     split.
-    intros r [].
-    exists tt.
-    refine (_ @ _^ @ ap _ _^).
-    1,3: rapply grp_homo_unit.
-    apply rng_mult_zero_r.
+    intros r [x p].
+    srefine ((cring_zero; idpath);_).
+    refine ((rng_mult_zero_r r)^ @ _^).
+    f_ap.
   Defined.
 
   (** Zero ideal *)
@@ -48,8 +47,8 @@ Section Examples.
     : IsIdeal (R:=R) maximal_subgroup.
   Proof.
     split.
-    cbn; intros r r'.
-    exists (r * r').
+    cbn; intros r [r'].
+    srefine ((r * r'; tt); _).
     reflexivity.
   Defined.
 
