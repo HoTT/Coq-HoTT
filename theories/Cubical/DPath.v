@@ -109,7 +109,7 @@ Proof.
   exact concat.
 Defined.
 
-Notation "x '@D' y" := (dp_concat x y) : dpath_scope.
+Notation "x '@Dp' y" := (dp_concat x y) : dpath_scope.
 
 (* Concatenation of dependent paths with non-dependent paths *)
 Definition dp_concat_r {A} {P : A -> Type} {a0 a1}
@@ -143,7 +143,7 @@ Notation "x '^D'" := (dp_inverse x) : dpath_scope.
 (* dp_apD distributes over concatenation *)
 Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)
   {a0 a1 a2 : A} (p : a0 = a1) (q : a1 = a2)
-  : dp_apD f (p @ q) = (dp_apD f p) @D (dp_apD f q).
+  : dp_apD f (p @ q) = (dp_apD f p) @Dp (dp_apD f q).
 Proof.
   by destruct p, q.
 Defined.
@@ -158,7 +158,7 @@ Defined.
 (* dp_const preserves concatenation *)
 Definition dp_const_pp {A B : Type} {a0 a1 a2 : A}
   {p : a0 = a1} {q : a1 = a2} {x y z : B} (r : x = y) (s : y = z)
-  : dp_const (p:=p @ q) (r @ s) = (dp_const (p:=p) r) @D (dp_const (p:=q) s).
+  : dp_const (p:=p @ q) (r @ s) = (dp_const (p:=p) r) @Dp (dp_const (p:=q) s).
 Proof.
   by destruct p,q.
 Defined.
@@ -169,28 +169,28 @@ Section DGroupoid.
     {b0 : P a0} {b1 : P a1} {dp : DPath P p b0 b1}.
 
   Definition dp_concat_p1
-    : DPath (fun t => DPath _ t _ _) (concat_p1 _) (dp @D 1) dp.
+    : DPath (fun t => DPath _ t _ _) (concat_p1 _) (dp @Dp 1) dp.
   Proof.
     destruct p.
     apply concat_p1.
   Defined.
 
   Definition dp_concat_1p
-    : DPath (fun t => DPath _ t _ _) (concat_1p _) (1 @D dp) dp.
+    : DPath (fun t => DPath _ t _ _) (concat_1p _) (1 @Dp dp) dp.
   Proof.
     destruct p.
     apply concat_1p.
   Defined.
 
   Definition dp_concat_Vp
-    : DPath (fun t => DPath _ t _ _) (concat_Vp _) (dp^D @D dp) 1.
+    : DPath (fun t => DPath _ t _ _) (concat_Vp _) (dp^D @Dp dp) 1.
   Proof.
     destruct p.
     apply concat_Vp.
   Defined.
 
   Definition dp_concat_pV
-    : DPath (fun t => DPath _ t _ _) (concat_pV _) (dp @D dp^D) 1.
+    : DPath (fun t => DPath _ t _ _) (concat_pV _) (dp @Dp dp^D) 1.
   Proof.
     destruct p.
     apply concat_pV.
@@ -204,7 +204,7 @@ Section DGroupoid.
 
     Definition dp_concat_pp_p
       : DPath (fun t => DPath _ t _ _) (concat_pp_p _ _ _)
-        ((dp @D dq) @D dr) (dp @D (dq @D dr)).
+        ((dp @Dp dq) @Dp dr) (dp @Dp (dq @Dp dr)).
     Proof.
       destruct p, q, r.
       apply concat_pp_p.
@@ -212,7 +212,7 @@ Section DGroupoid.
 
     Definition dp_concat_p_pp
       : DPath (fun t => DPath _ t _ _) (concat_p_pp _ _ _)
-        (dp @D (dq @D dr)) ((dp @D dq) @D dr).
+        (dp @Dp (dq @Dp dr)) ((dp @Dp dq) @Dp dr).
     Proof.
       destruct p, q, r.
       apply concat_p_pp.

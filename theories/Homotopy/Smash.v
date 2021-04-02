@@ -118,7 +118,7 @@ Section Smash.
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : X)
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
-    = (Pgl a) @D ((Pgl b)^D).
+    = (Pgl a) @Dp ((Pgl b)^D).
   Proof.
     unfold gluel'.
     rewrite dp_apD_pp, dp_apD_V.
@@ -130,7 +130,7 @@ Section Smash.
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : Y)
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
-    = (Pgr a) @D ((Pgr b)^D).
+    = (Pgr a) @Dp ((Pgr b)^D).
   Proof.
     unfold gluer'.
     rewrite dp_apD_pp, dp_apD_V.
@@ -142,7 +142,7 @@ Section Smash.
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X) (b : Y)
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
-    = ((Pgl a) @D ((Pgl pt)^D)) @D ((Pgr pt) @D ((Pgr b)^D)).
+    = ((Pgl a) @Dp ((Pgl pt)^D)) @Dp ((Pgr pt) @Dp ((Pgr b)^D)).
   Proof.
     by rewrite dp_apD_pp, Smash_ind_beta_gluel', Smash_ind_beta_gluer'.
   Qed.
