@@ -15,7 +15,7 @@ Local Open Scope nat_scope.
 
 (** A *finite set* is a type that is merely equivalent to the canonical finite set determined by some natural number.  There are many equivalent ways to define the canonical finite sets, such as [{ k : nat & k < n}]; we instead choose a recursive one. *)
 
-Fixpoint Fin (n : nat) : Type
+Fixpoint Fin (n : nat) : Type0
   := match n with
        | 0 => Empty
        | S n => Fin n + Unit

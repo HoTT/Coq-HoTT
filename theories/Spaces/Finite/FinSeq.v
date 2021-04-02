@@ -13,7 +13,7 @@ Require Import
 
     Note that the induction principle [finseq_]*)
 
-Definition FinSeq (n : nat) (A : Type) : Type := Fin n -> A.
+Definition FinSeq@{u} (n : nat) (A : Type@{u}) : Type@{u} := Fin n -> A.
 
 (** The empty finite sequence. *)
 
