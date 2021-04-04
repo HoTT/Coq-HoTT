@@ -113,7 +113,7 @@ End GroupCongruenceQuotient.
 
 Section QuotientGroup.
 
-  Context (G : Group) (N : Subgroup G) `{!IsNormalSubgroup N}.
+  Context (G : Group) (N : NormalSubgroup G).
 
   Global Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).
   Proof.
@@ -139,32 +139,30 @@ Section QuotientGroup.
   Defined.
 
   Definition grp_quotient_rec {A : Group} (f : G $-> A)
-    (h : forall n : N, f (subgroup_incl _ n) = mon_unit) : QuotientGroup $-> A.
+             (h : forall n : G, N n -> f n = mon_unit)
+    : QuotientGroup $-> A.
   Proof.
     snrapply Build_GroupHomomorphism.
-    { srapply Quotient_rec.
+    - srapply Quotient_rec.
       + exact f.
-      + intros x y [n p].
-        apply (ap f) in p.
-        rewrite h in p.
-        refine ((right_identity _)^ @ _).
-        apply moveR_equiv_M; cbn.
-        refine (p @ _).
-        refine (grp_homo_op f _ _ @ _).
-        f_ap.
-        apply grp_homo_inv. }
-    intro x.
-    refine (Quotient_ind_hprop _ _ _).
-    intro y. revert x.
-    refine (Quotient_ind_hprop _ _ _).
-    intro x.
-    simpl.
-    apply grp_homo_op.
+      + cbn; intros x y n.
+        symmetry.
+        apply (group_moveL_M1 _ _).
+        rewrite <- grp_homo_inv.
+        rewrite <- grp_homo_op.
+        apply h; assumption.
+    - intro x.
+      refine (Quotient_ind_hprop _ _ _).
+      intro y. revert x.
+      refine (Quotient_ind_hprop _ _ _).
+      intro x.
+      simpl.
+      apply grp_homo_op.
   Defined.
 
 End QuotientGroup.
 
-Arguments grp_quotient_map {_ _ _}.
+Arguments grp_quotient_map {_ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.
 
@@ -172,18 +170,18 @@ Local Open Scope group_scope.
 
 (** Computation rule for grp_quotient_rec. *)
 Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
-          (N : Subgroup G) (H : Group) `{!IsNormalSubgroup N}
+          (N : NormalSubgroup G) (H : Group)
           {A : Group} (f : G $-> A)
-          (h : forall n:N, f (subgroup_incl _ n) = mon_unit)
+          (h : forall n:G, N n -> f n = mon_unit)
   : (grp_quotient_rec G N f h) $o grp_quotient_map = f.
 Proof.
   apply equiv_path_grouphomomorphism; reflexivity.
 Defined.
 
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
-Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
+(* Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
-  : GroupIsomorphism (@QuotientGroup G H k) (@QuotientGroup G H k').
+  : GroupIsomorphism (@QuotientGroup G _ k) (@QuotientGroup G _ k').
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.
@@ -191,31 +189,23 @@ Proof.
   srapply Quotient_ind_hprop; intro y; revert x.
   srapply Quotient_ind_hprop; intro x.
   reflexivity.
-Defined.
+Defined. *)
 
 (** The universal mapping property for groups *)
-Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : Subgroup G) (H : Group)
-  `{!IsNormalSubgroup N}
-  : {f : G $-> H & forall (n : N), f (subgroup_incl _ n) = mon_unit} <~> (G / N $-> H).
+Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (H : Group)
+  : {f : G $-> H & forall (n : G), N n -> f n = mon_unit} <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
   { intros [f p].
     exact (grp_quotient_rec _ _ f p). }
   { intro f.
     exists (f $o grp_quotient_map).
-    intro n.
-    simpl.
-    etransitivity.
-    2: apply (grp_homo_unit f).
+    intros n h; cbn.
+    refine (_ @ grp_homo_unit f).
     apply ap.
-    apply qglue.
-    unfold in_cosetL.
-    exists (-n).
-    symmetry.
-    etransitivity.
-    1: apply right_identity.
-    symmetry.
-    apply grp_homo_inv. }
+    apply qglue; cbn.
+    rewrite right_identity;
+      by apply issubgroup_inv. }
   { intros f.
     rapply equiv_path_grouphomomorphism.
     srapply Quotient_ind_hprop.
@@ -235,9 +225,8 @@ Section FirstIso.
   Proof.
     srapply grp_quotient_rec.
     + srapply grp_image_in.
-    + intro n.
-      apply path_sigma_hprop.
-      exact (pr2 n).
+    + intros n x.
+      by apply path_sigma_hprop.
   Defined.
 
   (** The underlying map of this homomorphism is an equivalence *)
@@ -249,13 +238,10 @@ Section FirstIso.
     refine (Quotient_ind_hprop _ _ _); intro x.
     refine (Quotient_ind_hprop _ _ _); intro y.
     intros h; simpl in h.
-    apply qglue.
-    srefine (_;_).
-    { exists (-x * y).
-      apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
-      cbn. rewrite grp_homo_op, grp_homo_inv, h.
-      srapply negate_l. }
-    reflexivity.
+    apply qglue; cbn.
+    apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
+    cbn. rewrite grp_homo_op, grp_homo_inv, h.
+    srapply negate_l.
   Defined.
 
   (** First isomorphism theorem for groups *)

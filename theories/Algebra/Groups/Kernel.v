@@ -8,31 +8,24 @@ Require Import WildCat.
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
-Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : Subgroup A.
+Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : NormalSubgroup A.
 Proof.
-  snrapply (Build_Subgroup A (fun x => f x = group_unit)).
-  repeat split.
-  1: exact _.
-  1: apply grp_homo_unit.
-  { intros x y p q.
-    refine (_ @ ap011 _ p q @ left_identity mon_unit).
-    apply grp_homo_op. }
-  intros x p.
-  exact (grp_homo_inv f x @ ap _ p @ negate_mon_unit).
-Defined.
-
-Global Instance isnormal_kernel {A B : Group} (f : GroupHomomorphism A B)
-  : IsNormalSubgroup (grp_kernel f).
-Proof.
-  apply isnormalsubgroup_of_cong_mem.
-  intros g n.
-  srefine ((_ ; _ ); _).
-  3: reflexivity.
-  simpl.
-  rewrite grp_homo_op, grp_homo_op, grp_homo_inv.
-  rewrite (pr2 n), (right_identity (- f g)).
-  rewrite (negate_l _).
-  reflexivity.
+  snrapply Build_NormalSubgroup.
+  - snrapply (Build_Subgroup A (fun x => f x = group_unit)).
+    repeat split.
+    1: exact _.
+    1: apply grp_homo_unit.
+    { intros x y p q.
+      refine (_ @ ap011 _ p q @ left_identity mon_unit).
+      apply grp_homo_op. }
+    intros x p.
+    exact (grp_homo_inv f x @ ap _ p @ negate_mon_unit).
+  - unfold IsNormalSubgroup; cbn.
+    intros x y.
+    rewrite 2 grp_homo_op.
+    rewrite 2 grp_homo_inv.
+    refine (group_moveR_gV _ _ oE equiv_path_inverse _ _ oE _ ); symmetry.
+    apply group_moveR_Vg.
 Defined.
 
 (** ** Corecursion principle for group kernels *)

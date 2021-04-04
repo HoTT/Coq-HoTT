@@ -183,4 +183,10 @@ Definition path_iff_hprop {A B : hProp}
 : (A -> B) -> (B -> A) -> A = B :> hProp
   := fun f g => path_iff_hprop_uncurried (f,g).
 
+Lemma equiv_path_iff_ishprop `{Univalence} {A B : Type} `{IsHProp A, IsHProp B}
+  : (A <-> B) <~> (A = B).
+Proof.
+  exact (Build_Equiv _ _ path_iff_ishprop_uncurried _).
+Defined.
+
 End TruncType.
