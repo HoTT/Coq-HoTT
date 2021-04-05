@@ -124,6 +124,7 @@ theories/Spaces/Finite/Fin.v
 theories/Spaces/Finite/FinNat.v
 theories/Spaces/Finite/FinInduction.v
 theories/Spaces/Finite/Finite.v
+theories/Spaces/Finite/FinSeq.v
 theories/Spaces/Finite/Tactics.v
 theories/Spaces/Finite.v
 
@@ -352,6 +353,7 @@ theories/Spectra/Coinductive.v
 
 theories/Algebra/Universal/Algebra.v
 theories/Algebra/Universal/Homomorphism.v
+theories/Algebra/Universal/Operation.v
 
 #
 #   Algebra

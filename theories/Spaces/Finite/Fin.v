@@ -15,7 +15,7 @@ Local Open Scope nat_scope.
 
 (** A *finite set* is a type that is merely equivalent to the canonical finite set determined by some natural number.  There are many equivalent ways to define the canonical finite sets, such as [{ k : nat & k < n}]; we instead choose a recursive one. *)
 
-Fixpoint Fin (n : nat) : Type
+Fixpoint Fin (n : nat) : Type0
   := match n with
        | 0 => Empty
        | S n => Fin n + Unit
@@ -112,14 +112,14 @@ Proof.
     + rewrite path_fin_fsucc_incl, path_nat_fin_incl.
       apply IHn.
     + reflexivity.
-Qed.
+Defined.
 
 Lemma path_nat_fin_zero {n} : fin_to_nat (@fin_zero n) = 0.
 Proof.
   induction n as [|n' IHn].
   - reflexivity.
   - trivial.
-Qed.
+Defined.
 
 Lemma path_nat_fin_last {n} : fin_to_nat (@fin_last n) = n.
 Proof.

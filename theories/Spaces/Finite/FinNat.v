@@ -79,7 +79,8 @@ Proof.
                    (hset_path2 1 (@path_succ_finnat n u u.2)) idpath).
 Defined.
 
-Definition is_bounded_fin_to_nat {n} (k : Fin n) : fin_to_nat k < n.
+Monomorphic Definition is_bounded_fin_to_nat {n} (k : Fin n)
+  : fin_to_nat k < n.
 Proof.
   induction n as [| n IHn].
   - elim k.
@@ -90,10 +91,10 @@ Proof.
     + apply leq_refl.
 Defined.
 
-Definition fin_to_finnat {n} (k : Fin n) : FinNat n
+Monomorphic Definition fin_to_finnat {n} (k : Fin n) : FinNat n
   := (fin_to_nat k; is_bounded_fin_to_nat k).
 
-Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
+Monomorphic Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
   := match n with
      | 0 => fun u => Empty_rec u.2
      | n.+1 => fun u =>
@@ -160,7 +161,7 @@ Proof.
   - exact (ap fsucc IHn).
 Defined.
 
-Lemma homot_finnat_to_fin_to_finnat {n : nat} (u : FinNat n)
+Lemma path_finnat_to_fin_to_finnat {n : nat} (u : FinNat n)
   : fin_to_finnat (finnat_to_fin u) = u.
 Proof.
   induction n as [| n IHn].
@@ -173,7 +174,7 @@ Proof.
       exact (ap S (IHn (x; h))..1).
 Defined.
 
-Lemma homot_fin_to_finnat_to_fin {n : nat} (k : Fin n)
+Lemma path_fin_to_finnat_to_fin {n : nat} (k : Fin n)
   : finnat_to_fin (fin_to_finnat k) = k.
 Proof.
   induction n as [| n IHn].
@@ -187,5 +188,5 @@ Defined.
 
 Definition equiv_fin_finnat (n : nat) : Fin n <~> FinNat n
   := equiv_adjointify fin_to_finnat finnat_to_fin
-      homot_finnat_to_fin_to_finnat
-      homot_fin_to_finnat_to_fin.
+      path_finnat_to_fin_to_finnat
+      path_fin_to_finnat_to_fin.
