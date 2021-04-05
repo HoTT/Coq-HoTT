@@ -166,7 +166,7 @@ Arguments grp_quotient_map {_ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.
 
-(** Rephrasing that let's you specify the normality proof *)
+(** Rephrasing that lets you specify the normality proof *)
 Definition QuotientGroup' (G : Group) (N : Subgroup G) (H : IsNormalSubgroup N)
   := QuotientGroup G (Build_NormalSubgroup G N H).
 
