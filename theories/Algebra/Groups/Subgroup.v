@@ -336,22 +336,3 @@ Proof.
   by apply isnormal, symmetric_in_cosetR.
 Defined.
 
-(* jarlg: needed for abelian groups *)
-(* Definition isnormalsubgroup_of_cong_mem  {G : Group} {N : Subgroup G}
-  (h : forall (g : G) (n : N), exists m : N,
-    - g * subgroup_incl N n * g = subgroup_incl N m)
-  : IsNormalSubgroup N.
-Proof.
-  intros x y.
-  apply equiv_iff_hprop; intros [m p].
-  1: specialize (h (-y) (-m)).
-  2: specialize (h y (-m)).
-  1-2: destruct h as [m' p'].
-  1-2: exists m'.
-  1-2: rewrite <- p'.
-  1-2: f_ap.
-  1-2: rewrite grp_homo_inv, p, negate_sg_op, involutive. 
-  1: rewrite associativity, involutive, (negate_r G y).
-  2: rewrite (associativity (-y)), (negate_l G y).
-  1-2: rewrite (left_identity _); reflexivity.
-Defined. *)
