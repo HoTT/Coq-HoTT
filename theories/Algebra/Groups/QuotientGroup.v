@@ -166,6 +166,10 @@ Arguments grp_quotient_map {_ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.
 
+(** Rephrasing that let's you specify the normality proof *)
+Definition QuotientGroup' (G : Group) (N : Subgroup G) (H : IsNormalSubgroup N)
+  := QuotientGroup G (Build_NormalSubgroup G N H).
+
 Local Open Scope group_scope.
 
 (** Computation rule for grp_quotient_rec. *)
@@ -181,9 +185,7 @@ Defined.
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
-  : GroupIsomorphism
-      (@QuotientGroup G (Build_NormalSubgroup G H k))
-      (@QuotientGroup G (Build_NormalSubgroup G H k')).
+  : GroupIsomorphism (QuotientGroup' G H k) (QuotientGroup' G H k').
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.

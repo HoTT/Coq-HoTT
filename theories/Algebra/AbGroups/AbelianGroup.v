@@ -76,7 +76,7 @@ Defined.
 (** ** Quotients of abelian groups *)
 
 Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
-  : IsAbGroup (QuotientGroup G (Build_NormalSubgroup G H (isnormal_ab_subgroup G H))).
+  : IsAbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)).
 Proof.
   nrapply Build_IsAbGroup.
   1: exact _.
@@ -90,10 +90,7 @@ Proof.
 Defined.
 
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup :=
-  Build_AbGroup
-    (QuotientGroup G
-      (Build_NormalSubgroup G H (isnormal_ab_subgroup G H)))
-    _ _ _ _.
+  Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _ _ _ _.
 
 Theorem equiv_quotient_abgroup_ump {F : Funext} {G : AbGroup}
   (N : Subgroup G) (H : Group)
