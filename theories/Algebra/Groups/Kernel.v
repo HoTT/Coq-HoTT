@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import Basics Types HSet.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
@@ -60,28 +60,28 @@ Proof.
 Defined.
 
 (** ** Characterisation of group embeddings *)
-
-(*
-(* Local Existing Instance ishprop_path_subgroup. *)
-
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
+  : (grp_kernel f = trivial_subgroup :> Subgroup _) <~> IsEmbedding f.
 Proof.
+  refine (_ oE (equiv_path_subgroup' _ _)^-1).
   srapply equiv_iff_hprop.
-  - intros phi b.
-    apply hprop_inhabited_contr; intro a.
-    rapply (contr_equiv' _ (equiv_grp_hfiber _ _ a)^-1%equiv).
-    rapply (transport Contr (x:=grp_trivial)).
-    exact (ap (group_type o subgroup_group A) phi^).
-  - intro isemb_f.
-    rapply equiv_path_subgroup.
-    srefine (grp_iso_inverse _; _).
-    + srapply Build_GroupIsomorphism.
-      * exact grp_homo_const.
-      * srapply isequiv_adjointify.
-        1: exact grp_homo_const.
-        all: intro x; apply path_ishprop.
-    + apply equiv_path_grouphomomorphism; intro x; cbn.
-      refine (ap pr1 (y:=(mon_unit; grp_homo_unit f)) _).
-      apply path_ishprop.
-Defined.*)
+  - cbn; intros h.
+    intros b.
+    apply hprop_allpath.
+    intros [x p] [y q].
+    apply path_sigma_hprop; cbn.
+    apply group_moveL_1M.
+    apply h.
+    rewrite grp_homo_op, grp_homo_inv.
+    rewrite p, q.
+    apply right_inverse.
+  - intros isemb_f g.
+    apply isinj_embedding in isemb_f.
+    split.
+    + cbn; intros p.
+      apply isemb_f.
+      refine (p @ _^).
+      apply grp_homo_unit.
+    + cbn; intros p.
+      refine (ap _ p @ grp_homo_unit f).
+Defined.

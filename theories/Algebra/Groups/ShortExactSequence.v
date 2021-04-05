@@ -46,12 +46,11 @@ Proof.
     exists tt; apply path_ishprop.
 Defined.
 
-(*
+
 (** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)
 Corollary equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
   : IsExact purely (@grp_homo_const grp_trivial A) f
-            <~> (grp_kernel f = trivial_subgroup).
+            <~> (grp_kernel f = trivial_subgroup :> Subgroup _).
 Proof.
   exact ((equiv_kernel_isembedding f)^-1%equiv oE equiv_grp_isexact_isembedding f).
 Defined.
-*)
