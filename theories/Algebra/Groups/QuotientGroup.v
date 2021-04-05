@@ -179,9 +179,11 @@ Proof.
 Defined.
 
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
-(* Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
+Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
-  : GroupIsomorphism (@QuotientGroup G _ k) (@QuotientGroup G _ k').
+  : GroupIsomorphism
+      (@QuotientGroup G (Build_NormalSubgroup G H k))
+      (@QuotientGroup G (Build_NormalSubgroup G H k')).
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.
@@ -189,7 +191,7 @@ Proof.
   srapply Quotient_ind_hprop; intro y; revert x.
   srapply Quotient_ind_hprop; intro x.
   reflexivity.
-Defined. *)
+Defined.
 
 (** The universal mapping property for groups *)
 Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (H : Group)

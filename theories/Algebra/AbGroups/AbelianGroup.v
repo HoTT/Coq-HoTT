@@ -54,34 +54,29 @@ Proof.
   cbn. apply commutativity.
 Defined.
 
+
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
   intros x y.
   unfold in_cosetL, in_cosetR.
-  refine (equiv_functor_sigma' (Build_Equiv _ _ group_inverse _) _).
-  intros h.
   srapply equiv_iff_hprop.
-  + intros p.
-    rewrite grp_homo_inv.
-    rewrite p.
+  { rewrite <- (negate_involutive (x + -y)).
     rewrite negate_sg_op.
-    rewrite (involutive x).
-    apply commutativity.
-  + intros p.
-    rewrite grp_homo_inv in p.
-    apply moveL_equiv_V in p.
-    rewrite p; cbn.
-    change (- (x + -y) = - x + y).
-    rewrite negate_sg_op.
-    rewrite (involutive y).
-    apply commutativity.
+    rewrite negate_involutive.
+    rewrite (commutativity y (-x)).
+    rapply subgroup_inv. }
+  rewrite <- (negate_involutive (-x + y)).
+  rewrite negate_sg_op.
+  rewrite negate_involutive.
+  rewrite (commutativity x (-y)).
+  rapply subgroup_inv.
 Defined.
 
 (** ** Quotients of abelian groups *)
 
 Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
-  : IsAbGroup (QuotientGroup G H).
+  : IsAbGroup (QuotientGroup G (Build_NormalSubgroup G H (isnormal_ab_subgroup G H))).
 Proof.
   nrapply Build_IsAbGroup.
   1: exact _.
@@ -94,8 +89,19 @@ Proof.
   apply commutativity.
 Defined.
 
-Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G)
-  : AbGroup := Build_AbGroup (QuotientGroup G H) _ _ _ _.
+Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup :=
+  Build_AbGroup
+    (QuotientGroup G
+      (Build_NormalSubgroup G H (isnormal_ab_subgroup G H)))
+    _ _ _ _.
+
+Theorem equiv_quotient_abgroup_ump {F : Funext} {G : AbGroup}
+  (N : Subgroup G) (H : Group)
+  : {f : GroupHomomorphism G H & forall (n : G), N n -> f n = mon_unit}
+    <~> (GroupHomomorphism (QuotientAbGroup G N) H).
+Proof.
+  exact (equiv_grp_quotient_ump (Build_NormalSubgroup G N _) _).
+Defined.
 
 (** ** The wild category of abelian groups *)
 
