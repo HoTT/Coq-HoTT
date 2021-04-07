@@ -142,6 +142,9 @@ Reserved Notation "'CAT' // a" (at level 40, left associativity).
 Reserved Notation "'CAT' \\ a" (at level 40, left associativity).
 Reserved Notation "C ^op" (at level 3, format "C '^op'").
 
+(** Universal algebra *)
+Reserved Notation "u .# A" (at level 3, format "u '.#' A").
+
 (** Natural numbers *)
 Reserved Infix "=n" (at level 70, no associativity).
 
@@ -216,7 +219,6 @@ Reserved Notation "x \\ F" (at level 40, left associativity).
 Reserved Notation "x // F" (at level 40, left associativity).
 Reserved Notation "{ { xL | xR // xcut } }" (at level 0, xR at level 39, format "{ {  xL  |  xR  //  xcut  } }").
 Reserved Notation "x \ F" (at level 40, left associativity).
-Reserved Notation "x / F" (at level 40, left associativity).
 Reserved Notation "x <> y" (at level 70, no associativity).
 Reserved Notation "x ->> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x -|-> y" (at level 99, right associativity, y at level 200).

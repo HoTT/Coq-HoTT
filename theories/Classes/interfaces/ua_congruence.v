@@ -32,7 +32,7 @@ Section congruence.
        Φ (cod_symboltype w) (ap_operation f a) (ap_operation f b).
 
   Class OpsCompatible : Type
-    := ops_compatible : ∀ (u : Symbol σ), OpCompatible (u^^A).
+    := ops_compatible : ∀ (u : Symbol σ), OpCompatible u.#A.
 
   Global Instance trunc_ops_compatible `{Funext} {n : trunc_index}
     `{!∀ s x y, IsTrunc n (Φ s x y)}

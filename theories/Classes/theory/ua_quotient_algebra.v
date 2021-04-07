@@ -127,7 +127,7 @@ Section quotient_algebra.
 
   Definition ops_quotient_algebra (u : Symbol σ)
     : Operation carriers_quotient_algebra (σ u)
-    := (op_quotient_algebra (u^^A) (ops_compatible_cong A Φ u)).1.
+    := (op_quotient_algebra u.#A (ops_compatible_cong A Φ u)).1.
 
 (** Definition of quotient algebra. See Lemma [compute_op_quotient]
     below for the computation rule of quotient algebra operations. *)
@@ -152,11 +152,11 @@ Section quotient_algebra.
       = class_of _ (α (a1, a2, ..., an))
     >>
 
-    where [α] is the uncurried [u^^A] operation and [β] is the
-    uncurried [u^^QuotientAlgebra] operation. *)
+    where [α] is the uncurried [u.#A] operation and [β] is the
+    uncurried [u.#QuotientAlgebra] operation. *)
 
   Lemma compute_op_quotient (u : Symbol σ)
-    : ComputeOpQuotient (u^^A) (u^^QuotientAlgebra).
+    : ComputeOpQuotient u.#A u.#QuotientAlgebra.
   Proof.
     apply op_quotient_algebra.
   Defined.

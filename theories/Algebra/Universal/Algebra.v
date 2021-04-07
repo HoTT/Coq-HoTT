@@ -95,6 +95,8 @@ Global Existing Instance hset_algebra.
 
 Global Coercion carriers : Algebra >-> Funclass.
 
+Bind Scope Algebra_scope with Algebra.
+
 Definition SigAlgebra (σ : Signature) : Type
   := {c : Carriers σ
         | { _ : forall (u : Symbol σ), Operation c (σ u)
@@ -158,8 +160,7 @@ Defined.
 Arguments path_path_algebra {_} {σ} {A B}%Algebra_scope (p q r)%path_scope.
 
 Module notations_algebra.
-  (** Conflicts with inverse notation so cannot be reserved *)
-  Global Notation "u ^^ A" := (operations A u)
-                              (at level 6, no associativity)
-                              : Algebra_scope.
+
+  Global Notation "u .# A" := (operations A u) : Algebra_scope.
+
 End notations_algebra.

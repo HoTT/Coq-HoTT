@@ -28,7 +28,7 @@ Section is_homomorphism.
   Qed.
 
   Class IsHomomorphism : Type
-    := oppreserving_hom : forall (u : Symbol σ), OpPreserving u^^A u^^B.
+    := oppreserving_hom : forall (u : Symbol σ), OpPreserving u.#A u.#B.
 
   Global Instance hprop_is_homomorphism `{Funext}
     : IsHProp IsHomomorphism.

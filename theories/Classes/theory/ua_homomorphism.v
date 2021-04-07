@@ -44,11 +44,11 @@ Section is_homomorphism.
 
 (** The family of functions [f : ∀ (s : Sort σ), A s → B s] above is
     a homomorphism if for each function symbol [u : Symbol σ], it is
-    [OpPreserving (u^^A) (u^^B)] with respect to the algebra
-    operations [u^^A] and [u^^B] corresponding to [u]. *)
+    [OpPreserving u.#A u.#B] with respect to the algebra
+    operations [u.#A] and [u.#B] corresponding to [u]. *)
 
   Class IsHomomorphism : Type
-    := oppreserving_hom : ∀ (u : Symbol σ), OpPreserving (u^^A) (u^^B).
+    := oppreserving_hom : ∀ (u : Symbol σ), OpPreserving u.#A u.#B.
 
   Global Instance trunc_is_homomorphism `{Funext} {n : trunc_index}
     `{!IsTruncAlgebra n.+1 B}
@@ -182,13 +182,13 @@ Section homomorphism_ap_operation.
     >>
 
     where [(a1, a2, ..., an, tt) : FamilyProd A [s1; s2; ...; sn]] and
-    [α], [β] uncurried versions of [u^^A], [u^^B] respectively. *)
+    [α], [β] uncurried versions of [u.#A], [u.#B] respectively. *)
 
   Lemma path_homomorphism_ap_operation (f : ∀ s, A s → B s)
     `{!IsHomomorphism f}
     : ∀ (u : Symbol σ) (a : FamilyProd A (dom_symboltype (σ u))),
-      f (cod_symboltype (σ u)) (ap_operation (u^^A) a)
-      = ap_operation (u^^B) (map_family_prod f a).
+      f (cod_symboltype (σ u)) (ap_operation u.#A a)
+      = ap_operation u.#B (map_family_prod f a).
   Proof.
     intros u a. by apply path_oppreserving_ap_operation.
   Defined.
@@ -203,7 +203,7 @@ Section hom_id.
   Global Instance is_homomorphism_id
     : IsHomomorphism (λ s (x : A s), x).
   Proof.
-    intro u. generalize (u^^A). intro w. induction (σ u).
+    intro u. generalize u.#A. intro w. induction (σ u).
     - reflexivity.
     - now intro x.
   Defined.
@@ -231,7 +231,7 @@ Section hom_inv.
   Global Instance is_homomorphism_inv : IsHomomorphism (λ s, (f s)^-1).
   Proof.
    intro u.
-   generalize (u^^A) (u^^B) (oppreserving_hom f u).
+   generalize u.#A u.#B (oppreserving_hom f u).
    intros a b P.
    induction (σ u).
    - destruct P. apply (eissect (f t)).
@@ -275,7 +275,7 @@ Section hom_compose.
     : IsHomomorphism (λ s, g s o f s).
   Proof.
     intro u.
-    by apply (oppreserving_compose g f (u^^A) (u^^B) (u^^C)).
+    by apply (oppreserving_compose g f u.#A u.#B u.#C).
   Defined.
 
   Global Instance is_isomorphism_compose
@@ -338,21 +338,21 @@ Section path_isomorphism.
   Qed.
 
 (** Suppose [u : Symbol σ] is a function symbol. Recall that
-    [u^^A] is notation for [operations A u : Operation A (σ u)]. This
+    [u.#A] is notation for [operations A u : Operation A (σ u)]. This
     is the algebra operation corresponding to function symbol [u]. *)
 
 (** An isomorphism [f : ∀ s, A s → B s] induces a family of
     equivalences [e : ∀ (s : Sort σ), A s <~> B s]. Let [u : Symbol σ]
     be a function symbol. Since [f] is a homomorphism, the induced
-    family of equivalences [e] satisfies [OpPreserving e (u^^A) (u^^B)].
-    By [path_operations_equiv] above, we can then transport [u^^A] along
-    the path [path_equiv_family e] and obtain a path to [u^^B]. *)
+    family of equivalences [e] satisfies [OpPreserving e (u.#A) (u.#B)].
+    By [path_operations_equiv] above, we can then transport [u.#A] along
+    the path [path_equiv_family e] and obtain a path to [u.#B]. *)
 
   Lemma path_operations_isomorphism (f : ∀ s, A s → B s)
     `{IsIsomorphism σ A B f} (u : Symbol σ)
     : transport (λ C : Carriers σ, Operation C (σ u))
-        (path_equiv_family (equiv_isomorphism f)) (u^^A)
-      = u^^B.
+        (path_equiv_family (equiv_isomorphism f)) u.#A
+      = u.#B.
   Proof.
     by apply path_operations_equiv.
   Defined.
