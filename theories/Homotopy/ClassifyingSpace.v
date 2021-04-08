@@ -1,10 +1,10 @@
-Require Import Basics Types Pointed Cubical.
-Require Import Algebra.AbGroups.
-Require Import Homotopy.HSpace.
-Require Import TruncType.
-Require Import Truncations.
-Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.WhiteheadsPrinciple.
+Require Import HoTT.Basics HoTT.Types HoTT.Pointed HoTT.Cubical.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Homotopy.HSpace.
+Require Import HoTT.TruncType.
+Require Import HoTT.Truncations.
+Require Import HoTT.Homotopy.HomotopyGroup.
+Require Import HoTT.Homotopy.WhiteheadsPrinciple.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

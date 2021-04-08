@@ -3,7 +3,7 @@
 (** * Factorizations and factorization systems. *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp Extensions PathAny.
+Require Import HoTT.HProp HoTT.Extensions HoTT.PathAny.
 Local Open Scope path_scope.
 
 

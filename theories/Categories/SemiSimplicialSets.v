@@ -1,11 +1,11 @@
 (** * The category of semisimplicial sets *)
-Require Import Types.
-Require Import Category.Core Functor.Core.
-Require Import Category.Morphisms.
-Require Import Category.Dual FunctorCategory.Core.
-Require Import SetCategory.Core.
-Require Import SimplicialSets.
-Require Import Category.Sigma.OnMorphisms Category.Subcategory.Wide.
+Require Import HoTT.Types.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Categories.SimplicialSets.
+Require Import HoTT.Categories.Category.Sigma.OnMorphisms HoTT.Categories.Category.Subcategory.Wide.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

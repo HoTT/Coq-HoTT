@@ -3,7 +3,7 @@
 (** * Spectra *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Pointed.
+Require Import HoTT.Pointed.
 Require Import HoTT.Truncations.
 
 Local Open Scope nat_scope.

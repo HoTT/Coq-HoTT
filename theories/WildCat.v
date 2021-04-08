@@ -1,23 +1,23 @@
 (* Basic theory *)
-Require Export WildCat.Core.
-Require Export WildCat.Equiv.
-Require Export WildCat.Opposite.
-Require Export WildCat.Induced.
-Require Export WildCat.EquivGpd.
-Require Export WildCat.FunctorCat.
-Require Export WildCat.NatTrans.
-Require Export WildCat.Yoneda.
-Require Export WildCat.Square.
+Require Export HoTT.WildCat.Core.
+Require Export HoTT.WildCat.Equiv.
+Require Export HoTT.WildCat.Opposite.
+Require Export HoTT.WildCat.Induced.
+Require Export HoTT.WildCat.EquivGpd.
+Require Export HoTT.WildCat.FunctorCat.
+Require Export HoTT.WildCat.NatTrans.
+Require Export HoTT.WildCat.Yoneda.
+Require Export HoTT.WildCat.Square.
 (* Examples *)
-Require Export WildCat.Type.
-Require Export WildCat.Paths.
-Require Export WildCat.UnitCat.
-Require Export WildCat.EmptyCat.
-Require Export WildCat.Prod.
-Require Export WildCat.Sum.
-Require Export WildCat.Forall.
-Require Export WildCat.Sigma.
+Require Export HoTT.WildCat.Type.
+Require Export HoTT.WildCat.Paths.
+Require Export HoTT.WildCat.UnitCat.
+Require Export HoTT.WildCat.EmptyCat.
+Require Export HoTT.WildCat.Prod.
+Require Export HoTT.WildCat.Sum.
+Require Export HoTT.WildCat.Forall.
+Require Export HoTT.WildCat.Sigma.
 (* Higher categories *)
-Require Export WildCat.TwoOneCat.
+Require Export HoTT.WildCat.TwoOneCat.
 (* Pointed categories *)
-Require Export WildCat.PointedCat.
+Require Export HoTT.WildCat.PointedCat.

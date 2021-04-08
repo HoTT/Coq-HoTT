@@ -1,6 +1,6 @@
-Require Import Basics Types.
-Require Import Cubical.
-Require Import Spaces.Circle Spaces.Torus.Torus.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Cubical.
+Require Import HoTT.Spaces.Circle HoTT.Spaces.Torus.Torus.
 
 (* In this file we:
     - Prove that the Torus is equivalent to the product of two circles

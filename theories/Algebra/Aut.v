@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics.
-Require Import Types.
-Require Import Truncations.
-Require Import Factorization.
-Require Import Algebra.ooGroup.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Truncations.
+Require Import HoTT.Factorization.
+Require Import HoTT.Algebra.ooGroup.
 
 Local Open Scope path_scope.
 

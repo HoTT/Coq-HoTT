@@ -1,11 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types.
-Require Import Pointed.
-Require Import Truncations.
-Require Import Colimits.Quotient.
-Require Import Homotopy.ClassifyingSpace.
-Require Import Algebra.Groups.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Pointed.
+Require Import HoTT.Truncations.
+Require Import HoTT.Colimits.Quotient.
+Require Import HoTT.Homotopy.ClassifyingSpace.
+Require Import HoTT.Algebra.Groups.
+Require Import HoTT.WildCat.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.

@@ -1,7 +1,7 @@
 (** * Identity adjunction [1 ⊣ 1] *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity NaturalTransformation.Identity.
-Require Import Adjoint.UnitCounit Adjoint.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

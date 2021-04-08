@@ -1,9 +1,9 @@
 (** * Tactic for proving laws about adjoint composition *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core.
-Require Import Functor.Composition.Laws.
-Require Import Adjoint.UnitCounit Adjoint.Paths.
-Require Import PathGroupoids HoTT.Tactics Types.Prod Types.Forall.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Functor.Composition.Laws.
+Require Import HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Paths.
+Require Import HoTT.Basics.PathGroupoids HoTT.Tactics HoTT.Types.Prod HoTT.Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

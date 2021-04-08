@@ -1,6 +1,6 @@
 (** * Dependent Product Category *)
-Require Import Category.Core Category.Strict.
-Require Import Types.Forall.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Strict.
+Require Import HoTT.Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

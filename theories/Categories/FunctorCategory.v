@@ -1,15 +1,15 @@
 (** * Functor category *)
 (** Since there are only notations in [FunctorCategory.Notations], we can just export those. *)
-Require Export FunctorCategory.Notations.
+Require Export HoTT.Categories.FunctorCategory.Notations.
 
 (** ** Definition *)
-Require FunctorCategory.Core.
+Require HoTT.Categories.FunctorCategory.Core.
 (** ** Morphisms in a functor category *)
-Require FunctorCategory.Morphisms.
+Require HoTT.Categories.FunctorCategory.Morphisms.
 (** ** Functoriality of [(_ → _)] *)
-Require FunctorCategory.Functorial.
+Require HoTT.Categories.FunctorCategory.Functorial.
 (** ** Opposite functor [(C → D) → (Cᵒᵖ → Dᵒᵖ)ᵒᵖ] *)
-Require FunctorCategory.Dual.
+Require HoTT.Categories.FunctorCategory.Dual.
 
 Include FunctorCategory.Core.
 Include FunctorCategory.Morphisms.

@@ -1,9 +1,9 @@
 (** * ∑-precategories *)
 (** These are a generalization of subcategories in the direction of the Grothendieck construction *)
-Require Category.Sigma.Core.
-Require Category.Sigma.OnMorphisms.
-Require Category.Sigma.OnObjects.
-Require Category.Sigma.Univalent.
+Require HoTT.Categories.Category.Sigma.Core.
+Require HoTT.Categories.Category.Sigma.OnMorphisms.
+Require HoTT.Categories.Category.Sigma.OnObjects.
+Require HoTT.Categories.Category.Sigma.Univalent.
 
 Include Category.Sigma.Core.
 Include Category.Sigma.OnMorphisms.

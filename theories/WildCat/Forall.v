@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
-Require Import WildCat.Core.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
 
 (** ** Indexed product of categories *)
 

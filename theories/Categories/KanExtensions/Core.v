@@ -1,8 +1,8 @@
 (** * Kan Extensions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import ExponentialLaws.Law4.Functors FunctorCategory.Core.
-Require Import Functor.Composition.Functorial.Core.
-Require Import UniversalProperties.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.ExponentialLaws.Law4.Functors HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Functor.Composition.Functorial.Core.
+Require Import HoTT.Categories.UniversalProperties.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

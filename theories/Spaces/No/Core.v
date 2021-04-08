@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import TruncType HSet.
+Require Import HoTT.TruncType HoTT.HSet.
 Require Import HoTT.Truncations.
 
 Local Open Scope nat_scope.

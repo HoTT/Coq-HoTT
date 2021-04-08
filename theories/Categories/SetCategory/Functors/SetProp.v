@@ -1,6 +1,6 @@
 (** * Functors between [set_cat] and [prop_cat] *)
-Require Import Category.Core Functor.Core SetCategory.Core.
-Require Import Basics.Trunc HProp HSet TruncType.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Basics.Trunc HoTT.HProp HoTT.HSet HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,11 +1,11 @@
-Require Import Basics.
-Require Import Types.
-Require Import Diagrams.Graph.
-Require Import Diagrams.Diagram.
-Require Import Diagrams.ParallelPair.
-Require Import Diagrams.Cocone.
-Require Import Colimits.Colimit.
-Require Import HIT.Coeq.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Diagrams.Graph.
+Require Import HoTT.Diagrams.Diagram.
+Require Import HoTT.Diagrams.ParallelPair.
+Require Import HoTT.Diagrams.Cocone.
+Require Import HoTT.Colimits.Colimit.
+Require Import HoTT.HIT.Coeq.
 
 Generalizable All Variables.
 

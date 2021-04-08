@@ -1,11 +1,11 @@
-Require Import Basics.
-Require Import Types.
-Require Import Colimits.Pushout.
-Require Import Colimits.SpanPushout.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Colimits.Pushout.
+Require Import HoTT.Colimits.SpanPushout.
 Require Import HoTT.Truncations.
-Require Import Homotopy.Join.
-Require Import Homotopy.Suspension.
-Require Import Homotopy.BlakersMassey.
+Require Import HoTT.Homotopy.Join.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Homotopy.BlakersMassey.
 
 (** * The Freudenthal Suspension Theorem *)
 

@@ -1,4 +1,4 @@
-Require Import HoTT.
+Require Import HoTT.HoTT.
 
 Fail Check Type0 : Type0.
 Check Susp nat : Type0.

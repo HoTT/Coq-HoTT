@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
 Require Import HoTT.Types.
-Require Import HSet TruncType.
-Require Export HIT.Coeq.
+Require Import HoTT.HSet HoTT.TruncType.
+Require Export HoTT.HIT.Coeq.
 Local Open Scope path_scope.
 
 (** * Homotopy Pushouts *)

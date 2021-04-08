@@ -1,7 +1,7 @@
 (** * Functors involving product categories *)
-Require Import Category.Core Functor.Core Category.Prod Functor.Composition.Core.
-Require Import Functor.Paths.
-Require Import Types.Prod.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Prod HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Functor.Paths.
+Require Import HoTT.Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

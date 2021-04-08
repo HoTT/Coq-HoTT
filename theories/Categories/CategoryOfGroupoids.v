@@ -1,8 +1,8 @@
 (** * Groupoid, the precategory of strict groupoid categories *)
-Require Import Category.Core Functor.Core Category.Strict.
-Require Import Cat.Core.
-Require Import GroupoidCategory.Core.
-Require Import Functor.Paths.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Strict.
+Require Import HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.GroupoidCategory.Core.
+Require Import HoTT.Categories.Functor.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

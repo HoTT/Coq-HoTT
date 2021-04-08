@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types Diagrams.CommutativeSquares.
+Require Import HoTT.Basics HoTT.Types HoTT.Diagrams.CommutativeSquares.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.

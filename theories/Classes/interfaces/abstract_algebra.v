@@ -1,6 +1,6 @@
-Require Import Spaces.Nat.
+Require Import HoTT.Spaces.Nat.
 Require Export HoTT.Classes.interfaces.canonical_names.
-Require Import HProp.
+Require Import HoTT.HProp.
 
 Generalizable Variables A B f g x y.
 

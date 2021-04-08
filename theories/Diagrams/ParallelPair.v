@@ -1,8 +1,8 @@
-Require Import Basics.
-Require Import Types.
-Require Import Diagrams.Graph.
-Require Import Diagrams.Diagram.
-Require Import Diagrams.Cocone.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Diagrams.Graph.
+Require Import HoTT.Diagrams.Diagram.
+Require Import HoTT.Diagrams.Cocone.
 
 (** Parallel pairs *)
 

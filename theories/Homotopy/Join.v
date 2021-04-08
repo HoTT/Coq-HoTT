@@ -1,13 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Import Types.
-Require Import Cubical.
-Require Import HProp.
-Require Import HSet.
-Require Import NullHomotopy.
-Require Import Extensions.
-Require Import Colimits.Pushout.
-Require Import Truncations.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Cubical.
+Require Import HoTT.HProp.
+Require Import HoTT.HSet.
+Require Import HoTT.NullHomotopy.
+Require Import HoTT.Extensions.
+Require Import HoTT.Colimits.Pushout.
+Require Import HoTT.Truncations.
 
 Local Open Scope path_scope.
 

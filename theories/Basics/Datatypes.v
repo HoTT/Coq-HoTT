@@ -12,7 +12,7 @@
 
 Set Implicit Arguments.
 
-Require Import Basics.Logic.
+Require Import HoTT.Basics.Logic.
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.

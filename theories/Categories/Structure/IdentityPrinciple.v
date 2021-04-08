@@ -1,8 +1,8 @@
 (** * The Structure Identity Principle *)
-Require Import Category.Core Category.Univalent Category.Morphisms.
-Require Import Structure.Core.
-Require Import HProp Types.Sigma Trunc Equivalences.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Univalent HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Structure.Core.
+Require Import HoTT.HProp HoTT.Types.Sigma HoTT.Basics.Trunc HoTT.Basics.Equivalences.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

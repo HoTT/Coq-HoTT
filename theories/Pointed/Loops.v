@@ -1,7 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HSet HFiber Factorization HoTT.Truncations HProp.
-Require Import Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.pHomotopy.
-Require Import WildCat.
+Require Import HoTT.HSet HoTT.HFiber HoTT.Factorization HoTT.Truncations HoTT.HProp.
+Require Import HoTT.Pointed.Core HoTT.Pointed.pMap HoTT.Pointed.pEquiv HoTT.Pointed.pHomotopy.
+Require Import HoTT.WildCat.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.

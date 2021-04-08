@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types HProp.
-Require Import Modalities.Modality HoTT.Truncations.
-Require Import Spaces.BAut Spaces.BAut.Rigid.
-Require Import ExcludedMiddle.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp.
+Require Import HoTT.Modalities.Modality HoTT.Truncations.
+Require Import HoTT.Spaces.BAut HoTT.Spaces.BAut.Rigid.
+Require Import HoTT.ExcludedMiddle.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.

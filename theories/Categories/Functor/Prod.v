@@ -1,10 +1,10 @@
 (** * Functors involving product categories, and their properties *)
 (** ** Definitions of various functors *)
-Require Functor.Prod.Core.
+Require HoTT.Categories.Functor.Prod.Core.
 (** ** Universal property *)
-Require Functor.Prod.Universal.
+Require HoTT.Categories.Functor.Prod.Universal.
 (** ** Functoriality *)
-Require Functor.Prod.Functorial.
+Require HoTT.Categories.Functor.Prod.Functorial.
 
 Include Functor.Prod.Core.
 Include Functor.Prod.Universal.

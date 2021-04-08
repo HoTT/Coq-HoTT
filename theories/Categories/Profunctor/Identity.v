@@ -1,5 +1,5 @@
 (** * Identity profunctor *)
-Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod.Core SetCategory.Core Profunctor.Core HomFunctor.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Prod HoTT.Categories.Category.Dual HoTT.Categories.Functor.Prod.Core HoTT.Categories.SetCategory.Core HoTT.Categories.Profunctor.Core HoTT.Categories.HomFunctor.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

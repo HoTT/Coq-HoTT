@@ -1,5 +1,5 @@
-Require Import Basics Types HProp HSet PathAny WildCat.
-Require Import Algebra.Groups.Group.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp HoTT.HSet HoTT.PathAny HoTT.WildCat.
+Require Import HoTT.Algebra.Groups.Group.
 
 Local Open Scope mc_mult_scope.
 Generalizable Variables G H A B C N f g.

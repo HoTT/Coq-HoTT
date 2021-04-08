@@ -1,17 +1,17 @@
 (** * Notations for categories *)
-Require Import Basics.Notations.
-Require Export Category.Notations.
-Require Export Functor.Notations.
-Require Export NaturalTransformation.Notations.
-Require Export FunctorCategory.Notations.
-Require NatCategory.
+Require Import HoTT.Basics.Notations.
+Require Export HoTT.Categories.Category.Notations.
+Require Export HoTT.Categories.Functor.Notations.
+Require Export HoTT.Categories.NaturalTransformation.Notations.
+Require Export HoTT.Categories.FunctorCategory.Notations.
+Require HoTT.Categories.NatCategory.
 Export NatCategory.Notations.
-Require Export InitialTerminalCategory.Notations.
-Require Export Profunctor.Notations.
+Require Export HoTT.Categories.InitialTerminalCategory.Notations.
+Require Export HoTT.Categories.Profunctor.Notations.
 Local Set Warnings Append "-notation-overridden".
-Require Export Comma.Notations.
-Require Export Adjoint.Notations.
-Require Export Structure.Notations.
+Require Export HoTT.Categories.Comma.Notations.
+Require Export HoTT.Categories.Adjoint.Notations.
+Require Export HoTT.Categories.Structure.Notations.
 
-Require ChainCategory.
+Require HoTT.Categories.ChainCategory.
 Export ChainCategory.Notations.

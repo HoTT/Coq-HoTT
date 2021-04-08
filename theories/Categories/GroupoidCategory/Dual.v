@@ -1,7 +1,7 @@
 (** * Propositional self-duality of groupoid categories *)
-Require Import Category.Core GroupoidCategory.Core Category.Paths Category.Dual.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.GroupoidCategory.Core HoTT.Categories.Category.Paths HoTT.Categories.Category.Dual.
 Require Import HoTT.Types.
-Require Import Basics.Trunc Basics.Tactics.
+Require Import HoTT.Basics.Trunc HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -2,7 +2,7 @@
 
 (** * The groupid structure of paths *)
 
-Require Import Basics.Overture Basics.Tactics.
+Require Import HoTT.Basics.Overture HoTT.Basics.Tactics.
 
 Local Open Scope path_scope.
 

@@ -1,6 +1,6 @@
 (** * Functoriality of composition of natural transformations *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import FunctorCategory.Core Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.FunctorCategory.Core HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

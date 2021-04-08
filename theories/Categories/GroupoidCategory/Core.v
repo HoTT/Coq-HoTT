@@ -1,6 +1,6 @@
 (** * Groupoids *)
-Require Import Category.Core Category.Morphisms Category.Strict.
-Require Import Trunc Types.Forall PathGroupoids Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms HoTT.Categories.Category.Strict.
+Require Import HoTT.Basics.Trunc HoTT.Types.Forall HoTT.Basics.PathGroupoids HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,9 +1,9 @@
-Require Import Basics Types.
-Require Import Cubical.
-Require Import HIT.Coeq.
-Require Import Spaces.List.
-Require Import Colimits.Pushout.
-Require Import Algebra.Groups.Group.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Cubical.
+Require Import HoTT.HIT.Coeq.
+Require Import HoTT.Spaces.List.
+Require Import HoTT.Colimits.Pushout.
+Require Import HoTT.Algebra.Groups.Group.
 
 Local Open Scope list_scope.
 Local Open Scope mc_scope.

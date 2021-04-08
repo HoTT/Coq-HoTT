@@ -1,10 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types.
-Require Import HProp NullHomotopy.
-Require Import Homotopy.Suspension.
-Require Import Pointed.
-Require Import Truncations.
-Require Import Spaces.Circle Spaces.TwoSphere.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.HProp HoTT.NullHomotopy.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Pointed.
+Require Import HoTT.Truncations.
+Require Import HoTT.Spaces.Circle HoTT.Spaces.TwoSphere.
 
 (** * The spheres, in all dimensions. *)
 

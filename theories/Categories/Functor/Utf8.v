@@ -1,7 +1,7 @@
 (** * Unicode notations for functors *)
-Require Export Category.Notations Category.Utf8 Functor.Notations.
-Require Import Functor.Core Functor.Composition.Core Functor.Sum Functor.Dual Functor.Identity.
-Require Import Basics.Utf8.
+Require Export HoTT.Categories.Category.Notations HoTT.Categories.Category.Utf8 HoTT.Categories.Functor.Notations.
+Require Import HoTT.Categories.Functor.Core HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Sum HoTT.Categories.Functor.Dual HoTT.Categories.Functor.Identity.
+Require Import HoTT.Basics.Utf8.
 
 Infix "∘" := compose : functor_scope.
 

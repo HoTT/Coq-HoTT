@@ -1,11 +1,11 @@
-Require Import Basics.
-Require Import Types.
-Require Import Diagrams.Span.
-Require Import Diagrams.Cocone.
-Require Import Colimits.Colimit.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Diagrams.Span.
+Require Import HoTT.Diagrams.Cocone.
+Require Import HoTT.Colimits.Colimit.
 
 (* We require this now, but will import later. *)
-Require Colimits.Pushout.
+Require HoTT.Colimits.Pushout.
 
 Local Open Scope path_scope.
 

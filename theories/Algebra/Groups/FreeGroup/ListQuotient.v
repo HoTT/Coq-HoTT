@@ -1,7 +1,7 @@
-Require Import Basics Types.
-Require Import Groups.Group.
-Require Import Truncations.
-Require Import HIT.Coeq.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.Truncations.
+Require Import HoTT.HIT.Coeq.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

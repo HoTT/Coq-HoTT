@@ -1,11 +1,11 @@
 (** * Functoriality of the construction of adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import Category.Dual.
-Require Import FunctorCategory.Core.
-Require Import Category.Sigma.OnObjects Category.Prod.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.
-Require Import Adjoint.Functorial.Parts Adjoint.Functorial.Laws.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Category.Sigma.OnObjects HoTT.Categories.Category.Prod.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Dual.
+Require Import HoTT.Categories.Adjoint.Functorial.Parts HoTT.Categories.Adjoint.Functorial.Laws.
 Require Import HoTT.Types.Prod.
 
 Set Universe Polymorphism.

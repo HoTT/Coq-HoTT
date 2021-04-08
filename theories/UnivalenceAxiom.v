@@ -3,7 +3,7 @@
     avoids creating multiple witnesses for the axiom in
     different developments.) *)
 
-Require Import Types.Universe.
+Require Import HoTT.Types.Universe.
 
 Axiom univalence_axiom : Univalence.
 Global Existing Instance univalence_axiom.

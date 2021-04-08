@@ -1,9 +1,9 @@
 (** * Kan extensions assemble into functors *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import KanExtensions.Core.
-Require Import Adjoint.UniversalMorphisms.Core.
-Require Import FunctorCategory.Core.
-Require Import Adjoint.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.KanExtensions.Core.
+Require Import HoTT.Categories.Adjoint.UniversalMorphisms.Core.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Adjoint.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

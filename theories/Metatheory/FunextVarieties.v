@@ -3,7 +3,7 @@
 (** * Varieties of function extensionality *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Metatheory.Core.
+Require Import HoTT.Metatheory.Core.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.

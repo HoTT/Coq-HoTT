@@ -1,8 +1,8 @@
-From HoTT.Classes Require Import
-     interfaces.canonical_names
-     interfaces.orders
-     interfaces.rationals
-     theory.rationals.
+Require Import
+     HoTT.Classes.interfaces.canonical_names
+     HoTT.Classes.interfaces.orders
+     HoTT.Classes.interfaces.rationals
+     HoTT.Classes.theory.rationals.
 
 Monomorphic Universe UQ.
 Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)

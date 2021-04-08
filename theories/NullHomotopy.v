@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall.
+Require Import HoTT.Types.Sigma HoTT.Types.Forall.
 Local Open Scope path_scope.
 
 

@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import HoTT.Basics HoTT.Types HProp.
-Require Import Constant Factorization.
-Require Import Modalities.Modality HoTT.Truncations.
-Require Export Algebra.ooGroup Algebra.Aut.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp.
+Require Import HoTT.Constant HoTT.Factorization.
+Require Import HoTT.Modalities.Modality HoTT.Truncations.
+Require Export HoTT.Algebra.ooGroup HoTT.Algebra.Aut.
 
 Local Open Scope path_scope.
 

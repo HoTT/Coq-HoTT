@@ -1,11 +1,11 @@
-Require Import Basics Types.
-Require Import Groups.Group.
-Require Import Pointed.
-Require Import WildCat.
-Require Import Truncations.
-Require Import Homotopy.Suspension.
-Require Import Homotopy.ClassifyingSpace.
-Require Import Homotopy.HomotopyGroup.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.Pointed.
+Require Import HoTT.WildCat.
+Require Import HoTT.Truncations.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Homotopy.ClassifyingSpace.
+Require Import HoTT.Homotopy.HomotopyGroup.
 
 Local Open Scope pointed_scope.
 Import ClassifyingSpaceNotation.

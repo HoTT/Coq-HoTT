@@ -1,30 +1,30 @@
 (** * Categories *)
 (** We collect here all of the files about categories. *)
 (** Since there are only notations in [Category.Notations], we can just export those. *)
-Require Export Category.Notations.
+Require Export HoTT.Categories.Category.Notations.
 
 (** ** Definition of precategories *)
-Require Category.Core.
+Require HoTT.Categories.Category.Core.
 (** ** Opposite precategories *)
-Require Category.Dual.
+Require HoTT.Categories.Category.Dual.
 (** ** Morphisms in precategories *)
-Require Category.Morphisms.
+Require HoTT.Categories.Category.Morphisms.
 (** ** Classification of path space *)
-Require Category.Paths.
+Require HoTT.Categories.Category.Paths.
 (** ** Universal objects *)
-Require Category.Objects.
+Require HoTT.Categories.Category.Objects.
 (** ** Product precategories *)
-Require Category.Prod.
+Require HoTT.Categories.Category.Prod.
 (** ** Dependent product precategories *)
-Require Category.Pi.
+Require HoTT.Categories.Category.Pi.
 (** ** ∑-precategories *)
-Require Category.Sigma.
+Require HoTT.Categories.Category.Sigma.
 (** ** Strict categories *)
-Require Category.Strict.
+Require HoTT.Categories.Category.Strict.
 (** ** Coproduct precategories *)
-Require Category.Sum.
+Require HoTT.Categories.Category.Sum.
 (** ** Categories (univalent or saturated) *)
-Require Category.Univalent.
+Require HoTT.Categories.Category.Univalent.
 
 Local Set Warnings Append "-notation-overridden".
 Include Category.Core.
@@ -43,4 +43,4 @@ Include Category.Univalent.
 
 (** ** Subcategories *)
 (** For the subfolders, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)
-Require Category.Subcategory.
+Require HoTT.Categories.Category.Subcategory.

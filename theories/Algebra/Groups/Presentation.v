@@ -1,9 +1,9 @@
-Require Import Basics Types.
-Require Import Algebra.Groups.Group.
-Require Import Algebra.Groups.FreeGroup.
-Require Import Algebra.Groups.GroupCoeq.
-Require Import Spaces.Finite.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.Algebra.Groups.FreeGroup.
+Require Import HoTT.Algebra.Groups.GroupCoeq.
+Require Import HoTT.Spaces.Finite.
+Require Import HoTT.WildCat.
 
 (** In this file we develop presentations of groups. *)
 

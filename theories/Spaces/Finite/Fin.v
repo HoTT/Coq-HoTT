@@ -1,10 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Import Types.
-Require Import HSet.
-Require Import DProp.
-Require Import Spaces.Nat.
-Require Import Equiv.PathSplit.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HSet.
+Require Import HoTT.DProp.
+Require Import HoTT.Spaces.Nat.
+Require Import HoTT.Equiv.PathSplit.
 
 Local Open Scope path_scope.
 Local Open Scope nat_scope.

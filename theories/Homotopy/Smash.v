@@ -1,8 +1,8 @@
-Require Import Basics.
-Require Import Pointed.Core.
-Require Import Types.
-Require Import Colimits.Pushout.
-Require Import Cubical.
+Require Import HoTT.Basics.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Types.
+Require Import HoTT.Colimits.Pushout.
+Require Import HoTT.Cubical.
 
 Local Open Scope pointed_scope.
 Local Open Scope dpath_scope.

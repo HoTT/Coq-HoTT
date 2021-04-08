@@ -1,7 +1,7 @@
 (** * Unicode notations for natural transformations *)
-Require Export Category.Utf8 Functor.Utf8.
-Require Import NaturalTransformation.Core NaturalTransformation.Composition.Core NaturalTransformation.Dual.
-Require Import Basics.Utf8.
+Require Export HoTT.Categories.Category.Utf8 HoTT.Categories.Functor.Utf8.
+Require Import HoTT.Categories.NaturalTransformation.Core HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Dual.
+Require Import HoTT.Basics.Utf8.
 
 Infix "∘" := compose : natural_transformation_scope.
 Infix "∘ˡ" := whisker_l : natural_transformation_scope.

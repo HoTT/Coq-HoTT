@@ -3,8 +3,8 @@
 (** * Theorems about the homotopical interval. *)
 
 Require Import HoTT.Basics.
-Require Import HIT.Interval.
-Require Import Metatheory.Core Metatheory.FunextVarieties.
+Require Import HoTT.HIT.Interval.
+Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties.
 
 (** ** From an interval type, we can prove function extensionality. *)
 

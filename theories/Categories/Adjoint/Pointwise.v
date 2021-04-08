@@ -1,19 +1,19 @@
 (** * Pointwise Adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity.
-Require Import Category.Morphisms.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions.
-Require Import Functor.Pointwise.Core.
-Require NaturalTransformation.Pointwise.
-Require Functor.Pointwise.Properties.
-Require Import Category.Morphisms FunctorCategory.Morphisms.
-Require Import FunctorCategory.Core.
-Require NaturalTransformation.Identity.
-Require NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.UnitCounitCoercions.
+Require Import HoTT.Categories.Functor.Pointwise.Core.
+Require HoTT.Categories.NaturalTransformation.Pointwise.
+Require HoTT.Categories.Functor.Pointwise.Properties.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require HoTT.Categories.NaturalTransformation.Identity.
+Require HoTT.Categories.NaturalTransformation.Composition.Laws.
 Import NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
-Require Import NaturalTransformation.Paths Functor.Paths.
-Require Import Basics.PathGroupoids HProp Types.Forall HoTT.Tactics Types.Arrow.
+Require Import HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.Functor.Paths.
+Require Import HoTT.Basics.PathGroupoids HoTT.HProp HoTT.Types.Forall HoTT.Tactics HoTT.Types.Arrow.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

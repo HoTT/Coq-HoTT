@@ -1,5 +1,5 @@
 (** * Definition of a [PreCategory] *)
-Require Export Overture Basics.Notations.
+Require Export HoTT.Basics.Overture HoTT.Basics.Notations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

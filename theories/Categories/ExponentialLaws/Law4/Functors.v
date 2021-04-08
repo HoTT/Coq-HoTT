@@ -1,6 +1,6 @@
 (** * Functors about currying, between [C₁ × C₂ → D] and [C₁ → (C₂ → D)] *)
-Require Import Category.Core Category.Prod FunctorCategory.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Prod HoTT.Categories.FunctorCategory.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

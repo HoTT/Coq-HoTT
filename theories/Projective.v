@@ -1,7 +1,7 @@
-Require Import Basics Types HProp HFiber HSet.
-Require Import Truncations.
-Require Import Modalities.Descent Modalities.Separated.
-Require Import Limits.Pullback.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp HoTT.HFiber HoTT.HSet.
+Require Import HoTT.Truncations.
+Require Import HoTT.Modalities.Descent HoTT.Modalities.Separated.
+Require Import HoTT.Limits.Pullback.
 
 
 (** * Projective types *)

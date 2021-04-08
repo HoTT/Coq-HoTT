@@ -1,14 +1,14 @@
 (** * Universal morphisms *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Dual Functor.Dual.
-Require Import Category.Objects Category.Morphisms.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
+Require Import HoTT.Categories.Category.Objects HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
-Require Import Types.Unit Trunc Types.Sigma HProp HoTT.Tactics Equivalences.
-Require Import Basics.Tactics.
+Require Import HoTT.Types.Unit HoTT.Basics.Trunc HoTT.Types.Sigma HoTT.HProp HoTT.Tactics HoTT.Basics.Equivalences.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

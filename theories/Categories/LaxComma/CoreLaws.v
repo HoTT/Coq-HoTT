@@ -1,14 +1,14 @@
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Functor.Identity.
-Require Import Category.Strict.
-Require Import Functor.Composition.Core.
-Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
-Require Import Category.Morphisms FunctorCategory.Core.
-Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.
-Require Import NaturalTransformation.Composition.Laws.
-Require Import FunctorCategory.Morphisms.
-Require LaxComma.CoreParts.
-Require Import Trunc HoTT.Tactics Types.Paths Types.Sigma.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Category.Strict.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core HoTT.Categories.Pseudofunctor.RewriteLaws.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require HoTT.Categories.LaxComma.CoreParts.
+Require Import HoTT.Basics.Trunc HoTT.Tactics HoTT.Types.Paths HoTT.Types.Sigma.
 
 Import Functor.Identity.FunctorIdentityNotations.
 

@@ -1,7 +1,7 @@
 (** * Laws about composition of functors *)
-Require Import Category.Core Functor.Core Functor.Composition.Core Functor.Identity.
-Require Import Functor.Paths.
-Require Import Basics.PathGroupoids Basics.Tactics HoTT.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Functor.Paths.
+Require Import HoTT.Basics.PathGroupoids HoTT.Basics.Tactics HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

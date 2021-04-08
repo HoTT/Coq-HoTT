@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import Classes.interfaces.abstract_algebra.
+Require Import HoTT.Basics.
+Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 (* We say that a relation is a congruence if it respects the operation.
   This is technically incorrect since we are not enforcing the relation to be an equivalence relation.

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Extensions Pullback NullHomotopy Factorization PathAny.
-Require Import Modality Accessible Localization Descent Separated.
+Require Import HoTT.HFiber HoTT.Extensions HoTT.Limits.Pullback HoTT.NullHomotopy HoTT.Factorization HoTT.PathAny.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Accessible HoTT.Modalities.Localization HoTT.Modalities.Descent HoTT.Modalities.Separated.
 
 Local Open Scope path_scope.
 Local Open Scope subuniverse_scope.

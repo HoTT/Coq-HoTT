@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import TruncType HProp HSet.
-Require Import Spaces.Int Spaces.Circle.
-Require Import HIT.Coeq HIT.Flattening Truncations.
+Require Import HoTT.TruncType HoTT.HProp HoTT.HSet.
+Require Import HoTT.Spaces.Int HoTT.Spaces.Circle.
+Require Import HoTT.HIT.Coeq HoTT.HIT.Flattening HoTT.Truncations.
 
 Local Open Scope path_scope.
 

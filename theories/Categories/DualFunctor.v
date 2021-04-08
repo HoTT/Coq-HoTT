@@ -1,9 +1,9 @@
 (** * The functor [ᵒᵖ : cat → cat] *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Dual Functor.Dual.
-Require Import Functor.Composition.Core Functor.Identity.
-Require Import Cat.Core Functor.Paths.
-Require Import Basics.Trunc Types.Sigma HoTT.Tactics Types.Forall.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Cat.Core HoTT.Categories.Functor.Paths.
+Require Import HoTT.Basics.Trunc HoTT.Types.Sigma HoTT.Tactics HoTT.Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

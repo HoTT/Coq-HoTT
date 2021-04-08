@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Extensions Pullback.
-Require Import ReflectiveSubuniverse Modality Accessible Localization.
+Require Import HoTT.HFiber HoTT.Extensions HoTT.Limits.Pullback.
+Require Import HoTT.Modalities.ReflectiveSubuniverse HoTT.Modalities.Modality HoTT.Modalities.Accessible HoTT.Modalities.Localization.
 
 Local Open Scope path_scope.
 Local Open Scope subuniverse_scope.

@@ -1,6 +1,6 @@
 (** * Definition of a univalent/saturated precategory, or just "category" *)
-Require Import Category.Core Category.Morphisms.
-Require Import HoTT.Basics HoTT.Types HoTT.Tactics Trunc.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Basics HoTT.Types HoTT.Tactics HoTT.Basics.Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

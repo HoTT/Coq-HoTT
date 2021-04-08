@@ -1,10 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Defining the natural numbers from univalence and propresizing. *)
-Require Import Basics.
-Require Import Types.
-Require Import HProp.
-Require Import PropResizing.PropResizing.
-Require Import PropResizing.ImpredicativeTruncation.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HProp.
+Require Import HoTT.PropResizing.PropResizing.
+Require Import HoTT.PropResizing.ImpredicativeTruncation.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  Usually you want to use the standard [Nat] instead. *)

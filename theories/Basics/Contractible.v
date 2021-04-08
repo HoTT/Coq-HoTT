@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Contractibility *)
 
-Require Import Overture PathGroupoids.
+Require Import HoTT.Basics.Overture HoTT.Basics.PathGroupoids.
 Local Open Scope path_scope.
 
 (** Naming convention: we consistently abbreviate "contractible" as "contr".  A theorem about a space [X] being contractible (which will usually be an instance of the typeclass [Contr]) is called [contr_X]. *)

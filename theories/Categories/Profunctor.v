@@ -1,12 +1,12 @@
 (** * Profunctors *)
-Require Export Profunctor.Notations.
+Require Export HoTT.Categories.Profunctor.Notations.
 
 (** ** Definition *)
-Require Profunctor.Core.
+Require HoTT.Categories.Profunctor.Core.
 (** ** Identity Profunctor *)
-Require Profunctor.Identity.
+Require HoTT.Categories.Profunctor.Identity.
 (** ** Representable Profunctors *)
-Require Profunctor.Representable.
+Require HoTT.Categories.Profunctor.Representable.
 
 Include Profunctor.Core.
 Include Profunctor.Representable.

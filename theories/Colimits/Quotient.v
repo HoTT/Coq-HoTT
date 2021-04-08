@@ -1,11 +1,11 @@
-Require Import Basics.
-Require Import Types.
-Require Import HSet.
-Require Import HProp.
-Require Import TruncType.
-Require Import HIT.epi.
-Require Import HIT.Coeq.
-Require Import Truncations.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HSet.
+Require Import HoTT.HProp.
+Require Import HoTT.TruncType.
+Require Import HoTT.HIT.epi.
+Require Import HoTT.HIT.Coeq.
+Require Import HoTT.Truncations.
 
 Local Open Scope path_scope.
 

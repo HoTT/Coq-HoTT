@@ -1,8 +1,8 @@
 (** * Kan Extensions *)
 (** ** Definitions *)
-Require KanExtensions.Core.
+Require HoTT.Categories.KanExtensions.Core.
 (** ** Kan Extensions assemble into functors *)
-Require KanExtensions.Functors.
+Require HoTT.Categories.KanExtensions.Functors.
 
 Include KanExtensions.Core.
 Include KanExtensions.Functors.

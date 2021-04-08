@@ -3,7 +3,7 @@
     avoids creating multiple witnesses for the axiom in
     different developments.) *)
 
-Require Import Basics.Overture.
+Require Import HoTT.Basics.Overture.
 
 Axiom funext_axiom : Funext.
 Global Existing Instance funext_axiom.

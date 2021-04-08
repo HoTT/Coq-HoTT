@@ -1,7 +1,7 @@
-Require Import Basics Types PathAny.
-Require Import Pointed.Core.
-Require Import Pointed.pHomotopy.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types HoTT.PathAny.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Pointed.pHomotopy.
+Require Import HoTT.WildCat.
 
 Local Open Scope pointed_scope.
 

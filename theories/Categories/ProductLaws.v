@@ -1,7 +1,7 @@
 (** * Laws about product categories *)
 Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
-Require Import Category.Core Functor.Core InitialTerminalCategory.Core InitialTerminalCategory.Functors Category.Prod Functor.Prod Functor.Composition.Core Functor.Identity Functor.Prod.Universal Functor.Composition.Laws Functor.Prod.Universal.
-Require Import Functor.Paths.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Prod.Universal HoTT.Categories.Functor.Composition.Laws HoTT.Categories.Functor.Prod.Universal.
+Require Import HoTT.Categories.Functor.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

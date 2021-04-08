@@ -1,8 +1,8 @@
 (** * Classification of morphisms of the Grothendieck Construction of a functor to Set *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Morphisms.
-Require Import SetCategory.Core.
-Require Import Grothendieck.ToSet.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Categories.Grothendieck.ToSet.Core.
 Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.

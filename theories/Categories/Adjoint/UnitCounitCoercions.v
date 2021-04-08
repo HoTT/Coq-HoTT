@@ -1,10 +1,10 @@
 (** * Coercions between the various (co)unit definitions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
-Require Import Adjoint.UnitCounit Adjoint.Dual.
-Require Import Functor.Composition.Core Functor.Identity NaturalTransformation.Composition.Core.
-Require Import HoTT.Tactics Basics.Trunc Types.Sigma.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual HoTT.Categories.NaturalTransformation.Dual.
+Require Import HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Dual.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Tactics HoTT.Basics.Trunc HoTT.Types.Sigma.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

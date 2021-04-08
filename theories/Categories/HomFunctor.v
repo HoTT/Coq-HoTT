@@ -1,8 +1,8 @@
 (** * Hom Functor *)
-Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
-Require Category.Prod Functor.Prod.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.SetCategory.Core HoTT.Categories.Category.Dual HoTT.Categories.Functor.Composition.Core.
+Require HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod.Core.
 Import Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.
-Require Import Basics.Trunc HSet TruncType.
+Require Import HoTT.Basics.Trunc HoTT.HSet HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

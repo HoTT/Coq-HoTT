@@ -1,11 +1,11 @@
-Require Import Basics Types Pointed.
-Require Import Cubical.DPath.
-Require Import Algebra.AbGroups.
-Require Import Truncations.
-Require Import Homotopy.Suspension.
-Require Import Homotopy.ClassifyingSpace.
-Require Import Homotopy.HSpace.
-Require Import TruncType.
+Require Import HoTT.Basics HoTT.Types HoTT.Pointed.
+Require Import HoTT.Cubical.DPath.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Truncations.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Homotopy.ClassifyingSpace.
+Require Import HoTT.Homotopy.HSpace.
+Require Import HoTT.TruncType.
 
 (* Formalisation of Eilenberg-MacLane spaces *)
 

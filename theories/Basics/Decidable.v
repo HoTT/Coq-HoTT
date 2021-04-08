@@ -1,11 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import
-  Basics.Overture
-  Basics.PathGroupoids
-  Basics.Contractible
-  Basics.Equivalences
-  Basics.Trunc
-  Basics.Tactics.
+  HoTT.Basics.Overture
+  HoTT.Basics.PathGroupoids
+  HoTT.Basics.Contractible
+  HoTT.Basics.Equivalences
+  HoTT.Basics.Trunc
+  HoTT.Basics.Tactics.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 

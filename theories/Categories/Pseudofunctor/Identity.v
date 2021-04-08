@@ -1,10 +1,10 @@
 (** * Identity pseudofunctor *)
-Require Import FunctorCategory.Morphisms.
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import NaturalTransformation.Isomorphisms.
-Require Import NaturalTransformation.Paths.
-Require Import Cat.Core.
-Require Import Pseudofunctor.Core.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core.
 
 (** Bring things into scope. *)
 Import NaturalTransformation.Identity.
@@ -12,7 +12,7 @@ Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.
 Import Category.Morphisms.
 Import FunctorCategory.Core.
 
-Require Import PathGroupoids.
+Require Import HoTT.Basics.PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

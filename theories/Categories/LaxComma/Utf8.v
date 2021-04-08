@@ -1,8 +1,8 @@
 (** * Unicode notations for comma categories *)
 Local Set Warnings Append "-notation-overridden".
-Require Import LaxComma.Core.
-Require Export LaxComma.Notations.
-Require Import Basics.Utf8.
+Require Import HoTT.Categories.LaxComma.Core.
+Require Export HoTT.Categories.LaxComma.Notations.
+Require Import HoTT.Basics.Utf8.
 
 (** Set some notations for printing *)
 Notation "'CAT' ⇓ a" := (@lax_slice_category_over _ _ _ a _) : category_scope.

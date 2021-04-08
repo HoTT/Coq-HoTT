@@ -1,10 +1,10 @@
 (** * Left and right identity laws of adjunction composition *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core.
-Require Import Functor.Composition.Laws.
-Require Import Adjoint.Composition.Core Adjoint.UnitCounit Adjoint.Core Adjoint.Paths Adjoint.Identity.
-Require Adjoint.Composition.LawsTactic.
-Require Import Types.Sigma HoTT.Tactics Types.Prod Basics.PathGroupoids Types.Forall.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Functor.Composition.Laws.
+Require Import HoTT.Categories.Adjoint.Composition.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.Paths HoTT.Categories.Adjoint.Identity.
+Require HoTT.Categories.Adjoint.Composition.LawsTactic.
+Require Import HoTT.Types.Sigma HoTT.Tactics HoTT.Types.Prod HoTT.Basics.PathGroupoids HoTT.Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

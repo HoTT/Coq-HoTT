@@ -1,15 +1,15 @@
-From HoTT.Classes Require Import
-     interfaces.abstract_algebra
-     interfaces.rationals
-     interfaces.orders
-     implementations.peano_naturals
-     orders.rings
-     orders.fields
-     orders.semirings
-     theory.rings
-     theory.dec_fields
-     theory.fields
-     theory.rationals.
+Require Import
+     HoTT.Classes.interfaces.abstract_algebra
+     HoTT.Classes.interfaces.rationals
+     HoTT.Classes.interfaces.orders
+     HoTT.Classes.implementations.peano_naturals
+     HoTT.Classes.orders.rings
+     HoTT.Classes.orders.fields
+     HoTT.Classes.orders.semirings
+     HoTT.Classes.theory.rings
+     HoTT.Classes.theory.dec_fields
+     HoTT.Classes.theory.fields
+     HoTT.Classes.theory.rationals.
 
 Section cauchy.
   Context (Q : Type).

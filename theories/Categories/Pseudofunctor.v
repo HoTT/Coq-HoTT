@@ -1,12 +1,12 @@
 (** * Pseudofunctors *)
 (** ** Definition *)
-Require Pseudofunctor.Core.
+Require HoTT.Categories.Pseudofunctor.Core.
 (** ** Helper lemmas for rewriting *)
-Require Pseudofunctor.RewriteLaws.
+Require HoTT.Categories.Pseudofunctor.RewriteLaws.
 (** ** Construction from a functor to cat *)
-Require Pseudofunctor.FromFunctor.
+Require HoTT.Categories.Pseudofunctor.FromFunctor.
 (** ** Identity pseudofunctor *)
-Require Pseudofunctor.Identity.
+Require HoTT.Categories.Pseudofunctor.Identity.
 
 Include Pseudofunctor.Core.
 Include Pseudofunctor.RewriteLaws.

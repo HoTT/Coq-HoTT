@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * H-Sets *)
 
-Require Import Basics.
-Require Import Types.
-Require Import HProp.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HProp.
 
 
 Local Open Scope path_scope.

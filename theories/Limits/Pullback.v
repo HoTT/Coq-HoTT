@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber PathAny Cubical.PathSquare.
-Require Import Diagrams.CommutativeSquares.
+Require Import HoTT.HFiber HoTT.PathAny HoTT.Cubical.PathSquare.
+Require Import HoTT.Diagrams.CommutativeSquares.
 
 Local Open Scope path_scope.
 

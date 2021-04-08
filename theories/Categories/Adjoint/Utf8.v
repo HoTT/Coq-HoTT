@@ -1,6 +1,6 @@
-Require Import Adjoint.Core Adjoint.Dual Adjoint.Composition.Core.
-Require Export Adjoint.Notations.
-Require Import Basics.Utf8.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.Dual HoTT.Categories.Adjoint.Composition.Core.
+Require Export HoTT.Categories.Adjoint.Notations.
+Require Import HoTT.Basics.Utf8.
 
 Infix "⊣" := Adjunction : type_scope.
 

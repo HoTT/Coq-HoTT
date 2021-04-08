@@ -1,11 +1,11 @@
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.
-Require Import Algebra.AbGroups.
-Require Import Truncations.
-Require Import Spaces.Nat.
-Require Import Modalities.ReflectiveSubuniverse.
-Require Import WildCat.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Pointed.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Truncations.
+Require Import HoTT.Spaces.Nat.
+Require Import HoTT.Modalities.ReflectiveSubuniverse.
+Require Import HoTT.WildCat.
 
 Local Open Scope nat_scope.
 Local Open Scope pointed_scope.

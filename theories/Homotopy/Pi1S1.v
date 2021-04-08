@@ -1,9 +1,9 @@
-Require Import Basics Types.
-Require Import Pointed.
-Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
-Require Import Algebra.AbGroups.
-Require Import Homotopy.HomotopyGroup.
-Require Import Truncations.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Pointed.
+Require Import HoTT.Spaces.Int HoTT.Spaces.Circle HoTT.Spaces.Spheres.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Homotopy.HomotopyGroup.
+Require Import HoTT.Truncations.
 
 (** The fundamental group of the 1-sphere *)
 

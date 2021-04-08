@@ -1,5 +1,5 @@
 (** * Composition of natural transformations *)
-Require Import Category.Core Functor.Core Functor.Composition.Core NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

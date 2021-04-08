@@ -1,13 +1,13 @@
-Require Export Basics.Notations.
-Require Export Basics.Overture.
-Require Export Basics.UniverseLevel.
-Require Export Basics.PathGroupoids.
-Require Export Basics.Contractible.
-Require Export Basics.Equivalences.
-Require Export Basics.Trunc.
-Require Export Basics.Decidable.
-Require Export Basics.Utf8.
-Require Export Basics.Tactics.
+Require Export HoTT.Basics.Notations.
+Require Export HoTT.Basics.Overture.
+Require Export HoTT.Basics.UniverseLevel.
+Require Export HoTT.Basics.PathGroupoids.
+Require Export HoTT.Basics.Contractible.
+Require Export HoTT.Basics.Equivalences.
+Require Export HoTT.Basics.Trunc.
+Require Export HoTT.Basics.Decidable.
+Require Export HoTT.Basics.Utf8.
+Require Export HoTT.Basics.Tactics.
 
-Require Export Basics.Nat.
-Require Export Basics.Numeral.
+Require Export HoTT.Basics.Nat.
+Require Export HoTT.Basics.Numeral.

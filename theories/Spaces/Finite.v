@@ -1,5 +1,5 @@
-Require Export Finite.Fin.
-Require Export Finite.FinNat.
-Require Export Finite.FinInduction.
-Require Export Finite.Finite.
-Require Export Finite.Tactics.
+Require Export HoTT.Finite.Fin.
+Require Export HoTT.Finite.FinNat.
+Require Export HoTT.Finite.FinInduction.
+Require Export HoTT.Finite.Finite.
+Require Export HoTT.Finite.Tactics.

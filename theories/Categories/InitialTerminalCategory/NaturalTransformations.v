@@ -1,7 +1,7 @@
 (** * Natural transformations between functors from initial categories and to terminal categories *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Paths NaturalTransformation.Paths.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Import NatCategory Contractible.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core HoTT.Categories.Functor.Paths HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require Import HoTT.Categories.NatCategory HoTT.Basics.Contractible.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

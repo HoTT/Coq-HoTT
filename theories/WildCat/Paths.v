@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import WildCat.Core.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
 
 (** * Path groupoids as wild categories *)
 

@@ -1,8 +1,8 @@
 (** * Subcategories *)
 (** ** Full *)
-Require Subcategory.Full.
+Require HoTT.Categories.Category.Subcategory.Full.
 (** ** Wide *)
-Require Subcategory.Wide.
+Require HoTT.Categories.Category.Subcategory.Wide.
 
 Include Subcategory.Full.
 Include Subcategory.Wide.

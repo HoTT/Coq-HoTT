@@ -1,7 +1,7 @@
-Require Import Basics.
-Require Import Types.
-Require Import Cubical.DPath.
-Require Import Cubical.PathSquare.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Cubical.DPath.
+Require Import HoTT.Cubical.PathSquare.
 
 Declare Scope dsquare_scope.
 Delimit Scope dsquare_scope with dsquare.

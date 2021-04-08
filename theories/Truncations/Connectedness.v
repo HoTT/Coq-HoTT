@@ -1,15 +1,15 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
-Require Import Basics.
-Require Import Types.
-Require Import TruncType.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.TruncType.
 
-Require Import HProp.
-Require Import Extensions.
-Require Import Factorization.
-Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
-Require Import Modalities.Descent Modalities.Separated.
-Require Import Truncations.Core.
+Require Import HoTT.HProp.
+Require Import HoTT.Extensions.
+Require Import HoTT.Factorization.
+Require Export HoTT.Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
+Require Import HoTT.Modalities.Descent HoTT.Modalities.Separated.
+Require Import HoTT.Truncations.Core.
 
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.

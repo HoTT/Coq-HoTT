@@ -1,7 +1,7 @@
 (** * Profunctors *)
-Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod.Core SetCategory.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Prod HoTT.Categories.Category.Dual HoTT.Categories.Functor.Prod.Core HoTT.Categories.SetCategory.Core.
 Local Set Warnings Append "-notation-overridden".
-Require Import Basics.Notations.
+Require Import HoTT.Basics.Notations.
 Local Set Warnings Append "notation-overridden".
 
 Set Universe Polymorphism.

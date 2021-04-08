@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import WildCat.Core.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
 
 
 (** A wild category is pointed if the initial and terminal object are the same. *)

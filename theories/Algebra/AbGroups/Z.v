@@ -1,6 +1,6 @@
-Require Import Basics Types.
-Require Import Spaces.Int.
-Require Import Algebra.AbGroups.AbelianGroup.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Spaces.Int.
+Require Import HoTT.Algebra.AbGroups.AbelianGroup.
 
 (** The group of integers. *)
 

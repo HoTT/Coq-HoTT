@@ -1,14 +1,14 @@
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.Core.
-Require Import Pointed.Loops.
-Require Import Pointed.pMap.
-Require Import Pointed.pHomotopy.
-Require Import Pointed.pTrunc.
-Require Import Pointed.pEquiv.
-Require Import Homotopy.Suspension.
-Require Import Homotopy.Freudenthal.
-Require Import Truncations.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Pointed.Loops.
+Require Import HoTT.Pointed.pMap.
+Require Import HoTT.Pointed.pHomotopy.
+Require Import HoTT.Pointed.pTrunc.
+Require Import HoTT.Pointed.pEquiv.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Homotopy.Freudenthal.
+Require Import HoTT.Truncations.
 
 Generalizable Variables X A B f g n.
 

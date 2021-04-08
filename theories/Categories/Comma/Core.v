@@ -1,9 +1,9 @@
 (** * Comma categories *)
-Require Import Category.Core Functor.Core.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Functor.Identity.
-Require Import Category.Strict.
-Require Import HoTT.Basics HoTT.Types Trunc HoTT.Tactics HProp.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Category.Strict.
+Require Import HoTT.Basics HoTT.Types HoTT.Basics.Trunc HoTT.Tactics HoTT.HProp.
 Import Functor.Identity.FunctorIdentityNotations.
 
 Set Universe Polymorphism.

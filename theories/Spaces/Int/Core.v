@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import Spaces.Pos.
+Require Import HoTT.Basics.
+Require Import HoTT.Spaces.Pos.
 
 (** * The Integers. *)
 

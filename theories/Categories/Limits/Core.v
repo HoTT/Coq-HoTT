@@ -1,14 +1,14 @@
 (** * Limits and Colimits *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core.
-Require Import ExponentialLaws.Law1.Functors FunctorCategory.Core.
-Require Import UniversalProperties KanExtensions.Core InitialTerminalCategory.Core NatCategory.
-Require Import Functor.Paths NaturalTransformation.Paths.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.ExponentialLaws.Law1.Functors HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.UniversalProperties HoTT.Categories.KanExtensions.Core HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.NatCategory.
+Require Import HoTT.Categories.Functor.Paths HoTT.Categories.NaturalTransformation.Paths.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
-Require Import Equivalences.
+Require Import HoTT.Basics.Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

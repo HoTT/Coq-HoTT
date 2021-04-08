@@ -23,8 +23,8 @@
 
 *)
 
-Require Import HoTT.
-Require Import Spaces.Nat.
+Require Import HoTT.HoTT.
+Require Import HoTT.Spaces.Nat.
 Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties HoTT.Metatheory.UnivalenceImpliesFunext.
 
 Local Open Scope nat_scope.

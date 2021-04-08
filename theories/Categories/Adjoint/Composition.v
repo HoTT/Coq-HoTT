@@ -1,10 +1,10 @@
 (** * Adjunction composition *)
 (** ** Definition *)
-Require Adjoint.Composition.Core.
+Require HoTT.Categories.Adjoint.Composition.Core.
 (** ** Associativity *)
-Require Adjoint.Composition.AssociativityLaw.
+Require HoTT.Categories.Adjoint.Composition.AssociativityLaw.
 (** * Left and right identity laws *)
-Require Adjoint.Composition.IdentityLaws.
+Require HoTT.Categories.Adjoint.Composition.IdentityLaws.
 
 Include Adjoint.Composition.Core.
 Include Adjoint.Composition.AssociativityLaw.

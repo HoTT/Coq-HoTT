@@ -1,27 +1,27 @@
 (** * Adjunctions *)
 (** ** Definitions *)
-Require Adjoint.Core.
+Require HoTT.Categories.Adjoint.Core.
 (** *** unit+UMP *)
 (** *** counit+UMP *)
 (** *** unit+counit+zig+zag *)
-Require Adjoint.UnitCounit.
+Require HoTT.Categories.Adjoint.UnitCounit.
 (** *** universal morphisms *)
-Require Adjoint.UniversalMorphisms.
+Require HoTT.Categories.Adjoint.UniversalMorphisms.
 (** *** hom-set isomorphism *)
-Require Adjoint.Hom.
+Require HoTT.Categories.Adjoint.Hom.
 (** ** Coercions between various definitions *)
-Require Adjoint.UnitCounitCoercions.
-Require Adjoint.HomCoercions.
+Require HoTT.Categories.Adjoint.UnitCounitCoercions.
+Require HoTT.Categories.Adjoint.HomCoercions.
 (** ** Opposite adjunctions *)
-Require Adjoint.Dual.
+Require HoTT.Categories.Adjoint.Dual.
 (** ** Path spaces of adjunctions *)
-Require Adjoint.Paths.
+Require HoTT.Categories.Adjoint.Paths.
 (** ** Composition *)
-Require Adjoint.Composition.
+Require HoTT.Categories.Adjoint.Composition.
 (** ** Pointwise adjunctions *)
-Require Adjoint.Pointwise.
+Require HoTT.Categories.Adjoint.Pointwise.
 (** ** Functoriality of any adjoint construction *)
-Require Adjoint.Functorial.
+Require HoTT.Categories.Adjoint.Functorial.
 
 Include Adjoint.Core.
 Include Adjoint.UnitCounit.
@@ -35,4 +35,4 @@ Include Adjoint.Composition.
 Include Adjoint.Pointwise.
 Include Adjoint.Functorial.Core.
 
-Require Export Adjoint.Notations.
+Require Export HoTT.Categories.Adjoint.Notations.

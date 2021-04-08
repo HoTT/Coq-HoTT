@@ -1,7 +1,7 @@
 (** * Product Category *)
-Require Import Basics.Tactics.
-Require Import Category.Core Category.Strict.
-Require Import Types.Prod.
+Require Import HoTT.Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Strict.
+Require Import HoTT.Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

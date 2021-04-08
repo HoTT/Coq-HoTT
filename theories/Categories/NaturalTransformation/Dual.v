@@ -1,7 +1,7 @@
 (** * Opposite natural transformations *)
-Require Category.Dual Functor.Dual.
+Require HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
 Import Category.Dual.CategoryDualNotations Functor.Dual.FunctorDualNotations.
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

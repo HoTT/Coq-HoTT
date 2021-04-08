@@ -1,9 +1,9 @@
 (** * Unicode notations for categories *)
-Require Import Category.Core Category.Morphisms Category.Dual Category.Prod Category.Sum Category.Pi.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms HoTT.Categories.Category.Dual HoTT.Categories.Category.Prod HoTT.Categories.Category.Sum HoTT.Categories.Category.Pi.
 Local Set Warnings Append "-notation-overridden".
-Require Export Category.Notations.
+Require Export HoTT.Categories.Category.Notations.
 Local Set Warnings Append "notation-overridden".
-Require Import Basics.Utf8.
+Require Import HoTT.Basics.Utf8.
 
 Infix "∘" := compose : morphism_scope.
 Notation "m ⁻¹" := (morphism_inverse m) : morphism_scope.

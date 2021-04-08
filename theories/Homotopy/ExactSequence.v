@@ -1,11 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types.
-Require Import SuccessorStructure.
-Require Import WildCat.
-Require Import Pointed.
-Require Import ReflectiveSubuniverse Modality Modalities.Identity Modalities.Descent.
-Require Import Truncations.
-Require Import HFiber.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Homotopy.SuccessorStructure.
+Require Import HoTT.WildCat.
+Require Import HoTT.Pointed.
+Require Import HoTT.Modalities.ReflectiveSubuniverse HoTT.Modalities.Modality HoTT.Modalities.Identity HoTT.Modalities.Descent.
+Require Import HoTT.Truncations.
+Require Import HoTT.HFiber.
 
 Local Open Scope succ_scope.
 Open Scope pointed_scope.

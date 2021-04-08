@@ -1,6 +1,6 @@
-Require Import Basics.
-Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
+Require Import HoTT.Basics.
+Require Import HoTT.Spaces.Pos.
+Require Import HoTT.Spaces.Int.Core.
 
 Local Open Scope int_scope.
 

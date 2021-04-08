@@ -1,8 +1,8 @@
-Require Import Basics.
-Require Import Cubical.DPath.
-Require Import Cubical.PathSquare.
-Require Import Cubical.DPathSquare.
-Require Import Types.Paths Types.Prod.
+Require Import HoTT.Basics.
+Require Import HoTT.Cubical.DPath.
+Require Import HoTT.Cubical.PathSquare.
+Require Import HoTT.Cubical.DPathSquare.
+Require Import HoTT.Types.Paths HoTT.Types.Prod.
 
 Declare Scope cube_scope.
 Delimit Scope cube_scope with cube.

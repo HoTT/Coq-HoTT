@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import Pos.Core.
+Require Import HoTT.Basics.
+Require Import HoTT.Spaces.Pos.Core.
 
 Local Open Scope positive_scope.
 

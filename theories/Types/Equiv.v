@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
 Require Import HoTT.Basics.
-Require Import Types.Prod Types.Sigma Types.Forall Types.Arrow Types.Paths.
+Require Import HoTT.Types.Prod HoTT.Types.Sigma HoTT.Types.Forall HoTT.Types.Arrow HoTT.Types.Paths.
 
 Local Open Scope path_scope.
 

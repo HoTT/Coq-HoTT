@@ -1,4 +1,4 @@
 (** * Category of sections of a functor *)
-Require CategoryOfSections.Core.
+Require HoTT.Categories.CategoryOfSections.Core.
 
 Include CategoryOfSections.Core.

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types.
-Require Import PathAny.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.PathAny.
+Require Import HoTT.WildCat.
 
 Declare Scope pointed_scope.
 

@@ -12,7 +12,7 @@
 
 Set Implicit Arguments.
 
-Require Export Basics.Notations.
+Require Export HoTT.Basics.Notations.
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.

@@ -1,14 +1,14 @@
 (** * Adjunctions as universal morphisms *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import Functor.Dual NaturalTransformation.Dual Category.Dual.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Functor.Dual HoTT.Categories.NaturalTransformation.Dual HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.UnitCounitCoercions HoTT.Categories.Adjoint.Dual.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
-Require Import UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Import HProp Types.Sigma HoTT.Tactics.
+Require Import HoTT.Categories.UniversalProperties HoTT.Categories.Comma.Dual HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require Import HoTT.HProp HoTT.Types.Sigma HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

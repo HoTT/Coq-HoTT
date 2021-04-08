@@ -1,4 +1,4 @@
-Require Import Basics.Overture.
+Require Import HoTT.Basics.Overture.
 
 (** TODO: Clean up *)
 (** This module implements various tactics used to simplify the goals produced by Program,

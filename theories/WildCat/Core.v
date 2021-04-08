@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 
 (** * Wild categories, functors, and transformations *)
 

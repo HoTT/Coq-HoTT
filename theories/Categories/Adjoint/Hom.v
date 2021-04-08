@@ -1,13 +1,13 @@
 (** * Hom-Set Adjunctions *)
-Require Import Category.Core Functor.Core.
-Require Import Adjoint.Core Adjoint.UnitCounit.
-Require Import FunctorCategory.Core Category.Morphisms.
-Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod Functor.Prod.Core.
-Require Import HomFunctor NaturalTransformation.Isomorphisms.
-Require Import Functor.Composition.Core.
-Require Import FunctorCategory.Morphisms.
-Require Import Functor.Identity.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit.
+Require Import HoTT.Categories.FunctorCategory.Core HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
+Require Import HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod.Core.
+Require Import HoTT.Categories.HomFunctor HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Functor.Identity.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

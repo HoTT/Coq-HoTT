@@ -1,4 +1,4 @@
 (** * Functors between [set_cat] and [prop_cat] *)
-Require SetCategory.Functors.SetProp.
+Require HoTT.Categories.SetCategory.Functors.SetProp.
 
 Include SetCategory.Functors.SetProp.

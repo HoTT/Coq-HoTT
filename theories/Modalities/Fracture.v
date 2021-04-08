@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions Pullback NullHomotopy.
-Require Import Modality Lex Open Closed Nullification.
+Require Import HoTT.Extensions HoTT.Limits.Pullback HoTT.NullHomotopy.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Lex HoTT.Modalities.Open HoTT.Modalities.Closed HoTT.Modalities.Nullification.
 
 Local Open Scope path_scope.
 

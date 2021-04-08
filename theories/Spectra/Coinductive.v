@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.
-Require Import HoTT.Truncations Homotopy.Suspension.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Pointed.
+Require Import HoTT.Truncations HoTT.Homotopy.Suspension.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

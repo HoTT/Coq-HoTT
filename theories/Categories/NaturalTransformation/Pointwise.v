@@ -1,7 +1,7 @@
 (** * Pointwise Natural Transformations *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import Functor.Pointwise.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.FunctorCategory.Core HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Functor.Pointwise.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

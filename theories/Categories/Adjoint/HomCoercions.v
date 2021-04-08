@@ -1,15 +1,15 @@
 (** * Coercions between hom-set adjunctions and unit+counit adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual Adjoint.Hom.
-Require Import FunctorCategory.Core Category.Morphisms.
-Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod.
-Require Import HomFunctor NaturalTransformation.Isomorphisms.
-Require Import Functor.Composition.Core.
-Require Import FunctorCategory.Morphisms.
-Require Import Functor.Identity.
-Require Import SetCategory.Core SetCategory.Morphisms.
-Require Import Basics.Trunc HProp HSet Types.Sigma HoTT.Tactics Equivalences TruncType.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.UnitCounitCoercions HoTT.Categories.Adjoint.Dual HoTT.Categories.Adjoint.Hom.
+Require Import HoTT.Categories.FunctorCategory.Core HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
+Require Import HoTT.Categories.Category.Prod.
+Require Import HoTT.Categories.HomFunctor HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.SetCategory.Core HoTT.Categories.SetCategory.Morphisms.
+Require Import HoTT.Basics.Trunc HoTT.HProp HoTT.HSet HoTT.Types.Sigma HoTT.Tactics HoTT.Basics.Equivalences HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

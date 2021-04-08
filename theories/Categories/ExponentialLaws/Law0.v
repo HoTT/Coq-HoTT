@@ -1,6 +1,6 @@
 (** * Exponential laws about the initial category *)
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity Functor.Composition.Core.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors InitialTerminalCategory.NaturalTransformations.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors HoTT.Categories.InitialTerminalCategory.NaturalTransformations.
 Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.

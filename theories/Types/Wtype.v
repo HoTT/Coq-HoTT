@@ -2,7 +2,7 @@
 (** * Theorems about W-types (well-founded trees) *)
 
 Require Import HoTT.Basics.
-Require Import Types.Forall Types.Sigma Types.Paths Types.Unit.
+Require Import HoTT.Types.Forall HoTT.Types.Sigma HoTT.Types.Paths HoTT.Types.Unit.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B C f g n.

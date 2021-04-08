@@ -1,8 +1,8 @@
-Require Import Basics.
-Require Import Types.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
 Require Import HoTT.Tactics.
-Require Import Diagrams.CommutativeSquares.
-Require Import Diagrams.Graph.
+Require Import HoTT.Diagrams.CommutativeSquares.
+Require Import HoTT.Diagrams.Graph.
 
 Local Open Scope path_scope.
 

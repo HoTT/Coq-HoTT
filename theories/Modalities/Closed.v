@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp TruncType Extensions.
-Require Import Modality Accessible Nullification Lex Topological.
-Require Import Colimits.Pushout Homotopy.Join.
+Require Import HoTT.HProp HoTT.TruncType HoTT.Extensions.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Accessible HoTT.Modalities.Nullification HoTT.Modalities.Lex HoTT.Modalities.Topological.
+Require Import HoTT.Colimits.Pushout HoTT.Homotopy.Join.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

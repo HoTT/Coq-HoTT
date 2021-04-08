@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.
+Require Import HoTT.Types.Sigma HoTT.Types.Forall HoTT.Types.Arrow HoTT.Types.Paths HoTT.Types.Equiv HoTT.Types.Bool HoTT.Types.Prod.
 
 Local Open Scope path_scope.
 

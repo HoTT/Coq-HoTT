@@ -2,11 +2,11 @@
 (** * Equivalences *)
 
 Require Import
-  Basics.Overture
-  Basics.PathGroupoids
-  Basics.Notations
-  Basics.Contractible
-  Basics.Tactics.
+  HoTT.Basics.Overture
+  HoTT.Basics.PathGroupoids
+  HoTT.Basics.Notations
+  HoTT.Basics.Contractible
+  HoTT.Basics.Tactics.
 Local Open Scope path_scope.
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].

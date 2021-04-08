@@ -1,12 +1,12 @@
 (** * Composition of adjunctions [F' ⊣ G' → F ⊣ G → (F' ∘ F) ⊣ (G ∘ G')] *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import Functor.Identity NaturalTransformation.Identity.
-Require NaturalTransformation.Composition.Laws.
-Require Import Adjoint.UnitCounit Adjoint.Core.
-Require Import Category.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Identity.
+Require HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Core.
+Require Import HoTT.Categories.Category.Morphisms.
 Require Import HoTT.Tactics.
-Require Import Basics.Tactics.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

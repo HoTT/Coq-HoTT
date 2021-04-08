@@ -1,17 +1,17 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Import Types.
-Require Import HSet.
-Require Import HProp.
-Require Import DProp.
-Require Import Spaces.Nat.
-Require Import HFiber.
-Require Import Factorization.
-Require Import Equiv.PathSplit.
-Require Import Truncations.
-Require Import Colimits.Quotient.
-Require Import Projective.
-Require Import Fin.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HSet.
+Require Import HoTT.HProp.
+Require Import HoTT.DProp.
+Require Import HoTT.Spaces.Nat.
+Require Import HoTT.HFiber.
+Require Import HoTT.Factorization.
+Require Import HoTT.Equiv.PathSplit.
+Require Import HoTT.Truncations.
+Require Import HoTT.Colimits.Quotient.
+Require Import HoTT.Projective.
+Require Import HoTT.Spaces.Finite.Fin.
 
 Local Open Scope path_scope.
 Local Open Scope nat_scope.

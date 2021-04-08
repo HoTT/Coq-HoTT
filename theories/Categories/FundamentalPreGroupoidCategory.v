@@ -1,6 +1,6 @@
 (** * Fundamental Pregroupoids *)
-Require Import Category.Core Category.Morphisms.
-Require Import HoTT.Truncations PathGroupoids.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Truncations HoTT.Basics.PathGroupoids.
 Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.

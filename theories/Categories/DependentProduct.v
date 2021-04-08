@@ -1,8 +1,8 @@
 (** * Dependent Product; oplax limit of a functor to Cat *)
-Require Import Category.Core Functor.Core.
-Require Import Cat.Core.
-Require Grothendieck.ToCat.
-Require Import CategoryOfSections.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Cat.Core.
+Require HoTT.Categories.Grothendieck.ToCat.
+Require Import HoTT.Categories.CategoryOfSections.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,6 +1,6 @@
 (** * Functoriality of functor category construction *)
-Require Import Basics.
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Pointwise.Core Functor.Pointwise.Properties Category.Dual Category.Prod Cat.Core ExponentialLaws.Law4.Functors.
+Require Import HoTT.Basics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.Functor.Pointwise.Core HoTT.Categories.Functor.Pointwise.Properties HoTT.Categories.Category.Dual HoTT.Categories.Category.Prod HoTT.Categories.Cat.Core HoTT.Categories.ExponentialLaws.Law4.Functors.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

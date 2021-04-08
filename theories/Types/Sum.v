@@ -2,9 +2,9 @@
 (** * Theorems about disjoint unions *)
 
 Require Import HoTT.Basics.
-Require Import Types.Empty Types.Unit Types.Prod Types.Sigma.
+Require Import HoTT.Types.Empty HoTT.Types.Unit HoTT.Types.Prod HoTT.Types.Sigma.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
-Require Import Types.Bool Types.Forall.
+Require Import HoTT.Types.Bool HoTT.Types.Forall.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.

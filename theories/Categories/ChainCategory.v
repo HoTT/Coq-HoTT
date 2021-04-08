@@ -1,7 +1,7 @@
 (** * The category ω of (ℕ, ≤), and the chain categories [[n]] *)
-Require Import Category.Core Category.Subcategory.Full.
-Require Import Category.Sigma.Univalent.
-Require Import Category.Morphisms Category.Univalent Category.Strict.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Subcategory.Full.
+Require Import HoTT.Categories.Category.Sigma.Univalent.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.Category.Univalent HoTT.Categories.Category.Strict.
 Require Import HoTT.Basics HoTT.Types HoTT.DProp HoTT.TruncType HoTT.Spaces.Nat.
 
 Set Universe Polymorphism.

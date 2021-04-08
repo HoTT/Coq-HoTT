@@ -2,7 +2,7 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
-Require Export Basics.Notations Basics.Datatypes Basics.Logic.
+Require Export HoTT.Basics.Notations HoTT.Basics.Datatypes HoTT.Basics.Logic.
 
 
 Declare ML Module "number_string_notation_plugin".

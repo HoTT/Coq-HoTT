@@ -1,6 +1,6 @@
-Require Import Basics.
-Require Import Pointed.Core.
-Require Import Colimits.Pushout.
+Require Import HoTT.Basics.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Colimits.Pushout.
 
 (* Here we define the Wedge sum of two pointed types *)
 

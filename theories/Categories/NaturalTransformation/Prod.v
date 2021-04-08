@@ -1,8 +1,8 @@
 (** * Natural transformations involving product categories *)
-Require Import Category.Core Functor.Core Category.Prod Functor.Prod.Core NaturalTransformation.Core.
-Require Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory.Core.
-Require Import Types.Prod.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod.Core HoTT.Categories.NaturalTransformation.Core.
+Require HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.InitialTerminalCategory.Core.
+Require Import HoTT.Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

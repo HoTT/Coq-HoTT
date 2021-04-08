@@ -1,5 +1,5 @@
 (** * Definition of a functor *)
-Require Import Category.Core.
+Require Import HoTT.Categories.Category.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

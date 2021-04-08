@@ -1,11 +1,11 @@
-Require Import Basics Types.
-Require Import Groups.Group.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.WildCat.
 
 (** Free groups are defined in Group.v. In this file we prove properties of free groups. There are various constructions of free groups to choose from, all of which can be found in the FreeGroup folder. Though, this is a bit of a lie since currently there is only one full implmentation. O:-) *)
 
 (** In this file, and in the rest of the library we choose a modified version of the free group which can be found in Kraus-Altenkirch 2018 arXiv:1805.02069. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
-Require Export Algebra.Groups.FreeGroup.ListQuotient.
+Require Export HoTT.Algebra.Groups.FreeGroup.ListQuotient.
 
 (** Properties of free groups *)
 

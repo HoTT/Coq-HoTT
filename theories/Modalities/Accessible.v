@@ -3,8 +3,8 @@
 (** * Accessible subuniverses and modalities *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions NullHomotopy.
-Require Import ReflectiveSubuniverse Modality.
+Require Import HoTT.Extensions HoTT.NullHomotopy.
+Require Import HoTT.Modalities.ReflectiveSubuniverse HoTT.Modalities.Modality.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

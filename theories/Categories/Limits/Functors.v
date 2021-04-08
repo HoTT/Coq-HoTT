@@ -1,11 +1,11 @@
 (** * (co)limits assemble into functors *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import KanExtensions.Core KanExtensions.Functors.
-Require Import Limits.Core.
-Require Import Adjoint.UniversalMorphisms.Core.
-Require Import FunctorCategory.Core.
-Require Import Adjoint.Core.
-Require Import InitialTerminalCategory.Core NatCategory.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.KanExtensions.Core HoTT.Categories.KanExtensions.Functors.
+Require Import HoTT.Categories.Limits.Core.
+Require Import HoTT.Categories.Adjoint.UniversalMorphisms.Core.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Adjoint.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.NatCategory.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

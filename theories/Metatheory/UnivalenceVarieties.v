@@ -2,8 +2,8 @@
 (** * Varieties of univalence *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Idempotents.
-Require Import Metatheory.Core.
+Require Import HoTT.Idempotents.
+Require Import HoTT.Metatheory.Core.
 Local Open Scope path_scope.
 
 (** A weaker form that only asserts that we can make equivalences into paths with a computation rule (no uniqueness rule). *)

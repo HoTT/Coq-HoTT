@@ -1,7 +1,7 @@
-Require Import Basics.
-Require Import WildCat.Core.
-Require Import WildCat.Prod.
-Require Import WildCat.NatTrans.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
+Require Import HoTT.WildCat.Prod.
+Require Import HoTT.WildCat.NatTrans.
 
 (** * Wild (2,1)-categories *)
 

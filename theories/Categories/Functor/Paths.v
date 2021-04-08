@@ -1,6 +1,6 @@
 (** * Classification of path spaces of functors *)
-Require Import Category.Core Functor.Core.
-Require Import HoTT.Basics HoTT.Types HoTT.Tactics Equivalences HProp.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Basics HoTT.Types HoTT.Tactics HoTT.Basics.Equivalences HoTT.HProp.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

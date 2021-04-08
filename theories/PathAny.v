@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import HoTT.Basics HoTT.Types.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 
