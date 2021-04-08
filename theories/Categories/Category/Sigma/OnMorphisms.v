@@ -1,8 +1,8 @@
 (** * ∑-categories on morphisms - a category with the same objects, but a ∑ type for morphisms *)
-Require Import HSet Types.Unit HoTT.Tactics Types.Forall Types.Sigma Basics.Trunc.
-Require Import Category.Core Functor.Core Category.Sigma.Core.
-Require Functor.Composition.Core Functor.Identity.
-Require Import Functor.Paths.
+Require Import HoTT.HSet HoTT.Types.Unit HoTT.Tactics HoTT.Types.Forall HoTT.Types.Sigma HoTT.Basics.Trunc.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Sigma.Core.
+Require HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Functor.Paths.
 Import Functor.Identity.FunctorIdentityNotations.
 Import Functor.Composition.Core.FunctorCompositionCoreNotations.
 

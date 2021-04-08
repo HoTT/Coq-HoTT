@@ -1,7 +1,7 @@
 (** * Opposite functors *)
-Require Category.Dual.
+Require HoTT.Categories.Category.Dual.
 Import Category.Dual.CategoryDualNotations.
-Require Import Category.Core Functor.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,6 +1,6 @@
 (** * Morphisms in cat *)
-Require Import Category.Core Functor.Core FunctorCategory.Core FunctorCategory.Morphisms NaturalTransformation.Core.
-Require Import Category.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.FunctorCategory.Morphisms HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Morphisms.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

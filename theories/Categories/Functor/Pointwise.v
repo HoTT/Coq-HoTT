@@ -1,6 +1,6 @@
 (** * Pointwise functors (functoriality of the functor category construction) *)
-Require Functor.Pointwise.Core.
-Require Functor.Pointwise.Properties.
+Require HoTT.Categories.Functor.Pointwise.Core.
+Require HoTT.Categories.Functor.Pointwise.Properties.
 
 Include Functor.Pointwise.Core.
 Include Functor.Pointwise.Properties.

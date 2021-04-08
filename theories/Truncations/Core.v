@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Basics Types.
-Require Import TruncType HProp.
-Require Import Modalities.Modality Modalities.Descent.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.TruncType HoTT.HProp.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Descent.
 
 (** * Truncations of types, in all dimensions. *)
 

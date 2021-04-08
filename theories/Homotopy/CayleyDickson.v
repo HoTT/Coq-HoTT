@@ -1,10 +1,10 @@
-Require Import Basics.
-Require Import Types.
-Require Import Cubical.
-Require Import Pointed.
-Require Import Homotopy.HSpace.
-Require Import Homotopy.Suspension.
-Require Import Homotopy.Join.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Cubical.
+Require Import HoTT.Pointed.
+Require Import HoTT.Homotopy.HSpace.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.Homotopy.Join.
 
 Local Open Scope mc_mult_scope.
 

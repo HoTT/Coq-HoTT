@@ -1,6 +1,6 @@
 (** * Functoriality of product of functors *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Prod.Core FunctorCategory.Core Category.Prod NaturalTransformation.Prod Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import NaturalTransformation.Paths.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core HoTT.Categories.Functor.Prod.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.Category.Prod HoTT.Categories.NaturalTransformation.Prod HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

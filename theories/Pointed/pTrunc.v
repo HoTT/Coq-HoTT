@@ -1,10 +1,10 @@
-Require Import Basics.
-Require Import Types.
-Require Import Pointed.Core.
-Require Import Pointed.pMap.
-Require Import Pointed.pEquiv.
-Require Import Pointed.Loops.
-Require Import Truncations.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Pointed.pMap.
+Require Import HoTT.Pointed.pEquiv.
+Require Import HoTT.Pointed.Loops.
+Require Import HoTT.Truncations.
 
 Local Open Scope pointed_scope.
 

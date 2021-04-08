@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 (** * Evaluating tactics on terms *)
-Require Import Basics.Overture Basics.PathGroupoids.
+Require Import HoTT.Basics.Overture HoTT.Basics.PathGroupoids.
 
 (** It sometimes happens, in the course of writing a tactic, that we have some term in an Ltac variable (more precisely, we have what Ltac calls a "constr") and we would like to act on it with some tactic such as [cbv] or [rewrite].  Ordinarily, such tactics only act on the current *goal*, and generally they have a version such as [rewrite ... in ...] which acts on something in the current *context*, but neither of these is the same as acting on a term held in an Ltac variable.
 

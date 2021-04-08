@@ -1,7 +1,7 @@
 (** * Properties of pointwise functors *)
-Require Import Category.Core Functor.Core Functor.Pointwise.Core NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Functor.Identity Functor.Paths.
-Require Import PathGroupoids Types.Forall HoTT.Tactics.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Pointwise.Core HoTT.Categories.NaturalTransformation.Core HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Paths.
+Require Import HoTT.Basics.PathGroupoids HoTT.Types.Forall HoTT.Tactics.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

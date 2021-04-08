@@ -1,21 +1,21 @@
 (** * Lax Comma Category *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Pseudofunctors.
-Require Import Cat.Core.
-Require Functor.Identity.
-Require Pseudofunctor.Identity.
-Require Import Category.Strict.
-Require Import Functor.Composition.Core.
-Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
-Require Import Category.Morphisms FunctorCategory.Core.
-Require Import Pseudofunctor.Core.
-Require Import NaturalTransformation.Composition.Laws.
-Require Import FunctorCategory.Morphisms.
-Require LaxComma.CoreLaws.
-Require Import Trunc HoTT.Tactics Types.Paths Types.Sigma.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Pseudofunctors.
+Require Import HoTT.Categories.Cat.Core.
+Require HoTT.Categories.Functor.Identity.
+Require HoTT.Categories.Pseudofunctor.Identity.
+Require Import HoTT.Categories.Category.Strict.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require HoTT.Categories.LaxComma.CoreLaws.
+Require Import HoTT.Basics.Trunc HoTT.Tactics HoTT.Types.Paths HoTT.Types.Sigma.
 Local Set Warnings Append "-notation-overridden".
-Require Import Basics.Notations.
+Require Import HoTT.Basics.Notations.
 Local Set Warnings Append "notation-overridden".
 
 Import Functor.Identity.FunctorIdentityNotations.

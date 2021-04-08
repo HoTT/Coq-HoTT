@@ -1,6 +1,6 @@
 (** * Cat, the precategory of strict categories *)
-Require Import Category.Core Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Category.Univalent Functor.Paths.
-Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Objects HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors HoTT.Categories.Functor.Core HoTT.Categories.Category.Strict HoTT.Categories.Category.Univalent HoTT.Categories.Functor.Paths.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Composition.Laws.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

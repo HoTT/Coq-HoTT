@@ -1,11 +1,11 @@
 (** * Exponential laws about products and sums in exponents *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Pointwise.Core Functor.Prod.Core.
-Require Import Category.Sum Functor.Sum NaturalTransformation.Sum.
-Require Import Functor.Paths NaturalTransformation.Paths.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import Types.Prod HoTT.Tactics ExponentialLaws.Tactics.
-Require Import ExponentialLaws.Law2.Functors.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Pointwise.Core HoTT.Categories.Functor.Prod.Core.
+Require Import HoTT.Categories.Category.Sum HoTT.Categories.Functor.Sum HoTT.Categories.NaturalTransformation.Sum.
+Require Import HoTT.Categories.Functor.Paths HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Types.Prod HoTT.Tactics HoTT.Categories.ExponentialLaws.Tactics.
+Require Import HoTT.Categories.ExponentialLaws.Law2.Functors.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

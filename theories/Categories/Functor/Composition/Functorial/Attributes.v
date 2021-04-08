@@ -1,14 +1,14 @@
 (** * Attributes of Functoriality of functor composition *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core Functor.Composition.Functorial.Core.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Functorial.
-Require Import NaturalTransformation.Isomorphisms.
-Require Import Functor.Attributes.
-Require Import FunctorCategory.Core.
-Require Import Category.Morphisms.
-Require Import SetCategory.Core.
-Require Import NaturalTransformation.Paths.
-Require Import HSet HProp HoTT.Truncations.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Composition.Functorial.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Functorial.
+Require Import HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.Functor.Attributes.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.HSet HoTT.HProp HoTT.Truncations.
 (*.
 Require Import Category.Prod  NaturalTransformation.Composition.Functorial NaturalTransformation.Composition.Laws ExponentialLaws.Law4.Functors.
 Require Import NaturalTransformation.Paths.

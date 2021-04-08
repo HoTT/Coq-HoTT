@@ -1,5 +1,5 @@
 (** * Definition of a strict category *)
-Require Export Category.Core.
+Require Export HoTT.Categories.Category.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

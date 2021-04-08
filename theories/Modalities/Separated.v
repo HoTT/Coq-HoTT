@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath.
-Require Import HFiber Extensions Factorization.
-Require Import ReflectiveSubuniverse Modality Accessible Localization Descent.
-Require Import Truncations.Core.
-Require Import Homotopy.Suspension.
+Require Import HoTT.HFiber HoTT.Extensions HoTT.Factorization.
+Require Import HoTT.Modalities.ReflectiveSubuniverse HoTT.Modalities.Modality HoTT.Modalities.Accessible HoTT.Modalities.Localization HoTT.Modalities.Descent.
+Require Import HoTT.Truncations.Core.
+Require Import HoTT.Homotopy.Suspension.
 
 Local Open Scope path_scope.
 Local Open Scope subuniverse_scope.

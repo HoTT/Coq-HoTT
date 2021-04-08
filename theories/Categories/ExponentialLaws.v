@@ -3,25 +3,25 @@
 (** ** Laws about the initial category *)
 (** *** [x⁰ ≅ 1] *)
 (** *** [0ˣ ≅ 0] if [x ≠ 0] *)
-Require ExponentialLaws.Law0.
+Require HoTT.Categories.ExponentialLaws.Law0.
 
 (** ** Laws about the terminal category *)
 (** *** [x¹ ≅ x] *)
 (** *** [1ˣ ≅ 1] *)
-Require ExponentialLaws.Law1.
+Require HoTT.Categories.ExponentialLaws.Law1.
 
 (** ** The law that a sum in an exponent is a product *)
 (** *** [yⁿ⁺ᵐ ≅ yⁿ × yᵐ] *)
-Require ExponentialLaws.Law2.
+Require HoTT.Categories.ExponentialLaws.Law2.
 
 (** ** The law that exponentiation distributes over product *)
 (** *** [(y × z)ⁿ ≅ yⁿ × zⁿ] *)
-Require ExponentialLaws.Law3.
+Require HoTT.Categories.ExponentialLaws.Law3.
 
 (** ** Currying *)
 (** *** [(yⁿ)ᵐ ≅ yⁿᵐ] *)
-Require ExponentialLaws.Law4.
+Require HoTT.Categories.ExponentialLaws.Law4.
 
 
-Require ExponentialLaws.Tactics.
+Require HoTT.Categories.ExponentialLaws.Tactics.
 Include ExponentialLaws.Tactics.

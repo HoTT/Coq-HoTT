@@ -3,9 +3,9 @@
 (** * The cumulative hierarchy [V]. *)
 
 Require Import HoTT.Basics HoTT.Basics.Utf8 HoTT.Types.
-Require Import HProp HSet TruncType.
-Require Import Colimits.SpanPushout.
-Require Import HoTT.Truncations Colimits.Quotient.
+Require Import HoTT.HProp HoTT.HSet HoTT.TruncType.
+Require Import HoTT.Colimits.SpanPushout.
+Require Import HoTT.Truncations HoTT.Colimits.Quotient.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 

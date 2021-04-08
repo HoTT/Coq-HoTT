@@ -1,8 +1,8 @@
 (** * Opposite comma categories *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
-Require Import Functor.Composition.Core Functor.Identity Functor.Paths.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual HoTT.Categories.NaturalTransformation.Dual.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Paths.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".

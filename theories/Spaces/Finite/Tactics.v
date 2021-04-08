@@ -1,5 +1,5 @@
 
-Require Import HoTT.Basics Fin.
+Require Import HoTT.Basics HoTT.Spaces.Finite.Fin.
 
 (** ** Tactics *)
 

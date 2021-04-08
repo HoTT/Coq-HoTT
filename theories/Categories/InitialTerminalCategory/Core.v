@@ -1,7 +1,7 @@
 (** * Initial and terminal category definitions *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Category.Core.
-Require Import NatCategory Contractible.
+Require Import HoTT.Categories.Category.Core.
+Require Import HoTT.Categories.NatCategory HoTT.Basics.Contractible.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

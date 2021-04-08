@@ -1,10 +1,10 @@
 (** * Groupoids *)
 (** ** Definition *)
-Require GroupoidCategory.Core.
+Require HoTT.Categories.GroupoidCategory.Core.
 (** ** Morphisms in a groupoid *)
-Require GroupoidCategory.Morphisms.
+Require HoTT.Categories.GroupoidCategory.Morphisms.
 (** ** Propositional self-duality *)
-Require GroupoidCategory.Dual.
+Require HoTT.Categories.GroupoidCategory.Dual.
 
 Include GroupoidCategory.Core.
 Include GroupoidCategory.Core.GroupoidCategoryInternals.

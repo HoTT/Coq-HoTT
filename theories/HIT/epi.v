@@ -1,9 +1,9 @@
-Require Import Basics.
-Require Import Types.
-Require Import HProp.
-Require Import HSet.
-Require Import TruncType.
-Require Import Colimits.Pushout Truncations HIT.SetCone.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HProp.
+Require Import HoTT.HSet.
+Require Import HoTT.TruncType.
+Require Import HoTT.Colimits.Pushout HoTT.Truncations HoTT.HIT.SetCone.
 
 Local Open Scope path_scope.
 

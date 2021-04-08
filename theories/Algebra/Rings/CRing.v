@@ -1,7 +1,7 @@
-Require Import Basics Types WildCat.
-Require Export Classes.interfaces.abstract_algebra.
-Require Import Algebra.AbGroups.
-Require Export Classes.theory.rings.
+Require Import HoTT.Basics HoTT.Types HoTT.WildCat.
+Require Export HoTT.Classes.interfaces.abstract_algebra.
+Require Import HoTT.Algebra.AbGroups.
+Require Export HoTT.Classes.theory.rings.
 
 (** Theory of commutative rings *)
 

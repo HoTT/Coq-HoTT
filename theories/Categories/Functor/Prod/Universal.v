@@ -1,8 +1,8 @@
 (** * Universal properties of product categories *)
-Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition.Core Functor.Prod.Core.
-Require Import Functor.Paths.
-Require Import Types.Prod HoTT.Tactics Types.Forall Types.Sigma.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Prod HoTT.Categories.NaturalTransformation.Core HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Prod.Core.
+Require Import HoTT.Categories.Functor.Paths.
+Require Import HoTT.Types.Prod HoTT.Tactics HoTT.Types.Forall HoTT.Types.Sigma.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

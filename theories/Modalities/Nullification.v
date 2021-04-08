@@ -2,10 +2,10 @@
 (** * Nullification *)
 
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
-Require Import Extensions.
-Require Import Modality Accessible.
-Require Export Localization.    (** Nullification is a special case of localization *)
-Require Import Homotopy.Suspension.
+Require Import HoTT.Extensions.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Accessible.
+Require Export HoTT.Modalities.Localization.    (** Nullification is a special case of localization *)
+Require Import HoTT.Homotopy.Suspension.
 
 Local Open Scope path_scope.
 

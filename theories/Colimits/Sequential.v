@@ -1,14 +1,14 @@
 (** We present a proof of the conjecture that sequential colimits in HoTT apropriately commute with Σ-types. As a corollary, we characterize the path space of a sequential colimit as a sequential colimit of path spaces. For the written account of these results see https://www.cs.cornell.edu/~ks858/papers/sequential_colimits_homotopy.pdf. *)
 
-Require Import Basics.
-Require Import Types.
-Require Import Diagrams.Diagram.
-Require Import Diagrams.Sequence.
-Require Import Diagrams.Cocone.
-Require Import Colimits.Colimit.
-Require Import Spaces.Nat.
-Require Import HProp.
-Require Import PathAny.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Diagrams.Diagram.
+Require Import HoTT.Diagrams.Sequence.
+Require Import HoTT.Diagrams.Cocone.
+Require Import HoTT.Colimits.Colimit.
+Require Import HoTT.Spaces.Nat.
+Require Import HoTT.HProp.
+Require Import HoTT.PathAny.
 
 Local Open Scope path_scope.
 

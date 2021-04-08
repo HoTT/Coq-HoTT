@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import HoTT.Basics.
 
 (** * Comutative squares *)
 

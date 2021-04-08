@@ -1,7 +1,7 @@
 (** * Functoriality of the construction of adjunctions *)
 (** ** Computational components *)
-Require Adjoint.Functorial.Parts.
+Require HoTT.Categories.Adjoint.Functorial.Parts.
 (** ** Functor laws *)
-Require Adjoint.Functorial.Laws.
+Require HoTT.Categories.Adjoint.Functorial.Laws.
 (** ** Adjunction functor *)
-Require Adjoint.Functorial.Core.
+Require HoTT.Categories.Adjoint.Functorial.Core.

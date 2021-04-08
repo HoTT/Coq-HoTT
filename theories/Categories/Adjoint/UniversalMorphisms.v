@@ -1,5 +1,5 @@
 (** * Adjunctions as universal morphisms *)
 (** ** Definitions *)
-Require Adjoint.UniversalMorphisms.Core.
+Require HoTT.Categories.Adjoint.UniversalMorphisms.Core.
 
 Include Adjoint.UniversalMorphisms.Core.

@@ -1,5 +1,5 @@
-Require Import Basics.
-Require Import Types.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
 
 (** * Graphs *)
 

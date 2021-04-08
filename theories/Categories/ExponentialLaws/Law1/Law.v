@@ -1,8 +1,8 @@
 (** * Exponential laws about the terminal category *)
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core Functor.Paths NaturalTransformation.Paths ExponentialLaws.Law1.Functors Functor.Composition.Core.
-Require Import InitialTerminalCategory.Core.
-Require Import Basics.Trunc HoTT.Tactics ExponentialLaws.Tactics.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Core HoTT.Categories.Functor.Paths HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.ExponentialLaws.Law1.Functors HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core.
+Require Import HoTT.Basics.Trunc HoTT.Tactics HoTT.Categories.ExponentialLaws.Tactics.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

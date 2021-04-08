@@ -1,6 +1,6 @@
-Require Import Basics Types WildCat Pointed.
-Require Import Groups.Group Groups.Subgroup Groups.Kernel.
-Require Import Homotopy.ExactSequence Modalities.Identity.
+Require Import HoTT.Basics HoTT.Types HoTT.WildCat HoTT.Pointed.
+Require Import HoTT.Algebra.Groups.Group HoTT.Algebra.Groups.Subgroup HoTT.Algebra.Groups.Kernel.
+Require Import HoTT.Homotopy.ExactSequence HoTT.Modalities.Identity.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.

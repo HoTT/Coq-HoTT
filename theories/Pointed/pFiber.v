@@ -1,9 +1,9 @@
-Require Import Basics.
-Require Import Types.
-Require Import HFiber.
-Require Import Pointed.Core.
-Require Import Pointed.pEquiv.
-Require Import Pointed.Loops.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.HFiber.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.Pointed.pEquiv.
+Require Import HoTT.Pointed.Loops.
 
 Local Open Scope pointed_scope.
 

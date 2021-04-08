@@ -1,17 +1,17 @@
 (** * Induced functors between comma categories *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual.
-Require Import Category.Prod.
-Require Import NaturalTransformation.Identity.
-Require Import FunctorCategory.Core Cat.Core.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.Category.Prod.
+Require Import HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.FunctorCategory.Core HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
-Require Import Comma.Projection.
-Require Import Types.Prod HoTT.Tactics Types.Unit.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Comma.Projection.
+Require Import HoTT.Types.Prod HoTT.Tactics HoTT.Types.Unit.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

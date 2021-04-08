@@ -1,10 +1,10 @@
 (** * Classify the path space of adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core Functor.Identity.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.
-Require Import Types Trunc.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.Core HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Types HoTT.Basics.Trunc.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

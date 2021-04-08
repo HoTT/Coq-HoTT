@@ -1,8 +1,8 @@
-Require Import Basics Types WildCat.
-Require Import Algebra.Congruence.
-Require Import Algebra.AbGroups.
-Require Import Algebra.Rings.CRing.
-Require Import Algebra.Rings.Ideal.
+Require Import HoTT.Basics HoTT.Types HoTT.WildCat.
+Require Import HoTT.Algebra.Congruence.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Algebra.Rings.CRing.
+Require Import HoTT.Algebra.Rings.Ideal.
 
 (** In this file we define the quotient of a commutative ring by an ideal *)
 

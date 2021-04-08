@@ -1,7 +1,7 @@
-From HoTT.Classes Require Import
-     interfaces.abstract_algebra
-     interfaces.rationals
-     interfaces.orders.
+Require Import
+     HoTT.Classes.interfaces.abstract_algebra
+     HoTT.Classes.interfaces.rationals
+     HoTT.Classes.interfaces.orders.
 
 Section property.
   Context (Q : Type).

@@ -1,4 +1,4 @@
 (** * Notations for structures *)
-Require Structure.Core.
+Require HoTT.Categories.Structure.Core.
 
 Include Structure.Core.StructureCoreNotations.

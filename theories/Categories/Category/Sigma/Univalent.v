@@ -1,7 +1,7 @@
 (** * Lifting saturation from categories to sigma/subcategories *)
-Require Import Category.Core Category.Morphisms.
-Require Import Category.Univalent.
-Require Import Category.Sigma.Core Category.Sigma.OnObjects Category.Sigma.OnMorphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.Category.Univalent.
+Require Import HoTT.Categories.Category.Sigma.Core HoTT.Categories.Category.Sigma.OnObjects HoTT.Categories.Category.Sigma.OnMorphisms.
 Require Import HoTT.Types HoTT.Basics HoTT.Tactics.
 
 Set Universe Polymorphism.

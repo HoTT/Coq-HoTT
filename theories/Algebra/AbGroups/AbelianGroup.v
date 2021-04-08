@@ -1,9 +1,9 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Truncations.
-Require Import HIT.Coeq.
-Require Export Algebra.Groups.
-Require Import Cubical.
-Require Import WildCat.
+Require Import HoTT.Truncations.
+Require Import HoTT.HIT.Coeq.
+Require Export HoTT.Algebra.Groups.
+Require Import HoTT.Cubical.
+Require Import HoTT.WildCat.
 
 Local Open Scope mc_add_scope.
 

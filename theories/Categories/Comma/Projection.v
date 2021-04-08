@@ -1,10 +1,10 @@
 (** * Projection functors from comma categories *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Prod Functor.Prod.Core.
-Require Import Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Comma.Core.
-Require Import Types.Prod.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors.
+Require HoTT.Categories.Comma.Core.
+Require Import HoTT.Types.Prod.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)

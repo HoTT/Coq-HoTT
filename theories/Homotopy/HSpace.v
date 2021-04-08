@@ -1,7 +1,7 @@
-Require Import Basics.
-Require Import Types.
-Require Import Truncations.
-Require Export Classes.interfaces.abstract_algebra.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Truncations.
+Require Export HoTT.Classes.interfaces.abstract_algebra.
 
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Modality Accessible.
+Require Import HoTT.Modalities.Modality HoTT.Modalities.Accessible.
 
 Local Open Scope path_scope.
 

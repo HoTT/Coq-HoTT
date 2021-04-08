@@ -1,7 +1,7 @@
-Require Import Basics.
-Require Import Types.
-Require Import WildCat.
-Require Import Pointed.Core Pointed.pMap Pointed.pHomotopy.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.WildCat.
+Require Import HoTT.Pointed.Core HoTT.Pointed.pMap HoTT.Pointed.pHomotopy.
 
 Local Open Scope pointed_scope.
 

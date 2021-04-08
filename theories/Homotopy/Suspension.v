@@ -1,13 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Import Types.
-Require Import Cubical.
-Require Import WildCat.
-Require Import Colimits.Pushout.
-Require Import NullHomotopy.
-Require Import Truncations.Core.
-Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
-Require Import Extensions.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Cubical.
+Require Import HoTT.WildCat.
+Require Import HoTT.Colimits.Pushout.
+Require Import HoTT.NullHomotopy.
+Require Import HoTT.Truncations.Core.
+Require Import HoTT.Modalities.ReflectiveSubuniverse HoTT.Modalities.Modality.
+Require Import HoTT.Extensions.
 
 (** * The suspension of a type *)
 

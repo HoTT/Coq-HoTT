@@ -1,7 +1,7 @@
 (** * Miscellaneous helper tactics for proving exponential laws *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Paths NaturalTransformation.Paths.
-Require Import HoTT.Tactics Basics.PathGroupoids Types.Forall Types.Prod.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Paths HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Tactics HoTT.Basics.PathGroupoids HoTT.Types.Forall HoTT.Types.Prod.
 
 (** These are probably more general than just exponential laws, but I haven't tried them more widely, yet. *)
 

@@ -1,6 +1,6 @@
 (** * Tactics for rewriting modulo assciativity *)
-Require Import Overture PathGroupoids.
-Require Import Tactics.BinderApply.
+Require Import HoTT.Basics.Overture HoTT.Basics.PathGroupoids.
+Require Import HoTT.Tactics.BinderApply.
 
 Local Open Scope path_scope.
 

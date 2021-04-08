@@ -1,6 +1,6 @@
-Require Import Basics Types Limits.Pullback Cubical.PathSquare.
-Require Import Algebra.Groups.Group.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types HoTT.Limits.Pullback HoTT.Cubical.PathSquare.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.WildCat.
 
 (** Pullbacks of groups are formalized by equipping the set-pullback with the desired group structure. The universal property in the category of groups is proved by saying that the corecursion principle (grp_pullback_corec) is an equivalence. *) 
 

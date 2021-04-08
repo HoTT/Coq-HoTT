@@ -1,10 +1,10 @@
 (** * The simplex category Δ, and the precategory of simplicial sets, [Δᵒᵖ → set] *)
-Require Import Basics Types Spaces.Nat.
-Require Import Category.Core Functor.Core Functor.Paths.
-Require Import SetCategory.Core.
-Require Import ChainCategory FunctorCategory.Core.
-Require Import Category.Dual.
-Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
+Require Import HoTT.Basics HoTT.Types HoTT.Spaces.Nat.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Paths.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Categories.ChainCategory HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Composition.Laws.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

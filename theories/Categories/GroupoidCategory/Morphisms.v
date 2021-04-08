@@ -1,6 +1,6 @@
 (** * Morphisms in a groupoid *)
-Require Import Category.Core Category.Morphisms Category.Univalent GroupoidCategory.Core.
-Require Import Trunc Equivalences HoTT.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms HoTT.Categories.Category.Univalent HoTT.Categories.GroupoidCategory.Core.
+Require Import HoTT.Basics.Trunc HoTT.Basics.Equivalences HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

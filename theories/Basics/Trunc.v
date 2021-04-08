@@ -2,12 +2,12 @@
 (** * Truncatedness *)
 
 Require Import
-  Basics.Overture
-  Basics.PathGroupoids
-  Basics.Contractible
-  Basics.Equivalences
-  Basics.Tactics
-  Basics.Nat.
+  HoTT.Basics.Overture
+  HoTT.Basics.PathGroupoids
+  HoTT.Basics.Contractible
+  HoTT.Basics.Equivalences
+  HoTT.Basics.Tactics
+  HoTT.Basics.Nat.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.

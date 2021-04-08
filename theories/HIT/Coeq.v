@@ -3,8 +3,8 @@
 (** * Homotopy coequalizers *)
 
 Require Import HoTT.Basics.
-Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
-Require Import Cubical.DPath.
+Require Import HoTT.Types.Paths HoTT.Types.Forall HoTT.Types.Sigma HoTT.Types.Arrow HoTT.Types.Universe.
+Require Import HoTT.Cubical.DPath.
 Local Open Scope path_scope.
 
 (** ** Definition *)

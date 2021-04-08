@@ -3,7 +3,7 @@
 (** * The flattening lemma. *)
 
 Require Import HoTT.Basics.
-Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
+Require Import HoTT.Types.Paths HoTT.Types.Forall HoTT.Types.Sigma HoTT.Types.Arrow HoTT.Types.Universe.
 Local Open Scope path_scope.
 Require Import HoTT.HIT.Coeq.
 

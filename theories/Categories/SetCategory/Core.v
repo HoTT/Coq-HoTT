@@ -1,6 +1,6 @@
 (** * PreCategories [set_cat] and [prop_cat] *)
-Require Import Category.Core Category.Strict.
-Require Import HoTT.Basics HoTT.Types HProp HSet TruncType.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Strict.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp HoTT.HSet HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

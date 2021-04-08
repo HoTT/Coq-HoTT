@@ -1,9 +1,9 @@
 (** * Limits and Colimits *)
 (** ** Definitions *)
-Require Limits.Core.
+Require HoTT.Categories.Limits.Core.
 (** ** (co)limits assemble into functors *)
 (** *** which are adjoints to Δ *)
-Require Limits.Functors.
+Require HoTT.Categories.Limits.Functors.
 
 Include Limits.Core.
 Include Limits.Functors.

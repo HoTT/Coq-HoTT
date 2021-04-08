@@ -1,10 +1,10 @@
 (** * Composition of natural transformations *)
 (** ** Composition *)
-Require NaturalTransformation.Composition.Core.
+Require HoTT.Categories.NaturalTransformation.Composition.Core.
 (** ** Functoriality *)
-Require NaturalTransformation.Composition.Functorial.
+Require HoTT.Categories.NaturalTransformation.Composition.Functorial.
 (** ** Laws about composition *)
-Require NaturalTransformation.Composition.Laws.
+Require HoTT.Categories.NaturalTransformation.Composition.Laws.
 
 Include NaturalTransformation.Composition.Core.
 Include NaturalTransformation.Composition.Functorial.

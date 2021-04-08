@@ -1,8 +1,8 @@
 (** * ∑-categories on objects - a generalization of subcategories *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Category.Core Functor.Core Category.Sigma.Core.
-Require Functor.Composition.Core Functor.Identity.
-Require Import Functor.Paths.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Sigma.Core.
+Require HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Functor.Paths.
 Import Functor.Identity.FunctorIdentityNotations.
 Import Functor.Composition.Core.FunctorCompositionCoreNotations.
 

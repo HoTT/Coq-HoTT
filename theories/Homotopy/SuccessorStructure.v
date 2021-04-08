@@ -1,7 +1,7 @@
-Require Import Basics Types.
-Require Import Spaces.Nat.
-Require Import Spaces.Int.
-Require Import Spaces.Finite.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Spaces.Nat.
+Require Import HoTT.Spaces.Int.
+Require Import HoTT.Spaces.Finite.
 
 (** * Successor Structures. *)
 

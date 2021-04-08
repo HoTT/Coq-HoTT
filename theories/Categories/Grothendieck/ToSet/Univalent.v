@@ -1,9 +1,9 @@
 (** * Saturation of the Grothendieck Construction of a functor to Set *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Univalent.
-Require Import Category.Morphisms.
-Require Import SetCategory.Core.
-Require Import Grothendieck.ToSet.Core Grothendieck.ToSet.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Univalent.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Categories.Grothendieck.ToSet.Core HoTT.Categories.Grothendieck.ToSet.Morphisms.
 Require Import HoTT.Basics.Equivalences HoTT.Basics.Trunc.
 Require Import HoTT.Types.Universe HoTT.Types.Paths HoTT.Types.Sigma.
 

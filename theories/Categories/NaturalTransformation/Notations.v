@@ -1,9 +1,9 @@
 (** * Notations for natural transformations *)
-Require NaturalTransformation.Composition.
-Require NaturalTransformation.Dual.
-Require NaturalTransformation.Identity.
-Require NaturalTransformation.Prod.
-Require NaturalTransformation.Sum.
+Require HoTT.Categories.NaturalTransformation.Composition.
+Require HoTT.Categories.NaturalTransformation.Dual.
+Require HoTT.Categories.NaturalTransformation.Identity.
+Require HoTT.Categories.NaturalTransformation.Prod.
+Require HoTT.Categories.NaturalTransformation.Sum.
 
 Include NaturalTransformation.Composition.NaturalTransformationCompositionNotations.
 Include NaturalTransformation.Dual.NaturalTransformationDualNotations.

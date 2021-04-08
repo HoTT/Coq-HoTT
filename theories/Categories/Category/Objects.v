@@ -1,5 +1,5 @@
 (** * Universal objects *)
-Require Import Category.Core Category.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Morphisms.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

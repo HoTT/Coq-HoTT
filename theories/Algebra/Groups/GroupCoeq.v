@@ -1,7 +1,7 @@
-Require Import Basics Types.
-Require Import Algebra.Groups.Group.
-Require Import HIT.Coeq.
-Require Import Algebra.Groups.FreeProduct.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.HIT.Coeq.
+Require Import HoTT.Algebra.Groups.FreeProduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

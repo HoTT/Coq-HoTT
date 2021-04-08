@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp HFiber.
-Require Import Modalities.Modality Truncations.
-Require Import Spaces.BAut.
+Require Import HoTT.HProp HoTT.HFiber.
+Require Import HoTT.Modalities.Modality HoTT.Truncations.
+Require Import HoTT.Spaces.BAut.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.

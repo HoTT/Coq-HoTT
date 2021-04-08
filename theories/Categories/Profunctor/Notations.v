@@ -1,6 +1,6 @@
 (** * Notations for profunctors *)
-Require Profunctor.Core.
-Require Profunctor.Identity.
+Require HoTT.Categories.Profunctor.Core.
+Require HoTT.Categories.Profunctor.Identity.
 
 Include Profunctor.Core.ProfunctorCoreNotations.
 Include Profunctor.Identity.ProfunctorIdentityNotations.

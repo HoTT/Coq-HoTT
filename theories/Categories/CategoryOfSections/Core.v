@@ -1,10 +1,10 @@
 (** * Category of sections *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Strict.
-Require Import Functor.Identity NaturalTransformation.Identity.
-Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
-Require Import Functor.Paths.
-Require Import Trunc HoTT.Basics HoTT.Types.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Strict.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.NaturalTransformation.Paths HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Functor.Paths.
+Require Import HoTT.Basics.Trunc HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

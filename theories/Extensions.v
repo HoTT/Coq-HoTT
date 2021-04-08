@@ -3,9 +3,9 @@
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp Equiv.PathSplit PathAny.
-Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
-Require Import HIT.Coeq Colimits.MappingCylinder.
+Require Import HoTT.HProp HoTT.Equiv.PathSplit HoTT.PathAny.
+Require Import HoTT.Cubical.DPath HoTT.Cubical.PathSquare HoTT.Cubical.DPathSquare.
+Require Import HoTT.HIT.Coeq HoTT.Colimits.MappingCylinder.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

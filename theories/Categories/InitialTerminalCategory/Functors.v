@@ -1,7 +1,7 @@
 (** * Functors to and from initial and terminal categories *)
-Require Import Category.Core Functor.Core Functor.Paths.
-Require Import InitialTerminalCategory.Core.
-Require Import NatCategory Contractible.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Paths.
+Require Import HoTT.Categories.InitialTerminalCategory.Core.
+Require Import HoTT.Categories.NatCategory HoTT.Basics.Contractible.
 Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.

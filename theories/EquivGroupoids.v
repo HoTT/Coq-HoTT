@@ -2,7 +2,7 @@
 
 (** * The pregroupid structure of [Equiv] *)
 
-Require Import Basics.Overture Basics.Equivalences Types.Equiv.
+Require Import HoTT.Basics.Overture HoTT.Basics.Equivalences HoTT.Types.Equiv.
 
 Local Open Scope equiv_scope.
 

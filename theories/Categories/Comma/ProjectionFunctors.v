@@ -1,19 +1,19 @@
 (** * Functoriality of the comma category construction with projection functors *)
-Require Import Category.Core Functor.Core.
-Require Import Category.Prod Functor.Prod.Core.
-Require Import Category.Dual Functor.Dual.
-Require Import Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors NatCategory.
-Require Import FunctorCategory.Core.
-Require Import Cat.Core.
-Require Import Functor.Paths.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod.Core.
+Require Import HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.InitialTerminalCategory.Core HoTT.Categories.InitialTerminalCategory.Functors HoTT.Categories.NatCategory.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.Functor.Paths.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
-Require Import Comma.InducedFunctors Comma.Projection.
-Require ProductLaws ExponentialLaws.Law1.Functors ExponentialLaws.Law4.Functors.
-Require Import Types.Prod Types.Forall PathGroupoids HoTT.Tactics.
+Require Import HoTT.Categories.Comma.InducedFunctors HoTT.Categories.Comma.Projection.
+Require HoTT.Categories.ProductLaws HoTT.Categories.ExponentialLaws.Law1.Functors HoTT.Categories.ExponentialLaws.Law4.Functors.
+Require Import HoTT.Types.Prod HoTT.Types.Forall HoTT.Basics.PathGroupoids HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,13 +1,13 @@
 (** * Functors to cat are pseudofunctors *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import Functor.Identity.
-Require Import Pseudofunctor.Core.
-Require Import Cat.Core.
-Require Import FunctorCategory.Core.
-Require Import FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.
-Require Import Category.Morphisms NaturalTransformation.Paths.
-Require Import Basics.PathGroupoids Basics.Trunc.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.Pseudofunctor.Core.
+Require Import HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.FunctorCategory.Morphisms HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Basics.PathGroupoids HoTT.Basics.Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

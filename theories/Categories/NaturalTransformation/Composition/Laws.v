@@ -1,5 +1,5 @@
 (** * Laws about composition of functors *)
-Require Import Category.Core Functor.Core Functor.Identity Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Identity NaturalTransformation.Composition.Core NaturalTransformation.Paths.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Core HoTT.Categories.NaturalTransformation.Identity HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

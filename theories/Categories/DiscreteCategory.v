@@ -1,5 +1,5 @@
 (** * Discrete category *)
-Require Import HoTT.Basics Category.Core GroupoidCategory.Core.
+Require Import HoTT.Basics HoTT.Categories.Category.Core HoTT.Categories.GroupoidCategory.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

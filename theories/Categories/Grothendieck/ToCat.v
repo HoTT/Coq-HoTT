@@ -1,8 +1,8 @@
 (** * Grothendieck Construction of a functor to Cat *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Pseudofunctor.Core Pseudofunctor.FromFunctor.
-Require Import Cat.Core.
-Require Import Grothendieck.PseudofunctorToCat.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core HoTT.Categories.Pseudofunctor.FromFunctor.
+Require Import HoTT.Categories.Cat.Core.
+Require Import HoTT.Categories.Grothendieck.PseudofunctorToCat.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

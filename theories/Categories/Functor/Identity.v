@@ -1,5 +1,5 @@
 (** * Identity functor *)
-Require Import Category.Core Functor.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

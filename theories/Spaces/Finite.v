@@ -1,5 +1,5 @@
-Require Export Finite.Fin.
-Require Export Finite.FinNat.
-Require Export Finite.FinInduction.
-Require Export Finite.Finite.
-Require Export Finite.Tactics.
+Require Export HoTT.Spaces.Finite.Fin.
+Require Export HoTT.Spaces.Finite.FinNat.
+Require Export HoTT.Spaces.Finite.FinInduction.
+Require Export HoTT.Spaces.Finite.Finite.
+Require Export HoTT.Spaces.Finite.Tactics.

@@ -1,4 +1,4 @@
-Require Import HoTT.Basics Types.Universe TruncType.
+Require Import HoTT.Basics HoTT.Types.Universe HoTT.TruncType.
 
 Local Open Scope path_scope.
 

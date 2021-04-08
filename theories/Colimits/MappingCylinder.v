@@ -2,8 +2,8 @@
 
 (** * Mapping Cylinders *)
 
-Require Import HoTT.Basics HoTT.Types Cubical.DPath Cubical.PathSquare.
-Require Import HIT.Coeq Colimits.Pushout.
+Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath HoTT.Cubical.PathSquare.
+Require Import HoTT.HIT.Coeq HoTT.Colimits.Pushout.
 Local Open Scope path_scope.
 
 (** As in topology, the mapping cylinder of a function [f : A -> B] is a way to replace it with an equivalent cofibration (dually to how [hfiber] replaces it with an equivalent fibration).  We can't talk *internally* in type theory about cofibrations, but we can say metatheoretically what they are: functions with the isomorphism extension property.  So while we can't literally say "let [f] be a cofibration" we can do a mostly equivalent thing and say "let [f] be a map and consider its mapping cylinder".  Replacing a map by a cofibration can be useful because it allows us to make more equalities true definitionally. *)

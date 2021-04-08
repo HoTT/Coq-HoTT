@@ -1,6 +1,6 @@
 (** * Classify the path space of natural transformations *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Equivalences HoTT.Types Trunc Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Basics.Equivalences HoTT.Types HoTT.Basics.Trunc HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

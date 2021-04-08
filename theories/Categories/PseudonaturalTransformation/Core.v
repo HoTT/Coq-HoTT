@@ -1,15 +1,15 @@
 (** * Definition of pseudonatural transformation *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Pseudofunctor.Core.
-Require Import Category.Pi.
-Require Import FunctorCategory.Core.
-Require Import Category.Morphisms FunctorCategory.Morphisms.
-Require Import Functor.Composition.Core Functor.Identity.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import NaturalTransformation.Identity.
-Require Import NaturalTransformation.Isomorphisms.
-Require Import NaturalTransformation.Paths.
-Require Import FunctorCategory.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core.
+Require Import HoTT.Categories.Category.Pi.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.NaturalTransformation.Isomorphisms.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.FunctorCategory.Core.
 Require Import HoTT.Tactics.
 
 Set Universe Polymorphism.

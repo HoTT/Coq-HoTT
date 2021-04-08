@@ -1,13 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
-Require Import WildCat.Core.
-Require Import WildCat.Equiv.
-Require Import WildCat.Type.
-Require Import WildCat.Opposite.
-Require Import WildCat.FunctorCat.
-Require Import WildCat.NatTrans.
-Require Import WildCat.Prod.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
+Require Import HoTT.WildCat.Equiv.
+Require Import HoTT.WildCat.Type.
+Require Import HoTT.WildCat.Opposite.
+Require Import HoTT.WildCat.FunctorCat.
+Require Import HoTT.WildCat.NatTrans.
+Require Import HoTT.WildCat.Prod.
 
 (** ** Two-variable hom-functors *)
 

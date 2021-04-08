@@ -1,11 +1,11 @@
 (** * Natural isomorphisms *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import NaturalTransformation.Composition.Core.
-Require Import Functor.Composition.Core.
-Require Import Category.Morphisms FunctorCategory.Morphisms.
-Require Import FunctorCategory.Core.
-Require Import NaturalTransformation.Paths.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

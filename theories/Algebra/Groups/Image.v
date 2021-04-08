@@ -1,9 +1,9 @@
-Require Import Basics Types.
-Require Import Algebra.Groups.Group.
-Require Import Algebra.Groups.Subgroup.
-Require Import WildCat.
-Require Import Truncations.
-Require Import Factorization.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.Algebra.Groups.Subgroup.
+Require Import HoTT.WildCat.
+Require Import HoTT.Truncations.
+Require Import HoTT.Factorization.
 
 (** Image of group homomorphisms *)
 

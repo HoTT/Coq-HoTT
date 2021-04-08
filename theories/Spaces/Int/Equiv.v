@@ -1,7 +1,7 @@
-Require Import Basics.
-Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
-Require Import Spaces.Int.Spec.
+Require Import HoTT.Basics.
+Require Import HoTT.Spaces.Pos.
+Require Import HoTT.Spaces.Int.Core.
+Require Import HoTT.Spaces.Int.Spec.
 
 (** ** Iteration of equivalences *)
 

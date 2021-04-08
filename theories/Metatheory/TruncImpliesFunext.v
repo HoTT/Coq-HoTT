@@ -3,7 +3,7 @@
 (** * Theorems about trunctions *)
 
 Require Import HoTT.Basics HoTT.Truncations HoTT.Types.Bool.
-Require Import Metatheory.Core Metatheory.FunextVarieties.
+Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties.
 
 (** ** We can construct an interval type as [Trunc -1 Bool] *)
 

@@ -1,6 +1,6 @@
 (** * Adjunctions *)
-Require Import Adjoint.UnitCounit.
-Require Import Basics.Notations.
+Require Import HoTT.Categories.Adjoint.UnitCounit.
+Require Import HoTT.Basics.Notations.
 
 Notation Adjunction := AdjunctionUnitCounit.
 

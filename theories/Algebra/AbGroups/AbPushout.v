@@ -1,5 +1,5 @@
-Require Import Basics Types WildCat.
-Require Import Algebra.Groups Algebra.AbGroups.AbelianGroup.
+Require Import HoTT.Basics HoTT.Types HoTT.WildCat.
+Require Import HoTT.Algebra.Groups HoTT.Algebra.AbGroups.AbelianGroup.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.

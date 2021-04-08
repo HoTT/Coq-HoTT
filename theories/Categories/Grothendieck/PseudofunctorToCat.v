@@ -1,12 +1,12 @@
 (** * Grothendieck Construction of a pseudofunctor to Cat *)
-Require Import FunctorCategory.Morphisms.
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.
-Require Import Category.Morphisms NaturalTransformation.Isomorphisms Cat.Morphisms.
-Require Import Functor.Composition.Core Functor.Composition.Laws.
-Require Import Functor.Identity.
-Require Import FunctorCategory.Core.
-Require Import Basics Types HoTT.Tactics PathGroupoids.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Pseudofunctor.Core HoTT.Categories.Pseudofunctor.RewriteLaws.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.NaturalTransformation.Isomorphisms HoTT.Categories.Cat.Morphisms.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.Functor.Composition.Laws.
+Require Import HoTT.Categories.Functor.Identity.
+Require Import HoTT.Categories.FunctorCategory.Core.
+Require Import HoTT.Basics HoTT.Types HoTT.Tactics HoTT.Basics.PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

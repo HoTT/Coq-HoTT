@@ -1,5 +1,5 @@
 (** * Opposite Category *)
-Require Import Category.Core Category.Objects.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Category.Objects.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

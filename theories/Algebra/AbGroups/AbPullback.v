@@ -1,6 +1,6 @@
-Require Import Basics Types Limits.Pullback Cubical.PathSquare.
-Require Import Algebra.Groups Algebra.AbGroups.AbelianGroup.
-Require Import WildCat.
+Require Import HoTT.Basics HoTT.Types HoTT.Limits.Pullback HoTT.Cubical.PathSquare.
+Require Import HoTT.Algebra.Groups HoTT.Algebra.AbGroups.AbelianGroup.
+Require Import HoTT.WildCat.
 
 (** Pullbacks of abelian groups. *)
 

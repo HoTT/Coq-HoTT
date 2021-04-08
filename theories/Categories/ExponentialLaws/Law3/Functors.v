@@ -1,8 +1,8 @@
 (** * Functors between an exponential of a product and a product of exponentials *)
-Require Import Category.Core Functor.Core FunctorCategory.Core Category.Prod.
-Require Import Functor.Prod Functor.Composition.Core NaturalTransformation.Composition.Laws NaturalTransformation.Composition.Core.
-Require Functor.Prod.Functorial.
-Require Import Types.Prod.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.FunctorCategory.Core HoTT.Categories.Category.Prod.
+Require Import HoTT.Categories.Functor.Prod HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws HoTT.Categories.NaturalTransformation.Composition.Core.
+Require HoTT.Categories.Functor.Prod.Functorial.
+Require Import HoTT.Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

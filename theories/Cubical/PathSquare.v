@@ -1,6 +1,6 @@
-Require Import Basics.
-Require Import Types.
-Require Import DPath.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Cubical.DPath.
 
 Declare Scope square_scope.
 Delimit Scope square_scope with square.

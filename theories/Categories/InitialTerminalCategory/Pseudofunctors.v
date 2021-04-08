@@ -1,14 +1,14 @@
 (** * Pseudofunctors from initial and terminal categories *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import Pseudofunctor.Core.
-Require Import InitialTerminalCategory.Core.
-Require Import FunctorCategory.Morphisms.
-Require Import Category.Morphisms.
-Require Import NaturalTransformation.Paths.
-Require Import NatCategory.
-Require Import Contractible PathGroupoids.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.Pseudofunctor.Core.
+Require Import HoTT.Categories.InitialTerminalCategory.Core.
+Require Import HoTT.Categories.FunctorCategory.Morphisms.
+Require Import HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.NatCategory.
+Require Import HoTT.Basics.Contractible HoTT.Basics.PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

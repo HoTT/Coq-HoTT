@@ -1,9 +1,9 @@
 (** * Functoriality of functor composition *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import Category.Prod FunctorCategory.Core NaturalTransformation.Composition.Functorial NaturalTransformation.Composition.Laws ExponentialLaws.Law4.Functors.
-Require Import NaturalTransformation.Paths.
-Require ProductLaws.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.Category.Prod HoTT.Categories.FunctorCategory.Core HoTT.Categories.NaturalTransformation.Composition.Functorial HoTT.Categories.NaturalTransformation.Composition.Laws HoTT.Categories.ExponentialLaws.Law4.Functors.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require HoTT.Categories.ProductLaws.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Equiv.BiInv Extensions HProp HFiber NullHomotopy Pullback.
-Require Import PathAny.
-Require Import HIT.Coeq Colimits.Pushout.
+Require Import HoTT.Equiv.BiInv HoTT.Extensions HoTT.HProp HoTT.HFiber HoTT.NullHomotopy HoTT.Limits.Pullback.
+Require Import HoTT.PathAny.
+Require Import HoTT.HIT.Coeq HoTT.Colimits.Pushout.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

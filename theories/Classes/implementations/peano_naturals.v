@@ -1,5 +1,5 @@
-Require Import Basics Types.
-Require Spaces.Nat.
+Require Import HoTT.Basics HoTT.Types.
+Require HoTT.Spaces.Nat.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.naturals

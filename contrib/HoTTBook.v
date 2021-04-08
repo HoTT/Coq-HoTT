@@ -57,13 +57,13 @@
 
 *)
 
-Require Import HoTT.
+Require Import HoTT.HoTT.
 Require Import HoTT.Metatheory.Core HoTT.Metatheory.IntervalImpliesFunext HoTT.Metatheory.UnivalenceImpliesFunext.
 Require HoTT.Categories.
-From HoTT.Classes Require
-  interfaces.abstract_algebra
-  interfaces.orders
-  theory.premetric.
+Require
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.premetric.
 
 
 (* END OF PREAMBLE *)

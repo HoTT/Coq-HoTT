@@ -1,8 +1,8 @@
-Require Import Basics Types Pointed.
-Require Import HFiber.
-Require Import Algebra.Groups.
-Require Import Homotopy.HomotopyGroup.
-Require Import Truncations.
+Require Import HoTT.Basics HoTT.Types HoTT.Pointed.
+Require Import HoTT.HFiber.
+Require Import HoTT.Algebra.Groups.
+Require Import HoTT.Homotopy.HomotopyGroup.
+Require Import HoTT.Truncations.
 
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.

@@ -1,5 +1,5 @@
 (** * Coproduct of natural transformations *)
-Require Import Category.Core Functor.Core Category.Sum Functor.Sum NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Sum HoTT.Categories.Functor.Sum HoTT.Categories.NaturalTransformation.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

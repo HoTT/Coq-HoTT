@@ -1,11 +1,11 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp HFiber.
-Require Import PathAny.
-Require Export Classes.interfaces.abstract_algebra.
-Require Export Classes.theory.groups.
-Require Import Pointed.Core.
-Require Import WildCat.
-Require Basics.Utf8.
+Require Import HoTT.HProp HoTT.HFiber.
+Require Import HoTT.PathAny.
+Require Export HoTT.Classes.interfaces.abstract_algebra.
+Require Export HoTT.Classes.theory.groups.
+Require Import HoTT.Pointed.Core.
+Require Import HoTT.WildCat.
+Require HoTT.Basics.Utf8.
 
 Generalizable Variables G H A B C f g.
 

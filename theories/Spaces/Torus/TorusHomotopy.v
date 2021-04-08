@@ -1,12 +1,12 @@
-Require Import Basics Types Pointed.
-Require Import Algebra.AbGroups.
-Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.Pi1S1.
-Require Import Spaces.Int Spaces.Circle.
-Require Import Truncations.
+Require Import HoTT.Basics HoTT.Types HoTT.Pointed.
+Require Import HoTT.Algebra.AbGroups.
+Require Import HoTT.Homotopy.HomotopyGroup.
+Require Import HoTT.Homotopy.Pi1S1.
+Require Import HoTT.Spaces.Int HoTT.Spaces.Circle.
+Require Import HoTT.Truncations.
 
-Require Import Spaces.Torus.Torus.
-Require Import Spaces.Torus.TorusEquivCircles.
+Require Import HoTT.Spaces.Torus.Torus.
+Require Import HoTT.Spaces.Torus.TorusEquivCircles.
 
 Local Open Scope trunc_scope.
 Local Open Scope pointed_scope.

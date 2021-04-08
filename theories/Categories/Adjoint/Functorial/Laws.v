@@ -1,15 +1,15 @@
 (** * Functoriality of the construction of adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import NaturalTransformation.Identity.
-Require Import NaturalTransformation.Paths.
-Require Import Functor.Dual NaturalTransformation.Dual Category.Dual.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.
-Require Import Adjoint.Composition.Core.
-Require Import Adjoint.Functorial.Parts.
-Require Import HProp Types.Sigma HoTT.Tactics.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Identity HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.Functor.Dual HoTT.Categories.NaturalTransformation.Dual HoTT.Categories.Category.Dual.
+Require Import HoTT.Categories.Adjoint.Core HoTT.Categories.Adjoint.UnitCounit HoTT.Categories.Adjoint.UnitCounitCoercions HoTT.Categories.Adjoint.Dual.
+Require Import HoTT.Categories.Adjoint.Composition.Core.
+Require Import HoTT.Categories.Adjoint.Functorial.Parts.
+Require Import HoTT.HProp HoTT.Types.Sigma HoTT.Tactics.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,9 +1,9 @@
-Require Import Basics.
-Require Import Types.
-Require Import Cone.
-Require Import Cocone.
-Require Import Diagram.
-Require Import Graph.
+Require Import HoTT.Basics.
+Require Import HoTT.Types.
+Require Import HoTT.Diagrams.Cone.
+Require Import HoTT.Diagrams.Cocone.
+Require Import HoTT.Diagrams.Diagram.
+Require Import HoTT.Diagrams.Graph.
 
 (** * Constant diagram *)
 

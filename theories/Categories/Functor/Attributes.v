@@ -1,6 +1,6 @@
 (** * Attributes of functors (full, faithful, split essentially surjective) *)
-Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import Basics.Trunc HIT.epi Types.Universe HSet HIT.iso HoTT.Truncations TruncType.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.HomFunctor HoTT.Categories.Category.Morphisms HoTT.Categories.Category.Dual HoTT.Categories.Functor.Dual HoTT.Categories.Category.Prod HoTT.Categories.Functor.Prod HoTT.Categories.NaturalTransformation.Core HoTT.Categories.SetCategory.Core HoTT.Categories.Functor.Composition.Core.
+Require Import HoTT.Basics.Trunc HoTT.HIT.epi HoTT.Types.Universe HoTT.HSet HoTT.HIT.iso HoTT.Truncations HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

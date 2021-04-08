@@ -1,17 +1,17 @@
 (** * Functoriality of the comma category construction *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import NaturalTransformation.Composition.Laws.
-Require Import InitialTerminalCategory.
-Require Import Functor.Paths.
-Require Functor.Identity NaturalTransformation.Identity.
-Require Import Category.Strict.
-Require Comma.Core.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Functor.Composition.Core HoTT.Categories.NaturalTransformation.Composition.Core.
+Require Import HoTT.Categories.NaturalTransformation.Composition.Laws.
+Require Import HoTT.Categories.InitialTerminalCategory.
+Require Import HoTT.Categories.Functor.Paths.
+Require HoTT.Categories.Functor.Identity HoTT.Categories.NaturalTransformation.Identity.
+Require Import HoTT.Categories.Category.Strict.
+Require HoTT.Categories.Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
-Require Import Trunc HoTT.Tactics PathGroupoids Types.Forall.
+Require Import HoTT.Basics.Trunc HoTT.Tactics HoTT.Basics.PathGroupoids HoTT.Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

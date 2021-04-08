@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Decimal Basics.Hexadecimal.
+Require Import HoTT.Basics.Overture HoTT.Basics.Decimal HoTT.Basics.Hexadecimal.
 
 (** * Decimal or Hexadecimal numbers *)
 

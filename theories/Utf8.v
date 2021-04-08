@@ -1,7 +1,7 @@
 Require Export HoTT.Basics.Utf8.
 Require Import HoTT.Basics HoTT.Types.
-Require Import Modalities.Identity.
-Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.
+Require Import HoTT.Modalities.Identity.
+Require Import HoTT.Spaces.Circle HoTT.Spaces.TwoSphere HoTT.Truncations HoTT.Homotopy.Suspension.
 
 (* Logic *)
 Notation "∀  x .. y , P" := (forall x, .. (forall y, P) ..) : type_scope.

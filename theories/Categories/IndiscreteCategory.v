@@ -1,6 +1,6 @@
 (** * Indiscrete category *)
-Require Import Category.Core Functor.Core Category.Strict Category.Univalent Category.Morphisms.
-Require Import Types.Unit Trunc HoTT.Tactics Equivalences.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.Category.Strict HoTT.Categories.Category.Univalent HoTT.Categories.Category.Morphisms.
+Require Import HoTT.Types.Unit HoTT.Basics.Trunc HoTT.Tactics HoTT.Basics.Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

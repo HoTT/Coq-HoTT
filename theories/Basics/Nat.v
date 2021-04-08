@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Decimal Basics.Hexadecimal Basics.Numeral.
+Require Import HoTT.Basics.Overture HoTT.Basics.Decimal HoTT.Basics.Hexadecimal HoTT.Basics.Numeral.
 
 (** ** Tail-recursive versions of [add] and [mul] *)
 

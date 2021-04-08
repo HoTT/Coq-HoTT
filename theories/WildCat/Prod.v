@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
-Require Import WildCat.Core.
-Require Import WildCat.Equiv.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
+Require Import HoTT.WildCat.Equiv.
 
 (** * Product categories *)
 

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
-Require Import Algebra.ooGroup.
+Require Import HoTT.Basics.
+Require Import HoTT.Algebra.ooGroup.
 
 Local Open Scope path_scope.
 

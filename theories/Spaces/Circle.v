@@ -1,10 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types.
-Require Import HProp HSet.
-Require Import Spaces.Pos Spaces.Int.
-Require Import HIT.Coeq.
-Require Import Modalities.Modality Truncations.
-Require Import Cubical.DPath.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.HProp HoTT.HSet.
+Require Import HoTT.Spaces.Pos HoTT.Spaces.Int.
+Require Import HoTT.HIT.Coeq.
+Require Import HoTT.Modalities.Modality HoTT.Truncations.
+Require Import HoTT.Cubical.DPath.
 
 (** * Theorems about the [Circle]. *)
 

@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope list_scope.
 

@@ -1,8 +1,8 @@
 (** * Grothendieck Construction of a functor to Set *)
-Require Import Category.Core Functor.Core.
-Require Import SetCategory.Core.
-Require Import Basics.Trunc HSet Types.Sigma TruncType.
-Require Import Basics.Tactics.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Basics.Trunc HoTT.HSet HoTT.Types.Sigma HoTT.TruncType.
+Require Import HoTT.Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

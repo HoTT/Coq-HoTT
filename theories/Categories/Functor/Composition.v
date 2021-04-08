@@ -1,10 +1,10 @@
 (** * Composition of functors *)
 (** ** Definition of composition *)
-Require Functor.Composition.Core.
+Require HoTT.Categories.Functor.Composition.Core.
 (** ** Functoriality of composition *)
-Require Functor.Composition.Functorial.
+Require HoTT.Categories.Functor.Composition.Functorial.
 (** ** Laws about functor composition *)
-Require Functor.Composition.Laws.
+Require HoTT.Categories.Functor.Composition.Laws.
 
 Include Functor.Composition.Core.
 Include Functor.Composition.Functorial.

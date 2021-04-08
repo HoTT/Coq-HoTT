@@ -1,9 +1,9 @@
 (** * Morphisms in [set_cat] *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Morphisms NaturalTransformation.Paths.
-Require Import Category.Univalent.
-Require Import SetCategory.Core.
-Require Import HoTT.Basics HoTT.Types HProp HSet Equivalences TruncType.
+Require Import HoTT.Categories.Category.Core HoTT.Categories.Functor.Core HoTT.Categories.NaturalTransformation.Core.
+Require Import HoTT.Categories.Category.Morphisms HoTT.Categories.NaturalTransformation.Paths.
+Require Import HoTT.Categories.Category.Univalent.
+Require Import HoTT.Categories.SetCategory.Core.
+Require Import HoTT.Basics HoTT.Types HoTT.HProp HoTT.HSet HoTT.Basics.Equivalences HoTT.TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

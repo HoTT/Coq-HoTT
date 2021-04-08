@@ -1,6 +1,6 @@
 (** * Pseudonatural Transformations *)
 
 (** ** Definition of pseudonatural transformations *)
-Require PseudonaturalTransformation.Core.
+Require HoTT.Categories.PseudonaturalTransformation.Core.
 
 Include PseudonaturalTransformation.Core.

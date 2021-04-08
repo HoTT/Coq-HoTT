@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
-Require Import WildCat.Core.
-Require Import WildCat.NatTrans.
-Require Import WildCat.Sigma.
+Require Import HoTT.Basics.
+Require Import HoTT.WildCat.Core.
+Require Import HoTT.WildCat.NatTrans.
+Require Import HoTT.WildCat.Sigma.
 
 (** * Equivalences of 0-groupoids, and split essentially surjective functors *)
 

@@ -1,8 +1,8 @@
-Require Import Basics Types Cubical WildCat.
-Require Import Truncations.
-Require Import HIT.Coeq.
-Require Import Algebra.Groups.
-Require Import Algebra.AbGroups.AbelianGroup.
+Require Import HoTT.Basics HoTT.Types HoTT.Cubical HoTT.WildCat.
+Require Import HoTT.Truncations.
+Require Import HoTT.HIT.Coeq.
+Require Import HoTT.Algebra.Groups.
+Require Import HoTT.Algebra.AbGroups.AbelianGroup.
 
 (** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
 

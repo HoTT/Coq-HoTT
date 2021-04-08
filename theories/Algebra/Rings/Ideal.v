@@ -1,6 +1,6 @@
-Require Import Basics Types.
-Require Import Algebra.Rings.CRing.
-Require Import Algebra.AbGroups.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Algebra.Rings.CRing.
+Require Import HoTT.Algebra.AbGroups.
 
 Local Open Scope mc_scope.
 

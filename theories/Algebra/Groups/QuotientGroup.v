@@ -1,13 +1,13 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HSet.
-Require Import Algebra.Groups.Group.
-Require Import Algebra.Groups.Subgroup.
-Require Import Algebra.Congruence.
-Require Export Colimits.Quotient.
-Require Export Algebra.Groups.Image.
-Require Export Algebra.Groups.Kernel.
-Require Import HSet.
-Require Import WildCat.
+Require Import HoTT.HSet.
+Require Import HoTT.Algebra.Groups.Group.
+Require Import HoTT.Algebra.Groups.Subgroup.
+Require Import HoTT.Algebra.Congruence.
+Require Export HoTT.Colimits.Quotient.
+Require Export HoTT.Algebra.Groups.Image.
+Require Export HoTT.Algebra.Groups.Kernel.
+Require Import HoTT.HSet.
+Require Import HoTT.WildCat.
 
 (** * Quotient groups *)
 

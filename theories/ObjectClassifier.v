@@ -3,7 +3,7 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Pullback.
+Require Import HoTT.HFiber HoTT.Limits.Pullback.
 
 Local Open Scope path_scope.
 

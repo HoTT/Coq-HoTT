@@ -1,6 +1,6 @@
 Require Import HoTT.Basics.
-Require Import Types.Universe Types.Paths Types.Unit.
-Require Import Metatheory.Core Metatheory.FunextVarieties.
+Require Import HoTT.Types.Universe HoTT.Types.Paths HoTT.Types.Unit.
+Require Import HoTT.Metatheory.Core HoTT.Metatheory.FunextVarieties.
 
 Generalizable All Variables.
 

@@ -1,8 +1,8 @@
 (** * Unicode notations for comma categories *)
 Local Set Warnings Append "-notation-overridden".
-Require Import Comma.Core.
-Require Export Comma.Notations.
-Require Import Basics.Utf8.
+Require Import HoTT.Categories.Comma.Core.
+Require Export HoTT.Categories.Comma.Notations.
+Require Import HoTT.Basics.Utf8.
 
 (** Set some notations for printing *)
 Notation "C ↓ a" := (@slice_category_over C a) (only printing) : category_scope.
