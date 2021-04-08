@@ -119,7 +119,7 @@ Section first_isomorphism.
 *)
 
   Definition def_first_isomorphism (s : Sort σ)
-    : (A / cong_ker f) s → (B & in_image_hom f) s.
+    : (A / cong_ker f) s → (B && in_image_hom f) s.
   Proof.
     refine (quotient_rec (cong_ker f s) (λ x, (f s x; tr (x; idpath))) _).
     intros x y p.
@@ -154,13 +154,13 @@ Section first_isomorphism.
   Global Instance is_homomorphism_first_isomorphism
     : IsHomomorphism def_first_isomorphism.
   Proof.
-    intro u. apply (oppreserving_first_isomorphism (u^^A)).
+    intro u. apply (oppreserving_first_isomorphism u.#A).
     - apply hom.
     - apply compute_op_quotient.
   Qed.
 
   Definition hom_first_isomorphism
-    : Homomorphism (A / cong_ker f) (B & in_image_hom f)
+    : Homomorphism (A / cong_ker f) (B && in_image_hom f)
     := BuildHomomorphism def_first_isomorphism.
 
   Global Instance embedding_first_isomorphism (s : Sort σ)
@@ -191,7 +191,7 @@ Section first_isomorphism.
   Qed.
 
   Theorem isomorphic_first_isomorphism
-    : A / cong_ker f ≅ B & in_image_hom f.
+    : A / cong_ker f ≅ B && in_image_hom f.
   Proof.
     exact (BuildIsomorphic def_first_isomorphism).
   Defined.
@@ -199,7 +199,7 @@ Section first_isomorphism.
 (* The first identification theorem [id_first_isomorphism] is an
    h-prop, so we can leave it opaque. *)
 
-  Corollary id_first_isomorphism : A / cong_ker f = B & in_image_hom f.
+  Corollary id_first_isomorphism : A / cong_ker f = B && in_image_hom f.
   Proof.
     exact (id_isomorphic isomorphic_first_isomorphism).
   Qed.
@@ -259,15 +259,15 @@ Section first_isomorphism_inj.
     composition of two isomorphisms, so it is an isomorphism. *)
 
   Definition hom_first_isomorphism_inj
-    : Homomorphism A (B & in_image_hom f)
+    : Homomorphism A (B && in_image_hom f)
     := hom_compose
           (hom_first_isomorphism f)
           (hom_quotient (cong_ker f)).
 
-  Definition isomorphic_first_isomorphism_inj : A ≅ B & in_image_hom f
+  Definition isomorphic_first_isomorphism_inj : A ≅ B && in_image_hom f
     := BuildIsomorphic hom_first_isomorphism_inj.
 
-  Definition id_first_isomorphism_inj : A = B & in_image_hom f
+  Definition id_first_isomorphism_inj : A = B && in_image_hom f
     := id_isomorphic isomorphic_first_isomorphism_inj.
 
 End first_isomorphism_inj.

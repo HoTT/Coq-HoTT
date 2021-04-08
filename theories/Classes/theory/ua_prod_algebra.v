@@ -30,7 +30,7 @@ Section prod_algebra.
 
   Definition ops_prod_algebra (u : Symbol σ)
     : Operation carriers_prod_algebra (σ u)
-    := op_prod_algebra (σ u) (λ (i:I), u ^^ A i).
+    := op_prod_algebra (σ u) (λ (i:I), u.#(A i)).
 
   Definition ProdAlgebra : Algebra σ
     := BuildAlgebra carriers_prod_algebra ops_prod_algebra.

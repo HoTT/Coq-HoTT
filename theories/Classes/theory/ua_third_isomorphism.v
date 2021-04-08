@@ -67,17 +67,17 @@ Section cong_quotient.
     refine (quotient_ind_prop_family_prod A Ψ _ _). intro b.
     (* It should not be necessary to provide the explicit types: *)
     destruct (compute_op_quotient A Ψ u a
-              : ap_operation (u^^A / Ψ)
+              : ap_operation (u.#(A / Ψ))
                  (map_family_prod (λ s, class_of (Ψ s)) _) = _)^.
     destruct (compute_op_quotient A Ψ u b
-              : ap_operation (u^^A / Ψ)
+              : ap_operation (u.#(A / Ψ))
                  (map_family_prod (λ s, class_of (Ψ s)) _) = _)^.
     intros R x y P Q.
     apply subrel in P.
     apply subrel in Q.
-    transitivity (ap_operation (u^^A) a).
+    transitivity (ap_operation u.#A a).
     - by symmetry.
-    - transitivity (ap_operation (u^^A) b); try assumption.
+    - transitivity (ap_operation u.#A b); try assumption.
       apply (ops_compatible A Φ u).
       by apply for_all_relation_quotient.
   Defined.

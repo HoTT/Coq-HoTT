@@ -354,6 +354,8 @@ theories/Spectra/Coinductive.v
 theories/Algebra/Universal/Algebra.v
 theories/Algebra/Universal/Homomorphism.v
 theories/Algebra/Universal/Operation.v
+theories/Algebra/Universal/Congruence.v
+theories/Algebra/Universal/TermAlgebra.v
 
 #
 #   Algebra

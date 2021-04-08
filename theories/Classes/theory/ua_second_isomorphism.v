@@ -27,7 +27,7 @@ Section cong_trace.
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
     (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
-  Definition cong_trace (s : Sort σ) (x : (A&P) s) (y : (A&P) s)
+  Definition cong_trace (s : Sort σ) (x : (A&&P) s) (y : (A&&P) s)
     := Φ s (i s x) (i s y).
 
   Global Instance equiv_rel_trace_congruence (s : Sort σ)
@@ -41,8 +41,8 @@ Section cong_trace.
   Qed.
 
   Lemma for_all_2_family_prod_trace_congruence {w : SymbolType σ}
-    (a b : FamilyProd (A&P) (dom_symboltype w))
-    (R : for_all_2_family_prod (A&P) (A&P) cong_trace a b)
+    (a b : FamilyProd (A&&P) (dom_symboltype w))
+    (R : for_all_2_family_prod (A&&P) (A&&P) cong_trace a b)
     : for_all_2_family_prod A A Φ
         (map_family_prod i a) (map_family_prod i b).
   Proof with try assumption.
@@ -53,7 +53,7 @@ Section cong_trace.
   Qed.
 
   Global Instance ops_compatible_trace_trace
-    : OpsCompatible (A&P) cong_trace.
+    : OpsCompatible (A&&P) cong_trace.
   Proof.
     intros u a b R.
     refine (transport (λ X, Φ _ X _)
@@ -64,9 +64,9 @@ Section cong_trace.
     exact (for_all_2_family_prod_trace_congruence a b R).
   Qed.
 
-  Global Instance is_congruence_trace : IsCongruence (A&P) cong_trace.
+  Global Instance is_congruence_trace : IsCongruence (A&&P) cong_trace.
   Proof.
-    apply (@BuildIsCongruence _ (A&P) cong_trace);
+    apply (@BuildIsCongruence _ (A&&P) cong_trace);
       [intros; apply (is_mere_relation_cong A Φ) | exact _ ..].
   Qed.
 End cong_trace.
@@ -81,7 +81,7 @@ Section is_subalgebra_class.
     (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
   Definition is_subalgebra_class (s : Sort σ) (x : (A/Φ) s) : hProp
-    := hexists (λ (y : (A&P) s), in_class (Φ s) x (i s y)).
+    := hexists (λ (y : (A&&P) s), in_class (Φ s) x (i s y)).
 
   Lemma op_closed_subalgebra_is_subalgebra_class {w : SymbolType σ}
     (γ : Operation (A/Φ) w)
@@ -125,7 +125,7 @@ End is_subalgebra_class.
 (** The next section proves the second isomorphism theorem,
 
     <<
-      (A&P) / (cong_trace P Φ) ≅ (A/Φ) & (is_subalgebra_class P Φ).
+      (A&&P) / (cong_trace P Φ) ≅ (A/Φ) && (is_subalgebra_class P Φ).
     >>
 *)
 
@@ -143,19 +143,19 @@ Section second_isomorphism.
   Local Notation Q := (is_subalgebra_class P Φ).
 
   Definition def_second_isomorphism (s : Sort σ)
-    : ((A&P) / Ψ) s → ((A/Φ) & Q) s
+    : ((A&&P) / Ψ) s → ((A/Φ) && Q) s
     := quotient_rec (Ψ s)
-        (λ (x : (A&P) s),
+        (λ (x : (A&&P) s),
          (class_of (Φ s) (i s x); tr (x; EquivRel_Reflexive x)))
-        (λ (x y : (A&P) s) (T : Ψ s x y),
+        (λ (x y : (A&&P) s) (T : Ψ s x y),
          path_sigma_hprop (class_of (Φ s) (i s x); _)
            (class_of (Φ s) (i s y); _) (related_classes_eq (Φ s) T)).
 
   Lemma oppreserving_second_isomorphism {w : SymbolType σ}
     (α : Operation A w) (γ : Operation (A/Φ) w)
-    (ζ : Operation ((A&P) / Ψ) w) (CA : ClosedUnderOp (A/Φ) Q γ)
+    (ζ : Operation ((A&&P) / Ψ) w) (CA : ClosedUnderOp (A/Φ) Q γ)
     (CB : ClosedUnderOp A P α) (QA : ComputeOpQuotient A Φ α γ)
-    (QB : ComputeOpQuotient (A&P) Ψ (op_subalgebra A P α CB) ζ)
+    (QB : ComputeOpQuotient (A&&P) Ψ (op_subalgebra A P α CB) ζ)
     : OpPreserving def_second_isomorphism ζ (op_subalgebra (A/Φ) Q γ CA).
   Proof.
     unfold ComputeOpQuotient in *.
@@ -178,11 +178,11 @@ Section second_isomorphism.
     intro u.
     eapply oppreserving_second_isomorphism.
     - apply (compute_op_quotient A).
-    - apply (compute_op_quotient (A&P)).
+    - apply (compute_op_quotient (A&&P)).
   Defined.
 
   Definition hom_second_isomorphism
-    : Homomorphism ((A&P) / Ψ) ((A/Φ) & Q)
+    : Homomorphism ((A&&P) / Ψ) ((A/Φ) && Q)
     := BuildHomomorphism def_second_isomorphism.
 
   Global Instance embedding_second_isomorphism (s : Sort σ)
@@ -217,12 +217,12 @@ Section second_isomorphism.
 
   Global Existing Instance is_isomorphism_second_isomorphism.
 
-  Theorem isomorphic_second_isomorphism : (A&P) / Ψ ≅ (A/Φ) & Q.
+  Theorem isomorphic_second_isomorphism : (A&&P) / Ψ ≅ (A/Φ) && Q.
   Proof.
     exact (BuildIsomorphic def_second_isomorphism).
   Defined.
 
-  Corollary id_second_isomorphism : (A&P) / Ψ = (A/Φ) & Q.
+  Corollary id_second_isomorphism : (A&&P) / Ψ = (A/Φ) && Q.
   Proof.
     exact (id_isomorphic isomorphic_second_isomorphism).
   Defined.

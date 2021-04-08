@@ -40,7 +40,7 @@ Section closed_under_op.
   Qed.
 
   Definition IsClosedUnderOps : Type
-    := ∀ (u : Symbol σ), ClosedUnderOp (u^^A).
+    := ∀ (u : Symbol σ), ClosedUnderOp u.#A.
 
   Global Instance trunc_is_closed_under_ops
     {n} `{∀ s x, IsTrunc n (P s x)}
@@ -110,7 +110,7 @@ Section subalgebra.
 
   Definition ops_subalgebra (u : Symbol σ)
     : Operation carriers_subalgebra (σ u)
-    := op_subalgebra (u^^A) (is_closed_under_ops_subalgebra_predicate A P u).
+    := op_subalgebra u.#A (is_closed_under_ops_subalgebra_predicate A P u).
 
   Definition Subalgebra : Algebra σ
     := BuildAlgebra carriers_subalgebra ops_subalgebra.
@@ -127,10 +127,9 @@ Section subalgebra.
 End subalgebra.
 
 Module subalgebra_notations.
-  (** Cannot reserve since it messes with sigma type notation *)
-  Notation "A & P" := (Subalgebra A P)
-                      (at level 50, left associativity)
-                      : Algebra_scope.
+
+  Notation "A && P" := (Subalgebra A P) : Algebra_scope.
+
 End subalgebra_notations.
 
 Import subalgebra_notations.
@@ -143,7 +142,7 @@ Section hom_inc_subalgebra.
     {σ : Signature} (A : Algebra σ)
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}.
 
-  Definition def_inc_subalgebra (s : Sort σ) : (A&P) s → A s
+  Definition def_inc_subalgebra (s : Sort σ) : (A&&P) s → A s
     := pr1.
 
   Lemma oppreserving_inc_subalgebra {w : SymbolType σ}
@@ -161,7 +160,7 @@ Section hom_inc_subalgebra.
     intro u. apply oppreserving_inc_subalgebra.
   Defined.
 
-  Definition hom_inc_subalgebra : Homomorphism (A&P) A
+  Definition hom_inc_subalgebra : Homomorphism (A&&P) A
     := BuildHomomorphism def_inc_subalgebra.
 
   Lemma is_isomorphism_inc_improper_subalgebra
@@ -185,13 +184,13 @@ Section path_subalgebra.
     (P : ∀ s, A s → Type) {CP : IsSubalgebraPredicate A P}
     (Q : ∀ s, A s → Type) {CQ : IsSubalgebraPredicate A Q}.
 
-  Lemma path_subalgebra `{Funext} (p : P = Q) : A&P = A&Q.
+  Lemma path_subalgebra `{Funext} (p : P = Q) : A&&P = A&&Q.
   Proof.
     by destruct p, (path_ishprop CP CQ).
   Defined.
 
   Lemma path_subalgebra_iff `{Univalence} (R : ∀ s x, P s x <-> Q s x)
-    : A&P = A&Q.
+    : A&&P = A&&Q.
   Proof.
     apply path_subalgebra.
     funext s x.
