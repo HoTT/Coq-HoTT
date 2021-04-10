@@ -11,17 +11,13 @@ Local Open Scope mc_mult_scope.
 Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : NormalSubgroup A.
 Proof.
   snrapply Build_NormalSubgroup.
-  - snrapply (Build_Subgroup A (fun x => f x = group_unit)).
-    repeat split.
-    1: exact _.
+  - srapply (Build_Subgroup' (fun x => f x = group_unit)).
     1: apply grp_homo_unit.
-    { intros x y p q.
-      refine (_ @ ap011 _ p q @ left_identity mon_unit).
-      apply grp_homo_op. }
-    intros x p.
-    exact (grp_homo_inv f x @ ap _ p @ negate_mon_unit).
-  - unfold IsNormalSubgroup; cbn.
-    intros x y.
+    intros x y p q; cbn in p, q; cbn.
+    refine (grp_homo_op _ _ _ @ ap011 _ p _ @ _).
+    1: apply grp_homo_inv.
+    rewrite q; apply right_inverse.
+  - intros x y; cbn.
     rewrite 2 grp_homo_op.
     rewrite 2 grp_homo_inv.
     refine (group_moveR_gV _ _ oE equiv_path_inverse _ _ oE _ ); symmetry.
@@ -61,9 +57,9 @@ Defined.
 
 (** ** Characterisation of group embeddings *)
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : (grp_kernel f = trivial_subgroup :> Subgroup _) <~> IsEmbedding f.
+  : (grp_kernel f = trivial_subgroup :> Subgroup A) <~> IsEmbedding f.
 Proof.
-  refine (_ oE (equiv_path_subgroup' _ _)^-1).
+  refine (_ oE (equiv_path_subgroup' _ _)^-1%equiv).
   srapply equiv_iff_hprop.
   - cbn; intros h.
     intros b.

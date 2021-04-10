@@ -12,7 +12,7 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
   issubgroup_predicate : forall x, IsHProp (H x) ;
   issubgroup_unit : H mon_unit ;
   issubgroup_op : forall x y, H x -> H y -> H (x * y) ;
-  issubgroup_inv : forall x, H x -> H (- x) ;
+  issubgroup_inverse : forall x, H x -> H (- x) ;
 }.
 
 Global Existing Instance issubgroup_predicate.
@@ -71,9 +71,21 @@ Proof.
 Defined.
 
 Definition subgroup_unit `(H : Subgroup G) : H mon_unit := issubgroup_unit.
-Definition subgroup_inv `(H : Subgroup G) x : H x -> H (- x) := issubgroup_inv x.
+Definition subgroup_inverse `(H : Subgroup G) x : H x -> H (- x) := issubgroup_inverse x.
 Definition subgroup_op `(H : Subgroup G) x y : H x -> H y -> H (x * y)
 := issubgroup_op x y.
+
+Global Instance isequiv_subgroup_inverse `(H : Subgroup G) (x : G)
+  : IsEquiv (subgroup_inverse H x).
+Proof.
+  srapply isequiv_iff_hprop.
+  intro h.
+  rewrite <- negate_involutive.
+    by apply subgroup_inverse.
+Defined.
+
+Definition equiv_subgroup_inverse {G : Group} (H : Subgroup G) (x : G)
+  : H x <~> H (-x) := Build_Equiv _ _ (subgroup_inverse H x) _.
 
 (** The group given by a subgroup *)
 Definition subgroup_group (G : Group) (H : Subgroup G) : Group.
@@ -86,7 +98,7 @@ Proof.
       (** The unit *)
       (mon_unit ; issubgroup_unit)
       (** Inverse *)
-      (fun '(x ; p) => (- x ; issubgroup_inv _ p))).
+      (fun '(x ; p) => (- x ; issubgroup_inverse _ p))).
   (** Finally we need to prove our group laws. *)
   repeat split.
   1: exact _.
@@ -199,7 +211,7 @@ Section Cosets.
     intros x y h; cbn; cbn in h.
     rewrite <- (negate_involutive x).
     rewrite <- negate_sg_op.
-    apply issubgroup_inv; assumption.
+    apply issubgroup_inverse; assumption.
   Defined.
 
   Global Instance symmetric_in_cosetR : Symmetric in_cosetR.
@@ -207,7 +219,7 @@ Section Cosets.
     intros x y h; cbn; cbn in h.
     rewrite <- (negate_involutive y).
     rewrite <- negate_sg_op.
-    apply issubgroup_inv; assumption.
+    apply issubgroup_inverse; assumption.
   Defined.
 
   Global Instance transitive_in_cosetL : Transitive in_cosetL.
@@ -283,7 +295,7 @@ Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
 (* Inverses are then respected *)
-Definition in_cosetL_inv {G : Group} {N : NormalSubgroup G}
+Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G}
   : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
 Proof.
   intros x y.
@@ -292,7 +304,7 @@ Proof.
   symmetry; apply isnormal.
 Defined.
 
-Definition in_cosetR_inv {G : Group} {N : NormalSubgroup G}
+Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G}
   : forall x y : G, in_cosetR N (-x) (-y) <~> in_cosetR N x y.
 Proof.
   intros x y.
@@ -303,7 +315,7 @@ Proof.
   by rewrite negate_involutive.
 Defined.
 
-(* This lets us prove that left and right coset relations are congruences. *)
+(** This lets us prove that left and right coset relations are congruences. *)
 Definition in_cosetL_cong {G : Group} {N : NormalSubgroup G}
   (x x' y y' : G)
   : in_cosetL N x y -> in_cosetL N x' y' -> in_cosetL N (x * x') (y * y').

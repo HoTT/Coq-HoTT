@@ -377,19 +377,18 @@ Defined.
 (** Inverses distribute over the group operation *)
 (* Check negate_sg_op. *)
 
-Definition group_cancelR {G : Group} (x y z : G)
-  : y = z <~> y * x = z * x := equiv_ap (fun t => t * x) _ _.
+(** Group elements can be cancelled both on the left and the right. *)
+(* Check group_cancelR. *)
+(* Check group_cancelL. *)
 
-Definition group_cancelL {G : Group} (x y z : G)
-  : y = z <~> x * y = x * z := equiv_ap (fun t => x * t) _ _.
-
+(* TODO make all of these into equivalences *)
 Lemma group_moveR_gV {G : Group} (x y : G)
   : x = y <~> x * -y = mon_unit.
 Proof.
   apply equiv_iff_hprop.
   1: intros []; apply right_inverse.
   intro p.
-  apply (group_cancelR (-y) _ _)^-1%equiv.
+  apply (group_cancelR (-y)).
   exact (p @ (right_inverse y)^).
 Defined.
 
@@ -399,12 +398,10 @@ Proof.
   apply equiv_iff_hprop.
   1: intros []; apply left_inverse.
   intro p.
-  apply (group_cancelL (-y) _ _)^-1%equiv.
+  apply (group_cancelL (-y)).
   exact (p @ (left_inverse y)^).
 Defined.
 
-(* jarlg: TODO make these equivalence, like the ones just above. *)
-(* jarlg: note that moveL_1M is inverse to moveR_gV, and so on *)
 Lemma group_moveL_1M {G : Group} (x y : G)
   : x * (-y) = mon_unit -> x = y.
 Proof.
@@ -473,7 +470,7 @@ Proof.
   exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
 Defined.
 
-(** Given a group element a0:A over b:B, multiplication by a establishes an equivalence between the kernel and the fiber over b. *)
+(** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
 Proof.

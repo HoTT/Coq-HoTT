@@ -155,8 +155,7 @@ Section QuotientGroup.
       refine (Quotient_ind_hprop _ _ _).
       intro y. revert x.
       refine (Quotient_ind_hprop _ _ _).
-      intro x.
-      simpl.
+      intro x; simpl.
       apply grp_homo_op.
   Defined.
 
@@ -200,24 +199,22 @@ Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (
   : {f : G $-> H & forall (n : G), N n -> f n = mon_unit} <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
-  { intros [f p].
-    exact (grp_quotient_rec _ _ f p). }
-  { intro f.
+  - intros [f p].
+    exact (grp_quotient_rec _ _ f p).
+  - intro f.
     exists (f $o grp_quotient_map).
     intros n h; cbn.
     refine (_ @ grp_homo_unit f).
     apply ap.
     apply qglue; cbn.
     rewrite right_identity;
-      by apply issubgroup_inv. }
-  { intros f.
+      by apply issubgroup_inverse.
+  - intros f.
     rapply equiv_path_grouphomomorphism.
-    srapply Quotient_ind_hprop.
-    intro x.
-    reflexivity. }
-  { intros [f p].
+      by srapply Quotient_ind_hprop.
+  - intros [f p].
     srapply path_sigma_hprop; simpl.
-    exact (grp_quotient_rec_beta N H f p). }
+    exact (grp_quotient_rec_beta N H f p).
 Defined.
 
 Section FirstIso.

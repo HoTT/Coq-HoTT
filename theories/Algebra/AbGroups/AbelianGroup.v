@@ -54,23 +54,14 @@ Proof.
   cbn. apply commutativity.
 Defined.
 
-
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
-  intros x y.
-  unfold in_cosetL, in_cosetR.
-  srapply equiv_iff_hprop.
-  { rewrite <- (negate_involutive (x + -y)).
-    rewrite negate_sg_op.
-    rewrite negate_involutive.
-    rewrite (commutativity y (-x)).
-    rapply subgroup_inv. }
-  rewrite <- (negate_involutive (-x + y)).
+  intros x y; unfold in_cosetL, in_cosetR.
+  refine (_ oE equiv_subgroup_inverse _ _).
   rewrite negate_sg_op.
   rewrite negate_involutive.
-  rewrite (commutativity x (-y)).
-  rapply subgroup_inv.
+  by rewrite (commutativity (-y) x).
 Defined.
 
 (** ** Quotients of abelian groups *)

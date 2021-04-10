@@ -51,8 +51,7 @@ Proof.
   strip_truncations.
   destruct p as [p q].
   apply equiv_path_prod in q.
-  destruct q as [q r]; cbn in q, r.
-  simpl.
+  destruct q as [q r]; cbn in q, r; simpl.
   apply tr.
   exists (-a); simpl.
   apply path_prod; simpl.
@@ -61,8 +60,7 @@ Proof.
     apply right_identity.
   - rewrite negate_involutive.
     rewrite negate_mon_unit.
-    symmetry.
-    apply left_identity.
+    exact (left_identity _)^.
 Defined.
 
 Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
@@ -74,10 +72,6 @@ Proof.
   pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
   rapply (equiv_ap' (equiv_quotient_abgroup_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
   srapply path_sigma_hprop.
-  change (ab_pushout_rec
-            (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
-            (fun a : A => ap phi (ab_pushout_commsq a)) $o grp_quotient_map
-          =  phi $o grp_quotient_map).
   refine (grp_quotient_rec_beta _ Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
   exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
