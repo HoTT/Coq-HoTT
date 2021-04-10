@@ -19,7 +19,7 @@ Theorem ab_pushout_rec {A B C Y : AbGroup} {f : A $-> B} {g : A $-> C}
 Proof.
   srapply grp_quotient_rec.
   - exact (ab_biprod_rec b c).
-  - intros [[x y] q]; strip_truncations; simpl.
+  - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
     refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
     unfold uncurry; cbn.
@@ -47,13 +47,20 @@ Proof.
   intro a.
   apply qglue.
   pose (bc := grp_image_in (ab_biprod_corec f (g $o ab_homo_negation)) a).
-  exists (-bc); simpl.
+  destruct bc as [[b c] p].
+  strip_truncations.
+  destruct p as [p q].
+  apply equiv_path_prod in q.
+  destruct q as [q r]; cbn in q, r; simpl.
+  apply tr.
+  exists (-a); simpl.
   apply path_prod; simpl.
-  - exact (right_identity (- f a))^.
-  - rewrite (preserves_negate (f:=g)).
-    refine (negate_involutive _ @ _).
+  - rewrite grp_homo_inv.
     symmetry.
-    exact (ap (fun x => x + g a) negate_mon_unit @ left_identity _).
+    apply right_identity.
+  - rewrite negate_involutive.
+    rewrite negate_mon_unit.
+    exact (left_identity _)^.
 Defined.
 
 Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
@@ -63,13 +70,9 @@ Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
                    (fun a:A => ap phi (ab_pushout_commsq a)) = phi.
 Proof.
   pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
-  apply (equiv_ap' (equiv_grp_quotient_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
+  rapply (equiv_ap' (equiv_quotient_abgroup_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
   srapply path_sigma_hprop.
-  change (ab_pushout_rec
-            (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
-            (fun a : A => ap phi (ab_pushout_commsq a)) $o grp_quotient_map
-          =  phi $o grp_quotient_map).
-  refine (grp_quotient_rec_beta N Y _ _ @ _).
+  refine (grp_quotient_rec_beta _ Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
   exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
 Defined.

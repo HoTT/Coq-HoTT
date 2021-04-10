@@ -10,17 +10,16 @@ Section QuotientRing.
 
   Context (R : CRing) (I : Ideal R).
 
-  Instance plus_quotient_group : Plus (QuotientGroup R I) := group_sgop.
+  Instance plus_quotient_group : Plus (QuotientAbGroup R I) := group_sgop.
 
   Instance iscong_mult_incosetL
-    : @IsCongruence R cring_mult (@in_cosetL R I _).
+    : @IsCongruence R cring_mult (in_cosetL I).
   Proof.
     snrapply Build_IsCongruence.
-    intros x x' y y' [i p] [j q].
-    change (issubgroup_incl (H:=R) i = (- x) + x') in p.
-    change (issubgroup_incl (H:=R) j = (- y) + y') in q.
-    unfold in_cosetL, hfiber.
-    change {m : I & issubgroup_incl (H:=R) m = - (x * y) + (x' * y')}.
+    intros x x' y y' p q.
+    change (I ( - (x * y) + (x' * y'))).
+    change (I (-x + x')) in p.
+    change (I (-y + y')) in q.
     rewrite <- (left_identity (op:=(+)) (x' * y') : 0 + (x' * y') = x' * y').
     rewrite <- (right_inverse (op:=(+)) (x' * y) : (x' * y) - (x' * y) = 0).
     rewrite 2 simple_associativity.
@@ -29,16 +28,12 @@ Section QuotientRing.
     rewrite <- simple_associativity.
     rewrite negate_mult_distr_r.
     rewrite <- simple_distribute_l.
-    rewrite <- p, <- q.
-    pose (isideal x' j) as s; destruct s as [s s'].
-    pose (isideal y i) as t; destruct t as [t t'].
-    rewrite (commutativity _ y).
-    rewrite <- s', <- t'.
-    exists (sg_op t s).
-    rapply grp_homo_op.
+    rapply subgroup_op.
+    1: rewrite (commutativity _ y).
+    all: by rapply isideal.
   Defined.
 
-  Instance mult_quotient_group : Mult (QuotientGroup R I).
+  Instance mult_quotient_group : Mult (QuotientAbGroup R I).
   Proof.
     intro x.
     srapply Quotient_rec.
@@ -59,10 +54,10 @@ Section QuotientRing.
     by rapply iscong.
   Defined.
 
-  Instance zero_quotient_abgroup : Zero (QuotientGroup R I) := class_of _ zero.
-  Instance one_quotient_abgroup : One (QuotientGroup R I) := class_of _ one.
+  Instance zero_quotient_abgroup : Zero (QuotientAbGroup R I) := class_of _ zero.
+  Instance one_quotient_abgroup : One (QuotientAbGroup R I) := class_of _ one.
 
-  Instance isring_quotient_abgroup : IsRing (QuotientGroup R I).
+  Instance isring_quotient_abgroup : IsRing (QuotientAbGroup R I).
   Proof.
     split.
     1: exact _.
@@ -101,7 +96,7 @@ Section QuotientRing.
   Defined.
 
   Definition QuotientRing : CRing 
-    := Build_CRing (QuotientGroup R I) _ _ _ _ _ _.
+    := Build_CRing (QuotientAbGroup R I) _ _ _ _ _ _.
 
 End QuotientRing.
 

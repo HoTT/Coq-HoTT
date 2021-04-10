@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import Basics Types HSet.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
@@ -8,66 +8,20 @@ Require Import WildCat.
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
-Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : Subgroup A.
+Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : NormalSubgroup A.
 Proof.
-  snrapply Build_Subgroup.
-  { srapply (Build_Group (hfiber f group_unit)); repeat split.
-    - (** Operation *)
-      intros [a p] [b q].
-      exists (sg_op a b).
-      rewrite grp_homo_op, p, q.
-      apply left_identity.
-    - (** Unit *)
-      exists mon_unit.
-      apply (grp_homo_unit f).
-    - (** Inverse *)
-      intros [a p].
-      exists (-a).
-      rewrite grp_homo_inv, p.
-      exact negate_mon_unit.
-    - (** HSet *)
-      exact _.
-    - (** Associativity *)
-      intros [a p] [b q] [c r].
-      srapply path_sigma_hprop.
-      cbn; apply associativity.
-    - (** Left identity *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply left_identity.
-    - (** Right identity *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply right_identity.
-    - (** Left inverse *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply left_inverse.
-    - (** Right inverse *)
-      intros [a p].
-      srapply path_sigma_hprop.
-      cbn; apply right_inverse. }
-  (** The kernel is a subgroup of the source of the map *)
-  snrapply Build_IsSubgroup.
-  { snrapply Build_GroupHomomorphism.
-    1: exact pr1.
-    intros ??; reflexivity. }
-  hnf; cbn; intros x y p.
-  by apply path_sigma_hprop.
-Defined.
-
-Global Instance isnormal_kernel {A B : Group} (f : GroupHomomorphism A B)
-  : IsNormalSubgroup (grp_kernel f).
-Proof.
-  apply isnormalsubgroup_of_cong_mem.
-  intros g n.
-  srefine ((_ ; _ ); _).
-  3: reflexivity.
-  simpl.
-  rewrite grp_homo_op, grp_homo_op, grp_homo_inv.
-  rewrite (pr2 n), (right_identity (- f g)).
-  rewrite (negate_l _).
-  reflexivity.
+  snrapply Build_NormalSubgroup.
+  - srapply (Build_Subgroup' (fun x => f x = group_unit)).
+    1: apply grp_homo_unit.
+    intros x y p q; cbn in p, q; cbn.
+    refine (grp_homo_op _ _ _ @ ap011 _ p _ @ _).
+    1: apply grp_homo_inv.
+    rewrite q; apply right_inverse.
+  - intros x y; cbn.
+    rewrite 2 grp_homo_op.
+    rewrite 2 grp_homo_inv.
+    refine (group_moveR_gV _ _ oE equiv_path_inverse _ _ oE _ ); symmetry.
+    apply group_moveR_Vg.
 Defined.
 
 (** ** Corecursion principle for group kernels *)
@@ -86,7 +40,9 @@ Theorem equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
   : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const).
 Proof.
   srapply equiv_adjointify.
-  - intro k. refine (subgrp_incl _ _ $o k; _).
+  - intro k.
+    srefine (_ $o k; _).
+    1: apply subgroup_incl.
     intro x; cbn.
     exact (k x).2.
   - intros [g p].
@@ -100,27 +56,28 @@ Proof.
 Defined.
 
 (** ** Characterisation of group embeddings *)
-
-Local Existing Instance ishprop_path_subgroup.
-
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : (grp_kernel f = trivial_subgroup) <~> IsEmbedding f.
+  : (grp_kernel f = trivial_subgroup :> Subgroup A) <~> IsEmbedding f.
 Proof.
+  refine (_ oE (equiv_path_subgroup' _ _)^-1%equiv).
   srapply equiv_iff_hprop.
-  - intros phi b.
-    apply hprop_inhabited_contr; intro a.
-    rapply (contr_equiv' _ (equiv_grp_hfiber _ _ a)^-1%equiv).
-    rapply (transport Contr (x:=grp_trivial)).
-    exact (ap (group_type o subgroup_group A) phi^).
-  - intro isemb_f.
-    rapply equiv_path_subgroup.
-    srefine (grp_iso_inverse _; _).
-    + srapply Build_GroupIsomorphism.
-      * exact grp_homo_const.
-      * srapply isequiv_adjointify.
-        1: exact grp_homo_const.
-        all: intro x; apply path_ishprop.
-    + apply equiv_path_grouphomomorphism; intro x; cbn.
-      refine (ap pr1 (y:=(mon_unit; grp_homo_unit f)) _).
-      apply path_ishprop.
+  - cbn; intros h.
+    intros b.
+    apply hprop_allpath.
+    intros [x p] [y q].
+    apply path_sigma_hprop; cbn.
+    apply group_moveL_1M.
+    apply h.
+    rewrite grp_homo_op, grp_homo_inv.
+    rewrite p, q.
+    apply right_inverse.
+  - intros isemb_f g.
+    apply isinj_embedding in isemb_f.
+    split.
+    + cbn; intros p.
+      apply isemb_f.
+      refine (p @ _^).
+      apply grp_homo_unit.
+    + cbn; intros p.
+      refine (ap _ p @ grp_homo_unit f).
 Defined.

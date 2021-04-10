@@ -60,7 +60,7 @@ Local Definition grp_law_right_inverse {G : Group} (x : G) := right_inverse x.
 #[export] Hint Immediate grp_law_right_inverse : group_db.
 
 (** Given path types in a product we may want to decompose. *)
-#[export] Hint Extern 5 (@paths (_ * _) _ _) => (rapply path_prod) : group_db.
+#[export] Hint Extern 5 (@paths (_ * _) _ _) => (apply path_prod) : group_db.
 (** Given path types in a sigma type of a hprop family (i.e. a subset) we may want to decompose. *)
 #[export] Hint Extern 6 (@paths (sig _) _ _) => (rapply path_sigma_hprop) : group_db.
 
@@ -96,88 +96,6 @@ Proof.
   refine (associativity _ _ _ @ _).
   refine (ap (fun x => x * y) p @ _).
   apply left_identity.
-Defined.
-
-(** ** Working with equations in groups *)
-
-(** Inverses are involutive *)
-(* Check negate_involutive. *)
-
-(** Inverses distribute over the group operation *)
-(* Check negate_sg_op. *)
-
-(** Group elements can be cancelled on the left of an equation *)
-(* Check group_cancelL. *)
-
-(** Group elements can be cancelled on the right of an equation *)
-(* Check group_cancelR. *)
-
-Lemma group_moveL_1M {G : Group} (x y : G)
-  : x * (-y) = mon_unit -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelR (- y)).
-  exact (p @ (right_inverse y)^).
-Defined.
-
-Lemma group_moveL_M1 {G : Group} (x y : G)
-  : -y * x = mon_unit -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelL (- y)).
-  exact (p @ (left_inverse y)^).
-Defined.
-
-Lemma group_moveL_gM {G : Group} (x y z : G)
-  : x * -z = y -> x = y * z.
-Proof.
-  intro p.
-  apply (group_cancelR (- z)).
-  refine (_ @ associativity _ _ _).
-  exact (p @ (right_identity y)^ @ (ap (fun a => y * a) (right_inverse z))^).
-Defined.
-
-Lemma group_moveL_Mg {G : Group} (x y z : G)
-  : -y * x = z -> x = y * z.
-Proof.
-  intro p.
-  apply (group_cancelL (- y)).
-  refine (_ @ (associativity _ _ _)^).
-  exact (p @ (left_identity z)^ @ (ap (fun a => a * z) (left_inverse y))^).
-Defined.
-
-Lemma group_moveR_1M {G : Group} (x y : G)
-  : mon_unit = y * (-x) -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelR (- x)).
-  exact (right_inverse x @ p).
-Defined.
-
-Lemma group_moveR_M1 {G : Group} (x y : G)
-  : mon_unit = -x * y -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelL (- x)).
-  exact (left_inverse x @ p).
-Defined.
-
-Lemma group_moveR_gM {G : Group} (x y z : G)
-  : x = z * -y -> x * y = z.
-Proof.
-  intro p.
-  apply (group_cancelR (- y)).
-  refine ((associativity _ _ _)^ @ _).
-  exact (ap (fun a => x * a) (right_inverse y) @ right_identity _ @ p).
-Defined.
-
-Lemma group_moveR_Mg {G : Group} (x y z : G)
-  : y = -x * z -> x * y = z.
-Proof.
-  intro p.
-  apply (group_cancelL (- x)).
- refine (associativity _ _ _ @ _).
-  exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
 Defined.
 
 (** ** Group homomorphisms *)
@@ -451,7 +369,108 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
-(** Given a group element a0:A over b:B, multiplication by a establishes an equivalence between the kernel and the fiber over b. *)
+(** ** Working with equations in groups *)
+
+(** Inverses are involutive *)
+(* Check negate_involutive. *)
+
+(** Inverses distribute over the group operation *)
+(* Check negate_sg_op. *)
+
+(** Group elements can be cancelled both on the left and the right. *)
+(* Check group_cancelR. *)
+(* Check group_cancelL. *)
+
+(* TODO make all of these into equivalences *)
+Lemma group_moveR_gV {G : Group} (x y : G)
+  : x = y <~> x * -y = mon_unit.
+Proof.
+  apply equiv_iff_hprop.
+  1: intros []; apply right_inverse.
+  intro p.
+  apply (group_cancelR (-y)).
+  exact (p @ (right_inverse y)^).
+Defined.
+
+Lemma group_moveR_Vg {G : Group} (x y : G)
+  : x = y <~> -y * x = mon_unit.
+Proof.
+  apply equiv_iff_hprop.
+  1: intros []; apply left_inverse.
+  intro p.
+  apply (group_cancelL (-y)).
+  exact (p @ (left_inverse y)^).
+Defined.
+
+Lemma group_moveL_1M {G : Group} (x y : G)
+  : x * (-y) = mon_unit -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelR (- y)).
+  exact (p @ (right_inverse y)^).
+Defined.
+
+Lemma group_moveL_M1 {G : Group} (x y : G)
+  : -y * x = mon_unit -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelL (- y)).
+  exact (p @ (left_inverse y)^).
+Defined.
+
+Lemma group_moveL_gM {G : Group} (x y z : G)
+  : x * -z = y -> x = y * z.
+Proof.
+  intro p.
+  apply (group_cancelR (- z)).
+  refine (_ @ associativity _ _ _).
+  exact (p @ (right_identity y)^ @ (ap (fun a => y * a) (right_inverse z))^).
+Defined.
+
+Lemma group_moveL_Mg {G : Group} (x y z : G)
+  : -y * x = z -> x = y * z.
+Proof.
+  intro p.
+  apply (group_cancelL (- y)).
+  refine (_ @ (associativity _ _ _)^).
+  exact (p @ (left_identity z)^ @ (ap (fun a => a * z) (left_inverse y))^).
+Defined.
+
+Lemma group_moveR_1M {G : Group} (x y : G)
+  : mon_unit = y * (-x) -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelR (- x)).
+  exact (right_inverse x @ p).
+Defined.
+
+Lemma group_moveR_M1 {G : Group} (x y : G)
+  : mon_unit = -x * y -> x = y.
+Proof.
+  intro p.
+  apply (group_cancelL (- x)).
+  exact (left_inverse x @ p).
+Defined.
+
+Lemma group_moveR_gM {G : Group} (x y z : G)
+  : x = z * -y -> x * y = z.
+Proof.
+  intro p.
+  apply (group_cancelR (- y)).
+  refine ((associativity _ _ _)^ @ _).
+  exact (ap (fun a => x * a) (right_inverse y) @ right_identity _ @ p).
+Defined.
+
+Lemma group_moveR_Mg {G : Group} (x y z : G)
+  : y = -x * z -> x * y = z.
+Proof.
+  intro p.
+  apply (group_cancelL (- x)).
+ refine (associativity _ _ _ @ _).
+  exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
+Defined.
+
+(** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
 Proof.
