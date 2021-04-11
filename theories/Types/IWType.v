@@ -426,75 +426,18 @@ Defined.
 
 (** ** Decidable equality for IW-types *)
 
-(** We begin with some helper lemmas. *)
-Section Eqdep_dec.
-  Context {A : Type} (x : A) (A_dec : forall y : A, (x = y) +  ~(x = y)).
-
-  Let comp (y y' : A) (eq1 : x = y) (eq2 : x = y') : y = y'
-   := paths_rec x (fun a : A => a = y') eq2 y eq1.
-
-  Local Definition trans_sym_eq (y : A) (u : x = y) : comp y y u u = idpath
-    := match u with idpath => idpath end.
-
-  Let nu y : x = y -> x = y
-   := fun xeqy =>
-      match A_dec y with
-      | inl xeqy' => xeqy'
-      | inr xneqy => Empty_rec _ (xneqy xeqy)
-      end.
-
-  Let nu_constant y (u v : x = y) : nu y u = nu y v
-   := match A_dec y as d
-      return
-        match d with inl xeqy => xeqy | inr xneqy => Empty_rec _ (xneqy u) end
-         =
-        match d with inl xeqy => xeqy | inr xneqy => Empty_rec _ (xneqy v) end
-      with
-      | inl xeqy => idpath
-      | inr xneqy => Empty_rec _ (xneqy u)
-      end.
-
-  Let nu_inv y (v : x = y) : x = y
-   := comp x y (nu x idpath) v.
-
-  Let proj (P : A -> Type) (exP : sig P) (def : P x) : P x :=
-    match exP with
-      | exist x' prf =>
-        match A_dec x' with
-          | inl eqprf => paths_rec x' P prf x (inverse eqprf)
-          | _ => def
-        end
-    end.
-
-  Local Definition nu_left_inv_on (y : A) (u : x = y) : nu_inv y (nu y u) = u
-    := match u with idpath => trans_sym_eq x (nu x idpath) end.
-
-  Local Definition eq_proofs_unicity_on (y : A) (p1 p2 : x = y) : p1 = p2
-    := paths_rec (nu_inv y (nu y p1)) (fun p3 : x = y => p3 = p2)
-         (paths_rec (nu_inv y (nu y p2)) (fun p3 : x = y => nu_inv y (nu y p1) = p3)
-            (paths_rec (nu y p1) (fun e : x = y => nu_inv y (nu y p1) = nu_inv y e)
-               idpath (nu y p2) (nu_constant y p1 p2)) p2
-            (nu_left_inv_on y p2)) p1 (nu_left_inv_on y p1).
-
-  Local Definition K_dec_on (P : x = x -> Type) (H : P idpath) (p : x = x) : P p
-    := paths_rec idpath P H p (eq_proofs_unicity_on x idpath p).
-
-  Local Definition inj_right_pair_on (P : A -> Type) (y y' : P x)
-    (H : exist P x y = exist P x y') : y = y'
-    := let H0 : proj P (exist P x y) y = proj P (exist P x y') y
-        := ap (fun px => proj P px y) H in
-       match A_dec x as d
-       return
-         match d with inl xeqx => paths_rec x P y x (inverse xeqx) | inr _ => y end =
-         match d with inl xeqx => paths_rec x P y' x (inverse xeqx) | inr _ => y end
-         -> y = y'
-       with
-       | inl xeqx => K_dec_on
-         (fun xeqx => paths_rec x P y x xeqx = paths_rec x P y' x xeqx -> y = y')
-         (fun H0 => H0) (inverse xeqx)
-       | inr xneqx => Empty_rec _ (xneqx idpath)
-       end H0.
-End Eqdep_dec.
+(** If A has decidable paths then it is a hset and therefore equality of sigma types over it are determined by the second component. *)
+Local Definition inj_right_pair_on
+  {A : Type} {A_dec : DecidablePaths A}
+  (P : A -> Type) (x : A) (y y' : P x)
+    (H : (x; y) = (x; y')) : y = y'.
+Proof.
+  apply (equiv_path_sigma _ _ _)^-1%equiv in H.
+  destruct H as [p q]; cbn in p, q.
+  assert (r : idpath = p) by apply path_ishprop.
+  destruct r.
+  exact q.
+Defined.
 
 (** ** IW-types have decidable equality if liftP holds and the fibers of the indexing map have decidable paths. Notably, if B x is finitely enumerable, then liftP holds. *)
 Section DecidablePaths.
@@ -505,7 +448,7 @@ Section DecidablePaths.
      (forall c, Decidable (P c)) -> Decidable (forall c, P c))
     (fibers_dec : forall x, DecidablePaths (hfiber i x)).
 
-  Let children_for (x : A) := forall c, IW I A B i j (j x c).
+  Let children_for (x : A) : Type := forall c, IW I A B i j (j x c).
   Let getfib {x} (a : IW I A B i j x) : hfiber i x
     := match a with iw_sup x _ => (x ; idpath) end.
   Let getfib_computes x y children p
@@ -517,11 +460,9 @@ Section DecidablePaths.
     : {f : hfiber i x & children_for (pr1 f)}
     := match a with iw_sup x c => ((x; idpath); c) end.
   Let children_eq (x : A) (c1 c2 : forall c, IW I A B i j (j x c))
-      := (fun aeqb => inj_right_pair_on
-         _ (fibers_dec _ (exist _ x idpath))
-         (fun f => children_for (proj1 f))
-         _ _ (ap getfib_plus aeqb))
-         : iw_sup _ _ _ _ _ x c1 = iw_sup _ _ _ _ _ x c2 -> c1 = c2.
+    : iw_sup I A B i j x c1 = iw_sup I A B i j x c2 -> c1 = c2
+    := fun r => inj_right_pair_on (fun f => children_for (pr1 f))
+         (x; idpath) _ _ (ap getfib_plus r).
 
   Fixpoint decide_eq l (a : IW I A B i j l) : forall b, Decidable (a = b).
   Proof.
@@ -529,15 +470,10 @@ Section DecidablePaths.
     intro b.
     transparent assert (decide_children : (forall c2, Decidable (c1 = c2))).
     { intros c2.
-      destruct (liftP x  (fun c => c1 c = c2 c) (fun c => decide_eq _ (c1 c) (c2 c)))
+      destruct (liftP x (fun c => c1 c = c2 c) (fun c => decide_eq _ (c1 c) (c2 c)))
         as [p|p].
-      + left.
-        apply path_forall.
-        assumption.
-      + right.
-        intro h.
-        apply p, apD10.
-        assumption. }
+      + left; by apply path_forall.
+      + right; intro h; by apply p, apD10. }
     snrefine (
       match b in (IW _ _ _ _ _ l)
         return
@@ -553,18 +489,12 @@ Section DecidablePaths.
               = paths_rec (i y) (IW I A B i j) (iw_sup _ _ _ _ _ y c2) (i x) iy)
           with idpath => _
         end c2).
-      simpl.
-      intros c3.
+      cbn; intros c3.
       destruct (decide_children c3) as [ceq | cneq].
-      - left.
-        exact (ap _ ceq).
-      - right.
-        intros r.
-        apply cneq.
+      - left; exact (ap _ ceq).
+      - right; intros r; apply cneq.
         exact (children_eq x c1 c3 r).
-    + right.
-      intros r.
-      apply fneq.
+    + right; intros r; apply fneq.
       exact (ap getfib r @ getfib_computes x y c2 iy).
   Defined.
 
