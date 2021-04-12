@@ -772,7 +772,7 @@ Definition Book_5_8_2_iv_implies_iii := @HoTT.PathAny.equiv_path_from_contr.
 (* ================================================== thm:ML-identity-systems *)
 (** Theorem 5.8.4 *)
 
-
+Definition Book_5_8_4_iv_implies_v := @HoTT.Types.Sigma.contr_sigma_refl_rel.
 
 (* ================================================== thm:equiv-induction *)
 (** Corollary 5.8.5 *)

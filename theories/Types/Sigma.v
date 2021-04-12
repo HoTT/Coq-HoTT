@@ -756,3 +756,19 @@ Proof.
   intros a v.
   exact (trunc_equiv' _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
 Defined.
+
+(** Theorem 5.8.4 (iv) -> (v) *)
+(** Contractibility of the total space of a reflexive relation is equivalent to asking that transport induces an equivalence between paths and the relation. *)
+Definition contr_sigma_refl_rel {A B : Type}
+  (R : A -> A -> Type) (r0 : forall a, R a a)
+  : (forall a b, IsEquiv (fun p : a = b => transport (R a) p (r0 a)))
+  -> forall a, Contr (sig (R a)).
+Proof.
+  intros f a.
+  rapply contr_equiv'.
+  { rapply equiv_functor_sigma_id.
+    intros b.
+    nrapply Build_Equiv.
+    exact (f a b). }
+  apply contr_basedpaths.
+Defined.
