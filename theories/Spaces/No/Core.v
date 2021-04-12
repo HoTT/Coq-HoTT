@@ -596,8 +596,8 @@ Section NoCodes.
   Context {S : OptionSort@{i}}.
   Let No := GenNo S.
 
-  Let A := {le'_x : No -> hProp &
-           {lt'_x : No -> hProp &
+  Let A := {le'_x : No -> HProp &
+           {lt'_x : No -> HProp &
            (forall y : No, lt'_x y -> le'_x y) *
            (forall y z : No, le'_x y -> y <= z -> le'_x z) *
            (forall y z : No, le'_x y -> y < z -> lt'_x z) *
@@ -613,7 +613,7 @@ Section NoCodes.
                          (xR_let r).1 y -> ((xL_let l).2).1 y).
 
     Let A' (y : No) : Type
-    := { lelt'_x_y : hProp * hProp &
+    := { lelt'_x_y : HProp * HProp &
          (snd lelt'_x_y -> fst lelt'_x_y) *
          (forall l : L, fst lelt'_x_y -> ((xL_let l).2).1 y) *
          (forall r : R, (xR_let r).1 y -> snd lelt'_x_y) }.
@@ -633,7 +633,7 @@ Section NoCodes.
       unfold A', A'le, A'lt; try exact _.
       - intros L' R' ? yL yR ycut x_let_yL x_let_yR y_lt_le.
         set (y := {{ yL | yR // ycut }}).
-        exists (BuildhProp
+        exists (Build_HProp
                   ((forall l, (xL_let l).2.1 y) *
                    (forall r', snd (x_let_yR r').1)) ,
                 (hor {l':L' & fst (x_let_yL l').1}
@@ -709,7 +709,7 @@ Section NoCodes.
                (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : fst (inner {{ yL | yR // ycut }}).1 =
-      (BuildhProp ((forall l, (xL_let l).2.1 {{ yL | yR // ycut }}) *
+      (Build_HProp ((forall l, (xL_let l).2.1 {{ yL | yR // ycut }}) *
                    (forall r', snd (inner (yR r')).1)))
       := 1.
 
@@ -811,10 +811,10 @@ Section NoCodes.
           refine (fst (zH {{ zL | zR // zcut }}) y_le_z) ).
   Defined.
 
-  Definition le' (x y : No) : hProp
+  Definition le' (x y : No) : HProp
     := (No_codes_package.1 x).1 y.
 
-  Definition lt' (x y : No) : hProp
+  Definition lt' (x y : No) : HProp
     := (No_codes_package.1 x).2.1 y.
 
   Definition lt'_le' x y
@@ -856,7 +856,7 @@ Section NoCodes.
   : le' {{xL | xR // xcut}} {{yL | yR // ycut}}
     = ((forall l, lt' (xL l) {{ yL | yR // ycut }}) *
        (forall r', lt' {{ xL | xR // xcut }} (yR r')))
-        (** For some reason, Coq has a really hard time checking the version of this that asserts an equality in [hProp].  But fortunately, we only ever really need the equality of types. *)
+        (** For some reason, Coq has a really hard time checking the version of this that asserts an equality in [HProp].  But fortunately, we only ever really need the equality of types. *)
         :> Type
     := 1.
 

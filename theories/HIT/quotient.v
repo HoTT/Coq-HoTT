@@ -78,9 +78,9 @@ Section Equiv.
     apply @hset_path2. apply _.
   Defined.
 
-  Definition in_class : quotient R -> A -> hProp.
+  Definition in_class : quotient R -> A -> HProp.
   Proof.
-    refine (quotient_ind R (fun _ => A -> hProp) (fun a b => BuildhProp (R a b)) _).
+    refine (quotient_ind R (fun _ => A -> HProp) (fun a b => Build_HProp (R a b)) _).
     intros. eapply concat;[apply transport_const|].
     apply path_forall. intro z. apply path_hprop; simpl.
     apply @equiv_iff_hprop; eauto.
@@ -147,7 +147,7 @@ Section Equiv.
     intros ?? H'. destruct (related_classes_eq R H'). by apply dequiv.
   Defined.
 
-  Definition quotient_rec2 {B : hSet} {dclass : (A -> A -> B)}:
+  Definition quotient_rec2 {B : HSet} {dclass : (A -> A -> B)}:
     forall dequiv : (forall x x', R x x' -> forall y y',  R y y' ->
                                                           dclass x y = dclass x' y'),
       quotient R -> quotient R -> B.
@@ -188,19 +188,19 @@ Section Equiv.
   Defined.
 
   (** From Ch10 *)
-  Definition quotient_ump' (B:hSet): (quotient R -> B) ->
+  Definition quotient_ump' (B:HSet): (quotient R -> B) ->
                                      (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
     intro f. exists (compose f (class_of R) ).
     intros. f_ap. by apply related_classes_eq.
   Defined.
 
-  Definition quotient_ump'' (B:hSet): (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
+  Definition quotient_ump'' (B:HSet): (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
                                       -> quotient R -> B.
     intros [f H'].
     apply (quotient_rec _ H').
   Defined.
 
-  Theorem quotient_ump (B:hSet): (quotient R -> B) <~>
+  Theorem quotient_ump (B:HSet): (quotient R -> B) <~>
                                                    (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
   Proof.
     refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).

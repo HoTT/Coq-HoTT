@@ -713,10 +713,10 @@ Defined.
 
 Definition LEM := forall (A : Type), IsHProp A -> A + ~A.
 
-Definition LEM_hProp_Bool (lem : LEM) (hprop : hProp) : Bool
+Definition LEM_hProp_Bool (lem : LEM) (hprop : HProp) : Bool
   := match (lem hprop _) with inl _ => true | inr _ => false end.
 
-Lemma Book_3_9_solution_1 `{Univalence} : LEM -> hProp <~> Bool.
+Lemma Book_3_9_solution_1 `{Univalence} : LEM -> HProp <~> Bool.
 Proof.
   intro lem.
   apply (equiv_adjointify (LEM_hProp_Bool lem) is_true).
@@ -1645,8 +1645,8 @@ End Book_7_1.
 (** Exercise 7.9 *)
 
 (** Solution for the case (oo,-1). *)
-Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : hSet, IsProjective' X) (A : Type)
-  : merely (exists X : hSet, exists p : X -> A, IsSurjection p)
+Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : HSet, IsProjective' X) (A : Type)
+  : merely (exists X : HSet, exists p : X -> A, IsSurjection p)
   := @HoTT.Projective.projective_cover_AC AC_oo_neg1 _ A.
 
 (* ================================================== ex:acconn *)

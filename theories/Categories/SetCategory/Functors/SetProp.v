@@ -32,7 +32,7 @@ Section set_coercions.
   (** ** Functors to [prop_cat] give rise to functors to [set_cat] *)
   Definition to_prop2set (F : to_prop C) : to_set C :=
     Build_Functor C set_cat
-                  (fun x => BuildhSet (F x))
+                  (fun x => Build_HSet (F x))
                   (fun s d m => (F _1 m)%morphism)
                   (fun s d d' m m' => composition_of F s d d' m m')
                   (fun x => identity_of F x).
@@ -40,16 +40,16 @@ Section set_coercions.
   (** ** Functors from [set_cat] give rise to functors to [prop_cat] *)
   Definition from_set2prop (F : from_set C) : from_prop C
     := Build_Functor prop_cat C
-                     (fun x => F (BuildhSet x))
+                     (fun x => F (Build_HSet x))
                      (fun s d m => (F _1 (m : morphism
                                                 set_cat
-                                                (BuildhSet s)
-                                                (BuildhSet d)))%morphism)
+                                                (Build_HSet s)
+                                                (Build_HSet d)))%morphism)
                      (fun s d d' m m' => composition_of F
-                                                        (BuildhSet s)
-                                                        (BuildhSet d)
-                                                        (BuildhSet d')
+                                                        (Build_HSet s)
+                                                        (Build_HSet d)
+                                                        (Build_HSet d')
                                                         m
                                                         m')
-                     (fun x => identity_of F (BuildhSet x)).
+                     (fun x => identity_of F (Build_HSet x)).
 End set_coercions.

@@ -10,13 +10,13 @@ Local Open Scope path_scope.
 
 (** ** Definitions *)
 
-(** A decidable proposition is, morally speaking, an hprop that is decidable.  However, we only require that it be an hprop under the additional assumption of [Funext]; this enables decidable propositions to usually be used without [Funext] hypotheses. *)
+(** A decidable proposition is, morally speaking, an HProp that is decidable.  However, we only require that it be an HProp under the additional assumption of [Funext]; this enables decidable propositions to usually be used without [Funext] hypotheses. *)
 
-Record DProp :=
-  { dprop_type : Type ;
-    ishprop_dprop : Funext -> IsHProp dprop_type ;
-    dec_dprop : Decidable dprop_type
-  }.
+Record DProp := {
+  dprop_type : Type ;
+  ishprop_dprop : Funext -> IsHProp dprop_type ;
+  dec_dprop : Decidable dprop_type
+}.
 
 (** A fancier definition, which would have the property that negation is judgmentally involutive, would be
 
@@ -41,11 +41,11 @@ Global Existing Instance dec_dprop.
 (** Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. *)
 
 Record DHProp :=
-  { dhprop_hprop : hProp ;
+  { dhprop_hprop : HProp ;
     dec_dhprop : Decidable dhprop_hprop
   }.
 
-Coercion dhprop_hprop : DHProp >-> hProp.
+Coercion dhprop_hprop : DHProp >-> HProp.
 Global Existing Instance dec_dhprop.
 
 Definition dhprop_to_dprop : DHProp -> DProp
@@ -99,13 +99,13 @@ Definition path_dprop `{Funext} {P Q : DProp}
   := equiv_path_dprop P Q.
 
 Definition issig_dhprop
-  : { X : hProp & Decidable X } <~> DHProp.
+  : { X : HProp & Decidable X } <~> DHProp.
 Proof.
   issig.
 Defined.
 
 Definition equiv_path_dhprop' `{Funext} (P Q : DHProp)
-: (P = Q :> hProp) <~> (P = Q :> DHProp).
+: (P = Q :> HProp) <~> (P = Q :> DHProp).
 Proof.
   destruct P as [P dP]. destruct Q as [Q dQ].
   refine (((equiv_ap' issig_dhprop^-1 _ _)^-1)
@@ -116,8 +116,8 @@ Defined.
 Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
 : (P = Q :> Type) <~> (P = Q :> DHProp).
 Proof.
-  assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> hProp)) by apply equiv_path_trunctype'.
-  assert (eq_hprop_dhprop : (P = Q :> hProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
+  assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> HProp)) by apply equiv_path_trunctype'.
+  assert (eq_hprop_dhprop : (P = Q :> HProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
   refine (eq_hprop_dhprop oE eq_type_hprop).
 Defined.
 
@@ -154,13 +154,13 @@ Definition dand (b1 b2 : DProp) : DProp
   := Build_DProp (b1 * b2) _ _.
 
 Definition dhand (b1 b2 : DHProp) : DHProp
-  := Build_DHProp (BuildhProp (b1 * b2)) _.
+  := Build_DHProp (Build_HProp (b1 * b2)) _.
 
 Definition dor (b1 b2 : DProp) : DProp
   := Build_DProp (hor b1 b2) _ _.
 
 Definition dhor (b1 b2 : DHProp) : DHProp
-  := Build_DHProp (BuildhProp (hor b1 b2)) _.
+  := Build_DHProp (Build_HProp (hor b1 b2)) _.
 
 Definition dneg (b : DProp) : DProp
   := Build_DProp (~b) _ _.

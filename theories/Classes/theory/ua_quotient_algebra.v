@@ -266,7 +266,7 @@ Section ump_quotient_algebra.
 
     Definition def_hom_quotient_algebra_mapout
       : ∀ (s : Sort σ), (A/Φ) s → B s
-      := λ s, (quotient_ump (Φ s) (BuildhSet (B s)))^-1 (f s; R s).
+      := λ s, (quotient_ump (Φ s) (Build_HSet (B s)))^-1 (f s; R s).
 
     Lemma oppreserving_quotient_algebra_mapout {w : SymbolType σ}
       (g : Operation (A/Φ) w) (α : Operation A w) (β : Operation B w)

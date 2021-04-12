@@ -76,7 +76,7 @@ Section in_image_hom.
     `{Funext} {σ : Signature} {A B : Algebra σ}
     (f : ∀ s, A s → B s) {hom : IsHomomorphism f}.
 
-  Definition in_image_hom (s : Sort σ) (y : B s) : hProp
+  Definition in_image_hom (s : Sort σ) (y : B s) : HProp
     := merely (hfiber (f s) y).
 
   Lemma closed_under_op_in_image_hom {w : SymbolType σ}

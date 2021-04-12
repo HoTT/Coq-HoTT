@@ -80,7 +80,7 @@ Section is_subalgebra_class.
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
     (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
-  Definition is_subalgebra_class (s : Sort σ) (x : (A/Φ) s) : hProp
+  Definition is_subalgebra_class (s : Sort σ) (x : (A/Φ) s) : HProp
     := hexists (λ (y : (A&&P) s), in_class (Φ s) x (i s y)).
 
   Lemma op_closed_subalgebra_is_subalgebra_class {w : SymbolType σ}

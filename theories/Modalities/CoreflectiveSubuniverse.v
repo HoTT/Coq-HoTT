@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 In particular, since we do not foresee many applications of this file, we don't bother introducing modules to make the definitions more universe polymorphic the way we did for reflective subuniverses. *)
 
 Record CoreflectiveSubuniverse :=
-  { inF : Type -> hProp ;
+  { inF : Type -> HProp ;
     F_coreflector : Type -> Type ;
     F_inF : forall X, inF (F_coreflector X) ;
     fromF : forall X, F_coreflector X -> X ;
@@ -95,12 +95,12 @@ End CoreflectiveSubuniverse.
 (** Conversely, we will now show that for any hprop [U], the types [X] such that [X -> U] are a coreflective subuniverse, which we call "co-open" since it is dual to the open modality. *)
 
 Section CoOpen.
-  Context `{Funext} (U : hProp).
+  Context `{Funext} (U : HProp).
 
   Definition coOp : CoreflectiveSubuniverse.
   Proof.
     simple refine (Build_CoreflectiveSubuniverse
-              (fun X => BuildhProp (X -> U))
+              (fun X => Build_HProp (X -> U))
               (fun X => X * U)
               (fun X => @snd X U)
               (fun X => @fst X U) _); try exact _.

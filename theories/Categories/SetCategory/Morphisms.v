@@ -17,7 +17,7 @@ Local Open Scope category_scope.
 
 Lemma isisomorphism_set_cat_natural_transformation_paths
       `{fs : Funext} (X : set_cat) C D F G
-      (T1 T2 : morphism set_cat X (BuildhSet (@NaturalTransformation C D F G)))
+      (T1 T2 : morphism set_cat X (Build_HSet (@NaturalTransformation C D F G)))
       (H : forall x y, T1 x y = T2 x y)
       `{@IsIsomorphism set_cat _ _ T1}
 : @IsIsomorphism set_cat _ _ T2.

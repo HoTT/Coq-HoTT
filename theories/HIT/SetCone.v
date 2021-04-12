@@ -5,10 +5,10 @@ Require Import HSet TruncType.
 Require Import Colimits.Pushout.
 Require Import HoTT.Truncations.
 
-(** * Cones of hsets *)
+(** * Cones of HSets *)
 
 Section SetCone.
-  Context {A B : hSet} (f : A -> B).
+  Context {A B : HSet} (f : A -> B).
 
   Definition setcone := Trunc 0 (Pushout f (const tt)).
 

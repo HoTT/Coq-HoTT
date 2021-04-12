@@ -11,11 +11,11 @@ Section AssumingUA.
 Context `{ua:Univalence}.
 
 (** We will now prove that for sets, epis and surjections are equivalent.*)
-Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
+Definition isepi {X Y} `(f:X->Y) := forall Z: HSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
 Definition isepi' {X Y} `(f : X -> Y) :=
-  forall (Z : hSet) (g : Y -> Z), Contr { h : Y -> Z | g o f = h o f }.
+  forall (Z : HSet) (g : Y -> Z), Contr { h : Y -> Z | g o f = h o f }.
 
 Lemma equiv_isepi_isepi' {X Y} f : @isepi X Y f <~> @isepi' X Y f.
 Proof.
@@ -37,7 +37,7 @@ Proof.
 Defined.
 
 Section cones.
-  Lemma isepi'_contr_cone `{Funext} {A B : hSet} (f : A -> B) : isepi' f -> Contr (setcone f).
+  Lemma isepi'_contr_cone `{Funext} {A B : HSet} (f : A -> B) : isepi' f -> Contr (setcone f).
   Proof.
     intros hepi.
     exists (setcone_point _).
@@ -50,7 +50,7 @@ Section cones.
     pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
     assert (X : l = r).
-      { let lem := constr:(fun X push' => hepi (BuildhSet (setcone f)) (tr o push' o @inl _ X)) in
+      { let lem := constr:(fun X push' => hepi (Build_HSet (setcone f)) (tr o push' o @inl _ X)) in
         pose (lem _ push).
         refine (path_contr l r). }
     subst l r.
@@ -94,7 +94,7 @@ transitivity (g (f x)).
 Qed.
 
 (** Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
- same universe as X and Y (the Z quantifier is instantiated with an hSet at a level higher)
+ same universe as X and Y (the Z quantifier is instantiated with an HSet at a level higher)
 <<
 Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f.
 Proof.
@@ -116,13 +116,13 @@ Defined.
 >> *)
 
 Section isepi_issurj.
-  Context {X Y : hSet} (f : X -> Y) (Hisepi : isepi f).
+  Context {X Y : HSet} (f : X -> Y) (Hisepi : isepi f).
   Definition epif := equiv_isepi_isepi' _ Hisepi.
-  Definition fam (c : setcone f) : hProp.
+  Definition fam (c : setcone f) : HProp.
   Proof.
     pose (fib y := hexists (fun x : X => f x = y)).
-    apply (fun f => @Trunc_rec _ _ hProp _ f c).
-    refine (Pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
+    apply (fun f => @Trunc_rec _ _ HProp _ f c).
+    refine (Pushout_rec HProp fib (fun _ => Unit_hp) (fun x => _)).
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.

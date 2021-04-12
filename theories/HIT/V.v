@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 (** Bitotal relation *)
 
-Definition bitotal {A B : Type} (R : A -> B -> hProp) :=
+Definition bitotal {A B : Type} (R : A -> B -> HProp) :=
    (forall a : A, hexists (fun (b : B) => R a b))
  * (forall b : B, hexists (fun (a : A) => R a b)).
 
@@ -22,7 +22,7 @@ Module Export CumulativeHierarchy.
 Private Inductive V : Type@{U'} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
-Axiom setext : forall {A B : Type} (R : A -> B -> hProp)
+Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
   (bitot_R : bitotal R) (h : SPushout R -> V),
 set (h o (spushl R)) = set (h o (spushr R)).
 
@@ -32,7 +32,7 @@ Existing Instance is0trunc_V.
 Fixpoint V_ind (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
+  (H_setext : forall (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
     (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
       = H_set B (h o spushr R) (H_h oD spushr R) )
@@ -49,11 +49,11 @@ End CumulativeHierarchy.
 Definition V_comp_setext (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
+  (H_setext : forall (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
     (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
       = H_set B (h o spushr R) (H_h oD spushr R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : SPushout R -> V)
+  (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R) (h : SPushout R -> V)
 : apD (V_ind P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_ind P H_0trunc H_set H_setext) oD h).
 Proof.
@@ -65,7 +65,7 @@ Defined.
 Definition V_rec (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
+  (H_setext : forall (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : SPushout R -> P),
     H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
 : V -> P.
@@ -77,10 +77,10 @@ Defined.
 Definition V_comp_nd_setext (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
+  (H_setext : forall (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : SPushout R -> P),
     H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : SPushout R -> V)
+  (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R) (h : SPushout R -> V)
 : ap (V_rec P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rec P H_0trunc H_set H_setext) o h).
 Proof.
@@ -97,7 +97,7 @@ Definition equal_img {A B C : Type} (f : A -> C) (g : B -> C) :=
 Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f g)
 : set f = set g.
 Proof.
-  pose (R := fun a b => BuildhProp (f a = g b)).
+  pose (R := fun a b => Build_HProp (f a = g b)).
   pose (h := SPushout_rec R V f g (fun _ _ r => r)).
   exact (setext R eq_img h).
 Defined.
@@ -193,7 +193,7 @@ Context `{ua : Univalence}.
 
 (** ** Membership relation *)
 
-Definition mem (x : V) : V -> hProp.
+Definition mem (x : V) : V -> HProp.
 Proof.
   simple refine (V_rec' _ _ _ _).
   - intros A f _.
@@ -215,20 +215,20 @@ Open Scope set_scope.
 
 (** ** Subset relation *)
 
-Definition subset (x : V) (y : V) : hProp
-:= BuildhProp (forall z : V, z ∈ x -> z ∈ y).
+Definition subset (x : V) (y : V) : HProp
+:= Build_HProp (forall z : V, z ∈ x -> z ∈ y).
 
 Notation "x ⊆ y" := (subset x y) : set_scope.
 
 
 (** ** Bisimulation relation *)
-(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
+(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in HProp_U : Type{U'}, hence the codomain is HProp@{U}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
 
-(* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
-Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
+(* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> HProp, by induction. This is the inner of the two inductions. *)
+Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> HProp) : V -> HProp.
 Proof.
   apply V_rec' with
-    (fun B g _ => BuildhProp ( (forall a, hexists (fun b => H_f a (g b)))
+    (fun B g _ => Build_HProp ( (forall a, hexists (fun b => H_f a (g b)))
                                * forall b, hexists (fun a => H_f a (g b)) )
     ).
   - exact _.
@@ -251,10 +251,10 @@ Proof.
         intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
 Defined.
 
-(* Then we define bisim : V -> (V -> hProp) by induction again *)
-Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U}.
+(* Then we define bisim : V -> (V -> HProp) by induction again *)
+Definition bisimulation : V@{U' U} -> V@{U' U} -> HProp@{U}.
 Proof.
-  refine (V_rec' (V -> hProp) _ bisim_aux _).
+  refine (V_rec' (V -> HProp) _ bisim_aux _).
   intros A B f g eq_img H_f H_g H_img.
   apply path_forall.
   refine (V_ind_hprop _ _ _).
@@ -432,7 +432,7 @@ Proof.
     + intros z Hz. apply (transport (fun x => z ∈ x) p^ Hz).
 Qed.
 
-Lemma mem_induction (C : V -> hProp)
+Lemma mem_induction (C : V -> HProp)
 : (forall v, (forall x, x ∈ v -> C x) -> C v) -> forall v, C v.
 Proof.
   intro H.
@@ -450,7 +450,7 @@ Proof.
   { intro.
     unfold complement.
     exact _. }
-  refine (mem_induction (fun x => BuildhProp (~ x ∈ x)) _); simpl in *.
+  refine (mem_induction (fun x => Build_HProp (~ x ∈ x)) _); simpl in *.
   intros v H. intro Hv.
   exact (H v Hv Hv).
 Defined.
@@ -706,7 +706,7 @@ Proof.
     intros [a p']. exists a. transitivity (r z); auto with path_hints. exact (ap r p').
 Qed.
 
-Lemma separation (C : V -> hProp) : forall a : V,
+Lemma separation (C : V -> HProp) : forall a : V,
   hexists (fun w => forall x, x ∈ w <-> x ∈ a * (C x)).
 Proof.
   refine (V_ind_hprop _ _ _).

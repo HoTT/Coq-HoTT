@@ -306,7 +306,7 @@ Definition F_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   (dequiv : forall x1 x2, equiv x1 x2 -> forall y1 y2, equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   F -> F -> T
-  := @quotient_rec2@{UR UR j i} _ _ _ _ _ (BuildhSet _).
+  := @quotient_rec2@{UR UR j i} _ _ _ _ _ (Build_HSet _).
 
 Definition F_rec2_compute {T sT} dclass dequiv x y
   : @F_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
@@ -405,7 +405,7 @@ Defined.
 
 Lemma classes_eq_related@{} : forall q r, ' q = ' r -> equiv q r.
 Proof.
-apply classes_eq_related@{UR UR Ularge Ularge Uhuge};apply _.
+apply classes_eq_related@{UR UR Ularge Uhuge};apply _.
 Qed.
 
 Lemma class_neq@{} : forall q r, ~ (equiv q r) -> ' q <> ' r.

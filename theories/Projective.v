@@ -88,13 +88,13 @@ Section AC_oo_neg1.
   (** ** Projectivity and AC_(oo,-1) (defined in HoTT book, Exercise 7.8) *)
   (* TODO: Generalize to n, m. *)
 
-  Context {AC : forall X : hSet, IsProjective' X}.
+  Context {AC : forall X : HSet, IsProjective' X}.
 
   (** (Exercise 7.9) Assuming AC_(oo,-1) every type merely has a projective cover. *)
   Proposition projective_cover_AC `{Univalence} (A : Type)
-    : merely (exists X:hSet, exists p : X -> A, IsSurjection p).
+    : merely (exists X:HSet, exists p : X -> A, IsSurjection p).
   Proof.
-    pose (X := BuildhSet (Tr 0 A)).
+    pose (X := Build_HSet (Tr 0 A)).
     pose proof ((equiv_isprojective_choice X)^-1 (AC X)) as P.
     pose proof (P A X idmap tr _) as F; clear P.
     strip_truncations.

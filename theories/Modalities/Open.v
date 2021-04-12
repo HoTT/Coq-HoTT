@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 (** ** Definition *)
 
-Definition Op `{Funext} (U : hProp) : Modality.
+Definition Op `{Funext} (U : HProp) : Modality.
 Proof.
   snrapply easy_modality.
   - intros X; exact (U -> X).
@@ -50,7 +50,7 @@ Defined.
 (** ** The open modality is lex *)
 
 (** Note that unlike most other cases, we can prove this without univalence (though we do of course need funext). *)
-Global Instance lex_open `{Funext} (U : hProp)
+Global Instance lex_open `{Funext} (U : HProp)
   : Lex (Op U).
 Proof.
   apply lex_from_isconnected_paths.
@@ -68,7 +68,7 @@ Defined.
 
 (** ** The open modality is accessible. *)
 
-Global Instance acc_open `{Funext} (U : hProp)
+Global Instance acc_open `{Funext} (U : HProp)
   : IsAccModality (Op U).
 Proof.
   unshelve econstructor.
@@ -86,5 +86,5 @@ Proof.
 Defined.
 
 (** Thus, arguably a better definition of [Op] would be as a nullification modality, as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We name the other version [Op']. *)
-Definition Op' (U : hProp) : Modality
+Definition Op' (U : HProp) : Modality
   := Nul (Build_NullGenerators Unit (fun _ => U)).
