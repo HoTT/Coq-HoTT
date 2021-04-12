@@ -547,18 +547,14 @@ Proof.
         transitivity (loops (pClassifyingSpace (Pi1 X))).
         1: symmetry; rapply equiv_tr.
         rapply equiv_loops_bg_g. }
-      intro x.
-      strip_truncations.
-      simpl.
-      unfold Trunc_functor.
-      unfold O_functor.
-      unfold O_rec.
-      simpl.
-      revert x.
+      intro x; strip_truncations; revert x.
       snrapply equiv_ind.
       2: apply equiv_loops_bg_g.
       1: exact _.
       intro p.
+      hnf.
+      change (_ = ?R) with (encode (point (ClassifyingSpace (Pi1 X))) (bloop p) = R).
+      unfold Trunc_functor, O_functor, O_rec.
       simpl.
       rewrite ClassifyingSpace_rec_beta_bloop.
       unfold encode.
@@ -570,7 +566,6 @@ Proof.
     snrapply isequiv_contr_contr.
     { nrapply contr_equiv'.
       { apply equiv_tr.
-        Search IsTrunc Contr.
         nrapply trunc_contr.
         apply equiv_istrunc_contr_iterated_loops.
         snrapply trunc_leq.
@@ -583,7 +578,6 @@ Proof.
       induction n; exact _. }
     { nrapply contr_equiv'.
       { apply equiv_tr.
-        Search IsTrunc Contr.
         nrapply trunc_contr.
         apply equiv_istrunc_contr_iterated_loops.
         snrapply trunc_leq.
