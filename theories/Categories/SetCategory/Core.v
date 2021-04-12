@@ -20,8 +20,8 @@ Notation cat_of obj :=
 (** There is a category [Set], where the objects are sets and the
     morphisms are set morphisms *)
 
-Definition prop_cat `{Funext} : PreCategory := cat_of hProp.
-Definition set_cat `{Funext} : PreCategory := cat_of hSet.
+Definition prop_cat `{Funext} : PreCategory := cat_of HProp.
+Definition set_cat `{Funext} : PreCategory := cat_of HSet.
 
 (** ** [Prop] is a strict category *)
 Global Instance isstrict_prop_cat `{Univalence}

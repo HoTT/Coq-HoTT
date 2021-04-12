@@ -3,19 +3,19 @@ Require Import
   HoTT.HProp HoTT.TruncType
   HoTT.Types.Universe HoTT.Types.Prod.
 
-(** Demonstrate the [hProp] is a (bounded) lattice w.r.t. the logical
+(** Demonstrate the [HProp] is a (bounded) lattice w.r.t. the logical
 operations. This requires Univalence. *)
-Instance join_hor : Join hProp := hor.
-Definition hand (X Y : hProp) : hProp := BuildhProp (X * Y).
-Instance meet_hprop : Meet hProp := hand.
-Instance bottom_hprop : Bottom hProp := False_hp.
-Instance top_hprop : Top hProp := Unit_hp.
+Instance join_hor : Join HProp := hor.
+Definition hand (X Y : HProp) : HProp := Build_HProp (X * Y).
+Instance meet_hprop : Meet HProp := hand.
+Instance bottom_hprop : Bottom HProp := False_hp.
+Instance top_hprop : Top HProp := Unit_hp.
 
 Section contents.
   Context `{Univalence}.
 
   (* We use this notation because [hor] can accept arguments of type [Type], which leads to minor confusion in the instances below *)
-  Notation lor := (hor : hProp -> hProp -> hProp).
+  Notation lor := (hor : HProp -> HProp -> HProp).
 
   (* This tactic attempts to destruct a truncated sum (disjunction) *)
   Local Ltac hor_intros :=
@@ -112,6 +112,6 @@ Section contents.
       * by apply tr, inl.
   Defined.
 
-  Global Instance boundedlattice_hprop : IsBoundedLattice hProp.
+  Global Instance boundedlattice_hprop : IsBoundedLattice HProp.
   Proof. repeat split; apply _. Defined.
 End contents.

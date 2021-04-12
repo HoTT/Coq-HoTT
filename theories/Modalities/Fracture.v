@@ -157,7 +157,7 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
 
 (** An easy example of the lex-modal fracture theorem is supplied by the open and closed modalities for an hprop [U]. *)
 
-Definition gluable_open_closed `{Funext} (U : hProp)
+Definition gluable_open_closed `{Funext} (U : HProp)
 : Gluable (Op U) (Cl U).
 Proof.
   intros A.
@@ -166,7 +166,7 @@ Proof.
   exact (ap10 (path_contr _ (fun _ => a)) u).
 Defined.
 
-Definition disjoint_open_closed `{Funext} (U : hProp)
+Definition disjoint_open_closed `{Funext} (U : HProp)
 : Disjoint (Op U) (Cl U).
 Proof.
   intros A.
@@ -178,7 +178,7 @@ Defined.
 
 (** We can also prove the same thing without funext if we use the nullification versions of these modalities. *)
 
-Definition gluable_open_closed' (U : hProp)
+Definition gluable_open_closed' (U : HProp)
 : Gluable (Op' U) (Cl' U).
 Proof.
   intros A ? u; simpl in *.
@@ -196,7 +196,7 @@ Proof.
   apply ooextendable_contr; exact _.
 Defined.
 
-Definition disjoint_open_closed' (U : hProp)
+Definition disjoint_open_closed' (U : HProp)
 : Disjoint (Op' U) (Cl' U).
 Proof.
   intros A An.

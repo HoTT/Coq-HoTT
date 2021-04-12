@@ -37,7 +37,7 @@ Section strict_field_order.
       x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t))).
   Proof. Abort.
 
-  Definition hexists4 {X Y Z W} (f : X -> Y -> Z -> W -> Type) : hProp
+  Definition hexists4 {X Y Z W} (f : X -> Y -> Z -> W -> Type) : HProp
     := hexists (fun xyzw => match xyzw with
                             | ((x , y) , (z , w)) => f x y z w
                             end).

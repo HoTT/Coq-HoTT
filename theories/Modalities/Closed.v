@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 
 (** We begin by characterizing the modal types. *)
 Section ClosedModalTypes.
-  Context (U : hProp).
+  Context (U : HProp).
 
   Definition equiv_inO_closed (A : Type)
   : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : Join U A).
@@ -44,7 +44,7 @@ Section ClosedModalTypes.
 End ClosedModalTypes.
 
 (** Exercise 7.13(ii): Closed modalities *)
-Definition Cl (U : hProp) : Modality.
+Definition Cl (U : HProp) : Modality.
 Proof.
   snrapply Build_Modality.
   - intros X; exact (U -> Contr X).
@@ -72,7 +72,7 @@ Proof.
 Defined.
 
 (** The closed modality is accessible. *)
-Global Instance accmodality_closed (U : hProp)
+Global Instance accmodality_closed (U : HProp)
   : IsAccModality (Cl U).
 Proof.
   unshelve econstructor.
@@ -90,16 +90,16 @@ Proof.
 Defined.
 
 (** In fact, it is topological, and therefore (assuming univalence) lex.  As for topological modalities generally, we don't need to declare these as global instances, but we prove them here as local instances for exposition. *)
-Local Instance topological_closed (U : hProp)
+Local Instance topological_closed (U : HProp)
   : Topological (Cl U)
   := _.
 
-Global Instance lex_closed `{Univalence} (U : hProp)
+Global Instance lex_closed `{Univalence} (U : HProp)
   : Lex (Cl U).
 Proof.
   rapply lex_topological.
 Defined.
 
 (** Thus, it also has the following alternative version. *)
-Definition Cl' (U : hProp) : Modality
+Definition Cl' (U : HProp) : Modality
   := Nul (Build_NullGenerators U (fun _ => Empty)).

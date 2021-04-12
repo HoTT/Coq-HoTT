@@ -17,7 +17,7 @@ Section hom_functor.
   Variable C : PreCategory.
 
   Local Notation obj_of c'c :=
-    (BuildhSet
+    (Build_HSet
        (morphism
           C
           (fst (c'c : object (C^op * C)))

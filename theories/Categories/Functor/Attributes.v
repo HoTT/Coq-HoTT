@@ -84,7 +84,7 @@ End full_faithful.
 
 Section fully_faithful_helpers.
   Context `{ua : Univalence}.
-  Variables x y : hSet.
+  Variables x y : HSet.
   Variable m : x -> y.
 
   Lemma isisomorphism_isequiv_set_cat

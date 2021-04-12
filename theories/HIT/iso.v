@@ -8,7 +8,7 @@ Local Open Scope path_scope.
 (** We prove that [epi + mono <-> IsEquiv] *)
 Section iso.
   Context `{Univalence}.
-  Variables X Y : hSet.
+  Variables X Y : HSet.
   Variable f : X -> Y.
 
   Lemma atmost1P_isinj (injf : isinj f)

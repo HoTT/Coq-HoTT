@@ -78,7 +78,7 @@ Section locator.
   Arguments locates_right_false [x] _ [q] [r] _.
 
   Definition locates_left {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
-    fun nu => Build_DHProp (BuildhProp (~ (locates_right l nu))) _.
+    fun nu => Build_DHProp (Build_HProp (~ (locates_right l nu))) _.
 
   Section classical.
     Context `{ExcludedMiddle}.
@@ -128,7 +128,7 @@ Section locator.
     Definition locator_locator' : locator x -> locator' x.
     Proof.
       intros l.
-      refine (Build_locator' x (fun q r nu => Build_DHProp (BuildhProp (is_inl (l q r nu))) _) _ _).
+      refine (Build_locator' x (fun q r nu => Build_DHProp (Build_HProp (is_inl (l q r nu))) _) _ _).
       - intros q r nu. simpl. apply un_inl.
       - intros q r nu. simpl. destruct (l q r nu) as [ltqx|].
         + simpl; intros f; destruct (f tt).

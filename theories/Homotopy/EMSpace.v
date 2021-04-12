@@ -38,8 +38,8 @@ Section LicataFinsterLemma.
   Local Definition codes : Susp X -> 1 -Type.
   Proof.
     srapply Susp_rec.
-    1: refine (BuildTruncType _ X).
-    1: refine (BuildTruncType _ X).
+    1: refine (Build_TruncType _ X).
+    1: refine (Build_TruncType _ X).
     intro x.
     apply path_trunctype.
     apply (equiv_hspace_left_op x).
