@@ -532,7 +532,9 @@ Definition Book_4_2_1 := @HoTT.Basics.Overture.IsEquiv.
 (* ================================================== lem:coh-equiv *)
 (** Lemma 4.2.2 *)
 
-Definition Book_4_2_2 := @HoTT.Basics.Equivalences.eisadj_other.
+Definition Book_4_2_2 := fun A B f isf x =>
+  @HoTT.Basics.Overture.eisadj B A f^-1
+    (@HoTT.Basics.Equivalences.isequiv_inverse A B f isf) x.
 
 (* ================================================== thm:equiv-iso-adj *)
 (** Theorem 4.2.3 *)
