@@ -338,28 +338,27 @@ Notation IsEmbedding := (IsTruncMap (-1)).
 
 (** It is convenient for some purposes to consider the universe of all n-truncated types (within a given universe of types).  In particular, this allows us to state the important fact that each such universe is itself (n+1)-truncated. *)
 
-Record TruncType (n : trunc_index) := BuildTruncType {
+Record TruncType (n : trunc_index) := {
   trunctype_type : Type ;
-  istrunc_trunctype_type : IsTrunc n trunctype_type
+  trunctype_istrunc : IsTrunc n trunctype_type
 }.
-(* Note: the naming of the second constructor is more than a little clunky.  However, the more obvious [istrunc_trunctype] is taken by the theorem below, that [IsTrunc n.+1 (TruncType n)], which seems to have an even better claim to it. *)
 
-Arguments BuildTruncType _ _ {_}.
+Arguments Build_TruncType _ _ {_}.
 Arguments trunctype_type {_} _.
-Arguments istrunc_trunctype_type [_] _.
+Arguments trunctype_istrunc [_] _.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
-Global Existing Instance istrunc_trunctype_type.
+Global Existing Instance trunctype_istrunc.
 
 Notation "n -Type" := (TruncType n) : type_scope.
-Notation hProp := (-1)-Type.
-Notation hSet := 0-Type.
+Notation HProp := (-1)-Type.
+Notation HSet := 0-Type.
 
-Notation BuildhProp := (BuildTruncType (-1)).
-Notation BuildhSet := (BuildTruncType 0).
+Notation Build_HProp := (Build_TruncType (-1)).
+Notation Build_HSet := (Build_TruncType 0).
 
 (** This is (as of October 2014) the only [Canonical Structure] in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. *)
-Canonical Structure default_TruncType := fun n T P => (@BuildTruncType n T P).
+Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 
 (** ** Facts about hprops *)
 

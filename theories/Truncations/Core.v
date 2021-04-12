@@ -167,11 +167,11 @@ Local Open Scope trunc_scope.
 
 (** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
 
-Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Tr (-1) A).
+Definition merely (A : Type@{i}) : HProp@{i} := Build_HProp (Tr (-1) A).
 
-Definition hexists {X} (P : X -> Type) : hProp := merely (sig P).
+Definition hexists {X} (P : X -> Type) : HProp := merely (sig P).
 
-Definition hor (P Q : Type) : hProp := merely (P + Q).
+Definition hor (P Q : Type) : HProp := merely (P + Q).
 
 Notation "A \/ B" := (hor A B) : type_scope.
 
@@ -304,7 +304,8 @@ Defined.
 Local Instance O_lex_leq_Tr `{Univalence} (n : trunc_index)
   : Tr n <<< Tr n.+1.
 Proof.
-  intros A; unshelve econstructor; intros P' P_inO; pose (P := fun x => BuildTruncType n (P' x)).
+  intros A; unshelve econstructor; intros P' P_inO;
+    pose (P := fun x => Build_TruncType n (P' x)).
   - refine (Trunc_rec P).
   - intros; exact _.
   - intros; cbn. reflexivity.

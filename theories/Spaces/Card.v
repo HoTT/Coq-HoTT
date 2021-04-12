@@ -8,27 +8,27 @@ Opaque trunc_equiv. (** This speeds things up considerably *)
 
 (** ** Definitions and operations *)
 
-Definition Card := Trunc 0 hSet.
+Definition Card := Trunc 0 HSet.
 
 Definition sum_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (BuildhSet (a + b))).
+  refine (tr (Build_HSet (a + b))).
 Defined.
 
 Definition prod_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (BuildhSet (a * b))).
+  refine (tr (Build_HSet (a * b))).
 Defined.
 
 Definition exp_card `{Funext} (b a : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (BuildhSet (b -> a))).
+  refine (tr (Build_HSet (b -> a))).
 Defined.
 
-Definition leq_card `{Univalence} : Card -> Card -> hProp.
+Definition leq_card `{Univalence} : Card -> Card -> HProp.
 Proof.
   refine (Trunc_rec (fun a => _)).
   refine (Trunc_rec (fun b => _)).
@@ -41,8 +41,8 @@ Section contents.
 
   Global Instance plus_card : Plus Card := sum_card.
   Global Instance mult_card : Mult Card := prod_card.
-  Global Instance zero_card : Zero Card := tr (BuildhSet Empty).
-  Global Instance one_card : One Card := tr (BuildhSet Unit).
+  Global Instance zero_card : Zero Card := tr (Build_HSet Empty).
+  Global Instance one_card : One Card := tr (Build_HSet Unit).
   Global Instance le_card : Le Card := leq_card.
 
   (* Reduce an algebraic equation to an equivalence *)

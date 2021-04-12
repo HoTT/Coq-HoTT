@@ -187,10 +187,10 @@ Section EncodeDecode.
 
   Context `{Univalence} {G : Group}.
 
-  Local Definition codes : B G -> 0-Type.
+  Local Definition codes : B G -> HSet.
   Proof.
     srapply ClassifyingSpace_rec.
-    + srapply (BuildhSet G).
+    + srapply (Build_HSet G).
     + intro x.
       apply path_trunctype.
       apply (right_mult_equiv x).
