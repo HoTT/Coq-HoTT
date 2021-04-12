@@ -44,7 +44,7 @@ Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
 Proof.
   intros [Z p] [W q].
   strip_truncations.
-  refine (@trunc_equiv' _ _ (path_baut _ _) n.+1 _); simpl.
+  refine (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _); simpl.
   symmetry in q; destruct q.
   symmetry in p; destruct p.
   exact _.

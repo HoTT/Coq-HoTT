@@ -35,7 +35,7 @@ Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
  {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
   `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1).
 Proof.
-  refine (trunc_equiv' _ dp_path_transport).
+  exact (istrunc_equiv_istrunc _ dp_path_transport).
 Defined.
 
 Definition dp_ishprop {A : Type} (P : A -> Type) {a0 a1} {p : a0 = a1}

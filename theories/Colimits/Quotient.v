@@ -190,7 +190,7 @@ Section Equiv.
   Proof.
     apply Quotient_ind with dclass.
     { srapply Quotient_ind.
-      1: intro; apply trunc_succ.
+      1: intro; apply istrunc_succ.
       intros ???; apply path_ishprop. }
     intros; apply path_ishprop.
   Defined.

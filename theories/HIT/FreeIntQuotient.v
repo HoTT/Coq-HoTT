@@ -26,7 +26,7 @@ Section FreeIntAction.
   (** Together, [R] and [f] define a fibration over [Circle].  By the flattening lemma, its total space is equivalent to the quotient. *)
   Global Instance isset_RmodZ : IsHSet RmodZ.
   Proof.
-    refine (trunc_equiv'
+    refine (istrunc_equiv_istrunc
               { z : Circle & Circle_rec Type R (path_universe f) z}
               (_ oE (@equiv_flattening _ Unit Unit idmap idmap
                                   (fun _ => R) (fun _ => f))^-1
@@ -74,7 +74,7 @@ Section FreeIntAction.
       unfold loop.
       exact (Coeq_rec_beta_cglue _ _ _ _).
     - intros xu yv.
-      refine (trunc_equiv' (n := -1) _ (equiv_path_sigma _ xu yv)).
+      refine (istrunc_equiv_istrunc (n := -1) _ (equiv_path_sigma _ xu yv)).
       destruct xu as [x u], yv as [y v]; cbn.
       apply hprop_allpath.
       intros [p r] [q s].

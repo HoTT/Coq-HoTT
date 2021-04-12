@@ -48,7 +48,7 @@ Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
 Global Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
   : IsHProp (IsSubgroup H).
 Proof.
-  exact (trunc_equiv' _ (issig_issubgroup H)).
+  exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).
 Defined.
 
 (** The type (set) of subgroups of a group G. *)
@@ -117,7 +117,7 @@ Defined.
 
 Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
   : IsEmbedding (subgroup_incl H)
-  := fun _ => trunc_equiv' _ (hfiber_fibration _ _).
+  := fun _ => istrunc_equiv_istrunc _ (hfiber_fibration _ _).
 
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
@@ -159,15 +159,15 @@ Defined.
 
 Global Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).
 Proof.
-  nrefine (trunc_equiv' _ issig_subgroup).
-  nrefine (trunc_equiv' _ (equiv_functor_sigma_id _)).
+  nrefine (istrunc_equiv_istrunc _ issig_subgroup).
+  nrefine (istrunc_equiv_istrunc _ (equiv_functor_sigma_id _)).
   - intro P; apply issig_issubgroup.
-  - nrefine (trunc_equiv' _ (equiv_sigma_assoc' _ _)^-1%equiv).
-    nrapply trunc_sigma.
-    2: intros []; apply trunc_hprop.
-    nrefine (trunc_equiv'
+  - nrefine (istrunc_equiv_istrunc _ (equiv_sigma_assoc' _ _)^-1%equiv).
+    nrapply istrunc_sigma.
+    2: intros []; apply istrunc_hprop.
+    nrefine (istrunc_equiv_istrunc
                _ (equiv_sig_coind (fun g:G => Type) (fun g x => IsHProp x))^-1%equiv).
-    apply trunc_forall.
+    apply istrunc_forall.
 Defined.
 
 Section Cosets.

@@ -48,7 +48,7 @@ Section congruence.
     `{!forall s x y, IsTrunc n (Φ s x y)}
     : IsTrunc n OpsCompatible.
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Defined.
 
   (** A family of relations [Φ] is a congruence iff it is a family of

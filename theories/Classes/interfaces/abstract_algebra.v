@@ -322,9 +322,9 @@ Global Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}
   `{SgOp B} `{IsHSet B} `{MonUnit A} `{MonUnit B} (f : A -> B)
   : IsHProp (IsMonoidPreserving f).
 Proof.
-  srapply (trunc_equiv' _ issig_IsMonoidPreserving).
-  srapply (trunc_equiv' _ (equiv_sigma_prod0 _ _)^-1).
-  srapply trunc_prod.
+  srapply (istrunc_equiv_istrunc _ issig_IsMonoidPreserving).
+  srapply (istrunc_equiv_istrunc _ (equiv_sigma_prod0 _ _)^-1).
+  srapply istrunc_prod.
   unfold IsUnitPreserving.
   exact _.
 Defined.
@@ -334,7 +334,7 @@ Global Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
   (f : A -> B)
   : IsHProp (IsSemiRingPreserving f).
 Proof.
-  snrapply (trunc_equiv' _ issig_IsSemiRingPreserving).
+  snrapply (istrunc_equiv_istrunc _ issig_IsSemiRingPreserving).
   exact _.
 Defined.
 
@@ -395,7 +395,7 @@ Proof.
   srapply contr_prod.
   all: srapply contr_paths_contr.
   all: srapply contr_inhabited_hprop.
-  all: srapply trunc_forall.
+  all: srapply istrunc_forall.
 Defined.
 
 Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).
@@ -429,7 +429,7 @@ Proof.
   srapply contr_prod.
   all: srapply contr_paths_contr.
   all: srapply contr_inhabited_hprop.
-  all: srapply trunc_forall.
+  all: srapply istrunc_forall.
 Defined.
 
 End extras.

@@ -351,12 +351,12 @@ Definition Book_3_1_4 := @HoTT.Spaces.Nat.hset_nat.
 (* ================================================== thm:isset-prod *)
 (** Example 3.1.5 *)
 
-Definition Book_3_1_5 := @HoTT.Types.Prod.trunc_prod.
+Definition Book_3_1_5 := @HoTT.Types.Prod.istrunc_prod.
 
 (* ================================================== thm:isset-forall *)
 (** Example 3.1.6 *)
 
-Definition Book_3_1_6 := @HoTT.Types.Forall.trunc_forall.
+Definition Book_3_1_6 := @HoTT.Types.Forall.istrunc_forall.
 
 (* ================================================== defn:1type *)
 (** Definition 3.1.7 *)
@@ -366,7 +366,7 @@ Definition Book_3_1_7 := @HoTT.Basics.Overture.IsTrunc 1.
 (* ================================================== thm:isset-is1type *)
 (** Lemma 3.1.8 *)
 
-Definition Book_3_1_8 := @HoTT.Basics.Trunc.trunc_succ 0.
+Definition Book_3_1_8 := @HoTT.Basics.Trunc.istrunc_succ 0.
 
 (* ================================================== thm:type-is-not-a-set *)
 (** Example 3.1.9 *)
@@ -401,7 +401,7 @@ Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.
 (* ================================================== thm:prop-set *)
 (** Lemma 3.3.4 *)
 
-Definition Book_3_3_4 := @HoTT.Basics.Trunc.trunc_succ (-1).
+Definition Book_3_3_4 := @HoTT.Basics.Trunc.istrunc_succ (-1).
 
 (* ================================================== thm:isprop-isset *)
 (** Lemma 3.3.5 *)
@@ -434,7 +434,7 @@ Definition Book_3_5_1 := @HoTT.Types.Sigma.path_sigma_hprop.
 (** Example 3.6.2 *)
 
 Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
-  := @HoTT.Types.Forall.trunc_forall _ A B (-1).
+  := @HoTT.Types.Forall.istrunc_forall _ A B (-1).
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)
@@ -484,7 +484,7 @@ Definition Book_3_11_5 := @HoTT.Basics.Contractible.contr_contr.
 (* ================================================== thm:contr-forall *)
 (** Lemma 3.11.6 *)
 
-Definition Book_3_11_6 := @HoTT.Types.Forall.trunc_forall.
+Definition Book_3_11_6 := @HoTT.Types.Forall.istrunc_forall.
 
 (* ================================================== thm:retract-contr *)
 (** Lemma 3.11.7 *)
@@ -991,7 +991,7 @@ Definition Book_6_12_8 := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.
 (* ================================================== thm:hlevel-prod *)
 (** Theorem 7.1.9 *)
 
-Definition Book_7_1_9 := @HoTT.Types.Forall.trunc_forall.
+Definition Book_7_1_9 := @HoTT.Types.Forall.istrunc_forall.
 
 (* ================================================== thm:isaprop-isofhlevel *)
 (** Theorem 7.1.10 *)
@@ -1486,7 +1486,7 @@ Definition Book_9_1_2 := @HoTT.Categories.Category.Morphisms.Isomorphic.
 (* ================================================== ct:isoprop *)
 (** Lemma 9.1.3 *)
 
-Definition Book_9_1_3 := @HoTT.Categories.Category.Morphisms.trunc_isisomorphism.
+Definition Book_9_1_3 := @HoTT.Categories.Category.Morphisms.istrunc_isisomorphism.
 
 (* ================================================== ct:idtoiso *)
 (** Lemma 9.1.4 *)
@@ -1536,11 +1536,11 @@ Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsCategory A}
 Proof.
   split.
   - intros H' a b.
-    eapply trunc_equiv.
+    eapply istrunc_isequiv_istrunc.
     + refine (H' a b).
     + apply H.
   - intros H' a b.
-    eapply trunc_equiv.
+    eapply istrunc_isequiv_istrunc.
     + apply (H' a b).
     + apply (@isequiv_inverse _ _ _ (H _ _)).
 Defined.

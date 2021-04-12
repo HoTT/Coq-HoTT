@@ -29,7 +29,7 @@ Proof.
   refine (contr_change_center (point (BAut A))).
   refine (contr_trunc_conn (Tr 0)).
   intros Z W; baut_reduce.
-  refine (trunc_equiv (n := -1) (A <~> A)
+  refine (istrunc_equiv_istrunc (n := -1) (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).
 Defined.
 

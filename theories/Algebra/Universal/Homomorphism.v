@@ -24,7 +24,7 @@ Section is_homomorphism.
     (α : Operation A w) (β : Operation B w)
     : IsHProp (OpPreserving α β).
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Qed.
 
   Class IsHomomorphism : Type
@@ -33,7 +33,7 @@ Section is_homomorphism.
   Global Instance hprop_is_homomorphism `{Funext}
     : IsHProp IsHomomorphism.
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Qed.
 End is_homomorphism.
 
@@ -67,7 +67,7 @@ Defined.
 Global Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
   : IsHSet (Homomorphism A B).
 Proof.
-  apply (trunc_equiv _ (issig_homomorphism A B)).
+  apply (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
 Qed.
 
 Lemma path_homomorphism `{Funext} {σ} {A B : Algebra σ}
@@ -97,7 +97,7 @@ Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
   {A B : Algebra σ} (f : forall s, A s -> B s) `{!IsHomomorphism f}
   : IsHProp (IsIsomorphism f).
 Proof.
-  apply trunc_forall.
+  apply istrunc_forall.
 Qed.
 
 (** The identity homomorphism. *)

@@ -40,7 +40,7 @@ Defined.
 
 Global Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
 Proof.
-  apply (trunc_equiv _ equiv_hset_axiomK).
+  apply (istrunc_equiv_istrunc _ equiv_hset_axiomK).
 Defined.
 
 Theorem hset_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):
@@ -59,7 +59,7 @@ Defined.
 Lemma axiomK_idpath {A} (x : A) (K : axiomK A) :
   K x (idpath x) = idpath (idpath x).
 Proof.
-  pose (T1A := @trunc_succ _ A (@hset_axiomK A K)).
+  pose (T1A := @istrunc_succ _ A (@hset_axiomK A K)).
   exact (@hset_path2 (x=x) (T1A x x) _ _ _ _).
 Defined.
 

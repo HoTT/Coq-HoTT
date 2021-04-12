@@ -14,4 +14,4 @@ Axiom equiv_resize_hprop : forall `{PropResizing} (A : Type@{i}) `{IsHProp A},
 Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}
   : IsHProp (resize_hprop A)
-  := trunc_equiv A (equiv_resize_hprop A).
+  := istrunc_equiv_istrunc A (equiv_resize_hprop A).

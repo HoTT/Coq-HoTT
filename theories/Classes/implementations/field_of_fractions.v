@@ -25,7 +25,7 @@ Lemma Frac_ishset' : IsHSet Frac.
 Proof.
 assert (E : sig (fun n : R => sig (fun d : R => d <> 0 )) <~> Frac).
 - issig.
-- apply (trunc_equiv' _ E).
+- apply (istrunc_equiv_istrunc _ E).
 Qed.
 
 Global Instance Frac_ishset@{} : IsHSet Frac
@@ -266,7 +266,7 @@ Definition F_compute_path P {sP} dclass dequiv q r (E : equiv q r)
 Definition F_ind@{i} (P : F -> Type@{i}) {sP : forall x, IsHProp (P x)}
   (dclass : forall x : Frac R, P (' x)) : forall x, P x.
 Proof.
-apply (@F_rect P (fun _ => trunc_hprop) dclass).
+apply (@F_rect P (fun _ => istrunc_hprop) dclass).
 intros;apply path_ishprop.
 Qed.
 
@@ -274,7 +274,7 @@ Definition F_ind2@{i j} (P : F -> F -> Type@{i}) {sP : forall x y, IsHProp (P x 
   (dclass : forall x y : Frac R, P (' x) (' y)) : forall x y, P x y.
 Proof.
 apply (@F_ind (fun x => forall y, _)).
-- intros;apply Forall.trunc_forall@{UR i j}.
+- intros;apply Forall.istrunc_forall@{UR i j}.
 - intros x.
   apply (F_ind _);intros y.
   apply dclass.
@@ -286,7 +286,7 @@ Definition F_ind3@{i j} (P : F -> F -> F -> Type@{i})
   : forall x y z, P x y z.
 Proof.
 apply (@F_ind (fun x => forall y z, _)).
-- intros;apply Forall.trunc_forall@{UR j j}.
+- intros;apply Forall.istrunc_forall@{UR j j}.
 - intros x.
   apply (F_ind2@{i j} _). auto.
 Qed.

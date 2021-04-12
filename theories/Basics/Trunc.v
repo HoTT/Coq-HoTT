@@ -259,11 +259,11 @@ Defined.
 (** ** Truncatedness proper. *)
 
 (** A contractible space is (-2)-truncated, by definition. This function is the identity, so there is never any need to actually use it, but it exists to be found in searches. *)
-Definition contr_trunc_minus_two `{H : IsTrunc (-2) A} : Contr A
+Definition contr_istrunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Global Instance trunc_succ `{IsTrunc n A}
+Global Instance istrunc_succ `{IsTrunc n A}
   : IsTrunc n.+1 A | 1000.
 Proof.
   generalize dependent A.
@@ -273,7 +273,7 @@ Proof.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
-Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A}
+Definition istrunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A}
   : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
@@ -281,35 +281,31 @@ Proof.
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
-  - (* -2, S n' *) apply @trunc_succ, (IH (-2)); auto.
+  - (* -2, S n' *) apply @istrunc_succ, (IH (-2)); auto.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
 Defined.
 
 (** In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. *)
 
-Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
-  := (@trunc_leq (-2) n.+1 tt _ _).
+Definition istrunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
+  := (@istrunc_leq (-2) n.+1 tt _ _).
 
-Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+2 A
-  := (@trunc_leq (-1) n.+2 tt _ _).
+Definition istrunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+2 A
+  := (@istrunc_leq (-1) n.+2 tt _ _).
 
-Definition trunc_hset {n} {A} `{IsHSet A}
+Definition istrunc_hset {n} {A} `{IsHSet A}
   : IsTrunc n.+3 A
-  := (@trunc_leq 0 n.+3 tt _ _).
+  := (@istrunc_leq 0 n.+3 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
-#[export]
-Hint Immediate trunc_contr : typeclass_instances.
-#[export]
-Hint Immediate trunc_hprop : typeclass_instances.
-#[export]
-Hint Immediate trunc_hset : typeclass_instances.
+#[export] Hint Immediate istrunc_contr : typeclass_instances.
+#[export] Hint Immediate istrunc_hprop : typeclass_instances.
+#[export] Hint Immediate istrunc_hset : typeclass_instances.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).
-   This is not an [Instance] because it causes infinite loops.
-   *)
-Definition trunc_equiv A {B} (f : A -> B)
+   This is not an [Instance] because it causes infinite loops. *)
+Definition istrunc_isequiv_istrunc A {B} (f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
@@ -321,9 +317,9 @@ Proof.
       (x = y) ((ap (f^-1))^-1) _).
 Defined.
 
-Definition trunc_equiv' A {B} (f : A <~> B) `{IsTrunc n A}
+Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
   : IsTrunc n B
-  := trunc_equiv A f.
+  := istrunc_isequiv_istrunc A f.
 
 (** ** Truncated morphisms *)
 

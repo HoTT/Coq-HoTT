@@ -26,8 +26,8 @@ Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
   (bitot_R : bitotal R) (h : SPushout R -> V),
 set (h o (spushl R)) = set (h o (spushr R)).
 
-Axiom is0trunc_V : IsTrunc 0 V.
-Existing Instance is0trunc_V.
+Axiom ishset_V : IsHSet V.
+Existing Instance ishset_V.
 
 Fixpoint V_ind (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))

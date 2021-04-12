@@ -176,11 +176,11 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
 
 Global Instance contr_arrow {A B : Type} `{Contr B}
   : Contr (A -> B) | 100
-:= contr_forall.
+  := contr_forall.
 
-Global Instance trunc_arrow {A B : Type} `{IsTrunc n B}
+Global Instance istrunc_arrow {A B : Type} `{IsTrunc n B}
   : IsTrunc n (A -> B) | 100
-:= trunc_forall.
+  := istrunc_forall.
 
 (** ** Equivalences *)
 

@@ -39,7 +39,7 @@ Global Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A ->
   : IsHProp (IsFreeGroupOn A F i).
 Proof.
   unfold IsFreeGroupOn.
-  apply trunc_forall.
+  apply istrunc_forall.
 Defined.
 
 (** Both ways of stating the universal property are equivalent. *)

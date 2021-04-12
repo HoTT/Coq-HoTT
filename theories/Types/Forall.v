@@ -346,7 +346,7 @@ Proof.
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+Global Instance istrunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
@@ -354,7 +354,7 @@ Proof.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
-  - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
+  - intros f g; apply (istrunc_isequiv_istrunc _ (apD10 ^-1)).
 Defined.
 
 (** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)

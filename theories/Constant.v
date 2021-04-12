@@ -90,7 +90,7 @@ Definition cconst_factors_contr `{Funext}  {X Y : Type} (f : X -> Y)
 Proof.
   assert (merely X -> IsHProp P).
   { apply Trunc_rec.            (** Uses funext *)
-    intros x; pose (Pc x); apply trunc_succ. }
+    intros x; pose (Pc x); apply istrunc_succ. }
   pose (g' := Trunc_ind (fun _ => P) g : merely X -> P).
   exists (h o g'); intros x.
   apply p.

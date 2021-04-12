@@ -54,7 +54,7 @@ Section is_homomorphism.
     `{!IsTruncAlgebra n.+1 B}
     : IsTrunc n IsHomomorphism.
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Qed.
 End is_homomorphism.
 
@@ -92,7 +92,7 @@ Global Instance trunc_homomorphism `{Funext} {σ} {A B : Algebra σ}
   {n : trunc_index} `{!IsTruncAlgebra n B}
   : IsTrunc n (Homomorphism A B).
 Proof.
-  apply (trunc_equiv _ (issig_homomorphism A B)).
+  apply (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
 Qed.
 
 (** To find a path between two homomorphisms [f g : Homomorphism A B]
@@ -144,7 +144,7 @@ Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
   {A B : Algebra σ} (f : ∀ s, A s → B s) `{!IsHomomorphism f}
   : IsHProp (IsIsomorphism f).
 Proof.
-  apply trunc_forall.
+  apply istrunc_forall.
 Qed.
 
 (** Let [f : ∀ s, A s → B s] be a homomorphism. The following

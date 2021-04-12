@@ -62,6 +62,6 @@ Global Instance isstrict_category_of_sections `{Funext}
       (F : Functor C D)
 : IsStrictCategory (category_of_sections F) | 20.
 Proof.
-  eapply trunc_equiv; [ | apply section_of_functor_sig' ].
+  eapply istrunc_isequiv_istrunc; [ | apply section_of_functor_sig' ].
   typeclasses eauto.
 Qed.

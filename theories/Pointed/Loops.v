@@ -169,7 +169,7 @@ Defined.
 Global Instance istrunc_loops_functor {n} (A B : pType) (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (loops_functor f).
 Proof.
-  intro p. apply (trunc_equiv' _ (hfiber_loops_functor f p)).
+  intro p. apply (istrunc_equiv_istrunc _ (hfiber_loops_functor f p)).
 Defined.
 
 (** And likewise the connectedness.  *)

@@ -84,7 +84,7 @@ Proof.
   assert (f : Contr A -> A * IsHProp A).
   - intro P. split.
     + exact (@center _ P).
-    + apply @trunc_succ. exact P.
+    + apply @istrunc_succ. exact P.
   - assert (g : A * IsHProp A -> Contr A).
     + intros [a P]. apply (@contr_inhabited_hprop _ P a).
     + refine (@equiv_iff_hprop _ _ _ _ f g).

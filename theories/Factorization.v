@@ -78,7 +78,7 @@ Section Factorization.
     refine (contr_equiv' {ff' : f2 o f1 == f & ff == ff'} _).
     symmetry; srefine (equiv_functor_sigma' (equiv_sigma_contr _) _).
     { intros h; cbn.
-      srefine (@trunc_sigma _ _ _ _ _); [ | intros a];
+      srefine (@istrunc_sigma _ _ _ _ _); [ | intros a];
         apply contr_inhabited_hprop; try exact _; assumption. }
     intros [ff' [oc1' oc2']]; cbn.
     refine (equiv_functor_forall' (equiv_idmap _) _); intros a.

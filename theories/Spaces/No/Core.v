@@ -903,9 +903,7 @@ Section NoCodes.
   Proof.
     revert x y.
     refine (No_ind_hprop _ _); intros L R ? xL xR xcut xHL xHR.
-    (** TODO: Why can't Coq find [trunc_arrow] here? *)
-    refine (@No_ind_hprop _ _
-              (fun y => @trunc_prod _ _ trunc_arrow _ trunc_arrow) _).
+    refine (@No_ind_hprop _ _ _ _).
     intros L' R' ? yL yR ycut yHL yHR. split.
     - intros x_le_y.
       rewrite le'_cut in x_le_y.

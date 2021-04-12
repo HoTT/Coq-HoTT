@@ -212,7 +212,7 @@ Section AssumeStuff.
 
   Lemma ishprop_in_N0 (n : Graph) : IsHProp (in_N@{p} n).
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Qed.
 
   Instance ishprop_in_N@{p sp} : forall n, IsHProp (in_N n)
@@ -276,7 +276,7 @@ Section AssumeStuff.
   Proof.
     intros n m.
     change (IsHProp (n = m)).
-    refine (trunc_equiv (n.1 = m.1) (equiv_path_sigma_hprop n m)).
+    refine (istrunc_equiv_istrunc (n.1 = m.1) (equiv_path_sigma_hprop n m)).
   Qed.
 
   Definition graph_zero_neq_succ@{} {A : Graph}
@@ -312,10 +312,10 @@ Section AssumeStuff.
       IsHProp ((n = graph_zero) + { m : N & n = graph_succ m.1 }).
   Proof.
     intros n. apply ishprop_sum@{p u p}.
-    - apply (@trunc_equiv' _ _ (equiv_path_inverse _ _)),ishprop_path_graph_in_N.
+    - apply (@istrunc_equiv_istrunc _ _ (equiv_path_inverse _ _)),ishprop_path_graph_in_N.
       exact zero.2.
     - apply @ishprop_sigma_disjoint.
-      + intros m;apply (@trunc_equiv' _ _ (equiv_path_inverse _ _)).
+      + intros m;apply (@istrunc_equiv_istrunc _ _ (equiv_path_inverse _ _)).
         apply ishprop_path_graph_in_N. exact ((succ m).2).
       + intros x y ex ey.
         apply succ_inj, path_N. path_via n.
@@ -399,7 +399,7 @@ Section AssumeStuff.
   Definition N_neq_succ@{} (n : N) : n <> succ n.
   Proof.
     revert n; apply N_propind@{p}.
-    - intros n;exact trunc_arrow@{p p p}.
+    - intros n;exact istrunc_arrow@{p p p}.
     - apply zero_neq_succ.
     - intros n H e.
       apply H.
@@ -640,7 +640,7 @@ Section AssumeStuff.
   Definition N_lt_irref@{} (n : N) : ~(n < n).
   Proof.
     revert n; apply N_propind@{p}.
-    - intros n;exact trunc_arrow@{p p p}.
+    - intros n;exact istrunc_arrow@{p p p}.
     - apply N_lt_zero.
     - intros n H [k K].
       apply H; exists k.
@@ -668,7 +668,7 @@ Section AssumeStuff.
   Definition N_succ_nlt@{} (n : N) : ~(succ n < n).
   Proof.
     revert n; apply N_propind@{p}.
-    - intros n;exact trunc_arrow@{p p p}.
+    - intros n;exact istrunc_arrow@{p p p}.
     - apply N_lt_zero.
     - intros n H L.
       apply H; clear H.
@@ -808,7 +808,7 @@ Section AssumeStuff.
     Lemma contr_partial_Nrec_zero0 : Contr (partial_Nrec zero).
     Proof.
       unfold partial_Nrec.
-      srefine (trunc_equiv' {f0 : {f : {m : N & m <= zero} -> X &
+      srefine (istrunc_equiv_istrunc {f0 : {f : {m : N & m <= zero} -> X &
     (f (zero_seg zero) = x0)} &
     (forall mh : {m : N & m < zero},
      f0.1 (succ_seg zero mh) =
@@ -817,7 +817,7 @@ Section AssumeStuff.
       - refine (_ oE equiv_inverse (equiv_sigma_assoc _ _)).
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
-      - refine (@trunc_sigma@{nr nr large nr} _ _ _ _ _).
+      - refine (@istrunc_sigma@{nr nr large nr} _ _ _ _ _).
         + srefine (Build_Contr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].
@@ -946,7 +946,7 @@ Section AssumeStuff.
     Proof.
       revert n; apply N_propind; try exact _.
       intros n H.
-      refine (trunc_equiv' _ (partial_Nrec_succ n)).
+      refine (istrunc_equiv_istrunc _ (partial_Nrec_succ n)).
     Qed.
 
     (** This will be useful later. *)
@@ -976,7 +976,7 @@ Section AssumeStuff.
     the types of partial attempts, which is contractible since each of
     them is.  *)
     Local Definition partials@{} := forall n, partial_Nrec n.
-    Local Instance contr_partials@{} : Contr partials := trunc_forall@{p nr nr}.
+    Local Instance contr_partials@{} : Contr partials := istrunc_forall@{p nr nr}.
 
     (** From a family of partial attempts, we get a totally defined
     recursive function. *)
@@ -1107,7 +1107,7 @@ Section AssumeStuff.
     (** And we're done! *)
     Global Instance contr_NRec@{} : Contr NRec.
     Proof.
-      refine (trunc_equiv partials partials_nrec).
+      refine (istrunc_isequiv_istrunc partials partials_nrec).
       refine (isequiv_adjointify _ nrec_partials nrec_partials_sect _).
       intros x; apply path_contr.
     Defined.

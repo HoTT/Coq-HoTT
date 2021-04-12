@@ -168,7 +168,7 @@ Section Join.
     refine (Pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
     - intros a; apply contr_join.  
       exact (contr_inhabited_hprop A a).
-    - intros b; refine (trunc_equiv (Join B A) (join_sym B A)).
+    - intros b; refine (istrunc_equiv_istrunc (Join B A) (join_sym B A)).
       apply contr_join.
       exact (contr_inhabited_hprop B b).
   Defined.
