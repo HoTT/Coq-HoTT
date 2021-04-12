@@ -532,9 +532,10 @@ Definition Book_4_2_1 := @HoTT.Basics.Overture.IsEquiv.
 (* ================================================== lem:coh-equiv *)
 (** Lemma 4.2.2 *)
 
-Definition Book_4_2_2 := fun A B f isf x =>
+(* The proof of Lemma 4.2.2 is embedded in the proof of isequiv_inverse. *)
+Definition Book_4_2_2 := fun (A B : Type) (f : A -> B) (feq : IsEquiv f) (y : B) =>
   @HoTT.Basics.Overture.eisadj B A f^-1
-    (@HoTT.Basics.Equivalences.isequiv_inverse A B f isf) x.
+    (@HoTT.Basics.Equivalences.isequiv_inverse A B f feq) y.
 
 (* ================================================== thm:equiv-iso-adj *)
 (** Theorem 4.2.3 *)
@@ -2337,4 +2338,3 @@ Definition Book_11_6_17_iv := @HoTT.Spaces.No.Core.lt_le_trans.
 (** Example 11.6.18 *)
 
 Definition Book_11_6_18 := @HoTT.Spaces.No.Addition.plus.
-
