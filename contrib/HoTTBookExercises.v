@@ -1401,7 +1401,10 @@ End Book_5_5.
 (* ================================================== ex:torus *)
 (** Exercise 6.1 *)
 
-
+Definition Book_6_1_i := @HoTT.Cubical.DPath.dp_concat.
+Definition Book_6_1_ii := @HoTT.Cubical.DPath.dp_apD_pp.
+(** We don't have the full induction principle for the torus *)
+(* Definition Book_6_1_iii := ? *)
 
 (* ================================================== ex:suspS1 *)
 (** Exercise 6.2 *)
@@ -1411,6 +1414,7 @@ End Book_5_5.
 (* ================================================== ex:torus-s1-times-s1 *)
 (** Exercise 6.3 *)
 
+Definition Book_6_3 := @HoTT.Spaces.Torus.TorusEquivCircles.equiv_torus_prod_Circle.
 
 
 (* ================================================== ex:nspheres *)
