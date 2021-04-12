@@ -4,7 +4,8 @@ Require Import HoTT.Basics HoTT.Types HoTT.HSet HoTT.TruncType.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 Require Import HoTT.Truncations.
 
-Opaque trunc_equiv. (** This speeds things up considerably *)
+(** This speeds things up considerably *)
+Local Opaque equiv_isequiv trunc_equiv.
 
 (** ** Definitions and operations *)
 
@@ -32,7 +33,7 @@ Definition leq_card `{Univalence} : Card -> Card -> HProp.
 Proof.
   refine (Trunc_rec (fun a => _)).
   refine (Trunc_rec (fun b => _)).
-  refine (hexists (fun (i : a -> b) => isinj i)).
+  exact (hexists (fun (i : a -> b) => isinj i)).
 Defined.
 
 (** ** Properties *)
@@ -51,8 +52,9 @@ Section contents.
 
   (* Simplify an equation by unfolding all the definitions apart from
   the actual operations. *)
+  (* Note that this is an expensive thing to do, and will be very slow unless we tell it not to unfold the following. *)
   Local Ltac simpl_ops :=
-    cbv-[plus_card mult_card zero_card one_card].
+    cbv-[plus_card mult_card zero_card one_card exp_card].
 
   (** We only make the instances of upper classes global, since the
   other instances will be project anyway. *)
