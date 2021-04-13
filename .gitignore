@@ -21,6 +21,8 @@ proviola/
 proviola-html/
 proviola-xml/
 file-dep-graphs/
+alectryon-html/
+alectryon-cache/
 
 HoTT.deps
 HoTT.dot
@@ -43,6 +45,7 @@ Makefile.in
 Makefile
 Makefile_ssrplugin
 html-done.timestamp
+alectryon-html-done.timestamp
 
 # Ignore links into the original Coq library
 coq/dev

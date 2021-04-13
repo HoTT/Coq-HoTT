@@ -9,3 +9,6 @@
 	path = etc/coq-dpdgraph
 	url = https://github.com/andreaslyn/coq-dpdgraph.git
 	branch = hott
+[submodule "etc/alectryon"]
+	path = etc/alectryon
+	url = https://github.com/JasonGross/alectryon.git
