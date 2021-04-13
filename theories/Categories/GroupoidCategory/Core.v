@@ -18,7 +18,7 @@ Class IsGroupoid (C : PreCategory)
                     IsIsomorphism m.
 
 Global Instance trunc_isgroupoid `{Funext} C : IsHProp (IsGroupoid C)
-  := trunc_forall.
+  := istrunc_forall.
 
 (** We don't want access to all of the internals of a groupoid category at top level. *)
 Module GroupoidCategoryInternals.

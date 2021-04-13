@@ -81,7 +81,7 @@ Module Import CommaCategory.
            `{forall s d, IsTrunc n (morphism C s d)}
     : IsTrunc n object.
     Proof.
-      eapply trunc_equiv';
+      eapply istrunc_equiv_istrunc;
       [ exact issig_object | ].
       typeclasses eauto.
     Qed.
@@ -182,8 +182,8 @@ Module Import CommaCategory.
     Proof.
       assert (forall m1 m2,
                 IsTrunc n (a'b'f'.(f) o S _1 m1 = T _1 m2 o abf.(f)))
-        by (intros; apply (trunc_equiv _ inverse)).
-      eapply trunc_equiv';
+        by (intros; apply (istrunc_isequiv_istrunc _ inverse)).
+      eapply istrunc_equiv_istrunc;
       [ exact (issig_morphism _ _) | ].
       typeclasses eauto.
     Qed.

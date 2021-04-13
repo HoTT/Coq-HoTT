@@ -358,18 +358,18 @@ Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
 
 (** ** Products preserve truncation *)
 
-Global Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
+Global Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; (intros A ? B ?).
   { exists (center A, center B).
     intros z; apply path_prod; apply contr. }
-  { intros x y.
-    exact (trunc_equiv _ (equiv_path_prod x y)). }
+  intros x y.
+  exact (istrunc_equiv_istrunc _ (equiv_path_prod x y)).
 Defined.
 
 Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
-  := @trunc_prod (-2) A CA B CB.
+  := @istrunc_prod (-2) A CA B CB.
 
 (** ** Decidability *)
 
@@ -415,4 +415,4 @@ Defined.
 Global Instance istruncmap_functor_prod (n : trunc_index) {A B C D : Type}
   (f : A -> B) (g : C -> D) `{!IsTruncMap n f} `{!IsTruncMap n g}
   : IsTruncMap n (Prod.functor_prod f g)
-  := fun y =>  trunc_equiv _ (hfiber_functor_prod _ _ _)^-1.
+  := fun y => istrunc_equiv_istrunc _ (hfiber_functor_prod _ _ _)^-1.

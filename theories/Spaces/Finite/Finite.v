@@ -35,7 +35,7 @@ Defined.
 Global Instance ishprop_finite X
 : IsHProp (Finite X).
 Proof.
-  refine (trunc_equiv' _ (issig_finite X)).
+  refine (istrunc_equiv_istrunc _ (issig_finite X)).
   apply ishprop_sigma_disjoint; intros n m Hn Hm.
   strip_truncations.
   refine (nat_eq_fin_equiv n m (Hm oE Hn^-1)).

@@ -98,7 +98,7 @@ Section TruncType.
     : IsTrunc n.+1 (TruncType n) | 0.
   Proof.
     intros A B.
-    refine (trunc_equiv _ (equiv_path_trunctype@{i j} A B)).
+    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
     case n as [ | n'].
     - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
     - apply istrunc_equiv.
@@ -109,7 +109,7 @@ Section TruncType.
   Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 (sig (IsTrunc n)) | 0.
   Proof.
     intro n.
-    apply (trunc_equiv' _ issig_trunctype^-1).
+    apply (istrunc_equiv_istrunc _ issig_trunctype^-1).
   Defined.
 
   (** ** Some standard inhabitants *)

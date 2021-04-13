@@ -566,15 +566,15 @@ Proof.
       * intros A trH a; srapply Colimit_ind.
         { intros m b; revert b; revert a; revert trH; revert A; induction m as [ | m IHm].
           { intros A trH a b.
-            srefine (trunc_equiv' _ (equiv_inverse (equiv_path_colim _ a b))). }
+            srefine (istrunc_equiv_istrunc _ (equiv_inverse (equiv_path_colim _ a b))). }
           { intros A trH a b.
-            srefine (trunc_equiv' _ (equiv_inverse (equiv_concat_l (glue A _ a) _))).
-            srapply (@trunc_equiv' _ _ _ k (IHm (succ_seq A) _ (@arr _ A 0%nat _ 1%path a) b)).
+            srefine (istrunc_equiv_istrunc _ (equiv_inverse (equiv_concat_l (glue A _ a) _))).
+            srapply (@istrunc_equiv_istrunc _ _ _ k (IHm (succ_seq A) _ (@arr _ A 0%nat _ 1%path a) b)).
             srapply (equiv_ap (colim_succ_seq_to_colim_seq A)). }}
         { intros n m p b; snrapply path_ishprop; snrapply ishprop_istrunc; exact _. }
       * intros A trH a; srapply (functor_forall_equiv_pb (colim_succ_seq_to_colim_seq A)).
-        intro x; srapply (@trunc_equiv' _ _ _ k (IHn (succ_seq A) _ a x)); srapply equiv_ap.
-    + intros n m p a; snrapply path_ishprop; snrapply trunc_forall.
+        intro x; srapply (@istrunc_equiv_istrunc _ _ _ k (IHn (succ_seq A) _ a x)); srapply equiv_ap.
+    + intros n m p a; snrapply path_ishprop; snrapply istrunc_forall.
       { exact _. }
       { intro x; srapply ishprop_istrunc. }
 Defined.

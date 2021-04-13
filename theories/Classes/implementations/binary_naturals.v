@@ -276,7 +276,7 @@ Section semiring_laws.
 
   Global Instance binnat_set : IsHSet binnat.
   Proof.
-    apply (trunc_equiv nat binary).
+    apply (istrunc_isequiv_istrunc nat binary).
   Qed.
 
   Global Instance binnat_semiring : IsSemiRing binnat.

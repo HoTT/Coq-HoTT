@@ -128,7 +128,7 @@ Definition path_dhprop `{Univalence} {P Q : DHProp}
 Global Instance ishset_dprop `{Univalence} : IsHSet DProp.
 Proof.
   intros P Q.
-  refine (trunc_equiv' _ (n := -1) (equiv_path_dprop P Q)).
+  refine (istrunc_equiv_istrunc _ (n := -1) (equiv_path_dprop P Q)).
 Defined.
 
 Global Instance isequiv_dprop_to_bool `{Univalence}

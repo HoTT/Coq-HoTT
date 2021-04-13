@@ -46,7 +46,7 @@ Section closed_under_op.
     {n} `{∀ s x, IsTrunc n (P s x)}
     : IsTrunc n IsClosedUnderOps.
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Qed.
 End closed_under_op.
 
@@ -120,7 +120,7 @@ Section subalgebra.
     : IsTruncAlgebra n.+1 Subalgebra.
   Proof.
     pose proof (hprop_subalgebra_predicate A P).
-    intro s. apply @trunc_sigma.
+    intro s. apply @istrunc_sigma.
     - exact _.
     - intro. induction n; exact _.
   Qed.

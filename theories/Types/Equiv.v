@@ -114,7 +114,7 @@ Section AssumeFunext.
   : IsTrunc n.+1 (A <~> B).
   Proof.
     simpl. intros e1 e2.
-    apply (trunc_equiv _ (equiv_path_equiv e1 e2)).
+    apply (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)
@@ -189,5 +189,4 @@ Section AssumeFunext.
 End AssumeFunext.
 
 (** We make this a global hint outside of the section. *)
-#[export]
-Hint Immediate isequiv_contr_map : typeclass_instances.
+#[export] Hint Immediate isequiv_contr_map : typeclass_instances.

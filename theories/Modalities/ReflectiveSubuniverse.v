@@ -85,7 +85,7 @@ Section Subuniverse.
   Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (MapIn O f).
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Defined.
 
   (** Anything homotopic to a local map is local. *)
@@ -1529,7 +1529,7 @@ Section ConnectedMaps.
   Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
-    apply trunc_forall.
+    apply istrunc_forall.
   Defined.
 
   (** Connected maps are orthogonal to modal maps (i.e. familes of modal types). *)
@@ -1615,7 +1615,7 @@ Section ConnectedMaps.
   Proof.
     apply isequiv_contr_map; intros d.
     apply contr_inhabited_hprop.
-    - nrefine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
+    - nrefine (@istrunc_equiv_istrunc {g : forall b, P b & g oD f == d} _ _ _ _).
       { refine (equiv_functor_sigma_id _); intros g.
         apply equiv_path_forall. }
       apply hprop_allpath. intros g h.
@@ -1945,7 +1945,7 @@ Proof.
   destruct O1 as [O1 [O1h ?]]; destruct O2 as [O2 [O2h ?]]; cbn.
   refine (equiv_path_arrow _ _ oE _).
   srapply (equiv_iff_hprop).
-  - srapply trunc_sigma; unfold O_leq; exact _.
+  - srapply istrunc_sigma; unfold O_leq; exact _.
   - intros [h k] A; specialize (h A); specialize (k A); cbn in *.
     apply path_universe_uncurried, equiv_iff_hprop; assumption.
   - intros h; split; intros A e; specialize (h A); cbn in *.

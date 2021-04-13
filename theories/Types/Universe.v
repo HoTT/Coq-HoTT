@@ -520,7 +520,7 @@ Global Instance istrunc_paths_Type `{Funext}
        {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
 : IsTrunc n.+1 (A = B).
 Proof.
-  refine (trunc_equiv _ path_universe_uncurried).
+  refine (istrunc_isequiv_istrunc _ path_universe_uncurried).
 Defined.
 
 (** We can also say easily that the universe is not a set. *)

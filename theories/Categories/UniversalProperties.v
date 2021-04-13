@@ -25,8 +25,8 @@ Section UniversalMorphism.
       following dual (opposite) notions: *)
 
   Local Ltac univ_hprop_t UniversalProperty :=
-    apply @trunc_succ in UniversalProperty;
-    eapply @trunc_sigma;
+    apply @istrunc_succ in UniversalProperty;
+    eapply @istrunc_sigma;
     first [ intro;
             simpl;
             match goal with
@@ -85,7 +85,7 @@ Section UniversalMorphism.
         intro x.
         specialize (UniversalProperty (CommaCategory.b x) (CommaCategory.f x)).
         (** We want to preserve the computation rules for the morphisms, even though they're unique up to unique isomorphism. *)
-        eapply trunc_equiv'.
+        eapply istrunc_equiv_istrunc.
         - apply CommaCategory.issig_morphism.
         - apply contr_inhabited_hprop.
           + abstract univ_hprop_t UniversalProperty.

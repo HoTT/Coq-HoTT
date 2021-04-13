@@ -44,7 +44,7 @@ Global Instance T_set : IsHSet (T N).
 Proof.
 assert (E : sig (fun _ : N => N) <~> (T N)).
 - issig.
-- apply (trunc_equiv' _ E).
+- apply (istrunc_equiv_istrunc _ E).
 Qed.
 
 Global Instance inject : Cast N (T N) := fun x => C x 0.
@@ -358,8 +358,8 @@ Definition Z_ind3@{i j} (P : Z -> Z -> Z -> Type@{i})
 Proof.
 apply (@Z_ind (fun x => forall y z, _));intros x.
 2:apply (Z_ind2@{i j} _);auto.
-apply (@Forall.trunc_forall@{UN j j} _).
-intros. apply Forall.trunc_forall@{UN i j}.
+apply (@Forall.istrunc_forall@{UN j j} _).
+intros. apply Forall.istrunc_forall@{UN i j}.
 Defined.
 
 Definition Z_rec@{i} {T : Type@{i} } {sT : IsHSet T}
@@ -802,8 +802,8 @@ split;[apply _|split;try apply _|].
     trivial.
 - apply @Z_ind2.
   + intros a b.
-    apply @trunc_prod;[|apply _].
-    apply (@trunc_arrow _).
+    apply @istrunc_prod;[|apply _].
+    apply (@istrunc_arrow _).
     apply ishprop_sum;try apply _.
     intros E1 E2;apply (irreflexivity lt a).
     transitivity b;trivial.

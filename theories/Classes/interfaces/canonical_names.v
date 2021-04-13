@@ -279,9 +279,9 @@ Global Instance trunc_sig_equiv_rel `{Funext} {A : Type}
   (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   :  IsTrunc n (SigEquivRel R).
 Proof.
-  apply @trunc_sigma.
-  - apply trunc_forall.
-  - intros. apply @trunc_sigma; intros; apply trunc_forall.
+  apply @istrunc_sigma.
+  - apply istrunc_forall.
+  - intros. apply @istrunc_sigma; intros; apply istrunc_forall.
 Defined.
 
 Lemma issig_equiv_rel {A:Type} (R : Relation A)
@@ -290,11 +290,11 @@ Proof.
   issig.
 Defined.
 
-Global Instance trunc_equiv_rel `{Funext} {A : Type}
+Global Instance istrunc_equiv_rel `{Funext} {A : Type}
   (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   : IsTrunc n (EquivRel R).
 Proof.
-  exact (trunc_equiv (SigEquivRel R) (issig_equiv_rel R)).
+  exact (istrunc_equiv_istrunc (SigEquivRel R) (issig_equiv_rel R)).
 Qed.
 
 Class Conjugate A := conj : A -> A.

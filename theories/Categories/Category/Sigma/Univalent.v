@@ -291,7 +291,7 @@ Section on_both.
   Proof.
     simple refine (path_sigma _ _ _ _ _); cycle 1.
     (* Speed up typeclass search: *)
-    1:pose @trunc_sigma; pose @istrunc_paths;
+    1:pose @istrunc_sigma; pose @istrunc_paths;
       simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
     all:repeat match goal with
                  | [ |- (transport ?P ?p ?z).1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.1))

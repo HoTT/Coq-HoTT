@@ -165,7 +165,7 @@ Section path_functor.
   Global Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
   : IsTrunc n (Functor C D).
   Proof.
-    eapply trunc_equiv'; [ exact equiv_sig_functor | ].
+    eapply istrunc_equiv_istrunc; [ exact equiv_sig_functor | ].
     induction n;
     simpl; intros;
     typeclasses eauto.

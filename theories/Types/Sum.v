@@ -118,10 +118,10 @@ Global Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 : IsHProp (hfiber inl z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (trunc_equiv' _
+  - refine (istrunc_equiv_istrunc _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inl x) (inl a)))).
-  - refine (trunc_equiv _
+  - refine (istrunc_isequiv_istrunc _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
 Defined.
 
@@ -140,9 +140,9 @@ Global Instance ishprop_hfiber_inr {A B : Type} (z : A + B)
 : IsHProp (hfiber inr z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (trunc_equiv _
+  - refine (istrunc_isequiv_istrunc _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1).
-  - refine (trunc_equiv' _
+  - refine (istrunc_equiv_istrunc _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
@@ -904,20 +904,20 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 
 (** ** Sums preserve most truncation *)
 
-Global Instance trunc_sum n' (n := n'.+2)
+Global Instance istrunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.
   intros a b.
-  eapply trunc_equiv';
+  eapply istrunc_equiv_istrunc;
     [ exact (equiv_path_sum _ _) | ].
   destruct a, b; simpl in *;
   try typeclasses eauto;
   intros [].
 Defined.
 
-Global Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
-  := @trunc_sum (-2) A HA B HB.
+Global Instance ishset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
+  := @istrunc_sum (-2) A HA B HB.
 
 (** Sums don't preserve hprops in general, but they do for disjoint sums. *)
 
@@ -1014,7 +1014,7 @@ Global Instance isequiv_sum_of_sig A B : IsEquiv (sum_of_sig A B)
 Definition trunc_sum' n A B `{IsTrunc n Bool, IsTrunc n A, IsTrunc n B}
 : (IsTrunc n (A + B)).
 Proof.
-  eapply trunc_equiv'; [ esplit;
+  eapply istrunc_equiv_istrunc; [ esplit;
                          exact (@isequiv_sum_of_sig _ _)
                        | ].
   typeclasses eauto.

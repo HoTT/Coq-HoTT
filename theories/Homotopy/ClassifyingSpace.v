@@ -566,9 +566,9 @@ Proof.
     snrapply isequiv_contr_contr.
     { nrapply contr_equiv'.
       { apply equiv_tr.
-        nrapply trunc_contr.
+        nrapply istrunc_contr.
         apply equiv_istrunc_contr_iterated_loops.
-        snrapply trunc_leq.
+        snrapply istrunc_leq.
         1: exact 1.
         { induction n.
           1: exact tt.
@@ -578,9 +578,9 @@ Proof.
       induction n; exact _. }
     { nrapply contr_equiv'.
       { apply equiv_tr.
-        nrapply trunc_contr.
+        nrapply istrunc_contr.
         apply equiv_istrunc_contr_iterated_loops.
-        snrapply trunc_leq.
+        snrapply istrunc_leq.
         1: exact 1.
         { induction n.
           1: exact tt.

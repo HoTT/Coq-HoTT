@@ -201,7 +201,7 @@ Section UnstableOctahedral.
     : IsTruncMap n (g o f).
   Proof.
     intros c.
-    exact (trunc_equiv _ (hfiber_compose c)^-1).
+    exact (istrunc_isequiv_istrunc _ (hfiber_compose c)^-1).
   Defined.
 
 End UnstableOctahedral.
@@ -220,14 +220,14 @@ Global Instance istruncmap_const n {A B} `{!IsTrunc n A}
 Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
   : forall x y, IsTruncMap n (@ap _ _ f x y)
   := fun x x' y =>
-       trunc_equiv' _ (hfiber_ap y)^-1.
+       istrunc_equiv_istrunc _ (hfiber_ap y)^-1.
 
 Definition istruncmap_from_ap {A B} n (f:A -> B) `{!forall x y, IsTruncMap n (@ap _ _ f x y)}
   : IsTruncMap n.+1 f.
 Proof.
   intros y [a p] [b q];
     destruct q;
-    exact (trunc_equiv' _ (hfiber_ap p)).
+    exact (istrunc_equiv_istrunc _ (hfiber_ap p)).
 Defined.
 
 Definition equiv_istruncmap_ap `{Funext} {A B} n (f:A -> B)
@@ -255,3 +255,5 @@ Definition equiv_isequiv_ap_isembedding `{Funext} {A B} (f : A -> B)
 Proof.
   exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
 Defined.
+
+

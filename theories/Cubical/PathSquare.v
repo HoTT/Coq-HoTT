@@ -100,7 +100,7 @@ Global Instance istrunc_sq n
   {p0x : a00 = a01} {p1x : a10 = a11}
   : IsTrunc n (PathSquare px0 px1 p0x p1x).
 Proof.
-  srapply (trunc_equiv _ sq_path).
+  exact (istrunc_equiv_istrunc _ sq_path).
 Defined.
 
 (* We can give degenerate squares *)

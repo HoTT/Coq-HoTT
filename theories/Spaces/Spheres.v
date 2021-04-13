@@ -245,13 +245,13 @@ Definition equiv_S2_TwoSphere : Sphere 2 <~> TwoSphere
 (** S0 is 0-truncated. *)
 Global Instance istrunc_s0 : IsHSet (Sphere 0).
 Proof.
-  srapply (trunc_equiv _ S0_to_Bool^-1).
+  srapply (istrunc_isequiv_istrunc _ S0_to_Bool^-1).
 Defined.
 
 (** S1 is 1-truncated. *)
 Global Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).
 Proof.
-  srapply (trunc_equiv _ S1_to_Circle^-1).
+  srapply (istrunc_isequiv_istrunc _ S1_to_Circle^-1).
 Defined.
 
 Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
@@ -278,7 +278,7 @@ Proof.
     apply allnullhomot_trunc; auto with typeclass_instances.
 Defined.
 
-Fixpoint trunc_allnullhomot {n : trunc_index} {X : Type}
+Fixpoint istrunc_allnullhomot {n : trunc_index} {X : Type}
   (HX : forall (f : Sphere n.+2 -> X), NullHomotopy f) {struct n}
 : IsTrunc n.+1 X.
 Proof.
@@ -287,6 +287,6 @@ Proof.
     intros x0 x1. set (f := (fun b => if (S0_to_Bool b) then x0 else x1)).
     set (n := HX f). exact (n.2 North @ (n.2 South)^).
   - (* n ≥ -1 *) intros x0 x1.
-    apply (trunc_allnullhomot n').
+    apply (istrunc_allnullhomot n').
     intro f. apply nullhomot_paths_from_susp, HX.
 Defined.

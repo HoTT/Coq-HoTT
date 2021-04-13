@@ -209,7 +209,7 @@ Proof.
   assert (q := merely_path_is0connected Circle base y).
   strip_truncations.
   destruct p, q.
-  refine (trunc_equiv' (n := 0) Int equiv_loopCircle_int^-1).
+  refine (istrunc_equiv_istrunc (n := 0) Int equiv_loopCircle_int^-1).
 Defined.
 
 (** ** Iteration of equivalences *)

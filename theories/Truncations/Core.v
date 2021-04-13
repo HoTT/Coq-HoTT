@@ -54,7 +54,7 @@ Definition Trunc_rec {n A X} `{IsTrunc n X}
 Definition Tr (n : trunc_index) : Modality.
 Proof.
   srapply (Build_Modality (IsTrunc n)).
-  - intros A B ? f ?; apply (trunc_equiv A f).
+  - intros A B ? f ?; apply (istrunc_isequiv_istrunc A f).
   - exact (Trunc n).
   - intros; apply istrunc_truncation.
   - intros A; apply tr.
@@ -240,7 +240,7 @@ Proof.
       exact (fun x => tr (tr x)). }
     { srapply Trunc_rec.
       srapply Trunc_rec.
-      1: srapply trunc_leq.
+      1: srapply istrunc_leq.
       exact tr. }
     { srapply Trunc_ind.
       simpl.
@@ -248,7 +248,7 @@ Proof.
       2: reflexivity.
       intro.
       apply istrunc_paths.
-      srapply (trunc_leq (m:=n)).
+      srapply (istrunc_leq (m:=n)).
       by apply trunc_index_leq_succ'. }
     srapply Trunc_ind; reflexivity.
   + set (min := trunc_index_min n m).
@@ -257,7 +257,7 @@ Proof.
     unfold min; clear min.
     symmetry.
     srapply equiv_tr.
-    srapply trunc_leq.
+    srapply istrunc_leq.
     3:{ (** Strangely, if [istrunc_inO_tr] were a [Hint Immediate], rather than our [Hint Extern], then typeclass inference would be able to find this all on its own, although the documentation for [Hint Immediate] suggests that it shouldn't because the following tactic doesn't solve it completely. *)
         simple apply istrunc_inO_tr; trivial.
         exact _. }

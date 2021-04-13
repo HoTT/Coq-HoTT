@@ -5,7 +5,7 @@ Require Import HoTT.Classes.interfaces.abstract_algebra.
 Require Import HoTT.Truncations.
 
 (** This speeds things up considerably *)
-Local Opaque equiv_isequiv trunc_equiv.
+Local Opaque equiv_isequiv istrunc_isequiv_istrunc.
 
 (** ** Definitions and operations *)
 

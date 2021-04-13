@@ -590,7 +590,7 @@ Definition equiv_sig_coind
 
 (** ** Sigmas preserve truncation *)
 
-Global Instance trunc_sigma `{P : A -> Type}
+Global Instance istrunc_sigma `{P : A -> Type}
          `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
 : IsTrunc n (sig P) | 100.
 Proof.
@@ -599,8 +599,8 @@ Proof.
   { exists (center A; center (P (center A))).
     intros [a ?].
     refine (path_sigma' P (contr a) (path_contr _ _)). }
-  { intros u v.
-    refine (trunc_equiv _ (path_sigma_uncurried P u v)). }
+  intros u v.
+  refine (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
 Defined.
 
 (** The sigma of an arbitrary family of *disjoint* hprops is an hprop. *)
@@ -732,7 +732,7 @@ Global Instance istruncmap_functor_sigma n {A B P Q}
   : IsTruncMap n (functor_sigma f g).
 Proof.
   intros [a b].
-  exact (trunc_equiv _ (hfiber_functor_sigma _ _ _ _ _ _)^-1).
+  exact (istrunc_equiv_istrunc _ (hfiber_functor_sigma _ _ _ _ _ _)^-1).
 Defined.
 
 (** Theorem 4.7.6 *)
@@ -754,5 +754,5 @@ Definition istruncmap_from_functor_sigma n {A P Q}
   : forall a, IsTruncMap n (g a).
 Proof.
   intros a v.
-  exact (trunc_equiv' _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
+  exact (istrunc_equiv_istrunc _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
 Defined.

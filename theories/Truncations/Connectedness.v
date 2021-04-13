@@ -50,7 +50,7 @@ Proof.
   - exists (extension_conn_map_elim n f P d).
     intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
-  - intros e e'. refine (trunc_equiv _ (path_extension e e')).
+  - intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
 (* magically infers: paths in extensions = extensions into paths,
                        which by induction is m'-truncated. *)
 Defined.

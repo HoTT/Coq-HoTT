@@ -352,7 +352,7 @@ Proof.
                                  (fun A => Build_Reflects _ _ _ _)).
   - (** Typeclass inference can find this, but we give it explicitly to prevent extra universes from cropping up. *)
     intros ? T; unfold IsLocal.
-    nrefine (trunc_forall@{a i i}); try assumption.
+    nrefine (istrunc_forall@{a i i}); try assumption.
     intros i.
     apply ishprop_ooextendable@{a a i i i i i i i i i i i}.
   - apply islocal_equiv_islocal.

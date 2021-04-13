@@ -17,7 +17,7 @@ Local Open Scope pointed_scope.
 
 Global Instance is1type_Torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
-  refine (trunc_equiv _ equiv_torus_prod_Circle^-1).
+  refine (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
 Qed.
 
 (** The torus is 0-connected *)

@@ -79,7 +79,7 @@ Module Import LaxCommaCategoryParts.
            `{forall s d, IsTrunc n (Functor (S s) (T d))}
     : IsTrunc n object.
     Proof.
-      eapply trunc_equiv';
+      eapply istrunc_equiv_istrunc;
       [ exact issig_object | ].
       typeclasses eauto.
     Qed.
@@ -152,7 +152,7 @@ Module Import LaxCommaCategoryParts.
                             (a'b'f'.(f) o p_morphism_of S m1))}
     : IsTrunc n (morphism abf a'b'f').
     Proof.
-      eapply trunc_equiv';
+      eapply istrunc_equiv_istrunc;
       [ exact (issig_morphism _ _) | ].
       typeclasses eauto.
     Qed.

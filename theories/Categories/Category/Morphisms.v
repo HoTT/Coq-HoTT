@@ -78,9 +78,9 @@ Section iso_contr.
     Defined.
 
     (** *** Being an isomorphism is a mere proposition *)
-    Global Instance trunc_isisomorphism : IsHProp (IsIsomorphism m).
+    Global Instance istrunc_isisomorphism : IsHProp (IsIsomorphism m).
     Proof.
-      eapply trunc_equiv'; [ exact issig_isisomorphism | ].
+      eapply istrunc_equiv_istrunc; [ exact issig_isisomorphism | ].
       apply hprop_allpath.
       intros [x [? ?]] [y [? ?]].
       let H := fresh in
@@ -118,7 +118,7 @@ Section iso_contr.
   (** *** Isomorphisms form an hSet *)
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
   Proof.
-    eapply trunc_equiv'; [ exact issig_isomorphic | ].
+    eapply istrunc_equiv_istrunc; [ exact issig_isomorphic | ].
     typeclasses eauto.
   Qed.
 

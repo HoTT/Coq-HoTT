@@ -181,7 +181,7 @@ Global Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
   {σ : Signature} (A : Algebra σ)
   : IsHProp (IsTruncAlgebra n A).
 Proof.
-  apply trunc_forall.
+  apply istrunc_forall.
 Qed.
 
 Global Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)

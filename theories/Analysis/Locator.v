@@ -479,7 +479,7 @@ Section locator.
     Local Definition P_isHProp qeps' : IsHProp (P qeps').
     Proof.
       destruct qeps' as [q eps'].
-      apply trunc_prod.
+      apply istrunc_prod.
     Qed.
 
     Local Definition P_dec qeps' : Decidable (P qeps').
