@@ -36,7 +36,7 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
-Definition equiv_apD10 `{Funext} {A : Type} (P : A -> Type) f g
+Definition equiv_apD10 {A : Type} (P : A -> Type) f g
 : (f = g) <~> (f == g)
   := Build_Equiv _ _ (@apD10 A P f g) _.
 
@@ -371,6 +371,8 @@ Proof.
     apply apD.
 Defined.
 
+End AssumeFunext.
+
 (** ** Symmetry of curried arguments *)
 
 (** Using the standard Haskell name for this, as it’s a handy utility function.
@@ -394,5 +396,3 @@ Defined.
 Definition equiv_flip `(P : A -> B -> Type)
   : (forall a b, P a b) <~> (forall b a, P a b)
   := Build_Equiv _ _ (@flip _ _ P) _.
-
-End AssumeFunext.
