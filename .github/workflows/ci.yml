@@ -103,3 +103,41 @@ jobs:
       run: etc/ci/after_success.sh
       env:
         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+
+  alectryon:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: snickerbockers/submodules-init@v4
+    - uses: coq-community/docker-coq-action@v1
+      with:
+        coq_version: 8.13
+        ocaml_version: 4.11-flambda
+        custom_script: |
+          opam install -y coq-serapi
+          sudo apt-get -o Acquire::Retries=30 update -q
+          sudo apt-get -o Acquire::Retries=30 install python3-pip autoconf -y --allow-unauthenticated
+          python3 -m pip install --user --upgrade pygments dominate beautifulsoup4 docutils
+          startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
+            sudo chown -R coq:coq .
+          endGroup
+          ./autogen.sh
+          ./configure
+          make TIMED=1 -j2
+          make alectryon
+    - name: Revert permissions
+      # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
+      if: ${{ always() }}
+      run: sudo chown -R 1001:116 .
+    - name: upload alectryon artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: alectryon-html
+        path: alectryon-html
+    - name: Deploy html files
+      uses: JamesIves/github-pages-deploy-action@releases/v4
+      with:
+        dry-run: ${{ github.ref != 'refs/heads/master' || github.event_name != 'push' }}
+        branch: gh-pages
+        folder: alectryon-html
+        single-commit: false

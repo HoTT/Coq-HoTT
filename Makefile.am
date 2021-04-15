@@ -53,6 +53,9 @@ SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
 
+# the alectryon binary
+ALECTRYON = python3 etc/alectryon/alectryon.py
+
 # read the targets from _CoqMakefile
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
@@ -108,6 +111,7 @@ ALL_TIMING_HTMLFILES=$(MAIN_TIMING_HTMLFILES)
 ALL_TIMINGFILES=$(ALL_VFILES:.v=.v.timing)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
+ALL_ALECTRYON_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/alectryon-html/%,$(ALL_HTMLFILES))
 ALL_DPDFILES=$(MAIN_DPDFILES)
 ALL_SVGFILES=$(ALL_DPDFILES:.dpd=.svg)
 ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
@@ -132,7 +136,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) _CoqProject
 
 .SECONDEXPANSION:
 
-.PHONY: hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs validate
+.PHONY: hottlib hott-core hott-categories contrib clean html proviola alectryon timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs validate
 
 # targets that we don't need to run coqdep for
 FAST_TARGETS = clean clean-local clean-dpdgraph TAGS
@@ -257,6 +261,24 @@ proviola-xml: $(ALL_XMLFILES)
 
 proviola-all: proviola proviola-xml
 
+# the alectryon files
+alectryon-html/index.html alectryon-html/toc.html alectryon-html/coqdoc.css : alectryon-html/% : html/%
+	- $(mkdir_p) alectryon-html
+	cp -f $< $@
+
+alectryon-html-done.timestamp: $(ALL_GLOBFILES) $(ALL_VFILES)
+	- $(mkdir_p) alectryon-html
+	touch alectryon-html-done.timestamp
+	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --sertop-arg=--no_prelude --sertop-arg=--indices-matter -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib --output-directory alectryon-html --cache-directory alectryon-cache $(ALL_VFILES)
+
+alectryon-html:
+	rm -f alectryon-html-done.timestamp
+	$(MAKE) alectryon-html-done.timestamp
+
+$(ALL_ALECTRYON_HTMLFILES) : alectryon-html-done.timestamp
+
+alectryon: $(ALL_ALECTRYON_HTMLFILES) alectryon-html/toc.html alectryon-html/coqdoc.css alectryon-html/index.html
+
 # dpdgraphs
 COQTHMDEP=etc/coq-dpdgraph/coqthmdep
 HOQTHMDEP=etc/hoqthmdep
@@ -353,6 +375,8 @@ clean::
 	$(Q)rm -f $(ALL_XMLFILES)
 	$(VECHO) "RM *.HTML"
 	$(Q)rm -f $(ALL_PROVIOLA_HTMLFILES)
+	$(VECHO) "RM *.HTML"
+	$(Q)rm -f $(ALL_ALECTRYON_HTMLFILES)
 	$(VECHO) "RM *.TIMING"
 	$(Q)rm -f $(ALL_TIMINGFILES)
 	$(VECHO) "RM *.TIMING.HTML"
