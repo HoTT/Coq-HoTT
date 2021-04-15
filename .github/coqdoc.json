@@ -1,0 +1,16 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "coqdoc-problem-matcher",
+            "pattern": [
+                {
+                    "regexp": "^Line (\\d+), character (\\d+), (warning|error): (.*)$",
+                    "line": 1,
+                    "column": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            ]
+        }
+    ]
+}

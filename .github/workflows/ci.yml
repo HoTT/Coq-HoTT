@@ -79,6 +79,12 @@ jobs:
         echo | coqtop
         export COMMITISH="$(git rev-list HEAD -1)"
 
+    - name: add problem matchers
+      run: |
+        echo "::add-matcher::.github/coq.json"
+        echo "::add-matcher::.github/coqdoc.json"
+        echo "::add-matcher::.github/alectryon.json"
+
     - name: Run ./autogen.sh
       run: ./autogen.sh
 
@@ -109,6 +115,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: snickerbockers/submodules-init@v4
+    - name: add problem matchers
+      run: |
+        echo "::add-matcher::.github/coq.json"
+        echo "::add-matcher::.github/coqdoc.json"
+        echo "::add-matcher::.github/alectryon.json"
     - uses: coq-community/docker-coq-action@v1
       with:
         coq_version: 8.13
