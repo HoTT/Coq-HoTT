@@ -41,4 +41,4 @@ fi
 # or using more evil (but portable) 'eval', do
 # $ eval 'exec "$COQTOP" '"$COQ_ARGS"' "$@"'
 # Instead, we duplicate code, because it's simpler.
-exec "$COQTOP" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -Q "$mythmdepdir" "" -I "$mythmdepdir" -indices-matter "$@"
+exec "$COQTOP" -noinit -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" HoTT.Contrib -Q "$mythmdepdir" "" -I "$mythmdepdir" -indices-matter "$@"

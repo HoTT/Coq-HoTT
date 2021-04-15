@@ -37,19 +37,17 @@ function readlink_f() {
     echo "$RESULT"
 }
 
-# If there is a coq/theories directory in the parent directory of this
+# If there is a theories directory in the parent directory of this
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
 mydir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
 which cygpath 2>/dev/null >/dev/null && mydir="$(cygpath -m "$mydir")"
-if test -d "$mydir/coq/theories"
+if test -d "$mydir/theories"
 then
-  export COQLIB="$mydir/coq"
   export HOTTLIB="$mydir/theories"
   export HOTTCONTRIB="$mydir/contrib"
 else
-  export COQLIB="@hottdir@/coq"
   export HOTTLIB="@hottdir@/theories"
   export HOTTCONTRIB="@hottdir@/contrib"
 fi
-#export COQ_ARGS=(-coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -indices-matter)
+#export COQ_ARGS=(-noinit -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" HoTT.Contrib -indices-matter)

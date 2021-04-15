@@ -15,13 +15,7 @@ if make_hoqchk
 endif
 
 hottdir=$(datadir)/hott
-EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
-
-# The path to the Coq library in $(srcdir)
-SRCCOQLIB=$(srcdir)/coq
-
-# Extra standard library replacements to install
-STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQLIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
+EXTRA_DIST = theories etc LICENSE.txt CREDITS.txt INSTALL.md README.md
 
 # Flags for hoqchk
 HOQCHKFLAGS=-silent -o
@@ -59,10 +53,7 @@ SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
 
-# read the targets from _CoqMakefile, except for STD_VFILES
-
-STD_VFILES = \
-	$(SRCCOQLIB)/theories/Init/Prelude.v
+# read the targets from _CoqMakefile
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
 
@@ -91,23 +82,13 @@ CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-de
 CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.$(VO))
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
 CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.v.d)
-CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
+CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/HoTT.Contrib.%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
 CONTRIB_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CONTRIB_HTMLFILES))
 
 # I'm not sure why we needs = rather than :=, but we seem to
-ALL_BUILT_HOTT_VFILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
+ALL_BUILT_HOTT_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
 ALL_HOTT_VFILES = $(shell find -name "*.v" -not -path "./coq-HoTT/*" -not -path "./etc/*")
 UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
-
-# The list of files that comprise the alternative standard library
-# the .vi infrastructure doesn't work unless we have .vos for the
-# standard library
-STD_VOFILES=$(STD_VFILES:.v=.vo)
-STD_GLOBFILES=$(STD_VFILES:.v=.glob)
-STD_DEPFILES=$(STD_VFILES:.v=.v.d)
-STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
-STD_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(STD_HTMLFILES))
-STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep-graphs/Coq.%,$(subst /,.,$(STD_VFILES:.v=.dpd)))
 
 # The list of all files, mainly used for html and proviola
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
@@ -118,25 +99,23 @@ MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
 MAIN_TIMING_HTMLFILES = $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES) $(CONTRIB_TIMING_HTMLFILES)
 MAIN_DPDFILES = $(CORE_DPDFILES) $(CATEGORY_DPDFILES)
 
-ALL_VFILES = $(STD_VFILES) $(MAIN_VFILES)
-ALL_VOFILES = $(STD_VOFILES) $(MAIN_VOFILES)
-ALL_GLOBFILES=$(STD_GLOBFILES) $(MAIN_GLOBFILES)
-ALL_DEPFILES=$(STD_DEPFILES) $(MAIN_DEPFILES)
-ALL_HTMLFILES=$(STD_HTMLFILES) $(MAIN_HTMLFILES)
-ALL_TIMING_HTMLFILES=$(STD_TIMING_HTMLFILES) $(MAIN_TIMING_HTMLFILES)
+ALL_VFILES = $(MAIN_VFILES)
+ALL_VOFILES = $(MAIN_VOFILES)
+ALL_GLOBFILES=$(MAIN_GLOBFILES)
+ALL_DEPFILES=$(MAIN_DEPFILES)
+ALL_HTMLFILES=$(MAIN_HTMLFILES)
+ALL_TIMING_HTMLFILES=$(MAIN_TIMING_HTMLFILES)
 ALL_TIMINGFILES=$(ALL_VFILES:.v=.v.timing)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
-ALL_DPDFILES=$(MAIN_DPDFILES) # $(STD_DPDFILES)
+ALL_DPDFILES=$(MAIN_DPDFILES)
 ALL_SVGFILES=$(ALL_DPDFILES:.dpd=.svg)
 ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
 	$(ALL_VOFILES) \
-	$(ALL_GLOBFILES) \
-	$(STDLIB_EXTRA_DIST) \
-	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt")
+	$(ALL_GLOBFILES)
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
@@ -153,23 +132,10 @@ all-am: Makefile $(SCRIPTS) $(DATA) _CoqProject
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs validate
+.PHONY: hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs validate
 
 # targets that we don't need to run coqdep for
 FAST_TARGETS = clean clean-local clean-dpdgraph TAGS
-
-if install_stdlib_symlinks
-install-data-local:
-	$(MKDIR_P) "$(hottdir)/coq"
-	$(Q)for i in $(STDLIB_REPLACEMENT_DIRS); do \
-		$(VIECHO) "INSTALL coq/$$i"; \
-		rm -f "$(hottdir)/coq/$$i"; \
-		$(LN_S) "$(COQLIB)/$$i" "$(hottdir)/coq"; \
-	done
-endif
-
-# The standard library files must be compiled in a special way
-stdlib: $(STD_VOFILES)
 
 quick:
 	$(MAKE) all VO=vi
@@ -185,11 +151,6 @@ checkproofs:
 validate: $(ALL_VOFILES)
 	$(VECHO) HOQCHK
 	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $^
-
-$(STD_VOFILES) : %.vo : %.v coq-HoTT
-	$(VECHO) COQC $*
-	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQC)" -time -indices-matter -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq "$<"
-
 
 # The HoTT library as a single target
 hott-core: $(CORE_VOFILES)
@@ -217,22 +178,22 @@ strict-no-axiom: $(ALL_GLOBFILES)
 strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
-$(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES) coq-HoTT
+$(MAIN_VFILES:.v=.vo) : %.vo : %.v coq-HoTT
 	$(VECHO) HOQC $*
 	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -time $<
 
-$(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES) coq-HoTT
+$(MAIN_VFILES:.v=.vi) : %.vi : %.v coq-HoTT
 	$(VECHO) HOQC -quick $*
 	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -quick -time $<
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
 	$(VECHO) COQDEP > $@
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq $(ALL_VFILES) | sed s'#\\#/#g' >$@
+	$(Q) "$(COQDEP)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib -R "$(SRCCOQLIB)/theories" Coq $(ALL_VFILES) | sed s'#\\#/#g' >$@
 
 HoTTCore.deps: $(CORE_VFILES)
 	$(VECHO) COQDEP > $@
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $(CORE_VFILES) | sed s'#\\#/#g' >$@
+	$(Q) "$(COQDEP)" -R "$(srcdir)/theories" HoTT $(CORE_VFILES) | sed s'#\\#/#g' >$@
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files without
@@ -241,7 +202,7 @@ HoTTCore.deps: $(CORE_VFILES)
 html-done.timestamp: $(ALL_GLOBFILES) $(ALL_VFILES)
 	- $(mkdir_p) html
 	touch html-done.timestamp
-	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq -d html $(ALL_VFILES)
+	"$(COQDOC)" -toc -interpolate -utf8 -html --no-externals -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib -d html $(ALL_VFILES)
 
 html:
 	rm -f html-done.timestamp
@@ -260,14 +221,9 @@ $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES): timing-html/HoTT.%.html :
 	$(VECHO) TIME2HTML HoTT.$* > $@
 	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
-$(CONTRIB_TIMING_HTMLFILES): timing-html/%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
+$(CONTRIB_TIMING_HTMLFILES): timing-html/HoTT.Contrib.%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) TIME2HTML $* > $@
-	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
-
-$(STD_TIMING_HTMLFILES): timing-html/Coq.%.html : coq/theories/$$(subst .,/,$$*).vo etc/time2html
-	@ $(mkdir_p) $(dir $@)
-	$(VECHO) TIME2HTML Coq.$* > $@
 	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
 
@@ -329,11 +285,6 @@ $(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo $(C
 	$(VECHO) HOQTHMDEP HoTT.$* > $@
 	$(Q) (echo "Require HoTT.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | $(HOQTHMDEP) 2>/dev/null >/dev/null
 
-$(STD_DPDFILES): file-dep-graphs/Coq.%.dpd : coq/theories/$$(subst .,/,$$*).vo $(COQTHMDEP)
-	@ $(mkdir_p) $(dir $@)
-	$(VECHO) HOQTHMDEP Coq.$* > $@
-	$(Q) (echo "Require Coq.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph Coq.$*.') | $(HOQTHMDEP) 2>/dev/null >/dev/null
-
 file-dep-graphs/hott-lib.dpd: $(COQTHMDEP) $(CORE_VOFILES)
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) HOQTHMDEP HoTTLib
@@ -381,11 +332,7 @@ TAGS : $(TAGS_FILES)
 # Dependency files
 $(MAIN_DEPFILES) : %.v.d : %.v
 	$(VECHO) COQDEP $<
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
-
-$(STD_DEPFILES) : %.v.d : %.v
-	$(VECHO) COQDEP $<
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
+	$(Q) "$(COQDEP)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib $< | sed s'#\\#/#g' >$@
 
 clean-dpdgraph::
 	(cd etc/coq-dpdgraph && $(MAKE) clean)
@@ -417,6 +364,6 @@ clean::
 	$(VECHO) "RM *.DOT"
 	$(Q)rm -f $(ALL_DOTFILES)
 	rm -f $(EXTRA_CLEANFILES)
-	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
+	find $(srcdir)/contrib $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
 @include_snippet@

@@ -212,46 +212,6 @@ AS_IF([test "x$TIME" = "xno"],
       [STDTIME="\"$TIME\" -f \"\$@ (real: %e, user: %U, sys: %S, mem: %M ko)\""])
 AC_SUBST([STDTIME])
 
-dnl Create symbolic links to the Coq library
-AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
-# We must have these links in the source directory, not in the build
-# directory, because the replacement standard library lives in the source
-# directory, and these links are required to make Coq accept it.
-# First remove existing links.  If they are symlinks, use -f.  If they are
-# physical directories, use -rf.  This ensures that we don't delete the
-# contents of symlinked directories.
-#
-# We do not use AC_CONFIG_LINKS because it creates links in the build
-# directory, not the source directory.  (Question: Even if that were
-# not a problem, would it work for directory links, or only file
-# links?)
-#
-# We also add successful directories to STDLIB_REPLACEMENT_DIRS, so
-# that the Makefile can manipulate them
-STDLIB_REPLACEMENT_DIRS=""
-for stdlibdir in dev kernel library plugins stm toplevel ide ; do
-    AS_IF([test -h "$srcdir/coq/$stdlibdir"], [rm -f "$srcdir/coq/$stdlibdir"],
-          [test -d "$srcdir/coq/$stdlibdir"], [rm -rf "$srcdir/coq/$stdlibdir"])
-    AS_IF([test -d "$COQLIB/$stdlibdir"],
-          [ln -s "$COQLIB/$stdlibdir" "$srcdir/coq"
-           STDLIB_REPLACEMENT_DIRS="$STDLIB_REPLACEMENT_DIRS $stdlibdir"
-          ])
-done
-AC_SUBST([STDLIB_REPLACEMENT_DIRS])
-
-AC_MSG_CHECKING([whether your coqtop supports directory symlinks to the stdlib])
-coqtop_out="$("$COQTOP" -coqlib "$srcdir/coq" < /dev/null 2>&1 | grep -c 'Warning: Cannot open\|Error: File not found on loadpath')"
-AS_IF([test "$coqtop_out" = 0],
-      [AC_MSG_RESULT([yes])],
-      [AC_MSG_RESULT([no])
-       AC_MSG_NOTICE([Falling back on making physical copies of the stdlib])
-       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins" "$srcdir/coq/stm" "$srcdir/coq/toplevel" "$srcdir/coq/ide"
-       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$COQLIB/toplevel" "$srcdir/coq"
-       AS_IF([test -d "$COQLIB/ide"],
-             [cp -R "$COQLIB/ide" "$srcdir/coq"])])
-
-AM_CONDITIONAL(install_stdlib_symlinks, [test "$coqtop_out" = 0])
-
 # create a snippet to get a Makefile conditional through automake,
 # from http://stackoverflow.com/a/8643550/377022 and
 # http://stackoverflow.com/a/28652045/377022
