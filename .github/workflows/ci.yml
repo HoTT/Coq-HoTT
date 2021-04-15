@@ -140,4 +140,5 @@ jobs:
         dry-run: ${{ github.ref != 'refs/heads/master' || github.event_name != 'push' }}
         branch: gh-pages
         folder: alectryon-html
+        target-folder: alectryon-html
         single-commit: false
