@@ -7,11 +7,6 @@
                     "regexp": "^!! (Warning|Error):\\s*(.*)$",
                     "severity": 1,
                     "message": 2
-                },
-                {
-                    "regexp": "^(!! (?!Warning|Error).*|        .*)$",
-                    "message": 1,
-                    "loop": true
                 }
             ]
         },
