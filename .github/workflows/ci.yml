@@ -24,7 +24,7 @@ jobs:
         - label: with submodule coq
           env: { FORCE_COQ_VERSION: ""      , BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
         - label: building coq master
-          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "", GH_REPORT_WARNINGS: "1" }
           display-warnings: true
 
     env: ${{ matrix.env }}
@@ -87,14 +87,9 @@ jobs:
         export COMMITISH="$(git rev-list HEAD -1)"
 
     # we display errors in the changes tab from all jobs
-    - name: add error problem matchers
-      run: |
-        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json"
-
     # we only display warnings from the master job, so we don't get duplicate warnings
     - name: add warning problem matchers
       run: |
-        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-warning.json"
         echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
       if: ${{ matrix.display-warnings }}
 
@@ -108,9 +103,11 @@ jobs:
       run: make strict-test
       if: env.UPDATE_QUICK_DOC == ''
 
+    # we display errors in the changes tab from all jobs
+    # we only display warnings from the master job, so we don't get duplicate warnings
     - name: Build with timing
       run: |
-        etc/coq-scripts/timing/make-pretty-timed.sh -j2 ONELINE_ERRORS=1
+        etc/coq-scripts/timing/make-pretty-timed.sh -j2 GH_REPORT_ERRORS=1
         make
       if: env.UPDATE_QUICK_DOC == ''
 
@@ -130,7 +127,7 @@ jobs:
     - uses: snickerbockers/submodules-init@v4
     - name: add problem matchers
       run: |
-        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json"
+        #echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json" # now via a script
         echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
         echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
         #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
@@ -148,7 +145,7 @@ jobs:
           endGroup
           ./autogen.sh
           ./configure
-          make TIMED=1 -j2 --output-sync ONELINE_ERRORS=1
+          make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
           make alectryon
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
