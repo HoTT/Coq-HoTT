@@ -52,15 +52,15 @@ SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
 GH_REPORT_ERRORS = 0
 GH_REPORTIFY_ERRORS_0 :=
-GH_REPORTIFY_ERRORS_1 := etc/coq-scripts/github/pipe_stderr.sh etc/coq-scripts/github/reportify-coq-errors.sh
+GH_REPORTIFY_ERRORS_1 := --errors
 GH_REPORTIFY_ERRORS = $(GH_REPORTIFY_ERRORS_$(GH_REPORT_ERRORS))
 
 GH_REPORT_WARNINGS = 0
 GH_REPORTIFY_WARNINGS_0 :=
-GH_REPORTIFY_WARNINGS_1 := etc/coq-scripts/github/pipe_stderr.sh etc/coq-scripts/github/reportify-coq-warnings.sh
+GH_REPORTIFY_WARNINGS_1 := --warnings
 GH_REPORTIFY_WARNINGS = $(GH_REPORTIFY_WARNINGS_$(GH_REPORT_WARNINGS))
 
-GH_REPORTIFY = $(GH_REPORTIFY_ERRORS) $(GH_REPORTIFY_WARNINGS)
+GH_REPORTIFY = etc/coq-scripts/github/reportify-coq.sh $(GH_REPORTIFY_WARNINGS) $(GH_REPORTIFY_ERRORS)
 
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
