@@ -50,6 +50,11 @@ SILENCE_COQDEP_0 := @echo \"COQDEP $$<\"; #
 SILENCE_COQDEP_1 :=
 SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
+ONELINE_ERRORS = 0
+ONELINIFY_ERRORS_0 :=
+ONELINIFY_ERRORS_1 := 2> >(etc/coq-scripts/github/onelineify-coq-errors.sh)
+ONELINIFY_ERRORS = $(ONELINIFY_ERRORS_$(ONELINE_ERRORS))
+
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
 
@@ -146,15 +151,15 @@ quick:
 
 vi2vo:
 	$(VECHO) HOQC -schedule-vi2vo
-	$(Q) $(TIMER) $(HOQC) -schedule-vi2vo $(J) $(MAIN_VOFILES:%.vo=%.vi)
+	$(Q) $(TIMER) $(HOQC) -schedule-vi2vo $(J) $(MAIN_VOFILES:%.vo=%.vi) $(ONELINIFY_ERRORS)
 
 checkproofs:
 	$(VECHO) HOQC -schedule-vi-checking
-	$(Q) $(TIMER) $(HOQC) -schedule-vi-checking $(J) $(MAIN_VOFILES:%.vo=%.vi)
+	$(Q) $(TIMER) $(HOQC) -schedule-vi-checking $(J) $(MAIN_VOFILES:%.vo=%.vi) $(ONELINIFY_ERRORS)
 
 validate: $(ALL_VOFILES)
 	$(VECHO) HOQCHK
-	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $^
+	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $^ $(ONELINIFY_ERRORS)
 
 # The HoTT library as a single target
 hott-core: $(CORE_VOFILES)
@@ -184,11 +189,11 @@ strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 # A rule for compiling the HoTT libary files
 $(MAIN_VFILES:.v=.vo) : %.vo : %.v coq-HoTT
 	$(VECHO) HOQC $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -time $< $(ONELINIFY_ERRORS)
 
 $(MAIN_VFILES:.v=.vi) : %.vi : %.v coq-HoTT
 	$(VECHO) HOQC -quick $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -quick -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -quick -time $< $(ONELINIFY_ERRORS)
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)

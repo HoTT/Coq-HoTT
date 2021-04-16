@@ -89,13 +89,13 @@ jobs:
     # we display errors in the changes tab from all jobs
     - name: add error problem matchers
       run: |
-        echo "::add-matcher::.github/coq-error.json"
+        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json"
 
     # we only display warnings from the master job, so we don't get duplicate warnings
     - name: add warning problem matchers
       run: |
-        echo "::add-matcher::.github/coq-warning.json"
-        echo "::add-matcher::.github/coqdoc.json"
+        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-warning.json"
+        echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
       if: ${{ matrix.display-warnings }}
 
     - name: Run ./autogen.sh
@@ -110,7 +110,7 @@ jobs:
 
     - name: Build with timing
       run: |
-        etc/coq-scripts/timing/make-pretty-timed.sh -j2
+        etc/coq-scripts/timing/make-pretty-timed.sh -j2 ONELINE_ERRORS=1
         make
       if: env.UPDATE_QUICK_DOC == ''
 
@@ -130,10 +130,10 @@ jobs:
     - uses: snickerbockers/submodules-init@v4
     - name: add problem matchers
       run: |
-        echo "::add-matcher::.github/coq-error.json"
-        echo "::add-matcher::.github/coqdoc.json"
-        echo "::add-matcher::.github/alectryon-error.json"
-        #echo "::add-matcher::.github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
+        echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json"
+        echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
+        echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
+        #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
     - uses: coq-community/docker-coq-action@v1
       with:
         coq_version: 8.13
@@ -148,7 +148,7 @@ jobs:
           endGroup
           ./autogen.sh
           ./configure
-          make TIMED=1 -j2
+          make TIMED=1 -j2 --output-sync ONELINE_ERRORS=1
           make alectryon
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
