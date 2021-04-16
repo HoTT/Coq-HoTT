@@ -90,7 +90,7 @@ jobs:
     # we only display warnings from the master job, so we don't get duplicate warnings
     - name: add warning problem matchers
       run: |
-        echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
+        #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
       if: ${{ matrix.display-warnings }}
 
     - name: Run ./autogen.sh
@@ -128,7 +128,7 @@ jobs:
     - name: add problem matchers
       run: |
         #echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json" # now via a script
-        echo "::add-matcher::etc/coq-scripts/github/coqdoc.json"
+        #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
         echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
         #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
     - uses: coq-community/docker-coq-action@v1
