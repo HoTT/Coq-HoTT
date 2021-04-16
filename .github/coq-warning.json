@@ -1,0 +1,21 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "coq-problem-matcher-warning",
+            "pattern": [
+                {
+                    "regexp": "^File \"([^ \"]+)\", line (\\d+), characters (\\d+-\\d+):",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3
+                },
+                {
+                    "regexp": "^(Warning):\\s*(.*?)(?:\\s*\\[(.*)\\])?$",
+                    "severity": 1,
+                    "message": 2,
+                    "code": 3
+                }
+            ]
+        }
+    ]
+}
