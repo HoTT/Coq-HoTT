@@ -87,6 +87,7 @@ Section diagonal_functor_lemmas.
                             (right_identity _ _ _ _))).
 End diagonal_functor_lemmas.
 
+#[export]
 Hint Rewrite @compose_diagonal_functor : category.
 
 Section Limit.

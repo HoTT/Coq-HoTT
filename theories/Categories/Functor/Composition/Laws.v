@@ -40,7 +40,9 @@ Section identity_lemmas.
     := @path_functor_uncurried_fst _ _ _ (F o 1) F 1 1.
 End identity_lemmas.
 
+#[export]
 Hint Rewrite @left_identity @right_identity : category.
+#[export]
 Hint Rewrite @left_identity @right_identity : functor.
 #[export]
 Hint Immediate left_identity right_identity : category functor.
