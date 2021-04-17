@@ -11,14 +11,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env:
-        - { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
-        - { LABEL: "update dep graphs", UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
-        - { LABEL: "update quick doc", UPDATE_QUICK_DOC: "yes" }
-        - { LABEL: "update html", UPDATE_HTML: "yes", UPDATE_QUICK_DOC: "" }
-        - { LABEL: "validate", VALIDATE: "yes"   , UPDATE_QUICK_DOC: "" }
-        - { LABEL: "with submodule coq", FORCE_COQ_VERSION: ""      , BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
-        - { LABEL: "building coq master", FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+        include:
+        - env: { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
+        - label: update dep graphs
+          env: { UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+        - label: update quick doc
+          env: { UPDATE_QUICK_DOC: "yes" }
+        - label: update html
+          env: { UPDATE_HTML: "yes", UPDATE_QUICK_DOC: "" }
+        - label: validate
+          env: { VALIDATE: "yes"   , UPDATE_QUICK_DOC: "" }
+        - label: with submodule coq
+          env: { FORCE_COQ_VERSION: ""      , BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+        - label: building coq master
+          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "", GH_REPORT_WARNINGS: "1" }
+          display-warnings: true
 
     env: ${{ matrix.env }}
 
@@ -79,6 +86,13 @@ jobs:
         echo | coqtop
         export COMMITISH="$(git rev-list HEAD -1)"
 
+    # we display errors in the changes tab from all jobs
+    # we only display warnings from the master job, so we don't get duplicate warnings
+    - name: add warning problem matchers
+      run: |
+        #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
+      if: ${{ matrix.display-warnings }}
+
     - name: Run ./autogen.sh
       run: ./autogen.sh
 
@@ -89,9 +103,11 @@ jobs:
       run: make strict-test
       if: env.UPDATE_QUICK_DOC == ''
 
+    # we display errors in the changes tab from all jobs
+    # we only display warnings from the master job, so we don't get duplicate warnings
     - name: Build with timing
       run: |
-        etc/coq-scripts/timing/make-pretty-timed.sh -j2
+        etc/coq-scripts/timing/make-pretty-timed.sh -j2 GH_REPORT_ERRORS=1
         make
       if: env.UPDATE_QUICK_DOC == ''
 
@@ -109,6 +125,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: snickerbockers/submodules-init@v4
+    - name: add problem matchers
+      run: |
+        #echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json" # now via a script
+        #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
+        echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
+        #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
     - uses: coq-community/docker-coq-action@v1
       with:
         coq_version: 8.13
@@ -123,7 +145,7 @@ jobs:
           endGroup
           ./autogen.sh
           ./configure
-          make TIMED=1 -j2
+          make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
           make alectryon
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
