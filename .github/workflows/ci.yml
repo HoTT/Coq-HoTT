@@ -146,7 +146,7 @@ jobs:
           ./autogen.sh
           ./configure
           make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
-          make alectryon
+          make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
