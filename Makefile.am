@@ -60,7 +60,9 @@ GH_REPORTIFY_WARNINGS_0 :=
 GH_REPORTIFY_WARNINGS_1 := --warnings
 GH_REPORTIFY_WARNINGS = $(GH_REPORTIFY_WARNINGS_$(GH_REPORT_WARNINGS))
 
-GH_REPORTIFY = etc/coq-scripts/github/reportify-coq.sh $(GH_REPORTIFY_WARNINGS) $(GH_REPORTIFY_ERRORS)
+GH_REPORTIFY_ARGS = $(GH_REPORTIFY_WARNINGS) $(GH_REPORTIFY_ERRORS)
+
+GH_REPORTIFY = $(if $(strip $(GH_REPORTIFY_ARGS)),etc/coq-scripts/github/reportify-coq.sh $(GH_REPORTIFY_ARGS))
 
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
