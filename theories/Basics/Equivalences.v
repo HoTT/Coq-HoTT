@@ -99,7 +99,7 @@ Section IsEquivHomotopic.
     apply whiskerR, eisadj.
   Qed.
 
-  (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be hoomotpic to. *)
+  (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
   Definition isequiv_homotopic : IsEquiv g
     := Build_IsEquiv _ _ g (f ^-1) sect retr adj.
 
