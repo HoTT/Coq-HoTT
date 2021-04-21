@@ -139,7 +139,7 @@ Proof.
   apply (contr_inhabited_hprop).
   - apply hprop_allpath; intros z w.
     strip_truncations.
-    refine (equiv_path_Tr z w (p z w)).
+    exact (equiv_path_Tr z w (p z w)).
   - apply tr; assumption.
 Defined.
 
