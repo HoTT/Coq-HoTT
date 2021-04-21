@@ -69,6 +69,7 @@ CAMERA = python proviola/camera/camera.py
 
 # the alectryon binary
 ALECTRYON = python3 etc/alectryon/alectryon.py
+ALECTRYON_EXTRAFLAGS ?=
 
 # read the targets from _CoqMakefile
 
@@ -283,7 +284,7 @@ alectryon-html/index.html alectryon-html/toc.html alectryon-html/coqdoc.css : al
 alectryon-html-done.timestamp: $(ALL_GLOBFILES) $(ALL_VFILES)
 	- $(mkdir_p) alectryon-html
 	touch alectryon-html-done.timestamp
-	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --sertop-arg=--no_prelude --sertop-arg=--indices-matter -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib --output-directory alectryon-html --cache-directory alectryon-cache $(ALL_VFILES)
+	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --sertop-arg=--no_prelude --sertop-arg=--indices-matter -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" HoTT.Contrib --output-directory alectryon-html --cache-directory alectryon-cache $(ALECTRYON_EXTRAFLAGS) $(ALL_VFILES)
 
 alectryon-html:
 	rm -f alectryon-html-done.timestamp
