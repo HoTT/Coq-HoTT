@@ -182,6 +182,24 @@ Proof.
   apply ap, right_inverse.
 Defined.
 
+(* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
+Definition pClassifyingSpace_rec {G : Group} (P : pType) `{IsTrunc 1 P}
+           (bloop' : G -> loops P)
+           (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+  : B G ->* P
+  := Build_pMap (B G) P (ClassifyingSpace_rec P (point P) bloop' bloop_pp') idpath.
+
+(* And this is one of the standard facts about adjoint functors: (R h') o eta = h, where h : G -> R P, h' : L G -> P is the adjunct, and eta (bloop) is the unit. *)
+Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType) `{IsTrunc 1 P}
+           (bloop' : G -> loops P)
+           (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+  : loops_functor (pClassifyingSpace_rec P bloop' bloop_pp') o bloop == bloop'.
+Proof.
+  intro x; simpl.
+  refine (concat_1p _ @ concat_p1 _ @ _).
+  apply ClassifyingSpace_rec_beta_bloop.
+Defined.
+
 (** Here we pove that BG is the delooping of G, in that loops BG <~> G. *)
 Section EncodeDecode.
 
@@ -250,6 +268,8 @@ Section EncodeDecode.
     + intro.
       apply (decode_encode bbase x).
   Defined.
+
+  Definition equiv_bloop := equiv_loops_bg_g^-1%equiv.
 
   (** Pointed version of the universal property. *)
   Lemma pequiv_loops_bg_g
@@ -508,86 +528,23 @@ Proof.
   2: apply isequiv_functor_pclassifyingspace.
 Defined.
 
-(** TODO: clean up and speed up *)
-(** Using Whitehead's principle we can prove that B(Pi 1 X) = X for a 0-connected 1-truncated X. *)
+(** B(Pi 1 X) <~>* X for a 0-connected 1-truncated X. *)
 Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
   (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
   : B (Pi1 X) <~>* X.
 Proof.
-  snrapply Build_pEquiv'.
-  { snrapply Build_Equiv.
-    (** First we give the map inducing equivalences between homotopy groups. *)
-    { srapply ClassifyingSpace_rec.
-      1: exact (point _).
-      { apply Trunc_rec.
-        exact idmap. }
-      intros x y.
-      strip_truncations.
-      reflexivity. }
-    (** Now we apply Whitehead's principle *)
-    snrapply whiteheads_principle.
-    1: exact _.
-    1: exact 1.
-    1,2: exact _.
-    1: apply isequiv_contr_contr.
-    (** We need to show that this map induces equivalences for all homotopy groups *)
-    intros x n.
-    revert x.
-    snrapply ClassifyingSpace_ind_hset.
-    1: exact _.
-    2: intro x; apply equiv_dp_path_transport, path_ishprop.
-    hnf.
-    unfold pmap_from_point.
-    unfold Build_pMap.
-    (** The case for n = 1 follows from the universal property of BG *)
-    destruct n.
-    { simpl.
-      snrapply isequiv_homotopic'.
-      { simpl.
-        transitivity (loops (pClassifyingSpace (Pi1 X))).
-        1: symmetry; rapply equiv_tr.
-        rapply equiv_loops_bg_g. }
-      intro x; strip_truncations; revert x.
-      snrapply equiv_ind.
-      2: apply equiv_loops_bg_g.
-      1: exact _.
-      intro p.
-      hnf.
-      change (_ = ?R) with (encode (point (ClassifyingSpace (Pi1 X))) (bloop p) = R).
-      unfold Trunc_functor, O_functor, O_rec.
-      simpl.
-      rewrite ClassifyingSpace_rec_beta_bloop.
-      unfold encode.
-      rewrite codes_transport.
-      strip_truncations.
-      apply path_Tr, tr.
-      hott_simpl. }
-    (** The case for n > 1 follows since higher homotopy groups are trivial *)
-    snrapply isequiv_contr_contr.
-    { nrapply contr_equiv'.
-      { apply equiv_tr.
-        nrapply istrunc_contr.
-        apply equiv_istrunc_contr_iterated_loops.
-        snrapply istrunc_leq.
-        1: exact 1.
-        { induction n.
-          1: exact tt.
-          rapply trunc_index_leq_transitive. }
-        exact _. }
-      apply equiv_istrunc_contr_iterated_loops.
-      induction n; exact _. }
-    { nrapply contr_equiv'.
-      { apply equiv_tr.
-        nrapply istrunc_contr.
-        apply equiv_istrunc_contr_iterated_loops.
-        snrapply istrunc_leq.
-        1: exact 1.
-        { induction n.
-          1: exact tt.
-          rapply trunc_index_leq_transitive. }
-        exact _. }
-      apply equiv_istrunc_contr_iterated_loops.
-      induction n; exact _. } }
-  (** Finally we need to show that this equivalence is pointed *)
-  reflexivity.
+  (** The pointed map [f] is the adjunct to the inverse of the natural map [loops X -> Pi1 X]. We define it first, to make the later goals easier to read. *)
+  transparent assert (f : (B (Pi1 X) ->* X)).
+  { srapply pClassifyingSpace_rec.
+    1: exact (equiv_tr 0 _)^-1%equiv.
+    intros x y.
+    strip_truncations.
+    reflexivity. }
+  snrapply (Build_pEquiv _ _ f).
+  (** [f] is an equivalence since [loops_functor f o bloop == tr^-1], and the other two maps are equivalences. *)
+  apply isequiv_is0connected_isequiv_loops.
+  snrapply (cancelR_isequiv equiv_bloop).
+  1,2: exact _.
+  rapply isequiv_homotopic'; symmetry.
+  rapply pClassifyingSpace_rec_beta_bloop.
 Defined.
