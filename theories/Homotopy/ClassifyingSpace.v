@@ -133,19 +133,24 @@ Section Eliminators.
     intros; apply path_ishprop.
   Defined.
 
+  (** Similarly, when eliminating into an hprop, we only have to handle the basepoint. *)
+  Definition ClassifyingSpace_ind_hprop (P : ClassifyingSpace G -> Type)
+    `{forall x, IsTrunc (-1) (P x)} (bbase' : P bbase)
+    : forall x, P x.
+  Proof.
+    refine (ClassifyingSpace_ind_hset P bbase' _).
+    intros; rapply dp_ishprop.
+  Defined.
+
 End Eliminators.
 
-(** We can prove that the classifying space is 0-connected. *)
+(** The classifying space is 0-connected. *)
 Global Instance isconnected_classifyingspace {G : Group}
   : IsConnected 0 (ClassifyingSpace G).
 Proof.
   exists (tr bbase).
   srapply Trunc_ind.
-  srapply ClassifyingSpace_ind_hset; cbn.
-  1: reflexivity.
-  intro x.
-  apply dp_paths_FlFr.
-  apply path_ishprop.
+  srapply ClassifyingSpace_ind_hprop; reflexivity.
 Defined.
 
 (** Now we focus on the classifying space of a group. *)
@@ -200,7 +205,7 @@ Proof.
   apply ClassifyingSpace_rec_beta_bloop.
 Defined.
 
-(** Here we pove that BG is the delooping of G, in that loops BG <~> G. *)
+(** Here we prove that [BG] is the delooping of [G], in that [loops BG <~> G]. *)
 Section EncodeDecode.
 
   Context `{Univalence} {G : Group}.
@@ -257,7 +262,7 @@ Section EncodeDecode.
   Defined.
 
   (** Universal property of BG *)
-  Lemma equiv_loops_bg_g : loops (B G) <~> G.
+  Theorem equiv_loops_bg_g : loops (B G) <~> G.
   Proof.
     srapply equiv_adjointify.
     + exact (encode _).
@@ -272,8 +277,7 @@ Section EncodeDecode.
   Definition equiv_bloop := equiv_loops_bg_g^-1%equiv.
 
   (** Pointed version of the universal property. *)
-  Lemma pequiv_loops_bg_g
-    : loops (B G) <~>* Build_pType G _.
+  Theorem pequiv_loops_bg_g : loops (B G) <~>* Build_pType G _.
   Proof.
     srapply Build_pEquiv'.
     1: apply equiv_loops_bg_g.
@@ -298,26 +302,25 @@ Section EncodeDecode.
     apply encode_pp'.
   Defined.
 
+  (** We also have that the equivalence is a group isomorphism. *)
+
+  (** First we show that the loop space of a pointed 1-type is a group *)
+  Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
+    := Build_Group (loops X) concat idpath inverse
+      (Build_IsGroup _ _ _ _
+        (Build_IsMonoid _ _ _
+          (Build_IsSemiGroup _ _ _ concat_p_pp) concat_1p concat_p1)
+        concat_Vp concat_pV).
+
+  Definition grp_iso_loopgroup_bg : GroupIsomorphism (LoopGroup (B G)) G.
+  Proof.
+    snrapply Build_GroupIsomorphism'.
+    1: exact equiv_loops_bg_g.
+    intros x y.
+    apply encode_pp.
+  Defined.
+
 End EncodeDecode.
-
-(** We also have that the equivalence is a group isomorphism. *)
-
-(** First we show that the loop space of a pointed 1-type is a group *)
-Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
-  := Build_Group (loops X) concat idpath inverse
-    (Build_IsGroup _ _ _ _
-      (Build_IsMonoid _ _ _
-        (Build_IsSemiGroup _ _ _ concat_p_pp) concat_1p concat_p1)
-      concat_Vp concat_pV).
-
-Definition grp_iso_loopgroup_bg `{Univalence} (G : Group)
-  : GroupIsomorphism (LoopGroup (B G)) G.
-Proof.
-  snrapply Build_GroupIsomorphism'.
-  1: exact equiv_loops_bg_g.
-  intros x y.
-  apply encode_pp.
-Defined.
 
 (** When G is an abelian group, BG is a H-space. *)
 Section HSpace_bg.
@@ -343,11 +346,8 @@ Section HSpace_bg.
     rewrite <- path_forall_pp.
     apply ap; cbn.
     apply path_forall.
-    srapply ClassifyingSpace_ind_hset.
-    1: exact (bloop_pp x y).
-    intro z.
-    srapply dp_paths_FlFr_D.
-    srapply path_ishprop.
+    srapply ClassifyingSpace_ind_hprop.
+    exact (bloop_pp x y).
   Defined.
 
   Definition bg_mul_beta x
@@ -371,16 +371,13 @@ Section HSpace_bg.
     intro.
     apply dp_forall_domain.
     intro y; apply dp_paths_FlFr; revert y.
-    srapply ClassifyingSpace_ind_hset.
-    { cbn; rewrite concat_p1.
-      rewrite ap_idmap.
-      apply moveR_Vp.
-      symmetry.
-      rewrite concat_p1.
-      apply bg_mul_beta. }
-    intro y.
-    apply dp_paths_FlFr_D.
-    apply path_ishprop.
+    srapply ClassifyingSpace_ind_hprop.
+    cbn; rewrite concat_p1.
+    rewrite ap_idmap.
+    apply moveR_Vp.
+    symmetry.
+    rewrite concat_p1.
+    apply bg_mul_beta.
   Defined.
 
   Definition bg_mul_left_id
@@ -509,15 +506,16 @@ Proof.
         rapply sq_ccGc.
         1: symmetry; rapply decode_encode.
         apply equiv_sq_path.
-        hott_simpl. } }
+        rewrite concat_pp_p.
+        rewrite concat_pp_V.
+        reflexivity. } }
       symmetry; apply concat_1p. }
   intros f.
   rapply equiv_path_grouphomomorphism.
   simpl; intro g.
   rapply (moveR_equiv_M' equiv_loops_bg_g).
   rewrite concat_1p, concat_p1.
-  rewrite ClassifyingSpace_rec_beta_bloop.
-  reflexivity.
+  rapply ClassifyingSpace_rec_beta_bloop.
 Defined.
 
 (** Hence we have that group homomorphisms are equivalent to pointed maps between their deloopings. *)
