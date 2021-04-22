@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# This file is now only needed for proviola.  This is a wrapper around
+# coqtop which enables the HoTT-specific options.
+
+exec "${COQBIN}coqtop" -noinit -R theories HoTT -Q contrib HoTT.Contrib -indices-matter "$@"

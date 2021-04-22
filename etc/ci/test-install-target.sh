@@ -12,7 +12,6 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR"
 
 sudo make install "$@" || exit $?
-(echo | hoqtop) || exit $?
-hoqc -v || exit $?
+(echo 'Require Import HoTT.HoTT.' | coqtop -q) || exit $?
 
 popd 1>/dev/null

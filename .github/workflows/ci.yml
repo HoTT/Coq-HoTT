@@ -24,7 +24,7 @@ jobs:
         - label: with submodule coq
           env: { FORCE_COQ_VERSION: ""      , BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
         - label: building coq master
-          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "", GH_REPORT_WARNINGS: "1" }
+          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "", EXTRA_GH_REPORTIFY: "--warnings" }
           display-warnings: true
 
     env: ${{ matrix.env }}
@@ -93,12 +93,6 @@ jobs:
         #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
       if: ${{ matrix.display-warnings }}
 
-    - name: Run ./autogen.sh
-      run: ./autogen.sh
-
-    - name: Run ./configure
-      run: ./configure
-
     - name: make strict-test
       run: make strict-test
       if: env.UPDATE_QUICK_DOC == ''
@@ -107,7 +101,7 @@ jobs:
     # we only display warnings from the master job, so we don't get duplicate warnings
     - name: Build with timing
       run: |
-        etc/coq-scripts/timing/make-pretty-timed.sh -j2 GH_REPORT_ERRORS=1
+        etc/coq-scripts/github/reportify-coq.sh --errors ${EXTRA_GH_REPORTIFY} etc/coq-scripts/timing/make-pretty-timed.sh -j2 TIMING=1
         make
       if: env.UPDATE_QUICK_DOC == ''
 
@@ -143,9 +137,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
-          ./autogen.sh
-          ./configure
-          make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
+          etc/coq-scripts/github/reportify-coq.sh --errors make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
           make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
