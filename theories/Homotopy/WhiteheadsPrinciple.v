@@ -57,8 +57,32 @@ Proof.
   exact (fun _ => concat_1p _ @ concat_p1 _).
 Defined.
 
-(** Truncated Whitehead's principle (8.8.3) *)
+(** When the types are 0-connected and the map is pointed, just one [loops_functor] needs to be checked. *)
+Definition isequiv_is0connected_isequiv_loops
+           `{Univalence} {A B : pType} `{IsConnected 0 A} `{IsConnected 0 B}
+           (f : A ->* B)
+           (e : IsEquiv (loops_functor f))
+  : IsEquiv f.
+Proof.
+  apply isequiv_isbij_tr0_isequiv_loops.
+  (** The pi_0 condition is trivial because [A] and [B] are 0-connected. *)
+  1: apply isequiv_contr_contr.
+  (** Since [A] is 0-connected, it's enough to check the [loops_functor] condition for the basepoint. *)
+  intro a.
+  srefine (Trunc_rec _ (merely_path_is0connected _ a (point A))).
+  2: exact _.
+  intro p.
+  symmetry in p.
+  induction p.
+  (** The [loops_functor] condition for [pmap_from_point f _] is equivalent to the [loops_functor] condition for [f] with its given pointing. *)
+  srapply isequiv_homotopic'.
+  - exact (equiv_concat_lr (point_eq f) (point_eq f)^ oE (Build_Equiv _ _ _ e)).
+  - intro r.
+    simpl.
+    hott_simpl.
+Defined.
 
+(** Truncated Whitehead's principle (8.8.3) *)
 Definition whiteheads_principle
            {ua : Univalence} {A B : Type} {f : A -> B}
            (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
