@@ -1,0 +1,318 @@
+#TODO: REMOVE GLOB?
+
+# Once https://github.com/coq/coq/pull/12411 is merged and we bump the
+# minimum version to a version including that PR, this file should
+# become Makefile.coq.local-late, and we should rename
+# Makefile.coq.local-early to Makefile.coq.local;
+# Makefile.coq.local-early contains code that overrides the relevant
+# variables in Makefile.coq, while Makefile.coq.local currently
+# contains additional targets that need access to the variables in
+# Makefile.coq.  Until then, this file MUST NOT use := to access any
+# variables defined after its inclusion in Makefile.coq.  By contrast
+# variable definitions with lazy setting (=) and the recipe of rules
+# are allowed to make use of variables defined later on in
+# Makefile.coq.  Prerequisites of targets which depend on the contents
+# of variables which (transitively) make use of variables defined
+# after this file's inclusion in Makefile.coq MUST be doubly escaped
+# so that they are evaluated late enough.  We use .SECONDEXPANSION: to
+# enable double-escaping.  Targets themselves also MUST NOT make
+# (transitive) use of variables defined after this file's inclusion in
+# Makefile.coq
+include Makefile.coq.local-early
+.SECONDEXPANSION:
+
+# TODO(not yet ported from automake): install these files: theories etc LICENSE.txt CREDITS.txt INSTALL.md README.md
+
+# the proviola camera
+CAMERA = python proviola/camera/camera.py
+
+# the alectryon binary
+ALECTRYON = python3 etc/alectryon/alectryon.py
+ALECTRYON_EXTRAFLAGS ?=
+
+ETAGS ?= etags
+
+COQTHMDEPFLAGS ?= -I etc/coq-dpdgraph/ -Q etc/coq-dpdgraph/ dpdgraph
+
+CATEGORY_VFILES = $(filter theories/Categories%.v, $(VFILES))
+CORE_VFILES = $(filter-out $(CATEGORY_VFILES),$(filter theories/%.v, $(VFILES)))
+CONTRIB_VFILES = $(filter contrib/%.v, $(VFILES))
+
+# This setting is already present in Makefile.coq, but it comes after
+# Makefile.coq.local is included, and we have targets that depend on
+# the value of this variable, so we must duplicate the setting.  Since
+# the only use of this variable is to allow users to pass VO=vio on
+# the command line to build the non-proofs version, it does not hurt
+# to set it again.  Once https://github.com/coq/coq/pull/12411 is
+# merged and we bump the minimum version to include this, we can drop
+# `VO=vo`
+VO=vo
+# likewise, the `strip_dotslash` helper function is a duplicate from
+# Makefile.coq and will not be needed once coq/coq#12411 is merged
+strip_dotslash = $(patsubst ./%,%,$(1))
+# The list of files that comprise the HoTT library
+CORE_VOFILES=$(CORE_VFILES:.v=.$(VO))
+CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
+CORE_HTMLFILES=$(patsubst theories.%,html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
+CORE_TIMING_HTMLFILES=$(patsubst html/%,timing-html/%,$(CORE_HTMLFILES))
+CORE_DPDFILES=$(patsubst theories.%,file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.dpd)))
+
+# The list of files from contrib
+CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.$(VO))
+CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
+CONTRIB_HTMLFILES=$(patsubst contrib.%,html/HoTT.Contrib.%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
+CONTRIB_TIMING_HTMLFILES=$(patsubst html/%,timing-html/%,$(CONTRIB_HTMLFILES))
+
+# I'm not sure why we needs = rather than :=, but we seem to
+ALL_BUILT_HOTT_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
+ALL_HOTT_VFILES = $(call strip_dotslash,$(shell find -name "*.v" -not -path "./coq-HoTT/*" -not -path "./etc/*"))
+UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
+
+# TODO(leftover from porting from automake): get rid of redundancy
+# between MAIN_* and ALL_*, and maybe remove the ones redundant with
+# the Makefile.coq variables entirely.  Note that
+# {MAIN,ALL}_{V,VO,GLOB}FILES should be the same as the corresponding
+# Makefile.coq variable, but {MAIN,ALL}_HTMLFILES is NOT the same as
+# HTMLFILES from Makefile.coq (the latter lives alongside the .v
+# files, while the former lives in the html/ directory)
+# The list of all files, mainly used for html and proviola
+MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
+MAIN_VOFILES = $(MAIN_VFILES:.v=.$(VO))
+MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
+MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
+MAIN_TIMING_HTMLFILES = $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES) $(CONTRIB_TIMING_HTMLFILES)
+MAIN_DPDFILES = $(CORE_DPDFILES) $(CATEGORY_DPDFILES)
+
+ALL_VFILES = $(MAIN_VFILES)
+ALL_VOFILES = $(MAIN_VOFILES)
+ALL_GLOBFILES=$(MAIN_GLOBFILES)
+ALL_HTMLFILES=$(MAIN_HTMLFILES)
+ALL_TIMING_HTMLFILES=$(MAIN_TIMING_HTMLFILES)
+ALL_TIMINGFILES=$(ALL_VFILES:.v=.v.timing)
+ALL_XMLFILES=$(patsubst html/%,proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
+ALL_PROVIOLA_HTMLFILES=$(patsubst proviola-xml/%,proviola-html/%,$(ALL_XMLFILES:.xml=.html))
+ALL_ALECTRYON_HTMLFILES=$(patsubst html/%,alectryon-html/%,$(ALL_HTMLFILES))
+ALL_DPDFILES=$(MAIN_DPDFILES)
+ALL_SVGFILES=$(ALL_DPDFILES:.dpd=.svg)
+ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
+
+
+HOTT_LIB_FILES=$(subst /,.,$(patsubst theories/%.v,HoTT.%,$(CORE_VFILES)))
+
+# Which extra files should be cleaned
+EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
+
+.PHONY: hottlib hott-core hott-categories contrib proviola alectryon timing-html proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom
+
+# The HoTT library as a single target
+hott-core: $(CORE_VOFILES)
+
+hott-categories: $(CATEGORY_VOFILES)
+
+contrib: $(CONTRIB_VOFILES)
+
+hottlib: hott-core hott-categories contrib
+
+# a strict rule that will error if there are .v files around which aren't in _CoqProject
+strict-test:
+	$(HIDE) if [ x"$(UNBUILT_VFILES)" != x ]; then \
+	    echo "Error: The files '$(UNBUILT_VFILES)' are present but are not in _CoqProject"; \
+	    exit 1; \
+	fi
+
+# a rule that will error if there are any .v files that require FunextAxiom or UnivalenceAxiom
+# coq_makefile-based makefiles don't handle building .vo and .glob in
+# parallel, so we never depend on .glob files, we just depend on the
+# corresponding .vo files
+strict-no-axiom: $(ALL_VOFILES)
+	$(HIDE) if [ ! -z "$$(grep 'HoTT\.\(FunextAxiom\|UnivalenceAxiom\) <> <> lib' -l $(GLOBFILES))" ]; then \
+	    echo "Error: The files '$$(grep 'HoTT\.\(FunextAxiom\|UnivalenceAxiom\) <> <> lib' -l $(GLOBFILES))' depend on FunextAxiom or UnivalenceAxiom."; \
+	    exit 1; \
+	fi
+
+strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
+
+# The deps file, for graphs
+HoTT.deps: $(ALL_VFILES)
+	$(SHOW)'COQDEP > $@'
+	$(HIDE)$(COQDEP) $(CMDLINE_COQLIBS) $(ALL_VFILES) | sed s'#\\#/#g' >$@
+
+HoTTCore.deps: $(CORE_VFILES)
+	$(SHOW)'COQDEP > $@'
+	$(HIDE)$(COQDEP) $(CMDLINE_COQLIBS) $(CORE_VFILES) | sed s'#\\#/#g' >$@
+
+# The HTML files
+# We have a dummy file, to allow us to depend on the html files
+# without remaking them every time, and to prevent make -j2 from
+# running coqdoc twice.  We also add a real-html target so that we can
+# force a rebuild of html while still updating the timestamp file,
+# with a single target.
+.PHONY: real-html
+html-done.timestamp real-html: $(ALL_VOFILES) $(ALL_VFILES)
+	$(HIDE)$(MAKE) --no-print-directory -f "$(SELF)" html
+	touch html-done.timestamp
+
+timing-html: $(ALL_TIMING_HTMLFILES) timing-html/coqdoc.css timing-html/toc.html
+
+timing-html/coqdoc.css timing-html/toc.html: timing-html/% : html/%
+	@ mkdir -p timing-html
+	cp "$<" "$@"
+
+$(ALL_HTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.timestamp
+
+$(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES): timing-html/HoTT.%.html : theories/$$(subst .,/,$$*).vo etc/time2html
+	@ mkdir -p $(dir $@)
+	$(SHOW)'TIME2HTML HoTT.$* > $@'
+	$(HIDE) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
+
+$(CONTRIB_TIMING_HTMLFILES): timing-html/HoTT.Contrib.%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
+	@ mkdir -p $(dir $@)
+	$(SHOW)'TIME2HTML $* > $@'
+	$(HIDE) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
+
+# the proviola files
+proviola-html/index.html proviola-html/toc.html proviola-html/coqdoc.css : proviola-html/% : html/%
+	@ mkdir -p proviola-html
+	cp -f $< $@
+
+proviola-html/proviola.css : proviola-html/% : proviola/proviola/ppcoqdoc/%
+	@ mkdir -p proviola-html
+	cp -f $< $@
+
+proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/proviola/ppcoqdoc/%
+	@ mkdir -p proviola-xml
+	cp -f $< $@
+
+proviola-xml/%.xml: html/%.html
+	@ mkdir -p proviola-xml
+	$(SHOW)'CAMERA $<'
+	$(HIDE) $(TIMER) $(CAMERA) --coqtop "etc/hoqtop" $< $@
+
+proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
+	@ mkdir -p proviola-html
+	$(SHOW)'XSLTPROC $<'
+	$(HIDE) $(TIMER) xsltproc $< > $@
+
+proviola: $(ALL_PROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css proviola-html/index.html
+
+proviola-xml: $(ALL_XMLFILES)
+
+proviola-all: proviola proviola-xml
+
+# the alectryon files
+alectryon-html/index.html alectryon-html/toc.html alectryon-html/coqdoc.css : alectryon-html/% : html/%
+	@ mkdir -p alectryon-html
+	cp -f $< $@
+
+alectryon-html-done.timestamp: $(ALL_VOFILES) $(ALL_VFILES)
+	@ mkdir -p alectryon-html
+	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --sertop-arg=--no_prelude --sertop-arg=--indices-matter $(COQLIBS_NOML) --output-directory alectryon-html --cache-directory alectryon-cache $(ALECTRYON_EXTRAFLAGS) $(ALL_VFILES)
+	touch alectryon-html-done.timestamp
+
+alectryon-html:
+	rm -f alectryon-html-done.timestamp
+	$(MAKE) alectryon-html-done.timestamp
+
+$(ALL_ALECTRYON_HTMLFILES) : alectryon-html-done.timestamp
+
+alectryon: $(ALL_ALECTRYON_HTMLFILES) alectryon-html/toc.html alectryon-html/coqdoc.css alectryon-html/index.html
+
+# dpdgraphs
+.PHONY: dpdgraph
+dpdgraph: etc/coq-dpdgraph/searchdepend.mlg etc/coq-dpdgraph/graphdepend.mlg etc/coq-dpdgraph/Makefile
+	$(SHOW)'MAKE DPDGRAPH'
+	$(HIDE) cd etc/coq-dpdgraph && $(MAKE)
+
+etc/coq-dpdgraph/Makefile: etc/coq-dpdgraph/Makefile.in etc/coq-dpdgraph/configure
+	$(SHOW)'"CD DPDGRAPH && ./configure"'
+	$(HIDE) cd etc/coq-dpdgraph && ./configure
+
+etc/coq-dpdgraph/configure: etc/coq-dpdgraph/configure.ac
+	$(SHOW)'"CD DPDGRAPH && AUTORECONF"'
+	$(HIDE) cd etc/coq-dpdgraph && autoreconf -fvi
+
+%.svg: %.dot
+	$(SHOW)'DOT $< -o $@'
+	$(HIDE) if [ -s "$<" ]; then dot -Tsvg "$<" -o "$@"; else (echo "" > "$@"; touch "$@"); fi # don't do anything if zero size
+
+file-dep-graphs/%.dot: file-dep-graphs/%.dpd | dpdgraph
+	$(SHOW)'DPD2DOT $< -o $@'
+	$(HIDE) if [ -s "$<" ]; then etc/coq-dpdgraph/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
+
+$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo | dpdgraph
+	@ mkdir -p $(dir $@)
+	$(SHOW)'COQTHMDEP HoTT.$* > $@'
+	$(HIDE)rm -f $@.ok
+	$(HIDE) ((echo "Require HoTT.$*."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+	$(HIDE)rm $@.ok
+
+file-dep-graphs/hott-lib.dpd: $(CORE_VOFILES) | dpdgraph
+	@ mkdir -p $(dir $@)
+	$(SHOW)'COQTHMDEP HoTTLib'
+	$(HIDE) ((echo "Require $(HOTT_LIB_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+	$(HIDE)rm $@.ok
+
+#file-dep-graphs/hott-all.dpd: $(CORE_VOFILES) $(CATEGORY_VOFILES) | dpdgraph
+#	@ mkdir -p $(dir $@)
+#	$(SHOW)'HOQTHMDEP HoTT'
+#        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
+#	$(HIDE) ((echo "Require $(HOTT_ALL_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+#	$(HIDE)rm $@.ok
+
+file-dep-graphs/index.html: Makefile _CoqProject Makefile.coq.local Makefile.coq
+	@ mkdir -p $(dir $@)
+	$(SHOW)'MAKE $@'
+	$(HIDE) (echo "<html><head><title>Dependency Graphs</title></head><body>"; \
+		echo '<ul><!--li><a href="hott-all.svg">Entire HoTT Library</a></li-->'; \
+		echo '<li><a href="hott-lib.svg">HoTT Core Library</a></li>'; \
+		for i in $(patsubst file-dep-graphs/%.svg,%,$(ALL_SVGFILES)); \
+		do echo "<li><a href=\"$$i.svg\">$$i</a></li>"; \
+		done; \
+		echo "</ul></body></html>") \
+		> $@
+
+svg-dep-graphs: svg-file-dep-graphs svg-aggregate-dep-graphs
+
+dot-dep-graphs: dot-file-dep-graphs dot-aggregate-dep-graphs
+
+svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg #file-dep-graphs/hott-all.svg
+
+dot-aggregate-dep-graphs: file-dep-graphs/hott-lib.dot #file-dep-graphs/hott-all.dot
+
+svg-file-dep-graphs: $(ALL_SVGFILES) $(ALL_DOTFILES)
+
+dot-file-dep-graphs: $(ALL_DOTFILES)
+
+# The TAGS file
+TAGS_FILES = $(ALL_VFILES)
+TAGS : $(TAGS_FILES)
+	$(ETAGS) --language=none \
+	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
+	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
+	$^
+
+clean-dpdgraph::
+	(cd etc/coq-dpdgraph && $(MAKE) clean)
+
+# We separate things to work around `make: execvp: /bin/bash: Argument list too long`
+clean::
+	$(SHOW)"RM *.HTML"
+	$(HIDE)rm -f $(ALL_HTMLFILES)
+	$(SHOW)"RM *.XML"
+	$(HIDE)rm -f $(ALL_XMLFILES)
+	$(SHOW)"RM *.HTML"
+	$(HIDE)rm -f $(ALL_PROVIOLA_HTMLFILES)
+	$(SHOW)"RM *.HTML"
+	$(HIDE)rm -f $(ALL_ALECTRYON_HTMLFILES)
+	$(SHOW)"RM *.TIMING"
+	$(HIDE)rm -f $(ALL_TIMINGFILES)
+	$(SHOW)"RM *.TIMING.HTML"
+	$(HIDE)rm -f $(ALL_TIMING_HTMLFILES)
+	$(SHOW)"RM *.SVG"
+	$(HIDE)rm -f $(ALL_SVGFILES)
+	$(SHOW)"RM *.DPD"
+	$(HIDE)rm -f $(ALL_DPDFILES)
+	$(SHOW)"RM *.DOT"
+	$(HIDE)rm -f $(ALL_DOTFILES)
+	rm -f $(EXTRA_CLEANFILES)
+	find contrib theories -name \*.vo -o -name \*.glob -o -name \*.timing -delete

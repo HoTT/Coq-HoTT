@@ -29,6 +29,9 @@
 #   # Classes
 #
 
+# IMPORTANT: File paths MUST NOT start with ./, or else the makefile
+# processing will break
+
 #
 #   Basics
 #

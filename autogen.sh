@@ -3,13 +3,13 @@
 # don't fall back on git if you interrupt or kill this script
 trap "exit 1" SIGINT SIGTERM
 
-if command -v autoreconf >/dev/null 2>&1
-then # autoreconf found
-    autoreconf -fvi
-else
-    echo 'Error: autoreconf not found.  Try installing autoconf or autoreconf.'
-    exit 1
-fi
+echo "Warning: autogen.sh is not needed anymore" >&2
+
+cat > configure <<EOF
+#!/usr/bin/env bash
+echo "Warning: autogen.sh is not needed anymore" >&2
+EOF
+chmod +x configure
 
 if [ "$1" != "-skip-submodules" ] && command -v git >/dev/null 2>&1
 then # git found
