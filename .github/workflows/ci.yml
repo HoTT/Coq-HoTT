@@ -14,7 +14,7 @@ jobs:
         include:
         - env: { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
         - label: update dep graphs
-          env: { UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
+          env: { UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", FORCE_COQ_VERSION: "master", UPDATE_QUICK_DOC: "" } # When we move to 8.14 or bump dpd graph, we may have to change the Coq version here to something other than master
         - label: update quick doc
           env: { UPDATE_QUICK_DOC: "yes" }
         - label: update html
