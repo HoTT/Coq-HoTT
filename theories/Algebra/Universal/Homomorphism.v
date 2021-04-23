@@ -1,6 +1,4 @@
-(** Thie file implements algebra homomorphism and isomorphim.
-    The main theorem in this file is the [isomorphism_to_path] theorem,
-    which states that there is a path between isomorphic algebras. *)
+(** Thie file implements algebra homomorphism. *)
 
 Local Unset Elimination Schemes.
 
@@ -10,7 +8,7 @@ Require Import
   HoTT.Types
   HoTT.Tactics.
 
-Import notations_algebra.
+Local Open Scope Algebra_scope.
 
 Section is_homomorphism.
   Context {σ} {A B : Algebra σ} (f : forall (s : Sort σ), A s -> B s).
@@ -80,26 +78,6 @@ Proof.
   exact p.
 Defined.
 
-Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
-  (f : forall s, A s -> B s) `{!IsHomomorphism f}
-  := isequiv_isomorphism : forall (s : Sort σ), IsEquiv (f s).
-
-Global Existing Instance isequiv_isomorphism.
-
-Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
-  (f : forall s, A s -> B s) `{IsIsomorphism σ A B f}
-  : forall (s : Sort σ), A s <~> B s.
-Proof.
-  intro s. rapply (Build_Equiv _ _ (f s)).
-Defined.
-
-Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
-  {A B : Algebra σ} (f : forall s, A s -> B s) `{!IsHomomorphism f}
-  : IsHProp (IsIsomorphism f).
-Proof.
-  apply istrunc_forall.
-Qed.
-
 (** The identity homomorphism. *)
 
 Section hom_id.
@@ -109,12 +87,6 @@ Section hom_id.
     : IsHomomorphism (fun s (x : A s) => x).
   Proof.
     intros u a. reflexivity.
-  Defined.
-
-  Global Instance is_isomorphism_id
-    : IsIsomorphism (fun s (x : A s) => x).
-  Proof.
-    intro s. exact _.
   Defined.
 
   Definition hom_id : Homomorphism A A
@@ -136,14 +108,6 @@ Section hom_compose.
   Proof.
     intros u a.
     by rewrite <- (oppreserving_hom g), (oppreserving_hom f).
-  Qed.
-
-  Global Instance is_isomorphism_compose
-    (g : forall s, B s -> C s) `{IsIsomorphism σ B C g}
-    (f : forall s, A s -> B s) `{IsIsomorphism σ A B f}
-    : IsIsomorphism (fun s => g s o f s).
-  Proof.
-    intro s. apply isequiv_compose.
   Qed.
 
   Definition hom_compose
@@ -173,79 +137,3 @@ Lemma right_id_hom_compose `{Funext} {σ} {A B : Algebra σ}
 Proof.
   by apply path_homomorphism.
 Defined.
-
-(** The inverse of an isomorphism. *)
-
-Section hom_inv.
-  Context
-    `{Funext} {σ} {A B : Algebra σ}
-    (f : forall s, A s -> B s) `{IsIsomorphism σ A B f}.
-
-  Global Instance is_homomorphism_inv : IsHomomorphism (fun s => (f s)^-1).
-  Proof.
-   intros u a.
-   apply (ap (f (sort_cod (σ u))))^-1.
-   rewrite (oppreserving_hom f).
-   refine (eisretr _ _ @ _).
-   f_ap.
-   funext i.
-   symmetry; apply eisretr.
-  Qed.
-
-  Global Instance is_isomorphism_inv : IsIsomorphism (fun s => (f s)^-1).
-  Proof.
-    intro s. exact _.
-  Defined.
-
-  Definition hom_inv : Homomorphism B A
-    := Build_Homomorphism (fun s => (f s)^-1).
-
-End hom_inv.
-
-(** If there is an isomorphism [f : forall s, A s -> B s] then [A = B]. *)
-
-Section isomorphism_to_path.
-  Context `{Univalence} {σ : Signature} {A B : Algebra σ}.
-
-  Local Notation path_equiv_family f
-    := (path_forall _ _ (fun i => path_universe (f i))).
-
-  Lemma path_operations_equiv {w : SymbolType σ}
-    (α : Operation A w) (β : Operation B w)
-    (f : forall (s : Sort σ), A s <~> B s) (P : OpPreserving f α β)
-    : transport (fun C => Operation C w) (path_equiv_family f) α = β.
-  Proof.
-    funext a.
-    unfold Operation.
-    transport_path_forall_hammer.
-    rewrite transport_arrow_toconst.
-    rewrite transport_forall_constant.
-    rewrite transport_idmap_path_universe.
-    rewrite P.
-    f_ap.
-    funext i.
-    rewrite transport_forall_constant.
-    rewrite <- path_forall_V.
-    transport_path_forall_hammer.
-    rewrite (transport_path_universe_V (f _)).
-    apply eisretr.
-  Qed.
-
-  Lemma path_operations_isomorphism (f : forall s, A s -> B s)
-    `{IsIsomorphism σ A B f}
-    : transport (fun C => forall u, Operation C (σ u))
-        (path_equiv_family (equiv_isomorphism f)) (operations A)
-      = operations B.
-  Proof.
-    funext u.
-    refine (transport_forall_constant _ _ u @ _).
-    now apply path_operations_equiv.
-  Qed.
-
-  Theorem isomorphism_to_path (f : forall s, A s -> B s) `{IsIsomorphism σ A B f}
-    : A = B.
-  Proof.
-    apply (path_algebra _ _ (path_equiv_family (equiv_isomorphism f))).
-    apply path_operations_isomorphism.
-  Defined.
-End isomorphism_to_path.

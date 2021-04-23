@@ -13,8 +13,7 @@ Require Import
   HoTT.Spaces.Nat
   HoTT.Spaces.Finite.FinSeq.
 
-Import notations_algebra.
-
+Local Open Scope Algebra_scope.
 Local Open Scope nat_scope.
 
 (** Functions [head_dom'] and [head_dom] are used to get the first
