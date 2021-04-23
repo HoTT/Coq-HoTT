@@ -412,3 +412,4 @@ Section ump_term_algebra.
   Defined.
 
 End ump_term_algebra.
+

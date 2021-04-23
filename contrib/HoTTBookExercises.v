@@ -1645,7 +1645,7 @@ End Book_7_1.
 (** Exercise 7.9 *)
 
 (** Solution for the case (oo,-1). *)
-Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : HSet, IsProjective' X) (A : Type)
+Definition Book_7_9_oo_neg1 `{Univalence} (AC_oo_neg1 : forall X : HSet, IsPureChoosable X) (A : Type)
   : merely (exists X : HSet, exists p : X -> A, IsSurjection p)
   := @HoTT.Projective.projective_cover_AC AC_oo_neg1 _ A.
 

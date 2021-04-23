@@ -211,10 +211,9 @@ Defined.
 
 (** ** The finite axiom of choice, and projectivity *)
 
-Definition finite_choice {X} `{Finite X} (P : X -> Type)
-  : (forall x, merely (P x)) -> merely (forall x, P x).
+Definition finite_choice {X} `{Finite X} : IsPureChoosable X.
 Proof.
-  intros f.
+  intros P oP f; clear oP.
   assert (e := merely_equiv_fin X).
   strip_truncations.
   set (P' := P o e^-1).
@@ -231,9 +230,9 @@ Proof.
       exact (tr (sum_ind P IH (Unit_ind e))).
 Defined.
 
-Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
+Corollary isprojective_fin_n (n : nat) : IsPureProjective (Fin n).
 Proof.
-  apply (iff_isprojective_choice (Fin n)).
+  apply (iff_isprojective_ischoosable _ (Fin n)).
   rapply finite_choice.
 Defined.
 
@@ -429,7 +428,7 @@ Definition fcard_sigma {X} (Y : X -> Type)
 Proof.
   set (f := fun x => fcard (Y x)).
   set (g := fun x => merely_equiv_fin (Y x) : merely (Y x <~> Fin (f x))).
-  apply finite_choice in g.
+  apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finadd.
   refine (fcard_equiv' (equiv_functor_sigma_id g)).
@@ -481,7 +480,7 @@ Definition fcard_forall `{Funext} {X} (Y : X -> Type)
 Proof.
   set (f := fun x => fcard (Y x)).
   set (g := fun x => merely_equiv_fin (Y x) : merely (Y x <~> Fin (f x))).
-  apply finite_choice in g.
+  apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finmult.
   refine (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
