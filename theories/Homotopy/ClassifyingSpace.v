@@ -283,6 +283,8 @@ Section EncodeDecode.
     apply bloop_id.
   Defined.
 
+  Definition pequiv_loops_bg_g := pequiv_g_loops_bg^-1*%equiv.
+
   (** We also have that the equivalence is a group isomorphism. *)
 
   (** First we show that the loop space of a pointed 1-type is a group *)
