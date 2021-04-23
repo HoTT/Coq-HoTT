@@ -63,6 +63,9 @@ Proof.
   - intros; reflexivity.
 Defined.
 
+(** We want to discourage coq from unfolding [Tr] as much as possible. *)
+Global Opaque Tr.
+
 (** We don't usually declare modalities as coercions, but this particular one is convenient so that lemmas about (for instance) connected maps can be applied to truncation modalities without the user/reader needing to be (particularly) aware of the general notion of modality. *)
 Coercion Tr : trunc_index >-> Modality.
 (** However, if the coercion is not printed, then we get things like [Tr (-1) X] being printed as [(-1) X], which is terribly confusing.  So we tell Coq to always print this coercion.  This does mean that although the user can type things like [IsConnected n X], it will always be displayed back as [IsConnected (Tr n) X]. *)

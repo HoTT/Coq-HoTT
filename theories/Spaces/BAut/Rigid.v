@@ -7,6 +7,9 @@ Require Import Spaces.BAut.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
+(** We mark Tr as transparent here as we need to unfold it. *)
+Transparent Tr.
+
 (** * Rigid types *)
 
 Class IsRigid (A : Type) := 
@@ -27,7 +30,7 @@ Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
   : Contr (BAut A).
 Proof.
   refine (contr_change_center (point (BAut A))).
-  refine (contr_trunc_conn (Tr 0)).
+  nrefine (contr_trunc_conn (Tr 0)); [|exact _].
   intros Z W; baut_reduce.
   refine (istrunc_equiv_istrunc (n := -1) (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).
