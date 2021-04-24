@@ -4,6 +4,7 @@
 #-arg -boot
 -arg -noinit
 -arg -indices-matter
+-arg -native-compiler -arg ondemand
 
 #
 #   Table of contents:
