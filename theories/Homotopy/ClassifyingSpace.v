@@ -308,16 +308,16 @@ End EncodeDecode.
 (** When G is an abelian group, BG is a H-space. *)
 Section HSpace_bg.
 
-  (** TODO: funext can probably be avoided here *)
-  Context `{Funext} {G : AbGroup}.
+  Context {G : AbGroup}.
 
   Definition bg_mul : B G -> B G -> B G.
   Proof.
+    intro b.
     snrapply ClassifyingSpace_rec.
     1: exact _.
-    1: exact idmap.
+    1: exact b.
     { intro x.
-      apply path_forall.
+      revert b.
       snrapply ClassifyingSpace_ind_hset.
       1: exact _.
       1: exact (bloop x).
@@ -328,60 +328,45 @@ Section HSpace_bg.
       refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).
       apply ap, commutativity. }
     intros x y.
-    refine (_ @ _). 2: apply path_forall_pp.
-    apply ap; cbn.
-    apply path_forall.
-    snrapply ClassifyingSpace_ind_hprop.
-    1: exact _.
+    revert b.
+    srapply ClassifyingSpace_ind_hprop.
     exact (bloop_pp x y).
-  Defined.
-
-  Definition bg_mul_beta x
-    : ap (fun x0 => bg_mul x0 bbase) (bloop x) = bloop x.
-  Proof.
-    refine (ap_apply_Fl _ _ _ @ _).
-    refine (ap (fun q => ap10 q bbase) _ @ _).
-    1: apply ClassifyingSpace_rec_beta_bloop.
-    by rewrite eisretr.
   Defined.
 
   Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.
   Proof.
-    snrapply ClassifyingSpace_ind_hset.
-    { exact _. }
-    { snrapply ClassifyingSpace_ind_hset.
-      1: exact _.
+    intros x.
+    srapply ClassifyingSpace_ind_hset.
+    { simpl.
+      revert x.
+      srapply ClassifyingSpace_ind_hset.
       1: reflexivity.
-      intro x.
+      intros x.
       apply sq_dp^-1, sq_1G.
-      refine (ap_idmap _ @ _).
-      symmetry.
-      apply bg_mul_beta. }
-    intro.
-    apply dp_forall_domain.
-    intro y; apply dp_paths_FlFr; revert y.
+      refine (ap_idmap _ @ _^).
+      nrapply ClassifyingSpace_rec_beta_bloop. }
+    intros y; revert x.
+    simpl.
     snrapply ClassifyingSpace_ind_hprop.
     1: exact _.
-    cbn.
-    refine (concat_p1 _ @@ ap_idmap _ @ _).
-    apply moveR_Vp.
-    symmetry.
-    refine (concat_p1 _ @ _).
-    apply bg_mul_beta.
+    simpl.
+    apply sq_dp^-1, sq_1G.
+    refine (_ @ (ap_idmap _)^).
+    nrapply ClassifyingSpace_rec_beta_bloop.
   Defined.
 
   Definition bg_mul_left_id
     : forall a : B G, bg_mul bbase a = a.
   Proof.
+    intros a.
+    refine (bg_mul_symm _ _ @ _).
     reflexivity.
   Defined.
 
   Definition bg_mul_right_id
     : forall a : B G, bg_mul a bbase = a.
   Proof.
-    intro.
-    refine (bg_mul_symm _ _ @ _).
-    apply bg_mul_left_id.
+    reflexivity.
   Defined.
 
   Global Instance ishspace_bg : IsHSpace (B G)
