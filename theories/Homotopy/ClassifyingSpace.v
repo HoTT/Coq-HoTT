@@ -358,9 +358,7 @@ Section HSpace_bg.
   Definition bg_mul_left_id
     : forall a : B G, bg_mul bbase a = a.
   Proof.
-    intros a.
-    refine (bg_mul_symm _ _ @ _).
-    reflexivity.
+    apply bg_mul_symm.
   Defined.
 
   Definition bg_mul_right_id
