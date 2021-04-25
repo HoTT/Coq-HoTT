@@ -141,7 +141,7 @@ Coq if you want:
 If you installed the local version of Coq, then from the HoTT
 directory run the following commands:
 
-    make COQBIN="`pwd`/coq-HoTT/bin"
+    make COQBIN="`pwd`/coq-HoTT/bin/"
 
 If instead you installed a version of Coq that is available on your
 PATH, you can omit the COQBIN argument to `make`.  If you
