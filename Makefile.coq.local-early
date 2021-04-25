@@ -1,0 +1,9 @@
+# Once https://github.com/coq/coq/pull/12411 is merged and we bump the
+# minimum version to a version including that PR, this file should
+# become Makefile.coq.local, and we should rename Makefile.coq.local
+# to Makefile.coq.local-late; Makefile.coq.local-early contains code
+# that overrides the relevant variables in Makefile.coq, while
+# Makefile.coq.local currently contains additional targets that need
+# access to the variables in Makefile.coq
+COQDOCEXTRAFLAGS?=
+COQDOCFLAGS?=-interpolate -utf8 --no-externals $(COQDOCEXTRAFLAGS)
