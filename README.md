@@ -30,17 +30,11 @@ Installation details are explained in the file [INSTALL.md](/INSTALL.md).
 
 ## USAGE
 
-It is possible to use the HoTT library directly on the command line with the `hoqtop`
+It is possible to use the HoTT library directly on the command line with the `coqtop`
 script, but who does that?
 
 It is probably better to use [Proof General](http://proofgeneral.inf.ed.ac.uk) and
-[Emacs](http://www.gnu.org/software/emacs/). When Proof General asks you where to find the
-`coqtop` executable, just point it to the `hoqtop` script. If Emacs runs a `coqtop`
-without asking, you should probably customize set the variable `proof-prog-name-ask` to
-`nil` (in Emacs type `C-h v proof-prog-name-ask RET` to see what this is about).
-
-There is also a script called `hoqide` that runs Coq's built-in GUI `coqide`
-with `hoqtop` as the underlying `coqtop`.
+[Emacs](http://www.gnu.org/software/emacs/).
 
 ## CONTRIBUTING
 

@@ -1,9 +1,9 @@
 ## Obtain Prerequisites
 
 Make sure you have all the prerequisites for compiling Coq. These are
-`OCaml`, `camlp5`, `git`, and `make`. If you want to build the HoTT
-version of the graphical user interface `coqide` you also need the
-`lablgtk3` and `lablgtksourceview3` libraries.  To get these:
+`OCaml`, `camlp5`, `git`, and `make`. If you want to build the
+graphical user interface `coqide` you also need the `lablgtk3` and
+`lablgtksourceview3` libraries.  To get these:
 
 ### Linux and OSX
 
@@ -31,7 +31,7 @@ provided at https://opam.ocaml.org/.
     sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 
 You can then initialize opam with
-     
+
     opam init
 
 It is recommended to allow opam to change your .profile file when it
@@ -68,7 +68,7 @@ labelled latest release and run the exe file.
 doesn't matter which version, 64 and 32 both work.
 3. When you are told to choose packages, select the following packages
 (use the search bar)
-  `git`, `make`, `ocaml`, `automake`, `libtool`
+  `git`, `make`, `ocaml`
 You can select these packages by choosing a version from the drop down
 in the installer.
 4. Complete the installation of cygwin.
@@ -92,8 +92,7 @@ If you do not want to deal with `git` at all, you may download an
 archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
 unpack that. We do not recommend this option because the HoTT library
 is under heavy development and you want to be able to easily track
-changes. Additionally, downloading the archive requires a working
-version of the `autoreconf` utility.
+changes.
 
 A somewhat old version of the HoTT library is also available on opam
 as `coq-hott` in the "extra-dev" archive
@@ -142,44 +141,27 @@ Coq if you want:
 If you installed the local version of Coq, then from the HoTT
 directory run the following commands:
 
-    ./autogen.sh
-    ./configure COQBIN="`pwd`/coq-HoTT/bin"
-    make
+    make COQBIN="`pwd`/coq-HoTT/bin"
 
 If instead you installed a version of Coq that is available on your
-PATH, you can omit the COQBIN argument to `configure`.  If you
+PATH, you can omit the COQBIN argument to `make`.  If you
 installed a version of Coq that is not available on your PATH, then
 you need to supply the *absolute* path name (starting with /) of the
 `bin` directory which contains `coqtop`, `coqc`, etc.
 
-If you are trying to install on Windows using cygwin, configure the 
-library with `./configure COQBIN="/cygdrive/c/Coq/bin/"`. This tells 
-the HoTT library where to find the coq binaries. This is of course 
-assuming the coq binaries were installed in `C:\Coq\bin`. When in 
+If you are trying to install on Windows using cygwin, make the
+library with `make COQBIN="/cygdrive/c/Coq/bin/"`. This tells
+the HoTT library where to find the coq binaries. This is of course
+assuming the coq binaries were installed in `C:\Coq\bin`. When in
 cygwin you can access your C drive through `/cygdrive/c`.
 
 ## Running Coq for the HoTT library
 
-Because it is a bit tricky to run Coq with a custom standard library,
-we provide scripts `hoqtop` and `hoqc` that do this for you, so you
-can run
-
-    ./hoqtop
-
-directly from the HoTT directory to start using the library.
 You can load the library from your Coq files with
 
-    Require Import HoTT.
+    Require Import HoTT.HoTT.
 
-There is also a `hoqc` for compiling files, and `hoqide` which is the
-version of coqide running the hoqtop toplevel if you have compiled it
-successfully.
-
-You may want to put an ampersand after `./hoqide &` to allow the
-process to run in the background, allowing you to continue using the
-terminal.
-
-You may prefer to install `hoqtop`, `hoqc` and the library files
+You may prefer to install the library files
 globally, in which case you can type
 
     sudo make install
@@ -187,32 +169,10 @@ globally, in which case you can type
 Though this is not recommended if you intend on developing the library
 itself.
 
-By default the files will be installed in `/usr/local/bin` and
-`/usr/local/share/hott`.  You can change the location by using
-standard `configure` parameters when you run it.  For example
-
-    ./configure --bindir=$HOME/bin --datadir=$HOME/stuff
-
-will install `hoqtop` and `hoqc` in the `bin` subdirectory of your
-home directory and the HoTT library in `stuff/hott` subdirectory of
-your home directory.
-
-
 ## Using Emacs and Proof General
 
 If you use ProofGeneral (PG) for browsing existing theories, it should
-just work. But in case you want to create theories outside the
-`HoTT/theories` directory, do not forget to change the name of the Coq
-program called by PG. For instance you can edit the name of the
-executable called by PG by typing `M-x customize-variable`, then
-`coq-prog-name` or `proof-prog-name` which displays a customization
-utility.
-
-Another option is `M-x customize-variable` then `proof-prog-name-ask`,
-then click on the `Toggle` button in front of `Proof Prog Name Ask`
-and to save this for future sessions.  This will prompt PG to ask you
-for the name of the Coq toplevel to be used each time you start
-evaluating a file.
+just work.
 
 To use the Emacs tags facility with the `*.v` files here, run the
 command
@@ -226,22 +186,6 @@ and learn the other facilities provided, such as the use of `M-*` to
 get back where you were, or the use of `M-x tags-search` to search
 throughout the code for locations matching a given regular
 expression.)
-
-To prevent Emacs from prompting you about risky local variables every
-time you open a `*.v` file, you can inform it that the variables we
-use are safe.  In newer versions of Emacs, you can do this by simply
-pressing `!` at the prompt.  In older versions of Emacs, that option
-is not available; instead you can add the following lisp form to the
-Emacs variable `safe-local-eval-forms`.  One way to do this is to run
-`M-x customize-variable`, enter `safe-local-eval-forms`, click `INS`
-and paste in the following lisp form, then click `State` and select
-`Save for future sessions`.
-
-    (let ((default-directory
-           (locate-dominating-file buffer-file-name ".dir-locals.el")))
-      (make-local-variable 'coq-prog-name)
-      (setq coq-prog-name (expand-file-name "../hoqtop")))
-
 
 ## Updating the library
 
