@@ -378,12 +378,27 @@ Tactic Notation "do_with_holes'" tactic3(x) uconstr(p) :=
   x uconstr:(p _) ||
   x uconstr:(p).
 
+(** We keep a list of global axioms that we will solve automatically, even when not using typeclass search. *)
+Unset Primitive Projections.
+Class IsGlobalAxiom (A : Type) := {}.
+Set Primitive Projections.
+Global Hint Mode IsGlobalAxiom + : typeclass_instances.
+
+(** We add [Funext] to the list here, and will later add [Univalence]. *)
+Instance is_global_axiom_funext : IsGlobalAxiom Funext := {}.
+
+Ltac is_global_axiom A := let _ := constr:(_ : IsGlobalAxiom A) in idtac.
+
+Ltac global_axiom := try match goal with
+    | |- ?G  => is_global_axiom G; exact _
+end.
+
 (** A shorter name for [simple refine]. *)
 Tactic Notation "srefine" uconstr(term) := simple refine term.
-(** A shorter name for [notypeclasses refine]. *)
-Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term.
-(** A shorter name for [simple notypeclasses refine]. *)
-Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term.
+(** A shorter name for [notypeclasses refine]; also handles global axioms. *)
+Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term; global_axiom.
+(** A shorter name for [simple notypeclasses refine]; also handles global axioms. *)
+Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term; global_axiom.
 
 (** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
 Tactic Notation "rapply" uconstr(term)
@@ -679,7 +694,7 @@ Ltac issig :=
   let u := fresh "u" in
   let v := fresh "v" in
   (** We build an equivalence with 5 holes. *)
-  snrefine  (* We don't want typeclass search running. *)
+  simple notypeclasses refine  (* We don't want typeclass search running. *)
     (Build_Equiv A B _ (Build_IsEquiv A B (fun u => _) (fun v => _)
       (fun v => _) (fun u => _) (fun _ => _)));
   (** Going from a sigma type to a record *)

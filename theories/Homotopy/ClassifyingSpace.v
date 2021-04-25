@@ -542,7 +542,7 @@ Proof.
   (** [f] is an equivalence since [loops_functor f o bloop == tr^-1], and the other two maps are equivalences. *)
   apply isequiv_is0connected_isequiv_loops.
   snrapply (cancelR_isequiv equiv_bloop).
-  1,2: exact _.
+  1: exact _.
   rapply isequiv_homotopic'; symmetry.
   rapply pClassifyingSpace_rec_beta_bloop.
 Defined.
