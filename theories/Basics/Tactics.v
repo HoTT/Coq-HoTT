@@ -694,7 +694,7 @@ Ltac issig :=
   let u := fresh "u" in
   let v := fresh "v" in
   (** We build an equivalence with 5 holes. *)
-  simple notypeclasses refine  (* We don't want typeclass search running. *)
+  snrefine  (* We don't want typeclass search running. *)
     (Build_Equiv A B _ (Build_IsEquiv A B (fun u => _) (fun v => _)
       (fun v => _) (fun u => _) (fun _ => _)));
   (** Going from a sigma type to a record *)
