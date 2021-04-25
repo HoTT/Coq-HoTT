@@ -6,7 +6,7 @@ Monomorphic Axiom ExcludedMiddle : Type0.
 Existing Class ExcludedMiddle.
 
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
-Instance is_global_axiom_excludedmiddle : IsGlobalAxiom ExcludedMiddle := {}.
+Global Instance is_global_axiom_excludedmiddle : IsGlobalAxiom ExcludedMiddle := {}.
 
 Axiom LEM : forall `{ExcludedMiddle} (P : Type), IsHProp P -> P + ~P.
 
