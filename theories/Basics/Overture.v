@@ -575,7 +575,7 @@ Arguments eisadj {A B}%type_scope f%function_scope {_} _.
 Arguments IsEquiv {A B}%type_scope f%function_scope.
 
 (** We mark [eisadj] as Opaque to deter Coq from unfolding it when simplifying. Since proofs of [eisadj] typically have larger proofs than the rest of the equivalence data, we gain some speed up as a result. *)
-Opaque eisadj.
+Global Opaque eisadj.
 
 (** A record that includes all the data of an adjoint equivalence. *)
 Cumulative Record Equiv A B := {
