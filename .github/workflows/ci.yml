@@ -101,7 +101,7 @@ jobs:
     # we only display warnings from the master job, so we don't get duplicate warnings
     - name: Build with timing
       run: |
-        etc/coq-scripts/github/reportify-coq.sh --errors ${EXTRA_GH_REPORTIFY} etc/coq-scripts/timing/make-pretty-timed.sh -j2 TIMING=1
+        etc/coq-scripts/github/reportify-coq.sh --stdout --errors ${EXTRA_GH_REPORTIFY} etc/coq-scripts/timing/make-pretty-timed.sh -j2 TIMING=1
         make
       if: env.UPDATE_QUICK_DOC == ''
 
