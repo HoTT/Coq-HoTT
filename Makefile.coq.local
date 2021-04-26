@@ -19,7 +19,7 @@
 # (transitive) use of variables defined after this file's inclusion in
 # Makefile.coq
 include Makefile.coq.local-early
-.SECONDEXPANSION:
+.SECONDEXANSION:
 
 # TODO(not yet ported from automake): install these files: theories etc LICENSE.txt CREDITS.txt INSTALL.md README.md
 
@@ -29,6 +29,10 @@ CAMERA = python proviola/camera/camera.py
 # the alectryon binary
 ALECTRYON = python3 etc/alectryon/alectryon.py
 ALECTRYON_EXTRAFLAGS ?=
+
+# In the old makefile set up we silence noise coming from coqc by
+# setting TIMING=1. By doing so here we get the same effect.
+TIMING ?= 1
 
 ETAGS ?= etags
 
