@@ -135,11 +135,11 @@ strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
 	$(SHOW)'COQDEP > $@'
-	$(HIDE)$(COQDEP) $(CMDLINE_COQLIBS) $(ALL_VFILES) | sed s'#\\#/#g' >$@
+	$(HIDE)$(COQDEP) $(COQLIBS) $(ALL_VFILES) | sed s'#\\#/#g' >$@
 
 HoTTCore.deps: $(CORE_VFILES)
 	$(SHOW)'COQDEP > $@'
-	$(HIDE)$(COQDEP) $(CMDLINE_COQLIBS) $(CORE_VFILES) | sed s'#\\#/#g' >$@
+	$(HIDE)$(COQDEP) $(COQLIBS) $(CORE_VFILES) | sed s'#\\#/#g' >$@
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files
