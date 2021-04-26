@@ -141,7 +141,7 @@ Section Adjointify.
   Let issect' := fun x =>
     ap g (ap f (issect x)^)  @  ap g (isretr (f x))  @  issect x.
 
-  Definition is_adjoint' (a : A) : isretr (f a) = ap f (issect' a).
+  Local Definition is_adjoint' (a : A) : isretr (f a) = ap f (issect' a).
   Proof.
     unfold issect'.
     apply moveR_M1.
