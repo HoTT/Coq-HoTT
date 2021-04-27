@@ -30,6 +30,10 @@ CAMERA = python proviola/camera/camera.py
 ALECTRYON = python3 etc/alectryon/alectryon.py
 ALECTRYON_EXTRAFLAGS ?=
 
+# In the old makefile set up we silence noise coming from coqc by
+# setting TIMING=1. By doing so here we get the same effect.
+TIMING ?= 1
+
 ETAGS ?= etags
 
 COQTHMDEPFLAGS ?= -I etc/coq-dpdgraph/ -Q etc/coq-dpdgraph/ dpdgraph
