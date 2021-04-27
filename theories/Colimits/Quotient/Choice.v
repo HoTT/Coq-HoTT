@@ -4,13 +4,10 @@ Require Import
   HoTT.HSet
   HoTT.Truncations
   HoTT.TruncType
-  HoTT.HIT.quotient
+  HoTT.Colimits.Quotient
   HoTT.Projective.
 
-(** The following is an alternative (0,-1)-projective predicate.
-    Given a family of quotient sets [forall x : A, quotient (R x)],
-    for [R : forall x : A, Relation (B x)], we merely have a choice
-    function [g : forall x, B x], such that [class_of (g x) = f x]. *)
+(** The following is an alternative (0,-1)-projective predicate. Given a family of quotient sets [forall x : A, quotient (R x)], for [R : forall x : A, Relation (B x)], we merely have a choice function [g : forall x, B x], such that [class_of (g x) = f x]. *)
 
 Definition IsQuotientChoosable (A : Type) :=
   forall (B : A -> Type), (forall x, IsHSet (B x)) ->
@@ -19,7 +16,7 @@ Definition IsQuotientChoosable (A : Type) :=
          (forall x, Reflexive (R x)) ->
          (forall x, Symmetric (R x)) ->
          (forall x, Transitive (R x)) ->
-  forall (f : forall x : A, quotient (R x)),
+  forall (f : forall x : A, Quotient (R x)),
   hexists (fun g : (forall x : A, B x) =>
                    forall x, class_of (R x) (g x) = f x).
 
@@ -50,22 +47,22 @@ Section choose_isquotientchoosable.
   Qed.
 
   Local Instance hprop_choose_cod (a : A)
-    : IsHProp {c : quotient (RelClassEquiv a)
+    : IsHProp {c : Quotient (RelClassEquiv a)
                  | forall b, in_class (RelClassEquiv a) c b <~> P a b}.
   Proof.
     apply ishprop_sigma_disjoint.
-    refine (quotient_ind_prop _ _ _).
+    refine (Quotient_ind_hprop _ _ _).
     intro b1.
-    refine (quotient_ind_prop _ _ _).
+    refine (Quotient_ind_hprop _ _ _).
     intros b2 f g.
-    apply related_classes_eq.
+    apply qglue.
     apply (f b2)^-1.
     apply g.
     apply reflexive_relclass.
   Qed.
 
   Local Definition prechoose (i : forall x, hexists (P x)) (a : A)
-    : {c : quotient (RelClassEquiv a)
+    : {c : Quotient (RelClassEquiv a)
          | forall b : B a, in_class (RelClassEquiv a) c b <~> P a b}.
   Proof.
     specialize (i a).
@@ -79,13 +76,12 @@ Section choose_isquotientchoosable.
   Defined.
 
   Local Definition choose (i : forall x, hexists (P x)) (a : A)
-    : quotient (RelClassEquiv a)
+    : Quotient (RelClassEquiv a)
     := (prechoose i a).1.
 
 End choose_isquotientchoosable.
 
-(** The following section derives [IsTrChoosable 0 A]
-    from [IsQuotientChoosable A]. *)
+(** The following section derives [IsTrChoosable 0 A] from [IsQuotientChoosable A]. *)
 
 Section isquotientchoosable_to_istr0choosable.
   Context `{Univalence} (A : Type) (qch : IsQuotientChoosable A).
@@ -112,20 +108,20 @@ Section isquotientchoosable_to_istr0choosable.
   Qed.
 
   Local Instance ishprop_quotient_relunit (B : A -> Type) (a : A)
-    : IsHProp (quotient (RelUnit B a)).
+    : IsHProp (Quotient (RelUnit B a)).
   Proof.
     apply hprop_allpath.
-    refine (quotient_ind_prop _ _ _).
+    refine (Quotient_ind_hprop _ _ _).
     intro r.
-    refine (quotient_ind_prop _ _ _).
+    refine (Quotient_ind_hprop _ _ _).
     intro s.
-    by apply related_classes_eq.
+    by apply qglue.
   Qed.
 
   Lemma isquotientchoosable_to_istr0choosable : IsTrChoosable 0 A.
   Proof.
     intros B sB f.
-    transparent assert (g : (forall a, quotient (RelUnit B a))).
+    transparent assert (g : (forall a, Quotient (RelUnit B a))).
     - intro a.
       specialize (f a).
       strip_truncations.
@@ -145,7 +141,7 @@ Proof.
   set (P := fun a b => class_of (R a) b = f a).
   assert (forall a, merely ((fun x => {b | P x b}) a)) as g.
   - intro a.
-    refine (quotient_ind_prop _
+    refine (Quotient_ind_hprop _
               (fun c => merely {b | class_of (R a) b = c}) _ (f a)).
     intro b.
     apply tr.
@@ -171,8 +167,7 @@ Definition equiv_istr0choosable_isquotientchoosable `{Univalence} (A : Type)
   : IsTrChoosable 0 A <~> IsQuotientChoosable A
   := Build_Equiv _ _ (istr0choosable_to_isquotientchoosable A) _.
 
-(** The next section uses [istr0choosable_to_isquotientchoosable] to
-    generalize [quotient_rec2], see [choose_quotient_ind] below. *)
+(** The next section uses [istr0choosable_to_isquotientchoosable] to generalize [quotient_rec2], see [choose_quotient_ind] below. *)
 
 Section choose_quotient_ind.
   Context `{Univalence}
@@ -184,36 +179,34 @@ Section choose_quotient_ind.
     {sR : forall i, Symmetric (R i)}
     {tR : forall i, Transitive (R i)}.
 
-(** First generalize the [related_classes_eq] constructor. *)
+(** First generalize the [qglue] constructor. *)
 
-  Lemma pointwise_related_classes_eq
+  Lemma pointwise_qglue
     (f g : forall i, A i) (r : forall i, R i (f i) (g i))
     : (fun i => class_of (R i) (f i)) = (fun i => class_of (R i) (g i)).
   Proof.
     funext s.
-    by apply related_classes_eq.
+    by apply qglue.
   Defined.
 
-(** Given suitable preconditions, we will show that [ChooseProp P a g]
-    is inhabited, rather than directly showing [P q]. This turns
-    out to be beneficial because [ChooseProp P a g] is a proposition. *)
+(** Given suitable preconditions, we will show that [ChooseProp P a g] is inhabited, rather than directly showing [P q]. This turns out to be beneficial because [ChooseProp P a g] is a proposition. *)
 
   Local Definition ChooseProp
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
-    (g : forall i, quotient (R i))
+    (g : forall i, Quotient (R i))
     : Type
     := {b : P g
        | merely (exists (f : forall i, A i)
                         (q : g = fun i => class_of (R i) (f i)),
                  forall (f' : forall i, A i)
                         (r : forall i, R i (f i) (f' i)),
-                 pointwise_related_classes_eq f f' r # q # b = a f')}.
+                 pointwise_qglue f f' r # q # b = a f')}.
 
   Local Instance ishprop_choose_quotient_ind_chooseprop
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
-    (g : forall i, quotient (R i))
+    (g : forall i, Quotient (R i))
     : IsHProp (ChooseProp P a g).
   Proof.
     apply ishprop_sigma_disjoint.
@@ -222,8 +215,9 @@ Section choose_quotient_ind.
     destruct h1 as [f1 [q1 p1]].
     destruct h2 as [f2 [q2 p2]].
     specialize (p1 f1 (fun i => rR i (f1 i))).
-    set (pR := fun i => classes_eq_related (R i) _ _ (ap (fun h => h i) q2^
-                        @ ap (fun h => h i) q1)).
+    set (pR := fun i =>
+                related_quotient_paths (R i) _ _ (ap (fun h => h i) q2^
+                @ ap (fun h => h i) q1)).
     specialize (p2 f1 pR).
     do 2 apply moveL_transport_V in p1.
     do 2 apply moveL_transport_V in p2.
@@ -234,22 +228,20 @@ Section choose_quotient_ind.
     apply moveR_transport_p.
     rewrite inv_V.
     do 2 rewrite <- transport_pp.
-    set (pa := (pointwise_related_classes_eq f2 f1 pR)^
+    set (pa := (pointwise_qglue f2 f1 pR)^
                @ (q2^ @ q1
-               @ pointwise_related_classes_eq f1 f1 _)).
+               @ pointwise_qglue f1 f1 _)).
     by induction (hset_path2 idpath pa).
   Qed.
 
-(* Since [ChooseProp P a g] is a proposition, we can apply
-   [istr0choosable_to_isquotientchoosable] and strip its truncation
-   in order to derive [ChooseProp P a g]. *)
+(* Since [ChooseProp P a g] is a proposition, we can apply [istr0choosable_to_isquotientchoosable] and strip its truncation in order to derive [ChooseProp P a g]. *)
 
   Lemma chooseprop_quotient_ind
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
     (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
-         pointwise_related_classes_eq f f' r # a f = a f')
-    (g : forall i, quotient (R i))
+         pointwise_qglue f f' r # a f = a f')
+    (g : forall i, Quotient (R i))
     : ChooseProp P a g.
   Proof.
     pose proof
@@ -265,27 +257,25 @@ Section choose_quotient_ind.
     apply E.
   Defined.
 
-(** By projecting out of [chooseprop_quotient_ind] we obtain a
-    generalization of [quotient_rec2]. *)
+(** By projecting out of [chooseprop_quotient_ind] we obtain a generalization of [quotient_rec2]. *)
 
   Lemma choose_quotient_ind
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
     (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
-         pointwise_related_classes_eq f f' r # a f = a f')
-    (g : forall i, quotient (R i))
+         pointwise_qglue f f' r # a f = a f')
+    (g : forall i, Quotient (R i))
     : P g.
   Proof.
     exact (chooseprop_quotient_ind P a E g).1.
   Defined.
 
-(** A specialization of [choose_quotient_ind] to the case where
-    [P g] is a proposition. *)
+(** A specialization of [choose_quotient_ind] to the case where [P g] is a proposition. *)
 
   Lemma choose_quotient_ind_prop
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHProp (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHProp (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
-    (g : forall i, quotient (R i))
+    (g : forall i, Quotient (R i))
     : P g.
   Proof.
     refine (choose_quotient_ind P a _ g). intros. apply path_ishprop.
@@ -297,7 +287,7 @@ Section choose_quotient_ind.
     {B : Type} `{!IsHSet B} (a : (forall i, A i) -> B)
     (E : forall (f f' : forall i, A i),
          (forall i, R i (f i) (f' i)) -> a f = a f')
-    (g : forall i, quotient (R i))
+    (g : forall i, Quotient (R i))
     : B
     := choose_quotient_ind (fun _ => B) a
         (fun f f' r => transport_const _ _ @ E f f' r) g.
@@ -305,18 +295,18 @@ Section choose_quotient_ind.
 (** The "beta-rule" of [choose_quotient_ind]. *)
 
   Lemma choose_quotient_ind_compute
-    (P : (forall i, quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
+    (P : (forall i, Quotient (R i)) -> Type) `{!forall g, IsHSet (P g)}
     (a : forall (f : forall i, A i), P (fun i => class_of (R i) (f i)))
     (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
-         pointwise_related_classes_eq f f' r # a f = a f')
+         pointwise_qglue f f' r # a f = a f')
     (f : forall i, A i)
     : choose_quotient_ind P a E (fun i => class_of (R i) (f i)) = a f.
   Proof.
     refine (Trunc_ind (fun a => (_ a).1 = _) _ _). cbn.
     intros [f' p].
     rewrite transport_sigma.
-    set (p' := fun x => classes_eq_related (R x) _ _ (p x)).
-    assert (p = (fun i => related_classes_eq (R i) (p' i))) as pE.
+    set (p' := fun x => related_quotient_paths (R x) _ _ (p x)).
+    assert (p = (fun i => qglue (p' i))) as pE.
     - funext x. apply hset_path2.
     - rewrite pE. apply E.
   Qed.
