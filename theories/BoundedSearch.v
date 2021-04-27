@@ -10,13 +10,11 @@ Section bounded_search.
           {P_hprop : forall n, IsHProp (P n)}
           (P_dec : forall n, Decidable (P n))
           (P_inhab : hexists (fun n => P n)).
-  (** We reopen these scopes so they take precedence over nat_scope; otherwise, now that we have [Coq.Init.Peano], we'd get [* : nat -> nat -> nat] rather than [* : Type -> Type -> Type]. *)
-  Global Open Scope type_scope.
-  Global Open Scope core_scope.
-
-  (** But in this file, we want to be able to use the usual symbols for natural number arithmetic. *)
+  
+  (** We open type_scope again after nat_scope in order to use the product type notation. *)
   Local Open Scope nat_scope.
-
+  Local Open Scope type_scope.
+  
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
   Local Definition ishprop_minimal (n : nat) : IsHProp (minimal n).
   Proof.
@@ -42,9 +40,7 @@ Section bounded_search.
     induction k as [l [[p m] z]].
     exists l.
     repeat split; try assumption.
-    refine (leq_trans _ _ _ _ _).
-    - exact z.
-    - apply leqnSn.
+    exact _.
   Qed.
 
   Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l <= n) -> not (P l).
@@ -54,15 +50,10 @@ Section bounded_search.
       induction X as [h|].
       + left.
         refine (0;(h,_,_)).
-        * intros ? ?. apply leq0n.
-        * reflexivity.
+        * intros ? ?. exact _.
       + right.
         intros l lleq0.
-        assert (l0 : l = 0).
-        {
-          apply leq_antisym; try assumption.
-          apply leq0n.
-        }
+        assert (l0 : l = 0) by rapply leq_antisym.
         rewrite l0; assumption.
     - induction IHn as [|n0].
       + left. apply smaller_S. assumption.
@@ -71,22 +62,18 @@ Section bounded_search.
         * left.
           refine (n.+1;(h,_,_)).
           -- intros m pm.
-             assert ((n.+1 <= m)+(n.+1>m))%type as X by apply leqdichot.
+             assert ((n.+1 <= m)+(n.+1>m))%type as X by apply leq_dichot.
              destruct X as [leqSnm|ltmSn].
              ++ assumption.
-             ++ unfold lt in ltmSn.
-                assert (m <= n) as X by assumption.
+             ++ unfold gt, lt in ltmSn.
+                assert (m <= n) as X by rapply leq_S_n.
                 destruct (n0 m X pm).
-          -- apply leq_refl.
         * right. intros l q.
-          assert ((l <= n) + (l > n)) as X by apply leqdichot.
+          assert ((l <= n) + (l > n)) as X by apply leq_dichot.
           induction X as [h|h].
           -- exact (n0 l h).
           -- unfold lt in h.
-             assert (eqlSn : l = n.+1).
-             {
-               apply leq_antisym; assumption.
-             }
+             assert (eqlSn : l = n.+1) by (apply leq_antisym; assumption).
              rewrite eqlSn; assumption.
   Qed.
 

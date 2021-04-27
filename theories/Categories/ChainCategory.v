@@ -9,6 +9,8 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Local Open Scope nat_scope.
+
 (** ** Definitions *)
 (** Quoting Wikipedia (http://en.wikipedia.org/wiki/Total_order##Chains):
 
@@ -31,7 +33,7 @@ Module Export Core.
          nat
          leq
          leq_refl
-         (fun x y z p q => leq_trans _ _ _ q p)
+         (fun x y z p q => leq_trans q p)
          (fun _ _ _ _ _ _ _ => path_ishprop _ _)
          (fun _ _ _ => path_ishprop _ _)
          (fun _ _ _ => path_ishprop _ _)

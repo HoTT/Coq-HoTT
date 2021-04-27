@@ -1,9 +1,12 @@
 Require Import
   HoTT.Basics
+  HoTT.Types
   HoTT.HSet
   HoTT.Spaces.Nat
   HoTT.Spaces.Finite.FinNat
   HoTT.Spaces.Finite.Fin.
+
+Local Open Scope nat_scope.
 
 Definition fin_ind (P : forall n : nat, Fin n -> Type)
   (z : forall n : nat, P n.+1 fin_zero)
@@ -14,7 +17,9 @@ Proof.
   refine (transport (P n) (path_fin_to_finnat_to_fin k) _).
   refine (finnat_ind (fun n u => P n (finnat_to_fin u)) _ _ _).
   - intro. apply z.
-  - intros n' u c. apply s. exact c.
+  - intros n' u c.
+    refine ((path_finnat_to_fin_succ _)^ # _).
+    by apply s.
 Defined.
 
 Lemma compute_fin_ind_fin_zero (P : forall n : nat, Fin n -> Type)
@@ -26,7 +31,11 @@ Proof.
   generalize (path_fin_to_finnat_to_fin (@fin_zero n)).
   induction (path_fin_to_finnat_fin_zero n)^.
   intro p.
-  by induction (hset_path2 1 p).
+  destruct (hset_path2 1 p).
+  cbn.
+  set (q := path_zero_finnat n leq_1_Sn).
+  change (path_zero_finnat n leq_1_Sn) with q.
+  by destruct (hset_path2 1 q).
 Defined.
 
 Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
@@ -44,7 +53,8 @@ Proof.
   induction (path_fin_to_finnat_to_fin k).
   induction (path_fin_to_finnat_to_fin k)^.
   intro p.
-  now induction (hset_path2 1 p).
+  induction (hset_path2 p (path_finnat_to_fin_succ (fin_to_finnat k))).
+  apply transport_pV.
 Defined.
 
 Definition fin_rec (B : nat -> Type)

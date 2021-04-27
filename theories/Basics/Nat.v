@@ -1,5 +1,12 @@
 Require Import Basics.Overture Basics.Decimal Basics.Hexadecimal Basics.Numeral.
 
+Notation "n .+1" := (S n) : nat_scope.
+Notation "n .+2" := (n.+1.+1)%nat   : nat_scope.
+Notation "n .+3" := (n.+1.+2)%nat   : nat_scope.
+Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.
+Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.
+
+
 (** ** Tail-recursive versions of [add] and [mul] *)
 
 Fixpoint tail_add n m :=

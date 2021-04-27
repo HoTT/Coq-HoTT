@@ -8,6 +8,9 @@ Require Import
   HoTT.Classes.orders.semirings
   HoTT.Classes.theory.apartness.
 
+Local Open Scope nat_scope.
+Local Open Scope mc_scope.
+
 Local Set Universe Minimization ToSet.
 
 (* This should go away one Coq has universe cumulativity through inductives. *)
@@ -23,20 +26,18 @@ Proof. unfold natpaths;apply _. Qed.
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Nat.plus.
+Global Instance nat_plus: Plus@{N} nat := Nat.add.
 
-Notation mul := Nat.mult.
+Notation mul := Nat.mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.mult.
+Global Instance nat_mult: Mult@{N} nat := Nat.mul.
 
 Ltac simpl_nat :=
-  change (@plus nat _) with Nat.plus;
-  change (@mult nat _) with Nat.mult;
+  change (@plus nat _) with Nat.add;
+  change (@mult nat _) with Nat.mul;
   simpl;
-  change nat_plus with (@plus nat nat_plus);
-  change Nat.plus with (@plus nat nat_plus);
-  change nat_mult with (@mult nat nat_mult);
-  change Nat.mult with (@mult nat nat_mult).
+  change Nat.add with (@plus nat Nat.add);
+  change Nat.mul with (@mult nat Nat.mul).
 
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
@@ -237,13 +238,13 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N N} nat := Nat.le'.
-Global Instance nat_lt: Lt@{N N} nat := Nat.lt'.
+Global Instance nat_le: Le@{N N} nat := Nat.leq.
+Global Instance nat_lt: Lt@{N N} nat := Nat.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
 induction k.
-- apply Nat.le_n.
+- apply Nat.leq_n.
 - simpl_nat. constructor. assumption.
 Qed.
 
@@ -392,7 +393,7 @@ Qed.
 Local Instance nat_strict : StrictOrder (_:Lt nat).
 Proof.
 split.
-- apply _.
+- cbv; exact _.
 - apply _.
 - hnf. intros a b c E1 E2.
   apply le_exists;apply le_exists in E1;apply le_exists in E2.
@@ -420,6 +421,11 @@ intros;apply ishprop_sum;try apply _.
 intros E1 E2. apply (irreflexivity nat_lt x).
 transitivity y;trivial.
 Qed.
+
+Instance decidable_nat_apart x y : Decidable (nat_apart x y).
+Proof.
+  rapply decidable_sum; apply Nat.decidable_lt.
+Defined.
 
 Global Instance nat_trivial_apart : TrivialApart nat.
 Proof.
@@ -631,14 +637,14 @@ Section for_another_semiring.
   Qed.
 End for_another_semiring.
 
-Lemma nat_naturals@{i} : Naturals@{N N N N N N N i} nat.
+Lemma nat_naturals : Naturals@{N N N N N N N i} nat.
 Proof.
 split;try apply _.
 intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.minus.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.sub.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.

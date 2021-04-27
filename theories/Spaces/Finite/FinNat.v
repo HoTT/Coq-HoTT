@@ -6,10 +6,12 @@ Require Import
   HoTT.Spaces.Finite.Fin
   HoTT.DProp.
 
+Local Open Scope nat_scope.
+
 Definition FinNat (n : nat) : Type := {x : nat | x < n}.
 
 Definition zero_finnat (n : nat) : FinNat n.+1
-  := (0; tt).
+  := (0; leq_1_Sn).
 
 Lemma path_zero_finnat (n : nat) (h : 0 < n.+1) : zero_finnat n = (0; h).
 Proof.
@@ -17,7 +19,7 @@ Proof.
 Defined.
 
 Definition succ_finnat {n : nat} (u : FinNat n) : FinNat n.+1
-  := (u.1.+1; u.2).
+  := (u.1.+1; leq_S_n' u.1.+1 n u.2).
 
 Lemma path_succ_finnat {n : nat} (u : FinNat n) (h : u.1.+1 < n.+1)
   : succ_finnat u = (u.1.+1; h).
@@ -26,7 +28,7 @@ Proof.
 Defined.
 
 Definition last_finnat (n : nat) : FinNat n.+1
-  := exist (fun x => x < n.+1) n (leq_refl n).
+  := exist (fun x => x < n.+1) n (leq_refl n.+1).
 
 Lemma path_last_finnat (n : nat) (h : n < n.+1)
   : last_finnat n = (n; h).
@@ -35,7 +37,7 @@ Proof.
 Defined.
 
 Definition incl_finnat {n : nat} (u : FinNat n) : FinNat n.+1
-  := (u.1; leq_trans u.1.+1 n n.+1 u.2 leqnSn).
+  := (u.1; leq_trans u.2 (leq_S n n (leq_n n))).
 
 Lemma path_incl_finnat (n : nat) (u : FinNat n) (h : u.1 < n.+1)
   : incl_finnat u = (u.1; h).
@@ -50,11 +52,11 @@ Definition finnat_ind (P : forall n : nat, FinNat n -> Type)
   : P n u.
 Proof.
   induction n as [| n IHn].
-  - elim u.2.
+  - elim (not_lt_n_0 u.1 u.2).
   - destruct u as [x h].
     destruct x as [| x].
     + exact (transport (P n.+1) (path_zero_finnat _ h) (z _)).
-    + refine (transport (P n.+1) (path_succ_finnat (x; h) _) _).
+    + refine (transport (P n.+1) (path_succ_finnat (x; leq_S_n _ _ h) _) _).
       apply s. apply IHn.
 Defined.
 
@@ -64,7 +66,7 @@ Lemma compute_finnat_ind_zero (P : forall n : nat, FinNat n -> Type)
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  reflexivity.
+  cbn. by induction (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
 Defined.
 
 Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
@@ -74,9 +76,17 @@ Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
   {n : nat} (u : FinNat n)
   : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).
 Proof.
-  exact (transport (fun p => transport _ p (s n u _)
+  refine (_ @ transport (fun p => transport _ p (s n u _)
                              = s n u (finnat_ind P z s u))
-                   (hset_path2 1 (@path_succ_finnat n u u.2)) idpath).
+                   (hset_path2 1
+                    (@path_succ_finnat n u (leq_S_n' _ _ u.2))) idpath).
+  simpl.
+  destruct u as [u1 u2].
+  assert (u2 = leq_S_n u1.+1 n (leq_S_n' u1.+1 n u2)).
+  - apply path_ishprop.
+  - simpl.
+    rewrite <- X.
+    reflexivity.
 Defined.
 
 Monomorphic Definition is_bounded_fin_to_nat {n} (k : Fin n)
@@ -85,9 +95,9 @@ Proof.
   induction n as [| n IHn].
   - elim k.
   - destruct k as [k | []].
-    + apply (leq_trans _ n).
+    + apply (@leq_trans _ n _).
       * apply IHn.
-      * apply leqnSn.
+      * apply leq_S. reflexivity.
     + apply leq_refl.
 Defined.
 
@@ -96,11 +106,11 @@ Monomorphic Definition fin_to_finnat {n} (k : Fin n) : FinNat n
 
 Monomorphic Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
   := match n with
-     | 0 => fun u => Empty_rec u.2
+     | 0 => fun u => Empty_rec (not_lt_n_0 _ u.2)
      | n.+1 => fun u =>
         match u with
         | (0; _) => fin_zero
-        | (x.+1; h) => fsucc (finnat_to_fin (x; h))
+        | (x.+1; h) => fsucc (finnat_to_fin (x; leq_S_n _ _ h))
         end
      end.
 
@@ -133,7 +143,7 @@ Defined.
 Lemma path_finnat_to_fin_succ {n : nat} (u : FinNat n)
   : finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u).
 Proof.
-  reflexivity.
+  cbn. do 2 f_ap. by apply path_sigma_hprop.
 Defined.
 
 Lemma path_finnat_to_fin_zero (n : nat)
@@ -146,11 +156,13 @@ Lemma path_finnat_to_fin_incl {n : nat} (u : FinNat n)
   : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).
 Proof.
   induction n as [| n IHn].
-  - elim u.2.
+  - elim (not_lt_n_0 _ u.2).
   - destruct u as [x h].
     destruct x as [| x]; [reflexivity|].
-    refine ((ap _ (ap _ (path_succ_finnat (x; h) h)))^ @ _).
-    exact (ap fsucc (IHn (x; h))).
+    refine ((ap _ (ap _ (path_succ_finnat (x; leq_S_n _ _ h) h)))^ @ _).
+    refine (_ @ ap fsucc (IHn (x; leq_S_n _ _ h))).
+    rewrite <- path_finnat_to_fin_succ.
+    reflexivity.
 Defined.
 
 Lemma path_finnat_to_fin_last (n : nat)
@@ -165,13 +177,13 @@ Lemma path_finnat_to_fin_to_finnat {n : nat} (u : FinNat n)
   : fin_to_finnat (finnat_to_fin u) = u.
 Proof.
   induction n as [| n IHn].
-  - elim u.2.
+  - elim (not_lt_n_0 _ u.2).
   - destruct u as [x h].
     destruct x as [| x].
-    + destruct h. apply path_fin_to_finnat_fin_zero.
+    + rewrite path_fin_to_finnat_fin_zero. by apply path_sigma_hprop.
     + apply path_sigma_hprop.
       refine ((path_fin_to_finnat_fsucc _)..1 @ _).
-      exact (ap S (IHn (x; h))..1).
+      exact (ap S (IHn (x; leq_S_n _ _ h))..1).
 Defined.
 
 Lemma path_fin_to_finnat_to_fin {n : nat} (k : Fin n)

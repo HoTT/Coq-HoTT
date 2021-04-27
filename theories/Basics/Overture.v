@@ -4,35 +4,10 @@
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations Basics.Datatypes Basics.Logic.
 
-
 Declare ML Module "number_string_notation_plugin".
-
-
 
 (** Keywords for blacklisting from search function *)
 Add Search Blacklist "_admitted" "_subproof" "Private_".
-
-(** Some basic tactics *)
-Ltac easy :=
-  let rec use_hyp H :=
-    match type of H with
-    | _ => try solve [inversion H]
-    end
-  with do_intro := let H := fresh in intro H; use_hyp H
-  with destruct_hyp H := case H; clear H; do_intro; do_intro in
-  let rec use_hyps :=
-    match goal with
-    | H : _ |- _ => solve [inversion H]
-    | _ => idtac
-    end in
-  let rec do_atom :=
-    solve [reflexivity | symmetry; trivial] ||
-    contradiction ||
-    (split; do_atom)
-  with do_ccl := trivial; repeat do_intro; do_atom in
-  (use_hyps; do_ccl) || fail "Cannot solve this goal".
-
-Tactic Notation "now" tactic(t) := t; easy.
 
 Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
@@ -97,7 +72,6 @@ Arguments transitivity {A R _} / {_ _ _} _ _.
 
     If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)
 
-(** TODO: update comment *)
 (** Overwrite [reflexivity] so that we use our version of [Reflexive] rather than having the tactic look for it in the standard library.  We make use of the built-in reflexivity to handle, e.g., single-constructor inductives. *)
 Ltac old_reflexivity := reflexivity.
 Tactic Notation "reflexivity" :=
@@ -150,13 +124,19 @@ Arguments Type3 / .
 Identity Coercion unfold_Type3 : Type3 >-> Sortclass.
 
 (** Along the same lines, here is a universe with an extra universe parameter that's less than or equal to it in size.  The [gt] isn't necessary to force the larger universe to be bigger than [Set] (since we refer to the smaller universe by [Type1] which is already bigger than [Set]), but we include it anyway to make the universe parameters occur again in (now non-strictly) decreasing order. *)
-Definition Type2le@{i j} := Eval hnf in let gt := (Set : Type@{i}) in
-                                        let ge := ((fun x => x) : Type1@{j} -> Type@{i}) in Type@{i}.
+Definition Type2le@{i j} :=
+  Eval hnf in
+  let gt := (Set : Type@{i}) in
+  let ge := ((fun x => x) : Type1@{j} -> Type@{i}) in
+  Type@{i}.
 Arguments Type2le / .
 Identity Coercion unfold_Type2le : Type2le >-> Sortclass.
 
-Definition Type3le@{i j k} := Eval hnf in let gt := (Set : Type@{i}) in
-                                          let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
+Definition Type3le@{i j k} :=
+  Eval hnf in
+  let gt := (Set : Type@{i}) in
+  let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in
+  Type@{i}.
 Arguments Type3le / .
 Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
 
@@ -170,9 +150,7 @@ Definition const {A B} (b : B) := fun x : A => b.
 
 (** ** Sigma types *)
 
-(** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
-    Similarly for [(sig2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
-
+(** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
 Record sig {A} (P : A -> Type) := exist {
   proj1 : A ;
   proj2 : P proj1 ;
@@ -194,67 +172,11 @@ Arguments sig (A P)%type.
 
 Notation "{ x | P }" := (sig (fun x => P)) : type_scope.
 Notation "{ x : A | P }" := (sig (A := A) (fun x => P)) : type_scope.
-
 Notation "'exists' x .. y , p" := (sig (fun x => .. (sig (fun y => p)) ..)) : type_scope.
-
 Notation "{ x : A  & P }" := (sig (fun x:A => P)) : type_scope.
 
+(** This let's us pattern match sigma types in let expressions *)
 Add Printing Let sig.
-
-
-
-
-(** TODO: Move to Types/Sigma.v *)
-(** Various forms of the axiom of choice for specifications *)
-
-Section Choice_lemmas.
-
-  Variables S S' : Type.
-  Variable R : S -> S' -> Type.
-  Variable R' : S -> S' -> Type.
-  Variables R1 R2 : S -> Type.
-
-  Lemma Choice :
-   (forall x:S, {y:S' & R' x y}) -> {f:S -> S' & forall z:S, R' z (f z)}.
-  Proof.
-    intro H.
-    exists (fun z => proj1 (H z)).
-    intro z; destruct (H z); assumption.
-  Defined.
-
-(*
-  Lemma bool_choice :
-   (forall x:S, (R1 x) + (R2 x)) ->
-     {f:S -> bool & forall x:S, (f x = true) * (R1 x) + (f x = false) * R2 x}.
-  Proof.
-    intro H.
-    exists (fun z:S => if H z then true else false).
-    intro z; destruct (H z); auto.
-  Defined.
-*)
-
-End Choice_lemmas.
-
- (*
-Section Dependent_choice_lemmas.
-
-  Variables X : Type.
-  Variable R : X -> X -> Type.
-
-  Lemma dependent_choice :
-    (forall x:X, {y : _ & R x y}) ->
-    forall x0, {f : nat -> X & (f O = x0) * (forall n, R (f n) (f (S n)))}.
-  Proof.
-    intros H x0.
-    set (f:=fix f n := match n with O => x0 | S n' => proj1 (H (f n')) end).
-    exists f.
-    split. reflexivity.
-    induction n; simpl; apply proj2.
-  Defined.
-
-End Dependent_choice_lemmas.
-*)
-
 
 #[export] Hint Resolve exist : core.
 
@@ -264,7 +186,6 @@ Notation "( x ; .. ; y ; z )" := (exist _ x .. (exist _ y z) ..) : fibration_sco
 (** We bind [fibration_scope] with [sig] so that we are automatically in [fibration_scope] when we are passing an argument of type [sig]. *)
 Bind Scope fibration_scope with sig.
 
-(** We have unified [sig] and [sig] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [proj1] and [proj2] nor the [_sig] in [proj1_sig] and [proj2], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
 Notation pr1 := proj1.
 Notation pr2 := proj2.
 
@@ -306,8 +227,7 @@ Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (
 
 Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
-#[export]
-Hint Unfold composeD : core.
+#[export] Hint Unfold composeD : core.
 
 Notation "g 'oD' f" := (composeD g f) : function_scope.
 
@@ -652,15 +572,10 @@ Arguments trunc_S _%trunc_scope.
 (** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
 Notation "n .+1" := (trunc_S n) : trunc_scope.
-Notation "n .+1" := (S n) : nat_scope.
 Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
-Notation "n .+2" := (n.+1.+1)%nat   : nat_scope.
 Notation "n .+3" := (n.+1.+2)%trunc : trunc_scope.
-Notation "n .+3" := (n.+1.+2)%nat   : nat_scope.
 Notation "n .+4" := (n.+1.+3)%trunc : trunc_scope.
-Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
-Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.
 Local Open Scope trunc_scope.
 
 (** Further notation for truncation levels is introducted in Trunc.v. *)
@@ -765,13 +680,36 @@ Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
    The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
 
 (** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
-#[export]
-Hint Resolve idpath inverse : path_hints.
-#[export]
-Hint Resolve idpath : core.
+#[export] Hint Resolve idpath inverse : path_hints.
+#[export] Hint Resolve idpath : core.
 
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
+
+(** ** Natural numbers *)
+
+(** Unfortunately due to a bug in coq #10766 we the induction tactic fails to work properly. We therefore have to use the autogenerated induction schemes and define the ones we want to use ourselves. *)
+
+Local Set Elimination Schemes.
+
+(**  Natural numbers. *)
+Inductive nat : Type :=
+| O : nat
+| S : nat -> nat.
+
+Local Unset Elimination Schemes.
+
+(** These schemes are therefore defined in Spaces.Nat *)
+(*
+Scheme nat_ind := Induction for nat Sort Type.
+Scheme nat_rect := Induction for nat Sort Type.
+Scheme nat_rec := Minimality for nat Sort Type.
+ *)
+
+Declare Scope nat_scope.
+Delimit Scope nat_scope with nat.
+Bind Scope nat_scope with nat.
+Arguments S _%nat.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
@@ -843,3 +781,25 @@ Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
+
+Ltac easy :=
+  let rec use_hyp H :=
+    match type of H with
+    | _ => try solve [inversion H]
+    end
+  with do_intro := let H := fresh in intro H; use_hyp H
+  with destruct_hyp H := case H; clear H; do_intro; do_intro in
+  let rec use_hyps :=
+    match goal with
+    | H : _ |- _ => solve [inversion H]
+    | _ => idtac
+    end in
+  let rec do_atom :=
+    solve [reflexivity | symmetry; trivial] ||
+    contradiction ||
+    (split; do_atom)
+  with do_ccl := trivial; repeat do_intro; do_atom in
+  (use_hyps; do_ccl) || fail "Cannot solve this goal".
+
+Tactic Notation "now" tactic(t) := t; easy.
+
