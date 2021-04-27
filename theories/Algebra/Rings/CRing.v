@@ -1,4 +1,5 @@
 Require Import Basics Types WildCat.
+Require Import Spaces.Nat.
 Require Export Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
 Require Export Classes.theory.rings.
@@ -6,6 +7,10 @@ Require Export Classes.theory.rings.
 (** Theory of commutative rings *)
 
 (** TODO: We should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup. But since we are only interested in commutative rings for the time being, it makes sense to only consider them. *)
+
+Declare Scope ring_scope.
+
+Local Open Scope ring_scope.
 
 (** A commutative ring consists of the following data *)
 Record CRing := {
@@ -78,11 +83,23 @@ Section RingLaws.
 
   Definition rng_dist_l : x * (y + z) = x * y + x * z := simple_distribute_l _ _ _.
   Definition rng_dist_r : (x + y) * z = x * z + y * z := simple_distribute_r _ _ _.
+  Definition rng_plus_zero_l : 0 + x = x := left_identity _.
+  Definition rng_plus_zero_r : x + 0 = x := right_identity _.
+  Definition rng_plus_negate_l : (- x) + x = 0 := left_inverse _.
+  Definition rng_plus_negate_r : x + (- x) = 0 := right_inverse _.
+
+  Definition rng_plus_comm : x + y = y + x := commutativity x y.
+  Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.
+  Definition rng_mult_comm : x * y = y * x := commutativity x y.
+  Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.
+
+  Definition rng_negate_negate : - (- x) = x := negate_involutive _.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
   Definition rng_mult_one_r : x * 1 = x := right_identity _.
   Definition rng_mult_zero_l : 0 * x = 0 := left_absorb _.
   Definition rng_mult_zero_r : x * 0 = 0 := right_absorb _.
+  Definition rng_mult_negate : -1 * x = - x := (negate_mult _)^.
   Definition rng_mult_negate_negate : -x * -y = x * y := negate_mult_negate _ _.
   Definition rng_mult_negate_l : -x * y = -(x * y) := inverse (negate_mult_distr_l _ _).
   Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).
@@ -107,6 +124,8 @@ Record CRingIsomorphism (A B : CRing) := {
 Arguments rng_iso_homo {_ _ }.
 Coercion rng_iso_homo : CRingIsomorphism >-> CRingHomomorphism.
 Global Existing Instance isequiv_rng_iso_homo.
+
+Infix "≅" := CRingIsomorphism : ring_scope.
 
 Definition issig_CRingIsomorphism {A B : CRing}
   : _ <~> CRingIsomorphism A B := ltac:(issig).
@@ -167,6 +186,61 @@ Definition Build_CRingIsomorphism'' (A B : CRing) (e : GroupIsomorphism A B)
   {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult) (Aunit:=one) (Bunit:=one) e}
   : CRingIsomorphism A B
   := @Build_CRingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).
+
+(** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
+Definition Build_CRing' (R : AbGroup)
+  `(Mult R, One R, LeftDistribute R mult (abgroup_sgop R))
+  (iscomm : @IsCommutativeMonoid R mult one)
+  : CRing
+  := Build_CRing R (abgroup_sgop R) _ (abgroup_unit R) _
+       (abgroup_inverse R) (Build_IsRing _ _ _ _).
+
+(** The image of a ring homomorphism *)
+Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
+Proof.
+  snrapply (Build_CRing' (abgroup_image f)).
+  { simpl.
+    intros [x p] [y q].
+    exists (x * y).
+    strip_truncations; apply tr.
+    destruct p as [p p'], q as [q q'].
+    exists (p * q).
+    refine (rng_homo_mult _ _ _ @ _).
+    f_ap. }
+  { exists 1.
+    apply tr.
+    exists 1.
+    exact (rng_homo_one f). }
+  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
+  2: repeat split.
+  2: exact _.
+  all: intros [].
+  1,2,5: intros [].
+  1,2: intros [].
+  all: apply path_sigma_hprop; cbn.
+  1: apply distribute_l.
+  1: apply associativity.
+  1: apply commutativity.
+  1: apply left_identity.
+  apply right_identity.
+Defined.
+
+Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
+  : CRingHomomorphism (rng_image f) S.
+Proof.
+  snrapply Build_CRingHomomorphism.
+  1: exact pr1.
+  repeat split.
+Defined.
+
+(** Image of a surjective ring homomorphism *)
+Lemma rng_image_issurj {R S} (f : CRingHomomorphism R S) {issurj : IsSurjection f}
+  : rng_image f ≅ S.
+Proof.
+  snrapply Build_CRingIsomorphism.
+  1: exact (rng_homo_image_incl f).
+  exact _.
+Defined. 
 
 (** Wild category of commutative rings *)
 
@@ -231,3 +305,76 @@ Proof.
   + intros G H f g p q.
     exact (isequiv_adjointify f g p q).
 Defined.
+
+(** ** Product ring *)
+
+Definition cring_product : CRing -> CRing -> CRing.
+Proof.
+  intros R S.
+  snrapply Build_CRing'.
+  1: exact (ab_biprod R S).
+  1: exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
+  1: exact (cring_one , cring_one).
+  { intros [r1 s1] [r2 s2] [r3 s3].
+    apply path_prod; cbn; apply rng_dist_l. }
+  repeat split.
+  1: exact _.
+  { intros [r1 s1] [r2 s2] [r3 s3].
+    apply path_prod; cbn; apply rng_mult_assoc. }
+  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.
+  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.
+  intros [r1 s1] [r2 s2]; apply path_prod; cbn; apply rng_mult_comm.
+Defined.
+
+Infix "×" := cring_product : ring_scope.
+
+Definition cring_product_corec (R S T : CRing)
+  : CRingHomomorphism R S -> CRingHomomorphism R T
+  -> CRingHomomorphism R (S × T).
+Proof.
+  intros f g.
+  srapply Build_CRingHomomorphism'.
+  1: apply (ab_biprod_corec f g).
+  repeat split.
+  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
+  cbn; apply path_prod; apply rng_homo_one.
+Defined.
+
+(** *** More Ring laws *)
+
+(** Powers of ring elements *)
+Fixpoint rng_power {R : CRing} (x : R) (n : nat) : R :=
+  match n with
+  | 0%nat => cring_one
+  | n.+1%nat => x * rng_power x n
+  end.
+
+(** Power laws *)
+Lemma rng_power_mult_law {R : CRing} (x : R) (n m : nat)
+  : (rng_power x n) * (rng_power x m) = rng_power x (n + m).
+Proof.
+  revert m.
+  induction n.
+  { intros m.
+    apply rng_mult_one_l. }
+  intros m; cbn.
+  refine ((rng_mult_assoc _ _ _)^ @ _).
+  f_ap.
+Defined.
+
+(** Powers commute with multiplication *)
+Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
+  : rng_power (x * y) n = rng_power x n * rng_power y n.
+Proof.
+  induction n.
+  1: symmetry; apply rng_mult_one_l.
+  cbn.
+  rewrite rng_mult_assoc.
+  rewrite <- (rng_mult_assoc x _ y).
+  rewrite (rng_mult_comm (rng_power x n) y).
+  rewrite rng_mult_assoc.
+  rewrite <- (rng_mult_assoc _ (rng_power x n)).
+  f_ap.
+Defined.
+
+
