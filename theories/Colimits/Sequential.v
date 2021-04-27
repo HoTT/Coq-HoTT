@@ -575,6 +575,5 @@ Proof.
       * intros A trH a; srapply (functor_forall_equiv_pb (colim_succ_seq_to_colim_seq A)).
         intro x; srapply (@istrunc_equiv_istrunc _ _ _ k (IHn (succ_seq A) _ a x)); srapply equiv_ap.
     + intros n m p a; snrapply path_ishprop; snrapply istrunc_forall.
-      { exact _. }
-      { intro x; srapply ishprop_istrunc. }
+      intro x; srapply ishprop_istrunc.
 Defined.

@@ -83,7 +83,7 @@ Section AssumeUnivalence.
     { rapply equiv_pequiv_precompose.
       symmetry.
       nrapply pequiv_pclassifyingspace_pi1.
-      1,3: exact _.
+      2: exact _.
       apply isconnected_trunc.
       rapply isconnected_susp.
       rapply contr_inhabited_hprop.

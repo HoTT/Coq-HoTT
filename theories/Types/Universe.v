@@ -34,6 +34,10 @@ Defined.
 (** See the note by [Funext] in Overture.v *)
 Monomorphic Axiom Univalence : Type0.
 Existing Class Univalence.
+
+(** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
+Global Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
+
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
 Global Existing Instance isequiv_equiv_path.
 
