@@ -33,9 +33,7 @@ Proof.
   intro p.
   destruct (hset_path2 1 p).
   cbn.
-  set (q := path_zero_finnat n leq_1_Sn).
-  change (path_zero_finnat n leq_1_Sn) with q.
-  by destruct (hset_path2 1 q).
+  by destruct (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
 Defined.
 
 Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
@@ -78,3 +76,4 @@ Lemma compute_fin_rec_fsucc (B : nat -> Type)
 Proof.
   apply (compute_fin_ind_fsucc (fun n _ => B n)).
 Defined.
+

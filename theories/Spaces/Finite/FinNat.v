@@ -76,17 +76,14 @@ Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
   {n : nat} (u : FinNat n)
   : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).
 Proof.
-  refine (_ @ transport (fun p => transport _ p (s n u _)
-                             = s n u (finnat_ind P z s u))
-                   (hset_path2 1
-                    (@path_succ_finnat n u (leq_S_n' _ _ u.2))) idpath).
-  simpl.
+  refine
+    (_ @ transport
+          (fun p => transport _ p (s n u _) = s n u (finnat_ind P z s u))
+          (hset_path2 1 (path_succ_finnat u (leq_S_n' _ _ u.2))) 1).
   destruct u as [u1 u2].
-  assert (u2 = leq_S_n u1.+1 n (leq_S_n' u1.+1 n u2)).
+  assert (u2 = leq_S_n u1.+1 n (leq_S_n' u1.+1 n u2)) as p.
   - apply path_ishprop.
-  - simpl.
-    rewrite <- X.
-    reflexivity.
+  - simpl. by induction p.
 Defined.
 
 Monomorphic Definition is_bounded_fin_to_nat {n} (k : Fin n)
@@ -97,7 +94,7 @@ Proof.
   - destruct k as [k | []].
     + apply (@leq_trans _ n _).
       * apply IHn.
-      * apply leq_S. reflexivity.
+      * by apply leq_S.
     + apply leq_refl.
 Defined.
 
@@ -161,8 +158,7 @@ Proof.
     destruct x as [| x]; [reflexivity|].
     refine ((ap _ (ap _ (path_succ_finnat (x; leq_S_n _ _ h) h)))^ @ _).
     refine (_ @ ap fsucc (IHn (x; leq_S_n _ _ h))).
-    rewrite <- path_finnat_to_fin_succ.
-    reflexivity.
+    by induction (path_finnat_to_fin_succ (incl_finnat (x; leq_S_n _ _ h))).
 Defined.
 
 Lemma path_finnat_to_fin_last (n : nat)
@@ -179,10 +175,10 @@ Proof.
   induction n as [| n IHn].
   - elim (not_lt_n_0 _ u.2).
   - destruct u as [x h].
+    apply path_sigma_hprop.
     destruct x as [| x].
-    + rewrite path_fin_to_finnat_fin_zero. by apply path_sigma_hprop.
-    + apply path_sigma_hprop.
-      refine ((path_fin_to_finnat_fsucc _)..1 @ _).
+    + exact (ap pr1 (path_fin_to_finnat_fin_zero n)).
+    + refine ((path_fin_to_finnat_fsucc _)..1 @ _).
       exact (ap S (IHn (x; leq_S_n _ _ h))..1).
 Defined.
 
@@ -202,3 +198,4 @@ Definition equiv_fin_finnat (n : nat) : Fin n <~> FinNat n
   := equiv_adjointify fin_to_finnat finnat_to_fin
       path_finnat_to_fin_to_finnat
       path_fin_to_finnat_to_fin.
+
