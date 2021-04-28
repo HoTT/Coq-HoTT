@@ -20,9 +20,10 @@ Proof.
   - intros x y; cbn.
     rewrite 2 grp_homo_op.
     rewrite 2 grp_homo_inv.
-    refine (group_moveR_gV _ _ oE equiv_path_inverse _ _ oE _ ); symmetry.
-    apply group_moveR_Vg.
-Defined.
+    refine (_^-1 oE grp_moveL_M1).
+    refine (_ oE equiv_path_inverse _ _).
+    apply grp_moveR_1M.
+  Defined.
 
 (** ** Corecursion principle for group kernels *)
 
@@ -66,7 +67,7 @@ Proof.
     apply hprop_allpath.
     intros [x p] [y q].
     apply path_sigma_hprop; cbn.
-    apply group_moveL_1M.
+    apply grp_moveL_1M.
     apply h.
     rewrite grp_homo_op, grp_homo_inv.
     rewrite p, q.
