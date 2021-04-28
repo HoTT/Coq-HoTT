@@ -73,7 +73,7 @@ Proof.
   rapply compose_sr_morphism.
 Defined.
 
-(** Ring laws *)
+(** ** Ring laws *)
 
 Section RingLaws.
 
@@ -242,7 +242,34 @@ Proof.
   exact _.
 Defined. 
 
-(** Wild category of commutative rings *)
+(** ** Ring movement lemmas *)
+
+Section RingMovement.
+
+  (** We adopt a similar naming convention to the [moveR_equiv] style lemmas that can be found in Types.Paths. *)
+
+  Context {R : CRing} {x y z : R}.
+
+  Definition rng_moveL_Mr : - y + x = z <~> x = y + z := @grp_moveL_Mg R x y z.
+  Definition rng_moveL_rM : x + - z = y <~> x = y + z := @grp_moveL_gM R x y z.
+  Definition rng_moveR_Mr : y = - x + z <~> x + y = z := @grp_moveR_Mg R x y z.
+  Definition rng_moveR_rM : x = z + - y <~> x + y = z := @grp_moveR_gM R x y z.
+
+  Definition rng_moveL_Vr : x + y = z <~> y = - x + z := @grp_moveL_Vg R x y z.
+  Definition rng_moveL_rV : x + y = z <~> x = z + - y := @grp_moveL_gV R x y z.
+  Definition rng_moveR_Vr : x = y + z <~> - y + x = z := @grp_moveR_Vg R x y z.
+  Definition rng_moveR_rV : x = y + z <~> x + - z = y := @grp_moveR_gV R x y z.
+
+  Definition rng_moveL_M0 : - y + x = 0 <~> x = y := @grp_moveL_M1 R x y.
+  Definition rng_moveL_0M :	x + - y = 0 <~> x = y := @grp_moveL_1M R x y.
+  Definition rng_moveR_M0 : 0 = - x + y <~> x = y := @grp_moveR_M1 R x y.
+  Definition rng_moveR_0M : 0 = y + - x <~> x = y := @grp_moveR_1M R x y.
+
+  (** TODO: Movement laws about mult *)
+
+End RingMovement.
+
+(** ** Wild category of commutative rings *)
 
 Global Instance isgraph_cring : IsGraph CRing
   := Build_IsGraph _ CRingHomomorphism.
