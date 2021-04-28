@@ -60,6 +60,13 @@ Section IdealElements.
     apply ideal_in_plus_negate.
   Defined.
 
+  Lemma ideal_in_negate_plus a b : I a -> I b -> I (-a + b).
+  Proof.
+    intros p q.
+    rewrite rng_plus_comm.
+    by apply ideal_in_plus_negate.
+  Defined.
+
 End IdealElements.
 
 (** The zero ideal is an ideal *)
@@ -247,6 +254,9 @@ Proof.
   rapply equiv_path_subgroup'.
 Defined.
 
+Global Instance ishprop_ideal_eq `{Funext} {R : CRing} (I J : Ideal R)
+  : IsHProp (ideal_eq I J) := _.
+
 Global Instance reflexive_ideal_eq {R : CRing} : Reflexive (@ideal_eq R).
 Proof.
   intros I x; by split.
@@ -332,37 +342,66 @@ Definition Coprime {R : CRing} (I J : Ideal R) : Type
   := ideal_eq (ideal_sum I J) (ideal_unit R).
 Existing Class Coprime.
 
-(* Lemma coprime_property {R : CRing} {I J : Ideal R} (p : Coprime I J)
-  : merely {x : R & I x /\ {y : R & J y /\ x + y = 1}}.
+Global Instance ishprop_coprime `{Funext} {R : CRing}
+  (I J : Ideal R) : IsHProp (Coprime I J).
 Proof.
-  pose (q := p); clearbody q.
-  specialize (p cring_one).
-  destruct p as [_ p].
-  specialize (p tt).
-  revert p; apply Trunc_functor; intros p.
-  destruct p as [x [s | t] | | ].
-  - 
-  
-  
-  
-  rapply (subgroup_generated_type_rec _ _ (fun _ _ => _) _ _ _ _ p).
-  { intros x t.
-    destruct t as [s | t].
-    + apply tr.
-      exists x.
-      exists (1 - x).
-      rewrite rng_plus_comm, <- rng_plus_assoc, rng_plus_negate_l.
-      apply rng_plus_zero_r.
-    + apply tr.
-      exists x.
-      exists (1 - x).
-      rewrite rng_plus_comm, <- rng_plus_assoc, rng_plus_negate_l.
-      apply rng_plus_zero_r. }
-  { apply tr.
-      
-      reflexivity.
-      rewrite 
-      rewrite (rng_plus_assoc x (-x) 1). *)
+    unfold Coprime.
+    exact _.
+Defined.
+
+Lemma equiv_coprime_sum `{Funext} {R : CRing} (I J : Ideal R)
+  : Coprime I J
+  <~> hexists (fun '(((i ; p) , (j ; q)) : sig I * sig J)
+      => i + j = cring_one).
+Proof.
+  simpl.
+  srapply equiv_iff_hprop.
+  { intros c.
+    pose (snd (c cring_one) tt) as d; clearbody d; clear c.
+    strip_truncations.
+    apply tr.
+    induction d.
+    - destruct x.
+      + exists ((g ; s), (cring_zero; ideal_in_zero _)).
+        apply rng_plus_zero_r.
+      + exists ((cring_zero; ideal_in_zero _), (g ; s)).
+        apply rng_plus_zero_l.
+    - exists ((cring_zero; ideal_in_zero _), (cring_zero; ideal_in_zero _)).
+      apply rng_plus_zero_l.
+    - destruct IHd1 as [[[x xi] [y yj]] p].
+      destruct IHd2 as [[[w wi] [z zj]] q].
+      srefine (((_;_),(_;_));_).
+      + exact (x - w).
+      + by apply ideal_in_plus_negate.
+      + exact (y - z).
+      + by apply ideal_in_plus_negate.
+      + cbn.
+        refine (_ @ ap011 (fun x y => x - y) p q).
+        rewrite <- 2 rng_plus_assoc.
+        f_ap.
+        rewrite negate_sg_op.
+        rewrite rng_plus_comm.
+        rewrite rng_plus_assoc.
+        reflexivity. }
+  intro x.
+  strip_truncations.
+  intros r.
+  split;[intro; exact tt|].
+  intros _.
+  destruct x as [[[x xi] [y yj]] p].
+  rewrite <- rng_mult_one_r.
+  change (x + y = 1) in p.
+  rewrite <- p.
+  rewrite rng_dist_l.
+  apply tr.
+  rapply sgt_op'.
+  - apply sgt_in.
+    left.
+    by apply isideal.
+  - apply sgt_in.
+    right.
+    by apply isideal.
+Defined.
 
 (** *** Ideal lemmas *)
 
