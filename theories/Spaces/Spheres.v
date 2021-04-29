@@ -273,9 +273,9 @@ Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X}
 : NullHomotopy f.
 Proof.
   destruct n as [ | n'].
-  - simpl in *. exists (center X). intros [ ].
+  - exists (center X). intros [].
   - apply nullhomot_susp_from_paths.
-    apply allnullhomot_trunc; auto with typeclass_instances.
+    rapply allnullhomot_trunc.
 Defined.
 
 Fixpoint istrunc_allnullhomot {n : trunc_index} {X : Type}
