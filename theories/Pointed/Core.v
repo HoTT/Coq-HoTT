@@ -170,7 +170,7 @@ Ltac pointed_reduce_pmap f
     | pEquiv ?X ?Y => destruct f as [f ?iseq]
     end;
     match type of f with
-    | _ ->* ?Y => destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
+    | _ ->* ?Y => let p := fresh in destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
     end.
 
 (** ** Equivalences to sigma-types. *)
