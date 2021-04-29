@@ -51,7 +51,8 @@ jobs:
           env: { UPDATE_QUICK_DOC: "yes" }
         - label: update html
           env: { UPDATE_HTML: "yes", UPDATE_QUICK_DOC: "" }
-        
+        - label: validate
+          env: { VALIDATE: "yes"   , UPDATE_QUICK_DOC: "" }
     env: ${{ matrix.env }}
 
     # The operating system
