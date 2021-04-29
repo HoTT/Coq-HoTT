@@ -204,13 +204,13 @@ Section Functor_Pullback.
     refine (_ oE hfiber_functor_sigma _ _ _ _ _ _).
     apply equiv_functor_sigma_id.
     intros [b1 e1]; simpl.
-    refine (_ oE (equiv_transport _ _ _ (transport_sigma' e1^ (c2; e2)))).
+    refine (_ oE (equiv_transport _ (transport_sigma' e1^ (c2; e2)))).
     refine (_ oE hfiber_functor_sigma _ _ _ _ _ _); simpl.
     apply equiv_functor_sigma_id.
     intros [c1 e3]; simpl.
-    refine (_ oE (equiv_transport _ _ _
+    refine (_ oE (equiv_transport _
                    (ap (fun e => e3^ # e) (transport_paths_Fl e1^ e2)))).
-    refine (_ oE (equiv_transport _ _ _ (transport_paths_Fr e3^ _))).
+    refine (_ oE (equiv_transport _ (transport_paths_Fr e3^ _))).
     unfold functor_hfiber; simpl.
     refine (equiv_concat_l (transport_sigma' e2 _) _ oE _); simpl.
     refine (equiv_path_sigma _ _ _ oE _); simpl.

@@ -86,7 +86,7 @@ Definition path_universe_transport_idmap {A B : Type} (p : A = B)
   : path_universe (transport idmap p) = p
   := eissect (equiv_path A B) p.
 Definition path_universe_uncurried_transport_idmap {A B : Type} (p : A = B)
-  : path_universe_uncurried (equiv_transport idmap A B p) = p
+  : path_universe_uncurried (equiv_transport idmap p) = p
   := eissect (equiv_path A B) p.
 Definition equiv_path_path_universe {A B : Type} (f : A <~> B)
   : equiv_path A B (path_universe f) = f

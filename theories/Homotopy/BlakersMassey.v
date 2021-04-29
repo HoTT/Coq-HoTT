@@ -19,9 +19,9 @@ Definition transport_singleton `{Univalence}
            (ev : ap10 (apD B p) p =
    transport_arrow_toconst p (B x) p @
    path_universe_uncurried
-     (equiv_transport (B y) ((p @ p^) @ p) p (concat_pV_p p p)
+     (@equiv_transport _ (B y) ((p @ p^) @ p) p (concat_pV_p p p)
       oE (f (p @ p^))
-      oE equiv_transport (B x)
+      oE @equiv_transport _ (B x)
            (transport (fun y => x = y) p^ p)
            (p @ p^) (transport_paths_r p^ p)))
   : transport (fun yp:{y:A & x=y} => B yp.1 yp.2)
@@ -412,9 +412,9 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       apply path_arrow; intros z.
       refine ((transport_arrow_toconst _ _ _) @ _).
       apply path_universe_uncurried.
-      refine (_ oE equiv_transport codeleft _ _ (transport_paths_r _ _)).
+      refine (_ oE equiv_transport codeleft (transport_paths_r _ _)).
       refine (_ oE codeglue _ q11).
-      refine (equiv_transport coderight _ _ _).
+      refine (equiv_transport coderight _).
       refine (concat_pV_p z (glue q11)).
     Defined.
 
@@ -431,10 +431,10 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       : ap10 (apD code (glue q11)) r
         = transport_arrow_toconst (glue q11) codeleft r
         @ path_universe_uncurried
-           (equiv_transport coderight ((r @ (glue q11)^) @ glue q11) r
+           (@equiv_transport _ coderight ((r @ (glue q11)^) @ glue q11) r
                             (concat_pV_p r (glue q11))
             oE (codeglue (r @ (glue q11)^) q11)
-            oE equiv_transport codeleft
+            oE @equiv_transport _ codeleft
                  (transport (fun y : SPushout Q => left x0 = y) (glue q11)^ r)
                  (r @ (glue q11)^) (transport_paths_r (glue q11)^ r)).
     Proof.

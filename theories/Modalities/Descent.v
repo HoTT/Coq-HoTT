@@ -125,7 +125,7 @@ Proof.
   refine (OO_descend_beta O' O P a oE _).
   assert (p := (to_O_natural O' f a)^).
   apply moveR_equiv_V in p.
-  exact (equiv_transport _ _ _ p).
+  exact (equiv_transport _ p).
 Defined.
 
 (** Morally, an equivalent way of saying [O <<< O'] is that the universe of [O]-modal types is [O']-modal.  We can't say this directly since this type lives in a higher universe, but here is a rephrasing of it. *)

@@ -313,7 +313,7 @@ Section UnivPropNat.
       <~> DPath (P o functor_susp f) (merid x) (fst NS) (snd NS).
   Proof.
     etransitivity.
-    - apply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
+    - nrapply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
       symmetry; apply ap_functor_susp_merid.
     - symmetry. 
       apply (dp_compose (functor_susp f) P (merid x)).
