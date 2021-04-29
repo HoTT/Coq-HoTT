@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         # We build on our supported version of coq and the master version
-        coq_version: [ '8.13' , 'latest' ]
+        coq_version: [ '8.13' , 'latest' , 'dev' ]
         ocaml_version: [ '4.11-flambda' ]
         
     runs-on: ubuntu-latest
