@@ -30,8 +30,10 @@ jobs:
         ocaml_version: ${{ matrix.ocaml_version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-          sudo chown -R coq:coq .
+            sudo chown -R coq:coq .
           endGroup
+          sudo apt-get -o Acquire::Retries=30 update -q
+          sudo apt-get -o Acquire::Retries=30 install python -y --allow-unauthenticated
           etc/coq-scripts/github/reportify-coq.sh --stdout --errors ${{ matrix.extra_gh_reportify }} etc/coq-scripts/timing/make-pretty-timed.sh -j2 TIMING=1
           make
     - name: Revert permissions
