@@ -32,7 +32,8 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
           sudo chown -R coq:coq .
           endGroup
-          etc/coq-scripts/github/reportify-coq.sh --errors make TIMED=1 -j2     --output-sync GH_REPORT_ERRORS=1
+          etc/coq-scripts/github/reportify-coq.sh --stdout --errors ${{ matrix.extra_gh_reportify }} etc/coq-scripts/timing/make-pretty-timed.sh -j2 TIMING=1
+          make
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
