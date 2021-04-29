@@ -1,30 +1,53 @@
 ## This is the name of the CI
 name: CI
 
-## These are the actions that trigger the CI to run
-on: [push, pull_request]
+## These are the tiggers for the CI to run
+on: [ push , pull_request ]
 
 jobs:
-  build:
-    # TODO: Eventually include different OS's in the matrix
 
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # We build on our supported version of coq and master
+        coq_version: [ '8.13' , 'latest' ]
+        ocaml_version: [ '4.11-flambda' ]
+        
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout branch
+    - uses: actions/checkout@v2
+    # Checkout submodules
+    - uses: snickerbockers/submodules-init@v4
+    # We use the coq docker so we don't have to build coq
+    - uses: coq-community/docker-coq-action@v1
+      with:
+        coq_version: ${{ matrix.coq_version }}
+        ocaml_version: ${{ matrix.ocaml_version }}
+        custom_script: |
+          startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
+          sudo chown -R coq:coq .
+          endGroup
+          etc/coq-scripts/github/reportify-coq.sh --errors make TIMED=1 -j2     --output-sync GH_REPORT_ERRORS=1
+    - name: Revert permissions
+      # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
+      if: ${{ always() }}
+      run: sudo chown -R 1001:116 .
+
+
+  doc:
     strategy:
       fail-fast: false
       matrix:
         include:
-        - env: { UPDATE_HTML: "", UPDATE_QUICK_DOC: "", UPDATE_DEP_GRAPHS: "", BUILD_COQ: "", FORCE_COQ_VERSION: "", VALIDATE: "" }
         - label: update dep graphs
           env: { UPDATE_DEP_GRAPHS: "yes", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "" }
         - label: update quick doc
           env: { UPDATE_QUICK_DOC: "yes" }
         - label: update html
           env: { UPDATE_HTML: "yes", UPDATE_QUICK_DOC: "" }
-        - label: validate
-          env: { VALIDATE: "yes"   , UPDATE_QUICK_DOC: "" }
-        - label: building coq master
-          env: { FORCE_COQ_VERSION: "master", BUILD_COQ: "yes", UPDATE_QUICK_DOC: "", EXTRA_GH_REPORTIFY: "--warnings" }
-          display-warnings: true
-
+        
     env: ${{ matrix.env }}
 
     # The operating system
@@ -111,7 +134,7 @@ jobs:
       run: etc/ci/after_success.sh
       env:
         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-
+  
   alectryon:
     runs-on: ubuntu-latest
     steps:
