@@ -1,7 +1,7 @@
 ## This is the name of the CI
 name: CI
 
-## These are the tiggers for the CI to run
+## These are the triggers for the CI to run
 on: [ push , pull_request ]
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # We build on our supported version of coq and master
+        # We build on our supported version of coq and the master version
         coq_version: [ '8.13' , 'latest' ]
         ocaml_version: [ '4.11-flambda' ]
         
