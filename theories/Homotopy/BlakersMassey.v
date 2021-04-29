@@ -19,9 +19,11 @@ Definition transport_singleton `{Univalence}
            (ev : ap10 (apD B p) p =
    transport_arrow_toconst p (B x) p @
    path_universe_uncurried
-     (equiv_transport (B y) (concat_pV_p p p)
+     (@equiv_transport _ (B y) ((p @ p^) @ p) p (concat_pV_p p p)
       oE (f (p @ p^))
-      oE equiv_transport (B x) (transport_paths_r p^ p)))
+      oE @equiv_transport _ (B x)
+           (transport (fun y => x = y) p^ p)
+           (p @ p^) (transport_paths_r p^ p)))
   : transport (fun yp:{y:A & x=y} => B yp.1 yp.2)
               (path_contr (A := {y:A & x=y}) (x;idpath) (y;p)) u
     = transport (B y) (concat_1p _) (f idpath u).
@@ -429,9 +431,12 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       : ap10 (apD code (glue q11)) r
         = transport_arrow_toconst (glue q11) codeleft r
         @ path_universe_uncurried
-           (equiv_transport coderight (concat_pV_p r (glue q11))
+           (@equiv_transport _ coderight ((r @ (glue q11)^) @ glue q11) r
+                            (concat_pV_p r (glue q11))
             oE (codeglue (r @ (glue q11)^) q11)
-            oE equiv_transport codeleft (transport_paths_r (glue q11)^ r)).
+            oE @equiv_transport _ codeleft
+                 (transport (fun y : SPushout Q => left x0 = y) (glue q11)^ r)
+                 (r @ (glue q11)^) (transport_paths_r (glue q11)^ r)).
     Proof.
       refine (ap (fun h => ap10 h r)
              (spushout_ind_beta_sglue Q (fun p => left x0 = p -> Type)
