@@ -127,7 +127,8 @@ Definition merely_path_is0connected `{Univalence}
            (A : Type) `{IsConnected 0 A} (x y : A)
 : merely (x = y).
 Proof.
-  refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
+  (** This follows immediately from the previous result. *)
+  rapply center.
 Defined.
 
 Definition is0connected_merely_allpath `{Univalence}
