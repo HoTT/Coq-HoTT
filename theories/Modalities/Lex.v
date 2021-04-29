@@ -379,7 +379,7 @@ Proof.
   assert (wc : forall y z, P y <~> P z).
   { intros y z.
     (** Here we use the hypothesis [lexgen] (typeclass inference finds it automatically). *)
-    refine (pr1 (isconnected_elim O _ (equiv_transport P y z))). }
+    refine (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))). }
   intros x; apply path_TypeO, path_universe_uncurried.
   refine (equiv_adjointify (fun f => f x) (fun u y => wc x y ((wc x x)^-1 u)) _ _).
   - intros u; apply eisretr.

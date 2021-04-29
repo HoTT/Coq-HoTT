@@ -266,7 +266,7 @@ Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
 Proof.
-  refine (_ oE equiv_transport (fun x => Tr x _) _ _ _ oE Trunc_min n m _).
+  refine (_ oE equiv_transport (fun x => Tr x _) _ oE Trunc_min n m _).
   2: apply trunc_index_min_swap.
   symmetry.
   apply Trunc_min.

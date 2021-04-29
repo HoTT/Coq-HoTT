@@ -321,7 +321,7 @@ Proof.
   strip_truncations.
   simple refine (finite_equiv' _
             (equiv_functor_forall' (P := fun x => Y (e^-1 x)) e _) _); try exact _.
-  { intros x; refine (equiv_transport _ _ _ (eissect e x)). }
+  { intros x; refine (equiv_transport _ (eissect e x)). }
   set (Y' := Y o e^-1); change (Finite (forall x, Y' x)).
   assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.
   generalize dependent (fcard X); intros n Y' ?.

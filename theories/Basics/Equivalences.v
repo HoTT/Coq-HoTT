@@ -115,7 +115,7 @@ Definition isequiv_homotopic' {A B : Type} (f : A <~> B) {g : A -> B} (h : f == 
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 
-  Context {A : Type} (P : A -> Type) (x y : A) (p : x = y).
+  Context {A : Type} (P : A -> Type) {x y : A} (p : x = y).
 
   Global Instance isequiv_transport : IsEquiv (transport P p) | 0
     := Build_IsEquiv (P x) (P y) (transport P p) (transport P p^)

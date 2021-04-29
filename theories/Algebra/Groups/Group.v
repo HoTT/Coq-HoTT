@@ -475,7 +475,7 @@ Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
 Proof.
   intros [a0 p].
-  refine (equiv_transport (hfiber f) _ _ (right_inverse b) oE _).
+  refine (equiv_transport (hfiber f) (right_inverse b) oE _).
   rapply (equiv_functor_hfiber (h:=right_mult_equiv (-a0)) (k:=right_mult_equiv (- b))).
   intro a; cbn; symmetry.
   refine (_ @ ap (fun x => f a * (- x)) p).
