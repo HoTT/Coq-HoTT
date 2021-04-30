@@ -42,18 +42,12 @@ Proof.
   apply isequiv_inhab_codomain.
   intro p.
   apply (ap (@tr 0 _)) in p.
-  apply (ap (Trunc_functor 0 f)^-1) in p.
-  pose proof ((eissect (Trunc_functor 0 f) (tr x))^
-              @ p @ eissect (Trunc_functor 0 f) (tr y)) as q.
-  clear p.
-  apply (equiv_path_Tr _ _)^-1 in q.
+  apply (@equiv_inj _ _ _ i (tr x) (tr y)) in p.
+  apply (equiv_path_Tr _ _)^-1 in p.
   strip_truncations.
-  destruct q.
+  destruct p.
   cbn in ii.
-  srapply isequiv_homotopic.
-  { intro p.
-    exact (1 @ (ap f p @ 1)). }
-  1: apply (ii x).
+  snrapply (isequiv_homotopic _ (H:=ii x)).
   exact (fun _ => concat_1p _ @ concat_p1 _).
 Defined.
 
