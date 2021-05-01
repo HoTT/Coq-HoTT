@@ -590,11 +590,7 @@ Section ModalFact.
       refine ((inv_V _)^ @ _ @ inv_V _); apply inverse2.
       refine (_ @ pr2_path (equiv_O_factor_hfibers_beta f fact fact' a)).
       refine (_ @ (transport_paths_Fl _ _)^).
-      (** Apparently Coq needs a little help to see that these paths are the same. *)
-      match goal with
-          |- ((?p)^ @ ?q)^ = _ @ _ => change ((p^ @ q)^ = q^ @ p)
-      end.
-      refine (inv_pp _ _ @ (1 @@ inv_V _)).
+      exact (inv_pp _ _ @ (1 @@ inv_V _)).
   Defined.
 
 End ModalFact.
