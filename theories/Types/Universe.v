@@ -489,7 +489,8 @@ Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type) :
 Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path V U)).
-  intro p; induction p; apply H0.
+  (* We manually apply [paths_ind_r] to reduce universe levels. *)
+  revert V; rapply paths_ind_r; apply H0.
 Defined.
 
 Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
@@ -499,16 +500,16 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 
 (** ** Based equivalence types *)
 
-Global Instance contr_basedequiv {X : Type}
-: Contr {Y : Type & X <~> Y}.
+Global Instance contr_basedequiv@{u +} {X : Type@{u}}
+: Contr {Y : Type@{u} & X <~> Y}.
 Proof.
   exists (X; equiv_idmap).
   intros [Y f]; revert Y f.
   exact (equiv_induction _ idpath).
 Defined.
 
-Global Instance contr_basedequiv' {X : Type}
-: Contr {Y : Type & Y <~> X}.
+Global Instance contr_basedequiv'@{u +} {X : Type@{u}}
+: Contr {Y : Type@{u} & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
   srapply Build_Contr.
