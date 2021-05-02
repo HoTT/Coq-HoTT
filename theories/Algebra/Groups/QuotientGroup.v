@@ -260,7 +260,7 @@ Global Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSub
   : Finite (QuotientGroup G H).
 Proof.
   nrapply finite_quotient.
-  1-6: exact _.
+  1-5: exact _.
   intros x y.
   pose (dec_H := detachable_finite_subset H).
   apply dec_H.
