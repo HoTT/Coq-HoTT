@@ -40,14 +40,15 @@ Defined.
 
 (** ** W-types preserve truncation *)
 
-Global Instance istrunc_wtype `{Funext} {A B} {n : trunc_index} `{IsTrunc n.+1 A}
+Global Instance istrunc_wtype `{Funext}
+  {A B} {n : trunc_index} `{IsTrunc n.+1 A}
 : IsTrunc n.+1 (W A B) | 100.
 Proof.
   intros z; induction z as [a w].
   intro y; destruct y as [a0 w0].
-  nrefine (trunc_equiv' _ (equiv_path_wtype' _ _)).
-  rapply trunc_sigma.
+  nrefine (istrunc_equiv_istrunc _ (equiv_path_wtype' _ _)).
+  rapply istrunc_sigma.
   cbn; intro p.
   destruct p.
-  apply (trunc_equiv' _ (equiv_path_forall _ _)).
+  apply (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).
 Defined.

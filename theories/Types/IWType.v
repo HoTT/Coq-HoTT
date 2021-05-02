@@ -207,7 +207,7 @@ Section Paths.
       destruct x as [x [a b]].
       cbv in h.
       refine (_ @ _).
-      { refine (_ @ ap _ (eisadj_other apD10 h)).
+      { refine (_ @ ap _ (eisadj (path_forall _ _) h)).
         refine (paths_ind _
           (fun b p' =>
             paths_ind _ (fun r p'' => P (i x ; (iw_sup I A B i j x a , r)) p'')
@@ -220,7 +220,7 @@ Section Paths.
                 p' (eissect apD10 p'))
           _ _ _).
         exact (transport_compose _ _ _ _)^. }
-      by destruct (eisretr apD10 h).
+      by cbn; destruct (eisretr apD10 h).
     Defined.
 
   End Ind.
@@ -417,11 +417,13 @@ Proof.
   1: apply ishprop_iwtype.
   intros I A B i j h l.
   intros x y.
-  refine (trunc_equiv' _ (equiv_path_iwtype I A B i j l x y) (n := n.+1)).
+  refine (istrunc_equiv_istrunc _
+    (equiv_path_iwtype I A B i j l x y) (n := n.+1)).
   apply IHn.
   intros [k [a b]].
   (** The crucial step is to characterize the fiber of [i'] which was done previously. *)
-  apply (trunc_equiv' _ (equiv_path_hfiber_index I A B i j k a b)).
+  apply (istrunc_equiv_istrunc _
+    (equiv_path_hfiber_index I A B i j k a b)).
 Defined.
 
 (** ** Decidable equality for IW-types *)
