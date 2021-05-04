@@ -18,11 +18,7 @@ Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
 Coercion fun01_F : Fun01 >-> Funclass.
 Existing Instance fun01_is0functor.
 
-Definition NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
-           {ff : Is0Functor F} {fg : Is0Functor G}
-  := { alpha : F $=> G & Is1Natural F G alpha }.
-
-(** Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
+(* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
 Global Instance isgraph_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : IsGraph (Fun01 A B).
 Proof.
@@ -37,7 +33,7 @@ Proof.
   - intros [F ?]; cbn.
     exists (id_transformation F); exact _.
   - intros [F ?] [G ?] [K ?] [gamma ?] [alpha ?]; cbn in *.
-    exists (comp_transformation gamma alpha); exact _.
+    exists (trans_comp gamma alpha); exact _.
 Defined.
 
 (** In fact, in this case it is automatically also a 0-coherent 2-category and a 1-coherent 1-category, with a totally incoherent notion of 2-cell between 1-coherent natural transformations. *)
@@ -74,10 +70,6 @@ Defined.
 
 (** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that this is not a "fully coherent" notion of equivalence, since the functors and transformations are not themselves fully coherent. *)
 
-Definition NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
-           (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
-  := { alpha : forall a, F a $<~> G a & Is1Natural F G (fun a => alpha a) }.
-
 Global Instance hasequivs_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
   : HasEquivs (Fun01 A B).
 Proof.
@@ -88,13 +80,14 @@ Proof.
   all:intros [F ?] [G ?] [alpha alnat]; cbn in *.
   - exists (fun a => alpha a); assumption.
   - intros a; exact _.
-  - intros ?; srefine (_;_).
+  - intros ?.
+    snrapply Build_NatEquiv.
     + intros a; exact (Build_CatEquiv (alpha a)).
     + cbn. refine (is1natural_homotopic alpha _).
       intros a; apply cate_buildequiv_fun.
   - cbn; intros; apply cate_buildequiv_fun.
   - exists (fun a => (alpha a)^-1$).
-    apply Build_Is1Natural; intros a b f.
+    intros a b f.
     refine ((cat_idr _)^$ $@ _).
     refine ((_ $@L (cate_isretr (alpha a))^$) $@ _).
     refine (cat_assoc _ _ _ $@ _).

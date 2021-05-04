@@ -474,7 +474,7 @@ Defined.
 (** [loops_inv] is a natural transformation. *)
 Global Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
 Proof.
-  apply Build_Is1Natural. intros A B f.
+  intros A B f.
   srapply Build_pHomotopy.
   + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
     refine (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
