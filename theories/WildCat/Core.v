@@ -182,6 +182,16 @@ Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
   : f = g
   := GpdHom_path^-1 p.
 
+(** A 1-category with morphism extensionality induces a strong 1-category *)
+Global Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
+  : Is1Cat_Strong A.
+Proof.
+  rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
+  + apply cat_assoc.
+  + apply cat_idl.
+  + apply cat_idr.
+Defined.
+
 (** A 1-functor acts on 2-cells (satisfying no axioms) and also preserves composition and identities up to a 2-cell. *)
   (* The [!] tells Coq to use typeclass search to find the [IsGraph] parameters of [Is0Functor] instead of assuming additional copies of them. *)
 Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
@@ -196,7 +206,6 @@ Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
 Arguments fmap2 {A B _ _ _ _ _ _} F {_ _ _ _ _ _} p.
 Arguments fmap_id {A B _ _ _ _ _ _} F {_ _} a.
 Arguments fmap_comp {A B _ _ _ _ _ _} F {_ _ _ _ _} f g.
-
 
 (** Identity functor *)
 
