@@ -55,6 +55,21 @@ Proof.
   exact (f $o g).
 Defined.
 
+Global Instance is1functor_opyon {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (opyon a).
+Proof.
+  rapply Build_Is1Functor.
+  + intros x y f g p h.
+    apply path_hom.
+    apply (cat_prewhisker p).
+  + intros x h.
+    apply path_hom.
+    apply cat_idl.
+  + intros x y z f g h.
+    apply path_hom.
+    apply cat_assoc.
+Defined.
+
 Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A -> Type) {ff : Is0Functor F}
   : F a -> (opyon a $=> F).
