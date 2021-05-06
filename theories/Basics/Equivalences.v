@@ -578,8 +578,7 @@ Ltac multi_assumption :=
 
 (* Build an element of a possibly-nested record type out of hypotheses in the context. *)
 Ltac build_record :=
-  first [ cbn; multi_assumption
-        | cbn; unshelve econstructor; build_record ].
+  cbn; multi_assumption + (unshelve econstructor; build_record).
 
 (* Construct an equivalence between two possibly-nested record/sigma types that differ only by associativity and permutation of their components.  We could use [Build_Equiv] and directly construct [eisadj] by decomposing to reflexivity as well, but often with large nested types it seems to be faster to adjointify. *)
 Ltac make_equiv :=
@@ -761,12 +760,11 @@ Ltac decomposing_intros_with_paths :=
 
 (** Going the other direction, we have to be willing to insert identity paths to fill in the based path-spaces that got destructed.  In fact [econstructor] is already willing to do that, since [idpath] is the constructor of [paths].  However, our previous [build_record] won't manage to get to the point of being able to apply [econstructor] to the necessary paths, since it'll get stuck earlier on trying to find the basepoint.  Thus, we give a version of [build_record] that is willing to create existential variables ("evars") for goals that it can't solve, in hopes that a later [idpath] (produced by [econstructor]) will determine them by unification.  Note that if there are other fields that depend on the basepoint that occur before the [idpath], the evar will -- and, indeed, must -- get instantiated by them instead.  This is why [multi_assumption], above, must be willing to instantiate evars. *)
 Ltac build_record_with_evars :=
-  first [ cbn; multi_assumption
-        | cbn; unshelve econstructor; build_record_with_evars
-        (** Create a fresh evar to solve this goal *)
-        | match goal with
-            |- ?G => let x := fresh in evar (x : G); exact x
-          end; build_record_with_evars ].
+  (cbn; multi_assumption + (unshelve econstructor; build_record_with_evars)) +
+  (** Create a fresh evar to solve this goal *)
+  (match goal with
+     |- ?G => let x := fresh in evar (x : G); exact x
+   end; build_record_with_evars).
 
 (** Now here's the improved version of [make_equiv]. *)
 Ltac make_equiv_contr_basedpaths :=
