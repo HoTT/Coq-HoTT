@@ -163,7 +163,6 @@ Global Instance is1nat_op A B `{Is01Cat A} `{Is1Cat B}
        (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (transformation_op F G alpha).
 Proof.
-  apply Build_Is1Natural.
   unfold op in *.
   unfold transformation_op.
   cbn.

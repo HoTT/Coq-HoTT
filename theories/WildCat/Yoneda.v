@@ -47,12 +47,27 @@ Defined.
 Definition opyon {A : Type} `{IsGraph A} (a : A) : A -> Type
   := fun b => (a $-> b).
 
-Global Instance is0coh1functor_opyon {A : Type} `{Is01Cat A} (a : A)
+Global Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
   : Is0Functor (opyon a).
 Proof.
   apply Build_Is0Functor.
   unfold opyon; intros b c f g; cbn in *.
   exact (f $o g).
+Defined.
+
+Global Instance is1functor_opyon {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (opyon a).
+Proof.
+  rapply Build_Is1Functor.
+  + intros x y f g p h.
+    apply path_hom.
+    apply (cat_prewhisker p).
+  + intros x h.
+    apply path_hom.
+    apply cat_idl.
+  + intros x y z f g h.
+    apply path_hom.
+    apply cat_assoc.
 Defined.
 
 Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
@@ -72,7 +87,6 @@ Global Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
   (a : A) (F : A -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon a) F (opyoneda a F x).
 Proof.
-  apply Build_Is1Natural.
   unfold opyon, opyoneda; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -113,14 +127,17 @@ Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
 Proof.
   intros f.
-  refine (cate_adjointify (f.1 a (Id a)) (f^-1$.1 b (Id b)) _ _) ;
-    apply GpdHom_path; pose proof (f.2); pose proof (f^-1$.2); cbn in *.
-  - refine ((isnat (fun a => (f.1 a)^-1$) (f.1 a (Id a)) (Id b))^ @ _); cbn.
-    refine (_ @ cate_issect (f.1 a) (Id a)); cbn.
+  refine (cate_adjointify (f a (Id a)) (f^-1$ b (Id b)) _ _) ;
+    apply GpdHom_path;
+      pose proof (is1natural_natequiv _ _ f);
+      pose proof (is1natural_natequiv _ _ f^-1$);
+      cbn in *.
+  - refine ((isnat (fun a => (f a)^-1$) (f a (Id a)) (Id b))^ @ _); cbn.
+    refine (_ @ cate_issect (f a) (Id a)); cbn.
     apply ap.
     srapply cat_idr_strong.
-  - refine ((isnat f.1 (f^-1$.1 b (Id b)) (Id a))^ @ _); cbn.
-    refine (_ @ cate_isretr (f.1 b) (Id b)); cbn.
+  - refine ((isnat (cat_equiv_natequiv _ _ f) (f^-1$ b (Id b)) (Id a))^ @ _); cbn.
+    refine (_ @ cate_isretr (f b) (Id b)); cbn.
     apply ap.
     srapply cat_idr_strong.
 Defined.
@@ -132,10 +149,10 @@ Defined.
 Definition yon {A : Type} `{IsGraph A} (a : A) : A^op -> Type
   := @opyon (A^op) _ a.
 
-Global Instance is0coh1functor_yon {A : Type} `{H : Is01Cat A} (a : A)
+Global Instance is0functor_yon {A : Type} `{H : Is01Cat A} (a : A)
   : Is0Functor (yon a).
 Proof.
-  apply is0coh1functor_opyon.
+  apply is0functor_opyon.
 Defined.
 
 Definition yoneda {A : Type} `{Is01Cat A} (a : A)

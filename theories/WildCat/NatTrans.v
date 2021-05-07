@@ -1,5 +1,7 @@
 Require Import Basics.
 Require Import WildCat.Core.
+Require Import WildCat.Equiv.
+Require Import WildCat.Square.
 
 (** ** Natural transformations *)
 
@@ -12,12 +14,20 @@ Notation "F $=> G" := (Transformation F G).
 Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
       (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
       (alpha : F $=> G) :=
-{
   isnat : forall a a' (f : a $-> a'),
-     (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a);
-}.
+     (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a).
 
 Arguments isnat {_ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
+
+Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+  {ff : Is0Functor F} {fg : Is0Functor G} :=
+{
+  trans_nattrans : F $=> G ;
+  is1natural_nattrans : Is1Natural F G trans_nattrans ;
+}.
+
+Global Existing Instance is1natural_nattrans.
+Coercion trans_nattrans : NatTrans >-> Transformation.
 
 (** The transposed natural square *)
 Definition isnat_tr {A B : Type} `{IsGraph A} `{Is1Cat B}
@@ -35,25 +45,56 @@ Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
        (F : A -> B) `{!Is0Functor F}
   : Is1Natural F F (id_transformation F).
 Proof.
-  apply Build_Is1Natural; intros a b f; cbn.
+  intros a b f; cbn.
   refine (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
-Definition comp_transformation {A B : Type} `{Is01Cat B}
+Definition trans_comp {A B : Type} `{Is01Cat B}
            {F G K : A -> B} (gamma : G $=> K) (alpha : F $=> G)
   : F $=> K
   := fun a => gamma a $o alpha a.
+
+Definition trans_prewhisker {A B C : Type} {F G : B -> C}
+  `{Is01Cat B, Is01Cat C} (gamma : F $=> G) (K : A -> B) 
+  : F o K $=> G o K
+  := gamma o K.
+
+Definition trans_postwhisker {A B C : Type} {F G : A -> B}
+  (K : B -> C) `{Is01Cat B, Is01Cat C, !Is0Functor K} (gamma : F $=> G)
+  : K o F $=> K o G
+  := fun a => fmap K (gamma a).
 
 Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
        {F G K : A -> B} `{!Is0Functor F} `{!Is0Functor G} `{!Is0Functor K}
        (gamma : G $=> K) `{!Is1Natural G K gamma}
        (alpha : F $=> G) `{!Is1Natural F G alpha}
-  : Is1Natural F K (comp_transformation gamma alpha).
+  : Is1Natural F K (trans_comp gamma alpha).
 Proof.
-  apply Build_Is1Natural; intros a b f; unfold comp_transformation; cbn.
+  intros a b f; unfold trans_comp; cbn.
   refine (cat_assoc _ _ _ $@ (_ $@L isnat alpha f) $@ _).
   refine (cat_assoc_opp _ _ _ $@ (isnat gamma f $@R _) $@ _).
   apply cat_assoc.
+Defined.
+
+Global Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
+  `{IsGraph A, Is01Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G, !Is0Functor K}
+  (gamma : F $=> G) `{L : !Is1Natural F G gamma}
+  : Is1Natural (F o K) (G o K) (trans_prewhisker gamma K).
+Proof.
+  intros x y f; unfold trans_prewhisker; cbn.
+  exact (L _ _ _).
+Defined.
+
+Global Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
+ `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G, !Is0Functor K, !Is1Functor K}
+  (gamma : F $=> G) `{L : !Is1Natural F G gamma}
+  : Is1Natural (K o F) (K o G) (trans_postwhisker K gamma).
+Proof.
+  intros x y f; unfold trans_postwhisker; cbn.
+  refine (_^$ $@ _ $@ _).
+  1,3: rapply fmap_comp.
+  rapply fmap2.
+  exact (L _ _ _).
 Defined.
 
 (** Modifying a transformation to something pointwise equal preserves naturality. *)
@@ -63,6 +104,85 @@ Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
       (p : forall a, alpha a $== gamma a)
   : Is1Natural F G alpha.
 Proof.
-  constructor; intros a b f.
+  intros a b f.
   exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
+Defined.
+
+(** Natural equivalences *)
+
+Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G} :=
+{
+  cat_equiv_natequiv : forall a, F a $<~> G a ;
+  is1natural_natequiv : Is1Natural F G (fun a => cat_equiv_natequiv a) ;
+}.
+
+Global Existing Instance is1natural_natequiv.
+Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
+
+Coercion trans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -> Transformation F G
+  := fun a b => a b.
+
+Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
+  `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
+  : NatEquiv G H -> NatEquiv F G -> NatEquiv F H.
+Proof.
+  intros alpha beta.
+  snrapply Build_NatEquiv.
+  1: exact (fun a => alpha a $oE beta a).
+  hnf; intros x y f.
+  refine (cat_prewhisker (compose_cate_fun _ _) _ $@ _).
+  refine (_ $@ cat_postwhisker _ (compose_cate_fun _ _)^$).
+  revert x y f.
+  rapply is1natural_comp.
+Defined.
+
+Definition natequiv_prewhisker {A B C} {H K : B -> C}
+  `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor H, !Is0Functor K}
+  (alpha : NatEquiv H K) (F : A -> B) `{!Is0Functor F}
+  : NatEquiv (H o F) (K o F).
+Proof.
+  snrapply Build_NatEquiv.
+  1: exact (alpha o F).
+  exact (is1natural_prewhisker _ _).
+Defined.
+
+Definition natequiv_postwhisker {A B C} {F G : A -> B}
+  `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor F, !Is0Functor G}
+   (K : B -> C) (alpha : NatEquiv F G) `{!Is0Functor K, !Is1Functor K}
+  : NatEquiv (K o F) (K o G).
+Proof.
+  snrapply Build_NatEquiv.
+  1: exact (fun a => emap K (alpha a)).
+  hnf. intros x y f.
+  refine (cat_prewhisker (cate_buildequiv_fun _) _ $@ _).
+  refine (_ $@ cat_postwhisker _ (cate_buildequiv_fun _)^$).
+  revert x y f.
+  exact (is1natural_postwhisker _ _).
+Defined.
+
+Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -> NatEquiv G F.
+Proof.
+  intros [alpha I].
+  snrapply Build_NatEquiv.
+  1: intro a; symmetry; apply alpha.
+  intros X Y f.
+  apply vinverse, I.
+Defined.
+
+(** This lemma might seem unnecessery since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)
+Definition natequiv_functor_assoc_ff_f {A B C D : Type}
+  `{IsGraph A, HasEquivs B, HasEquivs C, HasEquivs D} (** These are a lot of instances... *)
+  (F : C -> D) (G : B -> C) (K : A -> B) `{!Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatEquiv ((F o G) o K) (F o (G o K)).
+Proof.
+  snrapply Build_NatEquiv.
+  1: intro; reflexivity.
+  intros X Y f.
+  refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
+  refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
