@@ -27,17 +27,20 @@ Proof.
   apply equiv_path_inverse.
 Defined.
 
-(** Now we can define [Aut X], by proving that [BAut X] is connected. *)
-Definition Aut (X : Type) : ooGroup.
+Definition isconnected_baut {X : Type}
+  : IsConnected 0 (BAut X).
 Proof.
-  refine (Build_ooGroup
-            (Build_pType { Z : Type & merely (Z = X) } (X ; tr 1)) _).
-  refine (conn_pointed_type (point _)); try exact _.
-  pose (c := conn_map_compose (Tr (-1))
-                              (factor1 (image (Tr (-1)) (unit_name X)))
-                              (equiv_baut_image_unit X)^-1).
-  refine (conn_map_homotopic _ _ _ _ c); intros []; reflexivity.
+  exists (tr (X; tr 1)).
+  rapply Trunc_ind; intros [Z p].
+  strip_truncations.
+  rapply path_Tr; apply tr.
+  apply (path_sigma' _ p^).
+  apply path_ishprop.
 Defined.
+
+(** Now we can define [Aut X], since [BAut X] is connected. *)
+Definition Aut (X : Type) : ooGroup
+  := Build_ooGroup (Build_pType (BAut X) (X; tr 1)) isconnected_baut.
 
 Definition BAut X : Type := classifying_space (Aut X).
 
