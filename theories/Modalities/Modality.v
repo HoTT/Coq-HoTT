@@ -473,12 +473,14 @@ Section ModalFact.
   Definition image {A B : Type} (f : A -> B)
   : Factorization (@IsConnMap O) (@MapIn O) f.
   Proof.
+    pose mapinO_pr1. (** Slightly speeds up next line. *)
     refine (Build_Factorization {b : B & O (hfiber f b)}
                                 (fun a => (f a ; to O _ (a;1)))
                                 pr1
                                 (fun a => 1)
                                 _ _).
-    - exact (conn_map_compose O
+    pose conn_map_functor_sigma. (** Slightly speeds up next line. *)
+    exact (conn_map_compose O
               (equiv_fibration_replacement f)
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
   Defined.
