@@ -8,32 +8,32 @@ Require Import Limits.Pullback.
 
 (** * Projective types *)
 
-(** To quantify over all truncation levels including infinity, we parametrize [IsProjective] by a [Modality]. When specializing to [IsProjective purely] we get an (oo,-1)-projective predicate. When specializing to [IsProjective (Tr n)] we get an (n,-1)-projective predicate. *)
+(** To quantify over all truncation levels including infinity, we parametrize [IsOProjective] by a [Modality]. When specializing to [IsOProjective purely] we get an (oo,-1)-projectivity predicate, [IsProjective]. When specializing to [IsOProjective (Tr n)] we get an (n,-1)-projectivity predicate, [IsTrProjective]. *)
 
-Definition IsProjective (O : Modality) (X : Type) : Type
+Definition IsOProjective (O : Modality) (X : Type) : Type
   := forall A, In O A -> forall B, In O B ->
      forall f : X -> B, forall p : A -> B,
      IsSurjection p -> merely (exists s : X -> A, p o s == f).
 
-(** An (oo,-1)-projective predicate [IsPureProjective]. *)
+(** (oo,-1)-projectivity. *)
 
-Notation IsPureProjective := (IsProjective purely).
+Notation IsProjective := (IsOProjective purely).
 
-(** An (n,-1)-projective predicate [IsTrProjective]. *)
+(** (n,-1)-projectivity. *)
 
-Notation IsTrProjective n := (IsProjective (Tr n)).
+Notation IsTrProjective n := (IsOProjective (Tr n)).
 
 (** A type X is projective if and only if surjections into X merely split. *)
-Proposition iff_isprojective_surjections_split
+Proposition iff_isoprojective_surjections_split
   (O : Modality) (X : Type) `{In O X}
-  : IsProjective O X <->
+  : IsOProjective O X <->
     (forall (Y : Type), In O Y -> forall (p : Y -> X),
           IsSurjection p -> merely (exists s : X -> Y, p o s == idmap)).
 Proof.
   split.
-  - intros isprojX Y oY p S; unfold IsProjective in isprojX.
+  - intros isprojX Y oY p S; unfold IsOProjective in isprojX.
     exact (isprojX Y _ X _ idmap p S).
-  - intro splits. unfold IsProjective.
+  - intro splits. unfold IsOProjective.
     intros A oA B oB f p S.
     pose proof (splits (Pullback p f) _ pullback_pr2 _) as s'.
     strip_truncations.
@@ -45,38 +45,38 @@ Proof.
     apply E.
 Defined.
 
-Corollary equiv_isprojective_surjections_split
+Corollary equiv_isoprojective_surjections_split
   `{Funext} (O : Modality) (X : Type) `{In O X}
-  : IsProjective O X <~>
+  : IsOProjective O X <~>
     (forall (Y : Type), In O Y -> forall (p : Y -> X),
           IsSurjection p -> merely (exists s : X -> Y, p o s == idmap)).
 Proof.
-  exact (equiv_iff_hprop_uncurried (iff_isprojective_surjections_split O X)).
+  exact (equiv_iff_hprop_uncurried (iff_isoprojective_surjections_split O X)).
 Defined.
 
 
 (** ** Projectivity and the axiom of choice *)
 
-(** In topos theory, an object X is said to be projective if the axiom of choice holds when making choices indexed by X. We will refer to this as [IsChoosable], to avoid confusion with [IsProjective] above. In similarity with [IsProjective], we parametrize it by a [Modality]. *)
+(** In topos theory, an object X is said to be projective if the axiom of choice holds when making choices indexed by X. We will refer to this as [HasOChoice], to avoid confusion with [IsOProjective] above. In similarity with [IsOProjective], we parametrize it by a [Modality]. *)
 
-Class IsChoosable (O : Modality) (A : Type) :=
-  ischoosable :
+Class HasOChoice (O : Modality) (A : Type) :=
+  hasochoice :
     forall (B : A -> Type), (forall x, In O (B x)) ->
     (forall x, merely (B x)) -> merely (forall x, B x).
 
-(** An (oo,-1)-choice predicate [IsPureChoosable]. *)
+(** (oo,-1)-choice. *)
 
-Notation IsPureChoosable := (IsChoosable purely).
+Notation HasChoice := (HasOChoice purely).
 
-(** An (n,-1)-choice predicate [IsTrChoosable]. *)
+(** (n,-1)-choice. *)
 
-Notation IsTrChoosable n := (IsChoosable (Tr n)).
+Notation HasTrChoice n := (HasOChoice (Tr n)).
 
-Global Instance ischoosable_sigma
+Global Instance hasochoice_sigma
   `{Funext} {A : Type} {B : A -> Type} (O : Modality)
-  (chA : IsChoosable O A)
-  (chB : forall a : A, IsChoosable O (B a))
-  : IsChoosable O {a : A | B a}.
+  (chA : HasOChoice O A)
+  (chB : forall a : A, HasOChoice O (B a))
+  : HasOChoice O {a : A | B a}.
 Proof.
   intros C sC f.
   set (f' := fun a => chB a (fun b => C (a; b)) _ (fun b => f (a; b))).
@@ -85,43 +85,55 @@ Proof.
   apply tr.
   intro.
   apply chA.
-Qed.
-
-Proposition iff_isprojective_ischoosable
-  (O : Modality) (X : Type) `{In O X}
-  : IsProjective O X <-> IsChoosable O X.
-Proof.
-  refine (iff_compose (iff_isprojective_surjections_split O X) _).
-  split.
-  - intros splits P oP S.
-    specialize splits with {x : X & P x} pr1.
-    pose proof (splits _ (fst (iff_merely_issurjection P) S)) as M.
-    clear S splits.
-    strip_truncations; apply tr.
-    destruct M as [s p].
-    intro x.
-    exact (transport _ (p x) (s x).2).
-  - intros choiceX Y oY p S.
-    unfold IsConnMap, IsConnected in S.
-    pose proof (fun b => (@center _ (S b))) as S'; clear S.
-    pose proof (choiceX (hfiber p) _ S') as M; clear S'.
-    strip_truncations; apply tr.
-    exists (fun x => (M x).1).
-    exact (fun x => (M x).2).
 Defined.
 
-Proposition equiv_isprojective_ischoosable
-  `{Funext} (O : Modality) (X : Type) `{In O X}
-  : IsProjective O X <~> IsChoosable O X.
+Proposition isoprojective_ochoice (O : Modality) (X : Type)
+  : HasOChoice O X -> IsOProjective O X.
 Proof.
-  nrapply (equiv_iff_hprop_uncurried
-            (iff_isprojective_ischoosable O X)); try exact _.
+  intros chX A ? B ? f p S.
+  assert (g : merely (forall x:X, hfiber p (f x))).
+  - rapply chX.
+    intro x.
+    exact (center _).
+  - strip_truncations; apply tr.
+    exists (fun x:X => pr1 (g x)).
+    intro x.
+    exact (g x).2.
+Defined.
+
+Proposition hasochoice_oprojective (O : Modality) (X : Type) `{In O X}
+  : IsOProjective O X -> HasOChoice O X.
+Proof.
+  refine (_ o fst (iff_isoprojective_surjections_split O X)).
+  intros splits P oP S.
+  specialize splits with {x : X & P x} pr1.
+  pose proof (splits _ (fst (iff_merely_issurjection P) S)) as M.
+  clear S splits.
+  strip_truncations; apply tr.
+  destruct M as [s p].
+  intro x.
+  exact (transport _ (p x) (s x).2).
+Defined.
+
+Proposition iff_isoprojective_hasochoice (O : Modality) (X : Type) `{In O X}
+  : IsOProjective O X <-> HasOChoice O X.
+Proof.
+  split.
+  - apply hasochoice_oprojective. exact _.
+  - apply isoprojective_ochoice.
+Defined.
+
+Proposition equiv_isoprojective_hasochoice
+  `{Funext} (O : Modality) (X : Type) `{In O X}
+  : IsOProjective O X <~> HasOChoice O X.
+Proof.
+  refine (equiv_iff_hprop_uncurried (iff_isoprojective_hasochoice O X)).
   apply istrunc_forall.
 Defined.
 
-Proposition ispureprojective_unit : IsPureProjective Unit.
+Proposition isprojective_unit : IsProjective Unit.
 Proof.
-  apply (iff_isprojective_ischoosable purely Unit).
+  apply (isoprojective_ochoice purely Unit).
   intros P trP S.
   specialize S with tt.
   strip_truncations; apply tr.
@@ -133,14 +145,14 @@ Section AC_oo_neg1.
   (** ** Projectivity and AC_(oo,-1) (defined in HoTT book, Exercise 7.8) *)
   (* TODO: Generalize to n, m. *)
 
-  Context {AC : forall X : HSet, IsPureChoosable X}.
+  Context {AC : forall X : HSet, HasChoice X}.
 
   (** (Exercise 7.9) Assuming AC_(oo,-1) every type merely has a projective cover. *)
   Proposition projective_cover_AC `{Univalence} (A : Type)
     : merely (exists X:HSet, exists p : X -> A, IsSurjection p).
   Proof.
     pose (X := Build_HSet (Tr 0 A)).
-    pose proof ((equiv_isprojective_ischoosable _ X)^-1 (AC X)) as P.
+    pose proof ((equiv_isoprojective_hasochoice _ X)^-1 (AC X)) as P.
     pose proof (P A _ X _ idmap tr _) as F; clear P.
     strip_truncations.
     destruct F as [f p].
@@ -154,10 +166,10 @@ Section AC_oo_neg1.
 
   (** Assuming AC_(oo,-1), projective types are exactly sets. *)
   Theorem equiv_isprojective_ishset_AC `{Univalence} (X : Type)
-    : IsPureProjective X <~> IsHSet X.
+    : IsProjective X <~> IsHSet X.
   Proof.
     apply equiv_iff_hprop.
-    - intro isprojX. unfold IsProjective in isprojX.
+    - intro isprojX. unfold IsOProjective in isprojX.
       pose proof (projective_cover_AC X) as P; strip_truncations.
       destruct P as [P [p issurj_p]].
       pose proof (isprojX P _ X _ idmap p issurj_p) as S; strip_truncations.
@@ -166,7 +178,7 @@ Section AC_oo_neg1.
       apply isembedding_isinj_hset.
       exact (isinj_section h).
     - intro ishsetX.
-      apply (equiv_isprojective_ischoosable purely X)^-1.
+      apply (equiv_isoprojective_hasochoice purely X)^-1.
       rapply AC.
   Defined.
 

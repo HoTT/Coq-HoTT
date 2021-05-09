@@ -7,20 +7,20 @@ Require Import
   HoTT.Colimits.Quotient
   HoTT.Projective.
 
-(** The following is an alternative (0,-1)-projective predicate. Given a family of quotient sets [forall x : A, B x / R x], for [R : forall x : A, Relation (B x)], we merely have a choice function [g : forall x, B x], such that [class_of (g x) = f x]. *)
+(** The following is an alternative (0,-1)-projectivity predicate on [A]. Given a family of quotient equivalence classes [f : forall x : A, B x / R x], for [R : forall x : A, Relation (B x)], we merely have a choice function [g : forall x, B x], factoring [f] as [f x = class_of (g x)]. *)
 
-Definition IsQuotientChoosable (A : Type) :=
+Definition HasQuotientChoice (A : Type) :=
   forall (B : A -> Type), (forall x, IsHSet (B x)) ->
   forall (R : forall x, Relation (B x))
          (pR : forall x, is_mere_relation (B x) (R x)),
          (forall x, Reflexive (R x)) ->
          (forall x, Symmetric (R x)) ->
          (forall x, Transitive (R x)) ->
-  forall (f : forall x : A, B x / (R x)),
+  forall (f : forall x : A, B x / R x),
   hexists (fun g : (forall x : A, B x) =>
                    forall x, class_of (R x) (g x) = f x).
 
-Section choose_isquotientchoosable.
+Section choose_has_quotient_choice.
   Context `{Univalence}
     {A : Type} {B : A -> Type} `{!forall x, IsHSet (B x)}
     (P : forall x, B x -> Type) `{!forall x (a : B x), IsHProp (P x a)}.
@@ -79,12 +79,12 @@ Section choose_isquotientchoosable.
     : B a / RelClassEquiv a
     := (prechoose i a).1.
 
-End choose_isquotientchoosable.
+End choose_has_quotient_choice.
 
-(** The following section derives [IsTrChoosable 0 A] from [IsQuotientChoosable A]. *)
+(** The following section derives [HasTrChoice 0 A] from [HasQuotientChoice A]. *)
 
-Section isquotientchoosable_to_istr0choosable.
-  Context `{Univalence} (A : Type) (qch : IsQuotientChoosable A).
+Section has_tr0_choice_quotientchoice.
+  Context `{Univalence} (A : Type) (qch : HasQuotientChoice A).
 
   Local Definition RelUnit (B : A -> Type) (a : A) (b1 b2 : B a) : HProp
     := Build_HProp Unit.
@@ -118,7 +118,7 @@ Section isquotientchoosable_to_istr0choosable.
     by apply qglue.
   Qed.
 
-  Lemma isquotientchoosable_to_istr0choosable : IsTrChoosable 0 A.
+  Lemma has_tr0_choice_quotientchoice : HasTrChoice 0 A.
   Proof.
     intros B sB f.
     transparent assert (g : (forall a, B a / RelUnit B a)).
@@ -132,10 +132,10 @@ Section isquotientchoosable_to_istr0choosable.
       apply qch.
   Qed.
 
-End isquotientchoosable_to_istr0choosable.
+End has_tr0_choice_quotientchoice.
 
-Lemma istr0choosable_to_isquotientchoosable (A : Type)
-  : IsTrChoosable 0 A -> IsQuotientChoosable A.
+Lemma has_quotient_choice_tr0choice (A : Type)
+  : HasTrChoice 0 A -> HasQuotientChoice A.
 Proof.
   intros ch B sB R pR rR sR tR f.
   set (P := fun a b => class_of (R a) b = f a).
@@ -154,24 +154,25 @@ Proof.
     apply h.
 Qed.
 
-Global Instance isequiv_istr0choosable_to_isquotientchoosable
+Global Instance isequiv_has_tr0_choice_to_has_quotient_choice
   `{Univalence} (A : Type)
-  : IsEquiv (istr0choosable_to_isquotientchoosable A).
+  : IsEquiv (has_quotient_choice_tr0choice A).
 Proof.
   srapply isequiv_iff_hprop.
   - apply istrunc_forall.
-  - apply isquotientchoosable_to_istr0choosable.
+  - apply has_tr0_choice_quotientchoice.
 Qed.
 
-Definition equiv_istr0choosable_isquotientchoosable `{Univalence} (A : Type)
-  : IsTrChoosable 0 A <~> IsQuotientChoosable A
-  := Build_Equiv _ _ (istr0choosable_to_isquotientchoosable A) _.
+Definition equiv_has_tr0_choice_has_quotient_choice
+  `{Univalence} (A : Type)
+  : HasTrChoice 0 A <~> HasQuotientChoice A
+  := Build_Equiv _ _ (has_quotient_choice_tr0choice A) _.
 
-(** The next section uses [istr0choosable_to_isquotientchoosable] to generalize [quotient_rec2], see [choose_quotient_ind] below. *)
+(** The next section uses [has_quotient_choice_tr0choice] to generalize [quotient_rec2], see [choose_quotient_ind] below. *)
 
 Section choose_quotient_ind.
   Context `{Univalence}
-    {I : Type} `{!IsTrChoosable 0 I}
+    {I : Type} `{!HasTrChoice 0 I}
     {A : I -> Type} `{!forall i, IsHSet (A i)}
     (R : forall i, Relation (A i))
     `{!forall i, is_mere_relation (A i) (R i)}
@@ -189,7 +190,7 @@ Section choose_quotient_ind.
     by apply qglue.
   Defined.
 
-(** Given suitable preconditions, we will show that [ChooseProp P a g] is inhabited, rather than directly showing [P q]. This turns out to be beneficial because [ChooseProp P a g] is a proposition. *)
+(** Given suitable preconditions, we will show that [ChooseProp P a g] is inhabited, rather than directly giving an inhabitant of [P g]. This turns out to be beneficial because [ChooseProp P a g] is a proposition. *)
 
   Local Definition ChooseProp
     (P : (forall i, A i / R i) -> Type) `{!forall g, IsHSet (P g)}
@@ -233,7 +234,7 @@ Section choose_quotient_ind.
     by induction (hset_path2 idpath pa).
   Qed.
 
-(* Since [ChooseProp P a g] is a proposition, we can apply [istr0choosable_to_isquotientchoosable] and strip its truncation in order to derive [ChooseProp P a g]. *)
+(* Since [ChooseProp P a g] is a proposition, we can apply [has_quotient_choice_tr0choice] and strip its truncation in order to derive [ChooseProp P a g]. *)
 
   Lemma chooseprop_quotient_ind
     (P : (forall i, A i / R i) -> Type) `{!forall g, IsHSet (P g)}
@@ -244,7 +245,7 @@ Section choose_quotient_ind.
     : ChooseProp P a g.
   Proof.
     pose proof
-      (istr0choosable_to_isquotientchoosable I _ A _ R _ _ _ _ g) as h.
+      (has_quotient_choice_tr0choice I _ A _ R _ _ _ _ g) as h.
     strip_truncations.
     destruct h as [h p].
     apply path_forall in p.

@@ -211,7 +211,7 @@ Defined.
 
 (** ** The finite axiom of choice, and projectivity *)
 
-Definition finite_choice {X} `{Finite X} : IsPureChoosable X.
+Definition finite_choice {X} `{Finite X} : HasChoice X.
 Proof.
   intros P oP f; clear oP.
   assert (e := merely_equiv_fin X).
@@ -230,9 +230,9 @@ Proof.
       exact (tr (sum_ind P IH (Unit_ind e))).
 Defined.
 
-Corollary isprojective_fin_n (n : nat) : IsPureProjective (Fin n).
+Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
 Proof.
-  apply (iff_isprojective_ischoosable _ (Fin n)).
+  apply (iff_isoprojective_hasochoice _ (Fin n)).
   rapply finite_choice.
 Defined.
 
