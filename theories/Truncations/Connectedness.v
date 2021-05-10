@@ -144,6 +144,18 @@ Proof.
   - apply tr; assumption.
 Defined.
 
+(** The path component of an point [x : X] is connected. *)
+Global Instance is0connected_component {X : Type} (x : X)
+  : IsConnected 0 { z : X & merely (z = x) }.
+Proof.
+  exists (tr (x; tr idpath)).
+  rapply Trunc_ind; intros [Z p].
+  strip_truncations.
+  apply (ap tr).
+  rapply path_sigma_hprop.
+  exact p^.
+Defined.
+
 (** 0-connected types are indecomposable *)
 Global Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
