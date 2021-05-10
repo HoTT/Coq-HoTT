@@ -144,7 +144,7 @@ Proof.
   - apply tr; assumption.
 Defined.
 
-(** The path component of an point [x : X] is connected. *)
+(** The path component of a point [x : X] is connected. *)
 Global Instance is0connected_component {X : Type} (x : X)
   : IsConnected 0 { z : X & merely (z = x) }.
 Proof.
