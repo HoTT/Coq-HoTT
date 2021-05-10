@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types HProp.
 Require Import Constant Factorization.
 Require Import Modalities.Modality HoTT.Truncations.
-Require Export Algebra.ooGroup Algebra.Aut.
 
 Local Open Scope path_scope.
 
@@ -10,7 +9,11 @@ Local Open Scope path_scope.
 
 (** ** Basics *)
 
-(** The type [BAut X] is defined in [Algebra.Aut]. *)
+(** [BAut X] is the type of types that are merely equal to [X]. It is connected, by [is0connected_component]. *)
+Definition BAut@{u v} (X : Type@{u}) : Type@{v}
+  := sig@{v v} (fun Z => merely (paths@{v} Z X)).
+
+Global Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
 
 Definition BAut_pr1 X : BAut X -> Type := pr1.
 Coercion BAut_pr1 : BAut >-> Sortclass.

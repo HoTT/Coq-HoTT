@@ -144,6 +144,29 @@ Proof.
   - apply tr; assumption.
 Defined.
 
+(** The path component of a point [x : X] is connected. *)
+Global Instance is0connected_component {X : Type} (x : X)
+  : IsConnected 0 { z : X & merely (z = x) }.
+Proof.
+  exists (tr (x; tr idpath)).
+  rapply Trunc_ind; intros [Z p].
+  strip_truncations.
+  apply (ap tr).
+  rapply path_sigma_hprop.
+  exact p^.
+Defined.
+
+(** The path component of a point [x : X] is equivalent to the image of the constant map [Unit -> X] at [x]. *)
+Definition equiv_component_image_unit {X : Type} (x : X)
+: { z : X & merely (z = x) } <~> image (Tr (-1)) (unit_name x).
+Proof.
+  unfold image; simpl.
+  apply equiv_functor_sigma_id; intros z; simpl.
+  apply Trunc_functor_equiv; unfold hfiber.
+  refine ((equiv_contr_sigma _)^-1 oE _).
+  apply equiv_path_inverse.
+Defined.
+
 (** 0-connected types are indecomposable *)
 Global Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
