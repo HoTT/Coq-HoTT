@@ -22,9 +22,9 @@ Local Open Scope path_scope.
 
 (** *** Subuniverses *)
 
-Record Subuniverse@{i} :=
+Record Subuniverse@{i j} :=
 {
-  In_internal : Type@{i} -> Type@{i} ;
+  In_internal : Type@{i} -> Type@{j} ;
   hprop_inO_internal : Funext -> forall (T : Type@{i}),
       IsHProp (In_internal T) ;
   inO_equiv_inO_internal : forall (T U : Type@{i}) (T_inO : In_internal T)
@@ -52,8 +52,8 @@ Definition inO_equiv_inO' {O : Subuniverse}
   := inO_equiv_inO T f.
 
 (** The universe of types in the subuniverse *)
-Definition Type_@{i j} (O : Subuniverse@{i}) : Type@{j}
-  := @sig@{j i} Type@{i} (fun (T : Type@{i}) => In O T).
+Definition Type_@{i j k} (O : Subuniverse@{i j}) : Type@{k}
+  := @sig@{k i} Type@{i} (fun (T : Type@{i}) => In O T).
 
 Coercion TypeO_pr1 O (T : Type_ O) := @pr1 Type (In O) T.
 
@@ -129,7 +129,7 @@ End Subuniverse.
 (** *** Reflections *)
 
 (** A pre-reflection is a map to a type in the subuniverse. *)
-Class PreReflects@{i} (O : Subuniverse@{i}) (T : Type@{i}) :=
+Class PreReflects@{i} (O : Subuniverse@{i i}) (T : Type@{i}) :=
 {
   O_reflector : Type@{i} ;
   O_inO : In O O_reflector ;
@@ -142,7 +142,7 @@ Arguments O_inO {O} T {_}.
 Global Existing Instance O_inO.
 
 (** It is a reflection if it has the requisite universal property. *)
-Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
+Class Reflects@{i} (O : Subuniverse@{i i}) (T : Type@{i})
       `{PreReflects@{i} O T} :=
 {
   extendable_to_O : forall {Q : Type@{i}} {Q_inO : In O Q},
@@ -152,7 +152,7 @@ Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
 Arguments extendable_to_O O {T _ _ Q Q_inO}.
 
 (** Here's a modified version that applies to types in possibly-smaller universes without collapsing those universes to [i]. *)
-Definition extendable_to_O'@{i j k} (O : Subuniverse@{i}) (T : Type@{j})
+Definition extendable_to_O'@{i j k} (O : Subuniverse@{i i}) (T : Type@{j})
            `{Reflects O T} {Q : Type@{k}} {Q_inO : In O Q}
   : ooExtendableAlong@{j i k i} (to O T) (fun _ => Q).
 Proof.
@@ -163,7 +163,7 @@ Defined.
 
 Record ReflectiveSubuniverse@{i} :=
 {
-  rsu_subuniv : Subuniverse@{i} ;
+  rsu_subuniv : Subuniverse@{i i} ;
   rsu_prereflects : forall (T : Type@{i}), PreReflects rsu_subuniv T ;
   rsu_reflects : forall (T : Type@{i}), Reflects rsu_subuniv T ;
 }.
@@ -548,7 +548,7 @@ Section Reflective_Subuniverse.
     (** If [f] is inverted by [O], then mapping out of it into any modal type is an equivalence.  First we prove a version not requiring funext.  For use in [O_inverts_O_leq] below, we allow the types [A], [B], and [Z] to perhaps live in smaller universes than the one [i] on which our subuniverse lives.  This the first half of Lemma 1.23 of RSS. *)
     Definition ooextendable_O_inverts@{a b z i}
                {A : Type@{a}} {B : Type@{b}} (f : A -> B) `{O_inverts f}
-               (Z : Type@{z}) `{In@{i} O Z}
+               (Z : Type@{z}) `{In@{i i} O Z}
       : ooExtendableAlong@{a b z i} f (fun _ => Z).
     Proof.
       refine (cancelL_ooextendable@{a b i z i i i i i} _ _ (to O B) _ _).
@@ -909,7 +909,7 @@ Section Reflective_Subuniverse.
       transparent assert (c : (prod@{k k} (A->B) (prod@{k k} (B->A) (B->A)) -> prod@{k k} (A -> A) (B -> B))).
       { intros [f [g h]]; exact (h o f, f o g). }
       pose (U := hfiber@{k k} c (idmap, idmap)).
-      refine (inO_equiv_inO'@{k k k} U _). (** Introduces some extra copies of [k] by typeclass inference. *)
+      refine (inO_equiv_inO'@{k k k k} U _). (** Introduces some extra copies of [k] by typeclass inference. *)
       unfold hfiber, BiInv; cbn in *.
       srefine (equiv_adjointify _ _ _ _).
       - intros [[f [g h]] p].
@@ -1845,7 +1845,7 @@ End ConnectedMaps.
 (** ** Containment of (reflective) subuniverses *)
 
 (** One subuniverse is contained in another if every [O1]-modal type is [O2]-modal.  We define this parametrized by three universes: [O1] and [O2] are reflective subuniverses of [Type@{i1}] and [Type@{i2}] respectively, and the relation says that all types in [Type@{j}] that [O1]-modal are also [O2]-modal.  This implies [j <= i1] and [j <= i2], of course.  The most common application is when [i1 = i2 = j], but it's sometimes useful to talk about a subuniverse of a larger universe agreeing with a subuniverse of a smaller universe on the smaller universe.  *)
-Class O_leq@{i1 i2 j} (O1 : Subuniverse@{i1}) (O2 : Subuniverse@{i2})
+Class O_leq@{i1 i2 j} (O1 : Subuniverse@{i1 i1}) (O2 : Subuniverse@{i2 i2})
   := inO_leq : forall (A : Type@{j}), In O1 A -> In O2 A.
 
 Arguments inO_leq O1 O2 {_} A _.
@@ -1906,7 +1906,7 @@ Defined.
 (** ** Equality of (reflective) subuniverses *)
 
 (** Two subuniverses are the same if they have the same modal types.  The universe parameters are the same as for [O_leq]: [O1] and [O2] are reflective subuniverses of [Type@{i1}] and [Type@{i2}], and the relation says that they agree when restricted to [Type@{j}], where [j <= i1] and [j <= i2]. *)
-Class O_eq@{i1 i2 j} (O1 : Subuniverse@{i1}) (O2 : Subuniverse@{i2}) :=
+Class O_eq@{i1 i2 j} (O1 : Subuniverse@{i1 i1}) (O2 : Subuniverse@{i2 i2}) :=
 {
   O_eq_l : O_leq@{i1 i2 j} O1 O2 ;
   O_eq_r : O_leq@{i2 i1 j} O2 O1 ;

@@ -15,7 +15,7 @@ Note that this kind of descent is not the same as the "modal descent" of Cherubi
 (** ** Definitions *)
 
 (** This definition is an analogue of the statement of Lemma 2.19 of CORS, and of Theorem 3.1(xiii) of RSS.  Note that CORS Lemma 2.19 includes uniqueness of the extension, which we don't assert explicitly.  However, uniqueness follows from the [ReflectsD] parameter -- see [ooextendable_TypeO_lex_leq] below. *)
-Class Descends@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
+Class Descends@{i} (O' O : Subuniverse@{i i}) (T : Type@{i})
       `{ReflectsD@{i} O' O T} :=
 {
   OO_descend :

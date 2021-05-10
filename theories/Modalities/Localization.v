@@ -427,12 +427,12 @@ Proof.
 Defined.
 
 (** Conversely, if a subuniverse is accessible, then the corresponding localization subuniverse is equivalent to it, and moreover exists at every universe level and satisfies its computation rules judgmentally.  This is called [lift_accrsu] but in fact it works equally well to *lower* the universe level, as long as both levels are no smaller than the size [a] of the generators. *)
-Definition lift_accrsu@{a i j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+Definition lift_accrsu@{a i j} (O : Subuniverse@{i i}) `{IsAccRSU@{a i} O}
   : ReflectiveSubuniverse@{j}
   := Loc@{a j} (acc_lgen O).
 
 (** The lifted universe agrees with the original one, on any universe contained in both [i] and [j] *)
-Global Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+Global Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i i}) `{IsAccRSU@{a i} O}
   : O_eq@{i j k} O (lift_accrsu@{a i j} O).
 Proof.
   (** Anyone stepping through this proof should do [Set Printing Universes]. *)

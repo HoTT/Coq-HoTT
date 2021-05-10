@@ -76,11 +76,11 @@ Defined.
 
 (** And accessible modalities can be lifted to other universes. *)
 
-Definition lift_accmodality@{a i j} (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+Definition lift_accmodality@{a i j} (O : Subuniverse@{i i}) `{IsAccModality@{a i} O}
   : Modality@{j}
   := Nul@{a j} (acc_ngen O).
 
-Global Instance O_eq_lift_accmodality (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+Global Instance O_eq_lift_accmodality (O : Subuniverse@{i i}) `{IsAccModality@{a i} O}
   : O <=> lift_accmodality O.
 Proof.
   split; intros A; apply inO_iff_isnull.

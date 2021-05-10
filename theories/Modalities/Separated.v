@@ -149,7 +149,7 @@ Defined.
 
 (** Proposition 2.18 of CORS. *)
 Definition almost_inSepO_typeO@{i j} `{Univalence}
-           (O : ReflectiveSubuniverse) (A B : Type_@{i j} O)
+           (O : ReflectiveSubuniverse) (A B : Type_@{i i j} O)
   : { Z : Type@{i} & In O Z * (Z <~> (A = B)) }.
 Proof.
   exists (A <~> B); split.

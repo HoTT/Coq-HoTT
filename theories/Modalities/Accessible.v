@@ -31,7 +31,7 @@ Module Import IsLocal_Internal.
     (forall (i : lgen_indices f), ooExtendableAlong (f i) (fun _ => X)).
 End IsLocal_Internal.
 
-Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=
+Class IsAccRSU@{a i} (O : Subuniverse@{i i}) :=
 {
   acc_lgen : LocalGenerators@{a} ;
   inO_iff_islocal : forall (X : Type@{i}),
@@ -115,7 +115,7 @@ Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
 
 (** We define a modality to be accessible if it consists of the null types for some family of generators as above. *)
 
-Class IsAccModality@{a i} (O : Subuniverse@{i}) :=
+Class IsAccModality@{a i} (O : Subuniverse@{i i}) :=
 {
   acc_ngen : NullGenerators@{a} ;
   inO_iff_isnull : forall (X : Type@{i}),

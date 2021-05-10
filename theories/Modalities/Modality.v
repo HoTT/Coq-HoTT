@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 (** ** Dependent eliminators *)
 
 (** A dependent version of the reflection universal property.  For later use we generalize it to refer to different subuniverses in the reflection and the elimination target. *)
-Class ReflectsD@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
+Class ReflectsD@{i} (O' O : Subuniverse@{i i}) (T : Type@{i})
       `{PreReflects@{i} O' T} :=
 {
   extendable_to_OO :
@@ -33,7 +33,7 @@ Definition OO_ind_beta {O' O : Subuniverse} {A : Type} `{ReflectsD O' O A}
   := (fst (extendable_to_OO B 1%nat) f).2 a.
 
 (** Conversely, if [O] is closed under path-types, a dependent eliminator suffices to prove the whole dependent universal property. *)
-Definition reflectsD_from_OO_ind@{i} {O' O : Subuniverse@{i}}
+Definition reflectsD_from_OO_ind@{i} {O' O : Subuniverse@{i i}}
            {A : Type@{i}} `{PreReflects O' A}
            (OO_ind' : forall (B : O_reflector O' A -> Type@{i})
                              (B_inO : forall oa, In O (B oa))
@@ -123,7 +123,7 @@ Notation IsModality O := (O << O).
 (** However, it's not clear what the best bundled definition of modality is.  The obvious one [{ O : ReflectiveSubuniverse & IsModality O}] has the advantage that bundling a reflective subuniverse into a modality and then unbundling it is definitionally the identity; but it is redundant, since the dependent universal property implies the non-dependent one, and in practice most modalities are constructed directly with a dependent eliminator.  Thus, for now at least, we take the following definition, which in RSS is called a "uniquely eliminating modality".  *)
 Record Modality@{i} := Build_Modality'
 {
-  modality_subuniv : Subuniverse@{i} ;
+  modality_subuniv : Subuniverse@{i i} ;
   modality_prereflects : forall (T : Type@{i}),
       PreReflects modality_subuniv T ;
   modality_reflectsD : forall (T : Type@{i}),
