@@ -2,7 +2,6 @@
 Require Import HoTT.Basics HoTT.Types HProp.
 Require Import Constant Factorization.
 Require Import Modalities.Modality HoTT.Truncations.
-Require Export Algebra.ooGroup Algebra.Aut.
 
 Local Open Scope path_scope.
 
@@ -10,7 +9,11 @@ Local Open Scope path_scope.
 
 (** ** Basics *)
 
-(** The type [BAut X] is defined in [Algebra.Aut]. *)
+(** [BAut X] is the type of types that are merely equal to [X]. It is connected, by [is0connected_component]. *)
+Definition BAut@{u v} (X : Type@{u}) : Type@{v}
+  := sig@{v v} (fun Z => merely (paths@{v} Z X)).
+
+Global Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
 
 Definition BAut_pr1 X : BAut X -> Type := pr1.
 Coercion BAut_pr1 : BAut >-> Sortclass.
@@ -34,17 +37,6 @@ Proof.
   refine (transport_compose idmap (BAut_pr1 X) _ _ @ _).
   refine (_ @ transport_path_universe f z).
   apply ap10, ap, ap_pr1_path_baut.
-Defined.
-
-(** [BAut X] is the (-1)-image of the classifying map [1 -> Type] of [X]. *)
-Definition equiv_baut_image_unit X
-: BAut X <~> image (Tr (-1)) (unit_name X).
-Proof.
-  unfold BAut, image; simpl.
-  apply equiv_functor_sigma_id; intros Z; simpl.
-  apply Trunc_functor_equiv; unfold hfiber.
-  refine ((equiv_contr_sigma _)^-1 oE _).
-  apply equiv_path_inverse.
 Defined.
 
 (** ** Truncation *)
