@@ -34,6 +34,14 @@
 # processing will break
 
 #
+#  Axioms
+#
+
+theories/Axioms/Funext.v
+theories/Axioms/Univalence.v
+
+
+#
 #   Basics
 #
 
@@ -273,8 +281,6 @@ theories/TruncType.v
 theories/DProp.v
 theories/EquivGroupoids.v
 theories/Functorish.v
-theories/FunextAxiom.v
-theories/UnivalenceAxiom.v
 theories/ObjectClassifier.v
 theories/NullHomotopy.v
 theories/Idempotents.v
