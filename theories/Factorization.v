@@ -122,6 +122,19 @@ Record FactorizationSystem@{i j k} :=
 
 Global Existing Instances ishprop_class1 ishprop_class2.
 
+(** The type of factorizations is, as promised, contractible. *)
+Theorem contr_factor `{Univalence} (factsys : FactorizationSystem)
+        {X Y : Type} (f : X -> Y)
+  : Contr (Factorization (@class1 factsys) (@class2 factsys) f).
+Proof.
+  apply contr_inhabited_hprop.
+  - apply hprop_allpath.
+    intros fact fact'.
+    apply path_factorization; try exact _.
+    apply path_factor.
+  - apply factor.
+Defined.
+
 Section FactSys.
 
   Context (factsys : FactorizationSystem).
@@ -131,18 +144,6 @@ Section FactSys.
 
   Definition Build_PathFactorization' {X Y}
     := @Build_PathFactorization (@class1 factsys) (@class2 factsys) X Y.
-
-  (** The type of factorizations is, as promised, contractible. *)
-  Theorem contr_factor `{Univalence} {X Y} (f : X -> Y)
-  : Contr (Factorization (@class1 factsys) (@class2 factsys) f).
-  Proof.
-    apply contr_inhabited_hprop.
-    - apply hprop_allpath.
-      intros fact fact'.
-      apply path_factorization; try exact _.
-      apply path_factor.
-    - apply factor.
-  Defined.
 
   (** The left class is right-cancellable and the right class is left-cancellable. *)
   Definition cancelR_class1 `{Funext} {X Y Z} (f : X -> Y) (g : Y -> Z)
