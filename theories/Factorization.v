@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 Section Factorization.
   Universes ctxi.
-  (** It's important that these are all declared with a single [Context] command, so that the marker [@{i}] refers to the same universe level in all of them. *)
+  (** It's important that these are all declared with a single [Context] command, so that the marker [@{ctxi}] refers to the same universe level in all of them. *)
   Context {class1 class2 : forall (X Y : Type@{ctxi}), (X -> Y) -> Type@{ctxi}}
           `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class1 _ _ g)}
           `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class2 _ _ g)}
@@ -19,7 +19,7 @@ Section Factorization.
 
   (** A factorization of [f] into a first factor lying in [class1] and a second factor lying in [class2]. *)
   Record Factorization :=
-    { intermediate : Type ;
+    { intermediate : Type@{ctxi} ;
       factor1 : A -> intermediate ;
       factor2 : intermediate -> B ;
       fact_factors : factor2 o factor1 == f ;
@@ -113,18 +113,18 @@ Record FactorizationSystem@{i j k} :=
     class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class2 g -> class2 h -> class2 (h o g) ;
     (** Morally, the uniqueness of factorizations says that [Factorization class1 class2 f] is contractible.  However, in practice we always *prove* that by way of [path_factorization], and we frequently want to *use* the components of a [PathFactorization] as well.  Thus, as data we store the canonical factorization and a [PathFactorization] between any two such, and prove in a moment that this implies contractibility of the space of factorizations. *)
-    factor : forall {X Y : Type@{i}} (f:X->Y), Factorization@{i i} (@class1) (@class2) f ;
+    factor : forall {X Y : Type@{i}} (f:X->Y), Factorization@{i} (@class1) (@class2) f ;
     path_factor : forall {X Y : Type@{i}} (f:X->Y)
-                         (fact : Factorization@{i i} (@class1) (@class2) f)
-                         (fact' : Factorization@{i i} (@class1) (@class2) f),
-                    PathFactorization@{i i i} fact fact'
+                         (fact : Factorization@{i} (@class1) (@class2) f)
+                         (fact' : Factorization@{i} (@class1) (@class2) f),
+                    PathFactorization@{i} fact fact'
   }.
 
 Global Existing Instances ishprop_class1 ishprop_class2.
 
 Section FactSys.
 
-  Context `{Univalence} (factsys : FactorizationSystem).
+  Context (factsys : FactorizationSystem).
 
   Definition Build_Factorization' {X Y}
     := @Build_Factorization (@class1 factsys) (@class2 factsys) X Y.
@@ -133,7 +133,7 @@ Section FactSys.
     := @Build_PathFactorization (@class1 factsys) (@class2 factsys) X Y.
 
   (** The type of factorizations is, as promised, contractible. *)
-  Theorem contr_factor {X Y} (f : X -> Y)
+  Theorem contr_factor `{Univalence} {X Y} (f : X -> Y)
   : Contr (Factorization (@class1 factsys) (@class2 factsys) f).
   Proof.
     apply contr_inhabited_hprop.
@@ -144,8 +144,8 @@ Section FactSys.
     - apply factor.
   Defined.
 
-  (** It follows that the left class is right-cancellable and the right class is left-cancellable. *)
-  Definition cancelR_class1 {X Y Z} (f : X -> Y) (g : Y -> Z)
+  (** The left class is right-cancellable and the right class is left-cancellable. *)
+  Definition cancelR_class1 `{Funext} {X Y Z} (f : X -> Y) (g : Y -> Z)
   : class1 factsys f -> class1 factsys (g o f) -> class1 factsys g.
   Proof.
     intros c1f c1gf.
@@ -155,17 +155,15 @@ Section FactSys.
     pose (fact' := Build_Factorization' (g o f) I (g1 o f) g2
                      (fun x => gf (f x))
                      (class1_compose factsys f g1 c1f c1g1) c2g2).
-    destruct (path_factor factsys (g o f) fact fact')
+    destruct (path_factor factsys (g o f) fact' fact)
              as [q q1 q2 qf]; simpl in *.
     refine (transport (class1 factsys) (path_arrow _ _ gf) _).
     refine (class1_compose factsys g1 g2 c1g1 _).
-    refine (transport (class1 factsys) (path_arrow q^-1 g2 _)
-                      (class1_isequiv factsys q^-1)).
-    unfold pointwise_paths; equiv_intro q x.
-    exact (eissect q x @ q2 x).
+    apply class1_isequiv.
+    apply (isequiv_homotopic _ (fun i => (q2 i)^)).
   Defined.
 
-  Definition cancelL_class2 {X Y Z} (f : X -> Y) (g : Y -> Z)
+  Definition cancelL_class2 `{Funext} {X Y Z} (f : X -> Y) (g : Y -> Z)
   : class2 factsys g -> class2 factsys (g o f) -> class2 factsys f.
   Proof.
     intros c2g c2gf.
@@ -179,8 +177,8 @@ Section FactSys.
              as [q q1 q2 qf]; simpl in *.
     refine (transport (class2 factsys) (path_arrow _ _ ff) _).
     refine (class2_compose factsys f1 f2 _ c2f2).
-    exact (transport (class2 factsys) (path_arrow q f1 q1)
-                     (class2_isequiv factsys q)).
+    apply class2_isequiv.
+    apply (isequiv_homotopic _ q1).
   Defined.
 
   (** The two classes of maps are automatically orthogonal, i.e. any commutative square from a [class1] map to a [class2] map has a unique diagonal filler.  For now, we only bother to define the lift; in principle we ought to show that the type of lifts is contractible. *)
@@ -290,7 +288,7 @@ Section FactSys.
 End FactSys.
 
 Section FactsysExtensions.
-  Context {factsys : FactorizationSystem} {ua : Univalence}.
+  Context {factsys : FactorizationSystem}.
 
   (** We can deduce the lifting property in terms of extensions fairly easily from the version in terms of commutative squares. *)
   Definition extension_factsys {A B : Type}
