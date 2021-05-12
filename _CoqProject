@@ -349,7 +349,6 @@ theories/Pointed/pSusp.v
 #
 
 theories/Spectra/Spectrum.v
-theories/Spectra/Coinductive.v
 
 #
 #   Universal Algebra
