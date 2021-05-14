@@ -1,4 +1,5 @@
 Require Import Basics Types.
+Require Import Algebra.Groups.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
@@ -40,6 +41,35 @@ Definition cring_catamorphism_fun (R : CRing) (z : cring_Z) : R
      | pos z => pos_peano_rec R 1 (fun n nr => 1 + nr) z
      end.
 
+(** TODO: remove these (they will be cleaned up in the future)*)
+(** Left multiplication is an equivalence *)
+Instance isequiv_group_left_op {G} `{IsGroup G}
+  : forall (x : G), IsEquiv (fun t => sg_op x t).
+Proof.
+  intro x.
+  srapply isequiv_adjointify.
+  1: exact (sg_op (-x)).
+  all: intro y.
+  all: refine (associativity _ _ _ @ _ @ left_identity y).
+  all: refine (ap (fun x => x * y) _).
+  1: apply right_inverse.
+  apply left_inverse.
+Defined.
+
+(** Right multiplication is an equivalence *)
+Instance isequiv_group_right_op {G} `{IsGroup G}
+  : forall x:G, IsEquiv (fun y => sg_op y x).
+Proof.
+  intro x.
+  srapply isequiv_adjointify.
+  1: exact (fun y => sg_op y (- x)).
+  all: intro y.
+  all: refine ((associativity _ _ _)^ @ _ @ right_identity y).
+  all: refine (ap (y *.) _).
+  1: apply left_inverse.
+  apply right_inverse.
+Defined.
+
 (** Preservation of + *)
 Global Instance issemigrouppreserving_cring_catamorphism_fun_plus (R : CRing)
   : IsSemiGroupPreserving (Aop:=cring_plus) (Bop:=cring_plus)
@@ -76,12 +106,14 @@ Proof.
       rewrite pos_peano_rec_beta_pos_succ.
       rewrite int_pos_sub_succ_r.
       cbn; rewrite <- simple_associativity.
-      apply moveL_equiv_M.
+      srapply moveL_equiv_M.
+      1: apply isequiv_group_left_op.
       cbn; rewrite involutive.
       apply commutativity. }
     induction x as [|x IHx] using pos_peano_ind.
     { rewrite int_pos_sub_succ_l.
-      cbn; apply moveL_equiv_M.
+      cbn; srapply moveL_equiv_M.
+      1: apply isequiv_group_left_op.
       cbn; rewrite involutive.
       by rewrite pos_peano_rec_beta_pos_succ. }
     rewrite int_pos_sub_succ_succ.

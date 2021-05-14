@@ -216,7 +216,7 @@ Section EncodeDecode.
     + srapply (Build_HSet G).
     + intro x.
       apply path_trunctype.
-      apply (right_mult_equiv x).
+      exact (Build_Equiv _ _ (fun t => t * x) _).
     + intros x y.
       refine (_ @ path_trunctype_pp _ _).
       apply ap, path_equiv, path_forall.

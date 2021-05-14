@@ -147,7 +147,7 @@ Section QuotientGroup.
       + exact f.
       + cbn; intros x y n.
         symmetry.
-        apply (group_moveL_M1 _ _).
+        apply grp_moveL_M1.
         rewrite <- grp_homo_inv.
         rewrite <- grp_homo_op.
         apply h; assumption.

@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types.
+Require Import Basics Types.
 Require Import HProp HFiber.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
@@ -48,16 +48,22 @@ Definition issig_group : _ <~> Group
 Create HintDb group_db.
 
 (** Our group laws can be proven easily with tactics such as [rapply associativity]. However this requires a typeclass search on more general algebraic structures. Therefore we explicitly list many groups laws here so that coq can use them. We also create hints for each law in our groups database. *)
-Local Definition grp_law_associativity {G : Group} (x y z : G) := associativity x y z.
-#[export] Hint Immediate grp_law_associativity : group_db.
-Local Definition grp_law_left_identity {G : Group} (x : G) := left_identity x.
-#[export] Hint Immediate grp_law_left_identity : group_db.
-Local Definition grp_law_right_identity {G : Group} (x : G) := right_identity x.
-#[export] Hint Immediate grp_law_right_identity : group_db.
-Local Definition grp_law_left_inverse {G : Group} (x : G) := left_inverse x.
-#[export] Hint Immediate grp_law_left_inverse : group_db.
-Local Definition grp_law_right_inverse {G : Group} (x : G) := right_inverse x.
-#[export] Hint Immediate grp_law_right_inverse : group_db.
+Section GroupLaws.
+  Context {G : Group} (x y z : G).
+
+  Definition grp_assoc := associativity x y z.
+  Definition grp_unit_l := left_identity x.
+  Definition grp_unit_r := right_identity x.
+  Definition grp_inv_l := left_inverse x.
+  Definition grp_inv_r := right_inverse x.
+
+End GroupLaws.
+
+#[export] Hint Immediate grp_assoc  : group_db.
+#[export] Hint Immediate grp_unit_l : group_db.
+#[export] Hint Immediate grp_unit_r : group_db.
+#[export] Hint Immediate grp_inv_l  : group_db.
+#[export] Hint Immediate grp_inv_r  : group_db.
 
 (** Given path types in a product we may want to decompose. *)
 #[export] Hint Extern 5 (@paths (_ * _) _ _) => (apply path_prod) : group_db.
@@ -160,8 +166,8 @@ Proof.
   + refine (_ @ grp_homo_unit f).
     refine ((grp_homo_op f (-x) x)^ @ _).
     apply ap.
-    apply left_inverse.
-  + apply right_inverse.
+    apply grp_inv_l.
+  + apply grp_inv_r.
 Defined.
 #[export] Hint Immediate grp_homo_inv : group_db.
 
@@ -175,7 +181,7 @@ Proof.
   1: exact h.
   unfold IsUnitPreserving.
   apply (group_cancelL (f mon_unit)).
-  refine (_ @ (right_identity _)^).
+  refine (_ @ (grp_unit_r _)^).
   refine (_ @ ap _ (monoid_left_id _ mon_unit)).
   symmetry.
   apply h.
@@ -275,7 +281,7 @@ Proof.
   snrapply Build_GroupHomomorphism.
   - exact (fun _ => mon_unit).
   - intros x y.
-    exact (left_identity mon_unit)^.
+    exact (grp_unit_l mon_unit)^.
 Defined.
 
 (** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
@@ -327,42 +333,35 @@ Defined.
 (** * Simple group equivalences *)
 
 (** Left multiplication is an equivalence *)
-Global Instance isequiv_group_left_op `{IsGroup G}
-  : forall x, IsEquiv (x *.).
+Global Instance isequiv_group_left_op {G : Group}
+  : forall (x : G), IsEquiv (x *.).
 Proof.
   intro x.
   srapply isequiv_adjointify.
   1: exact (-x *.).
   all: intro y.
-  all: refine (associativity _ _ _ @ _ @ left_identity y).
+  all: refine (grp_assoc _ _ _ @ _ @ grp_unit_l y).
   all: refine (ap (fun x => x * y) _).
-  1: apply right_inverse.
-  apply left_inverse.
+  1: apply grp_inv_r.
+  apply grp_inv_l.
 Defined.
 
 (** Right multiplication is an equivalence *)
-Global Instance isequiv_group_right_op `{IsGroup G}
-  : forall x:G, IsEquiv (fun y => y * x).
+Global Instance isequiv_group_right_op (G : Group)
+  : forall (x : G), IsEquiv (fun y => y * x).
 Proof.
   intro x.
   srapply isequiv_adjointify.
   1: exact (fun y => y * - x).
   all: intro y.
-  all: refine ((associativity _ _ _)^ @ _ @ right_identity y).
+  all: refine ((grp_assoc _ _ _)^ @ _ @ grp_unit_r y).
   all: refine (ap (y *.) _).
-  1: apply left_inverse.
-  apply right_inverse.
+  1: apply grp_inv_l.
+  apply grp_inv_r.
 Defined.
 
-Definition left_mult_equiv `{IsGroup G} : G -> G <~> G
-  := fun x => Build_Equiv _ _ (x *.) _.
-
-(* Right multiplication is an equivalence. *)
-Definition right_mult_equiv `{IsGroup G} : G -> G <~> G
-  := fun x => Build_Equiv _ _ (fun y => y * x) _.
-
-Global Instance isequiv_group_inverse `{IsGroup G}
-  : IsEquiv (-).
+Global Instance isequiv_group_inverse {G : Group}
+  : IsEquiv ((-) : G -> G).
 Proof.
   srapply isequiv_adjointify.
   1: apply (-).
@@ -371,104 +370,84 @@ Defined.
 
 (** ** Working with equations in groups *)
 
-(** Inverses are involutive *)
-(* Check negate_involutive. *)
+Section GroupEquations.
 
-(** Inverses distribute over the group operation *)
-(* Check negate_sg_op. *)
+  Context {G : Group} (x y z : G).
+
+  (** Inverses are involutive *)
+  Definition grp_inv_inv : --x = x := negate_involutive x.
+
+  (** Inverses distribute over the group operation *)
+  Definition grp_inv_op : - (x * y) = -y * -x := negate_sg_op x y.
+
+End GroupEquations.
+
+(** ** Cancelation *)
 
 (** Group elements can be cancelled both on the left and the right. *)
-(* Check group_cancelR. *)
-(* Check group_cancelL. *)
+Definition grp_cancelL {G : Group} {x y : G} z : x = y <~> z * x = z * y
+  := equiv_ap (fun x => z * x) _ _.
+Definition grp_cancelR {G : Group} {x y : G} z : x = y <~> x * z = y * z
+  := equiv_ap (fun x => x * z) _ _.
 
-(* TODO make all of these into equivalences *)
-Lemma group_moveR_gV {G : Group} (x y : G)
-  : x = y <~> x * -y = mon_unit.
-Proof.
-  apply equiv_iff_hprop.
-  1: intros []; apply right_inverse.
-  intro p.
-  apply (group_cancelR (-y)).
-  exact (p @ (right_inverse y)^).
-Defined.
+(** ** Group movement lemmas *)
 
-Lemma group_moveR_Vg {G : Group} (x y : G)
-  : x = y <~> -y * x = mon_unit.
-Proof.
-  apply equiv_iff_hprop.
-  1: intros []; apply left_inverse.
-  intro p.
-  apply (group_cancelL (-y)).
-  exact (p @ (left_inverse y)^).
-Defined.
+Section GroupMovement.
 
-Lemma group_moveL_1M {G : Group} (x y : G)
-  : x * (-y) = mon_unit -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelR (- y)).
-  exact (p @ (right_inverse y)^).
-Defined.
+  (** Since left/right multiplication is an equivalence, we can use lemmas about moving equivalences around to prove group movement lemmas. *)
 
-Lemma group_moveL_M1 {G : Group} (x y : G)
-  : -y * x = mon_unit -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelL (- y)).
-  exact (p @ (left_inverse y)^).
-Defined.
+  Context {G : Group} {x y z : G}.
 
-Lemma group_moveL_gM {G : Group} (x y z : G)
-  : x * -z = y -> x = y * z.
-Proof.
-  intro p.
-  apply (group_cancelR (- z)).
-  refine (_ @ associativity _ _ _).
-  exact (p @ (right_identity y)^ @ (ap (fun a => y * a) (right_inverse z))^).
-Defined.
+  (** *** Moving group elements *)
 
-Lemma group_moveL_Mg {G : Group} (x y z : G)
-  : -y * x = z -> x = y * z.
-Proof.
-  intro p.
-  apply (group_cancelL (- y)).
-  refine (_ @ (associativity _ _ _)^).
-  exact (p @ (left_identity z)^ @ (ap (fun a => a * z) (left_inverse y))^).
-Defined.
+  Definition grp_moveL_gM : x * -z = y <~> x = y * z
+    := equiv_moveL_equiv_M (f := fun t => t * z) _ _.
 
-Lemma group_moveR_1M {G : Group} (x y : G)
-  : mon_unit = y * (-x) -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelR (- x)).
-  exact (right_inverse x @ p).
-Defined.
+  Definition grp_moveL_Mg : -y * x = z <~> x = y * z
+    := equiv_moveL_equiv_M (f := fun t => y * t) _ _.
 
-Lemma group_moveR_M1 {G : Group} (x y : G)
-  : mon_unit = -x * y -> x = y.
-Proof.
-  intro p.
-  apply (group_cancelL (- x)).
-  exact (left_inverse x @ p).
-Defined.
+  Definition grp_moveR_gM : x = z * -y <~> x * y = z
+    := equiv_moveR_equiv_M (f := fun t => t * y) _ _.
 
-Lemma group_moveR_gM {G : Group} (x y z : G)
-  : x = z * -y -> x * y = z.
-Proof.
-  intro p.
-  apply (group_cancelR (- y)).
-  refine ((associativity _ _ _)^ @ _).
-  exact (ap (fun a => x * a) (right_inverse y) @ right_identity _ @ p).
-Defined.
+  Definition grp_moveR_Mg : y = -x * z <~> x * y = z
+    := equiv_moveR_equiv_M (f := fun t => x * t) _ _.
 
-Lemma group_moveR_Mg {G : Group} (x y z : G)
-  : y = -x * z -> x * y = z.
-Proof.
-  intro p.
-  apply (group_cancelL (- x)).
- refine (associativity _ _ _ @ _).
-  exact (ap (fun a => a * y) (left_inverse x) @ left_identity _ @ p).
-Defined.
+  (** *** Moving inverses.*)
+  (** These are the inverses of the previous but are included here for completeness*)
+  Definition grp_moveR_gV : x = y * z <~> x * -z = y
+    := equiv_moveR_equiv_V (f := fun t => t * z) _ _.
+
+  Definition grp_moveR_Vg : x = y * z <~> -y * x = z 
+    := equiv_moveR_equiv_V (f := fun t => y * t) _ _.
+
+  Definition grp_moveL_gV :  x * y = z <~> x = z * -y
+    := equiv_moveL_equiv_V (f := fun t => t * y) _ _.
+
+  Definition grp_moveL_Vg :  x * y = z <~> y = -x * z
+    := equiv_moveL_equiv_V (f := fun t => x * t) _ _.
+
+(** We close the section here so the previous lemmas genearlise their assumptions. *)
+End GroupMovement.
+
+Section GroupMovement.
+
+  Context {G : Group} {x y z : G}.
+
+  (** *** Moving elements equal to unit. *)
+
+  Definition grp_moveL_1M : x * -y = mon_unit <~> x = y
+    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
+
+  Definition grp_moveL_M1 : -y * x = mon_unit <~> x = y
+    := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.
+
+  Definition grp_moveR_1M : mon_unit = y * (-x) <~> x = y
+    := (equiv_concat_l (grp_unit_l _) _)^-1%equiv oE grp_moveR_gM.
+
+  Definition grp_moveR_M1 : mon_unit = -x * y <~> x = y
+    := (equiv_concat_l (grp_unit_r _) _)^-1%equiv oE grp_moveR_Mg.
+
+End GroupMovement.
 
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
@@ -476,10 +455,12 @@ Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
 Proof.
   intros [a0 p].
   refine (equiv_transport (hfiber f) (right_inverse b) oE _).
-  rapply (equiv_functor_hfiber (h:=right_mult_equiv (-a0)) (k:=right_mult_equiv (- b))).
-  intro a; cbn; symmetry.
-  refine (_ @ ap (fun x => f a * (- x)) p).
-  exact (grp_homo_op f _ _ @ ap (fun x => f a * x) (grp_homo_inv f a0)).
+  snrapply Build_Equiv.
+  { srapply (functor_hfiber (h := fun t => t * -a0) (k := fun t => t * -b)).
+    intro a; cbn; symmetry.
+    refine (_ @ ap (fun x => f a * (- x)) p).
+    exact (grp_homo_op f _ _ @ ap (fun x => f a * x) (grp_homo_inv f a0)). }
+  srapply isequiv_functor_hfiber.
 Defined.
 
 (** ** The trivial group *)
@@ -495,7 +476,7 @@ Definition grp_trivial_rec (G : Group) : GroupHomomorphism grp_trivial G.
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun _ => group_unit).
-  intros ??; symmetry; apply left_identity.
+  intros ??; symmetry; apply grp_unit_l.
 Defined.
 
 (** Map into trivial group *)
@@ -503,7 +484,7 @@ Definition grp_trivial_corec (G : Group) : GroupHomomorphism G grp_trivial.
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun _ => tt).
-  intros ??; symmetry; apply left_identity.
+  intros ??; symmetry; exact (grp_unit_l _).
 Defined.
 
 (** * Direct product of group *)
