@@ -9,4 +9,5 @@ Require Export Types.Equiv.
 Require Export Types.Universe.
 Require Export Types.Bool.
 Require Export Types.Sum.
-Require Export Types.Wtype.
+Require Export Types.WType.
+Require Export Types.IWType.
