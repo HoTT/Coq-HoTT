@@ -888,7 +888,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition O_functor_hfiber_natural {A B} (f : A -> B) (b : B)
-      : O_functor_hfiber f b o to O (hfiber f b) == functor_hfiber (fun u => (to_O_natural f u)^) b.
+      : (O_functor_hfiber f b) o to O (hfiber f b) == functor_hfiber (fun u => (to_O_natural f u)^) b.
     Proof.
       intros [a p]; unfold O_functor_hfiber, functor_hfiber, functor_sigma; cbn.
       refine (O_rec_beta _ _ @ _).
