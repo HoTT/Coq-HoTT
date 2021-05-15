@@ -4,6 +4,9 @@ Require Import
   HoTT.Basics.Overture
   HoTT.Spaces.Nat.
 
+Local Open Scope nat_scope.
+Local Open Scope type_scope.
+
 Declare Scope ne_list_scope.
 
 Delimit Scope ne_list_scope with ne_list.
@@ -119,7 +122,7 @@ Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=
 
 Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
-  le' (length (to_list x)) (length (to_list y)).
+  leq (length (to_list x)) (length (to_list y)).
 Proof with auto.
  induction y; cbn.
  - intros [[] | C].

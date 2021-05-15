@@ -15,6 +15,8 @@ Require Import
 
 Import notations_algebra.
 
+Local Open Scope nat_scope.
+
 (** Functions [head_dom'] and [head_dom] are used to get the first
     element of a nonempty operation domain [a : forall i, A (ss i)]. *)
 
@@ -22,14 +24,14 @@ Monomorphic Definition head_dom' {σ} (A : Carriers σ) (n : nat)
   : forall (N : n > 0) (ss : FinSeq n (Sort σ)) (a : forall i, A (ss i)),
     A (fshead' n N ss)
   := match n with
-     | 0 => fun N ss _ => Empty_rec N
+     | 0 => fun N ss _ => Empty_rec (not_lt_n_n _ N)
      | n'.+1 => fun N ss a => a fin_zero
      end.
 
 Monomorphic Definition head_dom {σ} (A : Carriers σ) {n : nat}
   (ss : FinSeq n.+1 (Sort σ)) (a : forall i, A (ss i))
   : A (fshead ss)
-  := head_dom' A n.+1 tt ss a.
+  := head_dom' A n.+1 _ ss a.
 
 (** Functions [tail_dom'] and [tail_dom] are used to obtain the tail
     of an operation domain [a : forall i, A (ss i)]. *)
@@ -57,14 +59,14 @@ Monomorphic Definition cons_dom' {σ} (A : Carriers σ) {n : nat}
       (fun n i =>
         forall (ss : Fin n -> Sort σ) (N : n > 0),
         A (fshead' n N ss) -> (forall i, A (fstail' n ss i)) -> A (ss i))
-      (fun n' => fun _ z => match z with tt => fun x _ => x end)
+      (fun n' _ z x _ => x)
       (fun n' i' _ => fun _ _ _ xs => xs i').
 
 Definition cons_dom {σ} (A : Carriers σ)
   {n : nat} (ss : FinSeq n.+1 (Sort σ))
   (x : A (fshead ss)) (xs : forall i, A (fstail ss i))
   : forall i : Fin n.+1, A (ss i)
-  := fun i => cons_dom' A i ss tt x xs.
+  := fun i => cons_dom' A i ss _ x xs.
 
 (** The empty domain: *)
 
@@ -159,7 +161,7 @@ Proof.
   induction i using fin_ind; intros ss N a.
   - unfold cons_dom'.
     rewrite compute_fin_ind_fin_zero.
-    by destruct N.
+    reflexivity.
   - unfold cons_dom'.
     by rewrite compute_fin_ind_fsucc.
 Qed.

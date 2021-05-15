@@ -7,6 +7,8 @@ Require Import
   HoTT.Spaces.Finite.FinInduction
   HoTT.Spaces.Nat.
 
+Local Open Scope nat_scope.
+
 (** Finite-dimensional sequence. It is often referred to as vector,
     but we call it finite sequence [FinSeq] to avoid confusion with
     vector from linear algebra.
@@ -37,18 +39,18 @@ Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A
 (** Take the first element of a non-empty finite sequence,
     [fshead'] and [fshead]. *)
 
-Definition fshead' {A} (n : nat) : n > 0 -> FinSeq n A -> A
+Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A
   := match n with
-     | 0 => fun N _ => Empty_rec N
+     | 0 => fun N _ => Empty_rec (not_lt_n_0 _ N)
      | n'.+1 => fun _ v => v fin_zero
      end.
 
-Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 tt.
+Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
 
 Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (pred n) A)
   : fshead' n N (fscons' n a v) = a.
 Proof.
-  destruct n; [elim N|].
+  destruct n; [elim (not_lt_n_n _ N)|].
   exact (apD10 (compute_fin_rec_fin_zero _ _ _ _) v).
 Defined.
 
@@ -176,7 +178,7 @@ Proof.
   funext i.
   pose (p := eisretr apD10 (compute_fstail' n.+1 a v)).
   refine (_ @ (ap (fun f => _ f i) p)^).
-  exact (path_expand_fscons_fscons' n.+1 tt a v i).
+  exact (path_expand_fscons_fscons' n.+1 _ a v i).
 Defined.
 
 (** The induction principle for finite sequence, [finseq_ind].

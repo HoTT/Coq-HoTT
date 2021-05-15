@@ -1,4 +1,5 @@
-Require Import Basics.Overture.
+Require Import Basics.Overture Basics.Nat.
+
 
 (** TODO: Clean up *)
 (** This module implements various tactics used to simplify the goals produced by Program,

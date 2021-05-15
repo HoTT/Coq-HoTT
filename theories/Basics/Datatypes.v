@@ -79,22 +79,6 @@ Definition iff (A B : Type) := prod (A -> B) (B -> A).
 
 Notation "A <-> B" := (iff A B) : type_scope.
 
-(* Natural numbers. *)
-
-Inductive nat : Type :=
-  | O : nat
-  | S : nat -> nat.
-
-Scheme nat_rect := Induction for nat Sort Type.
-
-(* It would be nice not to need this, but the tactic [induction] requires it when the target is in [Set], and the above definition of [nat] puts it in [Set]. *)
-Scheme nat_rec := Induction for nat Sort Set.
-
-Declare Scope nat_scope.
-Delimit Scope nat_scope with nat.
-Bind Scope nat_scope with nat.
-Arguments S _%nat.
-
 (** Another way of interpreting booleans as propositions *)
 
 (* Definition is_true b := b = true. *)

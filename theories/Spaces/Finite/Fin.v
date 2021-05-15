@@ -399,11 +399,11 @@ Proof.
   induction n as [|n IH].
   - contradiction.
   - destruct k as [k|?]; simpl.
-    + rewrite nat_plus_comm.
+    + rewrite nat_add_comm.
       specialize (IH k).
-      rewrite nat_plus_comm in IH.
+      rewrite nat_add_comm in IH.
       exact (ap S IH).
-    + rewrite nat_plus_comm; reflexivity.
+    + rewrite nat_add_comm; reflexivity.
 Qed.
 
 (** [fsucc_mod] is the successor function mod n *)

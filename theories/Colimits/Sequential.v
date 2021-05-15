@@ -10,6 +10,7 @@ Require Import Spaces.Nat.
 Require Import HProp.
 Require Import PathAny.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 Notation coe := (transport idmap).
@@ -164,23 +165,23 @@ Proof.
   induction n as [ | n e]; srapply isequiv_homotopic'.
   - srapply equiv_functor_colimit; srapply Build_diagram_equiv.
     + srapply Build_DiagramMap.
-      * exact (fun k => coe (ap A (nat_plus_n_O k)^)).
-      * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (nat_plus_n_O k)^ @ _).
+      * exact (fun k => coe (ap A (nat_add_n_O k)^)).
+      * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (nat_add_n_O k)^ @ _).
         srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))).
     + intro k; srapply isequiv_path.
   - symmetry; srapply seq_colimit_uniq.
-    + intros k a; exact (J (nat_plus_n_O k)).
+    + intros k a; exact (J (nat_add_n_O k)).
     + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
   - transitivity (Colimit (succ_seq (shift_seq A n))).
     + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
       * srapply Build_DiagramMap.
-        { exact (fun k => coe (ap A (nat_plus_n_Sm k n)^)). }
-        { intros k l p a; destruct p; rapply (K S (fun n a => a^+) (nat_plus_n_Sm k n)^ @ _).
+        { exact (fun k => coe (ap A (nat_add_n_Sm k n)^)). }
+        { intros k l p a; destruct p; rapply (K S (fun n a => a^+) (nat_add_n_Sm k n)^ @ _).
           srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))). }
       * intro k; srapply isequiv_path.
     + srefine (transitivity (equiv_colim_succ_seq_to_colim_seq _) (Build_Equiv _ _ _ e)).
   - symmetry; srapply seq_colimit_uniq.
-    + intros k a; exact (J (nat_plus_n_Sm k n)).
+    + intros k a; exact (J (nat_add_n_Sm k n)).
     + intros k a; rewrite Colimit_rec_beta_colimp; simpl.
       rewrite 2(ap_compose' _ _ (glue _ k a)), Colimit_rec_beta_colimp, 2ap_pp.
       rewrite colim_succ_seq_to_colim_seq_ap_inj, colim_shift_seq_to_colim_seq_ap_inj.

@@ -263,7 +263,7 @@ Abort.
 Definition fcard_sum X Y `{Finite X} `{Finite Y}
 : fcard (X + Y) = (fcard X + fcard Y).
 Proof.
-  refine (_ @ nat_plus_comm _ _).
+  refine (_ @ nat_add_comm _ _).
   assert (e := merely_equiv_fin Y).
   strip_truncations.
   refine (fcard_equiv' (1 +E e) @ _).
@@ -303,8 +303,8 @@ Proof.
   - refine (fcard_equiv (sum_distrib_r Y (Fin n) Unit) @ _).
     refine (fcard_sum _ _ @ _).
     simpl.
-    refine (_ @ nat_plus_comm _ _).
-    refine (ap011 plus _ _).
+    refine (_ @ nat_add_comm _ _).
+    refine (ap011 add _ _).
     + apply IH.
     + apply fcard_equiv', prod_unit_l.
   Defined.
@@ -346,7 +346,7 @@ Proof.
   - reflexivity.
   - refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) => Y))^-1 @ _).
     refine (fcard_prod _ _ @ _).
-    apply (ap011 mult).
+    apply (ap011 mul).
     + assumption.
     + refine (fcard_equiv (@Unit_ind (fun (_:Unit) => Y))^-1).
 Defined.
@@ -420,24 +420,24 @@ Defined.
 
 (** Amusingly, this automatically gives us a way to add up a family of natural numbers indexed by any finite set.  (We could of course also define such an operation directly, probably using [merely_ind_hset].) *)
 
-Definition finplus {X} `{Finite X} (f : X -> nat) : nat
+Definition finadd {X} `{Finite X} (f : X -> nat) : nat
   := fcard { x:X & Fin (f x) }.
 
 Definition fcard_sigma {X} (Y : X -> Type)
        `{Finite X} `{forall x, Finite (Y x)}
-: fcard { x:X & Y x } = finplus (fun x => fcard (Y x)).
+: fcard { x:X & Y x } = finadd (fun x => fcard (Y x)).
 Proof.
   set (f := fun x => fcard (Y x)).
   set (g := fun x => merely_equiv_fin (Y x) : merely (Y x <~> Fin (f x))).
   apply finite_choice in g.
   strip_truncations.
-  unfold finplus.
+  unfold finadd.
   refine (fcard_equiv' (equiv_functor_sigma_id g)).
 Defined.
 
 (** The sum of a finite constant family is the product by its cardinality. *)
-Definition finplus_const X `{Finite X} n
-: finplus (fun x:X => n) = fcard X * n.
+Definition finadd_const X `{Finite X} n
+: finadd (fun x:X => n) = fcard X * n.
 Proof.
   transitivity (fcard (X * Fin n)).
   - exact (fcard_equiv' (equiv_sigma_prod0 X (Fin n))).
@@ -454,7 +454,7 @@ Defined.
 
 (** Therefore, the cardinality of the domain of a map between finite sets is the sum of the cardinalities of its hfibers. *)
 Definition fcard_domain {X Y} (f : X -> Y) `{Finite X} `{Finite Y}
-: fcard X = finplus (fun y => fcard (hfiber f y)).
+: fcard X = finadd (fun y => fcard (hfiber f y)).
 Proof.
   refine (_ @ fcard_sigma (hfiber f)).
   refine (fcard_equiv' (equiv_fibration_replacement f)).
@@ -617,7 +617,7 @@ Section DecidableQuotients.
 
   (** Therefore, the cardinality of [X] is the sum of the cardinalities of its equivalence classes. *)
   Definition fcard_quotient
-  : fcard X = finplus (fun z:Quotient R => fcard {x:X & in_class R z x}).
+  : fcard X = finadd (fun z:Quotient R => fcard {x:X & in_class R z x}).
   Proof.
     refine (fcard_domain (class_of R) @ _).
     apply ap, path_arrow; intros z; revert z.
@@ -646,7 +646,7 @@ Proof.
   assert (MapIn (Tr (-1)) g) by (unfold g; exact _).
   clearbody g. clear e e'. generalize dependent m.
   induction n as [|n IHn].
-  { intros; exact tt. }
+  1: exact _.
   intros m g ?.
   assert (i : isinj g) by (apply isinj_embedding; exact _).
   destruct m as [|m].
@@ -678,6 +678,7 @@ Proof.
     { unfold h; apply moveR_equiv_V; symmetry.
       apply fin_transpose_last_with_last. }
     rewrite q; exact tt. }
+  apply leq_S_n'.
   exact (IHn m (unfunctor_sum_l h Ha)
              (mapinO_unfunctor_sum_l (Tr (-1)) h Ha Hb)).
 Qed.
@@ -730,7 +731,7 @@ Section Enumeration.
   Proof.
     destruct (finite_enumeration_stage (fcard X).+1) as [p|?].
     - assert (q := leq_inj_finite (er (fcard X).+1) p); simpl in q.
-      elim (not_nltn _ q).
+      elim (not_lt_n_n _ q).
     - assumption.
   Defined.
 
