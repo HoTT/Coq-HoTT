@@ -25,23 +25,10 @@ hereinafter referred to as "CORS".  *)
 Section Diagonal.
   Context (O : Subuniverse) {X Y : Type} (f : X -> Y).
 
-  Definition hfiber_diagonal (p : Pullback f f)
-    : hfiber (diagonal f) p <~>  ((p.1 ; p.2.2) = (p.2.1 ; idpath) :> hfiber f (f p.2.1)).
-  Proof.
-    destruct p as [x1 [x2 p]]; cbn.
-    refine (_ oE equiv_functor_sigma_id (fun x => (equiv_path_sigma _ _ _)^-1)); cbn.
-    refine (_ oE equiv_sigma_assoc' _ _).
-    refine (_ oE equiv_contr_sigma _); cbn.
-    refine (equiv_path_sigma _ _ _ oE _ oE (equiv_path_sigma _ _ _)^-1); cbn.
-    apply equiv_functor_sigma_id; intros q.
-    destruct q; cbn.
-    apply equiv_path_inverse.
-  Defined.
-
   Definition mapinO_diagonal `{MapIn (Sep O) _ _ f} : MapIn O (diagonal f).
   Proof.
     intros p.
-    refine (inO_equiv_inO' _ (hfiber_diagonal p)^-1).
+    refine (inO_equiv_inO' _ (hfiber_diagonal f p)^-1).
   Defined.
 
   Definition mapinO_from_diagonal `{MapIn O _ _ (diagonal f)} : MapIn (Sep O) f.
@@ -49,7 +36,7 @@ Section Diagonal.
     intros x1 u v.
     destruct v as [x2 p].
     destruct p.
-    refine (inO_equiv_inO' _ (hfiber_diagonal (u.1; x2; u.2))).
+    refine (inO_equiv_inO' _ (hfiber_diagonal f (u.1; x2; u.2))).
   Defined.
 
 End Diagonal.

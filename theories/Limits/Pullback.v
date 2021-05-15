@@ -33,6 +33,20 @@ Definition pullback_corec {A B C D}
 Definition diagonal {X Y : Type} (f : X -> Y) : X -> Pullback f f
   := fun x => (x;x;idpath).
 
+(** The fiber of the diagonal is a path-space in the fiber. *)
+Definition hfiber_diagonal {X Y : Type} (f : X -> Y) (p : Pullback f f)
+  : hfiber (diagonal f) p <~>  ((p.1 ; p.2.2) = (p.2.1 ; idpath) :> hfiber f (f p.2.1)).
+Proof.
+  destruct p as [x1 [x2 p]]; cbn.
+  refine (_ oE equiv_functor_sigma_id (fun x => (equiv_path_sigma _ _ _)^-1)); cbn.
+  refine (_ oE equiv_sigma_assoc' _ _).
+  refine (_ oE equiv_contr_sigma _); cbn.
+  refine (equiv_path_sigma _ _ _ oE _ oE (equiv_path_sigma _ _ _)^-1); cbn.
+  apply equiv_functor_sigma_id; intros q.
+  destruct q; cbn.
+  apply equiv_path_inverse.
+Defined.
+
 (** Symmetry of the pullback *)
 Definition equiv_pullback_symm {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g <~> Pullback g f.
