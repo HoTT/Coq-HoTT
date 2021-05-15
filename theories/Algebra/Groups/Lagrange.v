@@ -30,7 +30,7 @@ Proof.
   exists (subgroup_index G H _ _).
   symmetry.
   refine (fcard_quotient (in_cosetL H) @ _).
-  refine (_ @ finplus_const _ _).
+  refine (_ @ finadd_const _ _).
   apply ap, path_forall.
   srapply Quotient_ind_hprop.
   simpl. (** simpl is better than cbn here *)
