@@ -140,8 +140,10 @@ Section LexModality.
     : diagonal (O_functor O f) == equiv_O_pullback f f o O_functor O (diagonal f).
   Proof.
     apply O_indpaths; intros x.
-    rewrite to_O_natural; cbn.
-    rewrite O_rec_beta; unfold diagonal, functor_pullback, functor_sigma; cbn.
+    refine (_ @ (ap _ (to_O_natural _ _ _))^).
+    cbn.
+    refine (_ @ (O_rec_beta _ _)^).
+    unfold diagonal, functor_pullback, functor_sigma; cbn.
     apply ap, ap.
     apply moveL_pV; exact (concat_1p _ @ (concat_p1 _)^).
   Defined.
