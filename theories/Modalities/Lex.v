@@ -100,8 +100,11 @@ Section LexModality.
     := OO_inverts_functor_pullback_to_O O O f g.
 
   Definition equiv_O_pullback {A B C : Type} (f : B -> A) (g : C -> A)
-    : O (Pullback f g) <~> O (Pullback (O_functor O f) (O_functor O g))
-    := equiv_OO_pullback O O f g.
+    : O (Pullback f g) <~> Pullback (O_functor O f) (O_functor O g)
+    := equiv_O_rec_O_inverts
+         O (functor_pullback f g (O_functor O f) (O_functor O g)
+                             (to O A) (to O B) (to O C)
+                             (to_O_natural O f) (to_O_natural O g)).
 
   Definition O_functor_pullback
              {A B C : Type} (f : B -> A) (g : C -> A)
@@ -132,6 +135,18 @@ Section LexModality.
     apply inverse2, to_O_natural_compose.
     Close Scope long_path_scope.
   Qed.
+
+  Definition diagonal_O_functor {A B : Type} (f : A -> B)
+    : diagonal (O_functor O f) == equiv_O_pullback f f o O_functor O (diagonal f).
+  Proof.
+    apply O_indpaths; intros x.
+    refine (_ @ (ap _ (to_O_natural _ _ _))^).
+    cbn.
+    refine (_ @ (O_rec_beta _ _)^).
+    unfold diagonal, functor_pullback, functor_sigma; cbn.
+    apply ap, ap.
+    apply moveL_pV; exact (concat_1p _ @ (concat_p1 _)^).
+  Defined.
 
   (** RSS Theorem 3.1 (xi) *)
   Definition cancelL_conn_map

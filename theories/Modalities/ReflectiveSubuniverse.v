@@ -161,6 +161,21 @@ Proof.
   exact e.
 Defined.
 
+(** In particular, every type in the subuniverse automatically reflects into it. *)
+Definition prereflects_in (O : Subuniverse) (T : Type) `{In O T} : PreReflects O T.
+Proof.
+  unshelve econstructor.
+  - exact T.
+  - assumption.
+  - exact idmap.
+Defined.
+
+Definition reflects_in (O : Subuniverse) (T : Type) `{In O T} : @Reflects O T (prereflects_in O T).
+Proof.
+  constructor; intros; rapply ooextendable_equiv.
+Defined.
+
+(** A reflective subuniverse is one for which every type reflects into it. *)
 Record ReflectiveSubuniverse@{i} :=
 {
   rsu_subuniv : Subuniverse@{i} ;
@@ -545,6 +560,11 @@ Section Reflective_Subuniverse.
                (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
     Defined.
 
+    Definition equiv_O_rec_O_inverts
+           {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
+      : O A <~> B
+      := Build_Equiv _ _ _ (isequiv_O_rec_O_inverts f).
+
     (** If [f] is inverted by [O], then mapping out of it into any modal type is an equivalence.  First we prove a version not requiring funext.  For use in [O_inverts_O_leq] below, we allow the types [A], [B], and [Z] to perhaps live in smaller universes than the one [i] on which our subuniverse lives.  This the first half of Lemma 1.23 of RSS. *)
     Definition ooextendable_O_inverts@{a b z i}
                {A : Type@{a}} {B : Type@{b}} (f : A -> B) `{O_inverts f}
@@ -865,6 +885,14 @@ Section Reflective_Subuniverse.
       exists (to O A a).
       refine (to_O_natural f a @ _).
       apply ap, p.
+    Defined.
+
+    Definition O_functor_hfiber_natural {A B} (f : A -> B) (b : B)
+      : (O_functor_hfiber f b) o to O (hfiber f b) == functor_hfiber (fun u => (to_O_natural f u)^) b.
+    Proof.
+      intros [a p]; unfold O_functor_hfiber, functor_hfiber, functor_sigma; cbn.
+      refine (O_rec_beta _ _ @ _).
+      exact (ap _ (inv_V _ @@ 1))^.
     Defined.
 
     (** [functor_sigma] over [idmap] preserves [O]-equivalences. *)
@@ -1864,6 +1892,13 @@ Proof.
   intros O1 O2 O3 O12 O23 A ?.
   rapply (@inO_leq O2 O3).
   rapply (@inO_leq O1 O2).
+Defined.
+
+Definition mapinO_O_leq (O1 O2 : Subuniverse) `{O1 <= O2}
+           {A B : Type} (f : A -> B) `{MapIn O1 A B f}
+  : MapIn O2 f.
+Proof.
+  intros b; rapply (inO_leq O1 O2).
 Defined.
 
 (** This implies that every [O2]-connected type is [O1]-connected, and similarly for maps and equivalences.  We give universe annotations so that [O1] and [O2] don't have to be on the same universe, but we do have to have [i1 <= i2] for this statement.  When [i2 <= i1] it seems that the statement might not be true unless the RSU on the larger universe is accessibly extended from the smaller one; see [Localization.v].  *)
