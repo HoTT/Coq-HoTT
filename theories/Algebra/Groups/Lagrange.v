@@ -22,7 +22,7 @@ Proof.
   apply dec_H.
 Defined.
 
-(** Given a finite group G and a finite subgroup H of G, the order of H divides the order G. Note that constructively, a subgroup of a finite group cannot be shown to be finite without exlcluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. *)
+(** Given a finite group G and a finite subgroup H of G, the order of H divides the order of G. Note that constructively, a subgroup of a finite group cannot be shown to be finite without exlcluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. *)
 Theorem lagrange {U : Univalence} (G : Group) (H : Subgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
   : exists d, d * (fcard H) = fcard G.
@@ -44,7 +44,7 @@ Proof.
   exact _.
 Defined.
 
-Corollary lagrange_noraml {U : Univalence} (G : Group) (H : NormalSubgroup G)
+Corollary lagrange_normal {U : Univalence} (G : Group) (H : NormalSubgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
   : fcard (QuotientGroup G H) * fcard H = fcard G.
 Proof.
