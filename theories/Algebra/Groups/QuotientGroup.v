@@ -1,12 +1,12 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HSet.
+Require Import Algebra.Congruence.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
-Require Import Algebra.Congruence.
-Require Export Colimits.Quotient.
 Require Export Algebra.Groups.Image.
 Require Export Algebra.Groups.Kernel.
+Require Export Colimits.Quotient.
 Require Import HSet.
+Require Import Spaces.Finite.
 Require Import WildCat.
 
 (** * Quotient groups *)
@@ -16,8 +16,8 @@ Local Open Scope mc_mult_scope.
 Section GroupCongruenceQuotient.
 
   Context {G : Group} {R : Relation G}
-    `{is_mere_relation _ R} `{!IsCongruence R} (* Congruence just means respects op *)
-    `{!Reflexive R} `{!Symmetric R} `{!Transitive R}.
+    `{is_mere_relation _ R, !IsCongruence R,
+      !Reflexive R, !Symmetric R, !Transitive R}.
 
   Definition CongruenceQuotient := G / R.
 
@@ -252,3 +252,16 @@ Section FirstIso.
   Defined.
 
 End FirstIso.
+
+(** Quotient groups are finite. *)
+(** Note that we cannot constructively conclude that the normal subgroup [H] must be finite since [G] is, therefore we keep it as an assumption. *)
+Global Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSubgroup G)
+  (fin_G : Finite G) (fin_H : Finite H)
+  : Finite (QuotientGroup G H).
+Proof.
+  nrapply finite_quotient.
+  1-5: exact _.
+  intros x y.
+  pose (dec_H := detachable_finite_subset H).
+  apply dec_H.
+Defined.

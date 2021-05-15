@@ -401,6 +401,8 @@ theories/Algebra/Groups/FreeProduct.v
 theories/Algebra/Groups/GroupCoeq.v
 theories/Algebra/Groups/Presentation.v
 theories/Algebra/Groups/ShortExactSequence.v
+theories/Algebra/Groups/Lagrange.v
+
 
 theories/Algebra/Groups/FreeGroup.v
 

@@ -12,6 +12,7 @@ Require Export HoTT.Algebra.Groups.FreeGroup.
 
 Require Export HoTT.Algebra.Groups.Presentation.
 Require Export HoTT.Algebra.Groups.ShortExactSequence.
+Require Export HoTT.Algebra.Groups.Lagrange.
 
 (** Examples *)
 
