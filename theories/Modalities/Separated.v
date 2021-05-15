@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath.
-Require Import HFiber Extensions Factorization.
+Require Import HFiber Extensions Factorization Pullback.
 Require Import ReflectiveSubuniverse Modality Accessible Localization Descent.
 Require Import Truncations.Core.
 Require Import Homotopy.Suspension.
@@ -19,6 +19,41 @@ hereinafter referred to as "CORS".  *)
 (** The definition is in [ReflectiveSubuniverse.v]. *)
 
 (** ** Basic properties *)
+
+(** A function is (fiberwise) in [Sep O] exactly when its diagonal is in [O]. *)
+
+Section Diagonal.
+  Context (O : Subuniverse) {X Y : Type} (f : X -> Y).
+
+  Definition hfiber_diagonal (p : Pullback f f)
+    : hfiber (diagonal f) p <~>  ((p.1 ; p.2.2) = (p.2.1 ; idpath) :> hfiber f (f p.2.1)).
+  Proof.
+    destruct p as [x1 [x2 p]]; cbn.
+    refine (equiv_path_sigma _ _ _ oE _); cbn.
+    refine (_ oE equiv_functor_sigma_id (fun x => (equiv_path_sigma _ _ _)^-1)); cbn.
+    refine (_ oE equiv_sigma_assoc' _ _).
+    refine (_ oE equiv_contr_sigma _); cbn.
+    refine (_ oE (equiv_path_sigma _ _ _)^-1); cbn.
+    apply equiv_functor_sigma_id; intros q.
+    destruct q; cbn.
+    apply equiv_path_inverse.
+  Defined.
+
+  Definition mapinO_diagonal `{MapIn (Sep O) _ _ f} : MapIn O (diagonal f).
+  Proof.
+    intros p.
+    refine (inO_equiv_inO' _ (hfiber_diagonal p)^-1).
+  Defined.
+
+  Definition mapinO_from_diagonal `{MapIn O _ _ (diagonal f)} : MapIn (Sep O) f.
+  Proof.
+    intros x1 u v.
+    destruct v as [x2 p].
+    destruct p.
+    refine (inO_equiv_inO' _ (hfiber_diagonal (u.1; x2; u.2))).
+  Defined.
+
+End Diagonal.
 
 (** Lemma 2.15 of CORS: If [O] is accessible, so is [Sep O].  Its generators are the suspension of those of [O], in the following sense: *)
 Definition susp_localgen (f : LocalGenerators@{a}) : LocalGenerators@{a}.

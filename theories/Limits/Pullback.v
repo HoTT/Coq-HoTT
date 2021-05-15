@@ -29,6 +29,10 @@ Definition pullback_corec {A B C D}
 : A -> Pullback k g
 := fun a => (f a ; h a ; p a).
 
+(** The diagonal of a map *)
+Definition diagonal {X Y : Type} (f : X -> Y) : X -> Pullback f f
+  := fun x => (x;x;idpath).
+
 (** Symmetry of the pullback *)
 Definition equiv_pullback_symm {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g <~> Pullback g f.
