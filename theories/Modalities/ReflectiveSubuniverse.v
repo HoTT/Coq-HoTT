@@ -891,8 +891,8 @@ Section Reflective_Subuniverse.
       : O_functor_hfiber f b o to O (hfiber f b) == functor_hfiber (fun u => (to_O_natural f u)^) b.
     Proof.
       intros [a p]; unfold O_functor_hfiber, functor_hfiber, functor_sigma; cbn.
-      rewrite O_rec_beta, inv_V.
-      reflexivity.
+      refine (O_rec_beta _ _ @ _).
+      exact (ap _ (inv_V _ @@ 1))^.
     Defined.
 
     (** [functor_sigma] over [idmap] preserves [O]-equivalences. *)
