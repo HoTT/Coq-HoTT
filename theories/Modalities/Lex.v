@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Extensions Pullback NullHomotopy Factorization PathAny.
+Require Import HFiber Extensions Pullback NullHomotopy Factorization PathAny Truncations.
 Require Import Modality Accessible Localization Descent Separated.
 
 Local Open Scope path_scope.
@@ -90,6 +90,13 @@ Section LexModality.
   Definition equiv_path_O {X : Type@{i}} (x y : X)
     : O (x = y) <~> (to O X x = to O X y)
     := equiv_path_OO O O x y.
+
+  Definition equiv_path_O_to_O {X : Type} (x y : X)
+    : (equiv_path_O x y) o (to O (x = y)) == @ap _ _ (to O X) x y.
+  Proof.
+    intros p; unfold equiv_path_O, equiv_path_OO, path_OO; cbn.
+    apply O_rec_beta.
+  Defined.
 
   (** RSS Theorem 3.1 (x).  This justifies the term "left exact". *)
   Global Instance O_inverts_functor_pullback_to_O
@@ -401,4 +408,32 @@ Proof.
   - intros f; apply path_forall; intros y; apply moveR_equiv_M.
     destruct (isconnected_elim O _ (fun y => (wc x y)^-1 (f y))) as [z p].
     exact (p x @ (p y)^).
+Defined.
+
+(** ** n-fold separation *)
+
+(** A type is [n]-[O]-separated, for n >= -2, if all its (n+2)-fold iterated identity types are [O]-modal.  Inductively, this means that it is (-2)-O-separated if it is O-modal, and (n+1)-O-separated if its identity types are n-O-separated. *)
+Fixpoint nSep (n : trunc_index) (O : Subuniverse) : Subuniverse
+  := match n with
+     | -2 => O
+     | n.+1 => Sep (nSep n O)
+     end.
+
+(** The reason for indexing this notion by a [trunc_index] rather than a [nat] is that when O is lex, a type is n-O-separated if and only if its O-unit is an n-truncated map. *)
+Definition nsep_iff_trunc_to_O (n : trunc_index) (O : Modality) `{Lex O} (A : Type)
+  : In (nSep n O) A <-> IsTruncMap n (to O A).
+Proof.
+  revert A; induction n as [|n IHn]; intros A; split; intros ?.
+  - apply contr_map_isequiv; rapply isequiv_to_O_inO.
+  - apply (inO_equiv_inO (O A) (to O A)^-1).
+  - apply istruncmap_from_ap; intros x y.
+    pose (i := fst (IHn (x = y)) _).
+    apply istruncmap_mapinO_tr, (mapinO_homotopic _ _ (equiv_path_O_to_O O x y)).
+  - intros x y.
+    apply (snd (IHn (x = y))).
+    pose (i := istruncmap_ap n (to O A) x y).
+    apply mapinO_tr_istruncmap in i.
+    apply istruncmap_mapinO_tr, (mapinO_homotopic _ ((equiv_path_O O x y)^-1 o (@ap _ _ (to O A) x y))).
+    { intros p; apply moveR_equiv_V; symmetry; apply equiv_path_O_to_O. }
+    rapply mapinO_compose.
 Defined.
