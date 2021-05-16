@@ -435,5 +435,6 @@ Proof.
     apply mapinO_tr_istruncmap in i.
     apply istruncmap_mapinO_tr, (mapinO_homotopic _ ((equiv_path_O O x y)^-1 o (@ap _ _ (to O A) x y))).
     { intros p; apply moveR_equiv_V; symmetry; apply equiv_path_O_to_O. }
+    pose mapinO_isequiv. (* This speeds up the next line. *)
     rapply mapinO_compose.
 Defined.
