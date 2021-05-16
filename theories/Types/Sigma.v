@@ -524,6 +524,12 @@ Proof.
   make_equiv.
 Defined.
 
+Definition equiv_sigma_symm' {A : Type} `(P : A -> Type) `(Q : A -> Type)
+  : { ap : { a : A & P a } & Q ap.1 } <~> { aq : { a : A & Q a } & P aq.1 }.
+Proof.
+  make_equiv.
+Defined.
+
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.
 Proof.

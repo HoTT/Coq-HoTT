@@ -55,6 +55,15 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
+(** ** Connectedness of path spaces *)
+
+Global Instance isconnected_paths `{Univalence} {n A}
+       `{IsConnected n.+1 A} (x y : A)
+: IsConnected n (x = y).
+Proof.
+  refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
+Defined.
+
 (** ** Connectivity of pointed types *)
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
@@ -74,6 +83,18 @@ Definition conn_point_incl {n : trunc_index} {A : Type} (a0:A)
 Proof.
   rapply (OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
   apply O_lex_leq_Tr.
+Defined.
+
+(** To prove an [n]-truncated predicate on an (n+1)-connected, pointed type, it's enough to prove it for the basepoint. *)
+Definition conn_to_trunc_ind `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
+           (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
+  : forall a, P a.
+Proof.
+  intro a.
+  (** Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
+  pose proof (p := center _ : Tr n ((point A) = a)).
+  strip_truncations.
+  exact (p # p0).
 Defined.
 
 (** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
@@ -111,14 +132,6 @@ Proof.
   assumption.
 Defined.
 
-(** ** Connectedness of path spaces *)
-
-Global Instance isconnected_paths `{Univalence} {n A}
-       `{IsConnected n.+1 A} (x y : A)
-: IsConnected n (x = y).
-Proof.
-  refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
-Defined.
 
 (** ** 0-connectedness *)
 

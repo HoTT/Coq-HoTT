@@ -269,7 +269,18 @@ Definition transport_path_universe_Vp `{Funext}
   @ transport_path_universe_V f (f z)
   @ eissect f z
   = transport_Vp idmap (path_universe f) z
-:= transport_path_universe_Vp_uncurried (Build_Equiv A B f feq) z.
+  := transport_path_universe_Vp_uncurried (Build_Equiv A B f feq) z.
+
+(** *** Transporting in particular type families *)
+
+Theorem transport_arrow_toconst_path_universe `{Univalence} {A U V : Type} (w : U <~> V)
+  : forall f : U -> A, transport (fun E : Type => E -> A) (path_universe w) f = (f o w^-1).
+Proof.
+  intros f. funext y.
+  refine (transport_arrow_toconst _ _ _ @ _).
+  apply ap.
+  apply transport_path_universe_V.
+Defined.
 
 (** ** 2-paths *)
 
