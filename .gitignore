@@ -104,3 +104,6 @@ contrib/*.bak.*
 
 # ignore dune _build directory
 _build/
+
+# ignore _CoqProject since we autogenerate it
+_CoqProject
