@@ -7,15 +7,15 @@ Local Open Scope pointed_scope.
 
 (** We prove that type families correspond to fibrations [equiv_sigma_fibration] (Theorem 4.8.3) and the projection [pointed_type : pType -> Type] is an object classifier [ispullback_square_objectclassifier] (Theorem 4.8.4). *)
 
-(** We denote fibrations over a base [Y] as follows. *)
-Definition Fib (Y : Type@{u}) := { X : Type@{u} & X -> Y }.
-Definition pFib (Y : pType@{u}) := { X : pType@{u} & X ->* Y }.
+(** We denote the type of all maps into a type [Y] as follows. *)
+Definition Slice (Y : Type@{u}) := { X : Type@{u} & X -> Y }.
+Definition pSlice (Y : pType@{u}) := { X : pType@{u} & X ->* Y }.
 
-Definition sigma_fibration@{u v} {Y : Type@{u}} (P : Y -> Type@{u}) : Fib@{u v} Y
+Definition sigma_fibration@{u v} {Y : Type@{u}} (P : Y -> Type@{u}) : Slice@{u v} Y
   := (sig@{u u} P; pr1).
 
 
-Definition sigma_fibration_inverse {Y : Type@{u}} (p : Fib Y) : Y -> Type@{u}
+Definition sigma_fibration_inverse {Y : Type@{u}} (p : Slice Y) : Y -> Type@{u}
   := hfiber p.2.
 
 Theorem isequiv_sigma_fibration `{Univalence} {Y : Type}
@@ -67,7 +67,7 @@ Local Notation "( X , x )" := (Build_pType X x).
 
 (** Fibrations over [B] with fiber [F] correspond to pointed maps into the universe pointed at [F]. *)
 Proposition equiv_sigma_fibration_p@{u v +} `{Univalence} {Y : pType@{u}} {F : Type@{u}}
-  : (Y ->* (Type@{u}, F)) <~> { p : Fib@{u v} Y & hfiber p.2 (point Y) <~> F }.
+  : (Y ->* (Type@{u}, F)) <~> { p : Slice@{u v} Y & hfiber p.2 (point Y) <~> F }.
 Proof.
   refine (_ oE (issig_pmap _ _)^-1).
   srapply (equiv_functor_sigma' equiv_sigma_fibration); intro P; cbn.
@@ -78,8 +78,8 @@ Defined.
 
 (** If the fiber [F] is pointed we may upgrade the right-hand side to pointed fiber sequences. *)
 Lemma equiv_pfiber_fibration_pfibration@{u v} {Y F : pType@{u}}
-  : { p : Fib@{u v} Y & hfiber p.2 (point Y) <~> F}
-      <~> { p : pFib@{u v} Y & pfiber p.2 <~>* F }.
+  : { p : Slice@{u v} Y & hfiber p.2 (point Y) <~> F}
+      <~> { p : pSlice@{u v} Y & pfiber p.2 <~>* F }.
 Proof.
   equiv_via
     (sig@{v u} (fun X : Type@{u} =>
@@ -99,7 +99,7 @@ Proof.
 Defined.
 
 Definition equiv_sigma_pfibration@{u v +} `{Univalence} {Y F : pType@{u}}
-  : (Y ->* (Type@{u}, F)) <~> { p : pFib@{u v} Y & pfiber p.2 <~>* F}
+  : (Y ->* (Type@{u}, F)) <~> { p : pSlice@{u v} Y & pfiber p.2 <~>* F}
   := equiv_pfiber_fibration_pfibration oE equiv_sigma_fibration_p.
 
 (** * The classifier for O-local types *)
@@ -121,7 +121,7 @@ Defined.
 Proposition equiv_sigma_fibration_Op@{u v +} `{Univalence} {O : Subuniverse}
             {Y : pType@{u}} {F : Type@{u}} `{inO : In O F}
   : (Y ->* (Type_ O, (F; inO)))
-      <~> { p : { q : Fib@{u v} Y & MapIn O q.2 } & hfiber p.1.2 (point Y) <~> F }.
+      <~> { p : { q : Slice@{u v} Y & MapIn O q.2 } & hfiber p.1.2 (point Y) <~> F }.
 Proof.
   refine (_ oE (issig_pmap _ _)^-1); cbn.
   srapply (equiv_functor_sigma' equiv_sigma_fibration_O); intro P; cbn.
@@ -135,7 +135,7 @@ Defined.
 Proposition equiv_sigma_fibration_Op_connected@{u v +} `{Univalence} {O : Subuniverse}
             {Y : pType@{u}} `{IsConnected 0 Y} {F : Type@{u}} `{inO : In O F}
   : (Y ->* (Type_ O, (F; inO)))
-       <~> { p : Fib@{u v} Y & hfiber p.2 (point Y) <~> F }.
+       <~> { p : Slice@{u v} Y & hfiber p.2 (point Y) <~> F }.
 Proof.
   refine (_ oE equiv_sigma_fibration_Op).
   refine (_ oE (equiv_sigma_assoc' _ (fun p _ => hfiber p.2 (point Y) <~> F))^-1%equiv).
@@ -143,7 +143,7 @@ Proof.
   refine (_ oE equiv_sigma_symm0 _ _).
   apply equiv_sigma_contr; intro e.
   rapply contr_inhabited_hprop.
-  rapply conn_to_trunc_ind@{u v u u u u u u u}.
+  rapply conn_point_elim@{u v u u u u u u u}.
   apply (inO_equiv_inO F e^-1).
 Defined.
 
@@ -153,7 +153,7 @@ Defined.
 Proposition equiv_sigma_pfibration_O `{Univalence} (O : Subuniverse)
             {Y F : pType} `{inO : In O F}
   : (Y ->* (Type_ O, (pointed_type F; inO)))
-      <~> { p : { q : pFib Y & MapIn O q.2 } & pfiber p.1.2 <~>* F }.
+      <~> { p : { q : pSlice Y & MapIn O q.2 } & pfiber p.1.2 <~>* F }.
 Proof.
   refine (_ oE equiv_sigma_fibration_Op).
   refine (_ oE equiv_sigma_symm' _ (fun q => hfiber q.2 (point Y) <~> F)).
@@ -165,7 +165,7 @@ Defined.
 Definition equiv_sigma_pfibration_O_connected@{u v +} `{Univalence} (O : Subuniverse)
           {Y F : pType@{u}} `{IsConnected 0 Y} `{inO : In O F}
   : (Y ->* (Type_ O, (pointed_type F; inO)))
-      <~> { p : pFib@{u v} Y & pfiber p.2 <~>* F }
+      <~> { p : pSlice@{u v} Y & pfiber p.2 <~>* F }
   := equiv_pfiber_fibration_pfibration oE equiv_sigma_fibration_Op_connected.
 
 (** As a corollary, pointed maps into the unverse of O-local types are just pointed maps into the universe, when the base [Y] is connected. *)

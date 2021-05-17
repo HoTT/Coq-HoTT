@@ -86,7 +86,7 @@ Proof.
 Defined.
 
 (** To prove an [n]-truncated predicate on an (n+1)-connected, pointed type, it's enough to prove it for the basepoint. *)
-Definition conn_to_trunc_ind `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
+Definition conn_point_elim `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
            (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
   : forall a, P a.
 Proof.

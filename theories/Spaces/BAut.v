@@ -266,7 +266,7 @@ Section ClassifyingMaps.
 
   (** Consequently, maps into [BAut F] correspond to fibrations with fibers merely equivalent to [F]. *)
   Corollary equiv_map_baut_fibration `{Univalence} {Y : pType} {F : Type}
-    : (Y -> BAut F) <~> { p : Fib Y & forall y:Y, merely (hfiber p.2 y <~> F) }.
+    : (Y -> BAut F) <~> { p : Slice Y & forall y:Y, merely (hfiber p.2 y <~> F) }.
   Proof.
     refine (_ oE equiv_postcompose' equiv_baut_typeO).
     refine (_ oE equiv_sigma_fibration_O).
@@ -285,7 +285,7 @@ Section ClassifyingMaps.
   Defined.
 
   Definition equiv_pmap_pbaut_pfibration `{Univalence} {Y F : pType@{u}}
-    : (Y ->* pBAut@{u v} F) <~> { p : { q : pFib Y & forall y:Y, merely (hfiber q.2 y <~> F) } &
+    : (Y ->* pBAut@{u v} F) <~> { p : { q : pSlice Y & forall y:Y, merely (hfiber q.2 y <~> F) } &
                                       pfiber p.1.2 <~>* F }
     := (equiv_sigma_pfibration_O (subuniverse_merely_equiv F))
          oE equiv_pequiv_postcompose pequiv_pbaut_typeOp.
