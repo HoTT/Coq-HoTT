@@ -1,211 +1,212 @@
-## Obtain Prerequisites
+We recommend [these install instructions](#1-installation-using-coq-platform) if you wish to install the HoTT
+library to use in your own project or to play around with.
 
-Make sure you have all the prerequisites for compiling Coq. These are
-`OCaml`, `camlp5`, `git`, and `make`. If you want to build the
-graphical user interface `coqide` you also need the `lablgtk3` and
-`lablgtksourceview3` libraries.  To get these:
+## Table of contents
 
-### Linux and OSX
+- [1. Installation using Coq Platform](#1-installation-using-coq-platform)
+- [2. Installation of HoTT library using opam](#2-installation-of-hott-library-using-opam)
+- [3. Setup for developers (using git)](#3-setup-for-developers-using-git)
+  - [3.1. Prequisites (Installing Coq)](#31-prequisites-installing-coq)
+    - [3.1.1. Development in OSX and Windows](#311-development-in-osx-and-windows)
+  - [3.2. Forking and obtaining the HoTT library](#32-forking-and-obtaining-the-hott-library)
+  - [3.3. Building the HoTT library](#33-building-the-hott-library)
+  - [3.4. Installing the library using git](#34-installing-the-library-using-git)
+- [4. Editors](#4-editors)
+  - [4.1. Tags for Emacs](#41-tags-for-emacs)
+- [5. Updating the library](#5-updating-the-library)
+- [6. Troubleshooting](#6-troubleshooting)
 
-Git and make can be installed through your package manager.  On Debian
-or any distribution with `apt-get` you can run the script
-`./etc/install_coq_deps.sh` in the HoTT directory (see step 2) which
-installs some dependencies automatically.
+# 1. Installation using Coq Platform
 
-On OSX you can instead use the brew package manager:
+In order to install the HoTT library, we recommend that you use the [Coq
+Platform][1]. This will install the [Coq Proof Assistant][2] together with the
+HoTT library. The Coq Platform supports installation on **Linux**, **MacOS** and
+**Windows**.
 
-    brew update
-    brew install opam
-    brew install pkgconfig automake autoconf
-    brew install libffi libxml2
-    brew install lablgtk gtksourceview
-    export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/gtksourceview/lib/pkgconfig"
+In order to use the HoTT library in your project, make sure you have a file
+called `_CoqProject` in your working directory which contains the following
+lines:
 
-However, for installing OCaml and its utilities we highly recommend
-using the Opam package manager for Ocaml [1] instead of your operating
-system package manager.  Run `opam --version` to check that opam is
-installed and up to date. If the opam version is less than 2, you
-should install a recent version of opam using the curl command
-provided at https://opam.ocaml.org/.
+```
+-arg -noinit
+-arg -indices-matter
+```
 
-    sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
+This way when you open `.v` files using `coqide` or any other text editor for
+coq (see [Editors](#editors)), the editor will pass the correct arguments to
+`coq`.
 
-You can then initialize opam with
+To import modules from the HoTT library inside your own file, you will need to
+write the following:
 
-    opam init
+```coq
+From HoTT Require Import Basics.
+```
 
-It is recommended to allow opam to change your .profile file when it
-asks for permission.
+This, for example, will import the `Basics` module from the HoTT library. If you
+wish to import the entire library you can write:
 
-After that switch to ocaml version 4.07.1 using
+```coq
+From HoTT Require Import HoTT.
+```
 
-    opam switch create 4.07.1
-    opam switch 4.07.1
+# 2. Installation of HoTT library using opam
 
-You may also need to run
+More advanced users may wish to install the HoTT library via `opam` ([See here
+for details on installing `opam`][3]). You need to add the released coq-archive
+packages to `opam` which can be done as follows:
+```shell
+$ opam repo add coq-released https://coq.inria.fr/opam/released
+```
+This will let you install the released versions of the library. We typically do
+a release for each major version of `coq`. Note that the name of the HoTT
+library is `coq-hott` inside the coq-archive.
 
-    eval `opam env`
+```shell
+$ opam install coq-hott
+```
 
-to continue working in the same terminal.  Then you can install the
-required dependencies:
+We also have the current development versions of the library available via
+`opam`. For this however, you will need to add the dev coq-archive packages:
+```shell
+$ opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
+```
 
-    opam install ocaml camlp5 ocamlfind num zarith
+# 3. Setup for developers (using git)
 
-and, if you want to build `coqide`:
+## 3.1. Prequisites (Installing Coq)
 
-    opam install lablgtk3 lablgtk3-sourceview3
+We recommend that you use the `opam` package manager to install `coq`. Details
+about [installing Opam can be found here][3].
 
-[1]:https://opam.ocaml.org/doc/Install.html
+Using `opam` you can install the latest version of `coq` by doing the following:
 
-### MS Windows
+```shell
+$ opam install coq
+```
 
-Here are some instruction for setting up the HoTT library using the
-Coq precompiled binaries.
-
-1. Install the [precompiled binaries for coq](https://github.com/coq/coq/releases). Just pick the one
-labelled latest release and run the exe file.
-2. Run the [cygwin installer](https://cygwin.com/install.html). It
-doesn't matter which version, 64 and 32 both work.
-3. When you are told to choose packages, select the following packages
-(use the search bar)
-  `git`, `make`, `ocaml`
-You can select these packages by choosing a version from the drop down
-in the installer.
-4. Complete the installation of cygwin.
-5. Run cygwin and check that git works by running `git`. It should
-just give you the help screen.
-
-## Obtain the HoTT library
-
-Of course, skip this step if you already have it.  The most
-straightforward way to download it is
-
-    git clone https://github.com/HoTT/HoTT.git
-    cd HoTT
-
-If you would like to contribute to the library (or imagine that you
-might one day in the future), we recommend that you first fork the
-repository on github.com and then clone your own fork. This way you
-will be able to make pull requests.
-
-If you do not want to deal with `git` at all, you may download an
-archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
-unpack that. We do not recommend this option because the HoTT library
-is under heavy development and you want to be able to easily track
-changes.
-
-A somewhat old version of the HoTT library is also available on opam
-as `coq-hott` in the "extra-dev" archive
-(https://github.com/coq/opam-coq-archive/tree/master/extra-dev).
-However, to obtain an up-to-date version of the library, and to
-contribute to it, you need to clone it using git.
+You will also need `make` and `git` in a typical workflow.
 
 
-## Install Coq (Linux and OSX)
+### 3.1.1. Development in OSX and Windows
 
-The recommended procedure is to install a local/custom version of Coq
-in a subdirectory of the HoTT directory, which can be done by running
-from the HoTT directory:
+We don't recommend developing on platforms other than Linux, however it is still
+possible.
 
-    etc/install_coq.sh
+Windows and OSX users may install `coq` directly using the [installer for the
+appropriate coq release][9].
 
-Compiling Coq may take a while.
-To speed it up, use `make -jn`, where n is the number of cores you
-have on your machine.
-On Linux this can be found with `nproc` or `lscpu`.
-On OSX Apple menu -> About this Mac -> System Report, then look for
-"number of cores".
+For OSX users `git` and `make` should be readily availble.
 
-Alternatively, you can install Coq using a package manager or opam.
+Windows users can install [`git` as described here][18] and [`make` as described
+here][17].
 
-If you get error messages during the compilation of Coq about the
-command line option "-fno-defer-pop", then you might be running Mac OS
-X 10.9 with an ocaml compiler installed by "brew".  We recommend
-installing ocaml using opam instead, as described above.
+## 3.2. Forking and obtaining the HoTT library
 
-If you don't want to compile your own copy of Coq, then the HoTT
-library is compatible with [Coq
-8.13](https://github.com/coq/coq/releases/tag/V8.13.0), so you can
-also install a binary Coq package using a package manager or opam.
-Paths still need to be set manually.  On Debian/Ubuntu, you can also
-install the master development branch of Coq as your only version of
-Coq if you want:
+In order to do development on the HoTT library, we recommend that you [fork it
+on Github][4]. More details [about forking can be found here][5].
 
-        sudo add-apt-repository ppa:jgross-h/coq-master-daily
-        sudo apt-get update
-        sudo apt-get install coq
+Use `git` to clone your fork locally:
+
+```shell
+$ git clone https://github.com/YOUR-USERNAME/HoTT
+```
+
+Of course, you may clone the library directly, but for development it is
+recommended to work on a fork.
+
+To follow the rest of the instructions, it is best to change your working
+directory to the `HoTT` directory.
+
+```shell
+$ cd HoTT
+```
+
+We also recommend that you [add the main repository as a git remote][6]. This
+makes it easier to track changes happening on the main repository. This can be
+done as follows:
+```shell
+$ git remote add upstream https://github.com/HoTT/HoTT.git
+```
+
+## 3.3. Building the HoTT library
+
+In order to compile the files of the HoTT library, run `make`:
+
+```shell
+$ make
+```
+You can speed up the build by passing `-jN` where `N` is the number of parallel
+recipes `make` will execute.
+
+## 3.4. Installing the library using git
+
+We don't recommend you install the library using the repository and instead
+recommend [installing via opam](#installation-of-hott-library-using-opam),
+especially if you are intending to develop the library. However the `makefile`
+contains a target called `install` and therefore running
+```shell
+$ make install
+```
+will install the library.
+
+# 4. Editors
+
+We recommend the following text editors for the development of `.v` files:
+
+ * [Emacs][10] together with [Proof General][11].
+ * [CoqIDE][12] part of the [Coq Proof Assistant][13].
+ * [Visual Studio Code][14] together with [VSCoq][15].
+
+## 4.1. Tags for Emacs
+
+To use the Emacs tags facility with the `*.v` files here, run the command:
+```shell
+$ make TAGS
+```
+The Emacs command `M-x find-tag`, bound to `M-.` , will take you to a definition
+or theorem, the default name for which is located under your cursor. Read the
+help on that Emacs command with `C-h k M-.` , and learn the other facilities
+provided, such as the use of `M-*` to get back where you were, or the use of
+`M-x tags-search` to search throughout the code for locations matching a given
+regular expression.
 
 
-## Configure and build the HoTT Library
+# 5. Updating the library
+If you installed the library via Coq Platform then [update your version of Coq
+Platform][1].
 
-If you installed the local version of Coq, then from the HoTT
-directory run the following commands:
+If you installed the library via `opam` then simply run `opam update` and then
+`opam ugprade`.
 
-    make COQBIN="`pwd`/coq-HoTT/bin/"
+To upgrade your clone of the GitHub repository as set up in [the instructions on
+using git](#forking-and-obtaining-the-hott-library). Pull the latest version
+using `git pull upstream master`. We also [have tags in the GitHub
+repository][7] for our released versions which you can use instead of `master`.
 
-If instead you installed a version of Coq that is available on your
-PATH, you can omit the COQBIN argument to `make`.  If you
-installed a version of Coq that is not available on your PATH, then
-you need to supply the *absolute* path name (starting with /) of the
-`bin` directory which contains `coqtop`, `coqc`, etc.
+# 6. Troubleshooting
 
-If you are trying to install on Windows using cygwin, make the
-library with `make COQBIN="/cygdrive/c/Coq/bin/"`. This tells
-the HoTT library where to find the coq binaries. This is of course
-assuming the coq binaries were installed in `C:\Coq\bin`. When in
-cygwin you can access your C drive through `/cygdrive/c`.
+In case of any problems, feel free to contact us by [opening an issue on
+GitHub](https://github.com/HoTT/HoTT).
 
-## Running Coq for the HoTT library
 
-You can load the library from your Coq files with
+[1]: https://github.com/coq/platform/releases
+[2]: https://github.com/coq/coq
+[3]: https://opam.ocaml.org/doc/Install.html
+[4]: https://github.com/HoTT/HoTT
+[5]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
 
-    Require Import HoTT.HoTT.
+[6]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork
+[7]: https://github.com/HoTT/HoTT/releases
+[8]: https://opam.ocaml.org/doc/Install.html#OSX
+[9]: https://github.com/coq/coq/releases
+[10]: http://www.gnu.org/software/emacs/
 
-You may prefer to install the library files
-globally, in which case you can type
-
-    sudo make install
-
-Though this is not recommended if you intend on developing the library
-itself.
-
-## Using Emacs and Proof General
-
-If you use ProofGeneral (PG) for browsing existing theories, it should
-just work.
-
-To use the Emacs tags facility with the `*.v` files here, run the
-command
-
-    make TAGS
-
-(The Emacs command `M-x find-tag`, bound to `M-.` , will take you to a
-definition or theorem, the default name for which is located under
-your cursor. Read the help on that Emacs command with `C-h k M-.` ,
-and learn the other facilities provided, such as the use of `M-*` to
-get back where you were, or the use of `M-x tags-search` to search
-throughout the code for locations matching a given regular
-expression.)
-
-## Updating the library
-
-To update the library to the most current version, run `git pull`.
-You will then have to recompile it with `make`.
-
-If you have problems, you can try running `make clean` first, which
-removes all old compiled files.  This might be necessary if the
-library was reorganized.
-
-If you still have problems, it could be because the library was
-updated to use a newer version of Coq.  Assuming you have compiled a
-local copy of Coq, the following commands should update it:
-
-    git pull
-    git submodule update
-    opam update
-    opam upgrade
-    etc/install_coq.sh
-    make
-
-In case of any problems, feel free to contact us by opening an issue at
-https://github.com/HoTT/HoTT.
+[11]: http://proofgeneral.inf.ed.ac.uk
+[12]: https://coq.inria.fr/refman/practical-tools/coqide.html
+[13]: https://github.com/coq/coq
+[14]: https://code.visualstudio.com/
+[15]: https://github.com/coq-community/vscoq
+[16]: https://cygwin.com/install.html
+[17]: https://stackoverflow.com/a/54086635
+[18]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
