@@ -764,7 +764,7 @@ Class IsPointed (A : Type) := point : A.
 
 Arguments point A {_}.
 
-Record pType :=
+Cumulative Record pType :=
   { pointed_type : Type ;
     ispointed_type : IsPointed pointed_type }.
 

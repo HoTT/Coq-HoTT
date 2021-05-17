@@ -49,7 +49,7 @@ Class IsTrunc_pFam n {A} (X : pFam A)
   := trunc_pfam_is_trunc : forall x, IsTrunc n (X.1 x).
 
 (** Pointed dependent functions *)
-Record pForall (A : pType) (P : pFam A) := {
+Cumulative Record pForall (A : pType) (P : pFam A) := {
   pointed_fun : forall x, P x ;
   dpoint_eq : pointed_fun (point A) = dpoint P ;
 }.
