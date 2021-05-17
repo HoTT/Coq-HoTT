@@ -7,13 +7,12 @@ Local Open Scope pointed_scope.
 
 (** We prove that type families correspond to fibrations [equiv_sigma_fibration] (Theorem 4.8.3) and the projection [pointed_type : pType -> Type] is an object classifier [ispullback_square_objectclassifier] (Theorem 4.8.4). *)
 
-(** We denote the type of all maps into a type [Y] as follows. *)
+(** We denote the type of all maps into a type [Y] as follows, and refer to them "bundles over Y". *)
 Definition Slice (Y : Type@{u}) := { X : Type@{u} & X -> Y }.
 Definition pSlice (Y : pType@{u}) := { X : pType@{u} & X ->* Y }.
 
 Definition sigma_fibration@{u v} {Y : Type@{u}} (P : Y -> Type@{u}) : Slice@{u v} Y
   := (sig@{u u} P; pr1).
-
 
 Definition sigma_fibration_inverse {Y : Type@{u}} (p : Slice Y) : Y -> Type@{u}
   := hfiber p.2.
@@ -61,11 +60,11 @@ Proof.
   - reflexivity.
 Defined.
 
-(** ** Classifying fibrations with specified fiber *)
+(** ** Classifying bundles with specified fiber *)
 
 Local Notation "( X , x )" := (Build_pType X x).
 
-(** Fibrations over [B] with fiber [F] correspond to pointed maps into the universe pointed at [F]. *)
+(** Bundles over [B] with fiber [F] correspond to pointed maps into the universe pointed at [F]. *)
 Proposition equiv_sigma_fibration_p@{u v +} `{Univalence} {Y : pType@{u}} {F : Type@{u}}
   : (Y ->* (Type@{u}, F)) <~> { p : Slice@{u v} Y & hfiber p.2 (point Y) <~> F }.
 Proof.
@@ -104,7 +103,7 @@ Definition equiv_sigma_pfibration@{u v +} `{Univalence} {Y F : pType@{u}}
 
 (** * The classifier for O-local types *)
 
-(** Families of O-local types correspond to fibrations with O-local fibers. *)
+(** Families of O-local types correspond to bundles with O-local fibers. *)
 Theorem equiv_sigma_fibration_O@{u v} `{Univalence} {O : Subuniverse} {Y : Type@{u}}
   : (Y -> Type_@{u v} O) <~> { p : { X : Type@{u} & X -> Y } & MapIn O p.2 }.
 Proof.
@@ -113,11 +112,11 @@ Proof.
   rapply equiv_forall_inO_mapinO_pr1.
 Defined.
 
-(** ** Classifying O-local fibrations with specified fiber *)
+(** ** Classifying O-local bundles with specified fiber *)
 
 (** We consider a pointed base [Y], and the universe of O-local types [Type_ O] pointed at some O-local type [F]. *)
 
-(** Pointed maps into [Type_ O] correspond to O-local fibrations with fiber [F] over the base point of [Y]. *)
+(** Pointed maps into [Type_ O] correspond to O-local bundles with fiber [F] over the base point of [Y]. *)
 Proposition equiv_sigma_fibration_Op@{u v +} `{Univalence} {O : Subuniverse}
             {Y : pType@{u}} {F : Type@{u}} `{inO : In O F}
   : (Y ->* (Type_ O, (F; inO)))
@@ -147,7 +146,7 @@ Proof.
   apply (inO_equiv_inO F e^-1).
 Defined.
 
-(** *** Classifying O-local fibrations with specified pointed fiber *)
+(** *** Classifying O-local bundles with specified pointed fiber *)
 
 (** When the fiber [F] is pointed, the right-hand side can be upgraded to pointed fiber sequences with O-local fibers.  *)
 Proposition equiv_sigma_pfibration_O `{Univalence} (O : Subuniverse)

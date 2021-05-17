@@ -243,7 +243,7 @@ End Center2BAut.
 
 Section ClassifyingMaps.
 
-  (** ** Maps into [BAut F] classify fibrations with fiber [F] *)
+  (** ** Maps into [BAut F] classify bundles with fiber [F] *)
 
   (** The property of being merely equivalent to a given type [F] defines a subuniverse. *)
   Definition subuniverse_merely_equiv (F : Type) : Subuniverse.
@@ -264,7 +264,7 @@ Section ClassifyingMaps.
     exact (equiv_path_universe _ _)^-1%equiv.
   Defined.
 
-  (** Consequently, maps into [BAut F] correspond to fibrations with fibers merely equivalent to [F]. *)
+  (** Consequently, maps into [BAut F] correspond to bundles with fibers merely equivalent to [F]. *)
   Corollary equiv_map_baut_fibration `{Univalence} {Y : pType} {F : Type}
     : (Y -> BAut F) <~> { p : Slice Y & forall y:Y, merely (hfiber p.2 y <~> F) }.
   Proof.
