@@ -28,7 +28,7 @@
     - [Relationships between axioms](#relationships-between-axioms)
     - [Assuming axioms](#assuming-axioms)
     - [Technical note: Universe-polymorphic axioms](#technical-note-universe-polymorphic-axioms)
-  - [Higher Inductive Types](#higher-inductive-types)
+  - [Higher Inductive Types](#higher-inductive-types-1)
   - [Universe Polymorphism](#universe-polymorphism)
     - [Displaying universes](#displaying-universes)
     - [Universe annotations](#universe-annotations)
@@ -36,6 +36,7 @@
     - [Lifting and lowering](#lifting-and-lowering)
     - [Universes and HITs](#universes-and-hits)
   - [Transparency and Opacity](#transparency-and-opacity)
+  - [Imports/exports](#importsexports)
   - [Formatting](#formatting)
     - [Location of commands](#location-of-commands)
     - [Indentation](#indentation)
@@ -1196,10 +1197,8 @@ Some bad examples:
 
 ### Creating new files ###
 
-If you create a new file, you must add it to `_CoqProject` so that it
-will get compiled by `make`.  We suggest running `make strict` rather
-than just `make`, so that you will get an error if you forget.  Of
-course, you'll also need to `git add` it.
+If you create a new file, `make` will only compile it if it is being tracked by
+`git`, so you will need to `git add` it.
 
 You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
