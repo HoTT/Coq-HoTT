@@ -11,6 +11,8 @@ Require Export Classes.theory.rings.
 Declare Scope ring_scope.
 
 Local Open Scope ring_scope.
+(** We want to print equivalences as [≅]. *)
+Local Open Scope wc_iso_scope.
 
 (** A commutative ring consists of the following data *)
 Record CRing := {
@@ -125,8 +127,6 @@ Arguments rng_iso_homo {_ _ }.
 Coercion rng_iso_homo : CRingIsomorphism >-> CRingHomomorphism.
 Global Existing Instance isequiv_rng_iso_homo.
 
-Infix "≅" := CRingIsomorphism : ring_scope.
-
 Definition issig_CRingIsomorphism {A B : CRing}
   : _ <~> CRingIsomorphism A B := ltac:(issig).
 
@@ -194,53 +194,6 @@ Definition Build_CRing' (R : AbGroup)
   : CRing
   := Build_CRing R (abgroup_sgop R) _ (abgroup_unit R) _
        (abgroup_inverse R) (Build_IsRing _ _ _ _).
-
-(** The image of a ring homomorphism *)
-Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
-Proof.
-  snrapply (Build_CRing' (abgroup_image f)).
-  { simpl.
-    intros [x p] [y q].
-    exists (x * y).
-    strip_truncations; apply tr.
-    destruct p as [p p'], q as [q q'].
-    exists (p * q).
-    refine (rng_homo_mult _ _ _ @ _).
-    f_ap. }
-  { exists 1.
-    apply tr.
-    exists 1.
-    exact (rng_homo_one f). }
-  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
-  2: repeat split.
-  2: exact _.
-  all: intros [].
-  1,2,5: intros [].
-  1,2: intros [].
-  all: apply path_sigma_hprop; cbn.
-  1: apply distribute_l.
-  1: apply associativity.
-  1: apply commutativity.
-  1: apply left_identity.
-  apply right_identity.
-Defined.
-
-Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
-  : CRingHomomorphism (rng_image f) S.
-Proof.
-  snrapply Build_CRingHomomorphism.
-  1: exact pr1.
-  repeat split.
-Defined.
-
-(** Image of a surjective ring homomorphism *)
-Lemma rng_image_issurj {R S} (f : CRingHomomorphism R S) {issurj : IsSurjection f}
-  : rng_image f ≅ S.
-Proof.
-  snrapply Build_CRingIsomorphism.
-  1: exact (rng_homo_image_incl f).
-  exact _.
-Defined. 
 
 (** ** Ring movement lemmas *)
 
@@ -352,6 +305,53 @@ Proof.
   1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.
   intros [r1 s1] [r2 s2]; apply path_prod; cbn; apply rng_mult_comm.
 Defined.
+
+(** The image of a ring homomorphism *)
+Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
+Proof.
+  snrapply (Build_CRing' (abgroup_image f)).
+  { simpl.
+    intros [x p] [y q].
+    exists (x * y).
+    strip_truncations; apply tr.
+    destruct p as [p p'], q as [q q'].
+    exists (p * q).
+    refine (rng_homo_mult _ _ _ @ _).
+    f_ap. }
+  { exists 1.
+    apply tr.
+    exists 1.
+    exact (rng_homo_one f). }
+  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
+  2: repeat split.
+  2: exact _.
+  all: intros [].
+  1,2,5: intros [].
+  1,2: intros [].
+  all: apply path_sigma_hprop; cbn.
+  1: apply distribute_l.
+  1: apply associativity.
+  1: apply commutativity.
+  1: apply left_identity.
+  apply right_identity.
+Defined.
+
+Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
+  : CRingHomomorphism (rng_image f) S.
+Proof.
+  snrapply Build_CRingHomomorphism.
+  1: exact pr1.
+  repeat split.
+Defined.
+
+(** Image of a surjective ring homomorphism *)
+Lemma rng_image_issurj {R S} (f : CRingHomomorphism R S) {issurj : IsSurjection f}
+  : rng_image f ≅ S.
+Proof.
+  snrapply Build_CRingIsomorphism.
+  1: exact (rng_homo_image_incl f).
+  exact _.
+Defined. 
 
 Infix "×" := cring_product : ring_scope.
 

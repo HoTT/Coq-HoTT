@@ -3,6 +3,9 @@
 Require Import Basics.
 Require Import WildCat.Core.
 
+(** We declare a scope for printing [CatEquiv] as [≅] *)
+Declare Scope wc_iso_scope.
+
 (** * Equivalences in wild categories *)
 
 (** We could define equivalences in any wild 2-category as bi-invertible maps, or in a wild 3-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to (quasi-)isomorphism. *)
@@ -31,6 +34,7 @@ Definition CatEquiv {A} `{HasEquivs A} (a b : A)
   := @CatEquiv' A _ _ _ _ a b.
 
 Notation "a $<~> b" := (CatEquiv a b).
+Infix "≅" := CatEquiv : wc_iso_scope.
 Arguments CatEquiv : simpl never.
 
 Definition cate_fun {A} `{HasEquivs A} {a b : A} (f : a $<~> b)

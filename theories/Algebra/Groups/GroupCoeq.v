@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import Basics Types WildCat.
 Require Import Algebra.Groups.Group.
 Require Import HIT.Coeq.
 Require Import Algebra.Groups.FreeProduct.
@@ -8,7 +8,7 @@ Local Open Scope mc_mult_scope.
 
 (** Coequalizers of group homomorphisms *)
 
-Definition GroupCoeq {A B : Group} (f g : GroupHomomorphism A B) : Group.
+Definition GroupCoeq {A B : Group} (f g : A $-> B) : Group.
 Proof.
   rapply (AmalgamatedFreeProduct (FreeProduct A A) A B).
   1,2: apply FreeProduct_rec.
@@ -19,7 +19,7 @@ Proof.
 Defined.
 
 Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : GroupHomomorphism A B)
-  : {h : GroupHomomorphism B C & h o f == h o g} <~> GroupHomomorphism (GroupCoeq f g) C.
+  : {h : B $-> C & h o f == h o g} <~> (GroupCoeq f g $-> C).
 Proof.
   refine (equiv_amalgamatedfreeproduct_rec _ _ _ _ _ _ oE _).
   refine (equiv_sigma_symm _ oE _).
