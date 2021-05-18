@@ -370,7 +370,8 @@ Local Notation "( X , x )" := (Build_pType X x).
 
 (* We can convert between families of loops in a type and loops in Type at that type. *)
 Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
-  : pEquiv@{j j k} (loops@{j} (Type@{i}, A)) (A <~> A, equiv_idmap).
+  : pEquiv@{j j k} (loops@{j} (Build_pType@{j} Type@{i} A))
+          (A <~> A, equiv_idmap).
 Proof.
   apply issig_pequiv'.
   exists (equiv_equiv_path A A).

@@ -695,12 +695,12 @@ Definition Book_4_8_2 := @HoTT.HFiber.equiv_fibration_replacement.
 (* ================================================== thm:nobject-classifier-appetizer *)
 (** Theorem 4.8.3 *)
 
-Definition Book_4_8_3 := @HoTT.ObjectClassifier.FamequivPow.
+Definition Book_4_8_3 := @HoTT.ObjectClassifier.equiv_sigma_fibration.
 
 (* ================================================== thm:object-classifier *)
 (** Theorem 4.8.4 *)
 
-Definition Book_4_8_4 := @HoTT.ObjectClassifier.objclasspb_is_fibrantreplacement.
+Definition Book_4_8_4 := @HoTT.ObjectClassifier.ispullback_objectclassifier_square.
 
 (* ================================================== weakfunext *)
 (** Definition 4.9.1 *)

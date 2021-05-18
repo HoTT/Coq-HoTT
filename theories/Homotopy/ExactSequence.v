@@ -6,6 +6,7 @@ Require Import Pointed.
 Require Import ReflectiveSubuniverse Modality Modalities.Identity Modalities.Descent.
 Require Import Truncations.
 Require Import HFiber.
+Require Import ObjectClassifier.
 
 Local Open Scope succ_scope.
 Open Scope pointed_scope.
@@ -236,7 +237,7 @@ Global Instance isexact_pfib {X Y} (f : X ->* Y)
 Proof.
   exists (iscomplex_pfib f).
   exact _.
-Defined.    
+Defined.
 
 (** Fiber sequences can alternatively be defined as an equivalence to the fiber of some map. *)
 Definition FiberSeq (F X Y : pType) := { f : X ->* Y & F <~>* pfiber f }.
@@ -445,3 +446,16 @@ Definition Pi_les `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
            `{IsExact purely F X Y i f}
   : LongExactSequence (Tr (-1)) (N3)
   := trunc_les (-1) (loops_les i f).
+
+(** * Classifying fiber sequences *)
+
+(** Fiber sequences correspond to pointed maps into the universe. *)
+Definition classify_fiberseq `{Univalence} {Y F : pType@{u}}
+  : (Y ->* Build_pType Type@{u} F) <~> { X : pType@{u} & FiberSeq F X Y }.
+Proof.
+  refine (_ oE _).
+  (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)
+  { do 2 (rapply equiv_functor_sigma_id; intro).
+    apply equiv_pequiv_inverse. }
+  exact ((equiv_sigma_assoc _ _)^-1 oE equiv_sigma_pfibration).
+Defined.
