@@ -306,8 +306,51 @@ Proof.
   intros [r1 s1] [r2 s2]; apply path_prod; cbn; apply rng_mult_comm.
 Defined.
 
+Infix "×" := cring_product : ring_scope.
+
+Definition cring_product_fst {R S : CRing} : R × S $-> R.
+Proof.
+  snrapply Build_CRingHomomorphism.
+  1: exact fst.
+  repeat split.
+Defined.
+
+Definition cring_product_snd {R S : CRing} : R × S $-> S.
+Proof.
+  snrapply Build_CRingHomomorphism.
+  1: exact snd.
+  repeat split.
+Defined.
+
+Definition cring_product_corec (R S T : CRing)
+  : (R $-> S) -> (R $-> T) -> (R $-> S × T).
+Proof.
+  intros f g.
+  srapply Build_CRingHomomorphism'.
+  1: apply (ab_biprod_corec f g).
+  repeat split.
+  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
+  cbn; apply path_prod; apply rng_homo_one.
+Defined.
+
+Definition equiv_cring_product_corec `{Funext} (R S T : CRing)
+  : (R $-> S) * (R $-> T) <~> (R $-> S × T).
+Proof.
+  snrapply equiv_adjointify.
+  1: exact (uncurry (cring_product_corec _ _ _)).
+  { intros f.
+    exact (cring_product_fst $o f , cring_product_snd $o f). }
+  { hnf; intros f.
+    by apply path_hom. }
+  intros [f g].
+  apply path_prod.
+  1,2: by apply path_hom.
+Defined.
+
+(** ** Image ring *)
+
 (** The image of a ring homomorphism *)
-Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
+Definition rng_image {R S : CRing} (f : R $-> S) : CRing.
 Proof.
   snrapply (Build_CRing' (abgroup_image f)).
   { simpl.
@@ -337,7 +380,7 @@ Proof.
 Defined.
 
 Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
-  : CRingHomomorphism (rng_image f) S.
+  : rng_image f $-> S.
 Proof.
   snrapply Build_CRingHomomorphism.
   1: exact pr1.
@@ -352,20 +395,6 @@ Proof.
   1: exact (rng_homo_image_incl f).
   exact _.
 Defined. 
-
-Infix "×" := cring_product : ring_scope.
-
-Definition cring_product_corec (R S T : CRing)
-  : CRingHomomorphism R S -> CRingHomomorphism R T
-  -> CRingHomomorphism R (S × T).
-Proof.
-  intros f g.
-  srapply Build_CRingHomomorphism'.
-  1: apply (ab_biprod_corec f g).
-  repeat split.
-  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
-  cbn; apply path_prod; apply rng_homo_one.
-Defined.
 
 (** *** More Ring laws *)
 
@@ -403,5 +432,3 @@ Proof.
   rewrite <- (rng_mult_assoc _ (rng_power x n)).
   f_ap.
 Defined.
-
-
