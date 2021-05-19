@@ -627,29 +627,6 @@ Section IdealLemmas.
     apply ideal_sum_subset_r.
   Defined.
 
-(*   Lemma ideal_dist_inter (I J K : Ideal R) : J ⊆ I -> I ∩ (J + K) ↔ J + (I ∩ K).
-  Proof. 
-    intros ji.
-    apply ideal_subset_antisymm.
-    { intros x [i jk].
-      strip_truncations.
-      apply tr, sgt_in.
-      induction jk as [r [] | | k].
-      1: by left.
-      1: right; by split.
-      1: left; apply ideal_in_zero.
-      admit. }
-    apply ideal_sum_smallest.
-    - apply ideal_intersection_subset.
-      1: exact p.
-      apply ideal_sum_subset_l.
-    - apply ideal_intersection_subset.
-      1: apply ideal_intersection_subset_l.
-      etransitivity.
-      2: apply ideal_sum_subset_r.
-      apply ideal_intersection_subset_r.
-  Admitted. *)
-  
   (** Ideal sums are commutative *)
   Lemma ideal_sum_comm (I J : Ideal R) : I + J ↔ J + I.
   Proof.
