@@ -13,6 +13,9 @@ Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.
 
+(** We disable the [deprecated-hint-rewrite-without-locality] warning until we update to coq V8.14.0 *)
+Global Set Warnings Append "-deprecated-hint-rewrite-without-locality".
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -802,4 +805,3 @@ Ltac easy :=
   (use_hyps; do_ccl) || fail "Cannot solve this goal".
 
 Tactic Notation "now" tactic(t) := t; easy.
-
