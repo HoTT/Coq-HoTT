@@ -4,6 +4,8 @@ Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.
 
+Local Open Scope wc_iso_scope.
+
 (** In this file we define the quotient of a commutative ring by an ideal *)
 
 Section QuotientRing.
@@ -109,7 +111,7 @@ Definition Build_CRing' (R : AbGroup)
        (abgroup_inverse R) (Build_IsRing _ _ _ _).
 
 (** The image of a ring homomorphism *)
-Definition rng_image {R S : CRing} (f : CRingHomomorphism R S) : CRing.
+Definition rng_image {R S : CRing} (f : R $-> S) : CRing.
 Proof.
   snrapply (Build_CRing' (abgroup_image f)).
   { simpl.
@@ -140,7 +142,7 @@ Defined.
 
 (** First isomorphism theorem for commutative rings *)
 Definition rng_first_iso `{Funext} {A B : CRing} (phi : A $-> B)
-  : CRingIsomorphism (QuotientRing A (ideal_kernel phi)) (rng_image phi).
+  : QuotientRing A (ideal_kernel phi) ≅ rng_image phi.
 Proof.
   snrapply Build_CRingIsomorphism''.
   { etransitivity.

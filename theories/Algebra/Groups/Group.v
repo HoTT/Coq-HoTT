@@ -15,6 +15,7 @@ Declare Scope group_scope.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope wc_iso_scope.
 
 (** * Definition of Group *)
 
@@ -449,6 +450,75 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** The wild cat of Groups *)
+Global Instance isgraph_group : IsGraph Group
+  := Build_IsGraph Group GroupHomomorphism.
+
+Global Instance is01cat_group : Is01Cat Group :=
+  (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
+
+Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
+  := induced_graph (@grp_homo_map A B).
+
+Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
+  := induced_01cat (@grp_homo_map A B).
+
+Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
+  := induced_0gpd (@grp_homo_map A B).
+
+Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
+  : Is0Functor (@cat_postcomp Group _ _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (ap h (p a)).
+Defined.
+
+Global Instance is0functor_precomp_grouphomomorphism
+       {A B C : Group} (h : A $-> B)
+  : Is0Functor (@cat_precomp Group _ _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (p (h a)).
+Defined.
+
+(** Group forms a 1Cat *)
+Global Instance is1cat_group : Is1Cat Group.
+Proof.
+  by rapply Build_Is1Cat.
+Defined.
+
+Instance hasmorext_group `{Funext} : HasMorExt Group.
+Proof.
+  srapply Build_HasMorExt.
+  intros A B f g; cbn in *.
+  snrapply @isequiv_homotopic.
+  1: exact (equiv_path_grouphomomorphism^-1%equiv).
+  1: exact _.
+  intros []; reflexivity. 
+Defined.
+
+Global Instance hasequivs_group : HasEquivs Group.
+Proof.
+  unshelve econstructor.
+  + exact GroupIsomorphism.
+  + exact (fun G H f => IsEquiv f).
+  + intros G H f; exact f.
+  + exact Build_GroupIsomorphism.
+  + intros G H; exact grp_iso_inverse.
+  + cbn; exact _.
+  + reflexivity.
+  + intros ????; apply eissect.
+  + intros ????; apply eisretr.
+  + intros G H f g p q.
+    exact (isequiv_adjointify f g p q).
+Defined.
+
+Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
+Proof.
+  rapply Build_Is1Cat_Strong.
+  all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
+Defined.
+
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
@@ -526,8 +596,7 @@ Definition grp_prod_inr {H K : Group}
   := grp_prod_corec grp_homo_const grp_homo_id.
 
 Definition grp_iso_prod {A B C D : Group}
-  : GroupIsomorphism A B -> GroupIsomorphism C D
-    -> GroupIsomorphism (grp_prod A C) (grp_prod B D).
+  : A ≅ B -> C ≅ D -> (grp_prod A C) ≅ (grp_prod B D).
 Proof.
   intros f g.
   srapply Build_GroupIsomorphism'.
@@ -537,75 +606,6 @@ Proof.
   intros x y.
   apply path_prod.
   1,2: apply grp_homo_op.
-Defined.
-
-(** The wild cat of Groups *)
-Global Instance isgraph_group : IsGraph Group
-  := Build_IsGraph Group GroupHomomorphism.
-
-Global Instance is01cat_group : Is01Cat Group :=
-  (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
-
-Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
-  := induced_graph (@grp_homo_map A B).
-
-Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
-  := induced_01cat (@grp_homo_map A B).
-
-Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
-  := induced_0gpd (@grp_homo_map A B).
-
-Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
-  : Is0Functor (@cat_postcomp Group _ _ A B C h).
-Proof.
-  apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (ap h (p a)).
-Defined.
-
-Global Instance is0functor_precomp_grouphomomorphism
-       {A B C : Group} (h : A $-> B)
-  : Is0Functor (@cat_precomp Group _ _ A B C h).
-Proof.
-  apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (p (h a)).
-Defined.
-
-(** Group forms a 1Cat *)
-Global Instance is1cat_group : Is1Cat Group.
-Proof.
-  by rapply Build_Is1Cat.
-Defined.
-
-Instance hasmorext_group `{Funext} : HasMorExt Group.
-Proof.
-  srapply Build_HasMorExt.
-  intros A B f g; cbn in *.
-  snrapply @isequiv_homotopic.
-  1: exact (equiv_path_grouphomomorphism^-1%equiv).
-  1: exact _.
-  intros []; reflexivity. 
-Defined.
-
-Global Instance hasequivs_group : HasEquivs Group.
-Proof.
-  unshelve econstructor.
-  + exact GroupIsomorphism.
-  + exact (fun G H f => IsEquiv f).
-  + intros G H f; exact f.
-  + exact Build_GroupIsomorphism.
-  + intros G H; exact grp_iso_inverse.
-  + cbn; exact _.
-  + reflexivity.
-  + intros ????; apply eissect.
-  + intros ????; apply eisretr.
-  + intros G H f g p q.
-    exact (isequiv_adjointify f g p q).
-Defined.
-
-Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
-Proof.
-  rapply Build_Is1Cat_Strong.
-  all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
 Defined.
 
 (** *** Properties of maps to and from the trivial group *)
@@ -650,7 +650,7 @@ Proof.
 Defined.
 
 Global Instance ishprop_grp_iso_trivial `{Univalence} (G : Group)
-  : IsHProp (GroupIsomorphism G grp_trivial).
+  : IsHProp (G ≅ grp_trivial).
 Proof.
   apply equiv_hprop_allpath.
   intros f g.

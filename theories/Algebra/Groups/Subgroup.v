@@ -121,7 +121,7 @@ Defined.
 Coercion subgroup_group : Subgroup >-> Group.
 
 Definition subgroup_incl {G : Group} (H : Subgroup G)
-  : GroupHomomorphism (subgroup_group G H) G.
+  : subgroup_group G H $-> G.
 Proof.
   snrapply Build_GroupHomomorphism'.
   1: exact pr1.

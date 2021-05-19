@@ -12,6 +12,7 @@ Require Import WildCat.
 (** * Quotient groups *)
 
 Local Open Scope mc_mult_scope.
+Local Open Scope wc_iso_scope.
 
 Section GroupCongruenceQuotient.
 
@@ -184,7 +185,7 @@ Defined.
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
-  : GroupIsomorphism (QuotientGroup' G H k) (QuotientGroup' G H k').
+  : QuotientGroup' G H k ≅ QuotientGroup' G H k'.
 Proof.
   snrapply Build_GroupIsomorphism'.
   1: reflexivity.
@@ -196,7 +197,8 @@ Defined.
 
 (** The universal mapping property for groups *)
 Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (H : Group)
-  : {f : G $-> H & forall (n : G), N n -> f n = mon_unit} <~> (G / N $-> H).
+  : {f : G $-> H & forall (n : G), N n -> f n = mon_unit}
+    <~> (G / N $-> H).
 Proof.
   srapply equiv_adjointify.
   - intros [f p].
@@ -222,7 +224,8 @@ Section FirstIso.
   Context `{Funext} {A B : Group} (phi : A $-> B).
 
   (** First we define a map from the quotient by the kernel of phi into the image of phi *)
-  Definition grp_image_quotient : GroupHomomorphism (A / grp_kernel phi) (grp_image phi).
+  Definition grp_image_quotient
+    : A / grp_kernel phi $-> grp_image phi.
   Proof.
     srapply grp_quotient_rec.
     + srapply grp_image_in.
@@ -231,7 +234,8 @@ Section FirstIso.
   Defined.
 
   (** The underlying map of this homomorphism is an equivalence *)
-  Global Instance isequiv_grp_image_quotient : IsEquiv grp_image_quotient.
+  Global Instance isequiv_grp_image_quotient
+    : IsEquiv grp_image_quotient.
   Proof.
     snrapply isequiv_surj_emb.
     1: srapply cancelR_conn_map.
@@ -246,7 +250,7 @@ Section FirstIso.
   Defined.
 
   (** First isomorphism theorem for groups *)
-  Theorem grp_first_iso : GroupIsomorphism (A / grp_kernel phi) (grp_image phi) .
+  Theorem grp_first_iso : A / grp_kernel phi ≅ grp_image phi.
   Proof.
     exact (Build_GroupIsomorphism _ _ grp_image_quotient _).
   Defined.

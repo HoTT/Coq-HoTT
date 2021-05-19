@@ -106,14 +106,12 @@ Proof.
       rewrite pos_peano_rec_beta_pos_succ.
       rewrite int_pos_sub_succ_r.
       cbn; rewrite <- simple_associativity.
-      srapply moveL_equiv_M.
-      1: apply isequiv_group_left_op.
+      apply rng_moveL_Mr.
       cbn; rewrite involutive.
       apply commutativity. }
     induction x as [|x IHx] using pos_peano_ind.
     { rewrite int_pos_sub_succ_l.
-      cbn; srapply moveL_equiv_M.
-      1: apply isequiv_group_left_op.
+      cbn; apply rng_moveL_Mr.
       cbn; rewrite involutive.
       by rewrite pos_peano_rec_beta_pos_succ. }
     rewrite int_pos_sub_succ_succ.

@@ -7,6 +7,7 @@ Require Import Algebra.AbGroups.AbelianGroup.
 (** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
 
 Local Open Scope mc_mult_scope.
+Local Open Scope wc_iso_scope.
 
 (** Definition of Abelianization.
 
@@ -317,7 +318,7 @@ Theorem groupiso_isabelianization {G : Group}
   (eta2 : GroupHomomorphism G B)
   {isab1 : IsAbelianization A eta1}
   {isab2 : IsAbelianization B eta2}
-  : GroupIsomorphism A B.
+  : A ≅ B.
 Proof.
   destruct (esssurj (group_precomp B eta1) eta2) as [a ac].
   destruct (esssurj (group_precomp A eta2) eta1) as [b bc].
