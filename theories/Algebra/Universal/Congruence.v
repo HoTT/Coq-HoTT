@@ -2,7 +2,7 @@
     universal algebra generalization of normal subgroup, ring ideal, etc.
 
     Congruence is used to construct quotients, in similarity with how
-    normal subgroup and ring ideal is used to construct quotients. *)
+    normal subgroup and ring ideal are used to construct quotients. *)
 
 Require Export HoTT.Algebra.Universal.Algebra.
 
