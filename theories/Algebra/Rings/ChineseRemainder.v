@@ -9,6 +9,7 @@ Require Import Algebra.Rings.QuotientRing.
 
 Import Ideal.Notation.
 Local Open Scope ring_scope.
+Local Open Scope wc_iso_scope.
 
 Section ChineseRemainderTheorem.
 
