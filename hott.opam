@@ -8,7 +8,7 @@ build: [
 ]
 install: [make "install"]
 depends: [
-  "coq" {>= "8.13.2"}
+  "coq" {>= "8.13~"}
 ]
 authors: ["The HoTT Library Development Team"]
 dev-repo: "git+https://github.com/HoTT/HoTT.git"
