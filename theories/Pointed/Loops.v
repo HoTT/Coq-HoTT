@@ -297,13 +297,28 @@ Proof.
 Defined.
 
 (* Iterated loops of products are products of iterated loops *)
-Lemma iterated_loops_prod (X Y : pType) {n}
+Fixpoint iterated_loops_prod (X Y : pType) n
   : iterated_loops n (X * Y) <~>* (iterated_loops n X) * (iterated_loops n Y).
 Proof.
-  induction n.
+  destruct n.
   1: reflexivity.
+  simpl.
   refine (pequiv_compose _ (loops_prod _ _)).
   by apply pequiv_loops_functor.
+Defined.
+
+Lemma loops_prod_pp_fst {X Y : pType} (p q : loops (X * Y))
+  : fst (loops_prod X Y (p @ q))
+  = fst (loops_prod X Y p) @ fst (loops_prod X Y q).
+Proof.
+  exact (ap_pp fst p q).
+Defined.
+
+Lemma loops_prod_pp_snd {X Y : pType} (p q : loops (X * Y))
+  : snd (loops_prod X Y (p @ q))
+  = snd (loops_prod X Y p) @ snd (loops_prod X Y q).
+Proof.
+  exact (ap_pp snd p q).
 Defined.
 
 (* A dependent form of loops *)
