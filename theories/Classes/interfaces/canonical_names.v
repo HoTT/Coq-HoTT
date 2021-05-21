@@ -83,14 +83,14 @@ Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
 Definition NonPos R `{Zero R} `{Le R} := sig (fun y => le y zero).
 
-Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
-Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
-Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
-Instance zero_is_mon_unit `{c : Zero A} : MonUnit A := c.
-Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
-Instance join_is_sg_op `{f : Join A} : SgOp A := f.
-Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
-Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
+Global Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
+Global Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
+Global Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
+Global Instance zero_is_mon_unit `{c : Zero A} : MonUnit A := c.
+Global Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
+Global Instance join_is_sg_op `{f : Join A} : SgOp A := f.
+Global Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
+Global Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
 
 #[export]
 Hint Extern 4 (Apart (ApartZero _)) => apply @sig_apart : typeclass_instances.
@@ -352,7 +352,7 @@ Class ZeroDivisor {R} `{Zero R} `{Mult R} (x : R) : Type
 Class NoZeroDivisors R `{Zero R} `{Mult R} : Type
   := no_zero_divisors x : ~ZeroDivisor x.
 
-Instance zero_product_no_zero_divisors `{ZeroProduct A}
+Global Instance zero_product_no_zero_divisors `{ZeroProduct A}
   : NoZeroDivisors A.
 Proof.
 intros x [? [? [? E]]].

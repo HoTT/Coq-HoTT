@@ -4,7 +4,7 @@ Generalizable Variables A R.
 
 Local Set Universe Minimization ToSet.
 
-Instance decide_eqb `{DecidablePaths A} : Eqb A
+Global Instance decide_eqb `{DecidablePaths A} : Eqb A
   := fun a b => if decide_rel paths a b then true else false.
 
 Lemma decide_eqb_ok@{i} {A:Type@{i} } `{DecidablePaths A} :
@@ -47,7 +47,7 @@ Proof.
 apply symmetric_neq, EQ_GT.
 Qed.
 
-Instance compare_eqb `{Compare A} : Eqb A | 2 := fun a b =>
+Global Instance compare_eqb `{Compare A} : Eqb A | 2 := fun a b =>
   match a ?= b with
   | EQ => true
   | _ => false
@@ -59,7 +59,7 @@ unfold eqb,compare_eqb;simpl.
 intros a b. destruct (a ?= b);trivial;intros E;destruct (false_ne_true E).
 Qed.
 
-Instance tricho_compare `{Trichotomy A R} : Compare A | 2
+Global Instance tricho_compare `{Trichotomy A R} : Compare A | 2
   := fun a b =>
   match trichotomy R a b with
   | inl _ => LT

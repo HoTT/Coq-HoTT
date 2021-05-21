@@ -272,12 +272,12 @@ intros P1 P2. split.
     intros F. apply E,P2. trivial.
 Qed.
 
-Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).
+Global Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).
 Proof.
 red;trivial.
 Qed.
 
-Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).
+Global Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).
 Proof.
 red;trivial.
 Qed.

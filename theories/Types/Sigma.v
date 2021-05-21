@@ -201,7 +201,7 @@ Definition equiv_path_sigma `(P : A -> Type) (u v : sig P)
   := Build_Equiv _ _ (path_sigma_uncurried P u v) _.
 
 (* A contravariant version of [isequiv_path_sigma'] *)
-Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sig P}
+Global Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sig P}
   : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
   apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
         (fun r => match r with idpath => (1; 1) end)).

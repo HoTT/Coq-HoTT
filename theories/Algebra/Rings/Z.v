@@ -31,7 +31,7 @@ Definition cring_catamorphism_fun (R : CRing) (z : cring_Z) : R
 
 (** TODO: remove these (they will be cleaned up in the future)*)
 (** Left multiplication is an equivalence *)
-Instance isequiv_group_left_op {G} `{IsGroup G}
+Local Instance isequiv_group_left_op {G} `{IsGroup G}
   : forall (x : G), IsEquiv (fun t => sg_op x t).
 Proof.
   intro x.
@@ -45,7 +45,7 @@ Proof.
 Defined.
 
 (** Right multiplication is an equivalence *)
-Instance isequiv_group_right_op {G} `{IsGroup G}
+Local Instance isequiv_group_right_op {G} `{IsGroup G}
   : forall x:G, IsEquiv (fun y => sg_op y x).
 Proof.
   intro x.

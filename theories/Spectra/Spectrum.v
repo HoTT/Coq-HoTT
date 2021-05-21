@@ -20,7 +20,7 @@ Record Prespectrum :=
 Class IsSpectrum (E : Prespectrum) :=
   is_equiv_glue : forall n, IsEquiv (glue E n).
 
-Existing Instance is_equiv_glue.
+Global Existing Instance is_equiv_glue.
 
 Definition equiv_glue (E : Prespectrum) `{IsSpectrum E}
 : forall n, E n <~>* loops (E n.+1)
@@ -30,7 +30,7 @@ Record Spectrum :=
   { to_prespectrum :> Prespectrum
     ; to_is_spectrum : IsSpectrum to_prespectrum }.
 
-Existing Instance to_is_spectrum.
+Global Existing Instance to_is_spectrum.
 
 (** ** Truncations of spectra *)
 

@@ -17,7 +17,6 @@ Record AbGroup := {
 }.
 
 Coercion abgroup_group : AbGroup >-> Group.
-
 Global Existing Instance abgroup_commutative.
 
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
@@ -93,7 +92,7 @@ Global Instance is0gpd_GroupHomomorphism {A B : AbGroup}: Is0Gpd (A $-> B)
 Global Instance is1cat_abgroup : Is1Cat AbGroup
   := induced_1cat _.
 
-Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
+Global Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
   := induced_hasmorext _.
 
 Global Instance hasequivs_abgroup : HasEquivs AbGroup

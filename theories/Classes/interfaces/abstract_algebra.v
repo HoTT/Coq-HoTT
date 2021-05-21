@@ -31,7 +31,7 @@ Class IsApart A {Aap : Apart A} : Type :=
   ; apart_cotrans :> CoTransitive (≶)
   ; tight_apart : forall x y, ~(x ≶ y) <-> x = y }.
 
-Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
+Global Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
 Proof.
 intros x ap.
 apply (tight_apart x x).

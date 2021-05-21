@@ -60,8 +60,8 @@ rewrite <-(to_semiring_twice f g id x), <-(to_semiring_twice f g id y).
 apply ap,E.
 Qed.
 
-Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2} (f: N -> N2)
-  `{!IsSemiRingPreserving f}
+Global Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2}
+  (f: N -> N2) `{!IsSemiRingPreserving f}
   : IsInjective f | 15.
 Proof. exact (to_semiring_injective (naturals_to_semiring N2 N) _). Qed.
 

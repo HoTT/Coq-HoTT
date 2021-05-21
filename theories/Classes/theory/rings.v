@@ -448,7 +448,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Instance id_sr_morphism `{IsSemiRing A}: IsSemiRingPreserving (@id A) := {}.
+Global Instance id_sr_morphism `{IsSemiRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}

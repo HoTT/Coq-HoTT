@@ -19,6 +19,6 @@ Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
 Parameter Qenum : Enumerable Q.
 Notation "Q+" := (Qpos Q).
 
-Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip
+Global Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip
          Qle Qlt QtoField Qrats Qtrivialapart Qdec
          Qmeet Qjoin Qlattice Qle_total Qabs Qenum.

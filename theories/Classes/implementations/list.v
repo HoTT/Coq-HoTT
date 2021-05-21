@@ -57,9 +57,9 @@ induction l as [|x l IHl].
 - simpl. rewrite Hf,IHl. reflexivity.
 Qed.
 
-Instance sg_op_app A : SgOp (list A) := @app A.
+Global Instance sg_op_app A : SgOp (list A) := @app A.
 
-Instance app_assoc A : Associative (@app A).
+Global Instance app_assoc A : Associative (@app A).
 Proof.
 intros l1. induction l1 as [|x l1 IH];intros l2 l3.
 - reflexivity.
@@ -110,7 +110,7 @@ intros l;induction l as [|x l IHl].
   apply IHl;auto.
 Qed.
 
-Instance for_all_trunc {A} {n} (P : A -> Type) : forall l,
+Global Instance for_all_trunc {A} {n} (P : A -> Type) : forall l,
   for_all (fun x => IsTrunc n (P x)) l -> IsTrunc n (for_all P l).
 Proof.
 intros l;induction l as [|x l IHl];simpl.
