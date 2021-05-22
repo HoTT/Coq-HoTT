@@ -1,4 +1,7 @@
-From HoTT Require Import Basics canonical_names TruncType ExcludedMiddle abstract_algebra PropResizing quotient Nat BiInv.
+From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra BiInv.
+From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Spaces.Nat.
+From HoTT Require Import Equiv.BiInv.
 
 From HoTT.Sets Require Import Ordinals Hartogs GCH.
 
@@ -459,4 +462,4 @@ Proof.
   - intros Y. apply tr. apply hartogs_number_injection.
 Qed.
 
-(* Note that the assumption of LEM is not necessary due to GCH_LEM *)
+(* Note that the assumption of LEM is actually not necessary due to GCH_LEM *)

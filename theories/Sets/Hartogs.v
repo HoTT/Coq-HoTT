@@ -1,4 +1,5 @@
-From HoTT Require Import Basics canonical_names TruncType ExcludedMiddle abstract_algebra PropResizing quotient.
+From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
+From HoTT Require Import PropResizing.PropResizing.
 
 From HoTT.Sets Require Import Ordinals.
 

@@ -1,4 +1,6 @@
-From HoTT Require Import Basics canonical_names TruncType ExcludedMiddle abstract_algebra PropResizing quotient Nat.
+From HoTT Require Import Basics TruncType abstract_algebra.
+From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Spaces.Nat.
 
 Open Scope type.
 

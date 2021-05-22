@@ -1,7 +1,9 @@
-From HoTT Require Import Basics canonical_names TruncType ExcludedMiddle abstract_algebra PropResizing quotient.
+From HoTT Require Import Basics TruncType ExcludedMiddle canonical_names abstract_algebra.
+From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import HIT.quotient.
 
 (** This file contains a definition of ordinals and some fundamental results,
-    roughly follow the presentation in the HoTT book. *)
+    roughly following the presentation in the HoTT book. *)
 
 
 
