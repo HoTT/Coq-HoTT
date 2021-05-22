@@ -222,10 +222,10 @@ Section Hartogs_Number.
     exact (fun a => Build_HProp (resize_hprop (p a))).
   Defined.
 
-  Lemma power_inj_inj {pr : PropResizing} {ua : Univalence} (C : Type@{i}) (p p' : C -> HProp) :
-    power_inj p = power_inj p' -> p = p'.
+  Lemma injective_power_inj {pr : PropResizing} {ua : Univalence} (C : Type@{i}) :
+    IsInjective (@power_inj _ C).
   Proof.
-    unfold power_inj. intros H. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
+    intros p p'. unfold power_inj. intros H. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
     - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
       rewrite <- H. apply equiv_resize_hprop. apply Ha.
     - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p a))) a).
@@ -238,8 +238,8 @@ Section Hartogs_Number.
     intros p b. exact (Build_HProp (resize_hprop (forall a, f a = b -> p a))).
   Defined.
 
-  Definition power_morph_inj {pr : PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B) :
-    IsInjective f -> forall p p', power_morph f p = power_morph f p' -> p = p'.
+  Definition injective_power_morph {pr : PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B) :
+    IsInjective f -> IsInjective (@power_morph _ _ C B f).
   Proof.
     intros Hf p p' H. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
     - enough (Hp : power_morph f p (f a)).
@@ -258,12 +258,12 @@ Section Hartogs_Number.
     srapply power_inj.
   Defined.
 
-  Lemma uni_fix_inj (X Y : 𝒫 (𝒫 (𝒫 A))) :
-    uni_fix X = uni_fix Y -> X = Y.
+  Lemma injective_uni_fix :
+    IsInjective uni_fix.
   Proof.
-    unfold uni_fix. intros H % power_morph_inj; trivial.
-    intros P Q. intros H % power_morph_inj; trivial.
-    intros p q. apply power_inj_inj.
+    intros X Y. unfold uni_fix. intros H % injective_power_morph; trivial.
+    intros P Q. intros H % injective_power_morph; trivial.
+    intros p q. apply injective_power_inj.
   Qed.
 
   (* We can therefore resize the Hartogs number of A to the same universe level as A. *)
@@ -294,7 +294,7 @@ Section Hartogs_Number.
       apply equiv_resize_hprop, tr. exists a. reflexivity.
     - exact _.
     - intros a b. intros H % pr1_path. cbn in H.
-      specialize (uni_fix_inj (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
+      specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
       intros H'. apply H' in H. now apply hartogs_number'_injection.2.
     - intros [X HX]. eapply merely_destruct.
       + eapply equiv_resize_hprop, HX.
