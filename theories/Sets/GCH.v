@@ -45,13 +45,6 @@ Definition GCH :=
 
 (** * GCH is a proposition *)
 
-Instance hProp_impred {FE : Funext} X (F : X -> Type) :
-  (forall x, IsHProp (F x)) -> IsHProp (forall x, F x).
-Proof.
-  intros H. apply hprop_allpath. intros f g.
-  apply path_forall. intros x. apply H.
-Qed.
-
 Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
   ~ inject (X -> HProp) X.
 Proof.
@@ -63,15 +56,15 @@ Proof.
   - intros H. apply equiv_resize_hprop. intros q -> % HI. apply H.
 Qed.
 
-Lemma GCH_hProp {PR : PropResizing} {FE : Funext} :
+Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
   IsHProp GCH.
 Proof.
-  repeat (apply hProp_impred; intros).
+  repeat (nrapply istrunc_forall; intros).
   apply hprop_allpath. intros [H|H] [H'|H'].
-  - enough (H = H') as ->; trivial. apply (hinject x0 x).
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj x); trivial. now apply hinject_trans with x0.
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj x); trivial. now apply hinject_trans with x0.
-  - enough (H = H') as ->; trivial. apply (hinject (x -> HProp) x0).
+  - enough (H = H') as ->; trivial. apply (hinject a0 a).
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply hinject_trans with a0.
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply hinject_trans with a0.
+  - enough (H = H') as ->; trivial. apply (hinject (a -> HProp) a0).
 Qed.
 
 
@@ -92,7 +85,7 @@ Section LEM.
   Definition sing (p : X -> HProp) :=
     exists x, p = hpaths x.
 
-  Definition Y :=
+  Definition sings :=
     { p : X -> HProp | sing p \/ (P + ~ P) }.
 
   Lemma Cantor_sing (i : (X -> HProp) -> (X -> HProp)) :
@@ -106,7 +99,7 @@ Section LEM.
     - intros H. apply equiv_resize_hprop. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
   Qed.
 
-  Lemma sig_inj {Z} (r : Z -> HProp) :
+  Lemma injective_proj1 {Z} (r : Z -> HProp) :
     IsInjective (@proj1 Z r).
   Proof.
     intros [p Hp] [q Hq]; cbn.
@@ -115,8 +108,8 @@ Section LEM.
     - cbn. apply (r q).
   Qed.
 
-  Lemma Y_inj :
-    (P + ~ P) -> inject (X -> HProp) Y.
+  Lemma inject_sings :
+    (P + ~ P) -> inject (X -> HProp) sings.
   Proof.
     intros HP. unshelve eexists.
     - intros p. exists p. apply tr. now right.
@@ -124,26 +117,26 @@ Section LEM.
       rewrite H. cbn. reflexivity.
   Qed.
 
-  Lemma IsInjective_trans {X' Y Z} (f : X' -> Y) (g : Y -> Z) :
+  Let IsInjective_trans {X' Y Z} (f : X' -> Y) (g : Y -> Z) :
     IsInjective f -> IsInjective g -> IsInjective (fun x => g (f x)).
   Proof.
     intros HF HG x y H. now apply HF, HG.
   Qed.
 
   Theorem CH_LEM :
-    (inject X Y -> inject Y (X -> HProp) -> ~ (inject Y X) -> hinject (X -> HProp) Y) -> P \/ ~ P.
+    (inject X sings -> inject sings (X -> HProp) -> ~ (inject sings X) -> hinject (X -> HProp) sings) -> P \/ ~ P.
   Proof.
     intros ch. eapply merely_destruct; try apply ch.
     - unshelve eexists.
       + intros x. exists (hpaths x). apply tr. left. exists x. reflexivity.
       + intros x y. intros H % pr1_path. cbn in H. change (hpaths x y). now rewrite H.
-    - exists (@proj1 _ _). now apply sig_inj.
+    - exists (@proj1 _ _). now apply injective_proj1.
     - intros H. assert (HP' : ~ ~ (P + ~ P)).
       { intros HP. apply HP. right. intros p. apply HP. now left. }
-      apply HP'. intros HP % Y_inj. clear HP'.
+      apply HP'. intros HP % inject_sings. clear HP'.
       apply Cantor_inj with X. now eapply (inject_trans _ _ _ HP).
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
-      + apply IsInjective_trans; trivial. now apply sig_inj.
+      + apply IsInjective_trans; trivial. now apply injective_proj1.
       + destruct (i p) as [q Hq]; cbn in *.
         eapply merely_destruct; try apply Hq.
         intros [H|H]; try now apply tr.
@@ -155,7 +148,7 @@ Theorem GCH_LEM {PR : PropResizing} {UA : Univalence} :
   GCH -> (forall P : HProp, P \/ ~ P).
 Proof.
   intros gch P. eapply (CH_LEM (Build_HSet nat)); try exact _. intros H1 H2 H3.
-  destruct (gch (Build_HSet nat) (Build_HSet (Y (Build_HSet nat) P))) as [H|H].
+  destruct (gch (Build_HSet nat) (Build_HSet (sings (Build_HSet nat) P))) as [H|H].
   - cbn. exists idmap. apply isinj_idmap.
   - apply tr. apply H1.
   - apply tr. apply H2.

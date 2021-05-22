@@ -271,7 +271,7 @@ Section Hartogs_Number.
   Definition hartogs_number_carrier : Type@{A} :=
     {X : 𝒫 (𝒫 (𝒫 A)) | resize_hprop (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
 
-  Lemma hset_equiv_bij {X Y} (f : X -> Y) :
+  Lemma hset_equiv_bij {X Y} (f : X -> Y) : (* maybe move this to a more general file? *)
     IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
   Proof.
     intros HY Hf H. srapply equiv_adjointify.
@@ -302,9 +302,8 @@ Section Hartogs_Number.
         apply ishprop_resize_hprop.
   Defined.
 
-  Definition resize_ordinal@{i j +}
-             (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
-    : Ordinal@{j _}.
+  Definition resize_ordinal@{i j +} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B) :
+    Ordinal@{j _}.
   Proof.
     exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
     srapply (isordinal_simulation g); try exact _.
@@ -338,14 +337,13 @@ Section Hartogs_Number.
     exists a. apply H.
   Qed.
 
-  Lemma resize_ordinal_iso@{i j +}
-             (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
-    : Isomorphism (resize_ordinal B C g) B.
+  Lemma resize_ordinal_iso@{i j +} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B) :
+    Isomorphism (resize_ordinal B C g) B.
   Proof.
     exists g. intros a a'. cbn. split; apply equiv_resize_hprop.
   Qed.
 
-  Lemma hartogs_number_ninjection :
+  Lemma hartogs_number_no_injection :
     ~ (exists f : hartogs_number -> A, IsInjective f).
   Proof.
     cbn. intros [f Hf]. cbn in f.
