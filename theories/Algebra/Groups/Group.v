@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import HProp HFiber.
+Require Import HProp HFiber HSet.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
@@ -277,6 +277,9 @@ Proof.
   srapply (Build_GroupHomomorphism idmap).
 Defined.
 
+Definition grp_iso_id {G : Group} : GroupIsomorphism G G
+  := Build_GroupIsomorphism _ _ grp_homo_id _.
+
 Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
 Proof.
   snrapply Build_GroupHomomorphism.
@@ -448,6 +451,14 @@ Section GroupMovement.
   Definition grp_moveR_M1 : mon_unit = -x * y <~> x = y
     := (equiv_concat_l (grp_unit_r _) _)^-1%equiv oE grp_moveR_Mg.
 
+  (** *** Cancelling elements equal to unit. *)
+
+  Definition grp_cancelL1 : x = mon_unit <~> z * x = z
+    := (equiv_concat_r (grp_unit_r _) _ oE grp_cancelL z).
+
+  Definition grp_cancelR1 : x = mon_unit <~> x * z = z
+    := (equiv_concat_r (grp_unit_l _) _) oE grp_cancelR z.
+
 End GroupMovement.
 
 (** The wild cat of Groups *)
@@ -606,6 +617,22 @@ Proof.
   intros x y.
   apply path_prod.
   1,2: apply grp_homo_op.
+Defined.
+
+Global Instance isembedding_grp_prod_inl {H K : Group}
+  : IsEmbedding (@grp_prod_inl H K).
+Proof.
+  apply isembedding_isinj_hset.
+  intros h0 h1 p; cbn in p.
+  exact (fst ((equiv_path_prod _ _)^-1 p)).
+Defined.
+
+Global Instance isembedding_grp_prod_inr {H K : Group}
+  : IsEmbedding (@grp_prod_inr H K).
+Proof.
+  apply isembedding_isinj_hset.
+  intros k0 k1 q; cbn in q.
+  exact (snd ((equiv_path_prod _ _)^-1 q)).
 Defined.
 
 (** *** Properties of maps to and from the trivial group *)

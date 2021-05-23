@@ -241,6 +241,15 @@ Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
 Class Commutative {B A} (f : A -> A -> B) : Type
   := commutativity: forall x y, f x y = f y x.
 
+Global Instance ishprop_commutative `{Funext} {G : Type}
+       `{IsTrunc 0 G} (m : SgOp G) : IsHProp (Commutative m).
+Proof.
+  apply hprop_allpath.
+  intros x y.
+  funext k l.
+  apply path_ishprop.
+Defined.
+
 Class HeteroAssociative {A B C AB BC ABC}
   (fA_BC: A -> BC -> ABC) (fBC: B -> C -> BC)
   (fAB_C: AB -> C -> ABC) (fAB : A -> B -> AB): Type
