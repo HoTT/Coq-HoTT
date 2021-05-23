@@ -516,6 +516,10 @@ Proof.
   make_equiv.
 Defined.
 
+Definition equiv_sigma_prod1 (A B C : Type)
+  : {a : A & {b : B & C}} <~> A * B * C
+  := ltac:(make_equiv).
+
 (** ** Symmetry *)
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
