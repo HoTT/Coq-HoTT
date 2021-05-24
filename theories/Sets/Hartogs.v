@@ -262,7 +262,7 @@ Section Hartogs_Number.
     IsInjective uni_fix.
   Proof.
     intros X Y. unfold uni_fix. intros H % injective_power_morph; trivial.
-    intros P Q. intros H % injective_power_morph; trivial.
+    intros P Q. intros H' % injective_power_morph; trivial.
     intros p q. apply injective_power_inj.
   Qed.
 
