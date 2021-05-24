@@ -161,8 +161,13 @@ Global Instance transitive_cringisomorphism : Transitive CRingIsomorphism
   := fun x y z f g => Build_CRingIsomorphism _ _ (rng_homo_compose g f) _.
 
 (** Underlying abelian groups of rings *)
-Definition abgroup_cring : CRing -> AbGroup
-  := fun A => Build_AbGroup A _ _ _ _.
+Definition abgroup_cring : CRing -> AbGroup.
+Proof.
+  intro A.
+  snrapply Build_AbGroup.
+  - srapply (Build_Group (cring_type A)).
+  - exact _.
+Defined.
 
 Coercion abgroup_cring : CRing >-> AbGroup.
 
@@ -189,11 +194,11 @@ Definition Build_CRingIsomorphism'' (A B : CRing) (e : GroupIsomorphism A B)
 
 (** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
 Definition Build_CRing' (R : AbGroup)
-  `(Mult R, One R, LeftDistribute R mult (abgroup_sgop R))
+  `(Mult R, One R, LeftDistribute R mult (@group_sgop R))
   (iscomm : @IsCommutativeMonoid R mult one)
   : CRing
-  := Build_CRing R (abgroup_sgop R) _ (abgroup_unit R) _
-       (abgroup_inverse R) (Build_IsRing _ _ _ _).
+  := Build_CRing R (@group_sgop R) _ (@group_unit R) _
+       (@group_inverse R) (Build_IsRing _ _ _ _).
 
 (** ** Ring movement lemmas *)
 

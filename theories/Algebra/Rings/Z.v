@@ -10,24 +10,12 @@ Require Import WildCat.
 (** The ring of integers *)
 Definition cring_Z : CRing.
 Proof.
-  snrapply (Build_CRing abgroup_Z).
-  6: split; [exact _ | repeat split | ].
-  + (** Multiplication *)
-    exact int_mul.
-  + (** Multiplicative unit *)
-    exact 1%int.
-  + (** IsHSet *)
-    exact _.
-  + (** Associativity of multiplication *)
-    exact int_mul_assoc.
-  + (** Left identity *)
-    exact int_mul_1_l.
-  + (** Right identity *)
-    exact int_mul_1_r.
-  + (** Commutativity of integer multiplication *)
-    exact int_mul_comm.
-  + (** Left distributivity *)
-    exact int_mul_add_distr_l.
+  snrapply (Build_CRing abgroup_Z int_add int_mul 0%int 1%int); only 2: repeat split; try exact _.
+  + exact int_mul_assoc.
+  + exact int_mul_1_l.
+  + exact int_mul_1_r.
+  + exact int_mul_comm.
+  + exact int_mul_add_distr_l.
 Defined.
 
 Local Open Scope mc_scope.
