@@ -12,34 +12,18 @@ Local Open Scope mc_add_scope.
 (** Definition of an abelian group *)
 
 Record AbGroup := {
-  abgroup_type : Type;
-  abgroup_sgop : SgOp abgroup_type;
-  abgroup_unit : MonUnit abgroup_type;
-  abgroup_inverse : Negate abgroup_type;
-  abgroup_isabgroup : IsAbGroup abgroup_type;
+  abgroup_group : Group;
+  abgroup_commutative : Commutative (@group_sgop abgroup_group);
 }.
 
-Existing Instances abgroup_sgop abgroup_unit abgroup_inverse abgroup_isabgroup.
+Coercion abgroup_group : AbGroup >-> Group.
 
-(** We want abelian groups to be coerced to the underlying type. *)
-Coercion abgroup_type : AbGroup >-> Sortclass.
+Existing Instance abgroup_commutative.
 
-Definition Build_AbGroup' (G : Group) {H : Commutative (@group_sgop G)} : AbGroup.
+Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
-  srapply (Build_AbGroup G).
-  4: split.
-  1-5: exact _.
+  split; exact _.
 Defined.
-
-(** The underlying group of an abelian group. *)
-Definition group_abgroup : AbGroup -> Group.
-Proof.
-  intros [G ? ? ? [l ?]].
-  nrapply (Build_Group G _ _ _ l).
-Defined.
-
-(** We also want abelian groups to be coerced to the underlying group. *)
-Coercion group_abgroup : AbGroup >-> Group.
 
 (** ** Subgroups of abelian groups *)
 
@@ -80,8 +64,8 @@ Proof.
   apply commutativity.
 Defined.
 
-Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup :=
-  Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _ _ _ _.
+Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
+  := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).
 
 Theorem equiv_quotient_abgroup_ump {F : Funext} {G : AbGroup}
   (N : Subgroup G) (H : Group)
@@ -94,10 +78,10 @@ Defined.
 (** ** The wild category of abelian groups *)
 
 Global Instance isgraph_abgroup : IsGraph AbGroup
-  := induced_graph group_abgroup.
+  := induced_graph abgroup_group.
 
 Global Instance is01cat_AbGroup : Is01Cat AbGroup
-  := induced_01cat group_abgroup.
+  := induced_01cat abgroup_group.
 
 Global Instance is01cat_GroupHomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
   := induced_01cat (@grp_homo_map A B).
@@ -119,7 +103,7 @@ Global Instance hasequivs_abgroup : HasEquivs AbGroup
 
 Definition abgroup_trivial : AbGroup.
 Proof.
-  rapply (Build_AbGroup' grp_trivial).
+  rapply (Build_AbGroup grp_trivial).
   by intros [].
 Defined.
 
@@ -147,7 +131,7 @@ Defined.
 
 (** Image of group homomorphisms between abelian groups *)
 Definition abgroup_image {A B : AbGroup} (f : A $-> B) : AbGroup
-  := Build_AbGroup (grp_image f) _ _ _ _.
+  := Build_AbGroup (grp_image f) _.
 
 (** First isomorphism theorem of abelian groups *)
 Definition abgroup_first_iso `{Funext} {A B : AbGroup} (f : A $-> B)
@@ -162,7 +146,7 @@ Defined.
 
 Definition ab_biprod (A B : AbGroup) : AbGroup.
 Proof.
-  rapply (Build_AbGroup' (grp_prod A B)).
+  rapply (Build_AbGroup (grp_prod A B)).
   intros [a b] [a' b'].
   apply path_prod; simpl; apply commutativity.
 Defined.
@@ -260,12 +244,14 @@ Definition ab_biprod_corec {A B X : AbGroup}
   : X $-> ab_biprod A B := grp_prod_corec f g.
 
 (** The negation automorphism of an abelian group *)
-Definition ab_homo_negation { A : AbGroup } : GroupIsomorphism A A.
+Definition ab_homo_negation {A : AbGroup} : GroupIsomorphism A A.
 Proof.
   snrapply Build_GroupIsomorphism.
   - snrapply Build_GroupHomomorphism.
     + exact (fun a => -a).
-    + exact negate_sg_op_distr.
+    + intros x y.
+      refine (grp_inv_op x y @ _).
+      apply commutativity.
   - srapply isequiv_adjointify.
     1: exact (fun a => -a).
     1-2: exact negate_involutive.

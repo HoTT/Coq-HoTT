@@ -23,7 +23,7 @@ Section AbPullback.
     : IsAbGroup (grp_pullback f g) := {}.
 
   Definition ab_pullback
-    : AbGroup := Build_AbGroup (grp_pullback f g) _ _ _ _.
+    : AbGroup := Build_AbGroup (grp_pullback f g) _.
 
   (** The corecursion principle is inherited from Groups; use grp_pullback_corec and friends from Groups/GrpPullback.v. *)
 

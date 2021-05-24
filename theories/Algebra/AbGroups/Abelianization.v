@@ -277,7 +277,9 @@ Defined.
 Definition abel : Group -> AbGroup.
 Proof.
   intro G.
-  srapply (Build_AbGroup (Abel G)).
+  snrapply Build_AbGroup.
+  - srapply (Build_Group (Abel G)).
+  - exact _.
 Defined.
 
 (** The unit of this map is the map ab which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
