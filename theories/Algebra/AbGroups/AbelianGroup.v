@@ -18,7 +18,7 @@ Record AbGroup := {
 
 Coercion abgroup_group : AbGroup >-> Group.
 
-Existing Instance abgroup_commutative.
+Global Existing Instance abgroup_commutative.
 
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
