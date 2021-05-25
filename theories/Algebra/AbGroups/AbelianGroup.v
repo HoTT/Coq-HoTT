@@ -170,7 +170,7 @@ Proof.
   apply path_prod; simpl; apply commutativity.
 Defined.
 
-(** These are known to be embeddings, since their versions for [grp_prod] are. *)
+(** These inherit [IsEmbedding] instances from their [grp_prod] versions. *)
 Definition ab_biprod_inl {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_inl.
 Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
 
@@ -191,31 +191,9 @@ Proof.
     exact (associativity _ (f a') _)^.
 Defined.
 
-Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A
-  := ab_biprod_rec grp_homo_id grp_homo_const.
-
-Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B
-  := ab_biprod_rec grp_homo_const grp_homo_id.
-
-Global Instance issurjection_ab_biprod_pr1 {A B : AbGroup}
-  : IsSurjection (@ab_biprod_pr1 A B).
-Proof.
-  intro a.
-  rapply contr_inhabited_hprop.
-  apply tr.
-  exists (a, mon_unit); cbn.
-  apply right_identity.
-Defined.
-
-Global Instance issurjection_ab_biprod_pr2 {A B : AbGroup}
-  : IsSurjection (@ab_biprod_pr2 A B).
-Proof.
-  intro b.
-  rapply contr_inhabited_hprop.
-  apply tr.
-  exists (mon_unit, b); cbn.
-  apply left_identity.
-Defined.
+(** These inherit [IsSurjection] instances from their [grp_prod] versions. *)
+Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
 Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
   : (A $-> Y) * (B $-> Y)
@@ -229,8 +207,7 @@ Proposition ab_biprod_rec_beta' {A B Y : AbGroup}
   : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.
 Proof.
   intros [a b]; simpl.
-  refine ((grp_homo_op u _ _)^ @ _).
-  apply (ap u).
+  refine ((grp_homo_op u _ _)^ @ ap u _).
   apply path_prod.
   - exact (right_identity a).
   - exact (left_identity b).
@@ -284,8 +261,8 @@ Definition ab_biprod_corec {A B X : AbGroup}
   : X $-> ab_biprod A B := grp_prod_corec f g.
 
 Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
-  : ab_biprod_corec g0 g1 $o f == ab_biprod_corec (g0 $o f) (g1 $o f)
-  := fun x => idpath.
+  : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
+  := fun _ => idpath.
 
 (** *** Functoriality of [ab_biprod] *)
 
@@ -296,13 +273,8 @@ Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-> A') (g: B $-> B')
 Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $-> Y)
            (g0 : X $-> A) (g1 : Y $-> B)
   : functor_ab_biprod g0 g1 $o ab_biprod_corec f0 f1
-    == ab_biprod_corec (g0 $o f0) (g1 $o f1).
-Proof.
-  intro x; cbn.
-  apply path_prod'.
-  - exact (ap _ (right_identity _)).
-  - exact (ap _ (left_identity _)).
-Defined.
+                      $== ab_biprod_corec (g0 $o f0) (g1 $o f1)
+  := fun _ => idpath.
 
 Definition isequiv_functor_ab_biprod {A A' B B' : AbGroup}
            (f : A $-> A') (g : B $-> B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
@@ -315,12 +287,8 @@ Proof.
        + exact (Build_GroupIsomorphism _ _ g _). }
   all: intros [a b]; simpl.
   all: apply path_prod'.
-  1,3: refine (ap _ (right_identity _) @ _).
-  3,4: refine (ap _ (left_identity _) @ _).
-  1,3: refine (eisretr _ _ @ _).
-  3,4: refine (eissect _ _ @ _).
-  1,3: apply right_identity.
-  all: apply left_identity.
+  1,2: apply eisretr.
+  all: apply eissect.
 Defined.
 
 Definition equiv_functor_ab_biprod {A A' B B' : AbGroup}

@@ -635,6 +635,30 @@ Proof.
   exact (snd ((equiv_path_prod _ _)^-1 q)).
 Defined.
 
+Definition grp_prod_pr1 {G H : Group}
+  : GroupHomomorphism (grp_prod G H) G.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact fst.
+  intros ? ?; reflexivity.
+Defined.
+
+Definition grp_prod_pr2 {G H : Group}
+  : GroupHomomorphism (grp_prod G H) H.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact snd.
+  intros ? ?; reflexivity.
+Defined.
+
+Global Instance issurj_grp_prod_pr1 {G H : Group}
+  : IsSurjection (@grp_prod_pr1 G H)
+  := issurj_retr grp_prod_inl (fun _ => idpath).
+
+Global Instance issurj_grp_prod_pr2 {G H : Group}
+  : IsSurjection (@grp_prod_pr2 G H)
+  := issurj_retr grp_prod_inr (fun _ => idpath).
+
 (** *** Properties of maps to and from the trivial group *)
 
 Global Instance isinitial_grp_trivial : IsInitial grp_trivial.

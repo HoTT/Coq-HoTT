@@ -238,7 +238,7 @@ Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y
 
 Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
             `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
-  : i o* pequiv_inverse (equiv_cxfib ex) == pr1. (** poitned pr1? *)
+  : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
 Proof.
   rapply equiv_ind.
   1: exact (isequiv_cxfib ex).

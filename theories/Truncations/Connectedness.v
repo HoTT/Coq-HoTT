@@ -288,3 +288,14 @@ Proof.
   destruct fs as [f_a0 [f_b0 f_a0b0]].
   refine (wedge_incl_elim _ _ _ _ _ f_a0b0).
 Defined.
+
+(** ** Connectivity of maps *)
+
+(** Retractions are surjective. *)
+Definition issurj_retr {X Y : Type} {r : X -> Y} (s : Y -> X) (h : forall y:Y, r (s y) = y)
+  : IsSurjection r.
+Proof.
+  intro y.
+  rapply contr_inhabited_hprop.
+  exact (tr (s y; h y)).
+Defined.
