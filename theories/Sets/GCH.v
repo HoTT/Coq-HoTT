@@ -38,6 +38,8 @@ Qed.
 Definition infinite X :=
   inject nat X.
 
+(* GCH states that for any infinite set X with Y squeezed between X and P(X) either Y embeds into X or P(X) embeds into Y. *)
+
 Definition GCH :=
   forall X Y : HSet, infinite X -> hinject X Y -> hinject Y (X -> HProp) -> hinject Y X + hinject (X -> HProp) Y.
 
@@ -55,6 +57,8 @@ Proof.
   - intros H. apply equiv_resize_hprop in H. apply H. reflexivity.
   - intros H. apply equiv_resize_hprop. intros q -> % HI. apply H.
 Qed.
+
+(* The concluding disjunction of GCH is excluse since otherwise we'd obtain an injection of P(X) into X. *)
 
 Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
   IsHProp GCH.
@@ -87,6 +91,11 @@ Section LEM.
 
   Definition sings :=
     { p : X -> HProp | sing p \/ (P + ~ P) }.
+
+  (* The main idea is that for a given set X and proposition P, the set sings fits between X and P(X).
+     Then CH for X implies that either sings embeds into X (which can be refuted constructively),
+     or that P(X) embeds into sings, from which we can extract a proof of P + ~P. *)
+     
 
   Lemma Cantor_sing (i : (X -> HProp) -> (X -> HProp)) :
     IsInjective i -> exists p, ~ sing (i p).
@@ -143,6 +152,8 @@ Section LEM.
   Qed.
 
 End LEM.
+
+(* We can instantiate the previous lemma with nat to obtain GCH -> LEM. *)
 
 Theorem GCH_LEM {PR : PropResizing} {UA : Univalence} :
   GCH -> (forall P : HProp, P \/ ~ P).

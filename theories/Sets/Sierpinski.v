@@ -8,9 +8,17 @@ From HoTT.Sets Require Import Ordinals Hartogs GCH.
 
 Open Scope type.
 
+(* The proof of Sierpinski's theorem given in this file consists of 2 ingredients:
+   1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
+   2. A variant of Cantor's theorem stating that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_hinject_hinject).
+   Those two are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
+   from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal,
+   which is enough to conclude GCH -> AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
 
 
 (** * Constructive equivalences *)
+
+(* For the 1. ingredient, we establish a bunch of paths and conclude the wished result by equational reasoning. *)
 
 Section Preparation.
 
@@ -138,6 +146,9 @@ Qed.
 
 
 (** * Variants of Cantors's theorem *)
+
+(* For the 2. ingredient, we give a preliminary version (Cantor_path_inject) to see the idea,
+   as well as a stronger refinement (Cantor_hinject_hinject) which is then a mere reformulation. *)
 
 Context {PR : PropResizing}.
 
@@ -335,6 +346,10 @@ Hypothesis HN_ninject : forall X, ~ hinject (HN X) X.
 Variable HN_bound : nat.
 Hypothesis HN_inject : forall X, hinject (HN X) (powit X HN_bound).
 
+(* This section then concludes the intermediate result that abstractly,
+   any function HN behaving like the Hartogs number is tamed in the presence of GCH.
+   Morally we show that X <= HN(X) for all X, we just ensure that X is large enough by considering P(N + X). *)
+
 Lemma hinject_sum X Y X' Y' :
   hinject X X' -> hinject Y Y' -> hinject (X + Y) (X' + Y').
 Proof.
@@ -348,6 +363,9 @@ Proof.
   - now apply inr_ne_inl in H.
   - apply ap. apply Hg. apply path_sum_inr with X'. apply H.
 Qed.
+
+(* The main proof is by induction on the cardinality bound for HN.
+   As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
 
 Lemma Sierpinski_step (X : HSet) n :
   GCH -> infinite X -> powfix X -> hinject (HN X) (powit X n) -> hinject X (HN X).
