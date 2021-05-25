@@ -10,7 +10,7 @@ Local Open Scope surreal_scope.
 (** Negation requires the option sorts to be symmetric. *)
 Class HasNegation (S : OptionSort) 
   := symmetric_options : forall L R, InSort S L R -> InSort S R L.
-Existing Instance symmetric_options.
+Global Existing Instance symmetric_options.
 
 Global Instance hasnegation_maxsort : HasNegation MaxSort
   := fun _ _ _ => tt.

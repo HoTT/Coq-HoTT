@@ -13,6 +13,9 @@ Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.
 
+(** We disable the [deprecated-hint-rewrite-without-locality] warning until we update to coq V8.14.0 *)
+Global Set Warnings Append "-deprecated-hint-rewrite-without-locality".
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -209,17 +212,17 @@ Notation "g 'o' f" := (compose g%function f%function) : function_scope.
 Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
 (** Composition of logical equivalences *)
-Instance iff_compose : Transitive iff | 1
+Global Instance iff_compose : Transitive iff | 1
   := fun A B C f g => (fst g o fst f , snd f o snd g).
 Arguments iff_compose {A B C} f g : rename.
 
 (** While we're at it, inverses of logical equivalences *)
-Instance iff_inverse : Symmetric iff | 1
+Global Instance iff_inverse : Symmetric iff | 1
   := fun A B f => (snd f , fst f).
 Arguments iff_inverse {A B} f : rename.
 
 (** And reflexivity of them *)
-Instance iff_reflexive : Reflexive iff | 1
+Global Instance iff_reflexive : Reflexive iff | 1
   := fun A => (idmap , idmap).
 
 (** Dependent composition of functions. *)
@@ -802,4 +805,3 @@ Ltac easy :=
   (use_hyps; do_ccl) || fail "Cannot solve this goal".
 
 Tactic Notation "now" tactic(t) := t; easy.
-

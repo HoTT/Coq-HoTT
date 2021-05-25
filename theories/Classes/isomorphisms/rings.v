@@ -18,10 +18,10 @@ Definition BuildOperations (T : Type) `{Plus T} `{Mult T} `{Zero T} `{One T}
   := exist _ T (plus,mult,zero,one).
 
 Coercion SR_carrier (s : Operations) : Type := s.1.
-Instance SR_plus (s : Operations) : Plus s := fst (fst (fst s.2)).
-Instance SR_mult (s : Operations) : Mult s := snd (fst (fst s.2)).
-Instance SR_zero (s : Operations) : Zero s := snd (fst s.2).
-Instance SR_one (s : Operations) : One s := snd s.2.
+Global Instance SR_plus (s : Operations) : Plus s := fst (fst (fst s.2)).
+Global Instance SR_mult (s : Operations) : Mult s := snd (fst (fst s.2)).
+Global Instance SR_zero (s : Operations) : Zero s := snd (fst s.2).
+Global Instance SR_one (s : Operations) : One s := snd s.2.
 
 Arguments SR_plus !_ / _ _.
 Arguments SR_mult !_ / _ _.
@@ -81,11 +81,11 @@ Definition BuildOperations (T : Type)
   := exist _ T (plus,mult,zero,one,negate).
 
 Coercion R_carrier (s : Operations) : Type := s.1.
-Instance R_plus (s : Operations) : Plus s := fst (fst (fst (fst s.2))).
-Instance R_mult (s : Operations) : Mult s := snd (fst (fst (fst s.2))).
-Instance R_zero (s : Operations) : Zero s := snd (fst (fst s.2)).
-Instance R_one (s : Operations) : One s := snd (fst s.2).
-Instance R_negate (s : Operations) : Negate s := snd s.2.
+Global Instance R_plus (s : Operations) : Plus s := fst (fst (fst (fst s.2))).
+Global Instance R_mult (s : Operations) : Mult s := snd (fst (fst (fst s.2))).
+Global Instance R_zero (s : Operations) : Zero s := snd (fst (fst s.2)).
+Global Instance R_one (s : Operations) : One s := snd (fst s.2).
+Global Instance R_negate (s : Operations) : Negate s := snd s.2.
 
 Arguments R_plus !_ / _ _.
 Arguments R_mult !_ / _ _.

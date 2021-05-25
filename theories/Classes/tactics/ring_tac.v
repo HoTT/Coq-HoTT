@@ -63,29 +63,29 @@ Qed.
 
 End content.
 
-Instance default_almostneg `{Zero A} : AlmostNegate A | 20
+Global Instance default_almostneg `{Zero A} : AlmostNegate A | 20
   := fun _ => 0.
 Arguments default_almostneg _ _ _ /.
 
-Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
+Global Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
   := (-).
 Arguments negate_almostneg _ _ _ /.
 
-Instance semiring_almostring `{IsSemiRing A} : AlmostRing A | 10.
+Global Instance semiring_almostring `{IsSemiRing A} : AlmostRing A | 10.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
-Instance ring_almostring `{IsRing A} : AlmostRing A.
+Global Instance ring_almostring `{IsRing A} : AlmostRing A.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
 apply negate_mult.
 Qed.
 
-Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
+Global Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
   : AlmostRingPreserving f | 10.
 Proof.
 split;try apply _.

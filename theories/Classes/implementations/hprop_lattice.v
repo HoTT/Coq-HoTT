@@ -5,11 +5,11 @@ Require Import
 
 (** Demonstrate the [HProp] is a (bounded) lattice w.r.t. the logical
 operations. This requires Univalence. *)
-Instance join_hor : Join HProp := hor.
+Global Instance join_hor : Join HProp := hor.
 Definition hand (X Y : HProp) : HProp := Build_HProp (X * Y).
-Instance meet_hprop : Meet HProp := hand.
-Instance bottom_hprop : Bottom HProp := False_hp.
-Instance top_hprop : Top HProp := Unit_hp.
+Global Instance meet_hprop : Meet HProp := hand.
+Global Instance bottom_hprop : Bottom HProp := False_hp.
+Global Instance top_hprop : Top HProp := Unit_hp.
 
 Section contents.
   Context `{Univalence}.

@@ -27,7 +27,7 @@ Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
 set (h o (spushl R)) = set (h o (spushr R)).
 
 Axiom ishset_V : IsHSet V.
-Existing Instance ishset_V.
+Global Existing Instance ishset_V.
 
 Fixpoint V_ind (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))

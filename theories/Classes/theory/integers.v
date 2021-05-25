@@ -63,12 +63,12 @@ rewrite <-(to_ring_twice f g id x), <-(to_ring_twice f g id y).
 apply ap,E.
 Qed.
 
-Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
+Global Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
   (f: Z -> Z2) `{!IsSemiRingPreserving f}
   : IsInjective f.
 Proof. exact (to_ring_injective (integers_to_ring Z2 Z) _). Qed.
 
-Instance naturals_to_integers_injective `{Funext} `{Univalence}
+Global Instance naturals_to_integers_injective `{Funext} `{Univalence}
   `{Integers@{i i i i i i i i} Z} `{Naturals@{i i i i i i i i} N}
   (f: N -> Z) `{!IsSemiRingPreserving f}
   : IsInjective f.

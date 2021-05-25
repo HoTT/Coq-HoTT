@@ -487,7 +487,7 @@ Proof.
   by rapply Build_Is1Cat.
 Defined.
 
-Instance hasmorext_group `{Funext} : HasMorExt Group.
+Global Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.

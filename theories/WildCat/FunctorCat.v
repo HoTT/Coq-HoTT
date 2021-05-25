@@ -16,7 +16,7 @@ Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
 }.
 
 Coercion fun01_F : Fun01 >-> Funclass.
-Existing Instance fun01_is0functor.
+Global Existing Instance fun01_is0functor.
 
 (* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
