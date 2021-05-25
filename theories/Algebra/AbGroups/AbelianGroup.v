@@ -335,6 +335,16 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
+(** Addition [+] is a group homomorphism [A+A -> A]. *)
 Definition ab_add_homo {A : AbGroup}
   : ab_biprod A A $-> A
   := ab_biprod_rec grp_homo_id grp_homo_id.
+
+(** We can add group homomorphisms. *)
+Definition ab_homo_add {A : Group} {B : AbGroup} (f g : A $-> B)
+  : A $-> B.
+Proof.
+  refine (grp_homo_compose ab_add_homo _).
+  (** [fun a => f(a) + g(a)] **)
+  exact (grp_prod_corec f g).
+Defined.

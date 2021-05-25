@@ -97,12 +97,7 @@ Definition exts_p_split_to_kernel {B A : AbGroup} (E : Exts B A)
   : GroupHomomorphism E (@ab_kernel E B exts_p).
 Proof.
   snrapply (grp_kernel_corec (G:=E) (A:=E)).
-  - (** We construct the map [fun e => e - s(exts_p e)] by going via [E + E]. *)
-    rapply grp_homo_compose.
-    (** [fun (e0,e1) => e0-e1] *)
-    1: exact (ab_biprod_rec grp_homo_id ab_homo_negation).
-    (** [fun e => (e, s (exts_p e))] **)
-    refine (ab_biprod_corec grp_homo_id (s $o exts_p)).
+  - exact (ab_homo_add grp_homo_id (ab_homo_negation $o s $o exts_p)).
   - intro x; simpl.
     refine (grp_homo_op exts_p x _ @ _).
     refine (ap (fun y => exts_p x + y) _ @ right_inverse (exts_p x)).
@@ -141,9 +136,9 @@ Proof.
         apply grp_cancelL1.
         refine (ap _ _ @ right_inverse _).
         apply (ap (-)).
-        refine (grp_homo_op (s $o exts_p) _ _ @ _).
-        refine (ap (fun x => x + _) (ap s a.2 @ grp_homo_unit s) @ _).
-        exact (left_identity _ @ ap s (h b)).
+        apply (ap s).
+        refine (grp_homo_op exts_p a.1 (s b) @ _).
+        exact (ap (fun y => y + _) a.2 @ left_identity _ @ h b).
       * refine (grp_homo_op exts_p a.1 (s b) @ _).
         exact (ap (fun y => y + _) a.2 @ left_identity _ @ h b).
     + intro e; simpl.
@@ -161,21 +156,17 @@ Proof.
     rapply grp_iso_cxfib.
 Defined.
 
-Proposition exts_p_split_beta `{Funext} {B A : AbGroup} (E : Exts B A)
+Proposition exts_p_split_beta {B A : AbGroup} (E : Exts B A)
       {s : GroupHomomorphism B E} (h : exts_p $o s == idmap)
   : exts_p_split_iso E h $o exts_i == ab_biprod_inl.
 Proof.
   intro a.
   refine (ap _ (ab_corec_beta _ _ _ _) @ _).
   refine (ab_biprod_functor_beta _ _ _ _ _ @ _).
-  srefine (ap (fun p => ab_biprod_corec p _ a) _ @ _).
-  1: exact grp_homo_id.
-  - refine (ap (fun g => _ $o g) _ @ _);
-      apply equiv_path_grouphomomorphism; intro.
-    1: apply exts_p_split_to_kernel_beta.
-    apply eissect.
-  - refine (path_prod' idpath _); cbn.
-    rapply cx_isexact.
+  nrapply path_prod'.
+  2: rapply cx_isexact.
+  refine (ap _ (exts_p_split_to_kernel_beta E h a) @ _).
+  apply eissect.
 Defined.
 
 (** An extension [E] in [Exts B A] is trivial if and only if it splits. *)
