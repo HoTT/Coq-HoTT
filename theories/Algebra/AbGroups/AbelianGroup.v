@@ -5,8 +5,6 @@ Require Export Algebra.Groups.
 Require Import Cubical.
 Require Import WildCat.
 
-Set Printing Universes.
-
 Local Open Scope mc_add_scope.
 
 (** * Abelian groups *)
