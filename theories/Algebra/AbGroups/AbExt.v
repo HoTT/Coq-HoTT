@@ -61,10 +61,7 @@ Proof.
     apply tr.
     exists a.
     rapply path_sigma_hprop; cbn.
-    + intro x.
-      apply istrunc_paths.
-      exact _.
-    + exact (path_prod' idpath p^).
+    exact (path_prod' idpath p^).
 Defined.
 
 (** Paths in [Exts] corespond to isomorphisms between the [exts_E]s respecting [exts_i] and [exts_p]. *)
