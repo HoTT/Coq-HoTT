@@ -51,13 +51,13 @@ Section Hartogs_Number.
 
   Local Notation 𝒫 := power_type.
 
-  Definition subtype_inclusion {A} (U V : 𝒫 A)
+  Definition proper_subtype_inclusion {A} (U V : 𝒫 A)
     := (forall a, U a -> V a) /\ merely (exists a : A, V a /\ ~U a).
   Coercion subtype_as_type' {X} (Y : 𝒫 X) : Type
     := { x : X & Y x }.
 
-  Local Infix "⊂" := subtype_inclusion (at level 50).
-  Local Notation "(⊂)" := subtype_inclusion.
+  Local Infix "⊂" := proper_subtype_inclusion (at level 50).
+  Local Notation "(⊂)" := proper_subtype_inclusion.
 
   (* The hartogs number of A embeds into the threefold power set of A.
      This preliminary injection also increases the universe level though. *)
@@ -117,7 +117,7 @@ Section Hartogs_Number.
             + cbn. intros [X [b Hb]]. apply path_sigma_hprop. cbn.
               apply path_forall; intros a. apply path_iff_hprop; apply Hb.
           - cbn. intros [X1 [b1 H'1]] [X2 [b2 H'2]].
-            unfold ϕ, subtype_inclusion. cbn.
+            unfold ϕ, proper_subtype_inclusion. cbn.
             split.
             + intros H3.
               refine (Trunc_rec _ (trichotomy_ordinal b1 b2)). intros [b1_b2 | H4].
