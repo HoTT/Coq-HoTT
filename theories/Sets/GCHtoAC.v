@@ -8,7 +8,7 @@ From HoTT.Sets Require Import Ordinals Cardinality Hartogs Powers GCH AC.
 
 Open Scope type.
 
-(* The proof of Sierpinski's theorem given in this file consists of 2 ingredients:
+(* The proof of Sierpinski's results that GCH implies AC given in this file consists of 2 ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
    2. A variant of Cantor's theorem saying that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_hinject_hinject).
    Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
@@ -267,14 +267,14 @@ Context {EM : ExcludedMiddle}.
 Context {PR : PropResizing}.
 
 Definition powfix X :=
-  forall n, (powit X n + powit X n) = (powit X n).
+  forall n, (power_iterated X n + power_iterated X n) = (power_iterated X n).
 
 Variable HN : HSet -> HSet.
 
 Hypothesis HN_ninject : forall X, ~ hinject (HN X) X.
 
 Variable HN_bound : nat.
-Hypothesis HN_inject : forall X, hinject (HN X) (powit X HN_bound).
+Hypothesis HN_inject : forall X, hinject (HN X) (power_iterated X HN_bound).
 
 (* This section then concludes the intermediate result that abstractly,
    any function HN behaving like the Hartogs number is tamed in the presence of GCH.
@@ -298,37 +298,37 @@ Qed.
    As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
 
 Lemma Sierpinski_step (X : HSet) n :
-  GCH -> infinite X -> powfix X -> hinject (HN X) (powit X n) -> hinject X (HN X).
+  GCH -> infinite X -> powfix X -> hinject (HN X) (power_iterated X n) -> hinject X (HN X).
 Proof.
   intros gch H1 H2 Hi. induction n.
   - now apply HN_ninject in Hi.
-  - destruct (gch (Build_HSet (powit X n)) (Build_HSet (powit X n + HN X))) as [H|H].
-    + now apply infinite_powit.
+  - destruct (gch (Build_HSet (power_iterated X n)) (Build_HSet (power_iterated X n + HN X))) as [H|H].
+    + now apply infinite_power_iterated.
     + apply tr. exists inl. intros x x'. apply path_sum_inl.
     + eapply hinject_trans.
       * apply hinject_sum; try apply Hi. apply tr, inject_power. exact _.
       * cbn. specialize (H2 (S n)). cbn in H2. rewrite H2. apply tr, inject_refl.
     + apply IHn. eapply hinject_trans; try apply H. apply tr. exists inr. intros x y. apply path_sum_inr.
-    + apply hinject_trans with (powit X (S n)); try apply tr, inject_powit.
+    + apply hinject_trans with (power_iterated X (S n)); try apply tr, inject_power_iterated.
       cbn. apply (Cantor_hinject_hinject H). rewrite (H2 n). apply tr, inject_refl.
 Qed.
 
-Theorem Sierpinski' (X : HSet) :
+Theorem GCH_inject' (X : HSet) :
   GCH -> infinite X -> hinject X (HN (Build_HSet (X -> HProp))).
 Proof.
   intros gch HX. eapply hinject_trans; try apply tr, inject_power; try apply X.
   apply (@Sierpinski_step (Build_HSet (X -> HProp)) HN_bound gch).
   - apply infinite_inject with X; trivial. apply inject_power. apply X.
-  - intros n. cbn. rewrite !powit_shift. eapply path_infinite_power. cbn. now apply infinite_powit.
+  - intros n. cbn. rewrite !power_iterated_shift. eapply path_infinite_power. cbn. now apply infinite_power_iterated.
   - apply HN_inject.
 Qed.
 
-Theorem Sierpinski (X : HSet) :
+Theorem GCH_inject (X : HSet) :
   GCH -> hinject X (HN (Build_HSet (Build_HSet (nat + X) -> HProp))).
 Proof.
   intros gch. eapply hinject_trans with (nat + X).
   - apply tr. exists inr. intros x y. apply path_sum_inr.
-  - apply Sierpinski'; trivial. exists inl. intros x y. apply path_sum_inl.
+  - apply GCH_inject'; trivial. exists inl. intros x y. apply path_sum_inl.
 Qed.
 
 End Sierpinski.
@@ -340,7 +340,7 @@ Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
 Proof.
   intros gch.
   apply WO_AC. intros X. apply tr. exists (hartogs_number (Build_HSet (Build_HSet (nat + X) -> HProp))).
-  unshelve eapply (@Sierpinski UA LEM PR hartogs_number _ 3 _ X gch).
+  unshelve eapply (@GCH_inject UA LEM PR hartogs_number _ 3 _ X gch).
   - intros Y. intros H. eapply merely_destruct; try apply H. apply hartogs_number_no_injection.
   - intros Y. apply tr. apply hartogs_number_injection.
 Qed.

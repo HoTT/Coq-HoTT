@@ -66,7 +66,7 @@ Lemma inject_trans X Y Z :
   inject X Y -> inject Y Z -> inject X Z.
 Proof.
   intros [f Hf] [g Hg]. exists (fun x => g (f x)).
-  now intros x x' H % Hg % Hf.
+  now apply isinjective_Compose.
 Qed.
 
 Definition hinject X Y :=
@@ -78,7 +78,7 @@ Proof.
   intros H1 H2.
   eapply merely_destruct; try apply H1. intros [f Hf].
   eapply merely_destruct; try apply H2. intros [g Hg].
-  apply tr. exists (fun x => g (f x)). now intros x x' H % Hg % Hf.
+  apply tr. exists (fun x => g (f x)). now apply isinjective_Compose.
 Qed.
 
 

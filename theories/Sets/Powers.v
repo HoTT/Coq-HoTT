@@ -25,14 +25,14 @@ Proof.
   rewrite H. cbn. apply equiv_resize_hprop. reflexivity.
 Qed.
 
-Fixpoint powit X n :=
+Fixpoint power_iterated X n :=
   match n with
   | O => X 
-  | S n => powit X n -> HProp
+  | S n => power_iterated X n -> HProp
   end.
 
-Lemma powit_shift X n :
-  powit (X -> HProp) n = (powit X n -> HProp).
+Lemma power_iterated_shift X n :
+  power_iterated (X -> HProp) n = (power_iterated X n -> HProp).
 Proof.
   induction n in X |- *; cbn.
   - reflexivity.
@@ -48,16 +48,16 @@ Proof.
   intros x. apply isset_HProp.
 Qed.
 
-Global Instance hset_powit {UA : Univalence} (X : HSet) n :
-  IsHSet (powit X n).
+Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n :
+  IsHSet (power_iterated X n).
 Proof.
   induction n; cbn.
   - apply X.
-  - apply (@hset_power UA (Build_HSet (powit X n))).
+  - apply (@hset_power UA (Build_HSet (power_iterated X n))).
 Qed.
 
-Lemma inject_powit {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  inject X (powit X n).
+Lemma inject_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
+  inject X (power_iterated X n).
 Proof.
   induction n.
   - apply inject_refl.
@@ -71,9 +71,9 @@ Proof.
   apply inject_trans.
 Qed.
 
-Lemma infinite_powit {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  infinite X -> infinite (powit X n).
+Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
+  infinite X -> infinite (power_iterated X n).
 Proof.
-  intros H. eapply infinite_inject; try apply H. apply inject_powit.
+  intros H. eapply infinite_inject; try apply H. apply inject_power_iterated.
 Qed.
 

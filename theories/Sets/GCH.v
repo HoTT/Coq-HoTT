@@ -60,7 +60,7 @@ Section LEM.
   Definition sing (p : X -> HProp) :=
     exists x, p = hpaths x.
 
-  Definition sings :=
+  Let sings :=
     { p : X -> HProp | sing p \/ (P + ~ P) }.
 
   (* The main idea is that for a given set X and proposition P, the set sings fits between X and P(X).
@@ -96,12 +96,6 @@ Section LEM.
       rewrite H. cbn. reflexivity.
   Qed.
 
-  Let IsInjective_trans {X' Y Z} (f : X' -> Y) (g : Y -> Z) :
-    IsInjective f -> IsInjective g -> IsInjective (fun x => g (f x)).
-  Proof.
-    intros HF HG x y H. now apply HF, HG.
-  Qed.
-
   Theorem CH_LEM :
     (inject X sings -> inject sings (X -> HProp) -> ~ (inject sings X) -> hinject (X -> HProp) sings) -> P \/ ~ P.
   Proof.
@@ -115,7 +109,7 @@ Section LEM.
       apply HP'. intros HP % inject_sings. clear HP'.
       apply Cantor_inj with X. now eapply (inject_trans _ _ _ HP).
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
-      + apply IsInjective_trans; trivial. now apply injective_proj1.
+      + apply isinjective_Compose; trivial. now apply injective_proj1.
       + destruct (i p) as [q Hq]; cbn in *.
         eapply merely_destruct; try apply Hq.
         intros [H|H]; try now apply tr.
@@ -129,7 +123,8 @@ Theorem GCH_LEM {PR : PropResizing} {UA : Univalence} :
   GCH -> (forall P : HProp, P \/ ~ P).
 Proof.
   intros gch P. eapply (CH_LEM (Build_HSet nat)); try exact _. intros H1 H2 H3.
-  destruct (gch (Build_HSet nat) (Build_HSet (sings (Build_HSet nat) P))) as [H|H].
+  pose (sings := { p : nat -> HProp | sing (Build_HSet nat) p \/ (P + ~ P) }).
+  destruct (gch (Build_HSet nat) (Build_HSet sings)) as [H|H].
   - cbn. exists idmap. apply isinj_idmap.
   - apply tr. apply H1.
   - apply tr. apply H2.
