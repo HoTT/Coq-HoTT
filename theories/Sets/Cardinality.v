@@ -10,14 +10,14 @@ Definition card A `{IsHSet A} : Cardinal
   := tr (Build_HSet A).
 
 
-Instance le_cardinal `{Univalence} : Le Cardinal
+Global Instance le_cardinal `{Univalence} : Le Cardinal
   := fun A B => Trunc_rec (fun A : HSet =>
              Trunc_rec (fun B : HSet =>
              (hexists (fun f : A -> B => IsInjective f)))
              B)
              A.
 
-Instance is_mere_relation_le_cardinal `{Univalence}
+Global Instance is_mere_relation_le_cardinal `{Univalence}
   : is_mere_relation Cardinal (<=).
 Proof.
   rapply Trunc_ind; intros A.
@@ -34,7 +34,7 @@ Proof.
   intros x y eq. apply injective_g, injective_f. assumption.
 Qed.
 
-Instance transitive_le_Cardinal `{Univalence}
+Global Instance transitive_le_Cardinal `{Univalence}
   : Transitive (le : Le Cardinal).
 Proof.
   unfold Transitive.

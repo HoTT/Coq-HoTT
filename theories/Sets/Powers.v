@@ -39,7 +39,7 @@ Proof.
   - rewrite IHn. reflexivity.
 Qed.
 
-Instance hset_power {UA : Univalence} (X : HSet) :
+Global Instance hset_power {UA : Univalence} (X : HSet) :
   IsHSet (X -> HProp).
 Proof.
   intros p q. apply hprop_allpath. intros H H'.
@@ -48,7 +48,7 @@ Proof.
   intros x. apply isset_HProp.
 Qed.
 
-Instance hset_powit {UA : Univalence} (X : HSet) n :
+Global Instance hset_powit {UA : Univalence} (X : HSet) n :
   IsHSet (powit X n).
 Proof.
   induction n; cbn.
