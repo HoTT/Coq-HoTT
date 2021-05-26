@@ -56,8 +56,8 @@ Section Hartogs_Number.
   Coercion subtype_as_type' {X} (Y : 𝒫 X) : Type
     := { x : X & Y x }.
 
-  Local Infix "⊂" := proper_subtype_inclusion (at level 50).
-  Local Notation "(⊂)" := proper_subtype_inclusion.
+  Local Infix "⊊" := proper_subtype_inclusion (at level 50).
+  Local Notation "(⊊)" := proper_subtype_inclusion.
 
   (* The hartogs number of A embeds into the threefold power set of A.
      This preliminary injection also increases the universe level though. *)
@@ -67,7 +67,7 @@ Section Hartogs_Number.
         IsInjective f.
   Proof.
     transparent assert (ϕ : (forall X : 𝒫 (𝒫 A), Lt X)). {
-      intros X. intros x1 x2. exact (x1.1 ⊂ x2.1).
+      intros X. intros x1 x2. exact (x1.1 ⊊ x2.1).
     }
     unshelve eexists.
     - intros [B _]. intros X. exact (merely (Isomorphism (X : Type; ϕ X) B)).
