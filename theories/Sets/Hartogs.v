@@ -220,25 +220,10 @@ Section Hartogs_Number.
   Definition hartogs_number_carrier : Type@{A} :=
     {X : 𝒫 (𝒫 (𝒫 A)) | resize_hprop (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
 
-  Lemma hset_equiv_bij {X Y} (f : X -> Y) : (* maybe move this to a more general file? *)
-    IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
-  Proof.
-    intros HY Hf H. srapply equiv_adjointify.
-    - exact f.
-    - intros y. enough (Hy : exists x, f x = y) by apply (proj1 Hy).
-      unshelve eapply merely_destruct; try apply H.
-      + apply hprop_allpath. intros [x Hx] [x' Hx'].
-        assert (Hxx : x = x'). { apply Hf. rewrite Hx, Hx'. reflexivity. }
-        destruct Hxx. apply ap. apply HY.
-      + intros [x Hx]. exists x. apply Hx.
-    - intros y. cbn. now destruct merely_destruct.
-    - intros x. cbn. destruct merely_destruct; try now apply Hf.
-  Defined.
-
   Lemma hartogs_equiv :
     hartogs_number_carrier <~> hartogs_number'.
   Proof.
-    apply equiv_inverse. unshelve eapply hset_equiv_bij.
+    apply equiv_inverse. unshelve eapply equiv_hset_bijection.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
       apply equiv_resize_hprop, tr. exists a. reflexivity.
     - exact _.

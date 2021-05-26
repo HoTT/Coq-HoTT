@@ -89,3 +89,25 @@ Qed.
 
 Definition infinite X :=
   inject nat X.
+
+
+
+(** * Sets of same cardinality are isomorphic *)
+
+(* For this result, we say that two sets X and Y have equal cardinality,
+   if there is an injection from X to Y that is also merely surjective. *)
+
+Lemma equiv_hset_bijection {X Y} (f : X -> Y) :
+  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
+Proof.
+  intros HY Hf H. srapply equiv_adjointify.
+  - exact f.
+  - intros y. enough (Hy : exists x, f x = y) by apply (proj1 Hy).
+    unshelve eapply merely_destruct; try apply H.
+    + apply hprop_allpath. intros [x Hx] [x' Hx'].
+      assert (Hxx : x = x'). { apply Hf. rewrite Hx, Hx'. reflexivity. }
+                             destruct Hxx. apply ap. apply HY.
+    + intros [x Hx]. exists x. apply Hx.
+  - intros y. cbn. now destruct merely_destruct.
+  - intros x. cbn. destruct merely_destruct; try now apply Hf.
+Defined.
