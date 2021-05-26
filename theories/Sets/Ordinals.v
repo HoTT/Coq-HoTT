@@ -6,7 +6,6 @@ From HoTT Require Import HIT.quotient.
     roughly following the presentation in the HoTT book. *)
 
 
-
 (** * Well-foundedness *)
 
 Inductive Accessible {A} (R : Lt A) (a : A) :=

@@ -1,57 +1,9 @@
 From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 
-From HoTT.Sets Require Import Ordinals.
+From HoTT.Sets Require Import Ordinals Cardinality Powers.
 
 (** This file contains a construction of the Hartogs number. *)
-
-
-
-(** * Cardinals *)
-
-Definition Cardinal := Trunc 0 HSet.
-Definition card A `{IsHSet A} : Cardinal
-  := tr (Build_HSet A).
-
-
-Instance le_cardinal `{Univalence} : Le Cardinal
-  := fun A B => Trunc_rec (fun A : HSet =>
-             Trunc_rec (fun B : HSet =>
-             (hexists (fun f : A -> B => IsInjective f)))
-             B)
-             A.
-
-Instance is_mere_relation_le_cardinal `{Univalence}
-  : is_mere_relation Cardinal (<=).
-Proof.
-  rapply Trunc_ind; intros A.
-  rapply Trunc_ind; intros B.
-  exact _.
-Qed.
-
-
-Lemma isinjective_Compose {A B C} (f : B -> C) (g : A -> B) :
-  IsInjective f ->
-  IsInjective g ->
-  IsInjective (f ∘ g).
-Proof.
-  intros injective_f injective_g.
-  intros x y eq. apply injective_g, injective_f. assumption.
-Qed.
-
-Instance transitive_le_Cardinal `{Univalence}
-  : Transitive (le : Le Cardinal).
-Proof.
-  unfold Transitive.
-  rapply Trunc_ind; intros X.
-  rapply Trunc_ind; intros Y.
-  rapply Trunc_ind; intros Z.
-  rapply Trunc_rec; intros [f injective_f].
-  rapply Trunc_rec; intros [g injective_g].
-  apply tr. exists (g ∘ f).
-  apply isinjective_Compose; assumption.
-Qed.
-
 
 
 (** * Hartogs number *)
@@ -97,18 +49,15 @@ Section Hartogs_Number.
         apply (isinjective_f x y). exact fx_fy.
   Defined.
 
-  Definition power_type (A : Type) : Type
-    := A -> HProp.
-
-  Notation 𝒫 := power_type.
+  Local Notation 𝒫 := power_type.
 
   Definition subtype_inclusion {A} (U V : 𝒫 A)
     := (forall a, U a -> V a) /\ merely (exists a : A, V a /\ ~U a).
   Coercion subtype_as_type' {X} (Y : 𝒫 X) : Type
     := { x : X & Y x }.
 
-  Infix "⊂" := subtype_inclusion (at level 50).
-  Notation "(⊂)" := subtype_inclusion.
+  Local Infix "⊂" := subtype_inclusion (at level 50).
+  Local Notation "(⊂)" := subtype_inclusion.
 
   (* The hartogs number of A embeds into the threefold power set of A.
      This preliminary injection also increases the universe level though. *)

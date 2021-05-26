@@ -4,14 +4,14 @@ From HoTT Require Import Spaces.Nat.
 From HoTT Require Import Equiv.BiInv.
 From HoTT Require Import HIT.unique_choice.
 
-From HoTT.Sets Require Import Ordinals Hartogs GCH.
+From HoTT.Sets Require Import Ordinals Cardinality Hartogs Powers GCH AC.
 
 Open Scope type.
 
 (* The proof of Sierpinski's theorem given in this file consists of 2 ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
-   2. A variant of Cantor's theorem stating that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_hinject_hinject).
-   Those two are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
+   2. A variant of Cantor's theorem saying that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_hinject_hinject).
+   Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
    from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal,
    which is enough to conclude GCH -> AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
 
@@ -126,7 +126,7 @@ Qed.
 
 
 
-(** * Euivalences on infinite sets *)
+(** * Equivalences on infinite sets *)
 
 Lemma path_infinite_unit (X : HSet) :
   infinite X -> Unit + X = X.
@@ -210,9 +210,7 @@ Proof.
         rewrite <- (Hfg (p, q)), <- (Hfg (p, q')). now rewrite Hqq'.
 Qed.
 
-
-
-(** ** Version just requiring propositional injections *)
+(* Version just requiring propositional injections *)
 
 Lemma Cantor_rel X (R : X -> (X -> HProp) -> HProp) :
   (forall x p p', R x p -> R x p' -> merely (p = p')) -> { p | forall x, ~ R x p }.
@@ -257,74 +255,6 @@ Proof.
 Qed.
 
 End Preparation.
-
-
-
-(** * Iterated powers *)
-
-(* If put in a section, this code generates universe conflicts (probably caused by power_hset) *)
-
-Lemma inject_power {PR : PropResizing} X :
-  IsHSet X -> inject X (X -> HProp).
-Proof.
-  intros HX.
-  set (f (x : X) := fun y => Build_HProp (resize_hprop (x = y))).
-  exists f. intros x x' H.
-  eapply (equiv_resize_hprop _)^-1. change (f x x').
-  rewrite H. cbn. apply equiv_resize_hprop. reflexivity.
-Qed.
-
-Fixpoint powit X n :=
-  match n with
-  | O => X 
-  | S n => powit X n -> HProp
-  end.
-
-Lemma powit_shift X n :
-  powit (X -> HProp) n = (powit X n -> HProp).
-Proof.
-  induction n in X |- *; cbn.
-  - reflexivity.
-  - rewrite IHn. reflexivity.
-Qed.
-
-Instance hset_power {UA : Univalence} (X : HSet) :
-  IsHSet (X -> HProp).
-Proof.
-  intros p q. apply hprop_allpath. intros H H'.
-  destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].
-  rewrite <- (Hfg H), <- (Hfg H'). apply ap. apply path_forall.
-  intros x. apply isset_HProp.
-Qed.
-
-Instance hset_powit {UA : Univalence} (X : HSet) n :
-  IsHSet (powit X n).
-Proof.
-  induction n; cbn.
-  - apply X.
-  - apply (@hset_power UA (Build_HSet (powit X n))).
-Qed.
-
-Lemma inject_powit {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  inject X (powit X n).
-Proof.
-  induction n.
-  - apply inject_refl.
-  - eapply inject_trans; try apply IHn.
-    apply inject_power. exact _.
-Qed.
-
-Lemma infinite_inject X Y :
-  infinite X -> inject X Y -> infinite Y.
-Proof.
-  apply inject_trans.
-Qed.
-
-Lemma infinite_powit {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  infinite X -> infinite (powit X n).
-Proof.
-  intros H. eapply infinite_inject; try apply H. apply inject_powit.
-Qed.
 
 
 
@@ -403,39 +333,6 @@ Qed.
 
 End Sierpinski.
 
-(* Usual set-theoretic formulation of AC *)
-
-Definition AC :=
-  forall (X Y : HSet) (R : X -> Y -> HProp), (forall x, hexists (R x)) -> hexists (fun f => forall x, R x (f x)).
-
-(* The well-ordering theorem implies AC *)
-
-Lemma WO_AC {LEM : ExcludedMiddle} :
-  (forall (X : HSet), hexists (fun (A : Ordinal) => hinject X A)) -> AC.
-Proof.
-  intros H X Y R HR. specialize (H Y).
-  eapply merely_destruct; try apply H.
-  intros [A HA]. eapply merely_destruct; try apply HA.
-  intros [f Hf]. apply tr. unshelve eexists.
-  - intros x. assert (HR' : hexists (fun y => merely (R x y * forall y', R x y' -> f y < f y' \/ f y = f y'))).
-    + pose proof (HAR := ordinal_has_minimal_hsolutions A (fun a => Build_HProp (merely (exists y, f y = a /\ R x y)))).
-      eapply merely_destruct; try apply HAR.
-      * eapply merely_destruct; try apply (HR x). intros [y Hy].
-        apply tr. exists (f y). apply tr. exists y. now split.
-      * intros [a [H1 H2]]. eapply merely_destruct; try apply H1.
-        intros [y [<- Hy]]. apply tr. exists y. apply tr. split; trivial.
-        intros y' Hy'. apply H2. apply tr. exists y'. split; trivial.
-    + edestruct (@iota Y) as [y Hy]; try exact y. 2: split; try apply HR'. 1: exact _.
-      intros y y' Hy Hy'.
-      eapply merely_destruct; try apply Hy. intros [H1 H2].
-      eapply merely_destruct; try apply Hy'. intros [H3 H4]. apply Hf.
-      eapply merely_destruct; try apply (H2 y'); trivial. intros [H5|H5]; trivial.
-      eapply merely_destruct; try apply (H4 y); trivial. intros [H6| -> ]; trivial.
-      apply Empty_rec. apply (irreflexive_ordinal_relation _ _ _ (f y)).
-      apply (ordinal_transitivity _ (f y')); trivial.
-  - intros x. cbn. destruct iota as [y Hy]. eapply merely_destruct; try apply Hy. now intros [].
-Qed.
-
 (* Main result: GCH implies AC *)
 
 Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
@@ -448,4 +345,4 @@ Proof.
   - intros Y. apply tr. apply hartogs_number_injection.
 Qed.
 
-(* Note that the assumption of LEM is actually not necessary due to GCH_LEM *)
+(* Note that the assumption of LEM is actually not necessary due to GCH_LEM. *)

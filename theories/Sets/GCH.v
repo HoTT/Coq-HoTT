@@ -2,43 +2,14 @@ From HoTT Require Import Basics TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Nat.
 
+From HoTT.Sets Require Import Cardinality.
+
 Open Scope type.
 
 
 (** * Formulation of GCH *)
 
-Definition inject X Y :=
-  { f : X -> Y | IsInjective f }.
-
-Lemma inject_refl X :
-  inject X X.
-Proof.
-  exists (fun x => x). intros x x'. easy.
-Qed.
-
-Lemma inject_trans X Y Z :
-  inject X Y -> inject Y Z -> inject X Z.
-Proof.
-  intros [f Hf] [g Hg]. exists (fun x => g (f x)).
-  now intros x x' H % Hg % Hf.
-Qed.
-
-Definition hinject X Y :=
-  hexists (@IsInjective X Y).
-
-Lemma hinject_trans X Y Z :
-  hinject X Y -> hinject Y Z -> hinject X Z.
-Proof.
-  intros H1 H2.
-  eapply merely_destruct; try apply H1. intros [f Hf].
-  eapply merely_destruct; try apply H2. intros [g Hg].
-  apply tr. exists (fun x => g (f x)). now intros x x' H % Hg % Hf.
-Qed.
-
-Definition infinite X :=
-  inject nat X.
-
-(* GCH states that for any infinite set X with Y squeezed between X and P(X) either Y embeds into X or P(X) embeds into Y. *)
+(* GCH states that for any infinite set X with Y between X and P(X) either Y embeds into X or P(X) embeds into Y. *)
 
 Definition GCH :=
   forall X Y : HSet, infinite X -> hinject X Y -> hinject Y (X -> HProp) -> hinject Y X + hinject (X -> HProp) Y.
@@ -94,8 +65,7 @@ Section LEM.
 
   (* The main idea is that for a given set X and proposition P, the set sings fits between X and P(X).
      Then CH for X implies that either sings embeds into X (which can be refuted constructively),
-     or that P(X) embeds into sings, from which we can extract a proof of P + ~P. *)
-     
+     or that P(X) embeds into sings, from which we can extract a proof of P + ~P. *)  
 
   Lemma Cantor_sing (i : (X -> HProp) -> (X -> HProp)) :
     IsInjective i -> exists p, ~ sing (i p).
