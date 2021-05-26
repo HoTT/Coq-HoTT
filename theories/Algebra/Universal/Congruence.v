@@ -15,7 +15,7 @@ Require Import
 
 Unset Elimination Schemes.
 
-Import notations_algebra.
+Local Open Scope Algebra_scope.
 
 Section congruence.
   Context {σ : Signature} (A : Algebra σ) (Φ : forall s, Relation (A s)).

@@ -13,7 +13,6 @@ Require Import
 
 Declare Scope Algebra_scope.
 Delimit Scope Algebra_scope with Algebra.
-Open Scope Algebra_scope.
 
 (** The below definition [SymbolTypeOf] is used to specify algebra
     operations. See [SymbolType] and [Operation] below. *)
@@ -78,9 +77,8 @@ Definition Operation {σ} (A : Carriers σ) (w : SymbolType σ) : Type
     carriers [Carriers σ], and for each symbol [u : Symbol σ], an
     operation/function of type [Operation carriers (σ u)],
     where [σ u : SymbolType σ] is the symbol type of [u].
-    Notice that [Algebra] cannot specify equations involving the
-    carriers and operations. See [HoTT.Algebra.Universal.Equational]
-    for equations. *)
+    Notice that [Algebra] does not specify equations involving
+    carriers and operations. Equations are defined elsewhere. *)
 
 Record Algebra {σ : Signature} : Type := Build_Algebra
   { carriers : Carriers σ
@@ -159,8 +157,4 @@ Defined.
 
 Arguments path_path_algebra {_} {σ} {A B}%Algebra_scope (p q r)%path_scope.
 
-Module notations_algebra.
-
-  Global Notation "u .# A" := (operations A u) : Algebra_scope.
-
-End notations_algebra.
+Global Notation "u .# A" := (operations A u) : Algebra_scope.

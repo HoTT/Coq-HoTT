@@ -147,7 +147,7 @@ Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
   := (cat_assoc_strong f g h)^.
 
 Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
-  : Is1Cat A.
+  : Is1Cat A | 1000.
 Proof.
   srapply Build_Is1Cat.
   all: intros a b.
