@@ -65,6 +65,9 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   : A <~> C
   := equiv_compose g f.
 
+Definition iff_equiv {A B : Type} (f : A <~> B)
+  : A <-> B := (equiv_fun f, f^-1).
+
 (** We put [g] and [f] in [equiv_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
 Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 

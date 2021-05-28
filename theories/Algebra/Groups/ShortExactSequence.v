@@ -8,11 +8,24 @@ Local Open Scope path_scope.
 
 (** * Complexes of groups *)
 
-Proposition grp_homo_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C} (cx : IsComplex i f)
-  : GroupHomomorphism A (grp_kernel f).
+Definition grp_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C} (cx : IsComplex i f)
+  : GroupHomomorphism A (grp_kernel f)
+  := grp_kernel_corec cx.
+
+Definition grp_iso_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C}
+           `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)
+  : GroupIsomorphism A (grp_kernel f)
+  := Build_GroupIsomorphism _ _ (grp_cxfib cx_isexact) (isequiv_cxfib ex).
+
+(** This is the same proof as for [equiv_cxfib_beta], but giving the proof is easier than specializing the general result. *)
+Proposition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
+            `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)
+  : i $o (grp_iso_inverse (grp_iso_cxfib ex)) $== subgroup_incl (grp_kernel f).
 Proof.
-  destruct cx as [phi eq]; simpl in phi, eq.
-  exact (@grp_kernel_corec _ _ _ f i phi).
+  rapply equiv_ind.
+  1: exact (isequiv_cxfib ex).
+  intro x.
+  exact (ap (fun y => i y) (eissect _ x)).
 Defined.
 
 Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)

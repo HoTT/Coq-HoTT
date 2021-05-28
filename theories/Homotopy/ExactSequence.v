@@ -222,6 +222,30 @@ Proof.
   rewrite (concat_A1p (eisretr k)), concat_V_pp. reflexivity.
 Defined.
 
+(** If a complex [F -> E -> B] is [O]-exact, the map [F -> B] is [O]-local, and path types in [Y] are [O]-local, then the induced map [cxfib] is an equivalence. *)
+Global Instance isequiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
+       `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
+  : IsEquiv (cxfib cx_isexact).
+Proof.
+  rapply isequiv_conn_ino_map.
+  1: apply ex.
+  rapply (cancelL_mapinO _ _ pr1).
+Defined.
+
+Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
+           `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
+  : F <~>* pfiber f := Build_pEquiv _ _ _ (isequiv_cxfib ex).
+
+Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
+            `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
+  : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
+Proof.
+  rapply equiv_ind.
+  1: exact (isequiv_cxfib ex).
+  intro x.
+  exact (ap (fun g => i g) (eissect _ x)).
+Defined.
+
 (** When [n] is the identity modality [purely], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an purely-exact sequence. *)
 
 Definition iscomplex_pfib {X Y} (f : X ->* Y)
@@ -265,12 +289,7 @@ Defined.
 
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
            `{IsExact purely F X Y i f}
-  : F <~>* pfiber f.
-Proof.
-  refine (Build_pEquiv _ _ (cxfib cx_isexact) _).
-  apply isequiv_contr_map; intros u. 
-  rapply conn_map_isexact.
-Defined.
+  : F <~>* pfiber f := Build_pEquiv _ _ (cxfib cx_isexact) _.
 
 Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
            `{IsExact purely F X Y i f}

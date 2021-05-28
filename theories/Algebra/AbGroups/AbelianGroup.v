@@ -24,6 +24,23 @@ Proof.
   split; exact _.
 Defined.
 
+Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
+
+(** ** Paths between abelian groups *)
+
+Definition equiv_path_abgroup `{Univalence} {A B : AbGroup@{u}}
+  : GroupIsomorphism A B <~> (A = B).
+Proof.
+  refine (equiv_ap_inv issig_abgroup _ _ oE _).
+  About equiv_path_sigma_hprop.
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  exact equiv_path_group@{v w u u u u u u u u u}.
+Defined.
+
+Definition equiv_path_abgroup_group `{Univalence} {A B : AbGroup}
+  : (A = B :> AbGroup) <~> (A = B :> Group)
+  := equiv_path_group@{v w u u u u u u u u u} oE equiv_path_abgroup^-1.
+
 (** ** Subgroups of abelian groups *)
 
 (** Subgroups of abelian groups are abelian *)
@@ -150,6 +167,7 @@ Proof.
   apply path_prod; simpl; apply commutativity.
 Defined.
 
+(** These inherit [IsEmbedding] instances from their [grp_prod] versions. *)
 Definition ab_biprod_inl {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_inl.
 Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
 
@@ -170,11 +188,9 @@ Proof.
     exact (associativity _ (f a') _)^.
 Defined.
 
-Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A
-  := ab_biprod_rec grp_homo_id grp_homo_const.
-
-Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B
-  := ab_biprod_rec grp_homo_const grp_homo_id.
+(** These inherit [IsSurjection] instances from their [grp_prod] versions. *)
+Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
 Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
   : (A $-> Y) * (B $-> Y)
@@ -188,8 +204,7 @@ Proposition ab_biprod_rec_beta' {A B Y : AbGroup}
   : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.
 Proof.
   intros [a b]; simpl.
-  refine ((grp_homo_op u _ _)^ @ _).
-  apply (ap u).
+  refine ((grp_homo_op u _ _)^ @ ap u _).
   apply path_prod.
   - exact (right_identity a).
   - exact (left_identity b).
@@ -242,6 +257,69 @@ Definition ab_biprod_corec {A B X : AbGroup}
            (f : X $-> A) (g : X $-> B)
   : X $-> ab_biprod A B := grp_prod_corec f g.
 
+Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
+  : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
+  := fun _ => idpath.
+
+(** *** Functoriality of [ab_biprod] *)
+
+Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-> A') (g: B $-> B')
+  : ab_biprod A B $-> ab_biprod A' B'
+  := (ab_biprod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).
+
+Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $-> Y)
+           (g0 : X $-> A) (g1 : Y $-> B)
+  : functor_ab_biprod g0 g1 $o ab_biprod_corec f0 f1
+                      $== ab_biprod_corec (g0 $o f0) (g1 $o f1)
+  := fun _ => idpath.
+
+Definition isequiv_functor_ab_biprod {A A' B B' : AbGroup}
+           (f : A $-> A') (g : B $-> B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
+  : IsEquiv (functor_ab_biprod f g).
+Proof.
+  srapply isequiv_adjointify.
+  1: { rapply functor_ab_biprod;
+       apply grp_iso_inverse.
+       + exact (Build_GroupIsomorphism _ _ f _).
+       + exact (Build_GroupIsomorphism _ _ g _). }
+  all: intros [a b]; simpl.
+  all: apply path_prod'.
+  1,2: apply eisretr.
+  all: apply eissect.
+Defined.
+
+Definition equiv_functor_ab_biprod {A A' B B' : AbGroup}
+           (f : A $-> A') (g : B $-> B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
+  : GroupIsomorphism (ab_biprod A B) (ab_biprod A' B')
+  := Build_GroupIsomorphism _ _ _ (isequiv_functor_ab_biprod f g).
+
+(** ** Kernels of abelian groups *)
+
+Definition ab_kernel {A B : AbGroup} (f : A $-> B) : AbGroup
+  := Build_AbGroup (grp_kernel f) _.
+
+(** ** Transporting in families related to abelian groups *)
+
+Lemma transport_abgrouphomomorphism_from_const `{Univalence} {A B B' : AbGroup}
+      (p : B = B') (f : GroupHomomorphism A B)
+  : transport (Hom A) p f
+    = grp_homo_compose (equiv_path_abgroup^-1 p) f.
+Proof.
+  induction p.
+  by apply equiv_path_grouphomomorphism.
+Defined.
+
+Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
+      (p : A = A') (f : GroupHomomorphism A B)
+  : transport (fun G => Hom G B) p f
+    = grp_homo_compose f (grp_iso_inverse (equiv_path_abgroup^-1 p)).
+Proof.
+  induction p; cbn.
+  by apply equiv_path_grouphomomorphism.
+Defined.
+
+(** ** Operations on abelian groups *)
+
 (** The negation automorphism of an abelian group *)
 Definition ab_homo_negation {A : AbGroup} : GroupIsomorphism A A.
 Proof.
@@ -254,4 +332,18 @@ Proof.
   - srapply isequiv_adjointify.
     1: exact (fun a => -a).
     1-2: exact negate_involutive.
+Defined.
+
+(** Addition [+] is a group homomorphism [A+A -> A]. *)
+Definition ab_add_homo {A : AbGroup}
+  : ab_biprod A A $-> A
+  := ab_biprod_rec grp_homo_id grp_homo_id.
+
+(** We can add group homomorphisms. *)
+Definition ab_homo_add {A : Group} {B : AbGroup} (f g : A $-> B)
+  : A $-> B.
+Proof.
+  refine (grp_homo_compose ab_add_homo _).
+  (** [fun a => f(a) + g(a)] **)
+  exact (grp_prod_corec f g).
 Defined.
