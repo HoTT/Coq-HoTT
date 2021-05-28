@@ -309,7 +309,6 @@ Section LexMeet.
   Defined.
 
   (** Therefore, if a type starts out as n-plus-separated, then n+2 applications of the plus-construction suffice to make it (-2)-plus-separated, i.e. in the meet subuniverse.  Hence it has a reflection. *)
-
   Global Instance prereflects_plus_nsep (n : trunc_index) (X : Type) `{In (nSep n (Meet L O)) X}
     : PreReflects (Meet L O) X.
   Proof.
