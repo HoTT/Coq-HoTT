@@ -91,6 +91,7 @@ Require Export HoTT.Modalities.Topological.
 Require Export HoTT.Modalities.Open.
 Require Export HoTT.Modalities.Closed.
 Require Export HoTT.Modalities.Fracture.
+Require Export HoTT.Modalities.Meet.
 
 Require Export HoTT.Modalities.CoreflectiveSubuniverse.
 
