@@ -3,7 +3,13 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions HFiber Truncations NullHomotopy Pullback.
 Require Import ReflectiveSubuniverse Modality Descent Lex Separated.
 
-(** Binary meets of reflective subuniverses, without assuming accessibility.  When applied in the cohesive topos of presheaves on a Grothendieck topology (see https://ncatlab.org/nlab/show/plus+construction+on+presheaves), this specializes to stack completion.  In particular, we will recover the result that an n-truncated type can be stackified by (n+2) applications of the "plus construction".  *)
+(** We construct "canonical" binary meets of reflective subuniverses (that is, whose underlying subuniverse is an intersection), without assuming accessibility.  In particular, we will show:
+
+1. Given two reflective subuniverses L and O, if [L O X] is [O]-modal, then it is a reflection into the canonical meet.  In particular, this is always the case if [L] preserves [O]-modal types; this is Theorem 3.30 of RSS.
+
+1. If L and O are lex modalities satisfying an additional "composability" condition, then the composite functor [L o O] converges to a reflection into the canonical meet after n+2 applications when applied to an n-type for some finite n.
+
+The latter gives in particular a synthetic approach to higher sheafification (stack completion).  As described at https://ncatlab.org/nlab/show/plus+construction+on+presheaves, for any site C the topos of presheaves on its Grothendieck topology is cohesive and even totally connected, so that its shape and sharp modalities are both lex.  Their canonical meet is the topos of sheaves for the given topology, and the composite functor [shape o sharp] is the usual "plus construction" on (higher) presheaves.  Thus, we recover synthetically the result that an n-truncated type can be stackified by (n+2) applications of the plus construction.  We also refer to [L o O] as a "plus construction" in the general case of reflective subuniverses.  *)
 
 Section RSUMeet.
   Context (L O : ReflectiveSubuniverse).
