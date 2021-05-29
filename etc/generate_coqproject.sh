@@ -1,5 +1,5 @@
 ## List tracked .v files
-TRACKED_V_FILES=$(git ls-files "*.v")
+TRACKED_V_FILES=$(find * -type f -name *.v)
 
 ## List untracked .v files
 #UNTRACKED_V_FILES=$(git ls-files --others --exclude-standard "*.v") 
