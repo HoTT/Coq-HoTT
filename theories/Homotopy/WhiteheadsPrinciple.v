@@ -62,12 +62,7 @@ Proof.
   (** The pi_0 condition is trivial because [A] and [B] are 0-connected. *)
   1: apply isequiv_contr_contr.
   (** Since [A] is 0-connected, it's enough to check the [loops_functor] condition for the basepoint. *)
-  intro a.
-  srefine (Trunc_rec _ (merely_path_is0connected _ a (point A))).
-  2: exact _.
-  intro p.
-  symmetry in p.
-  induction p.
+  rapply conn_point_elim.
   (** The [loops_functor] condition for [pmap_from_point f _] is equivalent to the [loops_functor] condition for [f] with its given pointing. *)
   srapply isequiv_homotopic'.
   - exact (equiv_concat_lr (point_eq f) (point_eq f)^ oE (Build_Equiv _ _ _ e)).
