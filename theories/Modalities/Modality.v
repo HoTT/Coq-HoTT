@@ -473,12 +473,14 @@ Section ModalFact.
   Definition image {A B : Type} (f : A -> B)
   : Factorization (@IsConnMap O) (@MapIn O) f.
   Proof.
+    pose mapinO_pr1. (** Slightly speeds up next line. *)
     refine (Build_Factorization {b : B & O (hfiber f b)}
                                 (fun a => (f a ; to O _ (a;1)))
                                 pr1
                                 (fun a => 1)
                                 _ _).
-    - exact (conn_map_compose O
+    pose conn_map_functor_sigma. (** Slightly speeds up next line. *)
+    exact (conn_map_compose O
               (equiv_fibration_replacement f)
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
   Defined.
@@ -590,11 +592,7 @@ Section ModalFact.
       refine ((inv_V _)^ @ _ @ inv_V _); apply inverse2.
       refine (_ @ pr2_path (equiv_O_factor_hfibers_beta f fact fact' a)).
       refine (_ @ (transport_paths_Fl _ _)^).
-      (** Apparently Coq needs a little help to see that these paths are the same. *)
-      match goal with
-          |- ((?p)^ @ ?q)^ = _ @ _ => change ((p^ @ q)^ = q^ @ p)
-      end.
-      refine (inv_pp _ _ @ (1 @@ inv_V _)).
+      exact (inv_pp _ _ @ (1 @@ inv_V _)).
   Defined.
 
 End ModalFact.

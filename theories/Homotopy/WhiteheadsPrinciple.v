@@ -42,18 +42,12 @@ Proof.
   apply isequiv_inhab_codomain.
   intro p.
   apply (ap (@tr 0 _)) in p.
-  apply (ap (Trunc_functor 0 f)^-1) in p.
-  pose proof ((eissect (Trunc_functor 0 f) (tr x))^
-              @ p @ eissect (Trunc_functor 0 f) (tr y)) as q.
-  clear p.
-  apply (equiv_path_Tr _ _)^-1 in q.
+  apply (@equiv_inj _ _ _ i (tr x) (tr y)) in p.
+  apply (equiv_path_Tr _ _)^-1 in p.
   strip_truncations.
-  destruct q.
+  destruct p.
   cbn in ii.
-  srapply isequiv_homotopic.
-  { intro p.
-    exact (1 @ (ap f p @ 1)). }
-  1: apply (ii x).
+  snrapply (isequiv_homotopic _ (H:=ii x)).
   exact (fun _ => concat_1p _ @ concat_p1 _).
 Defined.
 
@@ -68,12 +62,7 @@ Proof.
   (** The pi_0 condition is trivial because [A] and [B] are 0-connected. *)
   1: apply isequiv_contr_contr.
   (** Since [A] is 0-connected, it's enough to check the [loops_functor] condition for the basepoint. *)
-  intro a.
-  srefine (Trunc_rec _ (merely_path_is0connected _ a (point A))).
-  2: exact _.
-  intro p.
-  symmetry in p.
-  induction p.
+  rapply conn_point_elim.
   (** The [loops_functor] condition for [pmap_from_point f _] is equivalent to the [loops_functor] condition for [f] with its given pointing. *)
   srapply isequiv_homotopic'.
   - exact (equiv_concat_lr (point_eq f) (point_eq f)^ oE (Build_Equiv _ _ _ e)).

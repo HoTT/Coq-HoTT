@@ -173,26 +173,21 @@ Section UnstableOctahedral.
 
   Context (n : trunc_index) {A B C : Type} (f : A -> B) (g : B -> C).
 
-  Definition hfiber_compose_map (b : B)
-    : hfiber (g o f) (g b) -> hfiber g (g b)
+  Definition hfiber_compose_map (c : C)
+    : hfiber (g o f) c -> hfiber g c
     := fun x => (f x.1 ; x.2).
 
   Definition hfiber_hfiber_compose_map (b : B)
-    : hfiber (hfiber_compose_map b) (b;1) <~> hfiber f b.
+    : hfiber (hfiber_compose_map (g b)) (b;1) <~> hfiber f b.
   Proof.
     unfold hfiber, hfiber_compose_map.
-    refine (_ oE (equiv_sigma_assoc _ _)^-1).
-    apply equiv_functor_sigma_id; intros a; simpl.
-    refine (_ oE _); revgoals.
-    - refine (equiv_functor_sigma_id
-                (fun p => (equiv_path_sigma _ _ _)^-1)).
-    - cbn. refine (_ oE equiv_sigma_symm _).
-      apply equiv_sigma_contr; intros p.
-      destruct p; simpl; exact _.
+    (** Once we "destruct" the equality in a sigma type, the rest is just shuffling of data and path induction. *)
+    refine (_ oE equiv_functor_sigma_id (fun x => (equiv_path_sigma _ _ _)^-1)); cbn.
+    make_equiv_contr_basedpaths.
   Defined.
 
   Definition hfiber_compose (c : C)
-  : hfiber (g o f) c <~> { w : hfiber g c & hfiber f w.1 }.
+    : hfiber (g o f) c <~> { w : hfiber g c & hfiber f w.1 }.
   Proof.
     make_equiv_contr_basedpaths.
   Defined.

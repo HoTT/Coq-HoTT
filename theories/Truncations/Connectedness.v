@@ -85,19 +85,20 @@ Proof.
   apply O_lex_leq_Tr.
 Defined.
 
+(** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
+
 (** To prove an [n]-truncated predicate on an (n+1)-connected, pointed type, it's enough to prove it for the basepoint. *)
 Definition conn_point_elim `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
            (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
   : forall a, P a.
 Proof.
+  (** This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
   intro a.
   (** Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
   pose proof (p := center _ : Tr n ((point A) = a)).
   strip_truncations.
   exact (p # p0).
 Defined.
-
-(** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
 
 End Extensions.
 
@@ -140,7 +141,7 @@ Definition merely_path_is0connected `{Univalence}
            (A : Type) `{IsConnected 0 A} (x y : A)
 : merely (x = y).
 Proof.
-  (** This follows immediately from the previous result. *)
+  (** This follows immediately from [isconnected_paths] above. *)
   rapply center.
 Defined.
 
