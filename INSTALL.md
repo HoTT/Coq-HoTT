@@ -180,9 +180,12 @@ If you installed the library via `opam` then simply run `opam update` and then
 `opam ugprade`.
 
 To upgrade your clone of the GitHub repository as set up in [the instructions on
-using git](#forking-and-obtaining-the-hott-library). Pull the latest version
-using `git pull upstream master`. We also [have tags in the GitHub
-repository][7] for our released versions which you can use instead of `master`.
+using git](#forking-and-obtaining-the-hott-library): Pull the latest version
+using `git pull upstream master` and then rebuild using `make` as above.
+
+To update your fork, use `git push origin master`. We also [have tags in the
+GitHub repository][7] for our released versions which you can use instead of
+`master`.
 
 # 6. Troubleshooting
 
