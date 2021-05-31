@@ -630,12 +630,18 @@ Proof.
   intros []; reflexivity.
 Defined.
 
+Global Instance hasequivfuns_ptype : HasEquivFuns pType.
+Proof.
+  srapply Build_HasEquivFuns.
+  - exact pEquiv.
+  - intros A B. exact IsEquiv.
+  - intros a b f. apply f.
+Defined.
+
 (** pType has equivalences *)
 Global Instance hasequivs_ptype : HasEquivs pType.
 Proof.
-  srapply (Build_HasEquivs _ _ _ _ pEquiv (fun A B f => IsEquiv f));
-    intros A B f; cbn; intros.
-  - exact f.
+  srapply Build_HasEquivs; intros A B f; cbn; intros.
   - exact _.
   - exact (Build_pEquiv _ _ f _).
   - reflexivity.

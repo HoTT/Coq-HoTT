@@ -8,13 +8,37 @@ Declare Scope wc_iso_scope.
 
 (** * Equivalences in wild categories *)
 
-(** We could define equivalences in any wild 2-category as bi-invertible maps, or in a wild 3-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to (quasi-)isomorphism. *)
-
-Class HasEquivs (A : Type) `{Is1Cat A} :=
+Class HasEquivFuns (A : Type) `{Is1Cat A} :=
 {
   CatEquiv' : A -> A -> Type where "a $<~> b" := (CatEquiv' a b);
   CatIsEquiv' : forall a b, (a $-> b) -> Type;
   cate_fun' : forall a b, (a $<~> b) -> (a $-> b);
+}.
+
+(** Since apparently a field of a record can't be the source of a coercion (Coq complains about the uniform inheritance condition, although as officially stated that condition appears to be satisfied), we redefine all the fields of [HasEquivs]. *)
+
+Definition CatEquiv {A} `{HasEquivFuns A} (a b : A)
+  := @CatEquiv' A _ _ _ _ a b.
+
+Notation "a $<~> b" := (CatEquiv a b).
+Infix "≅" := CatEquiv : wc_iso_scope.
+Arguments CatEquiv : simpl never.
+
+Definition cate_fun {A} `{HasEquivFuns A} {a b : A} (f : a $<~> b)
+  : a $-> b
+  := @cate_fun' A _ _ _ _ a b f.
+
+Coercion cate_fun : CatEquiv >-> Hom.
+
+(* Being an equivalence should be a typeclass, but we have to redefine it to work around https://github.com/coq/coq/issues/8994 . *)
+Class CatIsEquiv {A} `{HasEquivFuns A} {a b : A} (f : a $-> b)
+  := catisequiv : CatIsEquiv' a b f.
+
+(** We could define equivalences in any wild 2-category as bi-invertible maps, or in a wild 3-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to (quasi-)isomorphism. *)
+
+Class HasEquivs (A : Type) `{Is1Cat A} :=
+{
+  cate_hasequivfuns : HasEquivFuns A;
   cate_isequiv' : forall a b (f : a $<~> b), CatIsEquiv' a b (cate_fun' a b f);
   cate_buildequiv' : forall a b (f : a $-> b), CatIsEquiv' a b f -> CatEquiv' a b;
   cate_buildequiv_fun' : forall a b (f : a $-> b) (fe : CatIsEquiv' a b f),
@@ -28,24 +52,7 @@ Class HasEquivs (A : Type) `{Is1Cat A} :=
     (r : f $o g $== Id b) (s : g $o f $== Id a), CatIsEquiv' a b f;
 }.
 
-(** Since apparently a field of a record can't be the source of a coercion (Coq complains about the uniform inheritance condition, although as officially stated that condition appears to be satisfied), we redefine all the fields of [HasEquivs]. *)
-
-Definition CatEquiv {A} `{HasEquivs A} (a b : A)
-  := @CatEquiv' A _ _ _ _ a b.
-
-Notation "a $<~> b" := (CatEquiv a b).
-Infix "≅" := CatEquiv : wc_iso_scope.
-Arguments CatEquiv : simpl never.
-
-Definition cate_fun {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
-  : a $-> b
-  := @cate_fun' A _ _ _ _ a b f.
-
-Coercion cate_fun : CatEquiv >-> Hom.
-
-(* Being an equivalence should be a typeclass, but we have to redefine it to work around https://github.com/coq/coq/issues/8994 . *)
-Class CatIsEquiv {A} `{HasEquivs A} {a b : A} (f : a $-> b)
-  := catisequiv : CatIsEquiv' a b f.
+Global Existing Instance cate_hasequivfuns.
 
 Global Instance cate_isequiv {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
   : CatIsEquiv f

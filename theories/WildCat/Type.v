@@ -58,12 +58,19 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+Global Instance hasequivfuns_type : HasEquivFuns Type.
+Proof.
+  srapply Build_HasEquivFuns.
+  - exact Equiv.
+  - intros A B. exact IsEquiv.
+  - intros A B. exact equiv_fun.
+Defined.
+
 Global Instance hasequivs_type : HasEquivs Type.
 Proof.
-  srefine (Build_HasEquivs Type _ _ _ Equiv (@IsEquiv) _ _ _ _ _ _ _ _); intros A B.
-  all:intros f.
-  - exact f.
-  - exact _.
+  srefine (Build_HasEquivs Type _ _ _ _ _ _ _ _ _ _ _).
+  all:intros A B f.
+  - apply f.
   - apply Build_Equiv.
   - intros; reflexivity.
   - intros; exact (f^-1).

@@ -72,15 +72,20 @@ Defined.
 
 (** Product categories inherit equivalences *)
 
+Global Instance hasequivfuns_prod A B `{HasEquivFuns A} `{HasEquivFuns B}
+  : HasEquivFuns (A * B).
+Proof.
+  srapply Build_HasEquivFuns.
+  - intros a b. exact ((fst a $<~> fst b) * (snd a $<~> snd b)).
+  - intros a b f; exact (CatIsEquiv (fst f) * CatIsEquiv (snd f)).
+  - intros a b f. split; [ exact (fst f) | exact (snd f) ].
+Defined.
+
 Global Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
   : HasEquivs (A * B).
 Proof.
-  srefine (Build_HasEquivs (A * B) _ _ _
-             (fun a b => (fst a $<~> fst b) * (snd a $<~> snd b))
-             _ _ _ _ _ _ _ _ _).
-  1:intros a b f; exact (CatIsEquiv (fst f) * CatIsEquiv (snd f)).
+  srefine (Build_HasEquivs (A * B) _ _ _ _ _ _ _ _ _ _ _).
   all:cbn; intros a b f.
-  - split; [ exact (fst f) | exact (snd f) ].
   - split; exact _.
   - intros [fe1 fe2]; split.
     + exact (Build_CatEquiv (fst f)).

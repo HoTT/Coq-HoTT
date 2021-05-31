@@ -508,12 +508,17 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-Global Instance hasequivs_group : HasEquivs Group.
+Global Instance hasequivfuns_group : HasEquivFuns Group.
 Proof.
-  unshelve econstructor.
+  srapply Build_HasEquivFuns.
   + exact GroupIsomorphism.
   + exact (fun G H f => IsEquiv f).
   + intros G H f; exact f.
+Defined.
+
+Global Instance hasequivs_group : HasEquivs Group.
+Proof.
+  unshelve econstructor.
   + exact Build_GroupIsomorphism.
   + intros G H; exact grp_iso_inverse.
   + cbn; exact _.

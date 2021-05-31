@@ -170,13 +170,20 @@ Proof.
   srapply isnat_tr.
 Defined.
 
-(** Opposite categories preserve having equivalences. *)
-Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+
+Global Instance hasequivfuns_op {A} `{HasEquivFuns A} : HasEquivFuns A^op.
 Proof.
-  srapply Build_HasEquivs; intros a b; unfold op in *; cbn.
+  srapply (Build_HasEquivFuns A); intros a b; cbn.
   - exact (b $<~> a).
   - apply CatIsEquiv.
   - apply cate_fun'.
+Defined.
+
+(** Opposite categories preserve having equivalences. *)
+Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+Proof.
+  srapply Build_HasEquivs.
+  all: intros a b; unfold op in *; cbn.
   - apply cate_isequiv'.
   - apply cate_buildequiv'.
   - apply cate_buildequiv_fun'.

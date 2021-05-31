@@ -72,14 +72,18 @@ Section Induced_category.
     constructor. intros. apply X.
   Defined.
 
+  Definition induced_hasequivfuns `{HasEquivFuns B} : HasEquivFuns A.
+  Proof.
+    srapply Build_HasEquivFuns.
+    + intros a b. exact (f a $<~> f b).
+    + intros a b h. apply (CatIsEquiv' (f a) (f b)). exact (fmap f h).
+    + intros a b. intros g. exact(cate_fun g).
+  Defined.
+
   Definition induced_hasequivs `{HasEquivs B} : HasEquivs A.
   Proof.
     srapply Build_HasEquivs.
-    + intros a b. exact (f a $<~> f b).
-    + intros a b h. apply (CatIsEquiv' (f a) (f b)).
-      exact (fmap f h).
-    + intros a b; cbn in *. 
-      intros g. exact( cate_fun g).
+    + apply induced_hasequivfuns.
     + intros a b h; cbn in *. 
       exact (cate_isequiv' _ _ h ).
     + intros a b h; cbn in *. 

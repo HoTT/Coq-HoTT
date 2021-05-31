@@ -275,12 +275,17 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-Global Instance hasequivs_cring : HasEquivs CRing.
+Global Instance hasequivfuns_cring : HasEquivFuns CRing.
 Proof.
-  unshelve econstructor.
+  srapply Build_HasEquivFuns.
   + exact CRingIsomorphism.
   + exact (fun G H f => IsEquiv f).
   + intros G H f; exact f.
+Defined.
+
+Global Instance hasequivs_cring : HasEquivs CRing.
+Proof.
+  unshelve econstructor.
   + exact Build_CRingIsomorphism.
   + intros G H; exact rng_iso_inverse.
   + cbn; exact _.

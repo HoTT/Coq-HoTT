@@ -136,7 +136,8 @@ Proof.
     refine (_ @ cate_issect (f a) (Id a)); cbn.
     apply ap.
     srapply cat_idr_strong.
-  - refine ((isnat (cat_equiv_natequiv _ _ f) (f^-1$ b (Id b)) (Id a))^ @ _); cbn.
+  - pose (g := @cate_inv _ _ _ _ _ (opyon1 a) (opyon1 b) f).
+    refine ((isnat (cat_equiv_natequiv _ _ f) (g b (Id b)) (Id a))^ @ _); cbn.
     refine (_ @ cate_isretr (f b) (Id b)); cbn.
     apply ap.
     srapply cat_idr_strong.

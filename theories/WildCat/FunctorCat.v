@@ -70,15 +70,23 @@ Defined.
 
 (** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that this is not a "fully coherent" notion of equivalence, since the functors and transformations are not themselves fully coherent. *)
 
+Global Instance hasequivfuns_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
+  : HasEquivFuns (Fun01 A B).
+Proof.
+  srapply Build_HasEquivFuns.
+  - intros [F ?] [G ?].
+    exact (NatEquiv F G).
+  - intros [F ?] [G ?] [alpha ?].
+    exact (forall a, CatIsEquiv (alpha a)).
+  - intros [F ?] [G ?] [alpha ?].
+    exists (fun a => alpha a); assumption.
+Defined.
+
 Global Instance hasequivs_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
   : HasEquivs (Fun01 A B).
 Proof.
   srapply Build_HasEquivs.
-  1:{ intros [F ?] [G ?]. exact (NatEquiv F G). }
-  1:{ intros [F ?] [G ?] [alpha ?]; cbn in *.
-      exact (forall a, CatIsEquiv (alpha a)). }
   all:intros [F ?] [G ?] [alpha alnat]; cbn in *.
-  - exists (fun a => alpha a); assumption.
   - intros a; exact _.
   - intros ?.
     snrapply Build_NatEquiv.
