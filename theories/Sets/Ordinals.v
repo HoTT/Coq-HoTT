@@ -491,8 +491,10 @@ Proof.
       * reflexivity.
 Defined.
 
+Declare Scope Ordinals.
+Open Scope Ordinals.
 
-Notation "↓ a" := (initial_segment a) (at level 4, format "↓ a").
+Notation "↓ a" := (initial_segment a) (at level 4, format "↓ a") : Ordinals.
 (* 3 is the level of most unary postfix operators in the standard lib, e.g. f^-1 *)
 
 Definition in_
@@ -634,7 +636,7 @@ Definition bound
   := H.1.
 
 (* We use this notation to hide the proof of A < B that `bound` takes as an argument *)
-Notation "A ◁ B" := (@bound A B _) (at level 70).
+Notation "A ◁ B" := (@bound A B _) (at level 70) : Ordinals.
 
 
 Definition bound_property

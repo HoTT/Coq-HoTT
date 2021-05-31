@@ -49,15 +49,18 @@ Section Hartogs_Number.
         apply (isinjective_f x y). exact fx_fy.
   Defined.
 
-  Local Notation 𝒫 := power_type.
+  Declare Scope Hartogs.
+  Open Scope Hartogs.
+
+  Notation "'𝒫'" := power_type (at level 30) : Hartogs.
 
   Definition proper_subtype_inclusion {A} (U V : 𝒫 A)
     := (forall a, U a -> V a) /\ merely (exists a : A, V a /\ ~U a).
   Coercion subtype_as_type' {X} (Y : 𝒫 X) : Type
     := { x : X & Y x }.
 
-  Local Infix "⊊" := proper_subtype_inclusion (at level 50).
-  Local Notation "(⊊)" := proper_subtype_inclusion.
+  Infix "⊊" := proper_subtype_inclusion (at level 50) : Hartogs.
+  Notation "(⊊)" := proper_subtype_inclusion : Hartogs.
 
   (* The hartogs number of A embeds into the threefold power set of A.
      This preliminary injection also increases the universe level though. *)
