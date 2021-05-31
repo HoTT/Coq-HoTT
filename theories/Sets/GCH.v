@@ -12,14 +12,14 @@ Open Scope type.
 (* GCH states that for any infinite set X with Y between X and P(X) either Y embeds into X or P(X) embeds into Y. *)
 
 Definition GCH :=
-  forall X Y : HSet, infinite X -> hinject X Y -> hinject Y (X -> HProp) -> hinject Y X + hinject (X -> HProp) Y.
+  forall X Y : HSet, infinite X -> InjectsInto X Y -> InjectsInto Y (X -> HProp) -> InjectsInto Y X + InjectsInto (X -> HProp) Y.
 
 
 
 (** * GCH is a proposition *)
 
 Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
-  ~ inject (X -> HProp) X.
+  ~ Injection (X -> HProp) X.
 Proof.
   intros [i HI]. pose (p n := Build_HProp (resize_hprop (forall q, i q = n -> ~ q n))).
   enough (Hp : p (i p) <-> ~ p (i p)).
@@ -36,10 +36,10 @@ Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
 Proof.
   repeat (nrapply istrunc_forall; intros).
   apply hprop_allpath. intros [H|H] [H'|H'].
-  - enough (H = H') as ->; trivial. apply (hinject a0 a).
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply hinject_trans with a0.
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply hinject_trans with a0.
-  - enough (H = H') as ->; trivial. apply (hinject (a -> HProp) a0).
+  - enough (H = H') as ->; trivial. apply (InjectsInto a0 a).
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
+  - enough (H = H') as ->; trivial. apply (InjectsInto (a -> HProp) a0).
 Qed.
 
 
@@ -88,7 +88,7 @@ Section LEM.
   Qed.
 
   Lemma inject_sings :
-    (P + ~ P) -> inject (X -> HProp) sings.
+    (P + ~ P) -> Injection (X -> HProp) sings.
   Proof.
     intros HP. unshelve eexists.
     - intros p. exists p. apply tr. now right.
@@ -97,7 +97,8 @@ Section LEM.
   Qed.
 
   Theorem CH_LEM :
-    (inject X sings -> inject sings (X -> HProp) -> ~ (inject sings X) -> hinject (X -> HProp) sings) -> P \/ ~ P.
+    (Injection X sings -> Injection sings (X -> HProp) -> ~ (Injection sings X) -> InjectsInto (X -> HProp) sings)
+    -> P \/ ~ P.
   Proof.
     intros ch. eapply merely_destruct; try apply ch.
     - unshelve eexists.
@@ -107,7 +108,7 @@ Section LEM.
     - intros H. assert (HP' : ~ ~ (P + ~ P)).
       { intros HP. apply HP. right. intros p. apply HP. now left. }
       apply HP'. intros HP % inject_sings. clear HP'.
-      apply Cantor_inj with X. now eapply (inject_trans _ _ _ HP).
+      apply Cantor_inj with X. now eapply (Injection_trans _ _ _ HP).
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
       + apply isinjective_Compose; trivial. now apply injective_proj1.
       + destruct (i p) as [q Hq]; cbn in *.

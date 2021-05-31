@@ -21,7 +21,7 @@ Global Instance is_global_axiom_propresizing : IsGlobalAxiom Choice := {}.
 (** * The well-ordering theorem implies AC *)
 
 Lemma WO_AC {LEM : ExcludedMiddle} :
-  (forall (X : HSet), hexists (fun (A : Ordinal) => hinject X A)) -> Choice_type.
+  (forall (X : HSet), hexists (fun (A : Ordinal) => InjectsInto X A)) -> Choice_type.
 Proof.
   intros H X Y R HR. specialize (H Y).
   eapply merely_destruct; try apply H.

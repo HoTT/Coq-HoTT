@@ -10,7 +10,7 @@ Open Scope type.
 
 (* The proof of Sierpinski's results that GCH implies AC given in this file consists of 2 ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
-   2. A variant of Cantor's theorem saying that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_hinject_hinject).
+   2. A variant of Cantor's theorem saying that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_injects_injects).
    Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
    from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal,
    which is enough to conclude GCH -> AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
@@ -148,7 +148,7 @@ Qed.
 (** * Variants of Cantors's theorem *)
 
 (* For the 2. ingredient, we give a preliminary version (Cantor_path_inject) to see the idea,
-   as well as a stronger refinement (Cantor_hinject_hinject) which is then a mere reformulation. *)
+   as well as a stronger refinement (Cantor_injects_injects) which is then a mere reformulation. *)
 
 Context {PR : PropResizing}.
 
@@ -195,8 +195,8 @@ Proof.
   unfold clean_sum. apply clean_sum_spec'.
 Qed.
 
-Fact Cantor_path_inject {X Y} :
-  (X -> HProp) = (X + Y) -> (X + X) = X -> inject (X -> HProp) Y.
+Fact Cantor_path_injection {X Y} :
+  (X -> HProp) = (X + Y) -> (X + X) = X -> Injection (X -> HProp) Y.
 Proof.
   intros H1 H2. assert (H : X + Y = (X -> HProp) * (X -> HProp)).
   - now rewrite <- H1, path_sum_prod, H2. 
@@ -223,8 +223,8 @@ Proof.
     eapply merely_destruct; try apply (HR _ _ _ Hp H). now intros ->.
 Qed.
 
-Lemma hinject_power_morph X Y :
-  hinject X Y -> hinject (X -> HProp) (Y -> HProp).
+Lemma InjectsInto_power_morph X Y :
+  InjectsInto X Y -> InjectsInto (X -> HProp) (Y -> HProp).
 Proof.
   intros HF. eapply merely_destruct; try apply HF. intros [f Hf].
   apply tr. exists (fun p => fun y => hexists (fun x => p x /\ y = f x)).
@@ -235,13 +235,13 @@ Proof.
     pattern (f x) in Hq. rewrite <- H in Hq. eapply merely_destruct; try apply Hq. now intros [x'[Hp <- % Hf]].
 Qed.
 
-Fact Cantor_hinject_hinject {X Y : HSet} :
-  hinject (X -> HProp) (X + Y) -> hinject (X + X) X -> hinject (X -> HProp) Y.
+Fact Cantor_injects_injects {X Y : HSet} :
+  InjectsInto (X -> HProp) (X + Y) -> InjectsInto (X + X) X -> InjectsInto (X -> HProp) Y.
 Proof.
-  intros H1 H2. assert (HF : hinject ((X -> HProp) * (X -> HProp)) (X + Y)).
-  - eapply hinject_trans; try apply H1.
-    eapply hinject_trans; try apply hinject_power_morph, H2.
-    rewrite path_sum_prod. apply tr, inject_refl.
+  intros H1 H2. assert (HF : InjectsInto ((X -> HProp) * (X -> HProp)) (X + Y)).
+  - eapply InjectsInto_trans; try apply H1.
+    eapply InjectsInto_trans; try apply InjectsInto_power_morph, H2.
+    rewrite path_sum_prod. apply tr, Injection_refl.
   - eapply merely_destruct; try apply HF. intros [f Hf].
     pose (R x p := hexists (fun q => f (p, q) = inl x)). destruct (@Cantor_rel _ R) as [p Hp].
     { intros x p p' H3 H4. eapply merely_destruct; try apply H3. intros [q Hq].
@@ -271,17 +271,17 @@ Definition powfix X :=
 
 Variable HN : HSet -> HSet.
 
-Hypothesis HN_ninject : forall X, ~ hinject (HN X) X.
+Hypothesis HN_ninject : forall X, ~ InjectsInto (HN X) X.
 
 Variable HN_bound : nat.
-Hypothesis HN_inject : forall X, hinject (HN X) (power_iterated X HN_bound).
+Hypothesis HN_inject : forall X, InjectsInto (HN X) (power_iterated X HN_bound).
 
 (* This section then concludes the intermediate result that abstractly,
    any function HN behaving like the Hartogs number is tamed in the presence of GCH.
    Morally we show that X <= HN(X) for all X, we just ensure that X is large enough by considering P(N + X). *)
 
-Lemma hinject_sum X Y X' Y' :
-  hinject X X' -> hinject Y Y' -> hinject (X + Y) (X' + Y').
+Lemma InjectsInto_sum X Y X' Y' :
+  InjectsInto X X' -> InjectsInto Y Y' -> InjectsInto (X + Y) (X' + Y').
 Proof.
   intros H1 H2.
   eapply merely_destruct; try apply H1. intros [f Hf].
@@ -298,37 +298,37 @@ Qed.
    As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
 
 Lemma Sierpinski_step (X : HSet) n :
-  GCH -> infinite X -> powfix X -> hinject (HN X) (power_iterated X n) -> hinject X (HN X).
+  GCH -> infinite X -> powfix X -> InjectsInto (HN X) (power_iterated X n) -> InjectsInto X (HN X).
 Proof.
   intros gch H1 H2 Hi. induction n.
   - now apply HN_ninject in Hi.
   - destruct (gch (Build_HSet (power_iterated X n)) (Build_HSet (power_iterated X n + HN X))) as [H|H].
     + now apply infinite_power_iterated.
     + apply tr. exists inl. intros x x'. apply path_sum_inl.
-    + eapply hinject_trans.
-      * apply hinject_sum; try apply Hi. apply tr, inject_power. exact _.
-      * cbn. specialize (H2 (S n)). cbn in H2. rewrite H2. apply tr, inject_refl.
-    + apply IHn. eapply hinject_trans; try apply H. apply tr. exists inr. intros x y. apply path_sum_inr.
-    + apply hinject_trans with (power_iterated X (S n)); try apply tr, inject_power_iterated.
-      cbn. apply (Cantor_hinject_hinject H). rewrite (H2 n). apply tr, inject_refl.
+    + eapply InjectsInto_trans.
+      * apply InjectsInto_sum; try apply Hi. apply tr, Injection_power. exact _.
+      * cbn. specialize (H2 (S n)). cbn in H2. rewrite H2. apply tr, Injection_refl.
+    + apply IHn. eapply InjectsInto_trans; try apply H. apply tr. exists inr. intros x y. apply path_sum_inr.
+    + apply InjectsInto_trans with (power_iterated X (S n)); try apply tr, Injection_power_iterated.
+      cbn. apply (Cantor_injects_injects H). rewrite (H2 n). apply tr, Injection_refl.
 Qed.
 
-Theorem GCH_inject' (X : HSet) :
-  GCH -> infinite X -> hinject X (HN (Build_HSet (X -> HProp))).
+Theorem GCH_injects' (X : HSet) :
+  GCH -> infinite X -> InjectsInto X (HN (Build_HSet (X -> HProp))).
 Proof.
-  intros gch HX. eapply hinject_trans; try apply tr, inject_power; try apply X.
+  intros gch HX. eapply InjectsInto_trans; try apply tr, Injection_power; try apply X.
   apply (@Sierpinski_step (Build_HSet (X -> HProp)) HN_bound gch).
-  - apply infinite_inject with X; trivial. apply inject_power. apply X.
+  - apply infinite_inject with X; trivial. apply Injection_power. apply X.
   - intros n. cbn. rewrite !power_iterated_shift. eapply path_infinite_power. cbn. now apply infinite_power_iterated.
   - apply HN_inject.
 Qed.
 
-Theorem GCH_inject (X : HSet) :
-  GCH -> hinject X (HN (Build_HSet (Build_HSet (nat + X) -> HProp))).
+Theorem GCH_injects (X : HSet) :
+  GCH -> InjectsInto X (HN (Build_HSet (Build_HSet (nat + X) -> HProp))).
 Proof.
-  intros gch. eapply hinject_trans with (nat + X).
+  intros gch. eapply InjectsInto_trans with (nat + X).
   - apply tr. exists inr. intros x y. apply path_sum_inr.
-  - apply GCH_inject'; trivial. exists inl. intros x y. apply path_sum_inl.
+  - apply GCH_injects'; trivial. exists inl. intros x y. apply path_sum_inl.
 Qed.
 
 End Sierpinski.
@@ -340,7 +340,7 @@ Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
 Proof.
   intros gch.
   apply WO_AC. intros X. apply tr. exists (hartogs_number (Build_HSet (Build_HSet (nat + X) -> HProp))).
-  unshelve eapply (@GCH_inject UA LEM PR hartogs_number _ 3 _ X gch).
+  unshelve eapply (@GCH_injects UA LEM PR hartogs_number _ 3 _ X gch).
   - intros Y. intros H. eapply merely_destruct; try apply H. apply hartogs_number_no_injection.
   - intros Y. apply tr. apply hartogs_number_injection.
 Qed.

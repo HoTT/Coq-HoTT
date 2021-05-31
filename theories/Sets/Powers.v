@@ -15,8 +15,8 @@ Definition power_type (A : Type) : Type :=
 
 (** * Iterated powers *)
 
-Lemma inject_power {PR : PropResizing} X :
-  IsHSet X -> inject X (X -> HProp).
+Lemma Injection_power {PR : PropResizing} X :
+  IsHSet X -> Injection X (X -> HProp).
 Proof.
   intros HX.
   set (f (x : X) := fun y => Build_HProp (resize_hprop (x = y))).
@@ -56,24 +56,24 @@ Proof.
   - apply (@hset_power UA (Build_HSet (power_iterated X n))).
 Qed.
 
-Lemma inject_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  inject X (power_iterated X n).
+Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
+  Injection X (power_iterated X n).
 Proof.
   induction n.
-  - apply inject_refl.
-  - eapply inject_trans; try apply IHn.
-    apply inject_power. exact _.
+  - apply Injection_refl.
+  - eapply Injection_trans; try apply IHn.
+    apply Injection_power. exact _.
 Qed.
 
 Lemma infinite_inject X Y :
-  infinite X -> inject X Y -> infinite Y.
+  infinite X -> Injection X Y -> infinite Y.
 Proof.
-  apply inject_trans.
+  apply Injection_trans.
 Qed.
 
 Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
   infinite X -> infinite (power_iterated X n).
 Proof.
-  intros H. eapply infinite_inject; try apply H. apply inject_power_iterated.
+  intros H. eapply infinite_inject; try apply H. apply Injection_power_iterated.
 Qed.
 

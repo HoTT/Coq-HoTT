@@ -53,27 +53,27 @@ Qed.
 
 (* We also work with cardinality comparisons directly to avoid unnecessary type truncations via cardinals. *)
 
-Definition inject X Y :=
+Definition Injection X Y :=
   { f : X -> Y | IsInjective f }.
 
-Lemma inject_refl X :
-  inject X X.
+Lemma Injection_refl X :
+  Injection X X.
 Proof.
   exists (fun x => x). intros x x'. easy.
 Qed.
 
-Lemma inject_trans X Y Z :
-  inject X Y -> inject Y Z -> inject X Z.
+Lemma Injection_trans X Y Z :
+  Injection X Y -> Injection Y Z -> Injection X Z.
 Proof.
   intros [f Hf] [g Hg]. exists (fun x => g (f x)).
   now apply isinjective_Compose.
 Qed.
 
-Definition hinject X Y :=
+Definition InjectsInto X Y :=
   hexists (@IsInjective X Y).
 
-Lemma hinject_trans X Y Z :
-  hinject X Y -> hinject Y Z -> hinject X Z.
+Lemma InjectsInto_trans X Y Z :
+  InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
 Proof.
   intros H1 H2.
   eapply merely_destruct; try apply H1. intros [f Hf].
@@ -88,7 +88,7 @@ Qed.
 (* We call a set infinite if nat embeds into it. *)
 
 Definition infinite X :=
-  inject nat X.
+  Injection nat X.
 
 
 
