@@ -34,12 +34,12 @@ Proof.
   refine (equiv_ap_inv issig_abgroup _ _ oE _).
   About equiv_path_sigma_hprop.
   refine (equiv_path_sigma_hprop _ _ oE _).
-  exact equiv_path_group@{v w u u u u u u u u u}.
+  exact equiv_path_group@{v u u u u u u u u u}.
 Defined.
 
 Definition equiv_path_abgroup_group `{Univalence} {A B : AbGroup}
   : (A = B :> AbGroup) <~> (A = B :> Group)
-  := equiv_path_group@{v w u u u u u u u u u} oE equiv_path_abgroup^-1.
+  := equiv_path_group@{v u u u u u u u u u} oE equiv_path_abgroup^-1.
 
 (** ** Subgroups of abelian groups *)
 
