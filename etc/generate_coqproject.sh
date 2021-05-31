@@ -1,5 +1,10 @@
 ## List tracked .v files
-TRACKED_V_FILES=$(git ls-files "*.v")
+if [ -d .git ]; then
+  TRACKED_V_FILES="$(git ls-files "*.v")"
+else
+  echo "Warning: Not a git clone, using find instead" >&2
+  TRACKED_V_FILES="$(find theories/ contrib/ -type f -name "*.v")"
+fi
 
 ## List untracked .v files
 #UNTRACKED_V_FILES=$(git ls-files --others --exclude-standard "*.v") 
@@ -37,4 +42,3 @@ fi
 
 ## Overwrite new _CoqProject
 echo "$NEW_COQPROJECT" > _CoqProject
-
