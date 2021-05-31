@@ -6,14 +6,22 @@ From HoTT.Sets Require Import Ordinals Cardinality.
 
 (** * Set-theoretic formulation of the axiom of choice (AC) *)
 
-Definition AC :=
+Monomorphic Axiom Choice : Type0.
+Existing Class Choice.
+
+Definition Choice_type :=
   forall (X Y : HSet) (R : X -> Y -> HProp), (forall x, hexists (R x)) -> hexists (fun f => forall x, R x (f x)).
+
+Axiom AC : forall `{Choice}, Choice_type.
+
+Global Instance is_global_axiom_propresizing : IsGlobalAxiom Choice := {}.
+
 
 
 (** * The well-ordering theorem implies AC *)
 
 Lemma WO_AC {LEM : ExcludedMiddle} :
-  (forall (X : HSet), hexists (fun (A : Ordinal) => hinject X A)) -> AC.
+  (forall (X : HSet), hexists (fun (A : Ordinal) => hinject X A)) -> Choice_type.
 Proof.
   intros H X Y R HR. specialize (H Y).
   eapply merely_destruct; try apply H.

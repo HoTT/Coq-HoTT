@@ -336,7 +336,7 @@ End Sierpinski.
 (* Main result: GCH implies AC *)
 
 Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
-  GCH -> AC.
+  GCH -> Choice_type.
 Proof.
   intros gch.
   apply WO_AC. intros X. apply tr. exists (hartogs_number (Build_HSet (Build_HSet (nat + X) -> HProp))).
