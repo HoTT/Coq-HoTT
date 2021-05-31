@@ -194,7 +194,7 @@ Section AssumeStuff.
   Defined.
 
   Definition graph_succ_path_equiv@{}
-    := Eval unfold graph_succ_path_equiv0 in graph_succ_path_equiv0@{u}.
+    := Eval unfold graph_succ_path_equiv0 in graph_succ_path_equiv0@{}.
 
   Definition graph_unsucc_path@{} (A B : Graph)
     : (graph_succ A = graph_succ B) -> A = B
@@ -261,7 +261,7 @@ Section AssumeStuff.
       equiv_intro (equiv_path_graph graph_zero graph_zero) fe'.
       destruct fe' as [f' e'].
       apply equiv_ap; try exact _.
-      apply path_sigma_hprop, path_equiv@{s s s u}, path_arrow.
+      apply path_sigma_hprop, path_equiv@{s s s}, path_arrow.
       intros [].
     - try clear B;intros B BC.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
