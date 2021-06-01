@@ -1,10 +1,10 @@
 From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra BiInv.
 From HoTT Require Import PropResizing.PropResizing.
-From HoTT Require Import Spaces.Nat.
+From HoTT Require Import Spaces.Nat Spaces.Card.
 From HoTT Require Import Equiv.BiInv.
 From HoTT Require Import HIT.unique_choice.
 
-From HoTT.Sets Require Import Ordinals Cardinality Hartogs Powers GCH AC.
+From HoTT.Sets Require Import Ordinals Hartogs Powers GCH AC.
 
 Open Scope type.
 

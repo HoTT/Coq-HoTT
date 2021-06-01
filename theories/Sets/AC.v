@@ -1,7 +1,8 @@
 From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
 From HoTT Require Import HIT.unique_choice.
+From HoTT Require Import Spaces.Card.
 
-From HoTT.Sets Require Import Ordinals Cardinality.
+From HoTT.Sets Require Import Ordinals.
 
 
 (** * Set-theoretic formulation of the axiom of choice (AC) *)

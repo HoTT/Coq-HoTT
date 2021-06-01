@@ -1,7 +1,6 @@
 From HoTT Require Import Basics TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
-
-From HoTT.Sets Require Import Cardinality.
+From HoTT Require Import Spaces.Card.
 
 
 (** * Definition of Power types *)

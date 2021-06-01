@@ -1,8 +1,6 @@
 From HoTT Require Import Basics TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
-From HoTT Require Import Spaces.Nat.
-
-From HoTT.Sets Require Import Cardinality.
+From HoTT Require Import Spaces.Nat Spaces.Card.
 
 Open Scope type.
 
@@ -110,7 +108,7 @@ Section LEM.
       apply HP'. intros HP % inject_sings. clear HP'.
       apply Cantor_inj with X. now eapply (Injection_trans _ _ _ HP).
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
-      + apply isinjective_Compose; trivial. now apply injective_proj1.
+      + intros x y H % injective_proj1. now apply Hi.
       + destruct (i p) as [q Hq]; cbn in *.
         eapply merely_destruct; try apply Hq.
         intros [H|H]; try now apply tr.

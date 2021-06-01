@@ -1,13 +1,13 @@
 From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Spaces.Card.
 
-From HoTT.Sets Require Import Ordinals Cardinality Powers.
+From HoTT.Sets Require Import Ordinals Powers.
 
 (** This file contains a construction of the Hartogs number. *)
 
 
 (** * Hartogs number *)
-
 
 Section Hartogs_Number.
 
@@ -18,7 +18,7 @@ Section Hartogs_Number.
           (A : HSet@{A}).
 
   Lemma le_Cardinal_lt_Ordinal (B C : Ordinal)
-    : B < C -> card B <= card C.
+    : B < C -> card B ≤ card C.
   Proof.
     intros B_C. apply tr. cbn. rewrite (bound_property B_C).
     exists out. apply isinjective_simulation. apply is_simulation_out.
@@ -87,7 +87,7 @@ Section Hartogs_Number.
             intros a. srapply istrunc_prod.
             srapply istrunc_arrow.
             rapply ishprop_sigma_disjoint. intros b1' b2' [_ ->] [_ p].
-            apply (injective f). exact p.
+            apply (injective_f). exact p.
           - apply extensionality. intros b'. split.
             + intros b'_b1.
               specialize (Hb1 (f b')). apply snd in Hb1.
@@ -294,7 +294,7 @@ Section Hartogs_Number.
       unshelve eexists.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
-          -- exists a. eapply transitive_le_Cardinal; try apply HN.
+          -- exists a. eapply transitive_card; try apply HN.
              now apply le_Cardinal_lt_Ordinal.
           -- apply equiv_resize_hprop. cbn. exact Ha.
         * intros [[a Ha] H % equiv_resize_hprop]. exists a.
