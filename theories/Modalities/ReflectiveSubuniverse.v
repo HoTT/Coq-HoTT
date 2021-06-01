@@ -239,6 +239,20 @@ Arguments O_indpaths_beta : simpl never.
 Arguments O_ind2paths : simpl never.
 Arguments O_ind2paths_beta : simpl never.
 
+(** A tactic that generalizes [strip_truncations] to reflective subuniverses. *)
+Ltac strip_reflections :=
+  (** Search for hypotheses of type [O X] for some [O] such that the goal is [O]-local. *)
+  progress repeat
+    match goal with
+    | [ T : _ |- _ ]
+      => revert_opaque T;
+        (** We don't treat the dependent case since it requires that [O] is a modality. We therefore define [strip_modalities] in Modality.v that does this. *)
+        refine (@O_rec _ _ _ _ _ _ _); (* || refine (@O_ind _ _ _ _ _ _ _); *)
+        (** Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately local. *)
+        [];
+        intro T
+  end.
+
 (** Given [Funext], we prove the definition of reflective subuniverse in the book. *)
 Global Instance isequiv_o_to_O `{Funext}
        (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
@@ -973,6 +987,14 @@ Section Reflective_Subuniverse.
         rewrite O_indpaths_beta; reflexivity.
     Qed.
     Global Existing Instance inO_paths.
+
+    Lemma O_concat {A : Type} {a0 a1 a2 : A}
+      : O (a0 = a1) -> O (a1 = a2) -> O (a0 = a2).
+    Proof.
+      intros p q.
+      strip_reflections.
+      exact (to O _ (p @ q)).
+    Defined.
 
     (** ** Truncations  *)
 

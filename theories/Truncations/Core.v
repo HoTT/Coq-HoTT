@@ -218,14 +218,17 @@ Defined.
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
-  progress repeat match goal with
-                    | [ T : _ |- _ ]
-                      => revert_opaque T;
-                        refine (@Trunc_ind _ _ _ _ _);
-                        (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
-                        [];
-                        intro T
-                  end.
+  progress repeat
+    match goal with
+    | [ T : _ |- _ ]
+      => revert_opaque T;
+        refine (@Trunc_ind _ _ _ _ _);
+        (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
+        [];
+        intro T
+  end.
+(** We would like to define this in terms of the [strip_modalities] tactic, however [O_ind] uses more universes than [Trunc_ind] which causes some problems down the line. *)
+(* Ltac strip_truncations := strip_modalities. *)
 
 (** ** Iterated truncations *)
 

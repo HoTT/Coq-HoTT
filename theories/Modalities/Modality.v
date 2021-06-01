@@ -208,6 +208,19 @@ Proof.
   srapply (isequiv_oD_to_O O O).
 Defined.
 
+(** A tactic that generalizes [strip_reflections] to modalities. *)
+Ltac strip_modalities :=
+  (** Search for hypotheses of type [O X] for some [O] such that the goal is [O]-local. *)
+  progress repeat
+    match goal with
+    | [ T : _ |- _ ]
+      => revert_opaque T;
+        (** The dependent case requires that [O] be a modality. *)
+        refine (@O_ind@{_ _ _} _ _ _ _ _ _ _);
+        (** Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately local. *)
+        [];
+        intro T
+  end.
 
 (** ** Dependent sums *)
 
