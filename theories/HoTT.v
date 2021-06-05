@@ -48,6 +48,7 @@ Require Export HoTT.HIT.epi.
 Require Export HoTT.HIT.unique_choice.
 Require Export HoTT.HIT.iso.
 Require Export HoTT.HIT.quotient.
+Require Export HoTT.HIT.surjective_factor.
 Require Export HoTT.HIT.V.
 
 Require Export HoTT.Diagrams.Graph.
@@ -68,7 +69,9 @@ Require Export HoTT.Limits.Limit.
 Require Export HoTT.Colimits.Pushout.
 Require Export HoTT.Colimits.SpanPushout.
 Require Export HoTT.Colimits.Quotient.
+Require Export HoTT.Colimits.Quotient.Choice.
 Require Export HoTT.Colimits.MappingCylinder.
+Require Export HoTT.Colimits.Sequential.
 Require Export HoTT.Colimits.Colimit.
 Require Export HoTT.Colimits.Colimit_Pushout.
 Require Export HoTT.Colimits.Colimit_Coequalizer.
@@ -99,6 +102,8 @@ Require Export HoTT.Spaces.Nat.
 Require Export HoTT.Spaces.Int.
 Require Export HoTT.Spaces.Pos.
 
+Require Export HoTT.Spaces.List.
+
 Require Export HoTT.Spaces.Cantor.
 
 Require Export HoTT.Spaces.Circle.
@@ -113,6 +118,8 @@ Require Export HoTT.Spaces.BAut.Rigid.
 
 Require Export HoTT.Spaces.Finite.
 
+Require Export HoTT.Spaces.Card.
+
 Require Export HoTT.Spaces.No.
 Require Export HoTT.Spaces.Universe.
 
@@ -126,6 +133,13 @@ Require Export HoTT.Algebra.ooAction.
 Require Export HoTT.Algebra.AbGroups.
 Require Export HoTT.Algebra.Groups.
 Require Export HoTT.Algebra.Rings.
+Require Export HoTT.Algebra.Universal.Algebra.
+Require Export HoTT.Algebra.Universal.Congruence.
+Require Export HoTT.Algebra.Universal.Homomorphism.
+Require Export HoTT.Algebra.Universal.Operation.
+Require Export HoTT.Algebra.Universal.TermAlgebra.
+
+Require Export HoTT.Analysis.Locator.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.Pi1S1.
@@ -138,6 +152,9 @@ Require Export HoTT.Homotopy.Wedge.
 Require Export HoTT.Homotopy.Join.
 Require Export HoTT.Homotopy.HSpace.
 Require Export HoTT.Homotopy.ClassifyingSpace.
+Require Export HoTT.Homotopy.CayleyDickson.
+Require Export HoTT.Homotopy.EMSpace.
+Require Export HoTT.Homotopy.HSpaceS1.
 
 Require Export HoTT.Spectra.Spectrum.
 
