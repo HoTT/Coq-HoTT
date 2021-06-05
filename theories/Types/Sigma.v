@@ -728,8 +728,8 @@ Definition hfiber_functor_sigma {A B} (P : A -> Type) (Q : B -> Type)
 Proof.
   unfold hfiber, functor_sigma.
   refine (_ oE equiv_functor_sigma_id _).
-  2:intros; apply equiv_inverse; apply equiv_path_sigma.
-  equiv_via {w : {x : A & f x = b} & {x : P w.1 & (w.2) # (g w.1 x) = v}}.
+  2:intros; symmetry; apply equiv_path_sigma.
+  transitivity {w : {x : A & f x = b} & {x : P w.1 & (w.2) # (g w.1 x) = v}}.
   1:make_equiv.
   apply equiv_functor_sigma_id; intros [a p]; simpl.
   apply equiv_functor_sigma_id; intros u; simpl.

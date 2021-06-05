@@ -75,6 +75,8 @@ Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 Global Instance transitive_equiv : Transitive Equiv | 0 :=
   fun _ _ _ f g => equiv_compose g f.
 
+Arguments transitive_equiv /.
+
 Ltac change_apply_equiv_compose :=
   match goal with
   | [ |- context [ equiv_fun (?f oE ?g) ?x ] ] =>
@@ -403,6 +405,8 @@ Defined.
 Notation "e ^-1" := (@equiv_inverse _ _ e) : equiv_scope.
 
 Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
+
+Arguments symmetric_equiv /.
 
 (** Inversion respects composition *)
 Definition equiv_inverse_compose {A B C} (f : A <~> B) (g : B <~> C)
