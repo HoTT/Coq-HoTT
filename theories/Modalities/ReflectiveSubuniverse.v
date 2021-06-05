@@ -246,8 +246,8 @@ Ltac strip_reflections :=
     match goal with
     | [ T : _ |- _ ]
       => revert_opaque T;
-        (** We don't treat the dependent case since it requires that [O] is a modality. We therefore define [strip_modalities] in Modality.v that does this. *)
-        refine (@O_rec _ _ _ _ _ _ _); (* || refine (@O_ind _ _ _ _ _ _ _); *)
+        (** We don't treat the dependent case since it requires that [O] is a modality. We define [strip_modalities] in Modality.v that does this. *)
+        refine (@O_rec _ _ _ _ _ _ _) || refine (@O_indpaths _ _ _ _ _ _ _ _ _);
         (** Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately local. *)
         [];
         intro T

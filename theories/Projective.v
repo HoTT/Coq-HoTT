@@ -154,7 +154,7 @@ Section AC_oo_neg1.
     pose (X := Build_HSet (Tr 0 A)).
     pose proof ((equiv_isoprojective_hasochoice _ X)^-1 (AC X)) as P.
     pose proof (P A _ X _ idmap tr _) as F; clear P.
-    revert F; refine (Trunc_ind@{_ _} _ _); intros F.
+    strip_truncations.
     destruct F as [f p].
     refine (tr (X; (f; BuildIsSurjection f _))).
     intro a; unfold hfiber.
