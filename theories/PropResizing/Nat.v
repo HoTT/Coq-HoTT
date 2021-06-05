@@ -357,8 +357,7 @@ Section AssumeStuff.
       exact m.2.
   Qed.
 
-  (** Importantly, the universe of the motive [P] is not constrained but can be arbitrary. *)
-  (** Final Peano axiom: induction *)
+  (** Final Peano axiom: induction.  Importantly, the universe of the motive [P] is not constrained but can be arbitrary. *)
   Definition N_propind@{P} (P : N -> Type@{P}) `{forall n, IsHProp (P n)}
              (P0 : P zero) (Ps : forall n, P n -> P (succ n))
     : forall n, P n.
