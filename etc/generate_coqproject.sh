@@ -1,5 +1,5 @@
 ## List tracked .v files
-if [ -d .git ]; then
+if [ -e .git ]; then
   TRACKED_V_FILES="$(git ls-files "*.v")"
 else
   echo "Warning: Not a git clone, using find instead" >&2
