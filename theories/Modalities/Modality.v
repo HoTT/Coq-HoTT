@@ -208,7 +208,7 @@ Proof.
   srapply (isequiv_oD_to_O O O).
 Defined.
 
-(** A tactic that generalizes [strip_reflections] to modalities. *)
+(** A tactic that extends [strip_reflections] to modalities. It handles non-dependent elimination for reflective subuniverses and dependent elimination for modalities. [strip_truncations] does the same for truncations, but introduces fewer universe variables, so tends to work better when removing truncations. *)
 Ltac strip_modalities :=
   (** Search for hypotheses of type [O X] for some [O] such that the goal is [O]-local. *)
   progress repeat

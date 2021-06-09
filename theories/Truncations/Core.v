@@ -215,7 +215,7 @@ Proof.
   apply (@isequiv_conn_ino_map (Tr (-1))); assumption.
 Defined.
 
-(** ** Tactic to remove truncations in hypotheses if possible. *)
+(** ** Tactic to remove truncations in hypotheses if possible. See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities. *)
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
   progress repeat

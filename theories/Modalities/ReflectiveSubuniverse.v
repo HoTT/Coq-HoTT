@@ -239,14 +239,13 @@ Arguments O_indpaths_beta : simpl never.
 Arguments O_ind2paths : simpl never.
 Arguments O_ind2paths_beta : simpl never.
 
-(** A tactic that generalizes [strip_truncations] to reflective subuniverses. *)
+(** A tactic that generalizes [strip_truncations] to reflective subuniverses. [strip_truncations] introduces fewer universe variables, so tends to work better when removing truncations. [strip_modalities] in Modality.v also applies dependent elimination when [O] is a modality. *)
 Ltac strip_reflections :=
   (** Search for hypotheses of type [O X] for some [O] such that the goal is [O]-local. *)
   progress repeat
     match goal with
     | [ T : _ |- _ ]
       => revert_opaque T;
-        (** We don't treat the dependent case since it requires that [O] is a modality. We define [strip_modalities] in Modality.v that does this. *)
         refine (@O_rec _ _ _ _ _ _ _) || refine (@O_indpaths _ _ _ _ _ _ _ _ _);
         (** Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately local. *)
         [];
