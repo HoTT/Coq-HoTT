@@ -9,6 +9,7 @@ Require Export HoTT.Algebra.Groups.QuotientGroup.
 Require Export HoTT.Algebra.Groups.GrpPullback.
 Require Export HoTT.Algebra.Groups.GroupCoeq.
 Require Export HoTT.Algebra.Groups.FreeGroup.
+Require Export HoTT.Algebra.Groups.FreeProduct.
 
 Require Export HoTT.Algebra.Groups.Presentation.
 Require Export HoTT.Algebra.Groups.ShortExactSequence.
