@@ -17,7 +17,7 @@ Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
   isnat : forall a a' (f : a $-> a'),
      (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a).
 
-Arguments isnat {_ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
+Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 
 Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G} :=

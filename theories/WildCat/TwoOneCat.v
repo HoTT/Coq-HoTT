@@ -5,7 +5,7 @@ Require Import WildCat.NatTrans.
 
 (** * Wild (2,1)-categories *)
 
-Class Is21Cat (A : Type) `{Is1Cat A} :=
+Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
 {
   is1cat_hom : forall (a b : A), Is1Cat (a $-> b) ;
   is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;

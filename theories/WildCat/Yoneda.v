@@ -21,12 +21,13 @@ Defined.
 
 (** This requires morphism extensionality! *)
 Global Instance is1functor_hom {A} `{HasMorExt A}
-  : @Is1Functor (A^op * A) Type _ _ _ _ _ _ (uncurry (@Hom A _)) _.
+  : @Is1Functor (A^op * A) Type _ _ _ _ _ _ _ _ (uncurry (@Hom A _)) _.
 Proof.
   apply Build_Is1Functor.
-  - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q; cbn in *.
+  - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q;
+      unfold fst, snd in *.
     apply path_hom.
-    exact (((p2 $@R q) $@R _) $@ (_ $@L p1)).
+    refine (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).
   - intros [a1 a2] f; cbn in *.
     apply path_hom.
     exact (cat_idr _ $@ cat_idl f).
@@ -168,21 +169,21 @@ Definition un_yoneda {A : Type} `{Is01Cat A} (a : A)
 Global Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
        (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (yon a) F (yoneda a F x)
-  := @is1natural_opyoneda (A^op) _ _ _ a F _ _ x.
+  := @is1natural_opyoneda (A^op) _ _ _ _ a F _ _ x.
 
 Definition yoneda_issect {A : Type} `{Is1Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : un_yoneda a F (yoneda a F x) = x
-  := @opyoneda_issect (A^op) _ _ _ a F _ _ x.
+  := @opyoneda_issect (A^op) _ _ _ _ a F _ _ x.
 
 Definition yoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
            (* Without the hint here, Coq guesses to first project from [Is1Cat_Strong A] and then pass to opposites, whereas what we need is to first pass to opposites and then project. *)
-           `{@Is1Functor _ _ _ _ (is1cat_is1cat_strong A^op) _ _ _ F _}
+           `{@Is1Functor _ _ _ _ _ (is1cat_is1cat_strong A^op) _ _ _ _ F _}
            (alpha : yon a $=> F) {alnat : Is1Natural (yon a) F alpha}
            (b : A)
   : yoneda a F (un_yoneda a F alpha) b $== alpha b
-  := @opyoneda_isretr A^op _ _ (is1cat_strong_op A) a F _ _ alpha alnat b.
+  := @opyoneda_isretr A^op _ _ _ (is1cat_strong_op A) a F _ _ alpha alnat b.
 
 Definition yon_cancel {A : Type} `{Is01Cat A} (a b : A)
   : (yon a $=> yon b) -> (a $-> b)
@@ -194,5 +195,5 @@ Definition yon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A^op Type
 Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            (a b : A)
   : (yon1 a $<~> yon1 b) -> (a $<~> b)
-  := (@opyon_equiv A^op _ _ _ _ _ a b).
+  := (@opyon_equiv A^op _ _ _ _ _ _ a b).
 

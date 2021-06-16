@@ -20,6 +20,9 @@ Proof.
   constructor; intros; exact tt.
 Defined.
 
+Global Instance is2graph_unit : Is2Graph Unit
+  := fun f g => isgraph_unit.
+
 Global Instance is1cat_unit : Is1Cat Unit.
 Proof.
   econstructor.

@@ -14,8 +14,12 @@ Proof.
   + exact (fun a b c g f => g o f).
 Defined.
 
-Global Instance isgraph_arrow {A B : Type} : IsGraph (A $-> B)
-  := Build_IsGraph _ (fun f g => f == g).
+Global Instance is2graph_type : Is2Graph Type
+  := fun x y => Build_IsGraph _ (fun f g => f == g).
+
+(** Sometimes we need typeclasses to pick up that [A -> B] is a graph, but this cannot be done without first converting it to [A $-> B]. *)
+Global Instance isgraph_arrow {A B : Type} : IsGraph (A -> B)
+  := isgraph_hom A B.
 
 Global Instance is01cat_arrow {A B : Type} : Is01Cat (A $-> B).
 Proof.
@@ -60,7 +64,7 @@ Defined.
 
 Global Instance hasequivs_type : HasEquivs Type.
 Proof.
-  srefine (Build_HasEquivs Type _ _ _ Equiv (@IsEquiv) _ _ _ _ _ _ _ _); intros A B.
+  srefine (Build_HasEquivs Type _ _ _ _ Equiv (@IsEquiv) _ _ _ _ _ _ _ _); intros A B.
   all:intros f.
   - exact f.
   - exact _.
