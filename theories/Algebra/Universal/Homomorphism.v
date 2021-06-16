@@ -145,9 +145,9 @@ Proof.
   by apply path_homomorphism.
 Defined.
 
-Global Instance isgraph_homomorphism {σ} (A B : Algebra σ)
-  : IsGraph (A $-> B)
-  := Build_IsGraph _ (fun (f g : A $-> B) => forall s, f s == g s).
+Global Instance is2graph_algebra {σ} : Is2Graph (Algebra σ)
+  := fun A B
+    => Build_IsGraph _ (fun (f g : A $-> B) => forall s, f s == g s).
 
 Global Instance is01cat_homomorphism {σ} (A B : Algebra σ)
   : Is01Cat (A $-> B).

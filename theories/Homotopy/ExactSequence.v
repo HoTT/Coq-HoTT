@@ -90,7 +90,7 @@ Definition iscomplex_cancelR {F X Y Y' : pType}
            (i : F ->* X) (f : X ->* Y) (e : Y <~>* Y') (cx : IsComplex i (e o* f))
   : IsComplex i f :=
   (compose_V_hh e (f o* i))^$ $@ 
-    cat_postwhisker _ ((cat_assoc _ _ _)^$ $@ cx) $@ precompose_pconst _.
+    cat_postwhisker _ ((cat_assoc i _ _)^$ $@ cx) $@ precompose_pconst _.
 
 (** And likewise passage across squares with equivalences *)
 Definition iscomplex_equiv_i {F F' X X' Y : pType}
@@ -211,8 +211,10 @@ Proof.
   pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
   exists (iscomplex_cancelR i' f' k cx_isexact).
-  pose (e := (pequiv_pfiber (id_cate _) k (cat_idr _)^$ : pfiber f' <~>* pfiber (k o* f'))).
-  nrefine (cancelR_isequiv_conn_map n _ e). 1: apply pointed_isequiv.
+  epose (e := (pequiv_pfiber (id_cate _) k (cat_idr (k o* f'))^$
+    : pfiber f' <~>* pfiber (k o* f'))).
+  nrefine (cancelR_isequiv_conn_map n _ e).
+  1: apply pointed_isequiv.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. srapply path_hfiber.
   { reflexivity. }

@@ -16,7 +16,7 @@ Proof.
 Defined.
 
 (* We can probably get rid of the following notation, and use ^-1$ instead. *)
-Notation "f ^-1*" := (@cate_inv pType _ _ _ hasequivs_ptype _ _ f) : pointed_scope.
+Notation "f ^-1*" := (@cate_inv pType _ _ _ _ hasequivs_ptype _ _ f) : pointed_scope.
 
 (* pointed equivalence is a symmetric relation *)
 Global Instance pequiv_symmetric : Symmetric pEquiv.
