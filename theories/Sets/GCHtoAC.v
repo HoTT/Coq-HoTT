@@ -171,28 +171,13 @@ Proof.
 Qed.
 
 Definition clean_sum {X Y Z} (f : X -> Y + Z) :
-  (forall x y, f x <> inl y) -> X -> Z.
+  (forall x y, f x <> inl y) -> forall x, { z | inr z = f x }.
 Proof.
-  intros H x. enough (Hc : forall c, f x = c -> Z) by now apply (Hc (f x)). intros [y|z].
-  - intros Hx % H. destruct Hx.
-  - intros _. exact z.
-Defined.
-
-Lemma clean_sum_spec' Y Z (a : Y + Z) (Ha : forall y, a <> inl y) :
-  inr (match a as s return (a = s -> Z) with
-       | inl y => fun Hx : a = inl y => Empty_rect _ (Ha y Hx)
-       | inr z => fun _ : a = inr z => z
-       end idpath) = a.
-Proof.
-  destruct a.
-  - destruct (Ha y).
-  - reflexivity.
-Qed.
-
-Lemma clean_sum_spec {X Y Z} (f : X -> Y + Z) (Hf : forall x y, f x <> inl y) x :
-  inr (clean_sum _ Hf x) = f x.
-Proof.
-  unfold clean_sum. apply clean_sum_spec'.
+  intros Hf. enough (H : forall x a, a = f x -> {z : Z & inr z = f x}).
+  - intros x. now apply (H x (f x)).
+  - intros x a Hxa. specialize (Hf x). destruct (f x) as [y|z].
+    + apply Empty_rect. now apply (Hf y).
+    + now exists z.
 Qed.
 
 Fact Cantor_path_injection {X Y} :
@@ -204,8 +189,8 @@ Proof.
     pose (f' x := fst (f (inl x))). destruct (hCantor f') as [p Hp].
     pose (g' q := g (p, q)). assert (H' : forall q x, g' q <> inl x).
     + intros q x H. apply (Hp x). unfold f'. rewrite <- H. unfold g'. now rewrite Hfg.
-    + exists (clean_sum _ H'). intros q q' H. assert (Hqq' : g' q = g' q').
-      * rewrite <- !(clean_sum_spec _ H'). now rewrite H.
+    + exists (fun x => proj1 (clean_sum _ H' x)). intros q q' H. assert (Hqq' : g' q = g' q').
+      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. now rewrite H.
       * unfold g' in Hqq'. change (snd (p, q) = snd (p, q')).
         rewrite <- (Hfg (p, q)), <- (Hfg (p, q')). now rewrite Hqq'.
 Qed.
@@ -249,8 +234,8 @@ Proof.
       change p with (fst (p, q)). rewrite (Hf (p, q) (p', q')); trivial. now rewrite Hq, Hq'. }
     pose (f' q := f (p, q)). assert (H' : forall q x, f' q <> inl x).
     + intros q x H. apply (Hp x). apply tr. exists q. apply H.
-    + apply tr. exists (clean_sum _ H'). intros q q' H. assert (Hqq' : f' q = f' q').
-      * rewrite <- !(clean_sum_spec _ H'). now rewrite H.
+    + apply tr. exists (fun x => proj1 (clean_sum _ H' x)). intros q q' H. assert (Hqq' : f' q = f' q').
+      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. now rewrite H.
       * apply Hf in Hqq'. change q with (snd (p, q)). now rewrite Hqq'.
 Qed.
 
