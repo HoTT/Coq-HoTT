@@ -155,26 +155,32 @@ End contents.
 Definition Injection X Y :=
   { f : X -> Y | IsInjective f }.
 
-Lemma Injection_refl X :
-  Injection X X.
+Global Instance Injection_refl :
+  Reflexive Injection.
 Proof.
-  exists (fun x => x). intros x x'. easy.
+  intros X. exists (fun x => x). intros x x'. easy.
 Qed.
 
-Lemma Injection_trans X Y Z :
-  Injection X Y -> Injection Y Z -> Injection X Z.
+Global Instance Injection_trans :
+  Transitive Injection.
 Proof.
-  intros [f Hf] [g Hg]. exists (fun x => g (f x)).
+  intros X Y Z [f Hf] [g Hg]. exists (fun x => g (f x)).
   intros x x' H. now apply Hf, Hg.
 Qed.
 
 Definition InjectsInto X Y :=
-  hexists (@IsInjective X Y).
+  merely (Injection X Y).
 
-Lemma InjectsInto_trans X Y Z :
-  InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
+Global Instance InjectsInto_refl :
+  Reflexive InjectsInto.
 Proof.
-  intros H1 H2.
+  intros X. apply tr. reflexivity.
+Qed.
+
+Global Instance InjectsInto_trans :
+  Transitive InjectsInto.
+Proof.
+  intros X Y Z H1 H2.
   eapply merely_destruct; try apply H1. intros [f Hf].
   eapply merely_destruct; try apply H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
@@ -210,4 +216,16 @@ Proof.
     + intros [x Hx]. exists x. apply Hx.
   - intros y. cbn. now destruct merely_destruct.
   - intros x. cbn. destruct merely_destruct; try now apply Hf.
-Defined.
+Qed.
+
+Lemma equiv_hset_bijection' {FE : Funext} {X Y} (f : X -> Y) :
+  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
+Proof.
+  intros HY Hf H. exists f. apply isequiv_surj_emb.
+  - intros y. eapply merely_destruct; try apply (H y); trivial.
+    intros [x Hx]. unshelve eexists.
+    + apply tr. exists x. apply Hx.
+    + intros x'. apply path_ishprop.
+  - intros y. apply hprop_allpath. intros [x Hx] [x' Hx'].
+    apply path_sigma_hprop. cbn. apply Hf. now rewrite Hx, Hx'.
+Qed.
