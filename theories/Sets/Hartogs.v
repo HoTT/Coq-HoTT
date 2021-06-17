@@ -226,7 +226,7 @@ Section Hartogs_Number.
   Lemma hartogs_equiv :
     hartogs_number_carrier <~> hartogs_number'.
   Proof.
-    apply equiv_inverse. unshelve eapply equiv_hset_bijection.
+    apply equiv_inverse. unshelve eexists. 2: unshelve eapply equiv_hset_bijection.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
       apply equiv_resize_hprop, tr. exists a. reflexivity.
     - exact _.

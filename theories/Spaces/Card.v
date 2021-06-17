@@ -204,10 +204,9 @@ Definition infinite X :=
    if there is an injection from X to Y that is also merely surjective. *)
 
 Lemma equiv_hset_bijection {X Y} (f : X -> Y) :
-  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
+  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> IsEquiv f.
 Proof.
-  intros HY Hf H. srapply equiv_adjointify.
-  - exact f.
+  intros HY Hf H. unshelve esplit. 
   - intros y. enough (Hy : exists x, f x = y) by apply (proj1 Hy).
     unshelve eapply merely_destruct; try apply H.
     + apply hprop_allpath. intros [x Hx] [x' Hx'].
@@ -216,12 +215,13 @@ Proof.
     + intros [x Hx]. exists x. apply Hx.
   - intros y. cbn. now destruct merely_destruct.
   - intros x. cbn. destruct merely_destruct; try now apply Hf.
+  - intros x. cbn. apply HY.
 Qed.
 
 Lemma equiv_hset_bijection' {FE : Funext} {X Y} (f : X -> Y) :
-  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> X <~> Y.
+  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> IsEquiv f.
 Proof.
-  intros HY Hf H. exists f. apply isequiv_surj_emb.
+  intros HY Hf H. apply isequiv_surj_emb.
   - intros y. eapply merely_destruct; try apply (H y); trivial.
     intros [x Hx]. unshelve eexists.
     + apply tr. exists x. apply Hx.
