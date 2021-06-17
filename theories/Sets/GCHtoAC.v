@@ -241,7 +241,7 @@ Proof.
   intros H1 H2. assert (HF : InjectsInto ((X -> HProp) * (X -> HProp)) (X + Y)).
   - eapply InjectsInto_trans; try apply H1.
     eapply InjectsInto_trans; try apply InjectsInto_power_morph, H2.
-    rewrite path_sum_prod. apply tr. reflexivity.
+    rewrite path_sum_prod. Fail reflexivity. apply tr. reflexivity.
   - eapply merely_destruct; try apply HF. intros [f Hf].
     pose (R x p := hexists (fun q => f (p, q) = inl x)). destruct (@Cantor_rel _ R) as [p Hp].
     { intros x p p' H3 H4. eapply merely_destruct; try apply H3. intros [q Hq].
