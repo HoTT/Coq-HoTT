@@ -11,6 +11,9 @@ Local Opaque equiv_isequiv istrunc_isequiv_istrunc.
 
 Definition Card := Trunc 0 HSet.
 
+Definition card A `{IsHSet A} : Card
+  := tr (Build_HSet A).
+
 Definition sum_card (a b : Card) : Card.
 Proof.
   strip_truncations.
@@ -33,7 +36,7 @@ Definition leq_card `{Univalence} : Card -> Card -> HProp.
 Proof.
   refine (Trunc_rec (fun a => _)).
   refine (Trunc_rec (fun b => _)).
-  exact (hexists (fun (i : a -> b) => isinj i)).
+  exact (hexists (fun (i : a -> b) => IsInjective i)).
 Defined.
 
 (** ** Properties *)
@@ -142,3 +145,53 @@ Section contents.
   Proof. split; apply _. Defined.
 
 End contents.
+
+
+
+(** * Cardinality comparisons *)
+
+(* We also work with cardinality comparisons directly to avoid unnecessary type truncations via cardinals. *)
+
+Definition Injection X Y :=
+  { f : X -> Y | IsInjective f }.
+
+Global Instance Injection_refl :
+  Reflexive Injection.
+Proof.
+  intros X. exists (fun x => x). intros x x'. easy.
+Qed.
+
+Lemma Injection_trans X Y Z :
+  Injection X Y -> Injection Y Z -> Injection X Z.
+Proof.
+  intros [f Hf] [g Hg]. exists (fun x => g (f x)).
+  intros x x' H. now apply Hf, Hg.
+Qed.
+
+Definition InjectsInto X Y :=
+  merely (Injection X Y).
+
+Global Instance InjectsInto_refl :
+  Reflexive InjectsInto.
+Proof.
+  intros X. apply tr. reflexivity.
+Qed.
+
+Lemma InjectsInto_trans X Y Z :
+  InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
+Proof.
+  intros H1 H2.
+  eapply merely_destruct; try apply H1. intros [f Hf].
+  eapply merely_destruct; try apply H2. intros [g Hg].
+  apply tr. exists (fun x => g (f x)).
+  intros x x' H. now apply Hf, Hg.
+Qed.
+
+
+
+(** * Infinity *)
+
+(* We call a set infinite if nat embeds into it. *)
+
+Definition infinite X :=
+  Injection nat X.
