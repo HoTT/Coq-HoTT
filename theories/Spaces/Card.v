@@ -161,10 +161,10 @@ Proof.
   intros X. exists (fun x => x). intros x x'. easy.
 Qed.
 
-Global Instance Injection_trans :
-  Transitive Injection.
+Lemma Injection_trans X Y Z :
+  Injection X Y -> Injection Y Z -> Injection X Z.
 Proof.
-  intros X Y Z [f Hf] [g Hg]. exists (fun x => g (f x)).
+  intros [f Hf] [g Hg]. exists (fun x => g (f x)).
   intros x x' H. now apply Hf, Hg.
 Qed.
 
@@ -177,10 +177,10 @@ Proof.
   intros X. apply tr. reflexivity.
 Qed.
 
-Global Instance InjectsInto_trans :
-  Transitive InjectsInto.
+Lemma InjectsInto_trans X Y Z :
+  InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
 Proof.
-  intros X Y Z H1 H2.
+  intros H1 H2.
   eapply merely_destruct; try apply H1. intros [f Hf].
   eapply merely_destruct; try apply H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
