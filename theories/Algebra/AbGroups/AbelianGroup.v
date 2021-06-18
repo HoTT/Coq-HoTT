@@ -94,26 +94,29 @@ Defined.
 (** ** The wild category of abelian groups *)
 
 Global Instance isgraph_abgroup : IsGraph AbGroup
-  := induced_graph abgroup_group.
+  := isgraph_induced abgroup_group.
 
-Global Instance is01cat_AbGroup : Is01Cat AbGroup
-  := induced_01cat abgroup_group.
+Global Instance is01cat_abgroup : Is01Cat AbGroup
+  := is01cat_induced abgroup_group.
 
-Global Instance is01cat_GroupHomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
-  := induced_01cat (@grp_homo_map A B).
+Global Instance is01cat_grouphomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
+  := is01cat_induced (@grp_homo_map A B).
 
-Global Instance is0gpd_GroupHomomorphism {A B : AbGroup}: Is0Gpd (A $-> B)
-  := induced_0gpd (@grp_homo_map A B).
+Global Instance is0gpd_grouphomomorphism {A B : AbGroup} : Is0Gpd (A $-> B)
+  := is0gpd_induced (@grp_homo_map A B).
+
+Global Instance is2graph_abgroup : Is2Graph AbGroup
+  := is2graph_induced abgroup_group.
 
 (** AbGroup forms a 1Cat *)
 Global Instance is1cat_abgroup : Is1Cat AbGroup
-  := induced_1cat _.
+  := is1cat_induced _.
 
 Global Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
-  := induced_hasmorext _.
+  := hasmorext_induced _.
 
 Global Instance hasequivs_abgroup : HasEquivs AbGroup
-  := induced_hasequivs _.
+  := hasequivs_induced _.
 
 (** Zero object of AbGroup *)
 

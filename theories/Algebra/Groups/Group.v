@@ -468,14 +468,17 @@ Global Instance isgraph_group : IsGraph Group
 Global Instance is01cat_group : Is01Cat Group :=
   (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
 
+Global Instance is2graph_group : Is2Graph Group
+  := fun A B => isgraph_induced (@grp_homo_map A B).
+
 Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
-  := induced_graph (@grp_homo_map A B).
+  := isgraph_induced (@grp_homo_map A B).
 
 Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
-  := induced_01cat (@grp_homo_map A B).
+  := is01cat_induced (@grp_homo_map A B).
 
 Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
-  := induced_0gpd (@grp_homo_map A B).
+  := is0gpd_induced (@grp_homo_map A B).
 
 Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
   : Is0Functor (@cat_postcomp Group _ _ A B C h).

@@ -31,19 +31,20 @@ Proof.
   intros f g p a; exact ((p a)^$).
 Defined.
 
+Global Instance is2graph_forall (A : Type) (B : A -> Type)
+  `{forall a, IsGraph (B a)} `{forall a, Is2Graph (B a)}
+  : Is2Graph (forall a, B a).
+Proof.
+  intros x y; srapply Build_IsGraph.
+  intros f g; exact (forall a, f a $-> g a).
+Defined.
+
 Global Instance is1cat_forall (A : Type) (B : A -> Type)
   `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)}
-  `{forall a, Is1Cat (B a)}
+  `{forall a, Is2Graph (B a)} `{forall a, Is1Cat (B a)}
   : Is1Cat (forall a, B a).
 Proof.
   srapply Build_Is1Cat.
-  + intros x y; srapply Build_IsGraph.
-    intros f g; exact (forall a, f a $== g a).
-  + intros x y; srapply Build_Is01Cat.
-    - intros f a; apply Id.
-    - intros f g h q p a; exact (p a $@ q a).
-  + intros x y; srapply Build_Is0Gpd.
-    intros f g p a; exact (gpd_rev (p a)).
   + intros x y z h; srapply Build_Is0Functor.
     intros f g p a.
     exact (h a $@L p a).

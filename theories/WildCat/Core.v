@@ -71,13 +71,16 @@ Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
 
 Arguments fmap {_ _ _ _} F {_ _ _} f.
 
+Class Is2Graph (A : Type) `{IsGraph A}
+  := isgraph_hom : forall (a b : A), IsGraph (a $-> b).
+Global Existing Instance isgraph_hom | 20.
+Typeclasses Transparent Is2Graph.
 
 (** ** Wild 1-categorical structures *)
-Class Is1Cat (A : Type) `{!IsGraph A, !Is01Cat A} :=
+Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
-  isgraph_hom : forall (a b : A), IsGraph (a $-> b) ;
   is01cat_hom : forall (a b : A), Is01Cat (a $-> b) ;
-  isgpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
+  is0gpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
   is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
   is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
@@ -86,14 +89,13 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is01Cat A} :=
   cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
 
-Global Existing Instance isgraph_hom.
 Global Existing Instance is01cat_hom.
-Global Existing Instance isgpd_hom.
+Global Existing Instance is0gpd_hom.
 Global Existing Instance is0functor_postcomp.
 Global Existing Instance is0functor_precomp.
-Arguments cat_assoc {_ _ _ _ _ _ _ _} f g h.
-Arguments cat_idl {_ _ _ _ _ _} f.
-Arguments cat_idr {_ _ _ _ _ _} f.
+Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_idl {_ _ _ _ _ _ _} f.
+Arguments cat_idr {_ _ _ _ _ _ _} f.
 
 Definition cat_assoc_opp {A : Type} `{Is1Cat A}
            {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
@@ -123,23 +125,24 @@ Definition cat_prewhisker {A} `{Is1Cat A} {a b c : A}
 Notation "p $@R h" := (cat_prewhisker p h).
 
 (** Often, the coherences are actually equalities rather than homotopies. *)
-Class Is1Cat_Strong (A : Type) `{Is01Cat A} := 
+Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} := 
 {
-  isgraph_hom_strong : forall (a b : A), IsGraph (a $-> b) ;
   is01cat_hom_strong : forall (a b : A), Is01Cat (a $-> b) ;
-  isgpd_hom_strong : forall (a b : A), Is0Gpd (a $-> b) ;
-  is0functor_postcomp_strong : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
-  is0functor_precomp_strong : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
+  is0gpd_hom_strong : forall (a b : A), Is0Gpd (a $-> b) ;
+  is0functor_postcomp_strong : forall (a b c : A) (g : b $-> c),
+    Is0Functor (cat_postcomp a g) ;
+  is0functor_precomp_strong : forall (a b c : A) (f : a $-> b),
+    Is0Functor (cat_precomp c f) ;
   cat_assoc_strong : forall (a b c d : A)
     (f : a $-> b) (g : b $-> c) (h : c $-> d),
-    (h $o g) $o f = h $o (g $o f);
-  cat_idl_strong : forall (a b : A) (f : a $-> b), Id b $o f = f;
-  cat_idr_strong : forall (a b : A) (f : a $-> b), f $o Id a = f;
+    (h $o g) $o f = h $o (g $o f) ;
+  cat_idl_strong : forall (a b : A) (f : a $-> b), Id b $o f = f ;
+  cat_idr_strong : forall (a b : A) (f : a $-> b), f $o Id a = f ;
 }.
 
-Arguments cat_assoc_strong {_ _ _ _ _ _ _ _} f g h.
-Arguments cat_idl_strong {_ _ _ _ _ _} f.
-Arguments cat_idr_strong {_ _ _ _ _ _} f.
+Arguments cat_assoc_strong {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_idl_strong {_ _ _ _ _ _ _} f.
+Arguments cat_idr_strong {_ _ _ _ _ _ _} f.
 
 Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
            {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
@@ -151,9 +154,8 @@ Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
 Proof.
   srapply Build_Is1Cat.
   all: intros a b.
-  - apply isgraph_hom_strong.
   - apply is01cat_hom_strong.
-  - apply isgpd_hom_strong.
+  - apply is0gpd_hom_strong.
   - apply is0functor_postcomp_strong.
   - apply is0functor_precomp_strong.
   - intros; apply GpdHom_path, cat_assoc_strong.
@@ -203,9 +205,9 @@ Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
     fmap F (g $o f) $== fmap F g $o fmap F f;
 }.
 
-Arguments fmap2 {A B _ _ _ _ _ _} F {_ _ _ _ _ _} p.
-Arguments fmap_id {A B _ _ _ _ _ _} F {_ _} a.
-Arguments fmap_comp {A B _ _ _ _ _ _} F {_ _ _ _ _} f g.
+Arguments fmap2 {A B _ _ _ _ _ _ _ _} F {_ _ _ _ _ _} p.
+Arguments fmap_id {A B _ _ _ _ _ _ _ _} F {_ _} a.
+Arguments fmap_comp {A B _ _ _ _ _ _ _ _} F {_ _ _ _ _} f g.
 
 (** Identity functor *)
 
@@ -352,3 +354,9 @@ Proof.
   apply gpd_moveL_V1.
   refine (cat_assoc _ _ _ $@ (f $@L gpd_h_Vh g f^$) $@ gpd_isretr f).
 Defined.
+
+Class Is3Graph (A : Type) `{Is2Graph A}
+  := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
+Global Existing Instance isgraph_hom_hom | 30.
+Typeclasses Transparent Is3Graph.
+

@@ -29,7 +29,7 @@ Section ZeroLaws.
     := (isterminal_zero_object a).2 h
       $@ ((isterminal_zero_object a).2 zero_morphism)^$.
 
-  Local Arguments zero_morphism {_ _ _ _ _} _ _.
+  Local Arguments zero_morphism {_ _ _ _ _ _} _ _.
 
   Definition cat_zero_l : zero_morphism b c $o f $== zero_morphism a c.
   Proof.

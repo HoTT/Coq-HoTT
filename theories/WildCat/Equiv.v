@@ -31,7 +31,7 @@ Class HasEquivs (A : Type) `{Is1Cat A} :=
 (** Since apparently a field of a record can't be the source of a coercion (Coq complains about the uniform inheritance condition, although as officially stated that condition appears to be satisfied), we redefine all the fields of [HasEquivs]. *)
 
 Definition CatEquiv {A} `{HasEquivs A} (a b : A)
-  := @CatEquiv' A _ _ _ _ a b.
+  := @CatEquiv' A _ _ _ _ _ a b.
 
 Notation "a $<~> b" := (CatEquiv a b).
 Infix "≅" := CatEquiv : wc_iso_scope.
@@ -39,7 +39,7 @@ Arguments CatEquiv : simpl never.
 
 Definition cate_fun {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
   : a $-> b
-  := @cate_fun' A _ _ _ _ a b f.
+  := @cate_fun' A _ _ _ _ _ a b f.
 
 Coercion cate_fun : CatEquiv >-> Hom.
 
@@ -71,7 +71,7 @@ Definition cate_adjointify {A} `{HasEquivs A} {a b : A}
            (f : a $-> b) (g : b $-> a)
            (r : f $o g $== Id b) (s : g $o f $== Id a)
   : a $<~> b
-  := @Build_CatEquiv _ _ _ _ _ a b f (catie_adjointify f g r s).
+  := @Build_CatEquiv _ _ _ _ _ _ a b f (catie_adjointify f g r s).
 
 (** This one we define to construct the whole inverse equivalence. *)
 Definition cate_inv {A} `{HasEquivs A} {a b : A} (f : a $<~> b) : b $<~> a.
@@ -111,11 +111,11 @@ Definition id_cate {A} `{HasEquivs A} (a : A)
   := Build_CatEquiv (Id a).
 
 Global Instance reflexive_cate {A} `{HasEquivs A}
-  : Reflexive (@CatEquiv A _ _ _ _)
+  : Reflexive (@CatEquiv A _ _ _ _ _)
   := id_cate.
 
 Global Instance symmetric_cate {A} `{HasEquivs A}
-  : Symmetric (@CatEquiv A _ _ _ _)
+  : Symmetric (@CatEquiv A _ _ _ _ _)
   := fun a b f => cate_inv f.
 
 (** Equivalences can be composed. *)
@@ -185,7 +185,7 @@ Proof.
 Defined.
 
 Global Instance transitive_cate {A} `{HasEquivs A}
-  : Transitive (@CatEquiv A _ _ _ _)
+  : Transitive (@CatEquiv A _ _ _ _ _)
   := fun a b c f g => g $oE f.
 
 (** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)
@@ -231,7 +231,7 @@ Proof.
 Defined.
 
 Class IsUnivalent1Cat (A : Type) `{HasEquivs A}
-  := { isequiv_cat_equiv_path : forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ a b) }.
+  := { isequiv_cat_equiv_path : forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ _ a b) }.
 Global Existing Instance isequiv_cat_equiv_path.
 
 Definition cat_path_equiv {A : Type} `{IsUnivalent1Cat A} (a b : A)
@@ -258,9 +258,10 @@ Proof.
   - intros a b c ; apply compose_cate.
 Defined.
 
-Global Instance isgraph_core_hom {A : Type} `{HasEquivs A} (a b : core A)
-  : IsGraph (a $-> b).
+Global Instance is2graph_core {A : Type} `{HasEquivs A}
+  : Is2Graph (core A).
 Proof.
+  intros a b.
   apply Build_IsGraph.
   intros f g ; exact (cate_fun f $== cate_fun g).
 Defined.
@@ -298,9 +299,11 @@ Global Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
 Proof.
   apply Build_Is0Functor.
   intros f g al; cbn in h.
-  exact (compose_cate_fun f h
-           $@ (al $@R h)
+  (** Why can't coq resolve this? *)
+  refine (compose_cate_fun f h
+           $@ (_ $@R h)
            $@ (compose_cate_fun g h)^$).
+  exact al.
 Defined.
 
 Global Instance is1cat_core {A : Type} `{HasEquivs A}

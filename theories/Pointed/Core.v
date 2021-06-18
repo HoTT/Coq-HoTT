@@ -590,8 +590,15 @@ Global Instance is01cat_ptype : Is01Cat pType
   := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
 
 (** pForall is a graph *)
-Global Instance isgraph_pforall (A : pType) (P : pFam A) : IsGraph (pForall A P)
+Global Instance isgraph_pforall (A : pType) (P : pFam A)
+  : IsGraph (pForall A P)
   := Build_IsGraph _ pHomotopy.
+
+Global Instance is2graph_ptype : Is2Graph pType := fun f g => _.
+
+Global Instance is2graph_pforall (A : pType) (P : pFam A)
+  : Is2Graph (pForall A P)
+  := fun f g => _.
 
 (** pForall is a 0-coherent 1-category *)
 Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
@@ -633,8 +640,9 @@ Defined.
 (** pType has equivalences *)
 Global Instance hasequivs_ptype : HasEquivs pType.
 Proof.
-  srapply (Build_HasEquivs _ _ _ _ pEquiv (fun A B f => IsEquiv f));
-    intros A B f; cbn; intros.
+  srapply (
+    Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f => IsEquiv f));
+  intros A B f; cbn; intros.
   - exact f.
   - exact _.
   - exact (Build_pEquiv _ _ f _).

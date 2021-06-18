@@ -27,7 +27,7 @@ Proof.
   exact (NatTrans F G).
 Defined.
 
-Global Instance is0cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (Fun01 A B).
+Global Instance is01cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (Fun01 A B).
 Proof.
   srapply Build_Is01Cat.
   - intros [F ?]; cbn.
@@ -36,14 +36,19 @@ Proof.
     exists (trans_comp gamma alpha); exact _.
 Defined.
 
+Global Instance is2graph_fun01 (A B : Type) `{IsGraph A, Is1Cat B}
+  : Is2Graph (Fun01 A B).
+Proof.
+  intros [F ?] [G ?]; apply Build_IsGraph.
+  intros [alpha ?] [gamma ?].
+  exact (forall a, alpha a $== gamma a).
+Defined.
+
 (** In fact, in this case it is automatically also a 0-coherent 2-category and a 1-coherent 1-category, with a totally incoherent notion of 2-cell between 1-coherent natural transformations. *)
 
-Global Instance is0coh2cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is1Cat (Fun01 A B).
+Global Instance is1cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is1Cat (Fun01 A B).
 Proof.
   srapply Build_Is1Cat.
-  - intros [F ?] [G ?]; apply Build_IsGraph.
-    intros [alpha ?] [gamma ?].
-    exact (forall a, alpha a $== gamma a).
   - intros [F ?] [G ?]; srapply Build_Is01Cat.
     + intros [alpha ?] a; cbn.
       reflexivity.
@@ -127,16 +132,20 @@ Defined.
 
 Global Instance isgraph_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
   : IsGraph (Fun11 A B)
-  := induced_graph fun01_fun11.
+  := isgraph_induced fun01_fun11.
 
 Global Instance is01cat_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
   : Is01Cat (Fun11 A B)
-  := induced_01cat fun01_fun11.
+  := is01cat_induced fun01_fun11.
+
+Global Instance is2graph_fun11 {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is2Graph (Fun11 A B)
+  := is2graph_induced fun01_fun11.
 
 Global Instance is1cat_fun11 {A B :Type} `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (Fun11 A B)
-  := induced_1cat fun01_fun11.
+  := is1cat_induced fun01_fun11.
 
 Global Instance hasequivs_fun11 {A B : Type} `{Is1Cat A} `{HasEquivs B}
   : HasEquivs (Fun11 A B)
-  := induced_hasequivs fun01_fun11.
+  := hasequivs_induced fun01_fun11.

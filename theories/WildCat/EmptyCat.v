@@ -18,6 +18,12 @@ Proof.
   constructor; intros [].
 Defined.
 
+Global Instance is2graph_empty : Is2Graph Empty.
+Proof.
+  intros f g.
+  by apply Build_IsGraph.
+Defined.
+
 Global Instance is1cat_empty : Is1Cat Empty.
 Proof.
   snrapply Build_Is1Cat; intros [].

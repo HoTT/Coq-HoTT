@@ -289,9 +289,14 @@ End Subgroups.
 
 (** The wild category of oo-groups is induced by the wild category of pTypes *)
 
-Global Instance isgraph_oogroup : IsGraph ooGroup := Build_IsGraph _ ooGroupHom.
-Global Instance is01cat_oogroup : Is01Cat ooGroup := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).
-Global Instance is1cat_oogroup : Is1Cat ooGroup := induced_1cat classifying_space.
+Global Instance isgraph_oogroup : IsGraph ooGroup
+  := Build_IsGraph _ ooGroupHom.
+Global Instance is01cat_oogroup : Is01Cat ooGroup
+  := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).
+Global Instance is2graph_oogroup : Is2Graph ooGroup
+  := is2graph_induced classifying_space.
+Global Instance is1cat_oogroup : Is1Cat ooGroup
+  := is1cat_induced classifying_space.
 
 (** ** 1-groups as oo-groups *)
 

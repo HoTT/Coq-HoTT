@@ -36,20 +36,17 @@ Proof.
   exact ( (f1^$, f2^$) ).
 Defined.
 
+Global Instance is2graph_prod A B `{Is2Graph A, Is2Graph B}
+  : Is2Graph (A * B).
+Proof.
+  intros [x1 x2] [y1 y2].
+  rapply isgraph_prod.
+Defined.
+
 Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
   srapply (Build_Is1Cat).
-  - intros [x1 x2] [y1 y2].
-    rapply isgraph_prod.
-  - intros [x1 x2] [y1 y2].
-    rapply is01cat_prod.
-  - intros [x1 x2] [y1 y2].
-    apply is0gpd_prod.
-    + cbn.
-      apply isgpd_hom.
-    + cbn.
-      apply isgpd_hom.
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
     srapply Build_Is0Functor.  
     intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
@@ -75,7 +72,7 @@ Defined.
 Global Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
   : HasEquivs (A * B).
 Proof.
-  srefine (Build_HasEquivs (A * B) _ _ _
+  srefine (Build_HasEquivs (A * B) _ _ _ _
              (fun a b => (fst a $<~> fst b) * (snd a $<~> snd b))
              _ _ _ _ _ _ _ _ _).
   1:intros a b f; exact (CatIsEquiv (fst f) * CatIsEquiv (snd f)).
@@ -97,7 +94,7 @@ Defined.
 Global Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
        {a1 a2 : A} {b1 b2 : B} {f : a1 $-> a2} {g : b1 $-> b2}
        {ef : CatIsEquiv f} {eg : CatIsEquiv g}
-  : @CatIsEquiv (A*B) _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
+  : @CatIsEquiv (A*B) _ _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
 
 (** More coherent two-variable functors. *)
 
@@ -106,16 +103,16 @@ Definition fmap22 {A B C : Type} `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
   {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2) (g1 : a1 $-> a2) (g2 : b1 $-> b2)
   (alpha : f1 $== g1) (beta : f2 $== g2)
   : (fmap11 F f1 f2) $== (fmap11 F g1 g2)
-  := @fmap2 _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) (g1, g2) (alpha, beta).
+  := @fmap2 _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) (g1, g2) (alpha, beta).
 
 Global Instance iemap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
            (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
            {a1 a2 : A} {b1 b2 : B} (f1 : a1 $<~> a2) (f2 : b1 $<~> b2)
   : CatIsEquiv (fmap11 F f1 f2)
-  := @iemap _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2).
+  := @iemap _ _ _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2).
 
 Definition emap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
            (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
            {a1 a2 : A} {b1 b2 : B} (fe1 : a1 $<~> a2)
            (fe2 : b1 $<~> b2) : (F a1 b1) $<~> (F a2 b2)
-  := @emap _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).
+  := @emap _ _ _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).

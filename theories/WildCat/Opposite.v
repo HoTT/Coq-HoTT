@@ -30,15 +30,19 @@ Section Op.
     + cbv; exact (fun a b c g f => f $o g).
   Defined.
 
+  (** We don't invert 2-cells as this is op on the first level. *)
+  Global Instance is2graph_op : Is2Graph A^op.
+  Proof.
+    intros a b; unfold op in *; cbn; exact _.
+  Defined.
+
   Global Instance is1cat_op : Is1Cat A^op.
   Proof.
     srapply Build_Is1Cat; unfold op in *; cbv in *.
     - intros a b.
-      apply isgraph_hom.
-    - intros a b.
       apply is01cat_hom.
     - intros a b.
-      apply isgpd_hom.
+      apply is0gpd_hom.
     - intros a b c h.
       srapply Build_Is0Functor.
       intros f g p.
@@ -67,12 +71,14 @@ Proof.
     apply cat_idl_strong.
 Defined.
 
-(* Opposites are definitionally involutive. You can test this by uncommenting the stuff below. *)
+(* Opposites are (almost) definitionally involutive. You can test this by uncommenting the stuff below. *)
+
 (*
-Definition test1 A {ac : Is01Cat A} : A = (A^op)^op := 1.
-Definition test2 A {ac : Is01Cat A} : ac = is01cat_op (A^op) := 1.
-Definition test3 A {ac : Is01Cat A} {ac2 : Is1Cat A} : ac2 = is1cat_op (A^op) := 1.
-Definition test4 A {ac : Is01Cat A} {ac2 : Is1Cat A} {ac11 : Is1Cat A} : ac11 = is1coh1cat_op (A^op) := 1.
+Definition test1 A `{Is01Cat A} : A = (A^op)^op := 1.
+Definition test2 A `{x : Is01Cat A} : x = is01cat_op (A^op) := 1.
+Definition test3 A `{x : Is2Graph A} : x = is2graph_op (A^op) := 1.
+(** Doesn't work *)
+Definition test4 A `{x : Is1Cat A} : x = is1cat_op (A^op) := 1.
 *)
 
 (** Opposite groupoids *)
@@ -111,7 +117,7 @@ Proof.
     apply is01cat_hom.
   - intros a b.
     apply is0coh1gpd_op.
-    apply isgpd_hom.
+    apply is0gpd_hom.
   - intros a b c.
     srapply Build_Is0Coh1Functor.
     intros [f g] [h k] [p q].
@@ -122,8 +128,8 @@ Defined.
 
 (** Opposite functors *)
 
-Global Instance is0coh1fun_op  A `{Is01Cat A} B `{Is01Cat B}
-       (F : A -> B) `{!Is0Functor F}
+Global Instance is0functor_op  A `{Is01Cat A} B `{Is01Cat B}
+       (F : A -> B) `{x : !Is0Functor F}
   : Is0Functor (F : A ^op -> B ^op).
 Proof.
   apply Build_Is0Functor.
@@ -134,12 +140,12 @@ Proof.
   assumption.
 Defined.
 
-Global Instance is0coh2fun_op A B `{Is1Cat A} `{Is1Cat B}
+Global Instance is1functor_op A B `{Is1Cat A} `{Is1Cat B}
        (F : A -> B) `{!Is0Functor F, !Is1Functor F}
   : Is1Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is1Functor; unfold op in *; cbn in *.
-  - intros a b; apply fmap2; assumption.
+  - intros a b; rapply fmap2; assumption.
   - intros a; exact (fmap_id F a).
   - intros a b c f g; exact (fmap_comp F g f).
 Defined.
@@ -179,17 +185,17 @@ Proof.
   - apply cate_fun'.
   - apply cate_isequiv'.
   - apply cate_buildequiv'.
-  - apply cate_buildequiv_fun'.
+  - rapply cate_buildequiv_fun'.
   - apply cate_inv'.
-  - apply cate_isretr'.
-  - apply cate_issect'.
+  - rapply cate_isretr'.
+  - rapply cate_issect'.
   - intros f g s t.
     exact (catie_adjointify f g t s).
 Defined.
 
 Global Instance isequivs_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
-  : @CatIsEquiv A^op _ _ _ _ b a f.
+  : @CatIsEquiv A^op _ _ _ _ _ b a f.
 Proof.
   assumption.
 Defined.
