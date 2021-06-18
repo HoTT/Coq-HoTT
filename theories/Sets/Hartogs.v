@@ -1,4 +1,4 @@
-From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
+From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra HSet.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Card.
 
@@ -226,18 +226,17 @@ Section Hartogs_Number.
   Lemma hartogs_equiv :
     hartogs_number_carrier <~> hartogs_number'.
   Proof.
-    apply equiv_inverse. unshelve eexists. 2: unshelve eapply equiv_hset_bijection.
+    apply equiv_inverse. unshelve eexists.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
       apply equiv_resize_hprop, tr. exists a. reflexivity.
-    - exact _.
-    - intros a b. intros H % pr1_path. cbn in H.
-      specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
-      intros H'. apply H' in H. now apply hartogs_number'_injection.2.
-    - intros [X HX]. eapply merely_destruct.
-      + eapply equiv_resize_hprop, HX.
-      + intros [a <-]. cbn. apply tr. exists a. cbn. apply ap.
-        apply ishprop_resize_hprop.
-  Defined.
+    - srapply isequiv_surj_emb.
+      + apply BuildIsSurjection. intros [X HX]. eapply merely_destruct.
+        * eapply equiv_resize_hprop, HX.
+        * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply ishprop_resize_hprop.
+      + apply isembedding_isinj_hset. intros a b. intros H % pr1_path. cbn in H.
+        specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
+        intros H'. apply H' in H. now apply hartogs_number'_injection.2.
+  Qed.
 
   Definition resize_ordinal@{i j +} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B) :
     Ordinal@{j _}.

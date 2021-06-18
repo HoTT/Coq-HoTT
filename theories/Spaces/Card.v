@@ -195,37 +195,3 @@ Qed.
 
 Definition infinite X :=
   Injection nat X.
-
-
-
-(** * Sets of same cardinality are isomorphic *)
-
-(* For this result, we say that two sets X and Y have equal cardinality,
-   if there is an injection from X to Y that is also merely surjective. *)
-
-Lemma equiv_hset_bijection {X Y} (f : X -> Y) :
-  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> IsEquiv f.
-Proof.
-  intros HY Hf H. unshelve esplit. 
-  - intros y. enough (Hy : exists x, f x = y) by apply (proj1 Hy).
-    unshelve eapply merely_destruct; try apply H.
-    + apply hprop_allpath. intros [x Hx] [x' Hx'].
-      assert (Hxx : x = x'). { apply Hf. rewrite Hx, Hx'. reflexivity. }
-                             destruct Hxx. apply ap. apply HY.
-    + intros [x Hx]. exists x. apply Hx.
-  - intros y. cbn. now destruct merely_destruct.
-  - intros x. cbn. destruct merely_destruct; try now apply Hf.
-  - intros x. cbn. apply HY.
-Qed.
-
-Lemma equiv_hset_bijection' {FE : Funext} {X Y} (f : X -> Y) :
-  IsHSet Y -> IsInjective f -> (forall y, merely (exists x, f x = y)) -> IsEquiv f.
-Proof.
-  intros HY Hf H. apply isequiv_surj_emb.
-  - intros y. eapply merely_destruct; try apply (H y); trivial.
-    intros [x Hx]. unshelve eexists.
-    + apply tr. exists x. apply Hx.
-    + intros x'. apply path_ishprop.
-  - intros y. apply hprop_allpath. intros [x Hx] [x' Hx'].
-    apply path_sigma_hprop. cbn. apply Hf. now rewrite Hx, Hx'.
-Qed.
