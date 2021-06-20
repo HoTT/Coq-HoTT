@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed Cubical.
+Require Import Basics Types Pointed Cubical WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
@@ -158,13 +158,11 @@ Defined.
 (** The classifying space of a group is the following pointed type. *)
 Definition pClassifyingSpace (G : Group)
   := Build_pType (ClassifyingSpace G) bbase.
-
+  
 (** To use the B G notation for pClassifyingSpace import this module. *)
 Module Import ClassifyingSpaceNotation.
   Definition B G := pClassifyingSpace G.
 End ClassifyingSpaceNotation.
-
-Import ClassifyingSpaceNotation.
 
 (** We can show that [bloop] takes the unit of the group to reflexivity. *)
 Definition bloop_id {G : Group} : bloop (mon_unit : G) = idpath.
@@ -185,6 +183,14 @@ Proof.
   refine (_ @ bloop_id).
   refine ((bloop_pp _ _)^ @ _).
   apply ap, right_inverse.
+Defined.
+
+(** The underlying pointed map of pequiv_g_loops_bg *)
+Definition pbloop {G : Group} : G ->* loops (B G).
+Proof.
+  srapply Build_pMap.
+  1: exact bloop.
+  apply bloop_id.
 Defined.
 
 (* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
@@ -388,10 +394,35 @@ Proof.
     apply bloop_pp.
 Defined.
 
+Global Instance is0functor_pclassifyingspace : Is0Functor pClassifyingSpace.
+Proof.
+  apply Build_Is0Functor.
+  rapply @functor_pclassifyingspace.
+Defined.
+
 Definition bloop_natural (G H : Group) (f : GroupHomomorphism G H)
   : loops_functor (functor_pclassifyingspace f) o bloop == bloop o f.
 Proof.
   nrapply pClassifyingSpace_rec_beta_bloop.
+Defined.
+
+Lemma pbloop_natural (G K : Group) (f : G $-> K) 
+  : loops_functor (fmap B f) o* pbloop
+    ==* pbloop o* f.
+Proof.
+  snrapply Build_pHomotopy.
+  1: apply bloop_natural.
+  apply path_ishprop.
+Defined.
+
+Definition natequiv_g_loops_bg `{Univalence}
+  : NatEquiv ptype_group (loops o B).
+Proof.
+  snrapply Build_NatEquiv.
+  1: intros G; rapply pequiv_g_loops_bg.
+  intros X Y f.
+  symmetry.
+  apply pbloop_natural.
 Defined.
 
 Definition functor2_pclassifyingspace {G H : Group} {f g : GroupHomomorphism G H}
@@ -453,6 +484,14 @@ Proof.
   reflexivity.
 Defined.
 
+Global Instance is1functor_pclassifyingspace : Is1Functor pClassifyingSpace.
+Proof.
+  apply Build_Is1Functor.
+  1: rapply @functor2_pclassifyingspace.
+  1: rapply @functor_pclassifyingspace_idmap.
+  rapply @functor_pclassifyingspace_compose.
+Defined.
+
 (** Interestingly, [functor_pclassifyingspace] is an equivalence *)
 Global Instance isequiv_functor_pclassifyingspace `{U : Univalence} (G H : Group)
   : IsEquiv (@functor_pclassifyingspace G H).
@@ -491,10 +530,18 @@ Defined.
 
 (** Hence we have that group homomorphisms are equivalent to pointed maps between their deloopings. *)
 Theorem equiv_grp_homo_pmap_bg `{U : Univalence} (G H : Group)
-  : (GroupHomomorphism G H) <~> (B G ->* B H).
+  : (G $-> H) <~> (B G $-> B H).
 Proof.
   snrapply Build_Equiv.
   2: apply isequiv_functor_pclassifyingspace.
+Defined.
+
+Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
+  : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).
+Proof.
+  intros K H f h.
+  apply path_hom.
+  rapply (fmap_comp B h f).
 Defined.
 
 (** B(Pi 1 X) <~>* X for a 0-connected 1-truncated X. *)
@@ -518,3 +565,48 @@ Proof.
   rapply isequiv_homotopic'; symmetry.
   nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
+
+(** We have the following natural equivalence. *)
+Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
+  : NatEquiv (opyon (Pi1 X)) (opyon X o B).
+Proof.
+  refine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _); revgoals.
+  { snrapply Build_NatEquiv.
+    - intros G.
+      srapply equiv_precompose_cat_equiv.
+      rapply grp_iso_pi1_Tr.
+    - rapply is1natural_opyoneda. }
+  refine (natequiv_compose (G := opyon (B (Pi1 (pTr 1 X))) o B) _ _); revgoals.
+  { snrapply Build_NatEquiv.
+    - intros G.
+      apply equiv_grp_homo_pmap_bg.
+    - exact _. }
+  refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
+  { snrapply Build_NatEquiv.
+    - intros G.
+      rapply equiv_pequiv_precompose; symmetry.
+      rapply pequiv_pclassifyingspace_pi1.
+    - rapply is1natural_prewhisker. }
+  snrapply Build_NatEquiv.
+  1: intro; exact equiv_ptr_rec.
+  rapply is1natural_prewhisker.
+Defined.
+
+(** The classifying space functor and the fundemental group functor form an adjunction (pType needs to be restricted to the subcategory of 0-connected pTypes). Note that the full adjunction should also be natural in X, but this was not needed yet. *)
+Theorem equiv_bg_pi1_adjoint `{Univalence} (X : pType)
+  `{IsConnected 0 X} (G : Group)
+  : (Pi 1 X $-> G) <~> (X $-> B G).
+Proof.
+  rapply natequiv_bg_pi1_adjoint.
+Defined.
+
+Lemma is1natural_equiv_bg_pi1_adjoint_r `{Univalence}
+  (X : pType) `{IsConnected 0 X}
+  : Is1Natural (opyon (Pi1 X)) (opyon X o B)
+      (equiv_bg_pi1_adjoint X).
+Proof.
+  rapply (is1natural_natequiv _ _ (natequiv_bg_pi1_adjoint X)).
+  (** Why so slow? Fixed by making this opaque. *)
+  Opaque equiv_bg_pi1_adjoint.
+Defined.
+Transparent equiv_bg_pi1_adjoint.
