@@ -9,6 +9,7 @@ Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Freudenthal.
 Require Import Truncations.
+Require Import WildCat.
 
 Generalizable Variables X A B f g n.
 
@@ -302,3 +303,21 @@ Proof.
   apply pmap_postwhisker.
   refine (psusp_functor_compose f g).
 Defined.
+
+Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
+  : Is1Natural (opyon (psusp A)) (opyon A o loops)
+      (loop_susp_adjoint A).
+Proof.
+  intros B B' g f.
+  refine ( _ @ cat_assoc_strong _ _ _).
+  refine (ap (fun x => x o* loop_susp_unit A) _).
+  apply path_pforall.
+  apply loops_functor_compose.
+Defined.
+
+Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)
+  : NatEquiv (opyon (psusp A)) (opyon A o loops).
+Proof.
+  rapply Build_NatEquiv.
+Defined.
+
