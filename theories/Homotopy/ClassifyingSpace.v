@@ -282,12 +282,8 @@ Section EncodeDecode.
     := Build_Equiv _ _ bloop _.
 
   (** Pointed version of the defining property. *)
-  Definition pequiv_g_loops_bg : Build_pType G _ <~>* loops (B G).
-  Proof.
-    srapply Build_pEquiv'.
-    1: apply equiv_g_loops_bg.
-    apply bloop_id.
-  Defined.
+  Definition pequiv_g_loops_bg : Build_pType G _ <~>* loops (B G)
+    := Build_pEquiv _ _ pbloop _.
 
   Definition pequiv_loops_bg_g := pequiv_g_loops_bg^-1*%equiv.
 
@@ -575,19 +571,13 @@ Defined.
 Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (Pi1 X)) (opyon X o B).
 Proof.
-  refine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _); revgoals.
-  { snrapply Build_NatEquiv.
-    - intros G.
-      srapply equiv_precompose_cat_equiv.
-      rapply grp_iso_pi1_Tr.
-    - rapply is1natural_opyoneda. }
+  nrefine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _).
+  2: exact (natequiv_opyon_equiv (Pi1 X) _ (grp_iso_pi1_Tr _)).
   refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).
   refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
-  { snrapply Build_NatEquiv.
-    - intros G.
-      rapply equiv_pequiv_precompose; symmetry.
-      rapply pequiv_pclassifyingspace_pi1.
-    - rapply is1natural_prewhisker. }
+  { refine (natequiv_prewhisker _ _).
+    refine (natequiv_opyon_equiv _ _ _^-1$).
+    rapply pequiv_pclassifyingspace_pi1. }
   snrapply Build_NatEquiv.
   1: intro; exact equiv_ptr_rec.
   rapply is1natural_prewhisker.
