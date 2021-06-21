@@ -165,6 +165,13 @@ Require Export HoTT.Tactics.EvalIn.
 Require Export HoTT.Tactics.Nameless.
 Require Export HoTT.Tactics.RewriteModuloAssociativity.
 
+Require Export HoTT.Sets.AC.
+Require Export HoTT.Sets.GCH.
+Require Export HoTT.Sets.GCHtoAC.
+Require Export HoTT.Sets.Hartogs.
+Require Export HoTT.Sets.Ordinals.
+Require Export HoTT.Sets.Powers.
+
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], or any of the files in [Metatheory] from this file.  Thus, importing this file does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
 
 (** We check that UnivalenceAxiom, FunextAxiom aren't being leaked. This is so that these can be imported seperately. *)
