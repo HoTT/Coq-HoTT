@@ -75,8 +75,7 @@ Record Ordinal@{carrier relation +} :=
     ; ordinal_property : IsOrdinal@{carrier relation} ordinal_carrier (<)
   }.
 
-Existing Instance ordinal_relation.
-Existing Instance ordinal_property.
+Global Existing Instances ordinal_relation ordinal_property.
 
 Coercion ordinal_as_hset (A : Ordinal) : HSet
   := Build_HSet (ordinal_carrier A).
