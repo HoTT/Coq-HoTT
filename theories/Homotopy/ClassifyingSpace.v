@@ -548,6 +548,7 @@ Theorem natequiv_grp_homo_pmap_bg `{U : Univalence} (G : Group)
 Proof.
   rapply Build_NatEquiv.
 Defined.
+
 (** B(Pi 1 X) <~>* X for a 0-connected 1-truncated X. *)
 Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
   (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
