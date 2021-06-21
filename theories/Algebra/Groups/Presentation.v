@@ -106,7 +106,7 @@ Proof.
   hnf in p.
   pose (p' := p o freegroup_eta _).
   clearbody p'; clear p.
-  specialize (p' (ListQuotient.word_sing _ (inl r))).
+  specialize (p' (FreeGroup.word_sing _ (inl r))).
   refine (_ @ p').
   clear p'.
   symmetry.

@@ -719,3 +719,45 @@ Proof.
   + intros. reflexivity.
   + intros. reflexivity.
 Defined.
+
+(** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor pType to Type. *)
+Definition pointify (S : Type) : pType := Build_pType (S + Unit) (inr tt).
+
+Global Instance is0functor_pointify : Is0Functor pointify.
+Proof.
+  apply Build_Is0Functor.
+  intros A B f.
+  srapply Build_pMap.
+  1: exact (functor_sum f idmap).
+  reflexivity.
+Defined.
+
+(** pointify is left adjoint to forgetting the basepoint in the following sense *)
+Theorem equiv_pointify_map `{Funext} (A : Type) (X : pType)
+  : (pointify A ->* X) <~> (A -> X).
+Proof.
+  snrapply equiv_adjointify.
+  1: exact (fun f => f o inl).
+  { intros f.
+    snrapply Build_pMap.
+    { intros [a|].
+      1: exact (f a).
+      exact (point _). }
+    reflexivity. }
+  1: intro x; reflexivity.
+  intros f.
+  cbv.
+  pointed_reduce.
+  rapply equiv_path_pforall.
+  snrapply Build_pHomotopy.
+  1: by intros [a|[]].
+  reflexivity.
+Defined.
+
+Lemma natequiv_pointify_r `{Funext} (A : Type)
+  : NatEquiv (opyon (pointify A)) (opyon A o pointed_type).
+Proof.
+  snrapply Build_NatEquiv.
+  1: rapply equiv_pointify_map.
+  cbv; reflexivity.
+Defined.

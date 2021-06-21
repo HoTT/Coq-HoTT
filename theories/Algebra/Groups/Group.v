@@ -533,6 +533,18 @@ Proof.
   all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
 Defined.
 
+Global Instance is0functor_type_group : Is0Functor group_type.
+Proof.
+  apply Build_Is0Functor.
+  rapply @grp_homo_map.
+Defined.
+
+Global Instance is0functor_ptype_group : Is0Functor ptype_group.
+Proof.
+  apply Build_Is0Functor.
+  rapply @pmap_GroupHomomorphism.
+Defined.
+
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
