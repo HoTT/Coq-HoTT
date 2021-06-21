@@ -199,3 +199,12 @@ Global Instance isequivs_op {A : Type} `{HasEquivs A}
 Proof.
   assumption.
 Defined.
+
+Global Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
+  : HasMorExt A^op.
+Proof.
+  snrapply Build_HasMorExt.
+  intros a b f g.
+  refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
+Defined.
+

@@ -143,6 +143,17 @@ Proof.
     srapply cat_idr_strong.
 Defined.
 
+Definition natequiv_opyon_equiv {A : Type} `{HasEquivs A}
+  `{!HasMorExt A} (a b : A)
+  : (b $<~> a) -> (opyon1 a $<~> opyon1 b).
+Proof.
+  intro e.
+  snrapply Build_NatEquiv.
+  - intros c.
+    exact (equiv_precompose_cat_equiv e).
+  - rapply is1natural_opyoneda.
+Defined.
+
 (** ** The contravariant Yoneda lemma *)
 
 (** We can deduce this from the covariant version with some boilerplate. *)
@@ -197,3 +208,7 @@ Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
   : (yon1 a $<~> yon1 b) -> (a $<~> b)
   := (@opyon_equiv A^op _ _ _ _ _ _ a b).
 
+Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
+  `{!HasMorExt A} (a b : A)
+  : (a $<~> b) -> (yon1 a $<~> yon1 b)
+  := (@natequiv_opyon_equiv A^op _ _ _ _ _ _ a b).
