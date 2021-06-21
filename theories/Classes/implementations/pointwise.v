@@ -32,24 +32,25 @@ Section contents.
        absorption
        commutativity | 1 : lattice_hints.
   Local Ltac reduce_fun := compute; intros; apply path_forall; intro.
-  Local Ltac try_solve_fun :=
-    reduce_fun;
-    eauto 10 with lattice_hints typeclass_instances.
 
   Global Instance lattice_fun `{!IsLattice B} : IsLattice (A -> B).
   Proof.
-    repeat split; try apply _; try_solve_fun.
-    * apply binary_idempotent.
-    * apply binary_idempotent.
+    repeat split; try apply _; reduce_fun.
+    1,4: apply associativity.
+    1,3: apply commutativity.
+    1,2: apply binary_idempotent.
+    1,2: apply absorption.
   Defined.
 
   Instance boundedjoinsemilattice_fun
    `{!IsBoundedJoinSemiLattice B} :
     IsBoundedJoinSemiLattice (A -> B).
   Proof.
-    repeat split; try apply _; try_solve_fun; try apply commutativity.
+    repeat split; try apply _; reduce_fun.
+    * apply associativity.
     * apply left_identity.
     * apply right_identity.
+    * apply commutativity.
     * apply binary_idempotent.
   Defined.
 
