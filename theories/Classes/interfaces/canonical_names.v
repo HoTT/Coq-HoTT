@@ -241,7 +241,7 @@ Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
 Class Commutative {B A} (f : A -> A -> B) : Type
   := commutativity: forall x y, f x y = f y x.
 
-Global Hint Unfold Commutative : typeclass_instances.
+Typeclasses Transparent Commutative.
 
 Class HeteroAssociative {A B C AB BC ABC}
   (fA_BC: A -> BC -> ABC) (fBC: B -> C -> BC)
