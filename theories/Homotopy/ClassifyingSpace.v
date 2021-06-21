@@ -407,8 +407,7 @@ Proof.
 Defined.
 
 Lemma pbloop_natural (G K : Group) (f : G $-> K) 
-  : loops_functor (fmap B f) o* pbloop
-    ==* pbloop o* f.
+  : loops_functor (fmap B f) o* pbloop ==* pbloop o* f.
 Proof.
   snrapply Build_pHomotopy.
   1: apply bloop_natural.
@@ -544,6 +543,11 @@ Proof.
   rapply (fmap_comp B h f).
 Defined.
 
+Theorem natequiv_grp_homo_pmap_bg `{U : Univalence} (G : Group)
+  : NatEquiv (opyon G) (opyon (B G) o B).
+Proof.
+  rapply Build_NatEquiv.
+Defined.
 (** B(Pi 1 X) <~>* X for a 0-connected 1-truncated X. *)
 Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
   (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
@@ -576,11 +580,7 @@ Proof.
       srapply equiv_precompose_cat_equiv.
       rapply grp_iso_pi1_Tr.
     - rapply is1natural_opyoneda. }
-  refine (natequiv_compose (G := opyon (B (Pi1 (pTr 1 X))) o B) _ _); revgoals.
-  { snrapply Build_NatEquiv.
-    - intros G.
-      apply equiv_grp_homo_pmap_bg.
-    - exact _. }
+  refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).
   refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
   { snrapply Build_NatEquiv.
     - intros G.

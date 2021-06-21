@@ -4,13 +4,12 @@ Require Import Truncations.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.Wedge.
 
 Local Open Scope trunc_scope.
 Local Open Scope pointed_scope.
 Import ClassifyingSpaceNotation.
 
-(** In this file we show that the fundemental group of a bouquet of circles index by a type S is the free group on that type S. We begin by defining S-indexed wedges of cricles as the suspension of the pointification of S. *)
+(** In this file we show that the fundamental group of a bouquet of circles indexed by a type S is the free group on that type S. We begin by defining S-indexed wedges of circles as the suspension of the pointification of S. *)
 
 Section AssumeUnivalence.
 
@@ -38,13 +37,7 @@ Section AssumeUnivalence.
     1: refine (natequiv_prewhisker (natequiv_pointify_r S) ptype_group).
     (** Post-compose with [pequiv_loops_bg_g] *)
     nrefine (natequiv_compose _ _).
-    { snrapply Build_NatEquiv.
-      1: intros G; rapply (equiv_postcompose_cat_equiv pequiv_loops_bg_g).
-      intros G K f g.
-      apply path_hom.
-      refine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
-      rapply (is1natural_natequiv _ _
-        (natequiv_inverse _ _ natequiv_g_loops_bg)). }
+1: rapply (natequiv_postwhisker _ (natequiv_inverse _ _ natequiv_g_loops_bg)).
     (** Loop-susp adjoint *)
     nrefine (natequiv_compose _ _).
     1: refine (natequiv_prewhisker
@@ -56,7 +49,6 @@ Section AssumeUnivalence.
   (** For the rest of this file, we don't need to unfold this. *)
   Local Opaque natequiv_pi1bouquet_rec.
 
-    (** Finally we use the pointify adjunction. *)
   Theorem equiv_pi1bouquet_rec (S : Type) (G : Group)
     : (Pi 1 (Bouquet S) $-> G) <~> (S -> G).
   Proof.
