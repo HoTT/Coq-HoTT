@@ -567,7 +567,6 @@ Proof.
   nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
-(** We have the following natural equivalence. *)
 Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (Pi1 X)) (opyon X o B).
 Proof.
