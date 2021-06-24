@@ -46,26 +46,25 @@ Defined.
 (** Truncation preserves complexes. *)
 Definition iscomplex_ptr (n : trunc_index)
        {F X Y : pType} (i : F ->* X) (f : X ->* Y) (cx : IsComplex i f)
-  : IsComplex (ptr_functor n i) (ptr_functor n f).
+  : IsComplex (fmap (pTr n) i) (fmap (pTr n) f).
 Proof.
-  refine ((ptr_functor_pmap_compose n i f)^* @* _).
+  refine ((fmap_comp (pTr n) i f)^* @* _).
   refine (_ @* ptr_functor_pconst n).
-  apply ptr_functor_homotopy; assumption.
+  rapply (fmap2 (pTr _)); assumption.
 Defined.
 
 (** Loopspaces preserve complexes. *)
 Definition iscomplex_loops
        {F X Y : pType} (i : F ->* X) (f : X ->* Y) (cx : IsComplex i f)
-  : IsComplex (loops_functor i) (loops_functor f).
+  : IsComplex (fmap loops i) (fmap loops f).
 Proof.
-  refine ((loops_functor_compose f i)^* @* _ @* loops_functor_pconst).
-  apply loops_2functor; assumption.
+  refine ((fmap_comp loops i f)^$ $@ _ $@ fmap_zero_morphism _).
+  rapply (fmap2 loops); assumption.
 Defined.
 
-Definition iscomplex_iterated_loops
-           {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           (cx : IsComplex i f) (n : nat)
-  : IsComplex (iterated_loops_functor n i) (iterated_loops_functor n f).
+Definition iscomplex_iterated_loops {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) (cx : IsComplex i f) (n : nat)
+  : IsComplex (fmap (iterated_loops n) i) (fmap (iterated_loops n) f).
 Proof.
   induction n as [|n IHn]; [ exact cx | ].
   apply iscomplex_loops; assumption.
@@ -302,31 +301,33 @@ Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
 Definition fiberseq_loops {F X Y} (fs : FiberSeq F X Y)
   : FiberSeq (loops F) (loops X) (loops Y).
 Proof.
-  exists (loops_functor fs.1).
-  refine (_ o*E pequiv_loops_functor fs.2).
-  exact ((pfiber_loops_functor fs.1)^-1* ).
+  (** TODO: doesn't work?! *)
+(*   exists (fmap loops fs.1). *)
+  refine (fmap loops fs.1 ; _).
+  refine (_ o*E emap loops fs.2).
+  exact ((pfiber_fmap_loops fs.1)^-1* ).
 Defined.
 
-(** Now we can deduce that they preserve purely-exact sequences.  The hardest part is modifying the first map back to [loops_functor i]. *)
+(** Now we can deduce that they preserve purely-exact sequences.  The hardest part is modifying the first map back to [fmap_loops i]. *)
 Global Instance isexact_loops {F X Y} (i : F ->* X) (f : X ->* Y)
            `{IsExact purely F X Y i f}
-  : IsExact purely (loops_functor i) (loops_functor f).
+  : IsExact purely (fmap loops i) (fmap loops f).
 Proof.
-  refine (@isexact_homotopic_i purely _ _ _ _ (loops_functor i) _ (loops_functor f)
+  refine (@isexact_homotopic_i purely _ _ _ _ (fmap loops i) _ (fmap loops f)
     (isexact_purely_fiberseq (fiberseq_loops (fiberseq_isexact_purely i f)))).
-  transitivity (loops_functor (pfib f) o* loops_functor (cxfib cx_isexact)).
-  - refine (_ @* loops_functor_compose _ _).
-    apply loops_2functor.
+  transitivity (fmap loops (pfib f) o* fmap loops (cxfib cx_isexact)).
+  - refine (_ @* fmap_comp loops _ _).
+    rapply (fmap2 loops).
     symmetry; apply pfib_cxfib.
   - refine (_ @* pmap_compose_assoc _ _ _).
-    refine (pmap_prewhisker (loops_functor (cxfib cx_isexact)) _).
+    refine (pmap_prewhisker (fmap loops (cxfib cx_isexact)) _).
     apply moveR_pequiv_fV.
-    apply pr1_pfiber_loops_functor.
+    apply pr1_pfiber_fmap_loops.
 Defined.
 
-Global Instance isexact_iterated_loops {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact purely F X Y i f} (n : nat)
-  : IsExact purely (iterated_loops_functor n i) (iterated_loops_functor n f).
+Global Instance isexact_iterated_loops {F X Y}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f} (n : nat)
+  : IsExact purely (fmap (iterated_loops n) i) (fmap (iterated_loops n) f).
 Proof.
   induction n as [|n IHn]; [ assumption | apply isexact_loops; assumption ].
 Defined.
@@ -335,12 +336,11 @@ Defined.
 Global Instance isexact_ptr `{Univalence} (n : trunc_index)
            {F X Y : pType} (i : F ->* X) (f : X ->* Y)
            `{IsExact (Tr n) F X Y i f}
-  : IsExact (Tr n) (ptr_functor n.+1 i) (ptr_functor n.+1 f).
+  : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
   exists (iscomplex_ptr n.+1 i f cx_isexact).
-  simple notypeclasses refine
-    (cancelR_conn_map (Tr n) (@tr n.+1 F) 
-      (@cxfib _ _ _ (ptr_functor n.+1 i) (ptr_functor n.+1 f) _)).
+  srefine (cancelR_conn_map (Tr n) (@tr n.+1 F) 
+    (@cxfib _ _ _ (fmap (pTr n.+1) i) (fmap (pTr n.+1) f) _)).
   { intros x; rapply isconnected_pred. }
   nrapply conn_map_homotopic.
   2:nrapply (conn_map_compose _ (cxfib _)
@@ -356,7 +356,7 @@ Defined.
 (** In particular, (n.+1)-truncation takes fiber sequences to n-exact ones. *)
 Global Instance isexact_ptr_purely `{Univalence} (n : trunc_index)
            {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : IsExact (Tr n) (ptr_functor n.+1 i) (ptr_functor n.+1 f).
+  : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
   rapply isexact_ptr.
   exists cx_isexact.
@@ -393,10 +393,10 @@ Definition connecting_map {F X Y} (i : F ->* X) (f : X ->* Y)
 
 Global Instance isexact_connect_R {F X Y} (i : F ->* X) (f : X ->* Y)
        `{IsExact purely F X Y i f}
-  : IsExact purely (loops_functor f) (connecting_map i f).
+  : IsExact purely (fmap loops f) (connecting_map i f).
 Proof.
   refine (isexact_equiv_i (Y := F) purely
-          (pfib (pfib i)) (loops_functor f)
+          (pfib (pfib i)) (fmap loops f)
           (((loops_inv X) o*E
             (pfiber2_loops (pfib f)) o*E
            (pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))^-1*)
@@ -412,7 +412,7 @@ Proof.
                   (f23 := pfiber2_loops f)
                   (f21 := pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)) _ _).
   - exact (square_pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))).
-  - exact (pfiber2_loops_functor f).
+  - exact (pfiber2_fmap_loops f).
 Defined.
 
 
@@ -435,7 +435,7 @@ Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}
   : LongExactSequence (Tr k) N
   := Build_LongExactSequence
        (Tr k) N (fun n => pTr k.+1 (S n))
-       (fun n => ptr_functor k.+1 (les_fn S n)) _.
+       (fun n => fmap (pTr k.+1) (les_fn S n)) _.
 
 
 (** ** LES of loop spaces and homotopy groups *)
@@ -455,10 +455,10 @@ Definition loops_les {F X Y : pType} (i : F ->* X) (f : X ->* Y)
 Proof.
   srefine (Build_LongExactSequence purely (N3) (loops_carrier F X Y) _ _).
   all:intros [n [[[[]|[]]|[]]|[]]]; cbn.
-  { exact (iterated_loops_functor n f). }
-  { exact (iterated_loops_functor n i). }
-  { exact (connecting_map (iterated_loops_functor n i)
-                          (iterated_loops_functor n f)). }
+  { exact (fmap (iterated_loops n) f). }
+  { exact (fmap (iterated_loops n) i). }
+  { exact (connecting_map (fmap (iterated_loops n) i)
+                          (fmap (iterated_loops n) f)). }
   all:exact _.
 Defined.
 

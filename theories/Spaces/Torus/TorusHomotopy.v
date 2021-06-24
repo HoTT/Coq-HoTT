@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed.
+Require Import Basics Types Pointed WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Pi1S1.
@@ -37,7 +37,7 @@ Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   srefine (_ o*E _).
   1: exact (loops (S1 * S1)).
-  1: apply pequiv_loops_functor.
+  1: rapply (emap loops).
   { srapply Build_pEquiv.
     1: srapply Build_pMap.
     1: exact equiv_torus_prod_Circle.

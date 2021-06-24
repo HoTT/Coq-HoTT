@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Basics Types.
+Require Import Basics Types WildCat.
 Require Import TruncType HProp.
 Require Import Modalities.Modality Modalities.Descent.
 
@@ -93,6 +93,9 @@ Section TruncationModality.
     : Tr@{i} n X -> Tr@{j} n Y
     := O_functor@{k k k} (Tr n) f.
 
+  Global Instance is0functor_Tr : Is0Functor (Tr n)
+    := Build_Is0Functor _ _ _ _ (Tr n) (@Trunc_functor).
+
   Global Instance Trunc_functor_isequiv {X Y : Type}
     (f : X -> Y) `{IsEquiv _ _ f}
     : IsEquiv (Trunc_functor f)
@@ -117,6 +120,14 @@ Section TruncationModality.
   Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp (Tr n) X Y.
+
+  Global Instance is1functor_Tr : Is1Functor (Tr n).
+  Proof.
+    apply Build_Is1Functor.
+    - apply @O_functor_homotopy.
+    - apply @Trunc_functor_idmap.
+    - apply @Trunc_functor_compose.
+  Defined.
 
 End TruncationModality.
 

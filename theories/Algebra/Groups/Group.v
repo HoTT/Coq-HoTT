@@ -681,7 +681,7 @@ Proof.
   intro G.
   exists (grp_trivial_rec _).
   intros g [].
-  apply (grp_homo_unit g).
+  apply (grp_homo_unit g)^.
 Defined.
 
 Global Instance contr_grp_homo_trivial_source `{Funext} G

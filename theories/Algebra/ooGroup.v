@@ -74,7 +74,7 @@ Definition ooGroupHom (G H : ooGroup)
   := B G ->* B H.
 
 Definition grouphom_fun {G H} (phi : ooGroupHom G H) : G -> H
-  := loops_functor phi.
+  := fmap loops phi.
 
 Coercion grouphom_fun : ooGroupHom >-> Funclass.
 
@@ -95,8 +95,8 @@ Defined.
 (** And this functor "is" the same as the ordinary loop space functor. *)
 Definition loops_functor_group
            {X Y : pType} (f : X ->* Y)
-: loops_functor (group_loops_functor f) o loops_group X
-  == loops_group Y o loops_functor f.
+: fmap loops (group_loops_functor f) o loops_group X
+  == loops_group Y o fmap loops f.
 Proof.
   intros x.
   apply (equiv_inj (equiv_path_sigma_hprop _ _)^-1).
@@ -129,16 +129,16 @@ Definition group_loops_functor_compose
 Proof.
   intros g.
   unfold grouphom_fun, grouphom_compose.
-  refine (pointed_htpy (loops_functor_compose _ _) g @ _).
+  refine (pointed_htpy (fmap_comp loops _ _) g @ _).
   pose (p := eisretr (loops_group X) g).
-  change (loops_functor (group_loops_functor psi)
-            (loops_functor (group_loops_functor phi) g)
-          = loops_functor (group_loops_functor
+  change (fmap loops (group_loops_functor psi)
+            (fmap loops (group_loops_functor phi) g)
+          = fmap loops (group_loops_functor
                                  (pmap_compose psi phi)) g).
   rewrite <- p.
   rewrite !loops_functor_group.
   apply ap.
-  symmetry; apply loops_functor_compose.
+  symmetry; rapply (fmap_comp loops).
 Qed.
 
 Definition grouphom_idmap (G : ooGroup) : ooGroupHom G G
@@ -146,32 +146,19 @@ Definition grouphom_idmap (G : ooGroup) : ooGroupHom G G
 
 Definition group_loops_functor_idmap {X : pType}
 : grouphom_idmap (group_loops X)
-  == group_loops_functor pmap_idmap.
+  == group_loops_functor (Id (A:=pType) _).
 Proof.
   intros g.
   unfold grouphom_fun, grouphom_idmap.
   assert (p := eisretr (loops_group X) g).
+  refine (fmap_id loops _ g @ _).
   rewrite <- p.
   rewrite !loops_functor_group.
-  rewrite (pointed_htpy (loops_functor_idmap _)).
-  simpl. apply ap.
-  rewrite concat_p1, concat_1p, ap_idmap.
+  pose (q := pointed_htpy
+    (fmap_id loops X : _ ==* _) ((loops_group X)^-1 g)).
+  rewrite q.
   reflexivity.
 Qed.
-
-Definition group_loops_2functor
-           {X Y : pType} {phi psi : X ->* Y}
-           (theta : pHomotopy phi psi)
-: (group_loops_functor phi) == (group_loops_functor psi).
-Proof.
-  intros g.
-  assert (p := eisretr (loops_group X) g).
-  rewrite <- p.
-  unfold grouphom_fun.
-  rewrite !loops_functor_group.
-  apply ap.
-  apply loops_2functor; assumption.
-Defined.
 
 (** *** Homomorphic properties *)
 
@@ -307,13 +294,13 @@ Global Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
 Proof.
   snrapply Build_Is0Functor.
   intros G H f.
-  by rapply functor_pclassifyingspace.
+  by rapply (fmap pClassifyingSpace).
 Defined.
 
 Global Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
 Proof.
-  snrapply Build_Is1Functor.
-  1: exact @functor2_pclassifyingspace.
-  1: exact functor_pclassifyingspace_idmap.
-  exact functor_pclassifyingspace_compose.
+  snrapply Build_Is1Functor; hnf; intros.
+  1: by rapply (fmap2 pClassifyingSpace).
+  1: by rapply (fmap_id pClassifyingSpace).
+  by rapply (fmap_comp pClassifyingSpace).
 Defined.
