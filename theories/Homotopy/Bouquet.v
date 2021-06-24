@@ -87,3 +87,7 @@ Section AssumeUnivalence.
   Defined.
 
 End AssumeUnivalence.
+
+Global Instance is0functor_bouquet : Is0Functor Bouquet := _.
+Global Instance is1functor_bouquet : Is1Functor Bouquet := _.
+

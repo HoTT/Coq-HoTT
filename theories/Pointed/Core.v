@@ -739,6 +739,25 @@ Proof.
   reflexivity.
 Defined.
 
+Global Instance is1functor_pointify : Is1Functor pointify.
+Proof.
+  apply Build_Is1Functor.
+  - intros X Y f g p.
+    srapply Build_pHomotopy.
+    { intros [x|[]].
+      1: rapply (ap inl); rapply p.
+      reflexivity. }
+    reflexivity.
+  - intros X. simpl.
+    srapply Build_pHomotopy.
+    1: by intros [|].
+    reflexivity.
+  - intros X Y Z f g.
+    srapply Build_pHomotopy.
+    1: by intros [|].
+    reflexivity.
+Defined.
+
 (** pointify is left adjoint to forgetting the basepoint in the following sense *)
 Theorem equiv_pointify_map `{Funext} (A : Type) (X : pType)
   : (pointify A ->* X) <~> (A -> X).

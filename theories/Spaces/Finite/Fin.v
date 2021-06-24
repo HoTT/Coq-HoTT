@@ -423,6 +423,20 @@ Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
       | S m => fsucc_mod (fin_nat m)
      end.
 
+(** Surjective map from larger Fin to smaller Fin. *)
+Definition fin_proj (n : nat) (x : Fin n.+2) : Fin n.+1 :=
+  match x with
+  | inl z => z
+  | inr _ => fin_zero
+  end.
+
+(** [fin_proj] is a retract of the inclusion map. *)
+Lemma path_fin_proj_succ (n : nat)
+  : fin_proj n o fin_incl == idmap.
+Proof.
+  by intros [x|].
+Defined.
+
 (** The 1-dimensional version of Sperner's lemma says that given any finite sequence of decidable hProps, where the sequence starts with true and ends with false, we can find a point in the sequence where the sequence changes from true to false. This is like a discrete intermediate value theorem. *)
 Fixpoint sperners_lemma_1d {n} :
   forall (f : Fin (n.+2) -> DHProp)
