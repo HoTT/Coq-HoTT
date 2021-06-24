@@ -381,3 +381,23 @@ Proof.
   apply cat_idl.
 Defined.
 
+(** * Initial objects and terminal objects are all respectively equivalent. *)
+
+Lemma cate_isinitial A `{HasEquivs A} (x y : A)
+  : IsInitial x -> IsInitial y -> x $<~> y.
+Proof.
+  intros inx iny.
+  srapply (cate_adjointify (inx y).1 (iny x).1).
+  1: exact (((iny _).2 _)^$ $@ (iny _).2 _).
+  1: exact (((inx _).2 _)^$ $@ (inx _).2 _).
+Defined.
+
+Lemma cate_isterminal A `{HasEquivs A} (x y : A)
+  : IsTerminal x -> IsTerminal y -> x $<~> y.
+Proof.
+  intros tex tey.
+  srapply (cate_adjointify (tey x).1 (tex y).1).
+  1: exact (((tey _).2 _)^$ $@ (tey _).2 _).
+  1: exact (((tex _).2 _)^$ $@ (tex _).2 _).
+Defined.
+

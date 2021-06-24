@@ -165,13 +165,31 @@ Defined.
 
 (** Initial objects *)
 Definition IsInitial {A : Type} `{Is1Cat A} (x : A)
-  := forall (y : A), {f : x $-> y & forall g, g $== f}.
+  := forall (y : A), {f : x $-> y & forall g, f $== g}.
 Existing Class IsInitial.
+
+Definition mor_initial {A : Type} `{Is1Cat A} (x y : A) {h : IsInitial x}
+  : x $-> y
+  := (h y).1.
+
+Definition mor_initial_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsInitial x}
+  (f : x $-> y)
+  : mor_initial x y $== f
+  := (h y).2 f.
 
 (** Terminal objects *)
 Definition IsTerminal {A : Type} `{Is1Cat A} (y : A)
-  := forall (x : A), {f : x $-> y & forall g, g $== f}.
+  := forall (x : A), {f : x $-> y & forall g, f $== g}.
 Existing Class IsTerminal.
+
+Definition mor_terminal {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal y}
+  : x $-> y
+  := (h x).1.
+
+Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal y}
+  (f : x $-> y)
+  : mor_terminal x y $== f
+  := (h x).2 f.
 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
 Class HasMorExt (A : Type) `{Is1Cat A} := {
@@ -359,4 +377,34 @@ Class Is3Graph (A : Type) `{Is2Graph A}
   := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
 Global Existing Instance isgraph_hom_hom | 30.
 Typeclasses Transparent Is3Graph.
+
+(** *** Preservation of initial and terminal objects *)
+
+Class PreservesInitial {A B : Type} (F : A -> B)
+  `{Is1Functor A B F} : Type
+  := isinitial_preservesinitial
+    : forall (x : A), IsInitial x -> IsInitial (F x).
+Global Existing Instance isinitial_preservesinitial.
+
+(** The initial morphism is preserved by such a functor. *)
+Lemma fmap_initial {A B : Type} (F : A -> B)
+  `{PreservesInitial A B F} (x y : A) (h : IsInitial x)
+  : fmap F (mor_initial x y) $== mor_initial (F x) (F y).
+Proof.
+  exact (mor_initial_unique _ _ _)^$.
+Defined.
+
+Class PreservesTerminal {A B : Type} (F : A -> B)
+  `{Is1Functor A B F} : Type
+  := isterminal_preservesterminal
+    : forall (x : A), IsTerminal x -> IsTerminal (F x).
+Global Existing Instance isterminal_preservesterminal.
+
+(** The terminal morphism is preserved by such a functor. *)
+Lemma fmap_terminal {A B : Type} (F : A -> B)
+  `{PreservesTerminal A B F} (x y : A) (h : IsTerminal y)
+  : fmap F (mor_terminal x y) $== mor_terminal (F x) (F y).
+Proof.
+  exact (mor_terminal_unique _ _ _)^$.
+Defined.
 
