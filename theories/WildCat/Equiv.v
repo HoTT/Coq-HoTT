@@ -401,3 +401,25 @@ Proof.
   1: exact (((tex _).2 _)^$ $@ (tex _).2 _).
 Defined.
 
+Lemma isinitial_cate A `{HasEquivs A} (x y : A)
+  : x $<~> y -> IsInitial x -> IsInitial y.
+Proof.
+  intros f inx z.
+  exists ((inx z).1 $o f^-1$).
+  intros g.
+  refine (_ $@ compose_hh_V _ f).
+  refine (_ $@R _).
+  exact ((inx z).2 _).
+Defined.
+
+Lemma isterminal_cate A `{HasEquivs A} (x y : A)
+  : x $<~> y -> IsTerminal x -> IsTerminal y.
+Proof.
+  intros f tex z.
+  exists (f $o (tex z).1).
+  intros g.
+  refine (_ $@ compose_h_Vh f _).
+  refine (_ $@L _).
+  exact ((tex z).2 _).
+Defined.
+
