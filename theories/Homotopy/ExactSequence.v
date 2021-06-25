@@ -308,7 +308,7 @@ Proof.
   exact ((pfiber_fmap_loops fs.1)^-1* ).
 Defined.
 
-(** Now we can deduce that they preserve purely-exact sequences.  The hardest part is modifying the first map back to [fmap_loops i]. *)
+(** Now we can deduce that they preserve purely-exact sequences.  The hardest part is modifying the first map back to [fmap loops i]. *)
 Global Instance isexact_loops {F X Y} (i : F ->* X) (f : X ->* Y)
            `{IsExact purely F X Y i f}
   : IsExact purely (fmap loops i) (fmap loops f).

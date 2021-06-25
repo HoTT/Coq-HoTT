@@ -149,15 +149,11 @@ Definition group_loops_functor_idmap {X : pType}
   == group_loops_functor (Id (A:=pType) _).
 Proof.
   intros g.
-  unfold grouphom_fun, grouphom_idmap.
-  assert (p := eisretr (loops_group X) g).
   refine (fmap_id loops _ g @ _).
-  rewrite <- p.
+  rewrite <- (eisretr (loops_group X) g).
+  unfold grouphom_fun, grouphom_idmap.
   rewrite !loops_functor_group.
-  pose (q := pointed_htpy
-    (fmap_id loops X : _ ==* _) ((loops_group X)^-1 g)).
-  rewrite q.
-  reflexivity.
+  exact (ap (loops_group X) (fmap_id loops _ _)^).
 Qed.
 
 (** *** Homomorphic properties *)

@@ -69,7 +69,7 @@ Defined.
 Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
   := { fmap : forall (a b : A) (f : a $-> b), F a $-> F b }.
 
-Arguments fmap {_ _ _ _} F {_ _ _} f.
+Arguments fmap {A B isgraph_A isgraph_B} F {is0functor_F a b} f : rename.
 
 Class Is2Graph (A : Type) `{IsGraph A}
   := isgraph_hom : forall (a b : A), IsGraph (a $-> b).
@@ -223,9 +223,18 @@ Class Is1Functor {A B : Type} `{Is1Cat A} `{Is1Cat B}
     fmap F (g $o f) $== fmap F g $o fmap F f;
 }.
 
-Arguments fmap2 {A B _ _ _ _ _ _ _ _} F {_ _ _ _ _ _} p.
-Arguments fmap_id {A B _ _ _ _ _ _ _ _} F {_ _} a.
-Arguments fmap_comp {A B _ _ _ _ _ _ _ _} F {_ _ _ _ _} f g.
+Arguments fmap2 {A B
+  isgraph_A is2graph_A is01cat_A is1cat_A
+  isgraph_B is2graph_B is01cat_B is1cat_B}
+  F {is0functor_F is1functor_F a b f g} p : rename.
+Arguments fmap_id {A B
+  isgraph_A is2graph_A is01cat_A is1cat_A
+  isgraph_B is2graph_B is01cat_B is1cat_B}
+  F {is0functor_F is1functor_F} a : rename.
+Arguments fmap_comp {A B
+  isgraph_A is2graph_A is01cat_A is1cat_A
+  isgraph_B is2graph_B is01cat_B is1cat_B}
+  F {is0functor_F is1functor_F a b c} f g : rename.
 
 (** Identity functor *)
 

@@ -46,7 +46,7 @@ Global Instance is0functor_homotopygroup_type_ptype (n : nat)
   definitionally equal to [Pi 1 (iterated_loops n X)] *)
 Definition Pi1 (X : pType) : Group.
 Proof.
-  srapply (Build_Group (pTr 0 (loops X)));
+  srapply (Build_Group (Tr 0 (loops X)));
   repeat split.
   (** Operation *)
   + intros x y.
@@ -132,7 +132,7 @@ Definition pi_functor_type_pmap {n X Y}
      end.
 Coercion pi_functor_type_pmap : pi_functor_type >-> pForall.
 
-(** For the same reason as for [Pi1] we first define [pi1_functor]. *)
+(** For the same reason as for [Pi1] we make [Pi1] a functor before making [Pi] a functor. *)
 Global Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.
   apply Build_Is0Functor.
@@ -166,14 +166,16 @@ Defined.
 
 Global Instance is1functor_pi1 : Is1Functor Pi1.
 Proof.
-  apply Build_Is1Functor.
-  - intros a b f g p.
-    exact (fmap2 (Tr 0 o loops) p).
-  - intros X.
-    exact (fmap_id (Tr 0 o loops) X).
-  - intros a b c f g.
-    exact (fmap_comp (Tr 0 o loops) f g).
+  (** The conditions for [Pi1] to be a 1-functor only involve equalities of maps between groups, which reduce to equalities of maps between types.  Type inference shows that [Tr 0 o loops] is a 1-functor, and so it follows that [Pi1] is a 1-functor. *)
+  assert (is1f : Is1Functor (Tr 0 o loops)) by exact _.
+  apply Build_Is1Functor; intros;
+    [ by rapply (fmap2 _ (is1functor_F := is1f))
+    | by rapply (fmap_id _ (is1functor_F := is1f))
+    | by rapply (fmap_comp _ (is1functor_F := is1f)) ].
 Defined.
+
+Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
+  := ltac:(destruct n; exact _).
 
 (* The homotopy groups of a loop space are those of the space shifted.  *)
 Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
@@ -253,4 +255,3 @@ Proof.
   apply path_Tr, tr.
   exact (ap_pp tr x y).
 Defined.
-

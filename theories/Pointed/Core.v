@@ -655,7 +655,6 @@ Proof.
     + intros x; exact (s x).
 Defined.
 
-(** TODO: finish *)
 (** pType is a univalent 1-coherent 1-category *)
 Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.

@@ -54,7 +54,7 @@ Section ZeroLaws.
 
 End ZeroLaws.
 
-(** We show the last two arguments so that end pointes can easily be specified. We had to do this again, since the section encapsulated the previous attempt. *)
+(** We make the last two arguments explicit so that end points can easily be specified. We had to do this again, since the section encapsulated the previous attempt. *)
 Local Arguments zero_morphism {_ _ _ _ _ _} _ _.
 
 (** A functor is pointed if it preserves the zero object. *)

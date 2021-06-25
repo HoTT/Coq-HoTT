@@ -101,7 +101,8 @@ Proof.
                IsEquiv (fmap (Pi k.+1) (pmap_from_point (@ap _ _ f x y) q))).
     2:exact (h3 x).
     intros y q. destruct q.
-    refine (isequiv_homotopic (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))) _).
+    snrefine (isequiv_homotopic _ _).
+    1: exact (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))).
     2:{ rapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           refine (concat_1p _ @ concat_p1 _).
