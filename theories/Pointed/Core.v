@@ -565,18 +565,18 @@ Defined.
 Definition pconst {A B : pType} : A ->* B
   := point_pforall (fun _ => B).
 
-Lemma pmap_punit_pconst {A : pType} (f : A ->* pUnit) : f ==* pconst.
+Lemma pmap_punit_pconst {A : pType} (f : A ->* pUnit) : pconst ==* f.
 Proof.
   srapply Build_pHomotopy.
   1: intro; apply path_unit.
   apply path_contr.
 Defined.
 
-Lemma punit_pmap_pconst {A : pType} (f : pUnit ->* A) : f ==* pconst.
+Lemma punit_pmap_pconst {A : pType} (f : pUnit ->* A) : pconst ==* f.
 Proof.
   srapply Build_pHomotopy.
-  1: intros []; exact (point_eq f).
-  exact (concat_p1 _)^.
+  1: intros []; exact (point_eq f)^.
+  exact (concat_1p _)^.
 Defined.
 
 (** * pType as a wild category *)
@@ -655,7 +655,6 @@ Proof.
     + intros x; exact (s x).
 Defined.
 
-(** TODO: finish *)
 (** pType is a univalent 1-coherent 1-category *)
 Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
@@ -664,8 +663,16 @@ Proof.
   intros []; apply path_pequiv.
   srefine (Build_pHomotopy _ _).
   - intros x; reflexivity.
-  - (* Some messy path algebra here. *)
-Abort.
+  - simpl.
+    refine (_^ @ (concat_p1 _)^).
+    rapply (equiv_moveL_Mp _ _ _)^-1.
+    refine (_ @ (concat_p1 _)^).
+    rewrite transport_paths_FlFr.
+    hott_simpl.
+    rewrite transport_path_universe_equiv_path.
+    rewrite ap_V.
+    apply inv_V.
+Defined.
 
 (** pType is a pointed category *)
 Global Instance ispointedcat_ptype : IsPointedCat pType.

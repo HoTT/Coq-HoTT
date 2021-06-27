@@ -1,5 +1,5 @@
 Require Import Basics Types Pointed.
-Require Import HFiber.
+Require Import WildCat HFiber.
 Require Import Algebra.Groups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Truncations.
@@ -34,7 +34,7 @@ Defined.
 Definition isequiv_isbij_tr0_isequiv_loops
            `{Univalence} {A B : Type} (f : A -> B)
            {i  : IsEquiv (Trunc_functor 0 f)}
-           {ii : forall x, IsEquiv (loops_functor (pmap_from_point f x)) }
+           {ii : forall x, IsEquiv (fmap loops (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
   srapply (isequiv_issurj_tr0_isequiv_ap f).
@@ -55,7 +55,7 @@ Defined.
 Definition isequiv_is0connected_isequiv_loops
            `{Univalence} {A B : pType} `{IsConnected 0 A} `{IsConnected 0 B}
            (f : A ->* B)
-           (e : IsEquiv (loops_functor f))
+           (e : IsEquiv (fmap loops f))
   : IsEquiv f.
 Proof.
   apply isequiv_isbij_tr0_isequiv_loops.
@@ -76,7 +76,7 @@ Definition whiteheads_principle
            {ua : Univalence} {A B : Type} {f : A -> B}
            (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
            {i  : IsEquiv (Trunc_functor 0 f)}
-           {ii : forall (x : A) (k : nat), IsEquiv (pi_functor k.+1 (pmap_from_point f x)) }
+           {ii : forall (x : A) (k : nat), IsEquiv (fmap (Pi k.+1) (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
   revert A B H0 H1 f i ii.
@@ -92,21 +92,22 @@ Proof.
   pose proof (@istrunc_paths _ _ H1 (f x) (f x)) as h1.
   nrefine (IHn (x=x) (f x=f x) h0 h1 (@ap _ _ f x x) _ _).
   - pose proof (ii x 0) as h2.
-    unfold pi_functor in h2; cbn in h2.
+    unfold is0functor_pi in h2; cbn in h2.
     refine (@isequiv_homotopic _ _ _ _ h2 _).
     apply (O_functor_homotopy (Tr 0)); intros p.
     exact (concat_1p _ @ concat_p1 _).
   - intros p k; revert p.
     assert (h3 : forall (y:A) (q:x=y),
-               IsEquiv (pi_functor k.+1 (pmap_from_point (@ap _ _ f x y) q))).
+               IsEquiv (fmap (Pi k.+1) (pmap_from_point (@ap _ _ f x y) q))).
     2:exact (h3 x).
     intros y q. destruct q.
-    nrefine (isequiv_homotopic (pi_functor k.+1 (loops_functor (pmap_from_point f x))) _).
-    2:{ apply pi_2functor; srefine (Build_pHomotopy _ _).
+    snrefine (isequiv_homotopic _ _).
+    1: exact (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))).
+    2:{ rapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           refine (concat_1p _ @ concat_p1 _).
         - reflexivity. }
-    nrefine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 (pmap_from_point f x))).
+    nrefine (isequiv_commsq _ _ _ _ (fmap_pi_loops k.+1 (pmap_from_point f x))).
     2-3:refine (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.

@@ -226,7 +226,7 @@ Proof.
   intros g x.
   destruct x as [n| |p].
   + induction n using pos_peano_ind.
-    { cbn. rapply rng_homo_minus_one. }
+    { cbn. symmetry; rapply rng_homo_minus_one. }
     simpl.
     rewrite pos_peano_rec_beta_pos_succ.
     rewrite int_neg_pos_succ.
@@ -238,7 +238,7 @@ Proof.
     exact IHn.
   + by rewrite 2 rng_homo_zero.
   + induction p using pos_peano_ind.
-    { cbn. rapply rng_homo_one. }
+    { cbn. symmetry; rapply rng_homo_one. }
     simpl.
     rewrite pos_peano_rec_beta_pos_succ.
     rewrite int_pos_pos_succ.

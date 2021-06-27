@@ -138,7 +138,7 @@ Proof.
       symmetry.
       apply left_identity. }
     intros g []; cbn.
-    exact (grp_homo_unit g). }
+    exact (grp_homo_unit g)^. }
   intro A.
   snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
   1: exact _.

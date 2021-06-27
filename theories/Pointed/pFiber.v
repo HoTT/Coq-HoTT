@@ -1,5 +1,4 @@
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types WildCat.
 Require Import HFiber.
 Require Import Pointed.Core.
 Require Import Pointed.pEquiv.
@@ -31,8 +30,8 @@ Proof.
   cbn; apply concat_Vp.
 Defined.
 
-Definition pfiber_loops_functor {A B : pType} (f : A ->* B)
-  : pfiber (loops_functor f) <~>* loops (pfiber f).
+Definition pfiber_fmap_loops {A B : pType} (f : A ->* B)
+  : pfiber (fmap loops f) <~>* loops (pfiber f).
 Proof.
   srapply Build_pEquiv'.
   { etransitivity.
@@ -49,9 +48,9 @@ Proof.
   by pointed_reduce.
 Defined.
 
-Definition pr1_pfiber_loops_functor {A B} (f : A ->* B)
-  : loops_functor (pfib f) o* pfiber_loops_functor f
-    ==* pfib (loops_functor f).
+Definition pr1_pfiber_fmap_loops {A B} (f : A ->* B)
+  : fmap loops (pfib f) o* pfiber_fmap_loops f
+    ==* pfib (fmap loops f).
 Proof.
   srapply Build_pHomotopy.
   - intros [u v].
@@ -60,14 +59,14 @@ Proof.
   - abstract (pointed_reduce_rewrite; reflexivity).
 Defined.
 
-Definition pfiber_iterated_loops_functor {A B : pType} (n : nat) (f : A ->* B)
-  : pfiber (iterated_loops_functor n f) <~>* iterated_loops n (pfiber f).
+Definition pfiber_fmap_iterated_loops {A B : pType} (n : nat) (f : A ->* B)
+  : pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f).
 Proof.
   induction n.
   1: reflexivity.
-  refine (_ o*E pfiber_loops_functor _ ).
-  apply pequiv_loops_functor.
-  apply IHn.
+  refine (_ o*E pfiber_fmap_loops _ ).
+  rapply (emap loops).
+  exact IHn.
 Defined.
 
 Definition functor_pfiber {A B C D}
@@ -106,9 +105,9 @@ Definition square_pequiv_pfiber {A B C D}
   := square_functor_pfiber p.
 
 (** The triple-fiber functor is equal to the negative of the loopspace functor. *)
-Definition pfiber2_loops_functor {A B : pType} (f : A ->* B)
+Definition pfiber2_fmap_loops {A B : pType} (f : A ->* B)
 : pfiber2_loops f o* pfib (pfib (pfib f))
-  ==* loops_functor f o* (loops_inv _ o* pfiber2_loops (pfib f)).
+  ==* fmap loops f o* (loops_inv _ o* pfiber2_loops (pfib f)).
 Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _).

@@ -204,7 +204,7 @@ Definition pClassifyingSpace_rec {G : Group} (P : pType) `{IsTrunc 1 P}
 Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType) `{IsTrunc 1 P}
            (bloop' : G -> loops P)
            (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
-  : loops_functor (pClassifyingSpace_rec P bloop' bloop_pp') o bloop == bloop'.
+  : fmap loops (pClassifyingSpace_rec P bloop' bloop_pp') o bloop == bloop'.
 Proof.
   intro x; simpl.
   refine (concat_1p _ @ concat_p1 _ @ _).
@@ -379,9 +379,10 @@ End HSpace_bg.
 
 (** Functoriality of B(-) *)
 
-Definition functor_pclassifyingspace {G H : Group} (f : GroupHomomorphism G H)
-  : B G ->* B H.
+Global Instance is0functor_pclassifyingspace : Is0Functor B.
 Proof.
+  apply Build_Is0Functor.
+  intros G H f.
   snrapply pClassifyingSpace_rec.
   - exact _.
   - exact (bloop o f).
@@ -390,20 +391,14 @@ Proof.
     apply bloop_pp.
 Defined.
 
-Global Instance is0functor_pclassifyingspace : Is0Functor pClassifyingSpace.
-Proof.
-  apply Build_Is0Functor.
-  rapply @functor_pclassifyingspace.
-Defined.
-
-Definition bloop_natural (G H : Group) (f : GroupHomomorphism G H)
-  : loops_functor (functor_pclassifyingspace f) o bloop == bloop o f.
+Definition bloop_natural (G H : Group) (f : G $-> H)
+  : fmap loops (fmap B f) o bloop == bloop o f.
 Proof.
   nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
 Lemma pbloop_natural (G K : Group) (f : G $-> K) 
-  : loops_functor (fmap B f) o* pbloop ==* pbloop o* f.
+  : fmap loops (fmap B f) o* pbloop ==* pbloop o* f.
 Proof.
   snrapply Build_pHomotopy.
   1: apply bloop_natural.
@@ -420,84 +415,68 @@ Proof.
   apply pbloop_natural.
 Defined.
 
-Definition functor2_pclassifyingspace {G H : Group} {f g : GroupHomomorphism G H}
-  : f == g -> functor_pclassifyingspace f ==* functor_pclassifyingspace g.
-Proof.
-  intro p.
-  snrapply Build_pHomotopy.
-  { snrapply ClassifyingSpace_ind_hset.
-    1: exact _.
-    1: reflexivity.
-    intro x.
-    unfold functor_pclassifyingspace.
-    rapply equiv_sq_dp^-1.
-    simpl.
-    rewrite 2 ClassifyingSpace_rec_beta_bloop.
-    apply sq_1G.
-    apply ap.
-    exact (p x). }
-  reflexivity.
-Defined.
-
-Definition functor_pclassifyingspace_idmap (G : Group)
-  : functor_pclassifyingspace (@grp_homo_id G) ==* pmap_idmap.
-Proof.
-  snrapply Build_pHomotopy.
-  { snrapply ClassifyingSpace_ind_hset.
-    1: exact _.
-    1: reflexivity.
-    intro x.
-    rapply equiv_sq_dp^-1.
-    simpl.
-    rewrite ClassifyingSpace_rec_beta_bloop.
-    apply sq_1G.
-    symmetry.
-    apply ap_idmap. }
-  reflexivity.
-Defined.
-
-Definition functor_pclassifyingspace_compose (A B C : Group)
-  (g : GroupHomomorphism A B) (f : GroupHomomorphism B C)
-  : functor_pclassifyingspace (grp_homo_compose f g)
-  ==* functor_pclassifyingspace f o* functor_pclassifyingspace g.
-Proof.
-  snrapply Build_pHomotopy.
-  { snrapply ClassifyingSpace_ind_hset.
-    1: exact _.
-    1: reflexivity.
-    intro x.
-    rapply equiv_sq_dp^-1.
-    simpl.
-    rapply sq_ccGG.
-    1,2: symmetry.
-    2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =>
-      ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
-      @ ap _ _ @ _).
-    1-3: nrapply ClassifyingSpace_rec_beta_bloop.
-    apply sq_1G.
-    reflexivity. }
-  reflexivity.
-Defined.
-
-Global Instance is1functor_pclassifyingspace : Is1Functor pClassifyingSpace.
+Global Instance is1functor_pclassifyingspace : Is1Functor B.
 Proof.
   apply Build_Is1Functor.
-  1: rapply @functor2_pclassifyingspace.
-  1: rapply @functor_pclassifyingspace_idmap.
-  rapply @functor_pclassifyingspace_compose.
+  (** Action on 2-cells *)
+  - intros G H f g p.
+    snrapply Build_pHomotopy.
+    { snrapply ClassifyingSpace_ind_hset.
+      1: exact _.
+      1: reflexivity.
+      intro x.
+      rapply equiv_sq_dp^-1.
+      simpl.
+      rewrite 2 ClassifyingSpace_rec_beta_bloop.
+      apply sq_1G.
+      apply ap.
+      exact (p x). }
+    reflexivity.
+  (** Preservation of identity *)
+  - intros G.
+    snrapply Build_pHomotopy.
+    { snrapply ClassifyingSpace_ind_hset.
+      1: exact _.
+      1: reflexivity.
+      intro x.
+      rapply equiv_sq_dp^-1.
+      simpl.
+      rewrite ClassifyingSpace_rec_beta_bloop.
+      apply sq_1G.
+      symmetry.
+      apply ap_idmap. }
+    reflexivity.
+  (** Preservation of composition *)
+  - intros G H K g f.
+    snrapply Build_pHomotopy.
+    { snrapply ClassifyingSpace_ind_hset.
+      1: exact _.
+      1: reflexivity.
+      intro x.
+      rapply equiv_sq_dp^-1.
+      simpl.
+      rapply sq_ccGG.
+      1,2: symmetry.
+      2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =>
+        ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
+        @ ap _ _ @ _).
+      1-3: nrapply ClassifyingSpace_rec_beta_bloop.
+      apply sq_1G.
+      reflexivity. }
+    reflexivity.
 Defined.
 
-(** Interestingly, [functor_pclassifyingspace] is an equivalence *)
-Global Instance isequiv_functor_pclassifyingspace `{U : Univalence} (G H : Group)
-  : IsEquiv (@functor_pclassifyingspace G H).
+(** Interestingly, [fmap B] is an equivalence *)
+Global Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
+  : IsEquiv (fmap B (a := G) (b := H)).
 Proof.
   snrapply isequiv_adjointify.
   { intros f.
     refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).
     1,3: rapply grp_iso_g_loopgroup_bg.
     snrapply Build_GroupHomomorphism.
-    1: by nrapply loops_functor.
-    rapply loops_functor_pp. }
+    1: by rapply (fmap loops).
+    rapply fmap_loops_pp. }
   { intros f.
     rapply equiv_path_pforall.
     snrapply Build_pHomotopy.
@@ -528,7 +507,7 @@ Theorem equiv_grp_homo_pmap_bg `{U : Univalence} (G H : Group)
   : (G $-> H) <~> (B G $-> B H).
 Proof.
   snrapply Build_Equiv.
-  2: apply isequiv_functor_pclassifyingspace.
+  2: apply isequiv_fmap_pclassifyingspace.
 Defined.
 
 Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)

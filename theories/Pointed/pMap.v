@@ -45,6 +45,7 @@ Lemma pconst_factor {A B : pType} {f : pUnit ->* B} {g : A ->* pUnit}
 Proof.
   refine (_ @* precompose_pconst f).
   apply pmap_postwhisker.
+  symmetry.
   apply pmap_punit_pconst.
 Defined.
 

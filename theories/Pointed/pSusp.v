@@ -32,63 +32,47 @@ Definition psusp (X : pType) : pType
 
 (** ** Suspension Functor *)
 
-(* Definition of pointed suspension functor *)
-Definition psusp_functor {X Y : pType} (f : X ->* Y) : psusp X ->* psusp Y
-  := Build_pMap (psusp X) (psusp Y) (functor_susp f) 1.
+(** [psusp] has a functorial action. *)
+(** TODO: make this a displayed functor *)
+Global Instance is0functor_psusp : Is0Functor psusp
+  := Build_Is0Functor _ _ _ _ psusp (fun X Y f
+      => Build_pMap (psusp X) (psusp Y) (functor_susp f) 1).
 
-(* Suspension functor preserves composition *)
-Definition psusp_functor_compose {X Y Z : pType} (g : Y ->* Z) (f : X ->* Y)
-  : psusp_functor (g o* f) ==* psusp_functor g o* psusp_functor f.
+(** [psusp] is a 1-functor. *)
+Global Instance is1functor_psusp : Is1Functor psusp.
 Proof.
-  pointed_reduce_rewrite; srefine (Build_pHomotopy _ _); cbn.
-  { srapply Susp_ind; try reflexivity; cbn.
-    intros x.
-    refine (transport_paths_FlFr _ _ @ _).
-    rewrite concat_p1; apply moveR_Vp.
-    by rewrite concat_p1, ap_compose, !Susp_rec_beta_merid. }
-  reflexivity.
-Qed.
-
-(* Suspension functor preserves identity *)
-Definition psusp_functor_idmap {X : pType}
-  : psusp_functor (@pmap_idmap X) ==* pmap_idmap.
-Proof.
-  srapply Build_pHomotopy.
-  { srapply Susp_ind; try reflexivity.
-    intro x.
-    refine (transport_paths_FFlr _ _ @ _).
-    by rewrite ap_idmap, Susp_rec_beta_merid,
-      concat_p1, concat_Vp. }
-  reflexivity.
-Qed.
-
-Definition psusp_2functor {X Y} {f g : X ->* Y} (p : f ==* g)
-  : psusp_functor f ==* psusp_functor g.
-Proof.
-  pointed_reduce.
-  srapply Build_pHomotopy.
-  { simpl.
-    srapply Susp_ind.
-    1,2: reflexivity.
-    intro x; cbn.
-    rewrite transport_paths_FlFr.
-    rewrite concat_p1.
-    rewrite 2 Susp_rec_beta_merid.
-    destruct (p x).
-    apply concat_Vp. }
-  reflexivity.
-Defined.
-
-Definition pequiv_psusp_functor {X Y : pType} (f : X <~>* Y)
-  : psusp X <~>* psusp Y.
-Proof.
-  srapply pequiv_adjointify.
-  1: apply psusp_functor, f.
-  1: apply psusp_functor, f^-1*.
-  1,2: refine ((psusp_functor_compose _ _)^* @* _ @* psusp_functor_idmap).
-  1,2: apply psusp_2functor.
-  1: apply peisretr.
-  apply peissect.
+  snrapply Build_Is1Functor.
+  (** Action on 2-cells *)
+  - intros X Y f g p.
+    pointed_reduce.
+    srapply Build_pHomotopy.
+    { simpl.
+      srapply Susp_ind.
+      1,2: reflexivity.
+      intro x; cbn.
+      rewrite transport_paths_FlFr.
+      rewrite concat_p1.
+      rewrite 2 Susp_rec_beta_merid.
+      destruct (p x).
+      apply concat_Vp. }
+    reflexivity.
+  (** Preservation of identity. *)
+  - intros X.
+    srapply Build_pHomotopy.
+    { srapply Susp_ind; try reflexivity.
+      intro x.
+      refine (transport_paths_FFlr _ _ @ _).
+      by rewrite ap_idmap, Susp_rec_beta_merid,
+        concat_p1, concat_Vp. }
+    reflexivity.
+  (** Preservation of composition. *)
+  - pointed_reduce_rewrite; srefine (Build_pHomotopy _ _); cbn.
+    { srapply Susp_ind; try reflexivity; cbn.
+      intros x.
+      refine (transport_paths_FlFr _ _ @ _).
+      rewrite concat_p1; apply moveR_Vp.
+      by rewrite concat_p1, ap_compose, !Susp_rec_beta_merid. }
+    reflexivity.
 Defined.
 
 (** ** Loop-Suspension Adjunction *)
@@ -161,14 +145,14 @@ Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
   snrefine (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
-  { apply ptr_functor.
+  { rapply (fmap (pTr _)).
     apply loop_susp_unit. }
   all:exact _.
 Defined.
 
 Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   : loop_susp_unit Y o* f
-  ==* loops_functor (psusp_functor f) o* loop_susp_unit X.
+  ==* fmap loops (fmap psusp f) o* loop_susp_unit X.
 Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _); cbn.
@@ -201,7 +185,7 @@ Definition loop_susp_counit (X : pType) : psusp (loops X) ->* X
 
 Definition loop_susp_counit_natural {X Y : pType} (f : X ->* Y)
   : f o* loop_susp_counit X
-  ==* loop_susp_counit Y o* psusp_functor (loops_functor f).
+  ==* loop_susp_counit Y o* fmap psusp (fmap loops f).
 Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _); simpl.
@@ -220,7 +204,7 @@ Qed.
 (** Now the triangle identities *)
 
 Definition loop_susp_triangle1 (X : pType)
-  : loops_functor (loop_susp_counit X) o* loop_susp_unit (loops X)
+  : fmap loops (loop_susp_counit X) o* loop_susp_unit (loops X)
   ==* pmap_idmap.
 Proof.
   simple refine (Build_pHomotopy _ _).
@@ -244,7 +228,7 @@ Proof.
 Qed.
 
 Definition loop_susp_triangle2 (X : pType)
-  : loop_susp_counit (psusp X) o* psusp_functor (loop_susp_unit X)
+  : loop_susp_counit (psusp X) o* fmap psusp (loop_susp_unit X)
   ==* pmap_idmap.
 Proof.
   simple refine (Build_pHomotopy _ _);
@@ -264,17 +248,17 @@ Definition loop_susp_adjoint `{Funext} (A B : pType)
   : (psusp A ->* B) <~> (A ->* loops B).
 Proof.
   refine (equiv_adjointify
-            (fun f => loops_functor f o* loop_susp_unit A)
-            (fun g => loop_susp_counit B o* psusp_functor g) _ _).
+            (fun f => fmap loops f o* loop_susp_unit A)
+            (fun g => loop_susp_counit B o* fmap psusp g) _ _).
   - intros g. apply path_pforall.
-    refine (pmap_prewhisker _ (loops_functor_compose _ _) @* _).
+    refine (pmap_prewhisker _ (fmap_comp loops _ _) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
     apply pmap_postcompose_idmap.
   - intros f. apply path_pforall.
-    refine (pmap_postwhisker _ (psusp_functor_compose _ _) @* _).
+    refine (pmap_postwhisker _ (fmap_comp psusp _ _) @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
@@ -286,22 +270,22 @@ Defined.
 
 Definition loop_susp_adjoint_nat_r `{Funext} (A B B' : pType)
   (f : psusp A ->* B) (g : B ->* B') : loop_susp_adjoint A B' (g o* f)
-  ==* loops_functor g o* loop_susp_adjoint A B f.
+  ==* fmap loops g o* loop_susp_adjoint A B f.
 Proof.
   cbn.
   refine (_ @* pmap_compose_assoc _ _ _).
   apply pmap_prewhisker.
-  refine (loops_functor_compose g f).
+  refine (fmap_comp loops f g).
 Defined.
 
 Definition loop_susp_adjoint_nat_l `{Funext} (A A' B : pType)
   (f : A ->* loops B) (g : A' ->* A) : (loop_susp_adjoint A' B)^-1 (f o* g)
-  ==* (loop_susp_adjoint A B)^-1 f o* psusp_functor g.
+  ==* (loop_susp_adjoint A B)^-1 f o* fmap psusp g.
 Proof.
   cbn.
   refine (_ @* (pmap_compose_assoc _ _ _)^*).
   apply pmap_postwhisker.
-  refine (psusp_functor_compose f g).
+  exact (fmap_comp psusp g f).
 Defined.
 
 Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
@@ -312,7 +296,7 @@ Proof.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
-  apply loops_functor_compose.
+  rapply (fmap_comp loops).
 Defined.
 
 Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)

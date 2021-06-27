@@ -28,6 +28,19 @@ Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
 
 Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
 
+(** We construct the wildcat structure on HomotopyGroup_type in the obvious way. *)
+Global Instance isgraph_homotopygroup_type (n : nat)
+  : IsGraph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
+Global Instance is2graph_homotopygroup_type (n : nat)
+  : Is2Graph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
+Global Instance is01cat_homotopygroup_type (n : nat)
+  : Is01Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
+Global Instance is1cat_homotopygroup_type (n : nat)
+  : Is1Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
+Global Instance is0functor_homotopygroup_type_ptype (n : nat)
+  : Is0Functor (HomotopyGroup_type_ptype n)
+  := ltac:(destruct n; exact _).
+
 (** We first define [Pi 1 X], and use this to define [Pi n X].
   The reason is to make it easier for Coq to see that [Pi (n.+1) X] is
   definitionally equal to [Pi 1 (iterated_loops n X)] *)
@@ -119,14 +132,14 @@ Definition pi_functor_type_pmap {n X Y}
      end.
 Coercion pi_functor_type_pmap : pi_functor_type >-> pForall.
 
-(** For the same reason as for [Pi1] we first define [pi1_functor]. *)
-Definition pi1_functor {X Y : pType}
-  : (X ->* Y) -> Pi1 X $-> Pi1 Y.
+(** For the same reason as for [Pi1] we make [Pi1] a functor before making [Pi] a functor. *)
+Global Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.
-  intro f.
+  apply Build_Is0Functor.
+  intros X Y f.
   snrapply Build_GroupHomomorphism.
-  { apply Trunc_functor.
-    apply loops_functor.
+  { rapply (fmap (Tr 0)).
+    rapply (fmap loops).
     assumption. }
   (** Note: we don't have to be careful about which paths we choose here since we are trying to inhabit a proposition. *)
   intros x y.
@@ -142,50 +155,27 @@ Proof.
   apply ap_pp.
 Defined.
 
-Definition pi_functor (n : nat) {X Y : pType}
-  : (X ->* Y) -> pi_functor_type n X Y.
-Proof.
-  destruct n.
-  + exact (ptr_functor 0).
-  + intro f. exact (pi1_functor (iterated_loops_functor n f)).
-Defined.
+Global Instance is0functor_pi (n : nat) : Is0Functor (Pi n)
+  := ltac:(destruct n; exact _).
 
-Definition pi_functor_succ {X Y : pType} (f : X $-> Y) (n : nat)
-  : pi_functor n.+1 f $== pi_functor 1 (iterated_loops_functor n f).
+Definition fmap_pi_succ {X Y : pType} (f : X $-> Y) (n : nat)
+  : fmap (Pi n.+1) f $== fmap (Pi 1) (fmap (iterated_loops n) f).
 Proof.
   reflexivity.
 Defined.
 
-Definition pi_functor_idmap n {X : pType}
-  : pi_functor n (@pmap_idmap X) == pmap_idmap.
+Global Instance is1functor_pi1 : Is1Functor Pi1.
 Proof.
-  destruct n; intros x.
-  - apply Trunc_functor_idmap.
-  - etransitivity.
-    + apply O_functor_homotopy.
-      exact (iterated_loops_functor_idmap _ n.+1).
-    + apply O_functor_idmap.
+  (** The conditions for [Pi1] to be a 1-functor only involve equalities of maps between groups, which reduce to equalities of maps between types.  Type inference shows that [Tr 0 o loops] is a 1-functor, and so it follows that [Pi1] is a 1-functor. *)
+  assert (is1f : Is1Functor (Tr 0 o loops)) by exact _.
+  apply Build_Is1Functor; intros;
+    [ by rapply (fmap2 _ (is1functor_F := is1f))
+    | by rapply (fmap_id _ (is1functor_F := is1f))
+    | by rapply (fmap_comp _ (is1functor_F := is1f)) ].
 Defined.
 
-Definition pi_functor_compose n {X Y Z : pType}
-  (f : X ->* Y) (g : Y ->* Z)
-  : pi_functor n (g o* f) == pi_functor n g o pi_functor n f.
-Proof.
-  destruct n; intro x.
-  - cbn; apply Trunc_functor_compose.
-  - etransitivity.
-    + apply O_functor_homotopy. rapply (iterated_loops_functor_compose (n.+1)).
-    + refine (O_functor_compose (Tr 0) _ _ x).
-Defined.
-
-Definition pi_2functor (n : nat)
-  {X Y : pType} (f g : X ->* Y) (p : f ==* g)
-  : pi_functor n f == pi_functor n g.
-Proof.
-  destruct n; intros x.
-  - apply O_functor_homotopy; exact p.
-  - apply O_functor_homotopy. refine (iterated_loops_2functor (n.+1) _); exact p.
-Defined.
+Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
+  := ltac:(destruct n; exact _).
 
 (* The homotopy groups of a loop space are those of the space shifted.  *)
 Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
@@ -196,26 +186,22 @@ Proof.
   all:apply unfold_iterated_loops'.
 Defined.
 
-Definition pi_functor_loops (n : nat) {X Y : pType} (f : X ->* Y)
-  : (pi_loops n Y) o (pi_functor n.+1 f)
-    == (pi_functor n (loops_functor f)) o (pi_loops n X).
+Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
+  : (pi_loops n Y) o (fmap (Pi n.+1) f)
+    == (fmap (HomotopyGroup_type_ptype n o Pi n o loops) f)
+        o (pi_loops n X).
 Proof.
   destruct n; intros x.
   all:refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
   all:apply O_functor_homotopy.
   - reflexivity.
-  - exact (pointed_htpy (unfold_iterated_loops_functor n.+1 f)).
+  - exact (pointed_htpy (unfold_iterated_fmap_loops n.+1 f)).
 Defined.
 
 Definition groupiso_pi_functor (n : nat)
   {X Y : pType} (e : X <~>* Y)
-  : Pi n.+1 X $<~> Pi n.+1 Y.
-Proof.
-  snrapply Build_GroupIsomorphism.
-  1: apply (pi_functor n.+1 e).
-  nrefine (Trunc_functor_isequiv _ _).
-  refine (isequiv_homotopic _ (pequiv_iterated_loops_functor_is_iterated_loops_functor n.+1 e)).
-Defined.
+  : Pi n.+1 X $<~> Pi n.+1 Y
+  := emap (Pi n.+1) e.
 
 (** Homotopy groups preserve products *)
 Lemma pi_prod (X Y : pType) {n : nat}
@@ -243,24 +229,10 @@ Proof.
   1,2: reflexivity.
 Defined.
 
-(** WildCat instances for [Pi] *)
-Global Instance is0functor_pi (n : nat) : Is0Functor (Pi n.+1).
-Proof.
-  constructor. intros X Y f. exact (pi_functor (n.+1) f).
-Defined.
-
-Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n.+1).
-Proof.
-  constructor. 
-  + intros X Y f g h. exact (pi_2functor (n.+1) _ _ h).
-  + intros X. exact (pi_functor_idmap (n.+1)).
-  + intros X Y Z f g h. exact (pi_functor_compose (n.+1) f g h).
-Defined.
-
 (** Can we make this reflexivity? *)
 Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : nat) 
-  : pi_functor_type_pmap (pi_functor (S n) f) ==* 
-  ptr_functor 0 (iterated_loops_functor (S n) f).
+  : fmap (Pi n.+1) f
+    ==* fmap (pTr 0) (fmap (iterated_loops n.+1) f).
 Proof.
   srapply Build_pHomotopy. 1: reflexivity. apply path_ishprop.
 Defined.
@@ -283,4 +255,3 @@ Proof.
   apply path_Tr, tr.
   exact (ap_pp tr x y).
 Defined.
-
