@@ -19,7 +19,6 @@ Section ChineseRemainderTheorem.
     {R : CRing} (I J : Ideal R).
 
   (** We begin with the homomorphism which will show to be a surjection. Using the first isomorphism theorem for rings we can improve this to be the isomorphism we want. *)
-  (** TODO: rename *)
   (** This is the corecursion of the two quotient maps *)
   Definition rng_homo_crt : R $-> (R / I) × (R / J).
   Proof.
