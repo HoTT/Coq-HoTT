@@ -308,6 +308,18 @@ Section CompositeFunctor.
 
 End CompositeFunctor.
 
+(** We give all arguments names in order to refer to them later. This allows us to write things like [is0functor (isgraph_A := _)] without having to make all the variables explicit. *)
+Arguments is0functor_compose {A B C} {isgraph_A isgraph_B isgraph_C}
+  F {is0functor_F} G {is0functor_G} : rename.
+
+Arguments is1functor_compose {A B C}
+  {isgraph_A is2graph_A is01cat_A is1cat_A
+   isgraph_B is2graph_B is01cat_B is1cat_B
+   isgraph_C is2graph_C is01cat_C is1cat_C}
+  F {is0functor_F} {is1functor_F}
+  G {is0functor_G} {is1functor_G}
+  : rename.
+
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
