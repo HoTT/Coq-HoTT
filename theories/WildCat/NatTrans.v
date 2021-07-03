@@ -17,6 +17,9 @@ Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
   isnat : forall a a' (f : a $-> a'),
      (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a).
 
+Arguments Is1Natural {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F {is0functor_F} G {is0functor_G} alpha : rename.
 Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 
 Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
@@ -47,6 +50,14 @@ Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
 Proof.
   intros a b f; cbn.
   refine (cat_idl _ $@ (cat_idr _)^$).
+Defined.
+
+Definition nattrans_id {A B : Type} (F : A -> B)
+  `{IsGraph A, Is1Cat B, !Is0Functor F}
+  : NatTrans F F.
+Proof.
+  nrapply Build_NatTrans.
+  rapply is1natural_id.
 Defined.
 
 Definition trans_comp {A B : Type} `{Is01Cat B}
@@ -97,6 +108,34 @@ Proof.
   exact (L _ _ _).
 Defined.
 
+Definition nattrans_comp {A B : Type} {F G K : A -> B}
+  `{IsGraph A, Is1Cat B, !Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatTrans G K -> NatTrans F G -> NatTrans F K.
+Proof.
+  intros alpha beta.
+  nrapply Build_NatTrans.
+  rapply (is1natural_comp alpha beta).
+Defined.
+
+Definition nattrans_prewhisker {A B C : Type} {F G : B -> C}
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G}
+  (alpha : NatTrans F G) (K : A -> B) `{!Is0Functor K} 
+  : NatTrans (F o K) (G o K).
+Proof.
+  nrapply Build_NatTrans.
+  rapply (is1natural_prewhisker K alpha).
+Defined.
+
+Definition nattrans_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
+    !Is0Functor K, !Is1Functor K} 
+  : NatTrans F G -> NatTrans (K o F) (K o G).
+Proof.
+  intros alpha.
+  nrapply Build_NatTrans.
+  rapply (is1natural_postwhisker K alpha).
+Defined.
+
 (** Modifying a transformation to something pointwise equal preserves naturality. *)
 Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
       {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
@@ -117,13 +156,24 @@ Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   is1natural_natequiv : Is1Natural F G (fun a => cat_equiv_natequiv a) ;
 }.
 
+Arguments NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} : rename.
+Arguments Build_NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} e isnat_e: rename.
+
 Global Existing Instance is1natural_natequiv.
 Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
 
-Coercion trans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+Coercion nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
-  : NatEquiv F G -> Transformation F G
-  := fun a b => a b.
+  : NatEquiv F G -> NatTrans F G.
+Proof.
+  intros alpha.
+  nrapply Build_NatTrans.
+  rapply (is1natural_natequiv _ _ alpha).
+Defined.
 
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
