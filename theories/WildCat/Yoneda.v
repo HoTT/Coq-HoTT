@@ -119,7 +119,7 @@ Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.
 Proof.
-  rapply (Build_Fun01 _ _ _ _ (opyon a)).
+  rapply (Build_Fun01 _ _ (opyon a)).
 Defined.
 
 (** We can also deduce "full-faithfulness" on equivalences. *)
