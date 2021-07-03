@@ -167,6 +167,12 @@ Proof.
   apply is0functor_opyon.
 Defined.
 
+Global Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (yon a).
+Proof.
+  rapply is1functor_opyon.
+Defined.
+
 Definition yoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
   : F a -> (yon a $=> F)
