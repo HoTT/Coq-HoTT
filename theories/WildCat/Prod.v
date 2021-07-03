@@ -3,6 +3,7 @@
 Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
+Require Import Types.Prod.
 
 (** * Product categories *)
 
@@ -116,3 +117,71 @@ Definition emap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
            {a1 a2 : A} {b1 b2 : B} (fe1 : a1 $<~> a2)
            (fe2 : b1 $<~> b2) : (F a1 b1) $<~> (F a2 b2)
   := @emap _ _ _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).
+
+(** ** Product functors *)
+
+Global Instance is0functor_prod_functor {A B C D : Type}
+  (F : A -> B) (G : C -> D) `{Is0Functor _ _ F, Is0Functor _ _ G}
+  : Is0Functor (functor_prod F G).
+Proof.
+  apply Build_Is0Functor.
+  intros [a1 c1] [a2 c2] [f g].
+  exact (fmap F f , fmap G g).
+Defined.
+
+Global Instance is1functor_prod_functor {A B C D : Type}
+  (F : A -> B) (G : C -> D) `{Is1Functor _ _ F, Is1Functor _ _ G}
+  : Is1Functor (functor_prod F G).
+Proof.
+  apply Build_Is1Functor.
+  - intros [a1 c1] [a2 c2] [f1 g1] [f2 g2] [p q].
+    exact (fmap2 F p , fmap2 G q).
+  - intros [a c].
+    exact (fmap_id F a, fmap_id G c).
+  - intros [a1 c1] [a2 c2] [a3 c3] [f1 g1] [f2 g2].
+    exact (fmap_comp F f1 f2 , fmap_comp G g1 g2).
+Defined.
+
+Global Instance is0functor_fst {A B : Type} `{!IsGraph A, !IsGraph B}
+  : Is0Functor (@fst A B).
+Proof.
+  apply Build_Is0Functor.
+  intros ? ? f; exact (fst f).
+Defined.
+
+Global Instance is0functor_snd {A B : Type} `{!IsGraph A, !IsGraph B}
+  : Is0Functor (@snd A B).
+Proof.
+  apply Build_Is0Functor.
+  intros ? ? f; exact (snd f).
+Defined.
+
+(** Swap functor *)
+
+Definition prod_swap {A B : Type} : A * B -> B * A
+  := fun '(a , b) => (b , a).
+
+Global Instance isequiv_prod_swap {A B}
+  : IsEquiv (@prod_swap A B)
+  := Build_IsEquiv _ _ prod_swap prod_swap
+    (fun _ => idpath) (fun _ => idpath) (fun _ => idpath).
+
+Global Instance is0functor_prod_swap {A B : Type} `{IsGraph A, IsGraph B}
+  : Is0Functor (@prod_swap A B).
+Proof.
+  snrapply Build_Is0Functor.
+  intros a b.
+  apply prod_swap.
+Defined.
+
+Global Instance is1functor_prod_swap {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is1Functor (@prod_swap A B).
+Proof.
+  snrapply Build_Is1Functor.
+  - intros a b f g.
+    apply prod_swap.
+  - intros a.
+    reflexivity.
+  - reflexivity.
+Defined.
+
