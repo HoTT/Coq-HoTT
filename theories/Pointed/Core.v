@@ -677,7 +677,7 @@ Defined.
 (** pType is a pointed category *)
 Global Instance ispointedcat_ptype : IsPointedCat pType.
 Proof.
-  srapply Build_IsPointedCat.
+  snrapply Build_IsPointedCat.
   + exact pUnit.
   + intro A.
     exists pconst.
