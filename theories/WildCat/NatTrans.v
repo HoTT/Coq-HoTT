@@ -5,8 +5,12 @@ Require Import WildCat.Square.
 
 (** ** Natural transformations *)
 
-Definition Transformation {A B : Type} `{IsGraph B} (F : A -> B) (G : A -> B)
+Definition Transformation {A : Type} {B : A -> Type} `{forall x, IsGraph (B x)}
+  (F G : forall (x : A), B x)
   := forall (a : A), F a $-> G a.
+
+(** This let's us apply transformations to things. *)
+Identity Coercion fun_trans : Transformation >-> Funclass.
 
 Notation "F $=> G" := (Transformation F G).
 
@@ -17,6 +21,9 @@ Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
   isnat : forall a a' (f : a $-> a'),
      (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a).
 
+Arguments Is1Natural {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F {is0functor_F} G {is0functor_G} alpha : rename.
 Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 
 Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
@@ -28,6 +35,10 @@ Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
 
 Global Existing Instance is1natural_nattrans.
 Coercion trans_nattrans : NatTrans >-> Transformation.
+
+Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+  {ff : Is0Functor F} {fg : Is0Functor G}
+  : _ <~> NatTrans F G := ltac:(issig).
 
 (** The transposed natural square *)
 Definition isnat_tr {A B : Type} `{IsGraph A} `{Is1Cat B}
@@ -49,13 +60,22 @@ Proof.
   refine (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
+Definition nattrans_id {A B : Type} (F : A -> B)
+  `{IsGraph A, Is1Cat B, !Is0Functor F}
+  : NatTrans F F.
+Proof.
+  nrapply Build_NatTrans.
+  rapply is1natural_id.
+Defined.
+
 Definition trans_comp {A B : Type} `{Is01Cat B}
            {F G K : A -> B} (gamma : G $=> K) (alpha : F $=> G)
   : F $=> K
   := fun a => gamma a $o alpha a.
 
-Definition trans_prewhisker {A B C : Type} {F G : B -> C}
-  `{Is01Cat B, Is01Cat C} (gamma : F $=> G) (K : A -> B) 
+Definition trans_prewhisker {A B : Type} {C : B -> Type} {F G : forall x, C x}
+  `{Is01Cat B} `{!forall x, IsGraph (C x)}
+  `{!forall x, Is01Cat (C x)} (gamma : F $=> G) (K : A -> B) 
   : F o K $=> G o K
   := gamma o K.
 
@@ -97,6 +117,34 @@ Proof.
   exact (L _ _ _).
 Defined.
 
+Definition nattrans_comp {A B : Type} {F G K : A -> B}
+  `{IsGraph A, Is1Cat B, !Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatTrans G K -> NatTrans F G -> NatTrans F K.
+Proof.
+  intros alpha beta.
+  nrapply Build_NatTrans.
+  rapply (is1natural_comp alpha beta).
+Defined.
+
+Definition nattrans_prewhisker {A B C : Type} {F G : B -> C}
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G}
+  (alpha : NatTrans F G) (K : A -> B) `{!Is0Functor K} 
+  : NatTrans (F o K) (G o K).
+Proof.
+  nrapply Build_NatTrans.
+  rapply (is1natural_prewhisker K alpha).
+Defined.
+
+Definition nattrans_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
+    !Is0Functor K, !Is1Functor K} 
+  : NatTrans F G -> NatTrans (K o F) (K o G).
+Proof.
+  intros alpha.
+  nrapply Build_NatTrans.
+  rapply (is1natural_postwhisker K alpha).
+Defined.
+
 (** Modifying a transformation to something pointwise equal preserves naturality. *)
 Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
       {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
@@ -117,13 +165,33 @@ Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   is1natural_natequiv : Is1Natural F G (fun a => cat_equiv_natequiv a) ;
 }.
 
+Arguments NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} : rename.
+Arguments Build_NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} e isnat_e: rename.
+
+Definition issig_NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : _ <~> NatEquiv F G := ltac:(issig).
+
 Global Existing Instance is1natural_natequiv.
 Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
 
-Coercion trans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
-  : NatEquiv F G -> Transformation F G
-  := fun a b => a b.
+  : NatEquiv F G -> NatTrans F G.
+Proof.
+  intros alpha.
+  nrapply Build_NatTrans.
+  rapply (is1natural_natequiv _ _ alpha).
+Defined.
+
+(** Throws a warning, but can probably be ignored. *)
+Global Set Warnings "-ambiguous-paths".
+Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
+(* Set Warnings "+ambiguous-paths". *)
 
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
@@ -186,3 +254,8 @@ Proof.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
   refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
+
+(* TODO: *)
+(* Morphisms of natural transformations - Modifications *)
+(* Since [Transformation] is dependent, we can define a modification to be a transformation together with a cylinder condition. This doesn't seem to be too useful as of yet however. We would also need better ways to write down cylinders. *)
+
