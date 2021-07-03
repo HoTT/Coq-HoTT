@@ -121,7 +121,7 @@ Coercion fun11_fun : Fun11 >-> Funclass.
 Global Existing Instance is0functor_fun11.
 Global Existing Instance is1functor_fun11.
 
-Arguments Build_Fun11 {A B _ _ _ _} F _ _ : rename.
+Arguments Build_Fun11 {A B _ _ _ _ _ _ _ _} F _ _ : rename.
 
 Definition fun01_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
            (F : Fun11 A B)
@@ -149,3 +149,30 @@ Global Instance is1cat_fun11 {A B :Type} `{Is1Cat A} `{Is1Cat B}
 Global Instance hasequivs_fun11 {A B : Type} `{Is1Cat A} `{HasEquivs B}
   : HasEquivs (Fun11 A B)
   := hasequivs_induced fun01_fun11.
+
+(** * Identity functors *)
+
+Definition fun01_id {A} `{IsGraph A} : Fun01 A A
+  := Build_Fun01 A A _ _ idmap _.
+
+Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
+  := Build_Fun11 idmap _ _.
+
+(** * Composition of functors *)
+
+Definition fun01_compose {A B C} `{IsGraph A, IsGraph B, IsGraph C}
+  : Fun01 B C -> Fun01 A B -> Fun01 A C.
+Proof.
+  intros F G.
+  nrapply Build_Fun01.
+  rapply (is0functor_compose G F).
+Defined.
+
+Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  : Fun11 B C -> Fun11 A B -> Fun11 A C.
+Proof.
+  intros F G.
+  nrapply Build_Fun11.
+  rapply (is1functor_compose G F).
+Defined.
+
