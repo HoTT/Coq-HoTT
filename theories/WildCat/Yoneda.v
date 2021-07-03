@@ -41,6 +41,10 @@ Proof.
     refine (cat_assoc_opp _ _ _).
 Defined.
 
+Definition fun01_hom {A} `{Is01Cat A}
+  : Fun01 (A^op * A) Type
+  := @Build_Fun01 _ _ _ _ _ is0functor_hom.
+
 (** ** The covariant Yoneda lemma *)
 
 (** This is easier than the contravariant version because it doesn't involve any "op"s. *)
@@ -122,6 +126,11 @@ Proof.
   rapply (Build_Fun01 _ _ (opyon a)).
 Defined.
 
+Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.
+Proof.
+  rapply (Build_Fun11 _ _ (opyon a)).
+Defined.
+
 (** We can also deduce "full-faithfulness" on equivalences. *)
 Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            (a b : A)
@@ -167,6 +176,12 @@ Proof.
   apply is0functor_opyon.
 Defined.
 
+Global Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (yon a).
+Proof.
+  rapply is1functor_opyon.
+Defined.
+
 Definition yoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
   : F a -> (yon a $=> F)
@@ -202,6 +217,9 @@ Definition yon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition yon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A^op Type
   := @opyon1 A^op _ _ a.
+
+Definition yon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A^op Type
+  := @opyon11 A^op _ _ _ _ _ a.
 
 Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            (a b : A)
