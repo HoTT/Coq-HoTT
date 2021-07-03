@@ -123,7 +123,7 @@ Global Instance is0functor_iterated_loops n : Is0Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
-  rapply is0functor_compose.
+  nrapply is0functor_compose; exact _.
 Defined.
 
 Global Instance is1functor_iterated_loops n : Is1Functor (iterated_loops n).
