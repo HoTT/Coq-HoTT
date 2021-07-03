@@ -3,114 +3,114 @@
 
 (** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import Categories.] *)
 (** ** Categories *)
-Require Category.
+Require HoTT.Categories.Category.
 (** ** Functors *)
-Require Functor.
+Require HoTT.Categories.Functor.
 (** ** Natural Transformations *)
-Require NaturalTransformation.
+Require HoTT.Categories.NaturalTransformation.
 (** ** Functor Categories *)
-Require FunctorCategory.
+Require HoTT.Categories.FunctorCategory.
 (** ** Groupoids *)
-Require GroupoidCategory.
+Require HoTT.Categories.GroupoidCategory.
 (** ** Precategory of Groupoids *)
-Require CategoryOfGroupoids.
+Require HoTT.Categories.CategoryOfGroupoids.
 (** ** Discrete Categories *)
-Require DiscreteCategory.
+Require HoTT.Categories.DiscreteCategory.
 (** ** Indiscrete Categories *)
-Require IndiscreteCategory.
+Require HoTT.Categories.IndiscreteCategory.
 (** ** Finite Discrete Categories (natural numbers as categories) *)
-Require NatCategory.
+Require HoTT.Categories.NatCategory.
 (** ** Chain Categories [[n]] *)
-Require ChainCategory.
+Require HoTT.Categories.ChainCategory.
 (** ** Initial and Terminal Categories *)
-Require InitialTerminalCategory.
+Require HoTT.Categories.InitialTerminalCategory.
 (** ** The Category of Sets *)
-Require SetCategory.
+Require HoTT.Categories.SetCategory.
 (** ** The Category of Simplicial Sets *)
-Require SimplicialSets.
+Require HoTT.Categories.SimplicialSets.
 (** ** The Category of Semi-Simplicial Sets *)
-Require SemiSimplicialSets.
+Require HoTT.Categories.SemiSimplicialSets.
 (** ** The Hom Functor *)
-Require HomFunctor.
+Require HoTT.Categories.HomFunctor.
 (** ** Profunctors *)
-Require Profunctor.
+Require HoTT.Categories.Profunctor.
 (** ** The Category of Categories *)
-Require Cat.
+Require HoTT.Categories.Cat.
 (** ** Laws about Functor Categories *)
-Require ExponentialLaws.
+Require HoTT.Categories.ExponentialLaws.
 (** ** Laws about Product Categories *)
-Require ProductLaws.
+Require HoTT.Categories.ProductLaws.
 (** ** Comma Categories *)
-Require Comma.
+Require HoTT.Categories.Comma.
 (** ** Universal Properties and Universal Morphisms *)
-Require UniversalProperties.
+Require HoTT.Categories.UniversalProperties.
 (** ** Kan Extensions *)
-Require KanExtensions.
+Require HoTT.Categories.KanExtensions.
 (** ** Adjunctions *)
-Require Adjoint.
+Require HoTT.Categories.Adjoint.
 (** ** Limits *)
-Require Limits.
+Require HoTT.Categories.Limits.
 (** ** Pseudofunctors *)
-Require Pseudofunctor.
+Require HoTT.Categories.Pseudofunctor.
 (** ** Pseudonatural Transformations *)
-Require PseudonaturalTransformation.
+Require HoTT.Categories.PseudonaturalTransformation.
 (** ** Lax Comma Categories *)
-Require LaxComma.
+Require HoTT.Categories.LaxComma.
 (** ** Duality as a Functor *)
-Require DualFunctor.
+Require HoTT.Categories.DualFunctor.
 (** ** The Grothendieck Construction *)
-Require Grothendieck.
+Require HoTT.Categories.Grothendieck.
 (** ** The Category of Sections of a Functor *)
-Require CategoryOfSections.
+Require HoTT.Categories.CategoryOfSections.
 (** ** The Dependent Product *)
-Require DependentProduct.
+Require HoTT.Categories.DependentProduct.
 (** ** The Yoneda Lemma *)
-Require Categories.Yoneda.
+Require HoTT.Categories.Yoneda.
 (** ** The Structure Identity Principle *)
-Require Structure.
+Require HoTT.Categories.Structure.
 (** ** Fundamental Pregroupoids *)
-Require FundamentalPreGroupoidCategory.
+Require HoTT.Categories.FundamentalPreGroupoidCategory.
 (** ** Homotopy PreCategory *)
-Require HomotopyPreCategory.
+Require HoTT.Categories.HomotopyPreCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Local Set Warnings Append "-notation-overridden".
-Include Category.Core.
-Include Category.Strict.
-Include Category.Univalent.
-Include Functor.Core.
-Include NaturalTransformation.Core.
-Include FunctorCategory.Core.
-Include GroupoidCategory.Core.
-Include CategoryOfGroupoids.
-Include DiscreteCategory.Core.
-Include IndiscreteCategory.Core.
-Include NatCategory.Core.
-Include ChainCategory.Core.
-Include InitialTerminalCategory.Core.
-Include SetCategory.Core.
-Include SimplicialSets.Core.
-Include SemiSimplicialSets.Core.
-Include HomFunctor.
-Include Profunctor.Core.
-Include Cat.Core.
-Include Comma.Core.
-Include UniversalProperties.
-Include KanExtensions.Core.
-Include Adjoint.Core.
-Include Limits.Core.
-Include Pseudofunctor.Core.
-Include PseudonaturalTransformation.Core.
-Include LaxComma.Core.
-Include DualFunctor.
-Include CategoryOfSections.Core.
-Include DependentProduct.
-Include Categories.Yoneda.
-Include Structure.Core.
-Include FundamentalPreGroupoidCategory.
-Include HomotopyPreCategory.
+Include HoTT.Categories.Category.Core.
+Include HoTT.Categories.Category.Strict.
+Include HoTT.Categories.Category.Univalent.
+Include HoTT.Categories.Functor.Core.
+Include HoTT.Categories.NaturalTransformation.Core.
+Include HoTT.Categories.FunctorCategory.Core.
+Include HoTT.Categories.GroupoidCategory.Core.
+Include HoTT.Categories.CategoryOfGroupoids.
+Include HoTT.Categories.DiscreteCategory.Core.
+Include HoTT.Categories.IndiscreteCategory.Core.
+Include HoTT.Categories.NatCategory.Core.
+Include HoTT.Categories.ChainCategory.Core.
+Include HoTT.Categories.InitialTerminalCategory.Core.
+Include HoTT.Categories.SetCategory.Core.
+Include HoTT.Categories.SimplicialSets.Core.
+Include HoTT.Categories.SemiSimplicialSets.Core.
+Include HoTT.Categories.HomFunctor.
+Include HoTT.Categories.Profunctor.Core.
+Include HoTT.Categories.Cat.Core.
+Include HoTT.Categories.Comma.Core.
+Include HoTT.Categories.UniversalProperties.
+Include HoTT.Categories.KanExtensions.Core.
+Include HoTT.Categories.Adjoint.Core.
+Include HoTT.Categories.Limits.Core.
+Include HoTT.Categories.Pseudofunctor.Core.
+Include HoTT.Categories.PseudonaturalTransformation.Core.
+Include HoTT.Categories.LaxComma.Core.
+Include HoTT.Categories.DualFunctor.
+Include HoTT.Categories.CategoryOfSections.Core.
+Include HoTT.Categories.DependentProduct.
+Include HoTT.Categories.Yoneda.
+Include HoTT.Categories.Structure.Core.
+Include HoTT.Categories.FundamentalPreGroupoidCategory.
+Include HoTT.Categories.HomotopyPreCategory.
 
-Require Export Categories.Notations.
+Require Export HoTT.Categories.Notations.
 
 (** Some checks that should pass, if all of the importing went correctly. *)
 (*Check PreCategory.
