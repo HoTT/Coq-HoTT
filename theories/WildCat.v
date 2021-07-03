@@ -1,4 +1,5 @@
 (* Basic theory *)
+Require Export WildCat.Adjoint.
 Require Export WildCat.Core.
 Require Export WildCat.Equiv.
 Require Export WildCat.Opposite.
@@ -17,6 +18,7 @@ Require Export WildCat.Prod.
 Require Export WildCat.Sum.
 Require Export WildCat.Forall.
 Require Export WildCat.Sigma.
+Require Export WildCat.Cat.
 (* Higher categories *)
 Require Export WildCat.TwoOneCat.
 (* Pointed categories *)
