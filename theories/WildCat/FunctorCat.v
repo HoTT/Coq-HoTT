@@ -18,6 +18,8 @@ Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
 Coercion fun01_F : Fun01 >-> Funclass.
 Global Existing Instance fun01_is0functor.
 
+Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
+
 (* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
 Global Instance isgraph_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : IsGraph (Fun01 A B).
@@ -121,9 +123,12 @@ Coercion fun11_fun : Fun11 >-> Funclass.
 Global Existing Instance is0functor_fun11.
 Global Existing Instance is1functor_fun11.
 
-Arguments Build_Fun11 {A B _ _ _ _ _ _ _ _} F _ _ : rename.
+Arguments Build_Fun11 A B
+  {isgraph_A is2graph_A is01cat_A is1cat_A
+   isgraph_B is2graph_B is01cat_B is1cat_B}
+  F {is0functor_fun11 is1functor_fun11} : rename.
 
-Definition fun01_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
+Coercion fun01_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
            (F : Fun11 A B)
   : Fun01 A B.
 Proof.
@@ -153,10 +158,10 @@ Global Instance hasequivs_fun11 {A B : Type} `{Is1Cat A} `{HasEquivs B}
 (** * Identity functors *)
 
 Definition fun01_id {A} `{IsGraph A} : Fun01 A A
-  := Build_Fun01 A A _ _ idmap _.
+  := Build_Fun01 A A idmap.
 
 Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
-  := Build_Fun11 idmap _ _.
+  := Build_Fun11 _ _ idmap.
 
 (** * Composition of functors *)
 
@@ -168,6 +173,41 @@ Proof.
   rapply (is0functor_compose G F).
 Defined.
 
+Definition fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Fun01 A B -> Fun01 A C
+  := fun01_compose (A:=A) F.
+
+(** Warning: [F] needs to be a 1-functor for this to be a 0-functor. *)
+Global Instance is0functor_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Is0Functor (fun01_postcomp (A:=A) F).
+Proof.
+  apply Build_Is0Functor.
+  intros a b f.
+  rapply nattrans_postwhisker.
+  exact f.
+Defined.
+
+Global Instance is1functor_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Is1Functor (fun01_postcomp (A:=A) F).
+Proof.
+  apply Build_Is1Functor.
+  - intros a b f g p x.
+    rapply fmap2.
+    rapply p.
+  - intros f x.
+    rapply fmap_id.
+  - intros a b c f g x.
+    rapply fmap_comp.
+Defined.
+
+Definition fun11_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Fun11 (Fun01 A B) (Fun01 A C)
+  := Build_Fun11 _ _ (fun01_postcomp F).
+
 Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
   : Fun11 B C -> Fun11 A B -> Fun11 A C.
 Proof.
@@ -175,4 +215,6 @@ Proof.
   nrapply Build_Fun11.
   rapply (is1functor_compose G F).
 Defined.
+
+
 

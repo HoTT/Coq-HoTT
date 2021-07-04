@@ -119,7 +119,12 @@ Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.
 Proof.
-  rapply (Build_Fun01 _ _ _ _ (opyon a)).
+  rapply (Build_Fun01 _ _ (opyon a)).
+Defined.
+
+Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.
+Proof.
+  rapply (Build_Fun11 _ _ (opyon a)).
 Defined.
 
 (** We can also deduce "full-faithfulness" on equivalences. *)
@@ -208,6 +213,9 @@ Definition yon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition yon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A^op Type
   := @opyon1 A^op _ _ a.
+
+Definition yon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A^op Type
+  := @opyon11 A^op _ _ _ _ _ a.
 
 Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            (a b : A)

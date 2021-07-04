@@ -20,6 +20,8 @@ There are notions of 2-adjunction/biadjunction/higher adjunction but it is not c
 We will define an adjunction to be an equivalence (in Type) between corresponding hom-types. This is a more immediately useful definition than others we can consider.
 
 We should also be able to define "F having a left adjoint" as the initial object of a slice category C / F. However this seems like too much work for now, and it is not immediately obvious how it ties back to the adjunction isomorphism.
+
+In the future, it ought to be possible to generalize this definition to live inside a given bicategory, however due to current structural issues in the WildCat library, writing down a usable definition of bicategory requires a lot of effort.
 *)
 
 (** * Definition of adjunction *)
@@ -88,10 +90,8 @@ Section AdjunctionData.
 
   (** TODO: *)
   (** We also have the natural equivalence in both arguments at the same time. *)
-  (* Definition natequiv_adjunction
-    : NatEquiv (un
- *)
 
+  (** The counit of an adjunction *)
   Definition adjunction_counit : NatTrans idmap (G o F).
   Proof.
     snrapply Build_NatTrans.
@@ -109,6 +109,7 @@ Section AdjunctionData.
     apply Square.vrefl.
   Defined.
 
+  (** The unit of an adjunction *)
   Definition adjunction_unit : NatTrans (F o G) idmap.
   Proof.
     snrapply Build_NatTrans.
@@ -135,15 +136,16 @@ End AdjunctionData.
 
 (** ** Building adjunctions *)
 Section BuildingAdjunctions.
-  Context {C D : Cat1} (F : C $-> D) (G : D $-> C) `{!HasMorExt C, !HasMorExt D}
-    .
+  (** Our assumptions are no longer fully unbundled. We are using the Fun11 and Cat1 bundled versions of wild categories, since the number of typeclass instances we have is growing ever larger. This also helps coq infer which typeclass instances need to be used. *)
+  (** It appears that translating between unit-counit and hom equivalence definitions of adjunction requires morphism extensionality. *)
+  Context {C D : Cat1} (F : C $-> D) (G : D $-> C)
+    `{!HasMorExt C, !HasMorExt D}.
 
   (** There are various ways to build an adjunction. *)
 
   (** TODO: A natural equivalence between functors [C^op * D -> Type] *)
-  
   (** TODO: A natural equivalence between functors [C^op -> Type] which is also natural in the right. *)
-  
+
   (** A natural equivalence between functors [D -> Type] which is also natural in the left. *)
   Definition Build_Adjunction_natequiv_nat_left
     (e : forall x, NatEquiv (opyon (F x)) (opyon x o G))
@@ -219,13 +221,13 @@ Section BuildingAdjunctions.
 
     (** And natural in the right. *)
     Lemma is1natural_γ_r x
-      : Is1Natural (opyon (F x)) (fun x0 : D => opyon x (G x0)) (fun y : D => γ x y).
+      : Is1Natural (opyon (F x)) (fun x0 : D => opyon x (G x0)) (γ x).
     Proof.
       nrapply is1natural_opyoneda.
       exact _.
     Defined.
 
-    (** Together this constructs and adjunction. *)
+    (** Together this constructs an adjunction. *)
     Definition Build_Adjunction_unit_counit : Adjunction F G.
     Proof.
       snrapply Build_Adjunction.
@@ -236,12 +238,20 @@ Section BuildingAdjunctions.
 
   End HomEquivFromUnitCounit.
 
-End BuildingAdjunctions. 
+End BuildingAdjunctions.
 
 
 (** * Properties of adjunctions *)
 
-
-
-
+Lemma adjunction_postcomp (C D J : Type)
+  `{Is1Cat C, Is1Cat D, IsGraph J} (F : Fun11 C D) (G : Fun11 D C)
+  : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣  fun11_fun01_postcomp (A:=J) G.
+Proof.
+  intros adj.
+  srefine (Build_Adjunction_natequiv_nat_left
+    (C:=Build_Cat1 _ _ _ _ _) (D:=Build_Cat1 _ _ _ _ _) _ _ _ _).
+  { simpl.
+    intros x.
+    refine (natequiv_compose _ (natequiv_opyon_equiv _ _ _)).
+Admitted.
 
