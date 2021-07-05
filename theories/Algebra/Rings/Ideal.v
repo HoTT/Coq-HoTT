@@ -7,6 +7,7 @@ Local Open Scope mc_scope.
 
 Declare Scope ideal_scope.
 Delimit Scope ideal_scope with ideal.
+Local Open Scope ideal_scope.
 
 (** In this file we define Ideals *)
 
@@ -296,22 +297,6 @@ Defined.
 Definition ideal_annihilator `{Funext} {R : CRing} (I : Ideal R) : Ideal R
   := ideal_quotient (ideal_zero R) I.
 
-(** *** Ideal notations *)
-
-(** We declare a module for various (unicode) ideal notations. These exist in their own special case, and can be imported and used when needing to reason about ideals. *)
-
-(** TODO: reserve these properly *)
-Module Notation.
-  Infix "⊆" := ideal_subset       : ideal_scope.
-  Infix "↔" := ideal_eq           : ideal_scope.
-  Infix "+" := ideal_sum          : ideal_scope.
-  Infix "⋅" := ideal_product      : ideal_scope.
-  Infix "∩" := ideal_intersection : ideal_scope.
-  Infix "::" := ideal_quotient    : ideal_scope.
-  Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
-  Notation Ann := ideal_annihilator.
-End Notation.
-
 (** ** Properties of ideals *)
 
 (** *** Coprime ideals *)
@@ -382,11 +367,22 @@ Proof.
     by apply isideal.
 Defined.
 
-(** *** Ideal lemmas *)
+(** *** Ideal notations *)
 
-(** We use the Ideal.Notation notations in the rest of this file *)
-Import Ideal.Notation.
-Local Open Scope ideal_scope.
+(** We declare and import a module for various (unicode) ideal notations. These exist in their own special case, and can be imported and used in other files when needing to reason about ideals. *)
+
+Module Import Notation.
+  Infix "⊆" := ideal_subset       : ideal_scope.
+  Infix "↔" := ideal_eq           : ideal_scope.
+  Infix "+" := ideal_sum          : ideal_scope.
+  Infix "⋅" := ideal_product      : ideal_scope.
+  Infix "∩" := ideal_intersection : ideal_scope.
+  Infix "::" := ideal_quotient    : ideal_scope.
+  Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
+  Notation Ann := ideal_annihilator.
+End Notation.
+
+(** *** Ideal lemmas *)
 
 Section IdealLemmas.
 
