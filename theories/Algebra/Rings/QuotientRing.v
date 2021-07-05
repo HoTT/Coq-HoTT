@@ -34,7 +34,7 @@ Section QuotientRing.
     rewrite <- simple_associativity.
     rewrite negate_mult_distr_r.
     rewrite <- simple_distribute_l.
-    rapply subgroup_op.
+    rapply subgroup_in_op.
     1: rewrite (commutativity _ y).
     all: by rapply isideal.
   Defined.
