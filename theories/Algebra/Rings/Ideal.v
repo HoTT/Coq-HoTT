@@ -302,12 +302,12 @@ Definition ideal_annihilator `{Funext} {R : CRing} (I : Ideal R) : Ideal R
 
 (** TODO: reserve these properly *)
 Module Notation.
-  Infix "⊆" := ideal_subset : ideal_scope.
-  Infix "↔" := ideal_eq : ideal_scope.
-  Infix "+" := ideal_sum : ideal_scope.
-  Infix "⋅" := ideal_product (at level 20) : ideal_scope.
-  Infix "∩" := ideal_intersection (at level 20)  : ideal_scope.
-  Infix "::" := ideal_quotient : ideal_scope.
+  Infix "⊆" := ideal_subset       : ideal_scope.
+  Infix "↔" := ideal_eq           : ideal_scope.
+  Infix "+" := ideal_sum          : ideal_scope.
+  Infix "⋅" := ideal_product      : ideal_scope.
+  Infix "∩" := ideal_intersection : ideal_scope.
+  Infix "::" := ideal_quotient    : ideal_scope.
   Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
   Notation Ann := ideal_annihilator.
 End Notation.
@@ -384,8 +384,8 @@ Defined.
 
 (** *** Ideal lemmas *)
 
-(** We use these notations in the rest of this file *)
-Import Notation.
+(** We use the Ideal.Notation notations in the rest of this file *)
+Import Ideal.Notation.
 Local Open Scope ideal_scope.
 
 Section IdealLemmas.
@@ -398,7 +398,7 @@ Section IdealLemmas.
     intros p q x; split; by revert x.
   Defined.
 
-  (** The zero ideal is contained by all ideals *)
+  (** The zero ideal is contained in all ideals *)
   Lemma ideal_zero_subset I : ideal_zero R ⊆ I.
   Proof.
     intros x p; rewrite p; apply ideal_in_zero.
@@ -547,6 +547,7 @@ Section IdealLemmas.
   Defined.
 
   (** Products left distribute over sums *)
+  (** Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
   Lemma ideal_dist_l (I J K : Ideal R) : I ⋅ (J + K) ↔ I ⋅ J + I ⋅ K.
   Proof.
     (** We split into two directions. *)
@@ -724,7 +725,7 @@ Section IdealLemmas.
     apply ideal_product_intersection_sum_subset.
   Defined.
 
-  (** If the sum of ideals is the whole ring then their product is a subset of their intersection. *)
+  (** If the sum of ideals is the whole ring then their intersection is a subset of their product. *)
   Lemma ideal_intersection_subset_product (I J : Ideal R)
     : ideal_unit R ⊆ (I + J) -> I ∩ J ⊆ I ⋅ J.
   Proof.
@@ -763,7 +764,7 @@ Section IdealLemmas.
       by apply isideal.
     Defined.
 
-    (** Products are subsets iff the first factor is a subset of the ideal quotient *)
+    (** The ideal quotient is a right adjoint to the product in the monoidal lattice of ideals. *)
     Lemma ideal_quotient_subset_prod (I J K : Ideal R)
       : I ⋅ J ⊆ K <-> I ⊆ (K :: J).
     Proof.
@@ -781,7 +782,7 @@ Section IdealLemmas.
     Defined.
 
     (** Ideal quotients partially cancel *)
-    Lemma ideal_quotient_susbset_left_inverse (I J : Ideal R)
+    Lemma ideal_quotient_product_left (I J : Ideal R)
       : (I :: J) ⋅ J ⊆ I.
     Proof.
       by apply ideal_quotient_subset_prod.
@@ -816,7 +817,7 @@ Section IdealLemmas.
       cbv; split; trivial.
     Defined.
 
-    (** The ideal quotient by a sum is an intersecton of ideal quotients *)
+    (** The ideal quotient by a sum is an intersection of ideal quotients *)
     Lemma ideal_quotient_sum (I J K : Ideal R)
       : (I :: (J + K)) ↔ (I :: J) ∩ (I :: K).
     Proof.

@@ -13,6 +13,8 @@ Reserved Notation "x ↔ y" (at level 95, no associativity).
 (*Notation "¬ x" (at level 75, right associativity).*)
 (*Notation "x ≠ y" (at level 70).*)
 
+Reserved Infix "∩" (at level 20).
+Reserved Infix "⋅" (at level 20).
 Reserved Infix "∙" (at level 20).
 Reserved Infix "∘" (at level 40, left associativity).
 Reserved Infix "∘ˡ" (at level 40, left associativity).
