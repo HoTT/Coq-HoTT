@@ -35,38 +35,17 @@ Proof.
   rapply istrunc_sigma.
 Defined.
 
-(** Here are some lemmas for proving certain elements are in an ideal. *)
+(** Here are some lemmas for proving certain elements are in an ideal. They are just special cases of the underlying subgroup lemmas. We write them out for clarity. *)
 Section IdealElements.
-
-  Context {R : CRing} (I : Ideal R).
-
-  Definition ideal_in_zero : I cring_zero := subgroup_unit I.
-  Definition ideal_in_plus a b : I a -> I b -> I (a + b) := subgroup_op I a b.
-  Definition ideal_in_negate a : I a -> I (- a) := subgroup_inverse I a.
-  Definition ideal_in_plus_negate a b : I a -> I b -> I (a - b)
-    := subgroup_op_inverse I a b.
-
-  Lemma ideal_in_negate' a : I (- a) -> I a.
-  Proof.
-    intros p; rewrite <- (negate_involutive a); revert p.
-    apply ideal_in_negate.
-  Defined.
-
-  Lemma ideal_in_plus_l a b : I (a + b) -> I b -> I a.
-  Proof.
-    intros p q; rewrite <- (rng_plus_zero_r a); revert p q.
-    rewrite <- (rng_plus_negate_r b).
-    rewrite rng_plus_assoc.
-    apply ideal_in_plus_negate.
-  Defined.
-
-  Lemma ideal_in_negate_plus a b : I a -> I b -> I (-a + b).
-  Proof.
-    intros p q.
-    rewrite rng_plus_comm.
-    by apply ideal_in_plus_negate.
-  Defined.
-
+  Context {R : CRing} (I : Ideal R) (a b : R).
+  Definition ideal_in_zero : I cring_zero := subgroup_in_unit I.
+  Definition ideal_in_plus : I a -> I b -> I (a + b) := subgroup_in_op I a b.
+  Definition ideal_in_negate  : I a -> I (- a) := subgroup_in_inv  I a.
+  Definition ideal_in_negate' : I (- a) -> I a := subgroup_in_inv' I a.
+  Definition ideal_in_plus_negate : I a -> I b -> I (a - b) := subgroup_in_op_inv I a b.
+  Definition ideal_in_negate_plus : I a -> I b -> I (-a + b) := subgroup_in_inv_op I a b.
+  Definition ideal_in_plus_l : I (a + b) -> I b -> I a := subgroup_in_op_l I a b.
+  Definition ideal_in_plus_r : I (a + b) -> I a -> I b := subgroup_in_op_r I a b.
 End IdealElements.
 
 (** The zero ideal is an ideal *)
@@ -118,11 +97,11 @@ Proof.
     right; by apply isideal.
   + apply tr, sgt_in.
     left; apply isideal.
-    apply subgroup_unit.
+    apply ideal_in_zero.
   + intros x y p q IHp IHq.
     rewrite rng_dist_l.
     rewrite rng_mult_negate_r.
-    by rapply subgroup_op_inverse.
+    by rapply subgroup_in_op_inv.
 Defined.
 
 (** Sum of ideals *)
@@ -532,9 +511,9 @@ Section IdealLemmas.
   Proof.
     intros p q.
     refine (ideal_sum_ind I J (fun x _ => K x) p q _ _).
-    1: apply subgroup_unit.
+    1: apply ideal_in_zero.
     intros y z s t.
-    rapply subgroup_op_inverse.
+    rapply ideal_in_plus_negate.
   Defined.
 
   (** Ideals absorb themselves under sum. *)
