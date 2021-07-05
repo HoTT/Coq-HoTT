@@ -494,6 +494,10 @@ Section IdealLemmas.
     + by apply ideal_in_plus_negate.
   Defined.
 
+  (** TODO: *)
+  (** The product of ideals is an associative operation. *)
+  (* Lemma ideal_product_assoc (I J K : Ideal R) : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K. *)
+
   (** Products of ideals are subsets of their intersection. *)
   Lemma ideal_product_subset_intersection (I J : Ideal R) : I ⋅ J ⊆ I ∩ J.
   Proof.
