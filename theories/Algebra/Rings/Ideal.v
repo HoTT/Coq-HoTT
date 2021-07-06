@@ -271,6 +271,7 @@ Proof.
 Defined.
 
 (** Quotient (a.k.a colon) ideal *)
+(** Note that this is quotient as in division rather than a colimit. In fact, the quotient ideal is more like an internal hom as we will see later. *)
 (** Unfortunately, due to truncatedness constraints, we need to assume funext. *)
 Definition ideal_quotient `{Funext} {R : CRing} (I J : Ideal R) : Ideal R.
 Proof.
@@ -893,4 +894,3 @@ End IdealLemmas.
 (** TODO: Radical ideals *)
 (** TODO: Minimal ideals *)
 (** TODO: Primary ideals *)
-
