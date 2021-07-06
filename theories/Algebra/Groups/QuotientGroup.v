@@ -210,7 +210,7 @@ Proof.
     apply ap.
     apply qglue; cbn.
     rewrite right_identity;
-      by apply issubgroup_inverse.
+      by apply issubgroup_in_inv.
   - intros f.
     rapply equiv_path_grouphomomorphism.
       by srapply Quotient_ind_hprop.
