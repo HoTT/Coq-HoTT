@@ -291,7 +291,7 @@ dot-file-dep-graphs: $(ALL_DOTFILES)
 TAGS_FILES = $(ALL_VFILES)
 TAGS : $(TAGS_FILES)
 	$(ETAGS) --language=none \
-	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
+	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|CoInductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^
 
