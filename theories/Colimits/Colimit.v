@@ -1,9 +1,9 @@
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
 Require Import Diagrams.ConstantDiagram.
+Require Import HIT.Coeq.
 
 Local Open Scope path_scope.
 Generalizable All Variables.
@@ -35,52 +35,83 @@ Definition cocone_postcompose_inv `{D: Diagram G} {Q X}
 
 (** Whatever the diagram considered, there exists a colimit of it. The existence is given by the HIT [colimit]. *)
 
-(** ** Definition of the HIT *)
+(** ** Definition of the HIT 
 
-Module Export Colimit.
+  HIT Colimit {G : Graph} (D : Diagram G) : Type :=
+  | colim : forall i, D i -> Colimit D
+  | colimp : forall i j (f : G i j) (x : D i) : colim j (D _f f x) = colim i x
+  .
 
-  Private Inductive Colimit {G : Graph} (D : Diagram G) : Type :=
-    | colim : forall i, D i -> Colimit D.
+*)
 
-  Arguments colim {G D} i x.
+(** A colimit is just the coequializer of the source and target maps of the diagram *)
+Definition Colimit {G : Graph} (D : Diagram G) : Type :=
+  @Coeq
+    {x : sig D & {y : sig D & {f : G x.1 y.1 & D _f f x.2 = y.2}}}
+    (sig D)
+    (fun t => t.1)
+    (fun t => t.2.1)
+  .
 
-  Axiom colimp : forall {G : Graph} {D : Diagram G} i j (f : G i j) (x : D i),
-      colim j (D _f f x) = colim i x.
+Definition colim {G : Graph} {D : Diagram G} (i : G) (x : D i) : Colimit D :=
+  coeq (i ; x).
 
-  Definition Colimit_ind {G : Graph} {D : Diagram G} (P : Colimit D -> Type)
-    (q : forall i x, P (colim i x))
-    (pp_q : forall (i j: G) (g: G i j) (x: D i),
-      (@colimp G D i j g x) # (q j (D _f g x)) = q i x)
-    : forall w, P w
-    := fun w => match w with colim i a => fun _ => q _ a end pp_q.
+Definition colimp {G : Graph} {D : Diagram G} (i j : G) (f : G i j) (x : D i)
+  : colim j (D _f f x) = colim i x
+  := (cglue ((i; x); (j; D _f f x); (f; idpath)))^.
 
-  Axiom Colimit_ind_beta_colimp : forall {G : Graph} {D : Diagram G}
-    (P : Colimit D -> Type) (q : forall i x, P (colim i x))
-    (pp_q : forall (i j: G) (g: G i j) (x: D i),
-      @colimp G D i j g x # q _ (D _f g x) = q _ x)
-    (i j : G) (g : G i j) (x : D i),
-    apD (Colimit_ind P q pp_q) (colimp i j g x) = pp_q i j g x.
+Definition Colimit_ind {G : Graph} {D : Diagram G} (P : Colimit D -> Type)
+(q : forall i x, P (colim i x))
+(pp_q : forall (i j: G) (g: G i j) (x: D i),
+  (@colimp G D i j g x) # (q j (D _f g x)) = q i x)
+: forall w, P w.
+Proof.
+  srapply Coeq_ind.
+  - intros [x i].
+    exact (q x i).
+  - intros [[i x] [[j y] [f g]]].
+    cbn in f, g; cbn.
+    destruct g.
+    apply moveR_transport_p.
+    symmetry.
+    exact (pp_q _ _ _ _).
+Defined.
 
-  Definition Colimit_rec {G : Graph} {D : Diagram G} (P : Type) (C : Cocone D P)
-    : Colimit D -> P.
-  Proof.
-    srapply (Colimit_ind _ C).
-    intros i j g x.
-    refine (transport_const _ _ @ _).
-    apply legs_comm.
-  Defined.
+Definition Colimit_ind_beta_colimp {G : Graph} {D : Diagram G}
+  (P : Colimit D -> Type) (q : forall i x, P (colim i x))
+  (pp_q : forall (i j: G) (g: G i j) (x: D i),
+    @colimp G D i j g x # q _ (D _f g x) = q _ x)
+  (i j : G) (g : G i j) (x : D i)
+  : apD (Colimit_ind P q pp_q) (colimp i j g x) = pp_q i j g x.
+Proof.
+  refine (apD_V _ _ @ _).
+  apply moveR_equiv_M.
+  apply moveR_equiv_M.
+  refine (Coeq_ind_beta_cglue _ _ _ _ @ _).
+  symmetry.
+  apply moveL_transport_p_V.
+Defined.
 
-  Definition Colimit_rec_beta_colimp {G : Graph} {D : Diagram G}
-    (P : Type) (C : Cocone D P) (i j : G) (g: G i j) (x: D i)
-    : ap (Colimit_rec P C) (colimp i j g x) = legs_comm C i j g x.
-  Proof.
-    unfold Colimit_rec, Colimit_ind.
-    eapply (cancelL (transport_const (colimp i j g x) _)).
-    srapply ((apD_const (Colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
-    srapply (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
-  Defined.
+Definition Colimit_rec {G : Graph} {D : Diagram G} (P : Type) (C : Cocone D P)
+  : Colimit D -> P.
+Proof.
+  srapply (Colimit_ind _ C).
+  intros i j g x.
+  refine (transport_const _ _ @ _).
+  apply legs_comm.
+Defined.
 
-End Colimit.
+Definition Colimit_rec_beta_colimp {G : Graph} {D : Diagram G}
+  (P : Type) (C : Cocone D P) (i j : G) (g: G i j) (x: D i)
+  : ap (Colimit_rec P C) (colimp i j g x) = legs_comm C i j g x.
+Proof.
+  rapply (cancelL (transport_const (colimp i j g x) _)).
+  srapply ((apD_const (Colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
+  srapply (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
+Defined.
+
+Arguments colim : simpl never.
+Arguments colimp : simpl never.
 
 (** Colimit_rec is an equivalence *)
 

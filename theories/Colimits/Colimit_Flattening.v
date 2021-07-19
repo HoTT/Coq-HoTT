@@ -83,6 +83,7 @@ Section Flattening.
 
   Local Opaque path_sigma ap11.
 
+  (** TODO: Make this faster! *)
   Global Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
   Proof.
     srapply Build_UniversalCocone.
@@ -150,7 +151,7 @@ Section Flattening.
           cbn.
           rewrite (ap_compose (fun x0 : exists x0 : D j, E (j; x0)
             => (colim j (pr1 x0); pr2 x0)) f).
-          rewrite <- !ap_pp.
+          rewrite <- ! (ap_pp f).
           apply (ap (ap f)).
           match goal with |- _ = (ap ?ff ?pp1 @ ?pp2) @ ?pp3
             => set (p1 := pp1) end.
@@ -205,7 +206,7 @@ Section Flattening.
             rewrite ap_compose.
             f_ap; symmetry.
             apply transport_VpV. }
-        rewrite X; hott_simpl.
+        rewrite X; simpl; hott_simpl.
   Defined.
 
   (** The flattening lemma follows by colimit unicity. *)
