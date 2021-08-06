@@ -6,6 +6,7 @@ Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
+Require Import WildCat.
 
 (* Formalisation of Eilenberg-MacLane spaces *)
 
@@ -218,27 +219,16 @@ Section EilenbergMacLane.
 
   Local Open Scope trunc_scope.
 
-  (* This is a straight forward property of truncations. Most of the proof is spent getting the indexing to work correctly. *)
-  Local Definition trunc_lemma (n : nat) X
-    : pTr n.+2 X <~>* pTr n.+2 (pTr (n +2+ n) X).
+  (* This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
+  Local Lemma pequiv_ptr_loop_psusp' `{Univalence} (X : pType) (n : nat) `{IsConnected n.+1 X}
+    : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
-    srapply Build_pEquiv'.
-    { notypeclasses refine (Build_Equiv _ _ (Trunc_functor _ tr) _).
-      notypeclasses refine (isequiv_conn_map_ino n.+2 _).
-      1,2: exact _.
-      apply conn_map_O_functor.
-      intro x.
-      notypeclasses refine (isconnected_pred_add n.-2 _ _).
-      rewrite 2 trunc_index_add_succ.
-      (* This has to be done by induction since n.-2.+2 only cancels when n >= 0 i.e. a nat *)
-      assert (p : (n .-2 +2+ n).+2 = (n +2+ n)).
-      { induction n; try reflexivity; cbn.
-        rewrite 2 trunc_index_add_succ.
-        apply ap, ap.
-        destruct n; reflexivity. }
-      destruct p.
-      rapply conn_map_to_O. }
-    all: reflexivity.
+    snrapply Build_pEquiv.
+    1: rapply (fmap (pTr _) (loop_susp_unit _)).
+    nrapply O_inverts_conn_map.
+    nrapply (isconnmap_pred_add n.-2).
+    rewrite 2 trunc_index_add_succ.
+    rapply conn_map_loop_susp_unit.
   Defined.
 
   Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
@@ -251,22 +241,8 @@ Section EilenbergMacLane.
     destruct n.
     { srapply licata_finster.
       reflexivity. }
-    transitivity (pTr n.+2 (K(G, n.+2))).
-    { symmetry.
-      transitivity (pTr n.+2 (pTr (n +2+ n) (K(G, n.+2)))).
-      1: generalize (K(G, n.+2)); intro X'; apply trunc_lemma.
-      transitivity (pTr n.+2 (pTr (n +2+ n) (loops (psusp (K(G, n.+2)))))).
-      { apply pequiv_ptr_functor.
-        srapply (pequiv_ptr_loop_psusp (K(G, n.+2)) n). }
-      symmetry.
-      generalize (K(G, n.+2)); intro X'.
-      apply trunc_lemma. }
-    symmetry.
-    srapply Build_pEquiv'.
-    1: srapply equiv_tr.
-    reflexivity.
+    refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
+    symmetry; rapply pequiv_ptr_loop_psusp'.
   Defined.
 
 End EilenbergMacLane.
-
-
