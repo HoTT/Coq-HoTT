@@ -133,6 +133,12 @@ Proof.
   assumption.
 Defined.
 
+Definition isconnmap_pred_add n m A B (f : A -> B) `{IsConnMap (n +2+ m) _ _ f}
+  : IsConnMap m f.
+Proof.
+  intro b.
+  exact (isconnected_pred_add n m _).
+Defined.
 
 (** ** 0-connectedness *)
 

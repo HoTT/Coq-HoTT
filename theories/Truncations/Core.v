@@ -150,7 +150,7 @@ Defined.
 (** See https://github.com/coq/coq/issues/11697 *)
 #[export]
 Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.
-(** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though; see the comment in the proof of [Trunc_min] below.  *)
+(** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though.  *)
 
 (** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
 
@@ -243,47 +243,32 @@ Ltac strip_truncations :=
 
 (** ** Iterated truncations *)
 
-Definition Trunc_min n m X : Tr n (Tr m X) <~> Tr (trunc_index_min n m) X.
+(** Compare to [O_leq_Tr] below. *)
+Definition O_leq_Tr_leq {n m : trunc_index} (Hmn : m <= n)
+  : O_leq (Tr m) (Tr n).
+Proof.
+  intros A; rapply istrunc_leq.
+Defined.
+
+Definition Trunc_min n m X : Tr (trunc_index_min n m) X <~> Tr n (Tr m X).
 Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
     destruct p^; clear p.
-    symmetry.
-    srapply equiv_adjointify.
-    { srapply Trunc_rec.
-      exact (fun x => tr (tr x)). }
-    { srapply Trunc_rec.
-      srapply Trunc_rec.
-      1: srapply istrunc_leq.
-      exact tr. }
-    { srapply Trunc_ind.
-      simpl.
-      srapply (Trunc_ind (n:=m)).
-      2: reflexivity.
-      intro.
-      apply istrunc_paths.
-      srapply (istrunc_leq (m:=n)).
-      by apply trunc_index_leq_succ'. }
-    srapply Trunc_ind; reflexivity.
-  + set (min := trunc_index_min n m).
-    refine (paths_ind _
-      (fun m _ => Tr n (Tr m X) <~> Tr min X) _ m q).
-    unfold min; clear min.
-    symmetry.
+    snrapply (Build_Equiv _ _ (Trunc_functor _ tr)).
+    nrapply O_inverts_conn_map.
+    rapply (conn_map_O_leq _ (Tr m)).
+    rapply O_leq_Tr_leq.
+  + assert (l := trunc_index_min_leq_left n m).
+    destruct q^; clear q.
     srapply equiv_tr.
     srapply istrunc_leq.
-    3:{ (** Strangely, if [istrunc_inO_tr] were a [Hint Immediate], rather than our [Hint Extern], then typeclass inference would be able to find this all on its own, although the documentation for [Hint Immediate] suggests that it shouldn't because the following tactic doesn't solve it completely. *)
-        simple apply istrunc_inO_tr; trivial.
-        exact _. }
-    apply trunc_index_min_leq_left.
 Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
 Proof.
-  refine (_ oE equiv_transport (fun x => Tr x _) _ oE Trunc_min n m _).
-  2: apply trunc_index_min_swap.
-  symmetry.
-  apply Trunc_min.
+  refine (Trunc_min m n _ oE equiv_transport (fun k => Tr k _) _ oE (Trunc_min n m _)^-1).
+  apply trunc_index_min_swap.
 Defined.
 
 (** ** Separatedness and path-spaces of truncations *)

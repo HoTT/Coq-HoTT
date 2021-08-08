@@ -51,7 +51,7 @@ Proof.
 Defined.
 
 Definition nat_to_trunc_index (n : nat) : trunc_index
-  := trunc_index_inc minus_two.+2 n.
+  := (trunc_index_inc minus_two n).+2.
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
