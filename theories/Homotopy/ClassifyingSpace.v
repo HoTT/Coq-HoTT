@@ -305,6 +305,24 @@ Section EncodeDecode.
     apply bloop_pp.
   Defined.
 
+  Definition grp_iso_g_pi1_bg : GroupIsomorphism G (Pi1 (B G)).
+  Proof.
+    snrapply (transitive_groupisomorphism _ _ _ grp_iso_g_loopgroup_bg).
+    snrapply Build_GroupIsomorphism'.
+    - rapply equiv_tr.
+    - intros x y; reflexivity.
+  Defined.
+
+  (* We also record this fact. *)
+  Definition grp_homo_loops {X Y : pType} `{IsTrunc 1 X} `{IsTrunc 1 Y}
+             (f : X ->* Y)
+    : LoopGroup X $-> LoopGroup Y.
+  Proof.
+    snrapply Build_GroupHomomorphism.
+    - exact (fmap loops f).
+    - nrapply fmap_loops_pp.
+  Defined.
+
 End EncodeDecode.
 
 (** When G is an abelian group, BG is a H-space. *)
@@ -474,9 +492,7 @@ Proof.
   { intros f.
     refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).
     1,3: rapply grp_iso_g_loopgroup_bg.
-    snrapply Build_GroupHomomorphism.
-    1: by rapply (fmap loops).
-    rapply fmap_loops_pp. }
+    exact (grp_homo_loops f). }
   { intros f.
     rapply equiv_path_pforall.
     snrapply Build_pHomotopy.
@@ -561,7 +577,7 @@ Proof.
   rapply is1natural_prewhisker.
 Defined.
 
-(** The classifying space functor and the fundemental group functor form an adjunction (pType needs to be restricted to the subcategory of 0-connected pTypes). Note that the full adjunction should also be natural in X, but this was not needed yet. *)
+(** The classifying space functor and the fundamental group functor form an adjunction (pType needs to be restricted to the subcategory of 0-connected pTypes). Note that the full adjunction should also be natural in X, but this was not needed yet. *)
 Theorem equiv_bg_pi1_adjoint `{Univalence} (X : pType)
   `{IsConnected 0 X} (G : Group)
   : (Pi 1 X $-> G) <~> (X $-> B G).

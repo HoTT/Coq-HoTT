@@ -5,6 +5,7 @@ Require Import Truncations.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.
+Require Import Homotopy.HomotopyGroup.
 Require Import TruncType.
 Require Import WildCat.
 
@@ -220,7 +221,7 @@ Section EilenbergMacLane.
   Local Open Scope trunc_scope.
 
   (* This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
-  Local Lemma pequiv_ptr_loop_psusp' `{Univalence} (X : pType) (n : nat) `{IsConnected n.+1 X}
+  Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
     : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
     snrapply Build_pEquiv.
@@ -243,6 +244,27 @@ Section EilenbergMacLane.
       reflexivity. }
     refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
     symmetry; rapply pequiv_ptr_loop_psusp'.
+  Defined.
+
+  Definition pequiv_loops_em_g (G : AbGroup) (n : nat)
+    : iterated_loops n K(G, n) <~>* G.
+  Proof.
+    induction n.
+    - reflexivity.
+    - refine (IHn o*E _ o*E unfold_iterated_loops' _ _).
+      exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).
+  Defined.
+
+  (* For positive indices, we in fact get a group isomorphism. *)
+  Definition equiv_g_pi_n_em (G : AbGroup) (n : nat)
+    : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).
+  Proof.
+    induction n.
+    - apply grp_iso_g_pi1_bg.
+    - snrapply (transitive_groupisomorphism _ _ _ IHn).
+      symmetry.
+      snrapply (transitive_groupisomorphism _ _ _ (groupiso_pi_loops _ _)).
+      apply (groupiso_pi_functor _ (pequiv_loops_em_em _ _)).
   Defined.
 
 End EilenbergMacLane.
