@@ -51,6 +51,16 @@ Definition inO_equiv_inO' {O : Subuniverse}
   : In O U
   := inO_equiv_inO T f.
 
+Definition iff_inO_equiv `{Funext} (O : Subuniverse)
+           {T : Type} {U : Type} (f : T <~> U)
+  : In O T <-> In O U
+  := (fun H => inO_equiv_inO' _ f, fun H => inO_equiv_inO' _ f^-1).
+
+Definition equiv_inO_equiv `{Funext} (O : Subuniverse)
+           {T : Type} {U : Type} (f : T <~> U)
+  : In O T <~> In O U
+  := equiv_iff_hprop_uncurried (iff_inO_equiv _ f).
+
 (** The universe of types in the subuniverse *)
 Definition Type_@{i j} (O : Subuniverse@{i}) : Type@{j}
   := @sig@{j i} Type@{i} (fun (T : Type@{i}) => In O T).

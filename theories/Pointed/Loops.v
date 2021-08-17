@@ -365,45 +365,27 @@ Proof.
   apply tr_loops.
 Defined.
 
-(* This is slightly different to 7.2.9 in that we ommit n = -1, which is
-   inhabited hsets are contractible. *)
+(* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
 Theorem equiv_istrunc_contr_iterated_loops `{Univalence} (n : nat)
-  : forall A, IsTrunc n A <~> forall a : A,
-    Contr (iterated_loops n.+1 (A, a)).
+  : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n (A, a)).
 Proof.
-  induction n.
-  { intro A.
-    refine (equiv_composeR' equiv_hset_axiomK _).
-    refine (equiv_iff_hprop (fun K a => Build_Contr _ 1 (fun x => (K a x)^)) _).
-    intros ? ? ?; apply path_contr. }
-  intro A.
-  transitivity (forall x, IsTrunc n (loops (A, x))).
-  1: destruct n; apply equiv_istrunc_istrunc_loops.
+  induction n; intro A.
+  { cbn. exact equiv_hprop_inhabited_contr. }
+  refine (_ oE equiv_istrunc_istrunc_loops n.-2 _).
   srapply equiv_functor_forall_id.
   intro a.
-  apply (equiv_composeR' (IHn (loops (A, a)))).
-  cbn; refine (equiv_iff_hprop _ _).
-  1: change ((forall p : a = a, Contr ((iterated_loops n.+1 (loops (A, a), p))))
-      -> Contr (iterated_loops n.+2 (A, a))).
-  1: refine (fun X => (ap _ (unfold_iterated_loops n.+1 _))^ # X 1).
-  change (Contr (iterated_loops n.+2 (A, a))
-    -> (forall p : a = a, Contr ((iterated_loops n.+1 (loops (A, a), p))))).
+  cbn beta.
+  refine (_ oE IHn (loops (A, a))).
+  refine (equiv_inO_equiv (-2) (unfold_iterated_loops' n (A,a))^-1 oE _).
+  rapply equiv_iff_hprop.
   intros X p.
   refine (@contr_equiv' _ _ _ X).
-  rewrite !unfold_iterated_loops.
-  apply pointed_equiv_equiv.
   rapply (emap (iterated_loops _)).
-  symmetry.
-  transitivity (p @ p^ = p @ p^, 1).
-  { srefine (Build_pEquiv' _ _).
-    1: exact (equiv_ap (equiv_concat_r _ _) _ _).
-    reflexivity. }
   srapply Build_pEquiv'.
-  { apply equiv_concat_lr.
-    1: symmetry; apply concat_pV.
-    apply concat_pV. }
-  cbn; by rewrite concat_p1, concat_Vp.
-Qed.
+  1: exact (equiv_concat_lr p 1).
+  cbn; unfold ispointed_loops.
+  exact (concat_p1 _ @ concat_p1 _).
+Defined.
 
 (** [loops_inv] is a natural transformation. *)
 Global Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.

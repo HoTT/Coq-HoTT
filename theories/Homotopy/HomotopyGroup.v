@@ -177,13 +177,23 @@ Defined.
 Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
   := ltac:(destruct n; exact _).
 
+Definition groupiso_pi_functor (n : nat)
+  {X Y : pType} (e : X <~>* Y)
+  : Pi n.+1 X $<~> Pi n.+1 Y
+  := emap (Pi n.+1) e.
+
 (* The homotopy groups of a loop space are those of the space shifted.  *)
+Definition groupiso_pi_loops n X : Pi n.+2 X $<~> Pi n.+1 (loops X).
+Proof.
+  snrapply (groupiso_pi_functor 0).
+  apply unfold_iterated_loops'.
+Defined.
+
 Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
 Proof.
   destruct n.
-  all:apply equiv_O_functor.
-  all:apply pointed_equiv_equiv.
-  all:apply unfold_iterated_loops'.
+  1: reflexivity.
+  rapply groupiso_pi_loops.
 Defined.
 
 Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
@@ -192,16 +202,11 @@ Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
         o (pi_loops n X).
 Proof.
   destruct n; intros x.
-  all:refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
-  all:apply O_functor_homotopy.
-  - reflexivity.
-  - exact (pointed_htpy (unfold_iterated_fmap_loops n.+1 f)).
+  1: reflexivity.
+  refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
+  apply O_functor_homotopy.
+  exact (pointed_htpy (unfold_iterated_fmap_loops n.+1 f)).
 Defined.
-
-Definition groupiso_pi_functor (n : nat)
-  {X Y : pType} (e : X <~>* Y)
-  : Pi n.+1 X $<~> Pi n.+1 Y
-  := emap (Pi n.+1) e.
 
 (** Homotopy groups preserve products *)
 Lemma pi_prod (X Y : pType) {n : nat}
