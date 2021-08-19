@@ -68,6 +68,9 @@ Class PreservesLimits (A B J : Type) `{Is1Cat A, IsGraph J, !HasLimit A J,
   equiv_preserveslimits (x : Fun01 J A)
     : F (cat_limit A J x) $<~> cat_limit B J (fun01_compose F x).
 
+
+
+
 (** This seems to be too strong *)
 (* 
 (** Property of a functor preserving limits. *)
@@ -79,15 +82,16 @@ Class PreservesLimits (A B J : Type) `{Is1Cat A, IsGraph J, !HasLimit A J,
 
 (** Properties of limits (and colimits) *)
 
-(** Functors with left adjoints preserve limits *)
-Global Instance preserveslimits_right_adjoint (A B J : Type)
+(** Right adjoints preserve limits *)
+Global Instance preserveslimits_right_adjoint `{Funext} (A B J : Type)
   `{Is1Cat A, !HasEquivs A, !Is1Cat_Strong A, Is01Cat J, !HasLimit A J,
-    HasEquivs B, !HasLimit B J}
+    HasEquivs B, !HasMorExt B, !HasLimit B J}
   (L : Fun11 A B) (R : Fun11 B A) (adj : L ⊣ R)
   : PreservesLimits B A J R.
 Proof.
   hnf.
   intros K.
+  (** Uses yoneda *)
   srapply yon_equiv.
   refine (natequiv_compose (natequiv_adjunction_l
     (adjunction_cat_limit _ _) (fun11_fun01_postcomp R K)) _).
@@ -101,15 +105,38 @@ Proof.
   1: apply natequiv_functor_assoc_ff_f.
   refine (natequiv_compose _ _).
   2: apply natequiv_functor_assoc_ff_f.
-  rapply natequiv_postwhisker.
-  (** Prove this *)
-(*   , !HasMorExt (Fun01 J B) *)
-(*   2: nrapply is1functor_yon; exact _.
+  (** This is where morphism extensionality and funext is used. *)
+  snrapply natequiv_postwhisker.
+  (** Why can't typeclasses find this? *)
+  4: rapply hasequivs_op.
+  2: rapply is1functor_yon.
+  (** Perhaps it's type for a natequiv_adjointify? *)
   snrapply Build_NatEquiv.
-  { simpl. cbv. *)
-    
-
-Admitted.
+  { intros a. cbn.
+    srapply cate_adjointify.
+    - snrapply Build_NatTrans.
+      1: intro j; exact (Id _).
+      intros i j f.
+      rapply cat_postwhisker.
+      rapply fmap_id.
+    - snrapply Build_NatTrans.
+      1: intro j; exact (Id _).
+      intros i j f.
+      rapply cat_prewhisker.
+      rapply gpd_rev.
+      rapply fmap_id.
+    - intros i.
+      rapply cat_idl.
+    - intros j.
+      rapply cat_idr. }
+  intros a a' f.
+  unfold trans_comp.
+  unfold cate_adjointify.
+  refine ((cate_buildequiv_fun _ $@R _) $@ _).
+  refine (_ $@ (_ $@L _)).
+  2: symmetry; rapply cate_buildequiv_fun.
+  intros j; exact (cat_idr _ $@ (cat_idl _)^$).
+Defined.
 
 (* (** Limits commute with functors which have a right adjoint. *)
 (** This can be written down as a natural equivalence, but specifying the categories involved is a bit tricky, whilst still trying to keep the coherence low. *)

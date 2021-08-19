@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
+Require Import Basics Types.Sigma.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.Induced.
@@ -19,6 +19,9 @@ Coercion fun01_F : Fun01 >-> Funclass.
 Global Existing Instance fun01_is0functor.
 
 Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
+
+Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
+  : _  <~> Fun01 A B := ltac:(issig).
 
 (* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
@@ -109,6 +112,34 @@ Proof.
   - intros [gamma ?] r s a; cbn in *.
     refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
 Defined.
+
+(** TODO: This is basically an axiom so far *)
+(** Funext seems to be needed to get morphism extensionality in the functor category. *)
+Global Instance hasmorext_fun01 `{Funext} (A B : Type) `{Is01Cat A} `{HasEquivs B}
+  `{!HasMorExt B}
+  : HasMorExt (Fun01 A B).
+Proof.
+  snrapply Build_HasMorExt.
+  intros F G i j.
+  destruct i.
+Admitted.
+(* 
+  srapply isequiv_adjointify.
+  { intros p.
+    srapply (equiv_ap' (issig_NatTrans _ _)^-1 _ _)^-1.
+    srapply equiv_path_sigma.
+    srefine (_;_).
+    { funext x.
+      rapply path_hom.
+      rapply p. }
+    hnf.
+    simpl.
+    cbv.
+    destruct ( apD10^-1 (fun x : A => GpdHom_path^-1 (p x))).
+     *)
+    
+    
+  
 
 (** ** Categories of 1-coherent 1-functors *)
 

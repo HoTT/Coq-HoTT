@@ -32,6 +32,10 @@ Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
 Global Existing Instance is1natural_nattrans.
 Coercion trans_nattrans : NatTrans >-> Transformation.
 
+Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+  {ff : Is0Functor F} {fg : Is0Functor G}
+  : _ <~> NatTrans F G := ltac:(issig).
+
 (** The transposed natural square *)
 Definition isnat_tr {A B : Type} `{IsGraph A} `{Is1Cat B}
       {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
@@ -162,6 +166,10 @@ Arguments NatEquiv {A B} {isgraph_A}
 Arguments Build_NatEquiv {A B} {isgraph_A}
   {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
   F G {is0functor_F} {is0functor_G} e isnat_e: rename.
+
+Definition issig_NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : _ <~> NatEquiv F G := ltac:(issig).
 
 Global Existing Instance is1natural_natequiv.
 Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
