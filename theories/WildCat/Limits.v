@@ -42,34 +42,19 @@ Section ConstantFunctor.
       reflexivity.
   Defined.
 
+  Definition fun11_diagonal : Fun11 A (Fun01 J A)
+    := Build_Fun11 _ _ diagonal.
+
   (** The property of having a [J]-shaped limit. *)
   Class HasLimit := {
-    cat_limit : Fun01 J A -> A ;
-    is0functor_cat_limit : Is0Functor cat_limit ;
-    is1functor_cat_limit : Is1Functor cat_limit ;
-    adjunction_cat_limit : Adjunction diagonal cat_limit;
+    cat_limit : Fun11 (Fun01 J A) A ;
+    adjunction_cat_limit : Adjunction fun11_diagonal cat_limit;
   }.
-
-  Global Existing Instances
-    is0functor_cat_limit
-    is1functor_cat_limit.
 
   Class HasColimit := {
-    cat_colimit : Fun01 J A -> A ;
-    is0functor_cat_colimit : Is0Functor cat_colimit ;
-    is1functor_cat_colimit : Is1Functor cat_colimit ;
-    adjunction_cat_colimit : Adjunction cat_colimit diagonal ;
+    cat_colimit : Fun11 (Fun01 J A) A ;
+    adjunction_cat_colimit : Adjunction cat_colimit fun11_diagonal ;
   }.
-
-  Global Existing Instances
-    is0functor_cat_colimit
-    is1functor_cat_colimit.
-
-  Definition fun11_cat_limit `{HasLimit} : Fun11 (Fun01 J A) A
-    := Build_Fun11 _ _ cat_limit.
-
-  Definition fun11_cat_colimit `{HasColimit} : Fun11 (Fun01 J A) A
-    := Build_Fun11 _ _ cat_colimit.
 
 End ConstantFunctor.
 
@@ -204,28 +189,35 @@ Proof.
   exact (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
-(** (Co)limits in functor categories *)
+(** ** (Co)limits in functor categories *)
+
 Global Instance haslimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
   `{!HasLimit B J}
   : HasLimit (Fun01 A B) J.
 Proof.
 Admitted.
 
+Global Instance hascolimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
+  `{!HasColimit B J}
+  : HasColimit (Fun01 A B) J.
+Proof.
+Admitted.
+
 (** ** Preservation of (co)limits by (co)limits *)
 
-Lemma preserveslimits_cat_limit
-  `{Funext}
-  (A I J : Type) `{HasEquivs A, !Is1Cat_Strong A, IsGraph I, IsGraph J}
+Lemma preserveslimits_cat_limit `{Funext} (A I J : Type)
+  `{HasEquivs A, !Is1Cat_Strong A, Is01Cat I, Is01Cat J, !HasMorExt A}
   `{!HasLimit A I, !HasLimit A J}
-  : PreservesLimits _ _ I (fun11_cat_limit A J).
+  : PreservesLimits _ _ I (cat_limit A J).
 Proof.
-  nrapply (preserveslimits_right_adjoint _ _ _ _ _).
-  5: exact (adjunction_cat_limit A J).
+  exact (preserveslimits_right_adjoint _ _ _ _ _ (adjunction_cat_limit A J)).
 Defined.
-  10: exact _.
-  4: exact _.
-  2: exact _.
 
-
-
+Lemma preservescolimits_cat_colimit `{Funext} (A I J : Type)
+  `{HasEquivs A, !Is1Cat_Strong A, Is01Cat I, Is01Cat J, !HasMorExt A}
+  `{!HasColimit A I, !HasColimit A J}
+  : PreservesColimits _ _ I (cat_colimit A J).
+Proof.
+  exact (preservescolimits_left_adjoint _ _ _ _ _ (adjunction_cat_colimit A J)).
+Defined.
 

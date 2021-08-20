@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics.
-Require Import HoTT.Types.
+Require Import Basics Types WildCat.
 Require Import HSet TruncType.
 Require Export HIT.Coeq.
 Local Open Scope path_scope.
@@ -156,10 +155,10 @@ equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pusho
 (** ** Functoriality *)
 
 Definition functor_pushout
-           {A B C} {f : A -> B} {g : A -> C}
-           {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
-           (h : A -> A') (k : B -> B') (l : C -> C')
-           (p : k o f == f' o h) (q : l o g == g' o h)
+  {A B C} {f : A -> B} {g : A -> C}
+  {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
+  (h : A -> A') (k : B -> B') (l : C -> C')
+  (p : k o f == f' o h) (q : l o g == g' o h)
   : Pushout f g -> Pushout f' g'.
 Proof.
   unfold Pushout; srapply functor_coeq.
@@ -170,6 +169,28 @@ Proof.
   - intros a; cbn.
     apply ap, q.
 Defined.
+
+Lemma functor_pushout_homotopic 
+  {A B C : Type} {f : A $-> B} {g : A $-> C}
+  {A' B' C' : Type} {f' : A' $-> B'} {g' : A' $-> C'}
+  {h h' : A $-> A'} {k k' : B $-> B'} {l l' : C $-> C'}
+  {p : k $o f $== f' $o h} {q : l $o g $== g' $o h}
+  {p' : k' $o f $== f' $o h'} {q' : l' $o g $== g' $o h'}
+  (t : h $== h') (u : k $== k') (v : l $== l')
+  (i : p $@ (f' $@L t) == (u $@R f) $@ p')
+  (j : q $@ (g' $@L t) == (v $@R g) $@ q')
+  : functor_pushout h k l p q $== functor_pushout h' k' l' p' q'.
+Proof.
+  srapply functor_coeq_homotopy.
+  1: exact t.
+  1: exact (functor_sum_homotopic u v).
+  1,2: intros b; simpl.
+  1,2: refine (_ @ ap_pp _ _ _ @ ap _ (ap_compose _ _ _)^).
+  1,2: refine ((ap_pp _ _ _)^ @ ap _ _^).
+  1: exact (i b).
+  exact (j b).
+Defined.
+
 
 (** ** Equivalences *)
 
@@ -519,3 +540,53 @@ Proof.
       exact (concat_Ap (pglue' f g) (eissect g a)) ).
   - intros c; reflexivity.
 Defined.
+
+Inductive Span := SpanSource | SpanTarget1 | SpanTarget2.
+Inductive SpanHom : Span -> Span -> Type :=
+| spanhom_s : SpanHom SpanSource SpanSource
+| spanhom_t1 : SpanHom SpanTarget1 SpanTarget1
+| spanhom_t2 : SpanHom SpanTarget2 SpanTarget2
+| spanhom_map1 : SpanHom SpanSource SpanTarget1
+| spanhom_map2 : SpanHom SpanSource SpanTarget2
+.
+
+Global Instance isgraph_span : IsGraph Span :=
+  Build_IsGraph Span SpanHom.
+
+(** Specific instances of having colimits for Type *)
+Global Instance hascolimits_pushout_type : HasColimit Type Span.
+Proof.
+  snrapply Build_HasColimit.
+  { snrapply Build_Fun11.
+    - intros D.
+      exact (Pushout (fmap D spanhom_map1) (fmap D spanhom_map2)).
+    - snrapply Build_Is0Functor.
+      intros D1 D2 [f n].
+      srapply functor_pushout.
+      1-3: exact (f _).
+      1,2: exact (n _ _ _).
+    - snrapply Build_Is1Functor.
+      + intros D1 D2 f g p.
+        srapply (functor_pushout_homotopic (p _) (p _) (p _)).
+        { intros x.
+          simpl.
+          Opaque ap concat.
+          cbv.
+          hnf in p.
+          cbv in p.
+          epos(p _ x)
+        
+        snrapply functor_coeq_homotopy.
+        1: exact (p _).
+        1: exact (functor_sum_homotopic (p _) (p _)).
+        { simpl.
+          intros x.
+          cbv in p.
+          
+          cbn.
+    
+      
+      
+
+
+

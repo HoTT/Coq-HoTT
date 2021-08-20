@@ -244,3 +244,13 @@ Proof.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
   refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
+
+(** * Morphisms of natural transformations - Modifications *)
+
+Record Modification := {
+  
+
+}.
+
+
+

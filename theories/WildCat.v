@@ -1,4 +1,4 @@
-(* Basic theory *)
+(* Theory *)
 Require Export WildCat.Adjoint.
 Require Export WildCat.Core.
 Require Export WildCat.Equiv.
@@ -9,6 +9,7 @@ Require Export WildCat.FunctorCat.
 Require Export WildCat.NatTrans.
 Require Export WildCat.Yoneda.
 Require Export WildCat.Square.
+Require Export WildCat.Limits.
 (* Examples *)
 Require Export WildCat.Type.
 Require Export WildCat.Paths.

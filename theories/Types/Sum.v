@@ -403,6 +403,16 @@ Section FunctorSum.
 
 End FunctorSum.
 
+Definition functor_sum_homotopic {A A' B B' : Type}
+  {f f' : A -> A'} {g g' : B -> B'}
+  : f == f' -> g == g' -> functor_sum f g == functor_sum f' g'.
+Proof.
+  intros p q.
+  intros [a|b].
+  - exact (ap inl (p a)).
+  - exact (ap inr (q b)).
+Defined.
+
 (** ** "Unfunctorial action" *)
 
 (** Not every function [A + B -> A' + B'] is of the form [functor_sum f g].  However, this is the case if it preserves the summands, i.e. if it maps [A] into [A'] and [B] into [B'].  More generally, if a function [A + B -> A' + B'] maps [A] into [A'] only, then we can extract from it a function [A -> A'].  Since these operations are a sort of inverse to [functor_sum], we call them [unfunctor_sum_*]. *)
