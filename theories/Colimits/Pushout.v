@@ -543,15 +543,34 @@ Defined.
 
 Inductive Span := SpanSource | SpanTarget1 | SpanTarget2.
 Inductive SpanHom : Span -> Span -> Type :=
-| spanhom_s : SpanHom SpanSource SpanSource
-| spanhom_t1 : SpanHom SpanTarget1 SpanTarget1
-| spanhom_t2 : SpanHom SpanTarget2 SpanTarget2
+| spanhom_id : forall x, SpanHom x x
 | spanhom_map1 : SpanHom SpanSource SpanTarget1
 | spanhom_map2 : SpanHom SpanSource SpanTarget2
 .
 
+Definition spanhom_comp (x y z : Span)
+  : SpanHom y z -> SpanHom x y -> SpanHom x z.
+Proof.
+  intros f.
+  destruct f.
+  1: exact idmap.
+  - intros g.
+    inversion g.
+    apply spanhom_map1.
+  - intros g.
+    inversion g.
+    apply spanhom_map2.
+Defined.
+
 Global Instance isgraph_span : IsGraph Span :=
   Build_IsGraph Span SpanHom.
+
+Global Instance is01cat_span : Is01Cat Span
+  := Build_Is01Cat _ _ spanhom_id spanhom_comp.
+
+(** TODO: REMOVE *)
+Axiom FUBAR : Empty.
+Ltac sorry := rapply (Empty_rec FUBAR).
 
 (** Specific instances of having colimits for Type *)
 Global Instance hascolimits_pushout_type : HasColimit Type Span.
@@ -560,33 +579,97 @@ Proof.
   { snrapply Build_Fun11.
     - intros D.
       exact (Pushout (fmap D spanhom_map1) (fmap D spanhom_map2)).
-    - snrapply Build_Is0Functor.
+    - sorry.
+    - sorry. }
+  sorry.
+Defined.
+   (* - snrapply Build_Is0Functor.
       intros D1 D2 [f n].
       srapply functor_pushout.
       1-3: exact (f _).
       1,2: exact (n _ _ _).
     - snrapply Build_Is1Functor.
       + intros D1 D2 f g p.
-        srapply (functor_pushout_homotopic (p _) (p _) (p _)).
-        { intros x.
-          simpl.
-          Opaque ap concat.
-          cbv.
-          hnf in p.
-          cbv in p.
-          epos(p _ x)
-        
-        snrapply functor_coeq_homotopy.
-        1: exact (p _).
-        1: exact (functor_sum_homotopic (p _) (p _)).
-        { simpl.
-          intros x.
-          cbv in p.
-          
-          cbn.
-    
-      
-      
+        srapply (functor_pushout_homotopic (p _) (p _) (p _)). *)
+(* Admitted. *)
 
+Lemma Build_SpanIn (X : Type) {A B C : X} `{Is1Cat X} (f : A $-> B) (g : A $-> C)
+  : Fun01 Span X.
+Proof.
+  snrapply Build_Fun01.
+  1: exact (Span_rect _ A B C).
+  apply Build_Is0Functor.
+  intros a b [].
+  1: exact (Id _).
+  1: exact f.
+  exact g.
+Defined.
 
+(* Goal Funext -> Type.
+intro funext.
+pose (p := preservescolimits_cat_colimit Type Span Span).
+  equiv_preservescolimits (PreservesColimits:=p) (cat_colimit Type Span) *)
+
+(** ** 3x3 lemma for pushouts *)
+Section Pushout3x3.
+
+(* The 3x3 Diagram looks like the following:
+    A00 <--- A02 ---> A04
+     ^     // ^ \\     ^
+     |    //  |  \\    |
+     |   //   |   \\   |
+    A20 <--- A22 ---> A24
+     |   \\   |   //   |
+     |    \\  |  //    |
+     V     \\ V //     V
+    A40 <--- A42 ---> A44
+The labels look like this:
+    A00 f01 A02 f03 A04
+    f10 H11 f12 H13 f14
+    A20 f21 A22 f23 A24
+    f30 H31 f32 H33 f34
+    A40 f41 A42 f43 A44 *)
+
+  Context `{Funext}
+    (A00 A02 A04 A20 A22 A24 A40 A42 A44 : Type)
+    (f01 : A02 -> A00) (f03 : A02 -> A04)
+    (f10 : A20 -> A00) (f12 : A22 -> A02) (f14 : A24 -> A04)
+    (f21 : A22 -> A20) (f23 : A22 -> A24)
+    (f30 : A20 -> A40) (f32 : A22 -> A42) (f34 : A24 -> A44)
+    (f41 : A42 -> A40) (f43 : A42 -> A44)
+    (H11 : f01 o f12 $== f10 o f21) (H13 : f03 o f12 $== f14 o f23)
+    (H31 : f41 o f32 $== f30 o f21) (H33 : f43 o f32 $== f34 o  f23).
+
+  Let AX0 : Fun01 Span Type := Build_SpanIn Type f10 f30.
+  Let AX2 : Fun01 Span Type := Build_SpanIn Type f12 f32.
+  Let AX4 : Fun01 Span Type := Build_SpanIn Type f14 f34.
+  Let AXO : Fun01 Span (Fun01 Span Type).
+  Proof.
+    srapply Build_SpanIn.
+    1: exact AX2.
+    1: exact AX0.
+    1: exact AX4.
+    (** The types let coq infer the correct hypotheses .*)
+    1,2: snrapply Build_NatTrans.
+    1,3: intros []; cbn; assumption.
+    1,2: by intros a a' [].
+  Defined.
+
+  Theorem equiv_pushout3x3
+    : Pushout
+        (functor_pushout f21 f01 f41 H11 H31)
+        (functor_pushout f23 f03 f43 H13 H33)
+    <~> Pushout
+        (functor_pushout f12 f10 f14 H11^$ H13^$)
+        (functor_pushout f32 f30 f34 H31^$ H33^$).
+  Proof.
+    Opaque functor_pushout Pushout.
+  
+    pose (equiv_preservescolimits (PreservesColimits:= preservescolimits_cat_colimit Type Span Span) AXO).
+    pose (p := cat_colimit Type Span (cat_colimit (Fun01 Span Type) Span AXO)).
+    cbv in p.
+    cbv in c.
+  Defined.
+
+End Pushout3x3.
 

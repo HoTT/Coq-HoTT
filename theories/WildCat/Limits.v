@@ -191,6 +191,8 @@ Defined.
 
 (** ** (Co)limits in functor categories *)
 
+(** These are computed pointwise *)
+
 Global Instance haslimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
   `{!HasLimit B J}
   : HasLimit (Fun01 A B) J.
@@ -201,6 +203,10 @@ Global Instance hascolimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J
   `{!HasColimit B J}
   : HasColimit (Fun01 A B) J.
 Proof.
+  snrapply Build_HasColimit.
+  { snrapply Build_Fun11. 
+    { intros F.
+      { 
 Admitted.
 
 (** ** Preservation of (co)limits by (co)limits *)

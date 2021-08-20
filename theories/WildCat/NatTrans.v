@@ -5,8 +5,12 @@ Require Import WildCat.Square.
 
 (** ** Natural transformations *)
 
-Definition Transformation {A B : Type} `{IsGraph B} (F : A -> B) (G : A -> B)
+Definition Transformation {A : Type} {B : A -> Type} `{forall x, IsGraph (B x)}
+  (F G : forall (x : A), B x)
   := forall (a : A), F a $-> G a.
+
+(** This let's us apply transformations to things. *)
+Identity Coercion fun_trans : Transformation >-> Funclass.
 
 Notation "F $=> G" := (Transformation F G).
 
@@ -174,7 +178,7 @@ Definition issig_NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
 Global Existing Instance is1natural_natequiv.
 Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
 
-Coercion nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
   : NatEquiv F G -> NatTrans F G.
 Proof.
@@ -182,6 +186,9 @@ Proof.
   nrapply Build_NatTrans.
   rapply (is1natural_natequiv _ _ alpha).
 Defined.
+
+(** Throws a warning, but can probably be ignored. *)
+Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
 
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
@@ -247,10 +254,18 @@ Defined.
 
 (** * Morphisms of natural transformations - Modifications *)
 
-Record Modification := {
+(* Definition IsModification {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+  {ff : Is0Functor F} {fg : Is0Functor G}
+  (alpha beta : NatTrans F G) (gamma : alpha $=> beta) : Type.
+  fmap (cat_postcomp _ _)
+  is0functor_precomp
+  is0functor_postcomp
+
+Record Modification {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -> B}
+  {ff : Is0Functor F} {fg : Is0Functor G} (alpha beta : NatTrans F G) := {
+  trans_modification : alpha $=> beta ;
   
-
 }.
-
+ *)
 
 
