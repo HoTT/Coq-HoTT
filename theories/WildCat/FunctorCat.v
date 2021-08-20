@@ -137,9 +137,6 @@ Admitted.
     cbv.
     destruct ( apD10^-1 (fun x : A => GpdHom_path^-1 (p x))).
      *)
-    
-    
-  
 
 (** ** Categories of 1-coherent 1-functors *)
 

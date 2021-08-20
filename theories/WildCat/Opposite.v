@@ -4,6 +4,7 @@ Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.NatTrans.
+Require Import WildCat.FunctorCat.
 
 (** ** Opposite categories *)
 
@@ -126,28 +127,34 @@ Proof.
 Defined.
 *)
 
-(** Opposite functors *)
+(** ** Opposite functors *)
 
-Global Instance is0functor_op  A `{Is01Cat A} B `{Is01Cat B}
-       (F : A -> B) `{x : !Is0Functor F}
-  : Is0Functor (F : A ^op -> B ^op).
+Global Instance is0functor_op A B (F : A -> B)
+  `{IsGraph A, IsGraph B, x : !Is0Functor F}
+  : Is0Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is0Functor.
-  unfold op.
-  cbn.
   intros a b.
-  apply fmap.
+  cbn; apply fmap.
   assumption.
 Defined.
 
-Global Instance is1functor_op A B `{Is1Cat A} `{Is1Cat B}
-       (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+Global Instance is1functor_op A B (F : A -> B)
+  `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}
   : Is1Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is1Functor; unfold op in *; cbn in *.
   - intros a b; rapply fmap2; assumption.
   - intros a; exact (fmap_id F a).
   - intros a b c f g; exact (fmap_comp F g f).
+Defined.
+
+(** Bundled opposite functors *)
+Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
+  : Fun01 A B -> Fun01 A^op B^op.
+Proof.
+  intros F.
+  rapply (Build_Fun01 A^op B^op F).
 Defined.
 
 (** Opposite natural transformations *)
@@ -206,5 +213,16 @@ Proof.
   snrapply Build_HasMorExt.
   intros a b f g.
   refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
+Defined.
+
+Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
+Proof.
+  intros [a n].
+  snrapply Build_NatEquiv.
+  { intro x.
+    exact (a x). }
+  rapply is1nat_op.
 Defined.
 
