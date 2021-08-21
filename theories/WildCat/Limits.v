@@ -7,6 +7,7 @@ Require Import WildCat.Equiv.
 Require Import WildCat.Opposite.
 Require Import WildCat.Yoneda.
 Require Import WildCat.Type.
+Require Import WildCat.Prod.
 
 (** Limits and colimits *)
 
@@ -149,7 +150,7 @@ Class PreservesColimits (A B J : Type) `{Is1Cat A, IsGraph J, !HasColimit A J,
 (** Left adjoints preserve colimits *)
 Global Instance preservescolimits_left_adjoint `{Funext} (A B J : Type)
   `{Is1Cat A, !HasEquivs A, Is01Cat J, !HasColimit A J,
-    HasEquivs B,  !Is1Cat_Strong B, !HasMorExt A, !HasColimit B J}
+    HasEquivs B, !HasMorExt B, !Is1Cat_Strong B, !HasMorExt A, !HasColimit B J}
   (L : Fun11 A B) (R : Fun11 B A) (adj : L ⊣ R)
   : PreservesColimits A B J L.
 Proof.
@@ -189,14 +190,134 @@ Proof.
   exact (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
+(** * Properties of diagonal functor *)
+
+(** The diagonal functor has various useful properties we would like to use. *)
+
+Definition fun11_eval_fun01 {A B : Type}
+  `{IsGraph A, Is1Cat B}
+  (a : A)
+  : Fun11 (Fun01 A B) B.
+Proof.
+  snrapply Build_Fun11.
+  - intros F.
+    exact (F a).
+  - snrapply Build_Is0Functor.
+    intros F G [t n].
+    exact (t a).
+  - snrapply Build_Is1Functor.
+    + intros F G u v r.
+      exact (r a).
+    + reflexivity.
+    + reflexivity.
+Defined.
+
+
+Section Swap.
+
+  Context (A B C : Type)
+    `{Is1Cat A, Is1Cat B, Is1Cat C}.
+
+  (** The swap functor (for Fun01). *)
+  Definition fun11_swap_fun01
+    : Fun11 (Fun01 A (Fun01 B C)) (Fun01 B (Fun01 A C)).
+  Proof.
+    snrapply Build_Fun11.
+    { intros F.
+      snrapply Build_Fun01.
+      { intros b.
+        snrapply Build_Fun01.
+        { intros a.
+          exact (F a b). }
+        apply Build_Is0Functor.
+        intros a a' f.
+        exact (fmap F f b). }
+      snrapply Build_Is0Functor.
+      intros b b' g.
+      simpl.
+      snrapply Build_NatTrans.
+      { intros a.
+        exact (fmap (F a) g). }
+      hnf.
+      intros a a' f.
+      symmetry.
+      cbn; set (fmap F f) as r.
+      exact (isnat r g). }
+    { snrapply Build_Is0Functor.
+      intros F G n.
+      snrapply Build_NatTrans.
+      { intros b.
+        snrapply Build_NatTrans.
+        { intros a.
+          exact (n a b). }
+        intros a a' f.
+        exact (isnat n f b). }
+      intros b b' g a.
+      exact (isnat (n a) g). }
+    unshelve econstructor; simpl.
+    - intros F G n m p b a.
+      exact (p a b).
+    - intros F b a.
+      exact (Id _).
+    - intros F G K n m b a.
+      exact (Id _).
+  Defined.
+
+End Swap.
+
+
 (** ** (Co)limits in functor categories *)
 
 (** These are computed pointwise *)
+
+(** Proof sketch:
+We use the swap equivalence and its interaction with diagonal functors to construct the appropriate (co)limit functor.
+
+Let C, D be cats. J be an indexing shape (basically a cat). We have the following functors:
+
+   Δ  : D -> [J,D]             (diagonal functor from D)
+   Δ* : [C,D] -> [C,[J,D]]     (pullback of diagonal functor)
+ lim  : [J,D] -> D             (limit functor)
+ lim* : [C,[J,D]] -> [C,D]     (pullback of limit functor)
+
+Observe that Δ ⊣ lim and therefore Δ* ⊣ lim*.
+Now we also have the following functors:
+
+   Δ' : [C,D] -> [J,[C,D]]     (diagonal functor from [C,D])
+s_C,J : [C,[J,D]] -> [J,[C,D]] (argument swap functor)
+
+Note that s_C,J is an equivalence, and s_C,J ⊣ s_J,C
+Importantly, the swap functor interacts with the diagonal as follows:
+
+(★)  s_C,J o Δ* ≃ Δ'
+
+Now we need to show that (lim* o s_J,C) is a limit functor. i.e. we need to have the following adjunction:
+
+   Δ' ⊣ lim* o s_J,C      i.e.   [J,[C,D]](Δ'x,y) ≃ [C,D](x,lim*(s_J,C y))
+
+This can be calculated:
+
+  [J,[C,D]](Δ'x,y) ≃ [J,[C,D]]((s_C,J (Δ*x)),y)    (via (★)) 
+                   ≃ [C,[J,D]](Δ*x,(s_J,C y))      (via s_C,J ⊣ s_J,C)
+                   ≃ [C,D](x,lim*(s_J,C y))        (via Δ* ⊣ lim* )
+
+  Perhaps a more direct calculation would be the following:
+  
+             Δ' ⊣ lim* o s_J,C
+ <=> s_C,J o Δ* ⊣ lim* o s_J,C
+ <=> (Δ* ⊣ lim* ) o (s_C,J o s_J,C) (composition of adjoints)
+
+*)
 
 Global Instance haslimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
   `{!HasLimit B J}
   : HasLimit (Fun01 A B) J.
 Proof.
+  snrapply Build_HasLimit.
+  { nrefine (fun11_compose _ (fun11_swap_fun01 J A B)).
+    apply fun11_fun01_postcomp.
+    rapply cat_limit. }
+  
 Admitted.
 
 Global Instance hascolimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
@@ -209,11 +330,14 @@ Proof.
       { 
 Admitted.
 
+
 (** ** Preservation of (co)limits by (co)limits *)
 
 Lemma preserveslimits_cat_limit `{Funext} (A I J : Type)
   `{HasEquivs A, !Is1Cat_Strong A, Is01Cat I, Is01Cat J, !HasMorExt A}
   `{!HasLimit A I, !HasLimit A J}
+  (** You would think we have a lemma about this but our Fun01 category is too incoherent to do this. The issue lies with the 2-cells which are the underlying transformations of the expected modifications between natural transformations. The extra cylinder condition of a modification is required in order to show that Fun01 can create (co)limits pointwise, but this would require extra coherence assumptions in many places. Perhaps in the future this can be done without being too destructive, but it seems easier just to take this as an assumption for now. *)
+  `{!HasLimit (Fun01 J A) I}
   : PreservesLimits _ _ I (cat_limit A J).
 Proof.
   exact (preserveslimits_right_adjoint _ _ _ _ _ (adjunction_cat_limit A J)).
@@ -222,6 +346,8 @@ Defined.
 Lemma preservescolimits_cat_colimit `{Funext} (A I J : Type)
   `{HasEquivs A, !Is1Cat_Strong A, Is01Cat I, Is01Cat J, !HasMorExt A}
   `{!HasColimit A I, !HasColimit A J}
+  (** See comment above. *)
+  `{!HasColimit (Fun01 J A) I}
   : PreservesColimits _ _ I (cat_colimit A J).
 Proof.
   exact (preservescolimits_left_adjoint _ _ _ _ _ (adjunction_cat_colimit A J)).

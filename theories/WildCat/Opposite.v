@@ -161,7 +161,7 @@ Defined.
 
 Definition transformation_op {A} {B} `{Is01Cat B}
            (F : A -> B) (G : A -> B) (alpha : F $=> G)
-  : @Transformation A^op B^op _
+  : @Transformation A^op (fun _ => B^op) _
                      (G : A^op -> B^op) (F : A^op -> B^op).
 Proof.
   unfold op in *.

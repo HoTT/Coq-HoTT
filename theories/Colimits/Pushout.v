@@ -593,6 +593,10 @@ Defined.
         srapply (functor_pushout_homotopic (p _) (p _) (p _)). *)
 (* Admitted. *)
 
+(** TODO: move *)
+(* Lemma hascolimits_fun01_type
+ *)
+
 Lemma Build_SpanIn (X : Type) {A B C : X} `{Is1Cat X} (f : A $-> B) (g : A $-> C)
   : Fun01 Span X.
 Proof.
@@ -664,12 +668,12 @@ The labels look like this:
         (functor_pushout f32 f30 f34 H31^$ H33^$).
   Proof.
     Opaque functor_pushout Pushout.
-  
+  (* 
     pose (equiv_preservescolimits (PreservesColimits:= preservescolimits_cat_colimit Type Span Span) AXO).
     pose (p := cat_colimit Type Span (cat_colimit (Fun01 Span Type) Span AXO)).
     cbv in p.
-    cbv in c.
-  Defined.
+    cbv in c. *)
+  Abort.
 
 End Pushout3x3.
 

@@ -135,31 +135,48 @@ Section AdjunctionData.
 End AdjunctionData.
 
 (** ** Building adjunctions *)
+
+(** There are various ways to build an adjunction. *)
+
+(** A natural equivalence between functors [D -> Type] which is also natural in the left. *)
+Definition Build_Adjunction_natequiv_nat_left
+  {C D : Type} (F : C -> D) (G : D -> C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} 
+  (e : forall x, NatEquiv (opyon (F x)) (opyon x o G))
+  (is1nat_e : forall y, Is1Natural (A := C^op) (yon y o F)
+      (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
+      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
+      (yon (G y)) (fun x => e _ y))
+  : Adjunction F G.
+Proof.
+  snrapply Build_Adjunction.
+  1: exact (fun x => e x).
+  1: exact is1nat_e.
+  intros x; apply (is1natural_natequiv _ _ (e x)).
+Defined.
+
+(** A natural equivalence between functors [C^op -> Type] which is also natural in the left. *)
+Definition Build_Adjunction_natequiv_nat_right
+  {C D : Type} (F : C -> D) (G : D -> C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} 
+  (e : forall y, NatEquiv (A := C^op) (yon y o F) (yon (G y))
+    (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y)))
+  (is1nat_e : forall x, Is1Natural (opyon (F x)) (opyon x o G) (fun y => e y x))
+  : Adjunction F G.
+Proof.
+  snrapply Build_Adjunction.
+  1: exact (fun x y => e y x).
+  1: intros y; apply (is1natural_natequiv _ _ (e y)).
+  exact is1nat_e.
+Defined.
+
 Section BuildingAdjunctions.
   (** Our assumptions are no longer fully unbundled. We are using the Fun11 and Cat1 bundled versions of wild categories, since the number of typeclass instances we have is growing ever larger. This also helps coq infer which typeclass instances need to be used. *)
   (** It appears that translating between unit-counit and hom equivalence definitions of adjunction requires morphism extensionality. *)
   Context {C D : Cat1} (F : C $-> D) (G : D $-> C)
     `{!HasMorExt C, !HasMorExt D}.
 
-  (** There are various ways to build an adjunction. *)
-
   (** TODO: A natural equivalence between functors [C^op * D -> Type] *)
-  (** TODO: A natural equivalence between functors [C^op -> Type] which is also natural in the right. *)
-
-  (** A natural equivalence between functors [D -> Type] which is also natural in the left. *)
-  Definition Build_Adjunction_natequiv_nat_left
-    (e : forall x, NatEquiv (opyon (F x)) (opyon x o G))
-    (is1nat_e : forall y, Is1Natural (A := C^op) (yon y o F)
-        (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
-        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
-        (yon (G y)) (fun x => e _ y))
-    : Adjunction F G.
-  Proof.
-    snrapply Build_Adjunction.
-    1: exact (fun x => e x).
-    1: exact is1nat_e.
-    intros x; apply (is1natural_natequiv _ _ (e x)).
-  Defined.
 
   (** From the data of an adjunction: unit, counit, left triangle, right triangle *)
 
@@ -243,15 +260,35 @@ End BuildingAdjunctions.
 
 (** * Properties of adjunctions *)
 
-Lemma adjunction_postcomp (C D J : Type)
-  `{Is1Cat C, Is1Cat D, IsGraph J} (F : Fun11 C D) (G : Fun11 D C)
-  : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣  fun11_fun01_postcomp (A:=J) G.
+Lemma adjunction_postcomp `{Funext} (C D J : Type)
+  `{Is1Cat C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
+  `{!HasMorExt D}
+  : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣ fun11_fun01_postcomp (A:=J) G.
 Proof.
-  intros adj.
+  intros adj. (* 
   srefine (Build_Adjunction_natequiv_nat_left
     (C:=Build_Cat1 _ _ _ _ _) (D:=Build_Cat1 _ _ _ _ _) _ _ _ _).
   { simpl.
-    intros x.
-    refine (natequiv_compose _ (natequiv_opyon_equiv _ _ _)).
+    intros x. *)
+(*     refine (natequiv_compose _ (natequiv_opyon_equiv _ _ _)). *)
+    
 Admitted.
 
+(** We can compose adjunctions. Notice how the middle category must have equivalences. *)
+Lemma adjunction_compose (A B C : Type)
+  (F : A -> B) (G : B -> A) (F' : B -> C) (G' : C -> B)
+  `{Is1Cat A, HasEquivs B, Is1Cat C}
+  `{!Is0Functor F, !Is0Functor G, !Is0Functor F', !Is0Functor G'}
+  : F ⊣ G -> F' ⊣ G' -> F' o F ⊣ G o G'.
+Proof.
+  intros adj1 adj2.
+  snrapply Build_Adjunction_natequiv_nat_right.
+  { intros y.
+    nrefine (natequiv_compose (natequiv_adjunction_l adj1 _) _).
+    exact (natequiv_prewhisker (A:=A^op) (B:=B^op)
+      (natequiv_adjunction_l adj2 y) F). }
+  intros x.
+  rapply is1natural_comp.
+  + rapply (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
+  + rapply is1natural_equiv_adjunction_r.
+Defined.

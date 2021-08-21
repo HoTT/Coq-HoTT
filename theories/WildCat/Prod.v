@@ -155,3 +155,33 @@ Proof.
   apply Build_Is0Functor.
   intros ? ? f; exact (snd f).
 Defined.
+
+(** Swap functor *)
+
+Definition prod_swap {A B : Type} : A * B -> B * A
+  := fun '(a , b) => (b , a).
+
+Global Instance isequiv_prod_swap {A B}
+  : IsEquiv (@prod_swap A B)
+  := Build_IsEquiv _ _ prod_swap prod_swap
+    (fun _ => idpath) (fun _ => idpath) (fun _ => idpath).
+
+Global Instance is0functor_prod_swap {A B : Type} `{IsGraph A, IsGraph B}
+  : Is0Functor (@prod_swap A B).
+Proof.
+  snrapply Build_Is0Functor.
+  intros a b.
+  apply prod_swap.
+Defined.
+
+Global Instance is1functor_prod_swap {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is1Functor (@prod_swap A B).
+Proof.
+  snrapply Build_Is1Functor.
+  - intros a b f g.
+    apply prod_swap.
+  - intros a.
+    reflexivity.
+  - reflexivity.
+Defined.
+

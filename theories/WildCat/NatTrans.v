@@ -188,7 +188,9 @@ Proof.
 Defined.
 
 (** Throws a warning, but can probably be ignored. *)
+Global Set Warnings "-ambiguous-paths".
 Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
+(* Set Warnings "+ambiguous-paths". *)
 
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
@@ -254,9 +256,27 @@ Defined.
 
 (** * Morphisms of natural transformations - Modifications *)
 
-(* Definition IsModification {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+(* WIP *)
+(*
+Definition IsModification {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G}
-  (alpha beta : NatTrans F G) (gamma : alpha $=> beta) : Type.
+  (alpha beta : NatTrans F G) (gamma : alpha $=> beta)
+  (a a' : A) (f : a $-> a')
+  : Type.
+  
+  refine (
+    Square
+      (isnat alpha f)
+      (isnat beta f)
+      (cat_prewhisker (gamma a') (fmap F f))
+      (cat_postwhisker (fmap G f) (gamma a))).
+  cat_prewhisker (gamma a') (fmap F f) $@ isnat beta f
+  $-> isnat alpha f $@ cat_postwhisker (fmap G f) (gamma a)
+  ).
+  1: exact _.
+  (** TODO: Write down cylinder condition for modification and impose everywhere *)
+  
+  fmap2 (cat_precomp _ _)
   fmap (cat_postcomp _ _)
   is0functor_precomp
   is0functor_postcomp
@@ -266,6 +286,6 @@ Record Modification {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -> B}
   trans_modification : alpha $=> beta ;
   
 }.
- *)
 
+*)
 
