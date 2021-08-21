@@ -4,6 +4,7 @@ Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.NatTrans.
+Require Import WildCat.FunctorCat.
 
 (** ** Opposite categories *)
 
@@ -98,50 +99,20 @@ Proof.
   exact (fun f => f^$).
 Defined.
 
-(** Mike thought co-duals were unnecessary, so I'm commenting this out.
+(** ** Opposite functors *)
 
-Definition co (A : Type) : Type := A.
-(** I wasn't able to make "A ^co" a notation. *)
-
-(** This stops typeclass search from trying to unfold co. *)
-Typeclasses Opaque co.
-
-Global Instance is01cat_co A `{Is01Cat A} : Is01Cat (co A)
-  := Build_Is01Cat A (fun a b => (a $-> b)^op) Id (fun a b c g f => g $o f).
-
-Global Instance is1cat_co A `{Is1Cat A} : Is1Cat (co A).
-Proof.
-  srapply Build_Is1Cat; unfold co in *; cbn.
-  - intros a b.
-    apply is01cat_op.
-    apply is01cat_hom.
-  - intros a b.
-    apply is0coh1gpd_op.
-    apply is0gpd_hom.
-  - intros a b c.
-    srapply Build_Is0Coh1Functor.
-    intros [f g] [h k] [p q].
-    cbn in *.
-    exact (p $o@ q).
-Defined.
-*)
-
-(** Opposite functors *)
-
-Global Instance is0functor_op  A `{Is01Cat A} B `{Is01Cat B}
-       (F : A -> B) `{x : !Is0Functor F}
-  : Is0Functor (F : A ^op -> B ^op).
+Global Instance is0functor_op A B (F : A -> B)
+  `{IsGraph A, IsGraph B, x : !Is0Functor F}
+  : Is0Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is0Functor.
-  unfold op.
-  cbn.
   intros a b.
-  apply fmap.
+  cbn; apply fmap.
   assumption.
 Defined.
 
-Global Instance is1functor_op A B `{Is1Cat A} `{Is1Cat B}
-       (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+Global Instance is1functor_op A B (F : A -> B)
+  `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}
   : Is1Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is1Functor; unfold op in *; cbn in *.
@@ -150,11 +121,19 @@ Proof.
   - intros a b c f g; exact (fmap_comp F g f).
 Defined.
 
+(** Bundled opposite functors *)
+Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
+  : Fun01 A B -> Fun01 A^op B^op.
+Proof.
+  intros F.
+  rapply (Build_Fun01 A^op B^op F).
+Defined.
+
 (** Opposite natural transformations *)
 
 Definition transformation_op {A} {B} `{Is01Cat B}
            (F : A -> B) (G : A -> B) (alpha : F $=> G)
-  : @Transformation A^op B^op _
+  : @Transformation A^op (fun _ => B^op) _
                      (G : A^op -> B^op) (F : A^op -> B^op).
 Proof.
   unfold op in *.
@@ -206,5 +185,16 @@ Proof.
   snrapply Build_HasMorExt.
   intros a b f g.
   refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
+Defined.
+
+Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
+Proof.
+  intros [a n].
+  snrapply Build_NatEquiv.
+  { intro x.
+    exact (a x). }
+  rapply is1nat_op.
 Defined.
 
