@@ -568,10 +568,6 @@ Global Instance isgraph_span : IsGraph Span :=
 Global Instance is01cat_span : Is01Cat Span
   := Build_Is01Cat _ _ spanhom_id spanhom_comp.
 
-(** TODO: REMOVE *)
-Axiom FUBAR : Empty.
-Ltac sorry := rapply (Empty_rec FUBAR).
-
 (** Specific instances of having colimits for Type *)
 Global Instance hascolimits_pushout_type : HasColimit Type Span.
 Proof.
@@ -579,19 +575,15 @@ Proof.
   { snrapply Build_Fun11.
     - intros D.
       exact (Pushout (fmap D spanhom_map1) (fmap D spanhom_map2)).
-    - sorry.
-    - sorry. }
-  sorry.
-Defined.
-   (* - snrapply Build_Is0Functor.
+   - snrapply Build_Is0Functor.
       intros D1 D2 [f n].
       srapply functor_pushout.
       1-3: exact (f _).
       1,2: exact (n _ _ _).
     - snrapply Build_Is1Functor.
       + intros D1 D2 f g p.
-        srapply (functor_pushout_homotopic (p _) (p _) (p _)). *)
-(* Admitted. *)
+        srapply (functor_pushout_homotopic (p _) (p _) (p _)).
+Admitted.
 
 (** TODO: move *)
 (* Lemma hascolimits_fun01_type
@@ -667,10 +659,12 @@ The labels look like this:
         (functor_pushout f12 f10 f14 H11^$ H13^$)
         (functor_pushout f32 f30 f34 H31^$ H33^$).
   Proof.
-    Opaque functor_pushout Pushout.
-  (* 
-    pose (equiv_preservescolimits (PreservesColimits:= preservescolimits_cat_colimit Type Span Span) AXO).
+(*     Opaque functor_pushout Pushout. *)
+  
+(*     pose (equiv_preservescolimits
+      (PreservesColimits:= preservescolimits_cat_colimit Type Span Span) AXO).
     pose (p := cat_colimit Type Span (cat_colimit (Fun01 Span Type) Span AXO)).
+    exact p.
     cbv in p.
     cbv in c. *)
   Abort.

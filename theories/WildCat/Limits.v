@@ -218,42 +218,48 @@ Section Swap.
   Context (A B C : Type)
     `{Is1Cat A, Is1Cat B, Is1Cat C}.
 
-  (** The swap functor (for Fun01). *)
-  Definition fun11_swap_fun01
-    : Fun11 (Fun01 A (Fun01 B C)) (Fun01 B (Fun01 A C)).
+  Definition swap_fun01
+    : Fun01 A (Fun01 B C) -> Fun01 B (Fun01 A C).
   Proof.
-    snrapply Build_Fun11.
-    { intros F.
+    intros F.
+    snrapply Build_Fun01.
+    { intros b.
       snrapply Build_Fun01.
-      { intros b.
-        snrapply Build_Fun01.
-        { intros a.
-          exact (F a b). }
-        apply Build_Is0Functor.
-        intros a a' f.
-        exact (fmap F f b). }
-      snrapply Build_Is0Functor.
-      intros b b' g.
-      simpl.
+      { intros a.
+        exact (F a b). }
+      apply Build_Is0Functor.
+      intros a a' f.
+      exact (fmap F f b). }
+    snrapply Build_Is0Functor.
+    intros b b' g.
+    simpl.
+    snrapply Build_NatTrans.
+    { intros a.
+      exact (fmap (F a) g). }
+    hnf.
+    intros a a' f.
+    symmetry.
+    cbn; set (fmap F f) as r.
+    exact (isnat r g).
+  Defined.
+
+  Global Instance is0functor_swap_fun01 : Is0Functor swap_fun01.
+  Proof.
+    snrapply Build_Is0Functor.
+    intros F G n.
+    snrapply Build_NatTrans.
+    { intros b.
       snrapply Build_NatTrans.
       { intros a.
-        exact (fmap (F a) g). }
-      hnf.
+        exact (n a b). }
       intros a a' f.
-      symmetry.
-      cbn; set (fmap F f) as r.
-      exact (isnat r g). }
-    { snrapply Build_Is0Functor.
-      intros F G n.
-      snrapply Build_NatTrans.
-      { intros b.
-        snrapply Build_NatTrans.
-        { intros a.
-          exact (n a b). }
-        intros a a' f.
-        exact (isnat n f b). }
-      intros b b' g a.
-      exact (isnat (n a) g). }
+      exact (isnat n f b). }
+    intros b b' g a.
+    exact (isnat (n a) g).
+  Defined.
+
+  Global Instance is1functor_swap_fun01 : Is1Functor swap_fun01.
+  Proof.
     unshelve econstructor; simpl.
     - intros F G n m p b a.
       exact (p a b).
@@ -263,8 +269,46 @@ Section Swap.
       exact (Id _).
   Defined.
 
+  (** The swap functor (for Fun01). *)
+  Definition fun11_swap_fun01
+    : Fun11 (Fun01 A (Fun01 B C)) (Fun01 B (Fun01 A C))
+    := Build_Fun11 _ _ swap_fun01.
+
+  (** Composing a pulled back diagonal with the swap functor is again the diagonal. *)
+  Lemma natequiv_swap_fun01_diagonal `{!HasEquivs C}
+    : NatEquiv
+        (fun11_compose fun11_swap_fun01 (fun11_fun01_postcomp (fun11_diagonal _ _)))
+        (fun11_diagonal _ _).
+  Proof.
+    snrapply Build_NatEquiv.
+    { intros F.
+      snrapply Build_NatEquiv.
+      { intros b.
+        snrapply Build_NatEquiv.
+        { intros a.
+          reflexivity. }
+        intros a a' f; cbn.
+        refine ((cate_buildequiv_fun _ $@R _) $@ cat_idl _ $@ _^$).
+        exact ((_ $@L cate_buildequiv_fun _) $@ cat_idr _). }
+        intros b b' g a; cbn.
+        refine (cat_idr _ $@ (cat_idl _)^$). }
+    simpl.
+    intros F G n b a. simpl. cbv.
+    refine ((cate_buildequiv_fun _ $@R _) $@ cat_idl _ $@ _^$).
+    exact ((_ $@L cate_buildequiv_fun _) $@ cat_idr _).
+  Defined.
+
 End Swap.
 
+(** TODO: swap is an equivlanece therefore an adjunction *)
+
+(** Showing that swap_fun01 is an equivalence requires some funext *)
+
+Lemma adjunction_swap_fun01 {A B C : Type}
+  `{IsGraph A, IsGraph B, Is1Cat C}
+  : swap_fun01 A B C ⊣ swap_fun01 B A C.
+Proof.
+Admitted.
 
 (** ** (Co)limits in functor categories *)
 
@@ -301,35 +345,53 @@ This can be calculated:
                    ≃ [C,[J,D]](Δ*x,(s_J,C y))      (via s_C,J ⊣ s_J,C)
                    ≃ [C,D](x,lim*(s_J,C y))        (via Δ* ⊣ lim* )
 
-  Perhaps a more direct calculation would be the following:
-  
+Perhaps a more direct calculation would be the following:
+
              Δ' ⊣ lim* o s_J,C
- <=> s_C,J o Δ* ⊣ lim* o s_J,C
- <=> (Δ* ⊣ lim* ) o (s_C,J o s_J,C) (composition of adjoints)
+ <=> s_C,J o Δ* ⊣ lim* o s_J,C      (via (★))
+ <=> (Δ* ⊣ lim* ) o (s_C,J ⊣ s_J,C) (composition of adjoints)
+
+And for colimits:
+
+      colim* o s_J,C ⊣ Δ'
+  <=> colim* o s_J,C ⊣ s_C,J o Δ*
+  <=> (s_J,C ⊣ s_J,C) o (colim* o ⊣ Δ* )
 
 *)
 
-Global Instance haslimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
-  `{!HasLimit B J}
+Global Instance haslimit_fun01 `{Funext}
+  (A B J : Type) `{Is1Cat A, HasEquivs B, Is1Cat J}
+  `{!HasLimit B J, !HasMorExt B}
   : HasLimit (Fun01 A B) J.
 Proof.
   snrapply Build_HasLimit.
   { nrefine (fun11_compose _ (fun11_swap_fun01 J A B)).
     apply fun11_fun01_postcomp.
     rapply cat_limit. }
-  
-Admitted.
+  rapply (adjunction_natequiv_left _ _ _
+    (natequiv_swap_fun01_diagonal _ _ _)).
+  rapply adjunction_compose.
+  { rapply adjunction_postcomp.
+    apply adjunction_cat_limit. }
+  apply adjunction_swap_fun01.
+Defined.
 
-Global Instance hascolimit_fun01 (A B J : Type) `{IsGraph A, Is1Cat B, IsGraph J}
-  `{!HasColimit B J}
+Global Instance hascolimit_fun01 `{Funext}
+  (A B J : Type) `{Is1Cat A, HasEquivs B, Is1Cat J}
+  `{!HasColimit B J, !HasMorExt B}
   : HasColimit (Fun01 A B) J.
 Proof.
   snrapply Build_HasColimit.
-  { snrapply Build_Fun11. 
-    { intros F.
-      { 
-Admitted.
-
+  { nrefine (fun11_compose _ (fun11_swap_fun01 J A B)).
+    apply fun11_fun01_postcomp.
+    rapply cat_colimit. }
+  rapply (adjunction_natequiv_right _ _ _
+    (natequiv_swap_fun01_diagonal _ _ _)).
+  rapply adjunction_compose.
+  1: apply adjunction_swap_fun01.
+  rapply adjunction_postcomp.
+  apply adjunction_cat_colimit.
+Defined.
 
 (** ** Preservation of (co)limits by (co)limits *)
 
