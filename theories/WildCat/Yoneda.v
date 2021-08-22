@@ -41,6 +41,10 @@ Proof.
     refine (cat_assoc_opp _ _ _).
 Defined.
 
+Definition fun01_hom {A} `{Is01Cat A}
+  : Fun01 (A^op * A) Type
+  := @Build_Fun01 _ _ _ _ _ is0functor_hom.
+
 (** ** The covariant Yoneda lemma *)
 
 (** This is easier than the contravariant version because it doesn't involve any "op"s. *)

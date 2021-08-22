@@ -113,17 +113,14 @@ Proof.
     refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
 Defined.
 
-(** TODO: This is basically an axiom so far *)
-(** Funext seems to be needed to get morphism extensionality in the functor category. *)
+(* (** Funext seems to be needed to get morphism extensionality in the functor category. *)
 Global Instance hasmorext_fun01 `{Funext} (A B : Type) `{Is01Cat A} `{HasEquivs B}
   `{!HasMorExt B}
   : HasMorExt (Fun01 A B).
 Proof.
   snrapply Build_HasMorExt.
   intros F G i j.
-  destruct i.
-Admitted.
-(* 
+  
   srapply isequiv_adjointify.
   { intros p.
     srapply (equiv_ap' (issig_NatTrans _ _)^-1 _ _)^-1.
@@ -134,9 +131,20 @@ Admitted.
       rapply p. }
     hnf.
     simpl.
+    cbn in p.
+    set ((path_forall _ _ (fun x : A => path_hom (p x)))) as q.
+    clearbody q.
+    rewrite <- (inv_V q).
+    
+    destruct q^.
+    cbn.
     cbv.
     destruct ( apD10^-1 (fun x : A => GpdHom_path^-1 (p x))).
-     *)
+    
+  
+  
+  
+Admitted. *)
 
 (** ** Categories of 1-coherent 1-functors *)
 

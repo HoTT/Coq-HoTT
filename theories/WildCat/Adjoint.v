@@ -8,6 +8,7 @@ Require Import WildCat.Yoneda.
 Require Import WildCat.FunctorCat.
 Require Import WildCat.Cat.
 Require Import WildCat.Type.
+Require Import Types.Prod.
 
 Generalizable Variables C D F G.
 
@@ -62,6 +63,21 @@ Global Existing Instances
 
 Notation "F ⊣ G" := (Adjunction F G).
 
+
+(** TODO: move *)
+Lemma fun01_profunctor {A B C D : Type} (F : A -> B) (G : C -> D)
+  `{Is0Functor A B F, Is0Functor C D G}
+  : Fun01 (A^op * C) (B^op * D).
+Proof.
+  snrapply Build_Fun01.
+  1: exact (functor_prod F G).
+  rapply is0functor_prod_functor.
+Defined.
+
+Definition fun01_hom {C : Type} `{Is01Cat C}
+  : Fun01 (C^op * C) Type
+  := @Build_Fun01 _ _ _ _ _ is0functor_hom.
+
 (** ** Natural equivalences coming from adjunctions. *)
 
 (** There are various bits of data we would like to extract from adjunctions. *)
@@ -88,8 +104,20 @@ Section AdjunctionData.
     apply (is1natural_equiv_adjunction_r adj).
   Defined.
 
-  (** TODO: *)
   (** We also have the natural equivalence in both arguments at the same time. *)
+  (** In order to manage the typeclass instances, we have to bundle them up into Fun01. *)
+  Definition natequiv_adjunction
+    : NatEquiv (A := C^op * D)
+        (fun01_compose fun01_hom (fun01_profunctor F idmap))
+        (fun01_compose fun01_hom (fun01_profunctor idmap G)).
+  Proof.
+    snrapply Build_NatEquiv.
+    1: intros [x y]; exact (equiv_adjunction adj x y).
+    intros [a b] [a' b'] [f g] K.
+    refine (_ @ ap (fun x : a $-> G b' => x $o f)
+      (is1natural_equiv_adjunction_r adj a b b' g K)).
+    exact (is1natural_equiv_adjunction_l adj _ _ _ f (g $o K)).
+  Defined.
 
   (** The counit of an adjunction *)
   Definition adjunction_counit : NatTrans idmap (G o F).
@@ -254,21 +282,22 @@ End UnitCounitAdjunction.
 
 (** * Properties of adjunctions *)
 
+(** ** Postcomposition adjunction *)
+(** There are at least two easy proofs of the following on paper:
+ 1. Using ends: Hom(F*x,y) ≃ ∫_c Hom(Fxc,yc) ≃ ∫_c Hom(xc,Gyc) ≃ Hom(x,G*y)
+ 2. 2-cat theory: postcomp (-)* is a 2-functor so preserves adjunctions.
+
+ We don't really have any of the theory needed for these, so we prove it directly instead.
+*)
+
 Lemma adjunction_postcomp `{Funext} (C D J : Type)
   `{Is1Cat C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
   `{!HasMorExt D}
   : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣ fun11_fun01_postcomp (A:=J) G.
 Proof.
   intros adj.
-  srapply Build_Adjunction_natequiv_nat_left.
-  
-   (* 
-  srefine (Build_Adjunction_natequiv_nat_left
-    (C:=Build_Cat1 _ _ _ _ _) (D:=Build_Cat1 _ _ _ _ _) _ _ _ _).
-  { simpl.
-    intros x. *)
-(*     refine (natequiv_compose _ (natequiv_opyon_equiv _ _ _)). *)
-    
+  srapply Build_Adjunction.
+  - intros x y.
 Admitted.
 
 (** We can compose adjunctions. Notice how the middle category must have equivalences. *)
