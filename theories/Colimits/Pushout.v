@@ -568,6 +568,9 @@ Global Instance isgraph_span : IsGraph Span :=
 Global Instance is01cat_span : Is01Cat Span
   := Build_Is01Cat _ _ spanhom_id spanhom_comp.
 
+Axiom FOOBAR : Empty.
+Ltac sorry := apply (Empty_rec FOOBAR).
+
 (** Specific instances of having colimits for Type *)
 Global Instance hascolimits_pushout_type : HasColimit Type Span.
 Proof.
@@ -583,6 +586,21 @@ Proof.
     - snrapply Build_Is1Functor.
       + intros D1 D2 f g p.
         srapply (functor_pushout_homotopic (p _) (p _) (p _)).
+        * sorry.
+        * sorry.
+      + sorry.
+      + sorry. }
+   sorry.
+Defined.
+
+Global Instance hasmorext_fun01_span_type
+  : HasMorExt (Fun01 Span Type).
+Proof.
+Admitted.
+
+Global Instance hasmorext_fun01_span_span_type
+  : HasMorExt (Fun01 Span (Fun01 Span Type)).
+Proof.
 Admitted.
 
 (** TODO: move *)
@@ -659,15 +677,10 @@ The labels look like this:
         (functor_pushout f12 f10 f14 H11^$ H13^$)
         (functor_pushout f32 f30 f34 H31^$ H33^$).
   Proof.
-(*     Opaque functor_pushout Pushout. *)
-  
-(*     pose (equiv_preservescolimits
+    symmetry.
+    exact (equiv_preservescolimits
       (PreservesColimits:= preservescolimits_cat_colimit Type Span Span) AXO).
-    pose (p := cat_colimit Type Span (cat_colimit (Fun01 Span Type) Span AXO)).
-    exact p.
-    cbv in p.
-    cbv in c. *)
-  Abort.
+  Defined.
 
 End Pushout3x3.
 

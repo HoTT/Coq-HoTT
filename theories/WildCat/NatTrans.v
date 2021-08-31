@@ -73,8 +73,9 @@ Definition trans_comp {A B : Type} `{Is01Cat B}
   : F $=> K
   := fun a => gamma a $o alpha a.
 
-Definition trans_prewhisker {A B C : Type} {F G : B -> C}
-  `{Is01Cat B, Is01Cat C} (gamma : F $=> G) (K : A -> B) 
+Definition trans_prewhisker {A B : Type} {C : B -> Type} {F G : forall x, C x}
+  `{Is01Cat B} `{!forall x, IsGraph (C x)}
+  `{!forall x, Is01Cat (C x)} (gamma : F $=> G) (K : A -> B) 
   : F o K $=> G o K
   := gamma o K.
 

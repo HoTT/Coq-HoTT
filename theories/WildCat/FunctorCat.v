@@ -112,9 +112,10 @@ Proof.
   - intros [gamma ?] r s a; cbn in *.
     refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
 Defined.
-
-(* (** Funext seems to be needed to get morphism extensionality in the functor category. *)
-Global Instance hasmorext_fun01 `{Funext} (A B : Type) `{Is01Cat A} `{HasEquivs B}
+(* 
+(** Funext seems to be needed to get morphism extensionality in the functor category. *)
+Global Instance hasmorext_fun01 `{Funext} (A B : Type)
+  `{Is01Cat A, HasEquivs B}
   `{!HasMorExt B}
   : HasMorExt (Fun01 A B).
 Proof.
@@ -129,6 +130,18 @@ Proof.
     { funext x.
       rapply path_hom.
       rapply p. }
+    simpl.
+    
+    unfold Transformation.
+    funext x y z.
+    Require Import Types.Forall.
+    rewrite 3 transport_forall.
+    
+    simpl.
+    
+    simpl.
+    rapply path_hom.
+    rewrite transport_forall_co.
     hnf.
     simpl.
     cbn in p.
@@ -144,8 +157,8 @@ Proof.
   
   
   
-Admitted. *)
-
+Admitted.
+ *)
 (** ** Categories of 1-coherent 1-functors *)
 
 Record Fun11 (A B : Type) `{Is1Cat A} `{Is1Cat B} :=

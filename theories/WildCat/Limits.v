@@ -81,7 +81,7 @@ Class PreservesLimits (A B J : Type) `{Is1Cat A, IsGraph J, !HasLimit A J,
 (** Right adjoints preserve limits *)
 Global Instance preserveslimits_right_adjoint `{Funext} (A B J : Type)
   `{HasEquivs A, HasEquivs B, Is01Cat J, !HasLimit A J, !HasLimit B J,
-     !HasMorExt A, !HasMorExt B, !HasMorExt (Fun01 J B) }
+     !HasMorExt A, !HasMorExt B, !HasMorExt (Fun01 J A), !HasMorExt (Fun01 J B)}
   (L : Fun11 A B) (R : Fun11 B A) (adj : L ⊣ R)
   : PreservesLimits B A J R.
 Proof.
@@ -150,7 +150,7 @@ Class PreservesColimits (A B J : Type) `{Is1Cat A, IsGraph J, !HasColimit A J,
 (** Left adjoints preserve colimits *)
 Global Instance preservescolimits_left_adjoint `{Funext} (A B J : Type)
   `{HasEquivs A, HasEquivs B, Is01Cat J, !HasColimit A J, !HasColimit B J,
-    !HasMorExt (Fun01 J A), !HasMorExt B}
+    !HasMorExt (Fun01 J A), !HasMorExt (Fun01 J B), !HasMorExt A, !HasMorExt B}
   (L : Fun11 A B) (R : Fun11 B A) (adj : L ⊣ R)
   : PreservesColimits A B J L.
 Proof.
@@ -361,8 +361,12 @@ And for colimits:
 
 Global Instance haslimit_fun01 `{Funext}
   (A B J : Type) `{Is01Cat A, HasEquivs B, Is01Cat J}
-  `{!HasLimit B J, !HasMorExt B,
-    !HasMorExt (Fun01 J (Fun01 A B)), !HasMorExt (Fun01 J B)}
+  `{!HasLimit B J}
+  `{!HasMorExt B,
+    !HasMorExt (Fun01 A B),
+    !HasMorExt (Fun01 A (Fun01 J B)),
+    !HasMorExt (Fun01 J (Fun01 A B)),
+    !HasMorExt (Fun01 J B)}
   : HasLimit (Fun01 A B) J.
 Proof.
   snrapply Build_HasLimit.
@@ -379,8 +383,12 @@ Defined.
 
 Global Instance hascolimit_fun01 `{Funext}
   (A B J : Type) `{Is01Cat A, HasEquivs B, Is01Cat J}
-  `{!HasColimit B J, !HasMorExt B,
-    !HasMorExt (Fun01 J (Fun01 A B)), !HasMorExt (Fun01 J B)}
+  `{!HasColimit B J}
+  `{!HasMorExt B,
+    !HasMorExt (Fun01 A B),
+    !HasMorExt (Fun01 A (Fun01 J B)),
+    !HasMorExt (Fun01 J (Fun01 A B)),
+    !HasMorExt (Fun01 J B)}
   : HasColimit (Fun01 A B) J.
 Proof.
   snrapply Build_HasColimit.
@@ -398,9 +406,12 @@ Defined.
 (** ** Preservation of (co)limits by (co)limits *)
 
 Lemma preserveslimits_cat_limit `{Funext} (A I J : Type)
-  `{HasEquivs A, Is01Cat I, Is01Cat J,
-    !HasMorExt A, !HasMorExt (Fun01 I A),
-    !HasMorExt (Fun01 J A), !HasMorExt (Fun01 I (Fun01 J A))}
+  `{HasEquivs A, Is01Cat I, Is01Cat J}
+  `{!HasMorExt A,
+    !HasMorExt (Fun01 I A),
+    !HasMorExt (Fun01 J A),
+    !HasMorExt (Fun01 I (Fun01 J A)),
+    !HasMorExt (Fun01 J (Fun01 I A))}
   (** We have a lot of morphism extensionality assumptions here. One wonders if there ought to be a lemma hasmorext_fun01 which sorts these out. I wasn't able to come up with such a lemma and I think this is due to the incoherent 2-cells in the functor category. *)
   `{!HasLimit A I, !HasLimit A J}
   : PreservesLimits _ _ I (cat_limit A J).
@@ -409,9 +420,12 @@ Proof.
 Defined.
 
 Lemma preservescolimits_cat_colimit `{Funext} (A I J : Type)
-  `{HasEquivs A, Is01Cat I, Is01Cat J,
-    !HasMorExt A, !HasMorExt (Fun01 I A),
-    !HasMorExt (Fun01 J A), !HasMorExt (Fun01 I (Fun01 J A))}
+  `{HasEquivs A, Is01Cat I, Is01Cat J}
+  `{!HasMorExt A,
+    !HasMorExt (Fun01 I A),
+    !HasMorExt (Fun01 J A),
+    !HasMorExt (Fun01 I (Fun01 J A)),
+    !HasMorExt (Fun01 J (Fun01 I A))}
   `{!HasColimit A I, !HasColimit A J}
   (** See comment above. *)
   `{!HasColimit (Fun01 J A) I}

@@ -84,7 +84,7 @@ Definition fun01_hom {C : Type} `{Is01Cat C}
 Section AdjunctionData.
   Context {C D : Type} {F : C -> D} {G : D -> C}
     `{Is1Cat C, Is1Cat D, !HasMorExt C, !HasMorExt D,
-      !Is0Functor F, !Is0Functor G}
+      !Is0Functor F, !Is0Functor G, !Is1Functor F, !Is1Functor G}
     (adj : Adjunction F G).
 
   Definition natequiv_adjunction_l (y : D)
@@ -158,7 +158,36 @@ Section AdjunctionData.
   Defined.
 
   (** TODO: triangles *)
-(*   Definition adjunction_ *)
+  Definition adjunction_triangle1
+    : Transformation 
+        (nattrans_comp
+          (nattrans_prewhisker adjunction_unit F)
+          (nattrans_postwhisker F adjunction_counit))
+        (nattrans_id _).
+  Proof.
+    intros c.
+    cbv.
+(*     natequiv_adjunction *)
+    
+  Admitted.
+
+  Definition adjunction_triangle2
+    : Transformation
+        (nattrans_comp
+          (nattrans_postwhisker G adjunction_unit)
+          (nattrans_prewhisker adjunction_counit G))
+        (nattrans_id _).
+  Proof.
+    intros d.
+    cbv.
+    epose (is1natural_equiv_adjunction_r adj (G d) _ _ (Id (F (G d))) (Id (F (G d)))) as p1.
+    clearbody p1; cbv in p1.
+    rewrite cat_idl_strong in p1.
+    rewrite p1.
+    refine (_ $o (_ $@R _) $o cat_assoc_opp _ _ _).
+    2: symmetry; rapply fmap_comp.
+    rewrite p1.
+  Admitted.
 
 End AdjunctionData.
 
@@ -203,24 +232,20 @@ Defined.
 Section UnitCounitAdjunction.
 
   (** From the data of an adjunction: unit, counit, left triangle, right triangle *)
+  Context {C D : Type} (F : C -> D) (G : D -> C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G,
+    !Is1Functor F, !Is1Functor G}
+  `{!HasMorExt C, !HasMorExt D}
+  (ε : NatTrans (F o G) idmap)
+  (η : NatTrans idmap (G o F))
+  (** TODO: perhaps these should be equalities? Currently they are just the underlying transformation of the modification. *)
+  (t1 : Transformation 
+    (nattrans_comp (nattrans_prewhisker ε F) (nattrans_postwhisker F η))
+    (nattrans_id _))
+  (t2 : Transformation
+    (nattrans_comp (nattrans_postwhisker G ε) (nattrans_prewhisker η G))
+    (nattrans_id _)).
 
-  Context
-    {C D : Cat1} (F : C $-> D) (G : D $-> C)
-    `{!HasMorExt C, !HasMorExt D}
-    (** A unit-counit adjunction consists of the following data: *)
-    (** A counit *)
-    (ε : F $o G $-> Id _)
-    (** A unit *)
-    (η : Id _ $-> G $o F)
-    (** Triangle identities *)
-    (** Unfortunately, typeclasses whirls out of control if we don't hint at it the base type of [GpdHom], so we have to be explicit here. *)
-    (t1 : GpdHom (A := Hom F F) (cat_comp (A:=Fun11 C D)
-      (nattrans_prewhisker ε F : (F $o G $o F) $-> F)
-      (nattrans_postwhisker F η : F $-> (F $o G $o F))) (Id F))
-    (t2 : GpdHom (A := Hom G G) (cat_comp (A:=Fun11 D C)
-      (nattrans_postwhisker G ε : (G $o F $o G) $-> G)
-      (nattrans_prewhisker η G : G $-> (G $o F $o G))) (Id G))
-    .
   (** We can construct an equivalence between homs *)
   Local Definition γ a b : (F a $-> b) $<~> (a $-> G b).
   Proof.
@@ -286,19 +311,42 @@ End UnitCounitAdjunction.
 (** There are at least two easy proofs of the following on paper:
  1. Using ends: Hom(F*x,y) ≃ ∫_c Hom(Fxc,yc) ≃ ∫_c Hom(xc,Gyc) ≃ Hom(x,G*y)
  2. 2-cat theory: postcomp (-)* is a 2-functor so preserves adjunctions.
-
- We don't really have any of the theory needed for these, so we prove it directly instead.
 *)
 
 Lemma adjunction_postcomp `{Funext} (C D J : Type)
-  `{Is1Cat C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
-  `{!HasMorExt D}
+  `{HasEquivs C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
+  `{!HasMorExt C, !HasMorExt D, !HasMorExt (Fun01 J C), !HasMorExt (Fun01 J D)}
   : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣ fun11_fun01_postcomp (A:=J) G.
 Proof.
   intros adj.
-  srapply Build_Adjunction.
-  - intros x y.
-Admitted.
+  srapply Build_Adjunction_unit_counit.
+  - snrapply Build_NatTrans.
+    + intros K.
+      exact (nattrans_prewhisker (adjunction_unit adj) K).
+    + intros K K' θ j.
+      apply GpdHom_path.
+      refine (_ @ is1natural_natequiv _ _ (natequiv_inverse _ _
+        (natequiv_adjunction_r adj _)) _ _ _ _).
+      refine ((is1natural_natequiv _ _ (natequiv_inverse _ _
+        (natequiv_adjunction_l adj _)) _ _ _ _)^ @ _).
+      cbn; rapply ap.
+      refine(cat_idl_strong _ @ _^).
+      apply cat_idr_strong.
+  - snrapply Build_NatTrans.
+    + intros K.
+      exact (nattrans_prewhisker (adjunction_counit adj) K).
+    + intros K K' θ j.
+      apply GpdHom_path.
+      refine (_ @ is1natural_natequiv _ _
+        (natequiv_adjunction_r adj _) _ _ _ _).
+      refine ((is1natural_natequiv _ _
+        (natequiv_adjunction_l adj _) _ _ _ _)^ @ _).
+      cbn; rapply ap.
+      refine(cat_idl_strong _ @ _^).
+      apply cat_idr_strong.
+  - exact (trans_prewhisker (adjunction_triangle1 adj)).
+  - exact (trans_prewhisker (adjunction_triangle2 adj)).
+Defined.
 
 (** We can compose adjunctions. Notice how the middle category must have equivalences. *)
 Lemma adjunction_compose (A B C : Type)
