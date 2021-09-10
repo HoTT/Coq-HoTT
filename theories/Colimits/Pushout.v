@@ -568,44 +568,84 @@ Global Instance isgraph_span : IsGraph Span :=
 Global Instance is01cat_span : Is01Cat Span
   := Build_Is01Cat _ _ spanhom_id spanhom_comp.
 
-Axiom FOOBAR : Empty.
-Ltac sorry := apply (Empty_rec FOOBAR).
-
-(** Specific instances of having colimits for Type *)
-Global Instance hascolimits_pushout_type : HasColimit Type Span.
+Definition pushout_of_span : Fun01 Span Type -> Type.
 Proof.
-  snrapply Build_HasColimit.
-  { snrapply Build_Fun11.
-    - intros D.
-      exact (Pushout (fmap D spanhom_map1) (fmap D spanhom_map2)).
-   - snrapply Build_Is0Functor.
-      intros D1 D2 [f n].
-      srapply functor_pushout.
-      1-3: exact (f _).
-      1,2: exact (n _ _ _).
-    - snrapply Build_Is1Functor.
-      + intros D1 D2 f g p.
-        srapply (functor_pushout_homotopic (p _) (p _) (p _)).
-        * sorry.
-        * sorry.
-      + sorry.
-      + sorry. }
-   sorry.
+  intros D.
+  exact (Pushout (fmap D spanhom_map1) (fmap D spanhom_map2)).
 Defined.
 
-Global Instance hasmorext_fun01_span_type
-  : HasMorExt (Fun01 Span Type).
+Global Instance is0functor_pushout_of_span : Is0Functor pushout_of_span.
+Proof.
+  snrapply Build_Is0Functor.
+  intros D1 D2 [f n].
+  srapply functor_pushout.
+  1-3: exact (f _).
+  1,2: exact (n _ _ _).
+Defined.
+
+(** TODO: requires cylinders (prob doable) *)
+Global Instance is1functor_pushout_of_span : Is1Functor pushout_of_span.
 Proof.
 Admitted.
 
+Lemma equiv_span_ind `{Funext} (P : Span -> Type)
+  : (P SpanTarget1) * (P SpanTarget2) * (P SpanSource) <~> forall x, P x.
+Proof.
+  snrapply equiv_adjointify.
+  1: intros [[a b] c] []; assumption.
+  1: intros Q; exact (Q _, Q _, Q _).
+  1: intros Q; by funext [].
+  by intros [[]].
+Defined.
+
+Definition adjunction_pushout_of_span `{Funext}
+  : pushout_of_span ⊣ diagonal Type Span.
+Proof.
+  snrapply Build_Adjunction.
+  - intros F y.
+    refine (_ oE equiv_pushout_unrec _ _ _).
+    refine (issig_NatTrans _ _ oE _).
+    refine (equiv_functor_sigma_pb (Q:= Is1Natural F (fun _ : Span => y))
+      (equiv_span_ind (fun x => F x -> y)) oE _).
+    refine (equiv_functor_sigma_pb (equiv_sigma_prod0 _ _) oE _).
+    refine (equiv_sigma_assoc _ _ oE _).
+    srapply equiv_functor_sigma_id.
+    intros [f g].
+    srapply equiv_adjointify.
+    + intros k.
+      srefine (_;_).
+      * exact (f o fmap F spanhom_map1).
+      * intros a b c.
+        destruct c.
+        { destruct x; cbv.
+Admitted.
+
+(** Specific instances of having colimits for Type *)
+Global Instance hascolimits_pushout_type `{Funext}
+  : HasColimit Type Span.
+Proof.
+  snrapply Build_HasColimit.
+  1: exact (Build_Fun11 _ _ pushout_of_span).
+  apply adjunction_pushout_of_span.
+Defined.
+
+(** TODO: This is a bit tricky *)
+Global Instance hasmorext_fun01_span_type
+  : HasMorExt (Fun01 Span Type).
+Proof.
+  snrapply Build_HasMorExt.
+  intros F G f g.
+  srapply isequiv_adjointify.
+  { intros p.
+    cbv in f.
+(*     rapply (equiv_ap' (issig_Fun01 _ _)^-1 _ _)^-1. *)
+Admitted.
+
+(** TODO: This is probably much trickier *)
 Global Instance hasmorext_fun01_span_span_type
   : HasMorExt (Fun01 Span (Fun01 Span Type)).
 Proof.
 Admitted.
-
-(** TODO: move *)
-(* Lemma hascolimits_fun01_type
- *)
 
 Lemma Build_SpanIn (X : Type) {A B C : X} `{Is1Cat X} (f : A $-> B) (g : A $-> C)
   : Fun01 Span X.
