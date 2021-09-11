@@ -63,6 +63,9 @@ Global Instance isequiv_unit_rec `{Funext} (A : Type)
 : IsEquiv (@Unit_ind (fun _ => A)) | 0
   := isequiv_unit_ind (fun _ => A).
 
+#[local]
+Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
 Definition equiv_unit_rec `{Funext} (A : Type)
   : A <~> (Unit -> A)
   := (Build_Equiv _ _ (@Unit_ind (fun _ => A)) _).

@@ -306,7 +306,7 @@ Proof.
   intros A; unshelve econstructor; intros P' P_inO;
     pose (P := fun x => Build_TruncType n (P' x)).
   - refine (Trunc_rec P).
-  - intros; exact _.
+  - intros; simpl; exact _.
   - intros; cbn. reflexivity.
 Defined.
 
