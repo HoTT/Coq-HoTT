@@ -42,6 +42,8 @@ Definition ooextendable_over_unit@{i j k l m}
 : ooExtendableAlong_Over (@const A Unit tt) C D ext
   := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).
 
+#[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
 Definition Nul@{a i} (S : NullGenerators@{a}) : Modality@{i}.
 Proof.
   (** We use the localization reflective subuniverses for most of the necessary data. *)

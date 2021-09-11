@@ -634,6 +634,8 @@ Section Reflective_Subuniverse.
         exact ((fst (e (O A) (O_inO A)) (to O A)).2 a).
     Defined.
 
+    #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
     (** And the version with funext.  Use it with universe parameters [i j k l lplus l l l l]. *)
     Definition O_inverts_from_isequiv_precompose `{Funext}
                {A B : Type} (f : A -> B)

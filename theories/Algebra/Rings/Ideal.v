@@ -442,6 +442,8 @@ Section IdealLemmas.
     right; exact p.
   Defined.
 
+  #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
   (** Products of ideals are included in their left factor *)
   Lemma ideal_product_subset_l (I J : Ideal R) : I ⋅ J ⊆ I.
   Proof.

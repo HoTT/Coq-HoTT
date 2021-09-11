@@ -234,8 +234,8 @@ Section Cosets.
   (** The relation of being in a right coset represented by an element. *)
   Definition in_cosetR : Relation G := fun x y => H (x * -y).
 
-  Hint Unfold in_cosetL : typeclass_instances.
-  Hint Unfold in_cosetR : typeclass_instances.
+  Hint Extern 4 => progress unfold in_cosetL : typeclass_instances.
+  Hint Extern 4 => progress unfold in_cosetR : typeclass_instances.
 
   Global Arguments in_cosetL /.
   Global Arguments in_cosetR /.
