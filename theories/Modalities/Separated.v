@@ -226,7 +226,7 @@ Section JoinConstruction.
 End JoinConstruction.
 
 (** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)
-Fail Instance: forall (O : ReflectiveSubuniverse), In (Sep O) (Type_ O).
+Fail Goal forall (O : ReflectiveSubuniverse), In (Sep O) (Type_ O).
 
 (** Instead, we do as in Lemma 2.19 of CORS and prove the morally-equivalent "descent" property, using Lemma 2.18 and the join construction. *)
 Global Instance SepO_lex_leq `{Univalence}
