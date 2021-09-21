@@ -333,6 +333,8 @@ Proof.
       refine (isequiv_unit_ind (Y' o inr)).
 Defined.
 
+#[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
 Definition fcard_arrow `{Funext} X Y `{Finite X} `{Finite Y}
 : fcard (X -> Y) = nat_exp (fcard Y) (fcard X).
 Proof.

@@ -240,7 +240,7 @@ Proof.
       pose (P := fun x => (P' x; P_inO x) : Type_ O);
       pose (ee := e P).
       - exact ee.1.
-      - exact _.
+      - simpl; exact _.
       - intros x; cbn; apply ee.2. }
   intros P.
   assert (ls : forall A B : Type_ O, { Z : Type & Z <~> (A = B) }).

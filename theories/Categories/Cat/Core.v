@@ -37,6 +37,8 @@ End sub_pre_cat.
 
 Arguments sub_pre_cat {_} P {_}, {_} P _.
 
+#[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
+
 Definition strict_cat `{Funext} : PreCategory
   := sub_pre_cat (fun C => IsStrictCategory C).
 
