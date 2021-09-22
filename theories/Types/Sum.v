@@ -404,10 +404,9 @@ Section FunctorSum.
 End FunctorSum.
 
 Definition functor_sum_homotopic {A A' B B' : Type}
-  {f f' : A -> A'} {g g' : B -> B'}
-  : f == f' -> g == g' -> functor_sum f g == functor_sum f' g'.
+  {f f' : A -> A'} {g g' : B -> B'} (p : f == f') (q : g == g')
+  : functor_sum f g == functor_sum f' g'.
 Proof.
-  intros p q.
   intros [a|b].
   - exact (ap inl (p a)).
   - exact (ap inr (q b)).
