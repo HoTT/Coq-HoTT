@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics.
-Require Import HoTT.Types.
+Require Import Basics Types WildCat.
 Require Import HSet TruncType.
 Require Export HIT.Coeq.
 Local Open Scope path_scope.
@@ -156,10 +155,10 @@ equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pusho
 (** ** Functoriality *)
 
 Definition functor_pushout
-           {A B C} {f : A -> B} {g : A -> C}
-           {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
-           (h : A -> A') (k : B -> B') (l : C -> C')
-           (p : k o f == f' o h) (q : l o g == g' o h)
+  {A B C} {f : A -> B} {g : A -> C}
+  {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
+  (h : A -> A') (k : B -> B') (l : C -> C')
+  (p : k o f == f' o h) (q : l o g == g' o h)
   : Pushout f g -> Pushout f' g'.
 Proof.
   unfold Pushout; srapply functor_coeq.
@@ -170,6 +169,28 @@ Proof.
   - intros a; cbn.
     apply ap, q.
 Defined.
+
+Lemma functor_pushout_homotopic 
+  {A B C : Type} {f : A $-> B} {g : A $-> C}
+  {A' B' C' : Type} {f' : A' $-> B'} {g' : A' $-> C'}
+  {h h' : A $-> A'} {k k' : B $-> B'} {l l' : C $-> C'}
+  {p : k $o f $== f' $o h} {q : l $o g $== g' $o h}
+  {p' : k' $o f $== f' $o h'} {q' : l' $o g $== g' $o h'}
+  (t : h $== h') (u : k $== k') (v : l $== l')
+  (i : p $@ (f' $@L t) == (u $@R f) $@ p')
+  (j : q $@ (g' $@L t) == (v $@R g) $@ q')
+  : functor_pushout h k l p q $== functor_pushout h' k' l' p' q'.
+Proof.
+  srapply functor_coeq_homotopy.
+  1: exact t.
+  1: exact (functor_sum_homotopic u v).
+  1,2: intros b; simpl.
+  1,2: refine (_ @ ap_pp _ _ _ @ ap _ (ap_compose _ _ _)^).
+  1,2: refine ((ap_pp _ _ _)^ @ ap _ _^).
+  1: exact (i b).
+  exact (j b).
+Defined.
+
 
 (** ** Equivalences *)
 
