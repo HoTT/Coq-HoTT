@@ -191,7 +191,6 @@ Defined.
 (** Throws a warning, but can probably be ignored. *)
 Global Set Warnings "-ambiguous-paths".
 Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
-(* Set Warnings "+ambiguous-paths". *)
 
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
