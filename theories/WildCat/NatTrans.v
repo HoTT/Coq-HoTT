@@ -9,7 +9,7 @@ Definition Transformation {A : Type} {B : A -> Type} `{forall x, IsGraph (B x)}
   (F G : forall (x : A), B x)
   := forall (a : A), F a $-> G a.
 
-(** This let's us apply transformations to things. *)
+(** This lets us apply transformations to things. Identity Coercion tells coq that this coercion is in fact definitionally the identity map so it doesn't need to insert it, but merely rewrite definitionally when typechecking. *)
 Identity Coercion fun_trans : Transformation >-> Funclass.
 
 Notation "F $=> G" := (Transformation F G).
