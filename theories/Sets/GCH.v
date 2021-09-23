@@ -111,7 +111,7 @@ Section LEM.
       + intros x y H % injective_proj1. now apply Hi.
       + destruct (i p) as [q Hq]; cbn in *.
         eapply merely_destruct; try apply Hq.
-        intros [H|H]; try now apply tr.
+        intros [H|H]; [destruct (HP H)|now apply tr].
   Qed.
 
 End LEM.
