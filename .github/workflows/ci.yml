@@ -84,6 +84,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
           sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make -j2
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -99,10 +100,9 @@ jobs:
         coq-version-dummy:
         - 'supported'
         - 'latest'
-        - 'dev'
         include:
         - coq-version-dummy: 'dev'
-          extra_gh_reportify: '--warnings'
+          extra-gh-reportify: '--warnings'
     env:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
@@ -113,8 +113,8 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # We use the coq docker so we don't have to build coq
     - uses: coq-community/docker-coq-action@v1
       with:
@@ -124,9 +124,10 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python -y --allow-unauthenticated
-          etc/coq-scripts/github/reportify-coq.sh --errors make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
+          etc/coq-scripts/github/reportify-coq.sh --errors ${{ matrix.extra-gh-reportify }} make TIMED=1 -j2 --output-sync
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -163,7 +164,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -188,6 +190,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -211,8 +214,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -241,6 +244,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make dependency graph
           make HoTT.deps HoTTCore.deps
           runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
@@ -296,8 +300,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -313,6 +317,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make HTML doc
           make -j2 html
           mv html coqdoc-html
@@ -340,8 +345,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -367,6 +372,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ./etc/ci/install_proviola.sh
           ## Make proviola doc
           make -j2 proviola TIMED=1 -k; make proviola TIMED=1 || exit $?
@@ -394,8 +400,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -413,6 +419,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make timing doc
           make -j2 timing-html
     - name: Revert permissions
@@ -440,9 +447,6 @@ jobs:
         - 'supported'
         - 'latest'
         - 'dev'
-        include:
-        - coq-version: 'dev'
-          extra_gh_reportify: '--warnings'
     env:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
@@ -453,8 +457,8 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -470,6 +474,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make validate
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -487,9 +492,6 @@ jobs:
         - 'supported'
         - 'latest'
         - 'dev'
-        include:
-        - coq-version: 'dev'
-          extra_gh_reportify: '--warnings'
     env:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
@@ -500,8 +502,8 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -517,9 +519,10 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Test install target
           make install
-          (echo 'Require Import HoTT.HoTT.' | coqtop -q)
+          echo 'Require Import HoTT.HoTT.' | coqtop -q
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
