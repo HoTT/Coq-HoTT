@@ -37,14 +37,14 @@ jobs:
         os:
           - ubuntu-latest
     env:
-      coq-version: ${{ matrix.coq-version-dummy }}    
+      coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ${{ matrix.os }}
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case. 
+    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
-        
+
     - name: Checkout repo
       uses: actions/checkout@v2
     - name: Build HoTT
@@ -53,7 +53,7 @@ jobs:
         opam_file: 'hott.opam'
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
-        
+
   # Quick build
   quick-build:
     strategy:
@@ -66,10 +66,10 @@ jobs:
         os:
         - ubuntu-latest
     env:
-      coq-version: ${{ matrix.coq-version-dummy }}    
+      coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ${{ matrix.os }}
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case. 
+    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
@@ -84,12 +84,13 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
           sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make -j2
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
       run: sudo chown -R 1001:116 .
-          
+
   # Main build which docs will run off
   build:
     strategy:
@@ -99,22 +100,21 @@ jobs:
         coq-version-dummy:
         - 'supported'
         - 'latest'
-        - 'dev'
         include:
         - coq-version-dummy: 'dev'
-          extra_gh_reportify: '--warnings'
+          extra-gh-reportify: '--warnings'
     env:
-      coq-version: ${{ matrix.coq-version-dummy }}    
+      coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case. 
+    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # We use the coq docker so we don't have to build coq
     - uses: coq-community/docker-coq-action@v1
       with:
@@ -124,9 +124,10 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python -y --allow-unauthenticated
-          etc/coq-scripts/github/reportify-coq.sh --errors make TIMED=1 -j2 --output-sync GH_REPORT_ERRORS=1
+          etc/coq-scripts/github/reportify-coq.sh --errors ${{ matrix.extra-gh-reportify }} make TIMED=1 -j2 --output-sync
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -140,7 +141,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: workspace-${{ env.coq-version }}
-        path: workspace.tar   
+        path: workspace.tar
 
 #
 #  Stage 2:
@@ -163,7 +164,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -188,6 +190,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -211,8 +214,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -237,10 +240,11 @@ jobs:
           sudo -E npm config set strict-ssl false
           sudo -E npm i -g npm
           sudo -E npm install -g doctoc
-          
+
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make dependency graph
           make HoTT.deps HoTTCore.deps
           runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
@@ -251,7 +255,7 @@ jobs:
           mkdir -p dep-graphs
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
-          
+
           ## Make file dependency graphs
           opam install ocamlgraph -y
           ./etc/ci/make_dpd_graphs.sh
@@ -263,8 +267,8 @@ jobs:
           #make svg-aggregate-dep-graphs -k || exit $?
           make file-dep-graphs/index.html -k || exit $?
 
-          
-        
+
+
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
@@ -296,8 +300,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -313,6 +317,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make HTML doc
           make -j2 html
           mv html coqdoc-html
@@ -328,20 +333,20 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: coqdoc-html
-        path: coqdoc-html.tar      
-          
+        path: coqdoc-html.tar
+
   # doc-proviola job
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
   doc-proviola:
     needs: build
     strategy:
-      fail-fast: false 
+      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -367,6 +372,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ./etc/ci/install_proviola.sh
           ## Make proviola doc
           make -j2 proviola TIMED=1 -k; make proviola TIMED=1 || exit $?
@@ -383,7 +389,7 @@ jobs:
       with:
         name: proviola-html
         path: proviola-html.tar
-          
+
   # doc-timing job
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
   doc-timing:
@@ -394,8 +400,8 @@ jobs:
     steps:
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -409,12 +415,13 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           sudo apt-get update
-          sudo apt-get install -y time python lua5.1 
+          sudo apt-get install -y time python lua5.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make timing doc
-          make -j2 timing-html         
+          make -j2 timing-html
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
@@ -427,7 +434,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: timing-html
-        path: timing-html.tar   
+        path: timing-html.tar
 
   # The coqchk job
   coqchk:
@@ -440,21 +447,18 @@ jobs:
         - 'supported'
         - 'latest'
         - 'dev'
-        include:
-        - coq-version: 'dev'
-          extra_gh_reportify: '--warnings'
     env:
-      coq-version: ${{ matrix.coq-version-dummy }}    
+      coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case. 
+    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -470,6 +474,7 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make validate
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -487,21 +492,18 @@ jobs:
         - 'supported'
         - 'latest'
         - 'dev'
-        include:
-        - coq-version: 'dev'
-          extra_gh_reportify: '--warnings'
     env:
-      coq-version: ${{ matrix.coq-version-dummy }}    
+      coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case. 
+    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
     - uses: actions/checkout@v2
-    # Checkout submodules
-    - uses: snickerbockers/submodules-init@v4
+      with:
+        submodules: recursive
     # Download artifact
     - uses: actions/download-artifact@v2
       with:
@@ -517,15 +519,16 @@ jobs:
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Test install target
           make install
-          (echo 'Require Import HoTT.HoTT.' | coqtop -q)
+          echo 'Require Import HoTT.HoTT.' | coqtop -q
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
       if: ${{ always() }}
       run: sudo chown -R 1001:116 .
-        
+
 #
 #  Stage 3
 #
@@ -541,7 +544,7 @@ jobs:
     - doc-dep-graphs
     - doc-coqdoc
     - doc-proviola
-    - doc-timing 
+    - doc-timing
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
@@ -553,7 +556,7 @@ jobs:
     # Download dependency graph artifacts
     - uses: actions/download-artifact@v2
       with:
-        name: dep-graphs 
+        name: dep-graphs
     # Download file dependency graph artifacts
     - uses: actions/download-artifact@v2
       with:
@@ -573,21 +576,21 @@ jobs:
     # Unpack Tar files
     - run: |
         mkdir doc
-        tar -xf alectryon-html.tar  -C doc  
+        tar -xf alectryon-html.tar  -C doc
         tar -xf dep-graphs.tar      -C doc
         tar -xf file-dep-graphs.tar -C doc
         tar -xf coqdoc-html.tar     -C doc
         tar -xf proviola-html.tar   -C doc
         tar -xf timing-html.tar     -C doc
-            
+
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
         branch: ${{ env.deployment-branch }}
         folder: doc
         single-commit: true
-      
-    
+
+
 #
 #  Stage 4
 #
@@ -632,4 +635,3 @@ jobs:
     - uses: geekyeggo/delete-artifact@v1
       with:
         name: timing-html
-    
