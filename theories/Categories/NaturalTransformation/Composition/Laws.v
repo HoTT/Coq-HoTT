@@ -47,7 +47,9 @@ Section natural_transformation_identity.
   Qed.
 End natural_transformation_identity.
 
+#[export]
 Hint Rewrite @left_identity @right_identity : category.
+#[export]
 Hint Rewrite @left_identity @right_identity : natural_transformation.
 
 Section whisker.

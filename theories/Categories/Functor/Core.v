@@ -62,5 +62,7 @@ End FunctorCoreNotations.
 
 #[export]
 Hint Resolve composition_of identity_of : category functor.
+#[export]
 Hint Rewrite identity_of : category.
+#[export]
 Hint Rewrite identity_of : functor.
