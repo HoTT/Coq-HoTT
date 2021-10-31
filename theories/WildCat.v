@@ -12,7 +12,7 @@ Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
 
 (* Examples *)
-Require Export WildCat.Type.
+Require Export WildCat.Universe.
 Require Export WildCat.Paths.
 Require Export WildCat.UnitCat.
 Require Export WildCat.EmptyCat.
