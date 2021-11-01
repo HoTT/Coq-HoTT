@@ -186,7 +186,7 @@ jobs:
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python3-pip autoconf -y --allow-unauthenticated
-          python3 -m pip install --user --upgrade pygments dominate beautifulsoup4 docutils
+          python3 -m pip install --user --upgrade pygments dominate beautifulsoup4 docutils==0.17.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
