@@ -3,7 +3,7 @@
 Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
-Require Import WildCat.Type.
+Require Import WildCat.Universe.
 Require Import WildCat.Opposite.
 Require Import WildCat.FunctorCat.
 Require Import WildCat.NatTrans.
