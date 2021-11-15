@@ -64,14 +64,14 @@ Proof.
 Defined.
 
 (** This tactic just applies the previous lemma, using a match to figure out the appropriate type families so the user doesn't have to specify them. *)
-Ltac contr_sigsig a c :=
+Ltac contr_sigsig a c0 :=
   match goal with
   | [ |- Contr (@sig (@sig ?A ?B) (fun ab => @sig (@?C ab) (@?D ab))) ] =>
     (* The lemma only applies when C depends only on the first component of ab, so we need to factor it somehow through pr1. *)
     let C' := fresh in
     transparent assert (C' : {C' : A -> Type & forall ab, C' ab.1 = C ab});
     [ eexists; intros ab; reflexivity
-    | nrefine (contr_sigma_sigma A B C'.1 (fun a b c => D (a;b) c) a c);
+    | nrefine (contr_sigma_sigma A B C'.1 (fun a b c => D (a;b) c) a c0);
       (** In practice, usually the first [Contr] hypothesis can be found by typeclass search, so we try that.  But we don't try on the second one, since often it can't be, and trying can be slow. *)
       [ try exact _ | subst C' ] ]
   end.
