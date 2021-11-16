@@ -158,7 +158,7 @@ Lemma cring_catamorphism_fun_negate {R} x
   : cring_catamorphism_fun R (- x) = - cring_catamorphism_fun R x.
 Proof.
   snrapply (groups.preserves_negate _).
-  1-6: exact _.
+  1-6: typeclasses eauto.
   snrapply Build_IsMonoidPreserving.
   1: exact _.
   split.
