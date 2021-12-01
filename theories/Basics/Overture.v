@@ -4,7 +4,7 @@
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations Basics.Datatypes Basics.Logic.
 
-Declare ML Module "number_string_notation_plugin".
+Declare ML Module "coq-core.plugins.number_string_notation".
 
 (** Keywords for blacklisting from search function *)
 Add Search Blacklist "_admitted" "_subproof" "Private_".

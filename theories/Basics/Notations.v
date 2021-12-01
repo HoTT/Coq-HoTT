@@ -9,7 +9,7 @@ Reserved Notation "'exists' x .. y , p"
 Local Set Warnings Append "-skip-spaces-curly".
 
 (** ML Tactic Notations *)
-Declare ML Module "ltac_plugin".
+Declare ML Module "coq-core.plugins.ltac".
 Global Set Default Proof Mode "Classic".
 
 (** These are the notations whose level and associativity are imposed by Coq *)
