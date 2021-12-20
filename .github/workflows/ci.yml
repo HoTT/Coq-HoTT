@@ -240,6 +240,7 @@ jobs:
           sudo -E npm config set strict-ssl false
           sudo -E npm i -g npm
           sudo -E npm install -g doctoc
+          sudo -E npm install -g npm@latest
 
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
