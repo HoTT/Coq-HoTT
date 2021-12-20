@@ -230,6 +230,11 @@ jobs:
         custom_script: |
           sudo apt-get update
           sudo apt-get install -y ghc cabal-install
+          
+          # See https://github.com/nodejs/help/issues/3644
+          curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          
           sudo apt-get install -y --allow-unauthenticated \
           libnode-dev node-gyp libssl-dev npm aspcud      \
           graphviz xsltproc python-lxml python-pexpect    \
@@ -240,7 +245,6 @@ jobs:
           sudo -E npm config set strict-ssl false
           sudo -E npm i -g npm
           sudo -E npm install -g doctoc
-          sudo -E npm install -g npm@latest
 
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
