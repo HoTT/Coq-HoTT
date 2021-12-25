@@ -1,6 +1,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Truncations.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Export Algebra.Groups.
 Require Import Cubical.
 Require Import WildCat.
@@ -76,7 +76,7 @@ Proof.
   intro y; revert x.
   srapply Quotient_ind_hprop.
   intro x.
-  apply (ap (tr o coeq)).
+  apply (ap (class_of _)).
   apply commutativity.
 Defined.
 

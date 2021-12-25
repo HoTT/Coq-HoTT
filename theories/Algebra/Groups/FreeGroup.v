@@ -1,7 +1,7 @@
 Require Import Basics Types.
 Require Import Groups.Group.
 Require Import Truncations.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Import WildCat.
 
 Local Open Scope mc_scope.
@@ -237,7 +237,7 @@ Section Reduction.
     revert x; snrapply Coeq_ind; intro x; [ | apply path_ishprop].
     revert y; snrapply Coeq_ind; intro y; [ | apply path_ishprop].
     revert z; snrapply Coeq_ind; intro z; [ | apply path_ishprop].
-    cbn; apply ap.
+    rapply (ap (tr o coeq)).
     apply word_concat_w_ww.
   Defined.
 

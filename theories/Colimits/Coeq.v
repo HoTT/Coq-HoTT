@@ -1,57 +1,61 @@
-(* -*- mode: coq; mode: visual-line -*- *)
+Require Import Basics Types.
+Require Import Cubical.DPath.
+Require Import Colimits.GraphQuotient.
+
+Local Open Scope path_scope.
 
 (** * Homotopy coequalizers *)
 
-Require Import HoTT.Basics.
-Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
-Require Import Cubical.DPath.
-Local Open Scope path_scope.
-
 (** ** Definition *)
 
-Module Export Coeq.
+Definition Coeq@{i j u} {B : Type@{i}} {A : Type@{j}} (f g : B -> A) : Type@{u}
+  := GraphQuotient@{i j u} (fun a b => {x : B & (f x = a) * (g x = b)}).
 
-  Private Inductive Coeq {B : Type@{i}} {A : Type@{j}}
-    (f g : B -> A) : Type@{max(i,j)} :=
-      | coeq : A -> Coeq f g.
+Definition coeq {B A f g} (a : A) : @Coeq B A f g := gq a.
+Definition cglue {B A f g} b : @coeq B A f g (f b) = coeq (g b)
+  := gqglue (b; (idpath,idpath)).
 
-  Arguments coeq {B A f g} a.
+Arguments Coeq : simpl never.
+Arguments coeq : simpl never.
+Arguments cglue : simpl never.
 
-  Axiom cglue : forall {B A f g} (b:B), @coeq B A f g (f b) = coeq (g b).
+Definition Coeq_ind {B A f g} (P : @Coeq B A f g -> Type)
+  (coeq' : forall a, P (coeq a))
+  (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b))
+  : forall w, P w.
+Proof.
+  rapply GraphQuotient_ind.
+  intros a b [x [[] []]].
+  exact (cglue' x).
+Defined.
 
-  Definition Coeq_ind {B A f g} (P : @Coeq B A f g -> Type)
-             (coeq' : forall a, P (coeq a))
-             (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b))
-  : forall w, P w
-    := fun w => match w with coeq a => fun _ => coeq' a end cglue'.
-
-  Axiom Coeq_ind_beta_cglue
-  : forall {B A f g} (P : @Coeq B A f g -> Type)
-           (coeq' : forall a, P (coeq a))
-           (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b)) (b:B),
-      apD (Coeq_ind P coeq' cglue') (cglue b) = cglue' b.
-
-End Coeq.
+Lemma Coeq_ind_beta_cglue {B A f g} (P : @Coeq B A f g -> Type)
+  (coeq' : forall a, P (coeq a))
+  (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b)) (b:B)
+  : apD (Coeq_ind P coeq' cglue') (cglue b) = cglue' b.
+Proof.
+  rapply GraphQuotient_ind_beta_gqglue.
+Defined.
 
 Definition Coeq_rec {B A f g} (P : Type) (coeq' : A -> P)
   (cglue' : forall b, coeq' (f b) = coeq' (g b))
-  : @Coeq B A f g -> P
-  := Coeq_ind (fun _ => P) coeq' (fun b => transport_const _ _ @ cglue' b).
+  : @Coeq B A f g -> P.
+Proof.
+  rapply GraphQuotient_rec.
+  intros a b [x [[] []]].
+  exact (cglue' x).
+Defined.
 
 Definition Coeq_rec_beta_cglue {B A f g} (P : Type) (coeq' : A -> P)
   (cglue' : forall b:B, coeq' (f b) = coeq' (g b)) (b:B)
   : ap (Coeq_rec P coeq' cglue') (cglue b) = cglue' b.
 Proof.
-  unfold Coeq_rec.
-  (** Use [eapply] rather than [refine] so that we don't get evars as goals, and don't have to shelve any goals with [shelve_unifiable]. *)
-  eapply (cancelL (transport_const (cglue b) _)).
-  refine ((apD_const (@Coeq_ind B A f g (fun _ => P) coeq' _) (cglue b))^ @ _).
-  refine (Coeq_ind_beta_cglue (fun _ => P) _ _ _).
+  rapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
 Definition Coeq_ind_dp {B A f g} (P : @Coeq B A f g -> Type)
-             (coeq' : forall a, P (coeq a))
-             (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
+  (coeq' : forall a, P (coeq a))
+  (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
   : forall w, P w.
 Proof.
   srapply (Coeq_ind P coeq'); intros b.
@@ -59,9 +63,9 @@ Proof.
 Defined.
 
 Definition Coeq_ind_dp_beta_cglue {B A f g} (P : @Coeq B A f g -> Type)
-             (coeq' : forall a, P (coeq a))
-             (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
-             (b : B)
+  (coeq' : forall a, P (coeq a))
+  (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
+  (b : B)
   : dp_apD (Coeq_ind_dp P coeq' cglue') (cglue b) = cglue' b.
 Proof.
   apply dp_apD_path_transport.
@@ -71,7 +75,7 @@ Defined.
 (** ** Universal property *)
 
 Definition Coeq_unrec {B A} (f g : B -> A) {P}
-           (h : Coeq f g -> P)
+  (h : Coeq f g -> P)
   : {k : A -> P & k o f == k o g}.
 Proof.
   exists (h o coeq).

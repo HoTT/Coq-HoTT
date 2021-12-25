@@ -40,7 +40,6 @@ Require Export HoTT.PropResizing.PropResizing.
 (* Don't export the rest of [PropResizing] *)
 
 Require Export HoTT.HIT.Interval.
-Require Export HoTT.HIT.Coeq.
 Require Export HoTT.HIT.Flattening.
 Require Export HoTT.HIT.FreeIntQuotient.
 Require Export HoTT.HIT.SetCone.
@@ -66,6 +65,8 @@ Require Export HoTT.Limits.Pullback.
 Require Export HoTT.Limits.Equalizer.
 Require Export HoTT.Limits.Limit.
 
+Require Export HoTT.Colimits.GraphQuotient.
+Require Export HoTT.Colimits.Coeq.
 Require Export HoTT.Colimits.Pushout.
 Require Export HoTT.Colimits.SpanPushout.
 Require Export HoTT.Colimits.Quotient.

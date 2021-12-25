@@ -2,7 +2,7 @@
 Require Import Basics Types.
 Require Import HProp HSet.
 Require Import Spaces.Pos Spaces.Int.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Import Modalities.Modality Truncations.
 Require Import Cubical.DPath.
 

@@ -3,7 +3,7 @@ Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
 Require Import Diagrams.ConstantDiagram.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 
 Local Open Scope path_scope.
 Generalizable All Variables.
