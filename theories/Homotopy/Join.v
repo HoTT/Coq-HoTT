@@ -1,9 +1,5 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Import Types.
-Require Import Cubical.
-Require Import HProp.
-Require Import HSet.
+Require Import Basics Types Cubical.
+Require Import HProp HSet.
 Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
@@ -173,6 +169,18 @@ Section Join.
       exact (contr_inhabited_hprop B b).
   Defined.
 
+  Lemma equiv_into_hprop `{Funext} {A B P : Type} `{IsHProp P} (f : A -> P)
+    : (Join A B -> P) <~> (B -> P).
+  Proof.
+    srapply equiv_iff_hprop.
+    1: exact (fun f => f o joinr).
+    intros g.
+    srapply Join_rec.
+    1,2: assumption.
+    intros a b.
+    apply path_ishprop.
+  Defined.
+
   (** And coincides with their disjunction *)
   Definition equiv_join_hor `{Funext} A B `{IsHProp A} `{IsHProp B} 
     : Join A B <~> hor A B.
@@ -258,4 +266,13 @@ Proof.
   destruct p.
   apply diamond_symm.
 Defined.
+
+
+(** The joint of n.+1 copies of a type. *)
+Fixpoint Join_power (A : Type) (n : nat) : Type :=
+  match n with
+  | 0%nat => A
+  | m.+1%nat => Join A (Join_power A m)
+  end.
+
 

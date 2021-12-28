@@ -21,6 +21,9 @@ Arguments legs_comm {G D X} C i j g x : rename.
 
 Coercion legs : Cocone >-> Funclass.
 
+Definition issig_Cocone {G : Graph} (D : Diagram G) (X : Type)
+  : _ <~> Cocone D X := ltac:(issig).
+
 Section Cocone.
   Context `{Funext} {G : Graph} {D : Diagram G} {X : Type}.
 
