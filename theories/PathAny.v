@@ -17,6 +17,8 @@ Proof.
   refine (@isequiv_contr_contr {x:A & a=x} {x:A & P x} _ _ _).
 Defined.
 
+(** See Homotopy/EncodeDecode.v for a related characterization of identity types. *)
+
 (** This is another result for characterizing the path type of [A] when given an equivalence [e : B <~> A], such as an [issig] lemma for [A]. It can help Coq to deduce the type family [P] if [revert] is used to move [a0] and [a1] into the goal, if needed. *)
 Definition equiv_path_along_equiv {A B : Type} {P : A -> A -> Type}
            (e : B <~> A)
@@ -77,3 +79,4 @@ Ltac contr_sigsig a c :=
   end.
 
 (** For examples of the use of this tactic, see for instance [Factorization] and [Idempotents]. *)
+
