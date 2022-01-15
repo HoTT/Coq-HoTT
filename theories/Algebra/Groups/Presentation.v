@@ -5,6 +5,10 @@ Require Import Algebra.Groups.GroupCoeq.
 Require Import Spaces.Finite.
 Require Import WildCat.
 
+
+Local Open Scope mc_scope.
+Local Open Scope mc_mult_scope.
+
 (** In this file we develop presentations of groups. *)
 
 (** The data of a group presentation *)
@@ -104,7 +108,7 @@ Proof.
     refine (p _ @ (grp_homo_unit _)^). }
   intros p r.
   hnf in p.
-  pose (p' := p o freegroup_eta _).
+  pose (p' := p o freegroup_eta).
   clearbody p'; clear p.
   specialize (p' (FreeGroup.word_sing _ (inl r))).
   refine (_ @ p').
@@ -114,3 +118,76 @@ Proof.
   refine (_ @ right_identity _).
   f_ap.
 Defined.
+
+(** ** Constructors for finite presentations *)
+
+Definition Build_Finite_GroupPresentation n m
+  (f : FinSeq m (FreeGroup (Fin n)))
+  : GroupPresentation.
+Proof.
+  snrapply Build_GroupPresentation.
+  - exact (Fin n).
+  - exact (Fin m).
+  - exact f.
+Defined.
+
+Global Instance FinitelyGeneratedPresentation_Build_Finite_GroupPresentation
+  {n m f}
+  : FinitelyGeneratedPresentation (Build_Finite_GroupPresentation n m f).
+Proof.
+  unshelve econstructor.
+  2: simpl; apply tr; reflexivity.
+Defined.
+
+Global Instance FinitelyRelatedPresentation_Build_Finite_GroupPresentation
+  {n m f}
+  : FinitelyRelatedPresentation (Build_Finite_GroupPresentation n m f).
+Proof.
+  unshelve econstructor.
+  2: simpl; apply tr; reflexivity.
+Defined.
+
+(** ** Notations for presentations *)
+
+(** Convenient abbreviation when defining notations. *)
+Local Notation ff := (freegroup_in o fin_nat).
+
+(** TODO: I haven't worked out how to generalize to any number of binders, so we explicitly list the first few levels. *)
+
+Local Open Scope nat_scope.
+
+(** One generator *)
+Notation "⟨ x | F , .. , G ⟩" :=
+  (Build_Finite_GroupPresentation 1 _
+    (fscons ((fun (x : FreeGroup (Fin 1))
+      => F : FreeGroup (Fin _)) (ff 0%nat))
+    .. (fscons ((fun (x : FreeGroup (Fin 1))
+      => G : FreeGroup (Fin _)) (ff 0)) fsnil) ..))
+  (at level 200, x binder).
+
+(** Two generators *)
+Notation "⟨ x , y | F , .. , G ⟩" :=
+  (Build_Finite_GroupPresentation 2 _
+    (fscons ((fun (x y : FreeGroup (Fin 2))
+      => F : FreeGroup (Fin _)) (ff 0) (ff 1))
+    .. (fscons ((fun (x y : FreeGroup (Fin 2))
+      => G : FreeGroup (Fin _)) (ff 0) (ff 1)) fsnil) ..))
+  (at level 200, x binder, y binder).
+
+(** Three generators *)
+Notation "⟨ x , y , z | F , .. , G ⟩" :=
+  (Build_Finite_GroupPresentation 3 _
+    (fscons ((fun (x y z : FreeGroup (Fin 3))
+      => F : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2))
+    .. (fscons ((fun (x y z : FreeGroup (Fin 3))
+      => G : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2)) fsnil) ..))
+  (at level 200, x binder, y binder, z binder).
+
+(** Tests: *)
+
+(*
+Check ⟨ x , y | x * y ,  x * y * x , x * (-y)*x*x*x⟩.
+Check ⟨ x | x * x * x , -x ⟩.
+Check ⟨ x , y , z | x * y * z , x * -z , x * y⟩.
+*)
+ 
