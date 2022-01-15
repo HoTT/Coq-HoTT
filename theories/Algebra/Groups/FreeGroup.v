@@ -110,7 +110,6 @@ Section Reduction.
   Proof.
     intros x y.
     strip_truncations.
-(*      apply tr. *)
     revert x; snrapply Coeq_rec.
     { intros x; revert y.
       snrapply Coeq_rec.
@@ -366,8 +365,15 @@ Section Reduction.
   (** Typeclass search can already find this but we leave it here as a definition for reference. *)
   Definition isfreegroup_freegrup `{Funext} : IsFreeGroup FreeGroup := _.
 
+  Definition freegroup_in : A -> FreeGroup
+    := freegroup_eta o word_sing o inl.
+
+  Coercion freegroup_in : A >-> group_type.
+
 End Reduction.
 
+Arguments freegroup_eta {A}.
+Arguments freegroup_in {A}.
 
 (** Properties of free groups *)
 
