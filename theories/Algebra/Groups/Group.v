@@ -461,6 +461,14 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** Power operation *)
+
+Fixpoint grp_pow {G : Group} (g : G) (n : nat) : G :=
+  match n with
+  | 0%nat => mon_unit
+  | m.+1%nat => g * grp_pow g m
+  end.
+
 (** The wild cat of Groups *)
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
