@@ -54,7 +54,8 @@ Module Export Core.
     Notation "9" := (nat_category 9) : category_scope.
   End NatCategoryCoreNotations.
 
-  Typeclasses Transparent nat_category.
+  #[export]
+Typeclasses Transparent nat_category.
   #[export]
   Hint Unfold nat_category : core.
   Arguments nat_category / .

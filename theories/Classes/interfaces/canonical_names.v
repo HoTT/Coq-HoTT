@@ -54,7 +54,7 @@ Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 Class Cast A B := cast: A -> B.
 Arguments cast _ _ {Cast} _.
 Notation "' x" := (cast _ _ x) : mc_scope.
-Typeclasses Transparent Cast.
+#[global] Typeclasses Transparent Cast.
 
 (* Other canonically named relations/operations/constants: *)
 Class SgOp A := sg_op: A -> A -> A.
@@ -67,17 +67,17 @@ Class Negate A := negate: A -> A.
 Class DecRecip A := dec_recip: A -> A.
 Definition ApartZero R `{Zero R} `{Apart R} := sig (≶ zero).
 Class Recip A `{Apart A} `{Zero A} := recip: ApartZero A -> A.
-Typeclasses Transparent SgOp MonUnit Plus Mult Zero One Negate.
+#[global] Typeclasses Transparent SgOp MonUnit Plus Mult Zero One Negate.
 
 Class Meet A := meet: A -> A -> A.
 Class Join A := join: A -> A -> A.
 Class Top A := top: A.
 Class Bottom A := bottom: A.
-Typeclasses Transparent Meet Join Top Bottom.
+#[global] Typeclasses Transparent Meet Join Top Bottom.
 
 Class Le A := le: Relation A.
 Class Lt A := lt: Relation A.
-Typeclasses Transparent Le Lt.
+#[global] Typeclasses Transparent Le Lt.
 
 Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
@@ -241,7 +241,7 @@ Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
 Class Commutative {B A} (f : A -> A -> B) : Type
   := commutativity: forall x y, f x y = f y x.
 
-Typeclasses Transparent Commutative.
+#[global] Typeclasses Transparent Commutative.
 
 Class HeteroAssociative {A B C AB BC ABC}
   (fA_BC: A -> BC -> ABC) (fBC: B -> C -> BC)
