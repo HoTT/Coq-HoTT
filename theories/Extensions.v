@@ -5,7 +5,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp Equiv.PathSplit PathAny.
 Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
-Require Import HIT.Coeq Colimits.MappingCylinder.
+Require Import Colimits.Coeq Colimits.MappingCylinder.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -737,7 +737,7 @@ Proof.
     2:change (fun y => pr_cylcoeq p q (coeq (functor_cyl q y)))
       with (fun y => coeq (f := f') (g := g') (pr_cyl (functor_cyl q y))).
     all:refine ((ap_V _ (eissect pr_cyl x))^ @ _).
-    all:rapply ap_compose. }
+    all: exact (ap_compose (fun x => pr_cyl (functor_cyl _ x)) coeq _). }
   pose (eb1 := fun u v w => (fst (cyl_extendable _ _ _ (eb'' u v)) w).1).
   (** Now we construct an extension using Coeq-induction, and prove that it *is* an extension also using Coeq-induction. *)
   srefine (_;_); srapply Coeq_ind_dp.

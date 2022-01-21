@@ -1,6 +1,6 @@
 Require Import Basics Types Cubical WildCat.
 Require Import Truncations.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Import Algebra.Groups.
 Require Import Algebra.AbGroups.AbelianGroup.
 
@@ -97,9 +97,8 @@ Section Abel.
     (x y z : G) : dp_apD (Abel_ind P a c) (ab_comm x y z) = c x y z.
   Proof.
     apply dp_apD_path_transport.
-    refine (apD_compose' tr _ _ @ _).
-    refine (ap _ (Coeq_ind_beta_cglue _ _ _ (x, y, z)) @ _).
-    apply concat_V_pp.
+    refine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).
+    rapply Coeq_ind_beta_cglue.
   Defined.
 
   (** We also have a recursion princple. *)
@@ -166,7 +165,7 @@ Section AbelGroup.
       refine (ap _ (associativity _ _ _)). }
     intros b c d.
     revert a.
-    Abel_ind_hprop a; cbn.
+    Abel_ind_hprop a; simpl.
     refine (ap _ (associativity _ _ _) @ _).
     refine (ab_comm _ _ _ @ _).
     refine (ap _ (associativity _ _ _)^).
@@ -178,7 +177,7 @@ Section AbelGroup.
     intros x y.
     Abel_ind_hprop z; revert y.
     Abel_ind_hprop y; revert x.
-    Abel_ind_hprop x; cbn.
+    Abel_ind_hprop x; simpl.
     apply ap, associativity.
   Defined.
 
@@ -192,13 +191,13 @@ Section AbelGroup.
   Global Instance abel_leftidentity : LeftIdentity abel_sgop abel_mon_unit.
   Proof.
     Abel_ind_hprop x.
-    cbn; apply ap, left_identity.
+    simpl; apply ap, left_identity.
   Defined.
 
   Global Instance abel_rightidentity : RightIdentity abel_sgop abel_mon_unit.
   Proof.
     Abel_ind_hprop x.
-    cbn; apply ap, right_identity.
+    simpl; apply ap, right_identity.
   Defined.
 
   (** Hence Abel G is a monoid *)
@@ -211,7 +210,6 @@ Section AbelGroup.
     Abel_ind_hprop y.
     revert x.
     Abel_ind_hprop x.
-    cbn.
     refine ((ap ab (left_identity _))^ @ _).
     refine (_ @ (ap ab (left_identity _))).
     apply ab_comm.
@@ -236,14 +234,14 @@ Section AbelGroup.
   (** Again by Abel_ind_hprop and the corresponding laws for G we can prove the left and right inverse laws. *)
   Global Instance abel_leftinverse : LeftInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    Abel_ind_hprop x.
-    cbn; apply ap; apply left_inverse.
+    Abel_ind_hprop x; simpl.
+    apply ap; apply left_inverse.
   Defined.
 
   Instance abel_rightinverse : RightInverse abel_sgop abel_negate abel_mon_unit.
   Proof.
-    Abel_ind_hprop x.
-    cbn; apply ap; apply right_inverse.
+    Abel_ind_hprop x; simpl.
+    apply ap; apply right_inverse.
   Defined.
 
   (** Thus Abel G is a group *)

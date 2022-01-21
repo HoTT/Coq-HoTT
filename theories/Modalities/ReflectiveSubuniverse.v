@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Equiv.BiInv Extensions HProp HFiber NullHomotopy Pullback.
 Require Import PathAny.
-Require Import HIT.Coeq Colimits.Pushout.
+Require Import Colimits.Coeq Colimits.Pushout.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

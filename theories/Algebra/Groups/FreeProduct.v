@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Cubical.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Import Spaces.List.
 Require Import Colimits.Pushout.
 Require Import Algebra.Groups.Group.
@@ -448,7 +448,7 @@ Section FreeProduct.
     rapply amal_type_ind_hprop; intro z; revert y.
     rapply amal_type_ind_hprop; intro y; revert x.
     rapply amal_type_ind_hprop; intro x.
-    cbn; nrapply (ap amal_eta).
+    nrapply (ap amal_eta).
     rapply word_concat_w_ww.
   Defined.
 
@@ -461,7 +461,7 @@ Section FreeProduct.
   Global Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
-    cbn; nrapply (ap amal_eta).
+    nrapply (ap amal_eta).
     apply word_concat_w_nil.
   Defined.
 
@@ -496,7 +496,6 @@ Section FreeProduct.
       change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl (- h)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
-      cbn.
       rewrite <- (word_concat_w_nil (cons _ _)).
       change (amal_eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
@@ -514,7 +513,6 @@ Section FreeProduct.
       change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr (-k)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
-      cbn.
       rewrite <- (word_concat_w_nil (cons _ _)).
       change (amal_eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
@@ -676,7 +674,7 @@ Section FreeProduct.
     destruct hkp as [h [k p]].
     apply path_prod; cbn;
     apply equiv_path_grouphomomorphism;
-    intro; cbn; apply right_identity.
+    intro; simpl; rapply right_identity.
   Defined.
 
 End FreeProduct.

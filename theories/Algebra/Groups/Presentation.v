@@ -93,7 +93,7 @@ Proof.
   { intros p.
     hnf.
     rapply Trunc_ind.
-    srapply Coeq.Coeq.Coeq_ind.
+    srapply Coeq.Coeq_ind.
     2: intros; apply path_ishprop.
     intros w; hnf.
     induction w.

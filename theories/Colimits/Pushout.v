@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types WildCat.
 Require Import HSet TruncType.
-Require Export HIT.Coeq.
+Require Export Colimits.Coeq.
 Local Open Scope path_scope.
 
 (** * Homotopy Pushouts *)
@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 
 Definition Pushout@{i j k l} {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
   (f : A -> B) (g : A -> C) : Type@{l}
-  := Coeq@{l l} (inl o f) (inr o g).
+  := Coeq@{l l _} (inl o f) (inr o g).
 
 Definition push {A B C : Type} {f : A -> B} {g : A -> C}
  : B+C -> Pushout f g

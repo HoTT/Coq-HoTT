@@ -5,7 +5,7 @@ Require Import Diagrams.Diagram.
 Require Import Diagrams.ParallelPair.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 
 Generalizable All Variables.
 

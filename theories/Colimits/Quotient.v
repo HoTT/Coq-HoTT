@@ -4,7 +4,7 @@ Require Import HSet.
 Require Import HProp.
 Require Import TruncType.
 Require Import HIT.epi.
-Require Import HIT.Coeq.
+Require Import Colimits.GraphQuotient.
 Require Import Truncations.
 
 Local Open Scope path_scope.
@@ -24,17 +24,15 @@ We do this by defining the quotient as a truncated coequalizer.
 *)
 
 Definition Quotient@{i j k} {A : Type@{i}} (R : Relation@{i j} A) : Type@{k}
-  := Trunc@{k} 0 (Coeq@{k k}
-    (fun x : sig@{k k} (fun a : A => sig (R a)) => x.1)
-    (fun x : sig@{k k} (fun a : A => sig (R a)) => x.2.1)).
+  := Trunc@{k} 0 (GraphQuotient@{i j k} R).
 
 Definition class_of@{i j k} {A : Type@{i}} (R : Relation@{i j} A)
-  : A -> Quotient@{i j k} R := tr o coeq.
+  : A -> Quotient@{i j k} R := tr o gq.
 
 Definition qglue@{i j k} {A : Type@{i}} {R : Relation@{i j} A}
   {x y : A}
   : R x y -> class_of@{i j k} R x = class_of R y
-  := fun p => ap tr (cglue (x; y; p)).
+  := fun p => ap tr (gqglue p).
 
 Global Instance ishset_quotient {A : Type} (R : Relation A)
   : IsHSet (Quotient R) := _.
@@ -46,9 +44,9 @@ Definition Quotient_ind@{i j k l}
   (peq : forall x y (H : R x y), qglue H # pclass x = pclass y)
   : forall q, P q.
 Proof.
-  eapply Trunc_ind, Coeq_ind.
+  eapply Trunc_ind, GraphQuotient_ind.
   1: assumption.
-  intros [a [b p]].
+  intros a b p.
   refine (transport_compose _ _ _ _ @ _).
   apply peq.
 Defined.
@@ -62,8 +60,10 @@ Definition Quotient_ind_beta_qglue@{i j k l}
   : apD (Quotient_ind@{i j k l} R P pclass peq) (qglue p) = peq x y p.
 Proof.
   refine (apD_compose' tr _ _ @ _).
-  refine (ap _ (Coeq_ind_beta_cglue _ _ _ _) @ _).
-  apply concat_V_pp.
+  unfold Quotient_ind.
+  refine (ap _ (GraphQuotient_ind_beta_gqglue _ pclass
+    (fun a b p0 => transport_compose P tr _ _ @ peq a b p0) _ _ _) @ _).
+  rapply concat_V_pp.
 Defined.
 
 Definition Quotient_rec@{i j k l}
@@ -72,9 +72,8 @@ Definition Quotient_rec@{i j k l}
   (peq : forall x y, R x y -> pclass x = pclass y)
   : Quotient@{i j k} R -> P.
 Proof.
-  eapply Trunc_rec, Coeq_rec.
-  intros [a [b p]].
-  by apply peq.
+  eapply Trunc_rec, GraphQuotient_rec.
+  apply peq.
 Defined.
 
 Definition Quotient_rec_beta_qglue @{i j k l}
@@ -85,7 +84,7 @@ Definition Quotient_rec_beta_qglue @{i j k l}
   : ap (Quotient_rec@{i j k l} R P pclass peq) (qglue p) = peq x y p.
 Proof.
   refine ((ap_compose tr _ _)^ @ _).
-  srapply Coeq_rec_beta_cglue.
+  srapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
 Arguments Quotient : simpl never.

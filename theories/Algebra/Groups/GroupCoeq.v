@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat.
 Require Import Algebra.Groups.Group.
-Require Import HIT.Coeq.
+Require Import Colimits.Coeq.
 Require Import Algebra.Groups.FreeProduct.
 
 Local Open Scope mc_scope.
