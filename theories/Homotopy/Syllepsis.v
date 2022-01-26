@@ -97,39 +97,39 @@ Defined.
 Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
   (rlucancel^-1 1 [-] rlucancel^-1 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel^-1 1).
 Proof.
-  by induction theta, p, q.
+  by destruct theta, p, q.
 Defined.
 
 Definition lrucancel_sHs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
   (lrucancel^-1 1 [I] lrucancel^-1 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel^-1 1).
 Proof.
-  by induction theta, p, q.
+  by destruct theta, p, q.
 Defined.
 
 Definition rlucancel_sHs_1 {X} {a b : X} (p : a = b) :
   (rlucancel^-1 1 [I] rlucancel^-1 1) = rlucancel^-1 (idpath p).
 Proof.
-  by induction p.
+  by destruct p.
 Defined.
 
 Definition lrucancel_sVs_1 {X} {a b : X} (p : a = b) :
   (lrucancel^-1 1 [-] lrucancel^-1 1) = lrucancel^-1 (idpath p).
 Proof.
-  by induction p.
+  by destruct p.
 Defined.
 
 (* Naturality of composition with 1. *)
 Definition ulnat {X} {a b : X} {u v : a = b} (p : u = v) :
   whiskerL 1 p @ concat_1p v = concat_1p u @ p.
 Proof.
-  induction p.
+  destruct p.
   exact (lrucancel^-1 1).
 Defined. 
 
 Definition urnat {X} {a b : X} {u v : a = b} (p : u = v) :
   whiskerR p 1 @ concat_p1 v = concat_p1 u @ p.
 Proof.
-  induction p.
+  destruct p.
   exact (lrucancel^-1 1).
 Defined.
 
@@ -137,7 +137,7 @@ Defined.
 Definition wlrnat {X} {a b c : X} {u v : a = b} {x y : b = c} p q :
   whiskerL u p @ whiskerR q y = whiskerR q x @ whiskerL v p.
 Proof.
-  by induction p, q.
+  by destruct p, q.
 Defined.
 
 (* Eckmann-Hilton *)
@@ -156,7 +156,7 @@ Proof.
   revert theta.
   srapply (equiv_ind rlucancel^-1).
   intro theta.
-  by induction theta, p.
+  by destruct theta, p.
 Defined.
 
 Definition eh_1p {X} {a : X} (p : idpath a = idpath a) :
@@ -171,7 +171,7 @@ Proof.
   revert theta.
   srapply (equiv_ind rlucancel^-1).
   intro theta.
-  by induction theta, p.
+  by destruct theta, p.
 Defined.
 
 Definition eh_p1 {X} {a : X} (p : idpath a = idpath a) :
@@ -184,14 +184,14 @@ Defined.
 Definition ehlnat {X} {a : X} (u : idpath a = idpath a) {x y} (p : x = y) :
   whiskerL u p @ eh u y = eh u x @ whiskerR p u.
 Proof.
-  induction p.
+  destruct p.
   exact (lrucancel^-1 1).
 Defined.
 
 Definition ehrnat {X} {a : X} {u v} (p : u = v) (x : idpath a = idpath a) :
   whiskerR p x @ eh v x = eh u x @ whiskerL x p.
 Proof.
-  induction p.
+  destruct p.
   exact (lrucancel^-1 1).
 Defined.
 
@@ -199,14 +199,14 @@ Defined.
 Definition ehlnat_1p {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
   (ehlnat 1 p [I] urnat p) @ whiskerR (eh_1p u) _ = whiskerL _ (eh_1p v) @ ulnat p.
 Proof.
-  induction p.
+  destruct p.
   apply lrucancel_sHs_1_pp.
 Defined.
 
 Definition ehrnat_p1 {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
   (ehrnat p 1 [I] ulnat p) @ whiskerR (eh_p1 u) _ = whiskerL _ (eh_p1 v) @ urnat p.
 Proof.
-  induction p.
+  destruct p.
   apply lrucancel_sHs_1_pp.
 Defined.
 
@@ -214,13 +214,13 @@ Defined.
 Local Definition concat_p_pp_pp_p {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
   concat_p_pp p q r @ concat_pp_p p q r = 1.
 Proof.
-  by induction p, q, r.
+  by destruct p, q, r.
 Defined.
 
 Local Definition concat_pp_p_p_pp {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
   concat_pp_p p q r @ concat_p_pp p q r = 1.
 Proof.
-  by induction p, q, r.
+  by destruct p, q, r.
 Defined.
 
 (* These lemmas are in the library but with worse computational behavior. *)
@@ -240,14 +240,14 @@ Defined.
 Definition ulnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
   ulnat p [-] ulnat q = whiskerR (whiskerL_pp _ p q)^ _ @ ulnat (p @ q).
 Proof.
-  by induction p, q, u.
+  by destruct p, q, u.
 Defined.
 
 (* We now prove that "urnat (p @ q)" suitably relates to "urnat p" and "urnat q". *)
 Definition urnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
   urnat p [-] urnat q = whiskerR (whiskerR_pp _ p q)^ _ @ urnat (p @ q).
 Proof.
-  by induction p, q, u.
+  by destruct p, q, u.
 Defined.
 
 (* We now prove that "ehlnat u (p @ q)" suitably relates to "ehlnat u p" and "ehlnat u q". *)
@@ -258,7 +258,7 @@ Proof.
   revert p.
   srapply (equiv_ind (equiv_path_inverse _ _)).
   intro p.
-  induction p, q.
+  destruct p, q.
   cbn.
   apply rlucancel^-1, lrucancel_sVs_1.
 Defined.
@@ -271,7 +271,7 @@ Proof.
   revert p.
   srapply (equiv_ind (equiv_path_inverse _ _)).
   intro p.
-  induction p, q.
+  destruct p, q.
   cbn.
   apply rlucancel^-1, lrucancel_sVs_1.
 Defined.
@@ -281,7 +281,7 @@ Definition wlrnat_p_pp {X} {a b c : X} {u v w : a = b} {x y : b = c} (p : x = y)
   (wlrnat p q [I] wlrnat p r) @ whiskerR (whiskerR_pp _ q r)^ _ =
   whiskerL _ (whiskerR_pp _ q r)^ @ wlrnat p (q @ r).
 Proof.
-  by induction p, q, r.
+  by destruct p, q, r.
 Defined.
 
 (* We now prove that "wlrnat (p @ q) r" suitably relates to "wlrnat p r" and "wlrnat q r". *)
@@ -289,7 +289,7 @@ Definition wlrnat_pp_p {X} {a b c : X} {u v : a = b} {x y z : b = c} (p : x = y)
   (wlrnat p r [-] wlrnat q r) @ whiskerL _ (whiskerL_pp _ p q)^ =
   whiskerR (whiskerL_pp _ p q)^ _ @ wlrnat (p @ q) r.
 Proof.
-  by induction p, q, r.
+  by destruct p, q, r.
 Defined.
 
 (* We now prove that "wlrnat p q" suitably relates to "wlrnat q p". *)
@@ -297,7 +297,7 @@ Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q :
   whiskerR (wlrnat p q) (eh v y) @ (ehrnat q x [-] ehlnat v p) =
   (ehlnat u p [-] ehrnat q y) @ whiskerL (eh u x) (wlrnat q p)^.
 Proof.
-  induction p, q.
+  destruct p, q.
   exact (lrucancel^-1 1).
 Defined.
 
@@ -367,58 +367,58 @@ Section eh_p_pp.
     concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.
   Proof.
     apply moveR_Vp in H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
-    induction H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
+    destruct H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
     clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.
-    induction wrpp_yz0, wrpp_yz1.
+    destruct wrpp_yz0, wrpp_yz1.
     clear wrpp_yz0 wrpp_yz1.
     revert ulnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_x0.
-    induction ulnat_x0.
+    destruct ulnat_x0.
     clear ulnat_x0.
     revert ulnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_x1.
-    induction ulnat_x1.
+    destruct ulnat_x1.
     clear ulnat_x1.
     revert ulnat_x2.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_x2.
-    induction ulnat_x2.
+    destruct ulnat_x2.
     clear ulnat_x2.
     revert urnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_y0.
-    induction urnat_y0.
+    destruct urnat_y0.
     clear urnat_y0.
     revert urnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_y1.
-    induction urnat_y1.
+    destruct urnat_y1.
     clear urnat_y1.
     revert urnat_z0.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_z0.
-    induction urnat_z0.
+    destruct urnat_z0.
     clear urnat_z0.
     revert urnat_z1.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_z1.
-    induction urnat_z1.
+    destruct urnat_z1.
     clear urnat_z1.
-    induction wry0, wry1, wrz0, wrz1.
+    destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
     revert wlrnat_x_y.
     srapply (equiv_ind rlucancel^-1).
     intro wlrnat_x_y.
-    induction wlrnat_x_y.
+    destruct wlrnat_x_y.
     clear wlrnat_x_y.
     revert wlrnat_x_z.
     srapply (equiv_ind rlucancel^-1).
     intro wlrnat_x_z.
-    induction wlrnat_x_z.
+    destruct wlrnat_x_z.
     clear wlrnat_x_z.
-    induction wlx0.
+    destruct wlx0.
     clear wlx0.
     reflexivity.
   Defined.
@@ -501,58 +501,58 @@ Section eh_pp_p.
     concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.
   Proof.
     apply moveR_Vp in H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
-    induction H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
+    destruct H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
     clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.
-    induction wlpp_xy0, wlpp_xy1.
+    destruct wlpp_xy0, wlpp_xy1.
     clear wlpp_xy0 wlpp_xy1.
     revert ulnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_x0.
-    induction ulnat_x0.
+    destruct ulnat_x0.
     clear ulnat_x0.
     revert ulnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_x1.
-    induction ulnat_x1.
+    destruct ulnat_x1.
     clear ulnat_x1.
     revert ulnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y0.
-    induction ulnat_y0.
+    destruct ulnat_y0.
     clear ulnat_y0.
     revert ulnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y1.
-    induction ulnat_y1.
+    destruct ulnat_y1.
     clear ulnat_y1.
     revert urnat_z0.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_z0.
-    induction urnat_z0.
+    destruct urnat_z0.
     clear urnat_z0.
     revert urnat_z1.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_z1.
-    induction urnat_z1.
+    destruct urnat_z1.
     clear urnat_z1.
     revert urnat_z2.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_z2.
-    induction urnat_z2.
+    destruct urnat_z2.
     clear urnat_z2.
-    induction wlx0, wlx1, wly0, wly1.
+    destruct wlx0, wlx1, wly0, wly1.
     clear wlx0 wlx1 wly0 wly1.
     revert wlrnat_x_z.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_x_z.
-    induction wlrnat_x_z.
+    destruct wlrnat_x_z.
     clear wlrnat_x_z.
     revert wlrnat_y_z.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_y_z.
-    induction wlrnat_y_z.
+    destruct wlrnat_y_z.
     clear wlrnat_y_z.
-    induction wrz0.
+    destruct wrz0.
     clear wrz0.
     reflexivity.
   Defined.
@@ -634,77 +634,77 @@ Section eh_V.
     apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
     apply symmetry in wlrnat_V_x_y.
-    induction wlrnat_V_x_y.
+    destruct wlrnat_V_x_y.
     clear wlrnat_V_x_y.
     clear H_whiskerR_wlrnat_x_y.
     revert ehlnat_1p_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_1p_x0.
-    induction ehlnat_1p_x0.
+    destruct ehlnat_1p_x0.
     clear ehlnat_1p_x0.
     revert ehlnat_1p_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_1p_x1.
-    induction ehlnat_1p_x1.
+    destruct ehlnat_1p_x1.
     clear ehlnat_1p_x1.
     revert ehrnat_p1_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_y0.
-    induction ehrnat_p1_y0.
+    destruct ehrnat_p1_y0.
     clear ehrnat_p1_y0.
     revert ehrnat_p1_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_y1.
-    induction ehrnat_p1_y1.
+    destruct ehrnat_p1_y1.
     clear ehrnat_p1_y1.
     revert ehlnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x0.
-    induction ehlnat_x0.
+    destruct ehlnat_x0.
     clear ehlnat_x0.
     revert ehlnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x1.
-    induction ehlnat_x1.
+    destruct ehlnat_x1.
     clear ehlnat_x1.
     revert ehrnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y0.
-    induction ehrnat_y0.
+    destruct ehrnat_y0.
     clear ehrnat_y0.
     revert ehrnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y1.
-    induction ehrnat_y1.
+    destruct ehrnat_y1.
     clear ehrnat_y1.
     revert urnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_x0.
-    induction urnat_x0.
+    destruct urnat_x0.
     clear urnat_x0.
     revert urnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_x1.
-    induction urnat_x1.
+    destruct urnat_x1.
     clear urnat_x1.
     revert ulnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y0.
-    induction ulnat_y0.
+    destruct ulnat_y0.
     clear ulnat_y0.
     revert ulnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y1.
-    induction ulnat_y1.
+    destruct ulnat_y1.
     clear ulnat_y1.
-    induction wry0, wry1.
+    destruct wry0, wry1.
     clear wry0 wry1.
     revert wlrnat_y_x.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_y_x.
-    induction wlrnat_y_x.
+    destruct wlrnat_y_x.
     clear wlrnat_y_x.
-    induction wlx1.
+    destruct wlx1.
     clear wlx1.
     reflexivity.
   Defined.
@@ -799,38 +799,38 @@ Section Ehrnat_p1_pp.
     whiskerL _ H_c02 @ urnat_yz.
   Proof.
     apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
-    induction H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
+    destruct H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
     clear H_urnat_yz H_ulnat_yz H_ehrnat_yz.
     apply moveR_Vp in ehrnat_p1_y, ehrnat_p1_z.
-    induction ehrnat_p1_y, ehrnat_p1_z.
+    destruct ehrnat_p1_y, ehrnat_p1_z.
     clear ehrnat_p1_y ehrnat_p1_z.
-    induction H_a02, H_c02.
+    destruct H_a02, H_c02.
     clear H_a02 H_c02.
-    induction wrpp_yz, wlpp_yz.
+    destruct wrpp_yz, wlpp_yz.
     clear wrpp_yz wlpp_yz.
-    induction a01, a12, b01, b12, c01, c12.
+    destruct a01, a12, b01, b12, c01, c12.
     clear a01 a12 b01 b12 c01 c12.
     revert ulnat_y.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y.
-    induction ulnat_y.
+    destruct ulnat_y.
     clear ulnat_y.
     revert ulnat_z.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_z.
-    induction ulnat_z.
+    destruct ulnat_z.
     clear ulnat_z.
     revert ehrnat_y.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y.
-    induction ehrnat_y.
+    destruct ehrnat_y.
     clear ehrnat_y.
     revert ehrnat_z.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_z.
-    induction ehrnat_z.
+    destruct ehrnat_z.
     clear ehrnat_z.
-    induction wry, wrz.
+    destruct wry, wrz.
     clear wry wrz.
     reflexivity.
   Defined.
@@ -845,7 +845,7 @@ Proof.
   revert q.
   srapply (equiv_ind (equiv_path_inverse _ _)).
   intro q.
-  by induction q, r.
+  by destruct q, r.
 Defined.
 
 (* Given "wlrnat_V x y" and "wlrnat_V x z", we can explicitly construct "wlrnat_V x (y @ z)". *)
@@ -947,12 +947,12 @@ Section wlrnat_V_p_pp.
     (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^.
   Proof.
     apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.
-    induction H_ehrnat_yz0, H_ehrnat_yz1.
+    destruct H_ehrnat_yz0, H_ehrnat_yz1.
     clear H_ehrnat_yz0 H_ehrnat_yz1.
     apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.
-    induction H_wlrnat_x_yz, H_wlrnat_yz_x.
+    destruct H_wlrnat_x_yz, H_wlrnat_yz_x.
     clear H_wlrnat_x_yz H_wlrnat_yz_x.
-    induction a01, b01, c01, d01, e01, f01.
+    destruct a01, b01, c01, d01, e01, f01.
     clear a01 b01 c01 d01 e01 f01.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
     pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
@@ -960,65 +960,65 @@ Section wlrnat_V_p_pp.
     apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
     apply symmetry in wlrnat_V_x_y.
-    induction wlrnat_V_x_y.
+    destruct wlrnat_V_x_y.
     clear wlrnat_V_x_y.
     apply moveL_pV in wlrnat_V_x_z.
     apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_z.
     apply symmetry in wlrnat_V_x_z.
-    induction wlrnat_V_x_z.
+    destruct wlrnat_V_x_z.
     clear wlrnat_V_x_z.
     clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
-    induction wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
+    destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
     clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
     revert ehlnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x0.
-    induction ehlnat_x0.
+    destruct ehlnat_x0.
     clear ehlnat_x0.
     revert ehlnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x1.
-    induction ehlnat_x1.
+    destruct ehlnat_x1.
     clear ehlnat_x1.
     revert ehlnat_x2.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x2.
-    induction ehlnat_x2.
+    destruct ehlnat_x2.
     clear ehlnat_x2.
     revert ehrnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y0.
-    induction ehrnat_y0.
+    destruct ehrnat_y0.
     clear ehrnat_y0.
     revert ehrnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y1.
-    induction ehrnat_y1.
+    destruct ehrnat_y1.
     clear ehrnat_y1.
     revert ehrnat_z0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_z0.
-    induction ehrnat_z0.
+    destruct ehrnat_z0.
     clear ehrnat_z0.
     revert ehrnat_z1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_z1.
-    induction ehrnat_z1.
+    destruct ehrnat_z1.
     clear ehrnat_z1.
-    induction wry0, wry1, wrz0, wrz1.
+    destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
     revert wlrnat_y_x.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_y_x.
-    induction wlrnat_y_x.
+    destruct wlrnat_y_x.
     clear wlrnat_y_x.
     revert wlrnat_z_x.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_z_x.
-    induction wlrnat_z_x.
+    destruct wlrnat_z_x.
     clear wlrnat_z_x.
-    induction wlx2.
+    destruct wlx2.
     clear wlx2.
     reflexivity.
   Defined.
@@ -1033,7 +1033,7 @@ Proof.
   revert q.
   srapply (equiv_ind (equiv_path_inverse _ _)).
   intro q.
-  by induction p, q, r.
+  by destruct p, q, r.
 Defined.
 
 (* Coherence #2: We now prove that "eh_V p (q @ r)" suitably relates to "eh_V p q" and "eh_V p q". *)
@@ -1207,7 +1207,7 @@ Section eh_V_p_pp.
     (eh_pp_p_gen H_ulnat_yz1 H_ulnat_yz0 H_wlrnat_yz_x [-]
      lrucancel^-1 (whiskerL _ (ap (fun p => whiskerR p z0) (moveL_1V _ _ eh_V_x_y)))).
   Proof.
-    induction H_ehrnat_p1_yz0, H_ehrnat_p1_yz1, H_wlrnat_V_x_yz.
+    destruct H_ehrnat_p1_yz0, H_ehrnat_p1_yz1, H_wlrnat_V_x_yz.
     clear H_ehrnat_p1_yz0 H_ehrnat_p1_yz1 H_wlrnat_V_x_yz.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
     pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
@@ -1218,7 +1218,7 @@ Section eh_V_p_pp.
     srapply (equiv_ind (moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_path_inverse _ _)).
     intro wlrnat_V_x_y.
-    induction wlrnat_V_x_y.
+    destruct wlrnat_V_x_y.
     clear wlrnat_V_x_y.
     revert wlrnat_V_x_z.
     srapply (equiv_ind (moveL_pV _ _ _)^-1).
@@ -1227,169 +1227,169 @@ Section eh_V_p_pp.
     srapply (equiv_ind (moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_path_inverse _ _)).
     intro wlrnat_V_x_z.
-    induction wlrnat_V_x_z.
+    destruct wlrnat_V_x_z.
     clear wlrnat_V_x_z.
     revert H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
     revert ehlnat_1p_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_1p_x0.
-    induction ehlnat_1p_x0.
+    destruct ehlnat_1p_x0.
     clear ehlnat_1p_x0.
     revert ehlnat_1p_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_1p_x1.
-    induction ehlnat_1p_x1.
+    destruct ehlnat_1p_x1.
     clear ehlnat_1p_x1.
     revert ehlnat_1p_x2.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_1p_x2.
-    induction ehlnat_1p_x2.
+    destruct ehlnat_1p_x2.
     clear ehlnat_1p_x2.
     revert ehrnat_p1_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_y0.
-    induction ehrnat_p1_y0.
+    destruct ehrnat_p1_y0.
     clear ehrnat_p1_y0.
     revert ehrnat_p1_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_y1.
-    induction ehrnat_p1_y1.
+    destruct ehrnat_p1_y1.
     clear ehrnat_p1_y1.
     revert ehrnat_p1_z0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_z0.
-    induction ehrnat_p1_z0.
+    destruct ehrnat_p1_z0.
     clear ehrnat_p1_z0.
     revert ehrnat_p1_z1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_p1_z1.
-    induction ehrnat_p1_z1.
+    destruct ehrnat_p1_z1.
     clear ehrnat_p1_z1.
     revert H_wlrnat_x_yz.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_wlrnat_x_yz.
-    induction H_wlrnat_x_yz.
+    destruct H_wlrnat_x_yz.
     clear H_wlrnat_x_yz.
     revert H_wlrnat_yz_x.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_wlrnat_yz_x.
-    induction H_wlrnat_yz_x.
+    destruct H_wlrnat_yz_x.
     clear H_wlrnat_yz_x.
     revert H_ehrnat_yz0.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_ehrnat_yz0.
-    induction H_ehrnat_yz0.
+    destruct H_ehrnat_yz0.
     clear H_ehrnat_yz0.
     revert H_ehrnat_yz1.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_ehrnat_yz1.
-    induction H_ehrnat_yz1.
+    destruct H_ehrnat_yz1.
     clear H_ehrnat_yz1.
     revert H_ulnat_yz0.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_ulnat_yz0.
-    induction H_ulnat_yz0.
+    destruct H_ulnat_yz0.
     clear H_ulnat_yz0.
     revert H_ulnat_yz1.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_ulnat_yz1.
-    induction H_ulnat_yz1.
+    destruct H_ulnat_yz1.
     clear H_ulnat_yz1.
     revert H_urnat_yz0.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_urnat_yz0.
-    induction H_urnat_yz0.
+    destruct H_urnat_yz0.
     clear H_urnat_yz0.
     revert H_urnat_yz1.
     srapply (equiv_ind (moveR_Vp _ _ _)^-1).
     intro H_urnat_yz1.
-    induction H_urnat_yz1.
+    destruct H_urnat_yz1.
     clear H_urnat_yz1.
-    induction wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
+    destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
     clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
     revert ehlnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x0.
-    induction ehlnat_x0.
+    destruct ehlnat_x0.
     clear ehlnat_x0.
     revert ehlnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x1.
-    induction ehlnat_x1.
+    destruct ehlnat_x1.
     clear ehlnat_x1.
     revert ehlnat_x2.
     srapply (equiv_ind rlucancel^-1).
     intro ehlnat_x2.
-    induction ehlnat_x2.
+    destruct ehlnat_x2.
     clear ehlnat_x2.
     revert ehrnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y0.
-    induction ehrnat_y0.
+    destruct ehrnat_y0.
     clear ehrnat_y0.
     revert ehrnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_y1.
-    induction ehrnat_y1.
+    destruct ehrnat_y1.
     clear ehrnat_y1.
     revert ehrnat_z0.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_z0.
-    induction ehrnat_z0.
+    destruct ehrnat_z0.
     clear ehrnat_z0.
     revert ehrnat_z1.
     srapply (equiv_ind rlucancel^-1).
     intro ehrnat_z1.
-    induction ehrnat_z1.
+    destruct ehrnat_z1.
     clear ehrnat_z1.
     revert urnat_x0.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_x0.
-    induction urnat_x0.
+    destruct urnat_x0.
     clear urnat_x0.
     revert urnat_x1.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_x1.
-    induction urnat_x1.
+    destruct urnat_x1.
     clear urnat_x1.
     revert urnat_x2.
     srapply (equiv_ind rlucancel^-1).
     intro urnat_x2.
-    induction urnat_x2.
+    destruct urnat_x2.
     clear urnat_x2.
     revert ulnat_y0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y0.
-    induction ulnat_y0.
+    destruct ulnat_y0.
     clear ulnat_y0.
     revert ulnat_y1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_y1.
-    induction ulnat_y1.
+    destruct ulnat_y1.
     clear ulnat_y1.
     revert ulnat_z0.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_z0.
-    induction ulnat_z0.
+    destruct ulnat_z0.
     clear ulnat_z0.
     revert ulnat_z1.
     srapply (equiv_ind rlucancel^-1).
     intro ulnat_z1.
-    induction ulnat_z1.
+    destruct ulnat_z1.
     clear ulnat_z1.
-    induction wry0, wry1, wrz0, wrz1.
+    destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
     revert wlrnat_y_x.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_y_x.
-    induction wlrnat_y_x.
+    destruct wlrnat_y_x.
     clear wlrnat_y_x.
     revert wlrnat_z_x.
     srapply (equiv_ind lrucancel^-1).
     intro wlrnat_z_x.
-    induction wlrnat_z_x.
+    destruct wlrnat_z_x.
     clear wlrnat_z_x.
-    induction wlx2.
+    destruct wlx2.
     clear wlx2.
     reflexivity.
   Defined.
