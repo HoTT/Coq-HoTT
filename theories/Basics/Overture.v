@@ -242,9 +242,9 @@ Cumulative Inductive paths {A : Type} (a : A) : A -> Type :=
 Arguments idpath {A a} , [A] a.
 
 Scheme paths_ind := Induction for paths Sort Type.
-Arguments paths_ind [A] a P f y p.
+Arguments paths_ind [A] a P f y p : rename.
 Scheme paths_rec := Minimality for paths Sort Type.
-Arguments paths_rec [A] a P f y p.
+Arguments paths_rec [A] a P f y p : rename.
 
 Register idpath as core.identity.refl.
 
