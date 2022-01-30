@@ -55,21 +55,21 @@ Definition nat_to_trunc_index (n : nat) : trunc_index
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
-Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
+Definition int_to_trunc_index (v : Decimal.int) : Option trunc_index
   := match v with
-     | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))
+     | Decimal.Pos d => some (nat_to_trunc_index (Nat.of_uint d))
      | Decimal.Neg d => match Nat.of_uint d with
-                        | 2%nat => Some minus_two
-                        | 1%nat => Some (minus_two.+1)
-                        | 0%nat => Some (minus_two.+2)
-                        | _ => None
+                        | 2%nat => some minus_two
+                        | 1%nat => some (minus_two.+1)
+                        | 0%nat => some (minus_two.+2)
+                        | _ => none
                         end
      end.
 
-Definition num_int_to_trunc_index (v : Numeral.int) : option trunc_index :=
+Definition num_int_to_trunc_index (v : Numeral.int) : Option trunc_index :=
   match v with
   | Numeral.IntDec v => int_to_trunc_index v
-  | Numeral.IntHex _ => None
+  | Numeral.IntHex _ => none
   end.
 
 Fixpoint trunc_index_to_little_uint n acc :=

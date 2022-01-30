@@ -90,8 +90,8 @@ Definition int_of_decimal_int (d : Decimal.int) : Int :=
 
 Definition int_of_number_int (d:Numeral.int) :=
   match d with
-  | Numeral.IntDec d => Some (int_of_decimal_int d)
-  | Numeral.IntHex _ => None
+  | Numeral.IntDec d => some (int_of_decimal_int d)
+  | Numeral.IntHex _ => none
   end.
 
 Number Notation Int int_of_number_int int_to_number_int : int_scope.

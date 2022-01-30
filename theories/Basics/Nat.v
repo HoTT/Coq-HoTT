@@ -88,19 +88,19 @@ Definition to_uint n :=
 
 Definition to_num_uint n := Numeral.UIntDec (to_uint n).
 
-Definition of_int (d:Decimal.int) : option nat :=
+Definition of_int (d:Decimal.int) : Option nat :=
   match Decimal.norm d with
-    | Decimal.Pos u => Some (of_uint u)
-    | _ => None
+    | Decimal.Pos u => some (of_uint u)
+    | _ => none
   end.
 
-Definition of_hex_int (d:Hexadecimal.int) : option nat :=
+Definition of_hex_int (d:Hexadecimal.int) : Option nat :=
   match Hexadecimal.norm d with
-    | Hexadecimal.Pos u => Some (of_hex_uint u)
-    | _ => None
+    | Hexadecimal.Pos u => some (of_hex_uint u)
+    | _ => none
   end.
 
-Definition of_num_int (d:Numeral.int) : option nat :=
+Definition of_num_int (d:Numeral.int) : Option nat :=
   match d with
   | Numeral.IntDec d => of_int d
   | Numeral.IntHex d => of_hex_int d

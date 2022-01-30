@@ -20,24 +20,24 @@ Global Set Primitive Projections.
 Global Set Nonrecursive Elimination Schemes.
 Local Unset Elimination Schemes.
 
-(** [option A] is the extension of [A] with an extra element [None] *)
+(** [Option A] is the extension of [A] with an extra element none] *)
 
-Inductive option (A : Type) : Type :=
-  | Some : A -> option A
-  | None : option A.
+Inductive Option (A : Type) : Type :=
+| some : A -> Option A
+| none : Option A.
 
-Scheme option_rect := Induction for option Sort Type.
+Scheme Option_rect := Induction for Option Sort Type.
 
-Arguments Some {A} a.
-Arguments None {A}.
+Arguments some {A} a.
+Arguments none {A}.
 
-Register option as core.option.type.
+Register Option as core.option.type.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
 Inductive sum (A B : Type) : Type :=
-  | inl : A -> sum A B
-  | inr : B -> sum A B.
+| inl : A -> sum A B
+| inr : B -> sum A B.
 
 Scheme sum_rect := Induction for sum Sort Type.
 

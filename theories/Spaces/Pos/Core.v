@@ -370,31 +370,31 @@ Fixpoint pos_of_uint_acc (d : Decimal.uint) (acc : Pos) :=
   | Decimal.D9 l => pos_of_uint_acc l (pos_add 1~0~0~1 (pos_mul ten acc))
   end.
 
-Fixpoint pos_of_uint (d : Decimal.uint) : option Pos :=
+Fixpoint pos_of_uint (d : Decimal.uint) : Option Pos :=
   match d with
-    | Decimal.Nil => None
+    | Decimal.Nil => none
     | Decimal.D0 l => pos_of_uint l
-    | Decimal.D1 l => Some (pos_of_uint_acc l 1)
-    | Decimal.D2 l => Some (pos_of_uint_acc l 1~0)
-    | Decimal.D3 l => Some (pos_of_uint_acc l 1~1)
-    | Decimal.D4 l => Some (pos_of_uint_acc l 1~0~0)
-    | Decimal.D5 l => Some (pos_of_uint_acc l 1~0~1)
-    | Decimal.D6 l => Some (pos_of_uint_acc l 1~1~0)
-    | Decimal.D7 l => Some (pos_of_uint_acc l 1~1~1)
-    | Decimal.D8 l => Some (pos_of_uint_acc l 1~0~0~0)
-    | Decimal.D9 l => Some (pos_of_uint_acc l 1~0~0~1)
+    | Decimal.D1 l => some (pos_of_uint_acc l 1)
+    | Decimal.D2 l => some (pos_of_uint_acc l 1~0)
+    | Decimal.D3 l => some (pos_of_uint_acc l 1~1)
+    | Decimal.D4 l => some (pos_of_uint_acc l 1~0~0)
+    | Decimal.D5 l => some (pos_of_uint_acc l 1~0~1)
+    | Decimal.D6 l => some (pos_of_uint_acc l 1~1~0)
+    | Decimal.D7 l => some (pos_of_uint_acc l 1~1~1)
+    | Decimal.D8 l => some (pos_of_uint_acc l 1~0~0~0)
+    | Decimal.D9 l => some (pos_of_uint_acc l 1~0~0~1)
   end.
 
-Definition pos_of_decimal_int (d:Decimal.int) : option Pos :=
+Definition pos_of_decimal_int (d:Decimal.int) : Option Pos :=
   match d with
   | Decimal.Pos d => pos_of_uint d
-  | Decimal.Neg _ => None
+  | Decimal.Neg _ => none
   end.
 
-Definition pos_of_number_uint (d:Numeral.int) : option Pos :=
+Definition pos_of_number_uint (d:Numeral.int) : Option Pos :=
   match d with
   | Numeral.IntDec d => pos_of_decimal_int d
-  | Numeral.IntHex _ => None
+  | Numeral.IntHex _ => none
   end.
 
 Fixpoint pos_to_little_uint p :=
