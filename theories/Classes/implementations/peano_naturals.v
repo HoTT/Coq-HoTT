@@ -249,7 +249,7 @@ induction k.
 Qed.
 
 Lemma le_exists : forall n m : nat,
-  iff@{N N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
+  Iff@{N N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -265,7 +265,7 @@ Proof.
 induction a;constructor;auto.
 Qed.
 
-Lemma le_S_S : forall a b : nat, iff@{N N N} (a <= b) (S a <= S b).
+Lemma le_S_S : forall a b : nat, Iff@{N N N} (a <= b) (S a <= S b).
 Proof.
 intros. etransitivity;[apply le_exists|].
 etransitivity;[|apply symmetry,le_exists].

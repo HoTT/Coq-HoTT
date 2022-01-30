@@ -35,8 +35,8 @@ Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=
 {
   acc_lgen : LocalGenerators@{a} ;
   inO_iff_islocal : forall (X : Type@{i}),
-      (** We call [iff] explicitly to control the number of universe parameters. *)
-      iff@{i i i} (In O X) (IsLocal acc_lgen X) ;
+      (** We call [Iff] explicitly to control the number of universe parameters. *)
+      Iff@{i i i} (In O X) (IsLocal acc_lgen X) ;
 }.
 
 Arguments acc_lgen O {_}.
@@ -119,7 +119,7 @@ Class IsAccModality@{a i} (O : Subuniverse@{i}) :=
 {
   acc_ngen : NullGenerators@{a} ;
   inO_iff_isnull : forall (X : Type@{i}),
-      iff@{i i i} (In O X) (IsNull acc_ngen X) ;
+      Iff@{i i i} (In O X) (IsNull acc_ngen X) ;
 }.
 
 Arguments acc_ngen O {_}.

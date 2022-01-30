@@ -150,7 +150,7 @@ Section upper_classes.
 
   Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
     := field_characteristic : forall n : nat, Nat.lt@{i} 0 n ->
-      iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Nat.mul k m)))
+      Iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Nat.mul k m)))
         (@apart A Aap (Nat.nat_iter n (1 +) 0) 0).
 
 End upper_classes.

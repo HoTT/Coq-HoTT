@@ -73,11 +73,11 @@ Notation conj := pair (only parsing).
 Definition prod_curry (A B C : Type) (f : A -> B -> C)
   (p : Prod A B) : C := f (fst p) (snd p).
 
-(** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
+(** [Iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 
-Definition iff (A B : Type) := Prod (A -> B) (B -> A).
+Definition Iff (A B : Type) := Prod (A -> B) (B -> A).
 
-Notation "A <-> B" := (iff A B) : type_scope.
+Notation "A <-> B" := (Iff A B) : type_scope.
 
 (** Another way of interpreting booleans as propositions *)
 

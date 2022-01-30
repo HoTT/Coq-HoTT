@@ -136,16 +136,6 @@ Proof.
 Defined.
 
 
-Global Instance transitive_iff
-  : Transitive iff.
-Proof.
-  intros A B C A_B B_C.
-  split.
-  - intros a. apply B_C. apply A_B. exact a.
-  - intros c. apply A_B. apply B_C. exact c.
-Qed.
-
-
 Lemma transitive_Isomorphism
   : forall A B C,
     Isomorphism A B
