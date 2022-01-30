@@ -80,7 +80,7 @@ Proof.
   destruct x as [n a]; exact (n.+1; a^+).
 Defined.
 
-Definition seq_pair_shift_by {A : Sequence} (x : sig A) (k : nat) : sig A.
+Definition seq_pair_shift_by {A : Sequence} (x : sig A) (k : Nat) : sig A.
 Proof.
   induction k as [ | k y].
   - exact x.
@@ -90,7 +90,7 @@ Defined.
 Notation "x ^++" := (seq_pair_shift x).
 Notation "x ^++ k" := (seq_pair_shift_by x k).
 
-Definition seq_pair_shift_assoc {A : Sequence} (x : sig A) (k : nat)
+Definition seq_pair_shift_assoc {A : Sequence} (x : sig A) (k : Nat)
   : (x^++)^++k = x^++(k.+1).
 Proof.
   induction k as [ | k q].

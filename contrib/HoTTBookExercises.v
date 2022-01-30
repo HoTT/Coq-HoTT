@@ -166,22 +166,22 @@ End Book_1_5.
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
 
-Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
+Fixpoint rec_nat' (C : Type) c0 cs (n : Nat) : C :=
   match n with
     O => c0
   | S m => cs m (rec_nat' C c0 cs m)
   end.
 
-Definition add : nat -> nat -> nat :=
-  rec_nat' (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+Definition add : Nat -> Nat -> Nat :=
+  rec_nat' (Nat -> Nat) (fun m => m) (fun n g m => (S (g m))).
 
-Definition mult : nat -> nat -> nat  :=
-  rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
+Definition mult : Nat -> Nat -> Nat  :=
+  rec_nat' (Nat -> Nat) (fun m => 0) (fun n g m => add m (g m)).
 
 (* rec_nat' gives back a function with the wrong argument order, so we flip the
    order of the arguments p and q *)
-Definition exp : nat -> nat -> nat  :=
-  fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
+Definition exp : Nat -> Nat -> Nat  :=
+  fun p q => (rec_nat' (Nat -> Nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
 
 Example add_example: add 32 17 = 49. Proof. reflexivity. Defined.
 Example mult_example: mult 20 5 = 100. Proof. reflexivity. Defined.
@@ -197,10 +197,10 @@ Example exp_example: exp 2 10 = 1024. Proof. reflexivity. Defined.
 (* ================================================== ex:ackermann *)
 (** Exercise 1.10 *)
 
-Fixpoint ack (n m : nat) : nat :=
+Fixpoint ack (n m : Nat) : Nat :=
   match n with
   | O => S m
-  | S p => let fix ackn (m : nat) :=
+  | S p => let fix ackn (m : Nat) :=
                match m with
                  | O => ack p 1
                  | S q => ack p (ackn q)
@@ -355,8 +355,8 @@ Defined.
 (* ================================================== ex:npaths *)
 (** Exercise 2.4 *)
 
-Definition Book_2_4_npath : nat -> Type -> Type
-  := nat_ind (fun (n : nat) => Type -> Type)
+Definition Book_2_4_npath : Nat -> Type -> Type
+  := Nat_ind (fun (n : Nat) => Type -> Type)
              (* 0-dimensional paths are elements *)
              (fun A => A)
              (* (n+1)-dimensional paths are paths between n-dimimensional paths *)
@@ -364,7 +364,7 @@ Definition Book_2_4_npath : nat -> Type -> Type
 
 (* This is the intuition behind definition of nboundary:
    As we've defined them, every (n+1)-path is a path between two n-paths. *)
-Lemma npath_as_sig : forall {n : nat} {A : Type},
+Lemma npath_as_sig : forall {n : Nat} {A : Type},
     (Book_2_4_npath (S n) A) = (exists (p1 p2 : Book_2_4_npath n A), p1 = p2).
 Proof.
   reflexivity.
@@ -381,7 +381,7 @@ Eval compute in (Book_2_4_npath 2 A). (* and so on... *)
 
 (* Given an (n+1)-path, we simply project to a pair of n-paths. *)
 Definition Book_2_4_nboundary
-  : forall {n : nat} {A : Type}, Book_2_4_npath (S n) A ->
+  : forall {n : Nat} {A : Type}, Book_2_4_npath (S n) A ->
                           (Book_2_4_npath n A * Book_2_4_npath n A)
   := fun {n} {A} p => (pr1 p, pr1 (pr2 p)).
 
@@ -1266,9 +1266,9 @@ Defined.
 Section Book_5_2.
   (** Here is one example of functions which are propositionally equal but not judgmentally equal.  They satisfy the same reucrrence propositionally. *)
   Let ez : Bool := true.
-  Let es : nat -> Bool -> Bool := fun _ => idmap.
-  Definition Book_5_2_i : nat -> Bool := nat_ind (fun _ => Bool) ez es.
-  Definition Book_5_2_ii : nat -> Bool := fun _ => true.
+  Let es : Nat -> Bool -> Bool := fun _ => idmap.
+  Definition Book_5_2_i : Nat -> Bool := Nat_ind (fun _ => Bool) ez es.
+  Definition Book_5_2_ii : Nat -> Bool := fun _ => true.
   Fail Definition Book_5_2_not_defn_eq : Book_5_2_i = Book_5_2_ii := idpath.
   Lemma Book_5_2_i_prop_eq : forall n, Book_5_2_i n = Book_5_2_ii n.
   Proof.
@@ -1279,10 +1279,10 @@ End Book_5_2.
 Section Book_5_2'.
   Local Open Scope nat_scope.
   (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same reucrrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
-  Let ez : nat := 1.
-  Let es : nat -> nat -> nat := fun _ => S.
-  Definition Book_5_2'_i : nat -> nat := fun n => n + 1.
-  Definition Book_5_2'_ii : nat -> nat := fun n => 1 + n.
+  Let ez : Nat := 1.
+  Let es : Nat -> Nat -> Nat := fun _ => S.
+  Definition Book_5_2'_i : Nat -> Nat := fun n => n + 1.
+  Definition Book_5_2'_ii : Nat -> Nat := fun n => 1 + n.
   Fail Definition Book_5_2'_not_defn_eq : Book_5_2'_i = Book_5_2'_ii := idpath.
   Definition Book_5_2'_i_eq_ez : Book_5_2'_i 0 = ez := idpath.
   Definition Book_5_2'_ii_eq_ez : Book_5_2'_ii 0 = ez := idpath.
@@ -1295,10 +1295,10 @@ End Book_5_2'.
 
 Section Book_5_3.
   Let ez : Bool := true.
-  Let es : nat -> Bool -> Bool := fun _ => idmap.
+  Let es : Nat -> Bool -> Bool := fun _ => idmap.
   Let ez' : Bool := true.
-  Let es' : nat -> Bool -> Bool := fun _ _ => true.
-  Definition Book_5_3 : nat -> Bool := fun _ => true.
+  Let es' : Nat -> Bool -> Bool := fun _ _ => true.
+  Definition Book_5_3 : Nat -> Bool := fun _ => true.
   Definition Book_5_3_satisfies_ez : Book_5_3 0 = ez := idpath.
   Definition Book_5_3_satisfies_ez' : Book_5_3 0 = ez' := idpath.
   Definition Book_5_3_satisfies_es n : Book_5_3 (S n) = es n (Book_5_3 n) := idpath.
@@ -1316,17 +1316,17 @@ Definition Book_5_4 := @HoTT.Types.Bool.equiv_bool_forall_prod.
 (** Exercise 5.5 *)
 
 Section Book_5_5.
-  Let ind_nat (P : nat -> Type) := fun x => @nat_ind P (fst x) (snd x).
+  Let ind_nat (P : Nat -> Type) := fun x => @Nat_ind P (fst x) (snd x).
 
-  Lemma Book_5_5 `{fs : Funext} : ~forall P : nat -> Type,
+  Lemma Book_5_5 `{fs : Funext} : ~forall P : Nat -> Type,
                                      IsEquiv (@ind_nat P).
   Proof.
     intro H.
     specialize (H (fun _ => Bool)).
     pose proof (eissect (@ind_nat (fun _ => Bool)) (true, (fun _ _ => true))) as H1.
     pose proof (eissect (@ind_nat (fun _ => Bool)) (true, (fun _ => idmap))) as H2.
-    cut (ind_nat (fun _ : nat => Bool) (true, fun (_ : nat) (_ : Bool) => true)
-         = (ind_nat (fun _ : nat => Bool) (true, fun _ : nat => idmap))).
+    cut (ind_nat (fun _ : Nat => Bool) (true, fun (_ : Nat) (_ : Bool) => true)
+         = (ind_nat (fun _ : Nat => Bool) (true, fun _ : Nat => idmap))).
     - intro H'.
       apply true_ne_false.
       exact (ap10 (apD10 (ap snd (H1^ @ ap _ H' @ H2)) 0) false).

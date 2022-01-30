@@ -740,13 +740,13 @@ split.
   rewrite negate_swap_r,!involutive in E2.
   pose proof (plus_lt_compat _ _ _ _ E1' E2) as E.
   assert (Hrw : s - r = q - r + (s - q))
-    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+    by abstract ring_tac.ring_with_integers (NatPair.Z Nat).
   rewrite Hrw;trivial.
 - apply flip_lt_negate in E1.
   rewrite negate_swap_r,!involutive in E1.
   pose proof (plus_lt_compat _ _ _ _ E1 E2') as E.
   assert (Hrw : r - s = r - q + (q - s))
-    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+    by abstract ring_tac.ring_with_integers (NatPair.Z Nat).
   rewrite Hrw;trivial.
 Qed.
 
@@ -820,7 +820,7 @@ Global Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
 Proof.
 red. unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : q + s - (r + s) = q - r)
-  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+  by abstract ring_tac.ring_with_integers (NatPair.Z Nat).
 rewrite Hrw;trivial.
 Qed.
 
@@ -828,7 +828,7 @@ Global Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
 Proof.
 red;unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : s + q - (s + r) = q - r)
-  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+  by abstract ring_tac.ring_with_integers (NatPair.Z Nat).
 rewrite Hrw;trivial.
 Qed.
 
@@ -942,7 +942,7 @@ rewrite !(plus_mult_distr_l (Aplus:=Qplus)).
 rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E;trivial).
 rewrite mult_1_r.
 assert (Hrw :  (r ⊔ ' e) * ((q ⊔ ' e) * - / (r ⊔ ' e)) = - Y * (X / X))
-  by ring_tac.ring_with_integers (NatPair.Z nat).
+  by ring_tac.ring_with_integers (NatPair.Z Nat).
 rewrite Hrw;clear Hrw.
 rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E';trivial).
 rewrite mult_1_r. unfold X, Y.

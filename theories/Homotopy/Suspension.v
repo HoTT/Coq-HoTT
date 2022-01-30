@@ -418,7 +418,7 @@ End UnivPropNat.
 
 (** Now we can iterate, deducing [n]-extendability. *)
 Definition extendable_iff_functor_susp
-           {X Y : Type} (f : X -> Y) (P : Susp Y -> Type) (n : nat)
+           {X Y : Type} (f : X -> Y) (P : Susp Y -> Type) (n : Nat)
   : (ExtendableAlong n (functor_susp f) P)
     <-> (forall NS, ExtendableAlong n f (fun x => DPath P (merid x) (fst NS) (snd NS))).
 Proof.

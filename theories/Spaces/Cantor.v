@@ -6,7 +6,7 @@ Local Open Scope path_scope.
 
 (** * Cantor space 2^N *)
 
-Definition Cantor : Type := nat -> Bool.
+Definition Cantor : Type := Nat -> Bool.
 
 Definition cantor_fold : Cantor + Cantor -> Cantor.
 Proof.

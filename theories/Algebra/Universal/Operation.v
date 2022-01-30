@@ -19,7 +19,7 @@ Local Open Scope nat_scope.
 (** Functions [head_dom'] and [head_dom] are used to get the first
     element of a nonempty operation domain [a : forall i, A (ss i)]. *)
 
-Monomorphic Definition head_dom' {σ} (A : Carriers σ) (n : nat)
+Monomorphic Definition head_dom' {σ} (A : Carriers σ) (n : Nat)
   : forall (N : n > 0) (ss : FinSeq n (Sort σ)) (a : forall i, A (ss i)),
     A (fshead' n N ss)
   := match n with
@@ -27,7 +27,7 @@ Monomorphic Definition head_dom' {σ} (A : Carriers σ) (n : nat)
      | n'.+1 => fun N ss a => a fin_zero
      end.
 
-Monomorphic Definition head_dom {σ} (A : Carriers σ) {n : nat}
+Monomorphic Definition head_dom {σ} (A : Carriers σ) {n : Nat}
   (ss : FinSeq n.+1 (Sort σ)) (a : forall i, A (ss i))
   : A (fshead ss)
   := head_dom' A n.+1 _ ss a.
@@ -35,7 +35,7 @@ Monomorphic Definition head_dom {σ} (A : Carriers σ) {n : nat}
 (** Functions [tail_dom'] and [tail_dom] are used to obtain the tail
     of an operation domain [a : forall i, A (ss i)]. *)
 
-Monomorphic Definition tail_dom' {σ} (A : Carriers σ) (n : nat)
+Monomorphic Definition tail_dom' {σ} (A : Carriers σ) (n : Nat)
   : forall (ss : FinSeq n (Sort σ)) (a : forall i, A (ss i)) (i : Fin (pred n)),
     A (fstail' n ss i)
   := match n with
@@ -43,7 +43,7 @@ Monomorphic Definition tail_dom' {σ} (A : Carriers σ) (n : nat)
      | n'.+1 => fun ss a i => a (fsucc i)
      end.
 
-Monomorphic Definition tail_dom {σ} (A : Carriers σ) {n : nat}
+Monomorphic Definition tail_dom {σ} (A : Carriers σ) {n : Nat}
   (ss : FinSeq n.+1 (Sort σ)) (a : forall i, A (ss i))
   : forall i, A (fstail ss i)
   := tail_dom' A n.+1 ss a.
@@ -51,7 +51,7 @@ Monomorphic Definition tail_dom {σ} (A : Carriers σ) {n : nat}
 (** Functions [cons_dom'] and [cons_dom] to add an element to
     the front of a given domain [a : forall i, A (ss i)]. *)
 
-Monomorphic Definition cons_dom' {σ} (A : Carriers σ) {n : nat}
+Monomorphic Definition cons_dom' {σ} (A : Carriers σ) {n : Nat}
   : forall (i : Fin n) (ss : FinSeq n (Sort σ)) (N : n > 0),
     A (fshead' n N ss) -> (forall i, A (fstail' n ss i)) -> A (ss i)
   := fin_ind
@@ -62,7 +62,7 @@ Monomorphic Definition cons_dom' {σ} (A : Carriers σ) {n : nat}
       (fun n' i' _ => fun _ _ _ xs => xs i').
 
 Definition cons_dom {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n.+1 (Sort σ))
+  {n : Nat} (ss : FinSeq n.+1 (Sort σ))
   (x : A (fshead ss)) (xs : forall i, A (fstail ss i))
   : forall i : Fin n.+1, A (ss i)
   := fun i => cons_dom' A i ss _ x xs.
@@ -76,7 +76,7 @@ Definition nil_dom {σ} (A : Carriers σ) (ss : FinSeq 0 (Sort σ))
 (** A specialization of [Operation] to finite [Fin n] arity. *)
 
 Definition FiniteOperation {σ : Signature} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ) : Type
+  {n : Nat} (ss : FinSeq n (Sort σ)) (t : Sort σ) : Type
   := Operation A {| Arity := Fin n; sorts_dom := ss; sort_cod := t |}.
 
 (** A type of curried operations
@@ -84,7 +84,7 @@ Definition FiniteOperation {σ : Signature} (A : Carriers σ)
 CurriedOperation A [s1, ..., sn] t := A s1 -> ... -> A sn -> A t.
 >> *)
 
-Fixpoint CurriedOperation {σ} (A : Carriers σ) {n : nat}
+Fixpoint CurriedOperation {σ} (A : Carriers σ) {n : Nat}
   : (FinSeq n (Sort σ)) -> Sort σ -> Type
   := match n with
      | 0 => fun ss t => A t
@@ -100,7 +100,7 @@ operation_uncurry A [s1, ..., sn] t (op : CurriedOperation A [s1, ..., sn] t)
 >>
 See [equiv_operation_curry] below. *)
 
-Fixpoint operation_uncurry {σ} (A : Carriers σ) {n : nat}
+Fixpoint operation_uncurry {σ} (A : Carriers σ) {n : Nat}
   : forall (ss : FinSeq n (Sort σ)) (t : Sort σ),
     CurriedOperation A ss t -> FiniteOperation A ss t
   := match n with
@@ -112,7 +112,7 @@ Fixpoint operation_uncurry {σ} (A : Carriers σ) {n : nat}
 
 Local Example computation_example_operation_uncurry
   : forall
-      (σ : Signature) (A : Carriers σ) (n : nat) (s1 s2 t : Sort σ)
+      (σ : Signature) (A : Carriers σ) (n : Nat) (s1 s2 t : Sort σ)
       (ss := (fscons s1 (fscons s2 fsnil)))
       (op : CurriedOperation A ss t) (a : forall i, A (ss i)),
     operation_uncurry A ss t op
@@ -129,7 +129,7 @@ operation_curry A [s1, ..., sn] t (op : FiniteOperation A [s1, ..., sn] t)
 >>
 See [equiv_operation_curry] below. *)
 
-Fixpoint operation_curry {σ} (A : Carriers σ) {n : nat} 
+Fixpoint operation_curry {σ} (A : Carriers σ) {n : Nat} 
   : forall (ss : FinSeq n (Sort σ)) (t : Sort σ),
     FiniteOperation A ss t -> CurriedOperation A ss t
   := match n with
@@ -141,7 +141,7 @@ Fixpoint operation_curry {σ} (A : Carriers σ) {n : nat}
 
 Local Example computation_example_operation_curry
   : forall
-      (σ : Signature) (A : Carriers σ) (n : nat) (s1 s2 t : Sort σ)
+      (σ : Signature) (A : Carriers σ) (n : Nat) (s1 s2 t : Sort σ)
       (ss := (fscons s1 (fscons s2 fsnil)))
       (op : FiniteOperation A ss t)
       (x1 : A s1) (x2 : A s2),
@@ -151,7 +151,7 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma expand_cons_dom' {σ} (A : Carriers σ) (n : nat)
+Lemma expand_cons_dom' {σ} (A : Carriers σ) (n : Nat)
   : forall (i : Fin n) (ss : FinSeq n (Sort σ)) (N : n > 0)
            (a : forall i, A (ss i)),
     cons_dom' A i ss N (head_dom' A n N ss a) (tail_dom' A n ss a) = a i.
@@ -166,7 +166,7 @@ Proof.
 Qed.
 
 Lemma expand_cons_dom `{Funext} {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n.+1 (Sort σ)) (a : forall i, A (ss i))
+  {n : Nat} (ss : FinSeq n.+1 (Sort σ)) (a : forall i, A (ss i))
   : cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a.
 Proof.
   funext i.
@@ -174,7 +174,7 @@ Proof.
 Defined.
 
 Lemma path_operation_curry_to_cunurry `{Funext} {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
+  {n : Nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
   : operation_uncurry A ss t o operation_curry A ss t == idmap.
 Proof.
   intro a.
@@ -187,7 +187,7 @@ Proof.
 Qed.
 
 Lemma path_operation_uncurry_to_curry `{Funext} {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
+  {n : Nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
   : operation_curry A ss t o operation_uncurry A ss t == idmap.
 Proof.
   intro a.
@@ -205,7 +205,7 @@ Proof.
 Qed.
 
 Global Instance isequiv_operation_curry `{Funext} {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
+  {n : Nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
   : IsEquiv (operation_curry A ss t).
 Proof.
   srapply isequiv_adjointify.
@@ -215,7 +215,7 @@ Proof.
 Defined.
 
 Definition equiv_operation_curry `{Funext} {σ} (A : Carriers σ)
-  {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
+  {n : Nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
   : FiniteOperation A ss t <~> CurriedOperation A ss t
   := Build_Equiv _ _ (operation_curry A ss t) _.
 

@@ -463,7 +463,7 @@ End GroupMovement.
 
 (** Power operation *)
 
-Fixpoint grp_pow {G : Group} (g : G) (n : nat) : G :=
+Fixpoint grp_pow {G : Group} (g : G) (n : Nat) : G :=
   match n with
   | 0%nat => mon_unit
   | m.+1%nat => g * grp_pow g m

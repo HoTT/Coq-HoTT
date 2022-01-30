@@ -133,7 +133,7 @@ Section borrowed_from_nat.
   pose (Q := fun s : SemiRings.Operations =>
     forall P : s -> Type, P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n).
   change (Q (SemiRings.BuildOperations N)).
-  apply (from_nat_stmt nat).
+  apply (from_nat_stmt Nat).
   unfold Q;clear Q.
   simpl.
   exact nat_induction.
@@ -141,7 +141,7 @@ Section borrowed_from_nat.
 
   Lemma case : forall x : N, x = 0 |_| exists y : N, (x = 1 + y)%mc.
   Proof.
-  refine (from_nat_stmt nat
+  refine (from_nat_stmt Nat
     (fun s => forall x : s, x = 0 |_| exists y : s, (x = 1 + y)%mc) _).
   simpl. intros [|x];eauto.
   Qed.
@@ -156,7 +156,7 @@ Section borrowed_from_nat.
   Global Instance nat_plus_cancel_l : forall z : N, LeftCancellation (+) z.
   Proof.
   refine (from_nat_stmt@{i U}
-    nat (fun s => forall z : s, LeftCancellation plus z) _).
+    Nat (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
   Qed.
 
@@ -165,7 +165,7 @@ Section borrowed_from_nat.
 
   Global Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
-  refine (from_nat_stmt nat (fun s =>
+  refine (from_nat_stmt Nat (fun s =>
     forall z : s, PropHolds (z <> 0) -> LeftCancellation mult z) _).
   simpl. apply nat_mult_cancel_l.
   Qed.
@@ -175,7 +175,7 @@ Section borrowed_from_nat.
 
   Instance nat_nontrivial: PropHolds ((1:N) <> 0).
   Proof.
-  refine (from_nat_stmt nat (fun s => PropHolds ((1:s) <> 0)) _).
+  refine (from_nat_stmt Nat (fun s => PropHolds ((1:s) <> 0)) _).
   apply _.
   Qed.
 
@@ -185,14 +185,14 @@ Section borrowed_from_nat.
 
   Lemma zero_sum : forall (x y : N), x + y = 0 -> x = 0 /\ y = 0.
   Proof.
-  refine (from_nat_stmt nat
+  refine (from_nat_stmt Nat
     (fun s => forall x y : s, x + y = 0 -> x = 0 /\ y = 0) _).
   simpl. apply plus_eq_zero.
   Qed.
 
   Lemma one_sum : forall (x y : N), x + y = 1 -> (x = 1 /\ y = 0) |_| (x = 0 /\ y = 1).
   Proof.
-  refine (from_nat_stmt nat (fun s =>
+  refine (from_nat_stmt Nat (fun s =>
     forall (x y : s), x + y = 1 -> (x = 1 /\ y = 0) |_| (x = 0 /\ y = 1)) _).
   simpl.
   intros [|x] [|y];auto.
@@ -206,7 +206,7 @@ Section borrowed_from_nat.
 
   Global Instance: ZeroProduct N.
   Proof.
-  refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
+  refine (from_nat_stmt Nat (fun s => ZeroProduct s) _).
   simpl. red. apply mult_eq_zero.
   Qed.
 End borrowed_from_nat.
@@ -218,7 +218,7 @@ Qed.
 
 Global Instance slow_naturals_dec : DecidablePaths N.
 Proof.
-apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
+apply decidablepaths_equiv with Nat (naturals_to_semiring Nat N);apply _.
 Qed.
 
 Section with_a_ring.

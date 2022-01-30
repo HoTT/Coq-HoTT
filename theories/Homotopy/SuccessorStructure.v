@@ -25,7 +25,7 @@ Arguments ss_succ {_} _.
 Notation "x .+1" := (ss_succ x) : succ_scope.
 
 (** Successor structure of naturals *)
-Definition NatSucc : SuccStr := Build_SuccStr nat Nat.succ.
+Definition NatSucc : SuccStr := Build_SuccStr Nat Nat.succ.
 
 (** Successor structure of integers *)
 Definition IntSucc : SuccStr := Build_SuccStr Int int_succ.
@@ -35,9 +35,9 @@ Notation "'+Z'" := IntSucc : succ_scope.
 
 (** Stratified successor structures *)
 
-Definition StratifiedType (N : SuccStr) (n : nat) : Type := N * Fin n.
+Definition StratifiedType (N : SuccStr) (n : Nat) : Type := N * Fin n.
 
-Definition stratified_succ (N : SuccStr) (n : nat) (x : StratifiedType N n)
+Definition stratified_succ (N : SuccStr) (n : Nat) (x : StratifiedType N n)
   : StratifiedType N n.
 Proof.
   constructor.
@@ -49,11 +49,11 @@ Proof.
   + exact (fsucc_mod (snd x)).
 Defined.
 
-Definition Stratified (N : SuccStr) (n : nat) : SuccStr
+Definition Stratified (N : SuccStr) (n : Nat) : SuccStr
   := Build_SuccStr (StratifiedType N n) (stratified_succ N n).
 
 (** Addition in successor structures *)
-Fixpoint ss_add {N : SuccStr} (n : N) (k : nat) : N :=
+Fixpoint ss_add {N : SuccStr} (n : N) (k : Nat) : N :=
   match k with
   | O   => n
   | S k => (ss_add n k).+1
@@ -61,7 +61,7 @@ Fixpoint ss_add {N : SuccStr} (n : N) (k : nat) : N :=
 
 Infix "+" := ss_add : succ_scope.
 
-Definition ss_add_succ {N : SuccStr} (n : N) (k : nat)
+Definition ss_add_succ {N : SuccStr} (n : N) (k : Nat)
   : (n + k.+1) = n.+1 + k.
 Proof.
   induction k.

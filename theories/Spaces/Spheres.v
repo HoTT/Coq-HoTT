@@ -25,7 +25,7 @@ Fixpoint Sphere (n : trunc_index)
      end.
 
 (** ** Pointed sphere for non-negative dimensions *)
-Fixpoint psphere (n : nat) : pType
+Fixpoint psphere (n : Nat) : pType
   := match n with
       | O => Build_pType (Susp Empty) North
       | S n' => psusp (psphere n')

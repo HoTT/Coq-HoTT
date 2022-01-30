@@ -116,14 +116,14 @@ Section LEM.
 
 End LEM.
 
-(* We can instantiate the previous lemma with nat to obtain GCH -> LEM. *)
+(* We can instantiate the previous lemma with Nat to obtain GCH -> LEM. *)
 
 Theorem GCH_LEM {PR : PropResizing} {UA : Univalence} :
   GCH -> (forall P : HProp, P \/ ~ P).
 Proof.
-  intros gch P. eapply (CH_LEM (Build_HSet nat)); try exact _. intros H1 H2 H3.
-  pose (sings := { p : nat -> HProp | sing (Build_HSet nat) p \/ (P + ~ P) }).
-  destruct (gch (Build_HSet nat) (Build_HSet sings)) as [H|H].
+  intros gch P. eapply (CH_LEM (Build_HSet Nat)); try exact _. intros H1 H2 H3.
+  pose (sings := { p : Nat -> HProp | sing (Build_HSet Nat) p \/ (P + ~ P) }).
+  destruct (gch (Build_HSet Nat) (Build_HSet sings)) as [H|H].
   - cbn. exists idmap. apply isinj_idmap.
   - apply tr. apply H1.
   - apply tr. apply H2.

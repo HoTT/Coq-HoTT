@@ -405,7 +405,7 @@ Class Return (M : Type -> Type) := ret : forall {A}, A -> M A.
 Class Bind (M : Type -> Type) := bind : forall {A B}, M A -> (A -> M B) -> M B.
 
 Class Enumerable@{i} (A : Type@{i}) :=
-  { enumerator : nat -> A
+  { enumerator : Nat -> A
   ; enumerator_issurj :>
     IsConnMap@{i} (trunc_S minus_two) enumerator }.
 Arguments enumerator A {_} _.

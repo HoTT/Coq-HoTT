@@ -72,13 +72,13 @@ Section with_type.
 
   Definition last: ne_list → T := foldr1 (fun x y => y).
 
-  Fixpoint replicate_Sn (x: T) (n: nat): ne_list :=
+  Fixpoint replicate_Sn (x: T) (n: Nat): ne_list :=
     match n with
     | 0 => one x
     | S n' => cons x (replicate_Sn x n')
     end.
 
-  Fixpoint take (n: nat) (l: ne_list): ne_list :=
+  Fixpoint take (n: Nat) (l: ne_list): ne_list :=
     match l, n with
     | cons x xs, S n' => take n' xs
     | _, _ => one (head l)

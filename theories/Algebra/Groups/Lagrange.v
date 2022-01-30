@@ -12,7 +12,7 @@ Local Open Scope nat_scope.
 
 Definition subgroup_index {U : Univalence} (G : Group) (H : Subgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
-  : nat.
+  : Nat.
 Proof.
   refine (fcard (Quotient (in_cosetL H))).
   nrapply finite_quotient.

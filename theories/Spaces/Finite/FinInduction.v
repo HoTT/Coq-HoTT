@@ -8,10 +8,10 @@ Require Import
 
 Local Open Scope nat_scope.
 
-Definition fin_ind (P : forall n : nat, Fin n -> Type)
-  (z : forall n : nat, P n.+1 fin_zero)
-  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
-  {n : nat} (k : Fin n)
+Definition fin_ind (P : forall n : Nat, Fin n -> Type)
+  (z : forall n : Nat, P n.+1 fin_zero)
+  (s : forall (n : Nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
+  {n : Nat} (k : Fin n)
   : P n k.
 Proof.
   refine (transport (P n) (path_fin_to_finnat_to_fin k) _).
@@ -22,9 +22,9 @@ Proof.
     by apply s.
 Defined.
 
-Lemma compute_fin_ind_fin_zero (P : forall n : nat, Fin n -> Type)
-  (z : forall n : nat, P n.+1 fin_zero)
-  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k)) (n : nat)
+Lemma compute_fin_ind_fin_zero (P : forall n : Nat, Fin n -> Type)
+  (z : forall n : Nat, P n.+1 fin_zero)
+  (s : forall (n : Nat) (k : Fin n), P n k -> P n.+1 (fsucc k)) (n : Nat)
   : fin_ind P z s fin_zero = z n.
 Proof.
   unfold fin_ind.
@@ -36,10 +36,10 @@ Proof.
   by destruct (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
 Defined.
 
-Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
-  (z : forall n : nat, P n.+1 fin_zero)
-  (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
-  {n : nat} (k : Fin n)
+Lemma compute_fin_ind_fsucc (P : forall n : Nat, Fin n -> Type)
+  (z : forall n : Nat, P n.+1 fin_zero)
+  (s : forall (n : Nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
+  {n : Nat} (k : Fin n)
   : fin_ind P z s (fsucc k) = s n k (fin_ind P z s k).
 Proof.
   unfold fin_ind.
@@ -55,23 +55,23 @@ Proof.
   apply transport_pV.
 Defined.
 
-Definition fin_rec (B : nat -> Type)
-  : (forall n : nat, B n.+1) -> (forall (n : nat), Fin n -> B n -> B n.+1) ->
-    forall {n : nat}, Fin n -> B n
+Definition fin_rec (B : Nat -> Type)
+  : (forall n : Nat, B n.+1) -> (forall (n : Nat), Fin n -> B n -> B n.+1) ->
+    forall {n : Nat}, Fin n -> B n
   := fin_ind (fun n _ => B n).
 
-Lemma compute_fin_rec_fin_zero (B : nat -> Type)
-  (z : forall n : nat, B n.+1)
-  (s : forall (n : nat) (k : Fin n), B n -> B n.+1) (n : nat)
+Lemma compute_fin_rec_fin_zero (B : Nat -> Type)
+  (z : forall n : Nat, B n.+1)
+  (s : forall (n : Nat) (k : Fin n), B n -> B n.+1) (n : Nat)
   : fin_rec B z s fin_zero = z n.
 Proof.
   apply (compute_fin_ind_fin_zero (fun n _ => B n)).
 Defined.
 
-Lemma compute_fin_rec_fsucc (B : nat -> Type)
-  (z : forall n : nat, B n.+1)
-  (s : forall (n : nat) (k : Fin n), B n -> B n.+1)
-  {n : nat} (k : Fin n)
+Lemma compute_fin_rec_fsucc (B : Nat -> Type)
+  (z : forall n : Nat, B n.+1)
+  (s : forall (n : Nat) (k : Fin n), B n -> B n.+1)
+  {n : Nat} (k : Fin n)
   : fin_rec B z s (fsucc k) = s n k (fin_rec B z s k).
 Proof.
   apply (compute_fin_ind_fsucc (fun n _ => B n)).

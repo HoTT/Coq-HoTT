@@ -30,7 +30,7 @@ Module Export Core.
   (** *** [[ω]], the linear order on ℕ *)
   Definition omega : PreCategory
     := @Build_PreCategory
-         nat
+         Nat
          leq
          leq_refl
          (fun x y z p q => leq_trans q p)
@@ -43,7 +43,7 @@ Module Export Core.
   (** Using [n + 1] elements allows us to agree with the common
       definition of an [n]-simplex, where a 0-simplex is a point, and
       a 1-simplex has two end-points, etc. *)
-  Definition chain (n : nat) : PreCategory
+  Definition chain (n : Nat) : PreCategory
     := { m : omega | m <= n }%category.
 
   (** TODO: Possibly generalize this to arbitrary sets with arbitrary

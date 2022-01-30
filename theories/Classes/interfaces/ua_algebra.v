@@ -45,7 +45,7 @@ Global Coercion symbol_types : Signature >-> Funclass.
 
 (** A single sorted [Signature] is a signature with [Sort = Unit]. *)
 
-Definition BuildSingleSortedSignature (sym : Type) (arities : sym → nat)
+Definition BuildSingleSortedSignature (sym : Type) (arities : sym → Nat)
   : Signature
   := BuildSignature Unit sym (ne_list.replicate_Sn tt o arities).
 
@@ -68,10 +68,10 @@ Definition dom_symboltype {σ} : SymbolType σ → List (Sort σ)
   := ne_list.front.
 
 (** For [s : SymbolType σ], [cod_symboltype σ] is the arity of the
-    symbol type [s]. That is the number [n:nat] of arguments of the
+    symbol type [s]. That is the number [n:Nat] of arguments of the
     [SymbolType σ]. *)
 
-Definition arity_symboltype {σ} : SymbolType σ → nat
+Definition arity_symboltype {σ} : SymbolType σ → Nat
   := length o dom_symboltype.
 
 (** An [Algebra] must provide a family of [Carriers σ] indexed by

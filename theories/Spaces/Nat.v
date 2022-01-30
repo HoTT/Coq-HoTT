@@ -6,9 +6,9 @@ Require Export HoTT.DProp.
 
 Local Unset Elimination Schemes.
 
-Scheme nat_ind := Induction for nat Sort Type.
-Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
+Scheme Nat_ind := Induction for Nat Sort Type.
+Scheme Nat_rect := Induction for Nat Sort Type.
+Scheme Nat_rec := Minimality for Nat Sort Type.
 
 (** * Theorems about the natural numbers *)
 
@@ -24,14 +24,14 @@ Local Open Scope nat_scope.
 Notation succ := S (only parsing).
 
 (** The predecessor of a natural number. *)
-Definition pred n : nat :=
+Definition pred n : Nat :=
   match n with
   | 0 => n
   | S n' => n'
   end.
 
 (** Addition of natural numbers *)
-Fixpoint add n m : nat :=
+Fixpoint add n m : Nat :=
   match n with
   | 0 => m
   | S n' => S (add n' m)
@@ -39,9 +39,9 @@ Fixpoint add n m : nat :=
 
 Notation "n + m" := (add n m) : nat_scope.
 
-Definition double n : nat := n + n.
+Definition double n : Nat := n + n.
 
-Fixpoint mul n m : nat :=
+Fixpoint mul n m : Nat :=
   match n with
   | 0 => 0
   | S n' => m + (mul n' m)
@@ -50,7 +50,7 @@ Fixpoint mul n m : nat :=
 Notation "n * m" := (mul n m) : nat_scope.
 
 (** Truncated subtraction: [n - m] is [0] if [n <= m] *)
-Fixpoint sub n m : nat :=
+Fixpoint sub n m : Nat :=
   match n, m with
   | S n' , S m' => sub n' m'
   | _ , _ => n
@@ -86,7 +86,7 @@ Fixpoint pow n m :=
 
 (** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
 
-Fixpoint divmod x y q u : nat * nat :=
+Fixpoint divmod x y q u : Nat * Nat :=
   match x with
   | 0 => (q , u)
   | S x' =>
@@ -96,13 +96,13 @@ Fixpoint divmod x y q u : nat * nat :=
     end
   end.
 
-Definition div x y : nat :=
+Definition div x y : Nat :=
   match y with
     | 0 => y
     | S y' => fst (divmod x y' 0 y')
   end.
 
-Definition modulo x y : nat :=
+Definition modulo x y : Nat :=
   match y with
     | 0 => y
     | S y' => y' - snd (divmod x y' 0 y')
@@ -123,7 +123,7 @@ Fixpoint gcd a b :=
 
 (** ** Square *)
 
-Definition square n : nat := n * n.
+Definition square n : Nat := n * n.
 
 (** ** Square root *)
 
@@ -140,7 +140,7 @@ Definition square n : nat := n * n.
   in n, hence the square root of n is p.
 *)
 
-Fixpoint sqrt_iter k p q r : nat :=
+Fixpoint sqrt_iter k p q r : Nat :=
   match k with
   | O => p
   | S k' =>
@@ -150,7 +150,7 @@ Fixpoint sqrt_iter k p q r : nat :=
     end
   end.
 
-Definition sqrt n : nat := sqrt_iter n 0 0 0.
+Definition sqrt n : Nat := sqrt_iter n 0 0 0.
 
 (** ** Log2 *)
 
@@ -185,7 +185,7 @@ Definition sqrt n : nat := sqrt_iter n 0 0 0.
   [k+q] is invariant), and [p] its logarithm.
 *)
 
-Fixpoint log2_iter k p q r : nat :=
+Fixpoint log2_iter k p q r : Nat :=
   match k with
   | O    => p
   | S k' =>
@@ -195,19 +195,19 @@ Fixpoint log2_iter k p q r : nat :=
     end
   end.
 
-Definition log2 n : nat := log2_iter (pred n) 0 1 0.
+Definition log2 n : Nat := log2_iter (pred n) 0 1 0.
 
 (** ** Iterator on natural numbers *)
 
-Definition iter (n : nat) {A} (f : A -> A) (x : A) : A :=
-  nat_rec A x (fun _ => f) n.
+Definition iter (n : Nat) {A} (f : A -> A) (x : A) : A :=
+  Nat_rec A x (fun _ => f) n.
 
 Local Definition ap_S := @ap _ _ S.
-Local Definition ap_nat := @ap nat.
+Local Definition ap_nat := @ap Nat.
 #[export] Hint Resolve ap_S : core.
 #[export] Hint Resolve ap_nat : core.
 
-Theorem pred_Sn : forall n:nat, n = pred (S n).
+Theorem pred_Sn : forall n:Nat, n = pred (S n).
 Proof.
   auto.
 Defined.
@@ -217,14 +217,14 @@ Defined.
 Definition path_nat_S n m (H : S n = S m) : n = m := ap pred H.
 #[export] Hint Immediate path_nat_S : core.
 
-Theorem not_eq_S : forall n m:nat, n <> m -> S n <> S m.
+Theorem not_eq_S : forall n m:Nat, n <> m -> S n <> S m.
 Proof.
   auto.
 Defined.
 #[export] Hint Resolve not_eq_S : core.
 
 (** TODO: keep or remove? *)
-Definition IsSucc (n: nat) : Type :=
+Definition IsSucc (n: Nat) : Type :=
   match n with
   | O => False
   | S p => True
@@ -232,41 +232,41 @@ Definition IsSucc (n: nat) : Type :=
 
 (** Zero is not the successor of a number *)
 
-Theorem not_eq_O_S : forall n:nat, 0 <> S n.
+Theorem not_eq_O_S : forall n:Nat, 0 <> S n.
 Proof.
   discriminate.
 Defined.
 #[export] Hint Resolve not_eq_O_S : core.
 
-Theorem not_eq_n_Sn : forall n:nat, n <> S n.
+Theorem not_eq_n_Sn : forall n:Nat, n <> S n.
 Proof.
   induction n; auto.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
 Local Definition ap011_add := @ap011 _ _ _ add.
-Local Definition ap011_nat := @ap011 nat nat.
+Local Definition ap011_nat := @ap011 Nat Nat.
 #[export] Hint Resolve ap011_add : core.
 #[export] Hint Resolve ap011_nat : core.
 
-Lemma add_n_O : forall (n : nat), n = n + 0.
+Lemma add_n_O : forall (n : Nat), n = n + 0.
 Proof.
   induction n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_O : core.
 
-Lemma add_O_n : forall (n : nat), 0 + n = n.
+Lemma add_O_n : forall (n : Nat), 0 + n = n.
 Proof.
   auto.
 Defined.
 
-Lemma add_n_Sm : forall n m:nat, S (n + m) = n + S m.
+Lemma add_n_Sm : forall n m:Nat, S (n + m) = n + S m.
 Proof.
   intros n m; induction n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_Sm: core.
 
-Lemma add_Sn_m : forall n m:nat, S n + m = S (n + m).
+Lemma add_Sn_m : forall n m:Nat, S n + m = S (n + m).
 Proof.
   auto.
 Defined.
@@ -276,13 +276,13 @@ Defined.
 Local Definition ap011_mul := @ap011 _ _ _  mul.
 #[export] Hint Resolve ap011_mul : core.
 
-Lemma mul_n_O : forall n:nat, 0 = n * 0.
+Lemma mul_n_O : forall n:Nat, 0 = n * 0.
 Proof.
   induction n; simpl; auto.
 Defined.
 #[export] Hint Resolve mul_n_O : core.
 
-Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.
+Lemma mul_n_Sm : forall n m:Nat, n * m + n = n * S m.
 Proof.
   intros; induction n as [| p H]; simpl; auto.
   destruct H; rewrite <- add_n_Sm; apply ap.
@@ -299,7 +299,7 @@ Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 
 (** *** Boolean equality and its properties *)
 
-Fixpoint code_nat (m n : nat) {struct m} : DHProp :=
+Fixpoint code_nat (m n : Nat) {struct m} : DHProp :=
   match m, n with
   | 0, 0 => True
   | m'.+1, n'.+1 => code_nat m' n'
@@ -336,16 +336,16 @@ Defined.
 Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
   := Build_Equiv _ _ (@path_nat n m) _.
 
-(** Thus [nat] has decidable paths *)
-Global Instance decidable_paths_nat : DecidablePaths nat
+(** Thus [Nat] has decidable paths *)
+Global Instance decidable_paths_nat : DecidablePaths Nat
   := fun n m => decidable_equiv _ (@path_nat n m) _.
 
 (** And is therefore a HSet *)
-Global Instance hset_nat : IsHSet nat := _.
+Global Instance hset_nat : IsHSet Nat := _.
 
 (** ** Inequality of natural numbers *)
 
-Inductive leq (n : nat) : nat -> Type :=
+Inductive leq (n : Nat) : Nat -> Type :=
 | leq_n : leq n n
 | leq_S : forall m, leq n m -> leq n (S m).
 
@@ -559,10 +559,10 @@ Notation "x < y <= z"  := (x < y  /\ y <= z) : nat_scope.
 
 (** Principle of double induction *)
 
-Theorem nat_double_ind (R : nat -> nat -> Type)
+Theorem nat_double_ind (R : Nat -> Nat -> Type)
   (H1 : forall n, R 0 n) (H2 : forall n, R (S n) 0)
   (H3 : forall n m, R n m -> R (S n) (S m))
-  : forall n m:nat, R n m.
+  : forall n m:Nat, R n m.
 Proof.
   induction n; auto.
   destruct m; auto.
@@ -607,7 +607,7 @@ Proof.
   cbn; by apply ap_S, IHm, leq_S_n.
 Defined.
 
-Theorem max_r : forall n m : nat, n <= m -> max n m = m.
+Theorem max_r : forall n m : Nat, n <= m -> max n m = m.
 Proof.
   intros; rewrite max_comm; by apply max_l.
 Defined.
@@ -617,7 +617,7 @@ Proof.
   induction n; destruct m; cbn; auto.
 Defined. 
 
-Theorem min_l : forall n m : nat, n <= m -> min n m = n.
+Theorem min_l : forall n m : Nat, n <= m -> min n m = n.
 Proof.
   intros n m; revert m; induction n; auto.
   intros [] p.
@@ -625,14 +625,14 @@ Proof.
   cbn; by apply ap_S, IHn, leq_S_n.
 Defined.
 
-Theorem min_r : forall n m : nat, m <= n -> min n m = m.
+Theorem min_r : forall n m : Nat, m <= n -> min n m = m.
 Proof.
   intros; rewrite min_comm; by apply min_l.
 Defined.
 
 (** [n]th iteration of the function [f] *)
 
-Fixpoint nat_iter (n:nat) {A} (f:A->A) (x:A) : A :=
+Fixpoint nat_iter (n:Nat) {A} (f:A->A) (x:A) : A :=
   match n with
     | O => x
     | S n' => f (nat_iter n' f x)
@@ -645,7 +645,7 @@ Proof.
 Defined.
 
 Theorem nat_iter_add :
-  forall (n m:nat) {A} (f:A -> A) (x:A),
+  forall (n m:Nat) {A} (f:A -> A) (x:A),
     nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
 Proof.
   induction n; intros; simpl; rewrite ?IHn; trivial.
@@ -653,7 +653,7 @@ Defined.
 
 (** Preservation of invariants : if [f : A -> A] preserves the invariant [Inv], then the iterates of [f] also preserve it. *)
 
-Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
+Theorem nat_iter_invariant (n : Nat) {A} (f : A -> A) (P : A -> Type)
   : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
 Proof.
   revert n A f P.
@@ -664,21 +664,21 @@ Defined.
 
 (** ** Arithmetic *)
 
-Lemma nat_add_n_O : forall n:nat, n = n + 0.
+Lemma nat_add_n_O : forall n:Nat, n = n + 0.
 Proof.
   induction n.
   - reflexivity.
   - simpl; apply ap; assumption.
 Defined.
 
-Lemma nat_add_n_Sm : forall n m:nat, (n + m).+1 = n + m.+1.
+Lemma nat_add_n_Sm : forall n m:Nat, (n + m).+1 = n + m.+1.
 Proof.
   intros n m; induction n; simpl.
   - reflexivity.
   - apply ap; assumption.
 Defined.
 
-Definition nat_add_comm (n m : nat) : n + m = m + n.
+Definition nat_add_comm (n m : Nat) : n + m = m + n.
 Proof.
   revert m; induction n as [|n IH]; intros m; simpl.
   - refine (nat_add_n_O m).
@@ -689,7 +689,7 @@ Defined.
 
 (** ** Exponentiation *)
 
-Fixpoint nat_exp (n m : nat) : nat
+Fixpoint nat_exp (n m : Nat) : Nat
   := match m with
        | 0 => 1
        | S m => nat_exp n m * n
@@ -697,7 +697,7 @@ Fixpoint nat_exp (n m : nat) : nat
 
 (** ** Factorials *)
 
-Fixpoint factorial (n : nat) : nat
+Fixpoint factorial (n : Nat) : Nat
   := match n with
        | 0 => 1
        | S n => S n * factorial n

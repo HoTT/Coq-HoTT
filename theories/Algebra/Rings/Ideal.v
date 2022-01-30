@@ -210,7 +210,7 @@ Proof.
 Defined.
 
 (** Finitely generated ideal *)
-Definition ideal_generated_finite {R : CRing} {n : nat} (X : Fin n -> R) : Ideal R.
+Definition ideal_generated_finite {R : CRing} {n : Nat} (X : Fin n -> R) : Ideal R.
 Proof.
   apply ideal_generated.
   intros r.

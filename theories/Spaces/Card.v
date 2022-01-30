@@ -191,7 +191,7 @@ Qed.
 
 (** * Infinity *)
 
-(* We call a set infinite if nat embeds into it. *)
+(* We call a set infinite if Nat embeds into it. *)
 
 Definition infinite X :=
-  Injection nat X.
+  Injection Nat X.

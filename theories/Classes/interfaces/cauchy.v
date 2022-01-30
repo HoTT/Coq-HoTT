@@ -26,24 +26,24 @@ Section cauchy.
   Existing Instance qinc_strong_presving.
 
   Section sequence.
-    Context (x : nat -> F).
+    Context (x : Nat -> F).
 
-    Class CauchyModulus (M : Qpos Q -> nat) :=
+    Class CauchyModulus (M : Qpos Q -> Nat) :=
       cauchy_convergence : forall epsilon : Qpos Q, forall m n,
             M epsilon <= m -> M epsilon <= n ->
             - ' (' epsilon) < (x m) - (x n) < ' (' epsilon).
 
     Class IsLimit (l : F) := is_limit
       : forall epsilon : Qpos Q,
-          hexists (fun N : nat => forall n : nat, N <= n ->
+          hexists (fun N : Nat => forall n : Nat, N <= n ->
             - ' (' epsilon) < l - x n < ' (' epsilon)).
   End sequence.
 
   Class IsComplete := is_complete
-    : forall x : nat -> F, forall M , CauchyModulus x M -> exists l, IsLimit x l.
+    : forall x : Nat -> F, forall M , CauchyModulus x M -> exists l, IsLimit x l.
 
   Section theory.
-    Context (x : nat -> F) {M} `{CauchyModulus x M}.
+    Context (x : Nat -> F) {M} `{CauchyModulus x M}.
 
     Lemma modulus_close_limit
           {l}

@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 
 (** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
 
-Definition extendable_over_unit (n : nat)
+Definition extendable_over_unit (n : Nat)
   (A : Type@{a}) (C : Unit -> Type@{i}) (D : forall u, C u -> Type@{j})
   (ext : ExtendableAlong@{a a i k} n (@const A Unit tt) C)
   (ext' : forall (c : forall u, C u),

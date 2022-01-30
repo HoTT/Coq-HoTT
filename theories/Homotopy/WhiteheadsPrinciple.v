@@ -76,7 +76,7 @@ Definition whiteheads_principle
            {ua : Univalence} {A B : Type} {f : A -> B}
            (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
            {i  : IsEquiv (Trunc_functor 0 f)}
-           {ii : forall (x : A) (k : nat), IsEquiv (fmap (Pi k.+1) (pmap_from_point f x)) }
+           {ii : forall (x : A) (k : Nat), IsEquiv (fmap (Pi k.+1) (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
   revert A B H0 H1 f i ii.

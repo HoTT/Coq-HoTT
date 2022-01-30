@@ -29,7 +29,7 @@ Definition tail_mul n m := tail_addmul O n m.
 
 Local Notation ten := (S (S (S (S (S (S (S (S (S (S O)))))))))).
 
-Fixpoint of_uint_acc (d:Decimal.uint)(acc:nat) :=
+Fixpoint of_uint_acc (d:Decimal.uint)(acc:Nat) :=
   match d with
   | Decimal.Nil => acc
   | Decimal.D0 d => of_uint_acc d (tail_mul ten acc)
@@ -48,7 +48,7 @@ Definition of_uint (d:Decimal.uint) := of_uint_acc d O.
 
 Local Notation sixteen := (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S O)))))))))))))))).
 
-Fixpoint of_hex_uint_acc (d:Hexadecimal.uint)(acc:nat) :=
+Fixpoint of_hex_uint_acc (d:Hexadecimal.uint)(acc:Nat) :=
   match d with
   | Hexadecimal.Nil => acc
   | Hexadecimal.D0 d => of_hex_uint_acc d (tail_mul sixteen acc)
@@ -88,19 +88,19 @@ Definition to_uint n :=
 
 Definition to_num_uint n := Numeral.UIntDec (to_uint n).
 
-Definition of_int (d:Decimal.int) : Option nat :=
+Definition of_int (d:Decimal.int) : Option Nat :=
   match Decimal.norm d with
     | Decimal.Pos u => some (of_uint u)
     | _ => none
   end.
 
-Definition of_hex_int (d:Hexadecimal.int) : Option nat :=
+Definition of_hex_int (d:Hexadecimal.int) : Option Nat :=
   match Hexadecimal.norm d with
     | Hexadecimal.Pos u => some (of_hex_uint u)
     | _ => none
   end.
 
-Definition of_num_int (d:Numeral.int) : Option nat :=
+Definition of_num_int (d:Numeral.int) : Option Nat :=
   match d with
   | Numeral.IntDec d => of_int d
   | Numeral.IntHex d => of_hex_int d
@@ -113,7 +113,7 @@ Definition to_num_int n := Numeral.IntDec (to_int n).
 Arguments of_uint d%dec_uint_scope.
 Arguments of_int d%dec_int_scope.
 
-(* Parsing / printing of [nat] numbers *)
-Number Notation nat of_num_uint to_num_uint (abstract after 5001) : nat_scope.
+(* Parsing / printing of [Nat] numbers *)
+Number Notation Nat of_num_uint to_num_uint (abstract after 5001) : nat_scope.
 
 

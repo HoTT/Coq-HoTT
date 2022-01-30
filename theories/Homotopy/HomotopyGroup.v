@@ -12,14 +12,14 @@ Local Open Scope pointed_scope.
 Local Open Scope path_scope.
 
 (** The type that the nth homotopy group will have. *)
-Definition HomotopyGroup_type (n : nat) : Type
+Definition HomotopyGroup_type (n : Nat) : Type
   := match n with
       | 0 => pType
       | n.+1 => Group
      end.
 
 (* Every homotopy group is, in particular, a pointed type. *)
-Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
+Definition HomotopyGroup_type_ptype (n : Nat) : HomotopyGroup_type n -> pType
   := match n return HomotopyGroup_type n -> pType with
      | 0 => fun X => X
      (* This works because [ptype_group] is already a coercion. *)
@@ -29,15 +29,15 @@ Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
 Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
 
 (** We construct the wildcat structure on HomotopyGroup_type in the obvious way. *)
-Global Instance isgraph_homotopygroup_type (n : nat)
+Global Instance isgraph_homotopygroup_type (n : Nat)
   : IsGraph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is2graph_homotopygroup_type (n : nat)
+Global Instance is2graph_homotopygroup_type (n : Nat)
   : Is2Graph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is01cat_homotopygroup_type (n : nat)
+Global Instance is01cat_homotopygroup_type (n : Nat)
   : Is01Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is1cat_homotopygroup_type (n : nat)
+Global Instance is1cat_homotopygroup_type (n : Nat)
   : Is1Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is0functor_homotopygroup_type_ptype (n : nat)
+Global Instance is0functor_homotopygroup_type_ptype (n : Nat)
   : Is0Functor (HomotopyGroup_type_ptype n)
   := ltac:(destruct n; exact _).
 
@@ -87,7 +87,7 @@ Proof.
 Defined.
 
 (** Definition of the nth homotopy group *)
-Definition Pi (n : nat) (X : pType) : HomotopyGroup_type n.
+Definition Pi (n : Nat) (X : pType) : HomotopyGroup_type n.
 Proof.
   destruct n.
   1: exact (pTr 0 X).
@@ -104,7 +104,7 @@ Module PiUtf8.
 End PiUtf8.
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
-Global Instance isabgroup_pi (n : nat) (X : pType)
+Global Instance isabgroup_pi (n : Nat) (X : pType)
   : IsAbGroup (Pi n.+2 X).
 Proof.
   nrapply Build_IsAbGroup.
@@ -116,7 +116,7 @@ Proof.
 Defined.
 
 (** The nth homotopy group is in fact a functor. We now give the type this functor ought to have. For n = 0, this will simply be a pointed map, for n >= 1 this should be a group homomorphism. *)
-Definition pi_functor_type (n : nat) (X Y : pType) : Type
+Definition pi_functor_type (n : Nat) (X Y : pType) : Type
   := match n with
      | 0 => pTr 0 X ->* pTr 0 Y
      | n.+1 => GroupHomomorphism (Pi n.+1 X) (Pi n.+1 Y)
@@ -155,10 +155,10 @@ Proof.
   apply ap_pp.
 Defined.
 
-Global Instance is0functor_pi (n : nat) : Is0Functor (Pi n)
+Global Instance is0functor_pi (n : Nat) : Is0Functor (Pi n)
   := ltac:(destruct n; exact _).
 
-Definition fmap_pi_succ {X Y : pType} (f : X $-> Y) (n : nat)
+Definition fmap_pi_succ {X Y : pType} (f : X $-> Y) (n : Nat)
   : fmap (Pi n.+1) f $== fmap (Pi 1) (fmap (iterated_loops n) f).
 Proof.
   reflexivity.
@@ -174,10 +174,10 @@ Proof.
     | by rapply (fmap_comp _ (is1functor_F := is1f)) ].
 Defined.
 
-Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
+Global Instance is1functor_pi (n : Nat) : Is1Functor (Pi n)
   := ltac:(destruct n; exact _).
 
-Definition groupiso_pi_functor (n : nat)
+Definition groupiso_pi_functor (n : Nat)
   {X Y : pType} (e : X <~>* Y)
   : Pi n.+1 X $<~> Pi n.+1 Y
   := emap (Pi n.+1) e.
@@ -196,7 +196,7 @@ Proof.
   rapply groupiso_pi_loops.
 Defined.
 
-Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
+Definition fmap_pi_loops (n : Nat) {X Y : pType} (f : X ->* Y)
   : (pi_loops n Y) o (fmap (Pi n.+1) f)
     == (fmap (HomotopyGroup_type_ptype n o Pi n o loops) f)
         o (pi_loops n X).
@@ -209,7 +209,7 @@ Proof.
 Defined.
 
 (** Homotopy groups preserve products *)
-Lemma pi_prod (X Y : pType) {n : nat}
+Lemma pi_prod (X Y : pType) {n : Nat}
   : GroupIsomorphism (Pi n.+1 (X * Y))
       (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
@@ -235,7 +235,7 @@ Proof.
 Defined.
 
 (** Can we make this reflexivity? *)
-Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : nat) 
+Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : Nat) 
   : fmap (Pi n.+1) f
     ==* fmap (pTr 0) (fmap (iterated_loops n.+1) f).
 Proof.

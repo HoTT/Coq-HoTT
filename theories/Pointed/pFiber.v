@@ -59,7 +59,7 @@ Proof.
   - abstract (pointed_reduce_rewrite; reflexivity).
 Defined.
 
-Definition pfiber_fmap_iterated_loops {A B : pType} (n : nat) (f : A ->* B)
+Definition pfiber_fmap_iterated_loops {A B : pType} (n : Nat) (f : A ->* B)
   : pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f).
 Proof.
   induction n.

@@ -404,14 +404,14 @@ Defined.
 (** *** More Ring laws *)
 
 (** Powers of ring elements *)
-Fixpoint rng_power {R : CRing} (x : R) (n : nat) : R :=
+Fixpoint rng_power {R : CRing} (x : R) (n : Nat) : R :=
   match n with
   | 0%nat => cring_one
   | n.+1%nat => x * rng_power x n
   end.
 
 (** Power laws *)
-Lemma rng_power_mult_law {R : CRing} (x : R) (n m : nat)
+Lemma rng_power_mult_law {R : CRing} (x : R) (n m : Nat)
   : (rng_power x n) * (rng_power x m) = rng_power x (n + m).
 Proof.
   revert m.
@@ -424,7 +424,7 @@ Proof.
 Defined.
 
 (** Powers commute with multiplication *)
-Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
+Lemma rng_power_mult {R : CRing} (x y : R) (n : Nat)
   : rng_power (x * y) n = rng_power x n * rng_power y n.
 Proof.
   induction n.

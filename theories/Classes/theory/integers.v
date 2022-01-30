@@ -143,8 +143,8 @@ Qed.
 
 Global Instance int_dec : DecidablePaths Z | 10.
 Proof.
-apply decidablepaths_equiv with (NatPair.Z nat)
-  (integers_to_ring (NatPair.Z nat) Z);apply _.
+apply decidablepaths_equiv with (NatPair.Z Nat)
+  (integers_to_ring (NatPair.Z Nat) Z);apply _.
 Qed.
 
 Global Instance slow_int_abs `{Naturals N} : IntAbs Z N | 10.
@@ -162,21 +162,21 @@ Qed.
 Instance int_nontrivial : PropHolds ((1:Z) <>0).
 Proof.
 intros E.
-apply (rings.is_ne_0 (1:nat)).
-apply (injective (naturals_to_semiring nat Z)).
-exact E. (* because [naturals_to_semiring nat] plays nice with 1 *)
+apply (rings.is_ne_0 (1:Nat)).
+apply (injective (naturals_to_semiring Nat Z)).
+exact E. (* because [naturals_to_semiring Nat] plays nice with 1 *)
 Qed.
 
 Global Instance int_zero_product : ZeroProduct Z.
 Proof.
 intros x y E.
-destruct (zero_product (integers_to_ring Z (NatPair.Z nat) x)
-  (integers_to_ring Z (NatPair.Z nat) y)).
+destruct (zero_product (integers_to_ring Z (NatPair.Z Nat) x)
+  (integers_to_ring Z (NatPair.Z Nat) y)).
 - rewrite <-(rings.preserves_mult (A:=Z)), E, (rings.preserves_0 (A:=Z)).
   trivial.
-- left. apply (injective (integers_to_ring Z (NatPair.Z nat))).
+- left. apply (injective (integers_to_ring Z (NatPair.Z Nat))).
   rewrite rings.preserves_0. trivial.
-- right. apply (injective (integers_to_ring Z (NatPair.Z nat))).
+- right. apply (injective (integers_to_ring Z (NatPair.Z Nat))).
   rewrite rings.preserves_0. trivial.
 Qed.
 

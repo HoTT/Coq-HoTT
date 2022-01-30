@@ -365,9 +365,9 @@ Section Splitting.
 
   (** The splitting will be the sequential limit of the sequence [... -> X -> X -> X]. *)
   Definition split_idem : Type
-    := { a : nat -> X & forall n, f (a n.+1) = a n }.
+    := { a : Nat -> X & forall n, f (a n.+1) = a n }.
 
-  Definition split_idem_pr1 : split_idem -> (nat -> X)
+  Definition split_idem_pr1 : split_idem -> (Nat -> X)
     := pr1.
   Coercion split_idem_pr1 : split_idem >-> Funclass.
   Arguments split_idem_pr1 / .
@@ -448,7 +448,7 @@ Section Splitting.
 
   (** Now we're ready to prove the final condition.  We prove the two arguments of [path_split_idem] separately, in order to make the first one transparent and the second opaque. *)
 
-  Local Definition split_idem_issect_part1 (a : split_idem) (n : nat)
+  Local Definition split_idem_issect_part1 (a : split_idem) (n : Nat)
   : f (f (a n.+1)) = f (a 0).
   Proof.
     induction n as [|n IH].
@@ -456,7 +456,7 @@ Section Splitting.
     - exact (ap f (a.2 n.+1) @ (I (a n.+1))^ @ IH).
   Defined.
 
-  Local Definition split_idem_issect_part2 (a : split_idem) (n : nat)
+  Local Definition split_idem_issect_part2 (a : split_idem) (n : Nat)
   : ap f (ap f (a.2 n.+1)) @ split_idem_issect_part1 a n =
     ap f ((ap f (a.2 n.+1) @ (I (a.1 n.+1))^) @ split_idem_issect_part1 a n) @ I (a.1 0).
   Proof.

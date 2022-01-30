@@ -134,5 +134,5 @@ Global Existing Instance lower'_isequiv. (* work around https://coq.inria.fr/bug
 Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B)) : Equiv A B
   := @Build_Equiv A B (lower'2 e) _.
 
-(*Fail Check Lift nat : Type0.
-Check 1 : Lift nat.*)
+(*Fail Check Lift Nat : Type0.
+Check 1 : Lift Nat.*)

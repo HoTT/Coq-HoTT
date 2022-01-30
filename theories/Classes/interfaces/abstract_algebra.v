@@ -148,9 +148,9 @@ Section upper_classes.
     ; dec_recip_0 : /0 = 0
     ; dec_recip_inverse : forall x, x <> 0 -> x / x = 1 }.
 
-  Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
-    := field_characteristic : forall n : nat, Nat.lt@{i} 0 n ->
-      Iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Nat.mul k m)))
+  Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : Nat) : Type@{j}
+    := field_characteristic : forall n : Nat, Nat.lt@{i} 0 n ->
+      Iff@{j j j} (forall m : Nat, not@{j j} (paths@{Set} n (Nat.mul k m)))
         (@apart A Aap (Nat.nat_iter n (1 +) 0) 0).
 
 End upper_classes.

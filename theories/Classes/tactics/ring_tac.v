@@ -112,7 +112,7 @@ Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
     ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a semiring");
-    apply (by_quoting (naturals_to_semiring nat R));
+    apply (by_quoting (naturals_to_semiring Nat R));
     compute;reflexivity
   end.
 

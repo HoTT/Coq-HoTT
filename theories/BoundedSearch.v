@@ -6,7 +6,7 @@ Require Import HoTT.Spaces.Nat.
 Section bounded_search.
 
   Context `{Funext}.
-  Context (P : nat -> Type)
+  Context (P : Nat -> Type)
           {P_hprop : forall n, IsHProp (P n)}
           (P_dec : forall n, Decidable (P n))
           (P_inhab : hexists (fun n => P n)).
@@ -15,12 +15,12 @@ Section bounded_search.
   Local Open Scope nat_scope.
   Local Open Scope type_scope.
   
-  Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
-  Local Definition ishprop_minimal (n : nat) : IsHProp (minimal n).
+  Local Definition minimal (n : Nat) : Type := forall m : Nat, P m -> n <= m.
+  Local Definition ishprop_minimal (n : Nat) : IsHProp (minimal n).
   Proof.
     apply _.
   Qed.
-  Local Definition min_n_Type : Type := { n : nat & ((P n) * (minimal n))%type}.
+  Local Definition min_n_Type : Type := { n : Nat & ((P n) * (minimal n))%type}.
 
   Local Definition ishpropmin_n : IsHProp min_n_Type.
   Proof.
@@ -33,9 +33,9 @@ Section bounded_search.
 
   (* Local Definition min_n : hProp := hProppair min_n_UU isapropmin_n. *)
 
-  Local Definition smaller (n : nat) := { l : nat & (P l * minimal l * (l <= n))%type}.
+  Local Definition smaller (n : Nat) := { l : Nat & (P l * minimal l * (l <= n))%type}.
 
-  Local Definition smaller_S (n : nat) (k : smaller n) : smaller (S n).
+  Local Definition smaller_S (n : Nat) (k : smaller n) : smaller (S n).
   Proof.
     induction k as [l [[p m] z]].
     exists l.
@@ -43,7 +43,7 @@ Section bounded_search.
     exact _.
   Qed.
 
-  Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l <= n) -> not (P l).
+  Local Definition bounded_search (n : Nat) : smaller n + forall l : Nat, (l <= n) -> not (P l).
   Proof.
     induction n as [|n IHn].
     - assert (P 0 + not (P 0)) as X; [apply P_dec |].
@@ -77,7 +77,7 @@ Section bounded_search.
              rewrite eqlSn; assumption.
   Qed.
 
-  Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.
+  Local Definition n_to_min_n (n : Nat) (Pn : P n) : min_n_Type.
   Proof.
     assert (smaller n + forall l, (l <= n) -> not (P l)) as X by apply bounded_search.
     induction X as [[l [[Pl ml] leqln]]|none].
@@ -92,7 +92,7 @@ Section bounded_search.
     - induction 1 as [n Pn]. exact (n_to_min_n n Pn).
   Defined.
 
-  Definition minimal_n : { n : nat & P n }.
+  Definition minimal_n : { n : Nat & P n }.
   Proof.
     induction prop_n_to_min_n as [n pl]. induction pl as [p _].
     exact (n;p).
@@ -103,7 +103,7 @@ End bounded_search.
 Section bounded_search_alt_type.
   Context `{Funext}.
   Context (X : Type)
-          (e : nat <~> X)
+          (e : Nat <~> X)
           (P : X -> Type)
           {P_hprop : forall x, IsHProp (P x)}
           (P_dec : forall x, Decidable (P x))

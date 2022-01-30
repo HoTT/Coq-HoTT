@@ -13,15 +13,15 @@ Local Open Scope nat_scope.
 
 (** ** Canonical finite sets *)
 
-(** A *finite set* is a type that is merely equivalent to the canonical finite set determined by some natural number.  There are many equivalent ways to define the canonical finite sets, such as [{ k : nat & k < n}]; we instead choose a recursive one. *)
+(** A *finite set* is a type that is merely equivalent to the canonical finite set determined by some natural number.  There are many equivalent ways to define the canonical finite sets, such as [{ k : Nat & k < n}]; we instead choose a recursive one. *)
 
-Fixpoint Fin (n : nat) : Type0
+Fixpoint Fin (n : Nat) : Type0
   := match n with
        | 0 => Empty
        | S n => Fin n + Unit
      end.
 
-Fixpoint fin_to_nat {n} : Fin n -> nat
+Fixpoint fin_to_nat {n} : Fin n -> Nat
   := match n with
      | 0 => Empty_rec
      | S n' =>
@@ -32,14 +32,14 @@ Fixpoint fin_to_nat {n} : Fin n -> nat
          end
      end.
 
-Global Instance decidable_fin (n : nat)
+Global Instance decidable_fin (n : Nat)
 : Decidable (Fin n).
 Proof.
   destruct n as [|n]; try exact _.
   exact (inl (inr tt)).
 Defined.
 
-Global Instance decidablepaths_fin (n : nat)
+Global Instance decidablepaths_fin (n : Nat)
 : DecidablePaths (Fin n).
 Proof.
   induction n as [|n IHn]; simpl; exact _.
@@ -50,27 +50,27 @@ Proof.
   refine (contr_equiv' Unit (sum_empty_l Unit)^-1).
 Defined.
 
-Definition fin_empty (n : nat) (f : Fin n -> Empty) : n = 0.
+Definition fin_empty (n : Nat) (f : Fin n -> Empty) : n = 0.
 Proof.
   destruct n; [ reflexivity | ].
   elim (f (inr tt)).
 Defined.
 
 (** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by termsize. *)
-Fixpoint fin_zero {n : nat} : Fin n.+1 :=
+Fixpoint fin_zero {n : Nat} : Fin n.+1 :=
   match n with
   | O => inr tt
   | S _ => inl fin_zero
   end.
 
 (** Where `fin_zero` computes the first element of Fin (S n), `fin_last` computes the last. *)
-Definition fin_last {n : nat} : Fin (S n) := inr tt.
+Definition fin_last {n : Nat} : Fin (S n) := inr tt.
 
 (** Injection Fin n -> Fin n.+1 mapping the kth element to the kth element. *)
-Definition fin_incl {n : nat} (k : Fin n) : Fin (S n) := inl k.
+Definition fin_incl {n : Nat} (k : Fin n) : Fin (S n) := inl k.
 
 (** There is an injection from Fin n -> Fin n.+1 that maps the kth element to the (k+1)th element. *)
-Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
+Fixpoint fsucc {n : Nat} : Fin n -> Fin n.+1 :=
   match n with
   | O => Empty_rec
   | S n' =>
@@ -82,7 +82,7 @@ Fixpoint fsucc {n : nat} : Fin n -> Fin n.+1 :=
   end.
 
 (** This injection is an injection/embedding *)
-Lemma isembedding_fsucc {n : nat} : IsEmbedding (@fsucc n).
+Lemma isembedding_fsucc {n : Nat} : IsEmbedding (@fsucc n).
 Proof.
   apply isembedding_isinj_hset.
   induction n.
@@ -94,17 +94,17 @@ Proof.
     + destruct u, u0; reflexivity.
 Qed.
 
-Lemma path_fin_fsucc_incl {n : nat} : forall k : Fin n, fsucc (fin_incl k) = fin_incl (fsucc k).
+Lemma path_fin_fsucc_incl {n : Nat} : forall k : Fin n, fsucc (fin_incl k) = fin_incl (fsucc k).
 Proof.
   trivial.
 Qed.
 
-Lemma path_nat_fin_incl {n : nat} : forall k : Fin n, fin_to_nat (fin_incl k) = fin_to_nat k.
+Lemma path_nat_fin_incl {n : Nat} : forall k : Fin n, fin_to_nat (fin_incl k) = fin_to_nat k.
 Proof.
   reflexivity.
 Qed.
 
-Lemma path_nat_fsucc {n : nat} : forall k : Fin n, fin_to_nat (fsucc k) = S (fin_to_nat k).
+Lemma path_nat_fsucc {n : Nat} : forall k : Fin n, fin_to_nat (fsucc k) = S (fin_to_nat k).
 Proof.
   induction n as [|n' IHn].
   - intros [].
@@ -132,7 +132,7 @@ Qed.
 
 (** *** Swap the last two elements. *)
 
-Definition fin_transpose_last_two (n : nat)
+Definition fin_transpose_last_two (n : Nat)
 : Fin n.+2 <~> Fin n.+2
   := ((equiv_sum_assoc _ _ _)^-1)
        oE (1 +E (equiv_sum_symm _ _))
@@ -140,21 +140,21 @@ Definition fin_transpose_last_two (n : nat)
 
 Arguments fin_transpose_last_two : simpl nomatch.
 
-Definition fin_transpose_last_two_last (n : nat)
+Definition fin_transpose_last_two_last (n : Nat)
 : fin_transpose_last_two n (inr tt) = (inl (inr tt))
   := 1.
 
-Definition fin_transpose_last_two_nextlast (n : nat)
+Definition fin_transpose_last_two_nextlast (n : Nat)
 : fin_transpose_last_two n (inl (inr tt)) = (inr tt)
   := 1.
 
-Definition fin_transpose_last_two_rest (n : nat) (k : Fin n)
+Definition fin_transpose_last_two_rest (n : Nat) (k : Fin n)
 : fin_transpose_last_two n (inl (inl k)) = (inl (inl k))
   := 1.
 
 (** *** Swap the last element with [k]. *)
 
-Fixpoint fin_transpose_last_with (n : nat) (k : Fin n.+1)
+Fixpoint fin_transpose_last_with (n : Nat) (k : Fin n.+1)
 : Fin n.+1 <~> Fin n.+1.
 Proof.
   destruct k as [k|].
@@ -171,7 +171,7 @@ Defined.
 
 Arguments fin_transpose_last_with : simpl nomatch.
 
-Definition fin_transpose_last_with_last (n : nat) (k : Fin n.+1)
+Definition fin_transpose_last_with_last (n : Nat) (k : Fin n.+1)
 : fin_transpose_last_with n k (inr tt) = k.
 Proof.
   destruct k as [k|].
@@ -185,7 +185,7 @@ Proof.
     all:apply ap, path_contr.
 Qed.
 
-Definition fin_transpose_last_with_with (n : nat) (k : Fin n.+1)
+Definition fin_transpose_last_with_with (n : Nat) (k : Fin n.+1)
 : fin_transpose_last_with n k k = inr tt.
 Proof.
   destruct k as [k|].
@@ -198,7 +198,7 @@ Proof.
     all:apply ap, path_contr.
 Qed.
 
-Definition fin_transpose_last_with_rest (n : nat)
+Definition fin_transpose_last_with_rest (n : Nat)
            (k : Fin n.+1) (l : Fin n)
            (notk : k <> inl l)
 : fin_transpose_last_with n k (inl l) = (inl l).
@@ -218,13 +218,13 @@ Proof.
   - destruct n; reflexivity.
 Qed.
 
-Definition fin_transpose_last_with_last_other (n : nat) (k : Fin n.+1)
+Definition fin_transpose_last_with_last_other (n : Nat) (k : Fin n.+1)
 : fin_transpose_last_with n (inr tt) k = k.
 Proof.
   destruct n; reflexivity.
 Qed.
 
-Definition fin_transpose_last_with_invol (n : nat) (k : Fin n.+1)
+Definition fin_transpose_last_with_invol (n : Nat) (k : Fin n.+1)
 : fin_transpose_last_with n k o fin_transpose_last_with n k == idmap.
 Proof.
   intros l.
@@ -248,19 +248,19 @@ Qed.
 (** To give an equivalence [Fin n.+1 <~> Fin m.+1] is equivalent to giving an element of [Fin m.+1] (the image of the last element) together with an equivalence [Fin n <~> Fin m].  More specifically, any such equivalence can be decomposed uniquely as a last-element transposition followed by an equivalence fixing the last element.  *)
 
 (** Here is the uncurried map that constructs an equivalence [Fin n.+1 <~> Fin m.+1]. *)
-Definition fin_equiv (n m : nat)
+Definition fin_equiv (n m : Nat)
            (k : Fin m.+1) (e : Fin n <~> Fin m)
 : Fin n.+1 <~> Fin m.+1
   := (fin_transpose_last_with m k)
        oE (e +E 1).
 
 (** Here is the curried version that we will prove to be an equivalence. *)
-Definition fin_equiv' (n m : nat)
+Definition fin_equiv' (n m : Nat)
 : ((Fin m.+1) * (Fin n <~> Fin m)) -> (Fin n.+1 <~> Fin m.+1)
   := fun ke => fin_equiv n m (fst ke) (snd ke).
 
 (** We construct its inverse and the two homotopies first as versions using homotopies without funext (similar to [ExtendableAlong]), then apply funext at the end. *)
-Definition fin_equiv_hfiber (n m : nat) (e : Fin n.+1 <~> Fin m.+1)
+Definition fin_equiv_hfiber (n m : Nat) (e : Fin n.+1 <~> Fin m.+1)
 : { kf : (Fin m.+1) * (Fin n <~> Fin m) & fin_equiv' n m kf == e }.
 Proof.
   simpl in e.
@@ -306,15 +306,15 @@ Proof.
       symmetry; apply p.
 Qed.
 
-Definition fin_equiv_inv (n m : nat) (e : Fin n.+1 <~> Fin m.+1)
+Definition fin_equiv_inv (n m : Nat) (e : Fin n.+1 <~> Fin m.+1)
 : (Fin m.+1) * (Fin n <~> Fin m)
   := (fin_equiv_hfiber n m e).1.
 
-Definition fin_equiv_issect (n m : nat) (e : Fin n.+1 <~> Fin m.+1)
+Definition fin_equiv_issect (n m : Nat) (e : Fin n.+1 <~> Fin m.+1)
 : fin_equiv' n m (fin_equiv_inv n m e) == e
   := (fin_equiv_hfiber n m e).2.
 
-Definition fin_equiv_inj_fst (n m : nat)
+Definition fin_equiv_inj_fst (n m : Nat)
            (k l : Fin m.+1) (e f : Fin n <~> Fin m)
 : (fin_equiv n m k e == fin_equiv n m l f) -> (k = l).
 Proof.
@@ -323,7 +323,7 @@ Proof.
   rewrite fin_transpose_last_with_last; reflexivity.
 Qed.
 
-Definition fin_equiv_inj_snd (n m : nat)
+Definition fin_equiv_inj_snd (n m : Nat)
            (k l : Fin m.+1) (e f : Fin n <~> Fin m)
 : (fin_equiv n m k e == fin_equiv n m l f) -> (e == f).
 Proof.
@@ -336,7 +336,7 @@ Proof.
 Qed.
 
 (** Now it's time for funext. *)
-Global Instance isequiv_fin_equiv `{Funext} (n m : nat)
+Global Instance isequiv_fin_equiv `{Funext} (n m : Nat)
 : IsEquiv (fin_equiv' n m).
 Proof.
   refine (isequiv_pathsplit 0 _); split.
@@ -353,12 +353,12 @@ Proof.
       refine (fin_equiv_inj_snd n m k l e f p).
 Qed.
 
-Definition equiv_fin_equiv `{Funext} (n m : nat)
+Definition equiv_fin_equiv `{Funext} (n m : Nat)
 : ((Fin m.+1) * (Fin n <~> Fin m)) <~> (Fin n.+1 <~> Fin m.+1)
   := Build_Equiv _ _ (fin_equiv' n m) _.
 
 (** In particular, this implies that if two canonical finite sets are equivalent, then their cardinalities are equal. *)
-Definition nat_eq_fin_equiv (n m : nat)
+Definition nat_eq_fin_equiv (n m : Nat)
 : (Fin n <~> Fin m) -> (n = m).
 Proof.
   revert m; induction n as [|n IHn]; induction m as [|m IHm]; intros e.
@@ -369,9 +369,9 @@ Proof.
     exact (snd (fin_equiv_inv n m e)).
 Qed.
 
-(** ** Initial segments of [nat] *)
+(** ** Initial segments of [Nat] *)
 
-Definition nat_fin (n : nat) (k : Fin n) : nat.
+Definition nat_fin (n : Nat) (k : Fin n) : Nat.
 Proof.
   induction n as [|n nf].
   - contradiction.
@@ -380,11 +380,11 @@ Proof.
     + exact n.
 Defined.
 
-Definition nat_fin_inl (n : nat) (k : Fin n)
+Definition nat_fin_inl (n : Nat) (k : Fin n)
 : nat_fin n.+1 (inl k) = nat_fin n k
   := 1.
 
-Definition nat_fin_compl (n : nat) (k : Fin n) : nat.
+Definition nat_fin_compl (n : Nat) (k : Fin n) : Nat.
 Proof.
   induction n as [|n nfc].
   - contradiction.
@@ -407,7 +407,7 @@ Proof.
 Qed.
 
 (** [fsucc_mod] is the successor function mod n *)
-Definition fsucc_mod {n : nat} : Fin n -> Fin n.
+Definition fsucc_mod {n : Nat} : Fin n -> Fin n.
 Proof.
   destruct n.
   1: exact idmap.
@@ -417,7 +417,7 @@ Proof.
 Defined.
 
 (** fsucc allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
-Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
+Fixpoint fin_nat {n : Nat} (m : Nat) : Fin n.+1
   := match m with
       | 0 => fin_zero
       | S m => fsucc_mod (fin_nat m)

@@ -87,7 +87,7 @@ Section Extensions.
   (** Here is the iterated version. *)
 
   Fixpoint ExtendableAlong@{i j k l}
-           (n : nat) {A : Type@{i}} {B : Type@{j}}
+           (n : Nat) {A : Type@{i}} {B : Type@{j}}
            (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := match n with
          | 0 => Unit
@@ -106,7 +106,7 @@ Section Extensions.
 
   (** We can modify the universes, as with [ExtensionAlong]. *)
   Definition lift_extendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2}
-             (n : nat) {A : Type@{amin}} {B : Type@{bmin}}
+             (n : Nat) {A : Type@{amin}} {B : Type@{bmin}}
              (f : A -> B) (P : B -> Type@{pmin})
   : ExtendableAlong@{a1 b1 p1 m1} n f P -> ExtendableAlong@{a2 b2 p2 m2} n f P.
   Proof.
@@ -120,7 +120,7 @@ Section Extensions.
         exact (IH P' (snd ext h k)).
   Defined.
 
-  Definition equiv_extendable_pathsplit `{Funext} (n : nat)
+  Definition equiv_extendable_pathsplit `{Funext} (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ExtendableAlong n f C
     <~> PathSplit n (fun (g : forall b, C b) => g oD f).
@@ -140,20 +140,20 @@ Section Extensions.
       intros []; reflexivity.
   Defined.
 
-  Definition isequiv_extendable `{Funext} (n : nat)
+  Definition isequiv_extendable `{Funext} (n : Nat)
              {A B : Type} {C : B -> Type} {f : A -> B}
   : ExtendableAlong n.+2 f C
     -> IsEquiv (fun g => g oD f)
     := isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f).
 
-  Global Instance ishprop_extendable `{Funext} (n : nat)
+  Global Instance ishprop_extendable `{Funext} (n : Nat)
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ExtendableAlong n.+2 f C).
   Proof.
     exact (istrunc_equiv_istrunc _ (equiv_extendable_pathsplit n.+2 C f)^-1).
   Defined.
 
-  Definition equiv_extendable_isequiv `{Funext} (n : nat)
+  Definition equiv_extendable_isequiv `{Funext} (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ExtendableAlong n.+2 f C
     <~> IsEquiv (fun (g : forall b, C b) => g oD f).
@@ -178,7 +178,7 @@ Section Extensions.
   Defined.
 
   (** Postcomposition with a known equivalence.  Note that this does not require funext to define, although showing that it is an equivalence would require funext. *)
-  Definition extendable_postcompose' (n : nat)
+  Definition extendable_postcompose' (n : Nat)
              {A B : Type} (C D : B -> Type) (f : A -> B)
              (g : forall b, C b <~> D b)
   : ExtendableAlong n f C -> ExtendableAlong n f D.
@@ -202,14 +202,14 @@ Section Extensions.
       apply equiv_inverse, equiv_ap; exact _.
   Defined.
 
-  Definition extendable_postcompose (n : nat)
+  Definition extendable_postcompose (n : Nat)
              {A B : Type} (C D : B -> Type) (f : A -> B)
              (g : forall b, C b -> D b) `{forall b, IsEquiv (g b)}
   : ExtendableAlong n f C -> ExtendableAlong n f D
     := extendable_postcompose' n C D f (fun b => Build_Equiv _ _ (g b) _).
 
   (** Composition of the maps we extend along.  This also does not require funext. *)
-  Definition extendable_compose (n : nat)
+  Definition extendable_compose (n : Nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
   : ExtendableAlong n g P -> ExtendableAlong n f (fun b => P (g b)) -> ExtendableAlong n (g o f) P.
   Proof.
@@ -225,7 +225,7 @@ Section Extensions.
   Defined.
 
   (** And cancellation *)
-  Definition cancelL_extendable (n : nat)
+  Definition cancelL_extendable (n : Nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
   : ExtendableAlong n g P -> ExtendableAlong n (g o f) P -> ExtendableAlong n f (fun b => P (g b)).
   Proof.
@@ -242,7 +242,7 @@ Section Extensions.
       + apply (IHn (fun c => h' c = k' c) (snd extg h' k') (snd extgf h' k')).
   Defined.
 
-  Definition cancelR_extendable (n : nat)
+  Definition cancelR_extendable (n : Nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
   : ExtendableAlong n.+1 f (fun b => P (g b)) -> ExtendableAlong n (g o f) P -> ExtendableAlong n g P.
   Proof.
@@ -258,7 +258,7 @@ Section Extensions.
   Defined.
 
   (** And transfer across homotopies *)
-  Definition extendable_homotopic (n : nat)
+  Definition extendable_homotopic (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B) {g : A -> B} (p : f == g)
   : ExtendableAlong n f C -> ExtendableAlong n g C.
   Proof.
@@ -273,7 +273,7 @@ Section Extensions.
   Defined.
 
   (** We can extend along equivalences *)
-  Definition extendable_equiv (n : nat)
+  Definition extendable_equiv (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B) `{IsEquiv _ _ f}
   : ExtendableAlong n f C.
   Proof.
@@ -288,7 +288,7 @@ Section Extensions.
   Defined.
 
   (** And into contractible types *)
-  Definition extendable_contr (n : nat)
+  Definition extendable_contr (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
              `{forall b, Contr (C b)}
   : ExtendableAlong n f C.
@@ -303,7 +303,7 @@ Section Extensions.
   Defined.
 
   (** This is inherited by types of homotopies. *)
-  Definition extendable_homotopy (n : nat)
+  Definition extendable_homotopy (n : Nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
              (h k : forall b, C b)
   : ExtendableAlong n.+1 f C -> ExtendableAlong n f (fun b => h b = k b).
@@ -321,7 +321,7 @@ Section Extensions.
   Definition ooExtendableAlong@{i j k l}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
-    := forall n : nat, ExtendableAlong@{i j k l} n f C.
+    := forall n : Nat, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
 
   Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
@@ -430,7 +430,7 @@ Section Extensions.
       apply ooextendable_homotopy, orth.
   Defined.
 
-End Extensions.
+End Extensions. 
 
 (** ** Extendability along cofibrations *)
 
@@ -446,7 +446,7 @@ Proof.
   + reflexivity. (** The point is that this equality is now definitional. *)
 Defined.
 
-Definition cyl_extendable (n : nat)
+Definition cyl_extendable (n : Nat)
            {A B} (f : A -> B) (C : Cyl f -> Type)
            (ext : ExtendableAlong n cyl C)
   : ExtendableAlong n cyl C.
@@ -476,7 +476,7 @@ Proof.
   intros x; apply ext.2.
 Defined.
 
-Definition cyl_extendable' (n : nat)
+Definition cyl_extendable' (n : Nat)
            {A B} (f : A -> B) (C : B -> Type)
            (ext : ExtendableAlong n f C)
   : ExtendableAlong n cyl (C o (pr_cyl' f)).
@@ -515,7 +515,7 @@ Proof.
     exact ((fst (ef (g b)) _).2 a).
 Defined.
 
-Definition extendable_functor_prod (n : nat)
+Definition extendable_functor_prod (n : Nat)
            {A B A' B'} (f : A -> A') (g : B -> B')
            (P : A' * B' -> Type)
            (ef : forall b', ExtendableAlong n f (fun a' => P (a',b')))
@@ -585,7 +585,7 @@ Definition HomotopyExtensionAlong {A B} {Q : B -> Type}
            (p : forall (a:A) (v:Q (f a)), C (f a;v))
   := { q : forall (b:B) (v:Q b), C (b;v) & forall a v, q (f a) v = p a v }.
 
-Fixpoint HomotopyExtendableAlong (n : nat)
+Fixpoint HomotopyExtendableAlong (n : Nat)
          {A B} {Q : B -> Type} (f : A -> B) (C : sig Q -> Type) : Type
   := match n with
      | 0 => Unit
@@ -620,7 +620,7 @@ Proof.
     exact ((fst (eg a) _).2 u).
 Defined.
 
-Definition extendable_functor_sigma (n : nat)
+Definition extendable_functor_sigma (n : Nat)
            {A B} {P : A -> Type} {Q : B -> Type}
            (f : A -> B) (g : forall a, P a -> Q (f a))
            (C : sig Q -> Type)
@@ -664,7 +664,7 @@ Proof.
   + exact (fst eg (h o inr)).2.
 Defined.
 
-Definition extendable_functor_sum (n : nat)
+Definition extendable_functor_sum (n : Nat)
            {A B A' B'} (f : A -> A') (g : B -> B')
            (P : A' + B' -> Type)
            (ef : ExtendableAlong n f (P o inl))
@@ -757,7 +757,7 @@ Proof.
 Defined.
 
 (** Now we can easily iterate into higher extendability. *)
-Definition extendable_functor_coeq (n : nat)
+Definition extendable_functor_coeq (n : Nat)
            {B A f g B' A' f' g'}
            {h : B -> B'} {k : A -> A'}
            {p : k o f == f' o h} {q : k o g == g' o h}
@@ -788,7 +788,7 @@ Definition ooextendable_functor_coeq
   := fun n => extendable_functor_coeq n (ek n) (fun u v => eh u v n).
 
 (** Since extending at level [n.+1] into [C] implies extending at level [n] into path-types of [C], we get the following corollary. *)
-Definition extendable_functor_coeq' (n : nat)
+Definition extendable_functor_coeq' (n : Nat)
            {B A f g B' A' f' g'}
            {h : B -> B'} {k : A -> A'}
            {p : k o f == f' o h} {q : k o g == g' o h}

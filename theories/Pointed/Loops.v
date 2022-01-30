@@ -14,14 +14,14 @@ Global Instance ispointed_loops A (a : A) : IsPointed (a = a) := 1.
 Definition loops (A : pType) : pType
   := Build_pType (point A = point A) _.
 
-Fixpoint iterated_loops (n : nat) (A : pType) : pType
+Fixpoint iterated_loops (n : Nat) (A : pType) : pType
   := match n with
        | O => A
        | S p => loops (iterated_loops p A)
      end.
 
 (* Inner unfolding for iterated loops *)
-Lemma unfold_iterated_loops (n : nat) (X : pType)
+Lemma unfold_iterated_loops (n : Nat) (X : pType)
   : iterated_loops n.+1 X = iterated_loops n (loops X).
 Proof.
   induction n.
@@ -170,7 +170,7 @@ Proof.
 Defined.
 
 Definition isconnected_iterated_fmap_loops `{Univalence}
-  (k : nat) (A B : pType) (f : A ->* B)
+  (k : Nat) (A B : pType) (f : A ->* B)
   : forall n : trunc_index, IsConnMap (trunc_index_inc' n k) f
                        -> IsConnMap n (fmap (iterated_loops k) f).
 Proof.
@@ -216,7 +216,7 @@ Definition pequiv_fmap_loops {A B : pType}
   := emap loops.
 
 (** A version of [unfold_iterated_loops] that's an equivalence rather than an equality.  We could get this from the equality, but it's more useful to construct it explicitly since then we can reason about it.  *)
-Definition unfold_iterated_loops' (n : nat) (X : pType)
+Definition unfold_iterated_loops' (n : Nat) (X : pType)
   : iterated_loops n.+1 X <~>* iterated_loops n (loops X).
 Proof.
   induction n.
@@ -227,7 +227,7 @@ Proof.
 Defined.
 
 (** For instance, we can prove that it's natural. *)
-Definition unfold_iterated_fmap_loops {A B : pType} (n : nat) (f : A ->* B)
+Definition unfold_iterated_fmap_loops {A B : pType} (n : Nat) (f : A ->* B)
   : (unfold_iterated_loops' n B) o* (fmap (iterated_loops n.+1) f)
     ==* (fmap (iterated_loops n) (fmap loops f)) o* (unfold_iterated_loops' n A).
 Proof.
@@ -298,7 +298,7 @@ Proof.
 Defined.
 
 (* product and iterated loops commute *)
-Lemma iterated_loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType) (n : nat)
+Lemma iterated_loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType) (n : Nat)
   : iterated_loops n (pproduct F) <~>* pproduct (iterated_loops n o F).
 Proof.
   induction n.
@@ -309,7 +309,7 @@ Proof.
 Defined.
 
 (* Loops neutralise sigmas when truncated *)
-Lemma loops_psigma_trunc (n : nat) : forall (Aa : pType)
+Lemma loops_psigma_trunc (n : Nat) : forall (Aa : pType)
   (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (trunc_index_inc minus_two n) Pp),
   iterated_loops n (psigma Pp)
   <~>* iterated_loops n Aa.
@@ -341,7 +341,7 @@ Proof.
   reflexivity.
 Defined.
 
-Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : nat)
+Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : Nat)
   : iterated_loops@{j} n.+2 (Type@{i}, A)
     <~>* pproduct (fun a => iterated_loops@{j} n.+1 (A, a)).
 Proof.
@@ -366,7 +366,7 @@ Proof.
 Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
-Theorem equiv_istrunc_contr_iterated_loops `{Univalence} (n : nat)
+Theorem equiv_istrunc_contr_iterated_loops `{Univalence} (n : Nat)
   : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n (A, a)).
 Proof.
   induction n; intro A.

@@ -14,14 +14,14 @@ Context `{Funext}.
 
 A map is n-path-split if its induced maps on the first n iterated path-spaces are split surjections.  Thus every map is 0-path-split, the 1-path-split maps are the split surjections, and so on.  It turns out that for n>1, being n-path-split is the same as being an equivalence. *)
 
-Fixpoint PathSplit (n : nat) `(f : A -> B) : Type
+Fixpoint PathSplit (n : Nat) `(f : A -> B) : Type
   := match n with
        | 0 => Unit
        | S n => (forall a, hfiber f a) *
                 forall (x y : A), PathSplit n (@ap _ _ f x y)
      end.
 
-Definition isequiv_pathsplit (n : nat) `{f : A -> B}
+Definition isequiv_pathsplit (n : Nat) `{f : A -> B}
 : PathSplit n.+2 f -> IsEquiv f.
 Proof.
   intros [g k].
@@ -43,7 +43,7 @@ Proof.
 Defined.
 
 Global Instance contr_pathsplit_isequiv
-           (n : nat) `(f : A -> B) `{IsEquiv _ _ f}
+           (n : Nat) `(f : A -> B) `{IsEquiv _ _ f}
 : Contr (PathSplit n f).
 Proof.
   generalize dependent B; revert A.
@@ -52,7 +52,7 @@ Proof.
   - apply contr_prod.
 Defined.
 
-Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
+Global Instance ishprop_pathsplit (n : Nat) `(f : A -> B)
 : IsHProp (PathSplit n.+2 f).
 Proof.
   apply hprop_inhabited_contr; intros ps.
@@ -60,7 +60,7 @@ Proof.
   exact _.
 Defined.
 
-Definition equiv_pathsplit_isequiv (n : nat) `(f : A -> B)
+Definition equiv_pathsplit_isequiv (n : Nat) `(f : A -> B)
 : PathSplit n.+2 f <~> IsEquiv f.
 Proof.
   refine (equiv_iff_hprop _ _).
@@ -69,7 +69,7 @@ Proof.
 Defined.
 
 (** Path-splitness transfers across commutative squares of equivalences. *)
-Lemma equiv_functor_pathsplit (n : nat) {A B C D}
+Lemma equiv_functor_pathsplit (n : Nat) {A B C D}
       (f : A -> B) (g : C -> D) (h : A <~> C) (k : B <~> D)
       (p : g o h == k o f)
 : PathSplit n f <~> PathSplit n g.

@@ -16,7 +16,7 @@ Generalizable Variables A B m n f.
 Open Scope trunc_scope.
 
 (* Increase a truncation index by a natural number. *)
-Fixpoint trunc_index_inc (k : trunc_index) (n : nat)
+Fixpoint trunc_index_inc (k : trunc_index) (n : Nat)
   : trunc_index
   := match n with
       | O => k
@@ -25,14 +25,14 @@ Fixpoint trunc_index_inc (k : trunc_index) (n : nat)
 
 (* This is a variation that inserts the successor operations in
    the other order.  This is sometimes convenient. *)
-Fixpoint trunc_index_inc' (k : trunc_index) (n : nat)
+Fixpoint trunc_index_inc' (k : trunc_index) (n : Nat)
   : trunc_index
   := match n with
       | O => k
       | S m => (trunc_index_inc' k.+1 m)
     end.
 
-Definition trunc_index_inc'_succ (n : nat) (k : trunc_index)
+Definition trunc_index_inc'_succ (n : Nat) (k : trunc_index)
   : trunc_index_inc' k.+1 n = (trunc_index_inc' k n).+1.
 Proof.
   revert k; induction n; intro k.
@@ -40,7 +40,7 @@ Proof.
   - apply (IHn k.+1).
 Defined.
 
-Definition trunc_index_inc_agree (k : trunc_index) (n : nat)
+Definition trunc_index_inc_agree (k : trunc_index) (n : Nat)
   : trunc_index_inc k n = trunc_index_inc' k n.
 Proof.
   induction n.
@@ -50,10 +50,10 @@ Proof.
     symmetry; apply trunc_index_inc'_succ.
 Defined.
 
-Definition nat_to_trunc_index (n : nat) : trunc_index
+Definition nat_to_trunc_index (n : Nat) : trunc_index
   := (trunc_index_inc minus_two n).+2.
 
-Coercion nat_to_trunc_index : nat >-> trunc_index.
+Coercion nat_to_trunc_index : Nat >-> trunc_index.
 
 Definition int_to_trunc_index (v : Decimal.int) : Option trunc_index
   := match v with

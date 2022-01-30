@@ -104,15 +104,15 @@ apply pos_dec_recip_compat.
 solve_propholds.
 Defined.
 
-Global Instance pos_of_nat@{} : Cast nat Q+.
+Global Instance pos_of_nat@{} : Cast Nat Q+.
 Proof.
 intros n. destruct n as [|k].
 - exists 1;apply lt_0_1.
-- exists (naturals_to_semiring nat Q (S k)).
+- exists (naturals_to_semiring Nat Q (S k)).
   induction k as [|k Ik].
   + change (0 < 1). apply lt_0_1.
-  + change (0 < 1 + naturals_to_semiring nat Q (S k)).
-    set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
+  + change (0 < 1 + naturals_to_semiring Nat Q (S k)).
+    set (K := naturals_to_semiring Nat Q (S k)) in *;clearbody K.
     apply pos_plus_compat.
     * apply lt_0_1.
     * trivial.
@@ -257,7 +257,7 @@ simple refine (exist _ _ _);simpl.
   + apply pos_eq. unfold cast at 2;simpl.
     unfold cast at 3;simpl.
     set (a':=a/2);rewrite (pos_split2 a);unfold a';clear a'.
-    ring_tac.ring_with_integers (NatPair.Z nat).
+    ring_tac.ring_with_integers (NatPair.Z Nat).
 Qed.
 
 Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb : Q+,
@@ -279,7 +279,7 @@ Defined.
 Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
 Proof.
 intros q r E. change (r = q + (r - q)).
-abstract ring_tac.ring_with_integers (NatPair.Z nat).
+abstract ring_tac.ring_with_integers (NatPair.Z Nat).
 Qed.
 
 
@@ -388,7 +388,7 @@ split.
     { rewrite dec_recip_inverse;[|solve_propholds].
       rewrite mult_1_l;trivial.
     }
-    ring_tac.ring_with_integers (NatPair.Z nat).
+    ring_tac.ring_with_integers (NatPair.Z Nat).
   }
   apply pos_mult_compat;[|apply _].
   red. apply (snd (flip_pos_minus _ _)). trivial.
@@ -398,7 +398,7 @@ split.
     { rewrite dec_recip_inverse;[|solve_propholds].
       rewrite mult_1_l;trivial.
     }
-    ring_tac.ring_with_integers (NatPair.Z nat).
+    ring_tac.ring_with_integers (NatPair.Z Nat).
   }
   apply pos_mult_compat;[|apply _].
   red. apply (snd (flip_pos_minus _ _)). trivial.
@@ -460,7 +460,7 @@ assert (Haux : forall a b : Q, a <= b -> forall e, a < ' e -> b < ' e ->
   - apply le_lt_trans with (join b 0);trivial. apply join_ub_l.
   - apply pos_eq. unfold cast at 2;simpl. unfold cast at 2;simpl.
     unfold cast at 3;simpl.
-    abstract ring_tac.ring_with_integers (NatPair.Z nat).
+    abstract ring_tac.ring_with_integers (NatPair.Z Nat).
 }
 intros a b e E1 E2. destruct (total le a b) as [E|E];auto.
 destruct (Haux _ _ E e) as [d [d' [E3 [E4 E5]]]];trivial.
@@ -492,11 +492,11 @@ Proof.
 intros q r.
 apply (order_reflecting (+ (abs r))).
 assert (Hrw : abs q - abs r + abs r = abs q)
-  by ring_tac.ring_with_integers (NatPair.Z nat);
+  by ring_tac.ring_with_integers (NatPair.Z Nat);
 rewrite Hrw;clear Hrw.
 etransitivity;[|apply Q_triangle_le].
 assert (Hrw : q - r + r = q)
-  by ring_tac.ring_with_integers (NatPair.Z nat);
+  by ring_tac.ring_with_integers (NatPair.Z Nat);
 rewrite Hrw;clear Hrw.
 reflexivity.
 Qed.
@@ -586,7 +586,7 @@ Qed.
 Section enumerable.
 Context `{Enumerable Q}.
 
-Definition Qpos_enumerator : nat -> Q+.
+Definition Qpos_enumerator : Nat -> Q+.
 Proof.
 intros n.
 destruct (le_or_lt (enumerator Q n) 0) as [E|E].

@@ -53,8 +53,8 @@ Section locator.
   Context `{Funext} `{Univalence}.
 
   (* Assume we have enumerations of the rationals, and of pairs of ordered rationals. *)
-  Context (Q_eq : nat <~> Q).
-  Context (QQpos_eq : nat <~> Q * Qpos Q).
+  Context (Q_eq : Nat <~> Q).
+  Context (QQpos_eq : Nat <~> Q * Qpos Q).
 
   Instance qinc : Cast Q F := rationals_to_field Q F.
   (* TODO The following two instances should probably come from the `Rationals` instance. *)
@@ -311,9 +311,9 @@ Section locator.
       - assumption.
     Qed.
 
-    Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
+    Instance inc_N_Q : Cast Nat Q := naturals_to_semiring Nat Q.
 
-    Instance inc_fin_N {n} : Cast (Fin n) nat := fin_to_nat.
+    Instance inc_fin_N {n} : Cast (Fin n) Nat := fin_to_nat.
 
     Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
     Proof.
@@ -394,7 +394,7 @@ Section locator.
         unfold grid.
         change (' fsucc fin_zero) with (fin_to_nat (@fsucc (S n) fin_zero)).
         rewrite path_nat_fsucc, path_nat_fin_zero.
-        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
+        rewrite (@preserves_1 Nat Q _ _ _ _ _ _ _ _ _ _).
         rewrite plus_negate_r.
         rewrite mult_0_l.
         rewrite plus_0_r.
@@ -408,7 +408,7 @@ Section locator.
         rewrite path_nat_fin_incl, path_nat_fin_last.
         rewrite S_nat_plus_1.
         rewrite (preserves_plus n 1).
-        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
+        rewrite (@preserves_1 Nat Q _ _ _ _ _ _ _ _ _ _).
         rewrite <- (associativity (' n) 1 (-1)).
         rewrite plus_negate_r.
         rewrite plus_0_r.
@@ -755,7 +755,7 @@ Section locator.
 
   Section limit.
 
-    Context {xs : nat -> F}.
+    Context {xs : Nat -> F}.
     Context {M} {M_ismod : CauchyModulus Q F xs M}.
     Context (ls : forall n, locator (xs n)).
 

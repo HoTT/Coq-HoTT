@@ -419,7 +419,7 @@ Fixpoint nSep (n : trunc_index) (O : Subuniverse) : Subuniverse
      | n.+1 => Sep (nSep n O)
      end.
 
-(** The reason for indexing this notion by a [trunc_index] rather than a [nat] is that when O is lex, a type is n-O-separated if and only if its O-unit is an n-truncated map. *)
+(** The reason for indexing this notion by a [trunc_index] rather than a [Nat] is that when O is lex, a type is n-O-separated if and only if its O-unit is an n-truncated map. *)
 Definition nsep_iff_trunc_to_O (n : trunc_index) (O : Modality) `{Lex O} (A : Type)
   : In (nSep n O) A <-> IsTruncMap n (to O A).
 Proof.

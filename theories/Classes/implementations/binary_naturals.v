@@ -39,17 +39,17 @@ Section basics.
     | double2 n' => double2 (Succ (double n'))
     end.
 
-  Fixpoint Double (n : nat) : nat :=
+  Fixpoint Double (n : Nat) : Nat :=
     match n with
     | O    => O
     | S n' => S (S (Double n'))
     end.
 
-  Definition Double1 (n : nat) : nat := S (Double n).
+  Definition Double1 (n : Nat) : Nat := S (Double n).
 
-  Definition Double2 (n : nat) : nat := S (S (Double n)).
+  Definition Double2 (n : Nat) : Nat := S (S (Double n)).
 
-  Fixpoint binary (n : nat) : binnat :=
+  Fixpoint binary (n : Nat) : binnat :=
     match n with
     | O    => bzero
     | S n' => Succ (binary n')
@@ -59,7 +59,7 @@ End basics.
 
 Section binary_equiv.
 
-  Local Fixpoint unary' (n : binnat) : nat :=
+  Local Fixpoint unary' (n : binnat) : Nat :=
     match n with
     | bzero      => O
     | double1 n' => Double1 (unary' n')
@@ -81,7 +81,7 @@ Section binary_equiv.
     - simpl. rewrite succunary. apply ap. exact IHn.
   Qed.
 
-  Definition double1binary (n : nat) : binary (Double1 n) = double1 (binary n).
+  Definition double1binary (n : Nat) : binary (Double1 n) = double1 (binary n).
   Proof.
     induction n.
     - reflexivity.
@@ -89,7 +89,7 @@ Section binary_equiv.
       rewrite IHn. reflexivity.
   Qed.
 
-  Definition double2binary (n : nat) : binary (Double2 n) = double2 (binary n).
+  Definition double2binary (n : Nat) : binary (Double2 n) = double2 (binary n).
   Proof.
     induction n.
     - reflexivity.
@@ -108,7 +108,7 @@ Section binary_equiv.
   Global Instance isequiv_binary : IsEquiv binary :=
     isequiv_adjointify binary unary' binaryunary unarybinary.
 
-  Definition equiv_binary : nat <~> binnat :=
+  Definition equiv_binary : Nat <~> binnat :=
     Build_Equiv _ _  binary isequiv_binary.
 
 End binary_equiv.
@@ -150,7 +150,7 @@ End semiring_struct.
 
 Section semiring_laws.
 
-  Definition binarysucc (n : nat) : binary n.+1 = Succ (binary n).
+  Definition binarysucc (n : Nat) : binary n.+1 = Succ (binary n).
   Proof.
     reflexivity.
   Qed.
@@ -168,7 +168,7 @@ Section semiring_laws.
     induction m; induction n; try reflexivity; simpl; rewrite <- IHm; done.
   Qed.
 
-  Definition binaryplus (m n : nat) : binary m + binary n = binary (m + n).
+  Definition binaryplus (m n : Nat) : binary m + binary n = binary (m + n).
   Proof.
     induction m; induction n; try reflexivity.
     - simpl. rewrite binnatplussucc. apply ap. done.
@@ -222,7 +222,7 @@ Section semiring_laws.
       done.
   Qed.
 
-  Definition binarymult (m n : nat) : binary m * binary n = binary (m * n).
+  Definition binarymult (m n : Nat) : binary m * binary n = binary (m * n).
   Proof.
     induction m; induction n; try reflexivity; rewrite binnatmultsucc, IHm, binaryplus; done.
   Qed.
@@ -276,7 +276,7 @@ Section semiring_laws.
 
   Global Instance binnat_set : IsHSet binnat.
   Proof.
-    apply (istrunc_isequiv_istrunc nat binary).
+    apply (istrunc_isequiv_istrunc Nat binary).
   Qed.
 
   Global Instance binnat_semiring : IsSemiRing binnat.
@@ -358,8 +358,8 @@ Section naturals.
       | double1 n' => 2 * (f n') + 1
       | double2 n' => 2 * (f n') + 2 end.
 
-  Definition nat_to_semiring_helper : NaturalsToSemiRing nat :=
-    fun _ _ _ _ _ _ => fix f (n: nat) :=
+  Definition nat_to_semiring_helper : NaturalsToSemiRing Nat :=
+    fun _ _ _ _ _ _ => fix f (n: Nat) :=
       match n with
       | 0%nat => 0
       | S n' => 1 + f n'
@@ -370,7 +370,7 @@ Section naturals.
     Context {R:Type} `{IsSemiRing R}.
 
     Notation toR := (naturals_to_semiring binnat R).
-    Notation toR_fromnat := (naturals_to_semiring nat R).
+    Notation toR_fromnat := (naturals_to_semiring Nat R).
     Notation toR_vianat := (toR_fromnat ∘ unary).
 
     Definition f_suc (m : binnat) : toR (Succ m) = (toR m)+1.
@@ -723,7 +723,7 @@ Section minus.
       rewrite IHm. reflexivity.
   Qed.
 
-  Let binaryminus (x y : nat) : binary x ∸ binary y = binary (x ∸ y).
+  Let binaryminus (x y : Nat) : binary x ∸ binary y = binary (x ∸ y).
   Proof.
     revert y; induction x; intros y; induction y; try reflexivity.
     - apply binnat_zero_minus.

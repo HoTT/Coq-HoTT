@@ -14,17 +14,17 @@ Module Export Core.
   (** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior.
       TODO: this should be unified with [Spaces.Finite.Fin].
    *)
-  Fixpoint CardinalityRepresentative (n : nat) : Type0 :=
+  Fixpoint CardinalityRepresentative (n : Nat) : Type0 :=
     match n with
       | 0 => Empty
       | 1 => Unit
       | S n' => (CardinalityRepresentative n' + Unit)%type
     end.
 
-  Coercion CardinalityRepresentative : nat >-> Sortclass.
+  Coercion CardinalityRepresentative : Nat >-> Sortclass.
 
   (** ** [Fin n] is an hSet *)
-  Global Instance trunc_cardinality_representative (n : nat)
+  Global Instance trunc_cardinality_representative (n : Nat)
   : IsHSet (CardinalityRepresentative n).
   Proof.
     induction n; [ typeclasses eauto |].
@@ -34,7 +34,7 @@ Module Export Core.
   Qed.
 
   (** ** Define the categories [n] *)
-  Definition nat_category (n : nat) :=
+  Definition nat_category (n : Nat) :=
     match n with
       | 0 => indiscrete_category 0
       | 1 => indiscrete_category 1

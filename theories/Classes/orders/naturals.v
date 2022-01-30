@@ -72,10 +72,10 @@ Qed.
 Global Instance slow_nat_le_dec: forall x y: N, Decidable (x ≤ y) | 10.
 Proof.
 intros x y.
-destruct (nat_le_dec (naturals_to_semiring _ nat x) (naturals_to_semiring _ nat y))
+destruct (nat_le_dec (naturals_to_semiring _ Nat x) (naturals_to_semiring _ Nat y))
 as [E | E].
 - left.
-  apply (order_reflecting (naturals_to_semiring N nat)). exact E.
+  apply (order_reflecting (naturals_to_semiring N Nat)). exact E.
 - right. intros E'. apply E.
   apply order_preserving;trivial. apply _.
 Qed.

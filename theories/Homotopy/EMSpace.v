@@ -198,7 +198,7 @@ End LicataFinsterLemma.
 Section EilenbergMacLane.
   Context `{Univalence}.
 
-  Fixpoint EilenbergMacLane (G : Group) (n : nat) : pType
+  Fixpoint EilenbergMacLane (G : Group) (n : Nat) : pType
     := match n with
         | 0    => Build_pType G _
         | 1    => pClassifyingSpace G
@@ -207,12 +207,12 @@ Section EilenbergMacLane.
 
   Notation "'K(' G , n )" := (EilenbergMacLane G n).
 
-  Global Instance istrunc_em {G : Group}  {n : nat} : IsTrunc n K(G, n).
+  Global Instance istrunc_em {G : Group}  {n : Nat} : IsTrunc n K(G, n).
   Proof.
     destruct n as [|[]]; exact _.
   Defined.
 
-  Global Instance isconnected_em {G : Group} (n : nat)
+  Global Instance isconnected_em {G : Group} (n : Nat)
     : IsConnected n K(G, n.+1).
   Proof.
     induction n; exact _.
@@ -221,7 +221,7 @@ Section EilenbergMacLane.
   Local Open Scope trunc_scope.
 
   (* This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
-  Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
+  Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : Nat) `{IsConnected n.+1 X}
     : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
     snrapply Build_pEquiv.
@@ -232,7 +232,7 @@ Section EilenbergMacLane.
     rapply conn_map_loop_susp_unit.
   Defined.
 
-  Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
+  Lemma pequiv_loops_em_em (G : AbGroup) (n : Nat)
     : loops K(G, n.+1) <~>* K(G, n).
   Proof.
     destruct n.
@@ -246,7 +246,7 @@ Section EilenbergMacLane.
     symmetry; rapply pequiv_ptr_loop_psusp'.
   Defined.
 
-  Definition pequiv_loops_em_g (G : AbGroup) (n : nat)
+  Definition pequiv_loops_em_g (G : AbGroup) (n : Nat)
     : iterated_loops n K(G, n) <~>* G.
   Proof.
     induction n.
@@ -256,7 +256,7 @@ Section EilenbergMacLane.
   Defined.
 
   (* For positive indices, we in fact get a group isomorphism. *)
-  Definition equiv_g_pi_n_em (G : AbGroup) (n : nat)
+  Definition equiv_g_pi_n_em (G : AbGroup) (n : Nat)
     : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).
   Proof.
     induction n.

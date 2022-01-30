@@ -46,7 +46,7 @@ Then, however, we have to express the hypotheses of the induction principle.  We
 (** ** Dependent extendability *)
 
 Fixpoint ExtendableAlong_Over@{a b c d m}
-         (n : nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+         (n : Nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
          (C : B -> Type@{c})
          (D : forall b, C b -> Type@{d})
          (ext : ExtendableAlong@{a b c m} n f C)
@@ -72,7 +72,7 @@ Check ExtendableAlong_Over@{a b c d m}.
     - size of result (>= A,B,C,D) *)
 
 (** Like [ExtendableAlong], these can be postcomposed with known equivalences. *)
-Definition extendable_over_postcompose' (n : nat)
+Definition extendable_over_postcompose' (n : Nat)
            {A B : Type} (C : B -> Type) (f : A -> B)
            (ext : ExtendableAlong n f C)
            (D E : forall b, C b -> Type)
@@ -105,7 +105,7 @@ Proof.
     apply ap, symmetry, eisretr.
 Defined.
 
-Definition extendable_over_postcompose (n : nat)
+Definition extendable_over_postcompose (n : Nat)
            {A B : Type} (C : B -> Type) (f : A -> B)
            (ext : ExtendableAlong n f C)
            (D E : forall b, C b -> Type)
@@ -118,7 +118,7 @@ Definition extendable_over_postcompose (n : nat)
 
 (** And if the dependency is trivial, we obtain them from an ordinary [ExtendableAlong]. *)
 Definition extendable_over_const
-           (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
+           (n : Nat) {A B : Type} (C : B -> Type) (f : A -> B)
            (ext : ExtendableAlong n f C) (D : B -> Type)
 : ExtendableAlong n f D
   -> ExtendableAlong_Over n f C (fun b _ => D b) ext.
@@ -139,7 +139,7 @@ Proof.
 Defined.
 
 (** This lemma will be used in stating the computation rule for localization. *)
-Fixpoint apD_extendable_eq (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
+Fixpoint apD_extendable_eq (n : Nat) {A B : Type} (C : B -> Type) (f : A -> B)
          (ext : ExtendableAlong n f C) (D : forall b, C b -> Type)
          (g : forall b c, D b c)
          (ext' : ExtendableAlong_Over n f C D ext)
@@ -388,7 +388,7 @@ Section LocalTypes.
   : IsEquiv (fun g => g o f i)
   := isequiv_ooextendable (fun _ => X) (f i) (ooextendable_islocal i).
 
-  (** The non-dependent eliminator *)
+  (** The non-dependent elimiNator *)
   Definition Localize_rec {X Z : Type} `{IsLocal f Z} (g : X -> Z)
   : Localize f X -> Z.
   Proof.
@@ -467,7 +467,7 @@ Proof.
   exact B_inO1.
 Defined.
 
-(** Similarly, because localization is a HIT that has an elimination rule into types in *all* universes, for accessible reflective subuniverses we can show that containment implies connectedness properties with the universe containments in the other order. *)
+(** Similarly, because localization is a HIT that has an elimiNation rule into types in *all* universes, for accessible reflective subuniverses we can show that containment implies connectedness properties with the universe containments in the other order. *)
 Definition isconnected_O_leq'@{a i1 i2}
            (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
            (** Compared to [O_leq@{i1 i2 i1}] and [A : Type@{i1}] in [isconnected_O_leq], these two lines are what make [i2 <= i1] instead of vice versa. *)

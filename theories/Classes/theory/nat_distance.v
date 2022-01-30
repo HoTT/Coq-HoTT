@@ -51,18 +51,18 @@ Defined.
 
 (* Using the preceding instance we can make an instance
    for arbitrary models of the naturals
-   by translation into [nat] on which we already have a [CutMinus] instance. *)
+   by translation into [Nat] on which we already have a [CutMinus] instance. *)
 Global Instance natdistance_default `{Naturals N} : NatDistance N | 10.
 Proof.
 intros x y.
-destruct (nat_distance_sig (naturals_to_semiring N nat x)
-  (naturals_to_semiring N nat y)) as [[n E]|[n E]].
-- left. exists (naturals_to_semiring nat N n).
-  rewrite <-(naturals.to_semiring_involutive N nat y), <-E.
-  rewrite (rings.preserves_plus (A:=nat)), (naturals.to_semiring_involutive _ _).
+destruct (nat_distance_sig (naturals_to_semiring N Nat x)
+  (naturals_to_semiring N Nat y)) as [[n E]|[n E]].
+- left. exists (naturals_to_semiring Nat N n).
+  rewrite <-(naturals.to_semiring_involutive N Nat y), <-E.
+  rewrite (rings.preserves_plus (A:=Nat)), (naturals.to_semiring_involutive _ _).
   split.
-- right. exists (naturals_to_semiring nat N n).
-  rewrite <-(naturals.to_semiring_involutive N nat x), <-E.
-  rewrite (rings.preserves_plus (A:=nat)), (naturals.to_semiring_involutive _ _).
+- right. exists (naturals_to_semiring Nat N n).
+  rewrite <-(naturals.to_semiring_involutive N Nat x), <-E.
+  rewrite (rings.preserves_plus (A:=Nat)), (naturals.to_semiring_involutive _ _).
   split.
 Defined.

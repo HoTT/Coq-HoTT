@@ -306,7 +306,7 @@ Definition pos_div2_up p :=
 
 (** ** Number of digits in a positive number *)
 
-Fixpoint nat_pos_size p : nat :=
+Fixpoint nat_pos_size p : Nat :=
   match p with
     | 1 => S O
     | p~1 => S (nat_pos_size p)
@@ -336,7 +336,7 @@ Definition pos_iter_op {A} (op : A -> A -> A)
 
 (** A version preserving positive numbers, and sending 0 to 1. *)
 
-Fixpoint pos_of_nat (n : nat) : Pos :=
+Fixpoint pos_of_nat (n : Nat) : Pos :=
  match n with
    | O => 1
    | S O => 1
@@ -345,7 +345,7 @@ Fixpoint pos_of_nat (n : nat) : Pos :=
 
 (* Another version that converts [n] into [n+1] *)
 
-Fixpoint pos_of_succ_nat (n : nat) : Pos :=
+Fixpoint pos_of_succ_nat (n : Nat) : Pos :=
   match n with
     | O => 1
     | S x => pos_succ (pos_of_succ_nat x)

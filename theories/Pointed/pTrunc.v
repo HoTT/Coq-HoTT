@@ -102,7 +102,7 @@ Proof.
 Defined.
 
 Definition ptr_iterated_loops `{Univalence} (n : trunc_index)
-  (k : nat) (A : pType)
+  (k : Nat) (A : pType)
   : pTr n (iterated_loops k A) <~>* iterated_loops k (pTr (trunc_index_inc' n k) A).
 Proof.
   revert A n.

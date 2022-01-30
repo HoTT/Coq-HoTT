@@ -63,7 +63,7 @@ Proof.
 Defined.
 
 Definition iscomplex_iterated_loops {F X Y : pType}
-  (i : F ->* X) (f : X ->* Y) (cx : IsComplex i f) (n : nat)
+  (i : F ->* X) (f : X ->* Y) (cx : IsComplex i f) (n : Nat)
   : IsComplex (fmap (iterated_loops n) i) (fmap (iterated_loops n) f).
 Proof.
   induction n as [|n IHn]; [ exact cx | ].
@@ -326,7 +326,7 @@ Proof.
 Defined.
 
 Global Instance isexact_iterated_loops {F X Y}
-  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f} (n : nat)
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f} (n : Nat)
   : IsExact purely (fmap (iterated_loops n) i) (fmap (iterated_loops n) f).
 Proof.
   induction n as [|n IHn]; [ assumption | apply isexact_loops; assumption ].

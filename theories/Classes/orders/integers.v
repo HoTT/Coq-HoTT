@@ -24,7 +24,7 @@ Context `{Funext} `{Univalence}.
 Context `{Integers Z} `{!TrivialApart Z}.
 
 (* Add Ring Z : (rings.stdlib_ring_theory Z). *)
-(* Add Ring nat : (rings.stdlib_semiring_theory nat). *)
+(* Add Ring Nat : (rings.stdlib_semiring_theory Nat). *)
 
 Lemma induction
   (P: Z -> Type):
@@ -32,7 +32,7 @@ Lemma induction
   forall n, P n.
 Proof.
 intros P0 Psuc1 Psuc2 n.
-destruct (int_abs_sig Z nat n) as [[a A]|[a A]].
+destruct (int_abs_sig Z Nat n) as [[a A]|[a A]].
 - rewrite <-A. clear A. revert a.
   apply naturals.induction.
   + rewrite rings.preserves_0. trivial.
@@ -86,8 +86,8 @@ intros x y.
 (* otherwise Z_le gets defined using peano.nat_ring
    but we only know order_reflecting when using naturals.nat_ring *)
 pose (naturals_ring) as E0.
-destruct (dec (integers_to_ring _ (NatPair.Z nat) x ≤
-    integers_to_ring _ (NatPair.Z nat) y)) as [E|E].
+destruct (dec (integers_to_ring _ (NatPair.Z Nat) x ≤
+    integers_to_ring _ (NatPair.Z Nat) y)) as [E|E].
 - left. apply (order_reflecting _) in E. trivial.
 - right. intro;apply E;apply (order_preserving _);trivial.
 Qed.

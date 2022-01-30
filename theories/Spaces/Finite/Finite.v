@@ -19,14 +19,14 @@ Local Open Scope nat_scope.
 (** ** Definition of general finite sets *)
 
 Class Finite (X : Type) :=
-  { fcard : nat ;
+  { fcard : Nat ;
     merely_equiv_fin : merely (X <~> Fin fcard) }.
 
 Arguments fcard X {_}.
 Arguments merely_equiv_fin X {_}.
 
 Definition issig_finite X
-: { n : nat & merely (X <~> Fin n) } <~> Finite X.
+: { n : Nat & merely (X <~> Fin n) } <~> Finite X.
 Proof.
   issig.
 Defined.
@@ -230,7 +230,7 @@ Proof.
       exact (tr (Sum_ind P IH (Unit_ind e))).
 Defined.
 
-Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
+Corollary isprojective_fin_n (n : Nat) : IsProjective (Fin n).
 Proof.
   apply (iff_isoprojective_hasochoice _ (Fin n)).
   rapply finite_choice.
@@ -421,7 +421,7 @@ Defined.
 
 (** Amusingly, this automatically gives us a way to add up a family of natural numbers indexed by any finite set.  (We could of course also define such an operation directly, probably using [merely_ind_hset].) *)
 
-Definition finadd {X} `{Finite X} (f : X -> nat) : nat
+Definition finadd {X} `{Finite X} (f : X -> Nat) : Nat
   := fcard { x:X & Fin (f x) }.
 
 Definition fcard_sigma {X} (Y : X -> Type)
@@ -473,7 +473,7 @@ Defined.
 
 (** Similarly, closure of finite sets under [forall] automatically gives us a way to multiply a family of natural numbers indexed by any finite set.  Of course, if we defined this explicitly, it wouldn't need funext. *)
 
-Definition finmult `{Funext} {X} `{Finite X} (f : X -> nat) : nat
+Definition finmult `{Funext} {X} `{Finite X} (f : X -> Nat) : Nat
   := fcard (forall x:X, Fin (f x)).
 
 Definition fcard_forall `{Funext} {X} (Y : X -> Type)
@@ -686,16 +686,16 @@ Qed.
 
 (** ** Enumerations *)
 
-(** A function from [nat] to a finite set must repeat itself eventually. *)
+(** A function from [Nat] to a finite set must repeat itself eventually. *)
 Section Enumeration.
-  Context `{Funext} {X} `{Finite@{_ Set _} X} (e : nat -> X).
+  Context `{Funext} {X} `{Finite@{_ Set _} X} (e : Nat -> X).
 
-  Let er (n : nat) : Fin n -> X
+  Let er (n : Nat) : Fin n -> X
     := fun k => e (nat_fin n k).
 
-  Lemma finite_enumeration_stage (n : nat)
+  Lemma finite_enumeration_stage (n : Nat)
   : IsEmbedding (er n)
-    + { n : nat & { k : nat & e n = e (n + k).+1 }}.
+    + { n : Nat & { k : Nat & e n = e (n + k).+1 }}.
   Proof.
     induction n as [|n [IH|IH]].
     - left. intros x.
@@ -728,7 +728,7 @@ Section Enumeration.
   Defined.
 
   Definition finite_enumeration_repeats
-  : { n : nat & { k : nat & e n = e (n + k).+1 }}.
+  : { n : Nat & { k : Nat & e n = e (n + k).+1 }}.
   Proof.
     destruct (finite_enumeration_stage (fcard X).+1) as [p|?].
     - assert (q := leq_inj_finite (er (fcard X).+1) p); simpl in q.

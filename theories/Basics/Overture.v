@@ -27,7 +27,7 @@ Global Set Keyed Unification.
 (** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
 Global Unset Strict Universe Declaration.
 
-(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
+(** This command makes it so that when we say something like [IsHSet Nat] we get [IsHSet@{i} Nat] instead of [IsHSet@{Set} Nat]. *)
 Global Unset Universe Minimization ToSet.
 
 (** Force to use bullets in proofs. *)
@@ -569,7 +569,7 @@ Definition trunc_index_rect := trunc_index_ind.
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%trunc_scope.
 
-(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
+(** Include the basic numerals, so we don't need to go through the coercion from [Nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
 Notation "n .+1" := (trunc_S n) : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
@@ -637,7 +637,7 @@ Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_inst
 
 (** *** Simple induction *)
 
-(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [match] and [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [Nat] or a [trunc_index].  The difference is that it produces proof terms involving [match] and [fix] explicitly rather than [Nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
 
 Ltac simple_induction n n' IH :=
   generalize dependent n;
@@ -694,22 +694,22 @@ Ltac path_via mid :=
 Local Set Elimination Schemes.
 
 (**  Natural numbers. *)
-Inductive nat : Type :=
-| O : nat
-| S : nat -> nat.
+Inductive Nat : Type :=
+| O : Nat
+| S : Nat -> Nat.
 
 Local Unset Elimination Schemes.
 
 (** These schemes are therefore defined in Spaces.Nat *)
 (*
-Scheme nat_ind := Induction for nat Sort Type.
-Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
+Scheme Nat_ind := Induction for Nat Sort Type.
+Scheme Nat_rect := Induction for Nat Sort Type.
+Scheme Nat_rec := Minimality for Nat Sort Type.
  *)
 
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
-Bind Scope nat_scope with nat.
+Bind Scope nat_scope with Nat.
 Arguments S _%nat.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)

@@ -15,7 +15,7 @@ Local Open Scope nat_scope.
 
     Note that the induction principle [finseq_]*)
 
-Definition FinSeq@{u} (n : nat) (A : Type@{u}) : Type@{u} := Fin n -> A.
+Definition FinSeq@{u} (n : Nat) (A : Type@{u}) : Type@{u} := Fin n -> A.
 
 (** The empty finite sequence. *)
 
@@ -28,24 +28,24 @@ Defined.
 
 (** Add an element in the end of a finite sequence, [fscons'] and [fscons]. *)
 
-Definition fscons' {A : Type} (n : nat) (a : A) (v : FinSeq (pred n) A)
+Definition fscons' {A : Type} (n : Nat) (a : A) (v : FinSeq (pred n) A)
   : FinSeq n A
   := fun i =>  fin_rec (fun n => FinSeq (pred n) A -> A)
                        (fun _ _ => a) (fun n' i _ v => v i) i v.
 
-Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A
+Definition fscons {A : Type} {n : Nat} : A -> FinSeq n A -> FinSeq n.+1 A
   := fscons' n.+1.
 
 (** Take the first element of a non-empty finite sequence,
     [fshead'] and [fshead]. *)
 
-Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A
+Definition fshead' {A} (n : Nat) : 0 < n -> FinSeq n A -> A
   := match n with
      | 0 => fun N _ => Empty_rec (not_lt_n_0 _ N)
      | n'.+1 => fun _ v => v fin_zero
      end.
 
-Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
+Definition fshead {A} {n : Nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
 
 Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (pred n) A)
   : fshead' n N (fscons' n a v) = a.
@@ -62,7 +62,7 @@ Defined.
 
 (** If the sequence is non-empty, then remove the first element. *)
 
-Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (pred n) A
+Definition fstail' {A} (n : Nat) : FinSeq n A -> FinSeq (pred n) A
   := match n with
      | 0 => fun _ => Empty_rec
      | n'.+1 => fun v i => v (fsucc i)
@@ -70,7 +70,7 @@ Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (pred n) A
 
 (** Remove the first element from a non-empty sequence. *)
 
-Definition fstail {A} {n : nat} : FinSeq n.+1 A -> FinSeq n A := fstail' n.+1.
+Definition fstail {A} {n : Nat} : FinSeq n.+1 A -> FinSeq n A := fstail' n.+1.
 
 Definition compute_fstail' {A} n (a : A) (v : FinSeq (pred n) A)
   : fstail' n (fscons' n a v) == v.
@@ -90,7 +90,7 @@ Defined.
 (** A non-empty finite sequence is equal to [fscons] of head and tail,
     [path_expand_fscons'] and [path_expand_fscons]. *)
 
-Lemma path_expand_fscons' {A : Type} (n : nat)
+Lemma path_expand_fscons' {A : Type} (n : Nat)
   (i : Fin n) (N : n > 0) (v : FinSeq n A)
   : fscons' n (fshead' n N v) (fstail' n v) i = v i.
 Proof.
@@ -120,7 +120,7 @@ Proof.
     exact (compute_fstail' n.+1 a1 v1 i @ q i).
 Defined.
 
-Definition compute_path_fscons' {A} (n : nat)
+Definition compute_path_fscons' {A} (n : Nat)
     (a : A) (v : FinSeq (pred n) A) (i : Fin n)
     : path_fscons' n (idpath a) (fun j => idpath (v j)) i = idpath.
 Proof.
@@ -153,7 +153,7 @@ Defined.
     identify [path_expand_fscons'] with [path_fscons'] and
     [path_expand_fscons] with [path_fscons]. *)
 
-Lemma path_expand_fscons_fscons' {A : Type} (n : nat)
+Lemma path_expand_fscons_fscons' {A : Type} (n : Nat)
   (N : n > 0) (a : A) (v : FinSeq (pred n) A) (i : Fin n)
   : path_expand_fscons' n i N (fscons' n a v) =
     path_fscons' n (compute_fshead' n N a v) (compute_fstail' n a v) i.
@@ -170,7 +170,7 @@ Proof.
 Qed.
 
 Lemma path_expand_fscons_fscons `{Funext}
-  {A : Type} {n : nat} (a : A) (v : FinSeq n A)
+  {A : Type} {n : Nat} (a : A) (v : FinSeq n A)
   : path_expand_fscons (fscons a v) =
     path_fscons (compute_fshead a v) (compute_fstail a v).
 Proof.
@@ -186,7 +186,7 @@ Defined.
 
 Lemma finseq_ind `{Funext} {A : Type} (P : forall n, FinSeq n A -> Type)
   (z : P 0 fsnil) (s : forall n a (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
-  {n : nat} (v : FinSeq n A)
+  {n : Nat} (v : FinSeq n A)
   : P n v.
 Proof.
   induction n.
@@ -197,7 +197,7 @@ Defined.
 
 Lemma compute_finseq_ind_fsnil `{Funext} {A : Type}
   (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)
-  (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
+  (s : forall (n : Nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
   : finseq_ind P z s fsnil = z.
 Proof.
   exact (ap (fun x => _ x z) (hset_path2 1 (path_fsnil fsnil)))^.
@@ -205,8 +205,8 @@ Defined.
 
 Lemma compute_finseq_ind_fscons `{Funext} {A : Type}
   (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)
-  (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
-  {n : nat} (a : A) (v : FinSeq n A)
+  (s : forall (n : Nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
+  {n : Nat} (a : A) (v : FinSeq n A)
   : finseq_ind P z s (fscons a v) = s n a v (finseq_ind P z s v).
 Proof.
   simpl.

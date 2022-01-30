@@ -722,7 +722,7 @@ argument in question.  One way to avoid this is to instead use a
 `Fixpoint` definition, or the tactic `fix`, along with `destruct`.
 There is a tactic `simple_induction` defined in `Overture` whose
 interface is almost the same as `induction` but does this internally,
-although it only works for induction over `nat` and `trunc_index`.
+although it only works for induction over `Nat` and `trunc_index`.
 
 If you apply the `symmetry` tactic when constructing an equivalence to
 reverse the direction of the goal, then rather than applying
@@ -740,10 +740,10 @@ described above; another is to call the instance(s) you need
 explicitly, rather than relying on typeclass inference to find them.
 
 Sometimes binders without type annotations, like `forall n, foo n`
-where `foo : nat -> Type0`, will produce a fresh universe for
+where `foo : Nat -> Type0`, will produce a fresh universe for
 the variable's type, eg `forall n : (? : Type@{fresh}), foo n`,
 which will remain in the definition as a phantom type:
-`fresh |= forall n : nat, foo n`. Annotating the binder will get rid of it.
+`fresh |= forall n : Nat, foo n`. Annotating the binder will get rid of it.
 See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### 1.6.4. Lifting and lowering ###
@@ -1383,7 +1383,7 @@ End Coq.
 ```
 
 and then replace all `Require Import`s in the pasted files with simply
-`Import`, remove the definition of `nat` (because there's no way to
+`Import`, remove the definition of `Nat` (because there's no way to
 get special syntax for it), and possibly remove dependent choice.  You
 can then run the bug-finder on this file again to remove the parts of
 the pasted stdlib that aren't needed, telling it to use the unmodified

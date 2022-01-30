@@ -89,7 +89,7 @@ Module Import IsNull_Internal.
 End IsNull_Internal.
 
 (** A central fact: if a type [X] is null for all the fibers of a map [f], then it is [f]-local.  (NB: the converse is *not* generally true.)  TODO: Should this go in [Extensions]? *)
-Definition extendable_isnull_fibers (n : nat)
+Definition extendable_isnull_fibers (n : Nat)
            {A B} (f : A -> B) (C : B -> Type)
 : (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
                                (fun _ => C b))

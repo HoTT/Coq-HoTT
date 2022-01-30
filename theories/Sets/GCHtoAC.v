@@ -47,7 +47,7 @@ Proof.
 Qed.
 
 Lemma path_unit_nat :
-  Unit + nat = nat.
+  Unit + Nat = Nat.
 Proof.
   apply path_universe_uncurried. srapply equiv_adjointify.
   - exact (fun x => match x with inl _ => O | inr n => S n end).
@@ -258,7 +258,7 @@ Variable HN : HSet -> HSet.
 
 Hypothesis HN_ninject : forall X, ~ InjectsInto (HN X) X.
 
-Variable HN_bound : nat.
+Variable HN_bound : Nat.
 Hypothesis HN_inject : forall X, InjectsInto (HN X) (power_iterated X HN_bound).
 
 (* This section then concludes the intermediate result that abstractly,
@@ -309,9 +309,9 @@ Proof.
 Qed.
 
 Theorem GCH_injects (X : HSet) :
-  GCH -> InjectsInto X (HN (Build_HSet (Build_HSet (nat + X) -> HProp))).
+  GCH -> InjectsInto X (HN (Build_HSet (Build_HSet (Nat + X) -> HProp))).
 Proof.
-  intros gch. eapply InjectsInto_trans with (nat + X).
+  intros gch. eapply InjectsInto_trans with (Nat + X).
   - apply tr. exists inr. intros x y. apply path_sum_inr.
   - apply GCH_injects'; trivial. exists inl. intros x y. apply path_sum_inl.
 Qed.
@@ -324,7 +324,7 @@ Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
   GCH -> Choice_type.
 Proof.
   intros gch.
-  apply WO_AC. intros X. apply tr. exists (hartogs_number (Build_HSet (Build_HSet (nat + X) -> HProp))).
+  apply WO_AC. intros X. apply tr. exists (hartogs_number (Build_HSet (Build_HSet (Nat + X) -> HProp))).
   unshelve eapply (@GCH_injects UA LEM PR hartogs_number _ 3 _ X gch).
   - intros Y. intros H. eapply merely_destruct; try apply H. apply hartogs_number_no_injection.
   - intros Y. apply tr. apply hartogs_number_injection.

@@ -10,16 +10,13 @@ Local Open Scope path_scope.
 
 (** A Sequence is a sequence of maps from [X(n)] to [X(n+1)]. *)
 
-Definition sequence_graph : Graph.
-Proof.
-  srapply (Build_Graph nat).
-  intros n m; exact (S n = m).
-Defined.
+Definition sequence_graph : Graph :=
+  Build_Graph Nat (fun n m => S n = m).
 
 Definition Sequence := Diagram sequence_graph.
 
 Definition Build_Sequence
-  (X : nat -> Type)
+  (X : Nat -> Type)
   (f : forall n, X n -> X n.+1)
   : Sequence.
 Proof.

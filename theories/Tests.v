@@ -1,7 +1,7 @@
 Require Import HoTT.
 
 Fail Check Type0 : Type0.
-Check Susp nat : Type0.
+Check Susp Nat : Type0.
 Fail Check Susp Type0 : Type0.
 
 Fail Check (fun (P : interval -> Type) (a : P Interval.zero) (b : P Interval.one)
@@ -9,8 +9,8 @@ Fail Check (fun (P : interval -> Type) (a : P Interval.zero) (b : P Interval.one
             => idpath : interval_ind P a b p = interval_rect P a b p').
 
 Local Open Scope nat_scope.
-Fail Check Lift nat : Type0.
-Check 1 : Lift nat.
+Fail Check Lift Nat : Type0.
+Check 1 : Lift Nat.
 
 Check lift'@{i j}.
 Check lower'@{i j}.
@@ -26,10 +26,10 @@ Check ({ l : Unit & { n : Unit & Unit }}).
 
 (** Test 1 from issue #754 *)
 Module Issue754_1.
-  Inductive nat : Type1 :=
-  | O : nat
-  | S : nat -> nat.
-  Fixpoint code_nat (m n : nat) {struct m} : DProp.DHProp :=
+  Inductive Nat : Type1 :=
+  | O : Nat
+  | S : Nat -> Nat.
+  Fixpoint code_nat (m n : Nat) {struct m} : DProp.DHProp :=
     match m with
       | O => match n with
                | O => DProp.True
@@ -44,12 +44,12 @@ Module Issue754_1.
   Local Set Warnings Append "-notation-overridden".
   Notation "x =n y" := (code_nat x y) : nat_scope.
   Local Set Warnings Append "notation-overridden".
-  Bind Scope nat_scope with nat.
+  Bind Scope nat_scope with Nat.
   Axiom equiv_path_nat :
-    forall n m : nat,
+    forall n m : Nat,
       Trunc.trunctype_type (DProp.dhprop_hprop (n =n m)) <~> n = m.
 
-  Definition nat_discr `{Funext} {n: nat}: O <> S n.
+  Definition nat_discr `{Funext} {n: Nat}: O <> S n.
   Proof.
     intro H'.
     equiv_induction (@equiv_path_nat O (S n)).
@@ -77,12 +77,12 @@ End Issue_1358.
 
 Module Issue_973.
 
-  Inductive vec (A : Type) : nat -> Type :=
+  Inductive vec (A : Type) : Nat -> Type :=
   | nil : vec A 0
-  | cons : forall n : nat, A -> vec A n -> vec A (S n).
+  | cons : forall n : Nat, A -> vec A n -> vec A (S n).
 (*   Arguments nil [A]. *)
 
-  Definition hd (A : Type) (n : nat) (v : vec A (S n)) : A :=
+  Definition hd (A : Type) (n : Nat) (v : vec A (S n)) : A :=
   match v in (vec _ (S n)) return A with
   | cons _ h _ => h
   end.
@@ -106,12 +106,12 @@ Module PR_1382.
   Goal O = S O -> Unit.
   intros H. Ltac g x := discriminate x. g H. Qed.
 
-  Goal (forall x y : nat, x = y -> x = S y) -> Unit.
+  Goal (forall x y : Nat, x = y -> x = S y) -> Unit.
   intros.
   try discriminate (H O) || exact tt.
   Qed.
 
-  Goal (forall x y : nat, x = y -> x = S y) -> Unit.
+  Goal (forall x y : Nat, x = y -> x = S y) -> Unit.
   intros H. ediscriminate (H O). instantiate (1:=O). Abort.
 
   (* Check discriminate on types with local definitions *)

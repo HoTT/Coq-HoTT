@@ -1402,7 +1402,7 @@ Section ConnectedTypes.
   Defined.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
-  Definition extendable_const_isconnected_inO (n : nat)
+  Definition extendable_const_isconnected_inO (n : Nat)
              (A : Type) `{IsConnected O A}
              (C : Type) `{In O C}
   : ExtendableAlong n (@const A Unit tt) (fun _ => C).
@@ -1640,7 +1640,7 @@ Section ConnectedMaps.
     apply conn_map_comp.
   Defined.
 
-  Definition extendable_conn_map_inO (n : nat)
+  Definition extendable_conn_map_inO (n : Nat)
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
              (P : B -> Type) `{forall b:B, In O (P b)}
   : ExtendableAlong n f P.

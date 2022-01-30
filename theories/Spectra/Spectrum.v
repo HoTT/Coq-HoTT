@@ -14,7 +14,7 @@ Local Open Scope pointed_scope.
 (** ** Basic Definitions of Spectra *)
 
 Record Prespectrum :=
-  { deloop :> nat -> pType
+  { deloop :> Nat -> pType
     ; glue : forall n, deloop n ->* loops (deloop (n .+1)) }.
 
 Class IsSpectrum (E : Prespectrum) :=

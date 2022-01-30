@@ -24,17 +24,17 @@ Module Export Core.
     (** We say that the objects of Δ are natural numbers, where a
         number [n] is morally considered as the canonical [n]-simplex,
         a finite linear order on [n + 1] elements.  By declaring
-        [chain] to be a local coercion from [nat] to [PreCategory], we
+        [chain] to be a local coercion from [Nat] to [PreCategory], we
         can rely on on-the-fly eta-expansion to make this moral
         consideration a reality, telling Coq that it can unify, for
-        example, [nat -> nat -> Type] with [PreCategory -> PreCategory
+        example, [Nat -> Nat -> Type] with [PreCategory -> PreCategory
         -> Type] by silently inserting [chain]. *)
 
-    Local Coercion chain : nat >-> PreCategory.
+    Local Coercion chain : Nat >-> PreCategory.
 
     Definition simplex_category
       := @Build_PreCategory
-           nat
+           Nat
            Functor
            identity
            compose
