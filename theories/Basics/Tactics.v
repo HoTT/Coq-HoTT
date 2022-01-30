@@ -2,7 +2,7 @@ Require Import Basics.Overture Basics.Nat.
 
 
 (** TODO: Clean up *)
-(** This module implements various tactics used to simplify the goals produced by Program,
+(** This module implements various tactics used to simplify the goals Produced by Program,
    which are also generally useful. *)
 
 (** Debugging tactics to show the goal during evaluation. *)
@@ -43,7 +43,7 @@ Ltac on_last_hyp tac :=
 
 Ltac destruct_one_pair :=
  match goal with
-   | [H : prod _ _ |- _] => destruct H
+   | [H : Prod _ _ |- _] => destruct H
  end.
 
 (** Repeateadly destruct pairs. *)
@@ -401,7 +401,7 @@ Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term; global_axi
 (** A shorter name for [simple notypeclasses refine]; also handles global axioms. *)
 Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term; global_axiom.
 
-(** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
+(** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem Producing an equivalence will by preference be used to Produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
 Tactic Notation "rapply" uconstr(term)
   := do_with_holes ltac:(fun x => refine x) term.
 Tactic Notation "rapply'" uconstr(term)
@@ -446,7 +446,7 @@ Ltac by_extensionality x :=
   match goal with
   | [ |- ?f = ?g ] => eapply path_forall; intro x;
       match goal with
-        | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
+        | [ |- forall (_ : Prod _ _), _ ] => intros [? ?]
         | [ |- forall (_ : sig _ _), _ ] => intros [? ?]
         | _ => intros
     end;

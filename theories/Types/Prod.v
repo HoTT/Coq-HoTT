@@ -7,8 +7,8 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
-Scheme prod_ind := Induction for prod Sort Type.
-Arguments prod_ind {A B} P f p.
+Scheme Prod_ind := Induction for Prod Sort Type.
+Arguments Prod_ind {A B} P f p.
 
 (** ** Unpacking *)
 
@@ -315,10 +315,10 @@ Defined.
 
 (* First the positive universal property. *)
 Global Instance isequiv_prod_ind `(P : A * B -> Type)
-: IsEquiv (prod_ind P) | 0
+: IsEquiv (Prod_ind P) | 0
   := Build_IsEquiv
        _ _
-       (prod_ind P)
+       (Prod_ind P)
        (fun f x y => f (x, y))
        (fun _ => 1)
        (fun _ => 1)
@@ -326,7 +326,7 @@ Global Instance isequiv_prod_ind `(P : A * B -> Type)
 
 Definition equiv_prod_ind `(P : A * B -> Type)
   : (forall (a : A) (b : B), P (a, b)) <~> (forall p : A * B, P p)
-  := Build_Equiv _ _ (prod_ind P) _.
+  := Build_Equiv _ _ (Prod_ind P) _.
 
 (* The non-dependent version, which is a special case, is the currying equivalence. *)
 Definition equiv_uncurry (A B C : Type)

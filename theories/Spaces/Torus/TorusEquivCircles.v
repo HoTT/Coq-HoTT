@@ -148,7 +148,7 @@ Section TorusEquivCircle.
   (* We now prove t2c is a retraction of c2t *)
   Definition c2t2c : t2c o c2t == idmap.
   Proof.
-    rapply prod_ind.
+    rapply Prod_ind.
     (* Start with double circle induction *)
     srefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
     (* Change the second loop case into a square and shelve *)

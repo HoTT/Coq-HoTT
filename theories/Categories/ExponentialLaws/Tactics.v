@@ -27,7 +27,7 @@ Ltac exp_laws_simplify_types' :=
     | [ H : (_ * _)%type |- _ ] => destruct H
     | [ |- _ = _ :> Functor _ _ ] => progress path_functor
     | [ |- _ = _ :> NaturalTransformation _ _ ] => progress path_natural_transformation
-    | [ |- _ = _ :> prod _ _ ] => apply path_prod
+    | [ |- _ = _ :> Prod _ _ ] => apply path_prod
   end.
 
 (** Do some simplifications of contractible types *)

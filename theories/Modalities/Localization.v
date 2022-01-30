@@ -148,7 +148,7 @@ Fixpoint apD_extendable_eq (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
 Proof.
   destruct n.
   - exact Unit.
-  - apply prod.
+  - apply Prod.
     + exact (forall (h : forall a, C (f a)) (b : B),
                g b ((fst ext h).1 b) = (fst ext' h (fun a => g (f a) (h a))).1 b).
     + exact (forall h k, apD_extendable_eq

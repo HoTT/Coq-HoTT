@@ -961,7 +961,7 @@ Section Reflective_Subuniverse.
       refine (inO_equiv_inO _ (issig_equiv@{i j k} A B)).
       refine (inO_equiv_inO _ (equiv_functor_sigma equiv_idmap@{k}
                                  (fun f => equiv_biinv_isequiv@{i j k} f))).
-      transparent assert (c : (prod@{k k} (A->B) (prod@{k k} (B->A) (B->A)) -> prod@{k k} (A -> A) (B -> B))).
+      transparent assert (c : (Prod@{k k} (A->B) (Prod@{k k} (B->A) (B->A)) -> Prod@{k k} (A -> A) (B -> B))).
       { intros [f [g h]]; exact (h o f, f o g). }
       pose (U := hfiber@{k k} c (idmap, idmap)).
       refine (inO_equiv_inO'@{k k k} U _). (** Introduces some extra copies of [k] by typeclass inference. *)

@@ -170,7 +170,7 @@ Defined.
 
 (** [ap (prod A)] behaves like [equiv_functor_prod_l]. *)
 Definition ap_prod_l_path_universe `{Funext} A {B C} (f : B <~> C)
-  : equiv_path (A * B) (A * C) (ap (prod A) (path_universe f))
+  : equiv_path (A * B) (A * C) (ap (Prod A) (path_universe f))
     = equiv_functor_prod_l f.
 Proof.
   revert f. equiv_intro (equiv_path B C) f.

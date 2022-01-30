@@ -471,7 +471,7 @@ Section locator.
     Local Definition P (qeps' : Q * Qpos Q) : Type :=
       match qeps' with
       | (q' , eps') =>
-        (prod
+        (Prod
            (locates_left l (ltQnegQ q' eps'))
            (locates_right m (ltQposQ q' eps')))
       end.

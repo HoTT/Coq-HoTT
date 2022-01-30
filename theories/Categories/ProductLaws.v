@@ -11,7 +11,7 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
 
-Local Notation prod_type := Basics.Datatypes.prod.
+Local Notation prod_type := Basics.Datatypes.Prod.
 Local Notation fst_type := Basics.Datatypes.fst.
 Local Notation snd_type := Basics.Datatypes.snd.
 Local Notation pair_type := Basics.Datatypes.pair.

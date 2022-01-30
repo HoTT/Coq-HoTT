@@ -94,7 +94,7 @@ Section prod.
                   idpath)).
   Defined.
 
-  Global Instance: @respects_equivalence_db _ _ (@prod) (@prod_respects_equivalenceL) := tt.
+  Global Instance: @respects_equivalence_db _ _ (@Prod) (@prod_respects_equivalenceL) := tt.
 End prod.
 
 (** A tactic to solve the identity-preservation part of equivalence-respectfulness. *)

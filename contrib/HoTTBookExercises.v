@@ -93,7 +93,7 @@ End Book_1_2_sig.
 (** The propositional uniqueness principles are named with an
     'eta' postfix in the HoTT library. *)
 
-Definition Book_1_3_prod_lib := @HoTT.Types.Prod.prod_ind.
+Definition Book_1_3_prod_lib := @HoTT.Types.Prod.Prod_ind.
 Section Book_1_3_prod.
   Variable A B : Type.
 
@@ -488,9 +488,9 @@ Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
 
 (* To create a function on the direct sum from functions on the summands, work
    by cases *)
-Check prod_rect.
+Check Prod_rect.
 Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
-  prod_rect (fun _ => A + B -> X) (fun f g => Sum_rect (fun _ => X) f g).
+  Prod_rect (fun _ => A + B -> X) (fun f g => Sum_rect (fun _ => X) f g).
 
 Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
   apply (equiv_adjointify coprod_ump2 coprod_ump1).

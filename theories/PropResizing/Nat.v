@@ -776,7 +776,7 @@ Section AssumeStuff.
     Local Definition partial_Nrec@{} (n : N) : Type@{nr}
       := sig@{nr nr}
             (fun f : ({ m : N & m <= n} -> X) =>
-               prod@{x nr} (f (zero_seg n) = x0)
+               Prod@{x nr} (f (zero_seg n) = x0)
                    (forall (mh : {m:N & m < n}),
                        f (succ_seg n mh) = xs (f ((equiv_N_segment n)^-1 (inl mh))))).
 
@@ -819,7 +819,7 @@ Section AssumeStuff.
     Local Existing Instance contr_partial_Nrec_zero.
 
     Local Definition equiv_N_segment_succ_maps@{} (n : N)
-      : Equiv@{nr nr} (prod@{nr x} ({ m : N & m <= n} -> X) X) ({ m : N & m <= succ n} -> X).
+      : Equiv@{nr nr} (Prod@{nr x} ({ m : N & m <= n} -> X) X) ({ m : N & m <= succ n} -> X).
     Proof.
       refine (_ oE @equiv_sum_ind@{x nr nr nr nr p p p}
                 _ {m:N&m<=n} Unit (fun _ => X) oE _).
@@ -999,7 +999,7 @@ Section AssumeStuff.
     we want to prove to be contractible. *)
     Definition NRec : Type@{nr}
       := sig@{nr nr} (fun f : N -> X =>
-                        prod@{x nr} (f zero = x0)
+                        Prod@{x nr} (f zero = x0)
                             (forall m:N, f (succ m) = xs (f m))).
 
     Local Definition nrec_partials@{} : NRec -> partials.

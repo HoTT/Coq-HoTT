@@ -64,7 +64,7 @@ Section comma.
               (center _)
               _).
     simpl.
-    destruct_head_hnf Datatypes.prod.
+    destruct_head_hnf Datatypes.Prod.
     path_functor.
   Defined.
 
@@ -74,7 +74,7 @@ Section comma.
     rewrite !transport_forall_constant;
     transport_path_forall_hammer;
     simpl;
-    destruct_head Datatypes.prod;
+    destruct_head Datatypes.Prod;
     simpl in *;
     apply CommaCategory.path_morphism;
     simpl;

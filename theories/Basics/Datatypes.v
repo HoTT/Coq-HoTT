@@ -52,30 +52,30 @@ Notation "x |_| y" := (Sum x y) (only parsing) : type_scope.
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
-Record prod (A B : Type) := pair { fst : A ; snd : B }.
+Record Prod (A B : Type) := pair { fst : A ; snd : B }.
 
-Scheme prod_rect := Induction for prod Sort Type.
+Scheme Prod_rect := Induction for Prod Sort Type.
 
 Arguments pair {A B} _ _.
 Arguments fst {A B} _ / .
 Arguments snd {A B} _ / .
 
-Add Printing Let prod.
+Add Printing Let Prod.
 
-Notation "x * y" := (prod x y) : type_scope.
+Notation "x * y" := (Prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
-Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
-Notation and := prod (only parsing).
+Notation "A /\ B" := (Prod A B) (only parsing) : type_scope.
+Notation and := Prod (only parsing).
 Notation conj := pair (only parsing).
 
 #[export] Hint Resolve pair inl inr : core.
 
 Definition prod_curry (A B C : Type) (f : A -> B -> C)
-  (p : prod A B) : C := f (fst p) (snd p).
+  (p : Prod A B) : C := f (fst p) (snd p).
 
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 
-Definition iff (A B : Type) := prod (A -> B) (B -> A).
+Definition iff (A B : Type) := Prod (A -> B) (B -> A).
 
 Notation "A <-> B" := (iff A B) : type_scope.
 
