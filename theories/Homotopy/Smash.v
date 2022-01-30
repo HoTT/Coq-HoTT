@@ -172,7 +172,7 @@ Section Smash.
     rapply Smash_ind_beta_gluel.
   Qed.
 
-  Definition smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
+  Definition Smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
@@ -197,7 +197,7 @@ Section Smash.
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.
   Proof.
     rewrite ap_pp, ap_V.
-    by rewrite 2 smash_rec_beta_gluer.
+    by rewrite 2 Smash_rec_beta_gluer.
   Qed.
 
   Definition smash_rec_beta_glue {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
