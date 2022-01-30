@@ -64,7 +64,7 @@ Definition cod_symboltype {σ} : SymbolType σ → Sort σ
 (** For [s : SymbolType σ], [cod_symboltype σ] is the domain of the
     symbol type [s]. *)
 
-Definition dom_symboltype {σ} : SymbolType σ → list (Sort σ)
+Definition dom_symboltype {σ} : SymbolType σ → List (Sort σ)
   := ne_list.front.
 
 (** For [s : SymbolType σ], [cod_symboltype σ] is the arity of the

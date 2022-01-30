@@ -18,7 +18,7 @@ Section family_prod.
       It is convenient to have the [Unit] in the end.
   *)
 
-  Definition FamilyProd (F : I → Type) : list I → Type
+  Definition FamilyProd (F : I → Type) : List I → Type
     := fold_right (λ (i:I) (A:Type), F i * A) Unit.
 
   (** Map function for [FamilyProd F ℓ],
@@ -28,7 +28,7 @@ Section family_prod.
         = (f x1, f x2, ..., f xn, tt)
       >> *)
 
-  Fixpoint map_family_prod {F G : I → Type} {ℓ : list I}
+  Fixpoint map_family_prod {F G : I → Type} {ℓ : List I}
       (f : ∀ i, F i → G i)
       : FamilyProd F ℓ → FamilyProd G ℓ :=
     match ℓ with
@@ -39,7 +39,7 @@ Section family_prod.
   (** [for_all_family_prod F P (x1, ..., xn, tt) = True] if
       [P i1 x1 ∧ P i2 x2 ∧ ... ∧ P in xn] holds. *)
 
-  Fixpoint for_all_family_prod (F : I → Type) {ℓ : list I}
+  Fixpoint for_all_family_prod (F : I → Type) {ℓ : List I}
       (P : ∀ i, F i -> Type) : FamilyProd F ℓ → Type :=
     match ℓ with
     | nil => λ _, True
@@ -49,7 +49,7 @@ Section family_prod.
   (** [for_all_2_family_prod F G R (x1,...,xn,tt) (y1,...,yn,tt) = True]
       if [R i1 x1 y1 ∧ R i2 x2 y2 ∧ ... ∧ P in xn yn] holds. *)
 
-  Fixpoint for_all_2_family_prod (F G : I → Type) {ℓ : list I}
+  Fixpoint for_all_2_family_prod (F G : I → Type) {ℓ : List I}
       (R : ∀ i, F i -> G i -> Type)
       : FamilyProd F ℓ → FamilyProd G ℓ → Type :=
     match ℓ with
@@ -67,7 +67,7 @@ Section family_prod.
       holds. *)
   Lemma reflexive_for_all_2_family_prod (F : I → Type)
     (R : ∀ i, Relation (F i)) `{!∀ i, Reflexive (R i)}
-    {ℓ : list I} (s : FamilyProd F ℓ)
+    {ℓ : List I} (s : FamilyProd F ℓ)
     : for_all_2_family_prod F F R s s.
   Proof with try reflexivity.
     induction ℓ...

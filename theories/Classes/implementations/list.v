@@ -17,25 +17,25 @@ End ListNotations.
 
 Import ListNotations.
 
-Fixpoint length {A} (l : list A) := match l with
+Fixpoint length {A} (l : List A) := match l with
   | [] => O
   | _ :: l => S (length l)
   end.
 
-Fixpoint fold_left {A B} (f : A -> B -> A) (acc : A) (l : list B) :=
+Fixpoint fold_left {A B} (f : A -> B -> A) (acc : A) (l : List B) :=
   match l with
   | [] => acc
   | x :: l => fold_left f (f acc x) l
   end.
 
-Fixpoint map {A B} (f : A -> B) (l : list A) :=
+Fixpoint map {A B} (f : A -> B) (l : List A) :=
   match l with
   | [] => []
   | x :: l => (f x) :: (map f l)
   end.
 
 Fixpoint map2 `(f : A -> B -> C)
-  (def_l : list A -> list C) (def_r : list B -> list C)
+  (def_l : List A -> List C) (def_r : List B -> List C)
   l1 l2 :=
   match l1, l2 with
   | [], [] => []
@@ -50,14 +50,14 @@ Proof.
 reflexivity.
 Qed.
 
-Lemma map_id `(f : A -> A) (Hf : forall x, f x = x) (l : list A) : map f l = l.
+Lemma map_id `(f : A -> A) (Hf : forall x, f x = x) (l : List A) : map f l = l.
 Proof.
 induction l as [|x l IHl].
 - reflexivity.
 - simpl. rewrite Hf,IHl. reflexivity.
 Qed.
 
-Global Instance sg_op_app A : SgOp (list A) := @app A.
+Global Instance sg_op_app A : SgOp (List A) := @app A.
 
 Global Instance app_assoc A : Associative (@app A).
 Proof.
@@ -120,21 +120,21 @@ intros l;induction l as [|x l IHl];simpl.
 Qed.
 
 (* Copy pasted from the Coq library. *)
-Definition tl {A} (l:list A) : list A :=
+Definition tl {A} (l:List A) : List A :=
   match l with
     | [] => nil
     | a :: m => m
   end.
 
 (* Modified copy from the Coq library. *)
-(** The "In list" predicate *)
-Fixpoint InList {A} (a:A) (l:list A) : Type0 :=
+(** The "In List" predicate *)
+Fixpoint InList {A} (a:A) (l:List A) : Type0 :=
   match l with
     | [] => False
     | b :: m => b = a |_| InList a m
   end.
 
-Fixpoint fold_right {A} {B} (f : B -> A -> A) (x : A) (l : list B) : A :=
+Fixpoint fold_right {A} {B} (f : B -> A -> A) (x : A) (l : List B) : A :=
   match l with
     | nil => x
     | cons b t => f b (fold_right f x t)

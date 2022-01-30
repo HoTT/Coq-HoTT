@@ -35,7 +35,7 @@ Section FreeProduct.
   Context (G H K : Group)
     (f : GroupHomomorphism G H) (g : GroupHomomorphism G K).
 
-  Local Definition Words : Type := list (H + K).
+  Local Definition Words : Type := List (H + K).
 
   Local Notation "[ x ]" := (cons x nil).
 

@@ -16,7 +16,7 @@ Section Reduction.
   Context (A : Type).
 
   (** We define words (with inverses) on A to be lists of marked elements of A *)
-  Local Definition Words : Type := list (A + A).
+  Local Definition Words : Type := List (A + A).
 
   (** Given a marked element of A we can change its mark *)
   Local Definition change_sign : A + A -> A + A

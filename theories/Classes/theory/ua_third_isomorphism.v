@@ -45,7 +45,7 @@ Section cong_quotient.
       + exact (D x2 y2 (EquivRel_Reflexive x2) Q).
   Defined.
 
-  Lemma for_all_relation_quotient {w : list (Sort σ)} (a b : FamilyProd A w)
+  Lemma for_all_relation_quotient {w : List (Sort σ)} (a b : FamilyProd A w)
     : for_all_2_family_prod (A/Ψ) (A/Ψ) (cong_quotient subrel)
         (map_family_prod (λ s, class_of (Ψ s)) a)
         (map_family_prod (λ s, class_of (Ψ s)) b) →

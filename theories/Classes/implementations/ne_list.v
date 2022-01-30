@@ -47,19 +47,19 @@ Section with_type.
   Definition head (l: ne_list): T
     := match l with one x => x | cons x _ => x end.
 
-  Fixpoint to_list (l: ne_list): list T :=
+  Fixpoint to_list (l: ne_list): List T :=
     match l with
     | one x => x :: nil
     | cons x xs => x :: to_list xs
     end.
 
-  Fixpoint from_list (x: T) (xs: list T): ne_list :=
+  Fixpoint from_list (x: T) (xs: List T): ne_list :=
     match xs with
     | nil => one x
     | Datatypes.cons h t => cons x (from_list h t)
     end.
 
-  Definition tail (l: ne_list): list T
+  Definition tail (l: ne_list): List T
     := match l with one _ => nil | cons _ x => to_list x end.
 
   Lemma decomp_eq (l: ne_list): l = from_list (head l) (tail l).
@@ -84,7 +84,7 @@ Section with_type.
     | _, _ => one (head l)
     end.
 
-  Fixpoint front (l: ne_list) : list T :=
+  Fixpoint front (l: ne_list) : List T :=
     match l with
     | one _ => nil
     | cons x xs => x :: front xs
@@ -177,4 +177,4 @@ Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)
 
 End ne_list.
 
-Global Coercion ne_list.to_list : ne_list.ne_list >-> list.
+Global Coercion ne_list.to_list : ne_list.ne_list >-> List.

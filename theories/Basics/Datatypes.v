@@ -85,22 +85,22 @@ Notation "A <-> B" := (Iff A B) : type_scope.
 
 (** Polymorphic lists and some operations *)
 
-Inductive list (A : Type) : Type :=
- | nil : list A
- | cons : A -> list A -> list A.
+Inductive List (A : Type) : Type :=
+| nil : List A
+| cons : A -> List A -> List A.
 
-Scheme list_rect := Induction for list Sort Type.
+Scheme List_rect := Induction for List Sort Type.
 
 Arguments nil {A}.
 Declare Scope list_scope.
 Infix "::" := cons : list_scope.
 Delimit Scope list_scope with list.
-Bind Scope list_scope with list.
+Bind Scope list_scope with List.
 
 Local Open Scope list_scope.
 (** Concatenation of two lists *)
 
-Definition app (A : Type) : list A -> list A -> list A :=
+Definition app (A : Type) : List A -> List A -> List A :=
   fix app l m :=
   match l with
    | nil => m

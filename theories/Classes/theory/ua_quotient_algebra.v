@@ -31,7 +31,7 @@ Section quotient_algebra.
     that [P (class_of _ x1, ..., class_of _ xn, tt)] holds for all
     [(x1, ..., xn, tt) : FamilyProd A w]. *)
 
-  Fixpoint quotient_ind_prop_family_prod {w : list (Sort σ)}
+  Fixpoint quotient_ind_prop_family_prod {w : List (Sort σ)}
     : ∀ (P : FamilyProd carriers_quotient_algebra w → Type)
         `{!∀ a, IsHProp (P a)}
         (dclass : ∀ x, P (map_family_prod (λ s, class_of (Φ s)) x))

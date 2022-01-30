@@ -10,13 +10,13 @@ Section Fold_Left_Recursor.
   Variables (A : Type) (B : Type).
   Variable f : A -> B -> A.
 
-  Fixpoint fold_left (l : list B) (a0 : A) : A :=
+  Fixpoint fold_left (l : List B) (a0 : A) : A :=
     match l with
       | nil => a0
       | cons b t => fold_left t (f a0 b)
     end.
 
-  Lemma fold_left_app : forall (l l' : list B) (i : A),
+  Lemma fold_left_app : forall (l l' : List B) (i : A),
     fold_left (l ++ l') i = fold_left l' (fold_left l i).
   Proof.
     induction l; simpl; auto.
@@ -28,7 +28,7 @@ Section Fold_Right_Recursor.
   Variables (A : Type) (B : Type).
   Variable f : B -> A -> A.
 
-  Fixpoint fold_right (a0 : A) (l : list B) : A :=
+  Fixpoint fold_right (a0 : A) (l : List B) : A :=
     match l with
       | nil => a0
       | cons b t => f b (fold_right a0 t)
