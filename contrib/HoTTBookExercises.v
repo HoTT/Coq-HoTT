@@ -490,7 +490,7 @@ Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
    by cases *)
 Check prod_rect.
 Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
-  prod_rect (fun _ => A + B -> X) (fun f g => sum_rect (fun _ => X) f g).
+  prod_rect (fun _ => A + B -> X) (fun f g => Sum_rect (fun _ => X) f g).
 
 Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
   apply (equiv_adjointify coprod_ump2 coprod_ump1).

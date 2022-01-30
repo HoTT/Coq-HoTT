@@ -33,21 +33,21 @@ Arguments none {A}.
 
 Register Option as core.option.type.
 
-(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+(** [Sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
-Inductive sum (A B : Type) : Type :=
-| inl : A -> sum A B
-| inr : B -> sum A B.
+Inductive Sum (A B : Type) : Type :=
+| inl : A -> Sum A B
+| inr : B -> Sum A B.
 
-Scheme sum_rect := Induction for sum Sort Type.
+Scheme Sum_rect := Induction for Sum Sort Type.
 
-Notation "x + y" := (sum x y) : type_scope.
+Notation "x + y" := (Sum x y) : type_scope.
 
 Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
 (* A notation for coproduct that's less overloaded than [+] *)
-Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
+Notation "x |_| y" := (Sum x y) (only parsing) : type_scope.
 
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)

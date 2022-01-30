@@ -11,8 +11,8 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
-Scheme sum_ind := Induction for sum Sort Type.
-Arguments sum_ind {A B} P f g s : rename.
+Scheme Sum_ind := Induction for Sum Sort Type.
+Arguments Sum_ind {A B} P f g s : rename.
 
 (** ** CoUnpacking *)
 
@@ -784,7 +784,7 @@ Definition decompose_r {A B C} (f : C -> A + B) : Type
 Definition equiv_decompose {A B C} (f : C -> A + B)
 : decompose_l f + decompose_r f <~> C.
 Proof.
-  simple refine (equiv_adjointify (sum_ind (fun _ => C) pr1 pr1) _ _ _).
+  simple refine (equiv_adjointify (Sum_ind (fun _ => C) pr1 pr1) _ _ _).
   - intros c; destruct (is_inl_or_is_inr (f c));
     [ left | right ]; exists c; assumption.
   - intros c; destruct (is_inl_or_is_inr (f c)); reflexivity.
@@ -887,7 +887,7 @@ Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
 Definition sum_ind_uncurried {A B} (P : A + B -> Type)
            (fg : (forall a, P (inl a)) * (forall b, P (inr b)))
 : forall s, P s
-  := @sum_ind A B P (fst fg) (snd fg).
+  := @Sum_ind A B P (fst fg) (snd fg).
 
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)

@@ -227,7 +227,7 @@ Proof.
     + specialize (IH (P o inl) (f o inl)).
       assert (e := f (inr tt)).
       strip_truncations.
-      exact (tr (sum_ind P IH (Unit_ind e))).
+      exact (tr (Sum_ind P IH (Unit_ind e))).
 Defined.
 
 Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
@@ -585,7 +585,7 @@ Section DecidableQuotients.
           apply qglue; unfold R''.
           exact (related_quotient_paths R' (inl u) (inl v) q). }
       { refine (finite_equiv' (Quotient R'' + Unit) _ _).
-        refine (Build_Equiv _ _ (sum_ind (fun _ => Quotient R')
+        refine (Build_Equiv _ _ (Sum_ind (fun _ => Quotient R')
                                         (Quotient_functor R'' R' inl inlresp)
                                         (fun _ => class_of R' (inr tt))) _).
         apply isequiv_surj_emb.
@@ -595,9 +595,9 @@ Section DecidableQuotients.
           + exists (inl (class_of R'' y)); reflexivity.
           + exists (inr tt); reflexivity.
         - apply isembedding_isinj_hset; intros u.
-          refine (sum_ind _ _ _).
+          refine (Sum_ind _ _ _).
           + refine (Quotient_ind_hprop R'' _ _); intros v.
-            revert u; refine (sum_ind _ _ _).
+            revert u; refine (Sum_ind _ _ _).
             * refine (Quotient_ind_hprop R'' _ _); intros u.
               simpl; intros q.
               apply ap, qglue; unfold R''.

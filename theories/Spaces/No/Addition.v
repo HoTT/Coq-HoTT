@@ -22,7 +22,7 @@ Global Instance hasaddition_maxsort : HasAddition MaxSort
 
 Global Instance hasaddition_ordsort : HasAddition OrdSort
   := { empty_options := idmap ;
-       sum_options := fun _ _ _ _ f g => sum_ind _ f g }.
+       sum_options := fun _ _ _ _ f g => Sum_ind _ f g }.
 
 Global Instance hasaddition_decsort : HasAddition DecSort.
 Proof.
@@ -67,11 +67,11 @@ Section Addition.
                 _ _ _ _ _).
       - intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR.
         pose (L'' := L + L').  pose (R'' := R + R').
-        pose (zL := sum_ind (fun _ => No)
+        pose (zL := Sum_ind (fun _ => No)
                             (fun l => (xL_plus l).1 {{ yL | yR // ycut }})
                             (fun l => (x_plus_yL l).1)
                     : L'' -> No).
-        pose (zR := sum_ind (fun _ => No)
+        pose (zR := Sum_ind (fun _ => No)
                             (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
                             (fun r => (x_plus_yR r).1)
                     : R'' -> No).
@@ -133,11 +133,11 @@ Section Addition.
                (ycut : forall (l : L') (r : R'), yL l < yR r)
     : let L'' := L + L' in
       let R'' := R + R' in
-      let zL := sum_ind (fun _ => No)
+      let zL := Sum_ind (fun _ => No)
                         (fun l => (xL_plus l).1 {{ yL | yR // ycut }})
                         (fun l => (plus_inner.1 (yL l)).1)
                 : L'' -> No in
-      let zR := sum_ind (fun _ => No)
+      let zR := Sum_ind (fun _ => No)
                         (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
                         (fun r => (plus_inner.1 (yR r)).1)
                 : R'' -> No in
@@ -262,10 +262,10 @@ Section Addition.
     let R'' := (R + R')%type in
     let x := {{ xL | xR // xcut }} in
     let y := {{ yL | yR // ycut }} in
-    let zL := sum_ind (fun _ => No)
+    let zL := Sum_ind (fun _ => No)
                       (fun l => (xL l) + y) (fun l => x + (yL l))
               : L'' -> No in
-    let zR := sum_ind (fun _ => No)
+    let zR := Sum_ind (fun _ => No)
                       (fun r => (xR r) + y) (fun r => x + (yR r))
               : R'' -> No in
     let Sz := sum_options L R L' R' _ _ in
@@ -309,7 +309,7 @@ Section Addition.
              let ef' := (eval hnf in ef) in
              progress change ef with ef'
            end;
-    repeat cbn [sum_ind];
+    repeat cbn [Sum_ind];
     (* rewrite with induction hypotheses from [repeat_No_ind_hprop] and [do_plus_cut] *)
     repeat match goal with
            | [ |- ?x = ?x ] => reflexivity
@@ -362,14 +362,14 @@ Section Addition.
     rewrite p; clear p;
     do_plus_cut.
     apply path_No.
-    - apply le_lr; [ intros [l|r]; cbn [sum_ind] | intros [] ].
+    - apply le_lr; [ intros [l|r]; cbn [Sum_ind] | intros [] ].
       + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
         apply plus_lt_r.
         refine (lt_ropt _ _ _ l).
       + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
         apply plus_lt_l.
         refine (lt_ropt _ _ _ r).
-    - apply le_lr; [ intros [] | intros [r|l] ]; cbn [sum_ind].
+    - apply le_lr; [ intros [] | intros [r|l] ]; cbn [Sum_ind].
       + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
         apply plus_lt_r.
         refine (lt_lopt _ _ _ r).

@@ -75,7 +75,7 @@ Section AssumeStuff.
 
   Definition graph_succ@{} (A : Graph) : Graph.
   Proof.
-    srefine (Build_Graph (sum@{s s} (vert A) Unit) _ _).
+    srefine (Build_Graph (Sum@{s s} (vert A) Unit) _ _).
     - intros [x|x] [y|y].
       + exact (edge A x y).
       + exact Unit.
@@ -698,7 +698,7 @@ Section AssumeStuff.
   Qed.
 
   Definition equiv_N_segment@{} (n : N)
-    : { m : N & m <= n } <~> (sum@{p p} {m : N & m < n} Unit).
+    : { m : N & m <= n } <~> (Sum@{p p} {m : N & m < n} Unit).
   Proof.
     srefine (equiv_adjointify _ _ _ _).
     - intros mH.
@@ -728,7 +728,7 @@ Section AssumeStuff.
   Defined.
 
   Definition equiv_N_segment_succ@{} (n : N)
-    : { m : N & m <= succ n } <~> @sum@{p p} {m : N & m <= n} Unit.
+    : { m : N & m <= succ n } <~> @Sum@{p p} {m : N & m <= n} Unit.
   Proof.
     refine (_ oE equiv_N_segment (succ n)).
     apply equiv_functor_sum_r.

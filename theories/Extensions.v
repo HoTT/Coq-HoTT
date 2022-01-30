@@ -657,7 +657,7 @@ Definition extension_functor_sum
            (h : forall z, P (functor_sum f g z))
   : ExtensionAlong (functor_sum f g) P h.
 Proof.
-  srefine (sum_ind _ _ _ ; sum_ind _ _ _).
+  srefine (Sum_ind _ _ _ ; Sum_ind _ _ _).
   + exact (fst ef (h o inl)).1.
   + exact (fst eg (h o inr)).1.
   + exact (fst ef (h o inl)).2.

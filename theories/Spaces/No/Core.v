@@ -1103,17 +1103,17 @@ Proof.
   intros L R s xL xR xcut IHL IHR.
   pose (uLR := Unit + (L + R)).
   assert (Decidable uLR) by exact (inl (inl tt)).
-  pose (xLR := sum_ind _ (fun _ => zero) (sum_ind (fun _ => DecNo) (fun l => (IHL l).1) (fun r => (IHR r).1)) : uLR -> DecNo).
+  pose (xLR := Sum_ind _ (fun _ => zero) (Sum_ind (fun _ => DecNo) (fun l => (IHL l).1) (fun r => (IHR r).1)) : uLR -> DecNo).
   pose (z := {{ xLR | Empty_rec // rempty_cut }}).
   pose (z' := {{ unit_name z | Empty_rec // rempty_cut }}).
   pose (y := {{ Empty_rec | xLR // lempty_cut }}).
   pose (y' := {{ Empty_rec | unit_name y // lempty_cut }} ).
   pose (L' := Unit + L).
   assert (Decidable L') by exact (inl (inl tt)).
-  pose (wL := sum_ind _ (fun _ => y') (fun l => (IHL l).1) : L' -> DecNo).
+  pose (wL := Sum_ind _ (fun _ => y') (fun l => (IHL l).1) : L' -> DecNo).
   pose (R' := Unit + R).
   assert (Decidable R') by exact (inl (inl tt)).
-  pose (wR := sum_ind _ (fun _ => z') (fun r => (IHR r).1) : R' -> DecNo).
+  pose (wR := Sum_ind _ (fun _ => z') (fun r => (IHR r).1) : R' -> DecNo).
   assert (wcut : forall l r, wL l < wR r).
   { intros [[]|l] [[]|r]; cbn.
     - transitivity y.

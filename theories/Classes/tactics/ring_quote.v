@@ -66,7 +66,7 @@ Proof. intros []. Defined.
 
 Definition singleton x : Vars Unit := fun _ => x.
 
-Definition merge {A B:Type0 } (va:Vars A) (vb:Vars B) : Vars (sum@{Set Set} A B)
+Definition merge {A B:Type0 } (va:Vars A) (vb:Vars B) : Vars (Sum@{Set Set} A B)
   := fun i => match i with inl i => va i | inr i => vb i end.
 
 Section Lookup.

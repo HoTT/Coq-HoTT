@@ -10,10 +10,10 @@ Local Open Scope dpath_scope.
 (* Definition of smash product *)
 
 Definition sum_to_prod (X Y : pType) : X + Y -> X * Y
-  := sum_ind _ (fun x => (x, point Y)) (fun y => (point X, y)).
+  := Sum_ind _ (fun x => (x, point Y)) (fun y => (point X, y)).
 
 Definition sum_to_bool X Y : X + Y -> Bool
-  := sum_ind _ (fun _ => false) (fun _ => true).
+  := Sum_ind _ (fun _ => false) (fun _ => true).
 
 Definition Smash (X Y : pType) : pType
   := Build_pType (Pushout (sum_to_prod X Y) (sum_to_bool X Y))
@@ -84,7 +84,7 @@ Section Smash.
     + intros [a b].
       apply Psm.
     + apply (Bool_ind _ Pr Pl).
-    + srapply sum_ind; intro; apply dp_path_transport^-1.
+    + srapply Sum_ind; intro; apply dp_path_transport^-1.
       - apply Pgl.
       - apply Pgr.
   Defined.
@@ -97,7 +97,7 @@ Section Smash.
   Proof.
     apply dp_apD_path_transport.
     refine (Pushout_ind_beta_pglue P _ _ _ (inl a) @ _).
-    unfold sum_ind.
+    unfold Sum_ind.
     by apply ap.
   Qed.
 
@@ -109,7 +109,7 @@ Section Smash.
   Proof.
     apply dp_apD_path_transport.
     refine (Pushout_ind_beta_pglue P _ _ _ (inr b) @ _).
-    unfold sum_ind.
+    unfold Sum_ind.
     by apply ap.
   Qed.
 
