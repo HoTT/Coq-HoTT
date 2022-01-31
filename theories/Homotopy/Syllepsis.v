@@ -78,42 +78,42 @@ Infix "[I]" := (concat_square_hor) (at level 60).
 
 (* We will frequently use the following equivalences. *)
 Definition rlucancel {X} {a b : X} {p q : a = b} :
-  (p @ 1 = 1 @ q) <~> (p = q).
+  (p = q) <~> (p @ 1 = 1 @ q).
 Proof.
   refine (equiv_compose' _ _).
-  - exact (equiv_concat_r (concat_1p _) _).
-  - exact (equiv_concat_l (concat_p1 _)^ _).
+  - exact (equiv_concat_r (concat_1p _)^ _).
+  - exact (equiv_concat_l (concat_p1 _) _).
 Defined.
 
 Definition lrucancel {X} {a b : X} {p q : a = b} :
-  (1 @ p = q @ 1) <~> (p = q).
+  (p = q) <~> (1 @ p = q @ 1).
 Proof.
   refine (equiv_compose' _ _).
-  - exact (equiv_concat_r (concat_p1 _) _).
-  - exact (equiv_concat_l (concat_1p _)^ _).
+  - exact (equiv_concat_r (concat_p1 _)^ _).
+  - exact (equiv_concat_l (concat_1p _) _).
 Defined.
 
 (* Interaction of the above equivalences with square composition. *)
 Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
-  (rlucancel^-1 1 [-] rlucancel^-1 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel^-1 1).
+  (rlucancel 1 [-] rlucancel 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel 1).
 Proof.
   by destruct theta, p, q.
 Defined.
 
 Definition lrucancel_sHs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
-  (lrucancel^-1 1 [I] lrucancel^-1 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel^-1 1).
+  (lrucancel 1 [I] lrucancel 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel 1).
 Proof.
   by destruct theta, p, q.
 Defined.
 
 Definition rlucancel_sHs_1 {X} {a b : X} (p : a = b) :
-  (rlucancel^-1 1 [I] rlucancel^-1 1) = rlucancel^-1 (idpath p).
+  (rlucancel 1 [I] rlucancel 1) = rlucancel (idpath p).
 Proof.
   by destruct p.
 Defined.
 
 Definition lrucancel_sVs_1 {X} {a b : X} (p : a = b) :
-  (lrucancel^-1 1 [-] lrucancel^-1 1) = lrucancel^-1 (idpath p).
+  (lrucancel 1 [-] lrucancel 1) = lrucancel (idpath p).
 Proof.
   by destruct p.
 Defined.
@@ -123,14 +123,14 @@ Definition ulnat {X} {a b : X} {u v : a = b} (p : u = v) :
   whiskerL 1 p @ concat_1p v = concat_1p u @ p.
 Proof.
   destruct p.
-  exact (lrucancel^-1 1).
+  exact (lrucancel 1).
 Defined. 
 
 Definition urnat {X} {a b : X} {u v : a = b} (p : u = v) :
   whiskerR p 1 @ concat_p1 v = concat_p1 u @ p.
 Proof.
   destruct p.
-  exact (lrucancel^-1 1).
+  exact (lrucancel 1).
 Defined.
 
 (* Exchange law for whiskering on the left and on the right. *)
@@ -144,17 +144,17 @@ Defined.
 Theorem eh {X} {a : X} (p q : idpath a = idpath a) :
   p @ q = q @ p.
 Proof.
-  refine (_ @ rlucancel (urnat q [-] ulnat p)).
-  refine ((rlucancel (ulnat p [-] urnat q))^ @ _).
+  refine (_ @ rlucancel^-1 (urnat q [-] ulnat p)).
+  refine ((rlucancel^-1 (ulnat p [-] urnat q))^ @ _).
   exact (wlrnat p q).
 Defined.
 
 (* Eckmann-Hilton on reflexivity. *)
 Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q) :
-  (rlucancel (1 [-] theta))^ @ wlrnat 1 p @ rlucancel (theta [-] 1) @ concat_p1 q = concat_1p q.
+  (rlucancel^-1 (1 [-] theta))^ @ wlrnat 1 p @ rlucancel^-1 (theta [-] 1) @ concat_p1 q = concat_1p q.
 Proof.
   revert theta.
-  srapply (equiv_ind rlucancel^-1).
+  srapply (equiv_ind rlucancel).
   intro theta.
   by destruct theta, p.
 Defined.
@@ -166,10 +166,10 @@ Proof.
 Defined.
 
 Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q) :
-  (rlucancel (theta [-] 1))^ @ wlrnat p 1 @ rlucancel (1 [-] theta) @ concat_1p q = concat_p1 q.
+  (rlucancel^-1 (theta [-] 1))^ @ wlrnat p 1 @ rlucancel^-1 (1 [-] theta) @ concat_1p q = concat_p1 q.
 Proof.
   revert theta.
-  srapply (equiv_ind rlucancel^-1).
+  srapply (equiv_ind rlucancel).
   intro theta.
   by destruct theta, p.
 Defined.
@@ -185,14 +185,14 @@ Definition ehlnat {X} {a : X} (u : idpath a = idpath a) {x y} (p : x = y) :
   whiskerL u p @ eh u y = eh u x @ whiskerR p u.
 Proof.
   destruct p.
-  exact (lrucancel^-1 1).
+  exact (lrucancel 1).
 Defined.
 
 Definition ehrnat {X} {a : X} {u v} (p : u = v) (x : idpath a = idpath a) :
   whiskerR p x @ eh v x = eh u x @ whiskerL x p.
 Proof.
   destruct p.
-  exact (lrucancel^-1 1).
+  exact (lrucancel 1).
 Defined.
 
 (* Naturality of Eckmann-Hilton when the fixed path is 1. *)
@@ -260,7 +260,7 @@ Proof.
   intro p.
   destruct p, q.
   cbn.
-  apply rlucancel^-1, lrucancel_sVs_1.
+  apply rlucancel, lrucancel_sVs_1.
 Defined.
 
 (* We now prove that "ehrnat (p @ q) w" suitably relates to "ehrnat p w" and "ehrnat q w". *)
@@ -273,7 +273,7 @@ Proof.
   intro p.
   destruct p, q.
   cbn.
-  apply rlucancel^-1, lrucancel_sVs_1.
+  apply rlucancel, lrucancel_sVs_1.
 Defined.
 
 (* We now prove that "wlrnat p (q @ r)" suitably relates to "wlrnat p q" and "wlrnat q p". *)
@@ -298,7 +298,7 @@ Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q :
   (ehlnat u p [-] ehrnat q y) @ whiskerL (eh u x) (wlrnat q p)^.
 Proof.
   destruct p, q.
-  exact (lrucancel^-1 1).
+  exact (lrucancel 1).
 Defined.
 
 (* Coherence #1: We now prove that "eh p (q @ r)" suitably relates to "eh p q" and "eh p r". *)
@@ -357,12 +357,12 @@ Section eh_p_pp.
 
   (* the coherence *)
   Definition eh_p_pp_gen :
-    let EH_x_y := (rlucancel (ulnat_x0 [-] urnat_y0))^ @
-      wlrnat_x_y @ rlucancel (urnat_y1 [-] ulnat_x1) in
-    let EH_x_z := (rlucancel (ulnat_x1 [-] urnat_z0))^ @
-      wlrnat_x_z @ rlucancel (urnat_z1 [-] ulnat_x2) in
-    let EH_x_yz := (rlucancel (ulnat_x0 [-] urnat_yz0))^ @
-      wlrnat_x_yz @ rlucancel (urnat_yz1 [-] ulnat_x2) in
+    let EH_x_y := (rlucancel^-1 (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel^-1 (urnat_y1 [-] ulnat_x1) in
+    let EH_x_z := (rlucancel^-1 (ulnat_x1 [-] urnat_z0))^ @
+      wlrnat_x_z @ rlucancel^-1 (urnat_z1 [-] ulnat_x2) in
+    let EH_x_yz := (rlucancel^-1 (ulnat_x0 [-] urnat_yz0))^ @
+      wlrnat_x_yz @ rlucancel^-1 (urnat_yz1 [-] ulnat_x2) in
     EH_x_yz @ (concat_pp_p _ _ _ @ whiskerL _ EH_x_z^) =
     concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.
   Proof.
@@ -372,49 +372,49 @@ Section eh_p_pp.
     destruct wrpp_yz0, wrpp_yz1.
     clear wrpp_yz0 wrpp_yz1.
     revert ulnat_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_x0.
     destruct ulnat_x0.
     clear ulnat_x0.
     revert ulnat_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_x1.
     destruct ulnat_x1.
     clear ulnat_x1.
     revert ulnat_x2.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_x2.
     destruct ulnat_x2.
     clear ulnat_x2.
     revert urnat_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_y0.
     destruct urnat_y0.
     clear urnat_y0.
     revert urnat_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_y1.
     destruct urnat_y1.
     clear urnat_y1.
     revert urnat_z0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_z0.
     destruct urnat_z0.
     clear urnat_z0.
     revert urnat_z1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_z1.
     destruct urnat_z1.
     clear urnat_z1.
     destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
     revert wlrnat_x_y.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro wlrnat_x_y.
     destruct wlrnat_x_y.
     clear wlrnat_x_y.
     revert wlrnat_x_z.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro wlrnat_x_z.
     destruct wlrnat_x_z.
     clear wlrnat_x_z.
@@ -491,12 +491,12 @@ Section eh_pp_p.
 
   (* the coherence *)
   Definition eh_pp_p_gen :
-    let EH_x_z := (rlucancel (ulnat_x0 [-] urnat_z1))^ @
-      wlrnat_x_z @ rlucancel (urnat_z2 [-] ulnat_x1) in
-    let EH_y_z := (rlucancel (ulnat_y0 [-] urnat_z0))^ @
-      wlrnat_y_z @ rlucancel (urnat_z1 [-] ulnat_y1) in
-    let EH_xy_z := (rlucancel (ulnat_xy0 [-] urnat_z0))^ @
-      wlrnat_xy_z @ rlucancel (urnat_z2 [-] ulnat_xy1) in
+    let EH_x_z := (rlucancel^-1 (ulnat_x0 [-] urnat_z1))^ @
+      wlrnat_x_z @ rlucancel^-1 (urnat_z2 [-] ulnat_x1) in
+    let EH_y_z := (rlucancel^-1 (ulnat_y0 [-] urnat_z0))^ @
+      wlrnat_y_z @ rlucancel^-1 (urnat_z1 [-] ulnat_y1) in
+    let EH_xy_z := (rlucancel^-1 (ulnat_xy0 [-] urnat_z0))^ @
+      wlrnat_xy_z @ rlucancel^-1 (urnat_z2 [-] ulnat_xy1) in
     EH_xy_z @ (concat_p_pp _ _ _ @ whiskerR EH_x_z^ _) =
     concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.
   Proof.
@@ -506,49 +506,49 @@ Section eh_pp_p.
     destruct wlpp_xy0, wlpp_xy1.
     clear wlpp_xy0 wlpp_xy1.
     revert ulnat_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_x0.
     destruct ulnat_x0.
     clear ulnat_x0.
     revert ulnat_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_x1.
     destruct ulnat_x1.
     clear ulnat_x1.
     revert ulnat_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_y0.
     destruct ulnat_y0.
     clear ulnat_y0.
     revert ulnat_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_y1.
     destruct ulnat_y1.
     clear ulnat_y1.
     revert urnat_z0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_z0.
     destruct urnat_z0.
     clear urnat_z0.
     revert urnat_z1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_z1.
     destruct urnat_z1.
     clear urnat_z1.
     revert urnat_z2.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_z2.
     destruct urnat_z2.
     clear urnat_z2.
     destruct wlx0, wlx1, wly0, wly1.
     clear wlx0 wlx1 wly0 wly1.
     revert wlrnat_x_z.
-    srapply (equiv_ind lrucancel^-1).
+    srapply (equiv_ind lrucancel).
     intro wlrnat_x_z.
     destruct wlrnat_x_z.
     clear wlrnat_x_z.
     revert wlrnat_y_z.
-    srapply (equiv_ind lrucancel^-1).
+    srapply (equiv_ind lrucancel).
     intro wlrnat_y_z.
     destruct wlrnat_y_z.
     clear wlrnat_y_z.
@@ -623,10 +623,10 @@ Section eh_V.
 
   (* the syllepsis *)
   Definition eh_V_gen :
-    let EH_x_y := (rlucancel (ulnat_x0 [-] urnat_y0))^ @
-      wlrnat_x_y @ rlucancel (urnat_y1 [-] ulnat_x1) in
-    let EH_y_x := (rlucancel (ulnat_y1 [-] urnat_x1))^ @
-      wlrnat_y_x @ rlucancel (urnat_x0 [-] ulnat_y0) in
+    let EH_x_y := (rlucancel^-1 (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel^-1 (urnat_y1 [-] ulnat_x1) in
+    let EH_y_x := (rlucancel^-1 (ulnat_y1 [-] urnat_x1))^ @
+      wlrnat_y_x @ rlucancel^-1 (urnat_x0 [-] ulnat_y0) in
     EH_x_y @ EH_y_x = 1.
   Proof.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
@@ -638,69 +638,69 @@ Section eh_V.
     clear wlrnat_V_x_y.
     clear H_whiskerR_wlrnat_x_y.
     revert ehlnat_1p_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_1p_x0.
     destruct ehlnat_1p_x0.
     clear ehlnat_1p_x0.
     revert ehlnat_1p_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_1p_x1.
     destruct ehlnat_1p_x1.
     clear ehlnat_1p_x1.
     revert ehrnat_p1_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_p1_y0.
     destruct ehrnat_p1_y0.
     clear ehrnat_p1_y0.
     revert ehrnat_p1_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_p1_y1.
     destruct ehrnat_p1_y1.
     clear ehrnat_p1_y1.
     revert ehlnat_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_x0.
     destruct ehlnat_x0.
     clear ehlnat_x0.
     revert ehlnat_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_x1.
     destruct ehlnat_x1.
     clear ehlnat_x1.
     revert ehrnat_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_y0.
     destruct ehrnat_y0.
     clear ehrnat_y0.
     revert ehrnat_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_y1.
     destruct ehrnat_y1.
     clear ehrnat_y1.
     revert urnat_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_x0.
     destruct urnat_x0.
     clear urnat_x0.
     revert urnat_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro urnat_x1.
     destruct urnat_x1.
     clear urnat_x1.
     revert ulnat_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_y0.
     destruct ulnat_y0.
     clear ulnat_y0.
     revert ulnat_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_y1.
     destruct ulnat_y1.
     clear ulnat_y1.
     destruct wry0, wry1.
     clear wry0 wry1.
     revert wlrnat_y_x.
-    srapply (equiv_ind lrucancel^-1).
+    srapply (equiv_ind lrucancel).
     intro wlrnat_y_x.
     destruct wlrnat_y_x.
     clear wlrnat_y_x.
@@ -811,22 +811,22 @@ Section Ehrnat_p1_pp.
     destruct a01, a12, b01, b12, c01, c12.
     clear a01 a12 b01 b12 c01 c12.
     revert ulnat_y.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_y.
     destruct ulnat_y.
     clear ulnat_y.
     revert ulnat_z.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ulnat_z.
     destruct ulnat_z.
     clear ulnat_z.
     revert ehrnat_y.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_y.
     destruct ehrnat_y.
     clear ehrnat_y.
     revert ehrnat_z.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_z.
     destruct ehrnat_z.
     clear ehrnat_z.
@@ -972,49 +972,49 @@ Section wlrnat_V_p_pp.
     destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
     clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
     revert ehlnat_x0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_x0.
     destruct ehlnat_x0.
     clear ehlnat_x0.
     revert ehlnat_x1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_x1.
     destruct ehlnat_x1.
     clear ehlnat_x1.
     revert ehlnat_x2.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehlnat_x2.
     destruct ehlnat_x2.
     clear ehlnat_x2.
     revert ehrnat_y0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_y0.
     destruct ehrnat_y0.
     clear ehrnat_y0.
     revert ehrnat_y1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_y1.
     destruct ehrnat_y1.
     clear ehrnat_y1.
     revert ehrnat_z0.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_z0.
     destruct ehrnat_z0.
     clear ehrnat_z0.
     revert ehrnat_z1.
-    srapply (equiv_ind rlucancel^-1).
+    srapply (equiv_ind rlucancel).
     intro ehrnat_z1.
     destruct ehrnat_z1.
     clear ehrnat_z1.
     destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
     revert wlrnat_y_x.
-    srapply (equiv_ind lrucancel^-1).
+    srapply (equiv_ind lrucancel).
     intro wlrnat_y_x.
     destruct wlrnat_y_x.
     clear wlrnat_y_x.
     revert wlrnat_z_x.
-    srapply (equiv_ind lrucancel^-1).
+    srapply (equiv_ind lrucancel).
     intro wlrnat_z_x.
     destruct wlrnat_z_x.
     clear wlrnat_z_x.
