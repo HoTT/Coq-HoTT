@@ -85,6 +85,8 @@ Proof.
   - exact (equiv_concat_l (concat_p1 _) _).
 Defined.
 
+Definition rlucancel_inv {X} {a b : X} {p q : a = b} := (@rlucancel X a b p q)^-1.
+
 Definition lrucancel {X} {a b : X} {p q : a = b} :
   (p = q) <~> (1 @ p = q @ 1).
 Proof.
@@ -144,14 +146,14 @@ Defined.
 Theorem eh {X} {a : X} (p q : idpath a = idpath a) :
   p @ q = q @ p.
 Proof.
-  refine (_ @ rlucancel^-1 (urnat q [-] ulnat p)).
-  refine ((rlucancel^-1 (ulnat p [-] urnat q))^ @ _).
+  refine (_ @ rlucancel_inv (urnat q [-] ulnat p)).
+  refine ((rlucancel_inv (ulnat p [-] urnat q))^ @ _).
   exact (wlrnat p q).
 Defined.
 
 (* Eckmann-Hilton on reflexivity. *)
 Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q) :
-  (rlucancel^-1 (1 [-] theta))^ @ wlrnat 1 p @ rlucancel^-1 (theta [-] 1) @ concat_p1 q = concat_1p q.
+  (rlucancel_inv (1 [-] theta))^ @ wlrnat 1 p @ rlucancel_inv (theta [-] 1) @ concat_p1 q = concat_1p q.
 Proof.
   revert theta.
   srapply (equiv_ind rlucancel).
@@ -166,7 +168,7 @@ Proof.
 Defined.
 
 Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q) :
-  (rlucancel^-1 (theta [-] 1))^ @ wlrnat p 1 @ rlucancel^-1 (1 [-] theta) @ concat_1p q = concat_p1 q.
+  (rlucancel_inv (theta [-] 1))^ @ wlrnat p 1 @ rlucancel_inv (1 [-] theta) @ concat_1p q = concat_p1 q.
 Proof.
   revert theta.
   srapply (equiv_ind rlucancel).
@@ -357,12 +359,12 @@ Section eh_p_pp.
 
   (* the coherence *)
   Definition eh_p_pp_gen :
-    let EH_x_y := (rlucancel^-1 (ulnat_x0 [-] urnat_y0))^ @
-      wlrnat_x_y @ rlucancel^-1 (urnat_y1 [-] ulnat_x1) in
-    let EH_x_z := (rlucancel^-1 (ulnat_x1 [-] urnat_z0))^ @
-      wlrnat_x_z @ rlucancel^-1 (urnat_z1 [-] ulnat_x2) in
-    let EH_x_yz := (rlucancel^-1 (ulnat_x0 [-] urnat_yz0))^ @
-      wlrnat_x_yz @ rlucancel^-1 (urnat_yz1 [-] ulnat_x2) in
+    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
+    let EH_x_z := (rlucancel_inv (ulnat_x1 [-] urnat_z0))^ @
+      wlrnat_x_z @ rlucancel_inv (urnat_z1 [-] ulnat_x2) in
+    let EH_x_yz := (rlucancel_inv (ulnat_x0 [-] urnat_yz0))^ @
+      wlrnat_x_yz @ rlucancel_inv (urnat_yz1 [-] ulnat_x2) in
     EH_x_yz @ (concat_pp_p _ _ _ @ whiskerL _ EH_x_z^) =
     concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.
   Proof.
@@ -491,12 +493,12 @@ Section eh_pp_p.
 
   (* the coherence *)
   Definition eh_pp_p_gen :
-    let EH_x_z := (rlucancel^-1 (ulnat_x0 [-] urnat_z1))^ @
-      wlrnat_x_z @ rlucancel^-1 (urnat_z2 [-] ulnat_x1) in
-    let EH_y_z := (rlucancel^-1 (ulnat_y0 [-] urnat_z0))^ @
-      wlrnat_y_z @ rlucancel^-1 (urnat_z1 [-] ulnat_y1) in
-    let EH_xy_z := (rlucancel^-1 (ulnat_xy0 [-] urnat_z0))^ @
-      wlrnat_xy_z @ rlucancel^-1 (urnat_z2 [-] ulnat_xy1) in
+    let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
+      wlrnat_x_z @ rlucancel_inv (urnat_z2 [-] ulnat_x1) in
+    let EH_y_z := (rlucancel_inv (ulnat_y0 [-] urnat_z0))^ @
+      wlrnat_y_z @ rlucancel_inv (urnat_z1 [-] ulnat_y1) in
+    let EH_xy_z := (rlucancel_inv (ulnat_xy0 [-] urnat_z0))^ @
+      wlrnat_xy_z @ rlucancel_inv (urnat_z2 [-] ulnat_xy1) in
     EH_xy_z @ (concat_p_pp _ _ _ @ whiskerR EH_x_z^ _) =
     concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.
   Proof.
@@ -623,10 +625,10 @@ Section eh_V.
 
   (* the syllepsis *)
   Definition eh_V_gen :
-    let EH_x_y := (rlucancel^-1 (ulnat_x0 [-] urnat_y0))^ @
-      wlrnat_x_y @ rlucancel^-1 (urnat_y1 [-] ulnat_x1) in
-    let EH_y_x := (rlucancel^-1 (ulnat_y1 [-] urnat_x1))^ @
-      wlrnat_y_x @ rlucancel^-1 (urnat_x0 [-] ulnat_y0) in
+    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
+    let EH_y_x := (rlucancel_inv (ulnat_y1 [-] urnat_x1))^ @
+      wlrnat_y_x @ rlucancel_inv (urnat_x0 [-] ulnat_y0) in
     EH_x_y @ EH_y_x = 1.
   Proof.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
