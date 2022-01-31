@@ -95,6 +95,47 @@ Proof.
   - exact (equiv_concat_l (concat_1p _) _).
 Defined.
 
+(* A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. *)
+Definition equiv_path_ind {A} (a : A) (X : A -> Type) (P : forall (b : A), X b -> Type)
+           (e : forall (b : A), a = b <~> X b) (r : P a (e a 1))
+  : forall (b : A) (x : X b), P b x.
+Proof.
+  intro b.
+  srapply (equiv_ind (e b)).
+  intros [].
+  exact r.
+Defined.
+
+(* This special case of [equiv_path_ind] comes up a lot. *)
+Definition equiv_path_ind_rlucancel {X} (a b : X) (p : a = b)
+           (P : forall (q : a = b), p @ 1 = 1 @ q -> Type)
+           (r : P p (rlucancel 1))
+  : forall (q : a = b) (s : p @ 1 = 1 @ q), P q s.
+Proof.
+  snrapply (equiv_path_ind _ _ _ (fun _ => rlucancel)).
+  exact r.
+Defined.
+
+(* This special case of [equiv_path_ind] comes up a lot. *)
+Definition equiv_path_ind_lrucancel {X} (a b : X) (p : a = b)
+           (P : forall (q : a = b), 1 @ p = q @ 1 -> Type)
+           (r : P p (lrucancel 1))
+  : forall (q : a = b) (s : 1 @ p = q @ 1), P q s.
+Proof.
+  snrapply (equiv_path_ind _ _ _ (fun _ => lrucancel)).
+  exact r.
+Defined.
+
+(* This special case of [equiv_path_ind] comes up a lot. *)
+Definition equiv_path_ind_moveR_Vp_inv {X} (a b c : X) (p : a = c) (r : a = b)
+           (P : forall (q : b = c), p = r @ q -> Type)
+           (i : P (r^ @ p) ((equiv_moveR_Vp _ _ _)^-1 1))
+  : forall (q : b = c) (s : p = r @ q), P q s.
+Proof.
+  snrapply (equiv_path_ind _ _ _ (fun _ => (equiv_moveR_Vp _ _ _)^-1%equiv)).
+  exact i.
+Defined.
+
 (* Interaction of the above equivalences with square composition. *)
 Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
   (rlucancel 1 [-] rlucancel 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel 1).
@@ -155,10 +196,9 @@ Defined.
 Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q) :
   (rlucancel_inv (1 [-] theta))^ @ wlrnat 1 p @ rlucancel_inv (theta [-] 1) @ concat_p1 q = concat_1p q.
 Proof.
-  revert theta.
-  srapply (equiv_ind rlucancel).
-  intro theta.
-  by destruct theta, p.
+  revert q theta.
+  snrapply equiv_path_ind_rlucancel.
+  by destruct p.
 Defined.
 
 Definition eh_1p {X} {a : X} (p : idpath a = idpath a) :
@@ -170,10 +210,9 @@ Defined.
 Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q) :
   (rlucancel_inv (theta [-] 1))^ @ wlrnat p 1 @ rlucancel_inv (1 [-] theta) @ concat_1p q = concat_p1 q.
 Proof.
-  revert theta.
-  srapply (equiv_ind rlucancel).
-  intro theta.
-  by destruct theta, p.
+  revert q theta.
+  snrapply equiv_path_ind_rlucancel.
+  by destruct p.
 Defined.
 
 Definition eh_p1 {X} {a : X} (p : idpath a = idpath a) :
@@ -257,10 +296,9 @@ Definition ehlnat_pp {X} {a : X} (u : idpath a = idpath a) {v w : idpath a = idp
   (ehlnat u p [-] ehlnat u q) @ whiskerL _ (whiskerR_pp _ p q)^ =
   (whiskerR (whiskerL_pp _ p q)^ _) @ ehlnat u (p @ q).
 Proof.
-  revert p.
-  srapply (equiv_ind (equiv_path_inverse _ _)).
-  intro p.
-  destruct p, q.
+  revert v p.
+  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  destruct q.
   cbn.
   apply rlucancel, lrucancel_sVs_1.
 Defined.
@@ -270,10 +308,9 @@ Definition ehrnat_pp {X} {a : X} {u v : idpath a = idpath a} (p : u = 1) (q : 1 
   (ehrnat p w [-] ehrnat q w) @ whiskerL _ (whiskerL_pp _ p q)^ =
   (whiskerR (whiskerR_pp _ p q)^ _) @ ehrnat (p @ q) w.
 Proof.
-  revert p.
-  srapply (equiv_ind (equiv_path_inverse _ _)).
-  intro p.
-  destruct p, q.
+  revert u p.
+  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  destruct q.
   cbn.
   apply rlucancel, lrucancel_sVs_1.
 Defined.
@@ -373,53 +410,26 @@ Section eh_p_pp.
     clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.
     destruct wrpp_yz0, wrpp_yz1.
     clear wrpp_yz0 wrpp_yz1.
-    revert ulnat_x0.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_x0.
-    destruct ulnat_x0.
-    clear ulnat_x0.
-    revert ulnat_x1.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_x1.
-    destruct ulnat_x1.
-    clear ulnat_x1.
-    revert ulnat_x2.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_x2.
-    destruct ulnat_x2.
-    clear ulnat_x2.
-    revert urnat_y0.
-    srapply (equiv_ind rlucancel).
-    intro urnat_y0.
-    destruct urnat_y0.
-    clear urnat_y0.
-    revert urnat_y1.
-    srapply (equiv_ind rlucancel).
-    intro urnat_y1.
-    destruct urnat_y1.
-    clear urnat_y1.
-    revert urnat_z0.
-    srapply (equiv_ind rlucancel).
-    intro urnat_z0.
-    destruct urnat_z0.
-    clear urnat_z0.
-    revert urnat_z1.
-    srapply (equiv_ind rlucancel).
-    intro urnat_z1.
-    destruct urnat_z1.
-    clear urnat_z1.
+    revert x0 ulnat_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert x1 ulnat_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert x2 ulnat_x2.
+    snrapply equiv_path_ind_rlucancel.
+    revert y0 urnat_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert y1 urnat_y1.
+    snrapply equiv_path_ind_rlucancel.
+    revert z0 urnat_z0.
+    snrapply equiv_path_ind_rlucancel.
+    revert z1 urnat_z1.
+    snrapply equiv_path_ind_rlucancel.
     destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
-    revert wlrnat_x_y.
-    srapply (equiv_ind rlucancel).
-    intro wlrnat_x_y.
-    destruct wlrnat_x_y.
-    clear wlrnat_x_y.
-    revert wlrnat_x_z.
-    srapply (equiv_ind rlucancel).
-    intro wlrnat_x_z.
-    destruct wlrnat_x_z.
-    clear wlrnat_x_z.
+    revert wlx2 wlrnat_x_z.
+    snrapply equiv_path_ind_rlucancel.
+    revert wlx1 wlrnat_x_y.
+    snrapply equiv_path_ind_rlucancel.
     destruct wlx0.
     clear wlx0.
     reflexivity.
@@ -507,53 +517,26 @@ Section eh_pp_p.
     clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.
     destruct wlpp_xy0, wlpp_xy1.
     clear wlpp_xy0 wlpp_xy1.
-    revert ulnat_x0.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_x0.
-    destruct ulnat_x0.
-    clear ulnat_x0.
-    revert ulnat_x1.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_x1.
-    destruct ulnat_x1.
-    clear ulnat_x1.
-    revert ulnat_y0.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_y0.
-    destruct ulnat_y0.
-    clear ulnat_y0.
-    revert ulnat_y1.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_y1.
-    destruct ulnat_y1.
-    clear ulnat_y1.
-    revert urnat_z0.
-    srapply (equiv_ind rlucancel).
-    intro urnat_z0.
-    destruct urnat_z0.
-    clear urnat_z0.
-    revert urnat_z1.
-    srapply (equiv_ind rlucancel).
-    intro urnat_z1.
-    destruct urnat_z1.
-    clear urnat_z1.
-    revert urnat_z2.
-    srapply (equiv_ind rlucancel).
-    intro urnat_z2.
-    destruct urnat_z2.
-    clear urnat_z2.
+    revert x0 ulnat_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert x1 ulnat_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert y0 ulnat_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert y1 ulnat_y1.
+    snrapply equiv_path_ind_rlucancel.
+    revert z0 urnat_z0.
+    snrapply equiv_path_ind_rlucancel.
+    revert z1 urnat_z1.
+    snrapply equiv_path_ind_rlucancel.
+    revert z2 urnat_z2.
+    snrapply equiv_path_ind_rlucancel.
     destruct wlx0, wlx1, wly0, wly1.
     clear wlx0 wlx1 wly0 wly1.
-    revert wlrnat_x_z.
-    srapply (equiv_ind lrucancel).
-    intro wlrnat_x_z.
-    destruct wlrnat_x_z.
-    clear wlrnat_x_z.
-    revert wlrnat_y_z.
-    srapply (equiv_ind lrucancel).
-    intro wlrnat_y_z.
-    destruct wlrnat_y_z.
-    clear wlrnat_y_z.
+    revert wrz2 wlrnat_x_z.
+    snrapply equiv_path_ind_lrucancel.
+    revert wrz1 wlrnat_y_z.
+    snrapply equiv_path_ind_lrucancel.
     destruct wrz0.
     clear wrz0.
     reflexivity.
@@ -639,75 +622,38 @@ Section eh_V.
     destruct wlrnat_V_x_y.
     clear wlrnat_V_x_y.
     clear H_whiskerR_wlrnat_x_y.
-    revert ehlnat_1p_x0.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_1p_x0.
-    destruct ehlnat_1p_x0.
-    clear ehlnat_1p_x0.
-    revert ehlnat_1p_x1.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_1p_x1.
-    destruct ehlnat_1p_x1.
-    clear ehlnat_1p_x1.
-    revert ehrnat_p1_y0.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_p1_y0.
-    destruct ehrnat_p1_y0.
-    clear ehrnat_p1_y0.
-    revert ehrnat_p1_y1.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_p1_y1.
-    destruct ehrnat_p1_y1.
-    clear ehrnat_p1_y1.
-    revert ehlnat_x0.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_x0.
-    destruct ehlnat_x0.
-    clear ehlnat_x0.
-    revert ehlnat_x1.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_x1.
-    destruct ehlnat_x1.
-    clear ehlnat_x1.
-    revert ehrnat_y0.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_y0.
-    destruct ehrnat_y0.
-    clear ehrnat_y0.
-    revert ehrnat_y1.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_y1.
-    destruct ehrnat_y1.
-    clear ehrnat_y1.
-    revert urnat_x0.
-    srapply (equiv_ind rlucancel).
-    intro urnat_x0.
-    destruct urnat_x0.
-    clear urnat_x0.
-    revert urnat_x1.
-    srapply (equiv_ind rlucancel).
-    intro urnat_x1.
-    destruct urnat_x1.
-    clear urnat_x1.
-    revert ulnat_y0.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_y0.
-    destruct ulnat_y0.
-    clear ulnat_y0.
-    revert ulnat_y1.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_y1.
-    destruct ulnat_y1.
-    clear ulnat_y1.
-    destruct wry0, wry1.
-    clear wry0 wry1.
+    revert ulnat_x0 ehlnat_1p_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert ulnat_x1 ehlnat_1p_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert urnat_y0 ehrnat_p1_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert urnat_y1 ehrnat_p1_y1.
+    snrapply equiv_path_ind_rlucancel.
+
+    revert x0 urnat_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert x1 urnat_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert y0 ulnat_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert y1 ulnat_y1.
+    snrapply equiv_path_ind_rlucancel.
+
     revert wlrnat_y_x.
-    srapply (equiv_ind lrucancel).
-    intro wlrnat_y_x.
-    destruct wlrnat_y_x.
-    clear wlrnat_y_x.
-    destruct wlx1.
-    clear wlx1.
+    revert wrx0 ehlnat_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert wrx1 ehlnat_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert wly0 ehrnat_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert wly1 ehrnat_y1.
+    snrapply equiv_path_ind_rlucancel.
+
+    destruct wry0, wry1, wlx1.
+    clear wry0 wry1 wlx1.
+    revert wlx0.
+    snrapply equiv_path_ind_lrucancel.
     reflexivity.
   Defined.
 
@@ -812,26 +758,14 @@ Section Ehrnat_p1_pp.
     clear wrpp_yz wlpp_yz.
     destruct a01, a12, b01, b12, c01, c12.
     clear a01 a12 b01 b12 c01 c12.
-    revert ulnat_y.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_y.
-    destruct ulnat_y.
-    clear ulnat_y.
-    revert ulnat_z.
-    srapply (equiv_ind rlucancel).
-    intro ulnat_z.
-    destruct ulnat_z.
-    clear ulnat_z.
-    revert ehrnat_y.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_y.
-    destruct ehrnat_y.
-    clear ehrnat_y.
-    revert ehrnat_z.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_z.
-    destruct ehrnat_z.
-    clear ehrnat_z.
+    revert y ulnat_y.
+    snrapply equiv_path_ind_rlucancel.
+    revert z ulnat_z.
+    snrapply equiv_path_ind_rlucancel.
+    revert wly ehrnat_y.
+    snrapply equiv_path_ind_rlucancel.
+    revert wlz ehrnat_z.
+    snrapply equiv_path_ind_rlucancel.
     destruct wry, wrz.
     clear wry wrz.
     reflexivity.
@@ -844,10 +778,9 @@ Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r :
     (ehrnat_p1 q) (ehrnat_p1 r) =
   ehrnat_p1 (q @ r).
 Proof.
-  revert q.
-  srapply (equiv_ind (equiv_path_inverse _ _)).
-  intro q.
-  by destruct q, r.
+  revert u q.
+  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  by destruct r.
 Defined.
 
 (* Given "wlrnat_V x y" and "wlrnat_V x z", we can explicitly construct "wlrnat_V x (y @ z)". *)
@@ -973,53 +906,27 @@ Section wlrnat_V_p_pp.
     clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
     destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
     clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
-    revert ehlnat_x0.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_x0.
-    destruct ehlnat_x0.
-    clear ehlnat_x0.
-    revert ehlnat_x1.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_x1.
-    destruct ehlnat_x1.
-    clear ehlnat_x1.
-    revert ehlnat_x2.
-    srapply (equiv_ind rlucancel).
-    intro ehlnat_x2.
-    destruct ehlnat_x2.
-    clear ehlnat_x2.
-    revert ehrnat_y0.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_y0.
-    destruct ehrnat_y0.
-    clear ehrnat_y0.
-    revert ehrnat_y1.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_y1.
-    destruct ehrnat_y1.
-    clear ehrnat_y1.
-    revert ehrnat_z0.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_z0.
-    destruct ehrnat_z0.
-    clear ehrnat_z0.
-    revert ehrnat_z1.
-    srapply (equiv_ind rlucancel).
-    intro ehrnat_z1.
-    destruct ehrnat_z1.
-    clear ehrnat_z1.
+    revert wlrnat_y_x wlrnat_z_x.
+    revert wrx0 ehlnat_x0.
+    snrapply equiv_path_ind_rlucancel.
+    revert wrx1 ehlnat_x1.
+    snrapply equiv_path_ind_rlucancel.
+    revert wrx2 ehlnat_x2.
+    snrapply equiv_path_ind_rlucancel.
+    revert wly0 ehrnat_y0.
+    snrapply equiv_path_ind_rlucancel.
+    revert wly1 ehrnat_y1.
+    snrapply equiv_path_ind_rlucancel.
+    revert wlz0 ehrnat_z0.
+    snrapply equiv_path_ind_rlucancel.
+    revert wlz1 ehrnat_z1.
+    snrapply equiv_path_ind_rlucancel.
     destruct wry0, wry1, wrz0, wrz1.
     clear wry0 wry1 wrz0 wrz1.
-    revert wlrnat_y_x.
-    srapply (equiv_ind lrucancel).
-    intro wlrnat_y_x.
-    destruct wlrnat_y_x.
-    clear wlrnat_y_x.
-    revert wlrnat_z_x.
-    srapply (equiv_ind lrucancel).
-    intro wlrnat_z_x.
-    destruct wlrnat_z_x.
-    clear wlrnat_z_x.
+    revert wlx0.
+    snrapply equiv_path_ind_lrucancel.
+    revert wlx1.
+    snrapply equiv_path_ind_lrucancel.
     destruct wlx2.
     clear wlx2.
     reflexivity.
@@ -1032,8 +939,7 @@ Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (
     (wlrnat_V p q) (wlrnat_V p r) =
   wlrnat_V p (q @ r).
 Proof.
-  revert q.
-  srapply (equiv_ind (equiv_path_inverse _ _)).
-  intro q.
-  by destruct p, q, r.
+  revert u q.
+  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  by destruct p, r.
 Defined.
