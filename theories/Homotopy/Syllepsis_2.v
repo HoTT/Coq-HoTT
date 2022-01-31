@@ -177,19 +177,19 @@ Section eh_V_p_pp.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
     pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
     revert wlrnat_V_x_y.
-    srapply (equiv_ind (moveL_pV _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_concat_l H_whiskerR_wlrnat_x_y _)).
-    srapply (equiv_ind (moveL_Vp _ _ _)^-1).
-    srapply (equiv_ind (moveL_pV _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_path_inverse _ _)).
     intro wlrnat_V_x_y.
     destruct wlrnat_V_x_y.
     clear wlrnat_V_x_y.
     revert wlrnat_V_x_z.
-    srapply (equiv_ind (moveL_pV _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_concat_l H_whiskerR_wlrnat_x_z _)).
-    srapply (equiv_ind (moveL_Vp _ _ _)^-1).
-    srapply (equiv_ind (moveL_pV _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveL_pV _ _ _)^-1).
     srapply (equiv_ind (equiv_path_inverse _ _)).
     intro wlrnat_V_x_z.
     destruct wlrnat_V_x_z.
@@ -231,42 +231,42 @@ Section eh_V_p_pp.
     destruct ehrnat_p1_z1.
     clear ehrnat_p1_z1.
     revert H_wlrnat_x_yz.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_wlrnat_x_yz.
     destruct H_wlrnat_x_yz.
     clear H_wlrnat_x_yz.
     revert H_wlrnat_yz_x.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_wlrnat_yz_x.
     destruct H_wlrnat_yz_x.
     clear H_wlrnat_yz_x.
     revert H_ehrnat_yz0.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_ehrnat_yz0.
     destruct H_ehrnat_yz0.
     clear H_ehrnat_yz0.
     revert H_ehrnat_yz1.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_ehrnat_yz1.
     destruct H_ehrnat_yz1.
     clear H_ehrnat_yz1.
     revert H_ulnat_yz0.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_ulnat_yz0.
     destruct H_ulnat_yz0.
     clear H_ulnat_yz0.
     revert H_ulnat_yz1.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_ulnat_yz1.
     destruct H_ulnat_yz1.
     clear H_ulnat_yz1.
     revert H_urnat_yz0.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_urnat_yz0.
     destruct H_urnat_yz0.
     clear H_urnat_yz0.
     revert H_urnat_yz1.
-    srapply (equiv_ind (moveR_Vp _ _ _)^-1).
+    srapply (equiv_ind (equiv_moveR_Vp _ _ _)^-1).
     intro H_urnat_yz1.
     destruct H_urnat_yz1.
     clear H_urnat_yz1.
