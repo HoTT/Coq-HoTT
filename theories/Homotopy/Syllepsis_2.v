@@ -357,7 +357,7 @@ Section eh_V_p_pp.
     destruct wlx2.
     clear wlx2.
     reflexivity.
-  Defined.
+  Qed.
 
 End eh_V_p_pp.
 
