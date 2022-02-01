@@ -4,16 +4,16 @@ Require Import Homotopy.Syllepsis.
 (* In this file, we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q].  This is kept separate from Syllepsis.v because it is slow.  Improvements to the speed are welcome!  *)
 
 (* We need this equivalence twice below. *)
-Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (s : p = q) (t : q @ 1 = r) (u : p @ 1 = r)
-  : whiskerR s 1 @ t = u
-      <~> ((concat_p1 p)^ @ (u @ t^)) @ (concat_p1 q) = s.
+Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (t : q @ 1 = r) (u : p @ 1 = r) (s : p = q)
+  : ((concat_p1 p)^ @ (u @ t^)) @ (concat_p1 q) = s
+    <~> whiskerR s 1 @ t = u.
 Proof.
-  pose (H := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).
-  snrapply (_ oE (equiv_moveL_pV _ _ _)).
-  snrapply (_ oE (equiv_concat_l H _)^-1%equiv).
-  snrapply (_ oE (equiv_moveL_Vp _ _ _)).
-  snrapply (_ oE (equiv_moveL_pM _ _ _)).
-  snrapply (equiv_path_inverse _ _).
+  snrapply (_ oE equiv_path_inverse _ _).
+  snrapply (_ oE equiv_moveR_pV _ _ _).
+  snrapply (_ oE equiv_moveR_Mp _ _ _).
+  snrapply (_ oE equiv_concat_l _ _).
+  3: exact (moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).
+  snrapply (equiv_moveR_pM _ _ _).
 Defined.
 
 (* A form of the coherence we can prove by path induction. *)
@@ -145,9 +145,9 @@ Proof.
   revert H_wlrnat_x_yz H_ulnat_yz0 H_ulnat_yz1 H_urnat_yz0 H_urnat_yz1.
 
   revert wlrnat_x_y wlrnat_V_x_y.
-  snrapply (equiv_path_ind _ _ _ (fun _ => (equiv_helper _ _ _)^-1%equiv)).
+  snrapply (equiv_path_ind _ _ _ (equiv_helper _ _)).
   revert wlrnat_x_z wlrnat_V_x_z.
-  snrapply (equiv_path_ind _ _ _ (fun _ => (equiv_helper _ _ _)^-1%equiv)).
+  snrapply (equiv_path_ind _ _ _ (equiv_helper _ _)).
 
   revert ulnat_x0 ehlnat_1p_x0.
   snrapply equiv_path_ind_rlucancel.
