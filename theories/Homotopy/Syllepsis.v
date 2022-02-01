@@ -299,7 +299,6 @@ Proof.
   revert v p.
   snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
   destruct q.
-  cbn.
   apply rlucancel, lrucancel_sVs_1.
 Defined.
 
@@ -441,7 +440,7 @@ Theorem eh_p_pp {X} {a : X} (p q r : idpath a = idpath a) :
   eh p (q @ r) @ (concat_pp_p _ _ _ @ whiskerL _ (eh p r)^) =
   concat_p_pp _ _ _ @ whiskerR (eh p q) _ @ concat_pp_p _ _ _.
 Proof.
-  rapply eh_p_pp_gen.
+  nrapply eh_p_pp_gen.
   - exact (urnat_pp q r).
   - exact (urnat_pp q r).
   - exact (wlrnat_p_pp p q r).
@@ -548,7 +547,7 @@ Theorem eh_pp_p {X} {a : X} (p q r : idpath a = idpath a) :
   eh (p @ q) r @ (concat_p_pp _ _ _ @ whiskerR (eh p r)^ _) =
   concat_pp_p _ _ _ @ whiskerL _ (eh q r) @ concat_p_pp _ _ _.
 Proof.
-  rapply eh_pp_p_gen.
+  nrapply eh_pp_p_gen.
   - exact (ulnat_pp p q).
   - exact (ulnat_pp p q).
   - exact (wlrnat_pp_p p q r).
@@ -662,7 +661,7 @@ End eh_V.
 Theorem eh_V {X} {a : X} (p q : idpath (idpath a) = idpath (idpath a)) :
   eh p q @ eh q p = 1.
 Proof.
-  rapply eh_V_gen.
+  nrapply eh_V_gen.
   - exact (ehlnat_1p p).
   - exact (ehlnat_1p p).
   - exact (ehrnat_p1 q).

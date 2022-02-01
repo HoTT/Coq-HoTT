@@ -223,7 +223,7 @@ Proof.
   snrapply equiv_path_ind_lrucancel.
   destruct wlx2.
   reflexivity.
-Qed.
+Qed.  (* This line is slow. *)
 
 Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a)) :
   whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR (eh_V p (q @ r)) _ @ lrucancel 1 @
@@ -233,7 +233,7 @@ Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a))
   (eh_pp_p_gen (ulnat_pp q r) (ulnat_pp q r) (wlrnat_pp_p q r p) [-]
    lrucancel (whiskerL _ (ap (fun p => whiskerR p r) (moveL_1V _ _ (eh_V p q))))).
 Proof.
-  rapply eh_V_p_pp_gen.
+  nrapply eh_V_p_pp_gen.
   - exact (ehrnat_p1_pp q r).
   - exact (ehrnat_p1_pp q r).
   - exact (wlrnat_V_p_pp p q r).
