@@ -1,16 +1,18 @@
 Require Import Basics Types.
 Require Import Homotopy.Syllepsis.
 
+(* In this file, we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q].  This is kept separate from Syllepsis.v because it is slow.  Improvements to the speed are welcome!  *)
+
 (* We need this equivalence twice below. *)
 Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (s : p = q) (t : q @ 1 = r) (u : p @ 1 = r)
   : whiskerR s 1 @ t = u
-      <~> ((concat_p1 p)^ @ (u @ t^)) @ ((concat_p1 q)^)^ = s.
+      <~> ((concat_p1 p)^ @ (u @ t^)) @ (concat_p1 q) = s.
 Proof.
   pose (H := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).
   snrapply (_ oE (equiv_moveL_pV _ _ _)).
   snrapply (_ oE (equiv_concat_l H _)^-1%equiv).
   snrapply (_ oE (equiv_moveL_Vp _ _ _)).
-  snrapply (_ oE (equiv_moveL_pV _ _ _)).
+  snrapply (_ oE (equiv_moveL_pM _ _ _)).
   snrapply (equiv_path_inverse _ _).
 Defined.
 

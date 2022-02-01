@@ -95,7 +95,7 @@ Proof.
   - exact (equiv_concat_l (concat_1p _) _).
 Defined.
 
-(* A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. *)
+(* A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. The idiom for using this is to first [revert b X], which allows Coq to determine the family [P]. After using this, [b] will be replaced by [a] in the goal. *)
 Definition equiv_path_ind {A} (a : A) (X : A -> Type) (P : forall (b : A), X b -> Type)
            (e : forall (b : A), a = b <~> X b) (r : P a (e a 1))
   : forall (b : A) (x : X b), P b x.
