@@ -16,6 +16,15 @@ Proof.
   snrapply (equiv_moveR_pM _ _ _).
 Defined.
 
+(* This special case of [equiv_path_ind] comes up a lot. *)
+Definition equiv_path_ind_moveL_Mp {X} (a b c : X) (p : a = c) (r : a = b)
+           (P : forall (q : b = c), p = r @ q -> Type)
+           (i : P (r^ @ p) (equiv_moveL_Mp _ _ _ 1))
+  : forall (q : b = c) (s : p = r @ q), P q s.
+Proof.
+  exact (equiv_path_ind (fun q => (equiv_moveL_Mp q _ _)) P i).
+Defined.
+
 (* A form of the coherence we can prove by path induction. *)
 Definition eh_V_p_pp_gen {X : Type}
 
@@ -145,9 +154,9 @@ Proof.
   revert H_wlrnat_x_yz H_ulnat_yz0 H_ulnat_yz1 H_urnat_yz0 H_urnat_yz1.
 
   revert wlrnat_x_y wlrnat_V_x_y.
-  snrapply (equiv_path_ind _ _ _ (equiv_helper _ _)).
+  snrapply (equiv_path_ind (equiv_helper _ _)).
   revert wlrnat_x_z wlrnat_V_x_z.
-  snrapply (equiv_path_ind _ _ _ (equiv_helper _ _)).
+  snrapply (equiv_path_ind (equiv_helper _ _)).
 
   revert ulnat_x0 ehlnat_1p_x0.
   snrapply equiv_path_ind_rlucancel.
@@ -165,22 +174,22 @@ Proof.
   revert urnat_z1 ehrnat_p1_z1.
   snrapply equiv_path_ind_rlucancel.
   revert wlrnat_x_yz.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert wlrnat_yz_x H_wlrnat_yz_x.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert ehrnat_yz0 H_ehrnat_yz0.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert ehrnat_yz1 H_ehrnat_yz1.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
 
   revert ulnat_yz0.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert ulnat_yz1.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert urnat_yz0.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
   revert urnat_yz1.
-  snrapply equiv_path_ind_moveR_Vp_inv.
+  snrapply equiv_path_ind_moveL_Mp.
 
   destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
 

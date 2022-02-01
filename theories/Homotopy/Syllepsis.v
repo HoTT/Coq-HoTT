@@ -95,24 +95,13 @@ Proof.
   - exact (equiv_concat_l (concat_1p _) _).
 Defined.
 
-(* A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. The idiom for using this is to first [revert b X], which allows Coq to determine the family [P]. After using this, [b] will be replaced by [a] in the goal. *)
-Definition equiv_path_ind {A} (a : A) (X : A -> Type) (P : forall (b : A), X b -> Type)
-           (e : forall (b : A), a = b <~> X b) (r : P a (e a 1))
-  : forall (b : A) (x : X b), P b x.
-Proof.
-  intro b.
-  srapply (equiv_ind (e b)).
-  intros [].
-  exact r.
-Defined.
-
 (* This special case of [equiv_path_ind] comes up a lot. *)
 Definition equiv_path_ind_rlucancel {X} (a b : X) (p : a = b)
            (P : forall (q : a = b), p @ 1 = 1 @ q -> Type)
            (r : P p (rlucancel 1))
   : forall (q : a = b) (s : p @ 1 = 1 @ q), P q s.
 Proof.
-  snrapply (equiv_path_ind _ _ _ (fun _ => rlucancel)).
+  snrapply (equiv_path_ind (fun _ => rlucancel)).
   exact r.
 Defined.
 
@@ -122,18 +111,8 @@ Definition equiv_path_ind_lrucancel {X} (a b : X) (p : a = b)
            (r : P p (lrucancel 1))
   : forall (q : a = b) (s : 1 @ p = q @ 1), P q s.
 Proof.
-  snrapply (equiv_path_ind _ _ _ (fun _ => lrucancel)).
+  snrapply (equiv_path_ind (fun _ => lrucancel)).
   exact r.
-Defined.
-
-(* This special case of [equiv_path_ind] comes up a lot. *)
-Definition equiv_path_ind_moveR_Vp_inv {X} (a b c : X) (p : a = c) (r : a = b)
-           (P : forall (q : b = c), p = r @ q -> Type)
-           (i : P (r^ @ p) ((equiv_moveR_Vp _ _ _)^-1 1))
-  : forall (q : b = c) (s : p = r @ q), P q s.
-Proof.
-  snrapply (equiv_path_ind _ _ _ (fun _ => (equiv_moveR_Vp _ _ _)^-1%equiv)).
-  exact i.
 Defined.
 
 (* Interaction of the above equivalences with square composition. *)
@@ -297,7 +276,7 @@ Definition ehlnat_pp {X} {a : X} (u : idpath a = idpath a) {v w : idpath a = idp
   (whiskerR (whiskerL_pp _ p q)^ _) @ ehlnat u (p @ q).
 Proof.
   revert v p.
-  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  snrapply (equiv_path_ind (equiv_path_inverse _)).
   destruct q.
   apply rlucancel, lrucancel_sVs_1.
 Defined.
@@ -308,7 +287,7 @@ Definition ehrnat_pp {X} {a : X} {u v : idpath a = idpath a} (p : u = 1) (q : 1 
   (whiskerR (whiskerR_pp _ p q)^ _) @ ehrnat (p @ q) w.
 Proof.
   revert u p.
-  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  snrapply (equiv_path_ind (equiv_path_inverse _)).
   destruct q.
   cbn.
   apply rlucancel, lrucancel_sVs_1.
@@ -778,7 +757,7 @@ Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r :
   ehrnat_p1 (q @ r).
 Proof.
   revert u q.
-  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  snrapply (equiv_path_ind (equiv_path_inverse _)).
   by destruct r.
 Defined.
 
@@ -939,6 +918,6 @@ Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (
   wlrnat_V p (q @ r).
 Proof.
   revert u q.
-  snrapply (equiv_path_ind _ _ _ (equiv_path_inverse _)).
+  snrapply (equiv_path_ind (equiv_path_inverse _)).
   by destruct p, r.
 Defined.
