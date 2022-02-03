@@ -16,7 +16,7 @@ Local Open Scope path_scope.
 Notation coe := (transport idmap).
 Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
-(** Mapping spaces from colimits of sequences can be characterized. *)
+(** Mapping spaces into hprops from colimits of sequences can be characterized. *)
 Lemma equiv_colim_seq_rec `{Funext} (A : Sequence) (P : Type) `{IsHProp P}
   : (Colimit A -> P) <~> (forall n, A n -> P).
 Proof.
