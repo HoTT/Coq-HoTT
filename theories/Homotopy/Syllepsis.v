@@ -968,7 +968,7 @@ Ltac generalize_goal :=
                     let T := open_constr:(ltac:(make_P_and_evars G)) in
                     assert (lem : T) end.
 
-(* Make Ltac1 the default again. *)
+(* Make Ltac1 the default again. Only needed while we support Coq <= 8.15. *)
 Set Default Proof Mode "Classic".
 
 (* We need this equivalence twice below. *)
