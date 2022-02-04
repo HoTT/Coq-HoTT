@@ -3,6 +3,54 @@ Require Import Homotopy.Syllepsis.
 
 (* In this file, we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q].  This is kept separate from Syllepsis.v because it is slow.  Improvements to the speed are welcome!  *)
 
+(* These tactics will be moved elsewhere once things stabilize. *)
+Ltac make_P ty :=
+  lazymatch ty with
+  | forall a : ?A, ?ty
+    => let ty' := fresh in
+       constr:(forall a : A,
+                  (* bind [ty] in [match] so that we avoid issues such as https://github.com/coq/coq/issues/7299 and similar ones *)
+                  match ty return _ (* without [return _], [match] tries two ways to elaborate the branches, which results in exponential blowup on failure *) with
+                  | ty'
+                    => ltac:(let ty := (eval cbv delta [ty'] in ty') in
+                             clear ty';
+                             let res := make_P ty in
+                             exact res)
+                  end)
+  | _ => constr:(Type)
+  end.
+
+Ltac apply_P ty P :=
+  lazymatch ty with
+  | forall a : ?A, ?ty
+    => let ty' := fresh in
+       let P' := fresh in
+       constr:(forall a : A,
+                  (* bind [ty] in [match] so that we avoid issues such as https://github.com/coq/coq/issues/7299 and similar ones *)
+                  match ty, P a return _ (* without [return _], [match] tries two ways to elaborate the branches, which results in exponential blowup on failure *) with
+                  | ty', P'
+                    => ltac:(let ty := (eval cbv delta [ty'] in ty') in
+                             let P := (eval cbv delta [P'] in P') in
+                             clear ty' P';
+                             let res := apply_P ty P in
+                             exact res)
+                  end)
+  | _ => P
+  end.
+
+Ltac apply_P_evars P :=
+  lazymatch type of P with
+  | forall a, _ => apply_P_evars open_constr:(P _)
+  | _ => P
+  end.
+
+Ltac make_P_and_evars ty :=
+  let P_ty := make_P ty in
+  let P := fresh "P" in
+  open_constr:(forall P : P_ty,
+                  ltac:(let res := apply_P_evars P in exact res)
+                  -> ltac:(let res := apply_P ty P in exact res)).
+
 (* We need this equivalence twice below. *)
 Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (t : q @ 1 = r) (u : p @ 1 = r) (s : p = q)
   : ((concat_p1 p)^ @ (u @ t^)) @ (concat_p1 q) = s
@@ -150,6 +198,27 @@ Proof.
   cbn zeta.
   destruct H_ehrnat_p1_yz0, H_ehrnat_p1_yz1, H_wlrnat_V_x_yz.
 
+  (* For efficiency purposes, we generalize the goal to an arbitrary function [P] of the context (except for [X] and [a]), and do all of the induction steps in this generality.  This reduces the size of the term that Coq needs to manipulate, speeding up the proof.  The same proof works with the next three lines removed and with the second and third last lines removed. *)
+
+  revert_until a.
+
+  (* Temporary timing info. *)
+  Time match goal with |- ?G => let P_ty := make_P G in idtac P_ty end.  (* 0.5s *)
+
+  Time match goal with |- ?G => let P_ty := make_P G in
+  let P := fresh "P" in
+  let A := open_constr:(forall P : P_ty,
+                  ltac:(let res := apply_P_evars P in exact res)) in idtac A end. (* 0.6s *)
+
+  Time match goal with |- ?G =>
+  let P := fresh "P" in
+  let A := open_constr:(forall P : _,
+                  ltac:(let res := apply_P G P in exact res)) in idtac A end. (* 1.0s *)
+
+  (* This is the real step we need. *)
+  Time match goal with |- ?G => let T := make_P_and_evars G in assert (lem : T) end.  (* 1.8s *)
+  { intros P H; intros.
+
   (* We revert some things early, since they depend on other things that we want to revert. *)
   revert H_wlrnat_x_yz H_ulnat_yz0 H_ulnat_yz1 H_urnat_yz0 H_urnat_yz1.
 
@@ -231,8 +300,10 @@ Proof.
   revert wlx1.
   snrapply equiv_path_ind_lrucancel.
   destruct wlx2.
+  exact H.  }
+  apply lem.
   reflexivity.
-Qed.  (* This line is slow. *)
+Qed.  (* This line is a bit slow. *)
 
 Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a)) :
   whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR (eh_V p (q @ r)) _ @ lrucancel 1 @
