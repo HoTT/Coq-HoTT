@@ -16,6 +16,55 @@ Local Open Scope path_scope.
 Notation coe := (transport idmap).
 Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
+(** Mapping spaces into hprops from colimits of sequences can be characterized. *)
+Lemma equiv_colim_seq_rec `{Funext} (A : Sequence) (P : Type) `{IsHProp P}
+  : (Colimit A -> P) <~> (forall n, A n -> P).
+Proof.
+  symmetry.
+  refine (equiv_colimit_rec P oE _).
+  refine (issig_Cocone _ _ oE _).
+  symmetry.
+  srapply Build_Equiv.
+  1: exact pr1.
+  exact _.
+Defined.
+
+(** If a sequential colimit has maps homotopic to a constant map then the colimit is contractible. *)
+Global Instance contr_colim_seq_into_prop {funext : Funext} (A : Sequence)
+  (a : forall n, A n) (H : forall n, const (a n.+1) == A _f idpath)
+  : Contr (Colimit A).
+Proof.
+  transparent assert (B : Sequence).
+  { srapply Build_Sequence.
+    1: exact A.
+    intros n.
+    exact (const (a n.+1)). }
+  rapply contr_equiv'.
+  1: rapply equiv_functor_colimit.
+  1: rapply (equiv_sequence B A).
+  1: reflexivity.
+  { intros n e.
+    exists equiv_idmap.
+    intros x.
+    symmetry.
+    exact (H _ (e x)). }
+  srapply Build_Contr.
+  1: exact (colim (D:=B) 1%nat (a 1%nat)).
+  srapply Colimit_ind.
+  { intros i x.
+    induction i.
+    1: exact (colimp (D:=B) _ _ idpath x).
+    refine (IHi (a i) @ _).
+    refine ((colimp (D:=B) _ _ idpath (a i))^ @ _).
+    refine ((colimp (D:=B) _ _ idpath (a i.+1))^ @ _).
+    exact (colimp (D:=B) _ _ idpath x). }
+  intros n m [] x.
+  rewrite transport_paths_FlFr.
+  rewrite ap_const.
+  rewrite ap_idmap.
+  destruct n; simpl; hott_simpl.
+Qed.
+
 Definition seq_shift_from_zero_by {A : Sequence} (a : A 0) k : A k.
 Proof.
   induction k as [ | k q].
