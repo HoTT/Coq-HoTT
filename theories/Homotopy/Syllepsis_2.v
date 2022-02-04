@@ -4,27 +4,44 @@ Require Import Homotopy.Syllepsis.
 (* In this file, we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q].  This is kept separate from Syllepsis.v because it is slow.  Improvements to the speed are welcome!  *)
 
 (* These tactics will be moved elsewhere once things stabilize. *)
-Ltac apply_P ty P :=
-  lazymatch ty with
-  | forall a : ?A, ?ty
-    => let ty' := fresh in
-       let P' := fresh in
-       constr:(forall a : A,
-                  (* bind [ty] in [match] so that we avoid issues such as https://github.com/coq/coq/issues/7299 and similar ones *)
-                  match ty, P a return _ (* without [return _], [match] tries two ways to elaborate the branches, which results in exponential blowup on failure *) with
-                  | ty', P'
-                    => ltac:(let ty := (eval cbv delta [ty'] in ty') in
-                             let P := (eval cbv delta [P'] in P') in
-                             clear ty' P';
-                             let res := apply_P ty P in
-                             exact res)
-                  end)
-  | _ => P
+Require Import Ltac2.Ltac2.
+
+Ltac2 rec replace_under_prod (ty : constr) (final : constr) :=
+  match Constr.Unsafe.kind ty with
+  | Constr.Unsafe.Prod a ty
+    => Constr.Unsafe.make (Constr.Unsafe.Prod a (replace_under_prod ty final))
+  | _ => final
   end.
 
-Ltac make_P_and_H ty :=
-  let P := fresh "P" in
-  open_constr:(forall P : _, _ -> ltac:(let res := apply_P ty P in exact res)).
+Ltac2 make_P (ty : constr) := replace_under_prod ty 'Type.
+
+Ltac2 rec count_prod (ty : constr) :=
+  match Constr.Unsafe.kind ty with
+  | Constr.Unsafe.Prod _ ty => Int.add 1 (count_prod ty)
+  | _ => 0
+  end.
+
+Ltac2 apply_P_on (p : constr) (n : int) :=
+  Constr.Unsafe.make
+    (Constr.Unsafe.App
+       p
+       (Array.init
+          n
+          (fun i => Constr.Unsafe.make (Constr.Unsafe.Rel (Int.sub n i))))).
+
+Ltac2 apply_P (ty : constr) (p : int -> constr) :=
+  let n := count_prod ty in
+  replace_under_prod ty (apply_P_on (p n) n).
+
+Ltac2 make_P_and_evars (ty : constr) :=
+  let p_ty := make_P ty in
+  let res := apply_P ty (fun n => Constr.Unsafe.make (Constr.Unsafe.Rel (Int.add n 1))) in
+  '(forall P : $p_ty, _ -> $res).
+
+Ltac make_P_and_evars :=
+  ltac2:(ty |- Control.refine (fun _ => make_P_and_evars (Option.get (Ltac1.to_constr ty)))).
+
+Set Default Proof Mode "Classic".
 
 (* We need this equivalence twice below. *)
 Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (t : q @ 1 = r) (u : p @ 1 = r) (s : p = q)
@@ -175,7 +192,9 @@ Proof.
 
   (* For efficiency purposes, we generalize the goal to an arbitrary function [P] of the context (except for [X] and [a]), and do all of the induction steps in this generality.  This reduces the size of the term that Coq needs to manipulate, speeding up the proof.  The same proof works with the next three lines removed and with the second and third last lines removed. *)
   revert_until a.
-  match goal with |- ?G => let T := make_P_and_H G in assert (lem : T) end.  (* 0.9s *)
+  match goal with |- ?G =>
+                    let T := open_constr:(ltac:(make_P_and_evars G)) in
+                    assert (lem : T) end.
   { intros P H; intros.
 
   (* We revert some things early, since they depend on other things that we want to revert. *)
