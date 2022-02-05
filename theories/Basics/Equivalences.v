@@ -542,6 +542,19 @@ Tactic Notation "equiv_intros" constr(E) ident(x) ident(y)
 Tactic Notation "equiv_intros" constr(E) ident(x) ident(y) ident(z)
   := equiv_intro E x; equiv_intro E y; equiv_intro E z.
 
+(** A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. The idiom for using this is to first [revert b X], which allows Coq to determine the family [P]. After using this, [b] will be replaced by [a] in the goal. *)
+Definition equiv_path_ind {A} {a : A} {X : A -> Type}
+           (e : forall (b : A), a = b <~> X b)
+           (P : forall (b : A), X b -> Type)
+           (r : P a (e a 1))
+  : forall (b : A) (x : X b), P b x.
+Proof.
+  intro b.
+  srapply (equiv_ind (e b)).
+  intros [].
+  exact r.
+Defined.
+
 (** [equiv_composeR'], a flipped version of [equiv_compose'], is (like [concatR]) most often useful partially applied, to give the “first half” of an equivalence one is constructing and leave the rest as a subgoal. One could similarly define [equiv_composeR] as a flip of [equiv_compose], but it doesn’t seem so useful since it doesn’t leave the remaining equivalence as a subgoal. *)
 Definition equiv_composeR' {A B C} (f : A <~> B) (g : B <~> C)
   := equiv_compose' g f.
