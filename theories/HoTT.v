@@ -158,7 +158,7 @@ Require Export HoTT.Homotopy.EMSpace.
 Require Export HoTT.Homotopy.HSpaceS1.
 Require Export HoTT.Homotopy.Bouquet.
 Require Export HoTT.Homotopy.EncodeDecode.
-Require Export HoTT.Homotopy.Syllepsis.
+(* Require Export HoTT.Homotopy.Syllepsis. *)
 
 Require Export HoTT.Spectra.Spectrum.
 
