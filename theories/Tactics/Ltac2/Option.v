@@ -10,8 +10,8 @@
 
 (* Some of the below functions are inspired by ocaml-extlib *)
 
-Require Import Ltac2.Init.
-Require Import Ltac2.Control.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Control.
 
 Ltac2 may (f : 'a -> unit) (ov : 'a option) :=
   match ov with

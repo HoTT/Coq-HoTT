@@ -13,7 +13,7 @@
     Not for the casual user, handle with care and expect undefined behaviours
     otherwise. **)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 Ltac2 Type t.
 (** Dynamically-typed Ltac1 values. *)

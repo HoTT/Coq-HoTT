@@ -8,9 +8,9 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Control.
-Require Ltac2.List.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Control.
+From HoTT.Tactics Require Ltac2.List.
 
 Module Free.
 
@@ -23,7 +23,8 @@ Ltac2 @ external of_ids : ident list -> t := "ltac2" "fresh_free_of_ids".
 
 Ltac2 @ external of_constr : constr -> t := "ltac2" "fresh_free_of_constr".
 
-Ltac2 of_goal () := of_ids (List.map (fun (id, _, _) => id) (Control.hyps ())).
+(* TODO: Fix: List.map is not defined *)
+(* Ltac2 of_goal () := of_ids (List.map (fun (id, _, _) => id) (Control.hyps ())). *)
 
 End Free.
 
@@ -31,4 +32,5 @@ Ltac2 @ external fresh : Free.t -> ident -> ident := "ltac2" "fresh_fresh".
 (** Generate a fresh identifier with the given base name which is not a
     member of the provided set of free variables. *)
 
-Ltac2 in_goal id := Fresh.fresh (Free.of_goal ()) id.
+(* TODO: Fix: of_goal is not defined *)
+(* Ltac2 in_goal id := Fresh.fresh (Free.of_goal ()) id. *)

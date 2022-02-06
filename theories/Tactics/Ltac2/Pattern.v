@@ -8,8 +8,8 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Control.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Control.
 
 Ltac2 Type t := pattern.
 
@@ -70,7 +70,8 @@ Ltac2 @ external instantiate : context -> constr -> constr :=
 
 (** Implementation of Ltac matching over terms and goals *)
 
-Ltac2 lazy_match0 t pats :=
+(* TODO: Fix: Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/. *)
+(* Ltac2 lazy_match0 t pats :=
   let rec interp m := match m with
   | [] => Control.zero Match_failure
   | p :: m =>
@@ -145,3 +146,4 @@ Ltac2 multi_goal_match0 rev pats :=
   interp pats.
 
 Ltac2 one_goal_match0 rev pats := Control.once (fun _ => multi_goal_match0 rev pats).
+*)

@@ -8,39 +8,48 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Control Ltac2.Pattern Ltac2.Array Ltac2.Int Ltac2.Std.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Control Ltac2.Pattern Ltac2.Array Ltac2.Int Ltac2.Std.
 
 (** Constr matching *)
 
-Ltac2 Notation "lazy_match!" t(tactic(6)) "with" m(constr_matching) "end" :=
-  Pattern.lazy_match0 t m.
+(* TODO: fix *)
+(* Ltac2 Notation "lazy_match!" t(tactic(6)) "with" m(constr_matching) "end" :=
+  Pattern.lazy_match0 t m. *)
 
-Ltac2 Notation "multi_match!" t(tactic(6)) "with" m(constr_matching) "end" :=
-  Pattern.multi_match0 t m.
+(* TODO: fix *)
+(* Ltac2 Notation "multi_match!" t(tactic(6)) "with" m(constr_matching) "end" :=
+  Pattern.multi_match0 t m. *)
 
-Ltac2 Notation "match!" t(tactic(6)) "with" m(constr_matching) "end" :=
-  Pattern.one_match0 t m.
+(* TODO: fix *)
+(* Ltac2 Notation "match!" t(tactic(6)) "with" m(constr_matching) "end" :=
+  Pattern.one_match0 t m. *)
 
 (** Goal matching *)
 
-Ltac2 Notation "lazy_match!" "goal" "with" m(goal_matching) "end" :=
-  Pattern.lazy_goal_match0 false m.
+(* TODO: fix *)
+(* Ltac2 Notation "lazy_match!" "goal" "with" m(goal_matching) "end" :=
+  Pattern.lazy_goal_match0 false m. *)
 
-Ltac2 Notation "multi_match!" "goal" "with" m(goal_matching) "end" :=
-  Pattern.multi_goal_match0 false m.
+(* TODO: fix *)
+(* Ltac2 Notation "multi_match!" "goal" "with" m(goal_matching) "end" :=
+  Pattern.multi_goal_match0 false m. *)
 
-Ltac2 Notation "match!" "goal" "with" m(goal_matching) "end" :=
-  Pattern.one_goal_match0 false m.
+(* TODO: fix *)
+(* Ltac2 Notation "match!" "goal" "with" m(goal_matching) "end" :=
+  Pattern.one_goal_match0 false m. *)
 
-Ltac2 Notation "lazy_match!" "reverse" "goal" "with" m(goal_matching) "end" :=
-  Pattern.lazy_goal_match0 true m.
+(* TODO: fix *)
+(* Ltac2 Notation "lazy_match!" "reverse" "goal" "with" m(goal_matching) "end" :=
+  Pattern.lazy_goal_match0 true m. *)
 
-Ltac2 Notation "multi_match!" "reverse" "goal" "with" m(goal_matching) "end" :=
-  Pattern.multi_goal_match0 true m.
+(* TODO: fix *)
+(* Ltac2 Notation "multi_match!" "reverse" "goal" "with" m(goal_matching) "end" :=
+  Pattern.multi_goal_match0 true m. *)
 
-Ltac2 Notation "match!" "reverse" "goal" "with" m(goal_matching) "end" :=
-  Pattern.one_goal_match0 true m.
+(* TODO: fix *)
+(* Ltac2 Notation "match!" "reverse" "goal" "with" m(goal_matching) "end" :=
+  Pattern.one_goal_match0 true m. *)
 
 (** Tacticals *)
 
@@ -85,14 +94,15 @@ Ltac2 dispatch0 t (head, tail) :=
 
 Ltac2 Notation t(thunk(self)) ">" "[" l(dispatch) "]" : 4 := dispatch0 t l.
 
-Ltac2 do0 n t :=
+(* TODO: fix: Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/. *)
+(* Ltac2 do0 n t :=
   let rec aux n t := match Int.equal n 0 with
   | true => ()
   | false => t (); aux (Int.sub n 1) t
   end in
-  aux (n ()) t.
+  aux (n ()) t. *)
 
-Ltac2 Notation do := do0.
+(* Ltac2 Notation do := do0. *)
 
 Ltac2 Notation once := Control.once.
 
@@ -100,27 +110,28 @@ Ltac2 progress0 tac := Control.enter (fun _ => Control.progress tac).
 
 Ltac2 Notation progress := progress0.
 
-Ltac2 rec first0 tacs :=
+(* TODO: fix Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/. *)
+(* Ltac2 rec first0 tacs :=
 match tacs with
 | [] => Control.zero (Tactic_failure None)
 | tac :: tacs => Control.enter (fun _ => orelse tac (fun _ => first0 tacs))
-end.
+end. *)
 
-Ltac2 Notation "first" "[" tacs(list0(thunk(tactic(6)), "|")) "]" := first0 tacs.
+(* Ltac2 Notation "first" "[" tacs(list0(thunk(tactic(6)), "|")) "]" := first0 tacs. *)
 
 Ltac2 complete tac :=
   let ans := tac () in
   Control.enter (fun () => Control.zero (Tactic_failure None));
   ans.
 
-Ltac2 rec solve0 tacs :=
+(* Ltac2 rec solve0 tacs :=
 match tacs with
 | [] => Control.zero (Tactic_failure None)
 | tac :: tacs =>
   Control.enter (fun _ => orelse (fun _ => complete tac) (fun _ => solve0 tacs))
-end.
+end. *)
 
-Ltac2 Notation "solve" "[" tacs(list0(thunk(tactic(6)), "|")) "]" := solve0 tacs.
+(* Ltac2 Notation "solve" "[" tacs(list0(thunk(tactic(6)), "|")) "]" := solve0 tacs. *)
 
 Ltac2 time0 tac := Control.time None tac.
 
@@ -163,7 +174,7 @@ Ltac2 Notation split := split.
 Ltac2 Notation "esplit" bnd(thunk(with_bindings)) := split0 true bnd.
 Ltac2 Notation esplit := esplit.
 
-Ltac2 exists0 ev bnds := match bnds with
+(* Ltac2 exists0 ev bnds := match bnds with
 | [] => split0 ev (fun () => Std.NoBindings)
 | _ =>
   let rec aux bnds := match bnds with
@@ -171,13 +182,13 @@ Ltac2 exists0 ev bnds := match bnds with
   | bnd :: bnds => split0 ev bnd; aux bnds
   end in
   aux bnds
-end.
+end. *)
 
-Ltac2 Notation "exists" bnd(list0(thunk(bindings), ",")) := exists0 false bnd.
+(* Ltac2 Notation "exists" bnd(list0(thunk(bindings), ",")) := exists0 false bnd. *)
 (* Ltac2 Notation exists := exists. *)
 
-Ltac2 Notation "eexists" bnd(list0(thunk(bindings), ",")) := exists0 true bnd.
-Ltac2 Notation eexists := eexists.
+(* Ltac2 Notation "eexists" bnd(list0(thunk(bindings), ",")) := exists0 true bnd. *)
+(* Ltac2 Notation eexists := eexists. *)
 
 Ltac2 left0 ev bnd := enter_h ev Std.left bnd.
 
@@ -237,11 +248,11 @@ Ltac2 Notation "apply"
   cl(opt(seq("in", ident, opt(seq("as", intropattern))))) :=
   apply0 true false cb cl.
 
-Ltac2 default_on_concl cl :=
+(* Ltac2 default_on_concl cl :=
 match cl with
 | None => { Std.on_hyps := Some []; Std.on_concl := Std.AllOccurrences }
 | Some cl => cl
-end.
+end. *)
 
 Ltac2 pose0 ev p :=
   enter_h ev (fun ev (na, p) => Std.pose na p) p.
@@ -252,11 +263,11 @@ Ltac2 Notation "pose" p(thunk(pose)) :=
 Ltac2 Notation "epose" p(thunk(pose)) :=
   pose0 true p.
 
-Ltac2 Notation "set" p(thunk(pose)) cl(opt(clause)) :=
-  Std.set false p (default_on_concl cl).
+(* Ltac2 Notation "set" p(thunk(pose)) cl(opt(clause)) :=
+  Std.set false p (default_on_concl cl). *)
 
-Ltac2 Notation "eset" p(thunk(pose)) cl(opt(clause)) :=
-  Std.set true p (default_on_concl cl).
+(* Ltac2 Notation "eset" p(thunk(pose)) cl(opt(clause)) :=
+  Std.set true p (default_on_concl cl). *)
 
 Ltac2 assert0 ev ast :=
   enter_h ev (fun _ ast => Std.assert ast) ast.
@@ -350,7 +361,7 @@ Ltac2 Notation "inversion_clear"
   pat(opt(seq("as", intropattern)))
   ids(opt(seq("in", list1(ident)))) :=
   Std.inversion Std.FullInversionClear arg pat ids.
-
+(* 
 Ltac2 Notation "red" cl(opt(clause)) :=
   Std.red (default_on_concl cl).
 Ltac2 Notation red := red.
@@ -450,7 +461,7 @@ Ltac2 Notation "erewrite"
   cl(opt(clause))
   tac(opt(seq("by", thunk(tactic)))) :=
   rewrite0 true rw cl tac.
-
+*)
 (** coretactics *)
 
 Ltac2 exact0 ev c :=
@@ -473,13 +484,13 @@ Ltac2 Notation intro := intro.
 Ltac2 Notation "move" id(ident) mv(move_location) := Std.move id mv.
 
 Ltac2 Notation reflexivity := Std.reflexivity ().
-
+(* 
 Ltac2 symmetry0 cl :=
   Std.symmetry (default_on_concl cl).
 
 Ltac2 Notation "symmetry" cl(opt(clause)) := symmetry0 cl.
 Ltac2 Notation symmetry := symmetry.
-
+ *)
 Ltac2 Notation "revert" ids(list1(ident)) := Std.revert ids.
 
 Ltac2 Notation assumption := Std.assumption ().
@@ -487,7 +498,7 @@ Ltac2 Notation assumption := Std.assumption ().
 Ltac2 Notation etransitivity := Std.etransitivity ().
 
 Ltac2 Notation admit := Std.admit ().
-
+(* 
 Ltac2 clear0 ids := match ids with
 | [] => Std.keep []
 | _ => Std.clear ids
@@ -495,7 +506,7 @@ end.
 
 Ltac2 Notation "clear" ids(list0(ident)) := clear0 ids.
 Ltac2 Notation "clear" "-" ids(list1(ident)) := Std.keep ids.
-Ltac2 Notation clear := clear.
+Ltac2 Notation clear := clear. *)
 
 Ltac2 Notation refine := Control.refine.
 
@@ -505,13 +516,13 @@ Ltac2 absurd0 c := Control.enter (fun _ => Std.absurd (c ())).
 
 Ltac2 Notation "absurd" c(thunk(open_constr)) := absurd0 c.
 
-Ltac2 subst0 ids := match ids with
+(* Ltac2 subst0 ids := match ids with
 | [] => Std.subst_all ()
 | _ => Std.subst ids
 end.
 
 Ltac2 Notation "subst" ids(list0(ident)) := subst0 ids.
-Ltac2 Notation subst := subst.
+Ltac2 Notation subst := subst. *)
 
 Ltac2 Notation "discriminate" arg(opt(destruction_arg)) :=
   Std.discriminate false arg.
@@ -529,7 +540,7 @@ Ltac2 Notation "einjection" arg(opt(destruction_arg)) ipat(opt(seq("as", intropa
 
 (** Auto *)
 
-Ltac2 default_db dbs := match dbs with
+(* Ltac2 default_db dbs := match dbs with
 | None => Some []
 | Some dbs =>
   match dbs with
@@ -542,8 +553,8 @@ Ltac2 default_list use := match use with
 | None => []
 | Some use => use
 end.
-
-Ltac2 trivial0 use dbs :=
+ *)
+(* Ltac2 trivial0 use dbs :=
   let dbs := default_db dbs in
   let use := default_list use in
   Std.trivial Std.Off use dbs.
@@ -553,8 +564,8 @@ Ltac2 Notation "trivial"
   dbs(opt(seq("with", hintdb))) := trivial0 use dbs.
 
 Ltac2 Notation trivial := trivial.
-
-Ltac2 auto0 n use dbs :=
+ *)
+(* Ltac2 auto0 n use dbs :=
   let dbs := default_db dbs in
   let use := default_list use in
   Std.auto Std.Off n use dbs.
@@ -575,7 +586,7 @@ Ltac2 Notation "eauto" n(opt(tactic(0)))
   dbs(opt(seq("with", hintdb))) := eauto0 n use dbs.
 
 Ltac2 Notation eauto := eauto.
-
+ *)
 Ltac2 Notation "typeclasses_eauto" n(opt(tactic(0)))
   dbs(opt(seq("with", list1(ident)))) := Std.typeclasses_eauto None n dbs.
 
@@ -587,11 +598,9 @@ Ltac2 Notation typeclasses_eauto := typeclasses_eauto.
 Ltac2 Notation "unify" x(constr) y(constr) := Std.unify x y.
 
 (** Congruence *)
-
-Ltac2 f_equal0 () := ltac1:(f_equal).
-Ltac2 Notation f_equal := f_equal0 ().
+(* Ltac2 f_equal0 () := ltac1:(f_equal).
+Ltac2 Notation f_equal := f_equal0 (). *)
 
 (** now *)
-
-Ltac2 now0 t := t (); ltac1:(easy).
+Ltac2 now0 t := t (); ltac1:(Basics.Overture.easy).
 Ltac2 Notation "now" t(thunk(self)) : 6 := now0 t.

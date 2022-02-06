@@ -925,7 +925,7 @@ Defined.
 (* Next we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q]. *)
 
 (* The following tactics will be used to make the proof faster, but with only minor modifications, the proof goes through without these tactics. The final tactic [generalize_goal] takes a goal of the form [forall a b c ..., expression] and asserts a new goal [forall P, _ -> forall a b c ..., P a b c ...] which can be used to prove the original goal. Because [expression] has been replaced with a generic function, the proof of the new goal can be more efficient that the proof of the special case, especially when there are around 84 variables. *)
-Require Import Ltac2.Ltac2.
+Require Import HoTT.Tactics.Ltac2.
 
 Ltac2 rec replace_under_prod (ty : constr) (final : constr) :=
   match Constr.Unsafe.kind ty with

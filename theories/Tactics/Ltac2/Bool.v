@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 (** * Boolean operators *)
 

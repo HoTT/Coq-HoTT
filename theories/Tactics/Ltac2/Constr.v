@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 Ltac2 @ external type : constr -> constr := "ltac2" "constr_type".
 (** Return the type of a term *)

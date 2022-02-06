@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 Ltac2 @external of_int : int -> char := "ltac2" "char_of_int".
 Ltac2 @external to_int : char -> int := "ltac2" "char_to_int".

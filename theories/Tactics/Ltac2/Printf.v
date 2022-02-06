@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Message.
+From HoTT.Tactics Require Import Ltac2.Message.
 
 (** This file defines a printf notation for easiness of writing messages *)
 

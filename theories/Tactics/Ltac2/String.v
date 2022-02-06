@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 Ltac2 @external make : int -> char -> string := "ltac2" "string_make".
 Ltac2 @external length : string -> int := "ltac2" "string_length".

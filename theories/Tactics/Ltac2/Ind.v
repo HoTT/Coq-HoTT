@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-From Ltac2 Require Import Init.
+From HoTT.Tactics.Ltac2 Require Import Init.
 
 Ltac2 Type t := inductive.
 

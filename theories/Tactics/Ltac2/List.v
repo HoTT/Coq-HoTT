@@ -25,12 +25,16 @@
 (*                                                                        *)
 (**************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Int.
-Require Ltac2.Control.
-Require Ltac2.Bool.
-Require Ltac2.Message.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Int.
+From HoTT.Tactics Require Ltac2.Control.
+From HoTT.Tactics Require Ltac2.Bool.
+From HoTT.Tactics Require Ltac2.Message.
 
+(* TODO: Fix
+Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/.
+*)
+(*
 Ltac2 rec length (ls : 'a list) :=
   match ls with
   | [] => 0
@@ -596,3 +600,4 @@ Ltac2 sort_uniq (cmp : 'a -> 'a -> int) (l : 'a list) :=
            end
       end in
   uniq (sort cmp l).
+*)

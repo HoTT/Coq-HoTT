@@ -7,7 +7,7 @@
 (*         *     GNU Lesser General Public License Version 2.1          *)
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
-
+From HoTT Require Import Basics.
 
 Declare ML Module "ltac2_plugin".
 

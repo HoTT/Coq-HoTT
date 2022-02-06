@@ -8,7 +8,7 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
+From HoTT.Tactics Require Import Ltac2.Init.
 
 Ltac2 Type exn ::= [ Division_by_zero ].
 
@@ -19,6 +19,10 @@ Ltac2 @ external sub : int -> int -> int := "ltac2" "int_sub".
 Ltac2 @ external mul : int -> int -> int := "ltac2" "int_mul".
 Ltac2 @ external neg : int -> int := "ltac2" "int_neg".
 
+(* TODO: Fix 
+Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/.
+*)
+(*
 Ltac2 lt (x : int) (y : int) := equal (compare x y) -1.
 Ltac2 gt (x : int) (y : int) := equal (compare x y) 1.
 Ltac2 le (x : int) (y : int) :=
@@ -33,3 +37,4 @@ Ltac2 ge (x : int) (y : int) :=
   | true => true
   | false => gt x y
   end.
+*)

@@ -8,8 +8,8 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Message.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Message.
 
 (** Panic *)
 
@@ -98,12 +98,16 @@ Ltac2 assert_bounds (msg : string) (test : bool) :=
   | false => throw_out_of_bounds msg
   end.
 
+(* TODO: Fix
+Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/.
+*)
+(* 
 Ltac2 assert_true b :=
   if b then () else throw Assertion_failure.
 
 Ltac2 assert_false b :=
   if b then throw Assertion_failure else ().
-
+*)
 (** Short form backtracks *)
 
 Ltac2 backtrack_tactic_failure (msg : string) :=

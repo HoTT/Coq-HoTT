@@ -25,11 +25,11 @@
 (*                                                                        *)
 (**************************************************************************)
 
-Require Import Ltac2.Init.
-Require Ltac2.Int.
-Require Ltac2.Control.
-Require Ltac2.Bool.
-Require Ltac2.Message.
+From HoTT.Tactics Require Import Ltac2.Init.
+From HoTT.Tactics Require Ltac2.Int.
+From HoTT.Tactics Require Ltac2.Control.
+From HoTT.Tactics Require Ltac2.Bool.
+From HoTT.Tactics Require Ltac2.Message.
 
 (* Question: what is returned in case of an out of range value?
    Answer:   Ltac2 throws a panic *)
@@ -45,6 +45,10 @@ Ltac2 @external concat : ('a array) list -> 'a array := "ltac2" "array_concat".
 
 (* Low level array operations *)
 
+(* TODO: fix 
+Anomaly "Uncaught exception Not_found." Please report at http://coq.inria.fr/bugs/.
+*)
+(*
 Ltac2 lowlevel_sub (arr : 'a array) (start : int) (len : int) :=
   let l := length arr in
   match Int.equal l 0 with
@@ -73,6 +77,7 @@ Ltac2 init (l : int) (f : int->'a) :=
       init_aux arr 1 (Int.sub l 1) f;
       arr
   end.
+  
 
 Ltac2 make_matrix (sx : int) (sy : int) (v : 'a) :=
   let init1 i := v in
@@ -225,3 +230,4 @@ Ltac2 for_all (p : 'a -> bool) (a : 'a array) := for_all_aux p a 0 (length a).
 (* Note: we don't have (yet) a generic equality function in Ltac2 *)
 Ltac2 mem (eq : 'a -> 'a -> bool) (x : 'a) (a : 'a array) :=
   exist (eq x) a.
+*)
