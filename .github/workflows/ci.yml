@@ -204,91 +204,91 @@ jobs:
         name: alectryon-html
         path: alectryon-html.tar
 
-
+  # For now we disable the dpdgraph job because the node
+  # version/stackoverflow issue cannot be resolved.
+        
   # dependency graph doc job
-  doc-dep-graphs:
-    needs: build
-    strategy:
-      fail-fast: false
-    runs-on: ubuntu-latest
-    steps:
-    # Checkout branch
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    # Download artifact
-    - uses: actions/download-artifact@v2
-      with:
-        name: workspace-${{ env.coq-version-supported }}
-    # Unpack Tar
-    - run: tar -xf workspace.tar
-    # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
-      with:
-        coq_version: ${{ env.coq-version-supported }}
-        ocaml_version: ${{ env.ocaml-version }}
-        custom_script: |
-          sudo apt-get update
-          sudo apt-get install -y ghc cabal-install
-          sudo apt-get install -y --allow-unauthenticated \
-          libnode-dev node-gyp libssl-dev npm aspcud      \
-          graphviz xsltproc python-lxml python-pexpect    \
-          libxml2-dev libxslt1-dev time lua5.1 unzip
+  # doc-dep-graphs:
+  #   needs: build
+  #   strategy:
+  #     fail-fast: false
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   # Checkout branch
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       submodules: recursive
+  #   # Download artifact
+  #   - uses: actions/download-artifact@v2
+  #     with:
+  #       name: workspace-${{ env.coq-version-supported }}
+  #   # Unpack Tar
+  #   - run: tar -xf workspace.tar
+  #   # We use the coq docker so we don't have to build coq
+  #   - uses: coq-community/docker-coq-action@v1
+  #     with:
+  #       coq_version: ${{ env.coq-version-supported }}
+  #       ocaml_version: ${{ env.ocaml-version }}
+  #       custom_script: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y ghc cabal-install
+  #         sudo apt-get install -y --allow-unauthenticated \
+  #         libnode-dev node-gyp libssl-dev npm aspcud      \
+  #         graphviz xsltproc python-lxml python-pexpect    \
+  #         libxml2-dev libxslt1-dev time lua5.1 unzip
 
-          cabal update
-          cabal install graphviz text
-          sudo -E npm config set strict-ssl false
-          sudo -E npm i -g npm
-          sudo -E npm install -g doctoc
+  #         cabal update
+  #         cabal install graphviz text
+  #         sudo -E npm config set strict-ssl false
+  #         sudo -E npm i -g npm
+  #         sudo -E npm install -g doctoc
 
-          startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
-          endGroup
-          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
-          ## Make dependency graph
-          make HoTT.deps HoTTCore.deps
-          runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
-          runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot
-          dot -Tsvg HoTT.dot -o HoTT.svg
-          dot -Tsvg HoTTCore.dot -o HoTTCore.svg
-          rm -rf dep-graphs
-          mkdir -p dep-graphs
-          mv HoTT.svg HoTTCore.svg dep-graphs/
-
-
-          ## Make file dependency graphs
-          opam install ocamlgraph -y
-          ./etc/ci/make_dpd_graphs.sh
-
-          make dpdgraph || exit $?
-          make svg-file-dep-graphs -k || exit $?
-          # `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
-          # makes `dot` spin for over a dozen minutes.  So disable it for now.
-          #make svg-aggregate-dep-graphs -k || exit $?
-          make file-dep-graphs/index.html -k || exit $?
+  #         startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
+  #           sudo chown -R coq:coq .
+  #         endGroup
+  #         echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
+  #         ## Make dependency graph
+  #         make HoTT.deps HoTTCore.deps
+  #         runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
+  #         runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot
+  #         dot -Tsvg HoTT.dot -o HoTT.svg
+  #         dot -Tsvg HoTTCore.dot -o HoTTCore.svg
+  #         rm -rf dep-graphs
+  #         mkdir -p dep-graphs
+  #         mv HoTT.svg HoTTCore.svg dep-graphs/
 
 
+  #         ## Make file dependency graphs
+  #         opam install ocamlgraph -y
+  #         ./etc/ci/make_dpd_graphs.sh
 
-    - name: Revert permissions
-      # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
-      if: ${{ always() }}
-      run: sudo chown -R 1001:116 .
-    # Tar dependency graph files
-    - name: 'Tar .svg files'
-      run: |
-        tar -cf dep-graphs.tar dep-graphs
-        tar -cf file-dep-graphs.tar file-dep-graphs.tar
-    # We upload the artifacts
-    - name: 'Upload Artifact dep-graphs.tar'
-      uses: actions/upload-artifact@v2
-      with:
-        name: dep-graphs
-        path: dep-graphs.tar
-    - name: 'Upload Artifact file-dep-graphs.tar'
-      uses: actions/upload-artifact@v2
-      with:
-        name: file-dep-graphs
-        path: file-dep-graphs.tar
+  #         make dpdgraph || exit $?
+  #         make svg-file-dep-graphs -k || exit $?
+  #         # `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
+  #         # makes `dot` spin for over a dozen minutes.  So disable it for now.
+  #         #make svg-aggregate-dep-graphs -k || exit $?
+  #         make file-dep-graphs/index.html -k || exit $?
+
+    # - name: Revert permissions
+    #   # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
+    #   if: ${{ always() }}
+    #   run: sudo chown -R 1001:116 .
+    # # Tar dependency graph files
+    # - name: 'Tar .svg files'
+    #   run: |
+    #     tar -cf dep-graphs.tar dep-graphs
+    #     tar -cf file-dep-graphs.tar file-dep-graphs.tar
+    # # We upload the artifacts
+    # - name: 'Upload Artifact dep-graphs.tar'
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: dep-graphs
+    #     path: dep-graphs.tar
+    # - name: 'Upload Artifact file-dep-graphs.tar'
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: file-dep-graphs
+    #     path: file-dep-graphs.tar
 
   # doc-coqdoc job
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
@@ -541,7 +541,7 @@ jobs:
     - coqchk
     - install
     - doc-alectryon
-    - doc-dep-graphs
+    #- doc-dep-graphs
     - doc-coqdoc
     - doc-proviola
     - doc-timing
@@ -554,13 +554,13 @@ jobs:
       with:
         name: alectryon-html
     # Download dependency graph artifacts
-    - uses: actions/download-artifact@v2
-      with:
-        name: dep-graphs
+    #- uses: actions/download-artifact@v2
+    #  with:
+    #    name: dep-graphs
     # Download file dependency graph artifacts
-    - uses: actions/download-artifact@v2
-      with:
-        name: file-dep-graphs
+    #- uses: actions/download-artifact@v2
+    #  with:
+    #    name: file-dep-graphs
     # Download coqdoc artifact
     - uses: actions/download-artifact@v2
       with:
@@ -577,8 +577,8 @@ jobs:
     - run: |
         mkdir doc
         tar -xf alectryon-html.tar  -C doc
-        tar -xf dep-graphs.tar      -C doc
-        tar -xf file-dep-graphs.tar -C doc
+        #tar -xf dep-graphs.tar      -C doc
+        #tar -xf file-dep-graphs.tar -C doc
         tar -xf coqdoc-html.tar     -C doc
         tar -xf proviola-html.tar   -C doc
         tar -xf timing-html.tar     -C doc
@@ -617,12 +617,12 @@ jobs:
       with:
         name: workspace-dev
     # Delete documentation artifacts
-    - uses: geekyeggo/delete-artifact@v1
-      with:
-        name: dep-graphs
-    - uses: geekyeggo/delete-artifact@v1
-      with:
-        name: file-dep-graphs
+    #- uses: geekyeggo/delete-artifact@v1
+    #  with:
+    #    name: dep-graphs
+    #- uses: geekyeggo/delete-artifact@v1
+    #  with:
+    #    name: file-dep-graphs
     - uses: geekyeggo/delete-artifact@v1
       with:
         name: alectryon-html
