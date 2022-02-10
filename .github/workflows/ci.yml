@@ -227,18 +227,20 @@ jobs:
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
-        custom_script: |
+        custom_script: |        
           sudo apt-get update
           sudo apt-get install -y ghc cabal-install
           sudo apt-get install -y --allow-unauthenticated \
-          libnode-dev node-gyp libssl-dev npm aspcud      \
+          libssl-dev aspcud \
           graphviz xsltproc python-lxml python-pexpect    \
-          libxml2-dev libxslt1-dev time lua5.1 unzip
+          libxml2-dev libxslt1-dev time lua5.1 unzip npm
+          # libnode-dev node-gyp
 
+        
           cabal update
           cabal install graphviz text
           sudo -E npm config set strict-ssl false
-          sudo -E npm i -g npm
+          #sudo -E npm i -g npm
           sudo -E npm install -g doctoc
 
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
@@ -255,19 +257,26 @@ jobs:
           mkdir -p dep-graphs
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
-
           ## Make file dependency graphs
           opam install ocamlgraph -y
           ./etc/ci/make_dpd_graphs.sh
 
           make dpdgraph || exit $?
-          make svg-file-dep-graphs -k || exit $?
+
+          # For some reason, we get a stackoverflow. So we are lax
+          # with making these.
+          ulimit -s unlimited
+          make svg-file-dep-graphs -k || true
+          ## Try to make again to see errors
+          make svg-file-dep-graphs -k || true
+                  
           # `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
           # makes `dot` spin for over a dozen minutes.  So disable it for now.
           #make svg-aggregate-dep-graphs -k || exit $?
-          make file-dep-graphs/index.html -k || exit $?
 
-
+          # We try to make the index.html but there might be some dead
+          # links if the previous didn't succeed.
+          make file-dep-graphs/index.html -k || true
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
