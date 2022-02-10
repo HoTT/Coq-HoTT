@@ -1,0 +1,14 @@
+; Tell dune to look through subdirectories
+
+(include_subdirs qualified)
+
+; Main theory stanza telling dune how the HoTT library is compiled
+
+(coq.theory
+ (name HoTT)
+ (package coq-hott)
+ (modules :standard)
+ (flags -noinit -indices-matter -color on))
+
+; TODO: Tests
+; Prob need to move tests into tests folder

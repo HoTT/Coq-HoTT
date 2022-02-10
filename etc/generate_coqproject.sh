@@ -23,10 +23,19 @@ COQPROJECT_HEADER=\
 ###############################################################################
 -R theories HoTT
 -Q contrib HoTT.Contrib
+
 -arg -noinit
 -arg -indices-matter
 -arg -native-compiler -arg no
 "
+
+if [ "$GENERATE_COQPROJECT_FOR_DUNE" == "true" ]; then
+  COQPROJECT_HEADER="$COQPROJECT_HEADER
+# Dune compatbility 
+-R _build/default/theories HoTT
+-Q _build/default/contrib HoTT.Contrib
+"
+fi
 
 ## Generate _CoqProject
 printf -v NEW_COQPROJECT '%s\n%s' "$COQPROJECT_HEADER" "$SORTED_V_FILES"
