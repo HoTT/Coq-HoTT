@@ -1082,20 +1082,24 @@ Definition eh_V_p_pp_gen {X : Type}
            (H_wlrnat_V_x_yz :
              Wlrnat_V_p_pp H_ehrnat_yz0 H_ehrnat_yz1 H_wlrnat_x_yz H_wlrnat_yz_x wlrnat_V_x_y wlrnat_V_x_z =
                wlrnat_V_x_yz)
-  : let eh_V_x_y := eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x1)
-    (ehrnat_p1_y0) (ehrnat_p1_y1) (wlrnat_V_x_y) in
-  let eh_V_x_z := eh_V_gen (ehlnat_1p_x1) (ehlnat_1p_x2)
-    (ehrnat_p1_z0) (ehrnat_p1_z1) (wlrnat_V_x_z) in
-  let eh_V_x_yz := eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x2)
-    (ehrnat_p1_yz0) (ehrnat_p1_yz1) (wlrnat_V_x_yz) in
-  whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR eh_V_x_yz _ @ lrucancel 1 @
-  whiskerL _ (Syllepsis.concat_pp_p_p_pp _ _ _)^ @ whiskerL _ (concat_p1 _ @@ concat_p1 _)^ =
-  (eh_p_pp_gen H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz [-]
-   lrucancel (whiskerL _ (ap (fun p => whiskerL y1 p) (moveL_V1 _ _ eh_V_x_z)))) [-]
-  (eh_pp_p_gen H_ulnat_yz1 H_ulnat_yz0 H_wlrnat_yz_x [-]
-   lrucancel (whiskerL _ (ap (fun p => whiskerR p z0) (moveL_1V _ _ eh_V_x_y)))).
+  : let eh_x_y := concat_p_pp x0 y0 z0 @
+                 whiskerR (((rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @ wlrnat_x_y) @
+                            rlucancel_inv (urnat_y1 [-] ulnat_x1)) z0 in
+    whiskerR (concat_p1 _ @@ concat_p1 _) eh_x_y @
+    whiskerR (eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x2) (ehrnat_p1_yz0) (ehrnat_p1_yz1) wlrnat_V_x_yz) eh_x_y @
+    lrucancel 1 @
+    whiskerL eh_x_y (Syllepsis.concat_pp_p_p_pp _ _ _)^ @
+    whiskerL eh_x_y (concat_p1 _ @@ concat_p1 _)^ =
+    (eh_p_pp_gen H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz [-]
+     lrucancel (whiskerL _ (ap (fun p => whiskerL y1 p)
+                               (moveL_V1 _ _ (eh_V_gen ehlnat_1p_x1 ehlnat_1p_x2
+                                                       ehrnat_p1_z0 ehrnat_p1_z1 wlrnat_V_x_z))))) [-]
+    (eh_pp_p_gen H_ulnat_yz1 H_ulnat_yz0 H_wlrnat_yz_x [-]
+     lrucancel (whiskerL _ (ap (fun p => whiskerR p z0)
+                               (moveL_1V _ _ (eh_V_gen ehlnat_1p_x0 ehlnat_1p_x1
+                                                       ehrnat_p1_y0 ehrnat_p1_y1 wlrnat_V_x_y))))).
 Proof.
-  cbn zeta.
+  (* For some reason, it's most efficient to destruct a few things here but the rest within the subgoal. *)
   destruct H_ehrnat_p1_yz0, H_ehrnat_p1_yz1, H_wlrnat_V_x_yz.
 
   (* For efficiency purposes, we generalize the goal to an arbitrary function [P] of the context (except for [X] and [a]), and do all of the induction steps in this generality.  This reduces the size of the term that Coq needs to manipulate, speeding up the proof.  The same proof works with the next three lines removed and with the second and third last lines removed. *)
@@ -1103,8 +1107,11 @@ Proof.
   generalize_goal lem.
   { intros P H; intros.
 
-  (* We revert some things early, since they depend on other things that we want to revert. *)
-  revert H_wlrnat_x_yz H_ulnat_yz0 H_ulnat_yz1 H_urnat_yz0 H_urnat_yz1.
+  destruct wry0, wry1, wrz0, wrz1.
+  destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
+
+  revert wlrnat_x_yz H_wlrnat_x_yz.
+  snrapply equiv_path_ind_moveL_Mp.
 
   revert wlrnat_x_y wlrnat_V_x_y.
   snrapply (equiv_path_ind (equiv_helper _ _)).
@@ -1118,6 +1125,21 @@ Proof.
   revert ulnat_x2 ehlnat_1p_x2.
   snrapply equiv_path_ind_rlucancel.
 
+  revert urnat_yz0 H_urnat_yz0.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert urnat_yz1 H_urnat_yz1.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert wlrnat_yz_x H_wlrnat_yz_x.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert ehrnat_yz0 H_ehrnat_yz0.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert ehrnat_yz1 H_ehrnat_yz1.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert ulnat_yz1 H_ulnat_yz1.
+  snrapply equiv_path_ind_moveL_Mp.
+  revert ulnat_yz0 H_ulnat_yz0.
+  snrapply equiv_path_ind_moveL_Mp.
+
   revert urnat_y0 ehrnat_p1_y0.
   snrapply equiv_path_ind_rlucancel.
   revert urnat_y1 ehrnat_p1_y1.
@@ -1126,25 +1148,6 @@ Proof.
   snrapply equiv_path_ind_rlucancel.
   revert urnat_z1 ehrnat_p1_z1.
   snrapply equiv_path_ind_rlucancel.
-  revert wlrnat_x_yz.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert wlrnat_yz_x H_wlrnat_yz_x.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert ehrnat_yz0 H_ehrnat_yz0.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert ehrnat_yz1 H_ehrnat_yz1.
-  snrapply equiv_path_ind_moveL_Mp.
-
-  revert ulnat_yz0.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert ulnat_yz1.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert urnat_yz0.
-  snrapply equiv_path_ind_moveL_Mp.
-  revert urnat_yz1.
-  snrapply equiv_path_ind_moveL_Mp.
-
-  destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
 
   revert x0 urnat_x0.
   snrapply equiv_path_ind_rlucancel.
@@ -1161,10 +1164,10 @@ Proof.
   revert z1 ulnat_z1.
   snrapply equiv_path_ind_rlucancel.
 
-  revert wlrnat_y_x wlrnat_z_x.
-
+  revert wlrnat_y_x. (* Paired with wlx0 below. *)
   revert wrx0 ehlnat_x0.
   snrapply equiv_path_ind_rlucancel.
+  revert wlrnat_z_x. (* Paired with wlx1 below. *)
   revert wrx1 ehlnat_x1.
   snrapply equiv_path_ind_rlucancel.
   revert wrx2 ehlnat_x2.
@@ -1178,11 +1181,11 @@ Proof.
   revert wlz1 ehrnat_z1.
   snrapply equiv_path_ind_rlucancel.
 
-  destruct wry0, wry1, wrz0, wrz1.
-  revert wlx0.
-  snrapply equiv_path_ind_lrucancel.
   revert wlx1.
   snrapply equiv_path_ind_lrucancel.
+  revert wlx0.
+  snrapply equiv_path_ind_lrucancel.
+
   destruct wlx2.
   (* Remove the next two lines if not using the [generalize_goal] tactic. *)
   exact H. }
@@ -1198,8 +1201,5 @@ Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a))
   (eh_pp_p_gen (ulnat_pp q r) (ulnat_pp q r) (wlrnat_pp_p q r p) [-]
    lrucancel (whiskerL _ (ap (fun p => whiskerR p r) (moveL_1V _ _ (eh_V p q))))).
 Proof.
-  nrapply eh_V_p_pp_gen.
-  - exact (ehrnat_p1_pp q r).
-  - exact (ehrnat_p1_pp q r).
-  - exact (wlrnat_V_p_pp p q r).
+  exact (eh_V_p_pp_gen _ _ _ (ehrnat_p1_pp q r) (ehrnat_p1_pp q r) (wlrnat_V_p_pp p q r)).
 Defined.
