@@ -1082,14 +1082,14 @@ Definition eh_V_p_pp_gen {X : Type}
            (H_wlrnat_V_x_yz :
              Wlrnat_V_p_pp H_ehrnat_yz0 H_ehrnat_yz1 H_wlrnat_x_yz H_wlrnat_yz_x wlrnat_V_x_y wlrnat_V_x_z =
                wlrnat_V_x_yz)
-  : let subterm := concat_p_pp x0 y0 z0 @
-                  whiskerR (((rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @ wlrnat_x_y) @
+  : let eh_x_y := concat_p_pp x0 y0 z0 @
+                 whiskerR (((rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @ wlrnat_x_y) @
                             rlucancel_inv (urnat_y1 [-] ulnat_x1)) z0 in
-    whiskerR (concat_p1 _ @@ concat_p1 _) subterm @
-    whiskerR (eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x2) (ehrnat_p1_yz0) (ehrnat_p1_yz1) wlrnat_V_x_yz) subterm @
+    whiskerR (concat_p1 _ @@ concat_p1 _) eh_x_y @
+    whiskerR (eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x2) (ehrnat_p1_yz0) (ehrnat_p1_yz1) wlrnat_V_x_yz) eh_x_y @
     lrucancel 1 @
-    whiskerL subterm (Syllepsis.concat_pp_p_p_pp _ _ _)^ @
-    whiskerL subterm (concat_p1 _ @@ concat_p1 _)^ =
+    whiskerL eh_x_y (Syllepsis.concat_pp_p_p_pp _ _ _)^ @
+    whiskerL eh_x_y (concat_p1 _ @@ concat_p1 _)^ =
     (eh_p_pp_gen H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz [-]
      lrucancel (whiskerL _ (ap (fun p => whiskerL y1 p)
                                (moveL_V1 _ _ (eh_V_gen ehlnat_1p_x1 ehlnat_1p_x2
