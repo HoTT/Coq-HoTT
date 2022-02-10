@@ -286,7 +286,7 @@ jobs:
     - name: 'Tar .svg files'
       run: |
         tar -cf dep-graphs.tar dep-graphs
-        tar -cf file-dep-graphs.tar file-dep-graphs.tar
+        tar -cf file-dep-graphs.tar file-dep-graphs
     # We upload the artifacts
     - name: 'Upload Artifact dep-graphs.tar'
       uses: actions/upload-artifact@v2
