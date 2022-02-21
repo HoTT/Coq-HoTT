@@ -20,5 +20,5 @@
 ;; Rule for validation -- For dune 3.0
 ;;(rule (alias validate)
 ;;  (deps (glob_files_rec ./*.vo))
-;;  (action (run coqchk -R . LogiCoq %{deps} -o))
+;;  (action (run coqchk -R . HoTT %{deps} -o))
 ;;)
