@@ -2,16 +2,15 @@
 (dirs :standard theories contrib)
 
 (coq.theory
-  (name HoTT)	; Qualify all coq modules with HoTT
+  (name HoTT)
   (synopsis "The HoTT Coq library")
-  (libraries			  ; We require a few coq plugins:
-    coq-core.plugins.ltac) 	  ; The ltac plugin for writing ltac proofs
+  (libraries coq-core.plugins.ltac)
   (flags
-    -noinit	     ; Don't load standard library
+    -noinit	         ; Don't load standard library
     -indices-matter  ; Universe levels of index types in inductive types are used to calculate universe level 
     -color on))	     ; Allow color printing (good for errors)
 
-
+; Doesn't really work atm
 (rule (alias _CoqProject)
   (deps ./etc/generate_coqproject.sh)
   (action (bash ./etc/generate_coqproject.sh))
