@@ -2,7 +2,7 @@ Require Import Basics Types Limits.Pullback Cubical.PathSquare.
 Require Import Algebra.Groups Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.
 
-(** Pullbacks of abelian groups. *)
+(** * Pullbacks of abelian groups *)
 
 Section AbPullback.
   (* Variables are named to correspond with Limits.Pullback. *)

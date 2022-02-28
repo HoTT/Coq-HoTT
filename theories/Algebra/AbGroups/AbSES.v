@@ -95,6 +95,46 @@ Proof.
   - apply transport_abgrouphomomorphism_to_const.
 Defined.
 
+
+(** ** Morphisms of short exact sequences *)
+
+Record AbSESMor {A X B Y : AbGroup} (E : AbSES B A) (F : AbSES Y X) := {
+    absesm1 : A $-> X;
+    absesm2 : (abses_E E) $-> F;
+    absesm3 : B $-> Y;
+    absesm12 : (abses_i _) $o absesm1 == absesm2 $o (abses_i _);
+    absesm23 : (abses_p _) $o absesm2 == absesm3 $o (abses_p _);
+}.
+
+Arguments Build_AbSESMor {_ _ _ _ _ _} _ _ _ _ _.
+
+Arguments absesm1 {_ _ _ _ E F} _.
+Arguments absesm2 {_ _ _ _ E F} _.
+Arguments absesm3 {_ _ _ _ E F} _.
+Arguments absesm12 {_ _ _ _ E F} _.
+Arguments absesm23 {_ _ _ _ E F} _.
+
+Definition issig_AbSESMor {A X B Y : AbGroup}
+           {E : AbSES B A} {F : AbSES Y X}
+  : { f : (A $-> X) * (abses_E E $-> F) * (B $-> Y)
+          & ((abses_i _) $o (fst (fst f)) == (snd (fst f)) $o (abses_i _))
+            * ((abses_p F) $o (snd (fst f)) == (snd f) $o (abses_p _)) }
+      <~> AbSESMor E F := ltac:(make_equiv).
+
+Definition absesm_compose {A0 A1 A2 B0 B1 B2 : AbGroup}
+           {E : AbSES B0 A0} {F : AbSES B1 A1} {G : AbSES B2 A2}
+            (f12 : AbSESMor F G) (f01 : AbSESMor E F)
+  : AbSESMor E G.
+Proof.
+  rapply (Build_AbSESMor (absesm1 f12 $o absesm1 f01)
+                              (absesm2 f12 $o absesm2 f01)
+                              (absesm3 f12 $o absesm3 f01)).
+  - intro x; cbn.
+    exact (absesm12 f12 _ @ ap _ (absesm12 f01 _)).
+  - intro x; cbn.
+    exact (absesm23 f12 _ @ ap _ (absesm23 f01 _)).
+Defined.
+
 (** ** Characterization of split short exact sequences
 
     We characterize trivial short exact sequences in [AbSES] as those for which [abses_p] splits. *)
@@ -198,6 +238,73 @@ Proof.
       apply left_identity.
 Defined.
 
+(** ** Pullbacks of short exact sequences *)
+
+(** A short exact sequence [A -> E -> B] can be pulled back along a map [B' -> B]. *)
+Lemma abses_pullback {A B B' : AbGroup} (E : AbSES B A) (phi : B' $-> B) : AbSES B' A.
+Proof.
+  snrapply (Build_AbSES (ab_pullback (abses_p E) phi)
+                   (grp_pullback_corec _ _ (abses_i _) grp_homo_const _)
+                   (grp_pullback_pr2 (abses_p _) phi)).
+  - intro x.
+    nrefine (_ @ (grp_homo_unit phi)^).
+    apply abses_isexact.
+  - exact (cancelL_isembedding (g:= grp_pullback_pr1 _ _)).
+  - rapply conn_map_pullback'.
+  - snrapply Build_IsExact.
+    + srapply Build_pHomotopy.
+      * reflexivity.
+      * apply path_ishprop.
+    + nrefine (cancelR_equiv_conn_map
+                 _ _ (hfiber_pullback_along_pointed phi (abses_p _) (grp_homo_unit _))).
+      nrefine (conn_map_homotopic _ _ _ _ (conn_map_isexact (IsExact:=abses_isexact _))).
+      intro a.
+      by apply path_sigma_hprop.
+Defined.
+
+(** The natural map from the pulled back sequence. *)
+Definition abses_pullback_morphism {A B B' : AbGroup} (E : AbSES B A) (phi : B' $-> B)
+  : AbSESMor (abses_pullback E phi) E.
+Proof.
+  snrapply (Build_AbSESMor grp_homo_id _ phi).
+  - apply grp_pullback_pr1.
+  - reflexivity.
+  - apply pullback_commsq.
+Defined.
+
+(** *** The universal property of [abses_pullback_morphism]
+
+Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pullback F f3]. *)
+
+Definition abses_pullback_morphism_corec {A B X Y : AbGroup}
+           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMor E F)
+  : AbSESMor E (abses_pullback F (absesm3 f)).
+Proof.
+  snrapply (Build_AbSESMor (absesm1 f) _ grp_homo_id).
+  - apply (grp_pullback_corec (abses_p F) (absesm3 f)
+                              (absesm2 f) (abses_p E)).
+    apply absesm23.
+  - intro x; cbn.
+    snrapply path_sigma; cbn.
+    + apply absesm12.
+    + refine (transport_sigma' _ _ @ _); cbn.
+      apply path_sigma_hprop; cbn; symmetry.
+      apply iscomplex_abses.
+  - reflexivity.
+Defined.
+
+(** The original map factors via the induced map. *)
+Definition abses_pullback_morphism_corec_beta `{Funext} {A B X Y : AbGroup}
+           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMor E F)
+  : f = absesm_compose (abses_pullback_morphism F (absesm3 f))
+                              (abses_pullback_morphism_corec f).
+Proof.
+  apply (equiv_ap issig_AbSESMor^-1 _ _).
+  srapply path_sigma_hprop.
+  1: apply path_prod.
+  1: apply path_prod.
+  all: by apply equiv_path_grouphomomorphism.
+Defined.
 
 (** * The set [Ext B A] of abelian group extensions *)
 
