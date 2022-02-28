@@ -1,6 +1,6 @@
-Require Import HoTT.Basics HoTT.Types HSet.
-Require Import Groups AbGroups.AbelianGroup AbGroups.AbPullback WildCat.
-Require Import Homotopy.ExactSequence Pointed HFiber Limits.Pullback.
+Require Import HoTT.Basics HoTT.Types HSet WildCat.
+Require Import Groups AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.AbPushout.
+Require Import Homotopy.ExactSequence Pointed HFiber Limits.Pullback HIT.epi.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.
@@ -94,7 +94,6 @@ Proof.
   - apply transport_abgrouphomomorphism_from_const.
   - apply transport_abgrouphomomorphism_to_const.
 Defined.
-
 
 (** ** Morphisms of short exact sequences *)
 
@@ -305,6 +304,103 @@ Proof.
   1: apply path_prod.
   all: by apply equiv_path_grouphomomorphism.
 Defined.
+
+(** ** Pushouts of short exact sequences *)
+
+Definition abses_pushout `{Univalence} {A A' B : AbGroup} (E : AbSES B A) (phi : A $-> A')
+  : AbSES B A'.
+Proof.
+  snrapply (Build_AbSES (ab_pushout phi (abses_i E))
+                       ab_pushout_inl
+                       (ab_pushout_rec grp_homo_const (abses_p E) _)).
+  - symmetry; rapply iscomplex_abses.
+  - rapply ab_pushout_embedding_inl.
+  - nrapply (cancelR_issurjection ab_pushout_inr _).
+    rapply (conn_map_homotopic _ (abses_p E)); symmetry.
+    nrapply ab_pushout_rec_beta_right.
+  - snrapply Build_IsExact.
+    + srapply Build_pHomotopy.
+      * nrapply ab_pushout_rec_beta_left.
+      * apply path_ishprop.
+    + intros [bc' p].
+      rapply contr_inhabited_hprop.
+      (** Pick a preimage under the quotient map. *)
+      assert (bc : merely (hfiber grp_quotient_map bc'))
+        by apply issurj_class_of.
+      strip_truncations.
+      destruct bc as [[b c] q].
+      (** The E-component of the preimage is in the kernel of [abses_p E]. *)
+      assert (c_in_kernel : (abses_p E) c = mon_unit).
+      1: { refine (_ @ p); symmetry.
+           rewrite <- q.
+           refine (ab_pushout_rec_quotient_map_beta _ @ _); cbn.
+           apply left_identity. }
+      (** By exactness, we get an element in [A]. *)
+      pose proof (a := isexact_preimage (Tr (-1)) _ _ (c; c_in_kernel)); cbn in a.
+      strip_truncations.
+      destruct a as [a s].
+      (** Now we see that [bc'] lies in the image of [ab_pushout_inl]. *)
+      assert (u : bc' = ab_pushout_inl (b + phi a)).
+      1: { rewrite <- q.
+           apply path_ab_pushout; cbn.
+           refine (tr (a; _)).
+           apply path_prod; cbn.
+           - apply grp_moveL_Mg.
+             by rewrite negate_involutive.
+           - exact (grp_homo_inv _ _ @ ap _ s @ (right_identity _)^). }
+      apply tr.
+      exists (b + phi a); cbn.
+      apply path_sigma_hprop; cbn.
+      apply u^.
+Defined.
+
+Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
+           (E : AbSES B A) (phi : A $-> A')
+  : AbSESMor E (abses_pushout E phi).
+Proof.
+  snrapply (Build_AbSESMor phi _ grp_homo_id).
+  - exact ab_pushout_inr.
+  - exact ab_pushout_commsq.
+  - rapply ab_pushout_rec_beta_right.
+Defined.
+
+(** *** The universal property of [abses_pushout_morphism]
+
+Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pushout E f1]. *)
+
+Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
+           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMor E F)
+  : AbSESMor (abses_pushout E (absesm1 f)) F.
+Proof.
+  snrapply (Build_AbSESMor grp_homo_id _ (absesm3 f)).
+  - rapply ab_pushout_rec.
+    apply absesm12.
+  - intro x; simpl.
+    rewrite grp_homo_unit.
+    exact (right_identity _)^.
+  - rapply (issurj_isepi_funext grp_quotient_map); intro x; simpl.
+    refine (grp_homo_op (abses_p F) _ _ @ ap011 (+) _ _ @ (grp_homo_op _ _ _ )^).
+    + refine (_ @ (grp_homo_unit _)^).
+      apply iscomplex_abses.
+    + apply absesm23.
+Defined.
+
+(** The original map factors via the induced map. *)
+Definition abses_pushout_morphism_rec_beta `{Univalence} (A B X Y : AbGroup)
+           (E : AbSES B A) (F : AbSES Y X) (f : AbSESMor E F)
+  : f = absesm_compose (abses_pushout_morphism_rec f)
+                              (abses_pushout_morphism E (absesm1 f)).
+Proof.
+  apply (equiv_ap issig_AbSESMor^-1 _ _).
+  srapply path_sigma_hprop.
+  1: apply path_prod.
+  1: apply path_prod.
+  all: apply equiv_path_grouphomomorphism; intro x; simpl.
+  1,3: reflexivity.
+  rewrite grp_homo_unit.
+  exact (left_identity _)^.
+Defined.
+
 
 (** * The set [Ext B A] of abelian group extensions *)
 

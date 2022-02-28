@@ -146,6 +146,17 @@ Proof.
   apply path_universe_uncurried; issig.
 Defined.
 
+(** With exactness we can choose preimages. *)
+Lemma isexact_preimage (O : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
+      `{IsExact O _ _ _ i f} (x : hfiber f (point _))
+  : O (hfiber i x.1).
+Proof.
+  rapply (O_functor O (A:=hfiber (cxfib cx_isexact) x)).
+  - intros [z p].
+    exact (z; ap pr1 p).
+  - apply conn_map_isexact.
+Defined.
+
 (** Passage across homotopies preserves exactness. *)
 Definition isexact_homotopic_i n  {F X Y : pType}
            {i i' : F ->* X} (ii : i' ==* i) (f : X ->* Y)

@@ -306,3 +306,16 @@ Proof.
   rapply contr_inhabited_hprop.
   exact (tr (s y; h y)).
 Defined.
+
+(** (-1)-connected maps cancel on the right *)
+Lemma cancelR_issurjection {A B C : Type} (f : A -> B) (g : B -> C)
+      (isconn : IsConnMap (Tr (-1)) (g o f))
+  : IsConnMap (Tr (-1)) g.
+Proof.
+  intro c.
+  rapply contr_inhabited_hprop.
+  rapply (Trunc_functor _ (X:= (hfiber (g o f) c))).
+  - intros [a p].
+    exact (f a; p).
+  - apply isconn.
+Defined.
