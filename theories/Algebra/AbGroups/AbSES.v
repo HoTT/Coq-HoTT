@@ -401,6 +401,54 @@ Proof.
   exact (left_identity _)^.
 Defined.
 
+(** ** The Baer sum of short exact sequences *)
+
+(** Biproducts preserve exactness. *)
+Lemma ab_biprod_exact {A E B X F Y : AbGroup}
+      (i : A $-> E) (p : E $-> B) `{ex0 : IsExact (Tr (-1)) _ _ _ i p}
+      (j : X $-> F) (q : F $-> Y) `{ex1 : IsExact (Tr (-1)) _ _ _ j q}
+  : IsExact (Tr (-1)) (functor_ab_biprod i j)
+            (functor_ab_biprod p q).
+Proof.
+  snrapply Build_IsExact.
+  - snrapply Build_pHomotopy.
+    + intro x; apply path_prod; cbn.
+      * apply ex0.
+      * apply ex1.
+    + apply path_ishprop.
+  - intros [ef u]; cbn.
+    rapply contr_inhabited_hprop.
+    destruct ef as [e f].
+    pose (U := (equiv_path_prod _ _)^-1 u); cbn in U.
+    pose proof (a := isexact_preimage (Tr (-1)) i p (e; (fst U))).
+    pose proof (x := isexact_preimage (Tr (-1)) j q (f; (snd U))).
+    strip_truncations; apply tr.
+    exists (ab_biprod_inl a.1 + ab_biprod_inr x.1); cbn.
+    apply path_sigma_hprop; cbn.
+    apply path_prod; cbn.
+    + rewrite right_identity.
+      exact a.2.
+    + rewrite left_identity.
+      exact x.2.
+Defined.
+
+(** The pointwise direct sum of two short exact sequences. *)
+Definition abses_direct_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
+  : AbSES (ab_biprod B B) (ab_biprod A A)
+  := Build_AbSES (ab_biprod E F)
+                 (functor_ab_biprod (abses_i E) (abses_i F))
+                 (functor_ab_biprod (abses_p E) (abses_p F))
+                 (functor_ab_biprod_embedding _ _)
+                 (functor_ab_biprod_sujection _ _)
+                 (ab_biprod_exact _ _ _ _).
+
+(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pulling back along the diagonal map and pushing forth along the codiagonal. (Changing the order of pulling back and pushing forth produces an isomorphic short exact sequence.) *)
+Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
+  : AbSES B A
+  := abses_pullback
+       (abses_pushout (abses_direct_sum E F) ab_codiagonal)
+       ab_diagonal.
+
 
 (** * The set [Ext B A] of abelian group extensions *)
 

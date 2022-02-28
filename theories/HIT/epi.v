@@ -14,6 +14,9 @@ Context `{ua:Univalence}.
 Definition isepi {X Y} `(f:X->Y) := forall Z: HSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
+Definition isepi_funext {X Y : Type} (f : X -> Y)
+  := forall Z : HSet, forall g0 g1 : Y -> Z, g0 o f == g1 o f -> g0 == g1.
+
 Definition isepi' {X Y} `(f : X -> Y) :=
   forall (Z : HSet) (g : Y -> Z), Contr { h : Y -> Z | g o f = h o f }.
 
@@ -34,6 +37,20 @@ Proof.
     apply path_ishprop. }
   { intros hepi xy.
     exact (ap pr1 ((contr (g; 1))^ @ contr xy)). }
+Defined.
+
+Definition equiv_isespi_isepi_funext {X Y : Type} (f : X -> Y)
+  : isepi f <~> isepi_funext f.
+Proof.
+  apply equiv_iff_hprop.
+  - intros e ? g0 g1 h.
+    apply equiv_path_arrow.
+    apply e.
+    by apply path_arrow.
+  - intros e ? g0 g1 p.
+    apply path_arrow.
+    apply e.
+    by apply equiv_path_arrow.
 Defined.
 
 Section cones.
@@ -92,6 +109,13 @@ transitivity (g (f x)).
 - by apply ap.
 - transitivity (h (f x));auto with path_hints. by apply ap.
 Qed.
+
+Corollary issurj_isepi_funext {X Y} (f:X->Y) : IsSurjection f -> isepi_funext f.
+Proof.
+  intro s.
+  apply equiv_isespi_isepi_funext.
+  by apply issurj_isepi.
+Defined.
 
 (** Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
  same universe as X and Y (the Z quantifier is instantiated with an HSet at a level higher)
