@@ -181,7 +181,7 @@ jobs:
     - uses: coq-community/docker-coq-action@v1
       with:
         coq_version: ${{ env.coq-version-supported }}
-        ocaml_version: 4.11-flambda
+        ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
