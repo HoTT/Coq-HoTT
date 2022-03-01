@@ -97,7 +97,7 @@ Defined.
 
 (** ** Morphisms of short exact sequences *)
 
-Record AbSESMor {A X B Y : AbGroup} (E : AbSES B A) (F : AbSES Y X) := {
+Record AbSESMor {A X B Y : AbGroup} {E : AbSES B A} {F : AbSES Y X} := {
     absesm1 : A $-> X;
     absesm2 : (abses_E E) $-> F;
     absesm3 : B $-> Y;
@@ -105,13 +105,8 @@ Record AbSESMor {A X B Y : AbGroup} (E : AbSES B A) (F : AbSES Y X) := {
     absesm23 : (abses_p _) $o absesm2 == absesm3 $o (abses_p _);
 }.
 
+Arguments AbSESMor {A X B Y} E F.
 Arguments Build_AbSESMor {_ _ _ _ _ _} _ _ _ _ _.
-
-Arguments absesm1 {_ _ _ _ E F} _.
-Arguments absesm2 {_ _ _ _ E F} _.
-Arguments absesm3 {_ _ _ _ E F} _.
-Arguments absesm12 {_ _ _ _ E F} _.
-Arguments absesm23 {_ _ _ _ E F} _.
 
 Definition issig_AbSESMor {A X B Y : AbGroup}
            {E : AbSES B A} {F : AbSES Y X}
@@ -126,17 +121,17 @@ Definition absesm_compose {A0 A1 A2 B0 B1 B2 : AbGroup}
   : AbSESMor E G.
 Proof.
   rapply (Build_AbSESMor (absesm1 f12 $o absesm1 f01)
-                              (absesm2 f12 $o absesm2 f01)
-                              (absesm3 f12 $o absesm3 f01)).
+                           (absesm2 f12 $o absesm2 f01)
+                           (absesm3 f12 $o absesm3 f01)).
   - intro x; cbn.
     exact (absesm12 f12 _ @ ap _ (absesm12 f01 _)).
   - intro x; cbn.
     exact (absesm23 f12 _ @ ap _ (absesm23 f01 _)).
 Defined.
 
-(** ** Characterization of split short exact sequences
+(** ** Characterization of split short exact sequences *)
 
-    We characterize trivial short exact sequences in [AbSES] as those for which [abses_p] splits. *)
+(* We characterize trivial short exact sequences in [AbSES] as those for which [abses_p] splits. *)
 
 (** If [abses_p : E -> B] splits, we get an induced map [fun e => e - s (abses_p e)] from [E] to [ab_kernel abses_p]. *)
 Definition abses_p_split_to_kernel {B A : AbGroup} (E : AbSES B A)
@@ -271,9 +266,9 @@ Proof.
   - apply pullback_commsq.
 Defined.
 
-(** *** The universal property of [abses_pullback_morphism]
+(** *** The universal property of [abses_pullback_morphism] *)
 
-Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pullback F f3]. *)
+(* Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pullback F f3]. *)
 
 Definition abses_pullback_morphism_corec {A B X Y : AbGroup}
            {E : AbSES B A} {F : AbSES Y X} (f : AbSESMor E F)
@@ -364,9 +359,9 @@ Proof.
   - rapply ab_pushout_rec_beta_right.
 Defined.
 
-(** *** The universal property of [abses_pushout_morphism]
+(** *** The universal property of [abses_pushout_morphism] *)
 
-Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pushout E f1]. *)
+(* Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pushout E f1]. *)
 
 Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
            {E : AbSES B A} {F : AbSES Y X} (f : AbSESMor E F)

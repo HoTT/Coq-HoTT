@@ -39,7 +39,7 @@ Proof.
     exact (ap pr1 ((contr (g; 1))^ @ contr xy)). }
 Defined.
 
-Definition equiv_isespi_isepi_funext {X Y : Type} (f : X -> Y)
+Definition equiv_isepi_isepi_funext {X Y : Type} (f : X -> Y)
   : isepi f <~> isepi_funext f.
 Proof.
   apply equiv_iff_hprop.
@@ -113,7 +113,7 @@ Qed.
 Corollary issurj_isepi_funext {X Y} (f:X->Y) : IsSurjection f -> isepi_funext f.
 Proof.
   intro s.
-  apply equiv_isespi_isepi_funext.
+  apply equiv_isepi_isepi_funext.
   by apply issurj_isepi.
 Defined.
 
