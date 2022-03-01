@@ -437,7 +437,7 @@ Definition abses_direct_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
                  (functor_ab_biprod_sujection _ _)
                  (ab_biprod_exact _ _ _ _).
 
-(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pulling back along the diagonal map and pushing forth along the codiagonal. (Changing the order of pulling back and pushing forth produces an isomorphic short exact sequence.) *)
+(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forth along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forth and pulling back produces an isomorphic short exact sequence.) *)
 Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
   : AbSES B A
   := abses_pullback
