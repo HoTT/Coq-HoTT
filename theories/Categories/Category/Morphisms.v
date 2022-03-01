@@ -180,7 +180,6 @@ Section iso_equiv_relation.
 
   Local Ltac iso_comp_t inv_lemma :=
     etransitivity; [ | apply inv_lemma ];
-    instantiate;
     first [ rewrite -> ?associativity; apply ap
           | rewrite <- ?associativity; apply ap ];
     first [ rewrite -> ?associativity; rewrite inv_lemma
