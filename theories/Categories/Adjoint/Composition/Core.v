@@ -63,10 +63,10 @@ Section compose.
             | _ => rewrite <- ?composition_of, unit_counit_equation_2
             | [ A : _ -| _ |- _ = 1%morphism ]
               => (etransitivity; [ | apply (unit_counit_equation_1 A) ];
-                  instantiate; try_associativity_quick f_ap)
+                  try_associativity_quick f_ap)
             | [ A : _ -| _ |- _ = 1%morphism ]
               => (etransitivity; [ | apply (unit_counit_equation_2 A) ];
-                  instantiate; try_associativity_quick f_ap)
+                  try_associativity_quick f_ap)
             | _ => repeat (try_associativity_quick rewrite <- !composition_of);
                   progress repeat apply ap;
                   rewrite ?composition_of
