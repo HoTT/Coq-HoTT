@@ -322,8 +322,7 @@ Proof.
       (** The E-component of the preimage is in the kernel of [projection E]. *)
       assert (c_in_kernel : (projection E) c = mon_unit).
       1: { refine (_ @ p); symmetry.
-           rewrite <- q.
-           refine (ab_pushout_rec_quotient_map_beta _ @ _); cbn.
+           rewrite <- q; simpl.
            apply left_identity. }
       (** By exactness, we get an element in [A]. *)
       pose proof (a := isexact_preimage (Tr (-1)) _ _ (c; c_in_kernel)); cbn in a.
