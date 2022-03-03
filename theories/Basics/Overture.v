@@ -13,6 +13,10 @@ Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.
 
+(** Mangle non-user-picked names to check fragility of code. *)
+Set Mangle Names.
+Set Mangle Names Light.
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
