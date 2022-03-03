@@ -259,8 +259,6 @@ Class Trichotomy `(R : Relation A)
   := trichotomy : forall x y : A, R x y |_| x = y |_| R y x.
 Arguments trichotomy {A} R {Trichotomy} _ _.
 
-Arguments irreflexivity {A} _ {Irreflexive} _ _.
-
 Class CoTransitive `(R : Relation A) : Type := cotransitive
   : forall x y, R x y -> forall z, hor (R x z) (R z y).
 Arguments cotransitive {A R CoTransitive x y} _ _.
