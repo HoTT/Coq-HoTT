@@ -182,6 +182,14 @@ Proof.
   apply equiv_path_grouphomomorphism; reflexivity.
 Defined.
 
+(** Computation rule for grp_quotient_rec. *)
+Definition grp_quotient_rec_beta' {G : Group}
+          (N : NormalSubgroup G) (H : Group)
+          {A : Group} (f : G $-> A)
+          (h : forall n:G, N n -> f n = mon_unit)
+  : (grp_quotient_rec G N f h) $o grp_quotient_map == f
+    := fun _ => idpath.
+
 (** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}

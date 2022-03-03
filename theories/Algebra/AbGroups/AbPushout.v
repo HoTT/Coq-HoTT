@@ -1,16 +1,20 @@
-Require Import Basics Types WildCat.
-Require Import Algebra.Groups Algebra.AbGroups.AbelianGroup.
+Require Import Basics Types WildCat HSet.
+Require Import Groups AbGroups.AbelianGroup AbGroups.AbPullback.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * Pushouts of abelian groups. *)
 
+(** The pushout of two morphisms [f : A $-> B] and [g : A $-> C] is constructed as the quotient of the biproduct [B + C] by the image of [f - g]. Since this image comes up repeatedly, we name it. *)
+
+Definition ab_pushout_subgroup {A B C : AbGroup} (f : A $-> B) (g : A $-> C)
+  : Subgroup (ab_biprod B C)
+  := grp_image (ab_biprod_corec f (g $o ab_homo_negation)).
+
 Definition ab_pushout {A B C : AbGroup}
            (f : A $-> B) (g : A $-> C) : AbGroup
-  := QuotientAbGroup
-       (ab_biprod B C)
-       (grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
+  := QuotientAbGroup (ab_biprod B C) (ab_pushout_subgroup f g).
 
 (** Recursion principle. *)
 Theorem ab_pushout_rec {A B C Y : AbGroup} {f : A $-> B} {g : A $-> C}
@@ -63,18 +67,39 @@ Proof.
     exact (left_identity _)^.
 Defined.
 
+(** A map out of the pushout induces itself after restricting along the inclusions. *)
 Proposition ab_pushout_rec_beta `{Funext} {A B C Y : AbGroup}
             {f : A $-> B} {g : A $-> C}
             (phi : ab_pushout f g $-> Y)
   : ab_pushout_rec (phi $o ab_pushout_inl) (phi $o ab_pushout_inr)
                    (fun a:A => ap phi (ab_pushout_commsq a)) = phi.
 Proof.
-  pose (N := grp_image (ab_biprod_corec f (g $o ab_homo_negation))).
-  rapply (equiv_ap' (equiv_quotient_abgroup_ump (G:=ab_biprod B C) N Y)^-1%equiv _ _)^-1.
+  rapply (equiv_ap' (equiv_quotient_abgroup_ump (G:=ab_biprod B C) _ Y)^-1%equiv _ _)^-1.
   srapply path_sigma_hprop.
   refine (grp_quotient_rec_beta _ Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
   exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
+Defined.
+
+(** Restricting [ab_pushout_rec] along [ab_pushout_inl] recovers the left inducing map. *)
+Lemma ab_pushout_rec_beta_left {A B C Y : AbGroup}
+            (f : A $-> B) (g : A $-> C)
+            (l : B $-> Y) (r : C $-> Y) (p : l o f == r o g)
+  : ab_pushout_rec l r p $o ab_pushout_inl == l.
+Proof.
+  intro x; simpl.
+  rewrite (grp_homo_unit r).
+  apply right_identity.
+Defined.
+
+Lemma ab_pushout_rec_beta_right {A B C Y : AbGroup}
+      (f : A $-> B) (g : A $-> C)
+      (l : B $-> Y) (r : C $-> Y) (p : l o f == r o g)
+  : ab_pushout_rec l r p $o ab_pushout_inr == r.
+Proof.
+  intro x; simpl.
+  rewrite (grp_homo_unit l).
+  apply left_identity.
 Defined.
 
 Theorem isequiv_ab_pushout_rec `{Funext} {A B C Y : AbGroup}
@@ -101,4 +126,35 @@ Proof.
       intro y; simpl.
       refine (ap (fun k => k + c y) (grp_homo_unit b) @ _).
       apply left_identity.
+Defined.
+
+Definition path_ab_pushout `{Univalence} {A B C : AbGroup} (f : A $-> B) (g : A $-> C)
+           (bc0 bc1 : ab_biprod B C)
+  : @in_cosetL (ab_biprod B C) (ab_pushout_subgroup f g) bc0 bc1
+               <~> (grp_quotient_map bc0 = grp_quotient_map bc1 :> ab_pushout f g).
+Proof.
+  rapply path_quotient.
+Defined.
+
+(** The pushout of an embedding is an embedding. *)
+Definition ab_pushout_embedding_inl `{Univalence} {A B C : AbGroup}
+           (f : A $-> B) (g : A $-> C) `{IsEmbedding g}
+  : IsEmbedding (ab_pushout_inl (f:=f) (g:=g)).
+Proof.
+  apply isembedding_isinj_hset.
+  intros c0 c1.
+  apply (equiv_precompose (path_ab_pushout f g (grp_prod_inl c0) (grp_prod_inl c1)))^-1.
+  rapply Trunc_ind.
+  cbn; intros [a p].
+  pose proof ((equiv_path_prod _ _)^-1%equiv p) as [p0 p1]; cbn in p0, p1.
+  assert (z : a = mon_unit).
+  - rapply (isinj_embedding g); symmetry.
+    refine (grp_homo_unit g @ (left_inverse (mon_unit))^ @ _).
+    apply (equiv_ap_inv negate); cbn.
+    refine (negate_sg_op _ _ @ _).
+    rewrite negate_involutive.
+    refine (p1^ @ grp_homo_inv _ _).
+  - apply (grp_moveR_M1).
+    refine (_ @ p0); symmetry.
+    exact (ap f z @ grp_homo_unit f).
 Defined.

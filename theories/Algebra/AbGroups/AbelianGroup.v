@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Truncations.
+Require Import Truncations HSet.
 Require Import Colimits.Coeq.
 Require Export Algebra.Groups.
 Require Import Cubical.
@@ -195,6 +195,9 @@ Defined.
 Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
 Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
+Definition ab_codiagonal {A : AbGroup} : ab_biprod A A $-> A
+  := ab_biprod_rec grp_homo_id grp_homo_id.
+
 Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
   : (A $-> Y) * (B $-> Y)
     -> (ab_biprod A B) $-> Y.
@@ -260,6 +263,9 @@ Definition ab_biprod_corec {A B X : AbGroup}
            (f : X $-> A) (g : X $-> B)
   : X $-> ab_biprod A B := grp_prod_corec f g.
 
+Definition ab_diagonal {A : AbGroup} : A $-> ab_biprod A A
+  := ab_biprod_corec grp_homo_id grp_homo_id.
+
 Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
   : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
   := fun _ => idpath.
@@ -295,6 +301,45 @@ Definition equiv_functor_ab_biprod {A A' B B' : AbGroup}
            (f : A $-> A') (g : B $-> B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
   : GroupIsomorphism (ab_biprod A B) (ab_biprod A' B')
   := Build_GroupIsomorphism _ _ _ (isequiv_functor_ab_biprod f g).
+
+(** Biproducts preserve embeddings. *)
+Definition functor_ab_biprod_embedding {A A' B B' : AbGroup}
+           (i : A $-> B) (i' : A' $-> B')
+           `{IsEmbedding i} `{IsEmbedding i'}
+  : IsEmbedding (functor_ab_biprod i i').
+Proof.
+  intros [b b'].
+  apply hprop_allpath.
+  intros [[a0 a0'] p] [[a1 a1'] p']; cbn in p, p'.
+  rapply path_sigma_hprop; cbn.
+  pose (q := (equiv_path_prod _ _)^-1 p); cbn in q.
+  pose (q' := (equiv_path_prod _ _)^-1 p'); cbn in q'.
+  destruct q as [q0 q1], q' as [q0' q1'].
+  apply path_prod; rapply isinj_embedding; cbn.
+  - exact (q0 @ q0'^).
+  - exact (q1 @ q1'^).
+Defined.
+
+(** Biproducts preserve surjections. *)
+Definition functor_ab_biprod_sujection `{Univalence} {A A' B B' : AbGroup}
+           (p : A $-> B) (p' : A' $-> B')
+           `{S : IsSurjection p} `{S' : IsSurjection p'}
+  : IsSurjection (functor_ab_biprod p p').
+Proof.
+  intros [b b'].
+  pose proof (a := S b); pose proof (a' := S' b').
+  destruct a as [a _], a' as [a' _].
+  strip_truncations.
+  rapply contr_inhabited_hprop.
+  apply tr.
+  exists (ab_biprod_inl a.1 + ab_biprod_inr a'.1); cbn.
+  apply path_prod;
+    refine (grp_homo_op _ _ _ @ _);
+    rewrite (grp_homo_unit _);
+    cbn.
+  - exact (right_identity _ @ a.2).
+  - exact (left_identity _ @ a'.2).
+Defined.
 
 (** ** Kernels of abelian groups *)
 

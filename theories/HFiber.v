@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types Diagrams.CommutativeSquares.
+Require Import Basics Types Diagrams.CommutativeSquares HSet.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -251,4 +251,10 @@ Proof.
   exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
 Defined.
 
-
+Lemma ap_isinj_embedding_beta {X Y : Type} (f : X -> Y) {I : IsEmbedding f} {x0 x1 : X}
+  : forall (p : f x0 = f x1), ap f (isinj_embedding f I x0 x1 p) = p.
+Proof.
+  equiv_intro (equiv_ap_isembedding f x0 x1) q.
+  induction q. cbn.
+  exact (ap _ (isinj_embedding_beta f)).
+Defined.

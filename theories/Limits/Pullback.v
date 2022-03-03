@@ -200,6 +200,17 @@ Proof.
   make_equiv_contr_basedpaths.
 Defined.
 
+(** A version where [g] is pointed, but we unbundle the pointed condition to avoid importing pointed types. *)
+Definition hfiber_pullback_along_pointed {A B C} {c : C} {a : A}
+           (g : C -> A) (f : B -> A) (p : g c = a)
+  : hfiber (g ^*' f) c <~> hfiber f a.
+Proof.
+  refine (_ oE hfiber_pullback_along' _ _ _); cbn.
+  srapply (equiv_functor_hfiber2 (h:=equiv_idmap) (k:=equiv_idmap)).
+  - reflexivity.
+  - assumption.
+Defined.
+
 Section Functor_Pullback.
 
   Context {A1 B1 C1 A2 B2 C2}

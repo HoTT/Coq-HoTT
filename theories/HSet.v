@@ -119,6 +119,13 @@ Proof.
   exact (ap pr1 q).
 Defined.
 
+(** Computation rule for isinj_embedding. *)
+Lemma isinj_embedding_beta {X Y : Type} (f : X -> Y) {I : IsEmbedding f} {x : X}
+  : (isinj_embedding f I x x idpath) = idpath.
+Proof.
+  exact (ap (ap pr1) (contr (idpath : (x;idpath) = (x;idpath)))).
+Defined.
+
 Definition isinj_section {A B : Type} {s : A -> B} {r : B -> A}
       (H : r o s == idmap) : isinj s.
 Proof.
@@ -167,3 +174,19 @@ Proof.
     * apply ap. apply H'.
     * by rewrite eissect.
 Qed.
+
+Lemma cancelL_isinjective {A B C : Type} {f : A -> B} {g : B -> C} `{I : isinj (g o f)}
+  : isinj f.
+Proof.
+  intros a0 a1 p.
+  apply I.
+  exact (ap g p).
+Defined.
+
+Lemma cancelL_isembedding {A B C : Type} `{IsHSet B} {f : A -> B} {g : B -> C} `{IsEmbedding (g o f)}
+  : IsEmbedding f.
+Proof.
+  apply isembedding_isinj_hset.
+  rapply (cancelL_isinjective (g:=g)).
+  rapply isinj_embedding.
+Defined.
