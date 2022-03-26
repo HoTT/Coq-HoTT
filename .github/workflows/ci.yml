@@ -50,7 +50,7 @@ jobs:
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
-        opam_file: 'hott.opam'
+        opam_file: 'coq-hott.opam'
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
 
