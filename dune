@@ -1,0 +1,24 @@
+
+; Rule for generating coq_project
+; This uses (mode promote) in order to put _CoqProject in the source tree.
+; This isn't actually needed for dune but is useful when working with editors.
+
+(rule
+ (target _CoqProject)
+ (deps
+  ./etc/generate_coqproject.sh
+  (source_tree theories)
+  (source_tree contrib))
+ (mode promote)
+ (package coq-hott)
+ (action
+  (bash ./etc/generate_coqproject.sh)))
+
+; Rule for validation: dune build @validate
+
+(rule
+ (alias validate)
+ (deps
+  (glob_files_rec ./*.vo))
+ (action
+  (run coqchk -R ./theories HoTT -Q contrib HoTT.Contrib %{deps} -o)))

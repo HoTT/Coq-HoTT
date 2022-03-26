@@ -1,23 +1,15 @@
-(include_subdirs qualified) ; Tell dune to look through subdirectories
-(dirs :standard theories contrib)
+; Tell dune to look through subdirectories
+
+(include_subdirs qualified)
+
+; Main theory stanza telling dune how the HoTT library is compiled
 
 (coq.theory
-  (name HoTT)
-  (synopsis "The HoTT Coq library")
-  (libraries coq-core.plugins.ltac)
-  (flags
-    -noinit	         ; Don't load standard library
-    -indices-matter  ; Universe levels of index types in inductive types are used to calculate universe level 
-    -color on))	     ; Allow color printing (good for errors)
+ (name HoTT)
+ (package coq-hott)
+ (modules :standard)
+ (libraries coq-core.plugins.ltac coq-core.plugins.number_string_notation)
+ (flags -noinit -indices-matter -color on))
 
-; Doesn't really work atm
-(rule (alias _CoqProject)
-  (deps ./etc/generate_coqproject.sh)
-  (action (bash ./etc/generate_coqproject.sh))
-)
-
-;; Rule for validation -- For dune 3.0
-;;(rule (alias validate)
-;;  (deps (glob_files_rec ./*.vo))
-;;  (action (run coqchk -R . HoTT %{deps} -o))
-;;)
+; TODO: Tests
+; Prob need to move tests into tests folder
