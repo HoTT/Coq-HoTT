@@ -751,3 +751,22 @@ Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S
   {H : IsFreeGroupOn S F_S i}
   : IsFreeGroup F_S
   := (S; i; H).
+
+(** Characterisation of injective group homomorphisms. *)
+Lemma isembedding_grouphomomorphism {A B : Group} (f : A $-> B)
+  : (forall a, f a = group_unit -> a = group_unit) <-> IsEmbedding f.
+Proof.
+  split.
+  - intros h b.
+    apply hprop_allpath.
+    intros [a0 p0] [a1 p1].
+    srapply path_sigma_hprop; simpl.
+    apply grp_moveL_1M.
+    apply h.
+    rewrite grp_homo_op, grp_homo_inv.
+    rewrite p0, p1.
+    apply right_inverse.
+  - intros E a p.
+    rapply (isinj_embedding f).
+    exact (p @ (grp_homo_unit f)^).
+Defined.

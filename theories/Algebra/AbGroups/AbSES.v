@@ -97,6 +97,116 @@ Proof.
   - apply transport_iso_abgrouphomomorphism_to_const.
 Defined.
 
+(** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
+Lemma short_five_lemma {B A : AbGroup} {E F : AbSES B A} (phi : GroupHomomorphism E F)
+      (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
+  : IsEquiv phi.
+Proof.
+  apply isequiv_surj_emb.
+  - intro f.
+    rapply contr_inhabited_hprop.
+    (** Since [projection E] is epi, we can pull [projection F f] back to [e0 : E].*)
+    assert (e0 : Tr (-1) (hfiber (projection E) (projection F f)))
+      by apply issurjection_projection.
+    strip_truncations.
+    (** The difference [f - (phi e0.1)] is sent to [0] by [projection F], hence lies in [A]. *)
+    assert (a : Tr (-1) (hfiber (inclusion F) (f + (- phi e0.1)))).
+    1: { refine (isexact_preimage (Tr (-1)) (inclusion F) (projection F) _ _).
+         refine (grp_homo_op _ _ _ @ _).
+         refine (ap _ (grp_homo_inv _ _) @ _).
+         apply (grp_moveL_1M)^-1.
+         exact (e0.2^ @ p1 e0.1). }
+    strip_truncations.
+    refine (tr (inclusion E a.1 + e0.1; _)).
+    refine (grp_homo_op _ _ _ @ _).
+    refine (ap (fun x => x + phi e0.1) (p0 a.1 @ a.2) @ _).
+    refine ((grp_assoc _ _ _)^ @ _).
+    refine (ap _ (left_inverse (phi e0.1)) @ _).
+    apply grp_unit_r.
+  - apply isembedding_grouphomomorphism.
+    intros e p.
+    assert (a : Tr (-1) (hfiber (inclusion E) e)).
+    1: { refine (isexact_preimage _ (inclusion E) (projection E) _ _).
+         exact (p1 e @ ap (projection F) p @ grp_homo_unit _). }
+    strip_truncations.
+    refine (a.2^ @ ap (inclusion E ) _ @ grp_homo_unit (inclusion E)).
+    rapply (isinj_embedding (inclusion F) _ _).
+    refine ((p0 a.1)^ @ (ap phi a.2) @ p @ (grp_homo_unit _)^).
+Defined.
+
+(** By the short 5-lemma, paths between short exact sequences correspond to group homomorphisms between the [middle]s respecting [inclusion] and [projection]. *)
+Proposition equiv_path_abses `{Univalence} {B A : AbGroup} (E F : AbSES B A)
+  : {phi : GroupHomomorphism E F &
+             (phi $o inclusion _ == inclusion _)
+             * (projection _ == projection _ $o phi)}
+      <~> E = F.
+Proof.
+  refine (equiv_path_abses_iso _ _ oE _).
+  srapply equiv_adjointify.
+  - intros [phi [p q]].
+    pose (phi_iso := {| grp_iso_homo := phi; isequiv_group_iso := short_five_lemma phi p q |}).
+    refine (phi_iso; _).
+    + lazy beta; split.
+      * exact p.
+      * srapply (equiv_ind phi_iso); intro e.
+        lazy beta.
+        refine (ap _ _ @ q e).
+        apply eissect.
+  - intros [phi [p q]].
+    exists phi; split.
+    1: assumption.
+    srapply (equiv_ind (phi^-1)); intro f; cbn.
+    refine (q f @ ap _ _).
+    exact (eisretr phi f)^.
+  - intros [phi [p q]].
+    apply path_sigma_hprop.
+    apply equiv_path_groupisomorphism.
+    reflexivity.
+  - intros [phi [p q]].
+    apply path_sigma_hprop.
+    reflexivity.
+Defined.
+
+(** Endomorphisms of the trivial short exact sequence in [AbSES B A] correspond to homomorphisms [B -> A]. *)
+Lemma abses_endomorphism_trivial `{Funext} {B A : AbGroup}
+  : {phi : GroupHomomorphism (point (AbSES B A)) (point (AbSES B A)) &
+             (phi $o inclusion _ == inclusion _)
+             * (projection _ == projection _ $o phi)}
+      <~> (B $-> A).
+Proof.
+  srapply equiv_adjointify.
+  - intros [phi _].
+    exact (ab_biprod_pr1 $o phi $o ab_biprod_inr).
+  - intro f.
+    snrefine (_;_).
+    + refine (ab_biprod_rec ab_biprod_inl _).
+      refine (ab_biprod_corec f grp_homo_id).
+    + split; intro x; cbn.
+      * apply path_prod; cbn.
+        -- exact (ap _ (grp_homo_unit f) @ right_identity _).
+        -- exact (right_identity _).
+      * exact (left_identity _)^.
+  - intro f.
+    rapply equiv_path_grouphomomorphism; intro b; cbn.
+    exact (left_identity _).
+  - intros [phi [p q]].
+    apply path_sigma_hprop; cbn.
+    rapply equiv_path_grouphomomorphism; intros [a b]; cbn.
+    apply path_prod; cbn.
+    + rewrite (ab_biprod_decompose a b).
+      refine (_ @ (grp_homo_op (ab_biprod_pr1 $o phi) _ _)^).
+      apply grp_cancelR; symmetry.
+      exact (ap fst (p a)).
+    + rewrite (ab_biprod_decompose a b).
+      refine (_ @ (grp_homo_op (ab_biprod_pr2 $o phi) _ _)^); cbn; symmetry.
+      exact (ap011 _ (ap snd (p a)) (q (group_unit, b))^).
+Defined.
+
+(** Consequently, the loop space of [AbSES B A] is [GroupHomomorphism B A]. *)
+Definition loops_abses `{Univalence} {A B : AbGroup}
+  : (B $-> A) <~> loops (AbSES B A)
+  := equiv_path_abses _ _ oE abses_endomorphism_trivial^-1.
+
 (** ** Morphisms of short exact sequences *)
 
 (** A morphism between short exact sequences is a natural transformation between the underlying diagrams. *)

@@ -341,6 +341,16 @@ Proof.
   - exact (left_identity _ @ a'.2).
 Defined.
 
+(** *** Lemmas for working with biproducts *)
+
+Lemma ab_biprod_decompose {B A : AbGroup} (a : A) (b : B)
+  : (a, b) = ((a, group_unit) : ab_biprod A B) + (group_unit, b).
+Proof.
+  apply path_prod; cbn.
+  - exact (right_identity _)^.
+  - exact (left_identity _)^.
+Defined.
+
 (** ** Kernels of abelian groups *)
 
 Definition ab_kernel {A B : AbGroup} (f : A $-> B) : AbGroup

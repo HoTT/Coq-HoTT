@@ -61,24 +61,12 @@ Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
   : (grp_kernel f = trivial_subgroup :> Subgroup A) <~> IsEmbedding f.
 Proof.
   refine (_ oE (equiv_path_subgroup' _ _)^-1%equiv).
-  srapply equiv_iff_hprop.
-  - cbn; intros h.
-    intros b.
-    apply hprop_allpath.
-    intros [x p] [y q].
-    apply path_sigma_hprop; cbn.
-    apply grp_moveL_1M.
-    apply h.
-    rewrite grp_homo_op, grp_homo_inv.
-    rewrite p, q.
-    apply right_inverse.
-  - intros isemb_f g.
-    apply isinj_embedding in isemb_f.
-    split.
-    + cbn; intros p.
-      apply isemb_f.
-      refine (p @ _^).
-      apply grp_homo_unit.
-    + cbn; intros p.
-      refine (ap _ p @ grp_homo_unit f).
+  apply equiv_iff_hprop_uncurried.
+  refine (iff_compose _ (isembedding_grouphomomorphism f)); split.
+  - intros E ? ?.
+    by apply E.
+  - intros e a; split.
+    + apply e.
+    + intro p.
+      exact (ap _ p @ grp_homo_unit f).
 Defined.
