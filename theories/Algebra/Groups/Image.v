@@ -4,6 +4,7 @@ Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
 Require Import Truncations.
 Require Import Factorization.
+Require Import HFiber HSet.
 
 (** Image of group homomorphisms *)
 
@@ -37,3 +38,62 @@ Proof.
     reflexivity. }
   cbn. grp_auto.
 Defined.
+
+(** When the homomorphism is an embedding, we don't need to truncate. *)
+Definition grp_image_embedding {A B : Group} (f : A $-> B) `{IsEmbedding f} : Subgroup B.
+Proof.
+  snrapply (Build_Subgroup _ (hfiber f)).
+  repeat split.
+  - exact _.
+  - exact (mon_unit; grp_homo_unit f).
+  - intros x y [a []] [b []].
+    exists (a + b).
+    apply grp_homo_op.
+  - intros b [a []].
+    exists (-a).
+    apply grp_homo_inv.
+Defined.
+
+Definition grp_image_in_embedding {A B : Group} (f : A $-> B) `{IsEmbedding f}
+  : GroupIsomorphism A (grp_image_embedding f).
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - snrapply Build_GroupHomomorphism.
+    + intro x.
+      exists (f x).
+      exists x.
+      reflexivity.
+    + cbn; grp_auto.
+  - apply isequiv_surj_emb.
+    2: apply (cancelL_isembedding (g:=pr1)).
+    intros [b [a p]]; cbn.
+    rapply contr_inhabited_hprop.
+    refine (tr (a; _)).
+    srapply path_sigma'.
+    1: exact p.
+    refine (transport_sigma' _ _ @ _).
+    by apply path_sigma_hprop.
+Defined.
+
+(** Embeddings [A $-> G] correspond to subgroups of [G]. *)
+Definition equiv_embedding_subgroup `{Univalence} {G : Group}
+  : {A : Group & {i : A $-> G & IsEmbedding i}}
+      <~> Subgroup G.
+Proof.
+  srapply equiv_adjointify.
+  - intros [A [i emb]].
+    exact (grp_image_embedding i).
+  - intro P.
+    exists (subgroup_group G P).
+    exists (subgroup_incl P).
+    exact _.
+  - intro P.
+    nrapply equiv_path_subgroup.
+    intro g; cbn.
+    srapply path_universe_uncurried; symmetry.
+    apply hfiber_fibration.
+  - intros [A [i emb]].
+    srapply path_sigma'.
+    + srapply equiv_path_group.
+Abort.
+

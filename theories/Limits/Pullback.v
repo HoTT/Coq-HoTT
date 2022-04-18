@@ -315,6 +315,38 @@ Proof.
   apply sq_1G.
 Defined.
 
+(** When [A] is a set, the [PathSquare] becomes trivial. *)
+Definition equiv_path_pullback_hset {A B C} `{IsHSet A} (f : B -> A) (g : C -> A)
+           (x y : Pullback f g)
+  : (x.1 = y.1) * (x.2.1 = y.2.1) <~> (x = y).
+Proof.
+  refine (equiv_path_pullback f g x y oE _).
+  srapply equiv_adjointify.
+  - intros [p q].
+    refine (p; q; _).
+    apply (istrunc_sq (-2)).
+  - intros [p [q _]].
+    exact (p, q).
+  - intros [p [q ?]].
+    srapply path_sigma'.
+    1: reflexivity.
+    refine (transport_sigma' _ _ @ _).
+    srapply path_sigma'.
+    1: reflexivity.
+    apply (istrunc_sq (-2)).
+  - reflexivity.
+Defined.
+
+Lemma equiv_path_pullback_rec_hset `{Funext} {A X Y Z : Type} `{IsHSet Z}
+      (f : X -> Z) (g : Y -> Z) (phi psi : A -> Pullback f g)
+  : ((pullback_pr1 o phi == pullback_pr1 o psi) * (pullback_pr2 o phi == pullback_pr2 o psi))
+      <~> (phi == psi).
+Proof.
+  refine (_ oE equiv_prod_coind _ _).
+  srapply equiv_functor_forall_id; intro a; cbn.
+  apply equiv_path_pullback_hset.
+Defined.
+
 (** The 3x3 Lemma *)
 
 Section Pullback3x3.

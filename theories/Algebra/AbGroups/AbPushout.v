@@ -158,3 +158,19 @@ Proof.
     refine (_ @ p0); symmetry.
     exact (ap f z @ grp_homo_unit f).
 Defined.
+
+(** Functoriality of pushouts *)
+Definition functor_ab_pushout {A A' B B' C C' : AbGroup}
+           (f : A $-> B) (f' : A' $-> B')
+           (g : A $-> C) (g' : A' $-> C')
+           (alpha : A $-> A') (beta : B $-> B') (gamma : C $-> C')
+           (h : beta $o f == f' $o alpha) (k : g' $o alpha == gamma $o g)
+  : ab_pushout f g $-> ab_pushout f' g'.
+Proof.
+  srapply ab_pushout_rec.
+  - exact (ab_pushout_inl $o beta).
+  - exact (ab_pushout_inr $o gamma).
+  - intro a.
+    refine (ap ab_pushout_inl (h a) @ _ @ ap ab_pushout_inr (k a)).
+    exact (ab_pushout_commsq (alpha a)).
+Defined.

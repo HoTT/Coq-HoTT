@@ -351,6 +351,21 @@ Proof.
   - exact (left_identity _)^.
 Defined.
 
+(* Maps out of biproducts are determined on the two inclusions. (Could be stated more generally for pointed types instead of abelian groups.) *)
+Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
+  : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
+      <~> phi == psi.
+Proof.
+  apply equiv_iff_hprop.
+  - intros [h k].
+    intros [a b].
+    refine (ap phi (ab_biprod_decompose _ _) @ _ @ ap psi (ab_biprod_decompose _ _)^).
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+    exact (ap011 (+) (h a) (k b)).
+  - intro h.
+    exact (fun a => h _, fun b => h _).
+Defined.
+
 (** ** Kernels of abelian groups *)
 
 Definition ab_kernel {A B : AbGroup} (f : A $-> B) : AbGroup
@@ -423,3 +438,11 @@ Proof.
   (** [fun a => f(a) + g(a)] **)
   exact (grp_prod_corec f g).
 Defined.
+
+(** The image of an inclusion is a normal subgroup. *)
+Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
+  := {| normalsubgroup_subgroup := grp_image_embedding f; normalsubgroup_isnormal := _ |}.
+
+Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
+  : GroupIsomorphism A (ab_image_embedding f)
+  := grp_image_in_embedding f.

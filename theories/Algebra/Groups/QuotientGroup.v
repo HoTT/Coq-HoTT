@@ -155,6 +155,7 @@ Section QuotientGroup.
     - intro x.
       refine (Quotient_ind_hprop _ _ _).
       intro y. revert x.
+
       refine (Quotient_ind_hprop _ _ _).
       intro x; simpl.
       apply grp_homo_op.
@@ -276,4 +277,26 @@ Proof.
   intros x y.
   pose (dec_H := detachable_finite_subset H).
   apply dec_H.
+Defined.
+
+Definition grp_kernel_quotient_iso `{Univalence} {G : Group} (N : NormalSubgroup G)
+  : GroupIsomorphism N (grp_kernel (@grp_quotient_map G N)).
+Proof.
+  srapply Build_GroupIsomorphism.
+  - srapply (grp_kernel_corec (g:=subgroup_incl N)).
+    intro x; cbn.
+    apply qglue.
+    apply issubgroup_in_op.
+    + exact (issubgroup_in_inv _ x.2).
+    + exact issubgroup_in_unit.
+  - apply isequiv_surj_emb.
+    2: apply (cancelL_isembedding (g:=pr1)).
+    intros [g p].
+    rapply contr_inhabited_hprop.
+    srefine (tr ((g; _); _)).
+    + rewrite <- grp_unit_l, <- negate_mon_unit.
+      apply (related_quotient_paths (fun x y => N (-x * y))).
+      exact p^.
+    + srapply path_sigma_hprop.
+      reflexivity.
 Defined.
