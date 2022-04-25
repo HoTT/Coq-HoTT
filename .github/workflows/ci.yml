@@ -5,7 +5,7 @@ on: [ push , pull_request ]
 # We set the supported coq-version from here. In order to use this environment variable correctly, look at how they are used in the following jobs.
 env:
   coq-version-supported: '8.15'
-  ocaml-version: '4.11-flambda'
+  ocaml-version: '4.13-flambda'
   deployment-branch: 'gh-pages'
 
 # Our jobs come in 3 stages, the latter stages depending on the former:
