@@ -347,18 +347,33 @@ Definition gpd_hV_h {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : b $-> a)
   : (f $o g^$) $o g $== f :=
   cat_assoc _ _ _ $@ (f $@L gpd_issect g) $@ cat_idr f.
 
-Definition gpd_moveL_1M {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
+Definition gpd_moveL_1M {A} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $o q^$ $== Id _) : p $== q.
 Proof.
   refine ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$ $@ _).
   refine ((r $@R q) $@ cat_idl q).
 Defined.
 
-Definition gpd_moveL_V1 {A : Type} `{Is1Gpd A} {x y : A} {p : x $-> y}
-  {q : y $-> x} (r : p $o q $== Id _) : p^$ $== q.
+Definition gpd_moveR_V1 {A} `{Is1Gpd A} {x y : A} {p : x $-> y}
+  {q : y $-> x} (r : Id _ $== p $o q) : p^$ $== q.
 Proof.
-  refine ((cat_idr p^$)^$ $@ (p^$ $@L r^$) $@ _).
+  refine ((cat_idr p^$)^$ $@ (p^$ $@L r) $@ _).
   apply gpd_V_hh.
+Defined.
+
+Definition gpd_moveR_1M {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
+  (r : p $o q^$ $== Id _) : p $== q.
+Proof.
+  refine ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$ $@ _).
+  refine ((r $@R q) $@ cat_idl q).
+Defined.
+
+Definition gpd_moveL_1V {A : Type} `{Is1Gpd A} {x y : A} {p : x $-> y}
+  {q : y $-> x} (r : p $o q $== Id _) : p $== q^$.
+Proof.
+  refine (_ $@ (cat_idl q^$)).
+  refine (_ $@ (r $@R q^$)).
+  exact (gpd_hh_V _ _)^$.
 Defined.
 
 Definition gpd_moveR_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
@@ -371,10 +386,18 @@ Definition gpd_moveR_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   : p^$ $o r $== q 
   := (p^$ $@L s) $@ gpd_V_hh _ _.
 
+Definition gpd_moveL_hM {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : r $o q^$ $== p)
+  : r $== p $o q := ((gpd_hV_h _ _)^$ $@ (s $@R _)).
+
 Definition gpd_moveL_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
   : p $== r $o q^$ 
   := (gpd_moveR_hV s^$)^$.
+
+Definition gpd_moveL_Mh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : p^$ $o r $== q)
+  : r $== p $o q := ((gpd_h_Vh _ _)^$ $@ (p $@L s)).
 
 Definition gpd_moveL_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
@@ -384,16 +407,73 @@ Definition gpd_moveL_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
 Definition gpd_rev2 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $== q) : p^$ $== q^$.
 Proof.
-  apply gpd_moveL_V1. apply gpd_moveR_hV.
-  exact (r $@ (cat_idl q)^$).
+  apply gpd_moveR_V1.
+  apply gpd_moveL_hV.
+  exact (cat_idl q $@ r^$).
 Defined.
 
 Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
   : (f $o g)^$ $== g^$ $o f^$.
 Proof.
-  apply gpd_moveL_V1.
-  refine (cat_assoc _ _ _ $@ (f $@L gpd_h_Vh g f^$) $@ gpd_isretr f).
+  apply gpd_moveR_V1.
+  refine (_ $@ cat_assoc _ _ _).
+  apply gpd_moveL_hV.
+  refine (cat_idl _ $@ _).
+  exact (gpd_hh_V _ _)^$.
 Defined.
+
+Definition gpd_rev_1 {A} `{Is1Gpd A} {a : A} : (Id a)^$ $== Id a.
+Proof.
+  refine ((gpd_rev2 (gpd_issect (Id a)))^$ $@ _).
+  refine (gpd_rev_pp _ _ $@ _).
+  apply gpd_isretr.
+Defined.
+
+Definition gpd_rev_rev {A} `{Is1Gpd A} {a0 a1 : A} (g : a0 $== a1)
+  : (g^$)^$ $== g.
+Proof.
+  apply gpd_moveR_V1.
+  exact (gpd_issect _)^$.
+Defined.
+
+(** 1-functors between 1-groupoids preserve identities *)
+Definition gpd_1functor_V {A B} `{Is1Gpd A, Is1Gpd B}
+           (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+           {a0 a1 : A} (f : a0 $== a1)
+  : fmap F f^$ $== (fmap F f)^$.
+Proof.
+  apply gpd_moveL_1V.
+  refine ((fmap_comp _ _ _)^$ $@ _ $@ fmap_id _ _).
+  rapply fmap2.
+  apply gpd_issect.
+Defined.
+
+(** Movement lemmas with extensionality *)
+
+(** For more complex movements you probably want to apply [path_hom] and use the lemmas above. *)
+
+Definition gpd_strong_V_hh {A} `{Is1Gpd A, !HasMorExt A} {a b c : A} (f : b $-> c) (g : a $-> b)
+  : f^$ $o (f $o g) = g := path_hom (gpd_V_hh f g).
+
+Definition gpd_strong_h_Vh {A} `{Is1Gpd A, !HasMorExt A} {a b c : A} (f : c $-> b) (g : a $-> b)
+  : f $o (f^$ $o g) = g := path_hom (gpd_h_Vh f g).
+
+Definition gpd_strong_hh_V {A} `{Is1Gpd A, !HasMorExt A} {a b c : A} (f : b $-> c) (g : a $-> b)
+  : (f $o g) $o g^$ = f := path_hom (gpd_hh_V f g).
+
+Definition gpd_strong_hV_h {A} `{Is1Gpd A, !HasMorExt A} {a b c : A} (f : b $-> c) (g : b $-> a)
+  : (f $o g^$) $o g = f := path_hom (gpd_hV_h f g).
+
+Definition gpd_strong_rev_pp {A} `{Is1Gpd A, !HasMorExt A} {a b c : A} (f : b $-> c) (g : a $-> b)
+  : (f $o g)^$ = g^$ $o f^$
+  := path_hom (gpd_rev_pp f g).
+
+Definition gpd_strong_rev_1 {A} `{Is1Gpd A, !HasMorExt A} {a : A}
+  : (Id a)^$ = Id a
+  := path_hom gpd_rev_1.
+
+Definition gpd_strong_rev_rev {A} `{Is1Gpd A, !HasMorExt A} {a0 a1 : A} (g : a0 $== a1)
+  : (g^$)^$ = g := path_hom (gpd_rev_rev g).
 
 Class Is3Graph (A : Type) `{Is2Graph A}
   := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
