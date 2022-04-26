@@ -10,8 +10,8 @@ Local Open Scope mc_add_scope.
 
 (** A short exact sequence of abelian groups consists of a monomorphism [i : A -> E] and an epimorphism [p : E -> B] such that the image of [i] equals the kernel of [p]. Later we will consider short exact sequences up to isomorphism by 0-truncating the type [AbSES] defined below. An isomorphism class of short exact sequences is called an extension. *)
 
-(** The type of short exact sequences [A -> E -> B] of abelian groups. *)
-Record AbSES {B A : AbGroup} := {
+(** The type of short exact sequences [A -> E -> B] of abelian groups. We decorate it with (') to reserve the undecorated name for the structured version. *)
+Record AbSES' {B A : AbGroup} := {
     middle :  AbGroup;
     inclusion : A $-> middle;
     projection : middle $-> B;
@@ -21,15 +21,17 @@ Record AbSES {B A : AbGroup} := {
   }.
 
 (** Given a short exact sequence [A -> E -> B : AbSES B A], we coerce it to [E]. *)
-Coercion middle : AbSES >-> AbGroup.
+Coercion middle : AbSES' >-> AbGroup.
 
 Global Existing Instances isembedding_inclusion issurjection_projection isexact_inclusion_projection.
 
-Arguments AbSES B A : clear implicits.
-Arguments Build_AbSES {B A}.
+Arguments AbSES' B A : clear implicits.
+Arguments Build_AbSES' {B A}.
+
+Definition Build_AbSES {B A : AbGroup} := @Build_AbSES' B A.
 
 (** TODO Figure out why printing this term eats memory and seems to never finish. *)
-Local Definition issig_abses_do_not_print {B A : AbGroup} : _ <~> AbSES B A := ltac:(issig).
+Local Definition issig_abses_do_not_print {B A : AbGroup} : _ <~> AbSES' B A := ltac:(issig).
 
 (** [make_equiv] is slow if used in the context of the next result, so we give the abstract form of the goal here. *)
 Local Definition issig_abses_helper {AG : Type} {P : AG -> Type} {Q : AG -> Type}
@@ -38,21 +40,21 @@ Local Definition issig_abses_helper {AG : Type} {P : AG -> Type} {Q : AG -> Type
       <~> {E : AG & {H0 : P E & {H1 : Q E & {_ : R _ H0 & {_ : S _ H1 & T _ H0 H1}}}}}
   := ltac:(make_equiv).
 
-(** A more useful organization of [AbSES] as a sigma-type. *)
+(** A more useful organization of [AbSES'] as a sigma-type. *)
 Definition issig_abses {B A : AbGroup}
   : {X : {E : AbGroup & (A $-> E) * (E $-> B)} &
            (IsEmbedding (fst X.2)
             * IsSurjection (snd X.2)
             * IsExact (Tr (-1)) (fst X.2) (snd X.2))}
-      <~> AbSES B A
+      <~> AbSES' B A
   := issig_abses_do_not_print oE issig_abses_helper.
 
-Definition iscomplex_abses {A B : AbGroup} (E : AbSES B A)
+Definition iscomplex_abses {A B : AbGroup} (E : AbSES' B A)
   : IsComplex (inclusion E) (projection E)
   := cx_isexact.
 
-(** [AbSES B A] is pointed by the split sequence [A -> A+B -> B]. *)
-Global Instance ispointed_abses {B A : AbGroup} : IsPointed (AbSES B A).
+(** [AbSES' B A] is pointed by the split sequence [A -> A+B -> B]. *)
+Global Instance ispointed_abses {B A : AbGroup} : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
   snrapply Build_IsExact.
@@ -67,26 +69,32 @@ Proof.
     exact (path_prod' idpath p^).
 Defined.
 
-(** Paths in [AbSES] corespond to isomorphisms between the [middle]s respecting [inclusion] and [projection]. *)
-Proposition equiv_path_abses `{Univalence} {B A : AbGroup} (E F : AbSES B A)
-  : (E = F) <~> {phi : GroupIsomorphism E F &
-                         (phi $o inclusion _ = inclusion _)
-                         * (projection _ $o grp_iso_inverse phi = projection _)}.
+(** The pointed type of short exact sequences. *)
+Definition AbSES (B A : AbGroup) : pType := Build_pType (AbSES' B A) _.
+
+(** Paths in [AbSES] correspond to isomorphisms between the [middle]s respecting [inclusion] and [projection]. Below we prove the stronger statement [equiv_path_abses], which uses this result. *)
+Proposition equiv_path_abses_iso `{Univalence} {B A : AbGroup} (E F : AbSES B A)
+  : {phi : GroupIsomorphism E F &
+             (phi $o inclusion _ == inclusion _)
+             * (projection _ $o grp_iso_inverse phi == projection _)}
+      <~> E = F.
 Proof.
-  refine (_ oE equiv_ap issig_abses^-1 _ _).
-  refine (_ oE (equiv_path_sigma_hprop _ _)^-1).
-  refine (_ oE (equiv_path_sigma _ _ _)^-1).
+  refine (equiv_ap_inv issig_abses _ _ oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  refine (equiv_path_sigma _ _ _ oE _).
   srapply equiv_functor_sigma'.
-  1: exact equiv_path_abgroup^-1%equiv.
+  1: exact equiv_path_abgroup.
   intro q; lazy beta.
-  snrefine (_ oE equiv_concat_l _ _); only 3: symmetry.
-  2: exact (grp_homo_compose (equiv_path_abgroup^-1 q) (inclusion _),
-             (grp_homo_compose (projection _) (grp_iso_inverse (equiv_path_abgroup^-1 q)))).
-  1: exact (equiv_path_prod _ _)^-1%equiv.
+  snrefine (equiv_concat_l _ _ oE _).
+  1: exact (q $o inclusion _, projection _ $o grp_iso_inverse q).
+  2: { refine (equiv_path_prod _ _ oE _).
+       exact (equiv_functor_prod'
+                equiv_path_grouphomomorphism
+                equiv_path_grouphomomorphism). }
   refine (transport_prod _ _ @ _).
   apply path_prod'.
-  - apply transport_abgrouphomomorphism_from_const.
-  - apply transport_abgrouphomomorphism_to_const.
+  - apply transport_iso_abgrouphomomorphism_from_const.
+  - apply transport_iso_abgrouphomomorphism_to_const.
 Defined.
 
 (** ** Morphisms of short exact sequences *)
@@ -208,35 +216,35 @@ Defined.
 
 (** A short exact sequence [E] in [AbSES B A] is trivial if and only if [projection E] splits. *)
 Proposition iff_abses_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
-  : (E = point (AbSES B A))
-    <-> {s : GroupHomomorphism B E & (projection _) $o s == idmap}.
+  : {s : GroupHomomorphism B E & (projection _) $o s == idmap}
+    <-> (E = point (AbSES B A)).
 Proof.
-  refine (iff_compose (iff_equiv (equiv_path_abses _ _)) _); split.
-  - intros [phi [g h]].
-    exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr).
-    intro x.
-    exact (equiv_path_grouphomomorphism^-1 h (ab_biprod_inr x)).
+  refine (iff_compose _ (iff_equiv (equiv_path_abses_iso _ _))); split.
   - intros [s h].
     exists (projection_split_iso E h).
-    split; apply equiv_path_grouphomomorphism.
+    split.
     + apply projection_split_beta.
     + intros [a b]; simpl.
       refine (grp_homo_op (projection _)  _ _ @ _).
       refine (ap011 (+) _ (h _) @ _).
       1: rapply cx_isexact.
       apply left_identity.
+  - intros [phi [g h]].
+    exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr).
+    intro x.
+    exact (h (ab_biprod_inr x)).
 Defined.
 
 (** ** Pullbacks of short exact sequences *)
 
 (** A short exact sequence [A -> E -> B] can be pulled back along a map [B' -> B]. *)
-Lemma abses_pullback {A B B' : AbGroup} (E : AbSES B A) (phi : B' $-> B) : AbSES B' A.
+Lemma abses_pullback {A B B' : AbGroup} (E : AbSES B A) (f : B' $-> B) : AbSES B' A.
 Proof.
-  snrapply (Build_AbSES (ab_pullback (projection E) phi)
+  snrapply (Build_AbSES (ab_pullback (projection E) f)
                         (grp_pullback_corec _ _ (inclusion _) grp_homo_const _)
-                        (grp_pullback_pr2 (projection _) phi)).
+                        (grp_pullback_pr2 (projection _) f)).
   - intro x.
-    nrefine (_ @ (grp_homo_unit phi)^).
+    nrefine (_ @ (grp_homo_unit f)^).
     apply isexact_inclusion_projection.
   - exact (cancelL_isembedding (g:= grp_pullback_pr1 _ _)).
   - rapply conn_map_pullback'.
@@ -245,17 +253,17 @@ Proof.
       * reflexivity.
       * apply path_ishprop.
     + nrefine (cancelR_equiv_conn_map
-                 _ _ (hfiber_pullback_along_pointed phi (projection _) (grp_homo_unit _))).
+                 _ _ (hfiber_pullback_along_pointed f (projection _) (grp_homo_unit _))).
       nrefine (conn_map_homotopic _ _ _ _ (conn_map_isexact (IsExact:=isexact_inclusion_projection _))).
       intro a.
       by apply path_sigma_hprop.
 Defined.
 
 (** The natural map from the pulled back sequence. *)
-Definition abses_pullback_morphism {A B B' : AbGroup} (E : AbSES B A) (phi : B' $-> B)
-  : AbSESMorphism (abses_pullback E phi) E.
+Definition abses_pullback_morphism {A B B' : AbGroup} (E : AbSES B A) (f : B' $-> B)
+  : AbSESMorphism (abses_pullback E f) E.
 Proof.
-  snrapply (Build_AbSESMorphism grp_homo_id _ phi).
+  snrapply (Build_AbSESMorphism grp_homo_id _ f).
   - apply grp_pullback_pr1.
   - reflexivity.
   - apply pullback_commsq.
@@ -297,10 +305,10 @@ Defined.
 
 (** ** Pushouts of short exact sequences *)
 
-Definition abses_pushout `{Univalence} {A A' B : AbGroup} (E : AbSES B A) (phi : A $-> A')
+Definition abses_pushout `{Univalence} {A A' B : AbGroup} (E : AbSES B A) (f : A $-> A')
   : AbSES B A'.
 Proof.
-  snrapply (Build_AbSES (ab_pushout phi (inclusion E))
+  snrapply (Build_AbSES (ab_pushout f (inclusion E))
                         ab_pushout_inl
                         (ab_pushout_rec grp_homo_const (projection E) _)).
   - symmetry; rapply iscomplex_abses.
@@ -325,11 +333,11 @@ Proof.
            rewrite <- q; simpl.
            apply left_identity. }
       (** By exactness, we get an element in [A]. *)
-      pose proof (a := isexact_preimage (Tr (-1)) _ _ (c; c_in_kernel)); cbn in a.
+      pose proof (a := isexact_preimage _ _ _ c c_in_kernel).
       strip_truncations.
       destruct a as [a s].
       (** Now we see that [bc'] lies in the image of [ab_pushout_inl]. *)
-      assert (u : bc' = ab_pushout_inl (b + phi a)).
+      assert (u : bc' = ab_pushout_inl (b + f a)).
       1: { rewrite <- q.
            apply path_ab_pushout; cbn.
            refine (tr (a; _)).
@@ -338,16 +346,16 @@ Proof.
              by rewrite negate_involutive.
            - exact (grp_homo_inv _ _ @ ap _ s @ (right_identity _)^). }
       apply tr.
-      exists (b + phi a); cbn.
+      exists (b + f a); cbn.
       apply path_sigma_hprop; cbn.
       apply u^.
 Defined.
 
 Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
-           (E : AbSES B A) (phi : A $-> A')
-  : AbSESMorphism E (abses_pushout E phi).
+           (E : AbSES B A) (f : A $-> A')
+  : AbSESMorphism E (abses_pushout E f).
 Proof.
-  snrapply (Build_AbSESMorphism phi _ grp_homo_id).
+  snrapply (Build_AbSESMorphism f _ grp_homo_id).
   - exact ab_pushout_inr.
   - exact ab_pushout_commsq.
   - rapply ab_pushout_rec_beta_right.
@@ -409,8 +417,8 @@ Proof.
     rapply contr_inhabited_hprop.
     destruct ef as [e f].
     pose (U := (equiv_path_prod _ _)^-1 u); cbn in U.
-    pose proof (a := isexact_preimage (Tr (-1)) i p (e; (fst U))).
-    pose proof (x := isexact_preimage (Tr (-1)) j q (f; (snd U))).
+    pose proof (a := isexact_preimage _ i p e (fst U)).
+    pose proof (x := isexact_preimage _ j q f (snd U)).
     strip_truncations; apply tr.
     exists (ab_biprod_inl a.1 + ab_biprod_inr x.1); cbn.
     apply path_sigma_hprop; cbn.
@@ -445,10 +453,10 @@ Global Instance ispointed_ext {B A : AbGroup} : IsPointed (Ext B A) := tr (point
 
 (** An extension [E : AbSES B A] is trivial in [Ext B A] if and only if [E] merely splits. *)
 Proposition iff_ab_ext_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
-  : (tr E = point (Ext B A))
-      <~> merely { s : GroupHomomorphism B E & (projection _) $o s == idmap }.
+  : merely {s : GroupHomomorphism B E & (projection _) $o s == idmap}
+           <~> (tr E = point (Ext B A)).
 Proof.
-  refine (_ oE (equiv_path_Tr _ _)^-1).
+  refine (equiv_path_Tr _ _ oE _).
   srapply equiv_iff_hprop;
     apply Trunc_functor;
     apply iff_abses_trivial_split.
