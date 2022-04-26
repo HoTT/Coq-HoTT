@@ -357,6 +357,15 @@ Proof.
   by apply equiv_path_grouphomomorphism.
 Defined.
 
+Lemma transport_iso_abgrouphomomorphism_from_const `{Univalence} {A B B' : AbGroup}
+      (phi : GroupIsomorphism B B') (f : GroupHomomorphism A B)
+  : transport (Hom A) (equiv_path_abgroup phi) f
+    = grp_homo_compose phi f.
+Proof.
+  refine (transport_abgrouphomomorphism_from_const _ _ @ _).
+  by rewrite eissect.
+Defined.
+
 Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
       (p : A = A') (f : GroupHomomorphism A B)
   : transport (fun G => Hom G B) p f
@@ -364,6 +373,15 @@ Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
 Proof.
   induction p; cbn.
   by apply equiv_path_grouphomomorphism.
+Defined.
+
+Lemma transport_iso_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
+      (phi : GroupIsomorphism A A') (f : GroupHomomorphism A B)
+  : transport (fun G => Hom G B) (equiv_path_abgroup phi) f
+    = grp_homo_compose f (grp_iso_inverse phi).
+Proof.
+  refine (transport_abgrouphomomorphism_to_const _ _ @ _).
+  by rewrite eissect.
 Defined.
 
 (** ** Operations on abelian groups *)

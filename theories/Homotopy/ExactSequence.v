@@ -148,6 +148,17 @@ Defined.
 
 (** With exactness we can choose preimages. *)
 Lemma isexact_preimage (O : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
+      `{IsExact O _ _ _ i f} (x : X) (p : f x = point Y)
+  : O (hfiber i x).
+Proof.
+  rapply (O_functor O (A:=hfiber (cxfib cx_isexact) (x; p))).
+  - intros [z q].
+    exact (z; ap pr1 q).
+  - apply conn_map_isexact.
+Defined.
+
+(** Bundled version of the above. *)
+Lemma isexact_preimage_hfiber (O : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
       `{IsExact O _ _ _ i f} (x : hfiber f (point _))
   : O (hfiber i x.1).
 Proof.
