@@ -201,6 +201,224 @@ Definition path_abses `{Univalence} {B A : AbGroup} {E F : AbSES B A} (phi : mid
            (p : phi $o inclusion _ == inclusion _) (q : projection _ == projection _ $o phi)
   : E = F := equiv_path_abses (phi; (p,q)).
 
+(** *** The wildcat of short exact sequences *)
+
+Global Instance isgraph_abses_path_data {A B: AbGroup} (E F : AbSES B A)
+  : IsGraph (abses_path_data_iso E F)
+  := isgraph_induced (grp_iso_homo _ _ o pr1).
+
+Global Instance is01cat_abses_path_data {A B : AbGroup} (E F : AbSES B A)
+  : Is01Cat (abses_path_data_iso E F)
+  := is01cat_induced (grp_iso_homo _ _ o pr1).
+
+Global Instance is0gpd_abses_path_data {A B : AbGroup} (E F : AbSES B A)
+  : Is0Gpd (abses_path_data_iso E F)
+  := is0gpd_induced (grp_iso_homo _ _ o pr1).
+
+Global Instance isgraph_abses {A B : AbGroup} : IsGraph (AbSES B A)
+  := Build_IsGraph _ abses_path_data_iso.
+
+(** The path data corresponding to [idpath]. *)
+Definition abses_path_data_1 {B A : AbGroup} (E : AbSES B A)
+  : E $-> E := (grp_iso_id; (fun _ => idpath, fun _ => idpath)).
+
+(** We can compose path data in [AbSES B A]. *)
+Definition abses_path_data_compose {B A : AbGroup} {E F G : AbSES B A}
+           (p : E $-> F) (q : F $-> G) : E $-> G
+  := (q.1 $oE p.1; ((fun x => ap q.1 (fst p.2 x) @ fst q.2 x), (fun x => snd p.2 x @ snd q.2 (p.1 x)))).
+
+Global Instance is01cat_abses {A B : AbGroup} : Is01Cat (AbSES B A) :=
+  Build_Is01Cat _ _ abses_path_data_1  (fun _ _ _ q p => abses_path_data_compose p q).
+
+Definition abses_path_data_inverse {B A : AbGroup} {E F : AbSES B A}
+  : (E $-> F) -> (F $-> E).
+Proof.
+  intros [phi [p q]].
+  srefine (_; (_,_)).
+  - exact (grp_iso_inverse phi).
+  - intro a.
+    exact (ap _ (p a)^ @ eissect _ (inclusion E a)).
+  - intro a; simpl.
+    exact (ap (projection F) (eisretr _ _)^ @ (q _)^).
+Defined.
+
+Global Instance is0gpd_abses {A B : AbGroup} : Is0Gpd (AbSES B A)
+  := {| gpd_rev := fun _ _ => abses_path_data_inverse |}.
+
+Global Instance is2graph_abses {A B : AbGroup} : Is2Graph (AbSES B A)
+  := fun E F => isgraph_abses_path_data E F.
+
+(** [AbSES B A] forms a 1Cat *)
+Global Instance is1cat_abses {A B : AbGroup} : Is1Cat (AbSES B A).
+Proof.
+  snrapply Build_Is1Cat.
+  1: intros ? ?; apply is01cat_abses_path_data.
+  1: intros ? ?; apply is0gpd_abses_path_data.
+  3-5: cbn; reflexivity.
+  1,2: intros E F G f;
+  srapply Build_Is0Functor;
+  intros p q h e; cbn.
+  - exact (ap f.1 (h e)).
+  - exact (h (f.1 e)).
+Defined.
+
+Global Instance is1gpd_abses {A B : AbGroup} : Is1Gpd (AbSES B A).
+Proof.
+  rapply Build_Is1Gpd;
+    intros E F p e; cbn.
+  - apply eissect.
+  - apply eisretr.
+Defined.
+
+Global Instance hasmorext_abses `{Funext} {A B : AbGroup} : HasMorExt (AbSES B A).
+Proof.
+  srapply Build_HasMorExt;
+    intros E F f g.
+  srapply isequiv_homotopic'; cbn.
+  1: exact (((equiv_path_groupisomorphism _ _)^-1%equiv)
+              oE (equiv_path_sigma_hprop _ _)^-1%equiv).
+  intro p; by induction p.
+Defined.
+
+(** *** Path data lemmas *)
+
+(** We need to be able to work with path data as if they're paths. Our preference is to state things in terms of [abses_path_data_iso], since this lets us keep track of isomorphisms whose inverses compute. The "abstract" inverses produced by [short_five_lemma] do not compute well. *)
+
+Definition equiv_path_abses_1 `{Univalence} {B A : AbGroup} {E : AbSES B A}
+  : equiv_path_abses_iso (abses_path_data_1 E) = idpath.
+Proof.
+  apply (equiv_ap_inv' equiv_path_abses_iso).
+  refine (eissect _ _ @ _).
+  srapply path_sigma_hprop; simpl.
+  srapply equiv_path_groupisomorphism.
+  reflexivity.
+Defined.
+
+Definition equiv_path_absesV_1 `{Univalence} {B A : AbGroup} {E : AbSES B A}
+  : (@equiv_path_abses_iso _ B A E E)^-1 idpath = Id E.
+Proof.
+  apply moveR_equiv_M; symmetry.
+  apply equiv_path_abses_1.
+Defined.
+
+Definition abses_path_data_V `{Univalence} {B A : AbGroup} {E F : AbSES B A}
+           (p : abses_path_data_iso E F)
+  : (equiv_path_abses_iso p)^ = equiv_path_abses_iso (abses_path_data_inverse p).
+Proof.
+  revert p.
+  equiv_intro (equiv_path_abses_iso (E:=E) (F:=F))^-1 p; induction p.
+  refine (ap _ (eisretr _ _) @ _); symmetry.
+  nrefine (ap (equiv_path_abses_iso o abses_path_data_inverse) equiv_path_absesV_1 @ _).
+  refine (ap equiv_path_abses_iso gpd_strong_rev_1 @ _).
+  exact equiv_path_abses_1.
+Defined.
+
+(** Composition of path data corresponds to composition of paths. *)
+Definition abses_path_compose_beta `{Univalence} {B A : AbGroup} {E F G : AbSES B A}
+          (p : E = F) (q : F = G)
+ : p @ q = equiv_path_abses_iso
+             (abses_path_data_compose
+                (equiv_path_abses_iso^-1 p) (equiv_path_abses_iso^-1 q)).
+Proof.
+  induction p, q.
+  refine (concat_p1 _ @ _).
+  apply (equiv_concat_l equiv_path_abses_1^).
+  apply (ap equiv_path_abses_iso).
+  apply path_sigma_hprop; cbn.
+  by apply equiv_path_groupisomorphism.
+Defined.
+
+(** A second beta-principle where you start with path data instead of actual paths. *)
+Definition abses_path_data_compose_beta `{Univalence} {B A : AbGroup} {E F G : AbSES B A}
+           (p : abses_path_data_iso E F) (q : abses_path_data_iso F G)
+  : equiv_path_abses_iso p @ equiv_path_abses_iso q
+    = equiv_path_abses_iso (abses_path_data_compose p q).
+Proof.
+  generalize p, q.
+  equiv_intro ((equiv_path_abses_iso (E:=E) (F:=F))^-1) x.
+  equiv_intro ((equiv_path_abses_iso (E:=F) (F:=G))^-1) y.
+  refine ((eisretr _ _ @@ eisretr _ _) @ _).
+  rapply abses_path_compose_beta.
+Defined.
+
+(** *** Homotopies of path data *)
+
+Definition equiv_path_data_homotopy `{Univalence} {X : Type} {B A : AbGroup}
+           (f g : X -> AbSES B A) : (f $=> g) <~> f == g.
+Proof.
+  srapply equiv_functor_forall_id; intro x; cbn.
+  srapply equiv_path_abses_iso.
+Defined.
+
+Definition pmap_abses (X : pType) (B A : AbGroup)
+  := {f : X -> AbSES B A & f (point X) $== point _}.
+
+Definition hfiber_abses {X : Type} {B A : AbGroup} (f : X -> AbSES B A) (E : AbSES B A)
+  := {x : X & f x $== E}.
+
+Definition pmap_abses_const {X : pType} {B A : AbGroup} : pmap_abses X B A
+  := (const (point _); abses_path_data_1 (point _)).
+
+Definition to_pointed `{Univalence} {X : pType} {B A : AbGroup}
+  : pmap_abses X B A -> (X ->* AbSES B A)
+  := fun f => Build_pMap _ _ f.1 (equiv_path_abses_iso f.2).
+
+Lemma pmap_abses_const_to_pointed `{Univalence} {X : pType} {B A : AbGroup}
+  : pconst ==* to_pointed (@pmap_abses_const X B A).
+Proof.
+  srapply Build_pHomotopy.
+  1: reflexivity.
+  apply moveL_pV.
+  refine (concat_1p _ @ _).
+  apply equiv_path_abses_1.
+Defined.
+
+Definition from_pointed `{Univalence} {X : pType} {B A : AbGroup}
+  : (X ->* AbSES B A) -> pmap_abses X B A
+  := fun f => (pointed_fun f; equiv_path_abses_iso^-1 (point_eq f)).
+
+Definition path_data_phomotopy {X : pType} {B A : AbGroup} (f g : pmap_abses X B A)
+  := {h : f.1 $=> g.1 & h (point X) = f.2 $@ g.2^$}.
+
+Notation "f $=>* g" := (path_data_phomotopy f g) (at level 18) : abses_scope.
+
+Definition path_data_phomotopy_inverse `{Funext} {X : pType} {B A : AbGroup} (f g : pmap_abses X B A)
+  : (f $=>* g) -> (g $=>* f).
+Proof.
+  intros [h p].
+  exists (fun x => (h x)^$).
+  refine (ap _ p @ _).
+  refine (gpd_strong_rev_pp _ _ @ ap _ _).
+  apply gpd_strong_rev_rev.
+Defined.
+
+Notation "h ^*$" := (path_data_phomotopy_inverse _ _ h) (at level 5) : abses_scope.
+
+Definition equiv_path_data_phomotopy `{Univalence} {X : pType} {B A : AbGroup}
+           (f g : pmap_abses X B A)
+  : f $=>* g <~> to_pointed f ==* to_pointed g.
+Proof.
+  refine (issig_pforall _ _ oE _).
+  apply (equiv_functor_sigma' (equiv_path_data_homotopy f.1 g.1)); intro h.
+  refine (equiv_concat_r _ _ oE _).
+  1: exact ((abses_path_data_compose_beta _ _)^ @ ap (fun x => _ @ x) (abses_path_data_V _)^).
+  apply equiv_ap'.
+Defined.
+
+Definition path_data_phomotopy_compose `{Univalence} {X : pType} {B A : AbGroup}
+           {f0 f1 f2 : pmap_abses X B A}
+  : (f0 $=>* f1) -> (f1 $=>* f2) -> (f0 $=>* f2).
+Proof.
+  intros [h0 p0] [h1 p1].
+  exists (trans_comp h1 h0).
+  refine (ap011 abses_path_data_compose p0 p1 @ _);
+    unfold gpd_comp.
+  refine (cat_assoc_strong _ _ _ @ ap _ _).
+  apply gpd_strong_h_Vh.
+Defined.
+
+Notation "h $@* k" := (path_data_phomotopy_compose h k) (at level 10) : abses_scope.
+
 (** *** Characterisation of loops of short exact sequences *)
 
 (** Endomorphisms of the trivial short exact sequence in [AbSES B A] correspond to homomorphisms [B -> A]. *)
@@ -394,4 +612,27 @@ Proof.
     exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr).
     intro x; cbn.
     exact (h _ @ ap snd (eisretr _ _)).
+Defined.
+
+(** ** Constructions of short exact sequences *)
+
+(** Any inclusion [i : A $-> E] determines a short exact sequence by quotienting. *)
+Definition abses_from_inclusion `{Univalence} {A E : AbGroup} (i : A $-> E) `{IsEmbedding i}
+  : AbSES (QuotientAbGroup E (grp_image_embedding i)) A.
+Proof.
+  srapply (Build_AbSES E i).
+  1: exact grp_quotient_map.
+  1: exact _.
+  srapply Build_IsExact.
+  - srapply Build_pHomotopy.
+    + intro x.
+      apply qglue; cbn.
+      exists (-x).
+      exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
+    + apply path_ishprop.
+  - snrapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
+    + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
+    + intro a.
+      by rapply (isinj_embedding (subgroup_incl _)).
+    + exact _.
 Defined.

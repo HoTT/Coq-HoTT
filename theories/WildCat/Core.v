@@ -475,6 +475,17 @@ Definition gpd_strong_rev_1 {A} `{Is1Gpd A, !HasMorExt A} {a : A}
 Definition gpd_strong_rev_rev {A} `{Is1Gpd A, !HasMorExt A} {a0 a1 : A} (g : a0 $== a1)
   : (g^$)^$ = g := path_hom (gpd_rev_rev g).
 
+Definition fmap_id_strong {A B} `{Is1Cat A, Is1Cat B, !HasMorExt B}
+           (F : A -> B) `{!Is0Functor F, !Is1Functor F} (a : A)
+  : fmap F (Id a) = Id (F a)
+  := path_hom (fmap_id F a).
+
+Definition gpd_strong_1functor_V {A B} `{Is1Gpd A, Is1Gpd B, !HasMorExt B}
+           (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+           {a0 a1 : A} (f : a0 $== a1)
+  : fmap F f^$ = (fmap F f)^$
+  := path_hom (gpd_1functor_V F f).
+
 Class Is3Graph (A : Type) `{Is2Graph A}
   := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
 Global Existing Instance isgraph_hom_hom | 30.
