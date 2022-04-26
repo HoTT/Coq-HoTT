@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types HFiber Pullback Pointed Truncations.
+Require Import HoTT.Basics HoTT.Types HFiber Limits.Pullback Pointed Truncations.
 Require Import Modalities.ReflectiveSubuniverse Modalities.Identity.
 
 Local Open Scope pointed_scope.

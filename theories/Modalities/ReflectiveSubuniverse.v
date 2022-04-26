@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Equiv.BiInv Extensions HProp HFiber NullHomotopy Pullback.
+Require Import Equiv.BiInv Extensions HProp HFiber NullHomotopy Limits.Pullback.
 Require Import PathAny.
 Require Import Colimits.Coeq Colimits.Pushout.
 
