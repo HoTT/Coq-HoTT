@@ -332,3 +332,81 @@ Definition abses_pullback_phomotopic `{Univalence} {A B B' : AbGroup}
       (f f' : B $-> B') (h : f == f')
   : abses_pullback (A:=A) f ==* abses_pullback f'
   := equiv_path_data_phomotopy _ _ (abses_pullback_phomotopic' f f' h).
+
+(** *** Pulling back along a complex *)
+
+Definition iscomplex_abses_pullback' `{Univalence} {A B0 B1 B2 : AbGroup}
+           (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
+  : (g $o* f) $=>* @pmap_abses_const _ _ A.
+Proof.
+  refine (abses_pullback_pcompose' _ _ $@* _).
+  refine (abses_pullback_phomotopic' _ _ h $@* _).
+  exact abses_pullback_pconst'^*$.
+Defined.
+
+Definition iscomplex_abses_pullback `{Univalence} {A B0 B1 B2 : AbGroup}
+           (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
+  : IsComplex (abses_pullback (A:=A) g) (abses_pullback f).
+Proof.
+  refine (_ @* _).
+  2: symmetry; exact pmap_abses_const_to_pointed.
+  refine (to_pointed_pullback_compose _ _ @* _).
+  apply equiv_path_data_phomotopy.
+  by rapply iscomplex_abses_pullback'.
+Defined.
+
+(** A consequence is that pulling back along a short exact sequence forms a complex. *)
+
+Definition iscomplex_pullback_abses `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+  : IsComplex (abses_pullback (A:=A) (projection E)) (abses_pullback (inclusion E)).
+Proof.
+  rapply iscomplex_abses_pullback.
+  rapply iscomplex_abses.
+Defined.
+
+(** In fact, pulling back along a short exact sequence is (purely) exact. See [AbSES.PullbackFiberSequence]. *)
+
+(** *** Fibers of pullback in terms of path data *)
+
+Definition hfiber_abses_path {A B B' : AbGroup} {f : B' $-> B} {X : AbSES B' A}
+           (E F : hfiber_abses (A:=A) (abses_pullback0 f) X) : Type.
+Proof.
+  refine (sig (fun p : E.1 $== F.1 => _)).
+  exact ((fmap (abses_pullback0 f) p)^$ $@ E.2 $== F.2).
+Defined.
+
+Definition equiv_hfiber_abses `{Univalence} {X : Type} {A B : AbGroup}
+           (f : X -> AbSES B A) (E : AbSES B A)
+  : hfiber_abses f E <~> hfiber f E
+  := equiv_functor_sigma_id (fun _ => equiv_path_abses_iso).
+
+Definition transport_path_data_hfiber_abses_pullback_l `{Univalence} {A B B' : AbGroup} {f : B' $-> B}
+           {Y : AbSES B' A} {X0 : hfiber_abses (abses_pullback0 f) Y} {X1 : AbSES B A} (p : X0.1 = X1)
+  : transport (fun x : AbSES B A => abses_pullback0 f x $== Y) p X0.2
+    = fmap (abses_pullback0 f) (equiv_path_abses_iso^-1 p^) $@ X0.2.
+Proof.
+  induction p.
+  refine (transport_1 _ _ @ _).
+  nrefine (_ @ (ap (fun x => x $@ _)) _).
+  2: { refine (_ @ ap _ equiv_path_absesV_1^).
+       exact (fmap_id_strong _ _)^. }
+  exact (cat_idr_strong _)^.
+Defined.
+
+Definition equiv_hfiber_abses_pullback `{Univalence} {A B B' : AbGroup} {f : B' $-> B}
+           (Y : AbSES B' A) (U V : hfiber_abses (abses_pullback0 f) Y)
+  : hfiber_abses_path U V <~> U = V.
+Proof.
+  refine (equiv_path_sigma _ _ _ oE _).
+  srapply (equiv_functor_sigma' equiv_path_abses_iso);
+    intro p; lazy beta.
+  refine (equiv_concat_l _ _ oE _).
+  { refine (transport_path_data_hfiber_abses_pullback_l _ @ _).
+    refine (ap (fun x => (fmap (abses_pullback0 f) x) $@ _) _ @ _).
+    { refine (ap _ (abses_path_data_V p) @ _).
+      apply eissect. }
+    refine (ap (fun x => x $@ _) _).
+    rapply gpd_strong_1functor_V. }
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_groupisomorphism.
+Defined.
