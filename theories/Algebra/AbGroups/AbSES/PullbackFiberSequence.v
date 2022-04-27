@@ -5,11 +5,11 @@ Require Import Modalities.Identity.
 
 (** * The fiber sequence induced by pulling back along a short exact sequence *)
 
-(** We show that pulling back along a short exact sequence [E : AbSES C A] produces a fiber sequence [AbSES C A -> AbSES E A -> AbSES B A]. The associated long exact sequence of homotopy groups recovers the usual (contravariant) six-term exact sequence of Ext groups.
+(** We show that pulling back along a short exact sequence [E : AbSES C B] produces a fiber sequence [AbSES C A -> AbSES E A -> AbSES B A]. The associated long exact sequence of homotopy groups recovers the usual (contravariant) six-term exact sequence of Ext groups.
 
 We will prove the analog of exactness in terms of path data, and deduce the usual notion. *)
 
-(** If a short exact sequence [A -> F -> B'] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the endpoint [F/B]. *)
+(** If a short exact sequence [A -> F -> E] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the endpoint [F/B]. *)
 
 Definition abses_pullback_inclusion_transpose_subgroup `{Univalence} {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
@@ -117,7 +117,7 @@ Proof.
       exact (negate_involutive _)^.
 Defined.
 
-(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate [abses_component1_trivial_pullback] and the following map: *)
+(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_component1_trivial_pullback] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
 
 Definition abses_pullback_inclusion0_map' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
            (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
@@ -131,7 +131,7 @@ Proof.
   - reflexivity.
 Defined.
 
-(** Of course, we need not only a preimage of [F] but a preimage of [(F,p)] along [cxfib]. We now define and prove this in terms of path data. *)
+(** For exactness we need not only a preimage of [F] but a preimage of [(F,p)] along [cxfib]. We now define and prove this in terms of path data. *)
 
 (** The analog of [cxfib] induced by pullback in terms of path data. *)
 Definition cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)

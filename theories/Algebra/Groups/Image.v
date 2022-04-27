@@ -74,26 +74,3 @@ Proof.
     refine (transport_sigma' _ _ @ _).
     by apply path_sigma_hprop.
 Defined.
-
-(** Embeddings [A $-> G] correspond to subgroups of [G]. *)
-Definition equiv_embedding_subgroup `{Univalence} {G : Group}
-  : {A : Group & {i : A $-> G & IsEmbedding i}}
-      <~> Subgroup G.
-Proof.
-  srapply equiv_adjointify.
-  - intros [A [i emb]].
-    exact (grp_image_embedding i).
-  - intro P.
-    exists (subgroup_group G P).
-    exists (subgroup_incl P).
-    exact _.
-  - intro P.
-    nrapply equiv_path_subgroup.
-    intro g; cbn.
-    srapply path_universe_uncurried; symmetry.
-    apply hfiber_fibration.
-  - intros [A [i emb]].
-    srapply path_sigma'.
-    + srapply equiv_path_group.
-Abort.
-
