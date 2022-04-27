@@ -5,7 +5,7 @@ on: [ push , pull_request ]
 # We set the supported coq-version from here. In order to use this environment variable correctly, look at how they are used in the following jobs.
 env:
   coq-version-supported: '8.15'
-  ocaml-version: '4.11-flambda'
+  ocaml-version: '4.13-flambda'
   deployment-branch: 'gh-pages'
 
 # Our jobs come in 3 stages, the latter stages depending on the former:
@@ -181,7 +181,7 @@ jobs:
     - uses: coq-community/docker-coq-action@v1
       with:
         coq_version: ${{ env.coq-version-supported }}
-        ocaml_version: 4.11-flambda
+        ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
@@ -227,7 +227,7 @@ jobs:
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
-        custom_script: |        
+        custom_script: |
           sudo apt-get update
           sudo apt-get install -y ghc cabal-install
           sudo apt-get install -y --allow-unauthenticated \
@@ -236,7 +236,6 @@ jobs:
           libxml2-dev libxslt1-dev time lua5.1 unzip npm
           # libnode-dev node-gyp
 
-        
           cabal update
           cabal install graphviz text
           sudo -E npm config set strict-ssl false
@@ -269,7 +268,6 @@ jobs:
           make svg-file-dep-graphs -k || true
           ## Try to make again to see errors
           make svg-file-dep-graphs -k || true
-                  
           # `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
           # makes `dot` spin for over a dozen minutes.  So disable it for now.
           #make svg-aggregate-dep-graphs -k || exit $?
