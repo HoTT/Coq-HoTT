@@ -184,8 +184,8 @@ Definition abses_pushout_point `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   := equiv_path_abses_iso (abses_pushout_point' f).
 
 Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : @pmap_abses (AbSES B A) B A'
-  := (abses_pushout0 f; abses_pushout_point' f).
+  : AbSES B A -->* AbSES B A'
+  := Build_BasepointPreservingFunctor (abses_pushout0 f) (abses_pushout_point' f).
 
 Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A ->* AbSES B A'

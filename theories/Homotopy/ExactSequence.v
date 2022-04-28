@@ -162,10 +162,7 @@ Lemma isexact_preimage_hfiber (O : Modality) {F X Y : pType} (i : F ->* X) (f : 
       `{IsExact O _ _ _ i f} (x : hfiber f (point _))
   : O (hfiber i x.1).
 Proof.
-  rapply (O_functor O (A:=hfiber (cxfib cx_isexact) x)).
-  - intros [z p].
-    exact (z; ap pr1 p).
-  - apply conn_map_isexact.
+  srapply isexact_preimage; exact x.2.
 Defined.
 
 (** Passage across homotopies preserves exactness. *)

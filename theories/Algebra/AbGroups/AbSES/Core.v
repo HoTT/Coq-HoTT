@@ -350,21 +350,15 @@ Proof.
   srapply equiv_path_abses_iso.
 Defined.
 
-Definition pmap_abses (X : pType) (B A : AbGroup)
-  := {f : X -> AbSES B A & f (point X) $== point _}.
+Definition pmap_abses_const {B' A' B A : AbGroup} : AbSES B A -->* AbSES B' A'
+  := Build_BasepointPreservingFunctor (const (point _)) (Id (point _)).
 
-Definition hfiber_abses {X : Type} {B A : AbGroup} (f : X -> AbSES B A) (E : AbSES B A)
-  := {x : X & f x $== E}.
+Definition to_pointed `{Univalence} {B' A' B A : AbGroup}
+  : (AbSES B A -->* AbSES B' A') -> (AbSES B A ->* AbSES B' A')
+  := fun f => Build_pMap _ _ f (equiv_path_abses_iso (bp_pointed f)).
 
-Definition pmap_abses_const {X : pType} {B A : AbGroup} : pmap_abses X B A
-  := (const (point _); abses_path_data_1 (point _)).
-
-Definition to_pointed `{Univalence} {X : pType} {B A : AbGroup}
-  : pmap_abses X B A -> (X ->* AbSES B A)
-  := fun f => Build_pMap _ _ f.1 (equiv_path_abses_iso f.2).
-
-Lemma pmap_abses_const_to_pointed `{Univalence} {X : pType} {B A : AbGroup}
-  : pconst ==* to_pointed (@pmap_abses_const X B A).
+Lemma pmap_abses_const_to_pointed `{Univalence} {B' A' B A : AbGroup}
+  : pconst ==* to_pointed (@pmap_abses_const B' A' B A).
 Proof.
   srapply Build_pHomotopy.
   1: reflexivity.
@@ -373,51 +367,55 @@ Proof.
   apply equiv_path_abses_1.
 Defined.
 
-Definition from_pointed `{Univalence} {X : pType} {B A : AbGroup}
-  : (X ->* AbSES B A) -> pmap_abses X B A
-  := fun f => (pointed_fun f; equiv_path_abses_iso^-1 (point_eq f)).
-
-Definition path_data_phomotopy {X : pType} {B A : AbGroup} (f g : pmap_abses X B A)
-  := {h : f.1 $=> g.1 & h (point X) = f.2 $@ g.2^$}.
-
-Notation "f $=>* g" := (path_data_phomotopy f g) (at level 18) : abses_scope.
-
-Definition path_data_phomotopy_inverse `{Funext} {X : pType} {B A : AbGroup} (f g : pmap_abses X B A)
-  : (f $=>* g) -> (g $=>* f).
+Lemma abses_ap_fmap `{Univalence} {B0 B1 A0 A1 : AbGroup}
+      (f : AbSES B0 A0 -> AbSES B1 A1) `{!Is0Functor f, !Is1Functor f}
+      {E F : AbSES B0 A0} (p : E $== F)
+  : ap f (equiv_path_abses_iso p) = equiv_path_abses_iso (fmap f p).
 Proof.
-  intros [h p].
-  exists (fun x => (h x)^$).
-  refine (ap _ p @ _).
-  refine (gpd_strong_rev_pp _ _ @ ap _ _).
-  apply gpd_strong_rev_rev.
+  revert p.
+  apply (equiv_ind equiv_path_abses_iso^-1%equiv);
+    intro p.
+  induction p.
+  refine (ap (ap f) (eisretr _ _) @ _).
+  nrefine (_ @ ap equiv_path_abses_iso _).
+  2: { rapply path_hom.
+       srefine (_ $@ fmap2 _ _).
+       2: exact (Id E).
+       2: intro x; reflexivity.
+       exact (fmap_id f _)^$. }
+  exact equiv_path_abses_1^.
 Defined.
 
-Notation "h ^*$" := (path_data_phomotopy_inverse _ _ h) (at level 5) : abses_scope.
+Definition to_pointed_compose `{Univalence} {B0 B1 B2 A0 A1 A2 : AbGroup}
+           (f : AbSES B0 A0 -->* AbSES B1 A1) (g : AbSES B1 A1 -->* AbSES B2 A2)
+           `{!Is1Functor f, !Is1Functor g}
+  : to_pointed g o* to_pointed f ==* to_pointed (g $o* f).
+Proof.
+  srapply Build_pHomotopy.
+  1: reflexivity.
+  lazy beta.
+  nrapply moveL_pV.
+  nrefine (concat_1p _ @ _).
+  unfold pmap_compose, Build_pMap, pointed_fun, point_eq, dpoint_eq.
+  refine (_ @ ap (fun x => x @ _) _^).
+  2: apply (abses_ap_fmap g).
+  nrefine (_ @ (abses_path_data_compose_beta _ _)^).
+  nrapply (ap equiv_path_abses_iso).
+  by rapply path_hom.
+Defined.
 
-Definition equiv_path_data_phomotopy `{Univalence} {X : pType} {B A : AbGroup}
-           (f g : pmap_abses X B A)
+Definition equiv_ptransformation_phomotopy `{Univalence} {B' A' B A : AbGroup}
+           (f g : AbSES B A -->* AbSES B' A')
   : f $=>* g <~> to_pointed f ==* to_pointed g.
 Proof.
   refine (issig_pforall _ _ oE _).
-  apply (equiv_functor_sigma' (equiv_path_data_homotopy f.1 g.1)); intro h.
+  apply (equiv_functor_sigma' (equiv_path_data_homotopy f g)); intro h.
   refine (equiv_concat_r _ _ oE _).
   1: exact ((abses_path_data_compose_beta _ _)^ @ ap (fun x => _ @ x) (abses_path_data_V _)^).
-  apply equiv_ap'.
+  refine (equiv_ap' equiv_path_abses_iso _ _ oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_groupisomorphism.
 Defined.
-
-Definition path_data_phomotopy_compose `{Univalence} {X : pType} {B A : AbGroup}
-           {f0 f1 f2 : pmap_abses X B A}
-  : (f0 $=>* f1) -> (f1 $=>* f2) -> (f0 $=>* f2).
-Proof.
-  intros [h0 p0] [h1 p1].
-  exists (trans_comp h1 h0).
-  refine (ap011 abses_path_data_compose p0 p1 @ _);
-    unfold gpd_comp.
-  refine (cat_assoc_strong _ _ _ @ ap _ _).
-  apply gpd_strong_h_Vh.
-Defined.
-
-Notation "h $@* k" := (path_data_phomotopy_compose h k) (at level 10) : abses_scope.
 
 (** *** Characterisation of loops of short exact sequences *)
 

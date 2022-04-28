@@ -135,7 +135,7 @@ Defined.
 
 (** The analog of [cxfib] induced by pullback in terms of path data. *)
 Definition cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
-  : AbSES C A -> hfiber_abses (A:=A) (abses_pullback0 (inclusion E)) (point _).
+  : AbSES C A -> graph_hfiber (abses_pullback0 (A:=A) (inclusion E)) (point _).
 Proof.
   intro Y.
   exists (abses_pullback0 (projection E) Y).
@@ -224,8 +224,8 @@ Definition hfiber_cxfib'_inhabited `{Univalence} {A B C : AbGroup} (E : AbSES C 
   : hfiber_cxfib' E F p.
 Proof.
   exists (abses_pullback_trivial_preimage E F p).
-  srefine (_; _).
-  1: symmetry; by nrapply (abses_component1_trivial_pullback' (abses_pullback_inclusion0_map' E F p)).
+  srefine (_^$; _).
+  1: by rapply (abses_component1_trivial_pullback' (abses_pullback_inclusion0_map' E F p)).
   lazy beta; unfold pr2.
   refine (cat_assoc _ _ _ $@ _).
   refine (cat_assoc _ _ _ $@ _).
@@ -276,7 +276,7 @@ Proof.
 Defined.
 
 Lemma fmap_hfiber_abses_lemma `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
-           (X Y : hfiber_abses (abses_pullback0 (A:=A) f) (point _)) (Q : hfiber_abses_path X Y)
+           (X Y : graph_hfiber (abses_pullback0 (A:=A) f) (point _)) (Q : hfiber_abses_path X Y)
   : fmap (abses_pullback0 f) Q.1^$ $o Y.2^$ $== X.2^$.
 Proof.
   generalize Q.

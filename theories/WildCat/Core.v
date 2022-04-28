@@ -13,6 +13,9 @@ Class IsGraph (A : Type) :=
 
 Notation "a $-> b" := (Hom a b).
 
+Definition graph_hfiber {B C : Type} `{IsGraph C} (F : B -> C) (c : C)
+  := {b : B & F b $-> c}.
+
 (** ** 0-categorical structures *)
 
 (** A wild (0,1)-category has 1-morphisms and operations on them, but no coherence. *)
@@ -521,4 +524,37 @@ Lemma fmap_terminal {A B : Type} (F : A -> B)
 Proof.
   exact (mor_terminal_unique _ _ _)^$.
 Defined.
+
+(** *** Functors preserving distinguished objects *)
+
+Record BasepointPreservingFunctor (B C : Type)
+       `{Is01Cat B, Is01Cat C} `{IsPointed B, IsPointed C} := {
+    bp_map : B -> C;
+    bp_is0functor : Is0Functor bp_map;
+    bp_pointed : bp_map (point B) $-> point C
+  }.
+
+Arguments bp_pointed {B C}%type_scope {H H0 H1 H2 H3 H4} b.
+Arguments Build_BasepointPreservingFunctor {B C}%type_scope {H H0 H1 H2 H3 H4}
+  bp_map%function_scope {bp_is0functor} bp_pointed.
+
+Coercion bp_map : BasepointPreservingFunctor >-> Funclass.
+
+Global Existing Instance bp_is0functor.
+
+Notation "B -->* C" := (BasepointPreservingFunctor B C) (at level 70).
+
+Definition basepointpreservingfunctor_compose {B C D : Type}
+           `{Is01Cat B, Is01Cat C, Is01Cat D}
+           `{IsPointed B, IsPointed C, IsPointed D}
+           (F : B -->* C) (G : C -->* D)
+  : B -->* D.
+Proof.
+  snrapply Build_BasepointPreservingFunctor.
+  - exact (G o F).
+  - exact _.
+  - exact (bp_pointed G $o fmap G (bp_pointed F)).
+Defined.
+
+Notation "G $o* F" := (basepointpreservingfunctor_compose F G) (at level 40).
 
