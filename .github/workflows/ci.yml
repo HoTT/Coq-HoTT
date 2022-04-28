@@ -256,11 +256,8 @@ jobs:
           mkdir -p dep-graphs
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
-          ## Make file dependency graphs
-          opam install ocamlgraph -y
-          ./etc/ci/make_dpd_graphs.sh
-
-          make dpdgraph || exit $?
+          ## Install coq-dpdgraph
+          opam install coq-dpdgraph.1.0+8.15 -y
 
           # For some reason, we get a stackoverflow. So we are lax
           # with making these.

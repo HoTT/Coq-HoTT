@@ -19,9 +19,5 @@ fi
 if [ ! -z "$UPDATE_HTML" ]; then
     ./install_proviola.sh || exit $?
 fi
-./install_coq.sh -prefix /usr/local || exit $?
-if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
-    ./make_dpd_graphs.sh || exit $?
-fi
 
 popd 1>/dev/null
