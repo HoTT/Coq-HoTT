@@ -298,7 +298,7 @@ Defined.
 Definition abses_pullback_phomotopic `{Univalence} {A B B' : AbGroup}
       (f f' : B $-> B') (h : f == f')
   : abses_pullback (A:=A) f ==* abses_pullback f'
-  := equiv_ptransformation_phomotopy _ _ (abses_pullback_phomotopic' f f' h).
+  := equiv_ptransformation_phomotopy (abses_pullback_phomotopic' f f' h).
 
 (** *** Pulling back along a complex *)
 

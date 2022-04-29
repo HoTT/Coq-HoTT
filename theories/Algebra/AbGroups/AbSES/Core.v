@@ -405,7 +405,7 @@ Proof.
 Defined.
 
 Definition equiv_ptransformation_phomotopy `{Univalence} {B' A' B A : AbGroup}
-           (f g : AbSES B A -->* AbSES B' A')
+           {f g : AbSES B A -->* AbSES B' A'}
   : f $=>* g <~> to_pointed f ==* to_pointed g.
 Proof.
   refine (issig_pforall _ _ oE _).

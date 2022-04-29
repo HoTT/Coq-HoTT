@@ -106,7 +106,8 @@ Proof.
       strip_truncations; destruct a as [a q2].
       (* It remains to show that [a] is the desired preimage. *)
       refine (tr (a; _)).
-      apply path_sigma_hprop.
+      nrapply path_sigma_hprop.
+      1: intros ?; apply istrunc_paths; apply group_isgroup.
       refine (ap grp_quotient_map q2 @ _ @ q0).
       refine (grp_homo_op _ _ _ @ _).
       apply grp_moveR_Mg.
@@ -149,6 +150,37 @@ Definition hfiber_cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
            (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
   := {Y : AbSES C A & hfiber_abses_path (cxfib' E Y) (F; p)}.
 
+(* This is just [idpath], but Coq takes too long to see that. *)
+Local Definition pr2_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B} (U : AbSES C A)
+  : equiv_ptransformation_phomotopy (iscomplex_abses_pullback' _ _ (iscomplex_abses E)) U
+    = equiv_path_abses_iso (cxfib' E U).2.
+Proof.
+  change (equiv_ptransformation_phomotopy (iscomplex_abses_pullback' _ _ (iscomplex_abses E)) U)
+    with (equiv_path_abses_iso ((iscomplex_abses_pullback' _ _ (iscomplex_abses E)).1 U)).
+  apply (ap equiv_path_abses_iso).
+  rapply path_hom.
+  refine (_ $@R abses_pullback_compose' (inclusion E) (projection E) U);
+    unfold trans_comp.
+  refine (_ $@R abses_pullback_homotopic' (projection E $o inclusion E) grp_homo_const (iscomplex_abses E) U).
+  reflexivity.
+Defined.
+
+(** Making [abses_pullback'] transparent speeds up the following proof. *)
+Opaque abses_pullback'.
+
+Local Definition eq_cxfib_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B} (U : AbSES C A)
+  : cxfib (iscomplex_pullback_abses E) U = equiv_hfiber_abses _ _ (cxfib' E U).
+Proof.
+  srapply path_sigma.
+  1: reflexivity.
+  nrefine (transport_1 _ _ @ _).
+  nrefine (concat_p1 _ @ _).
+  nrefine (concat_1p _ @ _).
+  exact (@pr2_cxfib' _ A B C E U).
+Defined.
+
+Transparent abses_pullback'.
+
 Definition equiv_hfiber_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
            (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
   : hfiber_cxfib' E F p <~> hfiber (cxfib (iscomplex_pullback_abses E))
@@ -158,20 +190,7 @@ Proof.
   refine (_ oE equiv_hfiber_abses_pullback _ _ _).
   refine (_ oE equiv_ap' (equiv_hfiber_abses _ (point _)) _ _).
   apply equiv_concat_l.
-  srapply path_sigma.
-  1: reflexivity.
-  nrefine (transport_1 _ _ @ _).
-  unfold cxfib, Build_pMap, pointed_fun, pr2,
-    iscomplex_pullback_abses, phomotopy_transitive,
-    Build_pHomotopy, pointed_fun.
-  nrefine (concat_p1 _ @ _).
-  nrefine (concat_1p _ @ _).
-  (* [reflexivity.] works here, but is too slow. *)
-  nrapply (ap equiv_path_abses_iso).
-  rapply path_hom.
-  snrapply (fmap (cat_comp ((abses_pullback_pconst'.1 U)^$ $o (abses_pullback_homotopic' _ _ _) U))).
-  3: apply Id.
-  rapply is0functor_postcomp.
+  apply eq_cxfib_cxfib'.
 Defined.
 
 (** The type of paths in [hfiber_cxfib'] in terms of path data. *)
