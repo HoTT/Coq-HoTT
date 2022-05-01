@@ -58,7 +58,7 @@ Proof.
     intros a q0.
     (* Since [inclusion F a] is killed by [grp_quotient_map], its in the image of [B]. *)
     assert (in_coset :  in_cosetL (abses_pullback_inclusion_transpose_subgroup (inclusion E) F p)
-                           (inclusion F a) mon_unit). (** todo: consider not using inclusion here, but grp_pullback_pr1 *)
+                           (inclusion F a) mon_unit).
     1:{ nrapply related_quotient_paths.
         1,2,3,4: exact _.
         exact q0. }
@@ -90,7 +90,7 @@ Proof.
       apply (@contr_inhabited_hprop _ _).
       (* We choose a preimage by [grp_quotient_map]. *)
       assert (f : merely (hfiber grp_quotient_map y)).
-      1: apply center, issurj_class_of. (* todo: clean up *)
+      1: apply center, issurj_class_of.
       revert_opaque f; apply Trunc_rec; intros [f q0].
       (* Since [projection F f] is in the kernel of [projection E], we find a preimage in [B]. *)
       assert (b : merely (hfiber (inclusion E) (projection F f))).
