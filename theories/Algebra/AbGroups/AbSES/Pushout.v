@@ -79,7 +79,10 @@ Proof.
   - intro x; simpl.
     rewrite grp_homo_unit.
     exact (right_identity _)^.
-  - rapply (issurj_isepi_funext grp_quotient_map); intro x; simpl.
+  - snrapply (issurj_isepi_funext grp_quotient_map).
+    1: apply issurj_class_of.
+    2: exact _.
+    intro x; simpl.
     refine (grp_homo_op (projection F) _ _ @ ap011 (+) _ _ @ (grp_homo_op _ _ _ )^).
     + refine (_ @ (grp_homo_unit _)^).
       apply iscomplex_abses.
@@ -109,7 +112,7 @@ Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A
 Proof.
   srapply Build_Is0Functor;
     intros E F p.
-  srapply equiv_path_abses_data.
+  srapply abses_path_data_to_iso.
   srefine (functor_ab_pushout f f (inclusion _) (inclusion _) grp_homo_id grp_homo_id p.1 _ _; (_, _)).
   - reflexivity.
   - symmetry; exact (fst p.2).
@@ -164,7 +167,7 @@ Defined.
 Definition abses_pushout_point' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : abses_pushout0 f (point (AbSES B A)) $== point _.
 Proof.
-  srapply equiv_path_abses_data;
+  srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
   - snrefine (ab_pushout_rec ab_biprod_inl _ _).
     + exact (functor_ab_biprod f grp_homo_id).
@@ -196,7 +199,7 @@ Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
   : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
 Proof.
   intro E; apply gpd_rev.
-  srapply equiv_path_abses_data;
+  srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
   - snrapply ab_pushout_rec.
     + apply inclusion.

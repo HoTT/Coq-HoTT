@@ -68,7 +68,7 @@ Definition abses_pullback_morphism_corec_beta `{Funext} {A B X Y : AbGroup}
 Proof.
   apply (equiv_ap issig_AbSESMorphism^-1 _ _).
   srapply path_sigma_hprop.
-  1: apply path_prod.
+  apply path_prod.
   1: apply path_prod.
   all: by apply equiv_path_grouphomomorphism.
 Defined.
@@ -79,7 +79,7 @@ Definition abses_component1_trivial_pullback' `{Funext} {A B B' : AbGroup}
   : E $== abses_pullback0 (component3 f) F.
 Proof.
   pose (g := (abses_pullback_morphism_corec f)).
-  rapply equiv_path_abses_data.
+  nrapply abses_path_data_to_iso.
   exists (component2 g); split.
   - intro a; cbn.
     apply equiv_path_pullback_hset; split; cbn.
@@ -157,14 +157,14 @@ Definition abses_pullback_point' {A B B' : AbGroup} (f : B' $-> B)
   : (abses_pullback0 f (point _)) $== (point (AbSES B' A)).
 Proof.
   snrefine (_; (_, _)).
-  - srapply Build_GroupIsomorphism.
+  - snrapply Build_GroupIsomorphism.
     + srapply ab_biprod_corec.
       * refine (ab_biprod_pr1 $o _).
         apply grp_pullback_pr1.
       * apply projection.
     + srapply isequiv_adjointify.
       * snrapply grp_pullback_corec.
-        --  exact (functor_ab_biprod grp_homo_id f).
+        -- exact (functor_ab_biprod grp_homo_id f).
         -- exact ab_biprod_pr2.
         -- reflexivity.
       * reflexivity.
@@ -234,7 +234,8 @@ Lemma abses_pullback_const' `{Funext} {A B B' : AbGroup}
   : const (point _) $=> (@abses_pullback0 A B B' grp_homo_const).
 Proof.
   intro E.
-  rapply equiv_path_abses_data.
+  simpl.
+  nrapply abses_path_data_to_iso.
   srefine (_;(_,_)); cbn.
   - srapply grp_pullback_corec.
     + exact (inclusion _ $o ab_biprod_pr1).

@@ -179,12 +179,18 @@ Definition abses_path_data {B A : AbGroup} (E F : AbSES B A)
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
+Definition abses_path_data_to_iso `{Funext} {B A : AbGroup} (E F: AbSES B A)
+  : abses_path_data E F -> abses_path_data_iso E F.
+Proof.
+  - intros [phi [p q]].
+    exact ({| grp_iso_homo := phi; isequiv_group_iso := short_five_lemma phi p q |}; (p, q)).
+Defined.
+
 Proposition equiv_path_abses_data `{Funext} {B A : AbGroup} (E F: AbSES B A)
   : abses_path_data E F <~> abses_path_data_iso E F.
 Proof.
   srapply equiv_adjointify.
-  - intros [phi [p q]].
-    exact ({| grp_iso_homo := phi; isequiv_group_iso := short_five_lemma phi p q |}; (p, q)).
+  - apply abses_path_data_to_iso.
   - srapply (functor_sigma (grp_iso_homo _ _)).
     exact (fun _ => idmap).
   - intros [phi [p q]].
@@ -321,10 +327,9 @@ Definition abses_path_compose_beta `{Univalence} {B A : AbGroup} {E F G : AbSES 
                 (equiv_path_abses_iso^-1 p) (equiv_path_abses_iso^-1 q)).
 Proof.
   induction p, q.
-  refine (concat_p1 _ @ _).
-  apply (equiv_concat_l equiv_path_abses_1^).
+  refine (equiv_path_abses_1^ @ _).
   apply (ap equiv_path_abses_iso).
-  apply path_sigma_hprop; cbn.
+  apply path_sigma_hprop.
   by apply equiv_path_groupisomorphism.
 Defined.
 
@@ -401,7 +406,8 @@ Proof.
   2: apply (abses_ap_fmap g).
   nrefine (_ @ (abses_path_data_compose_beta _ _)^).
   nrapply (ap equiv_path_abses_iso).
-  by rapply path_hom.
+  rapply path_hom.
+  reflexivity.
 Defined.
 
 Definition equiv_ptransformation_phomotopy `{Univalence} {B' A' B A : AbGroup}

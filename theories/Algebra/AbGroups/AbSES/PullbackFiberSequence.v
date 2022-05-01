@@ -59,7 +59,8 @@ Proof.
     (* Since [inclusion F a] is killed by [grp_quotient_map], its in the image of [B]. *)
     assert (in_coset :  in_cosetL (abses_pullback_inclusion_transpose_subgroup (inclusion E) F p)
                            (inclusion F a) mon_unit). (** todo: consider not using inclusion here, but grp_pullback_pr1 *)
-    1:{ rapply related_quotient_paths.
+    1:{ nrapply related_quotient_paths.
+        1,2,3,4: exact _.
         exact q0. }
     (* Cleaning up the context facilitates later steps. *)
     destruct in_coset as [b q1]; rewrite grp_unit_r in q1.
@@ -74,10 +75,11 @@ Proof.
     (* Using [q2], we conclude. *)
     pose proof (q3 := ap (-) (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
     exact ((negate_involutive _)^ @ q3^ @ negate_mon_unit).
-  - rapply (cancelR_conn_map (Tr (-1)) grp_quotient_map).
-    rapply conn_map_homotopic.
-    reflexivity.
-  - srapply Build_IsExact.
+  - apply (cancelR_conn_map (Tr (-1)) grp_quotient_map).
+    1: exact _.
+    simpl.
+    exact _.
+  - snrapply Build_IsExact.
     + srapply Build_pHomotopy.
       * intro a; simpl.
         refine (ap (projection E) _ @ _).
@@ -85,16 +87,16 @@ Proof.
         apply grp_homo_unit.
       * apply path_ishprop.
     + intros [y q].
-      rapply contr_inhabited_hprop.
+      apply (@contr_inhabited_hprop _ _).
       (* We choose a preimage by [grp_quotient_map]. *)
       assert (f : merely (hfiber grp_quotient_map y)).
       1: apply center, issurj_class_of. (* todo: clean up *)
-      strip_truncations; destruct f as [f q0].
+      revert_opaque f; apply Trunc_rec; intros [f q0].
       (* Since [projection F f] is in the kernel of [projection E], we find a preimage in [B]. *)
       assert (b : merely (hfiber (inclusion E) (projection F f))).
       1: { rapply isexact_preimage.
            exact (ap _ q0 @ q). }
-      strip_truncations; destruct b as [b q1].
+      revert_opaque b; apply Trunc_rec; intros [b q1].
       (* The difference [f - b] in [F] is in the kernel of [projection F], hence lies in [A]. *)
       assert (a : merely (hfiber (inclusion F)
                                  (sg_op f (-(grp_pullback_pr1 _ _ (p^$.1 (ab_biprod_inr b))))))).
@@ -103,10 +105,10 @@ Proof.
            refine (ap (fun x => _ + x) (grp_homo_inv _ _) @ _).
            refine (ap (fun x => _ - x) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b @ q1) @ _).
            apply right_inverse. }
-      strip_truncations; destruct a as [a q2].
+      revert_opaque a; apply Trunc_rec; intros [a q2].
       (* It remains to show that [a] is the desired preimage. *)
       refine (tr (a; _)).
-      nrapply path_sigma_hprop.
+      let T := type of y in apply (@path_sigma_hprop T).
       1: intros ?; apply istrunc_paths; apply group_isgroup.
       refine (ap grp_quotient_map q2 @ _ @ q0).
       refine (grp_homo_op _ _ _ @ _).
@@ -165,7 +167,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** Making [abses_pullback'] transparent speeds up the following proof. *)
+(** Making [abses_pullback'] opaque speeds up the following proof. *)
 Opaque abses_pullback'.
 
 Local Definition eq_cxfib_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B} (U : AbSES C A)
@@ -173,9 +175,11 @@ Local Definition eq_cxfib_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
 Proof.
   srapply path_sigma.
   1: reflexivity.
-  nrefine (transport_1 _ _ @ _).
   nrefine (concat_p1 _ @ _).
   nrefine (concat_1p _ @ _).
+  cbn zeta.
+  unfold equiv_hfiber_abses, equiv_functor_sigma_id, equiv_functor_sigma', equiv_functor_sigma, equiv_fun, functor_sigma, ".2".
+  (* The goal looks identical to [pr2_cxfib'], but the implicit argument to [@paths] is expressed differently, which is why the next line isn't faster. *)
   exact (@pr2_cxfib' _ A B C E U).
 Defined.
 
@@ -262,7 +266,7 @@ Proof.
     apply grp_moveL_Vg.
     refine ((grp_homo_op (grp_pullback_pr1 _ _ $o p^$.1 $o ab_biprod_inr) _ _)^ @ _).
     exact (ap _ (right_inverse _) @ grp_homo_unit _ @ (grp_homo_unit _)^).
-  - intro b. cbn.
+  - intro b.
     exact ((snd p^$.2 _)^).
 Defined.
 
@@ -328,7 +332,7 @@ Lemma hfiber_cxfib'_induced_path'0 `{Univalence} {A B C : AbGroup} (E : AbSES C 
   : abses_pullback_trivial_preimage E F p $== Y.1.
 Proof.
   destruct Y as [Y Q].
-  apply equiv_path_abses_data;
+  apply abses_path_data_to_iso;
     srefine (_; (_,_)).
   - srapply grp_quotient_rec.
     1: exact (grp_pullback_pr1 _ _$o (Q.1^$).1).
@@ -339,7 +343,10 @@ Proof.
   - intro a.
     refine (_ @ ap (grp_pullback_pr1 _ _) (fst (Q.1^$).2 a)).
     exact (grp_quotient_rec_beta' _ F _ _ (inclusion F a)).
-  - rapply (conn_map_elim _ grp_quotient_map); intro f.
+  - nrapply (conn_map_elim _ grp_quotient_map).
+    1: apply issurj_class_of.
+    1: intros ?; apply istrunc_paths; apply group_isgroup.
+    intro f.
     refine (ap (projection E) (snd (Q.1^$).2 f) @ _); unfold pr1.
     exact (pullback_commsq _ _ ((Q.1^$).1 f))^.
 Defined.
