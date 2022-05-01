@@ -36,8 +36,6 @@ TIMING ?= 1
 
 ETAGS ?= etags
 
-COQTHMDEPFLAGS ?= -I etc/coq-dpdgraph/ -Q etc/coq-dpdgraph/ dpdgraph
-
 CATEGORY_VFILES = $(filter theories/Categories%.v, $(VFILES))
 CORE_VFILES = $(filter-out $(CATEGORY_VFILES),$(filter theories/%.v, $(VFILES)))
 CONTRIB_VFILES = $(filter contrib/%.v, $(VFILES))
@@ -106,7 +104,7 @@ HOTT_LIB_FILES=$(subst /,.,$(patsubst theories/%.v,HoTT.%,$(CORE_VFILES)))
 # Which extra files should be cleaned
 EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
-.PHONY: hottlib hott-core hott-categories contrib proviola alectryon timing-html proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom
+.PHONY: hottlib hott-core hott-categories contrib proviola alectryon timing-html proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs strict strict-test strict-no-axiom
 
 # The HoTT library as a single target
 hott-core: $(CORE_VOFILES)
@@ -222,45 +220,33 @@ $(ALL_ALECTRYON_HTMLFILES) : alectryon-html-done.timestamp
 alectryon: $(ALL_ALECTRYON_HTMLFILES) alectryon-html/toc.html alectryon-html/coqdoc.css alectryon-html/index.html
 
 # dpdgraphs
-.PHONY: dpdgraph
-dpdgraph: etc/coq-dpdgraph/searchdepend.mlg etc/coq-dpdgraph/graphdepend.mlg etc/coq-dpdgraph/Makefile
-	$(SHOW)'MAKE DPDGRAPH'
-	$(HIDE) cd etc/coq-dpdgraph && $(MAKE)
-
-etc/coq-dpdgraph/Makefile: etc/coq-dpdgraph/Makefile.in etc/coq-dpdgraph/configure
-	$(SHOW)'"CD DPDGRAPH && ./configure"'
-	$(HIDE) cd etc/coq-dpdgraph && ./configure
-
-etc/coq-dpdgraph/configure: etc/coq-dpdgraph/configure.ac
-	$(SHOW)'"CD DPDGRAPH && AUTORECONF"'
-	$(HIDE) cd etc/coq-dpdgraph && autoreconf -fvi
 
 %.svg: %.dot
 	$(SHOW)'DOT $< -o $@'
 	$(HIDE) if [ -s "$<" ]; then dot -Tsvg "$<" -o "$@"; else (echo "" > "$@"; touch "$@"); fi # don't do anything if zero size
 
-file-dep-graphs/%.dot: file-dep-graphs/%.dpd | dpdgraph
+file-dep-graphs/%.dot: file-dep-graphs/%.dpd
 	$(SHOW)'DPD2DOT $< -o $@'
-	$(HIDE) if [ -s "$<" ]; then etc/coq-dpdgraph/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
+	$(HIDE) if [ -s "$<" ]; then dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
 
-$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo | dpdgraph
+$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo
 	@ mkdir -p $(dir $@)
 	$(SHOW)'COQTHMDEP HoTT.$* > $@'
 	$(HIDE)rm -f $@.ok
-	$(HIDE) ((echo "Require HoTT.$*."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+	$(HIDE) ((echo "Require HoTT.$*."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | $(COQTOP) $(COQFLAGS) $(COQLIBS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
 	$(HIDE)rm $@.ok
 
-file-dep-graphs/hott-lib.dpd: $(CORE_VOFILES) | dpdgraph
+file-dep-graphs/hott-lib.dpd: $(CORE_VOFILES)
 	@ mkdir -p $(dir $@)
 	$(SHOW)'COQTHMDEP HoTTLib'
-	$(HIDE) ((echo "Require $(HOTT_LIB_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+	$(HIDE) ((echo "Require $(HOTT_LIB_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
 	$(HIDE)rm $@.ok
 
-#file-dep-graphs/hott-all.dpd: $(CORE_VOFILES) $(CATEGORY_VOFILES) | dpdgraph
+#file-dep-graphs/hott-all.dpd: $(CORE_VOFILES) $(CATEGORY_VOFILES)
 #	@ mkdir -p $(dir $@)
 #	$(SHOW)'HOQTHMDEP HoTT'
 #        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
-#	$(HIDE) ((echo "Require $(HOTT_ALL_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) $(COQTHMDEPFLAGS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
+#	$(HIDE) ((echo "Require $(HOTT_ALL_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
 #	$(HIDE)rm $@.ok
 
 file-dep-graphs/index.html: Makefile _CoqProject Makefile.coq.local Makefile.coq
@@ -294,9 +280,6 @@ TAGS : $(TAGS_FILES)
 	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|CoInductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^
-
-clean-dpdgraph::
-	(cd etc/coq-dpdgraph && $(MAKE) clean)
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
 clean::
