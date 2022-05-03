@@ -1,13 +1,13 @@
-From HoTT Require Import Basics Basics.Utf8 Basics.Tactics.
-From HoTT Require Import implementations.list.
-From HoTT Require Import Category.Core Category.Prod Category.Morphisms. 
-From HoTT Require Import NatCategory.
-From HoTT Require Import Functor.Core Functor.Identity Functor.Composition.Core Functor.Prod.Core.
-From HoTT Require Import NaturalTransformation.Core NaturalTransformation.Isomorphisms NaturalTransformation.Identity NaturalTransformation.Prod.
-From HoTT Require Import NaturalTransformation.Composition.Core.
-From HoTT Require Import FunctorCategory.Core FunctorCategory.Morphisms.
-From HoTT Require Import ProductLaws.
-From HoTT Require Import Cat.Core.
+Require Import Basics Basics.Utf8 Basics.Tactics.
+Require Import implementations.list.
+Require Import Category.Core Category.Prod Category.Morphisms.
+Require Import NatCategory.
+Require Import Functor.Core Functor.Identity Functor.Composition.Core Functor.Prod.Core.
+Require Import NaturalTransformation.Core NaturalTransformation.Isomorphisms NaturalTransformation.Identity NaturalTransformation.Prod.
+Require Import NaturalTransformation.Composition.Core.
+Require Import FunctorCategory.Core FunctorCategory.Morphisms.
+Require Import ProductLaws.
+Require Import Cat.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -68,7 +68,7 @@ Section MonoidalCategoryConcepts.
     apply (morphism_of tensor); split; simpl.
     - exact (alpha_nat_trans (a,_)).
     - exact (Core.identity d).
-  Defined.    
+  Defined.
   Local Definition P4 : a ⊗ (b ⊗ (c ⊗ d)) --> (a ⊗ b) ⊗ (c ⊗ d)
     := alpha_nat_trans (a, (b, (c ⊗ d))).
   Local Definition P5 : (a ⊗ b) ⊗ (c ⊗ d) --> ((a ⊗ b) ⊗ c ) ⊗ d
@@ -82,7 +82,7 @@ Section MonoidalCategoryConcepts.
     - exact (Core.identity a).
     - exact (lambda_nat_trans _).
   Defined.
-  
+
   Local Definition Q2 : (a ⊗ (I ⊗ b)) --> a ⊗ b.
   Proof.
     refine (@Category.Core.compose _ _ ((a ⊗ I) ⊗ b) _ _ _).
@@ -95,7 +95,7 @@ Section MonoidalCategoryConcepts.
   End coherence_laws.
 End MonoidalCategoryConcepts.
 
-Class MonoidalStructure (C : PreCategory) := 
+Class MonoidalStructure (C : PreCategory) :=
   Build_MonoidalStructure {
     tensor : (C × C -> C)%category;
     I : C;
@@ -105,4 +105,3 @@ Class MonoidalStructure (C : PreCategory) :=
     pentagon_eq_holds : forall a b c d : C, pentagon_eq alpha  a b c d;
     triangle_eq_holds : forall a b : C, triangle_eq alpha lambda rho a b;
   }.
-  
