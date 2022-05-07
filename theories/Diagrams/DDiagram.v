@@ -35,5 +35,6 @@ Definition DDiagram {G : Graph} (D : Diagram G)
 
   Class Equifibered {G : Graph} {D : Diagram G} (E : DDiagram D) := {
     isequifibered i j (g : G i j) (x : D i)
-      :> IsEquiv (@arr _ E (i; x) (j; D _f g x) (g; idpath));
+      : IsEquiv (@arr _ E (i; x) (j; D _f g x) (g; idpath));
   }.
+  #[global] Existing Instance isequifibered.

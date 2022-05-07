@@ -11,17 +11,28 @@ Local Open Scope mc_mult_scope.
 (** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
   --x=x   x**=x   1*=1    (-x)*=-x*   x(-y)=-(xy)   (xy)* = y* x*    x* x=1    *)
 Class CayleyDicksonSpheroid (X : pType) := {
-  cds_hspace :> IsHSpace X;
-  cds_negate :> Negate X;
-  cds_conjug :> Conjugate X;
-  cds_negate_inv :> Involutive cds_negate;
-  cds_conjug_inv :> Involutive cds_conjug;
-  cds_conjug_unit_pres :> IsUnitPreserving cds_conjug;
-  cds_conjug_left_inv :> LeftInverse (.*.) cds_conjug mon_unit;
-  cds_conjug_distr :> DistrOpp (.*.) cds_conjug;
-  cds_swapop :> SwapOp (-) cds_conjug;
-  cds_factorneg_r :> FactorNegRight (-) (.*.);
+  cds_hspace : IsHSpace X;
+  cds_negate : Negate X;
+  cds_conjug : Conjugate X;
+  cds_negate_inv : Involutive cds_negate;
+  cds_conjug_inv : Involutive cds_conjug;
+  cds_conjug_unit_pres : IsUnitPreserving cds_conjug;
+  cds_conjug_left_inv : LeftInverse (.*.) cds_conjug mon_unit;
+  cds_conjug_distr : DistrOpp (.*.) cds_conjug;
+  cds_swapop : SwapOp (-) cds_conjug;
+  cds_factorneg_r : FactorNegRight (-) (.*.);
 }.
+#[global] Existing Instances
+  cds_hspace
+  cds_negate
+  cds_conjug
+  cds_negate_inv
+  cds_conjug_inv
+  cds_conjug_unit_pres
+  cds_conjug_left_inv
+  cds_conjug_distr
+  cds_swapop
+  cds_factorneg_r.
 
 Section CayleyDicksonSpherioid_Properties.
 
@@ -73,14 +84,20 @@ Proof.
 Defined.
 
 Class CayleyDicksonImaginaroid (A : Type) := {
-  cdi_negate :> Negate A;
-  cdi_negate_involutive :> Involutive cdi_negate;
-  cdi_susp_hspace :> IsHSpace (Build_pType (Susp A) _);
-  cdi_susp_factorneg_r :> FactorNegRight (negate_susp A cdi_negate) hspace_op;
-  cdi_susp_conjug_left_inv
-    :> LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
-  cdi_susp_conjug_distr :> DistrOpp hspace_op (conjugate_susp A cdi_negate);
+  cdi_negate : Negate A;
+  cdi_negate_involutive : Involutive cdi_negate;
+  cdi_susp_hspace : IsHSpace (Build_pType (Susp A) _);
+  cdi_susp_factorneg_r : FactorNegRight (negate_susp A cdi_negate) hspace_op;
+  cdi_susp_conjug_left_inv : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
+  cdi_susp_conjug_distr : DistrOpp hspace_op (conjugate_susp A cdi_negate);
 }.
+#[global] Existing Instances
+  cdi_negate
+  cdi_negate_involutive
+  cdi_susp_hspace
+  cdi_susp_factorneg_r
+  cdi_susp_conjug_left_inv
+  cdi_susp_conjug_distr.
 
 Global Instance involutive_negate_susp {A} `(CayleyDicksonImaginaroid A)
   : Involutive (negate_susp A cdi_negate).
