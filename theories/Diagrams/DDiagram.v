@@ -37,4 +37,4 @@ Definition DDiagram {G : Graph} (D : Diagram G)
     isequifibered i j (g : G i j) (x : D i)
       : IsEquiv (@arr _ E (i; x) (j; D _f g x) (g; idpath));
   }.
-  #[global] Existing Instance isequifibered.
+  #[export] Existing Instance isequifibered.

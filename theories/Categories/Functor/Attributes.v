@@ -145,6 +145,6 @@ Class IsEssentiallySurjective A B (F : Functor A B)
 Class IsWeakEquivalence `{Funext} A B (F : Functor A B)
   := { is_fully_faithful__is_weak_equivalence : IsFullyFaithful F;
        is_essentially_surjective__is_weak_equivalence : IsEssentiallySurjective F }.
-#[global] Existing Instances
+#[export] Existing Instances
   is_fully_faithful__is_weak_equivalence
   is_essentially_surjective__is_weak_equivalence.

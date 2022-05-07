@@ -28,4 +28,4 @@ Class Rationals A {Aap : Apart A} {Aplus Amult Azero Aone Aneg Arecip Ale Alt}
   ; rationals_initial : forall {B} `{IsField B} `{!FieldCharacteristic B 0}
     {h : A -> B} `{!IsSemiRingPreserving h} x,
     rationals_to_field A B x = h x }.
-#[global] Existing Instances rationals_field rationals_order rationals_to_field_mor.
+#[export] Existing Instances rationals_field rationals_order rationals_to_field_mor.

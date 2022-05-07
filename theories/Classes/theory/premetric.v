@@ -51,7 +51,7 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
   ; premetric_separated : Separated A
   ; premetric_triangular : Triangular A
   ; premetric_rounded : Rounded@{i j} A }.
-#[global] Existing Instances
+#[export] Existing Instances
   premetric_prop
   premetric_refl
   premetric_symm

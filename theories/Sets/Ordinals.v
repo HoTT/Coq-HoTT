@@ -58,7 +58,7 @@ Class IsOrdinal@{carrier relation} (A : Type@{carrier}) (R : Relation@{carrier r
   ordinal_well_foundedness : WellFounded R ;
   ordinal_transitivity : Transitive R ;
 }.
-#[global] Existing Instances
+#[export] Existing Instances
   ordinal_is_hset
   ordinal_relation_is_mere
   ordinal_extensionality

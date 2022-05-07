@@ -12,7 +12,7 @@ Class Setoid_Morphism :=
   { setoidmor_a : Setoid A
   ; setoidmor_b : Setoid B
   ; sm_proper : Proper ((=) ==> (=)) f }.
-#[global] Existing Instances setoidmor_a setoidmor_b sm_proper.
+#[export] Existing Instances setoidmor_a setoidmor_b sm_proper.
 
 then each time a Setoid instance is required, Coq will try to prove that a
 Setoid_Morphism exists. This obviously results in an enormous blow-up of the
@@ -31,7 +31,7 @@ Class IsApart A {Aap : Apart A} : Type :=
   ; apart_symmetric : Symmetric (≶)
   ; apart_cotrans : CoTransitive (≶)
   ; tight_apart : forall x y, ~(x ≶ y) <-> x = y }.
-#[global] Existing Instances
+#[export] Existing Instances
   apart_set
   apart_mere
   apart_symmetric
@@ -79,23 +79,23 @@ Section upper_classes.
   Class IsSemiGroup {Aop: SgOp A} :=
     { sg_set : IsHSet A
     ; sg_ass : Associative (.*.) }.
-    #[global] Existing Instances sg_set sg_ass.
+    #[export] Existing Instances sg_set sg_ass.
 
   Class IsCommutativeSemiGroup {Aop : SgOp A} :=
     { comsg_sg : @IsSemiGroup (.*.)
     ; comsg_comm : Commutative (.*.) }.
-  #[global] Existing Instances comsg_sg comsg_comm.
+  #[export] Existing Instances comsg_sg comsg_comm.
 
   Class IsSemiLattice {Aop : SgOp A} :=
     { semilattice_sg : @IsCommutativeSemiGroup (.*.)
     ; semilattice_idempotent : BinaryIdempotent (.*.)}.
-  #[global] Existing Instances semilattice_sg semilattice_idempotent.
+  #[export] Existing Instances semilattice_sg semilattice_idempotent.
 
   Class IsMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
     { monoid_semigroup : IsSemiGroup
     ; monoid_left_id : LeftIdentity (.*.) mon_unit
     ; monoid_right_id : RightIdentity (.*.) mon_unit }.
-  #[global] Existing Instances
+  #[export] Existing Instances
     monoid_semigroup
     monoid_left_id
     monoid_right_id.
@@ -103,7 +103,7 @@ Section upper_classes.
   Class IsCommutativeMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
     { commonoid_mon : @IsMonoid (.*.) Aunit
     ; commonoid_commutative : Commutative (.*.) }.
-  #[global] Existing Instances
+  #[export] Existing Instances
     commonoid_mon
     commonoid_commutative.
 
@@ -111,7 +111,7 @@ Section upper_classes.
     { group_monoid : @IsMonoid (.*.) Aunit
     ; negate_l : LeftInverse (.*.) (-) mon_unit
     ; negate_r : RightInverse (.*.) (-) mon_unit }.
-  #[global] Existing Instances 
+  #[export] Existing Instances 
     group_monoid
     negate_l
     negate_r.
@@ -119,14 +119,14 @@ Section upper_classes.
   Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=
     { bounded_semilattice_mon : @IsCommutativeMonoid (.*.) Aunit
     ; bounded_semilattice_idempotent : BinaryIdempotent (.*.)}.
-  #[global] Existing Instances
+  #[export] Existing Instances
     bounded_semilattice_mon
     bounded_semilattice_idempotent.
 
   Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
     { abgroup_group : @IsGroup (.*.) Aunit Anegate
     ; abgroup_commutative : Commutative (.*.) }.
-  #[global] Existing Instances abgroup_group abgroup_commutative.
+  #[export] Existing Instances abgroup_group abgroup_commutative.
 
   Close Scope mc_mult_scope.
 
@@ -137,7 +137,7 @@ Section upper_classes.
     ; semimult_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
     ; semiring_distr : LeftDistribute (.*.) (+)
     ; semiring_left_absorb : LeftAbsorb (.*.) 0 }.
-  #[global] Existing Instances semiplus_monoid semimult_monoid semiring_distr semiring_left_absorb.
+  #[export] Existing Instances semiplus_monoid semimult_monoid semiring_distr semiring_left_absorb.
 
   Context {Anegate : Negate A}.
 
@@ -145,7 +145,7 @@ Section upper_classes.
     { ring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
     ; ring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
     ; ring_dist : LeftDistribute (.*.) (+) }.
-  #[global] Existing Instances ring_group ring_monoid ring_dist.
+  #[export] Existing Instances ring_group ring_monoid ring_dist.
 
   (* For now, we follow CoRN/ring_theory's example in having Ring and SemiRing
     require commutative multiplication. *)
@@ -154,7 +154,7 @@ Section upper_classes.
     { intdom_ring : IsRing
     ; intdom_nontrivial : PropHolds (not (1 = 0))
     ; intdom_nozeroes : NoZeroDivisors A }.
-  #[global] Existing Instances intdom_nozeroes.
+  #[export] Existing Instances intdom_nozeroes.
 
   (* We do not include strong extensionality for (-) and (/)
     because it can de derived *)
@@ -165,7 +165,7 @@ Section upper_classes.
     ; field_mult_ext : StrongBinaryExtensionality (.*.)
     ; field_nontrivial : PropHolds (1 ≶ 0)
     ; recip_inverse : forall x, x.1 // x = 1 }.
-  #[global] Existing Instances
+  #[export] Existing Instances
     field_ring
     field_apart
     field_plus_ext
@@ -218,18 +218,18 @@ Section lattice.
 
   Class IsJoinSemiLattice := 
     join_semilattice : @IsSemiLattice A join_is_sg_op.
-  #[global] Existing Instance join_semilattice.
+  #[export] Existing Instance join_semilattice.
   Class IsBoundedJoinSemiLattice := 
     bounded_join_semilattice : @IsBoundedSemiLattice A
       join_is_sg_op bottom_is_mon_unit.
-  #[global] Existing Instance bounded_join_semilattice.
+  #[export] Existing Instance bounded_join_semilattice.
   Class IsMeetSemiLattice :=
     meet_semilattice : @IsSemiLattice A meet_is_sg_op.
-  #[global] Existing Instance meet_semilattice.
+  #[export] Existing Instance meet_semilattice.
   Class IsBoundedMeetSemiLattice :=
     bounded_meet_semilattice : @IsBoundedSemiLattice A
       meet_is_sg_op top_is_mon_unit.
-  #[global] Existing Instance bounded_meet_semilattice.
+  #[export] Existing Instance bounded_meet_semilattice.
 
 
   Class IsLattice := 
@@ -237,7 +237,7 @@ Section lattice.
     ; lattice_meet : IsMeetSemiLattice
     ; join_meet_absorption : Absorption (⊔) (⊓) 
     ; meet_join_absorption : Absorption (⊓) (⊔) }.
-  #[global] Existing Instances
+  #[export] Existing Instances
     lattice_join
     lattice_meet
     join_meet_absorption 
@@ -248,7 +248,7 @@ Section lattice.
     ; boundedlattice_meet : IsBoundedMeetSemiLattice
     ; boundedjoin_meet_absorption : Absorption (⊔) (⊓)
     ; boundedmeet_join_absorption : Absorption (⊓) (⊔)}.
-  #[global] Existing Instances
+  #[export] Existing Instances
     boundedlattice_join
     boundedlattice_meet
     boundedjoin_meet_absorption
@@ -258,7 +258,7 @@ Section lattice.
   Class IsDistributiveLattice := 
     { distr_lattice_lattice : IsLattice
     ; join_meet_distr_l : LeftDistribute (⊔) (⊓) }.
-  #[global] Existing Instances distr_lattice_lattice join_meet_distr_l.
+  #[export] Existing Instances distr_lattice_lattice join_meet_distr_l.
 End lattice.
 
 Section morphism_classes.
@@ -278,7 +278,7 @@ Section morphism_classes.
   Class IsMonoidPreserving (f : A -> B) :=
     { monmor_sgmor : IsSemiGroupPreserving f
     ; monmor_unitmor : IsUnitPreserving f }.
-  #[global] Existing Instances monmor_sgmor monmor_unitmor.
+  #[export] Existing Instances monmor_sgmor monmor_unitmor.
   End sgmorphism_classes.
 
   Section ringmorphism_classes.
@@ -291,13 +291,13 @@ Section morphism_classes.
         plus_is_sg_op plus_is_sg_op zero_is_mon_unit zero_is_mon_unit f
     ; semiringmor_mult_mor : @IsMonoidPreserving A B
         mult_is_sg_op mult_is_sg_op one_is_mon_unit one_is_mon_unit f }.
-  #[global] Existing Instances semiringmor_plus_mor semiringmor_mult_mor.
+  #[export] Existing Instances semiringmor_plus_mor semiringmor_mult_mor.
 
   Context {Aap : Apart A} {Bap : Apart B}.
   Class IsSemiRingStrongPreserving (f : A -> B) :=
     { strong_semiringmor_sr_mor : IsSemiRingPreserving f
     ; strong_semiringmor_strong_mor : StrongExtensionality f }.
-  #[global] Existing Instances strong_semiringmor_sr_mor strong_semiringmor_strong_mor.
+  #[export] Existing Instances strong_semiringmor_sr_mor strong_semiringmor_strong_mor.
   End ringmorphism_classes.
 
   Section latticemorphism_classes.
@@ -306,22 +306,22 @@ Section morphism_classes.
 
   Class IsJoinPreserving (f : A -> B) :=
     join_slmor_sgmor : @IsSemiGroupPreserving A B join_is_sg_op join_is_sg_op f.
-  #[global] Existing Instances join_slmor_sgmor.
+  #[export] Existing Instances join_slmor_sgmor.
 
   Class IsMeetPreserving (f : A -> B) :=
     meet_slmor_sgmor : @IsSemiGroupPreserving A B meet_is_sg_op meet_is_sg_op f.
-  #[global] Existing Instances meet_slmor_sgmor.
+  #[export] Existing Instances meet_slmor_sgmor.
 
   Context {Abottom : Bottom A} {Bbottom : Bottom B}.
   Class IsBoundedJoinPreserving (f : A -> B) := bounded_join_slmor_monmor
       : @IsMonoidPreserving A B join_is_sg_op join_is_sg_op
          bottom_is_mon_unit bottom_is_mon_unit f.
-  #[global] Existing Instances bounded_join_slmor_monmor.
+  #[export] Existing Instances bounded_join_slmor_monmor.
 
   Class IsLatticePreserving (f : A -> B) :=
     { latticemor_join_mor : IsJoinPreserving f
     ; latticemor_meet_mor : IsMeetPreserving f }.
-  #[global] Existing Instances
+  #[export] Existing Instances
     latticemor_join_mor
     latticemor_meet_mor.
   End latticemorphism_classes.

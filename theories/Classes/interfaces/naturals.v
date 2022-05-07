@@ -15,7 +15,7 @@ Class Naturals A {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}
     IsSemiRingPreserving (naturals_to_semiring A B)
   ; naturals_initial: forall {B} `{IsSemiRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,
     naturals_to_semiring A B x = h x }.
-#[global] Existing Instances naturals_ring naturals_order naturals_to_semiring_mor.
+#[export] Existing Instances naturals_ring naturals_order naturals_to_semiring_mor.
 
 (* Specializable operations: *)
 Class NatDistance N `{Plus N}

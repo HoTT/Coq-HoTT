@@ -22,7 +22,7 @@ Class CayleyDicksonSpheroid (X : pType) := {
   cds_swapop : SwapOp (-) cds_conjug;
   cds_factorneg_r : FactorNegRight (-) (.*.);
 }.
-#[global] Existing Instances
+#[export] Existing Instances
   cds_hspace
   cds_negate
   cds_conjug
@@ -91,7 +91,7 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_left_inv : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
   cdi_susp_conjug_distr : DistrOpp hspace_op (conjugate_susp A cdi_negate);
 }.
-#[global] Existing Instances
+#[export] Existing Instances
   cdi_negate
   cdi_negate_involutive
   cdi_susp_hspace

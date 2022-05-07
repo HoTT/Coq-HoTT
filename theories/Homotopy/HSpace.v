@@ -11,7 +11,7 @@ Class IsHSpace (X : pType) := {
   hspace_left_identity : LeftIdentity hspace_op (point _);
   hspace_right_identity : RightIdentity hspace_op (point _);
 }.
-#[global] Existing Instances hspace_left_identity hspace_right_identity hspace_op.
+#[export] Existing Instances hspace_left_identity hspace_right_identity hspace_op.
 
 Global Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := point _.
 

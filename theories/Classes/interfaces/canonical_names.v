@@ -46,7 +46,7 @@ Therefore we introduce the following class. *)
 Class TrivialApart A {Aap : Apart A} :=
   { trivial_apart_prop : is_mere_relation A apart
   ; trivial_apart : forall x y, x ≶ y <-> x <> y }.
-#[global] Existing Instance trivial_apart_prop.
+#[export] Existing Instance trivial_apart_prop.
 
 Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := fun x y => x.1 ≶ y.1.
 #[export]
@@ -209,7 +209,7 @@ Arguments idempotency {A} _ _ {Idempotent}.
 
 Class UnaryIdempotent {A} (f: A -> A) : Type :=
   unary_idempotent : Idempotent Compose f.
-#[global] Existing Instances unary_idempotent.
+#[export] Existing Instances unary_idempotent.
 
 Lemma unary_idempotency `{UnaryIdempotent A f} x : f (f x) = f x.
 Proof.
@@ -221,7 +221,7 @@ Qed.
 
 Class BinaryIdempotent `(op: A -> A -> A) : Type
   := binary_idempotent : forall x, Idempotent op x.
-#[global] Existing Instances binary_idempotent.
+#[export] Existing Instances binary_idempotent.
 
 Class LeftIdentity {A B} (op : A -> B -> B) (x : A): Type
   := left_identity: forall y, op x y = y.
@@ -252,7 +252,7 @@ Class HeteroAssociative {A B C AB BC ABC}
   := associativity : forall x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
 Class Associative {A} (f : A -> A -> A)
   := simple_associativity : HeteroAssociative f f f f.
-#[global] Existing Instances simple_associativity.
+#[export] Existing Instances simple_associativity.
 
 Class Involutive {A} (f : A -> A) := involutive: forall x, f (f x) = x.
 
@@ -277,7 +277,7 @@ Class EquivRel `(R : Relation A) : Type := Build_EquivRel
   { EquivRel_Reflexive : Reflexive R ;
     EquivRel_Symmetric : Symmetric R ;
     EquivRel_Transitive : Transitive R }.
-#[global] Existing Instances EquivRel_Reflexive EquivRel_Symmetric EquivRel_Transitive.
+#[export] Existing Instances EquivRel_Reflexive EquivRel_Symmetric EquivRel_Transitive.
 
 Definition SigEquivRel {A:Type} (R : Relation A) : Type :=
   {_ : Reflexive R | { _ : Symmetric R | Transitive R}}.
@@ -326,10 +326,10 @@ Class RightHeteroDistribute {A B C}
   := distribute_r: forall a b c, f (g_l a b) c = g (f a c) (f b c).
 Class LeftDistribute {A} (f g: A -> A -> A)
   := simple_distribute_l : LeftHeteroDistribute f g g.
-#[global] Existing Instances simple_distribute_l.
+#[export] Existing Instances simple_distribute_l.
 Class RightDistribute {A} (f g: A -> A -> A)
   := simple_distribute_r : RightHeteroDistribute f g g.
-#[global] Existing Instances simple_distribute_r.
+#[export] Existing Instances simple_distribute_r.
 
 
 Class HeteroSymmetric {A} {T : A -> A -> Type}
@@ -416,7 +416,7 @@ Class Enumerable@{i} (A : Type@{i}) :=
   { enumerator : nat -> A
   ; enumerator_issurj :
     IsConnMap@{i} (trunc_S minus_two) enumerator }.
-#[global] Existing Instance enumerator_issurj.
+#[export] Existing Instance enumerator_issurj.
 Arguments enumerator A {_} _.
 Arguments enumerator_issurj A {_} _.
 

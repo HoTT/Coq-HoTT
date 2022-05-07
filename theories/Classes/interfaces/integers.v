@@ -15,7 +15,7 @@ Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}
   ; integers_to_ring_mor : forall {B} `{IsRing B}, IsSemiRingPreserving (integers_to_ring A B)
   ; integers_initial: forall {B} `{IsRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,
       integers_to_ring A B x = h x}.
-#[global] Existing Instances integers_ring integers_order integers_to_ring_mor.
+#[export] Existing Instances integers_ring integers_order integers_to_ring_mor.
 
 Section specializable.
   Context (Z N : Type) `{Integers Z} `{Naturals N}.
