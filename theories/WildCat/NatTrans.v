@@ -254,6 +254,43 @@ Proof.
   refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
 
+(** *** Pointed natural transformations *)
+
+Definition PointedTransformation {B C : Type} `{Is1Cat B, Is1Gpd C}
+           `{IsPointed B, IsPointed C} (F G : B -->* C)
+  := {eta : F $=> G & eta (point _) $== bp_pointed F $@ (bp_pointed G)^$}.
+
+Notation "F $=>* G" := (PointedTransformation F G) (at level 70).
+
+Definition ptransformation_inverse `{Funext} {B C : Type} `{Is1Cat B, Is1Gpd C}
+           `{IsPointed B, IsPointed C} (F G : B -->* C)
+  : (F $=>* G) -> (G $=>* F).
+Proof.
+  intros [h p].
+  exists (fun x => (h x)^$).
+  refine (gpd_rev2 p $@ _).
+  refine (gpd_rev_pp _ _ $@ _).
+  refine (_ $@L _).
+  apply gpd_rev_rev.
+Defined.
+
+Notation "h ^*$" := (ptransformation_inverse _ _ h) (at level 5).
+
+Definition ptransformation_compose {B C : Type} `{Is1Cat B, Is1Gpd C}
+           `{IsPointed B, IsPointed C} {F0 F1 F2 : B -->* C}
+  : (F0 $=>* F1) -> (F1 $=>* F2) -> (F0 $=>* F2).
+Proof.
+  intros [h0 p0] [h1 p1].
+  exists (trans_comp h1 h0).
+  refine ((p1 $@R _) $@ (_ $@L p0) $@ _);
+    unfold gpd_comp; cbn.
+  refine (cat_assoc _ _ _ $@ _).
+  rapply (fmap _).
+  apply gpd_h_Vh.
+Defined.
+
+Notation "h $@* k" := (ptransformation_compose h k) (at level 40).
+
 (* TODO: *)
 (* Morphisms of natural transformations - Modifications *)
 (* Since [Transformation] is dependent, we can define a modification to be a transformation together with a cylinder condition. This doesn't seem to be too useful as of yet however. We would also need better ways to write down cylinders. *)

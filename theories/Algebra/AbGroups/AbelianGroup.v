@@ -341,6 +341,31 @@ Proof.
   - exact (left_identity _ @ a'.2).
 Defined.
 
+(** *** Lemmas for working with biproducts *)
+
+Lemma ab_biprod_decompose {B A : AbGroup} (a : A) (b : B)
+  : (a, b) = ((a, group_unit) : ab_biprod A B) + (group_unit, b).
+Proof.
+  apply path_prod; cbn.
+  - exact (right_identity _)^.
+  - exact (left_identity _)^.
+Defined.
+
+(* Maps out of biproducts are determined on the two inclusions. (Could be stated more generally for pointed types instead of abelian groups.) *)
+Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
+  : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
+      <~> phi == psi.
+Proof.
+  apply equiv_iff_hprop.
+  - intros [h k].
+    intros [a b].
+    refine (ap phi (ab_biprod_decompose _ _) @ _ @ ap psi (ab_biprod_decompose _ _)^).
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+    exact (ap011 (+) (h a) (k b)).
+  - intro h.
+    exact (fun a => h _, fun b => h _).
+Defined.
+
 (** ** Kernels of abelian groups *)
 
 Definition ab_kernel {A B : AbGroup} (f : A $-> B) : AbGroup
@@ -357,6 +382,15 @@ Proof.
   by apply equiv_path_grouphomomorphism.
 Defined.
 
+Lemma transport_iso_abgrouphomomorphism_from_const `{Univalence} {A B B' : AbGroup}
+      (phi : GroupIsomorphism B B') (f : GroupHomomorphism A B)
+  : transport (Hom A) (equiv_path_abgroup phi) f
+    = grp_homo_compose phi f.
+Proof.
+  refine (transport_abgrouphomomorphism_from_const _ _ @ _).
+  by rewrite eissect.
+Defined.
+
 Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
       (p : A = A') (f : GroupHomomorphism A B)
   : transport (fun G => Hom G B) p f
@@ -364,6 +398,15 @@ Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
 Proof.
   induction p; cbn.
   by apply equiv_path_grouphomomorphism.
+Defined.
+
+Lemma transport_iso_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
+      (phi : GroupIsomorphism A A') (f : GroupHomomorphism A B)
+  : transport (fun G => Hom G B) (equiv_path_abgroup phi) f
+    = grp_homo_compose f (grp_iso_inverse phi).
+Proof.
+  refine (transport_abgrouphomomorphism_to_const _ _ @ _).
+  by rewrite eissect.
 Defined.
 
 (** ** Operations on abelian groups *)
@@ -395,3 +438,11 @@ Proof.
   (** [fun a => f(a) + g(a)] **)
   exact (grp_prod_corec f g).
 Defined.
+
+(** The image of an inclusion is a normal subgroup. *)
+Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
+  := {| normalsubgroup_subgroup := grp_image_embedding f; normalsubgroup_isnormal := _ |}.
+
+Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
+  : GroupIsomorphism A (ab_image_embedding f)
+  := grp_image_in_embedding f.

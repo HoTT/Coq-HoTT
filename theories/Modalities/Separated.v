@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath.
-Require Import HFiber Extensions Factorization Pullback.
+Require Import HFiber Extensions Factorization Limits.Pullback.
 Require Import ReflectiveSubuniverse Modality Accessible Localization Descent.
 Require Import Truncations.Core.
 Require Import Homotopy.Suspension.

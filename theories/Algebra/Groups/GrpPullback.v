@@ -134,6 +134,78 @@ Section GrpPullback.
 
 End GrpPullback.
 
+Definition functor_grp_pullback {A A' B B' C C' : Group}
+           (f : B $-> A) (f' : B' $-> A')
+           (g : C $-> A) (g' : C' $-> A')
+           (alpha : A $-> A') (beta : B $-> B') (gamma : C $-> C')
+           (h : f' o beta == alpha o f)
+           (k : alpha o g == g' o gamma)
+  : grp_pullback f g $-> grp_pullback f' g'.
+Proof.
+  srapply grp_pullback_corec.
+  - exact (beta $o grp_pullback_pr1 f g).
+  - exact (gamma $o grp_pullback_pr2 f g).
+  - intro x; cbn.
+    refine (h _ @ ap alpha _ @ k _).
+    apply pullback_commsq.
+Defined.
+
+Definition equiv_functor_grp_pullback {A A' B B' C C' : Group}
+           (f : B $-> A) (f' : B' $-> A')
+           (g : C $-> A) (g' : C' $-> A')
+           (alpha : GroupIsomorphism A A')
+           (beta : GroupIsomorphism B B')
+           (gamma : GroupIsomorphism C C')
+           (h : f' o beta == alpha o f)
+           (k : alpha o g == g' o gamma)
+  : GroupIsomorphism (grp_pullback f g) (grp_pullback f' g').
+Proof.
+  srapply Build_GroupIsomorphism.
+  1: exact (functor_grp_pullback f f' g g' _ _ _ h k).
+  srapply isequiv_adjointify.
+  { srapply (functor_grp_pullback f' f g' g).
+    1-3: rapply grp_iso_inverse; assumption.
+    + rapply (equiv_ind beta); intro b.
+      refine (ap f (eissect _ _) @ _).
+      apply (equiv_ap' alpha _ _)^-1.
+      exact ((h b)^ @ (eisretr _ _)^).
+    + rapply (equiv_ind gamma); intro c.
+      refine (_ @ ap g (eissect _ _)^).
+      apply (equiv_ap' alpha _ _)^-1.
+      exact (eisretr _ _ @ (k c)^). }
+  all: intro x;
+    apply equiv_path_pullback_hset; split; cbn.
+  1-2: apply eisretr.
+  1-2: apply eissect.
+Defined.
+
+(** Pulling back along some [g : Y $-> Z] and then [g' : Y' $-> Y] is the same as pulling back along [g $o g']. *)
+Definition equiv_grp_pullback_compose_r {X Z Y Y' : Group} (f : X $-> Z) (g' : Y' $-> Y) (g : Y $-> Z)
+  : GroupIsomorphism (grp_pullback (grp_pullback_pr2 f g) g') (grp_pullback f (g $o g')).
+Proof.
+  srapply Build_GroupIsomorphism.
+  - srapply grp_pullback_corec.
+    + exact (grp_pullback_pr1 _ _ $o grp_pullback_pr1 _ _).
+    + apply grp_pullback_pr2.
+    + intro x; cbn.
+      exact (pullback_commsq _ _ _ @ ap g (pullback_commsq _ _ _)).
+  - srapply isequiv_adjointify.
+    + srapply grp_pullback_corec.
+      * srapply functor_grp_pullback.
+        1,2: exact grp_homo_id.
+        1: exact g'.
+        all: reflexivity.
+      * apply grp_pullback_pr2.
+      * reflexivity.
+    + intro x; cbn.
+      by srapply equiv_path_pullback_hset.
+    + intros [[x [y z0]] [y' z1]]; srapply equiv_path_pullback_hset; split; cbn.
+      2: reflexivity.
+      srapply equiv_path_pullback_hset; split; cbn.
+      1: reflexivity.
+      exact z1^.
+Defined.
+
 Section IsEquivGrpPullbackCorec.
 
   (* New section with Funext at the start of the Context. *)
