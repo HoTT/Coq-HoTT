@@ -249,7 +249,20 @@ End Book_1_12.
 (* ================================================== ex:not-not-lem *)
 (** Exercise 1.13 *)
 
+Section Book_1_13.
+  Lemma Book_1_13_aux: forall A B, ~(A + B) -> ~A * ~B.
+  Proof.
+    intros A B nAorB; split.
+    - intro a; exact (nAorB (inl a)).
+    - intro b; exact (nAorB (inr b)).
+  Qed.
 
+  Theorem Book_1_13 : forall P, ~~(P + ~P).
+  Proof.
+    intros P f. apply Book_1_13_aux in f. destruct f as [np nnp].
+    exact (nnp np).
+  Qed.
+End Book_1_13.
 
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
