@@ -472,7 +472,7 @@ Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_in
 (* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq stdlib. *)
 Ltac assert_fails tac :=
   tryif (once tac) then gfail 0 tac "succeeds" else idtac.
-Ltac assert_succeeds tac :=
+Tactic Notation "assert_succeeds" tactic3(tac) :=
   tryif (assert_fails tac) then gfail 0 tac "fails" else idtac.
 Tactic Notation "assert_succeeds" tactic3(tac) :=
   assert_succeeds tac.

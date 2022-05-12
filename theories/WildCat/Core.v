@@ -77,8 +77,7 @@ Arguments fmap {A B isgraph_A isgraph_B} F {is0functor_F a b} f : rename.
 Class Is2Graph (A : Type) `{IsGraph A}
   := isgraph_hom : forall (a b : A), IsGraph (a $-> b).
 Global Existing Instance isgraph_hom | 20.
-#[global]
-Typeclasses Transparent Is2Graph.
+#[global] Typeclasses Transparent Is2Graph.
 
 (** ** Wild 1-categorical structures *)
 Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
@@ -492,8 +491,7 @@ Definition gpd_strong_1functor_V {A B} `{Is1Gpd A, Is1Gpd B, !HasMorExt B}
 Class Is3Graph (A : Type) `{Is2Graph A}
   := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
 Global Existing Instance isgraph_hom_hom | 30.
-#[global]
-Typeclasses Transparent Is3Graph.
+#[global] Typeclasses Transparent Is3Graph.
 
 (** *** Preservation of initial and terminal objects *)
 

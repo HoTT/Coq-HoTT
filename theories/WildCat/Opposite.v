@@ -12,8 +12,7 @@ Definition op (A : Type) : Type := A.
 Notation "A ^op" := (op A).
 
 (** This stops typeclass search from trying to unfold op. *)
-#[global]
-Typeclasses Opaque op.
+#[global] Typeclasses Opaque op.
 
 Section Op.
 

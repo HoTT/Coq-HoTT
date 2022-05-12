@@ -248,8 +248,7 @@ Class IsMonomorphism {C} {x y} (m : morphism C x y) :=
 (** We make [IsEpimorphism] and [IsMonomorphism] transparent to
     typeclass search so that we can infer things like [IsHProp]
     automatically. *)
-#[global]
-Typeclasses Transparent IsEpimorphism IsMonomorphism.
+#[global] Typeclasses Transparent IsEpimorphism IsMonomorphism.
 
 Record Epimorphism {C} x y :=
   {

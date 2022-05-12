@@ -595,8 +595,7 @@ Class IsTrunc (n : trunc_index) (A : Type) : Type :=
 
 (** We use the principle that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
 
-#[global]
-Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
+#[global] Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
 
 Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
 
@@ -734,8 +733,7 @@ Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
 Definition complement {A} (R : Relation A) : Relation A :=
   fun x y => ~ (R x y).
 
-#[global]
-Typeclasses Opaque complement.
+#[global] Typeclasses Opaque complement.
 
 Class Irreflexive {A} (R : Relation A) :=
   irreflexivity : Reflexive (complement R).
@@ -764,8 +762,7 @@ Register tt as core.True.I.
 (** A space is pointed if that space has a point. *)
 Class IsPointed (A : Type) := point : A.
 
-#[global]
-Typeclasses Transparent IsPointed.
+#[global] Typeclasses Transparent IsPointed.
 
 Arguments point A {_}.
 
