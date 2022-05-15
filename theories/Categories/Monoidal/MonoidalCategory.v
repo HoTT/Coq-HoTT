@@ -2,7 +2,8 @@ Require Import Basics Basics.Utf8 Basics.Tactics.
 Require Import implementations.list.
 Require Import Category.Core Category.Prod Category.Morphisms.
 Require Import NatCategory.
-Require Import Functor.Core Functor.Identity Functor.Composition.Core Functor.Prod.Core.
+Require Import Functor.Core Functor.Identity Functor.Composition.Core Functor.Prod.Core
+        Functor.Utf8.
 Require Import NaturalTransformation.Core NaturalTransformation.Isomorphisms NaturalTransformation.Identity NaturalTransformation.Prod.
 Require Import NaturalTransformation.Composition.Core.
 Require Import FunctorCategory.Core FunctorCategory.Morphisms.
@@ -14,32 +15,27 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Context `{Funext}.
-
-Local Infix "×" := Category.Prod.prod.
+Section MonoidalStructure.
 Local Notation id := Functor.Identity.identity.
 Local Notation "x --> y" := (morphism _ x y).
-Local Infix "∘" := Functor.Composition.Core.compose.
-Local Notation nat_trans_prod := NaturalTransformation.Prod.prod.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
-
+Local Notation "g ∘ f" := (Functor.Composition.Core.compose g f).
+Context `{Funext}.
 Section MonoidalCategoryConcepts.
   Variable C : PreCategory.
-  Variable tensor : ((C × C) -> C)%category.
+  Variable tensor : ((C * C) -> C)%category.
   Variable I : C.
-
-  Local Notation "A ⊗ B" := (tensor (A, B)) (at level 45).
-
+  Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)) (at level 45, left associativity).
   Definition right_assoc := tensor ∘ (Functor.Prod.pair (id C) tensor).
   Definition left_assoc :=  tensor ∘
                                    (Functor.Prod.pair tensor (id C)) ∘
                                    (Associativity.functor _ _ _).
   Definition associator := NaturalIsomorphism right_assoc left_assoc.
   (* Orientation  (A ⊗ B) ⊗ C -> A ⊗ (B ⊗ C) *)
-  Definition pretensor (A : C) := Functor.Prod.Core.induced_snd tensor A.
+  Definition pretensor (A : C) := Core.induced_snd tensor A.
   Definition I_pretensor := pretensor I.
-  Definition posttensor (A : C) := Functor.Prod.Core.induced_fst tensor A.
+  Definition posttensor (A : C) := Core.induced_fst tensor A.
   Definition I_posttensor := posttensor I.
   Definition left_unitor := NaturalIsomorphism I_pretensor (id C).
   Definition right_unitor := NaturalIsomorphism I_posttensor (id C).
@@ -48,12 +44,12 @@ Section MonoidalCategoryConcepts.
   Variable lambda : left_unitor.
   Variable rho : right_unitor.
   Notation alpha_nat_trans := ((@morphism_isomorphic
-                                  (C × (C × C) -> C)%category right_assoc left_assoc) alpha).
+                                  (C * (C * C) -> C)%category right_assoc left_assoc) alpha).
   Notation lambda_nat_trans := ((@morphism_isomorphic _ _ _) lambda).
   Notation rho_nat_trans := ((@morphism_isomorphic _ _ _) rho).
 
   Section coherence_laws.
-  Variable a b c d : C.
+    Variable a b c d : C.
   Local Definition P1 : (a ⊗ (b ⊗ (c ⊗ d))) --> (a ⊗ ((b ⊗ c) ⊗ d)).
   Proof.
     apply (morphism_of tensor); split; simpl.
@@ -97,11 +93,13 @@ End MonoidalCategoryConcepts.
 
 Class MonoidalStructure (C : PreCategory) :=
   Build_MonoidalStructure {
-    tensor : (C × C -> C)%category;
+    tensor : (C * C -> C)%category;
     I : C;
     alpha : associator tensor;
     lambda : left_unitor tensor I;
     rho : right_unitor tensor I;
-    pentagon_eq_holds : forall a b c d : C, pentagon_eq alpha  a b c d;
+    pentagon_eq_holds : forall a b c d : C, pentagon_eq alpha a b c d;
     triangle_eq_holds : forall a b : C, triangle_eq alpha lambda rho a b;
   }.
+
+End MonoidalStructure.
