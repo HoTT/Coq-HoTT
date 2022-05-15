@@ -16,30 +16,37 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Section MonoidalStructure.
-Local Notation id := Functor.Identity.identity.
+  Context `{Funext}.
+
 Local Notation "x --> y" := (morphism _ x y).
-Local Open Scope category_scope.
-Local Open Scope morphism_scope.
-Local Notation "g ∘ f" := (Functor.Composition.Core.compose g f).
-Context `{Funext}.
+
 Section MonoidalCategoryConcepts.
   Variable C : PreCategory.
   Variable tensor : ((C * C) -> C)%category.
   Variable I : C.
+  Locate identity.
+  
   Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)) (at level 45, left associativity).
-  Definition right_assoc := tensor ∘ (Functor.Prod.pair (id C) tensor).
+
+  Local Open Scope functor_scope.
+  Locate identity.
+  Locate "1". Check (1%functor _).
+  Definition right_assoc := (tensor ∘ (Functor.Prod.pair 1 tensor) )%functor.
   Definition left_assoc :=  tensor ∘
-                                   (Functor.Prod.pair tensor (id C)) ∘
+                                   (Functor.Prod.pair tensor 1) ∘
                                    (Associativity.functor _ _ _).
+
   Definition associator := NaturalIsomorphism right_assoc left_assoc.
   (* Orientation  (A ⊗ B) ⊗ C -> A ⊗ (B ⊗ C) *)
   Definition pretensor (A : C) := Core.induced_snd tensor A.
   Definition I_pretensor := pretensor I.
   Definition posttensor (A : C) := Core.induced_fst tensor A.
   Definition I_posttensor := posttensor I.
-  Definition left_unitor := NaturalIsomorphism I_pretensor (id C).
-  Definition right_unitor := NaturalIsomorphism I_posttensor (id C).
+  Definition left_unitor := NaturalIsomorphism I_pretensor 1.
+  Definition right_unitor := NaturalIsomorphism I_posttensor 1.
 
+  Close Scope functor_scope.
+  
   Variable alpha : associator.
   Variable lambda : left_unitor.
   Variable rho : right_unitor.
@@ -70,7 +77,9 @@ Section MonoidalCategoryConcepts.
   Local Definition P5 : (a ⊗ b) ⊗ (c ⊗ d) --> ((a ⊗ b) ⊗ c ) ⊗ d
     := alpha_nat_trans (a ⊗ b,(c, d)).
 
+  Local Open Scope morphism_scope.
   Definition pentagon_eq := P3 o P2 o P1 = P5 o P4.
+  Close Scope morphism_scope.
 
   Local Definition Q1 : (a ⊗ (I ⊗ b)) --> a ⊗ b.
   Proof.
