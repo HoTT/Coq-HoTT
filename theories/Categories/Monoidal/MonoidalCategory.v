@@ -24,7 +24,6 @@ Section MonoidalCategoryConcepts.
   Variable C : PreCategory.
   Variable tensor : ((C * C) -> C)%category.
   Variable I : C.
-  Locate identity.
   
   Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)) (at level 45, left associativity).
 
