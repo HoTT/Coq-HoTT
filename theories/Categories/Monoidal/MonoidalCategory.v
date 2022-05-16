@@ -29,7 +29,6 @@ Section MonoidalCategoryConcepts.
 
   Local Open Scope functor_scope.
   Locate identity.
-  Locate "1". Check (1%functor _).
   Definition right_assoc := (tensor ∘ (Functor.Prod.pair 1 tensor) )%functor.
   Definition left_assoc :=  tensor ∘
                                    (Functor.Prod.pair tensor 1) ∘
