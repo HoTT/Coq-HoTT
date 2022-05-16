@@ -25,7 +25,7 @@ Section MonoidalCategoryConcepts.
   Variable tensor : ((C * C) -> C)%category.
   Variable I : C.
   
-  Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)) (at level 45, left associativity).
+  Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)).
 
   Local Open Scope functor_scope.
   Definition right_assoc := (tensor ∘ (Functor.Prod.pair 1 tensor) )%functor.
