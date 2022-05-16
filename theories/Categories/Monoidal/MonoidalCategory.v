@@ -28,7 +28,6 @@ Section MonoidalCategoryConcepts.
   Local Notation "A ⊗ B" := (tensor (Datatypes.pair A B)) (at level 45, left associativity).
 
   Local Open Scope functor_scope.
-  Locate identity.
   Definition right_assoc := (tensor ∘ (Functor.Prod.pair 1 tensor) )%functor.
   Definition left_assoc :=  tensor ∘
                                    (Functor.Prod.pair tensor 1) ∘
