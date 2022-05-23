@@ -57,6 +57,7 @@ Reserved Notation "x ≠ y" (at level 70).
 Reserved Notation "x ⇸ y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x ↠ y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x ↪ y" (at level 99, right associativity, y at level 200).
+Reserved Notation "A ⊗ B" (at level 45, left associativity).
 (* Reserved Notation "∀  x .. y , P" (at level 200, x binder, y binder, right associativity). *)
 Reserved Notation "x ∨ y" (at level 85, right associativity).
 (* Reserved Notation "x ⊔ y" (at level 85, right associativity). *)
