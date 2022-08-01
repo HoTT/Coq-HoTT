@@ -48,7 +48,7 @@ Proof.
            apply path_prod; cbn.
            - apply grp_moveL_Mg.
              by rewrite negate_involutive.
-           - exact (grp_homo_inv _ _ @ ap _ s @ (right_identity _)^). }
+           - exact (ap _ s @ (right_identity _)^). }
       apply tr.
       exists (b + f a); cbn.
       apply path_sigma_hprop; cbn.
@@ -137,8 +137,8 @@ Proof.
   - refine (grp_homo_unit f @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ right_identity _).
-  - rewrite negate_mon_unit.
-    refine (grp_homo_unit _ @ _).
+  - refine (ap _ (grp_homo_unit _) @ _).
+    refine (negate_mon_unit @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ left_identity _).
 Defined.

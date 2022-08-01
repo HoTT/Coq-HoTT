@@ -10,7 +10,7 @@ Local Open Scope mc_add_scope.
 
 Definition ab_pushout_subgroup {A B C : AbGroup} (f : A $-> B) (g : A $-> C)
   : Subgroup (ab_biprod B C)
-  := grp_image (ab_biprod_corec f (g $o ab_homo_negation)).
+  := grp_image (ab_biprod_corec f (ab_homo_negation $o g)).
 
 Definition ab_pushout {A B C : AbGroup}
            (f : A $-> B) (g : A $-> C) : AbGroup
@@ -27,7 +27,7 @@ Proof.
     destruct q as [a q]. cbn in q.
     refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
     unfold uncurry; cbn.
-    refine (ap011 sg_op (p a) (preserves_negate (f:=c $o g) _) @ _).
+    refine (ap011 sg_op (p a) (preserves_negate _) @ _).
     exact (right_inverse _).
 Defined.
 
@@ -50,7 +50,7 @@ Proposition ab_pushout_commsq {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
 Proof.
   intro a.
   apply qglue.
-  pose (bc := grp_image_in (ab_biprod_corec f (g $o ab_homo_negation)) a).
+  pose (bc := grp_image_in (ab_biprod_corec f (ab_homo_negation $o g)) a).
   destruct bc as [[b c] p].
   strip_truncations.
   destruct p as [p q].
@@ -62,7 +62,8 @@ Proof.
   - rewrite grp_homo_inv.
     symmetry.
     apply right_identity.
-  - rewrite negate_involutive.
+  - rewrite (preserves_negate a).
+    rewrite negate_involutive.
     rewrite negate_mon_unit.
     exact (left_identity _)^.
 Defined.
@@ -153,7 +154,7 @@ Proof.
     apply (equiv_ap_inv negate); cbn.
     refine (negate_sg_op _ _ @ _).
     rewrite negate_involutive.
-    refine (p1^ @ grp_homo_inv _ _).
+    exact p1^.
   - apply (grp_moveR_M1).
     refine (_ @ p0); symmetry.
     exact (ap f z @ grp_homo_unit f).
