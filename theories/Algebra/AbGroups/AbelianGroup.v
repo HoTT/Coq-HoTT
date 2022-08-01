@@ -324,7 +324,7 @@ Proof.
 Defined.
 
 (** Biproducts preserve surjections. *)
-Definition functor_ab_biprod_sujection `{Univalence} {A A' B B' : AbGroup}
+Definition functor_ab_biprod_surjection `{Funext} {A A' B B' : AbGroup}
            (p : A $-> B) (p' : A' $-> B')
            `{S : IsSurjection p} `{S' : IsSurjection p'}
   : IsSurjection (functor_ab_biprod p p').

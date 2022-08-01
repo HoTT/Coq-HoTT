@@ -38,13 +38,13 @@ Proof.
 Defined.
 
 (** The pointwise direct sum of two short exact sequences. *)
-Definition abses_direct_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
-  : AbSES (ab_biprod B B) (ab_biprod A A)
+Definition abses_direct_sum `{Funext} {B A B' A' : AbGroup} (E : AbSES B A) (F : AbSES B' A')
+  : AbSES (ab_biprod B B') (ab_biprod A A')
   := Build_AbSES (ab_biprod E F)
                  (functor_ab_biprod (inclusion E) (inclusion F))
                  (functor_ab_biprod (projection E) (projection F))
                  (functor_ab_biprod_embedding _ _)
-                 (functor_ab_biprod_sujection _ _)
+                 (functor_ab_biprod_surjection _ _)
                  (ab_biprod_exact _ _ _ _).
 
 (** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forth along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forth and pulling back produces an isomorphic short exact sequence.) *)
