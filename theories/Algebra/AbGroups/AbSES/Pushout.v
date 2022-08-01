@@ -40,19 +40,19 @@ Proof.
       pose proof (a := isexact_preimage _ _ _ c c_in_kernel).
       strip_truncations.
       destruct a as [a s].
-      (** Now we see that [bc'] lies in the image of [ab_pushout_inl]. *)
-      assert (u : bc' = ab_pushout_inl (b + f a)).
-      1: { rewrite <- q.
-           apply path_ab_pushout; cbn.
-           refine (tr (a; _)).
-           apply path_prod; cbn.
-           - apply grp_moveL_Mg.
-             by rewrite negate_involutive.
-           - exact (ap _ s @ (right_identity _)^). }
+      (** Now the goal is to show that [bc'] lies in the image of [ab_pushout_inl]. *)
       apply tr.
-      exists (b + f a); cbn.
+      exists (b + - f (- a)); cbn.  (* It simplifies the algebra to write [- f(- a)] instead of [f a]. *)
       apply path_sigma_hprop; cbn.
-      apply u^.
+      change (ab_pushout_inl (b + - f (- a)) = bc').  (* Just to guide the reader. *)
+      refine (_ @ q).
+      symmetry.
+      apply path_ab_pushout; cbn.
+      refine (tr (-a; _)).
+      apply path_prod; cbn.
+      * apply grp_moveL_Mg.
+        by rewrite negate_involutive.
+      * exact ((preserves_negate a) @ ap _ s @ (right_identity _)^).
 Defined.
 
 (** ** The universal property of [abses_pushout_morphism] *)
@@ -134,11 +134,11 @@ Proof.
   apply qglue.
   refine (tr (0; _)).
   apply path_prod'; cbn.
-  - refine (grp_homo_unit f @ _).
-    apply grp_moveL_Vg.
-    exact (right_identity _ @ right_identity _).
   - refine (ap _ (grp_homo_unit _) @ _).
     refine (negate_mon_unit @ _).
+    apply grp_moveL_Vg.
+    exact (right_identity _ @ right_identity _).
+  - refine (grp_homo_unit _ @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ left_identity _).
 Defined.
