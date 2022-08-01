@@ -144,7 +144,7 @@ Definition ab_pushout_embedding_inl `{Univalence} {A B C : AbGroup}
 Proof.
   apply isembedding_isinj_hset.
   intros c0 c1.
-  apply (equiv_precompose (path_ab_pushout f g (grp_prod_inl c0) (grp_prod_inl c1)))^-1.
+  refine (_ o (path_ab_pushout f g (grp_prod_inl c0) (grp_prod_inl c1))^-1).
   rapply Trunc_ind.
   cbn; intros [a p].
   pose proof ((equiv_path_prod _ _)^-1%equiv p) as [p0 p1]; cbn in p0, p1.
