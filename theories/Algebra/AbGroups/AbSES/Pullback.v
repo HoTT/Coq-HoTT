@@ -52,11 +52,9 @@ Proof.
                               (component2 f) (projection E)).
     apply right_square.
   - intro x; cbn.
-    snrapply path_sigma; cbn.
+    apply equiv_path_pullback_hset; cbn; split.
     + apply left_square.
-    + refine (transport_sigma' _ _ @ _); cbn.
-      apply path_sigma_hprop; cbn; symmetry.
-      apply iscomplex_abses.
+    + symmetry; apply iscomplex_abses.
   - reflexivity.
 Defined.
 
@@ -78,13 +76,10 @@ Definition abses_component1_trivial_pullback' `{Funext} {A B B' : AbGroup}
            (h : component1 f == grp_homo_id)
   : E $== abses_pullback0 (component3 f) F.
 Proof.
-  pose (g := (abses_pullback_morphism_corec f)).
+  pose (g := abses_pullback_morphism_corec f).
   nrapply abses_path_data_to_iso.
   exists (component2 g); split.
-  - intro a; cbn.
-    apply equiv_path_pullback_hset; split; cbn.
-    + exact ((left_square f a)^ @ ap _ (h a)).
-    + apply iscomplex_abses.
+  - exact (fun a => (left_square g a)^ @ ap _ (h a)).
   - reflexivity.
 Defined.
 
