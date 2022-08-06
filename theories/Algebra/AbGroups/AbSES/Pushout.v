@@ -195,7 +195,7 @@ Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
 
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
+  : abses_pushout0 (B:=B) g o abses_pushout0 f $=> abses_pushout0 (g $o f).
 Proof.
   intro E; apply gpd_rev.
   srapply abses_path_data_to_iso;
@@ -217,5 +217,5 @@ Defined.
 
 Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
+  : abses_pushout0 (B:=B) g o abses_pushout0 f == abses_pushout0 (g $o f)
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).

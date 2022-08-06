@@ -242,7 +242,7 @@ Defined.
 
 (** The fibre of [cxfib'] over [(F;p)] is inhabited. *)
 Definition hfiber_cxfib'_inhabited `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
   : hfiber_cxfib' E F p.
 Proof.
   exists (abses_pullback_trivial_preimage E F p).
@@ -266,7 +266,7 @@ Proof.
     exact (ap _ (right_inverse _) @ grp_homo_unit _ @ (grp_homo_unit _)^).
   - intro b.
     exact (snd p^$.2 _)^.
-Defined. (* A bit slow. *)
+Defined.
 
 (** To conclude exactness in terms of path data, we show that the fibre is a proposition, hence contractible. *)
 

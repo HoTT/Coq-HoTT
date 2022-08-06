@@ -198,7 +198,7 @@ Defined.
 (** The analog of [abses_pullback_compose'] with actual homotopies. *)
 Definition abses_pullback_compose `{Univalence} {A B0 B1 B2 : AbGroup}
            (f : B0 $-> B1) (g : B1 $-> B2)
-  : abses_pullback (A:=A) f o abses_pullback g == abses_pullback (g $o f)
+  : abses_pullback0 (A:=A) f o abses_pullback0 g == abses_pullback0 (g $o f)
   := fun x => equiv_path_abses_iso (abses_pullback_compose' f g x).
 
 (** We now work towards *pointed* composition of pullback ([abses_pullback_pcompose]). The proof of pointedness will matter when we later prove that pulling back along a short exact sequence is exact (i.e. that the complex [iscomplex_pullback_abses] below is exact). For this reason we carefully construct the proof of pointedness in terms of the analog [abses_pullback_pcompose'] on path data, which computes. *)
