@@ -256,8 +256,7 @@ Proof.
   apply equiv_path_biprod_corec.
   split; apply equiv_path_pullback_rec_hset; split; cbn.
   - intro a.
-    refine (ap (class_of _) _).
-    exact (ap pullback_pr1 (fst p^$.2 a)).
+    exact (ap (class_of _ o pullback_pr1) (fst p^$.2 a)).
   - intro a.
     exact ((snd p^$.2 _)^).
   - intro b; apply qglue.
@@ -266,8 +265,8 @@ Proof.
     refine ((grp_homo_op (grp_pullback_pr1 _ _ $o p^$.1 $o ab_biprod_inr) _ _)^ @ _).
     exact (ap _ (right_inverse _) @ grp_homo_unit _ @ (grp_homo_unit _)^).
   - intro b.
-    exact ((snd p^$.2 _)^).
-Defined.
+    exact (snd p^$.2 _)^.
+Defined. (* A bit slow. *)
 
 (** To conclude exactness in terms of path data, we show that the fibre is a proposition, hence contractible. *)
 

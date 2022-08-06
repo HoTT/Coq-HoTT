@@ -29,6 +29,7 @@ Proof.
     pose proof (x := isexact_preimage _ j q f (snd U)).
     strip_truncations; apply tr.
     exists (ab_biprod_inl a.1 + ab_biprod_inr x.1); cbn.
+    pose (IS := sg_set (ab_biprod B Y)). (* This hint speeds up the next line. *)
     apply path_sigma_hprop; cbn.
     apply path_prod; cbn.
     + rewrite right_identity.
