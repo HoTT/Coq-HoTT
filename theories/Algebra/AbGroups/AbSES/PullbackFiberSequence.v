@@ -119,7 +119,7 @@ Proof.
       exact (negate_involutive _)^.
 Defined.
 
-(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_component1_trivial_pullback] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
+(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_component1_id_pullback] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
 
 Definition abses_pullback_inclusion0_map' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
            (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
@@ -247,7 +247,7 @@ Definition hfiber_cxfib'_inhabited `{Univalence} {A B C : AbGroup} (E : AbSES C 
 Proof.
   exists (abses_pullback_trivial_preimage E F p).
   srefine (_^$; _).
-  1: by rapply (abses_component1_trivial_pullback' (abses_pullback_inclusion0_map' E F p)).
+  1: by rapply (abses_component1_id_pullback' (abses_pullback_inclusion0_map' E F p)).
   lazy beta; unfold pr2.
   refine (cat_assoc _ _ _ $@ _).
   refine (cat_assoc _ _ _ $@ _).

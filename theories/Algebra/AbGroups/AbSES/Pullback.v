@@ -71,7 +71,7 @@ Proof.
   all: by apply equiv_path_grouphomomorphism.
 Defined.
 
-Definition abses_component1_trivial_pullback' `{Funext} {A B B' : AbGroup}
+Definition abses_component1_id_pullback' `{Funext} {A B B' : AbGroup}
            {E : AbSES B A} {F : AbSES B' A} (f : AbSESMorphism E F)
            (h : component1 f == grp_homo_id)
   : E $== abses_pullback0 (component3 f) F.
@@ -84,11 +84,11 @@ Proof.
 Defined.
 
 (** In particular, if [component1] of a morphism is the identity, then it exhibits the domain as the pullback of the codomain. *)
-Definition abses_component1_trivial_pullback `{Univalence} {A B B' : AbGroup}
+Definition abses_component1_id_pullback `{Univalence} {A B B' : AbGroup}
            {E : AbSES B A} {F : AbSES B' A}
            (f : AbSESMorphism E F) (h : component1 f == grp_homo_id)
   : E = abses_pullback0 (component3 f) F
-  := equiv_path_abses_iso (abses_component1_trivial_pullback' f h).
+  := equiv_path_abses_iso (abses_component1_id_pullback' f h).
 
 (** ** Functoriality of [abses_pullback0 f] for [f : B' $-> B] *)
 
