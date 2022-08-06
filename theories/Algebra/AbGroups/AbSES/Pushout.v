@@ -21,9 +21,8 @@ Proof.
     rapply (conn_map_homotopic _ (projection E)); symmetry.
     nrapply ab_pushout_rec_beta_right.
   - snrapply Build_IsExact.
-    + srapply Build_pHomotopy.
-      * nrapply ab_pushout_rec_beta_left.
-      * apply path_ishprop.
+    + srapply phomotopy_homotopy_hset.
+      nrapply ab_pushout_rec_beta_left.
     + intros [bc' p].
       rapply contr_inhabited_hprop.
       (** Pick a preimage under the quotient map. *)

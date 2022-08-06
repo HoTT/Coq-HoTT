@@ -16,11 +16,11 @@ Lemma ab_biprod_exact {A E B X F Y : AbGroup}
             (functor_ab_biprod p q).
 Proof.
   snrapply Build_IsExact.
-  - snrapply Build_pHomotopy.
-    + intro x; apply path_prod; cbn.
-      * apply ex0.
-      * apply ex1.
-    + apply path_ishprop.
+  - snrapply phomotopy_homotopy_hset.
+    1: exact _.
+    intro x; apply path_prod; cbn.
+    + apply ex0.
+    + apply ex1.
   - intros [ef u]; cbn.
     rapply contr_inhabited_hprop.
     destruct ef as [e f].

@@ -80,12 +80,11 @@ Proof.
     simpl.
     exact _.
   - snrapply Build_IsExact.
-    + srapply Build_pHomotopy.
-      * intro a; simpl.
-        refine (ap (projection E) _ @ _).
-        1: apply iscomplex_abses.
-        apply grp_homo_unit.
-      * apply path_ishprop.
+    + srapply phomotopy_homotopy_hset.
+      intro a; simpl.
+      refine (ap (projection E) _ @ _).
+      1: apply iscomplex_abses.
+      apply grp_homo_unit.
     + intros [y q].
       apply (@contr_inhabited_hprop _ _).
       (* We choose a preimage by [grp_quotient_map]. *)

@@ -61,9 +61,7 @@ Global Instance ispointed_abses {B A : AbGroup} : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
   snrapply Build_IsExact.
-  - srapply Build_pHomotopy.
-    + reflexivity.
-    + apply path_ishprop.
+  - srapply phomotopy_homotopy_hset; reflexivity.
   - intros [[a b] p]; cbn; cbn in p.
     rapply contr_inhabited_hprop.
     apply tr.
@@ -628,12 +626,11 @@ Proof.
   1: exact grp_quotient_map.
   1: exact _.
   srapply Build_IsExact.
-  - srapply Build_pHomotopy.
-    + intro x.
-      apply qglue; cbn.
-      exists (-x).
-      exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
-    + apply path_ishprop.
+  - srapply phomotopy_homotopy_hset.
+    intro x.
+    apply qglue; cbn.
+    exists (-x).
+    exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
   - snrapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
     + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
     + intro a.

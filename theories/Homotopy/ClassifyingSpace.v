@@ -418,9 +418,8 @@ Defined.
 Lemma pbloop_natural (G K : Group) (f : G $-> K) 
   : fmap loops (fmap B f) o* pbloop ==* pbloop o* f.
 Proof.
-  snrapply Build_pHomotopy.
-  1: apply bloop_natural.
-  apply path_ishprop.
+  srapply phomotopy_homotopy_hset.
+  apply bloop_natural.
 Defined.
 
 Definition natequiv_g_loops_bg `{Univalence}

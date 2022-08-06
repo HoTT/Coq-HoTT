@@ -385,6 +385,14 @@ Proof.
   srapply phomotopy_ind_1.
 Defined.
 
+(** Every homotopy between pointed maps of sets is a pointed homotopy. *)
+Definition phomotopy_homotopy_hset {X Y : pType} `{IsHSet Y} {f g : X ->* Y} (h : f == g)
+  : f ==* g.
+Proof.
+  apply (Build_pHomotopy h).
+  apply path_ishprop.
+Defined.
+
 (** ** Operations on equivalences needed to make pType a wild category with equivalences *)
 
 (** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)

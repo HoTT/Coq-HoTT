@@ -20,9 +20,9 @@ Proof.
   - exact (cancelL_isembedding (g:= grp_pullback_pr1 _ _)).
   - rapply conn_map_pullback'.
   - snrapply Build_IsExact.
-    + srapply Build_pHomotopy.
+    + snrapply phomotopy_homotopy_hset.
+      * exact _.
       * reflexivity.
-      * apply path_ishprop.
     + nrefine (cancelR_equiv_conn_map
                  _ _ (hfiber_pullback_along_pointed f (projection _) (grp_homo_unit _))).
       nrefine (conn_map_homotopic _ _ _ _ (conn_map_isexact (IsExact:=isexact_inclusion_projection _))).
