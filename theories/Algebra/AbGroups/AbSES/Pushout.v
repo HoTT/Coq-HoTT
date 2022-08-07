@@ -8,7 +8,7 @@ Local Open Scope mc_add_scope.
 
 (** * Pushouts of short exact sequences *)
 
-Definition abses_pushout0 `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A -> AbSES B A'.
 Proof.
   intro E.
@@ -58,7 +58,7 @@ Defined.
 
 Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
            (E : AbSES B A) (f : A $-> A')
-  : AbSESMorphism E (abses_pushout0 f E).
+  : AbSESMorphism E (abses_pushout f E).
 Proof.
   snrapply (Build_AbSESMorphism f _ grp_homo_id).
   - exact ab_pushout_inr.
@@ -70,7 +70,7 @@ Defined.
 
 Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
            {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
-  : AbSESMorphism (abses_pushout0 (component1 f) E) F.
+  : AbSESMorphism (abses_pushout (component1 f) E) F.
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id _ (component3 f)).
   - rapply ab_pushout_rec.
@@ -104,10 +104,10 @@ Proof.
   exact (left_identity _)^.
 Defined.
 
-(** ** Functoriality of [abses_pushout0 f] *)
+(** ** Functoriality of [abses_pushout f] *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : Is0Functor (abses_pushout0 (B:=B) f).
+  : Is0Functor (abses_pushout (B:=B) f).
 Proof.
   srapply Build_Is0Functor;
     intros E F p.
@@ -124,7 +124,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_path_data_1 `{Univalence} {A A' B : AbGroup} (f : A $-> A') {E : AbSES B A} 
-  : fmap (abses_pushout0 f) (Id E) = Id (abses_pushout0 f E).
+  : fmap (abses_pushout f) (Id E) = Id (abses_pushout f E).
 Proof.
   srapply path_sigma_hprop.
   apply equiv_path_groupisomorphism.
@@ -144,8 +144,8 @@ Defined.
 
 Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
            {E F : AbSES B A} (p : E = F)
-  : ap (abses_pushout0 f) p
-    = equiv_path_abses_iso (fmap (abses_pushout0 f) (equiv_path_abses_iso^-1 p)).
+  : ap (abses_pushout f) p
+    = equiv_path_abses_iso (fmap (abses_pushout f) (equiv_path_abses_iso^-1 p)).
 Proof.
   induction p.
   refine (_ @ ap _ _).
@@ -155,8 +155,8 @@ Defined.
 
 Definition ap_abses_pushout_data `{Univalence} {A A' B : AbGroup} (f : A $-> A')
            {E F : AbSES B A} (p : E $== F)
-  : ap (abses_pushout0 f) (equiv_path_abses_iso p)
-    = equiv_path_abses_iso (fmap (abses_pushout0 f) p).
+  : ap (abses_pushout f) (equiv_path_abses_iso p)
+    = equiv_path_abses_iso (fmap (abses_pushout f) p).
 Proof.
   refine (ap_abses_pushout _ _ @ _).
   apply (ap (equiv_path_abses_iso o _)).
@@ -164,7 +164,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_point' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout0 f (point (AbSES B A)) $== point _.
+  : abses_pushout f (point (AbSES B A)) $== point _.
 Proof.
   srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
@@ -182,20 +182,20 @@ Proof.
 Defined.
 
 Definition abses_pushout_point `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout0 f (point (AbSES B A)) = point _
+  : abses_pushout f (point (AbSES B A)) = point _
   := equiv_path_abses_iso (abses_pushout_point' f).
 
 Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A -->* AbSES B A'
-  := Build_BasepointPreservingFunctor (abses_pushout0 f) (abses_pushout_point' f).
+  := Build_BasepointPreservingFunctor (abses_pushout f) (abses_pushout_point' f).
 
-Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A ->* AbSES B A'
   := to_pointed (abses_pushout' f).
 
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout0 (B:=B) g o abses_pushout0 f $=> abses_pushout0 (g $o f).
+  : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
 Proof.
   intro E; apply gpd_rev.
   srapply abses_path_data_to_iso;
@@ -217,5 +217,5 @@ Defined.
 
 Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout0 (B:=B) g o abses_pushout0 f == abses_pushout0 (g $o f)
+  : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).

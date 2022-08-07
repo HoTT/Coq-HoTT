@@ -13,7 +13,7 @@ We will prove the analog of exactness in terms of path data, and deduce the usua
 
 Definition abses_pullback_inclusion_transpose_subgroup `{Univalence} {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
-      (F : AbSES E A) (p : abses_pullback0 i F $== point _)
+      (F : AbSES E A) (p : abses_pullback i F $== point _)
   : NormalSubgroup F.
 Proof.
   srapply (ab_image_embedding (grp_pullback_pr1 _ _ $o (grp_iso_inverse p.1) $o ab_biprod_inr)).
@@ -24,14 +24,14 @@ Defined.
 
 Definition abses_pullback_inclusion_transpose_endpoint' `{Univalence} {A B E : AbGroup}
            (i : B $-> E) `{IsEmbedding i}
-           (F : AbSES E A) (p : abses_pullback0 i F $== point _)
+           (F : AbSES E A) (p : abses_pullback i F $== point _)
   : AbGroup := QuotientAbGroup F (abses_pullback_inclusion_transpose_subgroup i F p).
 
 (** By [abses_from_inclusion] we get a short exact sequence [B -> F -> F/B] associated to the subgroup and quotient just above. *)
 
 Lemma abses_pullback_inclusion_transpose_beta `{Univalence} {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
-      (F : AbSES E A) (p : abses_pullback0 i F $== point _)
+      (F : AbSES E A) (p : abses_pullback i F $== point _)
   : projection F $o (grp_pullback_pr1 (projection F) _ $o p^$.1 $o ab_biprod_inr) == i.
 Proof.
   rapply (conn_map_elim _ (ab_biprod_pr2 (A:=A))).
@@ -42,7 +42,7 @@ Defined.
 
 (** Short exact sequences in the fiber of [inclusion E] descend along [projection E]. *)
 Definition abses_pullback_trivial_preimage `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   : AbSES C A.
 Proof.
   snrapply Build_AbSES.
@@ -119,10 +119,10 @@ Proof.
       exact (negate_involutive _)^.
 Defined.
 
-(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_component1_id_pullback] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
+(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_pullback_component1_id] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
 
 Definition abses_pullback_inclusion0_map' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   : AbSESMorphism F (abses_pullback_trivial_preimage E F p).
 Proof.
   srapply Build_AbSESMorphism.
@@ -137,10 +137,10 @@ Defined.
 
 (** The analog of [cxfib] induced by pullback in terms of path data. *)
 Definition cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
-  : AbSES C A -> graph_hfiber (abses_pullback0 (A:=A) (inclusion E)) (point _).
+  : AbSES C A -> graph_hfiber (abses_pullback (A:=A) (inclusion E)) (point _).
 Proof.
   intro Y.
-  exists (abses_pullback0 (projection E) Y).
+  exists (abses_pullback (projection E) Y).
   refine (abses_pullback_compose' _ _ Y $@ _).
   refine (abses_pullback_homotopic' _ grp_homo_const _ Y $@ _).
   1: rapply iscomplex_abses.
@@ -148,7 +148,7 @@ Proof.
 Defined.
 
 Definition hfiber_cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   := {Y : AbSES C A & hfiber_abses_path (cxfib' E Y) (F; p)}.
 
 (* This is just [idpath], but Coq takes too long to see that. *)
@@ -185,7 +185,7 @@ Defined.
 Transparent abses_pullback'.
 
 Definition equiv_hfiber_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   : hfiber_cxfib' E F p <~> hfiber (cxfib (iscomplex_pullback_abses E))
                   (equiv_hfiber_abses _ (point _) (F;p)).
 Proof.
@@ -198,29 +198,29 @@ Defined.
 
 (** The type of paths in [hfiber_cxfib'] in terms of path data. *)
 Definition path_hfiber_cxfib' `{Funext} {A B C : AbGroup} {E : AbSES C B}
-           {F : AbSES (middle E) A} {p : abses_pullback0 (inclusion E) F $== point _}
+           {F : AbSES (middle E) A} {p : abses_pullback (inclusion E) F $== point _}
            (X Y : hfiber_cxfib' (B:=B) E F p)
   : Type.
 Proof.
   refine (sig (fun q0 : X.1 $== Y.1 => _)).
-  exact ((fmap (abses_pullback0 (projection E)) q0)^$ $@ X.2.1 $== Y.2.1).
+  exact ((fmap (abses_pullback (projection E)) q0)^$ $@ X.2.1 $== Y.2.1).
 Defined.
 
 Definition transport_hfiber_abses_path_cxfib'_l `{Univalence} {A B C : AbGroup} {E : AbSES C B}
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
            (U V : hfiber_cxfib' E F p) (q : U.1 = V.1)
   : (transport (fun Y : AbSES C A => hfiber_abses_path (cxfib' E Y) (F; p)) q U.2).1
-    = fmap (abses_pullback0 (projection E)) (equiv_path_abses_iso^-1 q^) $@ U.2.1.
+    = fmap (abses_pullback (projection E)) (equiv_path_abses_iso^-1 q^) $@ U.2.1.
 Proof.
   induction q.
   refine (ap pr1 (transport_1 _ _) @ _).
-  refine (_ @ ap (fun x => fmap (abses_pullback0 (projection E)) x $@ _) equiv_path_absesV_1^).
+  refine (_ @ ap (fun x => fmap (abses_pullback (projection E)) x $@ _) equiv_path_absesV_1^).
   refine (_ @ ap (fun x => x $@ _) (fmap_id_strong _ _)^).
   exact (cat_idr_strong _)^.
 Defined.
 
 Definition equiv_path_hfiber_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
-           (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
            (U V : hfiber_cxfib' E F p)
   : path_hfiber_cxfib' U V <~> U = V.
 Proof.
@@ -231,7 +231,7 @@ Proof.
   refine (equiv_concat_l _ _ oE _).
   1: apply transport_hfiber_abses_path_cxfib'_l.
   refine (equiv_path_sigma_hprop _ _ oE equiv_concat_l _ _ oE _).
-  1: { refine (ap (fun x => (fmap (abses_pullback0 _) x $@ _).1) _).
+  1: { refine (ap (fun x => (fmap (abses_pullback _) x $@ _).1) _).
        nrefine (ap _ (abses_path_data_V q) @ _).
        apply eissect. }
   refine (equiv_concat_l _ _ oE _).
@@ -242,12 +242,12 @@ Defined.
 
 (** The fibre of [cxfib'] over [(F;p)] is inhabited. *)
 Definition hfiber_cxfib'_inhabited `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   : hfiber_cxfib' E F p.
 Proof.
   exists (abses_pullback_trivial_preimage E F p).
   srefine (_^$; _).
-  1: by rapply (abses_component1_id_pullback' (abses_pullback_inclusion0_map' E F p)).
+  1: by rapply (abses_pullback_component1_id' (abses_pullback_inclusion0_map' E F p)).
   lazy beta; unfold pr2.
   refine (cat_assoc _ _ _ $@ _).
   refine (cat_assoc _ _ _ $@ _).
@@ -272,9 +272,9 @@ Defined.
 
 (** Given a point [(Y;Q)] in the fiber of [cxfib'] over [(F;p)] there is an induced map as follows. *)
 Local Definition hfiber_cxfib'_induced_map `{Funext} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
       (Y : hfiber_cxfib' E F p)
-  : ab_biprod A B $-> abses_pullback0 (projection E) Y.1.
+  : ab_biprod A B $-> abses_pullback (projection E) Y.1.
 Proof.
   destruct Y as [Y q].
   refine (grp_homo_compose _ (grp_iso_inverse p.1)).
@@ -285,7 +285,7 @@ Defined.
 (** There is "another" obvious induced map. *)
 Definition abses_pullback_splits_induced_map' {A B C : AbGroup}
            (E : AbSES C B) (Y : AbSES C A)
-  : ab_biprod A B $-> abses_pullback0 (projection E) Y.
+  : ab_biprod A B $-> abses_pullback (projection E) Y.
 Proof.
   srapply (ab_biprod_rec (inclusion _)).
   srapply grp_pullback_corec.
@@ -297,8 +297,8 @@ Proof.
 Defined.
 
 Lemma fmap_hfiber_abses_lemma `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
-           (X Y : graph_hfiber (abses_pullback0 (A:=A) f) (point _)) (Q : hfiber_abses_path X Y)
-  : fmap (abses_pullback0 f) Q.1^$ $o Y.2^$ $== X.2^$.
+           (X Y : graph_hfiber (abses_pullback (A:=A) f) (point _)) (Q : hfiber_abses_path X Y)
+  : fmap (abses_pullback f) Q.1^$ $o Y.2^$ $== X.2^$.
 Proof.
   generalize Q.
   equiv_intro (equiv_hfiber_abses_pullback _ X Y)^-1%equiv p;
@@ -312,7 +312,7 @@ Proof.
 Defined.
 
 Lemma induced_map_eq `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
       (Y : hfiber_cxfib' E F p)
   : hfiber_cxfib'_induced_map E F p Y == abses_pullback_splits_induced_map' E Y.1.
 Proof.
@@ -325,7 +325,7 @@ Defined.
 
 (** Given another point [(Y,Q)] in the fibre of [cxfib'] over [(F;p)], we get path data in [AbSES C A]. *)
 Lemma hfiber_cxfib'_induced_path'0 `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
       (Y : hfiber_cxfib' E F p)
   : abses_pullback_trivial_preimage E F p $== Y.1.
 Proof.
@@ -350,7 +350,7 @@ Proof.
 Defined.
 
 Lemma hfiber_cxfib'_induced_path' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
       (Y : hfiber_cxfib' E F p)
   : path_hfiber_cxfib' (hfiber_cxfib'_inhabited E F p) Y.
 Proof.
@@ -366,7 +366,7 @@ Defined.
 
 (** It follows that [hfiber_cxfib'] is contractible. *)
 Lemma contr_hfiber_cxfib' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
-      (F : AbSES (middle E) A) (p : abses_pullback0 (inclusion E) F $== point _)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== point _)
   : Contr (hfiber_cxfib' E F p).
 Proof.
   srapply Build_Contr.
@@ -378,11 +378,11 @@ Defined.
 
 (** From this we deduce exactness. *)
 Global Instance isexact_abses_pullback `{Univalence} {A B C : AbGroup} {E : AbSES C B}
-  : IsExact purely (abses_pullback (A:=A) (projection E)) (abses_pullback (inclusion E)).
+  : IsExact purely (abses_pullback_pmap (A:=A) (projection E)) (abses_pullback_pmap (inclusion E)).
 Proof.
   srapply Build_IsExact.
   1: apply iscomplex_pullback_abses.
-  srapply (equiv_ind (equiv_hfiber_abses (abses_pullback0 (inclusion E)) (point (AbSES B A)))).
+  srapply (equiv_ind (equiv_hfiber_abses (abses_pullback (inclusion E)) (point (AbSES B A)))).
   intros [F p].
   rapply contr_equiv'.
   1: apply equiv_hfiber_cxfib'.

@@ -51,4 +51,4 @@ Definition abses_direct_sum `{Funext} {B A B' A' : AbGroup} (E : AbSES B A) (F :
 (** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forth along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forth and pulling back produces an isomorphic short exact sequence.) *)
 Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
   : AbSES B A
-  := abses_pullback0 ab_diagonal (abses_pushout0 ab_codiagonal (abses_direct_sum E F)).
+  := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).
