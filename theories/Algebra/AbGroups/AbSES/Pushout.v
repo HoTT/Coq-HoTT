@@ -104,6 +104,28 @@ Proof.
   exact (left_identity _)^.
 Defined.
 
+(** Given [E : AbSES B A'] and [F : AbSES B A] and a morphism [f : E -> F], the pushout of [E] along [f_1] is [F] if [f_3] is homotopic to [id_B]. *)
+Lemma abses_pushout_component3_id' `{Univalence}
+      {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+      (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E $== F.
+Proof.
+  pose (g := abses_pushout_morphism_rec f).
+  nrapply abses_path_data_to_iso.
+  exists (component2 g); split.
+  + intro x.
+    exact (left_square g _)^.
+  + intro x.
+    exact ((right_square g _) @ h _)^.
+Defined.
+
+(** A version with equality instead of path data. *)
+Definition abses_pushout_component3_id `{Univalence}
+           {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+           (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E = F
+  := equiv_path_abses_iso (abses_pushout_component3_id' f h).
+
 (** ** Functoriality of [abses_pushout f] *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
@@ -193,6 +215,27 @@ Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A ->* AbSES B A'
   := to_pointed (abses_pushout' f).
 
+(** ** Functoriality of pushing out *)
+
+(** For every [E : AbSES B A], the pushout of [E] along [id_A] is [E]. *)
+Definition abses_pushout_id `{Univalence} {A B : AbGroup}
+  : abses_pushout (B:=B) (@grp_homo_id A) == idmap
+  := fun E => abses_pushout_component3_id (abses_morphism_id E) (fun _ => idpath).
+
+(** Pushing out along homotopic maps induces homotopic pushout functors. *)
+Lemma abses_pushout_homotopic' `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout (B:=B) f $=> abses_pushout f'.
+Proof.
+  induction (equiv_path_grouphomomorphism h).
+  apply id_transformation.
+Defined.
+
+Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout (B:=B) f == abses_pushout f'
+  := equiv_path_data_homotopy _ _ (abses_pushout_homotopic' _ _ h).
+
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
   : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
@@ -216,6 +259,39 @@ Proof.
 Defined.
 
 Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
-           (f : A0 $-> A1) (g : A1 $-> A2)
+  (f : A0 $-> A1) (g : A1 $-> A2)
   : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).
+
+Definition abses_pushout_pcompose' `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-> A1) (g : A1 $-> A2)
+  : abses_pushout' (B:=B) g $o* abses_pushout' f $=>* abses_pushout' (g $o f).
+Proof. Abort.
+
+
+(** [AbSES] and [AbSES'] become covariant functors in their second parameter by pushing out. *)
+
+Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is0Functor (AbSES' B).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ g => abses_pushout g).
+Defined.
+
+Global Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is1Functor (AbSES' B).
+Proof.
+  apply Build_Is1Functor; intros; cbn.
+  - by apply abses_pushout_homotopic.
+  - apply abses_pushout_id.
+  - symmetry; apply abses_pushout_compose.
+Defined.
+
+Global Instance is0functor_abses01 `{Univalence} {B : AbGroup}
+  : Is0Functor (AbSES B).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ g => abses_pushout_pmap g).
+Defined.
+
+(* todo: prove that [AbSES] is a 1-functor. *)

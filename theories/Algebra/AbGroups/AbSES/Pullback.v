@@ -184,6 +184,18 @@ Definition abses_pullback_pmap `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
 
 (** [abses_pullback] is psuedo-functorial, and we can state this in terms of actual homotopies or "path data homotopies." We decorate the latter with the suffix ('). *)
 
+(** For every [E : AbSES B A], the pullback of [E] along [id_B] is [E]. *)
+Definition abses_pullback_id `{Univalence} {A B : AbGroup}
+  : abses_pullback (A:=A) (@grp_homo_id B) == idmap
+  := fun E => (abses_pullback_component1_id (abses_morphism_id E) (fun _ => idpath))^.
+
+Definition abses_pullback_pmap_id `{Univalence} {A B : AbGroup}
+  : abses_pullback_pmap (A:=A) (@grp_homo_id B) ==* pmap_idmap.
+Proof.
+  srapply Build_pHomotopy.
+  1: apply abses_pullback_id.
+Admitted.
+
 Definition abses_pullback_compose' {A B0 B1 B2 : AbGroup}
            (f : B0 $-> B1) (g : B1 $-> B2)
   : abses_pullback (A:=A) f o abses_pullback g $=> abses_pullback (g $o f).
@@ -280,6 +292,15 @@ Proof.
   - reflexivity.
 Defined.
 
+Lemma abses_pullback_homotopic `{Univalence} {A B B' : AbGroup}
+      (f f' : B $-> B') (h : f == f')
+  : abses_pullback (A:=A) f == abses_pullback f'.
+Proof.
+  intro E.
+  apply equiv_path_abses_iso.
+  exact (abses_pullback_homotopic' _ _ h _).
+Defined.
+
 Lemma abses_pullback_phomotopic' {A B B' : AbGroup}
       (f f' : B $-> B') (h : f == f')
   : abses_pullback' (A:=A) f $=>* abses_pullback' f'.
@@ -369,4 +390,39 @@ Proof.
     rapply gpd_strong_1functor_V. }
   refine (equiv_path_sigma_hprop _ _ oE _).
   apply equiv_path_groupisomorphism.
+Defined.
+
+(** *** [AbSES] and [AbSES'] become a contravariant functors in the first variable by pulling back *)
+
+Global Instance is0functor_abses'10 {A : AbGroup}
+  : Is0Functor (fun B : AbGroup^op => AbSES' B A).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ f => abses_pullback f).
+Defined.
+
+Global Instance is1functor_abses'10 `{Univalence} {A : AbGroup}
+  : Is1Functor (fun B : AbGroup^op => AbSES' B A).
+Proof.
+  apply Build_Is1Functor; intros; cbn.
+  - by apply abses_pullback_homotopic.
+  - apply abses_pullback_id.
+  - symmetry; apply abses_pullback_compose.
+Defined.
+
+
+Global Instance is0functor_abses10 `{Univalence} {A : AbGroup}
+  : Is0Functor (fun B : AbGroup^op => AbSES B A).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ f => abses_pullback_pmap f).
+Defined.
+
+Global Instance is1functor_abses10 `{Univalence} {A : AbGroup}
+  : Is1Functor (fun B : AbGroup^op => AbSES B A).
+Proof.
+  apply Build_Is1Functor; intros; cbn.
+  - by apply abses_pullback_phomotopic.
+  - apply abses_pullback_pmap_id.
+  - symmetry; apply abses_pullback_pcompose.
 Defined.

@@ -503,6 +503,13 @@ Definition issig_AbSESMorphism {A X B Y : AbGroup}
             * ((projection F) $o (snd (fst f)) == (snd f) $o (projection _)) }
       <~> AbSESMorphism E F := ltac:(make_equiv).
 
+(** The identity morphism from [E] to [E]. *)
+Lemma abses_morphism_id {A B : AbGroup} (E : AbSES B A) : AbSESMorphism E E.
+Proof.
+  snrapply (Build_AbSESMorphism grp_homo_id grp_homo_id grp_homo_id).
+  1,2: reflexivity.
+Defined.
+
 Definition absesmorphism_compose {A0 A1 A2 B0 B1 B2 : AbGroup}
            {E : AbSES B0 A0} {F : AbSES B1 A1} {G : AbSES B2 A2}
            (g : AbSESMorphism F G) (f : AbSESMorphism E F)

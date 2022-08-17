@@ -1,5 +1,6 @@
-Require Import Basics Types Pointed WildCat.
+Require Import Basics Types Pointed WildCat WildCat.Profunctor.
 Require Import AbGroups.AbelianGroup AbSES.Core.
+Require Import AbSES.Pullback AbSES.Pushout BaerSum.
 
 (** * The set [Ext B A] of abelian group extensions *)
 
@@ -17,3 +18,8 @@ Proof.
     apply Trunc_functor;
     apply iff_abses_trivial_split.
 Defined.
+
+Definition Ext' (B A : AbGroup) := Tr 0 (AbSES' B A).
+
+Global Instance isprofunctor_ext' `{Univalence}
+  : IsProfunctor Ext' := isprofunctor_compose _ _.
