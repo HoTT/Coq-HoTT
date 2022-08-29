@@ -81,6 +81,7 @@ Proof.
   refine (abses_pushout_is_pullback' (Build_AbSESMorphism f (component2 F) g _ _)); apply F.
 Defined.
 
+(** This is the statement that [AbSES'] is a profunctor, but we state it separately because Coq is slow to unify [IsProfunctor AbSES'] against goals written in this foal. *)
 Definition abses_pushout_pullback_reorder `{Univalence} {A A' B B' : AbGroup}
   (E : AbSES B A) (f : A $-> A') (g : B' $-> B)
   : abses_pushout f (abses_pullback g E) = abses_pullback g (abses_pushout f E).
@@ -92,6 +93,6 @@ Defined.
 Global Instance isprofunctor_abses' `{Univalence}
   : IsProfunctor AbSES'.
 Proof.
-  intros ? ? g ? ? f E; cbn; unfold Profunctor.swap in E.
+  intros ? ? g ? ? f E; cbn.
   apply abses_pushout_pullback_reorder.
 Defined.
