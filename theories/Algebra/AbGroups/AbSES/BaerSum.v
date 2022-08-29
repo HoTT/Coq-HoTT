@@ -57,20 +57,41 @@ Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
 (** ** [AbSES'] is a profunctor *)
 
 (** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)
-Lemma abses_pushout_is_pullback `{Univalence} {A A' B B' : AbGroup}
+Lemma abses_pushout_is_pullback' `{Univalence} {A A' B B' : AbGroup}
       {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism E E')
-  : abses_pushout (component1 f) E = abses_pullback (component3 f) E'.
+  : abses_pushout (component1 f) E $== abses_pullback (component3 f) E'.
 Proof.
   (* The morphism [f : E -> E'] factors as [E -> f_1 E -> E'], where the first map is the map defining the pushout [f_1 E] and the second map is denoted [abses_pushout_morphism_rec f] below.  This second map is the identity on the first component, so it presents its domain as the pullback of [E'] along [f_3]. *)
-  exact (abses_pullback_component1_id (abses_pushout_morphism_rec f) (fun _ => idpath)).
+  exact (abses_pullback_component1_id' (abses_pushout_morphism_rec f) (fun _ => idpath)).
+Defined.
+
+(** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)
+Definition abses_pushout_is_pullback `{Univalence} {A A' B B' : AbGroup}
+      {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism E E')
+  : abses_pushout (component1 f) E = abses_pullback (component3 f) E'
+  := equiv_path_abses_iso (abses_pushout_is_pullback' f).
+
+Definition abses_pushout_pullback_reorder' `{Univalence} {A A' B B' : AbGroup}
+  (E : AbSES B A) (f : A $-> A') (g : B' $-> B)
+  : abses_pushout f (abses_pullback g E) $== abses_pullback g (abses_pushout f E).
+Proof.
+  (* There are morphisms [Eg -> E] and [E -> fE] by definition of the pullback and pushout. We define [F : Eg -> fE] to be the composite. Its first and third components are [f o id] and [id o g]. *)
+  pose (F := absesmorphism_compose (abses_pushout_morphism E f) (abses_pullback_morphism E g)).
+  (* We change [F] to a morphism that is the same except that the first and third components are [f] and [g]. Then [abses_pushout_is_pullback] shows that the pushout of [Eg] along [f] is equal to the pullback of [fE] along [g]. *)
+  refine (abses_pushout_is_pullback' (Build_AbSESMorphism f (component2 F) g _ _)); apply F.
+Defined.
+
+Definition abses_pushout_pullback_reorder `{Univalence} {A A' B B' : AbGroup}
+  (E : AbSES B A) (f : A $-> A') (g : B' $-> B)
+  : abses_pushout f (abses_pullback g E) = abses_pullback g (abses_pushout f E).
+Proof.
+  apply equiv_path_abses_iso.
+  apply abses_pushout_pullback_reorder'.
 Defined.
 
 Global Instance isprofunctor_abses' `{Univalence}
   : IsProfunctor AbSES'.
 Proof.
   intros ? ? g ? ? f E; cbn; unfold Profunctor.swap in E.
-  (* There are morphisms [Eg -> E] and [E -> fE] by definition of the pullback and pushout. We define [F : Eg -> fE] to be the composite. Its first and third components are [f o id] and [id o g]. *)
-  pose (F := absesmorphism_compose (abses_pushout_morphism E f) (abses_pullback_morphism E g)).
-  (* We change [F] to a morphism that is the same except that the first and third components are [f] and [g]. Then [abses_pushout_is_pullback] shows that the pushout of [Eg] along [f] is equal to the pullback of [fE] along [g]. *)
-  refine (abses_pushout_is_pullback (Build_AbSESMorphism f (component2 F) g _ _)); apply F.
+  apply abses_pushout_pullback_reorder.
 Defined.
