@@ -5,6 +5,8 @@ Require Export Algebra.Groups.
 Require Import Cubical.
 Require Import WildCat.
 
+Local Set Polymorphic Inductive Cumulativity.
+
 Local Open Scope mc_add_scope.
 
 (** * Abelian groups *)
