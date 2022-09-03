@@ -232,12 +232,12 @@ jobs:
           sudo apt-get install -y ghc cabal-install
           sudo apt-get install -y --allow-unauthenticated \
           libssl-dev aspcud \
-          graphviz xsltproc python-lxml python-pexpect    \
+          graphviz xsltproc python3-lxml python-pexpect-doc \
           libxml2-dev libxslt1-dev time lua5.1 unzip npm
           # libnode-dev node-gyp
 
           cabal update
-          cabal install graphviz text
+          cabal install --lib graphviz text fgl
           sudo -E npm config set strict-ssl false
           #sudo -E npm i -g npm
           sudo -E npm install -g doctoc
@@ -367,7 +367,7 @@ jobs:
           sudo apt-get install -y ghc cabal-install
           sudo apt-get install -y --allow-unauthenticated \
           libnode-dev node-gyp libssl-dev npm aspcud curl \
-          graphviz xsltproc python-lxml python-pexpect    \
+          graphviz xsltproc python3-lxml python-pexpect-doc \
           libxml2-dev libxslt1-dev time lua5.1 unzip python
 
           sudo curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
