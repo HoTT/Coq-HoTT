@@ -237,7 +237,7 @@ jobs:
           # libnode-dev node-gyp
 
           cabal update
-          cabal install --lib graphviz text
+          cabal install --lib graphviz text fgl
           sudo -E npm config set strict-ssl false
           #sudo -E npm i -g npm
           sudo -E npm install -g doctoc
