@@ -243,8 +243,8 @@ Section ORecursion.
 
 End ORecursion.
 
-(* We never want to see [extendable_to_O]. *)
-Arguments O_rec : simpl never.
+(* We never want to see [extendable_to_O].  The [!x] allows [cbn] to unfold [O_rec] when passed a constructor, such as [tr x].  This, for example, means that [O_rec (O:=Tr n) f (tr x)] will compute to [f x] and [Trunc_functor n f (tr x)] will compute to [tr (f x)]. *)
+Arguments O_rec {O} {P Q}%type_scope {Q_inO H H0} f%function_scope !x.
 Arguments O_rec_beta : simpl never.
 Arguments O_indpaths : simpl never.
 Arguments O_indpaths_beta : simpl never.
