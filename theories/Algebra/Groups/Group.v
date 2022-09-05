@@ -7,6 +7,8 @@ Require Import Pointed.Core.
 Require Import WildCat.
 Require Basics.Utf8.
 
+Local Set Polymorphic Inductive Cumulativity.
+
 Generalizable Variables G H A B C f g.
 
 Declare Scope group_scope.
