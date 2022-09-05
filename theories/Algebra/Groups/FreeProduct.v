@@ -322,7 +322,7 @@ Section FreeProduct.
         1,3: apply word_concat_w_ww.
         apply amal_omega_K. } }
     { intros r y h1 h2; revert r.
-      rapply amal_type_ind_hprop; cbn.
+      rapply amal_type_ind_hprop.
       intros z;
       change (amal_eta ((x ++ ((inl h1 :: [inl h2]) ++ y)) ++ z)
         = amal_eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
@@ -332,7 +332,7 @@ Section FreeProduct.
       1,3: apply word_concat_w_ww.
       apply amal_mu_H. }
     { intros r y k1 k2; revert r.
-      rapply amal_type_ind_hprop; cbn.
+      rapply amal_type_ind_hprop.
       intros z;
       change (amal_eta ((x ++ ((inr k1 :: [inr k2]) ++ y)) ++ z)
         = amal_eta ((x ++ [inr (k1 * k2)] ++ y) ++ z)).
@@ -342,7 +342,7 @@ Section FreeProduct.
       1,3: apply word_concat_w_ww.
       apply amal_mu_K. }
     { intros r y z; revert r.
-      rapply amal_type_ind_hprop; cbn.
+      rapply amal_type_ind_hprop.
       intros w;
       change (amal_eta ((x ++ [inl (f z)] ++ y) ++ w)
         = amal_eta ((x ++ [inr (g z)] ++ y) ++ w)).
@@ -352,7 +352,7 @@ Section FreeProduct.
       1,3: apply word_concat_w_ww.
       apply amal_tau. }
     { intros r z; revert r.
-      rapply amal_type_ind_hprop; cbn.
+      rapply amal_type_ind_hprop.
       intros w;
       change (amal_eta ((x ++ [inl mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
@@ -361,7 +361,7 @@ Section FreeProduct.
       1: apply word_concat_w_ww.
       apply amal_omega_H. }
     { intros r z; revert r.
-      rapply amal_type_ind_hprop; cbn.
+      rapply amal_type_ind_hprop.
       intros w;
       change (amal_eta ((x ++ [inr mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
