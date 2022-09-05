@@ -74,9 +74,7 @@ Definition path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
 
 Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O)
   : (paths@{j} T.1 T'.1) <~> (T = T')
-  (* coq#14758 compat (coq 8.15) *)
-  := ltac:(first [exact (equiv_path_sigma_hprop@{j i j j} T T') |
-                  exact (equiv_path_sigma_hprop@{j i j} T T')]).
+  := equiv_path_sigma_hprop@{j i j} T T'.
 
 (** Types in [TypeO] are always in [O]. *)
 Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
