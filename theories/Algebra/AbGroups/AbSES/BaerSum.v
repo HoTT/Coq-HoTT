@@ -1,5 +1,5 @@
 Require Import Basics Types Pointed.
-Require Import WildCat WildCat.Profunctor Homotopy.ExactSequence.
+Require Import WildCat Homotopy.ExactSequence.
 Require Import AbGroups.AbelianGroup AbSES.Core AbSES.Pullback AbSES.Pushout.
 
 Local Open Scope pointed_scope.

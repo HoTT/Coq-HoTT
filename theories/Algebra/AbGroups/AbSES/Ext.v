@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed WildCat WildCat.Profunctor.
+Require Import Basics Types Pointed WildCat.
 Require Import AbGroups.AbelianGroup AbSES.Core.
 Require Import AbSES.Pullback AbSES.Pushout BaerSum.
 
