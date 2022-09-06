@@ -392,7 +392,7 @@ Proof.
   apply equiv_path_groupisomorphism.
 Defined.
 
-(** *** [AbSES] and [AbSES'] become a contravariant functors in the first variable by pulling back *)
+(** *** [AbSES] and [AbSES'] become contravariant functors in the first variable by pulling back *)
 
 Global Instance is0functor_abses'10 {A : AbGroup}
   : Is0Functor (fun B : AbGroup^op => AbSES' B A).
