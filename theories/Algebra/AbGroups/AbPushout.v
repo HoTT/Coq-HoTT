@@ -1,5 +1,5 @@
 Require Import Basics Types WildCat HSet.
-Require Import Groups AbGroups.AbelianGroup AbGroups.AbPullback.
+Require Import Groups AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.

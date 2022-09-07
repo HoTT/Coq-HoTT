@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types HSet WildCat.
-Require Import Groups AbGroups.AbelianGroup.
+Require Import Groups AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import Homotopy.ExactSequence Pointed.
 
 Local Open Scope pointed_scope.

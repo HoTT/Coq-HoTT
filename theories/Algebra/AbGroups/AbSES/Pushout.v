@@ -1,6 +1,6 @@
 Require Import Types Basics WildCat Pointed Homotopy.ExactSequence HIT.epi.
-Require Import AbGroups.AbelianGroup AbGroups.AbPushout.
-Require Import AbSES.Core.
+Require Import AbGroups.AbelianGroup AbGroups.AbPushout AbGroups.Biproduct.
+Require Import AbSES.Core AbSES.DirectSum.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.
@@ -125,6 +125,20 @@ Definition abses_pushout_component3_id `{Univalence}
            (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
   : abses_pushout (component1 f) E = F
   := equiv_path_abses_iso (abses_pushout_component3_id' f h).
+
+(** Given short exact sequences [E] and [F] and homomorphisms [f : A' $-> A] and [g : D' $-> D], there is a morphism [E + F -> fE + gF] induced by the universal properties of the pushouts of [E] and [F]. *)
+Definition abses_directsum_pushout_morphism `{Univalence}
+           {A A' B C D D' : AbGroup} {E : AbSES B A'} {F : AbSES C D'}
+           (f : A' $-> A) (g : D' $-> D)
+  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum (abses_pushout f E) (abses_pushout g F))
+  := functor_abses_directsum (abses_pushout_morphism E f) (abses_pushout_morphism F g).
+
+(** For [E, F : AbSES B A'] and [f, g : A' $-> A], we have (f+g)(E+F) = fE + gF, where + denotes the direct sum. *)
+Definition abses_directsum_distributive_pushouts `{Univalence}
+           {A A' B C C' D : AbGroup} {E : AbSES B A'} {F : AbSES D C'} (f : A' $-> A) (g : C' $-> C)
+  : abses_pushout (functor_ab_biprod f g) (abses_direct_sum E F)
+    = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
+  := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ => idpath).
 
 (** ** Functoriality of [abses_pushout f] *)
 

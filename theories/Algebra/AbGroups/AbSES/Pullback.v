@@ -1,6 +1,6 @@
 Require Import Basics Types HSet HFiber Limits.Pullback Cubical.PathSquare.
 Require Import WildCat Pointed Homotopy.ExactSequence.
-Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbSES.Core.
+Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbSES.Core AbGroups.Biproduct AbSES.DirectSum.
 
 Local Open Scope abses_scope.
 
@@ -89,6 +89,21 @@ Definition abses_pullback_component1_id `{Univalence} {A B B' : AbGroup}
            (f : AbSESMorphism E F) (h : component1 f == grp_homo_id)
   : E = abses_pullback (component3 f) F
   := equiv_path_abses_iso (abses_pullback_component1_id' f h).
+
+(** For any two [E, F : AbSES B A] and [f, g : B' $-> B], there is a morphism [Ef + Fg -> E + F] induced by the universal properties of the pullbacks of E and F, respectively. *)
+Definition abses_directsum_pullback_morphism `{Funext} {A B B' C D D' : AbGroup}
+           {E : AbSES B A} {F : AbSES D C} (f : B' $-> B) (g : D' $-> D)
+  : AbSESMorphism (abses_direct_sum (abses_pullback f E) (abses_pullback g F))
+                  (abses_direct_sum E F)
+  := functor_abses_directsum (abses_pullback_morphism E f) (abses_pullback_morphism F g).
+
+(** For any two [E, F : AbSES B A] and [f, g : B' $-> B], we have (E + F)(f + g) = Ef + Eg, where + denotes the direct sum. *)
+Definition abses_directsum_distributive_pullbacks `{Univalence} {A B B' C D D' : AbGroup}
+           {E : AbSES B A} {F : AbSES D C} (f : B' $-> B) (g : D' $-> D)
+  : abses_pullback (functor_ab_biprod f g) (abses_direct_sum E F)
+    = abses_direct_sum (abses_pullback f E) (abses_pullback g F)
+  := (abses_pullback_component1_id (abses_directsum_pullback_morphism f g)
+        (fun _ => idpath))^.
 
 (** ** Functoriality of [abses_pullback f] for [f : B' $-> B] *)
 

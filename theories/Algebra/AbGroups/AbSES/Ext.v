@@ -1,6 +1,6 @@
 Require Import Basics Types Pointed WildCat.
-Require Import AbGroups.AbelianGroup AbSES.Core.
-Require Import AbSES.Pullback AbSES.Pushout BaerSum.
+Require Import AbGroups.AbelianGroup AbGroups.AbHom.
+Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.
 
 (** * The set [Ext B A] of abelian group extensions *)
 
@@ -21,3 +21,33 @@ Definition Ext' (B A : AbGroup) := Tr 0 (AbSES' B A).
 
 Global Instance isprofunctor_ext' `{Univalence}
   : IsProfunctor Ext' := isprofunctor_compose _ _.
+
+(** [Ext B A] is an abelian group for any [A, B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
+Definition grp_ext `{Univalence} (A B : AbGroup) : Group.
+Proof.
+  snrapply (Build_Group (Ext B A)).
+  - intros E F.
+    strip_truncations.
+    exact (tr (abses_baer_sum E F)).
+  - exact (point (Ext B A)).
+  - unfold Negate.
+    exact (Trunc_functor _ (abses_pullback (group_inverse (g := ab_hom _ _) grp_homo_id))).
+  - repeat split.
+    1: exact _.
+    all: intro E.  1: intros F G.
+    all: strip_truncations; unfold mon_unit, point; apply (ap tr).
+    + symmetry; apply baer_sum_associative.
+    + apply baer_sum_unit_l.
+    + apply baer_sum_unit_r.
+    + apply baer_sum_inverse_r.
+    + apply baer_sum_inverse_l.
+Defined.
+
+Definition ab_ext `{Univalence} (A B : AbGroup) : AbGroup.
+Proof.
+  snrapply (Build_AbGroup (grp_ext B A)).
+  intros E F.
+  strip_truncations; cbn.
+  apply ap.
+  apply baer_sum_commutative.
+Defined.
