@@ -1,6 +1,7 @@
 Require Import Basics Types HSet HFiber Limits.Pullback Cubical.PathSquare.
 Require Import WildCat Pointed Homotopy.ExactSequence.
-Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbSES.Core AbGroups.Biproduct AbSES.DirectSum.
+Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
+Require Import AbSES.Core AbSES.DirectSum.
 
 Local Open Scope abses_scope.
 

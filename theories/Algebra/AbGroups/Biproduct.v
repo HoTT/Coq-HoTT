@@ -1,10 +1,7 @@
-Require Import AbelianGroup.
 Require Import WildCat.
-Require Import HoTT.Basics HoTT.Types.
-Require Import Truncations HSet.
-Require Import Colimits.Coeq.
+Require Import HSet.
 Require Export Algebra.Groups.
-Require Import Cubical.
+Require Import AbelianGroup.
 
 Local Open Scope mc_add_scope.
 
@@ -20,6 +17,10 @@ Defined.
 (** These inherit [IsEmbedding] instances from their [grp_prod] versions. *)
 Definition ab_biprod_inl {A B : AbGroup} : A $-> ab_biprod A B := grp_prod_inl.
 Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
+
+(** These inherit [IsSurjection] instances from their [grp_prod] versions. *)
+Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
 (** Recursion principle *)
 Proposition ab_biprod_rec {A B Y : AbGroup}
@@ -37,14 +38,6 @@ Proof.
     rewrite (associativity _ (g b) _).
     exact (associativity _ (f a') _)^.
 Defined.
-
-(** These inherit [IsSurjection] instances from their [grp_prod] versions. *)
-Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
-Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
-
-(** Addition [+] is a group homomorphism [A+A -> A]. *)
-Definition ab_codiagonal {A : AbGroup} : ab_biprod A A $-> A
-  := ab_biprod_rec grp_homo_id grp_homo_id.
 
 Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
   : (A $-> Y) * (B $-> Y)
@@ -110,9 +103,6 @@ Defined.
 Definition ab_biprod_corec {A B X : AbGroup}
            (f : X $-> A) (g : X $-> B)
   : X $-> ab_biprod A B := grp_prod_corec f g.
-
-Definition ab_diagonal {A : AbGroup} : A $-> ab_biprod A A
-  := ab_biprod_corec grp_homo_id grp_homo_id.
 
 Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
   : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
@@ -214,19 +204,26 @@ Proof.
     exact (fun a => h _, fun b => h _).
 Defined.
 
-(** Given two abelian group homomorphisms [f] and [g], their pairing [(f, g) : B -> A + A] can be written as a composite. Note that [ab_biprod_corec] is an alias for [grp_prod_corec]. *)
-Lemma ab_biprod_corec_diagonal `{Funext} {A B : AbGroup} (f g : B $-> A)
-  : ab_biprod_corec f g = (functor_ab_biprod f g) $o ab_diagonal.
-Proof.
-  apply equiv_path_grouphomomorphism; reflexivity.
-Defined.
-
 (** The swap isomorphism of the direct product of two abelian groups. *)
 Definition direct_sum_swap {A B : AbGroup} : (ab_biprod A B) $<~> (ab_biprod B A).
 Proof.
   snrapply Build_GroupIsomorphism'.
   - apply equiv_prod_symm.
   - intro; reflexivity.
+Defined.
+
+(** Addition [+] is a group homomorphism [A+A -> A]. *)
+Definition ab_codiagonal {A : AbGroup} : ab_biprod A A $-> A
+  := ab_biprod_rec grp_homo_id grp_homo_id.
+
+Definition ab_diagonal {A : AbGroup} : A $-> ab_biprod A A
+  := ab_biprod_corec grp_homo_id grp_homo_id.
+
+(** Given two abelian group homomorphisms [f] and [g], their pairing [(f, g) : B -> A + A] can be written as a composite. Note that [ab_biprod_corec] is an alias for [grp_prod_corec]. *)
+Lemma ab_biprod_corec_diagonal `{Funext} {A B : AbGroup} (f g : B $-> A)
+  : ab_biprod_corec f g = (functor_ab_biprod f g) $o ab_diagonal.
+Proof.
+  apply equiv_path_grouphomomorphism; reflexivity.
 Defined.
 
 (** Precomposing the codiagonal with the swap map has no effect. *)

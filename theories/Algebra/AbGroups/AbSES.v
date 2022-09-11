@@ -4,3 +4,4 @@ Require Export AbSES.Pullback.
 Require Export AbSES.PullbackFiberSequence.
 Require Export AbSES.Pushout.
 Require Export AbSES.BaerSum.
+Require Export AbSES.DirectSum.

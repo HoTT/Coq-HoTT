@@ -19,7 +19,7 @@ Proof.
 Defined.
 
 (** We can negate an abelian group homomorphism by composing with ab_homo_negation. *)
-Global Instance negate_hom (A : Group) (B : AbGroup)
+Global Instance negate_hom {A : Group} {B : AbGroup}
   : Negate (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
 (** For [A, B : AbGroup], homomorphisms A $-> B form an abelian group.  *)
@@ -27,7 +27,7 @@ Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
   nrefine (Build_Group
               (GroupHomomorphism A B)
-              (fun f g => grp_homo_compose ab_codiagonal (grp_prod_corec f g))
+              (fun f g => ab_homo_add f g)
               grp_homo_const
               (@negate_hom _ _) _).
   repeat split.

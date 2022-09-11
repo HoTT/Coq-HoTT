@@ -7,7 +7,7 @@ Local Open Scope mc_add_scope.
 
 (** ** The Baer sum of two short exact sequences, lemmas and consequences. *)
 
-(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forth along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forth and pulling back produces an isomorphic short exact sequence.) *)
+(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forward along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forward and pulling back produces an isomorphic short exact sequence.) *)
 Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
   : AbSES B A
   := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).
@@ -99,7 +99,7 @@ Proof.
   apply abses_pushout_pullback_reorder.
 Defined.
 
-(** The right unit law for the Baer sum says that for all [E : AbSES B A], E + E_0 = E, where E_0 is the split short exact sequence. *)
+(** The right unit law for the Baer sum says that for all [E : AbSES B A], [E] + [E_0] = [E], where [E_0] is the split short exact sequence. *)
 Lemma baer_sum_unit_r `{Univalence} {A B : AbGroup} (E : AbSES B A)
   : abses_baer_sum E (point (AbSES B A)) = E.
 Proof.

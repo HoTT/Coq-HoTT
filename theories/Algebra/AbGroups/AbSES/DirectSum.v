@@ -21,9 +21,8 @@ Proof.
     intro x; apply path_prod; cbn.
     + apply ex0.
     + apply ex1.
-  - intros [ef u]; cbn.
+  - intros [[e f] u]; cbn.
     rapply contr_inhabited_hprop.
-    destruct ef as [e f].
     pose (U := (equiv_path_prod _ _)^-1 u); cbn in U.
     pose proof (a := isexact_preimage _ i p e (fst U)).
     pose proof (x := isexact_preimage _ j q f (snd U)).
@@ -90,19 +89,6 @@ Proof.
   snrapply Build_AbSESMorphism.
   1,2,3: exact direct_sum_swap.
   all: reflexivity.
-Defined.
-
-(** For every [E : AbSES B A], there is a morphism of the split short exact sequence into [E]. *)
-Lemma abses_split_morphism `{Funext} {A B : AbGroup} (E : AbSES B A)
-  : AbSESMorphism (point (AbSES B A)) E.
-Proof.
-  snrapply Build_AbSESMorphism.
-  - exact grp_homo_id.
-  - exact (inclusion E $o ab_biprod_pr1).
-  - exact grp_homo_const.
-  - reflexivity.
-  - intro x; cbn.
-    apply iscomplex_abses.
 Defined.
 
 (** For [E, F, G : AbSES B A], there is a morphism [(E + F) + G -> (G + F) + E] induced by the above map, where [+] denotes [abses_direct_sum]. *)
