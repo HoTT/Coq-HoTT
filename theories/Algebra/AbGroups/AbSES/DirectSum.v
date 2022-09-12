@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed.
+Require Import Pointed.
 Require Import WildCat Homotopy.ExactSequence.
 Require Import AbGroups.AbelianGroup AbSES.Core AbGroups.Biproduct.
 
@@ -6,7 +6,7 @@ Local Open Scope pointed_scope.
 Local Open Scope type_scope.
 Local Open Scope mc_add_scope.
 
-(** ** The direct sum of short exact sequences *)
+(** * The direct sum of short exact sequences *)
 
 (** Biproducts of abelian groups preserve exactness. *)
 Lemma ab_biprod_exact {A E B X F Y : AbGroup}

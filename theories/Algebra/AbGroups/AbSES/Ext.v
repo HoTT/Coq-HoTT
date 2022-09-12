@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed WildCat.
+Require Import Basics Types Pointed WildCat WildCat.Profunctor.
 Require Import AbGroups.AbelianGroup AbGroups.AbHom.
 Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.
 
@@ -31,7 +31,7 @@ Proof.
     exact (tr (abses_baer_sum E F)).
   - exact (point (Ext B A)).
   - unfold Negate.
-    exact (Trunc_functor _ (abses_pullback (group_inverse (g := ab_hom _ _) grp_homo_id))).
+    exact (Trunc_functor _ (abses_pullback (- grp_homo_id))).
   - repeat split.
     1: exact _.
     all: intro E.  1: intros F G.

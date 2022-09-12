@@ -1,11 +1,6 @@
-Require Import AbelianGroup.
-Require Import HoTT.Basics HoTT.Types.
-Require Import Truncations HSet.
-Require Import Colimits.Coeq.
-Require Export Algebra.Groups.
-Require Import Cubical.
 Require Import WildCat.
-Require Import Biproduct.
+Require Import HSet.
+Require Import AbelianGroup Biproduct.
 
 (** * Homomorphisms of abelian groups form an abelian group. *)
 
@@ -22,14 +17,12 @@ Defined.
 Global Instance negate_hom {A : Group} {B : AbGroup}
   : Negate (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
-(** For [A, B : AbGroup], homomorphisms A $-> B form an abelian group.  *)
+(** For [A, B : AbGroup], homomorphisms [A $-> B] form an abelian group.  *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
   nrefine (Build_Group
               (GroupHomomorphism A B)
-              (fun f g => ab_homo_add f g)
-              grp_homo_const
-              (@negate_hom _ _) _).
+              ab_homo_add grp_homo_const negate_hom _).
   repeat split.
   1: exact _.
   all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.

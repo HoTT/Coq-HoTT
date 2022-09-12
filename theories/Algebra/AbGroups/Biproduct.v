@@ -1,11 +1,10 @@
 Require Import WildCat.
 Require Import HSet.
-Require Export Algebra.Groups.
 Require Import AbelianGroup.
 
 Local Open Scope mc_add_scope.
 
-(** ** Biproducts of abelian groups *)
+(** * Biproducts of abelian groups *)
 
 Definition ab_biprod (A B : AbGroup) : AbGroup.
 Proof.
@@ -112,7 +111,7 @@ Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : 
 
 Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-> A') (g: B $-> B')
   : ab_biprod A B $-> ab_biprod A' B'
-  := (ab_biprod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).
+  := (grp_prod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).
 
 Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $-> Y)
            (g0 : X $-> A) (g1 : Y $-> B)
@@ -158,7 +157,7 @@ Proof.
   - exact (q1 @ q1'^).
 Defined.
 
-(** Biproducts preserve surjections. *)
+(** Products preserve surjections. *)
 Definition functor_ab_biprod_surjection `{Funext} {A A' B B' : AbGroup}
            (p : A $-> B) (p' : A' $-> B')
            `{S : IsSurjection p} `{S' : IsSurjection p'}
@@ -182,15 +181,14 @@ Defined.
 (** *** Lemmas for working with biproducts *)
 
 Lemma ab_biprod_decompose {B A : AbGroup} (a : A) (b : B)
-  : (a, b) = ((a, group_unit) : ab_biprod A B) + (group_unit, b).
+  : (a, b) = ((a, group_unit) : grp_prod A B) + (group_unit, b).
 Proof.
   apply path_prod; cbn.
   - exact (right_identity _)^.
   - exact (left_identity _)^.
 Defined.
 
-(* Maps out of biproducts are determined on the two inclusions. (Could be stated more generally for pointed types instead of abelian groups.) *)
-Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
+Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : grp_prod A B $-> X)
   : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
       <~> phi == psi.
 Proof.
@@ -204,7 +202,7 @@ Proof.
     exact (fun a => h _, fun b => h _).
 Defined.
 
-(** The swap isomorphism of the direct product of two abelian groups. *)
+(** The swap isomorphism of the biproduct of two groups. *)
 Definition direct_sum_swap {A B : AbGroup} : (ab_biprod A B) $<~> (ab_biprod B A).
 Proof.
   snrapply Build_GroupIsomorphism'.
