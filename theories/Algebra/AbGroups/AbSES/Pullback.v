@@ -202,15 +202,30 @@ Definition abses_pullback_pmap `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
 
 (** For every [E : AbSES B A], the pullback of [E] along [id_B] is [E]. *)
 Definition abses_pullback_id `{Univalence} {A B : AbGroup}
-  : abses_pullback (A:=A) (@grp_homo_id B) == idmap
-  := fun E => (abses_pullback_component1_id (abses_morphism_id E) (fun _ => idpath))^.
+  : abses_pullback (A:=A) (@grp_homo_id B) == idmap.
+Proof.
+  intro E.
+  apply equiv_path_abses_iso; srefine (_; (_, _)).
+  1: rapply (Build_GroupIsomorphism _ _ (grp_pullback_pr1 _ _)).
+  1: reflexivity.
+  intros [a [p q]]; cbn.
+  exact q^.
+Defined.
 
 Definition abses_pullback_pmap_id `{Univalence} {A B : AbGroup}
   : abses_pullback_pmap (A:=A) (@grp_homo_id B) ==* pmap_idmap.
 Proof.
   srapply Build_pHomotopy.
   1: apply abses_pullback_id.
-Admitted.
+  refine (_ @ (concat_p1 _)^).
+  apply (ap (equiv_path_abses_iso)).
+  apply equiv_path_sigma_hprop.
+  apply equiv_path_groupisomorphism.
+  intros [[a b] [b' p]]; cbn; cbn in p.
+  apply path_prod'.
+  1: reflexivity.
+  exact p.
+Defined.
 
 Definition abses_pullback_compose' {A B0 B1 B2 : AbGroup}
            (f : B0 $-> B1) (g : B1 $-> B2)

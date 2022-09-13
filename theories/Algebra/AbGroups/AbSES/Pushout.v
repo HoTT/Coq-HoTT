@@ -277,12 +277,6 @@ Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
   : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).
 
-Definition abses_pushout_pcompose' `{Univalence} {A0 A1 A2 B : AbGroup}
-  (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout' (B:=B) g $o* abses_pushout' f $=>* abses_pushout' (g $o f).
-Proof. Abort.
-
-
 (** [AbSES] and [AbSES'] become covariant functors in their second parameter by pushing out. *)
 
 Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
