@@ -218,13 +218,11 @@ Proof.
   srapply Build_pHomotopy.
   1: apply abses_pullback_id.
   refine (_ @ (concat_p1 _)^).
-  apply (ap (equiv_path_abses_iso)).
-  apply equiv_path_sigma_hprop.
+  apply (ap equiv_path_abses_iso).
+  apply path_sigma_hprop.
   apply equiv_path_groupisomorphism.
   intros [[a b] [b' p]]; cbn; cbn in p.
-  apply path_prod'.
-  1: reflexivity.
-  exact p.
+  by apply path_prod'.
 Defined.
 
 Definition abses_pullback_compose' {A B0 B1 B2 : AbGroup}
