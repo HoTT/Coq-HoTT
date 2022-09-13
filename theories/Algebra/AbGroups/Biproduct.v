@@ -111,7 +111,7 @@ Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : 
 
 Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-> A') (g: B $-> B')
   : ab_biprod A B $-> ab_biprod A' B'
-  := (grp_prod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).
+  := (ab_biprod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).
 
 Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $-> Y)
            (g0 : X $-> A) (g1 : Y $-> B)
@@ -181,14 +181,15 @@ Defined.
 (** *** Lemmas for working with biproducts *)
 
 Lemma ab_biprod_decompose {B A : AbGroup} (a : A) (b : B)
-  : (a, b) = ((a, group_unit) : grp_prod A B) + (group_unit, b).
+  : (a, b) = ((a, group_unit) : ab_biprod A B) + (group_unit, b).
 Proof.
   apply path_prod; cbn.
   - exact (right_identity _)^.
   - exact (left_identity _)^.
 Defined.
 
-Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : grp_prod A B $-> X)
+(* Maps out of biproducts are determined on the two inclusions. *)
+Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
   : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
       <~> phi == psi.
 Proof.
