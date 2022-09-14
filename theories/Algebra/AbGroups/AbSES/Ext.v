@@ -19,10 +19,11 @@ Defined.
 
 Definition Ext' (B A : AbGroup) := Tr 0 (AbSES' B A).
 
-Global Instance isprofunctor_ext' `{Univalence}
-  : IsProfunctor Ext' := isprofunctor_compose _ _.
+Global Instance isbifunctor_ext' `{Univalence}
+  : IsBifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
+  := isbifunctor_compose _ _.
 
-(** [Ext B A] is an abelian group for any [A, B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
+(** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (A B : AbGroup) : Group.
 Proof.
   snrapply (Build_Group (Ext B A)).

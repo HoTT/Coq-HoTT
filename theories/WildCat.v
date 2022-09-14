@@ -10,7 +10,7 @@ Require Export WildCat.NatTrans.
 Require Export WildCat.Yoneda.
 Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
-Require Export WildCat.Profunctor.
+Require Export WildCat.Bifunctor.
 
 (* Examples *)
 Require Export WildCat.Universe.

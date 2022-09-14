@@ -12,7 +12,7 @@ Definition abses_baer_sum `{Univalence} {B A : AbGroup} (E F : AbSES B A)
   := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).
 
 
-(** ** [AbSES'] is a profunctor *)
+(** ** [AbSES'] is a bifunctor *)
 
 (** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)
 Lemma abses_pushout_is_pullback' `{Univalence} {A A' B B' : AbGroup}
@@ -39,7 +39,7 @@ Proof.
   refine (abses_pushout_is_pullback' (Build_AbSESMorphism f (component2 F) g _ _)); apply F.
 Defined.
 
-(** This is the statement that [AbSES'] is a profunctor, but we state it separately because Coq is slow to unify [IsProfunctor AbSES'] against goals written in this goal. *)
+(** This is the statement that [AbSES'] is a bifunctor, but we state it separately because Coq is slow to unify [IsBifunctor AbSES'] against goals written in this form. *)
 Definition abses_pushout_pullback_reorder `{Univalence} {A A' B B' : AbGroup}
   (E : AbSES B A) (f : A $-> A') (g : B' $-> B)
   : abses_pushout f (abses_pullback g E) = abses_pullback g (abses_pushout f E).
@@ -48,8 +48,8 @@ Proof.
   apply abses_pushout_pullback_reorder'.
 Defined.
 
-Global Instance isprofunctor_abses' `{Univalence}
-  : IsProfunctor AbSES'.
+Global Instance isbifunctor_abses' `{Univalence}
+  : IsBifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
   intros ? ? g ? ? f E; cbn.
   apply abses_pushout_pullback_reorder.
