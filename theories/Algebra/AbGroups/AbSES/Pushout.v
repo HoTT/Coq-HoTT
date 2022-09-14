@@ -1,6 +1,6 @@
 Require Import Types Basics WildCat Pointed Homotopy.ExactSequence HIT.epi.
-Require Import AbGroups.AbelianGroup AbGroups.AbPushout.
-Require Import AbSES.Core.
+Require Import AbGroups.AbelianGroup AbGroups.AbPushout AbGroups.Biproduct.
+Require Import AbSES.Core AbSES.DirectSum.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.
@@ -8,7 +8,7 @@ Local Open Scope mc_add_scope.
 
 (** * Pushouts of short exact sequences *)
 
-Definition abses_pushout0 `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A -> AbSES B A'.
 Proof.
   intro E.
@@ -21,9 +21,8 @@ Proof.
     rapply (conn_map_homotopic _ (projection E)); symmetry.
     nrapply ab_pushout_rec_beta_right.
   - snrapply Build_IsExact.
-    + srapply Build_pHomotopy.
-      * nrapply ab_pushout_rec_beta_left.
-      * apply path_ishprop.
+    + srapply phomotopy_homotopy_hset.
+      nrapply ab_pushout_rec_beta_left.
     + intros [bc' p].
       rapply contr_inhabited_hprop.
       (** Pick a preimage under the quotient map. *)
@@ -40,26 +39,26 @@ Proof.
       pose proof (a := isexact_preimage _ _ _ c c_in_kernel).
       strip_truncations.
       destruct a as [a s].
-      (** Now we see that [bc'] lies in the image of [ab_pushout_inl]. *)
-      assert (u : bc' = ab_pushout_inl (b + f a)).
-      1: { rewrite <- q.
-           apply path_ab_pushout; cbn.
-           refine (tr (a; _)).
-           apply path_prod; cbn.
-           - apply grp_moveL_Mg.
-             by rewrite negate_involutive.
-           - exact (grp_homo_inv _ _ @ ap _ s @ (right_identity _)^). }
+      (** Now the goal is to show that [bc'] lies in the image of [ab_pushout_inl]. *)
       apply tr.
-      exists (b + f a); cbn.
+      exists (b + - f (- a)); cbn.  (* It simplifies the algebra to write [- f(- a)] instead of [f a]. *)
       apply path_sigma_hprop; cbn.
-      apply u^.
+      change (ab_pushout_inl (b + - f (- a)) = bc').  (* Just to guide the reader. *)
+      refine (_ @ q).
+      symmetry.
+      apply path_ab_pushout; cbn.
+      refine (tr (-a; _)).
+      apply path_prod; cbn.
+      * apply grp_moveL_Mg.
+        by rewrite negate_involutive.
+      * exact ((preserves_negate a) @ ap _ s @ (right_identity _)^).
 Defined.
 
 (** ** The universal property of [abses_pushout_morphism] *)
 
 Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
            (E : AbSES B A) (f : A $-> A')
-  : AbSESMorphism E (abses_pushout0 f E).
+  : AbSESMorphism E (abses_pushout f E).
 Proof.
   snrapply (Build_AbSESMorphism f _ grp_homo_id).
   - exact ab_pushout_inr.
@@ -71,7 +70,7 @@ Defined.
 
 Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
            {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
-  : AbSESMorphism (abses_pushout0 (component1 f) E) F.
+  : AbSESMorphism (abses_pushout (component1 f) E) F.
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id _ (component3 f)).
   - rapply ab_pushout_rec.
@@ -105,10 +104,46 @@ Proof.
   exact (left_identity _)^.
 Defined.
 
-(** ** Functoriality of [abses_pushout0 f] *)
+(** Given [E : AbSES B A'] and [F : AbSES B A] and a morphism [f : E -> F], the pushout of [E] along [f_1] is [F] if [f_3] is homotopic to [id_B]. *)
+Lemma abses_pushout_component3_id' `{Univalence}
+      {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+      (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E $== F.
+Proof.
+  pose (g := abses_pushout_morphism_rec f).
+  nrapply abses_path_data_to_iso.
+  exists (component2 g); split.
+  + intro x.
+    exact (left_square g _)^.
+  + intro x.
+    exact ((right_square g _) @ h _)^.
+Defined.
+
+(** A version with equality instead of path data. *)
+Definition abses_pushout_component3_id `{Univalence}
+           {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+           (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E = F
+  := equiv_path_abses_iso (abses_pushout_component3_id' f h).
+
+(** Given short exact sequences [E] and [F] and homomorphisms [f : A' $-> A] and [g : D' $-> D], there is a morphism [E + F -> fE + gF] induced by the universal properties of the pushouts of [E] and [F]. *)
+Definition abses_directsum_pushout_morphism `{Univalence}
+           {A A' B C D D' : AbGroup} {E : AbSES B A'} {F : AbSES C D'}
+           (f : A' $-> A) (g : D' $-> D)
+  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum (abses_pushout f E) (abses_pushout g F))
+  := functor_abses_directsum (abses_pushout_morphism E f) (abses_pushout_morphism F g).
+
+(** For [E, F : AbSES B A'] and [f, g : A' $-> A], we have (f+g)(E+F) = fE + gF, where + denotes the direct sum. *)
+Definition abses_directsum_distributive_pushouts `{Univalence}
+           {A A' B C C' D : AbGroup} {E : AbSES B A'} {F : AbSES D C'} (f : A' $-> A) (g : C' $-> C)
+  : abses_pushout (functor_ab_biprod f g) (abses_direct_sum E F)
+    = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
+  := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ => idpath).
+
+(** ** Functoriality of [abses_pushout f] *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : Is0Functor (abses_pushout0 (B:=B) f).
+  : Is0Functor (abses_pushout (B:=B) f).
 Proof.
   srapply Build_Is0Functor;
     intros E F p.
@@ -125,7 +160,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_path_data_1 `{Univalence} {A A' B : AbGroup} (f : A $-> A') {E : AbSES B A} 
-  : fmap (abses_pushout0 f) (Id E) = Id (abses_pushout0 f E).
+  : fmap (abses_pushout f) (Id E) = Id (abses_pushout f E).
 Proof.
   srapply path_sigma_hprop.
   apply equiv_path_groupisomorphism.
@@ -134,19 +169,19 @@ Proof.
   apply qglue.
   refine (tr (0; _)).
   apply path_prod'; cbn.
-  - refine (grp_homo_unit f @ _).
+  - refine (ap _ (grp_homo_unit _) @ _).
+    refine (negate_mon_unit @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ right_identity _).
-  - rewrite negate_mon_unit.
-    refine (grp_homo_unit _ @ _).
+  - refine (grp_homo_unit _ @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ left_identity _).
 Defined.
 
 Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
            {E F : AbSES B A} (p : E = F)
-  : ap (abses_pushout0 f) p
-    = equiv_path_abses_iso (fmap (abses_pushout0 f) (equiv_path_abses_iso^-1 p)).
+  : ap (abses_pushout f) p
+    = equiv_path_abses_iso (fmap (abses_pushout f) (equiv_path_abses_iso^-1 p)).
 Proof.
   induction p.
   refine (_ @ ap _ _).
@@ -156,8 +191,8 @@ Defined.
 
 Definition ap_abses_pushout_data `{Univalence} {A A' B : AbGroup} (f : A $-> A')
            {E F : AbSES B A} (p : E $== F)
-  : ap (abses_pushout0 f) (equiv_path_abses_iso p)
-    = equiv_path_abses_iso (fmap (abses_pushout0 f) p).
+  : ap (abses_pushout f) (equiv_path_abses_iso p)
+    = equiv_path_abses_iso (fmap (abses_pushout f) p).
 Proof.
   refine (ap_abses_pushout _ _ @ _).
   apply (ap (equiv_path_abses_iso o _)).
@@ -165,7 +200,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_point' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout0 f (point (AbSES B A)) $== point _.
+  : abses_pushout f (point (AbSES B A)) $== point _.
 Proof.
   srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
@@ -183,16 +218,37 @@ Proof.
 Defined.
 
 Definition abses_pushout_point `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout0 f (point (AbSES B A)) = point _
+  : abses_pushout f (point (AbSES B A)) = point _
   := equiv_path_abses_iso (abses_pushout_point' f).
 
 Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A -->* AbSES B A'
-  := Build_BasepointPreservingFunctor (abses_pushout0 f) (abses_pushout_point' f).
+  := Build_BasepointPreservingFunctor (abses_pushout f) (abses_pushout_point' f).
 
-Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A ->* AbSES B A'
   := to_pointed (abses_pushout' f).
+
+(** ** Functoriality of pushing out *)
+
+(** For every [E : AbSES B A], the pushout of [E] along [id_A] is [E]. *)
+Definition abses_pushout_id `{Univalence} {A B : AbGroup}
+  : abses_pushout (B:=B) (@grp_homo_id A) == idmap
+  := fun E => abses_pushout_component3_id (abses_morphism_id E) (fun _ => idpath).
+
+(** Pushing out along homotopic maps induces homotopic pushout functors. *)
+Lemma abses_pushout_homotopic' `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout (B:=B) f $=> abses_pushout f'.
+Proof.
+  induction (equiv_path_grouphomomorphism h).
+  apply id_transformation.
+Defined.
+
+Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout (B:=B) f == abses_pushout f'
+  := equiv_path_data_homotopy _ _ (abses_pushout_homotopic' _ _ h).
 
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
            (f : A0 $-> A1) (g : A1 $-> A2)
@@ -217,6 +273,33 @@ Proof.
 Defined.
 
 Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
-           (f : A0 $-> A1) (g : A1 $-> A2)
+  (f : A0 $-> A1) (g : A1 $-> A2)
   : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).
+
+(** [AbSES] and [AbSES'] become covariant functors in their second parameter by pushing out. *)
+
+Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is0Functor (AbSES' B).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ g => abses_pushout g).
+Defined.
+
+Global Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is1Functor (AbSES' B).
+Proof.
+  apply Build_Is1Functor; intros; cbn.
+  - by apply abses_pushout_homotopic.
+  - apply abses_pushout_id.
+  - symmetry; apply abses_pushout_compose.
+Defined.
+
+Global Instance is0functor_abses01 `{Univalence} {B : AbGroup}
+  : Is0Functor (AbSES B).
+Proof.
+  apply Build_Is0Functor.
+  exact (fun _ _ g => abses_pushout_pmap g).
+Defined.
+
+(* todo: prove that [AbSES] is a 1-functor. *)

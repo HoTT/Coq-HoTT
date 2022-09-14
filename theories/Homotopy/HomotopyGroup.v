@@ -239,7 +239,7 @@ Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : nat)
   : fmap (Pi n.+1) f
     ==* fmap (pTr 0) (fmap (iterated_loops n.+1) f).
 Proof.
-  srapply Build_pHomotopy. 1: reflexivity. apply path_ishprop.
+  srapply phomotopy_homotopy_hset; reflexivity.
 Defined.
 
 (** Homotopy groups of truncations *)

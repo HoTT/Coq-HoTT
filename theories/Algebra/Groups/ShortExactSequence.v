@@ -31,10 +31,9 @@ Defined.
 Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)
   : IsComplex (@grp_homo_const grp_trivial X) f.
 Proof.
-  srapply Build_pHomotopy.
-  - intro x; cbn.
-    exact (grp_homo_unit f).
-  - apply path_ishprop.
+  srapply phomotopy_homotopy_hset.
+  intro x; cbn.
+  exact (grp_homo_unit f).
 Defined.
 
 Local Existing Instance ishprop_phomotopy_hset.

@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types HSet WildCat.
-Require Import Groups AbGroups.AbelianGroup.
+Require Import Groups AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import Homotopy.ExactSequence Pointed.
 
 Local Open Scope pointed_scope.
@@ -61,9 +61,7 @@ Global Instance ispointed_abses {B A : AbGroup} : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
   snrapply Build_IsExact.
-  - srapply Build_pHomotopy.
-    + reflexivity.
-    + apply path_ishprop.
+  - srapply phomotopy_homotopy_hset; reflexivity.
   - intros [[a b] p]; cbn; cbn in p.
     rapply contr_inhabited_hprop.
     apply tr.
@@ -505,6 +503,13 @@ Definition issig_AbSESMorphism {A X B Y : AbGroup}
             * ((projection F) $o (snd (fst f)) == (snd f) $o (projection _)) }
       <~> AbSESMorphism E F := ltac:(make_equiv).
 
+(** The identity morphism from [E] to [E]. *)
+Lemma abses_morphism_id {A B : AbGroup} (E : AbSES B A) : AbSESMorphism E E.
+Proof.
+  snrapply (Build_AbSESMorphism grp_homo_id grp_homo_id grp_homo_id).
+  1,2: reflexivity.
+Defined.
+
 Definition absesmorphism_compose {A0 A1 A2 B0 B1 B2 : AbGroup}
            {E : AbSES B0 A0} {F : AbSES B1 A1} {G : AbSES B2 A2}
            (g : AbSESMorphism F G) (f : AbSESMorphism E F)
@@ -628,12 +633,11 @@ Proof.
   1: exact grp_quotient_map.
   1: exact _.
   srapply Build_IsExact.
-  - srapply Build_pHomotopy.
-    + intro x.
-      apply qglue; cbn.
-      exists (-x).
-      exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
-    + apply path_ishprop.
+  - srapply phomotopy_homotopy_hset.
+    intro x.
+    apply qglue; cbn.
+    exists (-x).
+    exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
   - snrapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
     + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
     + intro a.

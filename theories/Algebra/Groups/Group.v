@@ -432,7 +432,7 @@ Section GroupMovement.
   Definition grp_moveL_Vg :  x * y = z <~> y = -x * z
     := equiv_moveL_equiv_V (f := fun t => x * t) _ _.
 
-(** We close the section here so the previous lemmas genearlise their assumptions. *)
+(** We close the section here so the previous lemmas generalise their assumptions. *)
 End GroupMovement.
 
 Section GroupMovement.

@@ -10,7 +10,7 @@ Require Import HFiber HSet.
 
 Local Open Scope mc_add_scope.
 
-(** The image of a group homomorphisms between groups is a subgroup *)
+(** The image of a group homomorphism between groups is a subgroup *)
 Definition grp_image {A B : Group} (f : A $-> B) : Subgroup B.
 Proof.
   snrapply (Build_Subgroup _ (fun b => hexists (fun a => f a = b))).
