@@ -17,12 +17,11 @@ Defined.
 Global Instance negate_hom {A : Group} {B : AbGroup}
   : Negate (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
-(** For [A, B : AbGroup], homomorphisms [A $-> B] form an abelian group.  *)
+(** For [A B : AbGroup], homomorphisms [A $-> B] form an abelian group. *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
-  nrefine (Build_Group
-              (GroupHomomorphism A B)
-              ab_homo_add grp_homo_const negate_hom _).
+  nrefine (Build_Group (GroupHomomorphism A B)
+             ab_homo_add grp_homo_const negate_hom _).
   repeat split.
   1: exact _.
   all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.
