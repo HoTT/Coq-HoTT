@@ -801,7 +801,7 @@ Definition Book_6_2_5 := @HoTT.Spaces.Circle.Circle_rec.
 (* ================================================== thm:S1ump *)
 (** Lemma 6.2.9 *)
 
-
+Definition Book_6_2_9 := @HoTT.Spaces.Circle.isequiv_Circle_rec_uncurried.
 
 (* ================================================== thm:contr-interval *)
 (** Lemma 6.3.1 *)

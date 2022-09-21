@@ -240,3 +240,28 @@ Proof.
   apply dp_apD_path_transport.
   exact (Circle_ind_beta_loop _ _ _).
 Defined.
+
+(** The universal property of the circle (Lemma 6.2.9 in the Book).  We could deduce this from [isequiv_Coeq_rec], but it's nice to see a direct proof too. *)
+Definition Circle_rec_uncurried (P : Type)
+  : {b : P & b = b} -> (Circle -> P)
+  := fun x => Circle_rec P (pr1 x) (pr2 x).
+
+Global Instance isequiv_Circle_rec_uncurried `{Funext} (P : Type) : IsEquiv (Circle_rec_uncurried P).
+Proof.
+  srapply isequiv_adjointify.
+  - exact (fun g => (g base ; ap g loop)).
+  - intros g.
+    apply path_arrow.
+    srapply Circle_ind.
+    + reflexivity.
+    + unfold Circle_rec_uncurried; cbn.
+      rewrite transport_paths_FlFr.
+      rewrite Circle_rec_beta_loop.
+      rewrite concat_p1; apply concat_Vp.
+  - intros [b p]; apply ap.
+    apply Circle_rec_beta_loop.
+Defined.
+
+Definition equiv_Circle_rec `{Funext} (P : Type)
+  : {b : P & b = b} <~> (Circle -> P)
+  := Build_Equiv _ _ _ (isequiv_Circle_rec_uncurried P).
