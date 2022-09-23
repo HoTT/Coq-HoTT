@@ -19,7 +19,7 @@ Definition bitotal {A B : Type} (R : A -> B -> HProp) :=
 
 Module Export CumulativeHierarchy.
 
-Private Inductive V : Type@{U'} :=
+Private Inductive V@{U' U | U < U'} : Type@{U'} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
 Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
@@ -29,12 +29,12 @@ set (h o (spushl R)) = set (h o (spushr R)).
 Axiom ishset_V : IsHSet V.
 Global Existing Instance ishset_V.
 
-Fixpoint V_ind (P : V -> Type)
-  (H_0trunc : forall v : V, IsTrunc 0 (P v))
-  (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> HProp) (bitot_R : bitotal R)
+Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
+  (H_0trunc : forall v : V@{U' U}, IsTrunc 0 (P v))
+  (H_set : forall (A : Type@{U}) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
+  (H_setext : forall (A B : Type@{U}) (R : A -> B -> HProp@{U}) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
+    transport@{U' u} _ (setext R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
       = H_set B (h o spushr R) (H_h oD spushr R) )
   (v : V)
 : P v
