@@ -29,6 +29,7 @@ set (h o (spushl R)) = set (h o (spushr R)).
 Axiom ishset_V : IsHSet V.
 Global Existing Instance ishset_V.
 
+(** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)
 Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
   (H_0trunc : forall v : V@{U' U}, IsTrunc 0 (P v))
   (H_set : forall (A : Type@{U}) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
