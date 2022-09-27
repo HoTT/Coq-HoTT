@@ -201,3 +201,10 @@ Proof.
   - elim (nd d').
   - apply ap, path_forall; intros p; elim (nd p).
 Defined.
+
+Class ComplementaryProp (A B : Type) :=
+  Build_ComplementaryProp {
+      CProp_or : A + B ;
+      CProp_notboth : A -> B -> Empty
+    }.
+
