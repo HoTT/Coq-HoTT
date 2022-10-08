@@ -514,7 +514,10 @@ Proof.
 Defined.
 
 (** We define the less-than relation [lt] in terms of [leq] *)
-Definition lt n m : Type := leq (S n) m.
+Definition lt n m : Type0 := leq (S n) m.
+Set Printing Universes.
+Print lt.
+             
 (** We declare it as an existing class so typeclass search is performed on its goals. *)
 Existing Class lt.
 #[export] Hint Unfold lt : core typeclass_instances.
