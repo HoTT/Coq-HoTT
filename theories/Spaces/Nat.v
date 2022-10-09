@@ -514,8 +514,6 @@ Defined.
 
 (** We define the less-than relation [lt] in terms of [leq] *)
 Definition lt n m : Type0 := leq (S n) m.
-Set Printing Universes.
-Print lt.
              
 (** We declare it as an existing class so typeclass search is performed on its goals. *)
 Existing Class lt.
@@ -721,7 +719,6 @@ Proof.
 Defined.
 
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
-
 
 Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_0_n _).
 
