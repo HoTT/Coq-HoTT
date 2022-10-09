@@ -1,6 +1,8 @@
 Require Import Basics Types.Sigma.
 
-Record Box (A : SProp) : Type0 := box { unbox : A }.
+Unset Primitive Projections.
+  Record Box (A : SProp) : Type0 := box { unbox : A }.
+Set Primitive Projections.
 
 #[export] Instance BoxSProp_IsHProp (A : SProp) : IsHProp (Box A).
 Proof.
