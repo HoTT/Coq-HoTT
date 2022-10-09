@@ -51,38 +51,38 @@ Proof.
   - constructor; intro a; apply p in a; discriminate.
 Defined.
 
-Definition decBool (A : Type) `{Decidable A} : Bool :=
-  match dec A with
+Definition decBool (P : Type) `{Decidable P} : Bool :=
+  match dec P with
   | inl _ => true
   | inr _ => false
   end.
 
-Proposition decP (A : Type) `{Decidable A} : reflect A (decBool A).
+Proposition decP (P : Type) `{Decidable P} : reflect P (decBool P).
 Proof.
   unfold decBool; destruct dec; constructor; assumption.
 Defined.
 
-Proposition decBoolSum (A B: Type) `{H0 : Decidable A} `{H1 : Decidable B} :
-  decBool (A + B) = orb (decBool A) (decBool B).
+Proposition decBoolSum (P Q: Type) `{H0 : Decidable P} `{H1 : Decidable Q} :
+  decBool (P + Q) = orb (decBool P) (decBool Q).
 Proof.
   unfold decBool.
   unfold dec, decidable_sum at 1, dec. destruct H0, H1; done.
 Defined.
 
-Global Instance neg_dec {A : Type} {P : Decidable A} : Decidable (~ A).
+Global Instance neg_dec {P : Type} {H : Decidable P} : Decidable (~ P).
 Proof.
-  case P.
+  case H.
   - intro a. right. intro contr; contradiction contr.
   - intro na. now left.
 Defined.
 
-Proposition decBoolNegb (A : Type) `{H0 : Decidable A} :
-  decBool (~ A) = negb (decBool A).
+Proposition decBoolNegb (P : Type) `{H : Decidable P} :
+  decBool (~ P) = negb (decBool P).
 Proof.
   unfold decBool.
   unfold neg_dec, dec.
-  by destruct H0.
-Defined.    
+  by destruct H.
+Defined. 
 
 Proposition not_true_iff_false (b : Bool) : (~ b) <-> b = false.
 Proof.
@@ -93,35 +93,35 @@ Proof.
   - discriminate.
 Defined.
 
-Proposition andP (a b : Bool) : reflect (a * b) (a && b).
+Proposition andP (b b': Bool) : reflect (b * b') (b && b').
 Proof.
   apply iffP.
   - intro H; destruct H as [ar br].
     unfold is_true in ar; symmetry in ar; destruct ar.
     unfold is_true in br; symmetry in br; destruct br.
     reflexivity.
-  - destruct a, b; try discriminate; done.
+  - destruct b, b'; try discriminate; done.
 Defined.
 
-Proposition orP (a b : Bool) : reflect (a + b) (a || b).
+Proposition orP (b b' : Bool) : reflect (b + b') (b || b').
 Proof.
   apply iffP.
   - intro H; destruct H as [atrue | btrue].
     + unfold is_true in atrue; symmetry in atrue; destruct atrue; reflexivity.
     + unfold is_true in btrue; symmetry in btrue; destruct btrue.
-      destruct (symmetry _ _ (@commutativity Bool Bool orb _ a true)); reflexivity.
-  - destruct a.
+      destruct (symmetry _ _ (@commutativity Bool Bool orb _ b true)); reflexivity.
+  - destruct b.
     + intros _. left; reflexivity.
     + simpl; intro t; right; assumption.
 Defined.
 
-Proposition elimN {P : Type} {b : Bool} (p : reflect P b)  : negb b -> ~P. 
+Proposition elimN {P : Type} {b : Bool} (r : reflect P b)  : negb b -> ~ P. 
 Proof.
-  destruct p; [ discriminate | done ].
+  destruct r; [ discriminate | done ].
 Defined.
 
-Lemma introN {P : Type} {b : Bool} (p : reflect P b) : ~ P -> negb b.
+Lemma introN {P : Type} {b : Bool} (r : reflect P b) : ~ P -> negb b.
 Proof.
   intro np.
-  destruct p ; [ by contradiction np | reflexivity ].
+  destruct r; [ by contradiction np | reflexivity ].
 Defined.
