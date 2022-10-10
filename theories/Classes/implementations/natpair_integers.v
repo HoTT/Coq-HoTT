@@ -434,9 +434,10 @@ Definition Z_negate_compute q : - (' q) = ' (PairT.opp _ q)
 
 Lemma Z_ring@{} : IsRing Z.
 Proof.
-repeat split;try apply _;
-first [change sg_op with mult; change mon_unit with 1|
-       change sg_op with plus; change mon_unit with 0];hnf.
+  repeat split.
+  1,8: exact _.
+  all: first [change sg_op with mult; change mon_unit with 1 |
+       change sg_op with plus; change mon_unit with 0]; hnf.
 - apply (Z_ind3 _).
   intros a b c;apply Z_path;red;simpl.
   rewrite !plus_assoc. reflexivity.
