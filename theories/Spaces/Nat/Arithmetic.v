@@ -3,72 +3,10 @@ Require Import Basics.Tactics.
 Require Import Types.Bool.
 Require Import Types.Sum.
 Require Import Basics.Utf8.
-
 Require Import Basics.Nat.
 Require Import Basics.Decidable.
-Require Import BooleanReflection.
-(* This prefix seems necessary to avoid conflict with Coq.Init.Sprop? *)
-Require Import HoTT.SProp.
-  
 Require Import Spaces.Nat.
-
 Local Close Scope trunc_scope.
-
-Section Sleq.
-  Scheme leq_sind := Induction for leq Sort SProp.
-
-  Fixpoint Sleq (n m : nat) : SProp :=
-    match n with
-    | O => sUnit
-    | S n' => match m with
-              | O => sEmpty
-              | S m' => Sleq n' m'
-              end
-    end.
-
-  Proposition Sleq_refl (n : nat) : Sleq n n.
-  Proof.
-    induction n; done.
-  Defined.
-
-  Proposition Sleq_S (n m: nat) : Sleq n m -> Sleq n m.+1.
-  Proof.
-    revert m.
-    induction n; [ done |].
-    simpl. intro m; destruct m; simpl; [ done | apply IHn ].
-  Defined.
-
-  Proposition leq_implies_Sleq (n m : nat) : Nat.leq n m -> Sleq n m.
-  Proof.
-    intro ineq; induction ineq.
-    + apply Sleq_refl.
-    + by apply Sleq_S.
-  Defined.
-
-  Proposition Sleq_implies_leq (n m : nat) : Sleq n m -> Nat.leq n m.
-  Proof.
-    revert m; induction n.
-    + intros; apply leq_0_n.
-    + intros m H. simpl in H. destruct m; [ destruct H |].
-      apply leq_S_n', IHn; exact H.
-  Defined.
-
-  
-  Definition Sleq_rect
-    : forall (n : nat) (P : forall m : nat, Sleq n m -> Type),
-        P n (Sleq_refl n) ->
-        (forall (m : nat) (l : Sleq n m), P m l -> P (m.+1)%nat (Sleq_S n m l)) ->
-        forall (m : nat) (l : Sleq n m), P m l.
-  Proof.
-    intros n P diag succ m l.
-    change l with (leq_implies_Sleq n m (Sleq_implies_leq n m l)).
-    induction (Sleq_implies_leq n m l).
-    - apply diag.
-    - apply succ, IHl0, leq_implies_Sleq; assumption.
-  Defined.
-
-  Definition Sleq_rec := Sleq_rect.
-End Sleq.
   
 Local Open Scope nat_scope.
 Ltac nat_absurd_trivial :=
@@ -83,7 +21,7 @@ Global Hint Resolve not_lt_n_n : nat.
 Global Hint Resolve not_lt_n_0 : nat.
 Global Hint Resolve not_leq_Sn_0 : nat.
 Global Hint Extern 2 => nat_absurd_trivial : nat.
-(* This is defined so that ti can be added to the nat auto hint database. *)
+(* This is defined so that it can be added to the nat auto hint database. *)
 Proposition eq_nat_sym : forall n m : nat,  n = m -> m = n.
 Proof.
   intros n m; exact (symmetric_paths n m).
@@ -110,28 +48,6 @@ Proof.
     apply (transitive_paths _ _ _ (IHn m.+1 k)).
     apply (ap (fun zz => zz + k)).
     apply symmetric_paths, nat_add_n_Sm. 
-Defined.
-
-Fixpoint leq_bool (n m : nat) : Bool :=
-  match n with
-  | 0 => true
-  | S n' => match m with
-            | 0 => false
-            | S m' => leq_bool n' m'
-            end
-  end.
-
-Proposition leqP (n m : nat) : reflect (n <= m) (leq_bool n m).
-Proof.
-  apply iffP.
-  - revert m. induction n.
-    + intros; auto with nat; reflexivity.
-    + intros m l. simpl in l. destruct m. { contradiction (not_leq_Sn_0 n). }
-      apply leq_S_n in l; simpl; auto with nat.
-  - revert m. induction n.
-    + auto with nat.
-    + intros m; simpl. destruct m; [ intro H ; discriminate |].
-      intro eq; apply IHn in eq. apply leq_S_n'; assumption.
 Defined.
 
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
@@ -877,7 +793,7 @@ Lemma left_handed_leq_minus : forall n k : nat, left_handed_leq (n - k) n.
 Proof.
   induction k.
   - destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.
-  - destruct (leqP n k) as [l | g].
+  - destruct (@leq_dichot n k) as [l | g].
     + destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)) in IHk. apply leq_S in l.
       destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)). exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
@@ -885,7 +801,7 @@ Proof.
       destruct (symmetric_paths _ _ (subsubadd n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
       apply left_handed_leq_S.
-      apply not_leq_implies_gt in g.
+      unfold ">", "<" in *.
       apply lt_sub_gt_0 in g. 
       now (destruct (symmetric_paths _ _ (S_predn (n - k) 0 _))).
 Defined.
