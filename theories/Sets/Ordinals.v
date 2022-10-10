@@ -480,7 +480,6 @@ Proof.
   - unfold lt. exact _.
   - exact _.
   - exact _.
-  - intros x y p. apply path_sigma_hprop. exact p.
   - constructor.
     + intros x y x_y. exact x_y.
     + intros b a' a'_b; cbn in *. apply tr.
