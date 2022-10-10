@@ -113,7 +113,7 @@ Ltac ring_with_nat :=
   |- @paths ?R _ _ =>
     ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
-    compute;reflexivity
+    reflexivity
   end.
 
 Ltac ring_with_integers Z :=
@@ -121,7 +121,7 @@ Ltac ring_with_integers Z :=
   |- @paths ?R _ _ =>
     ((pose proof (_ : IsRing R)) || fail "target equality not on a ring");
     apply (by_quoting (integers_to_ring Z R));
-    compute;reflexivity
+    reflexivity
   end.
 
 Ltac ring_with_self :=
@@ -129,7 +129,7 @@ Ltac ring_with_self :=
   |- @paths ?R _ _ =>
     ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a ring");
     apply (by_quoting (@id R));
-    compute;reflexivity
+    reflexivity
   end.
 
 Ltac ring_repl a b :=
