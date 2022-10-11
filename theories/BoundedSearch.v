@@ -15,6 +15,8 @@ Section bounded_search.
   Local Open Scope type_scope.
   
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
+
+  (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)
   Local Definition min_n_Type : Type := { n : nat & ((P n) * merely (minimal n))%type}.
 
   Local Definition ishpropmin_n : IsHProp min_n_Type.
