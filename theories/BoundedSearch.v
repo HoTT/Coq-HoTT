@@ -17,7 +17,7 @@ Section bounded_search.
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
 
   (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)
-  Local Definition min_n_Type : Type := { n : nat & ((P n) * merely (minimal n))%type}.
+  Local Definition min_n_Type : Type := { n : nat & (P n) * merely (minimal n) }.
 
   Local Definition ishpropmin_n : IsHProp min_n_Type.
   Proof.
@@ -27,25 +27,24 @@ Section bounded_search.
     apply leq_antisym.
     - exact (m n' p').
     - exact (m' n p).
-  Qed.
+  Defined.
 
-  (* Local Definition min_n : hProp := hProppair min_n_UU isapropmin_n. *)
-
-  Local Definition smaller (n : nat) := { l : nat & (P l * minimal l * (l <= n))%type}.
+  Local Definition smaller (n : nat) := { l : nat & P l * minimal l * (l <= n) }.
 
   Local Definition smaller_S (n : nat) (k : smaller n) : smaller (S n).
   Proof.
-    induction k as [l [[p m] z]].
+    destruct k as [l [[p m] z]].
     exists l.
-    repeat split; try assumption.
+    repeat split.
+    1,2: assumption.
     exact _.
-  Qed.
+  Defined.
 
   Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l <= n) -> not (P l).
   Proof.
     induction n as [|n IHn].
     - assert (P 0 + not (P 0)) as X; [apply P_dec |].
-      induction X as [h|].
+      destruct X as [h|].
       + left.
         refine (0;(h,_,_)).
         * intros ? ?. exact _.
@@ -53,14 +52,14 @@ Section bounded_search.
         intros l lleq0.
         assert (l0 : l = 0) by rapply leq_antisym.
         rewrite l0; assumption.
-    - induction IHn as [|n0].
+    - destruct IHn as [|n0].
       + left. apply smaller_S. assumption.
       + assert (P (n.+1) + not (P (n.+1))) as X by apply P_dec.
-        induction X as [h|].
+        destruct X as [h|].
         * left.
           refine (n.+1;(h,_,_)).
           -- intros m pm.
-             assert ((n.+1 <= m)+(n.+1>m))%type as X by apply leq_dichot.
+             assert ((n.+1 <= m)+(n.+1>m)) as X by apply leq_dichot.
              destruct X as [leqSnm|ltmSn].
              ++ assumption.
              ++ unfold gt, lt in ltmSn.
@@ -68,17 +67,17 @@ Section bounded_search.
                 destruct (n0 m X pm).
         * right. intros l q.
           assert ((l <= n) + (l > n)) as X by apply leq_dichot.
-          induction X as [h|h].
+          destruct X as [h|h].
           -- exact (n0 l h).
           -- unfold lt in h.
              assert (eqlSn : l = n.+1) by (apply leq_antisym; assumption).
              rewrite eqlSn; assumption.
-  Qed.
+  Defined.
 
   Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.
   Proof.
     assert (smaller n + forall l, (l <= n) -> not (P l)) as X by apply bounded_search.
-    induction X as [[l [[Pl ml] leqln]]|none].
+    destruct X as [[l [[Pl ml] leqln]]|none].
     - exact (l;(Pl,tr ml)).
     - destruct (none n (leq_refl n) Pn).
   Defined.
@@ -87,19 +86,19 @@ Section bounded_search.
   Proof.
     refine (Trunc_rec _ P_inhab).
     - exact ishpropmin_n.
-    - induction 1 as [n Pn]. exact (n_to_min_n n Pn).
+    - destruct 1 as [n Pn]. exact (n_to_min_n n Pn).
   Defined.
 
   Definition minimal_n : { n : nat & P n }.
   Proof.
-    induction prop_n_to_min_n as [n pl]. induction pl as [p _].
+    destruct prop_n_to_min_n as [n pl]. destruct pl as [p _].
     exact (n;p).
   Defined.
 
 End bounded_search.
 
 Section bounded_search_alt_type.
-  Context `{Funext}.
+
   Context (X : Type)
           (e : nat <~> X)
           (P : X -> Type)
