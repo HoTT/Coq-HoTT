@@ -5,7 +5,6 @@ Require Import HoTT.Spaces.Nat.
 
 Section bounded_search.
 
-  Context `{Funext}.
   Context (P : nat -> Type)
           {P_hprop : forall n, IsHProp (P n)}
           (P_dec : forall n, Decidable (P n))
@@ -16,16 +15,13 @@ Section bounded_search.
   Local Open Scope type_scope.
   
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
-  Local Definition ishprop_minimal (n : nat) : IsHProp (minimal n).
-  Proof.
-    apply _.
-  Qed.
-  Local Definition min_n_Type : Type := { n : nat & ((P n) * (minimal n))%type}.
+  Local Definition min_n_Type : Type := { n : nat & ((P n) * merely (minimal n))%type}.
 
   Local Definition ishpropmin_n : IsHProp min_n_Type.
   Proof.
     apply ishprop_sigma_disjoint.
     intros n n' [p m] [p' m'].
+    strip_truncations.
     apply leq_antisym.
     - exact (m n' p').
     - exact (m' n p).
@@ -81,7 +77,7 @@ Section bounded_search.
   Proof.
     assert (smaller n + forall l, (l <= n) -> not (P l)) as X by apply bounded_search.
     induction X as [[l [[Pl ml] leqln]]|none].
-    - exact (l;(Pl,ml)).
+    - exact (l;(Pl,tr ml)).
     - destruct (none n (leq_refl n) Pn).
   Defined.
 
