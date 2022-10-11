@@ -149,9 +149,8 @@ Definition fcard_succ X `{Finite X}
 : fcard (X + Unit) = (fcard X).+1
   := 1.
 
-(** ** Decidability *)
-
 (** Like canonical finite sets, finite sets have decidable equality. *)
+
 Global Instance decidablepaths_finite `{Funext} X `{Finite X}
 : DecidablePaths X.
 Proof.
@@ -507,6 +506,8 @@ Proof.
 Defined.
 
 (** Conversely, if a subset of a finite set is finite, then it is detachable.  We show first that an embedding between finite subsets has detachable image. *)
+
+
 Definition detachable_image_finite
            {X Y} `{Finite X} `{Finite Y} (f : X -> Y) `{IsEmbedding f}
 : forall y, Decidable (hfiber f y).
@@ -635,7 +636,7 @@ End DecidableQuotients.
 (** ** Injections *)
 
 (** An injection between finite sets induces an inequality between their cardinalities. *)
-Definition leq_inj_finite `{Funext} {X Y} {fX : Finite X} {fY : Finite Y}
+Definition leq_inj_finite {X Y} {fX : Finite X} {fY : Finite Y}
            (f : X -> Y) (i : IsEmbedding f)
 : fcard X <= fcard Y.
 Proof.
@@ -684,7 +685,29 @@ Proof.
              (mapinO_unfunctor_sum_l (Tr (-1)) h Ha Hb)).
 Qed.
 
-(** ** Enumerations *)
+(** ** Surjections  *)
+(** A surjection between finite sets induces an inequality 
+    between their cardinalities. *)
+Definition leq_surj_finite  {X Y} {fX : Finite X} {fY : Finite Y}
+           (f : X -> Y) (i : IsSurjection f)
+: fcard X >= fcard Y.
+Proof.
+  destruct fX as [n e], fY as [m e']; simpl.
+  assert (k := (isprojective_fin_n m)).
+  strip_truncations.
+  pose (g := e' o f o e^-1).
+  assert (k' : IsSurjection g) by exact _ .
+  clearbody g; clear i f.
+  assert (j := k (Fin n) _ (Fin m) _ idmap g k').
+  strip_truncations.
+  simpl; destruct j as [s split]. 
+  change n with (fcard (Fin n)).
+  change m with (fcard (Fin m)).
+  apply (leq_inj_finite s).
+  apply isembedding_isinj_hset, (isinj_section split).
+Defined.
+  
+  (** ** Enumerations *)
 
 (** A function from [nat] to a finite set must repeat itself eventually. *)
 Section Enumeration.
