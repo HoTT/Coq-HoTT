@@ -194,6 +194,17 @@ Proof.
   refine (contr_inhabited_hprop _ ma).
 Defined.
 
+(** A decidable type is logically equivalent to its (-1)-truncation. *)
+Definition merely_inhabited_iff_inhabited_decidable {A} {A_dec : Decidable A}
+  : Tr (-1) A <-> A.
+Proof.
+  refine (_, tr).
+  intro ma.
+  destruct A_dec as [a | na].
+  - exact a.
+  - exact (Empty_rec (Trunc_rec na ma)).
+Defined.
+
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
 Notation IsSurjection := (IsConnMap (Tr (-1))).
 

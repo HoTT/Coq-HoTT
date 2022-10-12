@@ -535,7 +535,6 @@ Section locator.
       {
         apply minimal_n_alt_type.
         - apply QQpos_eq.
-        - apply P_isHProp.
         - apply P_dec.
         - apply P_inhab.
       }
