@@ -37,7 +37,6 @@ Section Hartogs_Number.
     exists carrier relation. srapply (isordinal_simulation pr1).
     - exact _.
     - exact _.
-    - intros B C. apply path_sigma_hprop.
     - constructor.
       + intros a a' a_a'. exact a_a'.
       + intros [B small_B] C C_B; cbn in *. apply tr.
@@ -146,13 +145,7 @@ Section Hartogs_Number.
                    apply irreflexivity in b'_b1; try exact _. assumption.
         }
       }
-      assert (IsOrdinal X (ϕ X)). {
-        srefine (isordinal_simulation iso.1); try exact _.
-        intros x1 x2 p.
-        rewrite <- (eissect iso.1 x1).
-        rewrite <- (eissect iso.1 x2).
-        f_ap.
-      }
+      assert (IsOrdinal X (ϕ X)) by exact (isordinal_simulation iso.1). 
       apply apD10 in H0. specialize (H0 X). cbn in H0.
       refine (transitive_Isomorphism _ (X : Type; ϕ X) _ _ _). {
         apply isomorphism_inverse. assumption.
@@ -244,8 +237,6 @@ Section Hartogs_Number.
     exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
     srapply (isordinal_simulation g); try exact _.
     - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
-    - intros c1 c2. intros p.
-      rewrite <- (eissect g c1).  rewrite <- (eissect g c2). f_ap.
     - constructor.
       + intros a a' a_a'. apply (equiv_resize_hprop _)^-1. exact a_a'.
       + intros a b b_fa. apply tr. exists (g^-1 b). split.

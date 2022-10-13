@@ -350,6 +350,11 @@ Global Instance isinj_idmap A : @IsInjective A A idmap
 #[export]
 Hint Unfold IsInjective : typeclass_instances.
 
+#[export]
+Instance isinjective_mapinO_tr {A B : Type} (f : A -> B)
+  {p : MapIn (Tr (-1)) f} : IsInjective f
+  := fun x y pfeq => ap pr1 (@center _ (p (f y) (x; pfeq) (y; idpath))).
+  
 Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
   Class IsStrongInjective :=
