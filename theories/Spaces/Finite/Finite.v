@@ -149,6 +149,8 @@ Definition fcard_succ X `{Finite X}
 : fcard (X + Unit) = (fcard X).+1
   := 1.
 
+(** ** Decidability *)		
+
 (** Like canonical finite sets, finite sets have decidable equality. *)
 
 Global Instance decidablepaths_finite `{Funext} X `{Finite X}
