@@ -152,7 +152,6 @@ Definition fcard_succ X `{Finite X}
 (** ** Decidability *)		
 
 (** Like canonical finite sets, finite sets have decidable equality. *)
-
 Global Instance decidablepaths_finite `{Funext} X `{Finite X}
 : DecidablePaths X.
 Proof.
