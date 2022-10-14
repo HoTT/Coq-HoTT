@@ -689,7 +689,7 @@ Qed.
 (** A surjection between finite sets induces an inequality between their cardinalities. *)
 Definition leq_surj_finite  {X Y} {fX : Finite X} {fY : Finite Y}
            (f : X -> Y) (i : IsSurjection f)
-: fcard X >= fcard Y.
+  : fcard X >= fcard Y.
 Proof.
   destruct fX as [n e], fY as [m e']; simpl.
   assert (k := (isprojective_fin_n m)).
