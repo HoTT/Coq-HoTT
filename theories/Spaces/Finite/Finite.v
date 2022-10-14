@@ -698,11 +698,11 @@ Proof.
   clearbody g; clear i f.
   assert (j := k (Fin n) _ (Fin m) _ idmap g k').
   strip_truncations.
-  simpl; destruct j as [s split]. 
+  simpl; destruct j as [s is_section]. 
   change n with (fcard (Fin n)).
   change m with (fcard (Fin m)).
   apply (leq_inj_finite s).
-  apply isembedding_isinj_hset, isinj_section split.
+  apply isembedding_isinj_hset, (isinj_section is_section).
 Defined.
   
   (** ** Enumerations *)
