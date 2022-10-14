@@ -508,8 +508,6 @@ Proof.
 Defined.
 
 (** Conversely, if a subset of a finite set is finite, then it is detachable.  We show first that an embedding between finite subsets has detachable image. *)
-
-
 Definition detachable_image_finite
            {X Y} `{Finite X} `{Finite Y} (f : X -> Y) `{IsEmbedding f}
 : forall y, Decidable (hfiber f y).
