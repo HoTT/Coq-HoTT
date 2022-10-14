@@ -703,7 +703,7 @@ Proof.
   change n with (fcard (Fin n)).
   change m with (fcard (Fin m)).
   apply (leq_inj_finite s).
-  apply isembedding_isinj_hset, (isinj_section split).
+  apply isembedding_isinj_hset, isinj_section split.
 Defined.
   
   (** ** Enumerations *)
