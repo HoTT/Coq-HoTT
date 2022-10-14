@@ -692,7 +692,7 @@ Definition geq_surj_finite  {X Y} {fX : Finite X} {fY : Finite Y}
   : fcard X >= fcard Y.
 Proof.
   destruct fX as [n e], fY as [m e']; simpl.
-  assert (k := (isprojective_fin_n m)).
+  assert (k := isprojective_fin_n m).
   strip_truncations.
   pose (g := e' o f o e^-1).
   assert (k' : IsSurjection g) by exact _ .
