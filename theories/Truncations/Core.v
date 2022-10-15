@@ -201,7 +201,7 @@ Proof.
   refine (_, tr).
   intro ma.
   apply stable; intro na.
-  revert ma; apply Trunc_ind; [exact _ | done].
+  revert ma; rapply Trunc_ind; exact na.
 Defined.
 
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
