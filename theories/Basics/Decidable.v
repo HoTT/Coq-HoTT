@@ -46,6 +46,12 @@ Proof.
   - apply Empty_rect,dn,n.
 Qed.
 
+Global Instance stable_negation P : Stable (~ P).
+Proof.
+  intros nnnp p.
+  exact (nnnp (fun np => np p)).
+Defined.
+
 (**
   Because [vm_compute] evaluates terms in [PROP] eagerly
   and does not remove dead code we
