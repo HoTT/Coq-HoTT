@@ -48,7 +48,8 @@ Qed.
 
 Global Instance stable_negation P : Stable (~ P).
 Proof.
-  intros nnnp p; contradiction nnnp; intro np; contradiction np; exact p.
+  intros nnnp p.
+  exact (nnnp (fun np => np p)).
 Defined.
 
 (**
