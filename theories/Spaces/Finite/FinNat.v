@@ -8,7 +8,7 @@ Require Import
 
 Local Open Scope nat_scope.
 
-Definition FinNat (n : nat) : Type := {x : nat | x < n}.
+Definition FinNat (n : nat) : Type0 := {x : nat | x < n}.
 
 Definition zero_finnat (n : nat) : FinNat n.+1
   := (0; leq_1_Sn).
