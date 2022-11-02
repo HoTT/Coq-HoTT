@@ -52,7 +52,7 @@ Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
-Record prod (A B : Type) := pair { fst : A ; snd : B }.
+Cumulative Record prod@{i j} (A : Type@{i}) (B : Type@{j}) := pair { fst : A ; snd : B }.
 
 Scheme prod_rect := Induction for prod Sort Type.
 
