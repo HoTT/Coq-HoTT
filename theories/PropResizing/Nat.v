@@ -175,9 +175,9 @@ Section AssumeStuff.
       intros x y.
       destruct x as [x|x]; destruct y as [y|y]; cbn.
       + apply e.
-      + split; apply idmap.
-      + split; apply idmap.
-      + split; apply idmap.
+      + refine (pair@{s s} _ _); apply idmap.
+      + refine (pair@{s s} _ _); apply idmap.
+      + refine (pair@{s s} _ _); apply idmap.
     - intros [f e].
       exists (graph_unsucc_equiv_vert f e).
       exact (graph_unsucc_equiv_edge f e).
@@ -821,12 +821,14 @@ Section AssumeStuff.
     Local Definition equiv_N_segment_succ_maps@{} (n : N)
       : Equiv@{nr nr} (prod@{nr x} ({ m : N & m <= n} -> X) X) ({ m : N & m <= succ n} -> X).
     Proof.
-      refine (_ oE @equiv_sum_ind@{x nr nr nr nr p p p}
-                _ {m:N&m<=n} Unit (fun _ => X) oE _).
-      - apply equiv_precompose'.
-        apply equiv_N_segment_succ.
-      - apply equiv_functor_prod_l.
-        apply equiv_unit_rec@{x nr Set}.
+      refine (equiv_compose' _ (equiv_compose' _ _)). all: swap 1 2.
+      - refine (@equiv_sum_ind@{x nr nr nr nr nr p p} _ {m:N&m<=n} Unit (fun _ => X)).
+      - cbn.
+        apply equiv_precompose'.
+        refine (equiv_N_segment_succ _).
+      - cbn.
+        apply equiv_functor_prod_l@{nr x p p p}.
+        refine (equiv_unit_rec@{x nr Set} _).
     Defined.
 
     Local Definition equiv_seg_succ@{} (n m : N) (H : m < succ n)
@@ -855,21 +857,22 @@ Section AssumeStuff.
              f (succ_seg n mh) = xs (f ((equiv_N_segment n)^-1 (inl mh)))) *
            (xsn = xs (f (refl_seg n))))). }
       { intros [f xsn].
-        apply equiv_functor_prod'.
-        { apply equiv_concat_l.
+        refine (equiv_functor_prod' _ _).
+        { refine (equiv_concat_l _ _).
           cbn.
           generalize (N_le_eq_or_lt zero (succ n) (N_zero_le (succ n))).
           intros [H0|Hs].
           + destruct (zero_neq_succ n (H0)).
           + cbn. apply ap.
             apply path_sigma_hprop; reflexivity. }
-        { srefine ((equiv_functor_forall_pb
+        { 
+          srefine ((equiv_functor_forall_pb
                      (equiv_N_segment_lt_succ n)^-1)^-1 oE _).
           srefine ((equiv_functor_forall_pb (equiv_N_segment n)^-1)^-1 oE _).
           srefine (equiv_sum_ind _ oE _).
-          apply equiv_functor_prod'.
-          - apply equiv_functor_forall_id; intros [m H].
-            apply equiv_concat_lr.
+          refine (equiv_functor_prod' _ _).
+          - refine (equiv_functor_forall_id _); intros [m H].
+            refine (equiv_concat_lr _ _).
             + transitivity ((equiv_N_segment_succ_maps n)
                               (f,xsn)
                               (succ m; N_lt_le _ _ (N_succ_lt m n H))).
@@ -887,7 +890,7 @@ Section AssumeStuff.
                 exact (N_succ_nlt n H).
               * cbn. apply ap, path_sigma_hprop; reflexivity.
           - refine ((equiv_contr_forall _)^-1 oE _).
-            apply equiv_concat_lr.
+            refine (equiv_concat_lr _ _).
             + cbn.
               match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
@@ -906,18 +909,19 @@ Section AssumeStuff.
               * cbn.
                 apply ap, path_sigma_hprop. reflexivity. } }
       { refine (equiv_sigma_prod _ oE _).
-        apply equiv_functor_sigma_id. intros f.
+        refine (equiv_functor_sigma_id _). intros f.
         refine (equiv_functor_sigma_id (fun b:X => equiv_sigma_prod0 _ _) oE _).
         refine (equiv_sigma_symm _ oE _).
         refine (_ oE (equiv_sigma_prod0 _ _)^-1).
-        apply equiv_functor_sigma_id; intros f0.
+        refine (equiv_functor_sigma_id _). intros f0.
         refine (equiv_functor_sigma_id (fun b:X => equiv_sigma_prod0 _ _) oE _).
         refine (equiv_sigma_symm _ oE _).
         exact ((equiv_sigma_contr _)^-1%equiv). }
     Defined.
+    Set Printing Universes.
     Local Definition partial_Nrec_succ@{}
       := Eval unfold partial_Nrec_succ0
-        in partial_Nrec_succ0@{nr nr nr nr}.
+        in partial_Nrec_succ0@{nr nr}.
 
     Local Instance contr_partial_Nrec@{} (n : N) : Contr (partial_Nrec n).
     Proof.
@@ -933,7 +937,7 @@ Section AssumeStuff.
       intros f.
       destruct f as [f [f0 fs]].
       exists (fun mh => f ((equiv_N_segment_succ n)^-1 (inl mh))).
-      split.
+      refine (pair@{_ _} _ _).
       - refine (_ @ f0).
         apply ap, path_sigma_hprop. reflexivity.
       - intros mh.
@@ -1006,7 +1010,7 @@ Section AssumeStuff.
     Proof.
       intros f n.
       exists (fun mh => f.1 mh.1).
-      split.
+      refine (pair@{_ _} _ _).
       - exact (fst f.2).
       - intros mh.
         exact (snd f.2 mh.1).
