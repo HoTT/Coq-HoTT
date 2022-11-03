@@ -35,7 +35,7 @@ Register option as core.option.type.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
-Inductive sum (A B : Type) : Type :=
+Cumulative Inductive sum (A B : Type) : Type :=
   | inl : A -> sum A B
   | inr : B -> sum A B.
 
