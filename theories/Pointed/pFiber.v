@@ -22,7 +22,7 @@ Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
   : pfiber (pfib f) <~>* loops B.
 Proof.
-  apply issig_pequiv'; srefine (_;_).
+  snrapply Build_pEquiv'.
   { transitivity (f (point A) = point B).
     1: make_equiv_contr_basedpaths.
     apply equiv_concat_l.
