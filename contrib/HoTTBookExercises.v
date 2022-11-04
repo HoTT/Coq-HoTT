@@ -939,7 +939,23 @@ End Book_3_14.
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
 
-
+Section Book_3_15.
+  Definition Book_3_15_rec {A B} `{IsHProp B}
+    : (A -> B) -> (forall P : HProp, (A -> P) -> P) -> B.
+  Proof.
+    intros f trA.
+    set (B' := Build_HProp B).
+    specialize (trA B').
+    apply trA.
+    assumption.
+  Defined.
+  Lemma Book_3_15_eq {A B} `{IsHProp B} (f : A -> B)
+    : forall a, f a = Book_3_15_rec f (fun _ f' => f' a).
+  Proof.
+    intro a. reflexivity.
+  Qed.
+  (* proportional resizing is needed? *)
+End Book_3_15.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
@@ -949,7 +965,21 @@ End Book_3_14.
 (* ================================================== ex:prop-trunc-ind *)
 (** Exercise 3.17 *)
 
-
+Section Book_3_17.
+  Theorem prop_trunc_ind
+  : forall A (B : merely A -> Type),
+    (forall a, B (tr a))
+    -> (forall x, IsHProp (B x))
+    -> forall x, B x.
+  Proof.
+    intros A B base p x.
+    specialize (p x).
+    refine (Trunc_rec _ x).
+    intro a.
+    assert (H: tr a = x) by (apply path_ishprop).
+    destruct H. exact (base a).
+  Defined.
+End Book_3_17.
 
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
