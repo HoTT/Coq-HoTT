@@ -347,7 +347,7 @@ Section another_pseudo_ring_order.
   pose proof (projected_pseudo_order f P).
   pose proof (projected_strict_ring_order f P).
   apply from_pseudo_ring_order; try apply _.
-  pose proof (pseudo_order_apart : IsApart R1).
+  pose proof (@pseudo_order_apart R1 H0 R1lt pseudo_srorder_strict : IsApart R1).
   pose proof (pseudo_order_apart : IsApart R2).
   pose proof (strong_injective_mor f).
   repeat (split; try apply _).
