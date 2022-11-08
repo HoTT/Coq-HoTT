@@ -175,9 +175,9 @@ Section AssumeStuff.
       intros x y.
       destruct x as [x|x]; destruct y as [y|y]; cbn.
       + apply e.
-      + refine (pair@{s s} _ _); apply idmap.
-      + refine (pair@{s s} _ _); apply idmap.
-      + refine (pair@{s s} _ _); apply idmap.
+      + split; apply idmap.
+      + split; apply idmap.
+      + split; apply idmap.
     - intros [f e].
       exists (graph_unsucc_equiv_vert f e).
       exact (graph_unsucc_equiv_edge f e).
