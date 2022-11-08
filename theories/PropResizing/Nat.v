@@ -918,7 +918,6 @@ Section AssumeStuff.
         refine (equiv_sigma_symm _ oE _).
         exact ((equiv_sigma_contr _)^-1%equiv). }
     Defined.
-    Set Printing Universes.
     Local Definition partial_Nrec_succ@{}
       := Eval unfold partial_Nrec_succ0
         in partial_Nrec_succ0@{nr nr}.
