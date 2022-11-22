@@ -731,11 +731,13 @@ Proof.
   intro n. apply (X (n.+1) n), (leq_n n.+1).
 Defined.
 
-Inductive left_handed_leq : nat -> nat -> Type :=
-| left_handed_leq_n (n : nat) : left_handed_leq n n
-| left_handed_leq_S (n m : nat) : left_handed_leq n.+1 m -> left_handed_leq n m.
+(** This inductive type is defined because it lets you loop from i = 0 up to i = n by structural induction on a proof of increasing_geq n 0. With the existing leq type and the inductive structure of n, it is easier and more natural to loop downwards from i = n to i = 0, but harder to find the least natural number in the interval [0, n] satisfying a given property. *)
 
-Proposition left_handed_leq_S_n (n m : nat) : left_handed_leq n m -> left_handed_leq n.+1 m.+1.
+Inductive increasing_geq (n : nat) : nat -> Type :=
+| increasing_geq_n : increasing_geq n n
+| increasing_geq_S (m : nat) : increasing_geq n m.+1 -> increasing_geq n m.
+
+Proposition increasing_geq_S_n (n m : nat) : increasing_geq n m -> increasing_geq n.+1 m.+1.
 Proof.
   intro a.
   induction a.
@@ -743,7 +745,7 @@ Proof.
   - now constructor.
 Defined.
 
-Proposition left_handed_leq_0_n (n :nat) : left_handed_leq 0 n.
+Proposition increasing_geq_n_0 (n :nat) : increasing_geq n 0.
 Proof.
   induction n.
   - constructor.
@@ -752,44 +754,7 @@ Proof.
     + constructor; now assumption.
 Defined.
 
-Definition least_such_that (P : nat -> Type) {T : forall n, Decidable (P n)}
-           (k : nat) (p : P k) : nat.
-Proof.
-  assert (t := left_handed_leq_0_n k).
-  induction t. 
-  - exact n.
-  - destruct (T n).
-    + exact n.
-    + exact (IHt p).
-Defined.
-
-Proposition least_such_that_P_holds (P : nat -> Type) {T : forall n, Decidable (P n)}
-           (n : nat) (p : P n) : (P (least_such_that P n p)).
-Proof.
-  unfold least_such_that. induction (left_handed_leq_0_n n).
-  - assumption.
-  - simpl. destruct (T n).
-    + assumption.
-    + apply IHl.
-Defined.
-Proposition least_such_that_P_is_least (P : nat -> Type) {T : forall n, Decidable (P n)}
-           (n : nat) (p : P n) : 
-  (forall k : nat, P k -> (least_such_that P n p) <= k).
-Proof.
-  intros k Pk. unfold least_such_that.
-  set (Q := left_handed_leq_rect _ _ _). generalize (left_handed_leq_0_n n); intro l.
-  cut (forall x : nat, forall l0 : left_handed_leq x n, x <= k -> Q x n l0 p <= k). {
-    intro KT. specialize KT with 0 l; apply (KT (leq_0_n k)). }
-  intros x l0 ineq. induction l0 as [| x n].
-  - assumption.
-  - simpl. destruct (T x).
-    + assumption.
-    + apply IHl0. { apply (left_handed_leq_0_n n). } destruct ineq.
-      * contradiction.
-      * apply leq_S_n'; assumption.
-Defined.
-
-Lemma left_handed_leq_minus : forall n k : nat, left_handed_leq (n - k) n.
+Lemma left_handed_leq_minus : forall n k : nat, increasing_geq n (n - k).
 Proof.
   induction k.
   - destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.
@@ -800,7 +765,7 @@ Proof.
       Check subsubadd.
       destruct (symmetric_paths _ _ (subsubadd n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
-      apply left_handed_leq_S.
+      apply increasing_geq_S.
       unfold ">", "<" in *.
       apply lt_sub_gt_0 in g. 
       now (destruct (symmetric_paths _ _ (S_predn (n - k) 0 _))).
@@ -833,12 +798,12 @@ Proof.
     apply (ap S), IHn, leq_S', ineq.
 Defined.                                 
   
-Proposition leq_equivalent : forall n m : nat, n <= m <-> left_handed_leq n m.
+Proposition leq_equivalent : forall n m : nat, n <= m <-> increasing_geq m n.
 Proof.
   split.
   - intro ineq. induction ineq.
     + constructor.
-    + apply left_handed_leq_S_n in IHineq; constructor; assumption.
+    + apply increasing_geq_S_n in IHineq; constructor; assumption.
   - intro a.
     induction a.
     + constructor.
