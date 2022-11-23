@@ -760,7 +760,7 @@ Proof.
     + constructor; now assumption.
 Defined.
 
-Lemma left_handed_leq_minus : forall n k : nat, increasing_geq n (n - k).
+Lemma increasing_geq_minus : forall n k : nat, increasing_geq n (n - k).
 Proof.
   induction k.
   - destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.
