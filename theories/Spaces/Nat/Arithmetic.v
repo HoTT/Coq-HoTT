@@ -29,7 +29,7 @@ Ltac nat_absurd_trivial :=
 
 (* This is defined so that it can be added to the nat auto hint database. *)
 Local Definition symmetric_paths_nat : forall n m : nat,  n = m -> m = n := @symmetric_paths nat.
-Local Definition transitive_paths_nat := @transitive_paths nat.
+Local Definition transitive_paths_nat : forall n m k : nat, n = m -> m = k -> n = k := @transitive_paths nat.
 
 #[export] Hint Resolve symmetric_paths_nat | 5 : nat.
 #[export] Hint Resolve transitive_paths_nat : nat.
