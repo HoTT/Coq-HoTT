@@ -20,7 +20,6 @@ Print CMorphisms.ProperProxy.
 (* #[export] Instance paths_proper_proxy {A : Type} {a : A} *)
 (*   : CMorphisms.ProperProxy (@paths A) a := reflexivity a. *)
 
-
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
   : CMorphisms.ProperProxy R x := reflexivity x.
@@ -196,4 +195,75 @@ Proof.
     rewrite ! cat_assoc.
     reflexivity.
 Defined.
-    
+
+Require Import WildCat.NatTrans WildCat.Equiv.
+
+#[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
+ : CMorphisms.Proper
+     (Hom ==> Hom ==> CRelationClasses.arrow) Hom.
+Proof.
+  intros x y eq_xy a b eq_ab f.
+  refine (transitivity _ eq_ab).
+  refine (transitivity _ f).
+  symmetry; exact eq_xy.
+Defined.
+
+#[export] Instance transitive_hom {A : Type} `{Is01Cat A} {x : A}
+ : CMorphisms.Proper
+     (Hom ==> CRelationClasses.arrow) (Hom x).
+Proof.
+  intros y z g f.
+  exact (g $o f).
+Defined.
+
+Proposition IsEpic_HasSection {A} `{Is1Cat A}
+  {a b : A} (f : a $-> b) :
+  SectionOf f -> Epic f.
+Proof.
+  intros section c g h eq_gf_hf.
+  destruct section as [right_inverse is_section].
+  apply (is0functor_precomp _ _ _ right_inverse) in eq_gf_hf;
+    unfold cat_precomp in eq_gf_hf.
+  rewrite 2 cat_assoc, is_section, 2 cat_idr in eq_gf_hf.
+  exact eq_gf_hf.
+Defined.
+
+Proposition IsMonic_HasRetraction {A} `{Is1Cat A}
+  {b c : A} (f : b $-> c) :
+  RetractionOf f -> Monic f.
+Proof.
+  intros retraction a g h eq_fg_fh.
+  destruct retraction as [left_inverse is_retraction].
+  apply (is0functor_postcomp _ _ _ left_inverse) in eq_fg_fh;
+    unfold cat_postcomp in eq_fg_fh.
+  rewrite <- 2 cat_assoc, is_retraction, 2 cat_idl in eq_fg_fh.
+  assumption.
+Defined.
+
+Proposition nat_equiv_faithful {A B : Type}
+  {F G : A -> B} `{Is1Functor _ _ F}
+  `{!Is0Functor G, !Is1Functor G} 
+  `{!HasEquivs B} (tau : NatEquiv F G)
+  : Faithful F -> Faithful G.
+Proof.
+  intros faithful_F x y f g eq_Gf_Gg.
+  Check cat_postcomp.
+  Print NatEquiv.
+  apply (@fmap _ _ _ _ _ (is0functor_precomp _
+       _ _ (cat_equiv_natequiv F G tau x))) in eq_Gf_Gg.
+  cbn in eq_Gf_Gg.
+  unfold cat_precomp in eq_Gf_Gg.
+  rewrite <- is1natural_natequiv in eq_Gf_Gg.
+  rewrite <- is1natural_natequiv in eq_Gf_Gg.
+  apply faithful_F.
+  assert (X : RetractionOf (tau y)). {
+    unshelve eapply Build_RetractionOf.
+    - exact ((tau y)^-1$).
+    - exact (cate_issect _ ).
+  }
+  apply IsMonic_HasRetraction in X.
+  apply X in eq_Gf_Gg. assumption.
+Defined.
+  
+
+
