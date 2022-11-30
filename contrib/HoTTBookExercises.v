@@ -940,7 +940,7 @@ End Book_3_14.
 (** Exercise 3.15 *)
 
 Section Book_3_15.
-  (* Propositional resizing is (implicitly) used for [forall P : HProp, (A -> P) -> P] to be on the same universe as [A] *)
+  (* Propositional resizing is (implicitly) used for [forall P : HProp, (A -> P) -> P] to be in the same universe as [A]. *)
   Definition Book_3_15_rec {A B} `{IsHProp B}
     : (A -> B) -> (forall P : HProp, (A -> P) -> P) -> B.
   Proof.
@@ -950,6 +950,7 @@ Section Book_3_15.
     apply trA.
     assumption.
   Defined.
+
   Lemma Book_3_15_eq {A B} `{IsHProp B} (f : A -> B)
     : forall a, f a = Book_3_15_rec f (fun _ f' => f' a).
   Proof.
@@ -966,17 +967,14 @@ End Book_3_15.
 (** Exercise 3.17 *)
 
 Section Book_3_17.
-  Theorem prop_trunc_ind
-  : forall A (B : merely A -> Type),
-    (forall x, IsHProp (B x))
-    -> (forall a, B (tr a))
-    -> forall x, B x.
+  Theorem prop_trunc_ind (A: Type) (B : merely A -> Type) `{forall x, IsHProp (B x)}
+  : (forall a, B (tr a)) -> forall x, B x.
   Proof.
-    intros A B p base x.
+    intros base x.
     refine (Trunc_rec _ x).
     intro a.
-    assert (H: tr a = x) by (apply path_ishprop).
-    destruct H. exact (base a).
+    assert (H': tr a = x) by (apply path_ishprop).
+    destruct H'. exact (base a).
   Defined.
 End Book_3_17.
 
