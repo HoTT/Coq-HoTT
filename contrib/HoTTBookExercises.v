@@ -940,6 +940,7 @@ End Book_3_14.
 (** Exercise 3.15 *)
 
 Section Book_3_15.
+  (* Propositional resizing is (implicitly) used for [forall P : HProp, (A -> P) -> P] to be on the same universe as [A] *)
   Definition Book_3_15_rec {A B} `{IsHProp B}
     : (A -> B) -> (forall P : HProp, (A -> P) -> P) -> B.
   Proof.
@@ -954,7 +955,6 @@ Section Book_3_15.
   Proof.
     intro a. reflexivity.
   Qed.
-  (* proportional resizing is needed? *)
 End Book_3_15.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
@@ -968,12 +968,11 @@ End Book_3_15.
 Section Book_3_17.
   Theorem prop_trunc_ind
   : forall A (B : merely A -> Type),
-    (forall a, B (tr a))
-    -> (forall x, IsHProp (B x))
+    (forall x, IsHProp (B x))
+    -> (forall a, B (tr a))
     -> forall x, B x.
   Proof.
-    intros A B base p x.
-    specialize (p x).
+    intros A B p base x.
     refine (Trunc_rec _ x).
     intro a.
     assert (H: tr a = x) by (apply path_ishprop).
