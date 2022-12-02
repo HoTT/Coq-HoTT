@@ -940,21 +940,33 @@ End Book_3_14.
 (** Exercise 3.15 *)
 
 Section Book_3_15.
-  (* Propositional resizing is (implicitly) used for [forall P : HProp, (A -> P) -> P] to be in the same universe as [A]. *)
-  Definition Book_3_15_rec {A B} `{IsHProp B}
-    : (A -> B) -> (forall P : HProp, (A -> P) -> P) -> B.
+  Definition Book_3_15_trunc@{u +} `{PropResizing} `{Funext} (A : Type@{u})
+    : Type@{u}.
+  Proof.
+    exact (resize_hprop@{_ u} (forall P : HProp@{u}, (A -> P) -> P)).
+  Defined.
+
+  Definition Book_3_15_ishprop `{PropResizing} `{Funext} (A : Type)
+    : IsHProp (Book_3_15_trunc A)
+    := _.
+
+  Definition Book_3_15_rec `{PropResizing} `{Funext} {A B} `{IsHProp B}
+    : (A -> B) -> (Book_3_15_trunc A) -> B.
   Proof.
     intros f trA.
     set (B' := Build_HProp B).
+    apply equiv_resize_hprop in trA.
     specialize (trA B').
     apply trA.
     assumption.
   Defined.
 
-  Lemma Book_3_15_eq {A B} `{IsHProp B} (f : A -> B)
-    : forall a, f a = Book_3_15_rec f (fun _ f' => f' a).
+  Lemma Book_3_15_eq `{PropResizing} `{Funext} {A B} `{IsHProp B} (f : A -> B)
+    : forall a, f a = Book_3_15_rec f (equiv_resize_hprop _ (fun _ f' => f' a)).
   Proof.
-    intro a. reflexivity.
+    intro a.
+    (* Now judgemental computation rule does not hold in Coq, as in Coq, propositional resizing isn't definitional; judgemental equality doesn't hold. *)
+    apply path_ishprop.
   Qed.
 End Book_3_15.
 
