@@ -1,24 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-From Coq Require Setoids.Setoid Classes.CMorphisms
-  Classes.CRelationClasses.
+
+(* This file contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
+From Coq Require Init.Tactics.
+
 Require Import Basics WildCat.Core.
+From Coq Require
+  Setoids.Setoid Classes.CMorphisms
+  Classes.CRelationClasses.
 Import CMorphisms.ProperNotations.
-
-
-  (** Every Transitive crelation gives rise to a binary morphism on [impl],
-   contravariant in the first argument, covariant in the second. *)
-  
-(* #[export] Instance trans_contra_co_type_morphism {A : Type} *)
-(*   {R : Relation A} `(Transitive A R) *)
-(*   : CMorphisms.Proper (R --> R ++> CRelationClasses.arrow) R. *)
-(* Proof with auto. *)
-(*   intros x y X x0 y0 X0 X1. *)
-(*   transitivity x... *)
-(*   transitivity x0... *)
-(* Defined. *)
-Print CMorphisms.ProperProxy.
-(* #[export] Instance paths_proper_proxy {A : Type} {a : A} *)
-(*   : CMorphisms.ProperProxy (@paths A) a := reflexivity a. *)
 
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
@@ -71,7 +60,6 @@ Proof.
   exact (transitivity eq_ay (symmetry _ _ eq_xy)).
 Defined.
 
-Locate "_ --> _".
 Open Scope signatureT_scope.
 
 #[export] Instance symmetry_flip {A B: Type} {f : A -> B}
@@ -89,77 +77,30 @@ Defined.
   : CMorphisms.Proper (R ++> R' --> R'') f.
 Proof.
   intros a b Rab x y R'yx. apply H1; [ assumption | symmetry; assumption ].
-Defined.  
+Defined.
 
-Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-    a $== b -> b $== c -> a $== c.
-Proof.
-  intros A ? ? ? a b c eq_ab eq_bc.
-  rewrite eq_ab, <- eq_bc.
-Abort.
-Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-    a $== b -> b $== c -> a $== c.
-Proof.
-  intros A ? ? ? a b c eq_ab eq_bc.
-  symmetry.
-  rewrite eq_ab, <- eq_bc.
-  rewrite eq_bc.
-  rewrite <- eq_bc.
-Abort.
-
-#[export] Instance IsProper_fmap {A B: Type} `{Is1Cat A} `{Is1Cat A} (F : A -> B) `{Is1Functor _ _ F} (a b : A)
+#[export] Instance IsProper_fmap {A B: Type} `{Is1Cat A}
+  `{Is1Cat A} (F : A -> B) `{Is1Functor _ _ F} (a b : A)
   : CMorphisms.Proper (GpdHom ==> GpdHom) (@fmap _ _ _ _ F _ a b) := fun _ _ eq => fmap2 F eq.
 
-Goal forall (A B : Type) (F : A -> B) `{Is1Functor _ _ F} (a b : A) (f g : a $-> b), f $== g -> fmap F f $== fmap F g.
-Proof.
-  do 17 intro.
-  intro eq_fg.
-  rewrite eq_fg.
-  Abort.
-    Check @cat_comp.
-#[export] Instance IsProper_catcomp_g {A : Type} `{Is1Cat A} {a b c : A} (g : b $-> c)
-      : CMorphisms.Proper (GpdHom ==> GpdHom) (@cat_comp _ _ _ a b c g).
+#[export] Instance IsProper_catcomp_g {A : Type} `{Is1Cat A}
+  {a b c : A} (g : b $-> c)
+  : CMorphisms.Proper (GpdHom ==> GpdHom) (@cat_comp _ _ _ a b c g).
 Proof.
   intros f1 f2.
   apply (is0functor_postcomp a b c g ).
 Defined.
                   
-Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g : b $-> c), f1 $== f2 -> g $o f1 $== g $o f2.
-Proof.
-  do 11 intro.
-  intro eq.
-  rewrite <- eq.
-  rewrite eq.
-Abort.
-
-#[export] Instance IsProper_catcomp {A : Type} `{Is1Cat A} {a b c : A}
-  : CMorphisms.Proper (GpdHom ==> GpdHom ==> GpdHom) (@cat_comp _ _ _ a b c).
+#[export] Instance IsProper_catcomp {A : Type} `{Is1Cat A}
+  {a b c : A}
+  : CMorphisms.Proper (GpdHom ==> GpdHom ==> GpdHom)
+      (@cat_comp _ _ _ a b c).
 Proof.
   intros g1 g2 eq_g f1 f2 eq_f.
   rewrite eq_f.
   apply (is0functor_precomp a b c f2).
   exact eq_g.
 Defined.
-
-Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> g1 $o f $== g2 $o f.
-Proof.
-  do 11 intro.
-  intro eq.
-  rewrite <- eq.
-  rewrite eq.
-  rewrite <- eq.
-  Abort.
-
-Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> f1 $== f2 -> g1 $o f1 $== g2 $o f2.
-Proof.
-  do 12 intro.
-  intros eq_g eq_f.
-  rewrite eq_g.
-  rewrite <- eq_f.
-  rewrite eq_f.
-  rewrite <- eq_g.
-Abort.
-
 
 Require Import WildCat.Bifunctor WildCat.Prod.
 
@@ -247,8 +188,6 @@ Proposition nat_equiv_faithful {A B : Type}
   : Faithful F -> Faithful G.
 Proof.
   intros faithful_F x y f g eq_Gf_Gg.
-  Check cat_postcomp.
-  Print NatEquiv.
   apply (@fmap _ _ _ _ _ (is0functor_precomp _
        _ _ (cat_equiv_natequiv F G tau x))) in eq_Gf_Gg.
   cbn in eq_Gf_Gg.
@@ -264,6 +203,4 @@ Proof.
   apply IsMonic_HasRetraction in X.
   apply X in eq_Gf_Gg. assumption.
 Defined.
-  
-
 
