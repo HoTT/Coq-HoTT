@@ -28,8 +28,10 @@ Ltac nat_absurd_trivial :=
 #[export] Hint Extern 2 => nat_absurd_trivial : nat.
 
 (* This is defined so that it can be added to the nat auto hint database. *)
-Local Definition symmetric_paths_nat : forall n m : nat,  n = m -> m = n := @symmetric_paths nat.
-Local Definition transitive_paths_nat : forall n m k : nat, n = m -> m = k -> n = k := @transitive_paths nat.
+Local Definition symmetric_paths_nat :
+  forall n m : nat,  n = m -> m = n := @symmetric_paths nat.
+Local Definition transitive_paths_nat :
+  forall n m k : nat, n = m -> m = k -> n = k := @transitive_paths nat.
 
 #[export] Hint Resolve symmetric_paths_nat | 5 : nat.
 #[export] Hint Resolve transitive_paths_nat : nat.
@@ -37,7 +39,8 @@ Local Definition transitive_paths_nat : forall n m k : nat, n = m -> m = k -> n 
 #[export] Hint Resolve leq_trans : nat.
 #[export] Hint Resolve leq_antisym : nat.
 
-Proposition assoc_nat_add : forall n m k : nat, n + (m + k) = (n + m) + k.
+Proposition assoc_nat_add :
+  forall n m k : nat, n + (m + k) = (n + m) + k.
 Proof.
   intro n; induction n. 
   - reflexivity.
@@ -92,17 +95,22 @@ Proof.
   - left. exact (leq_S_n' _ _ l).
 Defined.
 
-Proposition diseq_implies_lt : forall n m : nat, n <> m -> sum (n < m) (n > m).
+Proposition diseq_implies_lt :
+  forall n m : nat, n <> m -> sum (n < m) (n > m).
 Proof.
   intros n m diseq.
   destruct (dec (n < m)) as [| a]; [ now left |].
-  right. destruct (@leq_dichot n m) as [n_leq_m | gt]; [ | assumption].
-  destruct n_leq_m; [ now contradiction diseq | contradiction a; now apply leq_S_n']. 
+  right. destruct (@leq_dichot n m) as [n_leq_m | gt];
+    [ | assumption].
+  destruct n_leq_m;
+    [ now contradiction diseq
+    | contradiction a; now apply leq_S_n'].
 Defined.
 
 Proposition lt_implies_diseq : forall n m : nat, n < m -> (n <> m).
 Proof.
-  intros n m ineq eq. rewrite eq in ineq. contradiction (not_lt_n_n m).
+  intros n m ineq eq. rewrite eq in ineq.
+  contradiction (not_lt_n_n m).
 Defined.
 
 #[export] Hint Resolve lt_implies_diseq : nat.
@@ -122,7 +130,8 @@ Defined.
 Ltac easy_eq_to_ineq :=
   match goal with
   | [ H : ?x = ?n    |- ?x <= ?n ] => destruct H; constructor
-  | [ H : ?x.+1 = ?n |- ?x <= ?n ] => rewrite <- H; constructor; constructor
+  | [ H : ?x.+1 = ?n |- ?x <= ?n ] => rewrite <- H; constructor;
+                                      constructor
   | [ H : ?x.+1 = ?n |- ?x < ?n  ] => rewrite <- H; apply leq_n
   | [ H : ?x.+2 = ?n |- ?x <= ?n ] => rewrite <- H; apply leq_S';
                                       apply leq_S'; apply leq_n
@@ -132,9 +141,11 @@ Ltac easy_eq_to_ineq :=
 
 #[export] Hint Extern 3 => easy_eq_to_ineq : nat.
   
-Proposition mixed_trans1 : forall n m k : nat, n <= m -> m < k -> n < k.
+Proposition mixed_trans1 :
+  forall n m k : nat, n <= m -> m < k -> n < k.
 Proof.
-  intros n m k l j. apply leq_S_n' in l. apply (@leq_trans (n.+1) (m.+1) k); trivial. 
+  intros n m k l j. apply leq_S_n' in l.
+  apply (@leq_trans (n.+1) (m.+1) k); trivial. 
 Defined.
 
 Ltac leq_trans_resolve :=
@@ -149,7 +160,8 @@ Ltac leq_trans_resolve :=
 
 #[export] Hint Extern 2 => leq_trans_resolve : nat.
 
-Proposition mixed_trans2 : forall n m k : nat, n < m -> m <= k -> n < k.
+Proposition mixed_trans2 :
+  forall n m k : nat, n < m -> m <= k -> n < k.
 Proof.
   intros n m k l j.  apply (@leq_trans (n.+1) m k); trivial. 
 Defined.
@@ -254,12 +266,14 @@ Proof.
   auto with nat.
 Defined.
 
-Definition nleqSm_dichot {n m : nat} : (n <= m.+1) -> sum (n <= m) (n = m.+1).
+Definition nleqSm_dichot {n m : nat} :
+  (n <= m.+1) -> sum (n <= m) (n = m.+1).
 Proof.
   revert m; induction n.
   - intro. left. exact (leq_0_n m).
   - induction m.
-    + intro l. apply leq_S_n, natineq0eq0 in l. right; apply ap; exact l.
+    + intro l. apply leq_S_n, natineq0eq0 in l.
+      right; apply ap; exact l.
     + intro l. apply leq_S_n, IHn in l; induction l as [a | b].
       * left. apply leq_S_n'; exact a.
       * right. apply ap; exact b.
@@ -283,7 +297,8 @@ Proof.
   intro n; induction n.
   - auto with nat.
   - intros m eq. destruct m.
-    + simpl in eq. apply symmetric_paths in eq. contradiction (not_eq_O_S n eq).
+    + simpl in eq. apply symmetric_paths in eq.
+      contradiction (not_eq_O_S n eq).
     + simpl in eq. apply leq_S_n', IHn, eq.
 Defined.
 
@@ -304,10 +319,12 @@ Proof.
     + simpl. intro ineq. apply leq_S_n in ineq. now apply IHn in ineq.
 Defined.
 
-Proposition natminuspluseq : forall n m : nat, n <= m -> (m - n) + n = m.
+Proposition natminuspluseq :
+  forall n m : nat, n <= m -> (m - n) + n = m.
 Proof.
   induction n.
-  - intros. destruct m; [reflexivity |]. simpl. apply (ap S), symmetric_paths, add_n_O.
+  - intros. destruct m; [reflexivity |]. simpl.
+    apply (ap S), symmetric_paths, add_n_O.
   - intros m l. induction m.
     + contradiction (not_leq_Sn_0 n).
     + simpl. apply leq_S_n, IHn in l.
@@ -319,13 +336,15 @@ Defined.
 Proposition natminusplusineq : forall n m : nat,  n <= n - m + m.
 Proof.
   intros n m.
-  destruct (@leq_dichot m n) as [ | g].
-  - destruct (symmetric_paths _ _ (natminuspluseq _ _ l)); constructor.
+  destruct (@leq_dichot m n) as [l | g].
+  - destruct (symmetric_paths _ _ (natminuspluseq _ _ l));
+      constructor.
   - apply n_lt_m_n_leq_m in g.
     now destruct (symmetric_paths _ _ (sub_leq_0 n m _)).
 Defined.
     
-Proposition natminuspluseq' : forall n m : nat, n <= m -> n + (m - n) = m.
+Proposition natminuspluseq' :
+  forall n m : nat, n <= m -> n + (m - n) = m.
 Proof.
   intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
   apply natminuspluseq. assumption.
@@ -346,41 +365,49 @@ Ltac leq_S_n_in_hypotheses :=
 
 #[export] Hint Extern 4 => leq_S_n_in_hypotheses : nat.
                                                      
-Proposition nataddpreservesleq { n m k : nat } : n <= m -> n + k <= m + k.
+Proposition nataddpreservesleq { n m k : nat } :
+  n <= m -> n + k <= m + k.
 Proof.
   intro l.
   induction k.
   - destruct (add_n_O n), (add_n_O m); exact l.
-  - destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k); apply leq_S_n'; exact IHk.
+  - destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k);
+      apply leq_S_n'; exact IHk.
 Defined.
 
 #[export] Hint Resolve nataddpreservesleq : nat.
 
-Proposition nataddpreservesleq' { n m k : nat } : n <= m -> k + n <= k + m.
+Proposition nataddpreservesleq' { n m k : nat } :
+  n <= m -> k + n <= k + m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k m)),
-    (symmetric_paths _ _ (nat_add_comm k n)). exact nataddpreservesleq.
+    (symmetric_paths _ _ (nat_add_comm k n)).
+  exact nataddpreservesleq.
 Defined.
 
 #[export] Hint Resolve nataddpreservesleq' : nat.
 
-Proposition nataddpreserveslt { n m k : nat } : n < m -> n + k < m + k.
+Proposition nataddpreserveslt { n m k : nat } :
+  n < m -> n + k < m + k.
 Proof.
   unfold "<".
   change (n + k).+1 with (n.+1 + k).
   generalize (n.+1). intros n' l.
   induction k.
   - destruct (add_n_O n'), (add_n_O m); exact l.
-  - destruct (nat_add_n_Sm n' k), (nat_add_n_Sm m k); apply leq_S_n'; exact IHk.
+  - destruct (nat_add_n_Sm n' k), (nat_add_n_Sm m k);
+      apply leq_S_n'; exact IHk.
 Defined.
 
-Proposition nataddpreserveslt' { n m k : nat } : n < m -> k + n < k + m.
+Proposition nataddpreserveslt' { n m k : nat } :
+  n < m -> k + n < k + m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m)); exact nataddpreserveslt.
 Defined.
 
-Proposition nataddreflectslt { n m k : nat } : n + k < m + k -> n < m.
+Proposition nataddreflectslt { n m k : nat } :
+  n + k < m + k -> n < m.
 Proof.
   induction k.
   - destruct (add_n_O n), (add_n_O m); trivial.
@@ -388,7 +415,8 @@ Proof.
     apply leq_S_n, IHk in l; exact l.
 Defined.
 
-Proposition nataddreflectsleq { n m k : nat } : n + k <= m + k -> n <= m.
+Proposition nataddreflectsleq { n m k : nat } :
+  n + k <= m + k -> n <= m.
 Proof.
   destruct n.
   - intros ?; apply leq_0_n.
@@ -396,19 +424,24 @@ Proof.
     now apply (@nataddreflectslt n m k).
 Defined.
 
-Proposition nataddreflectslt' { n m k : nat } : k + n < k + m -> n < m.
+Proposition nataddreflectslt' { n m k : nat } :
+  k + n < k + m -> n < m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m)); exact nataddreflectslt.
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectslt.
 Defined.
 
-Proposition nataddreflectsleq' { n m k : nat } : k + n <= k + m -> n <= m.
+Proposition nataddreflectsleq' { n m k : nat } :
+  k + n <= k + m -> n <= m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m)); exact nataddreflectsleq.
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectsleq.
 Defined.
 
-Proposition natsubreflectsleq { n m k : nat } : k <= m -> n - k <= m - k -> n <= m.
+Proposition natsubreflectsleq { n m k : nat } :
+  k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
   apply (@nataddpreservesleq _ _ k) in ineq2.
@@ -417,23 +450,32 @@ Proof.
   destruct (symmetric_paths _ _ (natminuspluseq k m ineq1)); easy.
 Defined.
 
-Proposition nataddsub_assoc_lemma {k m : nat} : (k <= m) -> m.+1 - k = (m - k).+1.
+Proposition nataddsub_assoc_lemma {k m : nat} :
+  (k <= m) -> m.+1 - k = (m - k).+1.
 Proof.
   revert m; induction k.
   - intros m l; simpl. destruct m; reflexivity.
   - induction m.
     + simpl; intro g; contradiction (not_leq_Sn_0 _ g).
-    + intro l; apply leq_S_n in l. change (m.+2 - k.+1) with (m.+1 - k).
+    + intro l; apply leq_S_n in l.
+      change (m.+2 - k.+1) with (m.+1 - k).
       change (m.+1 - k.+1) with (m - k).
       exact (IHk _ l).
 Defined.
 
-Proposition nataddsub_assoc (n : nat) {m k : nat} : (k <= m) -> n + (m - k) = n + m - k.
+Proposition nataddsub_assoc (n : nat) {m k : nat} :
+  (k <= m) -> n + (m - k) = n + m - k.
 Proof.
   revert m k. induction n.
   - reflexivity.
-  - intros m k l. change (n.+1 + (m - k)) with (n + (m - k)).+1; change (n.+1 + m) with (n +m).+1.
-    destruct k, m; [ reflexivity | reflexivity | contradiction (not_lt_n_0 k _) |].
+  - intros m k l.
+    change (n.+1 + (m - k)) with (n + (m - k)).+1;
+      change (n.+1 + m) with (n +m).+1.
+    destruct k, m;
+      [ reflexivity
+      | reflexivity
+      | contradiction (not_lt_n_0 k _)
+      | ].
     simpl "-". apply leq_S_n in l.
     destruct (symmetric_paths _ _ (nat_add_n_Sm n (m - k))).
     destruct  (nataddsub_assoc_lemma l).
@@ -442,7 +484,8 @@ Proof.
     assumption.
 Defined.
 
-Proposition nataddsub_comm (n m k : nat) : m <= n -> (n - m) + k = (n + k) - m.
+Proposition nataddsub_comm (n m k : nat) :
+  m <= n -> (n - m) + k = (n + k) - m.
 Proof.
   intro l.
   destruct (nat_add_comm k n).
@@ -450,7 +493,8 @@ Proof.
   apply nat_add_comm.
 Defined.
 
-Proposition nataddsub_comm_ineq_lemma (n m : nat) : n.+1 - m <= (n - m).+1.
+Proposition nataddsub_comm_ineq_lemma (n m : nat) :
+  n.+1 - m <= (n - m).+1.
 Proof.
   revert m.
   induction n.
@@ -460,7 +504,8 @@ Proof.
     + apply IHn.
 Defined.
 
-Proposition nataddsub_comm_ineq (n m k : nat) : (n + k) - m <= (n - m) + k.
+Proposition nataddsub_comm_ineq (n m k : nat) :
+  (n + k) - m <= (n - m) + k.
 Proof. 
   induction k.
   - destruct (add_n_O n), (add_n_O (n - m)); constructor.
@@ -472,15 +517,17 @@ Defined.
 
 Proposition nat_sub_add_ineq ( n m : nat) : n <= n - m + m.
 Proof.
-  destruct (@leq_dichot m n) as [ | gt].
+  destruct (@leq_dichot m n) as [l | gt].
   - destruct (symmetric_paths _ _ (nataddsub_comm _ _ m l)).
-    destruct (symmetric_paths _ _ (add_n_sub_n_eq n m)). apply leq_refl; done.
+    destruct (symmetric_paths _ _ (add_n_sub_n_eq n m)).
+    apply leq_refl; done.
   - apply n_lt_m_n_leq_m in gt.
     destruct (symmetric_paths _ _ (sub_leq_0 n m _)).
     assumption.
 Defined.
 
-Proposition i_lt_n_sum_m (n m : nat) : forall i, i < n - m -> m <= n.
+Proposition i_lt_n_sum_m (n m : nat) :
+  forall i, i < n - m -> m <= n.
 Proof.
   revert m. induction n.
   - intros m i l. simpl in l. contradiction (not_lt_n_0 _ _).
@@ -489,7 +536,8 @@ Proof.
     + apply leq_S_n'. simpl in l. apply (IHn m i l).
 Defined.
   
-Proposition nataddsub_assoc_implication (n : nat) {m k z : nat} : (k <= m) -> n + (m - k) = z -> n + m - k = z.
+Proposition nataddsub_assoc_implication (n : nat) {m k z : nat} :
+  (k <= m) -> n + (m - k) = z -> n + m - k = z.
 Proof.
   intro H.
   destruct (symmetric_paths _ _ (nataddsub_assoc n H)); done.
@@ -497,7 +545,8 @@ Defined.
 
 #[export] Hint Resolve nataddsub_assoc_implication : nat.
 
-Proposition nat_add_sub_eq (n : nat) {k: nat} : (k <= n) -> k + (n - k) = n.
+Proposition nat_add_sub_eq (n : nat) {k: nat} :
+  (k <= n) -> k + (n - k) = n.
 Proof.
   intro H.
   destruct (symmetric_paths _ _ (nataddsub_assoc k H));
@@ -546,7 +595,8 @@ Proof.
   destruct n; auto.
 Defined.
 
-Proposition leq_implies_pred_lt : forall i n k, (n > i) -> n <= k -> pred n < k.
+Proposition leq_implies_pred_lt :
+  forall i n k, (n > i) -> n <= k -> pred n < k.
 Proof.
   intros i n k ineq.
   destruct n.
@@ -568,7 +618,8 @@ Proof.
 Defined.
 #[export] Hint Resolve lt_implies_pred_geq : nat.
 
-Proposition j_geq_0_lt_implies_pred_geq : forall i j k,  i < j -> k.+1 <= j -> k <= pred j.
+Proposition j_geq_0_lt_implies_pred_geq :
+  forall i j k,  i < j -> k.+1 <= j -> k <= pred j.
 Proof.
   intros i j k l ineq.
   destruct j.
@@ -578,17 +629,20 @@ Defined.
 
 #[export] Hint Resolve lt_implies_pred_geq : nat.
 
-Proposition pred_gt_implies_lt : forall i j, i < pred j -> i.+1 < j.
+Proposition pred_gt_implies_lt :
+  forall i j, i < pred j -> i.+1 < j.
 Proof.
   intros i j ineq.
   assert (H := leq_S_n' _ _ ineq). assert (i < j) as X. {
-    apply (@mixed_trans2 _ (pred j) _); [assumption | apply predn_leq_n].
+    apply (@mixed_trans2 _ (pred j) _);
+      [assumption  | apply predn_leq_n].
   }
   destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.
   assumption.
 Defined.
 
-Proposition pred_preserves_lt {i n: nat} (p : i < n) : forall m, (n < m) -> (pred n < pred m).
+Proposition pred_preserves_lt {i n: nat} (p : i < n) :
+  forall m, (n < m) -> (pred n < pred m).
 Proof.
   intros m l.
   apply leq_S_n. destruct (symmetric_paths _ _ (S_predn n i _)).
@@ -597,11 +651,14 @@ Proof.
   assumption.
 Defined.
 
-Proposition natsubpreservesleq { n m k : nat } : n <= m -> n - k <= m - k.
+Proposition natsubpreservesleq { n m k : nat } :
+  n <= m -> n - k <= m - k.
 Proof.
   induction k.
-  - destruct (symmetric_paths _ _ (sub_n_0 n)), (symmetric_paths _ _ (sub_n_0 m)); done.
-  - intro l. change (k.+1) with (1 + k). destruct (nat_add_comm k 1).
+  - destruct (symmetric_paths _ _ (sub_n_0 n)),
+      (symmetric_paths _ _ (sub_n_0 m)); done.
+  - intro l. change (k.+1) with (1 + k).
+    destruct (nat_add_comm k 1).
     destruct (symmetric_paths _ _ (subsubadd n k 1)).
     destruct (symmetric_paths _ _ (subsubadd m k 1)).
     destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).
@@ -618,13 +675,15 @@ Proof.
   - intros; apply leq_0_n.
   - induction k.
     + apply leq_n.
-    + simpl; apply (@leq_trans _ n _); [ apply IHn | apply leq_S, leq_n].
+    + simpl; apply (@leq_trans _ n _);
+        [ apply IHn | apply leq_S, leq_n].
 Defined.
 
 #[export] Hint Resolve sub_less : nat.
 #[export] Hint Resolve leq_S_n' : nat.
 
-Proposition sub_less_strict { n k : nat } : 0 < n -> 0 < k -> n - k < n.
+Proposition sub_less_strict { n k : nat } :
+  0 < n -> 0 < k -> n - k < n.
 Proof.
   intros l l'.
   unfold "<".
@@ -633,7 +692,8 @@ Proof.
   simpl; apply leq_S_n', sub_less.
 Defined.
 
-Proposition natpmswap1 : forall k m n, n <= k -> k < n + m -> k - n < m.
+Proposition natpmswap1 :
+  forall k m n, n <= k -> k < n + m -> k - n < m.
 Proof.
   intros k m n l q.
   assert (q' : k - n + n < m + n) by
@@ -645,7 +705,8 @@ Defined.
 
 #[export] Hint Resolve natpmswap1 : nat.
 
-Proposition natpmswap2 : forall k m n, n <= k -> k - n <= m -> k <= n + m.
+Proposition natpmswap2 :
+  forall k m n, n <= k -> k - n <= m -> k <= n + m.
 Proof.
   intros k m n l q.
   apply (@nataddpreservesleq' (k - n) m n) in q.
@@ -655,7 +716,8 @@ Defined.
 
 #[export] Hint Resolve natpmswap2 : nat.
 
-Proposition natpmswap3 : forall k m n : nat, k <= n -> m <= n - k -> k + m <= n.
+Proposition natpmswap3 :
+  forall k m n : nat, k <= n -> m <= n - k -> k + m <= n.
 Proof.
   intros k m n ineq qe.
   apply (@nataddpreservesleq' m (n - k) k) in qe.
@@ -666,7 +728,8 @@ Defined.
 
 #[export] Hint Resolve natpmswap3 : nat.
 
-Proposition natpmswap4 : forall k m n, k - n < m -> k < n + m.
+Proposition natpmswap4 :
+  forall k m n, k - n < m -> k < n + m.
 Proof.
   intros k m n l.
   apply (@nataddpreserveslt (k - n) m n) in l.
@@ -676,18 +739,22 @@ Defined.
 
 #[export] Hint Resolve natpmswap4 : nat.
 
-Proposition n_leq_m_n_leq_plus_m_k : forall n m k, n <= m -> n <= m + k.
+Proposition n_leq_m_n_leq_plus_m_k :
+  forall n m k, n <= m -> n <= m + k.
 Proof.
   intros n m k; intro l; apply (leq_trans l); exact (n_leq_add_n_k m k).
 Defined.
 
-Proposition nat_add_bifunctor : forall n n' m m' : nat, n <= m -> n' <= m' -> n + n' <= m + m'.
+Proposition nat_add_bifunctor :
+  forall n n' m m' : nat, n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
   intro n; induction n.
-  - intros n' m m' l l'. simpl. apply (leq_trans l'). exact (n_leq_add_n_k' m' m).
+  - intros n' m m' l l'. simpl.
+    apply (leq_trans l'). exact (n_leq_add_n_k' m' m).
   - intros n' m; induction m.
     + intros. contradiction (not_leq_Sn_0 n).
-    + intros m' l l'. apply leq_S_n in l. simpl. apply leq_S_n', IHn.
+    + intros m' l l'. apply leq_S_n in l. simpl.
+      apply leq_S_n', IHn.
       * exact l.
       * exact l'.
 Defined.
@@ -723,7 +790,7 @@ Proof.
     - intros m l. contradiction (not_lt_n_0 m).
     - intros m l. apply leq_S_n in l.
       destruct l as [ | n].
-      + apply a; intros t L; now apply IHn.
+      + apply a; intros ? ?; now apply IHn.
       + now apply (IHn m), leq_S_n'.
   }
   intro n. apply (X (n.+1) n), (leq_n n.+1).
@@ -735,7 +802,8 @@ Local Unset Elimination Schemes.
 
 Inductive increasing_geq (n : nat) : nat -> Type :=
 | increasing_geq_n : increasing_geq n n
-| increasing_geq_S (m : nat) : increasing_geq n m.+1 -> increasing_geq n m.
+| increasing_geq_S (m : nat) : increasing_geq n m.+1 ->
+                               increasing_geq n m.
 
 Scheme increasing_geq_ind := Induction for increasing_geq Sort Type.
 Scheme increasing_geq_rec := Minimality for increasing_geq Sort Type.
@@ -743,7 +811,8 @@ Definition increasing_geq_rect := increasing_geq_rec.
 
 Local Set Elimination Schemes.
 
-Proposition increasing_geq_S_n (n m : nat) : increasing_geq n m -> increasing_geq n.+1 m.+1.
+Proposition increasing_geq_S_n (n m : nat) :
+  increasing_geq n m -> increasing_geq n.+1 m.+1.
 Proof.
   intro a.
   induction a.
@@ -760,15 +829,16 @@ Proof.
     + constructor; now assumption.
 Defined.
 
-Lemma increasing_geq_minus : forall n k : nat, increasing_geq n (n - k).
+Lemma increasing_geq_minus :
+  forall n k : nat, increasing_geq n (n - k).
 Proof.
   induction k.
   - destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.
   - destruct (@leq_dichot n k) as [l | g].
-    + destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)) in IHk. apply leq_S in l.
+    + destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)) in IHk.
+      apply leq_S in l.
       destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)). exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
-      Check subsubadd.
       destruct (symmetric_paths _ _ (subsubadd n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
       apply increasing_geq_S.
@@ -789,22 +859,26 @@ Defined.
 Lemma ineq_sub : forall n m : nat, n <= m -> m - (m - n) = n.
 Proof.
   intro n; induction n.
-  - intros. destruct (symmetric_paths _ _ (sub_n_0 m)), (symmetric_paths _ _ (sub_n_n m));
+  - intros. destruct (symmetric_paths _ _ (sub_n_0 m)),
+      (symmetric_paths _ _ (sub_n_n m));
       reflexivity.
-  - intros m ineq. change (m - n.+1) with (m - (1 + n)). (destruct (nat_add_comm n 1)).
+  - intros m ineq. change (m - n.+1) with (m - (1 + n)).
+    (destruct (nat_add_comm n 1)).
     destruct (symmetric_paths _ _ (subsubadd m n 1)). 
     destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
       destruct (symmetric_paths _ _ (sub_n_0 (pred (m - n)))).
     assert (0 < m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).
     assert (pred (m - n) < m) as sh by
-        ( unfold "<"; destruct (symmetric_paths _ _ (S_predn _ 0 _));
+        ( unfold "<";
+          destruct (symmetric_paths _ _ (S_predn _ 0 _));
           exact sub_less).
     destruct (symmetric_paths _ _ (ineq_sub' _ _ _)).
     destruct (symmetric_paths _ _ (S_predn _ 0 _)).
     apply (ap S), IHn, leq_S', ineq.
 Defined.                                 
   
-Proposition leq_equivalent : forall n m : nat, n <= m <-> increasing_geq m n.
+Proposition leq_equivalent :
+  forall n m : nat, n <= m <-> increasing_geq m n.
 Proof.
   split.
   - intro ineq. induction ineq.
@@ -820,7 +894,7 @@ Defined.
 Definition leq_wrapper {n m : nat} : n <= m -> n <= m.
 Proof.
   intro ineq.
-  destruct (@leq_dichot n m) as [| g].
+  destruct (@leq_dichot n m) as [l | g].
   - exact l.
   - contradiction (not_lt_n_n m (@mixed_trans2 _ _ _ g ineq)).
 Defined.
