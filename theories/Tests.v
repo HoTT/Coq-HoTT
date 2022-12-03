@@ -127,7 +127,6 @@ End PR_1382.
 
 Require Import WildCat.SetoidRewrite.
 Section SetoidRewriteTests.
-  Print HintDb typeclass_instances.
   Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
       a $== b -> b $== c -> a $== c.
   Proof.

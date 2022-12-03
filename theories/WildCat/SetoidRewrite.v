@@ -2,12 +2,18 @@
 
 (* This file contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
 From Coq Require Init.Tactics.
-
-Require Import Basics WildCat.Core.
-From Coq Require
-  Setoids.Setoid Classes.CMorphisms
+Require Import Basics.
+From Coq Require Setoids.Setoid Classes.CMorphisms
   Classes.CRelationClasses.
+Require Import WildCat.Core.
 Import CMorphisms.ProperNotations.
+
+(* From Coq Require Init.Tactics. *)
+(* Require Import Basics WildCat.Core. *)
+(* From Coq Require  *)
+(*   Setoids.Setoid Classes.CMorphisms *)
+(*   Classes.CRelationClasses. *)
+(* Import CMorphisms.ProperNotations. *)
 
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
@@ -104,6 +110,14 @@ Defined.
 
 Require Import WildCat.Bifunctor WildCat.Prod.
 
+#[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A} 
+  {R : Relation B} (F : A -> B)
+  `{CMorphisms.Proper _ (GpdHom ==> R) F}
+  : CMorphisms.Proper (Hom ==> R) F.
+Proof.
+  intros a b eq_ab; apply H2; exact eq_ab.
+Defined.
+
 #[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C)
@@ -116,7 +130,7 @@ Require Import WildCat.Bifunctor WildCat.Prod.
 Proof.
   nrapply Build_Is1Functor.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [eq_fg1 eq_fg2];
-      cbn in f1, f2, g1, g2, eq_fg1, eq_fg2; cbn.
+      cbn in f1, f2, g1, g2, eq_fg1, eq_fg2. cbn.
     rewrite eq_fg1, eq_fg2.
     reflexivity.
   - intros [a b]; cbn.
@@ -137,7 +151,11 @@ Proof.
     reflexivity.
 Defined.
 
+
+
+
 Require Import WildCat.NatTrans WildCat.Equiv.
+
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
  : CMorphisms.Proper
