@@ -8,13 +8,6 @@ From Coq Require Setoids.Setoid Classes.CMorphisms
 Require Import WildCat.Core.
 Import CMorphisms.ProperNotations.
 
-(* From Coq Require Init.Tactics. *)
-(* Require Import Basics WildCat.Core. *)
-(* From Coq Require  *)
-(*   Setoids.Setoid Classes.CMorphisms *)
-(*   Classes.CRelationClasses. *)
-(* Import CMorphisms.ProperNotations. *)
-
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
   : CMorphisms.ProperProxy R x := reflexivity x.
