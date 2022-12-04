@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import WildCat.Core WildCat.Opposite WildCat.Universe.
+Require Import WildCat.Core WildCat.Opposite WildCat.Universe WildCat.Prod.
 
 (** * Bifunctors between WildCats *)
 
@@ -56,4 +56,17 @@ Proof.
   refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).
   rapply fmap2.
   apply P.
+Defined.
+
+(** There are two possible ways to define this, which will only agree in the event that F is a bifunctor. *)
+#[export] Instance Is0Functor_uncurry_bifunctor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is1Cat C}
+  (F : A -> B -> C)
+  `{forall a, Is0Functor (F a), forall b, Is0Functor (flip F b)}
+  : Is0Functor (uncurry F).
+Proof.
+  nrapply Build_Is0Functor.
+  intros [a1 b1] [a2 b2] [f g]; cbn in f, g.
+  unfold uncurry; cbn.
+  exact ((fmap (flip F b2) f) $o (fmap (F a1) g)).
 Defined.

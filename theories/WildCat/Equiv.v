@@ -333,7 +333,7 @@ Defined.
 
 (** ** Pre/post-composition with equivalences *)
 
-(** Precompositon with a cat_equiv is an equivalence between the homs *)
+(** Precomposition with a cat_equiv is an equivalence between the homs *)
 Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
   {x y z : A} (f : x $<~> y)
   : (y $-> z) <~> (x $-> z).
@@ -357,7 +357,7 @@ Proof.
   apply cat_idr.
 Defined.
 
-(** Postcompositon with a cat_equiv is an equivalence between the homs *)
+(** Postcomposition with a cat_equiv is an equivalence between the homs *)
 Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
   {x y z : A} (f : y $<~> z)
   : (x $-> y) <~> (x $-> z).
@@ -422,4 +422,3 @@ Proof.
   refine (_ $@L _).
   exact ((tex z).2 _).
 Defined.
-

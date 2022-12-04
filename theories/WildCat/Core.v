@@ -47,6 +47,10 @@ Global Instance reflexive_GpdHom {A} `{Is0Gpd A}
   : Reflexive GpdHom
   := fun a => Id a.
 
+Global Instance reflexive_Hom {A} `{Is01Cat A}
+  : Reflexive Hom
+  := fun a => Id a.
+
 Definition gpd_comp {A} `{Is0Gpd A} {a b c : A}
   : (a $== b) -> (b $== c) -> (a $== c)
   := fun p q => q $o p.
@@ -56,10 +60,18 @@ Global Instance transitive_GpdHom {A} `{Is0Gpd A}
   : Transitive GpdHom
   := fun a b c f g => f $@ g.
 
+Global Instance transitive_Hom {A} `{Is01Cat A}
+  : Transitive Hom
+  := fun a b c f g => g $o f.
+
 Notation "p ^$" := (gpd_rev p).
 
 Global Instance symmetric_GpdHom {A} `{Is0Gpd A}
   : Symmetric GpdHom
+  := fun a b f => f^$.
+
+Global Instance symmetric_GpdHom' {A} `{Is0Gpd A}
+  : Symmetric Hom
   := fun a b f => f^$.
 
 Definition GpdHom_path {A} `{Is0Gpd A} {a b : A} (p : a = b)
@@ -126,6 +138,26 @@ Definition cat_prewhisker {A} `{Is1Cat A} {a b c : A}
   : f $o h $== g $o h
   := fmap (cat_precomp c h) p.
 Notation "p $@R h" := (cat_prewhisker p h).
+
+Definition Monic {A} `{Is1Cat A} {b c: A} (f : b $-> c)
+  := forall a (g h : a $-> b), f $o g $== f $o h -> g $== h.
+
+Definition Epic {A} `{Is1Cat A} {a b : A} (f : a $-> b)
+  := forall c (g h : b $-> c), g $o f $== h $o f -> g $== h.
+
+(** Section might be a clearer name but it's better to avoid confusion with Coq keywords. *)
+
+Record SectionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
+  {
+    comp_right_inverse : b $-> a;
+    is_section : f $o comp_right_inverse $== Id b
+  }.
+
+Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
+  {
+    comp_left_inverse : b $-> a;
+    is_retraction : comp_left_inverse $o f $== Id a
+  }.
 
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} := 
@@ -239,6 +271,10 @@ Arguments fmap_comp {A B
   isgraph_B is2graph_B is01cat_B is1cat_B}
   F {is0functor_F is1functor_F a b c} f g : rename.
 
+Class Faithful {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
+  faithful : forall (x y : A) (f g : x $-> y),
+      fmap F f $== fmap F g -> f $== g.
+
 (** Identity functor *)
 
 Section IdentityFunctor.
@@ -255,6 +291,10 @@ Section IdentityFunctor.
     by apply Build_Is1Functor.
   Defined.
 
+  #[export] Instance isFaithful_idmap : Faithful idmap.
+  Proof.
+    by unfold Faithful.
+  Defined.
 End IdentityFunctor.
 
 (** Constant functor *)
