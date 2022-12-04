@@ -8,6 +8,12 @@ Local Open Scope path_scope.
 
 Generalizable Variables A B C D f g n.
 
+Definition arrow@{u u0} (A : Type@{u}) (B : Type@{u0}) := A -> B.
+#[export] Instance IsReflexive_arrow : Reflexive arrow :=
+  fun _ => idmap.
+#[export] Instance IsTransitive_arrow : Transitive arrow :=
+  fun _ _ _ f g => compose g f.
+
 Section AssumeFunext.
 Context `{Funext}.
 
