@@ -17,6 +17,8 @@ Class IsBifunctor {A B C : Type} `{IsGraph A, IsGraph B, Is1Cat C}
 
 #[export] Existing Instance bifunctor_isfunctor_10.
 #[export] Existing Instance bifunctor_isfunctor_01.
+Arguments bifunctor_isbifunctor {A B C} {_ _ _ _ _ _}
+  F {_} {a0 a1} f {b0 b1} g.
 
 Definition bifunctor_hom {C : Type} `{IsGraph C}
   : C^op -> C -> Type := @Hom C _.
