@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(* This file contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
+(* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
 From Coq Require Init.Tactics.
 Require Import Basics.
 From Coq Require Setoids.Setoid Classes.CMorphisms
