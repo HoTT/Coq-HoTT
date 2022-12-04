@@ -41,7 +41,7 @@ Defined.
 Global Instance isbifunctor_hom {C : Type} `{Is1Cat_Strong C}
   : IsBifunctor (bifunctor_hom (C:=C)).
 Proof.
-  snrapply Build_IsBifunctor; try (typeclasses eauto).
+  srapply Build_IsBifunctor.
   intros ? ? f ? ? g x; cbn.
   unfold cat_precomp, cat_postcomp.
   symmetry; apply cat_assoc_strong.
@@ -63,7 +63,7 @@ Global Instance isbifunctor_compose {A B C D : Type}
   `{P : !IsBifunctor F}
   : IsBifunctor (fun a b => G (F a b)).
 Proof.
-  snrapply Build_IsBifunctor; try (typeclasses eauto).
+  srapply Build_IsBifunctor.
   intros ? ? f ? ? g; cbn.
   refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).
   rapply fmap2.
@@ -77,7 +77,7 @@ Defined.
   `{forall a, Is0Functor (F a), forall b, Is0Functor (flip F b)}
   : Is0Functor (uncurry F).
 Proof.
-  snrapply Build_Is0Functor.
+  srapply Build_Is0Functor.
   intros [a1 b1] [a2 b2] [f g]; cbn in f, g.
   unfold uncurry; cbn.
   exact ((fmap (flip F b2) f) $o (fmap (F a1) g)).

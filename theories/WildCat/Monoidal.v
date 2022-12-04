@@ -22,7 +22,7 @@ Section Monoidal.
   #[export] Instance Is0Functor_right_assoc
     : Is0Functor right_assoc'.
   Proof.
-    nrapply Build_Is0Functor.
+    srapply Build_Is0Functor.
     intros [[a1 b1] c1] [[a2 b2] c2] [[f g] h];
       cbn in f, g, h.
     exact (fmap11 tensor f (fmap11 tensor g h)).
@@ -30,7 +30,7 @@ Section Monoidal.
 
   #[export] Instance Is0Functor_left_assoc : Is0Functor left_assoc'.
   Proof.
-    nrapply Build_Is0Functor.
+    srapply Build_Is0Functor.
     intros [[a1 b1] c1] [[a2 b2] c2] [[f g] h];
       cbn in f, g, h.
     exact (fmap11 tensor (fmap11 tensor f g) h).
