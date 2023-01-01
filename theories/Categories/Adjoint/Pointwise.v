@@ -82,27 +82,25 @@ Section AdjointPointwise.
 
     Definition pointwise_l : pointwise (identity E) F -| pointwise (identity E) G.
     Proof.
-      Time (
-          (exists unit_l counit_l);
-          abstract (
-              path_natural_transformation;
-              intros;
-              destruct A;
-              simpl in *;
-                repeat match goal with
-                         | _ => progress simpl
-                         | _ => progress autorewrite with adjoint_pointwise
-                         | [ |- context[ap object_of (path_functor_uncurried ?F ?G (?HO; ?HM))] ]
-                           => rewrite (@path_functor_uncurried_fst _ _ _ F G HO HM)
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper_helper
-                         | [ H : _ |- _ ] => apply H
-                       end
-            )
+      exists unit_l counit_l;
+      abstract (
+          path_natural_transformation;
+          intros;
+          destruct A;
+          simpl in *;
+            repeat match goal with
+                      | _ => progress simpl
+                      | _ => progress autorewrite with adjoint_pointwise
+                      | [ |- context[ap object_of (path_functor_uncurried ?F ?G (?HO; ?HM))] ]
+                        => rewrite (@path_functor_uncurried_fst _ _ _ F G HO HM)
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper_helper
+                      | [ H : _ |- _ ] => apply H
+                    end
         ). (* 23.345 s *)
     Defined.
   End l.
@@ -160,28 +158,26 @@ Section AdjointPointwise.
 
     Definition pointwise_r : pointwise G (identity E) -| pointwise F (identity E).
     Proof.
-      Time (
-          (exists unit_r counit_r);
-          abstract (
-              path_natural_transformation;
-              intros;
-              destruct A;
-              simpl in *;
-                repeat match goal with
-                         | _ => reflexivity
-                         | _ => progress simpl
-                         | _ => progress autorewrite with adjoint_pointwise
-                         | [ |- context[ap object_of (path_functor_uncurried ?F ?G (?HO; ?HM))] ]
-                           => rewrite (@path_functor_uncurried_fst _ _ _ F G HO HM)
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper_helper
-                         | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper_helper
-                         | _ => rewrite <- composition_of; progress rewrite_hyp
-                       end
-            )
+      exists unit_r counit_r;
+      abstract (
+          path_natural_transformation;
+          intros;
+          destruct A;
+          simpl in *;
+            repeat match goal with
+                      | _ => reflexivity
+                      | _ => progress simpl
+                      | _ => progress autorewrite with adjoint_pointwise
+                      | [ |- context[ap object_of (path_functor_uncurried ?F ?G (?HO; ?HM))] ]
+                        => rewrite (@path_functor_uncurried_fst _ _ _ F G HO HM)
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.identity_of_helper_helper
+                      | _ => progress unfold Functor.Pointwise.Properties.composition_of_helper_helper
+                      | _ => rewrite <- composition_of; progress rewrite_hyp
+                    end
         ). (* 19.097 *)
     Defined.
   End r.
