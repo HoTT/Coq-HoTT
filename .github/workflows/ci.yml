@@ -162,8 +162,6 @@ jobs:
    # alectryon job
   doc-alectryon:
     needs: build
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -211,8 +209,6 @@ jobs:
   # dependency graph doc job
   doc-dep-graphs:
     needs: build
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
@@ -301,8 +297,6 @@ jobs:
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
   doc-coqdoc:
     needs: build
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
@@ -346,8 +340,6 @@ jobs:
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
   doc-proviola:
     needs: build
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
@@ -401,8 +393,6 @@ jobs:
   # This builds coqdoc, proviola and timing docs and uploads their artifacts
   doc-timing:
     needs: build
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
