@@ -1,0 +1,6 @@
+(coq.theory
+ (name HoTT.Contrib)
+ (package coq-hott)
+ (flags -noinit -indices-matter -color on)
+ (theories HoTT))
+
