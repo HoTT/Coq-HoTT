@@ -53,7 +53,6 @@ Definition GraphQuotient_rec_beta_gqglue {A R P}
   : ap (GraphQuotient_rec c g) (gqglue s) = g a b s.
 Proof.
   unfold GraphQuotient_rec.
-  Search ap apD.
   refine (cancelL _ _ _ _ ).
   refine ((apD_const _ _)^ @ _).
   rapply GraphQuotient_ind_beta_gqglue.
