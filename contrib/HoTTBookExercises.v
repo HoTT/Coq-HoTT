@@ -511,7 +511,6 @@ Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
 
 (* To create a function on the direct sum from functions on the summands, work
    by cases *)
-Check prod_rect.
 Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
   prod_rect (fun _ => A + B -> X) (fun f g => sum_rect (fun _ => X) f g).
 
