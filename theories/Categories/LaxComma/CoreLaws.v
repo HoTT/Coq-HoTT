@@ -197,7 +197,7 @@ Module Import LaxCommaCategory.
                       o associator_1 x21 x18 x10 o ((x29 : Category.Core.morphism _ _ _) oR x10)))
           o associator_1 x25 x23 x10 o ((x28 : Category.Core.morphism _ _ _) oR x10))%natural_transformation.
     Proof.
-      Time t. (* 18.647s *)
+      t. (* 18.647s *)
     Qed.
 
     Lemma associativity x1 x2 x3 x4
@@ -211,9 +211,9 @@ Module Import LaxCommaCategory.
                               (Category.Core.associativity _ _ _ _ _ _ _ _)
                               _).
       simpl.
-      Time apply associativity_helper.
-      - Time exact (p_composition_of_coherent_for_rewrite _ _ _ _ _ _ _ _).
-      - Time exact (p_composition_of_coherent_inverse_for_rewrite _ _ _ _ _ _ _ _).
+      apply associativity_helper.
+      - exact (p_composition_of_coherent_for_rewrite _ _ _ _ _ _ _ _).
+      - exact (p_composition_of_coherent_inverse_for_rewrite _ _ _ _ _ _ _ _).
     Defined.
 
     (** Ugh.  To construct the type of this lemma, the code is:
@@ -294,7 +294,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                 (x11 oL x8) o associator_1 x11 x7 x4 o ((x14 : Category.Core.morphism _ _ _) oR x4)) o
           (x18 ^-1 oR x4))%natural_transformation = x8.
     Proof.
-      Time t. (* 3.959 s *)
+      t. (* 3.959 s *)
     Qed.
 
     Lemma left_identity (s d : object) (m : morphism s d)
@@ -306,7 +306,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                               (Category.Core.left_identity _ _ _ _)
                               _).
       simpl.
-      Time refine left_identity_helper.
+      refine left_identity_helper.
       - exact (p_left_identity_of_coherent_for_rewrite _ _ _ _).
       - exact (p_left_identity_of_coherent_inverse_for_rewrite _ _ _ _).
     Defined.
@@ -390,7 +390,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                             ((x12 : Category.Core.morphism _ _ _) oR x4))) o associator_1 x7 x11 x4 o
                 ((x14 : Category.Core.morphism _ _ _) oR x4)) o (x18 ^-1 oR x4))%natural_transformation = x8.
     Proof.
-      Time t. (* 3.26 s *)
+      t. (* 3.26 s *)
     Qed.
 
     Lemma right_identity (s d : object) (m : morphism s d)
@@ -402,7 +402,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                               (Category.Core.right_identity _ _ _ _)
                               _).
       simpl.
-      Time refine right_identity_helper.
+      refine right_identity_helper.
       - exact (p_right_identity_of_coherent_for_rewrite _ _ _ _).
       - exact (p_right_identity_of_coherent_inverse_for_rewrite _ _ _ _).
     Defined.
