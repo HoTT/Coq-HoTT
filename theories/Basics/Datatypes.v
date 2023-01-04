@@ -20,6 +20,8 @@ Global Set Primitive Projections.
 Global Set Nonrecursive Elimination Schemes.
 Local Unset Elimination Schemes.
 
+Local Set Polymorphic Inductive Cumulativity.
+
 (** [option A] is the extension of [A] with an extra element [None] *)
 
 Inductive option (A : Type) : Type :=
@@ -35,7 +37,7 @@ Register option as core.option.type.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
-Cumulative Inductive sum@{i j} (A : Type@{i}) (B : Type@{j}) : Type@{max(i,j)} :=
+Inductive sum@{i j} (A : Type@{i}) (B : Type@{j}) : Type@{max(i,j)} :=
   | inl : A -> sum A B
   | inr : B -> sum A B.
 
@@ -52,7 +54,7 @@ Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
-Cumulative Record prod@{i j} (A : Type@{i}) (B : Type@{j}) : Type@{max(i,j)} := pair { fst : A ; snd : B }.
+Record prod@{i j} (A : Type@{i}) (B : Type@{j}) : Type@{max(i,j)} := pair { fst : A ; snd : B }.
 
 Scheme prod_rect := Induction for prod Sort Type.
 
