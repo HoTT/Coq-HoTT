@@ -2,7 +2,6 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
-Require Import Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

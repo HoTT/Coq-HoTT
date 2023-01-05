@@ -6,12 +6,9 @@
 Require Export HoTT.Algebra.Universal.Algebra.
 
 Require Import
-  HoTT.Basics
   HoTT.Types
-  HoTT.DProp
   HoTT.Spaces.Finite
-  HoTT.Spaces.Nat
-  HoTT.Spaces.Finite.FinSeq.
+  HoTT.Spaces.Nat.
 
 Local Open Scope Algebra_scope.
 Local Open Scope nat_scope.

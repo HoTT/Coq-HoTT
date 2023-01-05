@@ -3,9 +3,6 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.archimedean
-  HoTT.Classes.theory.groups
-  HoTT.Classes.theory.rationals
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.fields
   HoTT.Classes.orders.rings.
 

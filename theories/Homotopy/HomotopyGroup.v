@@ -1,10 +1,5 @@
-Require Import Basics.
-Require Import Types.
 Require Import Pointed.
 Require Import Algebra.AbGroups.
-Require Import Truncations.
-Require Import Spaces.Nat.
-Require Import Modalities.ReflectiveSubuniverse.
 Require Import WildCat.
 
 Local Open Scope nat_scope.

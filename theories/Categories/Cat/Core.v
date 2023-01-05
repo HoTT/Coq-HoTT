@@ -1,5 +1,5 @@
 (** * Cat, the precategory of strict categories *)
-Require Import Category.Core Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Category.Univalent Functor.Paths.
+Require Import Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Functor.Paths.
 Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
 
 Set Universe Polymorphism.

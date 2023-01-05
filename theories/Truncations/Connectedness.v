@@ -2,13 +2,11 @@
 (** * Connectedness *)
 Require Import Basics.
 Require Import Types.
-Require Import TruncType.
 
-Require Import HProp.
 Require Import Extensions.
 Require Import Factorization.
 Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
-Require Import Modalities.Descent Modalities.Separated.
+Require Import Modalities.Descent.
 Require Import Truncations.Core.
 
 Local Open Scope path_scope.

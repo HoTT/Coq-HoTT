@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Constant Factorization.
-Require Import Modalities.Modality HoTT.Truncations.
+Require Import Constant.
+Require Import HoTT.Truncations.
 Require Import Spaces.BAut.
 
 Local Open Scope trunc_scope.

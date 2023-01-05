@@ -1,4 +1,3 @@
-Require Import HoTT.Types.Universe.
 Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.abstract_algebra

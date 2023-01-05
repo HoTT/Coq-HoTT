@@ -1,4 +1,3 @@
-Require Import Basics Types HSet.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.

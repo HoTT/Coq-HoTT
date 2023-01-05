@@ -1,4 +1,4 @@
-From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra.
+From HoTT Require Import ExcludedMiddle abstract_algebra.
 From HoTT Require Import HIT.unique_choice.
 From HoTT Require Import Spaces.Card.
 

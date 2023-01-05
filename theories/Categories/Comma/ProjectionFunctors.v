@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.Core.
 Require Import Category.Dual Functor.Dual.
-Require Import Functor.Composition.Core Functor.Identity.
+Require Import Functor.Composition.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors NatCategory.
 Require Import FunctorCategory.Core.
 Require Import Cat.Core.
@@ -13,7 +13,7 @@ Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Require Import Comma.InducedFunctors Comma.Projection.
 Require ProductLaws ExponentialLaws.Law1.Functors ExponentialLaws.Law4.Functors.
-Require Import Types.Prod Types.Forall PathGroupoids HoTT.Tactics.
+Require Import Types.Forall PathGroupoids HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

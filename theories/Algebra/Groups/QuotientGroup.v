@@ -1,4 +1,3 @@
-Require Import HoTT.Basics HoTT.Types.
 Require Import Algebra.Congruence.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.

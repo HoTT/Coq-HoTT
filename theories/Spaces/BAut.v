@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import HoTT.Basics HoTT.Types HProp.
-Require Import Constant Factorization.
-Require Import Modalities.Modality HoTT.Truncations.
+Require Import HoTT.Basics HoTT.Types.
+Require Import Constant.
+Require Import HoTT.Truncations.
 Require Import ObjectClassifier Homotopy.ExactSequence Pointed.
 
 Local Open Scope type_scope.

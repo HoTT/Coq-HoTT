@@ -1,8 +1,6 @@
 (** The second isomorphism theorem [isomorphic_second_isomorphism]. *)
 
 Require Import
-  HoTT.Types.Sigma
-  HoTT.Types.Universe
   HoTT.HSet
   HoTT.HIT.quotient
   HoTT.Classes.interfaces.canonical_names

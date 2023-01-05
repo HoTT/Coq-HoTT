@@ -1,5 +1,5 @@
 (** * Identity adjunction [1 ⊣ 1] *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Category.Core.
 Require Import Functor.Identity NaturalTransformation.Identity.
 Require Import Adjoint.UnitCounit Adjoint.Core.
 

@@ -1,6 +1,5 @@
-Require Import Basics Types HProp HFiber HSet.
+Require Import Basics Types HSet.
 Require Import Truncations.
-Require Import Modalities.Descent.
 Require Import Modalities.Separated.
 Require Import Modalities.Identity.
 Require Import Limits.Pullback.

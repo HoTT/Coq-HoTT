@@ -1,12 +1,10 @@
 (* General results about arbitrary integer implementations. *)
 Require Import
-  HoTT.Types.Universe
   HoTT.Basics.Decidable.
 Require Import
  HoTT.Classes.theory.nat_distance
  HoTT.Classes.implementations.peano_naturals
  HoTT.Classes.interfaces.naturals
- HoTT.Classes.interfaces.abstract_algebra
  HoTT.Classes.interfaces.orders
  HoTT.Classes.implementations.natpair_integers
  HoTT.Classes.theory.rings

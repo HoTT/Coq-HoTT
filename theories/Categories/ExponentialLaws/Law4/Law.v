@@ -1,10 +1,9 @@
 (** * Law about currying *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Prod.Core.
-Require Import Functor.Paths NaturalTransformation.Paths.
+Require Import Category.Core Functor.Core.
+Require Import Functor.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import ExponentialLaws.Law4.Functors.
-Require Import Types.Prod HoTT.Tactics Types.Forall Basics.PathGroupoids ExponentialLaws.Tactics.
+Require Import ExponentialLaws.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

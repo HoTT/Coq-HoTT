@@ -1,5 +1,3 @@
-Require Import Basics.
-Require Import Types.
 Require Import Cubical.
 Require Import Pointed.
 Require Import Homotopy.HSpace.

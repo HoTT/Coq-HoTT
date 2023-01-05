@@ -7,8 +7,6 @@
 Require Export HoTT.Algebra.Universal.Algebra.
 
 Require Import
-  HoTT.Basics
-  HoTT.Types
   HoTT.HProp
   HoTT.Classes.interfaces.canonical_names
   HoTT.Algebra.Universal.Homomorphism.

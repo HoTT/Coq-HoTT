@@ -1,9 +1,7 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
-  HoTT.Classes.orders.maps
   HoTT.Classes.orders.semirings
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.lattices.
 
 Generalizable Variables K L f.

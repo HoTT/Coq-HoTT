@@ -1,5 +1,4 @@
-Require Import Basics Types.
-Require Import Spaces.Nat Spaces.Finite.
+Require Import Spaces.Finite.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.AbGroups.
 

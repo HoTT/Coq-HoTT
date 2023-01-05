@@ -1,6 +1,4 @@
-Require Import Basics Types.
 Require Import Groups.Group.
-Require Import Truncations.
 Require Import Colimits.Coeq.
 Require Import WildCat.
 

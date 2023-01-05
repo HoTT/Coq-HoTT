@@ -1,5 +1,5 @@
 (** * Exponential laws about the initial category *)
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity Functor.Composition.Core.
+Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors InitialTerminalCategory.NaturalTransformations.
 Require Import HoTT.Basics HoTT.Types.
 

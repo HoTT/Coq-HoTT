@@ -1,14 +1,10 @@
-Require Import Basics Basics.Utf8 Basics.Tactics.
-Require Import implementations.list.
-Require Import Category.Core Category.Prod Category.Morphisms.
-Require Import NatCategory.
-Require Import Functor.Core Functor.Identity Functor.Composition.Core Functor.Prod.Core
+Require Import Basics.Utf8.
+Require Import Category.Core Category.Morphisms.
+Require Import Functor.Core
         Functor.Utf8.
-Require Import NaturalTransformation.Core NaturalTransformation.Isomorphisms NaturalTransformation.Identity NaturalTransformation.Prod.
-Require Import NaturalTransformation.Composition.Core.
+Require Import NaturalTransformation.Core.
 Require Import FunctorCategory.Core FunctorCategory.Morphisms.
 Require Import ProductLaws.
-Require Import Cat.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

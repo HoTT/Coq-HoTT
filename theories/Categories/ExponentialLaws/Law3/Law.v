@@ -1,10 +1,10 @@
 (** * Laws about an exponential of a product and a product of exponentials *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Prod Functor.Prod.Functorial Functor.Prod.Universal.
-Require Import Functor.Paths NaturalTransformation.Paths.
+Require Import Category.Core Functor.Core.
+Require Import Functor.Prod.
+Require Import Functor.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import ExponentialLaws.Law3.Functors.
-Require Import Types.Prod HoTT.Tactics ExponentialLaws.Tactics.
+Require Import Types.Prod ExponentialLaws.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

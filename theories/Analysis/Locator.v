@@ -2,30 +2,21 @@ Require Import
         HoTT.Basics
         HoTT.DProp
         HoTT.BoundedSearch
-        HoTT.Types.Universe
-        HoTT.Types.Sum
-        HoTT.Types.Arrow
         HoTT.Spaces.Finite
         HoTT.ExcludedMiddle.
 
 Require Import
         HoTT.Classes.interfaces.abstract_algebra
         HoTT.Classes.interfaces.orders
-        HoTT.Classes.interfaces.integers
         HoTT.Classes.interfaces.rationals
-        HoTT.Classes.interfaces.naturals
         HoTT.Classes.interfaces.cauchy
         HoTT.Classes.interfaces.archimedean
         HoTT.Classes.interfaces.round
         HoTT.Classes.interfaces.naturals
         HoTT.Classes.implementations.peano_naturals
-        HoTT.Classes.orders.orders
         HoTT.Classes.orders.archimedean
-        HoTT.Classes.orders.rings
         HoTT.Classes.orders.dec_fields
-        HoTT.Classes.orders.semirings
         HoTT.Classes.orders.lattices
-        HoTT.Classes.theory.rings
         HoTT.Classes.theory.apartness
         HoTT.Classes.theory.rationals.
 

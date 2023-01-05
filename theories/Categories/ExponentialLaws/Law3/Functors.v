@@ -1,7 +1,6 @@
 (** * Functors between an exponential of a product and a product of exponentials *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Category.Prod.
 Require Import Functor.Prod Functor.Composition.Core NaturalTransformation.Composition.Laws NaturalTransformation.Composition.Core.
-Require Functor.Prod.Functorial.
 Require Import Types.Prod.
 
 Set Universe Polymorphism.

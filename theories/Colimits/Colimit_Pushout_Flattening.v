@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import Diagrams.Graph.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.DDiagram.
 Require Import Diagrams.Span.

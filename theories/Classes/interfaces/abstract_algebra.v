@@ -1,6 +1,5 @@
 Require Import Spaces.Nat.
 Require Export HoTT.Classes.interfaces.canonical_names.
-Require Import HProp.
 
 Local Set Polymorphic Inductive Cumulativity.
 

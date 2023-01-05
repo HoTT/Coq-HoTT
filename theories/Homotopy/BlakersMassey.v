@@ -1,10 +1,8 @@
-Require Import HoTT.Basics HoTT.Types HProp.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import Homotopy.Join.
-Require Import Modalities.ReflectiveSubuniverse.
 Require Import Truncations.
-Require Import NullHomotopy Extensions.
 
 (** * The Generalized Blakers-Massey Theorem *)
 

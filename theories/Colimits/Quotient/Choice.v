@@ -3,7 +3,6 @@ Require Import
   HoTT.Types
   HoTT.HSet
   HoTT.Truncations
-  HoTT.TruncType
   HoTT.Colimits.Quotient
   HoTT.Projective.
 

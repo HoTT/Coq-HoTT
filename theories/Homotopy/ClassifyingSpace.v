@@ -1,8 +1,7 @@
-Require Import Basics Types Pointed Cubical WildCat.
+Require Import Pointed Cubical WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
-Require Import Truncations.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.WhiteheadsPrinciple.
 

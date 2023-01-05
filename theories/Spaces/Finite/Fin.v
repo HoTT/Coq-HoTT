@@ -2,7 +2,6 @@
 Require Import Basics.
 Require Import Types.
 Require Import HSet.
-Require Import DProp.
 Require Import Spaces.Nat.
 Require Import Equiv.PathSplit.
 

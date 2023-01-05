@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp TruncType Extensions.
+Require Import Extensions.
 Require Import Modality Accessible Nullification Lex Topological.
 Require Import Colimits.Pushout Homotopy.Join.
 

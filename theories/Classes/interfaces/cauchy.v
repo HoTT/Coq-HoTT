@@ -3,10 +3,7 @@ From HoTT.Classes Require Import
      interfaces.rationals
      interfaces.orders
      implementations.peano_naturals
-     orders.rings
      orders.fields
-     orders.semirings
-     theory.rings
      theory.dec_fields
      theory.fields
      theory.rationals.

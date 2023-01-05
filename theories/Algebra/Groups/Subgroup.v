@@ -1,5 +1,5 @@
 
-Require Import Basics Types HProp HSet HFiber PathAny WildCat.
+Require Import HFiber WildCat.
 Require Import Algebra.Groups.Group TruncType.
 
 Local Open Scope mc_mult_scope.

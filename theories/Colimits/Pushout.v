@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types WildCat.
-Require Import HSet TruncType.
 Require Export Colimits.Coeq.
 Local Open Scope path_scope.
 

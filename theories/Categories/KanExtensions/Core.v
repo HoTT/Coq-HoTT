@@ -1,6 +1,6 @@
 (** * Kan Extensions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import ExponentialLaws.Law4.Functors FunctorCategory.Core.
+Require Import Category.Core Functor.Core.
+Require Import FunctorCategory.Core.
 Require Import Functor.Composition.Functorial.Core.
 Require Import UniversalProperties.
 

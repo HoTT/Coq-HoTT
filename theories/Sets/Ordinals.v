@@ -1,4 +1,4 @@
-From HoTT Require Import Basics TruncType ExcludedMiddle canonical_names abstract_algebra.
+From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import HIT.quotient.
 

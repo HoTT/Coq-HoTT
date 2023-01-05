@@ -1,19 +1,16 @@
 (** * The Yoneda Lemma *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod.
-Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
+Require Import Functor.Composition.Core.
 Require Import Category.Morphisms FunctorCategory.Morphisms.
 Require Import SetCategory.
 Require Import Functor.Attributes.
 Require Import Functor.Composition.Functorial.
 Require Import Functor.Identity.
-Require ExponentialLaws.Law4.Functors.
-Require ProductLaws.
 Require Import HomFunctor.
 Require Import FunctorCategory.Core.
 Require Import NaturalTransformation.Paths.
-Require Import HSet HoTT.Tactics.
+Require Import HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

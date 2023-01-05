@@ -1,7 +1,6 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.HProp HoTT.TruncType
-  HoTT.Types.Universe HoTT.Types.Prod.
+  HoTT.TruncType.
 
 (** Demonstrate the [HProp] is a (bounded) lattice w.r.t. the logical
 operations. This requires Univalence. *)

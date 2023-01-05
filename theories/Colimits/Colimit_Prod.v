@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import Diagrams.Graph.
 Require Import Diagrams.Diagram.
 Require Import Colimits.Colimit.
 Require Import Colimits.Colimit_Sigma.

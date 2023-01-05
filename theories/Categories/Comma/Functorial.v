@@ -1,17 +1,15 @@
 (** * Functoriality of the comma category construction *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import NaturalTransformation.Composition.Laws.
-Require Import InitialTerminalCategory.
 Require Import Functor.Paths.
-Require Functor.Identity NaturalTransformation.Identity.
 Require Import Category.Strict.
 Require Comma.Core.
 Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
-Require Import Trunc HoTT.Tactics PathGroupoids Types.Forall.
+Require Import HoTT.Tactics PathGroupoids Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

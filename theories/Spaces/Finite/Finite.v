@@ -2,12 +2,9 @@
 Require Import Basics.
 Require Import Types.
 Require Import HSet.
-Require Import HProp.
-Require Import DProp.
 Require Import Spaces.Nat.
 Require Import HFiber.
 Require Import Factorization.
-Require Import Equiv.PathSplit.
 Require Import Truncations.
 Require Import Colimits.Quotient.
 Require Import Projective.

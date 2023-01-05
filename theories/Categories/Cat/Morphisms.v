@@ -1,5 +1,5 @@
 (** * Morphisms in cat *)
-Require Import Category.Core Functor.Core FunctorCategory.Core FunctorCategory.Morphisms NaturalTransformation.Core.
+Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Core.
 Require Import Category.Morphisms.
 
 Set Universe Polymorphism.

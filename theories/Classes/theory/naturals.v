@@ -1,8 +1,6 @@
 Require Import
-  HoTT.Types.Universe
   HoTT.Basics.Decidable.
 Require Import
-  HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.theory.rings

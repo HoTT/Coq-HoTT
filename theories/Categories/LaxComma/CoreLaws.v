@@ -1,5 +1,4 @@
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Functor.Identity.
+Require Import Functor.Core NaturalTransformation.Core.
 Require Import Category.Strict.
 Require Import Functor.Composition.Core.
 Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
@@ -8,7 +7,7 @@ Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require LaxComma.CoreParts.
-Require Import Trunc HoTT.Tactics Types.Paths Types.Sigma.
+Require Import HoTT.Tactics.
 
 Import Functor.Identity.FunctorIdentityNotations.
 

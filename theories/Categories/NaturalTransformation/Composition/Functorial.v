@@ -1,5 +1,5 @@
 (** * Functoriality of composition of natural transformations *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Category.Core Functor.Core.
 Require Import FunctorCategory.Core Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 
 Set Universe Polymorphism.

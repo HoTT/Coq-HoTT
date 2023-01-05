@@ -1,14 +1,9 @@
 Require Import
-  HoTT.Types.Universe
-  HoTT.Basics.Decidable
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.integers
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.orders
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.implementations.natpair_integers
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.groups
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.dec_fields
@@ -16,7 +11,6 @@ Require Import
   HoTT.Classes.orders.sum
   HoTT.Classes.theory.rationals
   HoTT.Classes.orders.lattices
-  HoTT.Classes.theory.additional_operations
   HoTT.Classes.implementations.assume_rationals
   HoTT.Classes.tactics.ring_quote
   HoTT.Classes.tactics.ring_tac.

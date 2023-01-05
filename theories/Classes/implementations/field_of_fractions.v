@@ -1,11 +1,6 @@
-Require Import HoTT.HIT.quotient
-  HoTT.Basics.PathGroupoids
-  HoTT.Types.Universe
-  HoTT.Basics.Trunc
-  HoTT.Basics.Decidable.
+Require Import HoTT.HIT.quotient.
 Require Import 
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.dec_fields.
 
 Module Frac.

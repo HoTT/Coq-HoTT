@@ -1,7 +1,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Universe.
-Require Import HSet TruncType.
-Require Import HIT.epi HIT.unique_choice HoTT.Truncations.
+Require Import HSet.
+Require Import HIT.epi HIT.unique_choice.
 
 Local Open Scope path_scope.
 

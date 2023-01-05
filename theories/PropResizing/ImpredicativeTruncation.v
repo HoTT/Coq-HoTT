@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Impredicative truncations. *)
 
-Require Import HoTT.Basics HoTT.Types HProp.
+Require Import HoTT.Basics HoTT.Types.
 Require Import PropResizing.PropResizing.
 Local Open Scope path_scope.
 

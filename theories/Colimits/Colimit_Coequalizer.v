@@ -1,7 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import Diagrams.Graph.
-Require Import Diagrams.Diagram.
 Require Import Diagrams.ParallelPair.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.

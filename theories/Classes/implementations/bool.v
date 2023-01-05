@@ -1,6 +1,5 @@
 Require Import
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Types.Bool.
+  HoTT.Classes.interfaces.abstract_algebra.
 
 Global Instance join_bool : Join Bool := orb.
 Global Instance meet_bool : Meet Bool := andb.

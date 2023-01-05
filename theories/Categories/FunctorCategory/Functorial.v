@@ -1,5 +1,4 @@
 (** * Functoriality of functor category construction *)
-Require Import Basics.
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Pointwise.Core Functor.Pointwise.Properties Category.Dual Category.Prod Cat.Core ExponentialLaws.Law4.Functors.
 
 Set Universe Polymorphism.

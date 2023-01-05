@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import NaturalTransformation.Composition.Core.
 Require Import Functor.Composition.Core.
-Require Import Category.Morphisms FunctorCategory.Morphisms.
+Require Import Category.Morphisms.
 Require Import FunctorCategory.Core.
 Require Import NaturalTransformation.Paths.
 Require Import Basics.Tactics.

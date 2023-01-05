@@ -1,11 +1,8 @@
-Require Import HoTT.Types.Universe.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.naturals
-  HoTT.Classes.theory.rings
-  HoTT.Classes.implementations.peano_naturals.
+  HoTT.Classes.theory.rings.
 Require Export
   HoTT.Classes.orders.semirings.
 

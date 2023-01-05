@@ -1,5 +1,5 @@
 (** * Groupoid, the precategory of strict groupoid categories *)
-Require Import Category.Core Functor.Core Category.Strict.
+Require Import Functor.Core Category.Strict.
 Require Import Cat.Core.
 Require Import GroupoidCategory.Core.
 Require Import Functor.Paths.

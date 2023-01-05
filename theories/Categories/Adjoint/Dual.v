@@ -1,8 +1,7 @@
 (** * Opposite adjunction [F ⊣ G → Gᵒᵖ ⊣ Fᵒᵖ] *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
+Require Import Category.Core Functor.Core.
+Require Import Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Core.
-Require Import Functor.Identity Functor.Composition.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -3,7 +3,7 @@ Require Import Basics Types.
 Require Import SuccessorStructure.
 Require Import WildCat.
 Require Import Pointed.
-Require Import ReflectiveSubuniverse Modality Modalities.Identity Modalities.Descent.
+Require Import Modalities.Identity Modalities.Descent.
 Require Import Truncations.
 Require Import HFiber.
 Require Import ObjectClassifier.

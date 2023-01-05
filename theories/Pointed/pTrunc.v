@@ -1,6 +1,5 @@
 Require Import Basics Types WildCat.
 Require Import Pointed.Core.
-Require Import Pointed.pMap.
 Require Import Pointed.pEquiv.
 Require Import Pointed.Loops.
 Require Import Truncations.

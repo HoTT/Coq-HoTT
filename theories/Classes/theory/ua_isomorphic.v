@@ -4,9 +4,7 @@
 Require Export HoTT.Classes.theory.ua_homomorphism.
 
 Require Import
-  HoTT.Basics
   HoTT.Types
-  HoTT.HProp
   HoTT.Tactics.
 
 (** Two algebras [A B : Algebra σ] are isomorphic if there is an

@@ -1,5 +1,4 @@
 Require Import Basics Types Cubical.
-Require Import HProp HSet.
 Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.

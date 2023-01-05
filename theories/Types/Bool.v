@@ -2,7 +2,7 @@
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.
-Require Import Types.Prod Types.Equiv.
+Require Import Types.Equiv.
 
 Local Open Scope path_scope.
 

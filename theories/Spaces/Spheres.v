@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
-Require Import HProp NullHomotopy.
+Require Import NullHomotopy.
 Require Import Homotopy.Suspension.
 Require Import Pointed.
 Require Import Truncations.

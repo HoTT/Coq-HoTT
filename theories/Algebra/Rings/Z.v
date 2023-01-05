@@ -1,5 +1,3 @@
-Require Import Basics Types.
-Require Import Algebra.Groups.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.

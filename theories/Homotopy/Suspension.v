@@ -6,7 +6,7 @@ Require Import WildCat.
 Require Import Colimits.Pushout.
 Require Import NullHomotopy.
 Require Import Truncations.Core.
-Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
+Require Import Modalities.Modality.
 Require Import Extensions.
 
 (** * The suspension of a type *)

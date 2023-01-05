@@ -1,21 +1,14 @@
 (** * Lax Comma Category *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Functor.Core.
 Require Import Category.Dual.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Pseudofunctors.
 Require Import Cat.Core.
-Require Functor.Identity.
 Require Pseudofunctor.Identity.
 Require Import Category.Strict.
-Require Import Functor.Composition.Core.
-Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
-Require Import Category.Morphisms FunctorCategory.Core.
+Require Import NaturalTransformation.Paths.
 Require Import Pseudofunctor.Core.
-Require Import NaturalTransformation.Composition.Laws.
-Require Import FunctorCategory.Morphisms.
 Require LaxComma.CoreLaws.
-Require Import Trunc HoTT.Tactics Types.Paths Types.Sigma.
 Local Set Warnings Append "-notation-overridden".
-Require Import Basics.Notations.
 Local Set Warnings Append "notation-overridden".
 
 Import Functor.Identity.FunctorIdentityNotations.

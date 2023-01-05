@@ -1,5 +1,5 @@
 (** * Dependent Product Category *)
-Require Import Category.Core Category.Strict.
+Require Import Category.Strict.
 Require Import Types.Forall.
 
 Set Universe Polymorphism.

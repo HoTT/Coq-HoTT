@@ -1,4 +1,4 @@
-From HoTT Require Import Basics TruncType abstract_algebra.
+From HoTT Require Import TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Card.
 

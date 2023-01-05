@@ -1,10 +1,9 @@
 (** * Functoriality of the construction of adjunctions *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
+Require Import Category.Core Functor.Core.
 Require Import Category.Dual.
 Require Import FunctorCategory.Core.
 Require Import Category.Sigma.OnObjects Category.Prod.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.
+Require Import Adjoint.Core.
 Require Import Adjoint.Functorial.Parts Adjoint.Functorial.Laws.
 Require Import HoTT.Types.Prod.
 

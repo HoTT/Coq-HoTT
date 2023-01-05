@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types HProp.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions HoTT.Truncations.
-Require Import Modality Accessible Lex Nullification.
+Require Import Accessible Lex Nullification.
 
 Local Open Scope path_scope.
 
