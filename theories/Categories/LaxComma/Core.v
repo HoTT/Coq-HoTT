@@ -8,8 +8,6 @@ Require Import Category.Strict.
 Require Import NaturalTransformation.Paths.
 Require Import Pseudofunctor.Core.
 Require LaxComma.CoreLaws.
-Local Set Warnings Append "-notation-overridden".
-Local Set Warnings Append "notation-overridden".
 
 Import Functor.Identity.FunctorIdentityNotations.
 Import Pseudofunctor.Identity.PseudofunctorIdentityNotations.
