@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Basics Types.
-Require Import HProp.
 
 (** * H-Sets *)
 
