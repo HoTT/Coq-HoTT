@@ -1,5 +1,6 @@
 From Coq Require Init.Tactics.
-Require Import HoTT.
+From HoTT Require Import Basics Types DProp Pointed WildCat WildCat.SetoidRewrite
+     Homotopy.Suspension Tactics.EquivalenceInduction.
 
 Fail Check Type0 : Type0.
 Check Susp nat : Type0.
@@ -125,7 +126,6 @@ Module PR_1382.
 End PR_1382.
 
 
-Require Import WildCat.SetoidRewrite.
 Section SetoidRewriteTests.
   Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
       a $== b -> b $== c -> a $== c.

@@ -23,11 +23,10 @@
 
 *)
 
-From HoTT Require Import HoTT.
-From HoTT Require Import Spaces.Nat.
-From HoTT Require Import
-  Metatheory.Core
-  Metatheory.FunextVarieties.
+From HoTT Require Import Basics Types HProp HSet Projective
+     TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
+     BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
+     Metatheory.Core Metatheory.FunextVarieties.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.

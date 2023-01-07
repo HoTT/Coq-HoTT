@@ -12,6 +12,8 @@ Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
 Require Export WildCat.Bifunctor.
 
+(* If we Export WildCat.SetoidRewrite here, other files in the library don't build. *)
+
 (* Examples *)
 Require Export WildCat.Universe.
 Require Export WildCat.Paths.
