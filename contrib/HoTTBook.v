@@ -1081,7 +1081,7 @@ Definition Book_7_2_2 := @HoTT.HSet.ishset_hrel_subpaths.
 (* ================================================== thm:path-truncation *)
 (** Theorem 7.3.12 *)
 
-Definition Book_7_3_12 := @HoTT.Truncations.Core.equiv_path_Tr.
+Definition Book_7_3_12 := @HoTT.Truncations.SeparatedTrunc.equiv_path_Tr.
 
 (* ================================================== lem:truncation-le *)
 (** Lemma 7.3.15 *)
