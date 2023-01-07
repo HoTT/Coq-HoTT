@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
 
 Local Open Scope path_scope.
 

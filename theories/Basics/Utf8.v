@@ -1,5 +1,3 @@
-Require Export Basics.Notations.
-
 Reserved Notation "'∀'  x .. y , P"
   (at level 200, x binder, y binder, right associativity).
 Reserved Notation "'∃'  x .. y , P"

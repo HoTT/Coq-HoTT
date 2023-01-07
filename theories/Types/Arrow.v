@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
-Require Import HoTT.Basics.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable.
 Require Import Types.Forall.
 Local Open Scope path_scope.
 

@@ -1,6 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import HoTT.Basics Types.Prod Types.Forall.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Contractible Basics.Equivalences.
+Require Import Types.Prod Types.Forall.
 Require Export Tactics.BinderApply.
 
 (** * Extra tactics for homotopy type theory. *)

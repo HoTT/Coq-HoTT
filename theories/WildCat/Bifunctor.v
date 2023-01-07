@@ -1,4 +1,5 @@
-Require Import Basics Types.
+Require Import Basics.Overture Basics.Tactics.
+Require Import Types.Forall.
 Require Import WildCat.Core WildCat.Opposite WildCat.Universe WildCat.Prod.
 
 (** * Bifunctors between WildCats *)

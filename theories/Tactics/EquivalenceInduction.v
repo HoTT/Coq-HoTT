@@ -1,5 +1,6 @@
 (** * Equivalence induction *)
-Require Import HoTT.Basics HoTT.Types.
+Require Import Basics.Overture Basics.Equivalences Basics.Tactics.
+Require Import Types.Equiv Types.Prod Types.Forall Types.Sigma Types.Universe.
 
 (** We define typeclasses and tactics for doing equivalence induction. *)
 

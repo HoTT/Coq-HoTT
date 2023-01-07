@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about dependent products *)
 
-Require Import HoTT.Basics.
+Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
+               Basics.Tactics Basics.Trunc Basics.Contractible.
 
 Local Open Scope path_scope.
 

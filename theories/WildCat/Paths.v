@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import Basics.Overture.
 Require Import WildCat.Core.
 
 (** * Path groupoids as wild categories *)

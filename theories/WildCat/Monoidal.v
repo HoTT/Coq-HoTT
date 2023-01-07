@@ -1,5 +1,5 @@
-Require Import Basics Types.
-
+Require Import Basics.Utf8 Basics.Overture Basics.Tactics.
+Require Import Types.Forall.
 Require Import WildCat.Core WildCat.Prod WildCat.Bifunctor
   WildCat.Equiv WildCat.NatTrans.
 
