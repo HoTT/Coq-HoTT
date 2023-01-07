@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Constant.
-Require Import HoTT.Truncations.
+Require Import Truncations.Core Modalities.Modality.
 Require Import PathAny.
 
 Local Open Scope nat_scope.

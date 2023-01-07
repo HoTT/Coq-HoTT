@@ -4,7 +4,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import TruncType HProp.
-Require Import HoTT.Truncations.
+Require Import Truncations.Core Modalities.ReflectiveSubuniverse.
 
 Local Open Scope path_scope.
 
