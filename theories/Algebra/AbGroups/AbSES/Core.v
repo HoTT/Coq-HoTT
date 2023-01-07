@@ -1,4 +1,5 @@
 Require Import HSet WildCat.
+Require Import Groups.Kernel Groups.Image Groups.QuotientGroup Groups.ShortExactSequence.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import Homotopy.ExactSequence Pointed.
 

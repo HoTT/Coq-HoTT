@@ -1,4 +1,6 @@
-Require Export Algebra.Groups.
+Require Export Algebra.Groups.Group.
+Require Export Algebra.Groups.Subgroup.
+Require Import Algebra.Groups.QuotientGroup.
 Require Import WildCat.
 
 Local Set Polymorphic Inductive Cumulativity.
