@@ -51,6 +51,7 @@ Defined.
 Global Instance isbifunctor_abses' `{Univalence}
   : IsBifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
+  eapply Build_IsBifunctor.
   intros ? ? g ? ? f E; cbn.
   apply abses_pushout_pullback_reorder.
 Defined.

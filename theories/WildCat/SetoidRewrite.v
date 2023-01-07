@@ -2,11 +2,12 @@
 
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
 From Coq Require Init.Tactics.
-Require Import Basics.
+Require Import Basics Types.Forall.
 From Coq Require Setoids.Setoid Classes.CMorphisms
   Classes.CRelationClasses.
-Require Import WildCat.Core.
 Import CMorphisms.ProperNotations.
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod
+  WildCat.NatTrans WildCat.Equiv.
 
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
@@ -101,7 +102,7 @@ Proof.
   exact eq_g.
 Defined.
 
-Require Import WildCat.Bifunctor WildCat.Prod.
+
 
 #[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A} 
   {R : Relation B} (F : A -> B)
@@ -111,14 +112,13 @@ Proof.
   intros a b eq_ab; apply H2; exact eq_ab.
 Defined.
 
+
 #[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C)
-  `{forall a, Is0Functor (F a)}
-  `{forall a, Is1Functor (F a)} 
-  `{forall b, Is0Functor (Forall.flip F b)}
-  `{forall b, Is1Functor (Forall.flip F b)}  
-  `{@IsBifunctor A B C _ _ _ _ _ _ F _ _} 
+  `{!IsBifunctor F}
+  `{forall a, Is1Functor (F a)}
+  `{forall b, Is1Functor (flip F b)}
   : Is1Functor (uncurry F).
 Proof.
   nrapply Build_Is1Functor.
@@ -139,7 +139,7 @@ Proof.
     rewrite (fmap_comp _).
     rewrite cat_assoc.
     rewrite <- (cat_assoc _ (fmap (F a1) g2)).
-    rewrite <- (isbifunctor F f1 g2).
+    rewrite <- (bifunctor_isbifunctor F f1 g2).
     rewrite ! cat_assoc.
     reflexivity.
 Defined.
@@ -147,7 +147,7 @@ Defined.
 
 
 
-Require Import WildCat.NatTrans WildCat.Equiv.
+
 
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
@@ -214,4 +214,3 @@ Proof.
   apply IsMonic_HasRetraction in X.
   apply X in eq_Gf_Gg. assumption.
 Defined.
-
