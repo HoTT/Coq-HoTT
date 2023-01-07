@@ -1,7 +1,6 @@
 Require Import Basics Types HSet.
-Require Import Truncations.
-Require Import Modalities.Separated.
-Require Import Modalities.Identity.
+Require Import Truncations.Core Truncations.SeparatedTrunc.
+Require Import Modalities.Modality Modalities.Separated Modalities.Identity.
 Require Import Limits.Pullback.
 
 
