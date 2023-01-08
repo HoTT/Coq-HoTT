@@ -1,14 +1,12 @@
 (** * Pseudofunctors from initial and terminal categories *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Identity Functor.Composition.Core.
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
+Require Import Category.Core Functor.Core.
+Require Import Functor.Identity.
 Require Import Pseudofunctor.Core.
 Require Import InitialTerminalCategory.Core.
 Require Import FunctorCategory.Morphisms.
-Require Import Category.Morphisms.
 Require Import NaturalTransformation.Paths.
 Require Import NatCategory.
-Require Import Contractible PathGroupoids.
+Require Import PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

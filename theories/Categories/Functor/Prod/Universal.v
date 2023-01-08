@@ -1,5 +1,5 @@
 (** * Universal properties of product categories *)
-Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition.Core Functor.Prod.Core.
+Require Import Category.Core Functor.Core Category.Prod Functor.Composition.Core Functor.Prod.Core.
 Require Import Functor.Paths.
 Require Import Types.Prod HoTT.Tactics Types.Forall Types.Sigma.
 Require Import Basics.Tactics.

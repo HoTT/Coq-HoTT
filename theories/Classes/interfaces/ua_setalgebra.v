@@ -3,7 +3,6 @@
 
 Require Export HoTT.Classes.interfaces.ua_algebra.
 
-Require Import HoTT.Basics.Equivalences.
 
 Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
   { algebra_setalgebra : Algebra σ

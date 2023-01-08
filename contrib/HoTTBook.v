@@ -60,12 +60,9 @@
 From HoTT Require Import HoTT.
 From HoTT Require Categories.
 From HoTT Require Import
-  Metatheory.Core
   Metatheory.IntervalImpliesFunext
   Metatheory.UnivalenceImpliesFunext.
 From HoTT.Classes Require
-  interfaces.abstract_algebra
-  interfaces.orders
   theory.premetric.
 
 

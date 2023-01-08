@@ -3,8 +3,7 @@ Require Import
   HoTT.Types
   HoTT.HSet
   HoTT.Spaces.Nat
-  HoTT.Spaces.Finite.Fin
-  HoTT.DProp.
+  HoTT.Spaces.Finite.Fin.
 
 Local Open Scope nat_scope.
 

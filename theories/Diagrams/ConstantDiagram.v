@@ -1,5 +1,4 @@
 Require Import Basics.
-Require Import Types.
 Require Import Cone.
 Require Import Cocone.
 Require Import Diagram.

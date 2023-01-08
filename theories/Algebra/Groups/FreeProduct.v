@@ -1,6 +1,4 @@
-Require Import Basics Types.
 Require Import Cubical.
-Require Import Colimits.Coeq.
 Require Import Spaces.List.
 Require Import Colimits.Pushout.
 Require Import Algebra.Groups.Group.

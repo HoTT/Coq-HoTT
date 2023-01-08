@@ -1,11 +1,9 @@
 Require Import
-  HoTT.Basics
   HoTT.Types
   HoTT.Categories.Category.Core
   HoTT.Categories.Category.Univalent
   HoTT.Classes.theory.ua_isomorphic.
 
-Require HoTT.Categories.Category.Morphisms.
 
 Import Morphisms.CategoryMorphismsNotations isomorphic_notations.
 

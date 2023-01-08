@@ -4,7 +4,6 @@
 Require Import
   Basics.Overture
   Basics.PathGroupoids
-  Basics.Notations
   Basics.Contractible
   Basics.Tactics.
 Local Open Scope path_scope.

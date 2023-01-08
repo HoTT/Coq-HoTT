@@ -1,6 +1,6 @@
 (** * Notions of Structure *)
 Require Import Category.Core.
-Require Import HoTT.Basics HoTT.Types HProp HSet Trunc.
+Require Import HoTT.Basics HoTT.Types HSet.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

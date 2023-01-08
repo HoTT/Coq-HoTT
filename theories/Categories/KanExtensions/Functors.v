@@ -1,5 +1,5 @@
 (** * Kan extensions assemble into functors *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Category.Core Functor.Core.
 Require Import KanExtensions.Core.
 Require Import Adjoint.UniversalMorphisms.Core.
 Require Import FunctorCategory.Core.

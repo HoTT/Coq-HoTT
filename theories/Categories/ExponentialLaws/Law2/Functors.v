@@ -1,6 +1,5 @@
 (** * Exponential functors between products and sums in exponents *)
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Category.Sum Category.Prod Functor.Sum Functor.Prod.Core NaturalTransformation.Sum Functor.Pointwise.Core NaturalTransformation.Paths.
-Require Import InitialTerminalCategory.Core.
+Require Import Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core Category.Sum Category.Prod Functor.Sum Functor.Prod.Core NaturalTransformation.Sum Functor.Pointwise.Core NaturalTransformation.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

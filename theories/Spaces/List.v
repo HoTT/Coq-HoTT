@@ -1,4 +1,4 @@
-Require Import Basics Types.
+Require Import Basics.
 
 Local Open Scope list_scope.
 

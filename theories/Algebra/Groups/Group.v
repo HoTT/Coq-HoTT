@@ -1,11 +1,9 @@
-Require Import Basics Types.
 Require Import HProp HFiber HSet.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
-Require Basics.Utf8.
 
 Local Set Polymorphic Inductive Cumulativity.
 

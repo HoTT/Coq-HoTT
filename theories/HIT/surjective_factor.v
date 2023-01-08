@@ -1,8 +1,7 @@
 Require Import
         HoTT.Types
         HoTT.Basics
-        HoTT.Truncations
-        HoTT.HIT.unique_choice.
+        HoTT.Truncations.
 
 (** Definition by factoring through a surjection. *)
 

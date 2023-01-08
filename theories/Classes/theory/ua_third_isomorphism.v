@@ -1,7 +1,6 @@
 (** This file proves the third isomorphism theorem,
     [isomorphic_third_isomorphism]. *)
 Require Import
-  HoTT.Types.Universe
   HoTT.HIT.quotient
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.theory.ua_quotient_algebra

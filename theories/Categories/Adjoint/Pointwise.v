@@ -1,7 +1,6 @@
 (** * Pointwise Adjunctions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Identity.
-Require Import Category.Morphisms.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions.
 Require Import Functor.Pointwise.Core.
@@ -10,10 +9,9 @@ Require Functor.Pointwise.Properties.
 Require Import Category.Morphisms FunctorCategory.Morphisms.
 Require Import FunctorCategory.Core.
 Require NaturalTransformation.Identity.
-Require NaturalTransformation.Composition.Laws.
 Import NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
 Require Import NaturalTransformation.Paths Functor.Paths.
-Require Import Basics.PathGroupoids HProp Types.Forall HoTT.Tactics Types.Arrow.
+Require Import Basics.PathGroupoids HoTT.Tactics Types.Arrow.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

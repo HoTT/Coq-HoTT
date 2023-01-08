@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types HProp.
-Require Import Modalities.Modality HoTT.Truncations.
+Require Import Basics Types.
+Require Import HoTT.Truncations.
 Require Import Spaces.BAut Spaces.BAut.Rigid.
 Require Import ExcludedMiddle.
 

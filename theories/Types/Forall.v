@@ -2,7 +2,6 @@
 (** * Theorems about dependent products *)
 
 Require Import HoTT.Basics.
-Require Import Types.Paths.
 
 Local Open Scope path_scope.
 

@@ -1,9 +1,8 @@
-Require Import Basics Types WildCat.
+Require Import WildCat.
 Require Import Pointed.
 Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
-Require Import Truncations.
 
 (** The fundamental group of the 1-sphere *)
 

@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat.
+Require Import WildCat.
 Require Import Spaces.Nat.
 Require Export Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.

@@ -1,8 +1,7 @@
 (** * Coercions between the various (co)unit definitions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Dual.
-Require Import Functor.Composition.Core Functor.Identity NaturalTransformation.Composition.Core.
+Require Import Functor.Composition.Core Functor.Identity.
 Require Import HoTT.Tactics Basics.Trunc Types.Sigma.
 Require Import Basics.Tactics.
 

@@ -1,6 +1,6 @@
 (** * Grothendieck Construction of a functor to Cat *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Pseudofunctor.Core Pseudofunctor.FromFunctor.
+Require Import Category.Core Functor.Core.
+Require Import Pseudofunctor.FromFunctor.
 Require Import Cat.Core.
 Require Import Grothendieck.PseudofunctorToCat.
 

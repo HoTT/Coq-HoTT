@@ -1,5 +1,4 @@
-Require Import Basics Types.
-Require Import Spaces.Nat.
+Require Import Basics.
 Require Import Spaces.Int.
 Require Import Spaces.Finite.
 

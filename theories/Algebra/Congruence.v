@@ -1,4 +1,3 @@
-Require Import Basics.
 Require Import Classes.interfaces.abstract_algebra.
 
 (* We say that a relation is a congruence if it respects the operation.

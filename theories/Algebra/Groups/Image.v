@@ -1,10 +1,7 @@
-Require Import Basics Types.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
-Require Import Truncations.
-Require Import Factorization.
-Require Import HFiber HSet.
+Require Import HSet.
 
 (** Image of group homomorphisms *)
 

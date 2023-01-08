@@ -1,12 +1,9 @@
-Require Import HoTT.Basics HoTT.Types.Bool.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.theory.additional_operations
   HoTT.Classes.tactics.ring_quote
   HoTT.Classes.tactics.ring_pol
   HoTT.Classes.theory.rings
   HoTT.Classes.orders.sum
-  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers.
 

@@ -8,7 +8,7 @@
 - generally, be extra-careful keeping this file well-organised and documented.
 - any time you see a chance to move lemmas from this file to a better home, do so without hesitation! *)
 
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Types.
 Local Open Scope path_scope.
 
 

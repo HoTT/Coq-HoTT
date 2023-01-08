@@ -4,9 +4,6 @@
     identification theorem [id_first_isomorphism] follows. *)
 
 Require Import
-  HoTT.Types.Forall
-  HoTT.Types.Sigma
-  HoTT.Types.Universe
   HoTT.HSet
   HoTT.HIT.quotient
   HoTT.Classes.interfaces.canonical_names

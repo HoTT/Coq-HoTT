@@ -1,6 +1,5 @@
 (** * Representable profunctors *)
-Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod.Core SetCategory.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition.Core Functor.Identity.
-Require Import HSet.
+Require Import Category.Core Functor.Core Functor.Prod.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition.Core Functor.Identity.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

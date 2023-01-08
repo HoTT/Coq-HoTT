@@ -1,7 +1,4 @@
 Require Import
-  HoTT.Types.Universe
-  HoTT.Types.Sigma
-  HoTT.Types.Prod
   HoTT.Types.Arrow.
 Require Export
   HoTT.Classes.interfaces.abstract_algebra.

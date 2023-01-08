@@ -1,14 +1,10 @@
 Require Import
-  HoTT.Types.Universe
-  HoTT.Basics.Decidable
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.implementations.natpair_integers
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.naturals
-  HoTT.Classes.interfaces.integers
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.orders
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.groups
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.dec_fields

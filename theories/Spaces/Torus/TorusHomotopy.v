@@ -1,9 +1,8 @@
-Require Import Basics Types Pointed WildCat.
+Require Import Pointed WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Pi1S1.
 Require Import Spaces.Int Spaces.Circle.
-Require Import Truncations.
 
 Require Import Spaces.Torus.Torus.
 Require Import Spaces.Torus.TorusEquivCircles.

@@ -1,17 +1,9 @@
 Require Import HoTT.HIT.quotient
-  HoTT.Basics.PathGroupoids
-  HoTT.Types.Universe
-  HoTT.Basics.Trunc
-  HoTT.Basics.Decidable
-  HoTT.Types.Prod
-  HoTT.Types.Arrow
-  HoTT.Types.Sum
   HoTT.TruncType.
 Require Import
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.theory.rings
   HoTT.Classes.theory.groups
@@ -19,7 +11,6 @@ Require Import
   HoTT.Classes.orders.sum
   HoTT.Classes.orders.rings
   HoTT.Classes.tactics.ring_tac
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.theory.naturals.
 
 Generalizable Variables B.

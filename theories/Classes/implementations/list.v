@@ -1,6 +1,5 @@
 Require Import
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Types.Unit HoTT.Types.Prod.
+  HoTT.Classes.interfaces.abstract_algebra.
 
 Generalizable Variables A B C.
 

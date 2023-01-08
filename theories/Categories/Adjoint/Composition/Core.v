@@ -1,10 +1,9 @@
 (** * Composition of adjunctions [F' ⊣ G' → F ⊣ G → (F' ∘ F) ⊣ (G ∘ G')] *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
-Require Import Functor.Identity NaturalTransformation.Identity.
+Require Import Functor.Identity.
 Require NaturalTransformation.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Core.
-Require Import Category.Morphisms.
 Require Import HoTT.Tactics.
 Require Import Basics.Tactics.
 

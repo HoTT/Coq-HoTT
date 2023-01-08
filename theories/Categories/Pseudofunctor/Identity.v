@@ -1,6 +1,6 @@
 (** * Identity pseudofunctor *)
 Require Import FunctorCategory.Morphisms.
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Category.Core Functor.Core.
 Require Import NaturalTransformation.Isomorphisms.
 Require Import NaturalTransformation.Paths.
 Require Import Cat.Core.

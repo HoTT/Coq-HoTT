@@ -1,4 +1,3 @@
-Require Import HoTT.Basics.Decidable HoTT.Basics.Trunc.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders

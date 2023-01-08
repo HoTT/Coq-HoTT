@@ -1,5 +1,5 @@
 (** * Groupoids *)
-Require Import Category.Core Category.Morphisms Category.Strict.
+Require Import Category.Morphisms Category.Strict.
 Require Import Trunc Types.Forall PathGroupoids Basics.Tactics.
 
 Set Universe Polymorphism.

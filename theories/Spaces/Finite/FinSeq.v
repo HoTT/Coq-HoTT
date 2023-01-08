@@ -2,7 +2,6 @@ Require Import
   HoTT.Basics
   HoTT.Types
   HoTT.HSet
-  HoTT.DProp
   HoTT.Spaces.Finite.Fin
   HoTT.Spaces.Finite.FinInduction
   HoTT.Spaces.Nat.

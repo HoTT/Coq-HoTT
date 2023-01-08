@@ -1,8 +1,6 @@
-Require Import HoTT.Types.Universe.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.orders
-  HoTT.Classes.theory.integers.
+  HoTT.Classes.interfaces.orders.
 
 (* Universes:
   - i universe of origin type

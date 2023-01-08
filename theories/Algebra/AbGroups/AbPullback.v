@@ -1,5 +1,5 @@
-Require Import Basics Types Limits.Pullback Cubical.PathSquare.
-Require Import Algebra.Groups Algebra.AbGroups.AbelianGroup.
+Require Import Limits.Pullback Cubical.PathSquare.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.
 
 (** * Pullbacks of abelian groups *)

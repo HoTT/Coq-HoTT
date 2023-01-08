@@ -2,8 +2,6 @@
 Require Import
   Basics.Overture
   Basics.PathGroupoids
-  Basics.Contractible
-  Basics.Equivalences
   Basics.Trunc
   Basics.Tactics.
 Local Open Scope trunc_scope.

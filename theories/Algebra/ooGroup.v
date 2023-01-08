@@ -1,8 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types.
 Require Import Pointed.
-Require Import Truncations.
-Require Import Colimits.Quotient.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Algebra.Groups.
 Require Import WildCat.

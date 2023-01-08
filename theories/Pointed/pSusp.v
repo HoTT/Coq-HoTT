@@ -2,10 +2,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
-Require Import Pointed.pMap.
-Require Import Pointed.pHomotopy.
 Require Import Pointed.pTrunc.
-Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Freudenthal.
 Require Import Truncations.

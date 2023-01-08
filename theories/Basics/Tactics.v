@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Nat.
+Require Import Basics.Overture.
 
 
 (** TODO: Clean up *)

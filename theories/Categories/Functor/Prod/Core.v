@@ -1,6 +1,5 @@
 (** * Functors involving product categories *)
 Require Import Category.Core Functor.Core Category.Prod Functor.Composition.Core.
-Require Import Functor.Paths.
 Require Import Types.Prod.
 
 Set Universe Polymorphism.

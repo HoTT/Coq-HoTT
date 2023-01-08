@@ -1,10 +1,10 @@
 (** * Dual functor categories *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
-Require Import Functor.Composition.Core Functor.Identity.
+Require Import Functor.Identity.
 Require Import FunctorCategory.Core.
 Require Import Functor.Paths.
-Require Import HoTT.Tactics Types.Forall.
+Require Import HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

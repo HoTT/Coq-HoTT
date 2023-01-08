@@ -1,4 +1,4 @@
-From HoTT Require Import Basics TruncType ExcludedMiddle abstract_algebra BiInv.
+From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Nat Spaces.Card.
 From HoTT Require Import Equiv.BiInv.

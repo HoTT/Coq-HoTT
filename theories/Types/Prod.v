@@ -2,7 +2,7 @@
 (** * Theorems about cartesian products *)
 
 Require Import HoTT.Basics.
-Require Import Types.Empty Types.Unit.
+Require Import Types.Empty.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.

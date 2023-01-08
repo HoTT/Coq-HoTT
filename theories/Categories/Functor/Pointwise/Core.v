@@ -1,5 +1,5 @@
 (** * Functors between functor categories constructed pointwise *)
-Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Composition.Core.
+Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

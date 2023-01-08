@@ -1,15 +1,12 @@
 (** * Coercions between hom-set adjunctions and unit+counit adjunctions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual Adjoint.Hom.
-Require Import FunctorCategory.Core Category.Morphisms.
-Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod.
-Require Import HomFunctor NaturalTransformation.Isomorphisms.
+Require Import Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Hom.
+Require Import Category.Morphisms.
 Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
 Require Import Functor.Identity.
-Require Import SetCategory.Core SetCategory.Morphisms.
-Require Import Basics.Trunc HProp HSet Types.Sigma HoTT.Tactics Equivalences TruncType.
+Require Import SetCategory.Morphisms.
+Require Import Basics.Trunc Types.Sigma HoTT.Tactics Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

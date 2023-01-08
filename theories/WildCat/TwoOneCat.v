@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import WildCat.Core.
-Require Import WildCat.Prod.
 Require Import WildCat.NatTrans.
 
 (** * Wild (2,1)-categories *)

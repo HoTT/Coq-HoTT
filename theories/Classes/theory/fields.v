@@ -1,4 +1,3 @@
-Require Import Basics.Trunc.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.apartness.

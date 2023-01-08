@@ -1,13 +1,10 @@
-Require Import HoTT.Types.Universe.
 Require Import
   HoTT.Classes.orders.naturals
   HoTT.Classes.implementations.peano_naturals.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.orders
-  HoTT.Classes.theory.naturals
-  HoTT.Classes.theory.additional_operations.
+  HoTT.Classes.theory.naturals.
 
 
 Generalizable Variables N.

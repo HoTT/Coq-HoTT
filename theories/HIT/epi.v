@@ -1,7 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import HProp.
-Require Import HSet.
 Require Import TruncType.
 Require Import Colimits.Pushout Truncations HIT.SetCone.
 

@@ -1,6 +1,5 @@
 (** * Identity natural transformation *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.
-Require Import PathGroupoids.
+Require Import Category.Core Functor.Core NaturalTransformation.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,10 +1,6 @@
 Require Import
         HoTT.Spaces.Nat.
 Require Import
-        HoTT.Basics.Decidable
-        HoTT.Basics.Equivalences
-        HoTT.Types.Sum
-        HoTT.Types.Paths
         HoTT.Tactics.
 Require Import
         HoTT.Classes.interfaces.abstract_algebra

@@ -1,17 +1,13 @@
 Require Import
-  HoTT.Types.Universe
   HoTT.Types.Sigma.
 Require Import
   HoTT.Classes.theory.naturals.
 Require Import
-  HoTT.Classes.theory.apartness
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.rings
   HoTT.Classes.orders.rings
-  HoTT.Classes.implementations.peano_naturals
-  HoTT.Classes.tactics.ring_tac.
+  HoTT.Classes.implementations.peano_naturals.
 Require Export
   HoTT.Classes.orders.nat_int.
 

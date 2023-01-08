@@ -8,7 +8,7 @@ Require Export
 
 Require Import
   HoTT.Types
-  HoTT.HSet HoTT.HProp
+  HoTT.HSet
   HoTT.Classes.implementations.list.
 
 Import ne_list.notations.

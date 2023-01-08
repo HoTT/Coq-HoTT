@@ -2,9 +2,8 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
-Require Import Functor.Dual NaturalTransformation.Dual Category.Dual.
-Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.
-Require Import HProp Types.Sigma HoTT.Tactics.
+Require Import Functor.Dual NaturalTransformation.Dual.
+Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

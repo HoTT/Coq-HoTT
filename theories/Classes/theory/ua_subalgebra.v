@@ -1,6 +1,4 @@
 Require Import
-  HoTT.Basics
-  HoTT.TruncType
   HoTT.HProp
   HoTT.Types
   HoTT.Classes.theory.ua_homomorphism.

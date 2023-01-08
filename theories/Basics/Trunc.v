@@ -3,7 +3,6 @@
 
 Require Import
   Basics.Overture
-  Basics.PathGroupoids
   Basics.Contractible
   Basics.Equivalences
   Basics.Tactics

@@ -1,10 +1,9 @@
 (** * Hom-Set Adjunctions *)
 Require Import Category.Core Functor.Core.
-Require Import Adjoint.Core Adjoint.UnitCounit.
-Require Import FunctorCategory.Core Category.Morphisms.
-Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod Functor.Prod.Core.
-Require Import HomFunctor NaturalTransformation.Isomorphisms.
+Require Import Adjoint.UnitCounit.
+Require Import Functor.Dual.
+Require Import Functor.Prod.Core.
+Require Import HomFunctor.
 Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
 Require Import Functor.Identity.

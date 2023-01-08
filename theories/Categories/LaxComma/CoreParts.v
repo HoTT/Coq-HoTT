@@ -1,12 +1,10 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Functor.Identity.
 Require Import Functor.Composition.Core.
 Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
 Require Import Category.Morphisms FunctorCategory.Core.
 Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
-Require Import FunctorCategory.Morphisms.
-Require Import Trunc Types.Paths Types.Sigma.
+Require Import Trunc Types.Sigma.
 Require Import Basics.Tactics.
 
 Import Functor.Identity.FunctorIdentityNotations.

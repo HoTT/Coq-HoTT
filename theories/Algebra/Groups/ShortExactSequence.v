@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Pointed.
+Require Import WildCat Pointed.
 Require Import Groups.Group Groups.Subgroup Groups.Kernel.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 

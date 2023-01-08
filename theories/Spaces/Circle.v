@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
-Require Import HProp HSet.
+Require Import HSet.
 Require Import Spaces.Pos Spaces.Int.
 Require Import Colimits.Coeq.
-Require Import Modalities.Modality Truncations.
+Require Import Truncations.
 Require Import Cubical.DPath.
 
 (** * Theorems about the [Circle]. *)

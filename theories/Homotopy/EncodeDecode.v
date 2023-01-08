@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed.
+Require Import Basics Pointed.
 Require Import Truncations.
 
 (** ** Encode-decode method of characterizing identity types *)

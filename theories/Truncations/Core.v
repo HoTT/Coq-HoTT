@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
 Require Import Basics Types WildCat.
-Require Import TruncType HProp.
+Require Import TruncType.
 Require Import Modalities.Modality Modalities.Descent.
 
 (** * Truncations of types, in all dimensions. *)

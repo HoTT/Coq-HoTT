@@ -1,7 +1,6 @@
-Require Import Basics Types PathAny.
+Require Import Basics Types.
 Require Import Pointed.Core.
 Require Import Pointed.pHomotopy.
-Require Import WildCat.
 
 Local Open Scope pointed_scope.
 

@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Decimal Basics.Hexadecimal Basics.Numeral.
+Require Import Basics.Overture Basics.Numeral.
 
 Notation "n .+1" := (S n) : nat_scope.
 Notation "n .+2" := (n.+1.+1)%nat   : nat_scope.

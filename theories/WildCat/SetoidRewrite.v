@@ -3,8 +3,7 @@
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
 From Coq Require Init.Tactics.
 Require Import Basics Types.Forall.
-From Coq Require Setoids.Setoid Classes.CMorphisms
-  Classes.CRelationClasses.
+From Coq Require Setoids.Setoid.
 Import CMorphisms.ProperNotations.
 Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod
   WildCat.NatTrans WildCat.Equiv.

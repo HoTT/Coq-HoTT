@@ -1,10 +1,8 @@
 (** * Associativity of adjunction composition *)
-Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Functor.Composition.Core.
-Require Import Functor.Composition.Laws.
-Require Import Adjoint.Composition.Core Adjoint.UnitCounit Adjoint.Core Adjoint.Paths Adjoint.Identity.
+Require Import Category.Core Functor.Core.
+Require Import Adjoint.Composition.Core Adjoint.Core.
 Require Adjoint.Composition.LawsTactic.
-Require Import Types.Sigma HoTT.Tactics Types.Prod Basics.PathGroupoids Types.Forall.
+Require Import Types.Sigma Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

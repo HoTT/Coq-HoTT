@@ -8,7 +8,6 @@ Require Export HoTT.Basics.
 
 Require Import
   HoTT.Types
-  HoTT.Spaces.Finite
   HoTT.HSet.
 
 Declare Scope Algebra_scope.

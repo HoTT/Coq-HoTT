@@ -1,8 +1,4 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import Truncations HSet.
-Require Import Colimits.Coeq.
 Require Export Algebra.Groups.
-Require Import Cubical.
 Require Import WildCat.
 
 Local Set Polymorphic Inductive Cumulativity.

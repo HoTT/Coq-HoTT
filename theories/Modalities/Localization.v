@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Localization *)
 
-Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions.
 Require Import ReflectiveSubuniverse Accessible.
 

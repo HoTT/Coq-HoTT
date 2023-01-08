@@ -1,4 +1,3 @@
-Require Import HoTT.Basics HoTT.Types.Bool.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.additional_operations

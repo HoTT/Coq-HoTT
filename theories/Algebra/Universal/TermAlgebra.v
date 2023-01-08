@@ -13,8 +13,6 @@
 Require Export HoTT.Algebra.Universal.Algebra.
 
 Require Import
-  HoTT.Types
-  HoTT.HProp
   HoTT.HSet
   HoTT.Classes.interfaces.canonical_names
   HoTT.Algebra.Universal.Homomorphism

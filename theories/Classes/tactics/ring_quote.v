@@ -1,7 +1,5 @@
-Require Import HoTT.Basics HoTT.Types.Bool.
-Require Import HoTT.Classes.theory.rings
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.implementations.list.
+Require Import 
+  HoTT.Classes.interfaces.abstract_algebra.
 
 Class AlmostNegate A := almost_negate : A -> A.
 

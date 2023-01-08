@@ -1,16 +1,11 @@
-Require Import HoTT.Types.Universe HoTT.Basics.Decidable.
 Require
-  HoTT.Classes.theory.integers
   HoTT.Classes.theory.int_abs.
 Require Import
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.integers
   HoTT.Classes.interfaces.naturals
-  HoTT.Classes.theory.additional_operations
   HoTT.Classes.interfaces.orders
   HoTT.Classes.implementations.natpair_integers
-  HoTT.Classes.orders.rings
   HoTT.Classes.theory.rings
   HoTT.Classes.theory.integers.
 Require Export

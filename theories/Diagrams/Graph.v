@@ -1,5 +1,4 @@
 Require Import Basics.
-Require Import Types.
 
 (** * Graphs *)
 

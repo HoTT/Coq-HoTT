@@ -1,5 +1,5 @@
 (** * Unicode notations for categories *)
-Require Import Category.Core Category.Morphisms Category.Dual Category.Prod Category.Sum Category.Pi.
+Require Import Category.Morphisms Category.Dual Category.Sum Category.Pi.
 Local Set Warnings Append "-notation-overridden".
 Require Export Category.Notations.
 Local Set Warnings Append "notation-overridden".

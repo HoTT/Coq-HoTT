@@ -1,10 +1,8 @@
-Require Import Basics Types.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
 Require Import Spaces.Finite.
 Require Import Spaces.Nat.
-Require Import Colimits.Quotient.
 
 (** ** Lagrange's theorem *)
 

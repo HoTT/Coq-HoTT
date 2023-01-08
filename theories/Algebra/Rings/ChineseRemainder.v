@@ -1,5 +1,4 @@
-Require Import Basics Types WildCat.
-Require Import Algebra.Congruence.
+Require Import WildCat.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.

@@ -7,8 +7,7 @@ Require Export
   HoTT.WildCat.Core.
 
 Require Import
-  HoTT.Types
-  HoTT.Tactics.
+  HoTT.Types.
 
 Local Open Scope Algebra_scope.
 

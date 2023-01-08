@@ -1,7 +1,5 @@
 Require Import
-  HoTT.Classes.interfaces.canonical_names
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.orders.
+  HoTT.Classes.interfaces.abstract_algebra.
 
 Generalizable Variables A B.
 

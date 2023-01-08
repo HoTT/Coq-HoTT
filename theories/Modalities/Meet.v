@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions HFiber Truncations NullHomotopy Limits.Pullback.
-Require Import ReflectiveSubuniverse Modality Descent Lex Separated.
+Require Import Descent Lex Separated.
 
 (** We construct "canonical" binary meets of reflective subuniverses (that is, whose underlying subuniverse is an intersection), without assuming accessibility.  In particular, we will show:
 

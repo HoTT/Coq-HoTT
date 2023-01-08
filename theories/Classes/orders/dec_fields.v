@@ -1,12 +1,9 @@
-Require Import HoTT.Basics.Decidable.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
-  HoTT.Classes.theory.rings
   HoTT.Classes.theory.dec_fields.
 Require Export
   HoTT.Classes.orders.rings.
-Require Import HoTT.Classes.tactics.ring_tac.
 
 Generalizable Variables F f R Fle Flt.
 
