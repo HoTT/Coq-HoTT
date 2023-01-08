@@ -57,14 +57,12 @@
 
 *)
 
-From HoTT Require Import Basics Truncations Idempotents Spaces.Spheres Spaces.No
-     HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple.
+From HoTT Require Import Basics Truncations.
+From HoTT Require Idempotents Spaces.Spheres Spaces.No.
+From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple.
 From HoTT Require Categories.
-From HoTT Require Import
-  Metatheory.IntervalImpliesFunext
-  Metatheory.UnivalenceImpliesFunext.
-From HoTT.Classes Require
-  theory.premetric.
+From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.
+From HoTT Require Classes.theory.premetric.
 
 
 (* END OF PREAMBLE *)
