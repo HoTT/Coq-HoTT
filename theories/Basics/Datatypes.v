@@ -20,6 +20,8 @@ Global Set Primitive Projections.
 Global Set Nonrecursive Elimination Schemes.
 Local Unset Elimination Schemes.
 
+Local Set Polymorphic Inductive Cumulativity.
+
 (** [option A] is the extension of [A] with an extra element [None] *)
 
 Inductive option (A : Type) : Type :=

@@ -916,7 +916,7 @@ Section AssumeStuff.
     Defined.
     Local Definition partial_Nrec_succ@{}
       := Eval unfold partial_Nrec_succ0
-        in partial_Nrec_succ0@{nr nr nr nr}.
+        in partial_Nrec_succ0@{nr nr}.
 
     Local Instance contr_partial_Nrec@{} (n : N) : Contr (partial_Nrec n).
     Proof.
