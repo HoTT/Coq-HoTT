@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.Bool.
 Require Import Types.Sum.
-Require Import Spaces.Nat.
+Require Import Spaces.Nat.Core.
 Local Close Scope trunc_scope.
   
 Local Open Scope nat_scope.

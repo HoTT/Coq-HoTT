@@ -1,3 +1,5 @@
+Require Import HoTT.Basics.Decidable.
+Require Import HoTT.Spaces.Nat.Core.
 Require Import
   HoTT.Classes.theory.apartness
   HoTT.Classes.interfaces.abstract_algebra
@@ -767,7 +769,7 @@ Section full_pseudo_semiring_order.
   apply lt_not_le_flip, lt_0_2.
   Qed.
 
-  Lemma repeat_nat_nonneg : forall n, 0 <= Nat.nat_iter n (plus 1) 0.
+  Lemma repeat_nat_nonneg : forall n, 0 <= Core.nat_iter n (plus 1) 0.
   Proof.
   induction n;simpl.
   - reflexivity.
@@ -776,7 +778,7 @@ Section full_pseudo_semiring_order.
     + apply IHn.
   Qed.
 
-  Lemma repeat_nat_pos : forall n, 0 < Nat.nat_iter (S n) (plus 1) 0.
+  Lemma repeat_nat_pos : forall n, 0 < Core.nat_iter (S n) (plus 1) 0.
   Proof.
   intros n. simpl.
   apply pos_plus_le_lt_compat_l.

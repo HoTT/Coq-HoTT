@@ -183,9 +183,11 @@ Section upper_classes.
   #[export] Existing Instances decfield_ring.
 
   Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
-    := field_characteristic : forall n : nat, Nat.lt 0 n ->
-      iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Nat.mul k m)))
-        (@apart A Aap (Nat.nat_iter n (1 +) 0) 0).
+    := field_characteristic : forall n : nat,
+        Nat.Core.lt 0 n ->
+        iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n
+                                                  (Nat.Core.mul k m)))
+        (@apart A Aap (nat_iter n (1 +) 0) 0).
 
 End upper_classes.
 

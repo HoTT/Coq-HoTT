@@ -24,18 +24,18 @@ Proof. unfold natpaths;apply _. Qed.
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Nat.add.
+Global Instance nat_plus: Plus@{N} nat := Nat.Core.add.
 
-Notation mul := Nat.mul.
+Notation mul := Nat.Core.mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.mul.
+Global Instance nat_mult: Mult@{N} nat := Nat.Core.mul.
 
 Ltac simpl_nat :=
-  change (@plus nat _) with Nat.add;
-  change (@mult nat _) with Nat.mul;
+  change (@plus nat _) with Nat.Core.add;
+  change (@mult nat _) with Nat.Core.mul;
   simpl;
-  change Nat.add with (@plus nat Nat.add);
-  change Nat.mul with (@mult nat Nat.mul).
+  change Nat.Core.add with (@plus nat Nat.Core.add);
+  change Nat.Core.mul with (@mult nat Nat.Core.mul).
 
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
@@ -101,7 +101,7 @@ apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
 - reflexivity.
 - simpl_nat. rewrite IHa.
   rewrite (simple_associativity b a).
-  change (((b + a) + (a * b)).+1 =N= (a + Nat.add b (a * b)).+1).
+  change (((b + a) + (a * b)).+1 =N= (a + Nat.Core.add b (a * b)).+1).
   rewrite (commutativity (f:=plus) b a), <-(associativity a b).
   reflexivity.
 Qed.
@@ -236,13 +236,13 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N N} nat := Nat.leq.
-Global Instance nat_lt: Lt@{N N} nat := Nat.lt.
+Global Instance nat_le: Le@{N N} nat := Nat.Core.leq.
+Global Instance nat_lt: Lt@{N N} nat := Nat.Core.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
 induction k.
-- apply Nat.leq_n.
+- apply Nat.Core.leq_n.
 - simpl_nat. constructor. assumption.
 Qed.
 
@@ -422,7 +422,7 @@ Qed.
 
 Instance decidable_nat_apart x y : Decidable (nat_apart x y).
 Proof.
-  rapply decidable_sum; apply Nat.decidable_lt.
+  rapply decidable_sum; apply Nat.Core.decidable_lt.
 Defined.
 
 Global Instance nat_trivial_apart : TrivialApart nat.
@@ -542,7 +542,7 @@ Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
-Lemma le_nat_max_l n m : n <= Nat.max n m.
+Lemma le_nat_max_l n m : n <= Nat.Core.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
@@ -550,7 +550,7 @@ Proof.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
-Lemma le_nat_max_r n m : m <= Nat.max n m.
+Lemma le_nat_max_r n m : m <= Nat.Core.max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
@@ -642,7 +642,7 @@ intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.sub.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.sub.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.
