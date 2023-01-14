@@ -3,7 +3,7 @@ Require Import Types.
 Require Import HSet.
 Require Import TruncType.
 Require Import Colimits.GraphQuotient.
-Require Import Truncations.
+Require Import Truncations.Core Truncations.Connectedness.
 
 Local Open Scope path_scope.
 

@@ -1,7 +1,7 @@
 Require Import
         HoTT.Types
         HoTT.Basics
-        HoTT.Truncations.
+        HoTT.Truncations.Core Modalities.Modality.
 
 (** Definition by factoring through a surjection. *)
 

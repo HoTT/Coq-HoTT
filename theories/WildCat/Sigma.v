@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.
+Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 
 (** ** Indexed sum of categories *)

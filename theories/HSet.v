@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import Basics Types.
+Require Import Basics.
+Require Import Types.Sigma Types.Forall Types.Paths Types.Unit Types.Arrow.
 
 (** * H-Sets *)
 

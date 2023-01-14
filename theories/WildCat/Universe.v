@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 

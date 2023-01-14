@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
 Require Import Colimits.Pushout.
-Require Import HoTT.Truncations.
+Require Import Truncations.Core.
 
 (** * Cones of HSets *)
 

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about path spaces *)
 
-Require Import HoTT.Basics.
+Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids Basics.Tactics.
 
 Local Open Scope path_scope.
 

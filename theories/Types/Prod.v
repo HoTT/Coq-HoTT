@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import HoTT.Basics.
+Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
+               Basics.Tactics Basics.Trunc Basics.Decidable.
 Require Import Types.Empty.
 Local Open Scope path_scope.
 

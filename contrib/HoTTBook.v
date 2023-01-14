@@ -57,13 +57,12 @@
 
 *)
 
-From HoTT Require Import HoTT.
+From HoTT Require Import Basics Truncations.
+From HoTT Require Idempotents Spaces.Spheres Spaces.No.
+From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple.
 From HoTT Require Categories.
-From HoTT Require Import
-  Metatheory.IntervalImpliesFunext
-  Metatheory.UnivalenceImpliesFunext.
-From HoTT.Classes Require
-  theory.premetric.
+From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.
+From HoTT Require Classes.theory.premetric.
 
 
 (* END OF PREAMBLE *)
@@ -1081,7 +1080,7 @@ Definition Book_7_2_2 := @HoTT.HSet.ishset_hrel_subpaths.
 (* ================================================== thm:path-truncation *)
 (** Theorem 7.3.12 *)
 
-Definition Book_7_3_12 := @HoTT.Truncations.Core.equiv_path_Tr.
+Definition Book_7_3_12 := @HoTT.Truncations.SeparatedTrunc.equiv_path_Tr.
 
 (* ================================================== lem:truncation-le *)
 (** Lemma 7.3.15 *)

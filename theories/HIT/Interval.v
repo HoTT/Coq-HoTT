@@ -2,8 +2,9 @@
 
 (** * Theorems about the homotopical interval. *)
 
-Require Import HoTT.Basics.
+Require Import Basics.Overture Basics.PathGroupoids.
 Require Import Types.Paths.
+
 Local Open Scope path_scope.
 
 

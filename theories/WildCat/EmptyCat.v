@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 
 (** Empty category *)

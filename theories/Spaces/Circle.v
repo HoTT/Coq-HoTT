@@ -3,7 +3,7 @@ Require Import Basics Types.
 Require Import HSet.
 Require Import Spaces.Pos Spaces.Int.
 Require Import Colimits.Coeq.
-Require Import Truncations.
+Require Import Truncations.Core Truncations.Connectedness.
 Require Import Cubical.DPath.
 
 (** * Theorems about the [Circle]. *)

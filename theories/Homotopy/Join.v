@@ -2,7 +2,7 @@ Require Import Basics Types Cubical.
 Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
-Require Import Truncations.
+Require Import Truncations.Core Truncations.Connectedness.
 
 Local Open Scope path_scope.
 

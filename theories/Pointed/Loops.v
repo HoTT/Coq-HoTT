@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HFiber Factorization HoTT.Truncations HProp.
+Require Import HFiber Factorization Truncations.Core Truncations.Connectedness HProp.
 Require Import Pointed.Core Pointed.pEquiv.
 Require Import WildCat.
 
