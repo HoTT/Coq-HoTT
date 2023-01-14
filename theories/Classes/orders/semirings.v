@@ -1,5 +1,3 @@
-Require Import HoTT.Basics.Decidable.
-Require Import HoTT.Spaces.Nat.Core.
 Require Import
   HoTT.Classes.theory.apartness
   HoTT.Classes.interfaces.abstract_algebra
