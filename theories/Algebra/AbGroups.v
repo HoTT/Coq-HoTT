@@ -9,7 +9,7 @@ Require Export HoTT.Algebra.AbGroups.AbPushout.
 Require Export HoTT.Algebra.AbGroups.Biproduct.
 Require Export HoTT.Algebra.AbGroups.AbHom.
 
-(* We do not export AbGroups.AbSES here, to allow the build to be more parallel. *)
+(* The theory of Ext groups of abelian groups is in HoTT.Algebra.AbSES. *)
 
 (** Examples *)
 
