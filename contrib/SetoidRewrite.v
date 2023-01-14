@@ -1,6 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
+
+(** Warning: This imports Coq.Setoids.Setoid from the standard library. Currently the setoid rewriting machinery requires this to work, it depends on this file explicitly. This imports the whole standard library into the namespace.
+
+All files that import WildCat/SetoidRewrite.v will also recursively import the entire Coq.Init standard library.  *)
+
+(** Because of this, this file needs to be the *first* file Require'd in any file that uses it.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on. In the long term it would be good if this could be avoided.*)
+
 From Coq Require Init.Tactics.
 Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall.
