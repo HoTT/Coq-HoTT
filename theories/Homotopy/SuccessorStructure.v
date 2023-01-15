@@ -24,7 +24,7 @@ Arguments ss_succ {_} _.
 Notation "x .+1" := (ss_succ x) : succ_scope.
 
 (** Successor structure of naturals *)
-Definition NatSucc : SuccStr := Build_SuccStr nat Nat.succ.
+Definition NatSucc : SuccStr := Build_SuccStr nat Nat.Core.succ.
 
 (** Successor structure of integers *)
 Definition IntSucc : SuccStr := Build_SuccStr Int int_succ.
