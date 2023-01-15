@@ -221,6 +221,7 @@ Proof.
   apply IsMonic_HasRetraction in X.
   apply X in eq_Gf_Gg. assumption.
 Defined.
+
 Section SetoidRewriteTests.
   Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
       a $== b -> b $== c -> a $== c.
