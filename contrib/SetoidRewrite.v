@@ -1,5 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
+(* Typeclass instances to allow rewriting in categories. Examples are given later in the file. *)
+
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
 
 (** Warning: This imports Coq.Setoids.Setoid from the standard library. Currently the setoid rewriting machinery requires this to work, it depends on this file explicitly. This imports the whole standard library into the namespace.
@@ -109,8 +111,6 @@ Proof.
   exact eq_g.
 Defined.
 
-
-
 #[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A} 
   {R : Relation B} (F : A -> B)
   `{CMorphisms.Proper _ (GpdHom ==> R) F}
@@ -118,7 +118,6 @@ Defined.
 Proof.
   intros a b eq_ab; apply H2; exact eq_ab.
 Defined.
-
 
 #[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
@@ -150,12 +149,6 @@ Proof.
     rewrite ! cat_assoc.
     reflexivity.
 Defined.
-
-
-
-
-
-
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
  : CMorphisms.Proper
