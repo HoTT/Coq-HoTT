@@ -12,7 +12,7 @@ Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
 Require Export WildCat.Bifunctor.
 
-(* If we Export WildCat.SetoidRewrite here, other files in the library don't build. *)
+(* See also contrib/SetoidRewrite.v for tools that can be used for rewriting in wild categories. *)
 
 (* Examples *)
 Require Export WildCat.Universe.
