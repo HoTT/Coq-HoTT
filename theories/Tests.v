@@ -1,5 +1,5 @@
 From Coq Require Init.Tactics.
-From HoTT Require Import Basics Types DProp Pointed WildCat WildCat.SetoidRewrite
+From HoTT Require Import Basics Types DProp Pointed 
      Homotopy.Suspension Tactics.EquivalenceInduction.
 
 Fail Check Type0 : Type0.
@@ -125,55 +125,3 @@ Module PR_1382.
 
 End PR_1382.
 
-
-Section SetoidRewriteTests.
-  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-      a $== b -> b $== c -> a $== c.
-  Proof.
-    intros A ? ? ? a b c eq_ab eq_bc.
-    rewrite eq_ab, <- eq_bc.
-  Abort.
-  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-      a $== b -> b $== c -> a $== c.
-  Proof.
-    intros A ? ? ? a b c eq_ab eq_bc.
-    symmetry.
-    rewrite eq_ab, <- eq_bc.
-    rewrite eq_bc.
-    rewrite <- eq_bc.
-  Abort.
-
-  Goal forall (A B : Type) (F : A -> B) `{Is1Functor _ _ F} (a b : A) (f g : a $-> b), f $== g -> fmap F f $== fmap F g.
-  Proof.
-    do 17 intro.
-    intro eq_fg.
-    rewrite eq_fg.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g : b $-> c), f1 $== f2 -> g $o f1 $== g $o f2.
-  Proof.
-    do 11 intro.
-    intro eq.
-    rewrite <- eq.
-    rewrite eq.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> g1 $o f $== g2 $o f.
-  Proof.
-  do 11 intro.
-  intro eq.
-  rewrite <- eq.
-  rewrite eq.
-  rewrite <- eq.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> f1 $== f2 -> g1 $o f1 $== g2 $o f2.
-  Proof.
-    do 12 intro.
-    intros eq_g eq_f.
-    rewrite eq_g.
-    rewrite <- eq_f.
-    rewrite eq_f.
-    rewrite <- eq_g.
-  Abort.
-End SetoidRewriteTests.

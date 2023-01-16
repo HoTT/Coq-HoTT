@@ -1,12 +1,21 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
+(* Typeclass instances to allow rewriting in categories. Examples are given later in the file. *)
+
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)
+
+(** Warning: This imports Coq.Setoids.Setoid from the standard library. Currently the setoid rewriting machinery requires this to work, it depends on this file explicitly. This imports the whole standard library into the namespace.
+
+All files that import WildCat/SetoidRewrite.v will also recursively import the entire Coq.Init standard library.  *)
+
+(** Because of this, this file needs to be the *first* file Require'd in any file that uses it.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on. In the long term it would be good if this could be avoided.*)
+
 From Coq Require Init.Tactics.
-Require Import Basics.Overture Basics.Tactics.
-Require Import Types.Forall.
+From HoTT Require Import Basics.Overture Basics.Tactics.
+From HoTT Require Import Types.Forall.
 From Coq Require Setoids.Setoid.
 Import CMorphisms.ProperNotations.
-Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod
+From HoTT Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod
   WildCat.NatTrans WildCat.Equiv.
 
 #[export] Instance reflexive_proper_proxy {A : Type}
@@ -102,8 +111,6 @@ Proof.
   exact eq_g.
 Defined.
 
-
-
 #[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A} 
   {R : Relation B} (F : A -> B)
   `{CMorphisms.Proper _ (GpdHom ==> R) F}
@@ -111,7 +118,6 @@ Defined.
 Proof.
   intros a b eq_ab; apply H2; exact eq_ab.
 Defined.
-
 
 #[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
@@ -143,12 +149,6 @@ Proof.
     rewrite ! cat_assoc.
     reflexivity.
 Defined.
-
-
-
-
-
-
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
  : CMorphisms.Proper
@@ -214,3 +214,55 @@ Proof.
   apply IsMonic_HasRetraction in X.
   apply X in eq_Gf_Gg. assumption.
 Defined.
+
+Section SetoidRewriteTests.
+  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
+      a $== b -> b $== c -> a $== c.
+  Proof.
+    intros A ? ? ? a b c eq_ab eq_bc.
+    rewrite eq_ab, <- eq_bc.
+  Abort.
+  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
+      a $== b -> b $== c -> a $== c.
+  Proof.
+    intros A ? ? ? a b c eq_ab eq_bc.
+    symmetry.
+    rewrite eq_ab, <- eq_bc.
+    rewrite eq_bc.
+    rewrite <- eq_bc.
+  Abort.
+
+  Goal forall (A B : Type) (F : A -> B) `{Is1Functor _ _ F} (a b : A) (f g : a $-> b), f $== g -> fmap F f $== fmap F g.
+  Proof.
+    do 17 intro.
+    intro eq_fg.
+    rewrite eq_fg.
+  Abort.
+
+  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g : b $-> c), f1 $== f2 -> g $o f1 $== g $o f2.
+  Proof.
+    do 11 intro.
+    intro eq.
+    rewrite <- eq.
+    rewrite eq.
+  Abort.
+
+  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> g1 $o f $== g2 $o f.
+  Proof.
+  do 11 intro.
+  intro eq.
+  rewrite <- eq.
+  rewrite eq.
+  rewrite <- eq.
+  Abort.
+
+  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> f1 $== f2 -> g1 $o f1 $== g2 $o f2.
+  Proof.
+    do 12 intro.
+    intros eq_g eq_f.
+    rewrite eq_g.
+    rewrite <- eq_f.
+    rewrite eq_f.
+    rewrite <- eq_g.
+  Abort.
+End SetoidRewriteTests.
