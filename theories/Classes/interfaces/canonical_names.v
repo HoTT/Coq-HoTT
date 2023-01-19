@@ -102,16 +102,20 @@ Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
 
 (* Notations: *)
 Declare Scope mc_add_scope.
+Open Scope mc_add_scope.
 Infix "+" := sg_op : mc_add_scope.
 Notation "(+)" := sg_op (only parsing) : mc_add_scope.
 Notation "( x +)" := (sg_op x) (only parsing) : mc_add_scope.
 Notation "(+ x )" := (fun y => y + x) (only parsing) : mc_add_scope.
+Close Scope mc_add_scope.
 
 Declare Scope mc_mult_scope.
+Open Scope mc_mult_scope.
 Infix "*" := sg_op : mc_mult_scope.
 Notation "( x *.)" := (sg_op x) (only parsing) : mc_mult_scope.
 Notation "(.*.)" := sg_op (only parsing) : mc_mult_scope.
 Notation "(.* x )" := (fun y => y * x) (only parsing) : mc_mult_scope.
+Close Scope mc_mult_scope.
 
 Infix "+" := plus : mc_scope.
 Notation "(+)" := plus (only parsing) : mc_scope.
