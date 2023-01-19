@@ -640,6 +640,9 @@ Definition ap10_ap_postcompose {A B C} (f : B -> C) {g g' : A -> B} (p : g = g')
 : ap10 (ap (fun h : A -> B => f o h) p) a = ap f (ap10 p a)
 := apD10_ap_postcompose (fun a => f) p a.
 
+Definition ap100 {X Y Z : Type} {f g : X -> Y -> Z} (p : f = g) (x : X) (y : Y)
+  : f x y = g x y := (ap10 (ap10 p x) y).
+
 (** *** Transport and the groupoid structure of paths *)
 
 Definition transport_1 {A : Type} (P : A -> Type) {x : A} (u : P x)

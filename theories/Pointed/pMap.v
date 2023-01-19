@@ -105,6 +105,18 @@ Definition functor_pforall_right {A : pType} {B B' : pFam A}
     : pForall A B' :=
   Build_pForall A B' (fun a => f a (g a)) (ap (f (point A)) (dpoint_eq g) @ p).
 
+Definition equiv_functor_pforall_id `{Funext} {A : pType} {B B' : pFam A}
+  (f : forall a, B a <~> B' a) (p : f (point A) (dpoint B) = dpoint B')
+  : pForall A B <~> pForall A B'.
+Proof.
+  refine (issig_pforall _ _ oE _ oE (issig_pforall _ _)^-1).
+  srapply equiv_functor_sigma'.
+  1: exact (equiv_functor_forall_id f).
+  intro s; cbn.
+  refine (equiv_concat_r p _ oE _).
+  apply (equiv_ap' (f (point A))).
+Defined.
+
 Definition functor2_pforall_right {A : pType} {B C : pFam A}
   {g g' : forall (a : A), B a -> C a}
   {g₀ : g (point A) (dpoint B) = dpoint C}
