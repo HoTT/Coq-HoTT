@@ -1,32 +1,22 @@
-Require Import Basics Types WildCat.
-Require Import Pointed.Core.
-Require Import Pointed.pEquiv.
-Require Import Pointed.Loops.
-Require Import Truncations.
+Require Import Basics Types WildCat Truncations
+  Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.
 
 Local Open Scope pointed_scope.
 
-(** ** Truncations *)
-
-Global Instance ispointed_tr (n : trunc_index) (A : Type) `{IsPointed A}
-  : IsPointed (Tr n A) := tr (point A).
+(** * Truncations of pointed types *)
 
 Definition pTr (n : trunc_index) (A : pType) : pType
   := Build_pType (Tr n A) _.
 
-Definition ptr {n : trunc_index} {A : pType} : A ->* pTr n A.
-Proof.
-  srapply Build_pMap.
-  + apply tr.
-  + reflexivity.
-Defined.
+(** We specialize [pto] and [pequiv_pto] from pModalities.v to truncations. *)
 
-Global Instance isequiv_ptr n (A : pType) `{IsTrunc n A}
-  : IsEquiv (@ptr n A) := _.
+Definition ptr {n : trunc_index} {A : pType} : A ->* pTr n A
+  := pto (Tr n) _.
 
 Definition pequiv_ptr {n : trunc_index} {A : pType} `{IsTrunc n A}
-  : A <~>* pTr n A := Build_pEquiv _ _ ptr _.
+  : A <~>* pTr n A := @pequiv_pto (Tr n) A _.
 
+(** We could specialize [pO_rec] to give the following result, but since maps induced by truncation-recursion compute on elements of the form [tr _], we can give a better proof of pointedness than the one coming from [pO_rec]. *)
 Definition pTr_rec n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
   : pTr n X ->* Y
   := Build_pMap (pTr n X) Y (Trunc_rec f) (point_eq f).
@@ -49,6 +39,8 @@ Proof.
   cbn.
   symmetry; apply concat_pp_V.
 Defined.
+
+(** ** Functoriality of [pTr] *)
 
 Global Instance is0functor_ptr n : Is0Functor (pTr n).
 Proof.
