@@ -84,6 +84,13 @@ Definition pmap_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
 
 Infix "o*" := pmap_compose : pointed_scope.
 
+Definition pfst {A B : pType} : A * B ->* A
+  := Build_pMap (A * B) A fst idpath.
+
+Definition psnd {A B : pType} : A * B ->* B
+  := Build_pMap (A * B) B snd idpath.
+
+
 (** ** Pointed homotopies *)
 
 Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
@@ -202,6 +209,22 @@ Definition issig_pequiv (A B : pType)
 Definition issig_pequiv' (A B : pType)
   : {f : A <~> B & f (point A) = point B} <~> (A <~>* B)
   := ltac:(make_equiv).
+
+(** This is [equiv_prod_coind] for pointed families. *)
+Definition equiv_pprod_coind {A : pType} (P Q : pFam A)
+  : (pForall A P * pForall A Q) <~>
+      (pForall A (fun a => prod (P a) (Q a); (P.2, Q.2))).
+Proof.
+  transitivity {p : prod (forall a:A, P a) (forall a:A, Q a)
+                    & prod (fst p _ = P.2) (snd p _ = Q.2)}.
+  1: make_equiv.
+  refine (issig_pforall _ _ oE _).
+  srapply equiv_functor_sigma'.
+  1: apply equiv_prod_coind.
+  intro f; cbn.
+  unfold prod_coind_uncurried.
+  exact (equiv_path_prod (fst f _, snd f _) (P.2, Q.2)).
+Defined.
 
 (** ** Various operations with pointed homotopies *)
 
@@ -565,6 +588,16 @@ Proof.
   + intro x. apply concat_Vp.
   + revert g p. srapply phomotopy_ind.
     pointed_reduce. reflexivity.
+Defined.
+
+Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
+  (f g h : A ->* B) (K : g ==* f)
+  : f ==* h <~> g ==* h.
+Proof.
+  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
+  rapply equiv_concat_l.
+  apply equiv_path_pforall.
+  exact K.
 Defined.
 
 (** ** The pointed category structure of [pType] *)
