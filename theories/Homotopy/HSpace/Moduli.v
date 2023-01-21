@@ -34,58 +34,48 @@ Defined.
 (** This lemma says that the family [fun a => A ->* [A,a]] is trivial. *)
 Lemma equiv_pmap_hspace `{Funext} {A : pType}
   (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
-  : (A ->* [A,a]) <~> (A ->* A).
+  : (A ->* A) <~> (A ->* [A,a]).
 Proof.
-  symmetry.
   nrapply equiv_pequiv_postcompose.
-  snrapply Build_pEquiv'.
-  - exact (Build_Equiv _ _ (hspace_op a) _).
-  - cbn. rapply right_identity.
+  rapply pequiv_hspace_left_op.
 Defined.
 
 (** The lemma gives us an equivalence on the total spaces (domains) of [ev A] and [psnd] (the projection out of the displayed product). *)
 Proposition equiv_map_pmap_hspace `{Funext} {A : pType}
   `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
-  : (A -> A) <~> (A ->* A) * A.
+  : (A ->* A) * A <~> (A -> A).
 Proof.
   transitivity {a : A  & {f : A -> A & f pt = a}}.
-  1: exact (equiv_sigma_symm _ oE (equiv_sigma_contr _)^-1%equiv).
-  refine (equiv_prod_symm _ _ oE equiv_sigma_prod0 _ _ oE _).
+  2: exact (equiv_sigma_contr _ oE (equiv_sigma_symm _)^-1%equiv).
+  refine (_ oE (equiv_sigma_prod0 _ _)^-1%equiv oE equiv_prod_symm _ _).
   apply equiv_functor_sigma_id; intro a.
-  exact (equiv_pmap_hspace a oE issig_pmap A [A,a]).
+  exact ((issig_pmap A [A,a])^-1%equiv oE equiv_pmap_hspace a).
 Defined.
 
-(** If the H-space is coherent, the above is a pointed equivalence. *)
+(** The above is a pointed equivalence. *)
 Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}
-  `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}
-  : selfmaps A <~>* [(A ->* A) * A, (pmap_idmap, pt)].
+  `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
+  : [(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A.
 Proof.
   srapply Build_pEquiv'.
   1: exact equiv_map_pmap_hspace.
-  cbn. refine (path_prod' _ idpath).
-  apply path_pforall; srapply Build_pHomotopy.
-  { intro k; cbn.
-    apply moveR_equiv_V.
-    exact (left_identity _)^. }
-  cbn. refine (_ @ (concat_1p _)^ @ (concat_p1 _)^).
-  apply (ap _).
-  apply inverse2.
-  exact iscoherent.
+  cbn.
+  apply path_forall, hspace_left_identity.
 Defined.
 
-(** The pointed equivalence [pequiv_map_pmap_hspace] is a pointed equivalence over [A], i.e., a trivialization of [ev A]. *)
+(** When [A] is coherent, the pointed equivalence [pequiv_map_pmap_hspace] is a pointed equivalence over [A], i.e., a trivialization of [ev A]. *)
 Proposition hspace_ev_trivialization `{Funext} {A : pType}
   `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}
-  : ev A ==* psnd (A:=[A ->* A, pmap_idmap]) o* pequiv_map_pmap_hspace.
+  : ev A o* pequiv_map_pmap_hspace ==* psnd (A:=[A ->* A, pmap_idmap]).
 Proof.
   srapply Build_pHomotopy.
-  1: reflexivity. (* The underlying maps agree definitionally. *)
-  lazy beta.
-  apply (moveR_1M _ _)^-1. (* [dpoint_eq (ev A)] is [idpath]. *)
-  refine (concat_p1 _ @ _).
-  unfold pequiv_map_pmap_hspace, equiv_map_pmap_hspace, ev, equiv_compose,
-    Build_pEquiv', Build_pMap, pointed_equiv_fun, point_eq, dpoint_eq.
-  exact (ap_snd_path_prod (z:=(_,pt)) (z':=(pt,pt)) _ _).
+  { intros [f x]; cbn.
+    exact (ap _ (dpoint_eq f) @ hspace_right_identity _). }
+  cbn.
+  refine (concat_1p _ @ _^).
+  refine (concat_p1 _ @ concat_p1 _ @ _).
+  refine (ap10_path_forall _ _ _ _ @ _).
+  apply iscoherent.
 Defined.
 
 (** ** The equivalence [IsCohHSpace A <~> (A ->* (A ->** A))] *)
@@ -95,9 +85,9 @@ Theorem equiv_cohhspace_ppmap `{Funext} {A : pType}
   : IsCohHSpace A <~> (A ->* (A ->** A)).
 Proof.
   refine (_ oE equiv_iscohhspace_psect A).
-  refine (_ oE equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization).
-  refine (_ oE equiv_psect_psnd).
+  refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).
+  refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).
   refine (equiv_pequiv_postcompose _); symmetry.
   rapply ishomogeneous.
-  rapply ishomogeneous_hspace.
+  apply ishomogeneous_hspace.
 Defined.
