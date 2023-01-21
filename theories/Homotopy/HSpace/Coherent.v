@@ -1,5 +1,5 @@
 Require Export Classes.interfaces.abstract_algebra.
-Require Import Pointed.Core HSpace.Core.
+Require Import HSpace.Core.
 
 Local Open Scope mc_mult_scope.
 

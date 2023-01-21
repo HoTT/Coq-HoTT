@@ -1,5 +1,4 @@
-From HoTT Require Import Basics Types Truncations.Core Pointed
-  Modalities.ReflectiveSubuniverse Homotopy.Cover.
+From HoTT Require Import Basics Types Truncations.Core Pointed Homotopy.Cover.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

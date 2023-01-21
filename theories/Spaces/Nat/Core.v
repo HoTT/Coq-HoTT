@@ -1,7 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
 Require Export Basics.Nat.
-Require Import HoTT.TruncType.
 Require Export HoTT.DProp.
 
 Local Unset Elimination Schemes.

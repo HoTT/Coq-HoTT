@@ -1,5 +1,4 @@
 Require Import WildCat.
-Require Import HSet.
 Require Import AbelianGroup Biproduct.
 
 (** * Homomorphisms of abelian groups form an abelian group. *)

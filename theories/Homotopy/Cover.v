@@ -1,5 +1,5 @@
-From HoTT Require Import Basics Types Truncations.Core HFiber
-  Pointed Pointed.pModality Modalities.ReflectiveSubuniverse.
+From HoTT Require Import Basics Types Truncations.Core
+  Pointed Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 

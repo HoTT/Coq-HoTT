@@ -1,5 +1,4 @@
 Require Import Limits.Pullback Cubical.PathSquare.
-Require Import Classes.interfaces.abstract_algebra.
 Require Export Algebra.Groups.GrpPullback.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.

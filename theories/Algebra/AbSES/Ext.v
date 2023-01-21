@@ -1,6 +1,6 @@
 Require Import Pointed WildCat.
 Require Import AbGroups.AbelianGroup AbGroups.AbHom.
-Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.
+Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
 
 (** * The set [Ext B A] of abelian group extensions *)
 

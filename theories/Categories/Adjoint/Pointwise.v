@@ -8,7 +8,6 @@ Require NaturalTransformation.Pointwise.
 Require Functor.Pointwise.Properties.
 Require Import Category.Morphisms FunctorCategory.Morphisms.
 Require Import FunctorCategory.Core.
-Require NaturalTransformation.Identity.
 Import NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
 Require Import NaturalTransformation.Paths Functor.Paths.
 Require Import Basics.PathGroupoids HoTT.Tactics Types.Arrow.
