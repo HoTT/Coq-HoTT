@@ -135,6 +135,6 @@ Proof.
   refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).
   refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).
   refine (equiv_pequiv_postcompose _); symmetry.
-  rapply ishomogeneous.
+  nrapply ishomogeneous.
   apply ishomogeneous_hspace.
 Defined.
