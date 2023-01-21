@@ -5,7 +5,7 @@ Local Open Scope mc_mult_scope.
 
 (** ** Coherent H-space structures *)
 
-(** An H-space is coherent when the left and right identites agree at the base point. *)
+(** An H-space is coherent when the left and right identities agree at the base point. *)
 
 Class IsCoherent (X : pType) `{IsHSpace X} :=
   iscoherent : left_identity _ = right_identity _.
