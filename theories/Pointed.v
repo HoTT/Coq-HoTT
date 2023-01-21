@@ -4,6 +4,7 @@ Require Export Pointed.pMap.
 Require Export Pointed.pFiber.
 Require Export Pointed.pEquiv.
 Require Export Pointed.pTrunc.
+Require Export Pointed.pModality.
 Require Export Pointed.pHomotopy.
 Require Export Pointed.pSusp.
 Require Export Pointed.pSect.
