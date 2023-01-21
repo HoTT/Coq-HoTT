@@ -8,7 +8,7 @@ Local Open Scope mc_mult_scope.
 
 (** When [A] is a left-invertible H-space, we construct an equivalence between the ("moduli") type of H-space structures on [A] and the type [A ->* (A ->** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A ->* A].
 
-This equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1. *)
+This equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1 *)
 
 (** ** Sections of evaluation fibrations *)
 
