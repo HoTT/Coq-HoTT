@@ -30,34 +30,6 @@ Proof.
   exact (left_identity x)^.
 Defined.
 
-Definition equiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
-  : X <~> X := Build_Equiv _ _ (pt *.) _.
-
-(** Any element of an H-space defines a pointed self-map by left multiplication. *)
-Definition pmap_hspace_left_op {X : pType} `{IsHSpace X} (x : X)
-  : X ->* [X, x] := Build_pMap X [X,x] (x *.) (right_identity x).
-
-Definition equiv_hspace_left_op {A : pType} `{IsHSpace A}
-  `{forall a, IsEquiv (a *.)} (a : A) : A <~> A
-  := Build_Equiv _ _ (a *.) _.
-
-Definition equiv_hspace_right_op {A : pType} `{IsHSpace A}
-  `{forall a, IsEquiv (.* a)} (a : A) : A <~> A
-  := Build_Equiv _ _ (.* a) _.
-
-(** We make [(pt *.)] into a pointed equivalence using the right identity. If we used the left identity, we'd get a map that's equal to the identity as a pointed map; but without coherence (see Coherent.v) this is not necessarily the case for this map. *)
-Definition pequiv_hspace_left_op_pt {X : pType} `{IsHSpace X} : X <~>* X
-  := Build_pEquiv' equiv_hspace_left_op_pt (right_identity pt).
-
-Definition pequiv_hspace_left_op_pt_beta {X : pType} `{IsHSpace X}
-  : pmap_hspace_left_op pt ==* pequiv_hspace_left_op_pt.
-Proof.
-  srapply Build_pHomotopy.
-  1: reflexivity.
-  cbn.
-  exact (concat_pV _)^.
-Defined.
-
 Global Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
   : IsEquiv (.* pt).
 Proof.
@@ -65,8 +37,22 @@ Proof.
   exact (right_identity x)^.
 Defined.
 
-Definition equiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
-  : X <~> X := Build_Equiv _ _ (.* pt) _.
+Definition equiv_hspace_left_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (x *.)} : X <~> X
+  := Build_Equiv _ _ (x *.) _.
+
+Definition equiv_hspace_right_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (.* x)} : X <~> X
+  := Build_Equiv _ _ (.* x) _.
+
+(** Any element of an H-space defines a pointed self-map by left multiplication, in the following sense. *)
+Definition pmap_hspace_left_op {X : pType} `{IsHSpace X} (x : X)
+  : X ->* [X, x] := Build_pMap X [X,x] (x *.) (right_identity x).
+
+(** We make [(x *.)] into a pointed equivalence (when possible). In particular, this makes [(pt *.)] into a pointed self-equivalence. We could have also used the left identity to make [(pt *.)] into a pointed self-equivalence, and then we would get a map that's equal to the identity as a pointed map; but without coherence (see Coherent.v) this is not necessarily the case for this map. *)
+Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (x *.)} : X <~>* [X,x]
+  := Build_pEquiv' (B:=[X,x]) (equiv_hspace_left_op x) (right_identity x).
 
 (** ** Paths between H-space structures *)
 
@@ -219,14 +205,14 @@ Proof.
   - intros a p.
     refine (_^ @ (ap ((a *.) o (pt *.)^-1) p @ _)).
     all: exact (point_eq (pmap_hspace_left_op a
-                            o* pequiv_hspace_left_op_pt^-1*)).
+                            o* (pequiv_hspace_left_op pt)^-1*)).
  - intro p; lazy beta.
    apply moveR_Vp.
-   pose (Q := pmap_prewhisker _ pequiv_hspace_left_op_pt_beta
-                @* peisretr _).
+   pose (Q := peisretr (pequiv_hspace_left_op pt)).
    refine (whiskerL _ (point_htpy Q)^
              @ _ @ whiskerR (point_htpy Q) _); cbn.
-   hott_simpl.
+   refine (whiskerL _ _ @ _ @ whiskerR _^ _).
+   1,3: exact (concat_p1 _ @ concat_p1 _ @ inv_V _).
    apply concat_A1p.
 Defined.
 
