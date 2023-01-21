@@ -3,6 +3,8 @@
 Require Import Basics Types WildCat.Core WildCat.Universe.
 Require Import TruncType.
 Require Import Modalities.Modality.
+(* Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
+Require Export (coercions) Modalities.Modality.
 
 (** * Truncations of types, in all dimensions. *)
 

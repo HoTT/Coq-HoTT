@@ -3,7 +3,7 @@ Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
-Require Import Homotopy.HSpace.
+Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.HomotopyGroup.
 Require Import TruncType.
 Require Import WildCat.

@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Truncations
+Require Import Basics Types WildCat Truncations.Core Truncations.SeparatedTrunc
   Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.
 
 Local Open Scope pointed_scope.

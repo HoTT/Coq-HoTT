@@ -1,6 +1,6 @@
 Require Import Cubical.
 Require Import Pointed.
-Require Import Homotopy.HSpace.
+Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Join.
 
