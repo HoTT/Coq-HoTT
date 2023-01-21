@@ -4,9 +4,6 @@ Require Import HSpace.Core HSpace.Coherent HSpace.Pointwise
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
-Local Notation pt := (point _).
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * The moduli type of H-space structures *)
 
 (** When [A] is a left-invertible H-space, we construct an equivalence between the ("moduli") type of H-space structures on [A] and the type [A ->* (A ->** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A ->* A].

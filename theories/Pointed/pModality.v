@@ -2,8 +2,6 @@ Require Import Basics Types ReflectiveSubuniverse Pointed.Core.
 
 Local Open Scope pointed_scope.
 
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * Modalities and pointed types *)
 
 Global Instance ispointed_O `{O : ReflectiveSubuniverse} (X : Type)

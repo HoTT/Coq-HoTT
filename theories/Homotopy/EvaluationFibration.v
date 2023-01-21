@@ -4,9 +4,6 @@ From HoTT Require Import Basics Types Truncations Pointed
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 
-Local Notation pt := (point _).
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * Evaluation fibrations and self-maps *)
 
 (* The type of unpointed self maps of A, pointed at the identity map. *)

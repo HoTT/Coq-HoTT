@@ -4,8 +4,6 @@ Require Import Basics Types Pointed.Core Pointed.pEquiv.
 
 Local Open Scope pointed_scope.
 
-Local Notation pt := (point _).
-
 (* The type of pointed sections of a pointed map. *)
 Definition pSect {A B : pType} (f : A ->* B)
   := { s : B ->* A & f o* s ==* pmap_idmap }.

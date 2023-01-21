@@ -12,11 +12,14 @@ Generalizable Variables A B f.
 
 (** ** Pointed Types *)
 
+Notation "'pt'" := (point _) : pointed_scope.
+Notation "[ X , x ]" := (Build_pType X x) : pointed_scope.
+
 (** The unit type is pointed *)
 Global Instance ispointed_unit : IsPointed Unit := tt.
 
 (** The Unit pType *)
-Definition pUnit : pType := (Build_pType Unit _).
+Definition pUnit : pType := [Unit, tt].
 
 (** A sigma type of pointed components is pointed. *)
 Global Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
@@ -790,7 +793,7 @@ Proof.
     snrapply Build_pMap.
     { intros [a|].
       1: exact (f a).
-      exact (point _). }
+      exact pt. }
     reflexivity. }
   1: intro x; reflexivity.
   intros f.

@@ -3,9 +3,11 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Constant.
 Require Import HoTT.Truncations.
 Require Import Spaces.BAut.
+Require Import Pointed.Core.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
+Local Open Scope pointed_scope.
 
 (** * BAut(Bool) *)
 
@@ -58,17 +60,17 @@ Section AssumeUnivalence.
 
   (** If [Z] is [Bool], then the flip is the usual one. *)
   Definition negb_baut_bool_bool_negb
-  : negb_baut_bool (point _) = equiv_negb.
+  : negb_baut_bool pt = equiv_negb.
   Proof.
-    pose (c := aut_bool_idmap_or_negb (negb_baut_bool (point _))).
+    pose (c := aut_bool_idmap_or_negb (negb_baut_bool pt)).
     destruct c.
-    - pose (negb_baut_bool_ne_idmap (point _) p).
+    - pose (negb_baut_bool_ne_idmap pt p).
       contradiction.
     - assumption.
   Defined.
 
   Definition ap_pr1_negb_baut_bool_bool
-  : (negb_center_baut_bool (point _))..1 = path_universe negb.
+  : (negb_center_baut_bool pt)..1 = path_universe negb.
   Proof.
     apply moveL_equiv_V.
     apply negb_baut_bool_bool_negb.
@@ -117,7 +119,7 @@ First we define the function that will be the equivalence. *)
 
   (** We compute this in the case when [Z] is [Bool]. *)
   Definition inhab_baut_bool_from_bool_bool (t : Bool)
-  : inhab_baut_bool_from_bool t (point _) =
+  : inhab_baut_bool_from_bool t pt =
     fun (z : point (BAut Bool)) (b : Bool) =>
       if t then
         if b then z else negb z
@@ -194,14 +196,14 @@ First we define the function that will be the equivalence. *)
   (** We compute its inverse in the case of [Bool]. *)
   Definition equiv_equiv_inhab_baut_bool_bool_bool_inv (t : Bool)
              (e : Bool <~> Bool)
-  : equiv_inverse (equiv_equiv_inhab_baut_bool_bool t (point _)) e = e t.
+  : equiv_inverse (equiv_equiv_inhab_baut_bool_bool t pt) e = e t.
   Proof.
-    pose (alt := Build_Equiv _ _ (equiv_inhab_baut_bool_bool t (point _))
+    pose (alt := Build_Equiv _ _ (equiv_inhab_baut_bool_bool t pt)
                    (isequiv_equiv_inhab_baut_bool_bool_lemma
-                      t (point _) (tr 1))).
-    assert (p : equiv_equiv_inhab_baut_bool_bool t (point _) = alt).
+                      t pt (tr 1))).
+    assert (p : equiv_equiv_inhab_baut_bool_bool t pt = alt).
     { apply (ap (fun i => Build_Equiv _ _ _ i)).
-      apply (ap (isequiv_equiv_inhab_baut_bool_bool_lemma t (point _))).
+      apply (ap (isequiv_equiv_inhab_baut_bool_bool_lemma t pt)).
       apply path_ishprop. }
     exact (ap10_equiv (ap equiv_inverse p) e).
   Defined.
@@ -222,8 +224,6 @@ First we define the function that will be the equivalence. *)
   Declare Scope baut_bool_scope.
   Notation "Z ** W" := (baut_bool_pairing Z W) : baut_bool_scope.
   Local Open Scope baut_bool_scope.
-
-  Local Notation pt := (point (BAut Bool)).
 
   (** Now [equiv_equiv_inhab_baut_bool_bool] is revealed as simply the left unit law of this pairing. *)
   Definition baut_bool_pairing_1Z Z : pt ** Z = Z.

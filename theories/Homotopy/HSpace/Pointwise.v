@@ -3,9 +3,6 @@ Require Import Pointed HSpace.Core HSpace.Coherent.
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
-Local Notation pt := (point _).
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * Pointwise H-space structures *)
 
 (** Whenever [X] is an H-space, so is any type of maps or pointed maps into [X]. *)
@@ -94,7 +91,6 @@ Proof.
     (* For some reason, [pt] doesn't work in the next line. *)
     set (p := hspace_left_identity _); clearbody p.
     intros [].
-    unfold pt in p.
     induction p.
     reflexivity.
 Defined.

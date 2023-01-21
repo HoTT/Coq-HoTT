@@ -5,9 +5,6 @@ Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 
-Local Notation pt := (point _).
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * H-spaces *)
 
 (** A (noncoherent) H-space [X] is a pointed type with a binary operation for which the base point is a both a left and a right identity. (See Coherent.v for the notion of a coherent H-space.) We say [X] is left-invertible if left multiplication by any element is an equivalence, and dually for right-invertible. *)

@@ -3,9 +3,6 @@ From HoTT Require Import Basics Types Truncations HFiber
 
 Local Open Scope pointed_scope.
 
-Local Notation pt := (point _).
-Local Notation "[ X , x ]" := (Build_pType X x).
-
 (** * [O]-connected covers *)
 
 (** Given a reflective subuniverse [O], for any type [X] and [x : O X], the [O]-connected cover of [X] at [x] is the fibre of [to O X] at [x]. *)
