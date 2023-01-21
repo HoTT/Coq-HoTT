@@ -1,5 +1,5 @@
 Require Export Classes.interfaces.abstract_algebra.
-Require Import Pointed.
+Require Import Pointed WildCat.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -60,7 +60,7 @@ Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
 Definition path_ishspace_type {X : pType} (mu nu : IsHSpace X) : Type.
 Proof.
   destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid].
-  refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 & prod (forall x:X, _)  (forall x:X, _) }.
+  refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 & prod (forall x:X, _) (forall x:X, _) }.
   - exact (mu_lid x = h pt x @ nu_lid x).
   - exact (mu_rid x = h x pt @ nu_rid x).
 Defined.
@@ -109,22 +109,14 @@ Global Instance isequiv_hspace_left_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (a *.).
 Proof.
-  refine (conn_map_elim (-1) (unit_name _) _ _).
-  apply Unit_ind.
-  srapply (isequiv_homotopic idmap).
-  intro a; symmetry.
-  apply left_identity.
+  rapply conn_point_elim; exact _.
 Defined.
 
 Global Instance isequiv_hspace_right_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (.* a).
 Proof.
-  refine (conn_map_elim (-1) (unit_name _) _ _).
-  apply Unit_ind.
-  srapply (isequiv_homotopic idmap).
-  intro a; symmetry.
-  apply right_identity.
+  rapply conn_point_elim; exact _.
 Defined.
 
 
@@ -146,7 +138,7 @@ Definition homogeneous_pt_id_beta `{Funext} {A : pType} `{IsHomogeneous A}
   : homogeneous_pt_id (point A) = pequiv_pmap_idmap
   := ltac:(apply path_pequiv, peisretr).
 
-(** This modified structure makes any homogeneous type into an H-space. *)
+(** This modified structure makes any homogeneous type into a (left-invertible) H-space. *)
 Global Instance ishspace_homogeneous {A : pType} `{IsHomogeneous A}
   : IsHSpace A.
 Proof.
@@ -159,25 +151,20 @@ Proof.
                    @ point_eq (ishomogeneous a)).
 Defined.
 
-(** Left-invertible H-spaces are homogeneous, giving a logical equivalence between H-spaces and homogeneous types. *)
+(** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. *)
 Global Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
-  `{forall a, IsEquiv (a *.)} : IsHomogeneous A.
-Proof.
-  intro a.
-  srapply Build_pEquiv'.
-  1: exact (Build_Equiv _ _ (a *.) _).
-  cbn. apply right_identity.
-Defined.
+  `{forall a, IsEquiv (a *.)}
+  : IsHomogeneous A
+  := (fun a => pequiv_hspace_left_op a).
 
 (** *** Promoting unpointed homotopies to pointed homotopies *)
 
-(** Two pointed maps [f g : Y ->* X] into an H-space type are equal if and only if they are equal as unpointed maps. (Note: This is a logical "iff", not an equivalence of types.)
+(** Two pointed maps [f g : Y ->* X] into an H-space are equal if and only if they are equal as unpointed maps. (Note: This is a logical "iff", not an equivalence of types.) This was first observed by Evan Cavallo for homogeneous types. Below we show a generalization due to Egbert Rijke, which we then specialize to H-spaces. Notably, the specialization does not require left-invertibility. This appears as Lemma 2.6 in https://arxiv.org/abs/2301.02636v1 *)
 
-This was first observed by Evan Cavallo for homogeneous types. Below we show a generalization due to Egbert Rijke, which we then specialize to H-spaces. Notably, the specialization does not require left-invertibility. *)
-
+(** First a version that assumes an equality of the unpointed maps. *)
 Definition phomotopy_from_homotopy {A B : pType}
   (m : forall (a : A), (point A) = (point A) -> a = a)
-  (q : forall p, m _ p = p) {f g : B ->* A} (K : pointed_fun f = g)
+  (q : m pt == idmap) {f g : B ->* A} (K : pointed_fun f = pointed_fun g)
   : f ==* g.
 Proof.
   rapply issig_phomotopy.
@@ -189,31 +176,26 @@ Proof.
   apply q.
 Defined.
 
-(** Assuming [Funext], it we may take [K] to be a homotopy. *)
+(** Assuming [Funext], we may take [K] to be a homotopy. With a more elaborate proof, [Funext] could be avoided here and therefore in the next result as well. *)
 Definition phomotopy_from_homotopy' `{Funext} {A B : pType}
   (m : forall (a : A), (point A) = (point A) -> a = a)
-  (q : forall p, m _ p = p) {f g : B ->* A} (K : f == g)
+  (q :  m pt == idmap) {f g : B ->* A} (K : f == g)
   : f ==* g
   := (phomotopy_from_homotopy m q (path_forall _ _ K)).
 
-(** We specialize to H-spaces.*)
+(** We specialize to H-spaces. *)
 Definition hspace_phomotopy_from_homotopy `{Funext} {A B : pType}
   `{IsHSpace A} {f g : B ->* A} (K : f == g)
   : f ==* g.
 Proof.
   srapply (phomotopy_from_homotopy' _ _ K).
-  - intros a p.
-    refine (_^ @ (ap ((a *.) o (pt *.)^-1) p @ _)).
-    all: exact (point_eq (pmap_hspace_left_op a
-                            o* (pequiv_hspace_left_op pt)^-1*)).
- - intro p; lazy beta.
-   apply moveR_Vp.
-   pose (Q := peisretr (pequiv_hspace_left_op pt)).
-   refine (whiskerL _ (point_htpy Q)^
-             @ _ @ whiskerR (point_htpy Q) _); cbn.
-   refine (whiskerL _ _ @ _ @ whiskerR _^ _).
-   1,3: exact (concat_p1 _ @ concat_p1 _ @ inv_V _).
-   apply concat_A1p.
+  - intro a.
+    exact (fmap loops (pmap_hspace_left_op a o* (pequiv_hspace_left_op pt)^-1*)).
+  - lazy beta.
+    transitivity (fmap (b:=A) loops pmap_idmap).
+    2: rapply (fmap_id loops).
+    rapply (fmap2 loops).
+    nrapply peisretr.
 Defined.
 
 (** A version with actual paths. *)
