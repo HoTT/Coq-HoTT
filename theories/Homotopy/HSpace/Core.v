@@ -48,7 +48,7 @@ Definition equiv_hspace_right_op {A : pType} `{IsHSpace A}
   `{forall a, IsEquiv (.* a)} (a : A) : A <~> A
   := Build_Equiv _ _ (.* a) _.
 
-(** We make [(pt *.)] into a pointed equivalence using the right identity. If we'd use the left identity, we'd get a map that's equal to the identity as a pointed map, but without coherence (see Coherent.v) this is necessarily the case for this map. *)
+(** We make [(pt *.)] into a pointed equivalence using the right identity. If we used the left identity, we'd get a map that's equal to the identity as a pointed map; but without coherence (see Coherent.v) this is not necessarily the case for this map. *)
 Definition pequiv_hspace_left_op_pt {X : pType} `{IsHSpace X} : X <~>* X
   := Build_pEquiv' equiv_hspace_left_op_pt (right_identity pt).
 
