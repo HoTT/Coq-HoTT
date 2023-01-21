@@ -54,53 +54,6 @@ Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
   (x : X) `{IsEquiv _ _ (x *.)} : X <~>* [X,x]
   := Build_pEquiv' (B:=[X,x]) (equiv_hspace_left_op x) (right_identity x).
 
-(** ** Paths between H-space structures *)
-
-(** Paths between H-space structures correspond to homotopies between the underlying binary operations which respect the identities. This is the type of the latter. *)
-Definition path_ishspace_type {X : pType} (mu nu : IsHSpace X) : Type.
-Proof.
-  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid].
-  refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 & prod (forall x:X, _) (forall x:X, _) }.
-  - exact (mu_lid x = h pt x @ nu_lid x).
-  - exact (mu_rid x = h x pt @ nu_rid x).
-Defined.
-
-(** Transport of left and right identities of binary operations along paths between the underlying functions. *)
-Local Definition transport_binop_lr_id `{Funext} {X : Type} {x : X}
-  {mu nu : X -> X -> X} `{mu_lid : forall y, mu x y = y}
-  `{mu_rid : forall y, mu y x = y} (p : mu = nu)
-  : transport (fun m : X -> X -> X =>
-                 (forall y, m x y = y) * (forall y, m y x = y))
-      p (mu_lid, mu_rid)
-    = (fun y => (ap100 p _ _)^ @ mu_lid y,
-         fun y => (ap100 p _ _)^ @ mu_rid y).
-Proof.
-  induction p; cbn.
-  apply path_prod'; funext y.
-  all: exact (concat_1p _)^.
-Defined.
-
-(** Characterization of paths between H-space structures. *)
-Definition equiv_path_ishspace `{Funext} {X : pType} (mu nu : IsHSpace X)
-  : path_ishspace_type mu nu <~> (mu = nu).
-Proof.
-  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid];
-    unfold path_ishspace_type.
-  nrefine (equiv_ap_inv' issig_ishspace _ _ oE _).
-  nrefine (equiv_path_sigma _ _ _ oE _); cbn.
-  snrapply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.
-  nrefine (equiv_concat_l _ _ oE _).
-  1: apply transport_binop_lr_id.
-  nrefine (equiv_path_prod _ _ oE _); cbn.
-  snrapply equiv_functor_prod';
-    nrefine (equiv_path_forall _ _ oE _);
-    apply equiv_functor_forall_id; intro x.
-  all: nrefine (equiv_moveR_Vp _ _ _ oE _);
-    apply equiv_concat_r;
-    apply whiskerR; symmetry;
-    apply ap100_path_arrow2.
-Defined.
-
 (** ** Connected H-spaces *)
 
 (** For connected H-spaces, left and right mulitiplication by an element is an equivalence. This is because left and right multiplication by the base point is one, and being an equivalence is a proposition. *)
@@ -119,10 +72,7 @@ Proof.
   rapply conn_point_elim; exact _.
 Defined.
 
-
-(** ** Results about H-spaces *)
-
-(** *** H-spaces are homogeneous *)
+(** ** H-spaces are homogeneous *)
 
 (** A homogeneous structure on a pointed type [A] gives, for any point [a : A], a self-equivalence of [A] sending the base point to [a]. *)
 Class IsHomogeneous (A : pType)
@@ -157,7 +107,7 @@ Global Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
   : IsHomogeneous A
   := (fun a => pequiv_hspace_left_op a).
 
-(** *** Promoting unpointed homotopies to pointed homotopies *)
+(** ** Promoting unpointed homotopies to pointed homotopies *)
 
 (** Two pointed maps [f g : Y ->* X] into an H-space are equal if and only if they are equal as unpointed maps. (Note: This is a logical "iff", not an equivalence of types.) This was first observed by Evan Cavallo for homogeneous types. Below we show a generalization due to Egbert Rijke, which we then specialize to H-spaces. Notably, the specialization does not require left-invertibility. This appears as Lemma 2.6 in https://arxiv.org/abs/2301.02636v1 *)
 

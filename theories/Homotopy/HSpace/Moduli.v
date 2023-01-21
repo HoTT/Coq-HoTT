@@ -10,6 +10,53 @@ Local Open Scope mc_mult_scope.
 
 This equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1 *)
 
+(** ** Paths between H-space structures *)
+
+(** Paths between H-space structures correspond to homotopies between the underlying binary operations which respect the identities. This is the type of the latter. *)
+Definition path_ishspace_type {X : pType} (mu nu : IsHSpace X) : Type.
+Proof.
+  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid].
+  refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 & prod (forall x:X, _) (forall x:X, _) }.
+  - exact (mu_lid x = h pt x @ nu_lid x).
+  - exact (mu_rid x = h x pt @ nu_rid x).
+Defined.
+
+(** Transport of left and right identities of binary operations along paths between the underlying functions. *)
+Local Definition transport_binop_lr_id `{Funext} {X : Type} {x : X}
+  {mu nu : X -> X -> X} `{mu_lid : forall y, mu x y = y}
+  `{mu_rid : forall y, mu y x = y} (p : mu = nu)
+  : transport (fun m : X -> X -> X =>
+                 (forall y, m x y = y) * (forall y, m y x = y))
+      p (mu_lid, mu_rid)
+    = (fun y => (ap100 p _ _)^ @ mu_lid y,
+         fun y => (ap100 p _ _)^ @ mu_rid y).
+Proof.
+  induction p; cbn.
+  apply path_prod'; funext y.
+  all: exact (concat_1p _)^.
+Defined.
+
+(** Characterization of paths between H-space structures. *)
+Definition equiv_path_ishspace `{Funext} {X : pType} (mu nu : IsHSpace X)
+  : path_ishspace_type mu nu <~> (mu = nu).
+Proof.
+  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid];
+    unfold path_ishspace_type.
+  nrefine (equiv_ap_inv' issig_ishspace _ _ oE _).
+  nrefine (equiv_path_sigma _ _ _ oE _); cbn.
+  snrapply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.
+  nrefine (equiv_concat_l _ _ oE _).
+  1: apply transport_binop_lr_id.
+  nrefine (equiv_path_prod _ _ oE _); cbn.
+  snrapply equiv_functor_prod';
+    nrefine (equiv_path_forall _ _ oE _);
+    apply equiv_functor_forall_id; intro x.
+  all: nrefine (equiv_moveR_Vp _ _ _ oE _);
+    apply equiv_concat_r;
+    apply whiskerR; symmetry;
+    apply ap100_path_arrow2.
+Defined.
+
 (** ** Sections of evaluation fibrations *)
 
 (** We first show that coherent H-space structures on a pointed type correspond to pointed sections of the evaluation fibration [ev A]. *)
