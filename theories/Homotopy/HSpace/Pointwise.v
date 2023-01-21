@@ -86,10 +86,8 @@ Proof.
   - cbn.
     generalize iscoherent as isc.
     unfold left_identity, right_identity.
-    (* The next two lines are essentially the same as [generalize], but for some reason that tactic doesn't work here. *)
-    set (q := hspace_right_identity pt); clearbody q.
-    (* For some reason, [pt] doesn't work in the next line. *)
-    set (p := hspace_left_identity _); clearbody p.
+    (* The next line is essentially the same as [generalize], but for some reason that tactic doesn't work here. *)
+    set (p := hspace_left_identity pt); clearbody p.
     intros [].
     induction p.
     reflexivity.
