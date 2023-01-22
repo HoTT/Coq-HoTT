@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
-Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable
+               Basics.Equivalences.
 Require Import Types.Forall.
 Local Open Scope path_scope.
 
@@ -46,7 +47,7 @@ Definition path_arrow_1 {A B : Type} (f : A -> B)
   : (path_arrow f f (fun x => 1)) = 1
   := eta_path_arrow f f 1.
 
-Definition equiv_ap10 `{Funext} {A B : Type} f g
+Definition equiv_ap10 {A B : Type} f g
 : (f = g) <~> (f == g)
   := Build_Equiv _ _ (@ap10 A B f g) _.
 
@@ -57,6 +58,26 @@ Global Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
 Definition equiv_path_arrow {A B : Type} (f g : A -> B)
   : (f == g) <~> (f = g)
   := equiv_path_forall f g.
+
+(** Function extensionality for two-variable functions *)
+Definition equiv_path_arrow2 {X Y Z: Type} (f g : X -> Y -> Z)
+  : (forall x y, f x y = g x y) <~> f = g.
+Proof.
+  refine (equiv_path_arrow _ _ oE _).
+  apply equiv_functor_forall_id; intro x.
+  apply equiv_path_arrow.
+Defined.
+
+Definition ap100_path_arrow2 {X Y Z : Type} {f g : X -> Y -> Z}
+  (h : forall x y, f x y = g x y) (x : X) (y : Y)
+  : ap100 (equiv_path_arrow2 f g h) x y = h x y.
+Proof.
+  unfold ap100.
+  refine (ap (fun p => ap10 p y) _ @ _).
+  1: apply apD10_path_arrow.
+  cbn.
+  apply apD10_path_arrow.
+Defined.
 
 (** ** Path algebra *)
 

@@ -29,8 +29,6 @@ Section Smash.
 
   Definition auxr : Smash X Y := pushr true.
 
-  Notation pt := (point _).
-
   Definition gluel (x : X) : sm x pt = auxl
     := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).
 

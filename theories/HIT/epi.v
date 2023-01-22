@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import TruncType.
-Require Import Colimits.Pushout Truncations.Core Modalities.Modality HIT.SetCone.
+Require Import Colimits.Pushout Truncations.Core HIT.SetCone.
 
 Local Open Scope path_scope.
 

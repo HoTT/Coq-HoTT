@@ -326,15 +326,12 @@ Proof.
   apply loops_psigma_commute.
 Defined.
 
-(* We declare this local notation to make it easier to write pointed types *)
-Local Notation "( X , x )" := (Build_pType X x).
-
 (** In the following lemmas we have used universe annotations explicitly as without them, coq cannot guess the universe levels correctly. Defining pointed maps as a special case of pForall has the side effect of raising the universe level since pForall requires a bigger universe for the type family. Hopefully in the future, coq's "universe guessing" will be smarter and we can drop the annotations here. *)
 
 (* We can convert between families of loops in a type and loops in Type at that type. *)
 Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
   : pEquiv@{j j k} (loops@{j} (Build_pType@{j} Type@{i} A))
-          (A <~> A, equiv_idmap).
+          [A <~> A, equiv_idmap].
 Proof.
   apply issig_pequiv'.
   exists (equiv_equiv_path A A).
@@ -342,8 +339,8 @@ Proof.
 Defined.
 
 Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : nat)
-  : iterated_loops@{j} n.+2 (Type@{i}, A)
-    <~>* pproduct (fun a => iterated_loops@{j} n.+1 (A, a)).
+  : iterated_loops@{j} n.+2 [Type@{i}, A]
+    <~>* pproduct (fun a => iterated_loops@{j} n.+1 [A, a]).
 Proof.
   induction n.
   { refine (_ o*E emap loops (loops_type A)).
@@ -356,7 +353,7 @@ Defined.
 
 (* 7.2.7 *)
 Theorem equiv_istrunc_istrunc_loops `{Univalence} n X
-  : IsTrunc n.+2 X <~> forall x, IsTrunc n.+1 (loops (X, x)).
+  : IsTrunc n.+2 X <~> forall x, IsTrunc n.+1 (loops [X, x]).
 Proof.
   srapply equiv_iff_hprop.
   intro tr_loops.
@@ -367,7 +364,7 @@ Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
 Theorem equiv_istrunc_contr_iterated_loops `{Univalence} (n : nat)
-  : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n (A, a)).
+  : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
 Proof.
   induction n; intro A.
   { cbn. exact equiv_hprop_inhabited_contr. }
@@ -375,8 +372,8 @@ Proof.
   srapply equiv_functor_forall_id.
   intro a.
   cbn beta.
-  refine (_ oE IHn (loops (A, a))).
-  refine (equiv_inO_equiv (-2) (unfold_iterated_loops' n (A,a))^-1 oE _).
+  refine (_ oE IHn (loops [A, a])).
+  refine (equiv_inO_equiv (-2) (unfold_iterated_loops' n [A,a])^-1 oE _).
   rapply equiv_iff_hprop.
   intros X p.
   refine (@contr_equiv' _ _ _ X).

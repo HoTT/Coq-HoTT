@@ -18,8 +18,11 @@
 # Also, stdout is usually redirected to a timing file, so we send all of
 # our additional output to stderr.
 
-# Below, excludes is set to a list of files to not process.  These are
+# Below, file_excludes is set to a list of files to not process.  These are
 # summary files, intended to be used to Require multiple other files.
+
+# Also, module_excludes is set to a list of Modules to not try removing.
+# We use this to keep "Basics" and "Types" present, by default.
 
 # "Require" and "Require Import" are both handled, but not "Require Export".
 
@@ -99,7 +102,7 @@ period = re.compile(r'[.]\s')
 # Files to not strip.  Most of these files are "summary" files that
 # Require other files for convenience.  A couple are excluded for
 # other reasons, as the comments mention.
-excludes=[
+file_excludes=[
     'theories/Categories.v',
     'theories/Categories/Adjoint.v',
     'theories/Categories/Adjoint/Composition.v',
@@ -144,6 +147,8 @@ excludes=[
     'theories/Classes/interfaces/integers.v',   # only a comment changes
     ]
 
+module_excludes = ['Basics', 'Types']
+
 def striprequires(vfile):
     changes = 0
     attempts = 0
@@ -152,7 +157,7 @@ def striprequires(vfile):
     # Ensure that the file builds with no changes:
     ret, duration = coqc(False)
     # Exit immediately if it fails, or if the file is excluded from further treatment.
-    if ret != 0 or vfile in excludes:
+    if ret != 0 or vfile in file_excludes:
         return ret, changes, attempts, timeouts
 
     with open(vfile, 'r', encoding="utf-8") as f:
@@ -204,8 +209,9 @@ def striprequires(vfile):
 
         imports = line[start:end].split()
         for j in range(len(imports)):
-            attempts += 1
             save = imports[j]
+            if save in module_excludes: continue
+            attempts += 1
             imports[j] = None
             newimports = myjoin(imports)
             if newimports or continuation or continued:
