@@ -65,11 +65,11 @@ Definition equiv_iscohhspace_psect `{Funext} (A : pType)
 Proof.
   refine (issig_psect (ev A) oE _ oE (issig_iscohhspace A)^-1%equiv).
   unfold SgOp, LeftIdentity, RightIdentity.
-  rapply equiv_functor_sigma_id; intro mu.
+  nrapply equiv_functor_sigma_id; intro mu.
   snrapply (equiv_functor_sigma' (equiv_path_forall _ _)); intro H1; cbn.
   snrapply equiv_functor_sigma_id; intro H2; cbn.
   refine (_ oE (equiv_path_inverse _ _)).
-  rapply equiv_concat_r.
+  nrapply equiv_concat_r.
   refine (_ @ (concat_p1 _)^).
   (* This does not do a rewrite, but [change]s the goal based on the type of the lemma: *)
   rewrite_refl (ap_apply_lD (path_forall (mu pt) idmap H1) pt).
@@ -104,7 +104,7 @@ Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}
   `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
   : [(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A.
 Proof.
-  srapply Build_pEquiv'.
+  snrapply Build_pEquiv'.
   1: exact equiv_map_pmap_hspace.
   cbn.
   apply path_forall, hspace_left_identity.
@@ -115,7 +115,7 @@ Proposition hspace_ev_trivialization `{Funext} {A : pType}
   `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}
   : ev A o* pequiv_map_pmap_hspace ==* psnd (A:=[A ->* A, pmap_idmap]).
 Proof.
-  srapply Build_pHomotopy.
+  snrapply Build_pHomotopy.
   { intros [f x]; cbn.
     exact (ap _ (dpoint_eq f) @ hspace_right_identity _). }
   cbn.
@@ -135,6 +135,5 @@ Proof.
   refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).
   refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).
   refine (equiv_pequiv_postcompose _); symmetry.
-  nrapply ishomogeneous.
-  apply ishomogeneous_hspace.
+  rapply pequiv_hspace_left_op.
 Defined.

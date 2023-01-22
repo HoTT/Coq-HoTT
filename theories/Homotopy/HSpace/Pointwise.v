@@ -103,7 +103,7 @@ Proof.
   - exact (fun a => equiv_hspace_left_op (f a)).
   - cbn. exact (right_identity _ @ point_eq f).
   - intro g.
-    apply path_pforall; srapply Build_pHomotopy.
+    apply path_pforall; snrapply Build_pHomotopy.
     + intro y; cbn.
       reflexivity.
     + cbn. apply (moveR_1M _ _)^-1.
