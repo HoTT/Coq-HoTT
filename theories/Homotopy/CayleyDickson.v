@@ -4,6 +4,7 @@ Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Join.
 
+Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
 (** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
@@ -124,7 +125,7 @@ Proof.
 Defined.
 
 Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ (point _) (point _) (conjugate_susp A cdi_negate).
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate).
 Proof.
   reflexivity.
 Defined.
@@ -244,7 +245,7 @@ Section ImaginaroidHSpace.
       (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
       the following is the spherical form. *)
   Global Instance cd_op
-    : SgOp (Build_pType (Join (Susp A) (Susp A)) (joinl (point _))).
+    : SgOp (Build_pType (Join (Susp A) (Susp A)) (joinl pt)).
   Proof.
     srapply Join_rec; hnf.
     { intro a.
@@ -296,7 +297,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance cd_op_left_identity
-    : LeftIdentity cd_op (point _).
+    : LeftIdentity cd_op pt.
   Proof.
     srapply Join_ind; simpl.
     { intro a; apply ap.
@@ -310,7 +311,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance cd_op_right_identity
-    : RightIdentity cd_op (point _).
+    : RightIdentity cd_op pt.
   Proof.
     srapply Join_ind; simpl.
     { intro a; apply ap.
@@ -328,7 +329,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance hspace_cdi_susp_assoc
-    : IsHSpace (Build_pType (Join (Susp A) (Susp A)) (joinl (point _)))
+    : IsHSpace (Build_pType (Join (Susp A) (Susp A)) (joinl pt))
     := {}.
 
 End ImaginaroidHSpace.

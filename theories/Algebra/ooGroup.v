@@ -48,7 +48,7 @@ Proof.
   cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }
   cut (IsSurjection (unit_name (point BG))).
-  { intros; refine (conn_pointed_type (point _)). }
+  { intros; refine (conn_pointed_type pt). }
   apply BuildIsSurjection; simpl; intros [x p].
   strip_truncations; apply tr; exists tt.
   apply path_sigma_hprop; simpl.

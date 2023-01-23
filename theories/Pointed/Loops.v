@@ -254,7 +254,7 @@ Definition pequiv_fmap_iterated_loops {A B} n
 Lemma loops_prod (X Y : pType) : loops (X * Y) <~>* loops X * loops Y.
 Proof.
   srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
-  1: symmetry; refine (equiv_path_prod (point _) (point (X * Y))).
+  1: symmetry; refine (equiv_path_prod pt (point (X * Y))).
   reflexivity.
 Defined.
 

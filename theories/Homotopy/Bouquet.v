@@ -22,7 +22,7 @@ Section AssumeUnivalence.
   Proof.
     rapply isconnected_susp.
     rapply contr_inhabited_hprop.
-    apply tr; exact (point _).
+    apply tr; exact pt.
   Defined.
 
   (** We can directly prove that it satisfies the desired equivalence together with naturality in the second argument. *)

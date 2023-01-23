@@ -355,7 +355,7 @@ Proof.
 Defined.
 
 Definition pmap_abses_const {B' A' B A : AbGroup} : AbSES B A -->* AbSES B' A'
-  := Build_BasepointPreservingFunctor (const (point _)) (Id (point _)).
+  := Build_BasepointPreservingFunctor (const pt) (Id pt).
 
 Definition to_pointed `{Univalence} {B' A' B A : AbGroup}
   : (AbSES B A -->* AbSES B' A') -> (AbSES B A ->* AbSES B' A')

@@ -134,7 +134,7 @@ Global Instance conn_map_loop_susp_unit `{Univalence}
   (X : pType) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
 Proof.
-  refine (conn_map_compose _ _ (equiv_concat_r (merid (point _))^ _)).
+  refine (conn_map_compose _ _ (equiv_concat_r (merid pt)^ _)).
 Defined.
 
 (** We also have this corollary *)
