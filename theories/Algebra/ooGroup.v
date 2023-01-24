@@ -1,7 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Pointed.
 Require Import Homotopy.ClassifyingSpace.
+Require Import Homotopy.Cover.
 Require Import Algebra.Groups.
+Require Import HFiber.
 Require Import WildCat.
 
 Local Open Scope trunc_scope.
@@ -36,31 +38,14 @@ This is also convenient because elements of oo-groups are, definitionally, loops
 Coercion group_type : ooGroup >-> Sortclass.
 
 (** Every pointed type has a loop space that is an oo-group. *)
-Definition group_loops (X : pType)
-  : ooGroup.
-Proof.
-  (* Work around https://coq.inria.fr/bugs/show_bug.cgi?id=4256 *)
-  pose (x0 := point X);
-  pose (BG := (Build_pType
-               { x:X & merely (x = point X) }
-               (exist (fun x:X => merely (x = point X)) x0 (tr 1)))).
-  (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
-  cut (IsConnected 0 BG).
-  { exact (Build_ooGroup BG). }
-  cut (IsSurjection (unit_name (point BG))).
-  { intros; refine (conn_pointed_type (point _)). }
-  apply BuildIsSurjection; simpl; intros [x p].
-  strip_truncations; apply tr; exists tt.
-  apply path_sigma_hprop; simpl.
-  exact (p^).
-Defined.
+Definition group_loops (X : pType) : ooGroup := Build_ooGroup (pcomp X pt) _.
 
 (** Unfortunately, the underlying type of that oo-group is not *definitionally* the same as the ordinary loop space, but it is equivalent to it. *)
 Definition loops_group (X : pType)
   : loops X <~> group_loops X.
 Proof.
   unfold loops, group_type. simpl.
-  exact (equiv_path_sigma_hprop (point X ; tr 1) (point X ; tr 1)).
+  exact (equiv_path_sigma_hprop (point X ; 1) (point X ; 1)).
 Defined.
 
 (** ** Homomorphisms *)
@@ -80,13 +65,14 @@ Definition group_loops_functor
            {X Y : pType} (f : X ->* Y)
 : ooGroupHom (group_loops X) (group_loops Y).
 Proof.
-  simple refine (Build_pMap _ _ _ _); simpl.
-  - intros [x p].
-    exists (f x).
-    strip_truncations; apply tr.
-    exact (ap f p @ point_eq f).
-  - apply path_sigma_hprop; simpl.
-    apply point_eq.
+  srapply functor_pfiber.
+  - exact f.
+  - exact (fmap (pTr _) f).
+  - srapply Build_pHomotopy.
+    + reflexivity.
+    + apply moveL_pV.
+      simpl; f_ap.
+      by apply concat_p1.
 Defined.
 
 (** And this functor "is" the same as the ordinary loop space functor. *)
@@ -97,18 +83,14 @@ Definition loops_functor_group
 Proof.
   intros x.
   apply (equiv_inj (equiv_path_sigma_hprop _ _)^-1).
-  simpl.
-  unfold pr1_path; rewrite !ap_pp.
+  cbn; unfold pr1_path; rewrite !ap_pp.
   rewrite ap_V, !ap_pr1_path_sigma_hprop.
-  apply whiskerL, whiskerR.
-  transitivity (ap (fun X0 : {x0 : X & merely (x0 = point X)} => f X0.1)
-                   (path_sigma_hprop (point X; tr 1) (point X; tr 1) x)).
-  - match goal with
-        |- ap ?f (ap ?g ?p) = ?z =>
-        symmetry; refine (ap_compose g f p)
-    end.
-  - rewrite ap_compose; apply ap.
-    apply ap_pr1_path_sigma_hprop.
+  cbn; rewrite !ap_pr1_path_sigma_uncurried.
+  cbn; do 2 f_ap.
+  refine (_ @ _).
+  { refine (ap _ _).
+    apply ap_functor_sigma_hprop. }
+  by rewrite !ap_pr1_path_sigma_hprop.
 Qed.
 
 Definition grouphom_compose {G H K : ooGroup}

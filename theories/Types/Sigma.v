@@ -162,6 +162,11 @@ Definition ap_pr1_path_sigma {A:Type} {P : A -> Type} {u v : sig P}
   : ap pr1 (path_sigma _ _ _ p q) = p
   := pr1_path_sigma p q.
 
+Definition ap_pr1_path_sigma_uncurried {A : Type} {P : A -> Type} {u v : sig P}
+           (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
+  : ap pr1 (path_sigma_uncurried _ _ _ pq) = pq.1
+  := pr1_path_sigma_uncurried pq.
+
 Definition pr2_path_sigma `{P : A -> Type} {u v : sig P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : (path_sigma _ _ _ p q)..2
@@ -719,6 +724,11 @@ Definition pr1_path_path_sigma_hprop {A : Type} {P : A -> Type}
 : (path_sigma_hprop u v p)..1 = p
   := eissect (path_sigma_hprop u v) p.
 
+Definition ap_pr1_path_sigma_uncurried_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sig P) (p : u.1 = v.1)
+  : ap pr1 (path_sigma_hprop u v p) = p
+  := eissect (path_sigma_hprop u v) p.
+
 (** ** Fibers of [functor_sigma] *)
 Definition hfiber_functor_sigma {A B} (P : A -> Type) (Q : B -> Type)
            (f : A -> B) (g : forall a, P a -> Q (f a))
@@ -765,4 +775,18 @@ Definition istruncmap_from_functor_sigma n {A P Q}
 Proof.
   intros a v.
   exact (istrunc_equiv_istrunc _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
+Defined.
+
+Definition ap_functor_sigma_hprop {A B} {P : A -> Type} {Q : B -> Type}
+  {H1 : forall x, IsHProp (P x)} {H2 : forall x, IsHProp (Q x)}
+  (f : A -> B) (g : forall a, P a -> Q (f a))
+  (u v : sig P) (p : u.1 = v.1)
+  : ap (functor_sigma f g) (path_sigma_hprop u v p)
+    = path_sigma_hprop (functor_sigma f g u) (functor_sigma f g v) (ap f p).
+Proof.
+  refine (ap_functor_sigma _ _ _ _ _ _ @ _).
+  unfold path_sigma_hprop.
+  unfold path_sigma.
+  f_ap; cbn; f_ap.
+  apply path_ishprop.
 Defined.
