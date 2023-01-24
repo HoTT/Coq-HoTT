@@ -31,7 +31,7 @@ Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
   := (point A, point B).
 
 (** We override the notation for products in pointed_scope *)
-Notation "X * Y" := ([(X * Y), ispointed_prod]) : pointed_scope.
+Notation "X * Y" := ([X * Y, ispointed_prod]) : pointed_scope.
 
 (** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. *)
 Definition pFam (A : pType) := {P : A -> Type & P (point A)}.
