@@ -3,7 +3,9 @@ Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.Connectedness.
+Require Import Pointed.Core.
 
+Local Open Scope pointed_scope.
 Local Open Scope path_scope.
 
 (** * Joins *)
@@ -223,6 +225,9 @@ Section Join.
       rewrite ap_const, concat_p1.
       reflexivity.
   Defined.
+
+  Definition pjoin (A : pType) (B : Type) : pType
+    := [Join A B, joinl pt].
 
 End Join.
 
