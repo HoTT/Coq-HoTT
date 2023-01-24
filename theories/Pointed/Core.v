@@ -31,7 +31,7 @@ Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
   := (point A, point B).
 
 (** We override the notation for products in pointed_scope *)
-Notation "X * Y" := (Build_pType (X * Y) ispointed_prod) : pointed_scope.
+Notation "X * Y" := ([(X * Y), ispointed_prod]) : pointed_scope.
 
 (** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. *)
 Definition pFam (A : pType) := {P : A -> Type & P (point A)}.
@@ -146,11 +146,11 @@ Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
 
 (** Pointed sigma types *)
 Definition psigma {A : pType} (P : pFam A) : pType
-  := Build_pType (sig P) (point A; P.2).
+  := [sig P, (point A; P.2)].
 
 (** Pointed pi types, note that the domain is not pointed *)
 Definition pproduct {A : Type} (F : A -> pType) : pType
-  := Build_pType (forall (a : A), pointed_type (F a)) (ispointed_type o F).
+  := [forall (a : A), pointed_type (F a), ispointed_type o F].
 
 (** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
 
@@ -502,7 +502,7 @@ Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B
 
 (** The pointed type of pointed maps. For dependent pointed maps we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
 Definition ppForall (A : pType) (B : A -> pType) : pType
-  := Build_pType (pForall A (pointed_fam B)) (point_pforall B).
+  := [pForall A (pointed_fam B), point_pforall B].
 
 Definition ppMap (A B : pType) : pType
   := ppForall A (fun _ => B).
@@ -772,7 +772,7 @@ Proof.
 Defined.
 
 (** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor pType to Type. *)
-Definition pointify (S : Type) : pType := Build_pType (S + Unit) (inr tt).
+Definition pointify (S : Type) : pType := [S + Unit, inr tt].
 
 Global Instance is0functor_pointify : Is0Functor pointify.
 Proof.

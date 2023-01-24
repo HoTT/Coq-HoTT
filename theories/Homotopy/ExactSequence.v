@@ -491,7 +491,7 @@ Definition Pi_les `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
 
 (** Fiber sequences correspond to pointed maps into the universe. *)
 Definition classify_fiberseq `{Univalence} {Y F : pType@{u}}
-  : (Y ->* Build_pType Type@{u} F) <~> { X : pType@{u} & FiberSeq F X Y }.
+  : (Y ->* [Type@{u}, F]) <~> { X : pType@{u} & FiberSeq F X Y }.
 Proof.
   refine (_ oE _).
   (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)

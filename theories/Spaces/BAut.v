@@ -20,7 +20,7 @@ Global Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
 
 (** We also define a pointed version [pBAut X], since the coercion [BAut_pr1] doesn't work if [BAut X] is a [pType]. *)
 Definition pBAut (X : Type) : pType
-  := Build_pType (BAut X) _.
+  := [BAut X, _].
 
 Definition path_baut `{Univalence} {X} (Z Z' : BAut X)
 : (Z <~> Z') <~> (Z = Z' :> BAut X)
@@ -277,7 +277,7 @@ Section ClassifyingMaps.
 
   (** The pointed version of [equiv_baut_typeO] above. *)
   Proposition pequiv_pbaut_typeOp@{u v +} `{Univalence} {F : Type@{u}}
-    : pBAut@{u v} F <~>* Build_pType (Type_ (subuniverse_merely_equiv F)) (F; tr equiv_idmap).
+    : pBAut@{u v} F <~>* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].
   Proof.
     snrapply Build_pEquiv'; cbn.
     1: exact equiv_baut_typeO.
@@ -293,7 +293,7 @@ Section ClassifyingMaps.
   (** When [Y] is connected, pointed maps into [pBAut F] correspond to maps into the universe sending the base point to [F]. *)
   Proposition equiv_pmap_pbaut_type_p `{Univalence}
               {Y : pType@{u}} {F : Type@{u}} `{IsConnected 0 Y}
-    : (Y ->* pBAut F) <~> (Y ->* Build_pType Type@{u} F).
+    : (Y ->* pBAut F) <~> (Y ->* [Type@{u}, F]).
   Proof.
     refine (_ oE equiv_pequiv_postcompose pequiv_pbaut_typeOp).
     rapply equiv_pmap_typeO_type_connected.

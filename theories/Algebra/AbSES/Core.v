@@ -72,7 +72,7 @@ Proof.
 Defined.
 
 (** The pointed type of short exact sequences. *)
-Definition AbSES (B A : AbGroup) : pType := Build_pType (AbSES' B A) _.
+Definition AbSES (B A : AbGroup) : pType := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
 

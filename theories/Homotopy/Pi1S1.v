@@ -11,18 +11,16 @@ Local Open Scope wc_iso_scope.
 Section Pi1S1.
   Context `{Univalence}.
 
-  Local Notation "( A , a )" := (Build_pType A a).
-
   Local Open Scope int_scope.
   Local Open Scope pointed_scope.
 
-  Theorem Pi1Circle : Pi 1 (Circle, base) ≅ abgroup_Z.
+  Theorem Pi1Circle : Pi 1 [Circle, base] ≅ abgroup_Z.
   Proof.
     (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
     symmetry.
     srapply Build_GroupIsomorphism'.
     { equiv_via (base = base).
-      2: exact (equiv_tr 0 (loops (Circle, base))).
+      2: exact (equiv_tr 0 (loops [Circle, base])).
       symmetry.
       exact equiv_loopCircle_int. }
     intros a b.

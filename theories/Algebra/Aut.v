@@ -3,9 +3,12 @@ Require Import Basics.
 Require Import Truncations.
 Require Import Algebra.ooGroup.
 Require Import Spaces.BAut.
+Require Import Pointed.Core.
+
+Local Open Scope pointed_scope.
 
 (** * Automorphism oo-Groups *)
 
 (** We define [Aut X] using the pointed, connected type [BAut X]. *)
 Definition Aut (X : Type) : ooGroup
-  := Build_ooGroup (Build_pType (BAut X) _) _.
+  := Build_ooGroup [BAut X, _] _.

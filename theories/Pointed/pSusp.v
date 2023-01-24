@@ -24,8 +24,8 @@ Global Instance ispointed_path_susp `{IsPointed X}
 Global Instance ispointed_path_susp' `{IsPointed X}
   : IsPointed (South = North :> Susp X) | 0 := (merid (point X))^.
 
-Definition psusp (X : pType) : pType
-  := Build_pType (Susp X) _.
+Definition psusp (X : Type) : pType
+  := [Susp X, _].
 
 (** ** Suspension Functor *)
 

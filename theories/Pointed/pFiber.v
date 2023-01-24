@@ -10,7 +10,7 @@ Local Open Scope pointed_scope.
 
 Definition pfiber {A B : pType} (f : A ->* B) : pType.
 Proof.
-  refine (Build_pType (hfiber f (point B)) _); try exact _.
+  nrefine ([hfiber f (point B), _]).
   exists (point A).
   apply point_eq.
 Defined.
