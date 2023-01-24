@@ -4,6 +4,7 @@ Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Join.
 
+Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
 (** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
@@ -84,7 +85,7 @@ Defined.
 Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_negate : Negate A;
   cdi_negate_involutive : Involutive cdi_negate;
-  cdi_susp_hspace : IsHSpace (Build_pType (Susp A) _);
+  cdi_susp_hspace : IsHSpace (psusp A);
   cdi_susp_factorneg_r : FactorNegRight (negate_susp A cdi_negate) hspace_op;
   cdi_susp_conjug_left_inv : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
   cdi_susp_conjug_distr : DistrOpp hspace_op (conjugate_susp A cdi_negate);
@@ -124,7 +125,7 @@ Proof.
 Defined.
 
 Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ (point _) (point _) (conjugate_susp A cdi_negate).
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate).
 Proof.
   reflexivity.
 Defined.
@@ -147,7 +148,7 @@ Defined.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spherioid. *)
 Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
-  : CayleyDicksonSpheroid (Build_pType (Susp A) _) := {}.
+  : CayleyDicksonSpheroid (psusp A) := {}.
 
 Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
@@ -244,8 +245,9 @@ Section ImaginaroidHSpace.
       (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
       the following is the spherical form. *)
   Global Instance cd_op
-    : SgOp (Build_pType (Join (Susp A) (Susp A)) (joinl (point _))).
+    : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
+    unfold psusp, pjoin; cbn.
     srapply Join_rec; hnf.
     { intro a.
       srapply Join_rec; hnf.
@@ -296,7 +298,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance cd_op_left_identity
-    : LeftIdentity cd_op (point _).
+    : LeftIdentity cd_op pt.
   Proof.
     srapply Join_ind; simpl.
     { intro a; apply ap.
@@ -310,7 +312,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance cd_op_right_identity
-    : RightIdentity cd_op (point _).
+    : RightIdentity cd_op pt.
   Proof.
     srapply Join_ind; simpl.
     { intro a; apply ap.
@@ -328,7 +330,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance hspace_cdi_susp_assoc
-    : IsHSpace (Build_pType (Join (Susp A) (Susp A)) (joinl (point _)))
+    : IsHSpace (pjoin (psusp A) (psusp A))
     := {}.
 
 End ImaginaroidHSpace.

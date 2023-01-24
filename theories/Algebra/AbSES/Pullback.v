@@ -165,7 +165,7 @@ Proof.
 Defined.
 
 Definition abses_pullback_point' {A B B' : AbGroup} (f : B' $-> B)
-  : (abses_pullback f (point _)) $== (point (AbSES B' A)).
+  : (abses_pullback f pt) $== (point (AbSES B' A)).
 Proof.
   snrefine (_; (_, _)).
   - snrapply Build_GroupIsomorphism.
@@ -267,7 +267,7 @@ Defined.
 (** *** Pulling back along constant maps *)
 
 Lemma abses_pullback_const' `{Funext} {A B B' : AbGroup}
-  : const (point _) $=> (@abses_pullback A B B' grp_homo_const).
+  : const pt $=> (@abses_pullback A B B' grp_homo_const).
 Proof.
   intro E.
   simpl.
@@ -284,7 +284,7 @@ Proof.
 Defined.
 
 Definition abses_pullback_const `{Univalence} {A B B' : AbGroup}
-  : const (point _) == @abses_pullback A B B' grp_homo_const
+  : const pt == @abses_pullback A B B' grp_homo_const
   := fun x => (equiv_path_abses_iso (abses_pullback_const' x)).
 
 Lemma abses_pullback_pconst' `{Funext} {A B B' : AbGroup}

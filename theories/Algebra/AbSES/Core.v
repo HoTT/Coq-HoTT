@@ -72,7 +72,7 @@ Proof.
 Defined.
 
 (** The pointed type of short exact sequences. *)
-Definition AbSES (B A : AbGroup) : pType := Build_pType (AbSES' B A) _.
+Definition AbSES (B A : AbGroup) : pType := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
 
@@ -355,7 +355,7 @@ Proof.
 Defined.
 
 Definition pmap_abses_const {B' A' B A : AbGroup} : AbSES B A -->* AbSES B' A'
-  := Build_BasepointPreservingFunctor (const (point _)) (Id (point _)).
+  := Build_BasepointPreservingFunctor (const pt) (Id pt).
 
 Definition to_pointed `{Univalence} {B' A' B A : AbGroup}
   : (AbSES B A -->* AbSES B' A') -> (AbSES B A ->* AbSES B' A')

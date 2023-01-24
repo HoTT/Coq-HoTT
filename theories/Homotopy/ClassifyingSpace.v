@@ -156,7 +156,7 @@ Defined.
 
 (** The classifying space of a group is the following pointed type. *)
 Definition pClassifyingSpace (G : Group)
-  := Build_pType (ClassifyingSpace G) bbase.
+  := [ClassifyingSpace G, bbase].
   
 (** To use the B G notation for pClassifyingSpace import this module. *)
 Module Import ClassifyingSpaceNotation.
@@ -281,7 +281,7 @@ Section EncodeDecode.
     := Build_Equiv _ _ bloop _.
 
   (** Pointed version of the defining property. *)
-  Definition pequiv_g_loops_bg : Build_pType G _ <~>* loops (B G)
+  Definition pequiv_g_loops_bg : G <~>* loops (B G)
     := Build_pEquiv _ _ pbloop _.
 
   Definition pequiv_loops_bg_g := pequiv_g_loops_bg^-1*%equiv.

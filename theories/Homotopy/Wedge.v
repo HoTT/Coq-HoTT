@@ -7,9 +7,7 @@ Require Import Colimits.Pushout.
 Local Open Scope pointed_scope.
 
 Definition Wedge (X Y : pType) : pType
-  := Build_pType
-    (Pushout (fun _ : Unit => point X) (fun _ => point Y))
-    (pushl (point X)).
+  := [Pushout (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 

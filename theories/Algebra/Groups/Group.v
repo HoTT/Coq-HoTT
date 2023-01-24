@@ -80,7 +80,7 @@ Global Instance ispointed_group (G : Group)
   : IsPointed G := @mon_unit G _.
 
 Definition ptype_group : Group -> pType
-  := fun G => Build_pType G _.
+  := fun G => [G, _].
 Coercion ptype_group : Group >-> pType.
 
 (** * Some basic properties of groups *)

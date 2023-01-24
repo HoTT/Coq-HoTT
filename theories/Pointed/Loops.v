@@ -12,7 +12,7 @@ Local Open Scope path_scope.
 Global Instance ispointed_loops A (a : A) : IsPointed (a = a) := 1.
 
 Definition loops (A : pType) : pType
-  := Build_pType (point A = point A) _.
+  := [point A = point A, 1].
 
 Fixpoint iterated_loops (n : nat) (A : pType) : pType
   := match n with
@@ -183,10 +183,10 @@ Defined.
 
 (** It follows that loop spaces "commute with images". *)
 Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)
-  : loops (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))
+  : loops ([image n.+1 f, factor1 (image n.+1 f) (point A)])
   <~> image n (fmap loops f).
 Proof.
-  set (C := (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))).
+  set (C := [image n.+1 f, factor1 (image n.+1 f) (point A)]).
   pose (g := Build_pMap A C (factor1 (image n.+1 f)) 1).
   pose (h := Build_pMap C B (factor2 (image n.+1 f)) (point_eq f)).
   transparent assert (I : (Factorization
@@ -254,7 +254,7 @@ Definition pequiv_fmap_iterated_loops {A B} n
 Lemma loops_prod (X Y : pType) : loops (X * Y) <~>* loops X * loops Y.
 Proof.
   srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
-  1: symmetry; refine (equiv_path_prod (point _) (point (X * Y))).
+  1: symmetry; refine (equiv_path_prod pt (point (X * Y))).
   reflexivity.
 Defined.
 

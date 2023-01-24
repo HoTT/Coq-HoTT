@@ -27,7 +27,7 @@ Fixpoint Sphere (n : trunc_index)
 (** ** Pointed sphere for non-negative dimensions *)
 Fixpoint psphere (n : nat) : pType
   := match n with
-      | O => Build_pType (Susp Empty) North
+      | O => psusp Empty
       | S n' => psusp (psphere n')
      end.
 
@@ -95,7 +95,7 @@ Defined.
 Definition equiv_S1_Circle : Sphere 1 <~> Circle
   := Build_Equiv _ _ _ isequiv_S1_to_Circle.
 
-Definition pequiv_S1_Circle : psphere 1 <~>* (Build_pType Circle _).
+Definition pequiv_S1_Circle : psphere 1 <~>* [Circle, _].
 Proof.
   srapply Build_pEquiv'.
   1: apply equiv_S1_Circle.

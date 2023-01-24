@@ -159,7 +159,7 @@ Defined.
 
 (** Bundled version of the above. *)
 Lemma isexact_preimage_hfiber (O : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-      `{IsExact O _ _ _ i f} (x : hfiber f (point _))
+      `{IsExact O _ _ _ i f} (x : hfiber f pt)
   : O (hfiber i x.1).
 Proof.
   srapply isexact_preimage; exact x.2.
@@ -184,7 +184,7 @@ Definition isexact_homotopic_f n  {F X Y : pType}
   : IsExact n i f'.
 Proof.
   exists (iscomplex_homotopic_f i ff cx_isexact).
-  pose (e := equiv_hfiber_homotopic _ _ ff (point _)).
+  pose (e := equiv_hfiber_homotopic _ _ ff pt).
   nrefine (cancelR_isequiv_conn_map n _ e).
   1: apply equiv_isequiv.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
@@ -491,7 +491,7 @@ Definition Pi_les `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
 
 (** Fiber sequences correspond to pointed maps into the universe. *)
 Definition classify_fiberseq `{Univalence} {Y F : pType@{u}}
-  : (Y ->* Build_pType Type@{u} F) <~> { X : pType@{u} & FiberSeq F X Y }.
+  : (Y ->* [Type@{u}, F]) <~> { X : pType@{u} & FiberSeq F X Y }.
 Proof.
   refine (_ oE _).
   (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)

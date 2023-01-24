@@ -6,7 +6,7 @@ Local Open Scope pointed_scope.
 (** * Truncations of pointed types *)
 
 Definition pTr (n : trunc_index) (A : pType) : pType
-  := Build_pType (Tr n A) _.
+  := [Tr n A, _].
 
 (** We specialize [pto] and [pequiv_pto] from pModalities.v to truncations. *)
 

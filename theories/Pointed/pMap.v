@@ -8,13 +8,13 @@ Local Open Scope pointed_scope.
 
 (** Not infrequently we have a map between two unpointed types and want to consider it as a pointed map that trivially respects some given point in the domain. *)
 Definition pmap_from_point {A B : Type} (f : A -> B) (a : A)
-  : Build_pType A a ->* Build_pType B (f a)
-  := Build_pMap (Build_pType A a) (Build_pType B (f a)) f 1%path.
+  : [A, a] ->* [B, f a]
+  := Build_pMap [A, a] [B, f a] f 1%path.
 
 (** A variant of [pmap_from_point] where the domain is pointed, but the codomain is not. *)
 Definition pmap_from_pointed {A : pType} {B : Type} (f : A -> B)
-  : A ->* Build_pType B (f (point A))
-  := Build_pMap A (Build_pType B (f (point A))) f 1%path.
+  : A ->* [B, f (point A)]
+  := Build_pMap A [B, f (point A)] f 1%path.
 
 (** The same, for a dependent pointed map. *)
 Definition pforall_from_pointed {A : pType} {B : A -> Type} (f : forall x, B x)
@@ -66,7 +66,7 @@ Proof.
     equiv_sig_coind _ _) C.
   destruct C as [C c0].
   equiv_intros (@equiv_functor_forall_id _ A _ _
-    (fun a => issig_pmap (B a) (Build_pType (C a) (c0 a))) oE
+    (fun a => issig_pmap (B a) [C a, c0 a]) oE
     equiv_sig_coind _ _) g.
   simpl in *. destruct g as [g g0].
   unfold point in g0. unfold functor_forall, sig_coind_uncurried. simpl.

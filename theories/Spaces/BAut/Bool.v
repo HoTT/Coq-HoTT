@@ -161,7 +161,7 @@ First we define the function that will be the equivalence. *)
 
   (** In fact, the map sending [z:Z] to this equivalence [Bool <~> Z] is also an equivalence.  To assist with computing the result when [Z] is [Bool], we prove it with an extra parameter first. *)
   Definition isequiv_equiv_inhab_baut_bool_bool_lemma
-             (t : Bool) (Z : BAut Bool) (m : merely (point _ = Z))
+             (t : Bool) (Z : BAut Bool) (m : merely (pt = Z))
   : IsEquiv (equiv_inhab_baut_bool_bool t Z).
   Proof.
     strip_truncations. destruct m.

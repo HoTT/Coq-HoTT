@@ -200,7 +200,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_point' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout f (point (AbSES B A)) $== point _.
+  : abses_pushout f (point (AbSES B A)) $== pt.
 Proof.
   srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
@@ -218,7 +218,7 @@ Proof.
 Defined.
 
 Definition abses_pushout_point `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-  : abses_pushout f (point (AbSES B A)) = point _
+  : abses_pushout f (point (AbSES B A)) = pt
   := equiv_path_abses_iso (abses_pushout_point' f).
 
 Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-> A')

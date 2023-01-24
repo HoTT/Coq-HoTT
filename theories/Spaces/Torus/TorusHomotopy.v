@@ -28,8 +28,8 @@ Proof.
 Qed.
 
 (** We give these notations for the pointed versions. *)
-Local Notation T := (Build_pType Torus _).
-Local Notation S1 := (Build_pType Circle _).
+Local Notation T := ([Torus, _]).
+Local Notation S1 := ([Circle, _]).
 
 (** Loop space of Torus *)
 Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
