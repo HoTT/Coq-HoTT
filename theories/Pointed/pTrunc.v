@@ -72,6 +72,17 @@ Proof.
     by pointed_reduce.
 Defined.
 
+(** Naturality of [ptr] *)
+Definition ptr_natural (n : trunc_index) {X Y : pType}
+  (f : X ->* Y) : fmap (pTr n) f o* ptr ==* ptr o* f.
+Proof.
+  srapply Build_pHomotopy.
+  1: reflexivity.
+  cbn.
+  refine (_ @ ap011 _ (concat_1p _)^ (ap _ (concat_p1 _))^).
+  exact (concat_pV _)^.
+Defined.
+
 Definition ptr_functor_pconst {X Y : pType} n
   : fmap (pTr n) (@pconst X Y) ==* pconst.
 Proof.
