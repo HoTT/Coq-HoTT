@@ -85,7 +85,7 @@ Defined.
 Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_negate : Negate A;
   cdi_negate_involutive : Involutive cdi_negate;
-  cdi_susp_hspace : IsHSpace (Build_pType (Susp A) _);
+  cdi_susp_hspace : IsHSpace (psusp A);
   cdi_susp_factorneg_r : FactorNegRight (negate_susp A cdi_negate) hspace_op;
   cdi_susp_conjug_left_inv : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
   cdi_susp_conjug_distr : DistrOpp hspace_op (conjugate_susp A cdi_negate);
@@ -148,7 +148,7 @@ Defined.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spherioid. *)
 Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
-  : CayleyDicksonSpheroid (Build_pType (Susp A) _) := {}.
+  : CayleyDicksonSpheroid (psusp A) := {}.
 
 Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
@@ -245,8 +245,9 @@ Section ImaginaroidHSpace.
       (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
       the following is the spherical form. *)
   Global Instance cd_op
-    : SgOp (Build_pType (Join (Susp A) (Susp A)) (joinl pt)).
+    : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
+    unfold psusp, pjoin; cbn.
     srapply Join_rec; hnf.
     { intro a.
       srapply Join_rec; hnf.
@@ -329,7 +330,7 @@ Section ImaginaroidHSpace.
   Defined.
 
   Global Instance hspace_cdi_susp_assoc
-    : IsHSpace (Build_pType (Join (Susp A) (Susp A)) (joinl pt))
+    : IsHSpace (pjoin (psusp A) (psusp A))
     := {}.
 
 End ImaginaroidHSpace.
