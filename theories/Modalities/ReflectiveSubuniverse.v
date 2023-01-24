@@ -839,8 +839,18 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition equiv_O_prod_cmp (A B : Type)
-    : O (A * B) <~> (O A * O B)
-    := Build_Equiv _ _ (O_prod_cmp A B) _.
+      : O (A * B) <~> (O A * O B)
+      := Build_Equiv _ _ (O_prod_cmp A B) _.
+
+    Definition equiv_path_O_prod {X Y : Type} {x0 x1 : X} {y0 y1 : Y}
+      : (to O _ (x0, y0) = to O _ (x1, y1))
+          <~> (to O _ x0 = to O _ x1) * (to O _ y0 = to O _ y1).
+    Proof.
+      refine (_ oE equiv_ap' (equiv_O_prod_cmp _ _) _ _).
+      refine (_ oE equiv_concat_lr _ _); only 2: symmetry.
+      2,3: apply O_rec_beta.
+      exact (equiv_path_prod _ _)^-1%equiv.
+    Defined.
 
     (** ** Pullbacks *)
 

@@ -520,6 +520,10 @@ Definition equiv_sigma_prod1 (A B C : Type)
   : {a : A & {b : B & C}} <~> A * B * C
   := ltac:(make_equiv).
 
+Definition equiv_sigma_prod_prod {X Y : Type} (P : X -> Type) (Q : Y -> Type)
+  : {z : X * Y & (P (fst z)) * (Q (snd z))} <~> (sig P) * (sig Q)
+  := ltac:(make_equiv).
+
 (** ** Symmetry *)
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)

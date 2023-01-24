@@ -18,6 +18,21 @@ Definition O_pcover@{u v} (O : ReflectiveSubuniverse@{u})
   (X : Type@{u}) (x : X) : pType@{u}
   := pfiber@{u v u u} (pto O [X,x]).
 
+(** Covers commute with products *)
+Definition O_pcover_prod `{O : ReflectiveSubuniverse} {X Y : pType@{u}}
+  : O_pcover O (X * Y) pt <~>* [(O_pcover O X pt) * (O_pcover O Y pt), _].
+Proof.
+  srapply Build_pEquiv'.
+  { refine (_ oE equiv_functor_sigma_id _).
+    2: intro; nrapply equiv_path_O_prod.
+    nrapply equiv_sigma_prod_prod. }
+  nrapply path_prod; cbn.
+  all: snrapply path_sigma'.
+  1,3: exact idpath.
+  all: cbn.
+  all: by rewrite concat_p1, concat_Vp.
+Defined.
+
 (** ** Functoriality of [O_cover] *)
 
 (** Given [X] and [x : O X], any map [f : X -> Y] out of [X] induces a map [O_cover X x -> O_cover Y (O_functor O f x)]. *)
