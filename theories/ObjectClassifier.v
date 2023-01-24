@@ -39,7 +39,7 @@ Definition equiv_sigma_fibration `{Univalence} {Y : Type@{u}}
 
 (** We construct the universal square for the object classifier. *)
 Local Definition topmap {A : Type} (P : A -> Type) (e : sig P) : pType
-  := [(P e.1), e.2].
+  := [P e.1, e.2].
 
 (** The square commutes definitionally. *)
 Definition objectclassifier_square {A : Type} (P : A -> Type)
