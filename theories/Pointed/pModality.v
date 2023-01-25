@@ -20,16 +20,22 @@ Definition pO_rec `{O : ReflectiveSubuniverse} {X Y : pType}
   `{In O Y} (f : X ->* Y) : [O X, _] ->* Y
   := Build_pMap [O X, _] _ (O_rec f) (O_rec_beta _ _ @ point_eq f).
 
+Definition pO_rec_beta `{O : ReflectiveSubuniverse} {X Y : pType}
+  `{In O Y} (f : X ->* Y)
+  : pO_rec f o* pto O X ==* f.
+Proof.
+  srapply Build_pHomotopy.
+  1: nrapply O_rec_beta.
+  cbn.
+  apply moveL_pV.
+  exact (concat_1p _)^.
+Defined.
+
 (** ** Pointed functoriality *)
 
 Definition O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}
-  (f : X ->* Y) : [O X, _] ->* [O Y, _].
-Proof.
-  snrapply Build_pMap.
-  1: exact (O_functor O f).
-  refine (O_rec_beta _ _ @ _).
-  exact (ap (to O Y) (point_eq f)).
-Defined.
+  (f : X ->* Y) : [O X, _] ->* [O Y, _]
+  := pO_rec (pto O Y o* f).
 
 (** Coq knows that [O_pfunctor O f] is an equivalence whenever [f] is. *)
 Definition equiv_O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}
@@ -40,10 +46,5 @@ Definition equiv_O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}
 Definition pto_O_natural `(O : ReflectiveSubuniverse) {X Y : pType}
   (f : X ->* Y) : O_pfunctor O f o* pto O X ==* pto O Y o* f.
 Proof.
-  srapply Build_pHomotopy.
-  1: apply to_O_natural.
-  cbn. unfold to_O_natural.
-  apply moveL_pV.
-  refine (whiskerL _ _ @ (concat_1p _)^).
-  apply concat_p1.
+  nrapply pO_rec_beta.
 Defined.
