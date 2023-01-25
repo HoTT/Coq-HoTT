@@ -1,4 +1,4 @@
-Require Import Basics Types HFiber Truncations Pointed
+Require Import Basics Types HFiber Truncations.Core Truncations.SeparatedTrunc Pointed
   Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
