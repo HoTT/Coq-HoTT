@@ -26,10 +26,6 @@ A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 
 
 One reason for our choice is that this way, the n-truncated and n-connected maps are the modal and modally-connected maps for the n-truncation modality.  Many of the basic lemmas about connected maps are in fact true for any modality, and can be found in [Modality.v].  Thus, here we consider mainly properties that involve the interaction of connectedness at different truncation levels. *)
 
-
-Section Extensions.
-  Context `{Univalence}.
-
 (** ** Truncatedness of the type of extensions *)
 
 (** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to extend along an n-connected map, into a k-truncated family of types (k ≥ n).  Then the space of possible extensions is (k–n–2)-truncated.
@@ -37,7 +33,7 @@ Section Extensions.
 (Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of extensions is contractible.)
 
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
-Lemma istrunc_extension_along_conn {m n : trunc_index}
+Lemma istrunc_extension_along_conn `{Univalence} {m n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc (m +2+ n) (P b)}
   (d : forall a:A, P (f a))
@@ -55,7 +51,7 @@ Defined.
 
 (** ** Connectedness of path spaces *)
 
-Global Instance isconnected_paths {n A}
+Global Instance isconnected_paths `{Univalence} {n A}
        `{IsConnected n.+1 A} (x y : A)
 : IsConnected n (x = y).
 Proof.
@@ -75,7 +71,7 @@ Proof.
   rapply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (fun _:A => tt)).
 Defined.
 
-Definition conn_point_incl {n : trunc_index} {A : Type} (a0:A)
+Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
            `{IsConnected n.+1 A}
   : IsConnMap n (unit_name a0).
 Proof.
@@ -86,7 +82,7 @@ Defined.
 (** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
 
 (** To prove an [n]-truncated predicate on an (n+1)-connected, pointed type, it's enough to prove it for the basepoint. *)
-Definition conn_point_elim (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
+Definition conn_point_elim `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
            (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
   : forall a, P a.
 Proof.
@@ -97,8 +93,6 @@ Proof.
   strip_truncations.
   exact (p # p0).
 Defined.
-
-End Extensions.
 
 #[export] Hint Immediate conn_point_incl : typeclass_instances.
 
