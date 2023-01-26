@@ -46,7 +46,7 @@ Section AssumeUnivalence.
     intros oops.
     apply nontrivial_negb_center_baut_bool.
     apply path_forall; intros Z'.
-    pose (p := merely_path_baut Z Z').
+    pose (p := merely_path_component Z Z').
     clearbody p. strip_truncations.
     destruct p.
     unfold negb_baut_bool in oops.
@@ -184,7 +184,7 @@ First we define the function that will be the equivalence. *)
   : IsEquiv (equiv_inhab_baut_bool_bool t Z).
   Proof.
     exact (isequiv_equiv_inhab_baut_bool_bool_lemma t Z
-            (merely_path_baut _ _)).
+            (merely_path_component _ _)).
   Defined.
 
   (** The names are getting pretty ridiculous; below we suggest a better name for this. *)
