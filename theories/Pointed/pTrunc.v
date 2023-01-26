@@ -21,21 +21,38 @@ Definition pTr_rec n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
   : pTr n X ->* Y
   := Build_pMap (pTr n X) Y (Trunc_rec f) (point_eq f).
 
+(** Note that we get an equality of pointed functions here, without Funext, while [pO_rec_beta] only gives a pointed homotopy. This is because [pTr_rec] computes on elements of the form [tr _]. *)
+Definition pTr_rec_beta_path n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
+  : pTr_rec n f o* ptr = f.
+Proof.
+  unfold pTr_rec, "o*"; cbn.
+  (* Since [f] is definitionally equal to [Build_pMap _ _ f (point_eq f)], this works: *)
+  apply (ap (Build_pMap _ _ f)).
+  apply concat_1p.
+Defined.
+
+(** The version with a pointed homotopy. *)
+Definition pTr_rec_beta n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
+  : pTr_rec n f o* ptr ==* f
+  := phomotopy_path (pTr_rec_beta_path n f).
+
+(** A pointed version of the induction principle. *)
+Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)} (f : pForall X (Y.1 o tr; Y.2))
+  : pForall (pTr n X) Y
+  := Build_pForall (pTr n X) Y (Trunc_ind Y f) (dpoint_eq f).
+
 Definition equiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
   : (pTr n X ->* Y) <~> (X ->* Y).
 Proof.
   srapply equiv_adjointify.
   { intro f.
-    refine (f o* ptr). }
+    exact (f o* ptr). }
   1: srapply pTr_rec.
-  { intro f.
-    destruct f as [f p].
-    apply (ap (Build_pMap _ _ f)).
-    apply concat_1p. }
+  1: nrapply pTr_rec_beta_path.
   intro f.
   apply path_pforall.
   srapply Build_pHomotopy.
-  1: intro; by strip_truncations.
+  1: by rapply Trunc_ind.
   cbn.
   symmetry; apply concat_pp_V.
 Defined.
@@ -46,38 +63,44 @@ Global Instance is0functor_ptr n : Is0Functor (pTr n).
 Proof.
   apply Build_Is0Functor.
   intros X Y f.
-  exact (Build_pMap (pTr n X) (pTr n Y)
-    (Trunc_functor n f) (ap (@tr n Y) (point_eq f))).
+  exact (pTr_rec _ (ptr o* f)).
 Defined.
 
 Global Instance is1functor_ptr n : Is1Functor (pTr n).
 Proof.
   apply Build_Is1Functor.
   - intros X Y f g p.
-    srapply Build_pHomotopy.
-    + intros x; strip_truncations; cbn.
-      change (@tr n Y (f x) = tr (g x)).
-      apply ap, p.
-    + exact (ap _ (dpoint_eq p) @ ap_pp (@tr n _) _ _
-        @ whiskerL _ (ap_V _ _)).
+    srapply pTr_ind; cbn.
+    snrapply Build_pForall.
+    + cbn. exact (fun x => ap tr (p x)).
+    + pointed_reduce.
+      exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.
   - intros X.
     srapply Build_pHomotopy.
-    { intro x.
-      by strip_truncations. }
-    reflexivity.
+    1: apply Trunc_rec_tr.
+    cbn. reflexivity.
   - intros X Y Z f g.
     srapply Build_pHomotopy.
-    { intro x.
-      by strip_truncations. }
+    1: by rapply Trunc_ind.
     by pointed_reduce.
 Defined.
+
+(** Naturality of [ptr].  Note that we get a equality of pointed functions, not just a pointed homotopy. *)
+Definition ptr_natural_path (n : trunc_index) {X Y : pType} (f : X ->* Y)
+  : fmap (pTr n) f o* ptr = ptr o* f
+  := pTr_rec_beta_path n (ptr o* f).
+
+(** The version with a pointed homotopy. *)
+Definition ptr_natural (n : trunc_index) {X Y : pType} (f : X ->* Y)
+  : fmap (pTr n) f o* ptr ==* ptr o* f
+  := phomotopy_path (ptr_natural_path n f).
 
 Definition ptr_functor_pconst {X Y : pType} n
   : fmap (pTr n) (@pconst X Y) ==* pconst.
 Proof.
   srapply Build_pHomotopy.
-  - intros x; strip_truncations; reflexivity.
-  - reflexivity.
+  1: by rapply Trunc_ind.
+  reflexivity.
 Defined.
 
 Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
