@@ -174,6 +174,18 @@ Proof.
   exact p^.
 Defined.
 
+(** Any two points in a path component are merely equal.  This follows from [merely_path_is0connected], but this proof doesn't need univalence. *)
+Definition merely_path_component {X : Type} {x : X}
+  (z1 z2 : { z : X & merely (z = x) })
+  : merely (z1 = z2).
+Proof.
+  destruct z1 as [z1 p1], z2 as [z2 p2].
+  strip_truncations.
+  apply tr.
+  apply path_sigma_hprop; cbn.
+  exact (p1 @ p2^).
+Defined.
+
 (** The path component of a point [x : X] is equivalent to the image of the constant map [Unit -> X] at [x]. *)
 Definition equiv_component_image_unit {X : Type} (x : X)
 : { z : X & merely (z = x) } <~> image (Tr (-1)) (unit_name x).
