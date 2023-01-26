@@ -43,20 +43,6 @@ Proof.
   apply ap10, ap, ap_pr1_path_baut.
 Defined.
 
-(** ** Truncation *)
-
-(** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
-Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
-: IsTrunc n.+2 (BAut X).
-Proof.
-  intros [Z p] [W q].
-  strip_truncations.
-  refine (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _); simpl.
-  symmetry in q; destruct q.
-  symmetry in p; destruct p.
-  exact _.
-Defined.
-
 (** The following tactic, which applies when trying to prove an hprop, replaces all assumed elements of [BAut X] by [X] itself. With [Univalence], this would work for any 0-connected type, but using [merely_path_component] we can avoid univalence. *)
 Ltac baut_reduce :=
   progress repeat
@@ -69,6 +55,17 @@ Ltac baut_reduce :=
            intro Zispoint;
            destruct Zispoint
     end.
+
+(** ** Truncation *)
+
+(** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
+Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
+: IsTrunc n.+2 (BAut X).
+Proof.
+  intros Z W.
+  baut_reduce.
+  exact (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _).
+Defined.
 
 (** If [X] is truncated, then so is every element of [BAut X]. *)
 Global Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
