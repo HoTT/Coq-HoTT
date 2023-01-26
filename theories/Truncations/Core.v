@@ -50,6 +50,10 @@ Definition Trunc_rec {n A X} `{IsTrunc n X}
   : (A -> X) -> (Trunc n A -> X)
 := Trunc_ind (fun _ => X).
 
+Definition Trunc_rec_tr n {A : Type}
+  : Trunc_rec (A:=A) (tr (n:=n)) == idmap
+  := Trunc_ind _ (fun a => idpath).
+
 (** ** [Trunc] is a modality *)
 
 Definition Tr (n : trunc_index) : Modality.

@@ -52,7 +52,7 @@ Proof.
   intro f.
   apply path_pforall.
   srapply Build_pHomotopy.
-  1: intro; by strip_truncations.
+  1: by rapply Trunc_ind.
   cbn.
   symmetry; apply concat_pp_V.
 Defined.
@@ -77,13 +77,11 @@ Proof.
       exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.
   - intros X.
     srapply Build_pHomotopy.
-    { intro x.
-      by strip_truncations. }
-    reflexivity.
+    1: apply Trunc_rec_tr.
+    cbn. reflexivity.
   - intros X Y Z f g.
     srapply Build_pHomotopy.
-    { intro x.
-      by strip_truncations. }
+    1: by rapply Trunc_ind.
     by pointed_reduce.
 Defined.
 
@@ -101,8 +99,8 @@ Definition ptr_functor_pconst {X Y : pType} n
   : fmap (pTr n) (@pconst X Y) ==* pconst.
 Proof.
   srapply Build_pHomotopy.
-  - intros x; strip_truncations; reflexivity.
-  - reflexivity.
+  1: by rapply Trunc_ind.
+  reflexivity.
 Defined.
 
 Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
