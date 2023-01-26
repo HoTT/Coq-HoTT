@@ -73,11 +73,8 @@ Proof.
     srapply pTr_ind; cbn.
     snrapply Build_pForall.
     + cbn. exact (fun x => ap tr (p x)).
-    + cbn.
-      refine (_ @ (ap011 (fun q r => q @ r^) (concat_p1 _) (concat_p1 _))^).
-      refine (_ @ (1 @@ ap_V _ _)).
-      refine (_ @ ap_pp _ _ _).
-      exact (ap _ (dpoint_eq p)).
+    + pointed_reduce.
+      exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.
   - intros X.
     srapply Build_pHomotopy.
     { intro x.
