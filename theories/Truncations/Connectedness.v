@@ -37,7 +37,7 @@ Lemma istrunc_extension_along_conn `{Univalence} {m n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc (m +2+ n) (P b)}
   (d : forall a:A, P (f a))
-: IsTrunc m (ExtensionAlong f P d).
+  : IsTrunc m (ExtensionAlong f P d).
 Proof.
   revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
   (* m = –2 *)
@@ -45,15 +45,14 @@ Proof.
     intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
   - intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
-(* magically infers: paths in extensions = extensions into paths,
-                       which by induction is m'-truncated. *)
+  (* magically infers: paths in extensions = extensions into paths, which by induction is m'-truncated. *)
 Defined.
 
 (** ** Connectedness of path spaces *)
 
 Global Instance isconnected_paths `{Univalence} {n A}
        `{IsConnected n.+1 A} (x y : A)
-: IsConnected n (x = y).
+  : IsConnected n (x = y).
 Proof.
   refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
 Defined.
@@ -100,7 +99,7 @@ Defined.
 
 (** An [n.+1]-connected type is also [n]-connected.  This obviously can't be an [Instance]! *)
 Definition isconnected_pred n A `{IsConnected n.+1 A}
-: IsConnected n A.
+  : IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
   refine (isconnected_elim n.+1 C f).
@@ -137,7 +136,7 @@ Defined.
 (** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  TODO: This should also be generalized to separated subuniverses (CORS Remark 2.35).  *)
 Definition merely_path_is0connected `{Univalence}
            (A : Type) `{IsConnected 0 A} (x y : A)
-: merely (x = y).
+  : merely (x = y).
 Proof.
   (** This follows immediately from [isconnected_paths] above. *)
   rapply center.
@@ -146,7 +145,7 @@ Defined.
 Definition is0connected_merely_allpath `{Univalence}
            (A : Type) `{merely A}
            (p : forall (x y:A), merely (x = y))
-: IsConnected 0 A.
+  : IsConnected 0 A.
 Proof.
   strip_truncations.
   apply (contr_inhabited_hprop).
@@ -182,7 +181,7 @@ Defined.
 
 (** The path component of a point [x : X] is equivalent to the image of the constant map [Unit -> X] at [x]. *)
 Definition equiv_component_image_unit {X : Type} (x : X)
-: { z : X & merely (z = x) } <~> image (Tr (-1)) (unit_name x).
+  : { z : X & merely (z = x) } <~> image (Tr (-1)) (unit_name x).
 Proof.
   unfold image; simpl.
   apply equiv_functor_sigma_id; intros z; simpl.
@@ -194,7 +193,7 @@ Defined.
 (** 0-connected types are indecomposable *)
 Global Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
-: Indecomposable X.
+  : Indecomposable X.
 Proof.
   assert (IsConnected (-1) X) by refine (isconnected_pred (-1) X).
   constructor.
@@ -242,7 +241,7 @@ Context `{Univalence}
   (f_a0b0 : f_a0 b0 = f_b0 a0).
 
 Corollary isconn_wedge_incl
-: { f : forall a b, P a b
+  : { f : forall a b, P a b
   & { e_a0 : forall b, f a0 b = f_a0 b
   & { e_b0 : forall a, f a b0 = f_b0 a
   & e_b0 a0 = (e_a0 b0) @ f_a0b0 }}}.
