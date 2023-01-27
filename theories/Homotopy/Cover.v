@@ -1,5 +1,5 @@
 Require Import Basics Types HFiber Truncations.Core Truncations.SeparatedTrunc Pointed
-  Modalities.ReflectiveSubuniverse Modalities.Modality.
+  Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 
@@ -10,10 +10,7 @@ Definition O_cover@{u} `{O : ReflectiveSubuniverse@{u}}
   (X : Type@{u}) (x : O X) : Type@{u}
   := hfiber (to O _) x.
 
-(** The "[O]-connected" cover is in fact [O]-connected when [O] is a modality, using [isconnected_hfiber_conn_map]. *)
-Global Instance isconnected_O_cover `{O : Modality}
-  (X : Type) (x : O X)
-  : IsConnected O (O_cover X x) := _.
+(** The "[O]-connected" cover is in fact [O]-connected when [O] is a modality, using [isconnected_hfiber_conn_map]. Since Coq can infer this using typeclasses, we don't restate it here. *)
 
 (** Characterization of paths in [O_cover] is given by [equiv_path_hfiber]. *)
 
