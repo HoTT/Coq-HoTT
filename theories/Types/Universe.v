@@ -10,25 +10,14 @@ Generalizable Variables A B f.
 
 (** ** Paths *)
 
-Global Instance isequiv_path {A B : Type} (p : A = B)
-  : IsEquiv (transport (fun X:Type => X) p) | 0
-  := Build_IsEquiv _ _ _ (transport (fun X:Type => X) p^)
-  (transport_pV idmap p)
-  (transport_Vp idmap p)
-  (fun a => match p in _ = C return
-              (transport_pp idmap p^ p (transport idmap p a))^ @
-                 transport2 idmap (concat_Vp p) (transport idmap p a) =
-              ap (transport idmap p) ((transport_pp idmap p p^ a) ^ @
-                transport2 idmap (concat_pV p) a) with idpath => 1 end).
-
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
-  := Build_Equiv _ _ (transport (fun X:Type => X) p) _.
+  := equiv_transport (fun X:Type => X) p.
 
 Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = (equiv_path A B p)^-1%equiv.
 Proof.
-  destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
-  refine (@path_ishprop _ (hprop_isequiv _) _ _).
+  apply path_equiv.
+  reflexivity.
 Defined.
 
 (** See the note by [Funext] in Overture.v *)

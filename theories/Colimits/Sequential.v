@@ -12,7 +12,8 @@ Require Import PathAny.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
-Notation coe := (transport idmap).
+(** [coe] is [transport idmap : (A = B) -> (A -> B)], but is described as the underlying map of an equivalence so that Coq knows that it is an equivalence. *)
+Notation coe := (fun p => equiv_fun (equiv_path _ _ p)).
 Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
 (** Mapping spaces into hprops from colimits of sequences can be characterized. *)
@@ -216,7 +217,7 @@ Proof.
       * exact (fun k => coe (ap A (nat_add_n_O k)^)).
       * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (nat_add_n_O k)^ @ _).
         srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))).
-    + intro k; srapply isequiv_path.
+    + exact _.
   - symmetry; srapply seq_colimit_uniq.
     + intros k a; exact (J (nat_add_n_O k)).
     + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
@@ -226,7 +227,7 @@ Proof.
         { exact (fun k => coe (ap A (nat_add_n_Sm k n)^)). }
         { intros k l p a; destruct p; rapply (K S (fun n a => a^+) (nat_add_n_Sm k n)^ @ _).
           srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))). }
-      * intro k; srapply isequiv_path.
+      * exact _.
     + srefine (transitivity (equiv_colim_succ_seq_to_colim_seq _) (Build_Equiv _ _ _ e)).
   - symmetry; srapply seq_colimit_uniq.
     + intros k a; exact (J (nat_add_n_Sm k n)).
@@ -591,7 +592,7 @@ Proof.
     * srapply Build_DiagramMap.
       - exact (fun n => coe (ap B (seq_shift_pair_from_zero a2 n))).
       - intros n m p b; destruct p; srapply (K _ _ (seq_shift_pair_from_zero a2 n)).
-    * intro n; srapply isequiv_path.
+    * exact _.
 Defined.
 
 (** The characterization of path spaces in sequential colimits; Theorem 7.4, second part. *)
