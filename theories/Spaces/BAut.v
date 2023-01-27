@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 (** ** Basics *)
 
-(** [BAut X] is the type of types that are merely equal to [X]. It is connected, by [is0connected_component]. *)
+(** [BAut X] is the type of types that are merely equal to [X]. It is connected, by [is0connected_component] and any two points are merely equal by [merely_path_component]. *)
 Definition BAut (X : Type@{u}) := { Z : Type@{u} & merely (Z = X) }.
 
 Coercion BAut_pr1 X : BAut X -> Type := pr1.
@@ -43,46 +43,34 @@ Proof.
   apply ap10, ap, ap_pr1_path_baut.
 Defined.
 
-(** ** Truncation *)
-
-(** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
-Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
-: IsTrunc n.+2 (BAut X).
-Proof.
-  intros [Z p] [W q].
-  strip_truncations.
-  refine (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _); simpl.
-  symmetry in q; destruct q.
-  symmetry in p; destruct p.
-  exact _.
-Defined.
-
-(** Since it is 0-connected, any two points in it are merely equal. *)
-Definition merely_path_baut `{Univalence} {X} (Z Z' : BAut X)
-: merely (Z = Z')
-:= merely_path_is0connected (BAut X) Z Z'.
-
-(** The following tactic, which applies when trying to prove an hprop, replaces all assumed elements of [BAut X] by [X] itself. *)
+(** The following tactic, which applies when trying to prove an hprop, replaces all assumed elements of [BAut X] by [X] itself. With [Univalence], this would work for any 0-connected type, but using [merely_path_component] we can avoid univalence. *)
 Ltac baut_reduce :=
   progress repeat
     match goal with
       | [ Z : BAut ?X |- _ ]
         => let Zispoint := fresh "Zispoint" in
-           assert (Zispoint := merely_path_baut (point (BAut X)) Z);
+           assert (Zispoint := merely_path_component (point (BAut X)) Z);
            revert Zispoint;
            refine (@Trunc_ind _ _ _ _ _);
            intro Zispoint;
            destruct Zispoint
     end.
 
-(** If [X] is truncated, then so is every element of [BAut X]. *)
-Global Instance trunc_el_baut `{Funext} {n X} `{IsTrunc n X} (Z : BAut X)
-: IsTrunc n Z.
+(** ** Truncation *)
+
+(** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
+Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
+: IsTrunc n.+2 (BAut X).
 Proof.
-  destruct Z as [Z p].
-  strip_truncations.
-  destruct p; exact _.
+  intros Z W.
+  baut_reduce.
+  exact (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _).
 Defined.
+
+(** If [X] is truncated, then so is every element of [BAut X]. *)
+Global Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
+  : IsTrunc n Z
+  := ltac:(by baut_reduce).
 
 (** ** Operations on [BAut] *)
 
