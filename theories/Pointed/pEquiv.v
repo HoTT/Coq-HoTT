@@ -27,7 +27,7 @@ Defined.
 (* pointed equivalences compose. *)
 Definition pequiv_compose {A B C : pType} (f : A <~>* B) (g : B <~>* C)
   : A <~>* C
-  := g $oE f.
+  := Build_pEquiv _ _ (g o* f) _.
 
 (* pointed equivalence is a transitive relation *)
 Global Instance pequiv_transitive : Transitive pEquiv.
