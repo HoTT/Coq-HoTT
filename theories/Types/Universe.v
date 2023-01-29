@@ -10,25 +10,14 @@ Generalizable Variables A B f.
 
 (** ** Paths *)
 
-Global Instance isequiv_path {A B : Type} (p : A = B)
-  : IsEquiv (transport (fun X:Type => X) p) | 0
-  := Build_IsEquiv _ _ _ (transport (fun X:Type => X) p^)
-  (transport_pV idmap p)
-  (transport_Vp idmap p)
-  (fun a => match p in _ = C return
-              (transport_pp idmap p^ p (transport idmap p a))^ @
-                 transport2 idmap (concat_Vp p) (transport idmap p a) =
-              ap (transport idmap p) ((transport_pp idmap p p^ a) ^ @
-                transport2 idmap (concat_pV p) a) with idpath => 1 end).
-
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
-  := Build_Equiv _ _ (transport (fun X:Type => X) p) _.
+  := equiv_transport (fun X:Type => X) p.
 
 Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = (equiv_path A B p)^-1%equiv.
 Proof.
-  destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
-  refine (@path_ishprop _ (hprop_isequiv _) _ _).
+  apply path_equiv.
+  reflexivity.
 Defined.
 
 (** See the note by [Funext] in Overture.v *)
@@ -106,9 +95,8 @@ Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A <~> B)
 Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
 : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
-  destruct p, q. simpl.
   apply path_equiv, path_arrow.
-  intros x; reflexivity.
+  nrapply transport_pp.
 Defined.
 
 Definition path_universe_compose_uncurried `{Funext} {A B C : Type}
@@ -125,17 +113,11 @@ Defined.
 
 Definition path_universe_compose `{Funext} {A B C : Type}
            (f : A <~> B) (g : B <~> C)
-: path_universe (g o f) = path_universe f @ path_universe g.
-Proof.
-  revert f. equiv_intro (equiv_path A B) f.
-  revert g. equiv_intro (equiv_path B C) g.
-  refine ((ap path_universe_uncurried (equiv_path_pp f g))^ @ _).
-  refine (eta_path_universe (f @ g) @ _).
-  apply concat2; symmetry; apply eta_path_universe.
-Defined.
+  : path_universe (g o f) = path_universe f @ path_universe g
+  := path_universe_compose_uncurried f g.
 
 Definition path_universe_1 {A : Type}
-: path_universe (equiv_idmap A) = 1
+  : path_universe (equiv_idmap A) = 1
   := eta_path_universe 1.
 
 Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
@@ -200,6 +182,7 @@ Proof.
   revert f.  equiv_intro (equiv_path A B) p.
   exact (ap (fun s => transport idmap s z) (eissect _ p)).
 Defined.
+(* Alternatively, [apply ap10, transport_idmap_path_universe_uncurried.], but then some later proofs would have to change. *)
 
 Definition transport_path_universe
            {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
