@@ -1,5 +1,6 @@
 Require Import Pointed WildCat.
 Require Import Algebra.Groups.
+Require Import Modalities.ReflectiveSubuniverse.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HomotopyGroup.

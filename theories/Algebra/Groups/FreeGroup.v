@@ -1,6 +1,7 @@
 Require Import Groups.Group.
 Require Import Colimits.Coeq.
 Require Import WildCat.
+Require Import Truncations.SeparatedTrunc.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

@@ -3,6 +3,7 @@ Require Import Spaces.Nat.
 Require Export Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
 Require Export Classes.theory.rings.
+Require Import Modalities.ReflectiveSubuniverse.
 
 (** Theory of commutative rings *)
 

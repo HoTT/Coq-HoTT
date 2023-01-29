@@ -591,7 +591,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 Defined.
 
 Lemma Qpos_is_enumerator :
-  IsConnMap@{UQ} (trunc_S minus_two) Qpos_enumerator.
+  IsSurjection@{UQ} Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.
 unfold hfiber.
@@ -603,7 +603,7 @@ unfold Qpos_enumerator. destruct (le_or_lt (enumerator Q n) 0) as [E1|E1].
 - apply pos_eq,E.
 Qed.
 
-Global Instance Qpos_enumerable `{Enumerable Q} : Enumerable Q+.
+Global Instance Qpos_enumerable : Enumerable Q+.
 Proof.
   exists Qpos_enumerator.
   first [exact Qpos_is_enumerator@{Uhuge Ularge}|

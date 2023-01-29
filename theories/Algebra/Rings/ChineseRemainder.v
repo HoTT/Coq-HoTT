@@ -1,4 +1,5 @@
 Require Import WildCat.
+Require Import Modalities.ReflectiveSubuniverse.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.
