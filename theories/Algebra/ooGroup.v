@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Pointed.
+Require Import Truncations.Connectedness.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Algebra.Groups.
 Require Import WildCat.

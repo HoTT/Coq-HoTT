@@ -1,8 +1,7 @@
 Require Export
   HoTT.Basics
   HoTT.Types
-  HoTT.Truncations
-  HoTT.Basics.Utf8.
+  HoTT.Truncations.Core.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
@@ -414,8 +413,7 @@ Class Bind (M : Type -> Type) := bind : forall {A B}, M A -> (A -> M B) -> M B.
 
 Class Enumerable@{i} (A : Type@{i}) :=
   { enumerator : nat -> A
-  ; enumerator_issurj :
-    IsConnMap@{i} (trunc_S minus_two) enumerator }.
+  ; enumerator_issurj : IsSurjection enumerator }.
 #[export] Existing Instance enumerator_issurj.
 Arguments enumerator A {_} _.
 Arguments enumerator_issurj A {_} _.

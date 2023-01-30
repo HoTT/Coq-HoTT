@@ -1,4 +1,5 @@
 Require Import WildCat Pointed Homotopy.ExactSequence HIT.epi.
+Require Import Truncations.Connectedness.
 Require Import AbGroups.AbelianGroup AbGroups.AbPushout AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.DirectSum.
 

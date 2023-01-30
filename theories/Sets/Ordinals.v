@@ -1,4 +1,4 @@
-From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
+From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import HIT.quotient.
 

@@ -1,5 +1,6 @@
 Require Import Spaces.Nat.
 Require Export HoTT.Classes.interfaces.canonical_names.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Local Set Polymorphic Inductive Cumulativity.
 

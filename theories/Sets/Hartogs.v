@@ -1,4 +1,4 @@
-From HoTT Require Import TruncType ExcludedMiddle abstract_algebra HSet.
+From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra HSet.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Card.
 
@@ -222,7 +222,7 @@ Section Hartogs_Number.
     apply equiv_inverse. unshelve eexists.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
       apply equiv_resize_hprop, tr. exists a. reflexivity.
-    - srapply isequiv_surj_emb.
+    - snrapply isequiv_surj_emb.
       + apply BuildIsSurjection. intros [X HX]. eapply merely_destruct.
         * eapply equiv_resize_hprop, HX.
         * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply ishprop_resize_hprop.

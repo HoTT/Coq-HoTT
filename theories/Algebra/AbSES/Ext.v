@@ -1,4 +1,5 @@
 Require Import Pointed WildCat.
+Require Import Truncations.SeparatedTrunc.
 Require Import AbGroups.AbelianGroup AbGroups.AbHom.
 Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
 

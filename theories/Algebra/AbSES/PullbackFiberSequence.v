@@ -3,7 +3,7 @@ Require Import WildCat Pointed Homotopy.ExactSequence.
 Require Import Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.Pullback. 
-Require Import Modalities.Identity.
+Require Import Modalities.Identity Modalities.Modality.
 
 Local Open Scope pointed_scope.
 

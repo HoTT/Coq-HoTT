@@ -1,6 +1,7 @@
 Require Import Cubical WildCat.
 Require Import Colimits.Coeq.
 Require Import Algebra.AbGroups.AbelianGroup.
+Require Import Modalities.ReflectiveSubuniverse.
 
 (** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
 

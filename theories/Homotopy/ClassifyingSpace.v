@@ -2,6 +2,7 @@ Require Import Pointed Cubical WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.Core.
 Require Import TruncType.
+Require Import Truncations.Connectedness.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.WhiteheadsPrinciple.
 

@@ -1,6 +1,7 @@
 Require Import WildCat.
 Require Import HSet.
 Require Import AbelianGroup.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope mc_add_scope.
 

@@ -6,6 +6,7 @@ Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.HomotopyGroup.
 Require Import TruncType.
+Require Import Truncations.Connectedness.
 Require Import WildCat.
 
 (* Formalisation of Eilenberg-MacLane spaces *)

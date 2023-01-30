@@ -2,6 +2,7 @@ Require Import HSet WildCat.
 Require Import Groups.QuotientGroup Groups.ShortExactSequence.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import Homotopy.ExactSequence Pointed.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.

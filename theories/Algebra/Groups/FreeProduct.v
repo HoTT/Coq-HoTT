@@ -1,6 +1,7 @@
 Require Import Cubical.
 Require Import Spaces.List.
 Require Import Colimits.Pushout.
+Require Import Truncations.SeparatedTrunc.
 Require Import Algebra.Groups.Group.
 
 Local Open Scope list_scope.

@@ -1,4 +1,5 @@
 Require Import Pointed WildCat.
+Require Import Modalities.ReflectiveSubuniverse.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Pi1S1.

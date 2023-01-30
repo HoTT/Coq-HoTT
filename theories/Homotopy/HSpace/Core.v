@@ -1,5 +1,6 @@
 Require Export Classes.interfaces.abstract_algebra.
 Require Import Pointed WildCat.
+Require Import Truncations.Connectedness.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

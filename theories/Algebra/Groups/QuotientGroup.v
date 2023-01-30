@@ -7,6 +7,7 @@ Require Export Colimits.Quotient.
 Require Import HSet.
 Require Import Spaces.Finite.
 Require Import WildCat.
+Require Import Modalities.Modality.
 
 (** * Quotient groups *)
 
