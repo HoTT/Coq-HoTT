@@ -24,10 +24,10 @@ Proof.
   intros ? ?; apply pequiv_inverse.
 Defined.
 
-(* pointed equivalences compose. *)
+(* Pointed equivalences compose. We use this definition rather than [g $oE f] so that we can compose equivalences between pointed types in different universes. *)
 Definition pequiv_compose {A B C : pType} (f : A <~>* B) (g : B <~>* C)
   : A <~>* C
-  := g $oE f.
+  := Build_pEquiv _ _ (g o* f) _.
 
 (* pointed equivalence is a transitive relation *)
 Global Instance pequiv_transitive : Transitive pEquiv.
