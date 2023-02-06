@@ -1,6 +1,6 @@
 Require Import Pointed WildCat.
 Require Import Truncations.SeparatedTrunc.
-Require Import AbGroups.AbelianGroup AbGroups.AbHom.
+Require Import AbelianGroup AbHom AbProjective.
 Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
 
 (** * The set [Ext B A] of abelian group extensions *)
@@ -52,4 +52,36 @@ Proof.
   strip_truncations; cbn.
   apply ap.
   apply baer_sum_commutative.
+Defined.
+
+(** ** Extensions ending in a projective are trivial *)
+
+Proposition abext_trivial_projective `{Univalence}
+  (P : AbGroup) `{IsAbProjective P}
+  : forall A, forall E : AbSES P A, tr E = point (Ext P A).
+Proof.
+  intros A E.
+  apply iff_ab_ext_trivial_split.
+  exact (fst (iff_isabprojective_surjections_split P) _ _ _ _).
+Defined.
+
+(** It follows that when [P] is projective, [Ext P A] is contractible. *)
+Global Instance contr_abext_projective `{Univalence}
+  (P : AbGroup) `{IsAbProjective P} {A : AbGroup}
+  : Contr (Ext P A).
+Proof.
+  exists (point _); intro E.
+  strip_truncations.
+  symmetry; by apply abext_trivial_projective.
+Defined.
+
+(* Converely, if all extensions ending in [P] are trivial, then [P] is projective. *)
+Proposition abext_projective_trivial `{Univalence} (P : AbGroup)
+  (ext_triv : forall A, forall E : AbSES P A, tr E = point (Ext P A))
+  : IsAbProjective P.
+Proof.
+  apply iff_isabprojective_surjections_split.
+  intros E p issurj_p.
+  apply (iff_ab_ext_trivial_split (abses_from_surjection p))^-1.
+  apply ext_triv.
 Defined.
