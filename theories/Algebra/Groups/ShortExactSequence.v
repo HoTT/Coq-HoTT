@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 
 Definition grp_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C} (cx : IsComplex i f)
   : GroupHomomorphism A (grp_kernel f)
-  := grp_kernel_corec cx.
+  := grp_kernel_corec _ cx.
 
 Definition grp_iso_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C}
            `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)
@@ -57,7 +57,6 @@ Proof.
     intros y; rapply contr_inhabited_hprop.
     exists tt; apply path_ishprop.
 Defined.
-
 
 (** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)
 Corollary equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)

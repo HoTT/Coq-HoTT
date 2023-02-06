@@ -283,7 +283,7 @@ Definition grp_kernel_quotient_iso `{Univalence} {G : Group} (N : NormalSubgroup
   : GroupIsomorphism N (grp_kernel (@grp_quotient_map G N)).
 Proof.
   srapply Build_GroupIsomorphism.
-  - srapply (grp_kernel_corec (g:=subgroup_incl N)).
+  - srapply (grp_kernel_corec (subgroup_incl N)).
     intro x; cbn.
     apply qglue.
     apply issubgroup_in_op.
