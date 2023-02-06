@@ -219,6 +219,23 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
+(** Multiplication by [n : nat] defines an endomorphism of any abelian group [A]. *)
+Definition ab_mul_nat {A : AbGroup} (n : nat) : GroupHomomorphism A A.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fun a => grp_pow a n).
+  intros a b.
+  induction n; cbn.
+  1: exact (grp_unit_l _)^.
+  refine (_ @ associativity _ _ _).
+  refine (_ @ ap _ (associativity _ _ _)^).
+  rewrite (commutativity (grp_pow a n) b).
+  refine (_ @ ap _ (associativity _ _ _)).
+  refine (_ @ (associativity _ _ _)^).
+  apply grp_cancelL.
+  assumption.
+Defined.
+
 (** The image of an inclusion is a normal subgroup. *)
 Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
   := {| normalsubgroup_subgroup := grp_image_embedding f; normalsubgroup_isnormal := _ |}.
@@ -226,3 +243,10 @@ Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : N
 Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
   : GroupIsomorphism A (ab_image_embedding f)
   := grp_image_in_embedding f.
+
+(** The cokernel of a homomorphism into an abelian group. *)
+Definition ab_cokernel {G : Group} {A : AbGroup} (f : GroupHomomorphism G A)
+  : AbGroup := QuotientAbGroup _ (grp_image f).
+
+Definition ab_cokernel_embedding {G : Group} {A : AbGroup} (f : G $-> A)
+  `{IsEmbedding f} : AbGroup := QuotientAbGroup _ (grp_image_embedding f).
