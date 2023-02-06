@@ -1,6 +1,6 @@
 Require Import HSet WildCat.
 Require Import Groups.QuotientGroup Groups.ShortExactSequence.
-Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
+Require Import AbelianGroup AbGroups.Biproduct AbHom.
 Require Import Homotopy.ExactSequence Pointed.
 Require Import Modalities.ReflectiveSubuniverse.
 
@@ -645,4 +645,73 @@ Proof.
     + intro a.
       by rapply (isinj_embedding (subgroup_incl _)).
     + exact _.
+Defined.
+
+(** Conversely, given a short exact sequence [A -> E -> B], [A] is the kernel of [E -> B]. (We don't need exactness at [B], so we drop this assumption.) *)
+Lemma abses_kernel_iso `{Funext} {A E B : AbGroup} (i : A $-> E) (p : E $-> B)
+  `{IsEmbedding i, IsExact (Tr (-1)) _ _ _ i p}
+  : GroupIsomorphism A (ab_kernel p).
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - apply (grp_kernel_corec i).
+    rapply cx_isexact.
+  - apply isequiv_surj_emb.
+    2: rapply (cancelL_mapinO _ (grp_kernel_corec _ _) _).
+    intros [y q].
+    assert (a : Tr (-1) (hfiber i y)).
+    1: by rapply isexact_preimage.
+    strip_truncations; destruct a as [a r].
+    rapply contr_inhabited_hprop.
+    refine (tr (a; _)); cbn.
+    apply path_sigma_hprop; cbn.
+    exact r.
+Defined.
+
+(** A computation rule for the inverse of [abses_kernel_iso i p]. *)
+Lemma abses_kernel_iso_inv_beta `{Funext} {A E B : AbGroup} (i : A $-> E) (p : E $-> B)
+  `{IsEmbedding i, IsExact (Tr (-1)) _ _ _ i p}
+  : i o (abses_kernel_iso i p)^-1 == subgroup_incl _.
+Proof.
+  rapply (equiv_ind (abses_kernel_iso i p)); intro a.
+  exact (ap i (eissect (abses_kernel_iso i p) _)).
+Defined.
+
+(* Any surjection [p : E $-> B] induces a short exact sequence by taking the kernel. *)
+Lemma abses_from_surjection {E B : AbGroup} (p : E $-> B) `{IsSurjection p}
+  : AbSES B (ab_kernel p).
+Proof.
+  srapply (Build_AbSES E _ p).
+  1: exact (subgroup_incl _).
+  1: exact _.
+  snrapply Build_IsExact.
+  - apply phomotopy_homotopy_hset.
+    intros [e q]; cbn.
+    exact q.
+  - exact _.
+Defined.
+
+(** Conversely, given a short exact sequence [A -> E -> B], [B] is the cokernel of [A -> E]. In fact, we don't need exactness at [A], so we drop this from the statement. *)
+Lemma abses_cokernel_iso `{Funext}
+  {A E B : AbGroup} (f : A $-> E) (g : GroupHomomorphism E B)
+  `{IsSurjection g, IsExact (Tr (-1)) _ _ _ f g}
+  : GroupIsomorphism (ab_cokernel f) B.
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - snrapply equiv_quotient_abgroup_ump.
+    exists g.
+    intros e; rapply Trunc_rec; intros [a p].
+    refine (ap _ p^ @ _).
+    rapply cx_isexact.
+  - apply isequiv_surj_emb.
+    1: rapply cancelR_conn_map.
+    apply isembedding_isinj_hset.
+    srapply Quotient_ind_hprop; intro x.
+    srapply Quotient_ind_hprop; intro y.
+    intro p.
+    apply qglue; cbn.
+    refine (isexact_preimage (Tr (-1)) _ _ (-x + y) _).
+    refine (grp_homo_op _ _ _ @ _).
+    rewrite grp_homo_inv.
+    apply grp_moveL_M1^-1.
+    exact p^.
 Defined.
