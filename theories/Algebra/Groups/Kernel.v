@@ -26,7 +26,7 @@ Proof.
 
 (** ** Corecursion principle for group kernels *)
 
-Proposition grp_kernel_corec {A B G : Group} {f : A $-> B} {g : G $-> A}
+Proposition grp_kernel_corec {A B G : Group} {f : A $-> B} (g : G $-> A)
             (h : f $o g == grp_homo_const) : G $-> grp_kernel f.
 Proof.
   snrapply Build_GroupHomomorphism.
@@ -46,7 +46,7 @@ Proof.
     intro x; cbn.
     exact (k x).2.
   - intros [g p].
-    exact (grp_kernel_corec p).
+    exact (grp_kernel_corec _ p).
   - intros [g p].
     apply path_sigma_hprop; unfold pr1.
     apply equiv_path_grouphomomorphism; intro; reflexivity.

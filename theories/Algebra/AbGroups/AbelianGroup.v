@@ -236,6 +236,18 @@ Proof.
   assumption.
 Defined.
 
+Definition ab_mul_nat_homo (n : nat)
+  {A B : AbGroup} (f : GroupHomomorphism A B)
+  : f o ab_mul_nat n == ab_mul_nat n o f.
+Proof.
+  intro a.
+  induction n; cbn.
+  1: apply grp_homo_unit.
+  refine (grp_homo_op _ _ _ @ _).
+  refine (ap _ _).
+  assumption.
+Defined.
+
 (** The image of an inclusion is a normal subgroup. *)
 Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
   := {| normalsubgroup_subgroup := grp_image_embedding f; normalsubgroup_isnormal := _ |}.
