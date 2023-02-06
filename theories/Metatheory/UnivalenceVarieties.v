@@ -76,7 +76,7 @@ Proof.
     rewrite !transport_pp.
     refine (moveR_transport_V idmap (unit vwu B) _ (f a) _).
     rewrite !(unit_comp vwu).
-    rewrite <- !transport_compose.
+    rewrite <- !(transport_compose idmap sig).
     rewrite (transport_sigma' (C := fun P (a0:A) => P a0)); cbn.
     refine (ap _ _ @ _).
     1:{ apply ap, ap.
