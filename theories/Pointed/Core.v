@@ -35,15 +35,12 @@ Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
 (** We override the notation for products in pointed_scope *)
 Notation "X * Y" := ([X * Y, ispointed_prod]) : pointed_scope.
 
-(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. By making this a Record, it has one fewer universe variable, and is cumulative. *)
-Record pFam (A : pType) := { pfam_pr1 : A -> Type; dpoint : pfam_pr1 (point A)}.
+(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. By making this a Record, it has one fewer universe variable, and is cumulative. We declare [pfam_pr1] to be a coercion [pFam >-> Funclass]. *)
+Record pFam (A : pType) := { pfam_pr1 :> A -> Type; dpoint : pfam_pr1 (point A)}.
 
 Arguments Build_pFam {A} _ _.
 Arguments pfam_pr1 {A} P : rename.
 Arguments dpoint {A} P : rename.
-
-(** We make [pfam_pr1] a coercion. *)
-Coercion pfam_pr1 : pFam >-> Funclass.
 
 (** The constant pointed family *)
 Definition pfam_const {A : pType} (B : pType) : pFam A
