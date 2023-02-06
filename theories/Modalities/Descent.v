@@ -142,6 +142,8 @@ Proof.
 Defined.
 
 (** We can also state it in terms of belonging to a subuniverse if we lift [O'] accessibly (an analogue of Theorem 3.11(iii) of RSS). *)
+(* *** TODO: With Cumulativity turned on globally, this produces a universe error.
+   It doesn't help to make the two Classes defined in this file NonCumulative. *)
 Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
   : In (lift_accrsu O') (Type_ O)
   := fun i => ooextendable_TypeO_lex_leq (acc_lgen O' i).

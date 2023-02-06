@@ -15,6 +15,7 @@ Set Implicit Arguments.
 Require Export Basics.Notations.
 
 Global Set Universe Polymorphism.
+Global Set Polymorphic Inductive Cumulativity.
 Global Set Asymmetric Patterns.
 
 Notation "A -> B" := (forall (_ : A), B) : type_scope.
