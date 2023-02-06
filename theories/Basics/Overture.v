@@ -13,6 +13,8 @@ Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.
 
+Local Set Polymorphic Inductive Cumulativity.
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -151,7 +153,7 @@ Definition const {A B} (b : B) := fun x : A => b.
 (** ** Sigma types *)
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
-Cumulative Record sig {A} (P : A -> Type) := exist {
+Record sig {A} (P : A -> Type) := exist {
   proj1 : A ;
   proj2 : P proj1 ;
 }.
@@ -236,7 +238,7 @@ Notation "g 'oD' f" := (composeD g f) : function_scope.
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
 (** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
-Cumulative Inductive paths {A : Type} (a : A) : A -> Type :=
+Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
 
 Arguments idpath {A a} , [A] a.
@@ -482,7 +484,7 @@ Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomat
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
-Cumulative Class IsEquiv {A B : Type} (f : A -> B) := {
+Class IsEquiv {A B : Type} (f : A -> B) := {
   equiv_inv : B -> A ;
   eisretr : f o equiv_inv == idmap ;
   eissect : equiv_inv o f == idmap ;
@@ -498,7 +500,7 @@ Arguments IsEquiv {A B}%type_scope f%function_scope.
 Global Opaque eisadj.
 
 (** A record that includes all the data of an adjoint equivalence. *)
-Cumulative Record Equiv A B := {
+Record Equiv A B := {
   equiv_fun : A -> B ;
   equiv_isequiv : IsEquiv equiv_fun
 }.
@@ -539,7 +541,7 @@ In order to achieve moderate coverage and speedy resolution, we currently follow
 (** A space [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].  Thus an element of [contr A] is a pair whose first component is a point [x] and the second component is a pointwise retraction of [A] to [x]. *)
 
 (** We use the [Contr_internal] record so as not to pollute typeclass search; we only do truncation typeclass search on the [IsTrunc] datatype, usually.  We will define a notation [Contr] which is equivalent to [Contr_internal], but picked up by typeclass search.  However, we must make [Contr_internal] a class so that we pick up typeclasses on [center] and [contr].  However, the only typeclass rule we register is the one that turns it into a [Contr]/[IsTrunc].  Unfortunately, this means that declaring an instance like [Instance contr_foo : Contr foo := { center := bar }.] will fail with mismatched instances/contexts.  Instead, we must iota expand such definitions to get around Coq's deficiencies, and write [Instance contr_foo : Contr foo := let x := {| center := bar |} in x.] *)
-Cumulative Class Contr_internal (A : Type) := Build_Contr {
+Class Contr_internal (A : Type) := Build_Contr {
   center : A ;
   contr : (forall y : A, center = y)
 }.
@@ -766,7 +768,7 @@ Class IsPointed (A : Type) := point : A.
 
 Arguments point A {_}.
 
-Cumulative Record pType :=
+Record pType :=
   { pointed_type : Type ;
     ispointed_type : IsPointed pointed_type }.
 
