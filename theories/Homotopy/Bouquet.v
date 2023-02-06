@@ -76,7 +76,7 @@ Section AssumeUnivalence.
   Global Instance isfreegroupon_pi1bouquet (S : Type)
     : IsFreeGroupOn S (Pi 1 (Bouquet S)) (pi1bouquet_incl S).
   Proof.
-    apply equiv_isfregroupon_isequiv_precomp.
+    apply equiv_isfreegroupon_isequiv_precomp.
     intro G.
     snrapply isequiv_homotopic'.
     1: apply equiv_pi1bouquet_rec.
