@@ -18,8 +18,8 @@ Definition pmap_from_pointed {A : pType} {B : Type} (f : A -> B)
 
 (** The same, for a dependent pointed map. *)
 Definition pforall_from_pointed {A : pType} {B : A -> Type} (f : forall x, B x)
-  : pForall A (B; f (point A))
-  := Build_pForall A (B; (f (point A))) f 1%path.
+  : pForall A (Build_pFam B (f (point A)))
+  := Build_pForall A (Build_pFam B (f (point A))) f 1%path.
 
 (* precomposing the zero map is the zero map *)
 Lemma precompose_pconst {A B C : pType} (f : B ->* C)

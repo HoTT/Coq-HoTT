@@ -37,7 +37,8 @@ Definition pTr_rec_beta n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
   := phomotopy_path (pTr_rec_beta_path n f).
 
 (** A pointed version of the induction principle. *)
-Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)} (f : pForall X (Y.1 o tr; Y.2))
+Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)}
+  (f : pForall X (Build_pFam (Y o tr) (dpoint Y)))
   : pForall (pTr n X) Y
   := Build_pForall (pTr n X) Y (Trunc_ind Y f) (dpoint_eq f).
 

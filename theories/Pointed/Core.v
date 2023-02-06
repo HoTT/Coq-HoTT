@@ -35,23 +35,20 @@ Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
 (** We override the notation for products in pointed_scope *)
 Notation "X * Y" := ([X * Y, ispointed_prod]) : pointed_scope.
 
-(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. *)
-Definition pFam (A : pType) := {P : A -> Type & P (point A)}.
+(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. By making this a Record, it has one fewer universe variable, and is cumulative. We declare [pfam_pr1] to be a coercion [pFam >-> Funclass]. *)
+Record pFam (A : pType) := { pfam_pr1 :> A -> Type; dpoint : pfam_pr1 (point A)}.
 
-(** We make the first projection of a [pFam] a coercion. *)
-Definition pfam_pr1 {A : pType} (P : pFam A) : A -> Type := pr1 P.
-Coercion pfam_pr1 : pFam >-> Funclass.
-
-(** We call the section of a pointed type family at the basepoint a [dpoint]. *)
-Definition dpoint {A : pType} (P : pFam A) : P (point A) := pr2 P.
+Arguments Build_pFam {A} _ _.
+Arguments pfam_pr1 {A} P : rename.
+Arguments dpoint {A} P : rename.
 
 (** The constant pointed family *)
-Definition pfam_const {A : pType} (B : pType) : pFam A :=
-  (fun _ => pointed_type B; point B).
+Definition pfam_const {A : pType} (B : pType) : pFam A
+  := Build_pFam (fun _ => pointed_type B) (point B).
 
 (** [IsTrunc] for a pointed type family *)
-Class IsTrunc_pFam n {A} (X : pFam A)
-  := trunc_pfam_is_trunc : forall x, IsTrunc n (X.1 x).
+Class IsTrunc_pFam n {A} (P : pFam A)
+  := trunc_pfam_is_trunc : forall x, IsTrunc n (P x).
 
 (** Pointed dependent functions *)
 Record pForall (A : pType) (P : pFam A) := {
@@ -99,7 +96,7 @@ Definition psnd {A B : pType} : A * B ->* B
 (** ** Pointed homotopies *)
 
 Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
-  := (fun x => f x = g x; dpoint_eq f @ (dpoint_eq g)^).
+  := Build_pFam (fun x => f x = g x) (dpoint_eq f @ (dpoint_eq g)^).
 
 (* A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
 Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P) : Type
@@ -148,7 +145,7 @@ Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
 
 (** Pointed sigma types *)
 Definition psigma {A : pType} (P : pFam A) : pType
-  := [sig P, (point A; P.2)].
+  := [sig P, (point A; dpoint P)].
 
 (** Pointed pi types, note that the domain is not pointed *)
 Definition pproduct {A : Type} (F : A -> pType) : pType
@@ -218,17 +215,17 @@ Definition issig_pequiv' (A B : pType)
 (** This is [equiv_prod_coind] for pointed families. *)
 Definition equiv_pprod_coind {A : pType} (P Q : pFam A)
   : (pForall A P * pForall A Q) <~>
-      (pForall A (fun a => prod (P a) (Q a); (P.2, Q.2))).
+      (pForall A (Build_pFam (fun a => prod (P a) (Q a)) (dpoint P, dpoint Q))).
 Proof.
   transitivity {p : prod (forall a:A, P a) (forall a:A, Q a)
-                    & prod (fst p _ = P.2) (snd p _ = Q.2)}.
+                    & prod (fst p _ = dpoint P) (snd p _ = dpoint Q)}.
   1: make_equiv.
   refine (issig_pforall _ _ oE _).
   srapply equiv_functor_sigma'.
   1: apply equiv_prod_coind.
   intro f; cbn.
   unfold prod_coind_uncurried.
-  exact (equiv_path_prod (fst f _, snd f _) (P.2, Q.2)).
+  exact (equiv_path_prod (fst f _, snd f _) (dpoint P, dpoint Q)).
 Defined.
 
 (** ** Various operations with pointed homotopies *)
@@ -496,7 +493,7 @@ Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
 
 (** A family of pointed types gives rise to a [pFam]. *)
 Definition pointed_fam {A : pType} (B : A -> pType) : pFam A
-  := (pointed_type o B; point (B (point A))).
+  := Build_pFam (pointed_type o B) (point (B (point A))).
 
 (** The section of a family of pointed types *)
 Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B)

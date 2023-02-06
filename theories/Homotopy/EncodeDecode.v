@@ -49,18 +49,18 @@ Defined.
 Definition encode_decode_loops
   (A : pType) (code : pFam A)
   (decode : forall x, code x -> point A = x)
-  (s : forall (c : code.1 (point A)), decode _ c # code.2 = c)
-  (r : decode _ (pr2 code) = idpath)
-  : loops A <~> code.1 (point A)
-  := encode_decode _ _ code.1 code.2 decode s r _.
+  (s : forall (c : code (point A)), decode _ c # (dpoint code) = c)
+  (r : decode _ (dpoint code) = idpath)
+  : loops A <~> code (point A)
+  := encode_decode _ _ code (dpoint code) decode s r _.
 
 (** Encode-decode for truncated loop spaces *)
 Definition encode_decode_trunc_loops n
   (A : pType) (code : pFam A) `{forall a, IsTrunc n (code a)}
   (decode : forall x, code x -> Tr n (point A = x))
-  (s : forall (c : code.1 (point A)),
-    Trunc_rec (fun (p : loops A) => p # code.2) (decode _ c) = c)
-  (r : decode _ code.2 = tr idpath)
+  (s : forall (c : code (point A)),
+    Trunc_rec (fun (p : loops A) => p # (dpoint code)) (decode _ c) = c)
+  (r : decode _ (dpoint code) = tr idpath)
   : pTr n (loops A) <~> code (point A)
-  := encode_decode_trunc _ _ _ code.1 code.2 decode s r _.
+  := encode_decode_trunc _ _ _ code (dpoint code) decode s r _.
 
