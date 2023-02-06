@@ -15,9 +15,9 @@ Definition O_cover@{u} `{O : ReflectiveSubuniverse@{u}}
 (** Characterization of paths in [O_cover] is given by [equiv_path_hfiber]. *)
 
 (* If [x] is an actual point of [X], then the connected cover is pointed. *)
-Definition O_pcover@{u v} (O : ReflectiveSubuniverse@{u})
+Definition O_pcover@{u} (O : ReflectiveSubuniverse@{u})
   (X : Type@{u}) (x : X) : pType@{u}
-  := pfiber@{u v u u} (pto O [X,x]).
+  := pfiber@{u u u} (pto O [X,x]).
 
 (** Covers commute with products *)
 Definition O_pcover_prod `{O : ReflectiveSubuniverse} {X Y : pType@{u}}

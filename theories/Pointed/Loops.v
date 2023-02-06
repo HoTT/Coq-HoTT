@@ -270,7 +270,7 @@ Defined.
 
 (* A dependent form of loops *)
 Definition loopsD {A} : pFam A -> pFam (loops A)
-  := fun Pp => (fun q => transport Pp.1 q Pp.2 = Pp.2; 1).
+  := fun Pp => Build_pFam (fun q : loops A => transport Pp q (dpoint Pp) = (dpoint Pp)) 1.
 
 Global Instance istrunc_pfam_loopsD {n} {A} (P : pFam A)
        {H :IsTrunc_pFam n.+1 P}
@@ -326,18 +326,16 @@ Proof.
   apply loops_psigma_commute.
 Defined.
 
-(** In the following lemmas we have used universe annotations explicitly as without them, coq cannot guess the universe levels correctly. Defining pointed maps as a special case of pForall has the side effect of raising the universe level since pForall requires a bigger universe for the type family. Hopefully in the future, coq's "universe guessing" will be smarter and we can drop the annotations here. *)
-
-(* We can convert between families of loops in a type and loops in Type at that type. *)
-Definition loops_type@{i j k} `{Univalence} (A : Type@{i})
-  : pEquiv@{j j k} (loops@{j} (Build_pType@{j} Type@{i} A))
-          [A <~> A, equiv_idmap].
+(* We can convert between loops in a type and loops in [Type] at that type. *)
+Definition loops_type `{Univalence} (A : Type@{i})
+  : loops [Type@{i}, A] <~>* [A <~> A, equiv_idmap].
 Proof.
   apply issig_pequiv'.
   exists (equiv_equiv_path A A).
   reflexivity.
 Defined.
 
+(* An iterated version.  Note that the statement with "-1" substituted for [n] is [loops [Type, A] <~>* [A -> A, idmap]], which is not true in general. Compare the previous result. *)
 Lemma local_global_looping `{Univalence} (A : Type@{i}) (n : nat)
   : iterated_loops@{j} n.+2 [Type@{i}, A]
     <~>* pproduct (fun a => iterated_loops@{j} n.+1 [A, a]).
