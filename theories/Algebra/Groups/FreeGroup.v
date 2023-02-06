@@ -1,14 +1,13 @@
-Require Import Groups.Group.
-Require Import Colimits.Coeq.
-Require Import WildCat.
-Require Import Truncations.SeparatedTrunc.
+Require Import Group Subgroup
+  WildCat Colimits.Coeq
+  Truncations.SeparatedTrunc Truncations.Connectedness.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
 (** Free groups are defined in Group.v. In this file we construct and prove properties of free groups. *)
 
-(** In this file we construct the free abelian group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set truncate it to suit our needs which is the free group as a set. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
+(** In this file we construct the free group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set truncate it to suit our needs which is the free group as a set. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
 
 Section Reduction.
 
@@ -376,31 +375,51 @@ Arguments freegroup_in {A}.
 
 (** Properties of free groups *)
 
-(** We can state the universal property of free groups as an equivalence: (F(A) $-> G) <~> (A -> G) *)
-Theorem equiv_isfreegroup_rec `{Funext} (G F : Group) (A : Type) (i : A -> F)
-  `{IsFreeGroupOn A F i}
-  : (F $-> G) <~> (A -> G).
+(* Given a function on the generators, there is an induced group homomorphism from the free group. *)
+Definition isfreegroupon_rec {S : Type} {F_S : Group}
+  {i : S -> F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f : S -> G) : F_S $-> G
+  := (center (FactorsThroughFreeGroup S F_S i G f)).1.
+
+(* The propositional computation rule for the recursor. *)
+Definition isfreegroupon_rec_beta
+  {S : Type} {F_S : Group} {i : S -> F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f : S -> G)
+  : isfreegroupon_rec f o i == f
+  := (center (FactorsThroughFreeGroup S F_S i G f)).2.
+
+(* Two homomorphisms from a free group are equal if they agree on the generators. *)
+Definition path_homomorphism_from_free_group {S : Type}
+  {F_S : Group} {i : S -> F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f g : F_S $-> G) (K : f o i == g o i)
+  : f = g.
 Proof.
-  snrapply Build_Equiv.
-  { intros f.
-    exact (f o i). }
-  nrapply isequiv_contr_map.
-  intro f.
-  unfold hfiber.
-  snrapply contr_equiv'.
-  1: exact (FactorsThroughFreeGroup A F i G f).
-  { rapply equiv_functor_sigma_id.
-    intro g.
-    apply equiv_path_forall. }
-  exact _.
+  (* By assumption, the type [FactorsThroughFreeGroup S F_S i G (g o i)] of factorizations of [g o i] through [i] is contractible.  Therefore the two elements we have are equal.  Therefore, their first components are equal. *)
+  exact (path_contr (f; K) (g; fun x => idpath))..1.
 Defined.
 
-(** The above theorem is true regardless of the implementation of free groups. This lets us state the more specific theorem about the canonical free groups. This can be read as [FreeGroup] is left adjoint to the forgetful functor [group_type]. *)
-Theorem equiv_freegroup_rec `{Funext} (G : Group) (A : Type)
-  : (FreeGroup A $-> G) <~> (A -> G).
+Global Instance isequiv_isfreegroupon_rec `{Funext} {S : Type}
+  {F_S : Group} {i : S -> F_S} `{IsFreeGroupOn S F_S i} {G : Group}
+  : IsEquiv (@isfreegroupon_rec S F_S i _ G).
 Proof.
-  rapply equiv_isfreegroup_rec.
+  apply (isequiv_adjointify isfreegroupon_rec (fun f => f o i)).
+  - intro f.
+    apply path_homomorphism_from_free_group.
+    apply isfreegroupon_rec_beta.
+  - intro f.
+    (* here we need [Funext]: *)
+    apply path_arrow, isfreegroupon_rec_beta.
 Defined.
+
+(** The universal property of a free group. *)
+Definition equiv_isfreegroupon_rec `{Funext} {G F : Group} {A : Type}
+  {i : A -> F} `{IsFreeGroupOn A F i}
+  : (A -> G) <~> (F $-> G) := Build_Equiv _ _ isfreegroupon_rec _.
+
+(** The above theorem is true regardless of the implementation of free groups. This lets us state the more specific theorem about the canonical free groups. This can be read as [FreeGroup] is left adjoint to the forgetful functor [group_type]. *)
+Definition equiv_freegroup_rec `{Funext} (G : Group) (A : Type)
+  : (A -> G) <~> (FreeGroup A $-> G)
+  := equiv_isfreegroupon_rec.
 
 Global Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -> F)
   : IsHProp (IsFreeGroupOn A F i).
@@ -410,11 +429,12 @@ Proof.
 Defined.
 
 (** Both ways of stating the universal property are equivalent. *)
-Definition equiv_isfregroupon_isequiv_precomp `{Funext} (F : Group) (A : Type) (i : A -> F)
+Definition equiv_isfreegroupon_isequiv_precomp `{Funext}
+  (F : Group) (A : Type) (i : A -> F)
   : IsFreeGroupOn A F i <~> forall G, IsEquiv (fun f : F $-> G => f o i).
 Proof.
   srapply equiv_iff_hprop.
-  1: intros k G; rapply (equiv_isequiv (equiv_isfreegroup_rec G F A i)).
+  1: intros ? ?; exact (equiv_isequiv (equiv_isfreegroupon_rec)^-1).
   intros k G g.
   specialize (k G).
   snrapply contr_equiv'.
@@ -424,3 +444,68 @@ Proof.
     apply equiv_path_forall. }
   exact _.
 Defined.
+
+(** ** Subgroups of free groups *)
+
+(* We say that a group [G] is generated by a subtype [X] if the natural map from the subgroup generated by [X] to [G] is a surjection.  One could equivalently say [IsEquiv (subgroup_incl (subgroup_generated X))], [forall g, subgroup_generated X g], or [subgroup_generated X = maximal_subgroup], but the definition using surjectivity is convenient later. *)
+Definition isgeneratedby (G : Group) (X : G -> Type)
+  := IsSurjection (subgroup_incl (subgroup_generated X)).
+
+Section FreeGroupGenerated.
+  (* In this Section, we prove that the free group [F_S] on a type [S] is generated in the above sense by the image of [S].  We conclude that the inclusion map is an equivalence, and that the free group is isomorphic as a group to the subgroup. We show that the inclusion is a surjection by showing that it is split epi in the category of groups. *)
+
+  Context {S : Type} {F_S : Group} {i : S -> F_S} `{IsFreeGroupOn S F_S i}.
+
+  (* We define a group homomorphism from [F_S] to the subgroup [G] generated by [S] by sending a generator [s] to "itself".  This map will be a section of the inclusion map. *)
+  Local Definition to_subgroup_generated
+    : F_S $-> subgroup_generated (hfiber i).
+  Proof.
+    apply isfreegroupon_rec.
+    intro s.
+    snrapply subgroup_generated_gen_incl.
+    - exact (i s).
+    - exact (s; idpath).
+  Defined.
+
+  (* We record the computation rule that [to_subgroup_generated] satisfies. *)
+  Local Definition to_subgroup_generated_beta (s : S)
+    : to_subgroup_generated (i s) = subgroup_generated_gen_incl (i s) (s; idpath)
+    := isfreegroupon_rec_beta _ _.
+
+  (* It follows [to_subgroup_generated] is a section of the inclusion map from [G] to [F_S]. *)
+  Local Definition is_retraction
+    : (subgroup_incl _) $o to_subgroup_generated = grp_homo_id.
+  Proof.
+    apply path_homomorphism_from_free_group; cbn.
+    intro s.
+    exact (ap pr1 (to_subgroup_generated_beta s)).
+  Defined.
+
+  (* It follows that the inclusion map is a surjection, i.e., that [F_S] is generated by the image of [S]. *)
+  Definition isgenerated_isfreegroupon
+    : isgeneratedby F_S (hfiber i).
+  Proof.
+    snrapply issurj_retr.
+    - apply to_subgroup_generated.
+    - apply ap10; cbn.
+      exact (ap (grp_homo_map F_S F_S) (is_retraction)).
+  Defined.
+
+  (* Therefore, the inclusion map is an equivalence, since it is known to be an embedding. *)
+  Definition isequiv_subgroup_incl_freegroupon
+    : IsEquiv (subgroup_incl (subgroup_generated (hfiber i))).
+  Proof.
+    apply isequiv_surj_emb.
+    - apply isgenerated_isfreegroupon.
+    - exact _.
+  Defined.
+
+  (* Therefore, the subgroup is isomorphic to the free group. *)
+  Definition iso_subgroup_incl_freegroupon
+    : GroupIsomorphism (subgroup_generated (hfiber i)) F_S.
+  Proof.
+    nrapply Build_GroupIsomorphism.
+    apply isequiv_subgroup_incl_freegroupon.
+  Defined.
+
+End FreeGroupGenerated.
