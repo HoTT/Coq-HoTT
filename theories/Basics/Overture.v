@@ -151,7 +151,7 @@ Definition const {A B} (b : B) := fun x : A => b.
 (** ** Sigma types *)
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
-Record sig {A} (P : A -> Type) := exist {
+Cumulative Record sig {A} (P : A -> Type) := exist {
   proj1 : A ;
   proj2 : P proj1 ;
 }.

@@ -104,8 +104,8 @@ Definition equiv_sigma_pfibration@{u v +} `{Univalence} {Y F : pType@{u}}
 Theorem equiv_sigma_fibration_O@{u v} `{Univalence} {O : Subuniverse} {Y : Type@{u}}
   : (Y -> Type_@{u v} O) <~> { p : { X : Type@{u} & X -> Y } & MapIn O p.2 }.
 Proof.
-  refine (_ oE (equiv_sig_coind _ _)^-1).
-  apply (equiv_functor_sigma' equiv_sigma_fibration); intro P; cbn.
+  refine (_ oE (equiv_sig_coind@{u v u v v v u} _ _)^-1).
+  apply (equiv_functor_sigma'@{v u v v v v} equiv_sigma_fibration@{u v}); intro P; cbn.
   rapply equiv_forall_inO_mapinO_pr1.
 Defined.
 
