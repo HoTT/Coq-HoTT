@@ -267,7 +267,7 @@ Defined.
 
 Module Export LocalizationHIT.
 
-  Cumulative Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
+  Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
   : Type@{max(a,i)} :=
   | loc : X -> Localize f X.
 

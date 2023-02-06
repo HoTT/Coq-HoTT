@@ -6,8 +6,6 @@ Require Import Truncations.Core.
 Require Import ReflectiveSubuniverse.
 Require Import Extensions.
 
-Local Set Polymorphic Inductive Cumulativity.
-
 Declare Scope pointed_scope.
 
 Local Open Scope pointed_scope.

@@ -36,7 +36,7 @@ Local Unset Elimination Schemes.
 
 (* Definition of PathSquare *)
 (* PathSquare left right up down *)
-Cumulative Inductive PathSquare {A} : forall a00 {a10 a01 a11 : A},
+Inductive PathSquare {A} : forall a00 {a10 a01 a11 : A},
   a00 = a10 -> a01 = a11 -> a00 = a01 -> a10 = a11 -> Type
   := sq_id : forall {x : A},
     PathSquare x 1 1 1 1.

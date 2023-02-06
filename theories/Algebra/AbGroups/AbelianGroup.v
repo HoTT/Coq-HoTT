@@ -6,8 +6,6 @@ Require Export Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
 Require Import WildCat.
 
-Local Set Polymorphic Inductive Cumulativity.
-
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
