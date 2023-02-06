@@ -475,6 +475,16 @@ Fixpoint grp_pow {G : Group} (g : G) (n : nat) : G :=
   | m.+1%nat => g * grp_pow g m
   end.
 
+(** Any homomorphism respects [grp_pow]. *)
+Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H)
+  (n : nat) (g : G) : f (grp_pow g n) = grp_pow (f g) n.
+Proof.
+  induction n.
+  + cbn. apply grp_homo_unit.
+  + cbn. refine ((grp_homo_op f g (grp_pow g n)) @ _).
+    exact (ap (fun m => f g + m) IHn).
+Defined.
+
 (** The wild cat of Groups *)
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
@@ -775,4 +785,17 @@ Proof.
   - intros E a p.
     rapply (isinj_embedding f).
     exact (p @ (grp_homo_unit f)^).
+Defined.
+
+(** Commutativity can be transferred across isomorphisms. *)
+Definition commutative_iso_commutative {G H : Group}
+  {C : Commutative (@group_sgop G)} (f : GroupIsomorphism G H)
+  : Commutative (@group_sgop H).
+Proof.
+  unfold Commutative.
+  rapply (equiv_ind f); intro g1.
+  rapply (equiv_ind f); intro g2.
+  refine ((preserves_sg_op _ _)^ @ _ @ (preserves_sg_op _ _)).
+  refine (ap f _).
+  apply C.
 Defined.
