@@ -139,7 +139,7 @@ Proof.
   refine (_ oE equiv_sigma_symm0 _ _).
   apply equiv_sigma_contr; intro e.
   rapply contr_inhabited_hprop.
-  rapply conn_point_elim@{u v u u u u u u v}.
+  rapply conn_point_elim.
   apply (inO_equiv_inO F e^-1).
 Defined.
 
