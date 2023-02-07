@@ -47,10 +47,9 @@ Definition path_Tr {n A} (x y : A)
   : Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A)
   := path_OO (Tr n.+1) (Tr n) x y.
 
-Definition equiv_path_Tr@{u v} `{Univalence} {n} {A : Type@{u}} (x y : A)
+Definition equiv_path_Tr `{Univalence} {n} {A : Type} (x y : A)
   : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A)
-  := @equiv_path_OO@{u u u u u u u u v} (Tr n.+1) (Tr n) _
-       (O_lex_leq_Tr@{v u} n) _ _ x y.
+  := equiv_path_OO (Tr n.+1) (Tr n) x y.
 
 End SeparatedTrunc.
 

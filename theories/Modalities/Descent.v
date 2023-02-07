@@ -61,7 +61,8 @@ Defined.
 In the case of a single modality, most of these statements are equivalent to lex-ness (as stated in Theorem 3.1 of RSS).  We do not know if anything similar is true more generally. *)
 
 Section LeftExactness.
-Context (O' O : ReflectiveSubuniverse) `{O << O', O <<< O'}.
+Universe i.
+Context (O' O : ReflectiveSubuniverse@{i}) `{O << O', O <<< O'}.
 
 (** Proposition 2.30 of CORS and Theorem 3.1(xii) of RSS: any [O']-equivalence is [O]-connected.  The special case when [f = to O' A] requires only [O << O'], but the general case seems to require [O <<< O']. *)
 Global Instance conn_map_OO_inverts
@@ -146,8 +147,8 @@ Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
   := fun i => ooextendable_TypeO_lex_leq (acc_lgen O' i).
 
 (** If [f] is an [O']-equivalence, then [ap f] is an [O]-equivalence. *)
-Global Instance OO_inverts_ap
-       {A B : Type} (f : A -> B) `{O_inverts O' f} (x y : A)
+Definition OO_inverts_ap'
+       {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
   : O_inverts O (@ap _ _ f x y).
 Proof.
   assert (Pb := OO_descend_O_inverts_beta f (fun y:A => O (x = y))).
@@ -179,6 +180,12 @@ Proof.
     destruct p; cbn.
     srapply eisretr.
 Defined.
+
+(** We give a version that only has one universe variable. *)
+Global Instance OO_inverts_ap
+       {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
+  : O_inverts O (@ap _ _ f x y)
+  := OO_inverts_ap'@{i i i i i i i} f x y.
 
 Definition equiv_O_functor_ap_OO_inverts
        {A B : Type} (f : A -> B) `{O_inverts O' f} (x y : A)
