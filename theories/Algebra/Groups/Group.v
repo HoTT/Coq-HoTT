@@ -306,10 +306,9 @@ Proof.
       1: exact _.
       intros [[op' [unit' [neg' ax']]] eq].
       apply path_sigma_hprop; cbn.
-      (* We really need to fix https://github.com/HoTT/HoTT/issues/976 *)
       refine (@ap _ _ (fun x : { oun :
-        { oo : SgOp G | { u : MonUnit G | Negate G}}
-        | @IsGroup G oun.1 oun.2.1 oun.2.2}
+        { oo : SgOp G & { u : MonUnit G & Negate G}}
+        & @IsGroup G oun.1 oun.2.1 oun.2.2}
         => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
         ((op;unit;neg);ax) ((op';unit';neg');ax') _).
       apply path_sigma_hprop; cbn.
