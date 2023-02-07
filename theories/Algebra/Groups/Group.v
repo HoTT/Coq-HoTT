@@ -321,10 +321,10 @@ Proof.
       rewrite transport_const.
       funext x.
       exact (preserves_negate@{u u} (f:=idmap) _). }
-  refine (equiv_compose'@{u u u} _ (issig_GroupIsomorphism@{u} G H)^-1).
+  refine (equiv_compose'@{u u u} _ (issig_GroupIsomorphism G H)^-1).
   refine (equiv_compose'@{u u u} _
             (equiv_functor_sigma'@{u u u u u u}
-               (issig_GroupHomomorphism@{u} G H) (fun f => 1%equiv))^-1).
+               (issig_GroupHomomorphism G H) (fun f => 1%equiv))^-1).
   refine (equiv_compose'@{u u u}
             (equiv_functor_sigma'@{u u u u u u}
                (issig_equiv@{u u u} G H) (fun f => 1%equiv)) _); cbn.
