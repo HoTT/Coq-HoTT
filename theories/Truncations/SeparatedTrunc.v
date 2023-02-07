@@ -47,7 +47,7 @@ Definition path_Tr {n A} (x y : A)
   : Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A)
   := path_OO (Tr n.+1) (Tr n) x y.
 
-Definition equiv_path_Tr `{Univalence} {n A} (x y : A)
+Definition equiv_path_Tr `{Univalence} {n} {A : Type} (x y : A)
   : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A)
   := equiv_path_OO (Tr n.+1) (Tr n) x y.
 

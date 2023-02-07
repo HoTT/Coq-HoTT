@@ -290,7 +290,7 @@ Proof.
 Defined.
 
 (** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
-Definition equiv_path_group {U : Univalence} {G H : Group}
+Definition equiv_path_group' {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
   refine (equiv_compose'
@@ -301,14 +301,14 @@ Proof.
       exact _.
     + intros [G [op [unit [neg ax]]]]; cbn.
       contr_sigsig G (equiv_idmap G).
-      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn;
-        try assumption; try exact _.
+      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
+      1: assumption.
+      1: exact _.
       intros [[op' [unit' [neg' ax']]] eq].
       apply path_sigma_hprop; cbn.
-      (* We really need to fix https://github.com/HoTT/HoTT/issues/976 *)
       refine (@ap _ _ (fun x : { oun :
-        { oo : SgOp G | { u : MonUnit G | Negate G}}
-        | @IsGroup G oun.1 oun.2.1 oun.2.2}
+        { oo : SgOp G & { u : MonUnit G & Negate G}}
+        & @IsGroup G oun.1 oun.2.1 oun.2.2}
         => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
         ((op;unit;neg);ax) ((op';unit';neg');ax') _).
       apply path_sigma_hprop; cbn.
@@ -334,6 +334,11 @@ Proof.
        _ _).
   all: intros [[]]; reflexivity.
 Defined.
+
+(** A version with nicer universe variables. *)
+Definition equiv_path_group@{u v} {U : Univalence} {G H : Group@{u}}
+  : GroupIsomorphism G H <~> (paths@{v} G H)
+  := equiv_path_group'@{v u v u u u v v v u u u u u u u}.
 
 (** * Simple group equivalences *)
 
