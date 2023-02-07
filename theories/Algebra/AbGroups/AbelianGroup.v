@@ -32,7 +32,6 @@ Definition equiv_path_abgroup `{Univalence} {A B : AbGroup@{u}}
   : GroupIsomorphism A B <~> (A = B).
 Proof.
   refine (equiv_ap_inv issig_abgroup _ _ oE _).
-  About equiv_path_sigma_hprop.
   refine (equiv_path_sigma_hprop _ _ oE _).
   exact equiv_path_group.
 Defined.
