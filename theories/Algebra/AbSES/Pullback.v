@@ -35,8 +35,9 @@ Defined.
 (** ** The universal property of [abses_pullback_morphism] *)
 
 (** The natural map from the pulled back sequence. *)
-Definition abses_pullback_morphism {A B B' : AbGroup} (E : AbSES B A) (f : B' $-> B)
-  : AbSESMorphism (abses_pullback f E) E.
+Definition abses_pullback_morphism@{u v | u < v}
+  {A B B' : AbGroup@{u}} (E : AbSES@{u v} B A)
+  (f : B' $-> B) : AbSESMorphism@{u v} (abses_pullback f E) E.
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id _ f).
   - apply grp_pullback_pr1.
@@ -45,9 +46,9 @@ Proof.
 Defined.
 
 (** Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pullback F f3]. *)
-Definition abses_pullback_morphism_corec {A B X Y : AbGroup}
-           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
-  : AbSESMorphism E (abses_pullback (component3 f) F).
+Definition abses_pullback_morphism_corec@{u v | u < v} {A B X Y : AbGroup@{u}}
+           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism@{u v} E F)
+  : AbSESMorphism@{u v} E (abses_pullback (component3 f) F).
 Proof.
   snrapply (Build_AbSESMorphism (component1 f) _ grp_homo_id).
   - apply (grp_pullback_corec (projection F) (component3 f)
@@ -61,8 +62,9 @@ Proof.
 Defined.
 
 (** The original map factors via the induced map. *)
-Definition abses_pullback_morphism_corec_beta `{Funext} {A B X Y : AbGroup}
-           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
+Definition abses_pullback_morphism_corec_beta `{Funext}
+  {A B X Y : AbGroup@{u}} {E : AbSES B A} {F : AbSES Y X}
+  (f : AbSESMorphism@{u v} E F)
   : f = absesmorphism_compose (abses_pullback_morphism F (component3 f))
                               (abses_pullback_morphism_corec f).
 Proof.
@@ -73,9 +75,9 @@ Proof.
   all: by apply equiv_path_grouphomomorphism.
 Defined.
 
-Definition abses_pullback_component1_id' `{Funext} {A B B' : AbGroup}
-           {E : AbSES B A} {F : AbSES B' A} (f : AbSESMorphism E F)
-           (h : component1 f == grp_homo_id)
+Definition abses_pullback_component1_id'@{u v | u < v} `{Funext}
+  {A B B' : AbGroup@{u}} {E : AbSES B A} {F : AbSES B' A}
+  (f : AbSESMorphism@{u v} E F) (h : component1 f == grp_homo_id)
   : E $== abses_pullback (component3 f) F.
 Proof.
   pose (g := abses_pullback_morphism_corec f).
@@ -93,19 +95,34 @@ Definition abses_pullback_component1_id `{Univalence} {A B B' : AbGroup}
   := equiv_path_abses_iso (abses_pullback_component1_id' f h).
 
 (** For any two [E, F : AbSES B A] and [f, g : B' $-> B], there is a morphism [Ef + Fg -> E + F] induced by the universal properties of the pullbacks of E and F, respectively. *)
-Definition abses_directsum_pullback_morphism `{Funext} {A B B' C D D' : AbGroup}
-           {E : AbSES B A} {F : AbSES D C} (f : B' $-> B) (g : D' $-> D)
-  : AbSESMorphism (abses_direct_sum (abses_pullback f E) (abses_pullback g F))
-                  (abses_direct_sum E F)
-  := functor_abses_directsum (abses_pullback_morphism E f) (abses_pullback_morphism F g).
+Definition abses_directsum_pullback_morphism@{u v | u < v} `{Funext}
+  {A B B' C D D' : AbGroup@{u}} {E : AbSES@{u v} B A} {F : AbSES@{u v} D C}
+  (f : B' $-> B) (g : D' $-> D)
+  : AbSESMorphism@{u v}
+      (abses_direct_sum (abses_pullback f E) (abses_pullback g F))
+      (abses_direct_sum E F)
+  := functor_abses_directsum
+       (abses_pullback_morphism E f) (abses_pullback_morphism F g).
 
 (** For any two [E, F : AbSES B A] and [f, g : B' $-> B], we have (E + F)(f + g) = Ef + Eg, where + denotes the direct sum. *)
-Definition abses_directsum_distributive_pullbacks `{Univalence} {A B B' C D D' : AbGroup}
+Definition abses_directsum_distributive_pullbacks@{u v | u < v} `{Univalence}
+  {A B B' C D D' : AbGroup@{u}}
            {E : AbSES B A} {F : AbSES D C} (f : B' $-> B) (g : D' $-> D)
   : abses_pullback (functor_ab_biprod f g) (abses_direct_sum E F)
     = abses_direct_sum (abses_pullback f E) (abses_pullback g F)
   := (abses_pullback_component1_id (abses_directsum_pullback_morphism f g)
         (fun _ => idpath))^.
+
+Definition abses_path_pullback_projection_commsq@{u v | u < v} `{Univalence}
+  {A B B' : AbGroup@{u}} (bt : B' $-> B)
+  (E : AbSES@{u v} B A) (F : AbSES B' A) (p : abses_pullback bt E = F)
+  : exists phi : middle F $-> E, projection E o phi == bt o projection F.
+Proof.
+  induction p.
+  exists (grp_pullback_pr1 _ _); intro x.
+  nrapply pullback_commsq.
+Defined.
+
 
 (** ** Functoriality of [abses_pullback f] for [f : B' $-> B] *)
 
@@ -219,15 +236,15 @@ Proof.
   srapply Build_pHomotopy.
   1: apply abses_pullback_id.
   refine (_ @ (concat_p1 _)^).
-  apply (ap equiv_path_abses_iso).
+  nrapply (ap equiv_path_abses_iso).
   apply path_sigma_hprop.
   apply equiv_path_groupisomorphism.
   intros [[a b] [b' p]]; cbn; cbn in p.
   by apply path_prod'.
 Defined.
 
-Definition abses_pullback_compose' {A B0 B1 B2 : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2)
+Definition abses_pullback_compose' {A B0 B1 B2 : AbGroup@{u}}
+  (f : B0 $-> B1) (g : B1 $-> B2)
   : abses_pullback (A:=A) f o abses_pullback g $=> abses_pullback (g $o f).
 Proof.
   intro E; srefine (_; (_,_)).
@@ -238,8 +255,8 @@ Proof.
 Defined.
 
 (** The analog of [abses_pullback_compose'] with actual homotopies. *)
-Definition abses_pullback_compose `{Univalence} {A B0 B1 B2 : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2)
+Definition abses_pullback_compose `{Univalence}
+  {A B0 B1 B2 : AbGroup@{u}} (f : B0 $-> B1) (g : B1 $-> B2)
   : abses_pullback (A:=A) f o abses_pullback g == abses_pullback (g $o f)
   := fun x => equiv_path_abses_iso (abses_pullback_compose' f g x).
 

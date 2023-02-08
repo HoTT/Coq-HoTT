@@ -5,7 +5,7 @@ Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
 
 (** * The set [Ext B A] of abelian group extensions *)
 
-Definition Ext (B A : AbGroup) := pTr 0 (AbSES B A).
+Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES@{u v} B A).
 
 (** An extension [E : AbSES B A] is trivial in [Ext B A] if and only if [E] merely splits. *)
 Proposition iff_ab_ext_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
@@ -18,16 +18,17 @@ Proof.
     apply iff_abses_trivial_split.
 Defined.
 
-Definition Ext' (B A : AbGroup) := Tr 0 (AbSES' B A).
+Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES'@{u v} B A).
 
-Global Instance isbifunctor_ext' `{Univalence}
-  : IsBifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
-  := isbifunctor_compose _ _.
+Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
+  : IsBifunctor@{v v w u u v v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
+  := isbifunctor_compose@{v v w w v v u u u u u u u u v v}
+       _ _ (P:=isbifunctor_abses'@{w u v v}).
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
-Definition grp_ext `{Univalence} (A B : AbGroup) : Group.
+Definition grp_ext@{u v +} `{Univalence} (A B : AbGroup@{u}) : Group@{v}.
 Proof.
-  snrapply (Build_Group (Ext B A)).
+  snrapply (Build_Group@{v} (Ext@{u v} B A)).
   - intros E F.
     strip_truncations.
     exact (tr (abses_baer_sum E F)).
@@ -35,7 +36,7 @@ Proof.
   - unfold Negate.
     exact (Trunc_functor _ (abses_pullback (- grp_homo_id))).
   - repeat split.
-    1: exact _.
+    1: apply istrunc_truncation@{v v}.
     all: intro E.  1: intros F G.
     all: strip_truncations; unfold mon_unit, point; apply (ap tr).
     + symmetry; apply baer_sum_associative.
