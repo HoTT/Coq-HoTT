@@ -118,7 +118,7 @@ Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
 (** ** Very short exact sequences and fiber sequences *)
 
 (** A complex is [n]-exact if the induced map [cxfib] is [n]-connected.  *)
-Class IsExact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y) :=
+Cumulative Class IsExact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y) :=
 {
   cx_isexact : IsComplex i f ;
   conn_map_isexact : IsConnMap n (cxfib cx_isexact)
