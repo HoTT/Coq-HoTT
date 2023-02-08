@@ -114,7 +114,7 @@ Global Instance is1cat_abgroup : Is1Cat AbGroup
 Global Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
   := hasmorext_induced _.
 
-Global Instance hasequivs_abgroup : HasEquivs AbGroup
+Global Instance hasequivs_abgroup@{u v} : HasEquivs@{v u u u u} AbGroup@{u}
   := hasequivs_induced _.
 
 (** Zero object of AbGroup *)
