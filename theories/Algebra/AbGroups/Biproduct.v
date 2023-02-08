@@ -7,7 +7,7 @@ Local Open Scope mc_add_scope.
 
 (** * Biproducts of abelian groups *)
 
-Definition ab_biprod (A B : AbGroup) : AbGroup.
+Definition ab_biprod@{u} (A B : AbGroup@{u}) : AbGroup@{u}.
 Proof.
   rapply (Build_AbGroup (grp_prod A B)).
   intros [a b] [a' b'].
@@ -101,8 +101,8 @@ Defined.
 
 (** Corecursion principle, inherited from Groups/Group.v. *)
 Definition ab_biprod_corec {A B X : AbGroup}
-           (f : X $-> A) (g : X $-> B)
-  : X $-> ab_biprod A B := grp_prod_corec f g.
+  (f : X $-> A) (g : X $-> B) : X $-> ab_biprod A B
+  := grp_prod_corec f g.
 
 Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
   : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
@@ -205,7 +205,8 @@ Proof.
 Defined.
 
 (** The swap isomorphism of the biproduct of two groups. *)
-Definition direct_sum_swap {A B : AbGroup} : (ab_biprod A B) $<~> (ab_biprod B A).
+Definition direct_sum_swap {A B : AbGroup}
+  : ab_biprod A B $<~> ab_biprod B A.
 Proof.
   snrapply Build_GroupIsomorphism'.
   - apply equiv_prod_symm.
@@ -268,7 +269,7 @@ Defined.
 (** The next few results are used to prove associativity of the Baer sum. *)
 
 (** A "twist" isomorphism [(A + B) + C <~> (C + B) + A]. *)
-Lemma ab_biprod_twist {A B C : AbGroup}
+Lemma ab_biprod_twist {A B C : AbGroup@{u}}
   : ab_biprod (ab_biprod A B) C $<~> ab_biprod (ab_biprod C B) A.
 Proof.
   snrapply Build_GroupIsomorphism.

@@ -229,12 +229,14 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
 Defined.
 
-Definition grp_iso_inverse {G H : Group}
+Definition grp_iso_inverse@{u} {G H : Group@{u}}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
   intros [f e].
   srapply Build_GroupIsomorphism.
-  - srapply (Build_GroupHomomorphism f^-1).
+  - snrapply (Build_GroupHomomorphism f^-1).
+    2: apply invert_monoid_morphism@{u u u}; exact _.
+    exact _.
   - exact _.
 Defined.
 
@@ -273,9 +275,10 @@ Proof.
   exact _.
 Defined.
 
-Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
+Definition grp_homo_id@{u} {G : Group@{u}} : GroupHomomorphism G G.
 Proof.
-  srapply (Build_GroupHomomorphism idmap).
+  snrapply (Build_GroupHomomorphism idmap).
+  exact id_sg_morphism@{u u u}.
 Defined.
 
 Definition grp_iso_id {G : Group} : GroupIsomorphism G G
@@ -490,7 +493,7 @@ Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
 Global Instance is01cat_group : Is01Cat Group :=
-  (Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose)).
+  Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
 Global Instance is2graph_group : Is2Graph Group
   := fun A B => isgraph_induced (@grp_homo_map A B).
@@ -535,11 +538,12 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-Global Instance hasequivs_group : HasEquivs Group.
+Global Instance hasequivs_group@{u v | u < v}
+  : HasEquivs@{v u u u u} Group@{u}.
 Proof.
   unshelve econstructor.
   + exact GroupIsomorphism.
-  + exact (fun G H f => IsEquiv f).
+  + exact (fun G H f => IsEquiv@{u u} f).
   + intros G H f; exact f.
   + exact Build_GroupIsomorphism.
   + intros G H; exact grp_iso_inverse.
