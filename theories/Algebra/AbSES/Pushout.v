@@ -141,6 +141,45 @@ Definition abses_directsum_distributive_pushouts `{Univalence}
     = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
   := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ => idpath).
 
+(** Given an AbSESMorphism whose third component is the identity, we know that it induces a path from the pushout of the domain along the first map to the codomain. Conversely, given a path from a pushout, we can deduce that the following square commutes: *)
+Definition abses_path_pushout_inclusion_commsq `{Univalence} {A A' B : AbGroup}
+  (alpha : A $-> A') (E : AbSES B A) (F : AbSES B A')
+  (p : abses_pushout alpha E = F)
+  : exists phi : middle E $-> F, inclusion F o alpha == phi o inclusion E.
+Proof.
+  induction p.
+  exists ab_pushout_inr; intro x.
+  nrapply ab_pushout_commsq.
+Defined.
+
+(** *** Properties of pushouts of maps *)
+
+(** The pushout of an epimorphism is an epimorphism. *)
+Global Instance ab_pushout_surjection_inr `{Univalence} {A B C : AbGroup}
+  (f : A $-> B) (g : A $-> C) `{S : IsSurjection f}
+  : IsSurjection (ab_pushout_inr (f:=f) (g:=g)).
+Proof.
+  intro x.
+  rapply contr_inhabited_hprop.
+  (* To find a preimage of [x], we may first choose a representative [x']. *)
+  assert (x' : merely (hfiber grp_quotient_map x)).
+  1: apply issurj_class_of.
+  strip_truncations; destruct x' as [[b c] p].
+  (* Now [x] = [b + c] in the quotient. We find a preimage of [a]. *)
+  assert (a : merely (hfiber f b)).
+  1: apply S.
+  strip_truncations; destruct a as [a q].
+  refine (tr (g a + c; _)).
+  refine (grp_homo_op _ _ _ @ _).
+  refine (ap (fun z => sg_op z _) _^ @ _).
+  { refine (_^ @ ab_pushout_commsq _).
+    exact (ap _ q). }
+  refine (ap grp_quotient_map _ @ p).
+  apply path_prod'; cbn.
+  - apply right_identity.
+  - apply left_identity.
+Defined.
+
 (** ** Functoriality of [abses_pushout f] *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
@@ -229,6 +268,51 @@ Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-> A')
 Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : AbSES B A ->* AbSES B A'
   := to_pointed (abses_pushout' f).
+
+(** The following general lemma lets us show that [abses_pushout f E] is trivial in cases of interest. It says that if you have a map [phi : E -> A'], then if you push out along the restriction [phi $o inclusion E], the result is trivial. Specifically, we get a morphism witnessing this fact.  *)
+Definition abses_pushout_trivial_morphism `{Univalence} {B A A' : AbGroup}
+  (E : AbSES B A) (f : A $-> A') (phi : middle E $-> A')
+  (k : f == phi $o inclusion E)
+  : AbSESMorphism E (pt : AbSES B A').
+Proof.
+  srapply (Build_AbSESMorphism f _ grp_homo_id).
+  1: exact (ab_biprod_corec phi (projection E)).
+  { intro a; cbn.
+    refine (path_prod' (k a) _^).
+    apply isexact_inclusion_projection. }
+  reflexivity.
+Defined.
+
+(** The pushout of a short exact sequence along its inclusion map is trivial. *)
+Definition abses_pushout_inclusion_morphism `{Univalence} {B A : AbGroup}
+  (E : AbSES B A) : AbSESMorphism E (pt : AbSES B E)
+  := abses_pushout_trivial_morphism E (inclusion E) grp_homo_id (fun _ => idpath).
+
+Definition abses_pushout_inclusion `{Univalence} {B A : AbGroup}
+  (E : AbSES B A) : abses_pushout (inclusion E) E = pt
+  := abses_pushout_component3_id
+       (abses_pushout_inclusion_morphism E) (fun _ => idpath).
+
+(** Pushing out along [grp_homo_const] is trivial. *)
+Definition abses_pushout_const_morphism `{Univalence} {B A A' : AbGroup}
+  (E : AbSES B A) : AbSESMorphism E (pt : AbSES B A')
+  := abses_pushout_trivial_morphism E
+       grp_homo_const grp_homo_const (fun _ => idpath).
+
+Definition abses_pushout_const `{Univalence} {B A A' : AbGroup}
+  (E : AbSES B A) : abses_pushout grp_homo_const E = pt :> AbSES B A'
+  := abses_pushout_component3_id
+       (abses_pushout_const_morphism E) (fun _ => idpath).
+
+(** Pushing out a fixed extension, with the map variable. This is the connecting map in the contravariant six-term exact sequence (see SixTerm.v). *)
+Definition abses_pushout_abses `{Univalence}
+  {B A G : AbGroup} (E : AbSES B A)
+  : ab_hom A G ->* AbSES B G.
+Proof.
+  srapply Build_pMap.
+  1: exact (fun g => abses_pushout g E).
+  apply abses_pushout_const.
+Defined.
 
 (** ** Functoriality of pushing out *)
 
