@@ -322,3 +322,15 @@ Proof.
     exact (f a; p).
   - apply isconn.
 Defined.
+
+(** If [X] is a set and [f : Y -> Z] is a surjection, then [- o f] is an embedding. *)
+Definition isembedding_precompose_surjection_hset `{Funext} {X Y Z : Type}
+  `{IsHSet X} (f : Y -> Z) `{IsSurjection f}
+  : IsEmbedding (fun phi : Z -> X => phi o f).
+Proof.
+  intros phi g0 g1; cbn.
+  rapply contr_inhabited_hprop.
+  apply path_sigma_hprop, equiv_path_arrow.
+  rapply conn_map_elim; intro y.
+  exact (ap10 (g0.2 @ g1.2^) y).
+Defined.
