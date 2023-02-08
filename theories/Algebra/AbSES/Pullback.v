@@ -205,6 +205,10 @@ Proof.
   - reflexivity.
 Defined.
 
+Definition abses_pullback_point `{Univalence} {A B B' : AbGroup}
+  (f : B' $-> B) : abses_pullback f pt = pt :> AbSES B' A
+  := equiv_path_abses_iso (abses_pullback_point' f).
+
 Definition abses_pullback' {A B B' : AbGroup} (f : B' $-> B)
   : AbSES B A -->* AbSES B' A
   := Build_BasepointPreservingFunctor (abses_pullback f) (abses_pullback_point' f).
@@ -321,6 +325,27 @@ Proof.
   rapply equiv_ptransformation_phomotopy.
   exact abses_pullback_pconst'.
 Defined.
+
+(** *** Pulling [E] back along [projection E] is trivial *)
+
+Definition abses_pullback_projection_morphism `{Univalence} {B A : AbGroup}
+  (E : AbSES B A) : AbSESMorphism (pt : AbSES E A) E.
+Proof.
+  srapply (Build_AbSESMorphism grp_homo_id _ (projection E)).
+  - cbn. exact (ab_biprod_rec (inclusion E) grp_homo_id).
+  - intro x; cbn.
+    exact (right_identity _)^.
+  - intros [a e]; cbn.
+    refine (grp_homo_op _ _ _ @ _).
+    refine (ap (fun x => sg_op x _) _ @ _).
+    1: apply isexact_inclusion_projection.
+    apply left_identity.
+Defined.
+
+Definition abses_pullback_projection `{Univalence} {B A : AbGroup}
+  (E : AbSES B A) : pt = abses_pullback (projection E) E
+  := abses_pullback_component1_id
+       (abses_pullback_projection_morphism E) (fun _ => idpath).
 
 (** *** Pulling back along homotopic maps *)
 

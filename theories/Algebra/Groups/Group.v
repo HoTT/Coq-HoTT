@@ -212,6 +212,10 @@ Definition equiv_groupisomorphism (G H : Group)
   : GroupIsomorphism G H -> G <~> H
   := fun f => Build_Equiv G H f _.
 
+Definition pequiv_groupisomorphism {A B : Group}
+  : GroupIsomorphism A B -> (A <~>* B)
+  := fun f => Build_pEquiv _ _ f _.
+
 Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
 
 Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}

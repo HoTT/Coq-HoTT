@@ -46,13 +46,26 @@ Proof.
     + apply baer_sum_inverse_l.
 Defined.
 
-Definition ab_ext `{Univalence} (A B : AbGroup) : AbGroup.
+Definition ab_ext@{u v | u < v} `{Univalence}
+  (A B : AbGroup@{u}) : AbGroup@{v}.
 Proof.
-  snrapply (Build_AbGroup (grp_ext B A)).
+  snrapply (Build_AbGroup (grp_ext@{u v} B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
   apply baer_sum_commutative.
+Defined.
+
+(** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)
+Definition abses_pushout_ext@{u v w | u < v, v < w} `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
+  : GroupHomomorphism (ab_hom A G) (ab_ext B G).
+Proof.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fun f => fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).
+  intros f g; cbn.
+  nrapply (ap tr@{v}).
+  exact (baer_sum_distributive_pushouts@{u v} f g).
 Defined.
 
 (** ** Extensions ending in a projective are trivial *)

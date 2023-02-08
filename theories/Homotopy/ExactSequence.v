@@ -97,6 +97,16 @@ Proof.
   apply postcompose_pconst.
 Defined.
 
+(** A special version with only an equivalence on the fiber. *)
+Definition iscomplex_equiv_fiber {F F' X Y : pType}
+  (i : F ->* X) (f : X ->* Y) (phi : F' <~>* F)
+  `{cx : IsComplex i f} : IsComplex (i o* phi) f.
+Proof.
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ cx @* _).
+  apply postcompose_pconst.
+Defined.
+
 (** Any pointed map induces a trivial complex. *)
 Definition iscomplex_trivial {X Y : pType} (f : X ->* Y)
   : IsComplex (@pconst pUnit X) f.
@@ -157,6 +167,12 @@ Proof.
   srapply isexact_preimage; exact x.2.
 Defined.
 
+(** If the base is contractible, then [i] is [O]-connected. *)
+Definition isconnmap_O_isexact_base_contr (O : Modality)
+  {F X Y : pType} `{Contr Y} (i : F ->* X) (f : X ->* Y)
+  `{IsExact O _ _ _ i f} : IsConnMap O i
+  := conn_map_compose O (cxfib cx_isexact) pr1.
+
 (** Passage across homotopies preserves exactness. *)
 Definition isexact_homotopic_i n  {F X Y : pType}
   {i i' : F ->* X} (ii : i' ==* i) (f : X ->* Y)
@@ -205,6 +221,30 @@ Proof.
       ).
 Defined.
 
+(** In particular, we can transfer exactness across equivalences of the total space. *)
+Definition moveL_isexact_equiv n {F X X' Y : pType}
+  (i : F ->* X) (f : X' ->* Y) (phi : X <~>* X')
+  `{IsExact n _ _ _ (phi o* i) f}
+  : IsExact n i (f o* phi).
+Proof.
+  rapply (isexact_equiv_i _ _ _ pequiv_pmap_idmap phi); cbn.
+  exact (pmap_precompose_idmap _)^*.
+Defined.
+
+(** Similarly, we can cancel equivalences on the fiber. *)
+Definition isexact_equiv_fiber n {F F' X Y : pType}
+  (i : F ->* X) (f : X ->* Y) (phi : F' <~>* F)
+  `{E : IsExact n _ _ _ i f}
+  : IsExact n (i o* phi) f.
+Proof.
+  srapply Build_IsExact.
+  1: apply iscomplex_equiv_fiber, cx_isexact.
+  apply (conn_map_homotopic _ (cxfib cx_isexact o* phi)).
+  { intro x; cbn.
+    by rewrite concat_p1, concat_1p. }
+  exact _.
+Defined.
+
 (** An equivalence of short sequences preserves exactness. *)
 Definition isexact_square_if n  {F F' X X' Y Y' : pType}
   {i : F ->* X} {i' : F' ->* X'}
@@ -251,6 +291,16 @@ Proof.
   1: exact (isequiv_cxfib ex).
   intro x.
   exact (ap (fun g => i g) (eissect _ x)).
+Defined.
+
+(** A purely exact sequence is [O]-exact for any modality [O]. *)
+Definition isexact_purely_O {O : Modality} {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely _ _ _ i f}
+  : IsExact O i f.
+Proof.
+  srapply Build_IsExact.
+  1: apply cx_isexact.
+  exact _.
 Defined.
 
 (** When [n] is the identity modality [purely], so that [cxfib] is an equivalence, we get simply a fiber sequence.  In particular, the fiber of a given map yields an purely-exact sequence. *)
