@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types Spaces.Pos.Core.
+Require Import Basics Types.
 Require Export Basics.Nat.
 Require Export HoTT.DProp.
 
@@ -738,12 +738,3 @@ Lemma not_lt_n_0 n : ~ (n < 0).
 Proof.
   apply not_leq_Sn_0.
 Defined.
-
-Definition pos_to_nat : Pos -> nat.
-Proof.
-  intro p. induction p.
-  + exact (S O).
-  + exact (add IHp IHp).
-  + exact (S (add IHp IHp)).
-Defined.
-

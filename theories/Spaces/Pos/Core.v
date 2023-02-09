@@ -1,4 +1,5 @@
-Require Import Basics.Overture Basics.Tactics Basics.Decidable.
+Require Import Basics.Overture Basics.Tactics Basics.Decidable
+  Spaces.Nat.Core.
 
 (* ** Binary Positive Integers *)
 
@@ -409,5 +410,13 @@ Definition pos_to_uint p := Decimal.rev (pos_to_little_uint p).
 Definition pos_to_decimal_int n := Decimal.Pos (pos_to_uint n).
 
 Definition pos_to_number_uint p := Numeral.UIntDec (pos_to_uint p).
+
+Definition pos_to_nat : Pos -> nat.
+Proof.
+  intro p. induction p.
+  + exact (S O).
+  + exact (add IHp IHp).
+  + exact (S (add IHp IHp)).
+Defined.
 
 Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.

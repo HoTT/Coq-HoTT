@@ -1,4 +1,4 @@
-Require Import Spaces.Nat Spaces.Int.
+Require Import Spaces.Nat Spaces.Pos Spaces.Int.
 Require Import Algebra.AbGroups.AbelianGroup.
 
 (** * The group of integers *)
