@@ -14,14 +14,14 @@ Definition isexact_abses_sixterm_i `{Funext}
   : IsExact (Tr (-1))
       (pconst : pUnit ->* ab_hom B G)
       (fmap10 (A:=Group^op) ab_hom (projection E) G).
-Abort.
+Abort. (* Left for future work. *)
 
 Definition isexact_ext_contr_sixterm_ii `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (projection E) G)
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G).
-Abort.
+Abort. (* Follows from [isexact_abses_pullback]. Details left for future work. *)
 
 (** *** Exactness of [ab_hom E G -> ab_hom A G -> Ext B G] *)
 
