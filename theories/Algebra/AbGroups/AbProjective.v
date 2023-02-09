@@ -5,7 +5,17 @@ Require Import Basics Types AbelianGroup AbPullback
 
 (** We define projective abelian groups and show that [P] is projective if and only if every epimorphism [A -> P] merely splits. *)
 
-(** An abelian group [P] is projective if for any map [P -> B] and epimorphism [A -> B], there merely exists a lift [P -> A] making the triangle commute. *)
+(** An abelian group [P] is projective if for any map [P -> B] and epimorphism [A -> B], there merely exists a lift [P -> A] making the following triangle commute:
+
+              A
+            ^ |
+         l /  |
+              | e
+         /    |
+              V
+       P ---> B
+          f
+*)
 Class IsAbProjective (P : AbGroup) : Type :=
   isabprojective : forall (A : AbGroup), forall (B : AbGroup), forall (e : A $-> B),
     forall (f : P $-> B), IsSurjection e -> merely (exists l : P $-> A, e $o l == f).
