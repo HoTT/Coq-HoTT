@@ -11,13 +11,14 @@ Local Open Scope mc_mult_scope.
 
 Section Reduction.
 
-  Context (A : Type).
+  Universe u.
+  Context (A : Type@{u}).
 
   (** We define words (with inverses) on A to be lists of marked elements of A *)
-  Local Definition Words : Type := list (A + A).
+  Local Definition Words : Type@{u} := list (A + A).
 
   (** Given a marked element of A we can change its mark *)
-  Local Definition change_sign : A + A -> A + A
+  Local Definition change_sign : A + A -> sum@{u u} A A
     := fun x => match x with
                 | inl a => inr a
                 | inr a => inl a
