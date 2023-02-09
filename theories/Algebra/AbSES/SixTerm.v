@@ -220,4 +220,6 @@ Defined.
 Definition ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : ab_cokernel (ab_mul_nat n) $<~> ab_ext (cyclic' n) A
-  := ext_cyclic_ab'@{u v w u u u u u u u u u u u u u} n (A:=A).
+  := ltac:(try
+    ( exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u u u} n (A:=A))
+    || exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u u u u} n (A:=A)))).
