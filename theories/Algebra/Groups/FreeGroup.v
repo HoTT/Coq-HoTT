@@ -472,7 +472,7 @@ Section FreeGroupGenerated.
     : to_subgroup_generated (i s) = subgroup_generated_gen_incl (i s) (s; idpath)
     := isfreegroupon_rec_beta _ _.
 
-  (* It follows [to_subgroup_generated] is a section of the inclusion map from [G] to [F_S]. *)
+  (* It follows that [to_subgroup_generated] is a section of the inclusion map from [G] to [F_S]. *)
   Local Definition is_retraction
     : (subgroup_incl _) $o to_subgroup_generated = grp_homo_id.
   Proof.
