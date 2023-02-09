@@ -439,7 +439,7 @@ Arguments sgt_in {G X g}.
 Arguments sgt_unit {G X}.
 Arguments sgt_op {G X g h}.
 
-(** Note that [subgroup_generated_type] will not automatically land in [HProp]. For example, if [X] already "contains" the unit of the group, then there are at least two different inhabitants of this family at the unit (given by [sgt_unit] and [sgt_in group_unit _]). Therefore, in [subgroup_generated] below propositionally truncate. *)
+(** Note that [subgroup_generated_type] will not automatically land in [HProp]. For example, if [X] already "contains" the unit of the group, then there are at least two different inhabitants of this family at the unit (given by [sgt_unit] and [sgt_in group_unit _]). Therefore, we propositionally truncate in [subgroup_generated] below. *)
 
 (** Subgroups are closed under inverses. *)
 Definition sgt_inv {G : Group} {X} {g : G}
