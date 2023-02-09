@@ -21,7 +21,8 @@ Definition IsComplex {F X Y} (i : F ->* X) (f : X ->* Y)
 
 (** This induces a map from the domain of [i] to the fiber of [f]. *)
 Definition cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
-  (cx : IsComplex i f) : F ->* pfiber f.
+  (cx : IsComplex i f)
+  : F ->* pfiber f.
 Proof.
   srapply Build_pMap.
   - exact (fun x => (i x; cx x)).
@@ -33,7 +34,8 @@ Defined.
 
 (** ...whose composite with the projection [pfib : pfiber i -> X] is [i].  *)
 Definition pfib_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
-  (cx : IsComplex i f) : pfib f o* cxfib cx ==* i.
+  (cx : IsComplex i f)
+  : pfib f o* cxfib cx ==* i.
 Proof.
   srapply Build_pHomotopy.
   - reflexivity.
@@ -74,13 +76,14 @@ Definition iscomplex_homotopic_i {F X Y : pType}
 
 Definition iscomplex_homotopic_f {F X Y : pType}
   (i : F ->* X) {f f' : X ->* Y} (ff : f' ==* f) (cx : IsComplex i f)
-  : IsComplex i f' := pmap_prewhisker i ff @* cx.
+  : IsComplex i f'
+  := pmap_prewhisker i ff @* cx.
 
 Definition iscomplex_cancelR {F X Y Y' : pType}
   (i : F ->* X) (f : X ->* Y) (e : Y <~>* Y') (cx : IsComplex i (e o* f))
-  : IsComplex i f :=
-  (compose_V_hh e (f o* i))^$ $@ cat_postwhisker _ ((cat_assoc i _ _)^$ $@ cx)
-    $@ precompose_pconst _.
+  : IsComplex i f
+  := (compose_V_hh e (f o* i))^$ $@ cat_postwhisker _ ((cat_assoc i _ _)^$ $@ cx)
+       $@ precompose_pconst _.
 
 (** And likewise passage across squares with equivalences *)
 Definition iscomplex_equiv_i {F F' X X' Y : pType}
@@ -100,7 +103,8 @@ Defined.
 (** A special version with only an equivalence on the fiber. *)
 Definition iscomplex_equiv_fiber {F F' X Y : pType}
   (i : F ->* X) (f : X ->* Y) (phi : F' <~>* F)
-  `{cx : IsComplex i f} : IsComplex (i o* phi) f.
+  `{cx : IsComplex i f}
+  : IsComplex (i o* phi) f.
 Proof.
   refine ((pmap_compose_assoc _ _ _)^* @* _).
   refine (pmap_prewhisker _ cx @* _).
@@ -122,7 +126,8 @@ Local Existing Instance ishprop_phomotopy_hset.
 
 (** If Y is a set, then IsComplex is an HProp. *)
 Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
-  (i : F ->* X) (f : X ->* Y) : IsHProp (IsComplex i f) := {}.
+  (i : F ->* X) (f : X ->* Y)
+  : IsHProp (IsComplex i f) := {}.
 
 
 (** ** Very short exact sequences and fiber sequences *)
@@ -149,8 +154,9 @@ Proof.
 Defined.
 
 (** With exactness we can choose preimages. *)
-Lemma isexact_preimage (O : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-  `{IsExact O _ _ _ i f} (x : X) (p : f x = point Y)
+Lemma isexact_preimage (O : Modality) {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact O _ _ _ i f}
+  (x : X) (p : f x = point Y)
   : O (hfiber i x).
 Proof.
   rapply (O_functor O (A:=hfiber (cxfib cx_isexact) (x; p))).
@@ -161,22 +167,25 @@ Defined.
 
 (** Bundled version of the above. *)
 Lemma isexact_preimage_hfiber (O : Modality) {F X Y : pType}
-  (i : F ->* X) (f : X ->* Y) `{IsExact O _ _ _ i f} (x : hfiber f pt)
+  (i : F ->* X) (f : X ->* Y) `{IsExact O _ _ _ i f}
+  (x : hfiber f pt)
   : O (hfiber i x.1).
 Proof.
   srapply isexact_preimage; exact x.2.
 Defined.
 
 (** If the base is contractible, then [i] is [O]-connected. *)
-Definition isconnmap_O_isexact_base_contr (O : Modality)
-  {F X Y : pType} `{Contr Y} (i : F ->* X) (f : X ->* Y)
-  `{IsExact O _ _ _ i f} : IsConnMap O i
+Definition isconnmap_O_isexact_base_contr (O : Modality) {F X Y : pType}
+  `{Contr Y} (i : F ->* X) (f : X ->* Y)
+  `{IsExact O _ _ _ i f}
+  : IsConnMap O i
   := conn_map_compose O (cxfib cx_isexact) pr1.
 
 (** Passage across homotopies preserves exactness. *)
 Definition isexact_homotopic_i n  {F X Y : pType}
   {i i' : F ->* X} (ii : i' ==* i) (f : X ->* Y)
-  `{IsExact n F X Y i f} : IsExact n i' f.
+  `{IsExact n F X Y i f}
+  : IsExact n i' f.
 Proof.
   exists (iscomplex_homotopic_i ii f cx_isexact).
   refine (conn_map_homotopic n (cxfib cx_isexact) _ _ _).
@@ -187,7 +196,8 @@ Defined.
 
 Definition isexact_homotopic_f n  {F X Y : pType}
   (i : F ->* X) {f f' : X ->* Y} (ff : f' ==* f)
-`{IsExact n F X Y i f} : IsExact n i f'.
+  `{IsExact n F X Y i f}
+  : IsExact n i f'.
 Proof.
   exists (iscomplex_homotopic_f i ff cx_isexact).
   pose (e := equiv_hfiber_homotopic _ _ ff pt).
@@ -251,7 +261,8 @@ Definition isexact_square_if n  {F F' X X' Y Y' : pType}
   {f : X ->* Y} {f' : X' ->* Y'}
   (g : F' <~>* F) (h : X' <~>* X) (k : Y' <~>* Y)
   (p : Square g h i' i) (q : Square h k f' f)
-  `{IsExact n F X Y i f} : IsExact n i' f'.
+  `{IsExact n F X Y i f}
+  : IsExact n i' f'.
 Proof.
   pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
@@ -281,7 +292,8 @@ Defined.
 
 Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
-  : F <~>* pfiber f := Build_pEquiv _ _ _ (isequiv_cxfib ex).
+  : F <~>* pfiber f
+  := Build_pEquiv _ _ _ (isequiv_cxfib ex).
 
 Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
@@ -324,7 +336,8 @@ Defined.
 Definition FiberSeq (F X Y : pType) := { f : X ->* Y & F <~>* pfiber f }.
 
 Definition i_fiberseq {F X Y} (fs : FiberSeq F X Y)
-  : F ->* X := pfib fs.1 o* fs.2.
+  : F ->* X
+  := pfib fs.1 o* fs.2.
 
 Global Instance isexact_purely_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
   : IsExact purely (i_fiberseq fs) fs.1.
@@ -344,7 +357,8 @@ Proof.
 Defined.
 
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
-  `{IsExact purely F X Y i f} : F <~>* pfiber f
+  `{IsExact purely F X Y i f}
+  : F <~>* pfiber f
   := Build_pEquiv _ _ (cxfib cx_isexact) _.
 
 Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
@@ -388,8 +402,8 @@ Defined.
 
 (** (n.+1)-truncation preserves n-exactness. *)
 Global Instance isexact_ptr `{Univalence} (n : trunc_index)
-           {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact (Tr n) F X Y i f}
+  {F X Y : pType} (i : F ->* X) (f : X ->* Y)
+  `{IsExact (Tr n) F X Y i f}
   : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
   exists (iscomplex_ptr n.+1 i f cx_isexact).
@@ -409,7 +423,7 @@ Defined.
 
 (** In particular, (n.+1)-truncation takes fiber sequences to n-exact ones. *)
 Global Instance isexact_ptr_purely `{Univalence} (n : trunc_index)
-           {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
   rapply isexact_ptr.
@@ -431,21 +445,21 @@ Proof.
 Defined.
 
 (** The connecting maps for the long exact sequence of loop spaces, defined as an extension to a fiber sequence. *)
-Definition connect_fiberseq {F X Y} (i : F ->* X) (f : X ->* Y)
-  `{IsExact purely F X Y i f} : FiberSeq (loops Y) F X.
+Definition connect_fiberseq {F X Y}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : FiberSeq (loops Y) F X.
 Proof.
   exists i.
   exact (((pfiber2_loops f) o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))^-1*).
 Defined.
 
-
-Definition connecting_map {F X Y} (i : F ->* X) (f : X ->* Y)
-           `{IsExact purely F X Y i f}
+Definition connecting_map {F X Y}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : loops Y ->* F
   := i_fiberseq (connect_fiberseq i f).
 
-Global Instance isexact_connect_R {F X Y} (i : F ->* X) (f : X ->* Y)
-       `{IsExact purely F X Y i f}
+Global Instance isexact_connect_R {F X Y}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : IsExact purely (fmap loops f) (connecting_map i f).
 Proof.
   refine (isexact_equiv_i (Y := F) purely
@@ -484,7 +498,7 @@ Global Existing Instance les_isexact.
 
 (** Long exact sequences are preserved by truncation. *)
 Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}
-           (S : LongExactSequence purely N)
+  (S : LongExactSequence purely N)
   : LongExactSequence (Tr k) N
   := Build_LongExactSequence
        (Tr k) N (fun n => pTr k.+1 (S n))
@@ -502,8 +516,8 @@ Definition loops_carrier (F X Y : pType) (n : N3) : pType :=
   end.
 
 (** Starting from a fiber sequence, we can obtain a long purely-exact sequence of loop spaces. *)
-Definition loops_les {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact purely F X Y i f}
+Definition loops_les {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : LongExactSequence purely (N3).
 Proof.
   srefine (Build_LongExactSequence purely (N3) (loops_carrier F X Y) _ _).
@@ -516,8 +530,8 @@ Proof.
 Defined.
 
 (** And from that, a long exact sequence of homotopy groups (though for now it is just a sequence of pointed sets). *)
-Definition Pi_les `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-           `{IsExact purely F X Y i f}
+Definition Pi_les `{Univalence} {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : LongExactSequence (Tr (-1)) (N3)
   := trunc_les (-1) (loops_les i f).
 
