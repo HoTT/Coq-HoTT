@@ -37,8 +37,6 @@ Proof.
   - intros f g. cbn. reflexivity.
 Defined.
 
-(** Next we show that [equiv_Z1_hom] is natural. *)
-
 Definition nat_to_Z1 : nat -> Z1 := fun n => grp_pow Z1_gen n.
 
 Definition Z1_mul_nat `{Funext} (n : nat) : ab_Z1@{u v} $-> ab_Z1@{u v}
@@ -51,15 +49,6 @@ Proof.
   1: easy.
   refine (grp_pow_homo _ _ _ @ _); simpl.
   by rewrite grp_unit_r.
-Defined.
-
-(** Naturality of [equiv_Z1_hom]. *)
-Lemma ab_mul_precomp `{Funext} (A : AbGroup) (n : Int)
-  : equiv_Z1_hom A o (fun f => grp_homo_compose f (ab_mul n))
-    == ab_mul n o equiv_Z1_hom A.
-Proof.
-  intro f; cbn.
-  exact (ab_mul_homo n f _).
 Defined.
 
 (** [ab_Z1] is projective. *)
