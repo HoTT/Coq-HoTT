@@ -16,8 +16,8 @@ Declare Scope abses_scope.
 Local Open Scope abses_scope.
 
 (** The type of short exact sequences [A -> E -> B] of abelian groups. We decorate it with (') to reserve the undecorated name for the structured version. *)
-Record AbSES' {B A : AbGroup@{u}} := {
-    middle :  AbGroup;
+Record AbSES' {B A : AbGroup@{u}} := Build_AbSES {
+    middle :  AbGroup@{u};
     inclusion : A $-> middle;
     projection : middle $-> B;
     isembedding_inclusion : IsEmbedding inclusion;
@@ -31,9 +31,7 @@ Coercion middle : AbSES' >-> AbGroup.
 Global Existing Instances isembedding_inclusion issurjection_projection isexact_inclusion_projection.
 
 Arguments AbSES' B A : clear implicits.
-Arguments Build_AbSES' {B A}.
-
-Definition Build_AbSES {B A : AbGroup@{u}} := @Build_AbSES' B A.
+Arguments Build_AbSES {B A}.
 
 (** TODO Figure out why printing this term eats memory and seems to never finish. *)
 Local Definition issig_abses_do_not_print {B A : AbGroup} : _ <~> AbSES' B A := ltac:(issig).
@@ -59,8 +57,8 @@ Definition iscomplex_abses {A B : AbGroup} (E : AbSES' B A)
   := cx_isexact.
 
 (** [AbSES' B A] is pointed by the split sequence [A -> A+B -> B]. *)
-Global Instance ispointed_abses@{u v | u < v} {B A : AbGroup@{u}}
-  : IsPointed (AbSES'@{u v} B A).
+Global Instance ispointed_abses {B A : AbGroup@{u}}
+  : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
   snrapply Build_IsExact.
@@ -74,20 +72,20 @@ Proof.
 Defined.
 
 (** The pointed type of short exact sequences. *)
-Definition AbSES@{u v} (B A : AbGroup@{u}) : pType@{v}
-  := [AbSES'@{u v} B A, _].
+Definition AbSES (B A : AbGroup@{u}) : pType
+  := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
 
-Definition abses_path_data_iso@{u v | u < v}
-  {B A : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Definition abses_path_data_iso
+  {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupIsomorphism E F
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
 (** Having the path data in a slightly different form is useful for [equiv_path_abses_iso]. *)
-Local Lemma shuffle_abses_path_data_iso@{u v | u < v} `{Funext}
-  {B A : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Local Lemma shuffle_abses_path_data_iso `{Funext}
+  {B A : AbGroup@{u}} (E F : AbSES B A)
   : (abses_path_data_iso E F)
       <~> {phi : GroupIsomorphism E F
                  & (phi $o inclusion _ == inclusion _)
@@ -103,8 +101,8 @@ Proof.
 Defined.
 
 (** Paths in [AbSES] correspond to isomorphisms between the [middle]s respecting [inclusion] and [projection]. Below we prove the stronger statement [equiv_path_abses], which uses this result. *)
-Proposition equiv_path_abses_iso@{u v} `{Univalence}
-  {B A : AbGroup@{u}} {E F : AbSES'@{u v} B A}
+Proposition equiv_path_abses_iso `{Univalence}
+  {B A : AbGroup@{u}} {E F : AbSES' B A}
   : abses_path_data_iso E F <~> E = F.
 Proof.
   refine (_ oE shuffle_abses_path_data_iso E F).
@@ -127,8 +125,8 @@ Proof.
 Defined.
 
 (** It follows that [AbSES B A] is 1-truncated. *)
-Global Instance istrunc_abses `{Univalence}
-  {B A : AbGroup@{u}} : IsTrunc 1 (AbSES@{u v} B A).
+Global Instance istrunc_abses `{Univalence} {B A : AbGroup@{u}}
+  : IsTrunc 1 (AbSES B A).
 Proof.
   intros E F.
   refine (istrunc_equiv_istrunc _ equiv_path_abses_iso (n:=0)).
@@ -137,7 +135,7 @@ Proof.
 Defined.
 
 Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
-  {E F : AbSES@{u v} B A}
+  {E F : AbSES B A}
   (phi : GroupIsomorphism E F) (p : phi $o inclusion _ == inclusion _)
   (q : projection _ == projection _ $o phi)
   : E = F := equiv_path_abses_iso (phi; (p,q)).
@@ -146,7 +144,7 @@ Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
 
 (** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
 Lemma short_five_lemma {B A : AbGroup@{u}}
-  {E F : AbSES@{u v} B A} (phi : GroupHomomorphism E F)
+  {E F : AbSES B A} (phi : GroupHomomorphism E F)
   (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
   : IsEquiv phi.
 Proof.
@@ -183,7 +181,7 @@ Proof.
 Defined.
 
 (** Below we prove that homomorphisms respecting [projection] and [inclusion] correspond to paths in [AbSES B A]. We refer to such homomorphisms simply as path data in [AbSES B A]. *)
-Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupHomomorphism E F
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
@@ -219,38 +217,38 @@ Definition path_abses `{Univalence} {B A : AbGroup@{u}}
 
 (** *** The wildcat of short exact sequences *)
 
-Global Instance isgraph_abses_path_data {A B : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Global Instance isgraph_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : IsGraph (abses_path_data_iso E F)
   := isgraph_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance is01cat_abses_path_data {A B : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Global Instance is01cat_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : Is01Cat (abses_path_data_iso E F)
   := is01cat_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance is0gpd_abses_path_data {A B : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Global Instance is0gpd_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : Is0Gpd (abses_path_data_iso E F)
   := is0gpd_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance isgraph_abses {A B : AbGroup@{u}} : IsGraph (AbSES@{u v} B A)
+Global Instance isgraph_abses {A B : AbGroup@{u}} : IsGraph (AbSES B A)
   := Build_IsGraph _ abses_path_data_iso.
 
 (** The path data corresponding to [idpath]. *)
-Definition abses_path_data_1 {B A : AbGroup@{u}} (E : AbSES@{u v} B A)
+Definition abses_path_data_1 {B A : AbGroup@{u}} (E : AbSES B A)
   : E $-> E := (grp_iso_id; (fun _ => idpath, fun _ => idpath)).
 
 (** We can compose path data in [AbSES B A]. *)
-Definition abses_path_data_compose@{u v +} {B A : AbGroup@{u}} {E F G : AbSES@{u v} B A}
+Definition abses_path_data_compose {B A : AbGroup@{u}} {E F G : AbSES B A}
            (p : E $-> F) (q : F $-> G) : E $-> G
   := (q.1 $oE p.1; ((fun x => ap q.1 (fst p.2 x) @ fst q.2 x),
                      (fun x => snd p.2 x @ snd q.2 (p.1 x)))).
 
-Global Instance is01cat_abses@{u v | u < v} {A B : AbGroup@{u}}
-  : Is01Cat (AbSES@{u v} B A)
+Global Instance is01cat_abses {A B : AbGroup@{u}}
+  : Is01Cat (AbSES B A)
   := Build_Is01Cat _ _ abses_path_data_1
-       (fun _ _ _ q p => abses_path_data_compose@{u v} p q).
+       (fun _ _ _ q p => abses_path_data_compose p q).
 
-Definition abses_path_data_inverse@{u v | u < v}
-  {B A : AbGroup@{u}} {E F : AbSES@{u v} B A}
+Definition abses_path_data_inverse
+  {B A : AbGroup@{u}} {E F : AbSES B A}
   : (E $-> F) -> (F $-> E).
 Proof.
   intros [phi [p q]].
@@ -262,17 +260,17 @@ Proof.
     exact (ap (projection F) (eisretr _ _)^ @ (q _)^).
 Defined.
 
-Global Instance is0gpd_abses@{u v | u < v}
-  {A B : AbGroup@{u}} : Is0Gpd (AbSES@{u v} B A)
+Global Instance is0gpd_abses
+  {A B : AbGroup@{u}} : Is0Gpd (AbSES B A)
   := {| gpd_rev := fun _ _ => abses_path_data_inverse |}.
 
-Global Instance is2graph_abses@{u v | u < v}
-  {A B : AbGroup@{u}} : Is2Graph (AbSES@{u v} B A)
+Global Instance is2graph_abses
+  {A B : AbGroup@{u}} : Is2Graph (AbSES B A)
   := fun E F => isgraph_abses_path_data E F.
 
 (** [AbSES B A] forms a 1Cat *)
 Global Instance is1cat_abses {A B : AbGroup@{u}}
-  : Is1Cat (AbSES@{u v} B A).
+  : Is1Cat (AbSES B A).
 Proof.
   snrapply Build_Is1Cat.
   1: intros ? ?; apply is01cat_abses_path_data.
@@ -285,7 +283,8 @@ Proof.
   - exact (h (f.1 e)).
 Defined.
 
-Global Instance is1gpd_abses {A B : AbGroup@{u}} : Is1Gpd (AbSES@{u v} B A).
+Global Instance is1gpd_abses {A B : AbGroup@{u}}
+  : Is1Gpd (AbSES B A).
 Proof.
   rapply Build_Is1Gpd;
     intros E F p e; cbn.
@@ -294,7 +293,7 @@ Proof.
 Defined.
 
 Global Instance hasmorext_abses `{Funext} {A B : AbGroup@{u}}
-  : HasMorExt (AbSES@{u v} B A).
+  : HasMorExt (AbSES B A).
 Proof.
   srapply Build_HasMorExt;
     intros E F f g.
@@ -308,7 +307,7 @@ Defined.
 
 (** We need to be able to work with path data as if they're paths. Our preference is to state things in terms of [abses_path_data_iso], since this lets us keep track of isomorphisms whose inverses compute. The "abstract" inverses produced by [short_five_lemma] do not compute well. *)
 
-Definition equiv_path_abses_1 `{Univalence} {B A : AbGroup} {E : AbSES B A}
+Definition equiv_path_abses_1 `{Univalence} {B A : AbGroup@{u}} {E : AbSES B A}
   : equiv_path_abses_iso (abses_path_data_1 E) = idpath.
 Proof.
   apply (equiv_ap_inv' equiv_path_abses_iso).
@@ -318,14 +317,14 @@ Proof.
   reflexivity.
 Defined.
 
-Definition equiv_path_absesV_1 `{Univalence} {B A : AbGroup} {E : AbSES B A}
+Definition equiv_path_absesV_1 `{Univalence} {B A : AbGroup@{u}} {E : AbSES B A}
   : (@equiv_path_abses_iso _ B A E E)^-1 idpath = Id E.
 Proof.
   apply moveR_equiv_M; symmetry.
   apply equiv_path_abses_1.
 Defined.
 
-Definition abses_path_data_V `{Univalence} {B A : AbGroup} {E F : AbSES B A}
+Definition abses_path_data_V `{Univalence} {B A : AbGroup@{u}} {E F : AbSES B A}
            (p : abses_path_data_iso E F)
   : (equiv_path_abses_iso p)^ = equiv_path_abses_iso (abses_path_data_inverse p).
 Proof.
@@ -338,7 +337,7 @@ Proof.
 Defined.
 
 (** Composition of path data corresponds to composition of paths. *)
-Definition abses_path_compose_beta `{Univalence} {B A : AbGroup} {E F G : AbSES B A}
+Definition abses_path_compose_beta `{Univalence} {B A : AbGroup@{u}} {E F G : AbSES B A}
           (p : E = F) (q : F = G)
  : p @ q = equiv_path_abses_iso
              (abses_path_data_compose
@@ -352,7 +351,7 @@ Proof.
 Defined.
 
 (** A second beta-principle where you start with path data instead of actual paths. *)
-Definition abses_path_data_compose_beta `{Univalence} {B A : AbGroup} {E F G : AbSES B A}
+Definition abses_path_data_compose_beta `{Univalence} {B A : AbGroup@{u}} {E F G : AbSES B A}
            (p : abses_path_data_iso E F) (q : abses_path_data_iso F G)
   : equiv_path_abses_iso p @ equiv_path_abses_iso q
     = equiv_path_abses_iso (abses_path_data_compose p q).
@@ -366,21 +365,21 @@ Defined.
 
 (** *** Homotopies of path data *)
 
-Definition equiv_path_data_homotopy `{Univalence} {X : Type} {B A : AbGroup}
+Definition equiv_path_data_homotopy `{Univalence} {X : Type} {B A : AbGroup@{u}}
            (f g : X -> AbSES B A) : (f $=> g) <~> f == g.
 Proof.
   srapply equiv_functor_forall_id; intro x; cbn.
   srapply equiv_path_abses_iso.
 Defined.
 
-Definition pmap_abses_const {B' A' B A : AbGroup} : AbSES B A -->* AbSES B' A'
+Definition pmap_abses_const {B' A' B A : AbGroup@{u}} : AbSES B A -->* AbSES B' A'
   := Build_BasepointPreservingFunctor (const pt) (Id pt).
 
-Definition to_pointed `{Univalence} {B' A' B A : AbGroup}
+Definition to_pointed `{Univalence} {B' A' B A : AbGroup@{u}}
   : (AbSES B A -->* AbSES B' A') -> (AbSES B A ->* AbSES B' A')
   := fun f => Build_pMap _ _ f (equiv_path_abses_iso (bp_pointed f)).
 
-Lemma pmap_abses_const_to_pointed `{Univalence} {B' A' B A : AbGroup}
+Lemma pmap_abses_const_to_pointed `{Univalence} {B' A' B A : AbGroup@{u}}
   : pconst ==* to_pointed (@pmap_abses_const B' A' B A).
 Proof.
   srapply Build_pHomotopy.
@@ -390,7 +389,7 @@ Proof.
   apply equiv_path_abses_1.
 Defined.
 
-Lemma abses_ap_fmap `{Univalence} {B0 B1 A0 A1 : AbGroup}
+Lemma abses_ap_fmap `{Univalence} {B0 B1 A0 A1 : AbGroup@{u}}
       (f : AbSES B0 A0 -> AbSES B1 A1) `{!Is0Functor f, !Is1Functor f}
       {E F : AbSES B0 A0} (p : E $== F)
   : ap f (equiv_path_abses_iso p) = equiv_path_abses_iso (fmap f p).
@@ -409,7 +408,7 @@ Proof.
   exact equiv_path_abses_1^.
 Defined.
 
-Definition to_pointed_compose `{Univalence} {B0 B1 B2 A0 A1 A2 : AbGroup}
+Definition to_pointed_compose `{Univalence} {B0 B1 B2 A0 A1 A2 : AbGroup@{u}}
            (f : AbSES B0 A0 -->* AbSES B1 A1) (g : AbSES B1 A1 -->* AbSES B2 A2)
            `{!Is1Functor f, !Is1Functor g}
   : to_pointed g o* to_pointed f ==* to_pointed (g $o* f).
@@ -428,7 +427,7 @@ Proof.
   reflexivity.
 Defined.
 
-Definition equiv_ptransformation_phomotopy `{Univalence} {B' A' B A : AbGroup}
+Definition equiv_ptransformation_phomotopy `{Univalence} {B' A' B A : AbGroup@{u}}
            {f g : AbSES B A -->* AbSES B' A'}
   : f $=>* g <~> to_pointed f ==* to_pointed g.
 Proof.
@@ -445,7 +444,7 @@ Defined.
 
 (** Endomorphisms of the trivial short exact sequence in [AbSES B A] correspond to homomorphisms [B -> A]. *)
 Lemma abses_endomorphism_trivial `{Funext} {B A : AbGroup@{u}}
-  : {phi : GroupHomomorphism (point (AbSES@{u v} B A)) (point (AbSES B A)) &
+  : {phi : GroupHomomorphism (point (AbSES B A)) (point (AbSES B A)) &
              (phi o inclusion _ == inclusion _)
              * (projection _ == projection _ o phi)}
       <~> (B $-> A).
@@ -506,7 +505,7 @@ Defined.
 
 (** A morphism between short exact sequences is a natural transformation between the underlying diagrams. *)
 Record AbSESMorphism {A X B Y : AbGroup@{u}}
-  {E : AbSES@{u v} B A} {F : AbSES@{u v} Y X} := {
+  {E : AbSES B A} {F : AbSES Y X} := {
     component1 : A $-> X;
     component2 : middle E $-> middle F;
     component3 : B $-> Y;
@@ -518,14 +517,14 @@ Arguments AbSESMorphism {A X B Y} E F.
 Arguments Build_AbSESMorphism {_ _ _ _ _ _} _ _ _ _ _.
 
 Definition issig_AbSESMorphism {A X B Y : AbGroup@{u}}
-           {E : AbSES@{u v} B A} {F : AbSES@{u v} Y X}
+           {E : AbSES B A} {F : AbSES Y X}
   : { f : (A $-> X) * (middle E $-> middle F) * (B $-> Y)
           & ((inclusion _) $o (fst (fst f)) == (snd (fst f)) $o (inclusion _))
             * ((projection F) $o (snd (fst f)) == (snd f) $o (projection _)) }
       <~> AbSESMorphism E F := ltac:(make_equiv).
 
 (** The identity morphism from [E] to [E]. *)
-Lemma abses_morphism_id {A B : AbGroup@{u}} (E : AbSES@{u v} B A)
+Lemma abses_morphism_id {A B : AbGroup@{u}} (E : AbSES B A)
   : AbSESMorphism E E.
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id grp_homo_id grp_homo_id).
@@ -534,7 +533,7 @@ Defined.
 
 Definition absesmorphism_compose {A0 A1 A2 B0 B1 B2 : AbGroup@{u}}
            {E : AbSES B0 A0} {F : AbSES B1 A1} {G : AbSES B2 A2}
-           (g : AbSESMorphism@{u v} F G) (f : AbSESMorphism@{u v} E F)
+           (g : AbSESMorphism F G) (f : AbSESMorphism E F)
   : AbSESMorphism E G.
 Proof.
   rapply (Build_AbSESMorphism (component1 g $o component1 f)
@@ -606,15 +605,15 @@ Proof.
 Defined.
 
 (** The full isomorphism [E -> A + B]. *)
-Definition projection_split_iso@{u v} {B A : AbGroup@{u}}
-  (E : AbSES@{u v} B A) {s : GroupHomomorphism B E}
+Definition projection_split_iso {B A : AbGroup@{u}}
+  (E : AbSES B A) {s : GroupHomomorphism B E}
   (h : (projection _) $o s == idmap)
   : GroupIsomorphism E (ab_biprod A B).
 Proof.
-  etransitivity (ab_biprod@{u} (ab_kernel@{u v} _) B).
+  etransitivity (ab_biprod (ab_kernel _) B).
   - exact (projection_split_iso1 E h).
-  - srapply (equiv_functor_ab_biprod@{u u u v}
-               (grp_iso_inverse _) grp_iso_id@{u}).
+  - srapply (equiv_functor_ab_biprod
+               (grp_iso_inverse _) grp_iso_id).
     rapply grp_iso_cxfib.
 Defined.
 
@@ -632,8 +631,8 @@ Proof.
 Defined.
 
 (** A short exact sequence [E] in [AbSES B A] is trivial if and only if [projection E] splits. *)
-Proposition iff_abses_trivial_split@{u v +} `{Univalence}
-  {B A : AbGroup@{u}} (E : AbSES@{u v} B A)
+Proposition iff_abses_trivial_split `{Univalence}
+  {B A : AbGroup@{u}} (E : AbSES B A)
   : {s : B $-> E & (projection _) $o s == idmap}
     <-> (E = point (AbSES B A)).
 Proof.
@@ -644,7 +643,7 @@ Proof.
     + nrapply projection_split_beta.
     + reflexivity.
   - intros [phi [g h]].
-    exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr@{u v}).
+    exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr).
     intro x; cbn.
     exact (h _ @ ap snd (eisretr _ _)).
 Defined.
@@ -652,24 +651,24 @@ Defined.
 (** ** Constructions of short exact sequences *)
 
 (** Any inclusion [i : A $-> E] determines a short exact sequence by quotienting. *)
-Definition abses_from_inclusion@{u v +} `{Univalence}
+Definition abses_from_inclusion `{Univalence}
   {A E : AbGroup@{u}} (i : A $-> E) `{IsEmbedding i}
-  : AbSES@{u v} (QuotientAbGroup E (grp_image_embedding i)) A.
+  : AbSES (QuotientAbGroup E (grp_image_embedding i)) A.
 Proof.
   srapply (Build_AbSES E i).
-  1: exact grp_quotient_map@{u u v}.
+  1: exact grp_quotient_map.
   1: exact _.
   srapply Build_IsExact.
   - srapply phomotopy_homotopy_hset.
     intro x.
     apply qglue; cbn.
     exists (-x).
-    exact (grp_homo_inv@{u u} _ _ @ (grp_unit_r@{u} _)^).
+    exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
   - snrapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
     + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
     + intro a.
       by rapply (isinj_embedding (subgroup_incl _)).
-    + exact _.
+    + rapply conn_map_isequiv@{u u u u u}.
 Defined.
 
 (** Conversely, given a short exact sequence [A -> E -> B], [A] is the kernel of [E -> B]. (We don't need exactness at [B], so we drop this assumption.) *)
@@ -702,7 +701,7 @@ Proof.
 Defined.
 
 (* Any surjection [p : E $-> B] induces a short exact sequence by taking the kernel. *)
-Lemma abses_from_surjection {E B : AbGroup} (p : E $-> B) `{IsSurjection p}
+Lemma abses_from_surjection {E B : AbGroup@{u}} (p : E $-> B) `{IsSurjection p}
   : AbSES B (ab_kernel p).
 Proof.
   srapply (Build_AbSES E _ p).
@@ -712,12 +711,12 @@ Proof.
   - apply phomotopy_homotopy_hset.
     intros [e q]; cbn.
     exact q.
-  - exact _.
+  - rapply conn_map_isequiv@{u u u u u}.
 Defined.
 
 (** Conversely, given a short exact sequence [A -> E -> B], [B] is the cokernel of [A -> E]. In fact, we don't need exactness at [A], so we drop this from the statement. *)
 Lemma abses_cokernel_iso `{Funext}
-  {A E B : AbGroup} (f : A $-> E) (g : GroupHomomorphism E B)
+  {A E B : AbGroup@{u}} (f : A $-> E) (g : GroupHomomorphism E B)
   `{IsSurjection g, IsExact (Tr (-1)) _ _ _ f g}
   : GroupIsomorphism (ab_cokernel f) B.
 Proof.
@@ -727,7 +726,7 @@ Proof.
     refine (ap _ p^ @ _).
     rapply cx_isexact.
   - apply isequiv_surj_emb.
-    1: rapply cancelR_conn_map.
+    1: rapply cancelR_conn_map@{u u u u u}.
     apply isembedding_isinj_hset.
     srapply Quotient_ind_hprop; intro x.
     srapply Quotient_ind_hprop; intro y.
