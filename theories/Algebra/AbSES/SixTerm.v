@@ -5,12 +5,11 @@ Require Import WildCat HSet Pointed
 
 (** * The contravariant six-term sequence of Ext *)
 
-(** We construct the contravariant six-term exact sequence of Ext groups associated to any short exact sequence [A -> E -> B] and coefficient group [G]. The existence of this exact sequence follows the final result in [PullbackFiberSequence]. However, with that definition it becomes a bit tricky to show that the connecting map is given by pushing out [E]. Instead, we give a direct proof.
+(** We construct the contravariant six-term exact sequence of Ext groups associated to any short exact sequence [A -> E -> B] and coefficient group [G]. The existence of this exact sequence follows from the final result in [PullbackFiberSequence]. However, with that definition it becomes a bit tricky to show that the connecting map is given by pushing out [E]. Instead, we give a direct proof.
 
   As an application, we use the six-term exact sequence to show that [Ext Z/n A] is isomorphic to [A/n], for nonzero natural numbers [n]. (See [ext_cyclic_ab].) *)
 
 (** Exactness of [0 -> ab_hom B G -> ab_hom E G] follows from the rightmost map being an embedding, which is a consequence of [isembedding_precompose_surjection_hset] from Truncations.Core. *)
-
 Definition isexact_abses_sixterm_i `{Funext}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
@@ -18,6 +17,7 @@ Definition isexact_abses_sixterm_i `{Funext}
       (fmap10 (A:=Group^op) ab_hom (projection E) G).
 Abort. (* Left for future work. *)
 
+(** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. *)
 Definition isexact_ext_contr_sixterm_ii `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
@@ -105,7 +105,7 @@ Proof.
 Defined.
 
 Global Instance isexact_ext_contr_sixterm_iv `{Univalence}
-  {B A G : AbGroup} (E : AbSES B A)
+  {B A G : AbGroup@{u}} (E : AbSES B A)
   : IsExact (Tr (-1)) (abses_pushout_ext E)
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).
 Proof.
@@ -122,7 +122,7 @@ Proof.
     revert dependent F; nrapply (Trunc_ind (n:=0) (A:=AbSES B G)).
     (* [exact _.] works here, but is slow. *)
     { intro x; nrapply istrunc_forall.
-      intro y; rapply istrunc_leq. }
+      intro y; rapply (istrunc_leq (trunc_index_leq_succ@{u} _)). }
     intro F.
     equiv_intros (equiv_path_Tr (n:=-1) (abses_pullback (projection E) F) pt) p.
     strip_truncations.
@@ -164,18 +164,19 @@ Local Definition isexact_ext_cyclic_ab_iii `{Univalence}
        (abses_from_inclusion (Z1_mul_nat n)).
 
 (** We show exactness of [A -> A -> Ext Z/n A] where the first map is multiplication by [n], but considered in universe [v]. *)
+(* The [+] is needed in the list of universes, but in the end there are no others. *)
 Local Definition ext_cyclic_exact@{u v w +} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v v v} (Tr (-1))
-      (ab_mul_nat@{v} (A:=A) n)
+      (ab_mul_nat (A:=A) n)
       (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n))
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
-  apply moveL_isexact_equiv.
+  apply moveL_isexact_equiv@{v v v w v v v}.
   (* now we change the left map so as to apply exactness at iii from above *)
   snrapply (isexact_homotopic_i (Tr (-1))).
-  1: exact (fmap10 (A:=Group^op) ab_hom@{u v} (Z1_mul_nat n) A o*
+  1: exact (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A o*
               (pequiv_inverse
                  (pequiv_groupisomorphism (equiv_Z1_hom A)))).
   - apply phomotopy_homotopy_hset.
@@ -186,16 +187,14 @@ Proof.
     1: apply Z1_rec_beta.
     exact (ab_mul_nat_homo f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
-    apply isexact_equiv_fiber.
-    apply isexact_ext_cyclic_ab_iii.
+    apply isexact_equiv_fiber@{v v v v v u v v v v v}.
+    apply isexact_ext_cyclic_ab_iii@{u v v w w}.
 Defined.
 
-(** The main result of this section. See the subsequent result for a cleaner statement uncluttered by universes.  *)
-Theorem ext_cyclic_ab'@{u v w +} `{Univalence}
+(** The main result of this section. *)
+Theorem ext_cyclic_ab'@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : GroupIsomorphism@{v v}
-      (ab_cokernel@{u u v w} (ab_mul_nat@{v} (A:=A) n))
-      (ab_ext@{u v} (cyclic'@{u v} n) A).
+  : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n) $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
   pose (E := abses_from_inclusion (Z1_mul_nat n)).
@@ -204,9 +203,9 @@ Proof.
              (abses_pushout_ext E)
              (grp_iso_inverse (equiv_Z1_hom A))).
   - apply (conn_map_compose _ (grp_iso_inverse (equiv_Z1_hom A))).
-    1: exact _.
+    1: rapply conn_map_isequiv@{v u u u u}.
     (* Coq knows that [Ext Z1 A] is contractible since [Z1] is projective, so exactness at spot iv gives us this: *)
-    exact (isconnmap_O_isexact_base_contr _ _
+    exact (isconnmap_O_isexact_base_contr@{u v v v v v u u} _ _
              (fmap (pTr 0)
                 (abses_pullback_pmap (A:=A)
                    (projection E)))).
@@ -217,11 +216,3 @@ Proof.
     1: by apply phomotopy_homotopy_hset.
     apply ext_cyclic_exact.
 Defined.
-
-(** A version with three universe variables. *)
-Definition ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
-  (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel (A:=A) (ab_mul_nat (A:=A) n) $<~> ab_ext (cyclic' n) A
-  := ltac:(try
-    ( exact (ext_cyclic_ab'@{u v w u u u u u u u u u u} n (A:=A))
-    || exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u} n (A:=A)))).
