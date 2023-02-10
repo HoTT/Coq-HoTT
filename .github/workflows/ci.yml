@@ -32,6 +32,7 @@ jobs:
       matrix:
         coq-version-dummy:
         - 'supported'
+        - '8.17'
         - 'latest'
         - 'dev'
         os:
