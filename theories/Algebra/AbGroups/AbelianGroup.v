@@ -82,6 +82,12 @@ Defined.
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
   := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).
 
+Definition quotient_abgroup_rec {G : AbGroup}
+  (N : Subgroup G) (H : AbGroup)
+  (f : GroupHomomorphism G H) (h : forall n : G, N n -> f n = mon_unit)
+  : GroupHomomorphism (QuotientAbGroup G N) H
+  := grp_quotient_rec G (Build_NormalSubgroup G N _) f h.
+
 Theorem equiv_quotient_abgroup_ump {F : Funext} {G : AbGroup}
   (N : Subgroup G) (H : Group)
   : {f : GroupHomomorphism G H & forall (n : G), N n -> f n = mon_unit}
