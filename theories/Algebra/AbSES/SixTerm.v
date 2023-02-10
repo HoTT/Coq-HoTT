@@ -1,4 +1,6 @@
-Require Import WildCat HSet Pointed Truncations AbGroups Homotopy.ExactSequence
+Require Import WildCat HSet Pointed
+  Modalities.ReflectiveSubuniverse Truncations.SeparatedTrunc
+  AbGroups Homotopy.ExactSequence
   AbSES.Core AbSES.Pullback AbSES.Pushout BaerSum Ext PullbackFiberSequence.
 
 (** * The contravariant six-term sequence of Ext *)
@@ -7,7 +9,7 @@ Require Import WildCat HSet Pointed Truncations AbGroups Homotopy.ExactSequence
 
   As an application, we use the six-term exact sequence to show that [Ext Z/n A] is isomorphic to [A/n], for nonzero natural numbers [n]. (See [ext_cyclic_ab].) *)
 
-(** Exactness of [0 -> ab_hom B G -> ab_hom E G] follows from the rightmost map being an embedding, which is a consequence of [isembedding_precompose_surjection_hset] from Truncations.Connectedness. *)
+(** Exactness of [0 -> ab_hom B G -> ab_hom E G] follows from the rightmost map being an embedding, which is a consequence of [isembedding_precompose_surjection_hset] from Truncations.Core. *)
 
 Definition isexact_abses_sixterm_i `{Funext}
   {B A G : AbGroup} (E : AbSES B A)

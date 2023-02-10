@@ -1,6 +1,6 @@
 Require Import Group Subgroup
   WildCat Colimits.Coeq
-  Truncations.SeparatedTrunc Truncations.Connectedness.
+  Truncations.SeparatedTrunc.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

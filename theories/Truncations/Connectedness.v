@@ -298,39 +298,3 @@ Proof.
   destruct fs as [f_a0 [f_b0 f_a0b0]].
   refine (wedge_incl_elim _ _ _ _ _ f_a0b0).
 Defined.
-
-(** ** Connectivity of maps *)
-
-(** Retractions are surjective. *)
-Definition issurj_retr {X Y : Type} {r : X -> Y} (s : Y -> X) (h : forall y:Y, r (s y) = y)
-  : IsSurjection r.
-Proof.
-  intro y.
-  rapply contr_inhabited_hprop.
-  exact (tr (s y; h y)).
-Defined.
-
-(** (-1)-connected maps cancel on the right *)
-Lemma cancelR_issurjection {A B C : Type} (f : A -> B) (g : B -> C)
-      (isconn : IsConnMap (Tr (-1)) (g o f))
-  : IsConnMap (Tr (-1)) g.
-Proof.
-  intro c.
-  rapply contr_inhabited_hprop.
-  rapply (Trunc_functor _ (X:= (hfiber (g o f) c))).
-  - intros [a p].
-    exact (f a; p).
-  - apply isconn.
-Defined.
-
-(** If [X] is a set and [f : Y -> Z] is a surjection, then [- o f] is an embedding. *)
-Definition isembedding_precompose_surjection_hset `{Funext} {X Y Z : Type}
-  `{IsHSet X} (f : Y -> Z) `{IsSurjection f}
-  : IsEmbedding (fun phi : Z -> X => phi o f).
-Proof.
-  intros phi g0 g1; cbn.
-  rapply contr_inhabited_hprop.
-  apply path_sigma_hprop, equiv_path_arrow.
-  rapply conn_map_elim; intro y.
-  exact (ap10 (g0.2 @ g1.2^) y).
-Defined.

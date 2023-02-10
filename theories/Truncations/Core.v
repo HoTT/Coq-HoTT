@@ -234,11 +234,46 @@ Proof. (* Can also be proved from equiv_forall_inO_mapinO_pr1. *)
   exact (equiv_iff_hprop_uncurried (iff_merely_issurjection P)).
 Defined.
 
+(** Surjections cancel on the right *)
+Lemma cancelR_issurjection {A B C : Type} (f : A -> B) (g : B -> C)
+      (isconn : IsSurjection (g o f))
+  : IsSurjection g.
+Proof.
+  intro c.
+  rapply contr_inhabited_hprop.
+  rapply (Trunc_functor _ (X:= (hfiber (g o f) c))).
+  - intros [a p].
+    exact (f a; p).
+  - apply isconn.
+Defined.
+
+(** Retractions are surjective. *)
+Definition issurj_retr {X Y : Type} {r : X -> Y} (s : Y -> X) (h : forall y:Y, r (s y) = y)
+  : IsSurjection r.
+Proof.
+  intro y.
+  rapply contr_inhabited_hprop.
+  exact (tr (s y; h y)).
+Defined.
+
+(** Since embeddings are the (-1)-truncated maps, a map that is both a surjection and an embedding is an equivalence. *)
 Definition isequiv_surj_emb {A B} (f : A -> B)
   `{IsSurjection f} `{IsEmbedding f}
   : IsEquiv f.
 Proof.
   apply (@isequiv_conn_ino_map (Tr (-1))); assumption.
+Defined.
+
+(** If [X] is a set and [f : Y -> Z] is a surjection, then [- o f] is an embedding. *)
+Definition isembedding_precompose_surjection_hset `{Funext} {X Y Z : Type}
+  `{IsHSet X} (f : Y -> Z) `{IsSurjection f}
+  : IsEmbedding (fun phi : Z -> X => phi o f).
+Proof.
+  intros phi g0 g1; cbn.
+  rapply contr_inhabited_hprop.
+  apply path_sigma_hprop, equiv_path_arrow.
+  rapply conn_map_elim; intro y.
+  exact (ap10 (g0.2 @ g1.2^) y).
 Defined.
 
 (** ** Tactic to remove truncations in hypotheses if possible. See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities. *)
