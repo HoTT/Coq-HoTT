@@ -58,7 +58,7 @@ Defined.
 (** ** The universal property of [abses_pushout_morphism] *)
 
 Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
-           (E : AbSES B A) (f : A $-> A')
+  (E : AbSES B A) (f : A $-> A')
   : AbSESMorphism E (abses_pushout f E).
 Proof.
   snrapply (Build_AbSESMorphism f _ grp_homo_id).
@@ -70,7 +70,7 @@ Defined.
 (** Any map [f : E -> F] of short exact sequences factors (uniquely) through [abses_pushout E f1]. *)
 
 Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
-           {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
+  {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
   : AbSESMorphism (abses_pushout (component1 f) E) F.
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id _ (component3 f)).
@@ -91,7 +91,7 @@ Defined.
 
 (** The original map factors via the induced map. *)
 Definition abses_pushout_morphism_rec_beta `{Univalence} (A B X Y : AbGroup)
-           (E : AbSES B A) (F : AbSES Y X) (f : AbSESMorphism E F)
+  (E : AbSES B A) (F : AbSES Y X) (f : AbSESMorphism E F)
   : f = absesmorphism_compose (abses_pushout_morphism_rec f)
                               (abses_pushout_morphism E (component1 f)).
 Proof.
@@ -107,8 +107,8 @@ Defined.
 
 (** Given [E : AbSES B A'] and [F : AbSES B A] and a morphism [f : E -> F], the pushout of [E] along [f_1] is [F] if [f_3] is homotopic to [id_B]. *)
 Lemma abses_pushout_component3_id' `{Univalence}
-      {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
-      (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+  (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
   : abses_pushout (component1 f) E $== F.
 Proof.
   pose (g := abses_pushout_morphism_rec f).
@@ -122,21 +122,21 @@ Defined.
 
 (** A version with equality instead of path data. *)
 Definition abses_pushout_component3_id `{Univalence}
-           {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
-           (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+  (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
   : abses_pushout (component1 f) E = F
   := equiv_path_abses_iso (abses_pushout_component3_id' f h).
 
 (** Given short exact sequences [E] and [F] and homomorphisms [f : A' $-> A] and [g : D' $-> D], there is a morphism [E + F -> fE + gF] induced by the universal properties of the pushouts of [E] and [F]. *)
 Definition abses_directsum_pushout_morphism `{Univalence}
-           {A A' B C D D' : AbGroup} {E : AbSES B A'} {F : AbSES C D'}
-           (f : A' $-> A) (g : D' $-> D)
+  {A A' B C D D' : AbGroup} {E : AbSES B A'} {F : AbSES C D'}
+  (f : A' $-> A) (g : D' $-> D)
   : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum (abses_pushout f E) (abses_pushout g F))
   := functor_abses_directsum (abses_pushout_morphism E f) (abses_pushout_morphism F g).
 
 (** For [E, F : AbSES B A'] and [f, g : A' $-> A], we have (f+g)(E+F) = fE + gF, where + denotes the direct sum. *)
 Definition abses_directsum_distributive_pushouts `{Univalence}
-           {A A' B C C' D : AbGroup} {E : AbSES B A'} {F : AbSES D C'} (f : A' $-> A) (g : C' $-> C)
+  {A A' B C C' D : AbGroup} {E : AbSES B A'} {F : AbSES D C'} (f : A' $-> A) (g : C' $-> C)
   : abses_pushout (functor_ab_biprod f g) (abses_direct_sum E F)
     = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
   := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ => idpath).
@@ -219,7 +219,7 @@ Proof.
 Defined.
 
 Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-           {E F : AbSES B A} (p : E = F)
+  {E F : AbSES B A} (p : E = F)
   : ap (abses_pushout f) p
     = equiv_path_abses_iso (fmap (abses_pushout f) (equiv_path_abses_iso^-1 p)).
 Proof.
@@ -230,7 +230,7 @@ Proof.
 Defined.
 
 Definition ap_abses_pushout_data `{Univalence} {A A' B : AbGroup} (f : A $-> A')
-           {E F : AbSES B A} (p : E $== F)
+  {E F : AbSES B A} (p : E $== F)
   : ap (abses_pushout f) (equiv_path_abses_iso p)
     = equiv_path_abses_iso (fmap (abses_pushout f) p).
 Proof.
@@ -284,29 +284,28 @@ Proof.
 Defined.
 
 (** The pushout of a short exact sequence along its inclusion map is trivial. *)
-Definition abses_pushout_inclusion_morphism `{Univalence} {B A : AbGroup}
-  (E : AbSES B A) : AbSESMorphism E (pt : AbSES B E)
+Definition abses_pushout_inclusion_morphism `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : AbSESMorphism E (pt : AbSES B E)
   := abses_pushout_trivial_morphism E (inclusion E) grp_homo_id (fun _ => idpath).
 
-Definition abses_pushout_inclusion `{Univalence} {B A : AbGroup}
-  (E : AbSES B A) : abses_pushout (inclusion E) E = pt
+Definition abses_pushout_inclusion `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : abses_pushout (inclusion E) E = pt
   := abses_pushout_component3_id
        (abses_pushout_inclusion_morphism E) (fun _ => idpath).
 
 (** Pushing out along [grp_homo_const] is trivial. *)
-Definition abses_pushout_const_morphism `{Univalence} {B A A' : AbGroup}
-  (E : AbSES B A) : AbSESMorphism E (pt : AbSES B A')
+Definition abses_pushout_const_morphism `{Univalence} {B A A' : AbGroup} (E : AbSES B A)
+  : AbSESMorphism E (pt : AbSES B A')
   := abses_pushout_trivial_morphism E
        grp_homo_const grp_homo_const (fun _ => idpath).
 
-Definition abses_pushout_const `{Univalence} {B A A' : AbGroup}
-  (E : AbSES B A) : abses_pushout grp_homo_const E = pt :> AbSES B A'
+Definition abses_pushout_const `{Univalence} {B A A' : AbGroup} (E : AbSES B A)
+  : abses_pushout grp_homo_const E = pt :> AbSES B A'
   := abses_pushout_component3_id
        (abses_pushout_const_morphism E) (fun _ => idpath).
 
 (** Pushing out a fixed extension, with the map variable. This is the connecting map in the contravariant six-term exact sequence (see SixTerm.v). *)
-Definition abses_pushout_abses `{Univalence}
-  {B A G : AbGroup} (E : AbSES B A)
+Definition abses_pushout_abses `{Univalence} {B A G : AbGroup} (E : AbSES B A)
   : ab_hom A G ->* AbSES B G.
 Proof.
   srapply Build_pMap.
@@ -336,7 +335,7 @@ Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
   := equiv_path_data_homotopy _ _ (abses_pushout_homotopic' _ _ h).
 
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
-           (f : A0 $-> A1) (g : A1 $-> A2)
+  (f : A0 $-> A1) (g : A1 $-> A2)
   : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
 Proof.
   intro E; apply gpd_rev.

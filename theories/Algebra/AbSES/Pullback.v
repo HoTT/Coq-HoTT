@@ -89,8 +89,8 @@ Defined.
 
 (** In particular, if [component1] of a morphism is the identity, then it exhibits the domain as the pullback of the codomain. *)
 Definition abses_pullback_component1_id `{Univalence} {A B B' : AbGroup}
-           {E : AbSES B A} {F : AbSES B' A}
-           (f : AbSESMorphism E F) (h : component1 f == grp_homo_id)
+  {E : AbSES B A} {F : AbSES B' A}
+  (f : AbSESMorphism E F) (h : component1 f == grp_homo_id)
   : E = abses_pullback (component3 f) F
   := equiv_path_abses_iso (abses_pullback_component1_id' f h).
 
@@ -162,7 +162,7 @@ Proof.
 Defined.
 
 Lemma ap_abses_pullback `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
-      {E F : AbSES B A} (p : E = F)
+  {E F : AbSES B A} (p : E = F)
   : ap (abses_pullback f) p
     = equiv_path_abses_iso (fmap (abses_pullback f) (equiv_path_abses_iso^-1 p)).
 Proof.
@@ -173,7 +173,7 @@ Proof.
 Defined.
 
 Lemma ap_abses_pullback_data `{Univalence} {A B B' : AbGroup} (f : B' $-> B) {E F : AbSES B A}
-      (p : abses_path_data_iso E F)
+  (p : abses_path_data_iso E F)
   : ap (abses_pullback f) (equiv_path_abses_iso p)
     = equiv_path_abses_iso (fmap (abses_pullback f) p).
 Proof.
@@ -205,8 +205,8 @@ Proof.
   - reflexivity.
 Defined.
 
-Definition abses_pullback_point `{Univalence} {A B B' : AbGroup}
-  (f : B' $-> B) : abses_pullback f pt = pt :> AbSES B' A
+Definition abses_pullback_point `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
+  : abses_pullback f pt = pt :> AbSES B' A
   := equiv_path_abses_iso (abses_pullback_point' f).
 
 Definition abses_pullback' {A B B' : AbGroup} (f : B' $-> B)
@@ -267,7 +267,7 @@ Definition abses_pullback_compose `{Univalence}
 (** We now work towards *pointed* composition of pullback ([abses_pullback_pcompose]). The proof of pointedness will matter when we later prove that pulling back along a short exact sequence is exact (i.e. that the complex [iscomplex_pullback_abses] below is exact). For this reason we carefully construct the proof of pointedness in terms of the analog [abses_pullback_pcompose'] on path data, which computes. *)
 
 Definition abses_pullback_pcompose' {B0 B1 B2 A : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2)
+  (f : B0 $-> B1) (g : B1 $-> B2)
   : abses_pullback' f $o* abses_pullback' g $=>* abses_pullback' (A:=A) (g $o f).
 Proof.
   exists (abses_pullback_compose' f g).
@@ -278,7 +278,7 @@ Proof.
 Defined.
 
 Definition abses_pullback_pcompose `{Univalence} {A B0 B1 B2 : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2)
+  (f : B0 $-> B1) (g : B1 $-> B2)
   : abses_pullback_pmap (A:=A) f o* abses_pullback_pmap g ==* abses_pullback_pmap (g $o f).
 Proof.
   refine (to_pointed_compose _ _ @* _).
@@ -328,8 +328,8 @@ Defined.
 
 (** *** Pulling [E] back along [projection E] is trivial *)
 
-Definition abses_pullback_projection_morphism `{Univalence} {B A : AbGroup}
-  (E : AbSES B A) : AbSESMorphism (pt : AbSES E A) E.
+Definition abses_pullback_projection_morphism `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : AbSESMorphism (pt : AbSES E A) E.
 Proof.
   srapply (Build_AbSESMorphism grp_homo_id _ (projection E)).
   - cbn. exact (ab_biprod_rec (inclusion E) grp_homo_id).
@@ -342,15 +342,15 @@ Proof.
     apply left_identity.
 Defined.
 
-Definition abses_pullback_projection `{Univalence} {B A : AbGroup}
-  (E : AbSES B A) : pt = abses_pullback (projection E) E
+Definition abses_pullback_projection `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : pt = abses_pullback (projection E) E
   := abses_pullback_component1_id
        (abses_pullback_projection_morphism E) (fun _ => idpath).
 
 (** *** Pulling back along homotopic maps *)
 
 Lemma abses_pullback_homotopic' {A B B' : AbGroup}
-      (f f' : B $-> B') (h : f == f')
+  (f f' : B $-> B') (h : f == f')
   : abses_pullback (A:=A) f $=> abses_pullback f'.
 Proof.
   intro E.
@@ -365,7 +365,7 @@ Proof.
 Defined.
 
 Lemma abses_pullback_homotopic `{Univalence} {A B B' : AbGroup}
-      (f f' : B $-> B') (h : f == f')
+  (f f' : B $-> B') (h : f == f')
   : abses_pullback (A:=A) f == abses_pullback f'.
 Proof.
   intro E.
@@ -374,7 +374,7 @@ Proof.
 Defined.
 
 Lemma abses_pullback_phomotopic' {A B B' : AbGroup}
-      (f f' : B $-> B') (h : f == f')
+  (f f' : B $-> B') (h : f == f')
   : abses_pullback' (A:=A) f $=>* abses_pullback' f'.
 Proof.
   exists (abses_pullback_homotopic' f f' h); cbn.
@@ -385,14 +385,14 @@ Proof.
 Defined.
 
 Definition abses_pullback_phomotopic `{Univalence} {A B B' : AbGroup}
-      (f f' : B $-> B') (h : f == f')
+  (f f' : B $-> B') (h : f == f')
   : abses_pullback_pmap (A:=A) f ==* abses_pullback_pmap f'
   := equiv_ptransformation_phomotopy (abses_pullback_phomotopic' f f' h).
 
 (** *** Pulling back along a complex *)
 
 Definition iscomplex_abses_pullback' `{Univalence} {A B0 B1 B2 : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
+  (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
   : abses_pullback' f $o* abses_pullback' g $=>* @pmap_abses_const _ _ _ A.
 Proof.
   refine (abses_pullback_pcompose' _ _ $@* _).
@@ -401,7 +401,7 @@ Proof.
 Defined.
 
 Definition iscomplex_abses_pullback `{Univalence} {A B0 B1 B2 : AbGroup}
-           (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
+  (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
   : IsComplex (abses_pullback_pmap (A:=A) g) (abses_pullback_pmap f).
 Proof.
   refine (_ @* _).
@@ -425,16 +425,16 @@ Defined.
 (** *** Fibers of pullback in terms of path data *)
 
 Definition equiv_hfiber_abses `{Univalence} {X : Type} {A B : AbGroup}
-           (f : X -> AbSES B A) (E : AbSES B A)
+  (f : X -> AbSES B A) (E : AbSES B A)
   : graph_hfiber f E <~> hfiber f E
   := equiv_functor_sigma_id (fun _ => equiv_path_abses_iso).
 
 Definition hfiber_abses_path {A B B' : AbGroup} {f : B' $-> B} {X : AbSES B' A}
-           (E F : graph_hfiber (abses_pullback f) X)
+  (E F : graph_hfiber (abses_pullback f) X)
   := {p : E.1 $-> F.1 & (fmap (abses_pullback f) p)^$ $@ E.2 $-> F.2}.
 
 Definition transport_path_data_hfiber_abses_pullback_l `{Univalence} {A B B' : AbGroup} {f : B' $-> B}
-           {Y : AbSES B' A} {X0 : graph_hfiber (abses_pullback f) Y} {X1 : AbSES B A} (p : X0.1 = X1)
+  {Y : AbSES B' A} {X0 : graph_hfiber (abses_pullback f) Y} {X1 : AbSES B A} (p : X0.1 = X1)
   : transport (fun x : AbSES B A => abses_pullback f x $== Y) p X0.2
     = fmap (abses_pullback f) (equiv_path_abses_iso^-1 p^) $@ X0.2.
 Proof.
@@ -447,7 +447,7 @@ Proof.
 Defined.
 
 Definition equiv_hfiber_abses_pullback `{Univalence} {A B B' : AbGroup} {f : B' $-> B}
-           (Y : AbSES B' A) (U V : graph_hfiber (abses_pullback f) Y)
+  (Y : AbSES B' A) (U V : graph_hfiber (abses_pullback f) Y)
   : hfiber_abses_path U V <~> U = V.
 Proof.
   refine (equiv_path_sigma _ _ _ oE _).
