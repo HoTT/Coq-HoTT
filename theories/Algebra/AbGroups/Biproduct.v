@@ -100,8 +100,8 @@ Proof.
 Defined.
 
 (** Corecursion principle, inherited from Groups/Group.v. *)
-Definition ab_biprod_corec {A B X : AbGroup}
-  (f : X $-> A) (g : X $-> B) : X $-> ab_biprod A B
+Definition ab_biprod_corec {A B X : AbGroup} (f : X $-> A) (g : X $-> B)
+  : X $-> ab_biprod A B
   := grp_prod_corec f g.
 
 Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
