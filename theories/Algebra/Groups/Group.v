@@ -142,7 +142,6 @@ Defined.
 
 (** * Some basic properties of group homomorphisms *)
 
-
 (** Group homomorphisms preserve identities *)
 Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
   : f (mon_unit) = mon_unit.
@@ -233,14 +232,12 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
 Defined.
 
-Definition grp_iso_inverse@{u} {G H : Group@{u}}
+Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
   intros [f e].
   srapply Build_GroupIsomorphism.
-  - snrapply (Build_GroupHomomorphism f^-1).
-    2: apply invert_monoid_morphism@{u u u}; exact _.
-    exact _.
+  - srapply (Build_GroupHomomorphism f^-1).
   - exact _.
 Defined.
 
@@ -279,11 +276,8 @@ Proof.
   exact _.
 Defined.
 
-Definition grp_homo_id@{u} {G : Group@{u}} : GroupHomomorphism G G.
-Proof.
-  snrapply (Build_GroupHomomorphism idmap).
-  exact id_sg_morphism@{u u u}.
-Defined.
+Definition grp_homo_id {G : Group} : GroupHomomorphism G G
+  := Build_GroupHomomorphism idmap.
 
 Definition grp_iso_id {G : Group} : GroupIsomorphism G G
   := Build_GroupIsomorphism _ _ grp_homo_id _.
@@ -343,9 +337,9 @@ Proof.
 Defined.
 
 (** A version with nicer universe variables. *)
-Definition equiv_path_group@{u v} {U : Univalence} {G H : Group@{u}}
+Definition equiv_path_group@{u v | u < v} {U : Univalence} {G H : Group@{u}}
   : GroupIsomorphism G H <~> (paths@{v} G H)
-  := equiv_path_group'@{v u v u u u v v v u u u u u u u}.
+  := equiv_path_group'.
 
 (** * Simple group equivalences *)
 
@@ -542,12 +536,12 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-Global Instance hasequivs_group@{u v | u < v}
-  : HasEquivs@{v u u u u} Group@{u}.
+Global Instance hasequivs_group
+  : HasEquivs Group.
 Proof.
   unshelve econstructor.
   + exact GroupIsomorphism.
-  + exact (fun G H f => IsEquiv@{u u} f).
+  + exact (fun G H f => IsEquiv f).
   + intros G H f; exact f.
   + exact Build_GroupIsomorphism.
   + intros G H; exact grp_iso_inverse.
