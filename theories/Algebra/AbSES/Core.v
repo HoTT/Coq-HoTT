@@ -722,8 +722,7 @@ Lemma abses_cokernel_iso `{Funext}
   : GroupIsomorphism (ab_cokernel f) B.
 Proof.
   snrapply Build_GroupIsomorphism.
-  - snrapply equiv_quotient_abgroup_ump.
-    exists g.
+  - snrapply (quotient_abgroup_rec _ _ g).
     intros e; rapply Trunc_rec; intros [a p].
     refine (ap _ p^ @ _).
     rapply cx_isexact.
