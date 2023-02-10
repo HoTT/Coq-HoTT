@@ -226,13 +226,9 @@ Section from_another_ab_group.
 
 End from_another_ab_group.
 
-Section compose_mor.
+Section id_mor.
 
-  Context
-    `{SgOp A} `{MonUnit A}
-    `{SgOp B} `{MonUnit B}
-    `{SgOp C} `{MonUnit C}
-    (f : A -> B) (g : B -> C).
+  Context `{SgOp A} `{MonUnit A}.
 
   Global Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
   Proof.
@@ -243,6 +239,16 @@ Section compose_mor.
   Proof.
     split; split.
   Defined.
+
+End id_mor.
+
+Section compose_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    `{SgOp C} `{MonUnit C}
+    (f : A -> B) (g : B -> C).
 
   (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)
   Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
@@ -261,9 +267,18 @@ Section compose_mor.
     intros;split.
     - apply _.
     - red;unfold Compose.
-      etransitivity;[|apply preserves_mon_unit].
+      etransitivity;[|apply (preserves_mon_unit (f:=g))].
       apply ap,preserves_mon_unit.
   Defined.
+
+End compose_mor.
+
+Section invert_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    (f : A -> B).
 
   Local Instance invert_sg_morphism
     : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
@@ -291,7 +306,7 @@ Section compose_mor.
       + symmetry; apply preserves_mon_unit.
   Defined.
 
-End compose_mor.
+End invert_mor.
 
 #[export]
 Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
