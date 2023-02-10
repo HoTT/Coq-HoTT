@@ -5,7 +5,7 @@ Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
 
 (** * The set [Ext B A] of abelian group extensions *)
 
-Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES@{u v} B A).
+Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES B A).
 
 (** An extension [E : AbSES B A] is trivial in [Ext B A] if and only if [E] merely splits. *)
 Proposition iff_ab_ext_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
@@ -18,7 +18,7 @@ Proof.
     apply iff_abses_trivial_split.
 Defined.
 
-Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES'@{u v} B A).
+Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
 Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
   : IsBifunctor@{v v w u u v v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
@@ -26,9 +26,9 @@ Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
        _ _ (P:=isbifunctor_abses'@{w u v v}).
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
-Definition grp_ext@{u v +} `{Univalence} (A B : AbGroup@{u}) : Group@{v}.
+Definition grp_ext `{Univalence} (A B : AbGroup@{u}) : Group.
 Proof.
-  snrapply (Build_Group@{v} (Ext@{u v} B A)).
+  snrapply (Build_Group (Ext B A)).
   - intros E F.
     strip_truncations.
     exact (tr (abses_baer_sum E F)).
@@ -36,7 +36,7 @@ Proof.
   - unfold Negate.
     exact (Trunc_functor _ (abses_pullback (- grp_homo_id))).
   - repeat split.
-    1: apply istrunc_truncation@{v v}.
+    1: apply istrunc_truncation.
     all: intro E.  1: intros F G.
     all: strip_truncations; unfold mon_unit, point; apply (ap tr).
     + symmetry; apply baer_sum_associative.
@@ -46,10 +46,10 @@ Proof.
     + apply baer_sum_inverse_l.
 Defined.
 
-Definition ab_ext@{u v | u < v} `{Univalence}
-  (A B : AbGroup@{u}) : AbGroup@{v}.
+Definition ab_ext `{Univalence}
+  (A B : AbGroup@{u}) : AbGroup.
 Proof.
-  snrapply (Build_AbGroup (grp_ext@{u v} B A)).
+  snrapply (Build_AbGroup (grp_ext B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
@@ -57,15 +57,15 @@ Proof.
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)
-Definition abses_pushout_ext@{u v w | u < v, v < w} `{Univalence}
-  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
+Definition abses_pushout_ext `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES B A)
   : GroupHomomorphism (ab_hom A G) (ab_ext B G).
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun f => fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).
   intros f g; cbn.
-  nrapply (ap tr@{v}).
-  exact (baer_sum_distributive_pushouts@{u v} f g).
+  nrapply (ap tr).
+  exact (baer_sum_distributive_pushouts f g).
 Defined.
 
 (** ** Extensions ending in a projective are trivial *)
