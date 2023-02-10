@@ -188,11 +188,22 @@ Proof.
   apply h.
 Defined.
 
+Definition grp_homo_id {G : Group} : GroupHomomorphism G G
+  := Build_GroupHomomorphism idmap.
+
 Definition grp_homo_compose {G H K : Group}
   : GroupHomomorphism H K -> GroupHomomorphism G H -> GroupHomomorphism G K.
 Proof.
   intros f g.
   srapply (Build_GroupHomomorphism (f o g)).
+Defined.
+
+Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun _ => mon_unit).
+  - intros x y.
+    exact (grp_unit_l mon_unit)^.
 Defined.
 
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
@@ -201,13 +212,23 @@ Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   isequiv_group_iso : IsEquiv grp_iso_homo;
 }.
 
+(* We can build an isomorphism from an operation preserving equivalence. *)
+Definition Build_GroupIsomorphism' {G H : Group}
+  (f : G <~> H) (h : IsSemiGroupPreserving f)
+  : GroupIsomorphism G H.
+Proof.
+  srapply Build_GroupIsomorphism.
+  1: srapply Build_GroupHomomorphism.
+  exact _.
+Defined.
+
 Coercion grp_iso_homo : GroupIsomorphism >-> GroupHomomorphism.
 Global Existing Instance isequiv_group_iso.
 
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
 
-Definition equiv_groupisomorphism (G H : Group)
+Definition equiv_groupisomorphism {G H : Group}
   : GroupIsomorphism G H -> G <~> H
   := fun f => Build_Equiv G H f _.
 
@@ -232,6 +253,14 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
 Defined.
 
+Definition grp_iso_id {G : Group} : GroupIsomorphism G G
+  := Build_GroupIsomorphism _ _ grp_homo_id _.
+
+Definition grp_iso_compose {G H K : Group}
+  (g : GroupIsomorphism H K) (f : GroupIsomorphism G H)
+  : GroupIsomorphism G K
+  := Build_GroupIsomorphism _ _ (grp_homo_compose g f) _.
+
 Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
@@ -241,54 +270,19 @@ Proof.
   - exact _.
 Defined.
 
-(* We can build an isomorphism from an operation preserving equivalence. *)
-Definition Build_GroupIsomorphism' {G H : Group}
-  (f : G <~> H) (h : IsSemiGroupPreserving f)
-  : GroupIsomorphism G H.
-Proof.
-  srapply Build_GroupIsomorphism.
-  1: srapply Build_GroupHomomorphism.
-  exact _.
-Defined.
-
 (** Group Isomorphisms are a reflexive relation *)
 Global Instance reflexive_groupisomorphism
-  : Reflexive GroupIsomorphism.
-Proof.
-  intro x.
-  by srapply Build_GroupIsomorphism'.
-Defined.
+  : Reflexive GroupIsomorphism
+  := fun G => grp_iso_id.
 
 (** Group Isomorphisms are a symmetric relation *)
 Global Instance symmetric_groupisomorphism
-  : Symmetric GroupIsomorphism.
-Proof.
-  intros G H.
-  srapply grp_iso_inverse.
-Defined.
+  : Symmetric GroupIsomorphism
+  := fun G H => grp_iso_inverse.
 
 Global Instance transitive_groupisomorphism
-  : Transitive GroupIsomorphism.
-Proof.
-  intros G H K f g.
-  srapply Build_GroupIsomorphism.
-  1: exact (grp_homo_compose g f).
-  exact _.
-Defined.
-
-Definition grp_homo_id {G : Group} : GroupHomomorphism G G
-  := Build_GroupHomomorphism idmap.
-
-Definition grp_iso_id {G : Group} : GroupIsomorphism G G
-  := Build_GroupIsomorphism _ _ grp_homo_id _.
-
-Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun _ => mon_unit).
-  - intros x y.
-    exact (grp_unit_l mon_unit)^.
-Defined.
+  : Transitive GroupIsomorphism
+  := fun G H K f g => grp_iso_compose g f.
 
 (** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
 Definition equiv_path_group' {U : Univalence} {G H : Group}
