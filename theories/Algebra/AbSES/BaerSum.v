@@ -7,7 +7,7 @@ Local Open Scope mc_add_scope.
 (** * The Baer sum of two short exact sequences, lemmas and consequences. *)
 
 (** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forward along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forward and pulling back produces an isomorphic short exact sequence.) *)
-Definition abses_baer_sum `{Univalence} {B A : AbGroup@{u}} (E F : AbSES@{u v} B A)
+Definition abses_baer_sum `{Univalence} {B A : AbGroup@{u}} (E F : AbSES B A)
   : AbSES B A
   := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).
 
@@ -16,7 +16,7 @@ Definition abses_baer_sum `{Univalence} {B A : AbGroup@{u}} (E F : AbSES@{u v} B
 
 (** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)
 Lemma abses_pushout_is_pullback' `{Univalence} {A A' B B' : AbGroup@{u}}
-      {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism@{u v} E E')
+      {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism E E')
   : abses_pushout (component1 f) E $== abses_pullback (component3 f) E'.
 Proof.
   (* The morphism [f : E -> E'] factors as [E -> f_1 E -> E'], where the first map is the map defining the pushout [f_1 E] and the second map is denoted [abses_pushout_morphism_rec f] below.  This second map is the identity on the first component, so it presents its domain as the pullback of [E'] along [f_3]. *)
@@ -151,14 +151,14 @@ Defined.
 
 (** The trinary Baer sum of three short exact sequences. *)
 Definition abses_trinary_baer_sum `{Univalence}
-  {A B : AbGroup@{u}} (E F G : AbSES@{u v} B A)
-  : AbSES@{u v} B A
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : AbSES B A
   := abses_pullback ab_triagonal
        (abses_pushout ab_cotriagonal
           (abses_direct_sum (abses_direct_sum E F) G)).
 
 (** For [E, F, G : AbSES B A], the Baer sum of [E], [F] and [G] (associated left) is equal to the trinary Baer sum of [E], [F] and [G]. *)
-Lemma baer_sum_is_trinary `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES@{u v} B A)
+Lemma baer_sum_is_trinary `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_baer_sum (abses_baer_sum E F) G = abses_trinary_baer_sum E F G.
 Proof.
   unfold abses_baer_sum, abses_trinary_baer_sum, ab_triagonal, ab_cotriagonal.
@@ -176,7 +176,7 @@ Defined.
 
 (** For [E, F, G : AbSES B A], we can "twist" the order of the trinary Baer sum as follows. *)
 Lemma twist_trinary_baer_sum `{Univalence}
-  {A B : AbGroup@{u}} (E F G : AbSES@{u v} B A)
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_trinary_baer_sum E F G = abses_trinary_baer_sum G F E.
 Proof.
   unfold abses_trinary_baer_sum.
@@ -191,7 +191,7 @@ Proof.
 Defined.
 
 (** It now follows that we can twist the order of the summands in the Baer sum. *)
-Lemma baer_sum_twist `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES@{u v} B A)
+Lemma baer_sum_twist `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum (abses_baer_sum G F) E.
 Proof.
   refine ((baer_sum_is_trinary E F G) @ _ @ (baer_sum_is_trinary G F E)^).
@@ -199,8 +199,8 @@ Proof.
 Defined.
 
 (** From these results, it finally follows that the Baer sum is associative. *)
-Lemma baer_sum_associative@{u v +} `{Univalence}
-  {A B : AbGroup@{u}} (E F G : AbSES@{u v} B A)
+Lemma baer_sum_associative `{Univalence}
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum E (abses_baer_sum F G).
 Proof.
   refine ((baer_sum_twist _ _ _)^ @ _).
