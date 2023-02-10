@@ -259,5 +259,5 @@ Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
 Definition ab_cokernel {G : Group} {A : AbGroup} (f : GroupHomomorphism G A)
   : AbGroup := QuotientAbGroup _ (grp_image f).
 
-Definition ab_cokernel_embedding {G : Group} {A : AbGroup} (f : G $-> A)
-  `{IsEmbedding f} : AbGroup := QuotientAbGroup _ (grp_image_embedding f).
+Definition ab_cokernel_embedding {G : Group} {A : AbGroup} (f : G $-> A) `{IsEmbedding f}
+  : AbGroup := QuotientAbGroup _ (grp_image_embedding f).
