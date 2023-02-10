@@ -190,7 +190,7 @@ Proof.
     apply isexact_ext_cyclic_ab_iii.
 Defined.
 
-(** The main result of this section. See the subsequent result for a clearner statement uncluttered by universes.  *)
+(** The main result of this section. See the subsequent result for a cleaner statement uncluttered by universes.  *)
 Theorem ext_cyclic_ab'@{u v w +} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : GroupIsomorphism@{v v}
@@ -221,7 +221,7 @@ Defined.
 (** A version with three universe variables. *)
 Definition ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel (ab_mul_nat n) $<~> ab_ext (cyclic' n) A
+  : ab_cokernel (ab_mul_nat (A:=A) n) $<~> ab_ext (cyclic' n) A
   := ltac:(try
-    ( exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u u u} n (A:=A))
-    || exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u u u u} n (A:=A)))).
+    ( exact (ext_cyclic_ab'@{u v w u u u u u u u u u u} n (A:=A))
+    || exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u} n (A:=A)))).
