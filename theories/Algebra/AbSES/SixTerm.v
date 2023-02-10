@@ -168,7 +168,7 @@ Local Definition ext_cyclic_exact@{u v w +} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v v v} (Tr (-1))
       (ab_mul_nat@{v} (A:=A) n)
-      (abses_pushout_ext@{u v w} (abses_from_inclusion (Z1_mul_nat n))
+      (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n))
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
@@ -221,7 +221,7 @@ Defined.
 (** A version with three universe variables. *)
 Definition ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel (ab_mul_nat (A:=A) n) $<~> ab_ext (cyclic' n) A
+  : ab_cokernel (A:=A) (ab_mul_nat (A:=A) n) $<~> ab_ext (cyclic' n) A
   := ltac:(try
     ( exact (ext_cyclic_ab'@{u v w u u u u u u u u u u} n (A:=A))
     || exact (ext_cyclic_ab'@{u v w u u u u u u u u u u u} n (A:=A)))).
