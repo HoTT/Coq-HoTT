@@ -4,7 +4,7 @@ Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
-Require Import Truncations.Connectedness.
+Require Import Truncations.Core.
 
 Local Set Polymorphic Inductive Cumulativity.
 
