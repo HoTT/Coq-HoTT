@@ -261,3 +261,13 @@ Definition ab_cokernel {G : Group} {A : AbGroup} (f : GroupHomomorphism G A)
 
 Definition ab_cokernel_embedding {G : Group} {A : AbGroup} (f : G $-> A) `{IsEmbedding f}
   : AbGroup := QuotientAbGroup _ (grp_image_embedding f).
+
+Definition ab_cokernel_embedding_rec {G: Group} {A B : AbGroup} (f : G $-> A) `{IsEmbedding f}
+  (h : A $-> B) (p : grp_homo_compose h f $== grp_homo_const)
+  : ab_cokernel_embedding f $-> B.
+Proof.
+  snrapply (grp_quotient_rec _ _ h).
+  intros a [g q].
+  induction q.
+  exact (p g).
+Defined.
