@@ -18,7 +18,7 @@ Definition isexact_abses_sixterm_i `{Funext}
 Abort. (* Left for future work. *)
 
 (** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. *)
-Definition isexact_ext_contr_sixterm_ii `{Univalence}
+Definition isexact_ext_contra_sixterm_ii `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (projection E) G)
@@ -47,7 +47,7 @@ Proof.
   apply isexact_inclusion_projection.
 Defined.
 
-Global Instance isexact_ext_contr_sixterm_iii@{u v +} `{Univalence}
+Global Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G)
@@ -77,7 +77,7 @@ Defined.
 (** *** Exactness of [ab_hom A G -> Ext1 B G -> Ext1 E G]. *)
 
 (** We construct a morphism which witnesses exactness. *)
-Definition isexact_ext_contr_sixterm_iv_mor `{Univalence}
+Definition isexact_ext_contra_sixterm_iv_mor `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   (F : AbSES B G) (p : abses_pullback (projection E) F = pt)
   : AbSESMorphism E F.
@@ -104,7 +104,7 @@ Proof.
     exact (pr _)^.
 Defined.
 
-Global Instance isexact_ext_contr_sixterm_iv `{Univalence}
+Global Instance isexact_ext_contra_sixterm_iv `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES B A)
   : IsExact (Tr (-1)) (abses_pushout_ext E)
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).
@@ -127,7 +127,7 @@ Proof.
     equiv_intros (equiv_path_Tr (n:=-1) (abses_pullback (projection E) F) pt) p.
     strip_truncations.
     rapply contr_inhabited_hprop; apply tr.
-    pose (g := isexact_ext_contr_sixterm_iv_mor E F p).
+    pose (g := isexact_ext_contra_sixterm_iv_mor E F p).
     exists (component1 g).
     apply path_sigma_hprop, (ap tr).
     by rapply (abses_pushout_component3_id g).
@@ -136,7 +136,7 @@ Defined.
 (** *** Exactness of [Ext B G -> Ext E G -> Ext A G] *)
 
 (** This is an immediate consequence of [isexact_abses_pullback]. *)
-Global Instance isexact_ext_contr_sixterm_v `{Univalence}
+Global Instance isexact_ext_contra_sixterm_v `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E)))
@@ -160,7 +160,7 @@ Local Definition isexact_ext_cyclic_ab_iii `{Univalence}
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A)
       (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n)))
-  := isexact_ext_contr_sixterm_iii
+  := isexact_ext_contra_sixterm_iii
        (abses_from_inclusion (Z1_mul_nat n)).
 
 (** We show exactness of [A -> A -> Ext Z/n A] where the first map is multiplication by [n], but considered in universe [v]. *)
