@@ -13,33 +13,47 @@ Local Open Scope pointed_scope.
 
 We will prove the analog of exactness in terms of path data, and deduce the usual notion. *)
 
-(** If a short exact sequence [A -> F -> E] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the endpoint [F/B]. *)
-
-Definition abses_pullback_inclusion_transpose_subgroup `{Univalence} {A B E : AbGroup}
+(** If a short exact sequence [A -> F -> E] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the the map [B -> F]. *)
+Definition abses_pullback_inclusion_transpose_map {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
       (F : AbSES E A) (p : abses_pullback i F $== pt)
-  : NormalSubgroup F.
+  : B $-> F
+  := grp_pullback_pr1 _ _ $o p^$.1 $o ab_biprod_inr.
+
+(** The comparison map [A + B $-> F] is an embedding.  This comes up twice so we factor it out as a lemma. *)
+Local Instance abses_pullback_inclusion_lemma {A B E : AbGroup}
+      (i : B $-> E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : IsEmbedding (grp_pullback_pr1 _ _ $o p^$.1).
 Proof.
-  srapply (ab_image_embedding (grp_pullback_pr1 _ _ $o (grp_iso_inverse p.1) $o ab_biprod_inr)).
-  1,2: exact _. (* Why doesn't Coq find Group's [Is01Cat] instance? *)
-  nrapply (istruncmap_compose _ (grp_iso_inverse p.1 o ab_biprod_inr)).
-  all : rapply istruncmap_mapinO_tr.
+  nrapply (istruncmap_compose (-1) p^$.1 (grp_pullback_pr1 (projection F) i)).
+  all: rapply istruncmap_mapinO_tr.
 Defined.
 
-Definition abses_pullback_inclusion_transpose_endpoint' `{Univalence} {A B E : AbGroup}
-           (i : B $-> E) `{IsEmbedding i}
-           (F : AbSES E A) (p : abses_pullback i F $== pt)
-  : AbGroup := QuotientAbGroup F (abses_pullback_inclusion_transpose_subgroup i F p).
-
-(** By [abses_from_inclusion] we get a short exact sequence [B -> F -> F/B] associated to the subgroup and quotient just above. *)
-
-Lemma abses_pullback_inclusion_transpose_beta `{Univalence} {A B E : AbGroup}
+(** The map [B -> F] is an inclusion. *)
+Local Instance abses_pullback_inclusion_transpose_embedding {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
       (F : AbSES E A) (p : abses_pullback i F $== pt)
-  : projection F $o (grp_pullback_pr1 (projection F) _ $o p^$.1 $o ab_biprod_inr) == i.
+  : IsEmbedding (abses_pullback_inclusion_transpose_map i F p).
 Proof.
-  rapply (conn_map_elim _ (ab_biprod_pr2 (A:=A))).
-  intro ab.
+  rapply (istruncmap_compose _ (ab_biprod_inr)).
+Defined.
+
+(** We define the cokernel [F/B], which is what we need below. *)
+Definition abses_pullback_inclusion_transpose_endpoint' {A B E : AbGroup}
+           (i : B $-> E) `{IsEmbedding i}
+           (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : AbGroup
+  := ab_cokernel_embedding (abses_pullback_inclusion_transpose_map i F p).
+
+(** The composite map [B -> F -> E] is homotopic to the original inclusion [i : B -> E]. *)
+Lemma abses_pullback_inclusion_transpose_beta {A B E : AbGroup}
+      (i : B $-> E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : projection F $o (abses_pullback_inclusion_transpose_map i F p) == i.
+Proof.
+  intro b.
+  change b with (ab_biprod_pr2 (A:=A) (mon_unit, b)).
   refine (pullback_commsq _ _ _ @ ap i _).
   exact (snd p^$.2 _)^.
 Defined.
@@ -52,27 +66,20 @@ Proof.
   snrapply Build_AbSES.
   - exact (abses_pullback_inclusion_transpose_endpoint' (inclusion E) F p).
   - exact (grp_quotient_map $o inclusion F).
-  - snrapply grp_quotient_rec.
-    + exact (projection E $o projection F).
-    + intros f [b q].
-      rewrite <- q.
-      refine (ap (projection E) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b) @ _).
-      apply iscomplex_abses.
+  - srapply (ab_cokernel_embedding_rec _ (projection E $o projection F)).
+    intro b.
+    refine (ap (projection E) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b) @ _).
+    apply iscomplex_abses.
   - apply isembedding_grouphomomorphism.
     intros a q0.
     (* Since [inclusion F a] is killed by [grp_quotient_map], its in the image of [B]. *)
-    assert (in_coset :  in_cosetL (abses_pullback_inclusion_transpose_subgroup (inclusion E) F p)
-                           (inclusion F a) mon_unit).
-    1:{ nrapply related_quotient_paths.
-        1,2,3,4: exact _.
-        exact q0. }
+    pose proof (in_coset := related_quotient_paths _ _ _ q0).
     (* Cleaning up the context facilitates later steps. *)
     destruct in_coset as [b q1]; rewrite grp_unit_r in q1.
     (* Since both [inclusion F] and [B -> F] factor through the mono [ab_biprod A B -> F], we can lift [q1] to [ab_biprod A B]. *)
     assert (q2 : ab_biprod_inr  b = ab_biprod_inl (-a)).
     1: { apply (isinj_embedding (grp_pullback_pr1 _ _ $o p^$.1)).
-         - nrapply (istruncmap_compose (-1) p^$.1 (grp_pullback_pr1 (projection F) (inclusion E))).
-           all: rapply istruncmap_mapinO_tr.
+         - apply abses_pullback_inclusion_lemma. exact _.
          - nrefine (q1 @ _); symmetry.
            refine (ap (grp_pullback_pr1 _ _) (fst p^$.2 (-a)) @ _).
            exact (grp_homo_inv _ _). }
@@ -336,10 +343,9 @@ Proof.
   destruct Y as [Y Q].
   apply abses_path_data_to_iso;
     srefine (_; (_,_)).
-  - srapply grp_quotient_rec.
-    1: exact (grp_pullback_pr1 _ _$o (Q.1^$).1).
-    intros f [b q0].
-    refine (ap _ q0^ @ _).
+  - snrapply (ab_cokernel_embedding_rec _ (grp_pullback_pr1 _ _$o (Q.1^$).1)).
+    1-3: exact _.
+    intro f.
     nrefine (ap _ (induced_map_eq E F p (Y;Q) _) @ _); cbn.
     exact (grp_unit_r _ @ grp_homo_unit _).
   - intro a.
