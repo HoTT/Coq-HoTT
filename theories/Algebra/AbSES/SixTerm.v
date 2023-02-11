@@ -56,7 +56,7 @@ Proof.
   snrapply Build_IsExact.
   - apply phomotopy_homotopy_hset; intro g; cbn.
     (* this equation holds purely *)
-    apply (ap tr).
+    apply (ap tr@{v}).
     refine ((abses_pushout_compose _ _ _)^ @ ap _ _ @ _).
     1: apply abses_pushout_inclusion.
     apply abses_pushout_point.
@@ -105,14 +105,14 @@ Proof.
 Defined.
 
 Global Instance isexact_ext_contra_sixterm_iv `{Univalence}
-  {B A G : AbGroup@{u}} (E : AbSES B A)
+  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
   : IsExact (Tr (-1)) (abses_pushout_ext E)
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).
 Proof.
   snrapply Build_IsExact.
   - apply phomotopy_homotopy_hset; intro g; cbn.
     (* this equation holds purely *)
-    apply (ap tr).
+    apply (ap tr@{v}).
     refine ((abses_pushout_pullback_reorder _ _ _)^
               @ ap _ _ @ _).
     1: exact (abses_pullback_projection _)^.
@@ -155,12 +155,12 @@ Definition cyclic' `{Funext} (n : nat) `{IsEmbedding (Z1_mul_nat n)}
   : AbGroup := ab_cokernel_embedding (Z1_mul_nat n).
 
 (** We first show that [ab_hom Z A -> ab_hom Z A -> Ext (cyclic n) A] is exact. We could inline the proof below, but factoring it out is faster. *)
-Local Definition isexact_ext_cyclic_ab_iii `{Univalence}
-  (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup}
+Local Definition isexact_ext_cyclic_ab_iii@{u v w} `{Univalence}
+  (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A)
       (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n)))
-  := isexact_ext_contra_sixterm_iii
+  := isexact_ext_contra_sixterm_iii@{u v u w}
        (abses_from_inclusion (Z1_mul_nat n)).
 
 (** We show exactness of [A -> A -> Ext Z/n A] where the first map is multiplication by [n], but considered in universe [v]. *)
@@ -188,22 +188,22 @@ Proof.
     exact (ab_mul_nat_homo f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
     apply isexact_equiv_fiber@{v v v v v u v v v v v}.
-    try (apply isexact_ext_cyclic_ab_iii@{u v v w w}
-      || apply isexact_ext_cyclic_ab_iii@{u v v w w v}).
+    apply isexact_ext_cyclic_ab_iii.
 Defined.
 
 (** The main result of this section. *)
-Theorem ext_cyclic_ab'@{u v w +} `{Univalence}
+Theorem ext_cyclic_ab@{u v w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n) $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
+  : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n)
+      $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
-  pose (E := abses_from_inclusion@{u v} (Z1_mul_nat n)).
+  pose (E := abses_from_inclusion (Z1_mul_nat n)).
   snrefine (abses_cokernel_iso (ab_mul_nat n) _).
   - exact (grp_homo_compose
              (abses_pushout_ext E)
              (grp_iso_inverse (equiv_Z1_hom A))).
-  - apply (conn_map_compose@{v v v v v} _ (grp_iso_inverse@{u u} (equiv_Z1_hom A))).
+  - apply (conn_map_compose _ (grp_iso_inverse (equiv_Z1_hom A))).
     1: rapply conn_map_isequiv@{v u u u u}.
     (* Coq knows that [Ext Z1 A] is contractible since [Z1] is projective, so exactness at spot iv gives us this: *)
     exact (isconnmap_O_isexact_base_contr@{u v v v v v u u} _ _
