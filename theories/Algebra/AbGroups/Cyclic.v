@@ -1,6 +1,6 @@
-Require Import Spaces.Nat Spaces.Int WildCat
-  AbelianGroup AbHom Centralizer AbGroups.Z AbProjective
-  Groups.FreeGroup Groups.Image.
+Require Import WildCat
+  AbelianGroup AbHom Centralizer AbProjective
+  Groups.FreeGroup.
 
 (** * Cyclic groups *)
 
