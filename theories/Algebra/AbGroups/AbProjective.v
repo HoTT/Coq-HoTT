@@ -16,8 +16,8 @@ Require Import Basics Types AbelianGroup AbPullback
        P ---> B
           f
 *)
-Class IsAbProjective (P : AbGroup) : Type :=
-  isabprojective : forall (A B : AbGroup), forall (e : A $-> B),
+Class IsAbProjective@{u +} (P : AbGroup@{u}) : Type :=
+  isabprojective : forall (A B : AbGroup@{u}), forall (e : A $-> B),
     forall (f : P $-> B), IsSurjection e -> merely (exists l : P $-> A, e $o l == f).
 
 (** An abelian group is projective iff epis into it merely split. *)
