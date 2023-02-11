@@ -47,8 +47,8 @@ Proof.
   apply isexact_inclusion_projection.
 Defined.
 
-Global Instance isexact_ext_contr_sixterm_iii `{Univalence}
-  {B A G : AbGroup} (E : AbSES B A)
+Global Instance isexact_ext_contr_sixterm_iii@{u v +} `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G)
       (abses_pushout_ext E).
@@ -188,21 +188,22 @@ Proof.
     exact (ab_mul_nat_homo f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
     apply isexact_equiv_fiber@{v v v v v u v v v v v}.
-    apply isexact_ext_cyclic_ab_iii@{u v v w w}.
+    try (apply isexact_ext_cyclic_ab_iii@{u v v w w}
+      || apply isexact_ext_cyclic_ab_iii@{u v v w w v}).
 Defined.
 
 (** The main result of this section. *)
-Theorem ext_cyclic_ab'@{u v w | u < v, v < w} `{Univalence}
+Theorem ext_cyclic_ab'@{u v w +} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n) $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
-  pose (E := abses_from_inclusion (Z1_mul_nat n)).
+  pose (E := abses_from_inclusion@{u v} (Z1_mul_nat n)).
   snrefine (abses_cokernel_iso (ab_mul_nat n) _).
   - exact (grp_homo_compose
              (abses_pushout_ext E)
              (grp_iso_inverse (equiv_Z1_hom A))).
-  - apply (conn_map_compose _ (grp_iso_inverse (equiv_Z1_hom A))).
+  - apply (conn_map_compose@{v v v v v} _ (grp_iso_inverse@{u u} (equiv_Z1_hom A))).
     1: rapply conn_map_isequiv@{v u u u u}.
     (* Coq knows that [Ext Z1 A] is contractible since [Z1] is projective, so exactness at spot iv gives us this: *)
     exact (isconnmap_O_isexact_base_contr@{u v v v v v u u} _ _
