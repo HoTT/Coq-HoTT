@@ -1,4 +1,4 @@
-Require Import WildCat HSet Pointed
+Require Import WildCat HSet Pointed.Core Pointed.pTrunc Pointed.pEquiv
   Modalities.ReflectiveSubuniverse Truncations.SeparatedTrunc
   AbGroups Homotopy.ExactSequence
   AbSES.Core AbSES.Pullback AbSES.Pushout BaerSum Ext PullbackFiberSequence.
