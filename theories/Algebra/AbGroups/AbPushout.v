@@ -164,3 +164,31 @@ Proof.
     refine (ap ab_pushout_inl (h a) @ _ @ ap ab_pushout_inr (k a)).
     exact (ab_pushout_commsq (alpha a)).
 Defined.
+
+(** ** Properties of pushouts of maps *)
+
+(** The pushout of an epimorphism is an epimorphism. *)
+Global Instance ab_pushout_surjection_inr `{Univalence} {A B C : AbGroup}
+  (f : A $-> B) (g : A $-> C) `{S : IsSurjection f}
+  : IsSurjection (ab_pushout_inr (f:=f) (g:=g)).
+Proof.
+  intro x.
+  rapply contr_inhabited_hprop.
+  (* To find a preimage of [x], we may first choose a representative [x']. *)
+  assert (x' : merely (hfiber grp_quotient_map x)).
+  1: apply issurj_class_of.
+  strip_truncations; destruct x' as [[b c] p].
+  (* Now [x] = [b + c] in the quotient. We find a preimage of [a]. *)
+  assert (a : merely (hfiber f b)).
+  1: apply S.
+  strip_truncations; destruct a as [a q].
+  refine (tr (g a + c; _)).
+  refine (grp_homo_op _ _ _ @ _).
+  refine (ap (fun z => sg_op z _) _^ @ _).
+  { refine (_^ @ ab_pushout_commsq _).
+    exact (ap _ q). }
+  refine (ap grp_quotient_map _ @ p).
+  apply path_prod'; cbn.
+  - apply right_identity.
+  - apply left_identity.
+Defined.
