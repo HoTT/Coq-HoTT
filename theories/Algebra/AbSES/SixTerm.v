@@ -155,7 +155,7 @@ Definition cyclic' `{Funext} (n : nat) `{IsEmbedding (Z1_mul_nat n)}
   : AbGroup := ab_cokernel_embedding (Z1_mul_nat n).
 
 (** We first show that [ab_hom Z A -> ab_hom Z A -> Ext (cyclic n) A] is exact. We could inline the proof below, but factoring it out is faster. *)
-Local Definition isexact_ext_cyclic_ab_iii@{u v w} `{Univalence}
+Local Definition isexact_ext_cyclic_ab_iii@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A)
@@ -192,7 +192,7 @@ Proof.
 Defined.
 
 (** The main result of this section. *)
-Theorem ext_cyclic_ab@{u v w} `{Univalence}
+Theorem ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n)
       $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
