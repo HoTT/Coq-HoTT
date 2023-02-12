@@ -367,6 +367,13 @@ Section Reduction.
   Definition freegroup_in : A -> FreeGroup
     := freegroup_eta o word_sing o inl.
 
+  Lemma FreeGroup_rec_beta {G : Group} (f : A -> G)
+    : FreeGroup_rec _ f o freegroup_in == f.
+  Proof.
+    intros x.
+    apply grp_unit_r.
+  Defined.
+
   Coercion freegroup_in : A >-> group_type.
 
 End Reduction.
