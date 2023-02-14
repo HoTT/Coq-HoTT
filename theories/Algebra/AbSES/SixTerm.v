@@ -57,7 +57,7 @@ Proof.
   - apply phomotopy_homotopy_hset; intro g; cbn.
     (* this equation holds purely *)
     apply (ap tr@{v}).
-    refine ((abses_pushout_compose _ _ _)^ @ ap _ _ @ _).
+    refine (abses_pushout_compose _ _ _ @ ap _ _ @ _).
     1: apply abses_pushout_inclusion.
     apply abses_pushout_point.
   - intros [F p].

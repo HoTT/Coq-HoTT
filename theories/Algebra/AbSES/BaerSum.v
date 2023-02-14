@@ -93,7 +93,7 @@ Proof.
   refine (_ @ abses_pullback_compose ab_diagonal direct_sum_swap _).
   refine (ap (abses_pullback ab_diagonal) _).
   refine (ap (fun f => abses_pushout f _) ab_codiagonal_swap^ @ _).
-  refine ((abses_pushout_compose _ _ _)^ @ _).
+  refine ((abses_pushout_compose _ _ _) @ _).
   refine (ap _ (abses_pushout_is_pullback (abses_swap_morphism E F)) @ _).
   unfold abses_swap_morphism, component3.
   apply abses_pushout_pullback_reorder.
@@ -137,11 +137,11 @@ Lemma baer_sum_distributive_pushouts `{Univalence}
   : abses_pushout (f + g) E = abses_baer_sum (abses_pushout f E) (abses_pushout g E).
 Proof.
   unfold abses_baer_sum.
-  refine ((abses_pushout_compose (A1 := ab_biprod A A) _ _ E)^ @ _).
+  refine (abses_pushout_compose (A1 := ab_biprod A A) _ _ E @ _).
   refine (_ @ abses_pushout_pullback_reorder _ _ _).
   refine (ap (abses_pushout ab_codiagonal) _).
   refine (ap (fun f => abses_pushout f E) (ab_biprod_corec_diagonal f g) @ _).
-  refine ((abses_pushout_compose _ _ E)^ @ _).
+  refine (abses_pushout_compose _ _ E @ _).
   refine (ap (abses_pushout _) (abses_pushout_is_pullback (abses_diagonal E)) @ _).
   refine (abses_pushout_pullback_reorder _ _ _ @ _).
   exact (ap (abses_pullback _) (abses_directsum_distributive_pushouts f g)).
@@ -170,7 +170,7 @@ Proof.
     apply abses_directsum_distributive_pushouts.
   - refine (ap (abses_pullback _) (abses_pushout_pullback_reorder _ _ _) @ _).
     refine (abses_pullback_compose _ _ _ @ _).
-    refine (ap (abses_pullback _) _).
+    refine (ap (abses_pullback _) _^).
     apply abses_pushout_compose.
 Defined.
 
@@ -184,7 +184,7 @@ Proof.
   refine (_ @ abses_pullback_compose ab_triagonal ab_biprod_twist _).
   refine (ap (abses_pullback _) _).
   refine (ap (fun f => abses_pushout f _) ab_cotriagonal_twist^ @ _).
-  refine ((abses_pushout_compose _ _ _)^ @ _).
+  refine (abses_pushout_compose _ _ _ @ _).
   refine (ap _ (abses_pushout_is_pullback (abses_twist_directsum E F G)) @ _).
   unfold abses_twist_directsum, component3.
   exact (abses_pushout_pullback_reorder _ _ _).
