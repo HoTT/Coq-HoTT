@@ -217,6 +217,10 @@ Defined.
 Definition ab_codiagonal {A : AbGroup} : ab_biprod A A $-> A
   := ab_biprod_rec grp_homo_id grp_homo_id.
 
+Definition ab_codiagonal_natural {A B : AbGroup} (f : A $-> B)
+  : f $o ab_codiagonal == ab_codiagonal $o functor_ab_biprod f f
+  := fun a => grp_homo_op f _ _.
+
 Definition ab_diagonal {A : AbGroup} : A $-> ab_biprod A A
   := ab_biprod_corec grp_homo_id grp_homo_id.
 

@@ -25,7 +25,7 @@ Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
   := isbifunctor_compose _ _ (P:=isbifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
-Definition grp_ext `{Univalence} (A B : AbGroup@{u}) : Group.
+Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
 Proof.
   snrapply (Build_Group (Ext B A)).
   - intros E F.
@@ -45,14 +45,50 @@ Proof.
     + apply baer_sum_inverse_l.
 Defined.
 
-Definition ab_ext `{Univalence}
-  (A B : AbGroup@{u}) : AbGroup.
+(** ** The bifunctor [ab_ext] *)
+
+Definition ab_ext `{Univalence} (B A : AbGroup@{u}) : AbGroup.
 Proof.
   snrapply (Build_AbGroup (grp_ext B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
   apply baer_sum_commutative.
+Defined.
+
+Global Instance is01functor_ext `{Univalence} (B : AbGroup^op)
+  : Is0Functor (ab_ext B).
+Proof.
+  srapply Build_Is0Functor; intros ? ? f.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fmap01 (A:=AbGroup^op) Ext' B f).
+  rapply Trunc_ind; intro E0.
+  rapply Trunc_ind; intro E1.
+  apply (ap tr); cbn.
+  apply baer_sum_pushout.
+Defined.
+
+Global Instance is10functor_ext `{Univalence} (A : AbGroup)
+  : Is0Functor (fun B : AbGroup^op => ab_ext B A).
+Proof.
+  srapply Build_Is0Functor; intros ? ? f; cbn.
+  snrapply Build_GroupHomomorphism.
+  1: exact (fmap10 (A:=AbGroup^op) Ext' f A).
+  rapply Trunc_ind; intro E0.
+  rapply Trunc_ind; intro E1.
+  apply (ap tr); cbn.
+  apply baer_sum_pullback.
+Defined.
+
+Global Instance isbifunctor_ext `{Univalence}
+  : IsBifunctor (A:=AbGroup^op) ab_ext.
+Proof.
+  snrapply Build_IsBifunctor.
+  1,2: exact _.
+  intros B B' f A A' g.
+  rapply Trunc_ind; intro E.
+  apply (ap tr).
+  apply abses_pushout_pullback_reorder.
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)
