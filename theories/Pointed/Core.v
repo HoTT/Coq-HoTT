@@ -143,6 +143,10 @@ Global Existing Instance pointed_isequiv.
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
   : A <~> B := Build_Equiv A B f _.
 
+(* The pointed identity is a pointed equivalence *)
+Definition pequiv_pmap_idmap {A} : A <~>* A
+  := Build_pEquiv _ _ pmap_idmap _.
+
 (** Pointed sigma types *)
 Definition psigma {A : pType} (P : pFam A) : pType
   := [sig P, (point A; dpoint P)].
@@ -457,33 +461,43 @@ Defined.
 (** Univalence for pointed types *)
 Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
 Proof.
-  destruct A as [A a], B as [B b].
-  refine (equiv_ap issig_ptype (A;a) (B;b) oE _).
-  refine (equiv_path_sigma _ _ _ oE _).
-  refine (_ oE (issig_pequiv' _ _)^-1); simpl.
-  refine (equiv_functor_sigma' (equiv_path_universe A B) _); intros f.
-  apply equiv_concat_l.
-  apply transport_path_universe.
+  refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
+  nrapply (contr_equiv' { X : Type & { f : A <~> X & {x : X & f pt = x} }}).
+  1: make_equiv.
+  rapply (contr_equiv' { X : Type &  A <~> X }).
+  nrapply equiv_functor_sigma_id; intro X; symmetry.
+  rapply equiv_sigma_contr.
+  (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
 Defined.
 
 Definition path_ptype `{Univalence} {A B : pType} : (A <~>* B) -> A = B
   := equiv_path_ptype A B.
 
-Definition pequiv_path {A B : pType} : (A = B) -> (A <~>* B).
+(** The inverse map can be defined without Univalence. *)
+Definition pequiv_path {A B : pType} (p : A = B) : (A <~>* B)
+  := match p with idpath => pequiv_pmap_idmap end.
+
+(** This just confirms that it is definitionally the inverse map. *)
+Definition pequiv_path_equiv_path_ptype_inverse `{Univalence} {A B : pType}
+  : @pequiv_path A B = (equiv_path_ptype A B)^-1
+  := idpath.
+
+Global Instance isequiv_pequiv_path `{Univalence} {A B : pType}
+  : IsEquiv (@pequiv_path A B)
+  := isequiv_inverse (equiv_path_ptype A B).
+
+(** Two pointed equivalences are equal if their underlying pointed functions are equal. This requires [Funext] for knowing that [IsEquiv] is an HProp. *)
+Definition equiv_path_pequiv' `{Funext} {A B : pType} (f g : A <~>* B)
+  : (f = g :> (A ->* B)) <~> (f = g :> (A <~>* B)).
 Proof.
-  intros p; apply (ap issig_ptype^-1) in p.
-  srefine (Build_pEquiv _ _ (Build_pMap _ _ (equiv_path A B p..1) p..2) _).
+  refine ((equiv_ap' (issig_pequiv A B)^-1%equiv f g)^-1%equiv oE _); cbn.
+  match goal with |- _ <~> ?F = ?G => exact (equiv_path_sigma_hprop F G) end.
 Defined.
 
 (** Two pointed equivalences are equal if their underlying pointed functions are pointed homotopic. *)
 Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
-  : (f ==* g) <~> (f = g).
-Proof.
-  transitivity ((issig_pequiv A B)^-1 f = (issig_pequiv A B)^-1 g).
-  - refine (equiv_path_sigma_hprop _ _ oE _).
-    apply (equiv_path_pforall f g).
-  - symmetry; exact (equiv_ap' (issig_pequiv A B)^-1 f g).
-Defined.
+  : (f ==* g) <~> (f = g)
+  := equiv_path_pequiv' f g oE equiv_path_pforall f g.
 
 Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
   : (f ==* g) -> (f = g)
@@ -702,19 +716,11 @@ Defined.
 Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
   srapply Build_IsUnivalent1Cat; intros A B.
-  refine (isequiv_homotopic (equiv_path_ptype A B)^-1 % equiv _).
-  intros []; apply path_pequiv.
-  srefine (Build_pHomotopy _ _).
-  - intros x; reflexivity.
-  - simpl.
-    refine (_^ @ (concat_p1 _)^).
-    rapply (equiv_moveL_Mp _ _ _)^-1.
-    refine (_ @ (concat_p1 _)^).
-    rewrite transport_paths_FlFr.
-    hott_simpl.
-    rewrite transport_path_universe_equiv_path.
-    rewrite ap_V.
-    apply inv_V.
+  (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
+  refine (isequiv_homotopic pequiv_path _).
+  intros [].
+  apply equiv_path_pequiv'.  (* Change to equality as pointed functions. *)
+  reflexivity.
 Defined.
 
 (** pType is a pointed category *)

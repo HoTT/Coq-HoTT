@@ -5,10 +5,6 @@ Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.
 
-(* The pointed identity is a pointed equivalence *)
-Definition pequiv_pmap_idmap {A} : A <~>* A
-  := Build_pEquiv _ _ pmap_idmap _.
-
 (* pointed equivalence is a reflexive relation *)
 Global Instance pequiv_reflexive : Reflexive pEquiv.
 Proof.
