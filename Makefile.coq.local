@@ -277,8 +277,8 @@ dot-file-dep-graphs: $(ALL_DOTFILES)
 TAGS_FILES = $(ALL_VFILES)
 TAGS : $(TAGS_FILES)
 	$(ETAGS) --language=none \
-	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|CoInductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
-	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
+	-r '/^[ \t]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|CoInductive\|Proposition\)[ \t]+\([a-zA-Z0-9_'\'']+\)/\2/' \
+	-r '/^[ \t]*\([a-zA-Z0-9_'\'']+\)[ \t]*:/\1/' \
 	$^
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
