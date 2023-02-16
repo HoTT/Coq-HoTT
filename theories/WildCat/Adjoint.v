@@ -37,7 +37,7 @@ Record Adjunction {C D : Type} (F : C -> D) (G : D -> C)
   is1natural_equiv_adjunction_l (y : D)
     : Is1Natural (A := C^op) (yon y o F)
         (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
-        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
+        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
         (yon (G y)) (fun x => equiv_adjunction _ y) ;
   (** Naturality in the right variable *)
   is1natural_equiv_adjunction_r (x : C)
@@ -89,7 +89,7 @@ Section AdjunctionData.
   Definition natequiv_adjunction_l (y : D)
     : NatEquiv (A := C^op) (yon y o F)
         (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
-        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
+        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
         (yon (G y)).
   Proof.
     nrapply Build_NatEquiv.
@@ -214,7 +214,7 @@ Definition Build_Adjunction_natequiv_nat_left
   (e : forall x, NatEquiv (opyon (F x)) (opyon x o G))
   (is1nat_e : forall y, Is1Natural (A := C^op) (yon y o F)
       (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
-      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
+      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
       (yon (G y)) (fun x => e _ y))
   : Adjunction F G.
 Proof.
@@ -229,7 +229,7 @@ Definition Build_Adjunction_natequiv_nat_right
   {C D : Type} (F : C -> D) (G : D -> C)
   `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} 
   (e : forall y, NatEquiv (A := C^op) (yon y o F) (yon (G y))
-    (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y)))
+    (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _))
   (is1nat_e : forall x, Is1Natural (opyon (F x)) (opyon x o G) (fun y => e y x))
   : Adjunction F G.
 Proof.
@@ -284,7 +284,7 @@ Section UnitCounitAdjunction.
   (** Which is natural in the left *)
   Lemma is1natural_γ_l (y : D)
     : Is1Natural (yon y o F) (yon (G y))
-      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) F (yon y))
+      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
       (is0functor_G := is0functor_yon (G y))
       (fun x : C^op => γ x y).
   Proof.

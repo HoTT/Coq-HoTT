@@ -22,8 +22,7 @@ Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
 Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
   : IsBifunctor@{v v w u u v v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
-  := isbifunctor_compose@{v v w w v v u u u u u u u u v v}
-       _ _ (P:=isbifunctor_abses'@{w u v v}).
+  := isbifunctor_compose _ _ (P:=isbifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (A B : AbGroup@{u}) : Group.

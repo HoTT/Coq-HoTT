@@ -8,58 +8,53 @@ Require Import WildCat.FunctorCat.
 
 (** ** Opposite categories *)
 
-Definition op (A : Type) : Type := A.
+Definition op (A : Type) := A.
 Notation "A ^op" := (op A).
 
 (** This stops typeclass search from trying to unfold op. *)
 #[global] Typeclasses Opaque op.
 
-Section Op.
+Global Instance isgraph_op {A : Type} `{IsGraph A}
+  : IsGraph A^op.
+Proof.
+  apply Build_IsGraph.
+  unfold op; exact (fun a b => b $-> a).
+Defined.
 
-  Context (A : Type) `{Is1Cat A}.
+Global Instance is01cat_op {A : Type} `{Is01Cat A} : Is01Cat A^op.
+Proof.
+  apply Build_Is01Cat.
+  + cbv; exact Id.
+  + cbv; exact (fun a b c g f => f $o g).
+Defined.
 
-  Global Instance isgraph_op : IsGraph A^op.
-  Proof.
-    apply Build_IsGraph.
-    unfold op; exact (fun a b => b $-> a).
-  Defined.
+(** We don't invert 2-cells as this is op on the first level. *)
+Global Instance is2graph_op {A : Type} `{Is2Graph A} : Is2Graph A^op.
+Proof.
+  intros a b; unfold op in *; cbn; exact _.
+Defined.
 
-  Global Instance is01cat_op : Is01Cat A^op.
-  Proof.
-    apply Build_Is01Cat.
-    + cbv; exact Id.
-    + cbv; exact (fun a b c g f => f $o g).
-  Defined.
-
-  (** We don't invert 2-cells as this is op on the first level. *)
-  Global Instance is2graph_op : Is2Graph A^op.
-  Proof.
-    intros a b; unfold op in *; cbn; exact _.
-  Defined.
-
-  Global Instance is1cat_op : Is1Cat A^op.
-  Proof.
-    srapply Build_Is1Cat; unfold op in *; cbv in *.
-    - intros a b.
-      apply is01cat_hom.
-    - intros a b.
-      apply is0gpd_hom.
-    - intros a b c h.
-      srapply Build_Is0Functor.
-      intros f g p.
-      cbn in *.
-      exact (p $@R h).
-    - intros a b c h.
-      srapply Build_Is0Functor.
-      intros f g p.
-      cbn in *.
-      exact (h $@L p).
-    - intros a b c d f g h; exact (cat_assoc_opp h g f).
-    - intros a b f; exact (cat_idr f).
-    - intros a b f; exact (cat_idl f).
-   Defined.
-
-End Op.
+Global Instance is1cat_op {A : Type} `{Is1Cat A} : Is1Cat A^op.
+Proof.
+  srapply Build_Is1Cat; unfold op in *; cbv in *.
+  - intros a b.
+    apply is01cat_hom.
+  - intros a b.
+    apply is0gpd_hom.
+  - intros a b c h.
+    srapply Build_Is0Functor.
+    intros f g p.
+    cbn in *.
+    exact (p $@R h).
+  - intros a b c h.
+    srapply Build_Is0Functor.
+    intros f g p.
+    cbn in *.
+    exact (h $@L p).
+  - intros a b c d f g h; exact (cat_assoc_opp h g f).
+  - intros a b f; exact (cat_idr f).
+  - intros a b f; exact (cat_idl f).
+Defined.
 
 Global Instance is1cat_strong_op A `{Is1Cat_Strong A}
   : Is1Cat_Strong (A ^op).
@@ -84,7 +79,7 @@ Definition test4 A `{x : Is1Cat A} : x = is1cat_op (A^op) := 1.
 
 (** Opposite groupoids *)
 
-Global Instance is0gpd_op A `{Is0Gpd A} : Is0Gpd (A ^op).
+Global Instance is0gpd_op A `{Is0Gpd A} : Is0Gpd (A^op).
 Proof.
   srapply Build_Is0Gpd; unfold op in *; cbn in *.
   intros a b.
