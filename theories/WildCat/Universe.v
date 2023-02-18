@@ -4,8 +4,8 @@ Require Import WildCat.Equiv.
 
 (** ** The category of types *)
 
-Global Instance isgraph_type : IsGraph Type
-  := Build_IsGraph Type (fun a b => a -> b).
+Global Instance isgraph_type@{u v} : IsGraph@{v u} Type@{u}
+  := Build_IsGraph Type@{u} (fun a b => a -> b).
 
 Global Instance is01cat_type : Is01Cat Type.
 Proof.

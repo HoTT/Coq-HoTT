@@ -169,12 +169,8 @@ Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
 (** * Composition of functors *)
 
 Definition fun01_compose {A B C} `{IsGraph A, IsGraph B, IsGraph C}
-  : Fun01 B C -> Fun01 A B -> Fun01 A C.
-Proof.
-  intros F G.
-  nrapply Build_Fun01.
-  rapply (is0functor_compose G F).
-Defined.
+  : Fun01 B C -> Fun01 A B -> Fun01 A C
+  := fun G F => Build_Fun01 _ _ (G o F).
 
 Definition fun01_postcomp {A B C}
   `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)

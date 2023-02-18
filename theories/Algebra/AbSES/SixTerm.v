@@ -160,7 +160,7 @@ Local Definition isexact_ext_cyclic_ab_iii@{u v w | u < v, v < w} `{Univalence}
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A)
       (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n)))
-  := isexact_ext_contra_sixterm_iii@{u v u w}
+  := isexact_ext_contra_sixterm_iii
        (abses_from_inclusion (Z1_mul_nat n)).
 
 (** We show exactness of [A -> A -> Ext Z/n A] where the first map is multiplication by [n], but considered in universe [v]. *)
