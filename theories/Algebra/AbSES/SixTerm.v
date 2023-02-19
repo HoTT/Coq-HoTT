@@ -17,8 +17,7 @@ Definition isexact_abses_sixterm_i `{Funext}
       (fmap10 (A:=Group^op) ab_hom (projection E) G).
 Abort. (* Left for future work. *)
 
-(** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G].
-    One can also deduce this from [isexact_abses_pullback]. *)
+(** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. One can also deduce this from [isexact_abses_pullback]. *)
 Definition isexact_ext_contra_sixterm_ii `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))

@@ -152,7 +152,9 @@ Proof.
   nrapply ab_pushout_commsq.
 Defined.
 
-(** ** Functoriality of [abses_pushout f] *)
+(** ** Functoriality of [abses_pushout f : AbSES B A -> AbSES B A'] *)
+
+(** In this file we will prove various "levels" of functoriality of pushing out. Here we show that the induced map between [AbSES B A] respect the groupoid structure of [is1gpd_abses] from AbSES.Core. *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : Is0Functor (abses_pushout (B:=B) f).
@@ -313,7 +315,7 @@ Definition abses_pushout_id `{Univalence} {A B : AbGroup}
   := fun E => abses_pushout_component3_id (abses_morphism_id E) (fun _ => idpath).
 
 Definition abses_pushout_pmap_id `{Univalence} {A B : AbGroup}
-  : abses_pushout_pmap (B:=B) (@grp_homo_id A) ==* pmap_idmap.
+  : abses_pushout_pmap (B:=B) (@grp_homo_id A) ==* @pmap_idmap (AbSES B A).
 Proof.
   srapply Build_pHomotopy.
   1: apply abses_pushout_id.
@@ -326,7 +328,7 @@ Proof.
   by rapply Quotient_ind_hprop.
 Defined.
 
-(** Pushing out along homotopic maps induces homotopic pushout functors. *)
+(** Pushing out along homotopic maps induces homotopic pushout functors. This statement has a short proof by path induction on the homotopy [h], but we prefer to construct a path using [abses_path_data_iso] with better computational properties. *)
 Lemma abses_pushout_homotopic' `{Univalence} {A A' B : AbGroup}
   (f f' : A $-> A') (h : f == f')
   : abses_pushout (B:=B) f $=> abses_pushout f'.
@@ -413,7 +415,7 @@ Proof.
   apply abses_pushout_pcompose'.
 Defined.
 
-(** [AbSES] and [AbSES'] become covariant functors in their second parameter by pushing out. *)
+(** [AbSES B : AbGroup -> pType] and [AbSES' B : AbGroup -> Type] are covariant functors, for any [B]. *)
 
 Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
   : Is0Functor (AbSES' B).
@@ -438,7 +440,7 @@ Proof.
   exact (fun _ _ g => abses_pushout_pmap g).
 Defined.
 
-Global Instance is1functor_abses10 `{Univalence} {B : AbGroup^op}
+Global Instance is1functor_abses01 `{Univalence} {B : AbGroup^op}
   : Is1Functor (AbSES B).
 Proof.
   apply Build_Is1Functor; intros; cbn.

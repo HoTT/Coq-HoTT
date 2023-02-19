@@ -231,7 +231,7 @@ Proof.
   apply abses_pushout_pullback_reorder.
 Defined.
 
-(** ** Pushouts and pullbacks respect the baer sum *)
+(** ** Pushouts and pullbacks respect the Baer sum *)
 
 Definition baer_sum_pushout `{Univalence}
   {A A' B : AbGroup} (f : A $-> A') (E F : AbSES B A)
