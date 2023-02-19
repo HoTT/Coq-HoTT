@@ -17,13 +17,35 @@ Definition isexact_abses_sixterm_i `{Funext}
       (fmap10 (A:=Group^op) ab_hom (projection E) G).
 Abort. (* Left for future work. *)
 
-(** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. *)
+(** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G].
+    One can also deduce this from [isexact_abses_pullback]. *)
 Definition isexact_ext_contra_sixterm_ii `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (projection E) G)
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G).
-Abort. (* Follows from [isexact_abses_pullback]. Details left for future work. *)
+Proof.
+  snrapply Build_IsExact.
+  { apply phomotopy_homotopy_hset; intro f.
+    apply equiv_path_grouphomomorphism; intro b; cbn.
+    refine (ap f _ @ grp_homo_unit f).
+    apply isexact_inclusion_projection. }
+  hnf. intros [f q]; rapply contr_inhabited_hprop.
+  srefine (tr (_; _)).
+  { refine (grp_homo_compose _
+              (abses_cokernel_iso (inclusion E) (projection E))^-1$).
+    apply (quotient_abgroup_rec _ _ f).
+    intros e; rapply Trunc_ind.
+    intros [b r].
+    refine (ap f r^ @ _).
+    exact (equiv_path_grouphomomorphism^-1 q _). }
+  lazy beta.
+  apply path_sigma_hprop.
+  apply equiv_path_grouphomomorphism; unfold pr1.
+  intro x.
+  exact (ap (quotient_abgroup_rec _ _ f _)
+            (abses_cokernel_iso_inv_beta _ _ _)).
+Defined.
 
 (** *** Exactness of [ab_hom E G -> ab_hom A G -> Ext B G] *)
 
