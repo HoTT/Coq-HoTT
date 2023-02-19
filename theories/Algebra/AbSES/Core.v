@@ -738,3 +738,11 @@ Proof.
     apply grp_moveL_M1^-1.
     exact p^.
 Defined.
+
+Definition abses_cokernel_iso_inv_beta `{Funext}
+  {A E B : AbGroup} (f : A $-> E) (g : GroupHomomorphism E B)
+  `{IsSurjection g, IsExact (Tr (-1)) _ _ _ f g}
+  : (abses_cokernel_iso f g)^-1 o g == grp_quotient_map.
+Proof.
+  intro x; by apply moveR_equiv_V.
+Defined.

@@ -1,6 +1,7 @@
-Require Import WildCat.
+Require Import WildCat Pointed.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import AbSES.Core AbSES.Pullback AbSES.Pushout AbSES.DirectSum.
+Require Import Homotopy.HSpace.
 
 Local Open Scope mc_add_scope.
 
@@ -93,7 +94,7 @@ Proof.
   refine (_ @ abses_pullback_compose ab_diagonal direct_sum_swap _).
   refine (ap (abses_pullback ab_diagonal) _).
   refine (ap (fun f => abses_pushout f _) ab_codiagonal_swap^ @ _).
-  refine ((abses_pushout_compose _ _ _)^ @ _).
+  refine ((abses_pushout_compose _ _ _) @ _).
   refine (ap _ (abses_pushout_is_pullback (abses_swap_morphism E F)) @ _).
   unfold abses_swap_morphism, component3.
   apply abses_pushout_pullback_reorder.
@@ -137,11 +138,11 @@ Lemma baer_sum_distributive_pushouts `{Univalence}
   : abses_pushout (f + g) E = abses_baer_sum (abses_pushout f E) (abses_pushout g E).
 Proof.
   unfold abses_baer_sum.
-  refine ((abses_pushout_compose (A1 := ab_biprod A A) _ _ E)^ @ _).
+  refine (abses_pushout_compose (A1 := ab_biprod A A) _ _ E @ _).
   refine (_ @ abses_pushout_pullback_reorder _ _ _).
   refine (ap (abses_pushout ab_codiagonal) _).
   refine (ap (fun f => abses_pushout f E) (ab_biprod_corec_diagonal f g) @ _).
-  refine ((abses_pushout_compose _ _ E)^ @ _).
+  refine (abses_pushout_compose _ _ E @ _).
   refine (ap (abses_pushout _) (abses_pushout_is_pullback (abses_diagonal E)) @ _).
   refine (abses_pushout_pullback_reorder _ _ _ @ _).
   exact (ap (abses_pullback _) (abses_directsum_distributive_pushouts f g)).
@@ -170,7 +171,7 @@ Proof.
     apply abses_directsum_distributive_pushouts.
   - refine (ap (abses_pullback _) (abses_pushout_pullback_reorder _ _ _) @ _).
     refine (abses_pullback_compose _ _ _ @ _).
-    refine (ap (abses_pullback _) _).
+    refine (ap (abses_pullback _) _^).
     apply abses_pushout_compose.
 Defined.
 
@@ -184,7 +185,7 @@ Proof.
   refine (_ @ abses_pullback_compose ab_triagonal ab_biprod_twist _).
   refine (ap (abses_pullback _) _).
   refine (ap (fun f => abses_pushout f _) ab_cotriagonal_twist^ @ _).
-  refine ((abses_pushout_compose _ _ _)^ @ _).
+  refine (abses_pushout_compose _ _ _ @ _).
   refine (ap _ (abses_pushout_is_pullback (abses_twist_directsum E F G)) @ _).
   unfold abses_twist_directsum, component3.
   exact (abses_pushout_pullback_reorder _ _ _).
@@ -207,4 +208,59 @@ Proof.
   refine (baer_sum_commutative _ _ @ _).
   apply ap.
   apply baer_sum_commutative.
+Defined.
+
+(** The Baer sum makes [AbSES B A] into an H-space. (In fact, a coherent H-space, but we leave that for now.) *)
+Global Instance ishspace_abses `{Univalence} {B A : AbGroup}
+  : IsHSpace (AbSES B A).
+Proof.
+  snrapply Build_IsHSpace.
+  - exact abses_baer_sum.
+  - intro; apply baer_sum_unit_l.
+  - intro; apply baer_sum_unit_r.
+Defined.
+
+Global Instance isbifunctor_abses `{Univalence}
+  : IsBifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
+Proof.
+  econstructor.
+  intros ? ? f ? ? g.
+  rapply hspace_phomotopy_from_homotopy.
+  1: apply ishspace_abses.
+  intro E; cbn.
+  apply abses_pushout_pullback_reorder.
+Defined.
+
+(** ** Pushouts and pullbacks respect the Baer sum *)
+
+Definition baer_sum_pushout `{Univalence}
+  {A A' B : AbGroup} (f : A $-> A') (E F : AbSES B A)
+  : abses_pushout f (abses_baer_sum E F)
+    = abses_baer_sum (abses_pushout f E) (abses_pushout f F).
+Proof.
+  unfold abses_baer_sum.
+  refine (abses_pushout_pullback_reorder _ _ _
+            @ ap _ _).
+  refine ((abses_pushout_compose _ _ _)^ @ _).
+  refine (abses_pushout_homotopic _ _ _ _ @ _).
+  1: apply ab_codiagonal_natural.
+  refine (abses_pushout_compose _ _ _ @ ap _ _).
+  apply abses_directsum_distributive_pushouts.
+Defined.
+
+Definition baer_sum_pullback `{Univalence}
+  {A B B' : AbGroup} (f : B' $-> B) (E F : AbSES B A)
+  : abses_pullback f (abses_baer_sum E F)
+    = abses_baer_sum (abses_pullback f E) (abses_pullback f F).
+Proof.
+  unfold abses_baer_sum.
+  refine (abses_pullback_compose _ _ _ @ _).
+  refine ((abses_pushout_pullback_reorder _ _ _)^
+            @ ap _ _
+              @ abses_pushout_pullback_reorder _ _ _).
+  refine (abses_pullback_homotopic
+            _ (functor_ab_biprod f f $o ab_diagonal) _ _ @ _).
+  1: reflexivity.
+  refine ((abses_pullback_compose _ _ _)^ @ ap _ _).
+  apply abses_directsum_distributive_pullbacks.
 Defined.

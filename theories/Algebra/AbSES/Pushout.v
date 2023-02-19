@@ -152,7 +152,9 @@ Proof.
   nrapply ab_pushout_commsq.
 Defined.
 
-(** ** Functoriality of [abses_pushout f] *)
+(** ** Functoriality of [abses_pushout f : AbSES B A -> AbSES B A'] *)
+
+(** In this file we will prove various "levels" of functoriality of pushing out. Here we show that the induced map between [AbSES B A] respect the groupoid structure of [is1gpd_abses] from AbSES.Core. *)
 
 Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : Is0Functor (abses_pushout (B:=B) f).
@@ -169,6 +171,26 @@ Proof.
     apply grp_cancelL.
     refine (snd p.2 (snd x) @ ap (projection F) _).
     exact (left_identity _)^.
+Defined.
+
+Global Instance is1functor_abses_pushout `{Univalence}
+  {A A' B : AbGroup} (f : A $-> A')
+  : Is1Functor (abses_pushout (B:=B) f).
+Proof.
+  srapply Build_Is1Functor.
+  - intros E F g0 g1 h.
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.
+    by rewrite (h e).
+  - intro E.
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.
+    refine (ap (class_of _) (path_prod' _ _)).
+    + exact (grp_unit_r _).
+    + exact (grp_unit_l _).
+  - intros E F G g0 g1.
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.
+    refine (ap (class_of _) (path_prod' _ _)).
+    + exact (grp_unit_r _)^.
+    + exact (ap (fun x => _ + g1.1 x) (grp_unit_l _)^).
 Defined.
 
 Definition abses_pushout_path_data_1 `{Univalence} {A A' B : AbGroup} (f : A $-> A') {E : AbSES B A} 
@@ -292,13 +314,36 @@ Definition abses_pushout_id `{Univalence} {A B : AbGroup}
   : abses_pushout (B:=B) (@grp_homo_id A) == idmap
   := fun E => abses_pushout_component3_id (abses_morphism_id E) (fun _ => idpath).
 
-(** Pushing out along homotopic maps induces homotopic pushout functors. *)
+Definition abses_pushout_pmap_id `{Univalence} {A B : AbGroup}
+  : abses_pushout_pmap (B:=B) (@grp_homo_id A) ==* @pmap_idmap (AbSES B A).
+Proof.
+  srapply Build_pHomotopy.
+  1: apply abses_pushout_id.
+  refine (_ @ (concat_p1 _)^).
+  (* For some reason Coq spends time finding [x] below, so we specify it. *)
+  nrapply (ap equiv_path_abses_iso
+             (x:=abses_pushout_component3_id' (abses_morphism_id pt) _)).
+  apply path_sigma_hprop.
+  apply equiv_path_groupisomorphism.
+  by rapply Quotient_ind_hprop.
+Defined.
+
+(** Pushing out along homotopic maps induces homotopic pushout functors. This statement has a short proof by path induction on the homotopy [h], but we prefer to construct a path using [abses_path_data_iso] with better computational properties. *)
 Lemma abses_pushout_homotopic' `{Univalence} {A A' B : AbGroup}
   (f f' : A $-> A') (h : f == f')
   : abses_pushout (B:=B) f $=> abses_pushout f'.
 Proof.
-  induction (equiv_path_grouphomomorphism h).
-  apply id_transformation.
+  intro E; cbn.
+  apply abses_path_data_to_iso.
+  snrefine (_; (_, _)).
+  - srapply (ab_pushout_rec (inclusion _)).
+    1: apply ab_pushout_inr.
+    intro x.
+    refine (ap _ (h x) @ _).
+    apply (ab_pushout_commsq x).
+  - apply ab_pushout_rec_beta_left.
+  - rapply Quotient_ind_hprop; intros [a' e]; simpl.
+    exact (ap (fun x => _ + projection E x) (grp_unit_l _)^).
 Defined.
 
 Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
@@ -306,11 +351,28 @@ Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
   : abses_pushout (B:=B) f == abses_pushout f'
   := equiv_path_data_homotopy _ _ (abses_pushout_homotopic' _ _ h).
 
+Definition abses_pushout_phomotopic' `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout' (B:=B) f $=>* abses_pushout' f'.
+Proof.
+  exists (abses_pushout_homotopic' _ _ h).
+  apply gpd_moveL_Vh.
+  rapply Quotient_ind_hprop; intros [a' [a b]]; simpl.
+  apply path_prod'.
+  - by rewrite grp_unit_l, grp_unit_r, (h a).
+  - apply grp_unit_l.
+Defined.
+
+Definition abses_pushout_phomotopic `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-> A') (h : f == f')
+  : abses_pushout_pmap (B:=B) f ==* abses_pushout_pmap f'
+  := equiv_ptransformation_phomotopy (abses_pushout_phomotopic' f f' h).
+
 Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
   (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout (B:=B) g o abses_pushout f $=> abses_pushout (g $o f).
+  : abses_pushout (g $o f) $=> abses_pushout (B:=B) g o abses_pushout f.
 Proof.
-  intro E; apply gpd_rev.
+  intro E.
   srapply abses_path_data_to_iso;
     srefine (_; (_,_)).
   - snrapply ab_pushout_rec.
@@ -330,10 +392,30 @@ Defined.
 
 Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
   (f : A0 $-> A1) (g : A1 $-> A2)
-  : abses_pushout (B:=B) g o abses_pushout f == abses_pushout (g $o f)
+  : abses_pushout (g $o f) == abses_pushout (B:=B) g o abses_pushout f
   := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).
 
-(** [AbSES] and [AbSES'] become covariant functors in their second parameter by pushing out. *)
+Definition abses_pushout_pcompose' `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-> A1) (g : A1 $-> A2)
+  : abses_pushout' (B:=B) (g $o f) $=>* abses_pushout' g $o* abses_pushout' f.
+Proof.
+  exists (abses_pushout_compose' f g).
+  apply gpd_moveL_Vh. (* it's easiest to construct a path in [pt] *)
+  rapply Quotient_ind_hprop; intros [a2 [a0 b]]; simpl.
+  by rewrite 7 grp_unit_l, 2 grp_unit_r.
+Defined.
+
+Definition abses_pushout_pcompose `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-> A1) (g : A1 $-> A2)
+  : abses_pushout_pmap (B:=B) (g $o f)
+      ==* abses_pushout_pmap g o* abses_pushout_pmap f.
+Proof.
+  refine (_ @* (to_pointed_compose _ _)^*).
+  apply equiv_ptransformation_phomotopy.
+  apply abses_pushout_pcompose'.
+Defined.
+
+(** [AbSES B : AbGroup -> pType] and [AbSES' B : AbGroup -> Type] are covariant functors, for any [B]. *)
 
 Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
   : Is0Functor (AbSES' B).
@@ -348,14 +430,21 @@ Proof.
   apply Build_Is1Functor; intros; cbn.
   - by apply abses_pushout_homotopic.
   - apply abses_pushout_id.
-  - symmetry; apply abses_pushout_compose.
+  - apply abses_pushout_compose.
 Defined.
 
-Global Instance is0functor_abses01 `{Univalence} {B : AbGroup}
+Global Instance is0functor_abses01 `{Univalence} {B : AbGroup^op}
   : Is0Functor (AbSES B).
 Proof.
   apply Build_Is0Functor.
   exact (fun _ _ g => abses_pushout_pmap g).
 Defined.
 
-(* todo: prove that [AbSES] is a 1-functor. *)
+Global Instance is1functor_abses01 `{Univalence} {B : AbGroup^op}
+  : Is1Functor (AbSES B).
+Proof.
+  apply Build_Is1Functor; intros; cbn.
+  - by apply abses_pushout_phomotopic.
+  - apply abses_pushout_pmap_id.
+  - apply abses_pushout_pcompose.
+Defined.
