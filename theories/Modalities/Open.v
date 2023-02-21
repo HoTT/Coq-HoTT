@@ -81,8 +81,8 @@ Proof.
       apply X_inO.
     + intros ext; specialize (ext tt).
       refine (isequiv_compose (f := (fun x => unit_name x))
-                              (g := (fun h => h o (@const U Unit tt)))).
-      refine (isequiv_ooextendable (fun _ => X) (@const U Unit tt) ext).
+                              (g := (fun h => h o const_tt U))).
+      refine (isequiv_ooextendable (fun _ => X) (const_tt U) ext).
 Defined.
 
 (** Thus, arguably a better definition of [Op] would be as a nullification modality, as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We name the other version [Op']. *)

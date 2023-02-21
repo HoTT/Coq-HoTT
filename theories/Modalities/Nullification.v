@@ -14,10 +14,10 @@ Local Open Scope path_scope.
 
 Definition extendable_over_unit (n : nat)
   (A : Type@{a}) (C : Unit -> Type@{i}) (D : forall u, C u -> Type@{j})
-  (ext : ExtendableAlong@{a a i k} n (@const A Unit tt) C)
+  (ext : ExtendableAlong@{a a i k} n (const_tt A) C)
   (ext' : forall (c : forall u, C u),
-            ExtendableAlong@{a a j k} n (@const A Unit tt) (fun u => (D u (c u))))
-: ExtendableAlong_Over@{a a i j k} n (@const A Unit tt) C D ext.
+            ExtendableAlong@{a a j k} n (const_tt A) (fun u => (D u (c u))))
+  : ExtendableAlong_Over@{a a i j k} n (const_tt A) C D ext.
 Proof.
   generalize dependent C; simple_induction n n IH;
     intros C D ext ext'; [exact tt | split].
@@ -35,10 +35,10 @@ Defined.
 
 Definition ooextendable_over_unit@{i j k l m}
   (A : Type@{i}) (C : Unit -> Type@{j}) (D : forall u, C u -> Type@{k})
-  (ext : ooExtendableAlong@{l l j m} (@const@{l l} A Unit tt) C)
+  (ext : ooExtendableAlong@{l l j m} (const_tt A) C)
   (ext' : forall (c : forall u, C u),
-            ooExtendableAlong (@const A Unit tt) (fun u => (D u (c u))))
-: ooExtendableAlong_Over (@const A Unit tt) C D ext
+            ooExtendableAlong (const_tt A) (fun u => (D u (c u))))
+  : ooExtendableAlong_Over (const_tt A) C D ext
   := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).
 
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.

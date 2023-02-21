@@ -197,8 +197,8 @@ Definition OO_isconnected_paths
            {A : Type} `{IsConnected O' A} (x y : A)
   : IsConnected O (x = y).
 Proof.
-  rapply (contr_equiv' _ (equiv_O_functor_ap_OO_inverts (const tt) x y)^-1).
-Defined.  
+  rapply (contr_equiv' _ (equiv_O_functor_ap_OO_inverts (const_tt _) x y)^-1).
+Defined.
 
 (** Proposition 2.26 of CORS and Theorem 3.1(ix) of RSS; also generalizes Theorem 7.3.12 of the book.  Here we need to add the extra assumption that [O' <= Sep O], which is satisfied when [O' = Sep O] but also when [O] is lex and [O' = O].  That some such extra hypothesis is necessary can be seen from the fact that [Tr (-2) <<< O'] for any [O'], whereas this statement is certainly not true in that generality. *)
 Definition path_OO `{O' <= Sep O}
@@ -386,7 +386,7 @@ Definition OO_isconnected_from_conn_map
   : IsConnected O' X.
 Proof.
   apply isconnected_conn_map_to_unit.
-  apply (OO_cancelR_conn_map O' O f (const tt)).
+  apply (OO_cancelR_conn_map O' O f (const_tt _)).
 Defined.
 
 (** An interesting scholium to Proposition 2.31. *)
@@ -408,7 +408,7 @@ Definition OO_inverts_conn_map_isconnected_domain
        `{IsConnected O' Y} `{IsConnMap O _ _ f}
   : O_inverts O' f.
 Proof.
-  apply (OO_inverts_conn_map_factor_conn_map O' O f (const tt)).
+  apply (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).
 Defined.
 
 (** Here is the converse of [ooextendable_TypeO_lex_leq]. *)

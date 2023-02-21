@@ -91,7 +91,7 @@ End IsNull_Internal.
 (** A central fact: if a type [X] is null for all the fibers of a map [f], then it is [f]-local.  (NB: the converse is *not* generally true.)  TODO: Should this go in [Extensions]? *)
 Definition extendable_isnull_fibers (n : nat)
            {A B} (f : A -> B) (C : B -> Type)
-: (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+: (forall b, ooExtendableAlong (const_tt (hfiber f b))
                                (fun _ => C b))
   -> ExtendableAlong n f C.
 Proof.
@@ -100,7 +100,7 @@ Proof.
   - intros g.
     exists (fun b => (fst (null b 1%nat) (fun x => x.2 # g x.1)).1 tt).
     intros a.
-    rewrite (path_unit tt (const tt a)).
+    rewrite (path_unit tt (const_tt _ a)).
     exact ((fst (null (f a) 1%nat) _).2 (a ; 1)).
   - intros h k.
     apply IHn; intros b.
@@ -108,7 +108,7 @@ Proof.
 Defined.
 
 Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
-: (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+: (forall b, ooExtendableAlong (const_tt (hfiber f b))
                                (fun _ => C b))
   -> ooExtendableAlong f C
 := fun null n => extendable_isnull_fibers n f C null.

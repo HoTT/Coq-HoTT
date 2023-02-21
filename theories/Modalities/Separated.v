@@ -130,7 +130,7 @@ Global Instance in_SepO_hprop (O : ReflectiveSubuniverse)
        {A : Type} `{IsHProp A}
   : In (Sep O) A.
 Proof.
-  srapply (in_SepO_embedding O (const tt)).
+  srapply (in_SepO_embedding O (const_tt _)).
   intros x y; exact _.
 Defined.
 

@@ -124,3 +124,6 @@ Defined.
 Global Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
   := Build_Contr A (f^-1 tt)
   (fun a => ap f^-1 (contr (f a)) @ eissect f a).
+
+(** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when this is not annotated. *)
+Definition const_tt@{u} (A : Type@{u}) := @const@{Set u} A Unit tt.

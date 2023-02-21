@@ -1413,7 +1413,7 @@ Section ConnectedTypes.
   Definition extendable_const_isconnected_inO (n : nat)
              (A : Type) `{IsConnected O A}
              (C : Type) `{In O C}
-  : ExtendableAlong n (@const A Unit tt) (fun _ => C).
+  : ExtendableAlong n (const_tt A) (fun _ => C).
   Proof.
     generalize dependent C;
       simple_induction n n IHn; intros C ?;
@@ -1429,7 +1429,7 @@ Section ConnectedTypes.
   Definition ooextendable_const_isconnected_inO
              (A : Type@{i}) `{IsConnected@{i} O A}
              (C : Type@{j}) `{In O C}
-  : ooExtendableAlong (@const A Unit tt) (fun _ => C)
+  : ooExtendableAlong (const_tt A) (fun _ => C)
     := fun n => extendable_const_isconnected_inO n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
@@ -1437,7 +1437,7 @@ Section ConnectedTypes.
   : IsEquiv (@const A C).
   Proof.
     refine (@isequiv_compose _ _ (fun c u => c) _ _ _
-              (isequiv_ooextendable (fun _ => C) (@const A Unit tt)
+              (isequiv_ooextendable (fun _ => C) (const_tt A)
                                     (ooextendable_const_isconnected_inO A C))).
   Defined.
 
@@ -1768,11 +1768,11 @@ Section ConnectedMaps.
 
   (** The constant map to [Unit] is connected just when its domain is. *)
   Definition isconnected_conn_map_to_unit {A : Type}
-             `{IsConnMap O _ _ (@const A Unit tt)}
+             `{IsConnMap O _ _ (const_tt A)}
   : IsConnected O A.
   Proof.
-    refine (isconnected_equiv O (hfiber (@const A Unit tt) tt)
-              (equiv_sigma_contr (fun a:A => const tt a = tt)) _).
+    refine (isconnected_equiv O (hfiber (const_tt A) tt)
+              (equiv_sigma_contr _) _).
   Defined.
 
   #[local]
@@ -1780,11 +1780,11 @@ Section ConnectedMaps.
 
   Global Instance conn_map_to_unit_isconnected {A : Type}
          `{IsConnected O A}
-  : IsConnMap O (@const A Unit tt).
+  : IsConnMap O (const_tt A).
   Proof.
     intros u.
     refine (isconnected_equiv O A
-              (equiv_sigma_contr (fun a:A => const tt a = u))^-1 _).
+              (equiv_sigma_contr _)^-1 _).
   Defined.
 
   (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if it is [O]-connected.  (The converse is true if and only if [O] is a modality.) *)

@@ -304,7 +304,7 @@ Section ImpliesLex.
     apply conn_map_isequiv.
     apply H; [ | exact _ | exact _ ].
     apply isconnected_conn_map_to_unit.
-    apply (cancelR_conn_map O (factor1 (image O f)) (const tt)).
+    apply (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).
   Defined.
 
   (** RSS Theorem 3.1 (vii) implies lex-ness *)
@@ -318,7 +318,7 @@ Section ImpliesLex.
   Proof.
     apply lex_from_isequiv_ismodal_isconnected_types.
     intros A B f AC BC fM.
-    specialize (H A Unit B Unit (const tt) (const tt) f idmap _ _ _ _
+    specialize (H A Unit B Unit (const_tt _) (const_tt _) f idmap _ _ _ _
                   (fun _ => 1)).
     unfold IsPullback, pullback_corec in H.
     refine (@isequiv_compose _ _ _ H _ (fun x => x.2.1) _).
