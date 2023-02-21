@@ -147,7 +147,7 @@ Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
   := fun i => ooextendable_TypeO_lex_leq (acc_lgen O' i).
 
 (** If [f] is an [O']-equivalence, then [ap f] is an [O]-equivalence. *)
-Definition OO_inverts_ap'
+Global Instance OO_inverts_ap@{}
        {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
   : O_inverts O (@ap _ _ f x y).
 Proof.
@@ -180,12 +180,6 @@ Proof.
     destruct p; cbn.
     srapply eisretr.
 Defined.
-
-(** We give a version that only has one universe variable. *)
-Global Instance OO_inverts_ap
-       {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
-  : O_inverts O (@ap _ _ f x y)
-  := OO_inverts_ap'@{i i i i i i i} f x y.
 
 Definition equiv_O_functor_ap_OO_inverts
        {A B : Type} (f : A -> B) `{O_inverts O' f} (x y : A)
@@ -363,7 +357,7 @@ End LeftExactness.
 
 (** Here's the "only if" direction of CORS Proposition 2.31.  Note that the hypotheses are different from those of the "if" direction, and the proof is shorter than the one given in CORS. *)
 Definition OO_cancelR_conn_map
-       (O' O : ReflectiveSubuniverse) `{O <= O', O' <= Sep O}
+       (O' O : ReflectiveSubuniverse@{u}) `{O_leq@{u u u} O O', O' <= Sep O}
        {Y X Z : Type} (f : Y -> X) (g : X -> Z)
        `{IsConnMap O' _ _ (g o f)} `{IsConnMap O _ _ f}
   : IsConnMap O' g.

@@ -668,7 +668,7 @@ Proof.
     + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
     + intro a.
       by rapply (isinj_embedding (subgroup_incl _)).
-    + rapply conn_map_isequiv@{u u u u u}.
+    + rapply conn_map_isequiv.
 Defined.
 
 (** Conversely, given a short exact sequence [A -> E -> B], [A] is the kernel of [E -> B]. (We don't need exactness at [B], so we drop this assumption.) *)
@@ -711,7 +711,7 @@ Proof.
   - apply phomotopy_homotopy_hset.
     intros [e q]; cbn.
     exact q.
-  - rapply conn_map_isequiv@{u u u u u}.
+  - rapply conn_map_isequiv.
 Defined.
 
 (** Conversely, given a short exact sequence [A -> E -> B], [B] is the cokernel of [A -> E]. In fact, we don't need exactness at [A], so we drop this from the statement. *)
@@ -726,7 +726,7 @@ Proof.
     refine (ap _ p^ @ _).
     rapply cx_isexact.
   - apply isequiv_surj_emb.
-    1: rapply cancelR_conn_map@{u u u u u}.
+    1: rapply cancelR_conn_map.
     apply isembedding_isinj_hset.
     srapply Quotient_ind_hprop; intro x.
     srapply Quotient_ind_hprop; intro y.

@@ -59,7 +59,7 @@ Proof.
                 (fun u => transport B (ap c (path_unit@{a} tt u))) _).
       refine (ooextendable_islocal _ i).
     + reflexivity.
-    + apply inO_paths@{i i i}.
+    + apply inO_paths@{i i}.
   Defined.
 
 (** And here is the "real" definition of the notation [IsNull]. *)

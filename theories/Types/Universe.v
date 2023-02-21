@@ -10,8 +10,8 @@ Generalizable Variables A B f.
 
 (** ** Paths *)
 
-Definition equiv_path (A B : Type) (p : A = B) : A <~> B
-  := equiv_transport (fun X:Type => X) p.
+Definition equiv_path (A B : Type@{u}) (p : A = B) : A <~> B
+  := equiv_transport (fun X => X) p.
 
 Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = (equiv_path A B p)^-1%equiv.
@@ -27,7 +27,7 @@ Existing Class Univalence.
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
 Global Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
 
-Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
+Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type@{u}), IsEquiv (equiv_path A B).
 Global Existing Instance isequiv_equiv_path.
 
 (** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)

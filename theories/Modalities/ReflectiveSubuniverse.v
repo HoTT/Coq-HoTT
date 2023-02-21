@@ -996,7 +996,7 @@ Section Reflective_Subuniverse.
 
     (** ** Paths *)
 
-    Definition inO_paths@{i j} (S : Type@{i}) {S_inO : In O S} (x y : S)
+    Definition inO_paths@{i} (S : Type@{i}) {S_inO : In O S} (x y : S)
     : In O (x=y).
     Proof.
       simple refine (inO_to_O_retract@{i} _ _ _); intro u.
@@ -1388,10 +1388,10 @@ Section ConnectedTypes.
   Defined.
 
   (** Contractible types are connected. *)
-  Global Instance isconnected_contr {A : Type} `{Contr A}
+  Global Instance isconnected_contr@{u} {A : Type@{u}} `{Contr A}
     : IsConnected O A.
   Proof.
-    apply contr_O_contr; exact _.
+    apply contr_O_contr@{u u u u}; exact _.
   Defined.    
 
   (** A type which is both connected and modal is contractible. *)

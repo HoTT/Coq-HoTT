@@ -14,4 +14,4 @@ Definition Funext_type@{i j max} :=
 
 (** Univalence is a property of a single universe; its statement lives in a higher universe *)
 Definition Univalence_type@{i iplusone} : Type@{iplusone} :=
-  forall (A B : Type@{i}), IsEquiv (equiv_path@{i i iplusone i} A B).
+  forall (A B : Type@{i}), IsEquiv (equiv_path@{i iplusone} A B).
