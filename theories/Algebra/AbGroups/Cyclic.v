@@ -73,4 +73,4 @@ Defined.
 
 (** The [n]-th cyclic group is the cokernel of [Z1_mul_nat n]. *)
 Definition cyclic@{u v | u < v} `{Funext} (n : nat) : AbGroup@{u}
-  := ab_cokernel@{u u u v} (Z1_mul_nat n).
+  := ab_cokernel@{u v} (Z1_mul_nat n).

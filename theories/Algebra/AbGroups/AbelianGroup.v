@@ -256,7 +256,7 @@ Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
   := grp_image_in_embedding f.
 
 (** The cokernel of a homomorphism into an abelian group. *)
-Definition ab_cokernel {G : Group} {A : AbGroup} (f : GroupHomomorphism G A)
+Definition ab_cokernel {G : Group@{u}} {A : AbGroup@{u}} (f : GroupHomomorphism G A)
   : AbGroup := QuotientAbGroup _ (grp_image f).
 
 Definition ab_cokernel_embedding {G : Group} {A : AbGroup} (f : G $-> A) `{IsEmbedding f}
