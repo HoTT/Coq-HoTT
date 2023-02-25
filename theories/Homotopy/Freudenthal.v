@@ -9,7 +9,7 @@ Require Import Homotopy.BlakersMassey.
 (** * The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  The only real work is to relate the span-pushout that we used for Blakers-Massey to the naive pushout that we used to define suspension. *)
-Definition freudenthal' `{Univalence} (n : trunc_index)
+Local Definition freudenthal' `{Univalence} (n : trunc_index)
            (X : Type) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.
@@ -28,6 +28,6 @@ Proof.
   exact ((concat_p1 _ @ concat_1p _)^).
 Defined.
 
-Definition freudenthal@{u v | u < v} := @freudenthal'@{u u u u u v u u u}.
+Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u u u u v u u u}.
 
 Global Existing Instance freudenthal.
