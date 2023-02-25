@@ -11,27 +11,14 @@ Local Open Scope mc_scope.
 
 Local Set Universe Minimization ToSet.
 
-(* This should go away one Coq has universe cumulativity through inductives. *)
-Section nat_lift.
+Global Instance nat_0: Zero nat := 0%nat.
+Global Instance nat_1: One nat := 1%nat.
 
-Universe N.
-
-Let natpaths := @paths@{N} nat.
-Infix "=N=" := natpaths.
-
-Definition natpaths_symm : Symmetric@{N N} natpaths.
-Proof.
-  unfold natpaths; apply _.
-Defined.
-
-Global Instance nat_0: Zero@{N} nat := 0%nat.
-Global Instance nat_1: One@{N} nat := 1%nat.
-
-Global Instance nat_plus: Plus@{N} nat := Nat.Core.add.
+Global Instance nat_plus: Plus nat := Nat.Core.add.
 
 Notation mul := Nat.Core.mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.Core.mul.
+Global Instance nat_mult: Mult nat := Nat.Core.mul.
 
 Ltac simpl_nat :=
   change (@plus nat _) with Nat.Core.add;
@@ -40,38 +27,38 @@ Ltac simpl_nat :=
   change Nat.Core.add with (@plus nat Nat.Core.add);
   change Nat.Core.mul with (@mult nat Nat.Core.mul).
 
-Local Instance add_assoc : Associative@{N} (plus : Plus nat).
+Local Instance add_assoc : Associative (plus : Plus nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IH];
+hnf. apply (nat_rect (fun a => forall b c, _));[|intros a IH];
 intros b c.
 + reflexivity.
 + change (S (a + (b + c)) = S (a + b + c)).
   apply ap,IH.
 Qed.
 
-Lemma add_0_r : forall x:nat, x + 0 =N= x.
+Lemma add_0_r : forall x:nat, x + 0 = x.
 Proof.
 intros a;induction a as [|a IH].
 + reflexivity.
 + apply (ap S),IH.
 Qed.
 
-Lemma add_S_r : forall a b, a + S b =N= S (a + b).
+Lemma add_S_r : forall a b, a + S b = S (a + b).
 Proof.
 induction a as [|a IHa];intros b.
 - reflexivity.
 - simpl_nat. apply (ap S),IHa.
 Qed.
 
-Lemma add_S_l a b : S a + b =N= S (a + b).
+Lemma add_S_l a b : S a + b = S (a + b).
 Proof. exact idpath. Qed.
 
-Lemma add_0_l a : 0 + a =N= a.
+Lemma add_0_l a : 0 + a = a.
 Proof. exact idpath. Qed.
 
-Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
+Local Instance add_comm : Commutative (plus : Plus nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];
+hnf. apply (nat_rect (fun a => forall b, _));[|intros a IHa];
 intros b;induction b as [|b IHb].
 - reflexivity.
 - change (S b = S (b + 0)). apply ap,IHb.
@@ -80,10 +67,10 @@ intros b;induction b as [|b IHb].
   rewrite (IHa (S b)), <- (IHb ). apply (ap S),(ap S),symmetry,IHa.
 Qed.
 
-Local Instance add_mul_distr_l : LeftDistribute@{N}
+Local Instance add_mul_distr_l : LeftDistribute
   (mult :Mult nat) (plus:Plus nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa];
+hnf. apply (nat_rect (fun a => forall b c, _));[|intros a IHa];
 simpl_nat.
 - intros _ _;reflexivity.
 - intros. rewrite IHa.
@@ -92,33 +79,32 @@ simpl_nat.
   reflexivity.
 Qed.
 
-Lemma mul_0_r : forall a : nat, a * 0 =N= 0.
+Lemma mul_0_r : forall a : nat, a * 0 = 0.
 Proof.
 induction a;simpl_nat;trivial.
-reflexivity.
 Qed.
 
-Lemma mul_S_r : forall a b : nat, a * S b =N= a + a * b.
+Lemma mul_S_r : forall a b : nat, a * S b = a + a * b.
 Proof.
-apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
+apply (nat_rect (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
 - reflexivity.
 - simpl_nat. rewrite IHa.
   rewrite (simple_associativity b a).
-  change (((b + a) + (a * b)).+1 =N= (a + Nat.Core.add b (a * b)).+1).
+  change (((b + a) + (a * b)).+1 = (a + Nat.Core.add b (a * b)).+1).
   rewrite (commutativity (f:=plus) b a), <-(associativity a b).
   reflexivity.
 Qed.
 
-Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
+Local Instance mul_comm : Commutative (mult : Mult nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];simpl_nat.
+hnf. apply (nat_rect (fun a => forall b, _));[|intros a IHa];simpl_nat.
 - intros;apply symmetry,mul_0_r.
 - intros b;rewrite IHa. rewrite mul_S_r,<-IHa. reflexivity.
 Qed.
 
-Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
+Local Instance mul_assoc : Associative (mult : Mult nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa].
+hnf. apply (nat_rect (fun a => forall b c, _));[|intros a IHa].
 - intros;reflexivity.
 - unfold mult;simpl;change nat_mult with mult.
   intros b c.
@@ -128,7 +114,7 @@ hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa].
   rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
 Qed.
 
-Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
+Global Instance S_neq_0 x : PropHolds (~ (S x = 0)).
 Proof.
 intros E.
 change ((fun a => match a with S _ => Unit | 0%nat => Empty end) 0).
@@ -139,13 +125,13 @@ Qed.
 
 Definition pred x := match x with | 0%nat => 0 | S k => k end.
 
-Global Instance S_inj : IsInjective@{N N} S
+Global Instance S_inj : IsInjective S
   := { injective := fun a b E => ap pred E }.
 
-Global Instance nat_dec: DecidablePaths@{N} nat.
+Global Instance nat_dec: DecidablePaths nat.
 Proof.
 hnf.
-apply (nat_rect@{N} (fun x => forall y, _)).
+apply (nat_rect (fun x => forall y, _)).
 - intros [|b].
   + left;reflexivity.
   + right;apply symmetric_neq,S_neq_0.
@@ -156,12 +142,12 @@ apply (nat_rect@{N} (fun x => forall y, _)).
     * right;intros E. apply (injective S) in E. auto.
 Defined.
 
-Global Instance nat_set : IsTrunc@{N} 0 nat.
+Global Instance nat_set : IsTrunc 0 nat.
 Proof.
 apply hset_pathcoll, pathcoll_decpaths, nat_dec.
 Qed.
 
-Instance nat_semiring : IsSemiRing@{N} nat.
+Local Instance nat_semiring : IsSemiRing nat.
 Proof.
 repeat (split; try apply _);
 first [change sg_op with plus; change mon_unit with 0
@@ -176,53 +162,51 @@ Qed.
 
 (* Close Scope nat_scope. *)
 
-Lemma O_nat_0 : O =N= 0.
+Lemma O_nat_0 : O = 0.
 Proof. reflexivity. Qed.
 
-Lemma S_nat_plus_1 x : S x =N= x + 1.
+Lemma S_nat_plus_1 x : S x = x + 1.
 Proof.
 rewrite add_comm. reflexivity.
 Qed.
 
-Lemma S_nat_1_plus x : S x =N= 1 + x.
+Lemma S_nat_1_plus x : S x = 1 + x.
 Proof. reflexivity. Qed.
 
 Lemma nat_induction (P : nat -> Type) :
   P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n.
 Proof. apply nat_rect. Qed.
 
-Lemma plus_eq_zero : forall a b : nat, a + b =N= 0 -> a =N= 0 /\ b =N= 0.
+Lemma plus_eq_zero : forall a b : nat, a + b = 0 -> a = 0 /\ b = 0.
 Proof.
 intros [|a];[intros [|b];auto|].
-- intros E. destruct (S_neq_0 _ E).
-- intros ? E. destruct (S_neq_0 _ E).
+intros ? E. destruct (S_neq_0 _ E).
 Qed.
 
-Lemma mult_eq_zero : forall a b : nat, a * b =N= 0 -> a =N= 0 |_| b =N= 0.
+Lemma mult_eq_zero : forall a b : nat, a * b = 0 -> a = 0 |_| b = 0.
 Proof.
 intros [|a] [|b];auto.
-- intros _;right;reflexivity.
-- simpl_nat.
-  intros E.
-  destruct (S_neq_0 _ E).
+simpl_nat.
+intros E.
+destruct (S_neq_0 _ E).
 Defined.
 
-Instance nat_zero_divisors : NoZeroDivisors nat.
+Local Instance nat_zero_divisors : NoZeroDivisors nat.
 Proof.
 intros x [Ex [y [Ey1 Ey2]]].
 apply mult_eq_zero in Ey2.
 destruct Ey2;auto.
 Qed.
 
-Instance nat_plus_cancel_l : forall z:nat, LeftCancellation@{N} plus z.
+Local Instance nat_plus_cancel_l : forall z:nat, LeftCancellation plus z.
 Proof.
 red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 - trivial.
 - apply IHa. apply (injective S). assumption.
 Qed.
 
-Instance nat_mult_cancel_l
-  : forall z : nat, PropHolds (~ (z =N= 0)) -> LeftCancellation@{N} (.*.) z.
+Local Instance nat_mult_cancel_l
+  : forall z : nat, PropHolds (~ (z = 0)) -> LeftCancellation (.*.) z.
 Proof.
 unfold PropHolds. unfold LeftCancellation.
 intros a Ea b c E;revert b c a Ea E.
@@ -239,8 +223,8 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N N} nat := Nat.Core.leq.
-Global Instance nat_lt: Lt@{N N} nat := Nat.Core.lt.
+Global Instance nat_le: Le nat := Nat.Core.leq.
+Global Instance nat_lt: Lt nat := Nat.Core.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -250,7 +234,7 @@ induction k.
 Qed.
 
 Lemma le_exists : forall n m : nat,
-  iff@{N N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
+  iff (n <= m) (sig (fun k => m = k + n)).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -266,7 +250,7 @@ Proof.
 induction a;constructor;auto.
 Qed.
 
-Lemma le_S_S : forall a b : nat, iff@{N N N} (a <= b) (S a <= S b).
+Lemma le_S_S : forall a b : nat, iff (a <= b) (S a <= S b).
 Proof.
 intros. etransitivity;[apply le_exists|].
 etransitivity;[|apply symmetry,le_exists].
@@ -303,7 +287,7 @@ Lemma not_lt_0 : forall a, ~ (a < 0).
 Proof.
 intros a E. apply le_exists in E.
 destruct E as [k E].
-apply natpaths_symm,plus_eq_zero in E.
+apply symmetric_paths, plus_eq_zero in E.
 apply (S_neq_0 _ (snd E)).
 Qed.
 
@@ -315,7 +299,7 @@ destruct b.
 - constructor. apply le_S_S. trivial.
 Qed.
 
-Local Instance nat_le_total : TotalRelation@{N N} (_:Le nat).
+Local Instance nat_le_total : TotalRelation (_:Le nat).
 Proof.
 hnf. intros a b.
 destruct (le_lt_dec a b);[left|right].
@@ -323,27 +307,26 @@ destruct (le_lt_dec a b);[left|right].
 - apply lt_le;trivial.
 Qed.
 
-Local Instance nat_lt_irrefl : Irreflexive@{N N} (_:Lt nat).
+Local Instance nat_lt_irrefl : Irreflexive (_:Lt nat).
 Proof.
 hnf. intros x E.
 apply le_exists in E.
 destruct E as [k E].
 apply (S_neq_0 k).
-apply (left_cancellation@{N} (+) x).
-fold natpaths.
+apply (left_cancellation (+) x).
 rewrite add_0_r, add_S_r,<-add_S_l.
-rewrite add_comm. apply natpaths_symm,E.
+rewrite add_comm. symmetry; apply E.
 Qed.
 
 Local Instance nat_le_hprop : is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
-generalize (idpath (S n) : S n =N= S n).
+generalize (idpath (S n) : S n = S n).
 generalize n at 2 3 4 5.
 change (forall n0 : nat,
-S n =N= S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
+S n = S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
 induction (S n) as [|n0 IHn0].
-- intros ? E;destruct (S_neq_0 _ (natpaths_symm _ _ E)).
+- intros ? E;destruct (S_neq_0 _ (symmetric_paths _ _ E)).
 - clear n; intros n H.
   apply (injective S) in H.
   rewrite <- H; intros le_mn1 le_mn2; clear n H.
@@ -406,24 +389,23 @@ split.
   reflexivity.
 Qed.
 
-Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
+Local Instance nat_trichotomy : Trichotomy (lt:Lt nat).
 Proof.
-hnf. fold natpaths.
+hnf.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
-- right;left;split.
-- left. apply le_S_S. trivial.
+left. apply le_S_S. trivial.
 Qed.
 
-Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m |_| m < n.
+Global Instance nat_apart : Apart nat := fun n m => n < m |_| m < n.
 
-Instance nat_apart_mere : is_mere_relation nat nat_apart.
+Local Instance nat_apart_mere : is_mere_relation nat nat_apart.
 Proof.
 intros;apply ishprop_sum;try apply _.
 intros E1 E2. apply (irreflexivity nat_lt x).
 transitivity y;trivial.
 Qed.
 
-Instance decidable_nat_apart x y : Decidable (nat_apart x y).
+Local Instance decidable_nat_apart x y : Decidable (nat_apart x y).
 Proof.
   rapply decidable_sum; apply Nat.Core.decidable_lt.
 Defined.
@@ -453,12 +435,12 @@ apply le_exists in E1;apply le_exists in E2.
 destruct E1 as [k1 E1], E2 as [k2 E2].
 apply (S_neq_0 (k1 + k2)).
 apply (left_cancellation (+) a).
-fold natpaths. rewrite add_0_r.
+rewrite add_0_r.
 rewrite E1 in E2.
 rewrite add_S_r;rewrite !add_S_r in E2.
 rewrite (add_assoc a), (add_comm a), <-(add_assoc k1), (add_comm a).
 rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
-apply natpaths_symm,E2.
+apply symmetric_paths, E2.
 Qed.
 
 Global Instance nat_le_dec: forall x y : nat, Decidable (x ≤ y).
@@ -473,7 +455,7 @@ Proof.
 intros;apply le_S_S,zero_least.
 Qed.
 
-Lemma nonzero_gt_0 : forall a, ~ (a =N= 0) -> 0 < a.
+Lemma nonzero_gt_0 : forall a, ~ (a = 0) -> 0 < a.
 Proof.
 intros [|a] E.
 - destruct E;split.
@@ -496,7 +478,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Defined.
 
-Lemma nat_full' : FullPseudoSemiRingOrder nat_le nat_lt.
+Lemma nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[apply _|split|].
 - split;try apply _.
@@ -539,10 +521,6 @@ split;[apply _|split|].
     destruct E;auto.
 Qed.
 
-(* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
-Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
-                                      exact nat_full'@{Ularge Ularge N}|
-                                      exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
 Lemma le_nat_max_l n m : n <= Nat.Core.max n m.
@@ -553,6 +531,7 @@ Proof.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
+
 Lemma le_nat_max_r n m : m <= Nat.Core.max n m.
 Proof.
   revert m.
@@ -561,7 +540,8 @@ Proof.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
-Instance S_embedding : OrderEmbedding S.
+
+Local Instance S_embedding : OrderEmbedding S.
 Proof.
 split.
 - intros ??;apply le_S_S.
@@ -573,7 +553,7 @@ Proof.
 split;apply _.
 Qed.
 
-Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
+Global Instance nat_naturals_to_semiring : NaturalsToSemiRing nat :=
   fun _ _ _ _ _ _ => fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
    S n' => 1 + f n' end.
 
@@ -636,16 +616,16 @@ Section for_another_semiring.
   Qed.
 End for_another_semiring.
 
-Lemma nat_naturals : Naturals@{N N N N N N N i} nat.
+Lemma nat_naturals : Naturals nat.
 Proof.
 split;try apply _.
 intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.sub.
+Global Instance nat_cut_minus: CutMinus nat := Nat.Core.sub.
 
-Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
+Lemma plus_minus : forall a b, cut_minus (a + b) b = a.
 Proof.
 unfold cut_minus,nat_cut_minus.
 intros a b;revert a;induction b as [|b IH].
@@ -658,14 +638,14 @@ intros a b;revert a;induction b as [|b IH].
     rewrite add_S_r,<-add_S_l;apply IH.
 Qed.
 
-Lemma le_plus_minus : forall n m : nat, n <= m -> m =N= (n + (cut_minus m  n)).
+Lemma le_plus_minus : forall n m : nat, n <= m -> m = (n + (cut_minus m  n)).
 Proof.
 intros n m E. apply le_exists in E.
 destruct E as [k E];rewrite E.
 rewrite plus_minus. apply add_comm.
 Qed.
 
-Lemma minus_ge : forall a b, a <= b -> cut_minus a b =N= 0.
+Lemma minus_ge : forall a b, a <= b -> cut_minus a b = 0.
 Proof.
 unfold cut_minus,nat_cut_minus.
 intros a b;revert a;induction b as [|b IH];intros [|a];simpl.
@@ -675,7 +655,7 @@ intros a b;revert a;induction b as [|b IH];intros [|a];simpl.
 - intros E. apply IH;apply le_S_S,E.
 Qed.
 
-Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
+Global Instance nat_cut_minus_spec : CutMinusSpec nat nat_cut_minus.
 Proof.
 split.
 - intros x y E. rewrite add_comm.
@@ -683,5 +663,3 @@ split.
   apply (le_plus_minus _ _ E).
 - apply minus_ge.
 Qed.
-
-End nat_lift.
