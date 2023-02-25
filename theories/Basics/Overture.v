@@ -557,7 +557,7 @@ Arguments center A {_}.
    Next, 0-truncated means "the space of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a space may have many points but it is discrete in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Inductive trunc_index : Type :=
+Inductive trunc_index : Type0 :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
 
@@ -695,7 +695,7 @@ Ltac path_via mid :=
 Local Set Elimination Schemes.
 
 (**  Natural numbers. *)
-Inductive nat : Type :=
+Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
 
