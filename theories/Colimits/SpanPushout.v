@@ -5,7 +5,7 @@ Require Import HoTT.Basics HoTT.Colimits.Pushout.
 Section SpanPushout.
   Context {X Y : Type} (Q : X -> Y -> Type).
 
-  Definition SPushout := @Pushout {xy:X * Y & Q (fst xy) (snd xy)} X Y
+  Definition SPushout := @Pushout@{up _ _ up} (sig@{up _} (fun (xy : X * Y) => Q (fst xy) (snd xy))) X Y
                                   (fst o pr1) (snd o pr1).
   Definition spushl : X -> SPushout := pushl.
   Definition spushr : Y -> SPushout := pushr.
