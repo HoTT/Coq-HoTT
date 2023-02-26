@@ -4,9 +4,9 @@ Require Import Basics.Overture Basics.PathGroupoids.
 
 (** We provide casting definitions for raising universe levels. *)
 
-(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i < j]), we may define [Lift : U@{i} → U@{j}] to be the identity function with a fancy type; the type says that [i < j]. *)
-Definition Lift@{i j} (A : Type@{i}) : Type@{j}
-  := Eval hnf in let enforce_lt := Type@{i} : Type@{j} in A.
+(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i < j]), we may define [Lift : U@{i} → U@{j}] to be the identity function. *)
+Definition Lift@{i j | i < j} (A : Type@{i}) : Type@{j}
+  := A.
 
 Definition lift {A} : A -> Lift A := fun x => x.
 
@@ -64,9 +64,8 @@ Global Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @Is
 Definition lower_equiv {A B} (e : Equiv (Lift A) (Lift B)) : Equiv A B
   := @Build_Equiv A B (lower2 e) _.
 
-(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same.  No fancy type is necessary here other than the universe annotations, because of cumulativity. *)
-
-Definition Lift'@{i j} (A : Type@{i}) : Type@{j} := A.
+(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same. *)
+Definition Lift'@{i j | i <= j} (A : Type@{i}) : Type@{j} := A.
 
 (** However, if we don't give the universes as explicit arguments here, then Coq collapses them. *)
 Definition lift'@{i j} {A : Type@{i}} : A -> Lift'@{i j} A := fun x => x.
