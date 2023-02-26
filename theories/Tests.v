@@ -22,7 +22,7 @@ Check ({ l : Unit & { n : Unit & Unit }}).
 
 (** Test 1 from issue #754 *)
 Module Issue754_1.
-  Inductive nat : Type1 :=
+  Inductive nat@{i | Set < i} : Type@{i} :=
   | O : nat
   | S : nat -> nat.
   Fixpoint code_nat (m n : nat) {struct m} : DProp.DHProp :=
