@@ -18,7 +18,7 @@ Local Open Scope path_scope.
 (* ** Definition of suspension *)
 
 (** We define the suspension of a type X as the pushout of 1 <- X -> 1 *)
-Definition Susp (X : Type) := Pushout (@const X _ tt) (const tt).
+Definition Susp (X : Type) := Pushout@{_ Set Set _} (const_tt X) (const_tt X).
 Definition North {X} : Susp X := pushl tt.
 Definition South {X} : Susp X := pushr tt.
 Definition merid {X} (x : X) : North = South := pglue x.

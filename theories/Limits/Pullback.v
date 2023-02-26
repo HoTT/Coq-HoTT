@@ -59,7 +59,7 @@ Defined.
 
 (** Pullback over [Unit] is equivalent to a product. *)
 Definition equiv_pullback_unit_prod (A B : Type)
-: Pullback (@const A Unit tt) (@const B Unit tt) <~> A * B.
+: Pullback (const_tt A) (const_tt B) <~> A * B.
 Proof.
   simple refine (equiv_adjointify _ _ _ _).
   - intros [a [b _]]; exact (a , b).

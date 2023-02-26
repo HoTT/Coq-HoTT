@@ -1,6 +1,6 @@
 Require Import
   HoTT.Utf8
-  HoTT.Basics.Overture
+  HoTT.Basics.Overture Types.Unit
   HoTT.Classes.implementations.list.
 
 (** The following section implements a datatype [FamilyProd] which
@@ -32,7 +32,7 @@ Section family_prod.
       (f : ∀ i, F i → G i)
       : FamilyProd F ℓ → FamilyProd G ℓ :=
     match ℓ with
-    | nil => const tt
+    | nil => const_tt _
     | i :: ℓ' => λ '(x,s), (f i x, map_family_prod f s)
     end.
 

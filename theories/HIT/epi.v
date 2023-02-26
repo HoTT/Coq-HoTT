@@ -56,7 +56,7 @@ Section cones.
   Proof.
     intros hepi.
     exists (setcone_point _).
-    pose (alpha1 := @pglue A B Unit f (const tt)).
+    pose (alpha1 := @pglue A B Unit f (const_tt _)).
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
     transparent assert (l : tot).
     { simple refine (tr o _ o inl; _).
@@ -83,7 +83,7 @@ Section cones.
     subst I0. simpl.
     pose (X..2) as p. simpl in p.
     rewrite (transport_precompose f _ _ X..1) in p.
-    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const tt) pglue) _)).
+    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const_tt _) pglue) _)).
     rewrite ap10_path_arrow in H'.
     clear p.
     (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)

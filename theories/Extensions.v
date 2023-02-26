@@ -414,7 +414,7 @@ Section Extensions.
 
   (** Extendability of a family [C] along a map [f] can be detected by extendability of the constant family [C b] along the projection from the corresponding fiber of [f] to [Unit].  Note that this is *not* an if-and-only-if; the hypothesis can be genuinely stronger than the conclusion. *)
   Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
-  : (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+  : (forall b, ooExtendableAlong (const_tt (hfiber f b))
                                  (fun _ => C b))
     -> ooExtendableAlong f C.
   Proof.
@@ -423,7 +423,7 @@ Section Extensions.
     - intros g.
       exists (fun b => (fst (orth b 1%nat) (fun x => x.2 # g x.1)).1 tt).
       intros a.
-      rewrite (path_unit tt (const tt a)).
+      rewrite (path_unit tt (const_tt _ a)).
       exact ((fst (orth (f a) 1%nat) _).2 (a ; 1)).
     - intros h k.
       apply IHn; intros b.

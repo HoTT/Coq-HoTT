@@ -743,14 +743,14 @@ Section Reflective_Subuniverse.
     (** ** The [Unit] type *)
     Global Instance inO_unit : In O Unit.
     Proof.
-      apply inO_to_O_retract with (mu := fun x => tt).
-      exact (@contr Unit _).
+      apply inO_to_O_retract@{Set} with (mu := fun x => tt).
+      exact (@contr@{Set} Unit _).
     Defined.
 
     (** It follows that any contractible type is in [O]. *)
     Global Instance inO_contr {A : Type} `{Contr A} : In O A.
     Proof.
-      exact (inO_equiv_inO Unit equiv_contr_unit^-1).
+      exact (inO_equiv_inO@{Set _ _} Unit equiv_contr_unit^-1).
     Defined.
 
     (** And that the reflection of a contractible type is still contractible. *)
@@ -996,7 +996,7 @@ Section Reflective_Subuniverse.
 
     (** ** Paths *)
 
-    Definition inO_paths@{i j} (S : Type@{i}) {S_inO : In O S} (x y : S)
+    Definition inO_paths@{i} (S : Type@{i}) {S_inO : In O S} (x y : S)
     : In O (x=y).
     Proof.
       simple refine (inO_to_O_retract@{i} _ _ _); intro u.
@@ -1391,8 +1391,8 @@ Section ConnectedTypes.
   Global Instance isconnected_contr {A : Type} `{Contr A}
     : IsConnected O A.
   Proof.
-    apply contr_O_contr; exact _.
-  Defined.    
+    rapply contr_O_contr.
+  Defined.
 
   (** A type which is both connected and modal is contractible. *)
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
@@ -1413,7 +1413,7 @@ Section ConnectedTypes.
   Definition extendable_const_isconnected_inO (n : nat)
              (A : Type) `{IsConnected O A}
              (C : Type) `{In O C}
-  : ExtendableAlong n (@const A Unit tt) (fun _ => C).
+  : ExtendableAlong n (const_tt A) (fun _ => C).
   Proof.
     generalize dependent C;
       simple_induction n n IHn; intros C ?;
@@ -1429,7 +1429,7 @@ Section ConnectedTypes.
   Definition ooextendable_const_isconnected_inO
              (A : Type@{i}) `{IsConnected@{i} O A}
              (C : Type@{j}) `{In O C}
-  : ooExtendableAlong (@const A Unit tt) (fun _ => C)
+  : ooExtendableAlong (const_tt A) (fun _ => C)
     := fun n => extendable_const_isconnected_inO n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
@@ -1437,7 +1437,7 @@ Section ConnectedTypes.
   : IsEquiv (@const A C).
   Proof.
     refine (@isequiv_compose _ _ (fun c u => c) _ _ _
-              (isequiv_ooextendable (fun _ => C) (@const A Unit tt)
+              (isequiv_ooextendable (fun _ => C) (const_tt A)
                                     (ooextendable_const_isconnected_inO A C))).
   Defined.
 
@@ -1737,8 +1737,8 @@ Section ConnectedMaps.
   : IsConnMap O (g o f).
   Proof.
     apply conn_map_from_extension_elim; intros P ? d.
-    exists (conn_map_elim g P (conn_map_elim f (P o g) d)); intros a.
-    exact (conn_map_comp g P _ _ @ conn_map_comp f (P o g) d a).
+    exists (conn_map_elim g P (conn_map_elim f (fun b => P (g b)) d)); intros a.
+    exact (conn_map_comp g P _ _ @ conn_map_comp f (fun b => P (g b)) d a).
   Defined.      
 
   Definition cancelR_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
@@ -1768,11 +1768,11 @@ Section ConnectedMaps.
 
   (** The constant map to [Unit] is connected just when its domain is. *)
   Definition isconnected_conn_map_to_unit {A : Type}
-             `{IsConnMap O _ _ (@const A Unit tt)}
+             `{IsConnMap O _ _ (const_tt A)}
   : IsConnected O A.
   Proof.
-    refine (isconnected_equiv O (hfiber (@const A Unit tt) tt)
-              (equiv_sigma_contr (fun a:A => const tt a = tt)) _).
+    refine (isconnected_equiv O (hfiber (const_tt A) tt)
+              (equiv_sigma_contr _) _).
   Defined.
 
   #[local]
@@ -1780,11 +1780,11 @@ Section ConnectedMaps.
 
   Global Instance conn_map_to_unit_isconnected {A : Type}
          `{IsConnected O A}
-  : IsConnMap O (@const A Unit tt).
+  : IsConnMap O (const_tt A).
   Proof.
     intros u.
     refine (isconnected_equiv O A
-              (equiv_sigma_contr (fun a:A => const tt a = u))^-1 _).
+              (equiv_sigma_contr _)^-1 _).
   Defined.
 
   (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if it is [O]-connected.  (The converse is true if and only if [O] is a modality.) *)

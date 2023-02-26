@@ -194,7 +194,7 @@ Local Definition ext_cyclic_exact@{u v w +} `{Univalence}
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
-  apply moveL_isexact_equiv@{v v v w v v v}.
+  apply moveL_isexact_equiv@{v v v w}.
   (* now we change the left map so as to apply exactness at iii from above *)
   snrapply (isexact_homotopic_i (Tr (-1))).
   1: exact (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A o*
@@ -208,14 +208,14 @@ Proof.
     1: apply Z1_rec_beta.
     exact (ab_mul_nat_homo f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
-    apply isexact_equiv_fiber@{v v v v v u v v v v v}.
+    apply isexact_equiv_fiber.
     apply isexact_ext_cyclic_ab_iii.
 Defined.
 
 (** The main result of this section. *)
 Theorem ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel@{u u v w} (ab_mul_nat (A:=A) n)
+  : ab_cokernel@{v w} (ab_mul_nat (A:=A) n)
       $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
@@ -225,9 +225,9 @@ Proof.
              (abses_pushout_ext E)
              (grp_iso_inverse (equiv_Z1_hom A))).
   - apply (conn_map_compose _ (grp_iso_inverse (equiv_Z1_hom A))).
-    1: rapply conn_map_isequiv@{v u u u u}.
+    1: rapply conn_map_isequiv.
     (* Coq knows that [Ext Z1 A] is contractible since [Z1] is projective, so exactness at spot iv gives us this: *)
-    exact (isconnmap_O_isexact_base_contr@{u v v v v v u u} _ _
+    exact (isconnmap_O_isexact_base_contr _ _
              (fmap (pTr 0)
                 (abses_pullback_pmap (A:=A)
                    (projection E)))).

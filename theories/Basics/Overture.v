@@ -557,7 +557,7 @@ Arguments center A {_}.
    Next, 0-truncated means "the space of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a space may have many points but it is discrete in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Inductive trunc_index : Type :=
+Inductive trunc_index : Type0 :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
 
@@ -584,7 +584,7 @@ Local Open Scope trunc_scope.
 
 (** n-truncatedness is defined by recursion on [n].  We could simply define [IsTrunc] as a fixpoint and an [Existing Class], but we want to also declare [IsTrunc] to be [simpl nomatch], so that when we say [simpl] or [cbn], [IsTrunc n.+1 A] doesn't get unfolded to [forall x y:A, IsTrunc n (x = y)].  But we also want to be able to use this equality, e.g. by proving [IsTrunc n.+1 A] starting with [intros x y], and if [IsTrunc] is a fixpoint declared as [simpl nomatch] then that doesn't work, because [intros] uses [hnf] to expose a [forall] and [hnf] respects [simpl nomatch] on fixpoints.  But we can make it work if we define the fixpoint separately as [IsTrunc_internal] and then take the class [IsTrunc] to be a definitional wrapper around it, since [hnf] is willing to unfold non-fixpoints even if they are defined as [simpl never].  This behavior of [hnf] is arguably questionable (see https://github.com/coq/coq/issues/11619), but it is useful for us here. *)
 
-Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
+Fixpoint IsTrunc_internal (n : trunc_index) (A : Type@{u}) : Type@{u} :=
   match n with
     | minus_two => Contr_internal A
     | n'.+1 => forall (x y : A), IsTrunc_internal n' (x = y)
@@ -695,7 +695,7 @@ Ltac path_via mid :=
 Local Set Elimination Schemes.
 
 (**  Natural numbers. *)
-Inductive nat : Type :=
+Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
 
@@ -721,7 +721,7 @@ Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
 Definition Empty_rect := Empty_ind.
 
-Definition not (A:Type) : Type := A -> Empty.
+Definition not (A : Type) := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Notation "~~ x" := (~ ~x) : type_scope.
 #[export]

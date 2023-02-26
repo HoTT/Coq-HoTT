@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics.
+Require Import HoTT.Basics Types.Unit.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core.
 
@@ -8,7 +8,7 @@ Require Import Truncations.Core.
 Section SetCone.
   Context {A B : HSet} (f : A -> B).
 
-  Definition setcone := Trunc 0 (Pushout f (const tt)).
+  Definition setcone := Trunc 0 (Pushout@{_ _ Set _} f (const_tt A)).
 
   Global Instance istrunc_setcone : IsHSet setcone := _.
 
