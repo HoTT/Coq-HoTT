@@ -33,8 +33,7 @@ Check WeakFunext@{i j max}.
 
 (** The obvious implications are
    Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
-   None of these do anything fiddly with the universes either.
-   *)
+   None of these do anything fiddly with the universes either. *)
 
 Definition Funext_implies_NaiveFunext@{i j max}
   : Funext_type@{i j max} -> NaiveFunext@{i j max}.
@@ -120,7 +119,6 @@ Proof.
     refine (htpy_ind_beta wf _ _ _).
 Defined.
 
-(** We add some hints to the typeclass database, so if we happen to have hypotheses of [WeakFunext] or [NaiveFunext] floating around, we get [Funext] automatically. *)
 Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type
   := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
 
@@ -154,17 +152,13 @@ Definition NaiveNondepFunext_implies_Funext@{i j max}
   : NaiveNondepFunext@{i max max} -> Funext_type@{i j max}
   := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.
 
-
 (** ** Functional extensionality is downward closed *)
 
-(** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
-Lemma Funext_downward_closed `{H : Funext_type} : Funext_type.
+(** If universe [U_i] is functionally extensional, then so are universes [U_i'] for [i' ≤ i]. *)
+Lemma Funext_downward_closed@{i j max i' j' max' | i <= max, j <= max, i' <= max', j' <= max', i' <= i, j' <= j}
+  `{H : Funext_type@{i j max}} : Funext_type@{i' j' max'}.
 Proof.
-  apply @NaiveFunext_implies_Funext.
-  apply Funext_implies_NaiveFunext in H.
   hnf in *.
-  intros A P f g H'.
-  (** We want to just use [H] here.  But we need to adjust the universe level in four places: for [A], for [P], for the input path, and for the output path. *)
-  case (H (Lift A) (fun x => Lift (P x)) f g (fun x => ap lift (H' x))).
-  exact idpath.
+  (* Here we make use of cumulativity. *)
+  exact (fun A P => H A P).
 Defined.
