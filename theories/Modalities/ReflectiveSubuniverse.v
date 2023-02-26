@@ -743,14 +743,14 @@ Section Reflective_Subuniverse.
     (** ** The [Unit] type *)
     Global Instance inO_unit : In O Unit.
     Proof.
-      apply inO_to_O_retract with (mu := fun x => tt).
-      exact (@contr Unit _).
+      apply inO_to_O_retract@{Set} with (mu := fun x => tt).
+      exact (@contr@{Set} Unit _).
     Defined.
 
     (** It follows that any contractible type is in [O]. *)
     Global Instance inO_contr {A : Type} `{Contr A} : In O A.
     Proof.
-      exact (inO_equiv_inO Unit equiv_contr_unit^-1).
+      exact (inO_equiv_inO@{Set _ _} Unit equiv_contr_unit^-1).
     Defined.
 
     (** And that the reflection of a contractible type is still contractible. *)
@@ -1388,11 +1388,11 @@ Section ConnectedTypes.
   Defined.
 
   (** Contractible types are connected. *)
-  Global Instance isconnected_contr@{u} {A : Type@{u}} `{Contr A}
+  Global Instance isconnected_contr {A : Type} `{Contr A}
     : IsConnected O A.
   Proof.
-    apply contr_O_contr@{u u u u}; exact _.
-  Defined.    
+    rapply contr_O_contr.
+  Defined.
 
   (** A type which is both connected and modal is contractible. *)
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
