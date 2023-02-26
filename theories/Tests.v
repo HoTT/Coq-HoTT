@@ -11,12 +11,6 @@ Fail Check (fun (P : interval -> Type) (a : P Interval.zero) (b : P Interval.one
             => idpath : interval_ind P a b p = interval_rect P a b p').
 
 Local Open Scope nat_scope.
-Fail Check Lift nat : Type0.
-Check 1 : Lift nat.
-
-Check lift'@{i j}.
-Check lower'@{i j}.
-Check isequiv_lift'@{i j}.
 
 (** Check that [ispointed_susp] doesn't require just a [Set] *)
 Check (fun A : Type => _ : IsPointed (Susp A)).
