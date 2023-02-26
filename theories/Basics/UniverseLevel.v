@@ -73,18 +73,19 @@ Definition lift'@{i j} {A : Type@{i}} : A -> Lift'@{i j} A := fun x => x.
 Definition lower'@{i j} {A : Type@{i}} : Lift'@{i j} A -> A := fun x => x.
 
 Definition lift'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}} (f : forall x : A, B x)
-: forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x))
+  : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x))
   := f.
 
 Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}}
            (f : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x)))
-: forall x : A, B x
+  : forall x : A, B x
   := f.
 
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
 #[global] Typeclasses Opaque lift' lower' lift'2 lower'2.
 
-Definition isequiv_lift'@{i j} (T : Type@{i}) : IsEquiv (@lift'@{i j} T)
+Global Instance isequiv_lift'@{i j} (T : Type@{i})
+  : IsEquiv (@lift'@{i j} T)
   := @Build_IsEquiv
        _ _
        (@lift' T)
@@ -92,9 +93,9 @@ Definition isequiv_lift'@{i j} (T : Type@{i}) : IsEquiv (@lift'@{i j} T)
        (fun _ => idpath)
        (fun _ => idpath)
        (fun _ => idpath).
-Global Existing Instance isequiv_lift'. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
-Definition isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j}) : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)
+Global Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j})
+  : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)
   := @Build_IsEquiv
        _ _
        (@lift'2 A B)
@@ -102,9 +103,10 @@ Definition isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j}) :
        (fun _ => idpath)
        (fun _ => idpath)
        (fun _ => idpath).
-Global Existing Instance isequiv_lift'2. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
-Definition lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)
+Global Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}
+  (f : A -> B) {H : IsEquiv f}
+  : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)
   := @Build_IsEquiv
        (Lift' A) (Lift' B)
        (lift'2 f)
@@ -114,9 +116,10 @@ Definition lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}} (f : A -
        (fun x => ((ap (ap lift') (eisadj f (lower' x)))
                     @ (ap_compose f lift' _)^)
                    @ (@ap_compose A (Lift' A) (Lift' B) lift' (lift'2 f) _ _ _)).
-Global Existing Instance lift'_isequiv. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
-Definition lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (f : Lift'@{i j} A -> Lift'@{i' j'} B) {H : IsEquiv f} : @IsEquiv A B (lower'2 f)
+Global Instance lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
+  (f : Lift'@{i j} A -> Lift'@{i' j'} B) {H : IsEquiv f}
+  : @IsEquiv A B (lower'2 f)
   := @Build_IsEquiv
        _ _
        (lower'2 f)
@@ -126,10 +129,8 @@ Definition lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (f : Lift'@{
        (fun x => ((ap (ap lower') (eisadj f (lift' x)))
                     @ (ap_compose f lower' _)^)
                    @ (@ap_compose (Lift' A) A B lower' (lower'2 f) _ _ _)).
-Global Existing Instance lower'_isequiv. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
-Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B)) : Equiv A B
+Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
+  (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B))
+  : Equiv A B
   := @Build_Equiv A B (lower'2 e) _.
-
-(*Fail Check Lift nat : Type0.
-Check 1 : Lift nat.*)
