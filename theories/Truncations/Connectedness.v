@@ -77,8 +77,9 @@ Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type@{u}} (a0:A)
            `{IsConnected n.+1 A}
   : IsConnMap n (unit_name a0).
 Proof.
-  (* Coq can find [conn_map_to_unit_isconnected] via typeclass search, but we manually pose it to get rid of an unneeded universe variable. *)
+  (* Coq can find [conn_map_to_unit_isconnected] and [isconnected_contr] via typeclass search, but we manually pose them to get rid of an unneeded universe variable. *)
   pose conn_map_to_unit_isconnected@{u u}.
+  pose isconnected_contr@{u u}.
   rapply (OO_cancelL_conn_map@{u u u u} (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
   apply O_lex_leq_Tr.
 Defined.
