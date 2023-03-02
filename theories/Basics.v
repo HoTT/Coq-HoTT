@@ -1,5 +1,4 @@
 Require Export Basics.Overture.
-Require Export Basics.UniverseLevel.
 Require Export Basics.PathGroupoids.
 Require Export Basics.Contractible.
 Require Export Basics.Equivalences.
