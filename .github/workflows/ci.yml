@@ -155,7 +155,6 @@ jobs:
 # - doc-alectryon: Builds the alectryon documentation
 # - doc-dep-graph: Builds dependency graphs
 # - doc-coqdoc: Builds the coqdoc documentation
-# - doc-proviola: Builds the proviola documentation
 # - doc-timing: Builds the timing documentation
 # - coqchk: Runs coqchk
 # - install: Tests install target
@@ -248,6 +247,7 @@ jobs:
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make dependency graph
           make HoTT.deps HoTTCore.deps
+          # TODO: Not sure what to do about proviola here
           runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
           runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot
           dot -Tsvg HoTT.dot -o HoTT.svg
@@ -295,7 +295,7 @@ jobs:
         path: file-dep-graphs.tar
 
   # doc-coqdoc job
-  # This builds coqdoc, proviola and timing docs and uploads their artifacts
+  # This builds coqdoc and timing docs and uploads their artifacts
   doc-coqdoc:
     needs: build
     runs-on: ubuntu-latest
@@ -337,61 +337,8 @@ jobs:
         name: coqdoc-html
         path: coqdoc-html.tar
 
-  # doc-proviola job
-  # This builds coqdoc, proviola and timing docs and uploads their artifacts
-  doc-proviola:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    # Checkout branch
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    # Download artifact
-    - uses: actions/download-artifact@v2
-      with:
-        name: workspace-${{ env.coq-version-supported }}
-    # Unpack Tar
-    - run: tar -xf workspace.tar
-    # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
-      with:
-        coq_version: ${{ env.coq-version-supported }}
-        ocaml_version: ${{ env.ocaml-version }}
-        custom_script: |
-          sudo apt-get update
-          sudo apt-get install -y ghc cabal-install
-          sudo apt-get install -y --allow-unauthenticated \
-          libnode-dev node-gyp libssl-dev npm aspcud curl \
-          graphviz xsltproc python3-lxml python-pexpect-doc \
-          libxml2-dev libxslt1-dev time lua5.1 unzip python
-
-          sudo curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-          sudo python ./get-pip.py
-
-          startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
-          endGroup
-          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
-          ./etc/ci/install_proviola.sh
-          ## Make proviola doc
-          make -j2 proviola TIMED=1 -k; make proviola TIMED=1 || exit $?
-    - name: Revert permissions
-      # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
-      if: ${{ always() }}
-      run: sudo chown -R 1001:116 .
-    # Tar html files
-    - name: 'Tar doc files'
-      run: tar -cf proviola-html.tar proviola-html
-    # Upload proviola-html artifact
-    - name: 'Upload proviola-html Artifact'
-      uses: actions/upload-artifact@v2
-      with:
-        name: proviola-html
-        path: proviola-html.tar
-
   # doc-timing job
-  # This builds coqdoc, proviola and timing docs and uploads their artifacts
+  # This builds coqdoc and timing docs and uploads their artifacts
   doc-timing:
     needs: build
     runs-on: ubuntu-latest
@@ -541,7 +488,6 @@ jobs:
     - doc-alectryon
     - doc-dep-graphs
     - doc-coqdoc
-    - doc-proviola
     - doc-timing
     runs-on: ubuntu-latest
     steps:
@@ -563,10 +509,6 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: coqdoc-html
-    # Download proviola artifact
-    - uses: actions/download-artifact@v2
-      with:
-        name: proviola-html
     # Download timing artifact
     - uses: actions/download-artifact@v2
       with:
@@ -578,7 +520,6 @@ jobs:
         tar -xf dep-graphs.tar      -C doc
         tar -xf file-dep-graphs.tar -C doc
         tar -xf coqdoc-html.tar     -C doc
-        tar -xf proviola-html.tar   -C doc
         tar -xf timing-html.tar     -C doc
 
     - name: Deploy 🚀
@@ -627,9 +568,6 @@ jobs:
     - uses: geekyeggo/delete-artifact@v1
       with:
         name: coqdoc-html
-    - uses: geekyeggo/delete-artifact@v1
-      with:
-        name: proviola-html
     - uses: geekyeggo/delete-artifact@v1
       with:
         name: timing-html

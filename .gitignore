@@ -69,9 +69,6 @@ time-of-build-pretty.log
 /Makefile.coq.conf
 
 html/
-proviola/
-proviola-html/
-proviola-xml/
 file-dep-graphs/
 alectryon-html/
 alectryon-cache/
