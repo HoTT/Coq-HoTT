@@ -2,7 +2,10 @@
 if [ -e .git ]; then
   TRACKED_V_FILES="$(git ls-files "*.v")"
 else
-  echo "Warning: Not a git clone, using find instead" >&2
+  # This is expected when building using dune, so don't print the warning in that case:
+  if [ "$GENERATE_COQPROJECT_FOR_DUNE" != "true" ]; then
+    echo "Warning: Not a git clone, using find instead" >&2
+  fi
   TRACKED_V_FILES="$(find theories contrib -type f -name "*.v")"
 fi
 
@@ -29,15 +32,16 @@ COQPROJECT_HEADER=\
 -arg -native-compiler -arg no
 "
 
+## Add additional lines when building with dune
 if [ "$GENERATE_COQPROJECT_FOR_DUNE" == "true" ]; then
   COQPROJECT_HEADER="$COQPROJECT_HEADER
-# Dune compatbility 
+# Dune compatibility
 -R _build/default/theories HoTT
 -Q _build/default/contrib HoTT.Contrib
 "
 fi
 
-## Generate _CoqProject
+## Store new _CoqProject in a variable
 printf -v NEW_COQPROJECT '%s\n%s' "$COQPROJECT_HEADER" "$SORTED_V_FILES"
 
 ## Look for exisitng _CoqProject
@@ -49,5 +53,5 @@ if test -f "_CoqProject"; then
   fi
 fi
 
-## Overwrite new _CoqProject
+## Overwrite _CoqProject
 echo "$NEW_COQPROJECT" > _CoqProject
