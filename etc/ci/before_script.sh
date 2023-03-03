@@ -16,8 +16,5 @@ if [ ! -z "$UPDATE_QUICK_DOC" ]; then
     ./install_coq_dot_deps.sh || exit $?
     ./install_doctoc.sh || exit $?
 fi
-if [ ! -z "$UPDATE_HTML" ]; then
-    ./install_proviola.sh || exit $?
-fi
 
 popd 1>/dev/null

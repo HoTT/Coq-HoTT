@@ -23,9 +23,6 @@ include Makefile.coq.local-early
 
 # TODO(not yet ported from automake): install these files: theories etc LICENSE.txt CREDITS.txt INSTALL.md README.md
 
-# the proviola camera
-CAMERA = python proviola/camera/camera.py
-
 # the alectryon binary
 ALECTRYON = python3 etc/alectryon/alectryon.py
 ALECTRYON_EXTRAFLAGS ?=
@@ -77,7 +74,7 @@ UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
 # Makefile.coq variable, but {MAIN,ALL}_HTMLFILES is NOT the same as
 # HTMLFILES from Makefile.coq (the latter lives alongside the .v
 # files, while the former lives in the html/ directory)
-# The list of all files, mainly used for html and proviola
+# The list of all files, mainly used for html
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
 MAIN_VOFILES = $(MAIN_VFILES:.v=.$(VO))
 MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
@@ -91,8 +88,6 @@ ALL_GLOBFILES=$(MAIN_GLOBFILES)
 ALL_HTMLFILES=$(MAIN_HTMLFILES)
 ALL_TIMING_HTMLFILES=$(MAIN_TIMING_HTMLFILES)
 ALL_TIMINGFILES=$(ALL_VFILES:.v=.v.timing)
-ALL_XMLFILES=$(patsubst html/%,proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
-ALL_PROVIOLA_HTMLFILES=$(patsubst proviola-xml/%,proviola-html/%,$(ALL_XMLFILES:.xml=.html))
 ALL_ALECTRYON_HTMLFILES=$(patsubst html/%,alectryon-html/%,$(ALL_HTMLFILES))
 ALL_DPDFILES=$(MAIN_DPDFILES)
 ALL_SVGFILES=$(ALL_DPDFILES:.dpd=.svg)
@@ -104,7 +99,7 @@ HOTT_LIB_FILES=$(subst /,.,$(patsubst theories/%.v,HoTT.%,$(CORE_VFILES)))
 # Which extra files should be cleaned
 EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
-.PHONY: hottlib hott-core hott-categories contrib proviola alectryon timing-html proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs strict strict-test strict-no-axiom
+.PHONY: hottlib hott-core hott-categories contrib alectryon timing-html svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs strict strict-test strict-no-axiom
 
 # The HoTT library as a single target
 hott-core: $(CORE_VOFILES)
@@ -171,35 +166,6 @@ $(CONTRIB_TIMING_HTMLFILES): timing-html/HoTT.Contrib.%.html : contrib/$$(subst 
 	@ mkdir -p $(dir $@)
 	$(SHOW)'TIME2HTML $* > $@'
 	$(HIDE) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
-
-# the proviola files
-proviola-html/index.html proviola-html/toc.html proviola-html/coqdoc.css : proviola-html/% : html/%
-	@ mkdir -p proviola-html
-	cp -f $< $@
-
-proviola-html/proviola.css : proviola-html/% : proviola/proviola/ppcoqdoc/%
-	@ mkdir -p proviola-html
-	cp -f $< $@
-
-proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/proviola/ppcoqdoc/%
-	@ mkdir -p proviola-xml
-	cp -f $< $@
-
-proviola-xml/%.xml: html/%.html
-	@ mkdir -p proviola-xml
-	$(SHOW)'CAMERA $<'
-	$(HIDE) $(TIMER) $(CAMERA) --coqtop "etc/hoqtop" $< $@
-
-proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
-	@ mkdir -p proviola-html
-	$(SHOW)'XSLTPROC $<'
-	$(HIDE) $(TIMER) xsltproc $< > $@
-
-proviola: $(ALL_PROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css proviola-html/index.html
-
-proviola-xml: $(ALL_XMLFILES)
-
-proviola-all: proviola proviola-xml
 
 # the alectryon files
 alectryon-html/index.html alectryon-html/toc.html alectryon-html/coqdoc.css : alectryon-html/% : html/%
@@ -287,8 +253,6 @@ clean::
 	$(HIDE)rm -f $(ALL_HTMLFILES)
 	$(SHOW)"RM *.XML"
 	$(HIDE)rm -f $(ALL_XMLFILES)
-	$(SHOW)"RM *.HTML"
-	$(HIDE)rm -f $(ALL_PROVIOLA_HTMLFILES)
 	$(SHOW)"RM *.HTML"
 	$(HIDE)rm -f $(ALL_ALECTRYON_HTMLFILES)
 	$(SHOW)"RM *.TIMING"
