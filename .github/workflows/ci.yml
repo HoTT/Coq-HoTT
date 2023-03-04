@@ -47,7 +47,7 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
 
     - name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -78,7 +78,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     - name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -116,7 +116,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # We use the coq docker so we don't have to build coq
@@ -142,10 +142,23 @@ jobs:
       run: tar -cf workspace.tar .
     # We upload build artifacts for use by documentation
     - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: workspace-${{ env.coq-version }}
         path: workspace.tar
+
+  # Nix build
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+      with:
+        name: coq-hott
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        extraPullNames: coq-hott
+    - run: nix build
+
 
 #
 #  Stage 2:
@@ -164,11 +177,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -212,11 +225,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -284,12 +297,12 @@ jobs:
         tar -cf file-dep-graphs.tar file-dep-graphs
     # We upload the artifacts
     - name: 'Upload Artifact dep-graphs.tar'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: dep-graphs
         path: dep-graphs.tar
     - name: 'Upload Artifact file-dep-graphs.tar'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: file-dep-graphs
         path: file-dep-graphs.tar
@@ -301,11 +314,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -332,7 +345,7 @@ jobs:
       run: tar -cf coqdoc-html.tar coqdoc-html
     # Upload coqdoc-html artifact
     - name: 'Upload coqdoc-html Artifact'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coqdoc-html
         path: coqdoc-html.tar
@@ -344,11 +357,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -376,7 +389,7 @@ jobs:
       run: tar -cf timing-html.tar timing-html
     # Upload timing-html artifact
     - name: 'Upload timing-html Artifact'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: timing-html
         path: timing-html.tar
@@ -401,11 +414,11 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -446,11 +459,11 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -492,25 +505,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     # Download alectryon artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: alectryon-html
     # Download dependency graph artifacts
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: dep-graphs
     # Download file dependency graph artifacts
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: file-dep-graphs
     # Download coqdoc artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: coqdoc-html
     # Download timing artifact
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: timing-html
     # Unpack Tar files
