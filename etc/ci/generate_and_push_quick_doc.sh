@@ -30,8 +30,8 @@ EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 export MESSAGE="Autoupdate documentation with DepsToDot.hs"
 echo '$ make HoTT.deps HoTTCore.deps'
 make HoTT.deps HoTTCore.deps || exit $?
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot || exit $?
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/Coq-HoTT/alectryon-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/Coq-HoTT/alectryon-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot || exit $?
 dot -Tsvg HoTT.dot -o HoTT.svg || exit $?
 dot -Tsvg HoTTCore.dot -o HoTTCore.svg || exit $?
 echo '$ git checkout -b gh-pages upstream/gh-pages'
