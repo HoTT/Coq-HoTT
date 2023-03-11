@@ -32,6 +32,7 @@
             dune_3
             ocaml
             coq
+            coqPackages.coq-lsp
           ];
         };
 
