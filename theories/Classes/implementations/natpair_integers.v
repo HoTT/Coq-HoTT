@@ -411,6 +411,9 @@ refine (Z_rec2 (fun x y => ' (PairT.ml@{UN UNalt} _ x y)) _).
 intros;apply Z_path;eapply PairT.ml_respects;trivial.
 Defined.
 
+(* Without this TC resolution for eg (Monoid Z Z_plus) tries to get it from (SemiRing Z Z_plus ?mult) and fills the evar with the unfolded value, which does case analysis on quotient. *)
+Global Typeclasses Opaque Z_plus Z_mult.
+
 Definition Z_mult_compute q r : (' q) * (' r) = ' (PairT.ml _ q r)
   := 1.
 

@@ -582,6 +582,16 @@ Look at some of the existing files in `HIT/*` for examples.
 
 [hit-hack]: http://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
 
+### 1.5.1. Case analysis on private inductive ###
+
+You may get this error at `Qed`/`Defined` when unification unfolded
+the induction principle and used its value to produce the proof term.
+
+You need to identify which tactic produced the problematic term, then
+either avoid unification by annotating more (eg `apply (@foo bla)`
+instead of `apply foo`), guide unification by manipulating the goal
+(eg using `rewrite` with the lemma witnessing the computation rule of
+the inductive principle) or the transparency of related definitions.
 
 ## 1.6. Universe Polymorphism ##
 
