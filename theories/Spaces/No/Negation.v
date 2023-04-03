@@ -45,7 +45,7 @@ Section HasNegation.
         {{ (fun r => negate (xR r)) | (fun l => negate (xL l)) // nxcut }} }.
   Proof.
     eexists.
-    unfold negate at 1;rewrite No_rec_cut.
+    unfold negate at 1; rewrite No_rec_cut.
     reflexivity.
   Defined.
 
@@ -53,7 +53,7 @@ Section HasNegation.
   Context `{InSort S Empty Empty} `{InSort S Unit Empty}.
   Goal negate one = minusone.
   Proof.
-    unfold one;rewrite (negate_cut _ _ _).2.
+    unfold one; rewrite (negate_cut _ _ _).2.
     apply path_No; apply le_lr; intros.
     (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)
     - elim l.
