@@ -35,20 +35,6 @@ Section HasNegation.
     - cbn in *. apply lt_l with r; intros; assumption.
   Defined.
 
-  (** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)
-  Context `{InSort S Empty Empty} `{InSort S Unit Empty}.
-  Goal negate one = minusone.
-  Proof.
-    apply path_No; apply le_lr; intros.
-    (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)
-    - elim l.
-    - apply lt_r with r.
-      apply le_lr; apply Empty_ind.
-    - elim l.
-    - apply lt_r with r.
-      apply le_lr; apply Empty_ind.
-  Qed.
-
   (** More useful is the following rewriting lemma. *)
   Definition negate_cut
              {L R : Type@{i} } {Sx : InSort@{i} S L R}
@@ -59,7 +45,25 @@ Section HasNegation.
         {{ (fun r => negate (xR r)) | (fun l => negate (xL l)) // nxcut }} }.
   Proof.
     eexists.
+    unfold negate at 1; rewrite No_rec_cut.
     reflexivity.
   Defined.
+
+  (** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)
+  Context `{InSort S Empty Empty} `{InSort S Unit Empty}.
+  Goal negate one = minusone.
+  Proof.
+    unfold one; rewrite (negate_cut _ _ _).2.
+    apply path_No; apply le_lr; intros.
+    (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)
+    - elim l.
+    - apply lt_r with r.
+      unfold zero; rewrite (negate_cut _ _ _).2.
+      apply le_lr; apply Empty_ind.
+    - elim l.
+    - unfold zero; rewrite (negate_cut _ _ _).2.
+      apply lt_r with r.
+      apply le_lr; apply Empty_ind.
+  Qed.
 
 End HasNegation.

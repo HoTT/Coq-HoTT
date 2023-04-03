@@ -304,7 +304,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
       := (No_ind_le x y , No_ind_lt x y).
 
     (** We verify that our definition computes judgmentally. *)
-    Definition No_ind_cut `{Funext}
+    Definition No_ind_cut
                (L R : Type@{i}) (s : InSort@{i} S L R)
                (xL : L -> GenNo) (xR : R -> GenNo)
                (xcut : forall (l:L) (r:R), (xL l) < (xR r))
@@ -463,6 +463,18 @@ Section NoRec.
       (forall (x y : No) (p : x <= y), dle (f x) (f y)) *
       (forall (x y : No) (p : x < y), dlt (f x) (f y)) }
     := ( No_rec ; (No_rec_le , No_rec_lt) ).
+
+
+  Definition No_rec_cut
+    (L R : Type@{i}) (s : InSort@{i} S L R)
+    (xL : L -> No) (xR : R -> No)
+    (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+    : No_rec {{ xL | xR // xcut }}
+      = dcut L R _ xL xR xcut
+          (fun l => No_rec (xL l)) (fun r => No_rec (xR r))
+          (fun l r => No_rec_lt (xL l) (xR r) (xcut l r))
+    := 1.
+
 
 End NoRec.
 
@@ -1013,6 +1025,9 @@ Section RaiseSort.
         {{ (fun l => No_raise (xL l)) | (fun r => No_raise (xR r)) // rxcut }} }.
   Proof.
     eexists.
+    (* Manual rewrite instead of letting unification handle it as it would expose the case analysis on the private type. *)
+    unfold No_raise at 1.
+    rewrite No_rec_cut.
     reflexivity.
   Qed.
 
@@ -1139,7 +1154,8 @@ Proof.
     + apply (lt_le_trans (y := No_raise y)).
       * apply No_raise_lt.
         refine (lt_ropt _ _ _ tt).
-      * apply le_lr; [ intros [] | intros r ].
+      * unfold y. rewrite (No_raise_cut _ _ _).2.
+        apply le_lr; [ intros [] | intros r ].
         rewrite <- (IHR r).2.
         refine (lt_ropt _ _ _ (inr (inr r))).
     + rewrite (IHL l).2.
@@ -1152,7 +1168,8 @@ Proof.
     refine (lt_lopt _ _ _ (inr l)).
   - intros [[]|r].
     + apply (le_lt_trans (y := No_raise z)).
-      * apply le_lr; [ intros l | intros [] ].
+      * unfold z. rewrite (No_raise_cut _ _ _).2.
+        apply le_lr; [ intros l | intros [] ].
         rewrite <- (IHL l).2.
         refine (lt_lopt _ _ _ (inr (inl l))).
       * apply No_raise_lt.
