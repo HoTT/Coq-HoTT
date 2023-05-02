@@ -75,9 +75,9 @@ Defined.
 
 (** Precomposition with a surjection is an embedding. *)
 (* This could be deduced from [isembedding_precompose_surjection_hset], but relating precomposition of homomorphisms with precomposition of the underlying maps is tedious, so we give a direct proof. *)
-Global Instance isembedding_precompose_surjection_ab `{Funext} {X Y Z : AbGroup}
-  (f : X $-> Y) `{IsSurjection f}
-  : IsEmbedding (fmap10 (A:=Group^op) ab_hom f Z).
+Global Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}
+  (f : A $-> B) `{IsSurjection f}
+  : IsEmbedding (fmap10 (A:=Group^op) ab_hom f C).
 Proof.
   apply isembedding_isinj_hset; intros g0 g1 p.
   apply equiv_path_grouphomomorphism.
