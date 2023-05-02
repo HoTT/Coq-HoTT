@@ -1,4 +1,4 @@
-Require Import WildCat.
+Require Import WildCat HSet Truncations.
 Require Import AbelianGroup Biproduct.
 
 (** * Homomorphisms of abelian groups form an abelian group. *)
@@ -69,4 +69,18 @@ Proof.
   1-2: exact _.
   intros A A' f B B' g phi; cbn.
   by apply equiv_path_grouphomomorphism.
+Defined.
+
+(** ** Properties of [ab_hom] *)
+
+(** Precomposition with a surjection is an embedding. *)
+(* This could be deduced from [isembedding_precompose_surjection_hset], but relating precomposition of homomorphisms with precomposition of the underlying maps is tedious, so we give a direct proof. *)
+Global Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}
+  (f : A $-> B) `{IsSurjection f}
+  : IsEmbedding (fmap10 (A:=Group^op) ab_hom f C).
+Proof.
+  apply isembedding_isinj_hset; intros g0 g1 p.
+  apply equiv_path_grouphomomorphism.
+  rapply (conn_map_elim (Tr (-1)) f).
+  exact (equiv_path_grouphomomorphism^-1 p).
 Defined.

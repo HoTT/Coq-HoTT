@@ -9,13 +9,19 @@ Require Import WildCat HSet Pointed.Core Pointed.pTrunc Pointed.pEquiv
 
   As an application, we use the six-term exact sequence to show that [Ext Z/n A] is isomorphic to [A/n], for nonzero natural numbers [n]. (See [ext_cyclic_ab].) *)
 
-(** Exactness of [0 -> ab_hom B G -> ab_hom E G] follows from the rightmost map being an embedding, which is a consequence of [isembedding_precompose_surjection_hset] from Truncations.Core. *)
+(** Exactness of [0 -> ab_hom B G -> ab_hom E G] follows from the rightmost map being an embedding. *)
 Definition isexact_abses_sixterm_i `{Funext}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (pconst : pUnit ->* ab_hom B G)
       (fmap10 (A:=Group^op) ab_hom (projection E) G).
-Abort. (* Left for future work. *)
+Proof.
+  apply isexact_purely_O.
+  rapply isexact_homotopic_i.
+  2: apply iff_grp_isexact_isembedding.
+  1: by apply phomotopy_homotopy_hset.
+  exact _. (* [isembedding_precompose_surjection_ab] *)
+Defined.
 
 (** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. One can also deduce this from [isexact_abses_pullback]. *)
 Definition isexact_ext_contra_sixterm_ii `{Univalence}

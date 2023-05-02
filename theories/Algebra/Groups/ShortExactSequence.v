@@ -40,18 +40,14 @@ Local Existing Instance ishprop_phomotopy_hset.
 Local Existing Instance ishprop_isexact_hset.
 
 (** A complex 0 -> A -> B of groups is purely exact if and only if the map A -> B is an embedding. *)
-Lemma equiv_grp_isexact_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : IsExact purely (@grp_homo_const grp_trivial A) f <~> IsEmbedding f.
+Lemma iff_grp_isexact_isembedding `{Funext} {A B : Group} (f : A $-> B)
+  : IsExact purely (@grp_homo_const grp_trivial A) f <-> IsEmbedding f.
 Proof.
-  srapply equiv_iff_hprop.
-  - intros [cx conn] b a.
-    rapply (transport IsHProp (x:= hfiber f 0)).
-    + apply path_universe_uncurried; symmetry.
-      apply equiv_grp_hfiber.
-      exact a.
-    + rapply (transport IsHProp (x:= grp_trivial)).
-      apply path_universe_uncurried.
-      rapply Build_Equiv.
+  split.
+  - intros ex b.
+    apply hprop_inhabited_contr; intro a.
+    rapply (contr_equiv' grp_trivial).
+    exact ((equiv_grp_hfiber f b a)^-1 oE pequiv_cxfib).
   - intro isemb_f.
     exists (grp_iscomplex_trivial f).
     intros y; rapply contr_inhabited_hprop.
@@ -59,9 +55,8 @@ Proof.
 Defined.
 
 (** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)
-Corollary equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
+Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
   : IsExact purely (@grp_homo_const grp_trivial A) f
-            <~> (grp_kernel f = trivial_subgroup :> Subgroup _).
-Proof.
-  exact ((equiv_kernel_isembedding f)^-1%equiv oE equiv_grp_isexact_isembedding f).
-Defined.
+      <~> (grp_kernel f = trivial_subgroup :> Subgroup _)
+  := (equiv_kernel_isembedding f)^-1%equiv
+       oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).
