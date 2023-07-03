@@ -20,7 +20,7 @@ End almostring_mor.
 
 Module Quoting.
 
-Inductive Expr (V:Type0) :=
+Inductive Expr (V:Type0) : Type0 :=
   | Var (v : V)
   | Zero
   | One

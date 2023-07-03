@@ -16,7 +16,8 @@ Notation terminal_category := (nat_category 1) (only parsing).
 (** A precategory is terminal if its objects and morphisms are contractible types. *)
 Class IsTerminalCategory (C : PreCategory)
       `{Contr (object C)}
-      `{forall s d, Contr (morphism C s d)} := {}.
+      `{forall s d, Contr (morphism C s d)}
+  : Type0 := {}.
 
 (** ** Initial categories *)
 (** An initial precategory is one whose objects have the recursion priniciple of the empty type *)
