@@ -1,12 +1,12 @@
-Require Import Basics.Hexadecimal.
+Require Import Basics.Overture Basics.Hexadecimal.
 
 (** * Decimal or Hexadecimal numbers *)
 
-Variant uint := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).
+Variant uint : Type0 := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).
 
-Variant int := IntDec (i:Decimal.int) | IntHex (i:Hexadecimal.int).
+Variant int : Type0 := IntDec (i:Decimal.int) | IntHex (i:Hexadecimal.int).
 
-Variant numeral := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).
+Variant numeral : Type0 := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).
 
 Register uint as num.num_uint.type.
 Register int as num.num_int.type.

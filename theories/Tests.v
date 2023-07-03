@@ -112,7 +112,7 @@ Module PR_1382.
 
   (* Check discriminate on types with local definitions *)
 
-  Inductive A := B (T := Unit) (x y : Bool) (z := x).
+  Inductive A : Type0 := B (T := Unit) (x y : Bool) (z := x).
   Goal forall x y, B x true = B y false -> Empty.
   discriminate.
   Qed.

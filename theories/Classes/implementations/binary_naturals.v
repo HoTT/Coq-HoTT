@@ -16,7 +16,7 @@ Section basics.
   (* This definition of binary naturals is due to Martín Escardó and
      Cory Knapp *)
 
-  Inductive binnat : Type :=
+  Inductive binnat : Type0 :=
   | bzero   :           binnat  (* zero *)
   | double1 : binnat -> binnat  (* 2n+1 *)
   | double2 : binnat -> binnat. (* 2n+2 *)

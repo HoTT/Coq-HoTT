@@ -25,7 +25,7 @@ Require Import Basics.Overture.
 (** Unsigned integers are just lists of digits.
     For instance, ten is (D1 (D0 Nil)) *)
 
-Inductive uint :=
+Inductive uint : Type0 :=
  | Nil
  | D0 (_:uint)
  | D1 (_:uint)
@@ -46,14 +46,14 @@ Notation zero := (D0 Nil).
 
 (** For signed integers, we use two constructors [Pos] and [Neg]. *)
 
-Variant int := Pos (d:uint) | Neg (d:uint).
+Variant int : Type0 := Pos (d:uint) | Neg (d:uint).
 
 (** For decimal numbers, we use two constructors [Decimal] and
     [DecimalExp], depending on whether or not they are given with an
     exponent (e.g., 1.02e+01). [i] is the integral part while [f] is
     the fractional part (beware that leading zeroes do matter). *)
 
-Variant decimal :=
+Variant decimal : Type0 :=
  | Decimal (i:int) (f:uint)
  | DecimalExp (i:int) (f:uint) (e:int).
 

@@ -381,7 +381,7 @@ Tactic Notation "do_with_holes'" tactic3(x) uconstr(p) :=
 
 (** We keep a list of global axioms that we will solve automatically, even when not using typeclass search. *)
 Unset Primitive Projections.
-Class IsGlobalAxiom (A : Type) := {}.
+Class IsGlobalAxiom (A : Type) : Type0 := {}.
 Set Primitive Projections.
 Global Hint Mode IsGlobalAxiom + : typeclass_instances.
 

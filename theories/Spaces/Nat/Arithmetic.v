@@ -796,7 +796,7 @@ Defined.
 
 Local Unset Elimination Schemes.
 
-Inductive increasing_geq (n : nat) : nat -> Type :=
+Inductive increasing_geq (n : nat) : nat -> Type0 :=
 | increasing_geq_n : increasing_geq n n
 | increasing_geq_S (m : nat) : increasing_geq n m.+1 ->
                                increasing_geq n m.

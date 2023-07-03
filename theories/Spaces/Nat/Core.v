@@ -344,7 +344,7 @@ Global Instance hset_nat : IsHSet nat := _.
 
 (** ** Inequality of natural numbers *)
 
-Inductive leq (n : nat) : nat -> Type :=
+Inductive leq (n : nat) : nat -> Type0 :=
 | leq_n : leq n n
 | leq_S : forall m, leq n m -> leq n (S m).
 
