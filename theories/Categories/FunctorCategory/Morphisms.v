@@ -110,7 +110,7 @@ Section idtoiso.
   Lemma eta_idtoiso
         (F G : object (C -> D))
         (T : F = G)
-  : Morphisms.idtoiso _ T = idtoiso T.
+  : Category.Morphisms.idtoiso _ T = idtoiso T.
   Proof.
     case T.
     expand; f_ap.
