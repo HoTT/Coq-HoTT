@@ -31,8 +31,8 @@
           buildInputs = with pkgs; [
             dune_3
             ocaml
-            coq
-            coqPackages.coq-lsp
+            coq_8_17
+            coqPackages_8_17.coq-lsp
           ];
         };
 
