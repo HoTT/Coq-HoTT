@@ -107,3 +107,6 @@ _build/
 
 # ignore _CoqProject since we autogenerate it
 _CoqProject
+
+# ignore nix profiles
+nix/profiles/
