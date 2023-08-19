@@ -17,7 +17,7 @@ homepage: "http://homotopytypetheory.org/"
 bug-reports: "https://github.com/HoTT/HoTT/issues"
 depends: [
   "dune" {>= "3.5"}
-  "coq" {>= "8.16.0"}
+  "coq" {>= "8.17.0"}
   "odoc" {with-doc}
 ]
 build: [

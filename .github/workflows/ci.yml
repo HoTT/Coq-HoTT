@@ -1,6 +1,6 @@
 name: CI
 
-on: [ push , pull_request ]
+on: [ push , pull_request , merge_group ]
 
 concurrency:
   group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
@@ -8,7 +8,7 @@ concurrency:
 
 # We set the supported coq-version from here. In order to use this environment variable correctly, look at how they are used in the following jobs.
 env:
-  coq-version-supported: '8.16'
+  coq-version-supported: '8.17'
   ocaml-version: '4.14-flambda'
   deployment-branch: 'gh-pages'
 
@@ -273,7 +273,7 @@ jobs:
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
           ## Install coq-dpdgraph
-          opam install coq-dpdgraph.1.0+8.16 -y
+          opam install coq-dpdgraph.1.0+8.17 -y
 
           # For some reason, we get a stackoverflow. So we are lax
           # with making these.
