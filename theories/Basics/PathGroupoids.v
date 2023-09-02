@@ -1087,15 +1087,6 @@ Proof.
   symmetry; refine (concat_p1 _ @ concat_1p _).
 Defined.
 
-(* The next two are definitionally true, so maybe can be dropped? *)
-Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
-  := idpath.
-
-Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  1 @@ h = whiskerL 1 h :> (1 @ p = 1 @ q)
-  := idpath.
-
 Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
            (g : p = p') (h k : q = q')
 : (g @@ h = g @@ k) -> (h = k).
