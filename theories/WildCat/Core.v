@@ -402,6 +402,13 @@ Proof.
   apply gpd_V_hh.
 Defined.
 
+Definition gpd_moveR_M1 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
+  (r : Id _ $== p^$ $o q) : p $== q.
+Proof.
+  refine (_ $@ (cat_assoc _ _ _)^$ $@ ((gpd_isretr p) $@R q) $@ (cat_idl q)).
+  exact ((cat_idr p)^$ $@ (p $@L r)).
+Defined.
+
 Definition gpd_moveR_1M {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $o q^$ $== Id _) : p $== q.
 Proof.
