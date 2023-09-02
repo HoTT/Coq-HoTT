@@ -134,7 +134,7 @@ Defined.
 
 (** We can also deduce "full-faithfulness" on equivalences. *)
 Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
-           (a b : A)
+           {a b : A}
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
 Proof.
   intros f.
@@ -154,7 +154,7 @@ Proof.
 Defined.
 
 Definition natequiv_opyon_equiv {A : Type} `{HasEquivs A}
-  `{!HasMorExt A} (a b : A)
+  `{!HasMorExt A} {a b : A}
   : (b $<~> a) -> (opyon1 a $<~> opyon1 b).
 Proof.
   intro e.
@@ -238,19 +238,15 @@ Defined.
 (** We can deduce this from the covariant version with some boilerplate. *)
 
 Definition yon {A : Type} `{IsGraph A} (a : A) : A^op -> Type
-  := @opyon (A^op) _ a.
+  := opyon (A:=A^op) a.
 
 Global Instance is0functor_yon {A : Type} `{H : Is01Cat A} (a : A)
-  : Is0Functor (yon a).
-Proof.
-  apply is0functor_opyon.
-Defined.
+  : Is0Functor (yon a)
+  := is0functor_opyon (A:=A^op) a.
 
 Global Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
-  : Is1Functor (yon a).
-Proof.
-  rapply is1functor_opyon.
-Defined.
+  : Is1Functor (yon a)
+  := is1functor_opyon (A:=A^op) a.
 
 Definition yoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
@@ -260,17 +256,17 @@ Definition yoneda {A : Type} `{Is01Cat A} (a : A)
 Definition un_yoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
   : (yon a $=> F) -> F a
-  := @un_opyoneda (A^op) _ _ a F _.
+  := un_opyoneda (A:=A^op) a F.
 
 Global Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
        (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (yon a) F (yoneda a F x)
-  := @is1natural_opyoneda (A^op) _ _ _ _ a F _ _ x.
+  := is1natural_opyoneda (A:=A^op) a F x.
 
 Definition yoneda_issect {A : Type} `{Is1Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : un_yoneda a F (yoneda a F x) = x
-  := @opyoneda_issect (A^op) _ _ _ _ a F _ _ x.
+  := opyoneda_issect (A:=A^op) a F x.
 
 Definition yoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F}
@@ -279,24 +275,24 @@ Definition yoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
            (alpha : yon a $=> F) {alnat : Is1Natural (yon a) F alpha}
            (b : A)
   : yoneda a F (un_yoneda a F alpha) b $== alpha b
-  := @opyoneda_isretr A^op _ _ _ (is1cat_strong_op A) a F _ _ alpha alnat b.
+  := opyoneda_isretr (A:=A^op) a F alpha b.
 
 Definition yon_cancel {A : Type} `{Is01Cat A} (a b : A)
   : (yon a $=> yon b) -> (a $-> b)
   := un_yoneda a (yon b).
 
 Definition yon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A^op Type
-  := @opyon1 A^op _ _ a.
+  := opyon1 (A:=A^op) a.
 
 Definition yon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A^op Type
-  := @opyon11 A^op _ _ _ _ _ a.
+  := opyon11 (A:=A^op) a.
 
 Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            (a b : A)
   : (yon1 a $<~> yon1 b) -> (a $<~> b)
-  := (@opyon_equiv A^op _ _ _ _ _ _ a b).
+  := opyon_equiv (A:=A^op).
 
 Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
   `{!HasMorExt A} (a b : A)
   : (a $<~> b) -> (yon1 a $<~> yon1 b)
-  := (@natequiv_opyon_equiv A^op _ _ _ _ _ _ a b).
+  := natequiv_opyon_equiv (A:=A^op).
