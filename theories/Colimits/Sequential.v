@@ -214,12 +214,12 @@ Proof.
   induction n as [ | n e]; srapply isequiv_homotopic'.
   - srapply equiv_functor_colimit; srapply Build_diagram_equiv.
     + srapply Build_DiagramMap.
-      * exact (fun k => coe (ap A (nat_add_n_O k)^)).
-      * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (nat_add_n_O k)^ @ _).
+      * exact (fun k => coe (ap A (add_n_O k)^)).
+      * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (add_n_O k)^ @ _).
         srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))).
     + exact _.
   - symmetry; srapply seq_colimit_uniq.
-    + intros k a; exact (J (nat_add_n_O k)).
+    + intros k a; exact (J (add_n_O k)).
     + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
   - transitivity (Colimit (succ_seq (shift_seq A n))).
     + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
