@@ -296,3 +296,16 @@ Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
   `{!HasMorExt A} (a b : A)
   : (a $<~> b) -> (yon1 a $<~> yon1 b)
   := natequiv_opyon_equiv (A:=A^op).
+
+Definition yon_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A^op ZeroGpd
+  := opyon_0gpd (A:=A^op) a.
+
+Definition yon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A}
+  : yon_0gpd a $<~> yon_0gpd b -> a $<~> b
+  := opyon_equiv_0gpd (A:=A^op).
+
+Definition natequiv_yon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A}
+  : a $<~> b -> yon_0gpd a $<~> yon_0gpd b
+  := natequiv_opyon_equiv_0gpd (A:=A^op).
