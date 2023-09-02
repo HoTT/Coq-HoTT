@@ -501,7 +501,7 @@ Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
 
 Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
   : (f ==* g) -> (f = g)
-  := fun p => equiv_path_pequiv f g p.
+  := equiv_path_pequiv f g.
 
 (** Pointed types of pointed maps *)
 
