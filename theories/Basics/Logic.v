@@ -28,10 +28,4 @@ Inductive True : Type :=
 (** [False] is the empty type. *)
 Inductive False : Type :=.
 
-(** [not A], written [~A], is the negation of [A] *)
-Definition not (A:Type) : Type := A -> False.
-
-(* Notation "~ x" := (not x) : type_scope. *)
-
-#[export] Hint Unfold not : core.
 #[export] Hint Resolve I : core.
