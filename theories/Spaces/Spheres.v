@@ -180,7 +180,7 @@ Proof.
                          (fun _ => 1) 
                          (merid North @ (merid South)^))^ @ _).
   refine ((ap (fun w => _ @@ w) (ap_const _ _)) @ _).
-  refine ((concat2_p1 _) @ _). refine ((whiskerR_p1_1 _) @ _).
+  refine ((whiskerR_p1_1 _) @ _).
   refine ((ap_pp _ (merid North) (merid South)^) @ _). 
   refine (_ @ (concat_p1 _)). f_ap.
   - refine (Susp_rec_beta_merid North).
