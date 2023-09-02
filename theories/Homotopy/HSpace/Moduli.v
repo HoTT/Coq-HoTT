@@ -44,11 +44,11 @@ Proof.
     unfold path_ishspace_type.
   nrefine (equiv_ap_inv' issig_ishspace _ _ oE _).
   nrefine (equiv_path_sigma _ _ _ oE _); cbn.
-  snrapply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.
+  apply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.
   nrefine (equiv_concat_l _ _ oE _).
   1: apply transport_binop_lr_id.
   nrefine (equiv_path_prod _ _ oE _); cbn.
-  snrapply equiv_functor_prod';
+  apply equiv_functor_prod';
     nrefine (equiv_path_forall _ _ oE _);
     apply equiv_functor_forall_id; intro x.
   all: nrefine (equiv_moveR_Vp _ _ _ oE _);
@@ -63,17 +63,14 @@ Defined.
 Definition equiv_iscohhspace_psect `{Funext} (A : pType)
   : IsCohHSpace A <~> pSect (ev A).
 Proof.
-  refine (issig_psect (ev A) oE _ oE (issig_iscohhspace A)^-1%equiv).
+  refine (issig_psect (ev A) oE _^-1%equiv oE (issig_iscohhspace A)^-1%equiv).
   unfold SgOp, LeftIdentity, RightIdentity.
-  nrapply equiv_functor_sigma_id; intro mu.
-  snrapply (equiv_functor_sigma' (equiv_path_forall _ _)); intro H1; cbn.
-  snrapply equiv_functor_sigma_id; intro H2; cbn.
-  refine (_ oE (equiv_path_inverse _ _)).
-  nrapply equiv_concat_r.
-  refine (_ @ (concat_p1 _)^).
-  (* This does not do a rewrite, but [change]s the goal based on the type of the lemma: *)
-  rewrite_refl (ap_apply_lD (path_forall (mu pt) idmap H1) pt).
-  exact (apD10_path_forall _ _ H1 pt)^.
+  apply equiv_functor_sigma_id; intro mu.
+  apply (equiv_functor_sigma' (equiv_apD10 _ _ _)); intro H1; cbn.
+  apply equiv_functor_sigma_id; intro H2; cbn.
+  refine (equiv_path_inverse _ _ oE _).
+  apply equiv_concat_r.
+  apply concat_p1.
 Defined.
 
 (** Our next goal is to see that when [A] is a left-invertible H-space, then the fibration [ev A] is trivial. *)
@@ -83,7 +80,7 @@ Lemma equiv_pmap_hspace `{Funext} {A : pType}
   (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
   : (A ->* A) <~> (A ->* [A,a]).
 Proof.
-  nrapply equiv_pequiv_postcompose.
+  apply equiv_pequiv_postcompose.
   rapply pequiv_hspace_left_op.
 Defined.
 
