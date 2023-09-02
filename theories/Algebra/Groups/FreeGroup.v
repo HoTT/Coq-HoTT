@@ -1,13 +1,14 @@
 Require Import Group Subgroup
   WildCat Colimits.Coeq
-  Truncations.SeparatedTrunc.
+  Truncations.SeparatedTrunc
+  Classes.implementations.list.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
-(** Free groups are defined in Group.v. In this file we construct and prove properties of free groups. *)
+(** [IsFreeGroup] is defined in Group.v. In this file we construct free groups and and prove properties about them. *)
 
-(** In this file we construct the free group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set truncate it to suit our needs which is the free group as a set. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
+(** We construct the free group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set-truncate it to suit our needs which is the free group as a set. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
 
 Section Reduction.
 
@@ -18,11 +19,7 @@ Section Reduction.
   Local Definition Words : Type@{u} := list (A + A).
 
   (** Given a marked element of A we can change its mark *)
-  Local Definition change_sign : A + A -> sum@{u u} A A
-    := fun x => match x with
-                | inl a => inr a
-                | inr a => inl a
-                end.
+  Local Definition change_sign : A + A -> A + A := equiv_sum_symm A A.
 
   (** We introduce a local notation for [change_sign]. It is only defined in this section however. *)
   Local Notation "x ^" := (change_sign x).
@@ -47,27 +44,13 @@ Section Reduction.
 
   Local Definition word_concat_w_ww x y z : x @ (y @ z) = (x @ y) @ z.
   Proof.
-    revert x z.
-    induction y; intros x z.
-    { f_ap; symmetry.
-      apply word_concat_w_nil. }
-    simpl; revert z y IHy.
-    induction x; trivial.
-    intros z y IHy.
-    simpl; f_ap.
-    apply IHx, IHy.
+    apply app_assoc.
   Defined.
 
   (** Singleton word *)
   Local Definition word_sing (x : A + A) : Words := (cons x nil).
 
   Local Notation "[ x ]" := (word_sing x).
-
-  (** We define an inductive family [Red] on [Words] which expresses whether a given word can be reduced to the empty list *)
-  Inductive Red : Words -> Type :=
-    | red_zero : Red nil
-    | red_step (y z : Words) (a : A + A)
-      : Red (y @ z) -> Red (y @ [a] @ [a^] @ z).
 
   (** Now we wish to define the free group on A as the following HIT: 
 
@@ -179,10 +162,9 @@ Section Reduction.
   Proof.
     induction x.
     1: reflexivity.
-    cbn.
+    simpl.
     set (a' := a^).
     rewrite <- (change_sign_inv a).
-    change a^ with a'.
     change (freegroup_eta ((word_change_sign x @ [a']) @ ([a'^] @ x)) = mon_unit).
     rewrite word_concat_w_ww.
     rewrite freegroup_tau.
