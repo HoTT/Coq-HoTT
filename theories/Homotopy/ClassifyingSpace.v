@@ -565,11 +565,11 @@ Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (Pi1 X)) (opyon X o B).
 Proof.
   nrefine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _).
-  2: exact (natequiv_opyon_equiv (Pi1 X) _ (grp_iso_pi1_Tr _)).
+  2: exact (natequiv_opyon_equiv (A:=Group) (grp_iso_pi1_Tr _)).
   refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).
   refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
   { refine (natequiv_prewhisker _ _).
-    refine (natequiv_opyon_equiv _ _ _^-1$).
+    refine (natequiv_opyon_equiv _^-1$).
     rapply pequiv_pclassifyingspace_pi1. }
   snrapply Build_NatEquiv.
   1: intro; exact equiv_ptr_rec.
