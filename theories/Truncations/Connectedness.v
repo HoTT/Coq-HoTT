@@ -5,7 +5,7 @@ Require Import Types.
 
 Require Import Extensions.
 Require Import Factorization.
-Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
+Require Export Modalities.Modality.        (* [Export] since the actual definitions of connectedness appear there, in the generality of a modality. *)
 Require Import Modalities.Descent.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 

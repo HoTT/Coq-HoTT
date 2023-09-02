@@ -63,7 +63,7 @@ Coercion pointed_fun : pForall >-> Funclass.
 
 (** ** Pointed functions *)
 
-(** A pointed map is a map with a proof that it preserves the point. We define it as as a notion for a non-dependent version of [pForall]. *)
+(** A pointed map is a map with a proof that it preserves the point. We define it as as a notation for a non-dependent version of [pForall]. *)
 Notation "A ->* B" := (pForall A (pfam_const B)) : pointed_scope.
 
 Definition Build_pMap (A B : pType) (f : A -> B) (p : f (point A) = point B)

@@ -273,12 +273,9 @@ Proof.
   apply diamond_symm.
 Defined.
 
-
-(** The joint of n.+1 copies of a type. *)
+(** The join of n.+1 copies of a type. *)
 Fixpoint Join_power (A : Type) (n : nat) : Type :=
   match n with
   | 0%nat => A
   | m.+1%nat => Join A (Join_power A m)
   end.
-
-

@@ -6,7 +6,7 @@ Generalizable Variables A B n f.
 
 (** * Universes of truncated types
 
-Now that we have the univalence axiom (from [types/Universe]), we study further the universes [TruncType] of truncated types (including [hProp] and [hSet]) that were defined in [Basics/Trunc].  *)
+Now that we have the univalence axiom (from [Types/Universe]), we study further the universes [TruncType] of truncated types (including [hProp] and [hSet]) that were defined in [Basics/Trunc].  *)
 
 (** ** Paths in [TruncType] *)
 

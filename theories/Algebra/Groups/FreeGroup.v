@@ -362,7 +362,7 @@ Section Reduction.
   Defined.
 
   (** Typeclass search can already find this but we leave it here as a definition for reference. *)
-  Definition isfreegroup_freegrup `{Funext} : IsFreeGroup FreeGroup := _.
+  Definition isfreegroup_freegroup `{Funext} : IsFreeGroup FreeGroup := _.
 
   Definition freegroup_in : A -> FreeGroup
     := freegroup_eta o word_sing o inl.
