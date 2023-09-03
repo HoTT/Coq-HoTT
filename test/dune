@@ -2,3 +2,5 @@
  (name HoTT.Tests)
  (theories HoTT)
  (flags -noinit -indices-matter -color on))
+
+(include_subdirs qualified)
