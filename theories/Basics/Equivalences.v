@@ -89,11 +89,11 @@ Section IsEquivHomotopic.
   Context `{IsEquiv A B f}.
   Hypothesis h : f == g.
 
-  Let sect := (fun b:B => (h (f^-1 b))^ @ eisretr f b).
-  Let retr := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
+  Let retr := (fun b:B => (h (f^-1 b))^ @ eisretr f b).
+  Let sect := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
 
   (* We prove the triangle identity with rewrite tactics.  Since we lose control over the proof term that way, we make the result opaque with "Qed". *)
-  Let adj (a : A) : sect (g a) = ap g (retr a).
+  Let adj (a : A) : retr (g a) = ap g (sect a).
   Proof.
     unfold sect, retr.
     rewrite ap_pp. apply moveR_Vp.
@@ -105,7 +105,7 @@ Section IsEquivHomotopic.
 
   (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
   Definition isequiv_homotopic : IsEquiv g
-    := Build_IsEquiv _ _ g (f ^-1) sect retr adj.
+    := Build_IsEquiv _ _ g (f ^-1) retr sect adj.
 
   Definition equiv_homotopic : A <~> B
     := Build_Equiv _ _ g isequiv_homotopic.

@@ -92,6 +92,7 @@ Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A <~> B)
 
 (** ** Behavior on path operations *)
 
+(* We explicitly assume [Funext] here, since this result doesn't use [Univalence]. *)
 Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
 : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
@@ -99,7 +100,7 @@ Proof.
   nrapply transport_pp.
 Defined.
 
-Definition path_universe_compose_uncurried `{Funext} {A B C : Type}
+Definition path_universe_compose_uncurried {A B C : Type}
            (f : A <~> B) (g : B <~> C)
 : path_universe_uncurried (equiv_compose g f)
 = path_universe_uncurried f @ path_universe_uncurried g.
@@ -111,7 +112,7 @@ Proof.
   apply concat2; symmetry; apply eta_path_universe.
 Defined.
 
-Definition path_universe_compose `{Funext} {A B C : Type}
+Definition path_universe_compose {A B C : Type}
            (f : A <~> B) (g : B <~> C)
   : path_universe (g o f) = path_universe f @ path_universe g
   := path_universe_compose_uncurried f g.
@@ -120,7 +121,7 @@ Definition path_universe_1 {A : Type}
   : path_universe (equiv_idmap A) = 1
   := eta_path_universe 1.
 
-Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
+Definition path_universe_V_uncurried {A B : Type} (f : A <~> B)
   : path_universe_uncurried f^-1 = (path_universe_uncurried f)^.
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
@@ -131,14 +132,14 @@ Proof.
   - by refine (eissect (equiv_path B A) p^).
 Defined.
 
-Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
+Definition path_universe_V `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (Build_Equiv A B f _).
 
 (** ** Path operations vs Type operations *)
 
 (** [ap (Equiv A)] behaves like postcomposition. *)
-Definition ap_equiv_path_universe `{Funext} A {B C} (f : B <~> C)
+Definition ap_equiv_path_universe A {B C} (f : B <~> C)
 : equiv_path (A <~> B) (A <~> C) (ap (Equiv A) (path_universe f))
   = equiv_functor_equiv (equiv_idmap A) f.
 Proof.
@@ -151,7 +152,7 @@ Proof.
 Defined.
 
 (** [ap (prod A)] behaves like [equiv_functor_prod_l]. *)
-Definition ap_prod_l_path_universe `{Funext} A {B C} (f : B <~> C)
+Definition ap_prod_l_path_universe A {B C} (f : B <~> C)
   : equiv_path (A * B) (A * C) (ap (prod A) (path_universe f))
     = equiv_functor_prod_l f.
 Proof.
@@ -162,7 +163,7 @@ Proof.
 Defined.
 
 (** [ap (fun Z => Z * A)] behaves like [equiv_functor_prod_r]. *)
-Definition ap_prod_r_path_universe `{Funext} A {B C} (f : B <~> C)
+Definition ap_prod_r_path_universe A {B C} (f : B <~> C)
   : equiv_path (B * A) (C * A) (ap (fun Z => Z * A) (path_universe f))
     = equiv_functor_prod_r f.
 Proof.
@@ -207,7 +208,7 @@ Definition transport_path_universe'
 
 (** And a version for transporting backwards. *)
 
-Definition transport_path_universe_V_uncurried `{Funext}
+Definition transport_path_universe_V_uncurried
            {A B : Type} (f : A <~> B) (z : B)
   : transport (fun X:Type => X) (path_universe_uncurried f)^ z = f^-1 z.
 Proof.
@@ -215,13 +216,13 @@ Proof.
   exact (ap (fun s => transport idmap s z) (inverse2 (eissect _ p))).
 Defined.
 
-Definition transport_path_universe_V `{Funext}
+Definition transport_path_universe_V
            {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
   : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
   := transport_path_universe_V_uncurried (Build_Equiv _ _ f feq) z.
 (* Alternatively, [(transport2 idmap (path_universe_V f) z)^ @ (transport_path_universe (f^-1) z)]. *)
 
-Definition transport_path_universe_V_equiv_path `{Funext}
+Definition transport_path_universe_V_equiv_path
            {A B : Type} (p : A = B) (z : B)
   : transport_path_universe_V (equiv_path A B p) z =
     ap (fun s => transport idmap s z) (inverse2 (eissect _ p))
@@ -229,7 +230,7 @@ Definition transport_path_universe_V_equiv_path `{Funext}
 
 (** And some coherence for it. *)
 
-Definition transport_path_universe_Vp_uncurried `{Funext}
+Definition transport_path_universe_Vp_uncurried
            {A B : Type} (f : A <~> B) (z : A)
 : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
   @ transport_path_universe_V f (f z)
@@ -246,7 +247,7 @@ Proof.
   - apply transport_path_universe_V_equiv_path.
 Defined.
 
-Definition transport_path_universe_Vp `{Funext}
+Definition transport_path_universe_Vp
            {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
 : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
   @ transport_path_universe_V f (f z)
@@ -256,7 +257,7 @@ Definition transport_path_universe_Vp `{Funext}
 
 (** *** Transporting in particular type families *)
 
-Theorem transport_arrow_toconst_path_universe `{Univalence} {A U V : Type} (w : U <~> V)
+Theorem transport_arrow_toconst_path_universe {A U V : Type} (w : U <~> V)
   : forall f : U -> A, transport (fun E : Type => E -> A) (path_universe w) f = (f o w^-1).
 Proof.
   intros f. funext y.
@@ -267,7 +268,7 @@ Defined.
 
 (** ** 2-paths *)
 
-Definition equiv_path2_universe `{Funext}
+Definition equiv_path2_universe
            {A B : Type} (f g : A <~> B)
 : (f == g) <~> (path_universe f = path_universe g).
 Proof.
@@ -276,12 +277,12 @@ Proof.
   exact (equiv_ap (equiv_path A B)^-1 _ _).
 Defined.
 
-Definition path2_universe `{Funext}
+Definition path2_universe
            {A B : Type} {f g : A <~> B}
 : (f == g) -> (path_universe f = path_universe g)
   := equiv_path2_universe f g.
 
-Definition equiv_path2_universe_1 `{Funext}
+Definition equiv_path2_universe_1
            {A B : Type} (f : A <~> B)
 : equiv_path2_universe f f (fun x => 1) = 1.
 Proof.
@@ -290,15 +291,15 @@ Proof.
   reflexivity.
 Qed.
 
-Definition path2_universe_1 `{Funext}
+Definition path2_universe_1
            {A B : Type} (f : A <~> B)
-: @path2_universe _ _ _ f f (fun x => 1) = 1
+: @path2_universe _ _ f f (fun x => 1) = 1
   := equiv_path2_universe_1 f.
 
 (** There ought to be a lemma which says something like this:
 
 <<
-Definition path2_universe_postcompose `{Funext}
+Definition path2_universe_postcompose
            {A B C : Type} {f1 f2 : A <~> B} (p : f1 == f2)
            (g : B <~> C)
 : equiv_path2_universe (g o f1)
@@ -312,7 +313,7 @@ Definition path2_universe_postcompose `{Funext}
 and similarly
 
 <<
-Definition path2_universe_precompose `{Funext}
+Definition path2_universe_precompose
            {A B C : Type} {f1 f2 : B <~> C} (p : f1 == f2)
            (g : A <~> B)
 : equiv_path2_universe (f1 o g)
@@ -329,7 +330,7 @@ but I haven't managed to prove them yet.  Fortunately, for existing applications
 Section PathEquivSimplNever.
   Local Arguments equiv_path_equiv : simpl never.
 
-  Definition path2_universe_postcompose_idmap `{Funext}
+  Definition path2_universe_postcompose_idmap
              {A C : Type} (p : forall a:A, a = a)
              (g : A <~> C)
   : equiv_path2_universe g g (fun a => ap g (p a))
@@ -365,7 +366,7 @@ Section PathEquivSimplNever.
       apply path_forall; intros x; apply ap_idmap.
   Defined.
 
-  Definition path2_universe_precompose_idmap `{Funext}
+  Definition path2_universe_precompose_idmap
              {A B : Type} (p : forall b:B, b = b)
              (g : A <~> B)
   : equiv_path2_universe g g (fun a => (p (g a)))
@@ -404,7 +405,7 @@ End PathEquivSimplNever.
 
 (** ** 3-paths *)
 
-Definition equiv_path3_universe `{Funext}
+Definition equiv_path3_universe
            {A B : Type} {f g : A <~> B} (p q : f == g)
 : (p == q) <~> (path2_universe p = path2_universe q).
 Proof.
@@ -415,12 +416,12 @@ Proof.
   simpl. refine (equiv_ap (ap (equiv_path A B)^-1) _ _).
 Defined.
 
-Definition path3_universe `{Funext}
+Definition path3_universe
            {A B : Type} {f g : A <~> B} {p q : f == g}
 : (p == q) -> (path2_universe p = path2_universe q)
   := equiv_path3_universe p q.
 
-Definition transport_path_universe_pV_uncurried `{Funext}
+Definition transport_path_universe_pV_uncurried
            {A B : Type} (f : A <~> B) (z : B)
 : transport_path_universe f (transport idmap (path_universe f)^ z)
   @ ap f (transport_path_universe_V f z)
@@ -440,7 +441,7 @@ Proof.
   - apply transport_path_universe_equiv_path.
 Defined.
 
-Definition transport_path_universe_pV `{Funext}
+Definition transport_path_universe_pV
            {A B : Type} (f : A -> B) {feq : IsEquiv f } (z : B)
 : transport_path_universe f (transport idmap (path_universe f)^ z)
   @ ap f (transport_path_universe_V f z)
@@ -515,7 +516,7 @@ Defined.
 (** ** Truncations *)
 
 (** Truncatedness of the universe is a subtle question, but with univalence we can conclude things about truncations of certain of its path-spaces. *)
-Global Instance istrunc_paths_Type `{Funext}
+Global Instance istrunc_paths_Type
        {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
 : IsTrunc n.+1 (A = B).
 Proof.

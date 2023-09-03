@@ -8,7 +8,7 @@ Require Import Truncations.
 
 (** ** Path algebra helper lemma *)
 
-(** Here are is a strange-looking path algebra helper lemma that is easier to prove by lifting to a general case and doing a path-induction blast.  It says something about what happens when we transport from the center of a based path-space to some other point, assuming we know a particular way to "compute" the action of the type family in question. *)
+(** Here is a strange-looking path algebra helper lemma that is easier to prove by lifting to a general case and doing a path-induction blast.  It says something about what happens when we transport from the center of a based path-space to some other point, assuming we know a particular way to "compute" the action of the type family in question. *)
 
 Definition transport_singleton `{Univalence}
            {A : Type} {x : A} (B : forall (y : A), (x = y) -> Type)

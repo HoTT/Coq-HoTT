@@ -215,7 +215,7 @@ Definition pequiv_fmap_loops {A B : pType}
   : A $<~> B -> loops A $<~> loops B
   := emap loops.
 
-(** A version of [unfold_iterated_loops] that's an equivalence rather than an equality.  We could get this from the equality, but it's more useful to construct it explicitly since then we can reason about it.  *)
+(** A version of [unfold_iterated_loops] that's an equivalence rather than an equality.  We could get this from the equality, but it's more useful to construct it explicitly since then we can reason about it. *)
 Definition unfold_iterated_loops' (n : nat) (X : pType)
   : iterated_loops n.+1 X <~>* iterated_loops n (loops X).
 Proof.
@@ -351,7 +351,7 @@ Defined.
 
 (* 7.2.7 *)
 Theorem equiv_istrunc_istrunc_loops `{Univalence} n X
-  : IsTrunc n.+2 X <~> forall x, IsTrunc n.+1 (loops [X, x]).
+  : IsTrunc n.+2 X <~> forall (x : X), IsTrunc n.+1 (loops [X, x]).
 Proof.
   srapply equiv_iff_hprop.
   intro tr_loops.
@@ -392,10 +392,7 @@ Proof.
   + pointed_reduce. reflexivity.
 Defined.
 
-(** Loops on the pointed type of dependent pointed maps correspond to
-  pointed dependent maps into a family of loops. *)
-(* We define this in this direction, because the forward map is pointed by
-  reflexivity. *)
+(** Loops on the pointed type of dependent pointed maps correspond to pointed dependent maps into a family of loops.  We define this in this direction, because the forward map is pointed by reflexivity. *)
 Definition equiv_loops_ppforall `{Funext} {A : pType} (B : A -> pType)
   : loops (ppforall x : A, B x) <~>* (ppforall x : A, loops (B x)).
 Proof.

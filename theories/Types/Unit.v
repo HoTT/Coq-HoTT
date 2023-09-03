@@ -100,11 +100,10 @@ Definition equiv_unit_coind `{Funext} (A : Type)
 (** ** Truncation *)
 
 (* The Unit type is contractible *)
-(** Because [Contr] is a notation, and [Contr_internal] is the record, we need to iota expand to fool Coq's typeclass machinery into accepting supposedly "mismatched" contexts. *)
-Global Instance contr_unit : Contr Unit | 0 := let x := {|
+Global Instance contr_unit : Contr Unit | 0 := {|
   center := tt;
   contr := fun t : Unit => match t with tt => 1 end
-|} in x.
+|}.
 
 (** ** Equivalences *)
 

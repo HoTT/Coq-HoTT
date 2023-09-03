@@ -13,6 +13,8 @@ Scheme nat_rec := Minimality for nat Sort Type.
 
 (** Many of these definitions and proofs have been ported from the coq stdlib. *)
 
+(** Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
+
 (** We want to close the trunc_scope so that notations from there don't conflict here. *)
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
@@ -664,13 +666,6 @@ Defined.
 
 (** ** Arithmetic *)
 
-Lemma nat_add_n_O : forall n:nat, n = n + 0.
-Proof.
-  induction n.
-  - reflexivity.
-  - simpl; apply ap; assumption.
-Defined.
-
 Lemma nat_add_n_Sm : forall n m:nat, (n + m).+1 = n + m.+1.
 Proof.
   intros n m; induction n; simpl.
@@ -681,7 +676,7 @@ Defined.
 Definition nat_add_comm (n m : nat) : n + m = m + n.
 Proof.
   revert m; induction n as [|n IH]; intros m; simpl.
-  - refine (nat_add_n_O m).
+  - refine (add_n_O m).
   - transitivity (m + n).+1.
     + apply ap, IH.
     + apply nat_add_n_Sm.

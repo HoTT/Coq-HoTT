@@ -22,7 +22,7 @@ Local Unset Elimination Schemes.
 (* Contents:
 
   * Definition of PathSquare 
-  * Degnerate PathSquares as paths between paths
+  * Degenerate PathSquares as paths between paths
   * Flipping squares horizontally and vertically
   * PathSquare transpose
   * PathSquare inverse

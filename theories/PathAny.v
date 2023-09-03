@@ -13,8 +13,7 @@ Proof.
   srefine (Build_Equiv _ _ _ _).
   { intros []; apply Prefl. }
   revert b; apply isequiv_from_functor_sigma.
-  (* For some reason, typeclass search can't find the Contr instances unless we give the types explicitly. *)
-  refine (@isequiv_contr_contr {x:A & a=x} {x:A & P x} _ _ _).
+  rapply isequiv_contr_contr.
 Defined.
 
 (** See Homotopy/EncodeDecode.v for a related characterization of identity types. *)
