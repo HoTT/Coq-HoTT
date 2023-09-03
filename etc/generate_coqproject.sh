@@ -6,7 +6,7 @@ else
   if [ "$GENERATE_COQPROJECT_FOR_DUNE" != "true" ]; then
     echo "Warning: Not a git clone, using find instead" >&2
   fi
-  TRACKED_V_FILES="$(find theories contrib -type f -name "*.v")"
+  TRACKED_V_FILES="$(find theories contrib test -type f -name "*.v")"
 fi
 
 ## List untracked .v files
@@ -26,6 +26,7 @@ COQPROJECT_HEADER=\
 ###############################################################################
 -R theories HoTT
 -Q contrib HoTT.Contrib
+-Q test HoTT.Tests
 
 -arg -noinit
 -arg -indices-matter
@@ -38,6 +39,7 @@ if [ "$GENERATE_COQPROJECT_FOR_DUNE" == "true" ]; then
 # Dune compatibility
 -R _build/default/theories HoTT
 -Q _build/default/contrib HoTT.Contrib
+-Q _build/default/test HoTT.Tests
 "
 fi
 
