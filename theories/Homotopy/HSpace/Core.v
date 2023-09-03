@@ -90,7 +90,7 @@ Definition homogeneous_pt_id_beta `{Funext} {A : pType} `{IsHomogeneous A}
   := ltac:(apply path_pequiv, peisretr).
 
 (** This modified structure makes any homogeneous type into a (left-invertible) H-space. *)
-Global Instance ishspace_homogeneous {A : pType} `{IsHomogeneous A}
+Definition ishspace_homogeneous {A : pType} `{IsHomogeneous A}
   : IsHSpace A.
 Proof.
   snrapply Build_IsHSpace.
