@@ -1,6 +1,6 @@
-(lang dune 3.5)
+(lang dune 3.8)
 
-(using coq 0.6)
+(using coq 0.8)
 
 (name coq-hott)
 
