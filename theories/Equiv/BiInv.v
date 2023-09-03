@@ -19,11 +19,26 @@ Definition isequiv_biinv `(f : A -> B)
 Proof.
   intros [[g s] [h r]].
   exact (isequiv_adjointify f g
-    (fun x => ap f (ap g (r x)^ @ s (h x))  @ r x)
+    (fun x => ap f (ap g (r x)^ @ s (h x)) @ r x)
     s).
 Defined.
 
-Global Instance isprop_biinv `{Funext} `(f : A -> B) : IsHProp (BiInv f) | 0.
+Definition biinv_isequiv `(f : A -> B)
+  : IsEquiv f -> BiInv f.
+Proof.
+  intros [g s r adj].
+  exact ((g; r), (g; s)).
+Defined.
+
+Definition iff_biinv_isequiv `(f : A -> B)
+  : BiInv f <-> IsEquiv f.
+Proof.
+  split.
+  - apply isequiv_biinv.
+  - apply biinv_isequiv.
+Defined.
+
+Global Instance ishprop_biinv `{Funext} `(f : A -> B) : IsHProp (BiInv f) | 0.
 Proof.
   apply hprop_inhabited_contr.
   intros bif; pose (fe := isequiv_biinv f bif).
@@ -36,9 +51,5 @@ Defined.
 Definition equiv_biinv_isequiv `{Funext} `(f : A -> B)
   : BiInv f <~> IsEquiv f.
 Proof.
-  apply equiv_iff_hprop.
-  - by apply isequiv_biinv.
-  - intros ?.  split.
-    + by exists (f^-1); apply eissect.
-    + by exists (f^-1); apply eisretr.
+  apply equiv_iff_hprop_uncurried, iff_biinv_isequiv.
 Defined.

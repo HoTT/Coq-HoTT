@@ -602,7 +602,7 @@ Definition Book_4_3_1  := @HoTT.Equiv.BiInv.BiInv.
 (* ================================================== thm:isprop-biinv *)
 (** Theorem 4.3.2 *)
 
-Definition Book_4_3_2  := @HoTT.Equiv.BiInv.isprop_biinv.
+Definition Book_4_3_2  := @HoTT.Equiv.BiInv.ishprop_biinv.
 
 (* ================================================== thm:equiv-biinv-isequiv *)
 (** Corollary 4.3.3 *)
