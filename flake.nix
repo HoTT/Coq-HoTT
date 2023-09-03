@@ -11,13 +11,11 @@
     { self
     , nixpkgs
     , flake-utils
-    ,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        coq_version = pkgs.coq_8_17;
       in
       {
         packages.default = pkgs.coqPackages.mkCoqDerivation {
@@ -28,11 +26,11 @@
         };
 
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            dune_3
-            ocaml
-            coq_8_17
-            coqPackages_8_17.coq-lsp
+          buildInputs = with pkgs.coqPackages_8_17; [
+            pkgs.dune_3
+            pkgs.ocaml
+            coq
+            coq-lsp
           ];
         };
 
