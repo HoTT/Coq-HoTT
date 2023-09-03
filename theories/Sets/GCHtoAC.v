@@ -68,9 +68,8 @@ Context {EM : ExcludedMiddle}.
 Lemma PE (P P' : HProp) :
   P <-> P' -> P = P'.
 Proof.
-  intros [f g]. apply path_trunctype.
-  apply (equiv_adjointify f g).
-  all: intro x; apply path_ishprop.
+  intros iff. apply path_trunctype.
+  rapply (equiv_iff_hprop_uncurried iff).
 Qed.
 
 Lemma path_bool_prop :
