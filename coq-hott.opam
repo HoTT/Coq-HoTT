@@ -16,7 +16,7 @@ license: "BSD-2-Clause"
 homepage: "http://homotopytypetheory.org/"
 bug-reports: "https://github.com/HoTT/HoTT/issues"
 depends: [
-  "dune" {>= "3.5"}
+  "dune" {>= "3.8"}
   "coq" {>= "8.17.0"}
   "odoc" {with-doc}
 ]
