@@ -8,17 +8,15 @@ From HoTT.Sets Require Import Ordinals Hartogs Powers GCH AC.
 
 Open Scope type.
 
-(* The proof of Sierpinski's results that GCH implies AC given in this file consists of 2 ingredients:
+(* The proof of Sierpinski's results that GCH implies AC given in this file consists of two ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
    2. A variant of Cantor's theorem saying that P(X) <= (X + Y) implies P(X) <= Y for large X (Cantor_injects_injects).
-   Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski),
-   from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal,
-   which is enough to conclude GCH -> AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
+   Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski), from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal, which is enough to conclude GCH -> AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
 
 
 (** * Constructive equivalences *)
 
-(* For the 1. ingredient, we establish a bunch of paths and conclude the wished result by equational reasoning. *)
+(* For the first ingredient, we establish a bunch of paths and conclude the desired result by equational reasoning. *)
 
 Section Preparation.
 
@@ -63,19 +61,9 @@ Proof.
 Qed.
 
 
-
 (** * Equivalences relying on LEM **)
 
 Context {EM : ExcludedMiddle}.
-
-Lemma PE (P P' : HProp) :
-  P <-> P' -> P = P'.
-Proof.
-  intros [f g]. apply path_trunctype.
-  exists f. apply isequiv_biinv. split.
-  - exists g. intros x. apply P.
-  - exists g. intros x. apply P'.
-Qed.
 
 Lemma path_bool_prop :
   HProp = Bool.
@@ -86,7 +74,7 @@ Proof.
   - intros []; destruct LEM as [H|H]; auto.
     + destruct (H (tr tt)).
     + apply (@merely_destruct Empty); easy.
-  - intros P. destruct LEM as [H|H]; apply PE.
+  - intros P. destruct LEM as [H|H]; apply equiv_path_iff_hprop.
     + split; auto. intros _. apply tr. exact tt.
     + split; try easy. intros HE. apply (@merely_destruct Empty); easy.
 Qed.
@@ -125,7 +113,6 @@ Proof.
 Qed.
 
 
-
 (** * Equivalences on infinite sets *)
 
 Lemma path_infinite_unit (X : HSet) :
@@ -144,11 +131,9 @@ Proof.
 Qed.
 
 
-
 (** * Variants of Cantors's theorem *)
 
-(* For the 2. ingredient, we give a preliminary version (Cantor_path_inject) to see the idea,
-   as well as a stronger refinement (Cantor_injects_injects) which is then a mere reformulation. *)
+(* For the second ingredient, we give a preliminary version (Cantor_path_inject) to see the idea, as well as a stronger refinement (Cantor_injects_injects) which is then a mere reformulation. *)
 
 Context {PR : PropResizing}.
 
@@ -213,7 +198,7 @@ Lemma InjectsInto_power_morph X Y :
 Proof.
   intros HF. eapply merely_destruct; try apply HF. intros [f Hf].
   apply tr. exists (fun p => fun y => hexists (fun x => p x /\ y = f x)).
-  intros p q H. apply path_forall. intros x. apply PE. split; intros Hx.
+  intros p q H. apply path_forall. intros x. apply equiv_path_iff_hprop. split; intros Hx.
   - assert (Hp : (fun y : Y => hexists (fun x : X => p x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
     pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try apply Hp. now intros [x'[Hq <- % Hf]].
   - assert (Hq : (fun y : Y => hexists (fun x : X => q x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
@@ -242,7 +227,6 @@ Qed.
 End Preparation.
 
 
-
 (** * Sierpinski's Theorem *)
 
 Section Sierpinski.
@@ -261,9 +245,7 @@ Hypothesis HN_ninject : forall X, ~ InjectsInto (HN X) X.
 Variable HN_bound : nat.
 Hypothesis HN_inject : forall X, InjectsInto (HN X) (power_iterated X HN_bound).
 
-(* This section then concludes the intermediate result that abstractly,
-   any function HN behaving like the Hartogs number is tamed in the presence of GCH.
-   Morally we show that X <= HN(X) for all X, we just ensure that X is large enough by considering P(N + X). *)
+(* This section then concludes the intermediate result that abstractly, any function HN behaving like the Hartogs number is tamed in the presence of GCH.  Morally we show that X <= HN(X) for all X, we just ensure that X is large enough by considering P(N + X). *)
 
 Lemma InjectsInto_sum X Y X' Y' :
   InjectsInto X X' -> InjectsInto Y Y' -> InjectsInto (X + Y) (X' + Y').
@@ -279,8 +261,7 @@ Proof.
   - apply ap. apply Hg. apply path_sum_inr with X'. apply H.
 Qed.
 
-(* The main proof is by induction on the cardinality bound for HN.
-   As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
+(* The main proof is by induction on the cardinality bound for HN.  As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
 
 Lemma Sierpinski_step (X : HSet) n :
   GCH -> infinite X -> powfix X -> InjectsInto (HN X) (power_iterated X n) -> InjectsInto X (HN X).

@@ -163,4 +163,10 @@ Section TruncType.
     exact (Build_Equiv _ _ path_iff_ishprop_uncurried _).
   Defined.
 
+  Lemma equiv_path_iff_hprop {A B : HProp}
+    : (A <-> B) <~> (A = B).
+  Proof.
+    refine (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
+  Defined.
+
 End TruncType.
