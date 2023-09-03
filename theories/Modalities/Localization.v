@@ -63,7 +63,6 @@ Fixpoint ExtendableAlong_Over@{a b c d m}
                   ExtendableAlong_Over n f (fun b => h b = k b)
                     (fun b c => c # h' b = k' b) (snd ext' h k)
      end ext.
-Check ExtendableAlong_Over@{a b c d m}.
 (** [ExtendableAlong_Over] takes 5 universe parameters:
     - size of A
     - size of B
@@ -159,12 +158,10 @@ Proof.
 Defined.
 
 (** Here's the [oo]-version. *)
-Definition ooExtendableAlong_Over
-         {A B : Type} (f : A -> B) (C : B -> Type)
-         (D : forall b, C b -> Type) (ext : ooExtendableAlong f C)
-  := forall n, ExtendableAlong_Over n f C D (ext n).
-(** Universe parameters are the same as for [ExtendableAlong_Over]. *)
-Check ooExtendableAlong_Over@{a b c d r}.
+Definition ooExtendableAlong_Over@{a b c d r}
+         {A : Type@{a}} {B : Type@{b}} (f : A -> B) (C : B -> Type@{c})
+         (D : forall b, C b -> Type@{d}) (ext : ooExtendableAlong f C)
+  := forall n, ExtendableAlong_Over@{a b c d r} n f C D (ext n).
 
 (** The [oo]-version for trivial dependency. *)
 Definition ooextendable_over_const
