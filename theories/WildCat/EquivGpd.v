@@ -7,7 +7,7 @@ Require Import WildCat.Sigma.
 
 (** * Equivalences of 0-groupoids, and split essentially surjective functors *)
 
-(** For an alternate definition of equivalences of 0-groupoids, see ZeroGroupoid.v. *)
+(** For a logically equivalent definition of equivalences of 0-groupoids, see ZeroGroupoid.v. *)
 
 (** We could define these similarly for more general categories too, but we'd need to use [HasEquivs] and [$<~>] instead of [$==]. *)
 

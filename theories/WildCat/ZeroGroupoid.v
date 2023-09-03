@@ -79,7 +79,7 @@ Proof.
   - reflexivity.
 Defined.
 
-(** We define equivalences of 0-groupoids.  Note that this differs from [IsEquiv0Gpd] in [EquivGpd.v].  It is chosen to provide what is needed for the Yoneda lemma, and to match the concept for types, with paths replaced by 1-cells.  We are able to match the biinvertible definition.  The half-adjoint definition doesn't work, as we can prove adjointification.  We would need to be in a 1-groupoid for that to be possible.  We could also use the "wrong" definition, without the eisadj condition, and things would go through, but it wouldn't match the definition for types. *)
+(** We define equivalences of 0-groupoids.  The definition is chosen to provide what is needed for the Yoneda lemma, and to match the concept for types, with paths replaced by 1-cells.  We are able to match the biinvertible definition.  The half-adjoint definition doesn't work, as we can't prove adjointification.  We would need to be in a 1-groupoid for that to be possible.  We could also use the "wrong" definition, without the eisadj condition, and things would go through, but it wouldn't match the definition for types. *)
 Class ZeroGpdIsEquiv {G H : ZeroGpd} (f : G $-> H) := {
   zerogpd_equiv_inv : H $-> G;
   zerogpd_eisretr : f $o zerogpd_equiv_inv $== Id H;
@@ -129,3 +129,42 @@ Proof.
     exact (Build_ZeroGpdIsEquiv _ _ f g r g s).
 Defined.
 
+(* In fact, being an equivalence in the sense above is logically equivalent to being an equivalence in the sense of EquivGpd. *)
+
+(* This is just a rough draft showing this.  Some further work is required to reorganize this. *)
+
+Require Import WildCat.EquivGpd.
+
+Definition IsEquiv0Gpd_ZeroGpdEquiv {G H : ZeroGpd} (f : G $<~> H)
+  : IsEquiv0Gpd f.
+Proof.
+  econstructor.
+  - intro y.
+    exists (f^-1$ y).
+    rapply zerogpd_eisretr.
+  - intros x1 x2 m.
+    refine ((zerogpd_eissect f x1)^$ $@ _ $@ zerogpd_eissect f x2).
+    exact (fmap f^-1$ m).
+Defined.
+
+Definition ZeroGpdEquiv_IsEquiv0Gpd {G H : ZeroGpd} (f : G -> H) `{!Is0Functor f}
+  (e : IsEquiv0Gpd f)
+  : G $<~> H.
+Proof.
+  destruct e as [e0 e1]; unfold SplEssSurj in e0.
+  snrapply cate_adjointify.
+  - exact (Build_ZeroGpdMorphism _ _ f _).
+  - snrapply Build_ZeroGpdMorphism.
+    1: exact (fun y => (e0 y).1).
+    snrapply Build_Is0Functor; cbn beta.
+    intros y1 y2 m.
+    apply e1.
+    exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
+  - cbn.
+    intro y.
+    apply e0.
+  - cbn.
+    intro x.
+    apply e1.
+    apply e0.
+Defined.
