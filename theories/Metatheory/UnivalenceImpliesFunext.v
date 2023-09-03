@@ -87,10 +87,6 @@ Section UnivalenceImpliesFunext.
 
 End UnivalenceImpliesFunext.
 
-(** Note that only the codomain universe of [NaiveNondepFunext] is required to be univalent. *)
-Check @Univalence_implies_FunextNondep@{j jplusone i max j max}
-  : Univalence_type@{j jplusone} -> NaiveNondepFunext@{i j max}.
-
 (** Now we use this to prove strong dependent funext.  Again only the codomain universe must be univalent, but the domain universe must be no larger than it is.  Thus practically speaking this means that a univalent universe satisfies funext only for functions between two types in that same universe. *)
 
 Definition Univalence_implies_WeakFunext : Univalence_type -> WeakFunext

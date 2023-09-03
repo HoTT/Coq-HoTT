@@ -15,21 +15,18 @@ Local Open Scope path_scope.
 Definition NaiveFunext :=
   forall (A : Type@{i}) (P : A -> Type@{j}) (f g : forall x, P x),
     (forall x, f x = g x) -> (f = g).
-Check NaiveFunext@{i j max}.
 
 (** Naive non-dependent funext is the same, but only for non-dependent functions.  *)
 
 Definition NaiveNondepFunext :=
   forall (A B : Type) (f g : A -> B),
     (forall x, f x = g x) -> (f = g).
-Check NaiveNondepFunext@{i j max}.
 
 (** Weak funext says that a product of contractible types is contractible. *)
 
 Definition WeakFunext :=
   forall (A : Type) (P : A -> Type),
     (forall x, Contr (P x)) -> Contr (forall x, P x).
-Check WeakFunext@{i j max}.
 
 (** The obvious implications are
    Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
