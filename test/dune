@@ -4,3 +4,8 @@
  (flags -noinit -indices-matter -color on))
 
 (include_subdirs qualified)
+
+(alias
+ (name runtest)
+ (deps
+  (glob_files_rec ./*.vo)))
