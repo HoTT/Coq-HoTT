@@ -1,0 +1,4 @@
+(coq.theory
+ (name HoTT.Tests)
+ (theories HoTT)
+ (flags -noinit -indices-matter -color on))

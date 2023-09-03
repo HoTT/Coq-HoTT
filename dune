@@ -17,10 +17,23 @@
    (bash ./etc/generate_coqproject.sh))))
 
 ; Rule for validation: dune build @runtest
+; This will also run the tests
 
 (rule
  (alias runtest)
  (deps
   (glob_files_rec ./*.vo))
  (action
-  (run coqchk -R ./theories HoTT -Q contrib HoTT.Contrib %{deps} -o)))
+  (run
+   coqchk
+   -R
+   ./theories
+   HoTT
+   -Q
+   contrib
+   HoTT.Contrib
+   -Q
+   test
+   HoTT.Tests
+   %{deps}
+   -o)))
