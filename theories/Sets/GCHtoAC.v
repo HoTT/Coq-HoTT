@@ -65,13 +65,6 @@ Qed.
 
 Context {EM : ExcludedMiddle}.
 
-Lemma PE (P P' : HProp) :
-  P <-> P' -> P = P'.
-Proof.
-  intros iff. apply path_trunctype.
-  rapply (equiv_iff_hprop_uncurried iff).
-Qed.
-
 Lemma path_bool_prop :
   HProp = Bool.
 Proof.
@@ -81,7 +74,7 @@ Proof.
   - intros []; destruct LEM as [H|H]; auto.
     + destruct (H (tr tt)).
     + apply (@merely_destruct Empty); easy.
-  - intros P. destruct LEM as [H|H]; apply PE.
+  - intros P. destruct LEM as [H|H]; apply equiv_path_iff_hprop.
     + split; auto. intros _. apply tr. exact tt.
     + split; try easy. intros HE. apply (@merely_destruct Empty); easy.
 Qed.
@@ -205,7 +198,7 @@ Lemma InjectsInto_power_morph X Y :
 Proof.
   intros HF. eapply merely_destruct; try apply HF. intros [f Hf].
   apply tr. exists (fun p => fun y => hexists (fun x => p x /\ y = f x)).
-  intros p q H. apply path_forall. intros x. apply PE. split; intros Hx.
+  intros p q H. apply path_forall. intros x. apply equiv_path_iff_hprop. split; intros Hx.
   - assert (Hp : (fun y : Y => hexists (fun x : X => p x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
     pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try apply Hp. now intros [x'[Hq <- % Hf]].
   - assert (Hq : (fun y : Y => hexists (fun x : X => q x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
