@@ -47,7 +47,7 @@ Proof.
   refine (concat_p1 _ @ concat_1p _ @ concat_p1 _).
 Defined.
 
-(** ** Composition of pointed homotopies *)
+(** ** [phomotopy_path] respects 2-cells. *)
 Definition phomotopy_path2 {A : pType} {P : pFam A}
   {f g : pForall A P} {p p' : f = g} (q : p = p')
   : phomotopy_path p ==* phomotopy_path p'.

@@ -19,19 +19,13 @@ Global Set Asymmetric Patterns.
 
 Notation "A -> B" := (forall (_ : A), B) : type_scope.
 
-(** * Propositional connectives *)
-
 (** [True] is the unit type. *)
-Inductive True : Type :=
+Inductive True : Set :=
   I : True.
 
 (** [False] is the empty type. *)
-Inductive False : Type :=.
+Inductive False : Set :=.
 
-(** [not A], written [~A], is the negation of [A] *)
-Definition not (A:Type) : Type := A -> False.
-
-(* Notation "~ x" := (not x) : type_scope. *)
-
-#[export] Hint Unfold not : core.
 #[export] Hint Resolve I : core.
+
+(* In the HoTT library, we generally avoid using [True] and [False] and instead use [Unit] and [Empty]. *)

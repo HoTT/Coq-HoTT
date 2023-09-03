@@ -39,7 +39,7 @@ Section Flattening.
   Definition transport_E' {i j : G} (g : G i j)  (x : D i) (y : E (i; x))
     : transport E' (colimp i j g x) (E_f g x y) = y.
   Proof.
-    refine (transport_idmap_ap _ _ _ _ _ _ @ _).
+    refine (transport_idmap_ap _ _ _ @ _).
     srefine (transport2 idmap _ _ @ _).
     2: apply Colimit_rec_beta_colimp; cbn.
     apply (moveR_transport_V idmap).

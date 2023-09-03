@@ -4,7 +4,7 @@ Local Open Scope list_scope.
 
 (** ** Lemmas about lists *)
 
-(** Note that [list] is currently defined in the coq stdlib. *)
+(** Note that [list] is currently defined in Basics.Datatypes. *)
 
 Section Fold_Left_Recursor.
   Variables (A : Type) (B : Type).

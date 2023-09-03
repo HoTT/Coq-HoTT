@@ -100,8 +100,9 @@ require_export = re.compile(r'(^|\s)(Require Export)($|\s)')
 period = re.compile(r'[.]\s')
 
 # Files to not strip.  Most of these files are "summary" files that
-# Require other files for convenience.  A couple are excluded for
-# other reasons, as the comments mention.
+# Require other files for convenience.  Most summary files only contain
+# Export commands and don't need to be listed here.  A couple of files
+# are excluded for other reasons, as the comments mention.
 file_excludes=[
     'theories/Categories.v',
     'theories/Categories/Adjoint.v',

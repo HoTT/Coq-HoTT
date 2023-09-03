@@ -5,7 +5,7 @@ Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.
 
-(* pointed equivalence is a reflexive relation *)
+(* Pointed equivalence is a reflexive relation. *)
 Global Instance pequiv_reflexive : Reflexive pEquiv.
 Proof.
   intro; apply pequiv_pmap_idmap.
@@ -14,7 +14,7 @@ Defined.
 (* We can probably get rid of the following notation, and use ^-1$ instead. *)
 Notation "f ^-1*" := (@cate_inv pType _ _ _ _ hasequivs_ptype _ _ f) : pointed_scope.
 
-(* pointed equivalence is a symmetric relation *)
+(* Pointed equivalence is a symmetric relation. *)
 Global Instance pequiv_symmetric : Symmetric pEquiv.
 Proof.
   intros ? ?; apply pequiv_inverse.
@@ -25,7 +25,7 @@ Definition pequiv_compose {A B C : pType} (f : A <~>* B) (g : B <~>* C)
   : A <~>* C
   := g $oE f.
 
-(* pointed equivalence is a transitive relation *)
+(* Pointed equivalence is a transitive relation. *)
 Global Instance pequiv_transitive : Transitive pEquiv.
 Proof.
   intros ? ? ?; apply pequiv_compose.
@@ -33,20 +33,17 @@ Defined.
 
 Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.
 
-(* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed *)
+(* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed. *)
 Definition Build_pEquiv' {A B : pType} (f : A <~> B)
   (p : f (point A) = point B)
   : A <~>* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.
 
-(* A version of equiv_adjointify for pointed equivalences
-  where all data is pointed. There is a lot of unecessery data here
-  but sometimes it is easier to prove equivalences using this. *)
+(* A version of equiv_adjointify for pointed equivalences where all data is pointed. There is a lot of unnecessary data here but sometimes it is easier to prove equivalences using this. *)
 Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : f o* f' ==* pmap_idmap) (s : f' o* f == pmap_idmap) : A <~>* B
   := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).
 
-(* In some situations you want the back and forth maps to be pointed
-   but not the sections *)
+(* In some situations you want the back and forth maps to be pointed but not the sections. *)
 Definition pequiv_adjointify' {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : f o f' == idmap) (s : f' o f == idmap) : A <~>* B
   := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).

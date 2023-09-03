@@ -925,7 +925,7 @@ Proof.
 Defined.
 
 (** A special case of [transport_compose] which seems to come up a lot. *)
-Definition transport_idmap_ap A (P : A -> Type) x y (p : x = y) (u : P x)
+Definition transport_idmap_ap {A} (P : A -> Type) {x y : A} (p : x = y) (u : P x)
 : transport P p u = transport idmap (ap P p) u
   := match p with idpath => idpath end.
 
@@ -937,7 +937,7 @@ Ltac transport_to_ap :=
                   | idmap => fail 1 (* we don't want to turn [transport idmap (ap _ _)] into [transport idmap (ap idmap (ap _ _))] *)
                   | _ => idtac
                 end;
-               progress rewrite (transport_idmap_ap _ P _ _ p u)
+               progress rewrite (transport_idmap_ap P p u)
          end.
 
 (** Transporting in a fibration dependent on two independent types commutes. *)
@@ -1086,16 +1086,6 @@ Proof.
   refine (_ @ whiskerL_1p h); simpl.
   symmetry; refine (concat_p1 _ @ concat_1p _).
 Defined.
-
-Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
-  :=
-  match h with idpath => 1 end.
-
-Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  1 @@ h = whiskerL 1 h :> (1 @ p = 1 @ q)
-  :=
-  match h with idpath => 1 end.
 
 Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
            (g : p = p') (h k : q = q')

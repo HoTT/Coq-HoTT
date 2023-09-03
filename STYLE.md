@@ -849,7 +849,7 @@ necessary.
 
 Note that it *is* acceptable for the definition of a transparent
 theorem to invoke other theorems which are opaque.  For instance,
-the "adjointify" lemma itself is actually transparent, but it invokes
+the `isequiv_adjointify` lemma itself is actually transparent, but it invokes
 an opaque sublemma that computes the triangle identity (using
 `rewrite`).  Making the main lemma transparent is necessary so that
 the other parts of an equivalence -- the inverse function and
@@ -1221,7 +1221,7 @@ for some other reason.
 We use the [Travis Continuous Integration Platform][travis] to check
 that pull requests do not break anything, and also to automatically
 update various things (such as the documentation, proviola, and
-dependency graph liked on the [project wiki][wiki]).  Normally you
+dependency graph linked on the [project wiki][wiki]).  Normally you
 shouldn't need to know anything about this; Travis automatically
 checks every pull request made to the central repository.
 
