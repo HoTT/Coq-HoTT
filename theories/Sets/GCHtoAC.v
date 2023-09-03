@@ -72,9 +72,8 @@ Lemma PE (P P' : HProp) :
   P <-> P' -> P = P'.
 Proof.
   intros [f g]. apply path_trunctype.
-  exists f. apply isequiv_biinv. split.
-  - exists g. intros x. apply P.
-  - exists g. intros x. apply P'.
+  apply (equiv_adjointify f g).
+  all: intro x; apply path_ishprop.
 Qed.
 
 Lemma path_bool_prop :
