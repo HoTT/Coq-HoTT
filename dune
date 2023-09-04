@@ -38,3 +38,11 @@
    HoTT.Tests
    %{deps}
    -o)))
+
+; We modify the default alias to avoid test/
+
+(alias
+ (name default)
+ (deps
+  (alias_rec contrib/all)
+  (alias_rec theories/all)))
