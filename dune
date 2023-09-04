@@ -7,7 +7,8 @@
  (deps
   ./etc/generate_coqproject.sh
   (source_tree theories)
-  (source_tree contrib))
+  (source_tree contrib)
+  (source_tree test))
  (mode promote)
  (package coq-hott)
  (action
