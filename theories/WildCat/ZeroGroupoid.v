@@ -132,7 +132,7 @@ Defined.
 
 (** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also makes the proof of [HasEquivs] above easy. *)
 
-(** Every equivalence is injective and essentially surjective. *)
+(** Every equivalence is injective and split essentially surjective. *)
 Definition IsEquiv0Gpd_Equiv_0Gpd {G H : ZeroGpd} (f : G $<~> H)
   : IsEquiv0Gpd f.
 Proof.
@@ -144,7 +144,7 @@ Proof.
     exact ((eissect_0gpd f x1)^$ $@ fmap f^-1$ m $@ eissect_0gpd f x2).
 Defined.
 
-(** Conversely, every injective essentially surjective 0-functor is an equivalence. *)
+(** Conversely, every injective split essentially surjective 0-functor is an equivalence. *)
 Global Instance IsEquiv_0Gpd_IsEquiv0Gpd {G H : ZeroGpd} (F : G $-> H)
   {e : IsEquiv0Gpd F}
   : IsEquiv_0Gpd F.
