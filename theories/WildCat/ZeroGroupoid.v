@@ -16,34 +16,35 @@ Global Existing Instance isgraph_carrier.
 Global Existing Instance is01cat_carrier.
 Global Existing Instance is0gpd_carrier.
 
-Record ZeroGpdMorphism (G H : ZeroGpd) := {
-  zerogpd_fun :> carrier G -> carrier H;
-  is0functor_zerogpd_fun : Is0Functor zerogpd_fun;
+Record Morphism_0Gpd (G H : ZeroGpd) := {
+  fun_0gpd :> carrier G -> carrier H;
+  is0functor_fun_0gpd : Is0Functor fun_0gpd;
 }.
 
-Global Existing Instance is0functor_zerogpd_fun.
+Global Existing Instance is0functor_fun_0gpd.
 
+(** Now we show that the type [ZeroGpd] of 0-groupoids is itself a 1-category. *)
 Global Instance isgraph_0gpd : IsGraph ZeroGpd.
 Proof.
   apply Build_IsGraph.
-  exact ZeroGpdMorphism.
+  exact Morphism_0Gpd.
 Defined.
 
 Global Instance is01cat_0gpd : Is01Cat ZeroGpd.
 Proof.
   srapply Build_Is01Cat.
   - intro G.
-    snrapply Build_ZeroGpdMorphism.
+    snrapply Build_Morphism_0Gpd.
     1: exact idmap.
     snrapply Build_Is0Functor.
     intros g1 g2.
     exact idmap.
   - intros G H K f g.
-    snrapply Build_ZeroGpdMorphism.
+    snrapply Build_Morphism_0Gpd.
     1: exact (f o g).
     snrapply Build_Is0Functor; cbn beta.
     intros g1 g2 p.
-    apply is0functor_zerogpd_fun, is0functor_zerogpd_fun, p.
+    apply is0functor_fun_0gpd, is0functor_fun_0gpd, p.
 Defined.
 
 Global Instance is2graph_0gpd : Is2Graph ZeroGpd.
@@ -80,53 +81,53 @@ Proof.
 Defined.
 
 (** We define equivalences of 0-groupoids.  The definition is chosen to provide what is needed for the Yoneda lemma, and to match the concept for types, with paths replaced by 1-cells.  We are able to match the biinvertible definition.  The half-adjoint definition doesn't work, as we can't prove adjointification.  We would need to be in a 1-groupoid for that to be possible.  We could also use the "wrong" definition, without the eisadj condition, and things would go through, but it wouldn't match the definition for types. *)
-Class ZeroGpdIsEquiv {G H : ZeroGpd} (f : G $-> H) := {
-  zerogpd_equiv_inv : H $-> G;
-  zerogpd_eisretr : f $o zerogpd_equiv_inv $== Id H;
-  zerogpd_equiv_inv' : H $-> G;
-  zerogpd_eissect' : zerogpd_equiv_inv' $o f $== Id G;
+Class IsEquiv_0Gpd {G H : ZeroGpd} (f : G $-> H) := {
+  equiv_inv_0gpd : H $-> G;
+  eisretr_0gpd : f $o equiv_inv_0gpd $== Id H;
+  equiv_inv_0gpd' : H $-> G;
+  eissect_0gpd' : equiv_inv_0gpd' $o f $== Id G;
 }.
 
-Arguments zerogpd_equiv_inv {G H}%type_scope f {_}.
-Arguments zerogpd_eisretr {G H}%type_scope f {_} _.
-Arguments zerogpd_equiv_inv' {G H}%type_scope f {_}.
-Arguments zerogpd_eissect' {G H}%type_scope f {_} _.
+Arguments equiv_inv_0gpd {G H}%type_scope f {_}.
+Arguments eisretr_0gpd {G H}%type_scope f {_} _.
+Arguments equiv_inv_0gpd' {G H}%type_scope f {_}.
+Arguments eissect_0gpd' {G H}%type_scope f {_} _.
 
-Definition zerogpd_inverses_homotopic {G H : ZeroGpd} (f : G $-> H) `{ZeroGpdIsEquiv _ _ f}
-  : zerogpd_equiv_inv f $== zerogpd_equiv_inv' f.
+Definition inverses_homotopic_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
+  : equiv_inv_0gpd f $== equiv_inv_0gpd' f.
 Proof.
-  set (g := zerogpd_equiv_inv f).
-  set (g' := zerogpd_equiv_inv' f).
+  set (g := equiv_inv_0gpd f).
+  set (g' := equiv_inv_0gpd' f).
   intro x.
-  refine ((zerogpd_eissect' f (g x))^$ $@ _); cbn.
+  refine ((eissect_0gpd' f (g x))^$ $@ _); cbn.
   refine (fmap g' _).
-  rapply zerogpd_eisretr.
+  rapply eisretr_0gpd.
 Defined.
 
-Definition zerogpd_eissect {G H : ZeroGpd} (f : G $-> H) `{ZeroGpdIsEquiv _ _ f}
-  : zerogpd_equiv_inv f $o f $== Id G
-  := (zerogpd_inverses_homotopic f $@R f) $@ zerogpd_eissect' f.
+Definition eissect_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
+  : equiv_inv_0gpd f $o f $== Id G
+  := (inverses_homotopic_0gpd f $@R f) $@ eissect_0gpd' f.
 
-Record ZeroGpdEquiv (G H : ZeroGpd) := {
-  zerogpd_equiv_fun :> ZeroGpdMorphism G H;
-  zerogpd_isequiv_equiv : ZeroGpdIsEquiv zerogpd_equiv_fun;
+Record Equiv_0Gpd (G H : ZeroGpd) := {
+  equiv_fun_0gpd :> Morphism_0Gpd G H;
+  isequiv_equiv_0gpd : IsEquiv_0Gpd equiv_fun_0gpd;
 }.
 
-Global Instance hasequivs_zerogpd : HasEquivs ZeroGpd.
+Global Instance hasequivs_0gpd : HasEquivs ZeroGpd.
 Proof.
   srapply Build_HasEquivs; intros G H.
-  1: exact (ZeroGpdEquiv G H).
+  1: exact (Equiv_0Gpd G H).
   all:intros f.
-  - exact (ZeroGpdIsEquiv f).
+  - exact (IsEquiv_0Gpd f).
   - exact f.
-  - cbn. exact (zerogpd_isequiv_equiv _ _ f).
-  - apply Build_ZeroGpdEquiv.
+  - cbn. exact (isequiv_equiv_0gpd _ _ f).
+  - apply Build_Equiv_0Gpd.
   - intros; reflexivity.
-  - exact (@zerogpd_equiv_inv _ _ f (zerogpd_isequiv_equiv _ _ f)).
-  - cbn. apply zerogpd_eissect.
-  - cbn. apply zerogpd_eisretr.
+  - exact (@equiv_inv_0gpd _ _ f (isequiv_equiv_0gpd _ _ f)).
+  - cbn. apply eissect_0gpd.
+  - cbn. apply eisretr_0gpd.
   - intros g r s; cbn beta.
-    exact (Build_ZeroGpdIsEquiv _ _ f g r g s).
+    exact (Build_IsEquiv_0Gpd _ _ f g r g s).
 Defined.
 
 (* In fact, being an equivalence in the sense above is logically equivalent to being an equivalence in the sense of EquivGpd. *)
@@ -135,33 +136,31 @@ Defined.
 
 Require Import WildCat.EquivGpd.
 
-Definition IsEquiv0Gpd_ZeroGpdEquiv {G H : ZeroGpd} (f : G $<~> H)
+Definition IsEquiv0Gpd_Equiv_0Gpd {G H : ZeroGpd} (f : G $<~> H)
   : IsEquiv0Gpd f.
 Proof.
   econstructor.
   - intro y.
     exists (f^-1$ y).
-    rapply zerogpd_eisretr.
+    rapply eisretr_0gpd.
   - intros x1 x2 m.
-    refine ((zerogpd_eissect f x1)^$ $@ _ $@ zerogpd_eissect f x2).
-    exact (fmap f^-1$ m).
+    exact ((eissect_0gpd f x1)^$ $@ fmap f^-1$ m $@ eissect_0gpd f x2).
 Defined.
 
-Definition ZeroGpdEquiv_IsEquiv0Gpd {G H : ZeroGpd} (f : G -> H) `{!Is0Functor f}
+Definition Equiv_0Gpd_IsEquiv0Gpd {G H : ZeroGpd} (f : G -> H) `{!Is0Functor f}
   (e : IsEquiv0Gpd f)
   : G $<~> H.
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
   snrapply cate_adjointify.
-  - exact (Build_ZeroGpdMorphism _ _ f _).
-  - snrapply Build_ZeroGpdMorphism.
+  - exact (Build_Morphism_0Gpd _ _ f _).
+  - snrapply Build_Morphism_0Gpd.
     1: exact (fun y => (e0 y).1).
     snrapply Build_Is0Functor; cbn beta.
     intros y1 y2 m.
     apply e1.
     exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
   - cbn.
-    intro y.
     apply e0.
   - cbn.
     intro x.

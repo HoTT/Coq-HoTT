@@ -172,7 +172,7 @@ Proof.
     rapply (Build_ZeroGpd (opyon a b)).
   - snrapply Build_Is0Functor.
     intros b c f; cbn beta.
-    snrapply Build_ZeroGpdMorphism; cbn.
+    snrapply Build_Morphism_0Gpd; cbn.
     + exact (fmap (opyon a) f).
     + apply is0functor_postcomp.
 Defined.
@@ -187,15 +187,15 @@ Proof.
   - pose proof (gn := is1natural_natequiv _ _ g).
     refine ((isnat (alnat:=gn) g (f a (Id a)) (Id b))^$ $@ _).
     refine (fmap (g a) (cat_idr (f a (Id a))) $@ _).
-    1: rapply is0functor_zerogpd_fun.
+    1: rapply is0functor_fun_0gpd.
     1: exact _.
-    rapply zerogpd_eissect.
+    rapply eissect_0gpd.
   - pose proof (fn := is1natural_natequiv _ _ f).
     refine ((isnat (alnat:=fn) f (g b (Id b)) (Id a))^$ $@ _).
     refine (fmap (f b) (cat_idr (g b (Id b))) $@ _).
-    1: rapply is0functor_zerogpd_fun.
+    1: rapply is0functor_fun_0gpd.
     1: exact _.
-    rapply zerogpd_eisretr.
+    rapply eisretr_0gpd.
   (* Not sure why typeclass inference doesn't find [is1natural_natequiv] and [is0functor_zerogpd_fun] above. *)
 Defined.
 
@@ -205,10 +205,10 @@ Definition equiv_precompose_cat_equiv_0gpd {A : Type} `{HasEquivs A}
   : opyon_0gpd y z $<~> opyon_0gpd x z.
 Proof.
   snrapply cate_adjointify.
-  - snrapply Build_ZeroGpdMorphism.
+  - snrapply Build_Morphism_0Gpd.
     1: exact (cat_precomp z f).
     exact _.
-  - snrapply Build_ZeroGpdMorphism.
+  - snrapply Build_Morphism_0Gpd.
     1: exact (cat_precomp z f^-1$).
     exact _.
   - cbn.
