@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core WildCat.Equiv.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -128,12 +128,11 @@ Proof.
     exact (Build_IsEquiv_0Gpd _ _ f g r g s).
 Defined.
 
-(* In fact, being an equivalence in the sense above is logically equivalent to being an equivalence in the sense of EquivGpd. *)
+(** * We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors which are defined in EquivGpd. *)
 
-(* This is just a rough draft showing this.  Some further work is required to reorganize this. *)
+(** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also makes the proof of [HasEquivs] above easy. *)
 
-Require Import WildCat.EquivGpd.
-
+(** Every equivalence is injective and essentially surjective. *)
 Definition IsEquiv0Gpd_Equiv_0Gpd {G H : ZeroGpd} (f : G $<~> H)
   : IsEquiv0Gpd f.
 Proof.
@@ -145,13 +144,13 @@ Proof.
     exact ((eissect_0gpd f x1)^$ $@ fmap f^-1$ m $@ eissect_0gpd f x2).
 Defined.
 
-Definition Equiv_0Gpd_IsEquiv0Gpd {G H : ZeroGpd} (f : G -> H) `{!Is0Functor f}
-  (e : IsEquiv0Gpd f)
-  : G $<~> H.
+(** Conversely, every injective essentially surjective 0-functor is an equivalence. *)
+Global Instance IsEquiv_0Gpd_IsEquiv0Gpd {G H : ZeroGpd} (F : G $-> H)
+  {e : IsEquiv0Gpd F}
+  : IsEquiv_0Gpd F.
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
-  snrapply cate_adjointify.
-  - exact (Build_Morphism_0Gpd _ _ f _).
+  srapply catie_adjointify.
   - snrapply Build_Morphism_0Gpd.
     1: exact (fun y => (e0 y).1).
     snrapply Build_Is0Functor; cbn beta.

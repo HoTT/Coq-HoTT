@@ -31,6 +31,8 @@ Arguments essinj0 {A B _ _ _ _ _ _} F {_ _ x y} f.
 Definition equiv0gpd_inv {A B : Type} (F : A -> B) `{IsEquiv0Gpd A B F} : B -> A
   := fun b => (esssurj F b).1.
 
+(** Some of the results below also follow from the logical equivalence with [IsEquiv_0Gpd] and the fact that [ZeroGpd] satisfies [HasEquivs].  But it is sometimes awkward to deduce the results this way, mostly because [ZeroGpd] requires bundled objects rather than typeclass instances. *)
+
 (** Equivalences have inverses *)
 
 Global Instance is0functor_equiv0gpd_inv
