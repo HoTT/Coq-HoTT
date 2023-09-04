@@ -9,6 +9,7 @@
   - [1.1. Organization](#11-organization)
     - [1.1.1. The Core library](#111-the-core-library)
     - [1.1.2. Non-core files](#112-non-core-files)
+    - [1.1.3. Tests](#113-tests)
   - [1.2. Naming Conventions](#12-naming-conventions)
     - [1.2.1. General principles](#121-general-principles)
     - [1.2.2. Capitalization and spacing](#122-capitalization-and-spacing)
@@ -31,6 +32,7 @@
     - [1.4.4. Assuming axioms](#144-assuming-axioms)
     - [1.4.5. Technical note: Universe-polymorphic axioms](#145-technical-note-universe-polymorphic-axioms)
   - [1.5. Higher Inductive Types](#15-higher-inductive-types)
+    - [1.5.1. Case analysis on private inductive](#151-case-analysis-on-private-inductive)
   - [1.6. Universe Polymorphism](#16-universe-polymorphism)
     - [1.6.1. Displaying universes](#161-displaying-universes)
     - [1.6.2. Universe annotations](#162-universe-annotations)
@@ -53,7 +55,7 @@
     - [1.11.4. Simpl nomatch](#1114-simpl-nomatch)
     - [1.11.5. Available tactics](#1115-available-tactics)
   - [1.12. Contributing to the library](#112-contributing-to-the-library)
-    - [1.12.1. Fork & Pull](#1121-fork--pull)
+    - [1.12.1. Fork \& Pull](#1121-fork--pull)
     - [1.12.2. Approval of pull requests](#1122-approval-of-pull-requests)
     - [1.12.3. Commit messages](#1123-commit-messages)
     - [1.12.4. Creating new files](#1124-creating-new-files)
@@ -161,6 +163,10 @@ master branch.
 - `contrib/*`: Other work in progress, or files not judged appropriate
   for the core.
 
+### 1.1.3. Tests ###
+
+- `tests/*`: Tests of the library.  See the file `tests/README.md` for more
+  information.
 
 ## 1.2. Naming Conventions ##
 

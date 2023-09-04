@@ -7,7 +7,8 @@
  (deps
   ./etc/generate_coqproject.sh
   (source_tree theories)
-  (source_tree contrib))
+  (source_tree contrib)
+  (source_tree test))
  (mode promote)
  (package coq-hott)
  (action
@@ -17,10 +18,31 @@
    (bash ./etc/generate_coqproject.sh))))
 
 ; Rule for validation: dune build @runtest
+; This will also run the tests
 
 (rule
  (alias runtest)
  (deps
   (glob_files_rec ./*.vo))
  (action
-  (run coqchk -R ./theories HoTT -Q contrib HoTT.Contrib %{deps} -o)))
+  (run
+   coqchk
+   -R
+   ./theories
+   HoTT
+   -Q
+   contrib
+   HoTT.Contrib
+   -Q
+   test
+   HoTT.Tests
+   %{deps}
+   -o)))
+
+; We modify the default alias to avoid test/
+
+(alias
+ (name default)
+ (deps
+  (alias_rec contrib/all)
+  (alias_rec theories/all)))
