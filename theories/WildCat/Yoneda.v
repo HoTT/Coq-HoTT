@@ -164,7 +164,7 @@ Proof.
   - rapply is1natural_opyoneda.
 Defined.
 
-(** We define a version of [opyon] that lands in 0-groupoids, which we regard as setoids. *)
+(** We define a version of [opyon] that lands in 0-groupoids. *)
 Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A ZeroGpd.
 Proof.
   snrapply Build_Fun01.

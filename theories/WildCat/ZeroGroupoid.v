@@ -16,6 +16,7 @@ Global Existing Instance isgraph_carrier.
 Global Existing Instance is01cat_carrier.
 Global Existing Instance is0gpd_carrier.
 
+(* The morphisms of 0-groupoids are the 0-functors.  This is the same as [Fun01], but we put a different graph and 01-category structure on it, so we give this a custom name. *)
 Record Morphism_0Gpd (G H : ZeroGpd) := {
   fun_0gpd :> carrier G -> carrier H;
   is0functor_fun_0gpd : Is0Functor fun_0gpd;
@@ -23,7 +24,7 @@ Record Morphism_0Gpd (G H : ZeroGpd) := {
 
 Global Existing Instance is0functor_fun_0gpd.
 
-(** Now we show that the type [ZeroGpd] of 0-groupoids is itself a 1-category. *)
+(** Now we show that the type [ZeroGpd] of 0-groupoids is itself a 1-category, with morphisms the 0-functors. *)
 Global Instance isgraph_0gpd : IsGraph ZeroGpd.
 Proof.
   apply Build_IsGraph.
@@ -34,19 +35,12 @@ Global Instance is01cat_0gpd : Is01Cat ZeroGpd.
 Proof.
   srapply Build_Is01Cat.
   - intro G.
-    snrapply Build_Morphism_0Gpd.
-    1: exact idmap.
-    snrapply Build_Is0Functor.
-    intros g1 g2.
-    exact idmap.
+    exact (Build_Morphism_0Gpd G G idmap _).
   - intros G H K f g.
-    snrapply Build_Morphism_0Gpd.
-    1: exact (f o g).
-    snrapply Build_Is0Functor; cbn beta.
-    intros g1 g2 p.
-    apply is0functor_fun_0gpd, is0functor_fun_0gpd, p.
+    exact (Build_Morphism_0Gpd _ _ (f o g) _).
 Defined.
 
+(* The 2-cells are unnatural transformations, and are analogous to homotopies. *)
 Global Instance is2graph_0gpd : Is2Graph ZeroGpd.
 Proof.
   intros G H.
@@ -75,9 +69,9 @@ Proof.
     intros g h p x.
     cbn.
     exact (p (f x)).
-  - reflexivity.
-  - reflexivity.
-  - reflexivity.
+  - reflexivity. (* Associativity. *)
+  - reflexivity. (* Left identity. *)
+  - reflexivity. (* Right identity. *)
 Defined.
 
 (** We define equivalences of 0-groupoids.  The definition is chosen to provide what is needed for the Yoneda lemma, and to match the concept for types, with paths replaced by 1-cells.  We are able to match the biinvertible definition.  The half-adjoint definition doesn't work, as we can't prove adjointification.  We would need to be in a 1-groupoid for that to be possible.  We could also use the "wrong" definition, without the eisadj condition, and things would go through, but it wouldn't match the definition for types. *)
@@ -93,6 +87,14 @@ Arguments eisretr_0gpd {G H}%type_scope f {_} _.
 Arguments equiv_inv_0gpd' {G H}%type_scope f {_}.
 Arguments eissect_0gpd' {G H}%type_scope f {_} _.
 
+Record Equiv_0Gpd (G H : ZeroGpd) := {
+  equiv_fun_0gpd :> Morphism_0Gpd G H;
+  equiv_isequiv_0gpd : IsEquiv_0Gpd equiv_fun_0gpd;
+}.
+
+Global Existing Instance equiv_isequiv_0gpd.
+
+(** The two inverses are necessarily homotopic. *)
 Definition inverses_homotopic_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
   : equiv_inv_0gpd f $== equiv_inv_0gpd' f.
 Proof.
@@ -104,29 +106,25 @@ Proof.
   rapply eisretr_0gpd.
 Defined.
 
+(** Therefore we can prove [eissect] for the first inverse as well. *)
 Definition eissect_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
   : equiv_inv_0gpd f $o f $== Id G
   := (inverses_homotopic_0gpd f $@R f) $@ eissect_0gpd' f.
-
-Record Equiv_0Gpd (G H : ZeroGpd) := {
-  equiv_fun_0gpd :> Morphism_0Gpd G H;
-  isequiv_equiv_0gpd : IsEquiv_0Gpd equiv_fun_0gpd;
-}.
 
 Global Instance hasequivs_0gpd : HasEquivs ZeroGpd.
 Proof.
   srapply Build_HasEquivs; intros G H.
   1: exact (Equiv_0Gpd G H).
-  all:intros f.
+  all:intros f; cbn beta in *.
   - exact (IsEquiv_0Gpd f).
   - exact f.
-  - cbn. exact (isequiv_equiv_0gpd _ _ f).
+  - exact _.
   - apply Build_Equiv_0Gpd.
   - intros; reflexivity.
-  - exact (@equiv_inv_0gpd _ _ f (isequiv_equiv_0gpd _ _ f)).
-  - cbn. apply eissect_0gpd.
-  - cbn. apply eisretr_0gpd.
-  - intros g r s; cbn beta.
+  - exact (equiv_inv_0gpd f).
+  - apply eissect_0gpd.
+  - apply eisretr_0gpd.
+  - intros g r s.
     exact (Build_IsEquiv_0Gpd _ _ f g r g s).
 Defined.
 
@@ -160,10 +158,8 @@ Proof.
     intros y1 y2 m.
     apply e1.
     exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
-  - cbn.
-    apply e0.
-  - cbn.
-    intro x.
+  - cbn.  apply e0.
+  - cbn.  intro x.
     apply e1.
     apply e0.
 Defined.
