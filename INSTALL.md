@@ -139,6 +139,12 @@ $ make
 You can speed up the build by passing `-jN` where `N` is the number of parallel
 recipes `make` will execute.
 
+You can also use `dune` to build the library.
+
+```shell
+$ dune build
+```
+
 ## 3.4. Installing the library using git
 
 We don't recommend you install the library using the repository and instead
@@ -171,6 +177,11 @@ provided, such as the use of `M-*` to get back where you were, or the use of
 `M-x tags-search` to search throughout the code for locations matching a given
 regular expression.
 
+Dune users may use the following to generate tags:
+
+```shell
+dune build TAGS
+```
 
 # 5. Updating the library
 If you installed the library via Coq Platform then [update your version of Coq
