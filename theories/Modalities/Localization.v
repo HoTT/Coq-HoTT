@@ -45,7 +45,7 @@ Then, however, we have to express the hypotheses of the induction principle.  We
 
 (** ** Dependent extendability *)
 
-Fixpoint ExtendableAlong_Over@{a b c d m}
+Fixpoint ExtendableAlong_Over@{a b c d m | a <= m, b <= m, c <= m, d <= m}
          (n : nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
          (C : B -> Type@{c})
          (D : forall b, C b -> Type@{d})
@@ -152,10 +152,10 @@ Proof.
 Defined.
 
 (** Here's the [oo]-version. *)
-Definition ooExtendableAlong_Over
-         {A B : Type} (f : A -> B) (C : B -> Type)
-         (D : forall b, C b -> Type) (ext : ooExtendableAlong f C)
-  := forall n, ExtendableAlong_Over n f C D (ext n).
+Definition ooExtendableAlong_Over@{a b c d m | a <= m, b <= m, c <= m, d <= m}
+         {A : Type@{a}} {B : Type@{b}} (f : A -> B) (C : B -> Type@{c})
+         (D : forall b, C b -> Type@{d}) (ext : ooExtendableAlong f C)
+  := forall n, ExtendableAlong_Over@{a b c d m} n f C D (ext n).
 
 (** The [oo]-version for trivial dependency. *)
 Definition ooextendable_over_const
