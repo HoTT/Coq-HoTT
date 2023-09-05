@@ -249,7 +249,7 @@ Section UnivProp.
   Defined.
 
   (** And now we can prove that it's an equivalence. *)
-  Definition equiv0gpd_Susp_ind_inv : IsEquiv0Gpd Susp_ind_inv.
+  Definition issurjinj_Susp_ind_inv : IsSurjInj Susp_ind_inv.
   Proof.
     constructor.
     - intros [[n s] g].
@@ -336,8 +336,8 @@ Section UnivPropNat.
   Defined.
 
   (** And therefore a fiberwise equivalence of 0-groupoids. *)
-  Local Instance isequiv0gpd_functor_Susp_ind_data' NS
-    : IsEquiv0Gpd (functor_Susp_ind_data' NS).
+  Local Instance issurjinj_functor_Susp_ind_data' NS
+    : IsSurjInj (functor_Susp_ind_data' NS).
   Proof.
     constructor.
     - intros g.
@@ -402,7 +402,7 @@ Section UnivPropNat.
     { reflexivity. }
     etransitivity.
     { refine (isesssurj_iff_commsq Susp_ind_inv_nat); try exact _.
-      all:apply equiv0gpd_Susp_ind_inv. }
+      all:apply issurjinj_Susp_ind_inv. }
     etransitivity.
     { refine (isesssurj_iff_sigma _ _ 
                 (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)). }

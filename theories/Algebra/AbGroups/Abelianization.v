@@ -18,7 +18,7 @@ Definition group_precomp {a b} := @cat_precomp Group _ _ a b.
 Class IsAbelianization {G : Group} (G_ab : AbGroup)
       (eta : GroupHomomorphism G G_ab)
   := isequiv0gpd_isabel : forall (A : AbGroup),
-      IsEquiv0Gpd (group_precomp A eta).
+      IsSurjInj (group_precomp A eta).
 Global Existing Instance isequiv0gpd_isabel.
 
 (** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
@@ -323,13 +323,13 @@ Proof.
   destruct (esssurj (group_precomp A eta2) eta1) as [b bc].
   srapply (Build_GroupIsomorphism _ _ a).
   srapply (isequiv_adjointify _ b).
-  { refine (essinj0 (group_precomp B eta2)
-                    (x := a $o b) (y := Id (A := Group) B) _).
+  { refine (essinj (group_precomp B eta2)
+                   (x := a $o b) (y := Id (A := Group) B) _).
     intros x; cbn in *.
     refine (_ @ ac x).
     apply ap, bc. }
-  { refine (essinj0 (group_precomp A eta1)
-                    (x := b $o a) (y := Id (A := Group) A) _).
+  { refine (essinj (group_precomp A eta1)
+                   (x := b $o a) (y := Id (A := Group) A) _).
     intros x; cbn in *.
     refine (_ @ bc x).
     apply ap, ac. }
