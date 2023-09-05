@@ -17,7 +17,7 @@ Class SplEssSurj {A B : Type} `{Is0Gpd A, Is0Gpd B}
 
 Arguments esssurj {A B _ _ _ _ _ _} F {_ _} b.
 
-(** A 0-functor between 0-groupoids is an equivalence if it is essentially surjective and reflects the existence of morphisms.  This is "surjective and injective" in setoid-language.  (To define essential surjectivity for non-groupoids, we would need [HasEquivs] from [WildCat.Equiv]. *)
+(** A 0-functor between 0-groupoids is an "equivalence" if it is essentially surjective and reflects the existence of morphisms.  This is "surjective and injective" in setoid-language, so we use the name [IsSurjInj].  (To define essential surjectivity for non-groupoids, we would need [HasEquivs] from [WildCat.Equiv]. *)
 Class IsSurjInj {A B : Type} `{Is0Gpd A, Is0Gpd B}
       (F : A -> B) `{!Is0Functor F} :=
 {

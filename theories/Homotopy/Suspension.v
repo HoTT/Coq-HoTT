@@ -248,7 +248,7 @@ Section UnivProp.
       exact (dp_apD_nat p (merid x)).
   Defined.
 
-  (** And now we can prove that it's an equivalence. *)
+  (** And now we can prove that it's an equivalence of 0-groupoids, using the definition from WildCat/EquivGpd. *)
   Definition issurjinj_Susp_ind_inv : IsSurjInj Susp_ind_inv.
   Proof.
     constructor.
@@ -423,7 +423,7 @@ Definition extendable_iff_functor_susp
     <-> (forall NS, ExtendableAlong n f (fun x => DPath P (merid x) (fst NS) (snd NS))).
 Proof.
   revert P. induction n as [|n IHn]; intros P; [ split; intros; exact tt | ].
-  (** It would be nice to be able to do this proof by chaining logcal equivalences too, especially since the two parts seem very similar.  But I haven't managed to make that work. *)
+  (** It would be nice to be able to do this proof by chaining logical equivalences too, especially since the two parts seem very similar.  But I haven't managed to make that work. *)
   split.
   - intros [e1 en] [N S]; split.
     + apply extension_iff_functor_susp.
