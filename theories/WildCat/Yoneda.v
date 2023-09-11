@@ -182,20 +182,25 @@ Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A} (f : opyon_0gpd a $<~> opyon_0gpd b)
   : b $<~> a.
 Proof.
-  set (g := f^-1$).
-  srapply (cate_adjointify (f a (Id a)) (g b (Id b))).
-  - pose proof (gn := is1natural_natequiv _ _ g).
-    refine ((isnat (alnat:=gn) g (f a (Id a)) (Id b))^$ $@ _).
-    refine (fmap (g a) (cat_idr (f a (Id a))) $@ _).
+  (* Coq can't find the composite Coercion from equivalences of 0-groupoids to Funclass, so we make names for the underlying natural transformations of [f] and its inverse. *)
+  set (ft := cate_fun f).
+  set (gt := cate_fun f^-1$).
+  (* These are the maps that will define the desired equivalence: *)
+  set (fa := (ft a) (Id a)).
+  set (gb := (gt b) (Id b)).
+  srapply (cate_adjointify fa gb).
+  - pose proof (gn := is1natural_nattrans _ _ gt).
+    refine ((isnat (alnat:=gn) gt fa (Id b))^$ $@ _).
+    refine (fmap (gt a) (cat_idr fa) $@ _).
     1: rapply is0functor_fun_0gpd.
     1: exact _.
-    rapply eissect_0gpd.
+    exact (cat_eissect (f a) (Id a)).
   - pose proof (fn := is1natural_natequiv _ _ f).
-    refine ((isnat (alnat:=fn) f (g b (Id b)) (Id a))^$ $@ _).
-    refine (fmap (f b) (cat_idr (g b (Id b))) $@ _).
+    refine ((isnat (alnat:=fn) ft gb (Id a))^$ $@ _).
+    refine (fmap (ft b) (cat_idr gb) $@ _).
     1: rapply is0functor_fun_0gpd.
     1: exact _.
-    rapply eisretr_0gpd.
+    exact (cat_eisretr (f b) (Id b)).
   (* Not sure why typeclass inference doesn't find [is1natural_natequiv] and [is0functor_zerogpd_fun] above. *)
 Defined.
 

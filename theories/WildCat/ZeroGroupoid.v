@@ -74,80 +74,37 @@ Proof.
   - reflexivity. (* Right identity. *)
 Defined.
 
-(** We define equivalences of 0-groupoids.  The definition is chosen to provide what is needed for the Yoneda lemma, and to match the concept for types, with paths replaced by 1-cells.  We are able to match the biinvertible definition.  The half-adjoint definition doesn't work, as we can't prove adjointification.  We would need to be in a 1-groupoid for that to be possible.  We could also use the "wrong" definition, without the eisadj condition, and things would go through, but it wouldn't match the definition for types. *)
-Class IsEquiv_0Gpd {G H : ZeroGpd} (f : G $-> H) := {
-  equiv_inv_0gpd : H $-> G;
-  eisretr_0gpd : f $o equiv_inv_0gpd $== Id H;
-  equiv_inv_0gpd' : H $-> G;
-  eissect_0gpd' : equiv_inv_0gpd' $o f $== Id G;
-}.
+(** We define equivalences of 0-groupoids as the bi-invertible maps, using [Cat_BiInv] and [Cat_IsBiInv].  This definition is chosen to provide what is needed for the Yoneda lemma, and because it specializes to one of the correct definitions for types. *)
 
-Arguments equiv_inv_0gpd {G H}%type_scope f {_}.
-Arguments eisretr_0gpd {G H}%type_scope f {_} _.
-Arguments equiv_inv_0gpd' {G H}%type_scope f {_}.
-Arguments eissect_0gpd' {G H}%type_scope f {_} _.
+Global Instance hasequivs_0gpd : HasEquivs ZeroGpd
+  := cat_hasequivs ZeroGpd.
 
-Record Equiv_0Gpd (G H : ZeroGpd) := {
-  equiv_fun_0gpd :> Morphism_0Gpd G H;
-  equiv_isequiv_0gpd : IsEquiv_0Gpd equiv_fun_0gpd;
-}.
+(** Coq can't find the composite of the coercions [cate_fun : G $<~> H >-> G $-> H] and [fun_0gpd : Morphism_0Gpd G H >-> G -> H], probably because it passes through the definitional equality of [G $-> H] and [Morphism_0Gpd G H].  I couldn't find a solution, so instead here is a helper function to manually do the coercion when needed. *)
 
-Global Existing Instance equiv_isequiv_0gpd.
+Definition equiv_fun_0gpd {G H : ZeroGpd} (f : G $<~> H) : G -> H
+  := fun_0gpd _ _ (cate_fun f).
 
-(** The two inverses are necessarily homotopic. *)
-Definition inverses_homotopic_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
-  : equiv_inv_0gpd f $== equiv_inv_0gpd' f.
-Proof.
-  set (g := equiv_inv_0gpd f).
-  set (g' := equiv_inv_0gpd' f).
-  intro x.
-  refine ((eissect_0gpd' f (g x))^$ $@ _); cbn.
-  refine (fmap g' _).
-  rapply eisretr_0gpd.
-Defined.
+(** * We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd. *)
 
-(** Therefore we can prove [eissect] for the first inverse as well. *)
-Definition eissect_0gpd {G H : ZeroGpd} (f : G $-> H) `{IsEquiv_0Gpd _ _ f}
-  : equiv_inv_0gpd f $o f $== Id G
-  := (inverses_homotopic_0gpd f $@R f) $@ eissect_0gpd' f.
-
-Global Instance hasequivs_0gpd : HasEquivs ZeroGpd.
-Proof.
-  srapply Build_HasEquivs; intros G H.
-  1: exact (Equiv_0Gpd G H).
-  all:intros f; cbn beta in *.
-  - exact (IsEquiv_0Gpd f).
-  - exact f.
-  - exact _.
-  - apply Build_Equiv_0Gpd.
-  - intros; reflexivity.
-  - exact (equiv_inv_0gpd f).
-  - apply eissect_0gpd.
-  - apply eisretr_0gpd.
-  - intros g r s.
-    exact (Build_IsEquiv_0Gpd _ _ f g r g s).
-Defined.
-
-(** * We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors which are defined in EquivGpd. *)
-
-(** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also makes the proof of [HasEquivs] above easy. *)
+(** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)
 
 (** Every equivalence is injective and split essentially surjective. *)
 Definition IsSurjInj_Equiv_0Gpd {G H : ZeroGpd} (f : G $<~> H)
-  : IsSurjInj f.
+  : IsSurjInj (equiv_fun_0gpd f).
 Proof.
+  set (finv := equiv_fun_0gpd f^-1$).
   econstructor.
   - intro y.
-    exists (f^-1$ y).
-    rapply eisretr_0gpd.
+    exists (finv y).
+    rapply cat_eisretr.
   - intros x1 x2 m.
-    exact ((eissect_0gpd f x1)^$ $@ fmap f^-1$ m $@ eissect_0gpd f x2).
+    exact ((cat_eissect f x1)^$ $@ fmap finv m $@ cat_eissect f x2).
 Defined.
 
 (** Conversely, every injective split essentially surjective 0-functor is an equivalence. *)
 Global Instance IsEquiv_0Gpd_IsSurjInj {G H : ZeroGpd} (F : G $-> H)
   {e : IsSurjInj F}
-  : IsEquiv_0Gpd F.
+  : Cat_IsBiInv F.
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
   srapply catie_adjointify.
