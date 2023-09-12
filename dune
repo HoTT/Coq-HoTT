@@ -45,7 +45,8 @@
  (name default)
  (deps
   (alias_rec contrib/all)
-  (alias_rec theories/all)))
+  (alias_rec theories/all)
+  _CoqProject))
 
 ; Tags for emacs
 
