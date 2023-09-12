@@ -8,7 +8,7 @@ Declare Scope wc_iso_scope.
 
 (** * Equivalences in wild categories *)
 
-(** We could define equivalences in any wild 2-category as bi-invertible maps, or in a wild 3-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to (quasi-)isomorphism. *)
+(** We could define equivalences in any wild 1-category as bi-invertible maps, or in a wild 2-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to (quasi-)isomorphism. In [cat_hasequivs] below, we show that bi-invertible maps do provide a [HasEquivs] structure for any wild 1-category. *)
 
 Class HasEquivs (A : Type) `{Is1Cat A} :=
 {
@@ -421,4 +421,63 @@ Proof.
   refine (_ $@ compose_h_Vh f _).
   refine (_ $@L _).
   exact ((tex z).2 _).
+Defined.
+
+(** * There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
+
+(** We do not use the half-adjoint definition, since we can't prove adjointification for that definition. *)
+
+Class Cat_IsBiInv {A} `{Is1Cat A} {x y : A} (f : x $-> y) := {
+  cat_equiv_inv : y $-> x;
+  cat_eisretr : f $o cat_equiv_inv $== Id y;
+  cat_equiv_inv' : y $-> x;
+  cat_eissect' : cat_equiv_inv' $o f $== Id x;
+}.
+
+Arguments cat_equiv_inv {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eisretr {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv' {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eissect' {A}%type_scope { _ _ _ _ x y} f {_}.
+
+Arguments Build_Cat_IsBiInv {A}%type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
+
+Record Cat_BiInv A `{Is1Cat A} (x y : A) := {
+  cat_equiv_fun :> x $-> y;
+  cat_equiv_isequiv : Cat_IsBiInv cat_equiv_fun;
+}.
+
+Global Existing Instance cat_equiv_isequiv.
+
+(** The two inverses are necessarily homotopic. *)
+Definition cat_inverses_homotopic {A} `{Is1Cat A} {x y : A} (f : x $-> y) {bif : Cat_IsBiInv f}
+  : cat_equiv_inv f $== cat_equiv_inv' f.
+Proof.
+  refine ((cat_idl _)^$ $@ _).
+  refine (cat_prewhisker (cat_eissect' f)^$ _ $@ _).
+  refine (cat_assoc _ _ _ $@ _).
+  refine (cat_postwhisker _ (cat_eisretr f) $@ _).
+  apply cat_idr.
+Defined.
+
+(** Therefore we can prove [eissect] for the first inverse as well. *)
+Definition cat_eissect {A} `{Is1Cat A} {x y : A} (f : x $-> y) {bif : Cat_IsBiInv f}
+  : cat_equiv_inv f $o f $== Id x
+  := (cat_inverses_homotopic f $@R f) $@ cat_eissect' f.
+
+(** This shows that any 1-category satisfies [HasEquivs].  We do not make it an instance, since we may want to use a different [HasEquivs] structure in particular cases. *)
+Definition cat_hasequivs A `{Is1Cat A} : HasEquivs A.
+Proof.
+  srapply Build_HasEquivs; intros x y.
+  1: exact (Cat_BiInv _ x y).
+  all:intros f; cbn beta in *.
+  - exact (Cat_IsBiInv f).
+  - exact f.
+  - exact _.
+  - apply Build_Cat_BiInv.
+  - intros; reflexivity.
+  - exact (cat_equiv_inv f).
+  - apply cat_eissect.
+  - apply cat_eisretr.
+  - intros g r s.
+    exact (Build_Cat_IsBiInv g r g s).
 Defined.

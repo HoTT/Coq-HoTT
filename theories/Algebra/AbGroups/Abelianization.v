@@ -10,7 +10,7 @@ Local Open Scope wc_iso_scope.
 
 (** Definition of Abelianization.
 
-  A "unit" homomorphism [eta : G -> G_ab], with [G_ab] abelian, is considered an abelianization if and only if for all homomorphisms [G -> A], where [A] is abelian, there exists a unique [g : G_ab -> A] such that [h == g o eta X].   We express this in funext-free form by saying that precomposition with [eta] in the wild 1-category [Group] induces an equivalence of hom 0-groupoids.
+  A "unit" homomorphism [eta : G -> G_ab], with [G_ab] abelian, is considered an abelianization if and only if for all homomorphisms [G -> A], where [A] is abelian, there exists a unique [g : G_ab -> A] such that [h == g o eta X].   We express this in funext-free form by saying that precomposition with [eta] in the wild 1-category [Group] induces an equivalence of hom 0-groupoids, in the sense of WildCat/EquivGpd.
 
   Unfortunately, if [eta : GroupHomomorphism G G_ab] and we write [cat_precomp A eta] then Coq is unable to guess that the relevant 1-category is [Group].  Even writing [cat_precomp (A := Group) A eta] isn't good enough, I guess because the typeclass inference that finds the instance [is01cat_group] doesn't happen until after the type of [eta] would have to be resolved to a [Hom] in some wild category.  However, with the following auxiliary definition we can force the typeclass inference to happen first.  (It would be worth thinking about whether the design of the wild categories library could be improved to avoid this.)  *)
 Definition group_precomp {a b} := @cat_precomp Group _ _ a b.
@@ -18,7 +18,7 @@ Definition group_precomp {a b} := @cat_precomp Group _ _ a b.
 Class IsAbelianization {G : Group} (G_ab : AbGroup)
       (eta : GroupHomomorphism G G_ab)
   := isequiv0gpd_isabel : forall (A : AbGroup),
-      IsEquiv0Gpd (group_precomp A eta).
+      IsSurjInj (group_precomp A eta).
 Global Existing Instance isequiv0gpd_isabel.
 
 (** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
@@ -323,13 +323,13 @@ Proof.
   destruct (esssurj (group_precomp A eta2) eta1) as [b bc].
   srapply (Build_GroupIsomorphism _ _ a).
   srapply (isequiv_adjointify _ b).
-  { refine (essinj0 (group_precomp B eta2)
-                    (x := a $o b) (y := Id (A := Group) B) _).
+  { refine (essinj (group_precomp B eta2)
+                   (x := a $o b) (y := Id (A := Group) B) _).
     intros x; cbn in *.
     refine (_ @ ac x).
     apply ap, bc. }
-  { refine (essinj0 (group_precomp A eta1)
-                    (x := b $o a) (y := Id (A := Group) A) _).
+  { refine (essinj (group_precomp A eta1)
+                   (x := b $o a) (y := Id (A := Group) A) _).
     intros x; cbn in *.
     refine (_ @ bc x).
     apply ap, ac. }

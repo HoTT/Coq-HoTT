@@ -248,8 +248,8 @@ Section UnivProp.
       exact (dp_apD_nat p (merid x)).
   Defined.
 
-  (** And now we can prove that it's an equivalence. *)
-  Definition equiv0gpd_Susp_ind_inv : IsEquiv0Gpd Susp_ind_inv.
+  (** And now we can prove that it's an equivalence of 0-groupoids, using the definition from WildCat/EquivGpd. *)
+  Definition issurjinj_Susp_ind_inv : IsSurjInj Susp_ind_inv.
   Proof.
     constructor.
     - intros [[n s] g].
@@ -336,8 +336,8 @@ Section UnivPropNat.
   Defined.
 
   (** And therefore a fiberwise equivalence of 0-groupoids. *)
-  Local Instance isequiv0gpd_functor_Susp_ind_data' NS
-    : IsEquiv0Gpd (functor_Susp_ind_data' NS).
+  Local Instance issurjinj_functor_Susp_ind_data' NS
+    : IsSurjInj (functor_Susp_ind_data' NS).
   Proof.
     constructor.
     - intros g.
@@ -402,7 +402,7 @@ Section UnivPropNat.
     { reflexivity. }
     etransitivity.
     { refine (isesssurj_iff_commsq Susp_ind_inv_nat); try exact _.
-      all:apply equiv0gpd_Susp_ind_inv. }
+      all:apply issurjinj_Susp_ind_inv. }
     etransitivity.
     { refine (isesssurj_iff_sigma _ _ 
                 (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)). }
@@ -423,7 +423,7 @@ Definition extendable_iff_functor_susp
     <-> (forall NS, ExtendableAlong n f (fun x => DPath P (merid x) (fst NS) (snd NS))).
 Proof.
   revert P. induction n as [|n IHn]; intros P; [ split; intros; exact tt | ].
-  (** It would be nice to be able to do this proof by chaining logcal equivalences too, especially since the two parts seem very similar.  But I haven't managed to make that work. *)
+  (** It would be nice to be able to do this proof by chaining logical equivalences too, especially since the two parts seem very similar.  But I haven't managed to make that work. *)
   split.
   - intros [e1 en] [N S]; split.
     + apply extension_iff_functor_susp.
