@@ -2,7 +2,7 @@ Require Import
         HoTT.Basics
         HoTT.DProp
         HoTT.BoundedSearch
-        HoTT.Spaces.Finite
+        HoTT.Spaces.Finite.Fin
         HoTT.ExcludedMiddle.
 
 Require Import

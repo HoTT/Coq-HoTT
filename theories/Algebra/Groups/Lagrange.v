@@ -1,7 +1,7 @@
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
-Require Import Spaces.Finite.
+Require Import Spaces.Finite.Finite.
 Require Import Spaces.Nat.
 
 (** ** Lagrange's theorem *)

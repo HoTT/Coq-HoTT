@@ -1,4 +1,4 @@
-Require Import Spaces.Finite.
+Require Import Spaces.Finite.Fin.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.AbGroups.
 
