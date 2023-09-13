@@ -5,7 +5,7 @@ Require Export Algebra.Groups.Image.
 Require Export Algebra.Groups.Kernel.
 Require Export Colimits.Quotient.
 Require Import HSet.
-Require Import Spaces.Finite.
+Require Import Spaces.Finite.Finite.
 Require Import WildCat.
 Require Import Modalities.Modality.
 

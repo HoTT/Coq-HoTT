@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Spaces.Int.
-Require Import Spaces.Finite.
+Require Import Spaces.Finite.Fin.
 
 (** * Successor Structures. *)
 
