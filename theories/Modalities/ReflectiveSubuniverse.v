@@ -1550,7 +1550,8 @@ Global Existing Instance isconnected_hfiber_conn_map.
 
 Section ConnectedMaps.
   Context `{Univalence} `{Funext}.
-  Context (O : ReflectiveSubuniverse).
+  Universe i.
+  Context (O : ReflectiveSubuniverse@{i}).
 
   (** Any equivalence is connected *)
   Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -1564,7 +1565,7 @@ Section ConnectedMaps.
   : IsConnMap O f -> IsConnMap O g.
   Proof.
     intros ? b.
-    exact (isconnected_equiv O (hfiber f b)
+    exact (isconnected_equiv O (hfiber@{i i} f b)
                              (equiv_hfiber_homotopic f g h b) _).
   Defined.
 
