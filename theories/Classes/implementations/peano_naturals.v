@@ -18,8 +18,9 @@ Universe N.
 
 Let natpaths := @paths@{N} nat.
 Infix "=N=" := natpaths.
+#[clearbody]
 Let natpaths_symm : Symmetric@{N N} natpaths.
-Proof. unfold natpaths;apply _. Qed.
+Proof. unfold natpaths;apply _. Defined.
 
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
@@ -582,19 +583,23 @@ Section for_another_semiring.
 
 (*   Add Ring R: (rings.stdlib_semiring_theory R). *)
 
+  #[clearbody]
   Let f_preserves_0: toR 0 =  0.
-  Proof. reflexivity. Qed.
+  Proof. reflexivity. Defined.
 
+  #[clearbody]
   Let f_preserves_1: toR 1 = 1.
-  Proof. reflexivity. Qed.
+  Proof. reflexivity. Defined.
 
+  #[clearbody]
   Let f_S : forall x, toR (S x) = 1 + toR x.
   Proof.
   intros [|x].
   - symmetry;apply plus_0_r.
   - reflexivity.
-  Qed.
+  Defined.
 
+  #[clearbody]
   Let f_preserves_plus a a': toR (a + a') = toR a + toR a'.
   Proof.
   induction a as [|a IHa].
@@ -603,8 +608,9 @@ Section for_another_semiring.
   - change (toR (S (a + a')) = toR (S a) + toR a').
     rewrite !f_S,IHa.
     apply associativity.
-  Qed.
+  Defined.
 
+  #[clearbody]
   Let f_preserves_mult a a': toR (a * a') = toR a * toR a'.
   Proof.
   induction a as [|a IHa].
@@ -615,7 +621,7 @@ Section for_another_semiring.
     rewrite f_preserves_plus, IHa.
     rewrite plus_mult_distr_r,mult_1_l.
     reflexivity.
-  Qed.
+  Defined.
 
   Global Instance nat_to_sr_morphism
     : IsSemiRingPreserving (naturals_to_semiring nat R).

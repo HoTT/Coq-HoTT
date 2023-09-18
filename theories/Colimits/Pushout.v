@@ -269,6 +269,7 @@ Section EquivSigmaPushout.
     + intros a; cbn. exact (pglue (x;a)).
   Defined.
 
+  #[clearbody]
   Let esp1_beta_pglue (x : X) (a : A x)
     : ap esp1 (path_sigma' (fun x => Pushout (f x) (g x)) 1 (pglue a))
       = pglue (x;a).
@@ -278,7 +279,7 @@ Section EquivSigmaPushout.
     rewrite !concat_p1.
     unfold esp1; rewrite Pushout_rec_beta_pglue.
     reflexivity.
-  Qed.
+  Defined.
 
   Let esp2 : Pushout (functor_sigma idmap f) (functor_sigma idmap g)
              -> { x : X & Pushout (f x) (g x) }.
@@ -291,13 +292,14 @@ Section EquivSigmaPushout.
       apply pglue.
   Defined.
 
+  #[clearbody]
   Let esp2_beta_pglue (x : X) (a : A x)
     : ap esp2 (pglue (x;a)) = path_sigma' (fun x:X => Pushout (f x) (g x)) 1 (pglue a).
   Proof.
     unfold esp2.
     rewrite Pushout_rec_beta_pglue.
     reflexivity.
-  Qed.
+  Defined.
 
   Definition equiv_sigma_pushout
     : { x : X & Pushout (f x) (g x) }

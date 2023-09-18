@@ -93,6 +93,7 @@ Section IsEquivHomotopic.
   Let sect := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
 
   (* We prove the triangle identity with rewrite tactics.  Since we lose control over the proof term that way, we make the result opaque with "Qed". *)
+  #[clearbody]
   Let adj (a : A) : retr (g a) = ap g (sect a).
   Proof.
     unfold sect, retr.
@@ -101,7 +102,7 @@ Section IsEquivHomotopic.
     rewrite ap_V; apply moveL_Vp.
     rewrite <- ap_compose; rewrite (concat_A1p (eisretr f) (h a)).
     apply whiskerR, eisadj.
-  Qed.
+  Defined.
 
   (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
   Definition isequiv_homotopic : IsEquiv g
