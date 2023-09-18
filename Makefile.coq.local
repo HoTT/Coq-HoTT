@@ -31,8 +31,6 @@ ALECTRYON_EXTRAFLAGS ?=
 # setting TIMING=1. By doing so here we get the same effect.
 TIMING ?= 1
 
-ETAGS ?= etags
-
 CATEGORY_VFILES = $(filter theories/Categories%.v, $(VFILES))
 CORE_VFILES = $(filter-out $(CATEGORY_VFILES),$(filter theories/%.v, $(VFILES)))
 CONTRIB_VFILES = $(filter contrib/%.v, $(VFILES))
@@ -242,7 +240,7 @@ dot-file-dep-graphs: $(ALL_DOTFILES)
 # The TAGS file
 TAGS_FILES = $(ALL_VFILES)
 TAGS : $(TAGS_FILES)
-	$(ETAGS) --language=none $(shell cat etc/emacs/etags-args) $^
+	./etc/emacs/run-etags.sh $^
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
 clean::
