@@ -61,8 +61,8 @@ End PushoutInd.
 Arguments Pushout : simpl never.
 Arguments push : simpl never.
 Arguments pglue : simpl never.
-Arguments Pushout_ind : simpl never.
 Arguments Pushout_ind_beta_pglue : simpl never.
+(** However, we do allow [Pushout_ind] to simplify, as it computes on point constructors. *)
 
 Definition Pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (pushb : B -> P)
