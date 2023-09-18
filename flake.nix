@@ -2,7 +2,7 @@
   description = "A Coq library for Homotopy Type Theory";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -26,7 +26,7 @@
         };
 
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs.coqPackages_8_17; [
+          buildInputs = with pkgs.coqPackages_8_18; [
             pkgs.dune_3
             pkgs.ocaml
             coq
