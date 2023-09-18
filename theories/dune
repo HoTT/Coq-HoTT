@@ -10,5 +10,10 @@
  (modules :standard)
  (flags -noinit -indices-matter -color on))
 
-; TODO: Tests
-; Prob need to move tests into tests folder
+; On the dev profile, we want to use the -w +all flag to make sure
+; that all warnings are fatal. 
+
+(env
+ (dev
+  (coq
+   (flags -w +all))))
