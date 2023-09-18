@@ -62,7 +62,7 @@ Section binary_equiv.
     | double2 n' => Double2 (unary' n')
     end.
 
-  Let succunary (n : binnat) : unary' (Succ n) = S (unary' n).
+  Local Definition succunary (n : binnat) : unary' (Succ n) = S (unary' n).
   Proof.
     induction n.
     - reflexivity.
@@ -70,7 +70,7 @@ Section binary_equiv.
     - simpl. rewrite IHn. reflexivity.
   Qed.
 
-  Let unarybinary : unary' o binary == idmap.
+  Local Definition unarybinary : unary' o binary == idmap.
   Proof.
     intros n; induction n as [|n IHn].
     - reflexivity.
@@ -93,7 +93,7 @@ Section binary_equiv.
       rewrite IHn. reflexivity.
   Qed.
 
-  Let binaryunary : binary o unary' == idmap.
+  Local Definition binaryunary : binary o unary' == idmap.
   Proof.
     intros n; induction n.
     - reflexivity.
@@ -421,16 +421,7 @@ Section naturals.
           reflexivity.
     Qed.
 
-    Let f_preserves_0: toR 0 =  0.
-    Proof. reflexivity. Qed.
-
-    Let f_preserves_1: toR 1 = 1.
-    Proof.
-      rewrite (f_nat 1).
-      reflexivity.
-    Qed.
-
-    Let f_preserves_plus (a a' : binnat) : toR (a + a') = toR a + toR a'.
+    Local Definition f_preserves_plus (a a' : binnat) : toR (a + a') = toR a + toR a'.
     Proof.
       rewrite f_nat, f_nat, f_nat.
       unfold Compose.
@@ -438,7 +429,7 @@ Section naturals.
       apply nat_to_sr_morphism.
     Qed.
 
-    Let f_preserves_mult (a a' : binnat) : toR (a * a') = toR a * toR a'.
+    Local Definition f_preserves_mult (a a' : binnat) : toR (a * a') = toR a * toR a'.
     Proof.
       rewrite f_nat, f_nat, f_nat.
       unfold Compose.
@@ -449,8 +440,13 @@ Section naturals.
     Global Instance binnat_to_sr_morphism
       : IsSemiRingPreserving toR.
     Proof.
-      repeat (split;try apply _);trivial.
-    Qed.
+      split; split.
+      - rapply f_preserves_plus.
+      - reflexivity.
+      - rapply f_preserves_mult.
+      - unfold IsUnitPreserving.
+        apply f_nat.
+    Defined.
 
     Lemma binnat_toR_unique (h : binnat -> R) `{!IsSemiRingPreserving h} : forall x,
         toR x = h x.
@@ -475,7 +471,7 @@ End naturals.
 
 Section decidable.
 
-  Let ineq_bzero_double1 n : bzero <> double1 n.
+  Local Definition ineq_bzero_double1 n : bzero <> double1 n.
   Proof.
     intros p.
     change ((fun x => match x with | double1 y => Unit | _ => Empty end) bzero).
@@ -484,7 +480,7 @@ Section decidable.
     - exact tt.
   Qed.
 
-  Let ineq_bzero_double2 n : bzero <> double2 n.
+  Local Definition ineq_bzero_double2 n : bzero <> double2 n.
   Proof.
     intros p.
     change ((fun x => match x with | double2 y => Unit | _ => Empty end) bzero).
@@ -493,7 +489,7 @@ Section decidable.
     - exact tt.
   Qed.
 
-  Let ineq_double1_double2 m n : double1 m <> double2 n.
+  Local Definition ineq_double1_double2 m n : double1 m <> double2 n.
   Proof.
     intros p.
     change ((fun x => match x with | double2 y => Unit | _ => Empty end) (double1 m)).
@@ -502,7 +498,7 @@ Section decidable.
     - exact tt.
   Qed.
 
-  Let undouble (m : binnat) : binnat :=
+  Local Definition undouble (m : binnat) : binnat :=
     match m with
     | bzero => bzero
     | double1 k => k
@@ -602,7 +598,7 @@ Section minus.
     | double2 m' => double1 m'
     end.
 
-  Let succ_double (m : binnat) : Succ (double m) = double1 m.
+  Local Definition succ_double (m : binnat) : Succ (double m) = double1 m.
   Proof.
     induction m.
     - reflexivity.
@@ -612,7 +608,7 @@ Section minus.
       rewrite IHm; reflexivity.
   Qed.
 
-  Let double_succ (m : binnat) : double (Succ m) = double2 m.
+  Local Definition double_succ (m : binnat) : double (Succ m) = double2 m.
   Proof.
     induction m.
     - reflexivity.
@@ -622,24 +618,24 @@ Section minus.
       rewrite IHm; reflexivity.
   Qed.
 
-  Let pred_succ (m : binnat) : Pred (Succ m) = m.
+  Local Definition pred_succ (m : binnat) : Pred (Succ m) = m.
   Proof.
     induction m; try reflexivity.
     - exact (double_succ m).
   Qed.
 
-  Let double_pred (m : binnat) : double (Pred m) = Pred (Pred (double m)).
+  Local Definition double_pred (m : binnat) : double (Pred m) = Pred (Pred (double m)).
   Proof.
     induction m; try reflexivity.
     - exact (double_succ (double m))^.
   Qed.
 
-  Let pred_double2 (m : binnat) : Pred (double2 m) = double1 m.
+  Local Definition pred_double2 (m : binnat) : Pred (double2 m) = double1 m.
   Proof.
     induction m; reflexivity.
   Qed.
 
-  Let pred_double1 (m : binnat) : Pred (double1 m) = double m.
+  Local Definition pred_double1 (m : binnat) : Pred (double1 m) = double m.
   Proof.
     induction m; reflexivity.
   Qed.
@@ -662,17 +658,17 @@ Section minus.
 
   Global Instance binnat_cut_minus: CutMinus binnat := binnat_cut_minus'.
 
-  Let binnat_minus_zero (m : binnat) : m ∸ bzero = m.
+  Local Definition binnat_minus_zero (m : binnat) : m ∸ bzero = m.
   Proof.
     induction m; reflexivity.
   Qed.
 
-  Let binnat_zero_minus (m : binnat) : bzero ∸ m = bzero.
+  Local Definition binnat_zero_minus (m : binnat) : bzero ∸ m = bzero.
   Proof.
     induction m; reflexivity.
   Qed.
 
-  Let pred_succ_minus (m n : binnat) : Pred (Succ m ∸ n) = m ∸ n.
+  Local Definition pred_succ_minus (m n : binnat) : Pred (Succ m ∸ n) = m ∸ n.
   Proof.
     revert n; induction m; intros n; induction n; try reflexivity.
     - change (Pred (double (bzero ∸ n)) = bzero).
@@ -692,7 +688,7 @@ Section minus.
       exact (IHm n).
   Qed.
 
-  Let double_cases (m : binnat) : (bzero = double m) + hfiber double2 (double m).
+  Local Definition double_cases (m : binnat) : (bzero = double m) + hfiber double2 (double m).
   Proof.
     induction m.
     - left; reflexivity.
@@ -700,7 +696,7 @@ Section minus.
     - right; exists (Succ (double m)); reflexivity.
   Defined.
 
-  Let binnat_minus_succ (m n : binnat) : Succ m ∸ Succ n = m ∸ n.
+  Local Definition binnat_minus_succ (m n : binnat) : Succ m ∸ Succ n = m ∸ n.
   Proof.
     revert n; induction m; intros n; induction n; try reflexivity.
     - change (Pred (double (bzero ∸ n)) = bzero ∸ double1 n).
@@ -719,7 +715,7 @@ Section minus.
       rewrite IHm. reflexivity.
   Qed.
 
-  Let binaryminus (x y : nat) : binary x ∸ binary y = binary (x ∸ y).
+  Local Definition binaryminus (x y : nat) : binary x ∸ binary y = binary (x ∸ y).
   Proof.
     revert y; induction x; intros y; induction y; try reflexivity.
     - apply binnat_zero_minus.
@@ -728,7 +724,7 @@ Section minus.
       rewrite IHx. reflexivity.
   Qed.
 
-  Let unaryminus (m n : binnat) : unary m ∸ unary n = unary (m ∸ n).
+  Local Definition unaryminus (m n : binnat) : unary m ∸ unary n = unary (m ∸ n).
   Proof.
     etransitivity (unary (binary (_^-1 m ∸ _^-1 n))).
     - apply ((eissect binary (unary m ∸ unary n)) ^).

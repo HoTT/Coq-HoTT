@@ -93,7 +93,7 @@ Section IsEquivHomotopic.
   Let sect := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
 
   (* We prove the triangle identity with rewrite tactics.  Since we lose control over the proof term that way, we make the result opaque with "Qed". *)
-  Let adj (a : A) : retr (g a) = ap g (sect a).
+  Local Definition adj (a : A) : retr (g a) = ap g (sect a).
   Proof.
     unfold sect, retr.
     rewrite ap_pp. apply moveR_Vp.

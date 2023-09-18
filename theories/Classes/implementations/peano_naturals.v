@@ -18,8 +18,11 @@ Universe N.
 
 Let natpaths := @paths@{N} nat.
 Infix "=N=" := natpaths.
-Let natpaths_symm : Symmetric@{N N} natpaths.
-Proof. unfold natpaths;apply _. Qed.
+
+Definition natpaths_symm : Symmetric@{N N} natpaths.
+Proof.
+  unfold natpaths; apply _.
+Defined.
 
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
@@ -582,20 +585,14 @@ Section for_another_semiring.
 
 (*   Add Ring R: (rings.stdlib_semiring_theory R). *)
 
-  Let f_preserves_0: toR 0 =  0.
-  Proof. reflexivity. Qed.
-
-  Let f_preserves_1: toR 1 = 1.
-  Proof. reflexivity. Qed.
-
-  Let f_S : forall x, toR (S x) = 1 + toR x.
+  Local Definition f_S : forall x, toR (S x) = 1 + toR x.
   Proof.
   intros [|x].
   - symmetry;apply plus_0_r.
   - reflexivity.
-  Qed.
+  Defined.
 
-  Let f_preserves_plus a a': toR (a + a') = toR a + toR a'.
+  Local Definition f_preserves_plus a a': toR (a + a') = toR a + toR a'.
   Proof.
   induction a as [|a IHa].
   - change (toR a' = 0 + toR a').
@@ -605,7 +602,7 @@ Section for_another_semiring.
     apply associativity.
   Qed.
 
-  Let f_preserves_mult a a': toR (a * a') = toR a * toR a'.
+  Local Definition f_preserves_mult a a': toR (a * a') = toR a * toR a'.
   Proof.
   induction a as [|a IHa].
   - change (0 = 0 * toR a').
@@ -620,7 +617,11 @@ Section for_another_semiring.
   Global Instance nat_to_sr_morphism
     : IsSemiRingPreserving (naturals_to_semiring nat R).
   Proof.
-  repeat (split;try apply _);trivial.
+    split; split.
+    - rapply f_preserves_plus.
+    - reflexivity.
+    - rapply f_preserves_mult.
+    - reflexivity.
   Defined.
 
   Lemma toR_unique (h : nat -> R) `{!IsSemiRingPreserving h} x :

@@ -259,7 +259,7 @@ Section EquivSigmaPushout.
           (A : X -> Type) (B : X -> Type) (C : X -> Type)
           (f : forall x, A x -> B x) (g : forall x, A x -> C x).
 
-  Let esp1 : { x : X & Pushout (f x) (g x) }
+  Local Definition esp1 : { x : X & Pushout (f x) (g x) }
              -> Pushout (functor_sigma idmap f) (functor_sigma idmap g).
   Proof.
     intros [x p].
@@ -269,7 +269,7 @@ Section EquivSigmaPushout.
     + intros a; cbn. exact (pglue (x;a)).
   Defined.
 
-  Let esp1_beta_pglue (x : X) (a : A x)
+  Local Definition esp1_beta_pglue (x : X) (a : A x)
     : ap esp1 (path_sigma' (fun x => Pushout (f x) (g x)) 1 (pglue a))
       = pglue (x;a).
   Proof.
@@ -280,7 +280,7 @@ Section EquivSigmaPushout.
     reflexivity.
   Qed.
 
-  Let esp2 : Pushout (functor_sigma idmap f) (functor_sigma idmap g)
+  Local Definition esp2 : Pushout (functor_sigma idmap f) (functor_sigma idmap g)
              -> { x : X & Pushout (f x) (g x) }.
   Proof.
     srefine (Pushout_rec _ _ _ _).
@@ -291,7 +291,7 @@ Section EquivSigmaPushout.
       apply pglue.
   Defined.
 
-  Let esp2_beta_pglue (x : X) (a : A x)
+  Local Definition esp2_beta_pglue (x : X) (a : A x)
     : ap esp2 (pglue (x;a)) = path_sigma' (fun x:X => Pushout (f x) (g x)) 1 (pglue a).
   Proof.
     unfold esp2.
