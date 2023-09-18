@@ -30,14 +30,6 @@ Axiom interval_ind_beta_seg : forall (P : interval -> Type)
 
 End Interval.
 
-(*   Should fail:
-Lemma test (P : interval -> Type) (a : P zero) (b : P one)
-      (p p' : seg # a = b) :
-    interval_ind P a b p = interval_ind P a b p'.
-reflexivity.
-*)
-
-
 Definition interval_rec (P : Type) (a b : P) (p : a = b)
   : interval -> P
   := interval_ind (fun _ => P) a b (transport_const _ _ @ p).

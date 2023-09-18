@@ -29,7 +29,7 @@ Definition Wtil_ind {A B f g C D} (Q : Wtil A B f g C D -> Type)
   (cct' : forall a x, Q (cct a x))
   (ppt' : forall b y, (ppt b y) # (cct' (f b) y) = cct' (g b) (D b y))
   : forall w, Q w
-  := fun w => match w with cct a x => cct' a x end.
+  := fun w => match w with cct a x => fun _ => cct' a x end ppt'.
 
 Axiom Wtil_ind_beta_ppt
   : forall {A B f g C D} (Q : Wtil A B f g C D -> Type)
