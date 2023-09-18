@@ -22,8 +22,8 @@ Module Export GraphQuotient.
     (gqglue' : forall a b (s : R a b), gqglue@{i j u} s # gq' a = gq' b)
     : forall x, P x := fun x =>
     match x with
-    | gq a => gq' a
-    end.
+    | gq a => fun _ => gq' a
+    end gqglue'.
 
   Axiom GraphQuotient_ind_beta_gqglue@{i j u k}
   : forall  {A : Type@{i}} {R : A -> A -> Type@{j}}

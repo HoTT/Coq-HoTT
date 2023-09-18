@@ -19,10 +19,8 @@ Module Export Torus.
   (* We define the induction principle for Torus *)
   Definition Torus_ind (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
-    (ps : DPathSquare P surf pla pla plb plb) (x : Torus) : P x.
-  Proof.
-    by destruct x.
-  Defined.
+    (ps : DPathSquare P surf pla pla plb plb) (x : Torus) : P x
+  := (match x with tbase => fun _ _ _ => pb end) pla plb ps.
 
   (* We declare propsitional computational rules for loop_a and loop_b *)
   Axiom Torus_ind_beta_loop_a : forall (P : Torus -> Type) (pb : P tbase)
