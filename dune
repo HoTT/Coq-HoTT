@@ -55,7 +55,8 @@
  (alias emacs)
  (mode promote)
  (deps
-  %{bin:etags}
-  (glob_files_rec ./*.v))
+  (glob_files_rec theories/*.v)
+  (glob_files_rec contrib/*.v))
  (action
-  (run etags --language=none %{read:etc/emacs/etags-args} %{deps})))
+  (system
+   "%{bin:etags} --language=none %{read-lines:etc/emacs/etags-args} %{deps}")))
