@@ -175,7 +175,7 @@ Module Export LaxCommaCoreNotations.
   (** We play some games to get nice notations for lax comma categories. *)
   Section tc_notation_boiler_plate.
     Local Open Scope type_scope.
-    Class LCC_Builder {A B C} (x : A) (y : B) (z : C) := lcc_builder_dummy : True.
+    Class LCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := lcc_builder_dummy : True.
     Definition get_LCC `{@LCC_Builder A B C x y z} : C := z.
 
     Global Arguments get_LCC / {A B C} x y {z} {_}.
@@ -210,7 +210,7 @@ Module Export LaxCommaCoreNotations.
     : LCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | 10
       := I.
 
-    Class OLCC_Builder {A B C} (x : A) (y : B) (z : C) := olcc_builder_dummy : True.
+    Class OLCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := olcc_builder_dummy : True.
 
     Definition get_OLCC `{@OLCC_Builder A B C x y z} : C := z.
 
