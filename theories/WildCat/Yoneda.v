@@ -76,7 +76,7 @@ Proof.
     apply cat_assoc.
 Defined.
 
-(** We record these corollaries here, since we use them below. *)
+(** We record these corollaries here, since we use some of them below. *)
 Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
   {x y z : A} (f : y $<~> z)
   : (x $-> y) <~> (x $-> z)
@@ -86,6 +86,27 @@ Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
   {x y z : A} (f : x $<~> y)
   : (y $-> z) <~> (x $-> z)
   := @equiv_postcompose_cat_equiv A^op _ _ _ _ _ _ z y x f.
+
+(* The following implicitly use [hasequivs_core].  Note that when [A] has morphism extensionality, it doesn't follow that [core A] does.  We'd need to know that being an equivalence is a proposition, and we don't assume that (since even for [Type] it requires [Funext], see [hasmorext_core_type]). So we need to assume this in the following results. *)
+
+(** Postcomposition with a cat_equiv is an equivalence between the types of equivalences. *)
+Definition equiv_postcompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : y $<~> z)
+  : (x $<~> y) <~> (x $<~> z).
+Proof.
+  change ((Build_core x $-> Build_core y) <~> (Build_core x $-> Build_core z)).
+  refine (equiv_postcompose_cat_equiv (A := core A) _).
+  exact f.  (* It doesn't work to insert [f] on the previous line. *)
+Defined.
+
+Definition equiv_precompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : x $<~> y)
+  : (y $<~> z) <~> (x $<~> z).
+Proof.
+  change ((Build_core y $-> Build_core z) <~> (Build_core x $-> Build_core z)).
+  refine (equiv_precompose_cat_equiv (A := core A) _).
+  exact f.  (* It doesn't work to insert [f] on the previous line. *)
+Defined.
 
 Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A -> Type) {ff : Is0Functor F}

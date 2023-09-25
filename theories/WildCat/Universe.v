@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences Types.Equiv.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 
@@ -74,6 +74,18 @@ Proof.
   - cbn. intros ?; apply eissect.
   - cbn. intros ?; apply eisretr.
   - intros g r s; refine (isequiv_adjointify f g r s).
+Defined.
+
+Global Instance hasmorext_core_type `{Funext}: HasMorExt (core Type).
+Proof.
+  snrapply Build_HasMorExt.
+  intros A B f g; cbn in *.
+  snrapply isequiv_homotopic.
+  - exact (GpdHom_path o (ap (x:=f) (y:=g) equiv_fun)).
+  - nrapply isequiv_compose.
+    1: apply isequiv_ap_equiv_fun.
+    exact (isequiv_Htpy_path (uncore A) (uncore B) f g).
+  - intro p; by induction p.
 Defined.
 
 Definition catie_isequiv {A B : Type} {f : A $-> B}

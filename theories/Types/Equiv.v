@@ -107,6 +107,16 @@ Section AssumeFunext.
     (* Coq can find this instance by itself, but it's slow. *)
     := equiv_isequiv (equiv_path_equiv e1 e2).
 
+  (** The inverse equivalence is homotopic to [ap equiv_fun], so that is also an equivalence. *)
+  Global Instance isequiv_ap_equiv_fun `{Funext} {A B : Type} (e1 e2 : A <~> B)
+    : IsEquiv (ap (x:=e1) (y:=e2) (@equiv_fun A B)).
+  Proof.
+    snrapply isequiv_homotopic.
+    - exact (equiv_path_equiv e1 e2)^-1%equiv.
+    - exact _.
+    - intro p. exact (ap_compose (fun v => (equiv_fun v; equiv_isequiv v)) pr1 p)^.
+  Defined.
+
   (** This implies that types of equivalences inherit truncation.  Note that we only state the theorem for [n.+1]-truncatedness, since it is not true for contractibility: if [B] is contractible but [A] is not, then [A <~> B] is not contractible because it is not inhabited.
 
    Don't confuse this lemma with [trunc_equiv], which says that if [A] is truncated and [A] is equivalent to [B], then [B] is truncated.  It would be nice to find a better pair of names for them. *)

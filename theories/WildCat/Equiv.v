@@ -242,6 +242,7 @@ Definition cat_path_equiv {A : Type} `{IsUnivalent1Cat A} (a b : A)
 
 Record core (A : Type) := { uncore : A }.
 Arguments uncore {A} c.
+Arguments Build_core {A} a : rename.
 
 Global Instance isgraph_core {A : Type} `{HasEquivs A}
   : IsGraph (core A).
@@ -329,6 +330,27 @@ Proof.
     refine (compose_cate_fun _ _ $@ _ $@ (id_cate_fun _)^$).
   - apply cate_issect.
   - apply cate_isretr.
+Defined.
+
+Global Instance hasequivs_core {A : Type} `{HasEquivs A}
+  : HasEquivs (core A).
+Proof.
+  srapply Build_HasEquivs.
+  1: exact (fun a b => a $-> b).  (* In [core A], i.e. [CatEquiv' (uncore a) (uncore b)]. *)
+  all: intros a b f; cbn; intros.
+  - exact Unit.  (* Or [CatIsEquiv' (uncore a) (uncore b) (cate_fun f)]? *)
+  - exact f.
+  - exact tt.    (* Or [cate_isequiv' _ _ _]? *)
+  - exact f.
+  - reflexivity.
+  - exact f^-1$.
+  - refine (compose_cate_fun _ _ $@ _).
+    refine (cate_issect _ $@ _).
+    symmetry; apply id_cate_fun.
+  - refine (compose_cate_fun _ _ $@ _).
+    refine (cate_isretr _ $@ _).
+    symmetry; apply id_cate_fun.
+  - exact tt.
 Defined.
 
 (** * Initial objects and terminal objects are all respectively equivalent. *)
