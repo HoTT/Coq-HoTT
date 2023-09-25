@@ -331,56 +331,6 @@ Proof.
   - apply cate_isretr.
 Defined.
 
-(** ** Pre/post-composition with equivalences *)
-
-(** Precomposition with a cat_equiv is an equivalence between the homs *)
-Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
-  {x y z : A} (f : x $<~> y)
-  : (y $-> z) <~> (x $-> z).
-Proof.
-  snrapply equiv_adjointify.
-  1: exact (fun g => g $o f).
-  1: exact (fun h => h $o f^-1$).
-  { intros h.
-    apply path_hom.
-    refine (cat_assoc _ _ _ $@ _).
-    refine (_ $@ _).
-    { rapply cat_postwhisker.
-      apply cate_issect. }
-    apply cat_idr. }
-  intros g.
-  apply path_hom.
-  refine (cat_assoc _ _ _ $@ _).
-  refine (_ $@ _).
-  { rapply cat_postwhisker.
-    apply cate_isretr. }
-  apply cat_idr.
-Defined.
-
-(** Postcomposition with a cat_equiv is an equivalence between the homs *)
-Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
-  {x y z : A} (f : y $<~> z)
-  : (x $-> y) <~> (x $-> z).
-Proof.
-  snrapply equiv_adjointify.
-  1: exact (fun g => f $o g).
-  1: exact (fun h => f^-1$ $o h).
-  { intros h.
-    apply path_hom.
-    refine ((cat_assoc _ _ _)^$ $@ _).
-    refine (_ $@ _).
-    { rapply cat_prewhisker.
-      apply cate_isretr. }
-    apply cat_idl. }
-  intros g.
-  apply path_hom.
-  refine ((cat_assoc _ _ _)^$ $@ _).
-  refine (_ $@ _).
-  { rapply cat_prewhisker.
-    apply cate_issect. }
-  apply cat_idl.
-Defined.
-
 (** * Initial objects and terminal objects are all respectively equivalent. *)
 
 Lemma cate_isinitial A `{HasEquivs A} (x y : A)

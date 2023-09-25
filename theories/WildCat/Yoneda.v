@@ -76,6 +76,17 @@ Proof.
     apply cat_assoc.
 Defined.
 
+(** We record these corollaries here, since we use them below. *)
+Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : y $<~> z)
+  : (x $-> y) <~> (x $-> z)
+  := emap (opyon x) f.
+
+Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : x $<~> y)
+  : (y $-> z) <~> (x $-> z)
+  := @equiv_postcompose_cat_equiv A^op _ _ _ _ _ _ z y x f.
+
 Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A -> Type) {ff : Is0Functor F}
   : F a -> (opyon a $=> F).
