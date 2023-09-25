@@ -71,7 +71,7 @@ Definition cate_adjointify {A} `{HasEquivs A} {a b : A}
            (f : a $-> b) (g : b $-> a)
            (r : f $o g $== Id b) (s : g $o f $== Id a)
   : a $<~> b
-  := @Build_CatEquiv _ _ _ _ _ _ a b f (catie_adjointify f g r s).
+  := Build_CatEquiv f (fe:=catie_adjointify f g r s).
 
 (** This one we define to construct the whole inverse equivalence. *)
 Definition cate_inv {A} `{HasEquivs A} {a b : A} (f : a $<~> b) : b $<~> a.
@@ -119,10 +119,11 @@ Global Instance symmetric_cate {A} `{HasEquivs A}
   := fun a b f => cate_inv f.
 
 (** Equivalences can be composed. *)
-Definition compose_cate {A} `{HasEquivs A} {a b c : A}
-  (g : b $<~> c) (f : a $<~> b) : a $<~> c.
+Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : CatIsEquiv (g $o f).
 Proof.
-  refine (cate_adjointify (g $o f) (f^-1$ $o g^-1$) _ _).
+  refine (catie_adjointify _ (f^-1$ $o g^-1$) _ _).
   - refine (cat_assoc _ _ _ $@ _).
     refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
     refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
@@ -134,6 +135,10 @@ Proof.
     refine ((_ $@L cat_idl _) $@ _).
     apply cate_issect.
 Defined.
+
+Definition compose_cate {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b) : a $<~> c
+  := Build_CatEquiv (g $o f).
 
 Notation "g $oE f" := (compose_cate g f).
 

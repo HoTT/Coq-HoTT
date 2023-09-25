@@ -192,42 +192,39 @@ Defined.
 Global Set Warnings "-ambiguous-paths".
 Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
 
+Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
+  (alpha : NatTrans F G) `{forall a, CatIsEquiv (alpha a)}
+  : NatEquiv F G.
+Proof.
+  snrapply Build_NatEquiv.
+  - intro a.
+    refine (Build_CatEquiv (alpha a)).
+  - intros a a' f.
+    refine (cate_buildequiv_fun _ $@R _ $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
+    apply (isnat alpha).
+Defined.
+
 Definition natequiv_compose {A B} {F G H : A -> B} `{IsGraph A} `{HasEquivs B}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
-  : NatEquiv G H -> NatEquiv F G -> NatEquiv F H.
-Proof.
-  intros alpha beta.
-  snrapply Build_NatEquiv.
-  1: exact (fun a => alpha a $oE beta a).
-  hnf; intros x y f.
-  refine (cat_prewhisker (compose_cate_fun _ _) _ $@ _).
-  refine (_ $@ cat_postwhisker _ (compose_cate_fun _ _)^$).
-  revert x y f.
-  rapply is1natural_comp.
-Defined.
+  (alpha : NatEquiv G H) (beta : NatEquiv F G)
+  : NatEquiv F H
+  := Build_NatEquiv' (nattrans_comp alpha beta).
 
 Definition natequiv_prewhisker {A B C} {H K : B -> C}
   `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor H, !Is0Functor K}
   (alpha : NatEquiv H K) (F : A -> B) `{!Is0Functor F}
-  : NatEquiv (H o F) (K o F).
-Proof.
-  snrapply Build_NatEquiv.
-  1: exact (alpha o F).
-  exact (is1natural_prewhisker _ _).
-Defined.
+  : NatEquiv (H o F) (K o F)
+  := Build_NatEquiv' (nattrans_prewhisker alpha F).
 
 Definition natequiv_postwhisker {A B C} {F G : A -> B}
   `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor F, !Is0Functor G}
    (K : B -> C) (alpha : NatEquiv F G) `{!Is0Functor K, !Is1Functor K}
   : NatEquiv (K o F) (K o G).
 Proof.
-  snrapply Build_NatEquiv.
-  1: exact (fun a => emap K (alpha a)).
-  hnf. intros x y f.
-  refine (cat_prewhisker (cate_buildequiv_fun _) _ $@ _).
-  refine (_ $@ cat_postwhisker _ (cate_buildequiv_fun _)^$).
-  revert x y f.
-  exact (is1natural_postwhisker _ _).
+  srefine (Build_NatEquiv' (nattrans_postwhisker K alpha)).
+  2: unfold nattrans_postwhisker, trans_postwhisker; cbn.
+  all: exact _.
 Defined.
 
 Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
