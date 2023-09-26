@@ -101,6 +101,39 @@ Proof.
   apply cate_buildequiv_fun'.
 Defined.
 
+(** If [g] is a section of an equivalence, then it is the inverse. *)
+Definition cate_inverse_sect {A} `{HasEquivs A} {a b} (f : a $<~> b)
+  (g : b $-> a) (p : f $o g $== Id b)
+  : cate_fun f^-1$ $== g.
+Proof.
+  refine ((cat_idr _)^$ $@ _).
+  refine ((_ $@L p^$) $@ _).
+  refine (cat_assoc_opp _ _ _ $@ _).
+  refine (cate_issect f $@R _ $@ _).
+  apply cat_idl.
+Defined.
+
+(** If [g] is a retraction of an equivalence, then it is the inverse. *)
+Definition cate_inverse_retr {A} `{HasEquivs A} {a b} (f : a $<~> b)
+  (g : b $-> a) (p : g $o f $== Id a)
+  : cate_fun f^-1$ $== g.
+Proof.
+  refine ((cat_idl _)^$ $@ _).
+  refine ((p^$ $@R _) $@ _).
+  refine (cat_assoc _ _ _ $@ _).
+  refine (_ $@L cate_isretr f $@ _).
+  apply cat_idr.
+Defined.
+
+(** It follows that the inverse of the equivalence you get by adjointification is homotopic to the inverse [g] provided. *)
+Definition cate_inv_adjointify {A} `{HasEquivs A} {a b : A}
+  (f : a $-> b) (g : b $-> a) (r : f $o g $== Id b) (s : g $o f $== Id a)
+  : cate_fun (cate_adjointify f g r s)^-1$ $== g.
+Proof.
+  apply cate_inverse_sect.
+  exact ((cate_buildequiv_fun f $@R _) $@ r).
+Defined.
+
 (** The identity morphism is an equivalence *)
 Global Instance catie_id {A} `{HasEquivs A} (a : A)
   : CatIsEquiv (Id a)
@@ -211,6 +244,81 @@ Definition compose_hV_h {A} `{HasEquivs A} {a b c : A} (f : b $-> c) (g : b $<~>
   (f $o g^-1$) $o g $== f :=
   cat_assoc _ _ _ $@ (f $@L cate_issect g) $@ cat_idr f.
 
+(** Equivalences are both monomorphisms and epimorphisms (but not the converse). *)
+
+Definition cate_monic_equiv {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
+  : Monic e.
+Proof.
+  intros c f g p.
+  refine ((compose_V_hh e _)^$ $@ _ $@ compose_V_hh e _).
+  exact (_ $@L p).
+Defined.
+
+Definition cate_epic_equiv {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
+  : Epic e.
+Proof.
+  intros c f g p.
+  refine ((compose_hh_V _ e)^$ $@ _ $@ compose_hh_V _ e).
+  exact (p $@R _).
+Defined.
+
+(** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v.  More could be added. *)
+
+Definition cate_moveL_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
+  (p : e $o f $== Id _)
+  : f $== cate_fun e^-1$.
+Proof.
+  apply (cate_monic_equiv e).
+  exact (p $@ (cate_isretr e)^$).
+Defined.
+
+Definition cate_moveL_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
+  (p : f $o e $== Id _)
+  : f $== cate_fun e^-1$.
+Proof.
+  apply (cate_epic_equiv e).
+  exact (p $@ (cate_issect e)^$).
+Defined.
+
+Definition cate_moveR_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
+  (p : Id _ $== e $o f)
+  : cate_fun e^-1$ $== f.
+Proof.
+  apply (cate_monic_equiv e).
+  exact (cate_isretr e $@ p).
+Defined.
+
+Definition cate_moveR_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
+  (p : Id _ $== f $o e)
+  : cate_fun e^-1$ $== f.
+Proof.
+  apply (cate_epic_equiv e).
+  exact (cate_issect e $@ p).
+Defined.
+
+(** Lemmas about the underlying map of an equivalence. *)
+
+Definition cate_inv2 {A} `{HasEquivs A} {a b : A} {e f : a $<~> b} (p : cate_fun e $== cate_fun f)
+  : cate_fun e^-1$ $== cate_fun f^-1$.
+Proof.
+  apply cate_moveL_V1.
+  exact ((p^$ $@R _) $@ cate_isretr _).
+Defined.
+
+Definition cate_inv_compose {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : b $<~> c)
+  : cate_fun (f $oE e)^-1$ $== cate_fun (e^-1$ $oE f^-1$).
+Proof.
+  refine (_ $@ (compose_cate_fun _ _)^$).
+  apply cate_inv_adjointify.
+Defined.
+
+Definition cate_inv_V {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
+  : cate_fun (e^-1$)^-1$ $== cate_fun e.
+Proof.
+  apply cate_moveR_V1.
+  symmetry; apply cate_issect.
+Defined.
+
 (** Any sufficiently coherent functor preserves equivalences.  *)
 Global Instance iemap {A B : Type} `{HasEquivs A} `{HasEquivs B}
        (F : A -> B) `{!Is0Functor F, !Is1Functor F}
@@ -227,6 +335,46 @@ Definition emap {A B : Type} `{HasEquivs A} `{HasEquivs B}
            {a b : A} (f : a $<~> b)
   : F a $<~> F b
   := Build_CatEquiv (fmap F f).
+
+Definition emap_id {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F} {a : A}
+  : cate_fun (emap F (id_cate a)) $== cate_fun (id_cate (F a)).
+Proof.
+  refine (cate_buildequiv_fun _ $@ _).
+  refine (fmap2 F (id_cate_fun a) $@ _ $@ (id_cate_fun (F a))^$).
+  rapply fmap_id.
+Defined.
+
+Definition emap_compose {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+  {a b c : A} (f : a $<~> b) (g : b $<~> c)
+  : cate_fun (emap F (g $oE f)) $== fmap F (cate_fun g) $o fmap F (cate_fun f).
+Proof.
+  refine (cate_buildequiv_fun _ $@ _).
+  refine (fmap2 F (compose_cate_fun _ _) $@ _).
+  rapply fmap_comp.
+Defined.
+
+(** A variant. *)
+Definition emap_compose' {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+  {a b c : A} (f : a $<~> b) (g : b $<~> c)
+  : cate_fun (emap F (g $oE f)) $== cate_fun ((emap F g) $oE (emap F f)).
+Proof.
+  refine (emap_compose F f g $@ _).
+  symmetry.
+  refine (compose_cate_fun _ _ $@ _).
+  exact (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
+Defined.
+
+Definition emap_inv {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+  {a b : A} (e : a $<~> b)
+  : cate_fun (emap F e)^-1$ $== cate_fun (emap F e^-1$).
+Proof.
+  refine (cate_inv_adjointify _ _ _ _ $@ _).
+  exact (cate_buildequiv_fun _)^$.
+Defined.
 
 (** When we have equivalences, we can define what it means for a category to be univalent. *)
 Definition cat_equiv_path {A : Type} `{HasEquivs A} (a b : A)

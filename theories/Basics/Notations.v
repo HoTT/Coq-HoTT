@@ -158,6 +158,7 @@ Reserved Infix "$o@" (at level 30).
 Reserved Infix "$@" (at level 30).
 Reserved Infix "$@L" (at level 30).
 Reserved Infix "$@R" (at level 30).
+Reserved Infix "$@@" (at level 30).
 Reserved Infix "$=>" (at level 99).
 Reserved Notation "T ^op" (at level 3, format "T ^op").
 Reserved Notation "f ^-1$" (at level 3, format "f '^-1$'").
