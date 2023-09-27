@@ -76,6 +76,38 @@ Proof.
     apply cat_assoc.
 Defined.
 
+(** We record these corollaries here, since we use some of them below. *)
+Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : y $<~> z)
+  : (x $-> y) <~> (x $-> z)
+  := emap (opyon x) f.
+
+Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : x $<~> y)
+  : (y $-> z) <~> (x $-> z)
+  := @equiv_postcompose_cat_equiv A^op _ _ _ _ _ _ z y x f.
+
+(* The following implicitly use [hasequivs_core].  Note that when [A] has morphism extensionality, it doesn't follow that [core A] does.  We'd need to know that being an equivalence is a proposition, and we don't assume that (since even for [Type] it requires [Funext], see [hasmorext_core_type]). So we need to assume this in the following results. *)
+
+(** Postcomposition with a cat_equiv is an equivalence between the types of equivalences. *)
+Definition equiv_postcompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : y $<~> z)
+  : (x $<~> y) <~> (x $<~> z).
+Proof.
+  change ((Build_core x $-> Build_core y) <~> (Build_core x $-> Build_core z)).
+  refine (equiv_postcompose_cat_equiv (A := core A) _).
+  exact f.  (* It doesn't work to insert [f] on the previous line. *)
+Defined.
+
+Definition equiv_precompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : x $<~> y)
+  : (y $<~> z) <~> (x $<~> z).
+Proof.
+  change ((Build_core y $-> Build_core z) <~> (Build_core x $-> Build_core z)).
+  refine (equiv_precompose_cat_equiv (A := core A) _).
+  exact f.  (* It doesn't work to insert [f] on the previous line. *)
+Defined.
+
 Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
            (F : A -> Type) {ff : Is0Functor F}
   : F a -> (opyon a $=> F).
@@ -164,78 +196,118 @@ Proof.
   - rapply is1natural_opyoneda.
 Defined.
 
-(** We define a version of [opyon] that lands in 0-groupoids. *)
-Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A ZeroGpd.
+(** We repeat the above, regarding [opyon] as landing in 0-groupoids, using the 1-category structure on [ZeroGpd] in [ZeroGroupoid.v].  This has many advantages.  It avoids [HasMorExt], which means that we don't need [Funext] in many examples.  It also avoids [Is1Cat_Strong], which means the results all have the same hypotheses, namely that [A] is a 1-category.  This allows us to simplify the proof of [opyon_equiv_0gpd], making use of [opyoneda_isretr_0gpd]. *)
+
+Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -> ZeroGpd
+  := fun b => Build_ZeroGpd (a $-> b) _ _ _.
+
+Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is0Functor (opyon_0gpd a).
 Proof.
-  snrapply Build_Fun01.
-  - intro b.
-    rapply (Build_ZeroGpd (opyon a b)).
-  - snrapply Build_Is0Functor.
-    intros b c f; cbn beta.
-    snrapply Build_Morphism_0Gpd; cbn.
-    + exact (fmap (opyon a) f).
-    + apply is0functor_postcomp.
+  apply Build_Is0Functor.
+  intros b c f.
+  exact (Build_Morphism_0Gpd (opyon_0gpd a b) (opyon_0gpd a c) (cat_postcomp a f) _).
 Defined.
 
-(** A version of the covariant Yoneda lemma which regards [opyon] as a functor taking values in 0-groupoids, using the 1-category structure on [ZeroGpd] in [ZeroGroupoid.v].  Instead of assuming that each [f c : (a $-> c) -> (b $-> c)] is an equivalence of types, it only needs to be an equivalence of 0-groupoids.  For example, this means that we have a map [g c : (b $-> c) -> (a $-> c)] such that for each [k : a $-> c], [g c (f c k) $== k], rather than [g c (f c k) = k] as the version with types requires.  Similarly, the naturality is up to 2-cells, instead of up to paths.  This allows us to avoid [Funext] and [HasMorExt] when using this result.  As a side benefit, we also don't require that [A] is strong. *)
-Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A}
-  {a b : A} (f : opyon_0gpd a $<~> opyon_0gpd b)
+Global Instance is1functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is1Functor (opyon_0gpd a).
+Proof.
+  rapply Build_Is1Functor.
+  + intros x y f g p h.
+    apply (cat_prewhisker p).
+  + intros x h.
+    apply cat_idl.
+  + intros x y z f g h.
+    apply cat_assoc.
+Defined.
+
+Definition opyoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
+           (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  : F a -> (opyon_0gpd a $=> F).
+Proof.
+  intros x b.
+  refine (Build_Morphism_0Gpd (opyon_0gpd a b) (F b) (fun f => fmap F f x) _).
+  rapply Build_Is0Functor.
+  intros f1 f2 h.
+  exact (fmap2 F h x).
+Defined.
+
+Definition un_opyoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A -> ZeroGpd) {ff : Is0Functor F}
+  : (opyon_0gpd a $=> F) -> F a
+  := fun alpha => alpha a (Id a).
+
+Global Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (opyon_0gpd a) F (opyoneda_0gpd a F x).
+Proof.
+  unfold opyon_0gpd, opyoneda_0gpd; intros b c f g; cbn in *.
+  exact (fmap_comp F g f x).
+Defined.
+
+Definition opyoneda_issect_0gpd {A : Type} `{Is1Cat A} (a : A)
+           (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+           (x : F a)
+  : un_opyoneda_0gpd a F (opyoneda_0gpd a F x) $== x
+  := fmap_id F a x.
+
+(** Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
+Definition opyoneda_isretr_0gpd {A : Type} `{Is1Cat A} (a : A)
+           (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+           (alpha : opyon_0gpd a $=> F) {alnat : Is1Natural (opyon_0gpd a) F alpha}
+           (b : A)
+  : opyoneda_0gpd a F (un_opyoneda_0gpd a F alpha) b $== alpha b.
+Proof.
+  unfold opyoneda, un_opyoneda, opyon; intros f.
+  refine ((isnat alpha f (Id a))^$ $@ _).
+  cbn.
+  apply (fmap (alpha b)).
+  exact (cat_idr f).
+Defined.
+
+(** Specialization to "full-faithfulness" of the Yoneda embedding.  (In quotes because, again, incoherence means we can't recover the witness of naturality.)  *)
+Definition opyon_0gpd_cancel {A : Type} `{Is1Cat A} (a b : A)
+  : (opyon_0gpd a $=> opyon_0gpd b) -> (b $-> a)
+  := un_opyoneda_0gpd a (opyon_0gpd b).
+
+(** Since no extra hypotheses are needed, we use the name with "1" for the [Fun11] version. *)
+Definition opyon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun11 A ZeroGpd
+  := Build_Fun11 _ _ (opyon_0gpd a).
+
+(** We can also deduce "full-faithfulness" on equivalences.  We explain how this compares to [opyon_equiv] above.  Instead of assuming that each [f c : (a $-> c) -> (b $-> c)] is an equivalence of types, it only needs to be an equivalence of 0-groupoids.  For example, this means that we have a map [g c : (b $-> c) -> (a $-> c)] such that for each [k : a $-> c], [g c (f c k) $== k], rather than [g c (f c k) = k] as the version with types requires.  Similarly, the naturality is up to 2-cells, instead of up to paths.  This allows us to avoid [Funext] and [HasMorExt] when using this result.  As a side benefit, we also don't require that [A] is strong. The proof is also simpler, since we can re-use the work done in [opyoneda_isretr_0gpd]. *)
+Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A} `{!Is1Cat A}
+  {a b : A} (f : opyon1_0gpd a $<~> opyon1_0gpd b)
   : b $<~> a.
 Proof.
-  (* Coq can't find the composite Coercion from equivalences of 0-groupoids to Funclass, so we make names for the underlying natural transformations of [f] and its inverse. *)
-  set (ft := cate_fun f).
-  set (gt := cate_fun f^-1$).
   (* These are the maps that will define the desired equivalence: *)
-  set (fa := (ft a) (Id a)).
-  set (gb := (gt b) (Id b)).
+  set (fa := (cate_fun f a) (Id a)).     (* Equivalently, [un_opyoneda_0gpd a _ f]. *)
+  set (gb := (cate_fun f^-1$ b) (Id b)). (* Equivalently, [un_opyoneda_0gpd b _ f^-1$]. *)
   srapply (cate_adjointify fa gb).
-  - pose proof (gn := is1natural_nattrans _ _ gt).
-    refine ((isnat (alnat:=gn) gt fa (Id b))^$ $@ _).
-    refine (fmap (gt a) (cat_idr fa) $@ _).
-    1: rapply is0functor_fun_0gpd.
-    1: exact _.
-    exact (cat_eissect (f a) (Id a)).
-  - pose proof (fn := is1natural_natequiv _ _ f).
-    refine ((isnat (alnat:=fn) ft gb (Id a))^$ $@ _).
-    refine (fmap (ft b) (cat_idr gb) $@ _).
-    1: rapply is0functor_fun_0gpd.
-    1: exact _.
-    exact (cat_eisretr (f b) (Id b)).
-  (* Not sure why typeclass inference doesn't find [is1natural_natequiv] and [is0functor_zerogpd_fun] above. *)
+  (* [opyoneda_0gpd] is defined by postcomposition, so [opyoneda_isretr_0gpd] simplifies both LHSs.*)
+  - exact (opyoneda_isretr_0gpd _ _ f^-1$ a fa $@ cat_eissect (f a) (Id a)).
+  - exact (opyoneda_isretr_0gpd _ _ f     b gb $@ cat_eisretr (f b) (Id b)).
 Defined.
 
-(** Precomposition with a [cat_equiv] is an equivalence between the hom 0-groupoids. Note that we do not require [HasMorExt], as [equiv_precompose_cat_equiv] does. *)
+(** Since [opyon_0gpd] is a 1-functor, postcomposition with a [cat_equiv] is an equivalence between the hom 0-groupoids. Note that we do not require [HasMorExt], as [equiv_postcompose_cat_equiv] does. *)
+Definition equiv_postcompose_cat_equiv_0gpd {A : Type} `{HasEquivs A}
+  {x y z : A} (f : y $<~> z)
+  : opyon_0gpd x y $<~> opyon_0gpd x z
+  := emap (opyon_0gpd x) f.
+
+(** The dual result, which is used in the next result. *)
 Definition equiv_precompose_cat_equiv_0gpd {A : Type} `{HasEquivs A}
   {x y z : A} (f : x $<~> y)
-  : opyon_0gpd y z $<~> opyon_0gpd x z.
-Proof.
-  snrapply cate_adjointify.
-  - snrapply Build_Morphism_0Gpd.
-    1: exact (cat_precomp z f).
-    exact _.
-  - snrapply Build_Morphism_0Gpd.
-    1: exact (cat_precomp z f^-1$).
-    exact _.
-  - cbn.
-    intro g.
-    unfold cat_precomp.
-    apply compose_hV_h.
-  - cbn.
-    intro g.
-    unfold cat_precomp.
-    apply compose_hh_V.
-Defined.
+  : opyon_0gpd y z $<~> opyon_0gpd x z
+  := @equiv_postcompose_cat_equiv_0gpd A^op _ _ _ _ _ z y x f.
 
-(** A converse to [opyon_equiv_0gpd].  Together, we get a logical equivalence between [b $<~> a] and [opyon_0gpd a $<~> opyon_0gpd b].  Note again that the converse requires [HasMorExt] when using [opyon1]. *)
+(** A converse to [opyon_equiv_0gpd].  Together, we get a logical equivalence between [b $<~> a] and [opyon_0gpd a $<~> opyon_0gpd b], without [HasMorExt]. *)
 Definition natequiv_opyon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A} (e : b $<~> a)
-  : opyon_0gpd a $<~> opyon_0gpd b.
+  : opyon1_0gpd a $<~> opyon1_0gpd b.
 Proof.
   snrapply Build_NatEquiv.
   - intro c; exact (equiv_precompose_cat_equiv_0gpd e).
-  - intros c d f g; cbn.
-    unfold cat_precomp.
-    apply cat_assoc.
+  - rapply is1natural_opyoneda_0gpd.
 Defined.
 
 (** ** The contravariant Yoneda lemma *)
@@ -302,15 +374,15 @@ Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
   : (a $<~> b) -> (yon1 a $<~> yon1 b)
   := natequiv_opyon_equiv (A:=A^op).
 
-Definition yon_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A^op ZeroGpd
-  := opyon_0gpd (A:=A^op) a.
+Definition yon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A^op ZeroGpd
+  := opyon1_0gpd (A:=A^op) a.
 
 Definition yon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A}
-  : yon_0gpd a $<~> yon_0gpd b -> a $<~> b
+  : yon1_0gpd a $<~> yon1_0gpd b -> a $<~> b
   := opyon_equiv_0gpd (A:=A^op).
 
 Definition natequiv_yon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A}
-  : a $<~> b -> yon_0gpd a $<~> yon_0gpd b
+  : a $<~> b -> yon1_0gpd a $<~> yon1_0gpd b
   := natequiv_opyon_equiv_0gpd (A:=A^op).

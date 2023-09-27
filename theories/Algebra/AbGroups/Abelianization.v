@@ -17,9 +17,9 @@ Definition group_precomp {a b} := @cat_precomp Group _ _ a b.
 
 Class IsAbelianization {G : Group} (G_ab : AbGroup)
       (eta : GroupHomomorphism G G_ab)
-  := isequiv0gpd_isabel : forall (A : AbGroup),
+  := issurjinj_isabel : forall (A : AbGroup),
       IsSurjInj (group_precomp A eta).
-Global Existing Instance isequiv0gpd_isabel.
+Global Existing Instance issurjinj_isabel.
 
 (** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
 

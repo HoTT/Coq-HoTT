@@ -82,27 +82,40 @@ Global Instance hasequivs_0gpd : HasEquivs ZeroGpd
 (** Coq can't find the composite of the coercions [cate_fun : G $<~> H >-> G $-> H] and [fun_0gpd : Morphism_0Gpd G H >-> G -> H], probably because it passes through the definitional equality of [G $-> H] and [Morphism_0Gpd G H].  I couldn't find a solution, so instead here is a helper function to manually do the coercion when needed. *)
 
 Definition equiv_fun_0gpd {G H : ZeroGpd} (f : G $<~> H) : G -> H
-  := fun_0gpd _ _ (cate_fun f).
+  := fun_0gpd _ _ (cat_equiv_fun _ _ _ f).
+
+(** * Some tools for manipulating equivalences of 0-groupoids.  Even though the proofs are easy, in certain contexts Coq gets confused about [$==] vs [$->], which makes it hard to prove this inline.  So we record them here. *)
+
+(** Every equivalence is injective. *)
+Definition isinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
+  {x y : G} (h : equiv_fun_0gpd f x $== equiv_fun_0gpd f y)
+  : x $== y.
+Proof.
+  exact ((cat_eissect f x)^$ $@ fmap (equiv_fun_0gpd f^-1$) h $@ cat_eissect f y).
+Defined.
+
+(** This is one example of many things that could be ported from Basics/Equivalences.v. *)
+Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : x $== equiv_fun_0gpd f y)
+  : equiv_fun_0gpd f^-1$ x $== y
+  := fmap (equiv_fun_0gpd f^-1$) p $@ cat_eissect f y.
 
 (** * We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd. *)
 
 (** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)
 
 (** Every equivalence is injective and split essentially surjective. *)
-Definition IsSurjInj_Equiv_0Gpd {G H : ZeroGpd} (f : G $<~> H)
+Global Instance issurjinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
   : IsSurjInj (equiv_fun_0gpd f).
 Proof.
-  set (finv := equiv_fun_0gpd f^-1$).
   econstructor.
   - intro y.
-    exists (finv y).
+    exists (equiv_fun_0gpd f^-1$ y).
     rapply cat_eisretr.
-  - intros x1 x2 m.
-    exact ((cat_eissect f x1)^$ $@ fmap finv m $@ cat_eissect f x2).
+  - apply isinj_equiv_0gpd.
 Defined.
 
-(** Conversely, every injective split essentially surjective 0-functor is an equivalence. *)
-Global Instance IsEquiv_0Gpd_IsSurjInj {G H : ZeroGpd} (F : G $-> H)
+(** Conversely, every injective split essentially surjective 0-functor is an equivalence.  In practice, this is often the easiest way to prove that a functor is an equivalence. *)
+Definition isequiv_0gpd_issurjinj {G H : ZeroGpd} (F : G $-> H)
   {e : IsSurjInj F}
   : Cat_IsBiInv F.
 Proof.

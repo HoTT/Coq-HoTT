@@ -117,15 +117,7 @@ Definition cat_assoc_opp {A : Type} `{Is1Cat A}
   : h $o (g $o f) $== (h $o g) $o f
   := (cat_assoc f g h)^$.
 
-(*
-Definition Comp2 {A} `{Is1Cat A} {a b c : A}
-           {f g : a $-> b} {h k : b $-> c}
-           (q : h $-> k) (p : f $-> g)
-  : (h $o f $-> k $o g)
-  := ??
-
-Infix "$o@" := Comp2.
-*)
+(** Whiskering and horizontal composition of 2-cells. *)
 
 Definition cat_postwhisker {A} `{Is1Cat A} {a b c : A}
            {f g : a $-> b} (h : b $-> c) (p : f $== g)
@@ -138,6 +130,16 @@ Definition cat_prewhisker {A} `{Is1Cat A} {a b c : A}
   : f $o h $== g $o h
   := fmap (cat_precomp c h) p.
 Notation "p $@R h" := (cat_prewhisker p h).
+
+Definition cat_comp2 {A} `{Is1Cat A} {a b c : A}
+  {f g : a $-> b} {h k : b $-> c}
+  (p : f $== g) (q : h $== k )
+  : h $o f $== k $o g
+  := (q $@R _) $@ (_ $@L p).
+
+Notation "q $@@ p" := (cat_comp2 q p).
+
+(** Monomorphisms and epimorphisms. *)
 
 Definition Monic {A} `{Is1Cat A} {b c: A} (f : b $-> c)
   := forall a (g h : a $-> b), f $o g $== f $o h -> g $== h.

@@ -158,28 +158,20 @@ Defined.
 
 (** Swap functor *)
 
-Definition prod_swap {A B : Type} : A * B -> B * A
-  := fun '(a , b) => (b , a).
-
-Global Instance isequiv_prod_swap {A B}
-  : IsEquiv (@prod_swap A B)
-  := Build_IsEquiv _ _ prod_swap prod_swap
-    (fun _ => idpath) (fun _ => idpath) (fun _ => idpath).
-
-Global Instance is0functor_prod_swap {A B : Type} `{IsGraph A, IsGraph B}
-  : Is0Functor (@prod_swap A B).
+Global Instance is0functor_equiv_prod_symm {A B : Type} `{IsGraph A, IsGraph B}
+  : Is0Functor (equiv_prod_symm A B).
 Proof.
   snrapply Build_Is0Functor.
   intros a b.
-  apply prod_swap.
+  apply equiv_prod_symm.
 Defined.
 
-Global Instance is1functor_prod_swap {A B : Type} `{Is1Cat A, Is1Cat B}
-  : Is1Functor (@prod_swap A B).
+Global Instance is1functor_equiv_prod_symm {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is1Functor (equiv_prod_symm A B).
 Proof.
   snrapply Build_Is1Functor.
   - intros a b f g.
-    apply prod_swap.
+    apply equiv_prod_symm.
   - intros a.
     reflexivity.
   - reflexivity.
