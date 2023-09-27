@@ -1,0 +1,2 @@
+Require Export Join.Core.
+
