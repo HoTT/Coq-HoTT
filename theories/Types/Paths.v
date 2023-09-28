@@ -163,6 +163,14 @@ Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
   := Build_Equiv _ _ (fun r:x=y => p @ r @ q) _.
 
+Definition equiv_p1_1q {A : Type} {x y : A} {p q : x = y}
+  : p = q <~> p @ 1 = 1 @ q
+  := equiv_concat_lr (concat_p1 p) (concat_1p q)^.
+
+Definition equiv_1p_q1 {A : Type} {x y : A} {p q : x = y}
+  : p = q <~> 1 @ p = q @ 1
+  := equiv_concat_lr (concat_1p p) (concat_p1 q)^.
+
 Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
 : IsEquiv (@whiskerL A x y z p q r).
 Proof.

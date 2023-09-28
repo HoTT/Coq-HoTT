@@ -166,7 +166,7 @@ Proof.
     srapply path_cocone.
     1: reflexivity.
     intros i j f x; simpl.
-    refine (concat_p1 _ @ _ @ (concat_1p _)^).
+    apply equiv_p1_1q.
     apply Colimit_rec_beta_colimp.
   - intro f.
     apply path_forall.
@@ -175,7 +175,7 @@ Proof.
     intros i j g x; simpl.
     rewrite transport_paths_FlFr.
     rewrite Colimit_rec_beta_colimp.
-    refine (ap (fun x => concat x _) (concat_p1 _) @ _).
+    refine (concat_p1 _ @@ 1 @ _).
     apply concat_Vp.
 Defined.
 
