@@ -698,31 +698,27 @@ Section JoinTrunc.
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (Join A B).
   Proof.
-    exists (pushl (center A)).
-    intros y; simple refine (Pushout_ind _ _ _ _ y).
+    exists (joinl (center A)).
+    snrapply Join_ind.
     - intros a; apply ap, contr.
-    - intros b; exact (pglue (center A , b)).
-    - intros [a b]; cbn.
-      refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
-      refine (transport_paths_r _ _ @ _^).
-      nrapply transport_paths_FlFr'.
-      refine_lhs (ap_V _ _ @@ 1).
-      rapply_lhs concat_V_pp.
-      refine_rhs (1 @@ ap_const _ _).
-      exact (concat_p1 _)^.
+    - intros b; apply jglue.
+    - intros a b; cbn.
+      rapply_lhs transport_paths_r.
+      apply triangle_h'.
   Defined.
 
   (** The join of hprops is an hprop *)
   Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
   Proof.
     apply hprop_inhabited_contr.
-    unfold Join.
-    refine (Pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
+    snrapply Join_rec.
     - intros a; apply contr_join.
       exact (contr_inhabited_hprop A a).
-    - intros b; refine (istrunc_equiv_istrunc (Join B A) (equiv_join_sym B A)).
+    - intros b; refine (contr_equiv (Join B A) (equiv_join_sym B A)).
       apply contr_join.
       exact (contr_inhabited_hprop B b).
+    (* The two proofs of contractibility are equal because [Contr] is an [HProp].  This uses [Funext]. *)
+    - intros a b; apply path_ishprop.
   Defined.
 
   Lemma equiv_into_hprop `{Funext} {A B P : Type} `{IsHProp P} (f : A -> P)
@@ -742,7 +738,7 @@ Section JoinTrunc.
     : Join A B <~> hor A B.
   Proof.
     apply equiv_iff_hprop.
-    - refine (Pushout_rec _ (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ => path_ishprop _ _)).
+    - exact (Join_rec (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ _ => path_ishprop _ _)).
     - apply Trunc_rec, push.
   Defined.
 
@@ -754,20 +750,20 @@ Section JoinTrunc.
     apply isconnected_from_elim; intros C ? k.
     pose @istrunc_inO_tr.
     pose proof (istrunc_extension_along_conn
-                  (fun b:B => tt) (fun _ => C) (k o pushr)).
+                  (fun b:B => tt) (fun _ => C) (k o joinr)).
     unfold ExtensionAlong in *.
     transparent assert (f : (A -> {s : Unit -> C &
-                                   forall x, s tt = k (pushr x)})).
-    { intros a; exists (fun _ => k (pushl a)); intros b.
+                                   forall x, s tt = k (joinr x)})).
+    { intros a; exists (fun _ => k (joinl a)); intros b.
       exact (ap k (jglue a b)). }
     assert (h := isconnected_elim
-                   m {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
+                   m {s : Unit -> C & forall x : B, s tt = k (joinr x)} f).
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
-    srefine (Pushout_ind _ _ _ _).
+    snrapply Join_ind.
     - intros a; cbn. exact (ap10 (h a)..1 tt).
     - intros b; cbn. exact ((g b)^).
-    - intros [a b].
+    - intros a b.
       rewrite transport_paths_FlFr, ap_const, concat_p1; cbn.
       subst f; set (ha := h a); clearbody ha; clear h;
       assert (ha2 := ha..2); set (ha1 := ha..1) in *;
