@@ -477,19 +477,16 @@ Section FunctorJoin.
     : Join A B -> Join C D.
   Proof.
     snrapply Join_rec.
-    1: intro a; apply joinl, f, a.
-    1: intro b; apply joinr, g, b.
+    1: exact (joinl o f).
+    1: exact (joinr o g).
     intros a b.
     apply jglue.
   Defined.
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
-    : ap (functor_join f g) (jglue a b) = jglue (f a) (g b).
-  Proof.
-    unfold functor_join.
-    nrapply Join_rec_beta_jglue.
-  Defined.
+    : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
+    := Join_rec_beta_jglue _ _ _ a b.
 
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
@@ -500,9 +497,10 @@ Section FunctorJoin.
     intros a b.
     simpl.
     apply equiv_p1_1q.
-    rewrite (ap_compose (functor_join f g)).
-    rewrite 3 Join_rec_beta_jglue.
-    reflexivity.
+    rapply_lhs functor_join_beta_jglue; symmetry.
+    rapply_lhs (ap_compose (functor_join f g) _ (jglue a b)).
+    rapply_lhs (ap _ (functor_join_beta_jglue _ _ _ _)).
+    apply functor_join_beta_jglue.
   Defined.
 
   Definition functor_join_idmap {A B}
@@ -513,8 +511,22 @@ Section FunctorJoin.
     intros a b.
     simpl.
     apply equiv_p1_1q.
-    refine (functor_join_beta_jglue _ _ _ _ @ _).
+    rapply_lhs functor_join_beta_jglue.
     symmetry; apply ap_idmap.
+  Defined.
+
+  Definition functor2_join {A B C D} {f f' : A -> C} {g g' : B -> D}
+    (h : f == f') (k : g == g')
+    : functor_join f g == functor_join f' g'.
+  Proof.
+    srapply Join_ind_FlFr.
+    - simpl; intros; apply ap, h.
+    - simpl; intros; apply ap, k.
+    - intros a b; cbn beta.
+      rapply_lhs (functor_join_beta_jglue _ _ _ _ @@ 1).
+      symmetry.
+      rapply_lhs (1 @@ functor_join_beta_jglue _ _ _ _).
+      apply join_natsq.
   Defined.
 
   Global Instance isequiv_functor_join {A B C D}
@@ -522,18 +534,17 @@ Section FunctorJoin.
     : IsEquiv (functor_join f g).
   Proof.
     snrapply isequiv_adjointify.
-    1: apply (functor_join f^-1 g^-1).
-    1,2: snrapply Join_ind_dp.
-    1,2: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
-    1,2: apply ap, eisretr.
-    2,3: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
-    2,3: apply ap, eissect.
-    1,2: intros c d; cbn.
-    1,2: apply sq_dp^-1.
-     1 : rewrite (ap_compose _ (functor_join f g)).
-     2 : rewrite (ap_compose (functor_join f g)).
-    1,2: rewrite 2 Join_rec_beta_jglue, ap_idmap.
-    1,2: apply join_natsq_v.
+    - apply (functor_join f^-1 g^-1).
+    - etransitivity.
+      1: symmetry; apply functor_join_compose.
+      etransitivity.
+      1: exact (functor2_join (eisretr f) (eisretr g)).
+      apply functor_join_idmap.
+    - etransitivity.
+      1: symmetry; apply functor_join_compose.
+      etransitivity.
+      1: exact (functor2_join (eissect f) (eissect g)).
+      apply functor_join_idmap.
   Defined.
 
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
@@ -624,6 +635,10 @@ Section JoinSym.
     : Join A B -> Join B A
     := join_rec (join_sym_recdata A B).
 
+  Definition join_sym_beta_jglue {A B} (a : A) (b : B)
+    : ap (join_sym A B) (jglue a b) = (jglue b a)^
+    := Join_rec_beta_jglue _ _ _ _ _.
+
   (** The obvious definition is homotopic to the definition via the Yoneda lemma. *)
   Definition join_sym_homotopic (A B : Type)
     : join_sym A B == equiv_join_sym' A B.
@@ -658,6 +673,23 @@ Section JoinSym.
 
   (** Finally, one can also prove that the join is symmetric using [pushout_sym] and [equiv_prod_symm], but this results in an equivalence whose inverse isn't of the same form. *)
 
+  Definition join_sym_nat {A B A' B'} (f : A -> A') (g : B -> B')
+    : join_sym A' B' o functor_join f g == functor_join g f o join_sym A B.
+  Proof.
+    snrapply Join_ind_FlFr.
+    1, 2: reflexivity.
+    intros a b; cbn beta.
+    apply equiv_p1_1q.
+    refine_lhs (ap_compose' (functor_join f g) _ (jglue a b)).
+    refine_lhs (ap _ (functor_join_beta_jglue _ _ _ _)).
+    rapply_lhs join_sym_beta_jglue.
+    symmetry.
+    refine_lhs (ap_compose' (join_sym A B) _ (jglue a b)).
+    refine_lhs (ap _ (join_sym_beta_jglue a b)).
+    refine (ap_V _ (jglue b a) @ ap inverse _).
+    apply functor_join_beta_jglue.
+  Defined.
+
 End JoinSym.
 
 (** Relationship to truncation levels and connectedness. *)
@@ -674,9 +706,10 @@ Section JoinTrunc.
       refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
       refine (transport_paths_r _ _ @ _^).
       nrapply transport_paths_FlFr'.
-      refine (ap_V _ _ @@ 1 @ _).
-      refine (concat_V_pp _ _ @ _^).
-      exact (1 @@ ap_const _ _ @ concat_p1 _).
+      refine_lhs (ap_V _ _ @@ 1).
+      rapply_lhs concat_V_pp.
+      refine_rhs (1 @@ ap_const _ _).
+      exact (concat_p1 _)^.
   Defined.
 
   (** The join of hprops is an hprop *)
