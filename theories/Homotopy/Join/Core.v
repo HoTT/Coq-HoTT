@@ -105,29 +105,16 @@ Section Join.
     srapply Pushout_rec_beta_pglue.
   Defined.
 
-  (** Joining with a contractible type produces a contractible type *)
-  Global Instance contr_join A B `{Contr A} : Contr (Join A B).
-  Proof.
-    exists (pushl (center A)).
-    intros y; simple refine (Pushout_ind _ _ _ _ y).
-    - intros a; apply ap, contr.
-    - intros b; exact (pglue (center A , b)).
-    - intros [a b]; cbn.
-      refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
-      refine (transport_paths_r _ _ @ _^).
-      nrapply transport_paths_FlFr'.
-      refine (ap_V _ _ @@ 1 @ _).
-      refine (concat_V_pp _ _ @ _^).
-      exact (1 @@ ap_const _ _ @ concat_p1 _).
-  Defined.
+  (** If [A] is ipointed, so is [Join A B]. *)
+  Definition pjoin (A : pType) (B : Type) : pType
+    := [Join A B, joinl pt].
 
-  (** Join is symmetric *)
-  Definition join_sym A B : Join A B <~> Join B A.
-  Proof.
-    unfold Join; refine (pushout_sym oE _).
-    refine (equiv_pushout (equiv_prod_symm A B) 1 1 _ _);
-      intros [a b]; reflexivity.
-  Defined.
+End Join.
+
+(** * Various types of equalities between paths in joins. *)
+
+(** Naturality squares for given paths in [A] and [B]. *)
+Section JoinNatSq.
 
   Definition join_natsq {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
@@ -152,6 +139,86 @@ Section Join.
     destruct p, q.
     apply sq_refl_h.
   Defined.
+
+End JoinNatSq.
+
+(** The triangles that arise when one of the given paths is reflexivity. *)
+Section Triangle.
+
+  Context {A B : Type}.
+
+  Definition triangle_h {a a' : A} (b : B) (p : a = a')
+    : jglue a b @ (jglue a' b)^ = ap joinl p.
+  Proof.
+    destruct p.
+    apply concat_pV.
+  Defined.
+
+  Definition triangle_h' {a a' : A} (b : B) (p : a = a')
+    : ap joinl p @ (jglue a' b) = jglue a b.
+  Proof.
+    destruct p.
+    apply concat_1p.
+  Defined.
+
+  Definition triangle_v (a : A) {b b' : B} (p : b = b')
+    : (jglue a b)^ @ jglue a b' = ap joinr p.
+  Proof.
+    destruct p.
+    apply concat_Vp.
+  Defined.
+
+  Definition triangle_v' (a : A) {b b' : B} (p : b = b')
+    : jglue a b @ ap joinr p = jglue a b'.
+  Proof.
+    destruct p.
+    apply concat_p1.
+  Defined.
+
+End Triangle.
+
+(** Diamond lemmas for Join *)
+Section Diamond.
+
+  Context {A B : Type}.
+
+  Definition Diamond (a a' : A) (b b' : B)
+    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+
+  Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    apply sq_path.
+    exact (concat_pV _ @ (concat_pV _)^).
+  Defined.
+
+  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    by apply sq_path.
+  Defined.
+
+  Lemma diamond_symm (a : A) (b : B)
+    : diamond_v a a 1 = diamond_h b b 1.
+  Proof.
+    unfold diamond_v, diamond_h.
+    symmetry; apply ap, concat_pV.
+  Defined.
+
+End Diamond.
+
+Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
+  : DPath (fun x => Diamond a' x a x) p
+    (diamond_v a' a 1) (diamond_h a a' 1).
+Proof.
+  destruct p.
+  apply diamond_symm.
+Defined.
+
+(** * Functoriality of Join. *)
+Section FunctorJoin.
 
   Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D.
@@ -219,13 +286,46 @@ Section Join.
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
     : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
+End FunctorJoin.
+
+Section JoinSym.
+
+  (** Join is symmetric *)
+  Definition join_sym A B : Join A B <~> Join B A.
+  Proof.
+    unfold Join; refine (pushout_sym oE _).
+    refine (equiv_pushout (equiv_prod_symm A B) 1 1 _ _);
+      intros [a b]; reflexivity.
+  Defined.
+
+End JoinSym.
+
+(** Relationship to truncation levels and connectedness. *)
+Section JoinTrunc.
+
+  (** Joining with a contractible type produces a contractible type *)
+  Global Instance contr_join A B `{Contr A} : Contr (Join A B).
+  Proof.
+    exists (pushl (center A)).
+    intros y; simple refine (Pushout_ind _ _ _ _ y).
+    - intros a; apply ap, contr.
+    - intros b; exact (pglue (center A , b)).
+    - intros [a b]; cbn.
+      refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
+      refine (transport_paths_r _ _ @ _^).
+      nrapply transport_paths_FlFr'.
+      refine (ap_V _ _ @@ 1 @ _).
+      refine (concat_V_pp _ _ @ _^).
+      exact (1 @@ ap_const _ _ @ concat_p1 _).
+  Defined.
+
   (** The join of hprops is an hprop *)
   Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
   Proof.
     apply hprop_inhabited_contr.
     unfold Join.
     refine (Pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
-    - intros a; apply contr_join.  
+    - intros a; apply contr_join.
       exact (contr_inhabited_hprop A a).
     - intros b; refine (istrunc_equiv_istrunc (Join B A) (join_sym B A)).
       apply contr_join.
@@ -245,7 +345,7 @@ Section Join.
   Defined.
 
   (** And coincides with their disjunction *)
-  Definition equiv_join_hor `{Funext} A B `{IsHProp A} `{IsHProp B} 
+  Definition equiv_join_hor `{Funext} A B `{IsHProp A} `{IsHProp B}
     : Join A B <~> hor A B.
   Proof.
     apply equiv_iff_hprop.
@@ -288,89 +388,16 @@ Section Join.
       reflexivity.
   Defined.
 
-  Definition pjoin (A : pType) (B : Type) : pType
-    := [Join A B, joinl pt].
+End JoinTrunc.
 
-End Join.
+(** Iterated Join powers of a type. *)
+Section JoinPower.
 
-(** Diamond lemmas for Join *)
-Section Diamond.
+  (** The join of n.+1 copies of a type. *)
+  Fixpoint Join_power (A : Type) (n : nat) : Type :=
+    match n with
+    | 0%nat => A
+    | m.+1%nat => Join A (Join_power A m)
+    end.
 
-  Context {A B : Type}.
-
-  Definition Diamond (a a' : A) (b b' : B)
-    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
-
-  Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
-    : Diamond a a' b b'.
-  Proof.
-    destruct p.
-    apply sq_path.
-    exact (concat_pV _ @ (concat_pV _)^).
-  Defined.
-
-  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
-    : Diamond a a' b b'.
-  Proof.
-    destruct p.
-    by apply sq_path.
-  Defined.
-
-  Lemma diamond_symm (a : A) (b : B)
-    : diamond_v a a 1 = diamond_h b b 1.
-  Proof.
-    unfold diamond_v, diamond_h.
-    symmetry; apply ap, concat_pV.
-  Defined.
-
-End Diamond.
-
-Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
-  : DPath (fun x => Diamond a' x a x) p
-    (diamond_v a' a 1) (diamond_h a a' 1).
-Proof.
-  destruct p.
-  apply diamond_symm.
-Defined.
-
-(** Triangle lemmas for Join *)
-Section Triangle.
-
-  Context {A B : Type}.
-
-  Definition triangle_h {a a' : A} (b : B) (p : a = a')
-    : jglue a b @ (jglue a' b)^ = ap joinl p.
-  Proof.
-    destruct p.
-    apply concat_pV.
-  Defined.
-
-  Definition triangle_h' {a a' : A} (b : B) (p : a = a')
-    : ap joinl p @ (jglue a' b) = jglue a b.
-  Proof.
-    destruct p.
-    apply concat_1p.
-  Defined.
-
-  Definition triangle_v (a : A) {b b' : B} (p : b = b')
-    : (jglue a b)^ @ jglue a b' = ap joinr p.
-  Proof.
-    destruct p.
-    apply concat_Vp.
-  Defined.
-
-  Definition triangle_v' (a : A) {b b' : B} (p : b = b')
-    : jglue a b @ ap joinr p = jglue a b'.
-  Proof.
-    destruct p.
-    apply concat_p1.
-  Defined.
-
-End Triangle.
-
-(** The join of n.+1 copies of a type. *)
-Fixpoint Join_power (A : Type) (n : nat) : Type :=
-  match n with
-  | 0%nat => A
-  | m.+1%nat => Join A (Join_power A m)
-  end.
+End JoinPower.
