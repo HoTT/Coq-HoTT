@@ -129,6 +129,14 @@ Section Join.
       intros [a b]; reflexivity.
   Defined.
 
+  Definition join_natsq {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : (ap joinl p) @ (jglue a' b') = (jglue a b) @ (ap joinr q).
+  Proof.
+    destruct p, q.
+    apply concat_1p_p1.
+  Defined.
+
   Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
     : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
@@ -324,6 +332,41 @@ Proof.
   destruct p.
   apply diamond_symm.
 Defined.
+
+(** Triangle lemmas for Join *)
+Section Triangle.
+
+  Context {A B : Type}.
+
+  Definition triangle_h {a a' : A} (b : B) (p : a = a')
+    : jglue a b @ (jglue a' b)^ = ap joinl p.
+  Proof.
+    destruct p.
+    apply concat_pV.
+  Defined.
+
+  Definition triangle_h' {a a' : A} (b : B) (p : a = a')
+    : ap joinl p @ (jglue a' b) = jglue a b.
+  Proof.
+    destruct p.
+    apply concat_1p.
+  Defined.
+
+  Definition triangle_v (a : A) {b b' : B} (p : b = b')
+    : (jglue a b)^ @ jglue a b' = ap joinr p.
+  Proof.
+    destruct p.
+    apply concat_Vp.
+  Defined.
+
+  Definition triangle_v' (a : A) {b b' : B} (p : b = b')
+    : jglue a b @ ap joinr p = jglue a b'.
+  Proof.
+    destruct p.
+    apply concat_p1.
+  Defined.
+
+End Triangle.
 
 (** The join of n.+1 copies of a type. *)
 Fixpoint Join_power (A : Type) (n : nat) : Type :=
