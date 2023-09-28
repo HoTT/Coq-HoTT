@@ -421,6 +421,66 @@ Tactic Notation "snrapply" uconstr(term)
 Tactic Notation "snrapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => snrefine x) term.
 
+(** Variants, for manipulating one side of an equation without rewriting. *)
+
+(** It would be great if instead of these 32 notations, we could have just four tacticals [lhs], [lhs_V], [rhs] and [rhs_V] that could be used as [lhs rapply lemma], [rhs nrefine (lemma _ _ arg _)], etc.  The former would expand to [refine (_ @ _); [rapply lemma|]], for example. *)
+
+Tactic Notation "refine_lhs" uconstr(term) := refine (term @ _).
+Tactic Notation "nrefine_lhs" uconstr(term) := nrefine (term @ _).
+Tactic Notation "srefine_lhs" uconstr(term) := srefine (term @ _).
+Tactic Notation "snrefine_lhs" uconstr(term) := snrefine (term @ _).
+
+Tactic Notation "refine_lhs_V" uconstr(term) := refine (term^ @ _).
+Tactic Notation "nrefine_lhs_V" uconstr(term) := nrefine (term^ @ _).
+Tactic Notation "srefine_lhs_V" uconstr(term) := srefine (term^ @ _).
+Tactic Notation "snrefine_lhs_V" uconstr(term) := snrefine (term^ @ _).
+
+Tactic Notation "refine_rhs" uconstr(term) := refine (_ @ term^).
+Tactic Notation "nrefine_rhs" uconstr(term) := nrefine (_ @ term^).
+Tactic Notation "srefine_rhs" uconstr(term) := srefine (_ @ term^).
+Tactic Notation "snrefine_rhs" uconstr(term) := snrefine (_ @ term^).
+
+Tactic Notation "refine_rhs_V" uconstr(term) := refine (_ @ term).
+Tactic Notation "nrefine_rhs_V" uconstr(term) := nrefine (_ @ term).
+Tactic Notation "srefine_rhs_V" uconstr(term) := srefine (_ @ term).
+Tactic Notation "snrefine_rhs_V" uconstr(term) := snrefine (_ @ term).
+
+Tactic Notation "rapply_lhs" uconstr(term)
+  := do_with_holes ltac:(fun x => refine_lhs x) term.
+Tactic Notation "nrapply_lhs" uconstr(term)
+  := do_with_holes ltac:(fun x => nrefine_lhs x) term.
+Tactic Notation "srapply_lhs" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine_lhs x) term.
+Tactic Notation "snrapply_lhs" uconstr(term)
+  := do_with_holes ltac:(fun x => snrefine_lhs x) term.
+
+Tactic Notation "rapply_lhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => refine_lhs_V x) term.
+Tactic Notation "nrapply_lhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => nrefine_lhs_V x) term.
+Tactic Notation "srapply_lhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine_lhs_V x) term.
+Tactic Notation "snrapply_lhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => snrefine_lhs_V x) term.
+
+Tactic Notation "rapply_rhs" uconstr(term)
+  := do_with_holes ltac:(fun x => refine_rhs x) term.
+Tactic Notation "nrapply_rhs" uconstr(term)
+  := do_with_holes ltac:(fun x => nrefine_rhs x) term.
+Tactic Notation "srapply_rhs" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine_rhs x) term.
+Tactic Notation "snrapply_rhs" uconstr(term)
+  := do_with_holes ltac:(fun x => snrefine_rhs x) term.
+
+Tactic Notation "rapply_rhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => refine_rhs_V x) term.
+Tactic Notation "nrapply_rhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => nrefine_rhs_V x) term.
+Tactic Notation "srapply_rhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine_rhs_V x) term.
+Tactic Notation "snrapply_rhs_V" uconstr(term)
+  := do_with_holes ltac:(fun x => snrefine_rhs_V x) term.
+
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
