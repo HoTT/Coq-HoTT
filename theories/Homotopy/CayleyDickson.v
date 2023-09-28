@@ -2,7 +2,7 @@ Require Import Cubical.
 Require Import Pointed.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.Join.
+Require Import Homotopy.Join.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.

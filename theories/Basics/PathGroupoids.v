@@ -480,6 +480,16 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
     | idpath => concat_p1_1p _
   end.
 
+Definition apD_homotopic {A : Type} {B : A -> Type} {f g : forall x, B x}
+  (p : forall x, f x = g x) {x y : A} (q : x = y)
+  : apD f q = ap (transport B q) (p x) @ apD g q @ (p y)^.
+Proof.
+  apply moveL_pV.
+  destruct q; unfold apD, transport.
+  symmetry.
+  exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+Defined.
+
 (** Naturality with other paths hanging around. *)
 Definition concat_pA_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
   {x y : A} (q : x = y)
@@ -821,6 +831,12 @@ Definition concat_AT {A : Type} (P : A -> Type) {x y : A} {p q : x = y}
   : ap (transport P p) s  @  transport2 P r w
     = transport2 P r z  @  ap (transport P q) s
   := match r with idpath => (concat_p1_1p _) end.
+
+Definition transport_pp_1 {A : Type} (P : A -> Type) {a b : A} (p : a = b) (x : P a)
+  : transport_pp P p 1 x = transport2 P (concat_p1 p) x.
+Proof.
+  by induction p.
+Defined.
 
 (* TODO: What should this be called? *)
 Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :

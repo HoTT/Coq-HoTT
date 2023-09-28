@@ -1,7 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
-Require Import Homotopy.Join.
+Require Import Homotopy.Join.Core.
 Require Import Truncations.
 
 (** * The Generalized Blakers-Massey Theorem *)

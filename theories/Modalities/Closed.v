@@ -3,7 +3,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions.
 Require Import Modality Accessible Nullification Lex Topological.
-Require Import Colimits.Pushout Homotopy.Join.
+Require Import Colimits.Pushout Homotopy.Join.Core.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
