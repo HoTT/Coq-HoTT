@@ -27,30 +27,45 @@ Section Join.
 
   Definition Join_ind {A B : Type} (P : Join A B -> Type)
     (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
+    (P_g : forall a b, transport P (jglue a b) (P_A a) = (P_B b))
     : forall (x : Join A B), P x.
   Proof.
-    srapply (Pushout_ind P P_A P_B).
-    intros [a b].
-    apply dp_path_transport^-1.
-    exact (P_g a b).
+    apply (Pushout_ind P P_A P_B).
+    exact (fun ab => P_g (fst ab) (snd ab)).
   Defined.
 
   Definition Join_ind_beta_jglue {A B : Type} (P : Join A B -> Type)
     (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, transport P (jglue a b) (P_A a) = (P_B b)) a b
+    : apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b
+    := Pushout_ind_beta_pglue _ _ _ _ _.
+
+  (* A version of [Join_ind] that uses dependant paths. *)
+  Definition Join_ind_dp {A B : Type} (P : Join A B -> Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
+    : forall (x : Join A B), P x.
+  Proof.
+    refine (Join_ind P P_A P_B _).
+    intros a b.
+    apply dp_path_transport^-1.
+    exact (P_g a b).
+  Defined.
+
+  Definition Join_ind_dp_beta_jglue {A B : Type} (P : Join A B -> Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
     (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b)) a b
-    : dp_apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b.
+    : dp_apD (Join_ind_dp P P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
     apply dp_apD_path_transport.
-    srapply Pushout_ind_beta_pglue.
+    snrapply Join_ind_beta_jglue.
   Defined.
 
   Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
     (P_g : forall a b, P_A a = P_B b) : Join A B -> P.
   Proof.
     srapply (Pushout_rec P P_A P_B).
-    intros [a b].
-    apply P_g.
+    exact (fun ab => P_g (fst ab) (snd ab)).
   Defined.
 
   Definition Join_rec_beta_jglue {A B P : Type} (P_A : A -> P)
@@ -113,7 +128,7 @@ Section Join.
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
     : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
   Proof.
-    srapply Join_ind.
+    srapply Join_ind_dp.
     1,2: reflexivity.
     intros a b.
     simpl.
@@ -128,7 +143,7 @@ Section Join.
   Definition functor_join_idmap {A}
     : functor_join idmap idmap == (idmap : Join A A -> Join A A).
   Proof.
-    srapply Join_ind.
+    srapply Join_ind_dp.
     1,2: reflexivity.
     intros a b.
     cbn; apply dp_paths_FlFr.
@@ -143,7 +158,7 @@ Section Join.
   Proof.
     srapply isequiv_adjointify.
     1: apply (functor_join f^-1 g^-1).
-    1,2: srapply Join_ind.
+    1,2: srapply Join_ind_dp.
     1,2: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
     1,2: apply ap, eisretr.
     2,3: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
