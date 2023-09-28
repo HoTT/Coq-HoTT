@@ -73,7 +73,7 @@ Section Join.
     - exact Hl.
     - exact Hr.
     - intros a b.
-      rapply transport_paths_FlFr'.
+      nrapply transport_paths_FlFr'.
       apply Hglue.
   Defined.
 
@@ -88,14 +88,14 @@ Section Join.
     - exact Hl.
     - exact Hr.
     - intros a b.
-      rapply transport_paths_FFlr'.
+      nrapply transport_paths_FFlr'.
       apply Hglue.
   Defined.
 
   Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
     (P_g : forall a b, P_A a = P_B b) : Join A B -> P.
   Proof.
-    srapply (Pushout_rec P P_A P_B).
+    apply (Pushout_rec P P_A P_B).
     exact (fun ab => P_g (fst ab) (snd ab)).
   Defined.
 
@@ -103,7 +103,7 @@ Section Join.
     (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a b
     : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
-    srapply Pushout_rec_beta_pglue.
+    snrapply Pushout_rec_beta_pglue.
   Defined.
 
   (** If [A] is ipointed, so is [Join A B]. *)
@@ -203,7 +203,7 @@ Ltac generalize_three f a b :=
 Ltac interval_ind f a b :=
   generalize_three f a b;
   intro f; (* We really only wanted two of them generalized here, so we intro one. *)
-  snrapply paths_ind.
+  apply paths_ind.
 
 (** Similarly, for [h : JoinRecPath f g], if we have [a] and [b] and are trying to prove a goal only involving [h] and [g] evaluated at those points, we can assume that [g] is [f] and that [h] is "reflexivity".  For this, we first define a lemma that is like "path induction on h", and then a tactic that uses it. *)
 
@@ -223,7 +223,7 @@ Defined.
 Global Ltac square_ind g h a b :=
   generalize_three h a b;
   generalize_three g a b;
-  snrapply square_ind.
+  apply square_ind.
 
 (** * Here we start using the WildCat library to organize things. *)
 
@@ -233,7 +233,7 @@ Global Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
 
 Global Instance is01cat_joinrecdata (A B P : Type) : Is01Cat (JoinRecData A B P).
 Proof.
-  snrapply Build_Is01Cat.
+  apply Build_Is01Cat.
   - intro f.
     bundle_joinrecpath.
     reflexivity.
@@ -249,7 +249,7 @@ Defined.
 
 Global Instance is0gpd_joinrecdata (A B P : Type) : Is0Gpd (JoinRecData A B P).
 Proof.
-  snrapply Build_Is0Gpd.
+  apply Build_Is0Gpd.
   intros f g h.
   snrapply Build_JoinRecPath; intros; cbn beta.
   + exact (hl h a)^.
@@ -270,7 +270,7 @@ Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
 Global Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -> Q)
   : Is0Functor (@joinrecdata_fun A B P Q g).
 Proof.
-  snrapply Build_Is0Functor.
+  apply Build_Is0Functor.
   intros f1 f2 h.
   snrapply Build_JoinRecPath; intros; cbn.
   - exact (ap g (hl h a)).
@@ -282,7 +282,7 @@ Defined.
 (** [joinrecdata_0gpd A B] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)
 Global Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd A B).
 Proof.
-  snrapply Build_Is0Functor.
+  apply Build_Is0Functor.
   intros P Q g.
   snrapply Build_Morphism_0Gpd.
   - exact (joinrecdata_fun g).
@@ -292,7 +292,7 @@ Defined.
 (** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
 Global Instance is1functor_joinrecdata_0gpd (A B : Type) : Is1Functor (joinrecdata_0gpd A B).
 Proof.
-  snrapply Build_Is1Functor.
+  apply Build_Is1Functor.
   (* If [g1 g2 : P -> Q] are homotopic, then the induced maps are homotopic: *)
   - intros P Q g1 g2 h f; cbn in *.
     snrapply Build_JoinRecPath; intros; cbn.
@@ -334,7 +334,7 @@ Proof.
   1: apply join_rec_inv_nattrans.
   intro P.
   apply isequiv_0gpd_issurjinj.
-  snrapply Build_IsSurjInj.
+  apply Build_IsSurjInj.
   - intros f; cbn in f.
     exists (join_rec f).
     apply join_rec_beta.
@@ -476,7 +476,7 @@ Section FunctorJoin.
   Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D.
   Proof.
-    srapply Join_rec.
+    snrapply Join_rec.
     1: intro a; apply joinl, f, a.
     1: intro b; apply joinr, g, b.
     intros a b.
@@ -488,7 +488,7 @@ Section FunctorJoin.
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b).
   Proof.
     unfold functor_join.
-    rapply Join_rec_beta_jglue.
+    nrapply Join_rec_beta_jglue.
   Defined.
 
   Definition functor_join_compose {A B C D E F}
@@ -521,9 +521,9 @@ Section FunctorJoin.
     (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
     : IsEquiv (functor_join f g).
   Proof.
-    srapply isequiv_adjointify.
+    snrapply isequiv_adjointify.
     1: apply (functor_join f^-1 g^-1).
-    1,2: srapply Join_ind_dp.
+    1,2: snrapply Join_ind_dp.
     1,2: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
     1,2: apply ap, eisretr.
     2,3: intro; unfold functor_join, Join_rec, Pushout_rec, Pushout_ind; simpl.
@@ -554,7 +554,7 @@ Section JoinSym.
       snrapply (Build_JoinRecData fr fl).
       intros b a; exact (fg a b)^.
     (* It respects the paths. *)
-    - snrapply Build_Is0Functor.
+    - apply Build_Is0Functor.
       intros f g h; simpl.
       snrapply Build_JoinRecPath; simpl.
       1, 2: intros; apply h.
@@ -695,10 +695,10 @@ Section JoinTrunc.
   Lemma equiv_into_hprop `{Funext} {A B P : Type} `{IsHProp P} (f : A -> P)
     : (Join A B -> P) <~> (B -> P).
   Proof.
-    srapply equiv_iff_hprop.
+    apply equiv_iff_hprop.
     1: exact (fun f => f o joinr).
     intros g.
-    srapply Join_rec.
+    snrapply Join_rec.
     1,2: assumption.
     intros a b.
     apply path_ishprop.
