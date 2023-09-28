@@ -61,6 +61,36 @@ Section Join.
     snrapply Join_ind_beta_jglue.
   Defined.
 
+  (** A version of [Join_ind] specifically for proving that two functions defined on a [Join] are homotopic. *)
+  Definition Join_ind_FlFr {A B P : Type} (f g : Join A B -> P)
+    (Hl : forall a, f (joinl a) = g (joinl a))
+    (Hr : forall b, f (joinr b) = g (joinr b))
+    (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ ap g (jglue a b))
+    : f == g.
+  Proof.
+    snrapply Join_ind.
+    - exact Hl.
+    - exact Hr.
+    - intros a b.
+      rapply transport_paths_FlFr'.
+      apply Hglue.
+  Defined.
+
+  (** And a version for showing that a composite is homotopic to the identity. *)
+  Definition Join_ind_FFlr {A B P : Type} (f : Join A B -> P) (g : P -> Join A B)
+    (Hl : forall a, g (f (joinl a)) = joinl a)
+    (Hr : forall b, g (f (joinr b)) = joinr b)
+    (Hglue : forall a b, ap g (ap f (jglue a b)) @ Hr b = Hl a @ jglue a b)
+    : forall x, g (f x) = x.
+  Proof.
+    snrapply Join_ind.
+    - exact Hl.
+    - exact Hr.
+    - intros a b.
+      rapply transport_paths_FFlr'.
+      apply Hglue.
+  Defined.
+
   Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
     (P_g : forall a b, P_A a = P_B b) : Join A B -> P.
   Proof.
@@ -84,10 +114,11 @@ Section Join.
     - intros b; exact (pglue (center A , b)).
     - intros [a b]; cbn.
       refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
-      rewrite transport_paths_r, transport_paths_FlFr; cbn.
-      rewrite ap_V, inv_V, concat_pp_p.
-      rewrite ap_const, concat_p1.
-      reflexivity.
+      refine (transport_paths_r _ _ @ _^).
+      nrapply transport_paths_FlFr'.
+      refine (ap_V _ _ @@ 1 @ _).
+      refine (concat_V_pp _ _ @ _^).
+      exact (1 @@ ap_const _ _ @ concat_p1 _).
   Defined.
 
   (** Join is symmetric *)
@@ -124,32 +155,38 @@ Section Join.
     apply jglue.
   Defined.
 
+  Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
+    (a : A) (b : B)
+    : ap (functor_join f g) (jglue a b) = jglue (f a) (g b).
+  Proof.
+    unfold functor_join.
+    rapply Join_rec_beta_jglue.
+  Defined.
+
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
     : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
   Proof.
-    srapply Join_ind_dp.
+    snrapply Join_ind_FlFr.
     1,2: reflexivity.
     intros a b.
     simpl.
-    apply sq_dp^-1.
-    apply sq_1G.
-    symmetry.
-    rewrite ap_compose.
+    apply equiv_p1_1q.
+    rewrite (ap_compose (functor_join f g)).
     rewrite 3 Join_rec_beta_jglue.
     reflexivity.
   Defined.
 
-  Definition functor_join_idmap {A}
-    : functor_join idmap idmap == (idmap : Join A A -> Join A A).
+  Definition functor_join_idmap {A B}
+    : functor_join idmap idmap == (idmap : Join A B -> Join A B).
   Proof.
-    srapply Join_ind_dp.
+    snrapply Join_ind_FlFr.
     1,2: reflexivity.
     intros a b.
-    cbn; apply dp_paths_FlFr.
-    rewrite Join_rec_beta_jglue.
-    rewrite ap_idmap, concat_p1.
-    apply concat_Vp.
+    simpl.
+    apply equiv_p1_1q.
+    refine (functor_join_beta_jglue _ _ _ _ @ _).
+    symmetry; apply ap_idmap.
   Defined.
 
   Global Instance isequiv_functor_join {A B C D}

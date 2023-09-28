@@ -87,6 +87,29 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+(** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)
+Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
+  (h : (ap f p) @ r = q @ (ap g p))
+  : transport (fun x => f x = g x) p q = r.
+Proof.
+  refine (transport_paths_FlFr _ _ @ _).
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  exact h^.
+Defined.
+
+Definition transport_paths_FFlr' {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
+  (h : (ap g (ap f p)) @ r = q @ p)
+  : transport (fun x => g (f x) = x) p q = r.
+Proof.
+  refine (transport_paths_FFlr _ _ @ _).
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  exact h^.
+Defined.
+
 (** ** Transporting in 2-path types *)
 
 Definition transport_paths2 {A : Type} {x y : A}

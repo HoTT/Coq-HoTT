@@ -138,9 +138,9 @@ Proof.
     srapply Colimit_ind.
     1: reflexivity.
     intros ????; cbn.
-    rewrite transport_paths_FlFr.
-    rewrite Colimit_rec_beta_colimp.
-    hott_simpl. }
+    nrapply transport_paths_FlFr'.
+    apply equiv_p1_1q.
+    apply Colimit_rec_beta_colimp. }
   { intros [].
     srapply path_cocone.
     1: reflexivity.
@@ -173,10 +173,9 @@ Proof.
     srapply Colimit_ind.
     1: reflexivity.
     intros i j g x; simpl.
-    rewrite transport_paths_FlFr.
-    rewrite Colimit_rec_beta_colimp.
-    refine (concat_p1 _ @@ 1 @ _).
-    apply concat_Vp.
+    nrapply (transport_paths_FlFr' (g:=f)).
+    apply equiv_p1_1q.
+    apply Colimit_rec_beta_colimp.
 Defined.
 
 Global Instance iscolimit_colimit `{Funext} {G : Graph} (D : Diagram G)

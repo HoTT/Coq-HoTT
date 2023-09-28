@@ -74,22 +74,24 @@ Global Instance isequiv_S1_to_Circle : IsEquiv (S1_to_Circle) | 0.
 Proof.
   apply isequiv_adjointify with Circle_to_S1.
   - refine (Circle_ind _ 1 _).
-    refine ((transport_paths_FFlr _ _) @ _).
-    unfold Circle_to_S1; rewrite Circle_rec_beta_loop.
-    rewrite ap_pp, ap_V.
-    unfold S1_to_Circle. simpl. rewrite 2 Susp_rec_beta_merid. simpl.
-    hott_simpl.
+    nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+    refine (ap _ (Circle_rec_beta_loop _ _ _) @ _).
+    refine (ap_pp _ _ (merid South)^ @ _).
+    refine ((1 @@ ap_V _ _) @ _).
+    refine ((_ @@ (ap inverse _)) @ _). 1, 2: nrapply Susp_rec_beta_merid.
+    simpl.
+    apply concat_p1.
   - refine (Susp_ind (fun x => Circle_to_S1 (S1_to_Circle x) = x)
                      1 (merid South) _); intros x.
-    refine ((transport_paths_FFlr _ _) @ _).
+    nrapply transport_paths_FFlr'; symmetry.
     unfold S1_to_Circle; rewrite (Susp_rec_beta_merid x).
     revert x. change (Susp Empty) with (Sphere 0).
     apply (equiv_ind (S0_to_Bool ^-1)); intros x.
     case x; simpl.
-    2: apply concat_1p.
+    2: reflexivity.
+    refine (concat_1p _ @ _).
     unfold Circle_to_S1; rewrite Circle_rec_beta_loop.
-    refine (whiskerR (concat_p1 _) _ @ _).
-    apply moveR_Vp. hott_simpl.
+    symmetry; apply concat_pV_p.
 Defined.
 
 Definition equiv_S1_Circle : Sphere 1 <~> Circle
@@ -154,7 +156,7 @@ Proof.
                          (concat_pV (merid North)))
               (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere) 
                           (merid North @ (merid South)^))^) @ _).
-  refine ((transport_paths_FlFr _ _) @ _). rewrite_moveR_Vp_p.
+  apply transport_paths_FlFr'; symmetry.
   refine ((ap (fun w => _ @ w) 
               (ap_pp_concat_pV S2_to_TwoSphere (merid North))^) @ _).
   refine ((ap (fun w => _ @ (_ @ (_ @ w)))
