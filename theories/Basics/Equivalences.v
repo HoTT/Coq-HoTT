@@ -82,40 +82,6 @@ Ltac change_apply_equiv_compose :=
     change ((f oE g) x) with (f (g x))
   end.
 
-(** Anything homotopic to an equivalence is an equivalence. *)
-Section IsEquivHomotopic.
-
-  Context {A B : Type} (f : A -> B) {g : A -> B}.
-  Context `{IsEquiv A B f}.
-  Hypothesis h : f == g.
-
-  Let retr := (fun b:B => (h (f^-1 b))^ @ eisretr f b).
-  Let sect := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
-
-  (* We prove the triangle identity with rewrite tactics.  Since we lose control over the proof term that way, we make the result opaque with "Qed". *)
-  Local Definition adj (a : A) : retr (g a) = ap g (sect a).
-  Proof.
-    unfold sect, retr.
-    rewrite ap_pp. apply moveR_Vp.
-    rewrite concat_p_pp, <- concat_Ap, concat_pp_p, <- concat_Ap.
-    rewrite ap_V; apply moveL_Vp.
-    rewrite <- ap_compose; rewrite (concat_A1p (eisretr f) (h a)).
-    apply whiskerR, eisadj.
-  Qed.
-
-  (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
-  Definition isequiv_homotopic : IsEquiv g
-    := Build_IsEquiv _ _ g (f ^-1) retr sect adj.
-
-  Definition equiv_homotopic : A <~> B
-    := Build_Equiv _ _ g isequiv_homotopic.
-
-End IsEquivHomotopic.
-
-Definition isequiv_homotopic' {A B : Type} (f : A <~> B) {g : A -> B} (h : f == g)
-  : IsEquiv g
-  := isequiv_homotopic f h.
-
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 
@@ -168,6 +134,38 @@ End Adjointify.
 
 Arguments isequiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
 Arguments equiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
+
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
+Definition isequiv_homotopic {A B : Type} (f : A -> B) {g : A -> B}
+  `{IsEquiv A B f} (h : f == g)
+  : IsEquiv g.
+Proof.
+  snrapply isequiv_adjointify.
+  - exact f^-1.
+  - intro b.  exact ((h _)^ @ eisretr f b).
+  - intro a.  exact (ap f^-1 (h a)^ @ eissect f a).
+Defined.
+
+Definition isequiv_homotopic' {A B : Type} (f : A <~> B) {g : A -> B} (h : f == g)
+  : IsEquiv g
+  := isequiv_homotopic f h.
+
+Definition equiv_homotopic {A B : Type} (f : A -> B) {g : A -> B}
+  `{IsEquiv A B f} (h : f == g)
+  : A <~> B
+  := Build_Equiv _ _ g (isequiv_homotopic f h).
+
+(** If [e] is an equivalence, [f] is homotopic to [e], and [g] is homotopic to [e^-1], then there is an equivalence whose underlying map is [f] and whose inverse is [g], definitionally. *)
+Definition equiv_homotopic_inverse {A B} (e : A <~> B)
+  {f : A -> B} {g : B -> A} (h : f == e) (k : g == e^-1)
+  : A <~> B.
+Proof.
+  snrapply equiv_adjointify.
+  - exact f.
+  - exact g.
+  - intro a.  exact (ap f (k a) @ h _ @ eisretr e a).
+  - intro b.  exact (ap g (h b) @ k _ @ eissect e b).
+Defined.
 
 (** An involution is an endomap that is its own inverse. *)
 Definition isequiv_involution {X : Type} (f : X -> X) (isinvol : f o f == idmap)
