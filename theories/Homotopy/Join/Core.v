@@ -4,6 +4,7 @@ Require Import Extensions.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Pointed.Core.
+Require Import WildCat.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
@@ -110,6 +111,258 @@ Section Join.
     := [Join A B, joinl pt].
 
 End Join.
+
+(** * We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
+
+Record JoinRecData {A B P : Type} := {
+    jl : A -> P;
+    jr : B -> P;
+    jg : forall a b, jl a = jr b;
+  }.
+
+Arguments JoinRecData : clear implicits.
+Arguments Build_JoinRecData {A B P}%type_scope (jl jr jg)%function_scope.
+
+(** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
+Definition join_rec {A B P : Type} (f : JoinRecData A B P)
+  : Join A B -> P
+  := Join_rec (jl f) (jr f) (jg f).
+
+Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)
+  : ap (join_rec f) (jglue a b) = jg f a b
+  := Join_rec_beta_jglue _ _ _ a b.
+
+(** * We're next going to define a map in the other direction.  We do it via showing that [JoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
+Definition joinrecdata_fun {A B P Q : Type} (g : P -> Q) (f : JoinRecData A B P)
+  : JoinRecData A B Q.
+Proof.
+  snrapply Build_JoinRecData.
+  - exact (g o jl f).
+  - exact (g o jr f).
+  - exact (fun a b => ap g (jg f a b)).
+Defined.
+
+(** The join itself has canonical [JoinRecData]. *)
+Definition joinrecdata_join (A B : Type) : JoinRecData A B (Join A B)
+  := Build_JoinRecData joinl joinr jglue.
+
+(** Combining these gives a function going in the opposite direction to [join_rec]. *)
+Definition join_rec_inv {A B P : Type} (f : Join A B -> P)
+  : JoinRecData A B P
+  := joinrecdata_fun f (joinrecdata_join A B).
+
+(** * Under [Funext], [join_rec] and [join_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully.  We begin by describing a notion of paths between elements of [JoinRecData A B P]. Under [Funext], this type will be equivalent to the identity type.  But without [Funext], this definition will be more useful. *)
+
+Record JoinRecPath {A B P : Type} {f g : JoinRecData A B P} := {
+    hl : forall a, jl f a = jl g a;
+    hr : forall b, jr f b = jr g b;
+    hg : forall a b, jg f a b @ hr b = hl a @ jg g a b;
+  }.
+
+Arguments JoinRecPath {A B P} f g.
+
+(** In the special case where the first two components of [f] and [g] agree definitionally, [hl] and [hr] can be identity paths, and [hg] simplifies slightly. *)
+Definition bundle_joinrecpath {A B P : Type} {jl' : A -> P} {jr' : B -> P}
+  {f g : forall a b, jl' a = jr' b}
+  (h : forall a b, f a b = g a b)
+  : JoinRecPath (Build_JoinRecData jl' jr' f) (Build_JoinRecData jl' jr' g).
+Proof.
+  snrapply Build_JoinRecPath.
+  1, 2: reflexivity.
+  intros; apply equiv_p1_1q, h.
+Defined.
+
+(** A tactic that helps us apply the previous result. *)
+Ltac bundle_joinrecpath :=
+  hnf;
+  match goal with |- JoinRecPath ?F ?G =>
+    refine (bundle_joinrecpath (f:=jg F) (g:=jg G) _) end.
+
+(** Using [JoinRecPath], we can restate the beta rule for [join_rec]. This says that [join_rec_inv] is split surjective. *)
+Definition join_rec_beta {A B P : Type} (f : JoinRecData A B P)
+  : JoinRecPath (join_rec_inv (join_rec f)) f
+  := bundle_joinrecpath (join_rec_beta_jg f).
+
+(** [join_rec_inv] is essentially injective, as a map between 0-groupoids. *)
+Definition isinj_join_rec_inv {A B P : Type} {f g : Join A B -> P}
+  (h : JoinRecPath (join_rec_inv f) (join_rec_inv g))
+  : f == g
+  := Join_ind_FlFr _ _ (hl h) (hr h) (hg h).
+
+(** * We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic interval can be assumed to be trivial on the first vertex, and a generic square can be assumed to be the identity on the domain edge. In order to apply the [paths_ind] and [square_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
+
+(** This destructs a three component term [f], generalizes each piece evaluated appropriately, and clears all pieces. *)
+Ltac generalize_three f a b :=
+  let fg := fresh in let fr := fresh in let fl := fresh in
+  destruct f as [fl fr fg]; cbn;
+  generalize (fg a b); clear fg;
+  generalize (fr b); clear fr;
+  generalize (fl a); clear fl.
+
+(** For [f : JoinRecData A B P], if we have [a] and [b] and are trying to prove a statement only involving [jl f a], [jr f b] and [jg f a b], we can assume [jr f b] is [jl f a] and that [jg f a b] is reflexivity.  This is just path induction, but it requires generalizing the goal appropriately. *)
+Ltac interval_ind f a b :=
+  generalize_three f a b;
+  intro f; (* We really only wanted two of them generalized here, so we intro one. *)
+  snrapply paths_ind.
+
+(** Similarly, for [h : JoinRecPath f g], if we have [a] and [b] and are trying to prove a goal only involving [h] and [g] evaluated at those points, we can assume that [g] is [f] and that [h] is "reflexivity".  For this, we first define a lemma that is like "path induction on h", and then a tactic that uses it. *)
+
+Definition square_ind {P : Type} (a b : P) (ab : a = b)
+  (Q : forall (a' b' : P) (ab' : a' = b') (ha : a = a') (hb : b = b') (k : ab @ hb = ha @ ab'), Type)
+  (s : Q a b ab idpath idpath (equiv_p1_1q idpath))
+  : forall a' b' ab' ha hb k, Q a' b' ab' ha hb k.
+Proof.
+  intros.
+  induction ha, hb.
+  revert k; equiv_intro (equiv_p1_1q (p:=ab) (q:=ab')) k'; induction k'.
+  induction ab.
+  exact s.
+Defined.
+
+(* [g] should be the codomain of [h]. *)
+Global Ltac square_ind g h a b :=
+  generalize_three h a b;
+  generalize_three g a b;
+  snrapply square_ind.
+
+(** * Here we start using the WildCat library to organize things. *)
+
+(** We begin by showing that [JoinRecData A B P] is a 0-groupoid, one piece at a time. *)
+Global Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
+  := {| Hom := JoinRecPath |}.
+
+Global Instance is01cat_joinrecdata (A B P : Type) : Is01Cat (JoinRecData A B P).
+Proof.
+  snrapply Build_Is01Cat.
+  - intro f.
+    bundle_joinrecpath.
+    reflexivity.
+  - intros f1 f2 f3 h2 h1.
+    snrapply Build_JoinRecPath; intros; cbn beta.
+    + exact (hl h1 a @ hl h2 a).
+    + exact (hr h1 b @ hr h2 b).
+    + (* Some simple path algebra works as well. *)
+      square_ind f3 h2 a b.
+      square_ind f2 h1 a b.
+      by interval_ind f1 a b.
+Defined.
+
+Global Instance is0gpd_joinrecdata (A B P : Type) : Is0Gpd (JoinRecData A B P).
+Proof.
+  snrapply Build_Is0Gpd.
+  intros f g h.
+  snrapply Build_JoinRecPath; intros; cbn beta.
+  + exact (hl h a)^.
+  + exact (hr h b)^.
+  + (* Some simple path algebra works as well. *)
+    square_ind g h a b.
+    by interval_ind f a b.
+Defined.
+
+Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
+  := Build_ZeroGpd (JoinRecData A B P) _ _ _.
+
+(** * Next we show that [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
+
+(** It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
+
+(** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)
+Global Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -> Q)
+  : Is0Functor (@joinrecdata_fun A B P Q g).
+Proof.
+  snrapply Build_Is0Functor.
+  intros f1 f2 h.
+  snrapply Build_JoinRecPath; intros; cbn.
+  - exact (ap g (hl h a)).
+  - exact (ap g (hr h b)).
+  - square_ind f2 h a b.
+    by interval_ind f1 a b.
+Defined.
+
+(** [joinrecdata_0gpd A B] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)
+Global Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd A B).
+Proof.
+  snrapply Build_Is0Functor.
+  intros P Q g.
+  snrapply Build_Morphism_0Gpd.
+  - exact (joinrecdata_fun g).
+  - apply is0functor_joinrecdata_fun.
+Defined.
+
+(** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
+Global Instance is1functor_joinrecdata_0gpd (A B : Type) : Is1Functor (joinrecdata_0gpd A B).
+Proof.
+  snrapply Build_Is1Functor.
+  (* If [g1 g2 : P -> Q] are homotopic, then the induced maps are homotopic: *)
+  - intros P Q g1 g2 h f; cbn in *.
+    snrapply Build_JoinRecPath; intros; cbn.
+    1, 2: apply h.
+    interval_ind f a b; cbn.
+    apply concat_1p_p1.
+  (* The identity map [P -> P] is sent to a map homotopic to the identity. *)
+  - intros P f; cbn.
+    bundle_joinrecpath; intros; cbn.
+    apply ap_idmap.
+  (* It respects composition. *)
+  - intros P Q R g1 g2 f; cbn.
+    bundle_joinrecpath; intros; cbn.
+    apply ap_compose.
+Defined.
+
+Definition joinrecdata_0gpd_fun (A B : Type) : Fun11 Type ZeroGpd
+  := Build_Fun11 _ _ (joinrecdata_0gpd A B).
+
+(** By the Yoneda lemma, it follows from [JoinRecData] being a 1-functor that given [JoinRecData] in [J], we get a map [(J -> P) $-> (JoinRecData A B P)] of 0-groupoids which is natural in [P]. Below we will specialize to the case where [J] is [Join A B] with the canonical [JoinRecData]. *)
+Definition join_nattrans_recdata {A B J : Type} (f : JoinRecData A B J)
+  : NatTrans (opyon_0gpd J) (joinrecdata_0gpd_fun A B).
+Proof.
+  srapply Build_NatTrans.  (* This finds the Yoneda lemma via typeclass search. Is that what we want? *)
+  Unshelve.
+  exact f.
+Defined.
+
+(** Thus we get a map [(Join A B -> P) $-> (JoinRecData A B P)] of 0-groupoids, natural in [P]. The underlying map is [join_rec_inv A B P]. *)
+Definition join_rec_inv_nattrans (A B : Type)
+  : NatTrans (opyon_0gpd (Join A B)) (joinrecdata_0gpd_fun A B)
+  := join_nattrans_recdata (joinrecdata_join A B).
+
+(** This natural transformation is in fact a natural equivalence of 0-groupoids. *)
+Definition join_rec_inv_natequiv (A B : Type)
+  : NatEquiv (opyon_0gpd (Join A B)) (joinrecdata_0gpd_fun A B).
+Proof.
+  snrapply Build_NatEquiv'.
+  1: apply join_rec_inv_nattrans.
+  intro P.
+  apply isequiv_0gpd_issurjinj.
+  snrapply Build_IsSurjInj.
+  - intros f; cbn in f.
+    exists (join_rec f).
+    apply join_rec_beta.
+  - exact (@isinj_join_rec_inv A B P).
+Defined.
+
+(** It will be handy to name the inverse natural equivalence. *)
+Definition join_rec_natequiv (A B : Type)
+  := natequiv_inverse _ _ (join_rec_inv_natequiv A B).
+
+(** [join_rec_natequiv A B P] is an equivalence of 0-groupoids whose underlying function is definitionally [join_rec]. *)
+Local Definition join_rec_natequiv_check (A B P : Type)
+  : equiv_fun_0gpd (join_rec_natequiv A B P) = @join_rec A B P
+  := idpath.
+
+(** It follows that [join_rec A B P] is a 0-functor. *)
+Global Instance is0functor_join_rec (A B P : Type) : Is0Functor (@join_rec A B P).
+Proof.
+  change (Is0Functor (equiv_fun_0gpd (join_rec_natequiv A B P))).
+  exact _.
+Defined.
+
+(** And that [join_rec A B] is natural.   The [$==] in the statement is just [==], but we use WildCat notation so that we can invert and compose these with WildCat notation. *)
+Definition join_rec_nat (A B : Type) {P Q : Type} (g : P -> Q) (f : JoinRecData A B P)
+  : join_rec (joinrecdata_fun g f) $== g o join_rec f.
+Proof.
+  exact (isnat (join_rec_natequiv A B) g f).
+Defined.
 
 (** * Various types of equalities between paths in joins. *)
 
@@ -288,15 +541,122 @@ Section FunctorJoin.
 
 End FunctorJoin.
 
+(** * We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -> P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -> P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warmup to proving the associativity of the join. *)
+
 Section JoinSym.
 
-  (** Join is symmetric *)
-  Definition join_sym A B : Join A B <~> Join B A.
+  Definition joinrecdata_sym (A B P : Type)
+    : joinrecdata_0gpd A B P $-> joinrecdata_0gpd B A P.
   Proof.
-    unfold Join; refine (pushout_sym oE _).
-    refine (equiv_pushout (equiv_prod_symm A B) 1 1 _ _);
-      intros [a b]; reflexivity.
+    snrapply Build_Morphism_0Gpd.
+    (* The map of types [JoinRecData A B P -> JoinRecData B A P]: *)
+    - intros [fl fr fg].
+      snrapply (Build_JoinRecData fr fl).
+      intros b a; exact (fg a b)^.
+    (* It respects the paths. *)
+    - snrapply Build_Is0Functor.
+      intros f g h; simpl.
+      snrapply Build_JoinRecPath; simpl.
+      1, 2: intros; apply h.
+      intros b a.
+      square_ind g h a b.
+      by interval_ind f a b.
   Defined.
+
+  (** This map is its own inverse in the 1-category of 0-groupoids. *)
+  Definition joinrecdata_sym_inv (A B P : Type)
+    : joinrecdata_sym B A P $o joinrecdata_sym A B P $== Id _.
+  Proof.
+    intro f; simpl.
+    bundle_joinrecpath.
+    intros a b; simpl.
+    apply inv_V.
+  Defined.
+
+  (** We get the symmetry natural equivalence on [TriJoinRecData]. *)
+  Definition joinrecdata_sym_natequiv (A B : Type)
+    : NatEquiv (joinrecdata_0gpd_fun A B) (joinrecdata_0gpd_fun B A).
+  Proof.
+    snrapply Build_NatEquiv.
+    (* An equivalence of 0-groupoids for each [P]: *)
+    - intro P.
+      snrapply cate_adjointify.
+      1, 2: apply joinrecdata_sym.
+      1, 2: apply joinrecdata_sym_inv.
+    (* Naturality: *)
+    - intros P Q g f; simpl.
+      bundle_joinrecpath.
+      intros b a; simpl.
+      symmetry; apply ap_V.
+  Defined.
+
+  (** Combining with the recursion equivalence [join_rec_inv_natequiv] and its inverse gives the symmetry natural equivalence between the representable functors. *)
+  Definition joinrecdata_fun_sym (A B : Type)
+    : NatEquiv (opyon_0gpd (Join A B)) (opyon_0gpd (Join B A))
+    := natequiv_compose (join_rec_natequiv B A)
+        (natequiv_compose (joinrecdata_sym_natequiv A B) (join_rec_inv_natequiv A B)).
+
+  (** The Yoneda lemma for 0-groupoid valued functors therefore gives us an equivalence between the representing objects.  We mark this with a prime, since we'll use a homotopic map with a slightly simpler definition. *)
+  Definition equiv_join_sym' (A B : Type)
+    : Join A B <~> Join B A.
+  Proof.
+    rapply (opyon_equiv_0gpd (A:=Type)).
+    apply joinrecdata_fun_sym.
+  Defined.
+
+  (** It has the nice property that the underlying function of the inverse is again [equiv_join_sym'], with arguments permuted. *)
+  Local Definition equiv_join_sym_check1 (A B : Type)
+    : (equiv_join_sym' A B)^-1 = equiv_fun (equiv_join_sym' B A)
+    := idpath.
+
+  (** The definition we end up with is almost the same as the obvious one, but has an extra [ap idmap] in it. *)
+  Local Definition equiv_join_sym_check2 (A B : Type)
+    : equiv_fun (equiv_join_sym' A B) = Join_rec (fun a : A => joinr a) (fun b : B => joinl b)
+                                          (fun (a : A) (b : B) => (ap idmap (jglue b a))^)
+    := idpath.
+
+  (** The next two give the obvious definition. *)
+  Definition join_sym_recdata (A B : Type)
+    : JoinRecData A B (Join B A)
+    := Build_JoinRecData joinr joinl (fun a b => (jglue b a)^).
+
+  Definition join_sym (A B : Type)
+    : Join A B -> Join B A
+    := join_rec (join_sym_recdata A B).
+
+  (** The obvious definition is homotopic to the definition via the Yoneda lemma. *)
+  Definition join_sym_homotopic (A B : Type)
+    : join_sym A B == equiv_join_sym' A B.
+  Proof.
+    symmetry.
+    (** Both sides are [join_rec] applied to [JoinRecData]: *)
+    rapply (fmap join_rec).
+    bundle_joinrecpath; intros; cbn.
+    refine (ap inverse _).
+    apply ap_idmap.
+  Defined.
+
+  (** Therefore the obvious definition is also an equivalence, and the inverse function can also be chosen to be [join_sym]. *)
+  Definition equiv_join_sym (A B : Type) : Join A B <~> Join B A
+    := equiv_homotopic_inverse (equiv_join_sym' A B)
+                              (join_sym_homotopic A B)
+                              (join_sym_homotopic B A).
+
+  (** It's also straightforward to directly prove that [join_sym] is an equivalence.  The above approach is meant to illustrate the Yoneda lemma.  In the case of [equiv_trijoin_twist], the Yoneda approach seems to be more straightforward. *)
+  Definition join_sym_inv A B : join_sym A B o join_sym B A == idmap.
+  Proof.
+    snrapply (Join_ind_FFlr (join_sym B A)).
+    - reflexivity.
+    - reflexivity.
+    - intros a b; cbn beta.
+      apply equiv_p1_1q.
+      refine (ap _ (join_rec_beta_jg _ a b) @ _); cbn.
+      refine (ap_V _ (jglue b a) @ _).
+      refine (ap inverse (join_rec_beta_jg _ b a) @ _).
+      apply inv_V.
+  Defined.
+
+  (** Finally, one can also prove that the join is symmetric using [pushout_sym] and [equiv_prod_symm], but this results in an equivalence whose inverse isn't of the same form. *)
 
 End JoinSym.
 
@@ -327,7 +687,7 @@ Section JoinTrunc.
     refine (Pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
     - intros a; apply contr_join.
       exact (contr_inhabited_hprop A a).
-    - intros b; refine (istrunc_equiv_istrunc (Join B A) (join_sym B A)).
+    - intros b; refine (istrunc_equiv_istrunc (Join B A) (equiv_join_sym B A)).
       apply contr_join.
       exact (contr_inhabited_hprop B b).
   Defined.
