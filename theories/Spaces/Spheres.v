@@ -89,7 +89,7 @@ Proof.
     apply (equiv_ind (S0_to_Bool ^-1)); intros x.
     case x; simpl.
     2: reflexivity.
-    rapply_lhs concat_1p.
+    lhs nrapply concat_1p.
     unfold Circle_to_S1; rewrite Circle_rec_beta_loop.
     symmetry; apply concat_pV_p.
 Defined.
@@ -124,8 +124,8 @@ Defined.
 Definition issect_TwoSphere_to_S2 : S2_to_TwoSphere o TwoSphere_to_S2 == idmap.
 Proof.
   refine (TwoSphere_ind _ 1 _). 
-  rapply_rhs_V concat_p1.
-  refine_rhs (@concat_Ap (base = base) _ _
+  rhs_V rapply concat_p1.
+  rhs refine (@concat_Ap (base = base) _ _
                           (fun p => (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)
                           (fun x =>
                              (transport_paths_FFlr x 1) 
@@ -133,36 +133,36 @@ Proof.
                                @ ap (fun w => _ @ w) (inv_V x)^ 
                                @ (inv_pp _ _)^) 
                           1 1 surf).
-  rapply_rhs concat_1p.
-  refine_rhs (ap_compose (fun p => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
+  rhs rapply concat_1p.
+  rhs refine (ap_compose (fun p => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
                           inverse
                           surf).
   refine (@ap _ _ (ap inverse) 1 _ _).
-  rapply_rhs_V concat2_ap_ap.
-  refine_rhs (ap (fun w => inverse2 surf @@ w)
+  rhs_V rapply concat2_ap_ap.
+  rhs refine (ap (fun w => inverse2 surf @@ w)
                   (ap_compose (ap TwoSphere_to_S2) (ap S2_to_TwoSphere) surf)).
-  refine_lhs_V (concat_Vp_inverse2 _ _ surf).
-  rapply_lhs concat_p1.
+  lhs_V refine (concat_Vp_inverse2 _ _ surf).
+  lhs rapply concat_p1.
   refine (ap (fun p : 1 = 1 => inverse2 surf @@ p) _).
 
-  symmetry. refine_lhs ((ap (ap (ap S2_to_TwoSphere))
+  symmetry. lhs refine ((ap (ap (ap S2_to_TwoSphere))
                         (TwoSphere_rec_beta_surf (Sphere 2) North _))).
-  refine_lhs (ap_transport (concat_pV (merid North))
+  lhs refine (ap_transport (concat_pV (merid North))
                         (fun z => @ap _ _ _ z z) 
                         (ap (fun u => merid u @ (merid North)^)
                             (merid North @ (merid South)^))).
   
-  refine_lhs_V (ap (transport (fun z => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
+  lhs_V refine (ap (transport (fun z => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
                       (concat_pV (merid North)))
                (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)
                            (merid North @ (merid South)^))).
   apply transport_paths_FlFr'; symmetry.
-  refine_lhs_V (1 @@ ap_pp_concat_pV S2_to_TwoSphere (merid North)).
-  refine_lhs_V (1 @@ (1 @@ (1 @@
+  lhs_V refine (1 @@ ap_pp_concat_pV S2_to_TwoSphere (merid North)).
+  lhs_V refine (1 @@ (1 @@ (1 @@
                               (concat_pV_inverse2 (ap S2_to_TwoSphere (merid North))
                                   _
                                   (Susp_rec_beta_merid North))))).
-  refine_lhs (@concat_Ap (Sphere 1) _
+  lhs refine (@concat_Ap (Sphere 1) _
                       (fun x => ap S2_to_TwoSphere (merid x @ (merid North)^))
                       (fun x => Susp_rec 1 1 
                                 (Susp_rec surf 1 
@@ -174,18 +174,18 @@ Proof.
                                    @@ inverse2 (Susp_rec_beta_merid North)) 
                                 @ 1)))
                       North North (merid North @ (merid South)^)). f_ap.
-  { refine_rhs_V (ap_pp_concat_pV _ _).
+  { rhs_V refine (ap_pp_concat_pV _ _).
     exact (1 @@ (1 @@ (concat_pV_inverse2 _ _ _))). }
-  refine_lhs_V (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1
+  lhs_V refine (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1
                                          Empty_rec)) 
                          (fun _ => 1) 
                          (merid North @ (merid South)^)).
-  refine_lhs (ap (fun w => _ @@ w) (ap_const _ _)).
-  rapply_lhs whiskerR_p1_1.
-  refine_lhs (ap_pp _ (merid North) (merid South)^).
-  rapply_rhs_V concat_p1. f_ap.
+  lhs refine (ap (fun w => _ @@ w) (ap_const _ _)).
+  lhs rapply whiskerR_p1_1.
+  lhs refine (ap_pp _ (merid North) (merid South)^).
+  rhs_V rapply concat_p1. f_ap.
   - exact (Susp_rec_beta_merid North).
-  - rapply_lhs ap_V. refine (@inverse2 _ _ _ _ 1 _).
+  - lhs rapply ap_V. refine (@inverse2 _ _ _ _ 1 _).
     exact (Susp_rec_beta_merid South).
 Defined.
 

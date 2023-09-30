@@ -108,15 +108,15 @@ Proof.
     + exact join2'.
     + exact join3'.
     + intros b c.
-      rapply_lhs (transport_compose P).
+      lhs rapply (transport_compose P).
       apply join23'.
   - intro a.
     snrapply Join_ind.
     + simpl. exact (join12' a).
     + simpl. exact (join13' a).
     + intros b c; cbn beta zeta.
-      nrapply_lhs (transport_paths_FlFr_D (jglue b c)).
-      nrapply_lhs (1 @@ _).
+      lhs nrapply (transport_paths_FlFr_D (jglue b c)).
+      lhs nrapply (1 @@ _).
       1: nrapply Join_ind_beta_jglue.
       apply trijoin_ind_helper, join123'.
 Defined.
@@ -151,7 +151,7 @@ Proof.
     + exact (j12 f a).
     + exact (j13 f a).
     + intros b c.
-      nrapply_lhs transport_paths_Fr.
+      lhs nrapply transport_paths_Fr.
       exact (1 @@ Join_rec_beta_jglue _ _ _ _ _ @ j123 f a b c).
 Defined.
 
@@ -168,7 +168,7 @@ Definition trijoin_rec_beta_join23 {A B C P : Type} (f : TriJoinRecData A B C P)
   : ap (trijoin_rec f) (join23 b c) = j23 f b c.
 Proof.
   unfold trijoin_rec, join23.
-  nrapply_lhs_V (ap_compose joinr); simpl.
+  lhs_V nrapply (ap_compose joinr); simpl.
   apply Join_rec_beta_jglue.
 Defined.
 
@@ -190,7 +190,7 @@ Definition trijoin_rec_beta_join123 {A B C P : Type} (f : TriJoinRecData A B C P
         @ j123 f a b c @ (trijoin_rec_beta_join13 f a c)^.
 Proof.
   (* Expand the LHS: *)
-  nrapply_lhs ap_trijoin_transport.
+  lhs nrapply ap_trijoin_transport.
   rewrite (apD_homotopic (Join_rec_beta_jglue _ _ _ _) (jglue b c)).
   rewrite Join_ind_beta_jglue.
   (* Change [ap (transport __) _] on LHS. *)

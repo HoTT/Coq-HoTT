@@ -497,9 +497,9 @@ Section FunctorJoin.
     intros a b.
     simpl.
     apply equiv_p1_1q.
-    rapply_lhs functor_join_beta_jglue; symmetry.
-    rapply_lhs (ap_compose (functor_join f g) _ (jglue a b)).
-    rapply_lhs (ap _ (functor_join_beta_jglue _ _ _ _)).
+    lhs nrapply functor_join_beta_jglue; symmetry.
+    lhs nrapply (ap_compose (functor_join f g) _ (jglue a b)).
+    lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).
     apply functor_join_beta_jglue.
   Defined.
 
@@ -511,7 +511,7 @@ Section FunctorJoin.
     intros a b.
     simpl.
     apply equiv_p1_1q.
-    rapply_lhs functor_join_beta_jglue.
+    lhs nrapply functor_join_beta_jglue.
     symmetry; apply ap_idmap.
   Defined.
 
@@ -523,9 +523,9 @@ Section FunctorJoin.
     - simpl; intros; apply ap, h.
     - simpl; intros; apply ap, k.
     - intros a b; cbn beta.
-      rapply_lhs (functor_join_beta_jglue _ _ _ _ @@ 1).
+      lhs nrapply (functor_join_beta_jglue _ _ _ _ @@ 1).
       symmetry.
-      rapply_lhs (1 @@ functor_join_beta_jglue _ _ _ _).
+      lhs nrapply (1 @@ functor_join_beta_jglue _ _ _ _).
       apply join_natsq.
   Defined.
 
@@ -680,12 +680,12 @@ Section JoinSym.
     1, 2: reflexivity.
     intros a b; cbn beta.
     apply equiv_p1_1q.
-    refine_lhs (ap_compose' (functor_join f g) _ (jglue a b)).
-    refine_lhs (ap _ (functor_join_beta_jglue _ _ _ _)).
-    rapply_lhs join_sym_beta_jglue.
+    lhs nrefine (ap_compose' (functor_join f g) _ (jglue a b)).
+    lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).
+    lhs nrapply join_sym_beta_jglue.
     symmetry.
-    refine_lhs (ap_compose' (join_sym A B) _ (jglue a b)).
-    refine_lhs (ap _ (join_sym_beta_jglue a b)).
+    lhs nrefine (ap_compose' (join_sym A B) _ (jglue a b)).
+    lhs nrefine (ap _ (join_sym_beta_jglue a b)).
     refine (ap_V _ (jglue b a) @ ap inverse _).
     apply functor_join_beta_jglue.
   Defined.
@@ -703,7 +703,7 @@ Section JoinTrunc.
     - intros a; apply ap, contr.
     - intros b; apply jglue.
     - intros a b; cbn.
-      rapply_lhs transport_paths_r.
+      lhs nrapply transport_paths_r.
       apply triangle_h'.
   Defined.
 
