@@ -526,3 +526,173 @@ Proof.
   apply (concat (concat_p1 _)).
   apply ap, allpath_p0.
 Defined.
+
+(** Susp rec data *)
+Record SuspRecData {A P} := {
+  srd_n : P;
+  srd_s : P;
+  srd_m : A -> srd_n = srd_s
+}.
+
+Arguments SuspRecData : clear implicits.
+Arguments Build_SuspRecData {A P}%type_scope (srd_n srd_s srd_m)%function_scope.
+
+Definition susp_rec {A P} (f : SuspRecData A P)
+  : Susp A -> P
+  := Susp_rec (srd_n f) (srd_s f) (srd_m f).
+
+Definition susp_rec_beta_merid {A P} (f : SuspRecData A P) (x : A)
+  : ap (susp_rec f) (merid x) = srd_m f x
+  := Susp_rec_beta_merid _.
+
+Definition susprecdata_fun {A P Q} (g : P -> Q) (f : SuspRecData A P)
+  : SuspRecData A Q.
+Proof.
+  srapply Build_SuspRecData.
+  - exact (g (srd_n f)).
+  - exact (g (srd_s f)).
+  - exact (fun x => ap g (srd_m f x)).
+Defined.
+
+Definition susprecdata_susp A : SuspRecData A (Susp A)
+  := Build_SuspRecData North South merid.
+
+Definition susp_rec_inv {A P} (f : Susp A -> P)
+  : SuspRecData A P
+  := susprecdata_fun f (susprecdata_susp A).
+
+Record SuspRecPath {A P : Type} {f g : SuspRecData A P} := {
+  srp_n : srd_n f = srd_n g;
+  srp_s : srd_s f = srd_s g;
+  srp_m : forall x, PathSquare (srd_m f x) (srd_m g x) srp_n srp_s;
+}.
+
+Arguments SuspRecPath {A P} f g.
+
+Definition susp_rec_beta {A P} (f : SuspRecData A P)
+  : SuspRecPath (susp_rec_inv (susp_rec f)) f.
+Proof.
+  srapply Build_SuspRecPath.
+  - reflexivity.
+  - reflexivity.
+  - intros a.
+    apply sq_G1.
+    apply Susp_rec_beta_merid.
+Defined.
+
+Definition isinj_susp_rec_inv {A P} {f g : Susp A -> P}
+  (h : SuspRecPath (susp_rec_inv f) (susp_rec_inv g))
+  : f == g.
+Proof.
+  srapply Susp_ind.
+  - exact (srp_n h).
+  - exact (srp_s h).
+  - intros x.
+    rapply transport_paths_FlFr'.
+    apply sq_path.
+    apply (srp_m h).
+Defined.
+
+Global Instance isgraph_susprecdata A P : IsGraph (SuspRecData A P)
+  := {| Hom := SuspRecPath |}.
+
+Global Instance is01cat_susprecdata A P : Is01Cat (SuspRecData A P).
+Proof.
+  apply Build_Is01Cat.
+  - intro f.
+    srapply Build_SuspRecPath.
+    1,2: reflexivity.
+    intros x.
+    apply sq_refl_h.
+  - intros f1 f2 f3 h2 h1.
+    snrapply Build_SuspRecPath; intros; cbn beta.
+    + exact (srp_n h1 @ srp_n h2).
+    + exact (srp_s h1 @ srp_s h2).
+    + exact (srp_m h1 x @@h srp_m h2 x)%square.
+Defined.
+
+Global Instance is0gpd_susprecdata A P : Is0Gpd (SuspRecData A P).
+Proof.
+  apply Build_Is0Gpd.
+  intros f g h.
+  snrapply Build_SuspRecPath; intros; cbn beta.
+  - exact (srp_n h)^.
+  - exact (srp_s h)^.
+  - exact (sq_flip_h (srp_m h x)).
+Defined.
+
+Definition susprecdata_0gpd A P : ZeroGpd
+  := Build_ZeroGpd (SuspRecData A P) _ _ _.
+
+Global Instance is0functor_susprecdata_fun {A P Q : Type} (g : P -> Q)
+  : Is0Functor (@susprecdata_fun A P Q g).
+Proof.
+  apply Build_Is0Functor.
+  intros f1 f2 h.
+  snrapply Build_SuspRecPath; intros; cbn beta.
+  - exact (ap g (srp_n h)).
+  - exact (ap g (srp_s h)).
+  - exact (sq_ap g (srp_m h x)). 
+Defined.
+
+Global Instance is0functor_susprecdata_0gpd A : Is0Functor (susprecdata_0gpd A).
+Proof.
+  apply Build_Is0Functor.
+  intros P Q g.
+  snrapply Build_Morphism_0Gpd.
+  - exact (susprecdata_fun g).
+  - exact _.
+Defined.
+
+Global Instance is1functor_susprecdata_0gpd A : Is1Functor (susprecdata_0gpd A).
+Proof.
+  apply Build_Is1Functor.
+  - intros P Q g1 g2 h f; cbn in *.
+    snrapply Build_SuspRecPath; intros; cbn.
+    1,2: apply h.
+    apply ap_nat.
+  - intros P f; cbn in *.
+    snrapply Build_SuspRecPath; intros; cbn.
+    1,2: reflexivity.
+    apply sq_G1.
+    apply ap_idmap.
+  - intros P Q R g1 g2 f; cbn in *.
+    snrapply Build_SuspRecPath; intros; cbn.
+    1,2: reflexivity.
+    apply sq_G1.
+    apply ap_compose.
+Defined.
+
+Definition susprecdata_0gpd_fun A : Fun11 Type ZeroGpd
+  := Build_Fun11 _ _ (susprecdata_0gpd A).
+
+Definition susp_nattrans_recdata {A S} (f : SuspRecData A S)
+  : NatTrans (opyon_0gpd S) (susprecdata_0gpd_fun A).
+Proof.
+  snrapply Build_NatTrans.
+  1: rapply opyoneda_0gpd; exact f.
+  exact _.
+Defined.
+
+Definition susp_rec_inv_nattrans A
+  : NatTrans (opyon_0gpd (Susp A)) (susprecdata_0gpd_fun A)
+  := susp_nattrans_recdata (susprecdata_susp A).
+
+Definition susp_rec_inv_natequiv A
+  : NatEquiv (opyon_0gpd (Susp A)) (susprecdata_0gpd_fun A).
+Proof.
+  snrapply Build_NatEquiv'.
+  1: apply susp_rec_inv_nattrans.
+  intro P.
+  apply isequiv_0gpd_issurjinj.
+  apply Build_IsSurjInj.
+  - intros f.
+    exists (susp_rec f).
+    apply susp_rec_beta.
+  - intros f g h.
+    apply isinj_susp_rec_inv.
+    exact h.
+Defined.
+
+Definition susp_rec_natequiv A : NatEquiv (susprecdata_0gpd_fun A) (opyon_0gpd (Susp A))
+  := natequiv_inverse _ _ (susp_rec_inv_natequiv A).
