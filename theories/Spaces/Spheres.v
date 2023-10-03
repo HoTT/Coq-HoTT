@@ -2,6 +2,8 @@
 Require Import Basics Types.
 Require Import NullHomotopy.
 Require Import Homotopy.Suspension.
+Require Import Spaces.Nat.
+Require Import Homotopy.Join.
 Require Import Pointed.
 Require Import Truncations.
 Require Import Spaces.Circle Spaces.TwoSphere.
@@ -290,4 +292,31 @@ Proof.
   - (* n ≥ -1 *) intros x0 x1.
     apply (istrunc_allnullhomot n').
     intro f. apply nullhomot_paths_from_susp, HX.
+Defined.
+
+(** ** Joins of spheres *)
+
+(** The join of two spheres is a sphere. *)
+Definition equiv_join_sphere (n m : nat)
+  : Join (Sphere n) (Sphere m) <~> Sphere (n + m.+1)%nat.
+Proof.
+  induction n in m |- *.
+  { refine (_ oE equiv_functor_join equiv_S0_Bool equiv_idmap).
+    rapply equiv_join_susp. }
+  cbn.
+  rewrite nat_add_n_Sm.
+  refine (IHn _ oE _).
+  refine (_ oE equiv_functor_join _ equiv_idmap). 
+  2: { symmetry.
+    change (?x <~> Sphere (n.+1)%nat) with (x <~> Sphere (1 + n)%nat).
+    rewrite nat_add_comm.
+    apply (IHn 0%nat). }
+  refine (equiv_functor_join equiv_idmap _ oE _). 
+  1: apply equiv_join_susp.
+  change (Join (Join (Sphere n) (Sphere 0%nat)) (Sphere m)
+    <~> Join (Sphere n) (Join Bool (Sphere m))).
+  refine (_ oE (join_assoc _ _ _)^-1%equiv). 
+  apply (equiv_functor_join equiv_idmap).
+  rapply (equiv_functor_join _ equiv_idmap).
+  apply equiv_S0_Bool.
 Defined.
