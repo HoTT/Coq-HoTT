@@ -111,11 +111,10 @@ Section PathSquaresFromPaths.
     {p p' : a00 = a10} {q q' : a00 = a01}.
 
   Definition equiv_sq_G1  : p = p' <~> PathSquare p p' 1 1
-    := sq_path oE (equiv_concat_lr (concat_p1 _)^ (concat_1p _))^-1.
+    := sq_path oE equiv_p1_1q.
 
   Definition equiv_sq_1G : q = q' <~> PathSquare 1 1 q q'
-    := sq_path oE (equiv_concat_lr (concat_1p _)^ (concat_p1 _))^-1
-      oE equiv_path_inverse _ _.
+    := sq_path oE equiv_1p_q1 oE equiv_path_inverse _ _.
 
 End PathSquaresFromPaths.
 

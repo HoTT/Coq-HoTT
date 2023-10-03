@@ -91,7 +91,9 @@ Proof.
     srapply Coeq_ind; intros b.
     1: cbn;reflexivity.
     cbn.
-    abstract (rewrite transport_paths_FlFr, concat_p1, Coeq_rec_beta_cglue, concat_Vp; reflexivity).
+    nrapply transport_paths_FlFr'.
+    apply equiv_p1_1q.
+    nrapply Coeq_rec_beta_cglue.
   - intros [h q]; srapply path_sigma'.
     + reflexivity.
     + cbn.
@@ -134,8 +136,8 @@ Definition functor_coeq_compose {B A f g B' A' f' g' B'' A'' f'' g''}
   == functor_coeq h' k' p' q' o functor_coeq h k p q.
 Proof.
   refine (Coeq_ind _ (fun a => 1) _); cbn; intros b.
-  rewrite transport_paths_FlFr.
-  rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
+  nrapply transport_paths_FlFr'.
+  apply equiv_p1_1q; symmetry.
   rewrite ap_compose.
   rewrite !functor_coeq_beta_cglue, !ap_pp, functor_coeq_beta_cglue.
   rewrite <- !ap_compose. cbn.

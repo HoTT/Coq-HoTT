@@ -110,7 +110,8 @@ Proof.
   refine (transport_paths_FlFr_D
     (g := Susp_ind P (f North) (f South) (fun x : X => apD f (merid x)))
     _ _ @ _); simpl.
-  apply moveR_pM. apply (concat (concat_p1 _)), (concatR (concat_1p _)^).
+  apply moveR_pM.
+  apply equiv_p1_1q.
   apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
 
@@ -123,7 +124,7 @@ Proof.
   cbn.
   refine (concat_pp_p _ _ _ @ _).
   apply moveR_Vp.
-  refine (concat_1p _ @ _ @ (concat_p1 _)^).
+  apply equiv_1p_q1.
   apply (equiv_inj dp_path_transport).
   refine (dp_path_transport_apD _ _ @ _). 
   refine (_ @ (dp_path_transport_apD f (merid x))^).
@@ -135,10 +136,9 @@ Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
 Proof.
   refine (Susp_ind _ 1 1 _).
   intro x.
-  refine ((transport_paths_FlFr _ _) @ _). apply moveR_Mp.
-  refine ((Susp_rec_beta_merid _) @ _). hott_simpl.
-  refine (_ @ (ap_V f _)). f_ap.
-  refine (inv_V _)^.
+  apply transport_paths_FlFr'.
+  apply equiv_p1_1q.
+  exact (Susp_rec_beta_merid _)^.
 Defined.
 
 Definition Susp_eta `{Funext}

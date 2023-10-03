@@ -78,6 +78,15 @@ Definition concat_1p {A : Type} {x y : A} (p : x = y) :
   :=
   match p with idpath => 1 end.
 
+(** It's common to need to use both. *)
+Definition concat_p1_1p {A : Type} {x y : A} (p : x = y)
+  : p @ 1 = 1 @ p
+  := concat_p1 p @ (concat_1p p)^.
+
+Definition concat_1p_p1 {A : Type} {x y : A} (p : x = y)
+  : 1 @ p = p @ 1
+  := concat_1p p @ (concat_p1 p)^.
+
 (** Concatenation is associative. *)
 Definition concat_p_pp {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
   p @ (q @ r) = (p @ q) @ r :=
@@ -437,7 +446,7 @@ Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
   (ap f q) @ (p y) = (p x) @ (ap g q)
   :=
   match q with
-    | idpath => concat_1p _ @ ((concat_p1 _) ^)
+    | idpath => concat_1p_p1 _
   end.
 
 (* A useful variant of concat_Ap. *)
@@ -453,7 +462,7 @@ Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
   (ap f q) @ (p y) = (p x) @ q
   :=
   match q with
-    | idpath => concat_1p _ @ ((concat_p1 _) ^)
+    | idpath => concat_1p_p1 _
   end.
 
 (* The corresponding variant of concat_A1p. *)
@@ -468,8 +477,18 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
   (p x) @ (ap f q) =  q @ (p y)
   :=
   match q as i in (_ = y) return (p x @ ap f i = i @ p y) with
-    | idpath => concat_p1 _ @ (concat_1p _)^
+    | idpath => concat_p1_1p _
   end.
+
+Definition apD_homotopic {A : Type} {B : A -> Type} {f g : forall x, B x}
+  (p : forall x, f x = g x) {x y : A} (q : x = y)
+  : apD f q = ap (transport B q) (p x) @ apD g q @ (p y)^.
+Proof.
+  apply moveL_pV.
+  destruct q; unfold apD, transport.
+  symmetry.
+  exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+Defined.
 
 (** Naturality with other paths hanging around. *)
 Definition concat_pA_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
@@ -479,7 +498,7 @@ Definition concat_pA_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
   (r @ ap f q) @ (p y @ s) = (r @ p x) @ (ap g q @ s).
 Proof.
   destruct q, s; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -490,7 +509,7 @@ Definition concat_pA_p {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
   (r @ ap f q) @ p y = (r @ p x) @ ap g q.
 Proof.
   destruct q; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -501,8 +520,7 @@ Definition concat_A_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
   (ap f q) @ (p y @ s) = (p x) @ (ap g q @ s).
 Proof.
   destruct q, s; cbn.
-  repeat rewrite concat_p1, concat_1p.
-  reflexivity.
+  apply concat_1p.
 Defined.
 
 Definition concat_pA1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
@@ -512,7 +530,7 @@ Definition concat_pA1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
   (r @ ap f q) @ (p y @ s) = (r @ p x) @ (q @ s).
 Proof.
   destruct q, s; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -523,7 +541,7 @@ Definition concat_pp_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
   (r @ p x) @ (ap g q @ s) = (r @ q) @ (p y @ s).
 Proof.
   destruct q, s; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -534,7 +552,7 @@ Definition concat_pA1_p {A : Type} {f : A -> A} (p : forall x, f x = x)
   (r @ ap f q) @ p y = (r @ p x) @ q.
 Proof.
   destruct q; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -545,8 +563,7 @@ Definition concat_A1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
   (ap f q) @ (p y @ s) = (p x) @ (q @ s).
 Proof.
   destruct q, s; cbn.
-  repeat rewrite concat_p1, concat_1p.
-  reflexivity.
+  apply concat_1p.
 Defined.
 
 Definition concat_pp_A1 {A : Type} {g : A -> A} (p : forall x, x = g x)
@@ -556,7 +573,7 @@ Definition concat_pp_A1 {A : Type} {g : A -> A} (p : forall x, x = g x)
   (r @ p x) @ ap g q = (r @ q) @ p y.
 Proof.
   destruct q; simpl.
-  repeat rewrite concat_p1.
+  induction (p x).
   reflexivity.
 Defined.
 
@@ -567,8 +584,7 @@ Definition concat_p_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
   p x @ (ap g q @ s) = q @ (p y @ s).
 Proof.
   destruct q, s; simpl.
-  repeat rewrite concat_p1, concat_1p.
-  reflexivity.
+  symmetry; apply concat_1p.
 Defined.
 
 (** Some coherence lemmas for functoriality *)
@@ -814,7 +830,13 @@ Definition concat_AT {A : Type} (P : A -> Type) {x y : A} {p q : x = y}
   {z w : P x} (r : p = q) (s : z = w)
   : ap (transport P p) s  @  transport2 P r w
     = transport2 P r z  @  ap (transport P q) s
-  := match r with idpath => (concat_p1 _ @ (concat_1p _)^) end.
+  := match r with idpath => (concat_p1_1p _) end.
+
+Definition transport_pp_1 {A : Type} (P : A -> Type) {a b : A} (p : a = b) (x : P a)
+  : transport_pp P p 1 x = transport2 P (concat_p1 p) x.
+Proof.
+  by induction p.
+Defined.
 
 (* TODO: What should this be called? *)
 Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
@@ -1048,7 +1070,7 @@ Definition cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
 (** Whiskering and identity paths. *)
 
 Definition whiskerR_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  (concat_p1 p) ^ @ whiskerR h 1 @ concat_p1 q = h
+  (concat_p1 p)^ @ whiskerR h 1 @ concat_p1 q = h
   :=
   match h with idpath =>
     match p with idpath =>

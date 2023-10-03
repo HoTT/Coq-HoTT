@@ -2,7 +2,7 @@ Require Import Cubical.
 Require Import Pointed.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.Join.
+Require Import Homotopy.Join.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
@@ -268,7 +268,7 @@ Section ImaginaroidHSpace.
         apply jglue. }
     intros a b.
     apply path_forall.
-    srapply Join_ind.
+    srapply Join_ind_dp.
     1: intro; apply jglue.
     1: intro; cbn; symmetry; apply jglue.
     intros c d.
@@ -300,7 +300,7 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    srapply Join_ind.
+    srapply Join_ind_dp.
     { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl;
         intro a; apply ap.
       srapply hspace_left_identity. }
@@ -316,7 +316,7 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    srapply Join_ind.
+    srapply Join_ind_dp.
     { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl.
       intro a; apply ap.
       srapply hspace_right_identity. }

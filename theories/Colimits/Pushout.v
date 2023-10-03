@@ -108,8 +108,8 @@ Proof.
     + intros b; reflexivity.
     + intros c; reflexivity.
     + intros a; cbn.
-      abstract (rewrite transport_paths_FlFr, Pushout_rec_beta_pglue;
-                rewrite concat_p1; apply concat_Vp).
+      nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+      nrapply Pushout_rec_beta_pglue.
   - intros [[pushb pushc] pusha]; unfold pushout_unrec; cbn.
     srefine (path_sigma' _ _ _).
     + srefine (path_prod' _ _); reflexivity.
@@ -308,12 +308,12 @@ Section EquivSigmaPushout.
       + reflexivity.
       + reflexivity.
       + intros [x a].
-        rewrite transport_paths_FlFr.
-        rewrite ap_idmap, concat_p1.
-        apply moveR_Vp. rewrite concat_p1.
-        rewrite ap_compose.
-        rewrite esp2_beta_pglue, esp1_beta_pglue.
-        reflexivity.
+        refine (transport_paths_FFlr _ _ @ _).
+        refine (concat_p1 _ @@ 1 @ _).
+        apply moveR_Vp; symmetry.
+        refine (concat_p1 _ @ _).
+        refine (ap _ (esp2_beta_pglue _ _) @ _).
+        apply esp1_beta_pglue.
     - intros [x a]; revert a.
       srefine (Pushout_ind _ _ _ _); cbn.
       + reflexivity.

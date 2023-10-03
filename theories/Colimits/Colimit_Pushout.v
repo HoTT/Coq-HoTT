@@ -142,12 +142,13 @@ Section PO.
         apply ap, eisretr.
       + reflexivity.
       + intro a; cbn.
-        rewrite transport_paths_FlFr, ap_idmap.
-        rewrite ap_compose, PO_rec_beta_pp.
+        nrapply transport_paths_FFlr'.
+        refine (concat_p1 _ @ _).
+        rewrite PO_rec_beta_pp.
         rewrite eisadj.
         destruct (eissect f a); cbn.
-        rewrite concat_1p, concat_p1.
-        apply concat_Vp.
+        rewrite concat_p1.
+        symmetry; apply concat_Vp.
     - cbn; reflexivity.
   Defined.
 
@@ -191,11 +192,10 @@ Section is_PO_pushout.
         srapply Pushout_ind; cbn.
         1,2: reflexivity.
         intro a; cbn.
-        rewrite transport_paths_FlFr, concat_p1.
-        rewrite Pushout_rec_beta_pglue.
-        eapply moveR_Vp.
-        unfold popp'.
-        by rewrite 2 concat_p1.
+        nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+        unfold popp'; cbn.
+        refine (_ @ concat_p1 _).
+        nrapply Pushout_rec_beta_pglue.
   Defined.
 
   Definition equiv_pushout_PO : Pushout f g <~> PO f g.

@@ -421,6 +421,13 @@ Tactic Notation "snrapply" uconstr(term)
 Tactic Notation "snrapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => snrefine x) term.
 
+(** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)
+
+Tactic Notation "lhs" tactic3(tac) := nrefine (ltac:(tac) @ _).
+Tactic Notation "lhs_V" tactic3(tac) := nrefine (ltac:(tac)^ @ _).
+Tactic Notation "rhs" tactic3(tac) := nrefine (_ @ ltac:(tac)^).
+Tactic Notation "rhs_V" tactic3(tac) := nrefine (_ @ ltac:(tac)).
+
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve

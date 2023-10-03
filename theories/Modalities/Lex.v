@@ -152,7 +152,7 @@ Section LexModality.
     refine (_ @ (O_rec_beta _ _)^).
     unfold diagonal, functor_pullback, functor_sigma; cbn.
     apply ap, ap.
-    apply moveL_pV; exact (concat_1p _ @ (concat_p1 _)^).
+    apply moveL_pV; exact (concat_1p_p1 _).
   Defined.
 
   (** RSS Theorem 3.1 (xi) *)

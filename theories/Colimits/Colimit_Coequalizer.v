@@ -70,9 +70,10 @@ Section Coequalizer.
       end.
       + reflexivity.
       + intros b; simpl.
-        rewrite transport_paths_FlFr.
-        rewrite Coeq_rec_beta_cglue.
-        hott_simpl.
+        nrapply (transport_paths_FlFr' (g:=F)).
+        apply equiv_p1_1q.
+        refine (Coeq_rec_beta_cglue _ _ _ _ @ _).
+        apply concat_p1.
   Defined.
 
   Definition equiv_Coeq_Coequalizer `{Funext}

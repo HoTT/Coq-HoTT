@@ -106,7 +106,7 @@ Section FunctorialityCone.
     srapply path_cone; intro i.
     1: reflexivity.
     intros j g x; simpl.
-    refine (concat_p1 _ @ (concat_1p _)^).
+    apply concat_p1_1p.
   Defined.
 
   Definition cone_precompose_comp {D : Diagram G}
@@ -117,7 +117,7 @@ Section FunctorialityCone.
     srapply path_cone; intro i.
     1: reflexivity.
     intros j h x; simpl.
-    refine (concat_p1 _ @ (concat_1p _)^).
+    apply concat_p1_1p.
   Defined.
 
   (** ** Postcomposition for cones *)
@@ -157,7 +157,7 @@ Section FunctorialityCone.
     srapply path_cone.
     1: reflexivity.
     intros i j g x; simpl.
-    refine (concat_p1 _ @ _ @ (concat_1p _)^).
+    apply equiv_p1_1q.
     unfold CommutativeSquares.comm_square_comp.
     refine (_ @ concat_p_pp _ _ _).
     apply ap.
@@ -177,8 +177,7 @@ Section FunctorialityCone.
     srapply path_cone; intro i.
     1: reflexivity.
     intros j g x; simpl.
-    refine (concat_p1 _ @ _ @ (concat_1p _)^).
-    reflexivity.
+    apply concat_p1_1p.
   Defined.
 
   (** The postcomposition with a diagram equivalence is an equivalence. *)

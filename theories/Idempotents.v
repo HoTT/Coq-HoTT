@@ -113,7 +113,7 @@ Proof.
     exists equiv_idmap.
     exists (fun x => 1%path).
     exists (fun x => 1%path).
-    cbn. exact (fun a => concat_p1 _ @ ap_idmap (H a) @ (concat_1p _)^). }
+    cbn. exact (fun a => equiv_p1_1q (ap_idmap (H a))). }
   intros [A [r [s H]]]; cbn.
   unfold PathRetractOf.
   contr_sigsig A (equiv_idmap A); cbn.

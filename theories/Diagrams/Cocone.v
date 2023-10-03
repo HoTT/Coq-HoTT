@@ -109,7 +109,7 @@ Section FunctorialityCocone.
     srapply path_cocone; intro i.
     1: reflexivity.
     intros j g x; simpl.
-    refine (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+    apply equiv_p1_1q, ap_idmap.
   Defined.
 
   Definition cocone_postcompose_comp {D : Diagram G}
@@ -120,7 +120,7 @@ Section FunctorialityCocone.
     srapply path_cocone; intro i.
     1: reflexivity.
     intros j h x; simpl.
-    refine (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
+    apply equiv_p1_1q, ap_compose.
   Defined.
 
   (** ** Precomposition for cocones *)
@@ -149,7 +149,7 @@ Section FunctorialityCocone.
     intro C; srapply path_cocone; simpl.
     1: reflexivity.
     intros; simpl.
-    refine (concat_p1 _).
+    apply concat_p1.
   Defined.
 
   Definition cocone_precompose_comp {D1 D2 D3 : Diagram G}
@@ -161,7 +161,7 @@ Section FunctorialityCocone.
     srapply path_cocone.
     1: reflexivity.
     intros i j g x; simpl.
-    refine (concat_p1 _ @ _ @ (concat_1p _)^).
+    apply equiv_p1_1q.
     unfold CommutativeSquares.comm_square_comp.
     refine (concat_p_pp _ _ _ @ _).
     apply ap10, ap.
@@ -183,7 +183,7 @@ Section FunctorialityCocone.
     srapply path_cocone; intro i.
     1: reflexivity.
     intros j g x; simpl.
-    refine (concat_p1 _ @ _ @ (concat_1p _)^).
+    apply equiv_p1_1q.
     etransitivity.
     + apply ap_pp.
     + apply ap10, ap.

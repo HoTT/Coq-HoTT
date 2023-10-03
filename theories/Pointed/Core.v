@@ -319,8 +319,7 @@ Proof.
   symmetry.
   apply moveR_pV.
   simpl.
-  refine (concat_p1 _ @ _ @ (concat_1p _)^).
-  nrapply ap_idmap.
+  apply equiv_p1_1q, ap_idmap.
 Defined.
 
 (** ** Funext for pointed types and direct consequences. *)

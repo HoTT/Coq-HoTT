@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Diagrams.Sequence.
-Require Import Homotopy.Join.
+Require Import Homotopy.Join.Core.
 Require Import Colimits.Colimit Colimits.Sequential.
 
 Local Open Scope nat_scope.
