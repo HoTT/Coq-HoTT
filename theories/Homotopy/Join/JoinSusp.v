@@ -1,6 +1,7 @@
 Require Import Basics Types.
-Require Import Join.Core Suspension Spaces.Spheres.
+Require Import Join.Core Join.JoinAssoc Suspension Spaces.Spheres.
 Require Import WildCat.
+Require Import Spaces.Nat.Core.
 
 (** We give a direct proof that the join of [bool] with a type is equivalent to a suspension. It is also possible to give a proof using [opyon_equiv_0gpd]; see PR#1769. *)
 
@@ -54,8 +55,19 @@ Definition equiv_join_susp (A : Type) : Join Bool A <~> Susp A
 (** It follows that the iterated join of [Bool] gives a sphere. *)
 Definition equiv_join_power_bool_sphere (n : nat): Join_power' Bool n <~> Sphere (n.-1).
 Proof.
-  induction n.
+  induction n as [|n IHn].
   - reflexivity.
   - simpl.  refine (_ oE equiv_join_susp _).
     exact (emap Susp IHn).
+Defined.
+
+(** It follows that joins of spheres are spheres. *)
+Definition equiv_join_sphere (n m : nat)
+  : Join (Sphere n) (Sphere m) <~> Sphere (n + m)%nat.+1.
+Proof.
+  refine (_ oE equiv_functor_join _ _).
+  2,3: symmetry; exact (equiv_join_power_bool_sphere _.+1).
+  refine (equiv_join_power_bool_sphere _.+2 oE _).
+  rewrite nat_add_n_Sm.
+  apply join_join_power.
 Defined.

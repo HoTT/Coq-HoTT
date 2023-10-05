@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Join.Core Join.TriJoin.
+Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
 
 (** * We use the recursion principle for the triple join (from TriJoin.v) to prove the associativity of Join.  We'll use the common technique of combining symmetry and a twist equivalence.  Temporarily writing * for Join, symmetry says that [A * B <~> B * A] and the twist says that [A * (B * C) <~> B * (A * C)].  From these we get a composite equivalence [A * (B * C) <~> A * (C * B) <~> C * (A * B) <~> (A * B) * C].  One advantage of this approach is that both symmetry and the twist are their own inverses, so there are fewer maps to define and fewer composites to prove are homotopic to the identity. Symmetry is proved in Join/Core.v. *)
 
@@ -146,4 +146,14 @@ Proof.
   refine (_ oE equiv_functor_join equiv_idmap (equiv_join_sym B C)).
   refine (_ oE equiv_trijoin_twist _ _ _).
   apply equiv_join_sym.
+Defined.
+
+(** As a consequence, we get associativity of powers. *)
+Corollary join_join_power A n m
+  : Join (Join_power' A n) (Join_power' A m) <~> Join_power' A (n + m)%nat.
+Proof.
+  induction n as [|n IHn].
+  1: exact (equiv_join_empty' _).
+  simpl. refine (_ oE (join_assoc _ _ _)^-1%equiv).
+  exact (equiv_functor_join equiv_idmap IHn).
 Defined.
