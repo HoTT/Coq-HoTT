@@ -77,6 +77,21 @@ Arguments South : simpl never.
 Arguments merid : simpl never.
 Arguments Susp_ind_beta_merid : simpl never.
 
+(** A version of [Susp_ind] specifically for proving that two functions defined on a suspension are homotopic. *)
+Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
+  (HN : f North = g North)
+  (HS : f South = g South)
+  (Hmerid : forall x, ap f (merid x) @ HS = HN @ ap g (merid x))
+  : f == g.
+Proof.
+  snrapply Susp_ind.
+  - exact HN.
+  - exact HS.
+  - intro x.
+    nrapply transport_paths_FlFr'.
+    apply Hmerid.
+Defined.
+
 (* ** Non-dependent eliminator. *)
 
 Definition Susp_rec {X Y : Type}
@@ -132,11 +147,11 @@ Proof.
 Defined.
 
 Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
-: f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
+  : f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
 Proof.
-  refine (Susp_ind _ 1 1 _).
+  snrapply Susp_ind_FlFr.
+  1, 2: reflexivity.
   intro x.
-  apply transport_paths_FlFr'.
   apply equiv_p1_1q.
   exact (Susp_rec_beta_merid _)^.
 Defined.
@@ -144,11 +159,11 @@ Defined.
 Definition Susp_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_ind P (f North) (f South) (fun x => apD f (merid x))
-:= path_forall _ _ (Susp_eta_homot f).
+  := path_forall _ _ (Susp_eta_homot f).
 
 Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
   : f = Susp_rec (f North) (f South) (fun x => ap f (merid x))
-:= path_forall _ _ (Susp_rec_eta_homot f).
+  := path_forall _ _ (Susp_rec_eta_homot f).
 
 (** ** Functoriality *)
 
@@ -161,11 +176,55 @@ Proof.
   - intros x; exact (merid (f x)).
 Defined.
 
-Definition ap_functor_susp_merid {X Y : Type} (f : X -> Y) (x : X)
+Definition functor_susp_beta_merid {X Y : Type} (f : X -> Y) (x : X)
   : ap (functor_susp f) (merid x) = merid (f x).
 Proof.
   srapply Susp_rec_beta_merid.
 Defined.
+
+Definition functor_susp_compose {X Y Z}
+  (f : X -> Y) (g : Y -> Z)
+  : functor_susp (g o f) == functor_susp g o functor_susp f.
+Proof.
+  snrapply Susp_ind_FlFr.
+  1,2: reflexivity.
+  intro x.
+  apply equiv_p1_1q.
+  lhs nrapply functor_susp_beta_merid; symmetry.
+  lhs nrefine (ap_compose (functor_susp f) _ (merid x)).
+  lhs nrefine (ap _ (functor_susp_beta_merid _ _)).
+  apply functor_susp_beta_merid.
+Defined.
+
+Definition functor_susp_idmap {X}
+  : functor_susp idmap == (idmap : Susp X -> Susp X).
+Proof.
+  snrapply Susp_ind_FlFr.
+  1,2: reflexivity.
+  intro x.
+  apply equiv_p1_1q.
+  lhs nrapply functor_susp_beta_merid.
+  symmetry; apply ap_idmap.
+Defined.
+
+Definition functor2_susp {X Y} {f g : X -> Y} (h : f == g)
+  : functor_susp f == functor_susp g.
+Proof.
+  srapply Susp_ind_FlFr.
+  1, 2: reflexivity.
+  intro x.
+  apply equiv_p1_1q.
+  lhs nrapply (functor_susp_beta_merid f).
+  rhs nrapply (functor_susp_beta_merid g).
+  apply ap, h.
+Defined.
+
+Global Instance is0functor_susp : Is0Functor Susp
+  := Build_Is0Functor _ _ _ _ Susp (@functor_susp).
+
+Global Instance is1functor_susp : Is1Functor Susp
+  := Build_Is1Functor _ _ _ _ _ _ _ _ _ _ Susp _
+      (@functor2_susp) (@functor_susp_idmap) (@functor_susp_compose).
 
 (** ** Universal property *)
 
@@ -314,7 +373,7 @@ Section UnivPropNat.
   Proof.
     etransitivity.
     - nrapply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
-      symmetry; apply ap_functor_susp_merid.
+      symmetry; apply functor_susp_beta_merid.
     - symmetry. 
       apply (dp_compose (functor_susp f) P (merid x)).
   Defined.
@@ -389,7 +448,7 @@ Section UnivPropNat.
     refine (dp_apD_compose (functor_susp f) P (merid x) g @ _).
     cbn; apply ap.
     apply (moveL_transport_V (fun p => DPath P p (g North) (g South))).
-    exact (apD (dp_apD g) (ap_functor_susp_merid f x)).
+    exact (apD (dp_apD g) (functor_susp_beta_merid f x)).
   Defined.
 
   (** From this we can deduce a equivalence between extendability, which is definitionally equal to split essential surjectivity of a functor between forall 0-groupoids. *)
