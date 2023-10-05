@@ -232,12 +232,9 @@ Global Instance isequiv_contr_contr {A B : Type}
                   (fun x => path_contr _ _)
                   (fun x => path_contr _ _).
 
-Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
-  : (A <~> B).
-Proof.
-  apply equiv_adjointify with (fun _ => center B) (fun _ => center A);
-  intros ?; apply contr.
-Defined.
+Definition equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+  : (A <~> B)
+  := Build_Equiv _ _ (fun _ => center B) _.
 
 (** The projection from the sum of a family of contractible types is an equivalence. *)
 Global Instance isequiv_pr1 {A : Type} (P : A -> Type) `{forall x, Contr (P x)}

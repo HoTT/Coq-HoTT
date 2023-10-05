@@ -229,23 +229,19 @@ Global Instance is1functor_susp : Is1Functor Susp
 (** ** Universal property *)
 
 Definition equiv_Susp_rec `{Funext} (X Y : Type)
-: (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
+  : (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
 Proof.
-  unshelve econstructor.
-  { intros f.
-    exists (f North , f South).
-    intros x. exact (ap f (merid x)). }
-  simple refine (isequiv_adjointify _ _ _ _).
+  snrapply equiv_adjointify.
+  - intros f.
+    exists (f North, f South).
+    intros x; exact (ap f (merid x)).
   - intros [[N S] m].
     exact (Susp_rec N S m).
   - intros [[N S] m].
-    apply ap, path_arrow. intros x; apply Susp_rec_beta_merid.
+    apply ap, path_arrow.
+    intros x; apply Susp_rec_beta_merid.
   - intros f.
-    symmetry.
-    refine (Susp_eta f @ _).
-    unfold Susp_rec; apply ap.
-    apply path_forall; intros x.
-    apply apD_const.
+    symmetry; apply Susp_rec_eta.
 Defined.
 
 (** Using wild 0-groupoids, the universal property can be proven without funext.  A simple equivalence of 0-groupoids between [Susp X -> Y] and [{ NS : Y * Y & X -> fst NS = snd NS }] would not carry all the higher-dimensional information, but if we generalize it to dependent functions, then it does suffice. *)

@@ -108,21 +108,12 @@ Global Instance contr_unit : Contr Unit | 0 := {|
 (** ** Equivalences *)
 
 (** A contractible type is equivalent to [Unit]. *)
-Definition equiv_contr_unit `{Contr A} : A <~> Unit.
-Proof.
-  refine (Build_Equiv _ _
-    (fun (_ : A) => tt)
-    (Build_IsEquiv _ _ _
-      (fun (_ : Unit) => center A)
-      (fun t : Unit => match t with tt => 1 end)
-      (fun x : A => contr x) _)).
-  intro x. symmetry; apply ap_const.
-Defined.
+Definition equiv_contr_unit `{Contr A} : A <~> Unit
+  := equiv_contr_contr.
 
 (* Conversely, a type equivalent to [Unit] is contractible. *)
 Global Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
-  := Build_Contr A (f^-1 tt)
-  (fun a => ap f^-1 (contr (f a)) @ eissect f a).
+  := contr_equiv' Unit f^-1%equiv.
 
 (** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when this is not annotated. If we ever turn on [Universe Minimization ToSet], then we could get rid of this and remove some imports of this file. *)
 Definition const_tt@{u} (A : Type@{u}) := @const@{Set u} A Unit tt.
