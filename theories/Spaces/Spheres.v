@@ -24,8 +24,8 @@ Fixpoint Sphere (n : trunc_index)
        | n'.+1 => Susp (Sphere n')
      end.
 
-(** ** Pointed sphere for non-negative dimensions.  Note that [n.-1] is the predecessor as a [trunc_index]. *)
-Definition psphere (n : nat) : pType := psusp (Sphere n.-1).
+(** ** Pointed sphere for non-negative dimensions. *)
+Definition psphere (n : nat) : pType := [Sphere n, _].
 
 Arguments Sphere : simpl never.
 Arguments psphere : simpl never.
