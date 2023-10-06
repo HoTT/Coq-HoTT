@@ -4,6 +4,7 @@ Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
+Require Import Spaces.Nat.Core.
 
 Local Set Polymorphic Inductive Cumulativity.
 
@@ -463,11 +464,7 @@ End GroupMovement.
 
 (** Power operation *)
 
-Fixpoint grp_pow {G : Group} (g : G) (n : nat) : G :=
-  match n with
-  | 0%nat => mon_unit
-  | m.+1%nat => g * grp_pow g m
-  end.
+Definition grp_pow {G : Group} (g : G) (n : nat) : G := nat_iter n (g *.) mon_unit.
 
 (** Any homomorphism respects [grp_pow]. *)
 Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H)

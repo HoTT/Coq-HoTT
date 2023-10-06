@@ -1,5 +1,5 @@
 Require Import WildCat.
-Require Import Spaces.Nat.
+Require Import Spaces.Nat.Core.
 Require Export Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
 Require Export Classes.theory.rings.
@@ -405,23 +405,16 @@ Defined.
 (** *** More Ring laws *)
 
 (** Powers of ring elements *)
-Fixpoint rng_power {R : CRing} (x : R) (n : nat) : R :=
-  match n with
-  | 0%nat => cring_one
-  | n.+1%nat => x * rng_power x n
-  end.
+Definition rng_power {R : CRing} (x : R) (n : nat) : R := nat_iter n (x *.) cring_one.
 
 (** Power laws *)
 Lemma rng_power_mult_law {R : CRing} (x : R) (n m : nat)
   : (rng_power x n) * (rng_power x m) = rng_power x (n + m).
 Proof.
-  revert m.
-  induction n.
-  { intros m.
-    apply rng_mult_one_l. }
-  intros m; cbn.
+  induction n as [|n IHn].
+  1: apply rng_mult_one_l.
   refine ((rng_mult_assoc _ _ _)^ @ _).
-  f_ap.
+  exact (ap (x *.) IHn).
 Defined.
 
 (** Powers commute with multiplication *)
@@ -430,7 +423,7 @@ Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
 Proof.
   induction n.
   1: symmetry; apply rng_mult_one_l.
-  cbn.
+  simpl.
   rewrite rng_mult_assoc.
   rewrite <- (rng_mult_assoc x _ y).
   rewrite (rng_mult_comm (rng_power x n) y).
