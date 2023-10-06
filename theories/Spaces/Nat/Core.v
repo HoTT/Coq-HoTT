@@ -198,11 +198,6 @@ Fixpoint log2_iter k p q r : nat :=
 
 Definition log2 n : nat := log2_iter (pred n) 0 1 0.
 
-(** ** Iterator on natural numbers *)
-
-Definition iter (n : nat) {A} (f : A -> A) (x : A) : A :=
-  nat_rec A x (fun _ => f) n.
-
 Local Definition ap_S := @ap _ _ S.
 Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
@@ -632,53 +627,52 @@ Proof.
   intros; rewrite min_comm; by apply min_l.
 Defined.
 
-(** [n]th iteration of the function [f] *)
+(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x).  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
+Notation nat_iter n f x
+  := ((fix F (m : nat)
+      := match m with
+        | 0 => x
+        | m'.+1 => f (F m')
+        end) n).
 
-Fixpoint nat_iter (n:nat) {A} (f:A->A) (x:A) : A :=
-  match n with
-    | O => x
-    | S n' => f (nat_iter n' f x)
-  end.
-
-Lemma nat_iter_succ_r n {A} (f:A->A) (x:A) :
-  nat_iter (S n) f x = nat_iter n f (f x).
+Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
+  : nat_iter (S n) f x = nat_iter n f (f x).
 Proof.
-  induction n; intros; simpl; rewrite <- ?IHn; trivial.
+  induction n as [|n IHn]; simpl; trivial.
+  exact (ap f IHn).
 Defined.
 
-Theorem nat_iter_add :
-  forall (n m:nat) {A} (f:A -> A) (x:A),
-    nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
+Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
+  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
 Proof.
-  induction n; intros; simpl; rewrite ?IHn; trivial.
+  induction n as [|n IHn]; simpl; trivial.
+  exact (ap f IHn).
 Defined.
 
-(** Preservation of invariants : if [f : A -> A] preserves the invariant [Inv], then the iterates of [f] also preserve it. *)
-
+(** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
 Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
   : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
 Proof.
-  revert n A f P.
-  induction n; simpl; trivial.
-  intros A f P Hf x Hx.
+  induction n as [|n IHn]; simpl; trivial.
+  intros Hf x Hx.
   apply Hf, IHn; trivial.
 Defined.
 
 (** ** Arithmetic *)
 
-Lemma nat_add_n_Sm : forall n m:nat, (n + m).+1 = n + m.+1.
+Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
 Proof.
-  intros n m; induction n; simpl.
+  induction n; simpl.
   - reflexivity.
   - apply ap; assumption.
 Defined.
 
 Definition nat_add_comm (n m : nat) : n + m = m + n.
 Proof.
-  revert m; induction n as [|n IH]; intros m; simpl.
-  - refine (add_n_O m).
+  induction n as [|n IHn]; simpl.
+  - exact (add_n_O m).
   - transitivity (m + n).+1.
-    + apply ap, IH.
+    + apply ap, IHn.
     + apply nat_add_n_Sm.
 Defined.
 

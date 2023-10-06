@@ -2,6 +2,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Factorization Truncations.Core Truncations.Connectedness HProp.
 Require Import Pointed.Core Pointed.pEquiv.
 Require Import WildCat.
+Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
@@ -14,22 +15,13 @@ Global Instance ispointed_loops A (a : A) : IsPointed (a = a) := 1.
 Definition loops (A : pType) : pType
   := [point A = point A, 1].
 
-Fixpoint iterated_loops (n : nat) (A : pType) : pType
-  := match n with
-       | O => A
-       | S p => loops (iterated_loops p A)
-     end.
+Definition iterated_loops (n : nat) (A : pType) : pType
+  := nat_iter n loops A.
 
 (* Inner unfolding for iterated loops *)
-Lemma unfold_iterated_loops (n : nat) (X : pType)
-  : iterated_loops n.+1 X = iterated_loops n (loops X).
-Proof.
-  induction n.
-  1: reflexivity.
-  change (iterated_loops n.+2 X)
-    with (loops (iterated_loops n.+1 X)).
-  by refine (ap loops IHn @ _).
-Defined.
+Definition unfold_iterated_loops (n : nat) (X : pType)
+  : iterated_loops n.+1 X = iterated_loops n (loops X)
+  := nat_iter_succ_r _ _ _.
 
 (** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}

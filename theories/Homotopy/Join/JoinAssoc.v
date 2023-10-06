@@ -150,7 +150,7 @@ Defined.
 
 (** As a consequence, we get associativity of powers. *)
 Corollary join_join_power A n m
-  : Join (Join_power' A n) (Join_power' A m) <~> Join_power' A (n + m)%nat.
+  : Join (join_power A n) (join_power A m) <~> join_power A (n + m)%nat.
 Proof.
   induction n as [|n IHn].
   1: exact (equiv_join_empty' _).

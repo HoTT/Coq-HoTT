@@ -53,7 +53,7 @@ Definition equiv_join_susp (A : Type) : Join Bool A <~> Susp A
   := Build_Equiv _ _ (join_to_susp A) _.
 
 (** It follows that the iterated join of [Bool] gives a sphere. *)
-Definition equiv_join_power_bool_sphere (n : nat): Join_power' Bool n <~> Sphere (n.-1).
+Definition equiv_join_power_bool_sphere (n : nat): join_power Bool n <~> Sphere (n.-1).
 Proof.
   induction n as [|n IHn].
   - reflexivity.
