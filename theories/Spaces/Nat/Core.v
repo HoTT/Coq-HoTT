@@ -198,11 +198,6 @@ Fixpoint log2_iter k p q r : nat :=
 
 Definition log2 n : nat := log2_iter (pred n) 0 1 0.
 
-(** ** Iterator on natural numbers *)
-
-Definition iter (n : nat) {A} (f : A -> A) (x : A) : A :=
-  nat_rec A x (fun _ => f) n.
-
 Local Definition ap_S := @ap _ _ S.
 Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
