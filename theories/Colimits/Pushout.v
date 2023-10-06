@@ -91,9 +91,21 @@ Definition pushout_unrec {A B C P} (f : A -> B) (g : A -> C)
   : {psh : (B -> P) * (C -> P) &
            forall a, fst psh (f a) = snd psh (g a)}.
 Proof.
-  exists (h o pushl , h o pushr).
+  exists (h o pushl, h o pushr).
   intros a; cbn.
   exact (ap h (pglue a)).
+Defined.
+
+Definition pushout_rec_unrec {A B C} (f : A -> B) (g : A -> C) P
+  (e : Pushout f g -> P)
+  : Pushout_rec P (e o pushl) (e o pushr) (fun a => ap e (pglue a)) == e.
+Proof.
+  snrapply Pushout_ind.
+  1, 2: reflexivity.
+  intro a; cbn beta.
+  apply transport_paths_FlFr'.
+  apply equiv_p1_1q.
+  nrapply Pushout_rec_beta_pglue.
 Defined.
 
 Definition isequiv_Pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
@@ -102,20 +114,12 @@ Definition isequiv_Pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
              => Pushout_rec P (fst p.1) (snd p.1) p.2).
 Proof.
   srefine (isequiv_adjointify _ (pushout_unrec f g) _ _).
-  - intros h.
-    apply path_arrow; intros x.
-    srefine (Pushout_ind (fun x => Pushout_rec P (fst (pushout_unrec f g h).1) (snd (pushout_unrec f g h).1) (pushout_unrec f g h).2 x = h x) _ _ _ x).
-    + intros b; reflexivity.
-    + intros c; reflexivity.
-    + intros a; cbn.
-      nrapply transport_paths_FlFr'; apply equiv_p1_1q.
-      nrapply Pushout_rec_beta_pglue.
+  - intro e. apply path_arrow. apply pushout_rec_unrec.
   - intros [[pushb pushc] pusha]; unfold pushout_unrec; cbn.
-    srefine (path_sigma' _ _ _).
-    + srefine (path_prod' _ _); reflexivity.
-    + apply path_forall; intros a.
-      abstract (rewrite transport_forall_constant, Pushout_rec_beta_pglue;
-                reflexivity).
+    snrapply path_sigma'.
+    + reflexivity.
+    + cbn. apply path_forall; intros a.
+      apply Pushout_rec_beta_pglue.
 Defined.
 
 Definition equiv_Pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P

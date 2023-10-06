@@ -779,14 +779,45 @@ Section JoinTrunc.
 
 End JoinTrunc.
 
+(** Join with Empty *)
+Section JoinEmpty.
+
+  Definition equiv_join_empty A : Join A Empty <~> A.
+  Proof.
+    snrapply equiv_adjointify.
+    - srapply (Join_rec idmap); contradiction.
+    - exact joinl.
+    - reflexivity.
+    - snrapply Join_ind; [reflexivity| |]; contradiction.
+  Defined.
+
+  Definition equiv_join_empty' A : Join Empty A <~> A
+    := equiv_join_empty _ oE equiv_join_sym _ _.
+
+End JoinEmpty.
+
 (** Iterated Join powers of a type. *)
 Section JoinPower.
 
-  (** The join of n.+1 copies of a type. *)
+  (** The join of [n.+1] copies of a type. This is convenient because it produces [A] definitionally when [n] is [0]. *)
   Fixpoint Join_power (A : Type) (n : nat) : Type :=
     match n with
     | 0%nat => A
     | m.+1%nat => Join A (Join_power A m)
     end.
+
+  (** The join of [n] copies of a type. This is sometimes convenient for proofs by induction as it gives a trivial base case. *)
+  Fixpoint Join_power' (A : Type) (n : nat) : Type :=
+    match n with
+    | 0%nat => Empty
+    | m.+1%nat => Join A (Join_power' A m)
+    end.
+
+  Definition equiv_join_powers (A : Type) (n : nat) : Join_power A n <~> Join_power' A n.+1.
+  Proof.
+    induction n as [|n IHn].
+    - symmetry; apply equiv_join_empty.
+    - exact (equiv_functor_join equiv_idmap IHn).
+  Defined.
 
 End JoinPower.
