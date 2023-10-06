@@ -61,13 +61,12 @@ Proof.
     exact (emap Susp IHn).
 Defined.
 
-(** It follows that joins of spheres are spheres. *)
+(** It follows that joins of spheres are spheres, starting in dimension -1. *)
 Definition equiv_join_sphere (n m : nat)
-  : Join (Sphere n) (Sphere m) <~> Sphere (n + m)%nat.+1.
+  : Join (Sphere n.-1) (Sphere m.-1) <~> Sphere (n + m)%nat.-1.
 Proof.
   refine (_ oE equiv_functor_join _ _).
-  2,3: symmetry; exact (equiv_join_power_bool_sphere _.+1).
-  refine (equiv_join_power_bool_sphere _.+2 oE _).
-  rewrite nat_add_n_Sm.
+  2,3: symmetry; exact (equiv_join_power_bool_sphere _).
+  refine (equiv_join_power_bool_sphere _ oE _).
   apply join_join_power.
 Defined.
