@@ -13,7 +13,7 @@ Local Open Scope nat_scope.
 Definition Join_seq (A : Type) : Sequence.
 Proof.
   srapply Build_Sequence.
-  1: exact (Join_power A).
+  1: exact (iterated_join A).
   intros n.
   exact joinr.
 Defined.

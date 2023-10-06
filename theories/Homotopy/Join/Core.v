@@ -801,14 +801,14 @@ End JoinEmpty.
 Section JoinPower.
 
   (** The join of [n.+1] copies of a type. This is convenient because it produces [A] definitionally when [n] is [0]. We annotate the universes to reduce universe variables. *)
-  Definition Join_power (A : Type@{u}) (n : nat) : Type@{u}
+  Definition iterated_join (A : Type@{u}) (n : nat) : Type@{u}
     := nat_iter n (Join A) A.
 
   (** The join of [n] copies of a type. This is sometimes convenient for proofs by induction as it gives a trivial base case. *)
-  Definition Join_power' (A : Type@{u}) (n : nat) : Type@{u}
+  Definition join_power (A : Type@{u}) (n : nat) : Type@{u}
     := nat_iter n (Join A) (Empty : Type@{u}).
 
-  Definition equiv_join_powers (A : Type) (n : nat) : Join_power' A n.+1 <~> Join_power A n.
+  Definition equiv_join_powers (A : Type) (n : nat) : join_power A n.+1 <~> iterated_join A n.
   Proof.
     induction n as [|n IHn]; simpl.
     - exact (equiv_join_empty A).
