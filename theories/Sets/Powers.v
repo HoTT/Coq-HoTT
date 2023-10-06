@@ -1,21 +1,18 @@
-From HoTT Require Import TruncType abstract_algebra.
+From HoTT Require Import Basics Types TruncType.
 From HoTT Require Import PropResizing.PropResizing.
-From HoTT Require Import Spaces.Card.
-
+From HoTT Require Import Spaces.Card Spaces.Nat.Core.
 
 (** * Definition of Power types *)
 
-(* The definition is only used in Hartogs.v to allow defining a coercion,
-   everywhere else we prefer to write out the definition for clarity. *)
+(* The definition is only used in Hartogs.v to allow defining a coercion, and one place below.  Everywhere else we prefer to write out the definition for clarity. *)
 
-Definition power_type (A : Type) : Type :=
-  A -> HProp.
-
+Definition power_type (A : Type) : Type
+  := A -> HProp.
 
 (** * Iterated powers *)
 
-Lemma Injection_power {PR : PropResizing} X :
-  IsHSet X -> Injection X (X -> HProp).
+Lemma Injection_power {PR : PropResizing} X
+  : IsHSet X -> Injection X (X -> HProp).
 Proof.
   intros HX.
   set (f (x : X) := fun y => Build_HProp (resize_hprop (x = y))).
@@ -24,22 +21,14 @@ Proof.
   rewrite H. cbn. apply equiv_resize_hprop. reflexivity.
 Qed.
 
-Fixpoint power_iterated X n :=
-  match n with
-  | O => X 
-  | S n => power_iterated X n -> HProp
-  end.
+Definition power_iterated X n := nat_iter n power_type X.
 
-Lemma power_iterated_shift X n :
-  power_iterated (X -> HProp) n = (power_iterated X n -> HProp).
-Proof.
-  induction n in X |- *; cbn.
-  - reflexivity.
-  - rewrite IHn. reflexivity.
-Qed.
+Definition power_iterated_shift X n
+  : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
+  := (nat_iter_succ_r _ _ _)^.
 
-Global Instance hset_power {UA : Univalence} (X : HSet) :
-  IsHSet (X -> HProp).
+Global Instance hset_power {UA : Univalence} (X : HSet)
+  : IsHSet (X -> HProp).
 Proof.
   intros p q. apply hprop_allpath. intros H H'.
   destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].
@@ -47,32 +36,27 @@ Proof.
   intros x. apply isset_HProp.
 Qed.
 
-Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n :
-  IsHSet (power_iterated X n).
-Proof.
-  induction n; cbn.
-  - apply X.
-  - apply (@hset_power UA (Build_HSet (power_iterated X n))).
-Qed.
+Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n
+  : IsHSet (power_iterated X n)
+  := nat_iter_invariant _ _ _ _ _ _.
 
-Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  Injection X (power_iterated X n).
+Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
+  : Injection X (power_iterated X n).
 Proof.
-  induction n.
+  induction n as [|n IHn].
   - reflexivity.
   - eapply Injection_trans; try apply IHn.
     apply Injection_power. exact _.
 Qed.
 
-Lemma infinite_inject X Y :
-  infinite X -> Injection X Y -> infinite Y.
+Lemma infinite_inject X Y
+  : infinite X -> Injection X Y -> infinite Y.
 Proof.
   apply Injection_trans.
 Qed.
 
-Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n :
-  infinite X -> infinite (power_iterated X n).
+Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
+  : infinite X -> infinite (power_iterated X n).
 Proof.
   intros H. eapply infinite_inject; try apply H. apply Injection_power_iterated.
 Qed.
-
