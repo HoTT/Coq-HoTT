@@ -5,6 +5,7 @@ Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Pointed.Core.
 Require Import WildCat.
+Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope path_scope.
@@ -799,24 +800,18 @@ End JoinEmpty.
 (** Iterated Join powers of a type. *)
 Section JoinPower.
 
-  (** The join of [n.+1] copies of a type. This is convenient because it produces [A] definitionally when [n] is [0]. *)
-  Fixpoint Join_power (A : Type) (n : nat) : Type :=
-    match n with
-    | 0%nat => A
-    | m.+1%nat => Join A (Join_power A m)
-    end.
+  (** The join of [n.+1] copies of a type. This is convenient because it produces [A] definitionally when [n] is [0]. We annotate the universes to reduce universe variables. *)
+  Definition Join_power (A : Type@{u}) (n : nat) : Type@{u}
+    := nat_iter n (Join A) A.
 
   (** The join of [n] copies of a type. This is sometimes convenient for proofs by induction as it gives a trivial base case. *)
-  Fixpoint Join_power' (A : Type) (n : nat) : Type :=
-    match n with
-    | 0%nat => Empty
-    | m.+1%nat => Join A (Join_power' A m)
-    end.
+  Definition Join_power' (A : Type@{u}) (n : nat) : Type@{u}
+    := nat_iter n (Join A) (Empty : Type@{u}).
 
-  Definition equiv_join_powers (A : Type) (n : nat) : Join_power A n <~> Join_power' A n.+1.
+  Definition equiv_join_powers (A : Type) (n : nat) : Join_power' A n.+1 <~> Join_power A n.
   Proof.
-    induction n as [|n IHn].
-    - symmetry; apply equiv_join_empty.
+    induction n as [|n IHn]; simpl.
+    - exact (equiv_join_empty A).
     - exact (equiv_functor_join equiv_idmap IHn).
   Defined.
 
