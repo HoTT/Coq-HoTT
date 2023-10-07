@@ -189,7 +189,8 @@ Print PseudonaturalTransformationParts.a_part.
 Print PseudonaturalTransformationParts.b_part.
 Print PseudonaturalTransformationParts.b_id_part.
 Print PseudonaturalTransformationParts.c_part.
->> *)
+>>
+*)
 
 Record PseudonaturalTransformation `{Funext} (X : PreCategory)
        (F G : Pseudofunctor X) :=

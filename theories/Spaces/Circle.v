@@ -16,11 +16,11 @@ Generalizable Variables X A B f g n.
 
 (** We define the circle as the coequalizer of two copies of the identity map of [Unit].  This is easily equivalent to the naive definition
 
-<<<
+<<
 Private Inductive Circle : Type0 :=
 | base : Circle
 | loop : base = base.
->>>
+>>
 
 but it allows us to apply the flattening lemma directly rather than having to pass across that equivalence.  *)
 

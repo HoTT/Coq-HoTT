@@ -97,7 +97,8 @@ Section coherence.
                 \\   //
                  \\ //
                  G ∘ F
->> *)
+>>
+*)
   Lemma triangle C D E (F : Functor C D) (G : Functor D E)
   : (associativity F 1 G @ ap (compose G) (left_identity F))
     = (ap (fun G' : Functor D E => G' o F) (right_identity G)).
@@ -121,7 +122,8 @@ Section coherence.
               ||                      ||
               ||                      ||
       ((K ∘ H) ∘ G) ∘ F ====== (K ∘ (H ∘ G)) ∘ F
->> *)
+>>
+*)
   Lemma pentagon A B C D E
         (F : Functor A B) (G : Functor B C) (H : Functor C D) (K : Functor D E)
   : (associativity F G (K o H) @ associativity (G o F) H K)

@@ -18,9 +18,9 @@ Section is_homomorphism.
     respect to operations [α : A s1 → A s2 → ... → A sn → A t] and
     [β : B s1 → B s2 → ... → B sn → B t] if
 
-    <<
+<<
       f t (α x1 x2 ... xn) = β (f s1 x1) (f s2 x2) ... (f sn xn)
-    >>
+>>
 *)
 
   Fixpoint OpPreserving {w : SymbolType σ}
@@ -147,9 +147,9 @@ Qed.
     section proves that [f] is "OpPreserving" with respect to
     uncurried algebra operations in the sense that
 
-    <<
+<<
       f t (α (x1,x2,...,xn,tt)) = β (f s1 x1,f s2 x1,...,f sn xn,tt)
-    >>
+>>
 
     for all [(x1,x2,...,xn,tt) : FamilyProd A [s1;s2;...;sn]], where
     [α] and [β] are uncurried algebra operations in [A] and [B]
@@ -172,10 +172,10 @@ Section homomorphism_ap_operation.
 
 (** A homomorphism [f : ∀ s, A s → B s] satisfies
 
-    <<
+<<
       f t (α (a1, a2, ..., an, tt))
       = β (f s1 a1, f s2 a2, ..., f sn an, tt)
-    >>
+>>
 
     where [(a1, a2, ..., an, tt) : FamilyProd A [s1; s2; ...; sn]] and
     [α], [β] uncurried versions of [u.#A], [u.#B] respectively. *)
@@ -305,10 +305,10 @@ Section path_isomorphism.
 (** Given a family of equivalences [f : ∀ (s : Sort σ), A s <~> B s]
     which is [OpPreserving f α β] with respect to algebra operations
 
-    <<
+<<
       α : A s1 → A s2 → ... → A sn → A t
       β : B s1 → B s2 → ... → B sn → B t
-    >>
+>>
 
     By transporting [α] along the path [path_equiv_family f] we
     find a path from the transported operation [α] to [β]. *)

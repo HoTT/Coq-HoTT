@@ -135,7 +135,8 @@ Proof.
         by symmetry.
     + apply (transport hproptype p tt).
 Defined.
->> *)
+>>
+*)
 
 Section isepi_issurj.
   Context {X Y : HSet} (f : X -> Y) (Hisepi : isepi f).

@@ -789,15 +789,15 @@ Proof.
 
   (** To obtain the situation of 2.9.4, we rewrite x using
 
-      <<<
+<<
         x = transport (fun A : Type => C A) p^ x
-      >>>
+>>
 
       This equality holds because [(C A) -> (C A)] is contractible, so
 
-      <<<
+<<
         transport (fun A : Type => C A) p^ = idmap
-      >>>
+>>
 
       In both Theorem 3.2.2 and the following result, the hypothesis
       [Contr ((C A) -> (C A))] will follow from the contractibility of [(C A)].

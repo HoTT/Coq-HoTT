@@ -122,9 +122,9 @@ Section ump_prod_algebra.
       there is a unique homomorphism [f : Homomorphism C (ProdAlgebra I A)]
       such that [h i = hom_compose (pr i) f], where
 
-      <<
+<<
         pr i = hom_proj_prod_algebra I A i
-      >>
+>>
 
       is the ith projection homomorphism. *)
 

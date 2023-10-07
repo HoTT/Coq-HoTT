@@ -21,15 +21,15 @@ Section congruence.
 (** A finitary operation [f : A s1 * A s2 * ... * A sn -> A t]
     satisfies [OpCompatible f] iff
 
-    <<
+<<
       Φ s1 x1 y1 * Φ s2 x2 y2 * ... * Φ sn xn yn
-    >>
+>>
 
     implies
 
-    <<
+<<
       Φ t (f (x1, x2, ..., xn)) (f (y1, y2, ..., yn)).
-    >>
+>>
 
     The below definition generalizes this to infinitary operations.
 *)
