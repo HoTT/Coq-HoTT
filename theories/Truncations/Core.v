@@ -5,12 +5,12 @@ Require Import Modalities.Modality.
 (* Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
 Require Export (coercions) Modalities.Modality.
 
-(** * Truncations of types, in all dimensions. *)
+(** * Truncations of types, in all dimensions *)
 
 Local Open Scope path_scope.
 Generalizable Variables A X n.
 
-(** ** Definition. *)
+(** ** Definition *)
 
 (** The definition of [Trunc n], the n-truncation of a type.
 
@@ -276,7 +276,9 @@ Proof.
   exact (ap10 (g0.2 @ g1.2^) y).
 Defined.
 
-(** ** Tactic to remove truncations in hypotheses if possible. See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities. *)
+(** ** Tactic to remove truncations in hypotheses if possible
+
+  See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities. *)
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
   progress repeat

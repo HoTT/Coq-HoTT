@@ -1,8 +1,12 @@
 Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
 
-(** * We use the recursion principle for the triple join (from TriJoin.v) to prove the associativity of Join.  We'll use the common technique of combining symmetry and a twist equivalence.  Temporarily writing * for Join, symmetry says that [A * B <~> B * A] and the twist says that [A * (B * C) <~> B * (A * C)].  From these we get a composite equivalence [A * (B * C) <~> A * (C * B) <~> C * (A * B) <~> (A * B) * C].  One advantage of this approach is that both symmetry and the twist are their own inverses, so there are fewer maps to define and fewer composites to prove are homotopic to the identity. Symmetry is proved in Join/Core.v. *)
+(** * The associativity of [Join]
 
-(** * We prove the twist equivalence [TriJoin A B C <~> TriJoin B A C], using the Yoneda lemma.  The idea is that [TriJoin A B C -> P] is equivalent (as a 0-groupoid) to [TriJoinRecData A B C P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [TriJoinRecData B A C P].  Going back along the first equivalence gets us to [TriJoin B A C -> P].  These equivalences are natural in [P], so the twist equivalence follows from the Yoneda lemma. *)
+  We use the recursion principle for the triple join (from TriJoin.v) to prove the associativity of Join.  We'll use the common technique of combining symmetry and a twist equivalence.  Temporarily writing * for Join, symmetry says that [A * B <~> B * A] and the twist says that [A * (B * C) <~> B * (A * C)].  From these we get a composite equivalence [A * (B * C) <~> A * (C * B) <~> C * (A * B) <~> (A * B) * C].  One advantage of this approach is that both symmetry and the twist are their own inverses, so there are fewer maps to define and fewer composites to prove are homotopic to the identity. Symmetry is proved in Join/Core.v. *)
+
+(** ** The twist equivalence [TriJoin A B C <~> TriJoin B A C]
+
+  We prove the twist equivalence using the Yoneda lemma.  The idea is that [TriJoin A B C -> P] is equivalent (as a 0-groupoid) to [TriJoinRecData A B C P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [TriJoinRecData B A C P].  Going back along the first equivalence gets us to [TriJoin B A C -> P].  These equivalences are natural in [P], so the twist equivalence follows from the Yoneda lemma. *)
 
 (** First we define a map of 0-groupoids that will underlie the natural equivalence. *)
 Definition trijoinrecdata_twist (A B C P : Type)

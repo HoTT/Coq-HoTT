@@ -42,7 +42,7 @@ Section Join.
     : apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b
     := Pushout_ind_beta_pglue _ _ _ _ _.
 
-  (* A version of [Join_ind] that uses dependant paths. *)
+  (** A version of [Join_ind] that uses dependant paths. *)
   Definition Join_ind_dp {A B : Type} (P : Join A B -> Type)
     (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
     (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
@@ -113,7 +113,9 @@ Section Join.
 
 End Join.
 
-(** * We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
+(** * [Join_rec] gives an equivalence of 0-groupoids
+
+  We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
 
 Record JoinRecData {A B P : Type} := {
     jl : A -> P;
@@ -133,7 +135,7 @@ Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : 
   : ap (join_rec f) (jglue a b) = jg f a b
   := Join_rec_beta_jglue _ _ _ a b.
 
-(** * We're next going to define a map in the other direction.  We do it via showing that [JoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
+(** We're next going to define a map in the other direction.  We do it via showing that [JoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
 Definition joinrecdata_fun {A B P Q : Type} (g : P -> Q) (f : JoinRecData A B P)
   : JoinRecData A B Q.
 Proof.
@@ -152,7 +154,11 @@ Definition join_rec_inv {A B P : Type} (f : Join A B -> P)
   : JoinRecData A B P
   := joinrecdata_fun f (joinrecdata_join A B).
 
-(** * Under [Funext], [join_rec] and [join_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully.  We begin by describing a notion of paths between elements of [JoinRecData A B P]. Under [Funext], this type will be equivalent to the identity type.  But without [Funext], this definition will be more useful. *)
+(** Under [Funext], [join_rec] and [join_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully. *)
+
+(** ** The graph structure on [JoinRecData A B P]
+
+  Under [Funext], this type will be equivalent to the identity type.  But without [Funext], this definition will be more useful. *)
 
 Record JoinRecPath {A B P : Type} {f g : JoinRecData A B P} := {
     hl : forall a, jl f a = jl g a;
@@ -190,7 +196,9 @@ Definition isinj_join_rec_inv {A B P : Type} {f g : Join A B -> P}
   : f == g
   := Join_ind_FlFr _ _ (hl h) (hr h) (hg h).
 
-(** * We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic interval can be assumed to be trivial on the first vertex, and a generic square can be assumed to be the identity on the domain edge. In order to apply the [paths_ind] and [square_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
+(** ** Lemmas and tactics about intervals and squares
+
+  We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic interval can be assumed to be trivial on the first vertex, and a generic square can be assumed to be the identity on the domain edge. In order to apply the [paths_ind] and [square_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
 
 (** This destructs a three component term [f], generalizes each piece evaluated appropriately, and clears all pieces. *)
 Ltac generalize_three f a b :=
@@ -226,7 +234,7 @@ Global Ltac square_ind g h a b :=
   generalize_three g a b;
   apply square_ind.
 
-(** * Here we start using the WildCat library to organize things. *)
+(** ** Use the WildCat library to organize things *)
 
 (** We begin by showing that [JoinRecData A B P] is a 0-groupoid, one piece at a time. *)
 Global Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
@@ -263,9 +271,9 @@ Defined.
 Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
   := Build_ZeroGpd (JoinRecData A B P) _ _ _.
 
-(** * Next we show that [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
+(** * [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]
 
-(** It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
+  It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
 
 (** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)
 Global Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -> Q)
@@ -365,7 +373,7 @@ Proof.
   exact (isnat (join_rec_natequiv A B) g f).
 Defined.
 
-(** * Various types of equalities between paths in joins. *)
+(** * Various types of equalities between paths in joins *)
 
 (** Naturality squares for given paths in [A] and [B]. *)
 Section JoinNatSq.
@@ -553,7 +561,9 @@ Section FunctorJoin.
 
 End FunctorJoin.
 
-(** * We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -> P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -> P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warmup to proving the associativity of the join. *)
+(** * Symmetry of Join
+
+  We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -> P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -> P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warmup to proving the associativity of the join. *)
 
 Section JoinSym.
 

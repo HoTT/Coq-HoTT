@@ -77,7 +77,9 @@ Defined.
 (** The [Circle] is pointed by [base]. *)
 Global Instance ispointed_Circle : IsPointed Circle := base.
 
-(** ** In this section we prove that the loop space of the [Circle] is the Integers [Int]. This is the encode-decode style proof a la Licata-Shulman. *)
+(** ** The loop space of the [Circle] is the Integers [Int]
+
+  This is the encode-decode style proof a la Licata-Shulman. *)
 
 Section EncodeDecode.
   (** We assume univalence throughout this section. *)
