@@ -144,7 +144,8 @@ Definition equiv_trijoin_twist (A B C : Type)
                             (trijoin_twist_homotopic A B C)
                             (trijoin_twist_homotopic B A C).
 
-(** Finally, we get that Join is associative. *)
+(** ** The associativity of [Join] *)
+
 Definition join_assoc A B C : Join A (Join B C) <~> Join (Join A B) C.
 Proof.
   refine (_ oE equiv_functor_join equiv_idmap (equiv_join_sym B C)).

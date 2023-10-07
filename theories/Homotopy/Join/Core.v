@@ -271,7 +271,7 @@ Defined.
 Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
   := Build_ZeroGpd (JoinRecData A B P) _ _ _.
 
-(** * [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]
+(** ** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]
 
   It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
 

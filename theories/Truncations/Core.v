@@ -10,7 +10,7 @@ Require Export (coercions) Modalities.Modality.
 Local Open Scope path_scope.
 Generalizable Variables A X n.
 
-(** ** Definition *)
+(** ** The definition *)
 
 (** The definition of [Trunc n], the n-truncation of a type.
 
@@ -177,7 +177,7 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
-(** ** A few special things about the (-1)-truncation. *)
+(** ** A few special things about the (-1)-truncation *)
 
 Local Open Scope trunc_scope.
 

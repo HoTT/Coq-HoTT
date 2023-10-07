@@ -3,7 +3,9 @@ Require Import Join.Core Join.JoinAssoc Suspension Spaces.Spheres.
 Require Import WildCat.
 Require Import Spaces.Nat.Core.
 
-(** We give a direct proof that the join of [bool] with a type is equivalent to a suspension. It is also possible to give a proof using [opyon_equiv_0gpd]; see PR#1769. *)
+(** * [Join Bool A] is equivalent to [Susp A]
+
+  We give a direct proof of this fact. It is also possible to give a proof using [opyon_equiv_0gpd]; see PR#1769. *)
 
 Definition join_to_susp (A : Type) : Join Bool A -> Susp A.
 Proof.

@@ -1,7 +1,7 @@
 Require Import Basics.Overture Basics.Tactics Basics.Decidable
   Spaces.Nat.Core.
 
-(* ** Binary Positive Integers *)
+(** * Binary Positive Integers *)
 
 (** Most of this file has been adapted from the coq standard library for positive binary integers. *)
 
