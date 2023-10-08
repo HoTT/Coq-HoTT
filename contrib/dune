@@ -2,5 +2,5 @@
  (name HoTT.Contrib)
  (package coq-hott)
  (flags -noinit -indices-matter -color on)
- (coqdoc_flags :standard -interpolate -utf8 --no-externals)
+ (coqdoc_flags :standard --interpolate --utf8 --no-externals --parse-comments)
  (theories HoTT))

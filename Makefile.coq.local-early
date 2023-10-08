@@ -6,4 +6,4 @@
 # Makefile.coq.local currently contains additional targets that need
 # access to the variables in Makefile.coq
 COQDOCEXTRAFLAGS?=
-COQDOCFLAGS?=-interpolate -utf8 --no-externals $(COQDOCEXTRAFLAGS)
+COQDOCFLAGS?=--interpolate --utf8 --no-externals --parse-comments $(COQDOCEXTRAFLAGS)
