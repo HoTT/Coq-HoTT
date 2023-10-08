@@ -21,7 +21,8 @@ Proof.
 Qed.
 
 Section HasNegation.
-  Context {S : OptionSort} `{HasNegation S}.
+  Universe i.
+  Context {S : OptionSort@{i}} `{HasNegation S}.
   Let No := GenNo S.
 
   Definition negate : No -> No.

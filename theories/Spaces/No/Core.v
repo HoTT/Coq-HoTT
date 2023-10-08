@@ -29,6 +29,7 @@ Class InSort (S : OptionSort@{i}) (I J : Type@{i})
 Module Export Surreals.
 
   Section OptionSort.
+  Universe i.
   Context {S : OptionSort@{i}}.
 
   (** *** Games first *)
@@ -44,30 +45,30 @@ Module Export Surreals.
 
   Arguments opt {L R s} xL xR.
 
-  Private Inductive game_le : Game@{i} -> Game@{i} -> Type :=
+  Private Inductive game_le : Game -> Game -> Type :=
   | game_le_lr
     : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (xL : L -> Game) (xR : R -> Game)
              (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i}),
+             (yL : L' -> Game) (yR : R' -> Game),
         (forall (l:L), game_lt (xL l) (opt yL yR)) ->
         (forall (r:R'), game_lt (opt xL xR) (yR r)) ->
         game_le (opt xL xR) (opt yL yR)
 
-  with game_lt : Game@{i} -> Game@{i} -> Type :=
+  with game_lt : Game -> Game -> Type :=
   | game_lt_l
     : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (xL : L -> Game) (xR : R -> Game)
              (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
+             (yL : L' -> Game) (yR : R' -> Game)
              (l : L'),
         (game_le (opt xL xR) (yL l)) ->
         game_lt (opt xL xR) (opt yL yR)
   | game_lt_r
     : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (xL : L -> Game) (xR : R -> Game)
              (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
+             (yL : L' -> Game) (yR : R' -> Game)
              (r : R),
         (game_le (xR r) (opt yL yR)) ->
         game_lt (opt xL xR) (opt yL yR).
@@ -78,9 +79,9 @@ Module Export Surreals.
 
   (** *** Now the surreals *)
 
-  Private Inductive is_surreal : Game@{i} -> Type :=
+  Private Inductive is_surreal : Game -> Type :=
   | isno : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-                  (xL : L -> Game@{i}) (xR : R -> Game@{i}),
+                  (xL : L -> Game) (xR : R -> Game),
              (forall l, is_surreal (xL l))
              -> (forall r, is_surreal (xR r))
              -> (forall (l:L) (r:R), game_lt (xL l) (xR r))
@@ -326,6 +327,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
 End Surreals.
 
 Section OptionSort.
+Universe i.
 Context {S : OptionSort@{i}}.
 Let No := GenNo S.
 
@@ -605,6 +607,7 @@ Ltac repeat_No_ind_hprop :=
 
 Section NoCodes.
   Context `{Univalence}.
+  Universe i.
   Context {S : OptionSort@{i}}.
   Let No := GenNo S.
 

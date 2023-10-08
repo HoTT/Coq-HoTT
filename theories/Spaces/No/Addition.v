@@ -33,6 +33,7 @@ Qed.
 
 Section Addition.
   Context `{Univalence}.
+  Universe i.
   Context {S : OptionSort@{i}} `{HasAddition S}.
   Let No := GenNo S.
 
