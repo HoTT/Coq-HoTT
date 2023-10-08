@@ -1,8 +1,8 @@
-Require Import Basics.Overture Basics.Tactics Basics.Equivalences Types.Equiv.
-Require Import WildCat.Core.
-Require Import WildCat.Equiv.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
+Require Import Types.Equiv.
+Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
 
-(** ** The category of types *)
+(** ** The (1-)category of types *)
 
 Global Instance isgraph_type@{u v} : IsGraph@{v u} Type@{u}
   := Build_IsGraph Type@{u} (fun a b => a -> b).
@@ -111,4 +111,65 @@ Proof.
   exists (fun _ => tt).
   intros f x.
   by destruct (f x).
+Defined.
+
+(** ** The 2-category of types *)
+
+Global Instance is3graph_type : Is3Graph Type.
+Proof.
+  intros A B f g.
+  apply Build_IsGraph.
+  intros p q.
+  exact (p == q).
+Defined.
+
+Global Instance is1cat_type_hom A B : Is1Cat (A $-> B).
+Proof.
+  repeat unshelve esplit.
+  - intros f g h p q x.
+    exact (q x @ p x).
+  - intros; by symmetry.
+  - intros f h p x.
+    exact (p x @@ 1).
+  - intros g h p x.
+    exact (1 @@ p x).
+  - intros ? ? ? ? ? ? ? ?; apply concat_p_pp.
+  - intros ? ? ? ?. apply concat_p1.
+  - intros ? ? ? ?. apply concat_1p.
+Defined.
+
+Global Instance is1gpd_type_hom (A B : Type) : Is1Gpd (A $-> B).
+Proof.
+  repeat unshelve esplit.
+  - intros ? ? ? ?; apply concat_pV.
+  - intros ? ? ? ?; apply concat_Vp.
+Defined.
+
+Global Instance is1functor_cat_postcomp {A B C : Type} (g : B $-> C)
+  : Is1Functor (cat_postcomp A g).
+Proof.
+  repeat unshelve esplit.
+  - intros ? ? ? ? p ?; exact (ap _ (p _)).
+  - intros ? ? ? ? ? ?; cbn; apply ap_pp.
+Defined.
+
+Global Instance is1functor_cat_precomp {A B C : Type} (f : A $-> B)
+  : Is1Functor (cat_precomp C f).
+Proof.
+  repeat unshelve esplit.
+  intros ? ? ? ? p ?; exact (p _).
+Defined.
+
+Global Instance is21cat_type : Is21Cat Type.
+Proof.
+  snrapply Build_Is21Cat.
+  1-6: exact _.
+  - intros a b c d f g h i p x; cbn.
+    exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
+  - intros a b f g p x; cbn.
+    exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+  - intros a b f g p x; cbn.
+    exact (concat_p1 _ @ (concat_1p _)^).
+  - reflexivity.
+  - reflexivity.
 Defined.
