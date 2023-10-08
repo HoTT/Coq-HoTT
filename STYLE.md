@@ -265,7 +265,7 @@ principle is an equivalence.  These should be named according to the
 naming conventions for equivalences below, e.g. `isequiv_thing_rec`
 and `equiv_thing_rec`.
 
-[inductionbug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3745
+[inductionbug]: https://github.com/coq/coq/issues/3745
 
 ### 1.2.5. Path algebra functions ###
 
