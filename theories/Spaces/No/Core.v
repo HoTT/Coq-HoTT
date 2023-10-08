@@ -29,6 +29,12 @@ Class InSort (S : OptionSort@{i}) (I J : Type@{i})
 Module Export Surreals.
 
   Section OptionSort.
+
+  (** We will use this to assert that certain inequalities below hold.  We locate it here, so that it depends on no universe variables. See the longer explanation below. *)
+  Inductive No_Empty_for_admitted : Type0 := .
+  Axiom No_Empty_admitted : No_Empty_for_admitted.
+
+  Universe i.
   Context {S : OptionSort@{i}}.
 
   (** *** Games first *)
@@ -39,35 +45,35 @@ Module Export Surreals.
 
   Private Inductive Game : Type :=
   | opt : forall (L R : Type@{i})
-                 (s : InSort@{i} S L R)
+                 (s : InSort S L R)
                  (xL : L -> Game) (xR : R -> Game), Game.
 
   Arguments opt {L R s} xL xR.
 
-  Private Inductive game_le : Game@{i} -> Game@{i} -> Type :=
+  Private Inductive game_le : Game -> Game -> Type :=
   | game_le_lr
-    : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
-             (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i}),
+    : forall (L R : Type@{i}) (s : InSort S L R)
+             (xL : L -> Game) (xR : R -> Game)
+             (L' R' : Type@{i}) (s' : InSort S L' R')
+             (yL : L' -> Game) (yR : R' -> Game),
         (forall (l:L), game_lt (xL l) (opt yL yR)) ->
         (forall (r:R'), game_lt (opt xL xR) (yR r)) ->
         game_le (opt xL xR) (opt yL yR)
 
-  with game_lt : Game@{i} -> Game@{i} -> Type :=
+  with game_lt : Game -> Game -> Type :=
   | game_lt_l
-    : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
-             (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
+    : forall (L R : Type@{i}) (s : InSort S L R)
+             (xL : L -> Game) (xR : R -> Game)
+             (L' R' : Type@{i}) (s' : InSort S L' R')
+             (yL : L' -> Game) (yR : R' -> Game)
              (l : L'),
         (game_le (opt xL xR) (yL l)) ->
         game_lt (opt xL xR) (opt yL yR)
   | game_lt_r
     : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-             (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (xL : L -> Game) (xR : R -> Game)
              (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
-             (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
+             (yL : L' -> Game) (yR : R' -> Game)
              (r : R),
         (game_le (xR r) (opt yL yR)) ->
         game_lt (opt xL xR) (opt yL yR).
@@ -78,9 +84,9 @@ Module Export Surreals.
 
   (** *** Now the surreals *)
 
-  Private Inductive is_surreal : Game@{i} -> Type :=
-  | isno : forall (L R : Type@{i}) (s : InSort@{i} S L R)
-                  (xL : L -> Game@{i}) (xR : R -> Game@{i}),
+  Private Inductive is_surreal : Game -> Type :=
+  | isno : forall (L R : Type@{i}) (s : InSort S L R)
+                  (xL : L -> Game) (xR : R -> Game),
              (forall l, is_surreal (xL l))
              -> (forall r, is_surreal (xR r))
              -> (forall (l:L) (r:R), game_lt (xL l) (xR r))
@@ -101,7 +107,7 @@ Module Export Surreals.
   Local Infix "<" := lt : surreal_scope.
   Local Infix "<=" := le : surreal_scope.
 
-  Definition No_cut {L R : Type@{i}} {s : InSort@{i} S L R}
+  Definition No_cut {L R : Type@{i}} {s : InSort S L R}
              (xL : L -> GenNo) (xR : R -> GenNo)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
   : GenNo
@@ -115,10 +121,10 @@ Module Export Surreals.
   Arguments path_No {x y} _ _.
 
   Definition le_lr
-             {L R : Type@{i} } {s : InSort@{i} S L R}
+             {L R : Type@{i} } {s : InSort S L R}
              (xL : L -> GenNo) (xR : R -> GenNo)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type@{i} } {s' : InSort@{i} S L' R'}
+             {L' R' : Type@{i} } {s' : InSort S L' R'}
              (yL : L' -> GenNo) (yR : R' -> GenNo)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
   : (forall (l:L), xL l < {{ yL | yR // ycut }}) ->
@@ -128,10 +134,10 @@ Module Export Surreals.
                   (game_of o yL) (game_of o yR).
 
   Definition lt_l
-             {L R : Type@{i} } {s : InSort@{i} S L R}
+             {L R : Type@{i} } {s : InSort S L R}
              (xL : L -> GenNo) (xR : R -> GenNo)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type@{i} } {s' : InSort@{i} S L' R'}
+             {L' R' : Type@{i} } {s' : InSort S L' R'}
              (yL : L' -> GenNo) (yR : R' -> GenNo)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
              (l : L')
@@ -141,10 +147,10 @@ Module Export Surreals.
                  (game_of o yL) (game_of o yR) l.
 
   Definition lt_r
-             {L R : Type@{i} } {s : InSort@{i} S L R}
+             {L R : Type@{i} } {s : InSort S L R}
              (xL : L -> GenNo) (xR : R -> GenNo)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type@{i} } {s' : InSort@{i} S L' R'}
+             {L' R' : Type@{i} } {s' : InSort S L' R'}
              (yL : L' -> GenNo) (yR : R' -> GenNo)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
              (r : R)
@@ -171,7 +177,7 @@ Module Export Surreals.
       (dlt : forall (x y : GenNo), (x < y) -> A x -> A y -> Type)
       {ishprop_le : forall x y a b p, IsHProp (dle x y p a b)}
       {ishprop_lt : forall x y a b p, IsHProp (dlt x y p a b)}
-      (dcut : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+      (dcut : forall (L R : Type@{i}) (s : InSort S L R)
                      (xL : L -> GenNo) (xR : R -> GenNo)
                      (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                      (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
@@ -180,12 +186,12 @@ Module Export Surreals.
       (dpath : forall (x y : GenNo) (a:A x) (b:A y) (p : x <= y) (q : y <= x)
                       (dp : dle x y p a b) (dq : dle y x q b a),
                  path_No p q # a = b)
-      (dle_lr : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+      (dle_lr : forall (L R : Type@{i}) (s : InSort S L R)
                        (xL : L -> GenNo) (xR : R -> GenNo)
                        (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                        (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                        (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                       (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                       (L' R' : Type@{i}) (s' : InSort S L' R')
                        (yL : L' -> GenNo) (yR : R' -> GenNo)
                        (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                        (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
@@ -204,12 +210,12 @@ Module Export Surreals.
                       (le_lr xL xR xcut yL yR ycut p q)
                       (dcut _ _ _ xL xR xcut fxL fxR fxcut)
                       (dcut _ _ _ yL yR ycut fyL fyR fycut))
-      (dlt_l : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+      (dlt_l : forall (L R : Type@{i}) (s : InSort S L R)
                       (xL : L -> GenNo) (xR : R -> GenNo)
                       (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                       (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                       (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                      (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                      (L' R' : Type@{i}) (s' : InSort S L' R')
                       (yL : L' -> GenNo) (yR : R' -> GenNo)
                       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                       (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
@@ -223,12 +229,12 @@ Module Export Surreals.
                      (lt_l xL xR xcut yL yR ycut l p)
                      (dcut _ _ _ xL xR xcut fxL fxR fxcut)
                      (dcut _ _ _ yL yR ycut fyL fyR fycut))
-      (dlt_r : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+      (dlt_r : forall (L R : Type@{i}) (s : InSort S L R)
                       (xL : L -> GenNo) (xR : R -> GenNo)
                       (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                       (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                       (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                      (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                      (L' R' : Type@{i}) (s' : InSort S L' R')
                       (yL : L' -> GenNo) (yR : R' -> GenNo)
                       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                       (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
@@ -247,9 +253,7 @@ Module Export Surreals.
 
 However, it turns out that in defining [No_cut] we already need to know that it preserves inequalities.  Since this is eventually an axiom anyway, we could just assert it with [admit] in the proof.  However, if we did this then the [admit] would not be *judgmentally* equal to the axiom [No_ind_lt] that we assert afterwards.  Instead, we make use of the fact that [admit] is essentially by definition [match proof_admitted with end] for a global axiom [proof_admitted : Empty], so that if we use the same [admit] both inside the definition of [No_ind] and in asserting [No_ind_lt] as an axiom, they will be the same term judgmentally.
 
-Finally, for conceptual isolation, and so as not to depend on the particular implementation of [admit], we introduce here local copies of [Empty] and [proof_admitted]. *)
-    Inductive No_Empty_for_admitted := .
-    Axiom No_Empty_admitted : No_Empty_for_admitted.
+Finally, for conceptual isolation, and so as not to depend on the particular implementation of [admit], we use local copies of [Empty] and [proof_admitted].  These were defined at the start of the Section, because otherwise they depend on six universe variables. *)
 
     (** Technically, we induct over the inductive predicate witnessing Numberhood of games.  We prove the "induction step" separately to improve performance, possibly by preventing bare [fix]s from appearing upon simplification. *)
     Local Definition No_ind_internal_step
@@ -305,7 +309,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
 
     (** We verify that our definition computes judgmentally. *)
     Definition No_ind_cut
-               (L R : Type@{i}) (s : InSort@{i} S L R)
+               (L R : Type@{i}) (s : InSort S L R)
                (xL : L -> GenNo) (xR : R -> GenNo)
                (xcut : forall (l:L) (r:R), (xL l) < (xR r))
     : No_ind {{ xL | xR // xcut }}
@@ -326,6 +330,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
 End Surreals.
 
 Section OptionSort.
+Universe i.
 Context {S : OptionSort@{i}}.
 Let No := GenNo S.
 
@@ -353,7 +358,7 @@ Definition minusone `{InSort S Empty Empty} `{InSort S Empty Unit} : No
 (** *** The simplified induction principle for hprops *)
 
 Definition No_ind_hprop (P : No -> Type) `{forall x, IsHProp (P x)}
-           (dcut : forall (L R : Type) (s : InSort@{i} S L R)
+           (dcut : forall (L R : Type) (s : InSort S L R)
                           (xL : L -> No) (xR : R -> No)
                           (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                           (IHL : forall l, P (xL l))
@@ -379,19 +384,19 @@ Section NoRec.
   Context  (A : Type)
            (dle : A -> A -> Type) `{is_mere_relation A dle}
            (dlt : A -> A -> Type) `{is_mere_relation A dlt}
-           (dcut : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+           (dcut : forall (L R : Type@{i}) (s : InSort S L R)
                           (xL : L -> No) (xR : R -> No)
                           (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                           (fxL : L -> A) (fxR : R -> A)
                           (fxcut : forall l r, dlt (fxL l) (fxR r)),
                      A)
            (dpath : forall a b, dle a b -> dle b a -> a = b)
-           (dle_lr : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+           (dle_lr : forall (L R : Type@{i}) (s : InSort S L R)
                             (xL : L -> No) (xR : R -> No)
                             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                             (fxL : L -> A) (fxR : R -> A)
                             (fxcut : forall l r, dlt (fxL l) (fxR r))
-                            (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                            (L' R' : Type@{i}) (s' : InSort S L' R')
                             (yL : L' -> No) (yR : R' -> No)
                             (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                             (fyL : L' -> A) (fyR : R' -> A)
@@ -404,12 +409,12 @@ Section NoRec.
                                     dlt (dcut _ _ _ xL xR xcut fxL fxR fxcut) (fyR r)),
                        dle (dcut _ _ _ xL xR xcut fxL fxR fxcut)
                            (dcut _ _ _ yL yR ycut fyL fyR fycut))
-           (dlt_l : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+           (dlt_l : forall (L R : Type@{i}) (s : InSort S L R)
                            (xL : L -> No) (xR : R -> No)
                            (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                            (fxL : L -> A) (fxR : R -> A)
                            (fxcut : forall l r, dlt (fxL l) (fxR r))
-                           (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                           (L' R' : Type@{i}) (s' : InSort S L' R')
                            (yL : L' -> No) (yR : R' -> No)
                            (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                            (fyL : L' -> A) (fyR : R' -> A)
@@ -418,12 +423,12 @@ Section NoRec.
                            (dp : dle (dcut _ _ _ xL xR xcut fxL fxR fxcut) (fyL l)),
                       dlt (dcut _ _ _ xL xR xcut fxL fxR fxcut)
                           (dcut _ _ _ yL yR ycut fyL fyR fycut))
-           (dlt_r : forall (L R : Type@{i}) (s : InSort@{i} S L R)
+           (dlt_r : forall (L R : Type@{i}) (s : InSort S L R)
                            (xL : L -> No) (xR : R -> No)
                            (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                            (fxL : L -> A) (fxR : R -> A)
                            (fxcut : forall l r, dlt (fxL l) (fxR r))
-                           (L' R' : Type@{i}) (s' : InSort@{i} S L' R')
+                           (L' R' : Type@{i}) (s' : InSort S L' R')
                            (yL : L' -> No) (yR : R' -> No)
                            (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                            (fyL : L' -> A) (fyR : R' -> A)
@@ -466,7 +471,7 @@ Section NoRec.
 
 
   Definition No_rec_cut
-    (L R : Type@{i}) (s : InSort@{i} S L R)
+    (L R : Type@{i}) (s : InSort S L R)
     (xL : L -> No) (xR : R -> No)
     (xcut : forall (l:L) (r:R), (xL l) < (xR r))
     : No_rec {{ xL | xR // xcut }}
@@ -482,7 +487,7 @@ End NoRec.
 
 (** First we prove that *if* a left option of [y] is [<=] itself, then it is [< y]. *)
 Lemma Conway_theorem0_lemma1 `{Funext} (x : No) (xle : x <= x)
-      {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
+      {L' R' : Type@{i}} {s' : InSort S L' R'}
       (yL : L' -> No) (yR : R' -> No)
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (l : L') (p : x = yL l)
@@ -495,7 +500,7 @@ Defined.
 
 (** And dually *)
 Lemma Conway_theorem0_lemma2 `{Funext} (x : No) (xle : x <= x)
-      {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
+      {L' R' : Type@{i}} {s' : InSort S L' R'}
       (yL : L' -> No) (yR : R' -> No)
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (r : R') (p : x = yR r)
@@ -521,7 +526,7 @@ Instance reflexive_le `{Funext} : Reflexive le
 
 (** Theorem 0 Part (ii), left half *)
 Theorem lt_lopt `{Funext}
-        {L R : Type@{i}} {s : InSort@{i} S L R}
+        {L R : Type@{i}} {s : InSort S L R}
         (xL : L -> No) (xR : R -> No)
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (l : L)
@@ -533,7 +538,7 @@ Defined.
 
 (** Theorem 0 Part (ii), right half *)
 Theorem lt_ropt `{Funext}
-        {L R : Type@{i}} {s : InSort@{i} S L R}
+        {L R : Type@{i}} {s : InSort S L R}
         (xL : L -> No) (xR : R -> No)
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (r : R)
@@ -605,6 +610,7 @@ Ltac repeat_No_ind_hprop :=
 
 Section NoCodes.
   Context `{Univalence}.
+  Universe i.
   Context {S : OptionSort@{i}}.
   Let No := GenNo S.
 
@@ -617,7 +623,7 @@ Section NoCodes.
 
   Section Inner.
 
-    Context {L R : Type@{i} } {s : InSort@{i} S L R}
+    Context {L R : Type@{i} } {s : InSort S L R}
             (xL : L -> No) (xR : R -> No)
             (xcut : forall (l : L) (r : R), xL l < xR r)
             (xL_let : L -> A) (xR_let : R -> A)
@@ -717,7 +723,7 @@ Section NoCodes.
 
     (** These computation laws hold definitionally, but it helps Coq out if we prove them explicitly and then rewrite along them later. *)
     Definition inner_cut_le
-               (L' R' : Type@{i}) {s : InSort@{i} S L' R'}
+               (L' R' : Type@{i}) {s : InSort S L' R'}
                (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : fst (inner {{ yL | yR // ycut }}).1 =
@@ -726,7 +732,7 @@ Section NoCodes.
       := 1.
 
     Definition inner_cut_lt
-               (L' R' : Type@{i}) {s : InSort@{i} S L' R'}
+               (L' R' : Type@{i}) {s : InSort S L' R'}
                (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : snd (inner {{ yL | yR // ycut }}).1 =
