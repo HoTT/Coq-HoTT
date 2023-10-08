@@ -39,7 +39,7 @@ Section Addition.
 
   Section Inner.
 
-    Context {L R : Type@{i} } {Sx : InSort@{i} S L R}
+    Context {L R : Type@{i} } {Sx : InSort S L R}
             (xL : L -> No) (xR : R -> No)
             (xcut : forall (l : L) (r : R), xL l < xR r).
 
@@ -129,7 +129,7 @@ Section Addition.
 
     (** We now prove a computation law for [plus_inner].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
     Definition plus_inner_cut
-               {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
+               {L' R' : Type@{i} } {Sy : InSort S L' R'}
                (yL : L' -> No) (yR : R' -> No)
                (ycut : forall (l : L') (r : R'), yL l < yR r)
     : let L'' := L + L' in
@@ -253,10 +253,10 @@ Section Addition.
 
   (** See the remarks above [plus_inner_cut] to explain the type of this lemma. *)
   Definition plus_cut
-             {L R : Type@{i} } {Sx : InSort@{i} S L R}
+             {L R : Type@{i} } {Sx : InSort S L R}
              (xL : L -> No) (xR : R -> No)
              (xcut : forall (l : L) (r : R), xL l < xR r)
-             {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
+             {L' R' : Type@{i} } {Sy : InSort S L' R'}
              (yL : L' -> No) (yR : R' -> No)
              (ycut : forall (l : L') (r : R'), yL l < yR r)
   : let L'' := (L + L')%type in
