@@ -1,7 +1,8 @@
 (coq.theory
  (name HoTT.Tests)
  (theories HoTT)
- (flags -noinit -indices-matter -color on))
+ (flags -noinit -indices-matter -color on)
+ (coqdoc_flags :standard --interpolate --utf8 --no-externals --parse-comments))
 
 (include_subdirs qualified)
 

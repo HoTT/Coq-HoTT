@@ -10,7 +10,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-(** * Construction of the functor [_∘_ : (C → D) × (D → E) → (C → E)] and it's curried variant *)
+(** Construction of the functor [_∘_ : (C → D) × (D → E) → (C → E)] and its curried variant *)
 Section functorial_composition.
   Context `{Funext}.
   Variables C D E : PreCategory.

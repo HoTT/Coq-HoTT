@@ -110,9 +110,9 @@ Section first_isomorphism.
 
 (** The homomorphism [def_first_isomorphism] is informally given by
 
-    <<
+<<
       def_first_isomorphism s (class_of _ x) := f s x.
-    >>
+>>
 *)
 
   Definition def_first_isomorphism (s : Sort σ)

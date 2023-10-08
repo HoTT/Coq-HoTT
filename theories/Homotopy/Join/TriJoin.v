@@ -1,6 +1,8 @@
 Require Import Basics Types WildCat Join.Core.
 
-(** * We show that the iterated join satisfies symmetrical induction and recursion principles and prove that the recursion principle gives an equivalence of 0-groupoids.  We use this in JoinAssoc.v to prove that the join is associative.  Our approach parallels what is done in the two-variable case in Join/Core.v, especially starting with [TriJoinRecData] here and [JoinRecData] there.  That case is much simpler, so should be read first. *)
+(** * Induction and recursion principles for the triple join
+
+  We show that the triple join satisfies symmetrical induction and recursion principles and prove that the recursion principle gives an equivalence of 0-groupoids.  We use this in JoinAssoc.v to prove that the join is associative.  Our approach parallels what is done in the two-variable case in Join/Core.v, especially starting with [TriJoinRecData] here and [JoinRecData] there.  That case is much simpler, so should be read first. *)
 
 Section TriJoinStructure.
   Context {A B C : Type}.
@@ -18,7 +20,7 @@ End TriJoinStructure.
 
 Arguments TriJoin A B C : clear implicits.
 
-(** * The goal of the next few results is to define [ap_trijoin] and [ap_trijoin_transport]. *)
+(** ** [ap_trijoin] and [ap_trijoin_transport] *)
 
 (** Functions send triangles to triangles. *)
 Definition ap_triangle {X Y} (f : X -> Y)
@@ -65,7 +67,7 @@ Proof.
   nrapply ap_trijoin_general_transport.
 Defined.
 
-(** * Now we prove the induction principle for the triple join. *)
+(** ** The induction principle for the triple join *)
 
 (** A lemma that handles the path algebra in the final step. *)
 Local Definition trijoin_ind_helper {A BC : Type} (P : Join A BC -> Type)
@@ -121,7 +123,7 @@ Proof.
       apply trijoin_ind_helper, join123'.
 Defined.
 
-(** * We now state the recursion principle and prove many things about it. *)
+(** ** The recursion principle for the triple join, and many results about it *)
 
 (** We'll bundle up the arguments into a record. *)
 Record TriJoinRecData {A B C P : Type} := {
@@ -204,7 +206,7 @@ Proof.
   nrapply trijoin_rec_beta_join123_helper.
 Qed.
 
-(** * We're next going to define a map in the other direction.  We do it via showing that [TriJoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
+(** We're next going to define a map in the other direction.  We do it via showing that [TriJoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
 Definition trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q) (f : TriJoinRecData A B C P)
   : TriJoinRecData A B C Q.
 Proof.
@@ -230,7 +232,9 @@ Definition trijoin_rec_inv {A B C P : Type} (f : TriJoin A B C -> P)
   : TriJoinRecData A B C P
   := trijoinrecdata_fun f (trijoinrecdata_trijoin A B C).
 
-(** * Under [Funext], [trijoin_rec] and [trijoin_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully.  We begin by describing a notion of paths between elements of [TriJoinRecData A B C P]. *)
+(** Under [Funext], [trijoin_rec] and [trijoin_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully. *)
+
+(** ** The graph structure on [TriJoinRecData A B C P] *)
 
 (** The type of fillers for a triangular prism with five 2d faces [abc], [abc'], [k12], [k13], [k23]. *)
 Definition prism {P : Type}
@@ -293,7 +297,7 @@ Record TriJoinRecPath' {A B C P : Type} {j1' : A -> P} {j2' : B -> P} {j3' : C -
 
 Arguments TriJoinRecPath' {A B C P} {j1' j2' j3'} f g.
 
-(** * We can bundle and unbundle these types of data.  For unbundling, we just handle [TriJoinRecData] for now. *)
+(** We can bundle and unbundle these types of data.  For unbundling, we just handle [TriJoinRecData] for now. *)
 
 Definition bundle_trijoinrecdata {A B C P : Type} {j1' : A -> P} {j2' : B -> P} {j3' : C -> P}
   (f : TriJoinRecData' j1' j2' j3')
@@ -367,7 +371,7 @@ Definition trijoin_rec_beta {A B C P : Type} (f : TriJoinRecData A B C P)
   : TriJoinRecPath (trijoin_rec_inv (trijoin_rec f)) f
   := bundle_trijoinrecpath (trijoin_rec_beta' f).
 
-(** * Next we show that [trijoin_rec_inv] is an injective map between 0-groupoids. *)
+(** ** [trijoin_rec_inv] is an injective map between 0-groupoids *)
 
 (** We begin with a general purpose lemma. *)
 Definition triangle_ind {P : Type} (a : P)
@@ -431,7 +435,9 @@ Proof.
   exact (h123 h a b c).
 Defined.
 
-(** * We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic triangle can be assumed to be trivial on the first vertex, and a generic prism can be assumed to be the identity on the domain. In order to apply the [triangle_ind] and [prism_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
+(** ** Lemmas and tactics about triangles and prisms 
+
+  We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic triangle can be assumed to be trivial on the first vertex, and a generic prism can be assumed to be the identity on the domain. In order to apply the [triangle_ind] and [prism_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
 
 (** This destructs a seven component term [f], tries to generalize each piece evaluated appropriately, and clears all pieces.  If called with [a], [b] and [c] all valid terms, we expect all seven components to be generalized.  But one can also call it with one of [a], [b] and [c] a dummy value (e.g. [_X_]) that causes four of the [generalize] tactics to fail.  In this case, four components will be simply cleared, and three will be generalized and cleared, so this applies when the goal only depends on three of the seven components. *)
 Ltac generalize_some f a b c :=
@@ -495,7 +501,7 @@ Ltac prism_ind_two g h a b c :=
   generalize_some g a b c;
   apply square_ind. (* From Join/Core.v *)
 
-(** * Here we start using the WildCat library to organize things. *)
+(** ** Use the WildCat library to organize things *)
 
 (** We begin by showing that [TriJoinRecData A B C P] is a 0-groupoid, one piece at a time. *)
 Global Instance isgraph_trijoinrecdata (A B C P : Type) : IsGraph (TriJoinRecData A B C P)
@@ -554,9 +560,9 @@ Defined.
 Definition trijoinrecdata_0gpd (A B C P : Type) : ZeroGpd
   := Build_ZeroGpd (TriJoinRecData A B C P) _ _ _.
 
-(** * Next we show that [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]. *)
+(** ** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]
 
-(** It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
+  It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
 
 (** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)
 Global Instance is0functor_trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q)

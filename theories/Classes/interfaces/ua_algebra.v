@@ -85,9 +85,9 @@ Notation Carriers σ := (Sort σ → Type).
 (** The function [Operation] maps a family of carriers [A : Carriers σ]
     and [w : SymbolType σ] to the corresponding function type.
 
-    <<
+<<
       Operation A [:s1; s2; ...; sn; t:] = A s1 → A s2 → ... → A sn → A t
-    >>
+>>
 
     where [[:s1; s2; ...; sn; t:] : SymbolType σ] is a symbol type
     with domain [[s1; s2; ...; sn]] and codomain [t]. *)
@@ -107,9 +107,9 @@ Defined.
 
 (** Uncurry of an [f : Operation A w], such that
 
-    <<
+<<
       ap_operation f (x1,x2,...,xn) = f x1 x2 ... xn
-    >>
+>>
 *)
 
 Fixpoint ap_operation {σ} {A : Carriers σ} {w : SymbolType σ}
@@ -123,9 +123,9 @@ Fixpoint ap_operation {σ} {A : Carriers σ} {w : SymbolType σ}
 
 (** Funext for uncurried [Operation A w]. If
 
-    <<
+<<
       ap_operation f (x1,x2,...,xn) = ap_operation g (x1,x2,...,xn)
-    >>
+>>
 
     for all [(x1,x2,...,xn) : A s1 * A s2 * ... * A sn], then [f = g]. *)
 

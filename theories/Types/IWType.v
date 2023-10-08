@@ -441,7 +441,7 @@ Proof.
   exact q.
 Defined.
 
-(** ** IW-types have decidable equality if liftP holds and the fibers of the indexing map have decidable paths. Notably, if B x is finitely enumerable, then liftP holds. *)
+(** IW-types have decidable equality if liftP holds and the fibers of the indexing map have decidable paths. Notably, if B x is finitely enumerable, then liftP holds. *)
 Section DecidablePaths.
 
   Context `{Funext}

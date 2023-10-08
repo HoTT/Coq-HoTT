@@ -627,7 +627,7 @@ Proof.
   intros; rewrite min_comm; by apply min_l.
 Defined.
 
-(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x).  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
+(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
 Notation nat_iter n f x
   := ((fix F (m : nat)
       := match m with

@@ -11,9 +11,9 @@ Section family_prod.
 
   (** [FamilyProd F ℓ] is a product type defined by
   
-      <<
+<<
         FamilyProd F [i1;i2;...;in] = F i1 * F i2 * ... * F in * Unit
-      >>
+>>
 
       It is convenient to have the [Unit] in the end.
   *)
@@ -23,10 +23,11 @@ Section family_prod.
 
   (** Map function for [FamilyProd F ℓ],
 
-      <<
+<<
         map_family_prod f (x1, x2, ..., xn, tt)
         = (f x1, f x2, ..., f xn, tt)
-      >> *)
+>>
+*)
 
   Fixpoint map_family_prod {F G : I → Type} {ℓ : list I}
       (f : ∀ i, F i → G i)
@@ -60,9 +61,9 @@ Section family_prod.
   (** If [R : ∀ i, relation (F i)] is a family of relations indexed by
       [i:I] and [R i] is reflexive for all [i], then
 
-      <<
+<<
         for_all_2_family_prod F F R s s
-      >>
+>>
 
       holds. *)
   Lemma reflexive_for_all_2_family_prod (F : I → Type)

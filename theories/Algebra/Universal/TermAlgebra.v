@@ -2,9 +2,9 @@
 
     We show that term algebra forms an adjoint functor from the category of hset carriers
 
-    <<
+<<
       {C : Carrier σ | forall s, IsHSet (C s)}
-    >>
+>>
 
     to the category of algebras (without equations) [Algebra σ], where [Carriers σ] is notation for [Sort σ -> Type].  See [ump_term_algebra].
 
@@ -45,9 +45,9 @@ Definition CarriersTermAlgebra_rec {σ : Signature} (C : Carriers σ)
 
 (** A family of relations [R : forall s, Relation (C s)] can be extended to a family of relations on the term algebra carriers,
 
-    <<
+<<
       forall s, Relation (CarriersTermAlgebra C s)
-    >>
+>>
 
     See [ExtendDRelTermAlgebra] and [ExtendRelTermAlgebra] below. *)
 
@@ -318,22 +318,23 @@ End hom_term_algebra.
 (** The next section proves the universal property of the term algebra,
     that [TermAlgebra] is a left adjoint functor
 
-    >>
+<<
       {C : Carriers σ | forall s, IsHSet (C s)} -> Algebra σ,
-    <<
+>>
 
     with right adjoint the forgetful functor. This is stated below as
     an equivalence
 
-    >>
+<<
       Homomorphism (TermAlgebra C) A <~> (forall s, C s -> A s),
-    <<
+>>
 
     given by precomposition with
     
-    >>
+<<
       var_term_algebra C s : C s -> TermAlgebra C s.
-    << *)
+>>
+*)
 
 Section ump_term_algebra.
   Context

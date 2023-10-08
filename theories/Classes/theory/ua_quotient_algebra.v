@@ -45,10 +45,10 @@ Section quotient_algebra.
     If [g] is the quotient algebra operation induced by [f], then we want
     [ComputeOpQuotient f g] to hold, since then
 
-    <<
+<<
       β (class_of _ a1, class_of _ a2, ..., class_of _ an)
       = class_of _ (α (a1, a2, ..., an)),
-    >>
+>>
 
     where [α] is the uncurried [f] operation and [β] is the uncurried
     [g] operation. *)
@@ -94,16 +94,16 @@ Section quotient_algebra.
    the [op_quotient_algebra_well_def] lemma, which is used to show that
    the quotient algebra operation [g] is well defined, i.e. that
 
-   <<
+<<
     Φ s1 x1 y1 ∧ Φ s2 x2 y2 ∧ ... ∧ Φ sn xn yn
-   >>
+>>
 
    implies
 
-   <<
+<<
     g (class_of _ x1) (class_of _ x2) ... (class_of _ xn)
     = g (class_of _ y1) (class_of _ y2) ... (class_of _ yn).
-   >>
+>>
 *)
 
   Fixpoint op_quotient_algebra {w : SymbolType σ} : QuotOp w.
@@ -143,10 +143,10 @@ Section quotient_algebra.
     algebra operations. It says that for
     [(a1, a2, ..., an) : A s1 * A s2 * ... * A sn],
 
-    <<
+<<
       β (class_of _ a1, class_of _ a2, ..., class_of _ an)
       = class_of _ (α (a1, a2, ..., an))
-    >>
+>>
 
     where [α] is the uncurried [u.#A] operation and [β] is the
     uncurried [u.#QuotientAlgebra] operation. *)
@@ -293,9 +293,9 @@ Section ump_quotient_algebra.
 
 (** The computation rule for [hom_quotient_algebra_mapout] is
 
-    <<
+<<
       hom_quotient_algebra_mapout s (class_of (Φ s) x) = f s x.
-    >>
+>>
 *)
 
     Lemma compute_quotient_algebra_mapout
@@ -334,9 +334,9 @@ Section ump_quotient_algebra.
     [Φ] to equal elements, there is a unique homomorphism
     [g : Homomorphism (A/Φ) B] satisfying
 
-    <<
+<<
       f = hom_compose g (hom_quotient Φ).
-    >>
+>>
 *)
 
   Lemma ump_quotient_algebra

@@ -44,7 +44,7 @@
   - [1.9. Formatting](#19-formatting)
     - [1.9.1. Location of commands](#191-location-of-commands)
     - [1.9.2. Indentation](#192-indentation)
-    - [1.9.3. Line lengths](#193-line-lengths)
+    - [1.9.3. Line lengths and comments](#193-line-lengths-and-comments)
     - [1.9.4. Tactic scripts](#194-tactic-scripts)
     - [1.9.5. Placement of Arguments and types](#195-placement-of-arguments-and-types)
   - [1.10. Implicit Arguments](#110-implicit-arguments)
@@ -906,14 +906,32 @@ excessive churn in the diff.  If you wish, you can submit a separate
 pull request or commit for the re-indentation, labeled as "only
 whitespace changes" so that no one bothers reading the diff carefully.
 
-### 1.9.3. Line lengths
+### 1.9.3. Line lengths and comments
 
 Lines of code should be of limited width; try to restrict yourself to
 not much more than 70 characters.  Remember that when Coq code is
 often edited in split-screen so that the screen width is cut in half,
 and that not everyone's screen is as wide as yours.
 
-Text in comments, on the other hand, should not contain hard newlines.
+[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used to produce
+a browsable [view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
+coqdoc treats comments specially, so comments should follow the
+conventions described on the coqdoc page.  The most important ones are
+that Coq expressions within comments are surrounded by square brackets,
+and that headings are indicated with comments of the form
+
+```coq
+(** * This is a top-level section *)
+(** ** This is a subsection *)
+(** *** This is a sub-subsection *)
+```
+
+Section titles should be less than 80 characters, on one line, and not
+end in a period.  Other comments are generally written using the style
+`(** This is a comment. *)` or `(* This is a comment. *)`, with the
+latter generally used for inline comments during a proof.
+
+Text in comments should not contain hard newlines.
 Putting hard newlines in text makes it extremely ugly when viewed in a
 window that is narrower than the width to which you filled it.  If
 editing in Emacs, turn off `auto-fill-mode` and turn on

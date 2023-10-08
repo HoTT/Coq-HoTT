@@ -122,9 +122,9 @@ End is_subalgebra_class.
 
 (** The next section proves the second isomorphism theorem,
 
-    <<
+<<
       (A&&P) / (cong_trace P Φ) ≅ (A/Φ) && (is_subalgebra_class P Φ).
-    >>
+>>
 *)
 
 (* There is an alternative proof using the first isomorphism theorem,

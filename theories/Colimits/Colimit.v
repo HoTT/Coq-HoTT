@@ -38,23 +38,24 @@ Definition cocone_postcompose_inv `{D: Diagram G} {Q X}
 (** Whatever the diagram considered, there exists a colimit of it. The existence is given by the HIT [colimit]. *)
 
 (** ** Definition of the HIT 
-
+<<
   HIT Colimit {G : Graph} (D : Diagram G) : Type :=
   | colim : forall i, D i -> Colimit D
   | colimp : forall i j (f : G i j) (x : D i) : colim j (D _f f x) = colim i x
   .
-
+>>
 *)
 
-(** A colimit is just the coequializer of the source and target maps of the diagram. *)
+(** A colimit is just the coequalizer of the source and target maps of the diagram. *)
 (** The source type in the coequalizer ought to be:
->>>
+<<
 {x : sig D & {y : sig D & {f : G x.1 y.1 & D _f f x.2 = y.2}}}
-<<<
+>>
 However we notice that the path type forms a contractible component, so we can use the more efficient:
->>>
+<<
 {x : sig D & {j : G & G x.1 j}}
-<<< *)
+>>
+*)
 Definition Colimit {G : Graph} (D : Diagram G) : Type :=
   @Coeq
     {x : sig D & {j : G & G x.1 j}}

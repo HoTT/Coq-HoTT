@@ -295,7 +295,8 @@ Module inverseSymmetric (inverse : inverseT).
 End inverseSymmetric.
 
 Module Export symmetric_paths := inverseSymmetric inverse.
->> *)
+>>
+*)
 
 
 (** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)

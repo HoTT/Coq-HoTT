@@ -151,7 +151,8 @@ Module Import LaxCommaCategory.
         repeat (let H := fresh "x" in intro H).
         repeat match goal with H : _ |- _ => revert H end.
         intro.
->> *)
+>>
+*)
 
     Lemma associativity_helper
           {x x0 : PreCategory} {x1 : Functor x0 x}
@@ -269,7 +270,8 @@ Lemma left_identity (s d : object) (m : morphism s d)
         repeat (let H := fresh "x" in intro H).
         repeat match goal with H : _ |- _ => revert H end.
         intro.
->> *)
+>>
+*)
 
     Lemma left_identity_helper
           {x x0 : PreCategory} {x1 : Functor x0 x}
@@ -364,7 +366,8 @@ Lemma left_identity (s d : object) (m : morphism s d)
         repeat (let H := fresh "x" in intro H).
         repeat match goal with H : _ |- _ => revert H end.
         intro.
->> *)
+>>
+*)
 
     Lemma right_identity_helper
           {x x0 : PreCategory} {x1 : Functor x0 x}

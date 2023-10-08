@@ -79,7 +79,8 @@ Definition FiniteOperation {σ : Signature} (A : Carriers σ)
 (** A type of curried operations
 <<
 CurriedOperation A [s1, ..., sn] t := A s1 -> ... -> A sn -> A t.
->> *)
+>>
+*)
 
 Fixpoint CurriedOperation {σ} (A : Carriers σ) {n : nat}
   : (FinSeq n (Sort σ)) -> Sort σ -> Type

@@ -16,11 +16,11 @@ Generalizable Variables X A B f g n.
 
 (** We define the circle as the coequalizer of two copies of the identity map of [Unit].  This is easily equivalent to the naive definition
 
-<<<
+<<
 Private Inductive Circle : Type0 :=
 | base : Circle
 | loop : base = base.
->>>
+>>
 
 but it allows us to apply the flattening lemma directly rather than having to pass across that equivalence.  *)
 
@@ -77,7 +77,9 @@ Defined.
 (** The [Circle] is pointed by [base]. *)
 Global Instance ispointed_Circle : IsPointed Circle := base.
 
-(** ** In this section we prove that the loop space of the [Circle] is the Integers [Int]. This is the encode-decode style proof a la Licata-Shulman. *)
+(** ** The loop space of the [Circle] is the Integers [Int]
+
+  This is the encode-decode style proof a la Licata-Shulman. *)
 
 Section EncodeDecode.
   (** We assume univalence throughout this section. *)

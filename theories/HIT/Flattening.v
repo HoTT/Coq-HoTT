@@ -133,7 +133,8 @@ Proof.
   unfold sWtil_ind.
   (** ... but it's a doozy! *)
 Abort.
->> *)
+>>
+*)
 
 (** Fortunately, it turns out to be enough to have the computation rule for the *non-dependent* eliminator! *)
 
@@ -144,7 +145,8 @@ Definition sWtil_rec (P : Type)
   (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
   : sWtil -> P
   := sWtil_ind (fun _ => P) scct' (fun b y => transport_const _ _ @ sppt' b y).
->> *)
+>>
+*)
 
 (** ...but if we define it diindly, then it's easier to reason about. *)
 Definition sWtil_rec (Q : Type)

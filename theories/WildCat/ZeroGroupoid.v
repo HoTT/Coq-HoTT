@@ -84,7 +84,9 @@ Global Instance hasequivs_0gpd : HasEquivs ZeroGpd
 Definition equiv_fun_0gpd {G H : ZeroGpd} (f : G $<~> H) : G -> H
   := fun_0gpd _ _ (cat_equiv_fun _ _ _ f).
 
-(** * Some tools for manipulating equivalences of 0-groupoids.  Even though the proofs are easy, in certain contexts Coq gets confused about [$==] vs [$->], which makes it hard to prove this inline.  So we record them here. *)
+(** ** Tools for manipulating equivalences of 0-groupoids
+
+  Even though the proofs are easy, in certain contexts Coq gets confused about [$==] vs [$->], which makes it hard to prove this inline.  So we record them here. *)
 
 (** Every equivalence is injective. *)
 Definition isinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
@@ -99,9 +101,9 @@ Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p 
   : equiv_fun_0gpd f^-1$ x $== y
   := fmap (equiv_fun_0gpd f^-1$) p $@ cat_eissect f y.
 
-(** * We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd. *)
+(** ** [f] is an equivalence of 0-groupoids iff [IsSurjInj f]
 
-(** Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)
+  We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd.  Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)
 
 (** Every equivalence is injective and split essentially surjective. *)
 Global Instance issurjinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
