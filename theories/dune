@@ -8,7 +8,8 @@
  (name HoTT)
  (package coq-hott)
  (modules :standard)
- (flags -noinit -indices-matter -color on))
+ (flags -noinit -indices-matter -color on)
+ (coqdoc_flags :standard -interpolate -utf8 --no-externals))
 
 ; TODO: Tests
 ; Prob need to move tests into tests folder
