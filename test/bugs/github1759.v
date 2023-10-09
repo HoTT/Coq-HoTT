@@ -1,12 +1,12 @@
 From HoTT Require Import Basics Spaces.No.Core.
 
-(** HITs need to be defined carefully in Coq. If they are defined in the most naive way, two uses of the induction principle that are definitionally equal on the point constructors will be considered definitionally equal, which may be inconsistent.  There is an idiom that must be used in order to force Coq to regard the supplementary data as being required as well.  See, for example, Colimits/GraphQuotient.v for the idiom.  The HIT used in Spaces.No.Core is complicated, so it can't be written using the usual idiom.
+(** HITs need to be defined carefully in Coq. If they are defined in the most naive way, two uses of the induction principle that are definitionally equal on the point constructors will be considered definitionally equal, which may be inconsistent.  There is an idiom that must be used in order to force Coq to regard the supplementary data as being required as well.  See, for example, Colimits/GraphQuotient.v for the idiom.  The HIT used in Spaces.No.Core is complicated, so it can't be written using the usual idiom, but instead uses [revert] and [intros]
 
 The first section below shows that the most obvious way to use [No_ind] does depend on at least one of [dcut], [dle_lr], [dlt_l] and [dlt_r].
 
-The second section raises an issue, though.  [No_ind] does not depend on [ishprop_le].
+The second section shows that [No_ind] does depend on [ishprop_le].
 
-And the third section shows that it doesn't depend on [dlt_r]. *)
+And the third section shows that it does depend on [dlt_r]. *)
 
 Section Foo.
   Universe i.
@@ -261,8 +261,7 @@ Section Foo2.
   Definition bar2 : forall x, A x
     := @No_ind S A dle dlt ishprop_le' ishprop_lt dcut dpath dle_lr dlt_l dlt_r.
 
-  (** Whoops, this does not fail!  They should be equal, but not definitionally equal... *)
-  Definition foobar2
+  Fail Definition foobar2
     : forall x, foo2 x = bar2 x
     := fun _ => 1.
 
@@ -376,8 +375,7 @@ Section Foo3.
   Definition bar3 : forall x, A x
     := @No_ind S A dle dlt ishprop_le ishprop_lt dcut dpath dle_lr dlt_l dlt_r'.
 
-  (** Whoops, this does not fail!  They should be equal, but not definitionally equal... *)
-  Definition foobar3
+  Fail Definition foobar3
     : forall x, foo3 x = bar3 x
     := fun _ => 1.
 

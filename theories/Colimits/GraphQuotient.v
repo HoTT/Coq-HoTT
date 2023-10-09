@@ -24,6 +24,7 @@ Module Export GraphQuotient.
     match x with
     | gq a => fun _ => gq' a
     end gqglue'.
+  (** Above we did a match with output type a function, and then outside of the match we provided the argument [gqglue'].  If we instead end with [| gq a => gq' a end.], the definition will not depend on [gqglue'], which would be incorrect.  This is the idiom referred to in ../../test/bugs/github1758.v and github1759.v. *)
 
   Axiom GraphQuotient_ind_beta_gqglue@{i j u k}
   : forall  {A : Type@{i}} {R : A -> A -> Type@{j}}

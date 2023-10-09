@@ -262,6 +262,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
           (x : Game) (xno : is_surreal x)
     : A (Build_No x xno).
     Proof.
+      (* We use [revert] and [intros] as a way to ensure that the definition depends on all of the variables in the context. *)
       revert ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
       destruct xno as [L R ? xL xR Lno Rno xcut].
       intros ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
@@ -276,7 +277,10 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
           {struct xno}
     : A (Build_No x xno).
     Proof.
+      (* We use [revert] and [intros] as a way to ensure that the definition depends on all of the variables in the context. *)
+      revert ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
       destruct xno.
+      intros ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
       exact (No_ind_internal_step No_ind_internal _ _).
     Defined.
 
