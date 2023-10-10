@@ -131,7 +131,17 @@ Section borrowed_from_nat.
   pose (Q := fun s : SemiRings.Operations =>
     forall P : s -> Type, P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n).
   change (Q (SemiRings.BuildOperations N)).
-  apply (from_nat_stmt nat).
+
+  (* Material added while testing. *)
+  Set Printing Universes.
+  #[global] Typeclasses Transparent Lt.
+  assert (Zero@{U} nat).
+  1: exact _. (* This one works. *)
+  assert (Lt@{U U} nat).
+  Fail 1: exact _. (* Lt fails.  "Could not find an instance ..."  I didn't try the other seven. *)
+  1: apply nat_lt.
+
+  apply (from_nat_stmt nat).  (** Error here, looking for nine typeclass instances. *)
   unfold Q;clear Q.
   simpl.
   exact nat_induction.
