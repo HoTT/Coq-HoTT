@@ -2,6 +2,8 @@ Require Import
  HoTT.Classes.interfaces.abstract_algebra
  HoTT.Classes.interfaces.orders.
 
+#[local] Set Polymorphic Inductive Cumulativity.
+
 Class NaturalsToSemiRing@{i j} (A : Type@{i}) :=
   naturals_to_semiring: forall (B : Type@{j}) `{IsSemiRing B}, A -> B.
 

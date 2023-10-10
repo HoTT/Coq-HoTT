@@ -223,8 +223,8 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le nat := Nat.Core.leq.
-Global Instance nat_lt: Lt nat := Nat.Core.lt.
+Global Instance nat_le@{u}: Le@{Set u} nat := Nat.Core.leq.
+Global Instance nat_lt@{u}: Lt@{Set u} nat := Nat.Core.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
