@@ -384,6 +384,7 @@ On the other hand, in other examples (such as [~~] and open modalities) it is ea
 
 Section EasyModalities.
 
+  Universe i.
   Context (O_reflector : Type@{i} -> Type@{i})
           (to : forall (T : Type@{i}), T -> O_reflector T)
           (O_indO
