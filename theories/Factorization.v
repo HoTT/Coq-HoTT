@@ -11,7 +11,6 @@ Local Open Scope path_scope.
 
 Section Factorization.
   Universes ctxi.
-  (** It's important that these are all declared with a single [Context] command, so that the marker [@{ctxi}] refers to the same universe level in all of them. *)
   Context {class1 class2 : forall (X Y : Type@{ctxi}), (X -> Y) -> Type@{ctxi}}
           `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class1 _ _ g)}
           `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class2 _ _ g)}
