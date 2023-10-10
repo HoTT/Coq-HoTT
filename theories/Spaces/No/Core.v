@@ -921,7 +921,9 @@ Section NoCodes.
   Proof.
     revert x y.
     refine (No_ind_hprop _ _); intros L R ? xL xR xcut xHL xHR.
-    refine (@No_ind_hprop _ _ _ _).
+    nrefine (No_ind_hprop _ _).
+    (* Coq can find this proof by typeclass search, but helping it out makes this faster. *)
+    { intro x; nrapply istrunc_prod; nrapply istrunc_arrow; exact _. }
     intros L' R' ? yL yR ycut yHL yHR. split.
     - intros x_le_y.
       rewrite le'_cut in x_le_y.
@@ -1008,7 +1010,7 @@ Global Instance insort_maxsort {L R : Type}
 (** Furthermore, every other kind of surreal number *embeds* into the maximal ones.  So the other kinds of surreal numbers are really just subsets of the usual set of surreal numbers; but I don't know of a good way to define them except as their own HIITs. *)
 
 Section RaiseSort.
-  Context `{Univalence} `{S : OptionSort}.
+  Context `{ua: Univalence} `{S : OptionSort}.
 
   Definition No_raise : GenNo S -> No.
   Proof.
@@ -1065,7 +1067,7 @@ Section RaiseSort.
       strip_truncations.
       destruct sh as [[l sh]|[r sh]].
       + apply lt_l with l.
-        apply IHL0, (@No_decode_le _).
+        apply IHL0, (@No_decode_le ua). (* Need to pass in [Univalence] to make this fast. *)
         rewrite p; exact sh.
       + apply lt_r with r.
         apply IHR, No_decode_le.
