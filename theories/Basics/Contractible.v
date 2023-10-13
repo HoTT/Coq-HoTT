@@ -17,7 +17,7 @@ Definition path_contr `{Contr A} (x y : A) : x = y
 (** Any space of paths in a contractible space is contractible. *)
 Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000.
 Proof.
-  exists ((contr x)^ @ contr y).
+  exists (path_contr x y).
   intro r; destruct r; apply concat_Vp.
 Defined.
 
@@ -45,19 +45,21 @@ Defined.
 Global Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sig (@paths X x)) | 100
   := contr_basedpaths x.
 
+(** Based path types with the second variable fixed. *)
+
 Definition path_basedpaths' {X : Type} {x y : X} (p : y = x)
   : (x;1) = (y;p) :> {z:X & z=x}.
 Proof.
   destruct p; reflexivity.
 Defined.
 
+Arguments path_basedpaths' {X x y} p : simpl nomatch.
+
 Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
 Proof.
   refine (Build_Contr _ (x;1) _).
   intros [y p]; apply path_basedpaths'.
 Defined.
-
-Arguments path_basedpaths' {X x y} p : simpl nomatch.
 
 (** Some useful computation laws for based path spaces *)
 
