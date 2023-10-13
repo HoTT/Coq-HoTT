@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-(** Contractibility *)
+
+(** * Contractibility *)
 
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
@@ -13,26 +14,21 @@ Generalizable Variables A B f.
 Definition path_contr `{Contr A} (x y : A) : x = y
   := (contr x)^ @ (contr y).
 
-(** Similarly, any two parallel paths in a contractible space are homotopic, which is just the principle UIP. *)
-Definition path2_contr `{Contr A} {x y : A} (p q : x = y) : p = q.
-Proof.
-  assert (K : forall (r : x = y), r = path_contr x y).
-  - intro r; destruct r; symmetry; now apply concat_Vp.
-  - transitivity (path_contr x y);auto with path_hints.
-Defined.
-
-(** It follows that any space of paths in a contractible space is contractible. *)
-
+(** Any space of paths in a contractible space is contractible. *)
 Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000.
 Proof.
-  exists ((contr x)^ @ contr y).
-  exact (path2_contr ((contr x)^ @ contr y)).
+  exists (path_contr x y).
+  intro r; destruct r; apply concat_Vp.
 Defined.
+
+(** It follows that  any two parallel paths in a contractible space are homotopic, which is just the principle UIP. *)
+Definition path2_contr `{Contr A} {x y : A} (p q : x = y) : p = q
+  := path_contr p q.
 
 (** Also, the total space of any based path space is contractible.  We define the [contr] fields as separate definitions, so that we can give them [simpl nomatch] annotations. *)
 
 Definition path_basedpaths {X : Type} {x y : X} (p : x = y)
-: (x;1) = (y;p) :> {z:X & x=z}.
+  : (x;1) = (y;p) :> {z:X & x=z}.
 Proof.
   destruct p; reflexivity.
 Defined.
@@ -41,7 +37,7 @@ Arguments path_basedpaths {X x y} p : simpl nomatch.
 
 Global Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
 Proof.
-  exists (x ; 1).
+  exists (x;1).
   intros [y p]; apply path_basedpaths.
 Defined.
 
@@ -49,11 +45,15 @@ Defined.
 Global Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sig (@paths X x)) | 100
   := contr_basedpaths x.
 
+(** Based path types with the second variable fixed. *)
+
 Definition path_basedpaths' {X : Type} {x y : X} (p : y = x)
-: (x;1) = (y;p) :> {z:X & z=x}.
+  : (x;1) = (y;p) :> {z:X & z=x}.
 Proof.
   destruct p; reflexivity.
 Defined.
+
+Arguments path_basedpaths' {X x y} p : simpl nomatch.
 
 Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
 Proof.
@@ -61,34 +61,32 @@ Proof.
   intros [y p]; apply path_basedpaths'.
 Defined.
 
-Arguments path_basedpaths' {X x y} p : simpl nomatch.
-
 (** Some useful computation laws for based path spaces *)
 
 Definition ap_pr1_path_contr_basedpaths {X : Type}
            {x y z : X} (p : x = y) (q : x = z)
-: ap pr1 (path_contr ((y;p):{y':X & x = y'}) (z;q)) = p^ @ q.
+  : ap pr1 (path_contr ((y;p) : {y':X & x = y'}) (z;q)) = p^ @ q.
 Proof.
-  destruct p,q; reflexivity.
+  destruct p, q; reflexivity.
 Defined.
 
 Definition ap_pr1_path_contr_basedpaths' {X : Type}
            {x y z : X} (p : y = x) (q : z = x)
-: ap pr1 (path_contr ((y;p):{y':X & y' = x}) (z;q)) = p @ q^.
+  : ap pr1 (path_contr ((y;p) : {y':X & y' = x}) (z;q)) = p @ q^.
 Proof.
-  destruct p,q; reflexivity.
+  destruct p, q; reflexivity.
 Defined.
 
 Definition ap_pr1_path_basedpaths {X : Type}
            {x y : X} (p : x = y)
-: ap pr1 (path_basedpaths p) = p.
+  : ap pr1 (path_basedpaths p) = p.
 Proof.
   destruct p; reflexivity.
 Defined.
 
 Definition ap_pr1_path_basedpaths' {X : Type}
            {x y : X} (p : y = x)
-: ap pr1 (path_basedpaths' p) = p^.
+  : ap pr1 (path_basedpaths' p) = p^.
 Proof.
   destruct p; reflexivity.
 Defined.
@@ -112,10 +110,10 @@ Proof.
 Defined.
 
 (** If a type is contractible, then so is its type of contractions. *)
-Global Instance contr_contr `{Funext} (A : Type) `{Contr A}
+Global Instance contr_contr `{Funext} (A : Type) `{contrA : Contr A}
   : Contr (Contr A) | 100.
 Proof.
-  exists _; intros [a2 c2].
+  exists contrA; intros [a2 c2].
   destruct (contr a2).
   apply (ap (Build_Contr _ (center A))).
   apply path_forall; intros x.

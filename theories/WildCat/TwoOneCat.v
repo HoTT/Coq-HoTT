@@ -31,7 +31,7 @@ Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
       Is1Natural (cat_precomp b (Id a)) idmap
                  cat_idr;
 
-  (** *** Coherence *)
+  (** Coherence *)
   cat_pentagon : forall (a b c d e : A)
                         (f : a $-> b) (g : b $-> c) (h : c $-> d) (k : d $-> e),
       (k $@L cat_assoc f g h) $o (cat_assoc f (h $o g) k) $o (cat_assoc g h k $@R f)

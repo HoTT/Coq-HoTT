@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * The pregroupid structure of [Equiv] *)
+(** * The pregroupoid structure of [Equiv] *)
 
 Require Import Basics.Overture Basics.Equivalences Types.Equiv.
 
