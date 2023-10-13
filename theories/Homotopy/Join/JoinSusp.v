@@ -54,8 +54,10 @@ Defined.
 Definition equiv_join_susp (A : Type) : Join Bool A <~> Susp A
   := Build_Equiv _ _ (join_to_susp A) _.
 
-(** It follows that the iterated join of [Bool] gives a sphere. *)
-Definition equiv_join_power_bool_sphere (n : nat): join_power Bool n <~> Sphere (n.-1).
+(** It follows that the join powers of [Bool] are spheres.  These are sometimes a convenient alternative to working with spheres, so we give them a name. *)
+Definition bool_pow (n : nat) := join_power Bool n.
+
+Definition equiv_bool_pow_sphere (n : nat): bool_pow n <~> Sphere (n.-1).
 Proof.
   induction n as [|n IHn].
   - reflexivity.
@@ -68,7 +70,7 @@ Definition equiv_join_sphere (n m : nat)
   : Join (Sphere n.-1) (Sphere m.-1) <~> Sphere (n + m)%nat.-1.
 Proof.
   refine (_ oE equiv_functor_join _ _).
-  2,3: symmetry; exact (equiv_join_power_bool_sphere _).
-  refine (equiv_join_power_bool_sphere _ oE _).
+  2,3: symmetry; exact (equiv_bool_pow_sphere _).
+  refine (equiv_bool_pow_sphere _ oE _).
   apply join_join_power.
 Defined.
