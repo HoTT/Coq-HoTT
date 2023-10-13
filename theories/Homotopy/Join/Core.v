@@ -684,6 +684,7 @@ Section JoinSym.
 
   (** Finally, one can also prove that the join is symmetric using [pushout_sym] and [equiv_prod_symm], but this results in an equivalence whose inverse isn't of the same form. *)
 
+  (** We give a direct proof that [join_sym] is natural. *)
   Definition join_sym_nat {A B A' B'} (f : A -> A') (g : B -> B')
     : join_sym A' B' o functor_join f g == functor_join g f o join_sym A B.
   Proof.
@@ -702,6 +703,8 @@ Section JoinSym.
   Defined.
 
 End JoinSym.
+
+(** * Other miscellaneous results about joins *)
 
 (** Relationship to truncation levels and connectedness. *)
 Section JoinTrunc.
