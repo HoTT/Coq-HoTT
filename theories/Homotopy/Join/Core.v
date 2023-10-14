@@ -352,7 +352,7 @@ Defined.
 
 (** It will be handy to name the inverse natural equivalence. *)
 Definition join_rec_natequiv (A B : Type)
-  := natequiv_inverse _ _ (join_rec_inv_natequiv A B).
+  := natequiv_inverse (join_rec_inv_natequiv A B).
 
 (** [join_rec_natequiv A B P] is an equivalence of 0-groupoids whose underlying function is definitionally [join_rec]. *)
 Local Definition join_rec_natequiv_check (A B P : Type)

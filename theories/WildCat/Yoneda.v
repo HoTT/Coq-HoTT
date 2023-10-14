@@ -170,16 +170,13 @@ Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
 Proof.
   intros f.
-  refine (cate_adjointify (f a (Id a)) (f^-1$ b (Id b)) _ _) ;
-    apply GpdHom_path;
-      pose proof (is1natural_natequiv _ _ f);
-      pose proof (is1natural_natequiv _ _ f^-1$);
-      cbn in *.
-  - refine ((isnat (fun a => (f a)^-1$) (f a (Id a)) (Id b))^ @ _); cbn.
+  refine (cate_adjointify (f a (Id a)) (f^-1$ b (Id b)) _ _);
+    apply GpdHom_path; cbn in *.
+  - refine ((isnat_natequiv (natequiv_inverse f) (f a (Id a)) (Id b))^ @ _); cbn.
     refine (_ @ cate_issect (f a) (Id a)); cbn.
     apply ap.
     srapply cat_idr_strong.
-  - refine ((isnat (cat_equiv_natequiv _ _ f) (f^-1$ b (Id b)) (Id a))^ @ _); cbn.
+  - refine ((isnat_natequiv f (f^-1$ b (Id b)) (Id a))^ @ _); cbn.
     refine (_ @ cate_isretr (f b) (Id b)); cbn.
     apply ap.
     srapply cat_idr_strong.

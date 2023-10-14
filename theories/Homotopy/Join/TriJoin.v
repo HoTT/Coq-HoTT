@@ -651,7 +651,7 @@ Defined.
 
 (** It will be handy to name the inverse natural equivalence. *)
 Definition trijoin_rec_natequiv (A B C : Type)
-  := natequiv_inverse _ _ (trijoin_rec_inv_natequiv A B C).
+  := natequiv_inverse (trijoin_rec_inv_natequiv A B C).
 
 (** [trijoin_rec_natequiv A B C P] is an equivalence of 0-groupoids whose underlying function is definitionally [trijoin_rec]. *)
 Local Definition trijoin_rec_natequiv_check (A B C P : Type)
