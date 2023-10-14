@@ -200,7 +200,7 @@ Proposition nat_equiv_faithful {A B : Type}
 Proof.
   intros faithful_F x y f g eq_Gf_Gg.
   apply (@fmap _ _ _ _ _ (is0functor_precomp _
-       _ _ (cat_equiv_natequiv F G tau x))) in eq_Gf_Gg.
+       _ _ (cat_equiv_natequiv tau x))) in eq_Gf_Gg.
   cbn in eq_Gf_Gg.
   unfold cat_precomp in eq_Gf_Gg.
   rewrite <- is1natural_natequiv in eq_Gf_Gg.

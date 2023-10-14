@@ -589,7 +589,7 @@ Lemma is1natural_equiv_bg_pi1_adjoint_r `{Univalence}
   : Is1Natural (opyon (Pi1 X)) (opyon X o B)
       (equiv_bg_pi1_adjoint X).
 Proof.
-  rapply (is1natural_natequiv _ _ (natequiv_bg_pi1_adjoint X)).
+  rapply (is1natural_natequiv (natequiv_bg_pi1_adjoint X)).
   (** Why so slow? Fixed by making this opaque. *)
   Opaque equiv_bg_pi1_adjoint.
 Defined.

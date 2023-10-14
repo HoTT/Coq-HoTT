@@ -37,7 +37,7 @@ Section AssumeUnivalence.
     1: refine (natequiv_prewhisker (natequiv_pointify_r S) ptype_group).
     (** Post-compose with [pequiv_loops_bg_g] *)
     nrefine (natequiv_compose _ _).
-1: rapply (natequiv_postwhisker _ (natequiv_inverse _ _ natequiv_g_loops_bg)).
+1: rapply (natequiv_postwhisker _ (natequiv_inverse natequiv_g_loops_bg)).
     (** Loop-susp adjoint *)
     nrefine (natequiv_compose _ _).
     1: refine (natequiv_prewhisker
@@ -61,7 +61,7 @@ Section AssumeUnivalence.
         (opyon S o group_type)
         (fun G => equiv_pi1bouquet_rec S G).
   Proof.
-    rapply (is1natural_natequiv _ _ (natequiv_pi1bouquet_rec _)).
+    rapply (is1natural_natequiv (natequiv_pi1bouquet_rec _)).
   Defined.
 
   (** We can define the inclusion map by using the previous equivalence on the identity group homomorphism. *)

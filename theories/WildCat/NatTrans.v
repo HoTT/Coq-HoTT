@@ -26,12 +26,19 @@ Arguments Is1Natural {A B} {isgraph_A}
   F {is0functor_F} G {is0functor_G} alpha : rename.
 Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 
-Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
+Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -> B}
   {ff : Is0Functor F} {fg : Is0Functor G} :=
 {
   trans_nattrans : F $=> G ;
   is1natural_nattrans : Is1Natural F G trans_nattrans ;
 }.
+
+Arguments NatTrans {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F G {is0functor_F} {is0functor_G} : rename.
+Arguments Build_NatTrans {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F G {is0functor_F} {is0functor_G} alpha isnat_alpha: rename.
 
 Global Existing Instance is1natural_nattrans.
 Coercion trans_nattrans : NatTrans >-> Transformation.
@@ -159,7 +166,7 @@ Defined.
 (** Natural equivalences *)
 
 Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
-  (F G : A -> B) `{!Is0Functor F, !Is0Functor G} :=
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G} :=
 {
   cat_equiv_natequiv : forall a, F a $<~> G a ;
   is1natural_natequiv : Is1Natural F G (fun a => cat_equiv_natequiv a) ;
@@ -180,17 +187,23 @@ Global Existing Instance is1natural_natequiv.
 Coercion cat_equiv_natequiv : NatEquiv >-> Funclass.
 
 Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
-  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
   : NatEquiv F G -> NatTrans F G.
 Proof.
   intros alpha.
   nrapply Build_NatTrans.
-  rapply (is1natural_natequiv _ _ alpha).
+  rapply (is1natural_natequiv alpha).
 Defined.
 
 (** Throws a warning, but can probably be ignored. *)
 Global Set Warnings "-ambiguous-paths".
 Coercion nattrans_natequiv : NatEquiv >-> NatTrans.
+
+(** The above coercion doesn't trigger when it should, so we add the following. *)
+Definition isnat_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G} (alpha : NatEquiv F G)
+  {a a' : A} (f : a $-> a')
+  := isnat (nattrans_natequiv alpha) f.
 
 Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
   {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
@@ -228,7 +241,7 @@ Proof.
 Defined.
 
 Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
-  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
   : NatEquiv F G -> NatEquiv G F.
 Proof.
   intros [alpha I].

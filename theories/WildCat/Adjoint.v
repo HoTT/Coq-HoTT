@@ -146,9 +146,9 @@ Section AdjunctionData.
     intros y y' f.
     apply GpdHom_path.
     refine (_^ @ _ @ _).
-    1: exact (is1natural_natequiv _ _ (natequiv_inverse _ _
+    1: exact (is1natural_natequiv (natequiv_inverse
         (natequiv_adjunction_l _)) (G y') _ (fmap G f) _).
-    2: exact (is1natural_natequiv _ _ (natequiv_inverse _ _
+    2: exact (is1natural_natequiv (natequiv_inverse
         (natequiv_adjunction_r _)) _ _ _ (Id _)).
     simpl.
     apply equiv_ap_inv'.
@@ -166,8 +166,8 @@ Section AdjunctionData.
   Lemma triangle_helper2 x y g
     : (equiv_adjunction adj x y)^-1 g = adjunction_unit y $o fmap F g.
   Proof.
-    epose (n1 := is1natural_natequiv _ _
-      (natequiv_inverse _ _ (natequiv_adjunction_l _)) _ _ _ _).
+    epose (n1 := is1natural_natequiv
+      (natequiv_inverse (natequiv_adjunction_l _)) _ _ _ _).
     clearbody n1; cbv in n1.
     refine (_ @ n1).
     by rewrite cat_idl_strong.
@@ -221,7 +221,7 @@ Proof.
   snrapply Build_Adjunction.
   1: exact (fun x => e x).
   1: exact is1nat_e.
-  intros x; apply (is1natural_natequiv _ _ (e x)).
+  intros x; apply (is1natural_natequiv (e x)).
 Defined.
 
 (** A natural equivalence between functors [C^op -> Type] which is also natural in the left. *)
@@ -235,7 +235,7 @@ Definition Build_Adjunction_natequiv_nat_right
 Proof.
   snrapply Build_Adjunction.
   1: exact (fun x y => e y x).
-  1: intros y; apply (is1natural_natequiv _ _ (e y)).
+  1: intros y; apply (is1natural_natequiv (e y)).
   exact is1nat_e.
 Defined.
 
@@ -288,7 +288,7 @@ Section UnitCounitAdjunction.
       (is0functor_G := is0functor_yon (G y))
       (fun x : C^op => γ x y).
   Proof.
-    nrapply (is1natural_natequiv (yon y o F) (yon (G y)) (natequiv_inverse _ _
+    nrapply (is1natural_natequiv (natequiv_inverse
       (Build_NatEquiv (yon (G y)) (yon y o F) (fun x => (γ x y)^-1$) _))).
     nrapply is1natural_yoneda.
     nrapply is1functor_compose.
@@ -336,9 +336,9 @@ Proof.
       exact (nattrans_prewhisker (adjunction_unit adj) K).
     + intros K K' θ j.
       apply GpdHom_path.
-      refine (_ @ is1natural_natequiv _ _ (natequiv_inverse _ _
+      refine (_ @ is1natural_natequiv (natequiv_inverse
         (natequiv_adjunction_r adj _)) _ _ _ _).
-      refine ((is1natural_natequiv _ _ (natequiv_inverse _ _
+      refine ((is1natural_natequiv (natequiv_inverse
         (natequiv_adjunction_l adj _)) _ _ _ _)^ @ _).
       cbn; rapply ap.
       refine(cat_idl_strong _ @ _^).
@@ -348,9 +348,9 @@ Proof.
       exact (nattrans_prewhisker (adjunction_counit adj) K).
     + intros K K' θ j.
       apply GpdHom_path.
-      refine (_ @ is1natural_natequiv _ _
+      refine (_ @ is1natural_natequiv
         (natequiv_adjunction_r adj _) _ _ _ _).
-      refine ((is1natural_natequiv _ _
+      refine ((is1natural_natequiv
         (natequiv_adjunction_l adj _) _ _ _ _)^ @ _).
       cbn; rapply ap.
       refine(cat_idl_strong _ @ _^).
