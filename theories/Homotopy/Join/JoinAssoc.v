@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
+Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core HoTT.Tactics.
 
 (** * The associativity of [Join]
 
@@ -161,4 +161,106 @@ Proof.
   1: exact (equiv_join_empty' _).
   simpl. refine (_ oE (join_assoc _ _ _)^-1%equiv).
   exact (equiv_functor_join equiv_idmap IHn).
+Defined.
+
+(** ** Naturality of [trijoin_twist] *)
+
+(** Our goal is to prove that [trijoin_twist A' B' C' o functor_join f (functor_join g h)] is homotopic to [functor_join g (functor_join f h) o trijoin_twist A B C].  We will study the LHS and RHS separately, expressed using [functor_trijoin], and meet in the middle. *)
+
+Definition trijoin_twist_nat_rhs {A B C P} (f : TriJoinRecData B A C P)  (* P is TriJoin B' A' C' above *)
+  : trijoin_rec (trijoinrecdata_twist _ _ _ _ f)
+    == trijoin_rec f o trijoin_twist A B C.
+Proof.
+  (* We first replace [trijoin_twist] with [equiv_trijoin_twist']. *)
+  transitivity (trijoin_rec f o equiv_trijoin_twist' A B C).
+  2: exact (fun x => ap (trijoin_rec f) (trijoin_twist_homotopic A B C x)^).
+  (* The RHS is now the twist natural transformation applied to [Id], followed by postcomposition; naturality states that that is the same as the natural trans applied to [trijoin_rec f]. *)
+  refine (_ $@ isnat_natequiv (trijoinrecdata_fun_twist B A C) (trijoin_rec f) _).
+  (* The RHS simplifies to [trijoinrecdata_fun_twist] applied to [trijoin_rec f].  The former is a composite of [trijoin_rec], [trijoinrecdata_twist] and [trijoin_rec_inv], so we can write the RHS as: *)
+  change (?L $== ?R) with (L $== trijoin_rec (trijoinrecdata_twist B A C P (trijoin_rec_inv (trijoin_rec f)))).
+  refine (fmap trijoin_rec _).
+  refine (fmap (trijoinrecdata_twist B A C P) _).
+  symmetry; apply trijoin_rec_beta.
+Defined.
+
+(** We can precompose [k : TriJoinRecData] with a triple of maps. *)
+Definition trijoinrecdata_tricomp {A B C A' B' C' P} (k : TriJoinRecData A B C P)
+  (f : A' -> A) (g : B' -> B) (h : C' -> C)
+  : TriJoinRecData A' B' C' P
+  := {| j1 := j1 k o f; j2 := j2 k o g; j3 := j3 k o h;
+       j12 := fun a b => j12 k (f a) (g b);
+       j13 := fun a c => j13 k (f a) (h c);
+       j23 := fun b c => j23 k (g b) (h c);
+       j123 := fun a b c => j123 k (f a) (g b) (h c); |}.
+
+(** Precomposition with a triple respects paths. *)
+Definition trijoinrecdata_tricomp_0fun {A B C A' B' C' P}
+  {k l : TriJoinRecData A B C P} (p : k $== l)
+  (f : A' -> A) (g : B' -> B) (h : C' -> C)
+  : trijoinrecdata_tricomp k f g h $== trijoinrecdata_tricomp l f g h.
+Proof.
+  (* This line is not needed, but clarifies the proof. *)
+  unfold trijoinrecdata_tricomp; destruct p.
+  snrapply Build_TriJoinRecPath; intros; cbn; apply_hyp.
+  (* E.g., the first goal is [j1 k (f a) = j1 l (f a)], and this is solved by [h1 p (f a)]. We just precompose all fields of [p] with [f], [g] and [h]. *)
+Defined.
+
+(** We generalize the LHS to the LHS of the following result, which is a partial functoriality of [trijoin_rec] in [A], [B] and [C]. *)
+Definition trijoin_twist_nat_lhs {A B C A' B' C' P} (f : A -> A') (g : B -> B') (h : C -> C')
+  (k : TriJoinRecData A' B' C' P)
+  : trijoin_rec k o functor_trijoin f g h
+    == trijoin_rec (trijoinrecdata_tricomp k f g h).
+Proof.
+  (* On the LHS, we use naturality of the [trijoin_rec] inside [functor_trijoin]: *)
+  refine ((trijoin_rec_nat _ _ _ _ _)^$ $@ _).
+  refine (fmap trijoin_rec _).
+  (* Just to clarify to the reader what is going on: *)
+  change (?L $-> ?R) with (trijoinrecdata_tricomp (trijoin_rec_inv (trijoin_rec k)) f g h $-> R).
+  exact (trijoinrecdata_tricomp_0fun (trijoin_rec_beta k) f g h).
+Defined.
+
+(** Naturality of [trijoin_twist].  This version uses [functor_trijoin] and simply combines the above. *)
+Definition trijoin_twist_nat' {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : trijoin_twist A' B' C' o functor_trijoin f g h
+    == functor_trijoin g f h o trijoin_twist A B C.
+Proof.
+  intro x.
+  rhs_V nrapply trijoin_twist_nat_rhs.
+  nrapply trijoin_twist_nat_lhs.
+Defined.
+
+(** And now a version using [functor_join]. *)
+Definition trijoin_twist_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : trijoin_twist A' B' C' o functor_join f (functor_join g h)
+    == functor_join g (functor_join f h) o trijoin_twist A B C.
+Proof.
+  intro x.
+  lhs nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).
+  rhs nrapply functor_trijoin_as_functor_join.
+  apply trijoin_twist_nat'.
+Defined.
+
+(** ** Naturality of [join_assoc] *)
+
+Definition join_assoc_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : join_assoc A' B' C' o functor_join f (functor_join g h)
+    == functor_join (functor_join f g) h o join_assoc A B C.
+Proof.
+  (* Since [join_assoc] is a composite of [trijoin_twist] and [join_sym], we just use their naturality. We'll work from right to left, as it is easier to work near the head of a term. *)
+  intro x.
+  unfold join_assoc; simpl.
+  (* First we pass the [functor_joins]s through the outer [join_sym]. *)
+  rhs_V nrapply join_sym_nat.
+  (* Strip off the outer [join_sym]. *)
+  apply (ap _).
+  (* Next we pass the [functor_join]s through [trijoin_twist]. *)
+  rhs_V nrapply trijoin_twist_nat.
+  (* Strip off the [trijoin_twist]. *)
+  apply (ap _).
+  (* Finally, we pass the [functor_join]s through the inner [join_sym]. *)
+  lhs_V nrapply functor_join_compose.
+  rhs_V nrapply functor_join_compose.
+  apply functor2_join.
+  - reflexivity.
+  - apply join_sym_nat.
 Defined.
