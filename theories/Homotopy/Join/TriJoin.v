@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Join.Core.
+Require Import Basics Types.Paths WildCat Join.Core.
 
 (** * Induction and recursion principles for the triple join
 
@@ -672,3 +672,73 @@ Definition trijoin_rec_nat (A B C : Type) {P Q : Type} (g : P -> Q)
 Proof.
   exact (isnat (trijoin_rec_natequiv A B C) g f).
 Defined.
+
+(** * Functoriality of the triple join *)
+
+(** We start with a symmetrical definition of [functor_trijoin].  This definition makes some proofs in [JoinAssoc] more manageable. *)
+Definition functor_trijoin {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : TriJoin A B C -> TriJoin A' B' C'.
+Proof.
+  nrapply trijoin_rec; snrapply Build_TriJoinRecData.
+  - exact (join1 o f).
+  - exact (join2 o g).
+  - exact (join3 o h).
+  - intros a b; apply join12.
+  - intros a c; apply join13.
+  - intros b c; apply join23.
+  - intros a b c; cbn beta; apply join123.
+Defined.
+
+(** However, we want to know that [functor_trijoin f g h] is homotopic to [functor_join f (functor_join g h)].  This is worked out using the next three results. *)
+
+(** A lemma that handles the path algebra in the next result. [BC] here is [Join B C] there, [bc] here is [jglue b c] there, [bc'] here is [jg g b c] there, and [beta_jg] here is [Join_rec_beta_jglue _ _ _ b c] there. *)
+Local Lemma ap_triangle_functor_join {A BC A' P} (f : A -> A') (g : BC -> P)
+  (a : A) {b c : BC} (bc : b = c) (bc' : g b = g c) (beta_jg : ap g bc = bc')
+  : ap_triangle (functor_join f g) (triangle_v' a bc) @ functor_join_beta_jglue f g a c
+    = (functor_join_beta_jglue f g a b
+        @@ ((ap_compose joinr (functor_join f g) bc)^
+             @ (ap_compose g joinr bc @ ap (ap joinr) beta_jg)))
+       @ triangle_v' (f a) bc'.
+Proof.
+  induction bc, beta_jg; simpl.
+  transitivity (concat_p1 _ @ functor_join_beta_jglue f g a b).
+  - refine (_ @@ 1).
+    unfold ap_triangle.
+    apply moveR_Vp; symmetry.
+    exact (ap_pp_concat_p1 (functor_join f g) (jglue a b)).
+  - apply moveR_Mp; symmetry.
+    exact (concat_p_pp _ _ _ @ whiskerR_p1 _).
+Defined.
+
+(** We'll generalize the situation a bit to keep things less verbose.  [join_rec g] here will be [functor_join g h] in the next result.  Maybe this extra generality will also be useful sometime? *)
+Definition functor_join_join_rec {A B C A' P} (f : A -> A') (g : JoinRecData B C P)
+  : functor_join f (join_rec g)
+    == trijoin_rec {| j1 := joinl o f; j2 := joinr o jl g; j3 := joinr o jr g;
+                      j12 := fun a b => jglue (f a) (jl g b);
+                      j13 := fun a c => jglue (f a) (jr g c);
+                      j23 := fun b c => ap joinr (jg g b c);
+                      j123 := fun a b c => triangle_v' (f a) (jg g b c); |}.
+Proof.
+  (* Recall that [trijoin_rec] is defined to be the inverse of [trijoin_rec_inv_natequiv ...]. *)
+  refine (moveL_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _ _ _).
+  (* The next two lines aren't needed, but clarify the goal. *)
+  unfold trijoin_rec_inv_natequiv, equiv_fun_0gpd; simpl.
+  unfold trijoinrecdata_fun, trijoinrecdata_trijoin; simpl.
+  bundle_trijoinrecpath; intros; cbn.
+  - exact (functor_join_beta_jglue f _ a (joinl b)).
+  - exact (functor_join_beta_jglue f _ a (joinr c)).
+  - unfold join23.
+    refine ((ap_compose joinr _ _)^ @ _).
+    simpl.
+    refine (ap_compose _ joinr (jglue b c) @ _).
+    refine (ap (ap joinr) _).
+    apply join_rec_beta_jg.
+  - unfold prism'.
+    change (join123 a b c) with (triangle_v' a (jglue b c)).
+    exact (ap_triangle_functor_join f (join_rec g) a (jglue b c) (jg g b c) (Join_rec_beta_jglue _ _ _ b c)).
+Defined.
+
+Definition functor_trijoin_as_functor_join {A B C A' B' C'}
+  (f : A -> A') (g : B -> B') (h : C -> C')
+  : functor_join f (functor_join g h) == functor_trijoin f g h
+  := functor_join_join_rec f (functor_join_recdata g h).

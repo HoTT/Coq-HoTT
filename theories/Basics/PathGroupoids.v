@@ -1021,6 +1021,18 @@ Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
 
 (** Some higher coherences *)
 
+Lemma ap_pp_concat_p1 {A B} (f : A -> B) {a b : A} (p : a = b)
+  : ap_pp f p 1 @ concat_p1 (ap f p) = ap (ap f) (concat_p1 p).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Lemma ap_pp_concat_1p {A B} (f : A -> B) {a b : A} (p : a = b)
+  : ap_pp f 1 p @ concat_1p (ap f p) = ap (ap f) (concat_1p p).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 Lemma ap_pp_concat_pV {A B} (f : A -> B) {x y : A} (p : x = y)
 : ap_pp f p p^ @ ((1 @@ ap_V f p) @ concat_pV (ap f p))
   = ap (ap f) (concat_pV p).

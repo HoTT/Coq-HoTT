@@ -101,6 +101,10 @@ Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p 
   : equiv_fun_0gpd f^-1$ x $== y
   := fmap (equiv_fun_0gpd f^-1$) p $@ cat_eissect f y.
 
+Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : equiv_fun_0gpd f y $== x)
+  : y $== equiv_fun_0gpd f^-1$ x
+  := (cat_eissect f y)^$ $@ fmap (equiv_fun_0gpd f^-1$) p.
+
 (** ** [f] is an equivalence of 0-groupoids iff [IsSurjInj f]
 
   We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd.  Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)

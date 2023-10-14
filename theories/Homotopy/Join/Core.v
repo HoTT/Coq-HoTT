@@ -482,20 +482,19 @@ Defined.
 (** * Functoriality of Join. *)
 Section FunctorJoin.
 
+  (** In some cases, we'll need to refer to the recursion data that defines [functor_join], so we make it a separate definition. *)
+  Definition functor_join_recdata {A B C D} (f : A -> C) (g : B -> D)
+    : JoinRecData A B (Join C D)
+    := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
+
   Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
-    : Join A B -> Join C D.
-  Proof.
-    snrapply Join_rec.
-    1: exact (joinl o f).
-    1: exact (joinr o g).
-    intros a b.
-    apply jglue.
-  Defined.
+    : Join A B -> Join C D
+    := join_rec (functor_join_recdata f g).
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
-    := Join_rec_beta_jglue _ _ _ a b.
+    := join_rec_beta_jg _ a b.
 
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
