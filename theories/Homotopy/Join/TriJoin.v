@@ -67,6 +67,25 @@ Proof.
   nrapply ap_trijoin_general_transport.
 Defined.
 
+Definition ap_trijoin_general_V {J W P : Type} (f : J -> P)
+  (a : J) (jr : W -> J) (jg : forall w, a = jr w)
+  {b c : W} (p : b = c)
+  : ap_trijoin_general f a jr jg p^
+     = (1 @@ (ap (ap f) (ap_V jr p) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin_general f a jr jg p)^.
+Proof.
+  induction p.
+  unfold ap_trijoin_general; cbn.
+  by induction (jg b).
+Defined.
+
+Definition ap_trijoin_V {A B C P : Type} (f : TriJoin A B C -> P)
+  (a : A) (b : B) (c : C)
+  : ap_triangle f (triangle_v' a (jglue b c)^)
+     = (1 @@ (ap (ap f) (ap_V joinr _) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin f a b c)^.
+Proof.
+  nrapply ap_trijoin_general_V.
+Defined.
+
 (** ** The induction principle for the triple join *)
 
 (** A lemma that handles the path algebra in the final step. *)
@@ -198,11 +217,11 @@ Proof.
   (* Change [ap (transport __) _] on LHS. *)
   rewrite (concat_p_pp _ (transport_paths_Fr (jglue b c) (j12 f a b)) _).
   rewrite (concat_Ap (transport_paths_Fr (jglue b c))).
-  (* [trijoin_rec_beta_join23] expands to something of the form [p^ @ r], so that's what is in the lemma.  One can unfold it to see this, but the [Qed] is a bit faster without this.
-  unfold trijoin_rec_beta_join23. *)
+  (* Everything that remains is pure path algebra. *)
+  (* [trijoin_rec_beta_join23] expands to something of the form [p^ @ r], so that's what is in the lemma.  One can unfold it to see this, but the [Qed] is a bit faster without this: *)
+  (* unfold trijoin_rec_beta_join23. *)
   (* Note that one of the [ap]s on the LHS computes to [u @@ 1], so that's what is in the lemma: *)
   (* change (ap (fun q => q @ ?x) ?u) with (u @@ @idpath _ x). *)
-  (* Everything that remains is pure path algebra. *)
   nrapply trijoin_rec_beta_join123_helper.
 Qed.
 
@@ -673,6 +692,19 @@ Proof.
   exact (isnat (trijoin_rec_natequiv A B C) g f).
 Defined.
 
+(** It is also useful to record this. *)
+Definition issect_trijoin_rec_inv {A B C P : Type} (f : TriJoin A B C -> P)
+  : trijoin_rec (trijoin_rec_inv f) $== f
+  := cate_issect (trijoin_rec_inv_natequiv A B C P) f.
+
+(** This comes up a lot as well, and if you inline the proof, you get an ugly goal. *)
+Definition moveR_trijoin_rec {A B C P : Type} {f : TriJoinRecData A B C P} {g : TriJoin A B C -> P}
+  (p : f $== trijoin_rec_inv g)
+  : trijoin_rec f == g.
+Proof.
+  exact (moveR_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C P) _ _ p).
+Defined.
+
 (** * Functoriality of the triple join *)
 
 (** ** Precomposition of [TriJoinRecData] *)
@@ -749,7 +781,7 @@ Defined.
 Definition functor_trijoin_idmap {A B C}
   : functor_trijoin idmap idmap idmap == (idmap : TriJoin A B C -> TriJoin A B C).
 Proof.
-  refine (moveR_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _ _ _).
+  apply moveR_trijoin_rec.
   change (trijoinrecdata_trijoin A B C $== trijoinrecdata_fun idmap (trijoinrecdata_trijoin A B C)).
   symmetry.
   exact (fmap_id (trijoinrecdata_0gpd A B C) _ (trijoinrecdata_trijoin A B C)).

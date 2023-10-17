@@ -558,6 +558,18 @@ Section FunctorJoin.
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
     : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
+  Global Instance isbifunctor_join : IsBifunctor Join.
+  Proof.
+    snrapply Build_IsBifunctor.
+    - intro A; snrapply Build_Is0Functor; intros B D g.
+      exact (functor_join idmap g).
+    - intro B; snrapply Build_Is0Functor; intros A C f.
+      exact (functor_join f idmap).
+    - intros A C f B D g x.
+      lhs_V nrapply functor_join_compose.
+      nrapply functor_join_compose.
+  Defined.
+
 End FunctorJoin.
 
 (** * Symmetry of Join
@@ -666,6 +678,9 @@ Section JoinSym.
     := equiv_homotopic_inverse (equiv_join_sym' A B)
                               (join_sym_homotopic A B)
                               (join_sym_homotopic B A).
+
+  Global Instance isequiv_join_sym A B : IsEquiv (join_sym A B)
+    := equiv_isequiv (equiv_join_sym A B).
 
   (** It's also straightforward to directly prove that [join_sym] is an equivalence.  The above approach is meant to illustrate the Yoneda lemma.  In the case of [equiv_trijoin_twist], the Yoneda approach seems to be more straightforward. *)
   Definition join_sym_inv A B : join_sym A B o join_sym B A == idmap.
@@ -795,19 +810,45 @@ End JoinTrunc.
 (** Join with Empty *)
 Section JoinEmpty.
 
-  Definition equiv_join_empty A : Join A Empty <~> A.
+  Definition equiv_join_empty_right A : Join A Empty <~> A.
   Proof.
     snrapply equiv_adjointify.
-    - srapply (Join_rec idmap); contradiction.
+    - apply join_rec; snrapply (Build_JoinRecData idmap); contradiction.
     - exact joinl.
     - reflexivity.
     - snrapply Join_ind; [reflexivity| |]; contradiction.
   Defined.
 
-  Definition equiv_join_empty' A : Join Empty A <~> A
-    := equiv_join_empty _ oE equiv_join_sym _ _.
+  Definition equiv_join_empty_left A : Join Empty A <~> A
+    := equiv_join_empty_right _ oE equiv_join_sym _ _.
+
+  Global Instance join_right_unitor : RightUnitor Type Join Empty.
+  Proof.
+    snrapply Build_NatEquiv.
+    - apply equiv_join_empty_right.
+    - intros A B f.
+      cbn -[equiv_join_empty_right].
+      snrapply Join_ind_FlFr.
+      + intro a.
+        reflexivity.
+      + intros [].
+      + intros a [].
+  Defined.
+
+  Global Instance join_left_unitor : LeftUnitor Type Join Empty.
+  Proof.
+    snrapply Build_NatEquiv.
+    - apply equiv_join_empty_left.
+    - intros A B f x.
+      cbn -[equiv_join_empty_right].
+      rhs_V rapply (isnat_natequiv join_right_unitor).
+      cbn -[equiv_join_empty_right].
+      apply ap, join_sym_nat.
+  Defined.
 
 End JoinEmpty.
+
+Arguments equiv_join_empty_right : simpl never.
 
 (** Iterated Join powers of a type. *)
 Section JoinPower.
@@ -823,7 +864,7 @@ Section JoinPower.
   Definition equiv_join_powers (A : Type) (n : nat) : join_power A n.+1 <~> iterated_join A n.
   Proof.
     induction n as [|n IHn]; simpl.
-    - exact (equiv_join_empty A).
+    - exact (equiv_join_empty_right A).
     - exact (equiv_functor_join equiv_idmap IHn).
   Defined.
 
