@@ -11,6 +11,7 @@ Require Export WildCat.Yoneda.
 Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
 Require Export WildCat.Bifunctor.
+Require Export WildCat.Monoidal.
 
 (* See also contrib/SetoidRewrite.v for tools that can be used for rewriting in wild categories. *)
 

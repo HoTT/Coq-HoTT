@@ -158,7 +158,7 @@ Corollary join_join_power A n m
   : Join (join_power A n) (join_power A m) <~> join_power A (n + m)%nat.
 Proof.
   induction n as [|n IHn].
-  1: exact (equiv_join_empty' _).
+  1: exact (equiv_join_empty_left _).
   simpl. refine (_ oE (join_assoc _ _ _)^-1%equiv).
   exact (equiv_functor_join equiv_idmap IHn).
 Defined.
