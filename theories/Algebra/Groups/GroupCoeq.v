@@ -1,4 +1,6 @@
+Require Import Basics Types.
 Require Import WildCat.
+Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Colimits.Coeq.
 Require Import Algebra.Groups.FreeProduct.

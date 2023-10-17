@@ -1,3 +1,4 @@
+Require Import Basics Types.
 Require Import Pointed.
 Require Import WildCat HFiber.
 Require Import Truncations.

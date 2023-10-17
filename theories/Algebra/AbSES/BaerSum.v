@@ -1,8 +1,10 @@
+Require Import Basics Types.
 Require Import WildCat Pointed.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import AbSES.Core AbSES.Pullback AbSES.Pushout AbSES.DirectSum.
 Require Import Homotopy.HSpace.
 
+Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * The Baer sum of two short exact sequences, lemmas and consequences. *)

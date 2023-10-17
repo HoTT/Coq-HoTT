@@ -1,5 +1,4 @@
-Require Export Classes.interfaces.abstract_algebra.
-Require Import HSpace.Core.
+Require Import Basics HSpace.Core.
 
 Local Open Scope mc_mult_scope.
 

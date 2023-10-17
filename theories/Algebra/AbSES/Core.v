@@ -1,3 +1,4 @@
+Require Import Basics Types Truncations.Core.
 Require Import HSet WildCat.
 Require Import Groups.QuotientGroup Groups.ShortExactSequence.
 Require Import AbelianGroup AbGroups.Biproduct AbHom.
@@ -6,6 +7,7 @@ Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.
+Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * Short exact sequences of abelian groups *)
@@ -560,7 +562,7 @@ Proof.
   - intro x; simpl.
     refine (grp_homo_op (projection _) x _ @ _).
     refine (ap (fun y => (projection _) x + y) _ @ right_inverse ((projection _) x)).
-    refine (grp_homo_inv _ _ @ ap (-) _ ).
+    refine (grp_homo_inv _ _ @ ap negate _ ).
     apply h.
 Defined.
 
@@ -594,7 +596,7 @@ Proof.
         refine ((associativity _ _ _)^ @ _).
         apply grp_cancelL1.
         refine (ap _ _ @ right_inverse _).
-        apply (ap (-)).
+        apply (ap negate).
         apply (ap s).
         refine (grp_homo_op (projection _) a.1 (s b) @ _).
         exact (ap (fun y => y + _) a.2 @ left_identity _ @ h b).

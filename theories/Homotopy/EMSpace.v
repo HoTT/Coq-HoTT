@@ -1,3 +1,4 @@
+Require Import Basics Types.
 Require Import Pointed.
 Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.
@@ -6,7 +7,7 @@ Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.HomotopyGroup.
 Require Import TruncType.
-Require Import Truncations.Connectedness.
+Require Import Truncations.Core Truncations.Connectedness.
 Require Import WildCat.
 
 (* Formalisation of Eilenberg-MacLane spaces *)

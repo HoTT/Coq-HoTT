@@ -1,3 +1,4 @@
+Require Import Classes.interfaces.abstract_algebra.
 Require Import WildCat.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import Algebra.AbGroups.

@@ -1,10 +1,16 @@
-Require Export Classes.interfaces.abstract_algebra.
-Require Import Pointed WildCat.
-Require Import Truncations.Connectedness.
+Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
+    MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity).
+Require Import Basics Types Pointed WildCat.
+Require Import Truncations.Core Truncations.Connectedness.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
+
+(** We repeat these notations from canonical_names, to avoid having all Classes notations in our name space.  todo: Is there a way to do "Require Export Classes.interfaces.canonical_names." and limit to just these three notations? *)
+Infix "*" := sg_op : mc_mult_scope.
+Notation "( x *.)" := (sg_op x) (only parsing) : mc_mult_scope.
+Notation "(.* x )" := (fun y => sg_op y x) (only parsing) : mc_mult_scope.
 
 (** * H-spaces *)
 

@@ -1,4 +1,6 @@
+Require Import Basics Types.
 Require Import Spaces.Finite.Fin.
+Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.AbGroups.
 

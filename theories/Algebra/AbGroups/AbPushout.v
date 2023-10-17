@@ -1,3 +1,4 @@
+Require Import Basics Types Truncations.Core.
 Require Import WildCat HSet.
 Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.

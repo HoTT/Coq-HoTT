@@ -1,3 +1,4 @@
+Require Import Basics Types Truncations.Core.
 Require Import WildCat.
 Require Import HSet.
 Require Import AbelianGroup.
@@ -199,7 +200,7 @@ Proof.
     intros [a b].
     refine (ap phi (ab_biprod_decompose _ _) @ _ @ ap psi (ab_biprod_decompose _ _)^).
     refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-    exact (ap011 (+) (h a) (k b)).
+    exact (ap011 sg_op (h a) (k b)).
   - intro h.
     exact (fun a => h _, fun b => h _).
 Defined.
@@ -308,5 +309,5 @@ Proof.
   intro x. cbn.
   refine ((grp_assoc _ _ _)^ @ _).
   refine (abgroup_commutative _ _ _ @ _).
-  exact (ap (fun a =>  a * snd x) (abgroup_commutative _ _ _)).
+  exact (ap (fun a =>  a + snd x) (abgroup_commutative _ _ _)).
 Defined.

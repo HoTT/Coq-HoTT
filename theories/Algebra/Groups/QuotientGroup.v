@@ -1,3 +1,5 @@
+Require Import Basics Types.
+Require Import Truncations.Core.
 Require Import Algebra.Congruence.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
@@ -11,6 +13,7 @@ Require Import Modalities.Modality.
 
 (** * Quotient groups *)
 
+Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope wc_iso_scope.
 

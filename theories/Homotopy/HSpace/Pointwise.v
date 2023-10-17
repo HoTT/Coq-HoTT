@@ -1,4 +1,4 @@
-Require Import Pointed HSpace.Core HSpace.Coherent.
+Require Import Basics Types Pointed HSpace.Core HSpace.Coherent.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.

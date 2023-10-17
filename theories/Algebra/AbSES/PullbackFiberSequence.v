@@ -1,11 +1,13 @@
-Require Import Basics HSet HFiber Limits.Pullback.
+Require Import Basics Types HSet HFiber Limits.Pullback.
 Require Import WildCat Pointed Homotopy.ExactSequence.
 Require Import Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.Pullback. 
-Require Import Modalities.Identity Modalities.Modality.
+Require Import Modalities.Identity Modalities.Modality Truncations.Core.
 
 Local Open Scope pointed_scope.
+Local Open Scope mc_scope.
+Local Open Scope mc_add_scope.
 
 (** * The fiber sequence induced by pulling back along a short exact sequence *)
 
@@ -84,7 +86,7 @@ Proof.
            refine (ap (grp_pullback_pr1 _ _) (fst p^$.2 (-a)) @ _).
            exact (grp_homo_inv _ _). }
     (* Using [q2], we conclude. *)
-    pose proof (q3 := ap (-) (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
+    pose proof (q3 := ap negate (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
     exact ((negate_involutive _)^ @ q3^ @ negate_mon_unit).
   - apply (cancelR_conn_map (Tr (-1)) grp_quotient_map).
     1: exact _.

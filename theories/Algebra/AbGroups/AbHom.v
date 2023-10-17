@@ -1,4 +1,5 @@
-Require Import WildCat HSet Truncations.
+Require Import Basics Types.
+Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup Biproduct.
 
 (** * Homomorphisms of abelian groups form an abelian group. *)

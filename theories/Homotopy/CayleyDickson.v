@@ -1,3 +1,4 @@
+Require Import Classes.interfaces.abstract_algebra.
 Require Import Cubical.
 Require Import Pointed.
 Require Import Homotopy.HSpace.Core.
