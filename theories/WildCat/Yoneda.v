@@ -129,6 +129,25 @@ Proof.
   exact (fmap_comp F g f x).
 Defined.
 
+(** This is form of injectivity of [opyoneda]. *)
+Definition opyoneda_isinj {A : Type} `{Is1Cat A} (a : A)
+  (F : A -> Type) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b, opyoneda a F x b == opyoneda a F x' b)
+  : x = x'.
+Proof.
+  refine ((fmap_id F a x)^ @ _ @ fmap_id F a x').
+  cbn in p.
+  exact (p a (Id a)).
+Defined.
+
+(** This says that [opyon] is faithful, although we haven't yet defined a graph structure on natural transformations to express this in that way.  This follows from the previous result, but then would need [HasMorExt A], since the previous result assumes that [F] is a 1-functor, which is stronger than what is needed.  The direct proof below only needs the weaker assumption [Is1Cat_Strong A]. *)
+Definition opyon_faithful {A : Type} `{Is1Cat_Strong A}
+  (a b : A) (f g : b $-> a)
+  (p : forall (c : A) (h : a $-> c), h $o f = h $o g)
+  : f = g
+  := (cat_idl_strong f)^ @ p a (Id a) @ cat_idl_strong g.
+
+(** The composite in one direction is the identity map. *)
 Definition opyoneda_issect {A : Type} `{Is1Cat A} (a : A)
            (F : A -> Type) `{!Is0Functor F, !Is1Functor F}
            (x : F a)
@@ -149,7 +168,7 @@ Proof.
   exact (cat_idr_strong f).
 Defined.
 
-(** Specialization to "full-faithfulness" of the Yoneda embedding.  (In quotes because, again, incoherence means we can't recover the witness of naturality.)  *)
+(** A natural transformation between representable functors induces a map between the representing objects. *)
 Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
   : (opyon a $=> opyon b) -> (b $-> a)
   := un_opyoneda a (opyon b).
@@ -164,7 +183,7 @@ Proof.
   rapply (Build_Fun11 _ _ (opyon a)).
 Defined.
 
-(** We can also deduce "full-faithfulness" on equivalences. *)
+(** An equivalence between representable functors induces an equivalence between the representing objects. *)
 Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
            {a b : A}
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
@@ -192,6 +211,8 @@ Proof.
     exact (equiv_precompose_cat_equiv e).
   - rapply is1natural_opyoneda.
 Defined.
+
+(** ** The covariant Yoneda lemma using 0-groupoids *)
 
 (** We repeat the above, regarding [opyon] as landing in 0-groupoids, using the 1-category structure on [ZeroGpd] in [ZeroGroupoid.v].  This has many advantages.  It avoids [HasMorExt], which means that we don't need [Funext] in many examples.  It also avoids [Is1Cat_Strong], which means the results all have the same hypotheses, namely that [A] is a 1-category.  This allows us to simplify the proof of [opyon_equiv_0gpd], making use of [opyoneda_isretr_0gpd]. *)
 
@@ -242,17 +263,35 @@ Proof.
   exact (fmap_comp F g f x).
 Defined.
 
+(** This is form of injectivity of [opyoneda_0gpd]. *)
+Definition opyoneda_isinj_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b : A, opyoneda_0gpd a F x b $== opyoneda_0gpd a F x' b)
+  : x $== x'.
+Proof.
+  refine ((fmap_id F a x)^$ $@ _ $@ fmap_id F a x').
+  cbn in p.
+  exact (p a (Id a)).
+Defined.
+
+(** This says that [opyon_0gpd] is faithful, although we haven't yet defined a graph structure on natural transformations to express this in that way. *)
+Definition opyon_faithful_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  (f g : b $-> a) (p : forall (c : A) (h : a $-> c), h $o f $== h $o g)
+  : f $== g
+  := opyoneda_isinj_0gpd a _ f g p.
+
+(** The composite in one direction is the identity map. *)
 Definition opyoneda_issect_0gpd {A : Type} `{Is1Cat A} (a : A)
-           (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
-           (x : F a)
+  (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x : F a)
   : un_opyoneda_0gpd a F (opyoneda_0gpd a F x) $== x
   := fmap_id F a x.
 
-(** Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
+(** For the other composite, note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
 Definition opyoneda_isretr_0gpd {A : Type} `{Is1Cat A} (a : A)
-           (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
-           (alpha : opyon_0gpd a $=> F) {alnat : Is1Natural (opyon_0gpd a) F alpha}
-           (b : A)
+  (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (alpha : opyon_0gpd a $=> F) {alnat : Is1Natural (opyon_0gpd a) F alpha}
+  (b : A)
   : opyoneda_0gpd a F (un_opyoneda_0gpd a F alpha) b $== alpha b.
 Proof.
   unfold opyoneda, un_opyoneda, opyon; intros f.
@@ -262,8 +301,8 @@ Proof.
   exact (cat_idr f).
 Defined.
 
-(** Specialization to "full-faithfulness" of the Yoneda embedding.  (In quotes because, again, incoherence means we can't recover the witness of naturality.)  *)
-Definition opyon_0gpd_cancel {A : Type} `{Is1Cat A} (a b : A)
+(** A natural transformation between representable functors induces a map between the representing objects. *)
+Definition opyon_cancel_0gpd {A : Type} `{Is1Cat A} (a b : A)
   : (opyon_0gpd a $=> opyon_0gpd b) -> (b $-> a)
   := un_opyoneda_0gpd a (opyon_0gpd b).
 
@@ -271,8 +310,8 @@ Definition opyon_0gpd_cancel {A : Type} `{Is1Cat A} (a b : A)
 Definition opyon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun11 A ZeroGpd
   := Build_Fun11 _ _ (opyon_0gpd a).
 
-(** We can also deduce "full-faithfulness" on equivalences.  We explain how this compares to [opyon_equiv] above.  Instead of assuming that each [f c : (a $-> c) -> (b $-> c)] is an equivalence of types, it only needs to be an equivalence of 0-groupoids.  For example, this means that we have a map [g c : (b $-> c) -> (a $-> c)] such that for each [k : a $-> c], [g c (f c k) $== k], rather than [g c (f c k) = k] as the version with types requires.  Similarly, the naturality is up to 2-cells, instead of up to paths.  This allows us to avoid [Funext] and [HasMorExt] when using this result.  As a side benefit, we also don't require that [A] is strong. The proof is also simpler, since we can re-use the work done in [opyoneda_isretr_0gpd]. *)
-Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A} `{!Is1Cat A}
+(** An equivalence between representable functors induces an equivalence between the representing objects.  We explain how this compares to [opyon_equiv] above.  Instead of assuming that each [f c : (a $-> c) -> (b $-> c)] is an equivalence of types, it only needs to be an equivalence of 0-groupoids.  For example, this means that we have a map [g c : (b $-> c) -> (a $-> c)] such that for each [k : a $-> c], [g c (f c k) $== k], rather than [g c (f c k) = k] as the version with types requires.  Similarly, the naturality is up to 2-cells, instead of up to paths.  This allows us to avoid [Funext] and [HasMorExt] when using this result.  As a side benefit, we also don't require that [A] is strong. The proof is also simpler, since we can re-use the work done in [opyoneda_isretr_0gpd]. *)
+Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A} (f : opyon1_0gpd a $<~> opyon1_0gpd b)
   : b $<~> a.
 Proof.
@@ -337,6 +376,18 @@ Global Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
   : Is1Natural (yon a) F (yoneda a F x)
   := is1natural_opyoneda (A:=A^op) a F x.
 
+Definition yoneda_isinj {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b, yoneda a F x b == yoneda a F x' b)
+  : x = x'
+  := opyoneda_isinj (A:=A^op) a F x x' p.
+
+Definition yon_faithful {A : Type} `{Is1Cat_Strong A}
+  (a b : A) (f g : b $-> a)
+  (p : forall (c : A) (h : c $-> b), f $o h = g $o h)
+  : f = g
+  := opyon_faithful (A:=A^op) b a f g p.
+
 Definition yoneda_issect {A : Type} `{Is1Cat A} (a : A)
            (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : un_yoneda a F (yoneda a F x) = x
@@ -371,15 +422,71 @@ Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
   : (a $<~> b) -> (yon1 a $<~> yon1 b)
   := natequiv_opyon_equiv (A:=A^op).
 
-Definition yon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun01 A^op ZeroGpd
+(** ** The contravariant Yoneda lemma using 0-groupoids *)
+
+Definition yon_0gpd {A : Type} `{Is1Cat A} (a : A) : A^op -> ZeroGpd
+  := opyon_0gpd (A:=A^op) a.
+
+Global Instance is0functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is0Functor (yon_0gpd a)
+  := is0functor_opyon_0gpd (A:=A^op) a.
+
+Global Instance is1functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is1Functor (yon_0gpd a)
+  := is1functor_opyon_0gpd (A:=A^op) a.
+
+Definition yoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  : F a -> (yon_0gpd a $=> F)
+  := opyoneda_0gpd (A:=A^op) a F.
+
+Definition un_yoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A^op -> ZeroGpd) {ff : Is0Functor F}
+  : (yon_0gpd a $=> F) -> F a
+  := un_opyoneda_0gpd (A:=A^op) a F.
+
+Global Instance is1natural_yoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (yon_0gpd a) F (yoneda_0gpd a F x)
+  := is1natural_opyoneda_0gpd (A:=A^op) a F x.
+
+Definition yoneda_isinj_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b : A, yoneda_0gpd a F x b $== yoneda_0gpd a F x' b)
+  : x $== x'
+  := opyoneda_isinj_0gpd (A:=A^op) a F x x' p.
+
+Definition yon_faithful_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  (f g : b $-> a) (p : forall (c : A) (h : c $-> b), f $o h $== g $o h)
+  : f $== g
+  := opyon_faithful_0gpd (A:=A^op) b a f g p.
+
+Definition yoneda_issect_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x : F a)
+  : un_yoneda_0gpd a F (yoneda_0gpd a F x) $== x
+  := opyoneda_issect_0gpd (A:=A^op) a F x.
+
+Definition yoneda_isretr_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (alpha : yon_0gpd a $=> F) {alnat : Is1Natural (yon_0gpd a) F alpha}
+  (b : A)
+  : yoneda_0gpd a F (un_yoneda_0gpd a F alpha) b $== alpha b
+  := opyoneda_isretr_0gpd (A:=A^op) a F alpha b.
+
+Definition yon_cancel_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  : (yon_0gpd a $=> yon_0gpd b) -> (a $-> b)
+  := opyon_cancel_0gpd (A:=A^op) a b.
+
+Definition yon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun11 A^op ZeroGpd
   := opyon1_0gpd (A:=A^op) a.
 
 Definition yon_equiv_0gpd {A : Type} `{HasEquivs A}
-  {a b : A}
-  : yon1_0gpd a $<~> yon1_0gpd b -> a $<~> b
-  := opyon_equiv_0gpd (A:=A^op).
+  {a b : A} (f : yon1_0gpd a $<~> yon1_0gpd b)
+  : a $<~> b
+  := opyon_equiv_0gpd (A:=A^op) f.
 
 Definition natequiv_yon_equiv_0gpd {A : Type} `{HasEquivs A}
-  {a b : A}
-  : a $<~> b -> yon1_0gpd a $<~> yon1_0gpd b
-  := natequiv_opyon_equiv_0gpd (A:=A^op).
+  {a b : A} (e : a $<~> b)
+  : yon1_0gpd (A:=A) a $<~> yon1_0gpd b
+  := natequiv_opyon_equiv_0gpd (A:=A^op) (e : CatEquiv (A:=A^op) b a).
