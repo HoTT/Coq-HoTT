@@ -153,6 +153,8 @@ Proof.
   apply equiv_join_sym.
 Defined.
 
+Arguments join_assoc : simpl never.
+
 (** As a consequence, we get associativity of powers. *)
 Corollary join_join_power A n m
   : Join (join_power A n) (join_power A m) <~> join_power A (n + m)%nat.
@@ -167,20 +169,20 @@ Defined.
 
 (** Our goal is to prove that [trijoin_twist A' B' C' o functor_join f (functor_join g h)] is homotopic to [functor_join g (functor_join f h) o trijoin_twist A B C]. *)
 
-(** We first give a slightly more general result, which works for anything of the form [trijoin_rec f]. *)
+(** We first give a way to write anything of the form [trijoin_rec f o trijoin_twist A B C] as [trijoin_rec] applied to some [TriJoinRecData]. *)
 Definition trijoin_rec_trijoin_twist {A B C P} (f : TriJoinRecData B A C P)
-  : trijoin_rec (trijoinrecdata_twist _ _ _ _ f) == trijoin_rec f o trijoin_twist A B C.
+  : trijoin_rec f o trijoin_twist A B C == trijoin_rec (trijoinrecdata_twist _ _ _ _ f).
 Proof.
   (* We first replace [trijoin_twist] with [equiv_trijoin_twist']. *)
   transitivity (trijoin_rec f o equiv_trijoin_twist' A B C).
-  2: exact (fun x => ap (trijoin_rec f) (trijoin_twist_homotopic A B C x)^).
-  (* The RHS is now the twist natural transformation applied to [Id], followed by postcomposition; naturality states that that is the same as the natural trans applied to [trijoin_rec f]. *)
-  refine (_ $@ isnat_natequiv (trijoinrecdata_fun_twist B A C) (trijoin_rec f) _).
-  (* The RHS simplifies to [trijoinrecdata_fun_twist] applied to [trijoin_rec f].  The former is a composite of [trijoin_rec], [trijoinrecdata_twist] and [trijoin_rec_inv], so we can write the RHS as: *)
-  change (?L $== ?R) with (L $== trijoin_rec (trijoinrecdata_twist B A C P (trijoin_rec_inv (trijoin_rec f)))).
+  1: exact (fun x => ap (trijoin_rec f) (trijoin_twist_homotopic A B C x)).
+  (* The LHS is now the twist natural transformation applied to [Id], followed by postcomposition; naturality states that that is the same as the natural trans applied to [trijoin_rec f]. *)
+  refine ((isnat_natequiv (trijoinrecdata_fun_twist B A C) (trijoin_rec f) _)^$ $@ _).
+  (* The LHS simplifies to [trijoinrecdata_fun_twist] applied to [trijoin_rec f].  The former is a composite of [trijoin_rec], [trijoinrecdata_twist] and [trijoin_rec_inv], so we can write the LHS as: *)
+  change (?L $== ?R) with (trijoin_rec (trijoinrecdata_twist B A C P (trijoin_rec_inv (trijoin_rec f))) $== R).
   refine (fmap trijoin_rec _).
   refine (fmap (trijoinrecdata_twist B A C P) _).
-  symmetry; apply trijoin_rec_beta.
+  apply trijoin_rec_beta.
 Defined.
 
 (** Naturality of [trijoin_twist].  This version uses [functor_trijoin] and simply combines previous results. *)
@@ -189,7 +191,7 @@ Definition trijoin_twist_nat' {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : 
     == functor_trijoin g f h o trijoin_twist A B C.
 Proof.
   intro x.
-  rhs_V nrapply trijoin_rec_trijoin_twist.
+  rhs nrapply trijoin_rec_trijoin_twist.
   nrapply trijoin_rec_functor_trijoin.
 Defined.
 
@@ -228,4 +230,186 @@ Proof.
   apply functor2_join.
   - reflexivity.
   - apply join_sym_nat.
+Defined.
+
+Global Instance join_associator : Associator Type Join.
+Proof.
+  unshelve econstructor; unfold right_assoc, left_assoc, uncurry; cbn.
+  - intros [[A B] C]; cbn.
+    apply join_assoc.
+  - intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
+    (* This is awkward because Monoidal.v works with a tensor that is separately a functor in each variable. *)
+    intro x.
+    rhs_V nrapply functor_join_compose.
+    rhs_V nrapply functor2_join.
+    2: reflexivity.
+    2: nrapply functor_join_compose.
+    cbn.
+    rhs_V nrapply join_assoc_nat; cbn.
+    apply ap.
+    lhs_V nrapply functor_join_compose.
+    apply functor2_join.
+    1: reflexivity.
+    symmetry; nrapply functor_join_compose.
+Defined.
+
+(** ** The Triangle Law *)
+
+(** The unitors were defined in Join/Core.v, since they do not require associativity. *)
+
+(** Here's a version of the triangle law expressed using [trijoin_twist] instead of [join_assoc], and only using the right unitor. Since the left unitor is defined using [join_sym], the usual triangle law follows. *)
+Definition join_trianglelaw' A B
+  : join_sym B A o functor_join idmap (equiv_join_empty_right A) o trijoin_twist A B Empty
+    == functor_join idmap (equiv_join_empty_right B).
+Proof.
+  (* A direct proof with [Join_ind] three times is not hard, but the path algebra is slightly simpler if we manipulate things ahead of time using [functor_join_join_rec] and [trijoin_rec_trijoin_twist]. *)
+  intro x.
+  rapply moveR_equiv_M.
+  unfold equiv_join_empty_right at 1; cbn.
+  lhs nrapply functor_join_join_rec; cbn.
+  lhs nrapply trijoin_rec_trijoin_twist.
+  revert x.
+  apply moveR_trijoin_rec.
+  snrapply Build_TriJoinRecPath; intros; cbn.
+  3, 5, 6, 7: by destruct c.
+  - reflexivity.
+  - reflexivity.
+  - apply equiv_p1_1q.
+    symmetry.
+    lhs nrapply (ap_compose (functor_join idmap _) _ (join12 a b)).
+    lhs nrapply ap.
+    1: apply functor_join_beta_jglue.
+    apply join_sym_beta_jglue.
+Defined.
+
+Definition join_trianglelaw A B : TriangleLaw Type Join Empty A B.
+Proof.
+  unfold TriangleLaw; intro x; cbn.
+  lhs nrapply (functor_join_compose idmap _ idmap _).
+  lhs_V nrapply join_trianglelaw'.
+  unfold join_assoc; cbn.
+  apply join_sym_nat.
+Defined.
+
+(** ** The hexagon axiom *)
+
+(** This describes the transformation on [TriJoinRecData] corresponding to precomposition with [functor_join idmap (join_sym C B)], as in the next result. *)
+Definition trijoinrecdata_id_sym {A B C P} (f : TriJoinRecData A B C P)
+  : TriJoinRecData A C B P.
+Proof.
+  snrapply (Build_TriJoinRecData (j1 f) (j3 f) (j2 f)); intros.
+  - apply (j13 f).
+  - apply (j12 f).
+  - symmetry; apply (j23 f).
+  - cbn beta.  apply moveR_pV; symmetry.
+    apply (j123 f).
+Defined.
+
+(** This is analogous to [trijoin_rec_trijoin_twist] above, with [trijoin_twist] replaced by [join_sym]. *)
+Definition trijoin_rec_id_sym {A B C P} (f : TriJoinRecData A C B P)
+  : trijoin_rec f o functor_join idmap (join_sym B C) == trijoin_rec (trijoinrecdata_id_sym f).
+Proof.
+  (* First we use [functor_join_join_rec] on the LHS. *)
+  etransitivity.
+  { refine (cat_postwhisker (A:=Type) (trijoin_rec f) _).
+    apply functor_join_join_rec. }
+  unfold join_sym_recdata, jl, jr, jg.
+  (* And now we use naturality of the second [trijoin_rec] on the LHS. *)
+  refine ((trijoin_rec_nat A B C (trijoin_rec f) _)^$ $@ _).
+  refine (fmap trijoin_rec _).
+  (* Finally, we provide the needed [TriJoinRecPath]. *)
+  bundle_trijoinrecpath; intros; cbn.
+  - apply trijoin_rec_beta_join13.
+  - apply trijoin_rec_beta_join12.
+  - lhs refine (ap _ (ap_V _ _)).
+    lhs refine (ap_V (trijoin_rec f) _).
+    apply (ap inverse).
+    apply trijoin_rec_beta_join23.
+  - unfold prism'.
+    rewrite ap_trijoin_V.
+    rewrite trijoin_rec_beta_join123.
+    set (f' := f).
+    destruct f as [f1 f2 f3 f12 f13 f23 f123]; cbn.
+    generalize (f123 a c b).
+    generalize (trijoin_rec_beta_join23 f' c b); cbn.
+    generalize (f23 c b).
+    generalize (trijoin_rec_beta_join13 f' a b); cbn.
+    generalize (f13 a b).
+    generalize (trijoin_rec_beta_join12 f' a c); cbn.
+    generalize (f12 a c); cbn.
+    intros p12 beta12 p13 beta13 p23 beta23 p123.
+    induction beta12, beta13, beta23; cbn.
+    rewrite 3 concat_p1, concat_1p.
+    reflexivity.
+Defined.
+
+(** Here is our first hexagon law.  This is not the usual hexagon axiom, but we will see that it is equivalent, and is itself useful.  This law states that the following diagram commutes, where we write [*] for [Join]:
+<<
+    A * (B * C) -> A * (C * B) -> C * (A * B)
+        |                            |
+        v                            v
+    B * (A * C) -> B * (C * A) -> C * (B * A)
+>>
+Here every arrow is either [trijoin_twist _ _ _] or [functor_join idmap (join_sym _ _)], and they alternate as you go around.  These correspond to the permutations (1,2) and (2,3) in the symmetric group on three letters.  We already know that they are their own inverses, i.e., they have order two.  The above says that the composite (1,2)(2,3) has order three.  These are the only relations in this presentation of [S_3].  Note also that every object in this diagram is parenthesized in the same way.  That will be important in our proof. *)
+Definition hexagon_join_twist_sym A B C
+  : functor_join idmap (join_sym A B) o trijoin_twist A C B o functor_join idmap (join_sym B C)
+    == trijoin_twist B C A o functor_join idmap (join_sym A C) o trijoin_twist A B C.
+Proof.
+  (* It's enough to show that both sides induces the same natural transformation under the covariant Yoneda embedding, i.e., after postcomposing with a general function [f]. *)
+  rapply (opyon_faithful_0gpd (A:=Type)).
+  intros P f.
+  (* We replace [f] by [trijoin_rec t] for generic [t].  This will allow induction later. *)
+  pose proof (p := issect_trijoin_rec_inv f).
+  intro x; refine ((p _)^ @ _ @ p _); clear p.
+  generalize (trijoin_rec_inv f) as t.
+  intro t; clear f.
+  (* Now we use how these various maps postcompose with [trijoin_rec foo]. *)
+  lhs rapply trijoin_rec_id_sym.
+  lhs rapply trijoin_rec_trijoin_twist.
+  lhs rapply trijoin_rec_id_sym.
+  rhs rapply trijoin_rec_trijoin_twist.
+  rhs rapply trijoin_rec_id_sym.
+  rhs rapply trijoin_rec_trijoin_twist.
+  revert x; refine (fmap trijoin_rec _).
+  bundle_trijoinrecpath; intros; cbn.
+  1, 2, 3: reflexivity.
+  by triangle_ind t c b a.
+Defined.
+
+(** Next we paste on a naturality square for [join_sym] on the right of the diagram:
+<<
+    A * (B * C) -> A * (C * B) -> C * (A * B) -> (A * B) * C
+        |                            |                |
+        v                            v                v
+    B * (A * C) -> B * (C * A) -> C * (B * A) -> (B * A) * C
+>>
+The new horizontal maps are [join_sym _ _] and the new vertical map is [functor_join (join_sym A B) idmap]. This makes both horizontal composites definitionally equal to [join_assoc _ _ _], so the statement is about a square. *)
+Definition square_join_sym_assoc_twist A B C
+  : functor_join (join_sym A B) idmap o join_assoc A B C
+    == join_assoc B A C o trijoin_twist A B C.
+Proof.
+  unfold join_assoc; cbn.
+  intro x; lhs_V rapply join_sym_nat.
+  apply ap.
+  apply hexagon_join_twist_sym.
+Defined.
+
+(** Finally, we paste on the defining square for [join_assoc] on the left to get the hexagon axiom for the symmetric monoidal structure:
+<<
+    A * (C * B) -> A * (B * C) -> (A * B) * C
+         |              |              |
+         v              v              v
+    (A * C) * B -> B * (A * C) -> (B * A) * C
+>>
+The right-hand square is a horizontally-compressed version of the rectangle from the previous result, whose horizontal arrows are associativity. In the left-hand square, the new vertical map is [join_assoc A C B] and the horizontal maps are [functor_join idmap (join_sym _ _)] and [join_sym _ _]. *)
+Definition hexagon_join_assoc_sym A B C
+  : functor_join (join_sym A B) idmap o join_assoc A B C o functor_join idmap (join_sym C B)
+    == join_assoc B A C o join_sym (Join A C) B o join_assoc A C B.
+Proof.
+  intro x.
+  refine (square_join_sym_assoc_twist A B C _ @ _).
+  apply ap.
+  simpl.
+  symmetry.
+  exact (eissect (equiv_join_sym B (Join A C)) _).
 Defined.
