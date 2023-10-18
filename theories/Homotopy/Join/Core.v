@@ -437,6 +437,15 @@ Section Triangle.
     apply concat_Vp.
   Defined.
 
+  (** For just one of the above, we give a rule for how it behaves on inverse paths. *)
+  Definition triangle_v_V (a : A) {b b' : B} (p : b = b')
+    : triangle_v a p^ = (1 @@ ap_V joinr p) @ moveR_pV _ _ _ (triangle_v a p)^.
+  Proof.
+    induction p; cbn.
+    rhs nrapply concat_1p.
+    symmetry; apply concat_pV_p.
+  Defined.
+
 End Triangle.
 
 (** Diamond lemmas for Join *)
