@@ -6,9 +6,6 @@ Require Export Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
 Require Import WildCat.
 
-(** We repeat these notations from canonical_names, to avoid having all Classes notations in our name space.  todo: Is there a way to do "Require Export Classes.interfaces.canonical_names." and limit to just these notations? *)
-Notation "0" := zero : mc_scope.
-
 Local Set Polymorphic Inductive Cumulativity.
 
 Local Open Scope mc_scope.

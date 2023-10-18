@@ -99,6 +99,8 @@ Hint Extern 4 (Apart (NonNeg _)) => apply @sig_apart : typeclass_instances.
 #[export]
 Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
 
+(** We group these notations into a module, so that just this subset can be exported in some cases. *)
+Module Export BinOpNotations.
 (* Notations: *)
 Declare Scope mc_add_scope.
 Infix "+" := sg_op : mc_add_scope.
@@ -139,6 +141,7 @@ Notation "- 1" := (-(1)) : mc_scope.
 Notation "- 2" := (-(2)) : mc_scope.
 Notation "- 3" := (-(3)) : mc_scope.
 Notation "- 4" := (-(4)) : mc_scope.
+End BinOpNotations.
 
 Notation "/ x" := (dec_recip x) : mc_scope.
 Notation "(/)" := dec_recip (only parsing) : mc_scope.

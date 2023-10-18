@@ -8,6 +8,8 @@ Require Export Classes.interfaces.canonical_names (SgOp, sg_op, One, one,
     MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,
     Negate, negate, Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
+Require Classes.interfaces.canonical_names.
+Export canonical_names.BinOpNotations.
 Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, negate_l, negate_r,
     IsSemiGroup(..), sg_set, sg_ass,
     IsMonoid(..), monoid_left_id, monoid_right_id, monoid_semigroup,
@@ -18,15 +20,6 @@ Require Import Pointed.Core.
 Require Import WildCat.
 Require Import Spaces.Nat.Core.
 Require Import Truncations.Core.
-
-(** We repeat these notations from canonical_names, to avoid having all Classes notations in our name space.  todo: Is there a way to do "Require Export Classes.interfaces.canonical_names." and limit to just these notations? *)
-Infix "*" := sg_op : mc_mult_scope.
-Infix "+" := sg_op : mc_add_scope.
-Notation "- x" := (negate x) : mc_scope.
-Notation "x - y" := (x + -y) : mc_scope.
-Notation "1" := one : mc_scope.
-Notation "( x *.)" := (sg_op x) (only parsing) : mc_mult_scope.
-Notation "(.* x )" := (fun y => sg_op y x) (only parsing) : mc_mult_scope.
 
 Local Set Polymorphic Inductive Cumulativity.
 

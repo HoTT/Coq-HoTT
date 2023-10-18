@@ -200,7 +200,7 @@ Proof.
     intros [a b].
     refine (ap phi (ab_biprod_decompose _ _) @ _ @ ap psi (ab_biprod_decompose _ _)^).
     refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-    exact (ap011 sg_op (h a) (k b)).
+    exact (ap011 (+) (h a) (k b)).
   - intro h.
     exact (fun a => h _, fun b => h _).
 Defined.

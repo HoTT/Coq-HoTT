@@ -85,7 +85,7 @@ Proof.
     1: apply issurj_class_of.
     2: exact _.
     intro x; simpl.
-    refine (grp_homo_op (projection F) _ _ @ ap011 sg_op _ _ @ (grp_homo_op _ _ _ )^).
+    refine (grp_homo_op (projection F) _ _ @ ap011 (+) _ _ @ (grp_homo_op _ _ _ )^).
     + refine (_ @ (grp_homo_unit _)^).
       apply iscomplex_abses.
     + apply right_square.
