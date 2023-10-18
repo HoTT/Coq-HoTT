@@ -1,3 +1,4 @@
+Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.

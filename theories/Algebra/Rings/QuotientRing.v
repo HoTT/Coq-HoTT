@@ -1,6 +1,7 @@
 Require Import WildCat.
 Require Import Algebra.Congruence.
 Require Import Algebra.AbGroups.
+Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.Rings.CRing.
 Require Import Algebra.Rings.Ideal.
 

@@ -1,3 +1,5 @@
+Require Import Basics Types.
+Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.
@@ -5,7 +7,8 @@ Require Import HSet.
 
 (** Image of group homomorphisms *)
 
-Local Open Scope mc_add_scope.
+Local Open Scope mc_scope.
+Local Open Scope mc_mult_scope.
 
 (** The image of a group homomorphism between groups is a subgroup *)
 Definition grp_image {A B : Group} (f : A $-> B) : Subgroup B.
@@ -16,7 +19,7 @@ Proof.
   1: apply tr; exists mon_unit; apply grp_homo_unit.
   { intros x y p q; strip_truncations; apply tr.
     destruct p as [a []], q as [b []].
-    exists (a + b).
+    exists (a * b).
     apply grp_homo_op. }
   intros b p.
   strip_truncations.
@@ -44,7 +47,7 @@ Proof.
   - exact _.
   - exact (mon_unit; grp_homo_unit f).
   - intros x y [a []] [b []].
-    exists (a + b).
+    exists (a * b).
     apply grp_homo_op.
   - intros b [a []].
     exists (-a).

@@ -1,6 +1,9 @@
-Require Export Classes.interfaces.abstract_algebra.
-Require Import Pointed WildCat.
-Require Import Truncations.Connectedness.
+Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
+    MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity).
+Require Classes.interfaces.canonical_names.
+Export canonical_names.BinOpNotations.
+Require Import Basics Types Pointed WildCat.
+Require Import Truncations.Core Truncations.Connectedness.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

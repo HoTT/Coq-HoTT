@@ -1,3 +1,4 @@
+Require Import Basics Types.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
@@ -6,6 +7,7 @@ Require Import Spaces.Nat.
 
 (** ** Lagrange's theorem *)
 
+Local Open Scope mc_scope.
 Local Open Scope nat_scope.
 
 Definition subgroup_index {U : Univalence} (G : Group) (H : Subgroup G)

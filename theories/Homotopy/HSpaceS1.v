@@ -1,3 +1,4 @@
+Require Import Classes.interfaces.canonical_names.
 Require Import Cubical.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.HSpace.Core.

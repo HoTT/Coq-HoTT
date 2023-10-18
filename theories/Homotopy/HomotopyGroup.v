@@ -1,5 +1,5 @@
-Require Import Pointed.
-Require Import Truncations.SeparatedTrunc Modalities.ReflectiveSubuniverse.
+Require Import Basics Types Pointed.
+Require Import Modalities.ReflectiveSubuniverse Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.AbGroups.
 Require Import WildCat.
 

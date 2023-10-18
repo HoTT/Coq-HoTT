@@ -1,7 +1,11 @@
+Require Import Basics Types Truncations.Core.
 Require Import Pointed WildCat.
 Require Import Truncations.SeparatedTrunc.
 Require Import AbelianGroup AbHom AbProjective.
 Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
+
+Local Open Scope mc_scope.
+Local Open Scope mc_add_scope.
 
 (** * The set [Ext B A] of abelian group extensions *)
 

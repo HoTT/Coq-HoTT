@@ -1,3 +1,5 @@
+Require Import Basics Types.
+Require Import Truncations.Core.
 Require Import WildCat.
 Require Import Pointed.
 Require Import Spaces.Int Spaces.Circle Spaces.Spheres.

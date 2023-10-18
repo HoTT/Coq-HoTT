@@ -1,6 +1,6 @@
-Require Import Group Subgroup
+Require Import Basics Types Group Subgroup
   WildCat Colimits.Coeq
-  Truncations.SeparatedTrunc
+  Truncations.Core Truncations.SeparatedTrunc
   Classes.implementations.list.
 
 Local Open Scope mc_scope.

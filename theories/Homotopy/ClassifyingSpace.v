@@ -1,12 +1,14 @@
+Require Import Basics Types.
 Require Import Pointed Cubical WildCat.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.Core.
 Require Import TruncType.
-Require Import Truncations.Connectedness.
+Require Import Truncations.Core Truncations.Connectedness.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.WhiteheadsPrinciple.
 
 Local Open Scope pointed_scope.
+Local Open Scope mc_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 

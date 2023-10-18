@@ -1,4 +1,4 @@
-Require Import Limits.Pullback Cubical.PathSquare.
+Require Import Basics Types Limits.Pullback Cubical.PathSquare.
 Require Import Algebra.Groups.Group.
 Require Import WildCat.
 

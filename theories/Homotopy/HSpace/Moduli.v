@@ -1,4 +1,4 @@
-Require Import HSpace.Core HSpace.Coherent HSpace.Pointwise
+Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise
   Pointed Homotopy.EvaluationFibration Tactics.EvalIn.
 
 Local Open Scope pointed_scope.

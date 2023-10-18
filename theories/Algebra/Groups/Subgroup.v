@@ -1,7 +1,10 @@
-Require Import HFiber WildCat.
+Require Import Basics Types HFiber WildCat.
+Require Import Truncations.Core.
 Require Import Algebra.Groups.Group TruncType.
 
+Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
+
 Generalizable Variables G H A B C N f g.
 
 (** * Subgroups *)

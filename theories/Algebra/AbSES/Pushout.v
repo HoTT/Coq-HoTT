@@ -1,3 +1,4 @@
+Require Import Basics Types Truncations.Core.
 Require Import WildCat Pointed Homotopy.ExactSequence HIT.epi.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup AbPushout AbHom AbGroups.Biproduct.
@@ -5,6 +6,7 @@ Require Import AbSES.Core AbSES.DirectSum.
 
 Local Open Scope pointed_scope.
 Local Open Scope type_scope.
+Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * Pushouts of short exact sequences *)

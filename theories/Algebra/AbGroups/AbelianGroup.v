@@ -1,3 +1,6 @@
+Require Import Basics Types.
+Require Export Classes.interfaces.canonical_names (Zero, zero).
+Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
@@ -5,6 +8,7 @@ Require Import WildCat.
 
 Local Set Polymorphic Inductive Cumulativity.
 
+Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * Abelian groups *)

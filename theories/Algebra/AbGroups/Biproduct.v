@@ -1,3 +1,4 @@
+Require Import Basics Types Truncations.Core.
 Require Import WildCat.
 Require Import HSet.
 Require Import AbelianGroup.
@@ -308,5 +309,5 @@ Proof.
   intro x. cbn.
   refine ((grp_assoc _ _ _)^ @ _).
   refine (abgroup_commutative _ _ _ @ _).
-  exact (ap (fun a =>  a * snd x) (abgroup_commutative _ _ _)).
+  exact (ap (fun a =>  a + snd x) (abgroup_commutative _ _ _)).
 Defined.
