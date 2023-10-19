@@ -146,9 +146,15 @@ Definition equiv_trijoin_twist (A B C : Type)
 
 (** ** The associativity of [Join] *)
 
+(** [trijoin_twist] corresponds to the permutation (1,2).  The equivalence corresponding to the permutation (2,3) also plays a key role, so we name it here. *)
+Definition trijoin_id_sym A B C : TriJoin A B C <~> TriJoin A C B
+  := equiv_functor_join equiv_idmap (equiv_join_sym B C).
+
+Arguments trijoin_id_sym : simpl never.
+
 Definition join_assoc A B C : Join A (Join B C) <~> Join (Join A B) C.
 Proof.
-  refine (_ oE equiv_functor_join equiv_idmap (equiv_join_sym B C)).
+  refine (_ oE trijoin_id_sym _ _ _).
   refine (_ oE equiv_trijoin_twist _ _ _).
   apply equiv_join_sym.
 Defined.
@@ -206,16 +212,42 @@ Proof.
   apply trijoin_twist_nat'.
 Defined.
 
+(** ** Naturality of [trijoin_id_sym] *)
+
+(** Naturality of [trijoin_id_sym], using [functor_join].  In this case, it's easier to do this version first. *)
+Definition trijoin_id_sym_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : trijoin_id_sym A' B' C' o functor_join f (functor_join g h)
+    == functor_join f (functor_join h g) o trijoin_id_sym A B C.
+Proof.
+  intro x; simpl.
+  lhs_V nrapply functor_join_compose.
+  rhs_V nrapply functor_join_compose.
+  apply functor2_join.
+  - reflexivity.
+  - apply join_sym_nat.
+Defined.
+
+(** Naturality of [trijoin_id_sym], using [functor_trijoin]. *)
+Definition trijoin_id_sym_nat' {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
+  : trijoin_id_sym A' B' C' o functor_trijoin f g h
+    == functor_trijoin f h g o trijoin_id_sym A B C.
+Proof.
+  intro x.
+  lhs_V nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).
+  rhs_V nrapply functor_trijoin_as_functor_join.
+  apply trijoin_id_sym_nat.
+Defined.
+
 (** ** Naturality of [join_assoc] *)
 
-(** Since [join_assoc] is a composite of [trijoin_twist] and [join_sym], we just use their naturality. *)
+(** Since [join_assoc] is a composite of [join_sym], [trijoin_twist] and [trijoin_id_sym], we just use their naturality. *)
 Definition join_assoc_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C -> C')
   : join_assoc A' B' C' o functor_join f (functor_join g h)
     == functor_join (functor_join f g) h o join_assoc A B C.
 Proof.
   (* We'll work from right to left, as it is easier to work near the head of a term. *)
   intro x.
-  unfold join_assoc; simpl.
+  unfold join_assoc; cbn.
   (* First we pass the [functor_joins]s through the outer [join_sym]. *)
   rhs_V nrapply join_sym_nat.
   (* Strip off the outer [join_sym]. *)
@@ -224,12 +256,8 @@ Proof.
   rhs_V nrapply trijoin_twist_nat.
   (* Strip off the [trijoin_twist]. *)
   apply (ap _).
-  (* Finally, we pass the [functor_join]s through the inner [join_sym]. *)
-  lhs_V nrapply functor_join_compose.
-  rhs_V nrapply functor_join_compose.
-  apply functor2_join.
-  - reflexivity.
-  - apply join_sym_nat.
+  (* Finally, we pass the [functor_join]s through [trijoin_id_sym]. *)
+  apply trijoin_id_sym_nat.
 Defined.
 
 Global Instance join_associator : Associator Type Join.
@@ -293,7 +321,9 @@ Defined.
 
 (** ** The hexagon axiom *)
 
-(** This describes the transformation on [TriJoinRecData] corresponding to precomposition with [functor_join idmap (join_sym C B)], as in the next result. *)
+(** For the hexagon, we'll need to know how to compose [trijoin_id_sym] with something of the form [trijoin_rec f]. For some reason, the proof is harder than it was for [trijoin_twist]. *)
+
+(** This describes the transformation on [TriJoinRecData] corresponding to precomposition with [trijoin_id_sym], as in the next result. *)
 Definition trijoinrecdata_id_sym {A B C P} (f : TriJoinRecData A B C P)
   : TriJoinRecData A C B P.
 Proof.
@@ -305,9 +335,9 @@ Proof.
     apply (j123 f).
 Defined.
 
-(** This is analogous to [trijoin_rec_trijoin_twist] above, with [trijoin_twist] replaced by [join_sym]. *)
+(** This is analogous to [trijoin_rec_trijoin_twist] above, with [trijoin_twist] replaced by [trijoin_id_sym]. *)
 Definition trijoin_rec_id_sym {A B C P} (f : TriJoinRecData A C B P)
-  : trijoin_rec f o functor_join idmap (join_sym B C) == trijoin_rec (trijoinrecdata_id_sym f).
+  : trijoin_rec f o trijoin_id_sym A B C == trijoin_rec (trijoinrecdata_id_sym f).
 Proof.
   (* First we use [functor_join_join_rec] on the LHS. *)
   etransitivity.
@@ -350,10 +380,10 @@ Defined.
         v                            v
     B * (A * C) -> B * (C * A) -> C * (B * A)
 >>
-Here every arrow is either [trijoin_twist _ _ _] or [functor_join idmap (join_sym _ _)], and they alternate as you go around.  These correspond to the permutations (1,2) and (2,3) in the symmetric group on three letters.  We already know that they are their own inverses, i.e., they have order two.  The above says that the composite (1,2)(2,3) has order three.  These are the only relations in this presentation of [S_3].  Note also that every object in this diagram is parenthesized in the same way.  That will be important in our proof. *)
+Here every arrow is either [trijoin_twist _ _ _] or [trijoin_id_sym _ _ _], and they alternate as you go around.  These correspond to the permutations (1,2) and (2,3) in the symmetric group on three letters.  We already know that they are their own inverses, i.e., they have order two.  The above says that the composite (1,2)(2,3) has order three.  These are the only relations in this presentation of [S_3].  Note also that every object in this diagram is parenthesized in the same way.  That will be important in our proof. *)
 Definition hexagon_join_twist_sym A B C
-  : functor_join idmap (join_sym A B) o trijoin_twist A C B o functor_join idmap (join_sym B C)
-    == trijoin_twist B C A o functor_join idmap (join_sym A C) o trijoin_twist A B C.
+  : trijoin_id_sym C A B o trijoin_twist A C B o trijoin_id_sym A B C
+    == trijoin_twist B C A o trijoin_id_sym B A C o trijoin_twist A B C.
 Proof.
   (* It's enough to show that both sides induces the same natural transformation under the covariant Yoneda embedding, i.e., after postcomposing with a general function [f]. *)
   rapply (opyon_faithful_0gpd (A:=Type)).
@@ -401,9 +431,9 @@ Defined.
          v              v              v
     (A * C) * B -> B * (A * C) -> (B * A) * C
 >>
-The right-hand square is a horizontally-compressed version of the rectangle from the previous result, whose horizontal arrows are associativity. In the left-hand square, the new vertical map is [join_assoc A C B] and the horizontal maps are [functor_join idmap (join_sym _ _)] and [join_sym _ _]. *)
+The right-hand square is a horizontally-compressed version of the rectangle from the previous result, whose horizontal arrows are associativity. In the left-hand square, the new vertical map is [join_assoc A C B] and the horizontal maps are [trijoin_id_sym A C B] and [join_sym (Join A C) B]. *)
 Definition hexagon_join_assoc_sym A B C
-  : functor_join (join_sym A B) idmap o join_assoc A B C o functor_join idmap (join_sym C B)
+  : functor_join (join_sym A B) idmap o join_assoc A B C o trijoin_id_sym A C B
     == join_assoc B A C o join_sym (Join A C) B o join_assoc A C B.
 Proof.
   intro x.

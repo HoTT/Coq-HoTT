@@ -15,7 +15,7 @@ Section TriJoinStructure.
   Definition join12 : forall a b, join1 a = join2 b := fun a b => jglue a (joinl b).
   Definition join13 : forall a c, join1 a = join3 c := fun a c => jglue a (joinr c).
   Definition join23 : forall b c, join2 b = join3 c := fun b c => ap joinr (jglue b c).
-  Definition join123 : forall a b c, join12 a b @ join23 b c = join13 a c := fun a b c => triangle_v' a (jglue b c).
+  Definition join123 : forall a b c, join12 a b @ join23 b c = join13 a c := fun a b c => triangle_v a (jglue b c).
 End TriJoinStructure.
 
 Arguments TriJoin A B C : clear implicits.
@@ -28,7 +28,7 @@ Definition ap_triangle {X Y} (f : X -> Y)
   : ap f ab @ ap f bc = ap f ac
   := (ap_pp f ab bc)^ @ ap (ap f) abc.
 
-(** This general result abstracts away the situation where [J] is [TriJoin A B C], [a] is [joinl a'] for some [a'], [jr] is [joinr : Join B C -> J], [jg] is [fun w => jglue a' w], and [p] is [jglue b c].  By working in this generality, we can do induction on [p].  This also allows us to inline the proof of [triangle_v']. *)
+(** This general result abstracts away the situation where [J] is [TriJoin A B C], [a] is [joinl a'] for some [a'], [jr] is [joinr : Join B C -> J], [jg] is [fun w => jglue a' w], and [p] is [jglue b c].  By working in this generality, we can do induction on [p].  This also allows us to inline the proof of [triangle_v]. *)
 Definition ap_trijoin_general {J W P : Type} (f : J -> P)
   (a : J) (jr : W -> J) (jg : forall w, a = jr w)
   {b c : W} (p : b = c)
@@ -80,7 +80,7 @@ Defined.
 
 Definition ap_trijoin_V {A B C P : Type} (f : TriJoin A B C -> P)
   (a : A) (b : B) (c : C)
-  : ap_triangle f (triangle_v' a (jglue b c)^)
+  : ap_triangle f (triangle_v a (jglue b c)^)
      = (1 @@ (ap (ap f) (ap_V joinr _) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin f a b c)^.
 Proof.
   nrapply ap_trijoin_general_V.
@@ -94,7 +94,7 @@ Local Definition trijoin_ind_helper {A BC : Type} (P : Join A BC -> Type)
   (j1' : P (joinl a)) (j2' : P (joinr b)) (j3' : P (joinr c))
   (j12' : jglue a b # j1' = j2') (j13' : jglue a c # j1' = j3') (j23' : (ap joinr bc) # j2' = j3')
   (j123' : transport_pp _ (jglue a b) (ap joinr bc) j1' @ ap (transport _ (ap joinr bc)) j12' @ j23'
-           = transport2 _ (triangle_v' a bc) _ @ j13')
+           = transport2 _ (triangle_v a bc) _ @ j13')
   : ((apD (fun x : BC => transport P (jglue a x) j1') bc)^
        @ ap (transport (fun x : BC => P (joinr x)) bc) j12')
       @ ((transport_compose P joinr bc j2') @ j23') = j13'.
@@ -830,11 +830,11 @@ Definition equiv_functor_trijoin {A B C A' B' C'}
 (** A lemma that handles the path algebra in the next result. [BC] here is [Join B C] there, [bc] here is [jglue b c] there, [bc'] here is [jg g b c] there, and [beta_jg] here is [Join_rec_beta_jglue _ _ _ b c] there. *)
 Local Lemma ap_triangle_functor_join {A BC A' P} (f : A -> A') (g : BC -> P)
   (a : A) {b c : BC} (bc : b = c) (bc' : g b = g c) (beta_jg : ap g bc = bc')
-  : ap_triangle (functor_join f g) (triangle_v' a bc) @ functor_join_beta_jglue f g a c
+  : ap_triangle (functor_join f g) (triangle_v a bc) @ functor_join_beta_jglue f g a c
     = (functor_join_beta_jglue f g a b
         @@ ((ap_compose joinr (functor_join f g) bc)^
              @ (ap_compose g joinr bc @ ap (ap joinr) beta_jg)))
-       @ triangle_v' (f a) bc'.
+       @ triangle_v (f a) bc'.
 Proof.
   induction bc, beta_jg; simpl.
   transitivity (concat_p1 _ @ functor_join_beta_jglue f g a b).
@@ -853,7 +853,7 @@ Definition functor_join_join_rec {A B C A' P} (f : A -> A') (g : JoinRecData B C
                       j12 := fun a b => jglue (f a) (jl g b);
                       j13 := fun a c => jglue (f a) (jr g c);
                       j23 := fun b c => ap joinr (jg g b c);
-                      j123 := fun a b c => triangle_v' (f a) (jg g b c); |}.
+                      j123 := fun a b c => triangle_v (f a) (jg g b c); |}.
 Proof.
   (* Recall that [trijoin_rec] is defined to be the inverse of [trijoin_rec_inv_natequiv ...]. *)
   refine (moveL_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _ _ _).
@@ -870,7 +870,7 @@ Proof.
     refine (ap (ap joinr) _).
     apply join_rec_beta_jg.
   - unfold prism'.
-    change (join123 a b c) with (triangle_v' a (jglue b c)).
+    change (join123 a b c) with (triangle_v a (jglue b c)).
     exact (ap_triangle_functor_join f (join_rec g) a (jglue b c) (jg g b c) (Join_rec_beta_jglue _ _ _ b c)).
 Defined.
 
