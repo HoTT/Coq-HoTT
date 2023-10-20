@@ -114,7 +114,7 @@ Section Flattening.
       refine (_ @ concat_1p _).
       refine (concat_p_pp _ _ _ @ _).
       refine (_ @@ 1).
-      match goal with |- ap _ ?X @ _ = _ => set (p:=X) end.
+      match goal with |- ap _ ?X @ _ = _ => set (p := X) end.
       assert (r : transport_E'_V g x y = p^).
       { subst p.
         exact (moveL_transport_V_V E' _ _ _ _)^. }
@@ -158,7 +158,7 @@ Section Flattening.
       refine (_ @ concat_pp_p _ _ _).
       match goal with |- _ = (ap ?ff ?pp1 @ ?pp2) @ ?pp3
         => set (p1 := pp1) end.
-      assert (p1 = ap (transport E' (colimp i j g x)^)
+      assert (p1eq : p1 = ap (transport E' (colimp i j g x)^)
         (transport_pV E' (colimp i j g x) y)^).
       { subst p1; clear.
         etransitivity.
@@ -166,7 +166,7 @@ Section Flattening.
         etransitivity.
         1: nrapply inverse2; snrapply transport_VpV.
         symmetry; apply ap_V. }
-      rewrite X; clear X p1.
+      rewrite p1eq; clear p1eq p1.
       rewrite <- ap_compose; cbn.
       rewrite (ap_path_sigma (fun x => E (j; x))
         (fun x y => (colim j x; y))).
@@ -177,15 +177,15 @@ Section Flattening.
           change pp2 with (path_sigma' E' 1
                             (transport_E'_V g x
                                (transport E' (colimp i j g x) (transport E' (colimp i j g x)^ y)))) end.
-      assert (p1 = path_sigma' E' 1 (transport_Vp _ _ _)).
+      assert (p1eq : p1 = path_sigma' E' 1 (transport_Vp _ _ _)).
       { subst p1.
         rewrite <- ap_exist.
         rewrite (ap_compose (transport E' (colimp i j g x)^)
           (fun v => (colim j ((D _f g) x); v))).
-        f_ap; set (colimp i j g x).
+        f_ap; set (p := colimp i j g x).
         clear; symmetry.
         apply transport_VpV. }
-      rewrite X; clear p1 X.
+      rewrite p1eq; clear p1eq p1.
       rewrite <- !path_sigma_pp_pp'; f_ap.
       rewrite concat_p1, concat_pp_p.
       refine (1 @@ _).
@@ -198,7 +198,7 @@ Section Flattening.
       - f_ap.
         refine (1 @@ _).
         apply transport_VpV.
-      - set (transport E' (colimp i j g x)
+      - set (e := transport E' (colimp i j g x)
           (transport E' (colimp i j g x)^ y)).
         rewrite ap_pp, <- ap_compose.
         refine (_ @ (transport_E'_V_E' _ _ _)^).
