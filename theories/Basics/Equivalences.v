@@ -32,9 +32,9 @@ Arguments reflexive_equiv /.
 
 (** The composition of equivalences is an equivalence. *)
 Global Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
-  : IsEquiv (compose g f) | 1000
-  := Build_IsEquiv A C (compose g f)
-    (compose f^-1 g^-1)
+  : IsEquiv (g o f) | 1000
+  := Build_IsEquiv A C (g o f)
+    (f^-1 o g^-1)
     (fun c => ap g (eisretr f (g^-1 c)) @ eisretr g c)
     (fun a => ap (f^-1) (eissect g (f a)) @ eissect f a)
     (fun a =>
@@ -58,16 +58,13 @@ Definition isequiv_compose'
 Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   `{IsEquiv B C g} `{IsEquiv A B f}
   : A <~> C
-  := Build_Equiv A C (compose g f) _.
+  := Build_Equiv A C (g o f) _.
 
 Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   : A <~> C
   := equiv_compose g f.
 
-Definition iff_equiv {A B : Type} (f : A <~> B)
-  : A <-> B := (equiv_fun f, f^-1).
-
-(** We put [g] and [f] in [equiv_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+(** We put [g] and [f] in [equiv_scope] explicitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
 Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
@@ -76,11 +73,15 @@ Global Instance transitive_equiv : Transitive Equiv | 0 :=
 
 Arguments transitive_equiv /.
 
+(** A tactic to simplify "oE".  See [ev_equiv] below for a more extensive tactic. *)
 Ltac change_apply_equiv_compose :=
   match goal with
   | [ |- context [ equiv_fun (?f oE ?g) ?x ] ] =>
     change ((f oE g) x) with (f (g x))
   end.
+
+Definition iff_equiv {A B : Type} (f : A <~> B)
+  : A <-> B := (equiv_fun f, f^-1).
 
 (** Transporting is an equivalence. *)
 Section EquivTransport.
@@ -288,7 +289,6 @@ Definition equiv_ap' `(f : A <~> B) (x y : A)
   : (x = y) <~> (f x = f y)
   := equiv_ap f x y.
 
-(* TODO: Is this really necessary? *)
 Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
   : (f x = f y) -> (x = y)
   := (ap f)^-1.
@@ -329,42 +329,33 @@ Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
   := Build_Equiv _ _ (fun (g:A->B) => f o g) _.
 
-(** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
+(** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  This is a form of the Yoneda lemma.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
 
 Definition isequiv_isequiv_precompose {A B : Type} (f : A -> B)
   (precomp := (fun (C : Type) (h : B -> C) => h o f))
   (Aeq : IsEquiv (precomp A)) (Beq : IsEquiv (precomp B))
   : IsEquiv f.
 Proof.
-  assert (H : forall (C D : Type)
-                     (Ceq : IsEquiv (precomp C)) (Deq : IsEquiv (precomp D))
-                     (k : C -> D) (h : A -> C),
-                k o (precomp C)^-1 h = (precomp D)^-1 (k o h)).
-  { intros C D ? ? k h.
-    transitivity ((precomp D)^-1 (k o (precomp C ((precomp C)^-1 h)))).
-    - transitivity ((precomp D)^-1 (precomp D (k o ((precomp C)^-1 h)))).
-      + rewrite (eissect (precomp D) _); reflexivity.
-      + reflexivity.
-    - rewrite (eisretr (precomp C) h); reflexivity. }
-  refine (isequiv_adjointify f ((precomp A)^-1 idmap) _ _).
-  - intros x.
-    change ((f o (precomp A)^-1 idmap) x = idmap x).
-    apply ap10.
-    rewrite (H A B Aeq Beq).
-    change ((precomp B)^-1 (precomp B idmap) = idmap).
-    apply eissect.
-  - intros x.
-    change ((precomp A ((precomp A)^-1 idmap)) x = idmap x).
-    apply ap10, eisretr.
-Qed.
+  set (g:=(precomp A)^-1 idmap).
+  pose proof (p:=eisretr (precomp A) idmap : g o f = idmap).
+  refine (isequiv_adjointify f g (ap10 _) (ap10 p)).
+  apply (equiv_inj (precomp B)).
+  unfold precomp; cbn.
+  exact (ap (fun k => f o k) p).
+Defined.
 
-(*
 Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
   (postcomp := (fun (C : Type) (h : C -> A) => f o h))
-  (feq : forall C:Type, IsEquiv (postcomp C))
+  (Aeq : IsEquiv (postcomp A)) (Beq : IsEquiv (postcomp B))
   : IsEquiv f.
-(* TODO *)
-*)
+Proof.
+  set (g:=(postcomp B)^-1 idmap).
+  pose proof (p:=eisretr (postcomp B) idmap : f o g = idmap).
+  refine (isequiv_adjointify f g (ap10 p) (ap10 _)).
+  apply (equiv_inj (postcomp A)).
+  unfold postcomp; cbn.
+  exact (ap (fun k => k o f) p).
+Defined.
 
 (** The inverse of an equivalence is an equivalence. *)
 Global Instance isequiv_inverse {A B : Type} (f : A -> B) {feq : IsEquiv f}
@@ -430,7 +421,7 @@ Definition equiv_ap_inv' `(f : A <~> B) (x y : B)
 Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
   `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : IsEquiv g
-  := isequiv_homotopic (compose (compose g f) f^-1)
+  := isequiv_homotopic ((g o f) o f^-1)
        (fun b => ap g (eisretr f b)).
 
 Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
@@ -442,7 +433,7 @@ Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
 Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
   `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : IsEquiv f
-  := isequiv_homotopic (compose g^-1 (compose g f))
+  := isequiv_homotopic (g^-1 o (g o f))
        (fun a => eissect g (f a)).
 
 Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
@@ -559,12 +550,24 @@ Ltac equiv_via mid :=
 (** It's often convenient when constructing a chain of equivalences to use [equiv_compose'], etc.  But when we treat an [Equiv] object constructed in that way as a function, via the coercion [equiv_fun], Coq sometimes needs a little help to realize that the result is the same as ordinary composition.  This tactic provides that help. *)
 Ltac ev_equiv :=
   repeat match goal with
+           | [ |- context[equiv_fun (equiv_inverse (equiv_inverse ?f))] ] =>
+             change (equiv_fun (equiv_inverse (equiv_inverse f))) with (equiv_fun f)
+           | [ |- context[(@equiv_inv ?B ?A (equiv_fun (equiv_inverse ?f)) ?iseq)] ] =>
+             change (@equiv_inv B A (equiv_fun (equiv_inverse f)) iseq) with (equiv_fun f)
+           | [ |- context[((equiv_fun ?f)^-1)^-1] ] =>
+             change ((equiv_fun f)^-1)^-1 with (equiv_fun f)
            | [ |- context[equiv_fun (equiv_compose' ?g ?f) ?a] ] =>
-             change ((equiv_compose' g f) a) with (g (f a))
+             change (equiv_fun (equiv_compose' g f) a) with (g (f a))
            | [ |- context[equiv_fun (equiv_compose ?g ?f) ?a] ] =>
-             change ((equiv_compose g f) a) with (g (f a))
+             change (equiv_fun (equiv_compose g f) a) with (g (f a))
            | [ |- context[equiv_fun (equiv_inverse ?f) ?a] ] =>
-             change ((equiv_inverse f) a) with (f^-1 a)
+             change (equiv_fun (equiv_inverse f) a) with (f^-1 a)
+           | [ |- context[equiv_fun (equiv_compose' ?g ?f)] ] =>
+             change (equiv_fun (equiv_compose' g f)) with (g o f)
+           | [ |- context[equiv_fun (equiv_compose ?g ?f)] ] =>
+             change (equiv_fun (equiv_compose g f)) with (g o f)
+           | [ |- context[equiv_fun (equiv_inverse ?f)] ] =>
+             change (equiv_fun (equiv_inverse f)) with (f^-1)
          end.
 
 (** ** Building equivalences between nested sigma and record types *)
