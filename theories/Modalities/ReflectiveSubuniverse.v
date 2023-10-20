@@ -903,10 +903,7 @@ Section Reflective_Subuniverse.
                `{In O A} {B_inO : In O {x:A & B x}} (x : A)
     : In O (B x).
     Proof.
-      refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
-      (** TODO: Why doesn't Coq find this instance? *)
-      (* This is #12571 and it is only needed for Coq <= 8.11 *)
-      all: refine (inO_hfiber pr1 x); assumption.
+      exact (inO_equiv_inO _ (hfiber_fibration x B)^-1).
     Defined.
 
     #[local]
