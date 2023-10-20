@@ -64,7 +64,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   : A <~> C
   := equiv_compose g f.
 
-(** We put [g] and [f] in [equiv_scope] explicitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+(** We put [g] and [f] in [equiv_scope] explicitly.  This is a partial work-around for https://github.com/coq/coq/issues/3990, which is that implicitly bound scopes don't nest well. *)
 Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
