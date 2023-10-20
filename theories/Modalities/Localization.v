@@ -222,6 +222,7 @@ Proof.
       refine (transport_paths_FlFr_D _ _ @ _).
       Open Scope long_path_scope.
       Local Opaque transport_pV. (* work around bug 4533 *)
+      (* Even though https://github.com/coq/coq/issues/4533 is closed, this is still needed. *)
       rewrite !ap_pp, !concat_p_pp, ap_transport_pV, !concat_p_pp.
       Local Transparent transport_pV. (* work around bug 4533 *)
       refine ((((_  @@ 1) @ concat_1p _) @@ 1 @@ 1 @@ 1) @ _).

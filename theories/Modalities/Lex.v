@@ -375,6 +375,7 @@ Proof.
   unfold moveL_equiv_V, moveR_equiv_V.
   Open Scope long_path_scope.
   Local Opaque eissect. (* work around bug 4533 *)
+  (* Even though https://github.com/coq/coq/issues/4533 is closed, this is still needed. *)
   rewrite !ap_pp, !concat_p_pp, !ap_V.
   unfold to_O_natural.
   rewrite concat_pV_p.
