@@ -1067,7 +1067,7 @@ Section RaiseSort.
       strip_truncations.
       destruct sh as [[l sh]|[r sh]].
       + apply lt_l with l.
-        apply IHL0, (@No_decode_le ua). (* Need to pass in [Univalence] to make this fast. *)
+        apply IHL0, (@No_decode_le ua). (* Need to pass in [Univalence] to make this fast. TODO: should be fast without ua with Coq 8.19.  If so, remove this when 8.19 is our minimum version. *)
         rewrite p; exact sh.
       + apply lt_r with r.
         apply IHR, No_decode_le.
