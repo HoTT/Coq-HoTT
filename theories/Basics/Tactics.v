@@ -15,14 +15,6 @@ Ltac simple_induction n n' IH :=
   intros [| n'];
   [ clear IH | specialize (IH n') ].
 
-(** This should be equivalent to [induction p], except that it may leave additional things from the context reverted.  Using this avoids introducing extra universe variables. *)
-Ltac simple_path_induction p :=
-  match type of p with (_ = ?x) =>
-    move p at top; (* After the next line, we want the first two variables to be [x] and then [p]. *)
-    generalize dependent x;
-    refine (fun x p => match p with 1 => _ end);
-    clear x p end.
-
 (** Debugging tactics to show the goal during evaluation. *)
 
 Ltac show_goal := match goal with [ |- ?T ] => idtac T end.

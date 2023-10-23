@@ -222,12 +222,9 @@ Definition square_ind {P : Type@{u}} (a b : P) (ab : a = b)
   : forall a' b' ab' ha hb k, Q a' b' ab' ha hb k.
 Proof.
   intros.
-  simple_path_induction ha.
-  simple_path_induction hb.
-  intro ab'; equiv_intro (equiv_p1_1q (p:=ab) (q:=ab')) k'.
-  simple_path_induction k'.
-  simple_path_induction ab.
-  intros Q s.
+  destruct ha, hb.
+  revert k; equiv_intro (equiv_p1_1q (p:=ab) (q:=ab')) k'; destruct k'.
+  destruct ab.
   exact s.
 Defined.
 
@@ -444,7 +441,7 @@ Section Triangle.
   Definition triangle_v_V (a : A) {b b' : B} (p : b = b')
     : triangle_v a p^ = (1 @@ ap_V joinr p) @ moveR_pV _ _ _ (triangle_v a p)^.
   Proof.
-    induction p; cbn.
+    destruct p; cbn.
     rhs nrapply concat_1p.
     symmetry; apply concat_pV_p.
   Defined.
