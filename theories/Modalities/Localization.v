@@ -221,9 +221,10 @@ Proof.
       rewrite concat_Vp; simpl; rewrite concat_1p.
       refine (transport_paths_FlFr_D _ _ @ _).
       Open Scope long_path_scope.
+      rewrite !ap_pp, !concat_p_pp, ap_transport_pV.
+      (* Even though https://github.com/coq/coq/issues/4533 is closed, this workaround is still needed. Without the Opaque setting, the [rewrite] unfolds the first [transport_pV] in the goal, and the first [moveR_Vp] below fails. *)
       Local Opaque transport_pV. (* work around bug 4533 *)
-      (* Even though https://github.com/coq/coq/issues/4533 is closed, this is still needed. *)
-      rewrite !ap_pp, !concat_p_pp, ap_transport_pV, !concat_p_pp.
+      rewrite !concat_p_pp.
       Local Transparent transport_pV. (* work around bug 4533 *)
       refine ((((_  @@ 1) @ concat_1p _) @@ 1 @@ 1 @@ 1) @ _).
       * rewrite ap_V, concat_pp_p.
