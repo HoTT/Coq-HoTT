@@ -1,8 +1,27 @@
 Require Import Basics.Overture.
 
-
 (** TODO: Clean up *)
-(** This module implements various tactics used to simplify the goals produced by Program, which are also generally useful. *)
+
+(** * Basic tactics *)
+
+(** This module implements various tactics used in the library. *)
+
+(** Simple induction *)
+
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
+Ltac simple_induction n n' IH :=
+  generalize dependent n;
+  fix IH 1;
+  intros [| n'];
+  [ clear IH | specialize (IH n') ].
+
+(** This should be equivalent to [induction p], except that it may leave additional things from the context reverted.  Using this avoids introducing extra universe variables. *)
+Ltac simple_path_induction p :=
+  match type of p with (_ = ?x) =>
+    move p at top; (* After the next line, we want the first two variables to be [x] and then [p]. *)
+    generalize dependent x;
+    refine (fun x p => match p with 1 => _ end);
+    clear x p end.
 
 (** Debugging tactics to show the goal during evaluation. *)
 
