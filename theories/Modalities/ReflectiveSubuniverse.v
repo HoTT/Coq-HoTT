@@ -901,13 +901,8 @@ Section Reflective_Subuniverse.
 
     Definition inO_unsigma {A : Type} (B : A -> Type)
                `{In O A} {B_inO : In O {x:A & B x}} (x : A)
-    : In O (B x).
-    Proof.
-      refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
-      (** TODO: Why doesn't Coq find this instance? *)
-      (* This is #12571 and it is only needed for Coq <= 8.11 *)
-      all: refine (inO_hfiber pr1 x); assumption.
-    Defined.
+    : In O (B x)
+    := inO_equiv_inO _ (hfiber_fibration x B)^-1.
 
     #[local]
     Hint Immediate inO_unsigma : typeclass_instances.
