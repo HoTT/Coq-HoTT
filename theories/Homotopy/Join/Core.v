@@ -216,8 +216,8 @@ Ltac interval_ind f a b :=
 
 (** Similarly, for [h : JoinRecPath f g], if we have [a] and [b] and are trying to prove a goal only involving [h] and [g] evaluated at those points, we can assume that [g] is [f] and that [h] is "reflexivity".  For this, we first define a lemma that is like "path induction on h", and then a tactic that uses it. *)
 
-Definition square_ind {P : Type@{u}} (a b : P) (ab : a = b)
-  (Q : forall (a' b' : P) (ab' : a' = b') (ha : a = a') (hb : b = b') (k : ab @ hb = ha @ ab'), Type@{v})
+Definition square_ind {P : Type} (a b : P) (ab : a = b)
+  (Q : forall (a' b' : P) (ab' : a' = b') (ha : a = a') (hb : b = b') (k : ab @ hb = ha @ ab'), Type)
   (s : Q a b ab idpath idpath (equiv_p1_1q idpath))
   : forall a' b' ab' ha hb k, Q a' b' ab' ha hb k.
 Proof.
