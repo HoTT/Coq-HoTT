@@ -281,19 +281,17 @@ Class Faithful {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
 
 Section IdentityFunctor.
 
-  Context {A : Type} `{Is1Cat A}.
-
-  Global Instance is0functor_idmap : Is0Functor idmap.
+  Global Instance is0functor_idmap {A : Type} `{IsGraph A} : Is0Functor idmap.
   Proof.
     by apply Build_Is0Functor.
   Defined.
 
-  Global Instance is1functor_idmap : Is1Functor idmap.
+  Global Instance is1functor_idmap {A : Type} `{Is1Cat A} : Is1Functor idmap.
   Proof.
     by apply Build_Is1Functor.
   Defined.
 
-  #[export] Instance isFaithful_idmap : Faithful idmap.
+  #[export] Instance isFaithful_idmap {A : Type} `{Is1Cat A}: Faithful idmap.
   Proof.
     by unfold Faithful.
   Defined.

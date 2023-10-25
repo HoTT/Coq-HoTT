@@ -602,16 +602,6 @@ Notation IsHSet := (IsTrunc minus_two.+2).
 #[export]
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
-(** *** Simple induction *)
-
-(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [match] and [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
-
-Ltac simple_induction n n' IH :=
-  generalize dependent n;
-  fix IH 1;
-  intros [| n'];
-  [ clear IH | specialize (IH n') ].
-
 (** *** Truncated relations  *)
 
 (** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)

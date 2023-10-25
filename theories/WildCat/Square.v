@@ -8,9 +8,9 @@ Require Import WildCat.Equiv.
 
 (** A Square is a cubical 2-cell in a 1-category. The order of the arguments is left-right-top-bottom: [Square l r t b].  It is defined to be [r $o t $== b $o l]. *)
 
-Definition Square {A : Type} `{Is1Cat A} {x00 x20 x02 x22 : A}
+Definition Square@{u v w} {A : Type@{u}} `{Is1Cat@{u w v} A} {x00 x20 x02 x22 : A}
   (f01 : x00 $-> x02) (f21 : x20 $-> x22) (f10 : x00 $-> x20) (f12 : x02 $-> x22) 
-  : Type
+  : Type@{w}
   := f21 $o f10 $== f12 $o f01.
 
 
@@ -22,7 +22,7 @@ Section Squares.
     f03     f23     f43
     x04 f14 x24 f34 x44 
   All morphisms are pointed to the right or down. *)
-  Context {A : Type} `{HasEquivs A} {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
+  Context {A : Type} `{Is1Cat A} {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
     {f10 f10' : x00 $-> x20} {f30 : x20 $-> x40} 
     {f12 f12' : x02 $-> x22} {f32 : x22 $-> x42} 
     {f14 : x04 $-> x24} {f34 : x24 $-> x44}
@@ -55,7 +55,7 @@ Section Squares.
   := cat_assoc _ _ _ $@ (f23 $@L s) $@ (cat_assoc _ _ _)^$ $@ (t $@R f01) $@ cat_assoc _ _ _.
 
   (** If the horiztonal morphisms in a square are equivalences then we can flip the square by inverting them. *)
-  Definition hinverse (f10 : x00 $<~> x20) (f12 : x02 $<~> x22) (s : Square f01 f21 f10 f12)
+  Definition hinverse {HE : HasEquivs A} (f10 : x00 $<~> x20) (f12 : x02 $<~> x22) (s : Square f01 f21 f10 f12)
     : Square f21 f01 f10^-1$ f12^-1$
     := (cat_idl _)^$ $@ ((cate_issect f12)^$ $@R _) $@ cat_assoc _ _ _
       $@ (_ $@L ((cat_assoc _ _ _)^$ $@ (s^$ $@R _) $@ cat_assoc _ _ _
@@ -88,7 +88,7 @@ End Squares.
 Section Squares2.
 
   (** We declare the context again, now that we can reuse some declarations where the variables have been inserted. This would not need to be done if coq could generalize variables within sections. Currently this is possible in Lean and Agda. *)
-  Context {A B : Type} `{HasEquivs A} `{Is1Cat B}
+  Context {A : Type} `{HasEquivs A}
     {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
     {f10 f10' : x00 $-> x20} {f30 : x20 $-> x40} 
     {f12 f12' : x02 $-> x22} {f32 : x22 $-> x42} 
@@ -149,7 +149,7 @@ Section Squares2.
     : Square f01 f21' (f21 $o f10) f12
     := (cat_assoc _ _ _)^$ $@ s.
 
-  Definition fmap_square (f : A -> B) `{!Is0Functor f} `{!Is1Functor f}
+  Definition fmap_square {B : Type} `{Is1Cat B} (f : A -> B) `{!Is0Functor f} `{!Is1Functor f}
     (s : Square f01 f21 f10 f12)
     : Square (fmap f f01) (fmap f f21) (fmap f f10) (fmap f f12)
     := (fmap_comp f _ _)^$ $@ fmap2 f s $@ fmap_comp f _ _.
