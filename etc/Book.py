@@ -78,7 +78,7 @@ def die(msg):
     sys.exit(1)
 
 
-# Mapping from envirnment names to names
+# Mapping from environment names to names
 envname = {
     'axiom' :      'Axiom',
     'chapter' :    'Chapter',
