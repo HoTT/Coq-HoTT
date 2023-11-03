@@ -113,6 +113,9 @@ Section Join.
 
 End Join.
 
+Arguments joinl {A B}%type_scope _ , [A] B _.
+Arguments joinr {A B}%type_scope _ , A [B] _.
+
 (** * [Join_rec] gives an equivalence of 0-groupoids
 
   We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
