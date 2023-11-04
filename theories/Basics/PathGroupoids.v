@@ -1248,17 +1248,15 @@ Definition eckmann_hilton {A : Type} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q 
 (** The action of functions on 2-dimensional paths *)
 
 Definition ap02 {A B : Type} (f:A->B) {x y:A} {p q:x=y} (r:p=q) : ap f p = ap f q
-  := match r with idpath => 1 end.
+  := ap (ap f) r.
 
 Definition ap02_pp {A B} (f:A->B) {x y:A} {p p' p'':x=y} (r:p=p') (r':p'=p'')
-  : ap02 f (r @ r') = ap02 f r @ ap02 f r'.
-Proof.
-  case r, r'; reflexivity.
-Defined.
+  : ap02 f (r @ r') = ap02 f r @ ap02 f r'
+  := ap_pp (ap f) r r'.
 
 Definition ap02_p2p {A B} (f:A->B) {x y z:A} {p p':x=y} {q q':y=z} (r:p=p') (s:q=q')
-  : ap02 f (r @@ s) =   ap_pp f p q
-                      @ (ap02 f r  @@  ap02 f s)
+  : ap02 f (r @@ s) = ap_pp f p q
+                      @ (ap02 f r @@ ap02 f s)
                       @ (ap_pp f p' q')^.
 Proof.
   case r, s, p, q. reflexivity.
@@ -1270,12 +1268,11 @@ Definition apD02 {A : Type} {B : A -> Type} {x y : A} {p q : x = y}
   := match r with idpath => (concat_1p _)^ end.
 
 Definition apD02_const {A B : Type} (f : A -> B) {x y : A} {p q : x = y} (r : p = q)
-: apD02 f r = (apD_const f p)
-              @ (transport2_const r (f x) @@ ap02 f r)
-              @ (concat_p_pp _ _ _)^
-              @ (whiskerL (transport2 _ r (f x)) (apD_const f q)^)
-:=
-  match r with idpath =>
+  : apD02 f r = (apD_const f p)
+                  @ (transport2_const r (f x) @@ ap02 f r)
+                  @ (concat_p_pp _ _ _)^
+                  @ (whiskerL (transport2 _ r (f x)) (apD_const f q)^)
+  := match r with idpath =>
     match p with idpath => 1
     end end.
 

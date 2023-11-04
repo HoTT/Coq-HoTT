@@ -5,25 +5,23 @@ Local Open Scope path_scope.
 
 (** * Theorems about the 2-sphere [S^2]. *)
 
-Generalizable Variables X A B f g n.
-
 (* ** Definition of the 2-sphere. *)
 
 Module Export TwoSphere.
 
-Private Inductive TwoSphere : Type0 :=
-| base : TwoSphere.
+  Private Inductive TwoSphere : Type0 :=
+    | base : TwoSphere.
 
-Axiom surf : idpath base = idpath base.
+  Axiom surf : idpath base = idpath base.
 
-Definition TwoSphere_ind (P : TwoSphere -> Type)
-  (b : P base) (s : idpath b = transport2 P surf b)
-  : forall (x : TwoSphere), P x
-  := fun x => match x with base => fun _ => b end s.
+  Definition TwoSphere_ind (P : TwoSphere -> Type)
+    (b : P base) (s : idpath b = transport2 P surf b)
+    : forall (x : TwoSphere), P x
+    := fun x => match x with base => fun _ => b end s.
 
-Axiom TwoSphere_ind_beta_surf : forall (P : TwoSphere -> Type)
-  (b : P base) (s : idpath b = transport2 P surf b),
-  apD02 (TwoSphere_ind P b s) surf = s @ (concat_p1 _)^.
+  Axiom TwoSphere_ind_beta_surf : forall (P : TwoSphere -> Type)
+    (b : P base) (s : idpath b = transport2 P surf b),
+    apD02 (TwoSphere_ind P b s) surf = s @ (concat_p1 _)^.
 
 End TwoSphere.
 
@@ -33,9 +31,8 @@ Definition TwoSphere_rec (P : Type) (b : P) (s : idpath b = idpath b)
   : TwoSphere -> P
   := TwoSphere_ind (fun _ => P) b (s @ (transport2_const surf b) @ (concat_p1 _)).
 
-
 Definition TwoSphere_rec_beta_surf (P : Type) (b : P) (s : idpath b = idpath b)
-: ap02 (TwoSphere_rec P b s) surf = s.
+  : ap02 (TwoSphere_rec P b s) surf = s.
 Proof.
   apply (cancel2L (transport2_const surf b)).
   apply (cancelL (apD_const (TwoSphere_rec P b s) (idpath base))).
