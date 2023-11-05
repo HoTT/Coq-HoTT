@@ -223,16 +223,6 @@ Register paths_rect as core.identity.ind.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  [internal_paths_rew P u p] is definitionally equal to [transport P p u], but the more common [internal_paths_rew_r] is not definitionally equal to something defined using [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic. The lemmas below are not used in the library. *)
-Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
-Proof. rewrite <- H. exact u. Defined.
-
-Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
-Proof. rewrite -> H. exact u. Defined.
-
-Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
-Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
-
 Register paths as core.identity.type.
 
 Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
@@ -317,7 +307,7 @@ Register concat as core.identity.trans.
 Notation "1" := idpath : path_scope.
 
 (** The composition of two paths. *)
-(** We put [p] and [q] in [path_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+(** We put [p] and [q] in [path_scope] explicitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
 Notation "p @ q" := (concat p%path q%path) : path_scope.
 
 (** The inverse of a path. *)
@@ -327,27 +317,29 @@ Notation "p ^" := (inverse p%path) : path_scope.
 (** An alternative notation which puts each path on its own line, via the [format] specification in Notations.v.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) : long_path_scope.
 
-
-(** An important instance of [paths_ind] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
-
-   [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
-Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
-  match p with idpath => u end.
+(** An important instance of [paths_ind] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base:  [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
+Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y
+  := match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
 
-(** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
-
+(** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
 
-(** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".
+(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  [internal_paths_rew P u p] is definitionally equal to [transport P p u], but the more common [internal_paths_rew_r] is not definitionally equal to something defined using [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic. The lemmas below are not used in the library. *)
+Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
+Proof. rewrite <- H. exact u. Defined.
 
-We will first see this appearing in the type of [apD]. *)
+Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
+Proof. rewrite -> H. exact u. Defined.
 
-(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].
+Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
+Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
 
-   We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
+(** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
+
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
