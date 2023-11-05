@@ -223,12 +223,15 @@ Register paths_rect as core.identity.ind.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-(** Ensure [internal_paths_rew] and [internal_paths_rew_r] are defined outside sections, so they are not unnecessarily polymorphic. *)
-Lemma paths_rew A a y P (X : P a) (H : a = y :> A) : P y.
-Proof. rewrite <- H. exact X. Defined.
+(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  [internal_paths_rew P u p] is definitionally equal to [transport P p u], but the more common [internal_paths_rew_r] is not definitionally equal to something defined using [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic. The lemmas below are not used in the library. *)
+Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
+Proof. rewrite <- H. exact u. Defined.
 
-Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
-Proof. rewrite -> H. exact X. Defined.
+Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
+Proof. rewrite -> H. exact u. Defined.
+
+Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
+Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
 
 Register paths as core.identity.type.
 
@@ -273,10 +276,6 @@ Arguments inverse {A x y} p : simpl nomatch.
 
 Global Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 Arguments symmetric_paths / .
-
-(** This allows [rewrite] to both in left-to-right and right-to left directions. *)
-Definition paths_rect_r (A : Type) (x : A) (P : A -> Type) (p : P x) (y : A) (e : paths y x) : P y :=
-  paths_rect A x (fun y e => P y) p y (inverse e).
 
 (** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq's restriction on [Identity Coercion]s:
 
