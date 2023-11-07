@@ -407,3 +407,20 @@ Ltac context_to_lambda G :=
                                 let ret := context G[k] in
                                 exact ret)) in
   (eval cbv zeta in ret).
+
+(** The [rewrite <-] tactic uses [internal_paths_rew], which is definitionally equal to [transport], except for the order of the arguments.  The following replaces the former with the latter. *)
+Ltac internal_paths_rew_to_transport :=
+  repeat match goal with |- context [ internal_paths_rew ?P ?u ?p ] =>
+                           change (internal_paths_rew P u p) with (transport P p u) end.
+
+(** Unfortunately, the more common [rewrite ->] uses [internal_paths_rew_r], which is not definitionally equal to something involving [transport].  However, we do have a propositional equality. The arguments here match the arguments that [internal_paths_rew_r] takes. *)
+Definition internal_paths_rew_r_to_transport {A : Type} {x y : A} (P : A -> Type) (u : P y) (p : x = y)
+  : internal_paths_rew_r P u p = transport P p^ u.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+(** This tactic replaces both [internal_paths_rew] and [internal_paths_rew_r] with [transport], using [rewrite] for the latter. *)
+Ltac rewrite_to_transport :=
+  internal_paths_rew_to_transport;
+  rewrite ! internal_paths_rew_r_to_transport.

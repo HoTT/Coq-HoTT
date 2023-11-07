@@ -327,7 +327,7 @@ Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
 
-(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  [internal_paths_rew P u p] is definitionally equal to [transport P p u], but the more common [internal_paths_rew_r] is not definitionally equal to something defined using [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic. The lemmas below are not used in the library. *)
+(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
 Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
 Proof. rewrite <- H. exact u. Defined.
 
