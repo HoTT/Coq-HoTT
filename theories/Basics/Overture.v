@@ -328,6 +328,7 @@ Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl
 Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
 
 (** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
+(** TODO: If Coq PR#18299 is merged (possibly in Coq 8.20), then we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)
 Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
 Proof. rewrite <- H. exact u. Defined.
 
