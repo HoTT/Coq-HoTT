@@ -26,7 +26,7 @@
         };
 
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs.coqPackages_8_18; [
+          buildInputs = with pkgs.coqPackages_8_19; [
             pkgs.dune_3
             pkgs.ocaml
             coq
