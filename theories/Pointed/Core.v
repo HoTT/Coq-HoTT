@@ -186,6 +186,23 @@ Ltac pointed_reduce_pmap f
     | _ ->* ?Y => let p := fresh in destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
     end.
 
+(** General tactic to reduce any pointed equations of a pForall *)
+Ltac pelim q :=
+  destruct q as [q ?];
+  unfold pointed_fun, point_htpy in *;    
+  cbn;
+  generalize dependent (q pt);
+  rapply paths_ind_r;
+  clear q.
+
+Tactic Notation "pelim" constr(x0) := pelim x0.
+Tactic Notation "pelim" constr(x0) constr(x1) := pelim x0; pelim x1.
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) := pelim x0; pelim x1 x2.
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) := pelim x0; pelim x1 x2 x3.
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) := pelim x0; pelim x1 x2 x3 x4.
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) := pelim x0; pelim x1 x2 x3 x4 x5.
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) constr(x6) := pelim x0; pelim x1 x2 x3 x4 x5 x6.
+
 (** ** Equivalences to sigma-types. *)
 
 (** pType *)
@@ -525,42 +542,32 @@ Notation "'ppforall'  x .. y , P"
      : pointed_scope.
 
 (** ** 1-categorical properties of [pForall]. *)
-(** TODO: remove funext *)
 
-Definition phomotopy_postwhisker `{Funext} {A : pType} {P : pFam A}
+Definition phomotopy_postwhisker {A : pType} {P : pFam A}
   {f g h : pForall A P} {p p' : f ==* g} (r : p ==* p') (q : g ==* h)
   : p @* q ==* p' @* q.
 Proof.
   snrapply Build_pHomotopy.
   1: exact (fun x => whiskerR (r x) (q x)).
-  revert p' r. srapply phomotopy_ind.
-  revert h q. srapply phomotopy_ind.
-  revert g p. srapply phomotopy_ind.
-  pointed_reduce. reflexivity.
+  by pelim q r p p' f g h.
 Defined.
 
-Definition phomotopy_prewhisker `{Funext} {A : pType} {P : pFam A}
+Definition phomotopy_prewhisker {A : pType} {P : pFam A}
   {f g h : pForall A P} (p : f ==* g) {q q' : g ==* h} (s : q ==* q')
   : p @* q ==* p @* q'.
 Proof.
   snrapply Build_pHomotopy.
   1: exact (fun x => whiskerL (p x) (s x)).
-  revert q' s. srapply phomotopy_ind.
-  revert h q. srapply phomotopy_ind.
-  revert g p. srapply phomotopy_ind.
-  pointed_reduce. reflexivity.
+  by pelim s q q' p f g h.
 Defined.
 
-Definition phomotopy_compose_assoc `{Funext} {A : pType} {P : pFam A}
+Definition phomotopy_compose_assoc {A : pType} {P : pFam A}
   {f g h k : pForall A P} (p : f ==* g) (q : g ==* h) (r : h ==* k)
   : p @* (q @* r) ==* (p @* q) @* r.
 Proof.
   snrapply Build_pHomotopy.
   1: exact (fun x => concat_p_pp (p x) (q x) (r x)).
-  revert k r. srapply phomotopy_ind.
-  revert h q. srapply phomotopy_ind.
-  revert g p. srapply phomotopy_ind.
-  pointed_reduce. reflexivity.
+  by pelim r q p f g h k.
 Defined.
 
 Definition phomotopy_compose_p1 {A : pType} {P : pFam A} {f g : pForall A P}
@@ -587,22 +594,20 @@ Proof.
     intros x q. destruct q. reflexivity.
 Defined.
 
-Definition phomotopy_compose_pV `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
+Definition phomotopy_compose_pV {A : pType} {P : pFam A} {f g : pForall A P}
  (p : f ==* g) : p @* p ^* ==* phomotopy_reflexive f.
 Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_pV.
-  + revert g p. srapply phomotopy_ind.
-    pointed_reduce. reflexivity.
+  + by pelim p f g.
 Defined.
 
-Definition phomotopy_compose_Vp `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
+Definition phomotopy_compose_Vp {A : pType} {P : pFam A} {f g : pForall A P}
  (p : f ==* g) : p ^* @* p ==* phomotopy_reflexive g.
 Proof.
   srapply Build_pHomotopy.
   + intro x. apply concat_Vp.
-  + revert g p. srapply phomotopy_ind.
-    pointed_reduce. reflexivity.
+  + by pelim p f g.
 Defined.
 
 Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
@@ -752,7 +757,7 @@ Definition path_zero_morphism_pconst (A B : pType)
   : (@pconst A B) = zero_morphism := idpath.
 
 (** pForall is a 1-category *)
-Global Instance is1cat_pforall `{Funext} (A : pType) (P : pFam A) : Is1Cat (pForall A P).
+Global Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
   econstructor.
   - intros f g h p; rapply Build_Is0Functor.
@@ -765,11 +770,73 @@ Proof.
 Defined.
 
 (** pForall is a 1-groupoid *)
-Global Instance is1gpd_pforall `{Funext} (A : pType) (P : pFam A) : Is1Gpd (pForall A P).
+Global Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.
 Proof.
   econstructor.
   + intros ? ? p. exact (phomotopy_compose_pV p).
   + intros ? ? p. exact (phomotopy_compose_Vp p).
+Defined.
+
+Global Instance is3graph_ptype : Is3Graph pType := fun f g => _.
+
+Global Instance is21cat_ptype : Is21Cat pType.
+Proof.
+  unshelve econstructor.
+  1: exact _.
+  - intros f g h p; nrapply Build_Is1Functor.
+    + intros q r s t u.
+      srapply Build_pHomotopy.
+      1: exact (fun _ => ap _ (u _)).
+      by pelim u s t q r p.
+    + intros q.
+      srapply Build_pHomotopy.
+      1: reflexivity.
+      by pelim q p.
+    + intros a b c s t.
+      srapply Build_pHomotopy.
+      1: cbn; exact (fun _ => ap_pp _ _ _).
+      by pelim s t a b c p.
+  - intros f g h p; nrapply Build_Is1Functor.
+    + intros q r s t u.
+      srapply Build_pHomotopy.
+      1: intro; exact (u _).
+      by pelim p u s t q r.
+    + intros q.
+      srapply Build_pHomotopy.
+      1: reflexivity.
+      by pelim p q.
+    + intros a b c s t.
+      srapply Build_pHomotopy.
+      1: reflexivity.
+      by pelim p s t a b c.
+  - intros A B C D f g r1 r2 s1.
+    srapply Build_pHomotopy.
+    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
+    by pelim f g s1 r1 r2.
+  - intros A B C D f g r1 r2 s1.
+    srapply Build_pHomotopy.
+    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
+    by pelim f s1 r1 r2 g.
+  - intros A B C D f g r1 r2 s1.
+    srapply Build_pHomotopy.
+    1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
+    by pelim s1 r1 r2 f g.
+  - intros A B r1 r2 s1.
+    srapply Build_pHomotopy.
+    1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+    by pelim s1 r1 r2.
+  - intros A B r1 r2 s1.
+    srapply Build_pHomotopy.
+    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
+    simpl; by pelim s1 r1 r2.
+  - intros A B C D E f g h j.
+    srapply Build_pHomotopy.
+    1: reflexivity.
+    by pelim f g h j.
+  - intros A B C f g.
+    srapply Build_pHomotopy.
+    1: reflexivity.
+    by pelim f g.
 Defined.
 
 (** The forgetful map from pType to Type is a 0-functor *)

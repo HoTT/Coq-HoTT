@@ -99,8 +99,9 @@ Defined.
 (** Loops is a pointed functor *)
 Global Instance ispointedfunctor_loops : IsPointedFunctor loops.
 Proof.
-  rapply Build_IsPointedFunctor'.
-  apply pequiv_loops_punit.
+  snrapply Build_IsPointedFunctor'.
+  1-4: exact _.
+  exact pequiv_loops_punit.
 Defined.
 
 Lemma fmap_loops_pconst {A B : pType} : fmap loops (@pconst A B) ==* pconst.
@@ -122,7 +123,7 @@ Global Instance is1functor_iterated_loops n : Is1Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
-  rapply is1functor_compose.
+  nrapply is1functor_compose; exact _.
 Defined.
 
 Lemma fmap_iterated_loops_pp {X Y : pType} (f : X ->* Y) n

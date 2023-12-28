@@ -327,9 +327,10 @@ Definition joinrecdata_0gpd_fun (A B : Type) : Fun11 Type ZeroGpd
 (** By the Yoneda lemma, it follows from [JoinRecData] being a 1-functor that given [JoinRecData] in [J], we get a map [(J -> P) $-> (JoinRecData A B P)] of 0-groupoids which is natural in [P]. Below we will specialize to the case where [J] is [Join A B] with the canonical [JoinRecData]. *)
 Definition join_nattrans_recdata {A B J : Type} (f : JoinRecData A B J)
   : NatTrans (opyon_0gpd J) (joinrecdata_0gpd_fun A B).
-Proof.
-  srapply Build_NatTrans.  (* This finds the Yoneda lemma via typeclass search. Is that what we want? *)
-  Unshelve.
+Proof. 
+  snrapply Build_NatTrans.
+  1: rapply opyoneda_0gpd.
+  2: exact _.
   exact f.
 Defined.
 

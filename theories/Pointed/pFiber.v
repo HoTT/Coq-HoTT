@@ -84,7 +84,7 @@ Defined.
 Definition pequiv_pfiber {A B C D}
            {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)
            (p : k o* f ==* g o* h)
-  : pfiber f <~>* pfiber g
+  : pfiber f $<~> pfiber g
   := Build_pEquiv _ _ (functor_pfiber p) _.
 
 Definition square_functor_pfiber {A B C D}

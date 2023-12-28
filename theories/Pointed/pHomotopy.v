@@ -25,26 +25,16 @@ Defined.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
 
-Definition pmap_postwhisker {A B C : pType} {f g : A ->* B}
-  (h : B ->* C) (p : f ==* g) : h o* f ==* h o* g.
+Definition pmap_postwhisker {A B C : pType} {f g : A $-> B}
+  (h : B $-> C) (p : f ==* g) : h o* f ==* h o* g.
 Proof.
-  snrapply Build_pHomotopy; cbn.
-  1: intros a; apply ap, p.
-  pointed_reduce.
-  symmetry.
-  simpl.
-  refine (concat_p1 _ @ concat_p1 _ @ ap _ _).
-  exact (concat_p1 _).
+  exact (h $@L p).
 Defined.
 
-Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
-  {g h : B ->* C} (p : g ==* h) : g o* f ==* h o* f.
+Definition pmap_prewhisker {A B C : pType} (f : A $-> B)
+  {g h : B $-> C} (p : g $== h) : g o* f ==* h o* f.
 Proof.
-  snrapply Build_pHomotopy; cbn.
-  1: intros a; apply p.
-  pointed_reduce.
-  symmetry.
-  refine (concat_p1 _ @ concat_1p _ @ concat_p1 _).
+  exact (p $@R f).
 Defined.
 
 (** ** [phomotopy_path] respects 2-cells. *)
