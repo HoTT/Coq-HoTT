@@ -79,7 +79,7 @@ Definition iscomplex_homotopic_f {F X Y : pType}
   : IsComplex i f'
   := pmap_prewhisker i ff @* cx.
 
-Definition iscomplex_cancelR {F X Y Y' : pType}
+Definition iscomplex_cancelL {F X Y Y' : pType}
   (i : F ->* X) (f : X ->* Y) (e : Y <~>* Y') (cx : IsComplex i (e o* f))
   : IsComplex i f.
 Proof.
@@ -206,7 +206,7 @@ Definition isexact_homotopic_f n  {F X Y : pType}
 Proof.
   exists (iscomplex_homotopic_f i ff cx_isexact).
   pose (e := equiv_hfiber_homotopic _ _ ff pt).
-  nrefine (cancelR_isequiv_conn_map n _ e).
+  nrefine (cancelL_isequiv_conn_map n _ e).
   1: apply equiv_isequiv.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. simpl. srapply path_hfiber.
@@ -222,7 +222,7 @@ Definition isexact_equiv_i n  {F F' X X' Y : pType}
   : IsExact n i' (f o* h).
 Proof.
   exists (iscomplex_equiv_i i i' g h p f cx_isexact); cbn.
-  snrefine (cancelR_equiv_conn_map n (C := pfiber f) _ _).
+  snrefine (cancelL_equiv_conn_map n (C := pfiber f) _ _).
   - exact (@equiv_functor_hfiber _ _ _ _ (f o h) f h equiv_idmap
              (fun x => 1%path) (point Y)).
   - cbn; unfold functor_hfiber, functor_sigma; cbn.
@@ -271,10 +271,10 @@ Definition isexact_square_if n  {F F' X X' Y Y' : pType}
 Proof.
   pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
-  exists (iscomplex_cancelR i' f' k cx_isexact).
+  exists (iscomplex_cancelL i' f' k cx_isexact).
   epose (e := (pequiv_pfiber (id_cate _) k (cat_idr (k $o f'))^$
     : pfiber f' <~>* pfiber (k o* f'))).
-  nrefine (cancelR_isequiv_conn_map n _ e).
+  nrefine (cancelL_isequiv_conn_map n _ e).
   1: apply pointed_isequiv.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. srapply path_hfiber.

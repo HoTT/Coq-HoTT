@@ -354,7 +354,7 @@ Global Instance issurj_isabelianization {G : Group}
 Proof.
   intros k.
   pose (homotopic_isabelianization A (abel G) eta (abel_unit G)) as p.
-  refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
+  refine (@cancelL_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
 Defined.
 

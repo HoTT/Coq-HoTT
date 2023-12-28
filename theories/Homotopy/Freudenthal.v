@@ -13,7 +13,7 @@ Local Definition freudenthal' `{Univalence} (n : trunc_index)
            (X : Type) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.
-  snrapply cancelR_equiv_conn_map.
+  snrapply cancelL_equiv_conn_map.
   2: { refine (equiv_ap' (B:=SPushout (fun (u v : Unit) => X)) _ North South).
        exact (equiv_pushout (equiv_contr_sigma (fun _ : Unit * Unit => X))^-1
                             (equiv_idmap Unit) (equiv_idmap Unit)
