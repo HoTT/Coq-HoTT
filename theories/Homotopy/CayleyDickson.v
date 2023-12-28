@@ -292,8 +292,8 @@ Section ImaginaroidHSpace.
     change (forall s : Susp A,
       Diamond (-mon_unit) s (mon_unit) s).
     srapply Susp_ind_dp; hnf.
-    1: by apply diamond_v.
-    1: by apply diamond_h.
+    1: by apply diamond_v_sq.
+    1: by apply diamond_h_sq.
     intro a.
     apply diamond_twist.
   Defined.
