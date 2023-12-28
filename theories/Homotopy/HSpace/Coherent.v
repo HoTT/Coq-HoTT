@@ -1,13 +1,14 @@
-Require Import Basics HSpace.Core.
+Require Import Basics HSpace.Core Pointed.Core.
 
 Local Open Scope mc_mult_scope.
+Local Open Scope pointed_scope.
 
 (** ** Coherent H-space structures *)
 
 (** An H-space is coherent when the left and right identities agree at the base point. *)
 
 Class IsCoherent (X : pType) `{IsHSpace X} :=
-  iscoherent : left_identity _ = right_identity _.
+  iscoherent : left_identity pt = right_identity pt.
 
 Record IsCohHSpace (A : pType) := {
     ishspace_cohhspace : IsHSpace A;
@@ -17,9 +18,9 @@ Record IsCohHSpace (A : pType) := {
 
 Definition issig_iscohhspace (A : pType)
   : { hspace_op : SgOp A
-    & { hspace_left_identity : LeftIdentity hspace_op _
-    & { hspace_right_identity : RightIdentity hspace_op _
-    & hspace_left_identity (point _) = hspace_right_identity _ } } }
+    & { hspace_left_identity : LeftIdentity hspace_op pt
+    & { hspace_right_identity : RightIdentity hspace_op pt
+    & hspace_left_identity pt = hspace_right_identity pt } } }
       <~> IsCohHSpace A.
 Proof.
   transitivity { H : IsHSpace A & IsCoherent A }.
