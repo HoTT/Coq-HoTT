@@ -111,15 +111,7 @@ Proof.
   refine (isconnected_elim n.+1 C f).
 Defined.
 
-(** By induction, an [n.+1]-connected type is also [-1]-connected. *)
-Definition merely_isconnected n A `{IsConnected n.+1 A}
-  : merely A.
-Proof.
-  induction n as [|n IHn].
-  - apply center; assumption.
-  - apply IHn, isconnected_pred; assumption.
-Defined.
-
+(** A [k]-connected type is [n]-connected, when [k >= n].  We constrain [k] by making it of the form [n +2+ m], which makes the induction go through smoothly. *)
 Definition isconnected_pred_add n m A `{H : IsConnected (n +2+ m) A}
   : IsConnected m A.
 Proof.
@@ -129,6 +121,24 @@ Proof.
   apply isconnected_pred.
   assumption.
 Defined.
+
+(** A version with the order of summands swapped, which is sometimes handy, e.g. in the next two results. *)
+Definition isconnected_pred_add' n m A `{H : IsConnected (m +2+ n) A}
+  : IsConnected m A.
+Proof.
+  rewrite trunc_index_add_comm in H.
+  apply (isconnected_pred_add n m); assumption.
+Defined.
+
+(** It follows that an [n.+1]-connected type is also [-1]-connected. *)
+Definition merely_isconnected n A `{IsConnected n.+1 A}
+  : merely A
+  := @center _ (isconnected_pred_add' n (-1) A).
+
+(** And that an [n]-connected type, with [n >= 0], is [0]-connected. *)
+Definition is0connected_isconnected (n : nat) A `{IsConnected n A}
+  : IsConnected 0 A
+  := isconnected_pred_add' n.-2 0 A.
 
 Definition isconnmap_pred_add n m A B (f : A -> B) `{IsConnMap (n +2+ m) _ _ f}
   : IsConnMap m f.

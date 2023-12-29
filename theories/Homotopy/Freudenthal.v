@@ -28,6 +28,6 @@ Proof.
   exact ((concat_p1 _ @ concat_1p _)^).
 Defined.
 
-Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u u u u v u u u u u}.
+Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u u u u v u u u u u u}.
 
 Global Existing Instance freudenthal.
