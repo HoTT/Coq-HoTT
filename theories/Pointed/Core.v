@@ -261,8 +261,8 @@ Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B).
 Proof.
   intros f g p.
   snrefine (Build_pHomotopy _ _); cbn.
-  - intros x; exact ((p x)^).
-  - refine (inverse2 (dpoint_eq p) @ inv_pV _ _).
+  1: intros x; exact ((p x)^).
+  by pelim p f g.
 Defined.
 
 Notation "p ^*" := (phomotopy_symmetric _ _ p) : pointed_scope.
@@ -285,10 +285,8 @@ Definition pmap_postwhisker {A B C : pType} {f g : A ->* B}
   : h o* f ==* h o* g.
 Proof.
   snrefine (Build_pHomotopy _ _); cbn.
-  - exact (fun x => ap h (p x)).
-  - nrefine (ap _ (dpoint_eq p) @ ap_pp _ _ _ @ whiskerL _ (ap_V _ _) @ _^).
-    nrefine (whiskerL _ (inv_pp _ _) @ concat_pp_p _ _ _ @ _).
-    exact (whiskerL _ (concat_p_Vp _ _)).
+  1: exact (fun x => ap h (p x)).
+  by pelim p f g h. 
 Defined.
 
 Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
@@ -296,10 +294,8 @@ Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
   : g o* f ==* h o* f.
 Proof.
   snrefine (Build_pHomotopy _ _); cbn.
-  - exact (fun x => p (f x)).
-  - apply moveL_pV.
-    nrefine (concat_p_pp _ _ _ @ whiskerR (concat_Ap p (point_eq f))^ _ @ _).
-    exact (concat_pp_p _ _ _ @ whiskerL _ (point_htpy p)).
+  1: exact (fun x => p (f x)).
+  by pelim f p g h.
 Defined.
 
 (** ** 1-categorical properties of [pType]. *)
@@ -311,10 +307,7 @@ Definition pmap_compose_assoc {A B C D : pType} (h : C ->* D)
 Proof.
   snrapply Build_pHomotopy.
   1: reflexivity.
-  pointed_reduce_pmap f.
-  pointed_reduce_pmap g.
-  pointed_reduce_pmap h.
-  reflexivity.
+  by pelim f g h.
 Defined.
 
 (** precomposition of identity pointed map *)
@@ -323,8 +316,7 @@ Definition pmap_precompose_idmap {A B : pType} (f : A ->* B)
 Proof.
   snrapply Build_pHomotopy.
   1: reflexivity.
-  symmetry.
-  apply concat_pp_V.
+  by pelim f.
 Defined.
 
 (** postcomposition of identity pointed map *)
@@ -333,10 +325,7 @@ Definition pmap_postcompose_idmap {A B : pType} (f : A ->* B)
 Proof.
   snrapply Build_pHomotopy.
   1: reflexivity.
-  symmetry.
-  apply moveR_pV.
-  simpl.
-  apply equiv_p1_1q, ap_idmap.
+  by pelim f.
 Defined.
 
 (** ** Funext for pointed types and direct consequences. *)
@@ -575,46 +564,38 @@ Definition phomotopy_compose_p1 {A : pType} {P : pFam A} {f g : pForall A P}
 Proof.
   srapply Build_pHomotopy.
   1: intro; apply concat_p1.
-  pointed_reduce.
-  rewrite (concat_pp_V H (concat_p1 _))^. generalize (H @ concat_p1 _).
-  clear H. intros H. destruct H.
-  generalize (p point); generalize (g point).
-  intros x q. destruct q. reflexivity.
+  by pelim p f g.
 Defined.
 
 Definition phomotopy_compose_1p {A : pType} {P : pFam A} {f g : pForall A P}
  (p : f ==* g) : reflexivity f @* p ==* p.
 Proof.
   srapply Build_pHomotopy.
-  + intro x. apply concat_1p.
-  + pointed_reduce.
-    rewrite (concat_pp_V H (concat_p1 _))^. generalize (H @ concat_p1 _).
-    clear H. intros H. destruct H.
-    generalize (p point). generalize (g point).
-    intros x q. destruct q. reflexivity.
+  1: intro x; apply concat_1p.
+  by pelim p f g.
 Defined.
 
 Definition phomotopy_compose_pV {A : pType} {P : pFam A} {f g : pForall A P}
  (p : f ==* g) : p @* p ^* ==* phomotopy_reflexive f.
 Proof.
   srapply Build_pHomotopy.
-  + intro x. apply concat_pV.
-  + by pelim p f g.
+  1: intro x; apply concat_pV.
+  by pelim p f g.
 Defined.
 
 Definition phomotopy_compose_Vp {A : pType} {P : pFam A} {f g : pForall A P}
  (p : f ==* g) : p ^* @* p ==* phomotopy_reflexive g.
 Proof.
   srapply Build_pHomotopy.
-  + intro x. apply concat_Vp.
-  + by pelim p f g.
+  1: intro x; apply concat_Vp.
+  by pelim p f g.
 Defined.
 
 Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
   (f g h : A ->* B) (K : g ==* f)
   : f ==* h <~> g ==* h.
 Proof.
-  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
+refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
   rapply equiv_concat_l.
   apply equiv_path_pforall.
   exact K.
