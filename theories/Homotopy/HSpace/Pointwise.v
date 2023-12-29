@@ -64,10 +64,9 @@ Proof.
     snrapply Build_pHomotopy.
     + intro y; cbn.
       apply hspace_right_identity.
-    + cbn.
-      apply moveL_pV.
-      refine (concat_1p _ @ _ @ concat_A1p _ (dpoint_eq f))^; cbn.
-      apply whiskerL.
+    + pelim f; cbn.
+      symmetry.
+      lhs nrapply (concat_p1 _ @ concat_1p _ @ concat_1p _).
       apply iscoherent.
 Defined.
 

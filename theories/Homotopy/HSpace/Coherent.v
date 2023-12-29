@@ -39,9 +39,9 @@ Proof.
   - unfold IsCoherent; cbn.
     refine (_ @@ 1).
     refine (ap (ap f^-1) _).
-    pointed_reduce_pmap f.
+    pelim f.
     refine (1 @@ _).
-    exact (@iscoherent [Y, f pt] _ _).
+    apply iscoherent.
 Defined.
 
 (** Every loop space is a coherent H-space. *)
