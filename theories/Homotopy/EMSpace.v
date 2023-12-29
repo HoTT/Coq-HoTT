@@ -218,6 +218,12 @@ Section EilenbergMacLane.
     induction n; exact _.
   Defined.
 
+  Global Instance is0connected_em {G : Group} (n : nat)
+    : IsConnected 0 K(G, n.+1).
+  Proof.
+    rapply (is0connected_isconnected n).
+  Defined.
+
   Local Open Scope trunc_scope.
 
   (* This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
@@ -266,6 +272,14 @@ Section EilenbergMacLane.
       symmetry.
       snrapply (transitive_groupisomorphism _ _ _ (groupiso_pi_loops _ _)).
       apply (groupiso_pi_functor _ (pequiv_loops_em_em _ _)).
+  Defined.
+
+  Definition iscohhspace_em `{Univalence} {G : AbGroup} (n : nat)
+    : IsCohHSpace K(G, n).
+  Proof.
+    nrapply iscohhspace_equiv_cohhspace.
+    2: symmetry; apply pequiv_loops_em_em.
+    apply iscohhspace_loops.
   Defined.
 
 End EilenbergMacLane.
