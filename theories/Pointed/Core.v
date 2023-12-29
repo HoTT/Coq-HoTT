@@ -186,13 +186,13 @@ Ltac pointed_reduce_pmap f
     | _ ->* ?Y => let p := fresh in destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
     end.
 
-(** General tactic to reduce any pointed equations of a pForall *)
+(** A general tactic to replace pointedness paths in a pForall with reflexivity.  It clears the function, so can only be applied once the function itself is not longer needed. *)
 Ltac pelim q :=
   destruct q as [q ?];
-  unfold pointed_fun, point_htpy in *;    
+  unfold pointed_fun, point_htpy in *;
   cbn;
   generalize dependent (q pt);
-  rapply paths_ind_r;
+  nrapply paths_ind_r;
   clear q.
 
 Tactic Notation "pelim" constr(x0) := pelim x0.
@@ -286,7 +286,7 @@ Definition pmap_postwhisker {A B C : pType} {f g : A ->* B}
 Proof.
   snrefine (Build_pHomotopy _ _); cbn.
   1: exact (fun x => ap h (p x)).
-  by pelim p f g h. 
+  by pelim p f g h.
 Defined.
 
 Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
@@ -440,10 +440,10 @@ Defined.
 
 (* A pointed equivalence is a section of its inverse *)
 Definition peissect {A B : pType} (f : A <~>* B)
-  : (pequiv_inverse f) o* f ==* pmap_idmap. 
+  : (pequiv_inverse f) o* f ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
-  1: apply (eissect f). 
+  1: apply (eissect f).
   simpl. unfold moveR_equiv_V.
   pointed_reduce.
   symmetry.
@@ -595,7 +595,7 @@ Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
   (f g h : A ->* B) (K : g ==* f)
   : f ==* h <~> g ==* h.
 Proof.
-refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
+  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
   rapply equiv_concat_l.
   apply equiv_path_pforall.
   exact K.
@@ -758,38 +758,39 @@ Proof.
   + intros ? ? p. exact (phomotopy_compose_Vp p).
 Defined.
 
-Global Instance is3graph_ptype : Is3Graph pType := fun f g => _.
+Global Instance is3graph_ptype : Is3Graph pType
+  := fun f g => is2graph_pforall _ _.
 
 Global Instance is21cat_ptype : Is21Cat pType.
 Proof.
   unshelve econstructor.
-  1: exact _.
-  - intros f g h p; nrapply Build_Is1Functor.
-    + intros q r s t u.
+  - exact _.
+  - intros A B C f; nrapply Build_Is1Functor.
+    + intros g h p q r.
       srapply Build_pHomotopy.
-      1: exact (fun _ => ap _ (u _)).
-      by pelim u s t q r p.
-    + intros q.
+      1: exact (fun _ => ap _ (r _)).
+      by pelim r p q g h f.
+    + intros g.
       srapply Build_pHomotopy.
       1: reflexivity.
-      by pelim q p.
-    + intros a b c s t.
+      by pelim g f.
+    + intros g h i p q.
       srapply Build_pHomotopy.
       1: cbn; exact (fun _ => ap_pp _ _ _).
-      by pelim s t a b c p.
-  - intros f g h p; nrapply Build_Is1Functor.
-    + intros q r s t u.
+      by pelim p q g h i f.
+  - intros A B C f; nrapply Build_Is1Functor.
+    + intros g h p q r.
       srapply Build_pHomotopy.
-      1: intro; exact (u _).
-      by pelim p u s t q r.
-    + intros q.
-      srapply Build_pHomotopy.
-      1: reflexivity.
-      by pelim p q.
-    + intros a b c s t.
+      1: intro; exact (r _).
+      by pelim f r p q g h.
+    + intros g.
       srapply Build_pHomotopy.
       1: reflexivity.
-      by pelim p s t a b c.
+      by pelim f g.
+    + intros g h i p q.
+      srapply Build_pHomotopy.
+      1: reflexivity.
+      by pelim f p q i g h.
   - intros A B C D f g r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
