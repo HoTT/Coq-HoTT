@@ -1,6 +1,6 @@
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Cubical.
-Require Import Pointed.
+Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Join.Core.
@@ -34,7 +34,7 @@ Class CayleyDicksonSpheroid (X : pType) := {
   cds_swapop
   cds_factorneg_r.
 
-Section CayleyDicksonSpherioid_Properties.
+Section CayleyDicksonSpheroid_Properties.
 
   Context {X : pType} `(CayleyDicksonSpheroid X).
 
@@ -61,7 +61,7 @@ Section CayleyDicksonSpherioid_Properties.
     apply left_inverse.
   Defined.
 
-End CayleyDicksonSpherioid_Properties.
+End CayleyDicksonSpheroid_Properties.
 
 Global Instance conjugate_susp (A : Type) `(Negate A)
   : Conjugate (Susp A).
@@ -147,7 +147,7 @@ Proof.
   apply concat_pV.
 Defined.
 
-(** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spherioid. *)
+(** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
 Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
   : CayleyDicksonSpheroid (psusp A) := {}.
 
