@@ -120,6 +120,14 @@ Proof.
   all: assumption.
 Defined.
 
+Definition trunc_index_add_comm m n
+  : m +2+ n = n +2+ m.
+Proof.
+  induction n.
+  - apply trunc_index_add_minus_two.
+  - exact (trunc_index_add_succ _ _ @ ap trunc_S IHn).
+Defined.
+
 Fixpoint trunc_index_leq (m n : trunc_index) : Type0
   := match m, n with
        | -2, _ => Unit
@@ -147,6 +155,15 @@ Defined.
 
 Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
 Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
+
+Definition trunc_index_succ_pred (n : nat)
+  : (n.-1).+1 = n.
+Proof.
+  induction n as [|n IHn].
+  1: reflexivity.
+  unfold nat_to_trunc_index in *; cbn in *.
+  refine (ap trunc_S IHn).
+Defined.
 
 Definition trunc_index_leq_minus_two {n}
   : n <= -2 -> n = -2.
