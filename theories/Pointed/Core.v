@@ -193,7 +193,7 @@ Ltac pelim q :=
   cbn;
   generalize dependent (q pt);
   nrapply paths_ind_r;
-  clear q.
+  try clear q.
 
 Tactic Notation "pelim" constr(x0) := pelim x0.
 Tactic Notation "pelim" constr(x0) constr(x1) := pelim x0; pelim x1.
