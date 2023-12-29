@@ -81,14 +81,19 @@ Definition iscomplex_homotopic_f {F X Y : pType}
 
 Definition iscomplex_cancelR {F X Y Y' : pType}
   (i : F ->* X) (f : X ->* Y) (e : Y <~>* Y') (cx : IsComplex i (e o* f))
-  : IsComplex i f
-  := (compose_V_hh e (f o* i))^$ $@ cat_postwhisker _ ((cat_assoc i _ _)^$ $@ cx)
-       $@ precompose_pconst _.
+  : IsComplex i f.
+Proof.
+  refine (_ @* precompose_pconst e^-1*).
+  refine ((compose_V_hh e (f o* i))^$ $@ _).
+  refine (cat_postwhisker e^-1* _).
+  refine ((cat_assoc _ _ _)^$ $@ _).
+  exact cx.
+Defined.
 
 (** And likewise passage across squares with equivalences *)
 Definition iscomplex_equiv_i {F F' X X' Y : pType}
   (i : F ->* X) (i' : F' ->* X')
-  (g : F' <~>* F) (h : X' <~>* X) (p : Square g h i' i)
+  (g : F' $<~> F) (h : X' $<~> X) (p : Square g h i' i)
   (f : X ->* Y)
   (cx: IsComplex i f)
   : IsComplex i' (f o* h).
@@ -212,7 +217,7 @@ Defined.
 (** And also passage across squares with equivalences. *)
 Definition isexact_equiv_i n  {F F' X X' Y : pType}
   (i : F ->* X) (i' : F' ->* X')
-  (g : F' <~>* F) (h : X' <~>* X) (p : Square g h i' i)
+  (g : F' $<~> F) (h : X' $<~> X) (p : Square g h i' i)
   (f : X ->* Y) `{IsExact n F X Y i f}
   : IsExact n i' (f o* h).
 Proof.
@@ -259,7 +264,7 @@ Defined.
 Definition isexact_square_if n  {F F' X X' Y Y' : pType}
   {i : F ->* X} {i' : F' ->* X'}
   {f : X ->* Y} {f' : X' ->* Y'}
-  (g : F' <~>* F) (h : X' <~>* X) (k : Y' <~>* Y)
+  (g : F' $<~> F) (h : X' $<~> X) (k : Y' $<~> Y)
   (p : Square g h i' i) (q : Square h k f' f)
   `{IsExact n F X Y i f}
   : IsExact n i' f'.
@@ -267,7 +272,7 @@ Proof.
   pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
   exists (iscomplex_cancelR i' f' k cx_isexact).
-  epose (e := (pequiv_pfiber (id_cate _) k (cat_idr (k o* f'))^$
+  epose (e := (pequiv_pfiber (id_cate _) k (cat_idr (k $o f'))^$
     : pfiber f' <~>* pfiber (k o* f'))).
   nrefine (cancelR_isequiv_conn_map n _ e).
   1: apply pointed_isequiv.
@@ -358,7 +363,7 @@ Defined.
 
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{IsExact purely F X Y i f}
-  : F <~>* pfiber f
+  : F $<~> pfiber f
   := Build_pEquiv _ _ (cxfib cx_isexact) _.
 
 Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)

@@ -200,7 +200,7 @@ Local Definition ext_cyclic_exact@{u v w +} `{Univalence}
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
-  apply moveL_isexact_equiv@{v v v w}.
+  apply moveL_isexact_equiv@{v w}.
   (* now we change the left map so as to apply exactness at iii from above *)
   snrapply (isexact_homotopic_i (Tr (-1))).
   1: exact (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A o*
