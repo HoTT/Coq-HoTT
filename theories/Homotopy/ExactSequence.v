@@ -93,7 +93,7 @@ Defined.
 (** And likewise passage across squares with equivalences *)
 Definition iscomplex_equiv_i {F F' X X' Y : pType}
   (i : F ->* X) (i' : F' ->* X')
-  (g : F' $<~> F) (h : X' $<~> X) (p : Square g h i' i)
+  (g : F' <~>* F) (h : X' <~>* X) (p : h o* i' ==* i o* g)
   (f : X ->* Y)
   (cx: IsComplex i f)
   : IsComplex i' (f o* h).
@@ -217,7 +217,7 @@ Defined.
 (** And also passage across squares with equivalences. *)
 Definition isexact_equiv_i n  {F F' X X' Y : pType}
   (i : F ->* X) (i' : F' ->* X')
-  (g : F' $<~> F) (h : X' $<~> X) (p : Square g h i' i)
+  (g : F' <~>* F) (h : X' <~>* X) (p : h o* i' ==* i o* g)
   (f : X ->* Y) `{IsExact n F X Y i f}
   : IsExact n i' (f o* h).
 Proof.
@@ -264,15 +264,15 @@ Defined.
 Definition isexact_square_if n  {F F' X X' Y Y' : pType}
   {i : F ->* X} {i' : F' ->* X'}
   {f : X ->* Y} {f' : X' ->* Y'}
-  (g : F' $<~> F) (h : X' $<~> X) (k : Y' $<~> Y)
-  (p : Square g h i' i) (q : Square h k f' f)
+  (g : F' <~>* F) (h : X' <~>* X) (k : Y' <~>* Y)
+  (p : h o* i' ==* i o* g) (q : k o* f' ==* f o* h)
   `{IsExact n F X Y i f}
   : IsExact n i' f'.
 Proof.
   pose (I := isexact_equiv_i n i i' g h p f).
   pose (I2 := isexact_homotopic_f n i' q).
   exists (iscomplex_cancelL i' f' k cx_isexact).
-  epose (e := (pequiv_pfiber (id_cate _) k (cat_idr (k $o f'))^$
+  epose (e := (pequiv_pfiber pequiv_pmap_idmap k (pmap_precompose_idmap (k o* f'))^*
     : pfiber f' <~>* pfiber (k o* f'))).
   nrefine (cancelL_isequiv_conn_map n _ e).
   1: apply pointed_isequiv.
@@ -363,7 +363,7 @@ Defined.
 
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{IsExact purely F X Y i f}
-  : F $<~> pfiber f
+  : F <~>* pfiber f
   := Build_pEquiv _ _ (cxfib cx_isexact) _.
 
 Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
@@ -442,7 +442,7 @@ Defined.
 (** It's useful to see [pfib_cxfib] as a degenerate square. *)
 Definition square_pfib_pequiv_cxfib {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : Square (pequiv_cxfib) (pequiv_pmap_idmap) i (pfib f).
+  : pequiv_pmap_idmap o* i ==* pfib f o* pequiv_cxfib.
 Proof.
   unfold Square.
   refine (pmap_postcompose_idmap _ @* _).
