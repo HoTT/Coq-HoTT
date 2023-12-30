@@ -1,4 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
+
 (** * Truncatedness *)
 
 Require Import
@@ -7,54 +8,56 @@ Require Import
   Basics.Equivalences
   Basics.Tactics
   Basics.Nat.
+
+Local Set Universe Minimization ToSet.
+
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
-(** ** Notation for truncation-levels. *)
+(** Notation for truncation-levels. *)
 Open Scope trunc_scope.
 
 (* Increase a truncation index by a natural number. *)
-Fixpoint trunc_index_inc (k : trunc_index) (n : nat)
+Fixpoint trunc_index_inc@{} (k : trunc_index) (n : nat)
   : trunc_index
   := match n with
       | O => k
       | S m => (trunc_index_inc k m).+1
     end.
 
-(* This is a variation that inserts the successor operations in
-   the other order.  This is sometimes convenient. *)
-Fixpoint trunc_index_inc' (k : trunc_index) (n : nat)
+(* This is a variation that inserts the successor operations in the other order.  This is sometimes convenient. *)
+Fixpoint trunc_index_inc'@{} (k : trunc_index) (n : nat)
   : trunc_index
   := match n with
       | O => k
       | S m => (trunc_index_inc' k.+1 m)
     end.
 
-Definition trunc_index_inc'_succ (n : nat) (k : trunc_index)
+Definition trunc_index_inc'_succ@{} (n : nat) (k : trunc_index)
   : trunc_index_inc' k.+1 n = (trunc_index_inc' k n).+1.
 Proof.
-  revert k; induction n; intro k.
+  revert k; simple_induction n n IHn; intro k.
   - reflexivity.
   - apply (IHn k.+1).
 Defined.
 
-Definition trunc_index_inc_agree (k : trunc_index) (n : nat)
+Definition trunc_index_inc_agree@{} (k : trunc_index) (n : nat)
   : trunc_index_inc k n = trunc_index_inc' k n.
 Proof.
-  induction n.
+  simple_induction n n IHn.
   - reflexivity.
   - simpl.
     refine (ap _ IHn @ _).
     symmetry; apply trunc_index_inc'_succ.
 Defined.
 
-Definition nat_to_trunc_index (n : nat) : trunc_index
+Definition nat_to_trunc_index@{} (n : nat) : trunc_index
   := (trunc_index_inc minus_two n).+2.
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
-Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
+Definition int_to_trunc_index@{} (v : Decimal.int) : option trunc_index
   := match v with
      | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))
      | Decimal.Neg d => match Nat.of_uint d with
@@ -65,13 +68,13 @@ Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
                         end
      end.
 
-Definition num_int_to_trunc_index (v : Numeral.int) : option trunc_index :=
+Definition num_int_to_trunc_index@{} (v : Numeral.int) : option trunc_index :=
   match v with
   | Numeral.IntDec v => int_to_trunc_index v
   | Numeral.IntHex _ => None
   end.
 
-Fixpoint trunc_index_to_little_uint n acc :=
+Fixpoint trunc_index_to_little_uint@{} n acc :=
   match n with
   | minus_two => acc
   | minus_two.+1 => acc
@@ -79,21 +82,21 @@ Fixpoint trunc_index_to_little_uint n acc :=
   | trunc_S n => trunc_index_to_little_uint n (Decimal.Little.succ acc)
   end.
 
-Definition trunc_index_to_int n :=
+Definition trunc_index_to_int@{} n :=
   match n with
   | minus_two => Decimal.Neg (Nat.to_uint 2)
   | minus_two.+1 => Decimal.Neg (Nat.to_uint 1)
   | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
   end.
 
-Definition trunc_index_to_num_int n :=
+Definition trunc_index_to_num_int@{} n :=
   Numeral.IntDec (trunc_index_to_int n).
 
 Number Notation trunc_index num_int_to_trunc_index trunc_index_to_num_int
   : trunc_scope.
 
 (** ** Arithmetic on truncation-levels. *)
-Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
+Fixpoint trunc_index_add@{} (m n : trunc_index) : trunc_index
   := match m with
        | -2 => n
        | m'.+1 => (trunc_index_add m' n).+1
@@ -101,34 +104,33 @@ Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
 
 Notation "m +2+ n" := (trunc_index_add m n) : trunc_scope.
 
-Definition trunc_index_add_minus_two m
+Definition trunc_index_add_minus_two@{} m
   : m +2+ -2 = m.
 Proof.
-  induction m.
+  simple_induction m m IHm.
   1: reflexivity.
   cbn; apply ap.
   assumption.
 Defined.
 
-Definition trunc_index_add_succ m n
+Definition trunc_index_add_succ@{} m n
   : m +2+ n.+1 = (m +2+ n).+1.
 Proof.
-  revert m.
-  induction n; induction m.
+  revert m; simple_induction n n IHn; intro m; simple_induction m m IHm.
   1,3: reflexivity.
   all: cbn; apply ap.
   all: assumption.
 Defined.
 
-Definition trunc_index_add_comm m n
+Definition trunc_index_add_comm@{} m n
   : m +2+ n = n +2+ m.
 Proof.
-  induction n.
+  simple_induction n n IHn.
   - apply trunc_index_add_minus_two.
   - exact (trunc_index_add_succ _ _ @ ap trunc_S IHn).
 Defined.
 
-Fixpoint trunc_index_leq (m n : trunc_index) : Type0
+Fixpoint trunc_index_leq@{} (m n : trunc_index) : Type0
   := match m, n with
        | -2, _ => Unit
        | m'.+1, -2 => Empty
@@ -139,14 +141,14 @@ Existing Class trunc_index_leq.
 
 Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
 
-Global Instance trunc_index_leq_minus_two_n n : -2 <= n := tt.
+Global Instance trunc_index_leq_minus_two_n@{} n : -2 <= n := tt.
 
-Global Instance trunc_index_leq_succ n : n <= n.+1.
+Global Instance trunc_index_leq_succ@{} n : n <= n.+1.
 Proof.
   by induction n as [|n IHn] using trunc_index_ind.
 Defined.
 
-Definition trunc_index_pred : trunc_index -> trunc_index.
+Definition trunc_index_pred@{} : trunc_index -> trunc_index.
 Proof.
   intros [|m].
   1: exact (-2).
@@ -156,16 +158,16 @@ Defined.
 Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
 Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
 
-Definition trunc_index_succ_pred (n : nat)
+Definition trunc_index_succ_pred@{} (n : nat)
   : (n.-1).+1 = n.
 Proof.
-  induction n as [|n IHn].
+  simple_induction n n IHn.
   1: reflexivity.
   unfold nat_to_trunc_index in *; cbn in *.
   refine (ap trunc_S IHn).
 Defined.
 
-Definition trunc_index_leq_minus_two {n}
+Definition trunc_index_leq_minus_two@{} {n}
   : n <= -2 -> n = -2.
 Proof.
   destruct n.
@@ -173,7 +175,7 @@ Proof.
   contradiction.
 Defined.
 
-Definition trunc_index_leq_succ' n m
+Definition trunc_index_leq_succ'@{} n m
   : n <= m -> n <= m.+1.
 Proof.
   revert m.
@@ -185,14 +187,14 @@ Proof.
   apply IHn, p.
 Defined.
 
-Global Instance trunc_index_leq_refl
+Global Instance trunc_index_leq_refl@{}
   : Reflexive trunc_index_leq.
 Proof.
   intro n.
   by induction n as [|n IHn] using trunc_index_ind.
 Defined.
 
-Global Instance trunc_index_leq_transitive
+Global Instance trunc_index_leq_transitive@{}
   : Transitive trunc_index_leq.
 Proof.
   intros a b c p q.
@@ -209,7 +211,7 @@ Proof.
   by apply IHb.
 Defined.
 
-Fixpoint trunc_index_min (n m : trunc_index)
+Fixpoint trunc_index_min@{} (n m : trunc_index)
   : trunc_index.
 Proof.
   destruct n.
@@ -219,32 +221,30 @@ Proof.
   exact (trunc_index_min n m).+1.
 Defined.
 
-Definition trunc_index_min_minus_two n
+Definition trunc_index_min_minus_two@{} n
   : trunc_index_min n (-2) = -2.
 Proof.
   by destruct n.
 Defined.
 
-Definition trunc_index_min_swap n m
+Definition trunc_index_min_swap@{} n m
   : trunc_index_min n m = trunc_index_min m n.
 Proof.
   revert m.
-  induction n.
-  { intro.
-    symmetry.
+  simple_induction n n IHn; intro m.
+  { symmetry.
     apply trunc_index_min_minus_two. }
-  induction m.
+  simple_induction m m IHm.
   1: reflexivity.
   cbn; apply ap, IHn.
 Defined.
 
-Definition trunc_index_min_path n m
+Definition trunc_index_min_path@{} n m
   : (trunc_index_min n m = n) + (trunc_index_min n m = m).
 Proof.
-  revert m.
-  induction n.
-  1: by intro; apply inl.
-  induction m.
+  revert m; simple_induction n n IHn; intro m.
+  1: by apply inl.
+  simple_induction m m IHm.
   1: by apply inr.
   destruct (IHn m).
   1: apply inl.
@@ -252,7 +252,7 @@ Proof.
   1,2: cbn; by apply ap.
 Defined.
 
-Definition trunc_index_min_leq_left (n m : trunc_index)
+Definition trunc_index_min_leq_left@{} (n m : trunc_index)
   : trunc_index_min n m <= n.
 Proof.
   revert n m.
@@ -262,7 +262,7 @@ Proof.
   exact (IHn m).
 Defined.
 
-Definition trunc_index_min_leq_right (n m : trunc_index)
+Definition trunc_index_min_leq_right@{} (n m : trunc_index)
   : trunc_index_min n m <= m.
 Proof.
   revert n m.
@@ -319,8 +319,7 @@ Definition istrunc_hset {n} {A} `{IsHSet A}
 #[export] Hint Immediate istrunc_hprop : typeclass_instances.
 #[export] Hint Immediate istrunc_hset : typeclass_instances.
 
-(** Equivalence preserves truncation (this is, of course, trivial with univalence).
-   This is not an [Instance] because it causes infinite loops. *)
+(** Equivalence preserves truncation (this is, of course, trivial with univalence).  This is not an [Instance] because it causes infinite loops. *)
 Definition istrunc_isequiv_istrunc A {B} (f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
@@ -374,9 +373,7 @@ Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 
 (** ** Facts about hprops *)
 
-(** An inhabited proposition is contractible.
-   This is not an [Instance] because it causes infinite loops.
-   *)
+(** An inhabited proposition is contractible.  This is not an [Instance] because it causes infinite loops. *)
 Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
   : Contr A.
 Proof.

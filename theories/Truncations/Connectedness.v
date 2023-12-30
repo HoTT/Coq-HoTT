@@ -126,8 +126,8 @@ Defined.
 Definition isconnected_pred_add' n m A `{H : IsConnected (m +2+ n) A}
   : IsConnected m A.
 Proof.
-  rewrite trunc_index_add_comm in H.
-  apply (isconnected_pred_add n m); assumption.
+  apply (isconnected_pred_add n m).
+  destruct (trunc_index_add_comm m n); assumption.
 Defined.
 
 (** It follows that an [n.+1]-connected type is also [-1]-connected. *)
