@@ -254,32 +254,45 @@ Defined.
 
 (** ** Various operations with pointed homotopies *)
 
+(** For the following three instances, the typeclass (e.g. [Reflexive]) requires a third universe variable, the maximum of the universe of [A] and the universe of the values of [P].  Because of this, in each case we first prove a version not mentioning the typeclass, which avoids a stray universe variable. *)
+
 (** [pHomotopy] is a reflexive relation *)
-Global Instance phomotopy_reflexive {A : pType} {P : pFam A}
+Definition phomotopy_reflexive {A : pType} {P : pFam A} (f : pForall A P)
+  : f ==* f
+  := Build_pHomotopy (fun x => 1) (concat_pV _)^.
+
+Global Instance phomotopy_reflexive' {A : pType} {P : pFam A}
   : Reflexive (@pHomotopy A P)
-  := fun X => Build_pHomotopy (fun x => 1) (concat_pV _)^.
+  := @phomotopy_reflexive A P.
 
 (** [pHomotopy] is a symmetric relation *)
-Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B).
+Definition phomotopy_symmetric {A P} {f g : pForall A P} (p : f ==* g)
+  : g ==* f.
 Proof.
-  intros f g p.
   snrefine (Build_pHomotopy _ _); cbn.
   1: intros x; exact ((p x)^).
   by pelim p f g.
 Defined.
 
-Notation "p ^*" := (phomotopy_symmetric _ _ p) : pointed_scope.
+Global Instance phomotopy_symmetric' {A P}
+  : Symmetric (@pHomotopy A P)
+  := @phomotopy_symmetric A P.
+
+Notation "p ^*" := (phomotopy_symmetric p) : pointed_scope.
 
 (** [pHomotopy] is a transitive relation *)
-Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B).
+Definition phomotopy_transitive {A P} {f g h : pForall A P} (p : f ==* g) (q : g ==* h)
+  : f ==* h.
 Proof.
-  intros x y z p q.
   snrefine (Build_pHomotopy (fun x => p x @ q x) _).
   nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).
   nrapply whiskerL; nrapply concat_V_pp.
 Defined.
 
-Notation "p @* q" := (phomotopy_transitive _ _ _ p q) : pointed_scope.
+Global Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
+  := @phomotopy_transitive A P.
+
+Notation "p @* q" := (phomotopy_transitive p q) : pointed_scope.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
 
@@ -650,13 +663,13 @@ Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P)
 Proof.
   econstructor.
   - exact phomotopy_reflexive.
-  - intros a b c f g. exact (phomotopy_transitive _ _ _ g f).
+  - intros a b c f g. exact (g @* f).
 Defined.
 
 (** pForall is a 0-coherent 1-groupoid *)
 Global Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
 Proof.
-  srapply Build_Is0Gpd. intros ? ? h. exact (phomotopy_symmetric _ _ h).
+  srapply Build_Is0Gpd. intros ? ? h. exact h^*.
 Defined.
 
 (** pType is a 1-coherent 1-category *)
