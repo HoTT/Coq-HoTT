@@ -23,22 +23,6 @@ Proof.
   induction p. induction q. symmetry. apply phomotopy_compose_p1.
 Defined.
 
-(** ** Whiskering of pointed homotopies by pointed functions *)
-
-Definition pmap_postwhisker {A : pType@{u1}} {B : pType@{u2}} {C : pType@{u3}}
-  {f g : A ->* B} (h : B ->* C) (p : f ==* g)
-  : h o* f ==* h o* g.
-Proof.
-  exact (cat_postwhisker (A:=pType@{v}) h p).
-Defined.
-
-Definition pmap_prewhisker {A : pType@{u1}} {B : pType@{u2}} {C : pType@{u3}}
-  (f : A ->* B) {g h : B ->* C} (p : g $== h)
-  : g o* f ==* h o* f.
-Proof.
-  exact (cat_prewhisker (A:=pType@{v}) p f).
-Defined.
-
 (** ** [phomotopy_path] respects 2-cells. *)
 Definition phomotopy_path2 {A : pType} {P : pFam A}
   {f g : pForall A P} {p p' : f = g} (q : p = p')
