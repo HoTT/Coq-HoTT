@@ -26,7 +26,7 @@ Proof.
     + snrapply phomotopy_homotopy_hset.
       * exact _.
       * reflexivity.
-    + nrefine (cancelR_equiv_conn_map
+    + nrefine (cancelL_equiv_conn_map
                  _ _ (hfiber_pullback_along_pointed f (projection _) (grp_homo_unit _))).
       nrefine (conn_map_homotopic _ _ _ _ (conn_map_isexact (IsExact:=isexact_inclusion_projection _))).
       intro a.

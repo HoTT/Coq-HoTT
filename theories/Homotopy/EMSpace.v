@@ -5,6 +5,7 @@ Require Import Algebra.AbGroups.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.Core.
+Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup.
 Require Import TruncType.
 Require Import Truncations.Core Truncations.Connectedness.
@@ -17,23 +18,21 @@ Local Open Scope nat_scope.
 Local Open Scope bg_scope.
 Local Open Scope mc_mult_scope.
 
-
 (** When X is 0-connected we see that Freudenthal doesn't let us characterise the loop space of a suspension. For this we need some extra assumptions about our space X.
 
 Suppose X is a 0-connected, 1-truncated coherent H-space, then
 
   pTr 1 (loops (psusp X)) <~>* X
 
-By coherent H-space we mean that left and right identity laws at the unit are the same.
-*)
+By a coherent H-space we mean that the left and right identity laws at the unit are the same. *)
 
 Section LicataFinsterLemma.
 
   Context `{Univalence} (X : pType)
     `{IsConnected 0 X} `{IsTrunc 1 X} `{IsHSpace X}
-    {coh : left_identity mon_unit = right_identity mon_unit}.
+    {coh : IsCoherent X}.
 
-  (** This encode-decode style proof is detailed in Eilenberg-MacLane Spaces in Homotopy Type Theory by Dan Licata and Eric Finster *)
+  (** This encode-decode style proof is detailed in Eilenberg-MacLane Spaces in Homotopy Type Theory by Dan Licata and Eric Finster. *)
 
   Local Definition P : Susp X -> Type
     := fun x => Tr 1 (North = x).
@@ -181,7 +180,7 @@ Section LicataFinsterLemma.
     apply ap, concat_pV.
   Defined.
 
-  (* We could call this pequiv_ptr_loop_psusp but since we already used that for the Freudenthal case, it seems appropriate to name licata_finster for this one case *)
+  (* We could call this pequiv_ptr_loop_psusp but since we already used that for the Freudenthal case, it seems appropriate to use the name licata_finster for this one case. *)
   Lemma licata_finster : pTr 1 (loops (psusp X)) <~>* X.
   Proof.
     srapply Build_pEquiv'.
@@ -195,20 +194,20 @@ Section LicataFinsterLemma.
 
 End LicataFinsterLemma.
 
+(** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n > 1], later results will need to assume that [G] is abelian. *)
+Fixpoint EilenbergMacLane (G : Group) (n : nat) : pType
+  := match n with
+      | 0    => G
+      | 1    => pClassifyingSpace G
+      | m.+1 => pTr m.+1 (psusp (EilenbergMacLane G m))
+     end.
+
+Notation "'K(' G , n )" := (EilenbergMacLane G n).
 
 Section EilenbergMacLane.
   Context `{Univalence}.
 
-  Fixpoint EilenbergMacLane (G : Group) (n : nat) : pType
-    := match n with
-        | 0    => G
-        | 1    => pClassifyingSpace G
-        | m.+1 => pTr m.+1 (psusp (EilenbergMacLane G m))
-       end.
-
-  Notation "'K(' G , n )" := (EilenbergMacLane G n).
-
-  Global Instance istrunc_em {G : Group}  {n : nat} : IsTrunc n K(G, n).
+  Global Instance istrunc_em {G : Group} {n : nat} : IsTrunc n K(G, n).
   Proof.
     destruct n as [|[]]; exact _.
   Defined.
@@ -217,6 +216,12 @@ Section EilenbergMacLane.
     : IsConnected n K(G, n.+1).
   Proof.
     induction n; exact _.
+  Defined.
+
+  Global Instance is0connected_em {G : Group} (n : nat)
+    : IsConnected 0 K(G, n.+1).
+  Proof.
+    rapply (is0connected_isconnected n).
   Defined.
 
   Local Open Scope trunc_scope.
@@ -242,6 +247,7 @@ Section EilenbergMacLane.
     refine (_ o*E (ptr_loops _ _)^-1* ).
     destruct n.
     { srapply licata_finster.
+      1: exact _.
       reflexivity. }
     refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
     symmetry; rapply pequiv_ptr_loop_psusp'.
@@ -266,6 +272,14 @@ Section EilenbergMacLane.
       symmetry.
       snrapply (transitive_groupisomorphism _ _ _ (groupiso_pi_loops _ _)).
       apply (groupiso_pi_functor _ (pequiv_loops_em_em _ _)).
+  Defined.
+
+  Definition iscohhspace_em `{Univalence} {G : AbGroup} (n : nat)
+    : IsCohHSpace K(G, n).
+  Proof.
+    nrapply iscohhspace_equiv_cohhspace.
+    2: symmetry; apply pequiv_loops_em_em.
+    apply iscohhspace_loops.
   Defined.
 
 End EilenbergMacLane.

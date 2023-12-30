@@ -5,8 +5,7 @@ Local Open Scope mc_mult_scope.
 
 (** * Pointwise H-space structures *)
 
-(** Whenever [X] is an H-space, so is any type of maps or pointed maps into [X]. *)
-
+(** Whenever [X] is an H-space, so is the type of maps into [X]. *)
 Global Instance ishspace_map `{Funext} (X : pType) (Y : Type)
   `{IsHSpace X} : IsHSpace [Y -> X, const pt].
 (* Note: When writing [f * g], Coq only finds this instance if [f] is explicitly in the pointed type [[Y -> X, const pt]]. *)
@@ -39,8 +38,8 @@ Proof.
            (g:=fun y gy => (f y) * gy)).
 Defined.
 
-(** For the type of pointed maps [Y ->** X], coherence of [X] is needed even to get a noncoherent H-space structure on [Y ->** X]. *)
 
+(** For the type of pointed maps [Y ->** X], coherence of [X] is needed even to get a noncoherent H-space structure on [Y ->** X]. *)
 Global Instance ishspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
   : IsHSpace (Y ->** X).
 Proof.
@@ -65,10 +64,9 @@ Proof.
     snrapply Build_pHomotopy.
     + intro y; cbn.
       apply hspace_right_identity.
-    + cbn.
-      apply moveL_pV.
-      refine (concat_1p _ @ _ @ concat_A1p _ (dpoint_eq f))^; cbn.
-      apply whiskerL.
+    + pelim f; cbn.
+      symmetry.
+      lhs nrapply (concat_p1 _ @ concat_1p _ @ concat_1p _).
       apply iscoherent.
 Defined.
 
@@ -93,7 +91,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** If the H-space structure on [X] is left-invertible, so is that one induced on [Y ->** X]. *)
+(** If the H-space structure on [X] is left-invertible, so is the one induced on [Y ->** X]. *)
 Global Instance isleftinvertible_hspace_pmap `{Funext} (X Y : pType)
   `{IsCoherent X} `{forall x, IsEquiv (x *.)}
   : forall f : Y ->** X, IsEquiv (f *.).

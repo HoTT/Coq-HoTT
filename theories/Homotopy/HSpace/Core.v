@@ -90,7 +90,11 @@ Definition homogeneous_pt_id {A : pType} `{IsHomogeneous A}
   : forall a, A <~>* [A,a]
   := fun a => ishomogeneous a o*E (ishomogeneous (point A))^-1*.
 
-Definition homogeneous_pt_id_beta `{Funext} {A : pType} `{IsHomogeneous A}
+Definition homogeneous_pt_id_beta {A : pType} `{IsHomogeneous A}
+  : homogeneous_pt_id (point A) ==* pequiv_pmap_idmap
+  := peisretr _.
+
+Definition homogeneous_pt_id_beta' `{Funext} {A : pType} `{IsHomogeneous A}
   : homogeneous_pt_id (point A) = pequiv_pmap_idmap
   := ltac:(apply path_pequiv, peisretr).
 
@@ -102,12 +106,10 @@ Proof.
   - exact (fun a b => homogeneous_pt_id a b).
   - intro a; cbn.
     apply eisretr.
-  - intro a; cbn.
-    exact (ap _ (point_eq (ishomogeneous pt)^-1*)
-                   @ point_eq (ishomogeneous a)).
+  - intro a.  exact (point_eq (homogeneous_pt_id a)).
 Defined.
 
-(** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. (In fact, the type of homogeneous types with the base point sent to the pointed identity map is equivalent to the type of left-invertible coherent H-spaces, but we don't prove that here.) *)
+(** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. (In fact, the type of homogeneous types with the base point sent to the pointed identity map is equivalent to the type of left-invertible coherent H-spaces, but we don't prove that here.) See [equiv_iscohhspace_ptd_action] for a closely related result. *)
 Global Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
   `{forall a, IsEquiv (a *.)}
   : IsHomogeneous A
@@ -162,4 +164,31 @@ Proof.
   apply path_pforall, hspace_phomotopy_from_homotopy.
   apply (path_arrow _ _)^-1.
   exact K.
+Defined.
+
+(** A type equivalent to an H-space is an H-space. *)
+Definition ishspace_equiv_hspace {X Y : pType} `{IsHSpace Y} (f : X <~>* Y)
+  : IsHSpace X.
+Proof.
+  snrapply Build_IsHSpace.
+  - exact (fun a b => f^-1 (f a * f b)).
+  - intro b.
+    rhs_V nrapply (eissect f b).
+    apply ap.
+    lhs nrapply (ap (.* f b) (point_eq f)).
+    apply left_identity.
+  - intro a.
+    rhs_V nrapply (eissect f a).
+    apply ap.
+    lhs nrapply (ap (f a *.) (point_eq f)).
+    apply right_identity.
+Defined.
+
+(** Every loop space is an H-space. Making this an instance breaks CayleyDickson.v because Coq finds this instance rather than the expected one. *)
+Definition ishspace_loops {X : pType} : IsHSpace (loops X).
+Proof.
+  snrapply Build_IsHSpace.
+  - exact concat.
+  - exact concat_1p.
+  - exact concat_p1.
 Defined.

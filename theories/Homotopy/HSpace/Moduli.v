@@ -4,9 +4,9 @@ Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
-(** * The moduli type of H-space structures *)
+(** * The moduli type of coherent H-space structures *)
 
-(** When [A] is a left-invertible H-space, we construct an equivalence between the ("moduli") type of H-space structures on [A] and the type [A ->* (A ->** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A ->* A].
+(** When [A] is a left-invertible coherent H-space, we construct an equivalence between the ("moduli") type of coherent H-space structures on [A] and the type [A ->* (A ->** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A ->* A].
 
 This equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1 *)
 
@@ -133,4 +133,93 @@ Proof.
   refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).
   refine (equiv_pequiv_postcompose _); symmetry.
   rapply pequiv_hspace_left_op.
+Defined.
+
+(** Here is a third characterization of the type of coherent H-space structures. It simply involves shuffling the data around and using [Funext]. *)
+Definition equiv_iscohhspace_ptd_action `{Funext} (A : pType)
+  : IsCohHSpace A <~> { act : forall a, A ->* [A,a] & act pt ==* pmap_idmap }.
+Proof.
+  refine (_ oE (issig_iscohhspace A)^-1).
+  unfold IsPointed.
+  (* First we shuffle the data on the LHS to be of this form: *)
+  equiv_via {s : {act : A -> (A -> A) & forall a, act a pt = a} & {h : s.1 pt == idmap & h pt = s.2 pt}}.
+  1: make_equiv.
+  (* Then we break up [->*] and [==*] on the RHS using issig lemmas, and handle a trailing [@ 1]. *)
+  snrapply equiv_functor_sigma'.
+  - refine (equiv_functor_forall_id (fun a => issig_pmap A [A,a]) oE _).
+    unfold IsPointed.
+    nrapply equiv_sig_coind.
+  - cbn.
+    intros [act p]; simpl.
+    refine (issig_phomotopy _ _ oE _); cbn.
+    apply equiv_functor_sigma_id; intro q.
+    apply equiv_concat_r; symmetry; apply concat_p1.
+Defined.
+
+(** It follows that any homogeneous type is a coherent H-space.  This generalizes [ishspace_homogeneous]. *)
+Definition iscohhspace_homogeneous `{Funext} {A : pType} `{IsHomogeneous A}
+  : IsCohHSpace A.
+Proof.
+  apply (equiv_iscohhspace_ptd_action A)^-1.
+  exists homogeneous_pt_id.
+  apply homogeneous_pt_id_beta.
+Defined.
+
+(** One can also show directly that the H-space structure defined by [ishspace_homogeneous] is coherent. This also avoids [Funext]. *)
+Definition iscoherent_homogeneous {A : pType} `{IsHomogeneous A}
+  : @IsCoherent A (ishspace_homogeneous).
+Proof.
+  unfold IsCoherent; cbn.
+  set (f := ishomogeneous pt).
+  change (eisretr f pt = ap f (moveR_equiv_V pt pt (point_eq f)^) @ point_eq f).
+  rewrite <- (point_eq f).
+  unfold moveR_equiv_V; simpl.
+  rhs nrapply concat_p1.
+  lhs nrapply (eisadj f).
+  apply ap.
+  symmetry; apply concat_1p.
+Defined.
+
+(** Using either of these, we can "upgrade" any left-invertible H-space structure to a coherent one. This one has a prime because the direct proof below computes better. *)
+Definition iscohhspace_hspace' (A : pType)
+  `{IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : IsCohHSpace A.
+Proof.
+  snrapply Build_IsCohHSpace.
+  { nrapply ishspace_homogeneous.
+    apply ishomogeneous_hspace. }
+  apply iscoherent_homogeneous.
+Defined.
+
+(** The new multiplication is homotopic to the original one.  Relative to this, we expect that one of the identity laws also agrees, but that the other does not. *)
+Definition iscohhspace_hspace'_beta_mu `{Funext} (A : pType)
+  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : @hspace_op A (@ishspace_cohhspace A (iscohhspace_hspace' A)) = @hspace_op A m.
+Proof.
+  cbn. (* [*], [sg_op] and [hspace_op] all denote the original operation. *)
+  funext a b.
+  refine (ap (a *.) _).
+  apply moveR_equiv_V.
+  symmetry; apply left_identity.
+Defined.
+
+(** Here's a different proof that directly upgrades an H-space structure, leaving the multiplication and left-identity definitionally the same, but changing the right-identity. *)
+Definition iscohhspace_hspace (A : pType)
+  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : IsCohHSpace A.
+Proof.
+  snrapply Build_IsCohHSpace.
+  1: snrapply Build_IsHSpace.
+  - exact (@hspace_op A m).
+  - exact (@hspace_left_identity A m).
+  - intro a.
+    lhs nrapply (ap (a *.) (hspace_right_identity pt))^.
+    lhs nrapply (ap (a *.) (hspace_left_identity pt)).
+    exact (hspace_right_identity a).
+  - unfold IsCoherent; cbn.
+    apply moveL_Vp.
+    lhs nrapply concat_A1p.
+    refine (_ @@ 1).
+    apply (cancelR _ _ (hspace_left_identity pt)).
+    symmetry; apply concat_A1p.
 Defined.

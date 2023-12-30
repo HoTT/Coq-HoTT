@@ -461,24 +461,34 @@ Section Diamond.
     := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
 
   Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
-    : Diamond a a' b b'.
+    : jglue a b @ (jglue a' b)^ = jglue a b' @ (jglue a' b')^.
   Proof.
     destruct p.
-    apply sq_path.
     exact (concat_pV _ @ (concat_pV _)^).
   Defined.
 
-  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+  Definition diamond_h_sq {a a' : A} (b b' : B) (p : a = a')
     : Diamond a a' b b'.
   Proof.
-    destruct p.
-    by apply sq_path.
+    by apply sq_path, diamond_h.
+  Defined.
+
+  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+    : jglue a b @ (jglue a' b)^ = jglue a b' @ (jglue a' b')^.
+  Proof.
+    by destruct p.
+  Defined.
+
+  Definition diamond_v_sq (a a' : A) {b b' : B} (p : b = b')
+    : Diamond a a' b b'.
+  Proof.
+    by apply sq_path, diamond_v.
   Defined.
 
   Lemma diamond_symm (a : A) (b : B)
-    : diamond_v a a 1 = diamond_h b b 1.
+    : diamond_v_sq a a 1 = diamond_h_sq b b 1.
   Proof.
-    unfold diamond_v, diamond_h.
+    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.
     symmetry; apply ap, concat_pV.
   Defined.
 
@@ -486,7 +496,7 @@ End Diamond.
 
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
   : DPath (fun x => Diamond a' x a x) p
-    (diamond_v a' a 1) (diamond_h a a' 1).
+    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).
 Proof.
   destruct p.
   apply diamond_symm.

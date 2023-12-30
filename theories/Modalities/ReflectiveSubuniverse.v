@@ -1471,7 +1471,7 @@ Section ModalMaps.
     intros b; exact _.
   Defined.
 
-  (** Modal maps cancel on the left *)
+  (** Modal maps cancel on the left. *)
   Definition cancelL_mapinO {A B C : Type} (f : A -> B) (g : B -> C)
   : MapIn O g -> MapIn O (g o f) -> MapIn O f.
   Proof.
@@ -1479,7 +1479,22 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_hfiber_compose_map f g b)).
   Defined.
 
-  (** The pullback of a modal map is modal *)
+  (** Modal maps also cancel with equivalences on the other side. *)
+  Definition cancelR_isequiv_mapinO {A B C : Type} (f : A -> B) (g : B -> C)
+    `{IsEquiv _ _ f} `{MapIn O _ _ (g o f)}
+  : MapIn O g.
+  Proof.
+    intros b.
+    srefine (inO_equiv_inO' (hfiber (g o f) b) _).
+    exact (equiv_functor_sigma f (fun a => 1%equiv)).
+  Defined.
+
+  Definition cancelR_equiv_mapinO {A B C : Type} (f : A <~> B) (g : B -> C)
+    `{MapIn O _ _ (g o f)}
+  : MapIn O g
+  := cancelR_isequiv_mapinO f g.
+
+  (** The pullback of a modal map is modal. *)
   Global Instance mapinO_pullback {A B C}
          (f : B -> A) (g : C -> A) `{MapIn O _ _ g}
   : MapIn O (f^* g).
@@ -1748,7 +1763,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Connected maps also cancel with equivalences on the other side. *)
-  Definition cancelR_isequiv_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
+  Definition cancelL_isequiv_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsEquiv _ _ g} `{IsConnMap O _ _ (g o f)}
     : IsConnMap O f.
   Proof.
@@ -1757,10 +1772,10 @@ Section ConnectedMaps.
     exact (equiv_inverse (equiv_functor_sigma_id (fun a => equiv_ap g (f a) b))).
   Defined.
 
-  Definition cancelR_equiv_conn_map {A B C : Type} (f : A -> B) (g : B <~> C)
+  Definition cancelL_equiv_conn_map {A B C : Type} (f : A -> B) (g : B <~> C)
          `{IsConnMap O _ _ (g o f)}
     : IsConnMap O f
-    := cancelR_isequiv_conn_map f g.
+    := cancelL_isequiv_conn_map f g.
 
   (** The constant map to [Unit] is connected just when its domain is. *)
   Definition isconnected_conn_map_to_unit {A : Type}
