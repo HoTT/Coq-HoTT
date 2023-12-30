@@ -99,7 +99,7 @@ Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
   := Build_pFam (fun x => f x = g x) (dpoint_eq f @ (dpoint_eq g)^).
 
 (* A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
-Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P) : Type
+Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P)
   := pForall A (pfam_phomotopy f g).
 
 Infix "==*" := pHomotopy : pointed_scope.
