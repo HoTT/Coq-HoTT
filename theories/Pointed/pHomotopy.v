@@ -39,13 +39,10 @@ Proof.
   induction p. simpl. symmetry. apply phomotopy_inverse_1.
 Defined.
 
-(* TODO: Remove [Funext] when whiskering is reproven without it. *)
-Definition phomotopy_hcompose `{Funext} {A : pType} {P : pFam A} {f g h : pForall A P}
+Definition phomotopy_hcompose {A : pType} {P : pFam A} {f g h : pForall A P}
  {p p' : f ==* g} {q q' : g ==* h} (r : p ==* p') (s : q ==* q') :
-  p @* q ==* p' @* q'.
-Proof.
-  exact ((s $@R p) $@ (q' $@L r)).
-Defined.
+  p @* q ==* p' @* q'
+  := cat_comp2 (A:=pForall A P) r s.
 
 Notation "p @@* q" := (phomotopy_hcompose p q).
 
