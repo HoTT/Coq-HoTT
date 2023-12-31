@@ -1,5 +1,7 @@
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
+#[local] Set Polymorphic Inductive Cumulativity.
+
 Generalizable Variables A.
 
 (*

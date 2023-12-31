@@ -122,6 +122,8 @@ Proof.
 apply SemiRings.iso_leibnitz with (naturals_to_semiring N' N);apply _.
 Qed.
 
+#[local] Typeclasses Transparent Apart NaturalsToSemiRing.
+
 Section borrowed_from_nat.
 
   Lemma induction
@@ -155,7 +157,7 @@ Section borrowed_from_nat.
   Proof.
   refine (from_nat_stmt@{i U}
     nat (fun s => forall z : s, LeftCancellation plus z) _).
-  simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
+  simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}|exact nat_plus_cancel_l@{}].
   Qed.
 
   Global Instance: forall z : N, RightCancellation (+) z.
@@ -174,6 +176,7 @@ Section borrowed_from_nat.
   Instance nat_nontrivial: PropHolds ((1:N) <> 0).
   Proof.
   refine (from_nat_stmt nat (fun s => PropHolds ((1:s) <> 0)) _).
+  #[local] Typeclasses Transparent PropHolds not SR_carrier one zero.
   apply _.
   Qed.
 
