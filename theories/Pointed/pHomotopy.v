@@ -2,18 +2,12 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.Core.
 Require Import WildCat.
+Require Import Truncations.Core.
+Require Import ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 
 (** Some higher homotopies *)
-
-Definition phomotopy_inverse_1 {A : pType} {P : pFam A} {f : pForall A P}
-  : (phomotopy_reflexive f)^* ==* phomotopy_reflexive f.
-Proof.
-  srapply Build_pHomotopy.
-  + reflexivity.
-  + pointed_reduce. reflexivity.
-Defined.
 
 (** [phomotopy_path] sends concatenation to composition of pointed homotopies.*)
 Definition phomotopy_path_pp {A : pType} {P : pFam A}
@@ -36,20 +30,12 @@ Definition phomotopy_path_V {A : pType} {P : pFam A}
   {f g : pForall A P} (p : f = g)
   : phomotopy_path (p^) ==* (phomotopy_path p)^*.
 Proof.
-  induction p. simpl. symmetry. apply phomotopy_inverse_1.
+  induction p. simpl. symmetry. exact gpd_rev_1.
 Defined.
 
-Definition phomotopy_hcompose {A : pType} {P : pFam A} {f g h : pForall A P}
- {p p' : f ==* g} {q q' : g ==* h} (r : p ==* p') (s : q ==* q') :
-  p @* q ==* p' @* q'
-  := cat_comp2 (A:=pForall A P) r s.
-
-Notation "p @@* q" := (phomotopy_hcompose p q).
+Notation "p @@* q" := (p $@@ q).
 
 (** Pointed homotopies in a set form an HProp. *)
-Global Instance ishprop_phomotopy_hset `{Univalence} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
-  : IsHProp (f ==* g).
-Proof.
-  rapply (transport IsHProp (x := {p : f == g & p (point X) = dpoint_eq f @ (dpoint_eq g)^})).
-  apply path_universe_uncurried; issig.
-Defined.
+Global Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
+  : IsHProp (f ==* g)
+  := inO_equiv_inO' (O:=Tr (-1)) _ (issig_phomotopy f g).
