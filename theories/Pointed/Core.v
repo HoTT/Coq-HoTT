@@ -2,6 +2,8 @@
 Require Import Basics Types.
 Require Import PathAny.
 Require Import WildCat.
+Require Import Truncations.Core.
+Require Import ReflectiveSubuniverse.
 
 Local Set Polymorphic Inductive Cumulativity.
 
@@ -60,7 +62,6 @@ Arguments dpoint_eq {A P} f : rename.
 Arguments pointed_fun {A P} f : rename.
 Coercion pointed_fun : pForall >-> Funclass.
 
-
 (** ** Pointed functions *)
 
 (** A pointed map is a map with a proof that it preserves the point. We define it as as a notation for a non-dependent version of [pForall]. *)
@@ -86,20 +87,20 @@ Definition pmap_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
 
 Infix "o*" := pmap_compose : pointed_scope.
 
+(** The projections from a pointed product are pointed maps. *)
 Definition pfst {A B : pType} : A * B ->* A
   := Build_pMap (A * B) A fst idpath.
 
 Definition psnd {A B : pType} : A * B ->* B
   := Build_pMap (A * B) B snd idpath.
 
-
 (** ** Pointed homotopies *)
 
+(** A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
 Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
   := Build_pFam (fun x => f x = g x) (dpoint_eq f @ (dpoint_eq g)^).
 
-(* A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
-Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P) : Type
+Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P)
   := pForall A (pfam_phomotopy f g).
 
 Infix "==*" := pHomotopy : pointed_scope.
@@ -124,26 +125,24 @@ Defined.
 
 (** ** Pointed equivalences *)
 
-(* A pointed equivalence is a pointed map and a proof that it is
-  an equivalence *)
+(** A pointed equivalence is a pointed map and a proof that it is an equivalence *)
 Record pEquiv (A B : pType) := {
   pointed_equiv_fun : pForall A (pfam_const B) ;
   pointed_isequiv : IsEquiv pointed_equiv_fun ;
 }.
 
-(* TODO: It might be better behaved to define pEquiv as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor Build_pEquiv' which coq can infer faster than Build_pEquiv. *)
+(** TODO: It might be better behaved to define pEquiv as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor Build_pEquiv' which coq can infer faster than Build_pEquiv. *)
 
 Infix "<~>*" := pEquiv : pointed_scope.
 
-(* Note: because we define pMap as a special case of pForall, we must declare
-  all coercions into pForall, *not* into pMap. *)
+(** Note: because we define pMap as a special case of pForall, we must declare all coercions into pForall, *not* into pMap. *)
 Coercion pointed_equiv_fun : pEquiv >-> pForall.
 Global Existing Instance pointed_isequiv.
 
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
   : A <~> B := Build_Equiv A B f _.
 
-(* The pointed identity is a pointed equivalence *)
+(** The pointed identity is a pointed equivalence *)
 Definition pequiv_pmap_idmap {A} : A <~>* A
   := Build_pEquiv _ _ pmap_idmap _.
 
@@ -151,7 +150,7 @@ Definition pequiv_pmap_idmap {A} : A <~>* A
 Definition psigma {A : pType} (P : pFam A) : pType
   := [sig P, (point A; dpoint P)].
 
-(** Pointed pi types, note that the domain is not pointed *)
+(** Pointed pi types; note that the domain is not pointed *)
 Definition pproduct {A : Type} (F : A -> pType) : pType
   := [forall (a : A), pointed_type (F a), ispointed_type o F].
 
@@ -254,32 +253,45 @@ Defined.
 
 (** ** Various operations with pointed homotopies *)
 
+(** For the following three instances, the typeclass (e.g. [Reflexive]) requires a third universe variable, the maximum of the universe of [A] and the universe of the values of [P].  Because of this, in each case we first prove a version not mentioning the typeclass, which avoids a stray universe variable. *)
+
 (** [pHomotopy] is a reflexive relation *)
-Global Instance phomotopy_reflexive {A : pType} {P : pFam A}
+Definition phomotopy_reflexive {A : pType} {P : pFam A} (f : pForall A P)
+  : f ==* f
+  := Build_pHomotopy (fun x => 1) (concat_pV _)^.
+
+Global Instance phomotopy_reflexive' {A : pType} {P : pFam A}
   : Reflexive (@pHomotopy A P)
-  := fun X => Build_pHomotopy (fun x => 1) (concat_pV _)^.
+  := @phomotopy_reflexive A P.
 
 (** [pHomotopy] is a symmetric relation *)
-Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B).
+Definition phomotopy_symmetric {A P} {f g : pForall A P} (p : f ==* g)
+  : g ==* f.
 Proof.
-  intros f g p.
   snrefine (Build_pHomotopy _ _); cbn.
   1: intros x; exact ((p x)^).
   by pelim p f g.
 Defined.
 
-Notation "p ^*" := (phomotopy_symmetric _ _ p) : pointed_scope.
+Global Instance phomotopy_symmetric' {A P}
+  : Symmetric (@pHomotopy A P)
+  := @phomotopy_symmetric A P.
+
+Notation "p ^*" := (phomotopy_symmetric p) : pointed_scope.
 
 (** [pHomotopy] is a transitive relation *)
-Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B).
+Definition phomotopy_transitive {A P} {f g h : pForall A P} (p : f ==* g) (q : g ==* h)
+  : f ==* h.
 Proof.
-  intros x y z p q.
   snrefine (Build_pHomotopy (fun x => p x @ q x) _).
   nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).
   nrapply whiskerL; nrapply concat_V_pp.
 Defined.
 
-Notation "p @* q" := (phomotopy_transitive _ _ _ p q) : pointed_scope.
+Global Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
+  := @phomotopy_transitive A P.
+
+Notation "p @* q" := (phomotopy_transitive p q) : pointed_scope.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
 
@@ -330,208 +342,6 @@ Proof.
   1: reflexivity.
   by pelim f.
 Defined.
-
-(** ** Funext for pointed types and direct consequences. *)
-
-(** By funext pointed homotopies are equivalent to paths *)
-Definition equiv_path_pforall `{Funext} {A : pType}
-  {P : pFam A} (f g : pForall A P)
-  : (f ==* g) <~> (f = g).
-Proof.
-  refine (_ oE (issig_phomotopy f g)^-1).
-  revert f g; apply (equiv_path_issig_contr (issig_pforall A P)).
-  { intros [f feq]; cbn.
-    exists (fun a => 1%path).
-    exact (concat_pV _)^. }
-  intros [f feq]; cbn.
-  contr_sigsig f (fun a:A => idpath (f a)); cbn.
-  refine (contr_equiv' {feq' : f (point A) = dpoint P & feq = feq'} _).
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
-  refine (_^-1 oE equiv_path_inverse _ _).
-  apply equiv_moveR_1M.
-Defined.
-
-Definition path_pforall `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
-  : (f ==* g) -> (f = g) := equiv_path_pforall f g.
-
-(** Here is the inverse map without assuming funext *)
-Definition phomotopy_path {A : pType} {P : pFam A} {f g : pForall A P}
-  : (f = g) -> (f ==* g) := ltac:(by intros []).
-
-(** And we prove that it agrees with the inverse of [equiv_path_pforall] *)
-Definition path_equiv_path_pforall_phomotopy_path `{Funext} {A : pType}
-  {P : pFam A} {f g : pForall A P}
-  : phomotopy_path (f:=f) (g:=g) = (equiv_path_pforall f g)^-1%equiv
-  := ltac:(by funext []).
-
-(* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so. *)
-Definition equiv_inverse_path_pforall_1 `{Funext} {A : pType} {P : pFam A} (f : pForall A P)
-  : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
-  := 1.
-
-Definition path_pforall_1 `{Funext} {A : pType} {P : pFam A} {f : pForall A P}
-  : equiv_path_pforall _ _ (reflexivity f) = 1%path
-  := moveR_equiv_M _ _ (equiv_inverse_path_pforall_1 f)^.
-
-Definition equiv_path_pmap_1 `{Funext} {A B} {f : A ->* B}
-  : path_pforall (reflexivity f) = 1%path
-  := path_pforall_1.
-
-(** Since pointed homotopies are equivalent to equalities, we can act as if
-  they are paths and define a path induction for them *)
-Definition phomotopy_ind `{H0 : Funext} {A : pType} {P : pFam A}
-  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> Type)
-  (q : Q k (reflexivity k)) (k' : pForall A P)
-  : forall (H : k ==* k'), Q k' H.
-Proof.
-  equiv_intro (equiv_path_pforall k k')^-1%equiv p.
-  induction p.
-  exact q.
-Defined.
-
-(** Sometimes you have a goal with both a pointed homotopy [H] and [path_pforall H].
-  This is an induction principle that allows us to replace both of them by reflexivity
-  at the same time. *)
-Definition phomotopy_ind' `{H0 : Funext} {A : pType} {P : pFam A}
-  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> (k = k') -> Type)
-  (q : Q k (reflexivity k) 1 % path) (k' : pForall A P) (H : k ==* k')
-  (p : k = k') (r : path_pforall H = p)
-  : Q k' H p.
-Proof.
-  induction r.
-  revert k' H.
-  rapply phomotopy_ind.
-  exact (transport (Q _ (reflexivity _)) path_pforall_1^ q).
-Defined.
-
-Definition phomotopy_ind_1 `{H0 : Funext} {A : pType} {P : pFam A}
-  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> Type)
-  (q : Q k (reflexivity k)) :
-  phomotopy_ind Q q k (reflexivity k) = q.
-Proof.
-  change (reflexivity k) with ((equiv_path_pforall k k)^-1%equiv (idpath k)).
-  apply equiv_ind_comp.
-Defined.
-
-Definition phomotopy_ind_1' `{H0 : Funext} {A : pType} {P : pFam A}
-  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> (k = k') -> Type)
-  (q : Q k (reflexivity k) 1 % path)
-  : phomotopy_ind' Q q k (reflexivity k) (path_pforall (reflexivity k)) (1 % path)
-  = transport (Q k (reflexivity k)) path_pforall_1^ q.
-Proof.
-  srapply phomotopy_ind_1.
-Defined.
-
-(** Every homotopy between pointed maps of sets is a pointed homotopy. *)
-Definition phomotopy_homotopy_hset {X Y : pType} `{IsHSet Y} {f g : X ->* Y} (h : f == g)
-  : f ==* g.
-Proof.
-  apply (Build_pHomotopy h).
-  apply path_ishprop.
-Defined.
-
-(** ** Operations on equivalences needed to make pType a wild category with equivalences *)
-
-(** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)
-Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
-Proof.
-  snrapply Build_pEquiv.
-  1: apply (Build_pMap _ _ f^-1).
-  1: apply moveR_equiv_V; symmetry; apply point_eq.
-  exact _.
-Defined.
-
-(* A pointed equivalence is a section of its inverse *)
-Definition peissect {A B : pType} (f : A <~>* B)
-  : (pequiv_inverse f) o* f ==* pmap_idmap.
-Proof.
-  srefine (Build_pHomotopy _ _).
-  1: apply (eissect f).
-  simpl. unfold moveR_equiv_V.
-  pointed_reduce.
-  symmetry.
-  refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
-Defined.
-
-(* A pointed equivalence is a retraction of its inverse *)
-Definition peisretr {A B : pType} (f : A <~>* B)
-  : f o* (pequiv_inverse f) ==* pmap_idmap.
-Proof.
-  srefine (Build_pHomotopy _ _).
-  1: apply (eisretr f).
-  pointed_reduce.
-  unfold moveR_equiv_V.
-  refine (eisadj f _ @ _).
-  symmetry.
-  exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_1p _)).
-Defined.
-
-(** Univalence for pointed types *)
-Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
-Proof.
-  refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
-  nrapply (contr_equiv' { X : Type & { f : A <~> X & {x : X & f pt = x} }}).
-  1: make_equiv.
-  rapply (contr_equiv' { X : Type &  A <~> X }).
-  nrapply equiv_functor_sigma_id; intro X; symmetry.
-  rapply equiv_sigma_contr.
-  (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
-Defined.
-
-Definition path_ptype `{Univalence} {A B : pType} : (A <~>* B) -> A = B
-  := equiv_path_ptype A B.
-
-(** The inverse map can be defined without Univalence. *)
-Definition pequiv_path {A B : pType} (p : A = B) : (A <~>* B)
-  := match p with idpath => pequiv_pmap_idmap end.
-
-(** This just confirms that it is definitionally the inverse map. *)
-Definition pequiv_path_equiv_path_ptype_inverse `{Univalence} {A B : pType}
-  : @pequiv_path A B = (equiv_path_ptype A B)^-1
-  := idpath.
-
-Global Instance isequiv_pequiv_path `{Univalence} {A B : pType}
-  : IsEquiv (@pequiv_path A B)
-  := isequiv_inverse (equiv_path_ptype A B).
-
-(** Two pointed equivalences are equal if their underlying pointed functions are equal. This requires [Funext] for knowing that [IsEquiv] is an HProp. *)
-Definition equiv_path_pequiv' `{Funext} {A B : pType} (f g : A <~>* B)
-  : (f = g :> (A ->* B)) <~> (f = g :> (A <~>* B)).
-Proof.
-  refine ((equiv_ap' (issig_pequiv A B)^-1%equiv f g)^-1%equiv oE _); cbn.
-  match goal with |- _ <~> ?F = ?G => exact (equiv_path_sigma_hprop F G) end.
-Defined.
-
-(** Two pointed equivalences are equal if their underlying pointed functions are pointed homotopic. *)
-Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
-  : (f ==* g) <~> (f = g)
-  := equiv_path_pequiv' f g oE equiv_path_pforall f g.
-
-Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
-  : (f ==* g) -> (f = g)
-  := equiv_path_pequiv f g.
-
-(** Pointed types of pointed maps *)
-
-(** A family of pointed types gives rise to a [pFam]. *)
-Definition pointed_fam {A : pType} (B : A -> pType) : pFam A
-  := Build_pFam (pointed_type o B) (point (B (point A))).
-
-(** The section of a family of pointed types *)
-Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B)
-  := Build_pForall A (pointed_fam B) (fun x => point (B x)) 1.
-
-(** The pointed type of pointed maps. For dependent pointed maps we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
-Definition ppForall (A : pType) (B : A -> pType) : pType
-  := [pForall A (pointed_fam B), point_pforall B].
-
-Definition ppMap (A B : pType) : pType
-  := ppForall A (fun _ => B).
-
-Infix "->**" := ppMap : pointed_scope.
-Notation "'ppforall'  x .. y , P"
-  := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
-     : pointed_scope.
 
 (** ** 1-categorical properties of [pForall]. *)
 
@@ -594,17 +404,29 @@ Proof.
   by pelim p f g.
 Defined.
 
-Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
-  (f g h : A ->* B) (K : g ==* f)
-  : f ==* h <~> g ==* h.
-Proof.
-  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
-  rapply equiv_concat_l.
-  apply equiv_path_pforall.
-  exact K.
-Defined.
-
 (** ** The pointed category structure of [pType] *)
+
+(** Pointed types of pointed maps *)
+
+(** A family of pointed types gives rise to a [pFam]. *)
+Definition pointed_fam {A : pType} (B : A -> pType) : pFam A
+  := Build_pFam (pointed_type o B) (point (B (point A))).
+
+(** The section of a family of pointed types *)
+Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B)
+  := Build_pForall A (pointed_fam B) (fun x => point (B x)) 1.
+
+(** The pointed type of pointed maps. For dependent pointed maps we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
+Definition ppForall (A : pType) (B : A -> pType) : pType
+  := [pForall A (pointed_fam B), point_pforall B].
+
+Definition ppMap (A B : pType) : pType
+  := ppForall A (fun _ => B).
+
+Infix "->**" := ppMap : pointed_scope.
+Notation "'ppforall'  x .. y , P"
+  := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
+     : pointed_scope.
 
 (** The constant (zero) map *)
 Definition pconst {A B : pType} : A ->* B
@@ -624,20 +446,30 @@ Proof.
   exact (concat_1p _)^.
 Defined.
 
-(** * pType as a wild category *)
+(** * pType and pForall as wild categories *)
+
+(** Note that the definitions for [pForall] are also used for the higher structure in [pType]. *)
 
 (** pType is a graph *)
 Global Instance isgraph_ptype : IsGraph pType
   := Build_IsGraph pType (fun X Y => X ->* Y).
 
-(** pType is a 0-coherent 1-category *)
-Global Instance is01cat_ptype : Is01Cat pType
-  := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
-
 (** pForall is a graph *)
 Global Instance isgraph_pforall (A : pType) (P : pFam A)
   : IsGraph (pForall A P)
   := Build_IsGraph _ pHomotopy.
+
+(** pType is a 0-coherent 1-category *)
+Global Instance is01cat_ptype : Is01Cat pType
+  := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
+
+(** pForall is a 0-coherent 1-category *)
+Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
+Proof.
+  econstructor.
+  - exact phomotopy_reflexive.
+  - intros a b c f g. exact (g @* f).
+Defined.
 
 Global Instance is2graph_ptype : Is2Graph pType := fun f g => _.
 
@@ -645,18 +477,10 @@ Global Instance is2graph_pforall (A : pType) (P : pFam A)
   : Is2Graph (pForall A P)
   := fun f g => _.
 
-(** pForall is a 0-coherent 1-category *)
-Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
-Proof.
-  econstructor.
-  - exact phomotopy_reflexive.
-  - intros a b c f g. exact (phomotopy_transitive _ _ _ g f).
-Defined.
-
 (** pForall is a 0-coherent 1-groupoid *)
 Global Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
 Proof.
-  srapply Build_Is0Gpd. intros ? ? h. exact (phomotopy_symmetric _ _ h).
+  srapply Build_Is0Gpd. intros ? ? h. exact h^*.
 Defined.
 
 (** pType is a 1-coherent 1-category *)
@@ -672,55 +496,6 @@ Proof.
   - intros ? ? ? ? f g h; exact (pmap_compose_assoc h g f).
   - intros ? ? f; exact (pmap_postcompose_idmap f).
   - intros ? ? f; exact (pmap_precompose_idmap f).
-Defined.
-
-(** Under funext, pType has morphism extensionality *)
-Global Instance hasmorext_ptype `{Funext} : HasMorExt pType.
-Proof.
-  srapply Build_HasMorExt; intros A B f g.
-  refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
-  intros []; reflexivity.
-Defined.
-
-(** pType has equivalences *)
-Global Instance hasequivs_ptype : HasEquivs pType.
-Proof.
-  srapply (
-    Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f => IsEquiv f));
-  intros A B f; cbn; intros.
-  - exact f.
-  - exact _.
-  - exact (Build_pEquiv _ _ f _).
-  - reflexivity.
-  - exact (pequiv_inverse f).
-  - apply peissect.
-  - cbn. refine (peisretr f).
-  - rapply (isequiv_adjointify f g).
-    + intros x; exact (r x).
-    + intros x; exact (s x).
-Defined.
-
-Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
-Proof.
-  snrapply Build_HasMorExt.
-  intros a b f g.
-  unfold GpdHom_path.
-  cbn in f, g.
-  (* [GpdHom_path] and the inverse of [equiv_path_pequiv] are not definitionally equal, but they compute to definitionally equal things on [idpath]. *)
-  apply (isequiv_homotopic (equiv_path_pequiv f g)^-1%equiv).
-  intro p; induction p; cbn.
-  reflexivity.
-Defined.
-
-(** pType is a univalent 1-coherent 1-category *)
-Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
-Proof.
-  srapply Build_IsUnivalent1Cat; intros A B.
-  (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
-  refine (isequiv_homotopic pequiv_path _).
-  intros [].
-  apply equiv_path_pequiv'.  (* Change to equality as pointed functions. *)
-  reflexivity.
 Defined.
 
 (** pType is a pointed category *)
@@ -837,6 +612,274 @@ Proof.
   + intros ? ? ? ? h. exact h.
   + intros. reflexivity.
   + intros. reflexivity.
+Defined.
+
+(** Some higher homotopies *)
+
+(** Horizontal composition of homotopies. *)
+Notation "p @@* q" := (p $@@ q).
+
+(** ** Funext for pointed types and direct consequences. *)
+
+(** By funext pointed homotopies are equivalent to paths *)
+Definition equiv_path_pforall `{Funext} {A : pType}
+  {P : pFam A} (f g : pForall A P)
+  : (f ==* g) <~> (f = g).
+Proof.
+  refine (_ oE (issig_phomotopy f g)^-1).
+  revert f g; apply (equiv_path_issig_contr (issig_pforall A P)).
+  { intros [f feq]; cbn.
+    exists (fun a => 1%path).
+    exact (concat_pV _)^. }
+  intros [f feq]; cbn.
+  contr_sigsig f (fun a:A => idpath (f a)); cbn.
+  refine (contr_equiv' {feq' : f (point A) = dpoint P & feq = feq'} _).
+  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
+  refine (_^-1 oE equiv_path_inverse _ _).
+  apply equiv_moveR_1M.
+Defined.
+
+Definition path_pforall `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
+  : (f ==* g) -> (f = g) := equiv_path_pforall f g.
+
+(** We note that the inverse of [path_pforall] computes definitionally on reflexivity, and hence [path_pforall] itself computes typally so. *)
+Definition equiv_inverse_path_pforall_1 `{Funext} {A : pType} {P : pFam A} (f : pForall A P)
+  : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
+  := 1.
+
+Definition path_pforall_1 `{Funext} {A : pType} {P : pFam A} {f : pForall A P}
+  : equiv_path_pforall _ _ (reflexivity f) = 1%path
+  := moveR_equiv_M _ _ (equiv_inverse_path_pforall_1 f)^.
+
+(** Here is the inverse map without assuming funext *)
+Definition phomotopy_path {A : pType} {P : pFam A} {f g : pForall A P}
+  : (f = g) -> (f ==* g) := ltac:(by intros []).
+
+(** And we prove that it agrees with the inverse of [equiv_path_pforall] *)
+Definition path_equiv_path_pforall_phomotopy_path `{Funext} {A : pType}
+  {P : pFam A} {f g : pForall A P}
+  : phomotopy_path (f:=f) (g:=g) = (equiv_path_pforall f g)^-1%equiv
+  := ltac:(by funext []).
+
+(** TODO: The next few results could be proven for [GpdHom_path] in any WildCat. *)
+
+(** [phomotopy_path] sends concatenation to composition of pointed homotopies.*)
+Definition phomotopy_path_pp {A : pType} {P : pFam A}
+  {f g h : pForall A P} (p : f = g) (q : g = h)
+  : phomotopy_path (p @ q) ==* phomotopy_path p @* phomotopy_path q.
+Proof.
+  induction p. induction q. symmetry. apply phomotopy_compose_p1.
+Defined.
+
+(** ** [phomotopy_path] respects 2-cells. *)
+Definition phomotopy_path2 {A : pType} {P : pFam A}
+  {f g : pForall A P} {p p' : f = g} (q : p = p')
+  : phomotopy_path p ==* phomotopy_path p'.
+Proof.
+  induction q. reflexivity.
+Defined.
+
+(** [phomotopy_path] sends inverses to inverses.*)
+Definition phomotopy_path_V {A : pType} {P : pFam A}
+  {f g : pForall A P} (p : f = g)
+  : phomotopy_path (p^) ==* (phomotopy_path p)^*.
+Proof.
+  induction p. simpl. symmetry. exact gpd_rev_1.
+Defined.
+
+(** Since pointed homotopies are equivalent to equalities, we can act as if they are paths and define a path induction for them. *)
+Definition phomotopy_ind `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> Type)
+  (q : Q k (reflexivity k)) (k' : pForall A P)
+  : forall (H : k ==* k'), Q k' H.
+Proof.
+  equiv_intro (equiv_path_pforall k k')^-1%equiv p.
+  induction p.
+  exact q.
+Defined.
+
+(** Sometimes you have a goal with both a pointed homotopy [H] and [path_pforall H].  This is an induction principle that allows us to replace both of them by reflexivity at the same time. *)
+Definition phomotopy_ind' `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> (k = k') -> Type)
+  (q : Q k (reflexivity k) 1 % path) (k' : pForall A P) (H : k ==* k')
+  (p : k = k') (r : path_pforall H = p)
+  : Q k' H p.
+Proof.
+  induction r.
+  revert k' H.
+  rapply phomotopy_ind.
+  exact (transport (Q _ (reflexivity _)) path_pforall_1^ q).
+Defined.
+
+Definition phomotopy_ind_1 `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> Type)
+  (q : Q k (reflexivity k)) :
+  phomotopy_ind Q q k (reflexivity k) = q.
+Proof.
+  change (reflexivity k) with ((equiv_path_pforall k k)^-1%equiv (idpath k)).
+  apply equiv_ind_comp.
+Defined.
+
+Definition phomotopy_ind_1' `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -> (k = k') -> Type)
+  (q : Q k (reflexivity k) 1 % path)
+  : phomotopy_ind' Q q k (reflexivity k) (path_pforall (reflexivity k)) (1 % path)
+  = transport (Q k (reflexivity k)) path_pforall_1^ q.
+Proof.
+  srapply phomotopy_ind_1.
+Defined.
+
+(** Every homotopy between pointed maps of sets is a pointed homotopy. *)
+Definition phomotopy_homotopy_hset {X Y : pType} `{IsHSet Y} {f g : X ->* Y} (h : f == g)
+  : f ==* g.
+Proof.
+  apply (Build_pHomotopy h).
+  apply path_ishprop.
+Defined.
+
+(** Pointed homotopies in a set form an HProp. *)
+Global Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
+  : IsHProp (f ==* g)
+  := inO_equiv_inO' (O:=Tr (-1)) _ (issig_phomotopy f g).
+
+(** ** Operations on equivalences needed to make pType a wild category with equivalences *)
+
+(** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)
+Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
+Proof.
+  snrapply Build_pEquiv.
+  1: apply (Build_pMap _ _ f^-1).
+  1: apply moveR_equiv_V; symmetry; apply point_eq.
+  exact _.
+Defined.
+
+(* A pointed equivalence is a section of its inverse *)
+Definition peissect {A B : pType} (f : A <~>* B)
+  : (pequiv_inverse f) o* f ==* pmap_idmap.
+Proof.
+  srefine (Build_pHomotopy _ _).
+  1: apply (eissect f).
+  simpl. unfold moveR_equiv_V.
+  pointed_reduce.
+  symmetry.
+  refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
+Defined.
+
+(* A pointed equivalence is a retraction of its inverse *)
+Definition peisretr {A B : pType} (f : A <~>* B)
+  : f o* (pequiv_inverse f) ==* pmap_idmap.
+Proof.
+  srefine (Build_pHomotopy _ _).
+  1: apply (eisretr f).
+  pointed_reduce.
+  unfold moveR_equiv_V.
+  refine (eisadj f _ @ _).
+  symmetry.
+  exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_1p _)).
+Defined.
+
+(** Univalence for pointed types *)
+Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
+Proof.
+  refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
+  nrapply (contr_equiv' { X : Type & { f : A <~> X & {x : X & f pt = x} }}).
+  1: make_equiv.
+  rapply (contr_equiv' { X : Type &  A <~> X }).
+  nrapply equiv_functor_sigma_id; intro X; symmetry.
+  rapply equiv_sigma_contr.
+  (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
+Defined.
+
+Definition path_ptype `{Univalence} {A B : pType} : (A <~>* B) -> A = B
+  := equiv_path_ptype A B.
+
+(** The inverse map can be defined without Univalence. *)
+Definition pequiv_path {A B : pType} (p : A = B) : (A <~>* B)
+  := match p with idpath => pequiv_pmap_idmap end.
+
+(** This just confirms that it is definitionally the inverse map. *)
+Definition pequiv_path_equiv_path_ptype_inverse `{Univalence} {A B : pType}
+  : @pequiv_path A B = (equiv_path_ptype A B)^-1
+  := idpath.
+
+Global Instance isequiv_pequiv_path `{Univalence} {A B : pType}
+  : IsEquiv (@pequiv_path A B)
+  := isequiv_inverse (equiv_path_ptype A B).
+
+(** Two pointed equivalences are equal if their underlying pointed functions are equal. This requires [Funext] for knowing that [IsEquiv] is an [HProp]. *)
+Definition equiv_path_pequiv' `{Funext} {A B : pType} (f g : A <~>* B)
+  : (f = g :> (A ->* B)) <~> (f = g :> (A <~>* B)).
+Proof.
+  refine ((equiv_ap' (issig_pequiv A B)^-1%equiv f g)^-1%equiv oE _); cbn.
+  match goal with |- _ <~> ?F = ?G => exact (equiv_path_sigma_hprop F G) end.
+Defined.
+
+(** Two pointed equivalences are equal if their underlying pointed functions are pointed homotopic. *)
+Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
+  : (f ==* g) <~> (f = g)
+  := equiv_path_pequiv' f g oE equiv_path_pforall f g.
+
+Definition path_pequiv `{Funext} {A B : pType} (f g : A <~>* B)
+  : (f ==* g) -> (f = g)
+  := equiv_path_pequiv f g.
+
+Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
+  (f g h : A ->* B) (K : g ==* f)
+  : f ==* h <~> g ==* h.
+Proof.
+  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).
+  rapply equiv_concat_l.
+  apply equiv_path_pforall.
+  exact K.
+Defined.
+
+(** Under funext, pType has morphism extensionality *)
+Global Instance hasmorext_ptype `{Funext} : HasMorExt pType.
+Proof.
+  srapply Build_HasMorExt; intros A B f g.
+  refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
+  intros []; reflexivity.
+Defined.
+
+(** pType has equivalences *)
+Global Instance hasequivs_ptype : HasEquivs pType.
+Proof.
+  srapply (
+    Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f => IsEquiv f));
+  intros A B f; cbn; intros.
+  - exact f.
+  - exact _.
+  - exact (Build_pEquiv _ _ f _).
+  - reflexivity.
+  - exact (pequiv_inverse f).
+  - apply peissect.
+  - cbn. refine (peisretr f).
+  - rapply (isequiv_adjointify f g).
+    + intros x; exact (r x).
+    + intros x; exact (s x).
+Defined.
+
+Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
+Proof.
+  snrapply Build_HasMorExt.
+  intros a b f g.
+  unfold GpdHom_path.
+  cbn in f, g.
+  (* [GpdHom_path] and the inverse of [equiv_path_pequiv] are not definitionally equal, but they compute to definitionally equal things on [idpath]. *)
+  apply (isequiv_homotopic (equiv_path_pequiv f g)^-1%equiv).
+  intro p; induction p; cbn.
+  reflexivity.
+Defined.
+
+(** pType is a univalent 1-coherent 1-category *)
+Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
+Proof.
+  srapply Build_IsUnivalent1Cat; intros A B.
+  (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
+  refine (isequiv_homotopic pequiv_path _).
+  intros [].
+  apply equiv_path_pequiv'.  (* Change to equality as pointed functions. *)
+  reflexivity.
 Defined.
 
 (** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor pType to Type. *)

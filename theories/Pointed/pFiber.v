@@ -8,15 +8,13 @@ Local Open Scope pointed_scope.
 
 (** ** Pointed fibers *)
 
-Definition pfiber {A B : pType} (f : A ->* B) : pType.
-Proof.
-  nrefine ([hfiber f (point B), _]).
-  exists (point A).
-  apply point_eq.
-Defined.
+Global Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))
+  := (point A; point_eq f).
+
+Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _].
 
 Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
-  := (Build_pMap (pfiber f) A pr1 1).
+  := Build_pMap (pfiber f) A pr1 1.
 
 (** The double fiber object is equivalent to loops on the base. *)
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
