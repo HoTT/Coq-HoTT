@@ -127,13 +127,10 @@ Proof.
     exact (concat_p1 _ @ concat_1p _).
 Defined.
 
-Local Existing Instance ishprop_phomotopy_hset.
-
 (** If Y is a set, then IsComplex is an HProp. *)
 Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsComplex i f) := {}.
-
 
 (** ** Very short exact sequences and fiber sequences *)
 
