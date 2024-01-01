@@ -1,6 +1,5 @@
 Require Import Basics Types.
 Require Import Pointed.Core.
-Require Import Pointed.pHomotopy.
 
 Local Open Scope pointed_scope.
 
