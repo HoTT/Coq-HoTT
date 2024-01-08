@@ -1,13 +1,19 @@
 #!/usr/bin/python3
 
 # A wrapper for coqc that will try to strip unneeded imports from a file.
+# The results need to be inspected by hand, as it will often be too eager.
+# See the "Limitations" section below.
+
 # Can be used as
 #   path/to/coqcstriprequires.py file.v
 # but in order to get the right arguments passed to coqc, it is better to do
 #   make COQC=path/to/coqcstriprequires.py file.vo
 # or
 #   export COQC=path/to/coqcstriprequires.py
-#   make ...
+#   make file.vo
+# To run on the whole library, avoiding test/ and contrib/, can do:
+#   export COQC=path/to/coqcstriprequires.py
+#   make clean; make -j<fill in> theories/HoTT.vo
 
 # Can be run with -j8 or -j1.  You should adjust the timeout policy
 # depending on which case you use.  See below.
@@ -32,6 +38,10 @@
 #   (but after) the period from a previous "Require Import".
 # - If the "Require Import" command spans multiple lines and all
 #   imports are removed, the result won't be syntactically valid.
+# - It will sometimes remove a module that is transitively required; this has
+#   no advantage, and sometimes makes intermediate goals unclear.
+# - Shouldn't be run on test/ folder, as many definitions there are preceded
+#   with "Fail".
 # - It would probably be cleaner to just treat the input as a single string
 #   rather than working line by line.
 
@@ -51,15 +61,15 @@ import re
 # Classes/implementations/natpair_integers.v and Classes/theory/rationals.v
 # both spin when certain lines are removed.
 # On my system, the slowest file takes 5.5s usually, so a fixed timeout
-# of 10s timeout is fine, but on a slower system you'll need to increase it.
+# of 10s is fine, but on a slower system you'll need to increase it.
 
 # You can also use a dynamic timeout.  This will ensure that no change
 # is accepted if it increases the time to the value given, where
 # duration is the best time seen so far.  The reason for the displayed
-# formula is to allow for variation in the timing.  In one test, with
+# formula is to allow for variations in the timing.  In one test, with
 # max(duration+0.005, duration*1.03), only around 16 changes were
 # aborted due to the timeout, and only a few of those would have succeeded.
-# One important one to exclude is Basics from Algebra/.../PullbackFiberSequence,
+# One important one to avoid is Basics from Algebra/.../PullbackFiberSequence,
 # as removing that Import really does slow things down a lot.
 
 # Set your timeout policy, in seconds:
@@ -69,7 +79,7 @@ def calc_timeout(duration): return max(duration+0.005, duration*1.03)
 #def calc_timeout(duration): return 10
 
 # time.perf_counter is better than time.time, since the latter is
-# affect by changes to the system clock.  Both return a floating point
+# affected by changes to the system clock.  Both return a floating point
 # value in seconds.
 timer = time.perf_counter
 
@@ -148,7 +158,7 @@ file_excludes=[
     'theories/Classes/interfaces/integers.v',   # only a comment changes
     ]
 
-module_excludes = ['Basics', 'Types']
+module_excludes = ['Basics', 'Types', '(notations)', '(hints)']
 
 def striprequires(vfile):
     changes = 0

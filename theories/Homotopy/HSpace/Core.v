@@ -2,7 +2,6 @@ Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
     MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,
     Negate, negate, Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
-Require Classes.interfaces.canonical_names.
 Export canonical_names.BinOpNotations.
 Require Import Basics Types Pointed WildCat.
 Require Import Truncations.Core Truncations.Connectedness.
