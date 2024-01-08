@@ -2,6 +2,7 @@ Require Import Classes.interfaces.canonical_names.
 Require Import Cubical.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.HSpace.Core.
+Require Import Homotopy.HSpace.Coherent.
 Require Import Spaces.Spheres.
 
 (** H-space structure on circle. *)
@@ -81,6 +82,11 @@ Section HSpace_S1.
   Defined.
 
   Global Instance hspace_s1 : IsHSpace (psphere 1) := {}.
+
+  Global Instance iscoherent_s1 : IsCoherent (psphere 1) := idpath.
+
+  Definition iscohhspace_s1 : IsCohHSpace (psphere 1)
+    := Build_IsCohHSpace _ _ _.
 
   Global Instance associative_sgop_s1
     : Associative sgop_s1.

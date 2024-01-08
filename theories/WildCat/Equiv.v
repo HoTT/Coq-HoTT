@@ -264,6 +264,22 @@ Defined.
 
 (** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v.  More could be added. *)
 
+Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : a $<~> c)
+  (p : cate_fun g $== f $o e^-1$)
+  : g $o e $== f.
+Proof.
+  apply (cate_epic_equiv e^-1$).
+  exact (compose_hh_V _ _ $@ p).
+Defined.
+
+Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : c $<~> a)
+  (p : cate_fun e $== g $o f)
+  : g^-1$ $o e $== f.
+Proof.
+  apply (cate_monic_equiv g).
+  exact (compose_h_Vh _ _ $@ p).
+Defined.
+
 Definition cate_moveL_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : e $o f $== Id _)
   : f $== cate_fun e^-1$.

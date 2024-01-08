@@ -35,7 +35,7 @@ Local Open Scope wc_iso_scope.
 
 (** * Definition of Group *)
 
-(** A group consists of a type, and operation on that type, and unit and an inverse, such that they satisfy the group axioms in IsGroup. *)
+(** A group consists of a type, an operation on that type, a unit and an inverse that satisfy the group axioms in [IsGroup]. *)
 Record Group := {
   group_type : Type;
   group_sgop : SgOp group_type;
@@ -574,6 +574,13 @@ Global Instance is0functor_ptype_group : Is0Functor ptype_group.
 Proof.
   apply Build_Is0Functor.
   rapply @pmap_GroupHomomorphism.
+Defined.
+
+Global Instance is1functor_ptype_group : Is1Functor ptype_group.
+Proof.
+  apply Build_Is1Functor; intros; apply phomotopy_homotopy_hset.
+  1: assumption.
+  1, 2: reflexivity.
 Defined.
 
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)

@@ -45,8 +45,6 @@ Module Export ClassifyingSpace.
 
   End ClassifyingSpace.
 
-  Arguments ClassifyingSpace G : clear implicits.
-
   (** Now we can state the expected dependent elimination principle, and derive other versions of the elimination principle from it. *)
   Section ClassifyingSpace_ind.
 
@@ -57,24 +55,26 @@ Module Export ClassifyingSpace.
     (** Note that since our classifying space is 1-truncated, we can only eliminate into 1-truncated type families. *)
     Definition ClassifyingSpace_ind
       (P : ClassifyingSpace G -> Type)
-     `{forall x, IsTrunc 1 (P x)}
+      `{forall b, IsTrunc 1 (P b)}
       (bbase' : P bbase)
       (bloop' : forall x, DPath P (bloop x) bbase' bbase')
       (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
-        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1) x : P x
-      := match x with
+        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1)
+      (b : ClassifyingSpace G)
+      : P b
+      := match b with
             bbase => (fun _ _ => bbase')
          end bloop' bloop_pp'.
 
-    (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for bloop_pp since we have a 1-type. We leave this as admitted since the computation rule is an axiom. **)
+    (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for [bloop_pp] since we have a 1-type. We leave this as admitted since the computation rule is an axiom. **)
     Definition ClassifyingSpace_ind_beta_bloop
       (P : ClassifyingSpace G -> Type)
-     `{forall x, IsTrunc 1 (P x)}
+     `{forall b, IsTrunc 1 (P b)}
       (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
       (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
-        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1) (x : G)
-      : dp_apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x)
-        = bloop' x.
+        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1)
+      (x : G)
+      : dp_apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
     Proof. Admitted.
 
   End ClassifyingSpace_ind.
@@ -93,7 +93,7 @@ Section Eliminators.
     : ClassifyingSpace G -> P.
   Proof.
     srefine (ClassifyingSpace_ind (fun _ => P) bbase' _ _).
-    1: intro; apply dp_const, bloop', x.
+    1: intro x; apply dp_const, bloop', x.
     intros x y.
     apply ds_const'.
     rapply sq_GGcc.
@@ -117,9 +117,9 @@ Section Eliminators.
   (** Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
   Definition ClassifyingSpace_ind_hset
     (P : ClassifyingSpace G -> Type)
-   `{forall x, IsTrunc 0 (P x)}
+    `{forall b, IsTrunc 0 (P b)}
     (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
-    : forall x, P x.
+    : forall b, P b.
   Proof.
     refine (ClassifyingSpace_ind P bbase' bloop' _).
     intros.
@@ -137,8 +137,8 @@ Section Eliminators.
 
   (** Similarly, when eliminating into an hprop, we only have to handle the basepoint. *)
   Definition ClassifyingSpace_ind_hprop (P : ClassifyingSpace G -> Type)
-    `{forall x, IsTrunc (-1) (P x)} (bbase' : P bbase)
-    : forall x, P x.
+    `{forall b, IsTrunc (-1) (P b)} (bbase' : P bbase)
+    : forall b, P b.
   Proof.
     refine (ClassifyingSpace_ind_hset P bbase' _).
     intros; rapply dp_ishprop.
@@ -155,18 +155,19 @@ Proof.
   srapply ClassifyingSpace_ind_hprop; reflexivity.
 Defined.
 
-(** Now we focus on the classifying space of a group. *)
+(** The classifying space of a group is pointed. *)
+Global Instance ispointed_classifyingspace (G : Group)
+  : IsPointed (ClassifyingSpace G)
+  := bbase.
 
-(** The classifying space of a group is the following pointed type. *)
-Definition pClassifyingSpace (G : Group)
-  := [ClassifyingSpace G, bbase].
-  
-(** To use the B G notation for pClassifyingSpace import this module. *)
+Definition pClassifyingSpace (G : Group) := [ClassifyingSpace G, bbase].
+
+(** To use the [B G] notation for [pClassifyingSpace] import this module. *)
 Module Import ClassifyingSpaceNotation.
   Definition B G := pClassifyingSpace G.
 End ClassifyingSpaceNotation.
 
-(** We can show that [bloop] takes the unit of the group to reflexivity. *)
+(** [bloop] takes the unit of the group to reflexivity. *)
 Definition bloop_id {G : Group} : bloop (mon_unit : G) = idpath.
 Proof.
   symmetry.
@@ -176,7 +177,7 @@ Proof.
   apply concat_p1.
 Defined.
 
-(** We can show that [bloop] "preserves inverses" by taking inverses in G to inverses of paths in BG *)
+(** [bloop] "preserves inverses" by taking inverses in [G] to inverses of paths in [BG]. *)
 Definition bloop_inv {G : Group} : forall x : G, bloop (-x) = (bloop x)^.
 Proof.
   intro x.
@@ -187,7 +188,7 @@ Proof.
   apply ap, right_inverse.
 Defined.
 
-(** The underlying pointed map of pequiv_g_loops_bg *)
+(** The underlying pointed map of [pequiv_g_loops_bg]. *)
 Definition pbloop {G : Group} : G ->* loops (B G).
 Proof.
   srapply Build_pMap.
@@ -213,7 +214,7 @@ Proof.
   apply ClassifyingSpace_rec_beta_bloop.
 Defined.
 
-(** Here we prove that [BG] is the delooping of [G], in that [loops BG <~> G]. *)
+(** Here we prove that [BG] is a delooping of [G], i.e. that [loops BG <~> G]. *)
 Section EncodeDecode.
 
   Context `{Univalence} {G : Group}.
@@ -225,21 +226,21 @@ Section EncodeDecode.
     + intro x.
       apply path_trunctype.
       exact (Build_Equiv _ _ (fun t => t * x) _).
-    + intros x y.
+    + intros x y; cbn beta.
       refine (_ @ path_trunctype_pp _ _).
       apply ap, path_equiv, path_forall.
       intro; cbn.
       apply associativity.
   Defined.
 
-  Local Definition encode : forall z, bbase = z -> codes z.
+  Local Definition encode : forall b, bbase = b -> codes b.
   Proof.
-    intros z p.
+    intros b p.
     exact (transport codes p mon_unit).
   Defined.
 
   Local Definition codes_transport
-    : forall x y, transport codes (bloop x) y = y * x.
+    : forall x y : G, transport codes (bloop x) y = y * x.
   Proof.
     intros x y.
     rewrite transport_idmap_ap.
@@ -249,7 +250,7 @@ Section EncodeDecode.
     by rewrite transport_path_universe_uncurried.
   Qed.
 
-  Local Definition decode : forall (z : B G), codes z -> bbase = z.
+  Local Definition decode : forall (b : B G), codes b -> bbase = b.
   Proof.
     srapply ClassifyingSpace_ind_hset.
     + exact bloop.
@@ -262,9 +263,9 @@ Section EncodeDecode.
       apply ap, codes_transport.
   Defined.
 
-  Local Lemma decode_encode : forall z p, decode z (encode z p) = p.
+  Local Lemma decode_encode : forall b p, decode b (encode b p) = p.
   Proof.
-    intros z p.
+    intros b p.
     destruct p.
     apply bloop_id.
   Defined.
@@ -279,7 +280,7 @@ Section EncodeDecode.
       apply left_identity.
   Defined.
 
-  (** Defining property of BG *)
+  (** The defining property of BG. *)
   Definition equiv_g_loops_bg : G <~> loops (B G)
     := Build_Equiv _ _ bloop _.
 
@@ -291,7 +292,7 @@ Section EncodeDecode.
 
   (** We also have that the equivalence is a group isomorphism. *)
 
-  (** First we show that the loop space of a pointed 1-type is a group *)
+  (** First we show that the loop space of a pointed 1-type is a group. *)
   Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
     := Build_Group (loops X) concat idpath inverse
       (Build_IsGroup _ _ _ _
@@ -327,7 +328,7 @@ Section EncodeDecode.
 
 End EncodeDecode.
 
-(** When G is an abelian group, BG is a H-space. *)
+(** When [G] is an abelian group, [BG] is an H-space. *)
 Section HSpace_bg.
 
   Context {G : AbGroup}.
@@ -378,13 +379,13 @@ Section HSpace_bg.
   Defined.
 
   Definition bg_mul_left_id
-    : forall a : B G, bg_mul bbase a = a.
+    : forall b : B G, bg_mul bbase b = b.
   Proof.
     apply bg_mul_symm.
   Defined.
 
   Definition bg_mul_right_id
-    : forall a : B G, bg_mul a bbase = a.
+    : forall b : B G, bg_mul b bbase = b.
   Proof.
     reflexivity.
   Defined.
@@ -514,7 +515,7 @@ Proof.
       symmetry; apply concat_1p. }
   intros f.
   rapply equiv_path_grouphomomorphism.
-  intro g.
+  intro x.
   rapply (moveR_equiv_V' equiv_g_loops_bg).
   nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
@@ -541,7 +542,7 @@ Proof.
   rapply Build_NatEquiv.
 Defined.
 
-(** B(Pi 1 X) <~>* X for a 0-connected 1-truncated X. *)
+(** [B(Pi 1 X) <~>* X] for a 0-connected 1-truncated [X]. *)
 Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
   (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
   : B (Pi1 X) <~>* X.
@@ -567,7 +568,7 @@ Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (Pi1 X)) (opyon X o B).
 Proof.
   nrefine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _).
-  2: exact (natequiv_opyon_equiv (A:=Group) (grp_iso_pi1_Tr _)).
+  2: exact (natequiv_opyon_equiv (A:=Group) (grp_iso_inverse (grp_iso_pi_Tr 0 X))).
   refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).
   refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
   { refine (natequiv_prewhisker _ _).

@@ -251,6 +251,19 @@ Proof.
   exact (equiv_path_prod (fst f _, snd f _) (dpoint P, dpoint Q)).
 Defined.
 
+Definition functor_pprod {A A' B B' : pType} (f : A ->* A') (g : B ->* B')
+  : A * B ->* A' * B'.
+Proof.
+  snrapply Build_pMap.
+  - exact (functor_prod f g).
+  - apply path_prod; apply point_eq.
+Defined.
+
+(** [isequiv_functor_prod] applies, and is a Global Instance. *)
+Definition equiv_functor_pprod {A A' B B' : pType} (f : A <~>* A') (g : B <~>* B')
+  : A * B <~>* A' * B'
+  := Build_pEquiv _ _ (functor_pprod f g) _.
+
 (** ** Various operations with pointed homotopies *)
 
 (** For the following three instances, the typeclass (e.g. [Reflexive]) requires a third universe variable, the maximum of the universe of [A] and the universe of the values of [P].  Because of this, in each case we first prove a version not mentioning the typeclass, which avoids a stray universe variable. *)

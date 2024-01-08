@@ -180,7 +180,7 @@ Section LicataFinsterLemma.
     apply ap, concat_pV.
   Defined.
 
-  (* We could call this pequiv_ptr_loop_psusp but since we already used that for the Freudenthal case, it seems appropriate to use the name licata_finster for this one case. *)
+  (** We could call this [pequiv_ptr_loop_psusp] but since we already used that for the Freudenthal case, it seems appropriate to use the name [licata_finster] for this case. *)
   Lemma licata_finster : pTr 1 (loops (psusp X)) <~>* X.
   Proof.
     srapply Build_pEquiv'.

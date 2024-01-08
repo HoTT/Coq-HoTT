@@ -243,22 +243,71 @@ Definition pequiv_fmap_iterated_loops {A B} n
   : A <~>* B -> iterated_loops n A <~>* iterated_loops n B
   := emap (iterated_loops n).
 
-(* Loops preserves products *)
+(** Loops preserves products. *)
 Lemma loops_prod (X Y : pType) : loops (X * Y) <~>* loops X * loops Y.
 Proof.
-  srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
-  1: symmetry; refine (equiv_path_prod pt (point (X * Y))).
+  snrapply Build_pEquiv'.
+  1: exact (equiv_path_prod (point (X * Y)) (point (X * Y)))^-1%equiv.
   reflexivity.
 Defined.
 
-(* Iterated loops of products are products of iterated loops *)
+(** There is a natural map from [loops (X * Y)] to [loops X * loops Y], and ideally it would definitionally underly the equivalence [loops_prod].  That's not the case, but we show that [loops_prod] is homotopic to the expected maps after projecting to each factor. *)
+Definition pfst_loops_prod (X Y : pType)
+  : pfst o* loops_prod X Y ==* fmap loops pfst.
+Proof.
+  snrapply Build_pHomotopy.
+  - intro p; simpl.
+    rhs nrapply concat_1p.
+    symmetry; apply concat_p1.
+  - reflexivity.
+Defined.
+
+Definition psnd_loops_prod (X Y : pType)
+  : psnd o* loops_prod X Y ==* fmap loops psnd.
+Proof.
+  snrapply Build_pHomotopy.
+  - intro p; simpl.
+    rhs nrapply concat_1p.
+    symmetry; apply concat_p1.
+  - reflexivity.
+Defined.
+
+(** Iterated loops of products are products of iterated loops. *)
 Lemma iterated_loops_prod (X Y : pType) {n}
   : iterated_loops n (X * Y) <~>* (iterated_loops n X) * (iterated_loops n Y).
 Proof.
-  induction n.
+  induction n as [|n IHn].
   1: reflexivity.
-  refine (pequiv_compose _ (loops_prod _ _)).
-  by rapply (emap loops).
+  exact (loops_prod _ _ o*E emap loops IHn).
+Defined.
+
+(** Similarly, we compute the projections here. *)
+Definition pfst_iterated_loops_prod (X Y : pType) {n}
+  : pfst o* iterated_loops_prod X Y ==* fmap (iterated_loops n) pfst.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - change (_ ==* ?R) with (pfst o* (loops_prod _ _ o* fmap loops (iterated_loops_prod _ _)) ==* R).
+    refine ((pmap_compose_assoc _ _ _)^* @* _).
+    refine (pmap_prewhisker _ (pfst_loops_prod _ _) @* _).
+    refine ((fmap_comp loops _ _)^* @* _).
+    change (?L ==* _) with (L ==* fmap loops (fmap (iterated_loops n) pfst)).
+    rapply (fmap2 loops); simpl.
+    exact IHn.
+Defined.
+
+Definition psnd_iterated_loops_prod (X Y : pType) {n}
+  : psnd o* iterated_loops_prod X Y ==* fmap (iterated_loops n) psnd.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - change (_ ==* ?R) with (psnd o* (loops_prod _ _ o* fmap loops (iterated_loops_prod _ _)) ==* R).
+    refine ((pmap_compose_assoc _ _ _)^* @* _).
+    refine (pmap_prewhisker _ (psnd_loops_prod _ _) @* _).
+    refine ((fmap_comp loops _ _)^* @* _).
+    change (?L ==* _) with (L ==* fmap loops (fmap (iterated_loops n) psnd)).
+    rapply (fmap2 loops); simpl.
+    exact IHn.
 Defined.
 
 (* A dependent form of loops *)
@@ -276,7 +325,7 @@ Defined.
 Lemma loops_psigma_commute (A : pType) (P : pFam A)
   : loops (psigma P) <~>* psigma (loopsD P).
 Proof.
-  srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
+  snrapply Build_pEquiv'.
   1: exact (equiv_path_sigma _ _ _)^-1%equiv.
   reflexivity.
 Defined.
@@ -285,7 +334,7 @@ Defined.
 Lemma loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType)
   : loops (pproduct F) <~>* pproduct (loops o F).
 Proof.
-  srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
+  snrapply Build_pEquiv'.
   1: apply equiv_apD10.
   reflexivity.
 Defined.
@@ -309,7 +358,7 @@ Lemma loops_psigma_trunc (n : nat) : forall (Aa : pType)
 Proof.
   induction n.
   { intros A P p.
-    srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
+    snrapply Build_pEquiv'.
     1: refine (@equiv_sigma_contr _ _ p).
     reflexivity. }
   intros A P p.
