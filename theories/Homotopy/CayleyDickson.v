@@ -307,8 +307,8 @@ Section ImaginaroidHSpace.
     snrapply Join_ind_FFlr.
     1,2: exact (fun _ => ap _ (hspace_left_identity _)).
     intros a b.
-    refine (whiskerR _ _ @ _).
-    { refine (ap _ (ap_idmap _) @ _).
+    lhs nrapply whiskerR.
+    { lhs refine (ap _ (ap_idmap _)).
       exact (Join_rec_beta_jglue
         (fun c => joinl (pt * c))
         (fun d => joinr (conj pt * d))
