@@ -1,13 +1,10 @@
 Require Import Basics Types.
-Require Import Truncations.Core.
 Require Import WildCat.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.HSpace.Core.
-Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.EMSpace.
 Require Import Homotopy.HSpaceS1.
 
