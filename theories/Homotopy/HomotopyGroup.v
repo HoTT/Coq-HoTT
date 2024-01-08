@@ -1,5 +1,6 @@
 Require Import Basics Types Pointed.
-Require Import Modalities.ReflectiveSubuniverse Truncations.Core Truncations.SeparatedTrunc.
+Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
+Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.AbGroups.
 Require Import WildCat.
 
@@ -35,6 +36,9 @@ Global Instance is1cat_homotopygroup_type (n : nat)
   : Is1Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
 Global Instance is0functor_homotopygroup_type_ptype (n : nat)
   : Is0Functor (HomotopyGroup_type_ptype n)
+  := ltac:(destruct n; exact _).
+Global Instance is1functor_homotopygroup_type_ptype (n : nat)
+  : Is1Functor (HomotopyGroup_type_ptype n)
   := ltac:(destruct n; exact _).
 
 (** We first define [Pi 1 X], and use this to define [Pi n X].
@@ -173,31 +177,60 @@ Defined.
 Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
   := ltac:(destruct n; exact _).
 
-Definition groupiso_pi_functor (n : nat)
-  {X Y : pType} (e : X <~>* Y)
+(** Sometimes it is convenient to regard [Pi n] as landing in pointed types.  On objects, this is handled by the coercion [HomotopyGroup_type_ptype], but on morphisms it doesn't seem possible to define a coercion.  So we explicitly name the composite functor. *)
+Definition pPi (n : nat) : pType -> pType := HomotopyGroup_type_ptype n o Pi n.
+Global Instance is0functor_ppi (n : nat) : Is0Functor (pPi n) := _.
+Global Instance is1functor_ppi (n : nat) : Is1Functor (pPi n) := _.
+
+(** [pPi] is equal to a more explicit map.  These are definitional for [n = 0] and [n] a successor; it would be nice to make them definitional for generic [n]. *)
+Definition ppi_ptr_iterated_loops (n : nat)
+  : pPi n = pTr 0 o iterated_loops n
+  := ltac:(destruct n; reflexivity).
+
+(** Here is the associated object-wise equivalence, which is the identity map for [0] and successors. *)
+Definition pequiv_ppi_ptr_iterated_loops (n : nat) (X : pType)
+  : pPi n X <~>* pTr 0 (iterated_loops n X)
+  := ltac:(destruct n; exact pequiv_pmap_idmap).
+
+(** These equivalences are natural. Put another way, we can compute [fmap Pi] in terms of the composite functor, up to the equivalences above. For [n = 0] or [n] a successor, we can omit the equivalences; for [n = 0], the induced maps are definitionally equal as pointed maps; for [n] a successfor the underlying unpointed maps are definitionally equal, but the pointedness proofs are not, and this is handled by [phomotopy_homotopy_hset]. *)
+Definition fmap_ppi_ptr_iterated_loops (n : nat) {X Y : pType} (f : X ->* Y)
+  : pequiv_ppi_ptr_iterated_loops n Y o* fmap (pPi n) f
+     ==* fmap (pTr 0) (fmap (iterated_loops n) f) o* pequiv_ppi_ptr_iterated_loops n X.
+Proof.
+  destruct n; unfold pequiv_ppi_ptr_iterated_loops.
+  1: refine (pmap_postcompose_idmap _ @* (pmap_precompose_idmap _)^*).
+  refine (pmap_postcompose_idmap _ @* _ @* (pmap_precompose_idmap _)^*).
+  srapply phomotopy_homotopy_hset; reflexivity.
+Defined.
+
+(** [Pi n.+1] sends equivalences to group isomorphisms. *)
+Definition groupiso_pi_functor (n : nat) {X Y : pType} (e : X <~>* Y)
   : Pi n.+1 X $<~> Pi n.+1 Y
   := emap (Pi n.+1) e.
 
-(* The homotopy groups of a loop space are those of the space shifted.  *)
+(** The homotopy groups of a loop space are those of the space shifted.  *)
+Definition pi_loops n X : Pi n.+1 X <~>* Pi n (loops X).
+Proof.
+  destruct n.
+  1: reflexivity.
+  rapply (emap (pTr 0 o loops)).
+  apply unfold_iterated_loops'.
+Defined.
+
+(** Except in the lowest case, this can be expressed as an isomorphism of groups. *)
 Definition groupiso_pi_loops n X : Pi n.+2 X $<~> Pi n.+1 (loops X).
 Proof.
   snrapply (groupiso_pi_functor 0).
   apply unfold_iterated_loops'.
 Defined.
 
-Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
-Proof.
-  destruct n.
-  1: reflexivity.
-  rapply groupiso_pi_loops.
-Defined.
-
+(** Naturality of [pi_loops]. *)
 Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
-  : (pi_loops n Y) o (fmap (Pi n.+1) f)
-    == (fmap (HomotopyGroup_type_ptype n o Pi n o loops) f)
-        o (pi_loops n X).
+  : (pi_loops n Y) o* (fmap (Pi n.+1) f)
+    ==* (fmap (HomotopyGroup_type_ptype n o Pi n o loops) f)
+        o* (pi_loops n X).
 Proof.
-  destruct n; intros x.
+  destruct n; srapply phomotopy_homotopy_hset; intros x.
   1: reflexivity.
   refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
   apply O_functor_homotopy.
@@ -240,19 +273,39 @@ Defined.
 
 (** Homotopy groups of truncations *)
 
-(** The fundamental group 1st truncation of X is isomorphic to the fundamental group of X *) 
-Theorem grp_iso_pi1_Tr `{Univalence} (X : pType)
-  : GroupIsomorphism (Pi1 (pTr 1 X)) (Pi1 X).
+(** An [n]-connected map induces an equivalence on the nth homotopy group.  We first state this for [pTr 0 o iterated_loops n], since the proof works for general [n], and then we deduce the result for [pPi n] afterwards. *)
+Definition isequiv_pi_connmap' `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  `{!IsConnMap n f}
+  : IsEquiv (fmap (pTr 0) (fmap (iterated_loops n) f)).
 Proof.
-  symmetry.
-  snrapply Build_GroupIsomorphism'.
-  { unfold Pi1.
-    unfold group_type.
-    refine ((Trunc_functor_equiv _ _ )^-1%equiv oE _).
-    1: symmetry; rapply ptr_loops.
-    rapply equiv_tr. }
-  intros x y.
-  strip_truncations.
-  apply path_Tr, tr.
-  exact (ap_pp tr x y).
+  rapply O_inverts_conn_map.
+  rapply isconnected_iterated_fmap_loops.
+  rewrite 2 trunc_index_inc'_succ.
+  rewrite <- trunc_index_inc_agree.
+  assumption.
 Defined.
+
+(** The same holds for [pPi n]. *)
+Global Instance isequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  `{!IsConnMap n f}
+  : IsEquiv (fmap (pPi n) f).
+Proof.
+  (* For [n = 0] and [n] a successor, [fmap (pPi n) f] is definitionally equal to the map in the previous result as a map of types. *)
+  destruct n; rapply isequiv_pi_connmap'.
+Defined.
+
+(** For positive [n], it is a group isomorphism. *)
+Definition grp_iso_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  `{!IsConnMap n.+1 f}
+  : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y)
+  := Build_GroupIsomorphism _ _ (fmap (Pi n.+1) f) (isequiv_pi_connmap n.+1 f).
+
+(** As a consequence, the truncation map [ptr : X -> pTr n X] induces an equivalence on [Pi n].  We don't make this an instance, since it is found by typeclass search. *)
+Definition isequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
+  : IsEquiv (fmap (pPi n) ptr : Pi n X -> Pi n (pTr n X))
+  := _.
+
+(** For positive [n], it is a group isomorphism. *)
+Definition grp_iso_pi_Tr `{Univalence} (n : nat) (X : pType)
+  : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 (pTr n.+1 X))
+  := grp_iso_pi_connmap n ptr.

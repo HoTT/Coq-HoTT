@@ -72,5 +72,5 @@ Proof.
   etransitivity.
   1: apply pi_prod.
   apply grp_iso_prod.
-  1,2: apply Pi1Circle.
+  1,2: apply pi1_circle.
 Defined.

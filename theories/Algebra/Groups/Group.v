@@ -576,6 +576,13 @@ Proof.
   rapply @pmap_GroupHomomorphism.
 Defined.
 
+Global Instance is1functor_ptype_group : Is1Functor ptype_group.
+Proof.
+  apply Build_Is1Functor; intros; apply phomotopy_homotopy_hset.
+  1: assumption.
+  1, 2: reflexivity.
+Defined.
+
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
 Lemma equiv_grp_hfiber {A B : Group} (f : GroupHomomorphism A B) (b : B)
   : forall (a0 : hfiber f b), hfiber f b <~> hfiber f mon_unit.
