@@ -209,8 +209,7 @@ Defined.
 (** Naturality of [pi_loops]. *)
 Definition fmap_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
   : (pi_loops n Y) o* (fmap (Pi n.+1) f)
-    ==* (fmap (HomotopyGroup_type_ptype n o Pi n o loops) f)
-        o* (pi_loops n X).
+    ==* (fmap (pPi n o loops) f) o* (pi_loops n X).
 Proof.
   destruct n; srapply phomotopy_homotopy_hset; intros x.
   1: reflexivity.
@@ -291,6 +290,11 @@ Proof.
   destruct n; rapply isequiv_pi_connmap'.
 Defined.
 
+Definition pequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  `{!IsConnMap n f}
+  : Pi n X <~>* Pi n Y
+  := Build_pEquiv _ _ (fmap (pPi n) f) _.
+
 (** For positive [n], it is a group isomorphism. *)
 Definition grp_iso_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   `{!IsConnMap n.+1 f}
@@ -301,6 +305,10 @@ Definition grp_iso_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y
 Definition isequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
   : IsEquiv (fmap (pPi n) ptr : Pi n X -> Pi n (pTr n X))
   := _.
+
+Definition pequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
+  : Pi n X <~>* Pi n (pTr n X)
+  := Build_pEquiv _ _ (fmap (pPi n) ptr) _.
 
 (** For positive [n], it is a group isomorphism. *)
 Definition grp_iso_pi_Tr `{Univalence} (n : nat) (X : pType)
