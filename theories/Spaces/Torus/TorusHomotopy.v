@@ -70,7 +70,7 @@ Proof.
   { apply groupiso_pi_functor.
     apply pequiv_torus_prod_circles. }
   etransitivity.
-  1: apply pi_prod.
+  1: apply grp_iso_pi_prod.
   apply grp_iso_prod.
   1,2: apply pi1_circle.
 Defined.

@@ -1,6 +1,6 @@
 Require Import Basics Types Pointed.
-Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
-Require Import Truncations.Core Truncations.SeparatedTrunc.
+Require Import Modalities.Modality.
+Require Import Truncations.Core.
 Require Import Algebra.AbGroups.
 Require Import WildCat.
 
@@ -94,10 +94,9 @@ Proof.
   exact (Pi1 (iterated_loops n X)).
 Defined.
 
-Definition pi_succ n X : Pi n.+1 X $<~> Pi 1 (iterated_loops n X).
-Proof.
-  reflexivity.
-Defined.
+(** See [pi_loops] below for an alternate unfolding. *)
+Definition pi_succ n X : Pi n.+1 X $<~> Pi 1 (iterated_loops n X)
+  := grp_iso_id.
 
 Module PiUtf8.
   Notation "'π'" := Pi.
@@ -115,24 +114,7 @@ Proof.
   apply eckmann_hilton.
 Defined.
 
-(** The nth homotopy group is in fact a functor. We now give the type this functor ought to have. For n = 0, this will simply be a pointed map, for n >= 1 this should be a group homomorphism. *)
-Definition pi_functor_type (n : nat) (X Y : pType) : Type
-  := match n with
-     | 0 => pTr 0 X ->* pTr 0 Y
-     | n.+1 => GroupHomomorphism (Pi n.+1 X) (Pi n.+1 Y)
-     end.
-
-(* Every such map is, in particular, a pointed map. *)
-Definition pi_functor_type_pmap {n X Y}
-  : pi_functor_type n X Y -> Pi n X ->* Pi n Y
-  := match n return pi_functor_type n X Y -> (Pi n X ->* Pi n Y) with
-     | 0 => fun f => f
-     (* This works because [pmap_GroupHomomorphism] is already a coercion. *)
-     | n.+1 => fun f => f
-     end.
-Coercion pi_functor_type_pmap : pi_functor_type >-> pForall.
-
-(** For the same reason as for [Pi1] we make [Pi1] a functor before making [Pi] a functor. *)
+(** For the same reason as above, we make [Pi1] a functor before making [Pi] a functor. *)
 Global Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.
   apply Build_Is0Functor.
@@ -237,38 +219,53 @@ Proof.
   exact (pointed_htpy (unfold_iterated_fmap_loops n.+1 f)).
 Defined.
 
-(** Homotopy groups preserve products *)
-Lemma pi_prod (X Y : pType) {n : nat}
-  : GroupIsomorphism (Pi n.+1 (X * Y))
-      (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
+(** Homotopy groups preserve products.  This is a direct proof, but below we give a second proof whose underlying map is the natural one. *)
+Definition pi_prod' {n : nat} (X Y : pType)
+  : pPi n (X * Y) <~>* (pPi n X) * (pPi n Y).
 Proof.
-  srapply Build_GroupIsomorphism'.
-  { refine (equiv_O_prod_cmp _ _ _ oE _).
-    apply Trunc_functor_equiv.
-    refine (iterated_loops_prod (n := n.+1) _ _). }
-  intros x y.
-  strip_truncations; simpl.
-  set (Z := (iterated_loops_prod X Y)).
-  apply path_prod.
-  1,2: apply (ap tr).
-  1: set (q := ap fst); unfold fst; unfold q; clear q.
-  2: set (q := ap snd); unfold snd; unfold q; clear q.
-  1,2: rewrite 8 ap_pp.
-  1,2: rewrite ? concat_p_pp.
-  1,2: do 2 apply whiskerR.
-  1,2: rewrite ? ap_V.
-  1,2: rewrite concat_pp_p.
-  1,2: rewrite concat_pV.
-  1,2: rewrite concat_p1.
-  1,2: reflexivity.
+  (* First we re-express this in terms of the composite [pTr 0 o iterated_loops n]. *)
+  refine (_ o*E pequiv_ppi_ptr_iterated_loops _ _).
+  refine ((equiv_functor_pprod (pequiv_ppi_ptr_iterated_loops _ _)
+                               (pequiv_ppi_ptr_iterated_loops _ _))^-1* o*E _).
+  (* For this composite, the proof is straightforward. *)
+  refine (_ o*E pequiv_ptr_functor 0 _).
+  1: nrapply iterated_loops_prod.
+  snrapply Build_pEquiv'; cbn.
+  - refine (equiv_O_prod_cmp 0 _ _).
+  - reflexivity.
 Defined.
 
-(** Can we make this reflexivity? *)
-Lemma pmap_pi_functor {X Y : pType} (f : X ->* Y) (n : nat) 
-  : fmap (Pi n.+1) f
-    ==* fmap (pTr 0) (fmap (iterated_loops n.+1) f).
+(** The pointed map from left-to-right below, coming from functoriality, is an equivalence. *)
+Definition pi_prod {n : nat} (X Y : pType)
+  : pPi n (X * Y) <~>* (pPi n X) * (pPi n Y).
 Proof.
-  srapply phomotopy_homotopy_hset; reflexivity.
+  snrapply Build_pEquiv.
+  (* This describes the natural map. *)
+  - rapply (equiv_pprod_coind (pfam_const _) (pfam_const _)); split.
+    + exact (fmap (pPi n) (@pfst X Y)).
+    + exact (fmap (pPi n) (@psnd X Y)).
+  (* To see that it is an equivalence, we show that it is homotopic to [pi_prod']. *)
+  - snrapply (isequiv_homotopic' (pi_prod' X Y)).
+    intro xy.
+    destruct n; strip_truncations.
+    + apply path_prod; reflexivity.
+    + apply path_prod.
+      1,2: apply (ap tr).  (* Not obvious, but unfolding makes things cluttered. *)
+      * exact (pfst_iterated_loops_prod X Y (n:=n.+1) xy).
+      * exact (psnd_iterated_loops_prod X Y (n:=n.+1) xy).
+Defined.
+
+(** For positive [n], this equivalence is an isomorphism of groups. *)
+Lemma grp_iso_pi_prod {n : nat} (X Y : pType)
+  : GroupIsomorphism (Pi n.+1 (X * Y)) (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
+Proof.
+  srapply Build_GroupIsomorphism.
+  (* The underlying map is the natural one, so it is automatically a group homomorphism. *)
+  - apply grp_prod_corec.
+    + exact (fmap (Pi n.+1) (@pfst X Y)).
+    + exact (fmap (Pi n.+1) (@psnd X Y)).
+  (* This is also the underlying map of [pi_prod], so we can reuse the proof that it is an equivalence. *)
+  - exact (equiv_isequiv (pi_prod X Y (n:=n.+1))).
 Defined.
 
 (** Homotopy groups of truncations *)
