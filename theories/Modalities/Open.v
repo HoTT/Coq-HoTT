@@ -54,16 +54,13 @@ Global Instance lex_open `{Funext} (U : HProp)
   : Lex (Op U).
 Proof.
   apply lex_from_isconnected_paths.
-  intros A ? x y.
-  assert (uc : U -> Contr A).
-  { intros u.
-    pose (contr_inhabited_hprop U u).
-    refine (contr_equiv (U -> A) (equiv_contr_forall _)).
-    apply Ac. }
-  simple refine (Build_Contr _ _ _).
-  - intros u; pose (uc u); exact (center (x=y)).
-  - intros f; apply path_arrow; intros u.
-    pose proof (uc u); apply path_contr.
+  intros A Ac x y.
+  nrapply contr_forall.
+  intro u.
+  pose (contr_inhabited_hprop U u).
+  rapply contr_paths_contr.
+  refine (contr_equiv (U -> A) (equiv_contr_forall _)).
+  exact Ac.
 Defined.
 
 (** ** The open modality is accessible. *)

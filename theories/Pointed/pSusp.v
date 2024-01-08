@@ -129,16 +129,16 @@ Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
   := Build_pMap X (loops (psusp X))
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
-(** By Freudenthal, we have that this map is 2n-connected for a n-connected X *)
-Global Instance conn_map_loop_susp_unit `{Univalence}
+(** By Freudenthal, we have that this map is (2n+2)-connected when [X] is (n+1)-connected. *)
+Global Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
   (X : pType) `{IsConnected n.+1 X}
-  : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
+  : IsConnMap (n +2+ n) (loop_susp_unit X).
 Proof.
-  refine (conn_map_compose _ _ (equiv_concat_r (merid pt)^ _)).
+  refine (conn_map_compose _ merid (equiv_concat_r (merid pt)^ _)).
 Defined.
 
-(** We also have this corollary *)
-Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
+(** We also have this corollary: *)
+Definition pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
   snrapply Build_pEquiv.

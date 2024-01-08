@@ -793,6 +793,18 @@ Section Reflective_Subuniverse.
       - exact (O_rec_beta snd (a,b)).
     Defined.
 
+    (** Two ways to define a map [O(A * B) -> X * Y] agree. *)
+    Definition O_rec_functor_prod {A B X Y : Type} `{In O X} `{In O Y}
+      (f : A -> X) (g : B -> Y)
+      : O_rec (functor_prod f g) == prod_coind (O_rec (f o fst : A * B -> X))
+                                               (O_rec (g o snd : A * B -> Y)).
+    Proof.
+      apply O_indpaths; intro ab.
+      unfold functor_prod, prod_coind, prod_coind_uncurried; simpl.
+      lhs (nrapply O_rec_beta).
+      apply path_prod; cbn; symmetry; nrapply O_rec_beta.
+    Defined.
+
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
 
     (** Here is the map witnessing the universal property.  *)
@@ -851,6 +863,11 @@ Section Reflective_Subuniverse.
       2,3: apply O_rec_beta.
       exact (equiv_path_prod _ _)^-1%equiv.
     Defined.
+
+    Definition O_prod_cmp_coind (A B : Type)
+      : O_prod_cmp A B == prod_coind (O_rec (to O _ o fst : A * B -> O A))
+                                     (O_rec (to O _ o snd : A * B -> O B))
+      := O_rec_functor_prod _ _.
 
     (** ** Pullbacks *)
 

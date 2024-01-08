@@ -35,7 +35,7 @@ Local Open Scope wc_iso_scope.
 
 (** * Definition of Group *)
 
-(** A group consists of a type, and operation on that type, and unit and an inverse, such that they satisfy the group axioms in IsGroup. *)
+(** A group consists of a type, an operation on that type, a unit and an inverse that satisfy the group axioms in [IsGroup]. *)
 Record Group := {
   group_type : Type;
   group_sgop : SgOp group_type;
