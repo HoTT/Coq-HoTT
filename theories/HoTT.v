@@ -144,7 +144,7 @@ Require Export HoTT.Algebra.Universal.TermAlgebra.
 Require Export HoTT.Analysis.Locator.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
-Require Export HoTT.Homotopy.Pi1S1.
+Require Export HoTT.Homotopy.PinSn.
 Require Export HoTT.Homotopy.WhiteheadsPrinciple.
 Require Export HoTT.Homotopy.BlakersMassey.
 Require Export HoTT.Homotopy.Freudenthal.

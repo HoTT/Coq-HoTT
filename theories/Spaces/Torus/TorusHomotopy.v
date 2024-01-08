@@ -3,7 +3,7 @@ Require Import Pointed WildCat.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.Pi1S1.
+Require Import Homotopy.PinSn.
 Require Import Spaces.Int Spaces.Circle.
 
 Require Import Spaces.Torus.Torus.
