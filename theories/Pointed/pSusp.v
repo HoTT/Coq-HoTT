@@ -3,6 +3,7 @@ Require Import Types.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.
+Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.Freudenthal.
 Require Import Truncations.
@@ -241,25 +242,30 @@ Qed.
 (** Now we can finally construct the adjunction equivalence. *)
 
 Definition loop_susp_adjoint `{Funext} (A B : pType)
-  : (psusp A ->* B) <~> (A ->* loops B).
+  : (psusp A ->** B) <~>* (A ->** loops B).
 Proof.
-  refine (equiv_adjointify
-            (fun f => fmap loops f o* loop_susp_unit A)
-            (fun g => loop_susp_counit B o* fmap psusp g) _ _).
-  - intros g. apply path_pforall.
-    refine (pmap_prewhisker _ (fmap_comp loops _ _) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
-    apply pmap_postcompose_idmap.
-  - intros f. apply path_pforall.
-    refine (pmap_postwhisker _ (fmap_comp psusp _ _) @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker f (loop_susp_triangle2 A) @* _).
-    apply pmap_precompose_idmap.
+  snrapply Build_pEquiv'.
+  - refine (equiv_adjointify
+              (fun f => fmap loops f o* loop_susp_unit A)
+              (fun g => loop_susp_counit B o* fmap psusp g) _ _).
+    + intros g. apply path_pforall.
+      refine (pmap_prewhisker _ (fmap_comp loops _ _) @* _).
+      refine (pmap_compose_assoc _ _ _ @* _).
+      refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
+      refine ((pmap_compose_assoc _ _ _)^* @* _).
+      refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
+      apply pmap_postcompose_idmap.
+    + intros f. apply path_pforall.
+      refine (pmap_postwhisker _ (fmap_comp psusp _ _) @* _).
+      refine ((pmap_compose_assoc _ _ _)^* @* _).
+      refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
+      refine (pmap_compose_assoc _ _ _ @* _).
+      refine (pmap_postwhisker f (loop_susp_triangle2 A) @* _).
+      apply pmap_precompose_idmap.
+  - apply path_pforall.
+    unfold equiv_adjointify, equiv_fun.
+    nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
+    rapply cat_zero_l.
 Defined.
 
 (** And its naturality is easy. *)
