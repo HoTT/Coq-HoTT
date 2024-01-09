@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.
+Require Import Basics.Utf8 Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 
 (** We declare a scope for printing [CatEquiv] as [≅] *)

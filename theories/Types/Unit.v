@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the unit type *)
 
-Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids.
+Require Import Basics.Overture Basics.Equivalences.
 Local Open Scope path_scope.
 
 Generalizable Variables A.
@@ -28,6 +28,7 @@ Proof.
 Defined.
 
 Global Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.
+Proof.
   refine (Build_IsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
     (fun p:z=z' =>
       match p in (_ = z') return (path_unit_uncurried z z' tt = p) with
