@@ -30,7 +30,7 @@ Definition equiv_pequiv_pslice_psect `{Funext} {A B C : pType}
   : pSect f <~> pSect g.
 Proof.
   srapply equiv_functor_sigma'.
-  1: exact (equiv_pequiv_postcompose t).
+  1: exact (pequiv_pequiv_postcompose t).
   intro s; cbn.
   apply equiv_phomotopy_concat_l.
   refine ((pmap_compose_assoc _ _ _)^* @* _).

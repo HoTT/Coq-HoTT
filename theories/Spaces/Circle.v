@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
+Require Import Pointed.Core Pointed.Loops Pointed.pEquiv.
 Require Import HSet.
 Require Import Spaces.Pos Spaces.Int.
 Require Import Colimits.Coeq.
@@ -8,6 +9,7 @@ Require Import Cubical.DPath.
 
 (** * Theorems about the [Circle]. *)
 
+Local Open Scope pointed_scope.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
@@ -76,6 +78,8 @@ Defined.
 
 (** The [Circle] is pointed by [base]. *)
 Global Instance ispointed_Circle : IsPointed Circle := base.
+
+Definition pCircle : pType := [Circle, base].
 
 (** ** The loop space of the [Circle] is the Integers [Int]
 
@@ -257,9 +261,9 @@ Proof.
     srapply Circle_ind.
     + reflexivity.
     + unfold Circle_rec_uncurried; cbn.
-      rewrite transport_paths_FlFr.
-      rewrite Circle_rec_beta_loop.
-      rewrite concat_p1; apply concat_Vp.
+      apply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      apply Circle_rec_beta_loop.
   - intros [b p]; apply ap.
     apply Circle_rec_beta_loop.
 Defined.
@@ -267,3 +271,15 @@ Defined.
 Definition equiv_Circle_rec `{Funext} (P : Type)
   : {b : P & b = b} <~> (Circle -> P)
   := Build_Equiv _ _ _ (isequiv_Circle_rec_uncurried P).
+
+(** A pointed version of the universal property of the circle. *)
+Definition pmap_from_circle_loops `{Funext} (X : pType)
+  : (pCircle ->** X) <~>* loops X.
+Proof.
+  snrapply Build_pEquiv'.
+  - refine (_ oE (issig_pmap _ _)^-1%equiv).
+    equiv_via { xp : { x : X & x = x } & xp.1 = pt }.
+    2: make_equiv_contr_basedpaths.
+    exact ((equiv_functor_sigma_pb (equiv_Circle_rec X)^-1%equiv)).
+  - simpl.  apply ap_const.
+Defined.

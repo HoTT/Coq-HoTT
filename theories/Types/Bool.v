@@ -117,6 +117,9 @@ Section BoolForall.
   Defined.
 End BoolForall.
 
+Definition equiv_bool_rec_uncurried `{Funext} (P : Type) : P * P <~> (Bool -> P)
+  := (equiv_bool_forall_prod (fun _ => P))^-1%equiv.
+
 (** ** The type [Bool <~> Bool] is equivalent to [Bool]. *)
 
 (** The nonidentity equivalence is negation (the flip). *)

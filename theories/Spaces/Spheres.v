@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
+Require Import WildCat.Equiv.
 Require Import NullHomotopy.
 Require Import Homotopy.Suspension.
 Require Import Pointed.
@@ -52,6 +53,24 @@ Defined.
 
 Definition equiv_S0_Bool : Sphere 0 <~> Bool
   := Build_Equiv _ _ _ isequiv_S0_to_Bool.
+
+Definition ispointed_bool : IsPointed Bool := true.
+
+Definition pBool := [Bool, true].
+
+Definition pequiv_S0_Bool : psphere 0 <~>* pBool
+  := @Build_pEquiv' (psphere 0) pBool equiv_S0_Bool 1.
+
+(** In [pmap_from_psphere_iterated_loops] below, we'll use this universal property of [pBool]. *)
+Definition pmap_from_bool `{Funext} (X : pType)
+  : (pBool ->** X) <~>* X.
+Proof.
+  snrapply Build_pEquiv'.
+  - refine (_ oE (issig_pmap _ _)^-1%equiv).
+    refine (_ oE (equiv_functor_sigma_pb (equiv_bool_rec_uncurried X))^-1%equiv); cbn.
+    make_equiv_contr_basedpaths.
+  - reflexivity.
+Defined.
 
 (** *** [Sphere 1] *)
 Definition S1_to_Circle : (Sphere 1) -> Circle.
@@ -286,4 +305,15 @@ Proof.
   - (* n ≥ -1 *) intros x0 x1.
     apply (istrunc_allnullhomot n').
     intro f. apply nullhomot_paths_from_susp, HX.
+Defined.
+
+(** Iterated loop spaces can be described using pointed maps from spheres.  The [n = 0] case of this is stated using Bool in [pmap_from_bool] above, and the [n = 1] case of this is stated using [Circle] in [pmap_from_circle_loops] in Circle.v. *)
+Definition pmap_from_psphere_iterated_loops `{Funext} (n : nat) (X : pType)
+  : (psphere n ->** X) <~>* iterated_loops n X.
+Proof.
+  induction n as [|n IHn]; simpl.
+  - exact (pmap_from_bool X o*E pequiv_pequiv_precompose pequiv_S0_Bool^-1* ).
+  - refine (emap loops IHn o*E _).
+    refine (_ o*E loop_susp_adjoint (psphere n) _).
+    symmetry; apply equiv_loops_ppforall.
 Defined.

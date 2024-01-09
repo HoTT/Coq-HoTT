@@ -102,13 +102,24 @@ Proof.
   symmetry; apply peisretr.
 Defined.
 
-Definition equiv_pequiv_precompose `{Funext} {A B C : pType} (f : A <~>* B)
-  : (B ->* C) <~> (A ->* C)
-  := equiv_precompose_cat_equiv f.
+Definition pequiv_pequiv_precompose `{Funext} {A B C : pType} (f : A <~>* B)
+  : (B ->** C) <~>* (A ->** C).
+Proof.
+  srapply Build_pEquiv'.
+  - exact (equiv_precompose_cat_equiv f).
+  - (* By using [pelim f], we can avoid [Funext] in this part of the proof. *)
+    cbn; unfold "o*", point_pforall; cbn.
+    by pelim f.
+Defined.
 
-Definition equiv_pequiv_postcompose `{Funext} {A B C : pType} (f : B <~>* C)
-  : (A ->* B) <~> (A ->* C)
-  := equiv_postcompose_cat_equiv f.
+Definition pequiv_pequiv_postcompose `{Funext} {A B C : pType} (f : B <~>* C)
+  : (A ->** B) <~>* (A ->** C).
+Proof.
+  srapply Build_pEquiv'.
+  - exact (equiv_postcompose_cat_equiv f).
+  - cbn; unfold "o*", point_pforall; cbn.
+    by pelim f.
+Defined.
 
 Proposition equiv_pequiv_inverse `{Funext} {A B : pType}
   : (A <~>* B) <~> (B <~>* A).
