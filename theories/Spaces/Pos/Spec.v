@@ -1,6 +1,8 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import Pos.Core.
 
+Local Set Universe Minimization ToSet.
+
 Local Open Scope positive_scope.
 
 (** ** Specification of [succ] in term of [add] *)

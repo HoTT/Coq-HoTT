@@ -26,6 +26,8 @@ Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)
        | pos n => loopexp_pos p n
      end.
 
+(** TODO: One can also define [loopexp] as [int_iter (equiv_concat_r p x) z idpath].  This has slightly different computational behaviour, e.g., it sends [1 : int] to [1 @ p] rather than [p].  But with this definition, some of the results below become special cases of results in Int.Equiv, and others could be generalized to results belonging in Int.Equiv.  It's probably worth investigating this. *)
+
 Lemma loopexp_pos_inv {A : Type} {x : A} (p : x = x) (n : Pos)
   : loopexp_pos p^ n = (loopexp_pos p n)^.
 Proof.
@@ -63,28 +65,6 @@ Proof.
     apply ap.
     apply ap_loopexp_pos.
   + apply ap_loopexp_pos.
-Qed.
-
-Lemma int_add_succ_l a b : int_succ a + b = int_succ (a + b).
-Proof.
-  rewrite <- int_add_assoc, (int_add_comm 1 b).
-  apply int_add_assoc.
-Qed.
-
-Lemma int_add_succ_r a b : a + int_succ b = int_succ (a + b).
-Proof.
-  apply int_add_assoc.
-Qed.
-
-Lemma int_add_pred_l a b : int_pred a + b = int_pred (a + b).
-Proof.
-  rewrite <- int_add_assoc, (int_add_comm (-1) b).
-  apply int_add_assoc.
-Qed.
-
-Lemma int_add_pred_r a b : a + int_pred b = int_pred (a + b).
-Proof.
-  apply int_add_assoc.
 Qed.
 
 Lemma loopexp_pos_concat {A : Type} {x : A} (p : x = x) (a : Pos)

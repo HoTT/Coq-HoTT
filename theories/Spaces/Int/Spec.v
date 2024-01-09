@@ -2,6 +2,8 @@ Require Import Basics.
 Require Import Spaces.Pos.
 Require Import Spaces.Int.Core.
 
+Local Set Universe Minimization ToSet.
+
 Local Open Scope int_scope.
 
 (** ** Addition is commutative *)
@@ -132,6 +134,13 @@ Proof.
   1: apply pos_succ_pred_double.
   apply pos_pred_double_succ.
 Qed.
+
+(* ** The successor autoequivalence. *)
+Global Instance isequiv_int_succ : IsEquiv int_succ | 0
+  := isequiv_adjointify int_succ _ int_succ_pred int_pred_succ.
+
+Definition equiv_int_succ : Int <~> Int
+  := Build_Equiv _ _ _ isequiv_int_succ.
 
 (** ** Negation distributes over addition *)
 Lemma int_negation_add_distr n m : - (n + m) = - n + - m.
@@ -347,12 +356,28 @@ Proof.
   - apply int_add_assoc_pos.
 Qed.
 
-(* ** The successor autoequivalence. *)
-Global Instance isequiv_int_succ : IsEquiv int_succ | 0
-  := isequiv_adjointify int_succ _ int_succ_pred int_pred_succ.
+(** ** Relationship between [int_succ], [int_pred] and addition. *)
+Lemma int_add_succ_l a b : int_succ a + b = int_succ (a + b).
+Proof.
+  rewrite <- int_add_assoc, (int_add_comm 1 b).
+  apply int_add_assoc.
+Qed.
 
-Definition equiv_int_succ : Int <~> Int
-  := Build_Equiv _ _ _ isequiv_int_succ.
+Lemma int_add_succ_r a b : a + int_succ b = int_succ (a + b).
+Proof.
+  apply int_add_assoc.
+Qed.
+
+Lemma int_add_pred_l a b : int_pred a + b = int_pred (a + b).
+Proof.
+  rewrite <- int_add_assoc, (int_add_comm (-1) b).
+  apply int_add_assoc.
+Qed.
+
+Lemma int_add_pred_r a b : a + int_pred b = int_pred (a + b).
+Proof.
+  apply int_add_assoc.
+Qed.
 
 (** ** Commutativity of multiplication *)
 Lemma int_mul_comm n m : n * m = m * n.

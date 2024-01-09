@@ -1,7 +1,10 @@
 Require Import Basics.
+Require Import Nat.Core.
 Require Import Spaces.Int.
 Require Import Spaces.Finite.Fin.
 Require Import WildCat.
+
+Local Set Universe Minimization ToSet.
 
 (** * Successor Structures. *)
 
@@ -15,6 +18,7 @@ Record SuccStr : Type := {
 Declare Scope succ_scope.
 
 Local Open Scope nat_scope.
+Local Open Scope type_scope.
 Local Open Scope succ_scope.
 
 Delimit Scope succ_scope with succ.
@@ -33,14 +37,16 @@ Notation "'+Z'" := IntSucc : succ_scope.
 
 (** Stratified successor structures *)
 
-Definition StratifiedType (N : SuccStr) (n : nat) : Type := N * Fin n.
+(** If [N] has a successor structure, then so does the product [N * Fin n].  The successor operation increases the second factor, and if it wraps around, it also increases the first factor. *)
+
+Definition StratifiedType (N : SuccStr) (n : nat) := N * Fin n.
 
 Definition stratified_succ (N : SuccStr) (n : nat) (x : StratifiedType N n)
   : StratifiedType N n.
 Proof.
   constructor.
-  + induction n.
-    - induction (snd x).
+  + destruct n.
+    - exact (Empty_rec _ (snd x)).
     - destruct (dec (snd x = inr tt)).
       * exact (ss_succ (fst x)).
       * exact (fst x).
@@ -51,21 +57,17 @@ Definition Stratified (N : SuccStr) (n : nat) : SuccStr
   := Build_SuccStr (StratifiedType N n) (stratified_succ N n).
 
 (** Addition in successor structures *)
-Fixpoint ss_add {N : SuccStr} (n : N) (k : nat) : N :=
-  match k with
-  | O   => n
-  | S k => (ss_add n k).+1
-  end.
+Definition ss_add {N : SuccStr} (n : N) (k : nat) : N := nat_iter k ss_succ n.
 
 Infix "+" := ss_add : succ_scope.
 
 Definition ss_add_succ {N : SuccStr} (n : N) (k : nat)
-  : (n + k.+1) = n.+1 + k.
-Proof.
-  induction k.
-  + reflexivity.
-  + exact (ap ss_succ IHk).
-Defined.
+  : n + k.+1 = n.+1 + k
+  := nat_iter_succ_r k ss_succ n.
+
+Definition ss_add_sum {N : SuccStr} (n : N) (k l : nat)
+  : n + (k + l) = (n + l) + k
+  := nat_iter_add k l ss_succ n.
 
 (** Nat and Int segmented by triples *)
 Notation "'N3'" := (Stratified (+N) 3) : succ_scope.

@@ -1,6 +1,8 @@
 Require Import Basics.
 Require Import Spaces.Pos.
 
+Local Set Universe Minimization ToSet.
+
 (** * The Integers. *)
 
 Local Close Scope trunc_scope.
