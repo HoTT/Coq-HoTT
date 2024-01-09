@@ -711,6 +711,23 @@ Global Instance issurj_grp_prod_pr2 {G H : Group}
   : IsSurjection (@grp_prod_pr2 G H)
   := issurj_retr grp_prod_inr (fun _ => idpath).
 
+Global Instance hasbinaryproducts_group : HasBinaryProducts Group.
+Proof.
+  snrapply Build_HasBinaryProducts.
+  - exact grp_prod.
+  - exact @grp_prod_pr1.
+  - exact @grp_prod_pr2.
+  - exact @grp_prod_corec.
+  - intros x y z f g.
+    exact (Id _).
+  - intros x y z f g.
+    exact (Id _).
+  - intros x y z f g.
+    apply eta_prod.
+  - intros x y z f f' g g' p q a.
+    exact (path_prod' (p a) (q a)).
+Defined.
+
 (** *** Properties of maps to and from the trivial group *)
 
 Global Instance isinitial_grp_trivial : IsInitial grp_trivial.

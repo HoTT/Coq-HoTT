@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
-Require Import Types.Equiv.
-Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
+Require Import Types.Equiv Types.Prod.
+Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat WildCat.Products.
 
 (** ** The (1-)category of types *)
 
@@ -172,4 +172,19 @@ Proof.
     exact (concat_p1 _ @ (concat_1p _)^).
   - reflexivity.
   - reflexivity.
+Defined.
+
+Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
+Proof.
+  srapply Build_HasBinaryProducts.
+  - exact prod.
+  - intros x y; exact fst.
+  - intros x y; exact snd.
+  - intros x y z f g.
+    exact (prod_coind f g).
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+  - intros x y z f f' g g' p q a. 
+    exact (path_prod' (p a) (q a)).
 Defined.
