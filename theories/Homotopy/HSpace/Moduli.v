@@ -80,7 +80,7 @@ Lemma equiv_pmap_hspace `{Funext} {A : pType}
   (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
   : (A ->* A) <~> (A ->* [A,a]).
 Proof.
-  apply equiv_pequiv_postcompose.
+  nrapply pequiv_pequiv_postcompose.
   rapply pequiv_hspace_left_op.
 Defined.
 
@@ -131,7 +131,7 @@ Proof.
   refine (_ oE equiv_iscohhspace_psect A).
   refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).
   refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).
-  refine (equiv_pequiv_postcompose _); symmetry.
+  refine (pequiv_pequiv_postcompose _); symmetry.
   rapply pequiv_hspace_left_op.
 Defined.
 

@@ -276,14 +276,14 @@ Section ClassifyingMaps.
     : (Y ->* pBAut@{u v} F) <~> { p : { q : pSlice Y & forall y:Y, merely (hfiber q.2 y <~> F) } &
                                       pfiber p.1.2 <~>* F }
     := (equiv_sigma_pfibration_O (subuniverse_merely_equiv F))
-         oE equiv_pequiv_postcompose pequiv_pbaut_typeOp.
+         oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp.
 
   (** When [Y] is connected, pointed maps into [pBAut F] correspond to maps into the universe sending the base point to [F]. *)
   Proposition equiv_pmap_pbaut_type_p `{Univalence}
               {Y : pType@{u}} {F : Type@{u}} `{IsConnected 0 Y}
     : (Y ->* pBAut F) <~> (Y ->* [Type@{u}, F]).
   Proof.
-    refine (_ oE equiv_pequiv_postcompose pequiv_pbaut_typeOp).
+    refine (_ oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp).
     rapply equiv_pmap_typeO_type_connected.
   Defined.
 
