@@ -185,7 +185,7 @@ Defined.
 Section ImaginaroidHSpace.
 
   (* Let A be a Cayley-Dickson imaginaroid with associative H-space multiplication on Susp A *)
-  Context `{Funext} {A} `(CayleyDicksonImaginaroid A)
+  Context {A} `(CayleyDicksonImaginaroid A)
     `(!Associative hspace_op).
 
   (** Declaring these as local instances so that they can be found *)
@@ -249,26 +249,29 @@ Section ImaginaroidHSpace.
     : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
     unfold psusp, pjoin; cbn.
+    intros x y; revert x.
     srapply Join_rec; hnf.
     { intro a.
+      revert y.
       srapply Join_rec; hnf.
       - intro c.
-        exact (joinl (hspace_op a c)).
+        exact (joinl (a * c)).
       - intro d.
-        exact (joinr (hspace_op (conj a) d)).
+        exact (joinr (conj a * d)).
       - intros x y.
         apply jglue. }
     { intro b.
+      revert y.
       srapply Join_rec; hnf.
       - intro c.
-        exact (joinr (hspace_op c b)).
+        exact (joinr (c * b)).
       - intro d.
-        exact (joinl (hspace_op (-d) (conj b))).
+        exact (joinl ((-d) * conj b)).
       - intros x y.
         symmetry.
         apply jglue. }
     intros a b.
-    apply path_forall.
+    revert y.
     srapply Join_ind_dp.
     1: intro; apply jglue.
     1: intro; cbn; symmetry; apply jglue.
@@ -301,37 +304,32 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    srapply Join_ind_dp.
-    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl;
-        intro a; apply ap.
-      srapply hspace_left_identity. }
-    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind.
-      simpl; intro b; apply ap.
-      srapply hspace_left_identity. }
+    snrapply Join_ind_FFlr.
+    1,2: exact (fun _ => ap _ (hspace_left_identity _)).
     intros a b.
-     simpl. apply sq_dp^-1.
-    rewrite ap_idmap, Join_rec_beta_jglue.
-    apply join_natsq_v.
+    lhs nrapply whiskerR.
+    { lhs refine (ap _ (ap_idmap _)).
+      exact (Join_rec_beta_jglue
+        (fun c => joinl (pt * c))
+        (fun d => joinr (conj pt * d))
+        (fun x y => jglue (pt * x) (conj pt * y))
+        a b). }
+    symmetry.
+    apply join_natsq.
   Defined.
 
   Global Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    srapply Join_ind_dp.
-    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl.
-      intro a; apply ap.
-      srapply hspace_right_identity. }
-    { unfold cd_op, Join_rec, Pushout.Pushout_rec, Pushout.Pushout_ind; simpl.
-      intro b; apply ap.
-      srapply hspace_left_identity. }
+    snrapply Join_ind_FFlr.
+    1: exact (fun _ => ap joinl (hspace_right_identity _)).
+    1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
-    apply sq_dp^-1.
-    rewrite ap_idmap.
-    rewrite (ap_compose _ (fun f => f _)).
-    rewrite Join_rec_beta_jglue.
-    rewrite ap_apply_l.
-    rewrite eisretr.
-    apply join_natsq_v.
+    refine (whiskerR _ _ @ _).
+    { refine (ap _ (ap_idmap _) @ _).
+      simpl; rapply Join_rec_beta_jglue. }
+    symmetry.
+    apply join_natsq.
   Defined.
 
   Global Instance hspace_cdi_susp_assoc
