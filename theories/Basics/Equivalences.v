@@ -214,7 +214,7 @@ Definition moveL_equiv_V' `(f : A <~> B) (x : B) (y : A) (p : f y = x)
 Lemma contr_equiv A {B} (f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
 Proof.
-  exists (f (center A)).
+  apply (Build_Contr _ (f (center A))).
   intro y.
   apply moveR_equiv_M.
   apply contr.

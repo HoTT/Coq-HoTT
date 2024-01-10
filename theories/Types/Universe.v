@@ -498,7 +498,7 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 Global Instance contr_basedequiv@{u +} {X : Type@{u}}
 : Contr {Y : Type@{u} & X <~> Y}.
 Proof.
-  exists (X; equiv_idmap).
+  apply (Build_Contr _ (X; equiv_idmap)).
   intros [Y f]; revert Y f.
   exact (equiv_induction _ idpath).
 Defined.

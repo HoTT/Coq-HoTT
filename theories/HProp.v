@@ -12,17 +12,11 @@ Generalizable Variables A B.
 Theorem equiv_hprop_allpath `{Funext} (A : Type)
   : IsHProp A <~> (forall (x y : A), x = y).
 Proof.
-  apply (equiv_adjointify (@path_ishprop A) (@hprop_allpath A));
-  (* The proofs of the two homotopies making up this equivalence are almost identical.  First we start with a thing [f]. *)
-    intro f;
-  (* Then we apply funext a couple of times *)
-    apply path_forall; intro x;
-    apply path_forall; intro y;
-  (* Now we conclude that [A] is contractible *)
-    try pose (C := Build_Contr A x (f x));
-    try pose (D := contr_inhabited_hprop A x);
-  (* And conclude because we have a path in a contractible space. *)
-    apply path_contr.
+  rapply (equiv_iff_hprop (@path_ishprop A) (@hprop_allpath A)).
+  apply hprop_allpath; intros f g.
+  funext x y.
+  pose (C := Build_Contr A x (f x)).
+  apply path_contr.
 Defined.
 
 Theorem equiv_hprop_inhabited_contr `{Funext} {A}
@@ -30,9 +24,9 @@ Theorem equiv_hprop_inhabited_contr `{Funext} {A}
 Proof.
   apply (equiv_adjointify (@contr_inhabited_hprop A) (@hprop_inhabited_contr A)).
   - intro ic. by_extensionality x.
-    apply @path_contr. apply contr_contr. exact (ic x).
-  - intro hp. by_extensionality x. by_extensionality y.
-    apply @path_contr. apply contr_contr. exact (hp x y).
+    apply @path_contr. apply contr_istrunc. exact (ic x).
+  - intro hp.
+    apply path_ishprop.
 Defined.
 
 (** Being an hprop is also equivalent to the diagonal being an equivalence. *)

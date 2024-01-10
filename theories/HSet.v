@@ -13,12 +13,13 @@ Definition axiomK A := forall (x : A) (p : x = x), p = idpath x.
 Definition axiomK_hset {A} : IsHSet A -> axiomK A.
 Proof.
   intros H x p.
-  apply (H x x p (idpath x)).
+  nrapply path_ishprop.
+  exact (istrunc_unfold _ _ H x x).
 Defined.
 
 Definition hset_axiomK {A} `{axiomK A} : IsHSet A.
 Proof.
-  intros x y H.
+  apply istrunc_S; intros x y.
   apply @hprop_allpath.
   intros p q.
   by induction p.
@@ -33,8 +34,8 @@ Proof.
   - intros K. by_extensionality x. by_extensionality x'.
     cut (Contr (x=x)).
     + intro. eapply path_contr.
-    + exists 1. intros. symmetry; apply K.
-  - intro K. by_extensionality x. by_extensionality x'.
+    + apply (Build_Contr _ 1). intros. symmetry; apply K.
+  - intro K.
     eapply path_ishprop.
 Defined.
 
@@ -60,6 +61,7 @@ Lemma axiomK_idpath {A} (x : A) (K : axiomK A) :
   K x (idpath x) = idpath (idpath x).
 Proof.
   pose (T1A := @istrunc_succ _ A (@hset_axiomK A K)).
+  apply istrunc_unfold in T1A.
   exact (@hset_path2 (x=x) (T1A x x) _ _ _ _).
 Defined.
 

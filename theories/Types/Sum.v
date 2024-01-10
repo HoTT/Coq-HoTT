@@ -917,12 +917,11 @@ Global Instance istrunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.
+  apply istrunc_S.
   intros a b.
   eapply istrunc_equiv_istrunc;
     [ exact (equiv_path_sum _ _) | ].
-  destruct a, b; simpl in *;
-  try typeclasses eauto;
-  intros [].
+  destruct a, b; exact _.
 Defined.
 
 Global Instance ishset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100

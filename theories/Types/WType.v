@@ -44,6 +44,7 @@ Global Instance istrunc_wtype `{Funext}
   {A B} {n : trunc_index} `{IsTrunc n.+1 A}
 : IsTrunc n.+1 (W A B) | 100.
 Proof.
+  apply istrunc_S.
   intros z; induction z as [a w].
   intro y; destruct y as [a0 w0].
   nrefine (istrunc_equiv_istrunc _ (equiv_path_wtype' _ _)).

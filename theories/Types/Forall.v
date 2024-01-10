@@ -342,7 +342,7 @@ Global Arguments path_forall11 {A B}%type_scope {P} (f g)%function_scope _.
 Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a) | 100.
 Proof.
-  exists (fun a => center (P a)).
+  apply (Build_Contr _ (fun a => center (P a))).
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
@@ -354,7 +354,8 @@ Proof.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
-  - intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
+  - apply istrunc_S.
+    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
 Defined.
 
 (** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)

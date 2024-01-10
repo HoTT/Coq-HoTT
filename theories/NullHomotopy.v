@@ -19,7 +19,7 @@ Section NullHomotopy.
   Proof.
     apply @istrunc_sigma; auto.
     intros y. apply (@istrunc_forall _).
-    intros x. apply istrunc_succ.
+    intros x. apply istrunc_paths'.
   Defined.
 
   Definition nullhomotopy_homotopic {X Y : Type} {f g : X -> Y} (p : f == g)

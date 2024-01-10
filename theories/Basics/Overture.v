@@ -499,12 +499,7 @@ In order to achieve moderate coverage and speedy resolution, we currently follow
 (** A space [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].  Thus an element of [contr A] is a pair whose first component is a point [x] and the second component is a pointwise retraction of [A] to [x]. *)
 
 (** We use the [Contr_internal] record so as not to pollute typeclass search; we only do truncation typeclass search on the [IsTrunc] datatype, usually.  We will define a notation [Contr] which is equivalent to [Contr_internal], but picked up by typeclass search.  However, we must make [Contr_internal] a class so that we pick up typeclasses on [center] and [contr].  However, the only typeclass rule we register is the one that turns it into a [Contr]/[IsTrunc].  Unfortunately, this means that declaring an instance like [Instance contr_foo : Contr foo := { center := bar }.] will fail with mismatched instances/contexts.  Instead, we must iota expand such definitions to get around Coq's deficiencies, and write [Instance contr_foo : Contr foo := let x := {| center := bar |} in x.] *)
-Class Contr_internal (A : Type) := Build_Contr {
-  center : A ;
-  contr : (forall y : A, center = y)
-}.
-
-Arguments center A {_}.
+(** TODO: update comment. *)
 
 (** *** Truncation levels *)
 
@@ -541,58 +536,60 @@ Local Open Scope trunc_scope.
 (** Further notation for truncation levels is introducted in Trunc.v. *)
 
 (** n-truncatedness is defined by recursion on [n].  We could simply define [IsTrunc] as a fixpoint and an [Existing Class], but we want to also declare [IsTrunc] to be [simpl nomatch], so that when we say [simpl] or [cbn], [IsTrunc n.+1 A] doesn't get unfolded to [forall x y:A, IsTrunc n (x = y)].  But we also want to be able to use this equality, e.g. by proving [IsTrunc n.+1 A] starting with [intros x y], and if [IsTrunc] is a fixpoint declared as [simpl nomatch] then that doesn't work, because [intros] uses [hnf] to expose a [forall] and [hnf] respects [simpl nomatch] on fixpoints.  But we can make it work if we define the fixpoint separately as [IsTrunc_internal] and then take the class [IsTrunc] to be a definitional wrapper around it, since [hnf] is willing to unfold non-fixpoints even if they are defined as [simpl never].  This behavior of [hnf] is arguably questionable (see https://github.com/coq/coq/issues/11619), but it is useful for us here. *)
+(** TODO: update comment. *)
 
-Fixpoint IsTrunc_internal (n : trunc_index) (A : Type@{u}) : Type@{u} :=
-  match n with
-    | minus_two => Contr_internal A
-    | n'.+1 => forall (x y : A), IsTrunc_internal n' (x = y)
-  end.
-
-Arguments IsTrunc_internal n A : simpl nomatch.
-
-Class IsTrunc (n : trunc_index) (A : Type) : Type :=
-  Trunc_is_trunc : IsTrunc_internal n A.
-
-(** We use the principle that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
-
-#[global] Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
-
-Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
-
-Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
-: IsTrunc n (x = y)
-  := H x y. (* but do fold [IsTrunc] *)
+Cumulative Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
+| Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two
+| istrunc_S : forall {n:trunc_index}, (forall x y:A, IsTrunc_internal (x = y) n) -> IsTrunc_internal A (trunc_S n).
 
 Existing Class IsTrunc_internal.
 
-#[export]
-Hint Extern 0 (IsTrunc_internal _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+Notation IsTrunc n A := (IsTrunc_internal A n).
 
-#[export]
-Hint Extern 0 (IsTrunc _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+Scheme IsTrunc_internal_ind := Induction for IsTrunc_internal Sort Type.
+Scheme IsTrunc_internal_rec := Minimality for IsTrunc_internal Sort Type.
+Definition IsTrunc_internal_rect := IsTrunc_internal_ind.
 
-(** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
-#[export]
-Hint Extern 10 =>
-progress match goal with
-           | [ H : forall x y : ?T, IsTrunc ?n (x = y) |- _ ]
-             => change (IsTrunc n.+1 T) in H
-           | [ H : forall (a : ?A) (x y : @?T a), IsTrunc ?n (x = y) |- _ ]
-             => change (forall a : A, IsTrunc n.+1 (T a)) in H; cbv beta in H
-           | [ H : forall (a : ?A) (b : @?B a) (x y : @?T a b), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a), IsTrunc n.+1 (T a b)) in H; cbv beta in H
-           | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (x y : @?T a b c), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a) (c : C a b), IsTrunc n.+1 (T a b c)) in H; cbv beta in H
-           | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (d : @?D a b c) (x y : @?T a b c d), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
-         end : core.
+Definition IsTrunc_unfolded (n : trunc_index) (A : Type)
+  := match n with
+    | minus_two => { center : A & forall y, center = y }
+    | n.+1 => forall x y : A, IsTrunc n (x = y)
+    end.
 
-Notation Contr := (IsTrunc minus_two).
-Notation IsHProp := (IsTrunc minus_two.+1).
-Notation IsHSet := (IsTrunc minus_two.+2).
+Definition istrunc_unfold (n : trunc_index) (A : Type)
+  : IsTrunc n A -> IsTrunc_unfolded n A.
+Proof.
+  intros [center contr|k istrunc].
+  - exact (center; contr).
+  - exact istrunc.
+Defined.
 
-#[export]
-Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
+Definition isequiv_istrunc_unfold (n : trunc_index) (A : Type)
+  : IsEquiv (istrunc_unfold n A).
+Proof.
+  simple refine (Build_IsEquiv _ _ (istrunc_unfold n A) _ _ _ _).
+  - destruct n.
+    + intros [center contr]; exact (Build_Contr _ center contr).
+    + intros H. exact (istrunc_S _ H).
+  - destruct n; reflexivity.
+  - intros [center contr|k istrunc]; reflexivity.
+  - intros [center contr|k istrunc]; reflexivity.
+Defined.
+
+Definition equiv_istrunc_unfold (n : trunc_index) (A : Type)
+  := Build_Equiv _ _ _  (isequiv_istrunc_unfold n A).
+
+(** A version of [istrunc_unfold] for successors. *)
+Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
+  : IsTrunc n (x = y)
+  := istrunc_unfold n.+1 A H x y.
+
+Notation Contr A := (IsTrunc minus_two A).
+Notation IsHProp A := (IsTrunc minus_two.+1 A).
+Notation IsHSet A := (IsTrunc minus_two.+2 A).
+
+Definition center (A : Type) {H : Contr A} : A := pr1 (istrunc_unfold _ _ H).
+Definition contr {A : Type} {H : Contr A} (y : A) : center A = y := pr2 (istrunc_unfold _ _ H) y.
 
 (** *** Truncated relations  *)
 

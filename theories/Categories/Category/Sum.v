@@ -1,5 +1,6 @@
 (** * The coproduct of categories *)
 Require Export Category.Core.
+Require Import Types.Empty.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

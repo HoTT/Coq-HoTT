@@ -101,10 +101,7 @@ Definition equiv_unit_coind `{Funext} (A : Type)
 (** ** Truncation *)
 
 (* The Unit type is contractible *)
-Global Instance contr_unit : Contr Unit | 0 := {|
-  center := tt;
-  contr := fun t : Unit => match t with tt => 1 end
-|}.
+Global Instance contr_unit : Contr Unit | 0 := Build_Contr _ tt (fun t : Unit => match t with tt => 1 end).
 
 (** ** Equivalences *)
 

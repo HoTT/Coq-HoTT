@@ -52,7 +52,7 @@ Definition contr_sigma_sigma (A : Type) (B : A -> Type)
 Proof.
   pose (d := (center {y:B a & D a y c}).2).
   set (b := (center {y:B a & D a y c}).1) in *.
-  exists ((a;b);(c;d)).
+  apply (Build_Contr _ ((a;b);(c;d))).
   intros [[a' b'] [c' d']]; cbn in *.
   pose (ac' := (a';c')).
   pose (bd' := (b';d') : {y:B ac'.1 & D ac'.1 y ac'.2}).

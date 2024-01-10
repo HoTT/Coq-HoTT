@@ -220,7 +220,8 @@ Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
 Definition istruncmap_from_ap {A B} n (f:A -> B) `{!forall x y, IsTruncMap n (@ap _ _ f x y)}
   : IsTruncMap n.+1 f.
 Proof.
-  intros y [a p] [b q];
+  intro y; apply istrunc_S.
+  intros [a p] [b q];
     destruct q;
     exact (istrunc_equiv_istrunc _ (hfiber_ap p)).
 Defined.

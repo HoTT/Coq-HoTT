@@ -158,6 +158,7 @@ Defined.
 Global Instance hset_pathcoll (A : Type) `{PathCollapsible A}
 : IsHSet A | 1000.
 Proof.
+  apply istrunc_S.
   intros x y.
   assert (h : forall p:x=y, p = (collapse (idpath x))^ @ collapse p).
   { intros []; symmetry; by apply concat_Vp. }
@@ -195,7 +196,8 @@ Global Instance ishprop_decpaths `{Funext} (A : Type)
 Proof.
   apply hprop_inhabited_contr; intros d.
   assert (IsHSet A) by exact _.
-  exists d; intros d'.
+  apply (Build_Contr _ d).
+  intros d'.
   apply path_forall; intros x; apply path_forall; intros y.
   generalize (d x y); clear d; intros d.
   generalize (d' x y); clear d'; intros d'.
