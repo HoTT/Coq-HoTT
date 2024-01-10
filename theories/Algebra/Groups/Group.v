@@ -714,17 +714,18 @@ Global Instance issurj_grp_prod_pr2 {G H : Group}
 Global Instance hasbinaryproducts_group : HasBinaryProducts Group.
 Proof.
   snrapply Build_HasBinaryProducts.
-  - exact grp_prod.
-  - exact @grp_prod_pr1.
-  - exact @grp_prod_pr2.
-  - exact @grp_prod_corec.
-  - intros x y z f g.
+  intros G H.
+  snrapply Build_BinaryProduct.
+  - exact (grp_prod G H).
+  - exact grp_prod_pr1.
+  - exact grp_prod_pr2.
+  - intros K.
+    exact grp_prod_corec.
+  - intros K f g.
     exact (Id _).
-  - intros x y z f g.
+  - intros K f g.
     exact (Id _).
-  - intros x y z f g.
-    apply eta_prod.
-  - intros x y z f f' g g' p q a.
+  - intros K f g p q a.
     exact (path_prod' (p a) (q a)).
 Defined.
 

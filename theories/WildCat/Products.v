@@ -1,54 +1,176 @@
-Require Import Basics.
-Require Import WildCat.Core.
+Require Import Basics EquivGpd Types.Prod.
+Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda WildCat.Universe WildCat.NatTrans WildCat.Opposite.
 
 (** * Categories with products *)
 
-(** There is a lot of theory that can be developed about categories with certain limits. It can be very tempting to try to do this in full generality, but this often leads to the person doing the formalization getting lost down the rabbit hole. Therefore we try to keep things as direct as possible implementing only what we need for now. *)
-
-Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
-  (** A binary product is an object of a category given by a pair of objects. *)
-  cat_prod : A -> A -> A;
-
-  (** It comes equipped with two projection maps out of the product. *)
-  cat_pr1 : forall {x y : A}, cat_prod x y $-> x;
-  cat_pr2 : forall {x y : A}, cat_prod x y $-> y;
-  
-  (** Together with a pairing "corecursor" into the product. *)
-  cat_prod_corec : forall {x y z : A},
-    (z $-> x) -> (z $-> y) -> (z $-> cat_prod x y);
-
-  (** All this data satisifies certain equiations, leading to the unqiueness of the product_corec map. *)
-
-  (** Applying the first projection after a map pariing gives the first map. *) 
-  cat_prod_beta_pr1 {x y z : A} (f : z $-> x) (g : z $-> y)
-    : cat_pr1 $o cat_prod_corec f g $== f;
-  
-  (** Applying the second projection after a map pariing gives the second map. *)
-  cat_prod_beta_pr2 {x y z : A} (f : z $-> x) (g : z $-> y)
-    : cat_pr2 $o cat_prod_corec f g $== g;
-
-  (** The pairing map is the unique map that makes the following diagram commute. *)
-  cat_prod_eta {x y z : A} (f : z $-> cat_prod x y)
-    : cat_prod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f;
-  
-  (** Finally given any two [cat_prod_corec], they are uniquely identified by their components. (This introduces a 2-categorical notion of product, which for n-categorical universal properties will need (n+1) levels of cells. We therefore restrict to 1-categories for now). Without this condition, we would not be able to show the 2-functorial action of the product functor or even 1-functoriality in the second argument. *) 
-  cat_prod_corec_eta {x y z : A} {f f' : z $-> x} {g g' : z $-> y}
-    : f $== f' -> g $== g' -> cat_prod_corec f g $== cat_prod_corec f' g';
-}.
-
-Lemma cat_prod_pr_eta {A} `{HasBinaryProducts A}
-  {x y z : A} {f f' : z $-> cat_prod x y}
-  : cat_pr1 $o f $== cat_pr1 $o f' -> cat_pr2 $o f $== cat_pr2 $o f' -> f $== f'.
+Definition cat_prod_corec_inv {A : Type} `{Is1Cat A}
+  (xy x y z : A) (pr1 : xy $-> x) (pr2 : xy $-> y)
+  : yon_0gpd xy z $-> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
 Proof.
-  intros fst snd.
-  refine ((cat_prod_eta _)^$ $@ _ $@ cat_prod_eta _).
-  by apply cat_prod_corec_eta.
+  snrapply Build_Morphism_0Gpd.
+  - simpl; intros f.
+    exact (pr1 $o f, pr2 $o f).
+  - snrapply Build_Is0Functor.
+    simpl; intros f g p; split.
+    + exact (pr1 $@L p).
+    + exact (pr2 $@L p).
 Defined.
 
-(** In general it's not possible to define a recursor for a product. It is possible if a category has an internal hom, but that is a very strong condition.  *)
+(* A binary product of two objects of a category is an object of the category with a give pair of projections together with an induced map being an equivalence. *) 
+Class BinaryProduct {A : Type} `{Is1Cat A} {x y : A} := Build_BinaryProduct' {
+  cat_prod : A;
+  cat_pr1 : cat_prod $-> x;
+  cat_pr2 : cat_prod $-> y;
+  cat_isequiv_cat_prod_corec_inv
+    :: forall z, CatIsEquiv (cat_prod_corec_inv cat_prod x y z cat_pr1 cat_pr2);  
+}.
+
+Arguments BinaryProduct {A _ _ _ _} x y.
+Arguments cat_prod {A _ _ _ _} x y {_}.
+
+(** This is a convencience wrapper for building BinaryProducts *)
+Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
+  (cat_prod : A) (cat_pr1 : cat_prod $-> x) (cat_pr2 : cat_prod $-> y)
+  (cat_prod_corec : forall z : A, (z $-> x) -> (z $-> y) -> (z $-> cat_prod))
+  (cat_prod_beta_pr1 : forall z (f : z $-> x) (g : z $-> y), cat_pr1 $o cat_prod_corec z f g $== f)
+  (cat_prod_beta_pr2 : forall z (f : z $-> x) (g : z $-> y), cat_pr2 $o cat_prod_corec z f g $== g)
+  (cat_prod_pr_eta : forall z (f g : z $-> cat_prod), cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g)
+  : BinaryProduct x y.
+Proof.
+  snrapply (Build_BinaryProduct' _ _ _ _ _ _ _ cat_prod cat_pr1 cat_pr2).
+  intros z.
+  apply isequiv_0gpd_issurjinj.
+  snrapply Build_IsSurjInj.
+  - intros [f g].
+    exists (cat_prod_corec z f g).
+    split.
+    + apply cat_prod_beta_pr1.
+    + apply cat_prod_beta_pr2.
+  - intros f g [p q].
+    by apply cat_prod_pr_eta.
+Defined.
+
+(** The product of two objects is unique up to equivalence. *)
+
+
+Definition cat_equiv_cat_prod_corec_inv {A : Type}
+  {x y z : A} `{BinaryProduct _ x y}
+  : (yon_0gpd (cat_prod x y) z) $<~> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
+Proof.
+  srapply Build_CatEquiv.
+Defined.
+
+Section Lemmata.
+
+  Context {A : Type} {x y z : A} `{BinaryProduct _ x y}.
+
+  Definition cat_equiv_cat_prod_corec
+    : prod_0gpd (yon_0gpd x z) (yon_0gpd y z) $<~> (yon_0gpd (cat_prod x y) z)
+    := cat_equiv_cat_prod_corec_inv^-1$.
+
+  Definition cat_prod_corec : (z $-> x) -> (z $-> y) -> (z $-> cat_prod x y).
+  Proof.
+    intros f g.
+    apply cat_equiv_cat_prod_corec.
+    exact (f, g).
+  Defined.
+    
+  (** Applying the first projection after a map pairing gives the first map. *) 
+  Lemma cat_prod_beta_pr1 (f : z $-> x) (g : z $-> y)
+    : cat_pr1 $o cat_prod_corec f g $== f.
+  Proof.
+    exact (fst (cate_isretr cat_equiv_cat_prod_corec_inv (f, g))).
+  Defined.
+
+  (** Applying the second projection after a map pairing gives the second map. *)
+  Lemma cat_prod_beta_pr2 (f : z $-> x) (g : z $-> y)
+    : cat_pr2 $o cat_prod_corec f g $== g.
+  Proof.
+    exact (snd (cate_isretr cat_equiv_cat_prod_corec_inv (f, g))).
+  Defined.
+
+  (** The pairing map is the unique map that makes the following diagram commute. *)
+  Lemma cat_prod_eta (f : z $-> cat_prod x y)
+    : cat_prod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f.
+  Proof.
+    exact (cate_issect cat_equiv_cat_prod_corec_inv f).
+  Defined.
+
+  (* TODO: decompose and move *)
+  Local Instance is0functor_prod_0gpd_helper
+    : Is0Functor (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z)).
+  Proof.
+    snrapply Build_Is0Functor.
+    intros a b f.
+    snrapply Build_Morphism_0Gpd.
+    - intros [g g'].
+      exact (f $o g, f $o g').
+    - snrapply Build_Is0Functor.
+      intros [g g'] [h h'] [p q].
+      split.
+      + exact (f $@L p).
+      + exact (f $@L q).
+  Defined.
+
+  (* TODO: decompose and move *)
+  Local Instance is1functor_prod_0gpd_helper
+    : Is1Functor (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z)).
+  Proof.
+    snrapply Build_Is1Functor.
+    - intros a b f g p [r_fst r_snd].
+      cbn; split.
+      + refine (_ $@L _).
+        apply p.
+      + refine (_ $@L _).
+        apply p.
+    - intros a [r_fst r_snd].
+      split; apply cat_idl.
+    - intros a b c f g [r_fst r_snd].
+      split; apply cat_assoc.
+  Defined.
+  
+  Definition natequiv_cat_prod_corec_inv
+    : NatEquiv (yon_0gpd (cat_prod x y)) (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z)).
+  Proof.
+    snrapply Build_NatEquiv.
+    { intros a.
+      apply cat_equiv_cat_prod_corec_inv. }
+    exact (is1natural_yoneda_0gpd
+      (cat_prod x y)
+      (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z))
+      (cat_pr1, cat_pr2)).
+  Defined.
+
+  Lemma cat_prod_corec_eta {f f' : z $-> x} {g g' : z $-> y}
+    : f $== f' -> g $== g' -> cat_prod_corec f g $== cat_prod_corec f' g'.
+  Proof.
+    intros p q.
+    unfold cat_prod_corec.
+    apply (moveL_equiv_V_0gpd cat_equiv_cat_prod_corec_inv).
+    refine (cate_isretr cat_equiv_cat_prod_corec_inv _ $@ _).
+    split.
+    - exact p.
+    - exact q.
+  Defined.
+
+  Lemma cat_prod_pr_eta {f f' : z $-> cat_prod x y}
+    : cat_pr1 $o f $== cat_pr1 $o f' -> cat_pr2 $o f $== cat_pr2 $o f' -> f $== f'.
+  Proof.
+    intros fst snd.
+    refine ((cat_prod_eta _)^$ $@ _ $@ cat_prod_eta _).
+    by apply cat_prod_corec_eta.
+  Defined.
+
+End Lemmata.
+
+(** *** Categories with binary products *)
+
+(** A category with binary products is a category with a binary product for each pair of objects. *)
+Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
+  binary_products :: forall x y : A, BinaryProduct x y;
+}.
 
 (** *** Product functor *)
-
 
 (** Binary products are functorial in each argument. *)
 Global Instance is0functor_cat_prod_l {A : Type}
@@ -95,7 +217,7 @@ Defined.
 
 Global Instance is0functor_cat_prod_r {A : Type}
   `{HasBinaryProducts A} x
-  : Is0Functor (cat_prod x).
+  : Is0Functor (fun y => cat_prod x y).
 Proof.
   snrapply Build_Is0Functor.
   intros a b f.
@@ -106,7 +228,7 @@ Defined.
 
 Global Instance is1functor_cat_prod_r {A : Type}
   `{HasBinaryProducts A} x
-  : Is1Functor (cat_prod x).
+  : Is1Functor (fun y => cat_prod x y).
 Proof.
   snrapply Build_Is1Functor.
   - intros y z f g p.
@@ -138,7 +260,7 @@ Defined.
 
 Global Instance is0functor_cat_prod_corec_l {A : Type}
   `{HasBinaryProducts A} {x y z : A} (g : z $-> y)
-  : Is0Functor (fun f => @cat_prod_corec _ _ _ _ _ _ x y z f g).
+  : Is0Functor (fun f => @cat_prod_corec _ x y z _ _ _ _ _ f g).
 Proof.
   snrapply Build_Is0Functor.
   intros f f' p.
@@ -147,9 +269,27 @@ Defined.
 
 Global Instance is0functor_cat_prod_corec_r {A : Type}
   `{HasBinaryProducts A} {x y z : A} (f : z $-> x)
-  : Is0Functor (@cat_prod_corec _ _ _ _ _ _ x y z f).
+  : Is0Functor (@cat_prod_corec _ x y z _ _ _ _ _ f).
 Proof.
   snrapply Build_Is0Functor.
   intros g h p.
   by apply cat_prod_corec_eta.
+Defined.
+
+(** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means this instance has to therefore live here. *)
+Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
+Proof.
+  snrapply Build_HasBinaryProducts.
+  intros X Y.
+  snrapply Build_BinaryProduct.
+  - exact (X * Y).
+  - exact fst.
+  - exact snd.
+  - intros Z f g z. exact (f z, g z).
+  - reflexivity.
+  - reflexivity.
+  - intros Z f g p q x.
+    apply path_prod.
+    + exact (p x).
+    + exact (q x).
 Defined.

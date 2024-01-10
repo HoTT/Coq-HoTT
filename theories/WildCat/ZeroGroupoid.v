@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -137,4 +137,9 @@ Proof.
   - cbn.  intro x.
     apply e1.
     apply e0.
+Defined.
+
+Definition prod_0gpd (G H : ZeroGpd) : ZeroGpd.
+Proof.
+  rapply (Build_ZeroGpd (G * H)).
 Defined.
