@@ -99,7 +99,7 @@ Definition x1_neq_x0 {z w : Pos} : x1 z <> x0 w
 
 (** * Positive binary integers have decidable paths *)
 
-Global Instance decpaths_pos : DecidablePaths Pos.
+Global Instance decpaths_pos : DecidablePaths@{u} Pos.
 Proof.
   intros n; induction n as [|zn|on];
   intros m; induction m as [|zm|om].
@@ -121,7 +121,7 @@ Proof.
 Defined.
 
 (** Decidable paths imply Pos is a hSet *)
-Global Instance ishset_pos : IsHSet Pos := _.
+Global Instance ishset_pos : IsHSet@{u} Pos := _.
 
 (** * Operations over positive numbers *)
 
