@@ -1,4 +1,4 @@
-Require Import Basics EquivGpd Types.Prod.
+Require Import Basics EquivGpd Types.Prod Types.Sum.
 Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda WildCat.Universe WildCat.NatTrans WildCat.Opposite WildCat.Products.
 
 (** * Categories with coproducts *)
@@ -127,3 +127,25 @@ Class HasBinaryCoproducts (A : Type) `{Is1Cat A} := {
 (** *** Coproduct functor *)
 
 (** TODO: The functoriality argument doesn't follow definitionally from the functoriality of [cat_prod], however after some modification it is close. We need to use appropriate lemmas for opposite functors. *) 
+
+(** *** Coproducts in Type *)
+
+(** [Type] has all binary coproducts *)
+Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type.
+Proof.
+  snrapply Build_HasBinaryCoproducts.
+  intros X Y.
+  snrapply Build_BinaryCoproduct.
+  - exact (X + Y).
+  - exact inl.
+  - exact inr.
+  - intros Z f g.
+    intros [x | y].
+    + exact (f x).
+    + exact (g y).
+  - reflexivity.
+  - reflexivity.
+  - intros Z f g p q [x | y].
+    + exact (p x).
+    + exact (q y).
+Defined.
