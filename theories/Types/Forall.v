@@ -337,26 +337,7 @@ Global Arguments equiv_path_forall11 {A B}%type_scope {P} (f g)%function_scope.
 
 Global Arguments path_forall11 {A B}%type_scope {P} (f g)%function_scope _.
 
-(** ** Truncatedness: any dependent product of n-types is an n-type *)
-
-Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
-  : Contr (forall a, P a) | 100.
-Proof.
-  apply (Build_Contr _ (fun a => center (P a))).
-  intro f.  apply path_forall.  intro a.  apply contr.
-Defined.
-
-Global Instance istrunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
-  : IsTrunc n (forall a, P a) | 100.
-Proof.
-  generalize dependent P.
-  simple_induction n n IH; simpl; intros P ?.
-  (* case [n = -2], i.e. contractibility *)
-  - exact _.
-  (* case n = n'.+1 *)
-  - apply istrunc_S.
-    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
-Defined.
+(** ** Truncatedness: any dependent product of n-types is an n-type: see [contr_forall] and [istrunc_forall] in Basics.Trunc. *)
 
 (** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)
 

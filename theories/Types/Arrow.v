@@ -2,7 +2,7 @@
 (** * Theorems about Non-dependent function types *)
 
 Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable
-               Basics.Equivalences.
+               Basics.Equivalences Basics.Trunc.
 Require Import Types.Forall.
 Local Open Scope path_scope.
 

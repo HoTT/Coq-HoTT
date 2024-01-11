@@ -445,30 +445,41 @@ Proof.
   - rapply contr_inhabited_hprop.
 Defined.
 
+(** ** Truncatedness: any dependent product of n-types is an n-type *)
+
+Definition contr_forall `{Funext} `{P : A -> Type} `{forall a, Contr (P a)}
+  : Contr (forall a, P a).
+Proof.
+  apply (Build_Contr _ (fun a => center (P a))).
+  intro f.  apply path_forall.  intro a.  apply contr.
+Defined.
+
+Global Instance istrunc_forall `{Funext} `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+  : IsTrunc n (forall a, P a) | 100.
+Proof.
+  generalize dependent P.
+  simple_induction n n IH; simpl; intros P ?.
+  (* case [n = -2], i.e. contractibility *)
+  - apply contr_forall.
+  (* case n = n'.+1 *)
+  - apply istrunc_S.
+    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
+Defined.
+
 (** Truncatedness is an hprop. *)
 Global Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
-  apply hprop_inhabited_contr.
-  revert A.
-  simple_induction n n IH.
-  - intros A ContrA.
-    nrapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold (-2) A)^-1%equiv).
-    destruct (istrunc_unfold (-2) A ContrA) as [a1 c1].
-    snrapply (Build_Contr _ (a1; c1)).
-    intros [a2 c2].
+  revert A; simple_induction n n IH; cbn; intro A.
+  - nrapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold (-2) A)^-1%equiv).
+    apply hprop_allpath.
+    intros [a1 c1] [a2 c2].
     destruct (c1 a2).
     apply (ap (exist _ a1)).
     funext x.
-    apply path2_contr.
-  - intros A AH1.
-    nrapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
-    cbn.
-    pose (AH1' := (equiv_istrunc_unfold n.+1 A AH1)).
-    apply (Build_Contr _ AH1').
-    intro AH2.
-    funext x y.
-    apply path_contr.
+    pose (Build_Contr _ a1 c1); apply path2_contr.
+  - rapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
+    (* This case follows from [istrunc_forall]. *)
 Defined.
 
 (** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
