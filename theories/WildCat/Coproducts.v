@@ -46,30 +46,30 @@ Section Lemmata.
 
   Context {A : Type} {x y z : A} `{BinaryCoproduct _ x y}.
 
-  Definition cat_equiv_cat_coprod_rec_inv
+  Definition cate_cat_coprod_rec_inv
     : (opyon_0gpd (cat_coprod x y) z)
     $<~> prod_0gpd (opyon_0gpd x z) (opyon_0gpd y z)
-    := @cat_equiv_cat_prod_corec_inv A^op x y z _ _ _ _ _.
+    := @cate_cat_prod_corec_inv A^op x y _ _ _ _ _ _.
 
-  Definition cat_equiv_cat_coprod_rec
+  Definition cate_cat_coprod_rec
     : prod_0gpd (opyon_0gpd x z) (opyon_0gpd y z)
     $<~> (opyon_0gpd (cat_coprod x y) z)
-    := @cat_equiv_cat_prod_corec A^op x y z _ _ _ _ _.
+    := @cate_cat_prod_corec A^op x y _ _ _ _ _ _.
 
   Definition cat_coprod_rec (f : x $-> z) (g : y $-> z) : cat_coprod x y $-> z
-    := @cat_prod_corec A^op x y z _ _ _ _ _ f g.
+    := @cat_prod_corec A^op x y _ _ _ _ _ _ f g.
   
   Definition cat_coprod_beta_inl (f : x $-> z) (g : y $-> z)
     : cat_coprod_rec f g $o cat_inl $== f
-    := @cat_prod_beta_pr1 A^op x y z _ _ _ _ _ f g.
+    := @cat_prod_beta_pr1 A^op x y _ _ _ _ _ _ f g.
   
   Definition cat_coprod_beta_inr (f : x $-> z) (g : y $-> z)
     : cat_coprod_rec f g $o cat_inr $== g
-    := @cat_prod_beta_pr2 A^op x y z _ _ _ _ _ f g.
+    := @cat_prod_beta_pr2 A^op x y _ _ _ _ _ _ f g.
   
   Definition cat_coprod_eta (f : cat_coprod x y $-> z)
     : cat_coprod_rec (f $o cat_inl) (f $o cat_inr) $== f
-    := @cat_prod_eta A^op x y z _ _ _ _ _ f.
+    := @cat_prod_eta A^op x y _ _ _ _ _ _ f.
 
   (* TODO: decompose and move *)
   Local Instance is0functor_coprod_0gpd_helper
@@ -110,11 +110,11 @@ Section Lemmata.
 
   Definition cat_coprod_rec_eta {f f' : x $-> z} {g g' : y $-> z}
     : f $== f' -> g $== g' -> cat_coprod_rec f g $== cat_coprod_rec f' g'
-    := @cat_prod_corec_eta A^op x y z _ _ _ _ _ f f' g g'.
+    := @cat_prod_corec_eta A^op x y _ _ _ _ _ _ f f' g g'.
   
   Definition cat_coprod_in_eta {f f' : cat_coprod x y $-> z}
     : f $o cat_inl $== f' $o cat_inl -> f $o cat_inr $== f' $o cat_inr -> f $== f'
-    := @cat_prod_pr_eta A^op x y z _ _ _ _ _ f f'.
+    := @cat_prod_pr_eta A^op x y _ _ _ _ _ _ f f'.
 
 End Lemmata.
 

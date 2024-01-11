@@ -3,6 +3,7 @@ Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda Wi
 
 (** * Categories with products *)
 
+(* TODO: jdchristensen: There's a more general result, that given any two maps A -> B and A -> C of 0-groupoids, there's a map A -> prop_0gpd B C of 0-groupoids. Then this lemma is that general result applied to is0functor_yon_0gpd of the two projections. *)
 Definition cat_prod_corec_inv {A : Type} `{Is1Cat A}
   (xy x y z : A) (pr1 : xy $-> x) (pr2 : xy $-> y)
   : yon_0gpd xy z $-> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
@@ -16,7 +17,7 @@ Proof.
     + exact (pr2 $@L p).
 Defined.
 
-(* A binary product of two objects of a category is an object of the category with a give pair of projections together with an induced map being an equivalence. *) 
+(* A binary product of two objects of a category is an object of the category with a pair of projections such that the induced map is an equivalence. *) 
 Class BinaryProduct {A : Type} `{Is1Cat A} {x y : A} := Build_BinaryProduct' {
   cat_prod : A;
   cat_pr1 : cat_prod $-> x;
@@ -28,7 +29,7 @@ Class BinaryProduct {A : Type} `{Is1Cat A} {x y : A} := Build_BinaryProduct' {
 Arguments BinaryProduct {A _ _ _ _} x y.
 Arguments cat_prod {A _ _ _ _} x y {_}.
 
-(** This is a convencience wrapper for building BinaryProducts *)
+(** This is a convenience wrapper for building BinaryProducts *)
 Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
   (cat_prod : A) (cat_pr1 : cat_prod $-> x) (cat_pr2 : cat_prod $-> y)
   (cat_prod_corec : forall z : A, (z $-> x) -> (z $-> y) -> (z $-> cat_prod))
@@ -50,50 +51,47 @@ Proof.
     by apply cat_prod_pr_eta.
 Defined.
 
-(** The product of two objects is unique up to equivalence. *)
-
-
-Definition cat_equiv_cat_prod_corec_inv {A : Type}
-  {x y z : A} `{BinaryProduct _ x y}
-  : (yon_0gpd (cat_prod x y) z) $<~> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
-Proof.
-  srapply Build_CatEquiv.
-Defined.
-
 Section Lemmata.
 
-  Context {A : Type} {x y z : A} `{BinaryProduct _ x y}.
+  Context {A : Type} {x y : A} `{BinaryProduct _ x y}.
 
-  Definition cat_equiv_cat_prod_corec
+  Definition cate_cat_prod_corec_inv {z : A}
+    : (yon_0gpd (cat_prod x y) z) $<~> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
+  Proof.
+    srapply Build_CatEquiv.
+  Defined.
+
+  Definition cate_cat_prod_corec {z : A}
     : prod_0gpd (yon_0gpd x z) (yon_0gpd y z) $<~> (yon_0gpd (cat_prod x y) z)
-    := cat_equiv_cat_prod_corec_inv^-1$.
+    := cate_cat_prod_corec_inv^-1$.
 
-  Definition cat_prod_corec : (z $-> x) -> (z $-> y) -> (z $-> cat_prod x y).
+  Definition cat_prod_corec {z : A}
+    : (z $-> x) -> (z $-> y) -> (z $-> cat_prod x y).
   Proof.
     intros f g.
-    apply cat_equiv_cat_prod_corec.
+    apply cate_cat_prod_corec.
     exact (f, g).
   Defined.
     
   (** Applying the first projection after a map pairing gives the first map. *) 
-  Lemma cat_prod_beta_pr1 (f : z $-> x) (g : z $-> y)
+  Lemma cat_prod_beta_pr1 {z : A} (f : z $-> x) (g : z $-> y)
     : cat_pr1 $o cat_prod_corec f g $== f.
   Proof.
-    exact (fst (cate_isretr cat_equiv_cat_prod_corec_inv (f, g))).
+    exact (fst (cate_isretr cate_cat_prod_corec_inv (f, g))).
   Defined.
 
   (** Applying the second projection after a map pairing gives the second map. *)
-  Lemma cat_prod_beta_pr2 (f : z $-> x) (g : z $-> y)
+  Lemma cat_prod_beta_pr2 {z : A} (f : z $-> x) (g : z $-> y)
     : cat_pr2 $o cat_prod_corec f g $== g.
   Proof.
-    exact (snd (cate_isretr cat_equiv_cat_prod_corec_inv (f, g))).
+    exact (snd (cate_isretr cate_cat_prod_corec_inv (f, g))).
   Defined.
 
   (** The pairing map is the unique map that makes the following diagram commute. *)
-  Lemma cat_prod_eta (f : z $-> cat_prod x y)
+  Lemma cat_prod_eta {z : A} (f : z $-> cat_prod x y)
     : cat_prod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f.
   Proof.
-    exact (cate_issect cat_equiv_cat_prod_corec_inv f).
+    exact (cate_issect cate_cat_prod_corec_inv f).
   Defined.
 
   (* TODO: decompose and move *)
@@ -134,26 +132,26 @@ Section Lemmata.
   Proof.
     snrapply Build_NatEquiv.
     { intros a.
-      apply cat_equiv_cat_prod_corec_inv. }
+      apply cate_cat_prod_corec_inv. }
     exact (is1natural_yoneda_0gpd
       (cat_prod x y)
       (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z))
       (cat_pr1, cat_pr2)).
   Defined.
 
-  Lemma cat_prod_corec_eta {f f' : z $-> x} {g g' : z $-> y}
+  Lemma cat_prod_corec_eta {z : A} {f f' : z $-> x} {g g' : z $-> y}
     : f $== f' -> g $== g' -> cat_prod_corec f g $== cat_prod_corec f' g'.
   Proof.
     intros p q.
     unfold cat_prod_corec.
-    apply (moveL_equiv_V_0gpd cat_equiv_cat_prod_corec_inv).
-    refine (cate_isretr cat_equiv_cat_prod_corec_inv _ $@ _).
+    apply (moveL_equiv_V_0gpd cate_cat_prod_corec_inv).
+    refine (cate_isretr cate_cat_prod_corec_inv _ $@ _).
     split.
     - exact p.
     - exact q.
   Defined.
 
-  Lemma cat_prod_pr_eta {f f' : z $-> cat_prod x y}
+  Lemma cat_prod_pr_eta {z : A} {f f' : z $-> cat_prod x y}
     : cat_pr1 $o f $== cat_pr1 $o f' -> cat_pr2 $o f $== cat_pr2 $o f' -> f $== f'.
   Proof.
     intros fst snd.
@@ -260,7 +258,7 @@ Defined.
 
 Global Instance is0functor_cat_prod_corec_l {A : Type}
   `{HasBinaryProducts A} {x y z : A} (g : z $-> y)
-  : Is0Functor (fun f => @cat_prod_corec _ x y z _ _ _ _ _ f g).
+  : Is0Functor (fun f : z $-> y => cat_prod_corec f g).
 Proof.
   snrapply Build_Is0Functor.
   intros f f' p.
@@ -269,7 +267,7 @@ Defined.
 
 Global Instance is0functor_cat_prod_corec_r {A : Type}
   `{HasBinaryProducts A} {x y z : A} (f : z $-> x)
-  : Is0Functor (@cat_prod_corec _ x y z _ _ _ _ _ f).
+  : Is0Functor (fun g : z $-> x => cat_prod_corec f g).
 Proof.
   snrapply Build_Is0Functor.
   intros g h p.
