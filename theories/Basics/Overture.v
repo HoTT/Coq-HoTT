@@ -591,6 +591,27 @@ Notation IsHSet A := (IsTrunc minus_two.+2 A).
 Definition center (A : Type) {H : Contr A} : A := pr1 (istrunc_unfold _ _ H).
 Definition contr {A : Type} {H : Contr A} (y : A) : center A = y := pr2 (istrunc_unfold _ _ H) y.
 
+(** We define a slight variation of [istrunc_unfold], which differs only it what it does for [n = -2].  It will produce a section of the following type family. *)
+Definition istrunc_codomain_fam {n : trunc_index} {A : Type} (istrunc : IsTrunc n A) : A -> Type.
+Proof.
+  intro y.
+  destruct n.
+  - exact (center A = y).
+  - exact (forall x : A, IsTrunc n (y = x)).
+Defined.
+
+(** The variant of [istrunc_unfold] lets us treat any proof of truncation as a function.  For [n = -2], it produces the contracting homotopy. *)
+Definition istrunc_fun {n : trunc_index} {A : Type} (istrunc : IsTrunc n A)
+  : forall y : A, istrunc_codomain_fam istrunc y.
+Proof.
+  destruct n.
+  - exact (@contr A istrunc).
+  - exact (istrunc_unfold _ _ istrunc).
+Defined.
+
+(** We add this as a coercion. *)
+#[warning="-uniform-inheritance"] Coercion istrunc_fun : IsTrunc >-> Funclass.
+
 (** *** Truncated relations  *)
 
 (** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)

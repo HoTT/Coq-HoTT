@@ -14,7 +14,7 @@ Definition axiomK_hset {A} : IsHSet A -> axiomK A.
 Proof.
   intros H x p.
   nrapply path_ishprop.
-  exact (istrunc_unfold _ _ H x x).
+  exact (H x x).
 Defined.
 
 Definition hset_axiomK {A} `{axiomK A} : IsHSet A.
@@ -61,7 +61,6 @@ Lemma axiomK_idpath {A} (x : A) (K : axiomK A) :
   K x (idpath x) = idpath (idpath x).
 Proof.
   pose (T1A := @istrunc_succ _ A (@hset_axiomK A K)).
-  apply istrunc_unfold in T1A.
   exact (@hset_path2 (x=x) (T1A x x) _ _ _ _).
 Defined.
 
