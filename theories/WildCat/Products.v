@@ -171,6 +171,8 @@ Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
 (** *** Product functor *)
 
 (** Binary products are functorial in each argument. *)
+
+(* TODO: jdchristensen: Another approach to handling functoriality on the right is to first prove that products are symmetric. Then functoriality on the right follows from functoriality on the left... *)
 Global Instance is0functor_cat_prod_l {A : Type}
   `{HasBinaryProducts A} y
   : Is0Functor (fun x => cat_prod x y).
