@@ -16,7 +16,7 @@ Global Instance O_eq_Tr (n : trunc_index)
 Proof.
   split; intros A A_inO.
   - intros x y; exact _.
-  - exact _.
+  - rapply istrunc_S.
 Defined.
 
 (** It follows that [Tr n <<< Tr n.+1].  However, it is easier to prove this directly than to go through separatedness. *)

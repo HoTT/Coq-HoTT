@@ -41,10 +41,11 @@ Lemma istrunc_extension_along_conn `{Univalence} {m n : trunc_index}
 Proof.
   revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
   (* m = –2 *)
-  - exists (extension_conn_map_elim n f P d).
+  - apply (Build_Contr _ (extension_conn_map_elim n f P d)).
     intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
-  - intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
+  - apply istrunc_S.
+    intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
   (* magically infers: paths in extensions = extensions into paths, which by induction is m'-truncated. *)
 Defined.
 
@@ -175,7 +176,7 @@ Defined.
 Global Instance is0connected_component {X : Type} (x : X)
   : IsConnected 0 { z : X & merely (z = x) }.
 Proof.
-  exists (tr (x; tr idpath)).
+  apply (Build_Contr _ (tr (x; tr idpath))).
   rapply Trunc_ind; intros [Z p].
   strip_truncations.
   apply (ap tr).

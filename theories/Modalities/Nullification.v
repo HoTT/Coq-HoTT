@@ -56,11 +56,11 @@ Proof.
       apply ooextendable_over_unit; intros c.
       refine (ooextendable_postcompose@{a a i i i i i i i i}
                 (fun (_:Unit) => B (c tt)) _ _
-                (fun u => transport B (ap c (path_unit@{a} tt u))) _).
+                (fun u => transport B (ap@{Set _} c (path_unit tt u))) _).
       refine (ooextendable_islocal _ i).
     + reflexivity.
     + apply inO_paths@{i i}.
-  Defined.
+Defined.
 
 (** And here is the "real" definition of the notation [IsNull]. *)
 Notation IsNull f := (In (Nul f)).

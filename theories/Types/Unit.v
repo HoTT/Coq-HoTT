@@ -4,6 +4,8 @@
 Require Import Basics.Overture Basics.Equivalences.
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
+
 Generalizable Variables A.
 
 (** ** Eta conversion *)
@@ -113,5 +115,5 @@ Definition equiv_contr_unit `{Contr A} : A <~> Unit
 Global Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
   := contr_equiv' Unit f^-1%equiv.
 
-(** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when this is not annotated. If we ever turn on [Universe Minimization ToSet], then we could get rid of this and remove some imports of this file. *)
-Definition const_tt@{u} (A : Type@{u}) := @const@{Set u} A Unit tt.
+(** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when [const tt] is used in a context that doesn't have [Universe Minimization ToSet] as this file does. If we ever set that globally, then we could get rid of this and remove some imports of this file. *)
+Definition const_tt (A : Type) := @const A Unit tt.

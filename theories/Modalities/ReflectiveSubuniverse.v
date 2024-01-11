@@ -68,11 +68,11 @@ Definition Type_@{i j} (O : Subuniverse@{i}) : Type@{j}
 Coercion TypeO_pr1 O (T : Type_ O) := @pr1 Type (In O) T.
 
 (** The second component of [TypeO] is unique.  *)
-Definition path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
+Definition path_TypeO@{i j} {fs : Funext} O (T T' : Type_@{i j} O) (p : T.1 = T'.1)
   : T = T'
   := path_sigma_hprop@{j i j} T T' p.
 
-Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_ O)
+Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_@{i j} O)
   : (paths@{j} T.1 T'.1) <~> (T = T')
   := equiv_path_sigma_hprop@{j i j} T T'.
 
@@ -702,7 +702,7 @@ Section Reflective_Subuniverse.
     Global Instance contr_typeof_O_unit `{Univalence} (A : Type)
     : Contr (typeof_to_O A).
     Proof.
-      exists (O A ; (to O A ; (_ , _))).
+      apply (Build_Contr _ (O A ; (to O A ; (_ , _)))).
       intros [OA [Ou [? ?]]].
       pose (f := O_rec Ou : O A -> OA).
       pose (g := (O_functor Ou)^-1 o to O OA : (OA -> O A)).
@@ -1049,8 +1049,7 @@ Section Reflective_Subuniverse.
       generalize dependent A; simple_induction n n IH; intros A ?.
       - (** We have to be slightly clever here: the actual definition of [Contr] involves a sigma, which [O] is not generally closed under, but fortunately we have [equiv_contr_inhabited_allpath]. *)
         refine (inO_equiv_inO _ equiv_contr_inhabited_allpath^-1).
-      - change (In O (forall x y:A, IsTrunc n (x=y))).
-        exact _.
+      - refine (inO_equiv_inO _ (equiv_istrunc_unfold n.+1 A)^-1).
     Defined.
 
     (** ** Coproducts *)
@@ -1373,7 +1372,7 @@ Section ConnectedTypes.
   : NullHomotopy (to O A) -> IsConnected O A.
   Proof.
     intros nh.
-    exists (nh .1).
+    apply (Build_Contr _ (nh .1)).
     rapply O_indpaths.
     intros x; symmetry; apply (nh .2).
   Defined.

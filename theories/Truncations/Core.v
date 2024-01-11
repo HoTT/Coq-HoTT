@@ -58,14 +58,15 @@ Definition Trunc_rec_tr n {A : Type}
 
 Definition Tr (n : trunc_index) : Modality.
 Proof.
-  srapply (Build_Modality (IsTrunc n)).
-  - intros A B ? f ?; apply (istrunc_isequiv_istrunc A f).
+  srapply (Build_Modality (fun A => IsTrunc n A)); cbn.
+  - intros A B ? f ?; rapply (istrunc_isequiv_istrunc A f).
   - exact (Trunc n).
   - intros; apply istrunc_truncation.
   - intros A; apply tr.
   - intros A B ? f oa; cbn in *.
     exact (Trunc_ind B f oa).
   - intros; reflexivity.
+  - exact (@istrunc_paths' n).
 Defined.
 
 (** We don't usually declare modalities as coercions, but this particular one is convenient so that lemmas about (for instance) connected maps can be applied to truncation modalities without the user/reader needing to be (particularly) aware of the general notion of modality. *)
@@ -244,7 +245,7 @@ Proof.
   rapply (Trunc_functor _ (X:= (hfiber (g o f) c))).
   - intros [a p].
     exact (f a; p).
-  - apply isconn.
+  - apply center, isconn.
 Defined.
 
 (** Retractions are surjective. *)
@@ -269,7 +270,8 @@ Definition isembedding_precompose_surjection_hset `{Funext} {X Y Z : Type}
   `{IsHSet X} (f : Y -> Z) `{IsSurjection f}
   : IsEmbedding (fun phi : Z -> X => phi o f).
 Proof.
-  intros phi g0 g1; cbn.
+  intros phi; apply istrunc_S.
+  intros g0 g1; cbn.
   rapply contr_inhabited_hprop.
   apply path_sigma_hprop, equiv_path_arrow.
   rapply conn_map_elim; intro y.

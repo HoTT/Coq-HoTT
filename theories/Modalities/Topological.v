@@ -129,7 +129,7 @@ Proof.
           rapply (isconnected_acc_ngen (Nul D) (inr (a;(b,x)))). }
         pose (p := conn_map_elim (Nul D) (unit_name b)
                                  (fun u => f b = f u) (fun _ => 1)).
-        exists (f b ; p); intros [x q].
+        apply (Build_Contr _ (f b ; p)); intros [x q].
         refine (path_sigma' _ (q b)^ _); apply path_forall.
         refine (conn_map_elim (Nul D) (unit_name b) _ _); intros [].
         rewrite transport_forall_constant, transport_paths_l, inv_V.

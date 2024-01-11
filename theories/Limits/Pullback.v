@@ -324,7 +324,7 @@ Proof.
   srapply equiv_adjointify.
   - intros [p q].
     refine (p; q; _).
-    apply (istrunc_sq (-2)).
+    apply (@center _ (istrunc_sq (-2))).
   - intros [p [q _]].
     exact (p, q).
   - intros [p [q ?]].
@@ -333,7 +333,7 @@ Proof.
     refine (transport_sigma' _ _ @ _).
     srapply path_sigma'.
     1: reflexivity.
-    apply (istrunc_sq (-2)).
+    apply path_ishprop.
   - reflexivity.
 Defined.
 
