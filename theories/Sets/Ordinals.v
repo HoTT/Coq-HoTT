@@ -1,6 +1,6 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
-From HoTT Require Import HIT.quotient.
+From HoTT Require Import Colimits.Quotient.
 
 (** This file contains a definition of ordinals and some fundamental results,
     roughly following the presentation in the HoTT book. *)
@@ -806,7 +806,7 @@ Qed.
 (** * Ordinal limit *)
 
 Definition image@{i j} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
-  := quotient (fun a a' : A => f a = f a').
+  := Quotient (fun a a' : A => f a = f a').
 
 Definition factor1 {A} {B : HSet} (f : A -> B)
   : A -> image f
@@ -818,7 +818,7 @@ Lemma image_ind_prop {A} {B : HSet} (f : A -> B)
     -> forall x : image f, P x.
 Proof.
   intros step.
-  srefine (quotient_ind_prop _ _ _); intros a; cbn.
+  srefine (Quotient_ind_hprop _ _ _); intros a; cbn.
   apply step.
 Qed.
 
@@ -826,21 +826,20 @@ Definition image_rec {A} {B : HSet} (f : A -> B)
       {C : HSet} (step : A -> C)
   : (forall a a', f a = f a' -> step a = step a')
     -> image f -> C
-  := quotient_rec _ step.
-
+  := Quotient_rec _ _ step.
 
 
 Definition factor2 {A} {B : HSet} (f : A -> B)
   : image f -> B
-  := quotient_rec _ f (fun a a' fa_fa' => fa_fa').
+  := Quotient_rec _ _ f (fun a a' fa_fa' => fa_fa').
 
 Global Instance isinjective_factor2 `{Funext} {A} {B : HSet} (f : A -> B)
   : IsInjective (factor2 f).
 Proof.
   unfold IsInjective, image.
-  refine (quotient_ind_prop _ _ _); intros x; cbn.
-  refine (quotient_ind_prop _ _ _); intros y; cbn.
-  rapply related_classes_eq.
+  refine (Quotient_ind_hprop _ _ _); intros x; cbn.
+  refine (Quotient_ind_hprop _ _ _); intros y; cbn.
+  rapply qglue.
 Qed.
 
 
@@ -862,7 +861,7 @@ Proof.
     + rapply image_ind_prop; intros a. cbn.
       intros B B_fa. apply tr.
       exists (factor1 f (a.1; out (bound B_fa))). cbn.
-      unfold lt, relation, f; cbn.
+      unfold lt, relation, f; simpl.
       assert (↓(out (bound B_fa)) = B) as ->. {
         rewrite (path_initial_segment_simulation out).
         symmetry. apply bound_property.
@@ -893,7 +892,7 @@ Proof.
     intros a_u. apply equiv_resize_hprop in a_u. cbn in a_u.
     apply tr. exists (out (bound a_u)). split.
     + apply initial_segment_property.
-    + apply (injective (factor2 _)). cbn.
+    + apply (injective (factor2 _)); simpl.
       rewrite (path_initial_segment_simulation out).
       symmetry. apply bound_property.
 Qed.
