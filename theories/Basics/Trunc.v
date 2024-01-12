@@ -329,7 +329,7 @@ Definition istrunc_hset {n} {A} `{IsHSet A}
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).  This is not an [Instance] because it causes infinite loops. *)
 Definition istrunc_isequiv_istrunc A {B} (f : A -> B)
-  `{H : IsTrunc n A} `{IsEquiv A B f}
+  `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.

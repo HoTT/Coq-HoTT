@@ -107,7 +107,7 @@ Section TruncType.
 
   Global Instance isset_HProp : IsHSet HProp := _.
 
-  Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 (sig (fun A => IsTrunc n A)) | 0.
+  Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
     apply (istrunc_equiv_istrunc _ issig_trunctype^-1).

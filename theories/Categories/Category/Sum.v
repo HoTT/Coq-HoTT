@@ -1,6 +1,5 @@
 (** * The coproduct of categories *)
 Require Export Category.Core.
-Require Import Types.Empty.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -53,7 +52,7 @@ Proof.
             _
             _);
   abstract (
-      repeat (simpl || intros [] || intro);
+      repeat (simpl || apply istrunc_S || intros [] || intro);
       auto with morphism;
       typeclasses eauto
     ).
