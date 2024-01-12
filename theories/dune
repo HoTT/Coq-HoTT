@@ -10,6 +10,3 @@
  (modules :standard)
  (flags -noinit -indices-matter -color on)
  (coqdoc_flags :standard --interpolate --utf8 --no-externals --parse-comments))
-
-; TODO: Tests
-; Prob need to move tests into tests folder

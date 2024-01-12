@@ -67,16 +67,6 @@ Proof.
     apply cat_idl_strong.
 Defined.
 
-(* Opposites are (almost) definitionally involutive. You can test this by uncommenting the stuff below. *)
-
-(*
-Definition test1 A `{Is01Cat A} : A = (A^op)^op := 1.
-Definition test2 A `{x : Is01Cat A} : x = is01cat_op (A^op) := 1.
-Definition test3 A `{x : Is2Graph A} : x = is2graph_op (A^op) := 1.
-(** Doesn't work *)
-Definition test4 A `{x : Is1Cat A} : x = is1cat_op (A^op) := 1.
-*)
-
 (** Opposite groupoids *)
 
 Global Instance is0gpd_op A `{Is0Gpd A} : Is0Gpd (A^op).
