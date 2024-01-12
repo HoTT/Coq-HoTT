@@ -81,8 +81,8 @@ Proof.
   - split; [ exact (fst f) | exact (snd f) ].
   - split; exact _.
   - intros [fe1 fe2]; split.
-    + exact (Build_CatEquiv (fst f)).
-    + exact (Build_CatEquiv (snd f)).
+    + by rapply (Build_CatEquiv (fst f)).
+    + by rapply (Build_CatEquiv (snd f)).
   - intros [fe1 fe2]; cbn; split; apply cate_buildequiv_fun.
   - split; [ exact ((fst f)^-1$) | exact ((snd f)^-1$) ].
   - split; apply cate_issect.

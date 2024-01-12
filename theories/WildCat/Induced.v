@@ -78,9 +78,9 @@ Section Induced_category.
   Proof.
     srapply Build_HasEquivs; intros a b; cbn.
     + exact (f a $<~> f b).
-    + apply CatIsEquiv'.
+    + apply CatIsEquiv.
     + apply cate_fun.
-    + apply cate_isequiv'.
+    + apply cate_isequiv.
     + apply cate_buildequiv'.
     + nrapply cate_buildequiv_fun'.
     + apply cate_inv'.
