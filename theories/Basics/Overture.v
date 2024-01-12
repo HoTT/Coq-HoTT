@@ -610,7 +610,10 @@ Proof.
 Defined.
 
 (** We add this as a coercion. *)
-#[warning="-uniform-inheritance"] Coercion istrunc_fun : IsTrunc >-> Funclass.
+(** TODO: Once Coq 8.18 is the minimum, prefix the next line with
+#[warning="-uniform-inheritance"] 
+*)
+Coercion istrunc_fun : IsTrunc >-> Funclass.
 
 (** *** Truncated relations  *)
 
