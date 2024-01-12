@@ -62,6 +62,7 @@ Ltac baut_reduce :=
 Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
 : IsTrunc n.+2 (BAut X).
 Proof.
+  apply istrunc_S.
   intros Z W.
   baut_reduce.
   exact (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _).

@@ -278,7 +278,7 @@ Section semiring_laws.
   Global Instance binnat_semiring : IsSemiRing binnat.
   Proof.
     split; try split; try split; try split; hnf; intros.
-    1, 5: exact (binnat_set x y).
+    1, 5: apply istrunc_S; intros x y; exact (binnat_set x y).
     all: apply (equiv_inj unary).
     1, 2, 3, 7: repeat rewrite <- unaryplus.
     4, 5, 6, 7: rewrite <- unarymult.

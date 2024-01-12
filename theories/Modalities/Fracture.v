@@ -162,7 +162,7 @@ Definition gluable_open_closed `{Funext} (U : HProp)
 Proof.
   intros A.
   change (Contr (U -> A) -> (U -> Contr A)); intros ? u.
-  exists (center (U -> A) u); intros a.
+  apply (Build_Contr _ (center (U -> A) u)); intros a.
   exact (ap10 (path_contr _ (fun _ => a)) u).
 Defined.
 
@@ -171,7 +171,7 @@ Definition disjoint_open_closed `{Funext} (U : HProp)
 Proof.
   intros A.
   change ((U -> Contr A) -> Contr (U -> A)); intros uc.
-  exists (fun u => let i := uc u in center A).
+  apply (Build_Contr _ (fun u => let i := uc u in center A)).
   intros f; apply path_arrow; intros u.
   pose (uc u); apply path_contr.
 Defined.

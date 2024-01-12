@@ -408,6 +408,7 @@ Qed.
 Global Instance ishset_Ordinal `{Univalence}
   : IsHSet Ordinal.
 Proof.
+  apply istrunc_S.
   intros A B.
   apply (istrunc_equiv_istrunc (Isomorphism A B)). {
     apply equiv_path_Ordinal.

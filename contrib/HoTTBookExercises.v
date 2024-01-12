@@ -686,7 +686,7 @@ Lemma Book_3_4_solution_1 `{Funext} (A : Type) : IsHProp A <-> Contr (A -> A).
 Proof.
   split.
   - intro isHProp_A.
-    exists idmap.
+    apply (Build_Contr _ idmap).
     apply path_ishprop. (* automagically, from IsHProp A *)
   - intro contr_AA.
     apply hprop_allpath; intros a1 a2.
@@ -823,7 +823,7 @@ Proof.
   {
     intros A.
     apply Book_3_4_solution_1.
-    apply Trunc_is_trunc.
+    apply istrunc_truncation.
   }
 
   (** There are no fixpoints of the fix-point free autoequivalence of 2 (called
@@ -1253,10 +1253,11 @@ Definition Book_4_6_iii (qua1 qua2 : QInv_Univalence_type) : Empty.
 Proof.
   apply (Book_4_6_ii qua1 qua2).
   refine (istrunc_succ).
-  exists (fun A => 1); intros u.
+  apply (Build_Contr _ (fun A => 1)); intros u.
   set (B := {X : Type & X = X}) in *.
   exact (allqinv_coherent qua2 B B (idmap ; (idmap ; (fun A:B => 1 , u)))).
-Defined.
+Fail Defined.
+Admitted.
 
 (* ================================================== ex:embedding-cancellable *)
 (** Exercise 4.7 *)
@@ -1470,9 +1471,9 @@ Section Book_6_9.
   Proof.
     intro X.
     pose proof (@LEM (Contr { f : X <~> X & ~(forall x, f x = x) }) _) as contrXEquiv.
-    destruct contrXEquiv as [[f H]|H].
+    destruct contrXEquiv as [C|notC].
     - (** In the case where we have exactly one autoequivalence which is not the identity, use it. *)
-      exact (f.1).
+      exact ((@center _ C).1).
     - (** In the other case, just use the identity. *)
       exact idmap.
   Defined.
@@ -1499,8 +1500,9 @@ Section Book_6_9.
   Proof.
     apply path_forall; intro b.
     unfold Book_6_9.
-    destruct (@LEM (Contr { f : Bool <~> Bool & ~(forall x, f x = x) }) _) as [[f H']|H'].
-    - pose proof (bool_map_equiv_not_idmap f b).
+    destruct (@LEM (Contr { f : Bool <~> Bool & ~(forall x, f x = x) }) _) as [C|H'].
+    - set (f := @center _ C).
+      pose proof (bool_map_equiv_not_idmap f b).
       destruct (f.1 b), b;
       match goal with
         | _ => assumption
@@ -1510,10 +1512,10 @@ Section Book_6_9.
         | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
       end.
     - refine (match H' _ with end).
-      eexists (exist (fun f : Bool <~> Bool =>
+      apply (Build_Contr _ (exist (fun f : Bool <~> Bool =>
                          ~(forall x, f x = x))
                       (Build_Equiv _ _ negb _)
-                      (fun H => false_ne_true (H true)));
+                      (fun H => false_ne_true (H true))));
         simpl.
       intro f.
       apply path_sigma_uncurried; simpl.
@@ -1564,8 +1566,8 @@ Section Book_6_9.
     intro Bad. pose proof ((happly Bad) true) as Ugly.
     assert ((solution_6_9 Bool true) = false) as Good.
     - unfold solution_6_9.
-      destruct (LEM (Contr (AllExistsOther Bool)) _) as [[f C]|C];simpl.
-      + elim (centralAllExOthBool f). reflexivity.
+      destruct (LEM (Contr (AllExistsOther Bool)) _) as [C|C];simpl.
+      + elim (centralAllExOthBool (@center _ C)). reflexivity.
       + elim (C contrAllExOthBool).
     - apply false_ne_true. rewrite (inverse Good). assumption.
   Defined.

@@ -397,9 +397,10 @@ Theorem equiv_istrunc_istrunc_loops `{Univalence} n X
 Proof.
   srapply equiv_iff_hprop.
   intro tr_loops.
-  intros x y p.
+  apply istrunc_S; intros x y.
+  apply istrunc_S; intros p.
   destruct p.
-  apply tr_loops.
+  nrapply tr_loops.
 Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)

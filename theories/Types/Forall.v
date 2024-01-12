@@ -4,6 +4,8 @@
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
                Basics.Tactics Basics.Trunc Basics.Contractible.
 
+Require Export Basics.Trunc (istrunc_forall).
+
 Local Open Scope path_scope.
 
 

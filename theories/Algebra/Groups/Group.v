@@ -151,6 +151,7 @@ Defined.
 Global Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
   : IsHSet (GroupHomomorphism G H).
 Proof.
+  apply istrunc_S.
   intros f g; apply (istrunc_equiv_istrunc _ equiv_path_grouphomomorphism).
 Defined.
 
@@ -264,6 +265,7 @@ Defined.
 Definition ishset_groupisomorphism `{F : Funext} {G H : Group}
   : IsHSet (GroupIsomorphism G H).
 Proof.
+  apply istrunc_S.
   intros f g; apply (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
 Defined.
 

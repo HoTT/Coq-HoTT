@@ -210,6 +210,7 @@ Defined.
 (** It follows that the circle is a 1-type. *)
 Global Instance istrunc_Circle `{Univalence} : IsTrunc 1 Circle.
 Proof.
+  apply istrunc_S.
   intros x y.
   assert (p := merely_path_is0connected Circle base x).
   assert (q := merely_path_is0connected Circle base y).

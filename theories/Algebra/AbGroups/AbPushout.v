@@ -1,4 +1,4 @@
-Require Import Basics Types Truncations.Core.
+Require Import Basics Types Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import WildCat HSet.
 Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
@@ -177,11 +177,11 @@ Proof.
   rapply contr_inhabited_hprop.
   (* To find a preimage of [x], we may first choose a representative [x']. *)
   assert (x' : merely (hfiber grp_quotient_map x)).
-  1: apply issurj_class_of.
+  1: apply center, issurj_class_of.
   strip_truncations; destruct x' as [[b c] p].
   (* Now [x] = [b + c] in the quotient. We find a preimage of [a]. *)
   assert (a : merely (hfiber f b)).
-  1: apply S.
+  1: apply center, S.
   strip_truncations; destruct a as [a q].
   refine (tr (g a + c; _)).
   refine (grp_homo_op _ _ _ @ _).

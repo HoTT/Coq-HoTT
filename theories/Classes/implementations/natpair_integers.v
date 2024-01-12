@@ -1,5 +1,5 @@
 Require Import HoTT.HIT.quotient
-  HoTT.TruncType.
+  HoTT.TruncType HoTT.Basics.Trunc.
 Require Import
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
@@ -349,8 +349,8 @@ Definition Z_ind3@{i j} (P : Z -> Z -> Z -> Type@{i})
 Proof.
 apply (@Z_ind (fun x => forall y z, _));intros x.
 2:apply (Z_ind2@{i j} _);auto.
-apply (@Forall.istrunc_forall@{UN j j} _).
-intros. apply Forall.istrunc_forall@{UN i j}.
+apply (@istrunc_forall@{UN j j} _).
+intros. apply istrunc_forall@{UN i j}.
 Defined.
 
 Definition Z_rec@{i} {T : Type@{i} } {sT : IsHSet T}

@@ -83,7 +83,7 @@ Proof.
       pose (X_inO u).
       apply ooextendable_contr; exact _.
     + intros ext u.
-      exists ((fst (ext u 1%nat) Empty_rec).1 tt); intros x.
+      apply (Build_Contr _ ((fst (ext u 1%nat) Empty_rec).1 tt)); intros x.
       unfold const in ext.
       exact ((fst (snd (ext u 2) (fst (ext u 1%nat) Empty_rec).1
                        (fun _ => x)) (Empty_ind _)).1 tt).

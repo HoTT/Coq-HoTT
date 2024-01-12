@@ -150,7 +150,7 @@ End Eliminators.
 Global Instance isconnected_classifyingspace {G : Group}
   : IsConnected 0 (ClassifyingSpace G).
 Proof.
-  exists (tr bbase).
+  apply (Build_Contr _ (tr bbase)).
   srapply Trunc_ind.
   srapply ClassifyingSpace_ind_hprop; reflexivity.
 Defined.

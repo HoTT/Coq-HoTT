@@ -26,7 +26,7 @@ Class IsInitialCategory (C : PreCategory)
 
 Global Instance trunc_initial_category `{IsInitialCategory C}
 : IsHProp C
-  := fun x y => initial_category_ind _ x.
+  := istrunc_S _ (fun x y => initial_category_ind _ x).
 Global Instance trunc_initial_category_mor `{IsInitialCategory C} x y
 : Contr (morphism C x y)
   := initial_category_ind _ x.

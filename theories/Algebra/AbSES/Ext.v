@@ -123,7 +123,7 @@ Global Instance contr_abext_projective `{Univalence}
   (P : AbGroup) `{IsAbProjective P} {A : AbGroup}
   : Contr (Ext P A).
 Proof.
-  exists (point _); intro E.
+  apply (Build_Contr _ (point _)); intro E.
   strip_truncations.
   symmetry; by apply abext_trivial_projective.
 Defined.

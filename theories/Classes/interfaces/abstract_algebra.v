@@ -411,7 +411,7 @@ Definition issig_issemigroup x y : _ <~> @IsSemiGroup x y := ltac:(issig).
 Global Instance ishprop_issemigroup `{Funext}
   : forall x y, IsHProp (@IsSemiGroup x y).
 Proof.
-  intros x y a b.
+  intros x y; apply istrunc_S; intros a b.
   rewrite <- (eisretr (issig_issemigroup x y) a).
   rewrite <- (eisretr (issig_issemigroup x y) b).
   set (a' := (issig_issemigroup x y)^-1 a).
@@ -436,6 +436,7 @@ Definition issig_ismonoid x y z : _ <~> @IsMonoid x y z := ltac:(issig).
 
 Global Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z).
 Proof.
+  apply istrunc_S.
   intros a b.
   rewrite <- (eisretr (issig_ismonoid x y z) a).
   rewrite <- (eisretr (issig_ismonoid x y z) b).
@@ -470,6 +471,7 @@ Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).
 
 Global Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z).
 Proof.
+  apply istrunc_S.
   intros a b.
   rewrite <- (eisretr (issig_isgroup w x y z) a).
   rewrite <- (eisretr (issig_isgroup w x y z) b).

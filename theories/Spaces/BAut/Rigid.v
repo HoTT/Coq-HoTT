@@ -17,7 +17,7 @@ Class IsRigid (A : Type) :=
 Global Instance contr_aut_rigid `{Funext} (A : Type) `{IsRigid A}
   : Contr (A <~> A).
 Proof.
-  exists equiv_idmap.
+  apply (Build_Contr _ equiv_idmap).
   intros f; apply path_equiv, path_arrow, path_aut_rigid.
 Defined.
 
@@ -28,6 +28,7 @@ Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
 Proof.
   refine (contr_change_center (point (BAut A))).
   refine (contr_trunc_conn (Tr 0)).
+  apply istrunc_S.
   intros Z W; baut_reduce.
   refine (istrunc_equiv_istrunc (n := -1) (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).

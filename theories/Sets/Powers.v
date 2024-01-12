@@ -27,18 +27,19 @@ Definition power_iterated_shift X n
   : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
   := (nat_iter_succ_r _ _ _)^.
 
-Global Instance hset_power {UA : Univalence} (X : HSet)
+Global Instance hset_power {UA : Univalence} (X : Type) `{IsHSet X}
   : IsHSet (X -> HProp).
 Proof.
+  apply istrunc_S.
   intros p q. apply hprop_allpath. intros H H'.
   destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].
   rewrite <- (Hfg H), <- (Hfg H'). apply ap. apply path_forall.
-  intros x. apply isset_HProp.
+  intros x. apply path_ishprop.
 Qed.
 
 Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n
   : IsHSet (power_iterated X n)
-  := nat_iter_invariant _ _ _ _ _ _.
+  := nat_iter_invariant n power_type (fun A => IsHSet A) hset_power X (trunctype_istrunc X).
 
 Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
   : Injection X (power_iterated X n).

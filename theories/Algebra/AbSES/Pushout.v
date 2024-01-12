@@ -30,7 +30,7 @@ Proof.
       rapply contr_inhabited_hprop.
       (** Pick a preimage under the quotient map. *)
       assert (bc : merely (hfiber grp_quotient_map bc')).
-      1: apply issurj_class_of.
+      1: apply center, issurj_class_of.
       strip_truncations.
       destruct bc as [[b c] q].
       (** The E-component of the preimage is in the kernel of [projection E]. *)

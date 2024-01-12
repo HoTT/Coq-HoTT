@@ -111,13 +111,13 @@ Section UniversalMorphism.
              A
              p
              (fun A' p' =>
-                {| center := (m A' p'; H A' p');
-                   contr m' := path_sigma
+                Build_Contr _ (m A' p'; H A' p')
+                              (fun m' => path_sigma
                                  _
                                  (m A' p'; H A' p')
                                  m'
                                  (H' A' p' m'.1 m'.2)
-                                 (center _) |}).
+                                 (center _))).
 
       (** Projections from nested sigmas are currently rather slow.  We should just be able to do
 
@@ -237,15 +237,15 @@ Section UniversalMorphism.
                  (Y : D) (f : morphism C X (U Y))
       : Contr { m : morphism D (IsInitialMorphism_object M) Y
               | U _1 m o IsInitialMorphism_morphism M = f }
-        := {| center := (IsInitialMorphism_property_morphism M Y f;
-                         IsInitialMorphism_property_morphism_property M Y f);
-              contr m' := path_sigma
+        := Build_Contr _ (IsInitialMorphism_property_morphism M Y f;
+                         IsInitialMorphism_property_morphism_property M Y f)
+              (fun m' => path_sigma
                             _
                             (IsInitialMorphism_property_morphism M Y f;
                              IsInitialMorphism_property_morphism_property M Y f)
                             m'
                             (@IsInitialMorphism_property_morphism_unique M Y f m'.1 m'.2)
-                            (center _) |}.
+                            (center _)).
     End EliminationAbstractionBarrier.
 
     Global Arguments IsInitialMorphism_object : simpl never.
