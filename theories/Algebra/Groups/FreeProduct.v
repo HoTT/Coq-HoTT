@@ -4,6 +4,7 @@ Require Import Spaces.List.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.Groups.Group.
+Require Import WildCat.
 
 Local Open Scope list_scope.
 Local Open Scope mc_scope.
@@ -679,6 +680,8 @@ Section FreeProduct.
 
 End FreeProduct.
 
+Arguments amal_eta {G H K f g} x.
+
 Definition FreeProduct (G H : Group) : Group
   := AmalgamatedFreeProduct grp_trivial G H (grp_trivial_rec _) (grp_trivial_rec _).
 
@@ -708,4 +711,32 @@ Proof.
   intros []; apply contr_inhab_prop.
   apply tr.
   refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+Defined.
+
+(** The freeproduct is the coproduct in the category of groups. *)
+Global Instance hasbinarycoproducts : HasBinaryCoproducts Group.
+Proof.
+  snrapply Build_HasBinaryCoproducts.
+  intros G H.
+  snrapply Build_BinaryCoproduct.
+  - exact (FreeProduct G H).
+  - exact freeproduct_inl.
+  - exact freeproduct_inr.
+  - exact (FreeProduct_rec G H).
+  - intros Z f g x; simpl.
+    rapply right_identity.
+  - intros Z f g x; simpl.
+    rapply right_identity.
+  - intros Z f g p q.
+    srapply amal_type_ind_hprop; simpl.
+    intros w.
+    induction w as [|gh].
+    1: exact (grp_homo_unit _ @ (grp_homo_unit _)^).
+    Local Notation "[ x ]" := (cons x nil).
+    change (f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)).
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+    f_ap; clear IHw w.
+    destruct gh as [g' | h].
+    + exact (p g').
+    + exact (q h).
 Defined.

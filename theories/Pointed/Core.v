@@ -627,6 +627,38 @@ Proof.
   + intros. reflexivity.
 Defined.
 
+(** pType has binary products *)
+Global Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
+Proof.
+  snrapply Build_HasBinaryProducts.
+  intros X Y.
+  snrapply Build_BinaryProduct.
+  - exact (X * Y).
+  - exact pfst.
+  - exact psnd.
+  - intros Z f g.
+    snrapply Build_pMap.
+    1: exact (fun w => (f w, g w)).
+    apply path_prod'; cbn; apply point_eq.
+  - intros Z f g.
+    snrapply Build_pHomotopy.
+    1: reflexivity.
+    by pelim f g.
+  - intros Z f g.
+    snrapply Build_pHomotopy.
+    1: reflexivity.
+    by pelim f g.
+  - intros Z f g p q.
+    simpl.
+    snrapply Build_pHomotopy.
+    { intros a.
+      apply path_prod'; cbn.
+      - exact (p a).
+      - exact (q a). }
+    simpl.
+    by pelim p q f g.
+Defined.
+
 (** Some higher homotopies *)
 
 (** Horizontal composition of homotopies. *)
