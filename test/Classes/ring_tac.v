@@ -1,9 +1,9 @@
-Require Import
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.implementations.peano_naturals
-  HoTT.Classes.orders.sum
-  HoTT.Classes.tactics.ring_tac
-  HoTT.Classes.tactics.ring_quote.
+From HoTT Require Import
+  Classes.interfaces.abstract_algebra
+  Classes.implementations.peano_naturals
+  Classes.orders.sum
+  Classes.tactics.ring_tac
+  Classes.tactics.ring_quote.
 
 Import Quoting.Instances.
 Generalizable Variables R.
