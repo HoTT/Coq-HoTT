@@ -1,11 +1,11 @@
 (** This file proves the third isomorphism theorem,
     [isomorphic_third_isomorphism]. *)
 Require Import
-  HoTT.HIT.quotient
-  HoTT.Classes.interfaces.canonical_names
-  HoTT.Classes.theory.ua_quotient_algebra
-  HoTT.Classes.theory.ua_isomorphic
-  HoTT.Classes.theory.ua_first_isomorphism.
+  Colimits.Quotient
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_quotient_algebra
+  Classes.theory.ua_isomorphic
+  Classes.theory.ua_first_isomorphism.
 
 Import algebra_notations quotient_algebra_notations isomorphic_notations.
 
@@ -29,16 +29,16 @@ Section cong_quotient.
     : EquivRel (cong_quotient subrel s).
   Proof.
     constructor.
-    - refine (quotient_ind_prop (Ψ s) _ _). intros x y z P Q.
+    - refine (Quotient_ind_hprop (Ψ s) _ _). intros x y z P Q.
       apply subrel.
       by transitivity x.
-    - refine (quotient_ind_prop (Ψ s) _ _). intro x1.
-      refine (quotient_ind_prop (Ψ s) _ _). intros x2 C y1 y2 P Q.
+    - refine (Quotient_ind_hprop (Ψ s) _ _). intro x1.
+      refine (Quotient_ind_hprop (Ψ s) _ _). intros x2 C y1 y2 P Q.
       symmetry.
       by apply C.
-    - refine (quotient_ind_prop (Ψ s) _ _). intro x1.
-      refine (quotient_ind_prop (Ψ s) _ _). intro x2.
-      refine (quotient_ind_prop (Ψ s) _ _). intros x3 C D y1 y2 P Q.
+    - refine (Quotient_ind_hprop (Ψ s) _ _). intro x1.
+      refine (Quotient_ind_hprop (Ψ s) _ _). intro x2.
+      refine (Quotient_ind_hprop (Ψ s) _ _). intros x3 C D y1 y2 P Q.
       transitivity x2.
       + exact (C y1 x2 P (EquivRel_Reflexive x2)).
       + exact (D x2 y2 (EquivRel_Reflexive x2) Q).
@@ -54,7 +54,7 @@ Section cong_quotient.
     - constructor.
     - destruct a as [x a], b as [y b], F as [Q F].
       split.
-      + apply Q; cbn; reflexivity.
+      + apply Q; simpl; reflexivity.
       + by apply IHw.
   Qed.
 
@@ -99,11 +99,11 @@ Section third_isomorphism.
     (x y : A s) (P : Ψ s x y)
     : class_of (Φ s) x = class_of (Φ s) y.
   Proof.
-    apply related_classes_eq. exact (subrel s x y P).
+    apply qglue. exact (subrel s x y P).
   Defined.
 
   Definition def_third_surjection (s : Sort σ) : (A/Ψ) s → (A/Φ) s
-    := quotient_rec (Ψ s) (class_of (Φ s)) (third_surjecton_well_def s).
+    := Quotient_rec (Ψ s) _ (class_of (Φ s)) (third_surjecton_well_def s).
 
   Lemma oppreserving_third_surjection {w : SymbolType σ} (f : Operation A w)
     : ∀ (α : Operation (A/Φ) w) (Qα : ComputeOpQuotient A Φ f α)
@@ -111,14 +111,14 @@ Section third_isomorphism.
       OpPreserving def_third_surjection β α.
   Proof.
     induction w.
-    - refine (quotient_ind_prop (Φ t) _ _). intros α Qα.
-      refine (quotient_ind_prop (Ψ t) _ _). intros β Qβ.
-      apply related_classes_eq.
+    - refine (Quotient_ind_hprop (Φ t) _ _). intros α Qα.
+      refine (Quotient_ind_hprop (Ψ t) _ _). intros β Qβ.
+      apply qglue.
       transitivity f.
-      + apply subrel. apply (classes_eq_related (Ψ t)). exact (Qβ tt).
-      + apply (classes_eq_related (Φ t)). symmetry. exact (Qα tt).
+      + apply subrel. apply (related_quotient_paths (Ψ t)). exact (Qβ tt).
+      + apply (related_quotient_paths (Φ t)). symmetry. exact (Qα tt).
     - intros α Qα β Qβ.
-      refine (quotient_ind_prop (Ψ t) _ _).
+      refine (Quotient_ind_hprop (Ψ t) _ _).
       intro x.
       exact (IHw (f x) (α (class_of (Φ t) x)) (λ a, Qα (x,a))
                (β (class_of (Ψ t) x)) (λ a, Qβ (x,a))).
@@ -138,7 +138,7 @@ Section third_isomorphism.
     : IsSurjection (hom_third_surjection s).
   Proof.
     apply BuildIsSurjection.
-    refine (quotient_ind_prop (Φ s) _ _).
+    refine (Quotient_ind_hprop (Φ s) _ _).
     intro x.
     apply tr.
     by exists (class_of (Ψ s) x).
@@ -151,16 +151,16 @@ Section third_isomorphism.
   Proof.
     apply path_quotient_algebra_iff. intros s x y.
     split; generalize dependent y; generalize dependent x;
-           refine (quotient_ind_prop (Ψ s) _ _); intro x;
-           refine (quotient_ind_prop (Ψ s) _ _); intro y.
+           refine (Quotient_ind_hprop (Ψ s) _ _); intro x;
+           refine (Quotient_ind_hprop (Ψ s) _ _); intro y.
     - intros K x' y' Cx Cy.
       apply subrel in Cx. apply subrel in Cy.
-      apply (classes_eq_related (Φ s)) in K.
+      apply (related_quotient_paths (Φ s)) in K.
       transitivity x.
       + by symmetry.
       + by transitivity y.
     - intro T.
-      apply related_classes_eq.
+      apply qglue.
       exact (T x y (EquivRel_Reflexive x) (EquivRel_Reflexive y)).
   Defined.
 

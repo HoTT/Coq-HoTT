@@ -4,12 +4,12 @@
     identification theorem [id_first_isomorphism] follows. *)
 
 Require Import
-  HoTT.HSet
-  HoTT.HIT.quotient
-  HoTT.Classes.interfaces.canonical_names
-  HoTT.Classes.theory.ua_isomorphic
-  HoTT.Classes.theory.ua_subalgebra
-  HoTT.Classes.theory.ua_quotient_algebra.
+  HSet
+  Colimits.Quotient
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_isomorphic
+  Classes.theory.ua_subalgebra
+  Classes.theory.ua_quotient_algebra.
 
 Import
   algebra_notations
@@ -118,7 +118,7 @@ Section first_isomorphism.
   Definition def_first_isomorphism (s : Sort σ)
     : (A / cong_ker f) s → (B && in_image_hom f) s.
   Proof.
-    refine (quotient_rec (cong_ker f s) (λ x, (f s x; tr (x; idpath))) _).
+    refine (Quotient_rec (cong_ker f s) _ (λ x, (f s x; tr (x; idpath))) _).
     intros x y p.
     now apply path_sigma_hprop.
   Defined.
@@ -136,10 +136,10 @@ Section first_isomorphism.
     induction w.
     - apply path_sigma_hprop.
       generalize dependent γ.
-      refine (quotient_ind_prop (cong_ker f t) _ _). intros x G.
+      refine (Quotient_ind_hprop (cong_ker f t) _ _). intros x G.
       destruct P.
-      apply (classes_eq_related (cong_ker f t) _ _ (G tt)).
-    - refine (quotient_ind_prop (cong_ker f t) _ _). intro x.
+      apply (related_quotient_paths (cong_ker f t) _ _ (G tt)).
+    - refine (Quotient_ind_hprop (cong_ker f t) _ _). intro x.
       apply (IHw (α x) (β (f t x)) (γ (class_of _ x))).
       + exact (P x).
       + intro a. exact (G (x,a)).
@@ -164,9 +164,9 @@ Section first_isomorphism.
     : IsEmbedding (hom_first_isomorphism s).
   Proof.
     apply isembedding_isinj_hset.
-    refine (quotient_ind_prop (cong_ker f s) _ _). intro x.
-    refine (quotient_ind_prop (cong_ker f s) _ _). intros y p.
-    apply related_classes_eq.
+    refine (Quotient_ind_hprop (cong_ker f s) _ _). intro x.
+    refine (Quotient_ind_hprop (cong_ker f s) _ _). intros y p.
+    apply qglue.
     exact (p..1).
   Qed.
 
