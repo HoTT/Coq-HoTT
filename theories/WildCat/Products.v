@@ -17,13 +17,13 @@ Proof.
     + exact (pr2 $@L p).
 Defined.
 
-(* A binary product of two objects of a category is an object of the category with a pair of projections such that the induced map is an equivalence. *) 
+(* A binary product of two objects of a category is an object of the category with a pair of projections such that the induced map is an equivalence. *)
 Class BinaryProduct {A : Type} `{Is1Cat A} {x y : A} := Build_BinaryProduct' {
   cat_prod : A;
   cat_pr1 : cat_prod $-> x;
   cat_pr2 : cat_prod $-> y;
   cat_isequiv_cat_prod_corec_inv
-    :: forall z, CatIsEquiv (cat_prod_corec_inv cat_prod x y z cat_pr1 cat_pr2);  
+    :: forall z, CatIsEquiv (cat_prod_corec_inv cat_prod x y z cat_pr1 cat_pr2);
 }.
 
 Arguments BinaryProduct {A _ _ _ _} x y.
@@ -72,8 +72,8 @@ Section Lemmata.
     apply cate_cat_prod_corec.
     exact (f, g).
   Defined.
-    
-  (** Applying the first projection after a map pairing gives the first map. *) 
+
+  (** Applying the first projection after a map pairing gives the first map. *)
   Lemma cat_prod_beta_pr1 {z : A} (f : z $-> x) (g : z $-> y)
     : cat_pr1 $o cat_prod_corec f g $== f.
   Proof.
@@ -126,7 +126,7 @@ Section Lemmata.
     - intros a b c f g [r_fst r_snd].
       split; apply cat_assoc.
   Defined.
-  
+
   Definition natequiv_cat_prod_corec_inv
     : NatEquiv (yon_0gpd (cat_prod x y)) (fun z : A^op => prod_0gpd (yon_0gpd x z) (yon_0gpd y z)).
   Proof.
@@ -171,7 +171,7 @@ Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
 (** *** Symmetry of products *)
 
 Section Symmetry.
-  
+
   (** The requirement of having all binary products can be weakened further to having specific binary products, but it is not clear this is a useful generality. *)
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.
 
@@ -199,7 +199,7 @@ Section Symmetry.
     snrapply cate_adjointify.
     1,2: apply cat_prod_swap.
     all: apply cat_prod_swap_cat_prod_swap.
-  Defined. 
+  Defined.
 
 End Symmetry.
 
@@ -282,7 +282,7 @@ Proof.
     + refine (cat_prod_beta_pr1 _ _ $@ _).
       refine (_ $@ cat_assoc _ _ _).
       refine (_ $@ ((cat_prod_beta_pr1 _ _)^$ $@R _)).
-      exact (cat_prod_beta_pr1 _ _)^$.    
+      exact (cat_prod_beta_pr1 _ _)^$.
     + refine (cat_prod_beta_pr2 _ _ $@ _).
       refine (_ $@ cat_assoc _ _ _).
       refine (_ $@ ((cat_prod_beta_pr2 _ _)^$ $@R _)).
@@ -342,7 +342,7 @@ Section Associativity.
     - exact (cat_pr1 $o cat_pr2).
     - exact (fmap (fun y => cat_prod x y) cat_pr2).
   Defined.
-  
+
   Lemma cat_prod_twist_cat_prod_twist (x y z : A)
     : cat_prod_twist x y z $o cat_prod_twist y x z $== Id _.
   Proof.
