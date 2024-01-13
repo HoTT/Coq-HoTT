@@ -1,12 +1,12 @@
 (** The second isomorphism theorem [isomorphic_second_isomorphism]. *)
 
 Require Import
-  HoTT.HSet
-  HoTT.HIT.quotient
-  HoTT.Classes.interfaces.canonical_names
-  HoTT.Classes.theory.ua_isomorphic
-  HoTT.Classes.theory.ua_subalgebra
-  HoTT.Classes.theory.ua_quotient_algebra.
+  HSet
+  Colimits.Quotient
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_isomorphic
+  Classes.theory.ua_subalgebra
+  Classes.theory.ua_quotient_algebra.
 
 Import
   algebra_notations
@@ -93,12 +93,12 @@ Section is_subalgebra_class.
       exists (α; C).
       cbn in Q. destruct Q^.
       exact (EquivRel_Reflexive α).
-    - refine (quotient_ind_prop (Φ t) _ _). intro x.
+    - refine (Quotient_ind_hprop (Φ t) _ _). intro x.
       refine (Trunc_rec _).
       intros [y R].
       apply (IHw (γ (class_of (Φ t) x)) (α (i t y))).
       + intro a.
-        destruct (related_classes_eq (Φ t) R)^.
+        destruct (qglue R)^.
         apply (Q (i t y,a)).
       + apply C. exact y.2.
   Qed.
@@ -142,12 +142,12 @@ Section second_isomorphism.
 
   Definition def_second_isomorphism (s : Sort σ)
     : ((A&&P) / Ψ) s → ((A/Φ) && Q) s
-    := quotient_rec (Ψ s)
+    := Quotient_rec (Ψ s) _ 
         (λ (x : (A&&P) s),
          (class_of (Φ s) (i s x); tr (x; EquivRel_Reflexive x)))
         (λ (x y : (A&&P) s) (T : Ψ s x y),
          path_sigma_hprop (class_of (Φ s) (i s x); _)
-           (class_of (Φ s) (i s y); _) (related_classes_eq (Φ s) T)).
+           (class_of (Φ s) (i s y); _) (@qglue _ (Φ s) _ _ T)).
 
   Lemma oppreserving_second_isomorphism {w : SymbolType σ}
     (α : Operation A w) (γ : Operation (A/Φ) w)
@@ -160,8 +160,8 @@ Section second_isomorphism.
     induction w; cbn in *.
     - apply path_sigma_hprop.
       cbn. destruct (QB tt)^, (QA tt)^.
-      by apply related_classes_eq.
-    - refine (quotient_ind_prop (Ψ t) _ _). intro x.
+      by apply qglue.
+    - refine (Quotient_ind_hprop (Ψ t) _ _). intro x.
       apply (IHw (α (i t x)) (γ (class_of (Φ t) (i t x)))
               (ζ (class_of (Ψ t) x))
               (CA (class_of (Φ t) (i t x)) (tr (x; _)))
@@ -187,10 +187,10 @@ Section second_isomorphism.
     : IsEmbedding (hom_second_isomorphism s).
   Proof.
     apply isembedding_isinj_hset.
-    refine (quotient_ind_prop (Ψ s) _ _). intro x.
-    refine (quotient_ind_prop (Ψ s) _ _). intros y p.
-    apply related_classes_eq.
-    exact (classes_eq_related (Φ s) (i s x) (i s y) (p..1)).
+    refine (Quotient_ind_hprop (Ψ s) _ _). intro x.
+    refine (Quotient_ind_hprop (Ψ s) _ _). intros y p.
+    apply qglue.
+    exact (related_quotient_paths (Φ s) (i s x) (i s y) (p..1)).
   Qed.
 
   Global Instance surjection_second_isomorphism (s : Sort σ)
@@ -200,11 +200,11 @@ Section second_isomorphism.
     intros [y S].
     generalize dependent S.
     generalize dependent y.
-    refine (quotient_ind_prop (Φ s) _ _). intros y S.
+    refine (Quotient_ind_hprop (Φ s) _ _). intros y S.
     refine (Trunc_rec _ S). intros [y' S']. apply tr.
     exists (class_of _ y').
     apply path_sigma_hprop.
-    by apply related_classes_eq.
+    by apply qglue.
   Qed.
 
   Theorem is_isomorphism_second_isomorphism

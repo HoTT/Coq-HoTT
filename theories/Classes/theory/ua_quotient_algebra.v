@@ -1,11 +1,11 @@
 Require Export HoTT.Classes.interfaces.ua_congruence.
 
 Require Import
-  HoTT.HSet
-  HoTT.HIT.quotient
-  HoTT.Classes.implementations.list
-  HoTT.Classes.interfaces.canonical_names
-  HoTT.Classes.theory.ua_homomorphism.
+  HSet
+  Colimits.Quotient
+  Classes.implementations.list
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.
 
@@ -18,7 +18,7 @@ Section quotient_algebra.
     induced by [Φ]. *)
 
   Definition carriers_quotient_algebra : Carriers σ
-    := λ s, quotient (Φ s).
+    := λ s, Quotient (Φ s).
 
 (** Specialization of [quotient_ind_prop]. Suppose
     [P : FamilyProd carriers_quotient_algebra w → Type] and
@@ -35,7 +35,7 @@ Section quotient_algebra.
     := match w with
        | nil => λ P _ dclass 'tt, dclass tt
        | s :: w' => λ P _ dclass a,
-         quotient_ind_prop (Φ s) (λ a, ∀ b, P (a,b))
+         Quotient_ind_hprop (Φ s) (λ a, ∀ b, P (a,b))
            (λ a, quotient_ind_prop_family_prod
                   (λ c, P (class_of (Φ s) a, c)) (λ c, dclass (a, c)))
            (fst a) (snd a)
@@ -80,7 +80,7 @@ Section quotient_algebra.
     destruct (q _ _ (op_compatible_cons Φ s w f x P)) as [g1 P1].
     destruct (q _ _ (op_compatible_cons Φ s w f y P)) as [g2 P2].
     refine ((P1 a) @ _ @ (P2 a)^).
-    apply related_classes_eq.
+    apply qglue.
     exact (P (x,a) (y,a) (C, reflexive_for_all_2_family_prod A Φ a)).
   Defined.
 
@@ -111,7 +111,7 @@ Section quotient_algebra.
       match w return QuotOp w with
       | [:s:] => λ (f : A s) P, (class_of (Φ s) f; λ a, idpath)
       | s ::: w' => λ (f : A s → Operation A w') P,
-        (quotient_rec (Φ s)
+        (Quotient_rec (Φ s) _
           (λ (x : A s), op_qalg_cons op_quotient_algebra f P x)
           (op_quotient_algebra_well_def op_quotient_algebra s w' f P)
         ; _)
@@ -223,7 +223,7 @@ Section hom_quotient.
   Global Instance surjection_quotient
     : ∀ s, IsSurjection (hom_quotient s).
   Proof.
-    intro s. apply quotient_surjective.
+    intro s. apply issurj_class_of.
   Qed.
 End hom_quotient.
 
@@ -239,7 +239,7 @@ Proof.
   apply isequiv_surj_emb; [exact _ |].
   apply isembedding_isinj_hset.
   intros x y p.
-  by apply P, (classes_eq_related (Φ s)).
+  by apply P, (related_quotient_paths (Φ s)).
 Qed.
 
 (** This section develops the universal mapping property
@@ -262,7 +262,7 @@ Section ump_quotient_algebra.
 
     Definition def_hom_quotient_algebra_mapout
       : ∀ (s : Sort σ), (A/Φ) s → B s
-      := λ s, (quotient_ump (Φ s) (Build_HSet (B s)))^-1 (f s; R s).
+      := λ s, (equiv_quotient_ump (Φ s) (Build_HSet (B s)))^-1 (f s; R s).
 
     Lemma oppreserving_quotient_algebra_mapout {w : SymbolType σ}
       (g : Operation (A/Φ) w) (α : Operation A w) (β : Operation B w)
@@ -272,7 +272,7 @@ Section ump_quotient_algebra.
       unfold ComputeOpQuotient in G.
       induction w; cbn in *.
       - destruct (G tt)^. apply P.
-      - refine (quotient_ind_prop (Φ t) _ _). intro x.
+      - refine (Quotient_ind_hprop (Φ t) _ _). intro x.
         apply (IHw (g (class_of (Φ t) x)) (α x) (β (f t x))).
         + intro a. apply (G (x,a)).
         + apply P.
@@ -326,7 +326,7 @@ Section ump_quotient_algebra.
     exists (hom_quotient_algebra_mapin g).
     intros s x y E.
     exact (transport (λ z, g s (class_of (Φ s) x) = g s z)
-            (related_classes_eq (Φ s) E) idpath).
+            (qglue E) idpath).
   Defined.
 
 (** The universal mapping property of the quotient algebra. For each
@@ -349,7 +349,7 @@ Section ump_quotient_algebra.
     - intro G.
       apply path_hset_homomorphism.
       funext s.
-      exact (eissect (quotient_ump (Φ s) _) (G s)).
+      exact (eissect (equiv_quotient_ump (Φ s) _) (G s)).
     - intro F.
       apply path_sigma_hprop.
       by apply path_hset_homomorphism.
