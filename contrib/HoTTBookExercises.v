@@ -1209,7 +1209,7 @@ End EquivFunctorFunextType.
 
 (** Using the Kraus-Sattler space of loops rather than the version in the book, since it is simpler and avoids use of propositional truncation. *)
 Definition Book_4_6_ii
-           (qua1 qua2 : QInv_Univalence_type)
+  (qua1 qua2 : QInv_Univalence_type) (* Two, since we need them at different universe levels. *)
   : ~ IsHProp (forall A : { X : Type & X = X }, A = A).
 Proof.
   pose (fa := @QInv_Univalence_implies_Funext_type qua2).
@@ -1240,24 +1240,25 @@ Proof.
   exact (true_ne_false (ap10 r true)).
 Defined.
 
+(** Assuming qinv-univalence, every quasi-equivalence automatically satisfies one of the adjoint laws. *)
 Definition allqinv_coherent (qua : QInv_Univalence_type)
            (A B : Type) (f : qinv A B)
   : (fun x => ap f.2.1 (fst f.2.2 x)) = (fun x => snd f.2.2 (f.2.1 x)).
 Proof.
+  (* Every quasi-equivalence is the image of a path, and can therefore be assumed to be the identity equivalence, for which the claim holds immediately. *)
   revert f.
   equiv_intro (equiv_qinv_path qua A B) p.
   destruct p; cbn; reflexivity.
 Defined.
 
+(** Qinv-univalence is inconsistent. *)
 Definition Book_4_6_iii (qua1 qua2 : QInv_Univalence_type) : Empty.
 Proof.
   apply (Book_4_6_ii qua1 qua2).
-  refine (istrunc_succ).
+  nrapply istrunc_succ.
   apply (Build_Contr _ (fun A => 1)); intros u.
-  set (B := {X : Type & X = X}) in *.
-  exact (allqinv_coherent qua2 B B (idmap ; (idmap ; (fun A:B => 1 , u)))).
-Fail Defined.
-Admitted.
+  exact (allqinv_coherent qua2 _ _ (idmap; (idmap; (fun A => 1, u)))).
+Defined.
 
 (* ================================================== ex:embedding-cancellable *)
 (** Exercise 4.7 *)
