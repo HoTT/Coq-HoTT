@@ -168,6 +168,121 @@ Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
   binary_products :: forall x y : A, BinaryProduct x y;
 }.
 
+(** *** Symmetry of products *)
+
+Section Symmetry.
+
+  (** The requirement of having all binary products can be weakened further to having specific binary products, but it is not clear this is a useful generality. *)
+  Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.
+
+  Definition cat_prod_swap (x y : A) : cat_prod x y $-> cat_prod y x
+    := cat_prod_corec cat_pr2 cat_pr1.
+
+  Lemma cat_prod_swap_cat_prod_swap (x y : A)
+    : cat_prod_swap x y $o cat_prod_swap y x $== Id _.
+  Proof.
+    unfold cat_prod_swap.
+    apply cat_prod_pr_eta.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr1 _ _ $@R _ $@ _).
+      refine (cat_prod_beta_pr2 _ _ $@ _).
+      exact (cat_idr _)^$.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr2 _ _ $@R _ $@ _).
+      refine (cat_prod_beta_pr1 _ _ $@ _).
+      exact (cat_idr _)^$.
+  Defined.
+
+  Lemma cate_prod_swap (x y : A)
+    : cat_prod x y $<~> cat_prod y x.
+  Proof.
+    snrapply cate_adjointify.
+    1,2: apply cat_prod_swap.
+    all: apply cat_prod_swap_cat_prod_swap.
+  Defined. 
+
+End Symmetry.
+
+(** *** Associativity of products *)
+
+Section Associativity.
+
+  Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.
+
+  Definition cat_prod_assoc (x y z : A)
+    : cat_prod x (cat_prod y z) $-> cat_prod (cat_prod x y) z
+    := cat_prod_corec (cat_prod_corec cat_pr1 (cat_pr1 $o cat_pr2)) (cat_pr2 $o cat_pr2).
+
+  Definition cat_prod_assoc_inv (x y z : A)
+    : cat_prod (cat_prod x y) z $-> cat_prod x (cat_prod y z)
+    := cat_prod_corec (cat_pr1 $o cat_pr1) (cat_prod_corec (cat_pr2 $o cat_pr1) cat_pr2).
+
+  Lemma cat_prod_assoc_cat_prod_assoc_inv (x y z : A)
+    : cat_prod_assoc x y z $o cat_prod_assoc_inv x y z $== Id _.
+  Proof.
+    unfold cat_prod_assoc, cat_prod_assoc_inv.
+    apply cat_prod_pr_eta.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr1 _ _ $@R _ $@ _).
+      apply cat_prod_pr_eta.
+      + refine ((cat_assoc _ _ _)^$ $@ _).
+        refine (cat_prod_beta_pr1 _ _ $@R _ $@ _).
+        refine (cat_prod_beta_pr1 _ _ $@ _).
+        exact (_ $@L (cat_idr _)^$).
+      + refine ((cat_assoc _ _ _)^$ $@ _).
+        refine (cat_prod_beta_pr2 _ _ $@R _ $@ _).
+        refine (cat_assoc _ _ _ $@ _).
+        refine (_ $@L (cat_prod_beta_pr2 _ _) $@ _).
+        refine (cat_prod_beta_pr1 _ _ $@ _).
+        exact (_ $@L (cat_idr _)^$).
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr2 _ _ $@R _ $@ _).
+      refine (cat_assoc _ _ _ $@ _).
+      refine (_ $@L (cat_prod_beta_pr2 _ _) $@ _).
+      refine (cat_prod_beta_pr2 _ _ $@ _).
+      exact (cat_idr _)^$.
+  Defined.
+
+  Lemma cat_prod_assoc_inv_cat_prod_assoc (x y z : A)
+    : cat_prod_assoc_inv x y z $o cat_prod_assoc x y z $== Id _.
+  Proof.
+    unfold cat_prod_assoc, cat_prod_assoc_inv.
+    apply cat_prod_pr_eta.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr1 _ _ $@R _ $@ _).
+      refine (cat_assoc _ _ _ $@ _).
+      refine (_ $@L (cat_prod_beta_pr1 _ _) $@ _).
+      refine (cat_prod_beta_pr1 _ _ $@ _).
+      exact (cat_idr _)^$.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      refine (cat_prod_beta_pr2 _ _ $@R _ $@ _).
+      apply cat_prod_pr_eta.
+      + refine ((cat_assoc _ _ _)^$ $@ _).
+        refine (cat_prod_beta_pr1 _ _ $@R _ $@ _).
+        refine (cat_assoc _ _ _ $@ _).
+        refine (_ $@L (cat_prod_beta_pr1 _ _) $@ _).
+        refine (cat_prod_beta_pr2 _ _ $@ _).
+        exact (_ $@L (cat_idr _)^$).
+      + refine ((cat_assoc _ _ _)^$ $@ _).
+        refine (cat_prod_beta_pr2 _ _ $@R _ $@ _).
+        refine (cat_prod_beta_pr2 _ _ $@ _).
+        exact (_ $@L (cat_idr _)^$).
+  Defined.
+
+  Lemma cate_prod_assoc (x y z : A)
+    : cat_prod x (cat_prod y z) $<~> cat_prod (cat_prod x y) z.
+  Proof.
+    snrapply cate_adjointify.
+    - apply cat_prod_assoc.
+    - apply cat_prod_assoc_inv.
+    - apply cat_prod_assoc_cat_prod_assoc_inv.
+    - apply cat_prod_assoc_inv_cat_prod_assoc.
+  Defined.
+
+End Associativity.
+
+(** *** Unit of products *)
+
 (** *** Product functor *)
 
 (** Binary products are functorial in each argument. *)
