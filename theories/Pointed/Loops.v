@@ -40,6 +40,17 @@ Proof.
   reflexivity.
 Defined. 
 
+(** The connecting map associated to a pointed family. *)
+Definition connecting_map_family {X : pType} (P : pFam X)
+  : loops X ->* [P pt, dpoint P].
+Proof.
+  srapply Build_pMap.
+  - intro l.
+    apply (transport P l).
+    apply P.
+  - reflexivity.
+Defined.
+
 (** ** Functoriality of loop spaces *)
 
 (** Action on 1-cells *)
