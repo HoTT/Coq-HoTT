@@ -57,6 +57,15 @@ Definition nat_to_trunc_index@{} (n : nat) : trunc_index
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
+Definition trunc_index_inc'_0n (n : nat)
+  : trunc_index_inc' 0%nat n = n.
+Proof.
+  induction n as [|n p].
+  1: reflexivity.
+  refine (trunc_index_inc'_succ _ _ @ _).
+  exact (ap _ p).
+Defined.
+
 Definition int_to_trunc_index@{} (v : Decimal.int) : option trunc_index
   := match v with
      | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))

@@ -51,3 +51,19 @@ Proof.
             @ _ @ (transport_hopf_construction _ _)^).
   exact (right_identity _ @ (left_identity _)^).
 Defined.
+
+(** It follows from [hopf_retraction] and Freudenthal's theorem that [loop_susp_unit] induces an equivalence on [Pi (2n+1)] for [n]-connected H-spaces (with n >= 0). *)
+Proposition freudenthal_hspace `{Univalence}
+  {n : nat} {X : pType} `{IsConnected n X}
+  `{IsHSpace X} `{forall a, IsEquiv (a *.)}
+  : IsEquiv (fmap (pPi (n + n).+1) (loop_susp_unit X)).
+Proof.
+  nrapply isequiv_surj_emb.
+  - apply issurj_pi_connmap.
+    destruct n.
+    + by apply (conn_map_loop_susp_unit (-1)).
+    + rewrite <- trunc_index_add_nat_add.
+      by apply (conn_map_loop_susp_unit).
+  - nrapply isembedding_pi_psect.
+    apply hopf_retraction.
+Defined.
