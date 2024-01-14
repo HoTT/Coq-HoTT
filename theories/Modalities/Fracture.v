@@ -76,22 +76,23 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
                (BCf : { B : Type_ O1 & { C : Type_ O2 & C -> O2 B }})
     : fracture_unglue (fracture_glue_uncurried BCf) = BCf.
     Proof.
-      destruct BCf as [B [C f]]; simpl.
+      destruct BCf as [B [C f]].
       (** The first two components of our path will be applications of univalence.  We begin by observing that maps we will use are equivalences. *)
       assert (IsEquiv (O_rec ((to O2 B)^*' f))).
       { apply isequiv_O_rec_O_inverts.
         apply O_inverts_conn_map, conn_map_pullback'.
-        intros ob; apply isconnectedo1_ino2; exact _. }
+        intros ob; apply isconnectedo1_ino2.
+        rapply mapinO_between_inO. }
       assert (IsEquiv (O_rec (f^* (to O2 B)))).
       { apply isequiv_O_rec_O_inverts.
         apply O_inverts_conn_map, conn_map_pullback; exact _. }
       (** Now we start building the path. *)
       simple refine (path_sigma' _ _ _).
-      { apply path_TypeO; simpl.
+      { apply path_TypeO; unfold ".1", ".2".
         refine (path_universe (O_rec ((to O2 B)^*' f))). }
-      refine (transport_sigma' _ _ @ _); simpl.
+      refine (transport_sigma' _ _ @ _); unfold ".1", ".2".
       simple refine (path_sigma' _ _ _).
-      { apply path_TypeO; simpl.
+      { apply path_TypeO; unfold ".1", ".2".
         refine (path_universe (O_rec (f^* (to O2 B)))). }
       (** It remains to identify the induced function with the given [f].  We begin with some boilerplate. *)
       apply path_arrow; intros c.
@@ -125,10 +126,10 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
         refine (O_functor_homotopy O2 _ _ (O_rec_beta _) _ @ _).
         revert c; equiv_intro (O_rec (f^* (to O2 B))) x.
         refine (ap _ (eissect _ _) @ _).
-        revert x; apply O_indpaths; intros x; simpl.
-        refine (to_O_natural O2 _ x @ _); simpl.
+        revert x; apply O_indpaths; intros x.
+        refine (to_O_natural O2 _ x @ _).
         refine (_ @ ap f (O_rec_beta _ _)^).
-        destruct x as [a [b q]]; simpl; exact (q^).
+        destruct x as [a [b q]]; exact (q^).
     Qed.
 
     Definition fracture_unglue_issect `{Univalence} (A : Type)
@@ -191,8 +192,7 @@ Proof.
       refine (equiv_isequiv (@equiv_contr_contr U Unit _ _)).
     - refine (isequiv_adjointify _ (to (Op' U) A) _ _).
       + intros a; apply O_rec_beta.
-      + intros oa; revert oa; apply O_indpaths; intros a; simpl.
-        apply ap. rapply O_rec_beta. }
+      + apply O_indpaths; cbn. reflexivity. }
   apply ooextendable_contr; exact _.
 Defined.
 
