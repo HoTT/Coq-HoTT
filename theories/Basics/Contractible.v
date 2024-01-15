@@ -108,3 +108,18 @@ Proof.
   apply (Build_Contr _ a).
   intros; apply path_contr.
 Defined.
+
+(** The automatically generated induction principle for [IsTrunc_internal] produces two goals, so we define a custom induction principle for [Contr] that only produces the expected goal. *)
+Definition Contr_ind@{u v|} (A : Type@{u}) (P : Contr A -> Type@{v})
+  (H : forall (center : A) (contr : forall y, center = y), P (Build_Contr A center contr))
+  (C : Contr A)
+  : P C
+  := match C as C0 in IsTrunc n _ return
+          (match n as n0 return IsTrunc n0 _ -> Type@{v} with
+           | minus_two => fun c0 => P c0
+           | trunc_S k => fun _ => Unit
+           end C0)
+    with
+    | Build_Contr center contr => H center contr
+    | istrunc_S _ _ => tt
+    end.

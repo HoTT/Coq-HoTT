@@ -574,16 +574,7 @@ Ltac ev_equiv :=
 
 (** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
 
-(** The automatically generated induction principle for [IsTrunc_internal] produces two goals, which breaks [make_equiv], so we define a custom induction principle for [Contr] and use it below. *)
-Definition Contr_ind (A : Type) (P : Contr A -> Type)
-  (H : forall (center : A) (contr : forall y, center = y), P (Build_Contr A center contr))
-  : forall (C : Contr A), P C.
-Proof.
-  equiv_intro (equiv_istrunc_unfold minus_two A)^-1%equiv C.
-  destruct C; apply H.
-Defined.
-
-(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. *)
+(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. *)
 Ltac decomposing_intros :=
   let x := fresh in
   intros x; cbn in x;
