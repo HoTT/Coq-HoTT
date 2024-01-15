@@ -494,20 +494,17 @@ In order to achieve moderate coverage and speedy resolution, we currently follow
 - We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
 *)
 
-(** *** Contractibility *)
+(** *** Contractibility and truncation levels *)
 
-(** A space [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].  Thus an element of [contr A] is a pair whose first component is a point [x] and the second component is a pointwise retraction of [A] to [x]. *)
+(** Truncation measures how complicated a type is in terms of higher path types. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial.  More precisely, a type [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].
 
-(** We use the [Contr_internal] record so as not to pollute typeclass search; we only do truncation typeclass search on the [IsTrunc] datatype, usually.  We will define a notation [Contr] which is equivalent to [Contr_internal], but picked up by typeclass search.  However, we must make [Contr_internal] a class so that we pick up typeclasses on [center] and [contr].  However, the only typeclass rule we register is the one that turns it into a [Contr]/[IsTrunc].  Unfortunately, this means that declaring an instance like [Instance contr_foo : Contr foo := { center := bar }.] will fail with mismatched instances/contexts.  Instead, we must iota expand such definitions to get around Coq's deficiencies, and write [Instance contr_foo : Contr foo := let x := {| center := bar |} in x.] *)
-(** TODO: update comment. *)
+   The (n+1)-truncated types are those whose path types are n-truncated.
 
-(** *** Truncation levels *)
+   Thus, (-1)-truncated means "the type of paths between any two points is contractible". Such a type is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated types are truth values.  We call such types "propositions" or "h-propositions".
 
-(** Truncation measures how complicated a type is in terms of higher path spaces. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial. The (n+1)-truncated types are those whose path spaces are n-truncated.
+   Next, 0-truncated means "the type of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a type may have many points but it is discrete in the sense that all paths are trivial. We call such types "sets" or "h-sets".
 
-   Thus, (-1)-truncated means "the space of paths between any two points is contactible". Such a space is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated spaces are truth values (we call them "propositions").
-
-   Next, 0-truncated means "the space of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a space may have many points but it is discrete in the sense that all paths are trivial. We call such spaces "sets".
+   We begin by defining the type that indexes the truncation levels.
 *)
 
 Inductive trunc_index : Type0 :=
@@ -533,12 +530,9 @@ Notation "n .+4" := (n.+1.+3)%trunc : trunc_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
 Local Open Scope trunc_scope.
 
-(** Further notation for truncation levels is introducted in Trunc.v. *)
+(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inherence works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
 
-(** n-truncatedness is defined by recursion on [n].  We could simply define [IsTrunc] as a fixpoint and an [Existing Class], but we want to also declare [IsTrunc] to be [simpl nomatch], so that when we say [simpl] or [cbn], [IsTrunc n.+1 A] doesn't get unfolded to [forall x y:A, IsTrunc n (x = y)].  But we also want to be able to use this equality, e.g. by proving [IsTrunc n.+1 A] starting with [intros x y], and if [IsTrunc] is a fixpoint declared as [simpl nomatch] then that doesn't work, because [intros] uses [hnf] to expose a [forall] and [hnf] respects [simpl nomatch] on fixpoints.  But we can make it work if we define the fixpoint separately as [IsTrunc_internal] and then take the class [IsTrunc] to be a definitional wrapper around it, since [hnf] is willing to unfold non-fixpoints even if they are defined as [simpl never].  This behavior of [hnf] is arguably questionable (see https://github.com/coq/coq/issues/11619), but it is useful for us here. *)
-(** TODO: update comment. *)
-
-Cumulative Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
+Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
 | Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two
 | istrunc_S : forall {n:trunc_index}, (forall x y:A, IsTrunc_internal (x = y) n) -> IsTrunc_internal A (trunc_S n).
 
