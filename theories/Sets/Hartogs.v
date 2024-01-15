@@ -31,7 +31,7 @@ Section Hartogs_Number.
 
   Definition hartogs_number' : Ordinal.
   Proof.
-    set (carrier := {B : Ordinal & card B <= card A}).
+    set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
 
     exists carrier relation. srapply (isordinal_simulation pr1).
@@ -270,11 +270,6 @@ Section Hartogs_Number.
     exists g. intros a a'. cbn. split; apply equiv_resize_hprop.
   Qed.
 
-  Lemma test : Isomorphism hartogs_number' hartogs_number.
-    apply isomorphism_inverse.
-    apply resize_ordinal_iso.
-  Defined.
-
   Lemma hartogs_number_no_injection :
     ~ (exists f : hartogs_number -> A, IsInjective f).
   Proof.
@@ -283,11 +278,9 @@ Section Hartogs_Number.
     transparent assert (HNO : hartogs_number'). { exists hartogs_number. apply HN. }
     apply (ordinal_initial hartogs_number' HNO).
     eapply (transitive_Isomorphism hartogs_number' hartogs_number).
-    - Fail apply test.
-      apply isomorphism_inverse.
+    - apply isomorphism_inverse.
       unfold hartogs_number.
-      Fail exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).
-      admit.
+      exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).
     - assert (Isomorphism hartogs_number ↓hartogs_number) by apply isomorphism_to_initial_segment.
       eapply transitive_Isomorphism; try apply X.
       unshelve eexists.
@@ -302,6 +295,6 @@ Section Hartogs_Number.
         * intros [[a Ha] H]. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
         * intros [a Ha]. apply path_sigma_hprop. reflexivity.
       + intros [[a Ha] H1] [[b H] H2]. cbn. reflexivity.
-  Admitted.
+  Defined.
 
 End Hartogs_Number.
