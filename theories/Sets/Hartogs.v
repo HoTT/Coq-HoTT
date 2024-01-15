@@ -293,11 +293,9 @@ Section Hartogs_Number.
       unshelve eexists.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
-          -- exists a. eapply transitive_card; try apply HN.
-             Fail 2: apply HN.
-             2: admit.
-             Fail now apply le_Cardinal_lt_Ordinal.
-             admit.
+          -- exists a. transitivity (card hartogs_number).
+             ++ nrapply le_Cardinal_lt_Ordinal; apply Ha.
+             ++ apply HN.
           -- apply equiv_resize_hprop. cbn. exact Ha.
         * intros [[a Ha] H % equiv_resize_hprop]. exists a.
           apply equiv_resize_hprop. apply H.
