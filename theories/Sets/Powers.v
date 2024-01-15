@@ -27,7 +27,7 @@ Definition power_iterated_shift X n
   : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
   := (nat_iter_succ_r _ _ _)^.
 
-Global Instance hset_power {UA : Univalence} (X : Type) `{IsHSet X}
+Global Instance hset_power {UA : Univalence} (X : HSet)
   : IsHSet (X -> HProp).
 Proof.
   apply istrunc_S.
@@ -38,8 +38,12 @@ Proof.
 Qed.
 
 Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n
-  : IsHSet (power_iterated X n)
-  := nat_iter_invariant n power_type (fun A => IsHSet A) hset_power X (trunctype_istrunc X).
+  : IsHSet (power_iterated X n).
+Proof.
+  nrapply (nat_iter_invariant n power_type (fun A => IsHSet A)).
+  - intros Y HS. rapply hset_power.
+  - exact _.
+Defined.
 
 Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
   : Injection X (power_iterated X n).
