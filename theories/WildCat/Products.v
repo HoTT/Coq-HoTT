@@ -3,18 +3,11 @@ Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda Wi
 
 (** * Categories with products *)
 
-(* TODO: jdchristensen: There's a more general result, that given any two maps A -> B and A -> C of 0-groupoids, there's a map A -> prop_0gpd B C of 0-groupoids. Then this lemma is that general result applied to is0functor_yon_0gpd of the two projections. *)
 Definition cat_prod_corec_inv {A : Type} `{Is1Cat A}
   (xy x y z : A) (pr1 : xy $-> x) (pr2 : xy $-> y)
   : yon_0gpd xy z $-> prod_0gpd (yon_0gpd x z) (yon_0gpd y z).
 Proof.
-  snrapply Build_Morphism_0Gpd.
-  - simpl; intros f.
-    exact (pr1 $o f, pr2 $o f).
-  - snrapply Build_Is0Functor.
-    simpl; intros f g p; split.
-    + exact (pr1 $@L p).
-    + exact (pr2 $@L p).
+  snrapply prod_0gpd_corec; by apply (fmap (fun x => yon_0gpd x z)). 
 Defined.
 
 (* A binary product of two objects of a category is an object of the category with a pair of projections such that the induced map is an equivalence. *) 
