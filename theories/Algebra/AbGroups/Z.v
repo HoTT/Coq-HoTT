@@ -8,7 +8,11 @@ Require Import Algebra.AbGroups.AbelianGroup.
 
 Local Open Scope int_scope.
 
-Definition abgroup_Z : AbGroup.
+Section MinimizationToSet.
+
+Local Set Universe Minimization ToSet.
+
+Definition abgroup_Z@{} : AbGroup@{Set}.
 Proof.
   snrapply Build_AbGroup.
   - refine (Build_Group Int int_add 0 int_negation _); repeat split.
@@ -19,6 +23,8 @@ Proof.
     + exact int_add_negation_r.
   - exact int_add_comm.
 Defined.
+
+End MinimizationToSet.
 
 (** We can multiply by [n : Int] in any abelian group. *)
 Definition ab_mul (n : Int) {A : AbGroup} : GroupHomomorphism A A.

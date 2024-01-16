@@ -1049,10 +1049,7 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
   UN UN UN UN UN
   UN UN UN UN UN
   UN UN} Z N
-  := ltac:(first [exact Z_abs'@{Ularge Ularge Ularge Ularge Ularge
-                                Ularge Ularge}|
-                  exact Z_abs'@{Ularge Ularge Ularge Ularge Ularge
-                                Ularge}]).
+  := Z_abs'.
 
 Notation n_to_z := (naturals_to_semiring N Z).
 

@@ -1,6 +1,8 @@
 Require Import Basics.Overture Basics.Tactics Basics.Decidable
   Spaces.Nat.Core.
 
+Local Set Universe Minimization ToSet.
+
 (** * Binary Positive Integers *)
 
 (** Most of this file has been adapted from the coq standard library for positive binary integers. *)
@@ -14,7 +16,7 @@ Inductive Pos : Type0 :=
 Declare Scope positive_scope.
 Delimit Scope positive_scope with pos.
 
-(** Here are some notations that let us right binary positive integers more easily. *)
+(** Here are some notations that let us write binary positive integers more easily. *)
 Notation "1" := xH : positive_scope.
 Notation "p ~ 1" := (x1 p) : positive_scope.
 Notation "p ~ 0" := (x0 p) : positive_scope.

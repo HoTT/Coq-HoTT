@@ -9,6 +9,9 @@ Require Export Modalities.Modality.        (* [Export] since the actual definiti
 Require Import Modalities.Descent.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 
+(** This reduces universe variables in [conn_pointed_type] and [conn_point_elim], which refer to [Unit]. *)
+Local Set Universe Minimization ToSet.
+
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.
 
@@ -63,25 +66,20 @@ Defined.
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
 (** We can't make both of these [Instance]s, as that would result in infinite loops. *)
+
 Global Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
-       `{IsConnMap n _ _ (unit_name a0)}
+  `{IsConnMap n _ _ (unit_name a0)}
   : IsConnected n.+1 A | 1000.
 Proof.
   apply isconnected_conn_map_to_unit.
-  (* Coq can find [conn_map_to_unit_isconnected] and [isconnected_contr] via typeclass search, but we manually pose them to get rid of an unneeded universe variable. *)
-  pose conn_map_to_unit_isconnected@{u u}.
-  pose isconnected_contr@{u u}.
-  apply (OO_cancelR_conn_map@{u u u u} (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
+  apply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
 Defined.
 
-Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type@{u}} (a0:A)
-           `{IsConnected n.+1 A}
+Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
+  `{IsConnected n.+1 A}
   : IsConnMap n (unit_name a0).
 Proof.
-  (* Coq can find [conn_map_to_unit_isconnected] and [isconnected_contr] via typeclass search, but we manually pose them to get rid of an unneeded universe variable. *)
-  pose conn_map_to_unit_isconnected@{u u}.
-  pose isconnected_contr@{u u}.
-  rapply (OO_cancelL_conn_map@{u u u u} (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
+  rapply (OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
   apply O_lex_leq_Tr.
 Defined.
 

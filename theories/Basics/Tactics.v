@@ -6,12 +6,16 @@ Require Import Basics.Overture.
 
 (** This module implements various tactics used in the library. *)
 
-(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. It works if [n] is in the context or in the goal. *)
 Ltac simple_induction n n' IH :=
-  generalize dependent n;
+  try generalize dependent n;
   fix IH 1;
   intros [| n'];
   [ clear IH | specialize (IH n') ].
+
+Ltac simple_induction' n :=
+  let IH := fresh "IH" in
+  simple_induction n n IH.
 
 (** Debugging tactics to show the goal during evaluation. *)
 

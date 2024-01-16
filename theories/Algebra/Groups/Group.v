@@ -252,6 +252,7 @@ Definition pequiv_groupisomorphism {A B : Group}
   := fun f => Build_pEquiv _ _ f _.
 
 Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
+Coercion pequiv_groupisomorphism : GroupIsomorphism >-> pEquiv.
 
 Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
   (f g : GroupIsomorphism G H)
