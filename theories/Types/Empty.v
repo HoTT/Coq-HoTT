@@ -2,6 +2,9 @@
 (** * Theorems about the empty type *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.Trunc.
+
+Local Set Universe Minimization ToSet.
+
 Local Open Scope path_scope.
 
 (** ** Unpacking *)
@@ -12,37 +15,37 @@ Local Open Scope path_scope.
 (** ** Equivalences *)
 (** ** Universal mapping properties *)
 
-Global Instance contr_from_Empty {_ : Funext} (A : Empty -> Type) :
-  Contr (forall x:Empty, A x).
+Global Instance contr_from_Empty@{u} {_ : Funext} (A : Empty -> Type@{u})
+  : Contr@{u} (forall x:Empty, A x).
 Proof.
-  refine (Build_Contr _ (Empty_ind A) _).
-  intros f; apply path_forall; intros x; elim x.
+  refine (Build_Contr@{u} _ (Empty_ind A) _).
+  intros f; apply path_forall@{Set u u}; intros x; elim x.
 Defined.
 
 Lemma Empty_rec {T : Type} (falso: Empty) : T.
 Proof. case falso. Defined.
 
-Global Instance isequiv_empty_rec `{Funext} (A : Type)
-: IsEquiv (fun (_ : Unit) => @Empty_rec A) | 0
-  := isequiv_adjointify _
+Global Instance isequiv_empty_rec@{u} `{Funext} (A : Type@{u})
+  : IsEquiv@{Set u} (fun (_ : Unit) => @Empty_rec A) | 0
+  := isequiv_adjointify@{Set u} _
   (fun _ => tt)
-  (fun f => path_forall _ _ (fun x => Empty_rec x))
+  (fun f => path_forall@{Set u u} _ _ (fun x => Empty_rec x))
   (fun x => match x with tt => idpath end).
 
-Definition equiv_empty_rec `{Funext} (A : Type)
-  : Unit <~> (Empty -> A)
-  := (Build_Equiv _ _ (fun (_ : Unit) => @Empty_rec A) _).
+Definition equiv_empty_rec@{u} `{Funext} (A : Type@{u})
+  : Unit <~> ((Empty -> A) : Type@{u})
+  := (Build_Equiv@{Set u} _ _ (fun (_ : Unit) => @Empty_rec A) _).
 
 (** ** Behavior with respect to truncation *)
 
-Global Instance istrunc_Empty (n : trunc_index) : IsTrunc n.+1 Empty.
+Global Instance istrunc_Empty@{} (n : trunc_index) : IsTrunc n.+1 Empty.
 Proof.
   refine (@istrunc_leq (-1)%trunc n.+1 tt _ _).
   apply istrunc_S.
   intros [].
 Defined.
 
-Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
+Global Instance isequiv_all_to_empty (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
   refine (Build_IsEquiv _ _ _ 
     (Empty_ind (fun _ => T))                (* := equiv_inf *)
