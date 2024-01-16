@@ -332,7 +332,7 @@ Definition issurj_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   {C : IsConnMap n f}
   : IsConnMap (Tr (-1)) (fmap (pPi n.+1) f).
 Proof.
-  rapply conn_map_O_functor_leq.
+  rapply conn_map_O_functor_strong_leq.
   by apply issurj_iterated_loops_connmap.
 Defined.
 
