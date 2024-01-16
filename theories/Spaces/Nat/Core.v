@@ -3,6 +3,8 @@ Require Import Basics Types.
 Require Export Basics.Nat.
 Require Export HoTT.DProp.
 
+Local Set Universe Minimization ToSet.
+
 Local Unset Elimination Schemes.
 
 Scheme nat_ind := Induction for nat Sort Type.
@@ -220,10 +222,10 @@ Defined.
 #[export] Hint Resolve not_eq_S : core.
 
 (** TODO: keep or remove? *)
-Definition IsSucc (n: nat) : Type :=
+Definition IsSucc (n: nat) : Type0 :=
   match n with
-  | O => False
-  | S p => True
+  | O => Empty
+  | S p => Unit
   end.
 
 (** Zero is not the successor of a number *)
@@ -236,7 +238,7 @@ Defined.
 
 Theorem not_eq_n_Sn : forall n:nat, n <> S n.
 Proof.
-  induction n; auto.
+  simple_induction' n; auto.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
@@ -247,7 +249,7 @@ Local Definition ap011_nat := @ap011 nat nat.
 
 Lemma add_n_O : forall (n : nat), n = n + 0.
 Proof.
-  induction n; simpl; auto.
+  simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_O : core.
 
@@ -258,7 +260,7 @@ Defined.
 
 Lemma add_n_Sm : forall n m:nat, S (n + m) = n + S m.
 Proof.
-  intros n m; induction n; simpl; auto.
+  simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_Sm: core.
 
@@ -274,13 +276,13 @@ Local Definition ap011_mul := @ap011 _ _ _  mul.
 
 Lemma mul_n_O : forall n:nat, 0 = n * 0.
 Proof.
-  induction n; simpl; auto.
+  simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve mul_n_O : core.
 
 Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.
 Proof.
-  intros; induction n as [| p H]; simpl; auto.
+  intros; simple_induction n p H; simpl; auto.
   destruct H; rewrite <- add_n_Sm; apply ap.
   pattern m at 1 3; elim m; simpl; auto.
 Defined.
@@ -295,7 +297,7 @@ Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 
 (** *** Boolean equality and its properties *)
 
-Fixpoint code_nat (m n : nat) {struct m} : DHProp :=
+Fixpoint code_nat (m n : nat) {struct m} : DHProp@{Set} :=
   match m, n with
   | 0, 0 => True
   | m'.+1, n'.+1 => code_nat m' n'
@@ -341,7 +343,7 @@ Global Instance hset_nat : IsHSet nat := _.
 
 (** ** Inequality of natural numbers *)
 
-Inductive leq (n : nat) : nat -> Type0 :=
+Cumulative Inductive leq (n : nat) : nat -> Type0 :=
 | leq_n : leq n n
 | leq_S : forall m, leq n m -> leq n (S m).
 
@@ -385,7 +387,7 @@ Global Existing Instance leq_S_n' | 100.
 
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
 Proof.
-  induction n.
+  simple_induction n n IHn.
   { intro p.
     inversion p. }
   intros p.
@@ -395,7 +397,7 @@ Defined.
 (** A general form for injectivity of this constructor *)
 Definition leq_n_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_n n.
 Proof.
-  induction p.
+  destruct p.
   + assert (c : idpath = r) by apply path_ishprop.
     destruct c.
     reflexivity.
@@ -411,7 +413,7 @@ Fixpoint leq_S_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
   : p = r # leq_S n m q.
 Proof.
   revert m q r.
-  induction p.
+  destruct p.
   + intros k p r.
     destruct r.
     contradiction (not_leq_Sn_n _ p).
@@ -442,7 +444,7 @@ Defined.
 
 Global Instance leq_0_n n : 0 <= n | 10.
 Proof.
-  induction n; auto.
+  simple_induction' n; auto.
 Defined.
 
 Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
@@ -461,7 +463,7 @@ Defined.
 Global Instance decidable_leq n m : Decidable (n <= m).
 Proof.
   revert n.
-  induction m; intros n.
+  simple_induction' m; intros n.
   - destruct n.
     + left; exact _.
     + right; apply not_leq_Sn_0.
@@ -511,7 +513,7 @@ Defined.
 
 (** We define the less-than relation [lt] in terms of [leq] *)
 Definition lt n m : Type0 := leq (S n) m.
-             
+
 (** We declare it as an existing class so typeclass search is performed on its goals. *)
 Existing Class lt.
 #[export] Hint Unfold lt : core typeclass_instances.
@@ -561,7 +563,7 @@ Theorem nat_double_ind (R : nat -> nat -> Type)
   (H3 : forall n m, R n m -> R (S n) (S m))
   : forall n m:nat, R n m.
 Proof.
-  induction n; auto.
+  simple_induction' n; auto.
   destruct m; auto.
 Defined.
 
@@ -569,19 +571,19 @@ Defined.
 
 Lemma max_n_n n : max n n = n.
 Proof.
-  induction n; cbn; auto.
+  simple_induction' n; cbn; auto.
 Defined.
 #[export] Hint Resolve max_n_n : core.
 
 Lemma max_Sn_n n : max (S n) n = S n.
 Proof.
-  induction n; cbn; auto.
+  simple_induction' n; cbn; auto.
 Defined.
 #[export] Hint Resolve max_Sn_n : core.
 
 Lemma max_comm n m : max n m = max m n.
 Proof.
-  revert m; induction n; destruct m; cbn; auto.
+  revert m; simple_induction' n; destruct m; cbn; auto.
 Defined.
 
 Lemma max_0_n n : max 0 n = n.
@@ -598,7 +600,7 @@ Defined.
 
 Theorem max_l : forall n m, m <= n -> max n m = n.
 Proof.
-  intros n m; revert n; induction m; auto.
+  intros n m; revert n; simple_induction m m IHm; auto.
   intros [] p.
   1: inversion p.
   cbn; by apply ap_S, IHm, leq_S_n.
@@ -611,12 +613,12 @@ Defined.
 
 Lemma min_comm : forall n m, min n m = min m n.
 Proof.
-  induction n; destruct m; cbn; auto.
-Defined. 
+  simple_induction' n; destruct m; cbn; auto.
+Defined.
 
 Theorem min_l : forall n m : nat, n <= m -> min n m = n.
 Proof.
-  intros n m; revert m; induction n; auto.
+  simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
   cbn; by apply ap_S, IHn, leq_S_n.
@@ -638,14 +640,14 @@ Notation nat_iter n f x
 Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
   : nat_iter (S n) f x = nat_iter n f (f x).
 Proof.
-  induction n as [|n IHn]; simpl; trivial.
+  simple_induction n n IHn; simpl; trivial.
   exact (ap f IHn).
 Defined.
 
 Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
   : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
 Proof.
-  induction n as [|n IHn]; simpl; trivial.
+  simple_induction n n IHn; simpl; trivial.
   exact (ap f IHn).
 Defined.
 
@@ -653,7 +655,7 @@ Defined.
 Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
   : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
 Proof.
-  induction n as [|n IHn]; simpl; trivial.
+  simple_induction n n IHn; simpl; trivial.
   intros Hf x Hx.
   apply Hf, IHn; trivial.
 Defined.
@@ -662,14 +664,14 @@ Defined.
 
 Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
 Proof.
-  induction n; simpl.
+  simple_induction' n; simpl.
   - reflexivity.
   - apply ap; assumption.
 Defined.
 
 Definition nat_add_comm (n m : nat) : n + m = m + n.
 Proof.
-  induction n as [|n IHn]; simpl.
+  simple_induction n n IHn; simpl.
   - exact (add_n_O m).
   - transitivity (m + n).+1.
     + apply ap, IHn.
@@ -713,12 +715,12 @@ Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_0_n _).
 
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
 Proof.
-  induction m, n.
+  simple_induction' m; simple_induction' n.
   - left; reflexivity.
   - left; apply leq_0_n.
   - right; unfold lt; apply leq_1_Sn.
   - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
-    induction X as [leqmn|ltnm].
+    destruct X as [leqmn|ltnm].
     + left; apply leq_S_n'; assumption.
     + right; apply leq_S_n'; assumption.
 Defined.
