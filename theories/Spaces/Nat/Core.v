@@ -727,3 +727,19 @@ Lemma not_lt_n_0 n : ~ (n < 0).
 Proof.
   apply not_leq_Sn_0.
 Defined.
+
+(** ** Arithmetic relations between [trunc_index] and [nat]. *)
+
+Lemma trunc_index_add_nat_add (n : nat)
+  : trunc_index_add n n = n.+1 + n.+1.
+Proof.
+  induction n as [|n IH]; only 1: reflexivity.
+  refine (trunc_index_add_succ _ _ @ _).
+  refine (ap trunc_S _ @ _).
+  { refine (trunc_index_add_comm _ _ @ _).
+    refine (trunc_index_add_succ _ _ @ _).
+    exact (ap trunc_S IH). }
+  refine (_ @ ap nat_to_trunc_index _).
+  2: exact (ap _ (add_Sn_m _ _)^ @ add_n_Sm _ _).
+  reflexivity.
+Defined.

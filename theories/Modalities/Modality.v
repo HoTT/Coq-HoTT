@@ -373,6 +373,17 @@ Global Instance conn_map_to_O {O : Modality} (A : Type)
   : IsConnMap O (to O A)
   := _.
 
+(** When [O1 << O2], [O_functor O2] preserves [O1]-connected maps. *)
+Proposition conn_map_O_functor_strong_leq {O1 O2 : ReflectiveSubuniverse} (leq : O1 << O2)
+  {X Y : Type} (f : X -> Y) `{IsConnMap O1 _ _ f}
+  : IsConnMap O1 (O_functor O2 f).
+Proof.
+  rapply (cancelR_conn_map _ (to O2 _)).
+  nrapply conn_map_homotopic.
+  1: symmetry; apply to_O_natural.
+  rapply conn_map_compose.
+Defined.
+
 
 (** ** Easy modalities *)
 

@@ -1,6 +1,6 @@
-Require Import Basics Types Pointed.
+Require Import Basics Types Pointed HSet.
 Require Import Modalities.Modality.
-Require Import Truncations.Core.
+Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.AbGroups.
 Require Import WildCat.
 
@@ -101,6 +101,10 @@ Definition pi_succ n X : Pi n.+1 X $<~> Pi 1 (iterated_loops n X)
 Module PiUtf8.
   Notation "'π'" := Pi.
 End PiUtf8.
+
+Global Instance ishset_pi {n : nat} {X : pType}
+  : IsHSet (Pi n X)
+  := ltac:(destruct n; exact _).
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
 Global Instance isabgroup_pi (n : nat) (X : pType)
@@ -314,3 +318,34 @@ Definition pequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
 Definition grp_iso_pi_Tr `{Univalence} (n : nat) (X : pType)
   : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 (pTr n.+1 X))
   := grp_iso_pi_connmap n ptr.
+
+(** An [n]-connected map induces a surjection on [n+1]-fold loop spaces and [Pi (n+1)]. *)
+Definition issurj_iterated_loops_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  {C : IsConnMap n f}
+  : IsSurjection (fmap (iterated_loops (n.+1)) f).
+Proof.
+  apply isconnected_iterated_fmap_loops. cbn.
+  rewrite trunc_index_inc'_0n; assumption.
+Defined.
+
+Definition issurj_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+  {C : IsConnMap n f}
+  : IsConnMap (Tr (-1)) (fmap (pPi n.+1) f).
+Proof.
+  rapply conn_map_O_functor_strong_leq.
+  by apply issurj_iterated_loops_connmap.
+Defined.
+
+(** Pointed sections induce embeddings on homotopy groups. *)
+Proposition isembedding_pi_psect {n : nat} {X Y : pType}
+  (s : X ->* Y) (r : Y ->* X) (k : r o* s ==* pmap_idmap)
+  : IsEmbedding (fmap (pPi n) s).
+Proof.
+  apply isembedding_isinj_hset.
+  rapply (isinj_section (r:=fmap (pPi n) r)).
+  intro x.
+  lhs_V rapply (fmap_comp (pPi n) s r x).
+  lhs rapply (fmap2 (pPi n) k x).
+  exact (fmap_id (pPi n) X x).
+Defined.
+
