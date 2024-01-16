@@ -484,6 +484,16 @@ Proof.
   - exact (pfiber2_fmap_loops f).
 Defined.
 
+(** The connecting map associated to a pointed family. *)
+Definition connecting_map_family {Y : pType} (P : pFam Y)
+  : loops Y ->* [P pt, dpoint P].
+Proof.
+  srapply Build_pMap.
+  - intro l.
+    apply (transport P l).
+    apply P.
+  - reflexivity.
+Defined.
 
 (** ** Long exact sequences *)
 
