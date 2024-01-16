@@ -77,7 +77,7 @@ Section Hartogs_Number.
     set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
     exists carrier relation. snrapply (isordinal_simulation pr1).
-    1, 2, 3, 4: exact _.
+    1-4: exact _.
     - apply isinj_embedding, (mapinO_pr1 (Tr (-1))). (* Faster than [exact _.] *)
     - constructor.
       + intros a a' a_a'. exact a_a'.
