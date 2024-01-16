@@ -34,15 +34,15 @@ Fixpoint fin_to_nat {n} : Fin n -> nat
          end
      end.
 
-Global Instance decidable_fin@{u} (n : nat)
-: Decidable@{u} (Fin n).
+Global Instance decidable_fin (n : nat)
+: Decidable (Fin n).
 Proof.
   destruct n as [|n]; try exact _.
   exact (inl (inr tt)).
 Defined.
 
-Global Instance decidablepaths_fin@{u} (n : nat)
-: DecidablePaths@{u} (Fin n).
+Global Instance decidablepaths_fin@{} (n : nat)
+: DecidablePaths (Fin n).
 Proof.
   simple_induction n n IHn; simpl; exact _.
 Defined.

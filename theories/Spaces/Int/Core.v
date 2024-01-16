@@ -228,7 +228,7 @@ Definition sgn z :=
 
 (* ** Decidable paths and truncation. *)
 
-Global Instance decpaths_int : DecidablePaths@{u} Int.
+Global Instance decpaths_int : DecidablePaths Int.
 Proof.
   intros [n | | n] [m | | m].
   + destruct (dec (n = m)) as [p | q].
@@ -247,4 +247,4 @@ Proof.
 Defined.
 
 (** Since integers have decidable paths they are a hset *)
-Global Instance hset_int : IsHSet@{u} Int | 0 := _.
+Global Instance hset_int : IsHSet Int | 0 := _.
