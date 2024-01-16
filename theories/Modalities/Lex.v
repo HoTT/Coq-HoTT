@@ -192,7 +192,8 @@ Section LexModality.
   Proof.
     generalize dependent A; simple_induction n n IHn; intros A ?.
     - exact _.               (** Already proven for all modalities. *)
-    - refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
+    - apply istrunc_S.
+      refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
       refine (O_ind (fun y => IsTrunc n (to O A x = y)) _); intros y.
       refine (istrunc_equiv_istrunc _ (equiv_path_O x y)).
   Defined.

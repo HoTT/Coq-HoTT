@@ -265,6 +265,7 @@ Section AssumeStuff.
 
   Instance ishset_N@{} : IsHSet N.
   Proof.
+    apply istrunc_S.
     intros n m.
     change (IsHProp (n = m)).
     refine (istrunc_equiv_istrunc (n.1 = m.1) (equiv_path_sigma_hprop n m)).
@@ -302,7 +303,7 @@ Section AssumeStuff.
   Local Instance ishprop_graph_zero_or_succ@{} : forall n : Graph,
       IsHProp ((n = graph_zero) + { m : N & n = graph_succ m.1 }).
   Proof.
-    intros n. apply ishprop_sum@{p u p}.
+    intros n. apply ishprop_sum@{u p p}.
     - apply (@istrunc_equiv_istrunc _ _ (equiv_path_inverse _ _)),ishprop_path_graph_in_N.
       exact zero.2.
     - apply @ishprop_sigma_disjoint.
@@ -581,7 +582,7 @@ Section AssumeStuff.
 
   Instance contr_le_zero@{} : Contr {n:N & n <= zero}.
   Proof.
-    exists (exist (fun n => n <= zero) zero (N_zero_le zero)).
+    apply (Build_Contr _ (exist (fun n => n <= zero) zero (N_zero_le zero))).
     intros [n H].
     apply path_sigma_hprop.
     exact (N_le_zero n H)^.
@@ -810,7 +811,7 @@ Section AssumeStuff.
                 apply path_ishprop.
               - apply concat_1p. }
         + intros [f H].
-          exists (fun mh => Empty_rec (N_lt_zero mh.1 mh.2)).
+          apply (Build_Contr _ (fun mh => Empty_rec (N_lt_zero mh.1 mh.2))).
           intros g.
           apply path_forall; intros m.
           destruct (N_lt_zero m.1 m.2).
@@ -825,7 +826,7 @@ Section AssumeStuff.
       - apply equiv_precompose'.
         apply equiv_N_segment_succ.
       - apply equiv_functor_prod_l.
-        apply equiv_unit_rec@{x nr Set}.
+        apply equiv_unit_rec@{x nr}.
     Defined.
 
     Local Definition equiv_seg_succ@{} (n m : N) (H : m < succ n)

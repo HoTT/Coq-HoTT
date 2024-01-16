@@ -141,17 +141,7 @@ Proof.
   split; apply H.
 Defined.
 
-
-Global Instance transitive_iff
-  : Transitive iff.
-Proof.
-  intros A B C A_B B_C.
-  split.
-  - intros a. apply B_C. apply A_B. exact a.
-  - intros c. apply A_B. apply B_C. exact c.
-Qed.
-
-
+(** We state this first without using [Transitive] to allow more general universe variables. *)
 Lemma transitive_Isomorphism
   : forall A B C,
     Isomorphism A B
@@ -167,22 +157,9 @@ Proof.
   - intros gfa_gfa'. apply Hf. apply Hg. exact gfa_gfa'.
 Defined.
 
-
 Global Instance isomorphism_compose_backwards
-  : Transitive Isomorphism.
-Proof.
-  intros [A R__A] [B R__B] [C R__C] [f Hf] [g Hg].
-  exists (equiv_compose' g f).
-  intros a a'.
-  transitivity (R__B (f a) (f a')). {
-    apply Hf.
-  }
-  apply Hg.
-Qed.
-
-
-
-
+  : Transitive Isomorphism
+  := transitive_Isomorphism.
 
 Definition equiv_path_Ordinal `{Univalence} (A B : Ordinal)
   : Isomorphism A B <~> A = B.
@@ -408,6 +385,7 @@ Qed.
 Global Instance ishset_Ordinal `{Univalence}
   : IsHSet Ordinal.
 Proof.
+  apply istrunc_S.
   intros A B.
   apply (istrunc_equiv_istrunc (Isomorphism A B)). {
     apply equiv_path_Ordinal.

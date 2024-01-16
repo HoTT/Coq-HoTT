@@ -125,10 +125,11 @@ Lemma path_ap_carriers_path_algebra `{Funext} {σ} (A B : Algebra σ)
        = operations B)
   : ap carriers (path_algebra A B p q) = p.
 Proof.
+  destruct A as [A a ha], B as [B b hb]; cbn in p, q.
+  destruct p, q.
   unfold path_algebra, path_sigma_hprop, path_sigma_uncurried.
-  destruct A as [A a ha], B as [B b hb]; cbn in *.
-  destruct p, q; cbn.
-  now destruct (apD10^-1).
+  cbn -[center].
+  now destruct (center (ha = hb)).
 Defined.
 
 Arguments path_ap_carriers_path_algebra {_} {_} (A B)%Algebra_scope (p q)%path_scope.
@@ -151,7 +152,7 @@ Proof.
   unshelve eapply path_path_sigma.
   - transitivity (ap carriers p); [by destruct p |].
     transitivity (ap carriers q); [exact r | by destruct q].
-  - apply hprop_allpath. apply hset_path2.
+  - apply path_ishprop.
 Defined.
 
 Arguments path_path_algebra {_} {σ} {A B}%Algebra_scope (p q r)%path_scope.

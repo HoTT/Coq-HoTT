@@ -130,7 +130,7 @@ Defined.
 (** If Y is a set, then IsComplex is an HProp. *)
 Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   (i : F ->* X) (f : X ->* Y)
-  : IsHProp (IsComplex i f) := {}.
+  : IsHProp (IsComplex i f) := _.
 
 (** ** Very short exact sequences and fiber sequences *)
 
@@ -151,7 +151,8 @@ Global Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   (n : Modality) (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsExact n i f).
 Proof.
-  rapply (transport IsHProp (x := { cx : IsComplex i f & IsConnMap n (cxfib cx) })).
+  rapply (transport (fun A => IsHProp A) (x := { cx : IsComplex i f & IsConnMap n (cxfib cx) })).
+  2: exact _.
   apply path_universe_uncurried; issig.
 Defined.
 
@@ -164,7 +165,7 @@ Proof.
   rapply (O_functor O (A:=hfiber (cxfib cx_isexact) (x; p))).
   - intros [z q].
     exact (z; ap pr1 q).
-  - apply conn_map_isexact.
+  - apply center, conn_map_isexact.
 Defined.
 
 (** Bundled version of the above. *)

@@ -31,7 +31,7 @@ Section Hartogs_Number.
 
   Definition hartogs_number' : Ordinal.
   Proof.
-    set (carrier := {B : Ordinal & card B <= card A}).
+    set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
 
     exists carrier relation. srapply (isordinal_simulation pr1).
@@ -225,7 +225,7 @@ Section Hartogs_Number.
     - snrapply isequiv_surj_emb.
       + apply BuildIsSurjection. intros [X HX]. eapply merely_destruct.
         * eapply equiv_resize_hprop, HX.
-        * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply ishprop_resize_hprop.
+        * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply path_ishprop.
       + apply isembedding_isinj_hset. intros a b. intros H % pr1_path. cbn in H.
         specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
         intros H'. apply H' in H. now apply hartogs_number'_injection.2.
@@ -253,7 +253,7 @@ Section Hartogs_Number.
     exists f : hartogs_number -> 𝒫 (𝒫 (𝒫 A)), IsInjective f.
   Proof.  
     cbn. exists proj1. intros [X HX] [Y HY]. cbn. intros ->.
-    apply ap. apply ishprop_resize_hprop.
+    apply ap. apply path_ishprop.
   Qed.
 
   Lemma ordinal_initial (O : Ordinal) (a : O) :
@@ -278,20 +278,23 @@ Section Hartogs_Number.
     transparent assert (HNO : hartogs_number'). { exists hartogs_number. apply HN. }
     apply (ordinal_initial hartogs_number' HNO).
     eapply (transitive_Isomorphism hartogs_number' hartogs_number).
-    - apply isomorphism_inverse, resize_ordinal_iso.
+    - apply isomorphism_inverse.
+      unfold hartogs_number.
+      exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).
     - assert (Isomorphism hartogs_number ↓hartogs_number) by apply isomorphism_to_initial_segment.
       eapply transitive_Isomorphism; try apply X.
       unshelve eexists.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
-          -- exists a. eapply transitive_card; try apply HN.
-             now apply le_Cardinal_lt_Ordinal.
+          -- exists a. transitivity (card hartogs_number).
+             ++ nrapply le_Cardinal_lt_Ordinal; apply Ha.
+             ++ apply HN.
           -- apply equiv_resize_hprop. cbn. exact Ha.
         * intros [[a Ha] H % equiv_resize_hprop]. exists a.
           apply equiv_resize_hprop. apply H.
         * intros [[a Ha] H]. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
         * intros [a Ha]. apply path_sigma_hprop. reflexivity.
       + intros [[a Ha] H1] [[b H] H2]. cbn. reflexivity.
-  Qed.
+  Defined.
 
 End Hartogs_Number.

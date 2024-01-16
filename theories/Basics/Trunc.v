@@ -279,13 +279,20 @@ Definition contr_istrunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Global Instance istrunc_succ `{IsTrunc n A}
-  : IsTrunc n.+1 A | 1000.
+Global Instance istrunc_paths' {n : trunc_index} {A : Type} `{IsTrunc n A}
+  : forall x y : A, IsTrunc n (x = y) | 1000.
 Proof.
   generalize dependent A.
   simple_induction n n IH; simpl; intros A H x y.
   - apply contr_paths_contr.
-  - apply IH, H.
+  - apply istrunc_S.  rapply IH.
+Defined.
+
+Global Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
+  : IsTrunc n.+1 A | 1000.
+Proof.
+  apply istrunc_S.
+  apply istrunc_paths'.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
@@ -298,8 +305,9 @@ Proof.
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
   - (* -2, S n' *) apply @istrunc_succ, (IH (-2)); auto.
-  - (* S m', S n' *) intros x y; apply (IH m');
-                     auto with typeclass_instances.
+  - (* S m', S n' *)
+    apply istrunc_S.
+    intros x y; apply (IH m'); auto with typeclass_instances.
 Defined.
 
 (** In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. *)
@@ -327,9 +335,9 @@ Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; intros A ? B f ?.
   - exact (contr_equiv _ f).
-  - intros x y.
-    exact (IH (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y))
-      (x = y) ((ap (f^-1))^-1) _).
+  - apply istrunc_S.
+    intros x y.
+    refine (IH _ _ _ (ap (f^-1))^-1 _).
 Defined.
 
 Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
@@ -377,16 +385,16 @@ Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
   : Contr A.
 Proof.
-  exists x.
+  apply (Build_Contr _ x).
   intro y.
-  apply center, H.
+  rapply center.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
 Global Instance hprop_inhabited_contr (A : Type)
   : (A -> Contr A) -> IsHProp A | 10000.
 Proof.
-  intros H x y.
+  intros H; apply istrunc_S; intros x y.
   pose (C := H x).
   apply contr_paths_contr.
 Defined.
@@ -395,15 +403,17 @@ Defined.
 Theorem path_ishprop `{H : IsHProp A}
   : forall x y : A, x = y.
 Proof.
-  apply H.
+  intros x y.
+  rapply center.
 Defined.
 
 (** Conversely, this property characterizes hprops. *)
 Theorem hprop_allpath (A : Type)
   : (forall (x y : A), x = y) -> IsHProp A.
-  intros H x y.
-  pose (C := Build_Contr A x (H x)).
-  apply contr_paths_contr.
+Proof.
+  intros H; apply istrunc_S; intros x y.
+  nrapply contr_paths_contr.
+  exact (Build_Contr _ x (H x)).
 Defined.
 
 (** Two propositions are equivalent as soon as there are maps in both directions. *)
@@ -435,29 +445,42 @@ Proof.
   - rapply contr_inhabited_hprop.
 Defined.
 
-Corollary equiv_contr_hprop (A : Type) `{Funext} `{IsHProp A}
-  : Contr A <~> A.
+(** ** Truncatedness: any dependent product of n-types is an n-type *)
+
+Definition contr_forall `{Funext} `{P : A -> Type} `{forall a, Contr (P a)}
+  : Contr (forall a, P a).
 Proof.
-  exact (equiv_iff_hprop_uncurried (iff_contr_hprop A)).
+  apply (Build_Contr _ (fun a => center (P a))).
+  intro f.  apply path_forall.  intro a.  apply contr.
+Defined.
+
+Global Instance istrunc_forall `{Funext} `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+  : IsTrunc n (forall a, P a) | 100.
+Proof.
+  generalize dependent P.
+  simple_induction n n IH; simpl; intros P ?.
+  (* case [n = -2], i.e. contractibility *)
+  - apply contr_forall.
+  (* case n = n'.+1 *)
+  - apply istrunc_S.
+    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
 Defined.
 
 (** Truncatedness is an hprop. *)
 Global Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
-  apply hprop_inhabited_contr.
-  revert A.
-  simple_induction n n IH; unfold IsTrunc; simpl.
-  - intros A ?.
-    exact _.
-  - intros A AH1.
-    exists AH1.
-    intro AH2.
-    apply path_forall; intro x.
-    apply path_forall; intro y.
-    apply @path_contr.
-    apply IH, AH1.
-Qed.
+  revert A; simple_induction n n IH; cbn; intro A.
+  - nrapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold (-2) A)^-1%equiv).
+    apply hprop_allpath.
+    intros [a1 c1] [a2 c2].
+    destruct (c1 a2).
+    apply (ap (exist _ a1)).
+    funext x.
+    pose (Build_Contr _ a1 c1); apply path2_contr.
+  - rapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
+    (* This case follows from [istrunc_forall]. *)
+Defined.
 
 (** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
 
@@ -468,6 +491,17 @@ Proof.
   apply hprop_allpath; intros s t.
   apply path_forall; intros x.
   apply path_ishprop.
+Defined.
+
+(** If a type [A] is [n]-truncated, then [IsTrunc n A] is contractible. *)
+Global Instance contr_istrunc `{Funext} (n : trunc_index) (A : Type) `{istruncA : IsTrunc n A}
+  : Contr (IsTrunc n A) | 100
+  := contr_inhabited_hprop _ _.
+
+Corollary equiv_contr_hprop (A : Type) `{Funext} `{IsHProp A}
+  : Contr A <~> A.
+Proof.
+  exact (equiv_iff_hprop_uncurried (iff_contr_hprop A)).
 Defined.
 
 (** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)

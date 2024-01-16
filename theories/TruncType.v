@@ -73,7 +73,7 @@ Section TruncType.
   Proof.
     unfold path_trunctype; simpl.
     rewrite path_universe_compose_uncurried.
-    rewrite (path_sigma_hprop_pp _ _ _ (trunctype_istrunc B)).
+    rewrite (path_sigma_hprop_pp (path_universe_uncurried f) _ _ (trunctype_istrunc B)).
     refine (concat_p1 _ @ concat_1p _ @ _).
     refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).
     refine (_ @ (ap (fun z => z @ _) (concat_1p _))^ @ (ap (fun z => z @ _) (concat_p1 _))^).
@@ -97,6 +97,7 @@ Section TruncType.
   Global Instance istrunc_trunctype {n : trunc_index}
     : IsTrunc n.+1 (TruncType n) | 0.
   Proof.
+    apply istrunc_S.
     intros A B.
     refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
     case n as [ | n'].
@@ -106,7 +107,7 @@ Section TruncType.
 
   Global Instance isset_HProp : IsHSet HProp := _.
 
-  Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 (sig (IsTrunc n)) | 0.
+  Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
     apply (istrunc_equiv_istrunc _ issig_trunctype^-1).

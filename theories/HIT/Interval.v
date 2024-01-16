@@ -46,7 +46,7 @@ Defined.
 
 Global Instance contr_interval : Contr interval | 0.
 Proof.
-  exists zero.
+  apply (Build_Contr _ zero).
   refine (interval_ind _ 1 seg _).
   refine (transport_paths_r _ _ @ concat_1p _).
 Defined.

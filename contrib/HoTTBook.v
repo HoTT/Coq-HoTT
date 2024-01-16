@@ -330,7 +330,7 @@ Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sig_coind.
 (* ================================================== defn:set *)
 (** Definition 3.1.1 *)
 
-Definition Book_3_1_1 := @HoTT.Basics.Overture.IsTrunc 0.
+Definition Book_3_1_1 := fun A => @HoTT.Basics.Overture.IsTrunc 0 A.
 
 (* ================================================== eg:isset-unit *)
 (** Example 3.1.2 *)
@@ -340,7 +340,7 @@ Definition Book_3_1_2 := @HoTT.Types.Unit.contr_unit.
 (* ================================================== eg:isset-empty *)
 (** Example 3.1.3 *)
 
-Definition Book_3_1_3 := @HoTT.Types.Empty.hprop_Empty.
+Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).
 
 (* ================================================== thm:nat-set *)
 (** Example 3.1.4 *)
@@ -355,12 +355,12 @@ Definition Book_3_1_5 := @HoTT.Types.Prod.istrunc_prod.
 (* ================================================== thm:isset-forall *)
 (** Example 3.1.6 *)
 
-Definition Book_3_1_6 := @HoTT.Types.Forall.istrunc_forall.
+Definition Book_3_1_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P 0.
 
 (* ================================================== defn:1type *)
 (** Definition 3.1.7 *)
 
-Definition Book_3_1_7 := @HoTT.Basics.Overture.IsTrunc 1.
+Definition Book_3_1_7 := fun A => @HoTT.Basics.Overture.IsTrunc 1 A.
 
 (* ================================================== thm:isset-is1type *)
 (** Lemma 3.1.8 *)
@@ -385,7 +385,7 @@ Definition Book_3_1_9 := @HoTT.Types.Universe.not_hset_Type.
 (* ================================================== defn:isprop *)
 (** Definition 3.3.1 *)
 
-Definition Book_3_3_1 := @HoTT.Basics.Overture.IsTrunc (-1).
+Definition Book_3_3_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-1) A.
 
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
@@ -433,7 +433,7 @@ Definition Book_3_5_1 := @HoTT.Types.Sigma.path_sigma_hprop.
 (** Example 3.6.2 *)
 
 Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
-  := @HoTT.Types.Forall.istrunc_forall _ A B (-1).
+  := @HoTT.Basics.Trunc.istrunc_forall _ A B (-1).
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)
@@ -463,7 +463,7 @@ Definition Book_3_9_2 := @HoTT.HIT.unique_choice.unique_choice.
 (* ================================================== defn:contractible *)
 (** Definition 3.11.1 *)
 
-Definition Book_3_11_1 := @HoTT.Basics.Overture.IsTrunc (-2).
+Definition Book_3_11_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-2) A.
 
 (* ================================================== thm:contr-unit *)
 (** Lemma 3.11.3 *)
@@ -478,12 +478,12 @@ Definition Book_3_11_4 := @HoTT.Basics.Trunc.ishprop_istrunc.
 (* ================================================== thm:contr-contr *)
 (** Corollary 3.11.5 *)
 
-Definition Book_3_11_5 := @HoTT.Basics.Contractible.contr_contr.
+Definition Book_3_11_5 `{Funext} := @HoTT.Basics.Trunc.contr_istrunc _ (-2).
 
 (* ================================================== thm:contr-forall *)
 (** Lemma 3.11.6 *)
 
-Definition Book_3_11_6 := @HoTT.Types.Forall.istrunc_forall.
+Definition Book_3_11_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P (-2).
 
 (* ================================================== thm:retract-contr *)
 (** Lemma 3.11.7 *)
@@ -990,7 +990,7 @@ Definition Book_6_12_8 := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.
 (* ================================================== thm:hlevel-prod *)
 (** Theorem 7.1.9 *)
 
-Definition Book_7_1_9 := @HoTT.Types.Forall.istrunc_forall.
+Definition Book_7_1_9 := @HoTT.Basics.Trunc.istrunc_forall.
 
 (* ================================================== thm:isaprop-isofhlevel *)
 (** Theorem 7.1.10 *)
@@ -1538,7 +1538,7 @@ Proof.
     eapply istrunc_isequiv_istrunc.
     + refine (H' a b).
     + apply H.
-  - intros H' a b.
+  - intros H'; apply istrunc_S; intros a b.
     eapply istrunc_isequiv_istrunc.
     + apply (H' a b).
     + apply (@isequiv_inverse _ _ _ (H _ _)).

@@ -1,5 +1,5 @@
 (** * The category of semisimplicial sets *)
-Require Import Types.
+Require Import Types Basics.Trunc.
 Require Import Category.Core Functor.Core.
 Require Import Category.Morphisms.
 Require Import Category.Dual FunctorCategory.Core.
@@ -24,7 +24,7 @@ Module Export Core.
         nonstandard), then semi-simplicial sets (also a non-standard
         term) (sic) are [Fun(Γᵒᵖ, Set)]. Define the obvious inclusion
         [Γ -> Δ], which we will use to make simplicial sets without
-        having to worry about "degneracies". *)
+        having to worry about "degeneracies". *)
 
     Definition semisimplex_category : PreCategory
       := wide simplex_category

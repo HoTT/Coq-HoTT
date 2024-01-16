@@ -363,14 +363,15 @@ Global Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) |
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; (intros A ? B ?).
-  { exists (center A, center B).
+  { apply (Build_Contr _ (center A, center B)).
     intros z; apply path_prod; apply contr. }
+  apply istrunc_S.
   intros x y.
   exact (istrunc_equiv_istrunc _ (equiv_path_prod x y)).
 Defined.
 
 Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
-  := @istrunc_prod (-2) A CA B CB.
+  := istrunc_prod.
 
 (** ** Decidability *)
 

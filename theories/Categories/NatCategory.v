@@ -29,6 +29,7 @@ Module Export Core.
   Proof.
     induction n; [ typeclasses eauto |].
     induction n; [ typeclasses eauto |].
+    apply istrunc_S.
     intros [x|x] [y|y];
       typeclasses eauto.
   Qed.

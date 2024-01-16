@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the empty type *)
 
-Require Import Basics.Overture Basics.Equivalences.
+Require Import Basics.Overture Basics.Equivalences Basics.Trunc.
 Local Open Scope path_scope.
 
 (** ** Unpacking *)
@@ -15,7 +15,7 @@ Local Open Scope path_scope.
 Global Instance contr_from_Empty {_ : Funext} (A : Empty -> Type) :
   Contr (forall x:Empty, A x).
 Proof.
-  refine (Build_Contr (forall x:Empty, A x) (Empty_ind A) _).
+  refine (Build_Contr _ (Empty_ind A) _).
   intros f; apply path_forall; intros x; elim x.
 Defined.
 
@@ -35,8 +35,12 @@ Definition equiv_empty_rec `{Funext} (A : Type)
 
 (** ** Behavior with respect to truncation *)
 
-Global Instance hprop_Empty : IsHProp Empty.
-Proof. intro x. destruct x. Defined.
+Global Instance istrunc_Empty (n : trunc_index) : IsTrunc n.+1 Empty.
+Proof.
+  refine (@istrunc_leq (-1)%trunc n.+1 tt _ _).
+  apply istrunc_S.
+  intros [].
+Defined.
 
 Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.

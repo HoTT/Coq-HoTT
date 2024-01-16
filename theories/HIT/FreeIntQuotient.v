@@ -72,7 +72,8 @@ Section FreeIntAction.
       rewrite Circle_rec_beta_loop.
       unfold loop.
       exact (Coeq_rec_beta_cglue _ _ _ _).
-    - intros xu yv.
+    - apply istrunc_S.
+      intros xu yv.
       refine (istrunc_equiv_istrunc (n := -1) _ (equiv_path_sigma _ xu yv)).
       destruct xu as [x u], yv as [y v]; cbn.
       apply hprop_allpath.

@@ -1,6 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import TruncType.
+Require Import ReflectiveSubuniverse.
 Require Import Colimits.Pushout Truncations.Core HIT.SetCone.
 
 Local Open Scope path_scope.
@@ -28,7 +29,7 @@ Proof.
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
-    refine {| center := (g; idpath) |}.
+    nrapply (Build_Contr _ (g; idpath)).
     intro xy; specialize (hepi xy).
     apply path_sigma_uncurried.
     exists hepi.
@@ -55,7 +56,7 @@ Section cones.
   Lemma isepi'_contr_cone `{Funext} {A B : HSet} (f : A -> B) : isepi' f -> Contr (setcone f).
   Proof.
     intros hepi.
-    exists (setcone_point _).
+    apply (Build_Contr _ (setcone_point _)).
     pose (alpha1 := @pglue A B Unit f (const_tt _)).
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
     transparent assert (l : tot).
@@ -160,7 +161,8 @@ Section isepi_issurj.
     assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
     { intros. apply contr_dom_equiv. apply i. }
     specialize (X0 (tr (push (inl y)))). simpl in X0.
-    exact (transport Contr (ap trunctype_type X0)^ _).
+    unfold IsConnected.
+    refine (transport (fun A => Contr A) (ap trunctype_type X0)^ _); exact _.
   Defined.
 End isepi_issurj.
 

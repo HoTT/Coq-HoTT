@@ -733,12 +733,6 @@ Ltac issig :=
 
 (** We show how the tactic works in a couple of examples. *)
 
-Definition issig_contr (A : Type)
-  : {x : A & forall y, x = y} <~> Contr A.
-Proof.
-  issig.
-Defined.
-
 Definition issig_equiv (A B : Type)
   : {f : A -> B & IsEquiv f} <~> Equiv A B.
 Proof.

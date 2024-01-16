@@ -120,10 +120,11 @@ Proof.
 Defined.
 
 (* As a special case, if X embeds into an n-type for n >= -1 then X is an n-type. Note that this doesn't hold for n = -2. *)
-Corollary istrunc_embedding_trunc `{Funext} {X Y : Type} {n : trunc_index} `{IsTrunc n.+1 Y}
-      (i : X -> Y) `{IsEmbedding i} : IsTrunc n.+1 X.
+Corollary istrunc_embedding_trunc `{Funext} {X Y : Type} {n : trunc_index} `{istr : IsTrunc n.+1 Y}
+      (i : X -> Y) `{isem : IsEmbedding i} : IsTrunc n.+1 X.
 Proof.
-  exact (@in_SepO_embedding (Tr n) _ _ i IsEmbedding0 H0).
+  apply istrunc_S.
+  exact (@in_SepO_embedding (Tr n) _ _ i isem istr).
 Defined.
 
 Global Instance in_SepO_hprop (O : ReflectiveSubuniverse)

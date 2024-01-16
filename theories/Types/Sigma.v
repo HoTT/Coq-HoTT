@@ -610,9 +610,10 @@ Global Instance istrunc_sigma `{P : A -> Type}
 Proof.
   generalize dependent A.
   induction n; simpl; intros A P ac Pc.
-  { exists (center A; center (P (center A))).
+  { apply (Build_Contr _ (center A; center (P (center A)))).
     intros [a ?].
     refine (path_sigma' P (contr a) (path_contr _ _)). }
+  apply istrunc_S.
   intros u v.
   refine (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
 Defined.

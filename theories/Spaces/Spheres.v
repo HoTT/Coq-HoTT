@@ -302,7 +302,7 @@ Proof.
   - (* n = -2 *) apply hprop_allpath.
     intros x0 x1. set (f := (fun b => if (S0_to_Bool b) then x0 else x1)).
     set (n := HX f). exact (n.2 North @ (n.2 South)^).
-  - (* n ≥ -1 *) intros x0 x1.
+  - (* n ≥ -1 *) apply istrunc_S; intros x0 x1.
     apply (istrunc_allnullhomot n').
     intro f. apply nullhomot_paths_from_susp, HX.
 Defined.

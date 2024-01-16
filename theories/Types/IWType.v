@@ -416,6 +416,7 @@ Proof.
   induction n as [|n IHn].
   1: apply ishprop_iwtype.
   intros I A B i j h l.
+  apply istrunc_S.
   intros x y.
   refine (istrunc_equiv_istrunc _
     (equiv_path_iwtype I A B i j l x y) (n := n.+1)).

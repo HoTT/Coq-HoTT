@@ -611,7 +611,7 @@ Global Instance trunc_seq_colim `{Univalence} {A : Sequence} k :
 Proof.
   revert A; induction k as [ | k IHk].
   - srapply contr_colim_contr_seq.
-  - intros A trH; srapply Colimit_ind.
+  - intros A trH; apply istrunc_S; srapply Colimit_ind.
     + intro n; revert trH; revert A; induction n as [ | n IHn].
       * intros A trH a; srapply Colimit_ind.
         { intros m b; revert b; revert a; revert trH; revert A; induction m as [ | m IHm].

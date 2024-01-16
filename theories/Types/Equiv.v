@@ -123,7 +123,9 @@ Section AssumeFunext.
   Global Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A <~> B).
   Proof.
-    simpl. intros e1 e2.
+    simpl.
+    apply istrunc_S.
+    intros e1 e2.
     apply (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
   Defined.
 
@@ -131,7 +133,7 @@ Section AssumeFunext.
   Global Instance contr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
   : Contr (A <~> B).
   Proof.
-    exists equiv_contr_contr.
+    apply (Build_Contr _ equiv_contr_contr).
     intros e. apply path_equiv, path_forall. intros ?; apply contr.
   Defined.
 
@@ -139,7 +141,7 @@ Section AssumeFunext.
   Global Instance contr_aut_hprop A `{IsHProp A}
   : Contr (A <~> A).
   Proof.
-    exists 1%equiv.
+    apply (Build_Contr _ 1%equiv).
     intros e; apply path_equiv, path_forall. intros ?; apply path_ishprop.
   Defined.
 

@@ -167,7 +167,7 @@ Definition functor_ab_biprod_surjection `{Funext} {A A' B B' : AbGroup}
 Proof.
   intros [b b'].
   pose proof (a := S b); pose proof (a' := S' b').
-  destruct a as [a _], a' as [a' _].
+  apply center in a, a'.
   strip_truncations.
   rapply contr_inhabited_hprop.
   apply tr.

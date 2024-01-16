@@ -214,7 +214,7 @@ Definition moveL_equiv_V' `(f : A <~> B) (x : B) (y : A) (p : f y = x)
 Lemma contr_equiv A {B} (f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
 Proof.
-  exists (f (center A)).
+  apply (Build_Contr _ (f (center A))).
   intro y.
   apply moveR_equiv_M.
   apply contr.
@@ -574,13 +574,14 @@ Ltac ev_equiv :=
 
 (** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
 
-(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. *)
+(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. *)
 Ltac decomposing_intros :=
   let x := fresh in
   intros x; cbn in x;
-  try match type of x with
-  | ?a = ?b => fail 1           (** Don't destruct paths *)
-  | forall y:?A, ?B => fail 1   (** Don't apply functions *)
+  try lazymatch type of x with
+  | ?a = ?b => idtac           (** Don't destruct paths *)
+  | forall y:?A, ?B => idtac   (** Don't apply functions *)
+  | Contr ?A => revert x; match goal with |- (forall y, ?P y) => snrefine (Contr_ind A P _) end
   | _ => elim x; clear x
   end;
   try decomposing_intros.

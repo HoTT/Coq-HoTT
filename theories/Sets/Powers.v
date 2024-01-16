@@ -30,15 +30,20 @@ Definition power_iterated_shift X n
 Global Instance hset_power {UA : Univalence} (X : HSet)
   : IsHSet (X -> HProp).
 Proof.
+  apply istrunc_S.
   intros p q. apply hprop_allpath. intros H H'.
   destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].
   rewrite <- (Hfg H), <- (Hfg H'). apply ap. apply path_forall.
-  intros x. apply isset_HProp.
+  intros x. apply path_ishprop.
 Qed.
 
 Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n
-  : IsHSet (power_iterated X n)
-  := nat_iter_invariant _ _ _ _ _ _.
+  : IsHSet (power_iterated X n).
+Proof.
+  nrapply (nat_iter_invariant n power_type (fun A => IsHSet A)).
+  - intros Y HS. rapply hset_power.
+  - exact _.
+Defined.
 
 Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
   : Injection X (power_iterated X n).

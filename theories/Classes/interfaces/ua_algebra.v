@@ -236,7 +236,7 @@ Proof.
   unshelve eapply path_path_sigma.
   - transitivity (ap carriers p); [by destruct p |].
     transitivity (ap carriers q); [exact r | by destruct q].
-  - apply hprop_allpath. apply hset_path2.
+  - apply path_ishprop.
 Defined.
 
 Module algebra_notations.

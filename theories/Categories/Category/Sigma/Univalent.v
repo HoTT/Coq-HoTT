@@ -211,6 +211,7 @@ Section on_both.
   (** TODO: generalize this to a theorem [forall A P, IsHSet A -> IsHSet { x : A | P x } -> forall x, IsHSet (P x)], [inO_unsigma] of ##672 *)
   Local Instance ishset_pmor {s d m} : IsHSet (Pmor s d m).
   Proof.
+    apply istrunc_S.
     intros p q.
     apply hprop_allpath.
     let H := constr:(_ : forall x y : mor s d, IsHProp (x = y)) in

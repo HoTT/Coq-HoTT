@@ -17,7 +17,7 @@ Definition path_contr `{Contr A} (x y : A) : x = y
 (** Any space of paths in a contractible space is contractible. *)
 Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000.
 Proof.
-  exists (path_contr x y).
+  apply (Build_Contr _ (path_contr x y)).
   intro r; destruct r; apply concat_Vp.
 Defined.
 
@@ -37,7 +37,7 @@ Arguments path_basedpaths {X x y} p : simpl nomatch.
 
 Global Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
 Proof.
-  exists (x;1).
+  apply (Build_Contr _ (x;1)).
   intros [y p]; apply path_basedpaths.
 Defined.
 
@@ -105,17 +105,21 @@ Definition contr_retract {X Y : Type} `{Contr X}
 Definition contr_change_center {A : Type} (a : A) `{Contr A}
   : Contr A.
 Proof.
-  exists a.
+  apply (Build_Contr _ a).
   intros; apply path_contr.
 Defined.
 
-(** If a type is contractible, then so is its type of contractions. *)
-Global Instance contr_contr `{Funext} (A : Type) `{contrA : Contr A}
-  : Contr (Contr A) | 100.
-Proof.
-  exists contrA; intros [a2 c2].
-  destruct (contr a2).
-  apply (ap (Build_Contr _ (center A))).
-  apply path_forall; intros x.
-  apply path2_contr.
-Defined.
+(** The automatically generated induction principle for [IsTrunc_internal] produces two goals, so we define a custom induction principle for [Contr] that only produces the expected goal. *)
+Definition Contr_ind@{u v|} (A : Type@{u}) (P : Contr A -> Type@{v})
+  (H : forall (center : A) (contr : forall y, center = y), P (Build_Contr A center contr))
+  (C : Contr A)
+  : P C
+  := match C as C0 in IsTrunc n _ return
+          (match n as n0 return IsTrunc n0 _ -> Type@{v} with
+           | minus_two => fun c0 => P c0
+           | trunc_S k => fun _ => Unit
+           end C0)
+    with
+    | Build_Contr center contr => H center contr
+    | istrunc_S _ _ => tt
+    end.

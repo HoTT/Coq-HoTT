@@ -235,7 +235,7 @@ Global Instance contr_pushout {A B C : Type} `{Contr A, Contr B, Contr C}
        (f : A -> B) (g : A -> C)
   : Contr (Pushout f g).
 Proof.
-  exists (pushl (center B)).
+  apply (Build_Contr _ (pushl (center B))).
   srapply Pushout_ind.
   - intros b; apply ap, path_contr.
   - intros c.

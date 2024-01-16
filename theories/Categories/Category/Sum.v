@@ -52,7 +52,7 @@ Proof.
             _
             _);
   abstract (
-      repeat (simpl || intros [] || intro);
+      repeat (simpl || apply istrunc_S || intros [] || intro);
       auto with morphism;
       typeclasses eauto
     ).

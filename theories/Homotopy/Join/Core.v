@@ -749,7 +749,7 @@ Section JoinTrunc.
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (Join A B).
   Proof.
-    exists (joinl (center A)).
+    apply (Build_Contr _ (joinl (center A))).
     snrapply Join_ind.
     - intros a; apply ap, contr.
     - intros b; apply jglue.

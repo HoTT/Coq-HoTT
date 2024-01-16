@@ -176,7 +176,7 @@ Section Equiv.
     intros ? ? dclass. apply quotient_ind with dclass.
     - simple refine (quotient_ind R (fun x => IsHSet (P x)) _ _); cbn beta; try exact _.
       intros; apply path_ishprop.
-    - intros. apply Hprop'.
+    - intros. apply path_ishprop.
   Defined.
 
   (** From Ch6 *)

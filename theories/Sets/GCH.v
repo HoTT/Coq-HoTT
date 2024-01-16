@@ -34,10 +34,10 @@ Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
 Proof.
   repeat (nrapply istrunc_forall; intros).
   apply hprop_allpath. intros [H|H] [H'|H'].
-  - enough (H = H') as ->; trivial. apply (InjectsInto a0 a).
+  - enough (H = H') as ->; trivial. apply path_ishprop.
   - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
   - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
-  - enough (H = H') as ->; trivial. apply (InjectsInto (a -> HProp) a0).
+  - enough (H = H') as ->; trivial. apply path_ishprop.
 Qed.
 
 
@@ -82,7 +82,7 @@ Section LEM.
     intros [p Hp] [q Hq]; cbn.
     intros ->. unshelve eapply path_sigma; cbn.
     - reflexivity.
-    - cbn. apply (r q).
+    - cbn. apply path_ishprop.
   Qed.
 
   Lemma inject_sings :

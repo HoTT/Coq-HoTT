@@ -73,10 +73,10 @@ Proof.
   - exact (fun b : Bool => if b then merely Unit else merely Empty).
   - intros []; destruct LEM as [H|H]; auto.
     + destruct (H (tr tt)).
-    + apply (@merely_destruct Empty); easy.
+    + apply (@merely_destruct Empty); try easy. exact _.
   - intros P. destruct LEM as [H|H]; apply equiv_path_iff_hprop.
     + split; auto. intros _. apply tr. exact tt.
-    + split; try easy. intros HE. apply (@merely_destruct Empty); easy.
+    + split; try easy. intros HE. apply (@merely_destruct Empty); try easy. exact _.
 Qed.
 
 Lemma path_bool_subsingleton :
@@ -92,7 +92,7 @@ Proof.
   - intros x. destruct (LEM (p x) _) as [H|H]; [left | right]; now exists x.
   - intros [[x _]|[x _]]; exact x.
   - cbn. intros [[x Hx]|[x Hx]]; destruct LEM as [H|H]; try contradiction.
-    + enough (H = Hx) as -> by reflexivity. apply p.
+    + enough (H = Hx) as -> by reflexivity. apply path_ishprop.
     + enough (H = Hx) as -> by reflexivity. apply path_forall. now intros HP.
   - cbn. intros x. now destruct LEM.
 Qed.

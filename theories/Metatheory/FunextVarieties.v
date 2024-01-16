@@ -44,7 +44,7 @@ Definition NaiveFunext_implies_WeakFunext@{i j max}
   : NaiveFunext@{i j max} -> WeakFunext@{i j max}.
 Proof.
   intros nf A P Pc.
-  exists (fun x => center (P x)).
+  apply (Build_Contr _ (fun x => center (P x))).
   intros f; apply nf; intros x.
   apply contr.
 Defined.
@@ -74,7 +74,7 @@ Section Homotopies.
   Global Instance contr_basedhtpy : Contr {g : forall x, B x & f == g } | 1.
   Proof.
     unfold WeakFunext in wf.    (* Allow typeclass inference to find it *)
-    exists (f;idhtpy). intros [g h].
+    apply (Build_Contr _ (f;idhtpy)). intros [g h].
     (* The trick is to show that the type [{g : forall x, B x & f == g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
     pose (r := fun k => exist (fun g => f == g)
       (fun x => (k x).1) (fun x => (k x).2)).

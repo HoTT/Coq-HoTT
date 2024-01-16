@@ -6,6 +6,7 @@
 Require Import
   HSet
   Colimits.Quotient
+  Modalities.ReflectiveSubuniverse
   Classes.interfaces.canonical_names
   Classes.theory.ua_isomorphic
   Classes.theory.ua_subalgebra
@@ -213,7 +214,9 @@ Section first_isomorphism_surjection.
   Global Instance is_isomorphism_inc_first_isomorphism_surjection
     : IsIsomorphism (hom_inc_subalgebra B (in_image_hom f)).
   Proof.
-    apply is_isomorphism_inc_improper_subalgebra. apply S.
+    apply is_isomorphism_inc_improper_subalgebra.
+    intros s x; cbn.
+    apply center, S.
   Qed.
 
 (** The homomorphism [hom_first_isomorphism_surjection] is the

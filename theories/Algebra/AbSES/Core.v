@@ -130,6 +130,7 @@ Defined.
 Global Instance istrunc_abses `{Univalence} {B A : AbGroup@{u}}
   : IsTrunc 1 (AbSES B A).
 Proof.
+  apply istrunc_S.
   intros E F.
   refine (istrunc_equiv_istrunc _ equiv_path_abses_iso (n:=0)).
   rapply istrunc_sigma.
@@ -155,7 +156,7 @@ Proof.
     rapply contr_inhabited_hprop.
     (** Since [projection E] is epi, we can pull [projection F f] back to [e0 : E].*)
     assert (e0 : Tr (-1) (hfiber (projection E) (projection F f))).
-    1: apply issurjection_projection.
+    1: apply center, issurjection_projection.
     strip_truncations.
     (** The difference [f - (phi e0.1)] is sent to [0] by [projection F], hence lies in [A]. *)
     assert (a : Tr (-1) (hfiber (inclusion F) (f + (- phi e0.1)))).
