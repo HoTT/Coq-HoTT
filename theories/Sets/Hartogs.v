@@ -6,7 +6,6 @@ From HoTT.Sets Require Import Ordinals Powers.
 
 (** This file contains a construction of the Hartogs number. *)
 
-
 (** * Hartogs number *)
 
 Section Hartogs_Number.
@@ -34,9 +33,9 @@ Section Hartogs_Number.
     set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
 
-    exists carrier relation. srapply (isordinal_simulation pr1).
-    - exact _.
-    - exact _.
+    exists carrier relation. snrapply (isordinal_simulation pr1).
+    1, 2, 3, 4: exact _.
+    - apply isinj_embedding, (mapinO_pr1 (Tr (-1))). (* Faster than [exact _.] *)
     - constructor.
       + intros a a' a_a'. exact a_a'.
       + intros [B small_B] C C_B; cbn in *. apply tr.
@@ -83,8 +82,8 @@ Section Hartogs_Number.
           intros X. apply hprop_allpath; intros [b1 Hb1] [b2 Hb2].
           snrapply path_sigma_hprop; cbn.
           - intros b. snrapply istrunc_forall.
-            intros a. srapply istrunc_prod.
-            srapply istrunc_arrow.
+            intros a. snrapply istrunc_prod. 2: exact _.
+            snrapply istrunc_arrow.
             rapply ishprop_sigma_disjoint. intros b1' b2' [_ ->] [_ p].
             apply (injective_f). exact p.
           - apply extensionality. intros b'. split.
@@ -92,13 +91,13 @@ Section Hartogs_Number.
               specialize (Hb1 (f b')). apply snd in Hb1.
               specialize (Hb1 (b'; (b'_b1, idpath))).
               apply Hb2 in Hb1. destruct Hb1 as (? & H2 & H3).
-              apply injective in H3; try exact _. destruct H3.
+              apply injective in H3. 2: assumption. destruct H3.
               exact H2.
             + intros b'_b2.
               specialize (Hb2 (f b')). apply snd in Hb2.
               specialize (Hb2 (b'; (b'_b2, idpath))).
               apply Hb1 in Hb2. destruct Hb2 as (? & H2 & H3).
-              apply injective in H3; try exact _. destruct H3.
+              apply injective in H3. 2: assumption. destruct H3.
               exact H2.
         }
         exists (fun X : 𝒫 A =>
@@ -108,8 +107,9 @@ Section Hartogs_Number.
           - srapply equiv_adjointify.
             + intros [X [b _]]. exact b.
             + intros b.
-              unshelve eexists (fun a => Build_HProp (exists b', b' < b /\ a = f b'))
-              ; try exact _. {
+              unshelve eexists (fun a => Build_HProp (exists b', b' < b /\ a = f b')).
+              1: exact _.
+              {
                 apply hprop_allpath. intros [b1 [b1_b p]] [b2 [b2_b q]].
                 apply path_sigma_hprop; cbn. apply (injective f).
                 destruct p, q. reflexivity.
@@ -142,7 +142,7 @@ Section Hartogs_Number.
                 -- apply H'2. exists b1; auto.
                 -- intros X1_fb1. apply H'1 in X1_fb1. destruct X1_fb1 as [b' [b'_b1 fb1_fb']].
                    apply (injective f) in fb1_fb'. destruct fb1_fb'.
-                   apply irreflexivity in b'_b1; try exact _. assumption.
+                   apply irreflexivity in b'_b1. 2: exact _. assumption.
         }
       }
       assert (IsOrdinal X (ϕ X)) by exact (isordinal_simulation iso.1). 
@@ -151,7 +151,7 @@ Section Hartogs_Number.
         apply isomorphism_inverse. assumption.
       }
       enough (merely (Isomorphism (X : Type; ϕ X) C)). {
-        revert X1. rapply Trunc_rec. {
+        revert X1. nrapply Trunc_rec. {
           exact (ishprop_Isomorphism (Build_Ordinal X (ϕ X) _) C).
         }
         auto.
@@ -235,7 +235,7 @@ Section Hartogs_Number.
     Ordinal@{j _}.
   Proof.
     exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
-    srapply (isordinal_simulation g); try exact _.
+    snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
     - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
     - constructor.
       + intros a a' a_a'. apply (equiv_resize_hprop _)^-1. exact a_a'.
@@ -282,7 +282,7 @@ Section Hartogs_Number.
       unfold hartogs_number.
       exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).
     - assert (Isomorphism hartogs_number ↓hartogs_number) by apply isomorphism_to_initial_segment.
-      eapply transitive_Isomorphism; try apply X.
+      eapply transitive_Isomorphism. 1: exact X.
       unshelve eexists.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
@@ -292,9 +292,9 @@ Section Hartogs_Number.
           -- apply equiv_resize_hprop. cbn. exact Ha.
         * intros [[a Ha] H % equiv_resize_hprop]. exists a.
           apply equiv_resize_hprop. apply H.
-        * intros [[a Ha] H]. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
-        * intros [a Ha]. apply path_sigma_hprop. reflexivity.
-      + intros [[a Ha] H1] [[b H] H2]. cbn. reflexivity.
+        * intro a. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
+        * intro a. apply path_sigma_hprop. reflexivity.
+      + reflexivity.
   Defined.
 
 End Hartogs_Number.
