@@ -143,3 +143,14 @@ Definition prod_0gpd (G H : ZeroGpd) : ZeroGpd.
 Proof.
   rapply (Build_ZeroGpd (G * H)).
 Defined.
+
+Definition prod_0gpd_corec {G H K : ZeroGpd} (f : G $-> H) (g : G $-> K)
+  : G $-> prod_0gpd H K.
+Proof.
+  snrapply Build_Morphism_0Gpd.
+  1: exact (fun x => (f x, g x)).
+  snrapply Build_Is0Functor; cbn beta.
+  intros x y p; simpl; split.
+  - apply (fmap f p).
+  - apply (fmap g p).
+Defined.
