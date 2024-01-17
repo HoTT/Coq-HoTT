@@ -11,7 +11,6 @@ From HoTT Require Import Colimits.Quotient.
 Inductive Accessible {A} (R : Lt A) (a : A) :=
   acc : (forall b, b < a -> Accessible R b) -> Accessible R a.
 
-
 Global Instance ishprop_Accessible `{Funext} {A} (R : Lt A) (a : A) :
   IsHProp (Accessible R a).
 Proof.
@@ -22,10 +21,8 @@ Proof.
   apply IH.
 Qed.
 
-
 Class WellFounded {A} (R : Relation A) :=
   well_foundedness : forall a : A, Accessible R a.
-
 
 Global Instance ishprop_WellFounded `{Funext} {A} (R : Relation A) :
   IsHProp (WellFounded R).
@@ -35,9 +32,6 @@ Proof.
   apply path_ishprop.
 Qed.
 
-
-
-
 (** * Extensionality *)
 
 Class Extensional {A} (R : Lt A) :=
@@ -46,8 +40,6 @@ Class Extensional {A} (R : Lt A) :=
 Global Instance ishprop_Extensional `{Funext} {A} `{IsHSet A} (R : Relation A)
   : IsHProp (Extensional R).
 Proof. unfold Extensional. exact _. Qed.
-
-
 
 (** * Ordinals *)
 
@@ -74,7 +66,6 @@ Proof.
   unfold Transitive. exact _.
 Qed.
 
-
 Record Ordinal@{carrier relation +} :=
   { ordinal_carrier : Type@{carrier}
     ; ordinal_relation : Lt@{carrier relation} ordinal_carrier
@@ -86,8 +77,6 @@ Global Existing Instances ordinal_relation ordinal_property.
 Coercion ordinal_as_hset (A : Ordinal) : HSet
   := Build_HSet (ordinal_carrier A).
 
-
-
 Global Instance irreflexive_ordinal_relation A R
   : IsOrdinal A R -> Irreflexive R.
 Proof.
@@ -96,15 +85,11 @@ Proof.
   apply (IH a); assumption.
 Qed.
 
-
 Definition TypeWithRelation
   := { A : Type & Relation A }.
 
 Coercion ordinal_as_type_with_relation (A : Ordinal) : TypeWithRelation
   := (A : Type; (<)).
-
-
-
 
 (** * Paths in Ordinal *)
 
@@ -117,19 +102,15 @@ Proof.
   apply equiv_sigma_assoc'.
 Defined.
 
-
 Definition Isomorphism : TypeWithRelation -> TypeWithRelation -> Type
   := fun '(A; R__A) '(B; R__B) =>
        { f : A <~> B & forall a a', R__A a a' <-> R__B (f a) (f a') }.
-
 
 Global Instance isomorphism_id : Reflexive Isomorphism.
 Proof. intros A. exists equiv_idmap. cbn. intros a a'. reflexivity. Qed.
 
 Lemma isomorphism_inverse
-  : forall A B,
-    Isomorphism A B ->
-    Isomorphism B A.
+  : forall A B, Isomorphism A B -> Isomorphism B A.
 Proof.
   intros [A R__A] [B R__B] [f H].
   exists (equiv_inverse f).
@@ -143,10 +124,7 @@ Defined.
 
 (** We state this first without using [Transitive] to allow more general universe variables. *)
 Lemma transitive_Isomorphism
-  : forall A B C,
-    Isomorphism A B
-    -> Isomorphism B C
-    -> Isomorphism A C.
+  : forall A B C, Isomorphism A B -> Isomorphism B C -> Isomorphism A C.
 Proof.
   intros [A R__A] [B R__B] [C R__C].
   intros [f Hf] [g Hg].
@@ -157,8 +135,7 @@ Proof.
   - intros gfa_gfa'. apply Hf. apply Hg. exact gfa_gfa'.
 Defined.
 
-Global Instance isomorphism_compose_backwards
-  : Transitive Isomorphism
+Global Instance isomorphism_compose_backwards : Transitive Isomorphism
   := transitive_Isomorphism.
 
 Definition equiv_path_Ordinal `{Univalence} (A B : Ordinal)
@@ -203,12 +180,13 @@ Proof.
       repeat rewrite transport_pV in H0. exact H0.
 Qed.
 
-
 Lemma path_Ordinal `{Univalence} (A B : Ordinal)
   : forall f : A <~> B,
     (forall a a' : A, a < a' <-> f a < f a')
     -> A = B.
-Proof. intros f H0. apply equiv_path_Ordinal. exists f. exact H0. Qed.
+Proof.
+  intros f H0. apply equiv_path_Ordinal. exists f. exact H0.
+Qed.
 
 Lemma trichotomy_ordinal `{ExcludedMiddle} {A : Ordinal} (a b : A)
   : a < b \/ a = b \/ b < a.
@@ -243,8 +221,8 @@ Proof.
               ** apply tr. right. apply Empty_rec. exact (not_c_a c_a).
 Qed.
 
-Lemma ordinal_has_minimal_hsolutions {lem : ExcludedMiddle} (A : Ordinal) (P : A -> HProp) :
-  merely (exists a, P a) -> merely (exists a, P a /\ forall b, P b -> a < b \/ a = b).
+Lemma ordinal_has_minimal_hsolutions {lem : ExcludedMiddle} (A : Ordinal) (P : A -> HProp)
+  : merely (exists a, P a) -> merely (exists a, P a /\ forall b, P b -> a < b \/ a = b).
 Proof.
   intros H'. eapply merely_destruct; try apply H'.
   intros [a Ha]. induction (well_foundedness a) as [a _ IH].
@@ -259,8 +237,6 @@ Proof.
     apply Empty_rec, H, tr. exists b. now split.
 Qed.
 
-
-
 (** * Simulations *)
 
 (* We define the notion of simulations between arbitrary relations. For simplicity, most lemmas about simulations are formulated for ordinals only, even if they do not need all properties of ordinals. The only exception is isordinal_simulation which can be used to prove that a relation is an ordinal. *)
@@ -273,7 +249,6 @@ Class IsSimulation {A B : Type} {R__A : Lt A} {R__B : Lt B} (f : A -> B) :=
   }.
 Arguments simulation_is_hom {_ _ _ _} _ {_ _ _}.
 
-
 Global Instance ishprop_IsSimulation `{Funext}
          {A B : Ordinal} (f : A -> B) :
   IsHProp (IsSimulation f).
@@ -282,7 +257,6 @@ Proof.
   - issig.
   - exact _.
 Qed.
-
 
 Global Instance isinjective_simulation
          {A : Type} {R : Lt A} `{IsOrdinal A R}
@@ -492,16 +466,16 @@ Definition out
   : ↓a -> A
   := pr1.
 
-Definition initial_segment_property
-           `{PropResizing}
-           {A : Ordinal} {a : A}
+Definition initial_segment_property `{PropResizing}
+  {A : Ordinal} {a : A}
   : forall x : ↓a, out x < a.
-Proof. intros x. exact ((equiv_resize_hprop _)^-1 (proj2 x)). Defined.
+Proof.
+  intros x. exact ((equiv_resize_hprop _)^-1 (proj2 x)).
+Defined.
 
 
-Global Instance is_simulation_out
-         `{PropResizing}
-         {A : Ordinal} (a : A)
+Global Instance is_simulation_out `{PropResizing}
+  {A : Ordinal} (a : A)
   : IsSimulation (out : ↓a -> A).
 Proof.
   unfold out.
@@ -518,9 +492,8 @@ Proof.
 Qed.
 
 
-Global Instance isinjective_initial_segment `{Funext}
-         `{PropResizing}
-         (A : Ordinal)
+Global Instance isinjective_initial_segment `{Funext} `{PropResizing}
+  (A : Ordinal)
   : IsInjective (initial_segment : A -> Ordinal).
 Proof.
   enough (H1 : forall a1 a2 : A, ↓a1 = ↓a2 -> forall b : ↓a1, out b < a2). {
@@ -538,9 +511,6 @@ Proof.
   }
   rewrite transport_arrow_toconst. rewrite inv_V. apply initial_segment_property.
 Qed.
-
-
-
 
 Lemma equiv_initial_segment_simulation `{Univalence}
       `{PropResizing}
@@ -580,7 +550,6 @@ Proof.
       apply injective in p; try exact _. subst a'. exact a'_y.
 Qed.
 
-
 Lemma path_initial_segment_simulation `{Univalence}
       `{PropResizing}
       {A : Type} {R : Lt A} `{IsOrdinal A R}
@@ -591,16 +560,11 @@ Proof.
   apply equiv_path_Ordinal. apply (equiv_initial_segment_simulation f).
 Qed.
 
-
-
-
-
 (** * `Ordinal` is an ordinal *)
 
 Global Instance lt_Ordinal@{carrier relation +} `{PropResizing}
   : Lt Ordinal@{carrier relation}
   := fun A B => exists b : B, A = ↓b.
-
 
 Global Instance is_mere_relation_lt_on_Ordinal `{Univalence} `{PropResizing}
   : is_mere_relation Ordinal lt_Ordinal.
@@ -610,27 +574,21 @@ Proof.
   intros b b' -> p. apply (injective initial_segment). exact p.
 Qed.
 
-
-Definition bound
-           `{PropResizing}
-           {A B : Ordinal} (H : A < B)
+Definition bound `{PropResizing}
+  {A B : Ordinal} (H : A < B)
   : B
   := H.1.
 
 (* We use this notation to hide the proof of A < B that `bound` takes as an argument *)
 Notation "A ◁ B" := (@bound A B _) (at level 70) : Ordinals.
 
-
-Definition bound_property
-           `{PropResizing}
-           {A B : Ordinal} (H : A < B)
+Definition bound_property `{PropResizing}
+  {A B : Ordinal} (H : A < B)
   : A = ↓(bound H)
   := H.2.
 
-
-Lemma isembedding_initial_segment `{Univalence}
-      `{PropResizing}
-      {A : Ordinal} (a b : A)
+Lemma isembedding_initial_segment `{PropResizing} `{Univalence}
+  {A : Ordinal} (a b : A)
   : a < b <-> ↓a < ↓b.
 Proof.
   split.
@@ -646,9 +604,7 @@ Proof.
     apply initial_segment_property.
 Qed.
 
-
-Global Instance Ordinal_is_ordinal `{Univalence}
-         `{PropResizing}
+Global Instance Ordinal_is_ordinal `{PropResizing} `{Univalence}
   : IsOrdinal Ordinal (<).
 Proof.
   constructor.
@@ -694,7 +650,7 @@ Qed.
 
 (* This is analogous to the set-theoretic statement that an ordinal is the set of all smaller ordinals. *)
 Lemma isomorphism_to_initial_segment `{PropResizing} `{Univalence}
-      (B : Ordinal@{A _})
+  (B : Ordinal@{A _})
   : Isomorphism B ↓B.
 Proof.
   srapply exist.
@@ -710,9 +666,14 @@ Proof.
   - cbn. intros b b'. apply isembedding_initial_segment.
 Qed.
 
-
-
-
+(** But an ordinal isn't isomorphic to any initial segment of itself. *)
+Lemma ordinal_initial `{PropResizing} `{Univalence} (O : Ordinal) (a : O)
+  : Isomorphism O ↓a -> Empty.
+Proof.
+  intros p % equiv_path_Ordinal.
+  enough (HO : O < O) by apply (irreflexive_ordinal_relation _ _ _ _ HO).
+  exists a. apply p.
+Qed.
 
 (** * Ordinal successor *)
 
@@ -756,8 +717,7 @@ Proof.
 Defined.
 
 
-Lemma lt_successor `{Univalence} (A : Ordinal)
-      `{PropResizing}
+Lemma lt_successor `{PropResizing} `{Univalence} (A : Ordinal)
   : A < successor A.
 Proof.
   exists (inr tt).
@@ -777,9 +737,6 @@ Proof.
     + intros a. reflexivity.
   - cbn. intros a a'. reflexivity.
 Qed.
-
-
-
 
 (** * Ordinal limit *)
 
@@ -806,7 +763,6 @@ Definition image_rec {A} {B : HSet} (f : A -> B)
     -> image f -> C
   := Quotient_rec _ _ step.
 
-
 Definition factor2 {A} {B : HSet} (f : A -> B)
   : image f -> B
   := Quotient_rec _ _ f (fun a a' fa_fa' => fa_fa').
@@ -819,7 +775,6 @@ Proof.
   refine (Quotient_ind_hprop _ _ _); intros y; cbn.
   rapply qglue.
 Qed.
-
 
 Definition limit `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal) : Ordinal.
@@ -849,12 +804,8 @@ Proof.
       * reflexivity.
 Defined.
 
-
-
-
 Global Instance le_on_Ordinal : Le Ordinal :=
   fun A B => exists f : A -> B, IsSimulation f.
-
 
 Definition limit_is_upper_bound `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal)
@@ -873,4 +824,26 @@ Proof.
     + apply (injective (factor2 _)); simpl.
       rewrite (path_initial_segment_simulation out).
       symmetry. apply bound_property.
+Qed.
+
+(** Any type equivalent to an ordinal is an ordinal, and we can change the universe that the relation takes values in. *)
+
+(* TODO: Should factor this into two results:  (1) Anything equivalent to an ordinal is an ordinal (with the relation landing in the same universe for both).  (2) Under PropResizing, the universe that the relation takes values in can be changed. *)
+Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
+  : Ordinal@{j _}.
+Proof.
+  exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
+  snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
+  - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
+  - constructor.
+    + intros a a' a_a'. apply (equiv_resize_hprop _)^-1. exact a_a'.
+    + intros a b b_fa. apply tr. exists (g^-1 b). split.
+      * apply equiv_resize_hprop. rewrite eisretr. exact b_fa.
+      * apply eisretr.
+Defined.
+
+Lemma resize_ordinal_iso@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
+  : Isomorphism (resize_ordinal B C g) B.
+Proof.
+  exists g. intros a a'. cbn. split; apply equiv_resize_hprop.
 Qed.

@@ -6,10 +6,61 @@ From HoTT.Sets Require Import Ordinals Powers.
 
 (** This file contains a construction of the Hartogs number. *)
 
+(** We begin with some results about changing the universe of a power set using propositional resizing. *)
+
+Definition power_inj `{PropResizing} {C : Type@{i}} (p : C -> HProp@{j})
+  : C -> HProp@{k}.
+Proof.
+  exact (fun a => Build_HProp (resize_hprop@{j k} (p a))).
+Defined.
+
+Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})
+  : IsInjective (@power_inj _ C).
+Proof.
+  intros p p'. unfold power_inj. intros q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
+  - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
+    rewrite <- q. apply equiv_resize_hprop. apply Ha.
+  - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p a))) a).
+    rewrite q. apply equiv_resize_hprop. apply Ha.
+Qed.
+
+(* TODO: Could factor this as something keeping the [HProp] universe the same, followed by [power_inj]. *)
+Definition power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B)
+  : (C -> HProp) -> (B -> HProp).
+Proof.
+  intros p b. exact (Build_HProp (resize_hprop (forall a, f a = b -> p a))).
+Defined.
+
+Definition injective_power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B)
+  : IsInjective f -> IsInjective (@power_morph _ _ C B f).
+Proof.
+  intros Hf p p' q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
+  - enough (Hp : power_morph f p (f a)).
+    + rewrite q in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
+    + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
+  - enough (Hp : power_morph f p' (f a)).
+    + rewrite <- q in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
+    + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
+Qed.
+
+(** We'll also need this result. *)
+Lemma le_Cardinal_lt_Ordinal `{PropResizing} `{Univalence} (B C : Ordinal)
+  : B < C -> card B ≤ card C.
+Proof.
+  intros B_C. apply tr. cbn. rewrite (bound_property B_C).
+  exists out. apply isinjective_simulation. apply is_simulation_out.
+Qed.
 
 (** * Hartogs number *)
 
 Section Hartogs_Number.
+
+  Declare Scope Hartogs.
+  Open Scope Hartogs.
+
+  Notation "'𝒫'" := power_type (at level 30) : Hartogs.
+
+  Local Coercion subtype_as_type' {X} (Y : 𝒫 X) := { x : X & Y x }.
 
   Universe A.
   Context {univalence : Univalence}
@@ -17,15 +68,7 @@ Section Hartogs_Number.
           {lem: ExcludedMiddle}
           (A : HSet@{A}).
 
-  Lemma le_Cardinal_lt_Ordinal (B C : Ordinal)
-    : B < C -> card B ≤ card C.
-  Proof.
-    intros B_C. apply tr. cbn. rewrite (bound_property B_C).
-    exists out. apply isinjective_simulation. apply is_simulation_out.
-  Qed.
-
-  (* The Hartogs number of A consists of all ordinals that embed into A.
-     Note that this constructions necessarily increases the universe level. *)
+  (* The Hartogs number of [A] consists of all ordinals that embed into [A]. Note that this construction necessarily increases the universe level. *)
 
   Fail Check { B : Ordinal@{A _} | card B <= card A } : Type@{A}.
 
@@ -33,10 +76,9 @@ Section Hartogs_Number.
   Proof.
     set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
-
-    exists carrier relation. srapply (isordinal_simulation pr1).
-    - exact _.
-    - exact _.
+    exists carrier relation. snrapply (isordinal_simulation pr1).
+    1-4: exact _.
+    - apply isinj_embedding, (mapinO_pr1 (Tr (-1))). (* Faster than [exact _.] *)
     - constructor.
       + intros a a' a_a'. exact a_a'.
       + intros [B small_B] C C_B; cbn in *. apply tr.
@@ -48,25 +90,16 @@ Section Hartogs_Number.
         apply (isinjective_f x y). exact fx_fy.
   Defined.
 
-  Declare Scope Hartogs.
-  Open Scope Hartogs.
-
-  Notation "'𝒫'" := power_type (at level 30) : Hartogs.
-
-  Definition proper_subtype_inclusion {A} (U V : 𝒫 A)
-    := (forall a, U a -> V a) /\ merely (exists a : A, V a /\ ~U a).
-  Coercion subtype_as_type' {X} (Y : 𝒫 X) : Type
-    := { x : X & Y x }.
+  Definition proper_subtype_inclusion (U V : 𝒫 A)
+    := (forall a, U a -> V a) /\ merely (exists a : A, V a /\ ~(U a)).
 
   Infix "⊊" := proper_subtype_inclusion (at level 50) : Hartogs.
   Notation "(⊊)" := proper_subtype_inclusion : Hartogs.
 
-  (* The hartogs number of A embeds into the threefold power set of A.
-     This preliminary injection also increases the universe level though. *)
+  (* The hartogs number of [A] embeds into the threefold power set of [A].  This preliminary injection also increases the universe level though. *)
 
   Lemma hartogs_number'_injection
-    : exists f : hartogs_number' -> (𝒫 (𝒫 (𝒫 A)) : Type),
-        IsInjective f.
+    : exists f : hartogs_number' -> (𝒫 (𝒫 (𝒫 A))), IsInjective f.
   Proof.
     transparent assert (ϕ : (forall X : 𝒫 (𝒫 A), Lt X)). {
       intros X. intros x1 x2. exact (x1.1 ⊊ x2.1).
@@ -83,8 +116,8 @@ Section Hartogs_Number.
           intros X. apply hprop_allpath; intros [b1 Hb1] [b2 Hb2].
           snrapply path_sigma_hprop; cbn.
           - intros b. snrapply istrunc_forall.
-            intros a. srapply istrunc_prod.
-            srapply istrunc_arrow.
+            intros a. snrapply istrunc_prod. 2: exact _.
+            snrapply istrunc_arrow.
             rapply ishprop_sigma_disjoint. intros b1' b2' [_ ->] [_ p].
             apply (injective_f). exact p.
           - apply extensionality. intros b'. split.
@@ -92,13 +125,13 @@ Section Hartogs_Number.
               specialize (Hb1 (f b')). apply snd in Hb1.
               specialize (Hb1 (b'; (b'_b1, idpath))).
               apply Hb2 in Hb1. destruct Hb1 as (? & H2 & H3).
-              apply injective in H3; try exact _. destruct H3.
+              apply injective in H3. 2: assumption. destruct H3.
               exact H2.
             + intros b'_b2.
               specialize (Hb2 (f b')). apply snd in Hb2.
               specialize (Hb2 (b'; (b'_b2, idpath))).
               apply Hb1 in Hb2. destruct Hb2 as (? & H2 & H3).
-              apply injective in H3; try exact _. destruct H3.
+              apply injective in H3. 2: assumption. destruct H3.
               exact H2.
         }
         exists (fun X : 𝒫 A =>
@@ -108,8 +141,9 @@ Section Hartogs_Number.
           - srapply equiv_adjointify.
             + intros [X [b _]]. exact b.
             + intros b.
-              unshelve eexists (fun a => Build_HProp (exists b', b' < b /\ a = f b'))
-              ; try exact _. {
+              unshelve eexists (fun a => Build_HProp (exists b', b' < b /\ a = f b')).
+              1: exact _.
+              {
                 apply hprop_allpath. intros [b1 [b1_b p]] [b2 [b2_b q]].
                 apply path_sigma_hprop; cbn. apply (injective f).
                 destruct p, q. reflexivity.
@@ -142,7 +176,7 @@ Section Hartogs_Number.
                 -- apply H'2. exists b1; auto.
                 -- intros X1_fb1. apply H'1 in X1_fb1. destruct X1_fb1 as [b' [b'_b1 fb1_fb']].
                    apply (injective f) in fb1_fb'. destruct fb1_fb'.
-                   apply irreflexivity in b'_b1; try exact _. assumption.
+                   apply irreflexivity in b'_b1. 2: exact _. assumption.
         }
       }
       assert (IsOrdinal X (ϕ X)) by exact (isordinal_simulation iso.1). 
@@ -151,7 +185,7 @@ Section Hartogs_Number.
         apply isomorphism_inverse. assumption.
       }
       enough (merely (Isomorphism (X : Type; ϕ X) C)). {
-        revert X1. rapply Trunc_rec. {
+        revert X1. nrapply Trunc_rec. {
           exact (ishprop_Isomorphism (Build_Ordinal X (ϕ X) _) C).
         }
         auto.
@@ -159,52 +193,17 @@ Section Hartogs_Number.
       rewrite <- H0. apply tr. exact iso.
   Qed.
 
-  (* Using hprop resizing, the threefold power set can be pushed to the same universe level as A. *)
+  (** Using hprop resizing, the threefold power set can be pushed to the same universe level as [A]. *)
 
-  Definition power_inj {pr : PropResizing} {C : Type@{i}} (p : C -> HProp) :
-    (C -> HProp : Type@{i}).
+  Definition uni_fix (X : 𝒫 (𝒫 (𝒫 A))) : ((𝒫 (𝒫 (𝒫 A))) : Type@{A}).
   Proof.
-    exact (fun a => Build_HProp (resize_hprop (p a))).
+    revert X.
+    nrapply power_morph.
+    nrapply power_morph.
+    nrapply power_inj.
   Defined.
 
-  Lemma injective_power_inj {pr : PropResizing} {ua : Univalence} (C : Type@{i}) :
-    IsInjective (@power_inj _ C).
-  Proof.
-    intros p p'. unfold power_inj. intros H. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
-    - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
-      rewrite <- H. apply equiv_resize_hprop. apply Ha.
-    - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p a))) a).
-      rewrite H. apply equiv_resize_hprop. apply Ha.
-  Qed.
-
-  Definition power_morph {pr : PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B) :
-    (C -> HProp) -> (B -> HProp).
-  Proof.
-    intros p b. exact (Build_HProp (resize_hprop (forall a, f a = b -> p a))).
-  Defined.
-
-  Definition injective_power_morph {pr : PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B) :
-    IsInjective f -> IsInjective (@power_morph _ _ C B f).
-  Proof.
-    intros Hf p p' H. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
-    - enough (Hp : power_morph f p (f a)).
-      + rewrite H in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
-      + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
-    - enough (Hp : power_morph f p' (f a)).
-      + rewrite <- H in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
-      + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
-  Qed.
-
-  Definition uni_fix (X : 𝒫 (𝒫 (𝒫 A))) :
-    ((𝒫 (𝒫 (𝒫 A))) : Type@{i}).
-  Proof.
-    srapply power_morph. 3: apply X. intros P.
-    srapply power_morph. 3: apply P.
-    srapply power_inj.
-  Defined.
-
-  Lemma injective_uni_fix :
-    IsInjective uni_fix.
+  Lemma injective_uni_fix : IsInjective uni_fix.
   Proof.
     intros X Y. unfold uni_fix. intros H % injective_power_morph; trivial.
     intros P Q. intros H' % injective_power_morph; trivial.
@@ -213,11 +212,10 @@ Section Hartogs_Number.
 
   (* We can therefore resize the Hartogs number of A to the same universe level as A. *)
 
-  Definition hartogs_number_carrier : Type@{A} :=
-    {X : 𝒫 (𝒫 (𝒫 A)) | resize_hprop (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
+  Definition hartogs_number_carrier : Type@{A}
+    := {X : 𝒫 (𝒫 (𝒫 A)) | resize_hprop (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
 
-  Lemma hartogs_equiv :
-    hartogs_number_carrier <~> hartogs_number'.
+  Lemma hartogs_equiv : hartogs_number_carrier <~> hartogs_number'.
   Proof.
     apply equiv_inverse. unshelve eexists.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
@@ -231,47 +229,20 @@ Section Hartogs_Number.
         intros H'. apply H' in H. now apply hartogs_number'_injection.2.
   Qed.
 
-  Definition resize_ordinal@{i j +} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B) :
-    Ordinal@{j _}.
-  Proof.
-    exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
-    srapply (isordinal_simulation g); try exact _.
-    - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
-    - constructor.
-      + intros a a' a_a'. apply (equiv_resize_hprop _)^-1. exact a_a'.
-      + intros a b b_fa. apply tr. exists (g^-1 b). split.
-        * apply equiv_resize_hprop. rewrite eisretr. exact b_fa.
-        * apply eisretr.
-  Defined.
-
-  Definition hartogs_number : Ordinal@{A _} :=
-    resize_ordinal hartogs_number' hartogs_number_carrier hartogs_equiv.
+  Definition hartogs_number : Ordinal@{A _}
+    := resize_ordinal hartogs_number' hartogs_number_carrier hartogs_equiv.
 
   (* This final definition now satisfies the expected cardinality properties. *)
 
-  Lemma hartogs_number_injection :
-    exists f : hartogs_number -> 𝒫 (𝒫 (𝒫 A)), IsInjective f.
+  Lemma hartogs_number_injection
+    : exists f : hartogs_number -> 𝒫 (𝒫 (𝒫 A)), IsInjective f.
   Proof.  
     cbn. exists proj1. intros [X HX] [Y HY]. cbn. intros ->.
     apply ap. apply path_ishprop.
   Qed.
 
-  Lemma ordinal_initial (O : Ordinal) (a : O) :
-    Isomorphism O ↓a -> Empty.
-  Proof.
-    intros H % equiv_path_Ordinal.
-    enough (HO : O < O) by apply (irreflexive_ordinal_relation _ _ _ _ HO).
-    exists a. apply H.
-  Qed.
-
-  Lemma resize_ordinal_iso@{i j +} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B) :
-    Isomorphism (resize_ordinal B C g) B.
-  Proof.
-    exists g. intros a a'. cbn. split; apply equiv_resize_hprop.
-  Qed.
-
-  Lemma hartogs_number_no_injection :
-    ~ (exists f : hartogs_number -> A, IsInjective f).
+  Lemma hartogs_number_no_injection
+    : ~ (exists f : hartogs_number -> A, IsInjective f).
   Proof.
     cbn. intros [f Hf]. cbn in f.
     assert (HN : card hartogs_number <= card A). { apply tr. now exists f. }
@@ -282,7 +253,7 @@ Section Hartogs_Number.
       unfold hartogs_number.
       exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).
     - assert (Isomorphism hartogs_number ↓hartogs_number) by apply isomorphism_to_initial_segment.
-      eapply transitive_Isomorphism; try apply X.
+      eapply transitive_Isomorphism. 1: exact X.
       unshelve eexists.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
@@ -292,9 +263,9 @@ Section Hartogs_Number.
           -- apply equiv_resize_hprop. cbn. exact Ha.
         * intros [[a Ha] H % equiv_resize_hprop]. exists a.
           apply equiv_resize_hprop. apply H.
-        * intros [[a Ha] H]. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
-        * intros [a Ha]. apply path_sigma_hprop. reflexivity.
-      + intros [[a Ha] H1] [[b H] H2]. cbn. reflexivity.
+        * intro a. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
+        * intro a. apply path_sigma_hprop. reflexivity.
+      + reflexivity.
   Defined.
 
 End Hartogs_Number.
