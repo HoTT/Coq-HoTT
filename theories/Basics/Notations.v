@@ -9,6 +9,7 @@ Reserved Notation "'exists' x .. y , p"
 Local Set Warnings Append "-skip-spaces-curly".
 
 (** ML Tactic Notations *)
+Declare ML Module "ltacX_common_plugin".
 Declare ML Module "ltac_plugin".
 Global Set Default Proof Mode "Classic".
 
