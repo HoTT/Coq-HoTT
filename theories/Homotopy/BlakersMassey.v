@@ -491,7 +491,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       apply ap; rewrite transport_paths_r.
       (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to... something that's almost fully path-general!  So with just a little bit of further work, we can reduce it also to something we can prove with path-induction. *)
       Transparent frobnicate.
-      cbn. (* This is slow, but without it we can't [rewrite]. *)
+      cbn.
       Opaque frobnicate.
       rewrite (transport_compose (fun q => glue q @ (glue q01)^ = 1%path) pr1).
       unfold path_sigma'; rewrite ap_V, ap_pr1_path_sigma, transport_1.
@@ -534,6 +534,8 @@ Global Instance blakers_massey `{Univalence} (m n : trunc_index)
   : IsConnMap (m +2+ n) (@spglue X Y Q x y).
 Proof.
   intros r.
-  srefine (contr_code_inhab Q (m +2+ n) _ x
+  snrefine (contr_code_inhab Q (m +2+ n) _ x
                             (merely_isconnected n _) (spushr Q y) r).
+  1: intros; apply isconnected_join.
+  all: exact _.
 Defined.
