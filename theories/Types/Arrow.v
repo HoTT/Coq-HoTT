@@ -2,7 +2,7 @@
 (** * Theorems about Non-dependent function types *)
 
 Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable
-               Basics.Equivalences Basics.Trunc.
+               Basics.Equivalences Basics.Trunc Basics.Tactics.
 Require Import Types.Forall.
 Local Open Scope path_scope.
 
@@ -208,6 +208,18 @@ Global Instance contr_arrow {A B : Type} `{Contr B}
 Global Instance istrunc_arrow {A B : Type} `{IsTrunc n B}
   : IsTrunc n (A -> B) | 100
   := istrunc_forall.
+
+(** ** Functions from a contractible type *)
+
+(** This also follows from [equiv_contr_forall], but this proof has a better inverse map. *)
+Definition equiv_arrow_from_contr (A B : Type) `{Contr A}
+  : (A -> B) <~> B.
+Proof.
+  srapply (equiv_adjointify (fun f => f (center A)) const).
+  - reflexivity.
+  - intro f; funext a; unfold const; simpl.
+    apply (ap f), contr.
+Defined.
 
 (** ** Equivalences *)
 

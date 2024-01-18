@@ -575,7 +575,7 @@ Proof.
     refine (natequiv_opyon_equiv _^-1$).
     rapply pequiv_pclassifyingspace_pi1. }
   snrapply Build_NatEquiv.
-  1: intro; exact equiv_ptr_rec.
+  1: intro; exact pequiv_ptr_rec.
   rapply is1natural_prewhisker.
 Defined.
 
