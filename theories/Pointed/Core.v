@@ -447,10 +447,6 @@ Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B
 Definition ppForall (A : pType) (B : A -> pType) : pType
   := [pForall A (pointed_fam B), point_pforall B].
 
-Definition ppMap (A B : pType) : pType
-  := ppForall A (fun _ => B).
-
-Infix "->**" := ppMap : pointed_scope.
 Notation "'ppforall'  x .. y , P"
   := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
      : pointed_scope.
@@ -458,6 +454,11 @@ Notation "'ppforall'  x .. y , P"
 (** The constant (zero) map *)
 Definition pconst {A B : pType} : A ->* B
   := point_pforall (fun _ => B).
+
+Definition ppMap (A B : pType) : pType
+  := [A ->* B, pconst].
+
+Infix "->**" := ppMap : pointed_scope.
 
 Lemma pmap_punit_pconst {A : pType} (f : A ->* pUnit) : pconst ==* f.
 Proof.

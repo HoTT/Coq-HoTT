@@ -297,7 +297,7 @@ Ltac strip_truncations :=
 
 (** ** Iterated truncations *)
 
-(** Compare to [O_leq_Tr] below. *)
+(** Compare to [O_leq_Tr] and [O_strong_leq_Tr] in SeparatedTrunc.v. *)
 Definition O_leq_Tr_leq {n m : trunc_index} (Hmn : m <= n)
   : O_leq (Tr m) (Tr n).
 Proof.

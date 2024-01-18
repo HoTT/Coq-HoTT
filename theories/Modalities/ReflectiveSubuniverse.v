@@ -1452,6 +1452,10 @@ Section ConnectedTypes.
                                     (ooextendable_const_isconnected_inO A C))).
   Defined.
 
+  Definition equiv_const_isconnected_inO `{Funext}
+             {A : Type} `{IsConnected O A} (C : Type) `{In O C}
+  : C <~> (A -> C) := Build_Equiv _ _ const (isequiv_const_isconnected_inO C).
+
 End ConnectedTypes.
 
 (** ** Modally truncated maps *)
