@@ -235,7 +235,7 @@ Section EilenbergMacLane.
     nrapply O_inverts_conn_map.
     nrapply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.
-    rapply conn_map_loop_susp_unit.
+    apply (conn_map_loop_susp_unit n X).
   Defined.
 
   Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)

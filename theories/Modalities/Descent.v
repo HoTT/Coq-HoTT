@@ -64,8 +64,8 @@ Section LeftExactness.
 Universe i.
 Context (O' O : ReflectiveSubuniverse@{i}) `{O << O', O <<< O'}.
 
-(** Proposition 2.30 of CORS and Theorem 3.1(xii) of RSS: any [O']-equivalence is [O]-connected.  The special case when [f = to O' A] requires only [O << O'], but the general case seems to require [O <<< O']. *)
-Global Instance conn_map_OO_inverts
+(** Proposition 2.30 of CORS and Theorem 3.1(xii) of RSS: any [O']-equivalence is [O]-connected.  The special case when [f = to O' A] requires only [O << O'], but the general case seems to require [O <<< O']. It is convenient to have this as an instance in this file, but we don't make it global, as it requires that Coq guess [O']. *)
+Local Instance conn_map_OO_inverts
        {A B : Type} (f : A -> B) `{O_inverts O' f}
   : IsConnMap O f.
 Proof.
@@ -261,7 +261,7 @@ Definition OO_isconnected_hfiber
   := OO_conn_map_isconnected f x.
 
 (** Theorem 3.1(iv) of RSS: an [O]-modal map between [O']-connected types is an equivalence. *)
-Global Instance OO_isequiv_mapino_isconnected
+Definition OO_isequiv_mapino_isconnected
        {Y X : Type} `{IsConnected O' Y, IsConnected O' X} (f : Y -> X) `{MapIn O _ _ f}
   : IsEquiv f.
 Proof.
