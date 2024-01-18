@@ -111,8 +111,8 @@ Global Instance contr_unit : Contr Unit | 0 := Build_Contr _ tt (fun t : Unit =>
 Definition equiv_contr_unit `{Contr A} : A <~> Unit
   := equiv_contr_contr.
 
-(* Conversely, a type equivalent to [Unit] is contractible. *)
-Global Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
+(* Conversely, a type equivalent to [Unit] is contractible. We don't make this an instance because Coq would have to guess the equivalence.  And when it has a map in mind, it would try to use [isequiv_contr_contr], which would cause a cycle. *)
+Definition contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A
   := contr_equiv' Unit f^-1%equiv.
 
 (** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when [const tt] is used in a context that doesn't have [Universe Minimization ToSet] as this file does. If we ever set that globally, then we could get rid of this and remove some imports of this file. *)

@@ -34,7 +34,7 @@ Section LexModality.
     := OO_conn_map_isconnected O O f.
 
   (** RSS Theorem 3.1 (iv) *)
-  Global Instance isequiv_mapino_isconnected
+  Definition isequiv_mapino_isconnected
          {Y X : Type} `{IsConnected O Y, IsConnected O X}
          (f : Y -> X) `{MapIn O _ _ f}
     : IsEquiv f
