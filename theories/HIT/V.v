@@ -395,7 +395,7 @@ Proof.
     apply setext'; split.
     + intro a. apply tr; exists (eu a). exact (ap10 factor a).
     + intro a'. generalize (epi_eu a').
-      intros ?; refine (Trunc_functor (-1) _ (center _)).
+      intro IC; refine (Trunc_functor (-1) _ (@center _ IC)).
       intros [a p]. exists a. transitivity (mu (eu a)).
       * exact (ap10 factor a).
       * exact (ap mu p).

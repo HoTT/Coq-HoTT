@@ -1636,7 +1636,7 @@ Section ConnectedMaps.
   : forall b:B, P b.
   Proof.
     intros b.
-    refine (pr1 (isconnected_elim O _ _)).
+    refine (pr1 (isconnected_elim O (A:=hfiber f b) _ _)).
     intros [a p].
     exact (transport P p (d a)).
   Defined.
