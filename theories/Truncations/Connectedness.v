@@ -134,10 +134,10 @@ Definition merely_isconnected n A `{IsConnected n.+1 A}
   : merely A
   := @center _ (isconnected_pred_add' n (-1) A).
 
-(** And that an [n]-connected type, with [n >= 0], is [0]-connected. *)
-Definition is0connected_isconnected (n : nat) A `{IsConnected n A}
+(** And that an [n.+2]-connected type is [0]-connected. *)
+Definition is0connected_isconnected (n : trunc_index) A `{IsConnected n.+2 A}
   : IsConnected 0 A
-  := isconnected_pred_add' n.-2 0 A.
+  := isconnected_pred_add' n 0 A.
 
 Definition isconnmap_pred_add n m A B (f : A -> B) `{IsConnMap (n +2+ m) _ _ f}
   : IsConnMap m f.
