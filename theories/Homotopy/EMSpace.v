@@ -64,25 +64,24 @@ Section EilenbergMacLane.
   Defined.
 
   Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
-    : loops K(G, n.+1) <~>* K(G, n).
+    : K(G, n) <~>* loops K(G, n.+1).
   Proof.
     destruct n.
-    1: apply pequiv_loops_bg_g.
-    change (loops (pTr n.+2 (psusp (K(G, n.+1)))) <~>* K(G, n.+1)).
-    refine (_ o*E (ptr_loops _ _)^-1* ).
+    1: apply pequiv_g_loops_bg.
+    change (K(G, n.+1) <~>* loops (pTr n.+2 (psusp (K(G, n.+1))))).
+    refine (ptr_loops _ _ o*E _).
     destruct n.
-    { symmetry.
-      srapply (licata_finster (m:=-2)). }
-    refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
-    symmetry; rapply pequiv_ptr_loop_psusp'.
+    1: srapply (licata_finster (m:=-2)).
+    refine (_ o*E pequiv_ptr (n:=n.+2)).
+    rapply pequiv_ptr_loop_psusp'.
   Defined.
 
   Definition pequiv_loops_em_g (G : AbGroup) (n : nat)
-    : iterated_loops n K(G, n) <~>* G.
+    : G <~>* iterated_loops n K(G, n).
   Proof.
     induction n.
     - reflexivity.
-    - refine (IHn o*E _ o*E unfold_iterated_loops' _ _).
+    - refine ((unfold_iterated_loops' _ _)^-1* o*E _ o*E IHn).
       exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).
   Defined.
 
@@ -92,17 +91,16 @@ Section EilenbergMacLane.
   Proof.
     induction n.
     - apply grp_iso_g_pi1_bg.
-    - snrapply (transitive_groupisomorphism _ _ _ IHn).
-      symmetry.
-      snrapply (transitive_groupisomorphism _ _ _ (groupiso_pi_loops _ _)).
-      apply (groupiso_pi_functor _ (pequiv_loops_em_em _ _)).
+    - nrefine (grp_iso_compose _ IHn).
+      nrefine (grp_iso_compose _ (groupiso_pi_functor _ (pequiv_loops_em_em _ _))).
+      symmetry; apply (groupiso_pi_loops _ _).
   Defined.
 
   Definition iscohhspace_em `{Univalence} {G : AbGroup} (n : nat)
     : IsCohHSpace K(G, n).
   Proof.
     nrapply iscohhspace_equiv_cohhspace.
-    2: symmetry; apply pequiv_loops_em_em.
+    2: apply pequiv_loops_em_em.
     apply iscohhspace_loops.
   Defined.
 
