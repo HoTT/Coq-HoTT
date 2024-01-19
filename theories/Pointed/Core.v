@@ -443,7 +443,7 @@ Definition pointed_fam {A : pType} (B : A -> pType) : pFam A
 Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B)
   := Build_pForall A (pointed_fam B) (fun x => point (B x)) 1.
 
-(** The pointed type of pointed maps. For dependent pointed maps we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
+(** The pointed type of dependent pointed maps. Note that we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
 Definition ppForall (A : pType) (B : A -> pType) : pType
   := [pForall A (pointed_fam B), point_pforall B].
 
@@ -455,6 +455,7 @@ Notation "'ppforall'  x .. y , P"
 Definition pconst {A B : pType} : A ->* B
   := point_pforall (fun _ => B).
 
+(** The pointed type of pointed maps.  This is a special case of [ppForall]. *)
 Definition ppMap (A B : pType) : pType
   := [A ->* B, pconst].
 
