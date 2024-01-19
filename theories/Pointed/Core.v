@@ -4,6 +4,7 @@ Require Import PathAny.
 Require Import WildCat.
 Require Import Truncations.Core.
 Require Import ReflectiveSubuniverse.
+Require Import Extensions.
 
 Local Set Polymorphic Inductive Cumulativity.
 
@@ -70,6 +71,9 @@ Notation "A ->* B" := (pForall A (pfam_const B)) : pointed_scope.
 Definition Build_pMap (A B : pType) (f : A -> B) (p : f (point A) = point B)
   : A ->* B
   := Build_pForall A (pfam_const B) f p.
+
+(** The [&] tells Coq to use the context to infer the later arguments (in this case, all of them). *)
+Arguments Build_pMap & _ _ _ _.
 
 (** Pointed maps perserve the base point *)
 Definition point_eq {A B : pType} (f : A ->* B)
@@ -234,6 +238,16 @@ Definition issig_pequiv (A B : pType)
 Definition issig_pequiv' (A B : pType)
   : {f : A <~> B & f (point A) = point B} <~> (A <~>* B)
   := ltac:(make_equiv).
+
+(** pForall can also be described as a type of extensions. *)
+Definition equiv_extension_along_pforall `{Funext} {A : pType} (P : pFam A)
+  : ExtensionAlong (unit_name (point A)) P (unit_name (dpoint P)) <~> pForall A P.
+Proof.
+  unfold ExtensionAlong.
+  refine (issig_pforall A P oE _).
+  apply equiv_functor_sigma_id; intro s.
+  symmetry; apply equiv_unit_rec.
+Defined.
 
 (** This is [equiv_prod_coind] for pointed families. *)
 Definition equiv_pprod_coind {A : pType} (P Q : pFam A)
@@ -429,14 +443,10 @@ Definition pointed_fam {A : pType} (B : A -> pType) : pFam A
 Definition point_pforall {A : pType} (B : A -> pType) : pForall A (pointed_fam B)
   := Build_pForall A (pointed_fam B) (fun x => point (B x)) 1.
 
-(** The pointed type of pointed maps. For dependent pointed maps we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
+(** The pointed type of dependent pointed maps. Note that we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)
 Definition ppForall (A : pType) (B : A -> pType) : pType
   := [pForall A (pointed_fam B), point_pforall B].
 
-Definition ppMap (A B : pType) : pType
-  := ppForall A (fun _ => B).
-
-Infix "->**" := ppMap : pointed_scope.
 Notation "'ppforall'  x .. y , P"
   := (ppForall _ (fun x => .. (ppForall _ (fun y => P)) ..))
      : pointed_scope.
@@ -444,6 +454,12 @@ Notation "'ppforall'  x .. y , P"
 (** The constant (zero) map *)
 Definition pconst {A B : pType} : A ->* B
   := point_pforall (fun _ => B).
+
+(** The pointed type of pointed maps.  This is a special case of [ppForall]. *)
+Definition ppMap (A B : pType) : pType
+  := [A ->* B, pconst].
+
+Infix "->**" := ppMap : pointed_scope.
 
 Lemma pmap_punit_pconst {A : pType} (f : A ->* pUnit) : pconst ==* f.
 Proof.
@@ -457,6 +473,14 @@ Proof.
   srapply Build_pHomotopy.
   1: intros []; exact (point_eq f)^.
   exact (concat_1p _)^.
+Defined.
+
+Global Instance contr_pmap_from_contr `{Funext} {A B : pType} `{C : Contr A}
+  : Contr (A ->* B).
+Proof.
+  rapply (contr_equiv' { b : B & b = pt }).
+  refine (issig_pmap A B oE _).
+  exact (equiv_functor_sigma_pb (equiv_arrow_from_contr A B)^-1%equiv).
 Defined.
 
 (** * pType and pForall as wild categories *)

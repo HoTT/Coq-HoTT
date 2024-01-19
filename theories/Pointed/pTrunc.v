@@ -1,9 +1,11 @@
-Require Import Basics Types WildCat Truncations.Core Truncations.SeparatedTrunc
+Require Import Basics Types WildCat Truncations
   Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.
 
 Local Open Scope pointed_scope.
 
 (** * Truncations of pointed types *)
+
+(** TODO: Many things here can be generalized to any modality or any reflective subuniverse, and could be moved to pModality.v *)
 
 Definition pTr (n : trunc_index) (A : pType) : pType
   := [Tr n A, _].
@@ -42,21 +44,9 @@ Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x
   : pForall (pTr n X) Y
   := Build_pForall (pTr n X) Y (Trunc_ind Y f) (dpoint_eq f).
 
-Definition equiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
-  : (pTr n X ->* Y) <~> (X ->* Y).
-Proof.
-  srapply equiv_adjointify.
-  { intro f.
-    exact (f o* ptr). }
-  1: srapply pTr_rec.
-  1: nrapply pTr_rec_beta_path.
-  intro f.
-  apply path_pforall.
-  srapply Build_pHomotopy.
-  1: by rapply Trunc_ind.
-  cbn.
-  symmetry; apply concat_pp_V.
-Defined.
+Definition pequiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
+  : (pTr n X ->** Y) <~>* (X ->** Y)
+  := pequiv_o_pto_O _ X Y.
 
 (** ** Functoriality of [pTr] *)
 
@@ -104,7 +94,7 @@ Proof.
   reflexivity.
 Defined.
 
-Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
+Definition pequiv_ptr_functor {X Y : pType} (n : trunc_index) (f : X <~>* Y)
   : pTr n X <~>* pTr n Y
   := emap (pTr n) f.
 
@@ -135,21 +125,11 @@ Definition ptr_loops_eq `{Univalence} (n : trunc_index) (A : pType)
   : pTr n (loops A) = loops (pTr n.+1 A) :> pType
   := path_ptype (ptr_loops n A).
 
-Definition pequiv_ptr_functor {X Y : pType} n
-  : X <~>* Y -> pTr n X <~>* pTr n Y.
-Proof.
-  intro e.
-  srapply Build_pEquiv.
-  1: rapply (fmap (pTr _) e).
-  exact _.
-Defined.
-
 (* This lemma generalizes a goal that appears in [ptr_loops_commutes], allowing us to prove it by path induction. *)
-Definition path_Tr_commutes (n : trunc_index) (A : Type) (a0 a1 : A)
-  : (@path_Tr n A a0 a1) o tr == ap tr.
+Definition path_Tr_commutes (n : trunc_index) (A : Type) (a0 a1 : A) (p : a0 = a1)
+  : path_Tr (n:=n) (tr p) = ap tr p.
 Proof.
-  intro p; induction p.
-  reflexivity.
+  by destruct p.
 Defined.
 
 (* [ptr_loops] commutes with the two [ptr] maps. *)
@@ -168,3 +148,29 @@ Proof.
     reflexivity.
 Defined.
 
+(** ** Truncatedness of [pForall] and [pMap] *)
+
+(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+k+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m], and so there is a shift compared to the informal statement. This version also allows [n] to be one smaller than BvDR allow. *)
+Definition istrunc_pforall `{Univalence} {m n : trunc_index}
+  (X : pType) {iscX : IsConnected m.+1 X}
+  (Y : pFam X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
+  : IsTrunc n (pForall X Y).
+Proof.
+  nrapply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall Y)).
+  rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).
+Defined.
+
+(** From this we deduce the non-dependent version, which is Corollary 4.3 of BvDR.  We include [n = -2] here as well, but in this case it is not interesting.  Since [X ->* Y] is inhabited, the [n = -1] case also gives contractibility, with weaker hypotheses. *)
+Definition istrunc_pmap `{Univalence} {m n : trunc_index} (X Y : pType)
+  `{!IsConnected m.+1 X} `{!IsTrunc (n +2+ m) Y}
+  : IsTrunc n (X ->* Y)
+  := istrunc_pforall X (pfam_const Y).
+
+(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works for any reflective subuniverse and avoids univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be provied without univalence, the rest can be done inductively without univalence. *)
+Definition contr_pmap_isconnected_inO `{Funext} (O : ReflectiveSubuniverse)
+  (X : pType) `{IsConnected O X} (Y : pType) `{In O Y}
+  : Contr (X ->* Y).
+Proof.
+  srapply (contr_equiv' ([O X, _] ->* Y)).
+  rapply pequiv_o_pto_O.
+Defined.

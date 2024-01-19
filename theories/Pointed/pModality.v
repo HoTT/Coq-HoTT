@@ -1,8 +1,10 @@
-Require Import Basics Types ReflectiveSubuniverse Pointed.Core.
+Require Import Basics Types ReflectiveSubuniverse Pointed.Core Pointed.pEquiv.
 
 Local Open Scope pointed_scope.
 
-(** * Modalities and pointed types *)
+(** * Modalities, reflective subuniverses and pointed types *)
+
+(** So far, everything is about general reflective subuniverses, but in the future results about modalities can be placed here as well. *)
 
 Global Instance ispointed_O `{O : ReflectiveSubuniverse} (X : Type)
   `{IsPointed X} : IsPointed (O X) := to O _ (point X).
@@ -29,6 +31,25 @@ Proof.
   cbn.
   apply moveL_pV.
   exact (concat_1p _)^.
+Defined.
+
+(** A pointed version of the universal property. *)
+Definition pequiv_o_pto_O `{Funext}
+  (O : ReflectiveSubuniverse) (P Q : pType) `{In O Q}
+  : ([O P, _] ->** Q) <~>* (P ->** Q).
+Proof.
+  snrapply Build_pEquiv.
+  (* We could just use the map [e] defined in the next bullet, but we want Coq to immediately unfold the underlying map to this. *)
+  - exact (Build_pMap _ _ (fun f => f o* pto O P) 1).
+  (* We'll give an equivalence that definitionally has the same underlying map. *)
+  - transparent assert (e : (([O P, _] ->* Q) <~> (P ->* Q))).
+    + refine (issig_pmap P Q oE _ oE (issig_pmap [O P, _] Q)^-1%equiv).
+      snrapply equiv_functor_sigma'.
+      * rapply equiv_o_to_O.
+      * intro f; cbn.
+      (* [reflexivity] works here, but then the underlying map won't agree definitionally with precomposition by [pto P], since pointed composition inserts a reflexivity path here. *)
+      apply (equiv_concat_l 1).
+    + apply (equiv_isequiv e).
 Defined.
 
 (** ** Pointed functoriality *)

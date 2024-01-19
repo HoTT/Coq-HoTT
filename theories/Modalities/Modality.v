@@ -160,6 +160,15 @@ Proof.
   rapply Build_Modality'.
 Defined.
 
+(** When combined with [isequiv_oD_to_O], this yields Theorem 7.7.7 in the book. *)
+Definition isequiv_oD_to_O_modality
+           `{Funext} (O : Modality) {A : Type}
+           (B : O A -> Type) `{forall a, In O (B a)}
+  : IsEquiv (fun (h : forall oa, B oa) => h oD to O A).
+Proof.
+  srapply (isequiv_oD_to_O O O).
+Defined.
+
 (** Of course, modalities have dependent eliminators. *)
 Definition O_ind {O : Subuniverse} {A : Type} `{ReflectsD O O A}
   := @OO_ind O O A _ _.
@@ -197,15 +206,6 @@ Proof.
     + rapply O_ind'.
     + rapply O_ind_beta'.
     + rapply inO_paths'.
-Defined.
-
-(** When combined with [isequiv_oD_to_O], this yields Theorem 7.7.7 in the book. *)
-Definition isequiv_oD_to_O_modality
-           `{Funext} (O : Modality) {A : Type}
-           (B : O A -> Type) `{forall a, In O (B a)}
-  : IsEquiv (fun (h : forall oa, B oa) => h oD to O A).
-Proof.
-  srapply (isequiv_oD_to_O O O).
 Defined.
 
 (** A tactic that extends [strip_reflections] to modalities. It handles non-dependent elimination for reflective subuniverses and dependent elimination for modalities. [strip_truncations] does the same for truncations, but introduces fewer universe variables, so tends to work better when removing truncations. *)

@@ -43,7 +43,7 @@ Proof.
   - intros; cbn. reflexivity.
 Defined.
 
-Definition path_Tr {n A} (x y : A)
+Definition path_Tr {n A} {x y : A}
   : Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A)
   := path_OO (Tr n.+1) (Tr n) x y.
 

@@ -95,7 +95,7 @@ Proof.
   (** This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
   intro a.
   (** Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
-  pose proof (p := center _ : Tr n ((point A) = a)).
+  pose proof (p := center (Tr n ((point A) = a))).
   strip_truncations.
   exact (p # p0).
 Defined.
