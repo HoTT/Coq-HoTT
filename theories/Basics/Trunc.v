@@ -220,6 +220,21 @@ Proof.
   by apply IHb.
 Defined.
 
+Definition trunc_index_leq_add@{} n m
+  : n <= m +2+ n.
+Proof.
+  simple_induction m m IHm.
+  - reflexivity.
+  - rapply trunc_index_leq_transitive.
+Defined.
+
+Definition trunc_index_leq_add'@{} n m
+  : n <= n +2+ m.
+Proof.
+  rewrite trunc_index_add_comm.
+  apply trunc_index_leq_add.
+Defined.
+
 Fixpoint trunc_index_min@{} (n m : trunc_index)
   : trunc_index.
 Proof.
