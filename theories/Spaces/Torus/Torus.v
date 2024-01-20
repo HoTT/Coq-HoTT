@@ -85,6 +85,10 @@ Admitted.
 (** The torus is pointed. *)
 Global Instance ispointed_torus : IsPointed Torus := tbase.
 
+(** The loops commute. *)
+Definition loops_commute_torus : loop_a @ loop_b = loop_b @ loop_a
+  := equiv_sq_path^-1 surf.
+
 (* TODO:
 (* We ought to be able to prove the computation rules all at the same time *)
 (* This gives me the idea of writing all our computation rules as a
