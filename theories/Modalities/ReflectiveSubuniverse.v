@@ -298,7 +298,7 @@ Section Reflective_Subuniverse.
   Defined.
 
   (** If [T] is in the subuniverse, then [to O T] is an equivalence. *)
-  Definition isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
+  Global Instance isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
   Proof.
     pose (g := O_rec idmap : O T -> T).
     refine (isequiv_adjointify (to O T) g _ _).
@@ -309,7 +309,6 @@ Section Reflective_Subuniverse.
     - intros x.
       apply O_rec_beta.
   Defined.
-  Global Existing Instance isequiv_to_O_inO.
 
   Definition equiv_to_O (T : Type) `{In O T} : T <~> O T
     := Build_Equiv T (O T) (to O T) _.
@@ -509,6 +508,11 @@ Section Reflective_Subuniverse.
       - symmetry. exact (O_rec_beta (g o f) x).
     Defined.
 
+    (** In particular, we have: *)
+    Definition O_rec_postcompose_to_O {A B : Type} (f : A -> B) `{In O B}
+    : to O B o O_rec f == O_functor f
+    := O_rec_postcompose f (to O B).
+
   End Functor.
 
   Section Replete.
@@ -575,18 +579,25 @@ Section Reflective_Subuniverse.
            {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
     : IsEquiv (O_rec (O := O) f).
     Proof.
-      apply isequiv_O_inverts.
-      nrefine (cancelR_isequiv (O_functor (to O A))); [ exact _ | ].
-      nrefine (isequiv_homotopic (O_functor (O_rec f o to O A))
-                                (O_functor_compose _ _)).
-      refine (isequiv_homotopic (O_functor f)
-               (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
+      srapply (cancelL_isequiv (to O B)).
+      1,2: exact _. (* Why is this line needed? *)
+      rapply (isequiv_homotopic (O_functor f) (fun x => (O_rec_postcompose_to_O f x)^)).
     Defined.
 
     Definition equiv_O_rec_O_inverts
            {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
       : O A <~> B
       := Build_Equiv _ _ _ (isequiv_O_rec_O_inverts f).
+
+    Definition isequiv_to_O_O_inverts
+           {A B : Type} `{In O A} (f : A -> B) `{O_inverts f}
+      : IsEquiv (to O B o f)
+      := isequiv_homotopic (O_functor f o to O A) (to_O_natural f).
+
+    Definition equiv_to_O_O_inverts
+           {A B : Type} `{In O A} (f : A -> B) `{O_inverts f}
+      : A <~> O B
+      := Build_Equiv _ _ _ (isequiv_to_O_O_inverts f).
 
     (** If [f] is inverted by [O], then mapping out of it into any modal type is an equivalence.  First we prove a version not requiring funext.  For use in [O_inverts_O_leq] below, we allow the types [A], [B], and [Z] to perhaps live in smaller universes than the one [i] on which our subuniverse lives.  This the first half of Lemma 1.23 of RSS. *)
     Definition ooextendable_O_inverts@{a b z i}
