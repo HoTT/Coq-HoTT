@@ -33,7 +33,7 @@ Qed.
 Local Notation T := ([Torus, _]).
 Local Notation S1 := ([Circle, _]).
 
-Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
+Lemma pequiv_torus_prod_circles : T <~>* S1 * S1.
 Proof.
   srapply Build_pEquiv'.
   1: apply equiv_torus_prod_Circle.
