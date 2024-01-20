@@ -5,8 +5,8 @@ Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
-Require Import Homotopy.EMSpace.
 Require Import Homotopy.HSpaceS1.
+Require Import Homotopy.Hopf.
 
 (** * We show that the nth homotopy group of the n-sphere is the integers, for n >= 1. *)
 
@@ -51,7 +51,7 @@ Section Pi2S2.
 
   Definition ptr_loops_s2_s1 `{Univalence}
     : pTr 1 (loops (psphere 2)) <~>* psphere 1
-    := licata_finster (psphere 1).
+    := (licata_finster (psphere 1))^-1*.
 
   Definition pi2_s2 `{Univalence}
     : Pi 2 (psphere 2) $<~> abgroup_Z.

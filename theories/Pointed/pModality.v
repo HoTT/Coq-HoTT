@@ -69,3 +69,8 @@ Definition pto_O_natural `(O : ReflectiveSubuniverse) {X Y : pType}
 Proof.
   nrapply pO_rec_beta.
 Defined.
+
+Definition pequiv_O_inverts `(O : ReflectiveSubuniverse) {X Y : pType}
+  (f : X ->* Y) `{O_inverts O f}
+  : [O X, _] <~>* [O Y, _]
+  := Build_pEquiv _ _ (O_pfunctor O f) _.
