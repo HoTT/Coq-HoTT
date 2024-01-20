@@ -66,7 +66,7 @@ Proof.
       by apply (conn_map_loop_susp_unit).
   - pose (is0connected_isconnected n.-2 _).
     nrapply isembedding_pi_psect.
-    rapply hopf_retraction.
+    apply hopf_retraction.
 Defined.
 
 (** By Freudenthal, [loop_susp_unit] induces an equivalence on lower homotopy groups as well, so it is a (2n+1)-equivalence.  We formalize it below with [m = n-1], and allow [n] to start at [-1].  We prove it using a more general result about reflective subuniverses, [OO_inverts_conn_map_factor_conn_map], but one could also use homotopy groups and the truncated Whitehead theorem. *)
@@ -90,7 +90,7 @@ Definition freudenthal_hspace `{Univalence}
   : O_inverts (Tr (m.+1 +2+ m.+1).+1) (loop_susp_unit X).
 Proof.
   pose (is0connected_isconnected m _).
-  refine (freudenthal_hspace' (m:=m.+1) X).
+  exact (freudenthal_hspace' (m:=m.+1) X).
 Defined.
 
 (** Here we give a generalization of a result from Eilenberg-MacLane Spaces in Homotopy Type Theory, Dan Licata and Eric Finster.  Their version corresponds to [m = -2] in our version.  Their encode-decode proof was formalized in this library in EMSpace.v until this shorter and more general approach was found. *)
@@ -100,6 +100,6 @@ Definition licata_finster `{Univalence}
   : X <~>* pTr k (loops (psusp X)).
 Proof.
   refine (_ o*E pequiv_ptr (n:=k)).
-  refine (pequiv_O_inverts k (loop_susp_unit X)).
+  nrefine (pequiv_O_inverts k (loop_susp_unit X)).
   rapply freudenthal_hspace.
 Defined.
