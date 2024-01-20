@@ -61,16 +61,17 @@ Section PO.
     : forall w, P w.
   Proof.
     srapply Colimit_ind.
-    - intros [[]|[]] x; cbn.
-      + exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
+    - intros [u|[]] x; cbn.
+      + exact (@colimp _ (span f g) (inl u) (inr true) tt x # l' (f x)).
       + exact (l' x).
       + exact (r' x).
     - intros [] [] []; cbn.
-      destruct u, b; cbn.
+      destruct b; cbn.
       1: reflexivity.
       unfold popp in pp'.
       intro a. apply moveR_transport_p.
-      etransitivity; [|apply transport_pp].
+      rhs_V nrapply transport_pp.
+      destruct u.
       symmetry; apply pp'.
   Defined.
 
@@ -79,31 +80,13 @@ Section PO.
     : forall x, apD (PO_ind P l' r' pp') (popp x) = pp' x.
   Proof.
     intro x.
-    etransitivity.
-    1: eapply apD_pp.
-    assert (apD (PO_ind P l' r' pp')
-      (@colimp _ (span f g) (inl tt) (inr true) tt x) = 1).
-    { unfold PO_ind.
-      match goal with
-      | |- apD (Colimit_ind P ?qq1 ?qq2) _ = _ =>
-        exact (Colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr true) tt x)
-      end. }
-    rewrite X; clear X; cbn.
+    lhs nrapply apD_pp.
+    rewrite (Colimit_ind_beta_colimp P _ _ (inl tt) (inr true) tt x).
     rewrite concat_p1, apD_V.
-    unfold PO_ind.
-    match goal with
-    | |- _ @ moveR_transport_V
-          _ _ _ _ (apD (Colimit_ind P ?qq1 ?qq2) _)^ = _ =>
-      rewrite (Colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr false) tt x); cbn
-    end.
-    match goal with
-    | |- ?pp @ moveR_transport_V P _ _ _ (moveR_transport_p P _ _ _ ?qq)^ = _
-      => set (q := qq); set (p := pp) in *
-    end.
+    rewrite (Colimit_ind_beta_colimp P _ _ (inl tt) (inr false) tt x).
     rewrite moveR_transport_p_V, moveR_moveL_transport_p.
-    subst q.
-    rewrite inv_pp.
-    hott_simpl.
+    rewrite inv_pp, inv_V.
+    exact (concat_p_Vp _ _).
   Defined.
 
   Definition PO_rec (P: Type) (l': B -> P) (r': C -> P)
