@@ -579,8 +579,8 @@ Section Reflective_Subuniverse.
            {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
     : IsEquiv (O_rec (O := O) f).
     Proof.
-      srapply (cancelL_isequiv (to O B)).
-      1,2: exact _. (* Why is this line needed? *)
+      (* Not sure why we need [C:=O B] on the next line to get Coq to use two typeclass instances. *)
+      rapply (cancelL_isequiv (C:=O B) (to O B)).
       rapply (isequiv_homotopic (O_functor f) (fun x => (O_rec_postcompose_to_O f x)^)).
     Defined.
 
