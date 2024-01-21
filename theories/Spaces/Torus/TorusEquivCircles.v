@@ -2,14 +2,7 @@ Require Import Basics Types.
 Require Import Cubical.
 Require Import Spaces.Circle Spaces.Torus.Torus.
 
-(* In this file we:
-    - Prove that the Torus is equivalent to the product of two circles
- *)
-Section TorusEquivCircle.
-
-  (* We use function extensionality when defining the
-     map from circles to torus *)
-  Context `{Funext}.
+(* In this file we prove that the Torus is equivalent to the product of two circles. *)
 
   (* Here is a cube filler for help with circle recursion into the torus *)
   Definition c2t_square_and_cube
@@ -34,7 +27,7 @@ Section TorusEquivCircle.
   Defined.
 
   (* We now define the curried function from the circles to the torus *)
-  Definition c2t' : Circle -> Circle -> Torus.
+  Definition c2t' `{Funext} : Circle -> Circle -> Torus.
   Proof.
     srapply Circle_rec.
     + srapply Circle_rec.     (* Double circle recursion *)
@@ -48,13 +41,13 @@ Section TorusEquivCircle.
   Defined.
 
   (* Here is the uncurried version *)
-  Definition c2t : Circle * Circle -> Torus.
+  Definition c2t `{Funext} : Circle * Circle -> Torus.
   Proof.
     apply uncurry, c2t'.
   Defined.
 
   (* Computation rules for c2t' as a cube filler *)
-  Definition c2t'_beta :
+  Definition c2t'_beta `{Funext} :
     {bl1 : PathSquare (ap (fun y => c2t' base y) loop) loop_b 1 1 &
     {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &
     PathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
@@ -86,7 +79,7 @@ Section TorusEquivCircle.
   Local Open Scope cube_scope.
 
   (* We now prove that t2c is a section of c2t *)
-  Definition t2c2t : c2t o t2c == idmap.
+  Definition t2c2t `{Funext} : c2t o t2c == idmap.
   Proof.
     (* We start with Torus induction *)
     refine (Torus_ind _ 1 _ _ _).
@@ -146,7 +139,7 @@ Section TorusEquivCircle.
   Defined.
 
   (* We now prove t2c is a retraction of c2t *)
-  Definition c2t2c : t2c o c2t == idmap.
+  Definition c2t2c `{Funext} : t2c o c2t == idmap.
   Proof.
     rapply prod_ind.
     (* Start with double circle induction *)
@@ -182,7 +175,5 @@ Section TorusEquivCircle.
       (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
     apply sq_ap_uncurry. *)
 
-  Definition equiv_torus_prod_Circle : Torus <~> Circle * Circle
+  Definition equiv_torus_prod_Circle `{Funext} : Torus <~> Circle * Circle
     := equiv_adjointify t2c c2t c2t2c t2c2t.
-
-End TorusEquivCircle.
