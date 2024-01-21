@@ -19,7 +19,7 @@ Defined.
 (* We define the map from the Torus to the Circles *)
 Definition t2c : Torus -> Circle * Circle.
 Proof.
-  srapply Torus_rec.
+  snrapply Torus_rec.
   + exact (base, base). (* The point of the torus is taken to (base, base *)
   + exact (path_prod' loop 1). (* loop_a is taken to loop in the first *)
   + exact (path_prod' 1 loop). (* loop_b is taken to loop in the second *)
@@ -29,12 +29,12 @@ Defined.
 (* We now define the curried function from the circles to the torus *)
 Definition c2t' `{Funext} : Circle -> Circle -> Torus.
 Proof.
-  srapply Circle_rec.
-  + srapply Circle_rec.     (* Double circle recursion *)
+  snrapply Circle_rec.
+  + snrapply Circle_rec.     (* Double circle recursion *)
     - exact tbase.      (* The basepoint is sent to the point of the torus *)
     - exact loop_b.     (* The second loop is sent to loop_b *)
   + apply path_forall.  (* We use function extensionality here to induct *)
-    srapply Circle_ind_dp.  (* Circle induction as a DPath *)
+    snrapply Circle_ind_dp.  (* Circle induction as a DPath *)
     - exact loop_a.     (* The first loop is sent to loop_a *)
     - srapply sq_dp^-1. (* This DPath is actually a square *)
       apply (pr1 c2t_square_and_cube). (* We apply the cap we found above *)
@@ -52,24 +52,24 @@ Definition c2t'_beta `{Funext} :
   {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &
   PathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
 Proof.
-  refine (_;_;_).
+  nrefine (_;_;_).
   unfold sq_ap011.
   (* 1. Unfusing ap *)
-  refine (cu_concat_lr (cu_ds (dp_apD_nat
+  nrefine (cu_concat_lr (cu_ds (dp_apD_nat
     (fun y => ap_compose _ (fun f => f y) _) _)) _
     (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).
   (* 2. Reducing c2t' on loop *)
-  refine (cu_concat_lr (cu_ds (dp_apD_nat
+  nrefine (cu_concat_lr (cu_ds (dp_apD_nat
     (fun x => ap_apply_l _ _ @ apD10 (ap _(Circle_rec_beta_loop _ _ _)) x) _)) _
     (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).
   (* 3. Reducing ap10 on function extensionality *)
-  refine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
+  nrefine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
     (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
   (* 4. Reducing Circle_ind_dp on loop *)
-  refine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_dp_beta_loop _ _ _))) _
+  nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_dp_beta_loop _ _ _))) _
     (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
   (* 5. collapsing equivalence *)
-  refine (cu_concat_lr (cu_G11 (eisretr _ _)) _
+  nrefine (cu_concat_lr (cu_G11 (eisretr _ _)) _
     (sji0:=?[X5]) (sji1:=?X5) (sj0i:=?[Y5]) (sj1i:=?Y5) (pj11:=1)).
   (* 6. filling the cube *)
   apply c2t_square_and_cube.2.
@@ -82,7 +82,7 @@ Local Open Scope cube_scope.
 Definition t2c2t `{Funext} : c2t o t2c == idmap.
 Proof.
   (* We start with Torus induction *)
-  refine (Torus_ind _ 1 _ _ _).
+  nrefine (Torus_ind _ 1 _ _ _).
   (* Our DPathSquare is really just a cube *)
   apply cu_ds^-1.
   (* We pretend that our sides have sq_dpath o sq_dpath^-1
@@ -95,7 +95,7 @@ Proof.
   refine (cu_ccGGGG (eisretr _ _)^ (eisretr _ _)^
     (eisretr _ _)^ (eisretr _ _)^ _).
   (* Now we finish the proof with the following composition of cubes *)
-  refine ((sq_ap_compose t2c c2t surf)
+  nrefine ((sq_ap_compose t2c c2t surf)
     @lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ ))
     @lr (sq_ap_uncurry _ _ _)
     @lr (pr2 (pr2 c2t'_beta))
@@ -141,24 +141,24 @@ Defined.
 (* We now prove t2c is a retraction of c2t *)
 Definition c2t2c `{Funext} : t2c o c2t == idmap.
 Proof.
-  rapply prod_ind.
+  nrapply prod_ind.
   (* Start with double circle induction *)
-  srefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
+  snrefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
   (* Change the second loop case into a square and shelve *)
   1: apply sq_dp^-1, sq_tr^-1; shelve.
   (* Take the forall out of the DPath *)
   apply dp_forall_domain.
   intro x; apply sq_dp^-1; revert x.
-  srefine (Circle_ind_dp _ _ _).
+  snrefine (Circle_ind_dp _ _ _).
   1: apply sq_tr^-1; shelve.
   apply dp_cu.
-  refine (cu_ccGGcc _ _ _).
-  1,2: refine (ap sq_dp (Circle_ind_dp_beta_loop _ _ _)
+  nrefine (cu_ccGGcc _ _ _).
+  1,2: nrefine (ap sq_dp (Circle_ind_dp_beta_loop _ _ _)
     @ eisretr _ _)^.
   apply cu_rot_tb_fb.
-  refine (cu_ccGGGG _ _ _ _ _).
+  nrefine (cu_ccGGGG _ _ _ _ _).
   1,2,3,4: exact (eisretr _ _)^.
-  refine((sq_ap011_compose c2t' t2c loop loop)
+  nrefine ((sq_ap011_compose c2t' t2c loop loop)
     @lr (cu_ap t2c (c2t'_beta.2.2))
     @lr (Torus_rec_beta_surf _ _ _ _ _)
     @lr (cu_flip_lr (sq_ap_idmap _))
