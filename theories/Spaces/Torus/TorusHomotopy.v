@@ -16,14 +16,14 @@ Local Open Scope pointed_scope.
 
 (** The torus is 1-truncated *)
 
-Global Instance is1type_Torus `{Univalence} : IsTrunc 1 Torus.
+Global Instance is1type_torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
   refine (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
 Qed.
 
 (** The torus is 0-connected *)
 
-Global Instance isconnected_Torus `{Univalence} : IsConnected 0 Torus.
+Global Instance isconnected_torus `{Univalence} : IsConnected 0 Torus.
 Proof.
   srapply (isconnected_equiv' _ _ equiv_torus_prod_Circle^-1).
   srapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).
@@ -33,28 +33,8 @@ Qed.
 Local Notation T := ([Torus, _]).
 Local Notation S1 := ([Circle, _]).
 
-(** Loop space of Torus *)
-Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
-Proof.
-  srefine (_ o*E _).
-  1: exact (loops (S1 * S1)).
-  1: rapply (emap loops).
-  { srapply Build_pEquiv.
-    1: srapply Build_pMap.
-    1: exact equiv_torus_prod_Circle.
-    1: reflexivity.
-    exact _. }
-  srefine (_ o*E _).
-  1: exact (loops S1 * loops S1).
-  1: apply loops_prod.
-  snrapply Build_pEquiv.
-  1: srapply Build_pMap.
-  { apply functor_prod.
-    1,2: apply equiv_loopCircle_int. }
-  1: reflexivity.
-  exact _.
-Defined.
-
+(** A pointed version of the equivalence from TorusEquivCircles.v. *)
+(** TODO: If [Funext] is removed from there, remove it from here as well. *)
 Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
 Proof.
   srapply Build_pEquiv'.
@@ -62,15 +42,22 @@ Proof.
   reflexivity.
 Defined.
 
-(** Fundamental group of Torus *)
-Theorem Pi1Torus `{Univalence}
+(** Fundamental group of torus *)
+Theorem pi1_torus `{Univalence}
   : GroupIsomorphism (Pi 1 T) (grp_prod abgroup_Z abgroup_Z).
 Proof.
   etransitivity.
-  { apply groupiso_pi_functor.
-    apply pequiv_torus_prod_circles. }
+  1: exact (emap (Pi 1) pequiv_torus_prod_circles).
   etransitivity.
   1: apply grp_iso_pi_prod.
   apply grp_iso_prod.
   1,2: apply pi1_circle.
+Defined.
+
+(** Loop space of torus *)
+Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
+Proof.
+  (* Since [T] is 1-truncated, [loops T] is 0-truncated, and is therefore equivalent to its 0-truncation. *)
+  refine (_ o*E pequiv_ptr (n:=0)).
+  nrapply pi1_torus.
 Defined.
