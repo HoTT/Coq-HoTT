@@ -2,9 +2,9 @@ Require Import Basics Types.
 Require Import Cubical.
 Require Import Spaces.Circle Spaces.Torus.Torus.
 
-(* In this file we prove that the Torus is equivalent to the product of two circles. *)
+(** In this file we prove that the torus is equivalent to the product of two circles. *)
 
-(* Here is a cube filler for help with circle recursion into the torus *)
+(** Here is a cube filler for help with circle recursion into the torus *)
 Definition c2t_square_and_cube
   : {s : PathSquare loop_a loop_a
       (ap (Circle_rec _ tbase loop_b) loop)
@@ -16,7 +16,7 @@ Proof.
   apply cu_fill_left.
 Defined.
 
-(* We define the map from the Torus to the Circles *)
+(** We define the map from the Torus to the Circles *)
 Definition t2c : Torus -> Circle * Circle.
 Proof.
   snrapply Torus_rec.
@@ -26,7 +26,8 @@ Proof.
   + exact (sq_prod (hr, vr)). (* The square is the obvious product of squares *)
 Defined.
 
-(* We now define the curried function from the circles to the torus *)
+(** We now define the curried function from the circles to the torus. *)
+(** TODO: It's easy to remove [Funext] from this definition by using [intro] and [revert] appropriately, but then the cube algebra in the proof of [c2t'_beta] would need to be updated. See https://github.com/HoTT/Coq-HoTT/pull/1824. *)
 Definition c2t' `{Funext} : Circle -> Circle -> Torus.
 Proof.
   snrapply Circle_rec.
@@ -40,13 +41,13 @@ Proof.
       apply (pr1 c2t_square_and_cube). (* We apply the cap we found above *)
 Defined.
 
-(* Here is the uncurried version *)
+(** Here is the uncurried version *)
 Definition c2t `{Funext} : Circle * Circle -> Torus.
 Proof.
   apply uncurry, c2t'.
 Defined.
 
-(* Computation rules for c2t' as a cube filler *)
+(** Computation rules for c2t' as a cube filler *)
 Definition c2t'_beta `{Funext} :
   {bl1 : PathSquare (ap (fun y => c2t' base y) loop) loop_b 1 1 &
   {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &
@@ -78,7 +79,7 @@ Defined.
 Local Open Scope path_scope.
 Local Open Scope cube_scope.
 
-(* We now prove that t2c is a section of c2t *)
+(** We now prove that t2c is a section of c2t *)
 Definition t2c2t `{Funext} : c2t o t2c == idmap.
 Proof.
   (* We start with Torus induction *)
@@ -138,7 +139,7 @@ Proof.
   by destruct p, q.
 Defined.
 
-(* We now prove t2c is a retraction of c2t *)
+(** We now prove t2c is a retraction of c2t *)
 Definition c2t2c `{Funext} : t2c o c2t == idmap.
 Proof.
   nrapply prod_ind.
