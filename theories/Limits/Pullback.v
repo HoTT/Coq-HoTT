@@ -315,26 +315,28 @@ Proof.
   apply sq_1G.
 Defined.
 
+(** Maps into pullbacks are determined by their composites with the projections, and a coherence.  This can also be proved directly.  With [Funext], we could also prove an equivalence analogous to [equiv_path_pullback_rec_hset] below.  Not sure of the best name for this version. *)
+Definition pullback_homotopic {A B C D} {g : C -> D} {k : B -> D}
+           (f h : A -> Pullback k g)
+           (p1 : pullback_pr1 o f == pullback_pr1 o h)
+           (p2 : pullback_pr2 o f == pullback_pr2 o h)
+           (q : forall a, (ap k) (p1 a) @ (h a).2.2 = (f a).2.2 @ (ap g) (p2 a))
+  : f == h.
+Proof.
+  intro a.
+  apply equiv_path_pullback.
+  exists (p1 a).  exists (p2 a).
+  apply sq_path, q.
+Defined.
+
 (** When [A] is a set, the [PathSquare] becomes trivial. *)
 Definition equiv_path_pullback_hset {A B C} `{IsHSet A} (f : B -> A) (g : C -> A)
            (x y : Pullback f g)
   : (x.1 = y.1) * (x.2.1 = y.2.1) <~> (x = y).
 Proof.
-  refine (equiv_path_pullback f g x y oE _).
-  srapply equiv_adjointify.
-  - intros [p q].
-    refine (p; q; _).
-    apply (@center _ (istrunc_sq (-2))).
-  - intros [p [q _]].
-    exact (p, q).
-  - intros [p [q ?]].
-    srapply path_sigma'.
-    1: reflexivity.
-    refine (transport_sigma' _ _ @ _).
-    srapply path_sigma'.
-    1: reflexivity.
-    apply path_ishprop.
-  - reflexivity.
+  refine (equiv_path_pullback f g x y oE _^-1%equiv).
+  refine (_ oE equiv_sigma_prod (fun pq => PathSquare (ap f (fst pq)) (ap g (snd pq)) (x.2).2 (y.2).2)).
+  rapply equiv_sigma_contr. (* Uses [istrunc_sq]. *)
 Defined.
 
 Lemma equiv_path_pullback_rec_hset `{Funext} {A X Y Z : Type} `{IsHSet Z}

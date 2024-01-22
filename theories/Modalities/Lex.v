@@ -121,27 +121,31 @@ Section LexModality.
     nrapply (isequiv_homotopic
                (O_rec (functor_pullback _ _ _ _ _ _ _
                                         (to_O_natural O f) (to_O_natural O g)))).
-    1:apply isequiv_O_rec_O_inverts; exact _.
-    apply O_indpaths; intros [b [c e]].
-    refine (O_rec_beta _ _ @ _).
-    (** This *seems* like it ought to be the easier goal, but it turns out to involve lots of naturality wrangling.  If we ever want to make real use of this theorem, we might want to separate out this goal into an opaque lemma so we could make the main theorem transparent. *)
-    unfold functor_pullback, functor_sigma, pullback_corec; simpl.
-    refine (path_sigma' _ (to_O_natural O pullback_pr1 (b;(c;e)))^ _).
-    rewrite transport_sigma'; simpl.
-    refine (path_sigma' _ (to_O_natural O pullback_pr2 (b;(c;e)))^ _).
-    rewrite transport_paths_Fl.
-    rewrite transport_paths_Fr.
-    Open Scope long_path_scope.
-    unfold O_functor_square.
-    rewrite ap_V, inv_V, O_functor_homotopy_beta, !concat_p_pp.
-    unfold pullback_commsq; simpl.
-    rewrite to_O_natural_compose, !concat_pp_p.
-    do 3 apply whiskerL.
-    rewrite ap_V, <- inv_pp.
-    rewrite <- (inv_V (O_functor_compose _ _ _ _)), <- inv_pp.
-    apply inverse2, to_O_natural_compose.
-    Close Scope long_path_scope.
-  Qed.
+    1: apply isequiv_O_rec_O_inverts; exact _.
+    apply O_indpaths.
+    etransitivity.
+    1: intro x; apply O_rec_beta.
+    symmetry.
+    snrapply pullback_homotopic; intros [b [c e]]; cbn.
+    all: change (to (modality_subuniv O)) with (to O).
+    - nrapply (to_O_natural O).
+    - nrapply (to_O_natural O).
+    - Open Scope long_path_scope.
+      lhs nrapply concat_p_pp.
+      lhs nrapply (concat_p_pp _ _ _ @@ 1).
+      rewrite to_O_natural_compose.
+      unfold O_functor_square.
+      rewrite O_functor_homotopy_beta.
+      rewrite 6 concat_pp_p.
+      do 3 apply whiskerL.
+      rhs_V nrapply concat_pp_p.
+      apply moveL_pM.
+      lhs_V nrapply inv_pp.
+      rhs_V nrapply inv_Vp.
+      apply (ap inverse).
+      nrapply to_O_natural_compose.
+      Close Scope long_path_scope.
+  Defined.
 
   Definition diagonal_O_functor {A B : Type} (f : A -> B)
     : diagonal (O_functor O f) == equiv_O_pullback f f o O_functor O (diagonal f).
