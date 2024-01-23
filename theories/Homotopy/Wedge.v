@@ -74,7 +74,6 @@ Defined.
 
 Global Instance hasbinarycoproducts : HasBinaryCoproducts pType.
 Proof.
-  snrapply Build_HasBinaryCoproducts.
   intros X Y.
   snrapply Build_BinaryCoproduct.
   - exact (X \/ Y).

@@ -157,9 +157,9 @@ End Lemmata.
 (** *** Categories with binary products *)
 
 (** A category with binary products is a category with a binary product for each pair of objects. *)
-Class HasBinaryProducts (A : Type) `{Is1Cat A} := {
-  binary_products :: forall x y : A, BinaryProduct x y;
-}.
+Class HasBinaryProducts (A : Type) `{Is1Cat A} :=
+  binary_products :: forall x y : A, BinaryProduct x y
+.
 
 (** *** Symmetry of products *)
 
@@ -307,7 +307,6 @@ Defined.
 (** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means this instance has to therefore live here. *)
 Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
 Proof.
-  snrapply Build_HasBinaryProducts.
   intros X Y.
   snrapply Build_BinaryProduct.
   - exact (X * Y).

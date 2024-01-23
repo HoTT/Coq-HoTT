@@ -716,7 +716,6 @@ Defined.
 (** The freeproduct is the coproduct in the category of groups. *)
 Global Instance hasbinarycoproducts : HasBinaryCoproducts Group.
 Proof.
-  snrapply Build_HasBinaryCoproducts.
   intros G H.
   snrapply Build_BinaryCoproduct.
   - exact (FreeProduct G H).
