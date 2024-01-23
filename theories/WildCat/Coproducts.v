@@ -4,7 +4,7 @@ Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda Wi
 (** * Categories with coproducts *)
 
 Class BinaryCoproduct (A : Type) `{Is1Cat A} (x y : A) :=
-  prod_co_coprod :: BinaryProduct (x : A^op) y
+  prod_co_coprod :: BinaryProduct (x : A^op) (y : A^op)
 .
 
 Arguments BinaryCoproduct {A _ _ _ _} x y.
@@ -116,11 +116,27 @@ Section Lemmata.
 
 End Lemmata.
 
-(** *** Cateogires with binary coproducts *)
+(** *** Categories with binary coproducts *)
 
 Class HasBinaryCoproducts (A : Type) `{Is1Cat A} :=
   binary_coproducts :: forall x y, BinaryCoproduct x y
 .
+
+(** ** Symmetry of coproducts *)
+
+Definition cate_coprod_swap {A : Type} `{HasEquivs A} {e : HasBinaryCoproducts A} (x y : A)
+  : cat_coprod x y $<~> cat_coprod y x.
+Proof.
+  exact (@cate_prod_swap A^op _ _ _ _ _ e _ _).
+Defined.
+
+(** ** Associativity of coproducts *)
+
+Lemma cate_coprod_assoc {A : Type} `{HasEquivs A} {e : HasBinaryCoproducts A} (x y z : A)
+  : cat_coprod x (cat_coprod y z) $<~> cat_coprod (cat_coprod x y) z.
+Proof.
+  exact (@cate_prod_assoc A^op _ _ _ _ _ e x y z)^-1$.
+Defined.
 
 (** *** Coproduct functor *)
 
