@@ -654,7 +654,6 @@ Defined.
 (** pType has binary products *)
 Global Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
 Proof.
-  snrapply Build_HasBinaryProducts.
   intros X Y.
   snrapply Build_BinaryProduct.
   - exact (X * Y).

@@ -3,11 +3,10 @@ Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda Wi
 
 (** * Categories with coproducts *)
 
-Class BinaryCoproduct (A : Type) `{Is1Cat A} (x y : A) := Build_BinaryCoproduct' {
-  prod_co_coprod :: BinaryProduct (x : A^op) y
-}.
+Class BinaryCoproduct (A : Type) `{Is1Cat A} (x y : A) :=
+  prod_co_coprod :: BinaryProduct (x : A^op) (y : A^op)
+.
 
-Arguments Build_BinaryCoproduct' {_ _ _ _ _ x y} _.
 Arguments BinaryCoproduct {A _ _ _ _} x y.
 
 Definition cat_coprod {A : Type}  `{Is1Cat  A} (x y : A) `{!BinaryCoproduct x y} : A
@@ -32,15 +31,14 @@ Definition Build_BinaryCoproduct {A : Type} `{Is1Cat A} {x y : A}
   (cat_coprod_beta_inr : forall z (f : x $-> z) (g : y $-> z), cat_coprod_rec z f g $o cat_inr $== g)
   (cat_coprod_in_eta : forall z (f g : cat_coprod $-> z), f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g)
   : BinaryCoproduct x y
-  := Build_BinaryCoproduct'
-    (Build_BinaryProduct
+  := Build_BinaryProduct
       (cat_coprod : A^op)
       cat_inl
       cat_inr
       cat_coprod_rec
       cat_coprod_beta_inl
       cat_coprod_beta_inr
-      cat_coprod_in_eta).
+      cat_coprod_in_eta.
 
 Section Lemmata.
 
@@ -118,11 +116,27 @@ Section Lemmata.
 
 End Lemmata.
 
-(** *** Cateogires with binary coproducts *)
+(** *** Categories with binary coproducts *)
 
-Class HasBinaryCoproducts (A : Type) `{Is1Cat A} := {
-  binary_coproducts :: forall x y : A, BinaryCoproduct x y;
-}.
+Class HasBinaryCoproducts (A : Type) `{Is1Cat A} :=
+  binary_coproducts :: forall x y, BinaryCoproduct x y
+.
+
+(** ** Symmetry of coproducts *)
+
+Definition cate_coprod_swap {A : Type} `{HasEquivs A} {e : HasBinaryCoproducts A} (x y : A)
+  : cat_coprod x y $<~> cat_coprod y x.
+Proof.
+  exact (@cate_prod_swap A^op _ _ _ _ _ e _ _).
+Defined.
+
+(** ** Associativity of coproducts *)
+
+Lemma cate_coprod_assoc {A : Type} `{HasEquivs A} {e : HasBinaryCoproducts A} (x y z : A)
+  : cat_coprod x (cat_coprod y z) $<~> cat_coprod (cat_coprod x y) z.
+Proof.
+  exact (@cate_prod_assoc A^op _ _ _ _ _ e x y z)^-1$.
+Defined.
 
 (** *** Coproduct functor *)
 
@@ -133,7 +147,6 @@ Class HasBinaryCoproducts (A : Type) `{Is1Cat A} := {
 (** [Type] has all binary coproducts *)
 Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type.
 Proof.
-  snrapply Build_HasBinaryCoproducts.
   intros X Y.
   snrapply Build_BinaryCoproduct.
   - exact (X + Y).
