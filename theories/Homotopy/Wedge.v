@@ -1,4 +1,4 @@
-Require Import Basics Types.Paths.
+Require Import Basics Types.
 Require Import Pointed.Core.
 Require Import Colimits.Pushout.
 Require Import WildCat.
@@ -100,4 +100,67 @@ Proof.
     by pelim f g.
   - intros Z f g p q.
     by apply wedge_up.
+Defined.
+
+(** Wedge of an indexed family of pointed types *)
+
+(** Note that the index type is not necesserily pointed. An empty wedge is the unit type which is the zero object in the category of pointed types. *)
+Definition FamilyWedge (I : Type) (X : I -> pType) : pType.
+Proof.
+  srefine ([_, _]).
+  - srefine (Pushout (A := sig (fun _ : I => pUnit)) (B := sig X) (C := pUnit) _ _).
+    + snrapply functor_sigma.
+      1: exact idmap.
+      intros i.
+      exact (fun _ => pt).
+    + exact (fun _ => pt).
+  - apply pushr.
+    exact pt.
+Defined.
+
+(** We can define an inclusion map if the index set is non-empty. In the empty case the wedge should be equivalent to the unit type anyway. *)
+Definition fwedge_in (I : pType) (X : I -> pType)
+  : psigma (pointed_fam X) $-> FamilyWedge I X.
+Proof.
+  snrapply Build_pMap.
+  - exact pushl.
+  - exact (pglue (pt; pt)).
+Defined.
+
+(** Recursion principle for the wedge of an indexed family of pointed types. *)
+Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
+  (f : forall i, X i $-> Z)
+  : FamilyWedge I X $-> Z.
+Proof.
+  snrapply Build_pMap.
+  - snrapply Pushout_rec.
+    + apply (sig_rec _ _ _ f).
+    + exact pconst.
+    + intros [i ].
+      exact (point_eq (f i)).
+  - exact idpath.
+Defined.
+
+(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge should land. This makes it somewhat awkward to define an indexed smash product.
+
+TODO: is this strictly necessary or are their weaker assumptions we can use? Can we remove funext? *)
+Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
+  : FamilyWedge I X $-> pproduct X.
+Proof.
+  snrapply Build_pMap.
+  - snrapply Pushout_rec.
+    + intros [i x] a.
+      destruct (dec_paths i a).
+      * destruct p.
+        exact x.
+      * exact pt.
+    + exact (fun _ => pt).
+    + intros [i ].
+      simpl.
+      apply path_forall.
+      intros a.
+      destruct (dec_paths i a).
+      * by destruct p.
+      * reflexivity.
+  - exact idpath.
 Defined.
