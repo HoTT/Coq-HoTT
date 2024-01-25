@@ -108,11 +108,8 @@ Defined.
 Definition FamilyWedge (I : Type) (X : I -> pType) : pType.
 Proof.
   snrapply Build_pType.
-  - srefine (Pushout (A := sig (fun _ : I => pUnit)) (B := sig X) (C := pUnit) _ _).
-    + snrapply functor_sigma.
-      1: exact idmap.
-      intros i.
-      exact (fun _ => pt).
+  - srefine (Pushout (A := I) (B := sig X) (C := pUnit) _ _).
+    + exact (fun i => (i; pt)).
     + exact (fun _ => pt).
   - apply pushr.
     exact pt.
@@ -124,7 +121,7 @@ Definition fwedge_in (I : pType) (X : I -> pType)
 Proof.
   snrapply Build_pMap.
   - exact pushl.
-  - exact (pglue (pt; pt)).
+  - exact (pglue pt).
 Defined.
 
 (** Recursion principle for the wedge of an indexed family of pointed types. *)
@@ -136,7 +133,7 @@ Proof.
   - snrapply Pushout_rec.
     + apply (sig_rec _ _ _ f).
     + exact pconst.
-    + intros [i ?].
+    + intros i.
       exact (point_eq (f i)).
   - exact idpath.
 Defined.
