@@ -158,6 +158,18 @@ Definition psigma {A : pType} (P : pFam A) : pType
 Definition pproduct {A : Type} (F : A -> pType) : pType
   := [forall (a : A), pointed_type (F a), ispointed_type o F].
 
+Definition pproduct_corec `{Funext} {A : Type} (F : A -> pType)
+  (X : pType) (f : forall a, X ->* F a)
+  : X ->* pproduct F.
+Proof.
+  snrapply Build_pMap.
+  - intros x a.
+    exact (f a x).
+  - cbn.
+    funext a.
+    apply point_eq.
+Defined.
+
 (** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
 
 (** First a version with no rewrites, which leaves some cleanup to be done but which can be used in transparent proofs. *)
