@@ -42,7 +42,7 @@ Lemma istrunc_extension_along_conn `{Univalence} {m n : trunc_index}
   (d : forall a:A, P (f a))
   : IsTrunc m (ExtensionAlong f P d).
 Proof.
-  revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
+  revert P HP d. simple_induction m m' IH; intros P HP d; simpl in *.
   (* m = –2 *)
   - apply (Build_Contr _ (extension_conn_map_elim n f P d)).
     intros y. apply (allpath_extension_conn_map n); assumption.
