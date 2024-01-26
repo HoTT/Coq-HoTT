@@ -103,9 +103,9 @@ Module Book_Loop_Susp_Adjunction.
   Definition loop_susp_adjoint_nat_r `{Funext} (A B B' : pType)
              (f : psusp A ->* B) (g : B ->* B')
   : loop_susp_adjoint A B' (g o* f)
-    ==* loops_functor g o* loop_susp_adjoint A B f.
+    ==* fmap loops g o* loop_susp_adjoint A B f.
   Proof.
-    pointed_reduce_rewrite.
+    pointed_reduce. (* Very slow for some reason. *)
     srefine (Build_pHomotopy _ _).
     - intros a. simpl.
       refine (_ @ (concat_1p _)^).
@@ -114,8 +114,9 @@ Module Book_Loop_Susp_Adjunction.
       rewrite !(transport_arrow_fromconst (B := A)).
       rewrite !transport_paths_Fr.
       rewrite !ap_V, !ap_pr1_path_basedpaths.
-      rewrite ap_pp, !(ap_compose f g), ap_V.
-      reflexivity.
+      Fail rewrite ap_pp, !(ap_compose f g), ap_V. (* This line fails with current versions of the library. *)
+      Fail reflexivity.
+      admit.
     - cbn.
       Fail reflexivity.
   Abort.
