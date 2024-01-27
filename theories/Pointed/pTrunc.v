@@ -152,11 +152,11 @@ Defined.
 
 (** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+k+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m], and so there is a shift compared to the informal statement. This version also allows [n] to be one smaller than BvDR allow. *)
 Definition istrunc_pforall `{Univalence} {m n : trunc_index}
-  (X : pType) {iscX : IsConnected m.+1 X}
-  (Y : pFam X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
-  : IsTrunc n (pForall X Y).
+  (X : pType@{u}) {iscX : IsConnected m.+1 X}
+  (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
+  : IsTrunc@{w} n (pForall X Y).
 Proof.
-  nrapply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall Y)).
+  nrapply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
   rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).
 Defined.
 

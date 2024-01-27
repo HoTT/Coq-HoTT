@@ -38,6 +38,8 @@ Definition Build_pEquiv' {A B : pType} (f : A <~> B)
   (p : f (point A) = point B)
   : A <~>* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.
 
+Arguments Build_pEquiv' & _ _ _ _.
+
 (* A version of equiv_adjointify for pointed equivalences where all data is pointed. There is a lot of unnecessary data here but sometimes it is easier to prove equivalences using this. *)
 Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : f o* f' ==* pmap_idmap) (s : f' o* f == pmap_idmap) : A <~>* B

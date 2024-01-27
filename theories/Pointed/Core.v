@@ -253,7 +253,7 @@ Definition issig_pequiv' (A B : pType)
 
 (** pForall can also be described as a type of extensions. *)
 Definition equiv_extension_along_pforall `{Funext} {A : pType} (P : pFam A)
-  : ExtensionAlong (unit_name (point A)) P (unit_name (dpoint P)) <~> pForall A P.
+  : ExtensionAlong@{Set _ _ _} (unit_name (point A)) P (unit_name (dpoint P)) <~> pForall A P.
 Proof.
   unfold ExtensionAlong.
   refine (issig_pforall A P oE _).

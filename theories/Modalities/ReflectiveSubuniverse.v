@@ -162,13 +162,12 @@ Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
 Arguments extendable_to_O O {T _ _ Q Q_inO}.
 
 (** Here's a modified version that applies to types in possibly-smaller universes without collapsing those universes to [i]. *)
-Definition extendable_to_O'@{i j k} (O : Subuniverse@{i}) (T : Type@{j})
+Definition extendable_to_O'@{i j k | j <= i, k <= i} (O : Subuniverse@{i}) (T : Type@{j})
            `{Reflects O T} {Q : Type@{k}} {Q_inO : In O Q}
-  : ooExtendableAlong@{j i k i} (to O T) (fun _ => Q).
+  : ooExtendableAlong (to O T) (fun _ => Q).
 Proof.
-  assert (e := @extendable_to_O O T _ _ Q Q_inO).
-  apply (lift_ooextendablealong@{i j j i i i i k k i i}).
-  exact e.
+  apply lift_ooextendablealong.
+  rapply extendable_to_O.
 Defined.
 
 (** In particular, every type in the subuniverse automatically reflects into it. *)
