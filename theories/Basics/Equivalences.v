@@ -599,7 +599,7 @@ Ltac build_record :=
 
 (* Construct an equivalence between two possibly-nested record/sigma types that differ only by associativity and permutation of their components.  We could use [Build_Equiv] and directly construct [eisadj] by decomposing to reflexivity as well, but often with large nested types it seems to be faster to adjointify. *)
 Ltac make_equiv :=
-  simple notypeclasses refine (equiv_adjointify _ _ _ _);
+  snrefine (equiv_adjointify _ _ _ _);
     [ decomposing_intros; build_record
     | decomposing_intros; build_record
     | decomposing_intros; exact idpath
@@ -607,9 +607,9 @@ Ltac make_equiv :=
 
 (** In case anyone ever needs it, here's the version that doesn't adjointify. It's not the default, because it can be slow. *)
 Ltac make_equiv_without_adjointification :=
-  simple notypeclasses refine (Build_Equiv _ _ _ _);
+  snrefine (Build_Equiv _ _ _ _);
     [ decomposing_intros; build_record |
-      simple notypeclasses refine (Build_IsEquiv _ _ _ _ _ _ _);
+      snrefine (Build_IsEquiv _ _ _ _ _ _ _);
       [ decomposing_intros; build_record
       | decomposing_intros; exact idpath
       | decomposing_intros; exact idpath
@@ -626,7 +626,7 @@ Goal forall (A : Type) (B : A -> Type) (C : forall a:A, B a -> Type) (D : forall
   make_equiv.
   Undo.
   (** Here's the eventually successful proof script produced by [make_equiv], extracted from [Info 0 make_equiv] and prettified, so you can step through it and see how the tactic works. *)
-  simple notypeclasses refine (equiv_adjointify _ _ _ _).
+  snrefine (equiv_adjointify _ _ _ _).
   - (** Here begins [decomposing_intros] *)
     intros x; cbn in x.
     elim x; clear x.
@@ -697,7 +697,7 @@ Goal forall (A:Type) (R:A->A->Type),
   intros A R.
   make_equiv.
   Undo.
-  simple notypeclasses refine (equiv_adjointify _ _ _ _).
+  snrefine (equiv_adjointify _ _ _ _).
   - intros x; cbn in x.
     elim x; clear x.
     intros a1; cbn in a1.
@@ -785,7 +785,7 @@ Ltac build_record_with_evars :=
 
 (** Now here's the improved version of [make_equiv]. *)
 Ltac make_equiv_contr_basedpaths :=
-  simple notypeclasses refine (equiv_adjointify _ _ _ _);
+  snrefine (equiv_adjointify _ _ _ _);
     (** [solve [ unshelve TAC ]] ensures that [TAC] succeeds without leaving any leftover evars. *)
     [ decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
     | decomposing_intros_with_paths; solve [ unshelve build_record_with_evars ]
@@ -802,7 +802,7 @@ Section Examples.
   Proof.
     make_equiv_contr_basedpaths.
     Undo.
-    simple notypeclasses refine (equiv_adjointify _ _ _ _).
+    snrefine (equiv_adjointify _ _ _ _).
     - (** Here begins [decomposing_intros_with_paths] *)
       intros x; cbn in x.
       elim x; clear x.

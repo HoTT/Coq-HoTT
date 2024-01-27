@@ -226,7 +226,7 @@ Global Instance OO_inverts_functor_hfiber
   : O_inverts O (functor_hfiber p b).
 Proof.
   unfold functor_hfiber.
-  simple notypeclasses refine (OO_inverts_functor_sigma _ _).
+  snrefine (OO_inverts_functor_sigma _ _).
   1:exact _.
   intros a; cbn.
   refine (isequiv_homotopic (O_functor O (concat (p a)^) o O_functor O (@ap _ _ k (f a) b)) _).
@@ -313,10 +313,10 @@ Global Instance OO_inverts_functor_pullback
   : O_inverts O (functor_pullback f1 g1 f2 g2 h k l p q).
 Proof.
   unfold functor_pullback.
-  simple notypeclasses refine (OO_inverts_functor_sigma _ _).
+  snrefine (OO_inverts_functor_sigma _ _).
   1:exact _.
   intros b1; cbn.
-  simple notypeclasses refine (OO_inverts_functor_sigma _ _).
+  snrefine (OO_inverts_functor_sigma _ _).
   1:exact _.
   intros c1; cbn.
   pose @isequiv_compose. (* Speed up typeclass search. *)

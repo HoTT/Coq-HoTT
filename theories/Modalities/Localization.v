@@ -339,7 +339,7 @@ End Localization.
 
 Definition Loc@{a i} (f : LocalGenerators@{a}) : ReflectiveSubuniverse@{i}.
 Proof.
-  simple notypeclasses refine (Build_ReflectiveSubuniverse
+  snrefine (Build_ReflectiveSubuniverse
                                  (Build_Subuniverse (IsLocal f) _ _)
                                  (fun A => Build_PreReflects _ A (Localize f A) _ (@loc f A))
                                  (fun A => Build_Reflects _ _ _ _)).
