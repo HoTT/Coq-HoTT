@@ -2,7 +2,7 @@ Require Import Basics Types.
 Require Import Pointed.
 Require Import WildCat.Core HFiber.
 Require Import Truncations.
-Require Import Algebra.Groups.
+Require Import Algebra.Groups.Group.
 Require Import Homotopy.HomotopyGroup.
 
 Local Open Scope pointed_scope.
