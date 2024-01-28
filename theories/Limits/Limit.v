@@ -171,7 +171,7 @@ Defined.
 
 (** * Limits are right adjoint to constant diagram *)
 
-Theorem limit_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
+Theorem limit_adjoint {G : Graph} {D : Diagram G} {C : Type}
   : (C -> Limit D) <~> DiagramMap (diagram_const C) D.
 Proof.
   srapply equiv_adjointify.

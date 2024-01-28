@@ -123,7 +123,7 @@ Section TruncationModality.
     : IsEquiv (Trunc_functor f)
     := isequiv_O_functor (Tr n) f.
 
-  Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
+  Definition equiv_Trunc_prod_cmp {X Y}
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp (Tr n) X Y.
 

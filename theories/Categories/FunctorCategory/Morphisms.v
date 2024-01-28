@@ -46,7 +46,7 @@ Hint Extern 10 (@IsIsomorphism _ _ _ (@components_of ?C ?D ?F ?G ?T ?x))
 => apply (fun H' => @isisomorphism_components_of _ C D F G T H' x)
    : typeclass_instances.
 
-Definition inverse `{Funext}
+Definition inverse
            C D (F G : Functor C D) (T : NaturalTransformation F G)
            `{forall x, IsIsomorphism (T x)}
 : NaturalTransformation G F.

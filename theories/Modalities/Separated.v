@@ -120,7 +120,7 @@ Proof.
 Defined.
 
 (* As a special case, if X embeds into an n-type for n >= -1 then X is an n-type. Note that this doesn't hold for n = -2. *)
-Corollary istrunc_embedding_trunc `{Funext} {X Y : Type} {n : trunc_index} `{istr : IsTrunc n.+1 Y}
+Corollary istrunc_embedding_trunc {X Y : Type} {n : trunc_index} `{istr : IsTrunc n.+1 Y}
       (i : X -> Y) `{isem : IsEmbedding i} : IsTrunc n.+1 X.
 Proof.
   apply istrunc_S.

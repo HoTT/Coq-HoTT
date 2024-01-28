@@ -39,7 +39,7 @@ Proof.
 Defined.
 
 (** A complex 0 -> A -> B of groups is purely exact if and only if the map A -> B is an embedding. *)
-Lemma iff_grp_isexact_isembedding `{Funext} {A B : Group} (f : A $-> B)
+Lemma iff_grp_isexact_isembedding {A B : Group} (f : A $-> B)
   : IsExact purely (@grp_homo_const grp_trivial A) f <-> IsEmbedding f.
 Proof.
   split.

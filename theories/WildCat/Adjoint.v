@@ -324,7 +324,7 @@ End UnitCounitAdjunction.
  2. 2-cat theory: postcomp (-)* is a 2-functor so preserves adjunctions.
 *)
 
-Lemma adjunction_postcomp `{Funext} (C D J : Type)
+Lemma adjunction_postcomp (C D J : Type)
   `{HasEquivs C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
   `{!HasMorExt C, !HasMorExt D, !HasMorExt (Fun01 J C), !HasMorExt (Fun01 J D)}
   : F ⊣ G -> fun11_fun01_postcomp (A:=J) F ⊣ fun11_fun01_postcomp (A:=J) G.

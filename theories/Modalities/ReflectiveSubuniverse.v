@@ -51,7 +51,7 @@ Definition inO_equiv_inO' {O : Subuniverse}
   : In O U
   := inO_equiv_inO T f.
 
-Definition iff_inO_equiv `{Funext} (O : Subuniverse)
+Definition iff_inO_equiv (O : Subuniverse)
            {T : Type} {U : Type} (f : T <~> U)
   : In O T <-> In O U
   := (fun H => inO_equiv_inO' _ f, fun H => inO_equiv_inO' _ f^-1).
@@ -1636,7 +1636,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Being connected is an hprop *)
-  Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
+  Global Instance ishprop_isconnmap {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
     apply istrunc_forall.
