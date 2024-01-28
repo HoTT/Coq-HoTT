@@ -1,5 +1,5 @@
 Require Import Basics Types Group Subgroup
-  WildCat Colimits.Coeq
+  WildCat.Core Colimits.Coeq
   Truncations.Core Truncations.SeparatedTrunc
   Classes.implementations.list.
 

@@ -1,7 +1,7 @@
 Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
-Require Import WildCat Modalities.ReflectiveSubuniverse Modalities.Descent.
-Require Import HSet Spaces.Nat.
+Require Import WildCat.Core Modalities.ReflectiveSubuniverse Modalities.Descent.
+Require Import HSet Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.

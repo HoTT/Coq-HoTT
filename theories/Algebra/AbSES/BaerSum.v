@@ -1,8 +1,8 @@
 Require Import Basics Types.
-Require Import WildCat Pointed.
+Require Import WildCat Pointed.Core.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import AbSES.Core AbSES.Pullback AbSES.Pushout AbSES.DirectSum.
-Require Import Homotopy.HSpace.
+Require Import Homotopy.HSpace.Core.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.

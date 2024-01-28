@@ -1,5 +1,5 @@
 Require Import Basics Types Truncations.Core.
-Require Import WildCat Pointed Homotopy.ExactSequence HIT.epi.
+Require Import WildCat Pointed.Core Homotopy.ExactSequence HIT.epi.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup AbPushout AbHom AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.DirectSum.

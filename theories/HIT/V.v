@@ -5,7 +5,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HSet TruncType.
 Require Import Colimits.SpanPushout.
-Require Import HoTT.Truncations Colimits.Quotient.
+Require Import HoTT.Truncations.Core Colimits.Quotient.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 

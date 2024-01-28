@@ -2,7 +2,7 @@ Require Import
   HoTT.Basics
   HoTT.Types
   HoTT.HSet
-  HoTT.Truncations
+  HoTT.Truncations.Core
   HoTT.Colimits.Quotient
   HoTT.Projective.
 

@@ -4,7 +4,7 @@ Require Import
   HoTT.HSet
   HoTT.Spaces.Finite.Fin
   HoTT.Spaces.Finite.FinInduction
-  HoTT.Spaces.Nat.
+  HoTT.Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
 

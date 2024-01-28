@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Pointed.
-Require Import WildCat HFiber.
+Require Import WildCat.Core HFiber.
 Require Import Truncations.
 Require Import Algebra.Groups.
 Require Import Homotopy.HomotopyGroup.

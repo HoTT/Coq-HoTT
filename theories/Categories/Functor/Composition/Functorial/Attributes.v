@@ -7,7 +7,7 @@ Require Import Functor.Attributes.
 Require Import FunctorCategory.Core.
 Require Import Category.Morphisms.
 Require Import NaturalTransformation.Paths.
-Require Import HoTT.Truncations.
+Require Import HoTT.Truncations.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

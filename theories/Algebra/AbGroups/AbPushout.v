@@ -1,5 +1,5 @@
 Require Import Basics Types Truncations.Core Modalities.ReflectiveSubuniverse.
-Require Import WildCat HSet.
+Require Import WildCat.Core HSet.
 Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 

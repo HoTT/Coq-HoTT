@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import WildCat.
+Require Import WildCat.Core.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Colimits.Coeq.

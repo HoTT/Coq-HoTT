@@ -1,4 +1,4 @@
-Require Import Spaces.Nat.
+Require Import Spaces.Nat.Core.
 Require Export HoTT.Classes.interfaces.canonical_names.
 Require Import Modalities.ReflectiveSubuniverse.
 

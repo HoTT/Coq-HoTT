@@ -1,8 +1,8 @@
 Require Import Basics.
 Require Import Nat.Core.
-Require Import Spaces.Int.
+Require Import Spaces.Int.Core.
 Require Import Spaces.Finite.Fin.
-Require Import WildCat.
+Require Import WildCat.Core.
 
 Local Set Universe Minimization ToSet.
 
