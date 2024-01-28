@@ -52,7 +52,7 @@ Section Induced_category.
 
   Local Instance is1cat_induced `{Is1Cat B} : Is1Cat A.
   Proof.
-    srapply Build_Is1Cat;
+    snrapply Build_Is1Cat;
       unfold isgraph_induced, is2graph_induced,
         is01cat_induced, is0functor_induced in *;
       cbn in *.

@@ -461,7 +461,7 @@ Proof.
   srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
   srapply (contr_equiv _ (equiv_path_prod _ _)).
   destruct a'' as [a a''], b'' as [b b'']; cbn.
-  srapply contr_prod.
+  snrapply contr_prod.
   all: srapply contr_paths_contr.
   all: srapply contr_inhabited_hprop.
   all: srapply istrunc_forall.

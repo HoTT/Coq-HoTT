@@ -262,7 +262,7 @@ Defined.
 Lemma grp_iso_pi_prod {n : nat} (X Y : pType)
   : GroupIsomorphism (Pi n.+1 (X * Y)) (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
-  srapply Build_GroupIsomorphism.
+  snrapply Build_GroupIsomorphism.
   (* The underlying map is the natural one, so it is automatically a group homomorphism. *)
   - apply grp_prod_corec.
     + exact (fmap (Pi n.+1) (@pfst X Y)).

@@ -181,7 +181,7 @@ Section LexModality.
     pose proof (O_inverts_isconnected O (fun _:A => tt)).
     exists (OO_descend_O_inverts O O (fun _:A => tt) P tt); split.
     - apply OO_descend_O_inverts_inO.
-    - intros; rapply OO_descend_O_inverts_beta.
+    - intros; nrapply OO_descend_O_inverts_beta.
   Defined.  
 
   (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)

@@ -250,7 +250,7 @@ Definition isexact_equiv_fiber n {F F' X Y : pType}
   `{E : IsExact n _ _ _ i f}
   : IsExact n (i o* phi) f.
 Proof.
-  srapply Build_IsExact.
+  snrapply Build_IsExact.
   1: apply iscomplex_equiv_fiber, cx_isexact.
   apply (conn_map_homotopic _ (cxfib cx_isexact o* phi)).
   { intro x; cbn.

@@ -71,7 +71,7 @@ Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {p0x : a00 = a01} {p1x : a10 = a11}
   : px0 @ p1x = p0x @ px1 <~> PathSquare px0 px1 p0x p1x.
 Proof.
-  srapply Build_Equiv.
+  snrapply Build_Equiv.
   { destruct p0x, p1x.
     intro e.
     generalize (e @ concat_1p _).

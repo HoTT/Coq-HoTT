@@ -36,7 +36,7 @@ Defined.
 
 Global Instance is1cat_op {A : Type} `{Is1Cat A} : Is1Cat A^op.
 Proof.
-  srapply Build_Is1Cat; unfold op in *; cbv in *.
+  snrapply Build_Is1Cat; unfold op in *; cbv in *.
   - intros a b.
     apply is01cat_hom.
   - intros a b.
