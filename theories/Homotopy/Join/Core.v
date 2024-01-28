@@ -794,7 +794,7 @@ Section JoinTrunc.
   Defined.
 
   (** Joins add connectivity *)
-  Global Instance isconnected_join `{Univalence} {m n : trunc_index}
+  Global Instance isconnected_join `{Funext} {m n : trunc_index}
          (A B : Type) `{IsConnected m A} `{IsConnected n B}
     : IsConnected (m +2+ n) (Join A B).
   Proof.

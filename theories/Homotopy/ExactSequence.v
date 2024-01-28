@@ -128,7 +128,7 @@ Proof.
 Defined.
 
 (** If Y is a set, then IsComplex is an HProp. *)
-Global Instance ishprop_iscomplex_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
+Global Instance ishprop_iscomplex_hset `{Funext} {F X Y : pType} `{IsHSet Y}
   (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsComplex i f) := _.
 

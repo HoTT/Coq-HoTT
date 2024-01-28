@@ -348,7 +348,7 @@ Proof.
 Qed.
 
 
-Global Instance ishprop_Isomorphism `{Univalence} (A B : Ordinal)
+Global Instance ishprop_Isomorphism `{Funext} (A B : Ordinal)
   : IsHProp (Isomorphism A B).
 Proof.
   apply hprop_allpath; intros f g. apply path_sigma_hprop; cbn.

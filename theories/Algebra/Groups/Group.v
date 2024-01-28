@@ -772,7 +772,7 @@ Proof.
   apply path_contr.
 Defined.
 
-Global Instance ishprop_grp_iso_trivial `{Univalence} (G : Group)
+Global Instance ishprop_grp_iso_trivial `{Funext} (G : Group)
   : IsHProp (G ≅ grp_trivial).
 Proof.
   apply equiv_hprop_allpath.

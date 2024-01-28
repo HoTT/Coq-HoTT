@@ -392,7 +392,7 @@ Definition abses_pullback_phomotopic `{Univalence} {A B B' : AbGroup}
 
 (** *** Pulling back along a complex *)
 
-Definition iscomplex_abses_pullback' `{Univalence} {A B0 B1 B2 : AbGroup}
+Definition iscomplex_abses_pullback' `{Funext} {A B0 B1 B2 : AbGroup}
   (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
   : abses_pullback' f $o* abses_pullback' g $=>* @pmap_abses_const _ _ _ A.
 Proof.
