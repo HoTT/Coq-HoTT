@@ -174,7 +174,7 @@ Qed.
 
 (** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)
 
-Definition equiv_path_loopexp `{Univalence}
+Definition equiv_path_loopexp
            {A : Type} (p : A = A) (z : Int) (a : A)
   : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.
 Proof.

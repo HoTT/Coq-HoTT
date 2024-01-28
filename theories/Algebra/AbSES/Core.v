@@ -486,7 +486,7 @@ Definition loops_abses `{Univalence} {A B : AbGroup}
   := equiv_path_abses oE abses_endomorphism_trivial^-1.
 
 (** We can transfer a loop of the trivial short exact sequence to any other. *)
-Definition hom_loops_data_abses `{Univalence} {A B : AbGroup} (E : AbSES B A)
+Definition hom_loops_data_abses {A B : AbGroup} (E : AbSES B A)
   : (B $-> A) -> abses_path_data E E.
 Proof.
   intro phi.

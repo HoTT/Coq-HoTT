@@ -512,7 +512,7 @@ Proof.
   rewrite transport_arrow_toconst. rewrite inv_V. apply initial_segment_property.
 Qed.
 
-Lemma equiv_initial_segment_simulation `{Univalence}
+Lemma equiv_initial_segment_simulation
       `{PropResizing}
       {A : Type@{A}} {R : Lt@{_ R} A} `{IsOrdinal A R}
       {B : Type@{B}} {Q : Lt@{_ Q} B} `{IsOrdinal B Q}

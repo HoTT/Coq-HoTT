@@ -114,7 +114,7 @@ Definition abses_directsum_distributive_pullbacks `{Univalence}
   := (abses_pullback_component1_id (abses_directsum_pullback_morphism f g)
         (fun _ => idpath))^.
 
-Definition abses_path_pullback_projection_commsq `{Univalence}
+Definition abses_path_pullback_projection_commsq
   {A B B' : AbGroup@{u}} (bt : B' $-> B)
   (E : AbSES B A) (F : AbSES B' A) (p : abses_pullback bt E = F)
   : exists phi : middle F $-> E, projection E o phi == bt o projection F.
@@ -329,7 +329,7 @@ Defined.
 
 (** *** Pulling [E] back along [projection E] is trivial *)
 
-Definition abses_pullback_projection_morphism `{Univalence} {B A : AbGroup} (E : AbSES B A)
+Definition abses_pullback_projection_morphism {B A : AbGroup} (E : AbSES B A)
   : AbSESMorphism (pt : AbSES E A) E.
 Proof.
   srapply (Build_AbSESMorphism grp_homo_id _ (projection E)).

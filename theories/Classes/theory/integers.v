@@ -79,7 +79,7 @@ apply ap,E.
 Qed.
 
 Section retract_is_int.
-  Context `{Funext} `{Univalence}.
+  Context `{Funext}.
   Context `{Integers Z} `{IsRing Z2}
     {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
   Context (f : Z -> Z2) `{!IsEquiv f} `{!IsSemiRingPreserving f}

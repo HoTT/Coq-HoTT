@@ -266,7 +266,7 @@ Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   := to_pointed (abses_pushout' f).
 
 (** The following general lemma lets us show that [abses_pushout f E] is trivial in cases of interest. It says that if you have a map [phi : E -> A'], then if you push out along the restriction [phi $o inclusion E], the result is trivial. Specifically, we get a morphism witnessing this fact.  *)
-Definition abses_pushout_trivial_morphism `{Univalence} {B A A' : AbGroup}
+Definition abses_pushout_trivial_morphism {B A A' : AbGroup}
   (E : AbSES B A) (f : A $-> A') (phi : middle E $-> A')
   (k : f == phi $o inclusion E)
   : AbSESMorphism E (pt : AbSES B A').
@@ -280,7 +280,7 @@ Proof.
 Defined.
 
 (** The pushout of a short exact sequence along its inclusion map is trivial. *)
-Definition abses_pushout_inclusion_morphism `{Univalence} {B A : AbGroup} (E : AbSES B A)
+Definition abses_pushout_inclusion_morphism {B A : AbGroup} (E : AbSES B A)
   : AbSESMorphism E (pt : AbSES B E)
   := abses_pushout_trivial_morphism E (inclusion E) grp_homo_id (fun _ => idpath).
 
@@ -290,7 +290,7 @@ Definition abses_pushout_inclusion `{Univalence} {B A : AbGroup} (E : AbSES B A)
        (abses_pushout_inclusion_morphism E) (fun _ => idpath).
 
 (** Pushing out along [grp_homo_const] is trivial. *)
-Definition abses_pushout_const_morphism `{Univalence} {B A A' : AbGroup} (E : AbSES B A)
+Definition abses_pushout_const_morphism {B A A' : AbGroup} (E : AbSES B A)
   : AbSESMorphism E (pt : AbSES B A')
   := abses_pushout_trivial_morphism E
        grp_homo_const grp_homo_const (fun _ => idpath).
