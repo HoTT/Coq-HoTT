@@ -1589,7 +1589,6 @@ Class IsConnMap (O : ReflectiveSubuniverse@{i})
 Global Existing Instance isconnected_hfiber_conn_map.
 
 Section ConnectedMaps.
-  Context `{Univalence} `{Funext}.
   Universe i.
   Context (O : ReflectiveSubuniverse@{i}).
 
@@ -1636,7 +1635,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Being connected is an hprop *)
-  Global Instance ishprop_isconnmap {A B : Type} (f : A -> B)
+  Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
     apply istrunc_forall.
@@ -1706,7 +1705,7 @@ Section ConnectedMaps.
   : ooExtendableAlong f P
     := fun n => extendable_conn_map_inO n f P.
 
-  Lemma allpath_extension_conn_map
+  Lemma allpath_extension_conn_map `{Funext}
         {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
         (P : B -> Type) `{forall b:B, In O (P b)}
         (d : forall a:A, P (f a))
@@ -1718,7 +1717,7 @@ Section ConnectedMaps.
   Defined.
 
   (** It follows that [conn_map_elim] is actually an equivalence. *)
-  Theorem isequiv_o_conn_map 
+  Theorem isequiv_o_conn_map `{Funext}
           {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
           (P : B -> Type) `{forall b:B, In O (P b)}
   : IsEquiv (fun (g : forall b:B, P b) => g oD f).
@@ -1734,14 +1733,14 @@ Section ConnectedMaps.
       apply path_forall; intros x; apply conn_map_comp.
   Defined.
 
-  Definition equiv_o_conn_map
+  Definition equiv_o_conn_map `{Funext}
           {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
           (P : B -> Type) `{forall b:B, In O (P b)}
   : (forall b, P b) <~> (forall a, P (f a))
   := Build_Equiv _ _ _ (isequiv_o_conn_map f P).
 
   (** When considering lexness properties, we often want to consider the property of the universe of modal types being modal.  We can't say this directly (except in the accessible, hence liftable, case) because it lives in a higher universe, but we can make a direct extendability statement.  Here we prove a lemma that oo-extendability into the universe follows from plain extendability, essentially because the type of equivalences between two [O]-modal types is [O]-modal. *)
-  Definition ooextendable_TypeO_from_extension
+  Definition ooextendable_TypeO_from_extension `{Univalence}
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
              (extP : forall P : A -> Type_ O, ExtensionAlong f (fun _ : B => Type_ O) P)
     : ooExtendableAlong f (fun _ => Type_ O).
