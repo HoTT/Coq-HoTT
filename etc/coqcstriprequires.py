@@ -13,7 +13,8 @@
 #   make file.vo
 # To run on the whole library, avoiding test/ and contrib/, can do:
 #   export COQC=path/to/coqcstriprequires.py
-#   make clean; make -j<fill in> theories/HoTT.vo
+#   make clean; make -j<fill in> theories/HoTT.vo theories/Categories.vo
+# Use "unset COQC" when done.
 
 # Can be run with -j8 or -j1.  You should adjust the timeout policy
 # depending on which case you use.  See below.
@@ -84,6 +85,8 @@ def calc_timeout(duration): return max(duration+0.005, duration*1.03)
 timer = time.perf_counter
 
 # The default timeout value here will be used for the first run.
+# Returns (exit code of coqc, elapsed time).  If the elapsed time
+# is greater than the timeout, returns (1111, elapsed time).
 def coqc(quiet=False, timeout=60):
     start = timer()
     try:
@@ -94,7 +97,13 @@ def coqc(quiet=False, timeout=60):
             cp = subprocess.run(['coqc'] + sys.argv[1:], timeout=timeout)
     except subprocess.TimeoutExpired:
         return 1111, timer() - start
-    return cp.returncode, timer() - start
+    # subprocess.run uses a busy loop to check the timeout, so it may allow
+    # the command to run longer than the limit.  So we also check here.
+    elapsed = timer() - start
+    if elapsed > timeout:
+        return 1111, elapsed
+    else:
+        return cp.returncode, elapsed
 
 # Join words with spaces, ignoring None.
 def myjoin(words):
