@@ -1,5 +1,5 @@
 Require Import Basics Pointed.
-Require Import Truncations.
+Require Import Truncations.Core.
 
 (** ** Encode-decode method of characterizing identity types *)
 

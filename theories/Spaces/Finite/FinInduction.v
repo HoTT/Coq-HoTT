@@ -2,7 +2,7 @@ Require Import
   HoTT.Basics
   HoTT.Types
   HoTT.HSet
-  HoTT.Spaces.Nat
+  HoTT.Spaces.Nat.Core
   HoTT.Spaces.Finite.FinNat
   HoTT.Spaces.Finite.Fin.
 

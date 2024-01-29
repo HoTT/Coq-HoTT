@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Truncations.Core
+Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
   Groups.FreeGroup.
 

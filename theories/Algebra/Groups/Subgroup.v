@@ -1,4 +1,4 @@
-Require Import Basics Types HFiber WildCat.
+Require Import Basics Types HFiber WildCat.Core.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group TruncType.
 

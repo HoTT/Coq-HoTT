@@ -336,7 +336,7 @@ Section on_both.
   : IsCategory A'.
   Proof.
     intros s d.
-    simple notypeclasses refine (isequiv_homotopic
+    snrefine (isequiv_homotopic
               ((equiv_iso_A'^-1)
                  o (functor_sigma _ _)
                  o (path_sigma_uncurried _ _ _)^-1)

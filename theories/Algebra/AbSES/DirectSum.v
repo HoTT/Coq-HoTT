@@ -1,6 +1,6 @@
 Require Import Basics Types Truncations.Core.
-Require Import Pointed.
-Require Import WildCat Homotopy.ExactSequence.
+Require Import Pointed.Core.
+Require Import WildCat.Core Homotopy.ExactSequence.
 Require Import AbGroups.AbelianGroup AbSES.Core AbGroups.Biproduct.
 
 Local Open Scope pointed_scope.
@@ -93,7 +93,7 @@ Proof.
 Defined.
 
 (** For [E, F, G : AbSES B A], there is a morphism [(E + F) + G -> (G + F) + E] induced by the above map, where [+] denotes [abses_direct_sum]. *)
-Lemma abses_twist_directsum `{Univalence} {A B : AbGroup} (E F G : AbSES B A)
+Lemma abses_twist_directsum `{Funext} {A B : AbGroup} (E F G : AbSES B A)
   : AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)
                   (abses_direct_sum (abses_direct_sum G F) E).
 Proof.

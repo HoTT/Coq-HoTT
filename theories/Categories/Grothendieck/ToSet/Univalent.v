@@ -15,7 +15,7 @@ Set Asymmetric Patterns.
 Local Open Scope morphism_scope.
 
 Section Grothendieck.
-  Context `{Univalence}.
+  Context `{Funext}.
 
   Variable C : PreCategory.
   Context `{IsCategory C}.

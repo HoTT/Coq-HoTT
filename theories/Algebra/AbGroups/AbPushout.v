@@ -1,5 +1,5 @@
 Require Import Basics Types Truncations.Core Modalities.ReflectiveSubuniverse.
-Require Import WildCat HSet.
+Require Import WildCat.Core HSet.
 Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
@@ -169,7 +169,7 @@ Defined.
 (** ** Properties of pushouts of maps *)
 
 (** The pushout of an epimorphism is an epimorphism. *)
-Global Instance ab_pushout_surjection_inr `{Univalence} {A B C : AbGroup}
+Global Instance ab_pushout_surjection_inr {A B C : AbGroup}
   (f : A $-> B) (g : A $-> C) `{S : IsSurjection f}
   : IsSurjection (ab_pushout_inr (f:=f) (g:=g)).
 Proof.

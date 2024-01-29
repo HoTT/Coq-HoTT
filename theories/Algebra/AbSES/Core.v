@@ -189,7 +189,7 @@ Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES B A)
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
-Definition abses_path_data_to_iso `{Funext} {B A : AbGroup@{u}} (E F: AbSES B A)
+Definition abses_path_data_to_iso {B A : AbGroup@{u}} (E F: AbSES B A)
   : abses_path_data E F -> abses_path_data_iso E F.
 Proof.
   - intros [phi [p q]].
@@ -486,7 +486,7 @@ Definition loops_abses `{Univalence} {A B : AbGroup}
   := equiv_path_abses oE abses_endomorphism_trivial^-1.
 
 (** We can transfer a loop of the trivial short exact sequence to any other. *)
-Definition hom_loops_data_abses `{Univalence} {A B : AbGroup} (E : AbSES B A)
+Definition hom_loops_data_abses {A B : AbGroup} (E : AbSES B A)
   : (B $-> A) -> abses_path_data E E.
 Proof.
   intro phi.

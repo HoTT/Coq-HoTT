@@ -8,7 +8,7 @@ Require Export HoTT.Algebra.Universal.Algebra.
 Require Import
   HoTT.Types
   HoTT.Spaces.Finite
-  HoTT.Spaces.Nat.
+  HoTT.Spaces.Nat.Core.
 
 Local Open Scope Algebra_scope.
 Local Open Scope nat_scope.

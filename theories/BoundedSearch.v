@@ -1,6 +1,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Truncations.Core.
-Require Import HoTT.Spaces.Nat.
+Require Import HoTT.Spaces.Nat.Core.
 
 Section bounded_search.
 

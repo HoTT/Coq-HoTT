@@ -1,5 +1,5 @@
 Require Import Basics Types HSet HFiber Limits.Pullback.
-Require Import WildCat Pointed Homotopy.ExactSequence.
+Require Import WildCat Pointed.Core Homotopy.ExactSequence.
 Require Import Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.Pullback. 
@@ -149,7 +149,7 @@ Defined.
 (** For exactness we need not only a preimage of [F] but a preimage of [(F,p)] along [cxfib]. We now define and prove this in terms of path data. *)
 
 (** The analog of [cxfib] induced by pullback in terms of path data. *)
-Definition cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
+Definition cxfib' {A B C : AbGroup} (E : AbSES C B)
   : AbSES C A -> graph_hfiber (abses_pullback (A:=A) (inclusion E)) pt.
 Proof.
   intro Y.
@@ -160,7 +160,7 @@ Proof.
   symmetry; apply abses_pullback_const'.
 Defined.
 
-Definition hfiber_cxfib' `{Funext} {A B C : AbGroup} (E : AbSES C B)
+Definition hfiber_cxfib' {A B C : AbGroup} (E : AbSES C B)
            (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
   := {Y : AbSES C A & hfiber_abses_path (cxfib' E Y) (F; p)}.
 
@@ -210,7 +210,7 @@ Proof.
 Defined.
 
 (** The type of paths in [hfiber_cxfib'] in terms of path data. *)
-Definition path_hfiber_cxfib' `{Funext} {A B C : AbGroup} {E : AbSES C B}
+Definition path_hfiber_cxfib' {A B C : AbGroup} {E : AbSES C B}
            {F : AbSES (middle E) A} {p : abses_pullback (inclusion E) F $== pt}
            (X Y : hfiber_cxfib' (B:=B) E F p)
   : Type.
@@ -284,7 +284,7 @@ Defined.
 (** To conclude exactness in terms of path data, we show that the fibre is a proposition, hence contractible. *)
 
 (** Given a point [(Y;Q)] in the fiber of [cxfib'] over [(F;p)] there is an induced map as follows. *)
-Local Definition hfiber_cxfib'_induced_map `{Funext} {A B C : AbGroup} (E : AbSES C B)
+Local Definition hfiber_cxfib'_induced_map {A B C : AbGroup} (E : AbSES C B)
       (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
       (Y : hfiber_cxfib' E F p)
   : ab_biprod A B $-> abses_pullback (projection E) Y.1.

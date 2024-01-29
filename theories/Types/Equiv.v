@@ -108,7 +108,7 @@ Section AssumeFunext.
     := equiv_isequiv (equiv_path_equiv e1 e2).
 
   (** The inverse equivalence is homotopic to [ap equiv_fun], so that is also an equivalence. *)
-  Global Instance isequiv_ap_equiv_fun `{Funext} {A B : Type} (e1 e2 : A <~> B)
+  Global Instance isequiv_ap_equiv_fun {A B : Type} (e1 e2 : A <~> B)
     : IsEquiv (ap (x:=e1) (y:=e2) (@equiv_fun A B)).
   Proof.
     snrapply isequiv_homotopic.

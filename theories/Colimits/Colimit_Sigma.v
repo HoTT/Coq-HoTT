@@ -107,7 +107,7 @@ Section ColimitSigma.
       apply path_forall; intros [y x]; simpl.
       rewrite <- cocone_precompose_postcompose.
       srapply (apD10 (g := fun x => f (y; x)) _ x).
-      srapply equiv_moveR_equiv_V.
+      snrapply equiv_moveR_equiv_V.
       srapply path_cocone.
       1: reflexivity.
       intros i j g x'; simpl.

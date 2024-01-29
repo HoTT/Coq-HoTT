@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import HSet Limits.Pullback.
-Require Import WildCat Pointed Homotopy.ExactSequence.
+Require Import WildCat Pointed.Core Homotopy.ExactSequence.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.DirectSum.
@@ -76,7 +76,7 @@ Proof.
   all: by apply equiv_path_grouphomomorphism.
 Defined.
 
-Definition abses_pullback_component1_id' `{Funext}
+Definition abses_pullback_component1_id'
   {A B B' : AbGroup@{u}} {E : AbSES B A} {F : AbSES B' A}
   (f : AbSESMorphism E F) (h : component1 f == grp_homo_id)
   : E $== abses_pullback (component3 f) F.
@@ -114,7 +114,7 @@ Definition abses_directsum_distributive_pullbacks `{Univalence}
   := (abses_pullback_component1_id (abses_directsum_pullback_morphism f g)
         (fun _ => idpath))^.
 
-Definition abses_path_pullback_projection_commsq `{Univalence}
+Definition abses_path_pullback_projection_commsq
   {A B B' : AbGroup@{u}} (bt : B' $-> B)
   (E : AbSES B A) (F : AbSES B' A) (p : abses_pullback bt E = F)
   : exists phi : middle F $-> E, projection E o phi == bt o projection F.
@@ -289,7 +289,7 @@ Defined.
 
 (** *** Pulling back along constant maps *)
 
-Lemma abses_pullback_const' `{Funext} {A B B' : AbGroup}
+Lemma abses_pullback_const' {A B B' : AbGroup}
   : const pt $=> (@abses_pullback A B B' grp_homo_const).
 Proof.
   intro E.
@@ -310,7 +310,7 @@ Definition abses_pullback_const `{Univalence} {A B B' : AbGroup}
   : const pt == @abses_pullback A B B' grp_homo_const
   := fun x => (equiv_path_abses_iso (abses_pullback_const' x)).
 
-Lemma abses_pullback_pconst' `{Funext} {A B B' : AbGroup}
+Lemma abses_pullback_pconst' {A B B' : AbGroup}
   : @pmap_abses_const B' A B A $=>* abses_pullback' grp_homo_const.
 Proof.
   srefine (_; _).
@@ -329,7 +329,7 @@ Defined.
 
 (** *** Pulling [E] back along [projection E] is trivial *)
 
-Definition abses_pullback_projection_morphism `{Univalence} {B A : AbGroup} (E : AbSES B A)
+Definition abses_pullback_projection_morphism {B A : AbGroup} (E : AbSES B A)
   : AbSESMorphism (pt : AbSES E A) E.
 Proof.
   srapply (Build_AbSESMorphism grp_homo_id _ (projection E)).
@@ -392,7 +392,7 @@ Definition abses_pullback_phomotopic `{Univalence} {A B B' : AbGroup}
 
 (** *** Pulling back along a complex *)
 
-Definition iscomplex_abses_pullback' `{Univalence} {A B0 B1 B2 : AbGroup}
+Definition iscomplex_abses_pullback' {A B0 B1 B2 : AbGroup}
   (f : B0 $-> B1) (g : B1 $-> B2) (h : g $o f == grp_homo_const)
   : abses_pullback' f $o* abses_pullback' g $=>* @pmap_abses_const _ _ _ A.
 Proof.

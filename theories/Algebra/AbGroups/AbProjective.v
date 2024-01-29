@@ -1,5 +1,5 @@
 Require Import Basics Types AbelianGroup AbPullback
-  WildCat Limits.Pullback ReflectiveSubuniverse Truncations.Core.
+  WildCat.Core Limits.Pullback ReflectiveSubuniverse Truncations.Core.
 
 (** * Projective abelian groups *)
 

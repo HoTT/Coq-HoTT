@@ -2,7 +2,7 @@ Require Import
   HoTT.Basics
   HoTT.Types
   HoTT.HSet
-  HoTT.Truncations
+  HoTT.Truncations.Core
   HoTT.Colimits.Quotient
   HoTT.Projective.
 
@@ -83,7 +83,7 @@ End choose_has_quotient_choice.
 (** The following section derives [HasTrChoice 0 A] from [HasQuotientChoice A]. *)
 
 Section has_tr0_choice_quotientchoice.
-  Context `{Univalence} (A : Type) (qch : HasQuotientChoice A).
+  Context `{Funext} (A : Type) (qch : HasQuotientChoice A).
 
   Local Definition RelUnit (B : A -> Type) (a : A) (b1 b2 : B a) : HProp
     := Build_HProp Unit.
@@ -154,7 +154,7 @@ Proof.
 Qed.
 
 Global Instance isequiv_has_tr0_choice_to_has_quotient_choice
-  `{Univalence} (A : Type)
+  `{Funext} (A : Type)
   : IsEquiv (has_quotient_choice_tr0choice A).
 Proof.
   srapply isequiv_iff_hprop.
@@ -163,7 +163,7 @@ Proof.
 Qed.
 
 Definition equiv_has_tr0_choice_has_quotient_choice
-  `{Univalence} (A : Type)
+  `{Funext} (A : Type)
   : HasTrChoice 0 A <~> HasQuotientChoice A
   := Build_Equiv _ _ (has_quotient_choice_tr0choice A) _.
 

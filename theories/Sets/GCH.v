@@ -1,6 +1,6 @@
 From HoTT Require Import TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
-From HoTT Require Import Spaces.Nat Spaces.Card.
+From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 
 Open Scope type.
 

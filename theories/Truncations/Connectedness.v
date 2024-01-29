@@ -36,7 +36,7 @@ One reason for our choice is that this way, the n-truncated and n-connected maps
 (Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of extensions is contractible.)
 
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
-Lemma istrunc_extension_along_conn `{Univalence} {m n : trunc_index}
+Lemma istrunc_extension_along_conn `{Funext} {m n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc (m +2+ n) (P b)}
   (d : forall a:A, P (f a))

@@ -2,7 +2,7 @@
 Require Import Category.Subcategory.Full.
 Require Import Category.Sigma.Univalent.
 Require Import Category.Morphisms Category.Univalent Category.Strict.
-Require Import HoTT.Basics HoTT.Types HoTT.Spaces.Nat.
+Require Import HoTT.Basics HoTT.Types HoTT.Spaces.Nat.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

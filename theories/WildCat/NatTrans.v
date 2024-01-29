@@ -272,7 +272,7 @@ Definition PointedTransformation {B C : Type} `{Is1Cat B, Is1Gpd C}
 
 Notation "F $=>* G" := (PointedTransformation F G) (at level 70).
 
-Definition ptransformation_inverse `{Funext} {B C : Type} `{Is1Cat B, Is1Gpd C}
+Definition ptransformation_inverse {B C : Type} `{Is1Cat B, Is1Gpd C}
            `{IsPointed B, IsPointed C} (F G : B -->* C)
   : (F $=>* G) -> (G $=>* F).
 Proof.

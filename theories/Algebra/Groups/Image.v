@@ -2,7 +2,7 @@ Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
-Require Import WildCat.
+Require Import WildCat.Core.
 Require Import HSet.
 
 (** Image of group homomorphisms *)

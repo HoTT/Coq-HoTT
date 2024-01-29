@@ -392,7 +392,7 @@ Proof.
 Defined.
 
 (* 7.2.7 *)
-Theorem equiv_istrunc_istrunc_loops `{Univalence} n X
+Theorem equiv_istrunc_istrunc_loops `{Funext} n X
   : IsTrunc n.+2 X <~> forall (x : X), IsTrunc n.+1 (loops [X, x]).
 Proof.
   srapply equiv_iff_hprop.
@@ -404,7 +404,7 @@ Proof.
 Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
-Theorem equiv_istrunc_contr_iterated_loops `{Univalence} (n : nat)
+Theorem equiv_istrunc_contr_iterated_loops `{Funext} (n : nat)
   : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
 Proof.
   induction n; intro A.

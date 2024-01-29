@@ -96,7 +96,7 @@ Section EilenbergMacLane.
       symmetry; apply (groupiso_pi_loops _ _).
   Defined.
 
-  Definition iscohhspace_em `{Univalence} {G : AbGroup} (n : nat)
+  Definition iscohhspace_em {G : AbGroup} (n : nat)
     : IsCohHSpace K(G, n).
   Proof.
     nrapply iscohhspace_equiv_cohhspace.

@@ -6,7 +6,7 @@ Require Import Diagrams.Diagram.
 Require Import Diagrams.Sequence.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
-Require Import Spaces.Nat.
+Require Import Spaces.Nat.Core.
 Require Import PathAny.
 
 Local Open Scope nat_scope.

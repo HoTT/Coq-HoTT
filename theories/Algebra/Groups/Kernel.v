@@ -1,7 +1,7 @@
 Require Import Basics Types.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
-Require Import WildCat.
+Require Import WildCat.Core.
 
 (** * Kernels of group homomorphisms *)
 

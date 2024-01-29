@@ -50,7 +50,7 @@ Proof.
   - exact _.
   - intros A.
     (** We take care with universes. *)
-    simple notypeclasses refine (reflectsD_from_OO_ind@{i} _ _ _).
+    snrefine (reflectsD_from_OO_ind@{i} _ _ _).
     + intros B B_inO g.
       refine (Localize_ind@{a i i i} (null_to_local_generators S) A B g _); intros i.
       apply ooextendable_over_unit; intros c.

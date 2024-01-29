@@ -24,7 +24,7 @@ Proof.
 Defined.
 
 (** Exactness of [ab_hom B G -> ab_hom E G -> ab_hom A G]. One can also deduce this from [isexact_abses_pullback]. *)
-Definition isexact_ext_contra_sixterm_ii `{Univalence}
+Definition isexact_ext_contra_sixterm_ii `{Funext}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (projection E) G)

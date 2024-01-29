@@ -348,7 +348,7 @@ Proof.
 Qed.
 
 
-Global Instance ishprop_Isomorphism `{Univalence} (A B : Ordinal)
+Global Instance ishprop_Isomorphism `{Funext} (A B : Ordinal)
   : IsHProp (Isomorphism A B).
 Proof.
   apply hprop_allpath; intros f g. apply path_sigma_hprop; cbn.
@@ -512,7 +512,7 @@ Proof.
   rewrite transport_arrow_toconst. rewrite inv_V. apply initial_segment_property.
 Qed.
 
-Lemma equiv_initial_segment_simulation `{Univalence}
+Lemma equiv_initial_segment_simulation
       `{PropResizing}
       {A : Type@{A}} {R : Lt@{_ R} A} `{IsOrdinal A R}
       {B : Type@{B}} {Q : Lt@{_ Q} B} `{IsOrdinal B Q}
