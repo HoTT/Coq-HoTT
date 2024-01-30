@@ -1,20 +1,21 @@
 Require Import Basics.Overture.
 Require Import Basics.PathGroupoids.
 Require Import Basics.Tactics.
-Require Import Types.
+Require Import Types.Sigma.
 Require Import WildCat.Core.
 
 Class IsDGraph (A : Type) `{IsGraph A} (D : A -> Type)
-  := dhom : forall {a b}, (a $-> b) -> D a -> D b -> Type.
+  := dhom : forall {a b : A}, (a $-> b) -> D a -> D b -> Type.
 
 Class Is01DCat (A : Type) `{Is01Cat A} (D : A -> Type) `{!IsDGraph A D} :=
 {
   did : forall {a : A} (a' : D a), dhom (Id a) a' a';
-  dcat_comp : forall {a b c} {g : b $-> c} {f : a $-> b} {a'} {b'} {c'},
-          dhom g b' c' -> dhom f a' b' -> dhom (g $o f) a' c';
+  dcat_comp : forall {a b c : A} {g : b $-> c} {f : a $-> b}
+              {a' : D a} {b' : D b} {c' : D c},
+              dhom g b' c' -> dhom f a' b' -> dhom (g $o f) a' c';
 }.
 
-Notation "g '$o'' f" := (@dcat_comp _ _ _ _ _ _ _ _ _ _ _ _ _ _ g f).
+Notation "g '$o'' f" := (dcat_comp g f).
 
 Definition dcat_postcomp {A : Type} {D : A -> Type} `{Is01DCat A D} {a b c : A}
   {g : b $-> c} {a' : D a} {b' : D b} {c' : D c} (g' : dhom g b' c')
@@ -55,14 +56,13 @@ Defined.
 
 (* A displayed 0-functor G over a 0-functor F acts on displayed objects and
 1-cells and satisfies no axioms. *)
-Class Is0DFunctor
-  {A : Type} `{IsGraph A} {B : Type} `{IsGraph B}
-  (DA : A -> Type) `{!IsDGraph A DA} (DB : B -> Type) `{!IsDGraph B DB}
+Class Is0DFunctor {A : Type} {B : Type}
+  (DA : A -> Type) `{IsDGraph A DA} (DB : B -> Type) `{IsDGraph B DB}
   (F : A -> B) `{!Is0Functor F} (G : forall (a : A), DA a -> DB (F a))
   := dfmap : forall {a b : A} {f : a $-> b} {a' : DA a} {b' : DA b},
               dhom f a' b' -> dhom (fmap F f) (G a a') (G b b').
 
-Arguments dfmap {A _ B _ DA _ DB _} F {_} G {_ _ _ _ _ _} f'.
+Arguments dfmap {A B DA _ _ DB _ _} F {_} G {_ _ _ _ _ _} f'.
 
 Class Is2DGraph (A : Type) `{IsGraph A, !Is2Graph A}
   (D : A -> Type) `{!IsDGraph A D}
@@ -77,7 +77,7 @@ Class Is1DCat (A : Type) `{IsGraph A, !Is2Graph A, !Is01Cat A, !Is1Cat A}
     is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
                     Is01DCat (a $-> b) (fun f => dhom f a' b');
     is0dgpd_dhom : forall {a b : A} {a' : D a} {b' : D b},
-                  Is0DGpd (a $-> b) (fun f => dhom f a' b');
+                    Is0DGpd (a $-> b) (fun f => dhom f a' b');
     is0dfunctor_postcomp : forall {a b c : A} {g : b $-> c} {a' : D a}
                             {b' : D b} {c' : D c} (g' : dhom g b' c'),
                             Is0DFunctor (fun f => dhom f a' b')
@@ -85,9 +85,9 @@ Class Is1DCat (A : Type) `{IsGraph A, !Is2Graph A, !Is01Cat A, !Is1Cat A}
                                         (cat_postcomp a g) (dcat_postcomp g');
     is0dfunctor_precomp : forall {a b c : A} {f : a $-> b} {a' : D a}
                           {b' : D b} {c' : D c} (f' : dhom f a' b'),
-                            Is0DFunctor (fun g => dhom g b' c')
-                                        (fun gf => dhom gf a' c')
-                                        (cat_precomp c f) (dcat_precomp f');
+                          Is0DFunctor (fun g => dhom g b' c')
+                                      (fun gf => dhom gf a' c')
+                                      (cat_precomp c f) (dcat_precomp f');
     dcat_assoc : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
                   {a' : D a} {b' : D b} {c' : D c} {d' : D d}
                   (f' : dhom f a' b') (g' : dhom g b' c') (h' : dhom h c' d'),
@@ -149,8 +149,10 @@ Global Instance is01cat_sigma {A : Type} (D : A -> Type) `{Is01DCat A D}
   : Is01Cat (sig D).
 Proof.
   srapply Build_Is01Cat.
-  - intros [a a']. exact (Id a; did a').
-  - intros [a a'] [b b'] [c c'] [g g'] [f f']. exact (g $o f; g' $o' f').
+  - intros [a a'].
+    exact (Id a; did a').
+  - intros [a a'] [b b'] [c c'] [g g'] [f f'].
+    exact (g $o f; g' $o' f').
 Defined.
 
 Global Instance is0gpd_sigma {A : Type} (D : A -> Type) `{Is0DGpd A D}
@@ -365,3 +367,36 @@ Section ConstantFunctor.
       apply dcat_idl.
   Defined.
 End ConstantFunctor.
+
+Section CompositeFunctor.
+  Context {A B C : Type} {DA : A -> Type} {DB : B -> Type} {DC : C -> Type}
+  (F : A -> B) (G : B -> C)
+  (F' : forall (a : A), DA a -> DB (F a))
+  (G' : forall (b : B), DB b -> DC (G b)).
+
+  Global Instance is0dfunctor_compose
+    `{IsDGraph A DA} `{IsDGraph B DB} `{IsDGraph C DC}
+    `{!Is0Functor F} `{!Is0Functor G}
+    `{!Is0DFunctor DA DB F F'} `{!Is0DFunctor DB DC G G'}
+    : Is0DFunctor DA DC (G o F) (fun a a' => (G' (F a) o (F' a)) a').
+  Proof.
+    intros a b f a' b' f'.
+    exact (dfmap G G' (dfmap F F' f')).
+  Defined.
+
+  Global Instance is1dfunctor_compose
+    `{Is1DCat A DA} `{Is1DCat B DB} `{Is1DCat C DC}
+    `{!Is0Functor F, !Is1Functor F} `{!Is0Functor G, !Is1Functor G}
+    `{!Is0DFunctor DA DB F F', !Is1DFunctor DA DB F F'} 
+    `{!Is0DFunctor DB DC G G', !Is1DFunctor DB DC G G'}
+    : Is1DFunctor DA DC (G o F) (fun a a' => (G' (F a) o (F' a)) a').
+  Proof.
+    srapply Build_Is1DFunctor.
+    - intros a b f g p a' b' f' g' p'.
+      apply (dfmap2 _ _ (dfmap2 f' g' p')).
+    - intros a a'.
+      apply (dgpd_comp (dfmap2 _ _ (dfmap_id a')) (dfmap_id _)).
+    - intros a b c f g a' b' c' f' g'.
+      apply (dgpd_comp (dfmap2 _ _ (dfmap_comp f' g')) (dfmap_comp _ _)).
+  Defined.
+End CompositeFunctor.
