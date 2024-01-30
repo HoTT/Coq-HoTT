@@ -69,6 +69,13 @@ Proof.
   reflexivity.
 Defined.
 
+Definition ap_fst_path_prod' {A B : Type} {x x' : A} {y y' : B}
+  (p : x = x') (q : y = y')
+  : ap fst (path_prod' p q) = p.
+Proof.
+  apply ap_fst_path_prod.
+Defined.
+
 Definition ap_snd_path_prod {A B : Type} {z z' : A * B}
   (p : fst z = fst z') (q : snd z = snd z') :
   ap snd (path_prod _ _ p q) = q.
@@ -77,6 +84,13 @@ Proof.
   change z' with (fst z', snd z').
   destruct p, q.
   reflexivity.
+Defined.
+
+Definition ap_snd_path_prod' {A B : Type} {x x' : A} {y y' : B}
+  (p : x = x') (q : y = y')
+  : ap snd (path_prod' p q) = q.
+Proof.
+  apply ap_snd_path_prod.
 Defined.
 
 Definition eta_path_prod {A B : Type} {z z' : A * B} (p : z = z') :
