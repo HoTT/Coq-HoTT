@@ -4,10 +4,10 @@ Require Import Basics.Tactics.
 Require Import Types.Sigma.
 Require Import WildCat.Core.
 
-Class IsDGraph (A : Type) `{IsGraph A} (D : A -> Type)
+Class IsDGraph {A : Type} `{IsGraph A} (D : A -> Type)
   := DHom : forall {a b : A}, (a $-> b) -> D a -> D b -> Type.
 
-Class Is01DCat (A : Type) `{Is01Cat A} (D : A -> Type) `{!IsDGraph A D} :=
+Class Is01DCat {A : Type} `{Is01Cat A} (D : A -> Type) `{!IsDGraph D} :=
 {
   DId : forall {a : A} (a' : D a), DHom (Id a) a' a';
   dcat_comp : forall {a b c : A} {g : b $-> c} {f : a $-> b}
@@ -27,8 +27,8 @@ Definition dcat_precomp {A : Type} {D : A -> Type} `{Is01DCat A D} {a b c : A}
   : forall (g : b $-> c), DHom g b' c' -> DHom (g $o f) a' c'
   := fun _ g' => g' $o' f'.
 
-Class Is0DGpd (A : Type) `{Is0Gpd A} (D : A -> Type)
-  `{!IsDGraph A D, !Is01DCat A D}
+Class Is0DGpd {A : Type} `{Is0Gpd A} (D : A -> Type)
+  `{!IsDGraph D, !Is01DCat D}
   := dgpd_rev : forall {a b : A} {f : a $== b} {a' : D a} {b' : D b},
                 DHom f a' b' -> DHom (f^$) b' a'.
 
@@ -63,20 +63,20 @@ Class Is0DFunctor {A : Type} {B : Type}
 
 Arguments dfmap {A B DA _ _ DB _ _} F {_} F' {_ _ _ _ _ _} f'.
 
-Class Is2DGraph (A : Type) `{Is2Graph A}
-  (D : A -> Type) `{!IsDGraph A D}
+Class Is2DGraph {A : Type} `{Is2Graph A}
+  (D : A -> Type) `{!IsDGraph D}
   := isdgraph_dhom : forall {a b} {a'} {b'},
-                    IsDGraph (a $-> b) (fun f => DHom f a' b').
+                      IsDGraph (fun (f:a $-> b) => DHom f a' b').
 
 Global Existing Instance isdgraph_dhom.
 #[global] Typeclasses Transparent Is2DGraph.
 
-Class Is1DCat (A : Type) `{Is2Graph A, !Is01Cat A, !Is1Cat A}
-  (D : A -> Type) `{!IsDGraph A D, !Is2DGraph A D, !Is01DCat A D} := {
+Class Is1DCat {A : Type} `{Is2Graph A, !Is01Cat A, !Is1Cat A}
+  (D : A -> Type) `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} := {
     is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
-                    Is01DCat (a $-> b) (fun f => DHom f a' b');
+                    Is01DCat (fun f => DHom f a' b');
     is0dgpd_dhom : forall {a b : A} {a' : D a} {b' : D b},
-                    Is0DGpd (a $-> b) (fun f => DHom f a' b');
+                    Is0DGpd (fun f => DHom f a' b');
     is0dfunctor_postcomp : forall {a b c : A} {g : b $-> c} {a' : D a}
                             {b' : D b} {c' : D c} (g' : DHom g b' c'),
                             Is0DFunctor (fun f => DHom f a' b')
@@ -222,14 +222,14 @@ Proof.
     apply Id.
 Defined.
 
-Class Is1DCat_Strong (A : Type) `{Is2Graph A, !Is01Cat A, !Is1Cat_Strong A}
+Class Is1DCat_Strong {A : Type} `{Is2Graph A, !Is01Cat A, !Is1Cat_Strong A}
   (D : A -> Type)
-  `{!IsDGraph A D, !Is2DGraph A D, !Is01DCat A D} :=
+  `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} :=
 {
   is01dcat_dhom_strong : forall {a b : A} {a' : D a} {b' : D b},
-                          Is01DCat (a $-> b) (fun f => DHom f a' b');
+                          Is01DCat (fun f => DHom f a' b');
   is0dgpd_dhom_strong : forall {a b : A} {a' : D a} {b' : D b},
-                        Is0DGpd (a $-> b) (fun f => DHom f a' b');
+                        Is0DGpd (fun f => DHom f a' b');
   is0dfunctor_postcomp_strong : forall {a b c : A} {g : b $-> c} {a' : D a}
                                 {b' : D b} {c' : D c} (g' : DHom g b' c'),
                                 Is0DFunctor (fun f => DHom f a' b')
@@ -274,7 +274,7 @@ Proof.
 Defined.
 
 Global Instance is1dcat_is1dcatstrong {A : Type} (D : A -> Type)
-  `{Is1DCat_Strong A D} : Is1DCat A D.
+  `{Is1DCat_Strong A D} : Is1DCat D.
 Proof.
   srapply Build_Is1DCat.
   - intros a b c d f g h a' b' c' d' f' g' h'.
@@ -317,7 +317,7 @@ Defined.
 
 Section IdentityFunctor.
   Global Instance is0dfunctor_idmap {A : Type} `{Is01Cat A}
-    (DA : A -> Type) `{!IsDGraph A DA, !Is01DCat A DA}
+    (DA : A -> Type) `{!IsDGraph DA, !Is01DCat DA}
     : Is0DFunctor DA DA (idmap) (fun a a' => a').
   Proof.
     intros a b f a' b' f'.
@@ -325,7 +325,7 @@ Section IdentityFunctor.
   Defined.
 
   Global Instance is1dfunctor_idmap {A : Type} `{Is1Cat A} (DA : A -> Type)
-    `{!IsDGraph A DA, !Is2DGraph A DA, !Is01DCat A DA, !Is1DCat A DA}
+    `{!IsDGraph DA, !Is2DGraph DA, !Is01DCat DA, !Is1DCat DA}
     : Is1DFunctor DA DA (idmap) (fun a a' => a').
   Proof.
     apply Build_Is1DFunctor.
@@ -340,8 +340,8 @@ End IdentityFunctor.
 
 Section ConstantFunctor.
   Global Instance is0dfunctor_const {A : Type} `{IsGraph A}
-    {B : Type} `{Is01Cat B} (DA : A -> Type) `{!IsDGraph A DA}
-    (DB : B -> Type) `{!IsDGraph B DB, !Is01DCat B DB} (x : B) (x' : DB x)
+    {B : Type} `{Is01Cat B} (DA : A -> Type) `{!IsDGraph DA}
+    (DB : B -> Type) `{!IsDGraph DB, !Is01DCat DB} (x : B) (x' : DB x)
     : Is0DFunctor DA DB (fun _ : A => x) (fun _ _ => x').
   Proof.
     intros a b f a' b' f'.
@@ -350,9 +350,9 @@ Section ConstantFunctor.
 
   Global Instance is1dfunctor_const {A : Type} `{Is1Cat A} {B : Type} `{Is1Cat B}
     (DA : A -> Type)
-    `{!IsDGraph A DA, !Is2DGraph A DA, !Is01DCat A DA, !Is1DCat A DA}
+    `{!IsDGraph DA, !Is2DGraph DA, !Is01DCat DA, !Is1DCat DA}
     (DB : B -> Type)
-    `{!IsDGraph B DB, !Is2DGraph B DB, !Is01DCat B DB, !Is1DCat B DB}
+    `{!IsDGraph DB, !Is2DGraph DB, !Is01DCat DB, !Is1DCat DB}
     (x : B) (x' : DB x)
     : Is1DFunctor DA DB (fun _ : A => x) (fun _ _ => x').
   Proof.
