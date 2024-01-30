@@ -3,6 +3,7 @@ Require Import Basics.PathGroupoids.
 Require Import Basics.Tactics.
 Require Import Types.Sigma.
 Require Import WildCat.Core.
+Require Import WildCat.Prod.
 
 Class IsDGraph {A : Type} `{IsGraph A} (D : A -> Type)
   := DHom : forall {a b : A}, (a $-> b) -> D a -> D b -> Type.
@@ -401,3 +402,66 @@ Section CompositeFunctor.
       apply (dfmap2 _ _ (dfmap_comp f' g') $@' dfmap_comp _ _).
   Defined.
 End CompositeFunctor.
+
+Local Definition obwise_prod {A B : Type} (DA : A -> Type) (DB : B -> Type)
+  (x : A * B) := DA (fst x) * DB (snd x).
+
+Global Instance isdgraph_prod {A B : Type} (DA : A -> Type) `{IsDGraph A DA}
+  (DB : B -> Type) `{IsDGraph B DB}
+  : IsDGraph (obwise_prod DA DB).
+Proof.
+  intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'].
+  exact (DHom f a1' a2' * DHom g b1' b2').
+Defined.
+
+Global Instance is01dcat_prod {A B : Type} (DA : A -> Type) `{Is01DCat A DA}
+  (DB : B -> Type) `{Is01DCat B DB}
+  : Is01DCat (obwise_prod DA DB).
+Proof.
+  srapply Build_Is01DCat.
+  - intros [a b] [a' b'].
+    exact (DId a', DId b').
+  - intros [a1 b1] [a2 b2] [a3 b3] [f2 g2] [f1 g1] [a1' b1'] [a2' b2'] [a3' b3'].
+    intros [f2' g2'] [f1' g1'].
+    exact (f2' $o' f1', g2' $o' g1').
+Defined.
+
+Global Instance is0dgpd_prod {A B : Type} (DA : A -> Type) `{Is0DGpd A DA}
+  (DB : B -> Type) `{Is0DGpd B DB}
+  : Is0DGpd (obwise_prod DA DB).
+Proof.
+  intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].
+  exact (f'^$', g'^$').
+Defined.
+
+Global Instance is2dgraph_prod {A B : Type} (DA : A -> Type) `{Is2DGraph A DA}
+  (DB : B -> Type) `{Is2DGraph B DB}
+  : Is2DGraph (obwise_prod DA DB).
+Proof.
+  intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
+  srapply (isdgraph_prod _ _).
+Defined.
+
+Global Instance is1dcat_prod {A B : Type} (DA : A -> Type) `{Is1DCat A DA}
+  (DB : B -> Type) `{Is1DCat B DB}
+  : Is1DCat (obwise_prod DA DB).
+Proof.
+  srapply Build_Is1DCat.
+  - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
+    srapply (is01dcat_prod _ _).
+  - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
+    srapply (is0dgpd_prod _ _).
+  - intros [a1 b1] [a2 b2] [a3 b3] [f g] [a1' b1'] [a2' b2'] [a3' b3'] [f' g'].
+    intros [h1 k1] [h2 k2] [p q] [h1' k1'] [h2' k2'] [p' q'].
+    exact (f' $@L' p', g' $@L' q').
+  - intros [a1 b1] [a2 b2] [a3 b3] [f g] [a1' b1'] [a2' b2'] [a3' b3'] [f' g'].
+    intros [h1 k1] [h2 k2] [p q] [h1' k1'] [h2' k2'] [p' q'].
+    exact (p' $@R' f', q' $@R' g').
+  - intros [a1 b1] [a2 b2] [a3 b3] [a4 b4] [f1 g1] [f2 g2] [f3 g3].
+    intros [a1' b1'] [a2' b2'] [a3' b3'] [a4' b4'] [f1' g1'] [f2' g2'] [f3' g3'].
+    exact (dcat_assoc f1' f2' f3', dcat_assoc g1' g2' g3').
+  - intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].
+    exact (dcat_idl f', dcat_idl g').
+  - intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].
+    exact (dcat_idr f', dcat_idr g').
+Defined.
