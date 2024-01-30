@@ -439,7 +439,7 @@ Global Instance is2dgraph_prod {A B : Type} (DA : A -> Type) `{Is2DGraph A DA}
   : Is2DGraph (obwise_prod DA DB).
 Proof.
   intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
-  srapply (isdgraph_prod _ _).
+  srapply isdgraph_prod.
 Defined.
 
 Global Instance is1dcat_prod {A B : Type} (DA : A -> Type) `{Is1DCat A DA}
@@ -447,21 +447,21 @@ Global Instance is1dcat_prod {A B : Type} (DA : A -> Type) `{Is1DCat A DA}
   : Is1DCat (obwise_prod DA DB).
 Proof.
   snrapply Build_Is1DCat.
-  - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
-    srapply (is01dcat_prod _ _).
-  - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
+  - intros ab1 ab2 ab1' ab2'.
+    srapply is01dcat_prod.
+  - intros ab1 ab2 ab1' ab2'.
     srapply (is0dgpd_prod _ _).
-  - intros [a1 b1] [a2 b2] [a3 b3] [f g] [a1' b1'] [a2' b2'] [a3' b3'] [f' g'].
-    intros [h1 k1] [h2 k2] [p q] [h1' k1'] [h2' k2'] [p' q'].
+  - intros ab1 ab2 ab3 fg ab1' ab2' ab3' [f' g'].
+    intros hk1 hk2 pq hk1' hk2' [p' q'].
     exact (f' $@L' p', g' $@L' q').
-  - intros [a1 b1] [a2 b2] [a3 b3] [f g] [a1' b1'] [a2' b2'] [a3' b3'] [f' g'].
-    intros [h1 k1] [h2 k2] [p q] [h1' k1'] [h2' k2'] [p' q'].
+  - intros ab1 ab2 ab3 fg ab1' ab2' ab3' [f' g'].
+    intros hk1 hk2 pq hk1' hk2' [p' q'].
     exact (p' $@R' f', q' $@R' g').
-  - intros [a1 b1] [a2 b2] [a3 b3] [a4 b4] [f1 g1] [f2 g2] [f3 g3].
-    intros [a1' b1'] [a2' b2'] [a3' b3'] [a4' b4'] [f1' g1'] [f2' g2'] [f3' g3'].
+  - intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.
+    intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].
     exact (dcat_assoc f1' f2' f3', dcat_assoc g1' g2' g3').
-  - intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].
+  - intros ab1 ab2 fg ab1' ab2' [f' g'].
     exact (dcat_idl f', dcat_idl g').
-  - intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].
+  - intros ab1 ab2 fg ab1' ab2' [f' g'].
     exact (dcat_idr f', dcat_idr g').
 Defined.
