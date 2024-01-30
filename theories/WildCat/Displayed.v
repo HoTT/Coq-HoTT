@@ -63,7 +63,7 @@ Class Is0DFunctor {A : Type} {B : Type}
 
 Arguments dfmap {A B DA _ _ DB _ _} F {_} F' {_ _ _ _ _ _} f'.
 
-Class Is2DGraph (A : Type) `{IsGraph A, !Is2Graph A}
+Class Is2DGraph (A : Type) `{Is2Graph A}
   (D : A -> Type) `{!IsDGraph A D}
   := isdgraph_dhom : forall {a b} {a'} {b'},
                     IsDGraph (a $-> b) (fun f => DHom f a' b').
@@ -71,7 +71,7 @@ Class Is2DGraph (A : Type) `{IsGraph A, !Is2Graph A}
 Global Existing Instance isdgraph_dhom.
 #[global] Typeclasses Transparent Is2DGraph.
 
-Class Is1DCat (A : Type) `{IsGraph A, !Is2Graph A, !Is01Cat A, !Is1Cat A}
+Class Is1DCat (A : Type) `{Is2Graph A, !Is01Cat A, !Is1Cat A}
   (D : A -> Type) `{!IsDGraph A D, !Is2DGraph A D, !Is01DCat A D} := {
     is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
                     Is01DCat (a $-> b) (fun f => DHom f a' b');
@@ -222,7 +222,7 @@ Proof.
     apply Id.
 Defined.
 
-Class Is1DCat_Strong (A : Type) `{IsGraph A, !Is2Graph A, !Is01Cat A, !Is1Cat_Strong A}
+Class Is1DCat_Strong (A : Type) `{Is2Graph A, !Is01Cat A, !Is1Cat_Strong A}
   (D : A -> Type)
   `{!IsDGraph A D, !Is2DGraph A D, !Is01DCat A D} :=
 {
@@ -369,9 +369,9 @@ End ConstantFunctor.
 
 Section CompositeFunctor.
   Context {A B C : Type} {DA : A -> Type} {DB : B -> Type} {DC : C -> Type}
-  (F : A -> B) (G : B -> C)
-  (F' : forall (a : A), DA a -> DB (F a))
-  (G' : forall (b : B), DB b -> DC (G b)).
+    (F : A -> B) (G : B -> C)
+    (F' : forall (a : A), DA a -> DB (F a))
+    (G' : forall (b : B), DB b -> DC (G b)).
 
   Global Instance is0dfunctor_compose
     `{IsDGraph A DA} `{IsDGraph B DB} `{IsDGraph C DC}
@@ -388,6 +388,8 @@ Section CompositeFunctor.
     `{!Is0Functor F, !Is1Functor F} `{!Is0Functor G, !Is1Functor G}
     `{!Is0DFunctor DA DB F F', !Is1DFunctor DA DB F F'}
     `{!Is0DFunctor DB DC G G', !Is1DFunctor DB DC G G'}
+    `{!Is1DFunctor DA DB F F'}
+    `{!Is1DFunctor DB DC G G'}
     : Is1DFunctor DA DC (G o F) (fun a a' => (G' (F a) o (F' a)) a').
   Proof.
     srapply Build_Is1DFunctor.
