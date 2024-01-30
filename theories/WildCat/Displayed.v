@@ -357,7 +357,7 @@ Section ConstantFunctor.
     (x : B) (x' : DB x)
     : Is1DFunctor DA DB (fun _ : A => x) (fun _ _ => x').
   Proof.
-    srapply Build_Is1DFunctor.
+    snrapply Build_Is1DFunctor.
     - intros a b f g p a' b' f' g' p'.
       apply DId.
     - intros a a'.
@@ -393,7 +393,7 @@ Section CompositeFunctor.
     `{!Is1DFunctor DB DC G G'}
     : Is1DFunctor DA DC (G o F) (fun a a' => (G' (F a) o (F' a)) a').
   Proof.
-    srapply Build_Is1DFunctor.
+    snrapply Build_Is1DFunctor.
     - intros a b f g p a' b' f' g' p'.
       apply (dfmap2 _ _ (dfmap2 f' g' p')).
     - intros a a'.
@@ -446,7 +446,7 @@ Global Instance is1dcat_prod {A B : Type} (DA : A -> Type) `{Is1DCat A DA}
   (DB : B -> Type) `{Is1DCat B DB}
   : Is1DCat (obwise_prod DA DB).
 Proof.
-  srapply Build_Is1DCat.
+  snrapply Build_Is1DCat.
   - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
     srapply (is01dcat_prod _ _).
   - intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].
