@@ -72,7 +72,7 @@ Class Is2DGraph {A : Type} `{Is2Graph A}
 Global Existing Instance isdgraph_dhom.
 #[global] Typeclasses Transparent Is2DGraph.
 
-Class Is1DCat {A : Type} `{Is2Graph A, !Is01Cat A, !Is1Cat A}
+Class Is1DCat {A : Type} `{Is1Cat A}
   (D : A -> Type) `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} := {
     is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
                     Is01DCat (fun f => DHom f a' b');
@@ -223,7 +223,7 @@ Proof.
     apply Id.
 Defined.
 
-Class Is1DCat_Strong {A : Type} `{Is2Graph A, !Is01Cat A, !Is1Cat_Strong A}
+Class Is1DCat_Strong {A : Type} `{Is1Cat_Strong A}
   (D : A -> Type)
   `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} :=
 {
@@ -325,8 +325,8 @@ Section IdentityFunctor.
     assumption.
   Defined.
 
-  Global Instance is1dfunctor_idmap {A : Type} `{Is1Cat A} (DA : A -> Type)
-    `{!IsDGraph DA, !Is2DGraph DA, !Is01DCat DA, !Is1DCat DA}
+  Global Instance is1dfunctor_idmap {A : Type} (DA : A -> Type)
+    `{Is1DCat A DA}
     : Is1DFunctor DA DA (idmap) (fun a a' => a').
   Proof.
     apply Build_Is1DFunctor.
@@ -349,11 +349,11 @@ Section ConstantFunctor.
     apply DId.
   Defined.
 
-  Global Instance is1dfunctor_const {A : Type} `{Is1Cat A} {B : Type} `{Is1Cat B}
+  Global Instance is1dfunctor_const {A : Type} {B : Type}
     (DA : A -> Type)
-    `{!IsDGraph DA, !Is2DGraph DA, !Is01DCat DA, !Is1DCat DA}
+    `{Is1DCat A DA}
     (DB : B -> Type)
-    `{!IsDGraph DB, !Is2DGraph DB, !Is01DCat DB, !Is1DCat DB}
+    `{Is1DCat B DB}
     (x : B) (x' : DB x)
     : Is1DFunctor DA DB (fun _ : A => x) (fun _ _ => x').
   Proof.
