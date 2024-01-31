@@ -73,30 +73,31 @@ Global Existing Instance isdgraph_dhom.
 #[global] Typeclasses Transparent Is2DGraph.
 
 Class Is1DCat {A : Type} `{Is1Cat A}
-  (D : A -> Type) `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} := {
-    is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
-                    Is01DCat (fun f => DHom f a' b');
-    is0dgpd_dhom : forall {a b : A} {a' : D a} {b' : D b},
-                    Is0DGpd (fun f => DHom f a' b');
-    is0dfunctor_postcomp : forall {a b c : A} {g : b $-> c} {a' : D a}
-                            {b' : D b} {c' : D c} (g' : DHom g b' c'),
-                            @Is0DFunctor _ _ (fun f => DHom f a' b')
-                            _ _ (fun gf => DHom gf a' c')
-                            _ _ (cat_postcomp a g) _ (dcat_postcomp g');
-    is0dfunctor_precomp : forall {a b c : A} {f : a $-> b} {a' : D a}
-                          {b' : D b} {c' : D c} (f' : DHom f a' b'),
-                          @Is0DFunctor _ _ (fun g => DHom g b' c')
-                          _ _ (fun gf => DHom gf a' c')
-                          _ _ (cat_precomp c f) _ (dcat_precomp f');
-    dcat_assoc : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
-                  {a' : D a} {b' : D b} {c' : D c} {d' : D d}
-                  (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
-                  DHom (cat_assoc f g h) ((h' $o' g') $o' f')
-                  (h' $o' (g' $o' f'));
-    dcat_idl : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
-                (f' : DHom f a' b'), DHom (cat_idl f) (DId b' $o' f') f';
-    dcat_idr : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
-                (f' : DHom f a' b'), DHom (cat_idr f) (f' $o' DId a') f';
+  (D : A -> Type) `{!IsDGraph D, !Is2DGraph D, !Is01DCat D} :=
+{
+  is01dcat_dhom : forall {a b : A} {a' : D a} {b' : D b},
+                  Is01DCat (fun f => DHom f a' b');
+  is0dgpd_dhom : forall {a b : A} {a' : D a} {b' : D b},
+                 Is0DGpd (fun f => DHom f a' b');
+  is0dfunctor_postcomp : forall {a b c : A} {g : b $-> c} {a' : D a}
+                         {b' : D b} {c' : D c} (g' : DHom g b' c'),
+                         @Is0DFunctor _ _ (fun f => DHom f a' b')
+                         _ _ (fun gf => DHom gf a' c')
+                         _ _ (cat_postcomp a g) _ (dcat_postcomp g');
+  is0dfunctor_precomp : forall {a b c : A} {f : a $-> b} {a' : D a}
+                        {b' : D b} {c' : D c} (f' : DHom f a' b'),
+                        @Is0DFunctor _ _ (fun g => DHom g b' c')
+                        _ _ (fun gf => DHom gf a' c')
+                        _ _ (cat_precomp c f) _ (dcat_precomp f');
+  dcat_assoc : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
+               {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+               (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+               DHom (cat_assoc f g h) ((h' $o' g') $o' f')
+               (h' $o' (g' $o' f'));
+  dcat_idl : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
+             (f' : DHom f a' b'), DHom (cat_idl f) (DId b' $o' f') f';
+  dcat_idr : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
+             (f' : DHom f a' b'), DHom (cat_idr f) (f' $o' DId a') f';
 }.
 
 Global Existing Instance is01dcat_dhom.
