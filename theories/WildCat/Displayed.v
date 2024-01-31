@@ -388,8 +388,6 @@ Section CompositeFunctor.
     `{!Is0Functor F, !Is1Functor F} `{!Is0Functor G, !Is1Functor G}
     `{!Is0DFunctor F F', !Is1DFunctor F F'}
     `{!Is0DFunctor G G', !Is1DFunctor G G'}
-    `{!Is1DFunctor F F'}
-    `{!Is1DFunctor G G'}
     : Is1DFunctor (G o F) (fun a a' => (G' (F a) o (F' a)) a').
   Proof.
     snrapply Build_Is1DFunctor.
