@@ -212,7 +212,7 @@ Proof.
 Defined.
 
 Global Instance is1functor_pr1 {A : Type} {D : A -> Type} `{Is1DCat A D}
-  : Is1Functor (pr1 : (sig D) -> A).
+  : Is1Functor (pr1 : sig D -> A).
 Proof.
   srapply Build_Is1Functor.
   - intros [a a'] [b b'] [f f'] [g g'] [p p'].
