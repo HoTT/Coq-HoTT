@@ -172,6 +172,14 @@ Reserved Infix "$@vL" (at level 34).
 Reserved Notation "s ^h$" (at level 20).
 Reserved Notation "s ^v$" (at level 20).
 
+(** Displayed wild cat *)
+Reserved Infix "$o'" (at level 40, left associativity).
+Reserved Infix "$@'" (at level 30).
+Reserved Infix "$@L'" (at level 30).
+Reserved Infix "$@R'" (at level 30).
+Reserved Infix "$@@'" (at level 30).
+Reserved Notation "f ^$'" (at level 3, format "f '^$''").
+
 (** Cubical *)
 Reserved Infix "@@h" (at level 30).
 Reserved Infix "@@v" (at level 30).

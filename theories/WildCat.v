@@ -14,6 +14,7 @@ Require Export WildCat.Bifunctor.
 Require Export WildCat.Monoidal.
 Require Export WildCat.Products.
 Require Export WildCat.Coproducts.
+Require Export WildCat.Displayed.
 
 (* See also contrib/SetoidRewrite.v for tools that can be used for rewriting in wild categories. *)
 
