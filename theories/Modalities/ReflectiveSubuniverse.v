@@ -1605,7 +1605,7 @@ Section ConnectedMaps.
   Proof.
     intros ? b.
     exact (isconnected_equiv O (hfiber@{i i} f b)
-                             (equiv_hfiber_homotopic f g h b) _).
+                             (equiv_hfiber_homotopic@{i i i} f g h b) _).
   Defined.
 
   (** The pullback of a connected map is connected *)
