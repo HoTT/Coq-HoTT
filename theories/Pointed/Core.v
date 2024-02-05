@@ -207,7 +207,6 @@ Ltac pelim f :=
     | pEquiv ?X ?Y => destruct f as [f ?iseq]
   end;
   destruct f as [f ?ptd];
-  unfold pointed_fun, point_htpy in *;
   cbn in f, ptd |- *;
   match type of ptd with ?fpt = _ => generalize dependent fpt end;
   nrapply paths_ind_r;
