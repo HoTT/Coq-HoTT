@@ -1,22 +1,11 @@
 Require Export HoTT.Basics.Utf8.
+Require Export HoTT.Utf8Minimal.
 Require Import HoTT.Basics HoTT.Types.
 Require Import Modalities.Identity.
 Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.
 
-(* Logic *)
-Notation "∀  x .. y , P" := (forall x, .. (forall y, P) ..) : type_scope.
-Notation "∃  x .. y , P" := (exists x, .. (exists y, P) ..) : type_scope.
+(** Some unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)
 
-Notation "x ∧ y" := (x /\ y) : type_scope.
-Notation "x → y" := (x -> y) : type_scope.
-
-Notation "x ↔ y" := (x <-> y) : type_scope.
-(*Notation "¬ x" := (not x) : type_scope.*)
-(*Notation "x ≠ y" := (x <> y) : type_scope.*)
-
-(* Abstraction *)
-Notation "'λ'  x .. y , t" := (fun x => .. (fun y => t) ..).
-  
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
 Notation pr₂ := pr2.

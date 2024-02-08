@@ -1,5 +1,5 @@
 Require Import
-  HoTT.Utf8
+  HoTT.Utf8Minimal
   HoTT.Classes.implementations.list
   HoTT.Basics.Overture
   HoTT.Spaces.Nat.
