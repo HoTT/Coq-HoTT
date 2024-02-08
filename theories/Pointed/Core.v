@@ -204,10 +204,9 @@ Ltac pointed_reduce_pmap f
 (** A general tactic to replace pointedness paths in a pForall with reflexivity.  Because it generalizes [f pt], it can usually only be applied once the function itself is not longer needed.  Compared to [pointed_reduce], an advantage is that the pointed types do not need to be destructed. *)
 Ltac pelim f :=
   try match type of f with
-    | pEquiv ?X ?Y => destruct f as [f ?iseq]
+    | pEquiv ?X ?Y => destruct f as [f ?iseq]; unfold pointed_fun in *
   end;
   destruct f as [f ?ptd];
-  unfold pointed_fun, point_htpy in *;
   cbn in f, ptd |- *;
   match type of ptd with ?fpt = _ => generalize dependent fpt end;
   nrapply paths_ind_r;
