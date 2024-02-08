@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types WildCat.
+Require Import Basics Types WildCat.Core WildCat.Universe.
 Require Export Colimits.Coeq.
 Local Open Scope path_scope.
 
