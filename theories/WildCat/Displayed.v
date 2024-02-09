@@ -55,6 +55,14 @@ Proof.
   apply DId.
 Defined.
 
+Global Instance reflexive_DHom {A} {D : A -> Type} `{Is01DCat A D} {a : A}
+  : Reflexive (DHom (Id a))
+  := fun a' => DId a'.
+
+Global Instance reflexive_DGpdHom {A} {D : A -> Type} `{Is0DGpd A D} {a : A}
+  : Reflexive (DGpdHom (Id a))
+  := fun a' => DId a'.
+
 (** A displayed 0-functor [F'] over a 0-functor [F] acts on displayed objects and 1-cells and satisfies no axioms. *)
 Class Is0DFunctor {A : Type} {B : Type}
   {DA : A -> Type} `{IsDGraph A DA} {DB : B -> Type} `{IsDGraph B DB}
@@ -105,7 +113,7 @@ Global Existing Instance is0dgpd_dhom.
 Global Existing Instance is0dfunctor_postcomp.
 Global Existing Instance is0dfunctor_precomp.
 
-Definition dcat_assoc_opp {A : Type} (D : A -> Type) `{Is1DCat A D}
+Definition dcat_assoc_opp {A : Type} {D : A -> Type} `{Is1DCat A D}
   {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
   {a' : D a} {b' : D b} {c' : D c} {d' : D d}
   (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d')
@@ -137,6 +145,22 @@ Definition dcat_comp2 {A : Type} {D : A -> Type} `{Is1DCat A D} {a b c : A}
   (p' : DHom p f' g') (q' : DHom q h' k')
   : DHom (p $@@ q) (h' $o' f') (k' $o' g')
   :=  (k' $@L' p') $o' (q' $@R' f').
+
+Notation "q $@@' p" := (dcat_comp2 q p).
+
+(** Monomorphisms and epimorphisms. *)
+
+Definition DMonic {A} {D : A -> Type} `{Is1DCat A D} {b c : A}
+  {f : b $-> c} {mon : Monic f} {b' : D b} {c' : D c} (f' : DHom f b' c')
+  := forall (a : A) (g h : a $-> b) (p : f $o g $== f $o h) (a' : D a)
+      (g' : DHom g a' b') (h' : DHom h a' b'),
+      DGpdHom p (f' $o' g') (f' $o' h') -> DGpdHom (mon a g h p) g' h'.
+
+Definition DEpic {A} {D : A -> Type} `{Is1DCat A D} {a b : A}
+  {f : a $-> b} {epi : Epic f} {a' : D a} {b' : D b} (f' : DHom f a' b')
+  := forall (c : A) (g h : b $-> c) (p : g $o f $== h $o f) (c' : D c)
+      (g' : DHom g b' c') (h' : DHom h b' c'),
+      DGpdHom p (g' $o' f') (h' $o' f') -> DGpdHom (epi c g h p) g' h'.
 
 Global Instance isgraph_sigma {A : Type} (D : A -> Type) `{IsDGraph A D}
   : IsGraph (sig D).
@@ -262,7 +286,7 @@ Global Existing Instance is0dgpd_dhom_strong.
 Global Existing Instance is0dfunctor_postcomp_strong.
 Global Existing Instance is0dfunctor_precomp_strong.
 
-Definition dcat_assoc_opp_strong {A : Type} (D : A -> Type) `{Is1DCat_Strong A D}
+Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{Is1DCat_Strong A D}
   {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
   {a' : D a} {b' : D b} {c' : D c} {d' : D d}
   (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d')
@@ -285,6 +309,20 @@ Proof.
     exact (DGpdHom_path (cat_idr_strong f) (dcat_idr_strong f')).
 Defined.
 
+Global Instance is1catstrong_sigma {A : Type}
+  (D : A -> Type) `{Is1DCat_Strong A D}
+  : Is1Cat_Strong (sig D).
+Proof.
+  srapply Build_Is1Cat_Strong.
+  - intros aa' bb' cc' dd' [f f'] [g g'] [h h'].
+    exact (path_sigma' _
+            (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+  - intros aa' bb' [f f'].
+    exact (path_sigma' _ (cat_idl_strong f) (dcat_idl_strong f')).
+  - intros aa' bb' [f f'].
+    exact (path_sigma' _ (cat_idr_strong f) (dcat_idr_strong f')).
+Defined.
+
 Class Is1DFunctor
   {A B : Type} {DA : A -> Type} `{Is1DCat A DA} {DB : B -> Type} `{Is1DCat B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
@@ -301,6 +339,13 @@ Class Is1DFunctor
                 (dfmap F F' g' $o' dfmap F F' f');
 }.
 
+Arguments dfmap2 {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a b f g p a' b' f' g'} p'.
+Arguments dfmap_id {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a} a'.
+Arguments dfmap_comp {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a b c f g a' b' c'} f' g'.
+
 Global Instance is1functor_sigma {A B : Type} (DA : A -> Type) (DB : B -> Type)
   (F : A -> B) (F' : forall (a : A), DA a -> DB (F a)) `{Is1DFunctor A B DA DB F F'}
   : Is1Functor (functor_sigma F F').
@@ -308,11 +353,11 @@ Proof.
   srapply Build_Is1Functor.
   - intros [a a'] [b b'] [f f'] [g g'] [p p'].
     exists (fmap2 F p).
-    exact (dfmap2 f' g' p').
+    exact (dfmap2 F F' p').
   - intros [a a'].
-    exact (fmap_id F a; dfmap_id a').
+    exact (fmap_id F a; dfmap_id F F' a').
   - intros [a a'] [b b'] [c c'] [f f'] [g g'].
-    exact (fmap_comp F f g; dfmap_comp f' g').
+    exact (fmap_comp F f g; dfmap_comp F F' f' g').
 Defined.
 
 Section IdentityFunctor.
@@ -392,11 +437,11 @@ Section CompositeFunctor.
   Proof.
     snrapply Build_Is1DFunctor.
     - intros a b f g p a' b' f' g' p'.
-      apply (dfmap2 _ _ (dfmap2 f' g' p')).
+      apply (dfmap2 _ _ (dfmap2 F F' p')).
     - intros a a'.
-      apply (dfmap2 _ _ (dfmap_id a') $@' dfmap_id _).
+      apply (dfmap2 _ _ (dfmap_id F F' a') $@' dfmap_id G G' _).
     - intros a b c f g a' b' c' f' g'.
-      apply (dfmap2 _ _ (dfmap_comp f' g') $@' dfmap_comp _ _).
+      apply (dfmap2 _ _ (dfmap_comp F F' f' g') $@' dfmap_comp G G' _ _).
   Defined.
 End CompositeFunctor.
 
