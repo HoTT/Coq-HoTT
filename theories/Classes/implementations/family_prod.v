@@ -1,5 +1,5 @@
 Require Import
-  HoTT.Utf8
+  HoTT.Utf8Minimal
   HoTT.Basics.Overture Types.Unit
   HoTT.Classes.implementations.list.
 

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Spaces.Int Spaces.Circle.
-Require Import Colimits.Coeq HIT.Flattening Truncations.
+Require Import Colimits.Coeq HIT.Flattening Truncations.Core Truncations.Connectedness.
 
 Local Open Scope path_scope.
 

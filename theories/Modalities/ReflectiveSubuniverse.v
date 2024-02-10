@@ -521,7 +521,7 @@ Section Reflective_Subuniverse.
     : IsEquiv (to O T) -> In O T
     := fun _ => inO_equiv_inO (O T) (to O T)^-1.
 
-    (* We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis.  *)
+    (** We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis.  *)
     #[local]
     Hint Immediate inO_isequiv_to_O : typeclass_instances.
 
@@ -541,6 +541,18 @@ Section Reflective_Subuniverse.
       - refine (O_indpaths (to O T o mu) idmap _).
         intros x; exact (ap (to O T) (H x)).
       - exact H.
+    Defined.
+
+    (** It follows that reflective subuniverses are closed under retracts. *)
+    Definition inO_retract_inO (A B : Type) `{In O B} (s : A -> B) (r : B -> A)
+      (K : r o s == idmap)
+      : In O A.
+    Proof.
+      nrapply (inO_to_O_retract A (r o (to O B)^-1 o (O_functor s))).
+      intro a.
+      lhs exact (ap (r o (to O B)^-1) (to_O_natural s a)).
+      lhs nrefine (ap r (eissect _ (s a))).
+      apply K.
     Defined.
 
   End Replete.

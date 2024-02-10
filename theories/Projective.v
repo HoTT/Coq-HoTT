@@ -1,8 +1,7 @@
-Require Import Basics Types HSet.
+Require Import Basics Types.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
-Require Import Modalities.Modality Modalities.Separated Modalities.Identity.
+Require Import Modalities.Modality Modalities.Identity.
 Require Import Limits.Pullback.
-
 
 (** * Projective types *)
 
@@ -51,7 +50,6 @@ Corollary equiv_isoprojective_surjections_split
 Proof.
   exact (equiv_iff_hprop_uncurried (iff_isoprojective_surjections_split O X)).
 Defined.
-
 
 (** ** Projectivity and the axiom of choice *)
 
@@ -171,10 +169,7 @@ Section AC_oo_neg1.
       pose proof (projective_cover_AC X) as P; strip_truncations.
       destruct P as [P [p issurj_p]].
       pose proof (isprojX P _ X _ idmap p issurj_p) as S; strip_truncations.
-      destruct S as [s h].
-      rapply (istrunc_embedding_trunc s).
-      apply isembedding_isinj_hset.
-      exact (isinj_section h).
+      exact (inO_retract_inO (Tr 0) X P S.1 p S.2).
     - intro ishsetX.
       apply (equiv_isoprojective_hasochoice purely X)^-1.
       rapply AC.
