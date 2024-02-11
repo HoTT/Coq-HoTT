@@ -2,7 +2,7 @@ Require Import Basics Types Colimits.Pushout Colimits.Colimit_Pushout Colimits.C
 
 (** * Flattening for pushouts *)
 
-(** We derrive flattening for pushouts using the flattening lemma for colimits. Most of the work has already been done, what is left is to transport the result along the appropriate equivalences. *)
+(** We derive flattening for pushouts using the flattening lemma for colimits. Most of the work has already been done. What is left is to transport the result along the appropriate equivalences. *)
 
 Section Flattening.
   Context `{Univalence} {A B C} {f : A -> B} {g : A -> C}
@@ -21,7 +21,7 @@ Section Flattening.
   Lemma flattening_coh
     : forall x, pushout_flattening_fam x <~> POCase_P A0 B0 C0 f0 g0 (equiv_pushout_PO x).
   Proof.
-    (** Proving that the type families are equivalent takes some work but is mostly trivial. We don't know how to transport over families of equivlences yet, so we use univalence to turn it into a transportation over a family of paths. *)
+    (** Proving that the type families are equivalent takes some work but is mostly trivial. We don't know how to transport over families of equivalences yet, so we use univalence to turn it into a transport over a family of paths. *)
     snrapply Pushout_ind.
     1,2: hnf; reflexivity.
     intros a.
@@ -58,6 +58,41 @@ Section Flattening.
     reflexivity.
   Defined.
 
+  Lemma flattening_coh_2
+    : forall x, pushout_flattening_fam x <~> POCase_P A0 B0 C0 f0 g0 (equiv_pushout_PO x).
+  Proof.
+    intros x.
+    snrapply Build_Equiv.
+    - revert x.
+      snrapply Pushout_ind.
+      1,2: intros x; exact idmap.
+      intros x.
+      rapply dpath_arrow.
+      intros y.
+      lhs nrapply transport_compose.
+      lhs nrapply transport2.
+      1: apply Pushout_rec_beta_pglue.
+      unfold popp'.
+      simpl.
+      rewrite 2 concat_1p.
+      lhs nrapply (transport_compose idmap (POCase_P A0 B0 C0 f0 g0) (popp x)).
+      lhs nrapply ap011.
+      1: reflexivity.
+      1: nrapply PO_rec_beta_pp.
+      rhs nrapply (transport_idmap_ap _ (pglue x) _).
+      lhs nrapply transport_path_universe_uncurried.
+      rhs nrapply ap011.
+      2: reflexivity.
+      2: apply Pushout_rec_beta_pglue.
+      rhs nrapply transport_path_universe_uncurried.
+      reflexivity.
+    - revert x.
+      snrapply Pushout_ind.
+      1,2: intro; exact (isequiv_idmap _).
+      intros a.
+      apply path_ishprop.
+  Defined.
+
   Definition pushout_flattening
     : Pushout (functor_sigma f f0) (functor_sigma g g0)
       <~> exists x, pushout_flattening_fam x.
@@ -67,7 +102,7 @@ Section Flattening.
     symmetry.
     snrapply equiv_functor_sigma'.
     1: apply equiv_pushout_PO.
-    apply flattening_coh.
+    apply flattening_coh_2.
   Defined.
 
 End Flattening.
