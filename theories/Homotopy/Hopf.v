@@ -2,6 +2,7 @@ Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
 Require Import WildCat.Core Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
+Require Import Homotopy.Join Colimits.Pushout Colimits.PushoutFlattening.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -21,7 +22,8 @@ Definition hopf_construction `{Univalence} (X : pType)
 Proof.
   srapply Build_pFam.
   - apply (Susp_rec (Y:=Type) X X).
-    exact (fun x => path_universe (x *.)).
+    (** In order to use the flattening lemma for colimits to show that the total space is a join, we need for this equivalence to be a composition with the inverted identity equivalence so that the fiber is definitionally equivalent to the flattening lemma sigma type. This doesn't change anything elsewhere, but saves us having to rewrite an IsEquiv witness. *)
+    exact (fun x => path_universe ((x *.) o equiv_idmap^-1)).
   - simpl. exact pt.
 Defined.
 
@@ -102,4 +104,31 @@ Proof.
   refine (_ o*E pequiv_ptr (n:=k)).
   nrefine (pequiv_O_inverts k (loop_susp_unit X)).
   rapply freudenthal_hspace.
+Defined.
+
+(** *** Total space of the Hopf fibration *)
+
+(** The total space of the Hopf fibration on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. *)
+(* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
+Definition equiv_hopf_total_join `{Univalence} (X : pType)
+  `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
+  : psigma (hopf_construction X) <~> pjoin X X.
+Proof.
+  snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
+    (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
+    (fun x => Build_Equiv _ _ (fun y => sg_op x y) (H1 x)))^-1%equiv).
+  snrapply equiv_pushout.
+  - refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
+    snrapply equiv_functor_sigma_id.
+    intros x.
+    snrapply Build_Equiv.
+    + exact (.* x).
+    + exact _.
+  - rapply equiv_sigma_unit_ind.
+  - rapply equiv_sigma_unit_ind.
+  - simpl.
+    hnf.
+    reflexivity.
+  - intros [x y].
+    reflexivity.
 Defined.

@@ -117,3 +117,15 @@ Definition contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A
 
 (** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when [const tt] is used in a context that doesn't have [Universe Minimization ToSet] as this file does. If we ever set that globally, then we could get rid of this and remove some imports of this file. *)
 Definition const_tt (A : Type) := @const A Unit tt.
+
+(** Families over Unit type are equivalent to the type at the base point. *)
+Lemma equiv_sigma_unit_ind (P : Unit -> Type)
+  : sig P <~> P tt.
+Proof.
+  simple refine (equiv_adjointify _ _ _ _).
+  - intros [[] p]; exact p.
+  - intros p; exists tt; exact p.
+  - reflexivity.
+  - intros [[] p].
+    reflexivity.
+Defined.

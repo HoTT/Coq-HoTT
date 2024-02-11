@@ -5,28 +5,22 @@ Require Import Basics Types Colimits.Pushout Colimits.Colimit_Pushout Colimits.C
 (** We derrive flattening for pushouts using the flattening lemma for colimits. Most of the work has already been done, what is left is to transport the result along the appropriate equivalences. *)
 
 Section Flattening.
-  Context `{Univalence} {A B C} {f : A -> B} {g : A -> C}.
+  Context `{Univalence} {A B C} {f : A -> B} {g : A -> C}
+    (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
+    (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
 
-  Context (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
-          (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
-
-  Definition POCase_P : Pushout f g -> Type.
+  Definition pushout_flattening_fam : Pushout f g -> Type.
   Proof.
     nrefine (Pushout_rec Type B0 C0 _).
     cbn; intro x.
     snrapply path_universe.
-    1: exact ((g0 x) oE (f0 x)^-1%equiv).
+    1: exact ((g0 x) o (f0 x)^-1).
     exact _.
   Defined.
 
-  Definition PO_flattening
-    : Pushout (functor_sigma f f0) (functor_sigma g g0) <~> exists x, POCase_P x.
+  Lemma flattening_coh
+    : forall x, pushout_flattening_fam x <~> POCase_P A0 B0 C0 f0 g0 (equiv_pushout_PO x).
   Proof.
-    snrefine (_ oE equiv_pushout_PO). 
-    snrefine (_ oE PO_flattening A0 B0 C0 f0 g0).
-    symmetry.
-    snrapply equiv_functor_sigma'.
-    1: apply equiv_pushout_PO.
     (** Proving that the type families are equivalent takes some work but is mostly trivial. We don't know how to transport over families of equivlences yet, so we use univalence to turn it into a transportation over a family of paths. *)
     snrapply Pushout_ind.
     1,2: hnf; reflexivity.
@@ -62,6 +56,18 @@ Section Flattening.
     rewrite path_universe_1.
     rewrite concat_1p.
     reflexivity.
+  Defined.
+
+  Definition pushout_flattening
+    : Pushout (functor_sigma f f0) (functor_sigma g g0)
+      <~> exists x, pushout_flattening_fam x.
+  Proof.
+    snrefine (_ oE equiv_pushout_PO). 
+    snrefine (_ oE PO_flattening A0 B0 C0 f0 g0).
+    symmetry.
+    snrapply equiv_functor_sigma'.
+    1: apply equiv_pushout_PO.
+    apply flattening_coh.
   Defined.
 
 End Flattening.
