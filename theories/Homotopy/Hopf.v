@@ -112,12 +112,8 @@ Defined.
 (* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
 Definition equiv_hopf_total_join `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
-  : psigma (hopf_construction X) <~>* pjoin X X.
+  : psigma (hopf_construction X) <~> pjoin X X.
 Proof.
-  symmetry.
-  snrapply Build_pEquiv'.
-  2: shelve.
-  symmetry.
   snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
     (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
     (fun x => Build_Equiv _ _ (fun y => sg_op x y) (H1 x)))^-1%equiv).
@@ -132,27 +128,4 @@ Proof.
   - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
   - hnf; reflexivity.
   - hnf; reflexivity.
-  Unshelve.
-  unfold "pt".
-  Opaque pushout_flattening.
-  simpl.
-  Transparent pushout_flattening.
-  unfold pushout_flattening.
-  unfold "pt".
-  rapply (moveR_equiv_V' (equiv_functor_sigma' _ _)). 
-  Opaque Colimit_Pushout_Flattening.PO_flattening.
-  Opaque flattening_coh_2.
-  simpl.
-  unfold functor_sigma.
-  simpl.
-  unfold Colimit.functor_colimit.
-  simpl.
-  unfold Colimit.cocone_postcompose_inv.
-  unfold Cocone.cocone_postcompose.
-  simpl.
-  apply moveR_equiv_M'.
-
-
-    
-Admitted.
-     
+Defined. 
