@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import Pointed.
+Require Import Pointed.Core Pointed.pSusp.
 Require Import Colimits.Pushout.
 Require Import WildCat.
 Require Import Homotopy.Suspension.
@@ -57,7 +57,7 @@ Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y
   := pprod_corec _ wedge_pr1 wedge_pr2.
 
 (** 1-universal property of wedge. *)
-(** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is necessery. *)
+(** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is neccessery. *)
 Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
   : f $o wedge_inl $== g $o wedge_inl
   -> f $o wedge_inr $== g $o wedge_inr
@@ -113,9 +113,41 @@ Proof.
     by apply wedge_up.
 Defined.
 
+(** *** Lemmas about wedge functions *)
+
+Lemma wedge_pr1_inl {X Y} : wedge_pr1 $o (@wedge_inl X Y) $== pmap_idmap.
+Proof.
+  reflexivity.
+Defined.
+
+Lemma wedge_pr1_inr {X Y} : wedge_pr1 $o (@wedge_inr X Y) $== pconst.
+Proof.
+  snrapply Build_pHomotopy.
+  1: reflexivity.
+  rhs nrapply concat_p1.
+  rhs nrapply concat_p1.
+  rhs nrapply (ap_V _ wglue).
+  exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)^).
+Defined.
+
+Lemma wedge_pr2_inl {X Y} : wedge_pr2 $o (@wedge_inl X Y) $== pconst.
+Proof.
+  reflexivity.
+Defined.
+
+Lemma wedge_pr2_inr {X Y} : wedge_pr2 $o (@wedge_inr X Y) $== pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  1: reflexivity.
+  rhs nrapply concat_p1.
+  rhs nrapply concat_p1.
+  rhs nrapply (ap_V _ wglue).
+  exact (inverse2 (wedge_rec_beta_wglue pconst pmap_idmap)^).
+Defined.
+
 (** Wedge of an indexed family of pointed types *)
 
-(** Note that the index type is not necesserily pointed. An empty wedge is the unit type which is the zero object in the category of pointed types. *)
+(** Note that the index type is not necessarily pointed. An empty wedge is the unit type which is the zero object in the category of pointed types. *)
 Definition FamilyWedge (I : Type) (X : I -> pType) : pType.
 Proof.
   snrapply Build_pType.
@@ -167,7 +199,7 @@ Defined.
 (** Given a suspension, there is a natural map from the suspension to the wedge of the suspension with itself. This is known as the pinch map.
 
 This is the image to keep in mind:
->>
+<<
                                     *
                                    /|\
                                   / | \
@@ -183,19 +215,20 @@ This is the image to keep in mind:
     \  |  /                       / | \
      \ | /                       /  |  \
       \|/                       /   |   \
-       *                       *merid(x)^*
+       *                       * merid(x)*
                                 \   |   /
                                  \  |  /
                                   \ | /
                                    \|/
                                     *
-<<
-*)
+>>
+
+Note that this is only a conceptual picture as we aren't working with "reduced suspensions". This means we have to track back along [merid pt] making this map a little trickier to imagine. *)
 
 (** The pinch map for a suspension. *)
 Definition psusp_pinch (X : pType) : psusp X ->* psusp X \/ psusp X.
 Proof.
-  refine (loop_susp_counit _ o* fmap psusp _).
+  refine (Build_pMap _ _ (Susp_rec pt pt _) idpath).
   intros x.
   refine (ap wedge_inl _ @ wglue @ ap wedge_inr _ @ wglue^).
   1,2: exact (loop_susp_unit X x).
@@ -207,8 +240,6 @@ Definition psusp_pinch_beta_merid {X : pType} (x : X)
     = ap wedge_inl (loop_susp_unit X x) @ wglue
     @ ap wedge_inr (loop_susp_unit X x) @ wglue^.
 Proof.
-  refine (ap_compose (fmap psusp _) _ _ @ _).
-  refine (ap (ap _) (Susp_rec_beta_merid _) @ _).
   rapply Susp_rec_beta_merid.
 Defined.
 
@@ -224,22 +255,22 @@ Proof.
       rhs nrapply concat_1p.
       rhs nrapply ap_idmap.
       apply moveR_pM.
-      change (?t = merid x @ (merid pt)^) with (t = loop_susp_unit X x).
+      change (?t = _) with (t = loop_susp_unit X x).
       lhs nrapply (ap_compose (psusp_pinch X)).
       lhs nrapply (ap _ (psusp_pinch_beta_merid x)).
       lhs nrapply ap_pp.
       lhs nrapply (ap (fun x => _ @ x) (ap_V _ _)).
       apply moveR_pV.
-      nrefine (_ @ whiskerL _ (wedge_rec_beta_wglue _ _)^).
+      rhs nrapply (whiskerL _ (wedge_rec_beta_wglue _ _)).
       lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x) _).
-      { lhs nrapply (ap_compose _ _ _)^.
+      lhs nrapply (ap (fun x => _ @ x)).
+      { lhs_V nrapply ap_compose.
         apply ap_const. }
       lhs nrapply concat_p1.
       lhs nrapply ap_pp.
       lhs nrapply (ap (fun x => _ @ x) (wedge_rec_beta_wglue _ _)).
       f_ap.
-      lhs nrapply (ap_compose wedge_inl _ _)^.
+      lhs_V nrapply (ap_compose wedge_inl).
       apply ap_idmap.
   - reflexivity.
 Defined.
@@ -255,16 +286,16 @@ Proof.
       rhs nrapply concat_1p.
       rhs nrapply ap_idmap.
       apply moveR_pM.
-      change (?t = merid x @ (merid pt)^) with (t = loop_susp_unit X x).
+      change (?t = _) with (t = loop_susp_unit X x).
       lhs nrapply (ap_compose (psusp_pinch X)).
       lhs nrapply (ap _ (psusp_pinch_beta_merid x)).
       lhs nrapply ap_pp.
       lhs nrapply (ap (fun x => _ @ x) (ap_V _ _)).
       apply moveR_pV.
-      nrefine (_ @ whiskerL _ (wedge_rec_beta_wglue _ _)^).
+      rhs nrapply (whiskerL _ (wedge_rec_beta_wglue _ _)).
       lhs nrapply ap_pp.
       lhs nrapply (ap (fun x => _ @ x) _).
-      { lhs nrapply (ap_compose _ _ _)^.
+      { lhs_V nrapply ap_compose.
         apply ap_idmap. }
       rhs nrapply concat_p1.
       apply moveR_pM.
@@ -272,7 +303,7 @@ Proof.
       rhs nrapply concat_pV.
       lhs nrapply (ap _ (wedge_rec_beta_wglue _ _)).
       apply moveR_pM.
-      lhs nrapply (ap_compose wedge_inl _ _)^.
+      lhs_V nrapply (ap_compose wedge_inl).
       rapply ap_const.
   - reflexivity.
 Defined.
