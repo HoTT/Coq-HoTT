@@ -41,9 +41,14 @@ Proof.
   - exact (point_eq f).
 Defined.
 
-Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y :=
- Pushout_rec _ (fun x => (x, point Y)) (fun y => (point X, y)) 
-  (fun _ : Unit => idpath).
+Definition wedge_pr1 {X Y : pType} : X \/ Y $-> X
+  := wedge_rec pmap_idmap pconst.
+
+Definition wedge_pr2 {X Y : pType} : X \/ Y $-> Y
+  := wedge_rec pconst pmap_idmap.
+
+Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y
+  := pprod_corec _ wedge_pr1 wedge_pr2.
 
 (** 1-universal property of wedge. *)
 (** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is necessery. *)

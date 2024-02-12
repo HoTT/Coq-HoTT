@@ -91,13 +91,6 @@ Definition pmap_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
 
 Infix "o*" := pmap_compose : pointed_scope.
 
-(** The projections from a pointed product are pointed maps. *)
-Definition pfst {A B : pType} : A * B ->* A
-  := Build_pMap (A * B) A fst idpath.
-
-Definition psnd {A B : pType} : A * B ->* B
-  := Build_pMap (A * B) B snd idpath.
-
 (** ** Pointed homotopies *)
 
 (** A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
@@ -154,6 +147,8 @@ Definition pequiv_pmap_idmap {A} : A <~>* A
 Definition psigma {A : pType} (P : pFam A) : pType
   := [sig P, (point A; dpoint P)].
 
+(** *** Pointed products *)
+
 (** Pointed pi types; note that the domain is not pointed *)
 Definition pproduct {A : Type} (F : A -> pType) : pType
   := [forall (a : A), pointed_type (F a), ispointed_type o F].
@@ -168,6 +163,38 @@ Proof.
   - cbn.
     funext a.
     apply point_eq.
+Defined.
+
+(** The projections from a pointed product are pointed maps. *)
+Definition pfst {A B : pType} : A * B ->* A
+  := Build_pMap (A * B) A fst idpath.
+
+Definition psnd {A B : pType} : A * B ->* B
+  := Build_pMap (A * B) B snd idpath.
+
+Definition pprod_corec {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
+  : Z ->* (X * Y)
+  := Build_pMap Z (X * Y) (fun z => (f z, g z))
+      (path_prod' (point_eq _) (point_eq _)).
+
+Definition pprod_corec_beta_fst {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
+  : pfst o* pprod_corec Z f g ==* f.
+Proof.
+  snrapply Build_pHomotopy.
+  1: reflexivity.
+  apply moveL_pV.
+  refine (concat_1p _ @ _^ @ (concat_p1 _)^).
+  apply ap_fst_path_prod'.
+Defined.
+
+Definition pprod_corec_beta_snd {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
+  : psnd o* pprod_corec Z f g ==* g.
+Proof.
+  snrapply Build_pHomotopy.
+  1: reflexivity.
+  apply moveL_pV.
+  refine (concat_1p _ @ _^ @ (concat_p1 _)^).
+  apply ap_snd_path_prod'.
 Defined.
 
 (** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
@@ -670,18 +697,9 @@ Proof.
   - exact (X * Y).
   - exact pfst.
   - exact psnd.
-  - intros Z f g.
-    snrapply Build_pMap.
-    1: exact (fun w => (f w, g w)).
-    apply path_prod'; cbn; apply point_eq.
-  - intros Z f g.
-    snrapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g.
-  - intros Z f g.
-    snrapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g.
+  - exact pprod_corec.
+  - exact pprod_corec_beta_fst.
+  - exact pprod_corec_beta_snd.
   - intros Z f g p q.
     simpl.
     snrapply Build_pHomotopy.
