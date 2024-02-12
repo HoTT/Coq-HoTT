@@ -57,7 +57,7 @@ Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y
   := pprod_corec _ wedge_pr1 wedge_pr2.
 
 (** 1-universal property of wedge. *)
-(** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is neccessery. *)
+(** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is necessary. *)
 Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
   : f $o wedge_inl $== g $o wedge_inl
   -> f $o wedge_inr $== g $o wedge_inr
