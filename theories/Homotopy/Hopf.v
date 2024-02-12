@@ -1,6 +1,6 @@
 Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
-Require Import WildCat.Core Modalities.ReflectiveSubuniverse Modalities.Descent.
+Require Import WildCat.Core WildCat.Universe  WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
 Require Import Homotopy.Join Colimits.Pushout Colimits.PushoutFlattening.
 
@@ -47,7 +47,7 @@ Proof.
   - reflexivity.
 Defined. 
 
-(** *** Miscellaneous lemmas and corollaries about the Hopf construction *)
+(** ** Miscellaneous lemmas and corollaries about the Hopf construction *)
 
 Lemma transport_hopf_construction `{Univalence} {X : pType}
   `{IsHSpace X} `{forall a, IsEquiv (a *.)}
@@ -127,4 +127,43 @@ Proof.
   refine (_ o*E pequiv_ptr (n:=k)).
   nrefine (pequiv_O_inverts k (loop_susp_unit X)).
   rapply freudenthal_hspace.
+Defined.
+
+(** A version that shows that the underlying functions are equal. *)
+Definition transport_equiv' {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1)
+  : transport (fun x => B x <~> C x) p f = (equiv_transport _ p) oE f oE (equiv_transport _ p^) :> (B x2 -> C x2).
+Proof.
+  destruct p; auto.
+Defined.
+
+(** We can use the Hopf construction to show that the fiber of the loop-susp counit is equivalent to the join of the loop spaces. *)
+Definition equiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
+  : pfiber (loop_susp_counit X) <~> pjoin (loops X) (loops X).
+Proof.
+  snrefine (equiv_hopf_total_join (loops X) oE _).
+  1: rapply ishspace_loops.
+  1,2: exact _.
+  snrapply equiv_functor_sigma'.
+  1: exact (emap psusp (equiv_path_inverse _ _)).
+  snrapply Susp_ind; hnf.
+  1,2: reflexivity.
+  intros p.
+  nrapply path_equiv.
+  funext q.
+  unfold emap.
+  simpl.
+  lhs rapply transport_equiv.
+  rewrite transport_paths_Fl.
+  rewrite ap_V.
+  rewrite inv_V.
+  rewrite Susp_rec_beta_merid.
+  rewrite transport_idmap_ap.
+  simpl.
+  rewrite ap_compose.
+  rewrite functor_susp_beta_merid.
+  rewrite Susp_rec_beta_merid.
+  rewrite transport_path_universe.
+  apply moveR_Vp.
+  reflexivity.
 Defined.

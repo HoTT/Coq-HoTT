@@ -202,3 +202,28 @@ End AssumeFunext.
 
 (** We make this a global hint outside of the section. *)
 #[export] Hint Immediate isequiv_contr_map : typeclass_instances.
+
+(** This is like [transport_arrow], but for a family of equivalence types. It just shows that the functions are homotopic. *)
+Definition transport_equiv {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1) (y : B x2)
+  : (transport (fun x => B x <~> C x) p f) y = p # (f (p^ # y)).
+Proof.
+  destruct p; auto.
+Defined.
+
+(** A version that shows that the underlying functions are equal. *)
+Definition transport_equiv' {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1)
+  : transport (fun x => B x <~> C x) p f = (equiv_transport _ p) oE f oE (equiv_transport _ p^) :> (B x2 -> C x2).
+Proof.
+  destruct p; auto.
+Defined.
+
+(** A version that shows that the equivalences are equal.  Here we do need [Funext], for [path_equiv]. *)
+Definition transport_equiv'' `{Funext} {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1)
+  : transport (fun x => B x <~> C x) p f = (equiv_transport _ p) oE f oE (equiv_transport _ p^).
+Proof.
+  apply path_equiv.
+  destruct p; auto.
+Defined.
