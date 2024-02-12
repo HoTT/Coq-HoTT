@@ -188,4 +188,30 @@ Section is_PO_pushout.
     eapply iscolimit_colimit.
   Defined.
 
+  Definition equiv_pushout_PO_beta_pglue (a : A)
+    : ap equiv_pushout_PO (pglue a) = popp a.
+  Proof.
+    cbn.
+    refine (_ @ _).
+    1: nrapply Pushout_rec_beta_pglue.
+    unfold popp'; cbn.
+    rewrite 2 concat_1p.
+    reflexivity.
+  Defined.
+
+  Definition Pushout_rec_PO_rec (P : Type) (pushb : B -> P) (pushc : C -> P)
+    (pusha : forall a : A, pushb (f a) = pushc (g a))
+    : Pushout_rec P pushb pushc pusha == PO_rec P pushb pushc pusha o equiv_pushout_PO.
+  Proof.
+    snrapply Pushout_ind.
+    1, 2: reflexivity.
+    intro a; cbn beta.
+    nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+    lhs exact (Pushout_rec_beta_pglue P pushb pushc pusha a).
+    symmetry.
+    lhs nrapply (ap_compose equiv_pushout_PO _ (pglue a)).
+    lhs nrapply (ap _ (equiv_pushout_PO_beta_pglue a)).
+    nrapply PO_rec_beta_pp.
+  Defined.
+
 End is_PO_pushout.

@@ -10,7 +10,7 @@ Require Import Colimits.Colimit_Flattening.
 
 (** * Pushout case *)
 
-(** We show the flattening lemma in the case of the pushout. *)
+(** We show the flattening lemma in the case of the pushout. This pushout is defined as the colimit of a span and is not the pushout that appears elsewhere in the library. The flattening lemma here however can be used to derive the flattening lemma there and this is done in Colimits/PushoutFlattening.v. *)
 
 Section POCase.
   Context `{Univalence} {A B C} {f: A -> B} {g: A -> C}.
@@ -49,31 +49,31 @@ Section POCase.
   Definition PO_flattening
     : PO (functor_sigma f f0) (functor_sigma g g0) <~> exists x, POCase_P x.
   Proof.
-    assert (PO (functor_sigma f f0) (functor_sigma g g0)
-            = Colimit (diagram_sigma POCase_E)). {
+    transitivity (Colimit (diagram_sigma POCase_E)).
+    { apply equiv_path.
       unfold PO; apply ap.
       srapply path_diagram; cbn.
       - intros [|[]]; cbn. all: reflexivity.
       - intros [[]|[]] [[]|[]] [] x; cbn in *.
         all: reflexivity. }
-    rewrite X; clear X.
     transitivity (exists x, E' (span f g) POCase_E POCase_HE x).
     - apply flattening_lemma.
     - apply equiv_functor_sigma_id.
       intro x.
-      assert (E' (span f g) POCase_E POCase_HE x = POCase_P x). {
-        unfold E', POCase_P, PO_rec.
-        f_ap. srapply path_cocone.
-        - intros [[]|[]] y; cbn.
-          1: apply path_universe_uncurried; apply g0.
-          all: reflexivity.
-        - intros [[]|[]] [[]|[]] []; cbn.
-          + intro y; simpl; hott_simpl.
-            unfold path_universe.
-            rewrite <- path_universe_V_uncurried.
-            refine (path_universe_compose (f0 y)^-1 (g0 y))^. 
-          + intros; apply concat_Vp. }
-      rewrite X. reflexivity.
+      apply equiv_path.
+      unfold E', POCase_P, PO_rec.
+      f_ap. srapply path_cocone.
+      + intros [[]|[]] y; cbn.
+        1: apply path_universe_uncurried; apply g0.
+        all: reflexivity.
+      + intros [[]|[]] [[]|[]] []; cbn.
+        * intro y. simpl.
+          rhs nrapply concat_1p.
+          unfold path_universe.
+          lhs nrapply (ap (fun x => x @ _) _^).
+          1: nrapply path_universe_V_uncurried.
+          exact (path_universe_compose (f0 y)^-1 (g0 y))^. 
+        * intros; apply concat_Vp.
   Defined.
 
 End POCase.

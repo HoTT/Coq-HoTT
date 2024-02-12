@@ -59,7 +59,7 @@
 
 From HoTT Require Import Basics Truncations.
 From HoTT Require Idempotents Spaces.Spheres Spaces.No.
-From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple.
+From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.
 From HoTT Require Categories.
 From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.
 From HoTT Require Classes.theory.premetric.
@@ -1325,7 +1325,8 @@ Definition Book_7_6_2 := @HoTT.HFiber.equiv_istruncmap_ap.
 (* ================================================== lem:hopf-construction *)
 (** Lemma 8.5.7 *)
 
-
+Definition Book_8_5_6 := @HoTT.Homotopy.Hopf.hopf_construction.
+Definition Book_8_5_7 := @HoTT.Homotopy.Hopf.equiv_hopf_total_join.
 
 (* ================================================== lem:hspace-S1 *)
 (** Lemma 8.5.8 *)
