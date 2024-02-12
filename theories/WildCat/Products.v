@@ -154,6 +154,12 @@ Section Lemmata.
 
 End Lemmata.
 
+(** *** Diagonal map *)
+
+Definition cat_prod_diag {A : Type} `{Is1Cat A} (x : A) `{!BinaryProduct x x}
+  : x $-> cat_prod x x
+  := cat_prod_corec (Id _) (Id _).
+
 (** *** Categories with binary products *)
 
 (** A category with binary products is a category with a binary product for each pair of objects. *)
