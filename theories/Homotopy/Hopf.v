@@ -100,9 +100,10 @@ Definition freudenthal_hspace' `{Univalence}
   : O_inverts (Tr (m +2+ m).+1) (loop_susp_unit X).
 Proof.
   set (r:=connecting_map_family (hopf_construction X)).
-  rapply (OO_inverts_conn_map_factor_conn_map _ (m +2+ m) _ r).
+  nrapply (OO_inverts_conn_map_factor_conn_map _ (m +2+ m) _ r).
+  2, 4: exact _.
   1: apply O_lex_leq_Tr.
-  rapply (conn_map_homotopic _ idmap).
+  rapply (conn_map_homotopic _ equiv_idmap (r o loop_susp_unit X)).
   symmetry.
   nrapply hopf_retraction.
 Defined.
