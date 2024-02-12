@@ -2,7 +2,8 @@ From HoTT Require Import TruncType abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 
-Open Scope type.
+Local Open Scope type.
+Local Open Scope hprop_scope.
 
 
 (** * Formulation of GCH *)
