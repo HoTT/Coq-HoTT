@@ -142,6 +142,38 @@ Defined.
 
 (** TODO: The functoriality argument doesn't follow definitionally from the functoriality of [cat_prod], however after some modification it is close. We need to use appropriate lemmas for opposite functors. *) 
 
+Global Instance is0functor_cat_coprod_l {A : Type}
+  `{HasBinaryCoproducts A} y
+  : Is0Functor (A:=A) (fun x => cat_coprod x y).
+Proof.
+  rapply is0functor_op'.
+  exact (is0functor_cat_prod_l (A:=A^op) (H0:=H0) y).
+Defined.
+
+Global Instance is1functor_cat_coprod_l {A : Type}
+  `{HasBinaryCoproducts A} y
+  : Is1Functor (fun x => cat_coprod x y).
+Proof.
+  rapply is1functor_op'.
+  exact (is1functor_cat_prod_l (A:=A^op) (H0:=H0) y).
+Defined.
+
+Global Instance is0functor_cat_coprod_r {A : Type}
+  `{HasBinaryCoproducts A} x
+  : Is0Functor (fun y => cat_coprod x y).
+Proof.
+  rapply is0functor_op'.
+  exact (is0functor_cat_prod_r (A:=A^op) (H0:=H0) x).
+Defined.
+
+Global Instance is1functor_cat_coprod_r {A : Type}
+  `{HasBinaryCoproducts A} x
+  : Is1Functor (fun y => cat_coprod x y).
+Proof.
+  rapply is1functor_op'.
+  exact (is1functor_cat_prod_r (A:=A^op) (H0:=H0) x).
+Defined.
+
 (** *** Coproducts in Type *)
 
 (** [Type] has all binary coproducts *)
