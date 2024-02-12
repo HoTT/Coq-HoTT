@@ -27,7 +27,7 @@ Defined.
 
 (** *** Total space of the Hopf construction *)
 
-(** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. *)
+(** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. (This is lemma 8.5.7 in the HoTT book). *)
 (* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
 Definition equiv_hopf_total_join `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
