@@ -23,7 +23,7 @@ Proof.
   srapply Build_pFam.
   - apply (Susp_rec (Y:=Type) X X).
     (** In order to use the flattening lemma for colimits to show that the total space is a join, we need for this equivalence to be a composition with the inverted identity equivalence so that the fiber is definitionally equivalent to the flattening lemma sigma type. This doesn't change anything elsewhere, but saves us having to rewrite an IsEquiv witness. *)
-    exact (fun x => path_universe ((x *.) o equiv_idmap)).
+    exact (fun x => path_universe ((x *.) o equiv_idmap^-1%equiv)).
   - simpl. exact pt.
 Defined.
 
@@ -116,16 +116,14 @@ Definition equiv_hopf_total_join `{Univalence} (X : pType)
 Proof.
   snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
     (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
-    (fun x => Build_Equiv _ _ (fun y => sg_op x y) (H1 x)))^-1%equiv).
+    (fun x => Build_Equiv _ _ (x *.) (H1 x)))^-1%equiv).
   snrapply equiv_pushout.
-  - refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
+  - cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
     snrapply equiv_functor_sigma_id.
     intros x.
-    snrapply Build_Equiv.
-    + exact (.* x).
-    + exact _.
+    exact (Build_Equiv _ _ (.* x) _).
   - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
   - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
-  - hnf; reflexivity.
-  - hnf; reflexivity.
+  - reflexivity.
+  - reflexivity.
 Defined. 
