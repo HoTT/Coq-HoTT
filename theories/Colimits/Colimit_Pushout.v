@@ -1,5 +1,7 @@
 Require Import Basics.
 Require Import Types.
+Require Import Diagrams.Graph.
+Require Import Diagrams.Diagram.
 Require Import Diagrams.Span.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
@@ -26,11 +28,10 @@ Section PO.
   Proof.
     srapply Build_Cocone.
     - intros [|[]]; [ exact (inr' o g) | exact inl' | exact inr' ].
-    - intros [] [] []; cbn. destruct b.
+    - intros [u|b] [u'|b'] []; cbn. destruct b'.
       + exact pp'.
       + reflexivity.
   Defined.
-
 
   Definition pol' {f : A -> B} {g : A -> C} {Z} (Co : Cocone (span f g) Z)
     : B -> Z
@@ -55,25 +56,37 @@ Section PO.
     := colimp (D:=span f g) (inl tt) (inr true) tt a
           @ (colimp (D:=span f g) (inl tt) (inr false) tt a)^.
 
-  (** The eliminators [PO_ind], [PO_rec], ... can be proven. *)
+  (** We next define the eliminators [PO_ind] and [PO_rec]. To make later proof terms smaller, we define two things we'll need. *)
+  Definition PO_ind_obj (P : PO f g -> Type) (l' : forall b, P (pol b))
+    (r' : forall c, P (por c))
+    : forall (i : span_graph) (x : obj (span f g) i), P (colim i x).
+  Proof.
+    intros [u|[]] x; cbn.
+    - exact (@colimp _ (span f g) (inl u) (inr true) tt x # l' (f x)).
+    - exact (l' x).
+    - exact (r' x).
+  Defined.
+
+  Definition PO_ind_arr (P : PO f g -> Type) (l' : forall b, P (pol b))
+    (r' : forall c, P (por c)) (pp' : forall a, popp a # l' (f a) = r' (g a))
+    : forall (i j : span_graph) (e : span_graph i j) (ar : span f g i),
+      transport P (colimp i j e ar) (PO_ind_obj P l' r' j (((span f g) _f e) ar)) =
+        PO_ind_obj P l' r' i ar.
+  Proof.
+    intros [u|b] [u'|b'] []; cbn.
+    destruct b'; cbn.
+    1: reflexivity.
+    unfold popp in pp'.
+    intro a. apply moveR_transport_p.
+    rhs_V nrapply transport_pp.
+    destruct u.
+    symmetry; apply pp'.
+  Defined.
+
   Definition PO_ind (P : PO f g -> Type) (l' : forall b, P (pol b))
     (r' : forall c, P (por c)) (pp' : forall a, popp a # l' (f a) = r' (g a))
-    : forall w, P w.
-  Proof.
-    srapply Colimit_ind.
-    - intros [u|[]] x; cbn.
-      + exact (@colimp _ (span f g) (inl u) (inr true) tt x # l' (f x)).
-      + exact (l' x).
-      + exact (r' x).
-    - intros [] [] []; cbn.
-      destruct b; cbn.
-      1: reflexivity.
-      unfold popp in pp'.
-      intro a. apply moveR_transport_p.
-      rhs_V nrapply transport_pp.
-      destruct u.
-      symmetry; apply pp'.
-  Defined.
+    : forall w, P w
+    := Colimit_ind P (PO_ind_obj P l' r') (PO_ind_arr P l' r' pp').
 
   Definition PO_ind_beta_pp (P : PO f g -> Type) (l' : forall b, P (pol b))
     (r' : forall c, P (por c)) (pp' : forall a, popp a # l' (f a) = r' (g a))
@@ -86,7 +99,7 @@ Section PO.
     rewrite (Colimit_ind_beta_colimp P _ _ (inl tt) (inr false) tt x).
     rewrite moveR_transport_p_V, moveR_moveL_transport_p.
     rewrite inv_pp, inv_V.
-    exact (concat_p_Vp _ _).
+    apply concat_p_Vp.
   Defined.
 
   Definition PO_rec (P: Type) (l': B -> P) (r': C -> P)
@@ -98,15 +111,15 @@ Section PO.
     : forall x, ap (PO_rec P l' r' pp') (popp x) = pp' x.
   Proof.
     intro x.
-    pose (X := Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
-                                    (inl tt) (inr true) tt x).
-    pose (X0 := Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
-                                    (inl tt) (inr false) tt x).
-    unfold popp; cbn in *.
+    unfold popp.
     refine (ap_pp _ _ _ @ _ @ concat_p1 _).
-    refine (X @@ _).
-    refine (_ @ inverse2 X0).
-    exact (ap_V _ _).
+    refine (_ @@ _).
+    1: exact (Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
+                (inl tt) (inr true) tt x).
+    lhs nrapply ap_V.
+    apply (inverse2 (q:=1)).
+    exact (Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
+             (inl tt) (inr false) tt x).
   Defined.
 
   (** A nice property: the pushout of an equivalence is an equivalence. *)
@@ -161,23 +174,27 @@ Section is_PO_pushout.
         * exact (por' Co).
         * exact (popp' Co).
       + intros [Co Co'].
-        srapply path_cocone; cbn.
+        srapply path_cocone.
         * intros [[]|[]] x; simpl.
           1: apply (Co' (inl tt) (inr false) tt).
           all: reflexivity.
-        * intros [[]|[]] [[]|[]] [] x; simpl.
+        * cbn beta.
+          intros [u|b] [u'|b'] [] x.
+          destruct u, b'; cbn.
           2: reflexivity.
-          refine (_ @ (concat_1p _)^).
-          rewrite Pushout_rec_beta_pglue.
-          hott_simpl.
+          rhs nrapply concat_1p.
+          lhs refine (_ @@ 1).
+          1: nrapply Pushout_rec_beta_pglue.
+          unfold popp', legs_comm.
+          apply concat_pV_p.
       + intro h.
         apply path_forall.
         srapply Pushout_ind; cbn.
         1,2: reflexivity.
-        intro a; cbn.
+        intro a; cbn beta.
         nrapply transport_paths_FlFr'; apply equiv_p1_1q.
         unfold popp'; cbn.
-        refine (_ @ concat_p1 _).
+        rhs_V nrapply concat_p1.
         nrapply Pushout_rec_beta_pglue.
   Defined.
 
