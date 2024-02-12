@@ -2,7 +2,7 @@ Require Import Basics Types Colimits.Pushout Colimits.Colimit_Pushout Colimits.C
 
 (** * Flattening for pushouts *)
 
-(** We derive flattening for pushouts using the flattening lemma for colimits. Most of the work has already been done. What is left is to transport the result along the appropriate equivalences. *)
+(** We derive flattening for pushouts using the flattening lemma for colimits. Most of the work has already been done in Colimits/Colimit_Pushout_Flattening.v. The pushout there is defined as a colimit of a span whereas the pushout we use elsewhere is defined as a coequalizer. What is left is to transport the result along the appropriate equivalences. *)
 
 Section Flattening.
   Context `{Univalence} {A B C} {f : A -> B} {g : A -> C}

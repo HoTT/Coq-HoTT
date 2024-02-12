@@ -10,7 +10,7 @@ Require Import Colimits.Colimit_Flattening.
 
 (** * Pushout case *)
 
-(** We show the flattening lemma in the case of the pushout. *)
+(** We show the flattening lemma in the case of the pushout. This pushout is defined as the colimit of a span and is not the pushout that apepars elsehwere in the library. The flattening lemma here however can be used to derive the flattening lemma there and this is done in Colimits/PushoutFlattening.v. *)
 
 Section POCase.
   Context `{Univalence} {A B C} {f: A -> B} {g: A -> C}.
