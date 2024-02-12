@@ -8,8 +8,8 @@ Require Import Homotopy.Suspension.
 
 Local Open Scope pointed_scope.
 
-Definition Wedge (X Y : pType) : pType
-  := [Pushout (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
+Definition Wedge@{u v} (X Y : pType@{u}) : pType@{v}
+  := [Pushout@{u u v v} (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
@@ -29,17 +29,26 @@ Proof.
 Defined.
 
 Definition wglue {X Y : pType}
-  : pushl (point X) = (pushr (point Y) : X \/ Y) := pglue tt.
+  : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
-Definition wedge_rec {X Y Z : pType} (f : X $-> Z) (g : Y $-> Z)
+(** Wedge recursion into an unpointed type. We define this one separately as the universe variables need to be more general. *)
+Definition wedge_rec'@{i j v} {X Y : pType@{i}} {Z : Type@{v}}
+  (f : X -> Z) (g : Y -> Z) (w : f pt = g pt)
+  : Wedge@{i j} X Y -> Z.
+Proof.
+  snrapply Pushout_rec.
+  - exact f.
+  - exact g.
+  - intro.
+    exact w.
+Defined.
+
+Definition wedge_rec {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
   : X \/ Y $-> Z.
 Proof.
   snrapply Build_pMap.
-  - snrapply Pushout_rec.
-    + exact f.
-    + exact g.
-    + intro.
-      exact (point_eq f @ (point_eq g)^).
+  - snrapply (wedge_rec' f g).
+    exact (point_eq f @ (point_eq g)^).
   - exact (point_eq f).
 Defined.
 
@@ -53,8 +62,20 @@ Definition wedge_pr1 {X Y : pType} : X \/ Y $-> X
 Definition wedge_pr2 {X Y : pType} : X \/ Y $-> Y
   := wedge_rec pconst pmap_idmap.
 
-Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y
+Definition wedge_incl (X Y : pType) : X \/ Y $-> X * Y
   := pprod_corec _ wedge_pr1 wedge_pr2.
+
+Definition wedge_incl_beta_wglue {X Y : pType}
+  : ap (@wedge_incl X Y) wglue = 1.
+Proof.
+  lhs nrapply (eta_path_prod _)^.
+  lhs nrapply ap011.
+  - lhs nrapply (ap_compose _ _ _)^.
+    nrapply wedge_rec_beta_wglue.
+  - lhs nrapply (ap_compose _ _ _)^.
+    nrapply wedge_rec_beta_wglue.
+  - reflexivity.
+Defined.
 
 (** 1-universal property of wedge. *)
 (** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is necessary. *)
@@ -226,7 +247,7 @@ This is the image to keep in mind:
 Note that this is only a conceptual picture as we aren't working with "reduced suspensions". This means we have to track back along [merid pt] making this map a little trickier to imagine. *)
 
 (** The pinch map for a suspension. *)
-Definition psusp_pinch (X : pType) : psusp X ->* psusp X \/ psusp X.
+Definition psusp_pinch (X : pType) : psusp X $-> psusp X \/ psusp X.
 Proof.
   refine (Build_pMap _ _ (Susp_rec pt pt _) idpath).
   intros x.
@@ -245,7 +266,7 @@ Defined.
 
 (** Doing wedge projections on the pinch map gives the identity. *)
 Definition wedge_pr1_psusp_pinch {X}
-  : wedge_pr1 $o psusp_pinch X ==* Id (psusp X).
+  : wedge_pr1 $o psusp_pinch X $== Id (psusp X).
 Proof.
   snrapply Build_pHomotopy.
   - snrapply Susp_ind_FlFr.
@@ -276,7 +297,7 @@ Proof.
 Defined.
 
 Definition wedge_pr2_psusp_pinch {X}
-  : wedge_pr2 $o psusp_pinch X ==* Id (psusp X).
+  : wedge_pr2 $o psusp_pinch X $== Id (psusp X).
 Proof.
   snrapply Build_pHomotopy.
   - snrapply Susp_ind_FlFr.
