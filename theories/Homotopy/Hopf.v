@@ -11,9 +11,7 @@ Local Open Scope mc_mult_scope.
 
 (** * The Hopf construction *)
 
-(** We define the Hopf construction associated to a left-invertible H-space, and use it to prove that H-spaces satisfy a strengthened version of Freudenthal's theorem (see [freudenthal_hspace] below).
-
-We have not yet included various standard results about the Hopf construction, such as the total space being the join of the fibre. *)
+(** We define the Hopf construction associated to a left-invertible H-space, and use it to prove that H-spaces satisfy a strengthened version of Freudenthal's theorem (see [freudenthal_hspace] below). *)
 
 (** The Hopf construction associated to a left-invertible H-space (Definition 8.5.6 in the HoTT book). *)
 Definition hopf_construction `{Univalence} (X : pType)
@@ -26,6 +24,30 @@ Proof.
     exact (fun x => path_universe ((x *.) o equiv_idmap^-1%equiv)).
   - simpl. exact pt.
 Defined.
+
+(** *** Total space of the Hopf construction *)
+
+(** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. *)
+(* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
+Definition equiv_hopf_total_join `{Univalence} (X : pType)
+  `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
+  : psigma (hopf_construction X) <~> pjoin X X.
+Proof.
+  snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
+    (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
+    (fun x => Build_Equiv _ _ (x *.) (H1 x)))^-1%equiv).
+  snrapply equiv_pushout.
+  - cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
+    snrapply equiv_functor_sigma_id.
+    intros x.
+    exact (Build_Equiv _ _ (.* x) _).
+  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
+  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
+  - reflexivity.
+  - reflexivity.
+Defined. 
+
+(** *** Miscellaneous lemmas and corollaries about the Hopf construction *)
 
 Lemma transport_hopf_construction `{Univalence} {X : pType}
   `{IsHSpace X} `{forall a, IsEquiv (a *.)}
@@ -105,25 +127,3 @@ Proof.
   nrefine (pequiv_O_inverts k (loop_susp_unit X)).
   rapply freudenthal_hspace.
 Defined.
-
-(** *** Total space of the Hopf construction *)
-
-(** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. *)
-(* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
-Definition equiv_hopf_total_join `{Univalence} (X : pType)
-  `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
-  : psigma (hopf_construction X) <~> pjoin X X.
-Proof.
-  snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
-    (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
-    (fun x => Build_Equiv _ _ (x *.) (H1 x)))^-1%equiv).
-  snrapply equiv_pushout.
-  - cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
-    snrapply equiv_functor_sigma_id.
-    intros x.
-    exact (Build_Equiv _ _ (.* x) _).
-  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
-  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
-  - reflexivity.
-  - reflexivity.
-Defined. 
