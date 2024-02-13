@@ -161,11 +161,13 @@ Defined.
 
 (** As a corollary we get 2n-connectivity of [loop_susp_counit X] for an n-connected [X]. *)
 Global Instance conn_map_loop_susp_counit `{Univalence}
-  {n : trunc_index} (X : pType) `{IsConnected n.+2 X}
-  : IsConnMap (n.+1 +2+ n.+1)%nat (loop_susp_counit X).
+  {n : trunc_index} (X : pType) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (loop_susp_counit X).
 Proof.
-  rapply (conn_point_elim (-1)).
-  1: exact (isconnected_pred_add' n 0 _).
-  nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
-  rapply isconnected_join.
+  destruct n.
+  - intro x; hnf; exact _.
+  - rapply (conn_point_elim (-1)).
+    1: exact (isconnected_pred_add' n 0 _).
+    nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
+    rapply isconnected_join.
 Defined.
