@@ -190,7 +190,8 @@ Definition hexists {X} (P : X -> Type) : HProp := merely (sig P).
 
 Definition hor (P Q : Type) : HProp := merely (P + Q).
 
-Notation "A \/ B" := (hor A B) : type_scope.
+Declare Scope hprop_scope.
+Notation "A \/ B" := (hor A B) : hprop_scope.
 
 Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 

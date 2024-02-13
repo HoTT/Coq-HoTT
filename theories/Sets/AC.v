@@ -4,6 +4,7 @@ From HoTT Require Import Spaces.Card.
 
 From HoTT.Sets Require Import Ordinals.
 
+Local Open Scope hprop_scope.
 
 (** * Set-theoretic formulation of the axiom of choice (AC) *)
 

@@ -2,6 +2,8 @@ From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniver
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Colimits.Quotient.
 
+Local Open Scope hprop_scope.
+
 (** This file contains a definition of ordinals and some fundamental results,
     roughly following the presentation in the HoTT book. *)
 
