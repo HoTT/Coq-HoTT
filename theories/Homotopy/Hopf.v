@@ -1,6 +1,6 @@
 Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
-Require Import WildCat.Core Modalities.ReflectiveSubuniverse Modalities.Descent.
+Require Import WildCat.Core WildCat.Universe WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
 Require Import Homotopy.Join Colimits.Pushout Colimits.PushoutFlattening.
 
@@ -47,7 +47,7 @@ Proof.
   - reflexivity.
 Defined. 
 
-(** *** Miscellaneous lemmas and corollaries about the Hopf construction *)
+(** ** Miscellaneous lemmas and corollaries about the Hopf construction *)
 
 Lemma transport_hopf_construction `{Univalence} {X : pType}
   `{IsHSpace X} `{forall a, IsEquiv (a *.)}
@@ -127,4 +127,48 @@ Proof.
   refine (_ o*E pequiv_ptr (n:=k)).
   nrefine (pequiv_O_inverts k (loop_susp_unit X)).
   rapply freudenthal_hspace.
+Defined.
+
+(** Since [loops X] is an H-space, the Hopf construction provides a map [Join (loops X) (loops X) -> Susp (loops X)].  We show that this map is equivalent to the fiber of [loop_susp_counit X : Susp (loops X) -> X] over the base point, up to the automorphism of [Susp (loops X)] induced by inverting loops. *)
+(* TODO: use explicit path algebra once [equiv_hopf_total_join] is computable and make this pointed. *)
+Definition equiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
+  : pfiber (loop_susp_counit X) <~> pjoin (loops X) (loops X).
+Proof.
+  snrefine (equiv_hopf_total_join (loops X) oE _).
+  1: rapply ishspace_loops.
+  1,2: exact _.
+  snrapply equiv_functor_sigma'.
+  1: exact (emap psusp (equiv_path_inverse _ _)).
+  snrapply Susp_ind; hnf.
+  1,2: reflexivity.
+  intros p.
+  nrapply path_equiv.
+  funext q.
+  simpl.
+  lhs rapply (transport_equiv (merid p) _ q).
+  simpl.
+  rewrite transport_paths_Fl.
+  rewrite ap_V.
+  rewrite inv_V.
+  rewrite Susp_rec_beta_merid.
+  rewrite transport_idmap_ap.
+  rewrite ap_compose.
+  rewrite functor_susp_beta_merid.
+  rewrite Susp_rec_beta_merid.
+  rewrite transport_path_universe.
+  apply concat_V_pp.
+Defined.
+
+(** As a corollary we get 2n-connectivity of [loop_susp_counit X] for an n-connected [X]. *)
+Global Instance conn_map_loop_susp_counit `{Univalence}
+  {n : trunc_index} (X : pType) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (loop_susp_counit X).
+Proof.
+  destruct n.
+  - intro x; hnf; exact _.
+  - snrapply (conn_point_elim (-1)).
+    + exact (isconnected_pred_add' n 0 _).
+    + exact _.
+    + nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
+      nrapply isconnected_join; exact _.
 Defined.
