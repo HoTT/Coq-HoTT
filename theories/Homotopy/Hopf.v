@@ -1,6 +1,6 @@
 Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
-Require Import WildCat.Core WildCat.Universe  WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
+Require Import WildCat.Core WildCat.Universe WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
 Require Import Homotopy.Join Colimits.Pushout Colimits.PushoutFlattening.
 
@@ -129,16 +129,8 @@ Proof.
   rapply freudenthal_hspace.
 Defined.
 
-(** A version that shows that the underlying functions are equal. *)
-Definition transport_equiv' {A : Type} {B C : A -> Type}
-  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1)
-  : transport (fun x => B x <~> C x) p f = (equiv_transport _ p) oE f oE (equiv_transport _ p^) :> (B x2 -> C x2).
-Proof.
-  destruct p; auto.
-Defined.
-
-(** We can use the Hopf construction to show that the fiber of the loop-susp counit is equivalent to the join of the loop spaces. *)
-(* TODO: use explicit path algebra once [equiv_hopf_total_join] is computable and make this poitned. *)
+(** Since [loops X] is an H-space, the Hopf construction provides a map [Join (loops X) (loops X) -> Susp (loops X)].  We show that this map is equivalent to the fiber of [loop_susp_counit X : Susp (loops X) -> X] over the base point, up to the automorphism of [Susp (loops X)] induced by inverting loops. *)
+(* TODO: use explicit path algebra once [equiv_hopf_total_join] is computable and make this pointed. *)
 Definition equiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
   : pfiber (loop_susp_counit X) <~> pjoin (loops X) (loops X).
 Proof.
@@ -152,9 +144,8 @@ Proof.
   intros p.
   nrapply path_equiv.
   funext q.
-  unfold emap.
   simpl.
-  lhs rapply transport_equiv.
+  lhs rapply (transport_equiv (merid p) _ q).
   rewrite transport_paths_Fl.
   rewrite ap_V.
   rewrite inv_V.
@@ -165,6 +156,16 @@ Proof.
   rewrite functor_susp_beta_merid.
   rewrite Susp_rec_beta_merid.
   rewrite transport_path_universe.
-  apply moveR_Vp.
-  reflexivity.
+  apply concat_V_pp.
+Defined.
+
+(** As a corollary we get 2n-connectivity of [loop_susp_counit X] for an n-connected [X]. *)
+Global Instance conn_map_loop_susp_counit `{Univalence}
+  {n : trunc_index} (X : pType) `{IsConnected n.+2 X}
+  : IsConnMap (n.+1 +2+ n.+1)%nat (loop_susp_counit X).
+Proof.
+  rapply (conn_point_elim (-1)).
+  1: exact (isconnected_pred_add' n 0 _).
+  nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
+  rapply isconnected_join.
 Defined.
