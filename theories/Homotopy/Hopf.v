@@ -146,12 +146,12 @@ Proof.
   funext q.
   simpl.
   lhs rapply (transport_equiv (merid p) _ q).
+  simpl.
   rewrite transport_paths_Fl.
   rewrite ap_V.
   rewrite inv_V.
   rewrite Susp_rec_beta_merid.
   rewrite transport_idmap_ap.
-  simpl.
   rewrite ap_compose.
   rewrite functor_susp_beta_merid.
   rewrite Susp_rec_beta_merid.
