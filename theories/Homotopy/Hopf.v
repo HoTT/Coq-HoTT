@@ -166,8 +166,9 @@ Global Instance conn_map_loop_susp_counit `{Univalence}
 Proof.
   destruct n.
   - intro x; hnf; exact _.
-  - rapply (conn_point_elim (-1)).
-    1: exact (isconnected_pred_add' n 0 _).
-    nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
-    rapply isconnected_join.
+  - snrapply (conn_point_elim (-1)).
+    + exact (isconnected_pred_add' n 0 _).
+    + exact _.
+    + nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
+      nrapply isconnected_join; exact _.
 Defined.
