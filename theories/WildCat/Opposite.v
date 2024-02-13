@@ -106,6 +106,25 @@ Proof.
   - intros a b c f g; exact (fmap_comp F g f).
 Defined.
 
+Global Instance is0functor_op' A B (F : A^op -> B^op)
+  `{IsGraph A, IsGraph B, Fop : !Is0Functor (F : A^op -> B^op)}
+  : Is0Functor (F : A -> B).
+Proof.
+  apply Build_Is0Functor.
+  intros a b f.
+  exact (@fmap A^op B^op _ _ F Fop b a f).
+Defined.
+
+Global Instance is1functor_op' A B (F : A^op -> B^op)
+  `{Is1Cat A, Is1Cat B, Fop : !Is0Functor (F : A^op -> B^op), Fop2 : !Is1Functor (F : A^op -> B^op)}
+  : Is1Functor (F : A -> B).
+Proof.
+  apply Build_Is1Functor; unfold op in *; cbn in *.
+  - intros a b f; exact (@fmap2 A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 _ _ f).
+  - intros a; exact (@fmap_id A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 a).
+  - intros a b c f g; exact (@fmap_comp A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 _ _ _ g f).
+Defined.
+
 (** Bundled opposite functors *)
 Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
   : Fun01 A B -> Fun01 A^op B^op.
