@@ -4,12 +4,14 @@ Require Import Colimits.Pushout.
 Require Import WildCat.
 Require Import Homotopy.Suspension.
 
-(* Here we define the Wedge sum of two pointed types *)
+Local Set Universe Minimization ToSet.
+
+(** * Wedge sums *)
 
 Local Open Scope pointed_scope.
 
-Definition Wedge@{u v} (X Y : pType@{u}) : pType@{v}
-  := [Pushout@{u u v v} (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
+Definition Wedge (X Y : pType) : pType
+  := [Pushout (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
@@ -31,10 +33,10 @@ Defined.
 Definition wglue {X Y : pType}
   : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
-(** Wedge recursion into an unpointed type. We define this one separately as the universe variables need to be more general. *)
-Definition wedge_rec'@{i j v} {X Y : pType@{i}} {Z : Type@{v}}
+(** Wedge recursion into an unpointed type. *)
+Definition wedge_rec' {X Y : pType} {Z : Type}
   (f : X -> Z) (g : Y -> Z) (w : f pt = g pt)
-  : Wedge@{i j} X Y -> Z.
+  : Wedge X Y -> Z.
 Proof.
   snrapply Pushout_rec.
   - exact f.
