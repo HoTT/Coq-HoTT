@@ -112,6 +112,14 @@ Proof.
   destruct p; simpl; auto.
 Defined.
 
+(** This is an improvement to [transport_arrow_toconst].  That result shows that the functions are homotopic, but even without funext, we can prove that these functions are equal. *)
+Definition transport_arrow_toconst' {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C)
+  : transport (fun x => B x -> C) p f = f o transport B p^.
+Proof.
+  destruct p; auto.
+Defined.
+
 Definition transport_arrow_fromconst {A B : Type} {C : A -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : B -> C x1) (y : B)
   : (transport (fun x => B -> C x) p f) y  =  p # (f y).
