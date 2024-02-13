@@ -138,6 +138,7 @@ Proof.
 Defined.
 
 (** We can use the Hopf construction to show that the fiber of the loop-susp counit is equivalent to the join of the loop spaces. *)
+(* TODO: use explicit path algebra once [equiv_hopf_total_join] is computable and make this poitned. *)
 Definition equiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
   : pfiber (loop_susp_counit X) <~> pjoin (loops X) (loops X).
 Proof.
