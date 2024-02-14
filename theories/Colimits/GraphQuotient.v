@@ -253,13 +253,10 @@ Proof.
   snrapply GraphQuotient_ind.
   1: reflexivity.
   intros a b r.
-  lhs nrapply (transport_paths_FlFr (gqglue r)).
-  apply moveR_Mp.
-  rhs nrapply concat_p1.
-  rhs nrapply inv_Vp.
-  rhs nrapply concat_1p.
-  rhs nrapply GraphQuotient_rec_beta_gqglue.
-  apply ap_idmap.
+  nrapply (transport_paths_FlFr' (gqglue r)).
+  apply equiv_p1_1q.
+  rhs nrapply ap_idmap.
+  nrapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
 Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
@@ -269,31 +266,14 @@ Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
 Proof.
   snrapply GraphQuotient_ind.
   1: reflexivity.
-  intros a b r.
-  simpl.
-  lhs nrapply (transport_paths_FlFr (gqglue r)).
-  apply moveR_Mp.
-  rhs nrapply concat_p1.
-  rhs nrapply inv_Vp.
-  rhs nrapply concat_1p.
+  intros a b s.
+  nrapply (transport_paths_FlFr' (gqglue s)).
+  apply equiv_p1_1q.
+  lhs nrapply (ap_compose (functor_gq f e) (functor_gq g e') (gqglue s)).
+  lhs nrapply ap.
+  1: apply GraphQuotient_rec_beta_gqglue.
   lhs nrapply GraphQuotient_rec_beta_gqglue.
-  rhs nrapply (ap_compose (functor_gq f e) (functor_gq g e') (gqglue r)).
-  rhs nrapply ap.
-  2: apply GraphQuotient_rec_beta_gqglue.
-  symmetry.
-  rapply GraphQuotient_rec_beta_gqglue.
-Defined.
-
-(* TODO: split into other lemmas and move *)
-Definition transport011_helper {A B X} (P : A -> B -> Type) {f : A -> X} {g : B -> X}
-  {a1 a2 : A} {b1 b2 : B} {x1 : P a1 b1} {x2 : P a2 b2} 
-  (h : forall a b, P a b -> f a = g b) (p : a1 = a2) (q : b1 = b2)  
-  (r : transport011 P p q x1 = x2)
-  : ap f p = h a1 b1 x1 @ ap g q @ (h a2 b2 x2)^.
-Proof.
-  destruct p, q, r.
-  apply moveL_pV.
-  apply concat_1p_p1.
+  exact (GraphQuotient_rec_beta_gqglue _ _ _ _ s)^.
 Defined.
 
 Lemma functor2_gq {A B : Type} (f f' : A -> B)
@@ -307,18 +287,18 @@ Proof.
   - simpl; intro.
     apply ap.
     apply p.
-  - intros a b r.
-    simpl.
-    lhs nrapply (transport_paths_FlFr (gqglue r)).  
-    lhs nrapply concat_pp_p.
-    apply moveR_Vp.
-    lhs nrefine (1 @@ _).
-    1: apply GraphQuotient_rec_beta_gqglue.
-    rhs nrefine (_ @@ 1).
+  - intros a b s.
+    nrapply (transport_paths_FlFr' (gqglue s)).  
+    rhs nrefine (1 @@ _).
     2: apply GraphQuotient_rec_beta_gqglue.
-    apply moveR_pM.
-    rapply (transport011_helper S).
-    apply q.
+    lhs nrefine (_ @@ 1).
+    1: apply GraphQuotient_rec_beta_gqglue.
+    apply moveL_Mp.
+    symmetry.
+    destruct (q a b s).
+    lhs nrapply (ap_transport011 _ _ (fun s _ => gqglue)).
+    rhs nrapply concat_p_pp.
+    nrapply transport011_paths.
 Defined.
 
 (** ** Equivalence of graph quotients *)
