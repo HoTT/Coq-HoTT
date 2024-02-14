@@ -266,12 +266,10 @@ Declare Scope core_scope.
 Declare Scope function_scope.
 Declare Scope type_scope.
 Declare Scope equiv_scope.
-Declare Scope function_scope.
 Declare Scope path_scope.
 Declare Scope fibration_scope.
 Declare Scope trunc_scope.
 Declare Scope long_path_scope.
-Declare Scope core_scope.
 
 Delimit Scope core_scope with core.
 Delimit Scope function_scope with function.
@@ -292,5 +290,3 @@ Global Open Scope core_scope.
 
 Bind Scope function_scope with Funclass.
 Bind Scope type_scope with Sortclass.
-
-
