@@ -232,3 +232,109 @@ Section Flattening.
   Defined.
 
 End Flattening.
+
+(** ** Functoriality of graph quotients *)
+
+Lemma functor_gq {A B : Type} (f : A -> B)
+  {R : A -> A -> Type} {S : B -> B -> Type} (e : forall a b, R a b -> S (f a) (f b))
+  : GraphQuotient R -> GraphQuotient S.
+Proof.
+  snrapply GraphQuotient_rec.
+  1: exact (fun x => gq (f x)).
+  intros a b r.
+  apply gqglue.
+  apply e.
+  exact r.
+Defined.
+
+Lemma functor_gq_idmap {A : Type} {R : A -> A -> Type}
+  : functor_gq (A:=A) (B:=A) (S:=R) idmap (fun a b r => r) == idmap.
+Proof.
+  snrapply GraphQuotient_ind.
+  1: reflexivity.
+  intros a b r.
+  nrapply (transport_paths_FlFr' (gqglue r)).
+  apply equiv_p1_1q.
+  rhs nrapply ap_idmap.
+  nrapply GraphQuotient_rec_beta_gqglue.
+Defined.
+
+Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
+  {R : A -> A -> Type} {S : B -> B -> Type} {T : C -> C -> Type}
+  (e : forall a b, R a b -> S (f a) (f b)) (e' : forall a b, S a b -> T (g a) (g b))
+  : functor_gq g e' o (functor_gq f e) == functor_gq (g o f) (fun a b r => e' _ _ (e _ _ r)).
+Proof.
+  snrapply GraphQuotient_ind.
+  1: reflexivity.
+  intros a b s.
+  nrapply (transport_paths_FlFr' (gqglue s)).
+  apply equiv_p1_1q.
+  lhs nrapply (ap_compose (functor_gq f e) (functor_gq g e') (gqglue s)).
+  lhs nrapply ap.
+  1: apply GraphQuotient_rec_beta_gqglue.
+  lhs nrapply GraphQuotient_rec_beta_gqglue.
+  exact (GraphQuotient_rec_beta_gqglue _ _ _ _ s)^.
+Defined.
+
+Lemma functor2_gq {A B : Type} (f f' : A -> B)
+  {R : A -> A -> Type} {S : B -> B -> Type}
+  (e : forall a b, R a b -> S (f a) (f b)) (e' : forall a b, R a b -> S (f' a) (f' b))
+  (p : f == f')
+  (q : forall a b r, transport011 S (p a) (p b) (e a b r) = e' a b r)
+  : functor_gq f e == functor_gq f' e'.
+Proof.
+  snrapply GraphQuotient_ind.
+  - simpl; intro.
+    apply ap.
+    apply p.
+  - intros a b s.
+    nrapply (transport_paths_FlFr' (gqglue s)).  
+    rhs nrefine (1 @@ _).
+    2: apply GraphQuotient_rec_beta_gqglue.
+    lhs nrefine (_ @@ 1).
+    1: apply GraphQuotient_rec_beta_gqglue.
+    apply moveL_Mp.
+    symmetry.
+    destruct (q a b s).
+    lhs nrapply (ap_transport011 _ _ (fun s _ => gqglue)).
+    rhs nrapply concat_p_pp.
+    nrapply transport011_paths.
+Defined.
+
+(** ** Equivalence of graph quotients *)
+
+Lemma equiv_functor_gq {A B : Type} (f : A <~> B)
+  (R : A -> A -> Type) (S : B -> B -> Type) (e : forall a b, R a b <~> S (f a) (f b))
+  : GraphQuotient R <~> GraphQuotient S.
+Proof.
+  srapply equiv_adjointify.
+  - exact (functor_gq f e).
+  - nrapply (functor_gq f^-1).
+    intros a b r.
+    apply e.
+    exact (transport011 S (eisretr f a)^ (eisretr f b)^ r).
+  - intros x.
+    lhs nrapply functor_gq_compose.
+    rhs_V nrapply functor_gq_idmap.
+    snrapply functor2_gq.
+    1: apply eisretr.
+    intros a b r.
+    simpl.
+    rewrite (eisretr (e (f^-1 a) (f^-1 b))).
+    lhs_V nrapply transport011_pp.
+    by rewrite 2 concat_Vp.
+  - intros x.
+    lhs nrapply functor_gq_compose.
+    rhs_V nrapply functor_gq_idmap.
+    snrapply functor2_gq.
+    1: apply eissect.
+    intros a b r.
+    simpl.
+    rewrite 2 eisadj.
+    rewrite <- 2 ap_V.
+    rewrite <- (transport011_compose S).
+    rewrite <- (ap_transport011 (Q := fun x y => S (f x) (f y)) (eissect f a)^ (eissect f b)^ e).
+    rewrite (eissect (e (f^-1 (f a)) (f^-1 (f b)))).
+    lhs_V nrapply transport011_pp.
+    by rewrite 2 concat_Vp.
+Defined.
