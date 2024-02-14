@@ -311,15 +311,13 @@ Proof.
 Defined.
 
 
-(** Applying a function constructed with [sig_ind] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
-
+(** Applying a function constructed with [sig_rec] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
 Definition ap_sig_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
            (x1 x2:A) (p:x1=x2) (y1:P x1) (y2:P x2) (q:p # y1 = y2)
            (d : forall a, P a -> Q)
-: ap (sig_ind (fun _ => Q) d) (path_sigma' P p q)
+: ap (sig_rec _ _ Q d) (path_sigma' P p q)
   = (transport_const p _)^
     @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
-
     @ (transport_arrow p _ _)^
     @ ap10 (apD d p) (p # y1)
       @ ap (d x2) q.
