@@ -65,29 +65,21 @@ Proof.
   rapply GraphQuotient_ind_beta_gqglue.
 Defined.
 
-(** ** Flattening lemma *)
+(** ** The flattening lemma *)
 
-(** The flattening lemma, also known as descent, is a fundamental result in higher topos theory. Stated in it's simplest form, it says that limits (sigma types) commute with colimits (graph quotients) in an appropriate way. This is a particularly far reaching result in homotopy theory and will prove very useful later on.
-
-HITs on their own do not have these properties, but by using the univalence axiom, we can prove properties about HITs that were not available before. In some ways, descent is what characterizes a higher topos to begin with, so it is nice to see univalence directly giving this property. In that way, univalence can be thought of the thing that makes a higher topos tick. *) 
+(** Univalence tells us that type families over a colimit correspond to cartesian families over the indexing diagram.  The flattening lemma gives an explicit description of the family over a colimit that corresponds to a given cartesian family, again using univalence.  Together, these are known as descent, a fundamental result in higher topos theory which has many implications. *)
 
 Section Flattening.
   
-  (** In order to state the main lemma we will need to make some common assumptions which we will do in this section. *)
+  Context `{Univalence} {A : Type} {R : A -> A -> Type}.
+  (** We consider a type family over [A] which is "equifibrant" or "cartesian": the fibers are equivalent when the base points are related by [R]. *)
+  Context (F : A -> Type) (e : forall x y, R x y -> F x <~> F y).
 
-  Context
-    (** As mentioned before, univalence will play a crucial role in the definition of the flattening lemma. *)
-    `{Univalence}
-    (** We start with a type [A] and a binary relation [R] on that type. *)
-    {A : Type} {R : A -> A -> Type}
-    (** Next we consider a type family over this base type which is further more "equifibrant". This means that each of the fibers of this family are equivalent as types as long as the base poitns are related by [R]. *)
-    (F : A -> Type) (e : forall x y, R x y -> F x <~> F y).
-
-  (** Now we can define a family over [GraphQuotient R], clearly representatives of the equivalence classes can be mapped using the family [F], in order to make sure that this is well defined we need to know that any two fibers of related points are equal. This is where univalence comes in as it allows us to promote our equivalence to an identity. *)
+  (** By univalence, the equivalences give equalities, which means that [F] induces a map on the quotient. *)
   Definition DGraphQuotient : GraphQuotient R -> Type
-    := GraphQuotient_rec F (fun x y r => path_universe (e x y r)).
+    := GraphQuotient_rec F (fun x y s => path_universe (e x y s)).
 
-  (** When transporting [DGraphQuotient] along [gqglue] we can compute this as the equivalence [e] applied to the original point. This lemma is required a few times in the following proofs. *)
+  (** The transport of [DGraphQuotient] along [gqglue] equals the equivalence [e] applied to the original point. This lemma is required a few times in the following proofs. *)
   Definition transport_DGraphQuotient {x y} (s : R x y) (a : F x)
     : transport DGraphQuotient (gqglue s) a = e x y s a.
   Proof.
@@ -97,19 +89,18 @@ Section Flattening.
     rapply transport_path_universe.
   Defined.
 
-  (** The family [DGraphQuotient] we have defined over [GraphQuotient R] has a total space which we will aim to describe. Notably, this total space acts just like a [GraphQuotient] of [sig F] by an appropriate relation. *)
+  (** The family [DGraphQuotient] we have defined over [GraphQuotient R] has a total space which we will describe as a [GraphQuotient] of [sig F] by an appropriate relation. *)
 
-  (** We can mimic the constructors of [GraphQuotient] for the total space. Here is the point constructor. *)
+  (** We mimic the constructors of [GraphQuotient] for the total space. Here is the point constructor. *)
   Definition flatten_gq {x} : F x -> sig DGraphQuotient.
   Proof.
     intros p.
-    exists (gq x).
-    assumption.
+    exact (gq x; p).
   Defined.
   
   (** And here is the path constructor. *)
-  Definition flatten_gqglue {x y} (r : R x y) (a : F x)
-    : flatten_gq a = flatten_gq (e x y r a).
+  Definition flatten_gqglue {x y} (s : R x y) (a : F x)
+    : flatten_gq a = flatten_gq (e x y s a).
   Proof.
     snrapply path_sigma'.
     - by apply gqglue.
@@ -118,18 +109,18 @@ Section Flattening.
 
   (** This lemma is the same as [transport_DGraphQuotient] but adapted instead for [DPath]. The use of [DPath] will be apparent there. *)
   Lemma equiv_dp_dgraphquotient (x y : A) (s : R x y) (a : F x) (b : F y)
-    : DPath DGraphQuotient (gqglue s) a b <~> e x y s a = b.
+    : DPath DGraphQuotient (gqglue s) a b <~> (e x y s a = b).
   Proof.
     refine (_ oE dp_path_transport^-1).
     refine (equiv_concat_l _^ _).
     apply transport_DGraphQuotient.
   Defined.
 
-  (** We can also prove an induction principle for [sig DGraphQuotient]. We won't show that it satisfies the relevant computation rules, but these will not be needed. Instead we will prove the non-dependent eliminator directly so that we can better reason about it. Another thing to note, in order to get through the path algebra here, we have opted to use dependent paths. This makes the reasoning steps slightly easier, but it should not matter too much. *)
+  (** We can also prove an induction principle for [sig DGraphQuotient]. We won't show that it satisfies the relevant computation rules as these will not be needed. Instead we will prove the non-dependent eliminator directly so that we can better reason about it. In order to get through the path algebra here, we have opted to use dependent paths. This makes the reasoning slightly easier, but it should not matter too much. *)
   Definition flatten_ind {Q : sig DGraphQuotient -> Type}
     (Qgq : forall a (x : F a), Q (flatten_gq x))
-    (Qgqglue : forall a b (r : R a b) (x : F a),
-      flatten_gqglue r x # Qgq _ x = Qgq _ (e _ _ _ x))
+    (Qgqglue : forall a b (s : R a b) (x : F a),
+      flatten_gqglue s x # Qgq _ x = Qgq _ (e _ _ _ x))
     : forall x, Q x.
   Proof.
     apply sig_ind.
@@ -155,7 +146,7 @@ Section Flattening.
 
   (** Rather than use [flatten_ind] to define [flatten_rec] we reprove this simple case. This means we can later reason about it and derive the computation rules easily. The full computation rule for [flatten_ind] takes some work to derive and is not actually needed. *)
   Definition flatten_rec {Q : Type} (Qgq : forall a, F a -> Q)
-    (Qgqglue : forall a b (r : R a b) (x : F a), Qgq a x = Qgq b (e _ _ r x))
+    (Qgqglue : forall a b (s : R a b) (x : F a), Qgq a x = Qgq b (e _ _ s x))
     : sig DGraphQuotient -> Q.
   Proof.
     apply sig_rec.
@@ -176,9 +167,8 @@ Section Flattening.
     (a b : A) (s : R a b) (x : F a)
     : ap (flatten_rec Qgq Qgqglue) (flatten_gqglue s x) = Qgqglue a b s x.
   Proof.
-    lhs nrapply ap_sig_rec_path_sigma.
+    lhs nrapply ap_sig_rec_path_sigma; cbn.
     rewrite GraphQuotient_ind_beta_gqglue.
-    simpl.
     apply moveR_pM.
     apply moveL_pM.
     rewrite 3 concat_pp_p.
