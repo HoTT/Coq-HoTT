@@ -175,12 +175,12 @@ Section Flattening.
     apply moveR_Vp.
     rewrite (ap10_dpath_arrow DGraphQuotient (fun _ => Q) (gqglue s)).
     hott_simpl.
-    rewrite concat_pp_p.
+    lhs nrapply concat_pp_p.
     apply moveR_Mp.
-    rewrite concat_Vp.
+    rhs nrapply concat_Vp.
     apply moveR_pM.
-    rewrite concat_1p.
-    rapply ap_V.
+    rhs nrapply concat_1p.
+    nrapply ap_V.
   Defined.
 
   (** Now that we've shown that [sig DGraphQuotient] acts like a [GraphQuotient] of [sig F] by an appropriate relation, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *) 
@@ -209,17 +209,16 @@ Section Flattening.
       simpl.
       lhs nrapply transport_paths_FFlr.
       rewrite GraphQuotient_rec_beta_gqglue.
-      rewrite flatten_rec_beta_gqglue.
-      rewrite concat_p1.
-      apply concat_Vp.
+      refine ((_ @@ 1) @ concat_Vp _).
+      lhs nrapply concat_p1.
+      apply inverse2.
+      nrapply flatten_rec_beta_gqglue.
     - snrapply flatten_ind.
       1: reflexivity.
       intros a b r x.
-      lhs nrapply (transport_paths_FFlr (g := GraphQuotient_rec _ _) _).
+      nrapply (transport_paths_FFlr' (g := GraphQuotient_rec _ _)); apply equiv_p1_1q.
       rewrite flatten_rec_beta_gqglue.
-      rewrite GraphQuotient_rec_beta_gqglue.
-      rewrite concat_p1.
-      apply concat_Vp.
+      exact (GraphQuotient_rec_beta_gqglue _ _ (a; x) (b; e a b r x) (r; 1)).
   Defined.
 
 End Flattening.
