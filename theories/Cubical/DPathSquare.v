@@ -1,5 +1,5 @@
 Require Import Basics.
-Require Import Types.
+Require Import Types.Paths.
 Require Import Cubical.DPath.
 Require Import Cubical.PathSquare.
 
