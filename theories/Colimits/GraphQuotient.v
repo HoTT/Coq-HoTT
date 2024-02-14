@@ -168,7 +168,10 @@ Section Flattening.
     : ap (flatten_rec Qgq Qgqglue) (flatten_gqglue s x) = Qgqglue a b s x.
   Proof.
     lhs nrapply ap_sig_rec_path_sigma; cbn.
-    rewrite GraphQuotient_ind_beta_gqglue.
+    lhs nrapply (ap (fun x => x @ _)).
+    { nrapply ap.
+      nrapply (ap01 (fun x => ap10 x _)).
+      nrapply GraphQuotient_ind_beta_gqglue. }
     apply moveR_pM.
     apply moveL_pM.
     lhs nrapply concat_pp_p.
