@@ -32,29 +32,16 @@ Definition pequiv_hopf_total_join `{Univalence} (X : pType)
   : psigma (hopf_construction X) <~>* pjoin X X.
 Proof.
   snrapply Build_pEquiv'.
-  { etransitivity.
-    1: etransitivity.
-    2: exact (equiv_pushout_flatten (f := const_tt X) (g := const_tt X)
-      (fun _ : Unit => X) (fun _ : Unit => X) (fun x => Build_Equiv _ _ (x *.) (H1 x))).
-    - snrapply equiv_functor_sigma_id.
+  { refine (_ oE equiv_pushout_flatten (f := const_tt X) (g := const_tt X)
+      (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
+      (fun x => Build_Equiv _ _ (x *.) (H1 x))).
+    snrapply equiv_pushout.
+    { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
+      snrapply equiv_functor_sigma_id.
       intros x.
-      apply equiv_path.
-      revert x.
-      snrapply Susp_ind_FlFr.
-      1,2: reflexivity.
-      intros x.
-      lhs nrapply concat_p1.
-      lhs nrapply Susp_rec_beta_merid.
-      rhs nrapply concat_1p.
-      rewrite (Pushout_rec_beta_pglue _ _ _ _ x).
-      reflexivity.
-    - snrapply equiv_pushout.
-      { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
-        snrapply equiv_functor_sigma_id.
-        intros x.
-        exact (Build_Equiv _ _ (.* x) _). }
-      1,2: nrapply equiv_contr_sigma; exact _.
-      1,2: reflexivity. }
+      exact (Build_Equiv _ _ (.* x) _). }
+    1,2: rapply (equiv_contr_sigma (Unit_ind (pointed_type X))).
+    1,2: reflexivity. }
   reflexivity.
 Defined. 
 
