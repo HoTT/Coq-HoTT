@@ -543,3 +543,49 @@ Proof.
       exact (concat_Ap (pglue' f g) (eissect g a)) ).
   - intros c; reflexivity.
 Defined.
+
+(** ** Flattening lemma for pushouts *)
+
+(** The flattening lemma for pushouts follow from the flattening lemma for coequalizers. *)
+
+Section Flattening.
+
+  Context `{Univalence} {A B C} {f : A -> B} {g : A -> C}
+    (F : B -> Type) (G : C -> Type) (e : forall a, F (f a) <~> G (g a)).
+
+  Definition pushout_flatten_fam : Pushout f g -> Type
+    := Pushout_rec Type F G (fun a => path_universe (e a)).
+
+  Definition equiv_pushout_flatten
+    : sig pushout_flatten_fam
+    <~> Pushout (functor_sigma f (fun _ => idmap)) (functor_sigma g e).
+  Proof.
+    unfold pushout_flatten_fam.
+    transitivity ({x : _ & Coeq_rec (f := inl o f) (g := inr o g)
+      Type (sum_rect _ F G) (fun a => path_universe (e a)) x}).
+    { apply equiv_functor_sigma_id.
+      intros x.
+      apply equiv_path.
+      revert x.
+      snrapply Pushout_ind.
+      1,2: hnf; reflexivity.
+      simpl.
+      intros a.
+      lhs nrapply (transport_paths_FlFr (pglue a)).
+      apply moveR_Mp.
+      rhs nrapply concat_p1.
+      rhs nrapply inv_Vp.
+      rhs nrapply concat_1p.
+      lhs nrapply Coeq_rec_beta_cglue.
+      symmetry.
+      nrapply Pushout_rec_beta_pglue. }
+    refine (_ oE equiv_coeq_flatten _ _).
+    unfold Pushout.
+    snrapply equiv_functor_coeq'.
+    - reflexivity.
+    - apply equiv_sigma_sum.
+    - reflexivity.
+    - reflexivity.
+  Defined.
+
+End Flattening.
