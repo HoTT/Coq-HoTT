@@ -171,14 +171,27 @@ Section Flattening.
     rewrite GraphQuotient_ind_beta_gqglue.
     apply moveR_pM.
     apply moveL_pM.
-    rewrite 3 concat_pp_p.
+    lhs nrapply concat_pp_p.
+    lhs nrapply concat_pp_p.
+    lhs nrapply concat_pp_p.
     apply moveR_Vp.
-    rewrite (ap10_dpath_arrow DGraphQuotient (fun _ => Q) (gqglue s)).
-    hott_simpl.
+    lhs nrapply ap.
+    1: nrapply ap.
+    1: nrapply (ap (fun x => x @ _)).
+    1: nrapply (ap10_dpath_arrow DGraphQuotient (fun _ => Q) (gqglue s)).
+    lhs nrapply ap.
+    1: nrapply ap.
+    1: lhs nrapply concat_pp_p.
+    1: nrapply concat_pp_p.
+    lhs nrapply ap.
+    1: nrapply concat_V_pp.
+    lhs nrapply concat_V_pp.
+    lhs nrapply concat_pp_p.
+    f_ap.
     lhs nrapply concat_pp_p.
     apply moveR_Mp.
     rhs nrapply concat_Vp.
-    apply moveR_pM.
+    apply moveR_pV.
     rhs nrapply concat_1p.
     nrapply ap_V.
   Defined.
