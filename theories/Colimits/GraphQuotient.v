@@ -312,9 +312,9 @@ Proof.
     lhs nrapply (transport_paths_FlFr (gqglue r)).  
     lhs nrapply concat_pp_p.
     apply moveR_Vp.
-    lhs nrapply ap.
+    lhs nrefine (1 @@ _).
     1: apply GraphQuotient_rec_beta_gqglue.
-    rhs nrapply (ap (fun x => x @ _)).
+    rhs nrefine (_ @@ 1).
     2: apply GraphQuotient_rec_beta_gqglue.
     apply moveR_pM.
     rapply (transport011_helper S).
