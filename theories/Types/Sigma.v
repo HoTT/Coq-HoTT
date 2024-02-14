@@ -510,6 +510,12 @@ Proof.
   make_equiv.
 Defined.
 
+Definition equiv_sigma_prod' `(Q : A -> B -> Type)
+  : {a : A & {b : B & Q a b}} <~> sig (fun ab => Q (fst ab) (snd ab)).
+Proof.
+  make_equiv.
+Defined.
+
 Definition equiv_sigma_prod0 (A B : Type)
   : {a : A & B} <~> A * B.
 Proof.
