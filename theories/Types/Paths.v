@@ -110,6 +110,17 @@ Proof.
   exact h^.
 Defined.
 
+Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
+  {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)
+  (r : f a1 = g b1)
+  : transport011 (fun a b => f a = g b) p q r = (ap f p)^ @ r @ ap g q.
+Proof.
+  destruct p, q; cbn.
+  symmetry.
+  lhs nrapply concat_p1.
+  apply concat_1p.
+Defined.
+
 (** ** Transporting in 2-path types *)
 
 Definition transport_paths2 {A : Type} {x y : A}

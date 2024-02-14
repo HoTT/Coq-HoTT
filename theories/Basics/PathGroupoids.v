@@ -801,7 +801,7 @@ Proof.
   destruct p, q; reflexivity.
 Defined.
 
-(** Transporting along 2 1-dimensional paths *)
+(** Transporting along two 1-dimensional paths *)
 Definition transport011 {A B} (P : A -> B -> Type) {x1 x2 : A} {y1 y2 : B}
   (p : x1 = x2) (q : y1 = y2) (z : P x1 y1)
   : P x2 y2
@@ -823,21 +823,11 @@ Proof.
   destruct p, q; reflexivity.
 Defined.
 
-Definition transport011_natsq {A B X} (P : A -> B -> Type) {f : A -> X} {g : B -> X}
-  {a1 a2 : A} {b1 b2 : B} {x1 : P a1 b1} {x2 : P a2 b2} 
-  (h : forall a b, P a b -> f a = g b) (p : a1 = a2) (q : b1 = b2)  
-  (r : transport011 P p q x1 = x2)
-  : ap f p = h a1 b1 x1 @ ap g q @ (h a2 b2 x2)^.
-Proof.
-  destruct p, q, r.
-  apply moveL_pV.
-  apply concat_1p_p1.
-Defined.
-
-Definition ap_transport011 {A B} {P : A -> B -> Type} {Q : A -> B -> Type}
-  {x1 x2 : A} {y1 y2 : B} (p : x1 = x2) (q : y1 = y2)
-  (f : forall x y, P x y -> Q x y) (z : P x1 y1)
-  : f x2 y2 (transport011 P p q z) = transport011 Q p q (f x1 y1 z).
+(** Naturality of [transport011]. *)
+Definition ap_transport011{A B} {P Q : A -> B -> Type}
+  {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)  
+  (f : forall {a b}, P a b -> Q a b) (x : P a1 b1)
+  : f (transport011 P p q x) = transport011 Q p q (f x).
 Proof.
   destruct p, q; reflexivity.
 Defined.
