@@ -1,6 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types WildCat.Core WildCat.Universe.
+Require Import Basics.
+Require Import Types.Paths Types.Arrow Types.Sigma Types.Sum Types.Universe.
 Require Export Colimits.Coeq.
+
 Local Open Scope path_scope.
 
 (** * Homotopy Pushouts *)
@@ -167,15 +169,15 @@ Proof.
 Defined.
 
 Lemma functor_pushout_homotopic 
-  {A B C : Type} {f : A $-> B} {g : A $-> C}
-  {A' B' C' : Type} {f' : A' $-> B'} {g' : A' $-> C'}
-  {h h' : A $-> A'} {k k' : B $-> B'} {l l' : C $-> C'}
-  {p : k $o f $== f' $o h} {q : l $o g $== g' $o h}
-  {p' : k' $o f $== f' $o h'} {q' : l' $o g $== g' $o h'}
-  (t : h $== h') (u : k $== k') (v : l $== l')
-  (i : p $@ (f' $@L t) == (u $@R f) $@ p')
-  (j : q $@ (g' $@L t) == (v $@R g) $@ q')
-  : functor_pushout h k l p q $== functor_pushout h' k' l' p' q'.
+  {A B C : Type} {f : A -> B} {g : A -> C}
+  {A' B' C' : Type} {f' : A' -> B'} {g' : A' -> C'}
+  {h h' : A -> A'} {k k' : B -> B'} {l l' : C -> C'}
+  {p : k o f == f' o h} {q : l o g == g' o h}
+  {p' : k' o f == f' o h'} {q' : l' o g == g' o h'}
+  (t : h == h') (u : k == k') (v : l == l')
+  (i : forall a, p a @ (ap f') (t a) = u (f a) @ p' a)
+  (j : forall a, q a @ (ap g') (t a) = v (g a) @ q' a)
+  : functor_pushout h k l p q == functor_pushout h' k' l' p' q'.
 Proof.
   srapply functor_coeq_homotopy.
   1: exact t.

@@ -1,5 +1,5 @@
 Require Import Basics.
-Require Import Types.
+Require Import Types.Paths Types.Sigma Types.Forall.
 
 Declare Scope dpath_scope.
 Delimit Scope dpath_scope with dpath.

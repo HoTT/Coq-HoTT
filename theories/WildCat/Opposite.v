@@ -91,8 +91,8 @@ Global Instance is0functor_op A B (F : A -> B)
   : Is0Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is0Functor.
-  intros a b.
-  cbn; apply fmap.
+  intros a b; cbn.
+  apply fmap.
   assumption.
 Defined.
 
@@ -101,28 +101,26 @@ Global Instance is1functor_op A B (F : A -> B)
   : Is1Functor (F : A^op -> B^op).
 Proof.
   apply Build_Is1Functor; unfold op in *; cbn in *.
-  - intros a b; rapply fmap2; assumption.
-  - intros a; exact (fmap_id F a).
+  - intros a b; rapply fmap2.
+  - exact (fmap_id F).
   - intros a b c f g; exact (fmap_comp F g f).
 Defined.
 
+(** Since [Is01Cat] structures are definitionally involutive (see test/WildCat/Opposite.v), we can use [is0functor_op] to transform in the reverse direction as well.  This result makes that much easier to use in practice. *)
 Global Instance is0functor_op' A B (F : A^op -> B^op)
   `{IsGraph A, IsGraph B, Fop : !Is0Functor (F : A^op -> B^op)}
-  : Is0Functor (F : A -> B).
-Proof.
-  apply Build_Is0Functor.
-  intros a b f.
-  exact (@fmap A^op B^op _ _ F Fop b a f).
-Defined.
+  : Is0Functor (F : A -> B)
+  := is0functor_op A^op B^op F.
 
+(** [Is1Cat] structures are not definitionally involutive, so we prove the reverse direction separately. *)
 Global Instance is1functor_op' A B (F : A^op -> B^op)
-  `{Is1Cat A, Is1Cat B, Fop : !Is0Functor (F : A^op -> B^op), Fop2 : !Is1Functor (F : A^op -> B^op)}
+  `{Is1Cat A, Is1Cat B, !Is0Functor (F : A^op -> B^op), Fop2 : !Is1Functor (F : A^op -> B^op)}
   : Is1Functor (F : A -> B).
 Proof.
-  apply Build_Is1Functor; unfold op in *; cbn in *.
-  - intros a b f; exact (@fmap2 A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 _ _ f).
-  - intros a; exact (@fmap_id A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 a).
-  - intros a b c f g; exact (@fmap_comp A^op B^op _ _ _ _ _ _ _ _ F Fop Fop2 _ _ _ g f).
+  apply Build_Is1Functor; unfold op in *; cbn.
+  - intros a b; exact (@fmap2 A^op B^op _ _ _ _ _ _ _ _ F _ Fop2 b a).
+  - exact (@fmap_id A^op B^op _ _ _ _ _ _ _ _ F _ Fop2).
+  - intros a b c f g; exact (@fmap_comp A^op B^op _ _ _ _ _ _ _ _ F _ Fop2 _ _ _ g f).
 Defined.
 
 (** Bundled opposite functors *)

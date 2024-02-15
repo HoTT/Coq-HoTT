@@ -1,4 +1,5 @@
-Require Import Basics Types.
+Require Import Basics.
+Require Import Types.Paths Types.Arrow Types.Sigma Types.Forall Types.Universe Types.Prod.
 Require Import Cubical.DPath.
 Require Import Colimits.GraphQuotient.
 

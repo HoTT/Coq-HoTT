@@ -1,5 +1,5 @@
 Require Import Basics.
-Require Import Types.
+Require Import Types.Paths Types.Prod.
 Require Import DPath.
 
 Declare Scope square_scope.
