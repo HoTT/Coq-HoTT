@@ -303,33 +303,31 @@ Defined.
 
 (** ** Equivalence of graph quotients *)
 
-Lemma equiv_functor_gq {A B : Type} (f : A <~> B)
-  (R : A -> A -> Type) (S : B -> B -> Type) (e : forall a b, R a b <~> S (f a) (f b))
-  : GraphQuotient R <~> GraphQuotient S.
+Global Instance isequiv_functor_gq {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+  {R : A -> A -> Type} {S : B -> B -> Type} (e : forall a b, R a b -> S (f a) (f b))
+  `{forall a b, IsEquiv (e a b)}
+  : IsEquiv (functor_gq f e).
 Proof.
-  srapply equiv_adjointify.
-  - exact (functor_gq f e).
+  srapply isequiv_adjointify.
   - nrapply (functor_gq f^-1).
-    intros a b r.
-    apply e.
-    exact (transport011 S (eisretr f a)^ (eisretr f b)^ r).
+    intros a b s.
+    apply (e _ _)^-1.
+    exact (transport011 S (eisretr f a)^ (eisretr f b)^ s).
   - intros x.
     lhs nrapply functor_gq_compose.
     rhs_V nrapply functor_gq_idmap.
-    snrapply functor2_gq.
+    snrapply functor2_gq; cbn beta.
     1: apply eisretr.
-    intros a b r.
-    simpl.
+    intros a b s.
     rewrite (eisretr (e (f^-1 a) (f^-1 b))).
     lhs_V nrapply transport011_pp.
     by rewrite 2 concat_Vp.
   - intros x.
     lhs nrapply functor_gq_compose.
     rhs_V nrapply functor_gq_idmap.
-    snrapply functor2_gq.
+    snrapply functor2_gq; cbn beta.
     1: apply eissect.
     intros a b r.
-    simpl.
     rewrite 2 eisadj.
     rewrite <- 2 ap_V.
     rewrite <- (transport011_compose S).
@@ -338,3 +336,8 @@ Proof.
     lhs_V nrapply transport011_pp.
     by rewrite 2 concat_Vp.
 Defined.
+
+Definition equiv_functor_gq {A B : Type} (f : A <~> B)
+  (R : A -> A -> Type) (S : B -> B -> Type) (e : forall a b, R a b <~> S (f a) (f b))
+  : GraphQuotient R <~> GraphQuotient S
+  := Build_Equiv _ _ (functor_gq f e) _.
