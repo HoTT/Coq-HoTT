@@ -14,6 +14,9 @@ Generalizable Variables X A B f g n.
 Scheme sum_ind := Induction for sum Sort Type.
 Arguments sum_ind {A B} P f g s : rename.
 
+Scheme sum_rec := Minimality for sum Sort Type.
+Arguments sum_rec {A B} P f g s : rename.
+
 (** ** CoUnpacking *)
 
 (** Sums are coproducts, so there should be a dual to [unpack_prod].  I'm not sure what it is, though. *)

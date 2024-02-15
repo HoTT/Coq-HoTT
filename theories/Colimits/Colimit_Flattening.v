@@ -10,9 +10,8 @@ Local Open Scope path_scope.
 
 (** * Flattening lemma *)
 
-(** This file provides a proof of the flattening lemma for colimits. This lemma describes the type [sig E'] when [E' : colimit D -> Type] is a type family defined by recursion on a colimit. *)
-(** The flattening lemma in the case of W-types is presented in section 6.12 of the HoTT book. *)
-(** A good intuition is given by the pushout's case (see above). *)
+(** This file provides a proof of the flattening lemma for colimits. This lemma describes the type [sig E'] when [E' : colimit D -> Type] is a type family defined by recursion on a colimit. The flattening lemma in the case of coequalizers is presented in section 6.12 of the HoTT book and is in Colimits/Coeq.v. *)
+(** TODO: See whether there's a straightforward way to deduce the flattening lemma for general colimits from the version for coequalizers. *)
 
 Section Flattening.
   (** ** Equifibered diagrams *)

@@ -2,7 +2,7 @@ Require Import Types Basics Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
 Require Import WildCat.Core WildCat.Universe WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
-Require Import Homotopy.Join Colimits.Pushout Colimits.PushoutFlattening.
+Require Import Homotopy.Join Colimits.Pushout.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -20,31 +20,30 @@ Definition hopf_construction `{Univalence} (X : pType)
 Proof.
   srapply Build_pFam.
   - apply (Susp_rec (Y:=Type) X X).
-    (** In order to use the flattening lemma for colimits to show that the total space is a join, we need for this equivalence to be a composition with the inverted identity equivalence so that the fiber is definitionally equivalent to the flattening lemma sigma type. This doesn't change anything elsewhere, but saves us having to rewrite an IsEquiv witness. *)
-    exact (fun x => path_universe ((x *.) o equiv_idmap^-1%equiv)).
+    exact (fun x => path_universe (x *.)).
   - simpl. exact pt.
 Defined.
 
 (** *** Total space of the Hopf construction *)
 
 (** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. (This is lemma 8.5.7 in the HoTT book). *)
-(* TODO: Show that this is a pointed equivalence. We cannot yet do this as we cannot compute with the flattening lemma due to the massive size of the proof. *)
-Definition equiv_hopf_total_join `{Univalence} (X : pType)
+Definition pequiv_hopf_total_join `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
-  : psigma (hopf_construction X) <~> pjoin X X.
+  : psigma (hopf_construction X) <~>* pjoin X X.
 Proof.
-  snrefine (_ oE (pushout_flattening (f:=const_tt X) (g:=const_tt X) _
-    (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X)) (fun _ => equiv_idmap)
-    (fun x => Build_Equiv _ _ (x *.) (H1 x)))^-1%equiv).
-  snrapply equiv_pushout.
-  - cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
-    snrapply equiv_functor_sigma_id.
-    intros x.
-    exact (Build_Equiv _ _ (.* x) _).
-  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
-  - exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
-  - reflexivity.
-  - reflexivity.
+  snrapply Build_pEquiv'.
+  { refine (_ oE equiv_pushout_flatten (f := const_tt X) (g := const_tt X)
+      (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
+      (fun x => Build_Equiv _ _ (x *.) (H1 x))).
+    snrapply equiv_pushout.
+    (* The equivalence [{x : X & X} <~> X * X] that we need sends [(x; y) to (y, x*y)]. *)
+    { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
+      snrapply equiv_functor_sigma_id.
+      intros x.
+      exact (Build_Equiv _ _ (.* x) _). }
+    1,2: rapply (equiv_contr_sigma (Unit_ind (pointed_type X))).
+    1,2: reflexivity. }
+  reflexivity.
 Defined. 
 
 (** ** Miscellaneous lemmas and corollaries about the Hopf construction *)
@@ -130,33 +129,38 @@ Proof.
 Defined.
 
 (** Since [loops X] is an H-space, the Hopf construction provides a map [Join (loops X) (loops X) -> Susp (loops X)].  We show that this map is equivalent to the fiber of [loop_susp_counit X : Susp (loops X) -> X] over the base point, up to the automorphism of [Susp (loops X)] induced by inverting loops. *)
-(* TODO: use explicit path algebra once [equiv_hopf_total_join] is computable and make this pointed. *)
-Definition equiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
-  : pfiber (loop_susp_counit X) <~> pjoin (loops X) (loops X).
+Definition pequiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
+  : pfiber (loop_susp_counit X) <~>* pjoin (loops X) (loops X).
 Proof.
-  snrefine (equiv_hopf_total_join (loops X) oE _).
-  1: rapply ishspace_loops.
-  1,2: exact _.
-  snrapply equiv_functor_sigma'.
-  1: exact (emap psusp (equiv_path_inverse _ _)).
-  snrapply Susp_ind; hnf.
-  1,2: reflexivity.
-  intros p.
-  nrapply path_equiv.
-  funext q.
-  simpl.
-  lhs rapply (transport_equiv (merid p) _ q).
-  simpl.
-  rewrite transport_paths_Fl.
-  rewrite ap_V.
-  rewrite inv_V.
-  rewrite Susp_rec_beta_merid.
-  rewrite transport_idmap_ap.
-  rewrite ap_compose.
-  rewrite functor_susp_beta_merid.
-  rewrite Susp_rec_beta_merid.
-  rewrite transport_path_universe.
-  apply concat_V_pp.
+  snrefine (pequiv_hopf_total_join (loops X) o*E _).
+  2: rapply ishspace_loops.
+  2,3: exact _.
+  snrapply Build_pEquiv'.
+  { snrapply equiv_functor_sigma'.
+    1: exact (emap psusp (equiv_path_inverse _ _)).
+    snrapply Susp_ind; hnf.
+    1,2: reflexivity.
+    intros p.
+    nrapply path_equiv.
+    funext q.
+    simpl.
+    lhs rapply (transport_equiv (merid p) _ q).
+    simpl.
+    lhs nrapply ap.
+    { lhs nrapply transport_paths_Fl.
+      nrapply whiskerR.
+      { lhs nrapply (ap inverse (ap_V _ _)).
+        lhs rapply inv_V.
+        apply Susp_rec_beta_merid. } }
+    lhs nrapply (transport_idmap_ap _ (merid p)).
+    lhs nrapply (transport2 idmap).
+    { lhs nrapply ap_compose.
+      lhs nrapply ap.
+      1: apply functor_susp_beta_merid.
+      apply Susp_rec_beta_merid. }
+    lhs nrapply transport_path_universe.
+    apply concat_V_pp. }
+  reflexivity.
 Defined.
 
 (** As a corollary we get 2n-connectivity of [loop_susp_counit X] for an n-connected [X]. *)
@@ -169,6 +173,6 @@ Proof.
   - snrapply (conn_point_elim (-1)).
     + exact (isconnected_pred_add' n 0 _).
     + exact _.
-    + nrapply (isconnected_equiv' _ _ (equiv_pfiber_loops_susp_counit_join X)^-1).
+    + nrapply (isconnected_equiv' _ _ (pequiv_pfiber_loops_susp_counit_join X)^-1).
       nrapply isconnected_join; exact _.
 Defined.

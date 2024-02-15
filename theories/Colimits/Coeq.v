@@ -418,3 +418,61 @@ Lemma Coeq_sym {B A} {f g : B -> A} : @Coeq B A f g <~> Coeq g f.
 Proof.
   exact (equiv_adjointify (Coeq_sym_map f g) (Coeq_sym_map g f) sect_Coeq_sym_map sect_Coeq_sym_map).
 Defined.
+
+(** ** Flattening *)
+
+(** The flattening lemma for coequalizers follows from the flattening lemma for graph quotients. *)
+
+Section Flattening.
+
+  Context `{Univalence} {B A : Type} {f g : B -> A}
+    (F : A -> Type) (e : forall b, F (f b) <~> F (g b)).
+
+  Definition coeq_flatten_fam : Coeq f g -> Type
+    := Coeq_rec Type F (fun x => path_universe (e x)).
+  
+  Local Definition R (a b : A) := {x : B & (f x = a) * (g x = b)}.
+
+  Local Definition e' (a b : A) : R a b -> (F a <~> F b).
+  Proof.
+    intros [x [[] []]]; exact (e x).
+  Defined.
+
+  Definition equiv_coeq_flatten
+    : sig coeq_flatten_fam
+    <~> Coeq (functor_sigma f (fun _ => idmap)) (functor_sigma g e).
+  Proof.
+    snrefine (_ oE equiv_gq_flatten F e' oE _).
+    - snrapply equiv_functor_gq.
+      1: reflexivity.
+      intros [a x] [b y]; simpl.
+      unfold functor_sigma.
+      (* We use [equiv_path_sigma] twice on the RHS: *)
+      equiv_via {x0 : {H0 : B & F (f H0)} &
+                      {p : f x0.1 = a & p # x0.2 = x} * {q : g x0.1 = b & q # e x0.1 x0.2 = y}}.
+      2: { nrapply equiv_functor_sigma_id; intros [c z]; cbn.
+           nrapply equiv_functor_prod'.
+           all: apply (equiv_path_sigma _ (_; _) (_; _)). }
+      (* [make_equiv_contr_basedpaths.] handles the rest, but is slow, so we do some steps manually. *)
+      (* The RHS can be shuffled to this form: *)
+      equiv_via {r : R a b & { x02 : F (f r.1) & (transport F (fst r.2) x02 = x) *
+                                                 (transport F (snd r.2) (e r.1 x02) = y)}}.
+      2: make_equiv.
+      (* Three path contractions handle the rest. *)
+      nrapply equiv_functor_sigma_id; intros [c [p q]].
+      destruct p, q; unfold e'; simpl.
+      make_equiv_contr_basedpaths.
+    - apply equiv_functor_sigma_id; intros x.
+      apply equiv_path.
+      revert x; snrapply Coeq_ind.
+      1: reflexivity.
+      simpl.
+      intros b.
+      snrapply (dpath_path_FlFr (cglue b)).
+      apply equiv_1p_q1.
+      rhs nrapply Coeq_rec_beta_cglue.
+      exact (GraphQuotient_rec_beta_gqglue _
+               (fun a b s => path_universe (e' a b s)) _ _ _).
+  Defined.
+
+End Flattening.

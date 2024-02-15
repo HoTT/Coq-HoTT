@@ -96,22 +96,16 @@ Defined.
 
 Definition Susp_rec {X Y : Type}
   (H_N H_S : Y) (H_merid : X -> H_N = H_S)
-: Susp X -> Y.
-Proof.
-  apply (Susp_ind (fun _ => Y) H_N H_S).
-  intros x. exact (transport_const _ _ @ H_merid x).
-Defined.
+  : Susp X -> Y
+  := Pushout_rec (f:=const_tt X) (g:=const_tt X) Y (Unit_ind H_N) (Unit_ind H_S) H_merid.
 
 Global Arguments Susp_rec {X Y}%type_scope H_N H_S H_merid%function_scope _.
 
 Definition Susp_rec_beta_merid {X Y : Type}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
-: ap (Susp_rec H_N H_S H_merid) (merid x) = H_merid x.
+  : ap (Susp_rec H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
-  apply (cancelL (transport_const (merid x) H_N)).
-  transitivity (apD (Susp_rec H_N H_S H_merid) (merid x)).
-  - symmetry; refine (apD_const (Susp_rec H_N H_S H_merid) _).
-  - refine (Susp_ind_beta_merid (fun _ : Susp X => Y) _ _ _ _).
+  srapply Pushout_rec_beta_pglue.
 Defined.
 
 (** ** Eta-rule. *)
