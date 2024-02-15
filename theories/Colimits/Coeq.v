@@ -431,54 +431,48 @@ Section Flattening.
   Definition coeq_flatten_fam : Coeq f g -> Type
     := Coeq_rec Type F (fun x => path_universe (e x)).
   
+  Local Definition R (a b : A) := {x : B & (f x = a) * (g x = b)}.
+
+  Local Definition e' (a b : A) : R a b -> (F a <~> F b).
+  Proof.
+    intros [x [[] []]]; exact (e x).
+  Defined.
+
   Definition equiv_coeq_flatten
     : sig coeq_flatten_fam
     <~> Coeq (functor_sigma f (fun _ => idmap)) (functor_sigma g e).
   Proof.
-    snrefine (_ oE equiv_gq_flatten F _ oE _).
-    2: exact (fun a b => {x : B & (f x = a) * (g x = b)}).
-    2: intros a b [x [[] []]]; exact (e x).
+    snrefine (_ oE equiv_gq_flatten F e' oE _).
     - snrapply equiv_functor_gq.
       1: reflexivity.
-      simpl.
-      intros [a x] [b y].
-      nrefine (equiv_sigma_assoc _ _ oE _ oE (equiv_sigma_assoc _ _)^-1).  
-      nrapply equiv_functor_sigma_id.
-      intros c.
-      simpl.
+      intros [a x] [b y]; simpl.
       unfold functor_sigma.
-      simpl.
-      nrefine (equiv_functor_sigma_id _ oE _).
-      { intros r.
-        refine (equiv_functor_prod' _ _ oE equiv_sigma_prod0 _ _ oE _).
-        1,2: apply equiv_path_sigma. 
-        simpl.
-        refine (equiv_sigma_assoc _ _ oE _).
-        nrapply equiv_functor_sigma_id.
-        intros p.
-        exact (equiv_sigma_symm _). }
-      nrefine (equiv_sigma_symm _ oE equiv_functor_sigma_id _ oE _).
-      { intros p.
-        exact (equiv_sigma_symm _). }
-      nrefine ((equiv_sigma_prod' _)^-1 oE _).
-      apply equiv_functor_sigma_id.
-      intros [p q].
-      destruct p, q.
-      simpl.
-      snrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
-      refine ((equiv_contr_sigma _)^-1 oE _).
-      reflexivity.
-    - apply equiv_functor_sigma_id.
-      intros x.
+      (* We use [equiv_path_sigma] twice on the RHS: *)
+      equiv_via {x0 : {H0 : B & F (f H0)} &
+                      {p : f x0.1 = a & p # x0.2 = x} * {q : g x0.1 = b & q # e x0.1 x0.2 = y}}.
+      2: { nrapply equiv_functor_sigma_id; intros [c z]; cbn.
+           nrapply equiv_functor_prod'.
+           all: apply (equiv_path_sigma _ (_; _) (_; _)). }
+      (* [make_equiv_contr_basedpaths.] handles the rest, but is slow, so we do some steps manually. *)
+      (* The RHS can be shuffled to this form: *)
+      equiv_via {r : R a b & { x02 : F (f r.1) & (transport F (fst r.2) x02 = x) *
+                                                 (transport F (snd r.2) (e r.1 x02) = y)}}.
+      2: make_equiv.
+      (* Three path contractions handle the rest. *)
+      nrapply equiv_functor_sigma_id; intros [c [p q]].
+      destruct p, q; unfold e'; simpl.
+      make_equiv_contr_basedpaths.
+    - apply equiv_functor_sigma_id; intros x.
       apply equiv_path.
-      revert x.
-      snrapply Coeq_ind.
-      1: hnf; reflexivity.
+      revert x; snrapply Coeq_ind.
+      1: reflexivity.
       simpl.
       intros b.
       snrapply (dpath_path_FlFr (cglue b)).
-      rewrite 2 GraphQuotient_rec_beta_gqglue.
-      apply concat_1p_p1.
+      apply equiv_1p_q1.
+      rhs nrapply Coeq_rec_beta_cglue.
+      exact (GraphQuotient_rec_beta_gqglue _
+               (fun a b s => path_universe (e' a b s)) _ _ _).
   Defined.
 
 End Flattening.
