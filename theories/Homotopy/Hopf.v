@@ -36,6 +36,7 @@ Proof.
       (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
       (fun x => Build_Equiv _ _ (x *.) (H1 x))).
     snrapply equiv_pushout.
+    (* The equivalence [{x : X & X} <~> X * X] that we need sends [(x; y) to (y, x*y)]. *)
     { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
       snrapply equiv_functor_sigma_id.
       intros x.
