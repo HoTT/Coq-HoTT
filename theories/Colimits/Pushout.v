@@ -40,11 +40,7 @@ Section PushoutInd.
 
   Definition Pushout_ind
     : forall (w : Pushout f g), P w
-    := Coeq_ind P (fun bc =>
-      match bc with
-        | inl b => pushb b
-        | inr c => pushc c 
-      end) pusha.
+    := Coeq_ind P (sum_ind (P o push) pushb pushc) pusha.
 
   Definition Pushout_ind_beta_pushl (b:B) : Pushout_ind (pushl b) = pushb b
     := 1.
@@ -69,7 +65,7 @@ Definition Pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (pushc : C -> P)
   (pusha : forall a : A, pushb (f a) = pushc (g a))
   : @Pushout A B C f g -> P
-  := Pushout_ind (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pusha a).
+  := @Coeq_rec _ _ (inl o f) (inr o g) P (sum_rec P pushb pushc) pusha.
 
 Definition Pushout_rec_beta_pglue {A B C f g} (P : Type)
   (pushb : B -> P)
@@ -78,10 +74,7 @@ Definition Pushout_rec_beta_pglue {A B C f g} (P : Type)
   (a : A)
   : ap (Pushout_rec P pushb pushc pusha) (pglue a) = pusha a.
 Proof.
-  unfold Pushout_rec.
-  eapply (cancelL (transport_const (pglue a) _)).
-  refine ((apD_const (@Pushout_ind A B C f g (fun _ => P) pushb pushc _) (pglue a))^ @ _).
-  refine (Pushout_ind_beta_pglue (fun _ => P) _ _ _ _).
+  nrapply Coeq_rec_beta_cglue.
 Defined.
 
 (** ** Universal property *)
@@ -546,7 +539,7 @@ Defined.
 
 (** ** Flattening lemma for pushouts *)
 
-(** The flattening lemma for pushouts follow from the flattening lemma for coequalizers. *)
+(** The flattening lemma for pushouts follows from the flattening lemma for coequalizers. *)
 
 Section Flattening.
 
@@ -556,29 +549,12 @@ Section Flattening.
   Definition pushout_flatten_fam : Pushout f g -> Type
     := Pushout_rec Type F G (fun a => path_universe (e a)).
 
+  (** In this result, the vertex of the pushout is taken to be [{ a : A & F(f(a))}], the pullback of [F] along [f]. *)
   Definition equiv_pushout_flatten
     : sig pushout_flatten_fam
     <~> Pushout (functor_sigma f (fun _ => idmap)) (functor_sigma g e).
   Proof.
     unfold pushout_flatten_fam.
-    transitivity ({x : _ & Coeq_rec (f := inl o f) (g := inr o g)
-      Type (sum_rect _ F G) (fun a => path_universe (e a)) x}).
-    { apply equiv_functor_sigma_id.
-      intros x.
-      apply equiv_path.
-      revert x.
-      snrapply Pushout_ind.
-      1,2: hnf; reflexivity.
-      simpl.
-      intros a.
-      lhs nrapply (transport_paths_FlFr (pglue a)).
-      apply moveR_Mp.
-      rhs nrapply concat_p1.
-      rhs nrapply inv_Vp.
-      rhs nrapply concat_1p.
-      lhs nrapply Coeq_rec_beta_cglue.
-      symmetry.
-      nrapply Pushout_rec_beta_pglue. }
     refine (_ oE equiv_coeq_flatten _ _).
     unfold Pushout.
     snrapply equiv_functor_coeq'.
