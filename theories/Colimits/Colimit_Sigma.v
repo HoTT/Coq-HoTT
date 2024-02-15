@@ -7,7 +7,7 @@ Require Import Colimits.Colimit.
 
 (** * Colimit of the dependent sum of a family of diagrams *)
 
-(** Given a family diagram [D(y)], and a colimit [Q(y)] of each diagram, one can consider the diagram of the sigmas of the types of the [D(y)]s. Then, a colimit of such a diagram is the sigma of the [Q(y)]s. *)
+(** Given a family of diagrams [D y], and a colimit [Q y] of each diagram, one can consider the diagram of the sigmas of the types of the [D y]s. Then, a colimit of such a diagram is the sigma of the [Q y]s. *)
 
 Section ColimitSigma.
 
@@ -28,9 +28,7 @@ Section ColimitSigma.
   Definition sigma_diagram_map (y: Y) : DiagramMap (D y) sigma_diagram.
   Proof.
     srapply Build_DiagramMap.
-    { intros i x.
-      exists y.
-      exact x. }
+    1: exact (fun i x => (y; x)).
     reflexivity.
   Defined.
 
