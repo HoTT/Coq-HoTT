@@ -6,7 +6,7 @@ Require Import WildCat.Equiv.
 
 (** Equivalences in displayed wild categories *)
 Class DHasEquivs {A : Type} `{HasEquivs A}
-  (D : A -> Type) `{!IsDGraph D, !Is2DGraph D, !Is01DCat D, !Is1DCat D} :=
+  (D : A -> Type) `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D} :=
 {
   DCatEquiv : forall {a b}, (a $<~> b) -> D a -> D b -> Type;
   DCatIsEquiv : forall {a b} {f : a $-> b} {fe : CatIsEquiv f} {a'} {b'},
@@ -99,7 +99,7 @@ Definition dcate_inverse_sect {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   refine ((dcat_idr _)^$' $@' _).
   refine ((_ $@L' p'^$') $@' _).
-  1: exact is0dgpd_dhom.
+  1: exact isd0gpd_hom.
   refine (dcat_assoc_opp _ _ _ $@' _).
   refine (dcate_issect f' $@R' _ $@' _).
   apply dcat_idl.
@@ -114,7 +114,7 @@ Definition dcate_inverse_retr {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   refine ((dcat_idl _)^$' $@' _).
   refine ((p'^$' $@R' _) $@' _).
-  1: exact is0dgpd_dhom.
+  1: exact isd0gpd_hom.
   refine (dcat_assoc _ _ _ $@' _).
   refine (_ $@L' dcate_isretr f' $@' _).
   apply dcat_idr.
@@ -160,17 +160,17 @@ Global Instance dcatie_id {A} {D : A -> Type} `{DHasEquivs A D}
   : DCatIsEquiv (DId a')
   := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idl (DId a')).
 
-Definition id_dcate {A} {D : A -> Type} `{DHasEquivs A D}
+Definition did_cate {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
   : DCatEquiv (id_cate a) a' a'
   := Build_DCatEquiv (DId a').
 
 Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   : Reflexive (DCatEquiv (id_cate a))
-  := id_dcate.
+  := did_cate.
 
 (** Equivalences can be composed. *)
-Global Instance compose_dcatie {A} {D : A -> Type} `{DHasEquivs A D}
+Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DCatIsEquiv (dcate_fun g' $o' f').
@@ -189,23 +189,23 @@ Proof.
     apply dcate_issect.
 Defined.
 
-Definition compose_dcate {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DCatEquiv (compose_cate g f) a' c'
   := Build_DCatEquiv (dcate_fun g' $o' f').
 
-Notation "g $oE' f" := (compose_dcate g f).
+Notation "g $oE' f" := (dcompose_cate g f).
 
 (** Composing equivalences commutes with composing the underlying maps. *)
-Definition compose_dcate_fun {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate_fun {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DGpdHom (compose_cate_fun g f)
     (dcate_fun (g' $oE' f')) (dcate_fun g' $o' f')
   := dcate_buildequiv_fun _.
 
-Definition compose_dcate_funinv {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate_funinv {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DGpdHom (compose_cate_funinv g f)
@@ -216,38 +216,38 @@ Proof.
 Defined.
 
 (** The underlying map of the identity equivalence is homotopic to the identity. *)
-Definition id_dcate_fun {A} {D : A -> Type} `{DHasEquivs A D} {a : A} (a' : D a)
-  : DGpdHom (id_cate_fun a) (dcate_fun (id_dcate a')) (DId a')
+Definition did_cate_fun {A} {D : A -> Type} `{DHasEquivs A D} {a : A} (a' : D a)
+  : DGpdHom (id_cate_fun a) (dcate_fun (did_cate a')) (DId a')
   := dcate_buildequiv_fun _.
 
 (** Composition of equivalences is associative. *)
-Definition compose_dcate_assoc {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate_assoc {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c d : A} {f : a $<~> b} {g : b $<~> c} {h : c $<~> d} {a'} {b'} {c'} {d'}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c') (h' : DCatEquiv h c' d')
   : DGpdHom (compose_cate_assoc f g h) (dcate_fun ((h' $oE' g') $oE' f'))
     (dcate_fun (h' $oE' (g' $oE' f'))).
 Proof.
-  refine (compose_dcate_fun _ f' $@' _ $@' dcat_assoc (dcate_fun f') g' h'
-          $@' _ $@' compose_dcate_funinv h' _).
-  - apply (compose_dcate_fun h' g' $@R' _).
-  - apply (_ $@L' compose_dcate_funinv g' f').
+  refine (dcompose_cate_fun _ f' $@' _ $@' dcat_assoc (dcate_fun f') g' h'
+          $@' _ $@' dcompose_cate_funinv h' _).
+  - apply (dcompose_cate_fun h' g' $@R' _).
+  - apply (_ $@L' dcompose_cate_funinv g' f').
 Defined.
 
-Definition compose_dcate_idl {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate_idl {A} {D : A -> Type} `{DHasEquivs A D}
   {a b : A} {f : a $<~> b}  {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
-  : DGpdHom (compose_cate_idl f) (dcate_fun (id_dcate b' $oE' f'))
+  : DGpdHom (compose_cate_idl f) (dcate_fun (did_cate b' $oE' f'))
     (dcate_fun f').
 Proof.
-  refine (compose_dcate_fun _ f' $@' _ $@' dcat_idl (dcate_fun f')).
+  refine (dcompose_cate_fun _ f' $@' _ $@' dcat_idl (dcate_fun f')).
   apply (dcate_buildequiv_fun _ $@R' _).
 Defined.
 
-Definition compose_dcate_idr {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
   {a b : A} {f : a $<~> b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
-  : DGpdHom (compose_cate_idr f) (dcate_fun (f' $oE' id_dcate a'))
+  : DGpdHom (compose_cate_idr f) (dcate_fun (f' $oE' did_cate a'))
     (dcate_fun f').
 Proof.
-  refine (compose_dcate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
+  refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
   apply (_ $@L' dcate_buildequiv_fun _).
 Defined.
 
@@ -285,7 +285,7 @@ Definition dcate_monic_equiv {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   intros c f g p c' f' g' p'.
   refine ((dcompose_V_hh e' _)^$' $@' _ $@' dcompose_V_hh e' _).
-  1: exact is0dgpd_dhom.
+  1: exact isd0gpd_hom.
   exact (_ $@L' p').
 Defined.
 
@@ -295,7 +295,7 @@ Definition dcate_epic_equiv {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   intros c f g p c' f' g' p'.
   refine ((dcompose_hh_V _ e')^$' $@' _ $@' dcompose_hh_V _ e').
-  1: exact is0dgpd_dhom.
+  1: exact isd0gpd_hom.
   exact (p' $@R' _).
 Defined.
 
@@ -331,7 +331,7 @@ Definition dcate_moveL_V1 {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   apply (dcate_monic_equiv e').
   nrapply (p' $@' (dcate_isretr e')^$').
-  exact is0dgpd_dhom.
+  exact isd0gpd_hom.
 Defined.
 
 Definition dcate_moveL_1V {A} {D : A -> Type} `{DHasEquivs A D}
@@ -342,7 +342,7 @@ Definition dcate_moveL_1V {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   apply (dcate_epic_equiv e').
   nrapply (p' $@' (dcate_issect e')^$').
-  exact is0dgpd_dhom.
+  exact isd0gpd_hom.
 Defined.
 
 Definition dcate_moveR_V1 {A} {D : A -> Type} `{DHasEquivs A D}
@@ -375,7 +375,7 @@ Definition dcate_inv2 {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   apply dcate_moveL_V1.
   rapply ((p'^$' $@R' _) $@' dcate_isretr _).
-  exact is0dgpd_dhom.
+  exact isd0gpd_hom.
 Defined.
 
 Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}
@@ -384,9 +384,9 @@ Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}
   : DGpdHom (cate_inv_compose e f)
     (dcate_fun (f' $oE' e')^-1$') (dcate_fun (e'^-1$' $oE' f'^-1$')).
 Proof.
-  refine (_ $@' (compose_dcate_fun e'^-1$' f'^-1$')^$').
+  refine (_ $@' (dcompose_cate_fun e'^-1$' f'^-1$')^$').
   - snrapply dcate_inv_adjointify.
-  - exact is0dgpd_dhom.
+  - exact isd0gpd_hom.
 Defined.
 
 Definition dcate_inv_V {A} {D : A -> Type} `{DHasEquivs A D}
@@ -403,7 +403,7 @@ Defined.
 Global Instance diemap {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a b : A} {f : a $<~> b} {a' : DA a} {b' : DA b} (f' : DCatEquiv f a' b')
   : DCatIsEquiv (fe:=iemap F f) (dfmap F F' (dcate_fun f')).
 Proof.
@@ -420,7 +420,7 @@ Defined.
 Definition demap {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a b : A} {f : a $<~> b} {a' : DA a} {b' : DA b} (f' : DCatEquiv f a' b')
   : DCatEquiv (emap F f) (F' a a') (F' b b')
   := Build_DCatEquiv (dfmap F F' (dcate_fun f')).
@@ -428,29 +428,29 @@ Definition demap {A B : Type}
 Definition demap_id {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a : A} {a' : DA a}
   : DGpdHom (emap_id F)
-    (dcate_fun (demap F F' (id_dcate a'))) (dcate_fun (id_dcate (F' a a'))).
+    (dcate_fun (demap F F' (did_cate a'))) (dcate_fun (did_cate (F' a a'))).
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
-  refine (dfmap2 F F' (id_dcate_fun a') $@' _ $@' _).
+  refine (dfmap2 F F' (did_cate_fun a') $@' _ $@' _).
   - rapply dfmap_id.
   - apply dgpd_rev.
-    exact (id_dcate_fun (F' a a')).
+    exact (did_cate_fun (F' a a')).
 Defined.
 
 Definition demap_compose {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a b c : A} {f : a $<~> b} {g : b $<~> c} {a' : DA a} {b' : DA b} {c' : DA c}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
   : DGpdHom (emap_compose F f g) (dcate_fun (demap F F' (g' $oE' f')))
     (dfmap F F' (dcate_fun g') $o' dfmap F F' (dcate_fun f')).
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
-  refine (dfmap2 F F' (compose_dcate_fun _ _) $@' _).
+  refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
   rapply dfmap_comp.
 Defined.
 
@@ -458,7 +458,7 @@ Defined.
 Definition demap_compose' {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a b c : A} {f : a $<~> b} {g : b $<~> c} {a' : DA a} {b' : DA b} {c' : DA c}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
   : DGpdHom (emap_compose' F f g) (dcate_fun (demap F F' (g' $oE' f')))
@@ -466,14 +466,14 @@ Definition demap_compose' {A B : Type}
 Proof.
   refine (demap_compose F F' f' g' $@' _).
   apply dgpd_rev.
-  refine (compose_dcate_fun _ _ $@' _).
+  refine (dcompose_cate_fun _ _ $@' _).
   exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).
 Defined.
 
 Definition demap_inv {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!Is0DFunctor F F', !Is1DFunctor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
   {a b : A} {e : a $<~> b} {a' : DA a} {b' : DA b} (e' : DCatEquiv e a' b')
   : DGpdHom (emap_inv F e)
     (dcate_fun (demap F F' e')^-1$') (dcate_fun (demap F F' e'^-1$')).
@@ -491,14 +491,14 @@ Proof.
   intro p'. destruct p, p'. reflexivity.
 Defined.
 
-Class IsUnivalent1DCat {A} (D : A -> Type) `{DHasEquivs A D} :=
+Class IsDUnivalent1Cat {A} (D : A -> Type) `{DHasEquivs A D} :=
 {
   isequiv_dcat_equiv_path : forall {a b : A} (p : a = b) a' b',
     IsEquiv (dcat_equiv_path p a' b')
 }.
 Global Existing Instance isequiv_dcat_equiv_path.
 
-Definition dcat_path_equiv {A} {D : A -> Type} `{IsUnivalent1DCat A D}
+Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   {a b : A} (p : a = b) (a' : D a) (b' : D b)
   : DCatEquiv (cat_equiv_path a b p) a' b' -> transport D p a' = b'
   := (dcat_equiv_path p a' b')^-1.
