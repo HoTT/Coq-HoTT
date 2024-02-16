@@ -337,7 +337,7 @@ Section Localization.
 
 End Localization.
 
-Definition Loc@{a i} (f : LocalGenerators@{a}) : ReflectiveSubuniverse@{i}.
+Definition Loc@{a i | a <= i} (f : LocalGenerators@{a}) : ReflectiveSubuniverse@{i}.
 Proof.
   snrefine (Build_ReflectiveSubuniverse
                                  (Build_Subuniverse (IsLocal f) _ _)
@@ -422,7 +422,7 @@ Proof.
 Defined.
 
 (** Conversely, if a subuniverse is accessible, then the corresponding localization subuniverse is equivalent to it, and moreover exists at every universe level and satisfies its computation rules judgmentally.  This is called [lift_accrsu] but in fact it works equally well to *lower* the universe level, as long as both levels are no smaller than the size [a] of the generators. *)
-Definition lift_accrsu@{a i j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+Definition lift_accrsu@{a i j | a <= i, a <= j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
   : ReflectiveSubuniverse@{j}
   := Loc@{a j} (acc_lgen O).
 
