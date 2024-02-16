@@ -38,9 +38,9 @@ Section TruncType.
     : (A <~> B) <~> (A = B :> TruncType n)
     := equiv_path_trunctype' _ _ oE equiv_path_universe _ _.
 
-  Definition path_trunctype@{a b} {n : trunc_index} {A B : TruncType n}
+  Definition path_trunctype {n : trunc_index} {A B : TruncType n}
     : A <~> B -> (A = B :> TruncType n)
-  := equiv_path_trunctype@{a b} A B.
+  := equiv_path_trunctype A B.
 
   Global Instance isequiv_path_trunctype {n : trunc_index} {A B : TruncType n}
     : IsEquiv (@path_trunctype n A B) := _.
@@ -99,7 +99,7 @@ Section TruncType.
   Proof.
     apply istrunc_S.
     intros A B.
-    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
+    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype A B)).
     case n as [ | n'].
     - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
     - apply istrunc_equiv.
@@ -110,7 +110,8 @@ Section TruncType.
   Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
-    apply (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    nrefine (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    exact istrunc_trunctype. (* To get universe variables to match, we do this as a separate step. *)
   Defined.
 
   (** ** Some standard inhabitants *)

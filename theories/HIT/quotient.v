@@ -84,6 +84,7 @@ Section Equiv.
     intros. eapply concat;[apply transport_const|].
     apply path_forall. intro z. apply path_hprop; simpl.
     apply @equiv_iff_hprop; eauto.
+    (** Some universe annotations needed above for typeclass instance istrunc_trunctype. *)
   Defined.
 
   Context {Hrefl : Reflexive R}.

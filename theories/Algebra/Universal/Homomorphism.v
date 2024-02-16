@@ -36,7 +36,8 @@ Section is_homomorphism.
   Qed.
 End is_homomorphism.
 
-Record Homomorphism {σ} {A B : Algebra σ} : Type := Build_Homomorphism
+(* We make this NonCumulative so that the proof of [homomorphism_id] goes through smoothly. TODO: remove this. *)
+NonCumulative Record Homomorphism {σ} {A B : Algebra σ} : Type := Build_Homomorphism
   { def_homomorphism : forall (s : Sort σ), A s -> B s
   ; is_homomorphism : IsHomomorphism def_homomorphism }.
 

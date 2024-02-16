@@ -20,8 +20,6 @@ Require Import WildCat.
 Require Import Spaces.Nat.Core.
 Require Import Truncations.Core.
 
-Local Set Polymorphic Inductive Cumulativity.
-
 Generalizable Variables G H A B C f g.
 
 Declare Scope group_scope.

@@ -40,7 +40,7 @@ x011   |               |          x011----pi11----x111   |
 
 (* Homogeneous cubes *)
 (* PathCube left right top bottom front back *)
-Cumulative Inductive PathCube {A}
+Inductive PathCube {A}
   : forall x000 {x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
