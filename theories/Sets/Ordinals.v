@@ -742,15 +742,16 @@ Qed.
 
 (** * Ordinal limit *)
 
-Definition image@{i j} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
-  := Quotient (fun a a' : A => f a = f a').
+(** We can use PropResizing to resize the image of a function to whatever universe we want. *)
+Definition image@{i j |} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
+  := Quotient@{i i i} (fun a a' : A => resize_hprop@{j i} (f a = f a')).
 
-Definition factor1 {A} {B : HSet} (f : A -> B)
+Definition factor1 `{PropResizing} {A} {B : HSet} (f : A -> B)
   : A -> image f
   := Quotient.class_of _.
 
-Lemma image_ind_prop {A} {B : HSet} (f : A -> B)
-  (P : image f -> Type) `{forall x, IsHProp (P x)}
+Lemma image_ind_prop@{i j k|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
+  (P : image f -> Type@{k}) `{forall x, IsHProp (P x)}
   : (forall a : A, P (factor1 f a))
     -> forall x : image f, P x.
 Proof.
@@ -759,23 +760,39 @@ Proof.
   apply step.
 Qed.
 
-Definition image_rec {A} {B : HSet} (f : A -> B)
-      {C : HSet} (step : A -> C)
-  : (forall a a', f a = f a' -> step a = step a')
-    -> image f -> C
-  := Quotient_rec _ _ step.
+Definition image_rec@{i j k|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
+      {C : HSet@{k}} (step : A -> C)
+  (p : forall a a', f a = f a' -> step a = step a')
+  : image f -> C.
+Proof.
+  snrapply Quotient_rec.
+  - exact _.
+  - exact step.
+  - simpl. intros x y q.
+    apply p.
+    apply (equiv_resize_hprop _)^-1.
+    exact q.
+Defined.
 
-Definition factor2 {A} {B : HSet} (f : A -> B)
-  : image f -> B
-  := Quotient_rec _ _ f (fun a a' fa_fa' => fa_fa').
+Definition factor2@{i j|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
+  : image f -> B.
+Proof.
+  snrapply image_rec.
+  - exact f.
+  - intros a a' fa_fa'.
+    apply fa_fa'.
+Defined.
 
-Global Instance isinjective_factor2 `{Funext} {A} {B : HSet} (f : A -> B)
+Global Instance isinjective_factor2 `{PropResizing} `{Funext} {A} {B : HSet} (f : A -> B)
   : IsInjective (factor2 f).
 Proof.
   unfold IsInjective, image.
   refine (Quotient_ind_hprop _ _ _); intros x; cbn.
   refine (Quotient_ind_hprop _ _ _); intros y; cbn.
+  simpl; intros p.
   rapply qglue.
+  apply equiv_resize_hprop.
+  exact p.
 Qed.
 
 Definition limit `{Univalence} `{PropResizing}

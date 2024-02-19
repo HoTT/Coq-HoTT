@@ -12,35 +12,40 @@ We use graph quotients to build up all our other non-recursive HITs. Their simpl
 Local Unset Elimination Schemes.
 
 Module Export GraphQuotient.
+ Section GraphQuotient.
 
-  Private Inductive GraphQuotient@{i j u}
-    {A : Type@{i}} (R : A -> A -> Type@{j}) : Type@{u} :=
+  Universes i j u.
+  Constraint i <= u, j <= u.
+  Context {A : Type@{i}}.
+
+  Private Inductive GraphQuotient (R : A -> A -> Type@{j}) : Type@{u} :=
   | gq : A -> GraphQuotient R.
 
-  Arguments gq {A R} a.
+  Arguments gq {R} a.
 
-  Axiom gqglue@{i j u}
-    : forall {A : Type@{i}} {R : A -> A -> Type@{j}} {a b : A},
-    R a b -> paths@{u} (@gq A R a) (gq b).
+  Context {R : A -> A -> Type@{j}}.
 
-  Definition GraphQuotient_ind@{i j u k} {A : Type@{i}} {R : A -> A -> Type@{j}}
-    (P : GraphQuotient@{i j u} R -> Type@{k})
-    (gq' : forall a, P (gq@{i j u} a))
-    (gqglue' : forall a b (s : R a b), gqglue@{i j u} s # gq' a = gq' b)
+  Axiom gqglue : forall {a b : A},
+    R a b -> paths (@gq R a) (gq b).
+
+  Definition GraphQuotient_ind
+    (P : GraphQuotient R -> Type@{k})
+    (gq' : forall a, P (gq a))
+    (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
     : forall x, P x := fun x =>
     match x with
     | gq a => fun _ => gq' a
     end gqglue'.
   (** Above we did a match with output type a function, and then outside of the match we provided the argument [gqglue'].  If we instead end with [| gq a => gq' a end.], the definition will not depend on [gqglue'], which would be incorrect.  This is the idiom referred to in ../../test/bugs/github1758.v and github1759.v. *)
 
-  Axiom GraphQuotient_ind_beta_gqglue@{i j u k}
-  : forall  {A : Type@{i}} {R : A -> A -> Type@{j}}
-    (P : GraphQuotient@{i j u} R -> Type@{k})
+  Axiom GraphQuotient_ind_beta_gqglue
+  : forall (P : GraphQuotient R -> Type@{k})
     (gq' : forall a, P (gq a))
     (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
     (a b: A) (s : R a b),
     apD (GraphQuotient_ind P gq' gqglue') (gqglue s) = gqglue' a b s.
 
+ End GraphQuotient.
 End GraphQuotient.
 
 Arguments gq {A R} a.
