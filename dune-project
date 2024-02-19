@@ -26,4 +26,4 @@
   "To use the HoTT library, the following flags must be passed to coqc:\n  -noinit -indices-matter\nTo use the HoTT library in a project, add the following to _CoqProject:\n  -arg -noinit\n  -arg -indices-matter\n")
  (depends
   (coq
-   (>= 8.17.0))))
+   (>= 8.18.0))))
