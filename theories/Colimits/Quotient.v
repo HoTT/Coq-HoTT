@@ -7,8 +7,7 @@ Require Import Truncations.Core.
 
 Local Open Scope path_scope.
 
-
-(** * Quotient of a Type by an hprop-valued Relation
+(** * Quotient of a type by an hprop-valued relation
 
 We aim to model:
 <<
@@ -17,9 +16,7 @@ Inductive Quotient R : Type :=
    | qglue : forall x y, (R x y) -> class_of R x = class_of R y
    | ishset_quotient : IsHSet (Quotient R)
 >>
-We do this by defining the quotient as a truncated coequalizer.
-
-*)
+We do this by defining the quotient as a 0-truncated graph quotient. *)
 
 Definition Quotient@{i j k} {A : Type@{i}} (R : Relation@{i j} A) : Type@{k}
   := Trunc@{k} 0 (GraphQuotient@{i j k} R).

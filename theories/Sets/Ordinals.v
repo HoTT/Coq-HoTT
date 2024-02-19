@@ -742,7 +742,7 @@ Qed.
 
 (** * Ordinal limit *)
 
-(** We can use PropResizing to resize the image of a function to whatever universe we want. It should be noted that using the join construction we can also do this without PropResizing, but since we already assume it here, we use it. *)
+(** We can use PropResizing to resize the image of a function to whatever universe we want. *)
 Definition image@{i j |} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
   := Quotient@{i i i} (fun a a' : A => resize_hprop@{j i} (f a = f a')).
 
