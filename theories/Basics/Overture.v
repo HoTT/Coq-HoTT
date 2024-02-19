@@ -15,6 +15,9 @@ Create HintDb typeclass_instances discriminated.
 
 Local Set Polymorphic Inductive Cumulativity.
 
+(** Disable warning about argument scope delimiters. TODO: remove this once we bump the minimal Coq version to 8.19 and merge #1862. *)
+Global Set Warnings "-argument-scope-delimiter".
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
