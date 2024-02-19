@@ -183,12 +183,3 @@ Notation "⟨ x , y , z | F , .. , G ⟩" :=
     .. (fscons ((fun (x y z : FreeGroup (Fin 3))
       => G : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2)) fsnil) ..))
   (at level 200, x binder, y binder, z binder).
-
-(** Tests: *)
-
-(*
-Check ⟨ x , y | x * y ,  x * y * x , x * (-y)*x*x*x⟩.
-Check ⟨ x | x * x * x , -x ⟩.
-Check ⟨ x , y , z | x * y * z , x * -z , x * y⟩.
-*)
- 
