@@ -1,5 +1,5 @@
-Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod WildCat.Forall.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -139,18 +139,40 @@ Proof.
     apply e0.
 Defined.
 
-Definition prod_0gpd (G H : ZeroGpd) : ZeroGpd.
+Definition prod_0gpd (I : Type) (G : I -> ZeroGpd) : ZeroGpd.
 Proof.
-  rapply (Build_ZeroGpd (G * H)).
+  rapply (Build_ZeroGpd (forall i, G i)).
 Defined.
 
-Definition prod_0gpd_corec {G H K : ZeroGpd} (f : G $-> H) (g : G $-> K)
-  : G $-> prod_0gpd H K.
+Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
+  : forall i, prod_0gpd I G $-> G i.
 Proof.
+  intros i.
   snrapply Build_Morphism_0Gpd.
-  1: exact (fun x => (f x, g x)).
+  1: exact (fun f => f i).
   snrapply Build_Is0Functor; cbn beta.
-  intros x y p; simpl; split.
-  - apply (fmap f p).
-  - apply (fmap g p).
+  intros f g p.
+  exact (p i).
+Defined.
+
+(** The universal property of the product of 0-groupoids holds almost definitionally. *)
+Definition equiv_prod_0gpd_corec {I : Type} {G : ZeroGpd} {H : I -> ZeroGpd}
+  : (forall i, G $-> H i) <~> (G $-> prod_0gpd I H).
+Proof.
+  snrapply Build_Equiv.
+  { intro f.
+    snrapply Build_Morphism_0Gpd.
+    1: exact (fun x i => f i x).
+    snrapply Build_Is0Functor; cbn beta.
+    intros x y p i; simpl.
+    exact (fmap (f i) p). }
+  snrapply Build_IsEquiv.
+  - intro f.
+    intros i.
+    exact (prod_0gpd_pr i $o f).
+  - intro f.
+    reflexivity.
+  - intro f.
+    reflexivity.
+  - reflexivity.
 Defined.
