@@ -574,10 +574,10 @@ Ltac ev_equiv :=
 
 (** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
 
-(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. *)
+(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. The [hnf] is important, for example to unfold [IsUnitPreserving] to an equality, which the [lazymatch] then ignores. *)
 Ltac decomposing_intros :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x;
   try lazymatch type of x with
   | ?a = ?b => idtac           (** Don't destruct paths *)
   | forall y:?A, ?B => idtac   (** Don't apply functions *)

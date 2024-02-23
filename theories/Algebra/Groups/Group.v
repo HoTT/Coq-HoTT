@@ -332,19 +332,7 @@ Proof.
       rewrite transport_const.
       funext x.
       exact (preserves_negate (f:=idmap) _). }
-  refine (_ oE (issig_GroupIsomorphism G H)^-1).
-  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
-    (fun f => 1%equiv))^-1).
-  refine (equiv_functor_sigma' (issig_equiv G H) (fun f => 1%equiv) oE _).
-  cbn.
-  refine (
-    equiv_adjointify
-      (fun f => (exist (IsMonoidPreserving o pr1)
-        (exist IsEquiv f.1.1 f.2) f.1.2))
-      (fun f => (exist (IsEquiv o pr1)
-        (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
-       _ _).
-  all: intros [[]]; reflexivity.
+  make_equiv.
 Defined.
 
 (** A version with nicer universe variables. *)
