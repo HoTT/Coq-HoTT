@@ -40,13 +40,15 @@ Section group_props.
   Global Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
-    rewrite <- (left_identity x).
-    rewrite <- (left_inverse (unit:=mon_unit) z).
-    rewrite <- simple_associativity.
-    rewrite E.
-    rewrite simple_associativity, (left_inverse z), left_identity.
-    reflexivity.
-  Qed.
+    rhs_V rapply left_identity.
+    rhs_V rapply (ap (.* y) (left_inverse z)).
+    rhs_V rapply simple_associativity.
+    rhs_V rapply (ap (-z *.) E).
+    symmetry.
+    lhs rapply simple_associativity.
+    lhs rapply (ap (.* x) (left_inverse z)).
+    apply left_identity.
+  Defined.
 
   Global Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
