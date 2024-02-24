@@ -166,7 +166,7 @@ Definition istrunc_pmap `{Univalence} {m n : trunc_index} (X Y : pType)
   : IsTrunc n (X ->* Y)
   := istrunc_pforall X (pfam_const Y).
 
-(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works for any reflective subuniverse and avoids univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proved without univalence, the rest can be done inductively without univalence. *)
+(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works for any reflective subuniverse and avoids univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)
 Definition contr_pmap_isconnected_inO `{Funext} (O : ReflectiveSubuniverse)
   (X : pType) `{IsConnected O X} (Y : pType) `{In O Y}
   : Contr (X ->* Y).
