@@ -5,7 +5,7 @@ Require Import Truncations.Core.
 
 Local Open Scope path_scope.
 
-(** * Quotient of a Type by an hprop-valued relation
+(** * The set-quotient of a type by an hprop-valued relation
 
 We aim to model:
 <<
@@ -16,23 +16,23 @@ Inductive quotient : Type :=
 >>
 *)
 
-(** This development should be further connected with the sections in the book; see below.*)
+(** TODO:  This development should be further connected with the sections in the book; see below.  And it should be merged with Colimits.Quotient. Currently this file is only used in Classes/implementations/natpair_integers.v and Classes/implementations/field_of_fractions.v, so it shouldn't be too hard to switch to Colimits.Quotient. *)
 
 Module Export Quotient.
 
   Section Domain.
 
-    Context {A : Type} (R : Relation A) {sR: is_mere_relation _ R}.
+    Universes i j u.
+    Constraint i <= u, j <= u.
+
+    Context {A : Type@{i}} (R : Relation@{i j} A) {sR: is_mere_relation _ R}.
 
     (** We choose to let the definition of quotient depend on the proof that [R] is a set-relations.  Alternatively, we could have defined it for all relations and only develop the theory for set-relations.  The former seems more natural.
 
 We do not require [R] to be an equivalence relation, but implicitly consider its transitive-reflexive closure. *)
 
-
-    (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
-
     (** This definition has a parameter [sR] that shadows the ambient one in the Context in order to ensure that it actually ends up depending on everything in the Context when the section is closed, since its definition doesn't actually refer to any of them.  *)
-    Private Inductive quotient {sR: is_mere_relation _ R} : Type :=
+    Private Inductive quotient {sR: is_mere_relation _ R} : Type@{u} :=
     | class_of : A -> quotient.
 
     (** The path constructors. *)
