@@ -876,12 +876,12 @@ Proof.
 Defined.
 
 (** Univalence for pointed types *)
-Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
+Definition equiv_path_ptype `{Univalence} (A B : pType@{u}) : A <~>* B <~> A = B.
 Proof.
   refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
-  nrapply (contr_equiv' { X : Type & { f : A <~> X & {x : X & f pt = x} }}).
+  nrapply (contr_equiv' { X : Type@{u} & { f : A <~> X & {x : X & f pt = x} }}).
   1: make_equiv.
-  rapply (contr_equiv' { X : Type &  A <~> X }).
+  rapply (contr_equiv' { X : Type@{u} &  A <~> X }).
   nrapply equiv_functor_sigma_id; intro X; symmetry.
   rapply equiv_sigma_contr.
   (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
