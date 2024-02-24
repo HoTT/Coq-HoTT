@@ -37,10 +37,19 @@ Section EilenbergMacLane.
     destruct n as [|[]]; exact _.
   Defined.
 
+  (** This is subsumed by the next result, but Coq doesn't always find the next result when it should. *)
   Global Instance isconnected_em {G : Group} (n : nat)
     : IsConnected n K(G, n.+1).
   Proof.
     induction n; exact _.
+  Defined.
+
+  Global Instance isconnected_em' {G : Group} (n : nat)
+    : IsConnected n.-1 K(G, n).
+  Proof.
+    destruct n.
+    1: exact (is_minus_one_connected_pointed _).
+    apply isconnected_em.
   Defined.
 
   Global Instance is0connected_em {G : Group} (n : nat)
