@@ -182,7 +182,7 @@ Proof.
   all: induction n as [|n IH]
     using pos_peano_ind; try reflexivity; cbn in *.
   all: unfold loopexp_pos; rewrite pos_peano_ind_beta_pos_succ.
-  all: unfold pos_iter; rewrite pos_peano_ind_beta_pos_succ.
+  all: unfold pos_iter; rewrite pos_peano_rec_beta_pos_succ.
   all: refine (transport_pp _ _ _ _ @ _); cbn; apply ap, IH.
 Defined.
 

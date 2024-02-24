@@ -189,7 +189,7 @@ Lemma pos_iter_succ_l {A} (f : A -> A) p a
   : pos_iter f (pos_succ p) a = f (pos_iter f p a).
 Proof.
   unfold pos_iter.
-  by rewrite pos_peano_ind_beta_pos_succ.
+  by rewrite pos_peano_rec_beta_pos_succ.
 Qed.
 
 Lemma pos_iter_succ_r {A} (f : A -> A) p a
@@ -201,7 +201,7 @@ Proof.
   hnf; intros p q f a.
   refine (_ @ _ @ _^).
   1,3: unfold pos_iter;
-    by rewrite pos_peano_ind_beta_pos_succ.
+    by rewrite pos_peano_rec_beta_pos_succ.
   apply ap.
   apply q.
 Qed.
