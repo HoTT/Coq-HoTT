@@ -21,13 +21,8 @@ Definition issig_iscohhspace (A : pType)
     & { hspace_left_identity : LeftIdentity hspace_op pt
     & { hspace_right_identity : RightIdentity hspace_op pt
     & hspace_left_identity pt = hspace_right_identity pt } } }
-      <~> IsCohHSpace A.
-Proof.
-  transitivity { H : IsHSpace A & IsCoherent A }.
-  2: issig.
-  unfold IsCoherent.
-  make_equiv.
-Defined.
+      <~> IsCohHSpace A
+  := ltac:(make_equiv).
 
 (** A type equivalent to a coherent H-space is a coherent H-space. *)
 Definition iscohhspace_equiv_cohhspace {X Y : pType} `{IsCohHSpace Y} (f : X <~>* Y)
