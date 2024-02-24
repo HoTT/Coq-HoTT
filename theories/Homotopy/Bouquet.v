@@ -23,8 +23,6 @@ Section AssumeUnivalence.
     : IsConnected 0 (Bouquet S).
   Proof.
     rapply isconnected_susp.
-    rapply contr_inhabited_hprop.
-    exact (tr pt).
   Defined.
 
   (** We can directly prove that it satisfies the desired equivalence together with naturality in the second argument. *)
