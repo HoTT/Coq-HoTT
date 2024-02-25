@@ -754,6 +754,10 @@ Section Image.
   Local Definition factor2 : image -> B := qkfs.2.2.1.
   Local Definition isinjective_factor2 : IsInjective factor2
     := isinj_embedding _ (snd (fst qkfs.2.2.2)).
+  Local Definition image_ind_prop (P : image -> Type@{k}) `{forall x, IsHProp (P x)}
+    (step : forall a : A, P (factor1 a))
+    : forall x : image, P x
+    := Quotient_ind_hprop _ P step.
   (** [factor2 o factor1 == f] is definitional, so we don't state that. *)
 
 End Image.
@@ -773,13 +777,13 @@ Proof.
   - constructor.
     + intros x x' x_x'.
       unfold lt, relation. apply equiv_resize_hprop in x_x'. exact x_x'.
-    + rapply Quotient_ind_hprop; intros a.
+    + nrefine (image_ind_prop f _ _). 1: exact _.
+      intros a.
       change (factor2 f (class_of _ a)) with (f a).
       intros B B_fa. apply tr.
       exists (factor1 f (a.1; out (bound B_fa))).
       unfold lt, relation.
       change (factor2 f (factor1 f ?A)) with (f A).
-      change (factor2 f (class_of _ ?A)) with (f A).
       unfold f.
       assert (↓(out (bound B_fa)) = B) as ->. {
         rewrite (path_initial_segment_simulation out).
@@ -797,20 +801,24 @@ Definition limit_is_upper_bound `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal)
   : forall x, F x <= limit F.
 Proof.
-  unfold le_on_Ordinal.
-  intros x. unfold le.
-  exists (fun u => factor1 _ (x; u)).
+  set (f := fun x : {i : X & F i} => ↓x.2).
+  intros x. unfold le, le_on_Ordinal.
+  exists (fun u => factor1 f (x; u)).
   split.
-  - intros u v u_v. unfold lt; cbn. apply equiv_resize_hprop.
+  - intros u v u_v.
+    change (resize_hprop (f (x; u) < f (x; v))).
+    apply equiv_resize_hprop.
     apply isembedding_initial_segment. exact u_v.
-  - intros u. rapply Quotient_ind_hprop; intros a.
-    intros a_u. apply equiv_resize_hprop in a_u. cbn in a_u.
+  - intros u.
+    nrefine (image_ind_prop f _ _). 1: exact _.
+    intros a a_u.
+    change (resize_hprop (f a < f (x; u))) in a_u.
+    apply equiv_resize_hprop in a_u.
     apply tr. exists (out (bound a_u)). split.
     + apply initial_segment_property.
-    + apply (isinjective_factor2 _); simpl.
-      change (factor2 ?f (factor1 ?f ?A)) with (f A).
-      change (factor2 ?f (class_of _ ?A)) with (f A).
-      cbn beta.
+    + apply (isinjective_factor2 f); simpl.
+      change (factor2 f (factor1 f ?A)) with (f A).
+      unfold f.
       rewrite (path_initial_segment_simulation out).
       symmetry. apply bound_property.
 Qed.
