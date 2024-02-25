@@ -312,7 +312,7 @@ Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
 
 Definition related_path {x y} : Z_of_pair x = Z_of_pair y -> PairT.equiv x y
-  := classes_eq_related@{UN UN Ularge Uhuge} _ _ _.
+  := classes_eq_related@{UN UN Ularge UN Ularge} _ _ _.
 
 Definition Z_rect@{i} (P : Z -> Type@{i}) {sP : forall x, IsHSet (P x)}
   (dclass : forall x : PairT.T N, P (' x))
@@ -368,7 +368,7 @@ Definition Z_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   (dequiv : forall x1 x2, PairT.equiv x1 x2 -> forall y1 y2, PairT.equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   Z -> Z -> T
-  := @quotient_rec2@{UN UN j i} _ _ _ _ _ (Build_HSet _).
+  := @quotient_rec2@{UN UN UN j i} _ _ _ _ _ (Build_HSet _).
 
 Definition Z_rec2_compute {T sT} dclass dequiv x y
   : @Z_rec2 T sT dclass dequiv (' x) (' y) = dclass x y

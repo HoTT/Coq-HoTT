@@ -7,7 +7,7 @@ Require Import Truncations.Core.
 
 Local Open Scope path_scope.
 
-(** * Quotient of a type by an hprop-valued relation
+(** * The set-quotient of a type by an hprop-valued relation
 
 We aim to model:
 <<
