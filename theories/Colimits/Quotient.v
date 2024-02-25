@@ -4,6 +4,7 @@ Require Import HSet.
 Require Import TruncType.
 Require Import Colimits.GraphQuotient.
 Require Import Truncations.Core.
+Require Import PropResizing.
 
 Local Open Scope path_scope.
 
@@ -300,32 +301,33 @@ End Functoriality.
 
 Section Kernel.
 
-  (* TODO: Properly annotate with universes *)
-
   (** ** Quotients of kernels of maps to sets give a surjection/mono factorization. *)
 
+  (** Because the statement uses nested Sigma types, we need several variables to serve as [max] and [u+1]. We write [ar] for [max(a,r)], [ar'] for [ar+1], etc. *)
+  Universes a r ar ar' b ab abr.
+  Constraint a <= ar, r <= ar, ar < ar', a <= ab, b <= ab, ab <= abr, r <= abr.
+
   Context `{Funext}.
-  Universe i.
 
   (** A function we want to factor. *)
-  Context {A : Type@{i}} {B : Type} `{IsHSet B} (f : A -> B).
+  Context {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B).
 
   (** A mere Relation equivalent to its kernel. *)
-  Context (R : Relation A)
+  Context (R : Relation@{a r} A)
           (is_ker : forall x y, f x = f y <~> R x y).
 
-  Theorem quotient_kernel_factor
-    : exists (C : Type@{i}) (e : A -> C) (m : C -> B),
+  (** The factorization theorem.  An advantage of stating it as one bundled result is that it is easier to state variations as we do below.  Disadvantages are that it requires more universe variables and that each piece of the answer depends on [Funext] and all of the universe variables, even when these aren't needed for that piece.  Below we will clean up the universe variables slightly, so we make this version [Local]. *)
+  Local Definition quotient_kernel_factor_internal
+    : exists (C : Type@{ar}) (e : A -> C) (m : C -> B),
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
   Proof.
     exists (Quotient R).
     exists (class_of R).
     srefine (_;_).
-    { apply Quotient_ind with f; try exact _.
+    { refine (Quotient_ind R (fun _ => B) f _).
       intros x y p.
-      transitivity (f x).
-      - apply transport_const.
-      - exact ((is_ker x y)^-1 p). }
+      lhs nrapply transport_const.
+      exact ((is_ker x y)^-1 p). }
     repeat split; try exact _.
     intro u.
     apply hprop_allpath.
@@ -342,4 +344,29 @@ Section Kernel.
     exact (p @ p'^).
   Defined.
 
+  (** We clean up the universe variables here, using only those declared in this Section. *)
+  Definition quotient_kernel_factor_general@{}
+    := quotient_kernel_factor_internal@{ar' ar abr abr ab ar abr}.
+
 End Kernel.
+
+(** A common special case of [quotient_kernel_factor] is when we define [R] to be [f x = f y].  Then universes [r] and [b] are unified. *)
+Definition quotient_kernel_factor@{a b ab ab' | a <= ab, b <= ab, ab < ab'}
+  `{Funext} {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B)
+  : exists (C : Type@{ab}) (e : A -> C) (m : C -> B),
+      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
+Proof.
+  exact (quotient_kernel_factor_general@{a b ab ab' b ab ab}
+           f (fun x y => f x = f y) (fun x y => equiv_idmap)).
+Defined.
+
+(** If we use propositional resizing, we can replace [f x = f y] with a proposition [R x y] in universe [a], so that the universe of [C] is the same as the universe of [A]. *)
+Definition quotient_kernel_factor_small@{a a' b ab | a < a', a <= ab, b <= ab}
+  `{Funext} `{PropResizing}
+  {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B)
+  : exists (C : Type@{a}) (e : A -> C) (m : C -> B),
+      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
+Proof.
+  exact (quotient_kernel_factor_general@{a a a a' b ab ab}
+           f (fun x y => resize_hprop@{b a} (f x = f y)) (fun x y => equiv_resize_hprop _)).
+Defined.

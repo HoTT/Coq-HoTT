@@ -1,6 +1,7 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
 From HoTT Require Import PropResizing.PropResizing.
 From HoTT Require Import Colimits.Quotient.
+From HoTT Require Import HSet.
 
 Local Open Scope hprop_scope.
 
@@ -742,58 +743,20 @@ Qed.
 
 (** * Ordinal limit *)
 
-(** We can use PropResizing to resize the image of a function to whatever universe we want. *)
-Definition image@{i j |} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
-  := Quotient@{i i i} (fun a a' : A => resize_hprop@{j i} (f a = f a')).
+Section Image.
 
-Definition factor1 `{PropResizing} {A} {B : HSet} (f : A -> B)
-  : A -> image f
-  := Quotient.class_of _.
+  Universes i j.
+  Context `{PropResizing} `{Funext} {A : Type@{i}} {B : HSet@{j}} (f : A -> B).
 
-Lemma image_ind_prop@{i j k|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
-  (P : image f -> Type@{k}) `{forall x, IsHProp (P x)}
-  : (forall a : A, P (factor1 f a))
-    -> forall x : image f, P x.
-Proof.
-  intros step.
-  srefine (Quotient_ind_hprop _ _ _); intros a; cbn.
-  apply step.
-Qed.
+  Local Definition qkfs := quotient_kernel_factor_small f.
+  Local Definition image : Type@{i} := qkfs.1.
+  Local Definition factor1 : A -> image := qkfs.2.1.
+  Local Definition factor2 : image -> B := qkfs.2.2.1.
+  Local Definition isinjective_factor2 : IsInjective factor2
+    := isinj_embedding _ (snd (fst qkfs.2.2.2)).
+  (** [factor2 o factor1 == f] is definitional, so we don't state that. *)
 
-Definition image_rec@{i j k|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
-      {C : HSet@{k}} (step : A -> C)
-  (p : forall a a', f a = f a' -> step a = step a')
-  : image f -> C.
-Proof.
-  snrapply Quotient_rec.
-  - exact _.
-  - exact step.
-  - simpl. intros x y q.
-    apply p.
-    apply (equiv_resize_hprop _)^-1.
-    exact q.
-Defined.
-
-Definition factor2@{i j|} `{PropResizing} {A : Type@{i}} {B : HSet@{j}} (f : A -> B)
-  : image f -> B.
-Proof.
-  snrapply image_rec.
-  - exact f.
-  - intros a a' fa_fa'.
-    apply fa_fa'.
-Defined.
-
-Global Instance isinjective_factor2 `{PropResizing} `{Funext} {A} {B : HSet} (f : A -> B)
-  : IsInjective (factor2 f).
-Proof.
-  unfold IsInjective, image.
-  refine (Quotient_ind_hprop _ _ _); intros x; cbn.
-  refine (Quotient_ind_hprop _ _ _); intros y; cbn.
-  simpl; intros p.
-  rapply qglue.
-  apply equiv_resize_hprop.
-  exact p.
-Qed.
+End Image.
 
 Definition limit `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal) : Ordinal.
@@ -804,16 +767,20 @@ Proof.
                      resize_hprop (factor2 f A < factor2 f B)
                      : Type@{i}).
   exists carrier relation.
-  srapply (isordinal_simulation (factor2 f)).
-  - exact _.
-  - exact _.
-  - constructor; cbn.
+  snrapply (isordinal_simulation (factor2 f)).
+  1-4: exact _.
+  - apply isinjective_factor2.
+  - constructor.
     + intros x x' x_x'.
       unfold lt, relation. apply equiv_resize_hprop in x_x'. exact x_x'.
-    + rapply image_ind_prop; intros a. cbn.
+    + rapply Quotient_ind_hprop; intros a.
+      change (factor2 f (class_of _ a)) with (f a).
       intros B B_fa. apply tr.
-      exists (factor1 f (a.1; out (bound B_fa))). cbn.
-      unfold lt, relation, f; simpl.
+      exists (factor1 f (a.1; out (bound B_fa))).
+      unfold lt, relation.
+      change (factor2 f (factor1 f ?A)) with (f A).
+      change (factor2 f (class_of _ ?A)) with (f A).
+      unfold f.
       assert (↓(out (bound B_fa)) = B) as ->. {
         rewrite (path_initial_segment_simulation out).
         symmetry. apply bound_property.
@@ -836,11 +803,14 @@ Proof.
   split.
   - intros u v u_v. unfold lt; cbn. apply equiv_resize_hprop.
     apply isembedding_initial_segment. exact u_v.
-  - intros u. rapply image_ind_prop; intros a.
+  - intros u. rapply Quotient_ind_hprop; intros a.
     intros a_u. apply equiv_resize_hprop in a_u. cbn in a_u.
     apply tr. exists (out (bound a_u)). split.
     + apply initial_segment_property.
-    + apply (injective (factor2 _)); simpl.
+    + apply (isinjective_factor2 _); simpl.
+      change (factor2 ?f (factor1 ?f ?A)) with (f A).
+      change (factor2 ?f (class_of _ ?A)) with (f A).
+      cbn beta.
       rewrite (path_initial_segment_simulation out).
       symmetry. apply bound_property.
 Qed.
