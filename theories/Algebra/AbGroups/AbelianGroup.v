@@ -23,6 +23,11 @@ Record AbGroup := {
 Coercion abgroup_group : AbGroup >-> Group.
 Global Existing Instance abgroup_commutative.
 
+Definition Build_AbGroup' (G : Type) `(IsAbGroup G) : AbGroup := {|
+  abgroup_group := Build_Group G _ _ _ _;
+  abgroup_commutative := _;
+|}.
+
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
   split; exact _.

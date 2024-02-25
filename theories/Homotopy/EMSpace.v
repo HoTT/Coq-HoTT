@@ -103,5 +103,15 @@ Section EilenbergMacLane.
     2: apply pequiv_loops_em_em.
     apply iscohhspace_loops.
   Defined.
+  
+  Definition iscohhabgroup_em {G : AbGroup} (n : nat)
+    : IsCohHAbGroup K(G, n).
+  Proof.
+    nrapply iscohhabgroup_equiv_cohhabgroup.
+    2: apply pequiv_loops_em_em.
+    nrapply iscohhabgroup_equiv_cohhabgroup.
+    2: exact (emap loops (pequiv_loops_em_em _ _)).
+    apply iscohhabgroup_loops_loops.
+  Defined.
 
 End EilenbergMacLane.
