@@ -318,12 +318,16 @@ Section EncodeDecode.
 
   (* We also record this fact. *)
   Definition grp_homo_loops {X Y : pType} `{IsTrunc 1 X} `{IsTrunc 1 Y}
-             (f : X ->* Y)
-    : LoopGroup X $-> LoopGroup Y.
+    : (X ->** Y) ->* [LoopGroup X $-> LoopGroup Y, grp_homo_const].
   Proof.
-    snrapply Build_GroupHomomorphism.
-    - exact (fmap loops f).
-    - nrapply fmap_loops_pp.
+    snrapply Build_pMap.
+    - intro f.
+      snrapply Build_GroupHomomorphism.
+      + exact (fmap loops f).
+      + nrapply fmap_loops_pp.
+    - cbn beta.
+      apply equiv_path_grouphomomorphism.
+      exact (pointed_htpy fmap_loops_pconst).
   Defined.
 
 End EncodeDecode.
