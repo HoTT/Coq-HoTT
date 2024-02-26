@@ -63,7 +63,7 @@ Proof.
   - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
   - intros a b f.
     apply cat_idr_strong.
-  - intros a b f. 
+  - intros a b f.
     apply cat_idl_strong.
 Defined.
 
@@ -179,6 +179,16 @@ Global Instance isequivs_op {A : Type} `{HasEquivs A}
   : @CatIsEquiv A^op _ _ _ _ _ b a f.
 Proof.
   assumption.
+Defined.
+
+Definition equiv_op {A : Type} `{HasEquivs A}
+  {a b : A} (e : a $<~> b)
+  : @CatEquiv A^op _ _ _ _ _ a b.
+Proof.
+  snrapply Build_CatEquiv.
+  - exact (cate_fun e^-1$).
+  - apply isequivs_op.
+    apply cate_isequiv.
 Defined.
 
 Global Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}

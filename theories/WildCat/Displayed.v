@@ -47,13 +47,17 @@ Definition dgpd_comp {A : Type} {D : A -> Type} `{IsD0Gpd A D} {a b c : A}
 
 Notation "p '$@'' q" := (dgpd_comp p q).
 
+Definition DHom_path {A : Type} {D : A -> Type} `{IsD01Cat A D} {a b : A}
+  (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
+  : DHom (Hom_path p) a' b'.
+Proof.
+  destruct p, p'; apply DId.
+Defined.
+
 Definition DGpdHom_path {A : Type} {D : A -> Type} `{IsD0Gpd A D} {a b : A}
   (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
-  : DGpdHom (GpdHom_path p) a' b'.
-Proof.
-  destruct p, p'.
-  apply DId.
-Defined.
+  : DGpdHom (GpdHom_path p) a' b'
+  := DHom_path p p'.
 
 Global Instance reflexive_DHom {A} {D : A -> Type} `{IsD01Cat A D} {a : A}
   : Reflexive (DHom (Id a))
@@ -302,11 +306,11 @@ Global Instance isd1cat_isd1catstrong {A : Type} (D : A -> Type)
 Proof.
   srapply Build_IsD1Cat.
   - intros a b c d f g h a' b' c' d' f' g' h'.
-    exact (DGpdHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+    exact (DHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
   - intros a b f a' b' f'.
-    exact (DGpdHom_path (cat_idl_strong f) (dcat_idl_strong f')).
+    exact (DHom_path (cat_idl_strong f) (dcat_idl_strong f')).
   - intros a b f a' b' f'.
-    exact (DGpdHom_path (cat_idr_strong f) (dcat_idr_strong f')).
+    exact (DHom_path (cat_idr_strong f) (dcat_idr_strong f')).
 Defined.
 
 Global Instance is1catstrong_sigma {A : Type}
