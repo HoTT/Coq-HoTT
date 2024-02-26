@@ -746,6 +746,7 @@ Qed.
 Section Image.
 
   Universes i j.
+  (** In the following, there are no constraints between [i] and [j]. *)
   Context `{PropResizing} `{Funext} {A : Type@{i}} {B : HSet@{j}} (f : A -> B).
 
   Local Definition qkfs := quotient_kernel_factor_small f.
