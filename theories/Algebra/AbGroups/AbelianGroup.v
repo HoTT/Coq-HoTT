@@ -139,22 +139,9 @@ Defined.
 Global Instance ispointedcat_abgroup : IsPointedCat AbGroup.
 Proof.
   snrapply Build_IsPointedCat.
-  1: exact abgroup_trivial.
-  { intro A.
-    snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
-    1: exact _.
-    { intros [] [].
-      symmetry.
-      apply left_identity. }
-    intros g []; cbn.
-    exact (grp_homo_unit g)^. }
-  intro A.
-  snrefine (Build_GroupHomomorphism (fun _ => mon_unit); _).
-  1: exact _.
-  { intros x y; symmetry.
-    apply left_identity. }
-  intros g x; cbn.
-  apply path_unit.
+  - exact abgroup_trivial.
+  - intro A; apply ispointedcat_group.
+  - intro A; apply ispointedcat_group.
 Defined.
 
 (** Image of group homomorphisms between abelian groups *)

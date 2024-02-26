@@ -47,3 +47,10 @@ Proof.
   - cbn. apply grp_homo_unit.
   - cbn. apply grp_pow_homo.
 Defined.
+
+(** Multiplication by zero gives the constant group homomorphism. *)
+Definition ab_mul_const `{Funext} {A : AbGroup} : ab_mul 0 (A:=A) = grp_homo_const.
+Proof.
+  apply equiv_path_grouphomomorphism.
+  reflexivity.
+Defined.

@@ -2,7 +2,7 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup Biproduct.
 
-(** * Homomorphisms of abelian groups form an abelian group. *)
+(** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
 (** We can add group homomorphisms. *)
 Definition ab_homo_add {A : Group} {B : AbGroup} (f g : A $-> B)
@@ -13,11 +13,11 @@ Proof.
   exact (grp_prod_corec f g).
 Defined.
 
-(** We can negate an abelian group homomorphism by composing with ab_homo_negation. *)
+(** We can negate a group homomorphism by composing with [ab_homo_negation]. *)
 Global Instance negate_hom {A : Group} {B : AbGroup}
   : Negate (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
-(** For [A B : AbGroup], homomorphisms [A $-> B] form an abelian group. *)
+(** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
   nrefine (Build_Group (GroupHomomorphism A B)
