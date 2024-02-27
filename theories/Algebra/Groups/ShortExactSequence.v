@@ -31,7 +31,7 @@ Proof.
 Defined.
 
 Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)
-  : IsComplex (@grp_homo_const grp_trivial X) f.
+  : IsComplex (grp_trivial_rec X) f.
 Proof.
   srapply phomotopy_homotopy_hset.
   intro x; cbn.
@@ -40,7 +40,7 @@ Defined.
 
 (** A complex 0 -> A -> B of groups is purely exact if and only if the map A -> B is an embedding. *)
 Lemma iff_grp_isexact_isembedding {A B : Group} (f : A $-> B)
-  : IsExact purely (@grp_homo_const grp_trivial A) f <-> IsEmbedding f.
+  : IsExact purely (grp_trivial_rec A) f <-> IsEmbedding f.
 Proof.
   split.
   - intros ex b.
@@ -55,7 +55,7 @@ Defined.
 
 (** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)
 Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
-  : IsExact purely (@grp_homo_const grp_trivial A) f
+  : IsExact purely (grp_trivial_rec A) f
       <~> (grp_kernel f = trivial_subgroup :> Subgroup _)
   := (equiv_kernel_isembedding f)^-1%equiv
        oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).

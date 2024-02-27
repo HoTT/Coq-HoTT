@@ -213,14 +213,6 @@ Proof.
   srapply (Build_GroupHomomorphism (f o g)).
 Defined.
 
-Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun _ => mon_unit).
-  - intros x y.
-    exact (grp_unit_l mon_unit)^.
-Defined.
-
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
 Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   grp_iso_homo : GroupHomomorphism G H;
@@ -610,6 +602,24 @@ Proof.
   1: exact (fun _ => tt).
   intros ??; symmetry; exact (grp_unit_l _).
 Defined.
+
+(** AbGroup is a pointed category *)
+Global Instance ispointedcat_group : IsPointedCat Group.
+Proof.
+  snrapply Build_IsPointedCat.
+  - exact grp_trivial.
+  - intro G.
+    exists (grp_trivial_rec G).
+    intros g []; cbn.
+    exact (grp_homo_unit g)^.
+  - intro G.
+    exists (grp_trivial_corec G).
+    intros g x; cbn.
+    apply path_unit.
+Defined.
+
+Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
+  := zero_morphism.
 
 (** * Direct product of group *)
 

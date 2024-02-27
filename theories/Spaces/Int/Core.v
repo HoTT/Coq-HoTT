@@ -18,6 +18,8 @@ Inductive Int : Type0 :=
   | zero : Int
   | pos : Pos -> Int.
 
+Arguments pos p%pos.
+
 Declare Scope int_scope.
 Local Open Scope int_scope.
 Delimit Scope int_scope with int.
