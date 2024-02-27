@@ -109,14 +109,6 @@ Proof.
   rapply fmap_zero_morphism.
 Defined.
 
-Definition pfmap_loops `{Funext} (A B : pType) : (A ->** B) ->* (loops A ->** loops B).
-Proof.
-  snrapply Build_pMap.
-  1: exact (fmap loops).
-  apply path_pforall.
-  apply fmap_loops_pconst.
-Defined.
-
 (** *** Iterated loops functor *)
 
 (** Action on 1-cells *)

@@ -65,7 +65,7 @@ Class IsPointedFunctor {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
 }.
 Global Existing Instances preservesinitial_pfunctor preservesterminal_pfunctor.
 
-(** Here is an alternative construct using preservation of the zero object. This requires more structure on the categories however. *)
+(** Here is an alternative constructor using preservation of the zero object. This requires more structure on the categories however. *)
 Definition Build_IsPointedFunctor' {A B : Type} (F : A -> B)
   `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}
   `{!IsPointedCat A, !IsPointedCat B, !HasEquivs A, !HasEquivs B}

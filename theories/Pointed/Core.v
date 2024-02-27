@@ -1020,3 +1020,22 @@ Proof.
   1: rapply equiv_pointify_map.
   cbv; reflexivity.
 Defined.
+
+(** * Pointed categories give rise to pointed structures *)
+
+(** Pointed categories have pointed hom sets *)
+Definition pHom {A : Type} `{IsPointedCat A} (a1 a2 : A)
+  := [Hom a1 a2, zero_morphism].
+
+(** Pointed functors give pointed maps on morphisms *)
+Definition pfmap {A B : Type} (F : A -> B)
+  `{IsPointedCat A, IsPointedCat B, !HasEquivs B, !HasMorExt B}
+  `{!Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
+  {a1 a2 : A}
+  : pHom a1 a2 ->* pHom (F a1) (F a2).
+Proof.
+  snrapply Build_pMap.
+  - exact (fmap F).
+  - apply path_hom.
+    snrapply fmap_zero_morphism; assumption.
+Defined.
