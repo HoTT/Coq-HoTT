@@ -138,10 +138,8 @@ Defined.
 (** AbGroup is a pointed category *)
 Global Instance ispointedcat_abgroup : IsPointedCat AbGroup.
 Proof.
-  snrapply Build_IsPointedCat.
-  - exact abgroup_trivial.
-  - intro A; apply ispointedcat_group.
-  - intro A; apply ispointedcat_group.
+  apply Build_IsPointedCat with abgroup_trivial.
+  all: intro A; apply ispointedcat_group.
 Defined.
 
 (** Image of group homomorphisms between abelian groups *)
