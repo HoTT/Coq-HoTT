@@ -329,7 +329,7 @@ End ConstantFunctor.
 
 Global Instance is0functor_compose {A B C : Type}
   `{IsGraph A, IsGraph B, IsGraph C}
-  (F : A -> B) (G : B -> C) `{!Is0Functor F, !Is0Functor G}
+  (F : A -> B) `{!Is0Functor F} (G : B -> C) `{!Is0Functor G}
   : Is0Functor (G o F).
 Proof.
   srapply Build_Is0Functor.
