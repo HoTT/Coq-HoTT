@@ -116,7 +116,6 @@ Section Flattening.
   Lemma equiv_dp_dgraphquotient (x y : A) (s : R x y) (a : F x) (b : F y)
     : DPath DGraphQuotient (gqglue s) a b <~> (e x y s a = b).
   Proof.
-    refine (_ oE dp_path_transport^-1).
     refine (equiv_concat_l _^ _).
     apply transport_DGraphQuotient.
   Defined.
@@ -132,21 +131,17 @@ Section Flattening.
     snrapply GraphQuotient_ind.
     1: exact Qgq.
     intros a b s.
-    apply equiv_dp_path_transport.
     apply dp_forall.
     intros x y.
     srapply (equiv_ind (equiv_dp_dgraphquotient a b s x y)^-1).
     intros q.
     destruct q.
-    apply equiv_dp_path_transport.
     refine (transport2 _ _ _ @ Qgqglue a b s x).
     refine (ap (path_sigma_uncurried DGraphQuotient _ _) _).
     snrapply path_sigma.
     1: reflexivity.
-    apply moveR_equiv_V.
-    simpl; f_ap.
-    lhs rapply concat_p1.
-    rapply inv_V.
+    lhs nrapply concat_p1.
+    apply inv_V.
   Defined.
 
   (** Rather than use [flatten_ind] to define [flatten_rec] we reprove this simple case. This means we can later reason about it and derive the computation rules easily. The full computation rule for [flatten_ind] takes some work to derive and is not actually needed. *)

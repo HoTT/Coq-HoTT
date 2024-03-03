@@ -81,7 +81,7 @@ Section Smash.
     + intros [a b].
       apply Psm.
     + apply (Bool_ind _ Pr Pl).
-    + srapply sum_ind; intro; apply dp_path_transport^-1.
+    + srapply sum_ind.
       - apply Pgl.
       - apply Pgr.
   Defined.
@@ -90,64 +90,63 @@ Section Smash.
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
-  Proof.
-    apply dp_apD_path_transport.
-    refine (Pushout_ind_beta_pglue P _ _ _ (inl a) @ _).
-    unfold sum_ind.
-    by apply ap.
-  Qed.
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a
+    := Pushout_ind_beta_pglue P _ _ _ (inl a).
 
   Definition Smash_ind_beta_gluer {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
-  Proof.
-    apply dp_apD_path_transport.
-    refine (Pushout_ind_beta_pglue P _ _ _ (inr b) @ _).
-    unfold sum_ind.
-    by apply ap.
-  Qed.
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b
+    := Pushout_ind_beta_pglue P _ _ _ (inr b).
 
   Definition Smash_ind_beta_gluel' {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : X)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
     = (Pgl a) @Dp ((Pgl b)^D).
   Proof.
-    unfold gluel'.
-    rewrite dp_apD_pp, dp_apD_V.
-    by rewrite 2 Smash_ind_beta_gluel.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    1: apply Smash_ind_beta_gluel.
+    lhs nrapply dp_apD_V.
+    apply ap.
+    apply Smash_ind_beta_gluel.
+  Defined.
 
   Definition Smash_ind_beta_gluer' {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
     = (Pgr a) @Dp ((Pgr b)^D).
   Proof.
-    unfold gluer'.
-    rewrite dp_apD_pp, dp_apD_V.
-    by rewrite 2 Smash_ind_beta_gluer.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    1: apply Smash_ind_beta_gluer.
+    lhs nrapply dp_apD_V.
+    apply ap.
+    apply Smash_ind_beta_gluer.
+  Defined.
 
   Definition Smash_ind_beta_glue {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X) (b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @Dp ((Pgl pt)^D)) @Dp ((Pgr pt) @Dp ((Pgr b)^D)).
   Proof.
-    by rewrite dp_apD_pp, Smash_ind_beta_gluel', Smash_ind_beta_gluer'.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    - apply Smash_ind_beta_gluel'.
+    - apply Smash_ind_beta_gluer'.
+  Defined.
 
   Definition Smash_rec {P : Type} (Psm : X -> Y -> P) (Pl Pr : P)
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr)
-    : Smash X Y -> P := Smash_ind Psm Pl Pr
-      (fun x => dp_const (Pgl x)) (fun x => dp_const (Pgr x)).
+    : Smash X Y -> P
+    := Smash_ind Psm Pl Pr (fun x => dp_const (Pgl x)) (fun x => dp_const (Pgr x)).
 
   Local Open Scope path_scope.
 
@@ -155,59 +154,67 @@ Section Smash.
   Definition Smash_rec' {P : Type} {Psm : X -> Y -> P}
     (Pgl : forall a, Psm a pt = Psm pt pt) (Pgr : forall b, Psm pt b = Psm pt pt)
     (ql : Pgl pt = 1) (qr : Pgr pt = 1)
-    : Smash X Y -> P := Smash_rec Psm (Psm pt pt) (Psm pt pt) Pgl Pgr.
+    : Smash X Y -> P
+    := Smash_rec Psm (Psm pt pt) (Psm pt pt) Pgl Pgr.
 
   Definition Smash_rec_beta_gluel {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
   Proof.
-    refine (_ @ eissect dp_const (Pgl a)).
+    rhs_V nrapply (eissect dp_const).
     apply moveL_equiv_V.
-    unfold Smash_rec.
-    refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
-      (fun x : Y => dp_const (Pgr x))) (gluel a))^ @ _).
-    rapply Smash_ind_beta_gluel.
-  Qed.
+    lhs_V nrapply dp_apD_const.
+    nrapply Smash_ind_beta_gluel.
+  Defined.
 
-  Definition smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
+  Definition Smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
-    refine (_ @ eissect dp_const (Pgr b)).
+    rhs_V nrapply (eissect dp_const).
     apply moveL_equiv_V.
-    unfold Smash_rec.
-    refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
-      (fun x : Y => dp_const (Pgr x))) (gluer b))^ @ _).
-    rapply Smash_ind_beta_gluer.
-  Qed.
+    lhs_V nrapply dp_apD_const.
+    nrapply Smash_ind_beta_gluer.
+  Defined.
 
   Definition Smash_rec_beta_gluel' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel' a b) = Pgl a @ (Pgl b)^.
   Proof.
-    rewrite ap_pp, ap_V.
-    by rewrite 2 Smash_rec_beta_gluel.
-  Qed.
+    lhs nrapply ap_pp.
+    f_ap.
+    1: apply Smash_rec_beta_gluel.
+    lhs nrapply ap_V.
+    apply inverse2.
+    apply Smash_rec_beta_gluel.
+  Defined. 
 
   Definition Smash_rec_beta_gluer' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.
   Proof.
-    rewrite ap_pp, ap_V.
-    by rewrite 2 smash_rec_beta_gluer.
-  Qed.
+    lhs nrapply ap_pp.
+    f_ap.
+    1: apply Smash_rec_beta_gluer.
+    lhs nrapply ap_V.
+    apply inverse2.
+    apply Smash_rec_beta_gluer.
+  Defined.
 
-  Definition smash_rec_beta_glue {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
+  Definition Smash_rec_beta_glue {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
     (b : Y) : ap (Smash_rec Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @ (Pgl pt)^) @ (Pgr pt @ (Pgr b)^).
   Proof.
-    by rewrite ap_pp, Smash_rec_beta_gluel', Smash_rec_beta_gluer'.
+    lhs nrapply ap_pp.
+    f_ap.
+    - apply Smash_rec_beta_gluel'.
+    - apply Smash_rec_beta_gluer'.
   Defined.
 
-  Arguments sm : simpl never.
-  Arguments auxl : simpl never.
-  Arguments gluel : simpl never.
-  Arguments gluer : simpl never.
-
 End Smash.
+
+Arguments sm : simpl never.
+Arguments auxl : simpl never.
+Arguments gluel : simpl never.
+Arguments gluer : simpl never.

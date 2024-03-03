@@ -33,41 +33,24 @@ Section MappingCylinder.
             (cylb : forall b, P (cyr b))
             (cylg : forall a, DPath P (cyglue a) (cyla a) (cylb (f a))).
 
-    Definition Cyl_ind_dp : forall c, P c.
-    Proof.
-      srapply Pushout_ind.
-      - apply cyla.
-      - apply cylb.
-      - intros a; apply dp_path_transport^-1, cylg.
-    Defined.
+    Definition Cyl_ind : forall c, P c
+      := Pushout_ind _ cyla cylb cylg.
 
-    Definition Cyl_ind_dp_beta_cyglue (a : A)
-      : dp_apD Cyl_ind_dp (cyglue a) = cylg a.
-    Proof.
-      unfold Cyl_ind_dp.
-      refine ((dp_path_transport_apD _ _)^ @ _).
-      apply moveR_equiv_M.
-      rapply Pushout_ind_beta_pglue.
-    Defined.
+    Definition Cyl_ind_beta_cyglue (a : A)
+      : apD Cyl_ind (cyglue a) = cylg a
+      := Pushout_ind_beta_pglue _ _ _ _ _.
 
   End CylInd.
 
   Section CylRec.
     Context {P : Type} (cyla : A -> P) (cylb : B -> P) (cylg : cyla == cylb o f).
 
-    Definition Cyl_rec : Cyl f -> P.
-    Proof.
-      srapply Pushout_rec.
-      - apply cyla.
-      - apply cylb.
-      - apply cylg.
-    Defined.
+    Definition Cyl_rec : Cyl f -> P
+      := Pushout_rec _ cyla cylb cylg.
 
     Definition Cyl_rec_beta_cyglue (a : A)
-      : ap Cyl_rec (cyglue a) = cylg a.
-    Proof.
-      rapply Pushout_rec_beta_pglue.
-    Defined.
+      : ap Cyl_rec (cyglue a) = cylg a
+      := Pushout_rec_beta_pglue _ _ _ _ _.
 
   End CylRec.
 
@@ -82,7 +65,7 @@ Section MappingCylinder.
       + exact f.
       + exact idmap.
       + reflexivity.
-    - srapply Cyl_ind_dp.
+    - srapply Cyl_ind.
       + intros a; cbn.
         symmetry; apply cyglue.
       + intros b; reflexivity.

@@ -54,25 +54,6 @@ Proof.
   rapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
-Definition Coeq_ind_dp {B A f g} (P : @Coeq B A f g -> Type)
-  (coeq' : forall a, P (coeq a))
-  (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
-  : forall w, P w.
-Proof.
-  srapply (Coeq_ind P coeq'); intros b.
-  apply dp_path_transport^-1, cglue'.
-Defined.
-
-Definition Coeq_ind_dp_beta_cglue {B A f g} (P : @Coeq B A f g -> Type)
-  (coeq' : forall a, P (coeq a))
-  (cglue' : forall b, DPath P (cglue b) (coeq' (f b)) (coeq' (g b)))
-  (b : B)
-  : dp_apD (Coeq_ind_dp P coeq' cglue') (cglue b) = cglue' b.
-Proof.
-  apply dp_apD_path_transport.
-  srapply Coeq_ind_beta_cglue.
-Defined.
-
 (** ** Universal property *)
 
 Definition Coeq_unrec {B A} (f g : B -> A) {P}

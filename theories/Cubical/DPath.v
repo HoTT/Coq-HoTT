@@ -7,52 +7,31 @@ Delimit Scope dpath_scope with dpath.
 Local Open Scope dpath_scope.
 
 Definition DPath {A} (P : A -> Type) {a0 a1} (p : a0 = a1)
-  (b0 : P a0) (b1 : P a1) : Type.
-Proof.
-  destruct p.
-  exact (b0 = b1).
-Defined.
+  (b0 : P a0) (b1 : P a1) : Type
+  := transport P p b0 = b1.
 
-(* This allows DPaths to collapse to paths under cbn *)
+(** This allows DPaths to collapse to paths under cbn *)
 Arguments DPath _ / _ _ _ : simpl nomatch.
-
-(* Here is an alternative definition of DPath, for now the original suffices *)
-(* Definition DPath {A} (P : A -> Type) {a0 a1} (p : a0 = a1)
-  (b0 : P a0) (b1 : P a1) := transport P p b0 = b1.  *)
-
-(* We can prove they are equivalent anyway *)
-Definition equiv_dp_path_transport {A : Type} {P : A -> Type}
-           {a0 a1 : A} {p : a0 = a1} {b0 : P a0} {b1 : P a1}
-  : transport P p b0 = b1 <~> DPath P p b0 b1.
-Proof.
-  by destruct p.
-Defined.
-
-(** We abbreviate many names that are equivalences *)
-Notation dp_path_transport := equiv_dp_path_transport.
 
 Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
  {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
-  `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1).
-Proof.
-  exact (istrunc_equiv_istrunc _ dp_path_transport).
-Defined.
+  `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1) := _.
 
 Definition dp_ishprop {A : Type} (P : A -> Type) {a0 a1} {p : a0 = a1}
   {b0 : P a0} {b1 : P a1} `{IsHProp (P a0)} `{IsHProp (P a1)}
   : DPath P p b0 b1.
 Proof.
-  apply dp_path_transport, path_ishprop.
+  apply path_ishprop.
 Defined.
 
-(* We have reflexivity for DPaths, this helps coq guess later *)
+(** We have reflexivity for DPaths, this helps coq guess later *)
 Definition dp_id {A} {P : A -> Type} {a : A} {x : P a} : DPath P 1 x x := 1%path.
 
-(* Althought 1%dpath is definitionally 1%path, coq cannot guess this so it helps
+(** Althought 1%dpath is definitionally 1%path, coq cannot guess this so it helps
    to have 1 be a dpath before hand. *)
 Notation "1" := dp_id : dpath_scope.
 
-(* DPath induction *)
+(** DPath induction *)
 Definition DPath_ind (A : Type) (P : A -> Type) (P0 : forall (a0 a1 : A)
   (p : a0 = a1) (b0 : P a0) (b1 : P a1), DPath P p b0 b1 -> Type)
   : (forall (x : A) (y : P x), P0 x x 1%path y y 1) ->
@@ -62,21 +41,7 @@ Proof.
   intros X a0 a1 [] b0 b1 []; apply X.
 Defined.
 
-(* DPath version of apD *)
-Definition dp_apD {A P} (f : forall a, P a) {a0 a1 : A}
-  (p : a0 = a1) : DPath P p (f a0) (f a1).
-Proof.
-  by destruct p.
-Defined.
-
-(* which corresponds to ordinary apD *)
-Definition dp_path_transport_apD {A P} (f : forall a, P a) {a0 a1 : A} (p : a0 = a1)
-  : dp_path_transport (apD f p) = dp_apD f p.
-Proof.
-  by destruct p.
-Defined.
-
-(* A DPath over a constant family is just a path *)
+(** A DPath over a constant family is just a path *)
 Definition equiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
   : (x = y) <~> DPath (fun _ => C) p x y.
 Proof.
@@ -85,22 +50,22 @@ Defined.
 
 Notation dp_const := equiv_dp_const.
 
-(* dp_apD of a non-dependent map is just a constant DPath *)
+(** dp_apD of a non-dependent map is just a constant DPath *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}
-  (p : a0 = a1) : dp_apD f p = dp_const (ap f p).
+  (p : a0 = a1) : apD f p = dp_const (ap f p).
 Proof.
   by destruct p.
 Defined.
 
-(* An alternate version useful for proving recursion computation rules from induction ones *)
+(** An alternate version useful for proving recursion computation rules from induction ones *)
 Definition dp_apD_const' {A B : Type} {f : A -> B} {a0 a1 : A}
-  {p : a0 = a1} : dp_const^-1 (dp_apD f p) = ap f p.
+  {p : a0 = a1} : dp_const^-1 (apD f p) = ap f p.
 Proof.
   apply moveR_equiv_V.
   apply dp_apD_const.
 Defined.
 
-(* Concatenation of dependent paths *)
+(** Concatenation of dependent paths *)
 Definition dp_concat {A} {P : A -> Type} {a0 a1 a2}
   {p : a0 = a1} {q : a1 = a2} {b0 : P a0} {b1 : P a1} {b2 : P a2}
   : DPath P p b0 b1 -> DPath P q b1 b2 -> DPath P (p @ q) b0 b2.
@@ -111,7 +76,7 @@ Defined.
 
 Notation "x '@Dp' y" := (dp_concat x y) : dpath_scope.
 
-(* Concatenation of dependent paths with non-dependent paths *)
+(** Concatenation of dependent paths with non-dependent paths *)
 Definition dp_concat_r {A} {P : A -> Type} {a0 a1}
   {p : a0 = a1} {b0 : P a0} {b1 b2 : P a1}
   : DPath P p b0 b1 -> (b1 = b2) -> DPath P p b0 b2.
@@ -130,7 +95,7 @@ Defined.
 
 Notation "x '@Dl' y" := (dp_concat_l x y) : dpath_scope.
 
-(* Inverse of dependent paths *)
+(** Inverse of dependent paths *)
 Definition dp_inverse {A} {P : A -> Type} {a0 a1} {p : a0 = a1}
   {b0 : P a0} {b1 : P a1} : DPath P p b0 b1 -> DPath P p^ b1 b0.
 Proof.
@@ -140,28 +105,35 @@ Defined.
 
 Notation "x '^D'" := (dp_inverse x) : dpath_scope.
 
-(* dp_apD distributes over concatenation *)
+(** dp_apD distributes over concatenation *)
 Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)
   {a0 a1 a2 : A} (p : a0 = a1) (q : a1 = a2)
-  : dp_apD f (p @ q) = (dp_apD f p) @Dp (dp_apD f q).
+  : apD f (p @ q) = (apD f p) @Dp (apD f q).
 Proof.
   by destruct p, q.
 Defined.
 
-(* dp_apD respects inverses *)
+(** dp_apD respects inverses *)
 Definition dp_apD_V (A : Type) (P : A -> Type) (f : forall a, P a)
-  {a0 a1 : A} (p : a0 = a1) : dp_apD f p^ = (dp_apD f p)^D.
+  {a0 a1 : A} (p : a0 = a1) : apD f p^ = (apD f p)^D.
 Proof.
   by destruct p.
 Defined.
 
-(* dp_const preserves concatenation *)
+(** [dp_const] preserves concatenation *)
 Definition dp_const_pp {A B : Type} {a0 a1 a2 : A}
   {p : a0 = a1} {q : a1 = a2} {x y z : B} (r : x = y) (s : y = z)
   : dp_const (p:=p @ q) (r @ s) = (dp_const (p:=p) r) @Dp (dp_const (p:=q) s).
 Proof.
   by destruct p,q.
 Defined.
+
+(** [dp_const] preserves inverses *) 
+Definition dp_const_V {A B : Type} {a0 a1 : A} {p : a0 = a1} {x y : B} (r : x = y)
+  : dp_const r^ = (dp_const (p:=p) r)^D.
+Proof.
+  by destruct p.
+Defined. 
 
 Section DGroupoid.
 
@@ -222,13 +194,12 @@ Section DGroupoid.
 
 End DGroupoid.
 
-(* Dependent paths over paths *)
-(* These can be found under names such as dp_paths_l akin to transport_paths_l *)
+(** Dependent paths over paths *)
+(** These can be found under names such as dp_paths_l akin to transport_paths_l *)
 
 Definition equiv_dp_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y) r
   : p^ @ q = r <~> DPath (fun x => x = y) p q r.
 Proof.
-  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_l.
 Defined.
 
@@ -237,7 +208,6 @@ Notation dp_paths_l := equiv_dp_paths_l.
 Definition equiv_dp_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1) r
   :  q @ p = r <~> DPath (fun y => x = y) p q r.
 Proof.
-  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_r.
 Defined.
 
@@ -246,7 +216,6 @@ Notation dp_paths_r := equiv_dp_paths_r.
 Definition equiv_dp_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1) r
   : (p^ @ q) @ p = r <~> DPath (fun x : A => x = x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_lr.
 Defined.
 
@@ -255,7 +224,6 @@ Notation dp_paths_lr := equiv_dp_paths_lr.
 Definition equiv_dp_paths_Fl {A B} {f : A -> B} {x1 x2 : A} {y : B} (p : x1 = x2)
   (q : f x1 = y) r :  (ap f p)^ @ q = r <~> DPath (fun x => f x = y) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_Fl.
 Defined.
 
@@ -264,7 +232,6 @@ Notation dp_paths_Fl := equiv_dp_paths_Fl.
 Definition equiv_dp_paths_Fr {A B} {g : A -> B} {y1 y2 : A} {x : B} (p : y1 = y2)
   (q : x = g y1) r :  q @ ap g p = r <~> DPath (fun y : A => x = g y) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_Fr.
 Defined.
 
@@ -274,7 +241,6 @@ Definition equiv_dp_paths_FFlr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1) r
   : ((ap g (ap f p))^ @ q) @ p = r <~> DPath (fun x : A => g (f x) = x) p q r.
 Proof.
-  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FFlr.
 Defined.
 
@@ -284,7 +250,6 @@ Definition equiv_dp_paths_FlFr {A B} {f g : A -> B} {x1 x2 : A} (p : x1 = x2)
   (q : f x1 = g x1) r
   : ((ap f p)^ @ q) @ ap g p = r <~> DPath (fun x : A => f x = g x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FlFr.
 Defined.
 
@@ -294,7 +259,6 @@ Definition equiv_dp_paths_lFFr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : x1 = g (f x1)) r
   :  (p^ @ q) @ ap g (ap f p) = r <~> DPath (fun x : A => x = g (f x)) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_lFFr.
 Defined.
 
@@ -305,7 +269,6 @@ Definition equiv_dp_paths_FlFr_D {A B} (f g : forall a : A, B a)
   : ((apD f p)^ @ ap (transport B p) q) @ apD g p = r
     <~> DPath (fun x : A => f x = g x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FlFr_D.
 Defined.
 
@@ -329,19 +292,19 @@ Notation dp_compose := equiv_dp_compose.
 
 Definition dp_apD_compose' {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} {p : x = y} {q : f x = f y} (r : ap f p = q) (g : forall b:B, P b)
-  : dp_apD (g o f) p = (dp_compose' f P r)^-1 (dp_apD g q).
+  : apD (g o f) p = (dp_compose' f P r)^-1 (apD g q).
 Proof.
   by destruct r, p.
 Defined.
 
 Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} (p : x = y) (g : forall b:B, P b)
-  : dp_apD (g o f) p = (dp_compose f P p)^-1 (dp_apD g (ap f p))
+  : apD (g o f) p = (dp_compose f P p)^-1 (apD g (ap f p))
   := dp_apD_compose' f P (idpath (ap f p)) g.
 
-(* Type constructors *)
+(** Type constructors *)
 
-(* Many of these lemmas exist already for transports but we prove them for
+(** Many of these lemmas exist already for transports but we prove them for
    DPaths anyway. If we change the definition of DPath to the transport,
    then these will no longer be needed. It is however, far more readable
    to keep such lemmas seperate, since it is difficult to otherwise search
@@ -353,9 +316,7 @@ Definition equiv_path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
 Proof.
   refine (equiv_path_sigma _ _ _ oE _).
   apply equiv_functor_sigma_id.
-  intro p.
-  symmetry.
-  apply dp_path_transport.
+  reflexivity.
 Defined.
 
 Notation path_sigma_dp := equiv_path_sigma_dp.
@@ -429,13 +390,3 @@ Proof.
 Defined.
 
 Notation dp_sigma := equiv_dp_sigma.
-
-(* Useful for turning computation rules of HITs written with transports to
-   ones written with DPaths. *)
-Definition dp_apD_path_transport {A P} (f : forall a : A, P a)
-  {a0 a1 : A} (p : a0 = a1) l
-  : apD f p = dp_path_transport^-1 l -> dp_apD f p = l.
-Proof.
-  by destruct p.
-Defined.
-
