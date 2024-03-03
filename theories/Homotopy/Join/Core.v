@@ -42,27 +42,6 @@ Section Join.
     : apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b
     := Pushout_ind_beta_pglue _ _ _ _ _.
 
-  (** A version of [Join_ind] that uses dependant paths. *)
-  Definition Join_ind_dp {A B : Type} (P : Join A B -> Type)
-    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
-    : forall (x : Join A B), P x.
-  Proof.
-    refine (Join_ind P P_A P_B _).
-    intros a b.
-    apply dp_path_transport^-1.
-    exact (P_g a b).
-  Defined.
-
-  Definition Join_ind_dp_beta_jglue {A B : Type} (P : Join A B -> Type)
-    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b)) a b
-    : dp_apD (Join_ind_dp P P_A P_B P_g) (jglue a b) = P_g a b.
-  Proof.
-    apply dp_apD_path_transport.
-    snrapply Join_ind_beta_jglue.
-  Defined.
-
   (** A version of [Join_ind] specifically for proving that two functions defined on a [Join] are homotopic. *)
   Definition Join_ind_FlFr {A B P : Type} (f g : Join A B -> P)
     (Hl : forall a, f (joinl a) = g (joinl a))

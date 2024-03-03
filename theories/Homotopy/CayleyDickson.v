@@ -102,7 +102,7 @@ Class CayleyDicksonImaginaroid (A : Type) := {
 Global Instance involutive_negate_susp {A} `(CayleyDicksonImaginaroid A)
   : Involutive (negate_susp A cdi_negate).
 Proof.
-  srapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind; try reflexivity.
   intro x.
   apply dp_paths_FFlr.
   rewrite concat_p1.
@@ -117,7 +117,7 @@ Defined.
 Global Instance involutive_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
   : Involutive (conjugate_susp A cdi_negate).
 Proof.
-  srapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind; try reflexivity.
   intro x.
   apply dp_paths_FFlr.
   rewrite concat_p1.
@@ -134,7 +134,7 @@ Defined.
 Global Instance swapop_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
   : SwapOp negate (conjugate_susp A cdi_negate).
 Proof.
-  srapply Susp_ind_dp; try reflexivity.
+  srapply Susp_ind; try reflexivity.
   intro x.
   apply dp_paths_FlFr.
   rewrite concat_p1.
@@ -272,11 +272,11 @@ Section ImaginaroidHSpace.
         apply jglue. }
     intros a b.
     revert y.
-    srapply Join_ind_dp.
+    srapply Join_ind.
     1: intro; apply jglue.
     1: intro; cbn; symmetry; apply jglue.
     intros c d.
-    srapply sq_dp^-1.
+    apply sq_dp^-1.
     refine (sq_ccGG _^ _^ _).
     1,2: apply Join_rec_beta_jglue.
     change (PathSquare (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
@@ -294,7 +294,7 @@ Section ImaginaroidHSpace.
     clear a b c d.
     change (forall s : Susp A,
       Diamond (-mon_unit) s (mon_unit) s).
-    srapply Susp_ind_dp; hnf.
+    srapply Susp_ind; hnf.
     1: by apply diamond_v_sq.
     1: by apply diamond_h_sq.
     intro a.

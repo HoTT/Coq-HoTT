@@ -35,7 +35,7 @@ Proof.
     - exact tbase.      (* The basepoint is sent to the point of the torus *)
     - exact loop_b.     (* The second loop is sent to loop_b *)
   + apply path_forall.  (* We use function extensionality here to induct *)
-    snrapply Circle_ind_dp.  (* Circle induction as a DPath *)
+    snrapply Circle_ind.  (* Circle induction as a DPath *)
     - exact loop_a.     (* The first loop is sent to loop_a *)
     - srapply sq_dp^-1. (* This DPath is actually a square *)
       apply (pr1 c2t_square_and_cube). (* We apply the cap we found above *)
@@ -66,8 +66,8 @@ Proof.
   (* 3. Reducing ap10 on function extensionality *)
   nrefine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
     (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
-  (* 4. Reducing Circle_ind_dp on loop *)
-  nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_dp_beta_loop _ _ _))) _
+  (* 4. Reducing Circle_ind on loop *)
+  nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_beta_loop _ _ _))) _
     (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
   (* 5. collapsing equivalence *)
   nrefine (cu_concat_lr (cu_G11 (eisretr _ _)) _
@@ -144,17 +144,17 @@ Definition c2t2c `{Funext} : t2c o c2t == idmap.
 Proof.
   nrapply prod_ind.
   (* Start with double circle induction *)
-  snrefine (Circle_ind_dp _ (Circle_ind_dp _ 1 _) _).
+  snrefine (Circle_ind _ (Circle_ind _ 1 _) _).
   (* Change the second loop case into a square and shelve *)
   1: apply sq_dp^-1, sq_tr^-1; shelve.
   (* Take the forall out of the DPath *)
   apply dp_forall_domain.
   intro x; apply sq_dp^-1; revert x.
-  snrefine (Circle_ind_dp _ _ _).
+  snrefine (Circle_ind _ _ _).
   1: apply sq_tr^-1; shelve.
   apply dp_cu.
   nrefine (cu_ccGGcc _ _ _).
-  1,2: nrefine (ap sq_dp (Circle_ind_dp_beta_loop _ _ _)
+  1,2: nrefine (ap sq_dp (Circle_ind_beta_loop _ _ _)
     @ eisretr _ _)^.
   apply cu_rot_tb_fb.
   nrefine (cu_ccGGGG _ _ _ _ _).

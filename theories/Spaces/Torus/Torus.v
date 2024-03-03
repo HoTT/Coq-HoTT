@@ -25,12 +25,12 @@ Module Export Torus.
   Axiom Torus_ind_beta_loop_a : forall (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
     (ps : DPathSquare P surf pla pla plb plb), DPathSquare P hr
-      (dp_apD (Torus_ind P pb pla plb ps) (loop_a)) pla 1%dpath 1%dpath.
+      (apD (Torus_ind P pb pla plb ps) (loop_a)) pla 1%dpath 1%dpath.
 
   Axiom Torus_ind_beta_loop_b : forall (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
     (ps : DPathSquare P surf pla pla plb plb), DPathSquare P hr
-      (dp_apD (Torus_ind P pb pla plb ps) (loop_b)) plb 1%dpath 1%dpath.
+      (apD (Torus_ind P pb pla plb ps) (loop_b)) plb 1%dpath 1%dpath.
 
   (** We write out the computation rule for surf even though we will not use it. Instead we currently have an unfinished recursion computation principle, but we don't currently know how to derive it from this *)
   Axiom Torus_ind_beta_surf : forall (P : Torus -> Type) (pb : P tbase)

@@ -21,7 +21,6 @@ Section HSpace_S1.
     srapply Susp_ind; hnf.
     { apply moveL_transport_p.
       refine ((transport_pp _ _ _ _)^ @ _).
-      apply dp_path_transport^-1.
       apply p. }
     1: reflexivity.
     apply Empty_ind.
@@ -101,8 +100,7 @@ Section HSpace_S1.
     { apply (sq_flip_v (px0:=1) (px1:=1)).
       exact (ap_nat' (fun a => ap (fun b => sgop_s1 b z)
         (rightidentity_s1 a)) (merid North @ (merid South)^)). }
-    simpl.
-    srapply dp_ishprop.
+    apply path_ishprop.
   Defined.
 
   Global Instance commutative_sgop_s1

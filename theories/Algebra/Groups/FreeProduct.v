@@ -242,7 +242,6 @@ Section FreeProduct.
     snrapply Coeq_ind.
     1: exact e.
     intro a.
-    nrapply dp_path_transport^-1%equiv.
     destruct a as [ [ [ [a | a ] | a] | a ] | a ].
     + destruct a as [[[x h1] h2] y].
       apply dp_compose.
@@ -267,7 +266,7 @@ Section FreeProduct.
   Proof.
     srapply amal_type_ind.
     1: exact e.
-    all: intros; apply dp_path_transport, path_ishprop.
+    all: intros; apply path_ishprop.
   Defined.
 
   (** From which we can derive the non-dependent eliminator / recursion principle *)
