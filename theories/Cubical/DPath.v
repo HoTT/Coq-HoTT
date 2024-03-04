@@ -141,28 +141,28 @@ Section DGroupoid.
     {b0 : P a0} {b1 : P a1} {dp : DPath P p b0 b1}.
 
   Definition dp_concat_p1
-    : DPath (fun t => DPath _ t _ _) (concat_p1 _) (dp @Dp 1) dp.
+    : DPath (fun t : a0 = a1 => DPath P t b0 b1) (concat_p1 p) (dp @Dp 1) dp.
   Proof.
     destruct p.
     apply concat_p1.
   Defined.
 
   Definition dp_concat_1p
-    : DPath (fun t => DPath _ t _ _) (concat_1p _) (1 @Dp dp) dp.
+    : DPath (fun t : a0 = a1 => DPath P t b0 b1) (concat_1p p) (1 @Dp dp) dp.
   Proof.
     destruct p.
     apply concat_1p.
   Defined.
 
   Definition dp_concat_Vp
-    : DPath (fun t => DPath _ t _ _) (concat_Vp _) (dp^D @Dp dp) 1.
+    : DPath (fun t : a1 = a1 => DPath P t b1 b1) (concat_Vp p) (dp^D @Dp dp) 1.
   Proof.
     destruct p.
     apply concat_Vp.
   Defined.
 
   Definition dp_concat_pV
-    : DPath (fun t => DPath _ t _ _) (concat_pV _) (dp @Dp dp^D) 1.
+    : DPath (fun t : a0 = a0 => DPath P t b0 b0) (concat_pV p) (dp @Dp dp^D) 1.
   Proof.
     destruct p.
     apply concat_pV.
@@ -175,7 +175,7 @@ Section DGroupoid.
        (dq : DPath P q b1 b2) (dr : DPath P  r b2 b3).
 
     Definition dp_concat_pp_p
-      : DPath (fun t => DPath _ t _ _) (concat_pp_p _ _ _)
+      : DPath (fun t : a0 = a3 => DPath P t b0 b3) (concat_pp_p p q r)
         ((dp @Dp dq) @Dp dr) (dp @Dp (dq @Dp dr)).
     Proof.
       destruct p, q, r.
@@ -183,7 +183,7 @@ Section DGroupoid.
     Defined.
 
     Definition dp_concat_p_pp
-      : DPath (fun t => DPath _ t _ _) (concat_p_pp _ _ _)
+      : DPath (fun t : a0 = a3 => DPath P t b0 b3) (concat_p_pp p q r)
         (dp @Dp (dq @Dp dr)) ((dp @Dp dq) @Dp dr).
     Proof.
       destruct p, q, r.
