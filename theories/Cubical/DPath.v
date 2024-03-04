@@ -312,12 +312,8 @@ Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
 
 (** A version of [equiv_path_sigma] for [DPath]s *)
 Definition equiv_path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
-  : {p : x = x' & DPath P p y y'} <~> (x; y) = (x'; y').
-Proof.
-  refine (equiv_path_sigma _ _ _ oE _).
-  apply equiv_functor_sigma_id.
-  reflexivity.
-Defined.
+  : {p : x = x' & DPath P p y y'} <~> (x; y) = (x'; y')
+  := equiv_path_sigma P (x; y) (x'; y').
 
 Notation path_sigma_dp := equiv_path_sigma_dp.
 
