@@ -37,20 +37,6 @@ Proof.
   - exact (H_merid).
 Defined.
 
-(** Here is an alternative induction principle using DPath's instead of transports *)
-Definition Susp_ind_dp {X : Type} (P : Susp X -> Type)
-  (H_N : P North) (H_S : P South)
-  (H_merid : forall x:X, DPath P (merid x) H_N H_S)
-  : forall (y : Susp X), P y.
-Proof.
-  srapply Susp_ind.
-  - exact H_N.
-  - exact H_S.
-  - intro x.
-    apply dp_path_transport^-1.
-    exact (H_merid x).
-Defined.
-
 (** We can also derive the computation rule *)
 Definition Susp_ind_beta_merid {X : Type}
   (P : Susp X -> Type) (H_N : P North) (H_S : P South)
@@ -58,16 +44,6 @@ Definition Susp_ind_beta_merid {X : Type}
   : apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   srapply Pushout_ind_beta_pglue.
-Defined.
-
-(** And similarly for the DPath version *)
-Definition Susp_ind_dp_beta_merid {X : Type}
-  (P : Susp X -> Type) (H_N : P North) (H_S : P South)
-  (H_merid : forall x:X, DPath P (merid x) H_N H_S) (x : X)
-  : dp_apD (Susp_ind_dp P H_N H_S H_merid) (merid x) = H_merid x.
-Proof.
-  apply dp_apD_path_transport.
-  srapply Susp_ind_beta_merid.
 Defined.
 
 (** We want to allow the user to forget that we've defined suspension as a pushout and make it look like it was defined directly as a HIT. This has the advantage of not having to assume any new HITs but allowing us to have conceptual clarity. *)
@@ -122,22 +98,6 @@ Proof.
   apply moveR_pM.
   apply equiv_p1_1q.
   apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
-Defined.
-
-Definition Susp_eta_homot_dp {X : Type} {P : Susp X -> Type} (f : forall y, P y)
-  : f == Susp_ind_dp P (f North) (f South) (fun x => dp_apD f (merid x)).
-Proof.
-  unfold pointwise_paths. refine (Susp_ind_dp _ 1 1 _).
-  intros x.
-  apply dp_paths_FlFr_D.
-  cbn.
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  apply equiv_1p_q1.
-  apply (equiv_inj dp_path_transport).
-  refine (dp_path_transport_apD _ _ @ _). 
-  refine (_ @ (dp_path_transport_apD f (merid x))^).
-  srapply Susp_ind_dp_beta_merid.
 Defined.
 
 Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
@@ -282,7 +242,7 @@ Section UnivProp.
     intros f.
     exists (f North,f South).
     intros x.
-    exact (dp_apD f (merid x)).
+    exact (apD f (merid x)).
   Defined.
 
   Local Instance is0functor_susp_ind_inv : Is0Functor Susp_ind_inv.
@@ -302,12 +262,12 @@ Section UnivProp.
   Proof.
     constructor.
     - intros [[n s] g].
-      exists (Susp_ind_dp P n s g); cbn.
+      exists (Susp_ind P n s g); cbn.
       exists idpath.
       intros x; cbn.
-      apply Susp_ind_dp_beta_merid.
+      apply Susp_ind_beta_merid.
     - intros f g [p q]; cbn in *.
-      srapply Susp_ind_dp; cbn.
+      srapply Susp_ind; cbn.
       1: exact (ap fst p).
       1: exact (ap snd p).
       intros x; specialize (q x).
@@ -433,12 +393,12 @@ Section UnivPropNat.
       $=> functor_Susp_ind_data o (Susp_ind_inv Y P).
   Proof.
     intros g; exists idpath; intros x.
-    change (dp_apD (fun x0 : Susp X => g (functor_susp f x0)) (merid x) =
+    change (apD (fun x0 : Susp X => g (functor_susp f x0)) (merid x) =
             (functor_Susp_ind_data (Susp_ind_inv Y P g)).2 x).
     refine (dp_apD_compose (functor_susp f) P (merid x) g @ _).
     cbn; apply ap.
     apply (moveL_transport_V (fun p => DPath P p (g North) (g South))).
-    exact (apD (dp_apD g) (functor_susp_beta_merid f x)).
+    exact (apD (apD g) (functor_susp_beta_merid f x)).
   Defined.
 
   (** From this we can deduce a equivalence between extendability, which is definitionally equal to split essential surjectivity of a functor between forall 0-groupoids. *)
@@ -478,21 +438,21 @@ Proof.
     + apply extension_iff_functor_susp.
       exact e1.
     + cbn; intros h k.
-      pose (h' := Susp_ind_dp P N S h).
-      pose (k' := Susp_ind_dp P N S k).
+      pose (h' := Susp_ind P N S h).
+      pose (k' := Susp_ind P N S k).
       specialize (en h' k').
       assert (IH := fst (IHn _) en (1,1)); clear IHn en.
       cbn in IH.
       refine (extendable_postcompose' n _ _ f _ IH); clear IH.
       intros y.
       etransitivity.
-      1: apply ds_dp.
+      1: nrapply ds_dp.
       etransitivity.
       1: apply ds_transport_dpath.
       subst h' k'; cbn.
       apply equiv_concat_lr.
-      * symmetry. exact (Susp_ind_dp_beta_merid P N S h y).
-      * exact (Susp_ind_dp_beta_merid P N S k y).
+      * symmetry. exact (Susp_ind_beta_merid P N S h y).
+      * exact (Susp_ind_beta_merid P N S k y).
   - intros e; split.
     + apply extension_iff_functor_susp.
       intros NS; exact (fst (e NS)).
@@ -504,7 +464,7 @@ Proof.
       refine (extendable_postcompose' n _ _ f _ (e _ _)); intros y.
       symmetry.
       etransitivity.
-      1: apply ds_dp.
+      1: nrapply ds_dp.
       etransitivity.
       1: apply ds_transport_dpath.
       etransitivity.

@@ -440,9 +440,9 @@ Definition cyl_extension {A B} (f : A -> B) (C : Cyl f -> Type)
            (ext : ExtensionAlong cyl C g)
   : ExtensionAlong cyl C g.
 Proof.
-  srefine (Cyl_ind_dp C g (ext.1 o cyr) _ ; _); intros a.
+  srefine (Cyl_ind C g (ext.1 o cyr) _ ; _); intros a.
   + refine ((ext.2 a)^ @Dl _)%dpath.
-    apply dp_apD.
+    apply apD.
   + reflexivity. (** The point is that this equality is now definitional. *)
 Defined.
 
@@ -725,13 +725,12 @@ Proof.
         - rapply extendable_equiv.
         - exact (eh (fun x => cglue x # u (cyr x)) (v o cyr)). }
     intros x; subst C'.
-    refine (_ oE dp_path_transport).
     refine ((dp_compose (pr_cylcoeq p q) C _)^-1 oE _).
     symmetry; srapply equiv_ds_fill_lr.
     3:rapply ap_pr_cylcoeq_cglue.
     all:srapply (transport (fun r => DPath C r _ _)).
-    3:exact (dp_inverse (dp_compose _ C _ (dp_apD u (eissect pr_cyl x)))).
-    4:exact (dp_inverse (dp_compose _ C _ (dp_apD v (eissect pr_cyl x)))).
+    3:exact (dp_inverse (dp_compose _ C _ (apD u (eissect pr_cyl x) : DPath _ _ _ _))).
+    4:exact (dp_inverse (dp_compose _ C _ (apD v (eissect pr_cyl x) : DPath _ _ _ _))).
     1:change (fun y => pr_cylcoeq p q (coeq (functor_cyl p y)))
       with (fun y => coeq (f := f') (g := g') (pr_cyl (functor_cyl p y))).
     2:change (fun y => pr_cylcoeq p q (coeq (functor_cyl q y)))
@@ -740,11 +739,11 @@ Proof.
     all: exact (ap_compose (fun x => pr_cyl (functor_cyl _ x)) coeq _). }
   pose (eb1 := fun u v w => (fst (cyl_extendable _ _ _ (eb'' u v)) w).1).
   (** Now we construct an extension using Coeq-induction, and prove that it *is* an extension also using Coeq-induction. *)
-  srefine (_;_); srapply Coeq_ind_dp.
+  srefine (_;_); srapply Coeq_ind.
   + exact (ea1 (s' o coeq)).
   + apply eb1; intros b.
     rapply (dp_compose' _ _ (ap_cyl_cylcoeq_cglue p q b)).
-    exact (dp_apD s' (cglue b)).
+    exact (apD s' (cglue b)).
   + (** Since we're using cofibrations, this holds definitionally. *)
     intros a; reflexivity.
   + (** And this one is much simpler than it would be otherwise. *)
@@ -753,7 +752,7 @@ Proof.
     rapply ds_G1.
     refine (dp_apD_compose' _ _ (ap_cyl_cylcoeq_cglue p q b) _ @ _).
     apply moveR_equiv_V.
-    rapply (Coeq_ind_dp_beta_cglue C').
+    nrapply Coeq_ind_beta_cglue.
 Defined.
 
 (** Now we can easily iterate into higher extendability. *)

@@ -87,7 +87,6 @@ Section Abel.
     1: apply a.
     intros [[x y] z].
     refine (transport_compose _ _ _ _ @ _).
-    srapply dp_path_transport^-1%equiv.
     apply c.
   Defined.
 
@@ -96,9 +95,8 @@ Section Abel.
     `{forall x, IsHSet (P x)}(a : forall x, P (ab x))
     (c : forall x y z, DPath P (ab_comm x y z)
       (a (x * (y * z))) (a (x * (z * y))))
-    (x y z : G) : dp_apD (Abel_ind P a c) (ab_comm x y z) = c x y z.
+    (x y z : G) : apD (Abel_ind P a c) (ab_comm x y z) = c x y z.
   Proof.
-    apply dp_apD_path_transport.
     refine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).
     rapply Coeq_ind_beta_cglue.
   Defined.
@@ -117,8 +115,7 @@ Section Abel.
     (a : forall x, P (ab x)) : forall (x : Abel), P x.
   Proof.
     srapply (Abel_ind _ a).
-    intros; apply dp_path_transport.
-    apply path_ishprop.
+    intros; apply path_ishprop.
   Defined.
 
   (** And its recursion version. *)

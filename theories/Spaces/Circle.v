@@ -236,18 +236,6 @@ Proof.
   apply Circle_rec_beta_loop.
 Defined.
 
-(** An alternative induction principle for Circle that produces a DPath. *)
-Definition Circle_ind_dp (P : Circle -> Type) (b : P base)
-  (bl : DPath P loop b b) (x : Circle) : P x
-  := Circle_ind P b (dp_path_transport^-1 bl) x.
-
-Definition Circle_ind_dp_beta_loop (P : Circle -> Type) (b : P base)
-  (bl : DPath P loop b b) : dp_apD (Circle_ind_dp P b bl) loop = bl.
-Proof.
-  apply dp_apD_path_transport.
-  exact (Circle_ind_beta_loop _ _ _).
-Defined.
-
 (** The universal property of the circle (Lemma 6.2.9 in the Book).  We could deduce this from [isequiv_Coeq_rec], but it's nice to see a direct proof too. *)
 Definition Circle_rec_uncurried (P : Type)
   : {b : P & b = b} -> (Circle -> P)
