@@ -27,7 +27,7 @@ Defined.
 (** We have reflexivity for DPaths, this helps coq guess later *)
 Definition dp_id {A} {P : A -> Type} {a : A} {x : P a} : DPath P 1 x x := 1%path.
 
-(** Although [1%dpath] is definitionally [1%path], coq cannot guess this so it helps to have [1] be a dpath beforehand. *)
+(** Although [1%dpath] is definitionally [1%path], when [1%path] is used where a dependent path is expected, Coq sometimes has trouble interpreting this. So we make a custom notation for [1] in [dpath_scope]. *)
 Notation "1" := dp_id : dpath_scope.
 
 (** DPath induction *)
