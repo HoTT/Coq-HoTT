@@ -181,16 +181,6 @@ Proof.
   assumption.
 Defined.
 
-Definition equiv_op {A : Type} `{HasEquivs A}
-  {a b : A} (e : a $<~> b)
-  : @CatEquiv A^op _ _ _ _ _ a b.
-Proof.
-  snrapply Build_CatEquiv.
-  - exact (cate_fun e^-1$).
-  - apply isequivs_op.
-    apply cate_isequiv.
-Defined.
-
 Global Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
   : HasMorExt A^op.
 Proof.

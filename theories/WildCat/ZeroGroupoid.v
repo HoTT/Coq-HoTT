@@ -1,5 +1,7 @@
-Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod WildCat.Forall.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences
+               Basics.PathGroupoids.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod
+               WildCat.Forall.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -9,7 +11,7 @@ Record ZeroGpd := {
   carrier :> Type;
   isgraph_carrier : IsGraph carrier;
   is01cat_carrier : Is01Cat carrier;
-  is0gpd_carrier : Is0Gpd carrier;  
+  is0gpd_carrier : Is0Gpd carrier;
 }.
 
 Global Existing Instance isgraph_carrier.
@@ -176,3 +178,32 @@ Proof.
     reflexivity.
   - reflexivity.
 Defined.
+
+Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
+  (G : I -> ZeroGpd) (H : J -> ZeroGpd)
+  (f : forall (i : I), G i $<~> H (ie i))
+  : prod_0gpd I G $<~> prod_0gpd J H.
+Proof.
+  snrapply cate_adjointify.
+  - snrapply Build_Morphism_0Gpd.
+    + intros h j.
+      exact (transport H (eisretr ie j) (cate_fun (f (ie^-1 j)) (h _))).
+    + nrapply Build_Is0Functor.
+      intros g h p j.
+      destruct (eisretr ie j).
+      refine (_ $o Hom_path (transport_1 _ _)).
+      apply Build_Morphism_0Gpd.
+      exact (p _).
+  - exact (equiv_prod_0gpd_corec (fun i => (f i)^-1$ $o prod_0gpd_pr (ie i))).
+  - intros h j.
+    cbn.
+    destruct (eisretr ie j).
+    exact (cate_isretr (f _) _).
+  - intros g i.
+    cbn.
+    refine (_ $o Hom_path
+            (ap (cate_fun (f i)^-1$) (transport2 _ (eisadj ie i) _))).
+    destruct (eissect ie i).
+    exact (cate_issect (f _) _).
+Defined.
+

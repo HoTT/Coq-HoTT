@@ -1,8 +1,8 @@
 Require Import Basics.
 Require Import Types.Bool.
-Require Import WildCat.Core WildCat.ZeroGroupoid WildCat.Equiv WildCat.Yoneda
-               WildCat.Universe WildCat.NatTrans WildCat.Opposite
-               WildCat.Products WildCat.FunctorCat.
+Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
+               WildCat.Opposite WildCat.Products WildCat.Universe
+               WildCat.Yoneda WildCat.ZeroGroupoid.
 
 (** * Categories with coproducts *)
 
@@ -91,12 +91,9 @@ Definition cat_coprod_fold {I : Type} {A : Type} (x : A) `{Coproduct I _ (fun _ 
 (** [I]-indexed coproducts are unique no matter how they are constructed. *)
 Definition cate_cat_coprod {I J : Type} (ie : I <~> J) {A : Type} `{HasEquivs A}
   (x : I -> A) `{!Coproduct I x} (y : J -> A) `{!Coproduct J y}
-  (e : forall (i : I), x i $<~> y (ie i))
-  : cat_coprod I x $<~> cat_coprod J y.
-Proof.
-  apply equiv_op.
-  exact (cate_cat_prod (A:=A^op) ie x y (fun i => (e i)^-1$)).
-Defined.
+  (e : forall (i : I), y (ie i) $<~> x i)
+  : cat_coprod J y $<~> cat_coprod I x
+  := cate_cat_prod (A:=A^op) ie x y e.
 
 (** *** Existence of coproducts *)
 
@@ -108,35 +105,26 @@ Class HasAllCoproducts (A : Type) `{Is1Cat A}
 
 (** *** Coproduct functor *)
 
+Local Instance hasproductsop_hascoproducts {I A : Type} `{HasCoproducts I A}
+  : HasProducts I A^op
+  := fun x : I -> A^op => @has_coproducts I A _ _ _ _ _ x.
+
 Global Instance is0functor_cat_coprod (I : Type) `{IsGraph I}
   (A : Type) `{HasCoproducts I A}
-  : Is0Functor (fun x : Fun01 I A => cat_coprod I x).
+  : @Is0Functor (I -> A) A (isgraph_forall I (fun _ => A)) _
+    (fun x : I -> A => cat_coprod I x).
 Proof.
-  nrapply Build_Is0Functor.
-  intros x y f.
-  exact (cat_coprod_rec I (fun i => cat_in i $o f i)).
+  apply is0functor_op'.
+  exact (is0functor_cat_prod I A^op).
 Defined.
 
 Global Instance is1functor_cat_coprod (I : Type) `{IsGraph I}
   (A : Type) `{HasCoproducts I A}
-  : Is1Functor (fun x : Fun01 I A => cat_coprod I x).
+  : @Is1Functor (I -> A) A _ _ _ (is1cat_forall I (fun _ => A)) _ _ _ _
+    (fun x : I -> A => cat_coprod I x) _.
 Proof.
-  nrapply Build_Is1Functor.
-  - intros x y f g p.
-    exact (cat_coprod_rec_eta I (fun i => cat_in i $@L p i)).
-  - intros x.
-    nrefine (_ $@ (cat_coprod_eta I (Id _))).
-    exact (cat_coprod_rec_eta I (fun i => cat_idr _ $@ (cat_idl _)^$)).
-  - intros x y z f g.
-    apply cat_coprod_in_eta.
-    intros i.
-    nrefine (cat_coprod_beta _ _ _ $@ _).
-    nrefine (_ $@ cat_assoc_opp _ _ _).
-    symmetry.
-    nrefine (_ $@L cat_coprod_beta _ _ _ $@ _).
-    nrefine (cat_assoc_opp _ _ _ $@ _).
-    nrefine (cat_coprod_beta _ _ _ $@R _ $@ _).
-    apply cat_assoc.
+  apply is1functor_op'.
+  exact (is1functor_cat_prod I A^op).
 Defined.
 
 (** *** Categories with specific kinds of coproducts *)

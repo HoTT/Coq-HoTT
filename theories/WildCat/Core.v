@@ -364,6 +364,36 @@ Arguments is1functor_compose {A B C}
   G {is0functor_G} {is1functor_G}
   : rename.
 
+(** This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
+Definition is0functor_homotopic {A B : Type}
+  (F : A -> B) `{Is0Functor A B F} (G : A -> B) (h : F == G)
+  : Is0Functor G.
+Proof.
+  apply Build_Is0Functor.
+  intros a b f.
+  destruct (h a), (h b).
+  exact (fmap F f).
+Defined.
+
+Definition is1functor_homotopic {A B : Type} (F : A -> B) `{Is1Functor A B F}
+  (G : A -> B) (h : F == G)
+  : @Is1Functor A B _ _ _ _ _ _ _ _ G (is0functor_homotopic F G h).
+Proof.
+  apply Build_Is1Functor.
+  - intros a b f g p.
+    cbn.
+    destruct (h a), (h b).
+    exact (fmap2 F p).
+  - intros a.
+    cbn.
+    destruct (h a).
+    exact (fmap_id F a).
+  - intros a b c f g.
+    cbn.
+    destruct (h a), (h b), (h c).
+    exact (fmap_comp F f g).
+Defined.
+
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=

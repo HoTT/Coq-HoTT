@@ -85,3 +85,67 @@ Proof.
   unfold uncurry; cbn.
   exact ((fmap (flip F b2) f) $o (fmap (F a1) g)).
 Defined.
+
+(** *** (Uncurried) Bifunctors are functorial in each argument. *)
+
+Global Instance is0functor_bifunctor01 {A B C : Type}
+  `{Is01Cat A} `{IsGraph B} `{IsGraph C}
+  (F : A * B -> C) `{!Is0Functor F} (a : A)
+  : Is0Functor (fun b => F (a, b)).
+Proof.
+  apply Build_Is0Functor.
+  intros x y f.
+  exact (@fmap (A * B) C _ _ F _ (a, x) (a, y) (Id a, f)).
+Defined.
+
+Global Instance is1functor_bifunctor01 {A B C : Type}
+  `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
+  : Is1Functor (fun b => F (a, b)).
+Proof.
+  apply Build_Is1Functor.
+  - intros x y f g p.
+    exact (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, y)
+            (Id a, f) (Id a, g) (Id _, p)).
+  - intros b.
+    exact (fmap_id F (a, b)).
+  - intros x y z f g.
+    (** This term is just [refine (fmap2 F ((cat_idl _)^$, Id _) $@ _)]. Unfortunately, we need to help inference out quite a bit. *)
+    refine (@gpd_comp (Hom (F (a, x)) (F (a, z))) _ _ _ _ _ _
+            (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, z)
+              (Id a, _) (Id a $o Id a, _) ((cat_idl _)^$, Id _))
+            _).
+    exact (@fmap_comp (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, y) (a, z)
+            (Id a, f) (Id a, g)).
+Defined.
+
+Global Instance is0functor_bifunctor10 {A B C : Type}
+  `{IsGraph A} `{Is01Cat B} `{IsGraph C}
+  (F : A * B -> C) `{!Is0Functor F} (b : B)
+  : Is0Functor (fun a => F (a, b)).
+Proof.
+  apply Build_Is0Functor.
+  intros x y f.
+  exact (@fmap (A * B) C _ _ F _ (x, b) (y, b) (f, Id b)).
+Defined.
+
+Global Instance is1functor_bifunctor10 {A B C : Type}
+  `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (b : B)
+  : Is1Functor (fun a => F (a, b)).
+Proof.
+  apply Build_Is1Functor.
+  - intros x y f g p.
+    exact (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (y, b)
+            (f, Id b) (g, Id b) (p, Id _)).
+  - intros a.
+    exact (fmap_id F (a, b)).
+  - intros x y z f g.
+    (** This term is just [refine (fmap2 F (Id _, (cat_idl _)^$) $@ _)]. Unfortunately, we need to help inference out quite a bit. *)
+    refine (@gpd_comp (Hom (F (x,b)) (F (z,b))) _ _ _ _ _ _
+            (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (z, b)
+              (_, Id b) (_, Id b $o Id b) (Id _, (cat_idl _)^$))
+            _).
+    exact (@fmap_comp (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (y, b) (z, b)
+            (f, Id b) (g, Id b)).
+Defined.
