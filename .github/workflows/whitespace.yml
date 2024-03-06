@@ -71,7 +71,7 @@ jobs:
             echo "${dash} ${etc}"
             ;;
           esac
-        done <<< "$(git log --check --pretty=format:"---% h% s" -${{github.event.pull_request.commits}})"
+        done <<< "$(git log --check --pretty=format:"---% h% s" -${{ github.event.before }}..${{ github.sha }} --diff-filter=M)"
 
         if [ -n "${log}" ]; then
           echo -e "${log}" >> $GITHUB_OUTPUT
