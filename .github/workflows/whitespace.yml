@@ -50,10 +50,11 @@ jobs:
       id: check_out
       run: |
         log=
+        base_commit=$(git rev-parse FETCH_HEAD)
         while IFS= read -r line; do
           log="${log}\n${line}"
           echo "${line}"
-        done <<< "$(git diff --check ${{ github.event.before }}..${{ github.sha }})"
+        done <<< "$(git diff --check $base_commit ${{ github.sha }})"
 
         if [ -n "${log}" ]; then
           echo -e "${log}" >> $GITHUB_OUTPUT
