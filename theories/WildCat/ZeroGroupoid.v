@@ -206,4 +206,3 @@ Proof.
     destruct (eissect ie i).
     exact (cate_issect (f _) _).
 Defined.
-

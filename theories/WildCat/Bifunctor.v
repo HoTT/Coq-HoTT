@@ -8,18 +8,22 @@ Class IsBifunctor {A B C : Type} `{IsGraph A, IsGraph B, Is1Cat C}
   (F : A -> B -> C)
   := {
     bifunctor_isfunctor_10 : forall a, Is0Functor (F a);
-    bifunctor_isfunctor_01 :
-    forall b, Is0Functor (flip F b);
-    bifunctor_isbifunctor :
-    forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
-      fmap (F _) g $o fmap (flip F _) f $==
-        fmap (flip F _) f $o fmap (F _) g
+    bifunctor_isfunctor_01 : forall b, Is0Functor (flip F b);
+    bifunctor_isbifunctor : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
+      fmap (F _) g $o fmap (flip F _) f $== fmap (flip F _) f $o fmap (F _) g
   }.
 
 #[export] Existing Instance bifunctor_isfunctor_10.
 #[export] Existing Instance bifunctor_isfunctor_01.
 Arguments bifunctor_isbifunctor {A B C} {_ _ _ _ _ _}
   F {_} {a0 a1} f {b0 b1} g.
+
+Class Is1Bifunctor {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!IsBifunctor F}
+  := {
+    bifunctor_is1functor_10 :: forall a : A, Is1Functor (F a);
+    bifunctor_is1functor_01 :: forall b : B, Is1Functor (flip F b);
+  }.
 
 Definition bifunctor_hom {C : Type} `{IsGraph C}
   : C^op -> C -> Type := @Hom C _.
@@ -73,6 +77,33 @@ Proof.
   apply P.
 Defined.
 
+Global Instance is1bifunctor_compose {A B C D : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
+  (F : A -> B -> C) (G : C -> D) `{!Is0Functor G, !Is1Functor G}
+  `{!IsBifunctor F, !Is1Bifunctor F}
+  : Is1Bifunctor (fun a b => G (F a b)).
+Proof.
+  nrapply Build_Is1Bifunctor.
+  - intros x; nrapply Build_Is1Functor.
+    + intros a b f g p.
+      exact (fmap2 G (fmap2 (F x) p)).
+    + intros b.
+      refine (fmap2 G (fmap_id (F x) b) $@ _).
+      exact (fmap_id G _).
+    + intros a b c f g.
+      refine (fmap2 G (fmap_comp (F x) f g) $@ _).
+      exact (fmap_comp G _ _).
+  - intros y; nrapply Build_Is1Functor.
+    + intros a b f g p.
+      exact (fmap2 G (fmap2 (flip F y) p)).
+    + intros a.
+      refine (fmap2 G (fmap_id (flip F y) a) $@ _).
+      exact (fmap_id G _).
+    + intros a b c f g.
+      refine (fmap2 G (fmap_comp (flip F y) f g) $@ _).
+      exact (fmap_comp G _ _).
+Defined.
+
 (** There are two possible ways to define this, which will only agree in the event that F is a bifunctor. *)
 #[export] Instance Is0Functor_uncurry_bifunctor {A B C : Type}
   `{IsGraph A, IsGraph B, Is1Cat C}
@@ -95,7 +126,8 @@ Global Instance is0functor_bifunctor01 {A B C : Type}
 Proof.
   apply Build_Is0Functor.
   intros x y f.
-  exact (@fmap (A * B) C _ _ F _ (a, x) (a, y) (Id a, f)).
+  rapply (fmap F).
+  exact (Id a, f).
 Defined.
 
 Global Instance is1functor_bifunctor01 {A B C : Type}
@@ -105,18 +137,15 @@ Global Instance is1functor_bifunctor01 {A B C : Type}
 Proof.
   apply Build_Is1Functor.
   - intros x y f g p.
-    exact (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, y)
-            (Id a, f) (Id a, g) (Id _, p)).
+    rapply (fmap2 F).
+    exact (Id _, p).
   - intros b.
     exact (fmap_id F (a, b)).
   - intros x y z f g.
-    (** This term is just [refine (fmap2 F ((cat_idl _)^$, Id _) $@ _)]. Unfortunately, we need to help inference out quite a bit. *)
-    refine (@gpd_comp (Hom (F (a, x)) (F (a, z))) _ _ _ _ _ _
-            (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, z)
-              (Id a, _) (Id a $o Id a, _) ((cat_idl _)^$, Id _))
-            _).
-    exact (@fmap_comp (A * B) C _ _ _ _ _ _ _ _ F _ _ (a, x) (a, y) (a, z)
-            (Id a, f) (Id a, g)).
+    refine (_ $@ _).
+    2: rapply (fmap_comp F).
+    rapply (fmap2 F).
+    exact ((cat_idl (Id a))^$, Id _).
 Defined.
 
 Global Instance is0functor_bifunctor10 {A B C : Type}
@@ -126,7 +155,8 @@ Global Instance is0functor_bifunctor10 {A B C : Type}
 Proof.
   apply Build_Is0Functor.
   intros x y f.
-  exact (@fmap (A * B) C _ _ F _ (x, b) (y, b) (f, Id b)).
+  rapply (fmap F).
+  exact (f, Id b).
 Defined.
 
 Global Instance is1functor_bifunctor10 {A B C : Type}
@@ -136,16 +166,13 @@ Global Instance is1functor_bifunctor10 {A B C : Type}
 Proof.
   apply Build_Is1Functor.
   - intros x y f g p.
-    exact (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (y, b)
-            (f, Id b) (g, Id b) (p, Id _)).
+    rapply (fmap2 F).
+    exact (p, Id _).
   - intros a.
     exact (fmap_id F (a, b)).
   - intros x y z f g.
-    (** This term is just [refine (fmap2 F (Id _, (cat_idl _)^$) $@ _)]. Unfortunately, we need to help inference out quite a bit. *)
-    refine (@gpd_comp (Hom (F (x,b)) (F (z,b))) _ _ _ _ _ _
-            (@fmap2 (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (z, b)
-              (_, Id b) (_, Id b $o Id b) (Id _, (cat_idl _)^$))
-            _).
-    exact (@fmap_comp (A * B) C _ _ _ _ _ _ _ _ F _ _ (x, b) (y, b) (z, b)
-            (f, Id b) (g, Id b)).
+    refine (_ $@ _).
+    2: rapply (fmap_comp F).
+    rapply (fmap2 F).
+    exact (Id _, (cat_idl _)^$).
 Defined.
