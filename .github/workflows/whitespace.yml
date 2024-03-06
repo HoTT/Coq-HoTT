@@ -1,0 +1,37 @@
+name: Whitespace Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  whitespace-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check for trailing whitespace
+      run: |
+        TRAILING_WHITESPACE=$(git grep -l -z -E '\s+$' | xargs -0 sed -n '/\s$/p')
+        if [ -n "$TRAILING_WHITESPACE" ]; then
+          echo "Trailing whitespace found. Please fix with:\
+          bash ./etc/fix_trailing_whitespace.sh"
+          exit 1
+        fi
+
+    - name: Check that every file ends correctly
+      run: |
+        while IFS= read -r file; do
+          # Check if the file is a regular file
+          if [ -f "$file" ]; then
+            if [ -n "$(tail -c 1 "$file")" ]; then
+              echo "File $file does not end with a newline. Please fix with:\
+              bash ./etc/fix_end_newlines.sh"
+              exit 1
+            fi
+          fi
+        done < <(git ls-files)
