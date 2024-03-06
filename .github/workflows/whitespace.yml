@@ -60,6 +60,9 @@ jobs:
         done <<< "$(git diff --check $base_commit ${{ github.sha }} | grep '^-[^-]')"
 
         if [ -n "${log}" ]; then
-          echo -e "Whitespace issues found in the following file(s) and line number(s):\n${log}" >> $GITHUB_OUTPUT
+          delimiter=$(openssl rand -hex 8)
+          echo "text<<${delimiter}" >> $GITHUB_OUTPUT
+          echo -e "${log}" >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
           exit 2
         fi
