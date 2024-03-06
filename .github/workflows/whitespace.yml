@@ -49,11 +49,14 @@ jobs:
     - name: git log --check
       id: check_out
       run: |
-        log=
+       log=
         base_commit=$(git rev-parse FETCH_HEAD)
         while IFS= read -r line; do
           log="${log}\n${line}"
-          echo "::error file=${line%%:*},line=${line#*:}::Whitespace issue: ${line}"
+          if [[ $line =~ ^-[^-] ]]; then
+            file_line=$(echo "$line" | cut -c 2-)
+            echo "::error file=${file_line%%:*},line=${file_line#*:}::Whitespace issue: ${file_line}"
+          fi
         done <<< "$(git diff --check $base_commit ${{ github.sha }} | grep '^-[^-]')"
 
         if [ -n "${log}" ]; then
