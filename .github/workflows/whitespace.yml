@@ -11,17 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set commit count
+      shell: bash
+      run: echo "COMMIT_DEPTH=$((1 + ${{ github.event.pull_request.commits }}))" >> $GITHUB_ENV
+
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: ${{ env.COMMIT_DEPTH }}
 
-    - name: Check for trailing whitespace
-      run: |
-        TRAILING_WHITESPACE=$(git grep -l -z -E '\s+$' | xargs -0 sed -n '/\s$/p')
-        if [ -n "$TRAILING_WHITESPACE" ]; then
-          echo "Trailing whitespace found. Please fix with:\
-          bash ./etc/fix_trailing_whitespace.sh"
-          exit 1
-        fi
+    # TODO: reintroduce this check when the library is cleaned up
+    # - name: Check for trailing whitespace
+    #   run: |
+    #     TRAILING_WHITESPACE=$(git grep -l -z -E '\s+$' | xargs -0 sed -n '/\s$/p')
+    #     if [ -n "$TRAILING_WHITESPACE" ]; then
+    #       echo "Trailing whitespace found. Please fix with:\
+    #       bash ./etc/fix_trailing_whitespace.sh"
+    #       exit 1
+    #     fi
 
     - name: Check that every file ends correctly
       run: |
@@ -35,3 +42,38 @@ jobs:
             fi
           fi
         done < <(git ls-files)
+
+# Get the repo with the commits(+1) in the series.
+# Process `git log --check` output to extract just the check errors.
+
+    - name: git log --check
+      id: check_out
+      run: |
+        log=
+        commit=
+        while read dash etc
+        do
+          case "${dash}" in
+          "---")
+            commit="${etc}"
+            ;;
+          "")
+            ;;
+          *)
+            if test -n "${commit}"
+            then
+              log="${log}\n${commit}"
+              echo ""
+              echo "--- ${commit}"
+            fi
+            commit=
+            log="${log}\n${dash} ${etc}"
+            echo "${dash} ${etc}"
+            ;;
+          esac
+        done <<< "$(git log --check --pretty=format:"---% h% s" -${{github.event.pull_request.commits}})"
+
+        if [ -n "${log}" ]; then
+          echo -e "${log}" >> $GITHUB_OUTPUT
+          exit 2
+        fi
