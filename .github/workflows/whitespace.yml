@@ -53,10 +53,10 @@ jobs:
         base_commit=$(git rev-parse FETCH_HEAD)
         while IFS= read -r line; do
           log="${log}\n${line}"
-          echo "${line}"
-        done <<< "$(git diff --check $base_commit ${{ github.sha }})"
+          echo "::error file=${line%%:*},line=${line#*:}::Whitespace issue: ${line}"
+        done <<< "$(git diff --check $base_commit ${{ github.sha }} | grep '^-[^-]')"
 
         if [ -n "${log}" ]; then
-          echo -e "${log}" >> $GITHUB_OUTPUT
+          echo -e "Whitespace issues found in the following file(s) and line number(s):\n${log}" >> $GITHUB_OUTPUT
           exit 2
         fi
