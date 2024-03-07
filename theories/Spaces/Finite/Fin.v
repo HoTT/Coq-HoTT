@@ -4,6 +4,7 @@ Require Import Types.
 Require Import HSet.
 Require Import Spaces.Nat.Core.
 Require Import Equiv.PathSplit.
+Require Import DProp.
 
 (** By setting this, using [simple_induction] instead of [induction], and specifying universe variables in a couple of places, we can avoid all universe variables in this file.  Several results are confirmed to use no universe variables with an @{} annotation. *)
 Local Set Universe Minimization ToSet.
