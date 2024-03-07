@@ -191,7 +191,6 @@ Class HasAllProducts (A : Type) `{Is1Cat A}
 Global Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
   : Is0Functor (fun x : I -> A => cat_prod I x).
 Proof.
-  Set Printing All.
   nrapply Build_Is0Functor.
   intros x y f.
   exact (cat_prod_corec I (fun i => f i $o cat_pr i)).
