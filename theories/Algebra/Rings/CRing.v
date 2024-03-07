@@ -238,7 +238,7 @@ Global Instance is01cat_cring : Is01Cat CRing
   := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).
 
 Global Instance is2graph_cring : Is2Graph CRing
-  := fun A B => isgraph_induced (@rng_homo_map A B).
+  := fun A B => isgraph_induced (@rng_homo_map A B : _ -> (cring_type A $-> _)).
 
 Global Instance is01cat_cringhomomorphism {A B : CRing} : Is01Cat (A $-> B)
   := is01cat_induced (@rng_homo_map A B).
