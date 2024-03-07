@@ -560,13 +560,30 @@ Section FunctorJoin.
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
     : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
-  Global Instance isbifunctor_join : IsBifunctor Join.
+  Global Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
-    snrapply Build_IsBifunctor.
+    snrapply Build_Is0Bifunctor.
     - intro A; snrapply Build_Is0Functor; intros B D g.
       exact (functor_join idmap g).
     - intro B; snrapply Build_Is0Functor; intros A C f.
       exact (functor_join f idmap).
+  Defined.
+
+  Global Instance is1bifunctor_join : Is1Bifunctor Join.
+  Proof.
+    snrapply Build_Is1Bifunctor.
+    - intro A; snrapply Build_Is1Functor.
+      + intros B C f g p.
+        exact (functor2_join (fun _ => 1) p).
+      + intro B; exact functor_join_idmap.
+      + intros B C D f g.
+        exact (functor_join_compose idmap f idmap g).
+    - intro B; snrapply Build_Is1Functor.
+      + intros A C f g p.
+        exact (functor2_join p (fun _ => 1)).
+      + intro A; exact functor_join_idmap.
+      + intros A C D f g.
+        exact (functor_join_compose f idmap g idmap).
     - intros A C f B D g x.
       lhs_V nrapply functor_join_compose.
       nrapply functor_join_compose.

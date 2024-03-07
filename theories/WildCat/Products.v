@@ -427,9 +427,9 @@ End Symmetry.
 
 (** We prove bifunctoriality of [cat_binprod : A -> A -> A] by factoring it as [cat_prod Bool o Bool_rec A]. First, we prove that [Bool_rec A : A -> A -> (Bool -> A)] is a bifunctor. *)
 Local Instance is0bifunctor_boolrec {A : Type} `{Is1Cat A}
-  : IsBifunctor (Bool_rec A).
+  : Is0Bifunctor (Bool_rec A).
 Proof.
-  snrapply Build_IsBifunctor.
+  snrapply Build_Is0Bifunctor.
   - intros x.
     nrapply Build_Is0Functor.
     intros a b f [|].
@@ -440,9 +440,6 @@ Proof.
     intros a b f [|].
     + exact f.
     + reflexivity.
-  - intros a a' f b b' g [|].
-    + exact (cat_idl _ $@ (cat_idr _)^$).
-    + exact (cat_idr _ $@ (cat_idl _)^$).
 Defined.
 
 Local Instance is1bifunctor_boolrec {A : Type} `{Is1Cat A}
@@ -467,14 +464,17 @@ Proof.
     + intros a b c f g [|].
       1: reflexivity.
       exact (cat_idl _)^$.
+  - intros a a' f b b' g [|].
+    + exact (cat_idl _ $@ (cat_idr _)^$).
+    + exact (cat_idr _ $@ (cat_idl _)^$).
 Defined.
 
 (** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
 Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
-  : IsBifunctor (fun x y => cat_binprod x y).
+  : Is0Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
-  exact (isbifunctor_compose
+  exact (is0bifunctor_compose
           (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
@@ -491,28 +491,28 @@ Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
-  exact (bifunctor_isfunctor_01 y).
+  exact (bifunctor_is0functor10 y).
 Defined.
 
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
 Proof.
-  exact (bifunctor_is1functor_01 y).
+  exact (bifunctor_is1functor10 y).
 Defined.
 
 Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
-  exact (bifunctor_isfunctor_10 x).
+  exact (bifunctor_is0functor01 x).
 Defined.
 
 Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is1Functor (fun y => cat_binprod x y).
 Proof.
-  exact (bifunctor_is1functor_10 x).
+  exact (bifunctor_is1functor01 x).
 Defined.
 
 (** [cat_binprod_corec] is also functorial in each morphsism. *)

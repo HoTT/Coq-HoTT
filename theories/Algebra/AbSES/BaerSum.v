@@ -51,11 +51,18 @@ Proof.
   apply abses_pushout_pullback_reorder'.
 Defined.
 
-Global Instance isbifunctor_abses' `{Univalence}
-  : IsBifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
+Global Instance is0bifunctor_abses' `{Univalence}
+  : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  eapply Build_IsBifunctor.
-  intros ? ? g ? ? f E; cbn.
+  rapply Build_Is0Bifunctor.
+Defined.
+
+Global Instance is1bifunctor_abses' `{Univalence}
+  : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
+Proof.
+  snrapply Build_Is1Bifunctor.
+  1,2: exact _.
+  - intros ? ? g ? ? f E; cbn.
   apply abses_pushout_pullback_reorder.
 Defined.
 
@@ -222,15 +229,21 @@ Proof.
   - intro; apply baer_sum_unit_r.
 Defined.
 
-Global Instance isbifunctor_abses `{Univalence}
-  : IsBifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
+Global Instance is0bifunctor_abses `{Univalence}
+  : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  econstructor.
-  intros ? ? f ? ? g.
-  rapply hspace_phomotopy_from_homotopy.
-  1: apply ishspace_abses.
-  intro E; cbn.
-  apply abses_pushout_pullback_reorder.
+  rapply Build_Is0Bifunctor.
+Defined.
+
+Global Instance is1bifunctor_abses `{Univalence}
+  : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> Type).
+Proof.
+  snrapply Build_Is1Bifunctor.
+  (*TODO: why does typeclass search find is1functor_abses' lemmas here? *)
+  - intro; exact is1functor_abses'01.
+  - exact _.
+  - intros ? ? f ? ? g E; cbn.
+    apply abses_pushout_pullback_reorder.
 Defined.
 
 (** ** Pushouts and pullbacks respect the Baer sum *)

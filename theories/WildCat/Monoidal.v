@@ -8,7 +8,7 @@ Section Monoidal.
   Context `{Is1Cat C}.
   Context `{HasEquivs C}.
   Context (tensor : C -> C -> C).
-  Context `{!IsBifunctor tensor}.
+  Context `{!Is0Bifunctor tensor}.
 
   Definition left_assoc : C -> C -> C -> C :=
     fun a b c => tensor (tensor a b) c.

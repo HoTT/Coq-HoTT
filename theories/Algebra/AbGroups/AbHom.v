@@ -63,13 +63,10 @@ Proof.
   by apply equiv_path_grouphomomorphism.
 Defined.
 
-Global Instance isbifunctor_ab_hom `{Funext}
-  : IsBifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
+Global Instance is0bifunctor_ab_hom `{Funext}
+  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
-  snrapply Build_IsBifunctor.
-  1-2: exact _.
-  intros A A' f B B' g phi; cbn.
-  by apply equiv_path_grouphomomorphism.
+  rapply Build_Is0Bifunctor.
 Defined.
 
 (** ** Properties of [ab_hom] *)

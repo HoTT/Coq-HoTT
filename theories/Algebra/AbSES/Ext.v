@@ -24,9 +24,9 @@ Defined.
 
 Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
-Global Instance isbifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
-  : IsBifunctor@{v v w u u v v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
-  := isbifunctor_compose _ _ (P:=isbifunctor_abses').
+Global Instance is0bifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
+  : Is0Bifunctor@{v v w u u v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
+  := is0bifunctor_compose _ _ (bf:=isbifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
@@ -84,15 +84,10 @@ Proof.
   apply baer_sum_pullback.
 Defined.
 
-Global Instance isbifunctor_ext `{Univalence}
-  : IsBifunctor (A:=AbGroup^op) ab_ext.
+Global Instance is0bifunctor_ext `{Univalence}
+  : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  snrapply Build_IsBifunctor.
-  1,2: exact _.
-  intros B B' f A A' g.
-  rapply Trunc_ind; intro E.
-  apply (ap tr).
-  apply abses_pushout_pullback_reorder.
+  rapply Build_Is0Bifunctor.
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)

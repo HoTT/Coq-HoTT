@@ -122,9 +122,7 @@ Defined.
 #[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C)
-  `{!IsBifunctor F}
-  `{forall a, Is1Functor (F a)}
-  `{forall b, Is1Functor (flip F b)}
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
   : Is1Functor (uncurry F).
 Proof.
   nrapply Build_Is1Functor.
