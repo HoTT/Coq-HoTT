@@ -24,7 +24,7 @@ Class Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A} := Build_Product' {
 }.
 
 Arguments Product I {A _ _ _ _} x.
-Arguments cat_prod I {A _ _ _ _} x {_}.
+Arguments cat_prod I {A _ _ _ _} x {product} : rename.
 
 (** A convenience wrapper for building products *)
 Definition Build_Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A}
@@ -189,17 +189,16 @@ Class HasAllProducts (A : Type) `{Is1Cat A}
 (** *** Product functor *)
 
 Global Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
-  : @Is0Functor (I -> A) A (isgraph_forall I (fun _ => A)) _
-    (fun x => cat_prod I x).
+  : Is0Functor (fun x : I -> A => cat_prod I x).
 Proof.
+  Set Printing All.
   nrapply Build_Is0Functor.
   intros x y f.
   exact (cat_prod_corec I (fun i => f i $o cat_pr i)).
 Defined.
 
 Global Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
-  : @Is1Functor (I -> A) A (isgraph_forall I (fun _ => A)) _ _ _ _ _ _ _
-    (fun x => cat_prod I x) _.
+  : Is1Functor (fun x : I -> A => cat_prod I x).
 Proof.
   nrapply Build_Is1Functor.
   - intros x y f g p.
@@ -333,7 +332,7 @@ Proof.
     + exact (p false).
 Defined.
 
-(** From binary products, all Bool-shaped products can be constructed. This should not be an instance. *)
+(** From binary products, all Bool-shaped products can be constructed. This should not be an instance to avoid a cycle with [hasbinaryproducts_hasproductsbool]. *)
 Definition hasproductsbool_hasbinaryproducts {A : Type} `{HasBinaryProducts A}
   : HasProducts Bool A.
 Proof.
@@ -475,17 +474,17 @@ Defined.
 Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : IsBifunctor (fun x y => cat_binprod x y).
 Proof.
-  exact (isbifunctor_compose (Bool_rec A)
-          (fun x => @cat_prod Bool _ _ _ _ _ x
-            (@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts x))).
+  pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
+  exact (isbifunctor_compose
+          (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
 Global Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is1Bifunctor (fun x y => cat_binprod x y).
 Proof.
-  exact (is1bifunctor_compose (Bool_rec A)
-          (fun x => @cat_prod Bool _ _ _ _ _ x
-            (@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts x))).
+  pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
+  exact (is1bifunctor_compose
+          (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
 (** Binary products are functorial in each argument. *)
