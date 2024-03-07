@@ -427,11 +427,9 @@ End Symmetry.
 
 (** *** Binary product functor *)
 
-Local Definition pick2 {A : Type} `{Is01Cat A} (x y : A) : Bool -> A
-  := fun b => if b then x else y.
-
-Local Instance is0bifunctor_pick2 {A : Type} `{Is1Cat A}
-  : IsBifunctor pick2.
+(** We prove bifunctoriality of [cat_binprod : A -> A -> A] by factoring it as [cat_prod Bool o Bool_rec A]. First, we prove that [Bool_rec A : A -> A -> (Bool -> A)] is a bifunctor. *)
+Local Instance is0bifunctor_boolrec {A : Type} `{Is1Cat A}
+  : IsBifunctor (Bool_rec A).
 Proof.
   snrapply Build_IsBifunctor.
   - intros x.
@@ -449,8 +447,8 @@ Proof.
     + exact (cat_idr _ $@ (cat_idl _)^$).
 Defined.
 
-Local Instance is1bifunctor_pick2 {A : Type} `{Is1Cat A}
-  : Is1Bifunctor pick2.
+Local Instance is1bifunctor_boolrec {A : Type} `{Is1Cat A}
+  : Is1Bifunctor (Bool_rec A).
 Proof.
   nrapply Build_Is1Bifunctor.
   - intros x.
@@ -473,11 +471,11 @@ Proof.
       exact (cat_idl _)^$.
 Defined.
 
-(** As a special case of the product functor, [cat_binprod] is a bifunctor [A -> A -> A]. *)
+(** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
 Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : IsBifunctor (fun x y => cat_binprod x y).
 Proof.
-  exact (isbifunctor_compose pick2
+  exact (isbifunctor_compose (Bool_rec A)
           (fun x => @cat_prod Bool _ _ _ _ _ x
             (@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts x))).
 Defined.
@@ -485,7 +483,7 @@ Defined.
 Global Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is1Bifunctor (fun x y => cat_binprod x y).
 Proof.
-  exact (is1bifunctor_compose pick2
+  exact (is1bifunctor_compose (Bool_rec A)
           (fun x => @cat_prod Bool _ _ _ _ _ x
             (@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts x))).
 Defined.
