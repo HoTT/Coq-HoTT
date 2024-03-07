@@ -117,6 +117,26 @@ Proof.
   exact ((fmap (flip F b2) f) $o (fmap (F a1) g)).
 Defined.
 
+Global Instance is1functor_uncurry_bifunctor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
+  `{!IsBifunctor F, !Is1Bifunctor F}
+  : Is1Functor (uncurry F).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros x y f g [p q].
+    refine (fmap2 (flip F _) p $@R _ $@ _).
+    exact (_ $@L fmap2 (F _) q).
+  - intros x.
+    refine (fmap_id (flip F _) _ $@R _ $@ _).
+    refine (_ $@L fmap_id (F _) _ $@ cat_idl _).
+  - intros x y z f g.
+    refine (fmap_comp (flip F _) _ _ $@R _ $@ _).
+    refine (_ $@L fmap_comp (F _) _ _  $@ _).
+    refine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).
+    refine (cat_assoc _ _ _ $@R _ $@ _ $@ (cat_assoc_opp _ _ _ $@R _)).
+    exact (_ $@L (bifunctor_isbifunctor F _ _)^$ $@R _).
+Defined.
+
 (** *** (Uncurried) Bifunctors are functorial in each argument. *)
 
 Global Instance is0functor_bifunctor01 {A B C : Type}
