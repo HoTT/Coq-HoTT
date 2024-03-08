@@ -63,7 +63,7 @@ Proof.
   - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
   - intros a b f.
     apply cat_idr_strong.
-  - intros a b f. 
+  - intros a b f.
     apply cat_idl_strong.
 Defined.
 
