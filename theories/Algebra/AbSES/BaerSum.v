@@ -62,8 +62,8 @@ Global Instance is1bifunctor_abses' `{Univalence}
 Proof.
   snrapply Build_Is1Bifunctor.
   1,2: exact _.
-  - intros ? ? g ? ? f E; cbn.
-  apply abses_pushout_pullback_reorder.
+  intros ? ? g ? ? f E; cbn.
+  exact (abses_pushout_pullback_reorder E f g).
 Defined.
 
 (** Given a short exact sequence [A -> E -> B] and maps [f : A -> A'], [g : B' -> B], we can change the order of pushing out along [f] and pulling back along [g]. *)
@@ -236,14 +236,15 @@ Proof.
 Defined.
 
 Global Instance is1bifunctor_abses `{Univalence}
-  : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> Type).
+  : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
   snrapply Build_Is1Bifunctor.
-  (*TODO: why does typeclass search find is1functor_abses' lemmas here? *)
-  - intro; exact is1functor_abses'01.
-  - exact _.
-  - intros ? ? f ? ? g E; cbn.
-    apply abses_pushout_pullback_reorder.
+  1,2: exact _.
+  intros ? ? f ? ? g.
+  rapply hspace_phomotopy_from_homotopy.
+  1: apply ishspace_abses.
+  intro E; cbn.
+  apply abses_pushout_pullback_reorder.
 Defined.
 
 (** ** Pushouts and pullbacks respect the Baer sum *)
