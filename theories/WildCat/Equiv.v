@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.Utf8 Basics.Overture Basics.Tactics.
+Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import WildCat.Core.
 
 (** We declare a scope for printing [CatEquiv] as [≅] *)
@@ -520,6 +520,18 @@ Proof.
     refine (cate_isretr _ $@ _).
     symmetry; apply id_cate_fun.
   - exact tt.
+Defined.
+
+Global Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
+  `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)} 
+  : HasMorExt (core A).
+Proof.
+  snrapply Build_HasMorExt.
+  intros X Y f g; cbn in *.
+  snrapply isequiv_homotopic.
+  - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
+  - rapply isequiv_compose.
+  - intro p; by induction p.
 Defined.
 
 (** * Initial objects and terminal objects are all respectively equivalent. *)
