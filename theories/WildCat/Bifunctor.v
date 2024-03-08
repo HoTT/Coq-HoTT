@@ -23,31 +23,6 @@ Class Is1Bifunctor {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
 Arguments bifunctor_isbifunctor {A B C} {_ _ _ _ _ _ _ _ _ _ _ _}
   F {_ _} {a0 a1} f {b0 b1} g.
 
-Definition bifunctor_hom {C : Type} `{IsGraph C}
-  : C^op -> C -> Type := @Hom C _.
-
-Local Instance is0functor_hom01 {C : Type} `{Is1Cat C}
-  : forall c, Is0Functor (bifunctor_hom c).
-Proof.
-  intro c; srapply Build_Is0Functor.
-  rapply cat_postcomp.
-Defined.
-
-Local Instance is0functor_hom10 {C : Type} `{Is1Cat C}
-  : forall c, Is0Functor (flip bifunctor_hom c).
-Proof.
-  intro c; srapply Build_Is0Functor.
-  intros ? ? f; cbn.
-  rapply cat_precomp.
-  exact f.
-Defined.
-
-Global Instance is0bifunctor_hom {C : Type} `{Is1Cat C}
-  : Is0Bifunctor (bifunctor_hom (C:=C)).
-Proof.
-  rapply Build_Is0Bifunctor.
-Defined.
-
 Definition fmap01 {A B C : Type} `{Is01Cat A, Is01Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F}
   (a : A) {b0 b1 : B} (g : b0 $-> b1)
