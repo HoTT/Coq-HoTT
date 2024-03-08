@@ -285,3 +285,16 @@ Proof.
     + exact (p x).
     + exact (q y).
 Defined.
+
+Global Instance hasallcoproducts_type : HasAllCoproducts Type.
+Proof.
+  intros I x.
+  snrapply Build_Coproduct.
+  - exact (sig (fun i : I => x i)).
+  - exact (exist x).
+  - intros A f s.
+    exact (f s.1 s.2).
+  - intros A f i xi; reflexivity.
+  - intros A f g p s.
+    exact (p s.1 s.2).
+Defined.
