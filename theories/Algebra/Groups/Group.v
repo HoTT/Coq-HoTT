@@ -481,7 +481,7 @@ Global Instance is01cat_group : Is01Cat Group :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
 (** Helper notation so that the wildcat instances can easily be inferred. *)
-Local Notation grp_homo_map' := (fun A B => @grp_homo_map A B : _ -> (group_type A $-> _)).
+Local Notation grp_homo_map' A B := (@grp_homo_map A B : _ -> (group_type A $-> _)).
 
 Global Instance is2graph_group : Is2Graph Group
   := fun A B => isgraph_induced (grp_homo_map' A B).
