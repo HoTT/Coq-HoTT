@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Bool.
 Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
                WildCat.Opposite WildCat.Products WildCat.Universe
