@@ -2,7 +2,7 @@ Require Import Basics Types Truncations.Core.
 Require Import Pointed WildCat.
 Require Import Truncations.SeparatedTrunc.
 Require Import AbelianGroup AbHom AbProjective.
-Require Import AbSES.Pullback AbSES.BaerSum AbSES.Core.
+Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
@@ -27,6 +27,11 @@ Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 Global Instance is0bifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
   : Is0Bifunctor@{v v w u u v} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
   := is0bifunctor_compose _ _ (bf:=is0bifunctor_abses').
+
+(**TODO: universes*)
+Global Instance is1bifunctor_ext'@{u v w | u < v, v < w} `{Univalence}
+  : Is1Bifunctor@{v v w u u v v u u} (Ext' : AbGroup@{u}^op -> AbGroup@{u} -> Type@{v})
+  := is1bifunctor_compose _ _ (bf:=is1bifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
@@ -60,7 +65,7 @@ Proof.
   apply baer_sum_commutative.
 Defined.
 
-Global Instance is01functor_ext `{Univalence} (B : AbGroup^op)
+Global Instance is0functor_ext01 `{Univalence} (B : AbGroup^op)
   : Is0Functor (ab_ext B).
 Proof.
   srapply Build_Is0Functor; intros ? ? f.
@@ -72,7 +77,7 @@ Proof.
   apply baer_sum_pushout.
 Defined.
 
-Global Instance is10functor_ext `{Univalence} (A : AbGroup)
+Global Instance is0functor_ext10 `{Univalence} (A : AbGroup)
   : Is0Functor (fun B : AbGroup^op => ab_ext B A).
 Proof.
   srapply Build_Is0Functor; intros ? ? f; cbn.
@@ -84,10 +89,60 @@ Proof.
   apply baer_sum_pullback.
 Defined.
 
+Global Instance is1functor_ext01 `{Univalence} (B : AbGroup^op)
+  : Is1Functor (ab_ext B).
+Proof.
+  snrapply Build_Is1Functor.
+  - intros A C f g p x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    apply abses_pushout_homotopic.
+    exact p.
+  - intros A x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    apply abses_pushout_id.
+  - intros A C D f g x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    apply abses_pushout_compose.
+Defined.
+
+Global Instance is1functor_ext10 `{Univalence} (A : AbGroup)
+  : Is1Functor (fun B : AbGroup^op => ab_ext B A).
+Proof.
+  snrapply Build_Is1Functor.
+  - intros B C f g p x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    apply abses_pullback_homotopic.
+    exact p.
+  - intros B x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    apply abses_pullback_id.
+  - intros B C D f g x.
+    strip_truncations; cbn.
+    apply (ap tr).
+    symmetry.
+    apply abses_pullback_compose.
+Defined.
+
 Global Instance is0bifunctor_ext `{Univalence}
   : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
   rapply Build_Is0Bifunctor.
+Defined.
+
+Global Instance is1bifunctor_ext `{Univalence}
+  : Is1Bifunctor (A:=AbGroup^op) ab_ext.
+Proof.
+  snrapply Build_Is1Bifunctor.
+  1,2: exact _.
+  intros B B' f A A' g.
+  rapply Trunc_ind; intro E.
+  apply (ap tr).
+  apply abses_pushout_pullback_reorder.
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)

@@ -45,7 +45,7 @@ Defined.
 Global Instance is1bifunctor_compose {A B C D : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
   (F : A -> B -> C) (G : C -> D) `{!Is0Functor G, !Is1Functor G}
-  `{!Is0Bifunctor F, !Is1Bifunctor F}
+  `{!Is0Bifunctor F, bf : !Is1Bifunctor F}
   : Is1Bifunctor (fun a b => G (F a b)).
 Proof.
   nrapply Build_Is1Bifunctor.
