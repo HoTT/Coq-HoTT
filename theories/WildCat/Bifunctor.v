@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall.
-Require Import WildCat.Core WildCat.Opposite WildCat.Universe WildCat.Prod.
+Require Import WildCat.Core WildCat.Prod.
 
 (** * Bifunctors between WildCats *)
 
@@ -114,9 +114,10 @@ Global Instance is0functor_bifunctor_uncurried01 {A B C : Type}
   (F : A * B -> C) `{!Is0Functor F} (a : A)
   : Is0Functor (fun b => F (a, b)).
 Proof.
-  apply Build_Is0Functor.
-  intros x y f.
-  rapply (fmap F).
+  nrapply (is0functor_compose (fun b => (a, b)) F).
+  2: exact _.
+  nrapply Build_Is0Functor.
+  intros b c f.
   exact (Id a, f).
 Defined.
 
@@ -125,17 +126,14 @@ Global Instance is1functor_bifunctor_uncurried01 {A B C : Type}
   (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
   : Is1Functor (fun b => F (a, b)).
 Proof.
-  apply Build_Is1Functor.
-  - intros x y f g p.
-    rapply (fmap2 F).
+  nrapply (is1functor_compose (fun b => (a, b)) F).
+  2: exact _.
+  nrapply Build_Is1Functor.
+  - intros b c f g p.
     exact (Id _, p).
-  - intros b.
-    exact (fmap_id F (a, b)).
-  - intros x y z f g.
-    refine (_ $@ _).
-    2: rapply (fmap_comp F).
-    rapply (fmap2 F).
-    exact ((cat_idl (Id a))^$, Id _).
+  - intros b; reflexivity.
+  - intros b c d f g.
+    exact ((cat_idl _)^$, Id _).
 Defined.
 
 Global Instance is0functor_bifunctor_uncurried10 {A B C : Type}
@@ -143,9 +141,10 @@ Global Instance is0functor_bifunctor_uncurried10 {A B C : Type}
   (F : A * B -> C) `{!Is0Functor F} (b : B)
   : Is0Functor (fun a => F (a, b)).
 Proof.
-  apply Build_Is0Functor.
-  intros x y f.
-  rapply (fmap F).
+  nrapply (is0functor_compose (fun a => (a, b)) F).
+  2: exact _.
+  nrapply Build_Is0Functor.
+  intros a c f.
   exact (f, Id b).
 Defined.
 
@@ -154,16 +153,14 @@ Global Instance is1functor_bifunctor_uncurried10 {A B C : Type}
   (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (b : B)
   : Is1Functor (fun a => F (a, b)).
 Proof.
-  apply Build_Is1Functor.
-  - intros x y f g p.
-    rapply (fmap2 F).
+  nrapply (is1functor_compose (fun a => (a, b)) F).
+  2: exact _.
+  nrapply Build_Is1Functor.
+  - intros a c f g p.
     exact (p, Id _).
-  - intros a.
-    exact (fmap_id F (a, b)).
-  - intros x y z f g.
-    refine (_ $@ _).
-    2: rapply (fmap_comp F).
-    rapply (fmap2 F).
+  - intros a; reflexivity.
+  - intros a c d f g.
+    cbn.
     exact (Id _, (cat_idl _)^$).
 Defined.
 
@@ -181,14 +178,11 @@ Global Instance is1bifunctor_bifunctor_uncurried {A B C : Type}
   : Is1Bifunctor (fun a b => F (a, b)).
 Proof.
   apply Build_Is1Bifunctor.
-  - intros a.
-    exact (is1functor_bifunctor_uncurried01 F a).
-  - intros b.
-    exact (is1functor_bifunctor_uncurried10 F b).
-  - intros a b f c d g.
-    refine ((fmap_comp F _ _)^$ $@ _).
-    refine (_ $@ (fmap_comp F _ _)).
-    rapply (fmap2 F).
-    refine (cat_idl f $@ (cat_idr f)^$, _).
-    exact (cat_idr g $@ (cat_idl g)^$).
+  1,2: exact _.
+  intros a b f c d g.
+  refine ((fmap_comp F _ _)^$ $@ _).
+  refine (_ $@ (fmap_comp F _ _)).
+  rapply (fmap2 F).
+  refine (cat_idl f $@ (cat_idr f)^$, _).
+  exact (cat_idr g $@ (cat_idl g)^$).
 Defined.
