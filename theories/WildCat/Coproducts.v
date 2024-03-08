@@ -267,34 +267,20 @@ Defined.
 
 (** *** Coproducts in Type *)
 
-(** [Type] has all binary coproducts *)
-Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type.
-Proof.
-  intros X Y.
-  snrapply Build_BinaryCoproduct.
-  - exact (X + Y).
-  - exact inl.
-  - exact inr.
-  - intros Z f g.
-    intros [x | y].
-    + exact (f x).
-    + exact (g y).
-  - reflexivity.
-  - reflexivity.
-  - intros Z f g p q [x | y].
-    + exact (p x).
-    + exact (q y).
-Defined.
-
+(** [Type] has all coproducts. *)
 Global Instance hasallcoproducts_type : HasAllCoproducts Type.
 Proof.
   intros I x.
   snrapply Build_Coproduct.
   - exact (sig (fun i : I => x i)).
   - exact (exist x).
-  - intros A f s.
-    exact (f s.1 s.2).
+  - intros A f [i xi].
+    exact (f i xi).
   - intros A f i xi; reflexivity.
-  - intros A f g p s.
-    exact (p s.1 s.2).
+  - intros A f g p [i xi].
+    exact (p i xi).
 Defined.
+
+(** In particular, [Type] has all binary coproducts. *)
+Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
+  := {}.

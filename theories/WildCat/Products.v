@@ -554,6 +554,7 @@ Proof.
     + exact (q x).
 Defined.
 
+(** Assuming [Funext], [Type] has all products. *)
 Global Instance hasallproducts_type `{Funext} : HasAllProducts Type.
 Proof.
   intros I x.
