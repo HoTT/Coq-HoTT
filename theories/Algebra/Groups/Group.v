@@ -124,7 +124,7 @@ Defined.
 
 (* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
 Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
-  grp_homo_map : G -> H;
+  grp_homo_map : group_type G -> group_type H;
   grp_homo_ishomo :> IsMonoidPreserving grp_homo_map;
 }.
 
@@ -480,17 +480,20 @@ Global Instance isgraph_group : IsGraph Group
 Global Instance is01cat_group : Is01Cat Group :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
+(** Helper notation so that the wildcat instances can easily be inferred. *)
+Local Notation grp_homo_map' A B := (@grp_homo_map A B : _ -> (group_type A $-> _)).
+
 Global Instance is2graph_group : Is2Graph Group
-  := fun A B => isgraph_induced (@grp_homo_map A B).
+  := fun A B => isgraph_induced (grp_homo_map' A B).
 
 Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
-  := isgraph_induced (@grp_homo_map A B).
+  := isgraph_induced (grp_homo_map' A B).
 
 Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
-  := is01cat_induced (@grp_homo_map A B).
+  := is01cat_induced (grp_homo_map' A B).
 
 Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
-  := is0gpd_induced (@grp_homo_map A B).
+  := is0gpd_induced (grp_homo_map' A B).
 
 Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
   : Is0Functor (@cat_postcomp Group _ _ A B C h).

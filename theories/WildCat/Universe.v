@@ -17,10 +17,6 @@ Defined.
 Global Instance is2graph_type : Is2Graph Type
   := fun x y => Build_IsGraph _ (fun f g => f == g).
 
-(** Sometimes we need typeclasses to pick up that [A -> B] is a graph, but this cannot be done without first converting it to [A $-> B]. *)
-Global Instance isgraph_arrow {A B : Type} : IsGraph (A -> B)
-  := isgraph_hom A B.
-
 Global Instance is01cat_arrow {A B : Type} : Is01Cat (A $-> B).
 Proof.
   econstructor.
@@ -81,7 +77,7 @@ Proof.
   snrapply Build_HasMorExt.
   intros A B f g; cbn in *.
   snrapply isequiv_homotopic.
-  - exact (GpdHom_path o (ap (x:=f) (y:=g) equiv_fun)).
+  - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
   - nrapply isequiv_compose.
     1: apply isequiv_ap_equiv_fun.
     exact (isequiv_Htpy_path (uncore A) (uncore B) f g).

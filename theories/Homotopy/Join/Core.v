@@ -110,7 +110,7 @@ Arguments Build_JoinRecData {A B P}%type_scope (jl jr jg)%function_scope.
 
 (** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
 Definition join_rec {A B P : Type} (f : JoinRecData A B P)
-  : Join A B -> P
+  : Join A B $-> P
   := Join_rec (jl f) (jr f) (jg f).
 
 Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)

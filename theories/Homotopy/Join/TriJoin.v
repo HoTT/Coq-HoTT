@@ -159,7 +159,7 @@ Arguments TriJoinRecData : clear implicits.
 Arguments Build_TriJoinRecData {A B C P}%type_scope (j1 j2 j3 j12 j13 j23 j123)%function_scope.
 
 Definition trijoin_rec {A B C P : Type} (f : TriJoinRecData A B C P)
-  : TriJoin A B C -> P.
+  : TriJoin A B C $-> P.
 Proof.
   snrapply Join_rec.
   - exact (j1 f).
