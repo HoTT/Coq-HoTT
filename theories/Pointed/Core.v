@@ -958,14 +958,12 @@ Defined.
 
 Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
 Proof.
-  snrapply Build_HasMorExt.
+  rapply hasmorext_core.
   intros a b f g.
-  unfold GpdHom_path.
-  cbn in f, g.
-  (* [GpdHom_path] and the inverse of [equiv_path_pequiv] are not definitionally equal, but they compute to definitionally equal things on [idpath]. *)
-  apply (isequiv_homotopic (equiv_path_pequiv f g)^-1%equiv).
-  intro p; induction p; cbn.
-  reflexivity.
+  snrapply isequiv_homotopic.
+  1: apply equiv_path_pequiv'. 
+  1: exact _.
+  by intros [].
 Defined.
 
 (** pType is a univalent 1-coherent 1-category *)
