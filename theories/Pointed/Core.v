@@ -959,10 +959,9 @@ Defined.
 Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
 Proof.
   rapply hasmorext_core.
-  intros a b f g.
-  snrapply isequiv_homotopic.
-  1: apply equiv_path_pequiv'. 
-  1: exact _.
+  intros A B f g.
+  snrapply isequiv_homotopic'.
+  1: exact (equiv_path_pequiv' f g)^-1%equiv.
   by intros [].
 Defined.
 
