@@ -141,11 +141,13 @@ Proof.
     apply e0.
 Defined.
 
+(** [I]-indexed products for an [I]-indexed family of 0-groupoids. *)
 Definition prod_0gpd (I : Type) (G : I -> ZeroGpd) : ZeroGpd.
 Proof.
   rapply (Build_ZeroGpd (forall i, G i)).
 Defined.
 
+(** The [i]-th projection from the [I]-indexed product of 0-groupoids. *)
 Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
   : forall i, prod_0gpd I G $-> G i.
 Proof.
@@ -179,6 +181,7 @@ Proof.
   - reflexivity.
 Defined.
 
+(** Indexed products of groupoids with equivalent indices and fiberwise equivalent factors are equivalent. *)
 Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
   (G : I -> ZeroGpd) (H : J -> ZeroGpd)
   (f : forall (i : I), G i $<~> H (ie i))
