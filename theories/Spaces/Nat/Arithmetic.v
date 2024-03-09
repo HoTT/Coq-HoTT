@@ -1,5 +1,6 @@
 Require Import Basics.
 Require Import Spaces.Nat.Core.
+Require Import Types.Sigma.
   
 Local Set Universe Minimization ToSet.
 
@@ -348,6 +349,36 @@ Defined.
 
 #[export] Hint Rewrite -> natminuspluseq : nat.
 #[export] Hint Rewrite -> natminuspluseq' : nat.
+
+Lemma equiv_leq_add n m
+  : leq n m <~> exists k, k + n = m.
+Proof.
+  srapply equiv_iff_hprop.
+  { apply hprop_allpath.
+    intros [x p] [y q].
+    apply path_sigma_hprop.
+    simpl.
+    revert m p q.
+    induction n.
+    { intros m p q.
+      rewrite <- add_n_O in p,q.
+      exact (p @ q^). }
+    intros m p q.
+    rewrite <- add_n_Sm in p,q.
+    destruct m.
+    { inversion p. }
+    apply path_nat_S in p, q.
+    by apply (IHn m). }
+  { intros p.
+    induction p.
+    + exists 0.
+      reflexivity.
+    + exists IHp.1.+1.
+      apply (ap S), IHp.2. }
+  intros [k p].
+  destruct p.
+  apply leq_add.
+Defined.
 
 #[export] Hint Resolve leq_S_n' : nat.
 
