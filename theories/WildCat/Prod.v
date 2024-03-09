@@ -177,27 +177,40 @@ Proof.
   - reflexivity.
 Defined.
 
-(** Functors from a product category are functorial in each argument *)
+(** Inclusions into a product category are functorial. *)
 
-Global Instance is0functor_functor_uncurried01 {A B C : Type}
-  `{Is01Cat A} `{IsGraph B} `{IsGraph C}
-  (F : A * B -> C) `{!Is0Functor F} (a : A)
-  : Is0Functor (fun b => F (a, b)).
+(* [A * {b}] *)
+Global Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B} (b : B)
+  : Is0Functor (fun a : A => (a, b)).
 Proof.
-  nrapply (is0functor_compose (fun b => (a, b)) F).
-  2: exact _.
+  nrapply Build_Is0Functor.
+  intros a c f.
+  exact (f, Id b).
+Defined.
+
+Global Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B} (b : B)
+  : Is1Functor (fun a : A => (a, b)).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros a c f g p.
+    exact (p, Id _).
+  - intros a; reflexivity.
+  - intros a c d f g.
+    exact (Id _, (cat_idl _)^$).
+Defined.
+
+(* [{a} * B] *)
+Global Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B} (a : A)
+  : Is0Functor (fun b : B => (a, b)).
+Proof.
   nrapply Build_Is0Functor.
   intros b c f.
   exact (Id a, f).
 Defined.
 
-Global Instance is1functor_functor_uncurried01 {A B C : Type}
-  `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
-  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
-  : Is1Functor (fun b => F (a, b)).
+Global Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B} (a : A)
+  : Is1Functor (fun b : B => (a, b)).
 Proof.
-  nrapply (is1functor_compose (fun b => (a, b)) F).
-  2: exact _.
   nrapply Build_Is1Functor.
   - intros b c f g p.
     exact (Id _, p).
@@ -206,29 +219,28 @@ Proof.
     exact ((cat_idl _)^$, Id _).
 Defined.
 
+(** Functors from a product category are functorial in each argument *)
+
+Global Instance is0functor_functor_uncurried01 {A B C : Type}
+  `{Is01Cat A} `{IsGraph B} `{IsGraph C}
+  (F : A * B -> C) `{!Is0Functor F} (a : A)
+  : Is0Functor (fun b => F (a, b))
+  := is0functor_compose (fun b => (a, b)) F.
+
+Global Instance is1functor_functor_uncurried01 {A B C : Type}
+  `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
+  : Is1Functor (fun b => F (a, b))
+  := is1functor_compose (fun b => (a, b)) F.
+
 Global Instance is0functor_functor_uncurried10 {A B C : Type}
   `{IsGraph A} `{Is01Cat B} `{IsGraph C}
   (F : A * B -> C) `{!Is0Functor F} (b : B)
-  : Is0Functor (fun a => F (a, b)).
-Proof.
-  nrapply (is0functor_compose (fun a => (a, b)) F).
-  2: exact _.
-  nrapply Build_Is0Functor.
-  intros a c f.
-  exact (f, Id b).
-Defined.
+  : Is0Functor (fun a => F (a, b))
+  := is0functor_compose (fun a => (a, b)) F.
 
 Global Instance is1functor_functor_uncurried10 {A B C : Type}
   `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
   (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (b : B)
-  : Is1Functor (fun a => F (a, b)).
-Proof.
-  nrapply (is1functor_compose (fun a => (a, b)) F).
-  2: exact _.
-  nrapply Build_Is1Functor.
-  - intros a c f g p.
-    exact (p, Id _).
-  - intros a; reflexivity.
-  - intros a c d f g.
-    exact (Id _, (cat_idl _)^$).
-Defined.
+  : Is1Functor (fun a => F (a, b))
+  := is1functor_compose (fun a => (a, b)) F.
