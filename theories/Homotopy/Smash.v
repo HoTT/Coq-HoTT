@@ -220,6 +220,8 @@ Arguments auxl : simpl never.
 Arguments gluel : simpl never.
 Arguments gluer : simpl never.
 
+(** ** Functoriality of the smash product *)
+
 Definition functor_smash {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
   : Smash A B $-> Smash X Y.
 Proof.
