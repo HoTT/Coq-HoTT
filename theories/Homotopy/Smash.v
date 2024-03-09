@@ -1,9 +1,9 @@
-Require Import Basics.
-Require Import Pointed.Core.
-Require Import Types.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics Basics.Equivalences.
+Require Import Types.Sum Types.Bool Types.Paths.
+Require Import WildCat.Core WildCat.Bifunctor.
 Require Import Colimits.Pushout.
 Require Import Cubical.DPath.
-Require Import WildCat.Core WildCat.Bifunctor.
+Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope dpath_scope.
@@ -294,7 +294,6 @@ Definition functor_smash_homotopic {X Y A B : pType}
   (p : f $== h) (q : g $== k)
   : functor_smash f g $== functor_smash h k.
 Proof.
-  pointed_reduce.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
     - intros x y.
