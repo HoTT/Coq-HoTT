@@ -2,7 +2,8 @@ Require Import Basics.
 Require Import Pointed.Core.
 Require Import Types.
 Require Import Colimits.Pushout.
-Require Import Cubical.
+Require Import Cubical.DPath.
+Require Import WildCat.Core WildCat.Bifunctor.
 
 Local Open Scope pointed_scope.
 Local Open Scope dpath_scope.
@@ -218,3 +219,231 @@ Arguments sm : simpl never.
 Arguments auxl : simpl never.
 Arguments gluel : simpl never.
 Arguments gluer : simpl never.
+
+Definition Smash_functor {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
+  : Smash A B $-> Smash X Y.
+Proof.
+  srapply Build_pMap.
+  - snrapply (Smash_rec (fun a b => sm (f a) (g b)) auxl auxr).
+    + intro b.
+      rhs_V nrapply (gluel (f b)).
+      exact (ap011 _ 1 (point_eq g)).
+    + intro a.
+      simpl.
+      rhs_V nrapply (gluer (g a)).
+      exact (ap011 _ (point_eq f) 1).
+  - exact (ap011 _ (point_eq f) (point_eq g)).
+Defined.
+
+Definition Smash_functor_idmap (X Y : pType)
+  : Smash_functor (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind.
+    1-3: reflexivity.
+    - intros x.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      rhs nrapply ap_idmap.
+      lhs nrapply Smash_rec_beta_gluel.
+      apply concat_1p.
+    - intros y.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      rhs nrapply ap_idmap.
+      lhs nrapply Smash_rec_beta_gluer.
+      apply concat_1p. }
+  reflexivity.
+Defined.
+
+Definition Smash_functor_compose {X Y A B C D : pType}
+  (f : X $-> A) (g : Y $-> B) (h : A $-> C) (k : B $-> D)
+  : Smash_functor (h $o f) (k $o g) $== Smash_functor h k $o Smash_functor f g.
+Proof.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind.
+    1-3: reflexivity.
+    - intros x.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      lhs nrapply Smash_rec_beta_gluel.
+      rhs nrapply (ap_compose (Smash_functor f g) _ (gluel x)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluel.
+      rhs nrapply ap_pp.
+      rhs nrapply whiskerL.
+      2: apply Smash_rec_beta_gluel.
+      rhs nrapply concat_p_pp.
+      apply whiskerR.
+      rhs_V nrapply whiskerR.
+      2: nrapply (ap_compose (sm _) _ (point_eq g)).
+      lhs nrapply (ap011_pp sm 1 1).
+      apply whiskerR.
+      symmetry.
+      rapply ap_compose.
+    - intros y.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      lhs nrapply Smash_rec_beta_gluer.
+      rhs nrapply (ap_compose (Smash_functor f g) _ (gluer y)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluer.
+      rhs nrapply ap_pp.
+      rhs nrapply whiskerL.
+      2: apply Smash_rec_beta_gluer.
+      rhs nrapply concat_p_pp.
+      apply whiskerR.
+      unfold point_eq, dpoint_eq.
+      lhs nrapply (ap011_pp sm _ _ 1 1).
+      apply whiskerR.
+      rhs_V nrapply (ap011_compose sm (Smash_functor h k) (dpoint_eq f) 1).
+      symmetry.
+      nrapply (ap011_compose' sm h). }
+  simpl; pelim f g.
+  by simpl; pelim h k.
+Defined.
+
+Definition Smash_functor_homotopic {X Y A B : pType}
+  {f h : X $-> A} {g k : Y $-> B}
+  (p : f $== h) (q : g $== k)
+  : Smash_functor f g $== Smash_functor h k.
+Proof.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind.
+    - intros x y.
+       exact (ap011 _ (p x) (q y)).
+    - reflexivity.
+    - reflexivity.
+    - intros x.
+      nrapply transport_paths_FlFr'.
+      lhs nrapply concat_p1.
+      lhs nrapply Smash_rec_beta_gluel.
+      rhs nrapply whiskerL.
+      2: nrapply Smash_rec_beta_gluel.
+      rhs nrapply concat_p_pp.
+      apply moveL_pM.
+      lhs nrapply concat_pp_p.
+      rhs_V nrapply (ap011_pp sm).
+      rhs nrapply ap022.
+      2: apply moveR_pM, (dpoint_eq q).
+      2: apply concat_p1.
+      apply moveR_Mp.
+      rhs_V nrapply whiskerR.
+      2: apply ap011_V.
+      rhs_V nrapply ap011_pp.
+      rhs nrapply ap011.
+      2: apply concat_Vp.
+      2: apply concat_1p.
+      symmetry.
+      lhs nrapply ap011_is_ap.
+      lhs nrapply concat_p1.
+      nrapply ap_sm_left.
+    - intros y.
+      nrapply transport_paths_FlFr'.
+      lhs nrapply concat_p1.
+      lhs nrapply Smash_rec_beta_gluer.
+      rhs nrapply whiskerL.
+      2: nrapply Smash_rec_beta_gluer.
+      rhs nrapply concat_p_pp.
+      apply moveL_pM.
+      lhs nrapply concat_pp_p.
+      rhs_V nrapply (ap011_pp sm).
+      rhs nrapply ap022.
+      3: apply moveR_pM, (dpoint_eq p).
+      2: apply concat_p1.
+      apply moveR_Mp.
+      rhs_V nrapply whiskerR.
+      2: apply ap011_V.
+      rhs_V nrapply ap011_pp.
+      rhs nrapply ap011.
+      2: apply concat_1p.
+      2: apply concat_Vp.
+      symmetry.
+      nrapply ap_sm_right. }
+  simpl.
+  by pelim p q f g h k.
+Defined.
+
+Global Instance is0bifunctor_smash : IsBifunctor Smash.
+Proof.
+  snrapply Build_IsBifunctor.
+  - intros X.
+    snrapply Build_Is0Functor.
+    intros Y B g.
+    exact (Smash_functor (Id _) g).
+  - intros Y.
+    snrapply Build_Is0Functor.
+    intros X A f.
+    exact (Smash_functor f (Id _)).
+  - intros X A f Y B g.
+    snrapply Build_pHomotopy.
+    + snrapply Smash_ind.
+      1-3: reflexivity.
+      * intros x.
+        nrapply transport_paths_FlFr'.
+        apply equiv_p1_1q.
+        lhs rapply (ap_compose (Smash_functor _ _) (Smash_functor _ _) (gluel x)).
+        rhs rapply (ap_compose (Smash_functor (Id _) g) (Smash_functor f (Id _)) (gluel x)).
+        lhs nrapply ap.
+        1: apply Smash_rec_beta_gluel.
+        rhs nrapply ap.
+        2: apply Smash_rec_beta_gluel.
+        lhs nrapply ap.
+        1: apply concat_1p.
+        lhs nrapply Smash_rec_beta_gluel.
+        rhs nrapply (ap_pp _ _ (gluel x)).
+        rhs nrapply whiskerL.
+        2: apply Smash_rec_beta_gluel.
+        f_ap.
+        2: symmetry; apply concat_1p.
+        exact (ap_compose (sm x) (Smash_functor f (Id _)) (point_eq g)).
+      * intros y.
+        nrapply transport_paths_FlFr'.
+        apply equiv_p1_1q.
+        lhs rapply (ap_compose (Smash_functor _ _) (Smash_functor _ _) (gluer y)).
+        rhs rapply (ap_compose (Smash_functor (Id _) g) (Smash_functor f (Id _)) (gluer y)).
+        lhs nrapply ap.
+        1: apply Smash_rec_beta_gluer.
+        rhs nrapply ap.
+        2: apply Smash_rec_beta_gluer.
+        rhs nrapply ap.
+        2: apply concat_1p.
+        rhs nrapply Smash_rec_beta_gluer.
+        lhs nrapply (ap_pp _ _ (gluer y)).
+        lhs nrapply whiskerL.
+        1: apply Smash_rec_beta_gluer.
+        f_ap.
+        2: apply concat_1p.
+        exact (ap_compose (fun x => sm x y)  (Smash_functor (Id _) g) (point_eq f))^.
+    + apply moveL_pV.
+      lhs nrapply concat_1p.
+      simpl.
+      cbn in f, g.
+      lhs nrapply whiskerR.
+      1: rapply (ap_compose (fun x => sm pt x) _ (point_eq g))^.
+      rhs nrapply whiskerR.
+      2: rapply (ap_compose (fun x => sm x pt) _ (point_eq f))^.
+      simpl.
+      by pelim f g.
+Defined.
+
+Global Instance is1bifunctor_smash : Is1Bifunctor Smash.
+Proof.
+  snrapply Build_Is1Bifunctor.
+  - intros X.
+    snrapply Build_Is1Functor.
+    + intros Y B f' g' q.
+      rapply (Smash_functor_homotopic (Id _) q).
+    + intros Y; cbn.
+      rapply Smash_functor_idmap.
+    + intros Y A C f g.
+      exact (Smash_functor_compose (Id _) f (Id _) g).
+  - intros Y.
+    snrapply Build_Is1Functor.
+    + intros X A f g q.
+      rapply (Smash_functor_homotopic q (Id _)).
+    + intros X; cbn.
+      rapply Smash_functor_idmap.
+    + intros X A C f g.
+      exact (Smash_functor_compose f (Id _) g (Id _)).
+Defined.
