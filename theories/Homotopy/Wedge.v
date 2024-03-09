@@ -70,17 +70,16 @@ Definition wedge_incl (X Y : pType) : X \/ Y $-> X * Y
 Definition wedge_incl_beta_wglue {X Y : pType}
   : ap (@wedge_incl X Y) wglue = 1.
 Proof.
-  lhs nrapply (eta_path_prod _)^.
+  lhs_V nrapply eta_path_prod.
   lhs nrapply ap011.
-  - lhs nrapply (ap_compose _ _ _)^.
+  - lhs_V nrapply ap_compose.
     nrapply wedge_rec_beta_wglue.
-  - lhs nrapply (ap_compose _ _ _)^.
+  - lhs_V nrapply ap_compose.
     nrapply wedge_rec_beta_wglue.
   - reflexivity.
 Defined.
 
 (** 1-universal property of wedge. *)
-(** TODO: remove rewrites. For some reason pelim is not able to immediately abstract the goal so some shuffling around is necessary. *)
 Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
   : f $o wedge_inl $== g $o wedge_inl
   -> f $o wedge_inr $== g $o wedge_inr
@@ -90,20 +89,34 @@ Proof.
   snrapply Build_pHomotopy.
   - snrapply (Pushout_ind _ p q).
     intros [].
-    simpl.
-    refine (transport_paths_FlFr _ _ @ _).
-    refine (concat_pp_p _ _ _ @ _).
-    apply moveR_Vp.
-    refine (whiskerR (dpoint_eq p) _ @ _).
-    refine (_ @ whiskerL _ (dpoint_eq q)^).
+    nrapply transport_paths_FlFr'.
+    lhs nrapply (whiskerL _ (dpoint_eq q)).
+    rhs nrapply (whiskerR (dpoint_eq p)).
     clear p q.
+    lhs nrapply concat_p_pp.
     simpl.
-    apply moveL_Mp.
-    rewrite ? ap_V.
-    rewrite ? inv_pp.
-    hott_simpl.
+    apply moveR_pV.
+    lhs nrapply whiskerL.
+    { nrapply whiskerR.
+      apply ap_V. }
+    lhs nrapply concat_p_pp.
+    lhs nrapply whiskerR.
+    1: apply concat_pV.
+    rhs nrapply concat_p_pp.
+    apply moveL_pM.
+    lhs_V nrapply concat_p1.
+    lhs nrapply concat_pp_p.
+    lhs_V nrapply whiskerL.
+    1: apply (inv_pp 1).
+    rhs nrapply whiskerL.
+    2: apply ap_V.
+    apply moveL_pV.
+    reflexivity.
   - simpl; pelim p q.
-    hott_simpl.
+    f_ap.
+    1: apply concat_1p.
+    lhs nrapply inv_pp.
+    apply concat_p1.
 Defined.
 
 Global Instance hasbinarycoproducts : HasBinaryCoproducts pType.
