@@ -8,6 +8,7 @@ Require Import WildCat.Opposite.
 Require Import WildCat.FunctorCat.
 Require Import WildCat.NatTrans.
 Require Import WildCat.Prod.
+Require Import WildCat.Bifunctor.
 Require Import WildCat.ZeroGroupoid.
 
 (** ** Two-variable hom-functors *)
@@ -41,6 +42,14 @@ Proof.
     refine (_ $@ cat_assoc_opp _ _ _).
     refine (cat_assoc_opp _ _ _).
 Defined.
+
+Global Instance is0bifunctor_hom {A} `{Is01Cat A}
+  : @Is0Bifunctor A^op A Type _ _ _ (@Hom A _)
+  := is0bifunctor_functor_uncurried _.
+
+Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
+  : @Is1Bifunctor A^op A Type _ _ _ _ _ _ _ _ _ _ _ _ (@Hom A _) _
+  := is1bifunctor_functor_uncurried _.
 
 Definition fun01_hom {A} `{Is01Cat A}
   : Fun01 (A^op * A) Type
