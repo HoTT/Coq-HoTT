@@ -209,6 +209,13 @@ Proof.
   destruct (nat_add_comm m n). exact (add_n_sub_n_eq m n).
 Defined.
  
+Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.
+Proof.
+  destruct p.
+  symmetry.
+  apply add_n_sub_n_eq.
+Defined.
+
 Proposition n_lt_m_n_leq_m { n m : nat } : n < m -> n <= m.
 Proof.
   intro H. apply leq_S, leq_S_n in H; exact H.
@@ -348,6 +355,24 @@ Defined.
 
 #[export] Hint Rewrite -> natminuspluseq : nat.
 #[export] Hint Rewrite -> natminuspluseq' : nat.
+
+Lemma equiv_leq_add n m
+  : leq n m <~> exists k, k + n = m.
+Proof.
+  srapply equiv_iff_hprop.
+  - apply hprop_allpath.
+    intros [x p] [y q].
+    pose (r := summand_is_sub x _ _ p @ (summand_is_sub y _ _ q)^).
+    destruct r.
+    apply ap.
+    apply path_ishprop.
+  - intros p.
+    exists (m - n).
+    apply natminuspluseq, p.
+  - intros [k p].
+    destruct p.
+    apply leq_add.
+Defined.
 
 #[export] Hint Resolve leq_S_n' : nat.
 

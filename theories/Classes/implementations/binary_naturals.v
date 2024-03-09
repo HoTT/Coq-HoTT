@@ -1,5 +1,5 @@
 Require Import
-        HoTT.Spaces.Nat.
+        HoTT.Spaces.Nat.Core.
 Require Import
         HoTT.Tactics.
 Require Import

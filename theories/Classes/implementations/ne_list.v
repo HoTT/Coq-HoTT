@@ -2,7 +2,7 @@ Require Import
   HoTT.Utf8Minimal
   HoTT.Classes.implementations.list
   HoTT.Basics.Overture
-  HoTT.Spaces.Nat.
+  HoTT.Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.

@@ -1,7 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics Types.
+Require Import Basics.
 Require Export Basics.Nat.
-Require Export HoTT.DProp.
 
 Local Set Universe Minimization ToSet.
 
@@ -297,46 +296,18 @@ Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 
 (** *** Boolean equality and its properties *)
 
-Fixpoint code_nat (m n : nat) {struct m} : DHProp@{Set} :=
-  match m, n with
-  | 0, 0 => True
-  | m'.+1, n'.+1 => code_nat m' n'
-  | _, _ => False
-  end.
-
-Infix "=n" := code_nat : nat_scope.
-
-Fixpoint idcode_nat {n} : (n =n n) :=
-  match n as n return (n =n n) with
-  | 0 => tt
-  | S n' => @idcode_nat n'
-  end.
-
-Fixpoint path_nat {n m} : (n =n m) -> (n = m) :=
-  match m as m, n as n return (n =n m) -> (n = m) with
-  | 0, 0 => fun _ => idpath
-  | m'.+1, n'.+1 => fun H : (n' =n m') => ap S (path_nat H)
-  | _, _ => fun H => match H with end
-  end.
-
-Global Instance isequiv_path_nat {n m} : IsEquiv (@path_nat n m).
+(** [nat] has decidable paths *)
+Global Instance decidable_paths_nat : DecidablePaths nat.
 Proof.
-  refine (isequiv_adjointify
-            (@path_nat n m)
-            (fun H => transport (fun m' => (n =n m')) H idcode_nat)
-            _ _).
-  { intros []; simpl.
-    induction n; simpl; trivial.
-    by destruct (IHn^)%path. }
-  { intro. apply path_ishprop. }
+  intros n; induction n as [|n IHn];
+  intros m; destruct m.
+  - exact (inl idpath).
+  - exact (inr (not_eq_O_S m)).
+  - exact (inr (fun p => not_eq_O_S n p^)).
+  - destruct (IHn m) as [p|q].
+    + exact (inl (ap S p)).
+    + exact (inr (fun p => q (path_nat_S _ _ p))).
 Defined.
-
-Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
-  := Build_Equiv _ _ (@path_nat n m) _.
-
-(** Thus [nat] has decidable paths *)
-Global Instance decidable_paths_nat : DecidablePaths nat
-  := fun n m => decidable_equiv _ (@path_nat n m) _.
 
 (** And is therefore a HSet *)
 Global Instance hset_nat : IsHSet nat := _.
@@ -479,36 +450,6 @@ Proof.
   destruct m.
   1: apply leq_n.
   apply leq_S, leq_add.
-Defined.
-
-Lemma equiv_leq_add n m
-  : leq n m <~> exists k, k + n = m.
-Proof.
-  srapply equiv_iff_hprop.
-  { apply hprop_allpath.
-    intros [x p] [y q].
-    apply path_sigma_hprop.
-    simpl.
-    revert m p q.
-    induction n.
-    { intros m p q.
-      rewrite <- add_n_O in p,q.
-      exact (p @ q^). }
-    intros m p q.
-    rewrite <- add_n_Sm in p,q.
-    destruct m.
-    { inversion p. }
-    apply path_nat_S in p, q.
-    by apply (IHn m). }
-  { intros p.
-    induction p.
-    + exists 0.
-      reflexivity.
-    + exists IHp.1.+1.
-      apply ap_S, IHp.2. }
-  intros [k p].
-  destruct p.
-  apply leq_add.
 Defined.
 
 (** We define the less-than relation [lt] in terms of [leq] *)
