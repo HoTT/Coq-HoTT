@@ -294,6 +294,9 @@ Definition functor_smash_homotopic {X Y A B : pType}
   (p : f $== h) (q : g $== k)
   : functor_smash f g $== functor_smash h k.
 Proof.
+  destruct f as [f f_eq], g as [g g_eq].
+  revert p q.
+  pointed_reduce.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
     - intros x y.
@@ -346,8 +349,8 @@ Proof.
       2: apply concat_Vp.
       symmetry.
       nrapply ap_sm_right. }
-  simpl.
-  by pelim p q f g h k.
+  lhs nrapply (ap022 _ (dpoint_eq p) (dpoint_eq q)).
+  rapply ap011_pp.
 Defined.
 
 Global Instance is0bifunctor_smash : IsBifunctor Smash.
