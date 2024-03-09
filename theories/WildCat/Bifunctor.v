@@ -109,7 +109,6 @@ Proof.
     exact (bifunctor_isbifunctor F f g).
 Defined.
 
-(*TODO: does the comment below imply (incorrectly) that [Is0Bifunctor] ensures the two routes agree?*)
 (** Any 0-bifunctor [A -> B -> C] can be made into a functor from the product category [A * B -> C] in two ways. The bifunctor coherence condition ([bifunctor_isbifunctor]) states precisely that these two routes agree. *)
 Global Instance is0functor_uncurry_bifunctor {A B C : Type}
   `{IsGraph A, IsGraph B, Is1Cat C} (F : A -> B -> C) `{!Is0Bifunctor F}
