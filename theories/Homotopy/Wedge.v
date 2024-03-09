@@ -90,7 +90,7 @@ Proof.
   - snrapply (Pushout_ind _ p q).
     intros [].
     nrapply transport_paths_FlFr'.
-    lhs nrapply (whiskerL _(dpoint_eq q)).
+    lhs nrapply (whiskerL _ (dpoint_eq q)).
     rhs nrapply (whiskerR (dpoint_eq p)).
     clear p q.
     lhs nrapply concat_p_pp.
@@ -98,7 +98,7 @@ Proof.
     apply moveR_pV.
     lhs nrapply whiskerL.
     { nrapply whiskerR.
-      1: apply ap_V. }
+      apply ap_V. }
     lhs nrapply concat_p_pp.
     lhs nrapply whiskerR.
     1: apply concat_pV.
