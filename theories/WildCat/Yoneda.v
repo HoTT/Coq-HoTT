@@ -47,6 +47,7 @@ Global Instance is0bifunctor_hom {A} `{Is01Cat A}
   : @Is0Bifunctor A^op A Type _ _ _ (@Hom A _)
   := is0bifunctor_functor_uncurried _.
 
+(** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
 Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
   : @Is1Bifunctor A^op A Type _ _ _ _ _ _ _ _ _ _ _ _ (@Hom A _) _
   := is1bifunctor_functor_uncurried _.
