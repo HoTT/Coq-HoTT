@@ -220,7 +220,7 @@ Arguments auxl : simpl never.
 Arguments gluel : simpl never.
 Arguments gluer : simpl never.
 
-Definition Smash_functor {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
+Definition functor_smash {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
   : Smash A B $-> Smash X Y.
 Proof.
   srapply Build_pMap.
@@ -235,8 +235,8 @@ Proof.
   - exact (ap011 _ (point_eq f) (point_eq g)).
 Defined.
 
-Definition Smash_functor_idmap (X Y : pType)
-  : Smash_functor (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
+Definition functor_smash_idmap (X Y : pType)
+  : functor_smash (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
 Proof.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
@@ -256,9 +256,9 @@ Proof.
   reflexivity.
 Defined.
 
-Definition Smash_functor_compose {X Y A B C D : pType}
+Definition functor_smash_compose {X Y A B C D : pType}
   (f : X $-> A) (g : Y $-> B) (h : A $-> C) (k : B $-> D)
-  : Smash_functor (h $o f) (k $o g) $== Smash_functor h k $o Smash_functor f g.
+  : functor_smash (h $o f) (k $o g) $== functor_smash h k $o functor_smash f g.
 Proof.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
@@ -267,7 +267,7 @@ Proof.
       nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       lhs nrapply Smash_rec_beta_gluel.
-      rhs nrapply (ap_compose (Smash_functor f g) _ (gluel x)).
+      rhs nrapply (ap_compose (functor_smash f g) _ (gluel x)).
       rhs nrapply ap.
       2: apply Smash_rec_beta_gluel.
       rhs nrapply ap_pp.
@@ -285,7 +285,7 @@ Proof.
       nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       lhs nrapply Smash_rec_beta_gluer.
-      rhs nrapply (ap_compose (Smash_functor f g) _ (gluer y)).
+      rhs nrapply (ap_compose (functor_smash f g) _ (gluer y)).
       rhs nrapply ap.
       2: apply Smash_rec_beta_gluer.
       rhs nrapply ap_pp.
@@ -296,17 +296,17 @@ Proof.
       unfold point_eq, dpoint_eq.
       lhs nrapply (ap011_pp sm _ _ 1 1).
       apply whiskerR.
-      rhs_V nrapply (ap011_compose sm (Smash_functor h k) (dpoint_eq f) 1).
+      rhs_V nrapply (ap011_compose sm (functor_smash h k) (dpoint_eq f) 1).
       symmetry.
       nrapply (ap011_compose' sm h). }
   simpl; pelim f g.
   by simpl; pelim h k.
 Defined.
 
-Definition Smash_functor_homotopic {X Y A B : pType}
+Definition functor_smash_homotopic {X Y A B : pType}
   {f h : X $-> A} {g k : Y $-> B}
   (p : f $== h) (q : g $== k)
-  : Smash_functor f g $== Smash_functor h k.
+  : functor_smash f g $== functor_smash h k.
 Proof.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
@@ -370,11 +370,11 @@ Proof.
   - intros X.
     snrapply Build_Is0Functor.
     intros Y B g.
-    exact (Smash_functor (Id _) g).
+    exact (functor_smash (Id _) g).
   - intros Y.
     snrapply Build_Is0Functor.
     intros X A f.
-    exact (Smash_functor f (Id _)).
+    exact (functor_smash f (Id _)).
   - intros X A f Y B g.
     snrapply Build_pHomotopy.
     + snrapply Smash_ind.
@@ -382,8 +382,8 @@ Proof.
       * intros x.
         nrapply transport_paths_FlFr'.
         apply equiv_p1_1q.
-        lhs rapply (ap_compose (Smash_functor _ _) (Smash_functor _ _) (gluel x)).
-        rhs rapply (ap_compose (Smash_functor (Id _) g) (Smash_functor f (Id _)) (gluel x)).
+        lhs rapply (ap_compose (functor_smash f (Id _)) (functor_smash (Id _) g) (gluel x)).
+        rhs rapply (ap_compose (functor_smash (Id _) g) (functor_smash f (Id _)) (gluel x)).
         lhs nrapply ap.
         1: apply Smash_rec_beta_gluel.
         rhs nrapply ap.
@@ -396,12 +396,12 @@ Proof.
         2: apply Smash_rec_beta_gluel.
         f_ap.
         2: symmetry; apply concat_1p.
-        exact (ap_compose (sm x) (Smash_functor f (Id _)) (point_eq g)).
+        exact (ap_compose (sm x) (functor_smash f (Id _)) (point_eq g)).
       * intros y.
         nrapply transport_paths_FlFr'.
         apply equiv_p1_1q.
-        lhs rapply (ap_compose (Smash_functor _ _) (Smash_functor _ _) (gluer y)).
-        rhs rapply (ap_compose (Smash_functor (Id _) g) (Smash_functor f (Id _)) (gluer y)).
+        lhs rapply (ap_compose (functor_smash _ _) (functor_smash _ _) (gluer y)).
+        rhs rapply (ap_compose (functor_smash (Id _) g) (functor_smash f (Id _)) (gluer y)).
         lhs nrapply ap.
         1: apply Smash_rec_beta_gluer.
         rhs nrapply ap.
@@ -414,7 +414,7 @@ Proof.
         1: apply Smash_rec_beta_gluer.
         f_ap.
         2: apply concat_1p.
-        exact (ap_compose (fun x => sm x y)  (Smash_functor (Id _) g) (point_eq f))^.
+        exact (ap_compose (fun x => sm x y)  (functor_smash (Id _) g) (point_eq f))^.
     + apply moveL_pV.
       lhs nrapply concat_1p.
       simpl.
@@ -433,17 +433,17 @@ Proof.
   - intros X.
     snrapply Build_Is1Functor.
     + intros Y B f' g' q.
-      rapply (Smash_functor_homotopic (Id _) q).
+      rapply (functor_smash_homotopic (Id _) q).
     + intros Y; cbn.
-      rapply Smash_functor_idmap.
+      rapply functor_smash_idmap.
     + intros Y A C f g.
-      exact (Smash_functor_compose (Id _) f (Id _) g).
+      exact (functor_smash_compose (Id _) f (Id _) g).
   - intros Y.
     snrapply Build_Is1Functor.
     + intros X A f g q.
-      rapply (Smash_functor_homotopic q (Id _)).
+      rapply (functor_smash_homotopic q (Id _)).
     + intros X; cbn.
-      rapply Smash_functor_idmap.
+      rapply functor_smash_idmap.
     + intros X A C f g.
-      exact (Smash_functor_compose f (Id _) g (Id _)).
+      exact (functor_smash_compose f (Id _) g (Id _)).
 Defined.
