@@ -188,7 +188,7 @@ Section Smash.
     lhs nrapply ap_V.
     apply inverse2.
     apply Smash_rec_beta_gluel.
-  Defined. 
+  Defined.
 
   Definition Smash_rec_beta_gluer' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
@@ -296,63 +296,36 @@ Definition functor_smash_homotopic {X Y A B : pType}
   (p : f $== h) (q : g $== k)
   : functor_smash f g $== functor_smash h k.
 Proof.
-  destruct f as [f f_eq], g as [g g_eq].
-  revert p q.
   pointed_reduce.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
-    - intros x y.
+    - intros x y; simpl.
       exact (ap011 _ (p x) (q y)).
     - reflexivity.
     - reflexivity.
     - intros x.
-      nrapply transport_paths_FlFr'.
+      nrapply transport_paths_FlFr'; simpl.
       lhs nrapply concat_p1.
       lhs nrapply Smash_rec_beta_gluel.
       rhs nrapply whiskerL.
       2: nrapply Smash_rec_beta_gluel.
-      rhs nrapply concat_p_pp.
-      apply moveL_pM.
-      lhs nrapply concat_pp_p.
-      rhs_V nrapply (ap011_pp sm).
-      rhs nrapply ap022.
-      2: apply moveR_pM, (dpoint_eq q).
-      2: apply concat_p1.
-      apply moveR_Mp.
-      rhs_V nrapply whiskerR.
-      2: apply ap011_V.
-      rhs_V nrapply ap011_pp.
-      rhs nrapply ap011.
-      2: apply concat_Vp.
-      2: apply concat_1p.
-      symmetry.
-      lhs nrapply ap011_is_ap.
-      lhs nrapply concat_p1.
-      nrapply ap_sm_left.
+      induction (p x); simpl.
+      rhs_V nrapply concat_pp_p.
+      apply whiskerR.
+      nrapply ap_pp.
     - intros y.
-      nrapply transport_paths_FlFr'.
+      nrapply transport_paths_FlFr'; simpl.
       lhs nrapply concat_p1.
       lhs nrapply Smash_rec_beta_gluer.
       rhs nrapply whiskerL.
       2: nrapply Smash_rec_beta_gluer.
-      rhs nrapply concat_p_pp.
-      apply moveL_pM.
-      lhs nrapply concat_pp_p.
-      rhs_V nrapply (ap011_pp sm).
-      rhs nrapply ap022.
-      3: apply moveR_pM, (dpoint_eq p).
-      2: apply concat_p1.
-      apply moveR_Mp.
-      rhs_V nrapply whiskerR.
-      2: apply ap011_V.
-      rhs_V nrapply ap011_pp.
-      rhs nrapply ap011.
-      2: apply concat_1p.
-      2: apply concat_Vp.
-      symmetry.
-      nrapply ap_sm_right. }
-  lhs nrapply (ap022 _ (dpoint_eq p) (dpoint_eq q)).
-  rapply ap011_pp.
+      induction (q y); simpl.
+      rhs_V nrapply concat_pp_p.
+      apply whiskerR.
+      nrapply (ap011_pp _ _ _ 1 1). }
+  symmetry; simpl.
+  lhs nrapply concat_p1.
+  apply ap022; apply concat_p1.
 Defined.
 
 Global Instance is0bifunctor_smash : IsBifunctor Smash.
