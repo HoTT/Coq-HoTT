@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics Basics.Equivalences.
-Require Import Types.Sum Types.Bool Types.Paths.
-Require Import WildCat.Core WildCat.Bifunctor.
+Require Import Types.Sum Types.Bool Types.Paths Types.Forall.
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Equiv.
 Require Import Colimits.Pushout.
 Require Import Cubical.DPath.
 Require Import Pointed.Core.
@@ -410,4 +410,78 @@ Proof.
       rapply functor_smash_idmap.
     + intros X A C f g.
       exact (functor_smash_compose f (Id _) g (Id _)).
+Defined.
+
+(** ** Symmetry of the smash product *)
+
+Definition pswap (X Y : pType) : Smash X Y $-> Smash Y X
+  := Build_pMap _ _ (Smash_rec (flip sm) auxr auxl gluer gluel) 1.
+
+Definition pswap_pswap {X Y : pType}
+  : pswap X Y $o pswap Y X $== pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  - snrapply Smash_ind.
+    1-3: reflexivity.
+    + intros y.
+      rapply (transport_paths_FFlr' (f := pswap _ _)).
+      apply equiv_p1_1q.
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluel.
+      apply Smash_rec_beta_gluer.
+    + intros x.
+      rapply (transport_paths_FFlr' (f := pswap _ _)).
+      apply equiv_p1_1q.
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluer.
+      apply Smash_rec_beta_gluel.
+  - reflexivity.
+Defined.
+
+Definition pequiv_pswap {X Y : pType} : Smash X Y $<~> Smash Y X.
+Proof.
+  snrapply cate_adjointify.
+  1,2: exact (pswap _ _).
+  1,2: exact pswap_pswap.
+Defined.
+
+Definition pswap_natural {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
+  : pswap X Y $o functor_smash f g $== functor_smash g f $o pswap A B.
+Proof.
+  snrapply Build_pHomotopy.
+  - snrapply Smash_ind.
+    1-3: reflexivity.
+    + intros a.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      rhs nrapply (ap_compose (pswap A B) _ (gluel a)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluel.
+      rhs nrapply Smash_rec_beta_gluer.
+      lhs nrapply (ap_compose (functor_smash f g) (pswap X Y) (gluel a)).
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluel.
+      lhs nrapply (ap_pp (pswap X Y) (ap011 sm 1 (point_eq g)) (gluel (f a))).
+      lhs nrapply whiskerL.
+      1: apply Smash_rec_beta_gluel.
+      apply whiskerR.
+      symmetry.
+      exact (ap_compose _ _ _).
+    + intros b.
+      nrapply transport_paths_FlFr'.
+      apply equiv_p1_1q.
+      rhs nrapply (ap_compose (pswap A B) _ (gluer b)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluer.
+      rhs nrapply Smash_rec_beta_gluel.
+      lhs nrapply (ap_compose (functor_smash f g) (pswap X Y) (gluer b)).
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluer.
+      lhs nrapply (ap_pp (pswap X Y) (ap011 sm (point_eq f) 1) (gluer (g b))).
+      lhs nrapply whiskerL.
+      1: apply Smash_rec_beta_gluer.
+      apply whiskerR.
+      symmetry.
+      exact (ap011_compose _ _ (point_eq f) 1).
+  - by simpl; pelim f g.
 Defined.
