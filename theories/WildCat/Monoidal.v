@@ -1,85 +1,61 @@
-Require Import Basics.Utf8 Basics.Overture Basics.Tactics.
+Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall.
-Require Import WildCat.Core WildCat.Prod WildCat.Bifunctor
-  WildCat.Equiv WildCat.NatTrans.
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod WildCat.Equiv WildCat.NatTrans.
 
-Section Monoidal.
-  Context (C : Type).
-  Context `{Is1Cat C}.
-  Context `{HasEquivs C}.
-  Context (tensor : C -> C -> C).
-  Context `{!Is0Bifunctor tensor, !Is1Bifunctor tensor}.
+(** * Monoidal 1-categories *)
 
-  Definition left_assoc : C -> C -> C -> C :=
-    fun a b c => tensor (tensor a b) c.
-  
-  Definition right_assoc : C -> C -> C -> C :=
-    fun a b c => tensor a (tensor b c).
+(** ** Definition *)
 
-  Let right_assoc' := uncurry (uncurry (right_assoc)).
-  Let left_assoc' := uncurry (uncurry (left_assoc)).
-  
-  #[export] Instance Is0Functor_right_assoc
-    : Is0Functor right_assoc'.
-  Proof.
-    srapply Build_Is0Functor.
-    intros [[a1 b1] c1] [[a2 b2] c2] [[f g] h];
-      cbn in f, g, h.
-    exact (fmap11 tensor f (fmap11 tensor g h)).
-  Defined.
+(** A monoidal 1-category is a 1-category with equivalences and the following data: *)
+Class IsMonoidal {A : Type} `{HasEquivs A} := {
+  (** A bifunctor [cat_tensor] called the tensor product. *)
+  cat_tensor : A -> A -> A;
+  is0bifunctor_cat_tensor :: Is0Bifunctor cat_tensor;
+  is1bifunctor_cat_tensor :: Is1Bifunctor cat_tensor;
 
-  #[export] Instance Is0Functor_left_assoc : Is0Functor left_assoc'.
-  Proof.
-    srapply Build_Is0Functor.
-    intros [[a1 b1] c1] [[a2 b2] c2] [[f g] h];
-      cbn in f, g, h.
-    exact (fmap11 tensor (fmap11 tensor f g) h).
-  Defined.
+  (** An object [cat_tensor_unit] called the tensor unit. *)
+  cat_tensor_unit : A;
+ 
+  (** An isomorphism [associator] witnessing associativity of [cat_tensor]. *)
+  associator a b c : cat_tensor (cat_tensor a b) c $<~> cat_tensor a (cat_tensor b c);
 
-  (* Left to right is the convention in Mac Lane. *)
-  Class Associator := assoc : NatEquiv right_assoc' left_assoc'.
+  (** The [associator] is a natural isomorphism. Naturality is stated here in each variable separely. *)
+  is1natural_associator_l {b c : A}
+    :: Is1Natural
+        (flip cat_tensor c o flip cat_tensor b)
+        (flip cat_tensor (cat_tensor b c))
+        (fun a => associator a b c);
 
-  Notation "a ⊗ b" := (tensor a b).
-  
-  Definition PentagonLaw `{Associator} (a b c d : C) :=
-    (assoc (a ⊗ b, c, d)) $o (assoc (a, b, c ⊗ d)) $==
-      (fmap (flip tensor d) (assoc (a, b, c)))  
-      $o assoc (a, b ⊗ c, d) $o (fmap (tensor a) (assoc (b, c, d))).
-    
-  Context (I : C).
-  
-  Class LeftUnitor := left_unitor : NatEquiv (tensor I) idmap.
+  is1natural_associator_m {a c : A}
+    :: Is1Natural
+        (flip cat_tensor c o cat_tensor a)
+        (cat_tensor a o flip cat_tensor c)
+        (fun b => associator a b c);
 
-  Class RightUnitor := right_unitor : NatEquiv (flip tensor I) idmap.
+  is1natural_associator_r {a b : A}
+    :: Is1Natural
+        (cat_tensor (cat_tensor a b))
+        (cat_tensor a o cat_tensor b)
+        (fun c => associator a b c);
 
-  Definition TriangleLaw {assoc : Associator}
-    `{LeftUnitor} `{RightUnitor} (a c : C)
-    :=  fmap (tensor a) (left_unitor c)
-    $== fmap (flip tensor c) (right_unitor a) $o assoc (a, I, c).
-               
-  Class MonoidalStructure
-    `{forall a, Is1Functor (tensor a)}
-    `{forall b, Is1Functor (flip tensor b)}
-    {assoc : Associator}
-    {left_unitor : LeftUnitor}
-    {right_unitor : RightUnitor}
-    := {
-      pentagon_law : forall a b c d : C, PentagonLaw a b c d;
-      triangle_law : forall a c : C, TriangleLaw a c
-    }.
+  (** A natural isomorphism [left_unitor] witnessing the left unit law. *)
+  left_unitor
+    : NatEquiv (cat_tensor cat_tensor_unit) idmap;
 
-  (** TODO *)
-  Proposition left_unitor_associator_coherence
-    `{M : MonoidalStructure} (x y : C)
-    : fmap (flip tensor y) (left_unitor x) $o
-        assoc (I, x ,y) $== left_unitor (x ⊗ y).
-  Proof.
-    Abort.
-    
-  (** TODO *)
-  Proposition left_right_unitor_agree `{M : MonoidalStructure}
-    : cate_fun (left_unitor I) $== cate_fun (right_unitor I).
-  Proof.
-    Abort.
-    
-End Monoidal.
+  (** A natural isomorphism [right_unitor] witnessing the right unit law. *)
+  right_unitor
+    : NatEquiv (flip cat_tensor cat_tensor_unit) idmap;
+
+  (** The triangle identity. *)
+  triangle_identity a b
+    : fmap (cat_tensor a) (left_unitor b) $o (associator a cat_tensor_unit b)
+      $== fmap (flip cat_tensor b) (right_unitor a);
+     
+  (** The pentagon identity. *)
+  pentagon_identity a b c d
+    : associator a b (cat_tensor c d) $o associator (cat_tensor a b) c d
+      $== fmap (cat_tensor a) (associator b c d) $o associator a (cat_tensor b c) d
+        $o fmap (flip cat_tensor d) (associator a b c);
+}.
+
+Arguments IsMonoidal A {_ _ _ _ _}.
