@@ -1,4 +1,5 @@
-Require Import Basics.Overture Basics.Tactics.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
+Require Import Classes.implementations.list.
 
 Local Open Scope list_scope.
 
@@ -43,3 +44,28 @@ Section Fold_Right_Recursor.
 
 End Fold_Right_Recursor.
 
+(** The type of lists has a monoidal structure given by concatenation. *)
+Definition list_pentagon {A} (w x y z : list A)
+  : app_assoc _ w x (y ++ z) @ app_assoc _ (w ++ x) y z
+    = ap (fun l => w ++ l) (app_assoc _ x y z)
+    @ app_assoc _ w (x ++ y) z
+    @ ap (fun l => l ++ z) (app_assoc _ w x y).
+Proof.
+  induction w as [|? w IHw] in x, y, z |- *.
+  - simpl.
+    lhs nrapply concat_1p.
+    rhs nrapply concat_p1.
+    rhs nrapply concat_p1.
+    symmetry; apply ap_idmap.
+  - simpl.
+    lhs_V nrapply ap_pp.
+    lhs nrapply (ap (ap (cons a)) (IHw x y z)).
+    symmetry.
+    rhs nrapply ap_pp.
+    f_ap.
+    { rhs nrapply ap_pp.
+      f_ap.
+      apply ap_compose. }
+    lhs_V nrapply ap_compose.
+    nrapply (ap_compose (fun l => l ++ z)).
+Defined.

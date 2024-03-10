@@ -63,7 +63,7 @@ Proof.
 intros l1. induction l1 as [|x l1 IH];intros l2 l3.
 - reflexivity.
 - simpl;apply ap;apply IH.
-Qed.
+Defined.
 
 Fixpoint for_all {A} (P : A -> Type) l : Type :=
   match l with
