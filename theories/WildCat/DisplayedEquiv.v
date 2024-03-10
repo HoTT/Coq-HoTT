@@ -172,23 +172,43 @@ Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   := did_cate.
 
 (** Equivalences can be composed. *)
+Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $-> c} `{!CatIsEquiv g} {f : a $-> b} `{!CatIsEquiv f}
+  {a' : D a} {b' : D b} {c' : D c}
+  (g' : DHom g b' c') `{ge' : !DCatIsEquiv g'}
+  (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'}
+  : DCatIsEquiv (fe:=compose_catie' g f) (g' $o' f').
+Proof.
+  snrapply dcatie_adjointify.
+  - refine (_ $o' _).
+    1: nrapply (Build_DCatEquiv f')^-1$'; exact fe'.
+    nrapply (Build_DCatEquiv g')^-1$'; exact ge'.
+  - refine (dcat_assoc _ _ _ $@' _).
+    refine (_ $@L' ((dcate_buildequiv_fun f')^$' $@R' _ ) $@' _).
+    1: exact isd0gpd_hom.
+    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
+    refine (_ $@L' (dcate_isretr (Build_DCatEquiv f') $@R' _) $@' _).
+    refine (_ $@L' dcat_idl _ $@' _).
+    refine ((dcate_buildequiv_fun g')^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    nrapply dcate_isretr.
+  - refine (dcat_assoc _ _ _ $@' _).
+    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
+    refine (_ $@L' (_ $@L' (dcate_buildequiv_fun g')^$' $@R' _) $@' _).
+    1: exact isd0gpd_hom.
+    refine (_ $@L' (dcate_issect (Build_DCatEquiv g') $@R' _) $@' _).
+    refine (_ $@L' dcat_idl _ $@' _).
+    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).
+    1: exact isd0gpd_hom.
+    nrapply dcate_issect.
+Defined.
+
 Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DCatIsEquiv (dcate_fun g' $o' f').
 Proof.
-  snrapply dcatie_adjointify.
-  - exact (dcate_fun f'^-1$' $o' g'^-1$').
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (dcate_isretr _ $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
-    apply dcate_isretr.
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (dcate_issect _ $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
-    apply dcate_issect.
+  rapply dcompose_catie'.
 Defined.
 
 Definition dcompose_cate {A} {D : A -> Type} `{DHasEquivs A D}
@@ -387,8 +407,10 @@ Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun (f' $oE' e')^-1$') (dcate_fun (e'^-1$' $oE' f'^-1$')).
 Proof.
   refine (_ $@' (dcompose_cate_fun e'^-1$' f'^-1$')^$').
-  - snrapply dcate_inv_adjointify.
-  - exact isd0gpd_hom.
+  2: exact isd0gpd_hom.
+  refine (dcate_inv_adjointify _ _ _ _ $@' _).
+  refine (dcate_inv2 (dcate_buildequiv_fun _) $@R' _ $@' _).
+  exact (_ $@L' dcate_inv2 (dcate_buildequiv_fun _)).
 Defined.
 
 Definition dcate_inv_V {A} {D : A -> Type} `{DHasEquivs A D}

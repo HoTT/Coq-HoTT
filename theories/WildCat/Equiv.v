@@ -85,7 +85,7 @@ Defined.
 
 Notation "f ^-1$" := (cate_inv f).
 
-Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b) 
+Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
 Proof.
   refine (_ $@ cate_issect' a b f).
@@ -152,22 +152,32 @@ Global Instance symmetric_cate {A} `{HasEquivs A}
   := fun a b f => cate_inv f.
 
 (** Equivalences can be composed. *)
-Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
-  (g : b $<~> c) (f : a $<~> b)
+Definition compose_catie' {A} `{HasEquivs A} {a b c : A}
+  (g : b $-> c) `{!CatIsEquiv g} (f : a $-> b) `{!CatIsEquiv f}
   : CatIsEquiv (g $o f).
 Proof.
-  refine (catie_adjointify _ (f^-1$ $o g^-1$) _ _).
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
-    apply cate_isretr.
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_issect _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
-    apply cate_issect.
+  snrapply catie_adjointify.
+  - exact ((Build_CatEquiv f)^-1$ $o (Build_CatEquiv g)^-1$).
+  - nrefine (cat_assoc _ _ _ $@ _).
+    refine (_ $@L ((cate_buildequiv_fun f)^$ $@R _ ) $@ _).
+    nrefine (_ $@L cat_assoc_opp _ _ _ $@ _).
+    nrefine (_ $@L (cate_isretr (Build_CatEquiv f) $@R _) $@ _).
+    nrefine (_ $@L cat_idl _ $@ _).
+    refine ((cate_buildequiv_fun g)^$ $@R _ $@ _).
+    nrapply cate_isretr.
+  - nrefine (cat_assoc _ _ _ $@ _).
+    nrefine (_ $@L cat_assoc_opp _ _ _ $@ _).
+    refine (_ $@L (_ $@L (cate_buildequiv_fun g)^$ $@R _) $@ _).
+    nrefine (_ $@L (cate_issect (Build_CatEquiv g) $@R _) $@ _).
+    nrefine (_ $@L cat_idl _ $@ _).
+    refine (_ $@L (cate_buildequiv_fun f)^$ $@ _).
+    nrapply cate_issect.
 Defined.
+
+Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : CatIsEquiv (g $o f)
+  := compose_catie' g f.
 
 Definition compose_cate {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b) : a $<~> c
@@ -190,7 +200,7 @@ Proof.
   apply cate_buildequiv_fun.
 Defined.
 
-Definition id_cate_fun {A} `{HasEquivs A} (a : A) 
+Definition id_cate_fun {A} `{HasEquivs A} (a : A)
   : cate_fun (id_cate a) $== Id a.
 Proof.
   apply cate_buildequiv_fun.
@@ -325,7 +335,9 @@ Definition cate_inv_compose {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : b
   : cate_fun (f $oE e)^-1$ $== cate_fun (e^-1$ $oE f^-1$).
 Proof.
   refine (_ $@ (compose_cate_fun _ _)^$).
-  apply cate_inv_adjointify.
+  nrefine (cate_inv_adjointify _ _ _ _ $@ _).
+  nrefine (cate_inv2 (cate_buildequiv_fun _) $@R _ $@ _).
+  exact (_ $@L cate_inv2 (cate_buildequiv_fun _)).
 Defined.
 
 Definition cate_inv_V {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
