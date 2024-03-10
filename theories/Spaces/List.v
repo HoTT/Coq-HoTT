@@ -51,16 +51,16 @@ Definition list_pentagon {A} (w x y z : list A)
     @ app_assoc _ w (x ++ y) z
     @ ap (fun l => l ++ z) (app_assoc _ w x y).
 Proof.
+  symmetry.
   induction w as [|? w IHw] in x, y, z |- *.
   - simpl.
-    lhs nrapply concat_1p.
-    rhs nrapply concat_p1.
-    rhs nrapply concat_p1.
-    symmetry; apply ap_idmap.
+    rhs nrapply concat_1p.
+    lhs nrapply concat_p1.
+    lhs nrapply concat_p1.
+    apply ap_idmap.
   - simpl.
-    lhs_V nrapply ap_pp.
-    lhs nrapply (ap (ap (cons a)) (IHw x y z)).
-    symmetry.
+    rhs_V nrapply ap_pp.
+    rhs_V nrapply (ap (ap (cons a)) (IHw x y z)).
     rhs nrapply ap_pp.
     f_ap.
     { rhs nrapply ap_pp.
