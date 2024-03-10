@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall.
-Require Import WildCat.Core WildCat.Prod.
+Require Import WildCat.Core WildCat.Prod WildCat.Equiv.
 
 (** * Bifunctors between WildCats *)
 
@@ -56,17 +56,83 @@ Definition Build_Is1Bifunctor' {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   : Is1Bifunctor F
   := is1bifunctor_functor_uncurried (uncurry F).
 
-(* fmap in the first argument *)
-Definition fmap10 {A B C : Type} `{Is01Cat A, Is01Cat B, Is1Cat C}
+(** [fmap] in the first argument *)
+Definition fmap10 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1) (b : B)
   : (F a0 b) $-> (F a1 b)
   := fmap (flip F b) f.
 
-(* fmap in the second argument *)
-Definition fmap01 {A B C : Type} `{Is01Cat A, Is01Cat B, Is1Cat C}
+(** [fmap] in the second argument *)
+Definition fmap01 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} (a : A) {b0 b1 : B} (g : b0 $-> b1)
   : F a b0 $-> F a b1
   := fmap (F a) g.
+
+(** There are two ways to [fmap] in both arguments of a bifunctor. The bifunctor coherence condition ([bifunctor_isbifunctor]) states precisely that these two routes agree. *)
+Definition fmap11 {A B C : Type} `{IsGraph A, IsGraph B, Is01Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1)
+  {b0 b1 : B} (g : b0 $-> b1)
+  : F a0 b0 $-> F a1 b1
+  := fmap (F _) g $o fmap (flip F _) f.
+
+Definition fmap11' {A B C : Type} `{IsGraph A, IsGraph B, Is01Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1)
+  {b0 b1 : B} (g : b0 $-> b1)
+  : F a0 b0 $-> F a1 b1
+  := fmap (flip F _) f $o fmap (F _) g.
+
+Definition fmap22 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} {f : a0 $-> a1} {f' : a0 $-> a1}
+  {b0 b1 : B} {g : b0 $-> b1} {g' : b0 $-> b1}
+  (p : f $== f') (q : g $== g')
+  : fmap11 F f g $== fmap11 F f' g'
+  := fmap2 (F _) q $@R _ $@ (_ $@L fmap2 (flip F _) p).
+
+Global Instance iemap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} (f : a0 $<~> a1) {b0 b1 : B} (g : b0 $<~> b1)
+  : CatIsEquiv (fmap11 F f g).
+Proof.
+  rapply compose_catie'.
+  exact (iemap (flip F _) f).
+Defined.
+
+Definition emap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} (f : a0 $<~> a1) {b0 b1 : B} (g : b0 $<~> b1)
+  : F a0 b0 $<~> F a1 b1
+  := Build_CatEquiv (fmap11 F f g).
+
+(** Any 0-bifunctor [A -> B -> C] can be made into a functor from the product category [A * B -> C] in two ways. *)
+Global Instance is0functor_uncurry_bifunctor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A -> B -> C) `{!Is0Bifunctor F}
+  : Is0Functor (uncurry F).
+Proof.
+  nrapply Build_Is0Functor.
+  intros a b [f g].
+  exact (fmap11 F f g).
+Defined.
+
+(** Any 1-bifunctor defines a canonical functor from the product category. *)
+Global Instance is1functor_uncurry_bifunctor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
+  : Is1Functor (uncurry F).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros x y f g [p q].
+    exact (fmap22 F p q).
+  - intros x.
+    refine (fmap_id (F _) _ $@R _ $@ _).
+    refine (_ $@L fmap_id (flip F _) _ $@ cat_idl _).
+  - intros x y z f g.
+    refine (fmap_comp (F _) _ _ $@R _ $@ _).
+    refine (_ $@L fmap_comp (flip F _) _ _  $@ _).
+    nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).
+    nrefine (cat_assoc _ _ _ $@R _ $@ _ $@ (cat_assoc_opp _ _ _ $@R _)).
+    exact (_ $@L bifunctor_isbifunctor F _ _ $@R _).
+Defined.
 
 (** Restricting a functor along a bifunctor yields a bifunctor. *)
 Global Instance is0bifunctor_compose {A B C D : Type}
@@ -107,35 +173,4 @@ Proof.
     refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).
     rapply fmap2.
     exact (bifunctor_isbifunctor F f g).
-Defined.
-
-(** Any 0-bifunctor [A -> B -> C] can be made into a functor from the product category [A * B -> C] in two ways. The bifunctor coherence condition ([bifunctor_isbifunctor]) states precisely that these two routes agree. *)
-Global Instance is0functor_uncurry_bifunctor {A B C : Type}
-  `{IsGraph A, IsGraph B, Is1Cat C} (F : A -> B -> C) `{!Is0Bifunctor F}
-  : Is0Functor (uncurry F).
-Proof.
-  nrapply Build_Is0Functor.
-  intros [a b] [c d] [f g].
-  exact (fmap (flip F d) f $o fmap (F a) g).
-Defined.
-
-(** Any 1-bifunctor defines a canonical functor from the product category. *)
-Global Instance is1functor_uncurry_bifunctor {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
-  `{!Is0Bifunctor F, !Is1Bifunctor F}
-  : Is1Functor (uncurry F).
-Proof.
-  nrapply Build_Is1Functor.
-  - intros x y f g [p q].
-    refine (fmap2 (flip F _) p $@R _ $@ _).
-    exact (_ $@L fmap2 (F _) q).
-  - intros x.
-    refine (fmap_id (flip F _) _ $@R _ $@ _).
-    refine (_ $@L fmap_id (F _) _ $@ cat_idl _).
-  - intros x y z f g.
-    refine (fmap_comp (flip F _) _ _ $@R _ $@ _).
-    refine (_ $@L fmap_comp (F _) _ _  $@ _).
-    refine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).
-    refine (cat_assoc _ _ _ $@R _ $@ _ $@ (cat_assoc_opp _ _ _ $@R _)).
-    exact (_ $@L (bifunctor_isbifunctor F _ _)^$ $@R _).
 Defined.
