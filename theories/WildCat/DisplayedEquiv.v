@@ -171,7 +171,47 @@ Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   : Reflexive (DCatEquiv (id_cate a))
   := did_cate.
 
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
+Definition dcate_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
+  {f : a $-> b} `{!CatIsEquiv f} {g : a $-> b} {p : f $== g} {a' : D a}
+  {b' : D b} (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'} {g' : DHom g a' b'}
+  (p' : DGpdHom p f' g')
+  : DCatIsEquiv (fe:=cate_homotopic f p) g'.
+Proof.
+  snrapply dcatie_adjointify.
+  - exact (Build_DCatEquiv (fe':=fe') f')^-1$'.
+  - refine (p'^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    refine ((dcate_buildequiv_fun f')^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_isretr.
+  - refine (_ $@L' p'^$' $@' _).
+    1: exact isd0gpd_hom.
+    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_issect.
+Defined.
+
 (** Equivalences can be composed. *)
+Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
+  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
+  : DCatIsEquiv (dcate_fun g' $o' f').
+Proof.
+  snrapply dcatie_adjointify.
+  - exact (dcate_fun f'^-1$' $o' g'^-1$').
+  - refine (dcat_assoc _ _ _ $@' _).
+    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
+    refine (_ $@L' (dcate_isretr _ $@R' _) $@' _).
+    refine (_ $@L' dcat_idl _ $@' _).
+    apply dcate_isretr.
+  - refine (dcat_assoc _ _ _ $@' _).
+    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
+    refine (_ $@L' (dcate_issect _ $@R' _) $@' _).
+    refine (_ $@L' dcat_idl _ $@' _).
+    apply dcate_issect.
+Defined.
+
 Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $-> c} `{!CatIsEquiv g} {f : a $-> b} `{!CatIsEquiv f}
   {a' : D a} {b' : D b} {c' : D c}
@@ -179,36 +219,10 @@ Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
   (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'}
   : DCatIsEquiv (fe:=compose_catie' g f) (g' $o' f').
 Proof.
-  snrapply dcatie_adjointify.
-  - refine (_ $o' _).
-    1: nrapply (Build_DCatEquiv f')^-1$'; exact fe'.
-    nrapply (Build_DCatEquiv g')^-1$'; exact ge'.
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' ((dcate_buildequiv_fun f')^$' $@R' _ ) $@' _).
-    1: exact isd0gpd_hom.
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (dcate_isretr (Build_DCatEquiv f') $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
-    refine ((dcate_buildequiv_fun g')^$' $@R' _ $@' _).
-    1: exact isd0gpd_hom.
-    nrapply dcate_isretr.
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (_ $@L' (dcate_buildequiv_fun g')^$' $@R' _) $@' _).
-    1: exact isd0gpd_hom.
-    refine (_ $@L' (dcate_issect (Build_DCatEquiv g') $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
-    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).
-    1: exact isd0gpd_hom.
-    nrapply dcate_issect.
-Defined.
-
-Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
-  {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
-  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
-  : DCatIsEquiv (dcate_fun g' $o' f').
-Proof.
-  rapply dcompose_catie'.
+  pose (ff:=Build_DCatEquiv (fe':=fe') f').
+  pose (gg:=Build_DCatEquiv (fe':=ge') g').
+  nrefine (dcate_homotopic (fe':=dcompose_catie gg ff) _ _).
+  exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).
 Defined.
 
 Definition dcompose_cate {A} {D : A -> Type} `{DHasEquivs A D}
@@ -407,10 +421,8 @@ Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun (f' $oE' e')^-1$') (dcate_fun (e'^-1$' $oE' f'^-1$')).
 Proof.
   refine (_ $@' (dcompose_cate_fun e'^-1$' f'^-1$')^$').
-  2: exact isd0gpd_hom.
-  refine (dcate_inv_adjointify _ _ _ _ $@' _).
-  refine (dcate_inv2 (dcate_buildequiv_fun _) $@R' _ $@' _).
-  exact (_ $@L' dcate_inv2 (dcate_buildequiv_fun _)).
+  - snrapply dcate_inv_adjointify.
+  - exact isd0gpd_hom.
 Defined.
 
 Definition dcate_inv_V {A} {D : A -> Type} `{DHasEquivs A D}
