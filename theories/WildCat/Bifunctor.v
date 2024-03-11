@@ -87,7 +87,7 @@ Definition fmap22 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   {b0 b1 : B} {g : b0 $-> b1} {g' : b0 $-> b1}
   (p : f $== f') (q : g $== g')
   : fmap11 F f g $== fmap11 F f' g'
-  := fmap2 (F _) q $@R _ $@ (_ $@L fmap2 (flip F _) p).
+  := fmap2 (flip F _) p $@@ fmap2 (F _) q.
 
 Global Instance iemap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
@@ -124,11 +124,10 @@ Proof.
   - intros x y f g [p q].
     exact (fmap22 F p q).
   - intros x.
-    refine (fmap_id (F _) _ $@R _ $@ _).
-    refine (_ $@L fmap_id (flip F _) _ $@ cat_idl _).
+    refine (fmap_id (flip F _) _ $@@ fmap_id (F _) _ $@ _).
+    apply cat_idl.
   - intros x y z f g.
-    refine (fmap_comp (F _) _ _ $@R _ $@ _).
-    refine (_ $@L fmap_comp (flip F _) _ _  $@ _).
+    refine (fmap_comp (flip F _) _ _ $@@ fmap_comp (F _) _ _ $@ _ ).
     nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).
     nrefine (cat_assoc _ _ _ $@R _ $@ _ $@ (cat_assoc_opp _ _ _ $@R _)).
     exact (_ $@L bifunctor_isbifunctor F _ _ $@R _).
