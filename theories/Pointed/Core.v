@@ -647,7 +647,7 @@ Proof.
   - intros A B C f g h k p q.
     snrapply Build_pHomotopy.
     + intros x.
-      exact (concat_Ap q _).
+      exact (concat_Ap q _)^.
     + by pelim p f g q h k.
   - intros A B C D f g r1 r2 s1.
     srapply Build_pHomotopy.

@@ -10,9 +10,9 @@ Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
   is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
   is1functor_postcomp : forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
   is1functor_precomp : forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
-  bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g' g'' : b $-> c}
-    (p : f $== f') (s : g' $== g''),
-    (g' $@L p) $@ (s $@R f') $== (s $@R f) $@ (g'' $@L p);
+  bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g g' : b $-> c}
+    (p : f $== f') (p' : g $== g'),
+    (p' $@R f) $@ (g' $@L p) $== (g $@L p) $@ (p' $@R f') ;
 
   (** Naturality of the associator in each variable separately *)
   is1natural_cat_assoc_l : forall (a b c d : A) (f : a $-> b) (g : b $-> c),
@@ -54,6 +54,22 @@ Global Existing Instance is1natural_cat_assoc_r.
 Global Existing Instance is1natural_cat_idl.
 Global Existing Instance is1natural_cat_idr.
 
+(** *** Whiskering functoriality *)
+
+Definition cat_postwhisker_pp {A} `{Is21Cat A} {a b c : A}
+  {f g h : a $-> b} (k : b $-> c) (p : f $== g) (q : g $== h)
+  : k $@L (p $@ q) $== (k $@L p) $@ (k $@L q).
+Proof.
+  rapply fmap_comp.
+Defined.
+
+Definition cat_prewhisker_pp {A} `{Is21Cat A} {a b c : A}
+  {f g h : b $-> c} (k : a $-> b) (p : f $== g) (q : g $== h)
+  : (p $@ q) $@R k $== (p $@R k) $@ (q $@R k).
+Proof.
+  rapply fmap_comp.
+Defined.
+
 (** *** Exchange law *)
 
 Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}
@@ -61,15 +77,17 @@ Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}
   (p : f $== f') (q : f' $== f'') (r : g $== g') (s : g' $== g'')
   : (p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s).
 Proof.
-  refine ((_ $@@ _) $@ _).
-  1: rapply fmap_comp.
-  1: rapply fmap_comp.
-  refine (cat_assoc _ _ _ $@ _).
+  unfold "$@@".
+  (** We use the distributivity of [$@R] and [$@L] in a (2,1)-category (since they are functors) to see that we have the same dadta on both sides of the 3-morphism. *)
+  nrefine ((_ $@L cat_prewhisker_pp _ _ _ ) $@ _).
+  nrefine ((cat_postwhisker_pp _ _ _ $@R _) $@ _).
+  (** Now we reassociate and whisker on the left and right. *)
+  nrefine (cat_assoc _ _ _ $@ _).
   refine (_ $@ (cat_assoc _ _ _)^$).
   nrefine (_ $@L _).
   refine (_ $@ cat_assoc _ _ _).
   refine ((cat_assoc _ _ _)^$ $@ _).
   nrefine (_ $@R _).
-  symmetry.
+  (** Finally we are left with the bifunctoriality condition for left and right whiskering which is part of the data of the (2,1)-cat. *)
   apply bifunctor_coh_comp.
 Defined.
