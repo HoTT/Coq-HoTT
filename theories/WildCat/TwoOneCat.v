@@ -1,4 +1,4 @@
-Require Import Basics.Overture.
+Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 Require Import WildCat.NatTrans.
 
@@ -10,6 +10,9 @@ Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
   is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
   is1functor_postcomp : forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
   is1functor_precomp : forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
+  bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g' g'' : b $-> c}
+    (p : f $== f') (s : g' $== g''),
+    (g' $@L p) $@ (s $@R f') $== (s $@R f) $@ (g'' $@L p);
 
   (** Naturality of the associator in each variable separately *)
   is1natural_cat_assoc_l : forall (a b c d : A) (f : a $-> b) (g : b $-> c),
@@ -50,3 +53,23 @@ Global Existing Instance is1natural_cat_assoc_m.
 Global Existing Instance is1natural_cat_assoc_r.
 Global Existing Instance is1natural_cat_idl.
 Global Existing Instance is1natural_cat_idr.
+
+(** *** Exchange law *)
+
+Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}
+  {f f' f'' : a $-> b} {g g' g'' : b $-> c}
+  (p : f $== f') (q : f' $== f'') (r : g $== g') (s : g' $== g'')
+  : (p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s).
+Proof.
+  refine ((_ $@@ _) $@ _).
+  1: rapply fmap_comp.
+  1: rapply fmap_comp.
+  refine (cat_assoc _ _ _ $@ _).
+  refine (_ $@ (cat_assoc _ _ _)^$).
+  nrefine (_ $@L _).
+  refine (_ $@ cat_assoc _ _ _).
+  refine ((cat_assoc _ _ _)^$ $@ _).
+  nrefine (_ $@R _).
+  symmetry.
+  apply bifunctor_coh_comp.
+Defined.

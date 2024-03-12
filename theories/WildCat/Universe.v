@@ -149,7 +149,9 @@ Defined.
 Global Instance is21cat_type : Is21Cat Type.
 Proof.
   snrapply Build_Is21Cat.
-  1-6: exact _.
+  1-4,6-7: exact _.
+  - intros a b c f g h k p q x. cbn.
+    apply concat_Ap.
   - intros a b c d f g h i p x; cbn.
     exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
   - intros a b f g p x; cbn.

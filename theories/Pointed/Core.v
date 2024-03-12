@@ -644,6 +644,11 @@ Proof.
       srapply Build_pHomotopy.
       1: reflexivity.
       by pelim f p q i g h.
+  - intros A B C f g h k p q.
+    snrapply Build_pHomotopy.
+    + intros x.
+      exact (concat_Ap q _).
+    + by pelim p f g q h k.
   - intros A B C D f g r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
