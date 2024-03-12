@@ -172,11 +172,11 @@ Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   := did_cate.
 
 (** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
-Definition dcate_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
+Definition dcatie_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
   {f : a $-> b} `{!CatIsEquiv f} {g : a $-> b} {p : f $== g} {a' : D a}
   {b' : D b} (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'} {g' : DHom g a' b'}
   (p' : DGpdHom p f' g')
-  : DCatIsEquiv (fe:=cate_homotopic f p) g'.
+  : DCatIsEquiv (fe:=catie_homotopic f p) g'.
 Proof.
   snrapply dcatie_adjointify.
   - exact (Build_DCatEquiv (fe':=fe') f')^-1$'.
@@ -221,7 +221,7 @@ Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   pose (ff:=Build_DCatEquiv (fe':=fe') f').
   pose (gg:=Build_DCatEquiv (fe':=ge') g').
-  nrefine (dcate_homotopic (fe':=dcompose_catie gg ff) _ _).
+  nrefine (dcatie_homotopic (fe':=dcompose_catie gg ff) _ _).
   exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).
 Defined.
 

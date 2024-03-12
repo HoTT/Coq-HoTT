@@ -152,7 +152,7 @@ Global Instance symmetric_cate {A} `{HasEquivs A}
   := fun a b f => cate_inv f.
 
 (** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
-Definition cate_homotopic {A} `{HasEquivs A} {a b : A}
+Definition catie_homotopic {A} `{HasEquivs A} {a b : A}
   (f : a $-> b) `{!CatIsEquiv f} {g : a $-> b} (p : f $== g)
   : CatIsEquiv g.
 Proof.
@@ -187,7 +187,7 @@ Defined.
 Global Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
   (g : b $-> c) `{!CatIsEquiv g} (f : a $-> b) `{!CatIsEquiv f}
   : CatIsEquiv (g $o f)
-  := cate_homotopic _ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
+  := catie_homotopic _ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
 
 Definition compose_cate {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b) : a $<~> c
