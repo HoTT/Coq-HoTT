@@ -233,12 +233,9 @@ Global Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
 Proof.
   nrapply Build_Is0Functor.
-  intros [a1 a2] [b1 b2] [f1 f2]; cbn in *.
-  snrapply Build_Morphism_0Gpd.
-  - exact (cat_postcomp _ f2 o cat_precomp _ f1).
-  - rapply (is0functor_compose _ _).
-    + apply is0functor_precomp.
-    + apply is0functor_postcomp.
+  intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.
+  rapply (Build_Morphism_0Gpd (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
+          (cat_postcomp b1 f2 o cat_precomp a2 f1)).
 Defined.
 
 Global Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
