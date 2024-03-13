@@ -71,7 +71,7 @@ Defined.
 
 Open Scope signatureT_scope.
 
-#[export] Instance symmetry_flip {A B: Type} {f : A -> B}
+#[export] Instance symmetry_flip {A B : Type} {f : A -> B}
   {R : Relation A} {R' : Relation B} `{Symmetric _ R}
   (H0 : CMorphisms.Proper (R ++> R') f)
   : CMorphisms.Proper (R --> R') f.
@@ -80,7 +80,7 @@ Proof.
   apply H0. unfold CRelationClasses.flip. symmetry. exact Rab.
 Defined.
 
-#[export] Instance symmetric_flip_snd {A B C: Type} {R : Relation A}
+#[export] Instance symmetric_flip_snd {A B C : Type} {R : Relation A}
   {R' : Relation B} {R'' : Relation C} `{Symmetric _ R'}
   (f : A -> B -> C) (H1 : CMorphisms.Proper (R ++> R' ++> R'') f)
   : CMorphisms.Proper (R ++> R' --> R'') f.
@@ -88,7 +88,7 @@ Proof.
   intros a b Rab x y R'yx. apply H1; [ assumption | symmetry; assumption ].
 Defined.
 
-#[export] Instance IsProper_fmap {A B: Type} `{Is1Cat A}
+#[export] Instance IsProper_fmap {A B : Type} `{Is1Cat A}
   `{Is1Cat A} (F : A -> B) `{Is1Functor _ _ F} (a b : A)
   : CMorphisms.Proper (GpdHom ==> GpdHom) (@fmap _ _ _ _ F _ a b) := fun _ _ eq => fmap2 F eq.
 
@@ -111,7 +111,7 @@ Proof.
   exact eq_g.
 Defined.
 
-#[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A}
+#[export] Instance gpd_hom_to_hom_proper {A B : Type} `{Is0Gpd A}
   {R : Relation B} (F : A -> B)
   `{CMorphisms.Proper _ (GpdHom ==> R) F}
   : CMorphisms.Proper (Hom ==> R) F.
