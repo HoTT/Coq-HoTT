@@ -44,12 +44,12 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_hom {A} `{Is01Cat A}
-  : @Is0Bifunctor A^op A Type _ _ _ (@Hom A _)
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
   := is0bifunctor_functor_uncurried _.
 
 (** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
 Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
-  : @Is1Bifunctor A^op A Type _ _ _ _ _ _ _ _ _ _ _ _ (@Hom A _) _
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
   := is1bifunctor_functor_uncurried _.
 
 Definition fun01_hom {A} `{Is01Cat A}
@@ -228,6 +228,41 @@ Defined.
 
 Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -> ZeroGpd
   := fun b => Build_ZeroGpd (a $-> b) _ _ _.
+
+Global Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
+Proof.
+  nrapply Build_Is0Functor.
+  intros [a1 a2] [b1 b2] [f1 f2]; cbn in *.
+  snrapply Build_Morphism_0Gpd.
+  - exact (cat_postcomp _ f2 o cat_precomp _ f1).
+  - rapply (is0functor_compose _ _).
+    + apply is0functor_precomp.
+    + apply is0functor_postcomp.
+Defined.
+
+Global Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p q] h.
+    exact (h $@L p $@@ q).
+  - intros [a1 a2] h.
+    exact (cat_idl _ $@ cat_idr _).
+  - intros [a1 a2] [b1 b2] [c1 c2] [f1 f2] [g1 g2] h.
+    refine (cat_assoc _ _ _ $@ _).
+    refine (g2 $@L _).
+    refine (_ $@L (cat_assoc_opp _ _ _) $@ _).
+    exact (cat_assoc_opp _ _ _).
+Defined.
+
+Global Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
+  := is0bifunctor_functor_uncurried _.
+
+Global Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
+  := is1bifunctor_functor_uncurried _.
 
 Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (opyon_0gpd a).
