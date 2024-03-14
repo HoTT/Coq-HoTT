@@ -328,88 +328,24 @@ Proof.
   apply ap022; apply concat_p1.
 Defined.
 
-Global Instance is0bifunctor_smash : IsBifunctor Smash.
+Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
-  snrapply Build_IsBifunctor.
-  - intros X.
-    snrapply Build_Is0Functor.
-    intros Y B g.
-    exact (functor_smash (Id _) g).
-  - intros Y.
-    snrapply Build_Is0Functor.
-    intros X A f.
-    exact (functor_smash f (Id _)).
-  - intros X A f Y B g.
-    snrapply Build_pHomotopy.
-    + snrapply Smash_ind.
-      1-3: reflexivity.
-      * intros x.
-        nrapply transport_paths_FlFr'.
-        apply equiv_p1_1q.
-        lhs rapply (ap_compose (functor_smash f (Id _)) (functor_smash (Id _) g) (gluel x)).
-        rhs rapply (ap_compose (functor_smash (Id _) g) (functor_smash f (Id _)) (gluel x)).
-        lhs nrapply ap.
-        1: apply Smash_rec_beta_gluel.
-        rhs nrapply ap.
-        2: apply Smash_rec_beta_gluel.
-        lhs nrapply ap.
-        1: apply concat_1p.
-        lhs nrapply Smash_rec_beta_gluel.
-        rhs nrapply (ap_pp _ _ (gluel x)).
-        rhs nrapply whiskerL.
-        2: apply Smash_rec_beta_gluel.
-        f_ap.
-        2: symmetry; apply concat_1p.
-        exact (ap_compose (sm x) (functor_smash f (Id _)) (point_eq g)).
-      * intros y.
-        nrapply transport_paths_FlFr'.
-        apply equiv_p1_1q.
-        lhs rapply (ap_compose (functor_smash _ _) (functor_smash _ _) (gluer y)).
-        rhs rapply (ap_compose (functor_smash (Id _) g) (functor_smash f (Id _)) (gluer y)).
-        lhs nrapply ap.
-        1: apply Smash_rec_beta_gluer.
-        rhs nrapply ap.
-        2: apply Smash_rec_beta_gluer.
-        rhs nrapply ap.
-        2: apply concat_1p.
-        rhs nrapply Smash_rec_beta_gluer.
-        lhs nrapply (ap_pp _ _ (gluer y)).
-        lhs nrapply whiskerL.
-        1: apply Smash_rec_beta_gluer.
-        f_ap.
-        2: apply concat_1p.
-        exact (ap_compose (fun x => sm x y)  (functor_smash (Id _) g) (point_eq f))^.
-    + apply moveL_pV.
-      lhs nrapply concat_1p.
-      simpl.
-      cbn in f, g.
-      lhs nrapply whiskerR.
-      1: rapply (ap_compose (fun x => sm pt x) _ (point_eq g))^.
-      rhs nrapply whiskerR.
-      2: rapply (ap_compose (fun x => sm x pt) _ (point_eq f))^.
-      simpl.
-      by pelim f g.
+  rapply Build_Is0Bifunctor'.
+  nrapply Build_Is0Functor.
+  intros [X Y] [A B] [f g].
+  exact (functor_smash f g).
 Defined.
 
 Global Instance is1bifunctor_smash : Is1Bifunctor Smash.
 Proof.
-  snrapply Build_Is1Bifunctor.
-  - intros X.
-    snrapply Build_Is1Functor.
-    + intros Y B f' g' q.
-      rapply (functor_smash_homotopic (Id _) q).
-    + intros Y; cbn.
-      rapply functor_smash_idmap.
-    + intros Y A C f g.
-      exact (functor_smash_compose (Id _) f (Id _) g).
-  - intros Y.
-    snrapply Build_Is1Functor.
-    + intros X A f g q.
-      rapply (functor_smash_homotopic q (Id _)).
-    + intros X; cbn.
-      rapply functor_smash_idmap.
-    + intros X A C f g.
-      exact (functor_smash_compose f (Id _) g (Id _)).
+  snrapply Build_Is1Bifunctor'.
+  snrapply Build_Is1Functor.
+  - intros [X Y] [A B] [f g] [h i] [p q].
+    exact (functor_smash_homotopic p q).
+  - intros [X Y].
+    exact (functor_smash_idmap X Y).
+  - intros [X Y] [A B] [C D] [f g] [h i].
+    exact (functor_smash_compose f g h i).
 Defined.
 
 (** ** Symmetry of the smash product *)
