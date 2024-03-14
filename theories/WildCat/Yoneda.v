@@ -63,6 +63,7 @@ Definition fun01_hom {A} `{Is01Cat A}
 Definition opyon {A : Type} `{IsGraph A} (a : A) : A -> Type
   := fun b => (a $-> b).
 
+(** We prove this explicitly instead of using the bifunctor instance above so that we can apply [fmap] in each argument independently without mapping an identity in the other. *)
 Global Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
   : Is0Functor (opyon a).
 Proof.
