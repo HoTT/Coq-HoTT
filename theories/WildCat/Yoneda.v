@@ -8,6 +8,7 @@ Require Import WildCat.Opposite.
 Require Import WildCat.FunctorCat.
 Require Import WildCat.NatTrans.
 Require Import WildCat.Prod.
+Require Import WildCat.Bifunctor.
 Require Import WildCat.ZeroGroupoid.
 
 (** ** Two-variable hom-functors *)
@@ -42,6 +43,15 @@ Proof.
     refine (cat_assoc_opp _ _ _).
 Defined.
 
+Global Instance is0bifunctor_hom {A} `{Is01Cat A}
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
+  := is0bifunctor_functor_uncurried _.
+
+(** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
+Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
+  := is1bifunctor_functor_uncurried _.
+
 Definition fun01_hom {A} `{Is01Cat A}
   : Fun01 (A^op * A) Type
   := @Build_Fun01 _ _ _ _ _ is0functor_hom.
@@ -53,6 +63,7 @@ Definition fun01_hom {A} `{Is01Cat A}
 Definition opyon {A : Type} `{IsGraph A} (a : A) : A -> Type
   := fun b => (a $-> b).
 
+(** We prove this explicitly instead of using the bifunctor instance above so that we can apply [fmap] in each argument independently without mapping an identity in the other. *)
 Global Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
   : Is0Functor (opyon a).
 Proof.
@@ -218,6 +229,38 @@ Defined.
 
 Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -> ZeroGpd
   := fun b => Build_ZeroGpd (a $-> b) _ _ _.
+
+Global Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
+Proof.
+  nrapply Build_Is0Functor.
+  intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.
+  rapply (Build_Morphism_0Gpd (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
+          (cat_postcomp b1 f2 o cat_precomp a2 f1)).
+Defined.
+
+Global Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p q] h.
+    exact (h $@L p $@@ q).
+  - intros [a1 a2] h.
+    exact (cat_idl _ $@ cat_idr _).
+  - intros [a1 a2] [b1 b2] [c1 c2] [f1 f2] [g1 g2] h.
+    refine (cat_assoc _ _ _ $@ _).
+    refine (g2 $@L _).
+    refine (_ $@L (cat_assoc_opp _ _ _) $@ _).
+    exact (cat_assoc_opp _ _ _).
+Defined.
+
+Global Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
+  := is0bifunctor_functor_uncurried _.
+
+Global Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
+  := is1bifunctor_functor_uncurried _.
 
 Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (opyon_0gpd a).

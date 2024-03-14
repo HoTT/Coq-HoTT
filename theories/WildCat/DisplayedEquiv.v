@@ -171,6 +171,27 @@ Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   : Reflexive (DCatEquiv (id_cate a))
   := did_cate.
 
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
+Definition dcatie_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
+  {f : a $-> b} `{!CatIsEquiv f} {g : a $-> b} {p : f $== g} {a' : D a}
+  {b' : D b} (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'} {g' : DHom g a' b'}
+  (p' : DGpdHom p f' g')
+  : DCatIsEquiv (fe:=catie_homotopic f p) g'.
+Proof.
+  snrapply dcatie_adjointify.
+  - exact (Build_DCatEquiv (fe':=fe') f')^-1$'.
+  - refine (p'^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    refine ((dcate_buildequiv_fun f')^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_isretr.
+  - refine (_ $@L' p'^$' $@' _).
+    1: exact isd0gpd_hom.
+    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_issect.
+Defined.
+
 (** Equivalences can be composed. *)
 Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
@@ -189,6 +210,19 @@ Proof.
     refine (_ $@L' (dcate_issect _ $@R' _) $@' _).
     refine (_ $@L' dcat_idl _ $@' _).
     apply dcate_issect.
+Defined.
+
+Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $-> c} `{!CatIsEquiv g} {f : a $-> b} `{!CatIsEquiv f}
+  {a' : D a} {b' : D b} {c' : D c}
+  (g' : DHom g b' c') `{ge' : !DCatIsEquiv g'}
+  (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'}
+  : DCatIsEquiv (fe:=compose_catie' g f) (g' $o' f').
+Proof.
+  pose (ff:=Build_DCatEquiv (fe':=fe') f').
+  pose (gg:=Build_DCatEquiv (fe':=ge') g').
+  nrefine (dcatie_homotopic (fe':=dcompose_catie gg ff) _ _).
+  exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).
 Defined.
 
 Definition dcompose_cate {A} {D : A -> Type} `{DHasEquivs A D}

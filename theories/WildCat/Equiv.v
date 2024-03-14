@@ -85,7 +85,7 @@ Defined.
 
 Notation "f ^-1$" := (cate_inv f).
 
-Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b) 
+Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
 Proof.
   refine (_ $@ cate_issect' a b f).
@@ -151,6 +151,21 @@ Global Instance symmetric_cate {A} `{HasEquivs A}
   : Symmetric (@CatEquiv A _ _ _ _ _)
   := fun a b f => cate_inv f.
 
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
+Definition catie_homotopic {A} `{HasEquivs A} {a b : A}
+  (f : a $-> b) `{!CatIsEquiv f} {g : a $-> b} (p : f $== g)
+  : CatIsEquiv g.
+Proof.
+  snrapply catie_adjointify.
+  - exact (Build_CatEquiv f)^-1$.
+  - refine (p^$ $@R _ $@ _).
+    refine ((cate_buildequiv_fun f)^$ $@R _ $@ _).
+    apply cate_isretr.
+  - refine (_ $@L p^$ $@ _).
+    refine (_ $@L (cate_buildequiv_fun f)^$ $@ _).
+    apply cate_issect.
+Defined.
+
 (** Equivalences can be composed. *)
 Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b)
@@ -168,6 +183,11 @@ Proof.
     refine ((_ $@L cat_idl _) $@ _).
     apply cate_issect.
 Defined.
+
+Global Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
+  (g : b $-> c) `{!CatIsEquiv g} (f : a $-> b) `{!CatIsEquiv f}
+  : CatIsEquiv (g $o f)
+  := catie_homotopic _ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
 
 Definition compose_cate {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b) : a $<~> c
@@ -190,7 +210,7 @@ Proof.
   apply cate_buildequiv_fun.
 Defined.
 
-Definition id_cate_fun {A} `{HasEquivs A} (a : A) 
+Definition id_cate_fun {A} `{HasEquivs A} (a : A)
   : cate_fun (id_cate a) $== Id a.
 Proof.
   apply cate_buildequiv_fun.

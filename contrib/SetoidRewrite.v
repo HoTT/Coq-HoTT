@@ -71,7 +71,7 @@ Defined.
 
 Open Scope signatureT_scope.
 
-#[export] Instance symmetry_flip {A B: Type} {f : A -> B}
+#[export] Instance symmetry_flip {A B : Type} {f : A -> B}
   {R : Relation A} {R' : Relation B} `{Symmetric _ R}
   (H0 : CMorphisms.Proper (R ++> R') f)
   : CMorphisms.Proper (R --> R') f.
@@ -80,7 +80,7 @@ Proof.
   apply H0. unfold CRelationClasses.flip. symmetry. exact Rab.
 Defined.
 
-#[export] Instance symmetric_flip_snd {A B C: Type} {R : Relation A}
+#[export] Instance symmetric_flip_snd {A B C : Type} {R : Relation A}
   {R' : Relation B} {R'' : Relation C} `{Symmetric _ R'}
   (f : A -> B -> C) (H1 : CMorphisms.Proper (R ++> R' ++> R'') f)
   : CMorphisms.Proper (R ++> R' --> R'') f.
@@ -88,7 +88,7 @@ Proof.
   intros a b Rab x y R'yx. apply H1; [ assumption | symmetry; assumption ].
 Defined.
 
-#[export] Instance IsProper_fmap {A B: Type} `{Is1Cat A}
+#[export] Instance IsProper_fmap {A B : Type} `{Is1Cat A}
   `{Is1Cat A} (F : A -> B) `{Is1Functor _ _ F} (a b : A)
   : CMorphisms.Proper (GpdHom ==> GpdHom) (@fmap _ _ _ _ F _ a b) := fun _ _ eq => fmap2 F eq.
 
@@ -99,7 +99,7 @@ Proof.
   intros f1 f2.
   apply (is0functor_postcomp a b c g ).
 Defined.
-                  
+
 #[export] Instance IsProper_catcomp {A : Type} `{Is1Cat A}
   {a b c : A}
   : CMorphisms.Proper (GpdHom ==> GpdHom ==> GpdHom)
@@ -111,43 +111,12 @@ Proof.
   exact eq_g.
 Defined.
 
-#[export] Instance gpd_hom_to_hom_proper {A B: Type} `{Is0Gpd A} 
+#[export] Instance gpd_hom_to_hom_proper {A B : Type} `{Is0Gpd A}
   {R : Relation B} (F : A -> B)
   `{CMorphisms.Proper _ (GpdHom ==> R) F}
   : CMorphisms.Proper (Hom ==> R) F.
 Proof.
   intros a b eq_ab; apply H2; exact eq_ab.
-Defined.
-
-#[export] Instance Is1Functor_uncurry_bifunctor {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C)
-  `{!IsBifunctor F}
-  `{forall a, Is1Functor (F a)}
-  `{forall b, Is1Functor (flip F b)}
-  : Is1Functor (uncurry F).
-Proof.
-  nrapply Build_Is1Functor.
-  - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [eq_fg1 eq_fg2];
-      cbn in f1, f2, g1, g2, eq_fg1, eq_fg2. cbn.
-    rewrite eq_fg1, eq_fg2.
-    reflexivity.
-  - intros [a b]; cbn.
-    (* rewrite fmap_id generates an extra goal. Not sure how to get typeclass resolution to figure this out automatically. *)
-    rewrite (fmap_id _).
-    rewrite (fmap_id _).
-    rewrite cat_idl.
-    reflexivity.
-  - intros [a1 b1] [a2 b2] [a3 b3] [f1 f2] [g1 g2];
-      cbn in f1, f2, g1, g2.
-    cbn.
-    rewrite (fmap_comp _).
-    rewrite (fmap_comp _).
-    rewrite cat_assoc.
-    rewrite <- (cat_assoc _ (fmap (F a1) g2)).
-    rewrite <- (bifunctor_isbifunctor F f1 g2).
-    rewrite ! cat_assoc.
-    reflexivity.
 Defined.
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
@@ -194,7 +163,7 @@ Defined.
 
 Proposition nat_equiv_faithful {A B : Type}
   {F G : A -> B} `{Is1Functor _ _ F}
-  `{!Is0Functor G, !Is1Functor G} 
+  `{!Is0Functor G, !Is1Functor G}
   `{!HasEquivs B} (tau : NatEquiv F G)
   : Faithful F -> Faithful G.
 Proof.
