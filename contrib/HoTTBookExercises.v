@@ -128,7 +128,42 @@ End Book_1_3_sig.
 (* ================================================== ex:iterator *)
 (** Exercise 1.4 *)
 
+Section Book_1_4.
+  Fixpoint Book_1_4_iter (C : Type) (c0 : C) (cs : C -> C) (n : nat) : C :=
+    match n with
+    | O => c0
+    | S m => cs (Book_1_4_iter C c0 cs m)
+    end.
 
+  Definition Book_1_4_rec' (C : Type) (c0 : C) (cs : nat -> C -> C) : nat -> nat * C :=
+    Book_1_4_iter (nat * C) (O, c0) (fun x => (S (fst x), cs (fst x) (snd x))).
+  
+  Definition Book_1_4_rec (C : Type) (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
+    snd (Book_1_4_rec' C c0 cs n).
+
+  Lemma Book_1_4_aux : forall C c0 cs n, fst (Book_1_4_rec' C c0 cs n) = n.
+  Proof.
+    intros C c0 cs n.
+    induction n as [| m IH].
+    - simpl. reflexivity.
+    - simpl.
+      unfold Book_1_4_rec'.
+      rewrite IH.
+      reflexivity.
+  Qed.
+
+  Proposition Book_1_4_rec_refl : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
+  Proof. 
+    intros C c0 cs n.
+    induction n as [| m IH].
+    - simpl. reflexivity.
+    - unfold Book_1_4_rec. simpl.
+      rewrite Book_1_4_aux.
+      unfold Book_1_4_rec, Book_1_4_rec' in IH.
+      rewrite IH.
+      reflexivity.
+  Qed.
+End Book_1_4.
 
 (* ================================================== ex:sum-via-bool *)
 (** Exercise 1.5 *)
@@ -157,7 +192,37 @@ End Book_1_5.
 (* ================================================== ex:prod-via-bool *)
 (** Exercise 1.6 *)
 
+Section Book_1_6.
+  Definition Book_1_6_prod (A B : Type) : Type := forall x : Bool, (if x then A else B).
 
+  Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B :=
+    fun x : Bool => match x with
+    | true => a
+    | false => b 
+    end.
+
+  Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
+  Notation "'pr1' p" := (p true) (at level 0).
+  Notation "'pr2' p" := (p false) (at level 0).
+
+  Definition Book_1_6_eq {A B : Type} : forall p : Book_1_6_prod A B, (pr1 p, pr2 p) == p :=
+    fun p x => match x with
+    | true => idpath
+    | false => idpath
+    end.
+
+  Definition Book_1_6_eta `{Funext} {A B : Type} : forall p : Book_1_6_prod A B, (pr1 p, pr2 p) = p :=
+    fun p => path_forall (pr1 p, pr2 p) p (Book_1_6_eq p).
+
+  Definition Book_1_6_ind `{Funext} {A B : Type} (C : Book_1_6_prod A B -> Type) (f : forall a b, C (a, b)):
+    forall p : Book_1_6_prod A B, C p :=
+    fun p => transport C (Book_1_6_eta p) (f (pr1 p) (pr2 p)).
+
+  Theorem Book_1_6_red `{Funext} {A B : Type} (C : Book_1_6_prod A B -> Type) f a b : Book_1_6_ind C f (a, b) = f a b.
+  (* Proof. unfold Book_1_6_ind, transport, Book_1_6_eta, path_forall. simpl. reflexivity. Defined. *)
+  Admitted.
+
+End Book_1_6.
 
 (* ================================================== ex:pm-to-ml *)
 (** Exercise 1.7 *)
@@ -981,6 +1046,11 @@ Definition Book_3_19 := @HoTT.BoundedSearch.minimal_n.
 
 
 
+(* ================================================== ex:n-set *)
+(** Exercise 3.24 *)
+
+
+
 (* ================================================== ex:two-sided-adjoint-equivalences *)
 (** Exercise 4.1 *)
 
@@ -1435,7 +1505,6 @@ Definition Book_6_1_ii := @HoTT.Cubical.DPath.dp_apD_pp.
 (** Exercise 6.3 *)
 
 Definition Book_6_3 := @HoTT.Spaces.Torus.TorusEquivCircles.equiv_torus_prod_Circle.
-
 
 (* ================================================== ex:nspheres *)
 (** Exercise 6.4 *)
