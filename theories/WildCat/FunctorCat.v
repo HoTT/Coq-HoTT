@@ -92,7 +92,7 @@ Proof.
   - intros a; exact _.
   - intros ?.
     snrapply Build_NatEquiv.
-    + intros a; exact (Build_CatEquiv (alpha a)).
+    + intros a; by nrapply (Build_CatEquiv (alpha a)).
     + cbn. refine (is1natural_homotopic alpha _).
       intros a; apply cate_buildequiv_fun.
   - cbn; intros; apply cate_buildequiv_fun.

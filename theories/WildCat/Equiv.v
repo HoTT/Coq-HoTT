@@ -13,11 +13,11 @@ Declare Scope wc_iso_scope.
 Class HasEquivs (A : Type) `{Is1Cat A} :=
 {
   CatEquiv' : A -> A -> Type where "a $<~> b" := (CatEquiv' a b);
-  CatIsEquiv' : forall a b, (a $-> b) -> Type;
+  CatIsEquiv : forall a b, (a $-> b) -> Type;
   cate_fun' : forall a b, (a $<~> b) -> (a $-> b);
-  cate_isequiv' : forall a b (f : a $<~> b), CatIsEquiv' a b (cate_fun' a b f);
-  cate_buildequiv' : forall a b (f : a $-> b), CatIsEquiv' a b f -> CatEquiv' a b;
-  cate_buildequiv_fun' : forall a b (f : a $-> b) (fe : CatIsEquiv' a b f),
+  cate_isequiv : forall a b (f : a $<~> b), CatIsEquiv a b (cate_fun' a b f);
+  cate_buildequiv' : forall a b (f : a $-> b), CatIsEquiv a b f -> CatEquiv' a b;
+  cate_buildequiv_fun' : forall a b (f : a $-> b) (fe : CatIsEquiv a b f),
       cate_fun' a b (cate_buildequiv' a b f fe) $== f;
   cate_inv' : forall a b (f : a $<~> b), b $-> a;
   cate_issect' : forall a b (f : a $<~> b),
@@ -25,8 +25,12 @@ Class HasEquivs (A : Type) `{Is1Cat A} :=
   cate_isretr' : forall a b (f : a $<~> b),
       cate_fun' _ _ f $o cate_inv' _ _ f $== Id b;
   catie_adjointify' : forall a b (f : a $-> b) (g : b $-> a)
-    (r : f $o g $== Id b) (s : g $o f $== Id a), CatIsEquiv' a b f;
+    (r : f $o g $== Id b) (s : g $o f $== Id a), CatIsEquiv a b f;
 }.
+
+Existing Class CatIsEquiv.
+Arguments CatIsEquiv {A _ _ _ _ _ a b} f.
+Global Existing Instance cate_isequiv.
 
 (** Since apparently a field of a record can't be the source of a coercion (Coq complains about the uniform inheritance condition, although as officially stated that condition appears to be satisfied), we redefine all the fields of [HasEquivs]. *)
 
@@ -42,14 +46,6 @@ Definition cate_fun {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
   := @cate_fun' A _ _ _ _ _ a b f.
 
 Coercion cate_fun : CatEquiv >-> Hom.
-
-(* Being an equivalence should be a typeclass, but we have to redefine it to work around https://github.com/coq/coq/issues/8994 . *)
-Class CatIsEquiv {A} `{HasEquivs A} {a b : A} (f : a $-> b)
-  := catisequiv : CatIsEquiv' a b f.
-
-Global Instance cate_isequiv {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
-  : CatIsEquiv f
-  := cate_isequiv' a b f.
 
 Definition Build_CatEquiv {A} `{HasEquivs A} {a b : A}
            (f : a $-> b) {fe : CatIsEquiv f}
