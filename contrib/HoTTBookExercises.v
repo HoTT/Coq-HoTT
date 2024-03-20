@@ -193,13 +193,11 @@ End Book_1_5.
 (** Exercise 1.6 *)
 
 Section Book_1_6.
-  Definition Book_1_6_prod (A B : Type) : Type := forall x : Bool, (if x then A else B).
+Context `{Funext}.
+  Definition Book_1_6_prod (A B : Type) := forall x : Bool, (if x then A else B).
 
   Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B :=
-    fun x : Bool => match x with
-    | true => a
-    | false => b 
-    end.
+    Bool_rect (fun x => if x then A else B) a b.
 
   Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
   Notation "'pr1' p" := (p true) (at level 0).
@@ -211,16 +209,22 @@ Section Book_1_6.
     | false => idpath
     end.
 
-  Definition Book_1_6_eta `{Funext} {A B : Type} : forall p : Book_1_6_prod A B, (pr1 p, pr2 p) = p :=
+  Theorem Book_1_6_id {A B : Type} (a : A) (b : B) : Book_1_6_eq (a, b) = (fun x => idpath).
+  Proof.
+    apply path_forall. intros x. induction x; reflexivity.
+  Qed.
+
+  Definition Book_1_6_eta {A B : Type} : forall p : Book_1_6_prod A B, (pr1 p, pr2 p) = p :=
     fun p => path_forall (pr1 p, pr2 p) p (Book_1_6_eq p).
 
-  Definition Book_1_6_ind `{Funext} {A B : Type} (C : Book_1_6_prod A B -> Type) (f : forall a b, C (a, b)):
+  Definition Book_1_6_ind {A B : Type} (C : Book_1_6_prod A B -> Type) (f : forall a b, C (a, b)):
     forall p : Book_1_6_prod A B, C p :=
     fun p => transport C (Book_1_6_eta p) (f (pr1 p) (pr2 p)).
 
-  Theorem Book_1_6_red `{Funext} {A B : Type} (C : Book_1_6_prod A B -> Type) f a b : Book_1_6_ind C f (a, b) = f a b.
-  (* Proof. unfold Book_1_6_ind, transport, Book_1_6_eta, path_forall. simpl. reflexivity. Defined. *)
-  Admitted.
+  Theorem Book_1_6_red {A B : Type} (C : Book_1_6_prod A B -> Type) f a b : Book_1_6_ind C f (a, b) = f a b.
+  Proof.
+    unfold Book_1_6_ind, Book_1_6_eta. simpl. rewrite Book_1_6_id, path_forall_1. reflexivity.
+  Qed.
 
 End Book_1_6.
 
