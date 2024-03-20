@@ -50,7 +50,7 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
   := Build_Equiv _ _ (path_forall f g) _.
 
-Global Arguments equiv_path_forall {A%type_scope P} (f g)%function_scope.
+Global Arguments equiv_path_forall {A%_type_scope P} (f g)%_function_scope.
 
 (** ** Path algebra *)
 
@@ -335,9 +335,9 @@ Global Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a 
   : IsEquiv (path_forall11 f g) | 0
   := _.
 
-Global Arguments equiv_path_forall11 {A B}%type_scope {P} (f g)%function_scope.
+Global Arguments equiv_path_forall11 {A B}%_type_scope {P} (f g)%_function_scope.
 
-Global Arguments path_forall11 {A B}%type_scope {P} (f g)%function_scope _.
+Global Arguments path_forall11 {A B}%_type_scope {P} (f g)%_function_scope _.
 
 (** ** Truncatedness: any dependent product of n-types is an n-type: see [contr_forall] and [istrunc_forall] in Basics.Trunc. *)
 

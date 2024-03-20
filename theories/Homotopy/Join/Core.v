@@ -92,8 +92,8 @@ Section Join.
 
 End Join.
 
-Arguments joinl {A B}%type_scope _ , [A] B _.
-Arguments joinr {A B}%type_scope _ , A [B] _.
+Arguments joinl {A B}%_type_scope _ , [A] B _.
+Arguments joinr {A B}%_type_scope _ , A [B] _.
 
 (** * [Join_rec] gives an equivalence of 0-groupoids
 
@@ -106,7 +106,7 @@ Record JoinRecData {A B P : Type} := {
   }.
 
 Arguments JoinRecData : clear implicits.
-Arguments Build_JoinRecData {A B P}%type_scope (jl jr jg)%function_scope.
+Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.
 
 (** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
 Definition join_rec {A B P : Type} (f : JoinRecData A B P)

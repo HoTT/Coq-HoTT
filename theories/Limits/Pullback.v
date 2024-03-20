@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 Definition Pullback {A B C} (f : B -> A) (g : C -> A)
   := { b : B & { c : C & f b = g c }}.
 
-Global Arguments Pullback {A B C}%type_scope (f g)%function_scope.
+Global Arguments Pullback {A B C}%_type_scope (f g)%_function_scope.
 
 (** The universal commutative square *)
 Definition pullback_pr1 {A B C} {f : B -> A} {g : C -> A}

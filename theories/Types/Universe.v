@@ -43,7 +43,7 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (Build_Equiv _ _ f feq).
 
-Global Arguments path_universe {A B}%type_scope f%function_scope {feq}.
+Global Arguments path_universe {A B}%_type_scope f%_function_scope {feq}.
 
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p

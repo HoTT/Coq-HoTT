@@ -75,7 +75,7 @@ Definition Susp_rec {X Y : Type}
   : Susp X -> Y
   := Pushout_rec (f:=const_tt X) (g:=const_tt X) Y (Unit_ind H_N) (Unit_ind H_S) H_merid.
 
-Global Arguments Susp_rec {X Y}%type_scope H_N H_S H_merid%function_scope _.
+Global Arguments Susp_rec {X Y}%_type_scope H_N H_S H_merid%_function_scope _.
 
 Definition Susp_rec_beta_merid {X Y : Type}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)

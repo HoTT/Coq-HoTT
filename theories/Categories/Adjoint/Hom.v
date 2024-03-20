@@ -84,4 +84,4 @@ End Adjunction.
 Coercion mate_of : AdjunctionHom >-> NaturalIsomorphism.
 Bind Scope adjunction_scope with AdjunctionHom.
 
-Arguments mate_of {_} [C%category D%category F%functor G%functor] _%adjunction.
+Arguments mate_of {_} [C%_category D%_category F%_functor G%_functor] _%_adjunction.
