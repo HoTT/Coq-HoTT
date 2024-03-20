@@ -136,7 +136,7 @@ Proof.
 Defined.
 
 (** If the base category has equivalences and the displayed category has displayed equivalences, then the total category has equivalences. *)
-Global Instance hasequivs_sigma {A} (D : A -> Type) `{DHasEquivs A D}
+Global Instance hasequivs_total {A} (D : A -> Type) `{DHasEquivs A D}
   : HasEquivs (sig D).
 Proof.
   snrapply Build_HasEquivs.
@@ -540,13 +540,13 @@ Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   := (dcat_equiv_path p a' b')^-1.
 
 (** If [IsUnivalent1Cat A] and [IsDUnivalent1Cat D], then this is an equivalence by [isequiv_functor_sigma]. *)
-Definition dcat_equiv_path_sigma {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcat_equiv_path_total {A} {D : A -> Type} `{DHasEquivs A D}
   {a b : A} (a' : D a) (b' : D b)
   : {p : a = b & p # a' = b'} -> {e : a $<~> b & DCatEquiv e a' b'}
   := functor_sigma (cat_equiv_path a b) (fun p => dcat_equiv_path p a' b').
 
 (** If the base category and the displayed category are both univalent, then the total category is univalent. *)
-Global Instance isunivalent1cat_sigma {A} `{IsUnivalent1Cat A} (D : A -> Type)
+Global Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D, !DHasEquivs D}
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).
@@ -554,6 +554,6 @@ Proof.
   snrapply Build_IsUnivalent1Cat.
   intros aa' bb'.
   apply (isequiv_homotopic
-          (dcat_equiv_path_sigma _ _ o (path_sigma_uncurried D aa' bb')^-1)).
+          (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).
   intros []; reflexivity.
 Defined.

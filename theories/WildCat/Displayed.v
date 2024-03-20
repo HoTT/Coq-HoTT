@@ -166,7 +166,7 @@ Definition DEpic {A} {D : A -> Type} `{IsD1Cat A D} {a b : A}
       (g' : DHom g b' c') (h' : DHom h b' c'),
       DGpdHom p (g' $o' f') (h' $o' f') -> DGpdHom (epi c g h p) g' h'.
 
-Global Instance isgraph_sigma {A : Type} (D : A -> Type) `{IsDGraph A D}
+Global Instance isgraph_total {A : Type} (D : A -> Type) `{IsDGraph A D}
   : IsGraph (sig D).
 Proof.
   srapply Build_IsGraph.
@@ -174,7 +174,7 @@ Proof.
   exact {f : a $-> b & DHom f a' b'}.
 Defined.
 
-Global Instance is01cat_sigma {A : Type} (D : A -> Type) `{IsD01Cat A D}
+Global Instance is01cat_total {A : Type} (D : A -> Type) `{IsD01Cat A D}
   : Is01Cat (sig D).
 Proof.
   srapply Build_Is01Cat.
@@ -184,7 +184,7 @@ Proof.
     exact (g $o f; g' $o' f').
 Defined.
 
-Global Instance is0gpd_sigma {A : Type} (D : A -> Type) `{IsD0Gpd A D}
+Global Instance is0gpd_total {A : Type} (D : A -> Type) `{IsD0Gpd A D}
   : Is0Gpd (sig D).
 Proof.
   srapply Build_Is0Gpd.
@@ -192,7 +192,7 @@ Proof.
   exact (f^$; dgpd_rev f').
 Defined.
 
-Global Instance is0functor_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
+Global Instance is0functor_total_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
   : Is0Functor (pr1 : sig D -> A).
 Proof.
   srapply Build_Is0Functor.
@@ -200,7 +200,7 @@ Proof.
   exact f.
 Defined.
 
-Global Instance is2graph_sigma {A : Type} (D : A -> Type) `{IsD2Graph A D}
+Global Instance is2graph_total {A : Type} (D : A -> Type) `{IsD2Graph A D}
   : Is2Graph (sig D).
 Proof.
   intros [a a'] [b b'].
@@ -209,7 +209,7 @@ Proof.
   exact ({p : f $-> g & DHom p f' g'}).
 Defined.
 
-Global Instance is0functor_sigma {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
+Global Instance is0functor_total {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
   {B : Type} (DB : B -> Type) `{IsD01Cat B DB} (F : A -> B) `{!Is0Functor F}
   (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F'}
   : Is0Functor (functor_sigma F F').
@@ -220,7 +220,7 @@ Proof.
   exact (fmap F f; dfmap F F' f').
 Defined.
 
-Global Instance is1cat_sigma {A : Type} (D : A -> Type) `{IsD1Cat A D}
+Global Instance is1cat_total {A : Type} (D : A -> Type) `{IsD1Cat A D}
   : Is1Cat (sig D).
 Proof.
   srapply Build_Is1Cat.
@@ -313,7 +313,7 @@ Proof.
     exact (DHom_path (cat_idr_strong f) (dcat_idr_strong f')).
 Defined.
 
-Global Instance is1catstrong_sigma {A : Type}
+Global Instance is1catstrong_total {A : Type}
   (D : A -> Type) `{IsD1Cat_Strong A D}
   : Is1Cat_Strong (sig D).
 Proof.
@@ -350,7 +350,7 @@ Arguments dfmap_id {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
 Arguments dfmap_comp {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
   F {_ _} F' {_ _ a b c f g a' b' c'} f' g'.
 
-Global Instance is1functor_sigma {A B : Type} (DA : A -> Type) (DB : B -> Type)
+Global Instance is1functor_total {A B : Type} (DA : A -> Type) (DB : B -> Type)
   (F : A -> B) (F' : forall (a : A), DA a -> DB (F a)) `{IsD1Functor A B DA DB F F'}
   : Is1Functor (functor_sigma F F').
 Proof.
