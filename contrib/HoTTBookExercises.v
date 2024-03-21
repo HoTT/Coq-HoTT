@@ -356,7 +356,15 @@ End Book_1_8.
 (* ================================================== ex:fin *)
 (** Exercise 1.9 *)
 
+Section Book_1_9.
+  Fixpoint Book_1_9_Fin (n : nat) : Type :=
+    match n with
+    | O => Empty
+    | S m => (Book_1_9_Fin m) + Unit
+    end.
 
+  Definition Book_1_9_fmax (n : nat) : Book_1_9_Fin (S n) := inr tt.
+End Book_1_9.
 
 (* ================================================== ex:ackermann *)
 (** Exercise 1.10 *)
