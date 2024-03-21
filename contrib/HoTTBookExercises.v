@@ -240,116 +240,127 @@ End Book_1_7.
 (** Exercise 1.8 *)
 
 Section Book_1_8.
-  Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
+  Fixpoint Book_1_8_rec_nat (C : Type) c0 cs (n : nat) : C :=
     match n with
     | O => c0
-    | S m => cs m (rec_nat' C c0 cs m)
+    | S m => cs m (Book_1_8_rec_nat C c0 cs m)
     end.
 
-  Definition add : nat -> nat -> nat :=
-    rec_nat' (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+  Definition Book_1_8_add : nat -> nat -> nat :=
+    Book_1_8_rec_nat (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
 
-  Definition mult : nat -> nat -> nat  :=
-    rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
+  Definition Book_1_8_mult : nat -> nat -> nat :=
+    Book_1_8_rec_nat (nat -> nat) (fun m => 0) (fun n g m => Book_1_8_add m (g m)).
 
   (* rec_nat' gives back a function with the wrong argument order, so we flip the
     order of the arguments p and q *)
-  Definition exp : nat -> nat -> nat  :=
-    fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
+  Definition Book_1_8_exp : nat -> nat -> nat :=
+    fun p q =>
+      (Book_1_8_rec_nat (nat -> nat) (fun m => (S 0)) (fun n g m => Book_1_8_mult m (g m))) q p.
 
-  Example add_example: add 32 17 = 49. Proof. reflexivity. Defined.
-  Example mult_example: mult 20 5 = 100. Proof. reflexivity. Defined.
-  Example exp_example: exp 2 10 = 1024. Proof. reflexivity. Defined.
+  Example add_example: Book_1_8_add 32 17 = 49. Proof. reflexivity. Defined.
+  Example mult_example: Book_1_8_mult 20 5 = 100. Proof. reflexivity. Defined.
+  Example exp_example: Book_1_8_exp 2 10 = 1024. Proof. reflexivity. Defined.
 
   (* (nat, add, 0) is a commutative monoid *)
-  Theorem add_left_id (m : nat) : add 0 m = m.
+  Theorem Book_1_8_add_left_id (m : nat) : Book_1_8_add 0 m = m.
   Proof. reflexivity. Qed.
 
-  Theorem add_left_succ (m n : nat) : add (S m) n = S (add m n).
+  Theorem Book_1_8_add_left_succ (m n : nat) : Book_1_8_add (S m) n = S (Book_1_8_add m n).
   Proof. reflexivity. Qed.
 
-  Theorem add_right_id (m : nat) : add m 0 = m. 
+  Theorem Book_1_8_add_right_id (m : nat) : Book_1_8_add m 0 = m. 
   Proof.
     induction m.
     - reflexivity.
-    - rewrite add_left_succ, IHm. reflexivity.
+    - rewrite Book_1_8_add_left_succ, IHm. reflexivity.
   Qed.
 
-  Theorem add_right_succ (m n : nat) : add m (S n) = S (add m n).
+  Theorem Book_1_8_add_right_succ (m n : nat) : Book_1_8_add m (S n) = S (Book_1_8_add m n).
   Proof.
     induction m.
     - reflexivity.
-    - do 2 (rewrite add_left_succ). rewrite IHm. reflexivity.
+    - do 2 (rewrite Book_1_8_add_left_succ). rewrite IHm. reflexivity.
   Qed.
 
-  Theorem add_ass (i j k : nat) : add i (add j k) = add (add i j) k.
+  Theorem Book_1_8_add_ass (i j k : nat) :
+    Book_1_8_add i (Book_1_8_add j k) = Book_1_8_add (Book_1_8_add i j) k.
   Proof.
     induction i.
     - reflexivity.
-    - do 3 (rewrite add_left_succ). rewrite IHi. reflexivity.
+    - do 3 (rewrite Book_1_8_add_left_succ). rewrite IHi. reflexivity.
   Qed.
 
-  Theorem add_comm (m n : nat) : add n m = add m n.
+  Theorem Book_1_8_add_comm (m n : nat) : Book_1_8_add n m = Book_1_8_add m n.
   Proof.
     induction n.
-    - rewrite add_right_id. reflexivity.
-    - rewrite add_left_succ, add_right_succ, IHn. reflexivity.
+    - rewrite Book_1_8_add_right_id. reflexivity.
+    - rewrite Book_1_8_add_left_succ, Book_1_8_add_right_succ, IHn. reflexivity.
   Qed.
 
   (* (nat, mult, 1) is a commutative monoid, 0 is annihilating, and distributivity *)
-  Theorem mult_left_absorb (m : nat) : mult 0 m = 0.
+  Theorem Book_1_8_mult_left_absorb (m : nat) : Book_1_8_mult 0 m = 0.
   Proof. reflexivity. Qed.
 
-  Theorem mult_left_succ (m n: nat) : mult (S m) n = add n (mult m n).
+  Theorem Book_1_8_mult_left_succ (m n: nat) :
+    Book_1_8_mult (S m) n = Book_1_8_add n (Book_1_8_mult m n).
   Proof. reflexivity. Qed.
 
-  Theorem mult_left_id (m : nat) : mult 1 m = m.
-  Proof. rewrite mult_left_succ, add_right_id. reflexivity. Qed.
+  Theorem Book_1_8_mult_left_id (m : nat) : Book_1_8_mult 1 m = m.
+  Proof. rewrite Book_1_8_mult_left_succ, Book_1_8_add_right_id. reflexivity. Qed.
 
-  Theorem mult_right_absorb (m : nat) : mult m 0 = 0.
+  Theorem Book_1_8_mult_right_absorb (m : nat) : Book_1_8_mult m 0 = 0.
   Proof.
     induction m.
     - reflexivity.
-    - rewrite mult_left_succ, IHm. reflexivity.
+    - rewrite Book_1_8_mult_left_succ, IHm. reflexivity.
   Qed.
 
-  Theorem mult_right_succ (m n : nat) : mult m (S n) = add m (mult m n).
+  Theorem Book_1_8_mult_right_succ (m n : nat) :
+    Book_1_8_mult m (S n) = Book_1_8_add m (Book_1_8_mult m n).
   Proof.
     induction m.
     - reflexivity.
-    - do 2 (rewrite mult_left_succ). rewrite IHm. do 2 (rewrite add_left_succ).
-      do 2 (rewrite add_ass). pattern (add n m). rewrite add_comm. reflexivity.
+    - do 2 (rewrite Book_1_8_mult_left_succ). rewrite IHm. do 2 (rewrite Book_1_8_add_left_succ).
+      do 2 (rewrite Book_1_8_add_ass).
+      pattern (Book_1_8_add n m). rewrite Book_1_8_add_comm. reflexivity.
   Qed.
 
-  Theorem mult_right_id (m : nat) : mult m 1 = m.
-  Proof. rewrite mult_right_succ, mult_right_absorb, add_right_id. reflexivity. Qed.
+  Theorem Book_1_8_mult_right_id (m : nat) : Book_1_8_mult m 1 = m.
+  Proof.
+    rewrite Book_1_8_mult_right_succ, Book_1_8_mult_right_absorb, Book_1_8_add_right_id.
+    reflexivity.
+  Qed.
 
-  Theorem addmult_right_distr (i j k : nat) : mult (add i j) k = add (mult i k) (mult j k).
+  Theorem Book_1_8_right_distr (i j k : nat) :
+    Book_1_8_mult (Book_1_8_add i j) k = Book_1_8_add (Book_1_8_mult i k) (Book_1_8_mult j k).
   Proof.
     induction i.
     - reflexivity.
-    - rewrite add_left_succ. do 2 (rewrite mult_left_succ).
-      rewrite <- add_ass. rewrite IHi. reflexivity.
+    - rewrite Book_1_8_add_left_succ. do 2 (rewrite Book_1_8_mult_left_succ).
+      rewrite <- Book_1_8_add_ass. rewrite IHi. reflexivity.
   Qed.
 
-  Theorem mult_ass (i j k : nat) : mult i (mult j k) = mult (mult i j) k.
+  Theorem Book_1_8_mult_ass (i j k : nat) :
+    Book_1_8_mult i (Book_1_8_mult j k) = Book_1_8_mult (Book_1_8_mult i j) k.
   Proof.
     induction i.
     - reflexivity.
-    - do 2 (rewrite mult_left_succ). rewrite IHi, addmult_right_distr. reflexivity.
+    - do 2 (rewrite Book_1_8_mult_left_succ). rewrite IHi, Book_1_8_right_distr. reflexivity.
   Qed.
 
-  Theorem mult_comm (m n : nat) : mult n m = mult m n.
+  Theorem Book_1_8_mult_comm (m n : nat) : Book_1_8_mult n m = Book_1_8_mult m n.
   Proof.
     induction n.
-    - rewrite mult_right_absorb. reflexivity.
-    - rewrite mult_left_succ, mult_right_succ, IHn. reflexivity.
+    - rewrite Book_1_8_mult_right_absorb. reflexivity.
+    - rewrite Book_1_8_mult_left_succ, Book_1_8_mult_right_succ, IHn. reflexivity.
   Qed.
 
-  Theorem addmult_left_distr (i j k : nat) : mult i (add j k) = add (mult i j) (mult i k).
+  Theorem Book_1_8_left_distr (i j k : nat) :
+    Book_1_8_mult i (Book_1_8_add j k) = Book_1_8_add (Book_1_8_mult i j) (Book_1_8_mult i k).
   Proof.
-    rewrite mult_comm. pattern (mult i j). rewrite mult_comm.
-    pattern (mult i k). rewrite mult_comm. apply addmult_right_distr.
+    rewrite Book_1_8_mult_comm. pattern (Book_1_8_mult i j). rewrite Book_1_8_mult_comm.
+    pattern (Book_1_8_mult i k). rewrite Book_1_8_mult_comm. apply Book_1_8_right_distr.
   Qed.
 End Book_1_8.
 
@@ -456,7 +467,7 @@ End Book_1_13.
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)
 
-
+Definition Book_1_16 := Book_1_8_add_comm.
 
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
