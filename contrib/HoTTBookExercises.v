@@ -146,21 +146,16 @@ Section Book_1_4.
     intros C c0 cs n.
     induction n as [| m IH].
     - simpl. reflexivity.
-    - simpl.
-      unfold Book_1_4_rec'.
-      rewrite IH.
-      reflexivity.
+    - simpl. unfold Book_1_4_rec'. rewrite IH. reflexivity.
   Qed.
 
-  Proposition Book_1_4_rec_refl : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
+  Proposition Book_1_4_eq : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
   Proof. 
     intros C c0 cs n.
     induction n as [| m IH].
     - simpl. reflexivity.
-    - unfold Book_1_4_rec. simpl.
-      rewrite Book_1_4_aux.
-      unfold Book_1_4_rec, Book_1_4_rec' in IH.
-      rewrite IH.
+    - unfold Book_1_4_rec. simpl. rewrite Book_1_4_aux.
+      unfold Book_1_4_rec, Book_1_4_rec' in IH. rewrite IH.
       reflexivity.
   Qed.
 End Book_1_4.
@@ -197,7 +192,10 @@ Context `{Funext}.
   Definition Book_1_6_prod (A B : Type) := forall x : Bool, (if x then A else B).
 
   Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B :=
-    Bool_rect (fun x => if x then A else B) a b.
+    fun x => match x with
+    | true => a
+    | false => b
+    end. 
 
   Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
   Notation "'pr1' p" := (p true) (at level 0).
@@ -205,11 +203,11 @@ Context `{Funext}.
 
   Definition Book_1_6_eq {A B : Type} : forall p : Book_1_6_prod A B, (pr1 p, pr2 p) == p :=
     fun p x => match x with
-    | true => idpath
-    | false => idpath
+    | true => 1
+    | false => 1
     end.
 
-  Theorem Book_1_6_id {A B : Type} (a : A) (b : B) : Book_1_6_eq (a, b) = (fun x => idpath).
+  Theorem Book_1_6_id {A B : Type} (a : A) (b : B) : Book_1_6_eq (a, b) = (fun x => 1).
   Proof.
     apply path_forall. intros x. induction x; reflexivity.
   Qed.
@@ -225,13 +223,21 @@ Context `{Funext}.
   Proof.
     unfold Book_1_6_ind, Book_1_6_eta. simpl. rewrite Book_1_6_id, path_forall_1. reflexivity.
   Qed.
-
 End Book_1_6.
 
 (* ================================================== ex:pm-to-ml *)
 (** Exercise 1.7 *)
 
+Section Book_1_7.
+  Definition Book_1_7_id {A : Type} {x y : A} (p : x = y) : (x; 1) = (y; p) :=
+    match p with 1 => 1 end.
 
+  Definition Book_1_7_ind' {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1) (x : A) (p : a = x) : C x p :=
+    transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
+
+  Theorem Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1) : Book_1_7_ind' a C c a 1 = c.
+  Proof. reflexivity. Qed.
+End Book_1_7.
 
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
