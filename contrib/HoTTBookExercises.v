@@ -186,7 +186,8 @@ End Book_1_5.
 (** Exercise 1.6 *)
 
 Section Book_1_6.
-Context `{Funext}.
+  Context `{Funext}.
+
   Definition Book_1_6_prod (A B : Type) := forall x : Bool, (if x then A else B).
 
   Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B :=
@@ -266,7 +267,7 @@ Section Book_1_8.
   Theorem Book_1_8_add_left_id (m : nat) : Book_1_8_add 0 m = m.
   Proof. reflexivity. Qed.
 
-  Theorem Book_1_8_add_left_succ (m n : nat) : Book_1_8_add (S m) n = S (Book_1_8_add m n).
+  Lemma Book_1_8_add_left_succ (m n : nat) : Book_1_8_add (S m) n = S (Book_1_8_add m n).
   Proof. reflexivity. Qed.
 
   Theorem Book_1_8_add_right_id (m : nat) : Book_1_8_add m 0 = m. 
@@ -276,7 +277,7 @@ Section Book_1_8.
     - rewrite Book_1_8_add_left_succ, IHm. reflexivity.
   Qed.
 
-  Theorem Book_1_8_add_right_succ (m n : nat) : Book_1_8_add m (S n) = S (Book_1_8_add m n).
+  Lemma Book_1_8_add_right_succ (m n : nat) : Book_1_8_add m (S n) = S (Book_1_8_add m n).
   Proof.
     induction m.
     - reflexivity.
@@ -302,21 +303,21 @@ Section Book_1_8.
   Theorem Book_1_8_mult_left_absorb (m : nat) : Book_1_8_mult 0 m = 0.
   Proof. reflexivity. Qed.
 
-  Theorem Book_1_8_mult_left_succ (m n: nat) :
+  Lemma Book_1_8_mult_left_succ (m n: nat) :
     Book_1_8_mult (S m) n = Book_1_8_add n (Book_1_8_mult m n).
   Proof. reflexivity. Qed.
 
   Theorem Book_1_8_mult_left_id (m : nat) : Book_1_8_mult 1 m = m.
   Proof. rewrite Book_1_8_mult_left_succ, Book_1_8_add_right_id. reflexivity. Qed.
 
-  Theorem Book_1_8_mult_right_absorb (m : nat) : Book_1_8_mult m 0 = 0.
+  Lemma Book_1_8_mult_right_absorb (m : nat) : Book_1_8_mult m 0 = 0.
   Proof.
     induction m.
     - reflexivity.
     - rewrite Book_1_8_mult_left_succ, IHm. reflexivity.
   Qed.
 
-  Theorem Book_1_8_mult_right_succ (m n : nat) :
+  Lemma Book_1_8_mult_right_succ (m n : nat) :
     Book_1_8_mult m (S n) = Book_1_8_add m (Book_1_8_mult m n).
   Proof.
     induction m.
@@ -332,7 +333,7 @@ Section Book_1_8.
     reflexivity.
   Qed.
 
-  Theorem Book_1_8_right_distr (i j k : nat) :
+  Lemma Book_1_8_right_distr (i j k : nat) :
     Book_1_8_mult (Book_1_8_add i j) k = Book_1_8_add (Book_1_8_mult i k) (Book_1_8_mult j k).
   Proof.
     induction i.
@@ -457,12 +458,13 @@ End Book_1_13.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-
+(* There is no adequate type family Pi_{x, y} C such that C(x, x, p) is p = refl x definitionally *)
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
 
-(* concat_A1p? *)
+Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) : C x -> C y :=
+  match p with 1 => idmap end.
 
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)
