@@ -129,17 +129,17 @@ End Book_1_3_sig.
 (** Exercise 1.4 *)
 
 Section Book_1_4.
-  Fixpoint Book_1_4_iter (C : Type) (c0 : C) (cs : C -> C) (n : nat) : C :=
-    match n with
-    | O => c0
-    | S m => cs (Book_1_4_iter C c0 cs m)
-    end.
+  Fixpoint Book_1_4_iter (C : Type) (c0 : C) (cs : C -> C) (n : nat) : C
+    := match n with
+      | O => c0
+      | S m => cs (Book_1_4_iter C c0 cs m)
+      end.
 
-  Definition Book_1_4_rec' (C : Type) (c0 : C) (cs : nat -> C -> C) : nat -> nat * C :=
-    Book_1_4_iter (nat * C) (O, c0) (fun x => (S (fst x), cs (fst x) (snd x))).
+  Definition Book_1_4_rec' (C : Type) (c0 : C) (cs : nat -> C -> C) : nat -> nat * C
+    := Book_1_4_iter (nat * C) (O, c0) (fun x => (S (fst x), cs (fst x) (snd x))).
   
-  Definition Book_1_4_rec (C : Type) (c0 : C) (cs : nat -> C -> C) (n : nat) : C :=
-    snd (Book_1_4_rec' C c0 cs n).
+  Definition Book_1_4_rec (C : Type) (c0 : C) (cs : nat -> C -> C) (n : nat) : C
+    := snd (Book_1_4_rec' C c0 cs n).
 
   Lemma Book_1_4_aux : forall C c0 cs n, fst (Book_1_4_rec' C c0 cs n) = n.
   Proof.
@@ -153,8 +153,8 @@ Section Book_1_4.
     intros C c0 cs n. induction n as [| m IH].
     - simpl. reflexivity.
     - unfold Book_1_4_rec. simpl. rewrite Book_1_4_aux.
-      unfold Book_1_4_rec, Book_1_4_rec' in IH. rewrite IH.
-      reflexivity.
+      unfold Book_1_4_rec, Book_1_4_rec' in IH.
+      exact (ap (cs m) IH).
   Qed.
 End Book_1_4.
 
@@ -190,78 +190,87 @@ Section Book_1_6.
 
   Definition Book_1_6_prod (A B : Type) := forall x : Bool, (if x then A else B).
 
-  Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B :=
-    fun x => match x with
-    | true => a
-    | false => b
-    end. 
+  Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B
+    := fun x => match x with
+              | true => a
+              | false => b
+              end.
 
   Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
   Notation "'pr1' p" := (p true) (at level 0).
   Notation "'pr2' p" := (p false) (at level 0).
 
-  Definition Book_1_6_eq {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) == p :=
-    fun x => match x with
-    | true => 1
-    | false => 1
-    end.
+  Definition Book_1_6_eq {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) == p
+    := fun x => match x with
+              | true => 1
+              | false => 1
+              end.
 
   Theorem Book_1_6_id {A B : Type} (a : A) (b : B) : Book_1_6_eq (a, b) = (fun x => 1).
-  Proof. apply path_forall. intros x. induction x; reflexivity. Qed.
+  Proof.
+    apply path_forall. intros x. destruct x; reflexivity.
+  Qed.
 
-  Definition Book_1_6_eta {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) = p :=
-    path_forall (pr1 p, pr2 p) p (Book_1_6_eq p).
+  Definition Book_1_6_eta {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) = p
+    := path_forall (pr1 p, pr2 p) p (Book_1_6_eq p).
 
   Definition Book_1_6_ind {A B : Type} (C : Book_1_6_prod A B -> Type) (f : forall a b, C (a, b))
-    (p : Book_1_6_prod A B) : C p :=
-    transport C (Book_1_6_eta p) (f (pr1 p) (pr2 p)).
+    (p : Book_1_6_prod A B) : C p
+    := transport C (Book_1_6_eta p) (f (pr1 p) (pr2 p)).
 
-  Theorem Book_1_6_red {A B : Type} (C : Book_1_6_prod A B -> Type) f a b :
-    Book_1_6_ind C f (a, b) = f a b.
-  Proof. unfold Book_1_6_ind, Book_1_6_eta. simpl. rewrite Book_1_6_id, path_forall_1. reflexivity. Qed.
+  Theorem Book_1_6_red {A B : Type} (C : Book_1_6_prod A B -> Type) f a b
+    : Book_1_6_ind C f (a, b) = f a b.
+  Proof.
+    unfold Book_1_6_ind, Book_1_6_eta. simpl.
+    rewrite Book_1_6_id, path_forall_1.
+    reflexivity.
+  Qed.
 End Book_1_6.
 
 (* ================================================== ex:pm-to-ml *)
 (** Exercise 1.7 *)
 
 Section Book_1_7.
-  Definition Book_1_7_id {A : Type} {x y : A} (p : x = y) : (x; 1) = (y; p) :=
-    match p with 1 => 1 end.
+  Definition Book_1_7_id {A : Type} {x y : A} (p : x = y)
+    : (x; 1) = (y; p) :> { a : A & x = a }
+    := match p with 1 => 1 end.
 
-  Definition Book_1_7_ind' {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1) (x : A)
-    (p : a = x) : C x p :=
-    transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
+  Definition Book_1_7_ind' {A : Type} (a : A) (C : forall x, (a = x) -> Type)
+    (c : C a 1) (x : A) (p : a = x)
+    : C x p
+    := transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
 
-  Theorem Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1) :
-    Book_1_7_ind' a C c a 1 = c.
-  Proof. reflexivity. Qed.
+  Theorem Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1)
+    : Book_1_7_ind' a C c a 1 = c.
+  Proof.
+    reflexivity.
+  Qed.
 End Book_1_7.
 
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
 
 Section Book_1_8.
-  Fixpoint Book_1_8_rec_nat (C : Type) c0 cs (n : nat) : C :=
-    match n with
-    | O => c0
-    | S m => cs m (Book_1_8_rec_nat C c0 cs m)
-    end.
+  Fixpoint Book_1_8_rec_nat (C : Type) c0 cs (n : nat) : C
+    := match n with
+      | O => c0
+      | S m => cs m (Book_1_8_rec_nat C c0 cs m)
+      end.
 
-  Definition Book_1_8_add : nat -> nat -> nat :=
-    Book_1_8_rec_nat (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+  Definition Book_1_8_add : nat -> nat -> nat
+    := Book_1_8_rec_nat (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
 
-  Definition Book_1_8_mult : nat -> nat -> nat :=
-    Book_1_8_rec_nat (nat -> nat) (fun m => 0) (fun n g m => Book_1_8_add m (g m)).
+  Definition Book_1_8_mult : nat -> nat -> nat
+    := Book_1_8_rec_nat (nat -> nat) (fun m => 0) (fun n g m => Book_1_8_add m (g m)).
 
-  (* rec_nat' gives back a function with the wrong argument order, so we flip the
-    order of the arguments p and q *)
-  Definition Book_1_8_exp : nat -> nat -> nat :=
-    fun p q =>
-      (Book_1_8_rec_nat (nat -> nat) (fun m => (S 0)) (fun n g m => Book_1_8_mult m (g m))) q p.
+  (* [Book_1_8_rec_nat] gives back a function with the wrong argument order, so we flip the order of the arguments [p] and [q]. *)
+  Definition Book_1_8_exp : nat -> nat -> nat
+    := fun p q =>
+        (Book_1_8_rec_nat (nat -> nat) (fun m => (S 0)) (fun n g m => Book_1_8_mult m (g m))) q p.
 
-  Example add_example: Book_1_8_add 32 17 = 49. Proof. reflexivity. Defined.
-  Example mult_example: Book_1_8_mult 20 5 = 100. Proof. reflexivity. Defined.
-  Example exp_example: Book_1_8_exp 2 10 = 1024. Proof. reflexivity. Defined.
+  Example add_example: Book_1_8_add 32 17 = 49 := 1.
+  Example mult_example: Book_1_8_mult 20 5 = 100 := 1.
+  Example exp_example: Book_1_8_exp 2 10 = 1024 := 1.
 
   (* (nat, add, 0) is a commutative monoid *)
   Theorem Book_1_8_add_left_id (m : nat) : Book_1_8_add 0 m = m.
