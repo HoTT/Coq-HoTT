@@ -231,20 +231,22 @@ End Book_1_6.
 (** Exercise 1.7 *)
 
 Section Book_1_7.
-  Definition Book_1_7_id {A : Type} {x y : A} (p : x = y)
-    : (x; 1) = (y; p) :> { a : A & x = a }
-    := match p with 1 => 1 end.
+  Definition Book_1_7_id {A : Type}
+    : forall {x y : A} (p : x = y), (x; 1) = (y; p) :> { a : A & x = a }
+    := paths_ind' (fun (x y : A) (p : x = y) => (x; 1) = (y; p)) (fun x => 1).
+
+  Definition Book_1_7_transport {A : Type} (P : A -> Type)
+    : forall {x y : A} (p : x = y), P x -> P y
+    := paths_ind' (fun (x y : A) (p : x = y) => P x -> P y) (fun x => idmap).
 
   Definition Book_1_7_ind' {A : Type} (a : A) (C : forall x, (a = x) -> Type)
     (c : C a 1) (x : A) (p : a = x)
     : C x p
-    := transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
+    := Book_1_7_transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
 
-  Theorem Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1)
-    : Book_1_7_ind' a C c a 1 = c.
-  Proof.
-    reflexivity.
-  Qed.
+  Definition Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1)
+    : Book_1_7_ind' a C c a 1 = c
+    := 1.
 End Book_1_7.
 
 (* ================================================== ex:nat-semiring *)
