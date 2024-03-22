@@ -53,8 +53,8 @@ Section Book_1_2_prod.
   Variable A B : Type.
 
   (** Recursor with projection functions instead of pattern-matching. *)
-  Let prod_rec_proj C (g : A -> B -> C) (p : A * B) : C :=
-    g (fst p) (snd p).
+  Let prod_rec_proj C (g : A -> B -> C) (p : A * B) : C
+    := g (fst p) (snd p).
   Definition Book_1_2_prod := prod_rec_proj.
 
   Proposition Book_1_2_prod_fst : fst = prod_rec_proj A (fun a b => a).
@@ -75,8 +75,8 @@ Section Book_1_2_sig.
   Variable B : A -> Type.
 
   (** Non-dependent recursor with projection functions instead of pattern matching. *)
-  Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C :=
-    g (pr1 p) (pr2 p).
+  Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C
+    := g (pr1 p) (pr2 p).
   Definition Book_1_2_sig := @sig_rec_proj.
 
   Proposition Book_1_2_sig_fst : @pr1 A B = sig_rec_proj A (fun a => fun b => a).
@@ -98,8 +98,8 @@ Definition Book_1_3_prod_lib := @HoTT.Types.Prod.prod_ind.
 Section Book_1_3_prod.
   Variable A B : Type.
 
-  Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x :=
-    transport C (HoTT.Types.Prod.eta_prod x) (g (fst x) (snd x)).
+  Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x
+    := transport C (HoTT.Types.Prod.eta_prod x) (g (fst x) (snd x)).
   Definition Book_1_3_prod := prod_ind_eta.
 
   Proposition Book_1_3_prod_refl : forall C g a b, prod_ind_eta C g (a, b) = g a b.
@@ -115,8 +115,8 @@ Section Book_1_3_sig.
 
   Let sig_ind_eta (C : (exists (a : A), B a) -> Type)
                           (g : forall (a : A) (b : B a), C (a; b))
-                          (x : exists (a : A), B a) : C x :=
-    transport C (HoTT.Types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
+                          (x : exists (a : A), B a) : C x
+    := transport C (HoTT.Types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
   Definition Book_1_3_sig := sig_ind_eta.
 
   Proposition Book_1_3_sig_refl : forall C g a b, sig_ind_eta C g (a; b) = g a b.
@@ -148,7 +148,8 @@ Section Book_1_4.
     - simpl. unfold Book_1_4_rec'. rewrite IH. reflexivity.
   Qed.
 
-  Proposition Book_1_4_eq : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
+  Proposition Book_1_4_eq
+    : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
   Proof. 
     intros C c0 cs n. induction n as [| m IH].
     - simpl. reflexivity.
@@ -474,8 +475,8 @@ End Book_1_13.
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
 
-Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) : C x -> C y :=
-  match p with 1 => idmap end.
+Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) : C x -> C y 
+  := match p with 1 => idmap end.
 
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)
