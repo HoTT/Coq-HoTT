@@ -469,8 +469,7 @@ End Book_1_13.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-(* There is no adequate type family C : Pi_{x, y, p} U  such that C(x, x, p)
-  is p = refl x definitionally *)
+(* There is no adequate type family C : Pi_{x, y, p} U  such that C(x, x, p) is p = refl x definitionally *)
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
