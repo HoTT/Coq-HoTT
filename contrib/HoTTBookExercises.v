@@ -378,11 +378,11 @@ End Book_1_8.
 (** Exercise 1.9 *)
 
 Section Book_1_9.
-  Fixpoint Book_1_9_Fin (n : nat) : Type :=
-    match n with
-    | O => Empty
-    | S m => (Book_1_9_Fin m) + Unit
-    end.
+  Fixpoint Book_1_9_Fin (n : nat) : Type
+    := match n with
+      | O => Empty
+      | S m => (Book_1_9_Fin m) + Unit
+      end.
 
   Definition Book_1_9_fmax (n : nat) : Book_1_9_Fin (S n) := inr tt.
 End Book_1_9.
@@ -390,16 +390,16 @@ End Book_1_9.
 (* ================================================== ex:ackermann *)
 (** Exercise 1.10 *)
 
-Fixpoint ack (n m : nat) : nat :=
-  match n with
-  | O => S m
-  | S p => let fix ackn (m : nat) :=
-               match m with
-                 | O => ack p 1
-                 | S q => ack p (ackn q)
-               end
-           in ackn m
-  end.
+Fixpoint ack (n m : nat) : nat 
+  := match n with
+    | O => S m
+    | S p => let fix ackn (m : nat)
+              := match m with
+                | O => ack p 1
+                | S q => ack p (ackn q)
+                end
+            in ackn m
+    end.
 
 Definition Book_1_10 := ack.
 
@@ -479,7 +479,7 @@ Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) 
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)
 
-Definition Book_1_16 := Book_1_8_add_comm.
+Definition Book_1_16 := HoTT.Spaces.Nat.Core.nat_add_comm.
 
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
