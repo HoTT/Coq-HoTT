@@ -45,7 +45,7 @@ Ltac simpl_nat :=
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
   intros a b c.
-  simple_induction a a IH.
+  induction a as [|a IH].
   - reflexivity.
   - change (S (a + (b + c)) = S (a + b + c)).
     apply ap, IH.
