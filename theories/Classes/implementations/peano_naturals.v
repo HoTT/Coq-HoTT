@@ -41,20 +41,22 @@ Ltac simpl_nat :=
   change Nat.Core.add with (@plus nat Nat.Core.add);
   change Nat.Core.mul with (@mult nat Nat.Core.mul).
 
+(** [forall a b c : nat, a + (b + c) = (a + b) + c].  The RHS is written [a + b + c]. *)
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IH];
-intros b c.
-+ reflexivity.
-+ change (S (a + (b + c)) = S (a + b + c)).
-  apply ap,IH.
+  intros a b c.
+  simple_induction a a IH.
+  - reflexivity.
+  - change (S (a + (b + c)) = S (a + b + c)).
+    apply ap, IH.
 Qed.
 
-Lemma add_0_r : forall x:nat, x + 0 =N= x.
+(** [a + 0 =N= a] *)
+Local Instance add_0_r : RightIdentity@{N N} (plus : Plus nat) 0.
 Proof.
-intros a;induction a as [|a IH].
-+ reflexivity.
-+ apply (ap S),IH.
+  intros a; induction a as [|a IH].
+  - reflexivity.
+  - apply (ap S), IH.
 Qed.
 
 Lemma add_S_r : forall a b, a + S b =N= S (a + b).
@@ -67,8 +69,8 @@ Qed.
 Lemma add_S_l a b : S a + b =N= S (a + b).
 Proof. exact idpath. Qed.
 
-Lemma add_0_l a : 0 + a =N= a.
-Proof. exact idpath. Qed.
+(** [0 + a =N= a] *)
+Local Instance add_0_l : LeftIdentity@{N N} (plus : Plus nat) 0 := fun _ => idpath.
 
 Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
 Proof.
@@ -109,6 +111,18 @@ apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
   rewrite (commutativity (f:=plus) b a), <-(associativity a b).
   reflexivity.
 Qed.
+
+(** [a * 1 =N= a]. *)
+Local Instance mul_1_r : RightIdentity (mult : Mult nat) 1.
+Proof.
+  intro a.
+  lhs nrapply mul_S_r.
+  lhs nrapply (ap _ (mul_0_r a)).
+  apply add_0_r.
+Qed.
+
+(** [1 * a =N= a]. *)
+Local Instance mul_1_l : LeftIdentity (mult : Mult nat) 1 := add_0_r.
 
 Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
@@ -164,13 +178,10 @@ Qed.
 
 Instance nat_semiring : IsSemiRing@{N} nat.
 Proof.
-repeat (split; try apply _);
-first [change sg_op with plus; change mon_unit with 0
-      |change sg_op with mult; change mon_unit with 1].
-- exact add_0_r.
-- exact add_0_r.
-- hnf;simpl_nat. intros a.
-  rewrite mul_S_r,mul_0_r. apply add_0_r.
+  repeat (split; try exact _).
+  (* Coq doesn't find these two due to minor differences in the description of the multiplication operation. *)
+  - exact mul_1_l.
+  - exact mul_1_r.
 Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
