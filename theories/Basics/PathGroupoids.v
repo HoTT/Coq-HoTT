@@ -774,8 +774,49 @@ Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a 
 Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
   : f x y = f x' y'.
 Proof.
-  destruct p, q.
-  reflexivity.
+  destruct p.
+  apply ap.
+  exact q.
+Defined.
+
+Definition ap011_V {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
+  : ap011 f p^ q^ = (ap011 f p q)^.
+Proof.
+  destruct p.
+  apply ap_V.
+Defined.
+
+Definition ap011_pp {A B C} (f : A -> B -> C) {x x' x'' y y' y''}
+  (p : x = x') (p' : x' = x'') (q : y = y') (q' : y' = y'')
+  : ap011 f (p @ p') (q @ q') = ap011 f p q @ ap011 f p' q'.
+Proof.
+  destruct p, p'.
+  apply ap_pp.
+Defined.
+
+Definition ap011_compose {A B C D} (f : A -> B -> C) (g : C -> D) {x x' y y'}
+  (p : x = x') (q : y = y')
+  : ap011 (fun x y => g (f x y)) p q = ap g (ap011 f p q).
+Proof.
+  destruct p; simpl.
+  apply ap_compose.
+Defined.
+
+Definition ap011_compose' {A B C D E} (f : A -> B -> C) (g : D -> A) (h : E -> B)
+  {x x' y y'}
+  (p : x = x') (q : y = y')
+  : ap011 (fun x y => f (g x) (h y)) p q = ap011 f (ap g p) (ap h q).
+Proof.
+  destruct p; simpl.
+  apply ap_compose.
+Defined.
+
+Definition ap011_is_ap {A B C} (f : A -> B -> C) {x x' : A} {y y' : B} (p : x = x') (q : y = y')
+  : ap011 f p q = ap (fun x => f x y) p @ ap (fun y => f x' y) q.
+Proof.
+  destruct p.
+  symmetry.
+  apply concat_1p.
 Defined.
 
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
@@ -1317,6 +1358,15 @@ Definition apD02_pp {A} (B : A -> Type) (f : forall x:A, B x) {x y : A}
   @ (whiskerR (transport2_p2p B r1 r2 (f x))^ (apD f p3)).
 Proof.
   destruct r1, r2. destruct p1. reflexivity.
+Defined.
+
+Definition ap022 {A B C} (f : A -> B -> C) {x x' y y'}
+  {p p' : x = x'} (r : p = p') {q q' : y = y'} (s : q = q')
+  : ap011 f p q = ap011 f p' q'.
+Proof.
+  destruct r, p.
+  apply ap02.
+  exact s.
 Defined.
 
 (** These lemmas need better names. *)
