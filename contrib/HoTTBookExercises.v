@@ -145,7 +145,7 @@ Section Book_1_4.
   Proof.
     intros C c0 cs n. induction n as [| m IH].
     - simpl. reflexivity.
-    - change (S (fst (Book_1_4_rec' C c0 cs m)) = S m). exact (ap S IH).
+    - cbn. exact (ap S IH).
   Qed.
 
   Proposition Book_1_4_eq
