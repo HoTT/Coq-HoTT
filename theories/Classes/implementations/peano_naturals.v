@@ -143,17 +143,23 @@ Proof.
     apply (ap (plus c)), IHa.
 Qed.
 
+(** [(a + b) * c =N= a * c + b * c].  This also follows from [plus_mult_distr_r], which currently requires that we already have a semiring.  It should be adjusted to not require associativity. *)
+Local Instance add_mul_distr_r
+  : RightDistribute@{N} (mult : Mult nat) (plus : Plus nat).
+Proof.
+  intros a b c.
+  lhs apply mul_comm.
+  lhs apply add_mul_distr_l.
+  apply ap011; apply mul_comm.
+Defined.
+
 Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
 Proof.
  intros a b c; induction a as [| a IHa].
   - reflexivity.
-  - change (b * c + a * (b * c) = (b + a * b) * c).
-    rhs rapply mul_comm.
-    rhs rapply add_mul_distr_l.
-    rhs rapply (ap (fun x => x + _) (mul_comm _ _)).
-    rapply (ap (plus _)).
-    rhs rapply mul_comm.
-    exact IHa.
+  - simpl_nat.
+    rhs apply add_mul_distr_r.
+    apply ap, IHa.
 Qed.
 
 Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
@@ -170,6 +176,7 @@ Definition pred x := match x with | 0%nat => 0 | S k => k end.
 Global Instance S_inj : IsInjective@{N N} S
   := { injective := fun a b E => ap pred E }.
 
+(** This is also in Spaces.Nat.Core. *)
 Global Instance nat_dec: DecidablePaths@{N} nat.
 Proof.
 hnf.
