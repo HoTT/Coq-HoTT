@@ -219,7 +219,7 @@ Arguments auxl : simpl never.
 Arguments gluel : simpl never.
 Arguments gluer : simpl never.
 
-(** ** Miscallaneous lemmas about Smash *)
+(** ** Miscellaneous lemmas about Smash *)
 
 (** A version of [Smash_ind] specifically for proving that two functions from a [Smash] are homotopic. *)
 Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
@@ -386,12 +386,12 @@ Proof.
       apply equiv_p1_1q.
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluel.
-      apply Smash_rec_beta_gluer.
+      nrapply Smash_rec_beta_gluer.
     + intros x.
       apply equiv_p1_1q.
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluer.
-      apply Smash_rec_beta_gluel.
+      nrapply Smash_rec_beta_gluel.
   - reflexivity.
 Defined.
 
@@ -425,7 +425,7 @@ Proof.
       nrapply Smash_rec_beta_gluel.
     + intros b.
       apply equiv_p1_1q.
-      rhs nrapply (ap_compose (pswap _ _) _ (gluer b)).
+      rhs nrapply (ap_compose (pswap _ _) (functor_smash _ _) (gluer b)).
       rhs nrapply ap.
       2: apply Smash_rec_beta_gluer.
       rhs nrapply Smash_rec_beta_gluel.
