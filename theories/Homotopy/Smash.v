@@ -7,6 +7,7 @@ Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope dpath_scope.
+Local Open Scope path_scope.
 
 (* Definition of smash product *)
 
@@ -149,8 +150,6 @@ Section Smash.
     : Smash X Y -> P
     := Smash_ind Psm Pl Pr (fun x => dp_const (Pgl x)) (fun x => dp_const (Pgr x)).
 
-  Local Open Scope path_scope.
-
   (* Version of smash_rec that forces (Pgl pt) and (Pgr pt) to be idpath *)
   Definition Smash_rec' {P : Type} {Psm : X -> Y -> P}
     (Pgl : forall a, Psm a pt = Psm pt pt) (Pgr : forall b, Psm pt b = Psm pt pt)
@@ -233,8 +232,7 @@ Proof.
     + intro b; cbn beta.
       rhs_V nrapply (gluer (g b)).
       exact (ap011 _ (point_eq f) 1).
-  - simpl.
-    exact (ap011 _ (point_eq f) (point_eq g)).
+  - exact (ap011 _ (point_eq f) (point_eq g)).
 Defined.
 
 Definition functor_smash_idmap (X Y : pType)
