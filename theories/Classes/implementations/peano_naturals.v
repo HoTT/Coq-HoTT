@@ -93,7 +93,7 @@ Proof.
   intros a; induction a as [| a IHa].
   - reflexivity.
   - change (a * 0 = 0).
-    apply IHa.
+    exact IHa.
 Qed.
 
 Lemma mul_S_r a b : a * S b =N= a + a * b.
@@ -117,36 +117,14 @@ Proof.
   apply add_0_r.
 Qed.
 
-(** [(a + b) * c =N= a * c + b * c]. To be removed *)
-Local Instance add_mul_distr_r
-  : RightDistribute@{N} (mult : Mult nat) (plus : Plus nat).
-Proof.
-  intros a b c; induction a as [| a IHa].
-  - reflexivity.
-  - rewrite add_S_l.
-    do 2 (rewrite mul_S_l).
-    rewrite IHa.
-    apply add_assoc.
-Qed.
-
-(** To be rewritten *)
 Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
   intros a b; induction a as [| a IHa].
-  - rewrite mul_0_r.
+  - rhs apply mul_0_r.
     reflexivity.
-  - rewrite mul_S_r.
+  - rhs apply mul_S_r.
     change (b + a * b = b + b * a).
     apply (ap (fun x => b + x)), IHa.
-Qed.
-
-Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
-Proof.
- intros a b c; induction a as [| a IHa].
-  - reflexivity.
-  - do 2 (rewrite mul_S_l).
-    rewrite add_mul_distr_r.
-    apply (ap (fun x => b * c + x)), IHa.
 Qed.
 
 (** [a * (b + c) =N= a * b + a * c]. *)
@@ -163,6 +141,19 @@ Proof.
     rhs rapply (ap (fun x => x + _) (add_comm _ _)).
     rhs rapply (add_assoc _ _ _)^.
     apply (ap (plus c)), IHa.
+Qed.
+
+Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
+Proof.
+ intros a b c; induction a as [| a IHa].
+  - reflexivity.
+  - change (b * c + a * (b * c) = (b + a * b) * c).
+    rhs rapply mul_comm.
+    rhs rapply add_mul_distr_l.
+    rhs rapply (ap (fun x => x + _) (mul_comm _ _)).
+    rapply (ap (plus _)).
+    rhs rapply mul_comm.
+    exact IHa.
 Qed.
 
 Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
