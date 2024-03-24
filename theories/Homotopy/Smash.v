@@ -384,40 +384,38 @@ Defined.
 Definition pswap_natural {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
   : pswap X Y $o functor_smash f g $== functor_smash g f $o pswap A B.
 Proof.
+  pointed_reduce.
   snrapply Build_pHomotopy.
   - snrapply Smash_ind.
     1-3: reflexivity.
     + intros a.
       nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
-      rhs nrapply (ap_compose (pswap A B) _ (gluel a)).
+      rhs nrapply (ap_compose (pswap _ _) _ (gluel a)).
       rhs nrapply ap.
       2: apply Smash_rec_beta_gluel.
       rhs nrapply Smash_rec_beta_gluer.
-      lhs nrapply (ap_compose (functor_smash f g) (pswap X Y) (gluel a)).
+      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluel a)).
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluel.
-      lhs nrapply (ap_pp (pswap X Y) (ap011 sm 1 (point_eq g)) (gluel (f a))).
-      lhs nrapply whiskerL.
-      1: apply Smash_rec_beta_gluel.
-      apply whiskerR.
-      symmetry.
-      exact (ap_compose _ _ _).
+      simpl.
+      lhs nrapply ap.
+      1: apply concat_1p.
+      rhs nrapply concat_1p.
+      nrapply Smash_rec_beta_gluel.
     + intros b.
       nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
-      rhs nrapply (ap_compose (pswap A B) _ (gluer b)).
+      rhs nrapply (ap_compose (pswap _ _) _ (gluer b)).
       rhs nrapply ap.
       2: apply Smash_rec_beta_gluer.
       rhs nrapply Smash_rec_beta_gluel.
-      lhs nrapply (ap_compose (functor_smash f g) (pswap X Y) (gluer b)).
+      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluer b)).
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluer.
-      lhs nrapply (ap_pp (pswap X Y) (ap011 sm (point_eq f) 1) (gluer (g b))).
-      lhs nrapply whiskerL.
-      1: apply Smash_rec_beta_gluer.
-      apply whiskerR.
-      symmetry.
-      exact (ap011_compose _ _ (point_eq f) 1).
-  - by simpl; pelim f g.
+      lhs nrapply ap.
+      1: apply concat_1p.
+      rhs nrapply concat_1p.
+      nrapply Smash_rec_beta_gluer.
+  - reflexivity.
 Defined.
