@@ -299,7 +299,7 @@ Proof.
   pointed_reduce.
   snrapply Build_pHomotopy.
   { snrapply Smash_ind.
-    - intros x y; simpl.
+    - intros x y.
       exact (ap011 _ (p x) (q y)).
     - reflexivity.
     - reflexivity.
@@ -325,8 +325,8 @@ Proof.
       nrapply (ap011_pp _ _ _ 1 1). }
   symmetry; simpl.
   lhs nrapply concat_p1.
-  apply ap022; apply concat_p1.
-Defined.
+  exact (ap022 _ (concat_p1 (p pt)) (concat_p1 (q pt))).
+Time Defined.
 
 Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
