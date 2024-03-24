@@ -219,6 +219,43 @@ Arguments auxl : simpl never.
 Arguments gluel : simpl never.
 Arguments gluer : simpl never.
 
+(** ** Miscallaneous lemmas about Smash *)
+
+(** A version of [Smash_ind] specifically for proving that two functions from a [Smash] are homotopic. *)
+Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
+  (Hsm : forall a b, f (sm a b) = g (sm a b))
+  (Hl : f auxl = g auxl) (Hr : f auxr = g auxr)
+  (Hgluel : forall a, ap f (gluel a) @ Hl = Hsm a pt @ ap g (gluel a))
+  (Hgluer : forall b, ap f (gluer b) @ Hr = Hsm pt b @ ap g (gluer b))
+  : f == g.
+Proof.
+  snrapply (Smash_ind Hsm Hl Hr).
+  - intros a.
+    nrapply transport_paths_FlFr'.
+    exact (Hgluel a).
+  - intros b.
+    nrapply transport_paths_FlFr'.
+    exact (Hgluer b).
+Defined.
+
+(** A version of [Smash_ind]j specifically for proving that the composition of two functions is the identity map. *)
+Definition Smash_ind_FFlr {A B : pType} {P : Type}
+  (f : Smash A B -> P) (g : P -> Smash A B)
+  (Hsm : forall a b, g (f (sm a b)) = sm a b)
+  (Hl : g (f auxl) = auxl) (Hr : g (f auxr) = auxr)
+  (Hgluel : forall a, ap g (ap f (gluel a)) @ Hl = Hsm a pt @ gluel a)
+  (Hgluer : forall b, ap g (ap f (gluer b)) @ Hr = Hsm pt b @ gluer b)
+  : g o f == idmap.
+Proof.
+  snrapply (Smash_ind Hsm Hl Hr).
+  - intros a.
+    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+    exact (Hgluel a).
+  - intros b.
+    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+    exact (Hgluer b).
+Defined.
+
 (** ** Functoriality of the smash product *)
 
 Definition functor_smash {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
@@ -239,16 +276,14 @@ Definition functor_smash_idmap (X Y : pType)
   : functor_smash (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
 Proof.
   snrapply Build_pHomotopy.
-  { snrapply Smash_ind.
+  { snrapply Smash_ind_FlFr.
     1-3: reflexivity.
     - intros x.
-      nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       rhs nrapply ap_idmap.
       lhs nrapply Smash_rec_beta_gluel.
       apply concat_1p.
     - intros y.
-      nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       rhs nrapply ap_idmap.
       lhs nrapply Smash_rec_beta_gluer.
@@ -262,11 +297,9 @@ Definition functor_smash_compose {X Y A B C D : pType}
 Proof.
   pointed_reduce.
   snrapply Build_pHomotopy.
-  { snrapply Smash_ind.
+  { snrapply Smash_ind_FlFr.
     1-3: reflexivity.
-    - cbn beta.
-      intros x.
-      nrapply transport_paths_FlFr'.
+    - intros x.
       apply equiv_p1_1q.
       lhs nrapply Smash_rec_beta_gluel.
       symmetry.
@@ -275,9 +308,7 @@ Proof.
       2: nrapply Smash_rec_beta_gluel.
       lhs nrapply Smash_rec_beta_gluel.
       apply concat_1p.
-    - cbn beta.
-      intros y.
-      nrapply transport_paths_FlFr'.
+    - intros y.
       apply equiv_p1_1q.
       lhs nrapply Smash_rec_beta_gluer.
       symmetry.
@@ -296,35 +327,31 @@ Definition functor_smash_homotopic {X Y A B : pType}
 Proof.
   pointed_reduce.
   snrapply Build_pHomotopy.
-  { snrapply Smash_ind.
-    - intros x y.
-      exact (ap011 _ (p x) (q y)).
-    - reflexivity.
-    - reflexivity.
+  { snrapply Smash_ind_FlFr.
+    1: exact (fun x y => ap011 _ (p x) (q y)).
+    1,2: reflexivity.
     - intros x.
-      nrapply transport_paths_FlFr'; simpl.
       lhs nrapply concat_p1.
       lhs nrapply Smash_rec_beta_gluel.
       rhs nrapply whiskerL.
       2: nrapply Smash_rec_beta_gluel.
-      induction (p x); simpl.
+      simpl; induction (p x); simpl.
       rhs_V nrapply concat_pp_p.
       apply whiskerR.
       nrapply ap_pp.
     - intros y.
-      nrapply transport_paths_FlFr'; simpl.
       lhs nrapply concat_p1.
       lhs nrapply Smash_rec_beta_gluer.
       rhs nrapply whiskerL.
       2: nrapply Smash_rec_beta_gluer.
-      induction (q y); simpl.
+      simpl; induction (q y); simpl.
       rhs_V nrapply concat_pp_p.
       apply whiskerR.
       nrapply (ap011_pp _ _ _ 1 1). }
   symmetry; simpl.
   lhs nrapply concat_p1.
   exact (ap022 _ (concat_p1 (p pt)) (concat_p1 (q pt))).
-Time Defined.
+Defined.
 
 Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
@@ -355,16 +382,14 @@ Definition pswap_pswap {X Y : pType}
   : pswap X Y $o pswap Y X $== pmap_idmap.
 Proof.
   snrapply Build_pHomotopy.
-  - snrapply Smash_ind.
+  - snrapply Smash_ind_FFlr.
     1-3: reflexivity.
     + intros y.
-      rapply (transport_paths_FFlr' (f := pswap _ _)).
       apply equiv_p1_1q.
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluel.
       apply Smash_rec_beta_gluer.
     + intros x.
-      rapply (transport_paths_FFlr' (f := pswap _ _)).
       apply equiv_p1_1q.
       lhs nrapply ap.
       1: apply Smash_rec_beta_gluer.
@@ -384,10 +409,9 @@ Definition pswap_natural {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
 Proof.
   pointed_reduce.
   snrapply Build_pHomotopy.
-  - snrapply Smash_ind.
+  - snrapply Smash_ind_FlFr.
     1-3: reflexivity.
     + intros a.
-      nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       rhs nrapply (ap_compose (pswap _ _) _ (gluel a)).
       rhs nrapply ap.
@@ -402,7 +426,6 @@ Proof.
       rhs nrapply concat_1p.
       nrapply Smash_rec_beta_gluel.
     + intros b.
-      nrapply transport_paths_FlFr'.
       apply equiv_p1_1q.
       rhs nrapply (ap_compose (pswap _ _) _ (gluer b)).
       rhs nrapply ap.
