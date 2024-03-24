@@ -26,7 +26,7 @@
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
      BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
-     Metatheory.Core Metatheory.FunextVarieties.
+     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -275,106 +275,7 @@ Section Book_1_8.
   Example mult_example: Book_1_8_mult 20 5 = 100 := 1.
   Example exp_example: Book_1_8_exp 2 10 = 1024 := 1.
 
-  (* (nat, add, 0) is a commutative monoid *)
-  Theorem Book_1_8_add_left_id (m : nat) : Book_1_8_add 0 m = m.
-  Proof. reflexivity. Qed.
-
-  Lemma Book_1_8_add_left_succ (m n : nat) : Book_1_8_add (S m) n = S (Book_1_8_add m n).
-  Proof. reflexivity. Qed.
-
-  Theorem Book_1_8_add_right_id (m : nat) : Book_1_8_add m 0 = m. 
-  Proof.
-    induction m.
-    - reflexivity.
-    - rewrite Book_1_8_add_left_succ, IHm. reflexivity.
-  Qed.
-
-  Lemma Book_1_8_add_right_succ (m n : nat) : Book_1_8_add m (S n) = S (Book_1_8_add m n).
-  Proof.
-    induction m.
-    - reflexivity.
-    - do 2 (rewrite Book_1_8_add_left_succ). rewrite IHm. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_add_ass (i j k : nat) :
-    Book_1_8_add i (Book_1_8_add j k) = Book_1_8_add (Book_1_8_add i j) k.
-  Proof.
-    induction i.
-    - reflexivity.
-    - do 3 (rewrite Book_1_8_add_left_succ). rewrite IHi. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_add_comm (m n : nat) : Book_1_8_add n m = Book_1_8_add m n.
-  Proof.
-    induction n.
-    - rewrite Book_1_8_add_right_id. reflexivity.
-    - rewrite Book_1_8_add_left_succ, Book_1_8_add_right_succ, IHn. reflexivity.
-  Qed.
-
-  (* (nat, mult, 1) is a commutative monoid, 0 is annihilating, and distributivity *)
-  Theorem Book_1_8_mult_left_absorb (m : nat) : Book_1_8_mult 0 m = 0.
-  Proof. reflexivity. Qed.
-
-  Lemma Book_1_8_mult_left_succ (m n: nat) :
-    Book_1_8_mult (S m) n = Book_1_8_add n (Book_1_8_mult m n).
-  Proof. reflexivity. Qed.
-
-  Theorem Book_1_8_mult_left_id (m : nat) : Book_1_8_mult 1 m = m.
-  Proof. rewrite Book_1_8_mult_left_succ, Book_1_8_add_right_id. reflexivity. Qed.
-
-  Lemma Book_1_8_mult_right_absorb (m : nat) : Book_1_8_mult m 0 = 0.
-  Proof.
-    induction m.
-    - reflexivity.
-    - rewrite Book_1_8_mult_left_succ, IHm. reflexivity.
-  Qed.
-
-  Lemma Book_1_8_mult_right_succ (m n : nat) :
-    Book_1_8_mult m (S n) = Book_1_8_add m (Book_1_8_mult m n).
-  Proof.
-    induction m.
-    - reflexivity.
-    - do 2 (rewrite Book_1_8_mult_left_succ). rewrite IHm. do 2 (rewrite Book_1_8_add_left_succ).
-      do 2 (rewrite Book_1_8_add_ass).
-      pattern (Book_1_8_add n m). rewrite Book_1_8_add_comm. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_mult_right_id (m : nat) : Book_1_8_mult m 1 = m.
-  Proof.
-    rewrite Book_1_8_mult_right_succ, Book_1_8_mult_right_absorb, Book_1_8_add_right_id.
-    reflexivity.
-  Qed.
-
-  Lemma Book_1_8_right_distr (i j k : nat) :
-    Book_1_8_mult (Book_1_8_add i j) k = Book_1_8_add (Book_1_8_mult i k) (Book_1_8_mult j k).
-  Proof.
-    induction i.
-    - reflexivity.
-    - rewrite Book_1_8_add_left_succ. do 2 (rewrite Book_1_8_mult_left_succ).
-      rewrite <- Book_1_8_add_ass. rewrite IHi. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_mult_ass (i j k : nat) :
-    Book_1_8_mult i (Book_1_8_mult j k) = Book_1_8_mult (Book_1_8_mult i j) k.
-  Proof.
-    induction i.
-    - reflexivity.
-    - do 2 (rewrite Book_1_8_mult_left_succ). rewrite IHi, Book_1_8_right_distr. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_mult_comm (m n : nat) : Book_1_8_mult n m = Book_1_8_mult m n.
-  Proof.
-    induction n.
-    - rewrite Book_1_8_mult_right_absorb. reflexivity.
-    - rewrite Book_1_8_mult_left_succ, Book_1_8_mult_right_succ, IHn. reflexivity.
-  Qed.
-
-  Theorem Book_1_8_left_distr (i j k : nat) :
-    Book_1_8_mult i (Book_1_8_add j k) = Book_1_8_add (Book_1_8_mult i j) (Book_1_8_mult i k).
-  Proof.
-    rewrite Book_1_8_mult_comm. pattern (Book_1_8_mult i j). rewrite Book_1_8_mult_comm.
-    pattern (Book_1_8_mult i k). rewrite Book_1_8_mult_comm. apply Book_1_8_right_distr.
-  Qed.
+  Definition Book_1_8_semiring := HoTT.Classes.implementations.peano_naturals.nat_semiring.
 End Book_1_8.
 
 (* ================================================== ex:fin *)
@@ -470,13 +371,14 @@ End Book_1_13.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-(* There is no adequate type family C : Pi_{x, y, p} U  such that C(x, x, p) is p = refl x definitionally *)
+(** There is no adequate type family C : Pi_{x, y, p} U  such that C(x, x, p) is p = refl x definitionally. *)
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
 
 Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) : C x -> C y 
   := match p with 1 => idmap end.
+(** This is exactly the definition of [transport] from Basics.Overture. *)
 
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)

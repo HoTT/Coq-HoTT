@@ -41,106 +41,118 @@ Ltac simpl_nat :=
   change Nat.Core.add with (@plus nat Nat.Core.add);
   change Nat.Core.mul with (@mult nat Nat.Core.mul).
 
-(** [forall a b c : nat, a + (b + c) = (a + b) + c].  The RHS is written [a + b + c]. *)
-Local Instance add_assoc : Associative@{N} (plus : Plus nat).
-Proof.
-  intros a b c.
-  induction a as [|a IH].
-  - reflexivity.
-  - change (S (a + (b + c)) = S (a + b + c)).
-    apply ap, IH.
-Qed.
+(** [0 + a =N= a] *)
+Local Instance add_0_l : LeftIdentity@{N N} (plus : Plus nat) 0 := fun _ => idpath.
+
+Definition add_S_l a b : S a + b =N= S (a + b) := idpath.
 
 (** [a + 0 =N= a] *)
-Local Instance add_0_r : RightIdentity@{N N} (plus : Plus nat) 0.
+Local Instance add_0_r : RightIdentity@{N N} (plus : Plus nat) (zero : Zero nat).
 Proof.
-  intros a; induction a as [|a IH].
+  intros a; induction a.
   - reflexivity.
-  - apply (ap S), IH.
+  - apply (ap S), IHa.
 Qed.
 
 Lemma add_S_r : forall a b, a + S b =N= S (a + b).
 Proof.
-induction a as [|a IHa];intros b.
-- reflexivity.
-- simpl_nat. apply (ap S),IHa.
+  intros a b; induction a.
+  - reflexivity.
+  - apply (ap S), IHa.
 Qed.
 
-Lemma add_S_l a b : S a + b =N= S (a + b).
-Proof. exact idpath. Qed.
-
-(** [0 + a =N= a] *)
-Local Instance add_0_l : LeftIdentity@{N N} (plus : Plus nat) 0 := fun _ => idpath.
+(** [forall a b c : nat, a + (b + c) = (a + b) + c].  The RHS is written [a + b + c]. *)
+Local Instance add_assoc : Associative@{N} (plus : Plus nat).
+Proof.
+  intros a b c; induction a.
+  - reflexivity.
+  - do 3 (rewrite add_S_l).
+    apply (ap S), IHa.
+Qed.
 
 Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];
-intros b;induction b as [|b IHb].
-- reflexivity.
-- change (S b = S (b + 0)). apply ap,IHb.
-- apply (ap S),IHa.
-- change (S (a + S b) = S (b + S a)).
-  rewrite (IHa (S b)), <- (IHb ). apply (ap S),(ap S),symmetry,IHa.
+  intros a b; induction a.
+  - rewrite add_0_r.
+    reflexivity.
+  - rewrite add_S_l, add_S_r.
+    apply (ap S), IHa.
 Qed.
 
-Local Instance add_mul_distr_l : LeftDistribute@{N}
-  (mult :Mult nat) (plus:Plus nat).
+Local Instance mul_0_l : LeftAbsorb@{N N} (mult : Mult nat) (zero : Zero nat)
+  := fun _ => idpath.
+
+Definition mul_S_l a b : (S a) * b =N= b + a * b := idpath.
+
+(** [1 * a =N= a]. *)
+Local Instance mul_1_l : LeftIdentity@{N N} (mult : Mult nat) (one : One nat)
+  := add_0_r.
+
+Local Instance mul_0_r : RightAbsorb@{N N} (mult : Mult nat) (zero : Zero nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa];
-simpl_nat.
-- intros _ _;reflexivity.
-- intros. rewrite IHa.
-  rewrite <-(associativity b), (associativity c), (commutativity c),
-  <-(associativity (a*b)), (associativity b).
-  reflexivity.
+  intros a; induction a.
+  - reflexivity.
+  - rewrite mul_S_l.
+    apply IHa.
 Qed.
 
-Lemma mul_0_r : forall a : nat, a * 0 =N= 0.
+Lemma mul_S_r a b : a * S b =N= a + a * b.
 Proof.
-induction a;simpl_nat;trivial.
-reflexivity.
-Qed.
-
-Lemma mul_S_r : forall a b : nat, a * S b =N= a + a * b.
-Proof.
-apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
-- reflexivity.
-- simpl_nat. rewrite IHa.
-  rewrite (simple_associativity b a).
-  change (((b + a) + (a * b)).+1 =N= (a + Nat.Core.add b (a * b)).+1).
-  rewrite (commutativity (f:=plus) b a), <-(associativity a b).
-  reflexivity.
+  induction a.
+  - reflexivity.
+  - do 2 (rewrite add_S_l, mul_S_l).
+    apply (ap S).
+    rewrite IHa.
+    do 2 (rewrite add_assoc).
+    apply (ap (fun x => x + a * b)), add_comm.
 Qed.
 
 (** [a * 1 =N= a]. *)
-Local Instance mul_1_r : RightIdentity (mult : Mult nat) 1.
+Local Instance mul_1_r : RightIdentity@{N N} (mult : Mult nat) (one : One nat).
 Proof.
-  intro a.
-  lhs nrapply mul_S_r.
-  lhs nrapply (ap _ (mul_0_r a)).
+  intros a.
+  rewrite mul_S_r, mul_0_r.
   apply add_0_r.
 Qed.
 
-(** [1 * a =N= a]. *)
-Local Instance mul_1_l : LeftIdentity (mult : Mult nat) 1 := add_0_r.
+(** [(a + b) * c =N= a * c + b * c]. *)
+Local Instance add_mul_distr_r
+  : RightDistribute@{N} (mult : Mult nat) (plus : Plus nat).
+Proof.
+  intros a b c; induction a.
+  - reflexivity.
+  - rewrite add_S_l.
+    do 2 (rewrite mul_S_l).
+    rewrite IHa.
+    apply add_assoc.
+Qed.
 
 Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];simpl_nat.
-- intros;apply symmetry,mul_0_r.
-- intros b;rewrite IHa. rewrite mul_S_r,<-IHa. reflexivity.
+  intros a b; induction a.
+  - rewrite mul_0_r.
+    reflexivity.
+  - rewrite mul_S_l, mul_S_r.
+    apply (ap (fun x => b + x)), IHa.
 Qed.
 
 Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
 Proof.
-hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa].
-- intros;reflexivity.
-- unfold mult;simpl;change nat_mult with mult.
-  intros b c.
-  rewrite (mul_comm (_ + _) c).
-  rewrite add_mul_distr_l.
-  rewrite (mul_comm c (a*b)).
-  rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
+ intros a b c; induction a.
+  - reflexivity.
+  - do 2 (rewrite mul_S_l).
+    rewrite add_mul_distr_r.
+    apply (ap (fun x => b * c + x)), IHa.
+Qed.
+
+(** [a * (b + c) =N= a * b + a * c]. *)
+Local Instance add_mul_distr_l
+  : LeftDistribute@{N} (mult : Mult nat) (plus : Plus nat).
+Proof.
+  intros a b c.
+  rewrite (mul_comm a (b + c)), add_mul_distr_r.
+  rewrite (mul_comm a b).
+  apply (ap (fun x => b * a + x)), mul_comm.
 Qed.
 
 Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
@@ -179,9 +191,6 @@ Qed.
 Instance nat_semiring : IsSemiRing@{N} nat.
 Proof.
   repeat (split; try exact _).
-  (* Coq doesn't find these two due to minor differences in the description of the multiplication operation. *)
-  - exact mul_1_l.
-  - exact mul_1_r.
 Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
