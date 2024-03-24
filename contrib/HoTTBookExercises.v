@@ -145,7 +145,7 @@ Section Book_1_4.
   Proof.
     intros C c0 cs n. induction n as [| m IH].
     - simpl. reflexivity.
-    - simpl. unfold Book_1_4_rec'. rewrite IH. reflexivity.
+    - change (S (fst (Book_1_4_rec' C c0 cs m)) = S m). exact (ap S IH).
   Qed.
 
   Proposition Book_1_4_eq
@@ -153,8 +153,9 @@ Section Book_1_4.
   Proof. 
     intros C c0 cs n. induction n as [| m IH].
     - simpl. reflexivity.
-    - unfold Book_1_4_rec. simpl. rewrite Book_1_4_aux.
-      unfold Book_1_4_rec, Book_1_4_rec' in IH.
+    - change (cs (fst (Book_1_4_rec' C c0 cs m)) (Book_1_4_rec C c0 cs m)
+              = cs m (nat_rect (fun _ => C) c0 cs m)).
+      lhs rapply (ap (fun x => cs x _) (Book_1_4_aux _ _ _ _)).
       exact (ap (cs m) IH).
   Qed.
 End Book_1_4.
