@@ -49,14 +49,14 @@ Definition add_S_l a b : S a + b =N= S (a + b) := idpath.
 (** [a + 0 =N= a] *)
 Local Instance add_0_r : RightIdentity@{N N} (plus : Plus nat) (zero : Zero nat).
 Proof.
-  intros a; induction a.
+  intros a; induction a as [| a IHa].
   - reflexivity.
   - apply (ap S), IHa.
 Qed.
 
 Lemma add_S_r : forall a b, a + S b =N= S (a + b).
 Proof.
-  intros a b; induction a.
+  intros a b; induction a as [| a IHa].
   - reflexivity.
   - apply (ap S), IHa.
 Qed.
@@ -64,7 +64,7 @@ Qed.
 (** [forall a b c : nat, a + (b + c) = (a + b) + c].  The RHS is written [a + b + c]. *)
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
-  intros a b c; induction a.
+  intros a b c; induction a as [| a IHa].
   - reflexivity.
   - do 3 (rewrite add_S_l).
     apply (ap S), IHa.
@@ -72,7 +72,7 @@ Qed.
 
 Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
 Proof.
-  intros a b; induction a.
+  intros a b; induction a as [| a IHa].
   - rewrite add_0_r.
     reflexivity.
   - rewrite add_S_l, add_S_r.
@@ -90,7 +90,7 @@ Local Instance mul_1_l : LeftIdentity@{N N} (mult : Mult nat) (one : One nat)
 
 Local Instance mul_0_r : RightAbsorb@{N N} (mult : Mult nat) (zero : Zero nat).
 Proof.
-  intros a; induction a.
+  intros a; induction a as [| a IHa].
   - reflexivity.
   - rewrite mul_S_l.
     apply IHa.
@@ -98,7 +98,7 @@ Qed.
 
 Lemma mul_S_r a b : a * S b =N= a + a * b.
 Proof.
-  induction a.
+  induction a as [| a IHa].
   - reflexivity.
   - do 2 (rewrite add_S_l, mul_S_l).
     apply (ap S).
@@ -119,7 +119,7 @@ Qed.
 Local Instance add_mul_distr_r
   : RightDistribute@{N} (mult : Mult nat) (plus : Plus nat).
 Proof.
-  intros a b c; induction a.
+  intros a b c; induction a as [| a IHa].
   - reflexivity.
   - rewrite add_S_l.
     do 2 (rewrite mul_S_l).
@@ -129,7 +129,7 @@ Qed.
 
 Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
-  intros a b; induction a.
+  intros a b; induction a as [| a IHa].
   - rewrite mul_0_r.
     reflexivity.
   - rewrite mul_S_l, mul_S_r.
@@ -138,7 +138,7 @@ Qed.
 
 Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
 Proof.
- intros a b c; induction a.
+ intros a b c; induction a as [| a IHa].
   - reflexivity.
   - do 2 (rewrite mul_S_l).
     rewrite add_mul_distr_r.
