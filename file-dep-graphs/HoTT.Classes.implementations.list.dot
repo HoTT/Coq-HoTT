@@ -1,0 +1,33 @@
+digraph HoTT_Classes_implementations_list {
+  graph [ratio=0.5]
+  node [style=filled]
+list_fold_right [label="fold_right", URL=<list.html#fold_right>, peripheries=3, fillcolor="#F070D1"] ;
+list_InList [label="InList", URL=<list.html#InList>, peripheries=3, fillcolor="#F070D1"] ;
+list_tl [label="tl", URL=<list.html#tl>, peripheries=3, fillcolor="#F070D1"] ;
+list_for_all_trunc [label="for_all_trunc", URL=<list.html#for_all_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+list_fold_preserves [label="fold_preserves", URL=<list.html#fold_preserves>, peripheries=3, fillcolor="#F070D1"] ;
+list_for_all_map2 [label="for_all_map2", URL=<list.html#for_all_map2>, peripheries=3, fillcolor="#F070D1"] ;
+list_for_all_map [label="for_all_map", URL=<list.html#for_all_map>, peripheries=3, fillcolor="#F070D1"] ;
+list_for_all_trivial [label="for_all_trivial", URL=<list.html#for_all_trivial>, peripheries=3, fillcolor="#F070D1"] ;
+list_for_all [label="for_all", URL=<list.html#for_all>, fillcolor="#F070D1"] ;
+list_app_assoc [label="app_assoc", URL=<list.html#app_assoc>, peripheries=3, fillcolor="#F070D1"] ;
+list_sg_op_app [label="sg_op_app", URL=<list.html#sg_op_app>, peripheries=3, fillcolor="#F070D1"] ;
+list_map_id [label="map_id", URL=<list.html#map_id>, peripheries=3, fillcolor="#F070D1"] ;
+list_map2_cons [label="map2_cons", URL=<list.html#map2_cons>, peripheries=3, fillcolor="#F070D1"] ;
+list_map2 [label="map2", URL=<list.html#map2>, fillcolor="#F070D1"] ;
+list_map [label="map", URL=<list.html#map>, fillcolor="#F070D1"] ;
+list_fold_left [label="fold_left", URL=<list.html#fold_left>, fillcolor="#F070D1"] ;
+list_length [label="length", URL=<list.html#length>, peripheries=3, fillcolor="#F070D1"] ;
+  list_for_all_trunc -> list_for_all [] ;
+  list_fold_preserves -> list_for_all [] ;
+  list_fold_preserves -> list_fold_left [] ;
+  list_for_all_map2 -> list_for_all [] ;
+  list_for_all_map2 -> list_map2 [] ;
+  list_for_all_map -> list_for_all [] ;
+  list_for_all_map -> list_map [] ;
+  list_for_all_trivial -> list_for_all [] ;
+  list_map_id -> list_map [] ;
+  list_map2_cons -> list_map2 [] ;
+subgraph cluster_list { label="list"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+list_length; list_fold_left; list_map; list_map2; list_map2_cons; list_map_id; list_sg_op_app; list_app_assoc; list_for_all; list_for_all_trivial; list_for_all_map; list_for_all_map2; list_fold_preserves; list_for_all_trunc; list_tl; list_InList; list_fold_right; };
+} /* END */

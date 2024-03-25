@@ -1,0 +1,14 @@
+digraph HoTT_Metatheory_TruncImpliesFunext {
+  graph [ratio=0.5]
+  node [style=filled]
+TruncImpliesFunext_funext_type_from_trunc [label="funext_type_from_trunc", URL=<TruncImpliesFunext.html#funext_type_from_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+TruncImpliesFunext_seg [label="seg", URL=<TruncImpliesFunext.html#seg>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_interval_rec [label="interval_rec", URL=<TruncImpliesFunext.html#interval_rec>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_interval [label="interval", URL=<TruncImpliesFunext.html#interval>, fillcolor="#F070D1"] ;
+  TruncImpliesFunext_funext_type_from_trunc -> TruncImpliesFunext_seg [] ;
+  TruncImpliesFunext_funext_type_from_trunc -> TruncImpliesFunext_interval_rec [] ;
+  TruncImpliesFunext_seg -> TruncImpliesFunext_interval [] ;
+  TruncImpliesFunext_interval_rec -> TruncImpliesFunext_interval [] ;
+subgraph cluster_TruncImpliesFunext { label="TruncImpliesFunext"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TruncImpliesFunext_interval; TruncImpliesFunext_interval_rec; TruncImpliesFunext_seg; TruncImpliesFunext_funext_type_from_trunc; };
+} /* END */

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.18.0+0.18.2. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5a9" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5a9"><span class="kn">Require Import</span> Basics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Spaces.Pos.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * The Integers. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Close Scope</span> trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Close Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> positive_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Definition of the Integers *)</span>
+
+<span class="sd">(** We define an integer as being a positive number labelled negative, zero or a positive number labelled positive. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">Int</span> : Type0 :=
+  | neg : Pos -&gt; Int
+  | zero : Int
+  | pos : Pos -&gt; Int.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> pos p%pos.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> int_scope <span class="kr">with</span> int.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The integers are a pointed type *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Instance</span> <span class="nf">ispointed_Int</span> : IsPointed Int := zero.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Properties of constructors *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">neg_inj</span> {<span class="nv">z</span> <span class="nv">w</span> : Pos} (<span class="nv">p</span> : neg z = neg w) : z = w
+  := transport (<span class="kr">fun</span> <span class="nv">s</span> =&gt; z =
+    (<span class="kr">match</span> s <span class="kr">with</span> neg a =&gt; a | zero =&gt; w | pos a =&gt; w <span class="kr">end</span>)) p (idpath z).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pos_inj</span> {<span class="nv">z</span> <span class="nv">w</span> : Pos} (<span class="nv">p</span> : pos z = pos w) : z = w
+  := transport (<span class="kr">fun</span> <span class="nv">s</span> =&gt; z =
+    (<span class="kr">match</span> s <span class="kr">with</span> neg a =&gt; w | zero =&gt; w | pos a =&gt; a <span class="kr">end</span>)) p (idpath z).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">neg_neq_zero</span> {<span class="nv">z</span> : Pos} : ~ (neg z = zero)
+  := <span class="kr">fun</span> <span class="nv">p</span> =&gt; transport (<span class="kr">fun</span> <span class="nv">s</span> =&gt;
+    <span class="kr">match</span> s <span class="kr">with</span> neg a =&gt; z = a| zero =&gt; Empty | pos _ =&gt; Empty <span class="kr">end</span>) p (idpath z).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pos_neq_zero</span> {<span class="nv">z</span> : Pos} : ~ (pos z = zero)
+  := <span class="kr">fun</span> <span class="nv">p</span> =&gt; transport (<span class="kr">fun</span> <span class="nv">s</span> =&gt;
+    <span class="kr">match</span> s <span class="kr">with</span> pos a =&gt; z = a | zero =&gt; Empty | neg _ =&gt; Empty <span class="kr">end</span>) p (idpath z).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">neg_neq_pos</span> {<span class="nv">z</span> <span class="nv">w</span> : Pos} : ~ (neg z = pos w)
+  := <span class="kr">fun</span> <span class="nv">p</span> =&gt; transport (<span class="kr">fun</span> <span class="nv">s</span> =&gt;
+    <span class="kr">match</span> s <span class="kr">with</span> neg a =&gt; z = a | zero =&gt; Empty | pos _ =&gt; Empty <span class="kr">end</span>) p (idpath z).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">zero_neq_neg</span> {<span class="nv">z</span> : Pos} := @neg_neq_zero z o <span class="nb">symmetry</span> _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">zero_neq_pos</span> {<span class="nv">z</span> : Pos} := @pos_neq_zero z o <span class="nb">symmetry</span> _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pos_neq_neg</span> {<span class="nv">z</span> <span class="nv">w</span> : Pos} := @neg_neq_pos z w o <span class="nb">symmetry</span> _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Conversion with a decimal representation for printing/parsing *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_to_decimal_int</span> (<span class="nv">n</span> : Int) : Decimal.int :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+    | neg m =&gt; Decimal.Neg (pos_to_uint m)
+    | zero  =&gt; Decimal.Pos Decimal.Nil
+    | pos m =&gt; Decimal.Pos (pos_to_uint m)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_to_number_int</span> (<span class="nv">n</span> : Int) : Numeral.int :=
+  Numeral.IntDec (int_to_decimal_int n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">int_of_decimal_uint</span> (<span class="nv">d</span> : Decimal.uint) : Int :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+    | Decimal.Nil =&gt; zero
+    | Decimal.D0 l =&gt; int_of_decimal_uint l
+    | Decimal.D1 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>)
+    | Decimal.D2 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">0</span>)
+    | Decimal.D3 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">1</span>)
+    | Decimal.D4 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">0</span>~<span class="mi">0</span>)
+    | Decimal.D5 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">0</span>~<span class="mi">1</span>)
+    | Decimal.D6 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">1</span>~<span class="mi">0</span>)
+    | Decimal.D7 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">1</span>~<span class="mi">1</span>)
+    | Decimal.D8 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">0</span>~<span class="mi">0</span>~<span class="mi">0</span>)
+    | Decimal.D9 l =&gt; pos (pos_of_uint_acc l <span class="mi">1</span>~<span class="mi">0</span>~<span class="mi">0</span>~<span class="mi">1</span>)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_of_decimal_int</span> (<span class="nv">d</span> : Decimal.int) : Int :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+    | Decimal.Pos u =&gt; int_of_decimal_uint u
+    | Decimal.Neg u =&gt; <span class="kr">let</span> <span class="nv">t</span> := int_of_decimal_uint u <span class="kr">in</span>
+        <span class="kr">match</span> t <span class="kr">with</span>
+          | pos v =&gt; neg v
+          | _ =&gt; zero
+        <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_of_number_int</span> (<span class="nv">d</span>:Numeral.int) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Numeral.IntDec d =&gt; Some (int_of_decimal_int d)
+  | Numeral.IntHex _ =&gt; None
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">Number <span class="kn">Notation</span> <span class="nf">Int</span> int_of_number_int int_to_number_int : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* For some reason 0 can be parsed as an integer, but is printed as [zero]. This notation fixes that. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;0&quot;</span> := zero : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Doubling and variants *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_double</span> <span class="nv">x</span> :=
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | <span class="mi">0</span> =&gt; <span class="mi">0</span>
+    | pos p =&gt; pos p~<span class="mi">0</span>
+    | neg p =&gt; neg p~<span class="mi">0</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_succ_double</span> <span class="nv">x</span> :=
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | <span class="mi">0</span> =&gt; <span class="mi">1</span>
+    | pos p =&gt; pos p~<span class="mi">1</span>
+    | neg p =&gt; neg (pos_pred_double p)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_pred_double</span> <span class="nv">x</span> :=
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | <span class="mi">0</span> =&gt; neg <span class="mi">1</span>%pos
+    | neg p =&gt; neg p~<span class="mi">1</span>
+    | pos p =&gt; pos (pos_pred_double p)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Subtraction of positive into Int *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">int_pos_sub</span> (<span class="nv">x</span> <span class="nv">y</span> : Pos) {<span class="nv">struct</span> <span class="nv">y</span>} : Int :=
+  <span class="kr">match</span> x, y <span class="kr">with</span>
+    | p~<span class="mi">1</span>, q~<span class="mi">1</span> =&gt; int_double (int_pos_sub p q)
+    | p~<span class="mi">1</span>, q~<span class="mi">0</span> =&gt; int_succ_double (int_pos_sub p q)
+    | p~<span class="mi">1</span>, <span class="mi">1</span> =&gt; pos p~<span class="mi">0</span>
+    | p~<span class="mi">0</span>, q~<span class="mi">1</span> =&gt; int_pred_double (int_pos_sub p q)
+    | p~<span class="mi">0</span>, q~<span class="mi">0</span> =&gt; int_double (int_pos_sub p q)
+    | p~<span class="mi">0</span>, <span class="mi">1</span> =&gt; pos (pos_pred_double p)
+    | <span class="mi">1</span>, q~<span class="mi">1</span> =&gt; neg q~<span class="mi">0</span>
+    | <span class="mi">1</span>, q~<span class="mi">0</span> =&gt; neg (pos_pred_double q)
+    | <span class="mi">1</span>, <span class="mi">1</span> =&gt; zero
+  <span class="kr">end</span>%pos.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Negation *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_negation</span> <span class="nv">x</span> :=
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | zero =&gt; zero
+    | pos x =&gt; neg x
+    | neg x =&gt; pos x
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;- x&quot;</span> := (int_negation x) : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5aa" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5aa"><span class="kn">Lemma</span> <span class="nf">int_negation_negation</span> <span class="nv">n</span> : --n = n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Int</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">- - n = n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5ab" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5ab"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Int</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">- - n = n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">destruct</span> n.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Addition *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_add</span> <span class="nv">x</span> <span class="nv">y</span> :=
+  <span class="kr">match</span> x, y <span class="kr">with</span>
+    | <span class="mi">0</span>, y =&gt; y
+    | x, <span class="mi">0</span> =&gt; x
+    | pos x&#39;, pos y&#39; =&gt; pos (x&#39; + y&#39;)
+    | pos x&#39;, neg y&#39; =&gt; int_pos_sub x&#39; y&#39;
+    | neg x&#39;, pos y&#39; =&gt; int_pos_sub y&#39; x&#39;
+    | neg x&#39;, neg y&#39; =&gt; neg (x&#39; + y&#39;)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;+&quot;</span> := int_add : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Successor *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_succ</span> <span class="nv">x</span> := x + <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Predecessor *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_pred</span> <span class="nv">x</span> := x + neg <span class="mi">1</span>%pos.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Subtraction *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_sub</span> <span class="nv">m</span> <span class="nv">n</span> := m + -n.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;-&quot;</span> := int_sub : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Multiplication *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_mul</span> <span class="nv">x</span> <span class="nv">y</span> :=
+  <span class="kr">match</span> x, y <span class="kr">with</span>
+    | <span class="mi">0</span>, _ =&gt; <span class="mi">0</span>
+    | _, <span class="mi">0</span> =&gt; <span class="mi">0</span>
+    | pos x&#39;, pos y&#39; =&gt; pos (x&#39; * y&#39;)
+    | pos x&#39;, neg y&#39; =&gt; neg (x&#39; * y&#39;)
+    | neg x&#39;, pos y&#39; =&gt; neg (x&#39; * y&#39;)
+    | neg x&#39;, neg y&#39; =&gt; pos (x&#39; * y&#39;)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;*&quot;</span> := int_mul : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Power function *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_pow</span> <span class="nv">x</span> <span class="nv">y</span> :=
+  <span class="kr">match</span> y <span class="kr">with</span>
+    | pos p =&gt; pos_iter (int_mul x) p <span class="mi">1</span>
+    | <span class="mi">0</span> =&gt; <span class="mi">1</span>
+    | neg _ =&gt; <span class="mi">0</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;^&quot;</span> := int_pow : int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Square *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_square</span> <span class="nv">x</span> :=
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | <span class="mi">0</span> =&gt; <span class="mi">0</span>
+    | pos p =&gt; pos (pos_square p)
+    | neg p =&gt; pos (pos_square p)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Sign function *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sgn</span> <span class="nv">z</span> :=
+  <span class="kr">match</span> z <span class="kr">with</span>
+    | <span class="mi">0</span> =&gt; <span class="mi">0</span>
+    | pos p =&gt; <span class="mi">1</span>
+    | neg p =&gt; neg <span class="mi">1</span>%pos
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ** Decidable paths and truncation. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5ac" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5ac"><span class="kn">Global Instance</span> <span class="nf">decpaths_int</span> : DecidablePaths Int.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">DecidablePaths Int</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5ad" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5ad"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">DecidablePaths Int</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5ae" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5ae"><span class="nb">intros</span> [n | | n] [m | | m].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="core-v-chk5af" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5af"><hr></label><div class="goal-conclusion">Decidable (neg n = <span class="mi">0</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b0" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b0"><hr></label><div class="goal-conclusion">Decidable (neg n = pos m)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b1" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b1"><hr></label><div class="goal-conclusion">Decidable (<span class="mi">0</span> = neg m)</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (<span class="mi">0</span> = <span class="mi">0</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b2" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b2"><hr></label><div class="goal-conclusion">Decidable (<span class="mi">0</span> = pos m)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b3" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b3"><hr></label><div class="goal-conclusion">Decidable (pos n = neg m)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b4"><hr></label><div class="goal-conclusion">Decidable (pos n = <span class="mi">0</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="core-v-chk5b5" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b5"><hr></label><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5b6" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5b6">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5b7" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5b7"><span class="nb">destruct</span> (dec (n = m)) <span class="kr">as</span> [p | q].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>n = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="core-v-chk5b8" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>n &lt;&gt; m</span></span></span><br></div><label class="goal-separator" for="core-v-chk5b8"><hr></label><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5b9" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5b9">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>n = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> inl, ap, p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5ba" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5ba">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>n &lt;&gt; m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = neg m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">apply</span> inr; <span class="nb">intro</span>; <span class="nb">apply</span> q, neg_inj.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5bb" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5bb">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr neg_neq_zero).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5bc" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5bc">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (neg n = pos m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr neg_neq_pos).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5bd" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5bd">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (<span class="mi">0</span> = neg m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr zero_neq_neg).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5be" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5be">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (<span class="mi">0</span> = <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inl idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5bf" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5bf">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (<span class="mi">0</span> = pos m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr zero_neq_pos).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c0" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c0">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = neg m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr pos_neq_neg).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c1" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c1">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (inr pos_neq_zero).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c2" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c2">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c3" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c3"><span class="nb">destruct</span> (dec (n = m)) <span class="kr">as</span> [p | q].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>n = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="core-v-chk5c4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>n &lt;&gt; m</span></span></span><br></div><label class="goal-separator" for="core-v-chk5c4"><hr></label><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c5" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c5">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>n = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> inl, ap, p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk5c6" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk5c6">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>Pos</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>n &lt;&gt; m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Decidable (pos n = pos m)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">apply</span> inr; <span class="nb">intro</span>; <span class="nb">apply</span> q, pos_inj.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Since integers have decidable paths they are a hset *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Instance</span> <span class="nf">hset_int</span> : IsHSet Int | <span class="mi">0</span> := _.</span></span></pre>
+</div>
+</div></body>
+</html>

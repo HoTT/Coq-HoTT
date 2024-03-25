@@ -1,0 +1,27 @@
+digraph HoTT_Spaces_Universe {
+  graph [ratio=0.5]
+  node [style=filled]
+Universe_lem_beers [label="lem_beers", URL=<Universe.html#lem_beers>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_zero_beers [label="zero_beers", URL=<Universe.html#zero_beers>, fillcolor="#F070D1"] ;
+Universe_lem_from_aut_type_inhabited_empty [label="lem_from_aut_type_inhabited_empty", URL=<Universe.html#lem_from_aut_type_inhabited_empty>, fillcolor="#F070D1"] ;
+Universe_equiv_hprop_idprod [label="equiv_hprop_idprod", URL=<Universe.html#equiv_hprop_idprod>, fillcolor="#F070D1"] ;
+Universe_lem_from_aut_type_unit_empty [label="lem_from_aut_type_unit_empty", URL=<Universe.html#lem_from_aut_type_unit_empty>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_equiv_swap_prod_rigid [label="equiv_swap_prod_rigid", URL=<Universe.html#equiv_swap_prod_rigid>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_equiv_swap_rigid_swaps [label="equiv_swap_rigid_swaps", URL=<Universe.html#equiv_swap_rigid_swaps>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_equiv_swap_empty_unit [label="equiv_swap_empty_unit", URL=<Universe.html#equiv_swap_empty_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_equiv_swap_rigid [label="equiv_swap_rigid", URL=<Universe.html#equiv_swap_rigid>, fillcolor="#F070D1"] ;
+Universe_equiv_swap_types_not_id [label="equiv_swap_types_not_id", URL=<Universe.html#equiv_swap_types_not_id>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_equiv_swap_types_swaps [label="equiv_swap_types_swaps", URL=<Universe.html#equiv_swap_types_swaps>, fillcolor="#F070D1"] ;
+Universe_equiv_swap_types [label="equiv_swap_types", URL=<Universe.html#equiv_swap_types>, fillcolor="#F070D1"] ;
+  Universe_lem_beers -> Universe_zero_beers [] ;
+  Universe_zero_beers -> Universe_lem_from_aut_type_inhabited_empty [] ;
+  Universe_lem_from_aut_type_inhabited_empty -> Universe_equiv_hprop_idprod [] ;
+  Universe_equiv_swap_prod_rigid -> Universe_equiv_swap_types [] ;
+  Universe_equiv_swap_rigid_swaps -> Universe_equiv_swap_rigid [] ;
+  Universe_equiv_swap_empty_unit -> Universe_equiv_swap_rigid [] ;
+  Universe_equiv_swap_rigid -> Universe_equiv_swap_types [] ;
+  Universe_equiv_swap_types_not_id -> Universe_equiv_swap_types_swaps [] ;
+  Universe_equiv_swap_types_swaps -> Universe_equiv_swap_types [] ;
+subgraph cluster_Universe { label="Universe"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Universe_equiv_swap_types; Universe_equiv_swap_types_swaps; Universe_equiv_swap_types_not_id; Universe_equiv_swap_rigid; Universe_equiv_swap_empty_unit; Universe_equiv_swap_rigid_swaps; Universe_equiv_swap_prod_rigid; Universe_lem_from_aut_type_unit_empty; Universe_equiv_hprop_idprod; Universe_lem_from_aut_type_inhabited_empty; Universe_zero_beers; Universe_lem_beers; };
+} /* END */

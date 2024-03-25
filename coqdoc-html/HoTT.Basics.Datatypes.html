@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Datatypes</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Datatypes</h1>
+
+<div class="code">
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;The&nbsp;Coq&nbsp;Proof&nbsp;Assistant&nbsp;&nbsp;/&nbsp;&nbsp;The&nbsp;Coq&nbsp;Development&nbsp;Team&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&lt;O___,,&nbsp;*&nbsp;&nbsp;&nbsp;INRIA&nbsp;-&nbsp;CNRS&nbsp;-&nbsp;LIX&nbsp;-&nbsp;LRI&nbsp;-&nbsp;PPS&nbsp;-&nbsp;Copyright&nbsp;1999-2012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;\VV/&nbsp;&nbsp;**************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;is&nbsp;distributed&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;Version&nbsp;2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;has&nbsp;been&nbsp;modified&nbsp;for&nbsp;the&nbsp;purposes&nbsp;of&nbsp;the&nbsp;HoTT&nbsp;library.&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Logic.html#"><span class="id" title="library">Basics.Logic</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Nonrecursive</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Polymorphic</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Cumulativity</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Datatypes.html#option"><span class="id" title="inductive">option</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is the extension of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> with an extra element <span class="inlinecode"><a class="idref" href="HoTT.Basics.Datatypes.html#None"><span class="id" title="constructor">None</span></a></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="option" class="idref" href="#option"><span class="id" title="inductive">option</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <a id="Some" class="idref" href="#Some"><span class="id" title="constructor">Some</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#option:2"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:1"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;| <a id="None" class="idref" href="#None"><span class="id" title="constructor">None</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#option:2"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:1"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="option_rect" class="idref" href="#option_rect"><span class="id" title="definition">option_rect</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Basics.Datatypes.html#option"><span class="id" title="inductive">option</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#Some"><span class="id" title="constructor">Some</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#None"><span class="id" title="constructor">None</span></a> {<span class="id" title="var">A</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">option</span> <span class="id" title="keyword">as</span> <span class="id" title="var">core.option.type</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Sum.html#sum"><span class="id" title="definition">sum</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, written <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, is the disjoint sum of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="sum" class="idref" href="#sum"><span class="id" title="inductive">sum</span></a> (<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> <a id="B:5" class="idref" href="#B:5"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <a id="inl" class="idref" href="#inl"><span class="id" title="constructor">inl</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#sum:6"><span class="id" title="inductive">sum</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#B:5"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;| <a id="inr" class="idref" href="#inr"><span class="id" title="constructor">inr</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#B:5"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#sum:6"><span class="id" title="inductive">sum</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#B:5"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="sum_rect" class="idref" href="#sum_rect"><span class="id" title="definition">sum_rect</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Basics.Datatypes.html#sum"><span class="id" title="inductive">sum</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="e03f39daf98516fa530d3f6f5a1b4d92" class="idref" href="#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">&quot;</span></a>x + y" := (<a class="idref" href="HoTT.Basics.Datatypes.html#sum"><span class="id" title="inductive">sum</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> , [<span class="id" title="var">A</span>] <span class="id" title="var">B</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> , <span class="id" title="var">A</span> [<span class="id" title="var">B</span>] <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;A&nbsp;notation&nbsp;for&nbsp;coproduct&nbsp;that's&nbsp;less&nbsp;overloaded&nbsp;than&nbsp;<span class="inlinecode">+</span>&nbsp;*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="bb39a8e92ce12cfa0e6356e26e0a8a98" class="idref" href="#bb39a8e92ce12cfa0e6356e26e0a8a98"><span class="id" title="notation">&quot;</span></a>x |_| y" := (<a class="idref" href="HoTT.Basics.Datatypes.html#sum"><span class="id" title="inductive">sum</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Tactics.EquivalenceInduction.html#prod"><span class="id" title="section">prod</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, written <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, is the product of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>;
+    the pair <span class="inlinecode"><a class="idref" href="HoTT.Classes.theory.premetric.html#contents.pair"><span class="id" title="section">pair</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> is abbreviated <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a>)</span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="prod" class="idref" href="#prod"><span class="id" title="record">prod</span></a> (<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> <a id="B:9" class="idref" href="#B:9"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>) := <span class="id" title="var">pair</span> { <a id="fst" class="idref" href="#fst"><span class="id" title="projection">fst</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#A:8"><span class="id" title="variable">A</span></a> ; <a id="snd" class="idref" href="#snd"><span class="id" title="projection">snd</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#B:9"><span class="id" title="variable">B</span></a> }.<br/>
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="prod_rect" class="idref" href="#prod_rect"><span class="id" title="definition">prod_rect</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#pair"><span class="id" title="constructor">pair</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#fst"><span class="id" title="projection">fst</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> / .<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#snd"><span class="id" title="projection">snd</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> / .<br/>
+
+<br/>
+<span class="id" title="keyword">Add</span> <span class="id" title="keyword">Printing</span> <span class="id" title="keyword">Let</span> <span class="id" title="var">prod</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="11c698c8685bb8ab1cf725545c085ac4" class="idref" href="#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">&quot;</span></a>x * y" := (<a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="e6756e10c36f149b18b4a8741ed83079" class="idref" href="#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">&quot;</span></a>( x , y , .. , z )" := (<a class="idref" href="HoTT.Basics.Datatypes.html#pair"><span class="id" title="constructor">pair</span></a> .. (<a class="idref" href="HoTT.Basics.Datatypes.html#pair"><span class="id" title="constructor">pair</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) .. <span class="id" title="var">z</span>) : <span class="id" title="var">core_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="ba2b0e492d2b4675a0acf3ea92aabadd" class="idref" href="#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">&quot;</span></a>A /\ B" := (<a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="and" class="idref" href="#and"><span class="id" title="abbreviation">and</span></a> := <a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="conj" class="idref" href="#conj"><span class="id" title="abbreviation">conj</span></a> := <a class="idref" href="HoTT.Basics.Datatypes.html#pair"><span class="id" title="constructor">pair</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">pair</span> <span class="id" title="var">inl</span> <span class="id" title="var">inr</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="prod_curry" class="idref" href="#prod_curry"><span class="id" title="definition">prod_curry</span></a> (<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> <a id="B:14" class="idref" href="#B:14"><span class="id" title="binder">B</span></a> <a id="C:15" class="idref" href="#C:15"><span class="id" title="binder">C</span></a> : <span class="id" title="keyword">Type</span>) (<a id="f:16" class="idref" href="#f:16"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#B:14"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#C:15"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;(<a id="p:17" class="idref" href="#p:17"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#B:14"><span class="id" title="variable">B</span></a>) : <a class="idref" href="HoTT.Basics.Datatypes.html#C:15"><span class="id" title="variable">C</span></a> := <a class="idref" href="HoTT.Basics.Datatypes.html#f:16"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Basics.Datatypes.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#p:17"><span class="id" title="variable">p</span></a>) (<a class="idref" href="HoTT.Basics.Datatypes.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#p:17"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Datatypes.html#iff"><span class="id" title="definition">iff</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, written <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">↔</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span>, expresses the equivalence of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.html#Fold_Right_Recursor.B"><span class="id" title="variable">B</span></a></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="iff" class="idref" href="#iff"><span class="id" title="definition">iff</span></a> (<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a> <a id="B:19" class="idref" href="#B:19"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>) := <a class="idref" href="HoTT.Basics.Datatypes.html#prod"><span class="id" title="record">prod</span></a> (<a class="idref" href="HoTT.Basics.Datatypes.html#A:18"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#B:19"><span class="id" title="variable">B</span></a>) (<a class="idref" href="HoTT.Basics.Datatypes.html#B:19"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:18"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="::type_scope:x_'&lt;-&gt;'_x" class="idref" href="#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">&quot;</span></a>A &lt;-&gt; B" := (<a class="idref" href="HoTT.Basics.Datatypes.html#iff"><span class="id" title="definition">iff</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Another way of interpreting booleans as propositions 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Definition&nbsp;is_true&nbsp;b&nbsp;:=&nbsp;b&nbsp;=&nbsp;true.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Polymorphic lists and some operations 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="list" class="idref" href="#list"><span class="id" title="inductive">list</span></a> (<a id="A:20" class="idref" href="#A:20"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;| <a id="nil" class="idref" href="#nil"><span class="id" title="constructor">nil</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#list:21"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:20"><span class="id" title="variable">A</span></a><br/>
+&nbsp;| <a id="cons" class="idref" href="#cons"><span class="id" title="constructor">cons</span></a> : <a class="idref" href="HoTT.Basics.Datatypes.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#list:21"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#list:21"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:20"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="list_rect" class="idref" href="#list_rect"><span class="id" title="definition">list_rect</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Basics.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="::list_scope:x_'::'_x" class="idref" href="#::list_scope:x_'::'_x"><span class="id" title="notation">&quot;</span></a>::" := <a class="idref" href="HoTT.Basics.Datatypes.html#cons"><span class="id" title="constructor">cons</span></a> : <span class="id" title="var">list_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">list</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">list_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">list</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+</div>
+
+<div class="doc">
+Concatenation of two lists 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="app" class="idref" href="#app"><span class="id" title="definition">app</span></a> (<a id="A:23" class="idref" href="#A:23"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:23"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:23"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#A:23"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">app</span> <a id="l:24" class="idref" href="#l:24"><span class="id" title="binder">l</span></a> <a id="m:25" class="idref" href="#m:25"><span class="id" title="binder">m</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Datatypes.html#l:24"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Datatypes.html#m:25"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l1</span> ⇒ <span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Basics.Datatypes.html#app:26"><span class="id" title="variable">app</span></a> <span class="id" title="var">l1</span> <a class="idref" href="HoTT.Basics.Datatypes.html#m:25"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="bc347c51eaf667706ae54503b26d52c6" class="idref" href="#bc347c51eaf667706ae54503b26d52c6"><span class="id" title="notation">&quot;</span></a>++" := <a class="idref" href="HoTT.Basics.Datatypes.html#app"><span class="id" title="definition">app</span></a> : <span class="id" title="var">list_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

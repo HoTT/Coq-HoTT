@@ -1,0 +1,15 @@
+digraph HoTT_Spaces_Int_Equiv {
+  graph [ratio=0.5]
+  node [style=filled]
+Equiv_iter_int_pred_r [label="iter_int_pred_r", URL=<Equiv.html#iter_int_pred_r>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_iter_int_pred_l [label="iter_int_pred_l", URL=<Equiv.html#iter_int_pred_l>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_int_iter_succ_r [label="int_iter_succ_r", URL=<Equiv.html#int_iter_succ_r>, fillcolor="#F070D1"] ;
+Equiv_int_iter_succ_l [label="int_iter_succ_l", URL=<Equiv.html#int_iter_succ_l>, fillcolor="#F070D1"] ;
+Equiv_int_iter [label="int_iter", URL=<Equiv.html#int_iter>, fillcolor="#F070D1"] ;
+  Equiv_iter_int_pred_r -> Equiv_int_iter_succ_r [] ;
+  Equiv_iter_int_pred_l -> Equiv_int_iter_succ_l [] ;
+  Equiv_int_iter_succ_r -> Equiv_int_iter [] ;
+  Equiv_int_iter_succ_l -> Equiv_int_iter [] ;
+subgraph cluster_Equiv { label="Equiv"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Equiv_int_iter; Equiv_int_iter_succ_l; Equiv_int_iter_succ_r; Equiv_iter_int_pred_l; Equiv_iter_int_pred_r; };
+} /* END */

@@ -1,0 +1,16 @@
+digraph HoTT_WildCat_UnitCat {
+  graph [ratio=0.5]
+  node [style=filled]
+UnitCat_is1cat_unit [label="is1cat_unit", URL=<UnitCat.html#is1cat_unit>, peripheries=3, fillcolor="#F070D1"] ;
+UnitCat_is2graph_unit [label="is2graph_unit", URL=<UnitCat.html#is2graph_unit>, fillcolor="#F070D1"] ;
+UnitCat_is0gpd_unit [label="is0gpd_unit", URL=<UnitCat.html#is0gpd_unit>, fillcolor="#F070D1"] ;
+UnitCat_is01cat_unit [label="is01cat_unit", URL=<UnitCat.html#is01cat_unit>, fillcolor="#F070D1"] ;
+UnitCat_isgraph_unit [label="isgraph_unit", URL=<UnitCat.html#isgraph_unit>, fillcolor="#F070D1"] ;
+  UnitCat_is1cat_unit -> UnitCat_is2graph_unit [] ;
+  UnitCat_is1cat_unit -> UnitCat_is0gpd_unit [] ;
+  UnitCat_is2graph_unit -> UnitCat_isgraph_unit [] ;
+  UnitCat_is0gpd_unit -> UnitCat_is01cat_unit [] ;
+  UnitCat_is01cat_unit -> UnitCat_isgraph_unit [] ;
+subgraph cluster_UnitCat { label="UnitCat"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UnitCat_isgraph_unit; UnitCat_is01cat_unit; UnitCat_is0gpd_unit; UnitCat_is2graph_unit; UnitCat_is1cat_unit; };
+} /* END */

@@ -1,0 +1,40 @@
+digraph HoTT_Classes_theory_groups {
+  graph [ratio=0.5]
+  node [style=filled]
+groups_invert_monoid_morphism [label="invert_monoid_morphism", URL=<groups.html#invert_monoid_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+groups_invert_sg_morphism [label="invert_sg_morphism", URL=<groups.html#invert_sg_morphism>, fillcolor="#F070D1"] ;
+groups_compose_monoid_morphism [label="compose_monoid_morphism", URL=<groups.html#compose_monoid_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+groups_compose_sg_morphism [label="compose_sg_morphism", URL=<groups.html#compose_sg_morphism>, fillcolor="#F070D1"] ;
+groups_id_monoid_morphism [label="id_monoid_morphism", URL=<groups.html#id_monoid_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+groups_id_sg_morphism [label="id_sg_morphism", URL=<groups.html#id_sg_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_ab_group [label="projected_ab_group", URL=<groups.html#projected_ab_group>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_group [label="projected_group", URL=<groups.html#projected_group>, fillcolor="#F070D1"] ;
+groups_projected_com_monoid [label="projected_com_monoid", URL=<groups.html#projected_com_monoid>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_monoid [label="projected_monoid", URL=<groups.html#projected_monoid>, fillcolor="#F070D1"] ;
+groups_projected_com_sg [label="projected_com_sg", URL=<groups.html#projected_com_sg>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_comm [label="projected_comm", URL=<groups.html#projected_comm>, fillcolor="#F070D1"] ;
+groups_projected_sg [label="projected_sg", URL=<groups.html#projected_sg>, fillcolor="#F070D1"] ;
+groups_preserves_negate [label="preserves_negate", URL=<groups.html#preserves_negate>, peripheries=3, fillcolor="#F070D1"] ;
+groups_negate_sg_op_distr [label="negate_sg_op_distr", URL=<groups.html#negate_sg_op_distr>, peripheries=3, fillcolor="#F070D1"] ;
+groups_negate_sg_op [label="negate_sg_op", URL=<groups.html#negate_sg_op>, fillcolor="#F070D1"] ;
+groups_group_cancelR [label="group_cancelR", URL=<groups.html#group_cancelR>, peripheries=3, fillcolor="#F070D1"] ;
+groups_group_cancelL [label="group_cancelL", URL=<groups.html#group_cancelL>, fillcolor="#F070D1"] ;
+groups_negate_mon_unit [label="negate_mon_unit", URL=<groups.html#negate_mon_unit>, peripheries=3, fillcolor="#F070D1"] ;
+groups_isinj_group_negate [label="isinj_group_negate", URL=<groups.html#isinj_group_negate>, peripheries=3, fillcolor="#F070D1"] ;
+groups_negate_involutive [label="negate_involutive", URL=<groups.html#negate_involutive>, fillcolor="#F070D1"] ;
+  groups_invert_monoid_morphism -> groups_invert_sg_morphism [] ;
+  groups_compose_monoid_morphism -> groups_compose_sg_morphism [] ;
+  groups_projected_ab_group -> groups_projected_group [] ;
+  groups_projected_ab_group -> groups_projected_comm [] ;
+  groups_projected_group -> groups_projected_monoid [] ;
+  groups_projected_com_monoid -> groups_projected_monoid [] ;
+  groups_projected_com_monoid -> groups_projected_comm [] ;
+  groups_projected_monoid -> groups_projected_sg [] ;
+  groups_projected_com_sg -> groups_projected_comm [] ;
+  groups_projected_com_sg -> groups_projected_sg [] ;
+  groups_preserves_negate -> groups_group_cancelL [] ;
+  groups_negate_sg_op_distr -> groups_negate_sg_op [] ;
+  groups_isinj_group_negate -> groups_negate_involutive [] ;
+subgraph cluster_groups { label="groups"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+groups_negate_involutive; groups_isinj_group_negate; groups_negate_mon_unit; groups_group_cancelL; groups_group_cancelR; groups_negate_sg_op; groups_negate_sg_op_distr; groups_preserves_negate; groups_projected_sg; groups_projected_comm; groups_projected_com_sg; groups_projected_monoid; groups_projected_com_monoid; groups_projected_group; groups_projected_ab_group; groups_id_sg_morphism; groups_id_monoid_morphism; groups_compose_sg_morphism; groups_compose_monoid_morphism; groups_invert_sg_morphism; groups_invert_monoid_morphism; };
+} /* END */

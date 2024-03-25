@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Diagrams.ParallelPair</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Diagrams.ParallelPair</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Graph.html#"><span class="id" title="library">Diagrams.Graph</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#"><span class="id" title="library">Diagrams.Diagram</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#"><span class="id" title="library">Diagrams.Cocone</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Parallel pairs 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="parallel_pair_graph" class="idref" href="#parallel_pair_graph"><span class="id" title="definition">parallel_pair_graph</span></a> : <a class="idref" href="HoTT.Diagrams.Graph.html#Graph"><span class="id" title="record">Graph</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Diagrams.Graph.html#Build_Graph"><span class="id" title="constructor">Build_Graph</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="keyword">if</span> <span class="id" title="var">i</span> <span class="id" title="keyword">then</span> <span class="id" title="keyword">if</span> <span class="id" title="var">j</span> <span class="id" title="keyword">then</span> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Parallel pair diagram 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="parallel_pair" class="idref" href="#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> <a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:3" class="idref" href="#f:3"><span class="id" title="binder">f</span></a> <a id="g:4" class="idref" href="#g:4"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Diagrams.ParallelPair.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#B:2"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.Diagram.html#Diagram"><span class="id" title="record">Diagram</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair_graph"><span class="id" title="definition">parallel_pair_graph</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#Build_Diagram"><span class="id" title="constructor">Build_Diagram</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">intros</span> []; [<span class="id" title="tactic">exact</span> <span class="id" title="var">A</span> | <span class="id" title="tactic">exact</span> <span class="id" title="var">B</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] [] []; [<span class="id" title="tactic">exact</span> <span class="id" title="var">f</span> | <span class="id" title="tactic">exact</span> <span class="id" title="var">g</span>].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Cones on <span class="inlinecode"><a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a></span>s 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Build_parallel_pair_cocone" class="idref" href="#Build_parallel_pair_cocone"><span class="id" title="definition">Build_parallel_pair_cocone</span></a> {<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> <a id="B:6" class="idref" href="#B:6"><span class="id" title="binder">B</span></a> <a id="Q:7" class="idref" href="#Q:7"><span class="id" title="binder">Q</span></a>} {<a id="f:8" class="idref" href="#f:8"><span class="id" title="binder">f</span></a> <a id="g:9" class="idref" href="#g:9"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Diagrams.ParallelPair.html#B:6"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#A:5"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;`(<a id="q:10" class="idref" href="#q:10"><span class="id" title="binder">q</span></a>: <a class="idref" href="HoTT.Diagrams.ParallelPair.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#Q:7"><span class="id" title="variable">Q</span></a>) (<a id="Hq:11" class="idref" href="#Hq:11"><span class="id" title="binder">Hq</span></a>: <a class="idref" href="HoTT.Diagrams.ParallelPair.html#q:10"><span class="id" title="variable">q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#g:9"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#q:10"><span class="id" title="variable">q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#f:8"><span class="id" title="variable">f</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.Cocone.html#Cocone"><span class="id" title="class">Cocone</span></a> (<a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#f:8"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#g:9"><span class="id" title="variable">g</span></a>) <a class="idref" href="HoTT.Diagrams.ParallelPair.html#Q:7"><span class="id" title="variable">Q</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#Build_Cocone"><span class="id" title="constructor">Build_Cocone</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">intros</span> []; [<span class="id" title="tactic">exact</span> (<span class="id" title="var">q</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">f</span>) | <span class="id" title="tactic">exact</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] [] []; [<span class="id" title="tactic">reflexivity</span> | <span class="id" title="tactic">exact</span> <span class="id" title="var">Hq</span>].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

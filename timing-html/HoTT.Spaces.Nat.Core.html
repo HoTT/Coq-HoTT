@@ -1,0 +1,3387 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(* -*- mode: coq; mode: visual-line -*- *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Export Basics.Nat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme nat_ind := Induction for nat Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme nat_rect := Induction for nat Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme nat_rec := Minimality for nat Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Theorems about the natural numbers *)
+
+(** Many of these definitions and proofs have been ported from the coq stdlib. *)
+
+(** Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
+
+(** We want to close the trunc_scope so that notations from there don't conflict here. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Basic operations on naturals *)
+
+(** It is common to call [S] [succ] so we add it as a parsing only notation. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation succ := S (only parsing).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The predecessor of a natural number. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred n : nat :=
+  match n with
+  | 0 =&gt; n
+  | S n' =&gt; n'
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition of natural numbers *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint add n m : nat :=
+  match n with
+  | 0 =&gt; m
+  | S n' =&gt; S (add n' m)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "n + m" := (add n m) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition double n : nat := n + n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint mul n m : nat :=
+  match n with
+  | 0 =&gt; 0
+  | S n' =&gt; m + (mul n' m)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "n * m" := (mul n m) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Truncated subtraction: [n - m] is [0] if [n &lt;= m] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint sub n m : nat :=
+  match n, m with
+  | S n' , S m' =&gt; sub n' m'
+  | _ , _ =&gt; n
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "n - m" := (sub n m) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Minimum, maximum *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint max n m :=
+  match n, m with
+  | 0 , _ =&gt; m
+  | S n' , 0 =&gt; n'.+1
+  | S n' , S m' =&gt; (max n' m').+1
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint min n m :=
+  match n, m with
+  | 0 , _ =&gt; 0
+  | S n' , 0 =&gt; 0
+  | S n' , S m' =&gt; S (min n' m')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Power *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint pow n m :=
+  match m with
+  | 0 =&gt; 1
+  | S m' =&gt; n * (pow n m')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Euclidean division *)
+
+(** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint divmod x y q u : nat * nat :=
+  match x with
+  | 0 =&gt; (q , u)
+  | S x' =&gt;
+    match u with
+    | 0 =&gt; divmod x' y (S q) y
+    | S u' =&gt; divmod x' y q u'
+    end
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition div x y : nat :=
+  match y with
+    | 0 =&gt; y
+    | S y' =&gt; fst (divmod x y' 0 y')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition modulo x y : nat :=
+  match y with
+    | 0 =&gt; y
+    | S y' =&gt; y' - snd (divmod x y' 0 y')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "/" := div : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "mod" := modulo : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Greatest common divisor *)
+
+(** We use Euclid algorithm, which is normally not structural, but Coq is now clever enough to accept this (behind modulo there is a subtraction, which now preserves being a subterm) *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint gcd a b :=
+  match a with
+  | O =&gt; b
+  | S a' =&gt; gcd (b mod a'.+1) a'.+1
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Square *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition square n : nat := n * n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Square root *)
+
+(** The following square root function is linear (and tail-recursive).
+  With Peano representation, we can't do better. For faster algorithm,
+  see Psqrt/Zsqrt/Nsqrt...
+
+  We search the square root of n = k + p^2 + (q - r)
+  with q = 2p and 0&lt;=r&lt;=q. We start with p=q=r=0, hence
+  looking for the square root of n = k. Then we progressively
+  decrease k and r. When k = S k' and r=0, it means we can use (S p)
+  as new sqrt candidate, since (S k')+p^2+2p = k'+(S p)^2.
+  When k reaches 0, we have found the biggest p^2 square contained
+  in n, hence the square root of n is p.
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint sqrt_iter k p q r : nat :=
+  match k with
+  | O =&gt; p
+  | S k' =&gt;
+    match r with
+    | O =&gt; sqrt_iter k' p.+1 q.+2 q.+2
+    | S r' =&gt; sqrt_iter k' p q r'
+    end
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sqrt n : nat := sqrt_iter n 0 0 0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Log2 *)
+
+(** This base-2 logarithm is linear and tail-recursive.
+
+  In [log2_iter], we maintain the logarithm [p] of the counter [q],
+  while [r] is the distance between [q] and the next power of 2,
+  more precisely [q + S r = 2^(S p)] and [r&lt;2^p]. At each
+  recursive call, [q] goes up while [r] goes down. When [r]
+  is 0, we know that [q] has almost reached a power of 2,
+  and we increase [p] at the next call, while resetting [r]
+  to [q].
+
+  Graphically (numbers are [q], stars are [r]) :
+
+&lt;&lt;
+                    10
+                  9
+                8
+              7   *
+            6       *
+          5           ...
+        4
+      3   *
+    2       *
+  1   *       *
+0   *   *       *
+&gt;&gt;
+
+  We stop when [k], the global downward counter reaches 0.
+  At that moment, [q] is the number we're considering (since
+  [k+q] is invariant), and [p] its logarithm.
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint log2_iter k p q r : nat :=
+  match k with
+  | O    =&gt; p
+  | S k' =&gt;
+    match r with
+    | O =&gt; log2_iter k' (S p) (S q) q
+    | S r' =&gt; log2_iter k' p (S q) r'
+    end
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition log2 n : nat := log2_iter (pred n) 0 1 0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition ap_S := @ap _ _ S.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Definition ap_nat := @ap nat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve ap_S : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve ap_nat : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem pred_Sn : forall n:nat, n = pred (S n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Injectivity of successor *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_nat_S n m (H : S n = S m) : n = m := ap pred H.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Immediate path_nat_S : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem not_eq_S : forall n m:nat, n &lt;&gt; m -&gt; S n &lt;&gt; S m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve not_eq_S : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: keep or remove? *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsSucc (n: nat) : Type0 :=
+  match n with
+  | O =&gt; Empty
+  | S p =&gt; Unit
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Zero is not the successor of a number *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem not_eq_O_S : forall n:nat, 0 &lt;&gt; S n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  discriminate.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve not_eq_O_S : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem not_eq_n_Sn : forall n:nat, n &lt;&gt; S n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve not_eq_n_Sn : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition ap011_add := @ap011 _ _ _ add.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Definition ap011_nat := @ap011 nat nat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve ap011_add : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve ap011_nat : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma add_n_O : forall (n : nat), n = n + 0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve add_n_O : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma add_O_n : forall (n : nat), 0 + n = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma add_n_Sm : forall n m:nat, S (n + m) = n + S m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve add_n_Sm: core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma add_Sn_m : forall n m:nat, S n + m = S (n + m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition ap011_mul := @ap011 _ _ _  mul.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve ap011_mul : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma mul_n_O : forall n:nat, 0 = n * 0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve mul_n_O : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; simple_induction n p H; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H; rewrite &lt;- add_n_Sm; apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern m at 1 3; elim m; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve mul_n_Sm: core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Standard associated names *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation mul_0_r_reverse := mul_n_O (only parsing).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation mul_succ_r_reverse := mul_n_Sm (only parsing).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equality of natural numbers *)
+
+(** *** Boolean equality and its properties *)
+
+(** [nat] has decidable paths *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance decidable_paths_nat : DecidablePaths nat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n; induction n as [|n IHn];
+  intros m; destruct m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl idpath).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (not_eq_O_S m)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (fun p =&gt; not_eq_O_S n p^)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (IHn m) as [p|q].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl (ap S p)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (fun p =&gt; q (path_nat_S _ _ p))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And is therefore a HSet *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance hset_nat : IsHSet nat := _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Inequality of natural numbers *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Cumulative Inductive leq (n : nat) : nat -&gt; Type0 :=
+| leq_n : leq n n
+| leq_S : forall m, leq n m -&gt; leq n (S m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme leq_ind := Induction for leq Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme leq_rect := Induction for leq Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme leq_rec := Minimality for leq Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "n &lt;= m" := (leq n m) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Constructors leq : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Existing Class leq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Existing Instances leq_n leq_S.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation leq_refl := leq_n (only parsing).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance reflexive_leq : Reflexive leq := leq_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma leq_trans {x y z} : x &lt;= y -&gt; y &lt;= z -&gt; x &lt;= z.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction 2; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance transitive_leq : Transitive leq := @leq_trans.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma leq_n_pred n m : leq n m -&gt; leq (pred n) (pred m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction 1; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma leq_S_n : forall n m, n.+1 &lt;= m.+1 -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_n_pred.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma leq_S_n' n m : n &lt;= m -&gt; n.+1 &lt;= m.+1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction 1; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Existing Instance leq_S_n' | 100.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma not_leq_Sn_n n : ~ (n.+1 &lt;= n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    inversion p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply IHn, leq_S_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A general form for injectivity of this constructor *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leq_n_inj_gen n k (p : n &lt;= k) (r : n = k) : p = r # leq_n n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (c : idpath = r) by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct r^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    contradiction (not_leq_Sn_n _ p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Which we specialise to this lemma *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leq_n_inj n (p : n &lt;= n) : p = leq_n n
+  := leq_n_inj_gen n n p idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint leq_S_inj_gen n m k (p : n &lt;= k) (q : n &lt;= m) (r : m.+1 = k)
+  : p = r # leq_S n m q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m q r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k p r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    contradiction (not_leq_Sn_n _ p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m' q r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (r' := path_nat_S _ _ r).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct r'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    assert (t : idpath = r) by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct t.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1:  apply leq_n_inj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (leq_S_inj_gen n m _ p q idpath).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 376
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition leq_S_inj n m (p : n &lt;= m.+1) (q : n &lt;= m) : p = leq_S n m q
+  := leq_S_inj_gen n m m.+1 p q idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance ishprop_leq n m : IsHProp (n &lt;= m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q; revert p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply leq_n_inj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply leq_S_inj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance leq_0_n n : 0 &lt;= n | 10.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma not_leq_Sn_0 n : ~ (n.+1 &lt;= 0).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (fun x =&gt; leq_trans x (leq_0_n n)) in p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_leq_Sn_n _ p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_leq_S_n n m : n.+1 &lt;= m.+1 &lt;~&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 406
+Time: 0.007s">
+<div class="time" style="width: 24.137931034483%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_S_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance decidable_leq n m : Decidable (n &lt;= m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' m; intros n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; apply not_leq_Sn_0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply decidable_equiv'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_leq_S_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint leq_add n m : n &lt;= (m + n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply leq_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_S, leq_add.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define the less-than relation [lt] in terms of [leq] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lt n m : Type0 := leq (S n) m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We declare it as an existing class so typeclass search is performed on its goals. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Existing Class lt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Unfold lt : core typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "&lt;" := lt : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** We add a typeclass instance for unfolding the definition so lemmas about [leq] can be used. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance lt_is_leq n m : leq n.+1 m -&gt; lt n m | 100 := idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We should also give them their various typeclass instances *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance transitive_lt : Transitive lt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf; unfold lt in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y z p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply leq_trans.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance decidable_lt n m : Decidable (lt n m) := _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ge n m := leq m n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Class ge.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Unfold ge : core typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "&gt;=" := ge : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance ge_is_leq n m : leq m n -&gt; ge n m | 100 := idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance reflexive_ge : Reflexive ge := leq_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance transitive_ge : Transitive ge := fun x y z p q =&gt; leq_trans q p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance decidable_ge n m : Decidable (ge n m) := _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition gt n m := lt m n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Class gt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Unfold gt : core typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "&gt;" := gt : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance gt_is_leq n m : leq m.+1 n -&gt; gt n m | 100 := idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance transitive_gt : Transitive gt
+  := fun x y z p q =&gt; transitive_lt _ _ _ q p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Instance decidable_gt n m : Decidable (gt n m) := _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "x &lt;= y &lt;= z" := (x &lt;= y /\ y &lt;= z) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "x &lt;= y &lt; z"  := (x &lt;= y /\  y &lt; z) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "x &lt; y &lt; z"   := (x &lt; y  /\  y &lt; z) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "x &lt; y &lt;= z"  := (x &lt; y  /\ y &lt;= z) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Principle of double induction *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 474
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Theorem nat_double_ind (R : nat -&gt; nat -&gt; Type)
+  (H1 : forall n, R 0 n) (H2 : forall n, R (S n) 0)
+  (H3 : forall n m, R n m -&gt; R (S n) (S m))
+  : forall n m:nat, R n m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Maximum and minimum : definitions and specifications *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma max_n_n n : max n n = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve max_n_n : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma max_Sn_n n : max (S n) n = S n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve max_Sn_n : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma max_comm n m : max n m = max m n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 497
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  revert m; simple_induction' n; destruct m; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma max_0_n n : max 0 n = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve max_0_n : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma max_n_0 n : max n 0 = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite max_comm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve max_n_0 : core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem max_l : forall n m, m &lt;= n -&gt; max n m = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n m; revert n; simple_induction m m IHm; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [] p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: inversion p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; by apply ap_S, IHm, leq_S_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem max_r : forall n m : nat, n &lt;= m -&gt; max n m = m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; rewrite max_comm; by apply max_l.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma min_comm : forall n m, min n m = min m n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 527
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  simple_induction' n; destruct m; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem min_l : forall n m : nat, n &lt;= m -&gt; min n m = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; auto.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [] p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: inversion p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; by apply ap_S, IHn, leq_S_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem min_r : forall n m : nat, m &lt;= n -&gt; min n m = m.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; rewrite min_comm; by apply min_l.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n]th iteration of the function [f : A -&gt; A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation nat_iter n f x
+  := ((fix F (m : nat)
+      := match m with
+        | 0 =&gt; x
+        | m'.+1 =&gt; f (F m')
+        end) n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_iter_succ_r n {A} (f : A -&gt; A) (x : A)
+  : nat_iter (S n) f x = nat_iter n f (f x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; simpl; trivial.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap f IHn).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 556
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Theorem nat_iter_add (n m : nat) {A} (f : A -&gt; A) (x : A)
+  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; simpl; trivial.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap f IHn).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 562
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Preservation of invariants : if [f : A -&gt; A] preserves the invariant [P], then the iterates of [f] also preserve it. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem nat_iter_invariant (n : nat) {A} (f : A -&gt; A) (P : A -&gt; Type)
+  : (forall x, P x -&gt; P (f x)) -&gt; forall x, P x -&gt; P (nat_iter n f x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; simpl; trivial.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Hf x Hx.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Hf, IHn; trivial.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Arithmetic *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_add_comm (n m : nat) : n + m = m + n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (add_n_O m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (m + n).+1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, IHn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_add_n_Sm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Exponentiation *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint nat_exp (n m : nat) : nat
+  := match m with
+       | 0 =&gt; 1
+       | S m =&gt; nat_exp n m * n
+     end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Factorials *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint factorial (n : nat) : nat
+  := match n with
+       | 0 =&gt; 1
+       | S n =&gt; S n * factorial n
+     end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Natural number ordering *)
+
+(** ** Theorems about natural number ordering *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma leq_antisym {x y} : x &lt;= y -&gt; y &lt;= x -&gt; x = y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct x; [inversion q|].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_S_n in q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (r := leq_trans p q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 614
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  by apply not_leq_Sn_n in r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition not_lt_n_n n : ~ (n &lt; n) := not_leq_Sn_n n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition leq_1_Sn {n} : 1 &lt;= n.+1 := leq_S_n' 0 n (leq_0_n _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint leq_dichot {m} {n} : (m &lt;= n) + (m &gt; n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' m; simple_induction' n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; unfold lt; apply leq_1_Sn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert ((m &lt;= n) + (n &lt; m)) as X by apply leq_dichot.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct X as [leqmn|ltnm].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; apply leq_S_n'; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; apply leq_S_n'; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 631
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma not_lt_n_0 n : ~ (n &lt; 0).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply not_leq_Sn_0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Arithmetic relations between [trunc_index] and [nat]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma trunc_index_add_nat_add (n : nat)
+  : trunc_index_add n n = n.+1 + n.+1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH]; only 1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (trunc_index_add_succ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap trunc_S _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (trunc_index_add_comm _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (trunc_index_add_succ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap trunc_S IH).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ ap nat_to_trunc_index _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact (ap _ (add_Sn_m _ _)^ @ add_n_Sm _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

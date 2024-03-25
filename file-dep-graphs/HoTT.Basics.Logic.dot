@@ -1,0 +1,30 @@
+digraph HoTT_Basics_Logic {
+  graph [ratio=0.5]
+  node [style=filled]
+Basics_Logic_False_sind [label="False_sind", URL=<Basics.html#Logic.False_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Logic_False_rec [label="False_rec", URL=<Basics.html#Logic.False_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Logic_False_ind [label="False_ind", URL=<Basics.html#Logic.False_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Basics_Logic_False_rect [label="False_rect", URL=<Basics.html#Logic.False_rect>, fillcolor="#F070D1"] ;
+Basics_Logic_False [label="False", URL=<Basics.html#Logic.False>, fillcolor="#E2CDFA"] ;
+Basics_Logic_True_sind [label="True_sind", URL=<Basics.html#Logic.True_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Logic_True_rec [label="True_rec", URL=<Basics.html#Logic.True_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Logic_True_ind [label="True_ind", URL=<Basics.html#Logic.True_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Basics_Logic_True_rect [label="True_rect", URL=<Basics.html#Logic.True_rect>, fillcolor="#F070D1"] ;
+Basics_Logic_I [label="I", URL=<Basics.html#Logic.I>, fillcolor="#7FAAFF"] ;
+Basics_Logic_True [label="True", URL=<Basics.html#Logic.True>, fillcolor="#E2CDFA"] ;
+  Basics_Logic_False_sind -> Basics_Logic_False [] ;
+  Basics_Logic_False_rec -> Basics_Logic_False_rect [] ;
+  Basics_Logic_False_ind -> Basics_Logic_False [] ;
+  Basics_Logic_False_rect -> Basics_Logic_False [] ;
+  Basics_Logic_True_sind -> Basics_Logic_I [] ;
+  Basics_Logic_True_sind -> Basics_Logic_True [] ;
+  Basics_Logic_True_rec -> Basics_Logic_True_rect [] ;
+  Basics_Logic_True_ind -> Basics_Logic_I [] ;
+  Basics_Logic_True_ind -> Basics_Logic_True [] ;
+  Basics_Logic_True_rect -> Basics_Logic_I [] ;
+  Basics_Logic_True_rect -> Basics_Logic_True [] ;
+subgraph cluster_Basics { label="Basics"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Basics_Logic { label="Logic"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Basics_Logic_True; Basics_Logic_I; Basics_Logic_True_rect; Basics_Logic_True_ind; Basics_Logic_True_rec; Basics_Logic_True_sind; Basics_Logic_False; Basics_Logic_False_rect; Basics_Logic_False_ind; Basics_Logic_False_rec; Basics_Logic_False_sind; };
+};
+} /* END */

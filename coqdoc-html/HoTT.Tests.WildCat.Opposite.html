@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.WildCat.Opposite</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.WildCat.Opposite</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#"><span class="id" title="library">WildCat.Opposite</span></a>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Opposites&nbsp;are&nbsp;(almost)&nbsp;definitionally&nbsp;involutive.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> <a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:1"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span> := 1.<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2" class="idref" href="#test2"><span class="id" title="definition">test2</span></a> <a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> `{<a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:2"><span class="id" title="variable">A</span></a>} : <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#x:3"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#isgraph_op"><span class="id" title="instance">isgraph_op</span></a> (<span class="id" title="var">A</span> := <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:2"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a>) := 1.<br/>
+<span class="id" title="keyword">Definition</span> <a id="test3" class="idref" href="#test3"><span class="id" title="definition">test3</span></a> <a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> `{<a id="x:6" class="idref" href="#x:6"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:4"><span class="id" title="variable">A</span></a>} : <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#x:6"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#is01cat_op"><span class="id" title="instance">is01cat_op</span></a> (<span class="id" title="var">A</span> := <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:4"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a>) := 1.<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4" class="idref" href="#test4"><span class="id" title="definition">test4</span></a> <a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> `{<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:7"><span class="id" title="variable">A</span></a>} : <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#x:9"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#is2graph_op"><span class="id" title="instance">is2graph_op</span></a> (<span class="id" title="var">A</span> := <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:7"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a>) := 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Is1Cat is not definitionally involutive. 
+</div>
+<div class="code">
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test4" class="idref" href="#test4"><span class="id" title="definition">test4</span></a> <a id="A:10" class="idref" href="#A:10"><span class="id" title="binder">A</span></a> `{<a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is1Cat"><span class="id" title="class">Is1Cat</span></a> <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:10"><span class="id" title="variable">A</span></a>} : <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.WildCat.Opposite.html#is1cat_op"><span class="id" title="instance">is1cat_op</span></a> (<span class="id" title="var">A</span> := <a class="idref" href="HoTT.Tests.WildCat.Opposite.html#A:10"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.WildCat.Opposite.html#04903f19b08d61e7534076c88f44d4cf"><span class="id" title="notation">op</span></a>) := 1.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

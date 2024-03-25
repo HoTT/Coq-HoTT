@@ -1,0 +1,7 @@
+N: 5 "fold_left" [body=yes, kind=cnst, prop=no, path="List", ];
+N: 4 "fold_left_app" [body=yes, kind=cnst, prop=no, path="List", ];
+N: 3 "fold_right" [body=yes, kind=cnst, prop=no, path="List", ];
+N: 2 "fold_right_app" [body=yes, kind=cnst, prop=no, path="List", ];
+N: 1 "list_pentagon" [body=yes, kind=cnst, prop=no, path="List", ];
+E: 2 3 [weight=19, ];
+E: 4 5 [weight=16, ];

@@ -1,0 +1,25 @@
+digraph HoTT_HProp {
+  graph [ratio=0.5]
+  node [style=filled]
+HProp_equiv_decidable_hprop [label="equiv_decidable_hprop", URL=<HProp.html#equiv_decidable_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_if_not_hprop_then_equiv_Empty [label="if_not_hprop_then_equiv_Empty", URL=<HProp.html#if_not_hprop_then_equiv_Empty>, fillcolor="#F070D1"] ;
+HProp_if_hprop_then_equiv_Unit [label="if_hprop_then_equiv_Unit", URL=<HProp.html#if_hprop_then_equiv_Unit>, fillcolor="#F070D1"] ;
+HProp_equiv_equiv_iff_hprop [label="equiv_equiv_iff_hprop", URL=<HProp.html#equiv_equiv_iff_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_isequiv_equiv_iff_hprop_uncurried [label="isequiv_equiv_iff_hprop_uncurried", URL=<HProp.html#isequiv_equiv_iff_hprop_uncurried>, fillcolor="#F070D1"] ;
+HProp_equiv_contr_inhabited_allpath [label="equiv_contr_inhabited_allpath", URL=<HProp.html#equiv_contr_inhabited_allpath>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_equiv_contr_inhabited_hprop [label="equiv_contr_inhabited_hprop", URL=<HProp.html#equiv_contr_inhabited_hprop>, fillcolor="#F070D1"] ;
+HProp_isembedding_sect_ap [label="isembedding_sect_ap", URL=<HProp.html#isembedding_sect_ap>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_isembedding_sect_ap_subproof [label="isembedding_sect_ap_subproof", URL=<HProp.html#isembedding_sect_ap_subproof>, fillcolor="#F070D1"] ;
+HProp_isequiv_diag_ishprop [label="isequiv_diag_ishprop", URL=<HProp.html#isequiv_diag_ishprop>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_ishprop_isequiv_diag [label="ishprop_isequiv_diag", URL=<HProp.html#ishprop_isequiv_diag>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_equiv_hprop_inhabited_contr [label="equiv_hprop_inhabited_contr", URL=<HProp.html#equiv_hprop_inhabited_contr>, peripheries=3, fillcolor="#F070D1"] ;
+HProp_equiv_hprop_allpath [label="equiv_hprop_allpath", URL=<HProp.html#equiv_hprop_allpath>, fillcolor="#F070D1"] ;
+  HProp_equiv_decidable_hprop -> HProp_if_not_hprop_then_equiv_Empty [] ;
+  HProp_equiv_decidable_hprop -> HProp_if_hprop_then_equiv_Unit [] ;
+  HProp_equiv_equiv_iff_hprop -> HProp_isequiv_equiv_iff_hprop_uncurried [] ;
+  HProp_equiv_contr_inhabited_allpath -> HProp_equiv_contr_inhabited_hprop [] ;
+  HProp_equiv_contr_inhabited_allpath -> HProp_equiv_hprop_allpath [] ;
+  HProp_isembedding_sect_ap -> HProp_isembedding_sect_ap_subproof [] ;
+subgraph cluster_HProp { label="HProp"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+HProp_equiv_hprop_allpath; HProp_equiv_hprop_inhabited_contr; HProp_ishprop_isequiv_diag; HProp_isequiv_diag_ishprop; HProp_isembedding_sect_ap_subproof; HProp_isembedding_sect_ap; HProp_equiv_contr_inhabited_hprop; HProp_equiv_contr_inhabited_allpath; HProp_isequiv_equiv_iff_hprop_uncurried; HProp_equiv_equiv_iff_hprop; HProp_if_hprop_then_equiv_Unit; HProp_if_not_hprop_then_equiv_Empty; HProp_equiv_decidable_hprop; };
+} /* END */

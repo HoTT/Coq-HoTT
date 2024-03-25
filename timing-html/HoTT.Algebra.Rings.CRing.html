@@ -1,0 +1,2388 @@
+<html>
+<head>
+<title>CRing.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for CRing.v</h1>
+
+<div class="code" title="File: CRing.v
+Line: 1
+Time: 0.058s">
+<div class="time" style="width: 75.324675324675%"></div>
+<pre>Require Import WildCat.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 3
+Time: 0.03s">
+<div class="time" style="width: 38.961038961039%"></div>
+<pre>Require Import Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 3
+Time: 0.049s">
+<div class="time" style="width: 63.636363636364%"></div>
+<pre>
+Require Import Algebra.AbGroups.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Require Export Classes.theory.rings.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theory of commutative rings *)
+
+(** TODO: We should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup. But since we are only interested in commutative rings for the time being, it makes sense to only consider them. *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Declare Scope ring_scope.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope ring_scope.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** We want to print equivalences as [≅]. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutative ring consists of the following data *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Record CRing := {
+  cring_type : Type;
+  cring_plus : Plus cring_type;
+  cring_mult : Mult cring_type;
+  cring_zero : Zero cring_type;
+  cring_one  : One  cring_type;
+  cring_negate : Negate cring_type;
+  cring_isring : IsRing cring_type;
+}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cring_plus {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cring_mult {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cring_zero {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cring_one {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cring_negate {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cring_isring {_}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 31
+Time: 0.045s">
+<div class="time" style="width: 58.441558441558%"></div>
+<pre>
+
+Definition issig_CRing : _ &lt;~&gt; CRing := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We coerce rings to their underlying type. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion cring_type : CRing &gt;-&gt; Sortclass.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** All fields which are typeclasses are global instances *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Existing Instances cring_plus cring_mult cring_zero cring_one cring_negate cring_isring.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A ring homomorphism between commutative rings is a map of the underlying type and a proof that this map is a ring homomorphism. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Record CRingHomomorphism (A B : CRing) := {
+  rng_homo_map : A -&gt; B;
+  rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
+}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_CRingHomomorphism {_ _} _ _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 43
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre>
+
+Definition issig_CRingHomomorphism (A B : CRing)
+  : _ &lt;~&gt; CRingHomomorphism A B
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We coerce ring homomorphisms to their underlying maps *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion rng_homo_map : CRingHomomorphism &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Existing Instance rng_homo_ishomo.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_cringhomomorphism `{Funext} {A B : CRing}
+  {f g : CRingHomomorphism A B} : f == g &lt;~&gt; f = g.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 54
+Time: 0.032s">
+<div class="time" style="width: 41.558441558442%"></div>
+<pre>
+  refine ((equiv_ap (issig_CRingHomomorphism A B)^-1 _ _)^-1 oE _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 55
+Time: 0.007s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_forall.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rng_homo_id (A : CRing) : CRingHomomorphism A A
+  := Build_CRingHomomorphism idmap _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rng_homo_compose {A B C : CRing}
+  (f : CRingHomomorphism B C) (g : CRingHomomorphism A B)
+  : CRingHomomorphism A C.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (f o g).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  rapply compose_sr_morphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Ring laws *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section RingLaws.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Many of these ring laws have already been proven. But we give them names here so that they are easy to find and use. *)
+
+ </pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A B : CRing} (f : CRingHomomorphism A B) (x y z : A).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_dist_l : x * (y + z) = x * y + x * z := simple_distribute_l _ _ _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_dist_r : (x + y) * z = x * z + y * z := simple_distribute_r _ _ _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_plus_zero_l : 0 + x = x := left_identity _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_plus_zero_r : x + 0 = x := right_identity _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_plus_negate_l : (- x) + x = 0 := left_inverse _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_plus_negate_r : x + (- x) = 0 := right_inverse _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+
+  Definition rng_plus_comm : x + y = y + x := commutativity x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_mult_comm : x * y = y * x := commutativity x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_negate_negate : - (- x) = x := negate_involutive _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+  Definition rng_mult_one_l : 1 * x = x := left_identity _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  Definition rng_mult_one_r : x * 1 = x := right_identity _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_zero_l : 0 * x = 0 := left_absorb _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_zero_r : x * 0 = 0 := right_absorb _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate : -1 * x = - x := (negate_mult _)^.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_negate : -x * -y = x * y := negate_mult_negate _ _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_l : -x * y = -(x * y) := inverse (negate_mult_distr_l _ _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_homo_plus : f (x + y) = f x + f y := preserves_plus x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_mult : f (x * y) = f x * f y := preserves_mult x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_zero : f 0 = 0 := preserves_0.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_one  : f 1 = 1 := preserves_1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_negate : f (-x) = -(f x) := preserves_negate x.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+  Definition rng_homo_minus_one : f (-1) = -1
+    := preserves_negate 1%mc @ ap negate preserves_1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+End RingLaws.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Isomorphisms of commutative rings *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Record CRingIsomorphism (A B : CRing) := {
+  rng_iso_homo : CRingHomomorphism A B ;
+  isequiv_rng_iso_homo : IsEquiv rng_iso_homo ;
+}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments rng_iso_homo {_ _ }.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion rng_iso_homo : CRingIsomorphism &gt;-&gt; CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Existing Instance isequiv_rng_iso_homo.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 120
+Time: 0.004s">
+<div class="time" style="width: 5.1948051948052%"></div>
+<pre>
+
+Definition issig_CRingIsomorphism {A B : CRing}
+  : _ &lt;~&gt; CRingIsomorphism A B := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring isomorphism from an equivalence that preserves addition and multiplication. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 125
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>Definition Build_CRingIsomorphism' (A B : CRing) (e : A &lt;~&gt; B)
+  `{!IsSemiRingPreserving e}
+  : CRingIsomorphism A B
+  := Build_CRingIsomorphism A B (Build_CRingHomomorphism e _) _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The inverse of a CRing isomorphism *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_iso_inverse {A B : CRing}
+  : CRingIsomorphism A B -&gt; CRingIsomorphism B A.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f e].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingIsomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact f^-1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 137
+Time: 0.003s">
+<div class="time" style="width: 3.8961038961039%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** CRing isomorphisms are a reflexive relation *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 141
+Time: 0.009s">
+<div class="time" style="width: 11.688311688312%"></div>
+<pre>Global Instance reflexive_cringisomorphism : Reflexive CRingIsomorphism
+  := fun x =&gt; Build_CRingIsomorphism _ _ (rng_homo_id x) _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** CRing isomorphisms are a symmetric relation *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance symmetry_cringisomorphism : Symmetric CRingIsomorphism
+  := fun x y =&gt; rng_iso_inverse.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** CRing isomorphisms are a transitive relation *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 147
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre>Global Instance transitive_cringisomorphism : Transitive CRingIsomorphism
+  := fun x y z f g =&gt; Build_CRingIsomorphism _ _ (rng_homo_compose g f) _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Underlying abelian groups of rings *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abgroup_cring : CRing -&gt; AbGroup.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro A.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_AbGroup.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 154
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre> srapply (Build_Group (cring_type A)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion abgroup_cring : CRing &gt;-&gt; AbGroup.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Underlying group homomorphism of a ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 160
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>Definition grp_homo_rng_homo {R S : CRing}
+  : CRingHomomorphism R S -&gt; GroupHomomorphism R S
+  := fun f =&gt; @Build_GroupHomomorphism R S f _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion grp_homo_rng_homo : CRingHomomorphism &gt;-&gt; GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring homomorphism from a group homomorphism that preserves multiplication *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
+  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
+    (Aunit:=one) (Bunit:=one) map}
+  : CRingHomomorphism A B
+  := Build_CRingHomomorphism map
+      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring isomorphism from a group isomorphism that preserves multiplication *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Definition Build_CRingIsomorphism'' (A B : CRing) (e : GroupIsomorphism A B)
+  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult) (Aunit:=one) (Bunit:=one) e}
+  : CRingIsomorphism A B
+  := @Build_CRingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is an alternative way to build a commutative ring using the underlying abelian group. *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>Definition Build_CRing' (R : AbGroup)
+  `(Mult R, One R, LeftDistribute R mult (@group_sgop R))
+  (iscomm : @IsCommutativeMonoid R mult one)
+  : CRing
+  := Build_CRing R (@group_sgop R) _ (@group_unit R) _
+       (@group_inverse R) (Build_IsRing _ _ _ _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Ring movement lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section RingMovement.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We adopt a similar naming convention to the [moveR_equiv] style lemmas that can be found in Types.Paths. *)
+
+ </pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {R : CRing} {x y z : R}.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_Mr : - y + x = z &lt;~&gt; x = y + z := @grp_moveL_Mg R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_rM : x + - z = y &lt;~&gt; x = y + z := @grp_moveL_gM R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_Mr : y = - x + z &lt;~&gt; x + y = z := @grp_moveR_Mg R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_rM : x = z + - y &lt;~&gt; x + y = z := @grp_moveR_gM R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_Vr : x + y = z &lt;~&gt; y = - x + z := @grp_moveL_Vg R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_rV : x + y = z &lt;~&gt; x = z + - y := @grp_moveL_gV R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_Vr : x = y + z &lt;~&gt; - y + x = z := @grp_moveR_Vg R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_rV : x = y + z &lt;~&gt; x + - z = y := @grp_moveR_gV R x y z.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_M0 : - y + x = 0 &lt;~&gt; x = y := @grp_moveL_M1 R x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_0M :	x + - y = 0 &lt;~&gt; x = y := @grp_moveL_1M R x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_M0 : 0 = - x + y &lt;~&gt; x = y := @grp_moveR_M1 R x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_0M : 0 = y + - x &lt;~&gt; x = y := @grp_moveR_1M R x y.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** TODO: Movement laws about mult *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>End RingMovement.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Wild category of commutative rings *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isgraph_cring : IsGraph CRing
+  := Build_IsGraph _ CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance is01cat_cring : Is01Cat CRing
+  := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 215
+Time: 0.003s">
+<div class="time" style="width: 3.8961038961039%"></div>
+<pre>
+
+Global Instance is2graph_cring : Is2Graph CRing
+  := fun A B =&gt; isgraph_induced (@rng_homo_map A B : _ -&gt; (cring_type A $-&gt; _)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+Global Instance is01cat_cringhomomorphism {A B : CRing} : Is01Cat (A $-&gt; B)
+  := is01cat_induced (@rng_homo_map A B).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 221
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+
+Global Instance is0gpd_cringhomomorphism {A B : CRing} : Is0Gpd (A $-&gt; B)
+  := is0gpd_induced (@rng_homo_map A B).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+Global Instance is0functor_postcomp_cringhomomorphism {A B C : CRing} (h : B $-&gt; C)
+  : Is0Functor (@cat_postcomp CRing _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p a ; exact (ap h (p a)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 231
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+
+Global Instance is0functor_precomp_cringhomomorphism
+       {A B C : CRing} (h : A $-&gt; B)
+  : Is0Functor (@cat_precomp CRing _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p a ; exact (p (h a)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** CRing forms a 1Cat *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance is1cat_cring : Is1Cat CRing.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 242
+Time: 0.077s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  by rapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance hasmorext_cring `{Funext} : HasMorExt CRing.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 247
+Time: 0.026s">
+<div class="time" style="width: 33.766233766234%"></div>
+<pre>
+  srapply Build_HasMorExt.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f g; cbn in *.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply @isequiv_homotopic.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (equiv_path_cringhomomorphism^-1%equiv).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 251
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance hasequivs_cring : HasEquivs CRing.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve econstructor.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact CRingIsomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun G H f =&gt; IsEquiv f).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H f; exact f.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Build_CRingIsomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H; exact rng_iso_inverse.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 264
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre> cbn; exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 265
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ????; apply eissect.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ????; apply eisretr.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H f g p q.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (isequiv_adjointify f g p q).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Product ring *)
+
+</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cring_product : CRing -&gt; CRing -&gt; CRing.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros R S.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRing'.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (ab_biprod R S).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: exact (fun '(r1 , s1) '(r2 , s2) =&gt; (r1 * r2 , s1 * s2)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (cring_one , cring_one).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre> intros [r1 s1] [r2 s2] [r3 s3].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+    apply path_prod; cbn; apply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 282
+Time: 0.01s">
+<div class="time" style="width: 12.987012987013%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre> intros [r1 s1] [r2 s2] [r3 s3].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+    apply path_prod; cbn; apply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  intros [r1 s1] [r2 s2]; apply path_prod; cbn; apply rng_mult_comm.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 288
+Time: 0.009s">
+<div class="time" style="width: 11.688311688312%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "×" := cring_product : ring_scope.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cring_product_fst {R S : CRing} : R × S $-&gt; R.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact fst.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 297
+Time: 0.003s">
+<div class="time" style="width: 3.8961038961039%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cring_product_snd {R S : CRing} : R × S $-&gt; S.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact snd.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cring_product_corec (R S T : CRing)
+  : (R $-&gt; S) -&gt; (R $-&gt; T) -&gt; (R $-&gt; S × T).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 310
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  srapply Build_CRingHomomorphism'.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 311
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: apply (ab_biprod_corec f g).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 313
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 314
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  cbn; apply path_prod; apply rng_homo_one.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_cring_product_corec `{Funext} (R S T : CRing)
+  : (R $-&gt; S) * (R $-&gt; T) &lt;~&gt; (R $-&gt; S × T).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (uncurry (cring_product_corec _ _ _)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+    exact (cring_product_fst $o f , cring_product_snd $o f).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; intros f.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 325
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre>
+    by apply path_hom.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f g].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_prod.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 328
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre>
+  1,2: by apply path_hom.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 329
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image ring *)
+
+(** The image of a ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_image {R S : CRing} (f : R $-&gt; S) : CRing.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 335
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  snrapply (Build_CRing' (abgroup_image f)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (x * y).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 339
+Time: 0.013s">
+<div class="time" style="width: 16.883116883117%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p as [p p'], q as [q q'].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (p * q).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (rng_homo_mult _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 343
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists 1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (rng_homo_one f).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
+ </pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 350
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>2: repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 350
+Time: 0.017s">
+<div class="time" style="width: 22.077922077922%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 351
+Time: 0.005s">
+<div class="time" style="width: 6.4935064935065%"></div>
+<pre>
+  all: intros [].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 352
+Time: 0.003s">
+<div class="time" style="width: 3.8961038961039%"></div>
+<pre>
+  1,2,5: intros [].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 353
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  1,2: intros [].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 354
+Time: 0.012s">
+<div class="time" style="width: 15.584415584416%"></div>
+<pre>
+  all: apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 355
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: apply distribute_l.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 356
+Time: 0.002s">
+<div class="time" style="width: 2.5974025974026%"></div>
+<pre>
+  1: apply associativity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 357
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: apply commutativity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 358
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  1: apply left_identity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 359
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+  apply right_identity.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 360
+Time: 0.035s">
+<div class="time" style="width: 45.454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
+  : rng_image f $-&gt; S.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingHomomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact pr1.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Image of a surjective ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma rng_image_issurj {R S} (f : CRingHomomorphism R S) {issurj : IsSurjection f}
+  : rng_image f ≅ S.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_CRingIsomorphism.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (rng_homo_image_incl f).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 375
+Time: 0.054s">
+<div class="time" style="width: 70.12987012987%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+(** *** More Ring laws *)
+
+(** Powers of ring elements *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_power {R : CRing} (x : R) (n : nat) : R := nat_iter n (x *.) cring_one.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Power laws *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma rng_power_mult_law {R : CRing} (x : R) (n m : nat)
+  : (rng_power x n) * (rng_power x m) = rng_power x (n + m).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((rng_mult_assoc _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (x *.) IHn).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Powers commute with multiplication *)</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
+  : rng_power (x * y) n = rng_power x n * rng_power y n.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: symmetry; apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (rng_mult_assoc x _ y).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (rng_mult_comm (rng_power x n) y).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (rng_mult_assoc _ (rng_power x n)).</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 403
+Time: 0.001s">
+<div class="time" style="width: 1.2987012987013%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CRing.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

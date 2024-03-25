@@ -1,0 +1,6196 @@
+<html>
+<head>
+<title>Arithmetic.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Arithmetic.v</h1>
+
+<div class="code" title="File: Arithmetic.v
+Line: 1
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Ltac nat_absurd_trivial :=
+  unfold "&gt;" in *; unfold "&lt;" in *;
+  match goal with
+  | [ H : ?n.+1 &lt;= 0 |- _ ] =&gt; contradiction (not_leq_Sn_0 n H)
+  | [ H : ?n.+1 &lt;= ?n |- _ ] =&gt; contradiction (not_lt_n_n n H)
+  | [ H1 : ?k.+1 &lt;= ?n |- _ ] =&gt;
+      match goal with
+      | [ H2 : ?n &lt;= ?k |- _] =&gt;
+          contradiction (not_leq_Sn_n k (@leq_trans _ _ _ H1 H2))
+      end
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve not_lt_n_n : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve not_lt_n_0 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve not_leq_Sn_0 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Extern 2 =&gt; nat_absurd_trivial : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is defined so that it can be added to the [nat] auto hint database. *)</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition symmetric_paths_nat (n m : nat)
+  : n = m -&gt; m = n := @symmetric_paths nat n m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition transitive_paths_nat (n m k : nat)
+  : n = m -&gt; m = k -&gt; n = k := @transitive_paths nat n m k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve symmetric_paths_nat | 5 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve transitive_paths_nat : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve leq_0_n : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve leq_trans : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve leq_antisym : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition assoc_nat_add (n m k : nat)
+  : n + (m + k) = (n + m) + k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m k; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (n.+1 + (m + k)) with (n + (m + k)).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (transitive_paths _ _ _ (nat_add_n_Sm _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (m + k).+1 with (m.+1 + k);
+    change (n.+1 + m) with (n + m).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (transitive_paths _ _ _ (IHn m.+1 k)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap (fun zz =&gt; zz + k)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetric_paths, nat_add_n_Sm.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition not_lt_implies_geq {n m : nat} : ~(n &lt; m) -&gt; m &lt;= n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros not_lt.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot m n); [ assumption | contradiction].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition not_leq_implies_gt {n m : nat} : ~(n &lt;= m) -&gt; m &lt; n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros not_leq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  destruct (@leq_dichot n m); [ contradiction | assumption].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition lt_implies_not_geq {n m : nat} : (n &lt; m) -&gt; ~(m &lt;= n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq1 ineq2.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_lt_n_n n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply (leq_trans ineq1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition leq_implies_not_gt {n m : nat} : (n &lt;= m) -&gt; ~(m &lt; n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq1 ineq2.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac convert_to_positive :=
+  match goal with
+  | [ H : ~ (?n &lt; ?m) |- _] =&gt;  apply not_lt_implies_geq in H
+  | [ H : ~ (?n &lt;= ?m) |- _] =&gt; apply not_leq_implies_gt in H
+  | [|- ~ (?n &lt; ?m) ] =&gt; apply leq_implies_not_gt
+  | [|- ~ (?n &lt;= ?m) ] =&gt; apply lt_implies_not_geq
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Extern 2 =&gt; convert_to_positive : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Because of the inductive definition of [&lt;=], one can destruct the proof of [n &lt;= m] and get a judgemental identification between [n] and [m] rather than a propositional one, which may be preferable to the following lemma. *)</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition leq_split {n m : nat} : (n &lt;= m) -&gt; sum (n &lt; m) (n = m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> now right.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (leq_S_n' _ _ l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition diseq_implies_lt (n m : nat)
+  : n &lt;&gt; m -&gt; sum (n &lt; m) (n &gt; m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros diseq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  destruct (dec (n &lt; m)) as [| a]; [ now left |].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (@leq_dichot n m) as [n_leq_m | gt];
+    [ | assumption].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  destruct n_leq_m;
+    [ now contradiction diseq
+    | contradiction a; now apply leq_S_n'].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition lt_implies_diseq (n m : nat)
+  : n &lt; m -&gt; (n &lt;&gt; m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eq in ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_lt_n_n m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve lt_implies_diseq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lemma is just for convenience in the case where the user forgets to unfold the definition of [&lt;]. *)</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition n_lt_Sn (n : nat) : n &lt; n.+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (leq_n n.+1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition leq_S' (n m : nat) : n.+1 &lt;= m -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  now apply leq_S_n, leq_S.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Ltac easy_eq_to_ineq :=
+  match goal with
+  | [ H : ?x = ?n    |- ?x &lt;= ?n ] =&gt; destruct H; constructor
+  | [ H : ?x.+1 = ?n |- ?x &lt;= ?n ] =&gt; rewrite &lt;- H; constructor;
+                                      constructor
+  | [ H : ?x.+1 = ?n |- ?x &lt; ?n  ] =&gt; rewrite &lt;- H; apply leq_n
+  | [ H : ?x.+2 = ?n |- ?x &lt;= ?n ] =&gt; rewrite &lt;- H; apply leq_S';
+                                      apply leq_S'; apply leq_n
+  | [ H : ?x.+2 = ?n |- ?x &lt; ?n ] =&gt; rewrite &lt;- H; apply leq_S_n';
+                                      apply leq_S
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Extern 3 =&gt; easy_eq_to_ineq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Proposition mixed_trans1 (n m k : nat)
+  : n &lt;= m -&gt; m &lt; k -&gt; n &lt; k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n' in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@leq_trans (n.+1) (m.+1) k); trivial.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac leq_trans_resolve :=
+  match goal with
+  | [ H : ?n &lt;= ?m |- ?n &lt;= ?k ] =&gt; apply (leq_trans H)
+  | [ H : ?k &lt;= ?m |- ?n &lt;= ?k ] =&gt; refine (leq_trans _ H)
+  | [ H : ?n &lt;= ?m |- ?n &lt; ?k ] =&gt; apply (mixed_trans1 _ _ _ H)
+  | [ H : ?m &lt;= ?k |- ?n &lt; ?k ] =&gt; refine (leq_trans _ H)
+  | [ H : ?m &lt;  ?k |- ?n &lt; ?k ] =&gt; refine (mixed_trans1 _ _ _ _ H)
+  | [ H : ?n &lt;  ?m |- ?n &lt; ?k ] =&gt; apply (leq_trans H)
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Extern 2 =&gt; leq_trans_resolve : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition mixed_trans2 (n m k : nat)
+  : n &lt; m -&gt; m &lt;= k -&gt; n &lt; k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (@leq_trans (n.+1) m k); trivial.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve mixed_trans1 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve mixed_trans2 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_n_n (n : nat) : n - n = 0.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; exact IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_n_0 (n : nat) : n - 0 = n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+ destruct n; reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac rewrite_subn0 :=
+  match goal with
+  | [ |- context [ ?n - 0 ] ] =&gt; rewrite -&gt; sub_n_0
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac rewrite_subnn :=
+  match goal with
+  | [ |- context [ ?n - ?n ] ] =&gt; rewrite -&gt; sub_n_n
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Rewrite -&gt; sub_n_0 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; sub_n_n : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve sub_n_0 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction' n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction' n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_O m); reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_Sm m n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  destruct (nat_add_comm m n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (add_n_sub_n_eq m n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+ 
+Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply add_n_sub_n_eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition n_lt_m_n_leq_m { n m : nat } : n &lt; m -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro H.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S, leq_S_n in H; exact H.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve n_lt_m_n_leq_m : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition lt_trans (n m k : nat) : n &lt; m -&gt; m &lt; k -&gt; n &lt; k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  eauto with nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition not_both_less (n m : nat) : n &lt; m -&gt; ~(m &lt; n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l a; contradiction (not_lt_n_n _ (lt_trans _ _ _ l a)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+
+Proposition n_leq_add_n_k (n m : nat) : n &lt;= n + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; apply leq_S_n', IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition n_leq_add_n_k' (n m : nat) : n &lt;= m + n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact(leq_n n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natineq0eq0 {n : nat} : n &lt;= 0 -&gt; n = 0.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_leq_Sn_0 n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition subsubadd (n m k : nat) : n - (m + k) = n - m - k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m k; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro m; destruct m; intro k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (0 + k) with k; reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (m.+1 + k) with (m + k).+1; apply IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve subsubadd : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition subsubadd' (n m k : nat) : n - m - k = n - (m + k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 266
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+  auto with nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nleqSm_dichot {n m : nat}
+  : (n &lt;= m.+1) -&gt; sum (n &lt;= m) (n = m.+1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (leq_0_n m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n, natineq0eq0 in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      right; apply ap; exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n, IHn in l; destruct l as [a | b].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n'; exact a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap; exact b.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_leq_0 (n m : nat) : n &lt;= m -&gt; n - m = 0.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l; induction l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sub_n_n n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (m.+1) with (1 + m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_add_comm m 1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ (subsubadd n.+1 m 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ IHl).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto with nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetric_paths in eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      contradiction (not_eq_O_S n eq).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n', IHn, eq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_gt_0_lt (n m : nat) : n - m &gt; 0 -&gt; m &lt; n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sub_leq_0 in n_leq_m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_lt_n_n 0).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> now rewrite n_leq_m in ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition lt_sub_gt_0 (n m : nat) : m &lt; n -&gt; 0 &lt; n - m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> easy.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n in ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      now apply IHn in ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natminuspluseq (n m : nat)
+  : n &lt;= m -&gt; (m - n) + n = m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m; [reflexivity |].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap S), symmetric_paths, add_n_O.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_leq_Sn_0 n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n, IHn in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (nat_add_n_Sm (m - n) n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natminusplusineq (n m : nat) : n &lt;= n - m + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot m n) as [l | g].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (natminuspluseq _ _ l));
+      constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply n_lt_m_n_leq_m in g.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    now destruct (symmetric_paths _ _ (sub_leq_0 n m _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natminuspluseq' (n m : nat)
+  : n &lt;= m -&gt; n + (m - n) = m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply natminuspluseq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Rewrite -&gt; natminuspluseq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; natminuspluseq' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma equiv_leq_add n m
+  : leq n m &lt;~&gt; exists k, k + n = m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 358
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (r := summand_is_sub x _ _ p @ (summand_is_sub y _ _ q)^).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct r.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (m - n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply natminuspluseq, p.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [k p].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_add.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve leq_S_n' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac leq_S_n_in_hypotheses :=
+  match goal with
+  | [ H : ?n.+1 &lt;= ?m.+1 |- _ ] =&gt; apply leq_S_n in H
+  | [ H : ?n &lt; ?m.+1 |- _ ] =&gt; apply leq_S_n in H
+  | [ H : ?m.+1 &gt; ?n |- _ ] =&gt; apply leq_S_n in H
+  | [ H : ?m.+1 &gt;= ?n.+1 |- _ ] =&gt; apply leq_S_n in H
+  end.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Extern 4 =&gt; leq_S_n_in_hypotheses : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                                                     
+Proposition nataddpreservesleq { n m k : nat }
+  : n &lt;= m -&gt; n + k &lt;= m + k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_O n), (add_n_O m); exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k);
+      apply leq_S_n'; exact IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve nataddpreservesleq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddpreservesleq' { n m k : nat }
+  : n &lt;= m -&gt; k + n &lt;= k + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nat_add_comm k m)),
+    (symmetric_paths _ _ (nat_add_comm k n)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact nataddpreservesleq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve nataddpreservesleq' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddpreserveslt { n m k : nat }
+  : n &lt; m -&gt; n + k &lt; m + k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold "&lt;".</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (n + k).+1 with (n.+1 + k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (n.+1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n' l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_O n'), (add_n_O m); exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_add_n_Sm n' k), (nat_add_n_Sm m k);
+      apply leq_S_n'; exact IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddpreserveslt' { n m k : nat }
+  : n &lt; m -&gt; k + n &lt; k + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddpreserveslt.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddreflectslt { n m k : nat }
+  : n + k &lt; m + k -&gt; n &lt; m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_O n), (add_n_O m); trivial.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k) in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_S_n, IHk in l; exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddreflectsleq { n m k : nat }
+  : n + k &lt;= m + k -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?; apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (n.+1 + k) with (n + k).+1 in a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    now apply (@nataddreflectslt n m k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddreflectslt' { n m k : nat }
+  : k + n &lt; k + m -&gt; n &lt; m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectslt.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddreflectsleq' { n m k : nat }
+  : k + n &lt;= k + m -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectsleq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natsubreflectsleq { n m k : nat }
+  : k &lt;= m -&gt; n - k &lt;= m - k -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq1 ineq2.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@nataddpreservesleq _ _ k) in ineq2.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@leq_trans _ (n - k + k) _ (natminusplusineq _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@leq_trans _ (m - k + k)  _ _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 468
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (natminuspluseq k m ineq1)); easy.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddsub_assoc_lemma {k m : nat}
+  : (k &lt;= m) -&gt; m.+1 - k = (m - k).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m l; simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m; reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intro g; contradiction (not_leq_Sn_0 _ g).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro l; apply leq_S_n in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (m.+2 - k.+1) with (m.+1 - k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (m.+1 - k.+1) with (m - k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (IHk _ l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddsub_assoc (n : nat) {m k : nat}
+  : (k &lt;= m) -&gt; n + (m - k) = n + m - k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m k l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (n.+1 + (m - k)) with (n + (m - k)).+1;
+      change (n.+1 + m) with (n +m).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct k, m;
+      [ reflexivity
+      | reflexivity
+      | contradiction (not_lt_n_0 k _)
+      | ].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl "-".</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (nat_add_n_Sm n (m - k))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct  (nataddsub_assoc_lemma l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (IHn m.+1 k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_S.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddsub_comm (n m k : nat)
+  : m &lt;= n -&gt; (n - m) + k = (n + k) - m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nat_add_comm k n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nataddsub_assoc k l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddsub_comm_ineq_lemma (n m : nat)
+  : n.+1 - m &lt;= (n - m).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction m m IHm; [ apply leq_n | apply leq_S; apply leq_n ].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro m; simple_induction m m IHm.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nataddsub_comm_ineq (n m k : nat)
+  : (n + k) - m &lt;= (n - m) + k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_O n), (add_n_O (n - m)); constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (add_n_Sm n k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (leq_trans (nataddsub_comm_ineq_lemma (n+k) m) _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (add_n_Sm (n - m) k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    now apply leq_S_n'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nat_sub_add_ineq (n m : nat) : n &lt;= n - m + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot m n) as [l | gt].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (nataddsub_comm _ _ m l)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (add_n_sub_n_eq n m)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_refl; done.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply n_lt_m_n_leq_m in gt.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (sub_leq_0 n m _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition i_lt_n_sum_m (n m i : nat)
+  : i &lt; n - m -&gt; m &lt;= n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m i; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m i l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 _ _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m i l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (IHn m i l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
+  : (k &lt;= m) -&gt; n + (m - k) = z -&gt; n + m - k = z.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro H.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nataddsub_assoc n H)); done.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve nataddsub_assoc_implication : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nat_add_sub_eq (n : nat) {k: nat}
+  : (k &lt;= n) -&gt; k + (n - k) = n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro H.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nataddsub_assoc k H));
+  destruct (nat_add_comm n k); exact (add_n_sub_n_eq _ _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve nat_add_sub_eq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition predeqminus1 { n : nat } : n - 1 = pred n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sub_n_0.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition predn_leq_n (n : nat) : pred n &lt;= n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  case n; [ apply leq_n | intro; apply leq_S; apply leq_n].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve predn_leq_n : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition S_predn (n i: nat) : (i &lt; n) -&gt; S(pred n) = n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction' n; intros l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 i).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Rewrite S_predn : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite &lt;- pred_Sn : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve S_predn : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve leq_n_pred : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition pred_equiv (k n : nat) : k &lt; n -&gt; k &lt; S (pred n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  intro ineq; destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 _ _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition n_leq_pred_Sn (n : nat) : n &lt;= S (pred n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  destruct n; auto.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition leq_implies_pred_lt (i n k : nat)
+  : (n &gt; i) -&gt; n &lt;= k -&gt; pred n &lt; k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro ineq; destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 i).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro; assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Proposition pred_lt_implies_leq (n k : nat)
+  : pred n &lt; k -&gt; n &lt;= k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l; destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition lt_implies_pred_geq (i j : nat) : i &lt; j -&gt; i &lt;= pred j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l; apply leq_n_pred in l; assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve lt_implies_pred_geq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
+  : i &lt; j -&gt; k.+1 &lt;= j -&gt; k &lt;= pred j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 i).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> now simpl; apply leq_S_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve lt_implies_pred_geq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition pred_gt_implies_lt (i j : nat)
+  : i &lt; pred j -&gt; i.+1 &lt; j.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (H := leq_S_n' _ _ ineq).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (i &lt; j) as X.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (@mixed_trans2 _ (pred j) _);
+      [assumption  | apply predn_leq_n].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition pred_preserves_lt {i n: nat} (p : i &lt; n) m
+  : (n &lt; m) -&gt; (pred n &lt; pred m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_S_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (S_predn n i _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (k :=  transitive_lt i n m p l).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (S_predn m i _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natsubpreservesleq { n m k : nat }
+  : n &lt;= m -&gt; n - k &lt;= m - k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (sub_n_0 n)),
+      (symmetric_paths _ _ (sub_n_0 m)); done.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (k.+1) with (1 + k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (nat_add_comm k 1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (subsubadd n k 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (subsubadd m k 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (@predeqminus1 (m -k))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_n_pred, IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve natsubpreservesleq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_less { n k : nat } : n - k &lt;= n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; apply leq_0_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; apply (@leq_trans _ n _);
+        [ apply IHn | apply leq_S, leq_n].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve sub_less : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve leq_S_n' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition sub_less_strict { n k : nat }
+  : 0 &lt; n -&gt; 0 &lt; k -&gt; n - k &lt; n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l l'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold "&lt;".</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct k, n;
+  try (contradiction (not_lt_n_0 _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; apply leq_S_n', sub_less.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natpmswap1 (k m n : nat)
+  : n &lt;= k -&gt; k &lt; n + m -&gt; k - n &lt; m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l q.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (q' : k - n + n &lt; m + n) by
+    (destruct (symmetric_paths _ _ (natminuspluseq n k l));
+     destruct (nat_add_comm n m);
+     assumption).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (nataddreflectslt q').</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve natpmswap1 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natpmswap2 (k m n : nat)
+  : n &lt;= k -&gt; k - n &lt;= m -&gt; k &lt;= n + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l q.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@nataddpreservesleq' (k - n) m n) in q.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nataddsub_assoc n l)) in q.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (add_n_sub_n_eq' k n)) in q;
+    assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve natpmswap2 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natpmswap3 (k m n : nat)
+  : k &lt;= n -&gt; m &lt;= n - k -&gt; k + m &lt;= n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ineq qe.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@nataddpreservesleq' m (n - k) k) in qe.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (nataddsub_assoc k ineq)) in qe.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (symmetric_paths _ _ (add_n_sub_n_eq' n k)) in qe;
+    assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve natpmswap3 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition natpmswap4 (k m n : nat)
+  : k - n &lt; m -&gt; k &lt; n + m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l; apply (@nataddpreserveslt (k - n) m n) in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nat_add_comm m n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  now apply (mixed_trans1 k (k - n + n) (m + n)
+               (nat_sub_add_ineq _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve natpmswap4 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
+  : n &lt;= m -&gt; n &lt;= m + k.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro l; apply (leq_trans l); exact (n_leq_add_n_k m k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition nat_add_bifunctor (n n' m m' : nat)
+  : n &lt;= m -&gt; n' &lt;= m' -&gt; n + n' &lt;= m + m'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n' m m'; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n' m m' l l'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (leq_trans l').</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (n_leq_add_n_k' m' m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n' m; destruct m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_leq_Sn_0 n).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m' l l'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply leq_S_n', IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 778
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 778
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve nat_add_bifunctor : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve nataddpreserveslt : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve nataddpreservesleq' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve nataddpreserveslt' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve natineq0eq0 : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve n_leq_add_n_k : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Resolve n_leq_m_n_leq_plus_m_k : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Immediate add_n_sub_n_eq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Immediate add_n_sub_n_eq' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Rewrite &lt;- add_n_O : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; add_O_n : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; add_n_sub_n_eq : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; add_n_sub_n_eq' : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Rewrite -&gt; nataddsub_assoc : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac autorewrite_or_fail := progress ltac:(autorewrite with nat).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Extern 7 =&gt; autorewrite_or_fail : nat.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition strong_induction (P : nat -&gt; Type)
+  : (forall n : nat, (forall m : nat,  (m &lt; n) -&gt; P m) -&gt; P n) -&gt;
+  forall n : nat, P n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (forall n m: nat, m &lt; n -&gt; P m) as X.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct l as [ | n].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply a; intros ? ?; now apply IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> now apply (IHn m), leq_S_n'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (X (n.+1) n), (leq_n n.+1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This inductive type is defined because it lets you loop from [i = 0] up to [i = n] by structural induction on a proof of [increasing_geq n 0]. With the existing [leq] type and the inductive structure of [n], it is easier and more natural to loop downwards from [i = n] to [i = 0], but harder to find the least natural number in the interval $[0,n]$ satisfying a given property. *)
+
+</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Inductive increasing_geq (n : nat) : nat -&gt; Type0 :=
+| increasing_geq_n : increasing_geq n n
+| increasing_geq_S (m : nat) : increasing_geq n m.+1 -&gt;
+                               increasing_geq n m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme increasing_geq_ind := Induction for increasing_geq Sort Type.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme increasing_geq_rec := Minimality for increasing_geq Sort Type.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition increasing_geq_rect := increasing_geq_rec.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition increasing_geq_S_n (n m : nat)
+  : increasing_geq n m -&gt; increasing_geq n.+1 m.+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> now constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition increasing_geq_n_0 (n : nat) : increasing_geq n 0.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor; now constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor; now assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma increasing_geq_minus (n k : nat)
+  : increasing_geq n (n - k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction k k IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (@leq_dichot n k) as [l | g].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)) in IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply leq_S in l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ (sub_leq_0 _ _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IHk.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change k.+1 with (1 + k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_add_comm k 1).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ (subsubadd n k 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply increasing_geq_S.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 862
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold "&gt;", "&lt;" in *.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply lt_sub_gt_0 in g.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 864
+Time: 0.019s">
+<div class="time" style="width: 63.333333333333%"></div>
+<pre> 
+      now (destruct (symmetric_paths _ _ (S_predn (n - k) 0 _))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma ineq_sub' (n k : nat) : k &lt; n -&gt; n - k = (n - k.+1).+1.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 868
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_0 k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (n.+1 - k.+1) with (n - k).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n in ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (nataddsub_assoc_lemma _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Lemma ineq_sub (n m : nat) : n &lt;= m -&gt; m - (m - n) = n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 878
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (symmetric_paths _ _ (sub_n_0 m)),
+      (symmetric_paths _ _ (sub_n_n m));
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (m - n.+1) with (m - (1 + n)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (destruct (nat_add_comm n 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (subsubadd m n 1)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 885
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
+      destruct (symmetric_paths _ _ (sub_n_0 (pred (m - n)))).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (0 &lt; m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (pred (m - n) &lt; m) as sh by
+        ( unfold "&lt;";
+          destruct (symmetric_paths _ _ (S_predn _ 0 _));
+          exact sub_less).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (ineq_sub' _ _ _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (symmetric_paths _ _ (S_predn _ 0 _)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap S), IHn, leq_S', ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 895
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>                                 
+  
+Proposition leq_equivalent (n m : nat)
+  : n &lt;= m &lt;-&gt; increasing_geq m n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 901
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply increasing_geq_S_n in IHineq; constructor; assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction a.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (leq_S' _ _ _).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This tautology accepts a (potentially opaqued or QED'ed) proof of [n &lt;= m], and returns a transparent proof which can be computed with (i.e., one can loop from n to m) *) </pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leq_wrapper {n m : nat} : n &lt;= m -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 912
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro ineq.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 913
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot n m) as [l | g].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_n_n m (@mixed_trans2 _ _ _ g ineq)).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition symmetric_rel_total_order (R : nat -&gt; nat -&gt; Type)
+            {p : Symmetric R} {p' : Reflexive R}
+  : (forall n m : nat, n &lt; m -&gt; R n m) -&gt; (forall n m : nat, R n m).</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A n m.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (@leq_dichot m n) as [m_leq_n | m_gt_n].</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetry.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct m_leq_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply A.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply leq_S_n'.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply A, m_gt_n.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Arithmetic.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>                             
+
+</pre>
+</div>
+</body>
+</html>
+

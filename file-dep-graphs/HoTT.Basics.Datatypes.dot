@@ -1,0 +1,47 @@
+digraph HoTT_Basics_Datatypes {
+  graph [ratio=0.5]
+  node [style=filled]
+Basics_Datatypes_app [label="app", URL=<Basics.html#Datatypes.app>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_list_rect [label="list_rect", URL=<Basics.html#Datatypes.list_rect>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_cons [label="cons", URL=<Basics.html#Datatypes.cons>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_nil [label="nil", URL=<Basics.html#Datatypes.nil>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_list [label="list", URL=<Basics.html#Datatypes.list>, fillcolor="#E2CDFA"] ;
+Datatypes_iff [label="iff", URL=<Datatypes.html#iff>, peripheries=3, fillcolor="#F070D1"] ;
+Datatypes_prod_curry [label="prod_curry", URL=<Datatypes.html#prod_curry>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_prod_rect [label="prod_rect", URL=<Basics.html#Datatypes.prod_rect>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_snd [label="snd", URL=<Basics.html#Datatypes.snd>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_fst [label="fst", URL=<Basics.html#Datatypes.fst>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_pair [label="pair", URL=<Basics.html#Datatypes.pair>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_prod [label="prod", URL=<Basics.html#Datatypes.prod>, fillcolor="#E2CDFA"] ;
+Basics_Datatypes_sum_rect [label="sum_rect", URL=<Basics.html#Datatypes.sum_rect>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_inr [label="inr", URL=<Basics.html#Datatypes.inr>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_inl [label="inl", URL=<Basics.html#Datatypes.inl>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_sum [label="sum", URL=<Basics.html#Datatypes.sum>, fillcolor="#E2CDFA"] ;
+Basics_Datatypes_option_rect [label="option_rect", URL=<Basics.html#Datatypes.option_rect>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Datatypes_None [label="None", URL=<Basics.html#Datatypes.None>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_Some [label="Some", URL=<Basics.html#Datatypes.Some>, fillcolor="#7FAAFF"] ;
+Basics_Datatypes_option [label="option", URL=<Basics.html#Datatypes.option>, fillcolor="#E2CDFA"] ;
+  Basics_Datatypes_app -> Basics_Datatypes_cons [] ;
+  Basics_Datatypes_app -> Basics_Datatypes_list [] ;
+  Basics_Datatypes_list_rect -> Basics_Datatypes_cons [] ;
+  Basics_Datatypes_list_rect -> Basics_Datatypes_nil [] ;
+  Basics_Datatypes_list_rect -> Basics_Datatypes_list [] ;
+  Datatypes_iff -> Basics_Datatypes_prod [] ;
+  Datatypes_prod_curry -> Basics_Datatypes_prod [] ;
+  Basics_Datatypes_prod_rect -> Basics_Datatypes_pair [] ;
+  Basics_Datatypes_prod_rect -> Basics_Datatypes_prod [] ;
+  Basics_Datatypes_snd -> Basics_Datatypes_prod [] ;
+  Basics_Datatypes_fst -> Basics_Datatypes_prod [] ;
+  Basics_Datatypes_sum_rect -> Basics_Datatypes_inr [] ;
+  Basics_Datatypes_sum_rect -> Basics_Datatypes_inl [] ;
+  Basics_Datatypes_sum_rect -> Basics_Datatypes_sum [] ;
+  Basics_Datatypes_option_rect -> Basics_Datatypes_None [] ;
+  Basics_Datatypes_option_rect -> Basics_Datatypes_Some [] ;
+  Basics_Datatypes_option_rect -> Basics_Datatypes_option [] ;
+subgraph cluster_Basics { label="Basics"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Basics_Datatypes { label="Datatypes"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Basics_Datatypes_option; Basics_Datatypes_Some; Basics_Datatypes_None; Basics_Datatypes_option_rect; Basics_Datatypes_sum; Basics_Datatypes_inl; Basics_Datatypes_inr; Basics_Datatypes_sum_rect; Basics_Datatypes_prod; Basics_Datatypes_pair; Basics_Datatypes_fst; Basics_Datatypes_snd; Basics_Datatypes_prod_rect; Basics_Datatypes_list; Basics_Datatypes_nil; Basics_Datatypes_cons; Basics_Datatypes_list_rect; Basics_Datatypes_app; };
+};
+subgraph cluster_Datatypes { label="Datatypes"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Datatypes_prod_curry; Datatypes_iff; };
+} /* END */

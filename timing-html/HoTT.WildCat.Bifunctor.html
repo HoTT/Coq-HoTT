@@ -1,0 +1,831 @@
+<html>
+<head>
+<title>Bifunctor.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Bifunctor.v</h1>
+
+<div class="code" title="File: Bifunctor.v
+Line: 1
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 1
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Require Import Types.Forall.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 2
+Time: 0.006s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Prod WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Bifunctors between WildCats *)
+
+</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Class Is0Bifunctor {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
+  (F : A -&gt; B -&gt; C)
+  := {
+    bifunctor_is0functor01 :: forall a, Is0Functor (F a);
+    bifunctor_is0functor10 :: forall b, Is0Functor (flip F b);
+  }.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 11
+Time: 0.015s">
+<div class="time" style="width: 68.181818181818%"></div>
+<pre>
+
+Class Is1Bifunctor {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F}
+  := {
+    bifunctor_is1functor01 :: forall a : A, Is1Functor (F a);
+    bifunctor_is1functor10 :: forall b : B, Is1Functor (flip F b);
+    bifunctor_isbifunctor : forall a0 a1 (f : a0 $-&gt; a1) b0 b1 (g : b0 $-&gt; b1),
+      fmap (F _) g $o fmap (flip F _) f $== fmap (flip F _) f $o fmap (F _) g
+  }.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments bifunctor_isbifunctor {A B C} {_ _ _ _ _ _ _ _ _ _ _ _}
+  F {_ _} {a0 a1} f {b0 b1} g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Functors from product categories are (uncurried) bifunctors. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Global Instance is0bifunctor_functor_uncurried {A B C : Type}
+  `{Is01Cat A, Is01Cat B, IsGraph C} (F : A * B -&gt; C) `{!Is0Functor F}
+  : Is0Bifunctor (fun a b =&gt; F (a, b)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 28
+Time: 0.005s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+  rapply Build_Is0Bifunctor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 30
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+
+Global Instance is1bifunctor_functor_uncurried {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -&gt; C) `{!Is0Functor F, !Is1Functor F}
+  : Is1Bifunctor (fun a b =&gt; F (a, b)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Bifunctor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b f c d g; cbn.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 39
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+  refine ((fmap_comp F _ _)^$ $@ _ $@ fmap_comp F _ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 40
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  rapply (fmap2 F).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  refine (cat_idl f $@ (cat_idr f)^$, _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  exact (cat_idr g $@ (cat_idl g)^$).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It is often simplest to create a bifunctor [A -&gt; B -&gt; C] by constructing a functor from the product category [A * B]. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition Build_Is0Bifunctor' {A B C : Type} `{Is01Cat A, Is01Cat B, IsGraph C}
+  (F : A -&gt; B -&gt; C) `{!Is0Functor (uncurry F)}
+  : Is0Bifunctor F
+  := is0bifunctor_functor_uncurried (uncurry F).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 49
+Time: 0.007s">
+<div class="time" style="width: 31.818181818182%"></div>
+<pre>
+
+Definition Build_Is1Bifunctor' {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -&gt; B -&gt; C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
+  : Is1Bifunctor F
+  := is1bifunctor_functor_uncurried (uncurry F).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fmap] in the first argument *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 56
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Definition fmap10 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-&gt; a1) (b : B)
+  : (F a0 b) $-&gt; (F a1 b)
+  := fmap (flip F b) f.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fmap] in the second argument *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition fmap01 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F} (a : A) {b0 b1 : B} (g : b0 $-&gt; b1)
+  : F a b0 $-&gt; F a b1
+  := fmap (F a) g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There are two ways to [fmap] in both arguments of a bifunctor. The bifunctor coherence condition ([bifunctor_isbifunctor]) states precisely that these two routes agree. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 66
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>Definition fmap11 {A B C : Type} `{IsGraph A, IsGraph B, Is01Cat C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-&gt; a1)
+  {b0 b1 : B} (g : b0 $-&gt; b1)
+  : F a0 b0 $-&gt; F a1 b1
+  := fmap (F _) g $o fmap (flip F _) f.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 70
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+
+Definition fmap11' {A B C : Type} `{IsGraph A, IsGraph B, Is01Cat C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-&gt; a1)
+  {b0 b1 : B} (g : b0 $-&gt; b1)
+  : F a0 b0 $-&gt; F a1 b1
+  := fmap (flip F _) f $o fmap (F _) g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 76
+Time: 0.011s">
+<div class="time" style="width: 50%"></div>
+<pre>
+
+Definition fmap22 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} {f : a0 $-&gt; a1} {f' : a0 $-&gt; a1}
+  {b0 b1 : B} {g : b0 $-&gt; b1} {g' : b0 $-&gt; b1}
+  (p : f $== f') (q : g $== g')
+  : fmap11 F f g $== fmap11 F f' g'
+  := fmap2 (flip F _) p $@@ fmap2 (F _) q.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 84
+Time: 0.006s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre>
+
+Global Instance iemap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} (f : a0 $&lt;~&gt; a1) {b0 b1 : B} (g : b0 $&lt;~&gt; b1)
+  : CatIsEquiv (fmap11 F f g).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 90
+Time: 0.005s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+  rapply compose_catie'.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  exact (iemap (flip F _) f).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 93
+Time: 0.006s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre>
+
+Definition emap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
+  (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} (f : a0 $&lt;~&gt; a1) {b0 b1 : B} (g : b0 $&lt;~&gt; b1)
+  : F a0 b0 $&lt;~&gt; F a1 b1
+  := Build_CatEquiv (fmap11 F f g).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any 0-bifunctor [A -&gt; B -&gt; C] can be made into a functor from the product category [A * B -&gt; C] in two ways. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Global Instance is0functor_uncurry_bifunctor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A -&gt; B -&gt; C) `{!Is0Bifunctor F}
+  : Is0Functor (uncurry F).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b [f g].</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap11 F f g).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any 1-bifunctor defines a canonical functor from the product category. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 110
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>Global Instance is1functor_uncurry_bifunctor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -&gt; B -&gt; C)
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
+  : Is1Functor (uncurry F).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 114
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f g [p q].</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fmap22 F p q).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 118
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+    refine (fmap_id (flip F _) _ $@@ fmap_id (F _) _ $@ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 119
+Time: 0.016s">
+<div class="time" style="width: 72.727272727273%"></div>
+<pre>
+    apply cat_idl.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z f g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 121
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+    refine (fmap_comp (flip F _) _ _ $@@ fmap_comp (F _) _ _ $@ _ ).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    nrefine (cat_assoc _ _ _ $@R _ $@ _ $@ (cat_assoc_opp _ _ _ $@R _)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    exact (_ $@L bifunctor_isbifunctor F _ _ $@R _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 125
+Time: 0.006s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Restricting a functor along a bifunctor yields a bifunctor. *)</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 128
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Global Instance is0bifunctor_compose {A B C D : Type}
+  `{IsGraph A, IsGraph B, Is1Cat C, Is1Cat D}
+  (F : A -&gt; B -&gt; C) {bf : Is0Bifunctor F}
+  (G : C -&gt; D) `{!Is0Functor G, !Is1Functor G}
+  : Is0Bifunctor (fun a b =&gt; G (F a b)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 133
+Time: 0.005s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+  rapply Build_Is0Bifunctor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 135
+Time: 0.005s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+
+Global Instance is1bifunctor_compose {A B C D : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
+  (F : A -&gt; B -&gt; C) (G : C -&gt; D) `{!Is0Functor G, !Is1Functor G}
+  `{!Is0Bifunctor F} {bf : Is1Bifunctor F}
+  : Is1Bifunctor (fun a b =&gt; G (F a b)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 142
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+  nrapply Build_Is1Bifunctor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre> intros x; nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      exact (fmap2 G (fmap2 (F x) p)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      refine (fmap2 G (fmap_id (F x) b) $@ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fmap_id G _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      refine (fmap2 G (fmap_comp (F x) f g) $@ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fmap_comp G _ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 153
+Time: 0.006s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre> intros y; nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      exact (fmap2 G (fmap2 (flip F y) p)).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      refine (fmap2 G (fmap_id (flip F y) a) $@ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fmap_id G _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 159
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      refine (fmap2 G (fmap_comp (flip F y) f g) $@ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fmap_comp G _ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a0 a1 f b0 b1 g.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 162
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 163
+Time: 0.01s">
+<div class="time" style="width: 45.454545454545%"></div>
+<pre>
+    rapply fmap2.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (bifunctor_isbifunctor F f g).</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 165
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bifunctor.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

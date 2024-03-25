@@ -1,0 +1,3917 @@
+<html>
+<head>
+<title>Products.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Products.v</h1>
+
+<div class="code" title="File: Products.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 26.041666666667%"></div>
+<pre>Require Import Basics.Equivalences Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 1
+Time: 0.007s">
+<div class="time" style="width: 7.2916666666667%"></div>
+<pre>
+Require Import Types.Bool Types.Prod.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 2
+Time: 0.021s">
+<div class="time" style="width: 21.875%"></div>
+<pre>
+Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
+               WildCat.Forall WildCat.NatTrans WildCat.Opposite WildCat.Prod
+               WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Categories with products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 8
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Definition cat_prod_corec_inv {I A : Type} `{Is1Cat A}
+  (prod : A) (x : I -&gt; A) (z : A) (pr : forall i, prod $-&gt; x i)
+  : yon_0gpd prod z $-&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply equiv_prod_0gpd_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  exact (fmap (fun x =&gt; yon_0gpd x z) (pr i)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A product of an [I]-indexed family of objects of a category is an object of the category with an [I]-indexed family of projections such that the induced map is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 17
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Class Product (I : Type) {A : Type} `{Is1Cat A} {x : I -&gt; A} := Build_Product' {
+  cat_prod : A;
+  cat_pr : forall i : I, cat_prod $-&gt; x i;
+  cat_isequiv_cat_prod_corec_inv
+    :: forall z : A, CatIsEquiv (cat_prod_corec_inv cat_prod x z cat_pr);
+}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Product I {A _ _ _ _} x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cat_prod I {A _ _ _ _} x {product} : rename.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A convenience wrapper for building products *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 27
+Time: 0.006s">
+<div class="time" style="width: 6.25%"></div>
+<pre>Definition Build_Product (I : Type) {A : Type} `{Is1Cat A} {x : I -&gt; A}
+  (cat_prod : A) (cat_pr : forall i : I, cat_prod $-&gt; x i)
+  (cat_prod_corec : forall z : A,
+    (forall i : I, z $-&gt; x i) -&gt; (z $-&gt; cat_prod))
+  (cat_prod_beta_pr : forall (z : A) (f : forall i, z $-&gt; x i) (i : I),
+    cat_pr i $o cat_prod_corec z f $== f i)
+  (cat_prod_eta_pr : forall (z : A) (f g : z $-&gt; cat_prod),
+    (forall i : I, cat_pr i $o f $== cat_pr i $o g) -&gt; f $== g)
+  : Product I x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply (Build_Product' I A _ _ _ _ _ cat_prod cat_pr).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_0gpd_issurjinj.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_IsSurjInj.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (cat_prod_corec z f).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_prod_beta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply cat_prod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Lemmata.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (I : Type) {A : Type} {x : I -&gt; A} `{Product I _ x}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 52
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Definition cate_cat_prod_corec_inv {z : A}
+    : (yon_0gpd (cat_prod I x) z) $&lt;~&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z)
+    := Build_CatEquiv (cat_prod_corec_inv (cat_prod I x) x z cat_pr).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 56
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Definition cate_cat_prod_corec {z : A}
+    : prod_0gpd I (fun i =&gt; yon_0gpd (x i) z) $&lt;~&gt; (yon_0gpd (cat_prod I x) z)
+    := cate_cat_prod_corec_inv^-1$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_prod_corec {z : A}
+    : (forall i, z $-&gt; x i) -&gt; (z $-&gt; cat_prod I x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_cat_prod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Applying the [i]th projection after a tuple of maps gives the [ith] map. *)
+ </pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Lemma cat_prod_beta {z : A} (f : forall i, z $-&gt; x i)
+    : forall i, cat_pr i $o cat_prod_corec f $== f i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_isretr cate_cat_prod_corec_inv f).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The pairing map is the unique map that makes the following diagram commute. *)
+ </pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Lemma cat_prod_eta {z : A} (f : z $-&gt; cat_prod I x)
+    : cat_prod_corec (fun i =&gt; cat_pr i $o f) $== f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_issect cate_cat_prod_corec_inv f).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance is0functor_prod_0gpd_helper
+    : Is0Functor (fun z : A^op =&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply Build_Morphism_0Gpd.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (f $o g i).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros g h p i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (f $@L p i).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Local Instance is1functor_prod_0gpd_helper
+    : Is1Functor (fun z : A^op =&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 97
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    snrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p r i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      refine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a r i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply cat_idl.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g r i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      apply cat_assoc.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition natequiv_cat_prod_corec_inv
+    : NatEquiv (yon_0gpd (cat_prod I x))
+      (fun z : A^op =&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    snrapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intro; apply cate_cat_prod_corec_inv.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 113
+Time: 0.096s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    exact (is1natural_yoneda_0gpd
+      (cat_prod I x)
+      (fun z =&gt; prod_0gpd I (fun i =&gt; yon_0gpd (x i) z))
+      cat_pr).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Lemma cat_prod_corec_eta {z : A} {f f' : forall i, z $-&gt; x i}
+    : (forall i, f i $== f' i) -&gt; cat_prod_corec f $== cat_prod_corec f'.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold cat_prod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 124
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    apply (moveL_equiv_V_0gpd cate_cat_prod_corec_inv).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cate_isretr cate_cat_prod_corec_inv _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 128
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Lemma cat_prod_pr_eta {z : A} {f f' : z $-&gt; cat_prod I x}
+    : (forall i, cat_pr i $o f $== cat_pr i $o f') -&gt; f $== f'.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    refine ((cat_prod_eta _)^$ $@ _ $@ cat_prod_eta _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply cat_prod_corec_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+End Lemmata.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Diagonal map *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Definition cat_prod_diag {I : Type} {A : Type} (x : A)
+  `{Product I _ (fun _ =&gt; x)}
+  : x $-&gt; cat_prod I (fun _ =&gt; x)
+  := cat_prod_corec I (fun _ =&gt; Id x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Uniqueness of products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Definition cate_cat_prod {I J : Type} (ie : I &lt;~&gt; J) {A : Type} `{HasEquivs A}
+  (x : I -&gt; A) `{!Product I x} (y : J -&gt; A) `{!Product J y}
+  (e : forall i : I, x i $&lt;~&gt; y (ie i))
+  : cat_prod I x $&lt;~&gt; cat_prod J y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply yon_equiv_0gpd.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  nrefine (natequiv_compose _ (natequiv_cat_prod_corec_inv _)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  nrefine (natequiv_compose
+            (natequiv_inverse (natequiv_cat_prod_corec_inv _)) _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrapply (cate_prod_0gpd ie).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 159
+Time: 0.011s">
+<div class="time" style="width: 11.458333333333%"></div>
+<pre>
+    exact (natequiv_yon_equiv_0gpd (e i) _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g j.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 162
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    destruct (eisretr ie j).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 164
+Time: 0.004s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [I]-indexed products are unique no matter how they are constructed. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Definition cat_prod_unique {I A : Type} `{HasEquivs A}
+  (x : I -&gt; A) `{!Product I x} (y : I -&gt; A) `{!Product I y}
+  (e : forall i : I, x i $&lt;~&gt; y i)
+  : cat_prod I x $&lt;~&gt; cat_prod I y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cate_cat_prod 1 x y e).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Existence of products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class HasProducts (I A : Type) `{Is1Cat A}
+  := has_products :: forall x : I -&gt; A, Product I x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class HasAllProducts (A : Type) `{Is1Cat A}
+  := has_all_products :: forall I : Type, HasProducts I A.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Product functor *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Global Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+  : Is0Functor (fun x : I -&gt; A =&gt; cat_prod I x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cat_prod_corec I (fun i =&gt; f i $o cat_pr i)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 189
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+Global Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+  : Is1Functor (fun x : I -&gt; A =&gt; cat_prod I x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 193
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f g p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_prod_corec_eta I (fun i =&gt; p i $@R cat_pr i)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (_ $@ (cat_prod_eta I (Id _))).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 198
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    exact (cat_prod_corec_eta I (fun i =&gt; cat_idl _ $@ (cat_idr _)^$)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z f g.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_prod_pr_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cat_prod_beta _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cat_prod_beta _ _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (_ $@L cat_prod_beta _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 209
+Time: 0.005s">
+<div class="time" style="width: 5.2083333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Categories with specific kinds of products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isterminal_prodempty {A : Type} {z : A}
+  `{Product Empty A (fun _ =&gt; z)}
+  : IsTerminal (cat_prod Empty (fun _ =&gt; z)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (cat_prod_corec _ _; fun f =&gt; cat_prod_pr_eta _ _); intros [].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Binary products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Class BinaryProduct {A : Type} `{Is1Cat A} (x y : A)
+  := binary_product :: Product Bool (fun b =&gt; if b then x else y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A category with binary products is a category with a binary product for each pair of objects. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class HasBinaryProducts (A : Type) `{Is1Cat A}
+  := has_binary_products :: forall x y : A, BinaryProduct x y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+Global Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
+  : HasBinaryProducts A
+  := fun x y =&gt; has_products (fun b : Bool =&gt; if b then x else y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section BinaryProducts.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{Is1Cat A} {x y : A} `{!BinaryProduct x y}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_binprod : A
+    := cat_prod Bool (fun b : Bool =&gt; if b then x else y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_pr1 : cat_binprod $-&gt; x := cat_pr true.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_pr2 : cat_binprod $-&gt; y := cat_pr false.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_binprod_corec {z : A} (f : z $-&gt; x) (g : z $-&gt; y)
+    : z $-&gt; cat_binprod.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cat_prod_corec Bool).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact g.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition cat_binprod_beta_pr1 {z : A} (f : z $-&gt; x) (g : z $-&gt; y)
+    : cat_pr1 $o cat_binprod_corec f g $== f
+    := cat_prod_beta _ _ true.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 254
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Definition cat_binprod_beta_pr2 {z : A} (f : z $-&gt; x) (g : z $-&gt; y)
+    : cat_pr2 $o cat_binprod_corec f g $== g
+    := cat_prod_beta _ _ false.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 258
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition cat_binprod_eta {z : A} (f : z $-&gt; cat_binprod)
+    : cat_binprod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold cat_binprod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_prod_pr_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod_beta_pr1 _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod_beta_pr2 _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 268
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition cat_binprod_eta_pr {z : A} (f g : z $-&gt; cat_binprod)
+    : cat_pr1 $o f $== cat_pr1 $o g -&gt; cat_pr2 $o f $== cat_pr2 $o g -&gt; f $== g.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 273
+Time: 0.007s">
+<div class="time" style="width: 7.2916666666667%"></div>
+<pre>
+    rapply cat_prod_pr_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact q.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 278
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition cat_binprod_corec_eta {z : A} (f f' : z $-&gt; x) (g g' : z $-&gt; y)
+    : f $== f' -&gt; g $== g' -&gt; cat_binprod_corec f g $== cat_binprod_corec f' g'.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 283
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    rapply cat_prod_corec_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact q.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 288
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+End BinaryProducts.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cat_binprod {A _ _ _ _} x y {_}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A convenience wrapper for building binary products *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 294
+Time: 0.008s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
+  (cat_binprod : A) (cat_pr1 : cat_binprod $-&gt; x) (cat_pr2 : cat_binprod $-&gt; y)
+  (cat_binprod_corec : forall z : A, z $-&gt; x -&gt; z $-&gt; y -&gt; z $-&gt; cat_binprod)
+  (cat_binprod_beta_pr1 : forall (z : A) (f : z $-&gt; x) (g : z $-&gt; y),
+    cat_pr1 $o cat_binprod_corec z f g $== f)
+  (cat_binprod_beta_pr2 : forall (z : A) (f : z $-&gt; x) (g : z $-&gt; y),
+    cat_pr2 $o cat_binprod_corec z f g $== g)
+  (cat_binprod_eta_pr : forall (z : A) (f g : z $-&gt; cat_binprod),
+    cat_pr1 $o f $== cat_pr1 $o g -&gt; cat_pr2 $o f $== cat_pr2 $o g -&gt; f $== g)
+  : Product Bool (fun b =&gt; if b then x else y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply (Build_Product _ cat_binprod).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_pr1.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_pr2.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f true).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f false).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cat_binprod_beta_pr1.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cat_binprod_beta_pr2.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f g p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p true).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p false).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 319
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From binary products, all Bool-shaped products can be constructed. This should not be an instance to avoid a cycle with [hasbinaryproducts_hasproductsbool]. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition hasproductsbool_hasbinaryproducts {A : Type} `{HasBinaryProducts A}
+  : HasProducts Bool A.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 325
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_Product.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod (x true) (x false)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_pr1.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_pr2.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_binprod_corec (f true) (f false)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod_beta_pr1 (f true) (f false)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod_beta_pr2 (f true) (f false)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f g p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p true).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p false).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Operations on indexed products *)
+
+(** We can take the disjoint union of the index set of an indexed product if we have all binary products. This is useful for associating products in a canonical way. This leads to symmetry and associativity of binary products. *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Definition cat_prod_index_sum {I J : Type} {A : Type} `{HasBinaryProducts A}
+  (x : I -&gt; A) (y : J -&gt; A)
+  : Product I x -&gt; Product J y -&gt; Product (I + J) (sum_rect _ x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_Product.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_binprod (cat_prod I x) (cat_prod J y)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [i | j].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_pr _ $o cat_pr1).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_pr _ $o cat_pr2).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cat_prod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (f o inl).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cat_prod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (f o inr).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f [i | j].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine ((_ $@L cat_binprod_beta_pr1 _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 363
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+      rapply cat_prod_beta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine ((_ $@L cat_binprod_beta_pr2 _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 366
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+      rapply cat_prod_beta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z f g r.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 368
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    rapply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 370
+Time: 0.007s">
+<div class="time" style="width: 7.2916666666667%"></div>
+<pre> rapply  cat_prod_pr_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 371
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+      exact ((cat_assoc _ _ _)^$ $@ r (inl i) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 373
+Time: 0.005s">
+<div class="time" style="width: 5.2083333333333%"></div>
+<pre> rapply  cat_prod_pr_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros j.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 374
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+      exact ((cat_assoc _ _ _)^$ $@ r (inr j) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 375
+Time: 0.007s">
+<div class="time" style="width: 7.2916666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Symmetry of binary products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Symmetry.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The requirement of having all binary products can be weakened further to having specific binary products, but it is not clear this is a useful generality. *)
+ </pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition cat_binprod_swap (x y : A) : cat_binprod x y $-&gt; cat_binprod y x
+    := cat_binprod_corec cat_pr2 cat_pr1.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 385
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Lemma cat_binprod_swap_cat_binprod_swap (x y : A)
+    : cat_binprod_swap x y $o cat_binprod_swap y x $== Id _.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 391
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr1 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr2 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      exact (cat_idr _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr2 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr1 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 397
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      exact (cat_idr _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 398
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma cate_binprod_swap (x y : A)
+    : cat_binprod x y $&lt;~&gt; cat_binprod y x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 403
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    snrapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply cat_binprod_swap.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: apply cat_binprod_swap_cat_binprod_swap.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 407
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+End Symmetry.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Binary product functor *)
+
+(** We prove bifunctoriality of [cat_binprod : A -&gt; A -&gt; A] by factoring it as [cat_prod Bool o Bool_rec A]. First, we prove that [Bool_rec A : A -&gt; A -&gt; (Bool -&gt; A)] is a bifunctor. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance is0bifunctor_boolrec {A : Type} `{Is1Cat A}
+  : Is0Bifunctor (Bool_rec A).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_Is0Bifunctor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    nrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 427
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+Local Instance is1bifunctor_boolrec {A : Type} `{Is1Cat A}
+  : Is1Bifunctor (Bool_rec A).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 431
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  nrapply Build_Is1Bifunctor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 433
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 435
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 438
+Time: 0.006s">
+<div class="time" style="width: 6.25%"></div>
+<pre> intros a [|]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 439
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      1: exact (cat_idl _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 440
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 442
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    nrapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 445
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 447
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> intros a [|]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 448
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 449
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      exact (cat_idl _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' f b b' g [|].</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 452
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> exact (cat_idl _ $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 453
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> exact (cat_idr _ $@ (cat_idl _)^$).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 453
+Time: 0.006s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 456
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
+  : Is0Bifunctor (fun x y =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 459
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  exact (is0bifunctor_compose
+          (Bool_rec A) (fun x =&gt; cat_prod Bool x (product:=p x))).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 462
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+Global Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
+  : Is1Bifunctor (fun x y =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (is1bifunctor_compose
+          (Bool_rec A) (fun x =&gt; cat_prod Bool x (product:=p x))).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Binary products are functorial in each argument. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
+  (y : A)
+  : Is0Functor (fun x =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (bifunctor_is0functor10 y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 477
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
+  (y : A)
+  : Is1Functor (fun x =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (bifunctor_is1functor10 y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
+  (x : A)
+  : Is0Functor (fun y =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (bifunctor_is0functor01 x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 491
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
+  (x : A)
+  : Is1Functor (fun y =&gt; cat_binprod x y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (bifunctor_is1functor01 x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [cat_binprod_corec] is also functorial in each morphsism. *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 501
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>Global Instance is0functor_cat_binprod_corec_l {A : Type}
+  `{HasBinaryProducts A} {x y z : A} (g : z $-&gt; y)
+  : Is0Functor (fun f : z $-&gt; y =&gt; cat_binprod_corec f g).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f f' p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 506
+Time: 0.012s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  by apply cat_binprod_corec_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 508
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+Global Instance is0functor_cat_binprod_corec_r {A : Type}
+  `{HasBinaryProducts A} {x y z : A} (f : z $-&gt; x)
+  : Is0Functor (fun g : z $-&gt; x =&gt; cat_binprod_corec f g).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros g h p.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 515
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  by apply cat_binprod_corec_eta.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Products in Type *)
+
+(** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance hasbinaryproducts_type : HasBinaryProducts Type.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 523
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_BinaryProduct.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (X * Y).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fst.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact snd.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f g z.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f z, g z).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f g p q x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q x).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming [Funext], [Type] has all products. *)</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance hasallproducts_type `{Funext} : HasAllProducts Type.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros I x.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 539
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  snrapply Build_Product.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (forall (i : I), x i).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i f.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f i).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f a i.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f i a).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f g p a.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_forall _ _ (fun i =&gt; p i a)).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Associativity of binary products *)
+
+</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Associativity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 552
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition cat_binprod_twist (x y z : A)
+    : cat_binprod x (cat_binprod y z) $-&gt; cat_binprod y (cat_binprod x z).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_binprod_corec.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cat_pr1 $o cat_pr2).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fmap (fun y =&gt; cat_binprod x y) cat_pr2).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 560
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Lemma cat_binprod_twist_cat_binprod_twist (x y z : A)
+    : cat_binprod_twist x y z $o cat_binprod_twist y x z $== Id _.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold cat_binprod_twist.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 565
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    apply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr1 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 569
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      nrefine (_ $@L cat_binprod_beta_pr2 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 570
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr1 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 571
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      exact (cat_idl _ $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 573
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 573
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+      nrefine (cat_binprod_beta_pr2 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply cat_binprod_eta_pr.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 576
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 576
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+        nrefine (cat_binprod_beta_pr1 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 577
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+        nrefine (cat_assoc _ _ _ $@ cat_idl _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        nrefine (cat_binprod_beta_pr1 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        nrefine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 580
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+        exact (cat_idr _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 582
+Time: 0.002s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 582
+Time: 0.004s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+        nrefine (cat_binprod_beta_pr2 _ _ $@R _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 583
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+        nrefine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 584
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+        nrefine (_ $@L cat_binprod_beta_pr2 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 585
+Time: 0.003s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+        nrefine (cat_binprod_beta_pr2 _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        nrefine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 587
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+        exact (cat_idr _)^$.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 588
+Time: 0.057s">
+<div class="time" style="width: 59.375%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 589
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Definition cate_binprod_twist (x y z : A)
+    : cat_binprod x (cat_binprod y z) $&lt;~&gt; cat_binprod y (cat_binprod x z).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 593
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    snrapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply cat_binprod_twist.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply cat_binprod_twist_cat_binprod_twist.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 597
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+  Lemma cate_binprod_assoc (x y z : A)
+    : cat_binprod x (cat_binprod y z) $&lt;~&gt; cat_binprod (cat_binprod x y) z.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cate_binprod_swap _ _ $oE _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cate_binprod_twist _ _ _ $oE _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 603
+Time: 0.001s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    refine (emap (fun y =&gt; cat_binprod x y) _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_binprod_swap _ _).</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 606
+Time: 0.017s">
+<div class="time" style="width: 17.708333333333%"></div>
+<pre>
+
+End Associativity.</pre>
+</div>
+<div class="code" title="File: Products.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

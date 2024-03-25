@@ -1,0 +1,50 @@
+digraph HoTT_WildCat_Monoidal {
+  graph [ratio=0.5]
+  node [style=filled]
+Monoidal_triangle_law [label="triangle_law", URL=<Monoidal.html#triangle_law>, peripheries=3, fillcolor="#F070D1"] ;
+Monoidal_pentagon_law [label="pentagon_law", URL=<Monoidal.html#pentagon_law>, peripheries=3, fillcolor="#F070D1"] ;
+Monoidal_MonoidalStructure_sind [label="MonoidalStructure_sind", URL=<Monoidal.html#MonoidalStructure_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Monoidal_MonoidalStructure_rec [label="MonoidalStructure_rec", URL=<Monoidal.html#MonoidalStructure_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Monoidal_MonoidalStructure_ind [label="MonoidalStructure_ind", URL=<Monoidal.html#MonoidalStructure_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Monoidal_MonoidalStructure_rect [label="MonoidalStructure_rect", URL=<Monoidal.html#MonoidalStructure_rect>, fillcolor="#F070D1"] ;
+Monoidal_Build_MonoidalStructure [label="Build_MonoidalStructure", URL=<Monoidal.html#Build_MonoidalStructure>, fillcolor="#7FAAFF"] ;
+Monoidal_MonoidalStructure [label="MonoidalStructure", URL=<Monoidal.html#MonoidalStructure>, fillcolor="#E2CDFA"] ;
+Monoidal_TriangleLaw [label="TriangleLaw", URL=<Monoidal.html#TriangleLaw>, fillcolor="#F070D1"] ;
+Monoidal_right_unitor [label="right_unitor", URL=<Monoidal.html#right_unitor>, fillcolor="#F070D1"] ;
+Monoidal_RightUnitor [label="RightUnitor", URL=<Monoidal.html#RightUnitor>, fillcolor="#F070D1"] ;
+Monoidal_left_unitor [label="left_unitor", URL=<Monoidal.html#left_unitor>, fillcolor="#F070D1"] ;
+Monoidal_LeftUnitor [label="LeftUnitor", URL=<Monoidal.html#LeftUnitor>, fillcolor="#F070D1"] ;
+Monoidal_PentagonLaw [label="PentagonLaw", URL=<Monoidal.html#PentagonLaw>, fillcolor="#F070D1"] ;
+Monoidal_assoc [label="assoc", URL=<Monoidal.html#assoc>, fillcolor="#F070D1"] ;
+Monoidal_Associator [label="Associator", URL=<Monoidal.html#Associator>, fillcolor="#F070D1"] ;
+Monoidal_Is0Functor_left_assoc [label="Is0Functor_left_assoc", URL=<Monoidal.html#Is0Functor_left_assoc>, fillcolor="#F070D1"] ;
+Monoidal_Is0Functor_right_assoc [label="Is0Functor_right_assoc", URL=<Monoidal.html#Is0Functor_right_assoc>, fillcolor="#F070D1"] ;
+Monoidal_right_assoc [label="right_assoc", URL=<Monoidal.html#right_assoc>, fillcolor="#F070D1"] ;
+Monoidal_left_assoc [label="left_assoc", URL=<Monoidal.html#left_assoc>, fillcolor="#F070D1"] ;
+  Monoidal_triangle_law -> Monoidal_MonoidalStructure [] ;
+  Monoidal_pentagon_law -> Monoidal_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_sind -> Monoidal_Build_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_sind -> Monoidal_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_rec -> Monoidal_MonoidalStructure_rect [] ;
+  Monoidal_MonoidalStructure_ind -> Monoidal_Build_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_ind -> Monoidal_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_rect -> Monoidal_Build_MonoidalStructure [] ;
+  Monoidal_MonoidalStructure_rect -> Monoidal_MonoidalStructure [] ;
+  Monoidal_Build_MonoidalStructure -> Monoidal_TriangleLaw [] ;
+  Monoidal_Build_MonoidalStructure -> Monoidal_PentagonLaw [] ;
+  Monoidal_MonoidalStructure -> Monoidal_TriangleLaw [] ;
+  Monoidal_MonoidalStructure -> Monoidal_PentagonLaw [] ;
+  Monoidal_TriangleLaw -> Monoidal_right_unitor [] ;
+  Monoidal_TriangleLaw -> Monoidal_left_unitor [] ;
+  Monoidal_TriangleLaw -> Monoidal_Associator [] ;
+  Monoidal_right_unitor -> Monoidal_RightUnitor [] ;
+  Monoidal_left_unitor -> Monoidal_LeftUnitor [] ;
+  Monoidal_PentagonLaw -> Monoidal_assoc [] ;
+  Monoidal_assoc -> Monoidal_Associator [] ;
+  Monoidal_Associator -> Monoidal_Is0Functor_left_assoc [] ;
+  Monoidal_Associator -> Monoidal_Is0Functor_right_assoc [] ;
+  Monoidal_Is0Functor_left_assoc -> Monoidal_left_assoc [] ;
+  Monoidal_Is0Functor_right_assoc -> Monoidal_right_assoc [] ;
+subgraph cluster_Monoidal { label="Monoidal"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Monoidal_left_assoc; Monoidal_right_assoc; Monoidal_Is0Functor_right_assoc; Monoidal_Is0Functor_left_assoc; Monoidal_Associator; Monoidal_assoc; Monoidal_PentagonLaw; Monoidal_LeftUnitor; Monoidal_left_unitor; Monoidal_RightUnitor; Monoidal_right_unitor; Monoidal_TriangleLaw; Monoidal_MonoidalStructure; Monoidal_Build_MonoidalStructure; Monoidal_MonoidalStructure_rect; Monoidal_MonoidalStructure_ind; Monoidal_MonoidalStructure_rec; Monoidal_MonoidalStructure_sind; Monoidal_pentagon_law; Monoidal_triangle_law; };
+} /* END */

@@ -1,0 +1,15 @@
+digraph HoTT_PropResizing_PropResizing {
+  graph [ratio=0.5]
+  node [style=filled]
+PropResizing_ishprop_resize_hprop [label="ishprop_resize_hprop", URL=<PropResizing.html#ishprop_resize_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+PropResizing_equiv_resize_hprop [label="equiv_resize_hprop", URL=<PropResizing.html#equiv_resize_hprop>, fillcolor="#FACDEF"] ;
+PropResizing_resize_hprop [label="resize_hprop", URL=<PropResizing.html#resize_hprop>, fillcolor="#FACDEF"] ;
+PropResizing_is_global_axiom_propresizing [label="is_global_axiom_propresizing", URL=<PropResizing.html#is_global_axiom_propresizing>, peripheries=3, fillcolor="#F070D1"] ;
+PropResizing_PropResizing [label="PropResizing", URL=<PropResizing.html#PropResizing>, fillcolor="#FACDEF"] ;
+  PropResizing_ishprop_resize_hprop -> PropResizing_equiv_resize_hprop [] ;
+  PropResizing_equiv_resize_hprop -> PropResizing_resize_hprop [] ;
+  PropResizing_resize_hprop -> PropResizing_PropResizing [] ;
+  PropResizing_is_global_axiom_propresizing -> PropResizing_PropResizing [] ;
+subgraph cluster_PropResizing { label="PropResizing"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PropResizing_PropResizing; PropResizing_is_global_axiom_propresizing; PropResizing_resize_hprop; PropResizing_equiv_resize_hprop; PropResizing_ishprop_resize_hprop; };
+} /* END */

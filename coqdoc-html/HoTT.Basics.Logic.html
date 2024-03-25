@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Logic</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Logic</h1>
+
+<div class="code">
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;The&nbsp;Coq&nbsp;Proof&nbsp;Assistant&nbsp;&nbsp;/&nbsp;&nbsp;The&nbsp;Coq&nbsp;Development&nbsp;Team&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&lt;O___,,&nbsp;*&nbsp;&nbsp;&nbsp;INRIA&nbsp;-&nbsp;CNRS&nbsp;-&nbsp;LIX&nbsp;-&nbsp;LRI&nbsp;-&nbsp;PPS&nbsp;-&nbsp;Copyright&nbsp;1999-2012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;\VV/&nbsp;&nbsp;**************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;is&nbsp;distributed&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;Version&nbsp;2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;has&nbsp;been&nbsp;modified&nbsp;for&nbsp;the&nbsp;purposes&nbsp;of&nbsp;the&nbsp;HoTT&nbsp;library.&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Basics.Notations.html#"><span class="id" title="library">Basics.Notations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="::type_scope:x_'-&gt;'_x" class="idref" href="#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">&quot;</span></a>A -&gt; B" := (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span> : <span class="id" title="var">A</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <span class="id" title="var">B</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.DProp.html#True"><span class="id" title="definition">True</span></a></span> is the unit type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="True" class="idref" href="#True"><span class="id" title="definition, inductive"><span id="True_rect" class="id"><span id="True_ind" class="id"><span id="True_rec" class="id"><span id="True_sind" class="id">True</span></span></span></span></span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+&nbsp;&nbsp;<a id="I" class="idref" href="#I"><span class="id" title="constructor">I</span></a> : <a class="idref" href="HoTT.Basics.Logic.html#True:1"><span class="id" title="inductive">True</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.DProp.html#False"><span class="id" title="definition">False</span></a></span> is the empty type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="False" class="idref" href="#False"><span class="id" title="definition, inductive"><span id="False_rect" class="id"><span id="False_ind" class="id"><span id="False_rec" class="id"><span id="False_sind" class="id">False</span></span></span></span></span></a> : <span class="id" title="keyword">Set</span> :=.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">I</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;In&nbsp;the&nbsp;HoTT&nbsp;library,&nbsp;we&nbsp;generally&nbsp;avoid&nbsp;using&nbsp;<span class="inlinecode"><span class="id" title="var">True</span></span>&nbsp;and&nbsp;<span class="inlinecode"><span class="id" title="var">False</span></span>&nbsp;and&nbsp;instead&nbsp;use&nbsp;<span class="inlinecode"><span class="id" title="var">Unit</span></span>&nbsp;and&nbsp;<span class="inlinecode"><span class="id" title="var">Empty</span></span>.&nbsp;*)</span><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

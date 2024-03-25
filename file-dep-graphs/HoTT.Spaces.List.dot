@@ -1,0 +1,13 @@
+digraph HoTT_Spaces_List {
+  graph [ratio=0.5]
+  node [style=filled]
+List_list_pentagon [label="list_pentagon", URL=<List.html#list_pentagon>, peripheries=3, fillcolor="#F070D1"] ;
+List_fold_right_app [label="fold_right_app", URL=<List.html#fold_right_app>, peripheries=3, fillcolor="#F070D1"] ;
+List_fold_right [label="fold_right", URL=<List.html#fold_right>, fillcolor="#F070D1"] ;
+List_fold_left_app [label="fold_left_app", URL=<List.html#fold_left_app>, peripheries=3, fillcolor="#F070D1"] ;
+List_fold_left [label="fold_left", URL=<List.html#fold_left>, fillcolor="#F070D1"] ;
+  List_fold_right_app -> List_fold_right [] ;
+  List_fold_left_app -> List_fold_left [] ;
+subgraph cluster_List { label="List"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+List_fold_left; List_fold_left_app; List_fold_right; List_fold_right_app; List_list_pentagon; };
+} /* END */

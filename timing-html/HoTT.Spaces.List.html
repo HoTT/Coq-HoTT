@@ -1,0 +1,398 @@
+<html>
+<head>
+<title>List.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for List.v</h1>
+
+<div class="code" title="File: List.v
+Line: 1
+Time: 0.024s">
+<div class="time" style="width: 60%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Classes.implementations.list.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Lemmas about lists *)
+
+(** Note that [list] is currently defined in Basics.Datatypes. *)
+
+</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Fold_Left_Recursor.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variables (A : Type) (B : Type).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable f : A -&gt; B -&gt; A.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint fold_left (l : list B) (a0 : A) : A :=
+    match l with
+      | nil =&gt; a0
+      | cons b t =&gt; fold_left t (f a0 b)
+    end.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma fold_left_app : forall (l l' : list B) (i : A),
+    fold_left (l ++ l') i = fold_left l' (fold_left l i).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l; simpl; auto.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Fold_Left_Recursor.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Fold_Right_Recursor.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variables (A : Type) (B : Type).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable f : B -&gt; A -&gt; A.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint fold_right (a0 : A) (l : list B) : A :=
+    match l with
+      | nil =&gt; a0
+      | cons b t =&gt; f b (fold_right a0 t)
+    end.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma fold_right_app : forall l l' i,
+    fold_right i (l ++ l') = fold_right (fold_right i l') l.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l; simpl; auto.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; f_ap.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Fold_Right_Recursor.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The type of lists has a monoidal structure given by concatenation. *)</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Definition list_pentagon {A} (w x y z : list A)
+  : app_assoc _ w x (y ++ z) @ app_assoc _ (w ++ x) y z
+    = ap (fun l =&gt; w ++ l) (app_assoc _ x y z)
+    @ app_assoc _ w (x ++ y) z
+    @ ap (fun l =&gt; l ++ z) (app_assoc _ w x y).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction w as [|? w IHw] in x, y, z |- *.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs nrapply concat_1p.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs nrapply concat_p1.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs nrapply concat_p1.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    rhs_V nrapply ap_pp.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    rhs_V nrapply (ap (ap (cons a)) (IHw x y z)).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    rhs nrapply ap_pp.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 62
+Time: 0.003s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre> rhs nrapply ap_pp.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 64
+Time: 0.003s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+      f_ap.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap_compose.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs_V nrapply ap_compose.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    nrapply (ap_compose (fun l =&gt; l ++ z)).</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 68
+Time: 0.013s">
+<div class="time" style="width: 32.5%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: List.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

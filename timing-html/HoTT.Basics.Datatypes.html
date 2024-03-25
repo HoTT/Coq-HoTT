@@ -1,0 +1,449 @@
+<html>
+<head>
+<title>Datatypes.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Datatypes.v</h1>
+
+<div class="code" title="File: Datatypes.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(************************************************************************)
+(*  v      *   The Coq Proof Assistant  /  The Coq Development Team     *)
+(* &lt;O___,, *   INRIA - CNRS - LIX - LRI - PPS - Copyright 1999-2012     *)
+(*   \VV/  **************************************************************)
+(*    //   *      This file is distributed under the terms of the       *)
+(*         *       GNU Lesser General Public License Version 2.1        *)
+(************************************************************************)
+
+(************************************************************************)
+(*   This file has been modified for the purposes of the HoTT library.  *)
+(************************************************************************)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Set Implicit Arguments.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 12
+Time: 0.017s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Require Import Basics.Logic.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Set Primitive Projections.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Set Nonrecursive Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [option A] is the extension of [A] with an extra element [None] *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive option (A : Type) : Type :=
+  | Some : A -&gt; option A
+  | None : option A.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme option_rect := Induction for option Sort Type.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Some {A} a.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments None {A}.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Register option as core.option.type.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive sum (A B : Type) : Type :=
+  | inl : A -&gt; sum A B
+  | inr : B -&gt; sum A B.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme sum_rect := Induction for sum Sort Type.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "x + y" := (sum x y) : type_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments inl {A B} _ , [A] B _.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments inr {A B} _ , A [B] _.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A notation for coproduct that's less overloaded than [+] *)</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "x |_| y" := (sum x y) (only parsing) : type_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [prod A B], written [A * B], is the product of [A] and [B];
+    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record prod (A B : Type) := pair { fst : A ; snd : B }.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme prod_rect := Induction for prod Sort Type.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments pair {A B} _ _.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments fst {A B} _ / .</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments snd {A B} _ / .</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Add Printing Let prod.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "x * y" := (prod x y) : type_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation and := prod (only parsing).</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation conj := pair (only parsing).</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Resolve pair inl inr : core.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_curry (A B C : Type) (f : A -&gt; B -&gt; C)
+  (p : prod A B) : C := f (fst p) (snd p).</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [iff A B], written [A &lt;-&gt; B], expresses the equivalence of [A] and [B] *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iff (A B : Type) := prod (A -&gt; B) (B -&gt; A).</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "A &lt;-&gt; B" := (iff A B) : type_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Another way of interpreting booleans as propositions *)
+
+(* Definition is_true b := b = true. *)
+
+(** Polymorphic lists and some operations *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive list (A : Type) : Type :=
+ | nil : list A
+ | cons : A -&gt; list A -&gt; list A.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme list_rect := Induction for list Sort Type.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments nil {A}.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Declare Scope list_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "::" := cons : list_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope list_scope with list.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Bind Scope list_scope with list.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Concatenation of two lists *)
+
+</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition app (A : Type) : list A -&gt; list A -&gt; list A :=
+  fix app l m :=
+  match l with
+   | nil =&gt; m
+   | a :: l1 =&gt; a :: app l1 m
+  end.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "++" := app : list_scope.</pre>
+</div>
+<div class="code" title="File: Datatypes.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
