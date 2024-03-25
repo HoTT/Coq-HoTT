@@ -55,6 +55,7 @@ Proof.
 Defined.
 
 (** ** Universal property *)
+(** See Colimits/CoeqUnivProp.v for a similar universal property without [Funext]. *)
 
 Definition Coeq_unrec {B A} (f g : B -> A) {P}
   (h : Coeq f g -> P)
