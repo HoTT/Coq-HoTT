@@ -16,6 +16,7 @@ Require Import WildCat.ZeroGroupoid.
 Section UnivProp.
   Context {B A : Type} (f g : B -> A) (P : Coeq f g -> Type).
 
+  (** This allows Coq to infer 0-groupoid structures of the form [@isgraph_forall _ P (fun a => isgraph_paths (P a))] whenever the (co)domain is of the form [forall z, P z]. *)
   Local Existing Instances isgraph_forall is01cat_forall is0gpd_forall | 1.
   Local Existing Instances isgraph_total is01cat_total is0gpd_total | 1.
   Local Existing Instances isgraph_paths is01cat_paths is0gpd_paths | 2.
@@ -24,7 +25,7 @@ Section UnivProp.
   Definition Coeq_ind_data (h : forall a : A, P (coeq a))
     := forall b : B, DPath P (cglue b) (h (f b)) (h (g b)).
 
-  (** We consider [Coeq_ind_data] to be a displayed 0-groupoid, where objects over [h : forall a : A, P (coeq a)] are homotopies [h o f == h o g] and morphisms over [p : h == k] are witnesses that p commutes with the homotopies over [h] and [k]. *)
+  (** We consider [Coeq_ind_data] to be a displayed 0-groupoid, where objects over [h : forall a : A, P (coeq a)] are dependent paths as defined above and morphisms over [p : h == k] are witnesses that p commutes with the homotopies over [h] and [k]. *)
   Local Instance isdgraph_Coeq_ind_data : IsDGraph Coeq_ind_data.
   Proof.
     intros h k p r s.
@@ -55,7 +56,7 @@ Section UnivProp.
     nrapply concat_1p.
   Defined.
 
-  (** Here is the functor. The domain is the fully-applied type of [Coeq_ind]: sections of [P] over [Coeq f g]. The codomain consists of input data for [Coeq_ind]. *)
+  (** Here is the functor. The domain is the fully-applied type of [Coeq_ind]: sections of [P] over [Coeq f g]. The codomain consists of input data for [Coeq_ind] given a 0-groupoid structure via [is0gpd_total]. *)
   Definition Coeq_ind_inv : (forall z : Coeq f g, P z) -> sig Coeq_ind_data.
   Proof.
     intros h.
