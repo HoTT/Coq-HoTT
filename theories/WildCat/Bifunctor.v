@@ -133,43 +133,102 @@ Proof.
     exact (_ $@L bifunctor_isbifunctor F _ _ $@R _).
 Defined.
 
+(** ** Composition of bifunctors *)
+
+(** There are 4 different ways to compose a functor with a bifunctor. *)
+
 (** Restricting a functor along a bifunctor yields a bifunctor. *)
-Global Instance is0bifunctor_compose {A B C D : Type}
-  `{IsGraph A, IsGraph B, Is1Cat C, Is1Cat D}
+Global Instance is0bifunctor_postcompose {A B C D : Type}
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
   (F : A -> B -> C) {bf : Is0Bifunctor F}
-  (G : C -> D) `{!Is0Functor G, !Is1Functor G}
+  (G : C -> D) `{!Is0Functor G, !Is0Functor G}
   : Is0Bifunctor (fun a b => G (F a b)).
 Proof.
   rapply Build_Is0Bifunctor.
 Defined.
 
-Global Instance is1bifunctor_compose {A B C D : Type}
+Global Instance is1bifunctor_postcompose {A B C D : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
   (F : A -> B -> C) (G : C -> D) `{!Is0Functor G, !Is1Functor G}
   `{!Is0Bifunctor F} {bf : Is1Bifunctor F}
   : Is1Bifunctor (fun a b => G (F a b)).
 Proof.
   nrapply Build_Is1Bifunctor.
-  - intros x; nrapply Build_Is1Functor.
-    + intros a b f g p.
-      exact (fmap2 G (fmap2 (F x) p)).
-    + intros b.
-      refine (fmap2 G (fmap_id (F x) b) $@ _).
-      exact (fmap_id G _).
-    + intros a b c f g.
-      refine (fmap2 G (fmap_comp (F x) f g) $@ _).
-      exact (fmap_comp G _ _).
-  - intros y; nrapply Build_Is1Functor.
-    + intros a b f g p.
-      exact (fmap2 G (fmap2 (flip F y) p)).
-    + intros a.
-      refine (fmap2 G (fmap_id (flip F y) a) $@ _).
-      exact (fmap_id G _).
-    + intros a b c f g.
-      refine (fmap2 G (fmap_comp (flip F y) f g) $@ _).
-      exact (fmap_comp G _ _).
-  - intros a0 a1 f b0 b1 g.
-    refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).
-    rapply fmap2.
-    exact (bifunctor_isbifunctor F f g).
+  1,2: exact _.
+  intros a0 a1 f b0 b1 g.
+  refine ((fmap_comp G _ _)^$ $@ _ $@ fmap_comp G _ _).
+  rapply fmap2.
+  exact (bifunctor_isbifunctor F f g).
+Defined.
+
+Global Instance is0bifunctor_precompose {A B C D : Type}
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
+  (G : A -> B) (F : B -> C -> D) `{!Is0Functor G, !Is0Bifunctor F}
+  : Is0Bifunctor (fun a b => F (G a) b).
+Proof.
+  rapply Build_Is0Bifunctor.
+  intros c.
+  change (Is0Functor (flip F c o G)).
+  exact _.
+Defined.
+
+Global Instance is0bifunctor_precompose' {A B C D : Type}
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
+  (G : A -> C) (F : B -> C -> D) `{!Is0Functor G, !Is0Bifunctor F}
+  : Is0Bifunctor (fun a b => F a (G b)).
+Proof.
+  rapply Build_Is0Bifunctor.
+  intros a.
+  change (Is0Functor (flip F (G a))).
+  exact _.
+Defined.
+
+Global Instance is1bifunctor_precompose {A B C D : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
+  (G : A -> B) (F : B -> C -> D)
+  `{!Is0Functor G, !Is1Functor G, !Is0Bifunctor F, !Is1Bifunctor F}
+  : Is1Bifunctor (fun a b => F (G a) b).
+Proof.
+  nrapply Build_Is1Bifunctor.
+  - exact _.
+  - unfold flip.
+    change (forall c, Is1Functor (flip F c o G)).
+    exact _.
+  - intros ? ? ?; apply (bifunctor_isbifunctor F).
+Defined.
+
+Global Instance is1bifunctor_precompose' {A B C D : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
+  (G : A -> C) (F : B -> C -> D)
+  `{!Is0Functor G, !Is1Functor G, !Is0Bifunctor F, !Is1Bifunctor F}
+  : Is1Bifunctor (fun b a => F b (G a)).
+Proof.
+  nrapply Build_Is1Bifunctor.
+  - exact _.
+  - unfold flip.
+    change (forall a, Is1Functor (fun b => F b (G a))).
+    exact _.
+  - intros a a' f b b' g.
+    simpl.
+    apply (bifunctor_isbifunctor F).
+Defined.
+
+Global Instance is0functor_uncurry_uncurry_left {A B} (F : A -> B -> A)
+  `{Is01Cat A, Is01Cat B, !Is0Bifunctor F}
+  : Is0Functor (uncurry (uncurry (fun x y z => F (F x y) z))).
+Proof.
+  rapply is0functor_uncurry_bifunctor.
+Defined.
+
+Global Instance is0functor_uncurry_uncurry_right {A B} (F : A -> B -> B)
+  `{Is01Cat A, Is01Cat B, !Is0Bifunctor F}
+  : Is0Functor (uncurry (uncurry (fun x y z => F x (F y z)))).
+Proof.
+  apply is0functor_uncurry_bifunctor.
+  nrapply Build_Is0Bifunctor.
+  1: exact _.
+  intros b.
+  change (Is0Functor (uncurry (fun x y => F x (F y b)))).
+  apply is0functor_uncurry_bifunctor.
+  apply (is0bifunctor_precompose' (flip F b) F).
 Defined.
