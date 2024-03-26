@@ -13,11 +13,11 @@ Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES B A).
 
 Global Instance is0bifunctor_ext `{Univalence}
   : Is0Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
-  := is0bifunctor_compose _ _ (bf:=is0bifunctor_abses).
+  := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses).
 
 Global Instance is1bifunctor_ext `{Univalence}
   : Is1Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
-  := is1bifunctor_compose _ _ (bf:=is1bifunctor_abses).
+  := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses).
 
 (** An extension [E : AbSES B A] is trivial in [Ext B A] if and only if [E] merely splits. *)
 Proposition iff_ab_ext_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
@@ -34,11 +34,11 @@ Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
 Global Instance is0bifunctor_ext' `{Univalence}
   : Is0Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
-  := is0bifunctor_compose _ _ (bf:=is0bifunctor_abses').
+  := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses').
 
 Global Instance is1bifunctor_ext' `{Univalence}
   : Is1Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
-  := is1bifunctor_compose _ _ (bf:=is1bifunctor_abses').
+  := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
