@@ -260,10 +260,12 @@ Proof.
   apply trijoin_id_sym_nat.
 Defined.
 
-Global Instance join_associator : Associator Type Join.
+Global Instance join_associator : Associator Join.
 Proof.
-  unshelve econstructor; unfold right_assoc, left_assoc, uncurry; cbn.
-  - intros [[A B] C]; cbn.
+  snrapply Build_Associator_uncurried; simpl.
+  apply natequiv_inverse.
+  snrapply Build_NatEquiv.
+  - intros [[A B] C].
     apply join_assoc.
   - intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
     (* This is awkward because Monoidal.v works with a tensor that is separately a functor in each variable. *)
@@ -275,6 +277,7 @@ Proof.
     cbn.
     rhs_V nrapply join_assoc_nat; cbn.
     apply ap.
+    lhs_V nrapply functor_join_compose.
     lhs_V nrapply functor_join_compose.
     apply functor2_join.
     1: reflexivity.
@@ -310,9 +313,14 @@ Proof.
     apply join_sym_beta_jglue.
 Defined.
 
-Definition join_trianglelaw A B : TriangleLaw Type Join Empty A B.
+Definition join_trianglelaw : TriangleIdentity Join Empty.
 Proof.
-  unfold TriangleLaw; intro x; cbn.
+  intros A B.
+  (** TODO: This should be a lemma *)
+  nrefine (_ $@ cat_idr _).
+  nrefine (_ $@ (_ $@L cate_issect _)).
+  nrefine ((_ $@R _) $@ cat_assoc _ _ _).
+  intros x. 
   lhs nrapply (functor_join_compose idmap _ idmap _).
   lhs_V nrapply join_trianglelaw'.
   unfold join_assoc; cbn.

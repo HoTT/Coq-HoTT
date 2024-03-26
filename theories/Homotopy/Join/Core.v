@@ -831,7 +831,7 @@ Section JoinEmpty.
   Definition equiv_join_empty_left A : Join Empty A <~> A
     := equiv_join_empty_right _ oE equiv_join_sym _ _.
 
-  Global Instance join_right_unitor : RightUnitor Type Join Empty.
+  Global Instance join_right_unitor : RightUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_right.
@@ -844,7 +844,7 @@ Section JoinEmpty.
       + intros a [].
   Defined.
 
-  Global Instance join_left_unitor : LeftUnitor Type Join Empty.
+  Global Instance join_left_unitor : LeftUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_left.
