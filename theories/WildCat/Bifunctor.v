@@ -141,7 +141,7 @@ Defined.
 Global Instance is0bifunctor_postcompose {A B C D : Type}
   `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
   (F : A -> B -> C) {bf : Is0Bifunctor F}
-  (G : C -> D) `{!Is0Functor G, !Is0Functor G}
+  (G : C -> D) `{!Is0Functor G}
   : Is0Bifunctor (fun a b => G (F a b)).
 Proof.
   rapply Build_Is0Bifunctor.
@@ -213,22 +213,26 @@ Proof.
     apply (bifunctor_isbifunctor F).
 Defined.
 
-Global Instance is0functor_uncurry_uncurry_left {A B} (F : A -> B -> A)
-  `{Is01Cat A, Is01Cat B, !Is0Bifunctor F}
-  : Is0Functor (uncurry (uncurry (fun x y z => F (F x y) z))).
+Global Instance is0functor_uncurry_uncurry_left {A B C D E}
+  (F : A -> B -> C) (G : C -> D -> E)
+  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D, Is01Cat E,
+    !Is0Bifunctor F, !Is0Bifunctor G}
+  : Is0Functor (uncurry (uncurry (fun x y z => G (F x y) z))).
 Proof.
   rapply is0functor_uncurry_bifunctor.
 Defined.
 
-Global Instance is0functor_uncurry_uncurry_right {A B} (F : A -> B -> B)
-  `{Is01Cat A, Is01Cat B, !Is0Bifunctor F}
-  : Is0Functor (uncurry (uncurry (fun x y z => F x (F y z)))).
+Global Instance is0functor_uncurry_uncurry_right {A B C D E}
+  (F : A -> B -> D) (G : C -> D -> E)
+  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D, Is01Cat E,
+    !Is0Bifunctor F, !Is0Bifunctor G}
+  : Is0Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
 Proof.
   apply is0functor_uncurry_bifunctor.
   nrapply Build_Is0Bifunctor.
   1: exact _.
   intros b.
-  change (Is0Functor (uncurry (fun x y => F x (F y b)))).
+  change (Is0Functor (uncurry (fun x y => G x (F y b)))).
   apply is0functor_uncurry_bifunctor.
-  apply (is0bifunctor_precompose' (flip F b) F).
+  apply (is0bifunctor_precompose' (flip F b) G).
 Defined.
