@@ -92,7 +92,7 @@ Proof.
     by destruct h, s, r, q.
   - intros a b p q h; cbn.
     apply moveL_Mp.
-    (* TODO: the naturliaty condition in path groupoids is not in the most natural form. *)
+    (* TODO: the naturality condition in PathGroupoids.v is not in the most natural form. *)
     lhs nrapply concat_p_pp.
     exact (whiskerR_p1 h).
   - intros a b p q h. simpl. hnf.
