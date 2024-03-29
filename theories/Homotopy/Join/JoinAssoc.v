@@ -262,10 +262,8 @@ Defined.
 
 Global Instance join_associator : Associator Join.
 Proof.
-  snrapply Build_Associator_uncurried; simpl.
-  apply natequiv_inverse.
-  snrapply Build_NatEquiv.
-  - intros [[A B] C].
+  snrapply Build_Associator; simpl.
+  - intros A B C.
     apply join_assoc.
   - intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
     (* This is awkward because Monoidal.v works with a tensor that is separately a functor in each variable. *)
@@ -315,12 +313,7 @@ Defined.
 
 Definition join_trianglelaw : TriangleIdentity Join Empty.
 Proof.
-  intros A B.
-  (** TODO: This should be a lemma *)
-  nrefine (_ $@ cat_idr _).
-  nrefine (_ $@ (_ $@L cate_issect _)).
-  nrefine ((_ $@R _) $@ cat_assoc _ _ _).
-  intros x. 
+  intros A B x; cbn. 
   lhs nrapply (functor_join_compose idmap _ idmap _).
   lhs_V nrapply join_trianglelaw'.
   unfold join_assoc; cbn.

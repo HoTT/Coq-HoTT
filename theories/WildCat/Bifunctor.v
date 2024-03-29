@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall.
-Require Import WildCat.Core WildCat.Prod WildCat.Equiv.
+Require Import WildCat.Core WildCat.Prod WildCat.Equiv WildCat.NatTrans WildCat.Square.
 
 (** * Bifunctors between WildCats *)
 
@@ -235,4 +235,24 @@ Proof.
   change (Is0Functor (uncurry (fun x y => G x (F y b)))).
   apply is0functor_uncurry_bifunctor.
   apply (is0bifunctor_precompose' (flip F b) G).
+Defined.
+
+(** ** Natural transformations between bifunctors *)
+
+(** We can show that an uncurried natural transformation between uncurried bifunctors by composing the naturality square in each variable. *)
+Global Instance is1natural_uncurry {A B C : Type}
+  `{IsGraph A, IsGraph B, Is1Cat C}
+  (F : A -> B -> C)
+  `{!Is0Bifunctor F}
+  (G : A -> B -> C)
+  `{!Is0Bifunctor G}
+  (alpha : uncurry F $=> uncurry G)
+  (nat_l : forall b, Is1Natural (flip F b) (flip G b) (fun x : A => alpha (x, b)))
+  (nat_r : forall a, Is1Natural (F a) (G a) (fun y : B => alpha (a, y)))
+  : Is1Natural (uncurry F) (uncurry G) alpha.
+Proof.
+  intros [a b] [a' b'] [f f']; cbn in *.
+  change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
+  unfold fmap11.
+  exact (hconcat (nat_l _ _ _ f) (nat_r _ _ _ f')).
 Defined.
