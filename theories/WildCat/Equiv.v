@@ -719,3 +719,30 @@ Proof.
   - intros g r s.
     exact (Build_Cat_IsBiInv g r g s).
 Defined.
+
+(** ** Equivalences in groupoids *)
+
+(** All morphisms in 1-groupoids are equivalences. This is not an instance so that it can be used only when needed. *)
+Definition hasequivs_1gpd (A : Type) `{Is1Gpd A} : HasEquivs A.
+Proof.
+  snrapply Build_HasEquivs.
+  - intros x y.
+    exact (x $== y).
+  - exact (fun _ _ _ => Unit).
+  - intros x y.
+    exact idmap.
+  - intros x y f.
+    exact tt.
+  - intros x y f _.
+    exact f.
+  - simpl; intros x y f _.
+    exact (Id _).
+  - intros x y f.
+    exact f^$.
+  - intros x y f.
+    exact (gpd_issect f).
+  - intros x y f.
+    exact (gpd_isretr f).
+  - intros x y f g p q.
+    exact tt.
+Defined.

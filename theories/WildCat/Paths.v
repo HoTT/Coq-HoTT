@@ -62,8 +62,10 @@ Proof.
   - exact (@concat_1p A).
 Defined.
 
-(** Any type is a 1-groupoid with morphisms given by paths. *)
-Instance is1gpd_paths {A : Type} : Is1Gpd A.
+Local Instance is2graph_paths (A : Type) : Is2Graph A := fun _ _ => _.
+Local Instance is3graph_paths (A : Type) : Is3Graph A := fun _ _ => _.
+
+Local Instance is1cat_paths (A : Type) : Is1Cat A.
 Proof.
   snapply Build_Is1Gpd.
   - exact (@concat_pV A).
@@ -77,9 +79,40 @@ Proof.
   - exact _.
   - exact _.
   - intros x y z p.
-    snapply Build_Is1Functor.
-    + intros a b q r.
-      exact (ap (fun x => whiskerR x _)).
+    snrapply Build_Is0Functor.
+    intros q r h.
+    exact (whiskerR h p).
+  - intros x y z p.
+    snrapply Build_Is0Functor.
+    intros q r h.
+    exact (whiskerL p h).
+  - intros w x y z p q r.
+    exact (concat_p_pp p q r). 
+  - intros x y p.
+    exact (concat_p1 p).
+  - intros x y p.
+    exact (concat_1p p).
+Defined.
+
+Local Instance is1gpd_paths (A : Type) : Is1Gpd A.
+Proof.
+  snrapply Build_Is1Gpd.
+  - intros x y p.
+    exact (concat_pV p).
+  - intros x y p.
+    exact (concat_Vp p).
+Defined.
+
+Local Instance is21cat_paths (A : Type) : Is21Cat A.
+Proof.
+  snrapply Build_Is21Cat.
+  - exact _.
+  - exact _.
+  - intros x y z p.
+    snrapply Build_Is1Functor.
+    + intros a b q r h.
+      (* TODO: missing from path groupoids? *)
+      by destruct h.
     + reflexivity.
     + intros a b c.
       exact (whiskerR_pp p).
