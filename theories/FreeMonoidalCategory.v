@@ -53,9 +53,9 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X}, HomFMC a b -> HomFMC a b ->
 (** Right identity for composition of morphisms *)
 | right_unitor2 {x y} {f : HomFMC x y} : Hom2FMC (comp f (id _)) f
 (** Left inversion law for composition of morphisms *)
-| left_invertor2 {x y} {f : HomFMC x y} : Hom2FMC (comp (rev f) f) (id _)
+| left_invertor2 {x y} (f : HomFMC x y) : Hom2FMC (comp (rev f) f) (id _)
 (** Right inversion law for composition of morphisms *)
-| right_invertor2 {x y} {f : HomFMC x y} : Hom2FMC (comp f (rev f)) (id _)
+| right_invertor2 {x y} (f : HomFMC x y) : Hom2FMC (comp f (rev f)) (id _)
 (** Triangle identity *)
 | triangle {x y}
   : Hom2FMC
@@ -177,11 +177,7 @@ Defined.
 Definition left_unitor' {X} (x : FMC X)
   : tensor unit x $<~> x.
 Proof.
-  snrapply cate_adjointify.
-  - exact (left_unitor x).
-  - exact (rev (left_unitor x)).
-  - apply right_invertor2.
-  - apply left_invertor2.
+  exact (left_unitor x).
 Defined.
 
 Global Instance leftunitor_FMC {X} : LeftUnitor (@tensor X) unit.
@@ -194,11 +190,7 @@ Defined.
 Definition right_unitor' {X} (x : FMC X)
   : tensor x unit $<~> x.
 Proof.
-  snrapply cate_adjointify.
-  - exact (right_unitor x).
-  - exact (rev (right_unitor x)).
-  - apply right_invertor2.
-  - apply left_invertor2.
+  exact (right_unitor x).
 Defined.
 
 Global Instance rightunitor_FMC {X} : RightUnitor (@tensor X) unit.
@@ -211,11 +203,7 @@ Defined.
 Definition associator' {X} (x y z : FMC X)
   : tensor x (tensor y z) $<~> tensor (tensor x y) z.
 Proof.
-  snrapply cate_adjointify.
-  - exact (associator x y z).
-  - exact (rev (associator x y z)).
-  - apply right_invertor2.
-  - apply left_invertor2.
+  exact (associator x y z).
 Defined.
 
 Global Instance associator_FMC {X} : Associator (@tensor X).
@@ -369,8 +357,7 @@ Proof.
   - reflexivity.
   - reflexivity.
   - reflexivity.
-  - exact (fun _ => IHf _ @ ap _ (IHg _)).
-    (* exact (IHg $@@ IHf). *)
+  - exact (IHg $@@ IHf).
 Defined.
 
 Global Instance is1functor_interp (X : Type) : Is1Functor (interp X).
@@ -601,6 +588,72 @@ Proof.
   - exact (IHa _ $o fmap11 tensor (Id a) (IHb _) $o (associator' _ _ _)^$).
 Defined.
 
+Lemma natequiv_left_unitor {X}
+  : NatEquiv (tensor (X:=X) unit) idmap.
+Proof.
+  snrapply Build_NatEquiv.
+  - intros x.
+    apply left_unitor.
+  - intros x y f.
+    apply isnat_left_unitor.
+Defined.
+
+Definition isnat_left_unitor' {X} {x y : FMC X} (f : x $-> y)
+  : left_unitor' y $o fmap01 tensor unit f $== f $o left_unitor' x
+  := isnat_left_unitor x y f.
+
+Definition isnat_right_unitor' {X} {x y : FMC X} (f : x $-> y)
+  : right_unitor' y $o fmap10 tensor f unit $== f $o right_unitor' x
+  := isnat_right_unitor x y f.
+
+Definition triangle' {X} (x y : FMC X)
+  : fmap01 tensor x (left_unitor' y) $== fmap10 tensor (right_unitor' x) y $o associator' x unit y
+  := triangle.
+
+Definition pentagon' {X} (w x y z : FMC X)
+  : associator' (tensor w x) y z $o associator' w x (tensor y z)
+    $== fmap10 tensor (associator' w x y) z $o associator' w (tensor x y) z
+      $o fmap01 tensor w (associator' x y z)
+  := pentagon.
+
+Definition isnat_l_associator' {X} {w x y z : FMC X} (f : z $-> y)
+  : associator' y w x $o fmap10 tensor f (tensor w x)
+    $== fmap10 tensor (fmap10 tensor f w) x $o associator' z w x
+  := isnat_l_associator w x y z f.
+
+Definition isnat_m_associator' {X} {w x y z : FMC X} (f : z $-> y)
+  : associator' w y x $o fmap01 tensor w (fmap10 tensor f x)
+    $== fmap10 tensor (fmap01 tensor w f) x $o associator' w z x 
+  := isnat_m_associator w x y z f.
+
+Definition isnat_r_associator' {X} {w x y z : FMC X} (f : z $-> y)
+  : associator' w x y $o fmap01 tensor w (fmap01 tensor x f)
+    $== fmap01 tensor (tensor w x) f $o associator' w x z
+  := isnat_r_associator w x y z f.
+
+(** Proven in [Kelly 64]. Proof is a little tricky even though the lemma is simple. *)
+Lemma unitor_tensor_law {X} x y
+  : left_unitor' (tensor (X:=X) x y)
+    $== fmap10 tensor (left_unitor' x) y $o associator' unit x y.
+Proof.
+  refine ((gpd_moveR_hV (isnat_left_unitor' _))^$ $@ ((_ $@L _) $@R _)
+    $@ gpd_moveR_hV (isnat_left_unitor' _)).
+  refine (_ $@ (fmap_comp _ _ _)^$).
+  refine (_ $@ (gpd_moveR_Vh (isnat_m_associator' _)^$ $@R _)). 
+  refine (_ $@ (cat_assoc _ _ _)^$).
+  apply gpd_moveL_Vh.
+  change (fmap (tensor unit) ?f) with (fmap01 tensor unit f).
+  refine (_ $@L (triangle' _ _) $@ _).
+  refine ((cat_assoc _ _ _)^$ $@ _).
+  refine (_ $@ (cat_assoc _ _ _)^$).
+  refine (_ $@ ((fmap2 _ (triangle' _ _) $@ fmap_comp _ _ _)^$ $@R _)).
+  change (fmap (flip tensor y) ?f) with (fmap10 tensor f y).
+  refine (_ $@ (cat_assoc _ _ _)^$).
+  refine (_ $@ (_ $@L (pentagon' _ _ _ _ $@ cat_assoc _ _ _))).
+  refine ((_ $@R _) $@ cat_assoc _ _ _).
+  exact (isnat_l_associator' _).
+Defined.
+
 (** Main meat of proof *)
 Global Instance is1natural_zeta_trans {X} n
   : Is1Natural
@@ -635,11 +688,122 @@ Proof.
     2: exact (gpd_1functor_V (nfmc_fmc_incl X o (fun f => f n) o interp X) _).
     exact (hinverse' (IHf _)).
   - (** Left unitor *)
-    admit.
+    change (Square
+      (zeta_trans _ unit $o fmap11 tensor (Id unit) (zeta_trans n x) $o (associator' _ _ _)^$)
+      (zeta_trans n x)
+      (fmap (flip tensor (nfmc_fmc_incl X n)) (left_unitor x))
+      (id _)).
+    snrapply vconcatL.
+    { refine (_ $o (associator' _ _ _)^$).
+       apply left_unitor. }
+    { symmetry.
+      apply gpd_moveR_hV.
+      apply unitor_tensor_law. }
+    unfold Square.
+    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _).
+    refine (_ $@ (cat_idl _)^$).
+    generalize (zeta_trans n x); intros h.
+    refine (_ $@ (_ $@L _)).
+    2: { refine (_ $@ (_ $@L _^$)).
+      2: apply tensor2_id.
+      symmetry.
+      rapply cat_idr. }
+    symmetry.
+    apply isnat_left_unitor.
   - (** Right unitor *)
-    admit.
+    change (Square
+      (zeta_trans n x $o fmap11 tensor (Id x) (zeta_trans n unit) $o (associator' _ _ _)^$)
+      (zeta_trans n x)
+      (fmap (flip tensor (nfmc_fmc_incl X n)) (right_unitor x))
+      (id _)).
+    snrapply vconcatL.
+    { refine (_ $o (associator' _ _ _)^$).
+      refine (fmap01 tensor x _).
+      apply left_unitor. }
+    { apply gpd_moveL_hV.
+      symmetry.
+      apply triangle'. }
+    apply whiskerTL.
+    snrapply hconcatR.
+    { refine (_ $o _).
+      1: apply right_unitor.
+      refine (_ $o _^$).
+      2: apply right_unitor.
+      refine (fmap10 tensor _ unit).
+      exact (zeta_trans n x). }
+    { unfold Square.
+      refine (_ $@ (cat_idl _)^$).
+      unfold fmap11.
+      refine (_ $@ (_ $@L _^$) $@ cat_assoc _ _ _).
+      2: apply tensor2_id.
+      refine (_ $@ (cat_idr _)^$).
+      change (fmap (tensor x) ?f) with (fmap01 tensor x f).
+      refine (((cat_assoc _ _ _)^$ $@ _) $@R _).
+      apply gpd_moveR_hV.
+      apply isnat_right_unitor'. }
+    refine (_ $@ cat_assoc _ _ _).
+    apply gpd_moveL_hV.
+    symmetry.
+    apply isnat_right_unitor'.
   - (** Associator *)
-    admit.
+    change (Square
+      (zeta_trans _ x $o fmap11 tensor (Id x) (zeta_trans n (tensor y z)) $o (associator' _ _ _)^$)
+      (zeta_trans _ (tensor x y) $o fmap11 tensor (Id (tensor x y)) (zeta_trans n z) $o (associator' _ _ _)^$)
+      (fmap (flip tensor (nfmc_fmc_incl X n)) (associator x y z))
+      (id _)).
+    snrapply vconcat.
+    { refine (associator' _ _ _ $o _).
+      refine (fmap01 tensor x _)^$.
+      exact (associator' _ _ _). }
+    { apply vinverse'.
+      unfold Square.
+      refine ((cat_assoc _ _ _)^$ $@ _).
+      apply gpd_moveR_hV.
+      apply pentagon. }
+    snrapply vconcat.
+    { refine (associator' _ _ _ $o _).
+      refine (fmap01 tensor x _)^$.
+      rapply zeta_trans. }
+    { nrapply hconcat.
+      { apply hinverse'.
+        nrapply hconcatR.
+        2: exact ((_ $@L fmap_id _ _) $@ cat_idr _).
+        rapply (fmap_square (tensor x)).
+        simpl.
+        unfold Square.
+        refine (cat_assoc _ _ _ $@ _).
+        refine ((_ $@L _) $@ _).
+        1: apply left_invertor2.
+        refine (cat_idr _ $@ _).
+        change (comp ?x ?y) with (x $o y).
+        refine (_ $@L _).
+        refine (_^$ $@ _).
+        1: apply tensor2_comp.
+        eapply (tensor3 left_unitor2).
+        apply right_unitor2. }
+      simpl.
+      snrapply hconcatR.
+      1: exact (tensor2 (id (tensor x y)) (zeta_trans n z)).
+      2: { symmetry.
+        refine (_ $@ _).
+        2: apply tensor2_comp.
+        apply tensor3; apply rev2, right_unitor2. }
+      apply transpose.
+      apply isnat_r_associator. }
+    unfold Square.
+    refine ((cat_assoc _ _ _)^$ $@ _ $@ (cat_idl _)^$).
+    apply gpd_moveR_hV.
+    simpl.
+    do 4 change (comp ?x ?y) with (cat_comp (A:=FMC X) x y).
+    change (Hom2FMC ?f ?g) with (f $== g).
+    refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+    1: apply left_invertor2.
+    refine (cat_idr _ $@ _).
+    refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@L _) $@ _).
+    1: apply tensor2_id.
+    refine (cat_idr _ $@ _).
+    reflexivity.
   - (** Functoriality of tensor *)
     change (Square
       (zeta_trans _ a $o fmap11 tensor (Id a) (zeta_trans n b) $o (associator' _ _ _)^$)
@@ -692,7 +856,27 @@ Proof.
     { rapply fmap11_square.
       1: apply vrefl.
       apply IHg. }
-    
+    nrapply vconcatL.
+    1: exact (bifunctor_isbifunctor _ _ _).
+    nrapply vconcatR.
+    2: { refine (_ $o fmap2 _ _).
+      2: { refine (_ $@ _).
+        1: eapply tensor3.
+        1: apply rev2, right_unitor2.
+        1: apply rev2, left_unitor2.
+        apply tensor2_comp. }
+      rapply (fmap_comp (nrm' X n)). }
+    nrapply hconcat.
+    { apply IHg.
+
+      refine (fmap2 (nrm' X n) _).
+    { refine (fmap (nrm' X n) _ $o fmap (nrm' X n) _).
+
+    unfold Square.
+    unfold fmap11.
+    refine ((_ $@L bifunctor_isbifunctor _ _ _) $@ _).
+    refine ((cat_assoc _ _ _)^$ $@ _).
+    unfold Square in IHf.
 
     
 Admitted.
