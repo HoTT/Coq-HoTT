@@ -432,10 +432,6 @@ Inductive HomNFMC {X : Type} : NFMC X -> NFMC X -> Type :=
 
 Arguments HomNFMC {X} xs ys.
 
-(* Global Instance isgraph_nfmc {X : Type} : IsGraph (NFMC X)
-  := {| Hom := HomNFMC |}.
- *)
-
 Global Instance isgraph_nfmc {X : Type} : IsGraph (NFMC X) := isgraph_paths _.
 Global Instance is01cat_nfmc {X : Type} : Is01Cat (NFMC X) := is01cat_paths _.
 Global Instance is2graph_nfmc {X : Type} : Is2Graph (NFMC X) := is2graph_paths _.
@@ -538,10 +534,6 @@ Proof.
   - reflexivity.
   - reflexivity.
 Defined.
-
-(* Definition nrm' (X : Type) : FMC X -> NFMC X := nfmc'_nfmc X [] o interp X. *)
-(* Global Instance is0functor_nrm' {X : Type} : Is0Functor (nrm' X) := _. *)
-(* Global Instance is1functor_nrm' {X : Type} : Is1Functor (nrm' X) := _. *)
 
 Definition nfmc_fmc_incl (X : Type) : NFMC X -> FMC X.
 Proof.
@@ -856,29 +848,89 @@ Proof.
     { rapply fmap11_square.
       1: apply vrefl.
       apply IHg. }
-    nrapply vconcatL.
-    1: exact (bifunctor_isbifunctor _ _ _).
     nrapply vconcatR.
     2: { refine (_ $o fmap2 _ _).
       2: { refine (_ $@ _).
         1: eapply tensor3.
-        1: apply rev2, right_unitor2.
         1: apply rev2, left_unitor2.
+        1: apply rev2, right_unitor2.
         apply tensor2_comp. }
       rapply (fmap_comp (nrm' X n)). }
-    nrapply hconcat.
-    { apply IHg.
-
-      refine (fmap2 (nrm' X n) _).
-    { refine (fmap (nrm' X n) _ $o fmap (nrm' X n) _).
-
-    unfold Square.
     unfold fmap11.
-    refine ((_ $@L bifunctor_isbifunctor _ _ _) $@ _).
-    refine ((cat_assoc _ _ _)^$ $@ _).
-    unfold Square in IHf.
+    snrapply hconcat.
+    1: rapply zeta_trans.
+    + unfold Square.
+      unfold Square in IHf.
+      refine (IHf _ $@ _).
+      refine (_ $@R _).
+      unfold nfmc'_nfmc.
+      unfold is0functor_nrm'.
+      refine (fmap2 (nfmc_fmc_incl X) _).
+      change (a $-> a') in f.
+      change (fmap (nfmc'_nfmc X (interp X b n)) (fmap (interp X) f)
+        $== fmap (nfmc'_nfmc X n) (fmap (interp X) (Id b) $@@ fmap (interp X) f)).
+      refine (_ $@ fmap2 (nfmc'_nfmc X n) _).
+      2: { refine ((_  $@ _) $@R _).
+        2: refine (fmap2 _ _).
+        2: symmetry.
+        2: refine (fmap_id _ _).
+        symmetry.
+        refine (fmap_id _ _). }
+      refine (_ $@ fmap2 _ _).
+      2: rapply (cat_idl _)^$.
+      reflexivity.
+    + unfold Square in IHg |- *.
+      refine ((_ $@L (fmap2 _ _ $@ _)) $@ _).
+      1: exact (gpd_moveR_hV (IHg _))^$.
+      1: refine (fmap_comp _ _ _ $@ (_ $@R _)).
+      1: refine (fmap_comp _ _ _).
+      refine ((cat_assoc _ _ _ )^$ $@ _).
+      refine (_ $@L _ $@ _).
+      1: nrapply gpd_1functor_V; exact _.
+      apply gpd_moveR_hV.
+      refine ((cat_assoc _ _ _)^$ $@ _ $@ (cat_assoc _ _ _)^$).
+      set (r := tensor2 (id a') g).
+      change (HomFMC ?f ?g) with (f $== g) in r.
+      change (b $-> b') in g.
+      change (fmap (nrm' X n) r)
+        with (fmap (nfmc_fmc_incl X o nfmc'_nfmc X n) (fmap (interp X) r)).
+      change (fmap (interp X) r) with (fmap (interp X) g $@@ fmap (interp X) (Id a')).
+      unfold "$@@".
+      refine (_ $@ (_^$ $@R _)).
+      2: rapply (fmap_comp (nfmc_fmc_incl X o nfmc'_nfmc X n)).
+      (* refine (_ $@ (cat_assoc _ _ _)^$). *)
+      (* refine (cat_assoc _ _ _ $@ _). *)
+  
+      
+      Check (zeta_trans (nfmc'_nfmc X n (interp X b')) a').
+        (* : tensor a' (nfmc_fmc_incl X (nfmc'_nfmc X n (interp X b')))
+            $-> nrm' X (nfmc'_nfmc X n (interp X b')) a' *)
+      Check (fmap (tensor a') (zeta_trans n b')).
+      (* : tensor a' (tensor b' (nfmc_fmc_incl X n)) $-> tensor a' (nrm' X n b') *)
+      Check (fmap (tensor a') (fmap (flip tensor (nfmc_fmc_incl X n)) g)).
+      (* : tensor a' (flip tensor (nfmc_fmc_incl X n) b)
+        $-> tensor a' (flip tensor (nfmc_fmc_incl X n) b') *)
 
-    
+      Check (fmap (nfmc_fmc_incl X o nfmc'_nfmc X n) (interp X a' $@L fmap (interp X) g)).
+      (* : nfmc_fmc_incl X (nfmc'_nfmc X n (interp X a' $o interp X b))
+        $-> nfmc_fmc_incl X (nfmc'_nfmc X n (interp X a' $o interp X b')) *)
+      Check (fmap (nfmc_fmc_incl X o nfmc'_nfmc X n) (fmap (interp X) (Id a') $@R interp X b)).
+      (* nfmc_fmc_incl X (nfmc'_nfmc X n (interp X a' $o interp X b))
+        $-> nfmc_fmc_incl X (nfmc'_nfmc X n (interp X a' $o interp X b)) *)
+      Check ((zeta_trans (nfmc'_nfmc X n (interp X b)) a')). 
+      (* : tensor a' (nfmc_fmc_incl X (nfmc'_nfmc X n (interp X b)))
+        $-> nrm' X (nfmc'_nfmc X n (interp X b)) a' *)
+      Check (fmap (tensor a') (zeta_trans n b)).
+      (* : tensor a' (tensor b (nfmc_fmc_incl X n)) $-> tensor a' (nrm' X n b) *)
+
+
+        
+      (* refine ((cat_assoc _ _ _)^$ $@ _). *)
+      (* refine (_ $@ cat_assoc _ _ _). *)
+      change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
+      Arguments Square : clear implicits.
+      simpl.
+
 Admitted.
 
 Definition zeta {X} n
@@ -887,7 +939,6 @@ Definition zeta {X} n
       (nrm' X n).
 Proof.
   snrapply Build_NatEquiv.
-  (** Since this is a groupoid, the morphism suffices for the equivalence. *)
   1: exact (zeta_trans n).
   exact _.
 Defined.
