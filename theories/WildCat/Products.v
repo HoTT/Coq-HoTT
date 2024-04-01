@@ -474,7 +474,7 @@ Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is0Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
-  exact (is0bifunctor_compose
+  exact (is0bifunctor_postcompose
           (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
@@ -482,7 +482,7 @@ Global Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is1Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
-  exact (is1bifunctor_compose
+  exact (is1bifunctor_postcompose
           (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
