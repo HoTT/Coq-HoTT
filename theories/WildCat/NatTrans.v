@@ -131,6 +131,17 @@ Proof.
   exact (isnat gamma _).
 Defined.
 
+Definition nattrans_comp2 {A B C : Type} {F G : B -> C} {H K : A -> B}
+  `{IsGraph A, Is1Cat B, Is1Cat C,
+    !Is0Functor F, !Is1Functor F, !Is0Functor G, !Is0Functor H, !Is0Functor K}
+  : NatTrans F G -> NatTrans H K -> NatTrans (F o H) (G o K).
+Proof.
+  intros alpha beta.
+  nrapply (nattrans_comp (G := F o K)).
+  - exact (nattrans_prewhisker alpha K).
+  - exact (nattrans_postwhisker F beta).
+Defined.
+
 (** Modifying a transformation to something pointwise equal preserves naturality. *)
 Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
   {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
@@ -143,19 +154,18 @@ Proof.
   exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
 Defined.
 
-(** The opposite of a natural transformation is natural. *)
-Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
-  (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
-  (alpha : F $=> G) `{!Is1Natural F G alpha}
-  : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (trans_op F G alpha).
+Definition nattrans_functor_assoc_ff_f {A B C D : Type}
+  `{IsGraph A, Is1Cat B, Is1Cat C, Is1Cat D}
+  (F : C -> D) (G : B -> C) (K : A -> B) `{!Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatTrans ((F o G) o K) (F o (G o K)).
 Proof.
-  unfold op.
-  snapply Build_Is1Natural'.
-  - intros a b.
-    exact (isnat_tr alpha).
-  - intros a b.
-    exact (isnat alpha).
+  snrapply Build_NatTrans.
+  1: intro; reflexivity.
+  intros X Y f.
+  refine (cat_idl _ $@ (cat_idr _)^$).
 Defined.
+
+(** Natural equivalences *)
 
 (** ** Natural transformations *)
 
@@ -326,12 +336,9 @@ Definition natequiv_functor_assoc_ff_f {A B C D : Type}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor K}
   : NatEquiv ((F o G) o K) (F o (G o K)).
 Proof.
-  snapply Build_NatEquiv.
-  1: intro; reflexivity.
-  snapply Build_Is1Natural.
-  intros X Y f.
-  refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
-  exact (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
+  snrapply Build_NatEquiv'.
+  1: rapply (nattrans_functor_assoc_ff_f F G K).
+  exact _.
 Defined.
 
 (** ** Pointed natural transformations *)

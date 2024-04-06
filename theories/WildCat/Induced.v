@@ -87,5 +87,12 @@ Section Induced_category.
     + napply cate_isretr'.
     + napply catie_adjointify'.
   Defined.
+  
+  Definition is1gpd_induced `{Is1Gpd B} : Is1Gpd A.
+  Proof.
+    snrapply Build_Is1Gpd; intros_of_type A; cbn.
+    + exact gpd_issect.
+    + exact gpd_isretr.
+  Defined.
 
 End Induced_category.
