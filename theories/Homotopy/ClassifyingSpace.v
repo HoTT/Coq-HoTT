@@ -12,9 +12,6 @@ Local Open Scope mc_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 
-Declare Scope bg_scope.
-Local Open Scope bg_scope.
-
 (** * We define the Classifying space of a group to be the following HIT:
 
   HIT ClassifyingSpace (G : Group) : 1-Type
