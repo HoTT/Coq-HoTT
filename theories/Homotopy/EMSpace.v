@@ -16,7 +16,6 @@ Require Import WildCat.
 
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.
-Local Open Scope bg_scope.
 Local Open Scope mc_mult_scope.
 
 (** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n > 1], later results will need to assume that [G] is abelian. *)
