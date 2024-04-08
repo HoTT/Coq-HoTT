@@ -134,7 +134,7 @@ Section upper_classes.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 
-  Class IsSemiRing :=
+  Class IsSemiCRing :=
     { semiplus_monoid : @IsCommutativeMonoid plus_is_sg_op zero_is_mon_unit
     ; semimult_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
     ; semiring_distr : LeftDistribute (.*.) (+)

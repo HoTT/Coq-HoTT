@@ -68,7 +68,7 @@ Global Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
   := (-).
 Arguments negate_almostneg _ _ _ /.
 
-Global Instance semiring_almostring `{IsSemiRing A} : AlmostRing A | 10.
+Global Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
@@ -108,7 +108,7 @@ Arguments by_quoting {C _ R} phi
 Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a semiring");
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
     reflexivity
   end.
@@ -124,7 +124,7 @@ Ltac ring_with_integers Z :=
 Ltac ring_with_self :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a ring");
     apply (by_quoting (@id R));
     reflexivity
   end.

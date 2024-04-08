@@ -74,7 +74,7 @@ Section strong_cancellation.
 End strong_cancellation.
 
 Section semiring_props.
-  Context `{IsSemiRing R}.
+  Context `{IsSemiCRing R}.
 (*   Add Ring SR : (stdlib_semiring_theory R). *)
 
   Instance mult_ne_0 `{!NoZeroDivisors R} x y
@@ -206,7 +206,7 @@ Section ring_props.
   - apply ap. apply right_identity.
   Qed.
 
-  Global Instance Ring_Semi: IsSemiRing R.
+  Global Instance Ring_Semi: IsSemiCRing R.
   Proof.
   repeat (constructor; try apply _).
   Qed.
@@ -448,7 +448,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Global Instance id_sr_morphism `{IsSemiRing A}: IsSemiRingPreserving (@id A) := {}.
+Global Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
