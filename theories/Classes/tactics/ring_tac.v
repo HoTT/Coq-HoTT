@@ -75,7 +75,7 @@ intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
-Global Instance ring_almostring `{IsRing A} : AlmostRing A.
+Global Instance ring_almostring `{IsCRing A} : AlmostRing A.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
@@ -90,7 +90,7 @@ unfold almost_negate;simpl. intros _. apply preserves_0.
 Qed.
 
 Section VarSec.
-Context `{IsRing A} `{IsRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
+Context `{IsCRing A} `{IsCRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
 
 Global Instance ring_mor_almostring_mor : AlmostRingPreserving f.
 Proof.
@@ -116,7 +116,7 @@ Ltac ring_with_nat :=
 Ltac ring_with_integers Z :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsRing R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsCRing R)) || fail "target equality not on a ring");
     apply (by_quoting (integers_to_ring Z R));
     reflexivity
   end.

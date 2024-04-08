@@ -64,7 +64,7 @@ Section QuotientRing.
   Instance zero_quotient_abgroup : Zero (QuotientAbGroup R I) := class_of _ zero.
   Instance one_quotient_abgroup : One (QuotientAbGroup R I) := class_of _ one.
 
-  Instance isring_quotient_abgroup : IsRing (QuotientAbGroup R I).
+  Instance isring_quotient_abgroup : IsCRing (QuotientAbGroup R I).
   Proof.
     split.
     1: exact _.

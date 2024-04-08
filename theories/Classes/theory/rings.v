@@ -191,7 +191,7 @@ Qed.
 *)
 
 Section ring_props.
-  Context `{IsRing R}.
+  Context `{IsCRing R}.
 
 (*   Add Ring R: (stdlib_ring_theory R). *)
 
@@ -373,7 +373,7 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @intdom_nontrivial_apart : typeclass_instances.
 
 Section ringmor_props.
-  Context `{IsRing A} `{IsRing B} `{!IsSemiRingPreserving (f : A -> B)}.
+  Context `{IsCRing A} `{IsCRing B} `{!IsSemiRingPreserving (f : A -> B)}.
 
   Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
   (* alias for convenience *)
@@ -395,14 +395,14 @@ Section ringmor_props.
 End ringmor_props.
 
 Section from_another_ring.
-  Context `{IsRing A} `{IsHSet B}
+  Context `{IsCRing A} `{IsHSet B}
    `{Bplus : Plus B} `{Zero B} `{Bmult : Mult B} `{One B} `{Bnegate : Negate B}
     (f : B -> A) `{!IsInjective f}
     (plus_correct : forall x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
     (mult_correct : forall x y, f (x * y) = f x * f y) (one_correct : f 1 = 1)
     (negate_correct : forall x, f (-x) = -f x).
 
-  Lemma projected_ring: IsRing B.
+  Lemma projected_ring: IsCRing B.
   Proof.
   split.
   - apply (groups.projected_ab_group f);assumption.

@@ -24,7 +24,7 @@ Record CRing := {
   cring_zero : Zero cring_type;
   cring_one  : One  cring_type;
   cring_negate : Negate cring_type;
-  cring_isring : IsRing cring_type;
+  cring_isring : IsCRing cring_type;
 }.
 
 Arguments cring_plus {_}.
@@ -200,7 +200,7 @@ Definition Build_CRing' (R : AbGroup)
   (iscomm : @IsCommutativeMonoid R mult one)
   : CRing
   := Build_CRing R (@group_sgop R) _ (@group_unit R) _
-       (@group_inverse R) (Build_IsRing _ _ _ _).
+       (@group_inverse R) (Build_IsCRing _ _ _ _).
 
 (** ** Ring movement lemmas *)
 

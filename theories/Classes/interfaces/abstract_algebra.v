@@ -143,17 +143,17 @@ Section upper_classes.
 
   Context {Anegate : Negate A}.
 
-  Class IsRing :=
-    { ring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
-    ; ring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
-    ; ring_dist : LeftDistribute (.*.) (+) }.
-  #[export] Existing Instances ring_group ring_monoid ring_dist.
+  Class IsCRing :=
+    { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
+    ; cring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
+    ; cring_dist : LeftDistribute (.*.) (+) }.
+  #[export] Existing Instances cring_group cring_monoid cring_dist.
 
   (* For now, we follow CoRN/ring_theory's example in having Ring and SemiRing
     require commutative multiplication. *)
 
   Class IsIntegralDomain :=
-    { intdom_ring : IsRing
+    { intdom_ring : IsCRing
     ; intdom_nontrivial : PropHolds (not (1 = 0))
     ; intdom_nozeroes : NoZeroDivisors A }.
   #[export] Existing Instances intdom_nozeroes.
@@ -161,7 +161,7 @@ Section upper_classes.
   (* We do not include strong extensionality for (-) and (/)
     because it can de derived *)
   Class IsField {Aap: Apart A} {Arecip: Recip A} :=
-    { field_ring : IsRing
+    { field_ring : IsCRing
     ; field_apart : IsApart A
     ; field_plus_ext : StrongBinaryExtensionality (+)
     ; field_mult_ext : StrongBinaryExtensionality (.*.)
@@ -177,7 +177,7 @@ Section upper_classes.
     f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
     hold without any additional assumptions *)
   Class IsDecField {Adec_recip : DecRecip A} :=
-    { decfield_ring : IsRing
+    { decfield_ring : IsCRing
     ; decfield_nontrivial : PropHolds (1 <> 0)
     ; dec_recip_0 : /0 = 0
     ; dec_recip_inverse : forall x, x <> 0 -> x / x = 1 }.
@@ -204,13 +204,13 @@ Hint Extern 5 (PropHolds (1 <> 0)) =>
   eapply @decfield_nontrivial : typeclass_instances.
 
 (* 
-For a strange reason IsRing instances of Integers are sometimes obtained by
+For a strange reason IsCRing instances of Integers are sometimes obtained by
 Integers -> IntegralDomain -> Ring and sometimes directly. Making this an
-instance with a low priority instead of using intdom_ring:> IsRing forces Coq to
+instance with a low priority instead of using intdom_ring:> IsCRing forces Coq to
 take the right way 
 *)
 #[export]
-Hint Extern 10 (IsRing _) => apply @intdom_ring : typeclass_instances.
+Hint Extern 10 (IsCRing _) => apply @intdom_ring : typeclass_instances.
 
 Arguments recip_inverse {A Aplus Amult Azero Aone Anegate Aap Arecip IsField} _.
 Arguments dec_recip_inverse

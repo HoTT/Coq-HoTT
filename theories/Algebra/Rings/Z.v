@@ -4,7 +4,7 @@ Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.Core.
 
-(** In this file we define the ring Z of integers. The underlying abelian group is already defined in Algebra.AbGroups.Z. Many of the ring axioms are proven and made opaque. Typically, everything inside IsRing can be opaque since we will only ever rewrite along them and they are hprops. This also means we don't have to be too careful with how our proofs are structured. This allows us to freely use tactics such as rewrite. It would perhaps be possible to shorten many of the proofs here, but it would probably be unneeded due to the opacicty. *)
+(** In this file we define the ring Z of integers. The underlying abelian group is already defined in Algebra.AbGroups.Z. Many of the ring axioms are proven and made opaque. Typically, everything inside IsCRing can be opaque since we will only ever rewrite along them and they are hprops. This also means we don't have to be too careful with how our proofs are structured. This allows us to freely use tactics such as rewrite. It would perhaps be possible to shorten many of the proofs here, but it would probably be unneeded due to the opacicty. *)
 
 (** The ring of integers *)
 Definition cring_Z : CRing.

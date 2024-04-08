@@ -220,7 +220,7 @@ apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
 Qed.
 
 Section with_a_ring.
-  Context `{IsRing R} `{!IsSemiRingPreserving (f : N -> R)} `{!IsInjective f}.
+  Context `{IsCRing R} `{!IsSemiRingPreserving (f : N -> R)} `{!IsInjective f}.
 
   Lemma to_ring_zero_sum x y :
     -f x = f y -> x = 0 /\ y = 0.

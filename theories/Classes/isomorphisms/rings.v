@@ -96,7 +96,7 @@ Context `{Funext} `{Univalence}.
 Context (A B : Operations@{U V}).
 
 (* NB: we need to know they're rings for preserves_negate *)
-Context (f : A -> B) `{!IsEquiv f} `{!IsRing A} `{!IsRing B} `{!IsSemiRingPreserving f}.
+Context (f : A -> B) `{!IsEquiv f} `{!IsCRing A} `{!IsCRing B} `{!IsSemiRingPreserving f}.
 
 Lemma iso_same_rings : A = B.
 Proof.
