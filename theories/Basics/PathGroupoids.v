@@ -1264,6 +1264,33 @@ Proof.
   destruct p, r, q. reflexivity.
 Defined.
 
+(** Naturality of [concat_p_pp] in left-mode argument. *)
+Definition concat_p_pp_nat_l {A} {w x y z : A}
+  {p q : w = x} (r : p = q) (s : x = y) (t : y = z)
+  : whiskerR r (s @ t) @ concat_p_pp q s t
+    = concat_p_pp p s t @ whiskerR (whiskerR r s) t.
+Proof.
+  by destruct r, p, s, t.
+Defined.
+
+(** Naturality of [concat_p_pp] in middle argument. *)
+Definition concat_p_pp_nat_m {A} {w x y z : A}
+  (p : w = x) {q r : x = y} (s : q = r) (t : y = z)
+  : whiskerL p (whiskerR s t) @ concat_p_pp p r t
+    = concat_p_pp p q t @ whiskerR (whiskerL p s) t.
+Proof.
+  by destruct t, s, p, q.
+Defined.
+
+(** Naturality of [concat_p_pp] in right-most argument. *)
+Definition concat_p_pp_nat_r {A} {w x y z : A}
+  (p : w = x) (q : x = y) {r s : y = z} (t : r = s)
+  : whiskerL p (whiskerL q t) @ concat_p_pp p q s
+    = concat_p_pp p q r @ whiskerL (p @ q) t.
+Proof.
+  by destruct t, r, p, q.
+Defined.
+
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
   (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q'') :
