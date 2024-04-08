@@ -212,7 +212,7 @@ Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
 Proof.
   snrapply Build_NatEquiv.
   - intro a.
-    refine (Build_CatEquiv (alpha a)).
+    by refine (Build_CatEquiv (alpha a)).
   - intros a a' f.
     refine (cate_buildequiv_fun _ $@R _ $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
     apply (isnat alpha).

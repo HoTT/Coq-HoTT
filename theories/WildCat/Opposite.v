@@ -164,7 +164,7 @@ Proof.
   - exact (b $<~> a).
   - apply CatIsEquiv.
   - apply cate_fun'.
-  - apply cate_isequiv'.
+  - apply cate_isequiv.
   - apply cate_buildequiv'.
   - rapply cate_buildequiv_fun'.
   - apply cate_inv'.
