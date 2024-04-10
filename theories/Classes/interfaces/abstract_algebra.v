@@ -143,12 +143,30 @@ Section upper_classes.
 
   Context {Anegate : Negate A}.
 
+  Class IsRing := {
+    ring_abgroup :: @IsAbGroup plus_is_sg_op zero_is_mon_unit _;
+    ring_monoid :: @IsMonoid mult_is_sg_op one_is_mon_unit;
+    ring_dist_left :: LeftDistribute (.*.) (+);
+    ring_dist_right :: RightDistribute (.*.) (+);
+  }.
+
   Class IsCRing :=
     { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
     ; cring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
     ; cring_dist : LeftDistribute (.*.) (+) }.
-  #[export] Existing Instances cring_group cring_monoid cring_dist.
 
+  #[export] Existing Instances cring_group cring_monoid cring_dist.
+  
+  Global Instance isring_iscring : IsCRing -> IsRing.
+  Proof.
+    intros H.
+    econstructor; try exact _.
+    intros a b c.
+    lhs rapply commutativity.
+    lhs rapply distribute_l.
+    f_ap; apply commutativity.
+  Defined.
+  
   (* For now, we follow CoRN/ring_theory's example in having Ring and SemiRing
     require commutative multiplication. *)
 

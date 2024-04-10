@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Export Classes.interfaces.canonical_names (Zero, zero).
+Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
@@ -29,6 +29,10 @@ Proof.
 Defined.
 
 Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
+
+Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.
+Global Instance plus_abgroup (A : AbGroup) : Plus A := group_sgop.
+Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
 
 (** ** Paths between abelian groups *)
 

@@ -79,7 +79,7 @@ Global Instance ring_almostring `{IsCRing A} : AlmostRing A.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
-apply negate_mult.
+apply negate_mult_l.
 Qed.
 
 Global Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}

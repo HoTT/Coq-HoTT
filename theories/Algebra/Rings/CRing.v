@@ -3,432 +3,198 @@ Require Import Spaces.Nat.Core.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
-Require Export Classes.theory.rings.
-Require Import Modalities.ReflectiveSubuniverse.
+Require Export Algebra.Rings.Ring Algebra.Rings.Ideal.
 
-(** Theory of commutative rings *)
-
-(** TODO: We should really develop the theory of non-commutative rings seperately, and have commutative rings as a special case of that theory. Similar to how we have Group and AbGroup. But since we are only interested in commutative rings for the time being, it makes sense to only consider them. *)
-
-Declare Scope ring_scope.
+(** * Commutative Rings *)
 
 Local Open Scope ring_scope.
-(** We want to print equivalences as [≅]. *)
 Local Open Scope wc_iso_scope.
 
-(** A commutative ring consists of the following data *)
+(** A commutative ring consists of the following data: *)
 Record CRing := {
-  cring_type : Type;
-  cring_plus : Plus cring_type;
-  cring_mult : Mult cring_type;
-  cring_zero : Zero cring_type;
-  cring_one  : One  cring_type;
-  cring_negate : Negate cring_type;
-  cring_isring : IsCRing cring_type;
+  (** An underlying abelian group. *)
+  cring_abgroup :> AbGroup;
+  (** A multiplication operation. *)
+  cring_mult :: Mult cring_abgroup;
+  (** A multiplicative identity called [one]. *)
+  cring_one :: One cring_abgroup;
+  (** Such that all they all satisfy the axioms of a ring. *)
+  cring_iscring :: IsCRing cring_abgroup;
 }.
 
-Arguments cring_plus {_}.
 Arguments cring_mult {_}.
-Arguments cring_zero {_}.
 Arguments cring_one {_}.
-Arguments cring_negate {_}.
-Arguments cring_isring {_}.
+Arguments cring_iscring {_}.
 
 Definition issig_CRing : _ <~> CRing := ltac:(issig).
 
-(** We coerce rings to their underlying type. *)
-Coercion cring_type : CRing >-> Sortclass.
-(** All fields which are typeclasses are global instances *)
-Global Existing Instances cring_plus cring_mult cring_zero cring_one cring_negate cring_isring.
+Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup (cring_abgroup R).
+Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup (cring_abgroup R).
+Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup (cring_abgroup R).
 
-(** A ring homomorphism between commutative rings is a map of the underlying type and a proof that this map is a ring homomorphism. *)
-Record CRingHomomorphism (A B : CRing) := {
-  rng_homo_map : A -> B;
-  rng_homo_ishomo : IsSemiRingPreserving rng_homo_map;
-}.
+Definition ring_cring : CRing -> Ring
+  := fun R => Build_Ring (cring_abgroup R) (cring_mult) (cring_one) _.
+Coercion ring_cring : CRing >-> Ring.
 
-Arguments Build_CRingHomomorphism {_ _} _ _.
-
-Definition issig_CRingHomomorphism (A B : CRing)
-  : _ <~> CRingHomomorphism A B
-  := ltac:(issig).
-
-(** We coerce ring homomorphisms to their underlying maps *)
-Coercion rng_homo_map : CRingHomomorphism >-> Funclass.
-Global Existing Instance rng_homo_ishomo.
-
-Definition equiv_path_cringhomomorphism `{Funext} {A B : CRing}
-  {f g : CRingHomomorphism A B} : f == g <~> f = g.
+Definition Build_CRing' (R : Ring) (H : Commutative (@ring_mult R)) : CRing.
 Proof.
-  refine ((equiv_ap (issig_CRingHomomorphism A B)^-1 _ _)^-1 oE _).
-  refine (equiv_path_sigma_hprop _ _ oE _).
-  apply equiv_path_forall.
+  rapply (Build_CRing R).
+  split; try exact _.
+  split; exact _.
 Defined.
 
-Definition rng_homo_id (A : CRing) : CRingHomomorphism A A
-  := Build_CRingHomomorphism idmap _.
+(** ** Properties of commutative rings *)
 
-Definition rng_homo_compose {A B C : CRing}
-  (f : CRingHomomorphism B C) (g : CRingHomomorphism A B)
-  : CRingHomomorphism A C.
-Proof.
-  snrapply Build_CRingHomomorphism.
-  1: exact (f o g).
-  rapply compose_sr_morphism.
-Defined.
-
-(** ** Ring laws *)
-
-Section RingLaws.
-
-  (** Many of these ring laws have already been proven. But we give them names here so that they are easy to find and use. *)
-
-  Context {A B : CRing} (f : CRingHomomorphism A B) (x y z : A).
-
-  Definition rng_dist_l : x * (y + z) = x * y + x * z := simple_distribute_l _ _ _.
-  Definition rng_dist_r : (x + y) * z = x * z + y * z := simple_distribute_r _ _ _.
-  Definition rng_plus_zero_l : 0 + x = x := left_identity _.
-  Definition rng_plus_zero_r : x + 0 = x := right_identity _.
-  Definition rng_plus_negate_l : (- x) + x = 0 := left_inverse _.
-  Definition rng_plus_negate_r : x + (- x) = 0 := right_inverse _.
-
-  Definition rng_plus_comm : x + y = y + x := commutativity x y.
-  Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.
-  Definition rng_mult_comm : x * y = y * x := commutativity x y.
-  Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.
-
-  Definition rng_negate_negate : - (- x) = x := negate_involutive _.
-
-  Definition rng_mult_one_l : 1 * x = x := left_identity _.
-  Definition rng_mult_one_r : x * 1 = x := right_identity _.
-  Definition rng_mult_zero_l : 0 * x = 0 := left_absorb _.
-  Definition rng_mult_zero_r : x * 0 = 0 := right_absorb _.
-  Definition rng_mult_negate : -1 * x = - x := (negate_mult _)^.
-  Definition rng_mult_negate_negate : -x * -y = x * y := negate_mult_negate _ _.
-  Definition rng_mult_negate_l : -x * y = -(x * y) := inverse (negate_mult_distr_l _ _).
-  Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).
-
-  Definition rng_homo_plus : f (x + y) = f x + f y := preserves_plus x y.
-  Definition rng_homo_mult : f (x * y) = f x * f y := preserves_mult x y.
-  Definition rng_homo_zero : f 0 = 0 := preserves_0.
-  Definition rng_homo_one  : f 1 = 1 := preserves_1.
-  Definition rng_homo_negate : f (-x) = -(f x) := preserves_negate x.
-
-  Definition rng_homo_minus_one : f (-1) = -1
-    := preserves_negate 1%mc @ ap negate preserves_1.
-
-End RingLaws.
-
-(** Isomorphisms of commutative rings *)
-Record CRingIsomorphism (A B : CRing) := {
-  rng_iso_homo : CRingHomomorphism A B ;
-  isequiv_rng_iso_homo : IsEquiv rng_iso_homo ;
-}.
-
-Arguments rng_iso_homo {_ _ }.
-Coercion rng_iso_homo : CRingIsomorphism >-> CRingHomomorphism.
-Global Existing Instance isequiv_rng_iso_homo.
-
-Definition issig_CRingIsomorphism {A B : CRing}
-  : _ <~> CRingIsomorphism A B := ltac:(issig).
-
-(** We can construct a ring isomorphism from an equivalence that preserves addition and multiplication. *)
-Definition Build_CRingIsomorphism' (A B : CRing) (e : A <~> B)
-  `{!IsSemiRingPreserving e}
-  : CRingIsomorphism A B
-  := Build_CRingIsomorphism A B (Build_CRingHomomorphism e _) _.
-
-(** The inverse of a CRing isomorphism *)
-Definition rng_iso_inverse {A B : CRing}
-  : CRingIsomorphism A B -> CRingIsomorphism B A.
-Proof.
-  intros [f e].
-  snrapply Build_CRingIsomorphism.
-  { snrapply Build_CRingHomomorphism.
-    1: exact f^-1.
-    exact _. }
-  exact _.
-Defined.
-
-(** CRing isomorphisms are a reflexive relation *)
-Global Instance reflexive_cringisomorphism : Reflexive CRingIsomorphism
-  := fun x => Build_CRingIsomorphism _ _ (rng_homo_id x) _.
-
-(** CRing isomorphisms are a symmetric relation *)
-Global Instance symmetry_cringisomorphism : Symmetric CRingIsomorphism
-  := fun x y => rng_iso_inverse.
-
-(** CRing isomorphisms are a transitive relation *)
-Global Instance transitive_cringisomorphism : Transitive CRingIsomorphism
-  := fun x y z f g => Build_CRingIsomorphism _ _ (rng_homo_compose g f) _.
-
-(** Underlying abelian groups of rings *)
-Definition abgroup_cring : CRing -> AbGroup.
-Proof.
-  intro A.
-  snrapply Build_AbGroup.
-  - srapply (Build_Group (cring_type A)).
-  - exact _.
-Defined.
-
-Coercion abgroup_cring : CRing >-> AbGroup.
-
-(** Underlying group homomorphism of a ring homomorphism *)
-Definition grp_homo_rng_homo {R S : CRing}
-  : CRingHomomorphism R S -> GroupHomomorphism R S
-  := fun f => @Build_GroupHomomorphism R S f _.
-
-Coercion grp_homo_rng_homo : CRingHomomorphism >-> GroupHomomorphism.
-
-(** We can construct a ring homomorphism from a group homomorphism that preserves multiplication *)
-Definition Build_CRingHomomorphism' (A B : CRing) (map : GroupHomomorphism A B)
-  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult)
-    (Aunit:=one) (Bunit:=one) map}
-  : CRingHomomorphism A B
-  := Build_CRingHomomorphism map
-      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).
-
-(** We can construct a ring isomorphism from a group isomorphism that preserves multiplication *)
-Definition Build_CRingIsomorphism'' (A B : CRing) (e : GroupIsomorphism A B)
-  {H : IsMonoidPreserving (Aop:=cring_mult) (Bop:=cring_mult) (Aunit:=one) (Bunit:=one) e}
-  : CRingIsomorphism A B
-  := @Build_CRingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).
-
-(** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
-Definition Build_CRing' (R : AbGroup)
-  `(Mult R, One R, LeftDistribute R mult (@group_sgop R))
-  (iscomm : @IsCommutativeMonoid R mult one)
-  : CRing
-  := Build_CRing R (@group_sgop R) _ (@group_unit R) _
-       (@group_inverse R) (Build_IsCRing _ _ _ _).
-
-(** ** Ring movement lemmas *)
-
-Section RingMovement.
-
-  (** We adopt a similar naming convention to the [moveR_equiv] style lemmas that can be found in Types.Paths. *)
-
-  Context {R : CRing} {x y z : R}.
-
-  Definition rng_moveL_Mr : - y + x = z <~> x = y + z := @grp_moveL_Mg R x y z.
-  Definition rng_moveL_rM : x + - z = y <~> x = y + z := @grp_moveL_gM R x y z.
-  Definition rng_moveR_Mr : y = - x + z <~> x + y = z := @grp_moveR_Mg R x y z.
-  Definition rng_moveR_rM : x = z + - y <~> x + y = z := @grp_moveR_gM R x y z.
-
-  Definition rng_moveL_Vr : x + y = z <~> y = - x + z := @grp_moveL_Vg R x y z.
-  Definition rng_moveL_rV : x + y = z <~> x = z + - y := @grp_moveL_gV R x y z.
-  Definition rng_moveR_Vr : x = y + z <~> - y + x = z := @grp_moveR_Vg R x y z.
-  Definition rng_moveR_rV : x = y + z <~> x + - z = y := @grp_moveR_gV R x y z.
-
-  Definition rng_moveL_M0 : - y + x = 0 <~> x = y := @grp_moveL_M1 R x y.
-  Definition rng_moveL_0M :	x + - y = 0 <~> x = y := @grp_moveL_1M R x y.
-  Definition rng_moveR_M0 : 0 = - x + y <~> x = y := @grp_moveR_M1 R x y.
-  Definition rng_moveR_0M : 0 = y + - x <~> x = y := @grp_moveR_1M R x y.
-
-  (** TODO: Movement laws about mult *)
-
-End RingMovement.
-
-(** ** Wild category of commutative rings *)
-
-Global Instance isgraph_cring : IsGraph CRing
-  := Build_IsGraph _ CRingHomomorphism.
-
-Global Instance is01cat_cring : Is01Cat CRing
-  := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).
-
-Global Instance is2graph_cring : Is2Graph CRing
-  := fun A B => isgraph_induced (@rng_homo_map A B : _ -> (cring_type A $-> _)).
-
-Global Instance is01cat_cringhomomorphism {A B : CRing} : Is01Cat (A $-> B)
-  := is01cat_induced (@rng_homo_map A B).
-
-Global Instance is0gpd_cringhomomorphism {A B : CRing} : Is0Gpd (A $-> B)
-  := is0gpd_induced (@rng_homo_map A B).
-
-Global Instance is0functor_postcomp_cringhomomorphism {A B C : CRing} (h : B $-> C)
-  : Is0Functor (@cat_postcomp CRing _ _ A B C h).
-Proof.
-  apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (ap h (p a)).
-Defined.
-
-Global Instance is0functor_precomp_cringhomomorphism
-       {A B C : CRing} (h : A $-> B)
-  : Is0Functor (@cat_precomp CRing _ _ A B C h).
-Proof.
-  apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (p (h a)).
-Defined.
-
-(** CRing forms a 1Cat *)
-Global Instance is1cat_cring : Is1Cat CRing.
-Proof.
-  by rapply Build_Is1Cat.
-Defined.
-
-Global Instance hasmorext_cring `{Funext} : HasMorExt CRing.
-Proof.
-  srapply Build_HasMorExt.
-  intros A B f g; cbn in *.
-  snrapply @isequiv_homotopic.
-  1: exact (equiv_path_cringhomomorphism^-1%equiv).
-  1: exact _.
-  intros []; reflexivity. 
-Defined.
-
-Global Instance hasequivs_cring : HasEquivs CRing.
-Proof.
-  unshelve econstructor.
-  + exact CRingIsomorphism.
-  + exact (fun G H f => IsEquiv f).
-  + intros G H f; exact f.
-  + exact Build_CRingIsomorphism.
-  + intros G H; exact rng_iso_inverse.
-  + cbn; exact _.
-  + reflexivity.
-  + intros ????; apply eissect.
-  + intros ????; apply eisretr.
-  + intros G H f g p q.
-    exact (isequiv_adjointify f g p q).
-Defined.
-
-(** ** Product ring *)
-
-Definition cring_product : CRing -> CRing -> CRing.
-Proof.
-  intros R S.
-  snrapply Build_CRing'.
-  1: exact (ab_biprod R S).
-  1: exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
-  1: exact (cring_one , cring_one).
-  { intros [r1 s1] [r2 s2] [r3 s3].
-    apply path_prod; cbn; apply rng_dist_l. }
-  repeat split.
-  1: exact _.
-  { intros [r1 s1] [r2 s2] [r3 s3].
-    apply path_prod; cbn; apply rng_mult_assoc. }
-  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.
-  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.
-  intros [r1 s1] [r2 s2]; apply path_prod; cbn; apply rng_mult_comm.
-Defined.
-
-Infix "×" := cring_product : ring_scope.
-
-Definition cring_product_fst {R S : CRing} : R × S $-> R.
-Proof.
-  snrapply Build_CRingHomomorphism.
-  1: exact fst.
-  repeat split.
-Defined.
-
-Definition cring_product_snd {R S : CRing} : R × S $-> S.
-Proof.
-  snrapply Build_CRingHomomorphism.
-  1: exact snd.
-  repeat split.
-Defined.
-
-Definition cring_product_corec (R S T : CRing)
-  : (R $-> S) -> (R $-> T) -> (R $-> S × T).
-Proof.
-  intros f g.
-  srapply Build_CRingHomomorphism'.
-  1: apply (ab_biprod_corec f g).
-  repeat split.
-  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
-  cbn; apply path_prod; apply rng_homo_one.
-Defined.
-
-Definition equiv_cring_product_corec `{Funext} (R S T : CRing)
-  : (R $-> S) * (R $-> T) <~> (R $-> S × T).
-Proof.
-  snrapply equiv_adjointify.
-  1: exact (uncurry (cring_product_corec _ _ _)).
-  { intros f.
-    exact (cring_product_fst $o f , cring_product_snd $o f). }
-  { hnf; intros f.
-    by apply path_hom. }
-  intros [f g].
-  apply path_prod.
-  1,2: by apply path_hom.
-Defined.
-
-(** ** Image ring *)
-
-(** The image of a ring homomorphism *)
-Definition rng_image {R S : CRing} (f : R $-> S) : CRing.
-Proof.
-  snrapply (Build_CRing' (abgroup_image f)).
-  { simpl.
-    intros [x p] [y q].
-    exists (x * y).
-    strip_truncations; apply tr.
-    destruct p as [p p'], q as [q q'].
-    exists (p * q).
-    refine (rng_homo_mult _ _ _ @ _).
-    f_ap. }
-  { exists 1.
-    apply tr.
-    exists 1.
-    exact (rng_homo_one f). }
-  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
-  2: repeat split.
-  2: exact _.
-  all: intros [].
-  1,2,5: intros [].
-  1,2: intros [].
-  all: apply path_sigma_hprop; cbn.
-  1: apply distribute_l.
-  1: apply associativity.
-  1: apply commutativity.
-  1: apply left_identity.
-  apply right_identity.
-Defined.
-
-Lemma rng_homo_image_incl {R S} (f : CRingHomomorphism R S)
-  : rng_image f $-> S.
-Proof.
-  snrapply Build_CRingHomomorphism.
-  1: exact pr1.
-  repeat split.
-Defined.
-
-(** Image of a surjective ring homomorphism *)
-Lemma rng_image_issurj {R S} (f : CRingHomomorphism R S) {issurj : IsSurjection f}
-  : rng_image f ≅ S.
-Proof.
-  snrapply Build_CRingIsomorphism.
-  1: exact (rng_homo_image_incl f).
-  exact _.
-Defined. 
-
-(** *** More Ring laws *)
-
-(** Powers of ring elements *)
-Definition rng_power {R : CRing} (x : R) (n : nat) : R := nat_iter n (x *.) cring_one.
-
-(** Power laws *)
-Lemma rng_power_mult_law {R : CRing} (x : R) (n m : nat)
-  : (rng_power x n) * (rng_power x m) = rng_power x (n + m).
-Proof.
-  induction n as [|n IHn].
-  1: apply rng_mult_one_l.
-  refine ((rng_mult_assoc _ _ _)^ @ _).
-  exact (ap (x *.) IHn).
-Defined.
+Definition rng_mult_comm {R : CRing} (x y : R) : x * y = y * x := commutativity x y.
 
 (** Powers commute with multiplication *)
 Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
-  : rng_power (x * y) n = rng_power x n * rng_power y n.
+  : rng_power (R:=R) (x * y) n = rng_power (R:=R) x n * rng_power (R:=R) y n.
 Proof.
   induction n.
-  1: symmetry; apply rng_mult_one_l.
+  1: symmetry; rapply rng_mult_one_l.
   simpl.
+  rewrite (rng_mult_assoc (A:=R)).
+  rewrite <- (rng_mult_assoc (A:=R) x _ y).
+  rewrite (rng_mult_comm (rng_power (R:=R) x n) y).
   rewrite rng_mult_assoc.
-  rewrite <- (rng_mult_assoc x _ y).
-  rewrite (rng_mult_comm (rng_power x n) y).
-  rewrite rng_mult_assoc.
-  rewrite <- (rng_mult_assoc _ (rng_power x n)).
+  rewrite <- (rng_mult_assoc _ (rng_power (R:=R) x n)).
   f_ap.
 Defined.
+
+(** ** Ideals in commutative rings *)
+  
+Section IdealCRing.
+  Context {R : CRing}.
+  
+  Import Ideal.Notation.
+  Local Open Scope ideal_scope.
+
+  (** Ideal products are commutative in commutative rings. *)
+  Lemma ideal_product_comm (I J : Ideal R) : I ⋅ J ↔ J ⋅ I.
+  Proof.
+    (** WLOG we show one direction *)
+    assert (p : forall K L : Ideal R, K ⋅ L ⊆ L ⋅ K).
+    { clear I J; intros I J.
+      intros r p.
+      strip_truncations.
+      induction p as [r p | |].
+      2: apply ideal_in_zero.
+      2: by apply ideal_in_plus_negate.
+      destruct p as [s t p q].
+      rewrite rng_mult_comm.
+      apply tr.
+      apply sgt_in.
+      by rapply ipn_in. }
+    apply ideal_subset_antisymm; apply p.
+  Defined.
+  
+  (** Product of intersection and sum is a subset of product. Note that this is a generalization of lcm * gcd = product *)
+  Lemma ideal_product_intersection_sum_subset' (I J : Ideal R)
+    : (I ∩ J) ⋅ (I + J) ⊆ I ⋅ J.
+  Proof.
+    etransitivity.
+    2: rapply ideal_sum_self.
+    etransitivity.
+    2: rapply ideal_sum_subset_pres_r.
+    2: rapply ideal_product_comm.
+    apply ideal_product_intersection_sum_subset.
+  Defined.
+ 
+  (** If the sum of ideals is the whole ring then their intersection is a subset of their product. *)
+  Lemma ideal_intersection_subset_product (I J : Ideal R)
+    : ideal_unit R ⊆ (I + J) -> I ∩ J ⊆ I ⋅ J.
+  Proof.
+    intros p.
+    etransitivity.
+    { apply ideal_eq_subset.
+      symmetry.
+      apply ideal_product_unit_r. }
+    etransitivity.
+    1: rapply (ideal_product_subset_pres_r _ _ _ p).
+    rapply ideal_product_intersection_sum_subset'.
+  Defined.
+
+  (** This can be combined into a sufficient (but not necessary) condition for equality of intersections and products. *)
+  Lemma ideal_intersection_is_product (I J : Ideal R)
+    : Coprime I J -> I ∩ J ↔ I ⋅ J.
+  Proof.
+    intros p.
+    apply ideal_subset_antisymm.
+    - apply ideal_intersection_subset_product.
+      unfold Coprime in p.
+      apply symmetry in p.
+      rapply p.
+    - apply ideal_product_subset_intersection.
+  Defined.
+  
+  Section AssumeFunext.
+    Context `{Funext}.
+
+    Lemma ideal_quotient_product (I J K : Ideal R)
+      : (I :: J) :: K ↔ (I :: (J ⋅ K)).
+    Proof.
+      apply ideal_subset_antisymm.
+      - intros x p y q; simpl in p.
+        strip_truncations.
+        induction q as [y i | | ? ? ? [] ? [] ].
+        + destruct i as [ y z s t ].
+          destruct (p z t) as [p' p''].
+          destruct (p' y s) as [q q'], (p'' y s) as [q'' q'''].
+          rewrite <- rng_mult_assoc.
+          rewrite (rng_mult_comm y).
+          rewrite rng_mult_assoc.
+          by split.
+        + rewrite rng_mult_zero_l, rng_mult_zero_r.
+          split; apply ideal_in_zero.
+        + rewrite rng_dist_l, rng_dist_r.
+          rewrite rng_mult_negate_l, rng_mult_negate_r.
+          split; by apply ideal_in_plus_negate.
+      - intros x p y k; split; intros z j.
+        + rewrite <- rng_mult_assoc.
+          rewrite (rng_mult_comm x y).
+          rewrite 2 rng_mult_assoc, <- rng_mult_assoc.
+          rewrite (rng_mult_comm y).
+          simpl in p; by apply p, tr, sgt_in, ipn_in.
+        + rewrite rng_mult_assoc.
+          rewrite (rng_mult_comm y x).
+          rewrite <- rng_mult_assoc.
+          rewrite (rng_mult_comm y).
+          simpl in p; by apply p, tr, sgt_in, ipn_in.
+    Defined.
+    
+    (** The ideal quotient is a right adjoint to the product in the monoidal lattice of ideals. *)
+    Lemma ideal_quotient_subset_prod (I J K : Ideal R)
+      : I ⋅ J ⊆ K <-> I ⊆ (K :: J).
+    Proof.
+      split.
+      - intros p r i s j; rewrite (rng_mult_comm s r); split;
+          by apply p, tr, sgt_in; rapply ipn_in.
+      - intros p x.
+        apply Trunc_rec.
+        intros q.
+        induction q as [r x | | ].
+        { destruct x.
+          cbv in p.
+          by apply p. }
+        1: apply ideal_in_zero.
+        by apply ideal_in_plus_negate.
+    Defined.
+
+    (** Ideal quotients partially cancel *)
+    Lemma ideal_quotient_product_left (I J : Ideal R)
+      : (I :: J) ⋅ J ⊆ I.
+    Proof.
+      by apply ideal_quotient_subset_prod.
+    Defined.
+
+  End AssumeFunext.
+
+End IdealCRing.
+
+(** ** Category of commutative rings. *)
+
+Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced ring_cring.
+Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced ring_cring.
+Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced ring_cring.
+Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced ring_cring.
