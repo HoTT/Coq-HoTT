@@ -338,24 +338,24 @@ Defined.
 (** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v. *)
 
 Definition dcate_moveR_eM {A} {D : A -> Type} `{DHasEquivs A D}
-  {a b c : A} {e : b $<~> a} {f : b $<~> c} {g : a $<~> c}
-  {p : cate_fun g $== f $o e^-1$} {a' : D a} {b' : D b} {c' : D c}
-  (e' : DCatEquiv e b' a') (f' : DCatEquiv f b' c') (g' : DCatEquiv g a' c')
-  (p' : DGpdHom p (dcate_fun g') (dcate_fun f' $o' e'^-1$'))
-  : DGpdHom (cate_moveR_eM e f g p) (dcate_fun g' $o' e') (dcate_fun f').
+  {a b c : A} {e : b $<~> a} {f : a $-> c} {g : b $-> c}
+  {p : f $== g $o e^-1$} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' a') (f' : DHom f a' c') (g' : DHom g b' c')
+  (p' : DGpdHom p f' (g' $o' e'^-1$'))
+  : DGpdHom (cate_moveR_eM e f g p) (f' $o' e') g'.
 Proof.
   apply (dcate_epic_equiv e'^-1$').
   exact (dcompose_hh_V _ _ $@' p').
 Defined.
 
 Definition dcate_moveR_Ve {A} {D : A -> Type} `{DHasEquivs A D}
-  {a b c : A} {e : b $<~> a} {f : b $<~> c} {g : c $<~> a}
-  {p : cate_fun e $== g $o f} {a' : D a} {b' : D b} {c' : D c}
-  (e' : DCatEquiv e b' a') (f' : DCatEquiv f b' c') (g' : DCatEquiv g c' a')
-  (p' : DGpdHom p (dcate_fun e') (dcate_fun g' $o' f'))
-  : DGpdHom (cate_moveR_Ve e f g p) (dcate_fun g'^-1$' $o' e') (dcate_fun f').
+  {a b c : A} {e : b $<~> c} {f : a $-> c} {g : a $-> b}
+  {p : f $== e $o g} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' c') (f' : DHom f a' c') (g' : DHom g a' b')
+  (p' : DGpdHom p f' (dcate_fun e' $o' g'))
+  : DGpdHom (cate_moveR_Ve e f g p) (dcate_fun e'^-1$' $o' f') g'.
 Proof.
-  apply (dcate_monic_equiv g').
+  apply (dcate_monic_equiv e').
   exact (dcompose_h_Vh _ _ $@' p').
 Defined.
 
