@@ -227,7 +227,7 @@ Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   isequiv_group_iso :: IsEquiv grp_iso_homo;
 }.
 
-(** We can build an isomorphism from an operation preserving equivalence. *)
+(** We can build an isomorphism from an operation-preserving equivalence. *)
 Definition Build_GroupIsomorphism' {G H : Group}
   (f : G <~> H) (h : IsSemiGroupPreserving f)
   : GroupIsomorphism G H.
