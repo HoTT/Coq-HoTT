@@ -282,21 +282,79 @@ Proof.
   exact (p $@R _).
 Defined.
 
-(** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v.  More could be added. *)
+(** ** Movement Lemmas *)
 
-Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : a $<~> c)
-  (p : cate_fun g $== f $o e^-1$)
-  : g $o e $== f.
+(** These lemmas can be used to move equivalences around in an equation. *)
+
+Definition cate_moveL_eM {A} `{HasEquivs A} {a b c : A}
+  (e : a $<~> b) (f : a $-> c) (g : b $-> c)
+  (p : f $o e^-1$ $== g)
+  : f $== g $o e.
+Proof.
+  apply (cate_epic_equiv e^-1$).
+  exact (p $@ (compose_hh_V _ _)^$).
+Defined.
+  
+Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> a) (f : a $-> c) (g : b $-> c)
+  (p : f $== g $o e^-1$)
+  : f $o e $== g.
 Proof.
   apply (cate_epic_equiv e^-1$).
   exact (compose_hh_V _ _ $@ p).
 Defined.
 
-Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : c $<~> a)
-  (p : cate_fun e $== g $o f)
-  : g^-1$ $o e $== f.
+Definition cate_moveL_Me {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> c) (g : a $-> b)
+  (p : e^-1$ $o f $== g)
+  : f $== e $o g.
 Proof.
-  apply (cate_monic_equiv g).
+  apply (cate_monic_equiv e^-1$).
+  exact (p $@ (compose_V_hh _ _)^$).
+Defined.
+
+Definition cate_moveR_Me {A} `{HasEquivs A} {a b c : A}
+  (e : c $<~> b) (f : a $-> c) (g : a $-> b)
+  (p : f $== e^-1$ $o g)
+  : e $o f $== g.
+Proof.
+  apply (cate_monic_equiv e^-1$).
+  exact (compose_V_hh _ _ $@ p).
+Defined.
+
+Definition cate_moveL_eV {A} `{HasEquivs A} {a b c : A}
+  (e : a $<~> b) (f : b $-> c) (g : a $-> c)
+  (p : f $o e $== g)
+  : f $== g $o e^-1$.
+Proof.
+  apply (cate_epic_equiv e).
+  exact (p $@ (compose_hV_h _ _)^$).
+Defined.
+
+Definition cate_moveR_eV {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> a) (f : b $-> c) (g : a $-> c)
+  (p : f $== g $o e)
+  : f $o e^-1$ $== g.
+Proof.
+  apply (cate_epic_equiv e).
+  exact (compose_hV_h _ _ $@ p).
+Defined.
+
+Definition cate_moveL_Ve {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> b) (g : a $-> c)
+  (p : e $o f $== g)
+  : f $== e^-1$ $o g.
+Proof.
+  apply (cate_monic_equiv e).
+  exact (p $@ (compose_h_Vh _ _)^$).
+Defined.
+
+Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> c) (g : a $-> b)
+  (p : f $== e $o g)
+  : e^-1$ $o f $== g.
+Proof.
+  apply (cate_monic_equiv e).
   exact (compose_h_Vh _ _ $@ p).
 Defined.
 
