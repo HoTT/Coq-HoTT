@@ -196,7 +196,7 @@ Defined.
 
 Definition fwedge_in' (I : Type) (X : I -> pType)
   : forall i, X i $-> FamilyWedge I X
-  := fun i => Build_pMap _ _ (fun x => pushl (i; x)) (pglue pt).
+  := fun i => Build_pMap _ _ (fun x => pushl (i; x)) (pglue i).
 
 (** We have an inclusion map [pushl : sig X -> FamilyWedge X].  When [I] is pointed, so is [sig X], and then this inclusion map is pointed. *)
 Definition fwedge_in (I : pType) (X : I -> pType)
@@ -252,7 +252,7 @@ Proof.
         nrapply h.
       * intros [].
         exact (point_eq _ @ (point_eq _)^).
-      * intros i.
+      * intros i; cbn.
         nrapply transport_paths_FlFr'.
         lhs nrapply concat_p_pp.
         apply moveR_pV.
