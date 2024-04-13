@@ -124,13 +124,9 @@ Defined.
 
 (** A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
 Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
-  grp_homo_map : group_type G -> group_type H;
-  grp_homo_ishomo :> IsMonoidPreserving grp_homo_map;
+  grp_homo_map :> group_type G -> group_type H;
+  grp_homo_ishomo :: IsMonoidPreserving grp_homo_map;
 }.
-
-(** We coerce a homomorphism to its underlying map. *)
-Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
-Global Existing Instance grp_homo_ishomo.
 
 (** Group homomorphisms are pointed maps. *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
