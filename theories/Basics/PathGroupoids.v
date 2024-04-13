@@ -1266,29 +1266,29 @@ Defined.
 
 (** Naturality of [concat_p_pp] in left-most argument. *)
 Definition concat_p_pp_nat_l {A} {w x y z : A}
-  {p q : w = x} (r : p = q) (s : x = y) (t : y = z)
-  : whiskerR r (s @ t) @ concat_p_pp q s t
-    = concat_p_pp p s t @ whiskerR (whiskerR r s) t.
+  {p p' : w = x} (h : p = p') (q : x = y) (r : y = z)
+  : whiskerR h (q @ r) @ concat_p_pp p' q r
+    = concat_p_pp p q r @ whiskerR (whiskerR h q) r.
 Proof.
-  by destruct r, p, s, t.
+  by destruct h, p, q, r.
 Defined.
 
 (** Naturality of [concat_p_pp] in middle argument. *)
 Definition concat_p_pp_nat_m {A} {w x y z : A}
-  (p : w = x) {q r : x = y} (s : q = r) (t : y = z)
-  : whiskerL p (whiskerR s t) @ concat_p_pp p r t
-    = concat_p_pp p q t @ whiskerR (whiskerL p s) t.
+  (p : w = x) {q q' : x = y} (h : q = q') (r : y = z)
+  : whiskerL p (whiskerR h r) @ concat_p_pp p q' r
+    = concat_p_pp p q r @ whiskerR (whiskerL p h) r.
 Proof.
-  by destruct t, s, p, q.
+  by destruct h, p, q, r.
 Defined.
 
 (** Naturality of [concat_p_pp] in right-most argument. *)
 Definition concat_p_pp_nat_r {A} {w x y z : A}
-  (p : w = x) (q : x = y) {r s : y = z} (t : r = s)
-  : whiskerL p (whiskerL q t) @ concat_p_pp p q s
-    = concat_p_pp p q r @ whiskerL (p @ q) t.
+  (p : w = x) (q : x = y) {r r' : y = z} (h : r = r)
+  : whiskerL p (whiskerL q h) @ concat_p_pp p q r
+    = concat_p_pp p q r @ whiskerL (p @ q) h.
 Proof.
-  by destruct t, r, p, q.
+  by destruct h, p, q, r.
 Defined.
 
 (** The interchange law for concatenation. *)
