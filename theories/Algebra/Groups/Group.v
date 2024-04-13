@@ -28,7 +28,7 @@ Declare Scope group_scope.
 
 (** * Groups *)
 
-(** A group is an abstraction of several common situations in mathematics. For example, when considering the symmetries of an object you may notice that there are ways in which certain symmetries can be "combined". There are also other symmetries can be "reversed", as to undo the original symmetry and yield a symmetry that does "nothing". Such situations arise in geometry, algebra and importantly for us homotopy theory. *)
+(** A group is an abstraction of several common situations in mathematics. For example, consider the symmetries of an object.  Two symmetries can be combined; there is a symmetry that does nothing; and any symmetry can be reversed. Such situations arise in geometry, algebra and, importantly for us, homotopy theory. *)
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
