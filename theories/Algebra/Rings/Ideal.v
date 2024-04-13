@@ -728,7 +728,7 @@ Definition subgroup_ideal_left_annihilator {R : Ring} (S : R -> Type)
   : Subgroup R.
 Proof.
   snrapply Build_Subgroup'.
-  (** We use [merely] here to avoid [funext] it isn't necessary as the target is already a proposition. *)
+  (** If we assume [Funext], then it isn't necessary to use [merely] here. *)
   - exact (fun r => merely (forall x, S x -> r * x = ring_zero)).
   - exact _.
   - apply tr. 
