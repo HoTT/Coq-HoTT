@@ -194,14 +194,14 @@ Proof.
     exact pt.
 Defined.
 
+Definition fwedge_in' (I : Type) (X : I -> pType)
+  : forall i, X i $-> FamilyWedge I X
+  := fun i => Build_pMap _ _ (fun x => pushl (i; x)) (pglue i).
+
 (** We have an inclusion map [pushl : sig X -> FamilyWedge X].  When [I] is pointed, so is [sig X], and then this inclusion map is pointed. *)
 Definition fwedge_in (I : pType) (X : I -> pType)
-  : psigma (pointed_fam X) $-> FamilyWedge I X.
-Proof.
-  snrapply Build_pMap.
-  - exact pushl.
-  - exact (pglue pt).
-Defined.
+  : psigma (pointed_fam X) $-> FamilyWedge I X
+  := Build_pMap _ _ pushl (pglue pt).
 
 (** Recursion principle for the wedge of an indexed family of pointed types. *)
 Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
@@ -228,6 +228,39 @@ Proof.
   destruct (dec_paths i a).
   - destruct p; exact pmap_idmap.
   - exact pconst.
+Defined.
+
+Global Instance hasallcoproducts_ptype : HasAllCoproducts pType.
+Proof.
+  intros I X.
+  snrapply Build_Coproduct.
+  - exact (FamilyWedge I X).
+  - exact (fwedge_in' I X).
+  - exact (fwedge_rec I X).
+  - intros Z f i.
+    snrapply Build_pHomotopy.
+    1: reflexivity.
+    simpl.
+    apply moveL_pV.
+    apply equiv_1p_q1.
+    symmetry.
+    exact (Pushout_rec_beta_pglue Z _ (unit_name pt) (fun i => point_eq (f i)) _).
+  - intros Z f g h.
+    snrapply Build_pHomotopy.
+    + snrapply Pushout_ind.
+      * intros [i x].
+        nrapply h.
+      * intros [].
+        exact (point_eq _ @ (point_eq _)^).
+      * intros i; cbn.
+        nrapply transport_paths_FlFr'.
+        lhs nrapply concat_p_pp.
+        apply moveR_pV.
+        rhs nrapply concat_pp_p.
+        apply moveL_pM.
+        symmetry.
+        exact (dpoint_eq (h i)).
+    + reflexivity.
 Defined.
 
 (** ** The pinch map on the suspension *)
