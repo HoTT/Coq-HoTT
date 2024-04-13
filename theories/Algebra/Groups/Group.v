@@ -274,7 +274,7 @@ Defined.
 Definition grp_iso_id {G : Group} : GroupIsomorphism G G
   := Build_GroupIsomorphism _ _ grp_homo_id _.
 
-(** Group isomorphisms can be composed by composing the underlying group homomorphism. This is equivalence because equivalences are also preserved under composition. *)
+(** Group isomorphisms can be composed by composing the underlying group homomorphism. *)
 Definition grp_iso_compose {G H K : Group}
   (g : GroupIsomorphism H K) (f : GroupIsomorphism G H)
   : GroupIsomorphism G K
