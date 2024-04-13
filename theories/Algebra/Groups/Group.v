@@ -280,7 +280,7 @@ Definition grp_iso_compose {G H K : Group}
   : GroupIsomorphism G K
   := Build_GroupIsomorphism _ _ (grp_homo_compose g f) _.
 
-(** Group isomorphisms can be inverted unlike regular group homomorphisms. The inverse map of the underlying equivalence also preserves the group operation and unit. *)
+(** Group isomorphisms can be inverted. The inverse map of the underlying equivalence also preserves the group operation and unit. *)
 Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
