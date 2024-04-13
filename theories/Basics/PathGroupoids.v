@@ -1284,8 +1284,8 @@ Defined.
 
 (** Naturality of [concat_p_pp] in right-most argument. *)
 Definition concat_p_pp_nat_r {A} {w x y z : A}
-  (p : w = x) (q : x = y) {r r' : y = z} (h : r = r)
-  : whiskerL p (whiskerL q h) @ concat_p_pp p q r
+  (p : w = x) (q : x = y) {r r' : y = z} (h : r = r')
+  : whiskerL p (whiskerL q h) @ concat_p_pp p q r'
     = concat_p_pp p q r @ whiskerL (p @ q) h.
 Proof.
   by destruct h, p, q, r.
