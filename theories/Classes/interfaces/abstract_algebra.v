@@ -167,9 +167,6 @@ Section upper_classes.
     f_ap; apply commutativity.
   Defined.
   
-  (* For now, we follow CoRN/ring_theory's example in having Ring and SemiRing
-    require commutative multiplication. *)
-
   Class IsIntegralDomain :=
     { intdom_ring : IsCRing
     ; intdom_nontrivial : PropHolds (not (1 = 0))

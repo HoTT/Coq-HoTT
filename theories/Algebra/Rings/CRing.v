@@ -16,9 +16,9 @@ Record CRing := {
   cring_abgroup :> AbGroup;
   (** A multiplication operation. *)
   cring_mult :: Mult cring_abgroup;
-  (** A multiplicative identity called [one]. *)
+  (** A multiplicative identity. *)
   cring_one :: One cring_abgroup;
-  (** Such that all they all satisfy the axioms of a ring. *)
+  (** Such that they satisfy the axioms of a ring. *)
   cring_iscring :: IsCRing cring_abgroup;
 }.
 
@@ -67,26 +67,33 @@ Defined.
 Section IdealCRing.
   Context {R : CRing}.
   
+  (** The section is meant to complement the IdealLemmas section in Algebra.Rings.Ideal. Since the results here only hold in commutative rings, they have to be kept here. *)
+  
+  (** We import ideal notations as used in Algebra.Rings.Ideal but only for this section. Important to note is that [↔] corresponds to equality of ideals. *)
   Import Ideal.Notation.
   Local Open Scope ideal_scope.
 
-  (** Ideal products are commutative in commutative rings. *)
+  (** In a commutative ring, the product of two ideals is a subset of the reversed product. *)
+  Lemma ideal_product_subset_product_commutative (I J : Ideal R)
+    : I ⋅ J ⊆ J ⋅ I.
+  Proof.
+    intros r p.
+    strip_truncations.
+    induction p as [r p | |].
+    2: apply ideal_in_zero.
+    2: by apply ideal_in_plus_negate.
+    destruct p as [s t p q].
+    rewrite rng_mult_comm.
+    apply tr.
+    apply sgt_in.
+    by rapply ipn_in.
+  Defined.
+
+  (** Ideal products are commutative in commutative rings. Note that we are using ideal notations here and [↔] corresponds to equality of ideals. Essentially a subset in each direction. *)
   Lemma ideal_product_comm (I J : Ideal R) : I ⋅ J ↔ J ⋅ I.
   Proof.
-    (** WLOG we show one direction *)
-    assert (p : forall K L : Ideal R, K ⋅ L ⊆ L ⋅ K).
-    { clear I J; intros I J.
-      intros r p.
-      strip_truncations.
-      induction p as [r p | |].
-      2: apply ideal_in_zero.
-      2: by apply ideal_in_plus_negate.
-      destruct p as [s t p q].
-      rewrite rng_mult_comm.
-      apply tr.
-      apply sgt_in.
-      by rapply ipn_in. }
-    apply ideal_subset_antisymm; apply p.
+    apply ideal_subset_antisymm;
+    apply ideal_product_subset_product_commutative.
   Defined.
   
   (** Product of intersection and sum is a subset of product. Note that this is a generalization of lcm * gcd = product *)
@@ -127,68 +134,68 @@ Section IdealCRing.
       rapply p.
     - apply ideal_product_subset_intersection.
   Defined.
-  
-  Section AssumeFunext.
-    Context `{Funext}.
 
-    Lemma ideal_quotient_product (I J K : Ideal R)
-      : (I :: J) :: K ↔ (I :: (J ⋅ K)).
-    Proof.
-      apply ideal_subset_antisymm.
-      - intros x p y q; simpl in p.
+  Lemma ideal_quotient_product (I J K : Ideal R)
+    : (I :: J) :: K ↔ (I :: (J ⋅ K)).
+  Proof.
+    apply ideal_subset_antisymm.
+    - intros x p; simpl in p.
+      strip_truncations; apply tr.
+      intros y q.
+      strip_truncations.
+      induction q as [y i | | ? ? ? [] ? [] ].
+      + destruct i as [ y z s t ].
+        destruct (p z t) as [p' p''].
         strip_truncations.
-        induction q as [y i | | ? ? ? [] ? [] ].
-        + destruct i as [ y z s t ].
-          destruct (p z t) as [p' p''].
-          destruct (p' y s) as [q q'], (p'' y s) as [q'' q'''].
-          rewrite <- rng_mult_assoc.
-          rewrite (rng_mult_comm y).
-          rewrite rng_mult_assoc.
-          by split.
-        + rewrite rng_mult_zero_l, rng_mult_zero_r.
-          split; apply ideal_in_zero.
-        + rewrite rng_dist_l, rng_dist_r.
-          rewrite rng_mult_negate_l, rng_mult_negate_r.
-          split; by apply ideal_in_plus_negate.
-      - intros x p y k; split; intros z j.
-        + rewrite <- rng_mult_assoc.
-          rewrite (rng_mult_comm x y).
-          rewrite 2 rng_mult_assoc, <- rng_mult_assoc.
-          rewrite (rng_mult_comm y).
-          simpl in p; by apply p, tr, sgt_in, ipn_in.
-        + rewrite rng_mult_assoc.
-          rewrite (rng_mult_comm y x).
-          rewrite <- rng_mult_assoc.
-          rewrite (rng_mult_comm y).
-          simpl in p; by apply p, tr, sgt_in, ipn_in.
-    Defined.
-    
-    (** The ideal quotient is a right adjoint to the product in the monoidal lattice of ideals. *)
-    Lemma ideal_quotient_subset_prod (I J K : Ideal R)
-      : I ⋅ J ⊆ K <-> I ⊆ (K :: J).
-    Proof.
-      split.
-      - intros p r i s j; rewrite (rng_mult_comm s r); split;
-          by apply p, tr, sgt_in; rapply ipn_in.
-      - intros p x.
-        apply Trunc_rec.
-        intros q.
-        induction q as [r x | | ].
-        { destruct x.
-          cbv in p.
-          by apply p. }
-        1: apply ideal_in_zero.
-        by apply ideal_in_plus_negate.
-    Defined.
+        destruct (p' y s) as [q q'], (p'' y s) as [q'' q'''].
+        rewrite <- rng_mult_assoc.
+        rewrite (rng_mult_comm y).
+        rewrite rng_mult_assoc.
+        by split.
+      + rewrite rng_mult_zero_l, rng_mult_zero_r.
+        split; apply ideal_in_zero.
+      + rewrite rng_dist_l, rng_dist_r.
+        rewrite rng_mult_negate_l, rng_mult_negate_r.
+        split; by apply ideal_in_plus_negate.
+    - intros x p; strip_truncations; apply tr; intros y k.
+      split; apply tr; intros z j.
+      + rewrite <- rng_mult_assoc.
+        rewrite (rng_mult_comm x y).
+        rewrite 2 rng_mult_assoc, <- rng_mult_assoc.
+        rewrite (rng_mult_comm y).
+        simpl in p; by apply p, tr, sgt_in, ipn_in.
+      + rewrite rng_mult_assoc.
+        rewrite (rng_mult_comm y x).
+        rewrite <- rng_mult_assoc.
+        rewrite (rng_mult_comm y).
+        simpl in p; by apply p, tr, sgt_in, ipn_in.
+  Defined.
+  
+  (** The ideal quotient is a right adjoint to the product in the monoidal lattice of ideals. *)
+  Lemma ideal_quotient_subset_prod (I J K : Ideal R)
+    : I ⋅ J ⊆ K <-> I ⊆ (K :: J).
+  Proof.
+    split.
+    - intros p r i; apply tr; intros s j; rewrite (rng_mult_comm s r); split;
+        by apply p, tr, sgt_in; rapply ipn_in.
+    - intros p x.
+      apply Trunc_rec.
+      intros q.
+      induction q as [r x | | ].
+      { destruct x.
+        specialize (p x s); simpl in p.
+        revert p; apply Trunc_rec; intros p.
+        by apply p. }
+      1: apply ideal_in_zero.
+      by apply ideal_in_plus_negate.
+  Defined.
 
-    (** Ideal quotients partially cancel *)
-    Lemma ideal_quotient_product_left (I J : Ideal R)
-      : (I :: J) ⋅ J ⊆ I.
-    Proof.
-      by apply ideal_quotient_subset_prod.
-    Defined.
-
-  End AssumeFunext.
+  (** Ideal quotients partially cancel *)
+  Lemma ideal_quotient_product_left (I J : Ideal R)
+    : (I :: J) ⋅ J ⊆ I.
+  Proof.
+    by apply ideal_quotient_subset_prod.
+  Defined.
 
 End IdealCRing.
 
