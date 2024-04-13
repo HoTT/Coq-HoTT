@@ -1264,7 +1264,7 @@ Proof.
   destruct p, r, q. reflexivity.
 Defined.
 
-(** Naturality of [concat_p_pp] in left-mode argument. *)
+(** Naturality of [concat_p_pp] in left-most argument. *)
 Definition concat_p_pp_nat_l {A} {w x y z : A}
   {p q : w = x} (r : p = q) (s : x = y) (t : y = z)
   : whiskerR r (s @ t) @ concat_p_pp q s t
