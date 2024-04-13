@@ -64,38 +64,30 @@ Proof.
   - intros x y z p.
     snrapply Build_Is1Functor.
     + intros a b q r h.
-      (* TODO: missing from path groupoids? *)
-      by destruct h.
+      exact (ap (fun x => whiskerR x _) h).
     + reflexivity.
     + intros a b c q r.
       exact (whiskerR_pp p q r).
   - intros x y z p.
     snrapply Build_Is1Functor.
     + intros a b q r h.
-      (* TODO: missing from path groupoids *)
-      by destruct h.
+      exact (ap (whiskerL p) h).
     + reflexivity.
     + intros a b c q r.
       exact (whiskerL_pp p q r).
   - intros a b c q r s t h g.
-    simpl. cbn.
-    symmetry.
-    exact (concat_whisker q r s t h g).
+    exact (concat_whisker q r s t h g)^.
   - intros a b c d q r s t h.
-    (* TODO: missing from path groupoids *)
-    by destruct h, s, r, q.
+    apply concat_p_pp_nat_r.
   - intros a b c d q r s t h.
-    (* TODO: missing from path groupoids *)
-    by destruct h, s, r, q.
+    apply concat_p_pp_nat_m.
   - intros a b c d q r s t h.
-    (* TODO: missing from path groupoids *)
-    by destruct h, s, r, q.
+    apply concat_p_pp_nat_l.
   - intros a b p q h; cbn.
     apply moveL_Mp.
-    (* TODO: the naturality condition in PathGroupoids.v is not in the most natural form. *)
     lhs nrapply concat_p_pp.
     exact (whiskerR_p1 h).
-  - intros a b p q h. simpl. hnf.
+  - intros a b p q h.
     apply moveL_Mp.
     lhs rapply concat_p_pp.
     exact (whiskerL_1p h).
