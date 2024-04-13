@@ -290,17 +290,17 @@ Proof.
   - exact _.
 Defined.
 
-(** Group isomorphisms are a reflexive relation. *)
+(** Group isomorphism is a reflexive relation. *)
 Global Instance reflexive_groupisomorphism
   : Reflexive GroupIsomorphism
   := fun G => grp_iso_id.
 
-(** Group isomorphisms are a symmetric relation. *)
+(** Group isomorphism is a symmetric relation. *)
 Global Instance symmetric_groupisomorphism
   : Symmetric GroupIsomorphism
   := fun G H => grp_iso_inverse.
 
-(** Group isomorphisms are a transitive relation. *)
+(** Group isomorphism is a transitive relation. *)
 Global Instance transitive_groupisomorphism
   : Transitive GroupIsomorphism
   := fun G H K f g => grp_iso_compose g f.
@@ -374,7 +374,7 @@ Proof.
   apply grp_inv_r.
 Defined.
 
-(** The operation inverting group elements is an equivalence. Note that since the order of the operation will change after inversion that this isn't a group homomorphism. *)
+(** The operation inverting group elements is an equivalence. Note that, since the order of the operation will change after inversion, this isn't a group homomorphism. *)
 Global Instance isequiv_group_inverse {G : Group}
   : IsEquiv ((-) : G -> G).
 Proof.
@@ -489,7 +489,7 @@ Defined.
 
 (** ** The category of Groups *)
 
-(** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphsisms. *)
+(** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
 
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
@@ -544,7 +544,7 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-(** Group isomorphisms become equivalences in the category of gorups. *)
+(** Group isomorphisms become equivalences in the category of groups. *)
 Global Instance hasequivs_group
   : HasEquivs Group.
 Proof.
@@ -652,7 +652,7 @@ Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
 
 (** ** The direct product of groups *)
 
-(** The cartesian product of the underlying sets of two groups has a natural group structure we can give it. We call this the direct product of groups. *)
+(** The cartesian product of the underlying sets of two groups has a natural group structure. We call this the direct product of groups. *)
 Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
@@ -710,7 +710,7 @@ Proof.
   exact (snd ((equiv_path_prod _ _)^-1 q)).
 Defined.
 
-(** Given two pairs of isomorphic groups we can conclude that their pairwise direct products ought to be isomorphic. *)
+(** Given two pairs of isomorphic groups, their pairwise direct products are isomorphic. *)
 Definition grp_iso_prod {A B C D : Group}
   : A ≅ B -> C ≅ D -> (grp_prod A C) ≅ (grp_prod B D).
 Proof.
