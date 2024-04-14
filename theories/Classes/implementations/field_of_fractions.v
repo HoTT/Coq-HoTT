@@ -344,7 +344,7 @@ hnf. apply (F_ind2 _).
 intros;apply path, Frac.pl_comm.
 Qed.
 
-Instance F_ring@{} : IsRing F.
+Instance F_ring@{} : IsCRing F.
 Proof.
 repeat split;
 first [change sg_op with mult; change mon_unit with 1|

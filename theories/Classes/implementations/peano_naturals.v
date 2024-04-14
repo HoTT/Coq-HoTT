@@ -196,7 +196,7 @@ Proof.
 apply hset_pathcoll, pathcoll_decpaths, nat_dec.
 Qed.
 
-Instance nat_semiring : IsSemiRing@{N} nat.
+Instance nat_semiring : IsSemiCRing@{N} nat.
 Proof.
   repeat (split; try exact _).
 Qed.
@@ -608,7 +608,7 @@ Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
 
 Section for_another_semiring.
   Universe U.
-  Context {R:Type@{U} } `{IsSemiRing@{U} R}.
+  Context {R:Type@{U} } `{IsSemiCRing@{U} R}.
 
   Notation toR := (naturals_to_semiring nat R).
 

@@ -257,7 +257,7 @@ trivial;apply symmetry;trivial.
 Qed.
 
 Section to_ring.
-Context {B : Type@{UNalt} } `{IsRing@{UNalt} B}.
+Context {B : Type@{UNalt} } `{IsCRing@{UNalt} B}.
 
 Definition to_ring@{} : T N -> B.
 Proof.
@@ -426,7 +426,7 @@ Defined.
 Definition Z_negate_compute q : - (' q) = ' (PairT.opp _ q)
   := 1.
 
-Lemma Z_ring@{} : IsRing Z.
+Lemma Z_ring@{} : IsCRing Z.
 Proof.
   repeat split.
   1,8: exact _.
@@ -862,7 +862,7 @@ eapply Z_rec.
 apply (PairT.to_ring_respects N).
 Defined.
 
-Lemma Z_to_ring_morphism' `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B).
+Lemma Z_to_ring_morphism' `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B).
 Proof.
 split;split;red.
 - change (@sg_op B _) with (@plus B _);
@@ -899,11 +899,11 @@ split;split;red.
   rewrite negate_0,plus_0_r;trivial.
 Qed.
 
-Instance Z_to_ring_morphism@{} `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B)
+Instance Z_to_ring_morphism@{} `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B)
   := ltac:(first [exact Z_to_ring_morphism'@{Ularge}|
                   exact Z_to_ring_morphism'@{}]).
 
-Lemma Z_to_ring_unique@{} `{IsRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
+Lemma Z_to_ring_unique@{} `{IsCRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
   : forall x : Z, integers_to_ring Z B x = h x.
 Proof.
 pose proof Z_ring.

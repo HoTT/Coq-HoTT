@@ -6,7 +6,7 @@ Require Import
 
 Section round_up.
 
-  Class RoundUpStrict A `{IsSemiRing A} `{StrictSemiRingOrder A}
+  Class RoundUpStrict A `{IsSemiCRing A} `{StrictSemiRingOrder A}
     := round_up_strict : forall a : A, {n : nat & a < naturals_to_semiring nat A n}.
   Global Arguments round_up_strict A {_ _ _ _ _ _ _ _ _ _ _ _} _.
 

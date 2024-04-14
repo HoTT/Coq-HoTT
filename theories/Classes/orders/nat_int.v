@@ -21,7 +21,7 @@ the rationals or the reals), any morphism to it is an order embedding.
 *)
 Lemma to_semiring_nonneg `{FullPseudoSemiRingOrder N}
   `{!NaturalsToSemiRing N} `{!Naturals N} `{FullPseudoSemiRingOrder R}
-  `{!IsSemiRing R}
+  `{!IsSemiCRing R}
   `{!IsSemiRingPreserving (f : N -> R)} n : 0 ≤ f n.
 Proof.
 revert n. apply naturals.induction.
@@ -36,7 +36,7 @@ Qed.
 
 Section nat_int_order.
 Context `{Naturals N} `{Apart N} `{Le N} `{Lt N} `{!FullPseudoSemiRingOrder le lt}
-  `{FullPseudoSemiRingOrder R} `{!IsSemiRing R}
+  `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}
   `{!Biinduction R} `{PropHolds (1 ≶ 0)}.
 
 (* Add Ring R : (stdlib_semiring_theory R). *)
@@ -143,7 +143,7 @@ Lemma le_iff_lt_S x y : x ≤ y <-> x < 1 + y.
 Proof. rewrite plus_comm. apply le_iff_lt_plus_1. Qed.
 
 Section another_semiring.
-  Context `{FullPseudoSemiRingOrder R2} `{!IsSemiRing R2}
+  Context `{FullPseudoSemiRingOrder R2} `{!IsSemiCRing R2}
     `{PropHolds ((1 : R2) ≶ 0)}
     `{!IsSemiRingPreserving (f : R -> R2)}.
 

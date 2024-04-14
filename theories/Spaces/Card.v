@@ -86,7 +86,7 @@ Section contents.
   Instance leftabsorb_card : LeftAbsorb mult_card zero_card.
   Proof. reduce. apply prod_empty_l. Defined.
 
-  Global Instance issemiring_card : IsSemiRing Card.
+  Global Instance issemiring_card : IsSemiCRing Card.
   Proof.
     repeat split; try apply _.
     - repeat intro. simpl_ops.

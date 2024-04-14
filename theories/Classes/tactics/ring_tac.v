@@ -68,18 +68,18 @@ Global Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
   := (-).
 Arguments negate_almostneg _ _ _ /.
 
-Global Instance semiring_almostring `{IsSemiRing A} : AlmostRing A | 10.
+Global Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
-Global Instance ring_almostring `{IsRing A} : AlmostRing A.
+Global Instance ring_almostring `{IsCRing A} : AlmostRing A.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
-apply negate_mult.
+apply negate_mult_l.
 Qed.
 
 Global Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
@@ -90,7 +90,7 @@ unfold almost_negate;simpl. intros _. apply preserves_0.
 Qed.
 
 Section VarSec.
-Context `{IsRing A} `{IsRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
+Context `{IsCRing A} `{IsCRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
 
 Global Instance ring_mor_almostring_mor : AlmostRingPreserving f.
 Proof.
@@ -108,7 +108,7 @@ Arguments by_quoting {C _ R} phi
 Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a semiring");
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
     reflexivity
   end.
@@ -116,7 +116,7 @@ Ltac ring_with_nat :=
 Ltac ring_with_integers Z :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsRing R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsCRing R)) || fail "target equality not on a ring");
     apply (by_quoting (integers_to_ring Z R));
     reflexivity
   end.
@@ -124,7 +124,7 @@ Ltac ring_with_integers Z :=
 Ltac ring_with_self :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a ring");
     apply (by_quoting (@id R));
     reflexivity
   end.
