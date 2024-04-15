@@ -1,6 +1,6 @@
 Require Import
   HoTT.Utf8Minimal
-  HoTT.Classes.implementations.list
+  HoTT.Spaces.List.Core
   HoTT.Basics.Overture
   HoTT.Spaces.Nat.Core.
 
@@ -56,7 +56,7 @@ Section with_type.
   Fixpoint from_list (x: T) (xs: list T): ne_list :=
     match xs with
     | nil => one x
-    | Datatypes.cons h t => cons x (from_list h t)
+    | List.Core.cons h t => cons x (from_list h t)
     end.
 
   Definition tail (l: ne_list): list T
@@ -125,10 +125,10 @@ Lemma tails_are_shorter {T} (y x: ne_list T):
   leq (length (to_list x)) (length (to_list y)).
 Proof with auto.
  induction y; cbn.
- - intros [[] | C].
+ - intros [[ ] | C].
    + constructor.
    + elim C.
- - intros [[] | C]...
+ - intros [[ ] | C]...
 Qed.
 
 Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
@@ -138,7 +138,7 @@ Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
   end.
 
 Lemma list_map {A B} (f: A → B) (l: ne_list A)
-  : to_list (map f l) = list.map f (to_list l).
+  : to_list (map f l) = List.Core.map f (to_list l).
 Proof.
   induction l.
   - reflexivity.

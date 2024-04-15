@@ -3,10 +3,11 @@ Require Export HoTT.Classes.interfaces.ua_congruence.
 Require Import
   HSet
   Colimits.Quotient
-  Classes.implementations.list
+  Spaces.List.Core
   Classes.interfaces.canonical_names
   Classes.theory.ua_homomorphism.
 
+Local Open Scope list_scope.
 Import algebra_notations ne_list.notations.
 
 Section quotient_algebra.

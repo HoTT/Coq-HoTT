@@ -5,7 +5,8 @@ Require Import
   Classes.interfaces.canonical_names
   Classes.theory.ua_quotient_algebra
   Classes.theory.ua_isomorphic
-  Classes.theory.ua_first_isomorphism.
+  Classes.theory.ua_first_isomorphism
+  Spaces.List.Core.
 
 Import algebra_notations quotient_algebra_notations isomorphic_notations.
 

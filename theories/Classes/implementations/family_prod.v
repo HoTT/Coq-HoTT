@@ -1,7 +1,9 @@
 Require Import
   HoTT.Utf8Minimal
   HoTT.Basics.Overture Types.Unit
-  HoTT.Classes.implementations.list.
+  HoTT.Spaces.List.Core.
+
+Local Open Scope list_scope.
 
 (** The following section implements a datatype [FamilyProd] which
     is a kind of product/tuple. *)
