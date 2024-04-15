@@ -107,8 +107,8 @@ Section with_type.
      + intro. apply Pmore; intros; apply IHl.
   Qed.
 
-  Lemma tl_length (l: ne_list)
-    : S (length (tl (to_list l))) = length (to_list l).
+  Lemma tail_length (l: ne_list)
+    : S (length (List.Core.tail (to_list l))) = length (to_list l).
   Proof. destruct l; reflexivity. Qed.
 End with_type.
 
