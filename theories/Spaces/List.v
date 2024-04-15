@@ -73,7 +73,7 @@ Defined.
 
 (** ** Path spaces of lists *)
 
-(** This proof was adapted from a proof givaen in agda/cubical by Evan Cavallo. *)
+(** This proof was adapted from a proof given in agda/cubical by Evan Cavallo. *)
 
 Section PathList.
   Context {A : Type}.
