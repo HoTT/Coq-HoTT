@@ -1,4 +1,4 @@
-Require Import Classes.interfaces.abstract_algebra.
+Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
