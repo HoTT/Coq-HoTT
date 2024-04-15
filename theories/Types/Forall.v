@@ -2,7 +2,7 @@
 (** * Theorems about dependent products *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
-               Basics.Tactics Basics.Trunc Basics.Contractible.
+               Basics.Tactics Basics.Contractible.
 
 Require Export Basics.Trunc (istrunc_forall).
 

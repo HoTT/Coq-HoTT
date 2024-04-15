@@ -4,11 +4,9 @@ Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
-Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Hopf.
-Require Import TruncType.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import WildCat.
 

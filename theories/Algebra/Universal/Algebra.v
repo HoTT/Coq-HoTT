@@ -7,8 +7,7 @@ Local Unset Elimination Schemes.
 Require Export HoTT.Basics.
 
 Require Import
-  HoTT.Types
-  HoTT.HSet.
+  HoTT.Types.
 
 Declare Scope Algebra_scope.
 Delimit Scope Algebra_scope with Algebra.

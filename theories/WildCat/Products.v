@@ -1,7 +1,7 @@
 Require Import Basics.Equivalences Basics.Overture Basics.Tactics.
 Require Import Types.Bool Types.Prod.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
-               WildCat.Forall WildCat.NatTrans WildCat.Opposite WildCat.Prod
+               WildCat.Forall WildCat.NatTrans WildCat.Opposite
                WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid.
 
 (** * Categories with products *)

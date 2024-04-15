@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Tactics.
+Require Import Basics.Overture.
 Require Import Types.Forall.
 Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod WildCat.Equiv WildCat.NatTrans.
 

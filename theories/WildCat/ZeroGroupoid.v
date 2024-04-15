@@ -1,6 +1,6 @@
-Require Import Basics.Overture Basics.Tactics Basics.Equivalences
+Require Import Basics.Overture Basics.Tactics
                Basics.PathGroupoids.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall.
 
 (** * The wild 1-category of 0-groupoids. *)

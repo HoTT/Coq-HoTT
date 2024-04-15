@@ -1,5 +1,4 @@
 Require Import
-        HoTT.Types
         HoTT.Basics
         HoTT.Truncations.Core Modalities.Modality.
 
