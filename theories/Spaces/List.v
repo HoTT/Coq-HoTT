@@ -78,7 +78,7 @@ Defined.
 Section PathList.
   Context {A : Type}.
   
-  (** This type is equivalent to the path space of lists. We don't actually show that it is equivalent to the type of paths but rather that it is a retract of it. This is sufficient to determine the h-level of the type of lists. *)
+  (** This type is equivalent to the path space of lists. We don't actually show that it is equivalent to the type of paths but rather that the path type is a retract of this type. This is sufficient to determine the h-level of the type of lists. *)
   Fixpoint ListEq (l l' : list A) : Type :=
     match l, l' with
       | nil, nil => Unit
@@ -91,7 +91,7 @@ Section PathList.
     intros l.
     induction l as [| a l IHl].
     - exact tt.
-    - by split.
+    - exact (idpath, IHl).
   Defined.
 
   Local Definition encode {l1 l2} (p : l1 = l2) : ListEq l1 l2.
@@ -123,7 +123,7 @@ Section PathList.
     apply decode_refl.
   Defined.
 
-  (** By case analysis on both lists, it's easy to show that [ListEq] is n.+1-truncated if [A] is n.+2-truncated. *)
+  (** By case analysis on both lists, it's easy to show that [ListEq] is [n.+1]-truncated if [A] is [n.+2]-truncated. *)
   Global Instance istrunc_listeq n {l1 l2} {H : IsTrunc n.+2 A}
     : IsTrunc n.+1 (ListEq l1 l2).
   Proof.
@@ -135,7 +135,7 @@ Section PathList.
       rapply istrunc_prod.
   Defined.
 
-  (** Since [ListEq] is a retract of the path space of lists, the latter is n.+1-truncated hence [list A] is n.+2-truncated. *)
+  (** The path space of lists is a retract of [ListEq], therefore it is [n.+1]-truncated if [ListEq] is [n.+1]-truncated. By the previous result, this holds when [A] is [n.+2]-truncated. *) 
   Global Instance istrunc_list n {H : IsTrunc n.+2 A} : IsTrunc n.+2 (list A).
   Proof.
     apply istrunc_S.
