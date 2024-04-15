@@ -1,4 +1,4 @@
-Require Import Classes.interfaces.abstract_algebra.
+Require Import Classes.interfaces.canonical_names.
 Require Import WildCat.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import Algebra.AbGroups.

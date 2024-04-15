@@ -1,4 +1,4 @@
-Require Import HoTT.HIT.quotient HoTT.Basics.Trunc.
+Require Import HoTT.HIT.quotient.
 Require Import 
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.dec_fields.

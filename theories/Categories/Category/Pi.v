@@ -1,7 +1,6 @@
 (** * Dependent Product Category *)
 Require Import Category.Strict.
 Require Import Basics.Trunc.
-Require Import Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

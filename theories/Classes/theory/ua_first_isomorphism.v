@@ -6,7 +6,6 @@
 Require Import
   HSet
   Colimits.Quotient
-  Modalities.ReflectiveSubuniverse
   Classes.interfaces.canonical_names
   Classes.theory.ua_isomorphic
   Classes.theory.ua_subalgebra

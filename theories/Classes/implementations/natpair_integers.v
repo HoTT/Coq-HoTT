@@ -1,5 +1,5 @@
 Require Import HoTT.HIT.quotient
-  HoTT.TruncType HoTT.Basics.Trunc.
+  HoTT.TruncType.
 Require Import
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra

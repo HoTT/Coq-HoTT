@@ -58,7 +58,7 @@
 *)
 
 From HoTT Require Import Basics Truncations.
-From HoTT Require Idempotents Spaces.Spheres Spaces.No Spaces.Nat.
+From HoTT Require Idempotents Spaces.No Spaces.Nat.
 From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.
 From HoTT Require Categories.
 From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.

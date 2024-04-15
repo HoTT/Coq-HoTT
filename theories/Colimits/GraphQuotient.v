@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Equivalences.
-Require Import Types.Universe Types.Paths Types.Arrow Types.Sigma Types.Forall Cubical.DPath.
+Require Import Types.Universe Types.Paths Types.Arrow Types.Sigma Cubical.DPath.
 
 (** * Quotient of a graph *)
 
