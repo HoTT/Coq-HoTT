@@ -1,5 +1,6 @@
-Require Import Basics.Overture Spaces.List.Core.
-Require Import canonical_names.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
+Require Import Types.Paths Types.Unit Types.Prod.
+Require Import Spaces.List.Core.
 
 (** * Theory of Lists and List Operations *)
 
@@ -11,15 +12,13 @@ Local Open Scope list_scope.
 
 (** ** Concatenation *)
 
-(** TODO: is this needed? *)
-Global Instance sg_op_app A : SgOp (list A) := @app A.
-
-Global Instance app_assoc {A} : Associative (@app A).
+(** Associativity of list concatenation. *)
+Definition app_assoc {A} (x y z : list A)
+  : app x (app y z) = app (app x y) z.
 Proof.
-  intros l1 l2 l3.
-  induction l1 as [|a l IHl] in |- *.
+  induction x as [|a x IHx] in |- *.
   - reflexivity.
-  - exact (ap (cons a) IHl).
+  - exact (ap (cons a) IHx).
 Defined.
 
 (** The type of lists has a monoidal structure given by concatenation. *)
