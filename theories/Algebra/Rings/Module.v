@@ -1,9 +1,9 @@
-
 Require Import WildCat.
 Require Import Spaces.Nat.Core.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
-Require Import Classes.interfaces.abstract_algebra.
-Require Import Algebra.AbGroups.
+Require Import Classes.interfaces.canonical_names.
+Require Import Algebra.Groups.Kernel Algebra.Groups.Image Algebra.Groups.QuotientGroup.
+Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Rings.Ring.
 
 Declare Scope module_scope.
@@ -50,7 +50,7 @@ End ModuleAxioms.
 (** ** Facts about left modules *)
 
 Section ModuleFacts.
-  Context {R : Ring} {M : LeftModule R} (r s : R) (m n : M).
+  Context {R : Ring} {M : LeftModule R} (r : R) (m : M).
   
   (** Here are some quick facts that hold in modules. *) 
 
@@ -76,7 +76,7 @@ Section ModuleFacts.
   Definition lm_minus_one : lact (-1) m = -m.
   Proof.
      apply grp_moveL_1V.
-     lhs nrefine (ap (_ +) (lm_unit m)^).
+     lhs nrapply (ap (_ +) (lm_unit m)^).
      lhs_V nrapply lm_dist_r.
      rhs_V nrapply lm_zero_l.
      f_ap.
@@ -90,7 +90,7 @@ End ModuleFacts.
 (** A subgroup of a left R-module is a left submodule if it is closed under the action of R. *)
 Class IsLeftSubmodule {R : Ring} {M : LeftModule R} (N : M -> Type) := {
   ils_issubgroup :: IsSubgroup N;
-  is_left_submodule : forall r m, N m -> N (lact r m) ;
+  is_left_submodule : forall r m, N m -> N (lact r m);
 }.
 
 (** A left submodule is a subgroup of the abelian group closed under the action of R. *)
@@ -192,7 +192,7 @@ Proof.
 Defined.
 
 (** Smart constructor for building left module homomorphisms from a map. *)
-Definition Build_LeftModuleHomomorphism'{R : Ring} {M N : LeftModule R}
+Definition Build_LeftModuleHomomorphism' {R : Ring} {M N : LeftModule R}
   (f : M -> N) (p : forall r x y, f (lact r x + y) = lact r (f x) + f y)
   : LeftModuleHomomorphism M N.
 Proof.
@@ -235,7 +235,7 @@ Proof.
 Defined.
 
 Definition lm_iso_inverse {R : Ring} {M N : LeftModule R}
-  : LeftModuleIsomorphism M N ->LeftModuleIsomorphism N M.
+  : LeftModuleIsomorphism M N -> LeftModuleIsomorphism N M.
 Proof.
   intros f.
   snrapply Build_LeftModuleIsomorphism.
