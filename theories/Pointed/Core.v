@@ -165,6 +165,15 @@ Proof.
     apply point_eq.
 Defined.
 
+Definition pproduct_proj {A : Type} {F : A -> pType} (a : A)
+  : pproduct F ->* F a.
+Proof.
+  snrapply Build_pMap.
+  - intros x.
+    exact (x a).
+  - reflexivity.
+Defined.
+
 (** The projections from a pointed product are pointed maps. *)
 Definition pfst {A B : pType} : A * B ->* A
   := Build_pMap (A * B) A fst idpath.
@@ -714,6 +723,34 @@ Proof.
       - exact (q a). }
     simpl.
     by pelim p q f g.
+Defined.
+
+(** pType has I-indexed product. *)
+Global Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
+Proof.
+  intros I x.
+  snrapply Build_Product.
+  - exact (pproduct x).
+  - exact pproduct_proj. 
+  - exact (pproduct_corec x).
+  - intros Z f i.
+    snrapply Build_pHomotopy.
+    1: reflexivity.
+    apply moveL_pV.
+    apply equiv_1p_q1.
+    exact (apD10_path_forall _ _ (fun a => point_eq (f a)) i)^.
+  - intros Z f g p.
+    snrapply Build_pHomotopy.
+    1: intros z; funext i; apply p.
+    cbn; apply moveR_equiv_V.
+    funext i.
+    rhs nrapply ap_pp.
+    lhs nrapply (dpoint_eq (p i)).
+    cbn; f_ap.
+    + apply concat_p1.
+    + rhs nrapply (ap_V _ (dpoint_eq g)).
+      apply inverse2.
+      apply concat_p1.
 Defined.
 
 (** Some higher homotopies *)

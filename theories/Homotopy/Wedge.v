@@ -217,19 +217,6 @@ Proof.
   - exact idpath.
 Defined.
 
-(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge should land. This makes it somewhat awkward to work with, however in practice we typically only care about decidable index sets. *)
-Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
-  : FamilyWedge I X $-> pproduct X.
-Proof.
-  snrapply fwedge_rec.
-  intro i.
-  snrapply pproduct_corec.
-  intro a.
-  destruct (dec_paths i a).
-  - destruct p; exact pmap_idmap.
-  - exact pconst.
-Defined.
-
 Global Instance hasallcoproducts_ptype : HasAllCoproducts pType.
 Proof.
   intros I X.
@@ -263,6 +250,20 @@ Proof.
     + reflexivity.
 Defined.
 
+(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge should land. This makes it somewhat awkward to work with, however in practice we typically only care about decidable index sets. *)
+Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
+  : cat_coprod I X $-> pproduct X.
+Proof.
+  unshelve epose (f := cat_coprod_prod_incl X).
+  1-5: exact _.
+  (** TODO: why can't these instances be picked up? *)
+  { rapply (has_coproducts (I:=I)).
+    rapply has_all_coproducts. }
+  { rapply (has_products (I:=I)).
+    rapply has_all_products. }
+  exact f.
+Defined.
+  
 (** ** The pinch map on the suspension *)
 
 (** Given a suspension, there is a natural map from the suspension to the wedge of the suspension with itself. This is known as the pinch map.
