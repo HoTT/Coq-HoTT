@@ -123,12 +123,12 @@ Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=
 Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
   leq (length (to_list x)) (length (to_list y)).
-Proof with auto.
+Proof.
  induction y; cbn.
- - intros [[ ] | C].
+ - intros [[] | C].
    + constructor.
    + elim C.
- - intros [[ ] | C]...
+ - intros [[] | C]; auto.
 Qed.
 
 Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
