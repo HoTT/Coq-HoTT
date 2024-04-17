@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Cubical.
-Require Import Spaces.List.
+Require Import Spaces.List.Core Spaces.List.Theory.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.Groups.Group.
@@ -552,7 +552,7 @@ Section FreeProduct.
   Proof.
     srapply amal_type_rec.
     { intro w.
-      refine (fold_right _ _ _ _ w).
+      refine (fold_right _ _ w).
       { intros [l|r] x.
         + exact (h l * x).
         + exact (k r * x). }
@@ -594,7 +594,7 @@ Section FreeProduct.
     intros x; srapply amal_type_ind_hprop; intro y; revert x;
     srapply amal_type_ind_hprop; intro x; simpl.
     rewrite fold_right_app.
-    set (s := (fold_right X (H + K)
+    set (s := (fold_right
      (fun X0 : H + K => match X0 with
                         | inl l => fun x0 : X => h l * x0
                         | inr r => fun x0 : X => k r * x0

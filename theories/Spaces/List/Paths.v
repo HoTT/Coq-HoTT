@@ -1,77 +1,9 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
-Require Import Classes.implementations.list Types.Unit Types.Empty Types.Prod.
+Require Import Basics.Equivalences Types.Empty Types.Unit Types.Prod.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
+Require Import Spaces.List.Core.
 
-Local Open Scope list_scope.
-
-(** Note that [list] is currently defined in Basics.Datatypes. *)
-
-(** ** Lemmas about lists *)
-
-Section Fold_Left_Recursor.
-  Variables (A : Type) (B : Type).
-  Variable f : A -> B -> A.
-
-  Fixpoint fold_left (l : list B) (a0 : A) : A :=
-    match l with
-      | nil => a0
-      | cons b t => fold_left t (f a0 b)
-    end.
-
-  Lemma fold_left_app : forall (l l' : list B) (i : A),
-    fold_left (l ++ l') i = fold_left l' (fold_left l i).
-  Proof.
-    induction l; simpl; auto.
-  Qed.
-
-End Fold_Left_Recursor.
-
-Section Fold_Right_Recursor.
-  Variables (A : Type) (B : Type).
-  Variable f : B -> A -> A.
-
-  Fixpoint fold_right (a0 : A) (l : list B) : A :=
-    match l with
-      | nil => a0
-      | cons b t => f b (fold_right a0 t)
-    end.
-
-  Lemma fold_right_app : forall l l' i,
-    fold_right i (l ++ l') = fold_right (fold_right i l') l.
-  Proof.
-    induction l; simpl; auto.
-    intros; f_ap.
-  Qed.
-
-End Fold_Right_Recursor.
-
-(** The type of lists has a monoidal structure given by concatenation. *)
-Definition list_pentagon {A} (w x y z : list A)
-  : app_assoc _ w x (y ++ z) @ app_assoc _ (w ++ x) y z
-    = ap (fun l => w ++ l) (app_assoc _ x y z)
-    @ app_assoc _ w (x ++ y) z
-    @ ap (fun l => l ++ z) (app_assoc _ w x y).
-Proof.
-  symmetry.
-  induction w as [|? w IHw] in x, y, z |- *.
-  - simpl.
-    rhs nrapply concat_1p.
-    lhs nrapply concat_p1.
-    lhs nrapply concat_p1.
-    apply ap_idmap.
-  - simpl.
-    rhs_V nrapply ap_pp.
-    rhs_V nrapply (ap (ap (cons a)) (IHw x y z)).
-    rhs nrapply ap_pp.
-    f_ap.
-    { rhs nrapply ap_pp.
-      f_ap.
-      apply ap_compose. }
-    lhs_V nrapply ap_compose.
-    nrapply (ap_compose (fun l => l ++ z)).
-Defined.
-
-(** ** Path spaces of lists *)
+(** * Path spaces of lists *)
 
 (** This proof was adapted from a proof given in agda/cubical by Evan Cavallo. *)
 
@@ -142,5 +74,30 @@ Section PathList.
     intros x y.
     rapply (inO_retract_inO n.+1 _ _ encode decode decode_encode).
   Defined.
+
+  (** With a little more work, we can show that [ListEq] is also a retract of the path space. *)
+  Local Definition encode_decode {l1 l2} (p : ListEq l1 l2)
+    : encode (decode p) = p.
+  Proof.
+    induction l1 in l2, p |- *.
+    1: destruct l2; by destruct p.
+    destruct l2.
+    1: by destruct p.
+    cbn in p.
+    destruct p as [r p].
+    apply path_prod.
+    - simpl.
+      destruct (decode p).
+      by destruct r.
+    - rhs_V nrapply IHl1.
+      simpl.
+      destruct (decode p).
+      by destruct r.
+  Defined.
+
+  (** Giving us a way of characterising paths in lists. *)
+  Definition equiv_path_list {l1 l2}
+    : ListEq l1 l2 <~> l1 = l2
+    := equiv_adjointify decode encode decode_encode encode_decode.
 
 End PathList.

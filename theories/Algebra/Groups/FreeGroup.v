@@ -1,7 +1,7 @@
 Require Import Basics Types Group Subgroup
   WildCat.Core Colimits.Coeq
   Truncations.Core Truncations.SeparatedTrunc
-  Classes.implementations.list.
+  Spaces.List.Core Spaces.List.Theory.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
