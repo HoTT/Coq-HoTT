@@ -217,20 +217,8 @@ Proof.
   - exact idpath.
 Defined.
 
-(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge should land. This makes it somewhat awkward to work with, however in practice we typically only care about decidable index sets. *)
-Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
-  : FamilyWedge I X $-> pproduct X.
-Proof.
-  snrapply fwedge_rec.
-  intro i.
-  snrapply pproduct_corec.
-  intro a.
-  destruct (dec_paths i a).
-  - destruct p; exact pmap_idmap.
-  - exact pconst.
-Defined.
-
-Global Instance hasallcoproducts_ptype : HasAllCoproducts pType.
+(** We specify a universe variable here to prevent minimization to [Set]. *)
+Global Instance hasallcoproducts_ptype : HasAllCoproducts pType@{u}.
 Proof.
   intros I X.
   snrapply Build_Coproduct.
@@ -262,6 +250,11 @@ Proof.
         exact (dpoint_eq (h i)).
     + reflexivity.
 Defined.
+
+(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge summand should land in. *)
+Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
+  : FamilyWedge I X $-> pproduct X
+  := cat_coprod_prod_incl X.
 
 (** ** The pinch map on the suspension *)
 

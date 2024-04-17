@@ -1,8 +1,8 @@
-Require Import Basics.Overture Basics.Tactics.
+Require Import Basics.Overture Basics.Tactics Basics.Decidable.
 Require Import Types.Bool.
 Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
                WildCat.Opposite WildCat.Products WildCat.Universe
-               WildCat.Yoneda WildCat.ZeroGroupoid.
+               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat.
 
 (** * Categories with coproducts *)
 
@@ -284,3 +284,21 @@ Defined.
 (** In particular, [Type] has all binary coproducts. *)
 Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
   := {}.
+
+(** ** Coproduct-product inclusions *)
+
+(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed. *)
+Definition cat_coprod_prod_incl {I : Type} `{DecidablePaths I} {A : Type}
+  `{Is1Cat A, !IsPointedCat A}
+  (x : I -> A) `{!Coproduct I x, !Product I x}
+  : cat_coprod I x $-> cat_prod I x. 
+Proof.
+  apply cat_coprod_rec.
+  intros i.
+  apply cat_prod_corec.
+  intros a.
+  destruct (dec_paths i a) as [p|].
+  - destruct p.
+    exact (Id _).
+  - apply zero_morphism. 
+Defined.
