@@ -217,6 +217,9 @@ Proof.
   - exact idpath.
 Defined.
 
+(** The following instances have poor interaction with universe minimization to set so we disable it for a bit. *)
+Local Unset Universe Minimization ToSet.
+
 Global Instance hasallcoproducts_ptype : HasAllCoproducts pType.
 Proof.
   intros I X.
@@ -254,15 +257,10 @@ Defined.
 Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
   : cat_coprod I X $-> pproduct X.
 Proof.
-  unshelve epose (f := cat_coprod_prod_incl X).
-  1-5: exact _.
-  (** TODO: why can't these instances be picked up? *)
-  { rapply (has_coproducts (I:=I)).
-    rapply has_all_coproducts. }
-  { rapply (has_products (I:=I)).
-    rapply has_all_products. }
-  exact f.
+  exact (cat_coprod_prod_incl X).
 Defined.
+
+Local Set Universe Minimization ToSet.
   
 (** ** The pinch map on the suspension *)
 
