@@ -14,9 +14,9 @@ Declare Scope module_scope.
 
 (** ** Definition *)
 
-(** A left ring action of a ring [R] on an abelian group [M] consists of the following data: *) 
-Class LeftRingAction (R : Ring) (M : AbGroup) := {
-  (** A function [lact] that takes an element [r : R] and an element [m : M] and returns an element [lact r m : M]. *)
+(** An abelian group [M] is a left [R]-module when equipped with the following data: *) 
+Class IsLeftModule (R : Ring) (M : AbGroup) := {
+  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [lact r m : M]. *)
   lact : R -> M -> M;
   (** Actions distribute on the left over addition in the abelian group. That is [lact r (m + n) = lact r m + lact r n]. *)
   lact_left_dist :: LeftHeteroDistribute lact (+) (+);
@@ -30,10 +30,10 @@ Class LeftRingAction (R : Ring) (M : AbGroup) := {
 
 (** TODO: notation for action. *)
 
-(** A left R-module is an abelian group equipped with a left ring action of R. *)
+(** A left R-module is an abelian group equipped with a left R-module structure. *)
 Record LeftModule (R : Ring) := {
   lm_carrier :> AbGroup;
-  lm_lact :: LeftRingAction R lm_carrier;
+  lm_lact :: IsLeftModule R lm_carrier;
 }.
 
 Section ModuleAxioms.
@@ -95,20 +95,21 @@ Class IsLeftSubmodule {R : Ring} {M : LeftModule R} (N : M -> Type) := {
 
 (** A left submodule is a subgroup of the abelian group closed under the action of R. *)
 Record LeftSubmodule {R : Ring} (M : LeftModule R) := {
-  lsm_carrier :> Subgroup M;
+  lsm_carrier :> M -> Type;
   lsm_submodule :: IsLeftSubmodule lsm_carrier;
 }.
 
-(** Any left submodule of a left R-module is an abelian group. *)
-Definition abgroup_leftsubmodule {R : Ring} {M : LeftModule R} (N : LeftSubmodule M) : AbGroup
-  := Build_AbGroup (lsm_carrier M N) _.
-Coercion abgroup_leftsubmodule : LeftSubmodule >-> AbGroup.
+Definition subgroup_leftsubmodule {R : Ring} {M : LeftModule R}
+  : LeftSubmodule M -> Subgroup M
+  := fun N => Build_Subgroup M N _.
+Coercion subgroup_leftsubmodule : LeftSubmodule >-> Subgroup.
 
-(** Submodules inherit the action of their parent module. *)
-Global Instance lact_submodule_inherited {R : Ring} {M : LeftModule R}
-  (N : LeftSubmodule M) : LeftRingAction R N.
+(** Submodules inherit the R-module structure of their parent. *)
+Global Instance isleftmodule_leftsubmodule {R : Ring}
+  {M : LeftModule R} (N : LeftSubmodule M)
+  : IsLeftModule R N.
 Proof.
-  snrapply Build_LeftRingAction.
+  snrapply Build_IsLeftModule.
   - intros r [n n_in_N].
     exists (lact r n).
     by apply lsm_submodule.
@@ -123,10 +124,10 @@ Proof.
 Defined.
 
 (** Any left submodule of a left R-module is a left R-module. *)
-Definition leftmodule_leftsubmodule {R : Ring} {M : LeftModule R}
-  (N : LeftSubmodule M)
+Definition leftmodule_leftsubmodule {R : Ring}
+  {M : LeftModule R} (N : LeftSubmodule M)
   : LeftModule R
-  := Build_LeftModule R (abgroup_leftsubmodule N) _.
+  := Build_LeftModule R N _.
 Coercion leftmodule_leftsubmodule : LeftSubmodule >-> LeftModule.
 
 (** The submodule criterion. This is a convenient way to build submodules. *)
@@ -302,10 +303,10 @@ Defined.
 
 (** ** Kernel of module homomorphism *)
 
-Definition lm_kernel {R : Ring} {M N : LeftModule R} (f : M $-> N)
-  : LeftSubmodule M.
+Global Instance isleftsubmodule_grp_kernel {R : Ring}
+  {M N : LeftModule R} (f : M $-> N)
+  : IsLeftSubmodule (grp_kernel f).
 Proof.
-  snrapply (Build_LeftSubmodule _ _ (grp_kernel f)).
   srapply Build_IsLeftSubmodule.
   intros r m n.
   lhs nrapply lm_homo_lact.
@@ -314,12 +315,16 @@ Proof.
   exact n.
 Defined.
 
+Definition lm_kernel {R : Ring} {M N : LeftModule R} (f : M $-> N)
+  : LeftSubmodule M
+  := Build_LeftSubmodule _ _ (grp_kernel f) _.
+
 (** ** Image of module homomorphism *)
 
-Definition lm_image {R : Ring} {M N : LeftModule R} (f : M $-> N)
-  : LeftSubmodule N.
+Global Instance isleftsubmodule_grp_image {R : Ring}
+  {M N : LeftModule R} (f : M $-> N)
+  : IsLeftSubmodule (grp_image f).
 Proof.
-  snrapply (Build_LeftSubmodule _ _ (grp_image f)).
   srapply Build_IsLeftSubmodule.
   intros r m; apply Trunc_functor; intros [n p].
   exists (lact r n).
@@ -328,13 +333,18 @@ Proof.
   exact p.
 Defined.
 
+Definition lm_image {R : Ring} {M N : LeftModule R} (f : M $-> N)
+  : LeftSubmodule N
+  := Build_LeftSubmodule _ _ (grp_image f) _.
+
 (** ** Quotient Modules *)
 
 (** The quotient abelian group of a module and a submodule has a natural ring action. *)
-Global Instance lact_quotientabgroup {R : Ring} (M : LeftModule R) (N : LeftSubmodule M)
-  : LeftRingAction R (QuotientAbGroup M N).
+Global Instance isleftmodule_quotientabgroup {R : Ring}
+  (M : LeftModule R) (N : LeftSubmodule M)
+  : IsLeftModule R (QuotientAbGroup M N).
 Proof.
-  snrapply Build_LeftRingAction.
+  snrapply Build_IsLeftModule.
   - intros r.
     snrapply quotient_abgroup_rec.
     + refine (grp_quotient_map $o _). 
@@ -396,7 +406,7 @@ Definition lm_prod {R : Ring} : LeftModule R -> LeftModule R -> LeftModule R.
 Proof.
   intros M N.
   snrapply (Build_LeftModule R (ab_biprod M N)).
-  snrapply Build_LeftRingAction.
+  snrapply Build_IsLeftModule.
   - intros r.
     apply functor_prod; exact (lact r).
   - intros r m n.
