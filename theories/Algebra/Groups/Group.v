@@ -448,6 +448,9 @@ Section GroupMovement.
 
   Definition grp_moveL_1M : x * -y = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
+  
+  Definition grp_moveL_1V : x * y = mon_unit <~> x = -y
+    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
 
   Definition grp_moveL_M1 : -y * x = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.

@@ -61,6 +61,12 @@ Proof.
   cbn. apply commutativity.
 Defined.
 
+(** Given any subgroup of an abelian group, we can coerce it to an abelian group. Note that Coq complains this coercion doesn't satisfy the uniform-inheritance condition, but in practice it works and doesn't cause any issue, so we ignore it. *)
+Definition abgroup_subgroup (G : AbGroup) : Subgroup G -> AbGroup
+  := fun H => Build_AbGroup H _.
+#[warnings="-uniform-inheritance"]
+Coercion abgroup_subgroup : Subgroup >-> AbGroup.
+
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
