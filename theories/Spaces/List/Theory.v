@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
 Require Import Types.Paths Types.Unit Types.Prod.
-Require Import Spaces.List.Core.
+Require Export Spaces.List.Core.
 
 (** * Theory of Lists and List Operations *)
 
