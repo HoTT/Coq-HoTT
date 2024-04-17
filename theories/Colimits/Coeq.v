@@ -256,59 +256,54 @@ Definition equiv_functor_coeq' {B A f g B' A' f' g'}
 (** ** A double recursion principle *)
 
 Section CoeqRec2.
-  Context `{Funext}
-          {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
-          (P : Type) (coeq' : A -> A' -> P)
-          (cgluel : forall b a', coeq' (f b) a' = coeq' (g b) a')
-          (cgluer : forall a b', coeq' a (f' b') = coeq' a (g' b'))
-          (cgluelr : forall b b', cgluel b (f' b') @ cgluer (g b) b'
-                               = cgluer (f b) b' @ cgluel b (g' b')).
+  Context {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
+    (P : Type) (coeq' : A -> A' -> P)
+    (cgluel : forall b a', coeq' (f b) a' = coeq' (g b) a')
+    (cgluer : forall a b', coeq' a (f' b') = coeq' a (g' b'))
+    (cgluelr : forall b b', cgluel b (f' b') @ cgluer (g b) b'
+                          = cgluer (f b) b' @ cgluel b (g' b')).
 
-  Definition Coeq_rec2
-  : Coeq f g -> Coeq f' g' -> P.
+  Definition Coeq_rec2 : Coeq f g -> Coeq f' g' -> P.
   Proof.
-    simple refine (Coeq_rec _ _ _).
+    intros x y; revert x.
+    snrapply Coeq_rec.
     - intros a.
-      simple refine (Coeq_rec _ _ _).
+      revert y.
+      snrapply Coeq_rec.
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
         apply cgluer.
     - intros b.
-      apply path_arrow; intros a.
-      revert a; simple refine (Coeq_ind _ _ _).
-      + intros a'. cbn.
+      revert y.
+      snrapply Coeq_ind.
+      + intros a'.
+        cbn.
         apply cgluel.
-      + intros b'; cbn.
-        refine (transport_paths_FlFr (cglue b') (cgluel b (f' b')) @ _).
-        refine (concat_pp_p _ _ _ @ _).
-        apply moveR_Vp.
-        refine (_ @ cgluelr b b' @ _).
-        * apply whiskerL.
-          apply Coeq_rec_beta_cglue.
-        * apply whiskerR.
-          symmetry; apply Coeq_rec_beta_cglue.
+      + intros b'.
+        nrapply (transport_paths_FlFr' (cglue b')).
+        lhs nrapply (_ @@ 1).
+        1: apply Coeq_rec_beta_cglue.
+        rhs nrapply (1 @@ _).
+        2: apply Coeq_rec_beta_cglue.
+        symmetry.
+        apply cgluelr.
   Defined.
 
   Definition Coeq_rec2_beta (a : A) (a' : A')
-  : Coeq_rec2 (coeq a) (coeq a') = coeq' a a'
+    : Coeq_rec2 (coeq a) (coeq a') = coeq' a a'
     := 1.
 
   Definition Coeq_rec2_beta_cgluel (a : A) (b' : B')
-  : ap (Coeq_rec2 (coeq a)) (cglue b') = cgluer a b'.
+    : ap (Coeq_rec2 (coeq a)) (cglue b') = cgluer a b'.
   Proof.
-    apply Coeq_rec_beta_cglue.
+    nrapply Coeq_rec_beta_cglue.
   Defined.
 
   Definition Coeq_rec2_beta_cgluer (b : B) (a' : A')
-  : ap (fun x => Coeq_rec2 x (coeq a')) (cglue b) = cgluel b a'.
+    : ap (fun x => Coeq_rec2 x (coeq a')) (cglue b) = cgluel b a'.
   Proof.
-    transitivity (ap10 (ap Coeq_rec2 (cglue b)) (coeq a')).
-    - refine (ap_compose Coeq_rec2 (fun h => h (coeq a')) _ @ _).
-      apply ap_apply_l.
-    - unfold Coeq_rec2; rewrite Coeq_rec_beta_cglue.
-      rewrite ap10_path_arrow.
-      reflexivity.
+    nrapply Coeq_rec_beta_cglue.
   Defined.
 
   (** TODO: [Coeq_rec2_beta_cgluelr] *)
