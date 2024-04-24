@@ -1,8 +1,9 @@
 Require Import Basics.Equivalences Basics.Overture Basics.Tactics.
-Require Import Types.Bool Types.Prod.
+Require Import Types.Bool Types.Prod Types.Forall.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall WildCat.NatTrans WildCat.Opposite
-               WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid.
+               WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid
+               WildCat.Monoidal.
 
 (** * Categories with products *)
 
@@ -389,40 +390,6 @@ Proof.
       exact ((cat_assoc _ _ _)^$ $@ r (inr j) $@ cat_assoc _ _ _).
 Defined.
 
-(** *** Symmetry of binary products *)
-
-Section Symmetry.
-
-  (** The requirement of having all binary products can be weakened further to having specific binary products, but it is not clear this is a useful generality. *)
-  Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.
-
-  Definition cat_binprod_swap (x y : A) : cat_binprod x y $-> cat_binprod y x
-    := cat_binprod_corec cat_pr2 cat_pr1.
-
-  Lemma cat_binprod_swap_cat_binprod_swap (x y : A)
-    : cat_binprod_swap x y $o cat_binprod_swap y x $== Id _.
-  Proof.
-    apply cat_binprod_eta_pr.
-    - refine ((cat_assoc _ _ _)^$ $@ _).
-      nrefine (cat_binprod_beta_pr1 _ _ $@R _ $@ _).
-      nrefine (cat_binprod_beta_pr2 _ _ $@ _).
-      exact (cat_idr _)^$.
-    - refine ((cat_assoc _ _ _)^$ $@ _).
-      nrefine (cat_binprod_beta_pr2 _ _ $@R _ $@ _).
-      nrefine (cat_binprod_beta_pr1 _ _ $@ _).
-      exact (cat_idr _)^$.
-  Defined.
-
-  Lemma cate_binprod_swap (x y : A)
-    : cat_binprod x y $<~> cat_binprod y x.
-  Proof.
-    snrapply cate_adjointify.
-    1,2: apply cat_binprod_swap.
-    all: apply cat_binprod_swap_cat_binprod_swap.
-  Defined.
-
-End Symmetry.
-
 (** *** Binary product functor *)
 
 (** We prove bifunctoriality of [cat_binprod : A -> A -> A] by factoring it as [cat_prod Bool o Bool_rec A]. First, we prove that [Bool_rec A : A -> A -> (Bool -> A)] is a bifunctor. *)
@@ -535,37 +502,112 @@ Proof.
   by apply cat_binprod_corec_eta.
 Defined.
 
-(** *** Products in Type *)
+Definition cat_pr1_fmap01_binprod {A : Type} `{HasBinaryProducts A}
+  (a : A) {x y : A} (g : x $-> y)
+  : cat_pr1 $o fmap01 (fun x y => cat_binprod x y) a g $== cat_pr1
+  := cat_binprod_beta_pr1 _ _ $@ cat_idl _.
 
-(** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)
-Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
+Definition cat_pr1_fmap10_binprod {A : Type} `{HasBinaryProducts A}
+  {x y : A} (f : x $-> y) (a : A)
+  : cat_pr1 $o fmap10 (fun x y => cat_binprod x y) f a $== f $o cat_pr1
+  := cat_binprod_beta_pr1 _ _.
+
+Definition cat_pr1_fmap11_binprod {A : Type} `{HasBinaryProducts A}
+  {w x y z : A} (f : w $-> y) (g : x $-> z)
+  : cat_pr1 $o fmap11 (fun x y => cat_binprod x y) f g $== f $o cat_pr1.
 Proof.
-  intros X Y.
-  snrapply Build_BinaryProduct.
-  - exact (X * Y).
-  - exact fst.
-  - exact snd.
-  - intros Z f g z. exact (f z, g z).
-  - reflexivity.
-  - reflexivity.
-  - intros Z f g p q x.
-    apply path_prod.
-    + exact (p x).
-    + exact (q x).
+  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _ $@ _).
+  1: apply cat_binprod_beta_pr1.
+  exact (cat_idl _ $@ cat_binprod_beta_pr1 _ _).
 Defined.
 
-(** Assuming [Funext], [Type] has all products. *)
-Global Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+Definition cat_pr2_fmap01_binprod {A : Type} `{HasBinaryProducts A}
+  (a : A) {x y : A} (g : x $-> y)
+  : cat_pr2 $o fmap01 (fun x y => cat_binprod x y) a g $== g $o cat_pr2
+  := cat_binprod_beta_pr2 _ _.
+
+Definition cat_pr2_fmap10_binprod {A : Type} `{HasBinaryProducts A}
+  {x y : A} (f : x $-> y) (a : A)
+  : cat_pr2 $o fmap10 (fun x y => cat_binprod x y) f a $== cat_pr2
+  := cat_binprod_beta_pr2 _ _ $@ cat_idl _.
+
+Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
+  {w x y z : A} (f : w $-> y) (g : x $-> z)
+  : cat_pr2 $o fmap11 (fun x y => cat_binprod x y) f g $== g $o cat_pr2.
 Proof.
-  intros I x.
-  snrapply Build_Product.
-  - exact (forall (i : I), x i).
-  - intros i f. exact (f i).
-  - intros A f a i. exact (f i a).
-  - reflexivity.
-  - intros A f g p a.
-    exact (path_forall _ _ (fun i => p i a)).
+  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _)).
+  1: apply cat_binprod_beta_pr2.
+  apply cat_pr2_fmap10_binprod.
 Defined.
+
+(** *** Symmetry of binary products *)
+
+Section Symmetry.
+
+  (** The requirement of having all binary products can be weakened further to having specific binary products, but it is not clear this is a useful generality. *)
+  Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}.
+
+  Definition cat_binprod_swap (x y : A) : cat_binprod x y $-> cat_binprod y x
+    := cat_binprod_corec cat_pr2 cat_pr1.
+
+  Lemma cat_binprod_swap_cat_binprod_swap (x y : A)
+    : cat_binprod_swap x y $o cat_binprod_swap y x $== Id _.
+  Proof.
+    apply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine (cat_binprod_beta_pr1 _ _ $@R _ $@ _).
+      nrefine (cat_binprod_beta_pr2 _ _ $@ _).
+      exact (cat_idr _)^$.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine (cat_binprod_beta_pr2 _ _ $@R _ $@ _).
+      nrefine (cat_binprod_beta_pr1 _ _ $@ _).
+      exact (cat_idr _)^$.
+  Defined.
+
+  Lemma cate_binprod_swap (x y : A)
+    : cat_binprod x y $<~> cat_binprod y x.
+  Proof.
+    snrapply cate_adjointify.
+    1,2: apply cat_binprod_swap.
+    all: apply cat_binprod_swap_cat_binprod_swap.
+  Defined.
+  
+  Definition cat_binprod_swap_nat {a b c d : A} (f : a $-> c) (g : b $-> d)
+    : cat_binprod_swap c d $o fmap11 (fun x y : A => cat_binprod x y) f g
+    $== fmap11 (fun x y : A => cat_binprod x y) g f $o cat_binprod_swap a b.
+  Proof.
+    apply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine ((cat_binprod_beta_pr1 _ _ $@R _) $@ _).
+      nrefine (cat_pr2_fmap11_binprod _ _ $@ _).
+      refine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_pr1_fmap11_binprod.
+      refine ((_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+      apply cat_binprod_beta_pr1.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine ((cat_binprod_beta_pr2 _ _ $@R _) $@ _).
+      refine (cat_pr1_fmap11_binprod _ _ $@ _).
+      refine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_pr2_fmap11_binprod.
+      refine ((_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+      apply cat_binprod_beta_pr2.
+  Defined.
+  
+  Local Instance symmetricbraiding_binprod
+    : SymmetricBraiding (fun x y => cat_binprod x y).
+  Proof.
+    snrapply Build_SymmetricBraiding.
+    - snrapply Build_Braiding.
+      + exact cat_binprod_swap.
+      + intros [a b] [c d] [f g]; cbn in f, g.
+        refine (cat_binprod_swap_nat f g $@ (_ $@R _)).
+        rapply fmap11_coh.
+    - exact cat_binprod_swap_cat_binprod_swap.
+  Defined.
+
+End Symmetry.
 
 (** *** Associativity of binary products *)
 
@@ -578,7 +620,7 @@ Section Associativity.
   Proof.
     apply cat_binprod_corec.
     - exact (cat_pr1 $o cat_pr2).
-    - exact (fmap (fun y => cat_binprod x y) cat_pr2).
+    - exact (fmap01 (fun x y => cat_binprod x y) x cat_pr2).
   Defined.
 
   Lemma cat_binprod_twist_cat_binprod_twist (x y z : A)
@@ -618,13 +660,363 @@ Section Associativity.
     1,2: apply cat_binprod_twist_cat_binprod_twist.
   Defined.
 
-  Lemma cate_binprod_assoc (x y z : A)
-    : cat_binprod x (cat_binprod y z) $<~> cat_binprod (cat_binprod x y) z.
+  Definition cat_binprod_twist_nat {a a' b b' c c' : A}
+    (f : a $-> a') (g : b $-> b') (h : c $-> c')
+    : cat_binprod_twist a' b' c'
+        $o fmap11 (fun x y => cat_binprod x y) f (fmap11 (fun x y => cat_binprod x y) g h)
+      $== fmap11 (fun x y => cat_binprod x y) g (fmap11 (fun x y => cat_binprod x y) f h)
+        $o cat_binprod_twist a b c.
   Proof.
-    nrefine (cate_binprod_swap _ _ $oE _).
-    nrefine (cate_binprod_twist _ _ _ $oE _).
-    refine (emap (fun y => cat_binprod x y) _).
-    exact (cate_binprod_swap _ _).
+    apply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine ((cat_binprod_beta_pr1 _ _ $@R _) $@ _).
+      nrefine (cat_assoc _ _ _ $@ _).
+      nrefine ((_ $@L _) $@ _).
+      1: apply cat_pr2_fmap11_binprod.
+      refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine ((_ $@R _) $@ _).
+      1: apply cat_pr1_fmap11_binprod.
+      nrefine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_pr1_fmap11_binprod.
+      refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+      apply cat_binprod_beta_pr1.
+    - refine ((cat_assoc _ _ _)^$ $@ _).
+      nrefine ((cat_binprod_beta_pr2 _ _ $@R _) $@ _).
+      nrefine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_pr2_fmap11_binprod.
+      refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+      2: apply cat_binprod_beta_pr2.
+      refine (_ $@ (cat_assoc _ _ _)^$).
+      refine (_ $@ (_ $@L _)).
+      2: rapply fmap11_coh.
+      refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ (cat_assoc _ _ _)).
+      refine ((fmap01_comp _ _ _ _)^$ $@ fmap02 _ _ _ $@ fmap01_comp _ _ _ _).
+      apply cat_pr2_fmap11_binprod.
+  Defined.
+  
+  Local Existing Instance symmetricbraiding_binprod. 
+
+  Local Instance associator_binprod : Associator (fun x y => cat_binprod x y).
+  Proof.
+    srapply associator_twist.
+    - exact cat_binprod_twist.
+    - exact cat_binprod_twist_cat_binprod_twist.
+    - intros ? ? ? ? ? ?; exact cat_binprod_twist_nat.
   Defined.
 
+  Context (unit : A) `{!IsTerminal unit}.
+
+  Local Instance right_unitor_binprod
+    : RightUnitor (fun x y => cat_binprod x y) unit.
+  Proof.
+    snrapply Build_NatEquiv.
+    - intros a.
+      unfold flip.
+      snrapply cate_adjointify.
+      + exact cat_pr1.
+      + apply cat_binprod_corec.
+        * exact (Id _).
+        * exact (mor_terminal _ _).
+      + apply cat_binprod_beta_pr1.
+      + apply cat_binprod_eta_pr.
+        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+          1: apply cat_binprod_beta_pr1.
+          exact (cat_idl _ $@ (cat_idr _)^$).
+        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+          1: apply cat_binprod_beta_pr2.
+          refine (_^$ $@ _).
+          1,2: rapply mor_terminal_unique.
+    - intros a b f.
+      refine ((_ $@R _) $@ _ $@ (_ $@L _^$)).
+      1,3: apply cate_buildequiv_fun.
+      apply cat_binprod_beta_pr1.
+  Defined.
+
+  Local Existing Instance left_unitor_twist.
+
+  Local Instance triangle_binprod
+    : TriangleIdentity (fun x y => cat_binprod x y) unit.
+  Proof.
+    snrapply triangle_twist.
+    intros a b.
+    refine (fmap02 _ _ _ $@ _).
+    1: apply cate_buildequiv_fun.
+    refine (_ $@ ((_ $@L fmap02 _ _ _^$) $@R _)).
+    2: apply cate_buildequiv_fun.
+    apply cat_binprod_eta_pr.    
+    - refine (cat_pr1_fmap01_binprod _ _ $@ _).
+      nrefine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (((_^$ $@R _) $@ cat_assoc _ _ _) $@R _)).
+      2: apply cat_binprod_beta_pr1.
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_pr2_fmap01_binprod.
+      refine (_ $@ (cat_assoc _ _ _)^$).
+      refine (_^$ $@ (_ $@L _^$)).
+      2: apply cat_binprod_beta_pr2.
+      apply cat_pr1_fmap01_binprod.
+    - nrefine (_ $@ _).
+      1: apply cat_pr2_fmap01_binprod.
+      nrefine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ ((_^$ $@R _) $@ cat_assoc _ _ _ $@R _)).
+      2: apply cat_binprod_beta_pr2.
+      refine (_^$ $@ (_^$ $@R _)).
+      2: apply cat_pr1_fmap01_binprod.
+      apply cat_binprod_beta_pr1.
+  Defined.
+  
+  Local Instance pentagon_binprod
+    : PentagonIdentity (fun x y => cat_binprod x y).
+  Proof.
+    snrapply pentagon_twist.
+    intros a b c d.
+    repeat nrefine (cat_assoc _ _ _ $@ _).
+    repeat refine (_ $@ (cat_assoc _ _ _)^$).
+    apply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+      refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+      1,3: apply cat_pr1_fmap01_binprod.
+      refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+      refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+      1: apply cat_binprod_beta_pr1.
+      2: apply cat_pr1_fmap01_binprod.
+      refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+      refine (_ $@ _).
+      { do 2 refine (cat_assoc _ _ _ $@ _).
+        refine (_ $@L _).
+        refine ((cat_assoc _ _ _)^$ $@ _).
+        refine ((_ $@R _) $@ _).
+        1: apply cat_binprod_beta_pr2.
+        refine ((cat_assoc _ _ _)^$ $@ _).
+        refine ((_ $@R _) $@ _).
+        1: apply cat_binprod_beta_pr1.
+        refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+        1: apply cat_pr2_fmap01_binprod.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+        apply cat_binprod_beta_pr1. }
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_binprod_beta_pr1.
+      refine (_ $@ (cat_assoc _ _ _)^$).
+      refine (_ $@ (_ $@L _^$)).
+      2: apply cat_pr2_fmap01_binprod.
+      refine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ (_^$ $@R _)).
+      2: apply cat_binprod_beta_pr1.
+      symmetry; apply cat_assoc.
+    - refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+      refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+      1,3: apply cat_pr2_fmap01_binprod.
+      refine (cat_assoc _ _ _ $@ _ $@ (cat_assoc _ _ _)^$).
+      refine ((_ $@L _) $@ _).
+      { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+        apply cat_binprod_beta_pr2. }
+      refine (_ $@ (_ $@L _)).
+      2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+        apply cat_pr2_fmap01_binprod. }
+      apply cat_binprod_eta_pr.
+      + refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+        refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+        1,3: apply cat_binprod_beta_pr1.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ (cat_assoc _ _ _)^$).
+        1: apply cat_pr2_fmap01_binprod.
+        refine (cat_assoc _ _ _ $@ _).
+        refine ((_ $@L ((cat_assoc _ _ _)^$ $@ (_ $@R _))) $@ _).
+        1: apply cat_binprod_beta_pr2.
+        refine (_ $@ (_ $@L _)).
+        2: { do 2 refine ((_ $@R _) $@ cat_assoc _ _ _).
+          symmetry.
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ cat_assoc _ _ _).
+        refine (_ $@ (_ $@R _)).
+        2: { do 2 refine ((_ $@R _) $@ (cat_assoc _ _ _)).
+          symmetry.
+          apply cat_binprod_beta_pr1. }
+        do 2 refine (_ $@ (cat_assoc _ _ _)^$).
+        refine ((_ $@L _) $@ _).
+        { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+          apply cat_binprod_beta_pr1. }
+        refine (_ $@ (_ $@L (_ $@L _))).
+        2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ (_ $@L _)).
+        2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ (_ $@L _)).
+        2: { refine ((_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ (_ $@L _)).
+        2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+        2: apply cat_binprod_beta_pr2.
+        refine ((_ $@L _) $@ _).
+        { refine (cat_assoc _ _ _ $@ (_ $@L _)).
+          apply cat_binprod_beta_pr2. }
+        refine ((_ $@L _) $@ _).
+        1: refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+        1: apply cat_binprod_beta_pr1.
+        symmetry; apply cat_assoc.
+      + refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+        refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+        1,3: apply cat_binprod_beta_pr2.
+        refine ((cat_assoc _ _ _)^$ $@ ((_ $@ _) $@R _) $@ _).
+        1: apply cat_binprod_beta_pr1.
+        1: apply cat_idl.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+        1: apply cat_binprod_beta_pr1.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+        1: apply cat_binprod_beta_pr2.
+        refine (_ $@ (_ $@L _)).
+        2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+          refine (cat_assoc _ _ _ $@ (_ $@L _)).
+          apply cat_binprod_beta_pr2. }
+        refine (_ $@ cat_assoc _ _ _).
+        refine (_ $@ (_ $@R _)).
+        2: refine (cat_assoc _ _ _).
+        repeat refine (_ $@ (cat_assoc _ _ _)^$).
+        apply cat_binprod_eta_pr.
+        * refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+          refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+          1,3: apply cat_pr1_fmap01_binprod.
+          nrefine (cat_pr1_fmap01_binprod _ _ $@ _ $@ cat_assoc _ _ _).
+          refine (_ $@ (_^$ $@R _)).
+          2: apply cat_pr1_fmap01_binprod.
+          refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+          2: apply cat_pr1_fmap01_binprod.
+          apply cat_pr1_fmap01_binprod.
+        * refine ((cat_assoc _ _ _)^$ $@ _ $@ cat_assoc _ _ _).
+          refine ((_ $@R _) $@ _ $@ (_^$ $@R _)).
+          1,3: apply cat_pr2_fmap01_binprod.
+          refine (cat_assoc _ _ _ $@ _ $@ (cat_assoc _ _ _)^$).
+          refine ((_ $@L _) $@ _).
+          1: apply cat_pr2_fmap01_binprod.
+          refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+          1: apply cat_binprod_beta_pr2.
+          refine (_ $@ (_ $@L _)).
+          2: { refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+            apply cat_pr2_fmap01_binprod. }
+          refine (_ $@ cat_assoc _ _ _).
+          refine (_ $@ ((_^$ $@ _) $@R _)).
+          3: apply cat_assoc.
+          2: refine (_ $@R _).
+          2: apply cat_binprod_beta_pr2.
+          refine (_ $@ cat_assoc _ _ _).
+          refine (_ $@ ((_^$ $@ _^$) $@R _)).
+          3: apply cat_assoc.
+          2: refine (_ $@L _).
+          2: apply cat_pr2_fmap01_binprod.
+          refine (_ $@ (_ $@L ((_ $@L _^$) $@ (cat_assoc _ _ _)^$))
+            $@ (cat_assoc _ _ _)^$).
+          2: apply cat_pr2_fmap01_binprod.
+          refine (_ $@ (_ $@L (_ $@ _))).
+          3: apply cat_assoc.
+          2: refine (_^$ $@R _).
+          2: apply cat_binprod_beta_pr2.
+          refine ((_^$ $@R _) $@ cat_assoc _ _ _).
+          apply cat_pr1_fmap01_binprod.
+  Defined.
+
+  Local Instance hexagon_identity
+    : HexagonIdentity (fun x y => cat_binprod x y).
+  Proof.
+    snrapply hexagon_twist.
+    intros a b c.
+    refine (cat_assoc _ _ _ $@ _ $@ (cat_assoc _ _ _)^$).
+    snrapply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+        $@ _ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+      1: apply cat_pr1_fmap01_binprod.
+      2: apply cat_binprod_beta_pr1.
+      refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+        $@ _ $@ ((cat_assoc _ _ _ $@ (_ $@L _))^$ $@R _) $@ cat_assoc _ _ _).
+      1: apply cat_binprod_beta_pr1.
+      2: apply cat_pr2_fmap01_binprod.
+      nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _). 
+      1: apply cat_pr2_fmap01_binprod.
+      refine (_ $@  (_ $@L (cat_assoc _ _ _)^$) $@ (cat_assoc _ _ _)^$).
+      refine (_ $@ (_ $@@ _)^$ $@ cat_assoc _ _ _).
+      2: apply cat_binprod_beta_pr2.
+      2: apply cat_binprod_beta_pr1.
+      refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _^$).
+      1: apply cat_binprod_beta_pr1.
+      apply cat_pr2_fmap01_binprod.
+    - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+        $@ _ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+      1: apply cat_pr2_fmap01_binprod.
+      2: apply cat_binprod_beta_pr2.
+      nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+      { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+        apply cat_binprod_beta_pr2. }
+      snrapply cat_binprod_eta_pr.
+      + refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+          $@ _ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+        1: apply cat_binprod_beta_pr1.
+        2: apply cat_pr1_fmap01_binprod.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+          $@ _ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+        1: apply cat_pr2_fmap01_binprod.
+        2: apply cat_pr1_fmap01_binprod.
+        refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _ $@ _^$).
+        1: apply cat_pr2_fmap01_binprod.
+        2: apply cat_binprod_beta_pr1.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+        apply cat_binprod_beta_pr2.
+      + refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+          $@ _ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+        1: apply cat_binprod_beta_pr2.
+        2: apply cat_pr2_fmap01_binprod.
+        refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)
+          $@ _ $@ ((cat_assoc _ _ _ $@ (_ $@L _))^$ $@R _) $@ cat_assoc _ _ _).
+        1: apply cat_pr1_fmap01_binprod.
+        2: apply cat_pr2_fmap01_binprod.
+        nrefine (cat_pr1_fmap01_binprod _ _ $@ _).
+        refine (_ $@ (cat_assoc _ _ _)^$).
+        refine (_ $@ (_ $@L cat_assoc _ _ _)^$).
+        nrefine (_ $@ cat_assoc _ _ _).
+        refine ((_ $@@ _) $@ _)^$.
+        1,2: apply cat_binprod_beta_pr2.
+        apply cat_pr1_fmap01_binprod.
+  Defined.
+
+  Global Instance ismonoidal_binprod
+    : IsMonoidal A (fun x y => cat_binprod x y) unit
+    := {}.
+  
+  Global Instance issymmetricmonoidal_binprod
+    : IsSymmetricMonoidal A (fun x y => cat_binprod x y) unit
+    := {}.
+
 End Associativity.
+
+(** *** Products in Type *)
+
+(** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)
+Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
+Proof.
+  intros X Y.
+  snrapply Build_BinaryProduct.
+  - exact (X * Y).
+  - exact fst.
+  - exact snd.
+  - intros Z f g z. exact (f z, g z).
+  - reflexivity.
+  - reflexivity.
+  - intros Z f g p q x.
+    apply path_prod.
+    + exact (p x).
+    + exact (q x).
+Defined.
+
+(** Assuming [Funext], [Type] has all products. *)
+Global Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+Proof.
+  intros I x.
+  snrapply Build_Product.
+  - exact (forall (i : I), x i).
+  - intros i f. exact (f i).
+  - intros A f a i. exact (f i a).
+  - reflexivity.
+  - intros A f g p a.
+    exact (path_forall _ _ (fun i => p i a)).
+Defined.
