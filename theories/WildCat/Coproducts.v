@@ -2,7 +2,8 @@ Require Import Basics.Overture Basics.Tactics Basics.Decidable.
 Require Import Types.Bool.
 Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
                WildCat.Opposite WildCat.Products WildCat.Universe
-               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat.
+               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat
+               WildCat.Monoidal.
 
 (** * Categories with coproducts *)
 
@@ -226,7 +227,7 @@ Lemma cate_coprod_assoc {A : Type} `{HasEquivs A}
   : cat_bincoprod x (cat_bincoprod y z)
     $<~> cat_bincoprod (cat_bincoprod x y) z.
 Proof.
-  exact (@cate_binprod_assoc A^op _ _ _ _ _ e x y z)^-1$.
+  exact (@associator_binprod A^op _ _ _ _ _ e x y z)^-1$.
 Defined.
 
 (** *** Binary coproduct functor *)

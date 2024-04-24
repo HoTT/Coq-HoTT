@@ -103,14 +103,14 @@ Defined.
 Definition fmap10_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} (f : a0 $-> a1) (b : B)
-  : fmap11 F f (Id b) $== fmap10 F f b 
+  : fmap11 F f (Id b) $== fmap10 F f b
   := (fmap_id _ _ $@R _) $@ cat_idl _.
 
 (** [fmap11] with left map the identity gives [fmap01]. *)
 Definition fmap01_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   (a : A) {b0 b1 : B} (g : b0 $-> b1)
-  : fmap11 F (Id a) g $== fmap01 F a g 
+  : fmap11 F (Id a) g $== fmap01 F a g
   := (_ $@L fmap_id _ _) $@ cat_idr _.
 
 (** 2-functorial action *)
