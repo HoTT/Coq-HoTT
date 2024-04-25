@@ -10,12 +10,19 @@ Require Import canonical_names.
 
 (** ** Semiadditive Categories *)
 
+(** As semiadditive category is a a wild category with equivalences and the following data: *)
 Class IsSemiAdditive (A : Type) `{HasEquivs A} := {
+  (** It is a pointed category. *)
   semiadditive_pointed :: IsPointedCat A;
+  (** It has binary biproducts. *)
   semiadditive_hasbiproducts :: HasBinaryBiproducts A;
+  (** We have morphism extensionality. *)
   semiadditive_hasmorext :: HasMorExt A;
+  (** The homs are set. *)
   semiadditive_ishset_hom :: forall (a b : A), IsHSet (a $-> b);
 }.
+  
+(** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential chracteristic of semiadditive categories making it equivalent to alternate defintiions where the category is semiadditive if it is enriched in commutative monoids. The machinary of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
 
 Section CMonHom.
 
@@ -23,8 +30,11 @@ Section CMonHom.
   
   (** We can show that the hom-types of a semiadditive category are commutative monoids. *)
 
+  (** The zero element is given by the zero morphism. This exists from our pointedness assumption. *)
   Local Instance zero_hom : Zero (a $-> b) := zero_morphism.
 
+  (** TODO: explain a bit more: diagonal duplicates and codiagonal sums. *)
+  (** The operation is given by the biproduct structure. *) 
   Local Instance sgop_hom : SgOp (a $-> b) := fun f g =>
     cat_binbiprod_codiag b
     $o fmap11 (fun x y => cat_binbiprod x y) f g
@@ -34,7 +44,6 @@ Section CMonHom.
   Proof.
     intros g.
     apply path_hom.
-    unfold sgop_hom, fmap11; cbn.
     refine (cat_assoc _ _ _ $@ _).
     refine ((_ $@L cat_assoc _ _ _) $@ _).
     refine ((cat_assoc _ _ _)^$ $@ _).
@@ -93,13 +102,9 @@ Section CMonHom.
     intros f g h.
     apply path_hom.
     refine (((_ $@L (_ $@R _)) $@R _) $@ _ $@ ((_ $@L (_ $@L _)^$) $@R _)).
-    1,3: refine (fmap_comp _ _ _ $@ (_ $@R _)).
-    1,2: refine (fmap_comp _ _ _ $@ (_ $@L _)).
-    1,2: rapply fmap_comp.
-    do 2 change (fmap (flip (fun x y => cat_binbiprod x y) ?a) ?f)
-      with (fmap10 (fun x y => cat_binbiprod x y) f a);
-    do 2 change (fmap ((fun x y => cat_binbiprod x y) ?b) ?f)
-      with (fmap01 (fun x y => cat_binbiprod x y) b f).
+    1,3: refine (_ $@ ((_ $@ (_ $@L _)) $@R _)).
+    1-3: rapply fmap01_comp.
+    1-3: rapply fmap10_comp.
     Local Notation "a ⊕L g" := (fmap01 (fun x y => cat_binbiprod x y) a g) (at level 99).
     Local Notation "f ⊕R b" := (fmap10 (fun x y => cat_binbiprod x y) f b) (at level 99).
     Local Notation "'Δ' x" := (cat_binbiprod_diag x) (at level 10).
