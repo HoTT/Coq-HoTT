@@ -1,10 +1,10 @@
 Require Import Basics.Overture Basics.Decidable Basics.Tactics Basics.Trunc.
 Require Import WildCat.Core WildCat.Products WildCat.Coproducts WildCat.Equiv.
 Require Import WildCat.PointedCat WildCat.Bifunctor WildCat.NatTrans WildCat.Prod.
-Require Import WildCat.Monoidal.
+Require Import WildCat.Monoidal WildCat.Square.
 Require Import Types.Bool Types.Forall.
-Require Import Algebra.AbGroups.AbelianGroup.
-Require Import WildCat.Square.
+Require Import Algebra.AbGroups.AbelianGroup Algebra.Rings.Ring.
+Require Import canonical_names.
 
 (** * Categories with biproducts *)
 
@@ -406,6 +406,68 @@ Global Instance is1functor_cat_binbiprod_r {A : Type}
   `{HasBinaryBiproducts A} (x : A)
   : Is1Functor (fun y => cat_binbiprod x y)
   := bifunctor_is1functor01 x.
+
+(** *** Diagonal lemmas *)
+
+Definition cat_binbiprod_diag_fmap11 {A : Type}
+  `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {x y : A} (f : x $-> y)
+  : cat_binbiprod_diag y $o f
+    $== fmap11 (fun x y => cat_binbiprod x y) f f $o cat_binbiprod_diag x.
+Proof.
+  apply cat_binbiprod_pr_eta.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ (_ $@ _)).
+    1: apply cat_binbiprod_corec_beta_pr1.
+    1: apply cat_idl.
+    refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+    2: rapply cat_pr1_fmap11_binprod.
+    refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+    apply cat_binbiprod_corec_beta_pr1.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ (_ $@ _)).
+    1: apply cat_binbiprod_corec_beta_pr2.
+    1: apply cat_idl.
+    refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+    2: rapply cat_pr2_fmap11_binprod.
+    refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+    apply cat_binbiprod_corec_beta_pr2.
+Defined.
+
+Definition cat_binbiprod_codiag_fmap11 {A : Type}
+  `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {x y : A} (f : x $-> y)
+  : f $o cat_binbiprod_codiag x
+    $== cat_binbiprod_codiag y $o fmap11 (fun x y => cat_binbiprod x y) f f.
+Proof.
+  apply cat_binbiprod_in_eta.
+  - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
+    1: apply cat_binbiprod_rec_beta_inl.
+    refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
+    2: { refine ((_ $@L _) $@ (cat_assoc _ _ _)^$).
+      refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
+      apply cat_binbiprod_rec_beta_inl. }
+    refine (_ $@ (_ $@L _)).
+    2: { refine ((_ $@R _) $@ cat_assoc _ _ _).
+      refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
+      1: apply cat_binbiprod_rec_beta_inl.
+      apply cat_idr. }
+    refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+    2: apply cat_binbiprod_rec_beta_inl.
+    apply cat_idl.
+  - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
+    1: apply cat_binbiprod_rec_beta_inr.
+    refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
+    2: { refine ((_ $@L _) $@ (cat_assoc _ _ _)^$).
+      refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
+      1: apply cat_binbiprod_rec_beta_inr. 
+      apply cat_idr. }
+    refine (_ $@ (_ $@L _)).
+    2: { refine ((_ $@R _) $@ _)^$.
+      1: apply cat_binbiprod_corec_rec.
+      apply cat_binbiprod_rec_beta_inr. }
+    refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
+    2: apply cat_binbiprod_rec_beta_inr.
+    apply cat_idl.
+Defined.
 
 (** *** Symmetry *)
 
@@ -988,6 +1050,8 @@ End CMonHom.
 
 (** ** Additive Categories *)
 
+(** *** Definition *)
+
 Class IsAdditive (A : Type) `{HasEquivs A} := {
   additive_semiadditive :: IsSemiAdditive A;
   additive_negate_hom : forall (a b : A), Negate (a $-> b);
@@ -996,6 +1060,8 @@ Class IsAdditive (A : Type) `{HasEquivs A} := {
   additive_right_inverse_hom : forall (a b : A),
     RightInverse (sgop_hom a b) (additive_negate_hom a b) (zero_hom a b);
 }.
+
+(** *** Abelian Group structure on Hom *)
 
 (** Homs in an aditive category form an abelian group. *)
 Definition AbHom {A : Type} `{IsAdditive A} : A -> A -> AbGroup.
@@ -1012,6 +1078,43 @@ Proof.
   - exact (additive_left_inverse_hom a b).
   - exact (additive_right_inverse_hom a b).
   - exact (commutative_hom a b).
+Defined.
+
+(** *** Endomorphism ring *)
+
+(** The composition operation provides a multiplicative operation on the abelian group hom. Turning it into a ring of endomorphsims. *)
+Definition End {A : Type} `{IsAdditive A} (X : A) : Ring.
+Proof.
+  snrapply Build_Ring'; repeat split.
+  - exact (AbHom X X).
+  - exact (fun f g => f $o g).
+  - exact (Id _).
+  - intros f g h.
+    apply path_hom.
+    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ cat_assoc _ _ _).
+    1: apply cat_binbiprod_codiag_fmap11.
+    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+    rapply fmap11_comp.
+  - intros f g h.
+    apply path_hom.
+    refine (cat_assoc _ _ _ $@ _).
+    refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
+    refine ((_ $@L _) $@ _).
+    1: apply cat_binbiprod_diag_fmap11.
+    refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
+    rapply fmap11_comp.
+  - exact _.
+  - intros f g h.
+    apply path_hom.
+    symmetry.
+    apply cat_assoc.
+  - intros f.
+    apply path_hom.
+    apply cat_idl.
+  - intros g.
+    apply path_hom.
+    apply cat_idr.
 Defined.
 
 (** TODO: Additive functors *)
