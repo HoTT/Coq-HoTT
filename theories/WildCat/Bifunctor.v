@@ -367,7 +367,16 @@ Global Instance is0functor_uncurry_uncurry_left {A B C D E}
     !Is0Bifunctor F, !Is0Bifunctor G}
   : Is0Functor (uncurry (uncurry (fun x y z => G (F x y) z))).
 Proof.
-  rapply is0functor_uncurry_bifunctor.
+  nrapply is0functor_uncurry_bifunctor; exact _.
+Defined.
+
+Global Instance is1functor_uncurry_uncurry_left {A B C D E}
+  (F : A -> B -> C) (G : C -> D -> E)
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D, Is1Cat E,
+    !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
+  : Is1Functor (uncurry (uncurry (fun x y z => G (F x y) z))).
+Proof.
+  nrapply is1functor_uncurry_bifunctor; exact _.
 Defined.
 
 Global Instance is0functor_uncurry_uncurry_right {A B C D E}
@@ -381,10 +390,29 @@ Proof.
   1: exact _.
   intros b.
   change (Is0Functor (uncurry (fun x y => G x (F y b)))).
-  apply is0functor_uncurry_bifunctor.
-  apply (is0bifunctor_precompose' (flip F b) G).
+  exact _.
 Defined.
 
+Global Instance is1functor_uncurry_uncurry_right {A B C D E}
+  (F : A -> B -> D) (G : C -> D -> E)
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D, Is1Cat E,
+    !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
+  : Is1Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
+Proof.
+  apply is1functor_uncurry_bifunctor.
+  nrapply Build_Is1Bifunctor.
+  1: exact _.
+  - intros b.
+    change (Is1Functor (uncurry (fun x y => G x (F y b)))).
+    exact _.
+  - intros [c a] [c' a'] [h f] b b' g.
+    refine ((cat_assoc _ _ _)^$ $@ _ $@ (cat_assoc _ _ _)^$).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _)).
+    2: exact (fmap11_coh G h (fmap01 F a g)).
+    rapply fmap_square; unfold Square.
+    exact (fmap11_coh F f g).
+Defined.
+ 
 (** ** Natural transformations between bifunctors *)
 
 (** We can show that an uncurried natural transformation between uncurried bifunctors by composing the naturality square in each variable. *)

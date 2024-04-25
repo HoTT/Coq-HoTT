@@ -437,7 +437,7 @@ Proof.
 Defined.
 
 (** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
-Global Instance isbifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
+Global Instance is0bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is0Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).

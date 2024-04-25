@@ -147,6 +147,60 @@ Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
   cat_symm_tensor_hexagon :: HexagonIdentity cat_tensor;
 }.
 
+(** *** Theory about [Associator] *)
+
+Section Associator.
+  Context {A : Type} {F : A -> A -> A} `{Associator A F, !HasEquivs A}.
+
+  Local Definition associator_nat {x x' y y' z z'}
+    (f : x $-> x') (g : y $-> y') (h : z $-> z')
+    : associator x' y' z' $o fmap11 F f (fmap11 F g h)
+    $== fmap11 F (fmap11 F f g) h $o associator x y z.
+  Proof.
+    refine (_ $@ is1natural_associator_uncurried (x, y, z) (x', y', z') (f, g, h)).
+    refine (_ $@L ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _^$))); rapply fmap_comp. 
+  Defined.
+
+  Local Definition associator_nat_l {x x' : A} (f : x $-> x') (y z : A)
+    : associator x' y z $o fmap10 F f (F y z)
+    $== fmap10 F (fmap10 F f y) z $o associator x y z.
+  Proof.
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
+    2: apply (is1natural_associator_uncurried (x, y, z) (x', y, z) (f, Id _, Id _)).
+    - refine ((_ $@@ _) $@ cat_idl _).
+      2: exact (fmap02 _ _ (fmap01_id _ _ _) $@ fmap01_id _ _ _).
+      rapply fmap10_is_fmap11.
+    - refine ((fmap20 _ _ _ $@@ fmap01_id _ _ _) $@ cat_idl _).
+      rapply fmap10_is_fmap11.
+  Defined.
+
+  Local Definition associator_nat_m (x : A) {y y' : A} (g : y $-> y') (z : A)
+    : associator x y' z $o fmap01 F x (fmap10 F g z)
+    $== fmap10 F (fmap01 F x g) z $o associator x y z.
+  Proof.
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
+    2: apply (is1natural_associator_uncurried (x, y, z) (x, y', z) (Id _, g, Id _)).
+    - refine ((fmap01_is_fmap11 _ _ _ $@@ _) $@ cat_idl _).
+      exact (fmap02 _ _ (fmap01_id _ _ _) $@ fmap01_id _ _ _).
+    - refine ((fmap20 _ _ _ $@@ fmap01_id _ _ _) $@ cat_idl _).
+      rapply fmap01_is_fmap11.
+  Defined.
+
+  Local Definition associator_nat_r (x y : A) {z z' : A} (h : z $-> z')
+    : associator x y z' $o fmap01 F x (fmap01 F y h)
+    $== fmap01 F (F x y) h $o associator x y z.
+  Proof.
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
+    2: apply (is1natural_associator_uncurried (x, y, z) (x, y, z') (Id _, Id _, h)).
+    - refine ((_ $@L _) $@ cat_idr _).
+      rapply fmap11_id. 
+    - refine ((_ $@L _) $@ cat_idr _).
+      refine (fmap20 _ _ _ $@ fmap10_id _ _ _).
+      rapply fmap11_id.
+  Defined.
+
+End Associator.
+
 (** ** Theory about [SymmetricBraid] *)
 
 Section SymmetricBraid.
