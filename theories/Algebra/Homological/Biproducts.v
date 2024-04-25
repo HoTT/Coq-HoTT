@@ -540,39 +540,19 @@ Section Symmetry.
       apply cat_binbiprod_corec_beta_pr2.
   Defined.
   
-  (** The swap map preserves the codiagonal. TODO: proof can probably be shorter. *)
+  (** The swap map preserves the codiagonal. *)
   Lemma cat_binbiprod_swap_codiag (x : A)
     : cat_binbiprod_codiag x $o cat_binbiprod_swap x x $== cat_binbiprod_codiag x.
   Proof.
     apply cat_binbiprod_in_eta.
     - refine (_ $@ (cat_binbiprod_rec_beta_inl _ _)^$).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      + apply cat_binbiprod_pr_eta.
-        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr1.
-          refine (_ $@ _^$).
-          1: apply cat_binbiprod_pr2_inl.
-          apply cat_binbiprod_pr1_inr.
-        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr2.
-          refine (_ $@ _^$).
-          1: apply cat_binbiprod_pr1_inl.
-          apply cat_binbiprod_pr2_inr.
-      + apply cat_binbiprod_rec_beta_inr.
+      1: apply cat_binbiprod_swap_inl.
+      apply cat_binbiprod_rec_beta_inr.
     - refine (_ $@ (cat_binbiprod_rec_beta_inr _ _)^$).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      + apply cat_binbiprod_pr_eta.
-        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr1.
-          refine (_ $@ _^$).
-          1: apply cat_binbiprod_pr2_inr.
-          apply cat_binbiprod_pr1_inl.
-        * refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr2.
-          refine (_ $@ _^$).
-          1: apply cat_binbiprod_pr1_inr.
-          apply cat_binbiprod_pr2_inl.
-      + apply cat_binbiprod_rec_beta_inl.
+      1: apply cat_binbiprod_swap_inr.
+      apply cat_binbiprod_rec_beta_inl.
   Defined.
 
 End Symmetry.
