@@ -5,6 +5,7 @@ Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.NatTrans.
 Require Import WildCat.FunctorCat.
+Require Import WildCat.PointedCat.
 
 (** ** Opposite categories *)
 
@@ -200,3 +201,17 @@ Proof.
   rapply is1nat_op.
 Defined.
 
+Global Instance isinitial_isterminal_op {A : Type} `{Is1Cat A} (x : A)
+  {t : IsTerminal x} : IsInitial (A := A^op) x
+  := t.
+
+Global Instance isterminal_isinitial_op {A : Type} `{Is1Cat A} (x : A)
+  {i : IsInitial x} : IsTerminal (A := A^op) x
+  := i.
+
+Global Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
+Proof.
+  snrapply Build_IsPointedCat.
+  1: unfold op; exact zero_object.
+  1,2: exact _.
+Defined.

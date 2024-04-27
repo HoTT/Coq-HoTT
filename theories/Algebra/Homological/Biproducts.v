@@ -1,7 +1,8 @@
-Require Import Basics.Overture Basics.Decidable Basics.Tactics Basics.Trunc.
-Require Import Types.Forall Types.Bool.
+Require Import Basics.Overture Basics.Decidable Basics.Tactics Basics.Trunc Basics.Equivalences.
+Require Import Types.Forall Types.Bool Types.Paths Types.Empty Types.Equiv Types.Sigma.
 Require Import WildCat.Core WildCat.Products WildCat.Coproducts WildCat.Equiv.
-Require Import WildCat.PointedCat WildCat.Bifunctor WildCat.Square WildCat.Monoidal.
+Require Import WildCat.PointedCat WildCat.Bifunctor WildCat.Square.
+Require Import WildCat.Opposite WildCat.Monoidal.
 
 (** * Categories with biproducts *)
 
@@ -730,3 +731,79 @@ Section Associativity.
   Defined.
 
 End Associativity.
+    
+(** *** Biproducts in the opposite category *)
+
+(** Biproducts exist in the opposite category if they exist in the original category. *)
+Global Instance biproduct_op `{Funext} {I A : Type} {x : I -> A} `{Biproduct I A x}
+  : Biproduct (A:=A^op) I x.
+Proof.
+  snrapply Build_Biproduct'.
+  (** Products in the opposite category are coproducts in the original category. *)
+  - exact _.
+  (** Coproducts in the opposite category are products in the original category. *)
+  - apply coproduct_op. 
+    exact _.
+  - snrapply catie_homotopic.
+    + simpl; exact (cat_coprod_prod_incl (A:=A) x).
+    + simpl; exact _.
+    + (** Showing that these two maps are homotopic is a bit tricky. It boils down to showing an equality between [dec_paths (i = j)] and [dec_paths (j = i)] which is true with [Funext] but it is not certain if it holds without. *)
+      apply cat_coprod_in_eta.
+      intros i.
+      apply cat_prod_pr_eta.
+      intros j.
+      simpl.
+      refine (cat_assoc _ _ _ $@ _).
+      refine ((_ $@L _) $@ _).
+      1: apply cat_coprod_beta.
+      refine (_ $@ _).
+      1: rapply cat_prod_beta.
+      symmetry.
+      refine ((_ $@R _) $@ _).
+      1: apply cat_prod_beta.
+      refine (_ $@ _).
+      1: rapply cat_coprod_beta.
+      simpl.
+      generalize (dec_paths i j).
+      generalize (dec_paths j i).
+      intros p q.
+      assert (r : @decidable_equiv (i = j) (j = i) inverse _ q = p).
+      { destruct p as [p|np].
+        - destruct q as [q|nq].
+          + apply (ap inl).
+            apply path_ishprop.
+          + destruct (nq p^).
+        - destruct q as [|nq].
+          + destruct (np p^).
+          + apply (ap inr).
+            (** Seems to be essential. *)
+            apply path_forall.
+            intros p.
+            destruct (np p). }
+      destruct r.
+      destruct q as [[]|q]; reflexivity.
+Defined.
+
+Global Instance hasbiproducts_op `{Funext} {I A : Type} `{DecidablePaths I, HasEquivs A, !IsPointedCat A, !HasBiproducts I A}
+  : HasBiproducts I (A^op).
+Proof.
+  intros x.
+  by rapply biproduct_op.
+Defined.
+
+Global Instance binarybiproduct_op `{Funext} {A : Type}
+  `{HasEquivs A, !IsPointedCat A} {x y : A} {bb : BinaryBiproduct x y}
+  : BinaryBiproduct (A:=A^op) x y.
+Proof.
+  nrapply biproduct_op.
+  exact bb.
+Defined.
+
+Global Instance hasbinarybiproducts_op `{Funext} {A : Type}
+  `{HasEquivs A, !IsPointedCat A} {hbb : HasBinaryBiproducts A}
+  : HasBinaryBiproducts (A^op).
+Proof.
+  intros x y.
+  rapply biproduct_op.
+  exact (hbb x y).
+Defined.  

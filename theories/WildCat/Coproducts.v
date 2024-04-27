@@ -303,3 +303,22 @@ Proof.
     exact (Id _).
   - apply zero_morphism. 
 Defined.
+
+(** *** Coproducts in the opposite category *)
+
+Definition coproduct_op {I A : Type} (x : I -> A)
+  `{Is1Cat A} {H' : Product I x}
+  : Coproduct I (A:=A^op) x.
+Proof.
+  snrapply Build_Product.
+  - exact (cat_prod I x).
+  - exact cat_pr.
+  - exact (fun z => cat_prod_corec I).
+  - intros z f i.
+    apply cat_prod_beta.
+  - intros z f g p.
+    apply cat_prod_pr_eta.
+    exact p.
+Defined.
+  
+Hint Immediate coproduct_op : typeclass_instances.

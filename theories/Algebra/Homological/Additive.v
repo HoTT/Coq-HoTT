@@ -1,7 +1,8 @@
 Require Import Basics.Overture.
 Require Import WildCat.Core WildCat.Equiv WildCat.PointedCat WildCat.Bifunctor.
-Require Import WildCat.Square.
+Require Import WildCat.Square WildCat.Opposite.
 Require Import Algebra.Homological.Biproducts.
+Require Import Algebra.Groups.Group.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.Rings.Ring.
 Require Import canonical_names.
 
@@ -35,7 +36,7 @@ Section CMonHom.
 
   (** TODO: explain a bit more: diagonal duplicates and codiagonal sums. *)
   (** The operation is given by the biproduct structure. *) 
-  Local Instance sgop_hom : SgOp (a $-> b) := fun f g =>
+  Global Instance sgop_hom : Plus (a $-> b) := fun f g =>
     cat_binbiprod_codiag b
     $o fmap11 (fun x y => cat_binbiprod x y) f g
     $o cat_binbiprod_diag a.
@@ -313,10 +314,10 @@ End CMonHom.
 
 Class IsAdditive (A : Type) `{HasEquivs A} := {
   additive_semiadditive :: IsSemiAdditive A;
-  additive_negate_hom : forall (a b : A), Negate (a $-> b);
-  additive_left_inverse_hom : forall (a b : A),
+  additive_negate_hom :: forall (a b : A), Negate (a $-> b);
+  additive_left_inverse_hom :: forall (a b : A),
     LeftInverse (sgop_hom a b) (additive_negate_hom a b) (zero_hom a b);
-  additive_right_inverse_hom : forall (a b : A),
+  additive_right_inverse_hom :: forall (a b : A),
     RightInverse (sgop_hom a b) (additive_negate_hom a b) (zero_hom a b);
 }.
 
@@ -339,30 +340,108 @@ Proof.
   - exact (commutative_hom a b).
 Defined.
 
+(** *** Distributivity of composition over addition *)
+
+Definition addcat_dist_l {A : Type} `{IsAdditive A} {a b c : A}
+  (f : b $-> c) (g h : a $-> b)
+  : f $o (g + h) $== (f $o g) + (f $o h).
+Proof.
+  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ cat_assoc _ _ _).
+  1: apply cat_binbiprod_codiag_fmap11.
+  refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
+  rapply fmap11_comp.
+Defined.
+
+(** Note that this is more general than the distributive law in the endomorphism ring. *)
+Global Instance left_heterodistribute_hom {A : Type} `{IsAdditive A} {a b c : A}
+  : LeftHeteroDistribute cat_comp (sgop_hom a b) (sgop_hom a c).
+Proof.
+  intros f g h.
+  apply path_hom.
+  apply addcat_dist_l.
+Defined.
+
+Definition addcat_dist_r {A : Type} `{IsAdditive A} {a b c : A}
+  (f g : b $-> c) (h : a $-> b)
+  : (f + g) $o h $== (f $o h) + (g $o h).
+Proof.
+  refine (cat_assoc _ _ _ $@ _).
+  refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
+  refine ((_ $@L _) $@ _).
+  1: apply cat_binbiprod_diag_fmap11.
+  refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
+  rapply fmap11_comp.
+Defined.
+
+Global Instance right_heterodistribute_hom {A : Type} `{IsAdditive A} {a b c : A}
+  : RightHeteroDistribute cat_comp (sgop_hom a c) (sgop_hom b c).
+Proof.
+  intros f g h.
+  apply path_hom.
+  apply addcat_dist_r.
+Defined.
+
+Definition addcat_comp_negate_id_l {A : Type} `{IsAdditive A} {a b : A}
+  (f : a $-> b)
+  : (- Id _) $o f $== -f.
+Proof.
+  apply GpdHom_path.
+  change (@paths (Hom a b) ?x ?y) with (@paths (AbHom a b : Type) x y).
+  rapply grp_moveL_1V.
+  transitivity ((-Id b $o f) + (Id b $o f)).
+  - f_ap; symmetry; apply path_hom, cat_idl.
+  - lhs_V rapply right_heterodistribute_hom.
+    transitivity (zero_morphism (b := b) $o f).
+    + f_ap; apply (grp_inv_l (Id b : AbHom b b)).
+    + apply path_hom.
+      apply cat_zero_l.
+Defined.
+
+Definition addcat_comp_negate_id_r {A : Type} `{IsAdditive A} {a b : A}
+  (f : a $-> b)
+  : f $o (- Id _) $== -f.
+Proof.
+  apply GpdHom_path.
+  change (@paths (Hom a b) ?x ?y) with (@paths (AbHom a b : Type) x y).
+  rapply grp_moveL_1V.
+  transitivity ((f $o -Id a) + (f $o Id a)).
+  - f_ap; symmetry; apply path_hom, cat_idr.
+  - lhs_V rapply left_heterodistribute_hom.
+    transitivity (f $o zero_morphism (a := a)).
+    + f_ap; apply (grp_inv_l (Id a : AbHom a a)).
+    + apply path_hom.
+      apply cat_zero_r.
+Defined.
+
+Definition addcat_comp_negate_l {A : Type} `{IsAdditive A} {a b c : A}
+  (f : b $-> c) (g : a $-> b)
+  :  - (f $o g) $== (- f) $o g.
+Proof.
+  refine ((addcat_comp_negate_id_l _)^$ $@ _).
+  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+  apply addcat_comp_negate_id_l.
+Defined.
+
+Definition addcat_comp_negate_r {A : Type} `{IsAdditive A} {a b c : A}
+  (f : b $-> c) (g : a $-> b)
+  : - (f $o g) $== f $o (- g).
+Proof.
+  refine ((addcat_comp_negate_id_r _)^$ $@ _).
+  refine (cat_assoc _ _ _ $@ (_ $@L _)).
+  apply addcat_comp_negate_id_r.
+Defined.
+
 (** *** Endomorphism ring *)
 
-(** The composition operation provides a multiplicative operation on the abelian group hom. Turning it into a ring of endomorphsims. *)
 Definition End {A : Type} `{IsAdditive A} (X : A) : Ring.
 Proof.
   snrapply Build_Ring'; repeat split.
   - exact (AbHom X X).
   - exact (fun f g => f $o g).
   - exact (Id _).
-  - intros f g h.
-    apply path_hom.
-    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ cat_assoc _ _ _).
-    1: apply cat_binbiprod_codiag_fmap11.
-    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-    rapply fmap11_comp.
-  - intros f g h.
-    apply path_hom.
-    refine (cat_assoc _ _ _ $@ _).
-    refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-    refine ((_ $@L _) $@ _).
-    1: apply cat_binbiprod_diag_fmap11.
-    refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
-    rapply fmap11_comp.
+  - exact left_heterodistribute_hom.
+  - exact right_heterodistribute_hom.
   - exact _.
   - intros f g h.
     apply path_hom.
@@ -374,6 +453,39 @@ Proof.
   - intros g.
     apply path_hom.
     apply cat_idr.
+Defined.
+
+(** ** Properties of additive categories *)
+
+(** The opposite of a semiadditive category is semiadditive. *)
+Global Instance issemiadditive_op `{Funext} {A : Type} `{IsSemiAdditive A}
+  : IsSemiAdditive A^op.
+Proof.
+  snrapply Build_IsSemiAdditive.
+  - exact _.
+  - exact _.
+  - exact _.
+  - intros a b.
+    change A in a, b.
+    change (IsHSet (b $-> a)).
+    exact _.
+Defined.
+
+Axiom sorry : Empty.
+Ltac sorry := apply Empty_rect; apply sorry.
+
+(** The opposite of an additive category is additive. *)
+Global Instance isadditive_op `{F:Funext} {A : Type} `{H : IsAdditive A}
+  : IsAdditive A^op.
+Proof.
+  snrapply Build_IsAdditive.
+  - exact _.
+  - intros a b.
+    change A in a, b.
+    change (Negate (b $-> a)).
+    exact _.
+  - sorry.
+  - sorry.
 Defined.
 
 (** TODO: Additive functors *)
