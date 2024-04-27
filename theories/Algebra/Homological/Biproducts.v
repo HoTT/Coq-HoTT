@@ -113,12 +113,9 @@ Proof.
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     apply cat_coprod_beta. }
   refine (cat_prod_beta _ _ _ $@ _).
-  destruct (dec_paths i i); simpl.
-  - (** We cannot eliminate [p : i = i] with path induction, but we do have decidable equality, hence by Hedberg's theorem we must be in a hset and we can replace this with the identity. *)
-    assert (r : (idpath = p)) by apply path_ishprop.
-    by destruct r.
-  - contradiction n.
-    reflexivity.
+  simpl.
+  generalize (dec_paths i i).
+  by nrapply decidable_paths_refl.
 Defined.
 
 (** An inclusion followed by a projection of a different index is zero. *)
@@ -131,9 +128,9 @@ Proof.
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     apply cat_coprod_beta. }
   refine (cat_prod_beta _ _ _ $@ _).
-  destruct (dec_paths i j); simpl.
-  - contradiction p.
-  - reflexivity.
+  decidable_false (dec_paths i j) p.
+  simpl.
+  reflexivity.
 Defined.
 
 Definition cat_biprod_diag I {A} (x : A) `{Biproduct I A (fun _ => x)}
