@@ -752,14 +752,14 @@ Proof.
       simpl.
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
-      1: apply cat_coprod_beta.
+      1: nrapply cat_coprod_beta.
       refine (_ $@ _).
-      1: rapply cat_prod_beta.
+      1: nrapply cat_prod_beta.
       symmetry.
       refine ((_ $@R _) $@ _).
-      1: apply cat_prod_beta.
+      1: nrapply cat_prod_beta.
       refine (_ $@ _).
-      1: rapply cat_coprod_beta.
+      1: nrapply cat_coprod_beta.
       simpl.
       generalize (dec_paths j i).
       generalize (dec_paths i j).
