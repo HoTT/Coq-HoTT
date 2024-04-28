@@ -217,7 +217,8 @@ Defined.
 
 Global Instance is1cat_ss : Is1Cat SuccStr.
 Proof.
-  srapply Build_Is1Cat'.
+  snrapply Build_Is1Cat'.
+  1,2: exact _.
   - intros X Y Z g.
     snrapply Build_Is0Functor.
     intros f h p.

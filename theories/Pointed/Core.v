@@ -570,7 +570,8 @@ Defined.
 (** pType is a 1-coherent 1-category *)
 Global Instance is1cat_ptype : Is1Cat pType.
 Proof.
-  srapply Build_Is1Cat'.
+  snrapply Build_Is1Cat'.
+  1, 2: exact _.
   - intros A B C h; rapply Build_Is0Functor.
     intros f g p; cbn.
     apply pmap_postwhisker; assumption.
@@ -602,7 +603,8 @@ Definition path_zero_morphism_pconst (A B : pType)
 (** pForall is a 1-category *)
 Global Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
-  srapply Build_Is1Cat'.
+  snrapply Build_Is1Cat'.
+  1, 2: exact _.
   - intros f g h p; rapply Build_Is0Functor.
     intros q r s. exact (phomotopy_postwhisker s p).
   - intros f g h p; rapply Build_Is0Functor.

@@ -39,27 +39,47 @@ Global Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
 Proof.
   snrapply Build_Is1Cat.
   - intros x y.
-    srapply Build_Is01Cat;
-    destruct x as [a1 | b1], y as [a2 | b2];
-    try contradiction; cbn;
-    (apply Id || intros a b c; apply cat_comp).
+    srapply Build_Is01Cat; destruct x as [a1 | b1], y as [a2 | b2].
+    2,3,6,7: contradiction.
+    all: cbn.
+    1,2: exact Id.
+    1,2: intros a b c; apply cat_comp.
   - intros x y; srapply Build_Is0Gpd.
-    destruct x as [a1 | b1], y as [a2 | b2];
-    try contradiction; cbn; intros f g; apply gpd_rev.
+    destruct x as [a1 | b1], y as [a2 | b2].
+    2,3: contradiction.
+    all: cbn; intros f g; apply gpd_rev.
   - intros x y z h; srapply Build_Is0Functor.
     intros f g p.
-    destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
-    try contradiction; cbn in *; change (f $== g) in p; exact (h $@L p).
+    destruct x as [a1 | b1], y as [a2 | b2].
+    2,3: contradiction.
+    all: destruct z as [a3 | b3].
+    2,3: contradiction.
+    all: cbn in *; change (f $== g) in p; exact (h $@L p).
   - intros x y z h; srapply Build_Is0Functor.
     intros f g p.
-    destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
-    try contradiction; cbn in *; change (f $== g) in p; exact (p $@R h).
-  - intros [a1 | b1] [a2 | b2] [a3 | b3] [a4 | b4] f g h;
-    try contradiction; cbn; apply cat_assoc.
-  - intros [a1 | b1] [a2 | b2] [a3 | b3] [a4 | b4] f g h;
-    try contradiction; cbn; apply cat_assoc_opp.
-  - intros [a1 | b1] [a2 | b2] f; try contradiction;
-    cbn; apply cat_idl.
-  - intros [a1 | b1] [a2 | b2] f; try contradiction;
-    cbn; apply cat_idr.
+    destruct x as [a1 | b1], y as [a2 | b2].
+    2,3: contradiction.
+    all: destruct z as [a3 | b3].
+    2,3: contradiction.
+    all: cbn in *; change (f $== g) in p; exact (p $@R h).
+  - intros [a1 | b1] [a2 | b2].
+    2,3: contradiction.
+    all: intros [a3 | b3].
+    2,3: contradiction.
+    all: intros [a4 | b4].
+    2-3: contradiction.
+    all: intros f g h; cbn; apply cat_assoc.
+  - intros [a1 | b1] [a2 | b2].
+    2,3: contradiction.
+    all: intros [a3 | b3].
+    2,3: contradiction.
+    all: intros [a4 | b4].
+    2-3: contradiction.
+    all: intros f g h; cbn; apply cat_assoc_opp.
+  - intros [a1 | b1] [a2 | b2] f.
+    2, 3: contradiction.
+    all: cbn; apply cat_idl.
+  - intros [a1 | b1] [a2 | b2] f.
+    2, 3: contradiction.
+    all: cbn; apply cat_idr.
 Defined.

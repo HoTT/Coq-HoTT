@@ -60,7 +60,9 @@ Defined.
 Global Instance is1cat_strong_op A `{Is1Cat_Strong A}
   : Is1Cat_Strong (A ^op).
 Proof.
-  srapply Build_Is1Cat_Strong; unfold op in *; cbn in *.
+  snrapply Build_Is1Cat_Strong.
+  1-4: exact _.
+  all: cbn.
   - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
   - intros a b c d f g h; exact (cat_assoc_strong h g f).
   - intros a b f.
@@ -102,7 +104,7 @@ Global Instance is1functor_op A B (F : A -> B)
   `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}
   : Is1Functor (F : A^op -> B^op).
 Proof.
-  apply Build_Is1Functor; unfold op in *; cbn in *.
+  apply Build_Is1Functor; cbn.
   - intros a b; rapply fmap2.
   - exact (fmap_id F).
   - intros a b c f g; exact (fmap_comp F g f).
@@ -147,9 +149,8 @@ Global Instance is1nat_op A B `{Is01Cat A} `{Is1Cat B}
        (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (transformation_op F G alpha).
 Proof.
-  unfold op in *.
+  unfold op.
   unfold transformation_op.
-  cbn.
   intros a b f.
   srapply isnat_tr.
 Defined.
@@ -157,7 +158,7 @@ Defined.
 (** Opposite categories preserve having equivalences. *)
 Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
-  srapply Build_HasEquivs; intros a b; unfold op in *; cbn.
+  snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
   - exact (b $<~> a).
   - apply CatIsEquiv.
   - apply cate_fun'.
@@ -171,7 +172,7 @@ Proof.
     exact (catie_adjointify f g t s).
 Defined.
 
-Global Instance isequivs_op {A : Type} `{HasEquivs A}
+Global Instance isequiv_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
   : @CatIsEquiv A^op _ _ _ _ _ b a f.
 Proof.
@@ -192,8 +193,7 @@ Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
 Proof.
   intros [a n].
   snrapply Build_NatEquiv.
-  { intro x.
-    exact (a x). }
+  1: exact a.
   rapply is1nat_op.
 Defined.
 
