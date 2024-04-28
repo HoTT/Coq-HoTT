@@ -118,7 +118,7 @@ Class IsPreAbelian {A : Type} `{IsAdditive A} := {
   preabelian_has_cokernels :: forall {a b : A} (f : a $-> b), Cokernel f;
 }.
 
-Definition ispreabelian_canonical_map {A : Type} `{IsPreAbelian A}
+Definition cat_coker_ker_ker_coker {A : Type} `{IsPreAbelian A}
   {a b : A} (f : a $-> b)
   : cat_coker_obj (cat_ker f) $-> cat_ker_obj (cat_coker f).
 Proof.
@@ -138,6 +138,6 @@ Defined.
 
 Class IsAbelian {A : Type} `{IsPreAbelian A} := {
   catie_preabelian_canonical_map : forall a b (f : a $-> b),
-    CatIsEquiv (ispreabelian_canonical_map f);
+    CatIsEquiv (cat_coker_ker_ker_coker f);
 }.
 
