@@ -106,8 +106,7 @@ Definition coker_zero_epic {A : Type} `{IsPointedCat A}
   : Epic f -> cat_coker f $== zero_morphism
   := ker_zero_monic (A:=A^op) (a:=b) f.
 
-(** Funext required all the way in Biproducts to show opposite of additive is additivef. *)
-Definition epic_coker_zero `{Funext} {A : Type} `{IsAdditive A}
+Definition epic_coker_zero {A : Type} `{IsAdditive A}
   {a b : A} (f : a $-> b) {k : Cokernel f}
   : cat_coker f $== zero_morphism -> Epic f
   := monic_ker_zero (A:=A^op) (a:=b) (b:=a) f.

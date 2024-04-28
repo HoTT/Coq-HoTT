@@ -732,7 +732,7 @@ End Associativity.
 (** *** Biproducts in the opposite category *)
 
 (** Biproducts exist in the opposite category if they exist in the original category. *)
-Global Instance biproduct_op `{Funext} {I A : Type} {x : I -> A} `{Biproduct I A x}
+Global Instance biproduct_op {I A : Type} {x : I -> A} `{Biproduct I A x}
   : Biproduct (A:=A^op) I x.
 Proof.
   snrapply Build_Biproduct'.
@@ -744,7 +744,7 @@ Proof.
   - snrapply catie_homotopic.
     + simpl; exact (cat_coprod_prod (A:=A) x).
     + simpl; exact _.
-    + (** Showing that these two maps are homotopic is a bit tricky. It boils down to showing an equality between [dec_paths (i = j)] and [dec_paths (j = i)] which is true with [Funext] but it is not certain if it holds without. *)
+    + (** Showing that these two maps are homotopic is a bit tricky. *)
       apply cat_coprod_in_eta.
       intros i.
       apply cat_prod_pr_eta.
@@ -761,34 +761,28 @@ Proof.
       refine (_ $@ _).
       1: rapply cat_coprod_beta.
       simpl.
-      generalize (dec_paths i j).
       generalize (dec_paths j i).
+      generalize (dec_paths i j).
       intros p q.
-      assert (r : @decidable_equiv (i = j) (j = i) inverse _ q = p).
-      { destruct p as [p|np].
-        - destruct q as [q|nq].
-          + apply (ap inl).
-            apply path_ishprop.
-          + destruct (nq p^).
-        - destruct q as [|nq].
-          + destruct (np p^).
-          + apply (ap inr).
-            (** Seems to be essential. *)
-            apply path_forall.
-            intros p.
-            destruct (np p). }
-      destruct r.
-      destruct q as [[]|q]; reflexivity.
+      destruct p as [p|np].
+      * decidable_true q p^.
+        assert (r :  p^ = x0) by apply path_ishprop.
+        destruct r.
+        destruct p.
+        reflexivity.
+      * destruct q.
+        1: by destruct (np p^).
+        reflexivity.
 Defined.
 
-Global Instance hasbiproducts_op `{Funext} {I A : Type} `{DecidablePaths I, HasEquivs A, !IsPointedCat A, !HasBiproducts I A}
+Global Instance hasbiproducts_op {I A : Type} `{DecidablePaths I, HasEquivs A, !IsPointedCat A, !HasBiproducts I A}
   : HasBiproducts I (A^op).
 Proof.
   intros x.
   by rapply biproduct_op.
 Defined.
 
-Global Instance binarybiproduct_op `{Funext} {A : Type}
+Global Instance binarybiproduct_op {A : Type}
   `{HasEquivs A, !IsPointedCat A} {x y : A} {bb : BinaryBiproduct x y}
   : BinaryBiproduct (A:=A^op) x y.
 Proof.
@@ -796,7 +790,7 @@ Proof.
   exact bb.
 Defined.
 
-Global Instance hasbinarybiproducts_op `{Funext} {A : Type}
+Global Instance hasbinarybiproducts_op {A : Type}
   `{HasEquivs A, !IsPointedCat A} {hbb : HasBinaryBiproducts A}
   : HasBinaryBiproducts (A^op).
 Proof.

@@ -458,7 +458,7 @@ Defined.
 (** ** Properties of additive categories *)
 
 (** The opposite of a semiadditive category is semiadditive. *)
-Global Instance issemiadditive_op `{Funext} {A : Type} `{IsSemiAdditive A}
+Global Instance issemiadditive_op {A : Type} `{IsSemiAdditive A}
   : IsSemiAdditive A^op.
 Proof.
   snrapply Build_IsSemiAdditive.
@@ -475,7 +475,7 @@ Axiom sorry : Empty.
 Ltac sorry := apply Empty_rect; apply sorry.
 
 (** The opposite of an additive category is additive. *)
-Global Instance isadditive_op `{F:Funext} {A : Type} `{H : IsAdditive A}
+Global Instance isadditive_op {A : Type} `{H : IsAdditive A}
   : IsAdditive A^op.
 Proof.
   snrapply Build_IsAdditive.
