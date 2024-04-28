@@ -114,16 +114,11 @@ Global Instance is0functor_op' A B (F : A^op -> B^op)
   : Is0Functor (F : A -> B)
   := is0functor_op A^op B^op F.
 
-(** [Is1Cat] structures are not definitionally involutive, so we prove the reverse direction separately. *)
+(** [Is1Cat] structures are also definitionally involutive. *)
 Global Instance is1functor_op' A B (F : A^op -> B^op)
   `{Is1Cat A, Is1Cat B, !Is0Functor (F : A^op -> B^op), Fop2 : !Is1Functor (F : A^op -> B^op)}
-  : Is1Functor (F : A -> B).
-Proof.
-  apply Build_Is1Functor; unfold op in *; cbn.
-  - intros a b; exact (@fmap2 A^op B^op _ _ _ _ _ _ _ _ F _ Fop2 b a).
-  - exact (@fmap_id A^op B^op _ _ _ _ _ _ _ _ F _ Fop2).
-  - intros a b c f g; exact (@fmap_comp A^op B^op _ _ _ _ _ _ _ _ F _ Fop2 _ _ _ g f).
-Defined.
+  : Is1Functor (F : A -> B)
+  := is1functor_op A^op B^op F.
 
 (** Bundled opposite functors *)
 Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
