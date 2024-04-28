@@ -269,7 +269,7 @@ Global Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
 
 Global Instance is1cat_leftmodule {R : Ring} : Is1Cat (LeftModule R).
 Proof.
-  snrapply Build_Is1Cat.
+  snrapply Build_Is1Cat'.
   - intros M N; rapply is01cat_induced.
   - intros M N; rapply is0gpd_induced.
   - intros M N L h.

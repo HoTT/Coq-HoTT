@@ -275,7 +275,7 @@ Global Instance is2graph_abses
 Global Instance is1cat_abses {A B : AbGroup@{u}}
   : Is1Cat (AbSES B A).
 Proof.
-  snrapply Build_Is1Cat.
+  snrapply Build_Is1Cat'.
   1: intros ? ?; apply is01cat_abses_path_data.
   1: intros ? ?; apply is0gpd_abses_path_data.
   3-5: cbn; reflexivity.

@@ -40,7 +40,7 @@ Defined.
 Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
-  srapply (Build_Is1Cat).
+  srapply Build_Is1Cat.
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
     srapply Build_Is0Functor.
     intros [f1 f2] [g1 g2] [p1 p2]; cbn in *.
@@ -52,6 +52,9 @@ Proof.
   - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
     cbn in *.
     exact(cat_assoc f1 g1 h1, cat_assoc f2 g2 h2).
+  - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
+    cbn in *.
+    exact(cat_assoc_opp f1 g1 h1, cat_assoc_opp f2 g2 h2).
   - intros [a1 a2] [b1 b2] [f1 f2].
     cbn in *.
     exact (cat_idl _, cat_idl _).

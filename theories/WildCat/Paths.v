@@ -40,7 +40,9 @@ Proof.
     intros q r h.
     exact (whiskerL p h).
   - intros w x y z p q r.
-    exact (concat_p_pp p q r). 
+    exact (concat_p_pp p q r).
+  - intros w x y z p q r.
+    exact (concat_pp_p p q r).
   - intros x y p.
     exact (concat_p1 p).
   - intros x y p.

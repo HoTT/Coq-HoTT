@@ -56,6 +56,8 @@ Proof.
     try contradiction; cbn in *; change (f $== g) in p; exact (p $@R h).
   - intros [a1 | b1] [a2 | b2] [a3 | b3] [a4 | b4] f g h;
     try contradiction; cbn; apply cat_assoc.
+  - intros [a1 | b1] [a2 | b2] [a3 | b3] [a4 | b4] f g h;
+    try contradiction; cbn; apply cat_assoc_opp.
   - intros [a1 | b1] [a2 | b2] f; try contradiction;
     cbn; apply cat_idl.
   - intros [a1 | b1] [a2 | b2] f; try contradiction;

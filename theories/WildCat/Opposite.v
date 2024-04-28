@@ -52,6 +52,7 @@ Proof.
     cbn in *.
     exact (h $@L p).
   - intros a b c d f g h; exact (cat_assoc_opp h g f).
+  - intros a b c d f g h; exact (cat_assoc h g f).
   - intros a b f; exact (cat_idr f).
   - intros a b f; exact (cat_idl f).
 Defined.
@@ -61,6 +62,7 @@ Global Instance is1cat_strong_op A `{Is1Cat_Strong A}
 Proof.
   srapply Build_Is1Cat_Strong; unfold op in *; cbn in *.
   - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
+  - intros a b c d f g h; exact (cat_assoc_strong h g f).
   - intros a b f.
     apply cat_idr_strong.
   - intros a b f.

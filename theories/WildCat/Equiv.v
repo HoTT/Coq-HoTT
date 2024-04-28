@@ -226,6 +226,16 @@ Proof.
   - refine (_ $@L compose_cate_funinv g f).
 Defined.
 
+Definition compose_cate_assoc_opp {A} `{HasEquivs A}
+           {a b c d : A} (f : a $<~> b) (g : b $<~> c) (h : c $<~> d)
+  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
+Proof.
+  refine (compose_cate_fun h _ $@ _ $@ cat_assoc_opp f g h $@ _ $@
+                           compose_cate_funinv _ f).
+  - refine (_ $@L compose_cate_fun g f).
+  - refine (compose_cate_funinv h g $@R _).
+Defined.
+
 Definition compose_cate_idl {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
   : cate_fun (id_cate b $oE f) $== cate_fun f.
@@ -559,6 +569,7 @@ Global Instance is1cat_core {A : Type} `{HasEquivs A}
 Proof.
   rapply Build_Is1Cat.
   - intros; apply compose_cate_assoc.
+  - intros; apply compose_cate_assoc_opp.
   - intros; apply compose_cate_idl.
   - intros; apply compose_cate_idr.
 Defined.

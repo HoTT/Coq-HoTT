@@ -57,6 +57,7 @@ Section Induced_category.
     + rapply is0functor_postcomp.
     + rapply is0functor_precomp.
     + rapply cat_assoc.
+    + rapply cat_assoc_opp.
     + rapply cat_idl.
     + rapply cat_idr.
   Defined.
