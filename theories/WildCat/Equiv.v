@@ -137,7 +137,7 @@ Defined.
 (** The identity morphism is an equivalence *)
 Global Instance catie_id {A} `{HasEquivs A} (a : A)
   : CatIsEquiv (Id a)
-  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idl (Id a)).
+  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idr (Id a)).
 
 Definition id_cate {A} `{HasEquivs A} (a : A)
   : a $<~> a
@@ -177,10 +177,10 @@ Proof.
     refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
     refine ((_ $@L cat_idl _) $@ _).
     apply cate_isretr.
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_issect _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
+  - refine (cat_assoc_opp _ _ _ $@ _).
+    refine ((cat_assoc _ _ _ $@R _) $@ _).
+    refine (((_ $@L cate_issect _) $@R _) $@ _).
+    refine ((cat_idr _ $@R _) $@ _).
     apply cate_issect.
 Defined.
 
