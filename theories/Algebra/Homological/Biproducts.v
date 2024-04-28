@@ -13,7 +13,7 @@ Class Biproduct (I : Type) `{DecidablePaths I} {A : Type}
   := Build_Biproduct' {
   biproduct_product :: Product I x;
   biproduct_coproduct :: Coproduct I x;
-  catie_cat_coprod_prod_incl :: CatIsEquiv (cat_coprod_prod_incl x);
+  catie_cat_coprod_prod :: CatIsEquiv (cat_coprod_prod x);
 }.
 
 Arguments Biproduct I {_ A _ _ _ _ _ _} x.
@@ -22,7 +22,7 @@ Section Biproducts.
   Context {I : Type} {A : Type} (x : I -> A) `{Biproduct I A x}.
   
   Definition cate_coprod_prod : cat_coprod I x $<~> cat_prod I x
-    := Build_CatEquiv (cat_coprod_prod_incl x).
+    := Build_CatEquiv (cat_coprod_prod x).
 
   Definition cat_biprod : A
     := cat_prod I x.
@@ -742,7 +742,7 @@ Proof.
   - apply coproduct_op. 
     exact _.
   - snrapply catie_homotopic.
-    + simpl; exact (cat_coprod_prod_incl (A:=A) x).
+    + simpl; exact (cat_coprod_prod (A:=A) x).
     + simpl; exact _.
     + (** Showing that these two maps are homotopic is a bit tricky. It boils down to showing an equality between [dec_paths (i = j)] and [dec_paths (j = i)] which is true with [Funext] but it is not certain if it holds without. *)
       apply cat_coprod_in_eta.

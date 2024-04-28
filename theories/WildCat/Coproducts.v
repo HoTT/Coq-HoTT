@@ -286,10 +286,10 @@ Defined.
 Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
   := {}.
 
-(** ** Coproduct-product inclusions *)
+(** ** Canonical coproduct-product map *)
 
 (** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed. *)
-Definition cat_coprod_prod_incl {I : Type} `{DecidablePaths I} {A : Type}
+Definition cat_coprod_prod {I : Type} `{DecidablePaths I} {A : Type}
   `{Is1Cat A, !IsPointedCat A}
   (x : I -> A) `{!Coproduct I x, !Product I x}
   : cat_coprod I x $-> cat_prod I x. 
