@@ -39,7 +39,7 @@ Definition ker_zero_monic {A : Type} `{IsPointedCat A}
   : Monic f -> cat_ker f $== zero_morphism.
 Proof.
   intros monic.
-  apply monic.
+  nrapply monic.
   refine (cat_ker_zero f $@ _^$).
   apply cat_zero_r.
 Defined.
@@ -50,7 +50,7 @@ Definition monic_ker_zero {A : Type} `{IsAdditive A}
   : cat_ker f $== zero_morphism -> Monic f.
 Proof.
   intros ker_zero c g h p.
-  apply GpdHom_path.
+  nrapply GpdHom_path.
   apply path_hom in p.
   change (@paths (AbHom c a) g h).
   change (@paths (AbHom c b) (f $o g) (f $o h)) in p.
@@ -64,7 +64,7 @@ Proof.
   f_ap.
   apply path_hom.
   symmetry.
-  apply addcat_comp_negate_r.
+  nrapply addcat_comp_negate_r.
 Defined.
 
 (** *** Cokernels *)
@@ -125,13 +125,13 @@ Proof.
   snrapply cat_coker_rec.
   - snrapply cat_ker_corec.
     + exact f.
-    + apply cat_coker_zero.
+    + nrapply cat_coker_zero.
   - snrapply monic_cat_ker.
     refine ((cat_assoc _ _ _)^$ $@ _).
     refine ((_ $@R _) $@ _).
-    1: apply cat_ker_corec_beta.
+    1: nrapply cat_ker_corec_beta.
     refine (_ $@ (cat_zero_r _)^$).
-    apply cat_ker_zero.
+    nrapply cat_ker_zero.
 Defined.
 
 (** ** Abelian categories *)
