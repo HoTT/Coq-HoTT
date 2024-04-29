@@ -450,6 +450,26 @@ Section BinaryBiproducts.
     nrapply (not_fixed_negb true).
   Defined.
 
+  Definition cat_binbiprod_corec_zero_inl {z} (f : z $-> x)
+    : cat_binbiprod_corec f zero_morphism $== cat_binbiprod_inl $o f.
+  Proof.
+    snrapply cat_binbiprod_pr_eta.
+    - refine (cat_binbiprod_corec_beta_pr1 _ _ $@ _^$).
+      exact ((cat_assoc _ _ _)^$ $@ (cat_binbiprod_pr1_inl $@R _) $@ cat_idl _).
+    - refine (cat_binbiprod_corec_beta_pr2 _ _ $@ _^$).
+      exact ((cat_assoc _ _ _)^$ $@ (cat_binbiprod_pr2_inl $@R _) $@ cat_zero_l _).
+  Defined.
+
+  Definition cat_binbiprod_corec_zero_inr {z} (f : z $-> y)
+    : cat_binbiprod_corec zero_morphism f $== cat_binbiprod_inr $o f.
+  Proof.
+    snrapply cat_binbiprod_pr_eta.
+    - refine (cat_binbiprod_corec_beta_pr1 _ _ $@ _^$).
+      exact ((cat_assoc _ _ _)^$ $@ (cat_binbiprod_pr1_inr $@R _) $@ cat_zero_l _).
+    - refine (cat_binbiprod_corec_beta_pr2 _ _ $@ _^$).
+      exact ((cat_assoc _ _ _)^$ $@ (cat_binbiprod_pr2_inr $@R _) $@ cat_idl _).
+  Defined.
+
 End BinaryBiproducts.
 
 Arguments cat_binbiprod {A _ _ _ _ _ _} x y {_}.
@@ -517,30 +537,63 @@ Global Instance is1functor_cat_binbiprod_r {A : Type}
   : Is1Functor (fun y => cat_binbiprod x y)
   := bifunctor_is1functor01 x.
 
-(** *** Diagonal lemmas *)
+(** *** Functor lemmas *)
+
+Definition cat_binbiprod_fmap01_corec {A : Type}
+  `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {w x y z : A}
+  (f : w $-> z) (g : x $-> y) (h : w $-> x)
+  : fmap01 (fun x y => cat_binbiprod x y) z g $o cat_binbiprod_corec f h
+    $== cat_binbiprod_corec f (g $o h).
+Proof.
+  snrapply cat_binbiprod_pr_eta.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ cat_idl _ $@ _ $@ _^$).
+    1-3: rapply cat_binbiprod_corec_beta_pr1.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: rapply cat_binbiprod_corec_beta_pr2.
+Defined.
+
+Definition cat_binbiprod_fmap10_corec {A : Type}
+  `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {w x y z : A}
+  (f : x $-> y) (g : w $-> x) (h : w $-> z)
+  : fmap10 (fun x y => cat_binbiprod x y) f z $o cat_binbiprod_corec g h
+    $== cat_binbiprod_corec (f $o g) h.
+Proof.
+  snrapply cat_binbiprod_pr_eta.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: nrapply cat_binbiprod_corec_beta_pr1.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ cat_idl _ $@ _ $@ _^$).
+    1-3: nrapply cat_binbiprod_corec_beta_pr2.
+Defined. 
+
+Definition cat_binbiprod_fmap11_corec {A : Type}
+  `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {v w x y z : A}
+  (f : w $-> y) (g : x $-> z) (h : v $-> w) (i : v $-> x)
+  : fmap11 (fun x y => cat_binbiprod x y) f g $o cat_binbiprod_corec h i
+    $== cat_binbiprod_corec (f $o h) (g $o i).
+Proof.
+  nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+  - nrapply cat_binbiprod_fmap10_corec.
+  - nrapply cat_binbiprod_fmap01_corec.
+Defined.
 
 Definition cat_binbiprod_diag_fmap11 {A : Type}
   `{HasEquivs A, !IsPointedCat A, !HasBinaryBiproducts A} {x y : A} (f : x $-> y)
   : cat_binbiprod_diag y $o f
     $== fmap11 (fun x y => cat_binbiprod x y) f f $o cat_binbiprod_diag x.
 Proof.
+  refine (_ $@ _^$).
+  2: nrapply cat_binbiprod_fmap11_corec.
   nrapply cat_binbiprod_pr_eta.
   - refine ((cat_assoc _ _ _)^$ $@ _).
-    refine ((_ $@R _) $@ (_ $@ _)).
-    1: rapply cat_binbiprod_corec_beta_pr1.
-    1: nrapply cat_idl.
-    refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: rapply cat_pr1_fmap11_binprod.
-    refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-    rapply cat_binbiprod_corec_beta_pr1.
+    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
+    1,2: rapply cat_binbiprod_corec_beta_pr1.
   - refine ((cat_assoc _ _ _)^$ $@ _).
-    refine ((_ $@R _) $@ (_ $@ _)).
-    1: rapply cat_binbiprod_corec_beta_pr2.
-    1: nrapply cat_idl.
-    refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: rapply cat_pr2_fmap11_binprod.
-    refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-    rapply cat_binbiprod_corec_beta_pr2.
+    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
+    1,2: rapply cat_binbiprod_corec_beta_pr2.
 Defined.
 
 Definition cat_binbiprod_codiag_fmap11 {A : Type}

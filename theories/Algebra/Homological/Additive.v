@@ -45,33 +45,15 @@ Section CMonHom.
   Proof.
     intros g.
     apply path_hom.
-    unfold sgop_hom, fmap11.
-    nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ _).
-    snrefine ((_ $@L _) $@ _).
-    1: exact cat_binbiprod_inr.
-    { nrapply cat_binbiprod_pr_eta.
-      - refine (_ $@ cat_binbiprod_pr1_inr^$).
-        refine ((cat_assoc _ _ _)^$ $@ _).
-        refine ((_ $@R _) $@ _).
-        1: nrapply cat_binbiprod_corec_beta_pr1.
-        refine (cat_assoc _ _ _ $@ _).
-        nrapply cat_zero_l.
-      - refine (_ $@ cat_binbiprod_pr2_inr^$).
-        refine ((cat_assoc _ _ _)^$ $@ _).
-        refine ((_ $@R _) $@ _).
-        1: nrapply cat_binbiprod_corec_beta_pr2.
-        refine (cat_assoc _ _ _ $@ _).
-        refine (cat_idl _ $@ _).
-        nrapply cat_binbiprod_corec_beta_pr2. }
-    nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-    { refine ((_ $@R _) $@ _).
-      1: nrapply cat_binbiprod_corec_rec.
-      nrapply cat_binbiprod_rec_beta_inr. }
-    refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-    1: nrapply cat_binbiprod_rec_beta_inr.
-    nrapply cat_idl.
+    unfold sgop_hom.
+    nrefine (cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _).
+    1: nrapply cat_binbiprod_fmap11_corec.
+    1: nrapply (cat_binbiprod_corec_eta' (cat_idr _) (cat_idr _) $@ _).
+    1: exact (cat_binbiprod_corec_zero_inr g).
+    nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_idl _).
+    nrapply cat_binbiprod_rec_beta_inr.
   Defined.
-
+    
   Local Existing Instance symmetricbraiding_cat_binbiprod.
 
   (** Using the naturality of swap we can show that the operation is commutative. *)
