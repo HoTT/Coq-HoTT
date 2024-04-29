@@ -106,6 +106,11 @@ Class IsD1Cat {A : Type} `{Is1Cat A}
                (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
                DHom (cat_assoc f g h) ((h' $o' g') $o' f')
                (h' $o' (g' $o' f'));
+  dcat_assoc_opp : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
+               {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+               (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+               DHom (cat_assoc_opp f g h) (h' $o' (g' $o' f'))
+               ((h' $o' g') $o' f');
   dcat_idl : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
              (f' : DHom f a' b'), DHom (cat_idl f) (DId b' $o' f') f';
   dcat_idr : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
@@ -116,13 +121,6 @@ Global Existing Instance isd01cat_hom.
 Global Existing Instance isd0gpd_hom.
 Global Existing Instance isd0functor_postcomp.
 Global Existing Instance isd0functor_precomp.
-
-Definition dcat_assoc_opp {A : Type} {D : A -> Type} `{IsD1Cat A D}
-  {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
-  {a' : D a} {b' : D b} {c' : D c} {d' : D d}
-  (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d')
-  : DHom (cat_assoc_opp f g h) (h' $o' (g' $o' f')) ((h' $o' g') $o' f')
-  := (dcat_assoc f' g' h')^$'.
 
 Definition dcat_postwhisker {A : Type} {D : A -> Type} `{IsD1Cat A D}
   {a b c : A} {f g : a $-> b} {h : b $-> c} {p : f $== g}
@@ -234,6 +232,8 @@ Proof.
     exact (p $@R f; p' $@R' f').
   - intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].
     exact (cat_assoc f g h; dcat_assoc f' g' h').
+  - intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].
+    exact (cat_assoc_opp f g h; dcat_assoc_opp f' g' h').
   - intros [a a'] [b b'] [f f'].
     exact (cat_idl f; dcat_idl f').
   - intros [a a'] [b b'] [f f'].
@@ -275,6 +275,11 @@ Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
                       (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
                       (transport (fun k => DHom k a' d') (cat_assoc_strong f g h)
                       ((h' $o' g') $o' f')) = h' $o' (g' $o' f');
+  dcat_assoc_opp_strong : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
+                      {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+                      (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+                      (transport (fun k => DHom k a' d') (cat_assoc_opp_strong f g h)
+                      (h' $o' (g' $o' f'))) = (h' $o' g') $o' f';
   dcat_idl_strong : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
                     (f' : DHom f a' b'),
                     (transport (fun k => DHom k a' b') (cat_idl_strong f)
@@ -290,6 +295,7 @@ Global Existing Instance isd0gpd_hom_strong.
 Global Existing Instance isd0functor_postcomp_strong.
 Global Existing Instance isd0functor_precomp_strong.
 
+(* If in the future we make a [Build_Is1Cat_Strong'] that lets the user omit the second proof of associativity, this shows how it can be recovered from the original proof:
 Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{IsD1Cat_Strong A D}
   {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
   {a' : D a} {b' : D b} {c' : D c} {d' : D d}
@@ -300,6 +306,7 @@ Proof.
   apply (moveR_transport_V (fun k => DHom k a' d') (cat_assoc_strong f g h) _ _).
   exact ((dcat_assoc_strong f' g' h')^).
 Defined.
+*)
 
 Global Instance isd1cat_isd1catstrong {A : Type} (D : A -> Type)
   `{IsD1Cat_Strong A D} : IsD1Cat D.
@@ -307,6 +314,8 @@ Proof.
   srapply Build_IsD1Cat.
   - intros a b c d f g h a' b' c' d' f' g' h'.
     exact (DHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+  - intros a b c d f g h a' b' c' d' f' g' h'.
+    exact (DHom_path (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).
   - intros a b f a' b' f'.
     exact (DHom_path (cat_idl_strong f) (dcat_idl_strong f')).
   - intros a b f a' b' f'.
@@ -321,6 +330,9 @@ Proof.
   - intros aa' bb' cc' dd' [f f'] [g g'] [h h'].
     exact (path_sigma' _
             (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+  - intros aa' bb' cc' dd' [f f'] [g g'] [h h'].
+    exact (path_sigma' _
+            (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).
   - intros aa' bb' [f f'].
     exact (path_sigma' _ (cat_idl_strong f) (dcat_idl_strong f')).
   - intros aa' bb' [f f'].
@@ -506,6 +518,9 @@ Proof.
   - intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.
     intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].
     exact (dcat_assoc f1' f2' f3', dcat_assoc g1' g2' g3').
+  - intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.
+    intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].
+    exact (dcat_assoc_opp f1' f2' f3', dcat_assoc_opp g1' g2' g3').
   - intros ab1 ab2 fg ab1' ab2' [f' g'].
     exact (dcat_idl f', dcat_idl g').
   - intros ab1 ab2 fg ab1' ab2' [f' g'].

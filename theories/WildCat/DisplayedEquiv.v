@@ -160,7 +160,7 @@ Defined.
 Global Instance dcatie_id {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
   : DCatIsEquiv (DId a')
-  := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idl (DId a')).
+  := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idr (DId a')).
 
 Definition did_cate {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
@@ -205,10 +205,10 @@ Proof.
     refine (_ $@L' (dcate_isretr _ $@R' _) $@' _).
     refine (_ $@L' dcat_idl _ $@' _).
     apply dcate_isretr.
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (dcate_issect _ $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
+  - refine (dcat_assoc_opp _ _ _ $@' _).
+    refine (dcat_assoc _ _ _ $@R' _ $@' _).
+    refine (((_ $@L' dcate_issect _) $@R' _) $@' _).
+    refine ((dcat_idr _ $@R' _) $@' _).
     apply dcate_issect.
 Defined.
 

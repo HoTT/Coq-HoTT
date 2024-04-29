@@ -120,6 +120,7 @@ Proof.
   - intros g h p x.
     exact (1 @@ p x).
   - intros ? ? ? ? ? ? ? ?; apply concat_p_pp.
+  - intros ? ? ? ? ? ? ? ?; apply concat_pp_p.
   - intros ? ? ? ?. apply concat_p1.
   - intros ? ? ? ?. apply concat_1p.
 Defined.
