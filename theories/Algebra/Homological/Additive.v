@@ -23,7 +23,7 @@ Class IsSemiAdditive (A : Type) `{HasEquivs A} := {
   semiadditive_ishset_hom :: forall (a b : A), IsHSet (a $-> b);
 }.
   
-(** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential chracteristic of semiadditive categories making it equivalent to alternate definitions where the category is semiadditive if it is enriched in commutative monoids. The machinary of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
+(** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential characteristic of semiadditive categories making it equivalent to alternate definitions where the category is semiadditive if it is enriched in commutative monoids. The machinery of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
 
 Section CMonHom.
 
