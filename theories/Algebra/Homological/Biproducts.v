@@ -64,18 +64,18 @@ Section Biproducts.
     unfold cat_biprod_rec, cat_biprod_in.
     refine (_ $@ cat_coprod_beta I f i).
     nrefine (cat_assoc _ _ _ $@ (_ $@L _)).
-    apply compose_V_hh.
+    nrapply compose_V_hh.
   Defined.
 
   Definition cat_biprod_rec_eta {z : A} (f : cat_biprod $-> z)
     : cat_biprod_rec (fun i => f $o cat_biprod_in i) $== f.
   Proof.
     unfold cat_biprod_rec.
-    apply cate_moveR_eV.
-    apply cat_coprod_in_eta.
+    nrapply cate_moveR_eV.
+    nrapply cat_coprod_in_eta.
     intros i.
     refine (cat_coprod_beta I _ i $@ _^$).
-    apply cat_assoc.
+    nrapply cat_assoc; exact _.
   Defined.
 
   Definition cat_biprod_rec_eta' {z : A} {f f' : forall i, x i $-> z}
@@ -90,8 +90,8 @@ Section Biproducts.
     : (forall i, f $o cat_biprod_in i $== f' $o cat_biprod_in i) -> f $== f'.
   Proof.
     intros p.
-    apply (cate_epic_equiv cate_coprod_prod).
-    apply cat_coprod_in_eta.
+    nrapply (cate_epic_equiv cate_coprod_prod).
+    nrapply cat_coprod_in_eta.
     intros i.
     exact (cat_assoc _ _ _ $@ p i $@ (cat_assoc _ _ _)^$).
   Defined.
@@ -111,7 +111,7 @@ Proof.
   unfold cat_biprod_pr, cat_biprod_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
-    apply cat_coprod_beta. }
+    nrapply cat_coprod_beta. }
   refine (cat_prod_beta _ _ _ $@ _).
   simpl.
   generalize (dec_paths i i).
@@ -126,7 +126,7 @@ Proof.
   unfold cat_biprod_pr, cat_biprod_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
-    apply cat_coprod_beta. }
+    nrapply cat_coprod_beta. }
   refine (cat_prod_beta _ _ _ $@ _).
   decidable_false (dec_paths i j) p.
   simpl.
@@ -149,19 +149,19 @@ Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type}
   : cat_biprod_corec y (fun i => f i $o cat_biprod_pr i)
     $== cat_biprod_rec x (fun i => cat_biprod_in i $o f i).
 Proof.
-  apply cat_biprod_pr_eta.
+  nrapply cat_biprod_pr_eta.
   intros i.
   refine (cat_biprod_corec_beta _ _ i $@ _).
-  apply cat_biprod_in_eta.
+  nrapply cat_biprod_in_eta.
   intros j.
   refine (_ $@ (_ $@L (cat_biprod_rec_beta _ _ _)^$) $@ (cat_assoc _ _ _)^$).
   refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
   destruct (dec_paths j i) as [p | np].
   - destruct p.
     refine ((_ $@L _) $@ cat_idr _ $@ (cat_idl _)^$ $@ (_^$ $@R _)).
-    1,2: apply cat_biprod_pr_in.
+    1,2: nrapply cat_biprod_pr_in.
   - refine ((_ $@L _) $@ cat_zero_r _ $@ (cat_zero_l _)^$ $@ (_^$ $@R _)).
-    1,2: apply cat_biprod_pr_in_ne, np.
+    1,2: nrapply cat_biprod_pr_in_ne; assumption.
 Defined.
 
 (** *** Existence of biproducts *)
@@ -197,7 +197,7 @@ Global Instance hasbinarycoproducts_hasbinarybiproducts {A : Type}
 Proof.
   intros x y.
   nrapply biproduct_coproduct.
-  apply H.
+  nrapply H.
 Defined.
 
 Section BinaryBiproducts.
@@ -214,7 +214,7 @@ Section BinaryBiproducts.
   Definition cat_binbiprod_corec {z : A} (f : z $-> x) (g : z $-> y)
     : z $-> cat_binbiprod.
   Proof.
-    apply cat_biprod_corec.
+    nrapply cat_biprod_corec.
     intros [|].
     - exact f.
     - exact g.
@@ -232,7 +232,7 @@ Section BinaryBiproducts.
     : cat_binbiprod_corec (cat_binbiprod_pr1 $o f) (cat_binbiprod_pr2 $o f)
       $== f.
   Proof.
-    apply cat_biprod_pr_eta.
+    nrapply cat_biprod_pr_eta.
     intros [|].
     - exact (cat_binbiprod_corec_beta_pr1 _ _).
     - exact (cat_binbiprod_corec_beta_pr2 _ _).
@@ -243,7 +243,7 @@ Section BinaryBiproducts.
       -> cat_binbiprod_corec f g $== cat_binbiprod_corec f' g'.
   Proof.
     intros p q.
-    apply cat_biprod_corec_eta'.
+    nrapply cat_biprod_corec_eta'.
     intros [|].
     - exact p.
     - exact q.
@@ -255,7 +255,7 @@ Section BinaryBiproducts.
       -> f $== f'.
   Proof.
     intros p q.
-    apply cat_biprod_pr_eta.
+    nrapply cat_biprod_pr_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -267,7 +267,7 @@ Section BinaryBiproducts.
   Definition cat_binbiprod_rec {z : A} (f : x $-> z) (g : y $-> z)
     : cat_binbiprod $-> z.
   Proof.
-    apply cat_biprod_rec.
+    nrapply cat_biprod_rec.
     intros [|].
     - exact f.
     - exact g.
@@ -284,7 +284,7 @@ Section BinaryBiproducts.
   Definition cat_binbiprod_rec_eta {z : A} (f : cat_binbiprod $-> z)
     : cat_binbiprod_rec (f $o cat_binbiprod_inl) (f $o cat_binbiprod_inr) $== f.
   Proof.
-    apply cat_biprod_in_eta.
+    nrapply cat_biprod_in_eta.
     intros [|].
     - exact (cat_binbiprod_rec_beta_inl _ _).
     - exact (cat_binbiprod_rec_beta_inr _ _).
@@ -295,7 +295,7 @@ Section BinaryBiproducts.
       -> cat_binbiprod_rec f g $== cat_binbiprod_rec f' g'.
   Proof.
     intros p q.
-    apply cat_biprod_rec_eta'.
+    nrapply cat_biprod_rec_eta'.
     intros [|].
     - exact p.
     - exact q.
@@ -307,7 +307,7 @@ Section BinaryBiproducts.
       -> f $== f'.
   Proof.
     intros p q.
-    apply cat_biprod_in_eta.
+    nrapply cat_biprod_in_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -325,14 +325,14 @@ Section BinaryBiproducts.
     : cat_binbiprod_pr2 $o cat_binbiprod_inl $== zero_morphism.
   Proof.
     snrapply (cat_biprod_pr_in_ne Bool _ (i := true) (j := false)).
-    apply (not_fixed_negb false).
+    nrapply (not_fixed_negb false).
   Defined.
   
   Definition cat_binbiprod_pr1_inr
     : cat_binbiprod_pr1 $o cat_binbiprod_inr $== zero_morphism.
   Proof.
     snrapply (cat_biprod_pr_in_ne Bool _ (i := false) (j := true)).
-    apply (not_fixed_negb true).
+    nrapply (not_fixed_negb true).
   Defined.
 
 End BinaryBiproducts.
@@ -409,23 +409,23 @@ Definition cat_binbiprod_diag_fmap11 {A : Type}
   : cat_binbiprod_diag y $o f
     $== fmap11 (fun x y => cat_binbiprod x y) f f $o cat_binbiprod_diag x.
 Proof.
-  apply cat_binbiprod_pr_eta.
+  nrapply cat_binbiprod_pr_eta.
   - refine ((cat_assoc _ _ _)^$ $@ _).
     refine ((_ $@R _) $@ (_ $@ _)).
-    1: apply cat_binbiprod_corec_beta_pr1.
-    1: apply cat_idl.
+    1: rapply cat_binbiprod_corec_beta_pr1.
+    1: nrapply cat_idl.
     refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
     2: rapply cat_pr1_fmap11_binprod.
     refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-    apply cat_binbiprod_corec_beta_pr1.
+    rapply cat_binbiprod_corec_beta_pr1.
   - refine ((cat_assoc _ _ _)^$ $@ _).
     refine ((_ $@R _) $@ (_ $@ _)).
-    1: apply cat_binbiprod_corec_beta_pr2.
-    1: apply cat_idl.
+    1: rapply cat_binbiprod_corec_beta_pr2.
+    1: nrapply cat_idl.
     refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
     2: rapply cat_pr2_fmap11_binprod.
     refine ((cat_idr _)^$ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-    apply cat_binbiprod_corec_beta_pr2.
+    rapply cat_binbiprod_corec_beta_pr2.
 Defined.
 
 Definition cat_binbiprod_codiag_fmap11 {A : Type}
@@ -433,35 +433,35 @@ Definition cat_binbiprod_codiag_fmap11 {A : Type}
   : f $o cat_binbiprod_codiag x
     $== cat_binbiprod_codiag y $o fmap11 (fun x y => cat_binbiprod x y) f f.
 Proof.
-  apply cat_binbiprod_in_eta.
+  nrapply cat_binbiprod_in_eta.
   - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
-    1: apply cat_binbiprod_rec_beta_inl.
+    1: nrapply cat_binbiprod_rec_beta_inl.
     refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
     2: { refine ((_ $@L _) $@ (cat_assoc _ _ _)^$).
       refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      apply cat_binbiprod_rec_beta_inl. }
+      nrapply cat_binbiprod_rec_beta_inl. }
     refine (_ $@ (_ $@L _)).
     2: { refine ((_ $@R _) $@ cat_assoc _ _ _).
       refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      1: apply cat_binbiprod_rec_beta_inl.
-      apply cat_idr. }
+      1: nrapply cat_binbiprod_rec_beta_inl.
+      nrapply cat_idr. }
     refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: apply cat_binbiprod_rec_beta_inl.
-    apply cat_idl.
+    2: nrapply cat_binbiprod_rec_beta_inl.
+    nrapply cat_idl; exact _.
   - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
-    1: apply cat_binbiprod_rec_beta_inr.
+    1: nrapply cat_binbiprod_rec_beta_inr.
     refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
     2: { refine ((_ $@L _) $@ (cat_assoc _ _ _)^$).
       refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      1: apply cat_binbiprod_rec_beta_inr. 
-      apply cat_idr. }
+      1: nrapply cat_binbiprod_rec_beta_inr. 
+      nrapply cat_idr. }
     refine (_ $@ (_ $@L _)).
     2: { refine ((_ $@R _) $@ _)^$.
-      1: apply cat_binbiprod_corec_rec.
-      apply cat_binbiprod_rec_beta_inr. }
+      1: rapply cat_binbiprod_corec_rec.
+      nrapply cat_binbiprod_rec_beta_inr. }
     refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: apply cat_binbiprod_rec_beta_inr.
-    apply cat_idl.
+    2: nrapply cat_binbiprod_rec_beta_inr.
+    nrapply cat_idl; exact _.
 Defined.
 
 (** *** Symmetry *)
@@ -489,68 +489,68 @@ Section Symmetry.
     : cat_binbiprod_swap x y $o cat_binbiprod_inl
       $== cat_binbiprod_inr.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr1.
+      1: nrapply cat_binbiprod_corec_beta_pr1.
       refine (_ $@ _^$).
-      1: apply cat_binbiprod_pr2_inl.
-      apply cat_binbiprod_pr1_inr.
+      1: nrapply cat_binbiprod_pr2_inl.
+      nrapply cat_binbiprod_pr1_inr.
     - refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr2.
+      1: nrapply cat_binbiprod_corec_beta_pr2.
       refine (_ $@ _^$).
-      1: apply cat_binbiprod_pr1_inl.
-      apply cat_binbiprod_pr2_inr.
+      1: nrapply cat_binbiprod_pr1_inl.
+      nrapply cat_binbiprod_pr2_inr.
   Defined.
   
   Lemma cat_binbiprod_swap_inr (x y : A)
     : cat_binbiprod_swap x y $o cat_binbiprod_inr
       $== cat_binbiprod_inl.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr1.
+      1: nrapply cat_binbiprod_corec_beta_pr1.
       refine (_ $@ _^$).
-      1: apply cat_binbiprod_pr2_inr.
-      apply cat_binbiprod_pr1_inl.
+      1: nrapply cat_binbiprod_pr2_inr.
+      nrapply cat_binbiprod_pr1_inl.
     - refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr2.
+      1: nrapply cat_binbiprod_corec_beta_pr2.
       refine (_ $@ _^$).
-      1: apply cat_binbiprod_pr1_inr.
-      apply cat_binbiprod_pr2_inl.
+      1: nrapply cat_binbiprod_pr1_inr.
+      nrapply cat_binbiprod_pr2_inl.
   Defined.
     
   (** The swap map preserves the diagonal. *)
   Lemma cat_binbiprod_swap_diag (x : A)
     : cat_binbiprod_swap x x $o cat_binbiprod_diag x $== cat_binbiprod_diag x.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr1.
+      1: nrapply cat_binbiprod_corec_beta_pr1.
       refine (cat_binbiprod_corec_beta_pr2 _ _ $@ _^$).
-      apply cat_binbiprod_corec_beta_pr1.
+      nrapply cat_binbiprod_corec_beta_pr1.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr2.
+      1: nrapply cat_binbiprod_corec_beta_pr2.
       refine (cat_binbiprod_corec_beta_pr1 _ _ $@ _^$).
-      apply cat_binbiprod_corec_beta_pr2.
+      nrapply cat_binbiprod_corec_beta_pr2.
   Defined.
   
   (** The swap map preserves the codiagonal. *)
   Lemma cat_binbiprod_swap_codiag (x : A)
     : cat_binbiprod_codiag x $o cat_binbiprod_swap x x $== cat_binbiprod_codiag x.
   Proof.
-    apply cat_binbiprod_in_eta.
+    nrapply cat_binbiprod_in_eta.
     - refine (_ $@ (cat_binbiprod_rec_beta_inl _ _)^$).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      1: apply cat_binbiprod_swap_inl.
-      apply cat_binbiprod_rec_beta_inr.
+      1: nrapply cat_binbiprod_swap_inl.
+      nrapply cat_binbiprod_rec_beta_inr.
     - refine (_ $@ (cat_binbiprod_rec_beta_inr _ _)^$).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      1: apply cat_binbiprod_swap_inr.
-      apply cat_binbiprod_rec_beta_inl.
+      1: nrapply cat_binbiprod_swap_inr.
+      nrapply cat_binbiprod_rec_beta_inl.
   Defined.
 
 End Symmetry.
@@ -581,86 +581,86 @@ Section Associativity.
     : cat_binbiprod_twist x y z $o cat_binbiprod_inl
       $== cat_binbiprod_inr $o cat_binbiprod_inl.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr1.
+      1: nrapply cat_binbiprod_corec_beta_pr1.
       refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
       refine ((_ $@L _) $@ _ $@ (_^$ $@R _)).
-      1: apply cat_binbiprod_pr2_inl.
-      2: apply cat_binbiprod_pr1_inr.
+      1: nrapply cat_binbiprod_pr2_inl.
+      2: nrapply cat_binbiprod_pr1_inr.
       refine (_ $@ _^$).
-      1: apply cat_zero_r.
-      apply cat_zero_l.
+      1: nrapply cat_zero_r.
+      nrapply cat_zero_l.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_beta_pr2.
+      1: nrapply cat_binbiprod_corec_beta_pr2.
       refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
       refine (cat_binbiprod_rec_beta_inl _ _ $@ cat_idr _ $@ _).
       refine ((cat_idl _)^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-      apply cat_binbiprod_pr2_inr.
+      nrapply cat_binbiprod_pr2_inr.
   Defined.
 
   Lemma cat_binbiprod_twist_inr_inl (x y z : A)
     : cat_binbiprod_twist x y z $o cat_binbiprod_inr $o cat_binbiprod_inl
       $== cat_binbiprod_inl.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-        1: apply cat_binbiprod_corec_beta_pr1. }
+        1: nrapply cat_binbiprod_corec_beta_pr1. }
       refine (cat_assoc _ _ _ $@ _).
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-        1: apply cat_binbiprod_pr2_inr. 
-        apply cat_idl. }
+        1: nrapply cat_binbiprod_pr2_inr. 
+        nrapply cat_idl. }
       refine (_ $@ _^$).
-      1,2: apply cat_binbiprod_pr1_inl.
+      1,2: nrapply cat_binbiprod_pr1_inl.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-        1: apply cat_binbiprod_corec_beta_pr2. }
+        1: nrapply cat_binbiprod_corec_beta_pr2. }
       refine (cat_assoc _ _ _ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_rec.
+      1: nrapply cat_binbiprod_corec_rec.
       refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_rec_beta_inr.
+      1: nrapply cat_binbiprod_rec_beta_inr.
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      1: apply cat_binbiprod_pr2_inl.
+      1: nrapply cat_binbiprod_pr2_inl.
       refine (_ $@ _^$).
-      1: apply cat_zero_r.
-      apply cat_binbiprod_pr2_inl.
+      1: nrapply cat_zero_r.
+      nrapply cat_binbiprod_pr2_inl.
   Defined.
 
   Lemma cat_binbiprod_twist_inr_inr (x y z : A)
     : cat_binbiprod_twist x y z $o cat_binbiprod_inr $o cat_binbiprod_inr
       $== cat_binbiprod_inr $o cat_binbiprod_inr.
   Proof.
-    apply cat_binbiprod_pr_eta.
+    nrapply cat_binbiprod_pr_eta.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-        1: apply cat_binbiprod_corec_beta_pr1. }
+        1: nrapply cat_binbiprod_corec_beta_pr1. }
       refine (cat_assoc _ _ _ $@ _).
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-        1: apply cat_binbiprod_pr2_inr. 
-        apply cat_idl. }
+        1: nrapply cat_binbiprod_pr2_inr. 
+        nrapply cat_idl. }
       refine (_ $@ _^$).
-      1: apply cat_binbiprod_pr1_inr.
+      1: nrapply cat_binbiprod_pr1_inr.
       refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_pr1_inr.
-      apply cat_zero_l.
+      1: nrapply cat_binbiprod_pr1_inr.
+      nrapply cat_zero_l.
     - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
       { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-        1: apply cat_binbiprod_corec_beta_pr2. }
+        1: nrapply cat_binbiprod_corec_beta_pr2. }
       refine (cat_assoc _ _ _ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_rec.
+      1: nrapply cat_binbiprod_corec_rec.
       refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_rec_beta_inr.
+      1: nrapply cat_binbiprod_rec_beta_inr.
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-      1: apply cat_binbiprod_pr2_inr.
+      1: nrapply cat_binbiprod_pr2_inr.
       refine (cat_idr _ $@ _^$).
       refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-      1: apply cat_binbiprod_pr2_inr.
-      apply cat_idl.
+      1: nrapply cat_binbiprod_pr2_inr.
+      nrapply cat_idl.
   Defined.
 
   Lemma cate_binbiprod_assoc_inl (x y z : A)
@@ -672,14 +672,14 @@ Section Associativity.
     refine (cat_assoc _ _ _ $@ _).
     refine ((_ $@L (cat_assoc _ _ _ $@ (_ $@L _))) $@ _).
     { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ (_ $@ _)).
-      1: apply cat_binbiprod_rec_beta_inl.
-      apply cat_idr. }
+      1: nrapply cat_binbiprod_rec_beta_inl.
+      nrapply cat_idr. }
     simpl.
     refine ((_ $@L _) $@ _).
-    1: apply cat_binbiprod_twist_inl.
+    1: nrapply cat_binbiprod_twist_inl.
     refine ((cat_assoc _ _ _)^$ $@ _).
     refine (_ $@R _).
-    apply cat_binbiprod_swap_inr.
+    nrapply cat_binbiprod_swap_inr.
   Defined.
 
   Lemma cate_binbiprod_assoc_inr_inl (x y z : A)
@@ -693,16 +693,16 @@ Section Associativity.
     refine ((_ $@L (cat_assoc _ _ _ $@ (_ $@L _))) $@ _).
     { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
       refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-      apply cat_binbiprod_rec_beta_inr. }
+      nrapply cat_binbiprod_rec_beta_inr. }
     refine ((_ $@L _) $@ _).
     { refine ((cat_assoc _ _ _)^$ $@ _).
       refine (((cat_assoc _ _ _)^$ $@R _) $@ _).
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
-      1: apply cat_binbiprod_swap_inl.
-      apply cat_binbiprod_twist_inr_inr. }
+      1: nrapply cat_binbiprod_swap_inl.
+      nrapply cat_binbiprod_twist_inr_inr. }
     refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-    apply cat_binbiprod_swap_inr.
+    nrapply cat_binbiprod_swap_inr.
   Defined.
   
   Lemma cate_binbiprod_assoc_inr_inr (x y z : A)
@@ -716,15 +716,15 @@ Section Associativity.
     refine ((_ $@L (cat_assoc _ _ _ $@ (_ $@L _))) $@ _).
     { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
       refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-      apply cat_binbiprod_rec_beta_inr. }
+      nrapply cat_binbiprod_rec_beta_inr. }
     refine ((_ $@L _) $@ _).
     { refine ((cat_assoc _ _ _)^$ $@ _).
       refine (((cat_assoc _ _ _)^$ $@R _) $@ _).
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
-      1: apply cat_binbiprod_swap_inr.
-      apply cat_binbiprod_twist_inr_inl. }
-    apply cat_binbiprod_swap_inl.
+      1: nrapply cat_binbiprod_swap_inr.
+      nrapply cat_binbiprod_twist_inr_inl. }
+    nrapply cat_binbiprod_swap_inl.
   Defined.
 
 End Associativity.
@@ -739,15 +739,15 @@ Proof.
   (** Products in the opposite category are coproducts in the original category. *)
   - exact _.
   (** Coproducts in the opposite category are products in the original category. *)
-  - apply coproduct_op. 
+  - nrapply coproduct_op. 
     exact _.
   - snrapply catie_homotopic.
     + simpl; exact (cat_coprod_prod (A:=A) x).
     + simpl; exact _.
     + (** Showing that these two maps are homotopic is a bit tricky. *)
-      apply cat_coprod_in_eta.
+      nrapply cat_coprod_in_eta.
       intros i.
-      apply cat_prod_pr_eta.
+      nrapply cat_prod_pr_eta.
       intros j.
       simpl.
       refine (cat_assoc _ _ _ $@ _).
