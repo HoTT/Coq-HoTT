@@ -154,10 +154,7 @@ Proof.
   snrapply Build_Biproduct'.
   - exact product.
   - exact coproduct.
-  - snrapply catie_adjointify.
-    + exact (Id _).
-    + exact (cat_idr _ $@ r).
-    + exact (cat_idl _ $@ r).
+  - exact (catie_homotopic _ r^$).
 Defined. 
 
 (** An inclusion followed by a projection of the same index is the identity. *)

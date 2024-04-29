@@ -45,9 +45,8 @@ Section CMonHom.
   Proof.
     intros g.
     apply path_hom.
-    refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc _ _ _) $@ _).
-    refine ((cat_assoc _ _ _)^$ $@ _).
+    unfold sgop_hom, fmap11.
+    nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ _).
     snrefine ((_ $@L _) $@ _).
     1: exact cat_binbiprod_inr.
     { nrapply cat_binbiprod_pr_eta.
