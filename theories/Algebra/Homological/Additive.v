@@ -50,27 +50,27 @@ Section CMonHom.
     refine ((cat_assoc _ _ _)^$ $@ _).
     snrefine ((_ $@L _) $@ _).
     1: exact cat_binbiprod_inr.
-    { apply cat_binbiprod_pr_eta.
+    { nrapply cat_binbiprod_pr_eta.
       - refine (_ $@ cat_binbiprod_pr1_inr^$).
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr1.
+        1: nrapply cat_binbiprod_corec_beta_pr1.
         refine (cat_assoc _ _ _ $@ _).
-        apply cat_zero_l.
+        nrapply cat_zero_l.
       - refine (_ $@ cat_binbiprod_pr2_inr^$).
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr2.
+        1: nrapply cat_binbiprod_corec_beta_pr2.
         refine (cat_assoc _ _ _ $@ _).
         refine (cat_idl _ $@ _).
-        apply cat_binbiprod_corec_beta_pr2. }
+        nrapply cat_binbiprod_corec_beta_pr2. }
     nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
     { refine ((_ $@R _) $@ _).
-      1: apply cat_binbiprod_corec_rec.
-      apply cat_binbiprod_rec_beta_inr. }
+      1: nrapply cat_binbiprod_corec_rec.
+      nrapply cat_binbiprod_rec_beta_inr. }
     refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-    1: apply cat_binbiprod_rec_beta_inr.
-    apply cat_idl.
+    1: nrapply cat_binbiprod_rec_beta_inr.
+    nrapply cat_idl.
   Defined.
 
   Local Existing Instance symmetricbraiding_cat_binbiprod.
@@ -82,10 +82,10 @@ Section CMonHom.
     apply path_hom.
     refine (cat_assoc _ _ _ $@ _).
     refine ((_^$ $@R _) $@ _).
-    1: apply cat_binbiprod_swap_codiag.
+    1: nrapply cat_binbiprod_swap_codiag.
     refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
     refine (_ $@ (_ $@L _)).
-    2: apply cat_binbiprod_swap_diag.
+    2: nrapply cat_binbiprod_swap_diag.
     refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _).
     rapply Monoidal.braid_nat.
   Defined.
@@ -94,7 +94,7 @@ Section CMonHom.
   Proof.
     intros f.
     refine (commutativity _ _ @ _).
-    apply left_identity_hom.
+    nrapply left_identity_hom.
   Defined.
 
   Local Instance associative_ab_hom : Associative sgop_hom.
@@ -111,7 +111,7 @@ Section CMonHom.
     Local Notation "'Δ' x" := (cat_binbiprod_diag x) (at level 10).
     Local Notation "'∇' x" := (cat_binbiprod_codiag x) (at level 10).
     change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-    apply move_right_top.
+    nrapply move_right_top.
     (** The following associativity rewrites are specially chosen so that the diagram can be decomposed easily. *)
     rapply vconcatL.
     1: do 2 refine (cat_assoc _ _ _ $@ _).
@@ -124,20 +124,20 @@ Section CMonHom.
     1: nrapply cate_binbiprod_assoc.
     { nrefine ((_ $@R _) $@ _). 
       1: rapply Monoidal.associator_twist'_unfold.
-      apply cat_binbiprod_pr_eta.
+      nrapply cat_binbiprod_pr_eta.
       - srefine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
         1: exact (fmap01 (fun x y => cat_binbiprod x y) b cat_binbiprod_pr1).
         { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr1.
+          1: nrapply cat_binbiprod_corec_beta_pr1.
           refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-          1: apply cat_binbiprod_corec_beta_pr2.
+          1: nrapply cat_binbiprod_corec_beta_pr2.
           refine (_^$ $@ _). 
           1: rapply fmap01_comp.
           refine (fmap02 _ _ _).
-          apply cat_binbiprod_corec_beta_pr2. }
+          nrapply cat_binbiprod_corec_beta_pr2. }
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((((fmap02 _ _ _ $@ fmap01_id _ _ _)^$ $@ fmap01_comp _ _ _ _)^$ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr1.
+        1: nrapply cat_binbiprod_corec_beta_pr1.
         nrefine (cat_idl _ $@ _).
         refine (_ $@ (_ $@L (cat_assoc _ _ _)^$)).
         nrefine (_ $@ cat_assoc _ _ _).
@@ -151,156 +151,156 @@ Section CMonHom.
         refine (_ $@ (_ $@L _^$)).
         2: rapply cat_binbiprod_corec_beta_pr1.
         symmetry.
-        apply cat_idr.
+        nrapply cat_idr.
       - nrefine ((_ $@L (cat_assoc _ _ _)) $@ _).
         refine ((cat_assoc _ _ _)^$ $@ _).
         nrefine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr2.
+        1: nrapply cat_binbiprod_corec_beta_pr2.
         nrefine ((_ $@L (cat_assoc _ _ _)) $@ _).
         refine ((cat_assoc _ _ _)^$ $@ _).
         nrefine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr1.
+        1: nrapply cat_binbiprod_corec_beta_pr1.
         nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
         { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-          apply cat_binbiprod_corec_beta_pr2. }
+          nrapply cat_binbiprod_corec_beta_pr2. }
         nrefine ((_ $@L (cat_assoc _ _ _)) $@ _).
         refine ((cat_assoc _ _ _)^$ $@ _).
         nrefine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr1.
+        1: nrapply cat_binbiprod_corec_beta_pr1.
         nrefine ((_ $@L _) $@ _).
         { refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-          apply cat_binbiprod_corec_beta_pr2. }
+          nrapply cat_binbiprod_corec_beta_pr2. }
         nrefine ((_ $@L (cat_assoc _ _ _)) $@ _).
         refine ((cat_assoc _ _ _)^$ $@ _).
         nrefine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr2.
+        1: nrapply cat_binbiprod_corec_beta_pr2.
         nrefine (cat_idl _ $@ _).
         refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
-        1: apply cat_binbiprod_corec_beta_pr2.
+        1: nrapply cat_binbiprod_corec_beta_pr2.
         nrefine (cat_assoc _ _ _ $@ _).
         nrefine (cat_idl _ $@ _).
         nrefine (cat_binbiprod_corec_beta_pr2 _ _ $@ _).
         refine (_ $@ (_ $@L (cat_assoc _ _ _)^$)).
         nrefine (_ $@ cat_assoc _ _ _).
         refine (_ $@ (_^$ $@R _)).
-        2: apply cat_binbiprod_corec_beta_pr2.
+        2: nrapply cat_binbiprod_corec_beta_pr2.
         refine (_ $@ (cat_assoc _ _ _)^$).
         refine (_ $@ (cat_idl _)^$).
         refine (_ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-        2: apply cat_binbiprod_corec_beta_pr2.
+        2: nrapply cat_binbiprod_corec_beta_pr2.
         refine (_ $@ (cat_assoc _ _ _)^$).
         refine (_ $@ (cat_idl _)^$).
         symmetry.
-        apply cat_binbiprod_corec_beta_pr2. }
+        nrapply cat_binbiprod_corec_beta_pr2. }
     (** We split the square again, this time by picking yet another associativity map as the common edge. This leaves us with a naturality square for associativity. *)
     srapply hconcat.
     1: nrapply cate_binbiprod_assoc.
     1: nrapply Monoidal.associator_nat_m.
     (** Finally we are left with another polygon which we resolve by brute force. *)
     refine ((cat_assoc _ _ _)^$ $@ _).
-    apply cat_binbiprod_in_eta.
+    nrapply cat_binbiprod_in_eta.
     - nrefine (cat_assoc _ _ _ $@ _). 
       nrefine ((_ $@L _) $@ _).
       { nrefine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-        apply cat_binbiprod_rec_beta_inl. }
+        nrapply cat_binbiprod_rec_beta_inl. }
       refine ((cat_assoc _ _ _)^$ $@ _).
       refine (cat_idr _ $@ _).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
       { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-        apply cat_binbiprod_rec_beta_inl. }
+        nrapply cat_binbiprod_rec_beta_inl. }
       refine ((cat_assoc _ _ _)^$ $@ _).
       refine (cat_idr _ $@ _).
       refine (_ $@ _).
-      1: apply cat_binbiprod_rec_beta_inl.
+      1: nrapply cat_binbiprod_rec_beta_inl.
       symmetry.
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
-      1: apply cate_binbiprod_assoc_inl.
+      1: nrapply cate_binbiprod_assoc_inl.
       refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
       { refine (cat_assoc _ _ _ $@ (_ $@L _)).
         refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-        apply cat_binbiprod_rec_beta_inl. }
+        nrapply cat_binbiprod_rec_beta_inl. }
       simpl.
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L _) $@ _).
       { refine (cat_assoc _ _ _ $@ (_ $@L _)).
-        apply cat_binbiprod_rec_beta_inl. }
+        nrapply cat_binbiprod_rec_beta_inl. }
       refine ((cat_assoc _ _ _)^$ $@ _).
       refine ((_ $@R _) $@ _).
       { refine (cat_assoc _ _ _ $@ (_ $@L _)).
         refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ (_ $@ _)).
-        1: apply cat_binbiprod_rec_beta_inl.
-        apply cat_idr. }
+        1: nrapply cat_binbiprod_rec_beta_inl.
+        nrapply cat_idr. }
       refine (cat_idr _ $@ _).
-      apply cat_binbiprod_rec_beta_inl.
+      nrapply cat_binbiprod_rec_beta_inl.
     - nrefine (cat_assoc _ _ _ $@ _).
       nrefine ((_ $@L _) $@ _).
       { nrefine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-        apply cat_binbiprod_rec_beta_inr. }
+        nrapply cat_binbiprod_rec_beta_inr. }
       refine ((cat_assoc _ _ _)^$ $@ _).
       simpl.
       refine ((_ $@R _) $@ _).
       { refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
         1: refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-        1: apply cat_binbiprod_rec_beta_inr.
+        1: nrapply cat_binbiprod_rec_beta_inr.
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_rec_beta_inr.
-        apply cat_idl. }
+        1: nrapply cat_binbiprod_rec_beta_inr.
+        nrapply cat_idl. }
       simpl.
       refine (_ $@ (cat_assoc _ _ _)^$).
-      apply cat_binbiprod_in_eta.
+      nrapply cat_binbiprod_in_eta.
       + refine (cat_assoc _ _ _ $@ _).
         refine ((_ $@L _) $@ _).
         { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-          apply cat_binbiprod_rec_beta_inl. }
+          nrapply cat_binbiprod_rec_beta_inl. }
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_rec_beta_inl.
+        1: nrapply cat_binbiprod_rec_beta_inl.
         refine (cat_idr _ $@ _).
         refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-        2: apply cate_binbiprod_assoc_inr_inl.
+        2: nrapply cate_binbiprod_assoc_inr_inl.
         refine (_ $@ (cat_assoc _ _ _)^$).
         refine (_ $@ (_ $@L _^$)).
         2: { refine ((cat_assoc _ _ _)^$ $@ _).
           refine ((_ $@R _) $@ _).
           1: refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-          1: apply cat_binbiprod_rec_beta_inl.
+          1: nrapply cat_binbiprod_rec_beta_inl.
           simpl.
           refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
-          1: apply cat_binbiprod_rec_beta_inr. 
-          apply cat_idr. }
+          1: nrapply cat_binbiprod_rec_beta_inr. 
+          nrapply cat_idr. }
         simpl.
         refine (_ $@ (cat_assoc _ _ _)^$).
         refine (_^$ $@ (_ $@L _^$)).
         2: { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ (_ $@ _)).
-          1: apply cat_binbiprod_rec_beta_inl.
-          apply cat_idr. }
-        apply cat_binbiprod_rec_beta_inl.
+          1: nrapply cat_binbiprod_rec_beta_inl.
+          nrapply cat_idr. }
+        nrapply cat_binbiprod_rec_beta_inl.
       + refine (cat_assoc _ _ _ $@ _).
         refine ((_ $@L _) $@ _).
         { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-          apply cat_binbiprod_rec_beta_inr. }
+          nrapply cat_binbiprod_rec_beta_inr. }
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_rec_beta_inr.
+        1: nrapply cat_binbiprod_rec_beta_inr.
         refine (cat_idl _ $@ _).
         refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-        2: apply cate_binbiprod_assoc_inr_inr.
+        2: nrapply cate_binbiprod_assoc_inr_inr.
         simpl.
         refine (_ $@ (cat_assoc _ _ _)^$).
         refine (_^$ $@ (_ $@L _^$)).
         2: { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ (_ $@ _)).
-          1: apply cat_binbiprod_rec_beta_inr.
-          apply cat_idr. }
+          1: nrapply cat_binbiprod_rec_beta_inr.
+          nrapply cat_idr. }
         refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
         { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ _).
-          1: apply cat_binbiprod_rec_beta_inr. }
+          1: nrapply cat_binbiprod_rec_beta_inr. }
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
-        1: apply cat_binbiprod_rec_beta_inr.
-        apply cat_idl.
+        1: nrapply cat_binbiprod_rec_beta_inr.
+        nrapply cat_idl.
   Defined.
 
   Local Instance issemigroup_hom : IsSemiGroup (a $-> b) := {}.
@@ -348,7 +348,7 @@ Definition addcat_dist_l {A : Type} `{IsAdditive A} {a b c : A}
 Proof.
   refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
   refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ cat_assoc _ _ _).
-  1: apply cat_binbiprod_codiag_fmap11.
+  1: nrapply cat_binbiprod_codiag_fmap11.
   refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
   rapply fmap11_comp.
 Defined.
@@ -359,7 +359,7 @@ Global Instance left_heterodistribute_hom {A : Type} `{IsAdditive A} {a b c : A}
 Proof.
   intros f g h.
   apply path_hom.
-  apply addcat_dist_l.
+  nrapply addcat_dist_l.
 Defined.
 
 Definition addcat_dist_r {A : Type} `{IsAdditive A} {a b c : A}
@@ -369,7 +369,7 @@ Proof.
   refine (cat_assoc _ _ _ $@ _).
   refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
   refine ((_ $@L _) $@ _).
-  1: apply cat_binbiprod_diag_fmap11.
+  1: nrapply cat_binbiprod_diag_fmap11.
   refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
   rapply fmap11_comp.
 Defined.
@@ -379,39 +379,39 @@ Global Instance right_heterodistribute_hom {A : Type} `{IsAdditive A} {a b c : A
 Proof.
   intros f g h.
   apply path_hom.
-  apply addcat_dist_r.
+  nrapply addcat_dist_r.
 Defined.
 
 Definition addcat_comp_negate_id_l {A : Type} `{IsAdditive A} {a b : A}
   (f : a $-> b)
   : (- Id _) $o f $== -f.
 Proof.
-  apply GpdHom_path.
+  nrapply GpdHom_path.
   change (@paths (Hom a b) ?x ?y) with (@paths (AbHom a b : Type) x y).
   rapply grp_moveL_1V.
   transitivity ((-Id b $o f) + (Id b $o f)).
   - f_ap; symmetry; apply path_hom, cat_idl.
   - lhs_V rapply right_heterodistribute_hom.
     transitivity (zero_morphism (b := b) $o f).
-    + f_ap; apply (grp_inv_l (Id b : AbHom b b)).
+    + f_ap; nrapply (grp_inv_l (Id b : AbHom b b)).
     + apply path_hom.
-      apply cat_zero_l.
+      nrapply cat_zero_l.
 Defined.
 
 Definition addcat_comp_negate_id_r {A : Type} `{IsAdditive A} {a b : A}
   (f : a $-> b)
   : f $o (- Id _) $== -f.
 Proof.
-  apply GpdHom_path.
+  nrapply GpdHom_path.
   change (@paths (Hom a b) ?x ?y) with (@paths (AbHom a b : Type) x y).
   rapply grp_moveL_1V.
   transitivity ((f $o -Id a) + (f $o Id a)).
   - f_ap; symmetry; apply path_hom, cat_idr.
   - lhs_V rapply left_heterodistribute_hom.
     transitivity (f $o zero_morphism (a := a)).
-    + f_ap; apply (grp_inv_l (Id a : AbHom a a)).
+    + f_ap; nrapply (grp_inv_l (Id a : AbHom a a)).
     + apply path_hom.
-      apply cat_zero_r.
+      nrapply cat_zero_r.
 Defined.
 
 Definition addcat_comp_negate_l {A : Type} `{IsAdditive A} {a b c : A}
@@ -420,7 +420,7 @@ Definition addcat_comp_negate_l {A : Type} `{IsAdditive A} {a b c : A}
 Proof.
   refine ((addcat_comp_negate_id_l _)^$ $@ _).
   refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
-  apply addcat_comp_negate_id_l.
+  nrapply addcat_comp_negate_id_l.
 Defined.
 
 Definition addcat_comp_negate_r {A : Type} `{IsAdditive A} {a b c : A}
@@ -429,7 +429,7 @@ Definition addcat_comp_negate_r {A : Type} `{IsAdditive A} {a b c : A}
 Proof.
   refine ((addcat_comp_negate_id_r _)^$ $@ _).
   refine (cat_assoc _ _ _ $@ (_ $@L _)).
-  apply addcat_comp_negate_id_r.
+  nrapply addcat_comp_negate_id_r.
 Defined.
 
 (** *** Endomorphism ring *)
@@ -446,13 +446,13 @@ Proof.
   - intros f g h.
     apply path_hom.
     symmetry.
-    apply cat_assoc.
+    nrapply cat_assoc.
   - intros f.
     apply path_hom.
-    apply cat_idl.
+    nrapply cat_idl.
   - intros g.
     apply path_hom.
-    apply cat_idr.
+    nrapply cat_idr.
 Defined.
 
 (** ** Properties of additive categories *)
