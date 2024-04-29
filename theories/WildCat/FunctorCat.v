@@ -72,6 +72,8 @@ Proof.
     exact (f a $@R alpha a).
   - intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
     srapply cat_assoc.
+  - intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
+    srapply cat_assoc_opp.
   - intros [F ?] [G ?] [alpha ?] a; cbn.
     srapply cat_idl.
   - intros [F ?] [G ?] [alpha ?] a; cbn.

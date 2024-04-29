@@ -72,6 +72,7 @@ Proof.
     cbn.
     exact (p (f x)).
   - reflexivity. (* Associativity. *)
+  - reflexivity. (* Associativity in opposite direction. *)
   - reflexivity. (* Left identity. *)
   - reflexivity. (* Right identity. *)
 Defined.

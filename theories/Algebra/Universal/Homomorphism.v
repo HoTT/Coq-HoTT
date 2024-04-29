@@ -190,6 +190,7 @@ Global Instance is1cat_strong_algebra `{Funext} (σ : Signature)
 Proof.
   rapply Build_Is1Cat_Strong.
   - intros. apply assoc_homomorphism_compose.
+  - intros. symmetry; apply assoc_homomorphism_compose.
   - intros. apply left_id_homomorphism_compose.
   - intros. apply right_id_homomorphism_compose.
 Defined.

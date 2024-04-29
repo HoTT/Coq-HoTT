@@ -137,7 +137,7 @@ Defined.
 (** The identity morphism is an equivalence *)
 Global Instance catie_id {A} `{HasEquivs A} (a : A)
   : CatIsEquiv (Id a)
-  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idl (Id a)).
+  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idr (Id a)).
 
 Definition id_cate {A} `{HasEquivs A} (a : A)
   : a $<~> a
@@ -177,10 +177,10 @@ Proof.
     refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
     refine ((_ $@L cat_idl _) $@ _).
     apply cate_isretr.
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_issect _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
+  - refine (cat_assoc_opp _ _ _ $@ _).
+    refine ((cat_assoc _ _ _ $@R _) $@ _).
+    refine (((_ $@L cate_issect _) $@R _) $@ _).
+    refine ((cat_idr _ $@R _) $@ _).
     apply cate_issect.
 Defined.
 
@@ -224,6 +224,16 @@ Proof.
                            compose_cate_funinv h _).
   - refine (compose_cate_fun h g $@R _).
   - refine (_ $@L compose_cate_funinv g f).
+Defined.
+
+Definition compose_cate_assoc_opp {A} `{HasEquivs A}
+           {a b c d : A} (f : a $<~> b) (g : b $<~> c) (h : c $<~> d)
+  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
+Proof.
+  refine (compose_cate_fun h _ $@ _ $@ cat_assoc_opp f g h $@ _ $@
+                           compose_cate_funinv _ f).
+  - refine (_ $@L compose_cate_fun g f).
+  - refine (compose_cate_funinv h g $@R _).
 Defined.
 
 Definition compose_cate_idl {A} `{HasEquivs A}
@@ -559,6 +569,7 @@ Global Instance is1cat_core {A : Type} `{HasEquivs A}
 Proof.
   rapply Build_Is1Cat.
   - intros; apply compose_cate_assoc.
+  - intros; apply compose_cate_assoc_opp.
   - intros; apply compose_cate_idl.
   - intros; apply compose_cate_idr.
 Defined.

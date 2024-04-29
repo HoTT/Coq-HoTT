@@ -102,6 +102,8 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $== h $o (g $o f);
+  cat_assoc_opp : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    h $o (g $o f) $== (h $o g) $o f;
   cat_idl : forall (a b : A) (f : a $-> b), Id b $o f $== f;
   cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
@@ -111,13 +113,23 @@ Global Existing Instance is0gpd_hom.
 Global Existing Instance is0functor_postcomp.
 Global Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _ _ _} f.
 
-Definition cat_assoc_opp {A : Type} `{Is1Cat A}
-           {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
-  : h $o (g $o f) $== (h $o g) $o f
-  := (cat_assoc f g h)^$.
+(** An alternate constructor that doesn't require the proof of [cat_assoc_opp].  This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
+Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
+  (is01cat_hom : forall a b : A, Is01Cat (a $-> b))
+  (is0gpd_hom : forall a b : A, Is0Gpd (a $-> b))
+  (is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g))
+  (is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f))
+  (cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
+      h $o g $o f $== h $o (g $o f))
+  (cat_idl : forall (a b : A) (f : a $-> b), Id b $o f $== f)
+  (cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f)
+  : Is1Cat A
+  := Build_Is1Cat A _ _ _ is01cat_hom is0gpd_hom is0functor_postcomp is0functor_precomp
+      cat_assoc (fun a b c d f g h => (cat_assoc a b c d f g h)^$) cat_idl cat_idr.
 
 (** Whiskering and horizontal composition of 2-cells. *)
 
@@ -175,18 +187,17 @@ Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   cat_assoc_strong : forall (a b c d : A)
     (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f = h $o (g $o f) ;
+  cat_assoc_opp_strong : forall (a b c d : A)
+    (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    h $o (g $o f) = (h $o g) $o f ;
   cat_idl_strong : forall (a b : A) (f : a $-> b), Id b $o f = f ;
   cat_idr_strong : forall (a b : A) (f : a $-> b), f $o Id a = f ;
 }.
 
 Arguments cat_assoc_strong {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_assoc_opp_strong {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl_strong {_ _ _ _ _ _ _} f.
 Arguments cat_idr_strong {_ _ _ _ _ _ _} f.
-
-Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
-           {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
-  : h $o (g $o f) = (h $o g) $o f
-  := (cat_assoc_strong f g h)^.
 
 Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
   : Is1Cat A | 1000.
@@ -198,6 +209,7 @@ Proof.
   - apply is0functor_postcomp_strong.
   - apply is0functor_precomp_strong.
   - intros; apply GpdHom_path, cat_assoc_strong.
+  - intros; apply GpdHom_path, cat_assoc_opp_strong.
   - intros; apply GpdHom_path, cat_idl_strong.
   - intros; apply GpdHom_path, cat_idr_strong.
 Defined.
@@ -247,6 +259,7 @@ Global Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
 Proof.
   rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
   + apply cat_assoc.
+  + apply cat_assoc_opp.
   + apply cat_idl.
   + apply cat_idr.
 Defined.
