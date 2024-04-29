@@ -123,13 +123,10 @@ Defined.
 (** ** Additivity of AbGroup *)
 
 (** Here is a sanity check that the abelian group structure that is induced from the semiadditive structure is homotopic to the handcrafted operation on hom. *)
-Definition ab_homo_add_is_semiadditive_add `{Funext}
-  {A B : AbGroup} (f g : A $-> B)
-  : ab_homo_add f g = sgop_hom A B f g.
-Proof.
-  apply equiv_path_grouphomomorphism.
-  reflexivity.
-Defined.
+Definition ab_homo_add_is_semiadditive_add
+  {A B : AbGroup} (f g : A $-> B) `{Funext}
+  : ab_homo_add f g = sgop_hom A B f g :> (A -> B)
+  := 1.
 
 (** AbGroup is an additive category. *)
 Global Instance additive_ab `{Funext} : IsAdditive AbGroup.
