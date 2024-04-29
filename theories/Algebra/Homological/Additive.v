@@ -11,7 +11,7 @@ Require Import canonical_names.
 
 (** ** Semiadditive Categories *)
 
-(** As semiadditive category is a a wild category with equivalences and the following data: *)
+(** As semiadditive category is a wild category with equivalences and the following data: *)
 Class IsSemiAdditive (A : Type) `{HasEquivs A} := {
   (** It is a pointed category. *)
   semiadditive_pointed :: IsPointedCat A;
@@ -19,11 +19,11 @@ Class IsSemiAdditive (A : Type) `{HasEquivs A} := {
   semiadditive_hasbiproducts :: HasBinaryBiproducts A;
   (** We have morphism extensionality. *)
   semiadditive_hasmorext :: HasMorExt A;
-  (** The homs are set. *)
+  (** The homs are sets. *)
   semiadditive_ishset_hom :: forall (a b : A), IsHSet (a $-> b);
 }.
   
-(** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential chracteristic of semiadditive categories making it equivalent to alternate defintiions where the category is semiadditive if it is enriched in commutative monoids. The machinary of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
+(** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential chracteristic of semiadditive categories making it equivalent to alternate definitions where the category is semiadditive if it is enriched in commutative monoids. The machinary of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
 
 Section CMonHom.
 
@@ -323,7 +323,7 @@ Class IsAdditive (A : Type) `{HasEquivs A} := {
 
 (** *** Abelian Group structure on Hom *)
 
-(** Homs in an aditive category form an abelian group. *)
+(** Homs in an additive category form abelian groups. *)
 Definition AbHom {A : Type} `{IsAdditive A} : A -> A -> AbGroup.
 Proof.
   intros a b.
