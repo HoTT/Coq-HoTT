@@ -1,6 +1,8 @@
 Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup Biproduct.
+Require Import Algebra.Groups.Group.
+Require Import Algebra.Homological.Additive.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
@@ -116,4 +118,31 @@ Proof.
   apply equiv_path_grouphomomorphism.
   rapply (conn_map_elim (Tr (-1)) f).
   exact (equiv_path_grouphomomorphism^-1 p).
+Defined.
+
+(** ** Additivity of AbGroup *)
+
+(** Here is a sanity check that the abelian group structure that is induced from the semiadditive structure is homotopic to the handcrafted operation on hom. *)
+Definition ab_homo_add_is_semiadditive_add `{Funext}
+  {A B : AbGroup} (f g : A $-> B)
+  : ab_homo_add f g = sgop_hom A B f g.
+Proof.
+  apply equiv_path_grouphomomorphism.
+  reflexivity.
+Defined.
+
+(** AbGroup is an additive category. *)
+Global Instance additive_ab `{Funext} : IsAdditive AbGroup.
+Proof.
+  snrapply Build_IsAdditive.
+  - exact _.
+  - exact _.
+  - intros A B f.
+    snrapply equiv_path_grouphomomorphism.
+    intros x.
+    exact (left_inverse (f x)).
+  - intros A B f.
+    snrapply equiv_path_grouphomomorphism.
+    intros x.
+    exact (right_inverse (f x)).
 Defined.

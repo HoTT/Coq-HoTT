@@ -3,7 +3,7 @@ Require Import WildCat.Core WildCat.Equiv WildCat.PointedCat WildCat.Bifunctor.
 Require Import WildCat.Square WildCat.Opposite.
 Require Import Algebra.Homological.Biproducts.
 Require Import Algebra.Groups.Group.
-Require Import Algebra.AbGroups.AbelianGroup Algebra.Rings.Ring.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import canonical_names.
 
 (** * Semiadditive and Additive Categories *)
@@ -430,29 +430,6 @@ Proof.
   refine ((addcat_comp_negate_id_r _)^$ $@ _).
   refine (cat_assoc _ _ _ $@ (_ $@L _)).
   nrapply addcat_comp_negate_id_r.
-Defined.
-
-(** *** Endomorphism ring *)
-
-Definition End {A : Type} `{IsAdditive A} (X : A) : Ring.
-Proof.
-  snrapply Build_Ring'; repeat split.
-  - exact (AbHom X X).
-  - exact (fun f g => f $o g).
-  - exact (Id _).
-  - exact left_heterodistribute_hom.
-  - exact right_heterodistribute_hom.
-  - exact _.
-  - intros f g h.
-    apply path_hom.
-    symmetry.
-    nrapply cat_assoc.
-  - intros f.
-    apply path_hom.
-    nrapply cat_idl.
-  - intros g.
-    apply path_hom.
-    nrapply cat_idr.
 Defined.
 
 (** ** Properties of additive categories *)

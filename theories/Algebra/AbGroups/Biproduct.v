@@ -4,6 +4,7 @@ Require Import HSet.
 Require Import AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import Algebra.Homological.Biproducts.
+Require Import Algebra.Homological.Additive.
 
 Local Open Scope mc_add_scope.
 
@@ -339,3 +340,5 @@ Proof.
   - cbn; reflexivity.
   - cbn; reflexivity.
 Defined.
+
+Global Instance issemiadditive_ab `{Funext} : IsSemiAdditive AbGroup := {}.
