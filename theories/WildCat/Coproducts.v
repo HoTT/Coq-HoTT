@@ -51,7 +51,7 @@ Section Lemmata.
     : yon_0gpd z (cat_coprod I x) $<~> prod_0gpd I (fun i => yon_0gpd z (x i))
     := cate_cat_prod_corec_inv I (A:=A^op) (x:=x).
 
-  Definition cate_cate_coprod_rec {z : A}
+  Definition cate_cat_coprod_rec {z : A}
     : prod_0gpd I (fun i => yon_0gpd z (x i)) $<~> yon_0gpd z (cat_coprod I x)
     := cate_cat_prod_corec I (A:=A^op) (x:=x).
 
@@ -302,6 +302,13 @@ Proof.
   - destruct p.
     exact (Id _).
   - apply zero_morphism. 
+Defined.
+
+Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
+  (x y : A) `{!BinaryCoproduct x y, !BinaryProduct x y}
+  : cat_bincoprod x y $-> cat_binprod x y.
+Proof.
+  nrapply cat_coprod_prod; exact _.
 Defined.
 
 (** *** Coproducts in the opposite category *)

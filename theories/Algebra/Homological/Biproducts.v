@@ -17,6 +17,7 @@ Class Biproduct (I : Type) `{DecidablePaths I} {A : Type}
 }.
 
 Arguments Biproduct I {_ A _ _ _ _ _ _} x.
+Arguments Build_Biproduct' I {_ A _ _ _ _ _ _} x _ _ _.
 
 Section Biproducts.
   Context {I : Type} {A : Type} (x : I -> A) `{Biproduct I A x}.
@@ -103,6 +104,62 @@ Arguments cat_biprod_pr {I A x _ _ _ _ _ _ _ _} i.
 Arguments cat_biprod_in {I A x _ _ _ _ _ _ _ _} i.
 Arguments cate_coprod_prod {I A} x {_ _ _ _ _ _ _ _}.
 
+(** A smart constructor for biproducts. Note that compared to a typical definition of a biproduct, we have not asked for the sum of inclusions composed with projections to be the identity. There are a few reasons for this: In our general setting [I] may be infinite, so it doesn't make sense to ask for an infinite sum; Even if we somehow axiomtised something about the sum, we later show in [Additive.v] that the sum is infact an emergent property; Finally, it doesn't seem necessary to produce an isomorphism since we take that to be the identity in this lemma. We should also note that we require [A] to be a pointed category. In theory this requirement could be dropped. To do this we would weaken the equation showing [cat_pr j $o cat_in i] for different [i] and [j], to postulate that [cat_pr j $o cat_in i] is a split idempotent. This doesn't seem particularly useful however as the finite biproduct case implies the existance of zero objects.  *)
+Definition Build_Biproduct (I : Type) `{DecidablePaths I}
+  {A : Type} `{HasEquivs A, !IsPointedCat A} (x : I -> A)
+  (cat_biprod : A)
+  (** A biproduct is a product. *)
+  (cat_pr : forall i, cat_biprod $-> x i)
+  (corec : forall z, (forall i, z $-> x i) -> z $-> cat_biprod)
+  (corec_beta : forall z f i, cat_pr i $o corec z f $== f i)
+  (corec_eta : forall z (f g : z $-> cat_biprod),
+    (forall i, cat_pr i $o f $== cat_pr i $o g) -> f $== g)
+  (** A biproduct is a coproduct. *)
+  (cat_in : forall i, x i $-> cat_biprod)
+  (rec : forall z, (forall i, x i $-> z) -> cat_biprod $-> z)
+  (rec_beta : forall z f i, rec z f $o cat_in i $== f i)
+  (rec_eta : forall z (f g : cat_biprod $-> z),
+    (forall i, f $o cat_in i $== g $o cat_in i) -> f $== g)
+  (** The projections and inclusion maps satisfy some further properties. *)
+  (cat_pr_in : forall i, cat_pr i $o cat_in i $== Id _)
+  (cat_pr_in_ne : forall i j, i <> j -> cat_pr j $o cat_in i $== zero_morphism)
+  : Biproduct I x.
+Proof.
+  (** We can show these directly when building the biproduct, however we would like to refer to them between goals so we prove them here first. *)
+  transparent assert (product : (Product I x)).
+  { snrapply Build_Product.
+    - exact cat_biprod.
+    - exact cat_pr.
+    - exact corec.
+    - exact corec_beta.
+    - exact corec_eta. }
+  transparent assert (coproduct : (Coproduct I x)).
+  { snrapply Build_Coproduct.
+    - exact cat_biprod.
+    - exact cat_in.
+    - exact rec.
+    - exact rec_beta.
+    - exact rec_eta. }
+  assert (r : (cat_coprod_prod x $== Id cat_biprod)).
+  { nrapply rec_eta.
+    intros i.
+    refine (rec_beta _ _ _ $@ _ $@ (cat_idl _)^$).
+    nrapply corec_eta.
+    intros j.
+    refine (corec_beta _ _ _ $@ _^$).
+    destruct (dec_paths i j) as [p|np].
+    * destruct p.
+      exact (cat_pr_in i).
+    * exact (cat_pr_in_ne i j np). }
+  snrapply Build_Biproduct'.
+  - exact product.
+  - exact coproduct.
+  - snrapply catie_adjointify.
+    + exact (Id _).
+    + exact (cat_idr _ $@ r).
+    + exact (cat_idl _ $@ r).
+Defined. 
+
 (** An inclusion followed by a projection of the same index is the identity. *)
 Definition cat_biprod_pr_in (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} (i : I)
@@ -174,7 +231,68 @@ Class HasBiproducts (I A : Type)
 
 Class BinaryBiproduct {A : Type} `{HasEquivs A, !IsPointedCat A} (x y : A)
   := binary_biproduct :: Biproduct Bool (fun b => if b then x else y).
-  
+
+Definition Build_BinaryBiproduct' {A : Type} `{HasEquivs A, !IsPointedCat A}
+  {x y : A} {p : BinaryProduct x y} {c : BinaryCoproduct x y}
+  {ie : CatIsEquiv (cat_bincoprod_binprod x y)}
+  : BinaryBiproduct x y
+  := Build_Biproduct' _ _ p c ie.
+
+(** Smart constructor for binary biproducts. *)
+Definition Build_BinaryBiproduct {A : Type} `{HasEquivs A, !IsPointedCat A}
+  {x y : A} (cat_biprod : A)
+  (** A binary biproduct is a product. *)
+  (cat_pr1 : cat_biprod $-> x) (cat_pr2 : cat_biprod $-> y)
+  (corec : forall z, (z $-> x) -> (z $-> y) -> z $-> cat_biprod)
+  (corec_beta_pr1 : forall z f g, cat_pr1 $o corec z f g $== f)
+  (corec_beta_pr2 : forall z f g, cat_pr2 $o corec z f g $== g)
+  (corec_eta : forall z (f g : z $-> cat_biprod),
+    cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g)
+  (** A biproduct is a coproduct. *)
+  (cat_inl : x $-> cat_biprod) (cat_inr : y $-> cat_biprod)
+  (rec : forall z, (x $-> z) -> (y $-> z) -> cat_biprod $-> z)
+  (rec_beta_inl : forall z f g, rec z f g $o cat_inl $== f)
+  (rec_beta_inr : forall z f g, rec z f g $o cat_inr $== g)
+  (rec_eta : forall z (f g : cat_biprod $-> z),
+    f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g)
+  (** The projections and inclusion maps satisfy some further properties. *)
+  (cat_pr1_inl : cat_pr1 $o cat_inl $== Id _)
+  (cat_pr2_inr : cat_pr2 $o cat_inr $== Id _)
+  (cat_pr1_inr : cat_pr1 $o cat_inr $== zero_morphism)
+  (cat_pr2_inl : cat_pr2 $o cat_inl $== zero_morphism)
+  : BinaryBiproduct x y.
+Proof.
+  snrapply Build_Biproduct.
+  - exact cat_biprod.
+  - intros [ | ].
+    + exact cat_pr1.
+    + exact cat_pr2.
+  - intros z f.
+    exact (corec z (f true) (f false)).
+  - intros z f [ | ].
+    + exact (corec_beta_pr1 z (f true) (f false)).
+    + exact (corec_beta_pr2 z (f true) (f false)).
+  - intros z f g p.
+    exact (corec_eta z _ _ (p true) (p false)).
+  - intros [ | ].
+    + exact cat_inl.
+    + exact cat_inr.
+  - intros z f.
+    exact (rec z (f true) (f false)).
+  - intros z f [ | ].
+    + exact (rec_beta_inl z (f true) (f false)).
+    + exact (rec_beta_inr z (f true) (f false)).
+  - intros z f g p.
+    exact (rec_eta z _ _ (p true) (p false)).
+  - intros [ | ].
+    + exact cat_pr1_inl.
+    + exact cat_pr2_inr.
+  - intros i j ne.
+    destruct (negb_ne' ne), i as [ | ].
+    + exact cat_pr2_inl.
+    + exact cat_pr1_inr.
+Defined.
+
 Class HasBinaryBiproducts (A : Type) `{HasEquivs A, !IsPointedCat A}
   := has_binary_biproducts :: forall (x y : A), BinaryBiproduct x y.
 

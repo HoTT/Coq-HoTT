@@ -92,6 +92,16 @@ Proof.
   - intros oops; case (oops idpath).
 Defined.
 
+(** This version of [negb_ne] is more convenient to [destruct] against. *)
+Definition negb_ne' {b1 b2 : Bool}
+  : (b1 <> b2) -> (negb b1 = b2).
+Proof.
+  intros oops.
+  symmetry.
+  apply negb_ne.
+  intros p; symmetry in p; contradiction.
+Defined.
+
 (** ** Products as [forall] over [Bool] *)
 
 Section BoolForall.

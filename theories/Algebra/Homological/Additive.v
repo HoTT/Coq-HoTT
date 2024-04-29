@@ -461,14 +461,11 @@ Defined.
 Global Instance issemiadditive_op {A : Type} `{IsSemiAdditive A}
   : IsSemiAdditive A^op.
 Proof.
-  snrapply Build_IsSemiAdditive.
-  - exact _.
-  - exact _.
-  - exact _.
-  - intros a b.
-    change A in a, b.
-    change (IsHSet (b $-> a)).
-    exact _.
+  snrapply Build_IsSemiAdditive; try exact _.
+  intros a b.
+  change A in a, b.
+  change (IsHSet (b $-> a)).
+  exact _.
 Defined.
 
 Axiom sorry : Empty.
