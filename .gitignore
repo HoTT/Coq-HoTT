@@ -110,3 +110,6 @@ _CoqProject
 
 # ignore nix profiles
 nix/profiles/
+
+# Ignore the file to bench
+file_to_bench
