@@ -105,11 +105,8 @@ Defined.
 
 Global Instance isequiv_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
-  : @CatIsEquiv A^op _ _ _ _ _ b a f.
-Proof.
-  assumption.
-Defined.
-
+  : @CatIsEquiv A^op _ _ _ _ _ b a f
+  := ief.
 Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
 Proof.
