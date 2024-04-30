@@ -11,35 +11,30 @@ Local Open Scope wc_iso_scope.
 
 (** A commutative ring consists of the following data: *)
 Record CRing := {
-  (** An underlying abelian group. *)
-  cring_abgroup :> AbGroup;
-  (** A multiplication operation. *)
-  cring_mult :: Mult cring_abgroup;
-  (** A multiplicative identity. *)
-  cring_one :: One cring_abgroup;
-  (** Such that they satisfy the axioms of a ring. *)
-  cring_iscring :: IsCRing cring_abgroup;
+  (** An underlying ring. *)
+  cring_ring :> Ring;
+  (** Such that they satisfy the axioms of a commutative ring. *)
+  cring_commutative :: Commutative (A:=cring_ring) (.*.);
 }.
-
-Arguments cring_mult {_}.
-Arguments cring_one {_}.
-Arguments cring_iscring {_}.
 
 Definition issig_CRing : _ <~> CRing := ltac:(issig).
 
-Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup (cring_abgroup R).
-Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup (cring_abgroup R).
-Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup (cring_abgroup R).
+Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
+Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
+Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
 
-Definition ring_cring : CRing -> Ring
-  := fun R => Build_Ring (cring_abgroup R) (cring_mult) (cring_one) _.
-Coercion ring_cring : CRing >-> Ring.
-
-Definition Build_CRing' (R : Ring) (H : Commutative (@ring_mult R)) : CRing.
+Definition Build_CRing' (R : AbGroup)
+  `(!One R, !Mult R, !Commutative (.*.), !LeftDistribute (.*.) (+), @IsMonoid R (.*.) 1)
+  : CRing.
 Proof.
-  rapply (Build_CRing R).
-  split; try exact _.
-  split; exact _.
+  snrapply Build_CRing.
+  - snrapply (Build_Ring R).
+    1-3,5: exact _.
+    intros x y z.
+    lhs rapply commutativity.
+    lhs rapply simple_distribute_l.
+    f_ap.
+  - exact _.
 Defined.
 
 (** ** Properties of commutative rings *)
@@ -200,7 +195,7 @@ End IdealCRing.
 
 (** ** Category of commutative rings. *)
 
-Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced ring_cring.
-Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced ring_cring.
-Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced ring_cring.
-Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced ring_cring.
+Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
+Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
+Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
+Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.

@@ -101,7 +101,7 @@ Section QuotientRing.
   Defined.
 
   Definition QuotientRing : Ring 
-    := Build_Ring (QuotientAbGroup R I) _ _ _.
+    := Build_Ring (QuotientAbGroup R I) _ _ _ _ _.
 
 End QuotientRing.
 
