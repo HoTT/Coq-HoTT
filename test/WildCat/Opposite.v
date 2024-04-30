@@ -15,8 +15,6 @@ Definition core3 A `{HasEquivs A} : is01cat_op (A:=core A) = is01cat_core (A:=A^
 Definition core4 A `{HasEquivs A} : is2graph_op (A:=core A) = is2graph_core (A:=A^op) := 1.
 
 (** This also passes, but we comment it out as it is slow.  When uncommented, to save time, we end with [Admitted.] instead of [Defined.] *)
-(*
-Definition core5 A `{HasEquivs A} : is1cat_op (A:=core A) = is1cat_core (A:=A^op).
-  Time reflexivity. (* ~6s *)
-Admitted.
-*)
+
+Time Definition core5 A `{HasEquivs A} : is1cat_op (A:=core A) = is1cat_core (A:=A^op) := 1.
+(* Was 12s, now 0.25s. *)

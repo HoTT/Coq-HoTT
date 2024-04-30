@@ -119,12 +119,8 @@ Proof.
 Defined.
 
 Definition cate_isretr {A} `{HasEquivs A} {a b} (f : a $<~> b)
-  : f $o f^-1$ $== Id b.
-Proof.
-  refine (_ $@ cate_isretr' a b f).
-  refine (f $@L _).
-  apply cate_buildequiv_fun'.
-Defined.
+  : f $o f^-1$ $== Id b
+  := cate_issect (A:=A^op) (b:=a) (a:=b) f.
 
 (** If [g] is a section of an equivalence, then it is the inverse. *)
 Definition cate_inverse_sect {A} `{HasEquivs A} {a b} (f : a $<~> b)
@@ -141,14 +137,8 @@ Defined.
 (** If [g] is a retraction of an equivalence, then it is the inverse. *)
 Definition cate_inverse_retr {A} `{HasEquivs A} {a b} (f : a $<~> b)
   (g : b $-> a) (p : g $o f $== Id a)
-  : cate_fun f^-1$ $== g.
-Proof.
-  refine ((cat_idl _)^$ $@ _).
-  refine ((p^$ $@R _) $@ _).
-  refine (cat_assoc _ _ _ $@ _).
-  refine (_ $@L cate_isretr f $@ _).
-  apply cat_idr.
-Defined.
+  : cate_fun f^-1$ $== g
+  := cate_inverse_sect (A:=A^op) (a:=b) (b:=a) f g p.
 
 (** It follows that the inverse of the equivalence you get by adjointification is homotopic to the inverse [g] provided. *)
 Definition cate_inv_adjointify {A} `{HasEquivs A} {a b : A}
@@ -251,15 +241,29 @@ Proof.
   - refine (_ $@L compose_cate_funinv g f).
 Defined.
 
-Definition compose_cate_assoc_opp {A} `{HasEquivs A}
+Time Definition compose_cate_assoc_opp {A} `{HasEquivs A}
            {a b c d : A} (f : a $<~> b) (g : b $<~> c) (h : c $<~> d)
-  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
+  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f)
+:= @compose_cate_assoc (op A) (@isgraph_op A IsGraph0)
+  (@is2graph_op A IsGraph0 Is2Graph0)
+  (@is01cat_op A IsGraph0 Is01Cat0)
+  (@is1cat_op A IsGraph0 Is2Graph0 Is01Cat0 H)
+  (@hasequivs_op A IsGraph0 Is2Graph0 Is01Cat0 H H0) d c b a h g f.
+(* Why so slow?  ~3s *)
+(* But it fixes the slow test, which goes from 12s (including the Defined) to 0.2s. *)
+
+(* This also works and takes the same amount of time, ~3s:
+  := compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f.
+*)
+
+(* This is the old proof, which is fast:
 Proof.
   refine (compose_cate_fun h _ $@ _ $@ cat_assoc_opp f g h $@ _ $@
                            compose_cate_funinv _ f).
   - refine (_ $@L compose_cate_fun g f).
   - refine (compose_cate_funinv h g $@R _).
 Defined.
+*)
 
 Definition compose_cate_idl {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
@@ -271,11 +275,8 @@ Defined.
 
 Definition compose_cate_idr {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
-  : cate_fun (f $oE id_cate a) $== cate_fun f.
-Proof.
-  refine (compose_cate_fun f _ $@ _ $@ cat_idr f).
-  refine (_ $@L cate_buildequiv_fun _).
-Defined.
+  : cate_fun (f $oE id_cate a) $== cate_fun f
+  := compose_cate_idl (A:=A^op) (a:=b) (b:=a) f.
 
 Global Instance transitive_cate {A} `{HasEquivs A}
   : Transitive (@CatEquiv A _ _ _ _ _)
@@ -285,11 +286,11 @@ Global Instance transitive_cate {A} `{HasEquivs A}
 
 Definition compose_V_hh {A} `{HasEquivs A} {a b c : A} (f : b $<~> c) (g : a $-> b) :
   f^-1$ $o (f $o g) $== g :=
-  (cat_assoc _ _ _)^$ $@ (cate_issect f $@R g) $@ cat_idl g.
+  (cat_assoc_opp _ _ _) $@ (cate_issect f $@R g) $@ cat_idl g.
 
 Definition compose_h_Vh {A} `{HasEquivs A} {a b c : A} (f : c $<~> b) (g : a $-> b) :
   f $o (f^-1$ $o g) $== g :=
-  (cat_assoc _ _ _)^$ $@ (cate_isretr f $@R g) $@ cat_idl g.
+  (cat_assoc_opp _ _ _) $@ (cate_isretr f $@R g) $@ cat_idl g.
 
 Definition compose_hh_V {A} `{HasEquivs A} {a b c : A} (f : b $-> c) (g : a $<~> b) :
   (f $o g) $o g^-1$ $== f :=
@@ -310,12 +311,8 @@ Proof.
 Defined.
 
 Definition cate_epic_equiv {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
-  : Epic e.
-Proof.
-  intros c f g p.
-  refine ((compose_hh_V _ e)^$ $@ _ $@ compose_hh_V _ e).
-  exact (p $@R _).
-Defined.
+  : Epic e
+  := cate_monic_equiv (A:=A^op) (a:=b) (b:=a) e.
 
 (** ** Movement Lemmas *)
 
@@ -342,20 +339,16 @@ Defined.
 Definition cate_moveL_Me {A} `{HasEquivs A} {a b c : A}
   (e : b $<~> c) (f : a $-> c) (g : a $-> b)
   (p : e^-1$ $o f $== g)
-  : f $== e $o g.
-Proof.
-  apply (cate_monic_equiv e^-1$).
-  exact (p $@ (compose_V_hh _ _)^$).
-Defined.
+  : f $== e $o g
+  := cate_moveL_eM (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
 
 Definition cate_moveR_Me {A} `{HasEquivs A} {a b c : A}
   (e : c $<~> b) (f : a $-> c) (g : a $-> b)
   (p : f $== e^-1$ $o g)
-  : e $o f $== g.
-Proof.
-  apply (cate_monic_equiv e^-1$).
-  exact (compose_V_hh _ _ $@ p).
-Defined.
+  : e $o f $== g
+  := cate_moveR_eM (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
+
+(* TODO: lots more results are duals. *)
 
 Definition cate_moveL_eV {A} `{HasEquivs A} {a b c : A}
   (e : a $<~> b) (f : b $-> c) (g : a $-> c)
