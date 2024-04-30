@@ -2,6 +2,7 @@
 
 Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import WildCat.Core.
+Require Import WildCat.Opposite.
 
 (** We declare a scope for printing [CatEquiv] as [≅] *)
 Declare Scope wc_iso_scope.
@@ -84,6 +85,30 @@ Proof.
 Defined.
 
 Notation "f ^-1$" := (cate_inv f).
+
+(** * Opposite categories preserve having equivalences. *)
+Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+Proof.
+  snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
+  - exact (b $<~> a).
+  - apply CatIsEquiv.
+  - apply cate_fun'.
+  - apply cate_isequiv'.
+  - apply cate_buildequiv'.
+  - rapply cate_buildequiv_fun'.
+  - apply cate_inv'.
+  - rapply cate_isretr'.
+  - rapply cate_issect'.
+  - intros f g s t.
+    exact (catie_adjointify f g t s).
+Defined.
+
+Global Instance isequiv_op {A : Type} `{HasEquivs A}
+       {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
+  : @CatIsEquiv A^op _ _ _ _ _ b a f.
+Proof.
+  assumption.
+Defined.
 
 Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
