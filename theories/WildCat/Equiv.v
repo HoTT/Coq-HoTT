@@ -363,20 +363,14 @@ Defined.
 Definition cate_moveL_Ve {A} `{HasEquivs A} {a b c : A}
   (e : b $<~> c) (f : a $-> b) (g : a $-> c)
   (p : e $o f $== g)
-  : f $== e^-1$ $o g.
-Proof.
-  apply (cate_monic_equiv e).
-  exact (p $@ (compose_h_Vh _ _)^$).
-Defined.
+  : f $== e^-1$ $o g
+  := cate_moveL_eV (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
 
 Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A}
   (e : b $<~> c) (f : a $-> c) (g : a $-> b)
   (p : f $== e $o g)
-  : e^-1$ $o f $== g.
-Proof.
-  apply (cate_monic_equiv e).
-  exact (compose_h_Vh _ _ $@ p).
-Defined.
+  : e^-1$ $o f $== g
+  := cate_moveR_eV (A:=A^op) (a:=b) (b:=c) (c:=a) e f g p.
 
 Definition cate_moveL_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : e $o f $== Id _)
@@ -388,11 +382,8 @@ Defined.
 
 Definition cate_moveL_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : f $o e $== Id _)
-  : f $== cate_fun e^-1$.
-Proof.
-  apply (cate_epic_equiv e).
-  exact (p $@ (cate_issect e)^$).
-Defined.
+  : f $== cate_fun e^-1$
+  := cate_moveL_V1 (A:=A^op) (a:=b) (b:=a) f p.
 
 Definition cate_moveR_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : Id _ $== e $o f)
@@ -404,11 +395,8 @@ Defined.
 
 Definition cate_moveR_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : Id _ $== f $o e)
-  : cate_fun e^-1$ $== f.
-Proof.
-  apply (cate_epic_equiv e).
-  exact (cate_issect e $@ p).
-Defined.
+  : cate_fun e^-1$ $== f
+  := cate_moveR_V1 (A:=A^op) (a:=b) (b:=a) f p.
 
 (** Lemmas about the underlying map of an equivalence. *)
 
@@ -644,14 +632,9 @@ Proof.
   1: exact (((inx _).2 _)^$ $@ (inx _).2 _).
 Defined.
 
-Lemma cate_isterminal A `{HasEquivs A} (x y : A)
-  : IsTerminal x -> IsTerminal y -> x $<~> y.
-Proof.
-  intros tex tey.
-  srapply (cate_adjointify (tey x).1 (tex y).1).
-  1: exact (((tey _).2 _)^$ $@ (tey _).2 _).
-  1: exact (((tex _).2 _)^$ $@ (tex _).2 _).
-Defined.
+Definition cate_isterminal A `{HasEquivs A} (x y : A)
+  : IsTerminal x -> IsTerminal y -> y $<~> x
+  := cate_isinitial A^op x y.
 
 Lemma isinitial_cate A `{HasEquivs A} (x y : A)
   : x $<~> y -> IsInitial x -> IsInitial y.
@@ -664,16 +647,9 @@ Proof.
   exact ((inx z).2 _).
 Defined.
 
-Lemma isterminal_cate A `{HasEquivs A} (x y : A)
-  : x $<~> y -> IsTerminal x -> IsTerminal y.
-Proof.
-  intros f tex z.
-  exists (f $o (tex z).1).
-  intros g.
-  refine (_ $@ compose_h_Vh f _).
-  refine (_ $@L _).
-  exact ((tex z).2 _).
-Defined.
+Definition isterminal_cate A `{HasEquivs A} (x y : A)
+  : y $<~> x -> IsTerminal x -> IsTerminal y
+  := isinitial_cate A^op x y.
 
 (** * There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
 
