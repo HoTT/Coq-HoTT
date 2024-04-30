@@ -487,7 +487,7 @@ Definition demap_compose {A B : Type}
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
   refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
-  rapply dfmap_comp.
+  nrapply dfmap_comp; exact IsD1Functor0.
 Defined.
 
 (** A variant. *)
