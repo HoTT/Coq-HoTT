@@ -16,5 +16,6 @@ Definition core4 A `{HasEquivs A} : is2graph_op (A:=core A) = is2graph_core (A:=
 
 (** This also passes, but we comment it out as it is slow.  When uncommented, to save time, we end with [Admitted.] instead of [Defined.] *)
 
+Opaque compose_catie_isretr.
 Time Definition core5 A `{HasEquivs A} : is1cat_op (A:=core A) = is1cat_core (A:=A^op) := 1.
-(* Was 12s, now 0.25s. *)
+(* 0.07s (or 0.3s without the Opaque line). *)

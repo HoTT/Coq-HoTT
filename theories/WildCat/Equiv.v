@@ -178,22 +178,31 @@ Proof.
     apply cate_issect.
 Defined.
 
-(** Equivalences can be composed. *)
+(** Equivalences can be composed.  In order to make use of duality, we factor out parts of the proof as two lemmas. *)
+
+Definition compose_catie_isretr {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : g $o f $o (f^-1$ $o g^-1$) $== Id c.
+Proof.
+  refine (cat_assoc _ _ _ $@ _).
+  refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
+  refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
+  refine ((_ $@L cat_idl _) $@ _).
+  apply cate_isretr.
+Defined.
+
+Definition compose_catie_issect {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : (f^-1$ $o g^-1$ $o (g $o f) $== Id a)
+  := compose_catie_isretr (A:=A^op) (a:=c) (b:=b) (c:=a) f g.
+
 Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b)
   : CatIsEquiv (g $o f).
 Proof.
   refine (catie_adjointify _ (f^-1$ $o g^-1$) _ _).
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
-    apply cate_isretr.
-  - refine (cat_assoc_opp _ _ _ $@ _).
-    refine ((cat_assoc _ _ _ $@R _) $@ _).
-    refine (((_ $@L cate_issect _) $@R _) $@ _).
-    refine ((cat_idr _ $@R _) $@ _).
-    apply cate_issect.
+  - apply compose_catie_isretr.
+  - apply compose_catie_issect.
 Defined.
 
 Global Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
@@ -238,29 +247,14 @@ Proof.
   - refine (_ $@L compose_cate_funinv g f).
 Defined.
 
-Time Definition compose_cate_assoc_opp {A} `{HasEquivs A}
+Definition compose_cate_assoc_opp {A} `{HasEquivs A}
            {a b c d : A} (f : a $<~> b) (g : b $<~> c) (h : c $<~> d)
-  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f)
-:= @compose_cate_assoc (op A) (@isgraph_op A IsGraph0)
-  (@is2graph_op A IsGraph0 Is2Graph0)
-  (@is01cat_op A IsGraph0 Is01Cat0)
-  (@is1cat_op A IsGraph0 Is2Graph0 Is01Cat0 H)
-  (@hasequivs_op A IsGraph0 Is2Graph0 Is01Cat0 H H0) d c b a h g f.
-(* Why so slow?  ~3s *)
-(* But it fixes the slow test, which goes from 12s (including the Defined) to 0.2s. *)
-
-(* This also works and takes the same amount of time, ~3s:
-  := compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f.
-*)
-
-(* This is the old proof, which is fast:
+  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
 Proof.
-  refine (compose_cate_fun h _ $@ _ $@ cat_assoc_opp f g h $@ _ $@
-                           compose_cate_funinv _ f).
-  - refine (_ $@L compose_cate_fun g f).
-  - refine (compose_cate_funinv h g $@R _).
+  Opaque compose_catie_isretr.
+  exact (compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f).
 Defined.
-*)
+Transparent compose_catie_isretr.
 
 Definition compose_cate_idl {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
