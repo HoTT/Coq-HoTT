@@ -104,7 +104,7 @@ End groupmor_props.
 Section from_another_sg.
 
   Context
-    `{IsSemiGroup A} `{IsHSet A}
+    `{IsSemiGroup A} `{IsHSet B}
     `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
     (op_correct : forall x y, f (x * y) = f x * f y).
 
