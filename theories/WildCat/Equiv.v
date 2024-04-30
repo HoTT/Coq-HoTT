@@ -252,7 +252,8 @@ Definition compose_cate_assoc_opp {A} `{HasEquivs A}
   : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
 Proof.
   Opaque compose_catie_isretr.
-  exact (compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f).
+  (* We use [exact_no_check] just to save a small amount of time. *)
+  exact_no_check (compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f).
 Defined.
 Transparent compose_catie_isretr.
 
