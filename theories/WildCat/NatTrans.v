@@ -2,6 +2,7 @@ Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.Square.
+Require Import WildCat.Opposite.
 
 (** ** Natural transformations *)
 
@@ -163,6 +164,31 @@ Proof.
   exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
 Defined.
 
+(** Opposite natural transformations *)
+
+Definition transformation_op {A} {B} `{Is01Cat B}
+           (F : A -> B) (G : A -> B) (alpha : F $=> G)
+  : @Transformation A^op (fun _ => B^op) _
+                     (G : A^op -> B^op) (F : A^op -> B^op).
+Proof.
+  unfold op in *.
+  cbn in *.
+  intro a.
+  apply (alpha a).
+Defined.
+
+Global Instance is1nat_op A B `{Is01Cat A} `{Is1Cat B}
+       (F : A -> B) `{!Is0Functor F}
+       (G : A -> B) `{!Is0Functor G}
+       (alpha : F $=> G) `{!Is1Natural F G alpha}
+  : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (transformation_op F G alpha).
+Proof.
+  unfold op.
+  unfold transformation_op.
+  intros a b f.
+  srapply isnat_tr.
+Defined.
+
 (** Natural equivalences *)
 
 Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
@@ -262,6 +288,16 @@ Proof.
   intros X Y f.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
   refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
+Defined.
+
+Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
+  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
+Proof.
+  intros [a n].
+  snrapply Build_NatEquiv.
+  1: exact a.
+  rapply is1nat_op.
 Defined.
 
 (** *** Pointed natural transformations *)
