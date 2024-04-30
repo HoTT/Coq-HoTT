@@ -479,7 +479,7 @@ Defined.
 Definition demap_compose {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', isd1f : !IsD1Functor F F'}
   {a b c : A} {f : a $<~> b} {g : b $<~> c} {a' : DA a} {b' : DA b} {c' : DA c}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
   : DGpdHom (emap_compose F f g) (dcate_fun (demap F F' (g' $oE' f')))
@@ -487,7 +487,7 @@ Definition demap_compose {A B : Type}
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
   refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
-  nrapply dfmap_comp; exact IsD1Functor0.
+  nrapply dfmap_comp; exact isd1f.
 Defined.
 
 (** A variant. *)

@@ -107,6 +107,7 @@ Global Instance isequiv_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
   : @CatIsEquiv A^op _ _ _ _ _ b a f
   := ief.
+
 Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
 Proof.
@@ -339,8 +340,6 @@ Definition cate_moveR_Me {A} `{HasEquivs A} {a b c : A}
   (p : f $== e^-1$ $o g)
   : e $o f $== g
   := cate_moveR_eM (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
-
-(* TODO: lots more results are duals. *)
 
 Definition cate_moveL_eV {A} `{HasEquivs A} {a b c : A}
   (e : a $<~> b) (f : b $-> c) (g : a $-> c)
