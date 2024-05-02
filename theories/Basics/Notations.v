@@ -8,10 +8,6 @@ Reserved Notation "'exists' x .. y , p"
 (** Work around bug 5569, https://coq.inria.fr/bugs/show_bug.cgi?id=5569, Warning skip-spaces-curly,parsing seems bogus *)
 Local Set Warnings Append "-skip-spaces-curly".
 
-(** ML Tactic Notations *)
-Declare ML Module "ltac_plugin".
-Global Set Default Proof Mode "Classic".
-
 (** These are the notations whose level and associativity are imposed by Coq *)
 
 (** Notations for propositional connectives *)

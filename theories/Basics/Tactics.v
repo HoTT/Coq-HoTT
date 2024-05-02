@@ -239,7 +239,7 @@ Ltac bang :=
   match goal with
     | |- ?x =>
       match x with
-        | context [False_rect _ ?p] => elim p
+        | context [Empty_rect _ ?p] => elim p
       end
   end.
 
@@ -561,7 +561,7 @@ Ltac get_constructor_head T :=
                              let x' := (eval cbv delta [x'] in x') in
                              let x' := head x' in
                              unify h x';
-                             exact I)) in
+                             exact tt)) in
   h.
 
 (* A version of econstructor that doesn't resolve typeclasses. *)

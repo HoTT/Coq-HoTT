@@ -2,47 +2,91 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
-Require Export Basics.Notations Basics.Datatypes Basics.Logic.
-
-Declare ML Module "number_string_notation_plugin".
-
-(** Keywords for blacklisting from search function *)
-Add Search Blacklist "_admitted" "_subproof" "Private_".
-
-Create HintDb rewrite discriminated.
-#[export] Hint Variables Opaque : rewrite.
-Create HintDb typeclass_instances discriminated.
+Require Export Basics.Settings Basics.Notations.
 
 Local Set Polymorphic Inductive Cumulativity.
 
-(** Disable warning about argument scope delimiters. TODO: remove this once we bump the minimal Coq version to 8.19 and merge #1862. *)
-Global Set Warnings "-argument-scope-delimiter".
+(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
+Local Unset Elimination Schemes.
+
+(** ** Datatypes *)
+
+(** *** Functions *)
+
+(** Notation for non-dependent function types *)
+Notation "A -> B" := (forall (_ : A), B) : type_scope.
+
+(** *** Option type *)
+
+(** [option A] is the extension of [A] with an extra element [None] *)
+Inductive option (A : Type) : Type :=
+  | Some : A -> option A
+  | None : option A.
+
+Scheme option_rect := Induction for option Sort Type.
+
+Arguments Some {A} a.
+Arguments None {A}.
+
+Register option as core.option.type.
+
+(** *** Sum type *)
+
+(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+Inductive sum (A B : Type) : Type :=
+  | inl : A -> sum A B
+  | inr : B -> sum A B.
+
+Scheme sum_rect := Induction for sum Sort Type.
+Scheme sum_ind := Induction for sum Sort Type.
+Arguments sum_ind {A B} P f g : rename.
+
+Notation "x + y" := (sum x y) : type_scope.
+
+Arguments inl {A B} _ , [A] B _.
+Arguments inr {A B} _ , A [B] _.
+
+(* A notation for coproduct that's less overloaded than [+] *)
+Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
+
+(** *** Product type *)
+
+(** [prod A B], written [A * B], is the product of [A] and [B];
+    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
+Record prod (A B : Type) := pair { fst : A ; snd : B }.
+
+Scheme prod_rect := Induction for prod Sort Type.
+Scheme prod_ind := Induction for prod Sort Type.
+Arguments prod_ind {A B} P _. 
+
+Arguments pair {A B} _ _.
+Arguments fst {A B} _ / .
+Arguments snd {A B} _ / .
+
+Add Printing Let prod.
+
+Notation "x * y" := (prod x y) : type_scope.
+Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
+Notation and := prod (only parsing).
+Notation conj := pair (only parsing).
+
+#[export] Hint Resolve pair inl inr : core.
+
+Definition prod_curry (A B C : Type) (f : A -> B -> C)
+  (p : prod A B) : C := f (fst p) (snd p).
+
+(** If and only if *)
+
+(** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
+Definition iff (A B : Type) := prod (A -> B) (B -> A).
+
+Notation "A <-> B" := (iff A B) : type_scope.
 
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
-
-(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
-Local Unset Elimination Schemes.
-
-(** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)
-Global Set Keyed Unification.
-
-(** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
-Global Unset Strict Universe Declaration.
-
-(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
-Global Unset Universe Minimization ToSet.
-
-(** Force to use bullets in proofs. *)
-Global Set Default Goal Selector "!".
-
-(** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)
-Global Set Printing Primitive Projection Parameters.
-
-(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
-Global Set Loose Hint Behavior "Strict".
 
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c with typeclass_instances.
