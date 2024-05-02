@@ -21,8 +21,8 @@ Section Law2.
 
 
   Lemma helper1 (c : Functor C1 D * Functor C2 D)
-  : ((1 o (Datatypes.fst c + Datatypes.snd c) o inl C1 C2)%functor,
-     (1 o (Datatypes.fst c + Datatypes.snd c) o inr C1 C2)%functor)%core = c.
+  : ((1 o (Basics.Overture.fst c + Basics.Overture.snd c) o inl C1 C2)%functor,
+     (1 o (Basics.Overture.fst c + Basics.Overture.snd c) o inr C1 C2)%functor)%core = c.
   Proof.
     apply path_prod; simpl;
     path_functor.

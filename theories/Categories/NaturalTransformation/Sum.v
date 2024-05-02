@@ -16,8 +16,8 @@ Section sum.
     refine (Build_NaturalTransformation
               (F + F') (G + G')
               (fun x => match x with
-                          | Datatypes.inl c => T c
-                          | Datatypes.inr c' => T' c'
+                          | Basics.Overture.inl c => T c
+                          | Basics.Overture.inr c' => T' c'
                         end)
               _).
     abstract (

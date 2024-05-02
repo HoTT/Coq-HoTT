@@ -358,7 +358,7 @@ Defined.
 
 Definition cat_prod_index_sum {I J : Type} {A : Type} `{HasBinaryProducts A}
   (x : I -> A) (y : J -> A)
-  : Product I x -> Product J y -> Product (I + J) (sum_rect _ x y).
+  : Product I x -> Product J y -> Product (I + J) (sum_ind _ x y).
 Proof.
   intros p q.
   snrapply Build_Product.

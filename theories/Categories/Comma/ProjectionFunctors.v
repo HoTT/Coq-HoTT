@@ -46,8 +46,8 @@ Section comma.
              (ST : object ((A -> C)^op * (B -> C)))
   : Cat / !((A * B; PAB) : Cat).
   Proof.
-    exists (Datatypes.fst ST / Datatypes.snd ST; P_comma _ _) (center _).
-    exact (comma_category_projection (Datatypes.fst ST) (Datatypes.snd ST)).
+    exists (Basics.Overture.fst ST / Basics.Overture.snd ST; P_comma _ _) (center _).
+    exact (comma_category_projection (Basics.Overture.fst ST) (Basics.Overture.snd ST)).
   Defined.
 
   Definition comma_category_projection_functor_morphism_of
@@ -64,7 +64,7 @@ Section comma.
               (center _)
               _).
     simpl.
-    destruct_head_hnf Datatypes.prod.
+    destruct_head_hnf Basics.Overture.prod.
     path_functor.
   Defined.
 
@@ -74,7 +74,7 @@ Section comma.
     rewrite !transport_forall_constant;
     transport_path_forall_hammer;
     simpl;
-    destruct_head Datatypes.prod;
+    destruct_head Basics.Overture.prod;
     simpl in *;
     apply CommaCategory.path_morphism;
     simpl;

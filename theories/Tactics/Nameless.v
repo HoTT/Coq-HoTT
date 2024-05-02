@@ -14,13 +14,13 @@ Tactic Notation "syntax_enforce" "[" constr(H) ":=" open_constr(body) "]" := let
 Tactic Notation "enforce" "[" open_constr(x) "=" open_constr(y) "]" := unify x y.
 
 (** An example *)
-Goal False -> let X0 := I in False -> True.
+Goal Empty -> let X0 := tt in Empty -> Unit.
 Proof.
   intros.
   let H := hyp in
-  enforce (H : Logic.True);
-    syntax_enforce [ H := I ];
+  enforce (H : Unit);
+    syntax_enforce [ H := tt ];
     enforce [ H = _ ];
     enforce [ _ = H ];
-    enforce [ H = I ].
+    enforce [ H = tt ].
 Abort.
