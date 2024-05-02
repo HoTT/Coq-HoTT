@@ -459,6 +459,9 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
+(** Apply using the same opacity information as typeclass proof search. *)
+Ltac class_apply c := autoapply c with typeclass_instances.
+
 (** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
   intros;
@@ -471,7 +474,6 @@ Ltac by_extensionality x :=
     end;
     simpl; auto with path_hints
   end.
-
 
 (** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)
 (** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)

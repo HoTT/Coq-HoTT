@@ -85,9 +85,6 @@ Notation "A <-> B" := (iff A B) : type_scope.
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
 
-(** Apply using the same opacity information as typeclass proof search. *)
-Ltac class_apply c := autoapply c with typeclass_instances.
-
 Definition Relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : Relation A) :=
