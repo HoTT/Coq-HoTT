@@ -1,6 +1,6 @@
 (** * General Settings *)
 
-(** This file contains all the tweaks and settings we make to Coq as to not clutter Overture.v *)
+(** This file contains all the tweaks and settings we make to Coq. *)
 
 (** ** Warnings *)
 
