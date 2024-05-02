@@ -81,7 +81,6 @@ Proof.
     rapply cate_isinitial.
   + intros x tex.
     rapply isterminal_cate.
-    symmetry.
     refine (p $oE _).
     rapply (emap F _).
     rapply cate_isterminal.
