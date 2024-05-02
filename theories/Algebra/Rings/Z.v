@@ -9,12 +9,18 @@ Require Import WildCat.Core.
 (** The ring of integers *)
 Definition cring_Z : CRing.
 Proof.
-  snrapply (Build_CRing abgroup_Z int_mul 1%int); repeat split; try exact _.
-  + exact int_mul_assoc.
-  + exact int_mul_1_l.
-  + exact int_mul_1_r.
-  + exact int_mul_comm.
-  + exact int_mul_add_distr_l.
+  snrapply Build_CRing'.
+  - exact abgroup_Z.
+  - exact 1%int.
+  - exact int_mul.
+  - exact int_mul_comm.
+  - exact int_mul_add_distr_l.
+  - split.
+    + split.
+      * exact _.
+      * exact int_mul_assoc.
+    + exact int_mul_1_l.
+    + exact int_mul_1_r.
 Defined.
 
 Local Open Scope mc_scope.
@@ -184,7 +190,7 @@ Qed.
 
 (** Preservation of * (multiplication) *)
 Global Instance issemigrouppreserving_cring_catamorphism_fun_mult (R : CRing)
-  : IsSemiGroupPreserving (Aop:=cring_mult) (Bop:=cring_mult)
+  : IsSemiGroupPreserving (Aop:=(.*.)) (Bop:=(.*.))
       (cring_catamorphism_fun R : cring_Z -> R).
 Proof.
   hnf. intros [x| |x] [y| |y].

@@ -15,7 +15,7 @@ Local Open Scope ring_scope.
 Local Open Scope wc_iso_scope.
 
 (** A ring consists of the following data: *)
-Record Ring := {
+Record Ring := Build_Ring' {
   (** An underlying abelian group. *)
   ring_abgroup :> AbGroup;
   (** A multiplication operation. *)
@@ -24,6 +24,8 @@ Record Ring := {
   ring_one :: One ring_abgroup;
   (** Such that all they all satisfy the axioms of a ring. *)
   ring_isring :: IsRing ring_abgroup;
+  (** This field only exists so that opposite rings are definitionally involutive and can safely be ignored. *)
+  ring_mult_assoc_opp : forall z y x, (x * y) * z = x * (y * z);
 }.
 
 
@@ -175,11 +177,21 @@ Definition Build_RingIsomorphism'' (A B : Ring) (e : GroupIsomorphism A B)
   := @Build_RingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).
 
 (** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
-Definition Build_Ring' (R : AbGroup)
+Definition Build_Ring (R : AbGroup)
   `(Mult R, One R, LeftDistribute R mult (@group_sgop R), RightDistribute R mult (@group_sgop R))
   (iscomm : @IsMonoid R mult one)
   : Ring
-  := Build_Ring R _ _ (Build_IsRing _ _ _  _ _).
+  := Build_Ring' R _ _ (Build_IsRing _ _ _  _ _) (fun z y x => (associativity x y z)^).
+
+(** Scalar multiplication on the left is a group homomorphism. *)
+Definition grp_homo_rng_left_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s => r * s) (rng_dist_l r).
+
+(** Scalar multiplication on the right is a group homomorphism. *)
+Definition grp_homo_rng_right_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s => s * r) (fun x y => rng_dist_r x y r).
 
 (** ** Ring movement lemmas *)
 
@@ -277,7 +289,7 @@ Defined.
 Definition ring_product : Ring -> Ring -> Ring.
 Proof.
   intros R S.
-  snrapply Build_Ring'.
+  snrapply Build_Ring.
   1: exact (ab_biprod R S).
   1: exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
   1: exact (ring_one , ring_one).
@@ -353,7 +365,7 @@ Defined.
 (** The image of a ring homomorphism *)
 Definition rng_image {R S : Ring} (f : R $-> S) : Ring.
 Proof.
-  snrapply (Build_Ring' (abgroup_image f)).
+  snrapply (Build_Ring (abgroup_image f)).
   { simpl.
     intros [x p] [y q].
     exists (x * y).
@@ -395,7 +407,54 @@ Proof.
   exact _.
 Defined. 
 
-(** *** More Ring laws *)
+(** ** Opposite Ring *)
+
+(** Given a ring [R] we can reverse the order of the multiplication to get another ring [R^op]. *)
+Definition rng_op : Ring -> Ring.
+Proof.
+  (** Let's carefully pull apart the ring structure and put it back together. Unfortunately, our definition of ring has some redundant data such as multiple hset assumptions, due to the mixing of algebraic strucutres. This isn't a problem in practice, but it does mean using typeclass inference here will pick up the wrong instance, therefore we carefully put it back together. See test/Algebra/Rings/Ring.v for a test checking this operation is definitionally involutive. *)
+  intros [R mult one
+    [is_abgroup [[monoid_ishset mult_assoc] li ri] ld rd]
+    mult_assoc_opp].
+  snrapply Build_Ring'.
+  4: split.
+  5: split.
+  5: split.
+  - exact R.
+  - exact (fun x y => mult y x).
+  - exact one.
+  - exact is_abgroup.
+  - exact monoid_ishset.
+  - exact mult_assoc_opp.
+  - exact ri.
+  - exact li.
+  - exact (fun x y z => rd y z x).
+  - exact (fun x y z => ld z x y).
+  - exact mult_assoc.
+Defined.
+
+(** The opposite ring is a functor. *)
+Global Instance is0functor_rng_op : Is0Functor rng_op.
+Proof.
+  snrapply Build_Is0Functor.
+  intros R S f.
+  snrapply Build_RingHomomorphism'.
+  - exact f.
+  - split.
+    + exact (fun x y => rng_homo_mult f y x).
+    + exact (rng_homo_one f).
+Defined.
+
+Global Instance is1functor_rng_op : Is1Functor rng_op.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros R S f g p.
+    exact p.
+  - intros R; cbn; reflexivity.
+  - intros R S T f g; cbn; reflexivity.
+Defined.
+
+(** ** More Ring laws *)
 
 (** Powers of ring elements *)
 Definition rng_power {R : Ring} (x : R) (n : nat) : R := nat_iter n (x *.) ring_one.

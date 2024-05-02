@@ -2,7 +2,9 @@ Require Import Basics Types.
 Require Import Spaces.Finite.Fin.
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.Rings.Ring.
+Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.AbGroups.
+Require Import WildCat.Core.
 
 Local Open Scope mc_scope.
 
@@ -18,9 +20,13 @@ Local Open Scope ideal_scope.
 Class IsLeftIdeal {R : Ring} (I : Subgroup R) :=
   isleftideal (r x : R) : I x -> I (r * x).
 
-(** An additive subgroup [I] of a ring [R] is a right ideal when it is closed under multiplication on the right. *)
+(** An additive subgroup [I] of a ring [R] is a right ideal when it is closed under multiplication on the right. We define this using the opposite ring allowing us to reduce redundancy between left and right ideals. *)
 Class IsRightIdeal {R : Ring} (I : Subgroup R) :=
-  isrightideal (x r : R) : I x -> I (x * r).
+  isrightideal_isleftideal_op :: IsLeftIdeal (R := rng_op R) I.
+
+Definition isrightideal {R : Ring} (I : Subgroup R) (x r : R)
+  : IsRightIdeal I -> I x -> I (x * r)
+  := fun _ => isleftideal (R := rng_op R) r x.
 
 (** An additive subgroup [I] of a ring [R] is a two-sided ideal when it is both a left and right ideal. In this case we just call it an ideal. *)
 Class IsIdeal {R : Ring} (I : Subgroup R) := {
@@ -28,6 +34,14 @@ Class IsIdeal {R : Ring} (I : Subgroup R) := {
   ideal_isrightideal :: IsRightIdeal I;
 }.
 Definition issig_IsIdeal {R : Ring} (I : Subgroup R) : _ <~> IsIdeal I := ltac:(issig).
+Hint Immediate Build_IsIdeal : typeclass_instances.
+
+(** Any two-sided ideal is also a two-sided ideal of the opposite ring. *)
+Global Instance isideal_op {R : Ring} (I : Subgroup R)
+  : IsIdeal I -> IsIdeal (R := rng_op R) I.
+Proof.
+  intros [? ?]; exact _.
+Defined.
 
 (** A left ideal of a ring [R] is a subgroup [I] of [R] which is closed under left multiplication. *)
 Record LeftIdeal (R : Ring) := {
@@ -37,11 +51,19 @@ Record LeftIdeal (R : Ring) := {
 Definition issig_LeftIdeal (R : Ring) : _ <~> LeftIdeal R := ltac:(issig).
 
 (** A right ideal of a ring [R] is a subgroup [I] of [R] which is closed under right multiplication. *)
-Record RightIdeal (R : Ring) := {
-  rightideal_subgroup :> Subgroup R;
-  rightideal_isrightideal :: IsRightIdeal rightideal_subgroup;
-}.
-Definition issig_RightIdeal (R : Ring) : _ <~> RightIdeal R := ltac:(issig).
+Definition RightIdeal (R : Ring) := LeftIdeal (rng_op R).
+
+Global Instance isrightdeal_rightideal {R} (I : RightIdeal R)
+  : IsRightIdeal (R:=R) I
+  := leftideal_isleftideal _ I.
+
+Definition Build_RightIdeal (R : Ring) (I : Subgroup R) (H : IsRightIdeal I)
+  : RightIdeal R
+  := Build_LeftIdeal (rng_op R) I H.
+
+Definition issig_RightIdeal (R : Ring)
+  : {I : Subgroup R& IsRightIdeal (R:=R) I} <~> RightIdeal R
+  := ltac:(issig).
 
 (** A two-sided ideal of a ring [R], or just an ideal, is a subgroup [I] of [R] which is closed under both left and right multiplication. *)
 Record Ideal (R : Ring) := {
@@ -49,6 +71,10 @@ Record Ideal (R : Ring) := {
   ideal_isideal :: IsIdeal ideal_subgroup;
 }.
 Definition issig_Ideal (R : Ring) : _ <~> Ideal R := ltac:(issig).
+
+Definition ideal_op (R : Ring) : Ideal R -> Ideal (rng_op R)
+  := fun I => Build_Ideal (rng_op R) I _.
+Coercion ideal_op : Ideal >-> Ideal.
 
 (** *** Truncatedness properties *)
 
@@ -62,7 +88,7 @@ Section IdealTrunc.
 
   (** Being a right ideal is a proposition. *)
   Global Instance ishprop_isrightideal `{Funext} {R : Ring} (I : Subgroup R)
-    : IsHProp (IsRightIdeal I) := ltac:(unfold IsRightIdeal; exact _).
+    : IsHProp (IsRightIdeal I) :=  ishprop_isleftideal _.
 
   (** Being a two-sided ideal is a proposition. *)
   Global Instance ishprop_isideal {R : Ring} (I : Subgroup R)
@@ -78,7 +104,7 @@ Section IdealTrunc.
   
   (** The type of right ideals is a set. *)
   Global Instance ishset_rightideal {R : Ring} : IsHSet (RightIdeal R)
-    := istrunc_equiv_istrunc _ (issig_RightIdeal R).
+    := _.
 
   (** The type of ideals is a set. *)
   Global Instance ishset_ideal {R : Ring} : IsHSet (Ideal R)
@@ -128,12 +154,8 @@ Defined.
 
 (** The trivial subgroup is a right ideal. *)
 Global Instance isrightideal_trivial_subgroup (R : Ring)
-  : IsRightIdeal (R := R) trivial_subgroup.
-Proof.
-  intros r x p.
-  rhs_V nrapply (rng_mult_zero_l).
-  f_ap.
-Defined.
+  : IsRightIdeal (R := R) trivial_subgroup
+  := isleftideal_trivial_subgroup _.
 
 (** The trivial subgroup is an ideal. *)
 Global Instance isideal_trivial_subgroup (R : Ring)
@@ -153,7 +175,7 @@ Global Instance isleftideal_maximal_subgroup (R : Ring)
 (** The maximal subgroup is a right ideal. *)
 Global Instance isrightideal_maximal_subgroup (R : Ring)
   : IsRightIdeal (R := R) maximal_subgroup
-  := ltac:(done).
+  := isleftideal_maximal_subgroup _.
 
 (** The maximal subgroup is an ideal.  *)
 Global Instance isideal_maximal_subgroup (R : Ring)
@@ -177,10 +199,8 @@ Defined.
 (** Intersections of underlying subgroups of right ideals are again right ideals. *)
 Global Instance isrightideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
-  : IsRightIdeal (subgroup_intersection I J).
-Proof.
-  intros r x [a b]; split; by apply isrightideal.
-Defined.
+  : IsRightIdeal (subgroup_intersection I J)
+  := isleftideal_subgroup_intersection _ _ _.
 
 (** Intersections of underlying subgroups of ideals are again ideals. *)
 Global Instance isideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
@@ -196,7 +216,7 @@ Definition leftideal_intersection {R : Ring}
 (** Intersection of right ideals. *)
 Definition rightideal_intersection {R : Ring}
   : RightIdeal R -> RightIdeal R -> RightIdeal R
-  := fun I J => Build_RightIdeal R (subgroup_intersection I J) _.
+  := leftideal_intersection.
 
 (** Intersection of ideals. *)
 Definition ideal_intersection {R : Ring}
@@ -231,25 +251,8 @@ Defined.
 (** The subgroup product of right ideals is again an ideal. *)
 Global Instance isrightideal_subgroup_product (R : Ring) (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
-  : IsRightIdeal (subgroup_product I J).
-Proof.
-  intros x r; revert x.
-  nrapply subgroup_product_ind.
-  - intros x p.
-    apply tr, sgt_in.
-    left; by apply isrightideal.
-  - intros x p.
-    apply tr, sgt_in.
-    right; by apply isrightideal.
-  - apply tr, sgt_in.
-    left; apply isrightideal.
-    apply ideal_in_zero.
-  - intros x y p q IHp IHq; cbn beta.
-    rewrite rng_dist_r.
-    rewrite rng_mult_negate_l.
-    by apply subgroup_in_op_inv.
-  - exact _.
-Defined.
+  : IsRightIdeal (subgroup_product I J)
+  := isleftideal_subgroup_product _ _ _.
 
 (** The subgroup product of ideals is again an ideal. *)
 Global Instance isideal_subgroup_product (R : Ring) (I J : Subgroup R)
@@ -265,7 +268,7 @@ Definition leftideal_sum {R : Ring}
 (** Sum of right ideals. *)
 Definition rightideal_sum {R : Ring}
   : RightIdeal R -> RightIdeal R -> RightIdeal R
-  := fun I J => Build_RightIdeal R (subgroup_product I J) _.
+  := leftideal_sum.
 
 (** Sum of ideals. *)
 Definition ideal_sum {R : Ring}
@@ -288,7 +291,7 @@ Definition ideal_sum_ind {R : Ring} (I J : Ideal R)
 Inductive ideal_product_naive_type {R : Ring} (I J : Subgroup R) : R -> Type :=
 | ipn_in : forall x y, I x -> J y -> ideal_product_naive_type I J (x * y).
 
-(** We instead consider the subgroup generated by this naive product and later prove it happens ot be an ideal. Note that the subgroup generated by a set and the ideal generated by a set happened to conincide. In general this is not true. *)
+(** We instead consider the subgroup generated by this naive product and later prove it happens to be an ideal. Note that the subgroup generated by a set and the ideal generated by a set are not the same in general. *)
 Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
   := subgroup_generated (G := R) (ideal_product_naive_type I J). 
 
@@ -297,21 +300,12 @@ Global Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
   : IsLeftIdeal (ideal_product_type I J).
 Proof.
-  intros r s.
-  apply Trunc_functor.
-  intros p.
-  induction p as [s i | | g h p1 IHp1 p2 IHp2].
-  - destruct i.
-    apply sgt_in.
-    rewrite simple_associativity.
-    split.
-    + by apply isleftideal.
-    + assumption.
-  - rewrite rng_mult_zero_r.
-    apply sgt_unit.
-  - rewrite rng_dist_l.
-    rewrite rng_mult_negate_r.
-    by apply sgt_op.
+  intro r.
+  nrapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)).
+  intros s [s1 s2 p1 p2]; cbn.
+  rewrite simple_associativity.
+  nrefine (ipn_in I J (r * s1) s2 _ p2).
+  by apply isleftideal.
 Defined.
 
 (** The product of right ideals is a right ideal. *)
@@ -319,21 +313,12 @@ Global Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (ideal_product_type I J).
 Proof.
-  intros s r.
-  apply Trunc_functor.
-  intros p.
-  induction p as [s i | | g h p1 IHp1 p2 IHp2].
-  - destruct i.
-    apply sgt_in.
-    rewrite <- simple_associativity.
-    split.
-    + assumption.
-    + by apply isrightideal.
-  - rewrite rng_mult_zero_l.
-    apply sgt_unit.
-  - rewrite rng_dist_r.
-    rewrite rng_mult_negate_l.
-    by apply sgt_op.
+  intro r.
+  nrapply (functor_subgroup_generated _ _ (grp_homo_rng_right_mult (R:=R) r)).
+  intros s [s1 s2 p1 p2]; cbn.
+  rewrite <- simple_associativity.
+  nrefine (ipn_in I J s1 (s2 * r) p1 _).
+  by apply isrightideal.
 Defined.
 
 (** The product of ideals is an ideal. *)
@@ -350,7 +335,7 @@ Definition leftideal_product {R : Ring}
 (** Product of right ideals. *)
 Definition rightideal_product {R : Ring}
   : RightIdeal R -> RightIdeal R -> RightIdeal R
-  := fun I J => Build_RightIdeal R (ideal_product_type I J) _.
+  := leftideal_product.
 
 (** Product of ideals. *)
 Definition ideal_product {R : Ring}
@@ -371,13 +356,8 @@ Defined.
 
 (** The kernel of the underlying group homomorphism of a ring homomorphism is a right ideal. *)
 Global Instance isrightideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
-  : IsRightIdeal (grp_kernel f).
-Proof.
-  intros x r p.
-  lhs nrapply rng_homo_mult.
-  rhs_V nrapply (rng_mult_zero_l (f r)).
-  by apply (ap (.* f r)).
-Defined.
+  : IsRightIdeal (grp_kernel f)
+  := isleftideal_grp_kernel (fmap rng_op f).
 
 (** The kernel of the underlying group homomorphism of a ring homomorphism is an ideal. *)
 Global Instance isideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
@@ -429,44 +409,9 @@ Proof.
     apply ligt_mul.
 Defined.
 
-(** Unfortunately there is no modular way to combine these definitions for the right and two-sided case which means we have to repeat the construction albeit in a slightly tweaked manner. *)
-
-(** Underlying type family of a right ideal generated by subset. *)
-Inductive rightideal_generated_type (R : Ring) (X : R -> Type) : R -> Type :=
-(** It should contain all elements of the original family. *)
-| rigt_in (r : R) : X r -> rightideal_generated_type R X r
-(** It should contain zero. *)
-| rigt_zero : rightideal_generated_type R X ring_zero
-(** It should be closed under negation and addition. *)
-| rigt_add_neg (r s : R)
-  : rightideal_generated_type R X r
-  -> rightideal_generated_type R X s
-  -> rightideal_generated_type R X (r - s)
-(** And finally, it should be closed under right multiplication. *)
-| rigt_mul (r s : R)
-  : rightideal_generated_type R X r
-  -> rightideal_generated_type R X (r * s)
-.
-
-Arguments rightideal_generated_type {R} X r.
-Arguments rigt_in {R X r}.
-Arguments rigt_zero {R X}.
-Arguments rigt_add_neg {R X r s}.
-Arguments rigt_mul {R X r s}.
-
 (** Right ideal generated by a subset. *)
-Definition rightideal_generated {R : Ring} (X : R -> Type) : RightIdeal R.
-Proof.
-  snrapply Build_RightIdeal.
-  - snrapply Build_Subgroup'.
-    + exact (fun x => merely (rightideal_generated_type X x)).
-    + exact _.
-    + apply tr, rigt_zero.
-    + intros x y p q; strip_truncations.
-      by apply tr, rigt_add_neg.
-  - intros r x; apply Trunc_functor.
-    apply rigt_mul.
-Defined.
+Definition rightideal_generated {R : Ring} (X : R -> Type) : RightIdeal R
+  := Build_RightIdeal R (leftideal_generated (R:=rng_op R) X) _.
 
 (** Underlying type family of a two-sided ideal generated by subset. *)
 Inductive ideal_generated_type (R : Ring) (X : R -> Type) : R -> Type :=
@@ -506,9 +451,9 @@ Proof.
     + intros x y p q; strip_truncations.
       by apply tr, igt_add_neg.
   - intros r x; apply Trunc_functor.
-    apply igt_mul_l.
+    nrapply igt_mul_l.
   - intros x r; apply Trunc_functor.
-    apply igt_mul_r.
+    nrapply igt_mul_r.
 Defined. 
 
 (** *** Finitely gnerated ideal. *)
@@ -608,8 +553,8 @@ Proof.
     + by apply q.
 Defined.
 
-(** The left ideal quotient is a left ideal. *)
-Global Instance isleftideal_subgroup_ideal_quotient {R : Ring}
+(** The left ideal quotient of a left ideal is a left ideal. *)
+Global Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
   (I J : Subgroup R) `{IsLeftIdeal R I}
   : IsLeftIdeal (subgroup_leftideal_quotient I J).
 Proof.
@@ -621,105 +566,56 @@ Proof.
   by nrapply p.
 Defined.
 
+(** The left ideal quotient of a right ideal by a left ideal is a right ideal. *)
+Global Instance isrightideal_subgroup_leftideal_quotient {R : Ring}
+  (I J : Subgroup R) `{IsRightIdeal R I, IsLeftIdeal R J}
+  : IsRightIdeal (subgroup_leftideal_quotient (R:=R) I J).
+Proof.
+  intros r x p.
+  strip_truncations; apply tr.
+  intros s j.
+  cbn in *.
+  rewrite <- rng_mult_assoc.
+  apply p.
+  by rapply isleftideal.
+Defined.
+
 (** We define the left ideal quotient as a left ideal. *)
 Definition leftideal_quotient {R : Ring}
   : LeftIdeal R -> Subgroup R -> LeftIdeal R
   := fun I J => Build_LeftIdeal R (subgroup_leftideal_quotient I J) _.
   
-(** The subgroup corresponding to the right ideal quotient. *)
-Definition subgroup_rightideal_quotient {R : Ring} (I J : Subgroup R)
-  : Subgroup R.
-Proof.
-  snrapply Build_Subgroup'.
-  - exact (fun r => merely (forall x, J x -> I (x * r))).
-  - exact _. (** Funext is used here. *)
-  - apply tr.
-    intros r p.
-    rewrite rng_mult_zero_r.
-    apply ideal_in_zero.
-  - hnf; intros x y p q.
-    strip_truncations; apply tr.
-    intros s j.
-    rewrite rng_dist_l.
-    rewrite rng_mult_negate_r.
-    apply ideal_in_plus_negate.
-    + by apply p.
-    + by apply q.
-Defined.
+Definition subgroup_rightideal_quotient {R : Ring} (I J : Subgroup R) : Subgroup R
+  := subgroup_leftideal_quotient (R:=rng_op R) I J. 
 
-(** The right ideal quotient is a right ideal. *)
 Global Instance isrightideal_subgroup_rightideal_quotient {R : Ring}
   (I J : Subgroup R) `{IsRightIdeal R I}
-  : IsRightIdeal (subgroup_rightideal_quotient I J).
+  : IsRightIdeal (subgroup_rightideal_quotient I J)
+  := isleftideal_subgroup_leftideal_quotient (R:=rng_op R) I J.
+
+Global Instance isleftideal_subgroup_rightideal_quotient {R : Ring}
+  (I J : Subgroup R) `{H : IsLeftIdeal R I, IsRightIdeal R J}
+  : IsLeftIdeal (subgroup_rightideal_quotient I J).
 Proof.
-  intros x r p.
-  strip_truncations; apply tr.
-  intros s j.
-  rewrite rng_mult_assoc.
-  apply isrightideal.
-  by nrapply p.
+  snrapply (isrightideal_subgroup_leftideal_quotient (R:=rng_op R) I J).
+  - exact H.
+  - exact _.
 Defined.
 
 (** We define the right ideal quotient as a right ideal. *)
 Definition rightideal_quotient {R : Ring}
   : RightIdeal R -> Subgroup R -> RightIdeal R
-  := fun I J => Build_RightIdeal R (subgroup_rightideal_quotient I J) _.
+  := fun I J => Build_RightIdeal R (subgroup_rightideal_quotient (R:=R) I J) _.
 
-(** The subgroup corresponding to the ideal quotient. This collapses to the standard definition when the ring is commutative. *)
-Definition subgroup_ideal_quotient {R : Ring} (I J : Subgroup R)
-  : Subgroup R.
-Proof.
-  snrapply Build_Subgroup'.
-  - exact (fun r => merely (forall x, J x -> I (r * x) /\ I (x * r))).
-  - exact _.
-  - apply tr.
-    intros r p.
-    rewrite rng_mult_zero_l, rng_mult_zero_r.
-    split; apply ideal_in_zero.
-  - hnf; intros x y p q.
-    strip_truncations; apply tr. 
-    intros r s.
-    rewrite rng_dist_l, rng_dist_r.
-    rewrite rng_mult_negate_l, rng_mult_negate_r.
-    split; apply ideal_in_plus_negate.
-    1,3: by apply p.
-    1,2: by apply q.
-Defined.
-
-(** The ideal quotient is an ideal. *)
-Global Instance isideal_subgroup_ideal_quotient {R : Ring}
-  (I J : Subgroup R) `{IsIdeal R I, IsIdeal R J}
-  : IsIdeal (subgroup_ideal_quotient I J).
-Proof.
-  split.
-  - intros r x p.
-    strip_truncations; apply tr.
-    intros s j.
-    rewrite rng_mult_assoc, <- rng_mult_assoc.
-    split.
-    + apply isleftideal.
-      eapply fst.
-      by nrapply p.
-    + eapply snd.
-      rapply p.
-      by apply isrightideal.
-  - intros r x p.
-    strip_truncations; apply tr.
-    intros s j.
-    rewrite rng_mult_assoc, <- rng_mult_assoc.
-    split.
-    + eapply fst.
-      nrapply p.
-      by apply isleftideal.
-    + apply isrightideal.
-      eapply snd.
-      by rapply p.
-Defined.
-
-(** We define the ideal quotient as an ideal. *)
+(** The ideal quotient is then the intersection of a left and right quotient of both two sided ideals. *)
 Definition ideal_quotient {R : Ring}
   : Ideal R -> Ideal R -> Ideal R
-  := fun I J => Build_Ideal R (subgroup_ideal_quotient I J) _.
+  := fun I J =>
+    Build_Ideal R
+      (subgroup_intersection
+        (leftideal_quotient I J)
+        (rightideal_quotient I J))
+      (Build_IsIdeal _ _ _ _).
 
 (** *** Annihilator *)
 
@@ -764,7 +660,7 @@ Global Instance isrightideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
 Proof.
   intros r x p.
   strip_truncations; apply tr.
-  intros s i.
+  intros s i; cbn.
   rewrite <- rng_mult_assoc.
   by apply p, isleftideal.
 Defined.
@@ -781,59 +677,30 @@ Definition ideal_left_annihilator {R : Ring} (I : LeftIdeal R) : Ideal R
 
 (** The right annihilator of a subset of a ring is the set of elements that annihilate the elements of the subset with right multiplication. *)
 Definition subgroup_ideal_right_annihilator {R : Ring} (I : R -> Type)
-  : Subgroup R.
-Proof.
-  snrapply Build_Subgroup'.
-  - exact (fun r => merely (forall x, I x -> x * r = ring_zero)).
-  - exact _.
-  - apply tr.
-    intros r p.
-    apply rng_mult_zero_r.
-  - intros x y p q.
-    strip_truncations; apply tr. 
-    intros r s.
-    lhs rapply rng_dist_l.
-    rewrite (p r s).
-    rewrite rng_mult_negate_r.
-    rewrite (q r s).
-    rewrite <- rng_mult_negate.
-    rewrite rng_mult_zero_r.
-    apply left_identity.
-Defined.
+  : Subgroup R
+  := subgroup_ideal_left_annihilator (R:=rng_op R) I.
 
 (** When the subset is a right ideal the right annihilator is a left ideal of the ring. This can be strengthened. See the comment in the left ideal version of this lemma above. *)
 Global Instance isleftideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
   `{IsRightIdeal R I}
-  : IsLeftIdeal (subgroup_ideal_right_annihilator I).
-Proof.
-  intros r x p.
-  strip_truncations; apply tr.
-  intros s i.
-  simpl in p.
-  rewrite rng_mult_assoc.
-  by apply p, isrightideal.
-Defined.
+  : IsLeftIdeal (subgroup_ideal_right_annihilator I)
+  := isrightideal_ideal_left_annihilator (R:=rng_op R) I.
 
 (** The right annihilator is a right ideal of the ring. *)
 Global Instance isrightideal_ideal_right_annihilator {R : Ring} (I : R -> Type)
-  : IsRightIdeal (subgroup_ideal_right_annihilator I).
-Proof.
-  intros r x p.
-  strip_truncations; apply tr.
-  intros s i.
-  rewrite rng_mult_assoc, (p s i).
-  apply rng_mult_zero_l.
-Defined.
+  : IsRightIdeal (subgroup_ideal_right_annihilator (R:=R) I)
+  := isleftideal_ideal_left_annihilator (R:=rng_op R) I.
 
 (** Therefore the annihilator of a right ideal is an ideal. *)
 Global Instance isideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
   `{IsRightIdeal R I}
-  : IsIdeal (subgroup_ideal_right_annihilator I)
+  : IsIdeal (subgroup_ideal_right_annihilator (R:=R) I)
   := {}.
 
 (** The right annihilator of a right ideal. *)
 Definition ideal_right_annihilator {R : Ring} (I : RightIdeal R) : Ideal R
-  := Build_Ideal R (subgroup_ideal_right_annihilator I) _.
+  := Build_Ideal R (subgroup_ideal_right_annihilator (R:=R) I)
+     (isideal_ideal_right_annihilator (R:=R) I).
 
 (** The annihilator of an ideal is the intersection of the left and right annihilators. *)
 Definition ideal_annihilator {R : Ring} (I : Ideal R) : Ideal R
@@ -992,7 +859,7 @@ Section IdealLemmas.
     strip_truncations.
     induction p as [r i | | r s p1 IHp1 p2 IHp2 ].
     + destruct i as [s t].
-      by apply isrightideal.
+      by rapply isrightideal.
     + rapply ideal_in_zero.
     + by rapply ideal_in_plus_negate.
   Defined.
@@ -1241,9 +1108,9 @@ Section IdealLemmas.
   (** Ideals are subsets of their ideal quotients *)
   Lemma ideal_quotient_subset (I J : Ideal R) : I ⊆ (I :: J).
   Proof.
-    intros x i; apply tr; intros r j; split.
-    - by apply isrightideal.
-    - by apply isleftideal.
+    intros x i; split; apply tr; intros r j; cbn.
+    - by rapply isrightideal.
+    - by rapply isleftideal.
   Defined.
 
   (** If J divides I then the ideal quotient of J by I is trivial. *)
@@ -1253,9 +1120,10 @@ Section IdealLemmas.
     intros p.
     apply ideal_subset_antisymm.
     1: cbv; trivial.
-    intros r _; apply tr; intros x q; split.
+    intros r _; split; apply tr; intros x q; cbn.
     - by apply isleftideal, p. 
-    - by apply isrightideal, p.
+    - rapply isrightideal.
+      by apply p.
   Defined.
 
   (** The ideal quotient of I by unit is I. *)
@@ -1263,10 +1131,10 @@ Section IdealLemmas.
     : (I :: ideal_unit R) ↔ I.
   Proof.
     apply ideal_subset_antisymm.
-    - intros r p.
+    - intros r [p q].
       strip_truncations.
       rewrite <- rng_mult_one_r.
-      exact (fst (p ring_one tt)).
+      exact (p ring_one tt).
     - apply ideal_quotient_subset.
   Defined.
 
@@ -1276,7 +1144,7 @@ Section IdealLemmas.
   Proof.
     split.
     - cbn; trivial.
-    - intros ?; apply tr.
+    - intros ?; split; apply tr;
       cbn; split; trivial. 
   Defined.
 
@@ -1285,29 +1153,28 @@ Section IdealLemmas.
     : (I :: (J + K)) ↔ (I :: J) ∩ (I :: K).
   Proof.
     apply ideal_subset_antisymm.
-    { intros r p; split.
-      + strip_truncations; apply tr.
-        intros x j.
-        hnf in p; apply p.
-        by apply ideal_sum_subset_l.
-      + strip_truncations; apply tr.
-        intros x k.
-        hnf in p; apply p.
-        by apply ideal_sum_subset_r. }
-    intros r [p q].
-    strip_truncations; apply tr.
-    intros x jk.
-    hnf in p, q.
-    strip_truncations.
-    induction jk as [s x | | ? ? ? [] ? [] ].
-    - destruct x.
-      1: by apply p.
-      by apply q.
-    - rewrite rng_mult_zero_l, rng_mult_zero_r.
-      split; apply ideal_in_zero.
-    - rewrite rng_dist_l, rng_dist_r.
-      rewrite rng_mult_negate_l, rng_mult_negate_r.
-      split; by apply ideal_in_plus_negate.
+    { intros r [p q]; strip_truncations; split; split; apply tr; intros x jk.
+      - by rapply p; rapply ideal_sum_subset_l.
+      - by rapply q; rapply ideal_sum_subset_l.
+      - by rapply p; rapply ideal_sum_subset_r.
+      - by rapply q; rapply ideal_sum_subset_r. }
+    intros r [[p q] [u v]]; strip_truncations; split; apply tr;
+    intros x jk; strip_truncations.
+    - induction jk as [? [] | | ? ? ? ? ? ? ].
+      + by apply p.
+      + by apply u.
+      + apply u, ideal_in_zero.
+      + rewrite rng_dist_l.
+        rewrite rng_mult_negate_r.
+        by apply ideal_in_plus_negate.
+    - induction jk as [? [] | | ? ? ? ? ? ? ].
+      + by apply q.
+      + by apply v.
+      + apply v, ideal_in_zero.
+      + change (I ((g - h) * r)). 
+        rewrite rng_dist_r.
+        rewrite rng_mult_negate_l.
+        by apply ideal_in_plus_negate.
   Defined.
 
   (** Ideal quotients distribute over intersections. *)
@@ -1315,12 +1182,15 @@ Section IdealLemmas.
     : (I ∩ J :: K) ↔ (I :: K) ∩ (J :: K).
   Proof.
     apply ideal_subset_antisymm.
-    - intros r p.
-      strip_truncations.
-      split; apply tr; split; by apply p. 
-    - intros r [p q]; hnf in p, q.
-      strip_truncations; apply tr.
-      intros x k; split; split; by (apply p || apply q).
+    - intros r [p q]; strip_truncations; split; split; apply tr; intros x k.
+      1,3: by apply p.
+      1,2: by apply q.
+    - intros r [[p q] [u v]].
+      strip_truncations; split; apply tr; intros x k; split.
+      + by apply p.
+      + by apply u.
+      + by apply q.
+      + by apply v.
   Defined.
 
   (** Annihilators reverse the order of inclusion. *)
@@ -1337,12 +1207,15 @@ Section IdealLemmas.
     : Ann I ↔ ideal_zero R :: I.
   Proof.
     intros x; split.
-    - intros [p q]; strip_truncations; apply tr; intros y i; exact (p y i, q y i).
-    - intros p; strip_truncations; split; apply tr; intros y i; by destruct (p y i).
+    - intros [p q]; strip_truncations; split; apply tr; intros y i.
+      + exact (p y i).
+      + exact (q y i).
+    - intros [p q]; strip_truncations; split; apply tr; intros y i.
+      + exact (p y i).
+      + exact (q y i).
   Defined.
   
 End IdealLemmas.
-
 
 (** TODO: Maximal ideals *)
 (** TODO: Principal ideal *)
