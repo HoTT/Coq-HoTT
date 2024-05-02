@@ -664,7 +664,7 @@ Section Associativity.
     - exact (cat_pr1 $o cat_pr2).
     - exact (fmap01 (fun x y => cat_binprod x y) x cat_pr2).
   Defined.
-  
+
   Definition cat_binprod_pr1_twist (x y z : A)
     : cat_pr1 $o cat_binprod_twist x y z $== cat_pr1 $o cat_pr2
     := cat_binprod_beta_pr1 _ _.
@@ -676,7 +676,7 @@ Section Associativity.
     nrefine ((_ $@L cat_binprod_beta_pr2 _ _) $@ _).
     nrapply cat_pr1_fmap01_binprod.
   Defined.
-  
+
   Definition cat_binprod_pr2_pr2_twist (x y z : A)
     : cat_pr2 $o cat_pr2 $o cat_binprod_twist x y z $== cat_pr2 $o cat_pr2.
   Proof.
@@ -927,7 +927,7 @@ Section Associativity.
     1,3: nrapply cat_binprod_beta_pr2.
     nrapply cat_pr2_pr1_associator_binprod.
   Defined.
-  
+
   Global Instance ismonoidal_binprod
     : IsMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
