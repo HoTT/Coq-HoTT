@@ -411,7 +411,7 @@ Proof.
   5: split.
   5: split.
   - exact R.
-  - exact (flip mult).
+  - exact (fun x y => mult y x).
   - exact one.
   - exact is_abgroup.
   - exact monoid_ishset.
@@ -421,6 +421,27 @@ Proof.
   - exact (fun x y z => rd y z x).
   - exact (fun x y z => ld z x y).
   - exact (fun x y z => mult_assoc z y x).
+Defined.
+
+(** The opposite ring is a functor. *)
+Global Instance is0functor_rng_op : Is0Functor rng_op.
+Proof.
+  snrapply Build_Is0Functor.
+  intros R S f.
+  snrapply Build_RingHomomorphism'.
+  - exact f.
+  - split.
+    + exact (fun x y => rng_homo_mult f y x).
+    + exact (rng_homo_one f).
+Defined.
+
+Global Instance is1functor_rng_op : Is1Functor rng_op.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros R S f g p.
+    exact p.
+  - intros R; cbn; reflexivity.
+  - intros R S T f g; cbn; reflexivity.
 Defined.
 
 (** ** More Ring laws *)

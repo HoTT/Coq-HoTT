@@ -133,36 +133,56 @@ Section IdealCRing.
     : (I :: J) :: K ↔ (I :: (J ⋅ K)).
   Proof.
     apply ideal_subset_antisymm.
-    - intros x p; simpl in p.
-      strip_truncations; apply tr.
-      intros y q.
-      strip_truncations.
-      induction q as [y i | | ? ? ? [] ? [] ].
-      + destruct i as [ y z s t ].
-        destruct (p z t) as [p' p''].
-        strip_truncations.
-        destruct (p' y s) as [q q'], (p'' y s) as [q'' q'''].
-        rewrite <- rng_mult_assoc.
-        rewrite (rng_mult_comm y).
-        rewrite rng_mult_assoc.
-        by split.
-      + rewrite rng_mult_zero_l, rng_mult_zero_r.
-        split; apply ideal_in_zero.
-      + rewrite rng_dist_l, rng_dist_r.
-        rewrite rng_mult_negate_l, rng_mult_negate_r.
-        split; by apply ideal_in_plus_negate.
-    - intros x p; strip_truncations; apply tr; intros y k.
-      split; apply tr; intros z j.
+    - intros x [p q]; strip_truncations; split; apply tr;
+      intros r; rapply Trunc_rec; intros jk.
+      + induction jk as [y [z z' j k] | | ? ? ? ? ? ? ].
+        * rewrite (rng_mult_comm z z').
+          rewrite rng_mult_assoc.
+          destruct (p z' k) as [p' ?].
+          revert p'; apply Trunc_rec; intros p'.
+          exact (p' z j).
+        * change (I (x * 0)).
+          rewrite rng_mult_zero_r.
+          apply ideal_in_zero.
+        * change (I (x * (g - h))).
+          rewrite rng_dist_l.
+          rewrite rng_mult_negate_r.
+          by apply ideal_in_plus_negate.
+      + induction jk as [y [z z' j k] | | ? ? ? ? ? ? ].
+        * change (I (z * z' * x)).
+          rewrite <- rng_mult_assoc.
+          rewrite (rng_mult_comm z).
+          destruct (q z' k) as [q' ?].
+          revert q'; apply Trunc_rec; intros q'.
+          exact (q' z j).
+        * change (I (0 * x)).
+          rewrite rng_mult_zero_l.
+          apply ideal_in_zero.
+        * change (I ((g - h) * x)).
+          rewrite rng_dist_r.
+          rewrite rng_mult_negate_l.
+          by apply ideal_in_plus_negate.
+    - intros x [p q]; strip_truncations; split; apply tr;
+      intros r k; split; apply tr; intros z j.
       + rewrite <- rng_mult_assoc.
-        rewrite (rng_mult_comm x y).
-        rewrite 2 rng_mult_assoc, <- rng_mult_assoc.
-        rewrite (rng_mult_comm y).
-        simpl in p; by apply p, tr, sgt_in, ipn_in.
-      + rewrite rng_mult_assoc.
-        rewrite (rng_mult_comm y x).
+        rewrite (rng_mult_comm r z).
+        by apply p, tr, sgt_in, ipn_in.
+      + cbn in z.
+        change (I (z * (x * r))).
+        rewrite (rng_mult_comm x).
+        rewrite rng_mult_assoc.
+        by apply q, tr, sgt_in, ipn_in.
+      + cbn in r.
+        change (I (r * x * z)).
         rewrite <- rng_mult_assoc.
-        rewrite (rng_mult_comm y).
-        simpl in p; by apply p, tr, sgt_in, ipn_in.
+        rewrite (rng_mult_comm r).
+        rewrite <- rng_mult_assoc.
+        by apply p, tr, sgt_in, ipn_in.
+      + cbn in r, z.
+        change (I (z * (r * x))).
+        rewrite rng_mult_assoc.
+        rewrite rng_mult_comm.
+        by apply p, tr, sgt_in, ipn_in.
   Defined.
   
   (** The ideal quotient is a right adjoint to the product in the monoidal lattice of ideals. *)
@@ -170,14 +190,17 @@ Section IdealCRing.
     : I ⋅ J ⊆ K <-> I ⊆ (K :: J).
   Proof.
     split.
-    - intros p r i; apply tr; intros s j; rewrite (rng_mult_comm s r); split;
+    - intros p r i; split; apply tr; intros s j; cbn in s, r.
+      + by apply p, tr, sgt_in, ipn_in.
+      + change (K (s * r)).
+        rewrite (rng_mult_comm s r).
         by apply p, tr, sgt_in; rapply ipn_in.
     - intros p x.
       apply Trunc_rec.
       intros q.
       induction q as [r x | | ].
       { destruct x.
-        specialize (p x s); simpl in p.
+        specialize (p x s); destruct p as [p q].
         revert p; apply Trunc_rec; intros p.
         by apply p. }
       1: apply ideal_in_zero.
@@ -199,3 +222,31 @@ Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
 Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
 Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
 Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
+Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
+
+(** ** Opposite commutative ring *)
+
+Definition cring_op (R : CRing) : CRing.
+Proof.
+  destruct R as [R c].
+  snrapply Build_CRing.
+  - exact (rng_op R).
+  - intros x y; exact (c y x).
+Defined.
+
+Global Instance is0functor_cring_op : Is0Functor cring_op.
+Proof.
+  snrapply Build_Is0Functor.
+  intros R S.
+  exact (fmap rng_op).
+Defined.
+
+Global Instance is1fucntor_cring_op : Is1Functor cring_op.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros R S f g.
+    exact (fmap2 rng_op).
+  - exact (fmap_id rng_op).
+  - intros R S T.
+    exact (fmap_comp rng_op).
+Defined.

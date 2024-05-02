@@ -34,8 +34,8 @@ Section QuotientRing.
     rewrite <- rng_mult_negate_r.
     rewrite <- rng_dist_l.
     rapply subgroup_in_op.
-    - by apply isrightideal.
-    - by apply isleftideal.
+    - by rapply isrightideal.
+    - by rapply isleftideal.
   Defined.
 
   Instance mult_quotient_group : Mult (QuotientAbGroup R I).
