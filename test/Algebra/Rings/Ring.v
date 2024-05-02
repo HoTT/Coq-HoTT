@@ -6,6 +6,4 @@ Local Open Scope path_scope.
 
 (** Test that opposite rings are definitionally involutive. *)
 Definition test1 (R : Ring) : R = (rng_op (rng_op R)) :> Ring := 1.
-
-(** This also works because `:>` coercions are by default reversible. *)
-Definition test2 (R : CRing) : R = (rng_op (rng_op R)) :> CRing := 1.
+Definition test2 (R : CRing) : R = (cring_op (cring_op R)) :> CRing := 1.
