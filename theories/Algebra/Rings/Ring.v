@@ -25,7 +25,7 @@ Record Ring := Build_Ring' {
   (** Such that all they all satisfy the axioms of a ring. *)
   ring_isring :: IsRing ring_abgroup;
   (** This field only exists so that opposite rings are definitionally involutive and can safely be ignored. *)
-  ring_mult_assoc_opp : forall x y z, (x * y) * z = x * (y * z);
+  ring_mult_assoc_opp : forall z y x, (x * y) * z = x * (y * z);
 }.
 
 
@@ -181,7 +181,7 @@ Definition Build_Ring (R : AbGroup)
   `(Mult R, One R, LeftDistribute R mult (@group_sgop R), RightDistribute R mult (@group_sgop R))
   (iscomm : @IsMonoid R mult one)
   : Ring
-  := Build_Ring' R _ _ (Build_IsRing _ _ _  _ _) (fun x y z => (associativity x y z)^).
+  := Build_Ring' R _ _ (Build_IsRing _ _ _  _ _) (fun z y x => (associativity x y z)^).
 
 (** Scalar multiplication on the left is a group homomorphism. *)
 Definition grp_homo_rng_left_mult {R : Ring} (r : R)
@@ -425,12 +425,12 @@ Proof.
   - exact one.
   - exact is_abgroup.
   - exact monoid_ishset.
-  - exact (fun x y z => mult_assoc_opp z y x).
+  - exact mult_assoc_opp.
   - exact ri.
   - exact li.
   - exact (fun x y z => rd y z x).
   - exact (fun x y z => ld z x y).
-  - exact (fun x y z => mult_assoc z y x).
+  - exact mult_assoc.
 Defined.
 
 (** The opposite ring is a functor. *)
