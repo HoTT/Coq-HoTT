@@ -150,15 +150,16 @@ Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
 (** *** Theory about [Associator] *)
 
 Section Associator.
-  Context {A : Type} {F : A -> A -> A} `{Associator A F, !HasEquivs A}.
+  Context {A : Type} {F : A -> A -> A} `{assoc : Associator A F, !HasEquivs A}.
 
   Local Definition associator_nat {x x' y y' z z'}
     (f : x $-> x') (g : y $-> y') (h : z $-> z')
     : associator x' y' z' $o fmap11 F f (fmap11 F g h)
       $== fmap11 F (fmap11 F f g) h $o associator x y z.
   Proof.
-    refine (_ $@ is1natural_associator_uncurried (x, y, z) (x', y', z') (f, g, h)).
-    refine (_ $@L ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _^$))); rapply fmap_comp. 
+    nrefine (_ $@ is1natural_associator_uncurried (x, y, z) (x', y', z') (f, g, h)).
+    refine (_ $@L ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _^$))).
+    1,2: rapply fmap_comp. 
   Defined.
 
   Local Definition associator_nat_l {x x' : A} (f : x $-> x') (y z : A)
@@ -166,12 +167,9 @@ Section Associator.
       $== fmap10 F (fmap10 F f y) z $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: apply (is1natural_associator_uncurried (x, y, z) (x', y, z) (f, Id _, Id _)).
-    - refine ((_ $@@ _) $@ cat_idl _).
-      2: exact (fmap02 _ _ (fmap01_id _ _ _) $@ fmap01_id _ _ _).
-      rapply fmap10_is_fmap11.
-    - refine ((fmap20 _ _ _ $@@ fmap01_id _ _ _) $@ cat_idl _).
-      rapply fmap10_is_fmap11.
+    2: rapply (associator_nat f (Id _) (Id _)).
+    - exact (fmap12 _ _ (fmap11_id _ _ _) $@ fmap10_is_fmap11 _ _ _).
+    - exact (fmap21 _ (fmap10_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
   Defined.
 
   Local Definition associator_nat_m (x : A) {y y' : A} (g : y $-> y') (z : A)
@@ -179,11 +177,9 @@ Section Associator.
       $== fmap10 F (fmap01 F x g) z $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: apply (is1natural_associator_uncurried (x, y, z) (x, y', z) (Id _, g, Id _)).
-    - refine ((fmap01_is_fmap11 _ _ _ $@@ _) $@ cat_idl _).
-      exact (fmap02 _ _ (fmap01_id _ _ _) $@ fmap01_id _ _ _).
-    - refine ((fmap20 _ _ _ $@@ fmap01_id _ _ _) $@ cat_idl _).
-      rapply fmap01_is_fmap11.
+    2: nrapply (associator_nat (Id _) g (Id _)).
+    - exact (fmap12 _ _ (fmap10_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
+    - exact (fmap21 _ (fmap01_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
   Defined.
 
   Local Definition associator_nat_r (x y : A) {z z' : A} (h : z $-> z')
@@ -191,12 +187,9 @@ Section Associator.
       $== fmap01 F (F x y) h $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: apply (is1natural_associator_uncurried (x, y, z) (x, y, z') (Id _, Id _, h)).
-    - refine ((_ $@L _) $@ cat_idr _).
-      rapply fmap11_id. 
-    - refine ((_ $@L _) $@ cat_idr _).
-      refine (fmap20 _ _ _ $@ fmap10_id _ _ _).
-      rapply fmap11_id.
+    2: nrapply (associator_nat (Id _) (Id _) h).
+    - exact (fmap12 _ _ (fmap01_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
+    - exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).
   Defined.
 
 End Associator.
