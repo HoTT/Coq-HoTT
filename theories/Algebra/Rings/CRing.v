@@ -223,30 +223,3 @@ Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
 Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
 Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
 Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
-
-(** ** Opposite commutative ring *)
-
-Definition cring_op (R : CRing) : CRing.
-Proof.
-  destruct R as [R c].
-  snrapply Build_CRing.
-  - exact (rng_op R).
-  - intros x y; exact (c y x).
-Defined.
-
-Global Instance is0functor_cring_op : Is0Functor cring_op.
-Proof.
-  snrapply Build_Is0Functor.
-  intros R S.
-  exact (fmap rng_op).
-Defined.
-
-Global Instance is1fucntor_cring_op : Is1Functor cring_op.
-Proof.
-  snrapply Build_Is1Functor.
-  - intros R S f g.
-    exact (fmap2 rng_op).
-  - exact (fmap_id rng_op).
-  - intros R S T.
-    exact (fmap_comp rng_op).
-Defined.
