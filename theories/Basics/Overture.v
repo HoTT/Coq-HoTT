@@ -73,9 +73,6 @@ Notation conj := pair (only parsing).
 
 #[export] Hint Resolve pair inl inr : core.
 
-Definition prod_curry (A B C : Type) (f : A -> B -> C)
-  (p : prod A B) : C := f (fst p) (snd p).
-
 (** If and only if *)
 
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
