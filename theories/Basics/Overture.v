@@ -785,26 +785,3 @@ Global Existing Instance ispointed_type.
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
 Global Arguments hfiber {A B}%type_scope f%function_scope y.
-
-(** *** More tactics *)
-
-Ltac easy :=
-  let rec use_hyp H :=
-    match type of H with
-    | _ => try solve [inversion H]
-    end
-  with do_intro := let H := fresh in intro H; use_hyp H
-  with destruct_hyp H := case H; clear H; do_intro; do_intro in
-  let rec use_hyps :=
-    match goal with
-    | H : _ |- _ => solve [inversion H]
-    | _ => idtac
-    end in
-  let rec do_atom :=
-    solve [reflexivity | symmetry; trivial] ||
-    contradiction ||
-    (split; do_atom)
-  with do_ccl := trivial; repeat do_intro; do_atom in
-  (use_hyps; do_ccl) || fail "Cannot solve this goal".
-
-Tactic Notation "now" tactic(t) := t; easy.
