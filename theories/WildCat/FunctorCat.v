@@ -2,6 +2,7 @@
 
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
+Require Import WildCat.Opposite.
 Require Import WildCat.Equiv.
 Require Import WildCat.Induced.
 Require Import WildCat.NatTrans.
@@ -113,6 +114,14 @@ Proof.
   - intros; apply cate_isretr.
   - intros [gamma ?] r s a; cbn in *.
     refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
+Defined.
+
+(** Bundled opposite functors *)
+Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
+  : Fun01 A B -> Fun01 A^op B^op.
+Proof.
+  intros F.
+  rapply (Build_Fun01 A^op B^op F).
 Defined.
 
 (** ** Categories of 1-coherent 1-functors *)

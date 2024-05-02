@@ -2,10 +2,6 @@
 
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
-Require Import WildCat.Equiv.
-Require Import WildCat.NatTrans.
-Require Import WildCat.FunctorCat.
-Require Import WildCat.PointedCat.
 
 (** ** Opposite categories *)
 
@@ -123,79 +119,12 @@ Global Instance is1functor_op' A B (F : A^op -> B^op)
   : Is1Functor (F : A -> B)
   := is1functor_op A^op B^op F.
 
-(** Bundled opposite functors *)
-Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
-  : Fun01 A B -> Fun01 A^op B^op.
-Proof.
-  intros F.
-  rapply (Build_Fun01 A^op B^op F).
-Defined.
-
-(** Opposite natural transformations *)
-
-Definition transformation_op {A} {B} `{Is01Cat B}
-           (F : A -> B) (G : A -> B) (alpha : F $=> G)
-  : @Transformation A^op (fun _ => B^op) _
-                     (G : A^op -> B^op) (F : A^op -> B^op).
-Proof.
-  unfold op in *.
-  cbn in *.
-  intro a.
-  apply (alpha a).
-Defined.
-
-Global Instance is1nat_op A B `{Is01Cat A} `{Is1Cat B}
-       (F : A -> B) `{!Is0Functor F}
-       (G : A -> B) `{!Is0Functor G}
-       (alpha : F $=> G) `{!Is1Natural F G alpha}
-  : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (transformation_op F G alpha).
-Proof.
-  unfold op.
-  unfold transformation_op.
-  intros a b f.
-  srapply isnat_tr.
-Defined.
-
-(** Opposite categories preserve having equivalences. *)
-Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
-Proof.
-  snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
-  - exact (b $<~> a).
-  - apply CatIsEquiv.
-  - apply cate_fun'.
-  - apply cate_isequiv'.
-  - apply cate_buildequiv'.
-  - rapply cate_buildequiv_fun'.
-  - apply cate_inv'.
-  - rapply cate_isretr'.
-  - rapply cate_issect'.
-  - intros f g s t.
-    exact (catie_adjointify f g t s).
-Defined.
-
-Global Instance isequiv_op {A : Type} `{HasEquivs A}
-       {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
-  : @CatIsEquiv A^op _ _ _ _ _ b a f.
-Proof.
-  assumption.
-Defined.
-
 Global Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
   : HasMorExt A^op.
 Proof.
   snrapply Build_HasMorExt.
   intros a b f g.
   refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
-Defined.
-
-Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
-  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
-  : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
-Proof.
-  intros [a n].
-  snrapply Build_NatEquiv.
-  1: exact a.
-  rapply is1nat_op.
 Defined.
 
 Global Instance isinitial_isterminal_op {A : Type} `{Is1Cat A} (x : A)
@@ -205,10 +134,3 @@ Global Instance isinitial_isterminal_op {A : Type} `{Is1Cat A} (x : A)
 Global Instance isterminal_isinitial_op {A : Type} `{Is1Cat A} (x : A)
   {i : IsInitial x} : IsTerminal (A := A^op) x
   := i.
-
-Global Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
-Proof.
-  snrapply Build_IsPointedCat.
-  1: unfold op; exact zero_object.
-  1,2: exact _.
-Defined.

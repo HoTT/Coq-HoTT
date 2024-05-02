@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core.
+Require Import WildCat.Core WildCat.Opposite.
 Require Import WildCat.Equiv.
 
 (** A wild category is pointed if the initial and terminal object are the same. *)
@@ -81,7 +81,6 @@ Proof.
     rapply cate_isinitial.
   + intros x tex.
     rapply isterminal_cate.
-    symmetry.
     refine (p $oE _).
     rapply (emap F _).
     rapply cate_isterminal.
@@ -109,4 +108,12 @@ Proof.
   1: nrapply fmap_terminal; [exact _].
   rapply cat_zero_m.
   rapply pfunctor_zero.
+Defined.
+
+(** Opposite category of a pointed category is also pointed. *)
+Global Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
+Proof.
+  snrapply Build_IsPointedCat.
+  1: unfold op; exact zero_object.
+  1,2: exact _.
 Defined.

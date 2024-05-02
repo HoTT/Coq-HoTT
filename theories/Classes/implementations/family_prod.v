@@ -45,7 +45,7 @@ Section family_prod.
   Fixpoint for_all_family_prod (F : I → Type) {ℓ : list I}
       (P : ∀ i, F i -> Type) : FamilyProd F ℓ → Type :=
     match ℓ with
-    | nil => λ _, True
+    | nil => λ _, Unit
     | i :: _ => λ '(x,s), P i x ∧ for_all_family_prod F P s
     end.
 
@@ -56,7 +56,7 @@ Section family_prod.
       (R : ∀ i, F i -> G i -> Type)
       : FamilyProd F ℓ → FamilyProd G ℓ → Type :=
     match ℓ with
-    | nil => λ _ _, True
+    | nil => λ _ _, Unit 
     | i :: _ => λ '(x,s) '(y,t), R i x y ∧ for_all_2_family_prod F G R s t
     end.
 

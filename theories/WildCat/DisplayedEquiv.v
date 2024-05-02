@@ -284,7 +284,7 @@ Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun f').
 Proof.
   refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
-  apply (_ $@L' dcate_buildequiv_fun _).
+  rapply (_ $@L' dcate_buildequiv_fun _).
 Defined.
 
 (** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)
@@ -293,13 +293,13 @@ Definition dcompose_V_hh {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : b $<~> c} {g : a $-> b} {a' : D a} {b' : D b} {c' : D c}
   (f' : DCatEquiv f b' c') (g' : DHom g a' b')
   : DGpdHom (compose_V_hh f g) (dcate_fun f'^-1$' $o' (dcate_fun f' $o' g')) g'
-  := (dcat_assoc _ _ _)^$' $@' (dcate_issect f' $@R' g') $@' dcat_idl g'.
+  := (dcat_assoc_opp _ _ _) $@' (dcate_issect f' $@R' g') $@' dcat_idl g'.
 
 Definition dcompose_h_Vh {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : c $<~> b} {g : a $-> b} {a' : D a} {b' : D b} {c' : D c}
   (f' : DCatEquiv f c' b') (g' : DHom g a' b')
   : DGpdHom (compose_h_Vh f g) (dcate_fun f' $o' (dcate_fun f'^-1$' $o' g')) g'
-  := (dcat_assoc _ _ _)^$' $@' (dcate_isretr f' $@R' g') $@' dcat_idl g'.
+  := (dcat_assoc_opp _ _ _) $@' (dcate_isretr f' $@R' g') $@' dcat_idl g'.
 
 Definition dcompose_hh_V {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : b $-> c} {g : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
@@ -479,7 +479,7 @@ Defined.
 Definition demap_compose {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', isd1f : !IsD1Functor F F'}
   {a b c : A} {f : a $<~> b} {g : b $<~> c} {a' : DA a} {b' : DA b} {c' : DA c}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
   : DGpdHom (emap_compose F f g) (dcate_fun (demap F F' (g' $oE' f')))
@@ -487,7 +487,7 @@ Definition demap_compose {A B : Type}
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
   refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
-  rapply dfmap_comp.
+  nrapply dfmap_comp; exact isd1f.
 Defined.
 
 (** A variant. *)

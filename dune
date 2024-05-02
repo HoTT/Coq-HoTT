@@ -63,6 +63,28 @@
  (action
   (run etc/emacs/run-etags.sh %{vfile})))
 
+; Common flags for Coq
+
+(env
+ (dev
+  (coq
+   (coqdoc_flags
+    :standard
+    --interpolate
+    --utf8
+    --no-externals
+    --parse-comments)
+   (flags -noinit -indices-matter -color on)))
+ (_
+  (coq
+   (coqdoc_flags
+    :standard
+    --interpolate
+    --utf8
+    --no-externals
+    --parse-comments)
+   (flags -noinit -indices-matter))))
+
 ; Bench
 
 ; The following rule allows you to bench the running time of a file using

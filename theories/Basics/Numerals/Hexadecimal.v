@@ -12,7 +12,7 @@
 (* This file has been modified for use in the HoTT library              *)
 (************************************************************************)
 
-Require Import Basics.Overture Basics.Decimal.
+Require Import Basics.Overture Basics.Numerals.Decimal.
 
 (** * Hexadecimal numbers *)
 

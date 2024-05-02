@@ -9,7 +9,7 @@ Require Import Algebra.Homological.Additive.
 
 Definition End {A : Type} `{IsAdditive A} (X : A) : Ring.
 Proof.
-  snrapply Build_Ring'; repeat split.
+  snrapply Build_Ring; repeat split.
   - exact (AbHom X X).
   - exact (fun f g => f $o g).
   - exact (Id _).

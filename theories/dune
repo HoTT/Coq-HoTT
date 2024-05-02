@@ -6,7 +6,4 @@
 
 (coq.theory
  (name HoTT)
- (package coq-hott)
- (modules :standard)
- (flags -noinit -indices-matter -color on)
- (coqdoc_flags :standard --interpolate --utf8 --no-externals --parse-comments))
+ (package coq-hott))
