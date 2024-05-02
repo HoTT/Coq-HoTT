@@ -183,6 +183,16 @@ Definition Build_Ring (R : AbGroup)
   : Ring
   := Build_Ring' R _ _ (Build_IsRing _ _ _  _ _) (fun x y z => (associativity x y z)^).
 
+(** Scalar multiplication on the left is a group homomorphism. *)
+Definition grp_homo_rng_left_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s => r * s) (rng_dist_l r).
+
+(** Scalar multiplication on the right is a group homomorphism. *)
+Definition grp_homo_rng_right_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s => s * r) (fun x y => rng_dist_r x y r).
+
 (** ** Ring movement lemmas *)
 
 Section RingMovement.

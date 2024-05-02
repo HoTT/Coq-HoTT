@@ -2,6 +2,7 @@ Require Import Basics Types.
 Require Import Spaces.Finite.Fin.
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.Rings.Ring.
+Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.AbGroups.
 Require Import WildCat.Core.
 
@@ -299,44 +300,25 @@ Global Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
   : IsLeftIdeal (ideal_product_type I J).
 Proof.
-  intros r s.
-  apply Trunc_functor.
-  intros p.
-  induction p as [s i | | g h p1 IHp1 p2 IHp2].
-  - destruct i.
-    apply sgt_in.
-    rewrite simple_associativity.
-    split.
-    + by apply isleftideal.
-    + assumption.
-  - rewrite rng_mult_zero_r.
-    apply sgt_unit.
-  - rewrite rng_dist_l.
-    rewrite rng_mult_negate_r.
-    by apply sgt_op.
+  intro r.
+  nrapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)).
+  intros s [s1 s2 p1 p2]; cbn.
+  rewrite simple_associativity.
+  nrefine (ipn_in I J (r * s1) s2 _ p2).
+  by apply isleftideal.
 Defined.
 
-(** TODO: not sure how to dualize this. *)
 (** The product of right ideals is a right ideal. *)
 Global Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (ideal_product_type I J).
 Proof.
-  intros s r.
-  apply Trunc_functor.
-  intros p.
-  induction p as [r i | | g h p1 IHp1 p2 IHp2].
-  - destruct i.
-    apply sgt_in; cbn.
-    rewrite <- simple_associativity.
-    split.
-    + assumption.
-    + by apply isrightideal.
-  - rewrite (rng_mult_zero_r s).
-    apply sgt_unit.
-  - rewrite (rng_dist_l s).
-    rewrite (rng_mult_negate_r s).
-    by apply sgt_op.
+  intro r.
+  nrapply (functor_subgroup_generated _ _ (grp_homo_rng_right_mult (R:=R) r)).
+  intros s [s1 s2 p1 p2]; cbn.
+  rewrite <- simple_associativity.
+  nrefine (ipn_in I J s1 (s2 * r) p1 _).
+  by apply isrightideal.
 Defined.
 
 (** The product of ideals is an ideal. *)
