@@ -625,7 +625,7 @@ Proposition projection_split_beta {B A : AbGroup} (E : AbSES B A)
   : projection_split_iso E h o (inclusion _) == ab_biprod_inl.
 Proof.
   intro a.
-  refine (ap _ (ab_corec_beta _ _ _ _) @ _).
+  refine (ap _ (ab_corec_eta _ _ _ _) @ _).
   refine (ab_biprod_functor_beta _ _ _ _ _ @ _).
   nrapply path_prod'.
   2: rapply cx_isexact.

@@ -47,7 +47,7 @@ Proof.
   intros [f g]. exact (ab_biprod_rec f g).
 Defined.
 
-Proposition ab_biprod_rec_beta' {A B Y : AbGroup}
+Proposition ab_biprod_rec_eta {A B Y : AbGroup}
             (u : ab_biprod A B $-> Y)
   : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.
 Proof.
@@ -58,29 +58,19 @@ Proof.
   - exact (left_identity b).
 Defined.
 
-Proposition ab_biprod_rec_beta `{Funext} {A B Y : AbGroup}
-            (u : ab_biprod A B $-> Y)
-  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) = u.
-Proof.
-  apply equiv_path_grouphomomorphism.
-  exact (ab_biprod_rec_beta' u).
-Defined.
-
-Proposition ab_biprod_rec_inl_beta `{Funext} {A B Y : AbGroup}
+Proposition ab_biprod_rec_inl_beta {A B Y : AbGroup}
             (a : A $-> Y) (b : B $-> Y)
-  : (ab_biprod_rec a b) $o ab_biprod_inl = a.
+  : (ab_biprod_rec a b) $o ab_biprod_inl == a.
 Proof.
-  apply equiv_path_grouphomomorphism.
   intro x; simpl.
   rewrite (grp_homo_unit b).
   exact (right_identity (a x)).
 Defined.
 
-Proposition ab_biprod_rec_inr_beta `{Funext} {A B Y : AbGroup}
+Proposition ab_biprod_rec_inr_beta {A B Y : AbGroup}
             (a : A $-> Y) (b : B $-> Y)
-  : (ab_biprod_rec a b) $o ab_biprod_inr = b.
+  : (ab_biprod_rec a b) $o ab_biprod_inr == b.
 Proof.
-  apply equiv_path_grouphomomorphism.
   intro y; simpl.
   rewrite (grp_homo_unit a).
   exact (left_identity (b y)).
@@ -93,11 +83,14 @@ Proof.
   - intro phi.
     exact (phi $o ab_biprod_inl, phi $o ab_biprod_inr).
   - intro phi.
-    exact (ab_biprod_rec_beta phi).
+    apply equiv_path_grouphomomorphism.
+    exact (ab_biprod_rec_eta phi).
   - intros [a b].
     apply path_prod.
-    + apply ab_biprod_rec_inl_beta.
-    + apply ab_biprod_rec_inr_beta.
+    + apply equiv_path_grouphomomorphism.
+      apply ab_biprod_rec_inl_beta.
+    + apply equiv_path_grouphomomorphism.
+      apply ab_biprod_rec_inr_beta.
 Defined.
 
 (** Corecursion principle, inherited from Groups/Group.v. *)
@@ -105,7 +98,7 @@ Definition ab_biprod_corec {A B X : AbGroup} (f : X $-> A) (g : X $-> B)
   : X $-> ab_biprod A B
   := grp_prod_corec f g.
 
-Definition ab_corec_beta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
+Definition ab_corec_eta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
   : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
   := fun _ => idpath.
 
@@ -190,6 +183,18 @@ Proof.
   - exact (left_identity _)^.
 Defined.
 
+Lemma ab_biprod_corec_eta' {A B X : AbGroup} (f g : ab_biprod A B $-> X)
+  : (f $o ab_biprod_inl $== g $o ab_biprod_inl)
+  -> (f $o ab_biprod_inr $== g $o ab_biprod_inr)
+  -> f $== g.
+Proof.
+  intros h k.
+  intros [a b].
+  refine (ap f (ab_biprod_decompose _ _) @ _ @ ap g (ab_biprod_decompose _ _)^).
+  refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+  exact (ap011 (+) (h a) (k b)).
+Defined.
+
 (* Maps out of biproducts are determined on the two inclusions. *)
 Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
   : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
@@ -197,10 +202,7 @@ Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A
 Proof.
   apply equiv_iff_hprop.
   - intros [h k].
-    intros [a b].
-    refine (ap phi (ab_biprod_decompose _ _) @ _ @ ap psi (ab_biprod_decompose _ _)^).
-    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-    exact (ap011 (+) (h a) (k b)).
+    apply ab_biprod_corec_eta'; assumption.
   - intro h.
     exact (fun a => h _, fun b => h _).
 Defined.
