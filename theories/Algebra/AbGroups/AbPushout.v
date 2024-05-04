@@ -71,7 +71,7 @@ Proof.
   srapply path_sigma_hprop.
   refine (grp_quotient_rec_beta _ Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
-  exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
+  exact (ab_biprod_rec_eta (phi $o grp_quotient_map) bc).
 Defined.
 
 (** Restricting [ab_pushout_rec] along [ab_pushout_inl] recovers the left inducing map. *)
