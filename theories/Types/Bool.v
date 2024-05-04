@@ -99,7 +99,7 @@ Proof.
   intros oops.
   symmetry.
   apply negb_ne.
-  intros p; symmetry in p; contradiction.
+  exact (symmetric_neq oops).
 Defined.
 
 (** ** Products as [forall] over [Bool] *)
