@@ -157,9 +157,8 @@ Section Associator.
     : associator x' y' z' $o fmap11 F f (fmap11 F g h)
       $== fmap11 F (fmap11 F f g) h $o associator x y z.
   Proof.
-    nrefine (_ $@ is1natural_associator_uncurried (x, y, z) (x', y', z') (f, g, h)).
-    refine (_ $@L ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _^$))).
-    1,2: rapply fmap_comp. 
+    destruct assoc as [asso nat].
+    exact (nat (x, y, z) (x', y', z') (f, g, h)).
   Defined.
 
   Local Definition associator_nat_l {x x' : A} (f : x $-> x') (y z : A)
@@ -359,28 +358,20 @@ Section SymmetricBraid.
   Local Definition braid_nat {a b c d} (f : a $-> c) (g : b $-> d)
     : braid c d $o fmap11 F f g $== fmap11 F g f $o braid a b.
   Proof.
-    refine (is1natural_braiding_uncurried (a, b) (c, d) (f, g) $@ _).
-    refine (_ $@R _).
-    rapply fmap11_coh.
+    exact (is1natural_braiding_uncurried (a, b) (c, d) (f, g)).
   Defined.
 
   Local Definition braid_nat_l {a b c} (f : a $-> b)
     : braid b c $o fmap10 F f c $== fmap01 F c f $o braid a c.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    - rapply fmap10_is_fmap11.
-    - exact (is1natural_braiding_uncurried (a, c) (b, c) (f, Id _)).
-    - exact ((fmap11_coh _ _ _)^$ $@ fmap01_is_fmap11 _ c f).
+    exact (is1natural_braiding_uncurried (a, c) (b, c) (f, Id _)).
   Defined.
 
   (** This is just the inverse of above. *)
   Local Definition braid_nat_r {a b c} (g : b $-> c)
     : braid a c $o fmap01 F a g $== fmap10 F g a $o braid a b.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    - rapply fmap01_is_fmap11.
-    - exact (is1natural_braiding_uncurried (a, b) (a, c) (Id _ , g)).
-    - exact ((fmap11_coh _ _ _)^$ $@ fmap10_is_fmap11 _ g a).
+    exact (is1natural_braiding_uncurried (a, b) (a, c) (Id _ , g)).
   Defined.
 
 End SymmetricBraid.
@@ -632,15 +623,9 @@ Section TwistConstruction.
       (** The second square is just the naturality of twist. *)
       nrapply vconcat.
       2: apply twist_nat.
-      (** We rewrite one of the edges to make sure a functor application is grouped together. *)
-      nrapply vconcatL.
-      { refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
-        rapply fmap_comp. }
-      (** This allows us to compose with bifunctor coherence on one side. *)
-      nrapply hconcat.
-      1: rapply fmap11_coh.
       (** Leaving us with a square with a functor application. *)
-      rapply fmap_square.
+      rapply fmap11_square.
+      1: rapply vrefl.
       (** We are finally left with the naturality of braid. *)
       apply braid_nat.
   Defined.

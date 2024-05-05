@@ -45,12 +45,12 @@ Defined.
 
 Global Instance is0bifunctor_hom {A} `{Is01Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
-  := is0bifunctor_functor_uncurried _.
+  := is0functor_hom.
 
 (** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
 Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
-  := is1bifunctor_functor_uncurried _.
+  := is1functor_hom.
 
 Definition fun01_hom {A} `{Is01Cat A}
   : Fun01 (A^op * A) Type
@@ -256,11 +256,11 @@ Defined.
 
 Global Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
-  := is0bifunctor_functor_uncurried _.
+  := is0functor_hom_0gpd.
 
 Global Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
-  := is1bifunctor_functor_uncurried _.
+  := is1functor_hom_0gpd.
 
 Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (opyon_0gpd a).

@@ -98,7 +98,8 @@ Proof.
       destruct g as [g k].
     exists g.
     apply path_sigma_hprop; cbn.
-    exact k^.
+    elim k^. 
+    by apply equiv_path_grouphomomorphism.
 Defined.
 
 (** *** Exactness of [ab_hom A G -> Ext1 B G -> Ext1 E G]. *)

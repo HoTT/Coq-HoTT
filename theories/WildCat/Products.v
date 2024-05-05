@@ -440,44 +440,21 @@ Defined.
 Local Instance is0bifunctor_boolrec {A : Type} `{Is1Cat A}
   : Is0Bifunctor (Bool_rec A).
 Proof.
-  snrapply Build_Is0Bifunctor.
-  - intros x.
-    nrapply Build_Is0Functor.
-    intros a b f [|].
-    + reflexivity.
-    + exact f.
-  - intros y.
-    nrapply Build_Is0Functor.
-    intros a b f [|].
-    + exact f.
-    + reflexivity.
+  snrapply Build_Is0Functor.
+  intros [a b] [a' b'] [f g] [ | ].
+  - exact f.
+  - exact g.
 Defined.
 
 Local Instance is1bifunctor_boolrec {A : Type} `{Is1Cat A}
   : Is1Bifunctor (Bool_rec A).
 Proof.
-  nrapply Build_Is1Bifunctor.
-  - intros x.
-    nrapply Build_Is1Functor.
-    + intros a b f g p [|].
-      1: reflexivity.
-      exact p.
-    + intros a [|]; reflexivity.
-    + intros a b c f g [|].
-      1: exact (cat_idl _)^$.
-      reflexivity.
-  - intros y.
-    nrapply Build_Is1Functor.
-    + intros a b f g p [|].
-      1: exact p.
-      reflexivity.
-    + intros a [|]; reflexivity.
-    + intros a b c f g [|].
-      1: reflexivity.
-      exact (cat_idl _)^$.
-  - intros a a' f b b' g [|].
-    + exact (cat_idl _ $@ (cat_idr _)^$).
-    + exact (cat_idr _ $@ (cat_idl _)^$).
+  snrapply Build_Is1Functor.
+  - intros [a b] [a' b'] [f g] [f' g'] [p q] [ | ].
+    + exact p.
+    + exact q.
+  - intros [a b] [ | ]; reflexivity.
+  - intros [a b] [a' b'] [a'' b''] [f f'] [g g'] [ | ]; reflexivity.
 Defined.
 
 (** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
@@ -502,28 +479,28 @@ Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
-  exact (bifunctor_is0functor10 y).
+  exact (is0functor10_bifunctor _ y).
 Defined.
 
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
 Proof.
-  exact (bifunctor_is1functor10 y).
+  exact (is1functor10_bifunctor _ y).
 Defined.
 
 Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
-  exact (bifunctor_is0functor01 x).
+  exact (is0functor01_bifunctor _ x).
 Defined.
 
 Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is1Functor (fun y => cat_binprod x y).
 Proof.
-  exact (bifunctor_is1functor01 x).
+  exact (is1functor01_bifunctor _ x).
 Defined.
 
 (** [cat_binprod_corec] is also functorial in each morphsism. *)
@@ -558,12 +535,8 @@ Definition cat_pr1_fmap10_binprod {A : Type} `{HasBinaryProducts A}
 
 Definition cat_pr1_fmap11_binprod {A : Type} `{HasBinaryProducts A}
   {w x y z : A} (f : w $-> y) (g : x $-> z)
-  : cat_pr1 $o fmap11 (fun x y => cat_binprod x y) f g $== f $o cat_pr1.
-Proof.
-  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _ $@ _).
-  1: nrapply cat_binprod_beta_pr1.
-  exact (cat_idl _ $@ cat_binprod_beta_pr1 _ _).
-Defined.
+  : cat_pr1 $o fmap11 (fun x y => cat_binprod x y) f g $== f $o cat_pr1
+  := cat_binprod_beta_pr1 _ _.
 
 Definition cat_pr2_fmap01_binprod {A : Type} `{HasBinaryProducts A}
   (a : A) {x y : A} (g : x $-> y)
@@ -577,12 +550,8 @@ Definition cat_pr2_fmap10_binprod {A : Type} `{HasBinaryProducts A}
 
 Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
   {w x y z : A} (f : w $-> y) (g : x $-> z)
-  : cat_pr2 $o fmap11 (fun x y => cat_binprod x y) f g $== g $o cat_pr2.
-Proof.
-  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _)).
-  1: nrapply cat_binprod_beta_pr2.
-  nrapply cat_pr2_fmap10_binprod.
-Defined.
+  : cat_pr2 $o fmap11 (fun x y => cat_binprod x y) f g $== g $o cat_pr2
+  := cat_binprod_beta_pr2 _ _.
 
 (** *** Symmetry of binary products *)
 
@@ -644,8 +613,7 @@ Section Symmetry.
     - snrapply Build_Braiding.
       + exact cat_binprod_swap.
       + intros [a b] [c d] [f g]; cbn in f, g.
-        nrefine (cat_binprod_swap_nat f g $@ (_ $@R _)).
-        rapply fmap11_coh.
+        exact(cat_binprod_swap_nat f g).
     - exact cat_binprod_swap_cat_binprod_swap.
   Defined.
 
@@ -732,12 +700,11 @@ Section Associativity.
       2: nrapply cat_pr2_fmap11_binprod.
       refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
       2: nrapply cat_binprod_beta_pr2.
-      nrefine (_ $@ cat_assoc_opp _ _ _).
-      nrefine (_ $@ (_ $@L _)).
-      2: rapply fmap11_coh.
-      nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
-      refine ((fmap01_comp _ _ _ _)^$ $@ fmap02 _ _ _ $@ fmap01_comp _ _ _ _).
-      nrapply cat_pr2_fmap11_binprod.
+      refine (_^$ $@ _ $@ _).
+      1,3: rapply fmap11_comp.
+      rapply fmap22.
+      1: exact (cat_idl _ $@ (cat_idr _)^$).
+      nrapply cat_binprod_beta_pr2.
   Defined.
 
   Local Existing Instance symmetricbraiding_binprod.
