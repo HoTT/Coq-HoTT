@@ -63,9 +63,9 @@ Defined.
 
 (** ** The bifunctor [ab_ext] *)
 
-Definition ab_ext `{Univalence} (B : AbGroup@{u}^op) (A : AbGroup@{u}) : AbGroup.
+Definition ab_ext@{u v|u < v} `{Univalence} (B : AbGroup@{u}^op) (A : AbGroup@{u}) : AbGroup@{v}.
 Proof.
-  snrapply (Build_AbGroup (grp_ext B A)).
+  snrapply (Build_AbGroup (grp_ext@{u v} B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
