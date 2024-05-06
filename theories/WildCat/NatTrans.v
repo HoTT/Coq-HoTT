@@ -189,6 +189,17 @@ Proof.
   srapply isnat_tr.
 Defined.
 
+Definition nattrans_op {A B : Type} `{Is01Cat A} `{Is1Cat B}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
+  : NatTrans F G
+  -> NatTrans (A:=A^op) (B:=B^op) (G : A^op -> B^op) (F : A^op -> B^op).
+Proof.
+  intros alpha.
+  snrapply Build_NatTrans.
+  - exact (transformation_op F G alpha).
+  - exact _.
+Defined.
+
 (** Natural equivalences *)
 
 Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
@@ -291,7 +302,7 @@ Proof.
 Defined.
 
 Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
-  (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
   : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
 Proof.
   intros [a n].
