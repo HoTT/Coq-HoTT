@@ -165,30 +165,23 @@ Section Associator.
     : associator x' y z $o fmap10 F f (F y z)
       $== fmap10 F (fmap10 F f y) z $o associator x y z.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: rapply (associator_nat f (Id _) (Id _)).
-    - exact (fmap12 _ _ (fmap11_id _ _ _) $@ fmap10_is_fmap11 _ _ _).
-    - exact (fmap21 _ (fmap10_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
+    refine ((_ $@L _^$) $@ associator_nat f (Id _) (Id _)).
+    exact (fmap12 _ _ (fmap11_id _ _ _)).
   Defined.
 
   Local Definition associator_nat_m (x : A) {y y' : A} (g : y $-> y') (z : A)
     : associator x y' z $o fmap01 F x (fmap10 F g z)
       $== fmap10 F (fmap01 F x g) z $o associator x y z.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: nrapply (associator_nat (Id _) g (Id _)).
-    - exact (fmap12 _ _ (fmap10_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
-    - exact (fmap21 _ (fmap01_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
+    exact (associator_nat (Id _) g (Id _)).
   Defined.
 
   Local Definition associator_nat_r (x y : A) {z z' : A} (h : z $-> z')
     : associator x y z' $o fmap01 F x (fmap01 F y h)
       $== fmap01 F (F x y) h $o associator x y z.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: nrapply (associator_nat (Id _) (Id _) h).
-    - exact (fmap12 _ _ (fmap01_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
-    - exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).
+    nrefine (associator_nat (Id _) (Id _) h $@ (_ $@R _)).
+    exact (fmap21 _ (fmap11_id _ _ _) _ ).
   Defined.
 
 End Associator.
@@ -456,33 +449,23 @@ Section TwistConstruction.
     : twist a' b c $o fmap10 cat_tensor f (cat_tensor b c)
       $== fmap01 cat_tensor b (fmap10 cat_tensor f c) $o twist a b c.
   Proof.
-    refine ((_ $@L _^$) $@ twist_nat a a' b b c c f (Id _) (Id _) $@ (_ $@R _)).
-    - refine (fmap12 _ _ _ $@ fmap10_is_fmap11 _ _ _).
-      rapply fmap11_id.
-    - refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).
-      rapply fmap10_is_fmap11.
+    refine ((_ $@L _^$) $@ twist_nat a a' b b c c f (Id _) (Id _)).
+    exact (fmap12 _ _ (fmap11_id _ _ _)).
   Defined.
 
   Local Definition twist_nat_m a {b b'} (g : b $-> b') c
     : twist a b' c $o fmap01 cat_tensor a (fmap10 cat_tensor g c)
       $== fmap10 cat_tensor g (cat_tensor a c) $o twist a b c.
   Proof.
-    refine ((_ $@L _^$) $@ twist_nat a a b b' c c (Id _) g (Id _) $@ (_ $@R _)).
-    - refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).
-      rapply fmap10_is_fmap11.
-    - refine (fmap12 _ _ _ $@ fmap10_is_fmap11 _ _ _).
-      rapply fmap11_id.
+    nrefine (twist_nat a a b b' c c (Id _) g (Id _) $@ (_ $@R _)).
+    exact (fmap12 _ _ (fmap11_id _ _ _)).
   Defined.
 
   Local Definition twist_nat_r a b {c c'} (h : c $-> c')
     : twist a b c' $o fmap01 cat_tensor a (fmap01 cat_tensor b h)
       $== fmap01 cat_tensor b (fmap01 cat_tensor a h) $o twist a b c.
   Proof.
-    refine ((_ $@L _^$) $@ twist_nat a a b b c c' (Id _) (Id _) h $@ (_ $@R _)).
-    - refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).
-      rapply fmap01_is_fmap11.
-    - refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).
-      rapply fmap01_is_fmap11.
+    exact (twist_nat a a b b c c' (Id _) (Id _) h).
   Defined.
 
   (** *** Movement lemmas *)
@@ -645,10 +628,6 @@ Section TwistConstruction.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
         nrapply vconcat.
         2: rapply (isnat right_unitor f).
-        nrapply vconcatL.
-        1: symmetry; rapply fmap01_is_fmap11.
-        nrapply vconcatR.
-        2: symmetry; rapply fmap10_is_fmap11.
         rapply braid_nat.
     - intros a.
       rapply compose_catie'.

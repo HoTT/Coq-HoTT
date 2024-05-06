@@ -562,7 +562,6 @@ Section FunctorJoin.
 
   Global Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
-    rapply Build_Is0Functor.
     apply Build_Is0Functor.
     intros A B [f g].
     exact (functor_join f g).

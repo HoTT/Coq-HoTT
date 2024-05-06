@@ -53,15 +53,6 @@ Class Is1Bifunctor {A B C : Type}
 
 Arguments Is1Bifunctor {A B C _ _ _ _ _ _ _ _ _ _ _ _} F {Is0Bifunctor} : rename.
 
-(* Class Is1Bifunctor {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F}
-  := {
-  bifunctor_is1functor01 :: forall a : A, Is1Functor (F a);
-  bifunctor_is1functor10 :: forall b : B, Is1Functor (flip F b);
-  bifunctor_isbifunctor : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
-    fmap (F _) g $o fmap (flip F _) f $== fmap (flip F _) f $o fmap (F _) g
-}. *)
-
 Global Instance is1functor01_bifunctor {A B C : Type} (F : A -> B -> C)
   `{Is1Bifunctor A B C F}
   : forall a, Is1Functor (F a).
@@ -172,20 +163,6 @@ Definition bifunctor_coh {A B C : Type}
   {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
   : fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g
   := (fmap11_is_fmap01_fmap10 _ _ _)^$ $@ fmap11_is_fmap10_fmap01 _ _ _.
-
-(** [fmap11] with right map the identity gives [fmap10]. *)
-Definition fmap10_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a0 a1 : A} (f : a0 $-> a1) (b : B)
-  : fmap11 F f (Id b) $== fmap10 F f b
-  := Id _.
-
-(** [fmap11] with left map the identity gives [fmap01]. *)
-Definition fmap01_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  (a : A) {b0 b1 : B} (g : b0 $-> b1)
-  : fmap11 F (Id a) g $== fmap01 F a g
-  := Id _.
 
 (** 2-functorial action *)
 
@@ -350,7 +327,7 @@ Defined.
 
 (** Restricting a functor along a bifunctor yields a bifunctor. *)
 Global Instance is0bifunctor_postcompose {A B C D : Type}
-  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D}
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
   (F : A -> B -> C) {bf : Is0Bifunctor F}
   (G : C -> D) `{!Is0Functor G}
   : Is0Bifunctor (fun a b => G (F a b)).
@@ -368,7 +345,7 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_precompose {A B C D E : Type}
-  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D, Is01Cat E}
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D, IsGraph E}
   (G : A -> B) (K : E -> C) (F : B -> C -> D)
   `{!Is0Functor G, !Is0Bifunctor F, !Is0Functor K}
   : Is0Bifunctor (fun a b => F (G a) (K b)).
@@ -390,7 +367,7 @@ Defined.
 
 Global Instance is0functor_uncurry_uncurry_left {A B C D E}
   (F : A -> B -> C) (G : C -> D -> E)
-  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D, Is01Cat E,
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D, IsGraph E,
     !Is0Bifunctor F, !Is0Bifunctor G}
   : Is0Functor (uncurry (uncurry (fun x y z => G (F x y) z))).
 Proof.
@@ -399,7 +376,7 @@ Defined.
 
 Global Instance is0functor_uncurry_uncurry_right {A B C D E}
   (F : A -> B -> D) (G : C -> D -> E)
-  `{Is01Cat A, Is01Cat B, Is01Cat C, Is01Cat D, Is01Cat E,
+  `{IsGraph A, IsGraph B, IsGraph C, IsGraph D, IsGraph E,
     !Is0Bifunctor F, !Is0Bifunctor G}
   : Is0Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
 Proof.
@@ -421,12 +398,12 @@ Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
 (** ** Natural transformations between bifunctors *)
 
 (** We can show that an uncurried natural transformation between uncurried bifunctors by composing the naturality square in each variable. *)
-(* Global Instance is1natural_uncurry {A B C : Type}
-  `{Is01Cat A, Is01Cat B, Is1Cat C}
+Global Instance is1natural_uncurry {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C)
-  `{!Is0Bifunctor F}
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
   (G : A -> B -> C)
-  `{!Is0Bifunctor G}
+  `{!Is0Bifunctor G, !Is1Bifunctor G}
   (alpha : uncurry F $=> uncurry G)
   (nat_l : forall b, Is1Natural (flip F b) (flip G b) (fun x : A => alpha (x, b)))
   (nat_r : forall a, Is1Natural (F a) (G a) (fun y : B => alpha (a, y)))
@@ -434,6 +411,9 @@ Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
 Proof.
   intros [a b] [a' b'] [f f']; cbn in *.
   change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-  unfold fmap11.
-  epose (hconcat (nat_l _ _ _ f) (nat_r _ _ _ f')).
-Defined. *)
+  nrapply vconcatL.
+  1: rapply (fmap11_is_fmap01_fmap10 F).
+  nrapply vconcatR.
+  2: rapply (fmap11_is_fmap01_fmap10 G).
+  exact (hconcat (nat_l _ _ _ f) (nat_r _ _ _ f')).
+Defined.
