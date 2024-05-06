@@ -572,7 +572,7 @@ Section FunctorJoin.
   Global Instance is1bifunctor_join : Is1Bifunctor Join.
   Proof.
     snrapply Build_Is1Bifunctor'.
-    snrapply Build_Is1Functor.
+    nrapply Build_Is1Functor.
     - intros A B f g [p q].
       exact (functor2_join p q).
     - intros A; exact functor_join_idmap.

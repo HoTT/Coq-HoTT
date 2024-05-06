@@ -49,43 +49,6 @@ Proof.
   exact (fmap (flip F b') f $o fmap (F a) g).
 Defined.
 
-(* Global Instance is0functor01_bifunctor {A B C : Type}
-  `{Is01Cat A, IsGraph B, IsGraph C} (F : A -> B -> C) `{!Is0Bifunctor F}
-  : forall a, Is0Functor (F a).
-Proof.
-  intros a.
-  snrapply Build_Is0Functor.
-  intros b b' g.
-  change (uncurry F (a, b) $-> uncurry F (a, b')).
-  refine (fmap (uncurry F) (_, _)).
-  - exact (Id a).
-  - exact g.
-Defined. *)
-
-(* Global Instance is0functor10_bifunctor {A B C : Type}
-  `{IsGraph A, Is01Cat B, IsGraph C} (F : A -> B -> C) `{!Is0Bifunctor F}
-  : forall b, Is0Functor (flip F b).
-Proof.
-  intros b.
-  snrapply Build_Is0Functor.
-  intros a a' f.
-  change (uncurry F (a, b) $-> uncurry F (a', b)).
-  refine (fmap (uncurry F) (_, _)).
-  - exact f.
-  - exact (Id b).
-Defined. *)
-
-(* Definition Build_Is0Bifunctor {A B C : Type}
-  `{IsGraph A, IsGraph B, Is01Cat C} (F : A -> B -> C)
-  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
-  : Is0Bifunctor F.
-Proof.
-  snrapply Build_Is0Functor.
-  intros [a b] [a' b'] [f g].
-  change (F a b $-> F a' b').
-  exact (fmap (flip F b') f $o fmap (F a) g).
-Defined. *)
-
 (** *** 1-functorial action *)
 
 (** [fmap] in the first argument. *)
@@ -198,47 +161,9 @@ Proof.
     reflexivity.
 Defined.
 
-(** Here is an alternative constructor that uses [fmap01] and [fmap10] instead. *)
-(* Definition Build_Is1Bifunctor' {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
-  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
-  `{!forall a, Is1Functor (F a), !forall b, Is1Functor (flip F b)}
-  (Is0Bifunctor_F := Build_Is0Bifunctor F)
-  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
-    fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g)
-  : Is1Bifunctor F.
-Proof.
-  snrapply Build_Is1Bifunctor.
-  1,2: exact _.
-  intros a0 a1 f b0 b1 g.
-  refine ((_ $@@ _)^$ $@ bifunctor_coh a0 a1 f b0 b1 g $@ (_ $@@ _)).
-  1,4: exact ((_ $@L fmap_id (F _) _) $@ cat_idr _).
-  1,2: exact (( fmap_id (flip F _) _ $@R _) $@ cat_idl _).
-Defined. *)
-
 (** ** Bifunctor lemmas *)
 
 (** *** Coherence *)
-
-(* Definition fmap11_is_fmap01_fmap10 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
-  : fmap11 F f g $== fmap01 F a1 g $o fmap10 F f b0.
-Proof.
-  refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
-    (a := (a0, b0)) (b := (a1, b0)) (c := (a1, b1)) (f, Id b0) (Id a1, g)).
-  exact (cat_idl _, cat_idr _).
-Defined. *)
-
-(* Definition fmap11_is_fmap10_fmap01 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
-  : fmap11 F f g $== fmap10 F f b1 $o fmap01 F a0 g.
-Proof.
-  refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
-    (a := (a0, b0)) (b := (a0, b1)) (c := (a1, b1)) (Id a0, g) (f, Id b1)).
-  exact (cat_idr _, cat_idl _).
-Defined. *)
 
 Definition bifunctor_coh {A B C : Type}
   (F : A -> B -> C) `{Is1Bifunctor A B C F}

@@ -129,12 +129,8 @@ Global Instance is1bifunctor_abext `{Univalence}
 Proof.
   snrapply Build_Is1Bifunctor''.
   1,2: exact _.
-  intros A B f C D g.
-  intros x.
-  strip_truncations; cbn.
-  pose proof (bifunctor_coh (Ext : AbGroup^op -> AbGroup -> pType) f g (tr x)) as X.
-  cbn in X.
-  exact X.
+  intros A B.
+  exact (bifunctor_coh (Ext : AbGroup^op -> AbGroup -> pType)).
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)
@@ -143,10 +139,10 @@ Definition abses_pushout_ext `{Univalence}
   : GroupHomomorphism (ab_hom A G) (ab_ext B G).
 Proof.
   snrapply Build_GroupHomomorphism.
-  1: exact (fun f => fmap (Ext' (_ : AbGroup^op)) f (tr E)).
+  1: exact (fun f => fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).
   intros f g; cbn.
   nrapply (ap tr).
-  exact (baer_sum_distributive_pushouts (E:=E) f g).
+  exact (baer_sum_distributive_pushouts f g).
 Defined.
 
 (** ** Extensions ending in a projective are trivial *)
