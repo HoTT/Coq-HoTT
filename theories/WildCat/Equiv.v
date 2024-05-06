@@ -413,6 +413,13 @@ Proof.
   apply cate_inv_adjointify.
 Defined.
 
+Definition cate_inv_compose' {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : b $<~> c)
+  : cate_fun (f $oE e)^-1$ $== e^-1$ $o f^-1$.
+Proof.
+  nrefine (_ $@ cate_buildequiv_fun _).
+  nrapply cate_inv_compose.
+Defined.
+
 Definition cate_inv_V {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
   : cate_fun (e^-1$)^-1$ $== cate_fun e.
 Proof.

@@ -482,28 +482,28 @@ Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
-  exact (is0functor10_bifunctor y).
+  exact (is0functor10_bifunctor _ y).
 Defined.
 
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
 Proof.
-  exact (is1functor10_bifunctor y).
+  exact (is1functor10_bifunctor _ y).
 Defined.
 
 Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
-  exact (is0functor01_bifunctor x).
+  exact (is0functor01_bifunctor _ x).
 Defined.
 
 Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is1Functor (fun y => cat_binprod x y).
 Proof.
-  exact (is1functor01_bifunctor x).
+  exact (is1functor01_bifunctor _ x).
 Defined.
 
 (** [cat_binprod_corec] is also functorial in each morphsism. *)
@@ -556,6 +556,61 @@ Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
   : cat_pr2 $o fmap11 (fun x y => cat_binprod x y) f g $== g $o cat_pr2
   := cat_binprod_beta_pr2 _ _.
 
+(** *** Diagonal *)
+
+(** Annoyingly this doesn't follow directly from the general diagonal since [fun b => if b then x else x] is not definitionally equal to [fun _ => x]. *)
+Definition cat_binprod_diag {A : Type}
+  `{HasEquivs A} (x : A) `{!BinaryProduct x x}
+  : x $-> cat_binprod x x.
+Proof.
+  snrapply cat_binprod_corec; exact (Id _).
+Defined.
+
+Definition cat_binprod_fmap01_corec {A : Type}
+  `{Is1Cat A, !HasBinaryProducts A} {w x y z : A}
+  (f : w $-> z) (g : x $-> y) (h : w $-> x)
+  : fmap01 (fun x y => cat_binprod x y) z g $o cat_binprod_corec f h
+    $== cat_binprod_corec f (g $o h).
+Proof.
+  snrapply cat_binprod_eta_pr.
+  - nrefine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ cat_idl _ $@ _ $@ _^$).
+    1-3: rapply cat_binprod_beta_pr1.
+  - nrefine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: rapply cat_binprod_beta_pr2.
+Defined.
+
+Definition cat_binprod_fmap10_corec {A : Type}
+  `{Is1Cat A, !HasBinaryProducts A} {w x y z : A}
+  (f : x $-> y) (g : w $-> x) (h : w $-> z)
+  : fmap10 (fun x y => cat_binprod x y) f z $o cat_binprod_corec g h
+    $== cat_binprod_corec (f $o g) h.
+Proof.
+  snrapply cat_binprod_eta_pr.
+  - refine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: nrapply cat_binprod_beta_pr1.
+  - refine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ cat_idl _ $@ _ $@ _^$).
+    1-3: nrapply cat_binprod_beta_pr2.
+Defined.
+
+Definition cat_binprod_fmap11_corec {A : Type}
+  `{Is1Cat A, !HasBinaryProducts A} {v w x y z : A}
+  (f : w $-> y) (g : x $-> z) (h : v $-> w) (i : v $-> x)
+  : fmap11 (fun x y => cat_binprod x y) f g $o cat_binprod_corec h i
+    $== cat_binprod_corec (f $o h) (g $o i).
+Proof.
+  snrapply cat_binprod_eta_pr.
+  - refine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: nrapply cat_binprod_beta_pr1.
+  - nrefine (cat_assoc_opp _ _ _ $@ _).
+    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
+    1-3: rapply cat_binprod_beta_pr2.
+Defined.
+
 (** *** Symmetry of binary products *)
 
 Section Symmetry.
@@ -586,35 +641,30 @@ Section Symmetry.
     all: nrapply cat_binprod_swap_cat_binprod_swap.
   Defined.
 
-  Definition cat_binprod_swap_nat {a b c d : A} (f : a $-> c) (g : b $-> d)
-    : cat_binprod_swap c d $o fmap11 (fun x y : A => cat_binprod x y) f g
-    $== fmap11 (fun x y : A => cat_binprod x y) g f $o cat_binprod_swap a b.
+  Definition cat_binprod_swap_corec {a b c : A} (f : a $-> b) (g : a $-> c)
+    : cat_binprod_swap b c $o cat_binprod_corec f g $== cat_binprod_corec g f.
   Proof.
     nrapply cat_binprod_eta_pr.
-    - nrefine (cat_assoc_opp _ _ _ $@ _).
-      nrefine ((cat_binprod_beta_pr1 _ _ $@R _) $@ _).
-      nrefine (cat_pr2_fmap11_binprod _ _ $@ _).
-      nrefine (_ $@ cat_assoc _ _ _).
-      refine (_ $@ (_^$ $@R _)).
-      2: nrapply cat_pr1_fmap11_binprod.
-      refine ((_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-      nrapply cat_binprod_beta_pr1.
-    - refine ((cat_assoc _ _ _)^$ $@ _).
-      nrefine ((cat_binprod_beta_pr2 _ _ $@R _) $@ _).
-      nrefine (cat_pr1_fmap11_binprod _ _ $@ _).
-      nrefine (_ $@ cat_assoc _ _ _).
-      refine (_ $@ (_^$ $@R _)).
-      2: nrapply cat_pr2_fmap11_binprod.
-      refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _).
+    - refine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ (_ $@ _^$)).
+      1,3: nrapply cat_binprod_beta_pr1.
       nrapply cat_binprod_beta_pr2.
+    - refine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ (_ $@ _^$)).
+      1,3: nrapply cat_binprod_beta_pr2.
+      nrapply cat_binprod_beta_pr1.
   Defined.
+
+  Definition cat_binprod_swap_nat {a b c d : A} (f : a $-> c) (g : b $-> d)
+    : cat_binprod_swap c d $o fmap11 (fun x y : A => cat_binprod x y) f g
+    $== fmap11 (fun x y : A => cat_binprod x y) g f $o cat_binprod_swap a b
+    := cat_binprod_swap_corec _ _ $@ (cat_binprod_fmap11_corec _ _ _ _)^$.
 
   Local Instance symmetricbraiding_binprod
     : SymmetricBraiding (fun x y => cat_binprod x y).
   Proof.
     snrapply Build_SymmetricBraiding.
-    - snrapply Build_Braiding.
-      + exact cat_binprod_swap.
+    - snrapply Build_NatTrans.
+      + intros [x y].
+        exact (cat_binprod_swap x y).
       + intros [a b] [c d] [f g]; cbn in f, g.
         exact(cat_binprod_swap_nat f g).
     - exact cat_binprod_swap_cat_binprod_swap.
@@ -654,6 +704,25 @@ Section Associativity.
     nrefine (cat_assoc _ _ _ $@ _).
     nrefine ((_ $@L cat_binprod_beta_pr2 _ _) $@ _).
     nrapply cat_pr2_fmap01_binprod.
+  Defined.
+  
+  Definition cat_binprod_twist_corec {w x y z : A}
+    (f : w $-> x) (g : w $-> y) (h : w $-> z)
+    : cat_binprod_twist x y z $o cat_binprod_corec f (cat_binprod_corec g h)
+      $== cat_binprod_corec g (cat_binprod_corec f h).
+  Proof.
+    nrapply cat_binprod_eta_pr.
+    - nrefine (cat_assoc_opp _ _ _ $@ _).
+      refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ (_ $@ _^$)).
+      1: nrapply cat_binprod_pr1_twist.
+      1: nrapply cat_binprod_beta_pr2.
+      1,2: nrapply cat_binprod_beta_pr1.
+    - refine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ _ $@ (cat_binprod_beta_pr2 _ _)^$).
+      1: nrapply cat_binprod_beta_pr2.
+      nrefine (cat_binprod_fmap01_corec _ _ _ $@ _).
+      nrapply cat_binprod_corec_eta.
+      1: exact (Id _).
+      nrapply cat_binprod_beta_pr2.
   Defined.
 
   Lemma cat_binprod_twist_cat_binprod_twist (x y z : A)
@@ -752,6 +821,21 @@ Section Associativity.
     nrefine (cat_assoc_opp _ _ _ $@ (cat_binprod_pr1_twist _ _ _ $@R _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L cat_pr2_fmap01_binprod _ _) $@ _).
     exact (cat_assoc_opp _ _ _ $@ (cat_binprod_beta_pr1 _ _ $@R _)).
+  Defined.
+  
+  Definition cat_binprod_associator_corec {w x y z}
+    (f : w $-> x) (g : w $-> y) (h : w $-> z)
+    : associator_binprod x y z $o cat_binprod_corec f (cat_binprod_corec g h)
+      $== cat_binprod_corec (cat_binprod_corec f g) h. 
+  Proof.
+    nrefine ((Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _ $@R _) $@ _).
+    nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _). 
+    1: nrapply cat_binprod_fmap01_corec.
+    1: rapply (cat_binprod_corec_eta _ _ _ _ (Id _)).
+    1: nrapply cat_binprod_swap_corec.
+    nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+    1: nrapply cat_binprod_twist_corec.
+    nrapply cat_binprod_swap_corec.
   Defined.
 
   Context (unit : A) `{!IsTerminal unit}.
