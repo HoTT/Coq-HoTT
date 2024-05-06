@@ -105,7 +105,7 @@ Proof.
     + intros b.
       exact (fmap_id (uncurry F) _).
     + intros b b' b'' f g.
-      srefine (fmap2 (uncurry F) _ $@ _). 
+      srefine (fmap2 (uncurry F) _ $@ _).
       * exact (Id a $o Id a, g $o f).
       * exact ((cat_idl _)^$, Id _).
       * exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a, b')) (c := (a, b''))
@@ -148,7 +148,7 @@ Proof.
       exact (fmap2 (F a) p' $@@ fmap2 (flip F b') p).
     + intros [a b].
       exact ((fmap_id (F a) b $@@ fmap_id (flip F b) _) $@ cat_idr _).
-    + intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- . 
+    + intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- .
       refine ((fmap_comp (F a) g g' $@@ fmap_comp (flip F b'') f f') $@ _).
       nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
       refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
