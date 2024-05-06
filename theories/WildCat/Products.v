@@ -440,6 +440,8 @@ Defined.
 Local Instance is0bifunctor_boolrec {A : Type} `{Is1Cat A}
   : Is0Bifunctor (Bool_rec A).
 Proof.
+  snrapply Build_Is0Bifunctor'.
+  1,2: exact _.
   snrapply Build_Is0Functor.
   intros [a b] [a' b'] [f g] [ | ].
   - exact f.
@@ -449,6 +451,7 @@ Defined.
 Local Instance is1bifunctor_boolrec {A : Type} `{Is1Cat A}
   : Is1Bifunctor (Bool_rec A).
 Proof.
+  snrapply Build_Is1Bifunctor'.
   snrapply Build_Is1Functor.
   - intros [a b] [a' b'] [f g] [f' g'] [p q] [ | ].
     + exact p.
@@ -479,28 +482,28 @@ Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
-  exact (is0functor10_bifunctor _ y).
+  exact (is0functor10_bifunctor y).
 Defined.
 
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
 Proof.
-  exact (is1functor10_bifunctor _ y).
+  exact (is1functor10_bifunctor y).
 Defined.
 
 Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
-  exact (is0functor01_bifunctor _ x).
+  exact (is0functor01_bifunctor x).
 Defined.
 
 Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is1Functor (fun y => cat_binprod x y).
 Proof.
-  exact (is1functor01_bifunctor _ x).
+  exact (is1functor01_bifunctor x).
 Defined.
 
 (** [cat_binprod_corec] is also functorial in each morphsism. *)

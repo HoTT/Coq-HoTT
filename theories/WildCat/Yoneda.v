@@ -44,13 +44,20 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_hom {A} `{Is01Cat A}
-  : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
-  := is0functor_hom.
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
+Proof.
+  nrapply Build_Is0Bifunctor'.
+  1-2: exact _.
+  exact is0functor_hom.
+Defined.
 
 (** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
 Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
-  : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _)
-  := is1functor_hom.
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
+Proof.
+  nrapply Build_Is1Bifunctor'.
+  exact is1functor_hom.
+Defined.
 
 Definition fun01_hom {A} `{Is01Cat A}
   : Fun01 (A^op * A) Type
@@ -255,12 +262,19 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
-  : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
-  := is0functor_hom_0gpd.
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
+Proof.
+  snrapply Build_Is0Bifunctor'.
+  1,2: exact _.
+  exact is0functor_hom_0gpd.
+Defined.
 
 Global Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
-  : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A))
-  := is1functor_hom_0gpd.
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
+Proof.
+  snrapply Build_Is1Bifunctor'.
+  exact is1functor_hom_0gpd.
+Defined.
 
 Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (opyon_0gpd a).

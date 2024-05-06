@@ -121,13 +121,13 @@ Defined.
 Global Instance is0bifunctor_abext `{Univalence}
   : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  rapply Build_Is0Bifunctor.
+  rapply Build_Is0Bifunctor''.
 Defined.
 
 Global Instance is1bifunctor_abext `{Univalence}
   : Is1Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  snrapply Build_Is1Bifunctor'.
+  snrapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A B f C D g.
   intros x.

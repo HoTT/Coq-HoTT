@@ -7,10 +7,49 @@ Require Import WildCat.Core WildCat.Prod WildCat.Equiv WildCat.NatTrans WildCat.
 (** ** Definition *)
 
 Class Is0Bifunctor {A B C : Type}
-  `{IsGraph A, IsGraph B, IsGraph C} (F : A -> B -> C)
-  := is0functor_bifunctor_uncurried :: Is0Functor (uncurry F).
+  `{IsGraph A, IsGraph B, IsGraph C} (F : A -> B -> C) := {
+  is0functor_bifunctor_uncurried :: Is0Functor (uncurry F);
+  is0functor01_bifunctor :: forall a, Is0Functor (F a);
+  is0functor10_bifunctor :: forall b, Is0Functor (flip F b);
+}.
 
-Global Instance is0functor01_bifunctor {A B C : Type}
+Definition Build_Is0Bifunctor' {A B C : Type}
+  `{Is01Cat A, Is01Cat B, IsGraph C} (F : A -> B -> C)
+  `{!Is0Functor (uncurry F)}
+  : Is0Bifunctor F.
+Proof.
+  snrapply Build_Is0Bifunctor.
+  - exact _.
+  - intros a.
+    snrapply Build_Is0Functor.
+    intros b b' g.
+    change (uncurry F (a, b) $-> uncurry F (a, b')).
+    refine (fmap (uncurry F) (_, _)).
+    + exact (Id a).
+    + exact g.
+  - intros b.
+    snrapply Build_Is0Functor.
+    intros a a' f.
+    change (uncurry F (a, b) $-> uncurry F (a', b)).
+    refine (fmap (uncurry F) (_, _)).
+    + exact f.
+    + exact (Id b).
+Defined.
+
+Definition Build_Is0Bifunctor'' {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A -> B -> C)
+  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
+  : Is0Bifunctor F.
+Proof.
+  snrapply Build_Is0Bifunctor.
+  2,3: exact _.
+  snrapply Build_Is0Functor.
+  intros [a b] [a' b'] [f g].
+  change (F a b $-> F a' b').
+  exact (fmap (flip F b') f $o fmap (F a) g).
+Defined.
+
+(* Global Instance is0functor01_bifunctor {A B C : Type}
   `{Is01Cat A, IsGraph B, IsGraph C} (F : A -> B -> C) `{!Is0Bifunctor F}
   : forall a, Is0Functor (F a).
 Proof.
@@ -21,9 +60,9 @@ Proof.
   refine (fmap (uncurry F) (_, _)).
   - exact (Id a).
   - exact g.
-Defined.
+Defined. *)
 
-Global Instance is0functor10_bifunctor {A B C : Type}
+(* Global Instance is0functor10_bifunctor {A B C : Type}
   `{IsGraph A, Is01Cat B, IsGraph C} (F : A -> B -> C) `{!Is0Bifunctor F}
   : forall b, Is0Functor (flip F b).
 Proof.
@@ -34,9 +73,9 @@ Proof.
   refine (fmap (uncurry F) (_, _)).
   - exact f.
   - exact (Id b).
-Defined.
+Defined. *)
 
-Definition Build_Is0Bifunctor {A B C : Type}
+(* Definition Build_Is0Bifunctor {A B C : Type}
   `{IsGraph A, IsGraph B, Is01Cat C} (F : A -> B -> C)
   `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
   : Is0Bifunctor F.
@@ -45,86 +84,18 @@ Proof.
   intros [a b] [a' b'] [f g].
   change (F a b $-> F a' b').
   exact (fmap (flip F b') f $o fmap (F a) g).
-Defined.
-
-Class Is1Bifunctor {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C) `{!Is0Bifunctor F}
-  := is1functor_bifunctor_uncurried :: Is1Functor (uncurry F).
-
-Arguments Is1Bifunctor {A B C _ _ _ _ _ _ _ _ _ _ _ _} F {Is0Bifunctor} : rename.
-
-Global Instance is1functor01_bifunctor {A B C : Type} (F : A -> B -> C)
-  `{Is1Bifunctor A B C F}
-  : forall a, Is1Functor (F a).
-Proof.
-  intros a.
-  snrapply Build_Is1Functor.
-  - intros b b' g g' p.
-    refine (fmap2 (uncurry F) (_, _)).
-    + exact (Id (Id a)).
-    + exact p.
-  - intros b.
-    exact (fmap_id (uncurry F) _).
-  - intros b b' b'' f g.
-    srefine (fmap2 (uncurry F) _ $@ _). 
-    + exact (Id a $o Id a, g $o f).
-    + exact ((cat_idl _)^$, Id _).
-    + exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a, b')) (c := (a, b''))
-        (Id a, f) (Id a, g)).
-Defined.
-
-Global Instance is1functor10_bifunctor {A B C : Type} (F : A -> B -> C)
-  `{Is1Bifunctor A B C F}
-  : forall b, Is1Functor (flip F b).
-Proof.
-  intros b.
-  snrapply Build_Is1Functor.
-  - intros a a' f f' p.
-    refine (fmap2 (uncurry F) (_, _)).
-    + exact p.
-    + exact (Id (Id b)).
-  - intros a.
-    exact (fmap_id (uncurry F) _).
-  - intros a a' a'' f g.
-    srefine (fmap2 (uncurry F) _ $@ _).
-    + exact (g $o f, Id b $o Id b).
-    + exact (Id _, (cat_idr _)^$).
-    + exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a', b)) (c := (a'', b))
-        (f, Id b) (g, Id b)).
-Defined.
-
-Definition Build_Is1Bifunctor {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
-  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
-  `{!forall a, Is1Functor (F a), !forall b, Is1Functor (flip F b)}
-  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
-    fmap (F a1) g $o fmap (flip F b0) f $== fmap (flip F b1) f $o fmap (F a0) g)
-  : Is1Bifunctor (Is0Bifunctor := Build_Is0Bifunctor F) F.
-Proof.
-  snrapply Build_Is1Functor.
-  - intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
-    exact (fmap2 (F a) p' $@@ fmap2 (flip F b') p).
-  - intros [a b].
-    exact ((fmap_id (F a) b $@@ fmap_id (flip F b) _) $@ cat_idr _).
-  - intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- . 
-    refine ((fmap_comp (F a) g g' $@@ fmap_comp (flip F b'') f f') $@ _).
-    nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
-    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
-    nrapply bifunctor_coh.
-Defined.
-
-(** ** Bifunctor lemmas *)
+Defined. *)
 
 (** *** 1-functorial action *)
 
 (** [fmap] in the first argument. *)
-Definition fmap10 {A B C : Type} `{IsGraph A, Is01Cat B, IsGraph C}
+Definition fmap10 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1) (b : B)
   : (F a0 b) $-> (F a1 b)
   := fmap (flip F b) f.
 
 (** [fmap] in the second argument. *)
-Definition fmap01 {A B C : Type} `{Is01Cat A, IsGraph B, IsGraph C}
+Definition fmap01 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} (a : A) {b0 b1 : B} (g : b0 $-> b1)
   : F a b0 $-> F a b1
   := fmap (F a) g.
@@ -136,9 +107,120 @@ Definition fmap11 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   : F a0 b0 $-> F a1 b1
   := fmap (uncurry F) (a := (a0, b0)) (b := (a1, b1)) (f, g).
 
+Class Is1Bifunctor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C) `{!Is0Bifunctor F} := {
+
+  is1functor_bifunctor_uncurried :: Is1Functor (uncurry F);
+  is1functor01_bifunctor :: forall a, Is1Functor (F a);
+  is1functor10_bifunctor :: forall b, Is1Functor (flip F b);
+
+  fmap11_is_fmap01_fmap10 {a0 a1} (f : a0 $-> a1) {b0 b1} (g : b0 $-> b1)
+    : fmap11 F f g $== fmap01 F a1 g $o fmap10 F f b0;
+  fmap11_is_fmap10_fmap01 {a0 a1} (f : a0 $-> a1) {b0 b1} (g : b0 $-> b1)
+    : fmap11 F f g $== fmap10 F f b1 $o fmap01 F a0 g;
+}.
+
+Arguments Is1Bifunctor {A B C _ _ _ _ _ _ _ _ _ _ _ _} F {Is0Bifunctor} : rename.
+Arguments Build_Is1Bifunctor {A B C _ _ _ _ _ _ _ _ _ _ _ _} F {_} _ _ _ _ _.
+Arguments fmap11_is_fmap01_fmap10 {A B C _ _ _ _ _ _ _ _ _ _ _ _} F
+  {Is0Bifunctor Is1Bifunctor} {a0 a1} f {b0 b1} g : rename.
+Arguments fmap11_is_fmap10_fmap01 {A B C _ _ _ _ _ _ _ _ _ _ _ _} F
+  {Is0Bifunctor Is1Bifunctor} {a0 a1} f {b0 b1} g : rename.
+
+Definition Build_Is1Bifunctor' {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
+  `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
+  : Is1Bifunctor (Is0Bifunctor := Build_Is0Bifunctor' F) F.
+Proof.
+  snrapply Build_Is1Bifunctor.
+  - exact _.
+  - intros a.
+    snrapply Build_Is1Functor.
+    + intros b b' g g' p.
+      refine (fmap2 (uncurry F) _).
+      exact (Id (Id a), p).
+    + intros b.
+      exact (fmap_id (uncurry F) _).
+    + intros b b' b'' f g.
+      srefine (fmap2 (uncurry F) _ $@ _). 
+      * exact (Id a $o Id a, g $o f).
+      * exact ((cat_idl _)^$, Id _).
+      * exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a, b')) (c := (a, b''))
+          (Id a, f) (Id a, g)).
+  - intros b.
+    snrapply Build_Is1Functor.
+    + intros a a' f f' p.
+      refine (fmap2 (uncurry F) _).
+      exact (p, Id (Id b)).
+    + intros a.
+      exact (fmap_id (uncurry F) _).
+    + intros a a' a'' f g.
+      srefine (fmap2 (uncurry F) _ $@ _).
+      * exact (g $o f, Id b $o Id b).
+      * exact (Id _, (cat_idr _)^$).
+      * exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a', b)) (c := (a'', b))
+          (f, Id b) (g, Id b)).
+  - intros a0 a1 f b0 b1 g.
+    refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
+      (a := (a0, b0)) (b := (a1, b0)) (c := (a1, b1)) (f, Id b0) (Id a1, g)).
+    exact (cat_idl _, cat_idr _).
+  - intros a0 a1 f b0 b1 g.
+    refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
+      (a := (a0, b0)) (b := (a0, b1)) (c := (a1, b1)) (Id a0, g) (f, Id b1)).
+    exact (cat_idr _, cat_idl _).
+Defined.
+
+Definition Build_Is1Bifunctor'' {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
+  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
+  (Is0Bifunctor_F := Build_Is0Bifunctor'' F)
+  `{!forall a, Is1Functor (F a), !forall b, Is1Functor (flip F b)}
+  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
+    fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g)
+  : Is1Bifunctor F.
+Proof.
+  snrapply Build_Is1Bifunctor.
+  - snrapply Build_Is1Functor.
+    + intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
+      exact (fmap2 (F a) p' $@@ fmap2 (flip F b') p).
+    + intros [a b].
+      exact ((fmap_id (F a) b $@@ fmap_id (flip F b) _) $@ cat_idr _).
+    + intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- . 
+      refine ((fmap_comp (F a) g g' $@@ fmap_comp (flip F b'') f f') $@ _).
+      nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
+      refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
+      nrapply bifunctor_coh.
+  - exact _.
+  - exact _.
+  - intros a0 a1 f b0 b1 g.
+    exact (bifunctor_coh a0 a1 f b0 b1 g)^$.
+  - intros a0 a1 f b0 b1 g.
+    reflexivity.
+Defined.
+
+(** Here is an alternative constructor that uses [fmap01] and [fmap10] instead. *)
+(* Definition Build_Is1Bifunctor' {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
+  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
+  `{!forall a, Is1Functor (F a), !forall b, Is1Functor (flip F b)}
+  (Is0Bifunctor_F := Build_Is0Bifunctor F)
+  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
+    fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g)
+  : Is1Bifunctor F.
+Proof.
+  snrapply Build_Is1Bifunctor.
+  1,2: exact _.
+  intros a0 a1 f b0 b1 g.
+  refine ((_ $@@ _)^$ $@ bifunctor_coh a0 a1 f b0 b1 g $@ (_ $@@ _)).
+  1,4: exact ((_ $@L fmap_id (F _) _) $@ cat_idr _).
+  1,2: exact (( fmap_id (flip F _) _ $@R _) $@ cat_idl _).
+Defined. *)
+
+(** ** Bifunctor lemmas *)
+
 (** *** Coherence *)
 
-Definition fmap11_is_fmap01_fmap10 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+(* Definition fmap11_is_fmap01_fmap10 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
   : fmap11 F f g $== fmap01 F a1 g $o fmap10 F f b0.
@@ -146,9 +228,9 @@ Proof.
   refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
     (a := (a0, b0)) (b := (a1, b0)) (c := (a1, b1)) (f, Id b0) (Id a1, g)).
   exact (cat_idl _, cat_idr _).
-Defined.
+Defined. *)
 
-Definition fmap11_is_fmap10_fmap01 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+(* Definition fmap11_is_fmap10_fmap01 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
   : fmap11 F f g $== fmap10 F f b1 $o fmap01 F a0 g.
@@ -156,7 +238,7 @@ Proof.
   refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
     (a := (a0, b0)) (b := (a0, b1)) (c := (a1, b1)) (Id a0, g) (f, Id b1)).
   exact (cat_idr _, cat_idl _).
-Defined.
+Defined. *)
 
 Definition bifunctor_coh {A B C : Type}
   (F : A -> B -> C) `{Is1Bifunctor A B C F}
@@ -222,6 +304,20 @@ Definition fmap11_id {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F} (a : A) (b : B)
   : fmap11 F (Id a) (Id b) $== Id (F a b)
   := fmap_id (uncurry F) (a, b).
+
+(** [fmap11] with left map the identity gives [fmap01]. *)
+Definition fmap01_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  (a : A) {b0 b1 : B} (g : b0 $-> b1)
+  : fmap11 F (Id a) g $== fmap01 F a g
+  := fmap11_is_fmap01_fmap10 _ _ _ $@ (_ $@L fmap10_id _ _ _) $@ cat_idr _.
+
+(** [fmap11] with right map the identity gives [fmap10]. *)
+Definition fmap10_is_fmap11 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a0 a1 : A} (f : a0 $-> a1) (b : B)
+  : fmap11 F f (Id b) $== fmap10 F f b
+  := fmap11_is_fmap01_fmap10 _ _ _ $@ (fmap01_id _ _ _ $@R _) $@ cat_idl _.
 
 (** *** Composition preservation *)
 
@@ -289,8 +385,11 @@ Definition is0bifunctor_flip {A B C : Type}
   (F : A -> B -> C) `{Is01Cat A, Is01Cat B, Is01Cat C, !Is0Bifunctor F}
   : Is0Bifunctor (flip F).
 Proof.
-  change (Is0Functor (uncurry F o equiv_prod_symm _ _)).
-  exact _.
+  snrapply Build_Is0Bifunctor.
+  - change (Is0Functor (uncurry F o equiv_prod_symm _ _)).
+    exact _.
+  - exact _.
+  - exact _.
 Defined.
 Hint Immediate is0bifunctor_flip : typeclass_instances.
 
@@ -298,28 +397,17 @@ Definition is1bifunctor_flip {A B C : Type}
 (F : A -> B -> C) `{H : Is1Bifunctor A B C F}
   : Is1Bifunctor (flip F).
 Proof.
-  change (Is1Functor (uncurry F o equiv_prod_symm _ _)).
-  exact _.
+  snrapply Build_Is1Bifunctor.
+  - change (Is1Functor (uncurry F o equiv_prod_symm _ _)).
+    exact _.
+  - exact _.
+  - exact _.
+  - intros b0 b1 g a0 a1 f.
+    exact (fmap11_is_fmap10_fmap01 F f g).
+  - intros b0 b1 g a0 a1 f.
+    exact (fmap11_is_fmap01_fmap10 F f g).
 Defined.
 Hint Immediate is1bifunctor_flip : typeclass_instances.
-
-(** Here is an alternative constructor that uses [fmap01] and [fmap10] instead. *)
-Definition Build_Is1Bifunctor' {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
-  `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
-  `{!forall a, Is1Functor (F a), !forall b, Is1Functor (flip F b)}
-  (Is0Bifunctor_F := Build_Is0Bifunctor F)
-  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
-    fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g)
-  : Is1Bifunctor F.
-Proof.
-  snrapply Build_Is1Bifunctor.
-  1,2: exact _.
-  intros a0 a1 f b0 b1 g.
-  refine ((_ $@@ _)^$ $@ bifunctor_coh a0 a1 f b0 b1 g $@ (_ $@@ _)).
-  1,4: exact ((_ $@L fmap_id (F _) _) $@ cat_idr _).
-  1,2: exact (( fmap_id (flip F _) _ $@R _) $@ cat_idl _).
-Defined.
 
 (** ** Composition of bifunctors *)
 
@@ -330,10 +418,8 @@ Global Instance is0bifunctor_postcompose {A B C D : Type}
   `{IsGraph A, IsGraph B, IsGraph C, IsGraph D}
   (F : A -> B -> C) {bf : Is0Bifunctor F}
   (G : C -> D) `{!Is0Functor G}
-  : Is0Bifunctor (fun a b => G (F a b)).
-Proof.
-  rapply is0functor_compose.
-Defined.
+  : Is0Bifunctor (fun a b => G (F a b))
+  := {}.
 
 Global Instance is1bifunctor_postcompose {A B C D : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D}
@@ -341,7 +427,12 @@ Global Instance is1bifunctor_postcompose {A B C D : Type}
   `{!Is0Bifunctor F} {bf : Is1Bifunctor F}
   : Is1Bifunctor (fun a b => G (F a b)).
 Proof.
-  rapply is1functor_compose.
+  snrapply Build_Is1Bifunctor.
+  1-3: exact _.
+  - intros a0 a1 f b0 b1 g.
+    exact (fmap2 G (fmap11_is_fmap01_fmap10 F f g) $@ fmap_comp G _ _).
+  - intros a0 a1 f b0 b1 g.
+    exact (fmap2 G (fmap11_is_fmap10_fmap01 F f g) $@ fmap_comp G _ _).
 Defined.
 
 Global Instance is0bifunctor_precompose {A B C D E : Type}
@@ -350,8 +441,13 @@ Global Instance is0bifunctor_precompose {A B C D E : Type}
   `{!Is0Functor G, !Is0Bifunctor F, !Is0Functor K}
   : Is0Bifunctor (fun a b => F (G a) (K b)).
 Proof.
-  change (Is0Functor (uncurry F o functor_prod G K)).
-  exact _.
+  snrapply Build_Is0Bifunctor.
+  - change (Is0Functor (uncurry F o functor_prod G K)).
+    exact _.
+  - exact _.
+  - intros e.
+    change (Is0Functor (flip F (K e) o G)).
+    exact _.
 Defined.
 
 Global Instance is1bifunctor_precompose {A B C D E : Type}
@@ -361,8 +457,17 @@ Global Instance is1bifunctor_precompose {A B C D E : Type}
     !Is0Functor K, !Is1Functor K}
   : Is1Bifunctor (fun a b => F (G a) (K b)).
 Proof.
-  change (Is1Functor (uncurry F o functor_prod G K)).
-  exact _.
+  snrapply Build_Is1Bifunctor.
+  - change (Is1Functor (uncurry F o functor_prod G K)).
+    exact _.
+  - exact _.
+  - intros e.
+    change (Is1Functor (flip F (K e) o G)).
+    exact _.
+  - intros a0 a1 f b0 b1 g.
+    exact (fmap11_is_fmap01_fmap10 F (fmap G f) (fmap K g)).
+  - intros a0 a1 f b0 b1 g.
+    exact (fmap11_is_fmap10_fmap01 F (fmap G f) (fmap K g)).
 Defined.
 
 Global Instance is0functor_uncurry_uncurry_left {A B C D E}

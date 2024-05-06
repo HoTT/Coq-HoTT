@@ -562,6 +562,8 @@ Section FunctorJoin.
 
   Global Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
+    snrapply Build_Is0Bifunctor'.
+    1,2: exact _.
     apply Build_Is0Functor.
     intros A B [f g].
     exact (functor_join f g).
@@ -569,6 +571,7 @@ Section FunctorJoin.
 
   Global Instance is1bifunctor_join : Is1Bifunctor Join.
   Proof.
+    snrapply Build_Is1Bifunctor'.
     snrapply Build_Is1Functor.
     - intros A B f g [p q].
       exact (functor2_join p q).
