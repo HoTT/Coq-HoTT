@@ -6,6 +6,7 @@ Require Import WildCat.Core WildCat.Prod WildCat.Equiv WildCat.NatTrans WildCat.
 
 (** ** Definition *)
 
+(** We choose to store redundant information in the class, so that depending on how an instance is constructed, we will get the expected implementations of [fmap10], [fmap01] and [fmap11]. *)
 Class Is0Bifunctor {A B C : Type}
   `{IsGraph A, IsGraph B, IsGraph C} (F : A -> B -> C) := {
   is0functor_bifunctor_uncurried :: Is0Functor (uncurry F);
@@ -13,6 +14,7 @@ Class Is0Bifunctor {A B C : Type}
   is0functor10_bifunctor :: forall b, Is0Functor (flip F b);
 }.
 
+(** We provide two alternate constructors, allow the user to provide just the first field or the last two fields. *)
 Definition Build_Is0Bifunctor' {A B C : Type}
   `{Is01Cat A, Is01Cat B, IsGraph C} (F : A -> B -> C)
   `{!Is0Functor (uncurry F)}
@@ -20,20 +22,8 @@ Definition Build_Is0Bifunctor' {A B C : Type}
 Proof.
   snrapply Build_Is0Bifunctor.
   - exact _.
-  - intros a.
-    snrapply Build_Is0Functor.
-    intros b b' g.
-    change (uncurry F (a, b) $-> uncurry F (a, b')).
-    refine (fmap (uncurry F) (_, _)).
-    + exact (Id a).
-    + exact g.
-  - intros b.
-    snrapply Build_Is0Functor.
-    intros a a' f.
-    change (uncurry F (a, b) $-> uncurry F (a', b)).
-    refine (fmap (uncurry F) (_, _)).
-    + exact f.
-    + exact (Id b).
+  - exact (is0functor_functor_uncurried01 (uncurry F)).
+  - exact (is0functor_functor_uncurried10 (uncurry F)).
 Defined.
 
 Definition Build_Is0Bifunctor'' {A B C : Type}
@@ -63,13 +53,14 @@ Definition fmap01 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   : F a b0 $-> F a b1
   := fmap (F a) g.
 
-(** [fmap] in both arguments. Note that we made a choice in the order in which to compose, but the bifunctor coherence condition says that both ways agree. *)
+(** [fmap] in both arguments. *)
 Definition fmap11 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1)
   {b0 b1 : B} (g : b0 $-> b1)
   : F a0 b0 $-> F a1 b1
   := fmap (uncurry F) (a := (a0, b0)) (b := (a1, b1)) (f, g).
 
+(** As with [Is0Bifunctor], we store redundant information.  In addition, we store the proofs that they are consistent with each other. *)
 Class Is1Bifunctor {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C) `{!Is0Bifunctor F} := {
 
@@ -90,6 +81,7 @@ Arguments fmap11_is_fmap01_fmap10 {A B C _ _ _ _ _ _ _ _ _ _ _ _} F
 Arguments fmap11_is_fmap10_fmap01 {A B C _ _ _ _ _ _ _ _ _ _ _ _} F
   {Is0Bifunctor Is1Bifunctor} {a0 a1} f {b0 b1} g : rename.
 
+(** We again provide two alternate constructors. *)
 Definition Build_Is1Bifunctor' {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A -> B -> C)
   `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
@@ -97,32 +89,8 @@ Definition Build_Is1Bifunctor' {A B C : Type}
 Proof.
   snrapply Build_Is1Bifunctor.
   - exact _.
-  - intros a.
-    snrapply Build_Is1Functor.
-    + intros b b' g g' p.
-      refine (fmap2 (uncurry F) _).
-      exact (Id (Id a), p).
-    + intros b.
-      exact (fmap_id (uncurry F) _).
-    + intros b b' b'' f g.
-      srefine (fmap2 (uncurry F) _ $@ _).
-      * exact (Id a $o Id a, g $o f).
-      * exact ((cat_idl _)^$, Id _).
-      * exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a, b')) (c := (a, b''))
-          (Id a, f) (Id a, g)).
-  - intros b.
-    snrapply Build_Is1Functor.
-    + intros a a' f f' p.
-      refine (fmap2 (uncurry F) _).
-      exact (p, Id (Id b)).
-    + intros a.
-      exact (fmap_id (uncurry F) _).
-    + intros a a' a'' f g.
-      srefine (fmap2 (uncurry F) _ $@ _).
-      * exact (g $o f, Id b $o Id b).
-      * exact (Id _, (cat_idr _)^$).
-      * exact (fmap_comp (uncurry F) (a := (a, b)) (b := (a', b)) (c := (a'', b))
-          (f, Id b) (g, Id b)).
+  - exact (is1functor_functor_uncurried01 (uncurry F)).
+  - exact (is1functor_functor_uncurried10 (uncurry F)).
   - intros a0 a1 f b0 b1 g.
     refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
       (a := (a0, b0)) (b := (a1, b0)) (c := (a1, b1)) (f, Id b0) (Id a1, g)).
@@ -157,8 +125,7 @@ Proof.
   - exact _.
   - intros a0 a1 f b0 b1 g.
     exact (bifunctor_coh a0 a1 f b0 b1 g)^$.
-  - intros a0 a1 f b0 b1 g.
-    reflexivity.
+  - reflexivity.
 Defined.
 
 (** ** Bifunctor lemmas *)
