@@ -92,13 +92,13 @@ Defined.
 Global Instance is0bifunctor_ab_hom `{Funext}
   : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
-  rapply Build_Is0Bifunctor.
+  rapply Build_Is0Bifunctor''.
 Defined.
 
 Global Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
-  nrapply Build_Is1Bifunctor.
+  nrapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A A' f B B' g phi; cbn.
   by apply equiv_path_grouphomomorphism.

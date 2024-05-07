@@ -63,9 +63,9 @@ Defined.
 
 (** ** The bifunctor [ab_ext] *)
 
-Definition ab_ext `{Univalence} (B A : AbGroup@{u}) : AbGroup.
+Definition ab_ext@{u v|u < v} `{Univalence} (B : AbGroup@{u}^op) (A : AbGroup@{u}) : AbGroup@{v}.
 Proof.
-  snrapply (Build_AbGroup (grp_ext B A)).
+  snrapply (Build_AbGroup (grp_ext@{u v} B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
@@ -121,16 +121,16 @@ Defined.
 Global Instance is0bifunctor_abext `{Univalence}
   : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  rapply Build_Is0Bifunctor.
+  rapply Build_Is0Bifunctor''.
 Defined.
 
 Global Instance is1bifunctor_abext `{Univalence}
   : Is1Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snrapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A B.
-  exact (bifunctor_isbifunctor (Ext : AbGroup^op -> AbGroup -> pType)).
+  exact (bifunctor_coh (Ext : AbGroup^op -> AbGroup -> pType)).
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)

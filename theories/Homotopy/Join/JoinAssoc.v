@@ -266,20 +266,7 @@ Proof.
   - intros A B C.
     apply join_assoc.
   - intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
-    (* This is awkward because Monoidal.v works with a tensor that is separately a functor in each variable. *)
-    intro x.
-    rhs_V nrapply functor_join_compose.
-    rhs_V nrapply functor2_join.
-    2: reflexivity.
-    2: nrapply functor_join_compose.
-    cbn.
-    rhs_V nrapply join_assoc_nat; cbn.
-    apply ap.
-    lhs_V nrapply functor_join_compose.
-    lhs_V nrapply functor_join_compose.
-    apply functor2_join.
-    1: reflexivity.
-    symmetry; nrapply functor_join_compose.
+    apply join_assoc_nat.
 Defined.
 
 (** ** The Triangle Law *)
