@@ -14,7 +14,7 @@ Class Is0Bifunctor {A B C : Type}
   is0functor10_bifunctor :: forall b, Is0Functor (flip F b);
 }.
 
-(** We provide two alternate constructors, allow the user to provide just the first field or the last two fields. *)
+(** We provide two alternate constructors, allowing the user to provide just the first field or the last two fields. *)
 Definition Build_Is0Bifunctor' {A B C : Type}
   `{Is01Cat A, Is01Cat B, IsGraph C} (F : A -> B -> C)
   `{!Is0Functor (uncurry F)}
