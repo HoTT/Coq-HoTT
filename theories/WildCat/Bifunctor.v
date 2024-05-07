@@ -58,7 +58,7 @@ Definition fmap11 {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) `{!Is0Bifunctor F} {a0 a1 : A} (f : a0 $-> a1)
   {b0 b1 : B} (g : b0 $-> b1)
   : F a0 b0 $-> F a1 b1
-  := fmap (uncurry F) (a := (a0, b0)) (b := (a1, b1)) (f, g).
+  := fmap_pair (uncurry F) f g.
 
 (** As with [Is0Bifunctor], we store redundant information.  In addition, we store the proofs that they are consistent with each other. *)
 Class Is1Bifunctor {A B C : Type}
@@ -92,13 +92,11 @@ Proof.
   - exact (is1functor_functor_uncurried01 (uncurry F)).
   - exact (is1functor_functor_uncurried10 (uncurry F)).
   - intros a0 a1 f b0 b1 g.
-    refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
-      (a := (a0, b0)) (b := (a1, b0)) (c := (a1, b1)) (f, Id b0) (Id a1, g)).
-    exact (cat_idl _, cat_idr _).
+    refine (_^$ $@ fmap_pair_comp (uncurry F) f (Id b0) (Id a1) g).
+    exact (fmap2_pair (uncurry F) (cat_idl _) (cat_idr _)).
   - intros a0 a1 f b0 b1 g.
-    refine (fmap2 (uncurry F) _^$ $@ fmap_comp (uncurry F)
-      (a := (a0, b0)) (b := (a0, b1)) (c := (a1, b1)) (Id a0, g) (f, Id b1)).
-    exact (cat_idr _, cat_idl _).
+    refine (_^$ $@ fmap_pair_comp (uncurry F) (Id a0) g f (Id b1)).
+    exact (fmap2_pair (uncurry F) (cat_idr _) (cat_idl _)).
 Defined.
 
 Definition Build_Is1Bifunctor'' {A B C : Type}
@@ -149,11 +147,8 @@ Definition fmap02 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
 Definition fmap12 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} {g g' : b0 $-> b1} (q : g $== g')
-  : fmap11 F f g $== fmap11 F f g'.
-Proof.
-  refine (fmap2 (uncurry F) _).
-  exact (Id _, q).
-Defined.
+  : fmap11 F f g $== fmap11 F f g'
+  := fmap2_pair (uncurry F) (Id _) q.
 
 Definition fmap20 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
@@ -164,21 +159,15 @@ Definition fmap20 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
 Definition fmap21 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} {f f' : a0 $-> a1} (p : f $== f') {b0 b1 : B} (g : b0 $-> b1)
-  : fmap11 F f g $== fmap11 F f' g.
-Proof.
-  refine (fmap2 (uncurry F) _).
-  exact (p, Id _).
-Defined.
+  : fmap11 F f g $== fmap11 F f' g
+  := fmap2_pair (uncurry F) p (Id _).
 
 Definition fmap22 {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
   {a0 a1 : A} {f f' : a0 $-> a1} (p : f $== f')
   {b0 b1 : B} {g g' : b0 $-> b1} (q : g $== g')
-  : fmap11 F f g $== fmap11 F f' g'.
-Proof.
-  refine (fmap2 (uncurry F) _).
-  exact (p, q).
-Defined.
+  : fmap11 F f g $== fmap11 F f' g'
+  := fmap2_pair (uncurry F) p q.
 
 (** *** Identity preservation *)
 
@@ -230,8 +219,7 @@ Definition fmap11_comp {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   {a0 a1 a2 : A} (g : a1 $-> a2) (f : a0 $-> a1)
   {b0 b1 b2 : B} (k : b1 $-> b2) (h : b0 $-> b1)
   : fmap11 F (g $o f) (k $o h) $== fmap11 F g k $o fmap11 F f h
-  := fmap_comp (uncurry F)
-    (a := (a0, b0)) (b := (a1, b1)) (c := (a2, b2)) (_, _) (_, _).
+  := fmap_pair_comp (uncurry F) _ _ _ _.
 
 (** *** Equivalence preservation *)
 

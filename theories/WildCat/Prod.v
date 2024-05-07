@@ -227,3 +227,27 @@ Definition fmap11_uncurry {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
   : F a0 b0 $-> F a1 b1
   := @fmap _ _ _ _ (uncurry F) H2 (a0, b0) (a1, b1) (f, g).
+
+Definition fmap_pair {A B C : Type}  
+  `{IsGraph A, IsGraph B, IsGraph C}  
+  (F : A * B -> C) `{!Is0Functor F}  
+  {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)  
+  : F (a0, b0) $-> F (a1, b1)  
+  := fmap (a:=(a0,b0)) (b:=(a1,b1)) F (f,g).  
+
+Definition fmap_pair_comp {A B C : Type}  
+  `{Is1Cat A, Is1Cat B, Is1Cat C}  
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F}  
+  {a0 a1 a2 : A} {b0 b1 b2 : B}
+  (f : a0 $-> a1) (h : b0 $-> b1) (g : a1 $-> a2) (i : b1 $-> b2)  
+  : fmap_pair F (g $o f) (i $o h)
+    $== fmap_pair F g i $o fmap_pair F f h
+  := fmap_comp (a:=(a0,b0)) (b:=(a1,b1)) (c:=(a2,b2)) F (f,h) (g,i).
+
+Definition fmap2_pair {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F}
+  {a0 a1 : A} {f f' : a0 $-> a1} (p : f $== f')
+  {b0 b1 : B} {g g' : b0 $-> b1} (q : g $== g')
+  : fmap_pair F f g $== fmap_pair F f' g'
+  := fmap2 F (a:=(a0,b0)) (b:=(a1,b1)) (f:=(f,g)) (g:=(f',g')) (p,q).
