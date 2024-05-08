@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Types.Forall.
 Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod WildCat.Equiv.
-Require Import WildCat.NatTrans WildCat.Square.
+Require Import WildCat.NatTrans WildCat.Square WildCat.Opposite.
 
 (** * Monoidal Categories *)
 
@@ -12,21 +12,33 @@ Require Import WildCat.NatTrans WildCat.Square.
 
 (** *** Associators *)
 
-(** A natural equivalence witnessing the associativity of a bifunctor. *)
 Class Associator {A : Type} `{HasEquivs A}
-  (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F} := {
-  (** An isomorphism [associator] witnessing associativity of [F]. *)
-  associator a b c : F a (F b c) $<~> F (F a b) c;
+  (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  := associator_uncurried
+    : NatEquiv (fun '(a, b, c) => F a (F b c)) (fun '(a, b, c) => F (F a b) c).
 
-  (** The [associator] is a natural isomorphism. *)
-  is1natural_associator_uncurried
-    :: Is1Natural
-        (fun '(a, b, c) => F a (F b c))
-        (fun '(a, b, c) => F (F a b) c)
-        (fun '(a, b, c) => associator a b c);
-}.
+Arguments associator_uncurried {A _ _ _ _ _ F _ _ _}.
+
+Definition associator {A : Type} `{HasEquivs A} {F : A -> A -> A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F}
+  : forall a b c, F a (F b c) $<~> F (F a b) c
+  := fun a b c => associator_uncurried (a, b, c).
 Coercion associator : Associator >-> Funclass.
-Arguments associator {A _ _ _ _ _ F _ _ _} a b c.
+
+Definition Build_Associator {A : Type} `{HasEquivs A} (F : A -> A -> A)
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
+  (associator : forall a b c, F a (F b c) $<~> F (F a b) c)
+  (isnat_assoc : Is1Natural
+    (fun '(a, b, c) => F a (F b c))
+    (fun '(a, b, c) => F (F a b) c)
+    (fun '(a, b, c) => associator a b c))
+  : Associator F.
+Proof.
+  snrapply Build_NatEquiv.
+  - intros [[a b] c].
+    exact (associator a b c).
+  - exact isnat_assoc.
+Defined. 
 
 (** *** Unitors *)
 
@@ -69,18 +81,16 @@ Arguments pentagon_identity {A _ _ _ _ _} F {_ _ _}.
 (** *** Braiding *)
 
 Class Braiding {A : Type} `{Is1Cat A}
-  (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F} := {
-  (** A morphism [braid] witnessing the symmetry of [F]. *)
-  braid a b : F a b $-> F b a;
-  (** The [braid] is a natural transformation. *)
-  is1natural_braiding_uncurried
-    : Is1Natural
-      (uncurry F)
-      (uncurry (flip F))
-      (fun '(a, b) => braid a b);
-}.
+  (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  := braid_uncurried : NatTrans (uncurry F) (uncurry (flip F)).
+
+Arguments braid_uncurried {A _ _ _ _ F _ _ _}.
+    
+Definition braid {A : Type} `{Is1Cat A} {F : A -> A -> A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Braiding F}
+  : forall a b, F a b $-> F b a
+  := fun a b => braid_uncurried (a, b).
 Coercion braid : Braiding >-> Funclass.
-Arguments braid {A _ _ _ _ F _ _ _} a b.
 
 Class SymmetricBraiding {A : Type} `{Is1Cat A}
   (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F} := {
@@ -150,16 +160,16 @@ Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
 (** *** Theory about [Associator] *)
 
 Section Associator.
-  Context {A : Type} {F : A -> A -> A} `{assoc : Associator A F, !HasEquivs A}.
+  Context {A : Type} `{HasEquivs A} {F : A -> A -> A}
+    `{!Is0Bifunctor F, !Is1Bifunctor F, assoc : !Associator F}.
 
   Local Definition associator_nat {x x' y y' z z'}
     (f : x $-> x') (g : y $-> y') (h : z $-> z')
     : associator x' y' z' $o fmap11 F f (fmap11 F g h)
       $== fmap11 F (fmap11 F f g) h $o associator x y z.
   Proof.
-    nrefine (_ $@ is1natural_associator_uncurried (x, y, z) (x', y', z') (f, g, h)).
-    refine (_ $@L ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _^$))).
-    1,2: rapply fmap_comp. 
+    destruct assoc as [asso nat].
+    exact (nat (x, y, z) (x', y', z') (f, g, h)).
   Defined.
 
   Local Definition associator_nat_l {x x' : A} (f : x $-> x') (y z : A)
@@ -192,7 +202,35 @@ Section Associator.
     - exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).
   Defined.
 
+  Global Instance associator_op : Associator (A:=A^op) F
+    := natequiv_inverse (natequiv_op assoc).
+
 End Associator.
+
+(** ** Theory about [LeftUnitor] and [RightUnitor] *)
+
+Section LeftUnitor.
+  Context {A : Type} `{HasEquivs A} {F : A -> A -> A} (unit : A)
+    `{!Is0Bifunctor F, !Is1Bifunctor F, !LeftUnitor F unit, !RightUnitor F unit}.
+
+  Global Instance left_unitor_op : LeftUnitor (A:=A^op) F unit
+    := natequiv_inverse (natequiv_op left_unitor).
+  
+  Global Instance right_unitor_op : RightUnitor (A:=A^op) F unit
+    := natequiv_inverse (natequiv_op right_unitor).
+
+End LeftUnitor.
+
+(** ** Theory about [Braiding] *)
+
+Section Braiding.
+  Context {A : Type} `{HasEquivs A} {F : A -> A -> A}
+    `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding F}.
+  
+  Global Instance braiding_op : Braiding (A:=A^op) F
+    := (nattrans_op (nattrans_flip braid)).
+
+End Braiding.
 
 (** ** Theory about [SymmetricBraid] *)
 
@@ -359,31 +397,57 @@ Section SymmetricBraid.
   Local Definition braid_nat {a b c d} (f : a $-> c) (g : b $-> d)
     : braid c d $o fmap11 F f g $== fmap11 F g f $o braid a b.
   Proof.
-    refine (is1natural_braiding_uncurried (a, b) (c, d) (f, g) $@ _).
-    refine (_ $@R _).
-    rapply fmap11_coh.
+    exact (isnat braid_uncurried (a := (a, b)) (a' := (c, d)) (f, g)).
   Defined.
 
   Local Definition braid_nat_l {a b c} (f : a $-> b)
     : braid b c $o fmap10 F f c $== fmap01 F c f $o braid a c.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    - rapply fmap10_is_fmap11.
-    - exact (is1natural_braiding_uncurried (a, c) (b, c) (f, Id _)).
-    - exact ((fmap11_coh _ _ _)^$ $@ fmap01_is_fmap11 _ c f).
+    refine ((_ $@L (fmap10_is_fmap11 _ _ _)^$) $@ _ $@ (fmap01_is_fmap11 _ _ _ $@R _)).
+    exact (isnat braid_uncurried (a := (a, c)) (a' := (b, c)) (f, Id _)).
   Defined.
 
   (** This is just the inverse of above. *)
   Local Definition braid_nat_r {a b c} (g : b $-> c)
     : braid a c $o fmap01 F a g $== fmap10 F g a $o braid a b.
   Proof.
-    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    - rapply fmap01_is_fmap11.
-    - exact (is1natural_braiding_uncurried (a, b) (a, c) (Id _ , g)).
-    - exact ((fmap11_coh _ _ _)^$ $@ fmap10_is_fmap11 _ g a).
+    refine ((_ $@L (fmap01_is_fmap11 _ _ _)^$) $@ _ $@ (fmap10_is_fmap11 _ _ _ $@R _)).
+    exact (isnat braid_uncurried (a := (a, b)) (a' := (a, c)) (Id _ , g)).
+  Defined.
+  
+  Global Instance symmetricbraiding_op : SymmetricBraiding (A:=A^op) F.
+  Proof.
+    snrapply Build_SymmetricBraiding.
+    - exact _.
+    - intros a b.
+      rapply braid_braid.
   Defined.
 
 End SymmetricBraid.
+
+Global Instance ismonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
+  `{IsMonoidal A tensor unit}
+  : IsMonoidal A^op tensor unit.
+Proof.
+  snrapply Build_IsMonoidal.
+  1-5: exact _.
+  - intros a b; unfold op in a, b; simpl.
+    refine (_^$ $@ _ $@ (_ $@L _)).
+    1,3: exact (emap_inv _ _ $@ cate_buildequiv_fun _).
+    nrefine (cate_inv2 _ $@ cate_inv_compose' _ _).
+    refine (cate_buildequiv_fun _ $@ _ $@ ((cate_buildequiv_fun _)^$ $@R _)
+      $@ (cate_buildequiv_fun _)^$).
+    rapply cat_tensor_triangle_identity.
+  - intros a b c d; unfold op in a, b, c, d; simpl.
+    refine (_ $@ ((_ $@L _) $@@ _)).
+    2,3: exact (emap_inv _ _ $@ cate_buildequiv_fun _).
+    refine ((cate_inv_compose' _ _)^$ $@ cate_inv2 _ $@ cate_inv_compose' _ _
+      $@ (_ $@L cate_inv_compose' _ _)). 
+    refine (cate_buildequiv_fun _ $@ _ $@ ((cate_buildequiv_fun _)^$ $@R _)
+      $@ (cate_buildequiv_fun _)^$).
+    refine (_ $@ (cate_buildequiv_fun _ $@@ (cate_buildequiv_fun _ $@R _))^$).
+    rapply cat_tensor_pentagon_identity.
+Defined.
 
 (** ** Building Symmetric Monoidal Categories *)
 
@@ -632,15 +696,12 @@ Section TwistConstruction.
       (** The second square is just the naturality of twist. *)
       nrapply vconcat.
       2: apply twist_nat.
-      (** We rewrite one of the edges to make sure a functor application is grouped together. *)
-      nrapply vconcatL.
-      { refine ((cat_assoc _ _ _)^$ $@ (_^$ $@R _)).
-        rapply fmap_comp. }
-      (** This allows us to compose with bifunctor coherence on one side. *)
-      nrapply hconcat.
-      1: rapply fmap11_coh.
+      nrapply hconcatL.
+      2: nrapply hconcatR.
+      1,3: symmetry; rapply fmap01_is_fmap11.
       (** Leaving us with a square with a functor application. *)
-      rapply fmap_square.
+      rapply fmap11_square.
+      1: rapply vrefl.
       (** We are finally left with the naturality of braid. *)
       apply braid_nat.
   Defined.
@@ -660,11 +721,7 @@ Section TwistConstruction.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
         nrapply vconcat.
         2: rapply (isnat right_unitor f).
-        nrapply vconcatL.
-        1: symmetry; rapply fmap01_is_fmap11.
-        nrapply vconcatR.
-        2: symmetry; rapply fmap10_is_fmap11.
-        rapply braid_nat.
+        rapply braid_nat_r.
     - intros a.
       rapply compose_catie'.
       rapply catie_braid.

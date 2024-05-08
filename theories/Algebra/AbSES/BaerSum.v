@@ -54,13 +54,13 @@ Defined.
 Global Instance is0bifunctor_abses' `{Univalence}
   : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  rapply Build_Is0Bifunctor.
+  rapply Build_Is0Bifunctor''.
 Defined.
 
 Global Instance is1bifunctor_abses' `{Univalence}
   : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snrapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? g ? ? f E; cbn.
   exact (abses_pushout_pullback_reorder E f g).
@@ -232,13 +232,13 @@ Defined.
 Global Instance is0bifunctor_abses `{Univalence}
   : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  rapply Build_Is0Bifunctor.
+  rapply Build_Is0Bifunctor''.
 Defined.
 
 Global Instance is1bifunctor_abses `{Univalence}
   : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snrapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? f ? ? g.
   rapply hspace_phomotopy_from_homotopy.

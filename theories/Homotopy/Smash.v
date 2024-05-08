@@ -353,7 +353,8 @@ Defined.
 
 Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
-  rapply Build_Is0Bifunctor'.
+  snrapply Build_Is0Bifunctor'.
+  1,2: exact _.
   nrapply Build_Is0Functor.
   intros [X Y] [A B] [f g].
   exact (functor_smash f g).

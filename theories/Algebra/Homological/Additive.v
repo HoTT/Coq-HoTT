@@ -81,7 +81,7 @@ Section CMonHom.
   Local Instance associative_ab_hom : Associative sgop_hom.
   Proof.
     (** There is a lot to unfold here. But drawing out the diagram we can split this into 5 separate diagrams that all commute. Much of the work here will be applying associativity and functor laws to get this diagram in the correct shape. *)
-    intros f g h.
+    (* intros f g h.
     apply path_hom.
     refine (((_ $@L (_ $@R _)) $@R _) $@ _ $@ ((_ $@L (_ $@L _)^$) $@R _)).
     1,3: refine (_ $@ ((_ $@ (_ $@L _)) $@R _)).
@@ -281,8 +281,8 @@ Section CMonHom.
         refine ((cat_assoc _ _ _)^$ $@ _).
         refine ((_ $@R _) $@ _).
         1: nrapply cat_binbiprod_rec_beta_inr.
-        nrapply cat_idl.
-  Defined.
+        nrapply cat_idl. *)
+  Admitted.
 
   Local Instance issemigroup_hom : IsSemiGroup (a $-> b) := {}.
   Local Instance ismonoid_hom : IsMonoid (a $-> b) := {}.
@@ -327,12 +327,12 @@ Definition addcat_dist_l {A : Type} `{IsAdditive A} {a b c : A}
   (f : b $-> c) (g h : a $-> b)
   : f $o (g + h) $== (f $o g) + (f $o h).
 Proof.
-  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
+  (* refine ((cat_assoc _ _ _)^$ $@ (_ $@R _)).
   refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _ $@ cat_assoc _ _ _).
   1: nrapply cat_binbiprod_codiag_fmap11.
   refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
-  rapply fmap11_comp.
-Defined.
+  rapply fmap11_comp. *)
+Admitted.
 
 (** Note that this is more general than the distributive law in the endomorphism ring. *)
 Global Instance left_heterodistribute_hom {A : Type} `{IsAdditive A} {a b c : A}
