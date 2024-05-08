@@ -1,10 +1,11 @@
 Require Import Basics.Overture.
 Require Import WildCat.Core WildCat.Equiv WildCat.PointedCat WildCat.Bifunctor.
-Require Import WildCat.Square WildCat.Opposite.
+Require Import WildCat.Square WildCat.Opposite WildCat.Monoidal NatTrans WildCat.Products.
 Require Import Algebra.Homological.Biproducts.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import canonical_names.
+Require Import MonoidObject.
 
 (** * Semiadditive and Additive Categories *)
 
@@ -25,14 +26,51 @@ Class IsSemiAdditive (A : Type) `{HasEquivs A} := {
   
 (** The final two conditions in the definition of a semiadditive category ensure that the hom types can become commutative monoids. This is an essential characteristic of semiadditive categories making it equivalent to alternate definitions where the category is semiadditive if it is enriched in commutative monoids. The machinery of encriched categories however is a bit heavy so we use this more lightweight definition where the commutative monoid structure appears naturally. *)
 
+Local Existing Instance issymmetricmonoidal_cat_binbiprod.
+
+Global Instance iscocommutativecomonoidobject_semiadditive
+  {A : Type} `{IsSemiAdditive A} (x : A)
+  : IsCocommutativeComonoidObject (fun x y => cat_binbiprod x y) zero_object x.
+Proof.
+  snrapply Build_IsCocommutativeComonoidObject.
+  { snrapply Build_IsComonoidObject.
+    - exact (cat_binbiprod_diag x).
+    - exact zero_morphism.
+    - refine (_ $@ (cat_binbiprod_fmap10_corec _ _ _)^$).
+      nrefine (cat_assoc _ _ _ $@ (_ $@L cat_binbiprod_fmap01_corec _ _ _) $@ _).
+      refine ((_ $@L (cat_binbiprod_corec_eta' (Id _) (cat_idr _))) $@ _
+        $@ cat_binbiprod_corec_eta' (cat_idr _)^$ (Id _)).
+      nrapply Products.cat_binprod_associator_corec.
+    - refine (cat_assoc _ _ _ $@ (_ $@L cat_binbiprod_fmap10_corec _ _ _) $@ _).
+      nrefine ((cate_buildequiv_fun _ $@R _) $@ _).
+      unfold trans_nattrans.
+      nrefine (cat_assoc _ _ _ $@ (_ $@L cat_binprod_swap_corec _ _) $@ _).
+      nrefine ((cate_buildequiv_fun _ $@R _) $@ _).
+      nrapply cat_binbiprod_corec_beta_pr1.
+    - refine (cat_assoc _ _ _ $@ (_ $@L cat_binbiprod_fmap01_corec _ _ _) $@ _).
+      nrefine ((cate_buildequiv_fun _ $@R _) $@ _).
+      nrapply cat_binbiprod_corec_beta_pr1. }
+  rapply cat_binprod_swap_corec.
+Defined.
+
 Section CMonHom.
 
   Context {A : Type} `{IsSemiAdditive A} (a b : A).
   
   (** We can show that the hom-types of a semiadditive category are commutative monoids. *)
 
-  (** The zero element is given by the zero morphism. This exists from our pointedness assumption. *)
-  Local Instance zero_hom : Zero (a $-> b) := zero_morphism.
+  Local Instance zero_hom : Zero (a $-> b).
+  Proof.
+    change (MonUnit (Hom (A:=A^op) b a)).
+    snrapply (MonoidObject.monunit_hom (A:=A^op) (zero_object (A:=A^op)) (x := b) (y := a)).
+    1-11: exact _.
+    (* change (IsMonoidObject (A:=A^op) ?F ?z ?x) with (IsComonoidObject (A:=A) F z x).
+      (IsComonoidObject (fun x y => cat_binbiprod x y) _ b). *)
+    pose proof (iscocommutativecomonoidobject_semiadditive a). 
+    unfold IsCocommutativeComonoidObject in X.
+    rapply cmo_mo.
+  
+   := MonoidObject.monunit_hom (A:=A^op) _.
 
   (** TODO: explain a bit more: diagonal duplicates and codiagonal sums. *)
   (** The operation is given by the biproduct structure. *) 

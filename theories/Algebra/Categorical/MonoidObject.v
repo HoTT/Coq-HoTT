@@ -96,17 +96,17 @@ Section ComonoidObject.
   Context `{!Braiding tensor}.
 
   (** A cocommutative comonoid objects is a commutative monoid object in the opposite category. *)
-  Class IsCocommuativeComonoidObject (x : A)
+  Class IsCocommutativeComonoidObject (x : A)
     := iscommuatativemonoid_cocomutativemonoid_op
       :: IsCommutativeMonoidObject (A:=A^op) tensor unit x.
 
   (** We can build cocommutative comonoid objects from the following data: *)
-  Definition Build_IsCocommuatativeComonoidObject (x : A)
+  Definition Build_IsCocommutativeComonoidObject (x : A)
     (** A comonoid. *)
     `{!IsComonoidObject x}
     (** Together with a proof of cocommutativity. *)
     (cco_cocomm : braid x x $o co_comult $== co_comult)
-    : IsCocommuativeComonoidObject x.
+    : IsCocommutativeComonoidObject x.
   Proof.
     snrapply Build_IsCommutativeMonoidObject.
     - exact _.

@@ -883,6 +883,13 @@ Section Associativity.
     nrapply cat_binbiprod_swap_inl.
   Defined.
 
+  Definition issymmetricmonoidal_cat_binbiprod
+    : IsSymmetricMonoidal A (fun x y => cat_binbiprod x y) zero_object.
+  Proof.
+    change (IsSymmetricMonoidal A (fun x y => cat_binprod x y) zero_object).
+    exact _.
+  Defined.
+
 End Associativity.
     
 (** *** Biproducts in the opposite category *)
