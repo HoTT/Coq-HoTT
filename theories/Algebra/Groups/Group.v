@@ -486,6 +486,16 @@ Proof.
     exact (ap (fun m => f g + m) IHn).
 Defined.
 
+(** All powers of the unit are the unit. *)
+Definition grp_pow_unit {G : Group} (n : nat)
+  : grp_pow (G:=G) mon_unit n = mon_unit.
+Proof.
+  induction n.
+  1: reflexivity.
+  lhs rapply left_identity.
+  exact IHn.
+Defined.
+
 (** ** The category of Groups *)
 
 (** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
