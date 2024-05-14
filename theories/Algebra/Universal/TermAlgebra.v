@@ -30,7 +30,7 @@ Inductive CarriersTermAlgebra {σ} (C : Carriers σ) : Carriers σ :=
       DomOperation (CarriersTermAlgebra C) (σ u) ->
       CarriersTermAlgebra C (sort_cod (σ u)).
 
-Scheme CarriersTermAlgebra_ind := Elimination for CarriersTermAlgebra Sort Type.
+Scheme CarriersTermAlgebra_ind := Induction for CarriersTermAlgebra Sort Type.
 Arguments CarriersTermAlgebra_ind {σ}.
 
 Definition CarriersTermAlgebra_rect {σ} := @CarriersTermAlgebra_ind σ.
