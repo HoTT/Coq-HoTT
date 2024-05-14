@@ -388,7 +388,7 @@ Proof.
   snrapply Build_Adjunction_natequiv_nat_right.
   { intros y.
     refine (natequiv_compose (natequiv_adjunction_l adj _) _).
-    rapply (natequiv_postwhisker _ (natequiv_op _ _ e)). }
+    rapply (natequiv_postwhisker _ (natequiv_op e)). }
   intros x.
   rapply is1natural_comp.
 Defined.
