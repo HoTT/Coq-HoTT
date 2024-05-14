@@ -38,7 +38,7 @@ Definition Build_Is0Bifunctor'' {A B C : Type}
   : Is0Bifunctor F.
 Proof.
   (* The first condition follows from [is0functor_prod_is0functor]. *)
-  rapply Build_Is0Bifunctor.
+  nrapply Build_Is0Bifunctor; exact _.
 Defined.
 
 (** *** 1-functorial action *)
