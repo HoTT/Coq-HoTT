@@ -190,6 +190,8 @@ Reserved Notation "x '^D'" (at level 3).
 (** Lists *)
 Reserved Infix "::" (at level 60, right associativity).
 Reserved Infix "++" (right associativity, at level 60).
+Reserved Notation "[ u ]" (at level 0).
+Reserved Notation " [ u , v ] " (at level 0).
 
 (** Other / Not sorted yet *)
 
@@ -218,9 +220,7 @@ Reserved Notation "n -Type" (at level 1).
 Reserved Notation "p ..1" (at level 3).
 Reserved Notation "p ..2" (at level 3).
 Reserved Notation "!! P" (at level 35, right associativity).
-Reserved Notation "[ u ]" (at level 9).
 Reserved Notation "u ~~ v" (at level 30).
-Reserved Notation " [ u , v ] " (at level 9).
 Reserved Notation "! x" (at level 3, format "'!' x").
 Reserved Notation "x \\ F" (at level 40, left associativity).
 Reserved Notation "x // F" (at level 40, left associativity).

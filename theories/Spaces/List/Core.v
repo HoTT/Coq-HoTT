@@ -28,9 +28,9 @@ Scheme list_rect := Induction for list Sort Type.
 Scheme list_ind := Induction for list Sort Type.
 Scheme list_rec := Minimality for list Sort Type.
 
-(** Syntactic sugar for creating lists. [ [a1; b2; ...; an] = a1 :: b2 :: ... :: an :: nil ]. *)
+(** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)
 Notation "[ x ]" := (x :: nil) : list_scope.
-Notation "[ x ; y ; .. ; z ]" :=  (cons x (cons y .. (cons z nil) ..)) : list_scope.
+Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.
 
 (** ** Length *)
 
@@ -107,11 +107,11 @@ Definition reverse {A} (l : list A) : list A := reverse_acc nil l.
 
 (** ** Getting Elements *)
 
-(** The head of a list is its first element. If the list is empty, it returns the default value. *)
-Definition head {A} (default : A) (l : list A) : A :=
+(** The head of a list is its first element. Returns [None] If the list is empty. *)
+Definition head {A} (l : list A) : option A :=
   match l with
-  | nil => default
-  | a :: _ => a
+  | nil => None
+  | a :: _ => Some a
   end.
 
 (** The tail of a list is the list without its first element. *)
@@ -121,19 +121,20 @@ Definition tail {A} (l : list A) : list A :=
     | a :: m => m
   end.
 
-(** The last element of a list. If the list is empty, it returns the default value. *)
-Fixpoint last {A} (default : A) (l : list A) : A :=
+(** The last element of a list. If the list is empty, it returns [None]. *)
+Fixpoint last {A} (l : list A) : option A :=
   match l with
-  | nil => default
-  | _ :: l => last default l
+  | nil => None 
+  | a :: nil => Some a
+  | _ :: l => last l
   end.
 
-(** The [n]-th element of a list. If the list is too short, it returns the default value. *)
-Fixpoint nth {A} (l : list A) (n : nat) (default : A) : A :=
+(** The [n]-th element of a list. If the list is too short, it returns [None]. *)
+Fixpoint nth {A} (l : list A) (n : nat) : option A :=
   match n, l with
-  | O, x :: _ => x
-  | S n, _ :: l => nth l n default
-  | _, _ => default
+  | O, x :: _ => Some x
+  | S n, _ :: l => nth l n 
+  | _, _ => None
   end.
 
 (** ** Removing Elements *)
@@ -158,10 +159,19 @@ Fixpoint seq_rev (n : nat) : list nat :=
 (** Ascending sequence of natural numbers [< n]. *)
 Definition seq (n : nat) : list nat := reverse (seq_rev n).
 
+(** ** Repeat *)
+
+(** Repeat an element [n] times. *)
+Fixpoint repeat {A} (x : A) (n : nat) : list A :=
+  match n with
+  | O => nil
+  | S n => x :: repeat x n
+  end.
+
 (** ** Membership Predicate *)
 
 (** The "In list" predicate *)
-Fixpoint InList {A} (a : A) (l : list A) : Type0 :=
+Fixpoint InList {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=
   match l with
     | nil => Empty 
     | b :: m => (b = a) + InList a m
