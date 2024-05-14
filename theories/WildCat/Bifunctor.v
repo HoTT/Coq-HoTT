@@ -401,9 +401,9 @@ Defined.
 Definition nattrans_flip {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   {F : A -> B -> C} `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {G : B -> A -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
-  : NatTrans (uncurry F) (uncurry (flip G))
-    -> NatTrans (uncurry (flip F)) (uncurry G).
+  {G : A -> B -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
+  : NatTrans (uncurry F) (uncurry G)
+    -> NatTrans (uncurry (flip F)) (uncurry (flip G)).
 Proof.
   intros [alpha nat].
   snrapply Build_NatTrans.
@@ -411,14 +411,6 @@ Proof.
   - intros [b a] [b' a'] [g f].
     exact (nat (a, b) (a', b') (f, g)).
 Defined.
-
-Definition nattrans_flip' {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C}
-  {F : A -> B -> C} `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {G : B -> A -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
-  : NatTrans (uncurry (flip F)) (uncurry G)
-    -> NatTrans (uncurry F) (uncurry (flip G))
-  := nattrans_flip (F:=flip F) (G:=flip G).
 
 (** ** Opposite Bifunctors *)
 
