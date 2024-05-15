@@ -1,11 +1,13 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core WildCat.Equiv WildCat.Monoidal WildCat.Bifunctor
-  WildCat.NatTrans WildCat.Opposite WildCat.Products.
+  WildCat.NatTrans WildCat.Opposite WildCat.Products WildCat.Coproducts.
 Require Import abstract_algebra.
 
 (** * Monoids and Comonoids *)
 
-(** Here we define a monoid internal to a monoidal category. Various algebraic theories such as groups and rings may also be internalized, however these specifically require a cartesian monoidal structure. The theory of monoids however has no such requirement and can therefore be developed in much greater generality. This can be used to define a range of objects such as R-algebras, H-spaces, Hopf algebras and more. *)
+(** Here we define a monoid internal to a monoidal category. Note that we don't actually need the full monoidal structure so we assume only the parts we need. This allows us to keep the definitions general between various flavours of monoidal category.
+
+Many algebraic theories such as groups and rings may also be internalized, however these specifically require a cartesian monoidal structure. The theory of monoids however has no such requirement and can therefore be developed in much greater generality. This can be used to define a range of objects such as R-algebras, H-spaces, Hopf algebras and more. *)
 
 (** * Monoid objects *)
 
@@ -117,7 +119,7 @@ End ComonoidObject.
 
 (** ** Monoid enrichment *)
 
-(** A hom [x $-> y] in a cartesian category where [y] is a monoid object has the structure of a monoid. Equivalently, a hom [x $-> y] in a cartesian category where [x] is a comonoid object has the structure of a comonoid. *)
+(** A hom [x $-> y] in a cartesian category where [y] is a monoid object has the structure of a monoid. *)
 
 Section MonoidEnriched.
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}
@@ -192,6 +194,59 @@ Section MonoidEnriched.
 
 End MonoidEnriched.
 
+(** Equivalently, a hom [x $-> y] in a cartesian category where [x] is a comonoid object has the structure of a monoid. *)
+
+Section MonoidEnriched.
+  Context {A : Type} `{HasEquivs A} `{!HasBinaryCoproducts A}
+    (unit : A) `{!IsInitial unit} {x y : A}
+    `{!HasMorExt A} `{forall x y, IsHSet (x $-> y)}.
+
+Set Typeclasses Depth 1.
+  Section Monoid.
+    Context `{!IsComonoidObject _ _ x}.
+
+    Local Instance sgop_hom : SgOp (x $-> y)
+      := fun f g => cat_coproduct_corec f g $o co_comult.
+
+    Local Instance monunit_hom : MonUnit (x $-> y) := co_counit $o mor_initial _ _.
+
+    Local Instance associative_hom : Associative sgop_hom.
+    Proof.
+      intros f g h.
+      unfold sgop_hom.
+      rapply path_hom.
+      refine (_ $@ (cat_assoc _ _ _)^$).
+      refine (_ $@ (co_coassoc $@R _)^$).
+      refine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ cat_coproduct_associator_corec).
+    Defined.
+
+    Local Instance leftidentity_hom : LeftIdentity sgop_hom mon_unit.
+    Proof.
+      intros f.
+      unfold sgop_hom, mon_unit.
+      rapply path_hom.
+      refine (_ $@ cat_assoc_opp _ _ _).
+      refine (_ $@ (co_left_counit $@R _)^$).
+      refine (_ $@ cat_assoc _ _ _).
+      refine (_ $@ cat_coproduct_beta_inl).
+    Defined.
+
+    Local Instance rightidentity_hom : RightIdentity sgop_hom mon_unit.
+    Proof.
+      intros f.
+      unfold sgop_hom, mon_unit.
+      rapply path_hom.
+      refine (_ $@ cat_assoc_opp _ _ _).
+      refine (_ $@ (co_right_counit $@R _)^$).
+      refine (_ $@ cat_coproduct_beta_inr).
+    Defined.
+
+    Local Instance issemigroup_hom : IsSemiGroup (x $-> y) := {}.
+    Local Instance ismonoid_hom : IsMonoid (x $-> y) := {}.
+
+  End Monoid.
 
 
+End MonoidEnriched.
 

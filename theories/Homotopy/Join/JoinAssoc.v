@@ -263,8 +263,7 @@ Defined.
 Global Instance join_associator : Associator Join.
 Proof.
   snrapply Build_Associator; simpl.
-  - intros A B C.
-    apply join_assoc.
+  - exact join_assoc.
   - intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
     apply join_assoc_nat.
 Defined.

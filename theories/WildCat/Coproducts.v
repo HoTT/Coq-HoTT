@@ -3,7 +3,7 @@ Require Import Types.Bool.
 Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
                WildCat.Opposite WildCat.Products WildCat.Universe
                WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat
-               WildCat.Monoidal.
+               WildCat.Monoidal WildCat.Bifunctor.
 
 (** * Categories with coproducts *)
 
@@ -265,6 +265,50 @@ Proof.
   rapply is1functor_op'.
   exact (is1functor_cat_binprod_r (A:=A^op) (H0:=H0) x).
 Defined.
+
+Global Instance is0bifunctor_cat_bincoprod {A : Type}
+  `{H0 : HasBinaryCoproducts A}
+  : Is0Bifunctor (fun x y => cat_bincoprod x y).
+Proof.
+  nrapply is0bifunctor_op'.
+  exact (is0bifunctor_cat_binprod (A:=A^op) (H0:=H0)).
+Defined.
+
+Global Instance is1bifunctor_cat_bincoprod {A : Type}
+  `{H0 : HasBinaryCoproducts A}
+  : Is1Bifunctor (fun x y => cat_bincoprod x y).
+Proof.
+  nrapply is1bifunctor_op'.
+  exact (is1bifunctor_cat_binprod (A:=A^op) (H0:=H0)).
+Defined.
+
+(** *** Cocartesian Monoidal Structure *)
+
+Global Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
+  {e : HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
+  : IsMonoidal A (fun x y => cat_bincoprod x y) zero.
+Proof.
+  
+
+  unshelve epose proof (@ismonoidal_op A^op (fun x y => cat_bincoprod x y) zero _ _ _ _ _
+  (ismonoidal_binprod (A:=A^op) zero)
+  ).
+  4-7: exact _.
+  1: exact _.
+    
+
+
+  (* unshelve epose proof (ismonoidal_op (fun x y => cat_binprod x y) zero); try exact _. *)
+
+
+  snrapply Build_IsMonoidal.
+  1-2: exact _.
+Admitted. 
+
+Global Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
+  {e : HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
+  : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero
+  := issymmetricmonoidal_binprod (A:=A^op) zero.
 
 (** *** Coproducts in Type *)
 

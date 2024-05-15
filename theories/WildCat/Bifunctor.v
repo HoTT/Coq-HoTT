@@ -37,12 +37,8 @@ Definition Build_Is0Bifunctor'' {A B C : Type}
   `{!forall a, Is0Functor (F a), !forall b, Is0Functor (flip F b)}
   : Is0Bifunctor F.
 Proof.
-  snrapply Build_Is0Bifunctor.
-  2,3: exact _.
-  snrapply Build_Is0Functor.
-  intros [a b] [a' b'] [f g].
-  change (F a b $-> F a' b').
-  exact (fmap (flip F b') f $o fmap (F a) g).
+  (* The first condition follows from [is0functor_prod_is0functor]. *)
+  nrapply Build_Is0Bifunctor; exact _.
 Defined.
 
 (** *** 1-functorial action *)
@@ -118,16 +114,7 @@ Definition Build_Is1Bifunctor'' {A B C : Type}
   : Is1Bifunctor F.
 Proof.
   snrapply Build_Is1Bifunctor.
-  - snrapply Build_Is1Functor.
-    + intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
-      exact (fmap2 (F a) p' $@@ fmap2 (flip F b') p).
-    + intros [a b].
-      exact ((fmap_id (F a) b $@@ fmap_id (flip F b) _) $@ cat_idr _).
-    + intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- .
-      refine ((fmap_comp (F a) g g' $@@ fmap_comp (flip F b'') f f') $@ _).
-      nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
-      refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
-      nrapply bifunctor_coh.
+  - exact _. (* [is1functor_prod_is1functor]. *)
   - exact _.
   - exact _.
   - intros a0 a1 f b0 b1 g.
@@ -444,9 +431,9 @@ Defined.
 Definition nattrans_flip {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   {F : A -> B -> C} `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {G : B -> A -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
-  : NatTrans (uncurry F) (uncurry (flip G))
-    -> NatTrans (uncurry (flip F)) (uncurry G).
+  {G : A -> B -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
+  : NatTrans (uncurry F) (uncurry G)
+    -> NatTrans (uncurry (flip F)) (uncurry (flip G)).
 Proof.
   intros [alpha nat].
   snrapply Build_NatTrans.
@@ -454,14 +441,6 @@ Proof.
   - intros [b a] [b' a'] [g f].
     exact (nat (a, b) (a', b') (f, g)).
 Defined.
-
-Definition nattrans_flip' {A B C : Type}
-  `{Is1Cat A, Is1Cat B, Is1Cat C}
-  {F : A -> B -> C} `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {G : B -> A -> C} `{!Is0Bifunctor G, !Is1Bifunctor G}
-  : NatTrans (uncurry (flip F)) (uncurry G)
-    -> NatTrans (uncurry F) (uncurry (flip G))
-  := nattrans_flip (F:=flip F) (G:=flip G).
 
 (** ** Opposite Bifunctors *)
 

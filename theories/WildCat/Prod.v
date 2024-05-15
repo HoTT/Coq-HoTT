@@ -221,6 +221,42 @@ Global Instance is1functor_functor_uncurried10 {A B C : Type}
   : Is1Functor (fun a => F (a, b))
   := is1functor_compose (fun a => (a, b)) F.
 
+(** Conversely, if [F : A * B -> C] is a 0-functor in each variable, then it is a 0-functor. *)
+Definition is0functor_prod_is0functor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A * B -> C)
+  `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
+  : Is0Functor F.
+Proof.
+  snrapply Build_Is0Functor.
+  intros [a b] [a' b'] [f g].
+  exact (fmap (fun a0 => F (a0,b')) f $o fmap (fun b0 => F (a,b0)) g).
+Defined.
+(** TODO: If we make this an instance, will it cause typeclass search to spin? *)
+Hint Immediate is0functor_prod_is0functor : typeclass_instances.
+
+(** And if [F : A * B -> C] is a 1-functor in each variable and satisfies a coherence, then it is a 1-functor. *)
+Definition is1functor_prod_is1functor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A * B -> C)
+  `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
+  `{!forall a, Is1Functor (fun b => F (a,b)), !forall b, Is1Functor (fun a => F (a,b))}
+  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
+    fmap (fun b => F (a1,b)) g $o fmap (fun a => F (a,b0)) f
+      $== fmap (fun a => F(a,b1)) f $o fmap (fun b => F (a0,b)) g)
+  : Is1Functor F.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
+    exact (fmap2 (fun b0 => F (a,b0)) p' $@@ fmap2 (fun a0 => F (a0,b')) p).
+  - intros [a b].
+    exact ((fmap_id (fun b0 => F (a,b0)) b $@@ fmap_id (fun a0 => F (a0,b)) _) $@ cat_idr _).
+  - intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- .
+    refine ((fmap_comp (fun b0 => F (a,b0)) g g' $@@ fmap_comp (fun a0 => F (a0,b'')) f f') $@ _).
+    nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
+    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
+    nrapply bifunctor_coh.
+Defined.
+Hint Immediate is1functor_prod_is1functor : typeclass_instances.
+
 (** Applies a two variable functor via uncurrying. Note that the precondition on [C] is slightly weaker than that of [Bifunctor.fmap11]. *)
 Definition fmap11_uncurry {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B -> C) {H2 : Is0Functor (uncurry F)}
