@@ -23,7 +23,7 @@ Definition test6 A B (F : A -> B) `{x : Is0Functor A B F}
   : @is0functor_op _ _ F _ _ (@is0functor_op _ _ F _ _ x) = x
   := 1.
 Definition test7 A B (F : A -> B) `{x : Is1Functor A B F}
-  : @is1functor_op _ _ F _ _ _ _ _ _ _ _ _(@is1functor_op _ _ F _ _ _ _ _ _ _ _ _ x) = x
+  : @is1functor_op _ _ F _ _ _ _ _ _ _ _ _ (@is1functor_op _ _ F _ _ _ _ _ _ _ _ _ x) = x
   := 1.
 
 (** Opposite bifunctors are definitionally involutive. *)
