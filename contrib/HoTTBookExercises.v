@@ -594,7 +594,7 @@ End Book_2_7.
 (* ================================================== ex:ap-coprod *)
 (** Exercise 2.8 *)
 
-
+Definition Book_2_8 := @HoTT.Types.Sum.ap_functor_sum.
 
 (* ================================================== ex:coprod-ump *)
 (** Exercise 2.9 *)
