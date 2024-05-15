@@ -37,7 +37,7 @@ Definition code_sum {A B} (z z' : A + B) : Type
     | inr b, inr b' => b = b'
     | _, _ => Empty end.
 
-Definition path_sum {A B : Type} (z z' : A + B) (c : code_sum z z') : z = z'.
+Definition path_sum {A B : Type} {z z' : A + B} (c : code_sum z z') : z = z'.
 Proof.
   destruct z, z'.
   - apply ap, c.
@@ -80,12 +80,12 @@ Definition path_sum_inr (A : Type) {B : Type} {x x' : B}
 (** This lets us identify the path space of a sum type, up to equivalence. *)
 
 Definition eisretr_path_sum {A B} {z z' : A + B}
-: (path_sum z z') o (@path_sum_inv _ _ z z') == idmap
+: (@path_sum _ _ z z') o (@path_sum_inv _ _ z z') == idmap
   := fun p => match p as p in (_ = z') return
-                    path_sum z z' (path_sum_inv p) = p
+                    (@path_sum _ _ z z') (path_sum_inv p) = p
               with
                 | 1 => match z as z return
-                             path_sum z z (path_sum_inv 1) = 1
+                             (@path_sum _ _ z z) (path_sum_inv 1) = 1
                        with
                          | inl _ => 1
                          | inr _ => 1
@@ -93,17 +93,17 @@ Definition eisretr_path_sum {A B} {z z' : A + B}
               end.
 
 Definition eissect_path_sum {A B} {z z' : A + B}
-: (@path_sum_inv _ _ z z') o (path_sum z z') == idmap.
+: (@path_sum_inv _ _ z z') o (@path_sum _ _ z z') == idmap.
 Proof.
   intro p.
   destruct z, z', p; exact idpath.
 Defined.
 
 Global Instance isequiv_path_sum {A B : Type} {z z' : A + B}
-: IsEquiv (path_sum z z') | 0.
+: IsEquiv (@path_sum _ _ z z') | 0.
 Proof.
   refine (Build_IsEquiv _ _
-                       (path_sum z z')
+                       (@path_sum _ _ z z')
                        (@path_sum_inv _ _ z z')
                        (@eisretr_path_sum A B z z')
                        (@eissect_path_sum A B z z')
@@ -360,7 +360,7 @@ Section FunctorSum.
   Definition functor_sum : A + B -> A' + B'
     := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
 
-  Definition functor_code_sum (z z' : A + B) (c : code_sum z z')
+  Definition functor_code_sum {z z' : A + B} (c : code_sum z z')
     : code_sum (functor_sum z) (functor_sum z').
   Proof.
     destruct z, z'.
@@ -370,8 +370,8 @@ Section FunctorSum.
     - destruct c. reflexivity.
   Defined.
 
-  Definition ap_functor_sum (z z' : A + B) (c : code_sum z z')
-    : ap functor_sum (path_sum _ _ c) = path_sum _ _ (functor_code_sum z z' c).
+  Definition ap_functor_sum {z z' : A + B} (c : code_sum z z')
+    : ap functor_sum (path_sum c) = path_sum (functor_code_sum c).
   Proof.
     destruct z, z'.
     - destruct c. reflexivity.
@@ -992,13 +992,13 @@ Proof.
   - destruct (dec_paths a1 a2) as [p|np].
     + exact (inl (ap inl p)).
     + apply inr; intros p.
-      exact (np ((path_sum _ _)^-1 p)).
-  - exact (inr (path_sum _ _)^-1).
-  - exact (inr (path_sum _ _)^-1).
+      exact (np ((@path_sum _ _ _ _)^-1 p)).
+  - exact (inr (@path_sum _ _ _ _)^-1).
+  - exact (inr (@path_sum _ _ _ _)^-1).
   - destruct (dec_paths b1 b2) as [p|np].
     + exact (inl (ap inr p)).
     + apply inr; intros p.
-      exact (np ((path_sum _ _)^-1 p)).
+      exact (np ((@path_sum _ _ _ _)^-1 p)).
 Defined.
 
 (** Because of [ishprop_sum], decidability of an hprop is again an hprop. *)
