@@ -31,16 +31,19 @@ Definition eta_sum `(z : A + B) : match z with
 
 (** ** Paths *)
 
-Definition path_sum {A B : Type} (z z' : A + B)
-           (pq : match z, z' with
-                   | inl z0, inl z'0 => z0 = z'0
-                   | inr z0, inr z'0 => z0 = z'0
-                   | _, _ => Empty
-                 end)
-: z = z'.
+Definition code_sum {A B} (z z' : A + B) : Type
+  := match z, z' with
+    | inl a, inl a' => a = a'
+    | inr b, inr b' => b = b'
+    | _, _ => Empty end.
+
+Definition path_sum {A B : Type} (z z' : A + B) (c : code_sum z z') : z = z'.
+Proof.
   destruct z, z'.
-  all:try apply ap, pq.
-  all:elim pq.
+  - apply ap, c.
+  - elim c.
+  - elim c.
+  - apply ap, c.
 Defined.
 
 Definition path_sum_inv {A B : Type} {z z' : A + B}
@@ -356,6 +359,26 @@ Section FunctorSum.
 
   Definition functor_sum : A + B -> A' + B'
     := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
+
+  Definition functor_code_sum (z z' : A + B) (c : code_sum z z')
+    : code_sum (functor_sum z) (functor_sum z').
+  Proof.
+    destruct z, z'.
+    - destruct c. reflexivity.
+    - elim c.
+    - elim c.
+    - destruct c. reflexivity.
+  Defined.
+
+  Definition ap_functor_sum (z z' : A + B) (c : code_sum z z')
+    : ap functor_sum (path_sum _ _ c) = path_sum _ _ (functor_code_sum z z' c).
+  Proof.
+    destruct z, z'.
+    - destruct c. reflexivity.
+    - elim c.
+    - elim c.
+    - destruct c. reflexivity.
+  Defined.
 
   (** The fibers of [functor_sum] are those of [f] and [g]. *)
   Definition hfiber_functor_sum_l (a' : A')
