@@ -1,5 +1,5 @@
 Require Import Basics.
-Require Import Spaces.Pos.Core Spaces.Int.
+Require Import Spaces.Pos.Core Spaces.BinInt.
 Require Import Algebra.AbGroups.AbelianGroup.
 
 (** * The group of integers *)

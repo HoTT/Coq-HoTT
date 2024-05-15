@@ -1,9 +1,9 @@
 Require Import Basics.
 Require Import Types.Universe.
 Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
-Require Import Spaces.Int.Spec.
-Require Import Spaces.Int.Equiv.
+Require Import Spaces.BinInt.Core.
+Require Import Spaces.BinInt.Spec.
+Require Import Spaces.BinInt.Equiv.
 
 Local Open Scope positive_scope.
 Local Open Scope int_scope.

@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
-  Groups.FreeGroup AbGroups.Z Int.Core.
+  Groups.FreeGroup AbGroups.Z BinInt.Core.
 
 (** * Cyclic groups *)
 

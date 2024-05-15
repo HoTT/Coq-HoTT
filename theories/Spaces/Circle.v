@@ -2,7 +2,7 @@
 Require Import Basics Types.
 Require Import Pointed.Core Pointed.Loops Pointed.pEquiv.
 Require Import HSet.
-Require Import Spaces.Pos Spaces.Int.
+Require Import Spaces.Pos Spaces.BinInt.
 Require Import Colimits.Coeq.
 Require Import Truncations.Core Truncations.Connectedness.
 

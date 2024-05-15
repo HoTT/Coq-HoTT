@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
-Require Import Spaces.Int.Spec.
+Require Import Spaces.BinInt.Core.
+Require Import Spaces.BinInt.Spec.
 
 (** ** Iteration of equivalences *)
 

@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
+Require Import Spaces.BinInt.Core.
 
 Local Set Universe Minimization ToSet.
 

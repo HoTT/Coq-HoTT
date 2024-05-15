@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Nat.Core.
-Require Import Spaces.Int.Core.
+Require Import Spaces.BinInt.Core.
 Require Import Spaces.Finite.Fin.
 Require Import WildCat.Core.
 
