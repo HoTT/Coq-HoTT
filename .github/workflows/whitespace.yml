@@ -1,0 +1,68 @@
+name: Whitespace Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  whitespace-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set commit count
+      shell: bash
+      run: echo "COMMIT_DEPTH=$((1 + ${{ github.event.pull_request.commits }}))" >> $GITHUB_ENV
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: ${{ env.COMMIT_DEPTH }}
+
+    # TODO: reintroduce this check when the library is cleaned up
+    # - name: Check for trailing whitespace
+    #   run: |
+    #     TRAILING_WHITESPACE=$(git grep -l -z -E '\s+$' | xargs -0 sed -n '/\s$/p')
+    #     if [ -n "$TRAILING_WHITESPACE" ]; then
+    #       echo "Trailing whitespace found. Please fix with:\
+    #       bash ./etc/fix_trailing_whitespace.sh"
+    #       exit 1
+    #     fi
+
+    - name: Check that every file ends correctly
+      run: |
+        while IFS= read -r file; do
+          # Check if the file is a regular file
+          if [ -f "$file" ]; then
+            if [ -n "$(tail -c 1 "$file")" ]; then
+              echo "File $file does not end with a newline. Please fix with:\
+              bash ./etc/fix_end_newlines.sh"
+              exit 1
+            fi
+          fi
+        done < <(git ls-files)
+
+# Get the repo with the commits(+1) in the series.
+# Process `git log --check` output to extract just the check errors.
+
+    - name: git log --check
+      id: check_out
+      run: |
+        log=
+        base_commit=$(git rev-parse FETCH_HEAD)
+        while IFS= read -r line; do
+          log="${log}\n${line}"
+          if [[ $line =~ ^-[^-] ]]; then
+            file_line=$(echo "$line" | cut -c 2-)
+            echo "Whitespace issue: ${file_line}"
+          fi
+        done <<< "$(git diff --check $base_commit ${{ github.sha }} | grep '^-[^-]')"
+
+        if [ -n "${log}" ]; then
+          delimiter=$(openssl rand -hex 8)
+          echo "text<<${delimiter}" >> $GITHUB_OUTPUT
+          echo -e "${log}" >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
+          exit 2
+        fi
