@@ -18,7 +18,7 @@ Local Open Scope pointed_scope.
 Section Pi1S1.
   Context `{Univalence}.
 
-  Local Open Scope int_scope.
+  Local Open Scope binint_scope.
   Local Open Scope pointed_scope.
 
   Theorem pi1_circle : Pi 1 [Circle, base] ≅ abgroup_Z.
