@@ -297,9 +297,9 @@ Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 (** *** Boolean equality and its properties *)
 
 (** [nat] has decidable paths *)
-Global Instance decidable_paths_nat : DecidablePaths nat.
+Global Instance decidable_paths_nat@{} : DecidablePaths nat.
 Proof.
-  intros n; induction n as [|n IHn];
+  intros n; simple_induction n n IHn;
   intros m; destruct m.
   - exact (inl idpath).
   - exact (inr (not_eq_O_S m)).
@@ -617,6 +617,14 @@ Proof.
   - transitivity (m + n).+1.
     + apply ap, IHn.
     + apply nat_add_n_Sm.
+Defined.
+
+Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
+Proof.
+  induction x as [|x IHx] in y |- * using nat_rect@{Set}.
+  - apply mul_n_O.
+  - simpl; rewrite nat_add_comm, IHx.
+    nrapply mul_n_Sm.
 Defined.
 
 (** ** Exponentiation *)
