@@ -31,6 +31,40 @@ Ltac decide :=
   | [|- ?A] => decide_type A
   end.
 
+Definition decidable_true {A : Type} `{Decidable A}
+  (a : A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall x, P (inl x))
+  : forall p, P p.
+Proof.
+  intros [x|n].
+  - apply p.
+  - contradiction n.
+Defined.
+
+(** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)
+Ltac decidable_true p a :=
+  generalize p;
+  rapply (decidable_true a);
+  try intro.
+
+Definition decidable_false {A : Type} `{Decidable A}
+  (n : not A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall n', P (inr n'))
+  : forall p, P p.
+Proof.
+  intros [x|n'].
+  - contradiction n.
+  - apply p.
+Defined.
+
+(** Replace a term [p] of the form [Decidable A] with [inr na] if we have a term [n : not A] showing that [A] is false. *)
+Ltac decidable_false p n :=
+  generalize p;
+  rapply (decidable_false n);
+  try intro.
+
 Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
 Global Existing Instance dec_paths.
@@ -181,10 +215,25 @@ Proof.
   intros x y; apply collapsible_hprop; exact _.
 Defined.
 
+(** Hedberg's Theorem *)
 Corollary hset_decpaths (A : Type) `{DecidablePaths A}
 : IsHSet A.
 Proof.
   exact _.
+Defined.
+
+(** We can use Hedberg's Theorem to simplify a goal of the form [forall (d : Decidable (x = x :> A)), P d] when [A] has decidable paths. *)
+Definition decidable_paths_refl (A : Type) `{DecidablePaths A}
+  (x : A)
+  (P : forall (d : Decidable (x = x)), Type)
+  (Px : P (inl idpath))
+  : forall d, P d.
+Proof.
+  rapply (decidable_true idpath).
+  intro p.
+  (** We cannot eliminate [p : x = x] with path induction, but we can use Hedberg's theorem to replace this with [idpath]. *)
+  assert (r : (idpath = p)) by apply path_ishprop.
+  by destruct r.
 Defined.
 
 (** ** Truncation *)
