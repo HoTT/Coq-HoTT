@@ -1,30 +1,21 @@
 Require Import
-        HoTT.Basics
-        HoTT.DProp
-        HoTT.BoundedSearch
-        HoTT.Spaces.Finite.Fin
-        HoTT.ExcludedMiddle.
-
-Require Import
-        HoTT.Classes.interfaces.abstract_algebra
-        HoTT.Classes.interfaces.orders
-        HoTT.Classes.interfaces.rationals
-        HoTT.Classes.interfaces.cauchy
-        HoTT.Classes.interfaces.archimedean
-        HoTT.Classes.interfaces.round
-        HoTT.Classes.interfaces.naturals
-        HoTT.Classes.implementations.peano_naturals
-        HoTT.Classes.orders.archimedean
-        HoTT.Classes.orders.dec_fields
-        HoTT.Classes.orders.lattices
-        HoTT.Classes.theory.apartness
-        HoTT.Classes.theory.rationals.
-
-(* Strangely, it seems that combining the next import with the above list breaks some instance search? *)
-Require Import
-        HoTT.Classes.orders.fields
-        HoTT.Classes.theory.fields
-        HoTT.Classes.theory.dec_fields.
+  Basics DProp BoundedSearch Spaces.Finite.Fin ExcludedMiddle
+  Classes.interfaces.abstract_algebra
+  Classes.interfaces.orders
+  Classes.interfaces.rationals
+  Classes.interfaces.cauchy
+  Classes.interfaces.archimedean
+  Classes.interfaces.round
+  Classes.interfaces.naturals
+  Classes.implementations.peano_naturals
+  Classes.orders.archimedean
+  Classes.orders.dec_fields
+  Classes.orders.lattices
+  Classes.theory.apartness
+  Classes.theory.rationals
+  Classes.orders.fields
+  Classes.theory.fields
+  Classes.theory.dec_fields.
 
 Local Open Scope type_scope.
 
