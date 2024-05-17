@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Nat.Core.
-Require Import Spaces.Int.Core.
+Require Import Spaces.BinInt.Core.
 Require Import Spaces.Finite.Fin.
 Require Import WildCat.Core.
 
@@ -30,10 +30,10 @@ Notation "x .+1" := (ss_succ x) : succ_scope.
 Definition NatSucc : SuccStr := Build_SuccStr nat Nat.Core.succ.
 
 (** Successor structure of integers *)
-Definition IntSucc : SuccStr := Build_SuccStr Int int_succ.
+Definition BinIntSucc : SuccStr := Build_SuccStr BinInt binint_succ.
 
 Notation "'+N'" := NatSucc : succ_scope.
-Notation "'+Z'" := IntSucc : succ_scope.
+Notation "'+Z'" := BinIntSucc : succ_scope.
 
 (** Stratified successor structures *)
 

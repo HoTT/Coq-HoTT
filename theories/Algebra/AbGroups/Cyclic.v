@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
-  Groups.FreeGroup AbGroups.Z Int.Core.
+  Groups.FreeGroup AbGroups.Z BinInt.Core.
 
 (** * Cyclic groups *)
 
@@ -71,7 +71,7 @@ Defined.
 
 (** The map sending the generator to [1 : Int]. *)
 Definition Z1_to_Z `{Funext} : ab_Z1 $-> abgroup_Z
-  := Z1_rec (G:=abgroup_Z) 1%int.
+  := Z1_rec (G:=abgroup_Z) 1%binint.
 
 (** TODO:  Prove that [Z1_to_Z] is a group isomorphism. *)
 

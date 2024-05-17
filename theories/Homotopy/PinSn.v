@@ -2,7 +2,7 @@ Require Import Basics Types.
 Require Import WildCat.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
+Require Import Spaces.BinInt Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.HSpaceS1.
@@ -18,7 +18,7 @@ Local Open Scope pointed_scope.
 Section Pi1S1.
   Context `{Univalence}.
 
-  Local Open Scope int_scope.
+  Local Open Scope binint_scope.
   Local Open Scope pointed_scope.
 
   Theorem pi1_circle : Pi 1 [Circle, base] ≅ abgroup_Z.

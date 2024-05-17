@@ -1,12 +1,12 @@
 Require Import Basics.
 Require Import Types.Universe.
 Require Import Spaces.Pos.
-Require Import Spaces.Int.Core.
-Require Import Spaces.Int.Spec.
-Require Import Spaces.Int.Equiv.
+Require Import Spaces.BinInt.Core.
+Require Import Spaces.BinInt.Spec.
+Require Import Spaces.BinInt.Equiv.
 
 Local Open Scope positive_scope.
-Local Open Scope int_scope.
+Local Open Scope binint_scope.
 
 (** ** Exponentiation of loops *)
 
@@ -19,14 +19,14 @@ Proof.
     exact (q @ p).
 Defined.
 
-Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)
+Definition loopexp {A : Type} {x : A} (p : x = x) (z : BinInt) : (x = x)
   := match z with
        | neg n => loopexp_pos p^ n
        | zero => 1
        | pos n => loopexp_pos p n
      end.
 
-(** TODO: One can also define [loopexp] as [int_iter (equiv_concat_r p x) z idpath].  This has slightly different computational behaviour, e.g., it sends [1 : int] to [1 @ p] rather than [p].  But with this definition, some of the results below become special cases of results in Int.Equiv, and others could be generalized to results belonging in Int.Equiv.  It's probably worth investigating this. *)
+(** TODO: One can also define [loopexp] as [int_iter (equiv_concat_r p x) z idpath].  This has slightly different computational behaviour, e.g., it sends [1 : int] to [1 @ p] rather than [p].  But with this definition, some of the results below become special cases of results in BinInt.Equiv, and others could be generalized to results belonging in BinInt.Equiv.  It's probably worth investigating this. *)
 
 Lemma loopexp_pos_inv {A : Type} {x : A} (p : x = x) (n : Pos)
   : loopexp_pos p^ n = (loopexp_pos p n)^.
@@ -56,7 +56,7 @@ Proof.
   by rewrite ap_pp, q.
 Qed.
 
-Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : Int)
+Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : BinInt)
 : ap f (loopexp p z) = loopexp (ap f p) z.
 Proof.
   destruct z as [n| |n]; trivial.
@@ -103,58 +103,58 @@ Proof.
 Qed.
 
 
-Lemma loopexp_int_pos_sub_l {A : Type} {x : A} (p : x = x) (a b : Pos)
-  : loopexp p (int_pos_sub a b) = loopexp_pos p^ b @ loopexp_pos p a.
+Lemma loopexp_binint_pos_sub_l {A : Type} {x : A} (p : x = x) (a b : Pos)
+  : loopexp p (binint_pos_sub a b) = loopexp_pos p^ b @ loopexp_pos p a.
 Proof.
   symmetry.
   revert a b.
   induction a as [|a aH] using pos_peano_ind;
   induction b as [|b bH] using pos_peano_ind.
   + apply concat_Vp.
-  + cbn; rewrite int_pos_sub_succ_r.
+  + cbn; rewrite binint_pos_sub_succ_r.
     unfold loopexp_pos.
     rewrite pos_peano_ind_beta_pos_succ.
     by rewrite concat_pp_p, concat_Vp, concat_p1.
-  + rewrite int_pos_sub_succ_l; cbn.
+  + rewrite binint_pos_sub_succ_l; cbn.
     unfold loopexp_pos.
     rewrite pos_peano_ind_beta_pos_succ.
     rewrite loopexp_pos_concat.
     by rewrite concat_p_pp, concat_Vp, concat_1p.
-  + rewrite int_pos_sub_succ_succ.
+  + rewrite binint_pos_sub_succ_succ.
     unfold loopexp_pos.
     rewrite 2 pos_peano_ind_beta_pos_succ.
     change ((loopexp_pos p^ b @ p^) @ (loopexp_pos p a @ p)
-      = loopexp p (int_pos_sub a b)).
+      = loopexp p (binint_pos_sub a b)).
     rewrite (loopexp_pos_concat p).
     rewrite concat_pp_p, (concat_p_pp p^ p).
     rewrite concat_Vp, concat_1p.
     apply aH.
 Qed.
 
-Lemma loopexp_int_pos_sub_r {A : Type} {x : A} (p : x = x) (a b : Pos)
-  : loopexp p (int_pos_sub a b) = loopexp_pos p a @ loopexp_pos p^ b.
+Lemma loopexp_binint_pos_sub_r {A : Type} {x : A} (p : x = x) (a b : Pos)
+  : loopexp p (binint_pos_sub a b) = loopexp_pos p a @ loopexp_pos p^ b.
 Proof.
   symmetry.
   revert a b.
   induction a as [|a aH] using pos_peano_ind;
   induction b as [|b bH] using pos_peano_ind.
   + apply concat_pV.
-  + cbn; rewrite int_pos_sub_succ_r.
+  + cbn; rewrite binint_pos_sub_succ_r.
     unfold loopexp_pos.
     rewrite pos_peano_ind_beta_pos_succ.
     change (p @ (loopexp_pos p^ b @ p^) = loopexp p (neg b)).
     rewrite loopexp_pos_concat.
     by rewrite concat_p_pp, concat_pV, concat_1p.
-  + rewrite int_pos_sub_succ_l; cbn.
+  + rewrite binint_pos_sub_succ_l; cbn.
     unfold loopexp_pos.
     rewrite pos_peano_ind_beta_pos_succ.
     change ((loopexp_pos p a @ p) @ p^ = loopexp_pos p a).
     by rewrite concat_pp_p, concat_pV, concat_p1.
-  + rewrite int_pos_sub_succ_succ.
+  + rewrite binint_pos_sub_succ_succ.
     unfold loopexp_pos.
     rewrite 2 pos_peano_ind_beta_pos_succ.
     change ((loopexp_pos p a @ p) @ (loopexp_pos p^ b @ p^)
-      = loopexp p (int_pos_sub a b)).
+      = loopexp p (binint_pos_sub a b)).
     rewrite (loopexp_pos_concat p^).
     rewrite concat_pp_p, (concat_p_pp p p^).
     rewrite concat_pV, concat_1p.
@@ -168,15 +168,15 @@ Proof.
   try apply loopexp_pos_add; cbn.
   1,6: symmetry; apply concat_p1.
   2,3: symmetry; apply concat_1p.
-  1: apply loopexp_int_pos_sub_l.
-  apply loopexp_int_pos_sub_r.
+  1: apply loopexp_binint_pos_sub_l.
+  apply loopexp_binint_pos_sub_r.
 Qed.
 
 (** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)
 
 Definition equiv_path_loopexp
-           {A : Type} (p : A = A) (z : Int) (a : A)
-  : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.
+           {A : Type} (p : A = A) (z : BinInt) (a : A)
+  : equiv_path A A (loopexp p z) a = binint_iter (equiv_path A A p) z a.
 Proof.
   destruct z as [n| |n]; trivial.
   all: induction n as [|n IH]
@@ -187,9 +187,9 @@ Proof.
 Defined.
 
 Definition loopexp_path_universe `{Univalence}
-           {A : Type} (f : A <~> A) (z : Int) (a : A)
+           {A : Type} (f : A <~> A) (z : BinInt) (a : A)
   : transport idmap (loopexp (path_universe f) z) a
-  = int_iter f z a.
+  = binint_iter f z a.
 Proof.
   revert f. equiv_intro (equiv_path A A) p.
   refine (_ @ equiv_path_loopexp p z a).

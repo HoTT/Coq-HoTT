@@ -2,7 +2,7 @@
 Require Import Basics Types.
 Require Import Pointed.Core Pointed.Loops Pointed.pEquiv.
 Require Import HSet.
-Require Import Spaces.Pos Spaces.Int.
+Require Import Spaces.Pos Spaces.BinInt.
 Require Import Colimits.Coeq.
 Require Import Truncations.Core Truncations.Connectedness.
 
@@ -90,11 +90,11 @@ Section EncodeDecode.
 
   (** First we define the type of codes, this is a type family over the circle. This can be thought of as the covering space by the homotopical real numbers. It is defined by mapping loop to the path given by univalence applied to the automorphism of the integers. We will show that the section of this family at [base] is equivalent to the loop space of the circle. Giving us an equivalence [base = base <~> Int]. *)
   Definition Circle_code : Circle -> Type
-    := Circle_rec Type Int (path_universe int_succ).
+    := Circle_rec Type BinInt (path_universe binint_succ).
 
   (** Transporting along [loop] gives us the successor automorphism on [Int]. *)
-  Definition transport_Circle_code_loop (z : Int)
-    : transport Circle_code loop z = int_succ z.
+  Definition transport_Circle_code_loop (z : BinInt)
+    : transport Circle_code loop z = binint_succ z.
   Proof.
     refine (transport_compose idmap Circle_code loop z @ _).
     unfold Circle_code; rewrite Circle_rec_beta_loop.
@@ -102,13 +102,13 @@ Section EncodeDecode.
   Defined.
 
   (** Transporting along [loop^] gives us the predecessor on [Int]. *)
-  Definition transport_Circle_code_loopV (z : Int)
-    : transport Circle_code loop^ z = int_pred z.
+  Definition transport_Circle_code_loopV (z : BinInt)
+    : transport Circle_code loop^ z = binint_pred z.
   Proof.
     refine (transport_compose idmap Circle_code loop^ z @ _).
     rewrite ap_V.
     unfold Circle_code; rewrite Circle_rec_beta_loop.
-    rewrite <- (path_universe_V int_succ).
+    rewrite <- (path_universe_V binint_succ).
     apply transport_path_universe.
   Defined.
 
@@ -127,7 +127,7 @@ Section EncodeDecode.
     rewrite transport_Circle_code_loopV.
     destruct z as [n| |n].
     2: apply concat_Vp.
-    { rewrite <- int_neg_pos_succ.
+    { rewrite <- binint_neg_pos_succ.
       unfold loopexp, loopexp_pos.
       rewrite pos_peano_ind_beta_pos_succ.
       apply concat_pV_p. }
@@ -135,8 +135,8 @@ Section EncodeDecode.
     1: apply concat_1p.
     rewrite <- pos_add_1_r.
     change (pos (n + 1)%pos)
-      with (int_succ (pos n)).
-    rewrite int_pred_succ.
+      with (binint_succ (pos n)).
+    rewrite binint_pred_succ.
     cbn; rewrite pos_add_1_r.
     unfold loopexp_pos.
     rewrite pos_peano_ind_beta_pos_succ.
@@ -144,7 +144,7 @@ Section EncodeDecode.
   Defined.
 
   (** The non-trivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over [base]. *)
-  Definition Circle_encode_loopexp (z:Int)
+  Definition Circle_encode_loopexp (z:BinInt)
     : Circle_encode base (loopexp loop z) = z.
   Proof.
     destruct z as [n | | n]; unfold Circle_encode.
@@ -157,8 +157,8 @@ Section EncodeDecode.
         refine (moveR_transport_V _ loop _ _ _).
         refine (_ @ (transport_Circle_code_loop _)^).
         refine (IHn @ _^).
-        rewrite int_neg_pos_succ.
-        by rewrite int_succ_pred.
+        rewrite binint_neg_pos_succ.
+        by rewrite binint_succ_pred.
     - reflexivity.
     - induction n using pos_peano_ind; simpl in *.
       + by apply transport_Circle_code_loop.
@@ -169,8 +169,8 @@ Section EncodeDecode.
         refine (_ @ (transport_Circle_code_loopV _)^).
         refine (IHn @ _^).
         rewrite <- pos_add_1_r.
-        change (int_pred (int_succ (pos n)) = pos n).
-        apply int_pred_succ.
+        change (binint_pred (binint_succ (pos n)) = pos n).
+        apply binint_pred_succ.
   Defined.
 
   (** Now we put it together. *)
@@ -187,7 +187,7 @@ Section EncodeDecode.
   Defined.
 
   (** Finally giving us an equivalence between the loop space of the [Circle] and [Int]. *)
-  Definition equiv_loopCircle_int : (base = base) <~> Int
+  Definition equiv_loopCircle_int : (base = base) <~> BinInt
     := Build_Equiv _ _ (Circle_encode base) (Circle_encode_isequiv base).
 
 End EncodeDecode.
@@ -215,15 +215,15 @@ Proof.
   assert (q := merely_path_is0connected Circle base y).
   strip_truncations.
   destruct p, q.
-  refine (istrunc_equiv_istrunc (n := 0) Int equiv_loopCircle_int^-1).
+  refine (istrunc_equiv_istrunc (n := 0) BinInt equiv_loopCircle_int^-1).
 Defined.
 
 (** ** Iteration of equivalences *)
 
 (** If [P : Circle -> Type] is defined by a type [X] and an autoequivalence [f], then the image of [n : Int] regarded as in [base = base] is [iter_int f n]. *)
-Definition Circle_action_is_iter `{Univalence} X (f : X <~> X) (n : Int) (x : X)
+Definition Circle_action_is_iter `{Univalence} X (f : X <~> X) (n : BinInt) (x : X)
 : transport (Circle_rec Type X (path_universe f)) (equiv_loopCircle_int^-1 n) x
-  = int_iter f n x.
+  = binint_iter f n x.
 Proof.
   refine (_ @ loopexp_path_universe _ _ _).
   refine (transport_compose idmap _ _ _ @ _).

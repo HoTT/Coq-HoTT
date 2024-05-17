@@ -4,7 +4,7 @@ Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.PinSn.
-Require Import Spaces.Int.Core Spaces.Circle.
+Require Import Spaces.BinInt.Core Spaces.Circle.
 
 Require Import Spaces.Torus.Torus.
 Require Import Spaces.Torus.TorusEquivCircles.
@@ -55,7 +55,7 @@ Proof.
 Defined.
 
 (** Loop space of torus *)
-Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
+Theorem loops_torus `{Univalence} : loops T <~>* BinInt * BinInt.
 Proof.
   (* Since [T] is 1-truncated, [loops T] is 0-truncated, and is therefore equivalent to its 0-truncation. *)
   refine (_ o*E pequiv_ptr (n:=0)).

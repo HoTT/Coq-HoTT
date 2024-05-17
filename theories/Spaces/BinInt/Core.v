@@ -3,7 +3,7 @@ Require Import Spaces.Pos.Core.
 
 Local Set Universe Minimization ToSet.
 
-(** * The Integers. *)
+(** * Binary Integers *)
 
 Local Close Scope trunc_scope.
 Local Close Scope nat_scope.
@@ -13,19 +13,19 @@ Local Open Scope positive_scope.
 (** ** Definition of the Integers *)
 
 (** We define an integer as being a positive number labelled negative, zero or a positive number labelled positive. *)
-Inductive Int : Type0 :=
-  | neg : Pos -> Int
-  | zero : Int
-  | pos : Pos -> Int.
+Inductive BinInt : Type0 :=
+  | neg : Pos -> BinInt
+  | zero : BinInt
+  | pos : Pos -> BinInt.
 
 Arguments pos p%pos.
 
-Declare Scope int_scope.
-Local Open Scope int_scope.
-Delimit Scope int_scope with int.
+Declare Scope binint_scope.
+Local Open Scope binint_scope.
+Delimit Scope binint_scope with binint.
 
 (** The integers are a pointed type *)
-Global Instance ispointed_Int : IsPointed Int := zero.
+Global Instance ispointed_BinInt : IsPointed BinInt := zero.
 
 (** Properties of constructors *)
 
@@ -57,20 +57,20 @@ Definition pos_neq_neg {z w : Pos} := @neg_neq_pos z w o symmetry _ _.
 
 (** ** Conversion with a decimal representation for printing/parsing *)
 
-Definition int_to_decimal_int (n : Int) : Decimal.int :=
+Definition binint_to_decimal_binint (n : BinInt) : Decimal.int :=
   match n with
     | neg m => Decimal.Neg (pos_to_uint m)
     | zero  => Decimal.Pos Decimal.Nil
     | pos m => Decimal.Pos (pos_to_uint m)
   end.
 
-Definition int_to_number_int (n : Int) : Numeral.int :=
-  Numeral.IntDec (int_to_decimal_int n).
+Definition binint_to_number_binint (n : BinInt) : Numeral.int :=
+  Numeral.IntDec (binint_to_decimal_binint n).
 
-Fixpoint int_of_decimal_uint (d : Decimal.uint) : Int :=
+Fixpoint binint_of_decimal_uint (d : Decimal.uint) : BinInt :=
   match d with
     | Decimal.Nil => zero
-    | Decimal.D0 l => int_of_decimal_uint l
+    | Decimal.D0 l => binint_of_decimal_uint l
     | Decimal.D1 l => pos (pos_of_uint_acc l 1)
     | Decimal.D2 l => pos (pos_of_uint_acc l 1~0)
     | Decimal.D3 l => pos (pos_of_uint_acc l 1~1)
@@ -82,59 +82,59 @@ Fixpoint int_of_decimal_uint (d : Decimal.uint) : Int :=
     | Decimal.D9 l => pos (pos_of_uint_acc l 1~0~0~1)
   end.
 
-Definition int_of_decimal_int (d : Decimal.int) : Int :=
+Definition binint_of_decimal_binint (d : Decimal.int) : BinInt :=
   match d with
-    | Decimal.Pos u => int_of_decimal_uint u
-    | Decimal.Neg u => let t := int_of_decimal_uint u in
+    | Decimal.Pos u => binint_of_decimal_uint u
+    | Decimal.Neg u => let t := binint_of_decimal_uint u in
         match t with
           | pos v => neg v
           | _ => zero
         end
   end.
 
-Definition int_of_number_int (d:Numeral.int) :=
+Definition binint_of_number_binint (d:Numeral.int) :=
   match d with
-  | Numeral.IntDec d => Some (int_of_decimal_int d)
+  | Numeral.IntDec d => Some (binint_of_decimal_binint d)
   | Numeral.IntHex _ => None
   end.
 
-Number Notation Int int_of_number_int int_to_number_int : int_scope.
+Number Notation BinInt binint_of_number_binint binint_to_number_binint : binint_scope.
 
 (* For some reason 0 can be parsed as an integer, but is printed as [zero]. This notation fixes that. *)
-Notation "0" := zero : int_scope.
+Notation "0" := zero : binint_scope.
 
 (** ** Doubling and variants *)
 
-Definition int_double x :=
+Definition binint_double x :=
   match x with
     | 0 => 0
     | pos p => pos p~0
     | neg p => neg p~0
   end.
 
-Definition int_succ_double x :=
+Definition binint_succ_double x :=
   match x with
     | 0 => 1
     | pos p => pos p~1
     | neg p => neg (pos_pred_double p)
   end.
 
-Definition int_pred_double x :=
+Definition binint_pred_double x :=
   match x with
     | 0 => neg 1%pos
     | neg p => neg p~1
     | pos p => pos (pos_pred_double p)
   end.
 
-(** ** Subtraction of positive into Int *)
+(** ** Subtraction of positive into BinInt *)
 
-Fixpoint int_pos_sub (x y : Pos) {struct y} : Int :=
+Fixpoint binint_pos_sub (x y : Pos) {struct y} : BinInt :=
   match x, y with
-    | p~1, q~1 => int_double (int_pos_sub p q)
-    | p~1, q~0 => int_succ_double (int_pos_sub p q)
+    | p~1, q~1 => binint_double (binint_pos_sub p q)
+    | p~1, q~0 => binint_succ_double (binint_pos_sub p q)
     | p~1, 1 => pos p~0
-    | p~0, q~1 => int_pred_double (int_pos_sub p q)
-    | p~0, q~0 => int_double (int_pos_sub p q)
+    | p~0, q~1 => binint_pred_double (binint_pos_sub p q)
+    | p~0, q~0 => binint_double (binint_pos_sub p q)
     | p~0, 1 => pos (pos_pred_double p)
     | 1, q~1 => neg q~0
     | 1, q~0 => neg (pos_pred_double q)
@@ -143,51 +143,51 @@ Fixpoint int_pos_sub (x y : Pos) {struct y} : Int :=
 
 (** ** Negation *)
 
-Definition int_negation x :=
+Definition binint_negation x :=
   match x with
     | zero => zero
     | pos x => neg x
     | neg x => pos x
   end.
 
-Notation "- x" := (int_negation x) : int_scope.
+Notation "- x" := (binint_negation x) : binint_scope.
 
-Lemma int_negation_negation n : --n = n.
+Lemma ibnint_negation_negation n : --n = n.
 Proof.
   by destruct n.
 Qed.
 
 (** ** Addition *)
 
-Definition int_add x y :=
+Definition binint_add x y :=
   match x, y with
     | 0, y => y
     | x, 0 => x
     | pos x', pos y' => pos (x' + y')
-    | pos x', neg y' => int_pos_sub x' y'
-    | neg x', pos y' => int_pos_sub y' x'
+    | pos x', neg y' => binint_pos_sub x' y'
+    | neg x', pos y' => binint_pos_sub y' x'
     | neg x', neg y' => neg (x' + y')
   end.
 
-Infix "+" := int_add : int_scope.
+Infix "+" := binint_add : binint_scope.
 
 (** ** Successor *)
 
-Definition int_succ x := x + 1.
+Definition binint_succ x := x + 1.
 
 (** ** Predecessor *)
 
-Definition int_pred x := x + neg 1%pos.
+Definition binint_pred x := x + neg 1%pos.
 
 (** ** Subtraction *)
 
-Definition int_sub m n := m + -n.
+Definition binint_sub m n := m + -n.
 
-Infix "-" := int_sub : int_scope.
+Infix "-" := binint_sub : binint_scope.
 
 (** ** Multiplication *)
 
-Definition int_mul x y :=
+Definition binint_mul x y :=
   match x, y with
     | 0, _ => 0
     | _, 0 => 0
@@ -197,22 +197,22 @@ Definition int_mul x y :=
     | neg x', neg y' => pos (x' * y')
   end.
 
-Infix "*" := int_mul : int_scope.
+Infix "*" := binint_mul : binint_scope.
 
 (** ** Power function *)
 
-Definition int_pow x y :=
+Definition binint_pow x y :=
   match y with
-    | pos p => pos_iter (int_mul x) p 1
+    | pos p => pos_iter (binint_mul x) p 1
     | 0 => 1
     | neg _ => 0
   end.
 
-Infix "^" := int_pow : int_scope.
+Infix "^" := binint_pow : binint_scope.
 
 (** ** Square *)
 
-Definition int_square x :=
+Definition binint_square x :=
   match x with
     | 0 => 0
     | pos p => pos (pos_square p)
@@ -221,7 +221,7 @@ Definition int_square x :=
 
 (** ** Sign function *)
 
-Definition sgn z :=
+Definition binint_sgn z :=
   match z with
     | 0 => 0
     | pos p => 1
@@ -230,7 +230,7 @@ Definition sgn z :=
 
 (* ** Decidable paths and truncation. *)
 
-Global Instance decpaths_int : DecidablePaths Int.
+Global Instance decpaths_binint : DecidablePaths BinInt.
 Proof.
   intros [n | | n] [m | | m].
   + destruct (dec (n = m)) as [p | q].
@@ -249,4 +249,4 @@ Proof.
 Defined.
 
 (** Since integers have decidable paths they are a hset *)
-Global Instance hset_int : IsHSet Int | 0 := _.
+Global Instance hset_binint : IsHSet BinInt | 0 := _.
