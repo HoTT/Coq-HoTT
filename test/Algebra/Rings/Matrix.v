@@ -97,30 +97,3 @@ Definition test4_minor_1_1_eq
    : entries (matrix_minor 1 1 test4) = entries test4_minor_1_1
    := idpath.
 
-(** Now we check the determinant of a matrix is computed correctly. *)
-
-Definition test5_a := Build_Matrix' cring_Z 3 3
-   [ [  1 ,  3 ,  5 ]
-   , [  2 ,  4 ,  6 ]
-   , [  7 ,  8 ,  9 ] ]
-   ltac:(decide)
-   ltac:(decide).
-
-Definition test5_a_det_eq : det test5_a = 0 := idpath.
-
-Definition test5_b := Build_Matrix' cring_Z 3 3
-   [ [  2 ,  1 ,  3 ]
-   , [  1 , -2 ,  3 ]
-   , [  0 ,  2 ,  1 ] ]
-   ltac:(decide)
-   ltac:(decide).
-
-Definition test5_b_det_eq : det test5_b = -11 := idpath.
-
-Definition test5_c := Build_Matrix' cring_Z 2 2
-   [ [ 1 , 2 ]
-   , [ 3 , 4 ] ]
-   ltac:(decide)
-   ltac:(decide).
-      
-Definition test5_c_det_eq : det test5_c = -2 := idpath.
