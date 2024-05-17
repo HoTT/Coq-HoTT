@@ -976,7 +976,7 @@ Proof.
 Defined.
 
 (** [for_all] preserves the truncation predicate. *)
-Global Instance istrunc_for_all {A} {n} (P : A -> Type) (l : list A)
+Definition istrunc_for_all {A} {n} (P : A -> Type) (l : list A)
   : for_all (fun x => IsTrunc n (P x)) l -> IsTrunc n (for_all P l).
 Proof.
   induction l as [|x l IHl]; simpl.
@@ -984,6 +984,13 @@ Proof.
   - intros [Hx Hl].
     apply IHl in Hl.
     exact _.
+Defined.
+
+Global Instance istrunc_for_all' {A} {n} (P : A -> Type) (l : list A)
+  `{forall x, IsTrunc n (P x)}
+  : IsTrunc n (for_all P l).
+Proof.
+  by apply istrunc_for_all, for_all_inlist.
 Defined.
 
 (** If a predicate holds for an element, then it holds [for_all] the elements of the repeated list. *)
