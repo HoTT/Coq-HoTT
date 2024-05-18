@@ -1,8 +1,8 @@
 Require Import WildCat.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Algebra.AbGroups.
+Require Export Algebra.AbGroups.
 Require Export Classes.theory.rings.
 Require Import Modalities.ReflectiveSubuniverse.
 
@@ -454,7 +454,7 @@ Proof.
   - intros R S T f g; cbn; reflexivity.
 Defined.
 
-(** ** More Ring laws *)
+(** ** Powers *)
 
 (** Powers of ring elements *)
 Definition rng_power {R : Ring} (x : R) (n : nat) : R := nat_iter n (x *.) ring_one.
@@ -467,4 +467,24 @@ Proof.
   1: apply rng_mult_one_l.
   refine ((rng_mult_assoc _ _ _)^ @ _).
   exact (ap (x *.) IHn).
+Defined.
+
+(** ** Finite Sums *)
+
+(** Ring multiplication distributes over finite sums on the left. *)
+Definition rng_sum_dist_l {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) (r : R)
+  : r * ab_sum n f = ab_sum n (fun k Hk => r * f k Hk).
+Proof.
+  induction n as [|n IHn].
+  1: apply rng_mult_zero_r.
+  lhs nrapply rng_dist_l; simpl; f_ap.
+Defined.
+
+(** Ring multiplication distributes over finite sums on the right. *)
+Definition rng_sum_dist_r {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) (r : R)
+  : ab_sum n f * r = ab_sum n (fun k Hk => f k Hk * r).
+Proof.
+  induction n as [|n IHn].
+  1: apply rng_mult_zero_l.
+  lhs nrapply rng_dist_r; simpl; f_ap.
 Defined.
