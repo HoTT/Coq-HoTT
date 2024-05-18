@@ -1,8 +1,7 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
   Basics.Equivalences Basics.Decidable.
-Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum.
+Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum Types.Option.
 Require Export Spaces.List.Core Spaces.Nat.Core Spaces.Nat.Arithmetic.
-Require Spaces.Option.
 
 (** * Theory of Lists and List Operations *)
 
@@ -394,7 +393,7 @@ Definition nth'_cons {A} (l : list A) (n : nat) (x : A)
   (H : (n < length l)%nat) (H' : (n.+1 < length (x :: l))%nat)
   : nth' (x :: l) n.+1 H' = nth' l n H.
 Proof.
-  apply Option.option_path.
+  apply isinj_some.
   nrefine (_^ @ _ @ _).  
   1,3: rapply nth_nth'.
   reflexivity.
@@ -851,7 +850,7 @@ Proof.
   1: by rewrite length_map.
   unshelve lhs nrapply (ap011D (fun x y => nth' x _ y) _ idpath).
   2: apply seq_seq'.
-  apply Option.option_path.
+  apply isinj_some.
   lhs_V nrapply nth_nth'.
   apply nth_seq.
   by rewrite length_seq' in H.
