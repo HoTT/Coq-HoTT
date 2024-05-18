@@ -357,7 +357,7 @@ Proof.
   exact H.
 Defined.
 
-(** A variant of [nth] that garuntees that the index is in the list. *)
+(** A variant of [nth] that always returns an element when we know that the index is in the list. *)
 Definition nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat) : A
   := pr1 (nth_lt l n H).
 
