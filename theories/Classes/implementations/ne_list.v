@@ -138,7 +138,7 @@ Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
   end.
 
 Lemma list_map {A B} (f: A → B) (l: ne_list A)
-  : to_list (map f l) = List.Core.map f (to_list l).
+  : to_list (map f l) = List.Core.list_map f (to_list l).
 Proof.
   induction l.
   - reflexivity.

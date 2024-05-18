@@ -73,24 +73,24 @@ Fixpoint fold_right {A B} (f : B -> A -> A) (default : A) (l : list B) : A :=
     | cons b l => f b (fold_right f default l)
   end.
 
-(** ** Maps *)
+(** ** Maps - Functoriality of Lists *)
 
-(** The [map] function applies a function to each element of a list. In other words [ map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)
-Fixpoint map {A B} (f : A -> B) (l : list A) :=
+(** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)
+Fixpoint list_map {A B} (f : A -> B) (l : list A) :=
   match l with
   | nil => nil
-  | x :: l => (f x) :: (map f l)
+  | x :: l => (f x) :: (list_map f l)
   end.
 
-(** The [map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)
-Fixpoint map2 {A B C} (f : A -> B -> C)
+(** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)
+Fixpoint list_map2 {A B C} (f : A -> B -> C)
   (def_l : list A -> list C) (def_r : list B -> list C)
   l1 l2 :=
   match l1, l2 with
   | nil, nil => nil
   | nil, _ => def_r l2
   | _, nil => def_l l1
-  | x :: l1, y :: l2 => (f x y) :: (map2 f def_l def_r l1 l2)
+  | x :: l1, y :: l2 => (f x y) :: (list_map2 f def_l def_r l1 l2)
   end.
 
 (** ** Reversal *)

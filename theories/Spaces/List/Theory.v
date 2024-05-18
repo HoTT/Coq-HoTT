@@ -110,8 +110,8 @@ Defined.
 (** ** Maps *)
 
 (** The length of a mapped list is the same as the length of the original list. *)
-Definition length_map {A B} (f : A -> B) (l : list A)
-  : length (map f l) = length l.
+Definition length_list_map {A B} (f : A -> B) (l : list A)
+  : length (list_map f l) = length l.
 Proof.
   induction l as [|x l IHl].
   - reflexivity.
@@ -121,7 +121,7 @@ Defined.
 
 (** A function applied to an element of a list is an element of the mapped list. *)
 Definition inlist_map {A B} (f : A -> B) (l : list A) (x : A)
-  : InList x l -> InList (f x) (map f l).
+  : InList x l -> InList (f x) (list_map f l).
 Proof.
   intros H.
   induction l as [|y l IHl] in H |- *.
@@ -135,7 +135,7 @@ Defined.
 
 (** An element of a mapped list is equal to the function applied to some element of the original list. *)
 Definition inlist_map' {A B} (f : A -> B) (l : list A) (x : B)
-  : InList x (map f l) -> { y : A & (x = f y) * InList y l }.
+  : InList x (list_map f l) -> { y : A & (x = f y) * InList y l }.
 Proof.
   intros H.
   induction l as [|y l IHl] in H |- *.
@@ -152,8 +152,8 @@ Proof.
 Defined.
 
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
-Lemma map_id {A} (f : A -> A) (l : list A) (Hf : forall x, InList x l -> f x = x)
-  :  map f l = l.
+Lemma list_map_id {A} (f : A -> A) (l : list A) (Hf : forall x, InList x l -> f x = x)
+  :  list_map f l = l.
 Proof.
   induction l as [|x l IHl].
   - reflexivity.
@@ -166,9 +166,9 @@ Proof.
       by right.
 Defined.
 
-(** A map of a composition is the composition of the maps. *)
-Definition map_compose {A B C} (f : A -> B) (g : B -> C) (l : list A)
-  : map (fun x => g (f x)) l = map g (map f l).
+(** A list_map of a composition is the composition of the maps. *)
+Definition list_map_compose {A B C} (f : A -> B) (g : B -> C) (l : list A)
+  : list_map (fun x => g (f x)) l = list_map g (list_map f l).
 Proof.
   induction l as [|a l IHl].
   1: reflexivity.
@@ -176,10 +176,10 @@ Proof.
 Defined.
 
 (** TODO: generalize as max *)
-(** The length of a [map2] is the same as the length of the original lists. *)
-Definition length_map2 {A B C} (f : A -> B -> C) defl defr l1 l2
+(** The length of a [list_map2] is the same as the length of the original lists. *)
+Definition length_list_map2 {A B C} (f : A -> B -> C) defl defr l1 l2
   : length l1 = length l2
-    -> length (map2 f defl defr l1 l2) = length l1.
+    -> length (list_map2 f defl defr l1 l2) = length l1.
 Proof.
   intros p.
   induction l1 as [|x l1 IHl1] in l2, p |- *.
@@ -192,9 +192,9 @@ Proof.
       by apply IHl1, path_nat_S.
 Defined.
 
-(** An element of a [map2] is the result of applying the function to some elements of the original lists. *)
+(** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
 Definition inlist_map2 {A B C} (f : A -> B -> C) defl defr l1 l2 x
-  : InList x (map2 f defl defr l1 l2) -> length l1 = length l2
+  : InList x (list_map2 f defl defr l1 l2) -> length l1 = length l2
     -> { y : A & { z : B & (f y z = x) * (InList y l1 * InList z l2) } }.
 Proof.
   intros H p.
@@ -211,17 +211,17 @@ Proof.
     exact (y'; z'; (q, (inr r, inr s))).
 Defined.
 
-(** If an operation given to [map2] is heteroassociative, then [map2] is also heteroassociative with the caveat that the lists must be the same length. *)
-Definition heteroassociative_map2 {A B C AB BC ABC}
+(** If an operation given to [list_map2] is heteroassociative, then [list_map2] is also heteroassociative with the caveat that the lists must be the same length. *)
+Definition heteroassociative_list_map2 {A B C AB BC ABC}
   (fA_BC: A -> BC -> ABC) (fBC: B -> C -> BC)
   (fAB_C: AB -> C -> ABC) (fAB : A -> B -> AB)
-  (** These arguments end up not being used so are dummy arguments to [map2]. *)
+  (** These arguments end up not being used so are dummy arguments to [list_map2]. *)
   {a_abc bc_abc b_bc c_bc ab_abc c_abc a_ab b_ab}
   : forall x y z, length x = length y -> length y = length z
     -> (forall x' y' z', InList x' x -> InList y' y -> InList z' z
         -> fA_BC x' (fBC y' z') = fAB_C (fAB x' y') z')
-    -> map2 fA_BC a_abc bc_abc x (map2 fBC b_bc c_bc y z)
-      = map2 fAB_C ab_abc c_abc (map2 fAB a_ab b_ab x y) z.
+    -> list_map2 fA_BC a_abc bc_abc x (list_map2 fBC b_bc c_bc y z)
+      = list_map2 fAB_C ab_abc c_abc (list_map2 fAB a_ab b_ab x y) z.
 Proof.
   intros x y z p q H.
   induction x as [|a x IHx] in y, z, p, q, H |- *.
@@ -242,12 +242,12 @@ Proof.
     apply H; by right.
 Defined.
 
-(** If an operation given to [map2] is commutative, then [map2] is also commutative with the caveat that the lists must be the same length. *)
-Definition commutative_map2 {A B} (f : A -> A -> B) (x y : list A)
+(** If an operation given to [list_map2] is commutative, then [list_map2] is also commutative with the caveat that the lists must be the same length. *)
+Definition commutative_list_map2 {A B} (f : A -> A -> B) (x y : list A)
   {defl defr defl' defr'}
   : length x = length y
     -> (forall x' y', InList x' x -> InList y' y -> f x' y' = f y' x')
-    -> map2 f defl defr x y = map2 f defl' defr' y x.
+    -> list_map2 f defl defr x y = list_map2 f defl' defr' y x.
 Proof.
   intros p H.
   induction x as [|a x IHx] in y, p, H |- *.
@@ -264,20 +264,20 @@ Proof.
       apply H; by right.
 Defined.
 
-(** [map2] is a [map] if the first list is a repeated value. *)
-Definition map2_repeat_l {A B C} (f : A -> B -> C) (x : A) (l : list B)
+(** [list_map2] is a [list_map] if the first list is a repeated value. *)
+Definition list_map2_repeat_l {A B C} (f : A -> B -> C) (x : A) (l : list B)
   {defl defr}
-  : map2 f defl defr (repeat x (length l)) l = map (f x) l.
+  : list_map2 f defl defr (repeat x (length l)) l = list_map (f x) l.
 Proof.
   induction l as [|y l IHl].
   - reflexivity.
   - cbn; f_ap.
 Defined.
 
-(** [map2] is a [map] if the second list is a repeated value. *)
-Definition map2_repeat_r {A B C} (f : A -> B -> C) (y : B) (l : list A)
+(** [list_map2] is a [list_map] if the second list is a repeated value. *)
+Definition list_map2_repeat_r {A B C} (f : A -> B -> C) (y : B) (l : list A)
   {defl defr}
-  : map2 f defl defr l (repeat y (length l)) = map (fun x => f x y) l.
+  : list_map2 f defl defr l (repeat y (length l)) = list_map (fun x => f x y) l.
 Proof.
   induction l as [|x l IHl].
   - reflexivity.
@@ -303,20 +303,20 @@ Proof.
   rapply length_reverse_acc.
 Defined.
 
-(** The [map] of a [reverse_acc] is the [reverse_acc] of the [map] of the two lists. *)
-Definition map_reverse_acc {A B} (f : A -> B) (l l' : list A)
-  : map f (reverse_acc l' l) = reverse_acc (map f l') (map f l).
+(** The [list_map] of a [reverse_acc] is the [reverse_acc] of the [list_map] of the two lists. *)
+Definition list_map_reverse_acc {A B} (f : A -> B) (l l' : list A)
+  : list_map f (reverse_acc l' l) = reverse_acc (list_map f l') (list_map f l).
 Proof.
   induction l as [|a l IHl] in l' |- *.
   1: reflexivity.
   apply IHl.
 Defined.
 
-(** The [map] of a reversed list is the reversed [map]. *)
-Definition map_reverse {A B} (f : A -> B) (l : list A)
-  : map f (reverse l) = reverse (map f l).
+(** The [list_map] of a reversed list is the reversed [list_map]. *)
+Definition list_map_reverse {A B} (f : A -> B) (l : list A)
+  : list_map f (reverse l) = reverse (list_map f l).
 Proof.
-  nrapply map_reverse_acc.
+  nrapply list_map_reverse_acc.
 Defined.
 
 (** [reverse_acc] is the same as concatenating the reversed list with the accumulator. *)
@@ -410,10 +410,21 @@ Proof.
     apply nth'_cons.
 Defined.
 
-(** The [nth'] element of a map is the function applied to the [nth'] element of the original list. *)
-Definition nth'_map {A B} (f : A -> B) (l : list A) (n : nat) (H : (n < length l)%nat)
-  (H' : (n < length (map f l))%nat)
-  : nth' (map f l) n H' = f (nth' l n H).
+(** The [nth] element of a map is the function applied optionally to the [nth] element of the original list. *)
+Definition nth_list_map {A B} (f : A -> B) (l : list A) (n : nat)
+  : nth (list_map f l) n = functor_option f (nth l n).
+Proof.
+  induction l as [|a l IHl] in n |- *.
+  1: by destruct n.
+  destruct n.
+  1: reflexivity.
+  apply IHl.
+Defined.
+
+(** The [nth'] element of a list_map is the function applied to the [nth'] element of the original list. *)
+Definition nth'_list_map {A B} (f : A -> B) (l : list A) (n : nat) (H : (n < length l)%nat)
+  (H' : (n < length (list_map f l))%nat)
+  : nth' (list_map f l) n H' = f (nth' l n H).
 Proof.
   induction l as [|a l IHl] in n, H, H' |- *.
   1: destruct (not_leq_Sn_0 _ H).
@@ -422,12 +433,12 @@ Proof.
   apply IHl.
 Defined.
 
-(** The [nth'] element of a [map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)
-Definition nth'_map2 {A B C} (f : A -> B -> C) (l1 : list A) (l2 : list B)
+(** The [nth'] element of a [list_map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)
+Definition nth'_list_map2 {A B C} (f : A -> B -> C) (l1 : list A) (l2 : list B)
   (n : nat) defl defr (H : (n < length l1)%nat) (H' : (n < length l2)%nat)
-  (H'' : (n < length (map2 f defl defr l1 l2))%nat)
+  (H'' : (n < length (list_map2 f defl defr l1 l2))%nat)
   (p : length l1 = length l2)
-  : f (nth' l1 n H) (nth' l2 n H') = nth' (map2 f defl defr l1 l2) n H''.
+  : f (nth' l1 n H) (nth' l2 n H') = nth' (list_map2 f defl defr l1 l2) n H''.
 Proof.
   induction l1 as [|a l1 IHl1] in l2, n, defl, defr, H, H', H'', p |- *.
   - destruct l2 as [|b l2].
@@ -750,7 +761,7 @@ Proof.
     exact (leq_S _ _ H). }
   induction n as [|n IHn].
   1: exact nil.
-  nrefine ((n; _) :: map (f n) IHn).
+  nrefine ((n; _) :: list_map (f n) IHn).
   exact _.
 Defined.
 
@@ -765,7 +776,7 @@ Proof.
   induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
-  lhs nrapply length_map.
+  lhs nrapply length_list_map.
   exact IHn.
 Defined.
 
@@ -777,22 +788,22 @@ Proof.
   apply length_seq_rev'.
 Defined.
 
-(** The map of first projections on [seq_rev' n] is [seq_rev n]. *)
+(** The list_map of first projections on [seq_rev' n] is [seq_rev n]. *)
 Definition seq_rev_seq_rev' (n : nat)
-  : map pr1 (seq_rev' n) = seq_rev n.
+  : list_map pr1 (seq_rev' n) = seq_rev n.
 Proof.
   induction n as [|n IHn].
   1: reflexivity.
   simpl; f_ap.
-  lhs_V nrapply map_compose.
+  lhs_V nrapply list_map_compose.
   apply IHn.
 Defined.
 
-(** The map of first projections on [seq' n] is [seq n]. *)
+(** The list_map of first projections on [seq' n] is [seq n]. *)
 Definition seq_seq' (n : nat)
-  : map pr1 (seq' n) = seq n.
+  : list_map pr1 (seq' n) = seq n.
 Proof.
-  lhs nrapply map_reverse_acc.
+  lhs nrapply list_map_reverse_acc.
   apply (ap reverse).
   apply seq_rev_seq_rev'.
 Defined.
@@ -838,8 +849,8 @@ Defined.
 Definition nth'_seq' (n i : nat) (H : (i < length (seq' n))%nat)
   : (nth' (seq' n) i H).1 = i.
 Proof.
-  unshelve lhs_V nrapply nth'_map.
-  1: by rewrite length_map.
+  unshelve lhs_V nrapply nth'_list_map.
+  1: by rewrite length_list_map.
   unshelve lhs nrapply (ap011D (fun x y => nth' x _ y) _ idpath).
   2: apply seq_seq'.
   apply isinj_some.
@@ -899,9 +910,9 @@ Proof.
       exact i.
 Defined.
 
-(** If a predicate [P] implies a predicate [Q] composed with a function [f], then [for_all P l] implies [for_all Q (map f l)]. *)
-Definition for_all_map {A B} P Q (f : A -> B) (Hf : forall x, P x -> Q (f x))
- : forall l, for_all P l -> for_all Q (map f l).
+(** If a predicate [P] implies a predicate [Q] composed with a function [f], then [for_all P l] implies [for_all Q (list_map f l)]. *)
+Definition for_all_list_map {A B} P Q (f : A -> B) (Hf : forall x, P x -> Q (f x))
+ : forall l, for_all P l -> for_all Q (list_map f l).
 Proof.
   intros l; induction l as [|x l IHl]; simpl; trivial.
   intros [Hx Hl].
@@ -909,21 +920,21 @@ Proof.
 Defined.
 
 (** A variant of [for_all_map P Q f] where [Q] is [P o f]. *)
-Definition for_all_map' {A B} P (f : A -> B) 
-  : forall l, for_all (P o f) l -> for_all P (map f l).
+Definition for_all_list_map' {A B} P (f : A -> B) 
+  : forall l, for_all (P o f) l -> for_all P (list_map f l).
 Proof.
-  by apply for_all_map.
+  by apply for_all_list_map.
 Defined.
 
 (** If a predicate [P] and a prediate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
-Lemma for_all_map2 {A B C}
+Lemma for_all_list_map2 {A B C}
   (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
   def_l (Hdefl : forall l1, for_all P l1 -> for_all R (def_l l1))
   def_r (Hdefr : forall l2, for_all Q l2 -> for_all R (def_r l2))
   (l1 : list A) (l2 : list B)
   : for_all P l1 -> for_all Q l2
-    -> for_all R (map2 f def_l def_r l1 l2).
+    -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
   induction l1 as [|x l1 IHl1] in l2 |- *.
   - destruct l2 as [|y l2]; cbn; auto.
@@ -934,12 +945,12 @@ Proof.
 Defined.
 
 (** A simpler variant of [for_all_map2] where both lists have the same length and the side conditions on the default elements can be avoided. *)
-Definition for_all_map2' {A B C} (P : A -> Type) (Q : B -> Type) (R : C -> Type)
+Definition for_all_list_map2' {A B C} (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
   {def_l def_r} {l1 : list A} {l2 : list B}
   (p : length l1 = length l2)
   : for_all P l1 -> for_all Q l2
-    -> for_all R (map2 f def_l def_r l1 l2).
+    -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
   induction l1 as [|x l1 IHl1] in l2, p |- *. 
   - destruct l2.
