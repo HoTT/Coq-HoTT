@@ -28,9 +28,9 @@ Scheme list_rect := Induction for list Sort Type.
 Scheme list_ind := Induction for list Sort Type.
 Scheme list_rec := Minimality for list Sort Type.
 
-(** Syntactic sugar for creating lists. [ [a1; b2; ...; an] = a1 :: b2 :: ... :: an :: nil ]. *)
+(** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)
 Notation "[ x ]" := (x :: nil) : list_scope.
-Notation "[ x ; y ; .. ; z ]" :=  (cons x (cons y .. (cons z nil) ..)) : list_scope.
+Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.
 
 (** ** Length *)
 
@@ -73,24 +73,24 @@ Fixpoint fold_right {A B} (f : B -> A -> A) (default : A) (l : list B) : A :=
     | cons b l => f b (fold_right f default l)
   end.
 
-(** ** Maps *)
+(** ** Maps - Functoriality of Lists *)
 
-(** The [map] function applies a function to each element of a list. In other words [ map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)
-Fixpoint map {A B} (f : A -> B) (l : list A) :=
+(** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)
+Fixpoint list_map {A B} (f : A -> B) (l : list A) :=
   match l with
   | nil => nil
-  | x :: l => (f x) :: (map f l)
+  | x :: l => (f x) :: (list_map f l)
   end.
 
-(** The [map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)
-Fixpoint map2 {A B C} (f : A -> B -> C)
+(** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)
+Fixpoint list_map2 {A B C} (f : A -> B -> C)
   (def_l : list A -> list C) (def_r : list B -> list C)
   l1 l2 :=
   match l1, l2 with
   | nil, nil => nil
   | nil, _ => def_r l2
   | _, nil => def_l l1
-  | x :: l1, y :: l2 => (f x y) :: (map2 f def_l def_r l1 l2)
+  | x :: l1, y :: l2 => (f x y) :: (list_map2 f def_l def_r l1 l2)
   end.
 
 (** ** Reversal *)
@@ -107,11 +107,11 @@ Definition reverse {A} (l : list A) : list A := reverse_acc nil l.
 
 (** ** Getting Elements *)
 
-(** The head of a list is its first element. If the list is empty, it returns the default value. *)
-Definition head {A} (default : A) (l : list A) : A :=
+(** The head of a list is its first element. Returns [None] If the list is empty. *)
+Definition head {A} (l : list A) : option A :=
   match l with
-  | nil => default
-  | a :: _ => a
+  | nil => None
+  | a :: _ => Some a
   end.
 
 (** The tail of a list is the list without its first element. *)
@@ -121,19 +121,20 @@ Definition tail {A} (l : list A) : list A :=
     | a :: m => m
   end.
 
-(** The last element of a list. If the list is empty, it returns the default value. *)
-Fixpoint last {A} (default : A) (l : list A) : A :=
+(** The last element of a list. If the list is empty, it returns [None]. *)
+Fixpoint last {A} (l : list A) : option A :=
   match l with
-  | nil => default
-  | _ :: l => last default l
+  | nil => None 
+  | a :: nil => Some a
+  | _ :: l => last l
   end.
 
-(** The [n]-th element of a list. If the list is too short, it returns the default value. *)
-Fixpoint nth {A} (l : list A) (n : nat) (default : A) : A :=
+(** The [n]-th element of a list. If the list is too short, it returns [None]. *)
+Fixpoint nth {A} (l : list A) (n : nat) : option A :=
   match n, l with
-  | O, x :: _ => x
-  | S n, _ :: l => nth l n default
-  | _, _ => default
+  | O, x :: _ => Some x
+  | S n, _ :: l => nth l n 
+  | _, _ => None
   end.
 
 (** ** Removing Elements *)
@@ -158,10 +159,19 @@ Fixpoint seq_rev (n : nat) : list nat :=
 (** Ascending sequence of natural numbers [< n]. *)
 Definition seq (n : nat) : list nat := reverse (seq_rev n).
 
+(** ** Repeat *)
+
+(** Repeat an element [n] times. *)
+Fixpoint repeat {A} (x : A) (n : nat) : list A :=
+  match n with
+  | O => nil
+  | S n => x :: repeat x n
+  end.
+
 (** ** Membership Predicate *)
 
 (** The "In list" predicate *)
-Fixpoint InList {A} (a : A) (l : list A) : Type0 :=
+Fixpoint InList {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=
   match l with
     | nil => Empty 
     | b :: m => (b = a) + InList a m

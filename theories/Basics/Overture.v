@@ -185,6 +185,12 @@ Notation "{ x : A  & P }" := (sig (fun x:A => P)) : type_scope.
 
 (** This lets us pattern match sigma types in let expressions *)
 Add Printing Let sig.
+  
+Register sig as core.sigT.type.
+Register exist as core.sigT.intro.
+Register sig_rect as core.sigT.rect.
+Register proj1 as core.sigT.proj1.
+Register proj2 as core.sigT.proj2.
 
 #[export] Hint Resolve exist : core.
 
