@@ -166,7 +166,7 @@ Proof.
       by right.
 Defined.
 
-(** A list_map of a composition is the composition of the maps. *)
+(** A [list_map] of a composition is the composition of the maps. *)
 Definition list_map_compose {A B C} (f : A -> B) (g : B -> C) (l : list A)
   : list_map (fun x => g (f x)) l = list_map g (list_map f l).
 Proof.
@@ -421,7 +421,7 @@ Proof.
   apply IHl.
 Defined.
 
-(** The [nth'] element of a list_map is the function applied to the [nth'] element of the original list. *)
+(** The [nth'] element of a [list_map] is the function applied to the [nth'] element of the original list. *)
 Definition nth'_list_map {A B} (f : A -> B) (l : list A) (n : nat) (H : (n < length l)%nat)
   (H' : (n < length (list_map f l))%nat)
   : nth' (list_map f l) n H' = f (nth' l n H).
@@ -788,7 +788,7 @@ Proof.
   apply length_seq_rev'.
 Defined.
 
-(** The list_map of first projections on [seq_rev' n] is [seq_rev n]. *)
+(** The [list_map] of first projections on [seq_rev' n] is [seq_rev n]. *)
 Definition seq_rev_seq_rev' (n : nat)
   : list_map pr1 (seq_rev' n) = seq_rev n.
 Proof.
@@ -799,7 +799,7 @@ Proof.
   apply IHn.
 Defined.
 
-(** The list_map of first projections on [seq' n] is [seq n]. *)
+(** The [list_map] of first projections on [seq' n] is [seq n]. *)
 Definition seq_seq' (n : nat)
   : list_map pr1 (seq' n) = seq n.
 Proof.
