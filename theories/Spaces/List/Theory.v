@@ -175,14 +175,6 @@ Proof.
   simpl; f_ap.
 Defined.
 
-(** [map2] can be unfolded when acting on two [cons]'. *)
-Lemma map2_cons {A B C} (f : A -> B -> C) defl defr x l1 y l2
-  :  map2 f defl defr (x :: l1) (y :: l2)
-    = (f x y) :: map2 f defl defr l1 l2.
-Proof.
-  reflexivity.
-Defined.
-
 (** TODO: generalize as max *)
 (** The length of a [map2] is the same as the length of the original lists. *)
 Definition length_map2 {A B C} (f : A -> B -> C) defl defr l1 l2
