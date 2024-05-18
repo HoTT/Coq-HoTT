@@ -1,4 +1,5 @@
 Require Import Basics Types.
+Require Import Spaces.Nat.Core.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
@@ -33,6 +34,9 @@ Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
 Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.
 Global Instance plus_abgroup (A : AbGroup) : Plus A := group_sgop.
 Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
+
+Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
+  := commutativity x y.
 
 (** ** Paths between abelian groups *)
 
@@ -269,4 +273,75 @@ Proof.
   intros a [g q].
   induction q.
   exact (p g).
+Defined.
+
+(** ** Finite Sums *)
+
+(** Indexed finite sum of abelian group elements. *)
+Definition ab_sum {A : AbGroup} (n : nat) (f : forall k, (k < n)%nat -> A) : A.
+Proof.
+  induction n as [|n IHn].
+  - exact zero.
+  - refine (f n _ + IHn _).
+    intros k Hk.
+    refine (f k _).
+    apply leq_S.
+    exact Hk.
+Defined.
+
+(** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)
+Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
+  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = r)
+  : ab_sum n f = grp_pow r n.
+Proof.
+  induction n as [|n IHn] in f, p |- *.
+  1: reflexivity.
+  simpl; f_ap.
+  apply IHn.
+  intros k Hk.
+  apply p.
+Defined.
+
+(** If the function is zero in the range of a finite sum then the sum is zero. *)
+Definition ab_sum_zero {A : AbGroup} (n : nat)
+  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = 0)
+  : ab_sum n f = 0.
+Proof.
+  lhs nrapply (ab_sum_const _ 0 f p).
+  apply grp_pow_unit.
+Defined.
+
+(** Finite sums distribute over addition. *)
+Definition ab_sum_plus {A : AbGroup} (n : nat) (f g : forall k, (k < n)%nat -> A)
+  : ab_sum n (fun k Hk => f k Hk + g k Hk)
+    = ab_sum n (fun k Hk => f k Hk) + ab_sum n (fun k Hk => g k Hk).
+Proof.
+  induction n as [|n IHn].
+  1: by rewrite grp_unit_l.
+  simpl.
+  rewrite <- !grp_assoc; f_ap.
+  rewrite IHn, ab_comm, <- grp_assoc; f_ap.
+  by rewrite ab_comm.
+Defined.
+
+(** Double finite sums commute. *)
+Definition ab_sum_sum {A : AbGroup} (m n : nat)
+  (f : forall i j, (i < m)%nat -> (j < n)%nat -> A)
+  : ab_sum m (fun i Hi => ab_sum n (fun j Hj => f i j Hi Hj))
+   = ab_sum n (fun j Hj => ab_sum m (fun i Hi => f i j Hi Hj)).
+Proof.
+  induction n as [|n IHn] in m, f |- *.
+  1: by nrapply ab_sum_zero.
+  lhs nrapply ab_sum_plus; cbn; f_ap.
+Defined.
+
+(** Finite sums are equal if the functions are equal in the range. *)
+Definition path_ab_sum {A : AbGroup} {n : nat} {f g : forall k, (k < n)%nat -> A}
+  (p : forall k Hk, f k Hk = g k Hk)
+  : ab_sum n f = ab_sum n g.
+Proof.
+  induction n as [|n IHn].
+  1: reflexivity.
+  cbn; f_ap.
+  by apply IHn.
 Defined.

@@ -471,82 +471,9 @@ Defined.
 
 (** ** Finite Sums *)
 
-(** Indexed finite sum of ring elements. *)
-Definition rng_sum {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) : R.
-Proof.
-  induction n as [|n IHn].
-  - exact ring_zero.
-  - refine (f n _ + IHn _).
-    intros k Hk.
-    refine (f k _).
-    apply leq_S.
-    exact Hk.
-Defined.
-
-(** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying abelian group. *)
-Definition rng_sum_const {R : Ring} (n : nat) (r : R)
-  (f : forall k, (k < n)%nat -> R) (p : forall k Hk, f k Hk = r)
-  : rng_sum n f = grp_pow r n.
-Proof.
-  induction n as [|n IHn] in f, p |- *.
-  1: reflexivity.
-  simpl; f_ap.
-  apply IHn.
-  intros k Hk.
-  apply p.
-Defined.
-
-(** If the function is zero in the range of a finite sum then the sum is zero. *)
-Definition rng_sum_zero {R : Ring} (n : nat)
-  (f : forall k, (k < n)%nat -> R) (p : forall k Hk, f k Hk = 0)
-  : rng_sum n f = 0.
-Proof.
-  lhs nrapply (rng_sum_const _ 0 f p).
-  apply grp_pow_unit.
-Defined.
-
-(** Finite sums distribute over addition. *)
-Definition rng_sum_plus {R : Ring} (n : nat) (f g : forall k, (k < n)%nat -> R)
-  : rng_sum n (fun k Hk => f k Hk + g k Hk)
-    = rng_sum n (fun k Hk => f k Hk) + rng_sum n (fun k Hk => g k Hk).
-Proof.
-  induction n as [|n IHn].
-  1: by rewrite rng_plus_zero_l.
-  simpl.
-  rhs_V nrapply rng_plus_assoc.
-  rhs nrapply (ap (_ +)).
-  2: lhs nrapply rng_plus_assoc.
-  2: nrapply (ap (+ _)).
-  2: apply rng_plus_comm.
-  lhs_V nrapply rng_plus_assoc; f_ap.
-  rhs_V nrapply rng_plus_assoc; f_ap.
-Defined.
-
-(** Double finite sums commute. *)
-Definition rng_sum_sum {R : Ring} (m n : nat)
-  (f : forall i j, (i < m)%nat -> (j < n)%nat -> R)
-  : rng_sum m (fun i Hi => rng_sum n (fun j Hj => f i j Hi Hj))
-   = rng_sum n (fun j Hj => rng_sum m (fun i Hi => f i j Hi Hj)).
-Proof.
-  induction n as [|n IHn] in m, f |- *.
-  1: by nrapply rng_sum_zero.
-  lhs nrapply rng_sum_plus; cbn; f_ap.
-Defined.
-
-(** Finite sums are equal if the functions are equal in the range. *)
-Definition path_rng_sum {R : Ring} {n : nat} {f g : forall k, (k < n)%nat -> R}
-  (p : forall k Hk, f k Hk = g k Hk)
-  : rng_sum n f = rng_sum n g.
-Proof.
-  induction n as [|n IHn].
-  1: reflexivity.
-  cbn; f_ap.
-  by apply IHn.
-Defined.
-
 (** Ring multiplication distributes over finite sums on the left. *)
 Definition rng_sum_dist_l {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) (r : R)
-  : r * rng_sum n f = rng_sum n (fun k Hk => r * f k Hk).
+  : r * ab_sum n f = ab_sum n (fun k Hk => r * f k Hk).
 Proof.
   induction n as [|n IHn].
   1: apply rng_mult_zero_r.
@@ -555,7 +482,7 @@ Defined.
 
 (** Ring multiplication distributes over finite sums on the right. *)
 Definition rng_sum_dist_r {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) (r : R)
-  : rng_sum n f * r = rng_sum n (fun k Hk => f k Hk * r).
+  : ab_sum n f * r = ab_sum n (fun k Hk => f k Hk * r).
 Proof.
   induction n as [|n IHn].
   1: apply rng_mult_zero_l.

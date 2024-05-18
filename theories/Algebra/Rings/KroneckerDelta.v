@@ -89,7 +89,7 @@ Defined.
 (** Kronecker delta can be used to extract a single term from a finite sum. *)
 Definition rng_sum_kronecker_delta_l {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
-  : rng_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.
+  : ab_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.
 Proof.
   induction n as [|n IHn] in i, Hi, f |- *.
   1: destruct (not_leq_Sn_0 _ Hi).
@@ -99,7 +99,7 @@ Proof.
     rewrite rng_mult_one_l.
     rewrite <- rng_plus_zero_r.
     f_ap; [f_ap; rapply path_ishprop|].
-    nrapply rng_sum_zero.
+    nrapply ab_sum_zero.
     intros k Hk.
     rewrite (kronecker_delta_gt Hk).
     apply rng_mult_zero_l.
@@ -110,16 +110,16 @@ Proof.
       contradiction (lt_implies_not_geq Hi).
     + rewrite (kronecker_delta_neq p).
       rewrite rng_mult_zero_l.
-      rewrite rng_plus_zero_l.
+      rewrite grp_unit_l.
       f_ap; apply path_ishprop.
 Defined.
 
 (** Variant of [rng_sum_kronecker_delta_l] where the indexing is swapped. *)
 Definition rng_sum_kronecker_delta_l' {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
-  : rng_sum n (fun j Hj => kronecker_delta j i * f j Hj) = f i Hi.
+  : ab_sum n (fun j Hj => kronecker_delta j i * f j Hj) = f i Hi.
 Proof.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   2: nrapply rng_sum_kronecker_delta_l.
   intros k Hk.
   cbn; f_ap; apply kronecker_delta_symm.
@@ -128,9 +128,9 @@ Defined.
 (** Variant of [rng_sum_kronecker_delta_l] where the Kronecker delta appears on the right. *)
 Definition rng_sum_kronecker_delta_r {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
-  : rng_sum n (fun j Hj => f j Hj * kronecker_delta i j) = f i Hi.
+  : ab_sum n (fun j Hj => f j Hj * kronecker_delta i j) = f i Hi.
 Proof.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   2: nrapply rng_sum_kronecker_delta_l.
   intros k Hk.
   apply kronecker_delta_comm.
@@ -139,9 +139,9 @@ Defined.
 (** Variant of [rng_sum_kronecker_delta_r] where the indexing is swapped. *)
 Definition rng_sum_kronecker_delta_r' {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
-  : rng_sum n (fun j Hj => f j Hj * kronecker_delta j i) = f i Hi.
+  : ab_sum n (fun j Hj => f j Hj * kronecker_delta j i) = f i Hi.
 Proof.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   2: nrapply rng_sum_kronecker_delta_l'.
   intros k Hk.
   apply kronecker_delta_comm.
