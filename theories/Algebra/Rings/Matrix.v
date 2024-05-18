@@ -1,7 +1,8 @@
 Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.Decidable.
 Require Import Types.Sigma.
 Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
-Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing.
+Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
+  Algebra.Rings.KroneckerDelta.
 Require Import abstract_algebra.
 
 Set Universe Minimization ToSet.
@@ -38,15 +39,15 @@ Definition Build_Matrix (R : Type) (m n : nat)
   (M_fun : forall (i : nat) (j : nat), (i < m)%nat -> (j < n)%nat -> R)
   : Matrix R m n.
 Proof.
-  exists (map (fun '(i; H1)
-    => map (fun '(j; H2)
+  exists (list_map (fun '(i; H1)
+    => list_map (fun '(j; H2)
       => M_fun i j H1 H2) (seq' n)) (seq' m)).
-  - lhs nrapply length_map.
+  - lhs nrapply length_list_map.
     apply length_seq'.
-  - snrapply for_all_map'.
+  - snrapply for_all_list_map'.
     apply for_all_inlist.
     intros [k ?] H.
-    lhs nrapply length_map.
+    lhs nrapply length_list_map.
     apply length_seq'.
 Defined.
 
@@ -79,14 +80,14 @@ Definition entry_Build_Matrix {R : Type} {m n}
   : entry (Build_Matrix R m n M_fun) i j = M_fun i j _ _.
 Proof.
   snrefine (ap011D (fun l => nth' l _) _ _ @ _).
-  2: rapply nth'_map.
+  2: rapply nth'_list_map.
   - nrefine (_^ # H1).
     nrapply length_seq'.
   - nrefine (_^ # H2).
-    lhs nrapply length_map.
+    lhs nrapply length_list_map.
     nrapply length_seq'.
   - apply path_ishprop.
-  - snrefine (nth'_map _ _ _ _ _ @ _).
+  - snrefine (nth'_list_map _ _ _ _ _ @ _).
     { nrefine (_^ # H2).
       nrapply length_seq'. }
     snrefine (ap011D (fun x y => M_fun x _ y _) _ _ @ _).
@@ -277,7 +278,7 @@ Definition matrix_mult {R : Ring@{i}} {m n k : nat} (M : Matrix R m n) (N : Matr
 Proof.
   snrapply Build_Matrix.
   intros i j Hi Hj.
-  exact (rng_sum n (fun k Hk => entry M i k * entry N k j)).
+  exact (ab_sum n (fun k Hk => entry M i k * entry N k j)).
 Defined.
 
 (** TODO move *)
@@ -304,17 +305,17 @@ Definition associative_matrix_mult (R : Ring@{i}) (m n p q : nat)
 Proof.
   intros M N P; nrapply path_matrix; intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   { intros k Hk.
     rewrite entry_Build_Matrix.
     apply rng_sum_dist_l. }
-  lhs nrapply rng_sum_sum.
-  rhs nrapply path_rng_sum.
+  lhs nrapply ab_sum_sum.
+  rhs nrapply path_ab_sum.
   2: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply path_rng_sum.
+  nrapply path_ab_sum.
   intros k Hk.
   rhs nrapply rng_sum_dist_r.
-  nrapply path_rng_sum.
+  nrapply path_ab_sum.
   intros l Hl.
   apply associativity.
 Defined.
@@ -325,8 +326,9 @@ Definition left_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
   rewrite 4 entry_Build_Matrix.
-  rewrite <- rng_sum_plus.
-  nrapply path_rng_sum.
+  change (?x = ?y + ?z) with (x = sg_op y z).
+  rewrite <- ab_sum_plus.
+  nrapply path_ab_sum.
   intros k Hk.
   rewrite entry_Build_Matrix.
   apply rng_dist_l.
@@ -338,8 +340,9 @@ Definition right_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
   rewrite 4 entry_Build_Matrix.
-  rewrite <- rng_sum_plus.
-  nrapply path_rng_sum.
+  change (?x = ?y + ?z) with (x = sg_op y z).
+  rewrite <- ab_sum_plus.
+  nrapply path_ab_sum.
   intros k Hk.
   rewrite entry_Build_Matrix.
   apply rng_dist_r.
@@ -351,7 +354,7 @@ Definition left_identity_matrix_mult (R : Ring@{i}) (m n: nat)
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
   nrapply rng_sum_kronecker_delta_l.
 Defined.
@@ -362,7 +365,7 @@ Definition right_identity_matrix_mult (R : Ring@{i}) (m n : nat)
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
   nrapply rng_sum_kronecker_delta_r'.
 Defined.
@@ -429,7 +432,7 @@ Proof.
   apply path_matrix.
   intros i j Hi Hj.
   rewrite 3 entry_Build_Matrix.
-  apply path_rng_sum.
+  apply path_ab_sum.
   intros k Hk.
   rewrite 2 entry_Build_Matrix.
   apply rng_mult_comm.
@@ -439,20 +442,20 @@ Defined.
 
 (** The trace of a square matrix is the sum of the diagonal entries. *)
 Definition matrix_trace {R : Ring} {n} (M : Matrix R n n) : R
-  := rng_sum n (fun i Hi => entry M i i).
+  := ab_sum n (fun i Hi => entry M i i).
 
 (** The trace of a matrix multiplication is the same as the trace of the reverse multiplication. *)
 Definition matrix_trace_mult {R : CRing} {n} (M N : Matrix R n n)
   : matrix_trace (matrix_mult M N) = matrix_trace (matrix_mult N M).
 Proof.
-  lhs nrapply path_rng_sum.
+  lhs nrapply path_ab_sum.
   { intros i Hi.
     lhs nrapply entry_Build_Matrix.
-    nrapply path_rng_sum.
+    nrapply path_ab_sum.
     { intros j Hj.
       apply rng_mult_comm. } }
-  lhs nrapply rng_sum_sum. 
-  apply path_rng_sum.
+  lhs nrapply ab_sum_sum. 
+  apply path_ab_sum.
   intros i Hi.
   rhs nrapply entry_Build_Matrix.
   reflexivity.
@@ -462,7 +465,7 @@ Defined.
 Definition trace_transpose {R : Ring} {n} (M : Matrix R n n)
   : matrix_trace (matrix_transpose M) = matrix_trace M.
 Proof.
-  apply path_rng_sum.
+  apply path_ab_sum.
   intros i Hi.
   nrapply entry_Build_Matrix.
 Defined.
