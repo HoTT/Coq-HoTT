@@ -29,6 +29,39 @@ Definition pullback_corec {A B C D}
 : A -> Pullback k g
 := fun a => (f a ; h a ; p a).
 
+Definition pullback_corec_uncurried {A B C D} (k : B -> D) (g : C -> D)
+  : { f : A -> B & { h : A -> C & k o f == g o h }} -> (A -> Pullback k g).
+Proof.
+  intro sq; destruct sq as [f [h p]].
+  exact (pullback_corec p).
+Defined.
+
+Definition isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
+  : IsEquiv (@pullback_corec_uncurried A B C D k g).
+Proof.
+  apply (isequiv_adjointify (pullback_corec_uncurried k g)
+    (fun m : A -> Pullback k g
+    => (pullback_pr1 o m ; pullback_pr2 o m ; (pullback_commsq k g) o m))).
+  - reflexivity.
+  - reflexivity.
+Defined.
+
+(** A commutative square is equivalent to a pullback of arrow types *)
+
+Definition ispullback_commsq `{Funext} {A B C D} (k : B -> D) (g : C -> D)
+  : { f : A -> B & { h : A -> C & k o f == g o h }}
+    -> @Pullback (A -> D) (A -> B) (A -> C) (fun f => k o f) (fun h => g o h).
+Proof.
+  apply (functor_sigma idmap). intro f.
+  apply (functor_sigma idmap). intro h.
+  exact (path_forall _ _).
+Defined.
+
+Definition isequiv_ispullback_commsq `{H : Funext} {A B C D}
+  (k : B -> D) (g : C -> D)
+  : IsEquiv (@ispullback_commsq H A B C D k g)
+  := isequiv_functor_sigma.
+
 (** The diagonal of a map *)
 Definition diagonal {X Y : Type} (f : X -> Y) : X -> Pullback f f
   := fun x => (x;x;idpath).

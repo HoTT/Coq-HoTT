@@ -657,12 +657,22 @@ End TwoTen.
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
+(** The definition of commutative squares in HoTT.Limits.Pullback is slightly different, which uses homotopy between the composites *)
 
+Definition Book_2_11 `{H : Funext} {X A B C} (f : A -> C) (g : B -> C)
+: (X -> HoTT.Limits.Pullback.Pullback f g)
+  <~> HoTT.Limits.Pullback.Pullback (fun h : X -> A => f o h)
+    (fun k : X -> B => g o k)
+:= (Build_Equiv _ _ _
+    (@HoTT.Limits.Pullback.isequiv_ispullback_commsq H X A B C f g))
+  oE (Build_Equiv _ _ _ (HoTT.Limits.Pullback.isequiv_pullback_corec f g)) ^-1.
 
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
 
+Definition Book_2_12_i := @HoTT.Limits.Pullback.ispullback_pasting_left.
 
+Definition Book_2_12_ii := @HoTT.Limits.Pullback.ispullback_pasting_outer.
 
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
