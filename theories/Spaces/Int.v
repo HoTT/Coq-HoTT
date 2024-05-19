@@ -91,10 +91,10 @@ Infix "-" := (fun x y => x + -y) : int_scope.
 (** We define multiplication of integers by cases on the signs of the integers. Note that in the [negS y, pos x] case the order of the multplication is swapped. This is a trick so that the proof of commutativity becomes easier. *)
 Definition int_mul@{} (x y : Int) : Int :=
   match x, y with
-  | pos x, pos y => (x * y)%nat
-  | negS x, negS y => (x.+1 * y.+1)%nat
-  | pos x, negS y => - (x * y.+1)%nat
-  | negS y, pos x => - (x * y.+1)%nat
+  | pos x, pos y => pos (x * y)
+  | negS x, negS y => pos (x.+1 * y.+1)
+  | pos x, negS y => - pos (x * y.+1)
+  | negS y, pos x => - pos (x * y.+1)
   end.
 
 Infix "*" := int_mul : int_scope.
@@ -141,9 +141,7 @@ Defined.
 (** Negation is injective. *)
 Definition isinj_int_neg@{} (x y : Int) : int_neg x = int_neg y -> x = y.
 Proof.
-  intros H.
-  rewrite <- (int_neg_neg x), <- (int_neg_neg y).
-  by rewrite H.
+  apply (equiv_inj int_neg).
 Defined.
 
 (** TODO: eauto helped prove goals here. Work out a way to make this proof even easier. *)

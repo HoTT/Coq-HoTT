@@ -130,12 +130,8 @@ Proof.
 Defined.
 
 Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
-: Decidable A -> Decidable B.
-Proof.
-  intros [a|na].
-  - exact (inl (f a)).
-  - exact (inr (fun b => na (f^-1 b))).
-Defined.
+  : Decidable A -> Decidable B
+  := decidable_iff f f^-1.
 
 Definition decidable_equiv' (A : Type) {B : Type} (f : A <~> B)
 : Decidable A -> Decidable B
