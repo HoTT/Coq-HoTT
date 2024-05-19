@@ -1,7 +1,7 @@
 From HoTT Require Import Basics.
 From HoTT Require Import Algebra.Rings.Matrix.
 From HoTT Require Import Spaces.Nat.Core Spaces.List.Core.
-From HoTT Require Import Algebra.Rings.Z Spaces.Int.Core Algebra.Rings.CRing.
+From HoTT Require Import Algebra.Rings.Z Spaces.BinInt.Core Algebra.Rings.CRing.
 From HoTT Require Import Classes.interfaces.canonical_names.
 
 Local Open Scope mc_scope.
@@ -38,7 +38,7 @@ Definition test2_B := Build_Matrix' nat 4 4
 
 Definition test2 : entries test2_A = entries test2_B := idpath.
 
-Local Open Scope int_scope.
+Local Open Scope binint_scope.
 
 (** Matrices with ring entries can be multiplied *)
 
