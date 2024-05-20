@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Nat Basics.Tactics Basics.Decidable Basics.Equivalences.
 Require Basics.Numerals.Decimal.
-Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.
+Require Import Spaces.Nat.Core.
 
 Unset Elimination Schemes.
 Set Universe Minimization ToSet.
@@ -41,6 +41,42 @@ Number Notation Int int_of_number_int int_to_number_int : int_scope.
 Delimit Scope int_scope with int.
 Local Open Scope int_scope.
 
+(** Sucessor, Predecessor and Negation *)
+
+(** These operations will be used in the induction principle we derive for [Int] so we need to define them early on. *)
+
+(** *** Successor and Predecessor *)
+
+Definition int_succ (n : Int) : Int :=
+  match n with
+  | pos n => pos (S n)
+  | negS 0 => pos 0
+  | negS (S n) => negS n
+  end.
+
+Notation "n .+1" := (int_succ n) : int_scope.
+
+Definition int_pred (n : Int) : Int :=
+  match n with
+  | pos 0 => negS 0
+  | pos (S n) => pos n
+  | negS n => negS (S n)
+  end.
+
+Notation "n .-1" := (int_pred n) : int_scope.
+
+(** *** Negation *)
+
+(** We define negation of integers by cases on the signs of the integers. *)
+Definition int_neg@{} (x : Int) : Int :=
+  match x with
+  | pos 0 => pos 0
+  | pos x.+1 => negS x
+  | negS x => pos x.+1
+  end.
+
+Notation "- x" := (int_neg x) : int_scope.
+
 (** ** Basic Properties *)
 
 (** The integers have decidable equality. *)
@@ -58,68 +94,63 @@ Defined.
 (** By Hedberg's theorem, we have that the integers are a set. *)
 Global Instance ishset_int@{} : IsHSet Int := _.
 
+(** *** Integer induction *)
+
+(** The induction principle for integers is similar to the induction principle for natural numbers. However we have two induction hypotheses going in either direction starting from 0. *)
+Definition Int_ind@{i} (P : Int -> Type@{i})
+  (H0 : P (pos 0))
+  (HP : forall n : nat, P n -> P (int_succ n))
+  (HN : forall n : nat, P (- n) -> P (int_pred (-n)))
+  : forall x, P x.
+Proof.
+  intros [x | x].
+  - induction x as [|x IHx] using Core.nat_ind.
+    + apply H0.
+    + apply (HP x), IHx.
+  - induction x as [|x IHx] using Core.nat_ind.
+    + apply (HN 0), H0.
+    + change (P (int_pred (- x.+1))).
+      apply HN, IHx. 
+Defined.
+
+(** We record these so that they can be used with the [induction] tactic. *)
+Definition Int_rect := Int_ind.
+Definition Int_rec := Int_ind.
+
 (** ** Operations *)
-
-(** *** Negation *)
-
-(** We define negation of integers by cases on the signs of the integers. *)
-Definition int_neg@{} (x : Int) : Int :=
-  match x with
-  | pos 0 => pos 0
-  | pos x.+1 => negS x
-  | negS x => pos x.+1
-  end.
-
-Notation "- x" := (int_neg x) : int_scope.
 
 (** *** Addition *)
 
-(** We define addition of integers by cases on the signs of the integers. *)
-Definition int_add@{} (x y : Int) : Int :=
-  match x, y with
-  | pos x, pos y => pos (x + y)
-  | negS x, negS y => negS (x + y).+1
-  | negS x, pos y
-  | pos y, negS x => if (dec (x < y))%nat then pos (y - x.+1) else negS (x - y)
-  end.
+(** Addition for integers is defined by integer inductionn on the first argument. *)
+Definition int_add@{} (x y : Int) : Int.
+Proof.
+  induction x as [|x IHx|x IHx] in y |- *.
+  (** [0 + y = y] *)
+  - exact y.
+  (** [x.+1 + y = (x + y).+1] *)
+  - exact (int_succ (IHx y)).
+  (** [x.-1 + y = (x + y).-1] *)
+  - exact (int_pred (IHx y)).
+Defined.
 
 Infix "+" := int_add : int_scope.
 Infix "-" := (fun x y => x + -y) : int_scope.
 
 (** *** Multiplication *)
 
-(** We define multiplication of integers by cases on the signs of the integers. Note that in the [negS y, pos x] case the order of the multplication is swapped. This is a trick so that the proof of commutativity becomes easier. *)
-Definition int_mul@{} (x y : Int) : Int :=
-  match x, y with
-  | pos x, pos y => pos (x * y)
-  | negS x, negS y => pos (x.+1 * y.+1)
-  | pos x, negS y => - pos (x * y.+1)
-  | negS y, pos x => - pos (x * y.+1)
-  end.
-
-Infix "*" := int_mul : int_scope.
-
-(** *** Integer induction *)
-
-(** The induction principle for integers is similar to the induction principle for natural numbers. However we have two induction hypotheses going in either direction starting from 0. *)
-Definition Int_ind@{i} (P : Int -> Type@{i})
-  (H0 : P (pos 0))
-  (HP : forall n : nat, P n -> P n.+1%nat)
-  (HN : forall n : nat, P (- n) -> P (- n.+1%nat))
-  : forall x, P x.
+(** Multiplication for integers is defined by integer induction on the first argument. *)
+Definition int_mul@{} (x y : Int) : Int.
 Proof.
-  intros [x | x].
-  - induction x as [|x IHx].
-    + apply H0.
-    + apply HP, IHx.
-  - induction x as [|x IHx].
-    + apply HN, H0.
-    + apply HN, IHx.
+  induction x as [|x IHx|x IHx] in y |- *.
+  (** [0 * y = 0] *)
+  - exact 0.
+  (** [x.+1 * y = y + x * y] *)
+  - exact (y + IHx y).
+  (** [x.-1 * y = -y + x * y] *)
+  - exact (-y + IHx y).
 Defined.
 
-(** We record these so that they can be used with the [induction] tactic. *)
-Definition Int_rect := Int_ind.
-Definition Int_rec := Int_ind.
+Infix "*" := int_mul : int_scope.
 
 (** ** Properties of Operations *)
 
@@ -128,7 +159,7 @@ Definition Int_rec := Int_ind.
 (** Negation is involutive. *)
 Definition int_neg_neg@{} (x : Int) : - - x = x.  
 Proof.
-  by induction x; simpl.
+  by induction x as [ | x IHx | [ ] ].
 Defined.
 
 (** Negation is an equivalence. *)
@@ -139,261 +170,324 @@ Proof.
 Defined.
 
 (** Negation is injective. *)
-Definition isinj_int_neg@{} (x y : Int) : int_neg x = int_neg y -> x = y.
+Definition isinj_int_neg@{} (x y : Int) : - x = - y -> x = y.
 Proof.
   apply (equiv_inj int_neg).
 Defined.
 
-(** TODO: eauto helped prove goals here. Work out a way to make this proof even easier. *)
-(** Negation distributes over addition. *)
-Definition int_neg_add@{} (x y : Int) : - (x + y) = - x - y.
+(** The negation of a successor is the predecessor of the negation. *)
+Definition int_neg_succ (x : Int) : - x.+1 = (- x).-1.
 Proof.
-  destruct x as [[|x] | x], y as [[|y] | y]; trivial; simpl.
-  1-3,6: rewrite sub_n_0; trivial.
-  1,2: by rewrite <- add_n_O.
-  1,4: by rewrite add_n_Sm.
-  1,2: change (negS ?x) with (- x.+1)%nat.
-  1,2: destruct (dec (y <= x)%nat) as [H | H], (dec (x <= y)%nat) as [H' | H'].
-  - assert (H'' : x = y).
-    1: apply leq_antisym; trivial.
-    destruct H''.
-    decidable_true (dec (x < x.+1)%nat) (n_lt_Sn x).
-    by rewrite sub_n_n.
-  - apply not_leq_implies_gt in H'.
-    assert (H'' : (y < x.+1)%nat) by rapply lt_trans.
-    decidable_true (dec (y < x.+1)%nat) H''.
-    apply lt_implies_not_geq in H''.
-    assert (H''' : ~(x < y.+1)%nat) by eauto with nat.
-    decidable_false (dec (x < y.+1)%nat) H'''.
-    rewrite ineq_sub'; trivial.
-  - apply not_leq_implies_gt in H.
-    assert (H'' : ~ (y < x.+1)%nat) by eauto with nat.
-    decidable_false (dec (y < x.+1)%nat) H''.
-    assert (H''' : (x < y.+1)%nat) by eauto with nat.
-    decidable_true (dec (x < y.+1)%nat) H'''.
-    rewrite <- ineq_sub'; trivial.
-    apply int_neg_neg.
-  - contradiction H.
-    eauto with nat.
-  - assert (H'' : x = y).
-    1: apply leq_antisym; trivial.
-    destruct H''.
-    decidable_true (dec (x < x.+1)%nat) (n_lt_Sn x).
-    by rewrite sub_n_n.
-  - apply not_leq_implies_gt in H'.
-    assert (H'' : (y < x.+1)%nat) by rapply lt_trans.
-    decidable_true (dec (y < x.+1)%nat) H''.
-    apply lt_implies_not_geq in H''.
-    assert (H''' : ~(x < y.+1)%nat) by eauto with nat.
-    decidable_false (dec (x < y.+1)%nat) H'''.
-    rewrite <- ineq_sub'; trivial.
-    apply int_neg_neg.
-  - apply not_leq_implies_gt in H.
-    assert (H'' : ~ (y < x.+1)%nat) by eauto with nat.
-    decidable_false (dec (y < x.+1)%nat) H''.
-    assert (H''' : (x < y.+1)%nat) by eauto with nat.
-    decidable_true (dec (x < y.+1)%nat) H'''.
-    rewrite <- ineq_sub'; trivial.
-  - contradiction H.
-    eauto with nat.
+  by induction x as [|x IHx|[] IHx].
 Defined.
+
+(** The negation of a predecessor is the successor of the negation. *)
+Definition int_neg_pred (x : Int) : - x.-1 = (- x).+1.
+Proof.
+  by induction x as [|x IHx|[] IHx].
+Defined.
+
+(** The successor of a predecessor is the identity. *)
+Definition int_pred_succ@{} (x : Int) : x.-1.+1 = x.
+Proof.
+  by induction x as [|x IHx|[] IHx].
+Defined. 
+
+(** The predecessor of a successor is the identity. *)
+Definition int_succ_pred@{} (x : Int) : x.+1.-1 = x.
+Proof.
+  by induction x as [|x IHx|[] IHx].
+Defined.
+
+(** The sucessor is an equivalence on [Int] *)
+Global Instance isequiv_int_succ@{} : IsEquiv int_succ
+  := isequiv_adjointify int_succ int_pred int_pred_succ int_succ_pred.
+
+(** The predecessor is an equivalence on [Int] *)
+Global Instance isequiv_int_pred@{} : IsEquiv int_pred
+  := isequiv_inverse int_succ.
 
 (** *** Addition *)
 
-(** Integer addition is commutative. *)
-Definition int_add_comm@{} (x y : Int) : x + y = y + x.
-Proof.
-  destruct x as [x | x], y as [y | y]; trivial; simpl.
-  1,2: by rewrite nat_add_comm.
-Defined.
-
-(** Integer addition with zero on the left is the identity. *)
+(** Integer addition with zero on the left is the identity by definition. *)
 Definition int_add_0_l@{} (x : Int) : 0 + x = x.
 Proof.
-  by destruct x as [[] | []].
+  reflexivity.
 Defined.
 
 (** Integer addition with zero on the right is the identity. *)
 Definition int_add_0_r@{} (x : Int) : x + 0 = x.
 Proof.
-  by rewrite int_add_comm, int_add_0_l.
+  induction x as [|x IHx|x IHx].
+  - reflexivity.
+  - change ((x + 0).+1 = x.+1).
+    by rewrite IHx.
+  - destruct x.
+    1: reflexivity.
+    change (?x.-1 + ?y) with (x + y).-1.
+    by rewrite IHx.
 Defined. 
 
-(** TODO: cleanup *)
-(** Adding a successor of a nat on the left is the successor of the sum. *) 
-Definition int_add_S_nat_l@{} (n : nat) (y : Int) : n.+1%nat + y = 1 + (n + y).
+(** Adding a successor on the left is the successor of the sum. *)
+Definition int_add_succ_l@{} (x y : Int) : x.+1 + y = (x + y).+1.
 Proof.
-  destruct y as [|m].
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
   - reflexivity.
   - simpl.
-    destruct (dec (m < n)%nat) as [H | H].
-    + decidable_true (dec (m < n.+1)%nat) (lt_trans H _).
-      induction n as [|n IHn] in m, H |- * using nat_rect@{Set}.
-      1: by apply not_lt_n_0 in H.
-      destruct m.
-      1: simpl; by rewrite sub_n_0.
-      by apply IHn, leq_S_n.
-    + apply not_lt_implies_geq in H.
-      destruct (dec (m < n.+1))%nat as [H' | H'].
-      * apply leq_S_n in H'.
-        destruct (leq_antisym H H').
-        by rewrite sub_n_n.
-      * apply not_lt_implies_geq in H'.
-        destruct (dec (m - n < 1)%nat) as [H'' | H''].
-        { assert (H''' : m = n).
-          { apply natpmswap4 in H''.
-            rewrite <- add_n_Sm in H''.
-            rewrite <- add_n_O in H''.
-            eauto with nat. }
-          destruct H'''.
-          eauto with nat. }
-        apply ap.
-        rewrite <- subsubadd.
-        f_ap.
-        by rewrite <- add_n_Sm, <- add_n_O.
-Defined.
-
-(** Adding a successor of a nat on the right is the successor of the sum. *)
-Definition int_add_S_nat_r@{} (x : Int) (n : nat) : x + n.+1%nat = 1 + (x + n).
-Proof.
-  by rewrite int_add_comm, int_add_S_nat_l, (int_add_comm x).
-Defined.
-
-(** The sucessor of a predecessor is the identity. *)
-Definition int_add_S_pred@{} (x : Int) : 1 + (x - 1) = x.
-Proof.
-  destruct x as [x | x].
-  - destruct x; trivial.
-    simpl.
-    assert (H : (0 < x.+1)%nat) by eauto with nat.
-    decidable_true (dec (0 < x.+1)%nat) H.
-    by rewrite sub_n_0.
-  - simpl.
-    by rewrite sub_n_0, <- add_n_O.
-Defined.
-
-(** The predessor of a sucessor is the identity. *)
-Definition int_add_pred_S@{} (x : Int) : (1 + x) - 1 = x.
-Proof.
-  apply isinj_int_neg.
-  rewrite 2 int_neg_add.
-  rewrite int_neg_neg.
-  rewrite int_add_comm.
-  rewrite (int_add_comm (-1)).
-  apply int_add_S_pred.
-Defined.
-
-(** Adding a successor on the left is the sucessor of the sum. *)
-Definition int_add_S_l@{} (x y : Int) : (1 + x) + y = 1 + (x + y).
-Proof.
-  destruct x as [x | x].
-  - change (x.+1%nat + y = 1 + (x + y)).
-    by rewrite int_add_S_nat_l.
-  - apply isinj_int_neg.
-    rewrite 4 int_neg_add.
-    change (negS x) with (- x.+1)%nat.
-    rewrite int_neg_neg.
-    rewrite (int_add_S_nat_l _ (-y)).
-    rewrite (int_add_comm (-1)).
-    rewrite (int_add_S_nat_l ).
-    rewrite (int_add_comm (-1)).
-    rewrite int_add_S_pred.
-    by rewrite int_add_pred_S.
-Defined.
-
-(** Adding a successor on the right is the sucessor of the sum. *)
-Definition int_add_S_r@{} (x y : Int) : x + (1 + y) = 1 + (x + y).
-Proof.
-  by rewrite int_add_comm, int_add_S_l, (int_add_comm x).
+    by rewrite int_pred_succ.
+  - simpl. by rewrite !int_pred_succ.
 Defined.
 
 (** Adding a predecessor on the left is the predecessor of the sum. *)
-Definition int_add_sub1@{} (x y : Int) : (x - 1) + y = (x + y) - 1.
+Definition int_add_pred_l@{} (x y : Int) : x.-1 + y = (x + y).-1.
 Proof.
-  rewrite <- (int_neg_neg x), <- (int_neg_neg y).
-  generalize (-x) (-y); clear x y; intros x y.
-  rewrite <- !int_neg_add.
-  rewrite 2 (int_add_comm _ 1).
-  by rewrite int_add_S_l.
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
+  - simpl.
+    by rewrite int_succ_pred. 
+  - reflexivity.
+  - simpl.
+    reflexivity.
+Defined.
+
+(** Adding a successor on the right is the successor of the sum. *)
+Definition int_add_succ_r@{} (x y : Int) : x + y.+1 = (x + y).+1.
+Proof.
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
+  - by rewrite 2 int_add_succ_l, IHx.
+  - cbn. 
+    by rewrite int_succ_pred, int_pred_succ.
+  - change ((- (n.+1)).-1 + y.+1 = ((- (n.+1)).-1 + y).+1).
+    rewrite int_add_pred_l.
+    rewrite IHx.
+    rewrite <- 2 int_add_succ_l.
+    rewrite <- int_add_pred_l.
+    by rewrite int_pred_succ, int_succ_pred.
+Defined.
+
+(** Adding a predecessor on the right is the predecessor of the sum. *)
+Definition int_add_pred_r (x y : Int) : x + y.-1 = (x + y).-1.
+Proof.
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
+  - rewrite 2 int_add_succ_l.
+    rewrite IHx.
+    by rewrite int_pred_succ, int_succ_pred.
+  - reflexivity.
+  - rewrite 2 int_add_pred_l.
+    by rewrite IHx.
+Defined.
+
+(** Integer addition is commutative. *)
+Definition int_add_comm@{} (x y : Int) : x + y = y + x.
+Proof.
+  induction y as [|y IHy|y IHy] in x |- *.
+  (** [x + 0 = 0 + x] *)
+  - apply int_add_0_r.
+  (** [x + y.+1 = y.+1 + x] *)
+  - change (x + y.+1 = (y + x).+1).
+    rewrite <- IHy.
+    by rewrite int_add_succ_r.
+  - rewrite int_add_pred_r.
+    rewrite int_add_pred_l.
+    f_ap.
 Defined.
 
 (** Integer addition is associative. *)
 Definition int_add_assoc@{} (x y z : Int) : x + (y + z) = x + y + z.
 Proof.
   induction x as [|x IHx|x IHx] in y, z |- *.
-  - by rewrite 2 int_add_0_l.
-  - change (x.+1)%nat with (1 + x)%nat.
-    change (pos (?n + ?m)%nat) with (n + m)%int.
-    rewrite !(int_add_S_l x), int_add_S_l. 
-    by rewrite IHx.
-  - change (x.+1)%nat with (1 + x)%nat.
-    rewrite nat_add_comm.
-    change (pos (?n + ?m)%nat) with (n + m)%int.
-    rewrite (int_neg_add x 1).
-    rewrite !int_add_sub1.
-    by rewrite IHx.
+  - reflexivity.
+  - change ((x + (y + z)).+1 = (x + y).+1 + z).
+    by rewrite int_add_succ_l, IHx.
+  - destruct x.
+    + cbn.
+      by rewrite int_add_pred_l.
+    + cbn -[int_add].
+      change ((-x.+1 + (y + z)).-1 = (-x.+1).-1 + y + z).
+      by rewrite 2 int_add_pred_l, IHx.
 Defined.
 
-(** Integer addition has left inverses. *)
+(** Negation is a left inverse with respect to integer addition. *)
 Definition int_add_neg_l@{} (x : Int) : - x + x = 0.
 Proof.
-  induction x; trivial.
-  1,2: simpl; rewrite sub_n_n.
-  1,2: by decidable_true (dec (n < n.+1)%nat) (n_lt_Sn n).
+  induction x as [|x IHx|x IHx].
+  - reflexivity.
+  - destruct x.
+    + reflexivity.
+    + change (((- x.+1).-1 + x.+1.+1) = 0).
+      by rewrite int_add_pred_l, int_add_succ_r, IHx.
+  - destruct x.
+    + reflexivity.
+    + change ((- (- (x.+1))).+1 + (- (x.+1)).-1 = 0).
+      by rewrite int_neg_neg, int_add_succ_l, int_add_pred_r, IHx.
 Defined.
 
-(** Integer addition has right inverses. *)
+(** Negation is a right inverse with respect to integer addition. *)
 Definition int_add_neg_r@{} (x : Int) : x - x = 0.
 Proof.
   unfold "-"; by rewrite int_add_comm, int_add_neg_l.
 Defined.
 
+(** Negation distributes over addition. *)
+Definition int_neg_add@{} (x y : Int) : - (x + y) = - x - y.
+Proof.
+  induction x as [|x IHx|x IHx] in y |- *.
+  - reflexivity.
+  - rewrite int_add_succ_l.
+    rewrite 2 int_neg_succ.
+    rewrite int_add_pred_l.
+    f_ap.
+  - rewrite int_neg_pred.
+    rewrite int_add_succ_l.
+    rewrite int_add_pred_l.
+    rewrite int_neg_pred.
+    f_ap.
+Defined.
+      
 (** *** Multiplication *)
 
-(** Integer multiplication is commutative. *)
-Definition int_mul_comm@{} (x y : Int) : x * y = y * x.
+Definition int_mul_succ_l@{} (x y : Int) : x.+1 * y = y + x * y.
 Proof.
-  destruct x as [x | x], y as [y | y]; trivial; unfold "*";
-    by rewrite nat_mul_comm.
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
+  - reflexivity.
+  - cbn.
+    rewrite int_add_0_r.
+    by rewrite int_add_neg_r.
+  - rewrite int_pred_succ.
+    cbn.
+    rewrite int_add_assoc.
+    rewrite int_add_neg_r.
+    by rewrite int_add_0_l.
 Defined.
 
-(** Integer multiplication with one on the left is the identity. *)
-Definition int_mul_1_l@{} (x : Int) : 1 * x = x.
+Definition int_mul_pred_l@{} (x y : Int) : x.-1 * y = -y + x * y.
 Proof.
-  destruct x as [x | x]; trivial; simpl;
-    by rewrite <- add_n_O.
+  induction x as [|x IHx|[] IHx] in y |- *.
+  - reflexivity.
+  - rewrite int_mul_succ_l.
+    rewrite int_succ_pred.
+    rewrite int_add_assoc.
+    by rewrite int_add_neg_l.
+  - reflexivity.
+  - reflexivity.
 Defined.
 
-(** Integer multiplication with one on the right is the identity. *)
-Definition int_mul_1_r@{} (x : Int) : x * 1 = x. 
-Proof.
-  by rewrite int_mul_comm, int_mul_1_l.
-Defined.
-
-(** Integer multiplication with zero on the left is zero. *)
+(** Integer multiplication with zero on the left is zero by definition. *)
 Definition int_mul_0_l@{} (x : Int) : 0 * x = 0.
 Proof.
-  by destruct x as [[] | []].
+  reflexivity.
 Defined.
 
 (** Integer multiplication with zero on the right is zero. *)
 Definition int_mul_0_r@{} (x : Int) : x * 0 = 0.
 Proof.
-  by rewrite int_mul_comm, int_mul_0_l.
+  induction x as [|x IHx|[|x] IHx].
+  - reflexivity.
+  - change (0 + x * 0 = 0).
+    by rewrite int_add_0_l.
+  - reflexivity.
+  - rewrite int_mul_pred_l.
+    rewrite int_add_0_l.
+    by rewrite IHx.
 Defined.
+
+Definition int_mul_1_l@{} (x : Int) : 1 * x = x.
+Proof.
+  apply int_add_0_r.
+Defined.
+
+Definition int_mul_1_r@{} (x : Int) : x * 1 = x.
+Proof.
+  induction x as [|x IHx|[|x] IHx].
+  - reflexivity.
+  - change (1 + x * 1 = x.+1).
+    by rewrite IHx.
+  - reflexivity.
+  - change ((- (x.+1)).-1 * 1 = (- (x.+1)).-1).
+    rewrite int_mul_pred_l.
+    by rewrite IHx.
+Defined. 
 
 (** Multiplying with a negation on the left is the same as negating the product. *)
 Definition int_mul_neg_l@{} (x y : Int) : - x * y = - (x * y).
 Proof.
-  destruct x as [x | x], y as [y | y]; trivial.
-  - rewrite int_mul_comm.
-    destruct x.
-    1: by rewrite !int_mul_0_r.
-    apply (ap int_neg).
-    by rewrite int_mul_comm.
-  - rewrite int_neg_neg.
-    by destruct x.
-  - by rewrite int_neg_neg, int_mul_comm.
+  induction x as [|x IHx|x IHx] in y |- *.
+  - reflexivity.
+  - rewrite int_neg_succ.
+    rewrite int_mul_pred_l.
+    rewrite int_mul_succ_l.
+    rewrite int_neg_add.
+    by rewrite IHx.
+  - rewrite int_neg_pred.
+    rewrite int_mul_succ_l.
+    rewrite int_mul_pred_l.
+    rewrite int_neg_add.
+    rewrite IHx.
+    by rewrite int_neg_neg.
+Defined.
+
+Definition int_mul_succ_r@{} (x y : Int) : x * y.+1 = x + x * y.
+Proof.
+  induction x as [|x IHx|x IHx] in y |- *.
+  - reflexivity.
+  - rewrite 2 int_mul_succ_l.
+    rewrite 2 int_add_succ_l.
+    f_ap.
+    rewrite IHx.
+    rewrite !int_add_assoc; f_ap.
+    by rewrite int_add_comm.
+  - rewrite 2 int_mul_pred_l.
+    rewrite int_neg_succ.
+    rewrite int_mul_neg_l.
+    rewrite 2 int_add_pred_l.
+    f_ap.
+    rewrite <- int_mul_neg_l.
+    rewrite IHx.
+    rewrite !int_add_assoc; f_ap.
+    by rewrite int_add_comm.
+Defined.
+
+Definition int_mul_pred_r@{} (x y : Int) : x * y.-1 = -x + x * y.
+Proof.
+  induction x as [|x IHx|x IHx] in y |- *.
+  - reflexivity.
+  - rewrite 2 int_mul_succ_l.
+    rewrite IHx.
+    rewrite !int_add_assoc; f_ap.
+    rewrite <- (int_neg_neg y.-1).
+    rewrite <- int_neg_add.
+    rewrite int_neg_pred.
+    rewrite int_add_succ_l.
+    rewrite int_add_comm.
+    rewrite <- int_add_succ_l.
+    rewrite int_neg_add.
+    by rewrite int_neg_neg.
+  - rewrite int_neg_pred.
+    rewrite int_neg_neg.
+    rewrite 2 int_mul_pred_l.
+    rewrite IHx.
+    rewrite !int_add_assoc; f_ap.
+    rewrite int_neg_pred.
+    rewrite int_neg_neg.
+    rewrite 2 int_add_succ_l; f_ap.
+    by rewrite int_add_comm.
+Defined.
+
+(** Integer multiplication is commutative. *)
+Definition int_mul_comm@{} (x y : Int) : x * y = y * x.
+Proof.
+  induction y as [|y IHy|y IHy] in x |- *.
+  - apply int_mul_0_r.
+  - rewrite int_mul_succ_l.
+    rewrite int_mul_succ_r.
+    by rewrite IHy.
+  - rewrite int_mul_pred_l.
+    rewrite int_mul_pred_r.
+    by rewrite IHy.
 Defined.
 
 (** Multiplying with a negation on the right is the same as negating the product. *)
@@ -403,43 +497,21 @@ Proof.
   apply int_mul_neg_l.
 Defined.
 
-(** Multipication with a sucessor on the left can be unfolded. *)
-Definition int_mul_S_nat_l@{} (n : nat) (y : Int) : n.+1%nat * y = y + n * y.
-Proof.
-  destruct y as [m | m].
-  - reflexivity.
-  - change ((n.+1)%nat * - (m.+1)%nat = - (m.+1)%nat + n * -(m.+1)%nat).
-    by rewrite 2 int_mul_neg_r, <- int_neg_add.
-Defined.
-
-(** Multipication with a sucessor on the right can be unfolded. *)
-Definition int_mul_S_nat_r@{} (x : Int) (n : nat) : x * n.+1%nat = x + x * n.
-Proof.
-  by rewrite int_mul_comm, int_mul_S_nat_l, (int_mul_comm x).
-Defined.
-
 (** Multiplication distributes over addition on the left. *)
 Definition int_dist_l@{} (x y z : Int) : x * (y + z) = x * y + x * z.
 Proof.
   induction x as [|x IHx|x IHx] in y, z |- *.
-  - by rewrite 3 int_mul_0_l.
-  - change ((x.+1)%nat * (y + z) = (x.+1)%nat * y + (x.+1)%nat * z).
-    rewrite 3 int_mul_S_nat_l.
+  - reflexivity.
+  - rewrite 3 int_mul_succ_l.
     rewrite IHx.
-    rewrite !int_add_assoc.
-    rewrite 2 (int_add_comm _ (x * y)).
-    by rewrite int_add_assoc.
-  - rewrite 3 int_mul_neg_l.
-    rewrite 3 int_mul_S_nat_l.
+    rewrite !int_add_assoc; f_ap.
+    rewrite <- !int_add_assoc; f_ap.
+    by rewrite int_add_comm.
+  - rewrite 3 int_mul_pred_l.
+    rewrite IHx.
+    rewrite !int_add_assoc; f_ap.
     rewrite int_neg_add.
-    rewrite <- int_mul_neg_l.
-    rewrite IHx.
-    rewrite !int_neg_add.
-    rewrite !int_add_assoc.
-    rewrite <- 2 int_mul_neg_l.
-    f_ap.
-    rewrite <- 2 int_add_assoc.
-    f_ap.
+    rewrite <- !int_add_assoc; f_ap.
     by rewrite int_add_comm.
 Defined.
 
@@ -453,15 +525,12 @@ Defined.
 Definition int_mul_assoc@{} (x y z : Int) : x * (y * z) = x * y * z.
 Proof.
   induction x as [|x IHx|x IHx] in y, z |- *.
-  - by rewrite 3 int_mul_0_l.
-  - rewrite 2 int_mul_S_nat_l.
+  - reflexivity.
+  - rewrite 2 int_mul_succ_l.
     rewrite int_dist_r.
-    f_ap.
-  - rewrite 3 int_mul_neg_l.
-    rewrite 2 int_mul_S_nat_l.
+    by rewrite IHx.
+  - rewrite 2 int_mul_pred_l.
     rewrite int_dist_r.
-    rewrite 2 int_neg_add.
-    f_ap.
-    rewrite <- 3 int_mul_neg_l.
-    apply IHx.
+    rewrite <- int_mul_neg_l.
+    by rewrite IHx.
 Defined.
