@@ -36,7 +36,7 @@ Proof.
   exact (pullback_corec p).
 Defined.
 
-Definition isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
+Global Instance isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
   : IsEquiv (@pullback_corec_uncurried A B C D k g).
 Proof.
   snrapply isequiv_adjointify.
