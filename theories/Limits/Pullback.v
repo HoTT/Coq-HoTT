@@ -48,7 +48,7 @@ Defined.
 
 Definition equiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
   : { f : A -> B & { h : A -> C & k o f == g o h }} <~> (A -> Pullback k g)
-  := Build_Equiv _ _ _ (HoTT.Limits.Pullback.isequiv_pullback_corec k g).
+  := Build_Equiv _ _ _ (isequiv_pullback_corec k g).
 
 (** A homotopy commutative square is equivalent to a pullback of arrow types *)
 Definition equiv_ispullback_commsq `{Funext} {A B C D} (k : B -> D) (g : C -> D)
