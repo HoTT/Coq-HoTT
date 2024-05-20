@@ -29,6 +29,37 @@ Definition pullback_corec {A B C D}
 : A -> Pullback k g
 := fun a => (f a ; h a ; p a).
 
+Definition pullback_corec_uncurried {A B C D} (k : B -> D) (g : C -> D)
+  : { f : A -> B & { h : A -> C & k o f == g o h }} -> (A -> Pullback k g).
+Proof.
+  intros [f [h p]].
+  exact (pullback_corec p).
+Defined.
+
+Global Instance isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
+  : IsEquiv (@pullback_corec_uncurried A B C D k g).
+Proof.
+  snrapply isequiv_adjointify.
+  - intro m.
+    exact (pullback_pr1 o m ; pullback_pr2 o m ; (pullback_commsq k g) o m).
+  - reflexivity.
+  - reflexivity.
+Defined.
+
+Definition equiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
+  : { f : A -> B & { h : A -> C & k o f == g o h }} <~> (A -> Pullback k g)
+  := Build_Equiv _ _ _ (isequiv_pullback_corec k g).
+
+(** A homotopy commutative square is equivalent to a pullback of arrow types *)
+Definition equiv_ispullback_commsq `{Funext} {A B C D} (k : B -> D) (g : C -> D)
+  : { f : A -> B & { h : A -> C & k o f == g o h }}
+    <~> @Pullback (A -> D) (A -> B) (A -> C) (fun f => k o f) (fun h => g o h).
+Proof.
+  apply equiv_functor_sigma_id; intro f.
+  apply equiv_functor_sigma_id; intro h.
+  apply equiv_path_forall.
+Defined.
+
 (** The diagonal of a map *)
 Definition diagonal {X Y : Type} (f : X -> Y) : X -> Pullback f f
   := fun x => (x;x;idpath).
