@@ -46,7 +46,7 @@ Proof.
     apply length_seq'.
   - snrapply for_all_list_map'.
     apply for_all_inlist.
-    intros [k ?] H.
+    intros k H.
     lhs nrapply length_list_map.
     apply length_seq'.
 Defined.
@@ -128,11 +128,11 @@ Proof.
     apply inlist_nth'.
 Defined.
 
-(** ** Addition *)
+(** ** Addition and module structure *)
 
 (** Here we define the abelian group of (n x m)-matrices over a ring. This is not particularly interesting, just the entry-wise abelian group structure. We later show that this abelian group is a left R-module so we assume [R] is a ring throughout. Strictly speaking [R] does not have to be a ring for just the abelian group structure, but the extra generality doesn't seem useful. *)
 
-Section MatrixAddition.
+Section MatrixModule.
 
   Context (R : Ring) (m n : nat).
 
@@ -265,7 +265,7 @@ Section MatrixAddition.
     - exact left_identity_matrix_scale.
   Defined.
 
-End MatrixAddition.
+End MatrixModule.
 
 Arguments matrix_plus {R m n} M N.
 Arguments matrix_scale {R m n} r M.
