@@ -4,7 +4,6 @@ Require Import Spaces.Nat.Core.
 
 Unset Elimination Schemes.
 Set Universe Minimization ToSet.
-Set Cumulativity Weak Constraints.
 
 Declare Scope int_scope.
 
@@ -12,23 +11,25 @@ Declare Scope int_scope.
 
 (** ** Definition *)
 
-(** We define the integers as two copies of [nat] stuck together. This allows us to reuse many lemmas about arithmetic in nat to prove similar lemmas about integers. *)
-
+(** We define the integers as two copies of [nat] stuck together around a [zero]. *)
 Inductive Int : Type0 :=
 | negS : nat -> Int
 | zero :Int
-| posS : nat -> Int
-.
+| posS : nat -> Int.
 
+(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. *)
 Definition int_of_nat (n : nat) :=
   match n with
   | O => zero
   | S n => posS n
   end.
 
+(** We declare this conversion as a coercion so we can freely use [nat]s in statements about integers. *)
 Coercion int_of_nat : nat >-> Int.
 
 (** ** Number Notations *)
+
+(** Here we define some printing and parsing functions that convert the integers between numeral representations so that we can use notations such as [123] for [posS 122] and [-123] for [negS 122]. *)
 
 (** Printing *)
 Definition int_to_number_int (n : Int) : Numeral.int :=
@@ -52,8 +53,7 @@ Number Notation Int int_of_number_int int_to_number_int : int_scope.
 Delimit Scope int_scope with int.
 Local Open Scope int_scope.
 
-
-(** Sucessor, Predecessor and Negation *)
+(** ** Sucessor, Predecessor and Negation *)
 
 (** These operations will be used in the induction principle we derive for [Int] so we need to define them early on. *)
 
@@ -349,6 +349,7 @@ Defined.
       
 (** *** Multiplication *)
 
+(** Multiplication with a sucessor on the left is the sum of the multplication without the sucesseor and the multiplicand which was not a successor. *)
 Definition int_mul_succ_l@{} (x y : Int) : x.+1 * y = y + x * y.
 Proof.
   induction x as [|[|x] IHx|[] IHx] in y |- *.
@@ -365,6 +366,7 @@ Proof.
     by rewrite int_add_0_l.
 Defined.
 
+(** Similarly, multiplication with a predecessor on the left is the sum of the multiplication without the predecessor and the negation of the multiplicand which was not a predecessor. *)
 Definition int_mul_pred_l@{} (x y : Int) : x.-1 * y = -y + x * y.
 Proof.
   induction x as [|x IHx|[] IHx] in y |- *.
@@ -392,11 +394,13 @@ Proof.
   - by rewrite int_mul_pred_l, int_add_0_l.
 Defined.
 
+(** Integer multiplication with one on the left is the identity. *)
 Definition int_mul_1_l@{} (x : Int) : 1 * x = x.
 Proof.
   apply int_add_0_r.
 Defined.
 
+(** Integer multiplication with one on the right is the identity. *)
 Definition int_mul_1_r@{} (x : Int) : x * 1 = x.
 Proof.
   induction x as [|x IHx|x IHx].
@@ -423,6 +427,7 @@ Proof.
     by rewrite int_neg_neg.
 Defined.
 
+(** Multiplying with a successor on the right is the sum of the multiplication without the successor and the product of the multiplicand which was not a successor and the multiplicand. *)
 Definition int_mul_succ_r@{} (x y : Int) : x * y.+1 = x + x * y.
 Proof.
   induction x as [|x IHx|x IHx] in y |- *.
@@ -444,6 +449,7 @@ Proof.
     by rewrite int_add_comm.
 Defined.
 
+(** Multiplying with a predecessor on the right is the sum of the multiplication without the predecessor and the product of the multiplicand which was not a predecessor and the negation of the multiplicand which was not a predecessor. *)
 Definition int_mul_pred_r@{} (x y : Int) : x * y.-1 = -x + x * y.
 Proof.
   induction x as [|x IHx|x IHx] in y |- *.
