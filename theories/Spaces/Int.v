@@ -14,7 +14,7 @@ Declare Scope int_scope.
 (** We define the integers as two copies of [nat] stuck together around a [zero]. *)
 Inductive Int : Type0 :=
 | negS : nat -> Int
-| zero :Int
+| zero : Int
 | posS : nat -> Int.
 
 (** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. *)
