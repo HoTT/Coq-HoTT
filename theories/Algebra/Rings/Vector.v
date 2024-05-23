@@ -9,7 +9,7 @@ Local Open Scope mc_scope.
 
 (** * Vectors *)
 
-(** A vector is simply a list with a specified length. This datastructure has many uses, but here we will foxus on lists of ring elements, giving us free modules of a given rank. *)
+(** A vector is simply a list with a specified length. This data structure has many uses, but here we will focus on lists of left module elements. *)
 
 (** ** Definition *)
 
