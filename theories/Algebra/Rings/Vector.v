@@ -156,34 +156,34 @@ Section VectorScale.
   (** A vector of elements of an R-module is itself an R-module. A special case is when the R-module is the ring R itself. *)
   Context (M : AbGroup) (n : nat) {R : Ring} `{IsLeftModule R M}.
 
-  Definition vector_scale (r : R) : Vector M n -> Vector M n
+  Definition vector_lact (r : R) : Vector M n -> Vector M n
     := vector_map (lact r).
   
-  Definition left_heterodistribute_vector_scale_plus
-    : LeftHeteroDistribute vector_scale vector_plus vector_plus.
+  Definition left_heterodistribute_vector_lact_plus
+    : LeftHeteroDistribute vector_lact vector_plus vector_plus.
   Proof.
     intros r v1 v2; apply path_vector; intros i Hi.
     rewrite 5 entry_Build_Vector.
     apply distribute_l.
   Defined.
 
-  Definition right_heterodistribute_vector_scale_plus
-    : RightHeteroDistribute vector_scale (+) vector_plus.
+  Definition right_heterodistribute_vector_lact_plus
+    : RightHeteroDistribute vector_lact (+) vector_plus.
   Proof.
     intros r1 r2 v; apply path_vector; intros i Hi.
     rewrite 4 entry_Build_Vector.
     apply distribute_r.
   Defined.
 
-  Definition heteroassociative_vector_scale_plus
-    : HeteroAssociative vector_scale vector_scale vector_scale (.*.).
+  Definition heteroassociative_vector_lact_plus
+    : HeteroAssociative vector_lact vector_lact vector_lact (.*.).
   Proof.
     intros r s v; apply path_vector; intros i Hi.
     rewrite 3 entry_Build_Vector.
     apply associativity.
   Defined.
 
-  Definition left_identity_vector_scale : LeftIdentity vector_scale 1.
+  Definition left_identity_vector_lact : LeftIdentity vector_lact 1.
   Proof.
     intros v; apply path_vector; intros i Hi.
     rewrite entry_Build_Vector.
@@ -194,13 +194,13 @@ Section VectorScale.
     : IsLeftModule R (abgroup_vector M n).
   Proof.
     snrapply Build_IsLeftModule.
-    - exact vector_scale.
-    - exact left_heterodistribute_vector_scale_plus.
-    - exact right_heterodistribute_vector_scale_plus.
-    - exact heteroassociative_vector_scale_plus.
-    - exact left_identity_vector_scale.
+    - exact vector_lact.
+    - exact left_heterodistribute_vector_lact_plus.
+    - exact right_heterodistribute_vector_lact_plus.
+    - exact heteroassociative_vector_lact_plus.
+    - exact left_identity_vector_lact.
   Defined.
 
 End VectorScale.
 
-Arguments vector_scale {M n R _} r v.
+Arguments vector_lact {M n R _} r v.
