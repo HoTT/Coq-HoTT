@@ -6,6 +6,8 @@ Unset Elimination Schemes.
 Set Universe Minimization ToSet.
 
 Declare Scope int_scope.
+Delimit Scope int_scope with int.
+Local Open Scope int_scope.
 
 (** * The Integers *)
 
@@ -49,9 +51,6 @@ Definition int_of_number_int (d : Numeral.int) :=
   end.
 
 Number Notation Int int_of_number_int int_to_number_int : int_scope.
-
-Delimit Scope int_scope with int.
-Local Open Scope int_scope.
 
 (** ** Successor, Predecessor and Negation *)
 
