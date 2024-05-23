@@ -361,6 +361,13 @@ Defined.
 Definition nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat) : A
   := pr1 (nth_lt l n H).
 
+(** The [nth'] element doesn't depend on the proof that [n < length l]. *)
+Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : (n < length l)%nat)
+  : nth' l n H = nth' l n H'.
+Proof.
+  apply ap, path_ishprop.
+Defined.
+
 (** The [nth'] element of a list is in the list. *)
 Definition inlist_nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat)
   : InList (nth' l n H) l.

@@ -59,9 +59,8 @@ Proof.
   snrapply path_list_nth'.
   1: exact (pr2 v1 @ (pr2 v2)^).
   intros i Hi.
-  snrefine (ap011D (fun l => nth' l _) 1 _ @ H i (pr2 v1 # Hi)
-    @ (ap011D (fun l => nth' l _) 1 _)^).
-  1,2: apply path_ishprop.
+  snrefine (_ @ H i (pr2 v1 # Hi) @ _).
+  1, 2: apply nth'_nth'.
 Defined.
 
 Section VectorAddition.
