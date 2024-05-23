@@ -53,7 +53,7 @@ Number Notation Int int_of_number_int int_to_number_int : int_scope.
 Delimit Scope int_scope with int.
 Local Open Scope int_scope.
 
-(** ** Sucessor, Predecessor and Negation *)
+(** ** Successor, Predecessor and Negation *)
 
 (** These operations will be used in the induction principle we derive for [Int] so we need to define them early on. *)
 
@@ -186,36 +186,34 @@ Proof.
 Defined.
 
 (** Negation is injective. *)
-Definition isinj_int_neg@{} (x y : Int) : - x = - y -> x = y.
-Proof.
-  apply (equiv_inj int_neg).
-Defined.
+Definition isinj_int_neg@{} (x y : Int) : - x = - y -> x = y
+  := equiv_inj int_neg.
 
 (** The negation of a successor is the predecessor of the negation. *)
 Definition int_neg_succ (x : Int) : - x.+1 = (- x).-1.
 Proof.
-  by destruct x as [[] | | []].
+  by destruct x as [[] | | ].
 Defined.
 
 (** The negation of a predecessor is the successor of the negation. *)
 Definition int_neg_pred (x : Int) : - x.-1 = (- x).+1.
 Proof.
-  by destruct x as [[] | | []].
+  by destruct x as [ | | []].
 Defined.
 
 (** The successor of a predecessor is the identity. *)
 Definition int_pred_succ@{} (x : Int) : x.-1.+1 = x.
 Proof.
-  by destruct x as [[] | | []].
+  by destruct x as [ | | []].
 Defined. 
 
 (** The predecessor of a successor is the identity. *)
 Definition int_succ_pred@{} (x : Int) : x.+1.-1 = x.
 Proof.
-  by destruct x as [[] | | []].
+  by destruct x as [[] | | ].
 Defined.
 
-(** The sucessor is an equivalence on [Int] *)
+(** The successor is an equivalence on [Int] *)
 Global Instance isequiv_int_succ@{} : IsEquiv int_succ
   := isequiv_adjointify int_succ int_pred int_pred_succ int_succ_pred.
 
@@ -226,10 +224,7 @@ Global Instance isequiv_int_pred@{} : IsEquiv int_pred
 (** *** Addition *)
 
 (** Integer addition with zero on the left is the identity by definition. *)
-Definition int_add_0_l@{} (x : Int) : 0 + x = x.
-Proof.
-  reflexivity.
-Defined.
+Definition int_add_0_l@{} (x : Int) : 0 + x = x := 1.
 
 (** Integer addition with zero on the right is the identity. *)
 Definition int_add_0_r@{} (x : Int) : x + 0 = x.
@@ -237,33 +232,27 @@ Proof.
   induction x as [|[|x] IHx|[|x] IHx].
   - reflexivity.
   - reflexivity.
-  - change (?x.+1 + ?y) with (x + y).+1.
-    by rewrite IHx.
+  - change (?z.+1 + 0) with (z + 0).+1.
+    exact (ap _ IHx).
   - reflexivity.
-  - change (?x.-1 + ?y) with (x + y).-1.
-    by rewrite IHx.
+  - change (?z.-1 + 0) with (z + 0).-1.
+    exact (ap _ IHx).
 Defined. 
 
 (** Adding a successor on the left is the successor of the sum. *)
 Definition int_add_succ_l@{} (x y : Int) : x.+1 + y = (x + y).+1.
 Proof.
   induction x as [|[|x] IHx|[|x] IHx] in y |- *.
-  - reflexivity.
-  - reflexivity.
-  - reflexivity.
-  - by rewrite !int_pred_succ.
-  - by rewrite !int_pred_succ.
+  1-3: reflexivity.
+  all: symmetry; apply int_pred_succ.
 Defined.
 
 (** Adding a predecessor on the left is the predecessor of the sum. *)
 Definition int_add_pred_l@{} (x y : Int) : x.-1 + y = (x + y).-1.
 Proof.
   induction x as [|[|x] IHx|[|x] IHx] in y |- *.
-  - reflexivity.
-  - cbn; by rewrite int_succ_pred. 
-  - cbn; by rewrite int_succ_pred. 
-  - reflexivity.
-  - reflexivity.
+  1,4,5: reflexivity.
+  all: symmetry; apply int_succ_pred.
 Defined.
 
 (** Adding a successor on the right is the successor of the sum. *)
@@ -349,7 +338,7 @@ Defined.
       
 (** *** Multiplication *)
 
-(** Multiplication with a sucessor on the left is the sum of the multplication without the sucesseor and the multiplicand which was not a successor. *)
+(** Multiplication with a successor on the left is the sum of the multplication without the sucesseor and the multiplicand which was not a successor. *)
 Definition int_mul_succ_l@{} (x y : Int) : x.+1 * y = y + x * y.
 Proof.
   induction x as [|[|x] IHx|[] IHx] in y |- *.
@@ -380,10 +369,7 @@ Proof.
 Defined.
 
 (** Integer multiplication with zero on the left is zero by definition. *)
-Definition int_mul_0_l@{} (x : Int) : 0 * x = 0.
-Proof.
-  reflexivity.
-Defined.
+Definition int_mul_0_l@{} (x : Int) : 0 * x = 0 := 1.
 
 (** Integer multiplication with zero on the right is zero. *)
 Definition int_mul_0_r@{} (x : Int) : x * 0 = 0.
