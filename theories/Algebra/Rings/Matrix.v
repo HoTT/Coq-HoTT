@@ -32,6 +32,24 @@ Proof.
   exact (M_fun i j Hi Hj).
 Defined.
 
+(** The length conditions here are decidable so can be inferred in proofs. *)
+Definition Build_Matrix' (R : Type) (m n : nat)
+  (l : list (list R))
+  (wf_row : length l = m)
+  (wf_col : for_all (fun row => length row = n) l)
+  : Matrix R m n.
+Proof.
+  snrefine (_; _).
+  - snrapply list_sigma.
+    + exact l.
+    + exact wf_col.
+  - by lhs nrapply length_list_sigma.
+Defined.
+
+Definition entries {R : Type} {m n} (M : Matrix R m n)
+  : list (list R)
+  := list_map pr1 (pr1 M).
+
 (** The entry at row [i] and column [j] of a matrix [M]. *)
 Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
   {H1 : (i < m)%nat} {H2 : (j < n)%nat}

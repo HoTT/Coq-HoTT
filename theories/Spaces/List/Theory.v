@@ -1003,6 +1003,27 @@ Proof.
   exact (H, IHn).
 Defined.
 
+(** We can form a list of pairs of a sigma type given a list and a for_all predicate over it. *)
+Definition list_sigma {A} (P : A -> Type) (l : list A) (p : for_all P l)
+  : list {x : A & P x}.
+Proof.
+  induction l as [|x l IHl] in p |- *.
+  1: exact nil.
+  destruct p as [Hx Hl].
+  exact ((x; Hx) :: IHl Hl).
+Defined.
+
+(** The length of a list of sigma types is the same as the original list. *)
+Definition length_list_sigma {A} {P : A -> Type} {l} {p}
+  : length (list_sigma P l p) = length l.
+Proof.
+  induction l as [|x l IHl] in p |- *.
+  1: reflexivity.
+  destruct p as [Hx Hl].
+  cbn; f_ap.
+  apply IHl.
+Defined.
+
 (** If a predicate [P] is decidable then so is [for_all P]. *)
 Global Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
