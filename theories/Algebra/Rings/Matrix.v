@@ -116,7 +116,7 @@ Global Instance isleftmodule_abgroup_matrix (R : Ring) (m n : nat)
   : IsLeftModule R (abgroup_matrix R m n)
   := _.
 
-Definition matrix_scale {R : Ring} {m n : nat} (r : R) (M : Matrix R m n)
+Definition matrix_lact {R : Ring} {m n : nat} (r : R) (M : Matrix R m n)
   : Matrix R m n
   := lact r M.  
 
@@ -129,18 +129,6 @@ Proof.
   snrapply Build_Matrix.
   intros i j Hi Hj.
   exact (ab_sum n (fun k Hk => entry M i k * entry N k j)).
-Defined.
-
-(** TODO move *)
-Definition diagonal_matrix {R : Ring@{i}} {n : nat} (v : list R) (p : length v = n)
-  : Matrix R n n.
-Proof.
-  snrapply Build_Matrix.
-  intros i j H1 H2.
-  destruct (dec (i = j)).
-  - destruct p.
-    exact (nth' v i H1).
-  - exact 0.
 Defined.
 
 (** The identity matrix is the matrix with ones on the diagonal and zeros elsewhere. It acts as the multiplicative identity for matrix multiplication. We define it here using the [kronecker_delta] function which will make proving properties about it conceptually easier later. *)
@@ -265,8 +253,8 @@ Defined.
 
 (** Transpose commutes with scalar multiplication. *)
 Definition matrix_transpose_scale {R : Ring} {m n} (r : R) (M : Matrix R m n)
-  : matrix_transpose (matrix_scale r M)
-    = matrix_scale r (matrix_transpose M).
+  : matrix_transpose (matrix_lact r M)
+    = matrix_lact r (matrix_transpose M).
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
@@ -286,6 +274,20 @@ Proof.
   intros k Hk.
   rewrite 2 entry_Build_Matrix.
   apply rng_mult_comm.
+Defined.
+
+(** ** Diagonal matrices *)
+
+(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. *)
+Definition diagonal_matrix {R : Ring@{i}} {n : nat} (v : list R) (p : length v = n)
+  : Matrix R n n.
+Proof.
+  snrapply Build_Matrix.
+  intros i j H1 H2.
+  destruct (dec (i = j)).
+  - destruct p.
+    exact (nth' v i H1).
+  - exact 0.
 Defined.
 
 (** ** Trace *)
@@ -386,7 +388,7 @@ Defined.
 
 Definition matrix_minor_scale {R : Ring@{i}} {n : nat} (i j : nat)
   (Hi : (i < n.+1)%nat) (Hj : (j < n.+1)%nat) (r : R) (M : Matrix R n.+1 n.+1)
-  : matrix_minor i j (matrix_scale r M) = matrix_scale r (matrix_minor i j M).
+  : matrix_minor i j (matrix_lact r M) = matrix_lact r (matrix_minor i j M).
 Proof.
   apply path_matrix.
   intros k l Hk Hl.
