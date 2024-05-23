@@ -16,9 +16,7 @@ Local Open Scope mc_scope.
 Definition Vector (A : Type) (n : nat)
  := { l : list A & length l = n }.
 
-Global Instance istrunc_vector (A : Type) (n : nat) k `{IsTrunc k.+2 A}
-  : IsTrunc k.+2 (Vector A n)
-  := _. 
+(** *** Constructors *)
 
 Definition Build_Vector (A : Type) (n : nat)
   (f : forall (i : nat), (i < n)%nat -> A)
@@ -29,16 +27,12 @@ Proof.
   apply length_seq'.
 Defined.
 
+(** *** Projections *)
+
 Definition entry {A : Type} {n} (v : Vector A n) i {Hi : (i < n)%nat} : A
   := nth' (pr1 v) i ((pr2 v)^ # Hi).
 
-Definition vector_map {A B : Type} {n} (f : A -> B)
-  : Vector A n -> Vector B n
-  := fun v => Build_Vector B n (fun i _ => f (entry v i)).
-
-Definition vector_map2 {A B C : Type} {n} (f : A -> B -> C)
-  : Vector A n -> Vector B n -> Vector C n
-  := fun v1 v2 => Build_Vector C n (fun i _ => f (entry v1 i) (entry v2 i)).
+(** *** Basic properties *) 
 
 Definition entry_Build_Vector {A : Type} {n}
   (f : forall (i : nat), (i < n)%nat -> A) i {Hi : (i < n)%nat}
@@ -51,6 +45,10 @@ Proof.
   rapply path_ishprop. 
 Defined.
 
+Global Instance istrunc_vector (A : Type) (n : nat) k `{IsTrunc k.+2 A}
+  : IsTrunc k.+2 (Vector A n)
+  := _. 
+
 Definition path_vector (A : Type) {n : nat} (v1 v2 : Vector A n)
   (H : forall i (H : (i < n)%nat), entry v1 i = entry v2 i)
   : v1 = v2.
@@ -62,6 +60,18 @@ Proof.
   snrefine (_ @ H i (pr2 v1 # Hi) @ _).
   1, 2: apply nth'_nth'.
 Defined.
+
+(** ** Operations *)
+
+Definition vector_map {A B : Type} {n} (f : A -> B)
+  : Vector A n -> Vector B n
+  := fun v => Build_Vector B n (fun i _ => f (entry v i)).
+
+Definition vector_map2 {A B C : Type} {n} (f : A -> B -> C)
+  : Vector A n -> Vector B n -> Vector C n
+  := fun v1 v2 => Build_Vector C n (fun i _ => f (entry v1 i) (entry v2 i)).
+
+(** ** Abelian group structure *)
 
 Section VectorAddition.
 
@@ -139,6 +149,8 @@ Section VectorAddition.
 End VectorAddition.
 
 Arguments vector_plus {A n} v1 v2.
+
+(** ** Module structure *)
 
 Section VectorScale.
   (** A vector of elements of an R-module is itself an R-module. A special case is when the R-module is the ring R itself. *)
