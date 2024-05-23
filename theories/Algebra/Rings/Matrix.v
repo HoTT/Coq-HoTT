@@ -2,7 +2,7 @@ Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.Decidable.
 Require Import Types.Sigma.
 Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
-  Algebra.Rings.KroneckerDelta.
+  Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
 
 Set Universe Minimization ToSet.
@@ -13,55 +13,30 @@ Local Open Scope mc_scope.
 
 (** ** Definition *)
 
-(** A matrix is a list of lists of elements of a ring that is well-formed. A matrix is well-formed if all the rows and columns have the specified length. *)
-Record Matrix (R : Type@{i}) (m n : nat) : Type@{i} := Build_Matrix' {
-  entries :> list (list R);
-  mx_wf_rows : length entries = m;
-  mx_wf_cols : for_all (fun row => length row = n) entries;
-}.
-
-Arguments entries {R m n} M : rename.
-Arguments mx_wf_rows {R m n} M : rename. 
-Arguments mx_wf_cols {R m n} M : rename.
-
-Definition issig_Matrix (R : Type) (m n : nat) : _ <~> Matrix R m n := ltac:(issig).
+Definition Matrix (R : Type@{i}) (m n : nat) : Type@{i}
+  := Vector (Vector R n) m.
 
 Global Instance istrunc_matrix (R : Type) k `{IsTrunc k.+2 R} m n
-  : IsTrunc k.+2 (Matrix R m n).
-Proof.
-  nrapply istrunc_equiv_istrunc.
-  1: apply issig_Matrix.
-  exact _.
-Defined.
+  : IsTrunc k.+2 (Matrix R m n)
+  := _.
 
 (** Building a matrix from a function that takes row and column indices. *)
 Definition Build_Matrix (R : Type) (m n : nat)
   (M_fun : forall (i : nat) (j : nat), (i < m)%nat -> (j < n)%nat -> R)
   : Matrix R m n.
 Proof.
-  exists (list_map (fun '(i; H1)
-    => list_map (fun '(j; H2)
-      => M_fun i j H1 H2) (seq' n)) (seq' m)).
-  - lhs nrapply length_list_map.
-    apply length_seq'.
-  - snrapply for_all_list_map'.
-    apply for_all_inlist.
-    intros k H.
-    lhs nrapply length_list_map.
-    apply length_seq'.
+  snrapply Build_Vector.
+  intros i Hi.
+  snrapply Build_Vector.
+  intros j Hj.
+  exact (M_fun i j Hi Hj).
 Defined.
 
 (** The entry at row [i] and column [j] of a matrix [M]. *)
 Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
   {H1 : (i < m)%nat} {H2 : (j < n)%nat}
-  : R.
-Proof.
-  snrefine (nth' (nth' M i _) j _).
-  1: exact ((mx_wf_rows M)^ # H1).
-  nrefine (_^ # H2).
-  apply (inlist_for_all M (mx_wf_cols M)).
-  apply inlist_nth'.
-Defined.
+  : R
+  := Vector.entry (Vector.entry M i) j.
 
 (** Mapping a function on all the entries of a matrix. *)
 Definition matrix_map {R S : Type} {m n} (f : R -> S)
@@ -79,25 +54,8 @@ Definition entry_Build_Matrix {R : Type} {m n}
   (i j : nat) (H1 : (i < m)%nat) (H2 : (j < n)%nat)
   : entry (Build_Matrix R m n M_fun) i j = M_fun i j _ _.
 Proof.
-  snrefine (ap011D (fun l => nth' l _) _ _ @ _).
-  2: rapply nth'_list_map.
-  - nrefine (_^ # H1).
-    nrapply length_seq'.
-  - nrefine (_^ # H2).
-    lhs nrapply length_list_map.
-    nrapply length_seq'.
-  - apply path_ishprop.
-  - snrefine (nth'_list_map _ _ _ _ _ @ _).
-    { nrefine (_^ # H2).
-      nrapply length_seq'. }
-    snrefine (ap011D (fun x y => M_fun x _ y _) _ _ @ _).
-    + exact i.
-    + nrapply nth'_seq'.
-    + assumption.
-    + apply path_ishprop.
-    + snrefine (ap011D (fun x y => M_fun _ x _ y) _ _).
-      * nrapply nth'_seq'.
-      * apply path_ishprop.
+  unfold entry.
+  by rewrite 2 entry_Build_Vector.
 Defined.
 
 (** Two matrices are equal if all their entries are equal. *)
@@ -105,170 +63,44 @@ Definition path_matrix {R : Type} {m n} (M N : Matrix R m n)
   (H : forall i j (Hi : (i < m)%nat) (Hj : (j < n)%nat), entry M i j = entry N i j)
   : M = N.
 Proof.
-  nrefine ((equiv_ap' (issig_Matrix _ _ _)^-1%equiv _ _)^-1%equiv _).
-  rapply path_sigma_hprop; cbn.
-  snrapply path_list_nth'.
-  1: exact (mx_wf_rows M @ (mx_wf_rows N)^).
+  snrapply path_vector.
   intros i Hi.
-  snrapply path_list_nth'.
-  { lhs nrapply (inlist_for_all _ (mx_wf_cols M)).
-    1: nrapply inlist_nth'.
-    symmetry; nrapply (inlist_for_all _ (mx_wf_cols N)).
-    nrapply inlist_nth'. }
+  snrapply path_vector.
   intros j Hj.
-  snrefine (ap011D (fun l => nth' l _) _ _ @ H i j _ _
-    @ (ap011D (fun l => nth' l _) _ _)^).
-  2,6: apply path_ishprop.
-  1,4: snrapply ap011D.
-  1,3: reflexivity.
-  1,2: apply path_ishprop.
-  - exact (mx_wf_rows M # Hi).
-  - nrefine (_ # Hj).
-    apply (inlist_for_all M (mx_wf_cols M)).
-    apply inlist_nth'.
+  exact (H i j Hi Hj).
 Defined.
 
 (** ** Addition and module structure *)
 
-(** Here we define the abelian group of (n x m)-matrices over a ring. This is not particularly interesting, just the entry-wise abelian group structure. We later show that this abelian group is a left R-module so we assume [R] is a ring throughout. Strictly speaking [R] does not have to be a ring for just the abelian group structure, but the extra generality doesn't seem useful. *)
+(** Here we define the abelian group of (n x m)-matrices over a ring. This follows from the abelian group structure of the underlying vectors. We are also able to derive a left module strucutre when the entries come from a left module. *)
 
-Section MatrixModule.
+Definition abgroup_matrix (A : AbGroup) (m n : nat) : AbGroup
+  := abgroup_vector (abgroup_vector A n) m.
 
-  Context (R : Ring) (m n : nat).
+Definition matrix_plus {A : AbGroup} {m n}
+  : Matrix A m n -> Matrix A m n -> Matrix A m n
+  := @sg_op (abgroup_matrix A m n) _.
 
-  (** The addition of two matrices is the matrix with the sum of the corresponding entries. *)
-  Definition matrix_plus : Plus (Matrix R m n) := matrix_map2 (+).
+Definition matrix_zero (A : AbGroup) m n : Matrix A m n
+  := @mon_unit (abgroup_matrix A m n) _. 
 
-  (** The zero matrix is the matrix with all entries equal to zero. *)
-  Definition zero_matrix : Zero (Matrix R m n)
-    := Build_Matrix R m n (fun _ _ _ _ => 0).
+Global Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
+  {R : Ring} `{IsLeftModule R A}
+  : IsLeftModule R (abgroup_matrix A m n).
+Proof.
+  snrapply isleftmodule_isleftmodule_vector.
+  snrapply isleftmodule_isleftmodule_vector.
+  exact _.
+Defined.
 
-  (** The negation of a matrix is the matrix with the negation of the entries. *)
-  Definition neg_matrix : Negate (Matrix R m n) := matrix_map (-).
+(** As a special case, we get the left module of matrices over a ring. *)
+Global Instance isleftmodule_abgroup_matrix (R : Ring) (m n : nat)
+  : IsLeftModule R (abgroup_matrix R m n)
+  := _.
 
-  (** Matrix addition is associative. *)
-  Definition associative_matrix_plus : Associative matrix_plus.
-  Proof.
-    intros M N P; apply path_matrix; intros i j Hi Hj.
-    rewrite 4 entry_Build_Matrix.
-    apply associativity.
-  Defined.
-
-  (** Matrix addition is commutative. *)
-  Definition commutative_matrix_plus : Commutative matrix_plus.
-  Proof.
-    intros M N; apply path_matrix; intros i j Hi Hj.
-    rewrite 2 entry_Build_Matrix.
-    apply commutativity.
-  Defined.
-
-  (** The zero matrix is a left identity for matrix addition. *)
-  Definition left_identity_matrix_plus : LeftIdentity matrix_plus zero_matrix.
-  Proof.
-    intros M; apply path_matrix; intros i j Hi Hj.
-    rewrite 2 entry_Build_Matrix.
-    apply left_identity.
-  Defined.
-
-  (** The zero matrix is a right identity for matrix addition. *)
-  Definition right_identity_matrix_plus : RightIdentity matrix_plus zero_matrix.
-  Proof.
-    intros M; apply path_matrix; intros i j Hi Hj.
-    rewrite 2 entry_Build_Matrix.
-    apply right_identity.
-  Defined.
-
-  (** Matrix negation is a left inverse for matrix addition. *)
-  Definition left_inverse_matrix_plus
-    : LeftInverse matrix_plus neg_matrix zero_matrix.
-  Proof.
-    intros M; apply path_matrix; intros i j Hi Hj.
-    rewrite 3 entry_Build_Matrix.
-    rapply left_inverse.
-  Defined.
-
-  (** Matrix negation is a right inverse for matrix addition. *)
-  Definition right_inverse_matrix_plus
-    : RightInverse matrix_plus neg_matrix zero_matrix.
-  Proof.
-    intros M; apply path_matrix; intros i j Hi Hj.
-    rewrite 3 entry_Build_Matrix.
-    rapply right_inverse.
-  Defined.
-
-  (** Matrix addition forms an abelian group. *)
-  Definition abgroup_matrix : AbGroup.
-  Proof.
-    snrapply Build_AbGroup.
-    1: snrapply Build_Group.
-    5: repeat split.
-    - exact (Matrix R m n).
-    - exact matrix_plus.
-    - exact zero_matrix.
-    - exact neg_matrix.
-    - exact _.
-    - exact associative_matrix_plus.
-    - exact left_identity_matrix_plus.
-    - exact right_identity_matrix_plus.
-    - exact left_inverse_matrix_plus.
-    - exact right_inverse_matrix_plus.
-    - exact commutative_matrix_plus.
-  Defined.
-
-  (** The (left) scalar multiplication of a matrix is the matrix with each entry multiplied by the scalar. *)
-  Definition matrix_scale (r : R) : Matrix R m n -> Matrix R m n
-    := matrix_map (r *.).
-
-  (** Scalar multiplication distributes over matrix addition on the left. *)
-  Definition left_heterodistribute_matrix_scale_plus
-    : LeftHeteroDistribute matrix_scale matrix_plus matrix_plus.
-  Proof.
-    intros r M N; apply path_matrix; intros i j Hi Hj.
-    rewrite 5 entry_Build_Matrix.
-    apply distribute_l.
-  Defined.
-
-  (** Scalar multiplication distributes over addition of scalars on the right. *)
-  Definition right_heterodistribute_matrix_scale_plus
-    : RightHeteroDistribute matrix_scale (+) matrix_plus.
-  Proof.
-    intros r s M; apply path_matrix; intros i j Hi Hj.
-    rewrite 4 entry_Build_Matrix.
-    apply distribute_r.
-  Defined.
-
-  (** Scalar multiplication is associative. *)
-  Definition heteroassociative_matrix_scale_plus
-    : HeteroAssociative matrix_scale matrix_scale matrix_scale (.*.).
-  Proof.
-    intros r s N; apply path_matrix; intros i j Hi Hj.
-    rewrite 3 entry_Build_Matrix.
-    apply associativity.
-  Defined.
-
-  (** [1 : R] acts as an identity for scalar multiplication. *)
-  Definition left_identity_matrix_scale : LeftIdentity matrix_scale 1.
-  Proof.
-    intros M; apply path_matrix; intros i j Hi Hj.
-    lhs nrapply entry_Build_Matrix.
-    apply left_identity.
-  Defined.
-
-  (** The abelian group of matrices is a left module over the ring of coefficients. The ring acts on the matrices by scalar multplication. *)
-  Global Instance isleftmodule_abgroup_matrix : IsLeftModule R abgroup_matrix.
-  Proof.
-    snrapply Build_IsLeftModule.
-    - exact matrix_scale.
-    - exact left_heterodistribute_matrix_scale_plus.
-    - exact right_heterodistribute_matrix_scale_plus.
-    - exact heteroassociative_matrix_scale_plus.
-    - exact left_identity_matrix_scale.
-  Defined.
-
-End MatrixModule.
-
-Arguments matrix_plus {R m n} M N.
-Arguments matrix_scale {R m n} r M.
+Definition matrix_scale {R : Ring} {m n : nat} (r : R) (M : Matrix R m n)
+  : Matrix R m n
+  := lact r M.  
 
 (** ** Multiplication *)
 
@@ -325,7 +157,7 @@ Definition left_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
   : LeftHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
-  rewrite 4 entry_Build_Matrix.
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.
   change (?x = ?y + ?z) with (x = sg_op y z).
   rewrite <- ab_sum_plus.
   nrapply path_ab_sum.
@@ -339,7 +171,7 @@ Definition right_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
   : RightHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
-  rewrite 4 entry_Build_Matrix.
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.
   change (?x = ?y + ?z) with (x = sg_op y z).
   rewrite <- ab_sum_plus.
   nrapply path_ab_sum.
@@ -410,7 +242,7 @@ Definition matrix_transpose_plus {R : Ring} {m n} (M N : Matrix R m n)
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
-  by rewrite 5 entry_Build_Matrix.
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
 (** Transpose commutes with scalar multiplication. *)
@@ -420,7 +252,7 @@ Definition matrix_transpose_scale {R : Ring} {m n} (r : R) (M : Matrix R m n)
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
-  by rewrite 4 entry_Build_Matrix.
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
 (** Transpose distributes over multiplication (in a commutative ring). *)
@@ -507,13 +339,11 @@ Definition matrix_minor {R : Ring@{i}} {n : nat} (i j : nat)
 (** A minor of the zero matrix is again the zero matrix. *)
 Definition matrix_minor_zero {R : Ring@{i}} {n : nat} (i j : nat)
   (Hi : (i < n.+1)%nat) (Hj : (j < n.+1)%nat)
-  : matrix_minor i j (zero_matrix R n.+1 n.+1) = zero_matrix R n n.
+  : matrix_minor i j (matrix_zero R n.+1 n.+1) = matrix_zero R n n.
 Proof.
   apply path_matrix.
   intros k l Hk Hl.
-  lhs nrapply entry_Build_Matrix.
-  rhs nrapply entry_Build_Matrix.
-  nrapply entry_Build_Matrix.
+  by rewrite !entry_Build_Matrix.
 Defined.
 
 Definition matrix_minor_identity {R : Ring@{i}} {n : nat}
@@ -533,7 +363,7 @@ Definition matrix_minor_plus {R : Ring@{i}} {n : nat} (i j : nat)
 Proof.
   apply path_matrix.
   intros k l Hk Hl.
-  by rewrite 5 entry_Build_Matrix.
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
 Definition matrix_minor_scale {R : Ring@{i}} {n : nat} (i j : nat)
@@ -542,7 +372,7 @@ Definition matrix_minor_scale {R : Ring@{i}} {n : nat} (i j : nat)
 Proof.
   apply path_matrix.
   intros k l Hk Hl.
-  by rewrite 4 entry_Build_Matrix.
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
 Definition matrix_minor_transpose {R : Ring@{i}} {n : nat} (i j : nat)
