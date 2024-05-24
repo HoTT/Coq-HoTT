@@ -361,6 +361,13 @@ Defined.
 Definition nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat) : A
   := pr1 (nth_lt l n H).
 
+(** The [nth'] element doesn't depend on the proof that [n < length l]. *)
+Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : (n < length l)%nat)
+  : nth' l n H = nth' l n H'.
+Proof.
+  apply ap, path_ishprop.
+Defined.
+
 (** The [nth'] element of a list is in the list. *)
 Definition inlist_nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat)
   : InList (nth' l n H) l.
@@ -976,7 +983,7 @@ Proof.
 Defined.
 
 (** [for_all] preserves the truncation predicate. *)
-Global Instance istrunc_for_all {A} {n} (P : A -> Type) (l : list A)
+Definition istrunc_for_all {A} {n} (P : A -> Type) (l : list A)
   : for_all (fun x => IsTrunc n (P x)) l -> IsTrunc n (for_all P l).
 Proof.
   induction l as [|x l IHl]; simpl.
@@ -984,6 +991,13 @@ Proof.
   - intros [Hx Hl].
     apply IHl in Hl.
     exact _.
+Defined.
+
+Global Instance istrunc_for_all' {A} {n} (P : A -> Type) (l : list A)
+  `{forall x, IsTrunc n (P x)}
+  : IsTrunc n (for_all P l).
+Proof.
+  by apply istrunc_for_all, for_all_inlist.
 Defined.
 
 (** If a predicate holds for an element, then it holds [for_all] the elements of the repeated list. *)
@@ -994,6 +1008,27 @@ Proof.
   induction n as [|n IHn].
   1: exact tt.
   exact (H, IHn).
+Defined.
+
+(** We can form a list of pairs of a sigma type given a list and a for_all predicate over it. *)
+Definition list_sigma {A} (P : A -> Type) (l : list A) (p : for_all P l)
+  : list {x : A & P x}.
+Proof.
+  induction l as [|x l IHl] in p |- *.
+  1: exact nil.
+  destruct p as [Hx Hl].
+  exact ((x; Hx) :: IHl Hl).
+Defined.
+
+(** The length of a list of sigma types is the same as the original list. *)
+Definition length_list_sigma {A} {P : A -> Type} {l} {p}
+  : length (list_sigma P l p) = length l.
+Proof.
+  induction l as [|x l IHl] in p |- *.
+  1: reflexivity.
+  destruct p as [Hx Hl].
+  cbn; f_ap.
+  apply IHl.
 Defined.
 
 (** If a predicate [P] is decidable then so is [for_all P]. *)

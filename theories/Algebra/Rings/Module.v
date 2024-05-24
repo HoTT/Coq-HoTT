@@ -85,6 +85,12 @@ Section ModuleFacts.
 
 End ModuleFacts.
 
+(** Every ring [R] is a left [R]-module over itself. *)
+Global Instance isleftmodule_ring (R : Ring) : IsLeftModule R R.
+Proof.
+  rapply Build_IsLeftModule.
+Defined.
+
 (** ** Left Submodules *)
 
 (** A subgroup of a left R-module is a left submodule if it is closed under the action of R. *)
