@@ -1,7 +1,7 @@
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
-Require Import Spaces.Int Spaces.Pos.
+Require Import Spaces.BinInt Spaces.Pos.
 Require Import WildCat.Core.
 
 (** In this file we define the ring Z of integers. The underlying abelian group is already defined in Algebra.AbGroups.Z. Many of the ring axioms are proven and made opaque. Typically, everything inside IsCRing can be opaque since we will only ever rewrite along them and they are hprops. This also means we don't have to be too careful with how our proofs are structured. This allows us to freely use tactics such as rewrite. It would perhaps be possible to shorten many of the proofs here, but it would probably be unneeded due to the opacicty. *)
@@ -11,16 +11,16 @@ Definition cring_Z : CRing.
 Proof.
   snrapply Build_CRing'.
   - exact abgroup_Z.
-  - exact 1%int.
-  - exact int_mul.
-  - exact int_mul_comm.
-  - exact int_mul_add_distr_l.
+  - exact 1%binint.
+  - exact binint_mul.
+  - exact binint_mul_comm.
+  - exact binint_mul_add_distr_l.
   - split.
     + split.
       * exact _.
-      * exact int_mul_assoc.
-    + exact int_mul_1_l.
-    + exact int_mul_1_r.
+      * exact binint_mul_assoc.
+    + exact binint_mul_1_l.
+    + exact binint_mul_1_r.
 Defined.
 
 Local Open Scope mc_scope.
@@ -30,7 +30,7 @@ Local Open Scope mc_scope.
 Definition cring_catamorphism_fun (R : CRing) (z : cring_Z) : R
   := match z with
      | neg z => pos_peano_rec R (-1) (fun n nr => -1 + nr) z
-     | 0%int => 0
+     | 0%binint => 0
      | pos z => pos_peano_rec R 1 (fun n nr => 1 + nr) z
      end.
 
@@ -75,7 +75,7 @@ Proof.
   3,4: symmetry; apply left_identity.
   (** This leaves us with four cases to consider *)
   (** x < 0 , y < 0 *)
-  { change (cring_catamorphism_fun R ((neg x) + (neg y))%int
+  { change (cring_catamorphism_fun R ((neg x) + (neg y))%binint
       = (cring_catamorphism_fun R (neg x)) + (cring_catamorphism_fun R (neg y))).
     induction y as [|y IHy] using pos_peano_ind.
     { simpl.
@@ -97,15 +97,15 @@ Proof.
       induction x as [|x] using pos_peano_ind.
       1: symmetry; cbn; apply left_inverse.
       rewrite pos_peano_rec_beta_pos_succ.
-      rewrite int_pos_sub_succ_r.
+      rewrite binint_pos_sub_succ_r.
       cbn; rewrite <- simple_associativity.
       apply (rng_moveL_Vr (R:=R)).
       apply commutativity. }
     induction x as [|x IHx] using pos_peano_ind.
-    { rewrite int_pos_sub_succ_l.
+    { rewrite binint_pos_sub_succ_l.
       cbn; apply (rng_moveL_Vr (R:=R)).
       by rewrite pos_peano_rec_beta_pos_succ. }
-    rewrite int_pos_sub_succ_succ.
+    rewrite binint_pos_sub_succ_succ.
     rewrite IHy.
     rewrite 2 pos_peano_rec_beta_pos_succ.
     rewrite (commutativity (-1)).
@@ -123,17 +123,17 @@ Proof.
       rewrite pos_peano_rec_beta_pos_succ.
       rewrite (commutativity 1).
       rewrite <- simple_associativity.
-      rewrite int_pos_sub_succ_l.
+      rewrite binint_pos_sub_succ_l.
       cbn; by rewrite right_inverse, right_identity. }
     induction x as [|x IHx] using pos_peano_ind.
-    { rewrite int_pos_sub_succ_r.
+    { rewrite binint_pos_sub_succ_r.
       rewrite pos_peano_rec_beta_pos_succ.
       rewrite simple_associativity.
       cbn.
       rewrite (right_inverse 1).
       symmetry.
       apply left_identity. }
-    rewrite int_pos_sub_succ_succ.
+    rewrite binint_pos_sub_succ_succ.
     rewrite IHy.
     rewrite 2 pos_peano_rec_beta_pos_succ.
     rewrite (commutativity 1).
@@ -168,7 +168,7 @@ Proof.
 Defined.
 
 Lemma cring_catamorphism_fun_pos_mult {R} x y
-  : cring_catamorphism_fun R (pos x * pos y)%int
+  : cring_catamorphism_fun R (pos x * pos y)%binint
     = cring_catamorphism_fun R (pos x) * cring_catamorphism_fun R (pos y).
 Proof.
   revert y.
@@ -234,9 +234,9 @@ Proof.
     { cbn. symmetry; rapply (rng_homo_minus_one (B:=R)). }
     simpl.
     rewrite pos_peano_rec_beta_pos_succ.
-    rewrite int_neg_pos_succ.
-    unfold int_pred.
-    rewrite int_add_comm.
+    rewrite binint_neg_pos_succ.
+    unfold binint_pred.
+    rewrite binint_add_comm.
     rewrite rng_homo_plus.
     rewrite rng_homo_minus_one.
     apply ap.
@@ -246,9 +246,9 @@ Proof.
     { cbn. symmetry; rapply (rng_homo_one g). }
     simpl.
     rewrite pos_peano_rec_beta_pos_succ.
-    rewrite int_pos_pos_succ.
-    unfold int_succ.
-    rewrite int_add_comm.
+    rewrite binint_pos_pos_succ.
+    unfold binint_succ.
+    rewrite binint_add_comm.
     rewrite rng_homo_plus.
     rewrite rng_homo_one.
     apply ap.

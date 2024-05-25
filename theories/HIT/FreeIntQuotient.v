@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Spaces.Int Spaces.Circle.
+Require Import Spaces.BinInt Spaces.Circle.
 Require Import Colimits.Coeq HIT.Flattening Truncations.Core Truncations.Connectedness.
 
 Local Open Scope path_scope.
@@ -16,8 +16,8 @@ Section FreeIntAction.
 
   (** A free action by [Int] is the same as a single autoequivalence [f] (the action of [1]) whose iterates are all pointwise distinct. *)
   Context (f : R <~> R)
-          (f_free : forall (r : R) (n m : Int),
-                      (int_iter f n r = int_iter f m r) -> (n = m)).
+          (f_free : forall (r : R) (n m : BinInt),
+                      (binint_iter f n r = binint_iter f m r) -> (n = m)).
 
   (** We can then define the quotient to be the coequalizer of [f] and the identity map.  This gives it the desired universal property for all types; it remains to show that this definition gives a set. *)
   Let RmodZ := Coeq f idmap.

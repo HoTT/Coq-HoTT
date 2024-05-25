@@ -223,14 +223,14 @@ Defined.
 
 #[export] Hint Resolve n_lt_m_n_leq_m : nat.
 
-Proposition lt_trans (n m k : nat) : n < m -> m < k -> n < k.
+Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
 Proof.
   eauto with nat.
 Defined.
 
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
 Proof.
-  intros l a; contradiction (not_lt_n_n _ (lt_trans _ _ _ l a)).
+  intros l a; contradiction (not_lt_n_n _ (lt_trans l a)).
 Defined.  
 
 Proposition n_leq_add_n_k (n m : nat) : n <= n + m.

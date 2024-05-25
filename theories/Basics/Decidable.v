@@ -42,7 +42,7 @@ Proof.
   - contradiction n.
 Defined.
 
-(** Replace a term [p] of the form [Decidable A] with [inl x] if we know [A] is true. *)
+(** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)
 Ltac decidable_true p a :=
   generalize p;
   rapply (decidable_true a);
@@ -59,10 +59,10 @@ Proof.
   - apply p.
 Defined.
 
-(** Replace a term [p] of the form [Decidable A] with [inr na] if we know [A] is false. *)
-Ltac decidable_false p a :=
+(** Replace a term [p] of the form [Decidable A] with [inr na] if we have a term [n : not A] showing that [A] is false. *)
+Ltac decidable_false p n :=
   generalize p;
-  rapply (decidable_false a);
+  rapply (decidable_false n);
   try intro.
 
 Class DecidablePaths (A : Type) :=
@@ -121,13 +121,17 @@ Global Instance decidable_empty : Decidable Empty
 
 (** ** Transfer along equivalences *)
 
-Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
-: Decidable A -> Decidable B.
+Definition decidable_iff {A B} (f : A -> B) (f' : B -> A)
+  : Decidable A -> Decidable B.
 Proof.
   intros [a|na].
   - exact (inl (f a)).
-  - exact (inr (fun b => na (f^-1 b))).
+  - exact (inr (fun b => na (f' b))).
 Defined.
+
+Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
+  : Decidable A -> Decidable B
+  := decidable_iff f f^-1.
 
 Definition decidable_equiv' (A : Type) {B : Type} (f : A <~> B)
 : Decidable A -> Decidable B
