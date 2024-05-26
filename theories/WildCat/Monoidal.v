@@ -124,8 +124,8 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** These all satisfy the following properties: *)
   := {
   (** A [cat_tensor] is a 1-bifunctor. *)
-  is0bifunctor_cat_tensor :: Is0Bifunctor cat_tensor;
-  is1bifunctor_cat_tensor :: Is1Bifunctor cat_tensor;
+  is0bifunctor_cat_tensor : Is0Bifunctor cat_tensor;
+  is1bifunctor_cat_tensor : Is1Bifunctor cat_tensor;
   (** A natural isomorphism [associator] witnessing the associativity of the tensor product. *)
   cat_tensor_associator :: Associator cat_tensor;
   (** A natural isomorphism [left_unitor] witnessing the left unit law. *)
@@ -137,6 +137,9 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** The pentagon identity. *)
   cat_tensor_pentagon_identity :: PentagonIdentity cat_tensor;
 }.
+
+Existing Instance is0bifunctor_cat_tensor | 10.
+Existing Instance is1bifunctor_cat_tensor | 10.
 
 (** TODO: Braided monoidal categories *)
 
@@ -207,6 +210,11 @@ Section Associator.
 
 End Associator.
 
+Definition associator_op' {A : Type} `{HasEquivs A} {F : A -> A -> A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, assoc : !Associator (A:=A^op) F}
+  : Associator F
+  := associator_op (A:=A^op) (assoc := assoc).
+
 (** ** Theory about [LeftUnitor] and [RightUnitor] *)
 
 Section LeftUnitor.
@@ -230,13 +238,8 @@ Global Instance braiding_op {A : Type} `{HasEquivs A} {F : A -> A -> A}
 
 Definition braiding_op' {A : Type} `{HasEquivs A} {F : A -> A -> A}
   `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding (A:=A^op) F}
-  : Braiding F.
-Proof.
-
-  snrapply braiding_op.
-
-  snrapply (nattrans_op (A:=A^op)).
-  := nattrans_op (A:=A^op) (nattrans_flip (A:=A^op * A^op) braid).
+  : Braiding F
+  := braiding_op (A:=A^op) (braid := braid).
 
 (** ** Theory about [SymmetricBraid] *)
 
@@ -432,13 +435,10 @@ Section SymmetricBraid.
 End SymmetricBraid.
 
 Definition symmetricbraiding_op' {A : Type} {F : A -> A -> A}
-  `{HasEquivs A, !Is0Bifunctor F, !Is1Bifunctor F, !SymmetricBraiding (A:=A^op)F}
-  : SymmetricBraiding F.
-Proof.
-  snrapply Build_SymmetricBraiding.
-  -
-Admitted.
-
+  `{HasEquivs A, !Is0Bifunctor F, !Is1Bifunctor F,
+    H' : !SymmetricBraiding (A:=A^op) F}
+  : SymmetricBraiding F
+  := symmetricbraiding_op (A:=A^op) (F := F).
 
 Global Instance ismonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
   `{IsMonoidal A tensor unit}
@@ -466,10 +466,8 @@ Defined.
 
 Definition ismonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
   `{HasEquivs A} `{!IsMonoidal A^op tensor unit}
-  : IsMonoidal A tensor unit.
-Proof.
-  
-Admitted.
+  : IsMonoidal A tensor unit
+  := ismonoidal_op (A:=A^op) tensor unit.
 
 Global Instance issymmetricmonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
   `{IsSymmetricMonoidal A tensor unit}
@@ -479,23 +477,37 @@ Proof.
   - rapply ismonoidal_op.
   - rapply symmetricbraiding_op.
   - intros a b c; unfold op in a, b, c; simpl.
-    refine (_ $@ (_ $@L _) $@ (_ $@R _)).
-    (** TODO should be easy *)
-Admitted.
+    snrefine (_ $@ (_ $@L (_ $@R _))).
+    2: exact ((braide _ _)^-1$).
+    2: { nrapply cate_moveR_V1.
+      symmetry.
+      nrefine ((_ $@R _) $@ _).
+      1: nrapply cate_buildequiv_fun.
+      rapply braid_braid. }
+    snrefine ((_ $@R _) $@ _).
+    { refine (emap _ _)^-1$.
+      rapply braide. }
+    { symmetry.
+      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
+      nrapply cate_inv_adjointify. }
+    snrefine ((_ $@L (_ $@L _)) $@ _).
+    { refine (emap (flip tensor c) _)^-1$.
+      rapply braide. }
+    { symmetry.
+      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
+      nrapply cate_inv_adjointify. }
+    refine ((_ $@L _)^$ $@ _^$ $@ cate_inv2 _ $@ _ $@ (_ $@L _)).
+    1,2,4,5: rapply cate_inv_compose'.
+    refine (_ $@ (_ $@@ _) $@ _ $@ (_ $@R _)^$ $@ _^$).
+    1-3,5-6: rapply cate_buildequiv_fun.
+    refine ((fmap02 _ _ _ $@@ ((_ $@ fmap20 _ _ _) $@R _)) $@ cat_symm_tensor_hexagon a b c $@ ((_ $@L _^$) $@R _)).
+    1-4: nrapply cate_buildequiv_fun.
+Defined.
 
 Definition issymmetricmonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
-  `{HasEquivs A} `{!IsSymmetricMonoidal A^op tensor unit}
-  : IsSymmetricMonoidal A tensor unit.
-Proof.
-  snrapply Build_IsSymmetricMonoidal.
-  - nrapply ismonoidal_op'.
-    rapply issymmetricmonoidal_ismonoidal.
-  - nrapply symmetricbraiding_op.
-    
-
-  -
-Admitted.
-
+  `{HasEquivs A} `{H' : !IsSymmetricMonoidal A^op tensor unit}
+  : IsSymmetricMonoidal A tensor unit
+  := issymmetricmonoidal_op (A:=A^op) tensor unit.
 
 (** ** Building Symmetric Monoidal Categories *)
 

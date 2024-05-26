@@ -193,7 +193,7 @@ Definition cat_biprod_diag I {A} (x : A) `{Biproduct I A (fun _ => x)}
 
 Definition cat_biprod_codiag I {A} (x : A) `{Biproduct I A (fun _ => x)}
   : cat_biprod I (fun _ => x) $-> x
-  := cat_coprod_fold x $o (cate_coprod_prod (fun _ => x))^-1$.
+  := cat_coprod_codiag x $o (cate_coprod_prod (fun _ => x))^-1$.
 
 (** Compatability of [cat_biprod_rec] and [cat_biprod_corec]. *)
 Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type}

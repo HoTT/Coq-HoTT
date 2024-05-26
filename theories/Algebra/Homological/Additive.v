@@ -1,6 +1,6 @@
 Require Import Basics.Overture.
 Require Import WildCat.Core WildCat.Equiv WildCat.PointedCat WildCat.Bifunctor.
-Require Import WildCat.Square WildCat.Opposite WildCat.Monoidal NatTrans WildCat.Products.
+Require Import WildCat.Square WildCat.Opposite WildCat.Monoidal NatTrans WildCat.Products WildCat.Coproducts.
 Require Import Algebra.Homological.Biproducts.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.AbGroups.AbelianGroup.
@@ -30,7 +30,7 @@ Local Existing Instance issymmetricmonoidal_cat_binbiprod.
 
 Global Instance iscocommutativecomonoidobject_semiadditive
   {A : Type} `{IsSemiAdditive A} (x : A)
-  : IsCocommutativeComonoidObject (fun x y => cat_binbiprod x y) zero_object x.
+  : IsCocommutativeComonoidObject (fun x y => cat_binprod x y) zero_object x.
 Proof.
   snrapply Build_IsCocommutativeComonoidObject.
   { snrapply Build_IsComonoidObject.
@@ -61,16 +61,48 @@ Section CMonHom.
 
   Local Instance zero_hom : Zero (a $-> b).
   Proof.
+    snrapply MonoidObject.monunit_hom_co.
+    1-5: exact _.
+    1: exact zero_object.
+    1: exact _.
+    (* Set Printing All. *)
+    (* Check ( cco_co (iscocommutativecomonoidobject_semiadditive a)). *)
+    unfold cat_bincoprod.
+    snrefine (transport (fun x => @IsComonoidObject _ _ _ _ _ _ _ _ _ x _ _  _ a) _ _).
+    3:{
+      (* TODO: we need to redefine biproducts so that the coproduct strucutre is emergent from the birpoduct structure rather than being part of the structure. Hopefully this is enough for the following term to be accepted. *)
+       pose (i := cco_co (iscocommutativecomonoidobject_semiadditive a)).
+      exact i.
+    (* Arguments IsComonoidObject : clear implicits.
+    Arguments IsCocommutativeComonoidObject : clear implicits.
+    pose proof (i := cco_co (iscocommutativecomonoidobject_semiadditive a)).
+    unfold cat_bincoprod.
+    unfold is1bifunctor_cat_bincoprod.
+    Arguments is1bifunctor_op' : clear implicits.
+    unfold is1bifunctor_op'.
+    unfold is1bifunctor_op.
+    
+    exact i.
+    
+    unfold Coproducts.is1bifunctor_cat_bincoprod.
+    unfold Coproducts.is1bifunctor_cat_bincoprod.
+    
+    exact i.
+    exact _.
+    
+    
+    
+
     change (MonUnit (Hom (A:=A^op) b a)).
-    snrapply (MonoidObject.monunit_hom (A:=A^op) (zero_object (A:=A^op)) (x := b) (y := a)).
+    snrapply ( (A:=A^op) (zero_object (A:=A^op)) (x := b) (y := a)).
     1-11: exact _.
     (* change (IsMonoidObject (A:=A^op) ?F ?z ?x) with (IsComonoidObject (A:=A) F z x).
       (IsComonoidObject (fun x y => cat_binbiprod x y) _ b). *)
     pose proof (iscocommutativecomonoidobject_semiadditive a). 
     unfold IsCocommutativeComonoidObject in X.
     rapply cmo_mo.
-  
-   := MonoidObject.monunit_hom (A:=A^op) _.
+   *)
+   Admitted.
 
   (** TODO: explain a bit more: diagonal duplicates and codiagonal sums. *)
   (** The operation is given by the biproduct structure. *) 

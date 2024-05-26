@@ -381,20 +381,14 @@ Global Instance is1functor_uncurry_uncurry_right {A B C D E}
     !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
   : Is1Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
 Proof.
-
-  (* apply is1functor_uncurry_bifunctor.
-  nrapply Build_Is1Bifunctor.
-  1: exact _.
-  - intros b.
-    change (Is1Functor (uncurry (fun x y => G x (F y b)))).
-    exact _.
-  - intros [c a] [c' a'] [h f] b b' g.
-    refine ((cat_assoc _ _ _)^$ $@ _ $@ (cat_assoc _ _ _)^$).
-    refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _)).
-    2: exact (fmap11_coh G h (fmap01 F a g)).
-    rapply fmap_square; unfold Square.
-    exact (fmap11_coh F f g). *)
-Admitted.
+  snrapply Build_Is1Functor.
+  - intros cab cab' [[h f] g] [[h' f'] g'] [[q p] r].
+    exact (fmap22 G q (fmap22 F p r)).
+  - intros cab.
+    exact (fmap12 G _ (fmap11_id F _ _) $@ fmap11_id G _ _).
+  - intros cab cab' cab'' [[h f] g] [[h' f'] g'].
+    exact (fmap12 G _ (fmap11_comp F _ _ _ _) $@ fmap11_comp G _ _ _ _).
+Defined.  
 
 Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
