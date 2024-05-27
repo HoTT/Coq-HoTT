@@ -151,10 +151,10 @@ Global Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
 Proof.
   unfold op.
   snrapply Build_Is1Natural'.
-  - intros a b f.
-    by snrapply isnat_tr.
-  - intros a b f.
-    by snrapply isnat.
+  - intros a b.
+    exact (isnat_tr alpha).
+  - intros a b.
+    exact (isnat alpha).
 Defined.
 
 (** ** Natural transformations *)
