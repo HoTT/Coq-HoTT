@@ -163,7 +163,7 @@ Proof.
     nrapply (cate_prod_0gpd ie).
     intros i.
     exact (natequiv_yon_equiv_0gpd (e i) _).
-  - snrapply Build_Is1Natural'.
+  - snrapply Build_Is1Natural.
     intros a b f g j.
     cbn.
     destruct (eisretr ie j).
@@ -666,7 +666,7 @@ Section Symmetry.
     - snrapply Build_NatTrans.
       + intros [x y].
         exact (cat_binprod_swap x y).
-      + snrapply Build_Is1Natural'.
+      + snrapply Build_Is1Natural.
         intros [a b] [c d] [f g]; cbn in f, g.
         exact(cat_binprod_swap_nat f g).
     - exact cat_binprod_swap_cat_binprod_swap.
@@ -856,7 +856,7 @@ Section Associativity.
           exact (cat_idl _ $@ (cat_idr _)^$).
         * nrefine (cat_assoc_opp _ _ _ $@ (cat_binprod_beta_pr2 _ _ $@R _) $@ _).
           exact ((mor_terminal_unique _ _ _)^$ $@ mor_terminal_unique _ _ _).
-    - snrapply Build_Is1Natural'.
+    - snrapply Build_Is1Natural.
       intros a b f.
       refine ((_ $@R _) $@ _ $@ (_ $@L _^$)).
       1,3: nrapply cate_buildequiv_fun.

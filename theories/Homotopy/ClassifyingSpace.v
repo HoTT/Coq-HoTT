@@ -432,7 +432,7 @@ Definition natequiv_g_loops_bg `{Univalence}
 Proof.
   snrapply Build_NatEquiv.
   1: intros G; rapply pequiv_g_loops_bg.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros X Y f.
   symmetry.
   apply pbloop_natural.
@@ -534,7 +534,7 @@ Defined.
 Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
   : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros K H f h.
   apply path_hom.
   rapply (fmap_comp B h f).

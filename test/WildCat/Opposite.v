@@ -35,8 +35,14 @@ Definition test9 A B C (F : A -> B -> C) `{x : Is1Bifunctor A B C F}
     (@is1bifunctor_op _ _ _ F _ _ _ _ _ _ _ _ _ _ _ _ _ x) = x
   := 1.
 
-(** Opposite natural transformations are *not* definitionally involutive. *)
-Fail Definition test10 A `{Is01Cat A} B `{Is1Cat B} (F G : A -> B)
+(** Opposite natural transformations are definitionally involutive. *)
+Definition test10 A `{Is01Cat A} B `{Is1Cat B} (F G : A -> B)
   `{!Is0Functor F, !Is0Functor G} (n : NatTrans F G)
   : nattrans_op (nattrans_op n) = n
+  := 1.
+
+(** Opposite natural equivalences are definitionally involutive. *)
+Definition test11 A `{Is01Cat A} B `{HasEquivs B} (F G : A -> B)
+  `{!Is0Functor F, !Is0Functor G} (n : NatEquiv F G)
+  : natequiv_op (natequiv_op n) = n
   := 1.

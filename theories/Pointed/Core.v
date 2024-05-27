@@ -661,31 +661,31 @@ Proof.
       exact (concat_Ap q _)^.
     + by pelim p f g q h k.
   - intros A B C D f g.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f g s1 r1 r2.
   - intros A B C D f g.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f s1 r1 r2 g.
   - intros A B C D f g.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
     by pelim s1 r1 r2 f g.
   - intros A B.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
     by pelim s1 r1 r2.
   - intros A B.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
@@ -1069,7 +1069,7 @@ Lemma natequiv_pointify_r `{Funext} (A : Type)
 Proof.
   snrapply Build_NatEquiv.
   1: rapply equiv_pointify_map.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   cbv; reflexivity.
 Defined.
 

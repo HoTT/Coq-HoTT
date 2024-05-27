@@ -80,25 +80,25 @@ Proof.
   - intros a b c q r s t h g.
     exact (concat_whisker q r s t h g)^.
   - intros a b c d q r.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_r.
   - intros a b c d q r.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_m.
   - intros a b c d q r.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_l.
   - intros a b.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros p q h; cbn.
     apply moveL_Mp.
     lhs nrapply concat_p_pp.
     exact (whiskerR_p1 h).
   - intros a b.
-    snrapply Build_Is1Natural'.
+    snrapply Build_Is1Natural.
     intros p q h.
     apply moveL_Mp.
     lhs rapply concat_p_pp.

@@ -627,7 +627,7 @@ Section JoinSym.
       1, 2: apply joinrecdata_sym.
       1, 2: apply joinrecdata_sym_inv.
     (* Naturality: *)
-    - snrapply Build_Is1Natural'.
+    - snrapply Build_Is1Natural.
       intros P Q g f; simpl.
       bundle_joinrecpath.
       intros b a; simpl.
@@ -837,7 +837,7 @@ Section JoinEmpty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_right.
-    - snrapply Build_Is1Natural'.
+    - snrapply Build_Is1Natural.
       intros A B f.
       cbn -[equiv_join_empty_right].
       snrapply Join_ind_FlFr.
@@ -851,7 +851,7 @@ Section JoinEmpty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_left.
-    - snrapply Build_Is1Natural'.
+    - snrapply Build_Is1Natural.
       intros A B f x.
       cbn -[equiv_join_empty_right].
       rhs_V rapply (isnat_natequiv join_right_unitor).

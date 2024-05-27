@@ -60,7 +60,7 @@ Proof.
     1, 2: apply trijoinrecdata_twist.
     1, 2: apply trijoinrecdata_twist_inv.
   (* Naturality: *)
-  - snrapply Build_Is1Natural'.
+  - snrapply Build_Is1Natural.
     intros P Q g f; simpl.
     bundle_trijoinrecpath.
     all: intros; cbn.
@@ -265,7 +265,7 @@ Global Instance join_associator : Associator Join.
 Proof.
   snrapply Build_Associator; simpl.
   - exact join_assoc.
-  - snrapply Build_Is1Natural'.
+  - snrapply Build_Is1Natural.
     intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
     apply join_assoc_nat.
 Defined.
