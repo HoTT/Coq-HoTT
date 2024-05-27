@@ -155,6 +155,7 @@ Defined.
 
 Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -> B}
   {ff : Is0Functor F} {fg : Is0Functor G} := {
+  #[reversible=no]
   trans_nattrans :> F $=> G;
   is1natural_nattrans : Is1Natural F G trans_nattrans;
 }.
@@ -201,9 +202,10 @@ Definition nattrans_op {A B : Type} `{Is01Cat A} `{Is1Cat B}
 
 (** ** Natural equivalences *)
 
-(** Natural equivalences are families of equivlaences that are natural. *)
+(** Natural equivalences are families of equivalences that are natural. *)
 Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   {F G : A -> B} `{!Is0Functor F, !Is0Functor G} := {
+  #[reversible=no]
   cat_equiv_natequiv :> forall a, F a $<~> G a ;
   is1natural_natequiv :: Is1Natural F G (fun a => cat_equiv_natequiv a) ;
 }.

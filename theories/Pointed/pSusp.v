@@ -292,6 +292,7 @@ Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.
+  snrapply Build_Is1Natural'.
   intros B B' g f.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
