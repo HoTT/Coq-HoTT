@@ -57,30 +57,36 @@ Class Is1Natural {A B : Type} `{IsGraph A, Is1Cat B}
   (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
   (alpha : F $=> G) := Build_Is1Natural' {
   isnat {a a'} (f : a $-> a') : alpha a' $o fmap F f $== fmap G f $o alpha a;
+  (** We also include the transposed naturality square in the definition so that opposite natural transformations are definitionally involutive. In most cases, this will be constructed to be the inverse of the [isnat] field. *)
+  isnat_tr {a a'} (f : a $-> a') : fmap G f $o alpha a $== alpha a' $o fmap F f;
 }.
 
 Arguments Is1Natural {A B} {isgraph_A}
   {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
   F {is0functor_F} G {is0functor_G} alpha : rename.
 Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
+Arguments isnat_tr {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 
 (** We coerce naturality proofs to their naturality square as the [isnat] projection can be unwieldy in certain situations where the transformation is difficult to write down. This allows for the naturality proof to be used directly. *)
 Coercion isnat : Is1Natural >-> Funclass.
 
-(** TODO: make this part of the data for definitional involution of op *)
-(** The transposed natural square. *)
-Definition isnat_tr {A B : Type} `{IsGraph A} `{Is1Cat B}
-  {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
-  (alpha : F $=> G) `{!Is1Natural F G alpha} {a a' : A} (f : a $-> a')
-  : fmap G f $o alpha a $== alpha a' $o fmap F f
-  := (isnat alpha f)^$.
+Definition Build_Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
+  {F G : A -> B} `{!Is0Functor F, !Is0Functor G} (alpha : F $=> G)
+  (isnat : forall a a' (f : a $-> a'), alpha a' $o fmap F f $== fmap G f $o alpha a)
+  : Is1Natural F G alpha.
+Proof.
+  snrapply Build_Is1Natural'.
+  - exact isnat.
+  - intros a a' f.
+    exact (isnat a a' f)^$.
+Defined.
 
 (** The identity transformation is 1-natural. *)
 Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
   (F : A -> B) `{!Is0Functor F}
   : Is1Natural F F (trans_id F).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros a b f; cbn.
   refine (cat_idl _ $@ (cat_idr _)^$).
 Defined.
@@ -92,7 +98,7 @@ Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
   (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural F K (trans_comp gamma alpha).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros a b f; unfold trans_comp; cbn.
   refine (cat_assoc _ _ _ $@ (_ $@L isnat alpha f) $@ _).
   refine (cat_assoc_opp _ _ _ $@ (isnat gamma f $@R _) $@ _).
@@ -105,7 +111,7 @@ Global Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
   : Is1Natural (F o K) (G o K) (trans_prewhisker gamma K).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros x y f; unfold trans_prewhisker; cbn.
   exact (isnat gamma _).
 Defined.
@@ -117,7 +123,7 @@ Global Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
   : Is1Natural (K o F) (K o G) (trans_postwhisker K gamma).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros x y f; unfold trans_postwhisker; cbn.
   refine (_^$ $@ _ $@ _).
   1,3: rapply fmap_comp.
@@ -132,7 +138,7 @@ Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
   (p : forall a, alpha a $== gamma a)
   : Is1Natural F G alpha.
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros a b f.
   exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
 Defined.
@@ -145,8 +151,10 @@ Global Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
 Proof.
   unfold op.
   snrapply Build_Is1Natural'.
-  intros a b f.
-  srapply isnat_tr.
+  - intros a b.
+    exact (isnat_tr alpha).
+  - intros a b.
+    exact (isnat alpha).
 Defined.
 
 (** ** Natural transformations *)
@@ -251,9 +259,12 @@ Proof.
   - intro a.
     refine (Build_CatEquiv (alpha a)).
   - snrapply Build_Is1Natural'.
-    intros a a' f.
-    refine (cate_buildequiv_fun _ $@R _ $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
-    apply (isnat alpha).
+    + intros a a' f.
+      refine ((cate_buildequiv_fun _ $@R _) $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
+      apply (isnat alpha).
+    + intros a a' f.
+      refine ((_ $@L cate_buildequiv_fun _) $@ _ $@ (cate_buildequiv_fun _ $@R _)^$).
+      apply (isnat_tr alpha).
 Defined.
 
 Definition natequiv_id {A B : Type} `{IsGraph A} `{HasEquivs B}
@@ -300,10 +311,12 @@ Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
 Proof.
   intros [alpha I].
   snrapply Build_NatEquiv.
-  1: intro a; symmetry; apply alpha.
+  1: exact (fun a => (alpha a)^-1$).
   snrapply Build_Is1Natural'.
-  intros X Y f.
-  apply vinverse, I.
+  + intros X Y f.
+    apply vinverse, I.
+  + intros X Y f.
+    apply hinverse, I.
 Defined.
 
 (** This lemma might seem unnecessery since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)
@@ -315,7 +328,7 @@ Definition natequiv_functor_assoc_ff_f {A B C D : Type}
 Proof.
   snrapply Build_NatEquiv.
   1: intro; reflexivity.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   intros X Y f.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
   refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).

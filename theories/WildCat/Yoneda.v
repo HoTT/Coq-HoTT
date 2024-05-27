@@ -143,7 +143,7 @@ Global Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
   (a : A) (F : A -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon a) F (opyoneda a F x).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   unfold opyon, opyoneda; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -317,7 +317,7 @@ Global Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
   (a : A) (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon_0gpd a) F (opyoneda_0gpd a F x).
 Proof.
-  snrapply Build_Is1Natural'.
+  snrapply Build_Is1Natural.
   unfold opyon_0gpd, opyoneda_0gpd; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
