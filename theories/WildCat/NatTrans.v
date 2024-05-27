@@ -258,10 +258,13 @@ Proof.
   snrapply Build_NatEquiv.
   - intro a.
     refine (Build_CatEquiv (alpha a)).
-  - snrapply Build_Is1Natural.
-    intros a a' f.
-    refine (cate_buildequiv_fun _ $@R _ $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
-    apply (isnat alpha).
+  - snrapply Build_Is1Natural'.
+    + intros a a' f.
+      refine ((cate_buildequiv_fun _ $@R _) $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
+      apply (isnat alpha).
+    + intros a a' f.
+      refine ((_ $@L cate_buildequiv_fun _) $@ _ $@ (cate_buildequiv_fun _ $@R _)^$).
+      apply (isnat_tr alpha).
 Defined.
 
 Definition natequiv_id {A B : Type} `{IsGraph A} `{HasEquivs B}
@@ -308,10 +311,12 @@ Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
 Proof.
   intros [alpha I].
   snrapply Build_NatEquiv.
-  1: intro a; symmetry; apply alpha.
-  snrapply Build_Is1Natural.
-  intros X Y f.
-  apply vinverse, I.
+  1: exact (fun a => (alpha a)^-1$).
+  snrapply Build_Is1Natural'.
+  + intros X Y f.
+    apply vinverse, I.
+  + intros X Y f.
+    apply hinverse, I.
 Defined.
 
 (** This lemma might seem unnecessery since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)
