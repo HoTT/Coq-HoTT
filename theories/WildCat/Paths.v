@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
-Require Import WildCat.Core WildCat.TwoOneCat.
+Require Import WildCat.Core WildCat.TwoOneCat WildCat.NatTrans.
 
 (** * Path groupoids as wild categories *)
 
@@ -79,17 +79,27 @@ Proof.
       exact (whiskerL_pp p q r).
   - intros a b c q r s t h g.
     exact (concat_whisker q r s t h g)^.
-  - intros a b c d q r s t h.
+  - intros a b c d q r.
+    snrapply Build_Is1Natural'.
+    intros s t h.
     apply concat_p_pp_nat_r.
-  - intros a b c d q r s t h.
+  - intros a b c d q r.
+    snrapply Build_Is1Natural'.
+    intros s t h.
     apply concat_p_pp_nat_m.
-  - intros a b c d q r s t h.
+  - intros a b c d q r.
+    snrapply Build_Is1Natural'.
+    intros s t h.
     apply concat_p_pp_nat_l.
-  - intros a b p q h; cbn.
+  - intros a b.
+    snrapply Build_Is1Natural'.
+    intros p q h; cbn.
     apply moveL_Mp.
     lhs nrapply concat_p_pp.
     exact (whiskerR_p1 h).
-  - intros a b p q h.
+  - intros a b.
+    snrapply Build_Is1Natural'.
+    intros p q h.
     apply moveL_Mp.
     lhs rapply concat_p_pp.
     exact (whiskerL_1p h).

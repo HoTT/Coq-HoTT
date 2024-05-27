@@ -682,7 +682,8 @@ Section TwistConstruction.
   Proof.
     snrapply Build_Associator.
     - exact associator_twist'.
-    - simpl; intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.
+    - snrapply Build_Is1Natural'.
+      simpl; intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.
       (** To prove naturality it will be easier to reason about squares. *)
       change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
       (** First we remove all the equivalences from the equation. *)
@@ -717,7 +718,8 @@ Section TwistConstruction.
     snrapply Build_NatEquiv'.
     - snrapply Build_NatTrans.
       + exact (fun a => right_unitor a $o braid cat_tensor_unit a).
-      + intros a b f.
+      + snrapply Build_Is1Natural'.
+        intros a b f.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
         nrapply vconcat.
         2: rapply (isnat right_unitor f).

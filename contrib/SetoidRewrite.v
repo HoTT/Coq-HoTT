@@ -172,8 +172,7 @@ Proof.
        _ _ (cat_equiv_natequiv tau x))) in eq_Gf_Gg.
   cbn in eq_Gf_Gg.
   unfold cat_precomp in eq_Gf_Gg.
-  rewrite <- is1natural_natequiv in eq_Gf_Gg.
-  rewrite <- is1natural_natequiv in eq_Gf_Gg.
+  rewrite <- 2 (isnat tau) in eq_Gf_Gg.
   apply faithful_F.
   assert (X : RetractionOf (tau y)). {
     unshelve eapply Build_RetractionOf.
