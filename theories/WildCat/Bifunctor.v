@@ -388,6 +388,7 @@ Global Instance is1natural_uncurry {A B C : Type}
   (nat_r : forall a, Is1Natural (F a) (G a) (fun y : B => alpha (a, y)))
   : Is1Natural (uncurry F) (uncurry G) alpha.
 Proof.
+  snrapply Build_Is1Natural'.
   intros [a b] [a' b'] [f f']; cbn in *.
   change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
   nrapply vconcatL.
@@ -408,7 +409,8 @@ Proof.
   intros [alpha nat].
   snrapply Build_NatTrans.
   - exact (alpha o equiv_prod_symm _ _).
-  - intros [b a] [b' a'] [g f].
+  - snrapply Build_Is1Natural'.
+    intros [b a] [b' a'] [g f].
     exact (nat (a, b) (a', b') (f, g)).
 Defined.
 
