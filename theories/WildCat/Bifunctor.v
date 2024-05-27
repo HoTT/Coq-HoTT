@@ -406,12 +406,14 @@ Definition nattrans_flip {A B C : Type}
   : NatTrans (uncurry F) (uncurry G)
     -> NatTrans (uncurry (flip F)) (uncurry (flip G)).
 Proof.
-  intros [alpha nat].
+  intros alpha.
   snrapply Build_NatTrans.
   - exact (alpha o equiv_prod_symm _ _).
-  - snrapply Build_Is1Natural.
-    intros [b a] [b' a'] [g f].
-    exact (nat (a, b) (a', b') (f, g)).
+  - snrapply Build_Is1Natural'.
+    + intros [b a] [b' a'] [g f].
+      exact (isnat (a:=(a, b)) (a':=(a', b')) alpha (f, g)).
+    + intros [b a] [b' a'] [g f].
+      exact (isnat_tr (a:=(a, b)) (a':=(a', b')) alpha (f, g)).
 Defined.
 
 (** ** Opposite Bifunctors *)
