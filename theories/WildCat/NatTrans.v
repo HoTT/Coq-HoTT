@@ -31,14 +31,14 @@ Definition trans_comp {A B : Type} `{Is01Cat B}
   : F $=> K
   := fun a => gamma a $o alpha a.
 
-(** Transformations can be prewhiskered by a function. This means we precompose either side of the transformation with a function. *)
+(** Transformations can be prewhiskered by a function. This means we precompose both sides of the transformation with a function. *)
 Definition trans_prewhisker {A B : Type} {C : B -> Type} {F G : forall x, C x}
   `{Is01Cat B} `{!forall x, IsGraph (C x)}
   `{!forall x, Is01Cat (C x)} (gamma : F $=> G) (K : A -> B) 
   : F o K $=> G o K
   := gamma o K.
 
-(** Transformations can be postwhiskered by a function. This means we postcompose either side of the transformation with a function. *)
+(** Transformations can be postwhiskered by a function. This means we postcompose both sides of the transformation with a function. *)
 Definition trans_postwhisker {A B C : Type} {F G : A -> B}
   (K : B -> C) `{Is01Cat B, Is01Cat C, !Is0Functor K} (gamma : F $=> G)
   : K o F $=> K o G
@@ -221,7 +221,7 @@ Definition issig_NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   (F G : A -> B) `{!Is0Functor F, !Is0Functor G}
   : _ <~> NatEquiv F G := ltac:(issig).
 
-(** From a given natural transformation, we can get the underlying natural transformation. *)
+(** From a given natural equivalence, we can get the underlying natural transformation. *)
 Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
   : NatEquiv F G -> NatTrans F G.
