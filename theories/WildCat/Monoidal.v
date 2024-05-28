@@ -425,6 +425,8 @@ Section SymmetricBraid.
 
 End SymmetricBraid.
 
+(** ** Opposite Monoidal Categories *)
+
 Global Instance ismonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
   `{IsMonoidal A tensor unit}
   : IsMonoidal A^op tensor unit.
@@ -448,6 +450,82 @@ Proof.
     refine (_ $@ (cate_buildequiv_fun _ $@@ (cate_buildequiv_fun _ $@R _))^$).
     rapply cat_tensor_pentagon_identity.
 Defined.
+
+(** ** Further Coherence Conditions *)
+
+(** In MacLane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
+
+(** The left unitor of a tensor can be decomposed as an associator and a functorial action of the tensor on a left unitor. *)
+Definition left_unitor_associator {A} (tensor : A -> A -> A) (unit : A)
+  `{IsMonoidal A tensor unit} (x y : A)
+  : (left_unitor (tensor x y) : _ $-> _)
+    $== fmap10 tensor (left_unitor x) y $o associator unit x y.
+Proof.
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv left_unitor _))^$
+    $@ ((_ $@L _) $@R _) $@ cate_moveR_eV _ _ _ (isnat_natequiv left_unitor _)).
+  refine (_ $@ (fmap01_comp _ _ _ _)^$).
+  refine (_ $@ (cate_moveR_Ve _ _ _ (associator_nat_m _  _ _)^$ $@R _)).
+  nrefine (_ $@ cat_assoc_opp _ _ _).
+  change (fmap (tensor ?x) ?f) with (fmap01 tensor x f).
+  change (cate_fun' _ _ (cat_tensor_left_unitor ?x))
+    with (cate_fun (cat_tensor_left_unitor x)).
+  apply cate_moveL_Ve.
+  refine ((_ $@L triangle_identity _ _ _ _ _ _) $@ _).
+  nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
+  refine (_ $@ ((fmap20 _ (triangle_identity _ _ _ _ _ _) _
+    $@ fmap10_comp _ _ _ _)^$ $@R _)).
+  refine (_ $@ cat_assoc_opp _ _ _).
+  refine (_ $@ (_ $@L (pentagon_identity _ _ _ _ _ _ $@ cat_assoc _ _ _))).
+  refine ((_ $@R _) $@ cat_assoc _ _ _).
+  exact (associator_nat_l _ _ _).
+Defined.
+
+(** The right unitor of a tensor can be decomposed as an inverted associator and a functorial action of the tensor on a right unitor. *)
+Definition right_unitor_associator {A} (tensor : A -> A -> A) (unit : A)
+  `{IsMonoidal A tensor unit} (x y : A)
+  : (fmap01 tensor x (right_unitor y) : _ $-> _)
+    $== right_unitor (tensor x y) $o associator x y unit.
+Proof.
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv right_unitor _))^$
+    $@ ((_ $@L _) $@R _) $@ cate_moveR_eV _ _ _ (isnat_natequiv right_unitor _)).
+  refine (_ $@ (fmap10_comp tensor _ _ _)^$).
+  refine ((cate_moveR_eV _ _ _ (associator_nat_m _ _ _))^$ $@ _).
+  refine (_ $@ (cate_moveR_eV _ _ _ (triangle_identity _ _ _ _ _ _) $@R _)).
+  apply cate_moveR_eV.
+  refine ((_ $@L
+    (fmap02 _ _ (cate_moveR_eV _ _ _ (triangle_identity _ _ _ _ _ _))^$
+    $@ fmap01_comp _ _ _ _)) $@ _).
+  refine (cat_assoc_opp _ _ _ $@ _).
+  nrefine ((associator_nat_r _ _ _ $@R _) $@ cat_assoc _ _ _ $@ _).
+  do 2 nrefine (_ $@ cat_assoc_opp _ _ _).
+  refine (_ $@L _).
+  refine ((_ $@L (emap_inv' _ _)^$) $@ _).
+  apply cate_moveR_eV.
+  refine (_ $@ (_ $@L cate_buildequiv_fun _)^$).
+  nrefine (_ $@ cat_assoc_opp _ _ _).
+  apply cate_moveL_Ve.
+  rapply pentagon_identity.
+Defined.
+
+(** The left unitor at the unit is the right unitor at the unit. *)
+Definition left_unitor_unit_right_unitor_unit {A} (tensor : A -> A -> A) (unit : A)
+  `{IsMonoidal A tensor unit}
+  : (left_unitor unit : tensor unit unit $-> _) $== right_unitor unit.
+Proof.
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv left_unitor (left_unitor unit)))^$
+    $@ _).
+  apply cate_moveR_eV.
+  refine (_ $@ (_ $@L left_unitor_associator _ _ _ _)^$).
+  nrefine (_ $@ (_ $@R _) $@ cat_assoc _ _ _). 
+  2: rapply (isnat_natequiv right_unitor _)^$.
+  nrefine ((_ $@L _) $@ cat_assoc_opp _ _ _).
+  refine (triangle_identity _ _ _ _ _ _ $@ _).
+  nrefine (_ $@R _).
+  nrapply cate_monic_equiv.
+  exact (isnat_natequiv right_unitor (right_unitor unit)).
+Defined.
+
+(** TODO: Kelly also shows that there are redundant coherence conditions for symmetric monoidal categories also, but we leave these out for now. *)
 
 (** ** Building Symmetric Monoidal Categories *)
 
