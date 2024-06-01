@@ -13,7 +13,7 @@ Local Open Scope mc_scope.
 
 (** ** Definition *)
 
-Definition Matrix (R : Type@{i}) (m n : nat) : Type@{i}
+Definition Matrix@{i} (R : Type@{i}) (m n : nat) : Type@{i}
   := Vector (Vector R n) m.
 
 Global Instance istrunc_matrix (R : Type) k `{IsTrunc k.+2 R} m n

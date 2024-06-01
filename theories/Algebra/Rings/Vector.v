@@ -7,14 +7,16 @@ Require Import abstract_algebra.
 
 Local Open Scope mc_scope.
 
+Set Universe Minimization ToSet.
+
 (** * Vectors *)
 
 (** A vector is simply a list with a specified length. This data structure has many uses, but here we will focus on lists of left module elements. *)
 
 (** ** Definition *)
 
-Definition Vector (A : Type) (n : nat)
- := { l : list A & length l = n }.
+Definition Vector@{i} (A : Type@{i}) (n : nat) : Type@{i}
+ := { l : list@{i} A & length l = n }.
 
 (** *** Constructors *)
 
