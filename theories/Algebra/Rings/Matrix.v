@@ -955,6 +955,69 @@ Defined.
 
 (** Note that symmetric matrices do not form a subring (or subalgebra) but they do form a submodule of the module of matrices. *)
 
+(** ** Skew-symmetric Matrices *)
+
+(** A matrix is skew-symmetric when it is equal to the negation of its transpose. *)
+Class IsSkewSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_isskewsymmetric : matrix_transpose M = matrix_negate M.
+
+Arguments matrix_transpose_isskewsymmetric {R n} M {_}.
+
+(** The zero matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSkewSymmetric (matrix_zero R n n).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_zero.
+  symmetry.
+  nrapply (rng_negate_zero (A:=matrix_ring R n)).
+Defined.
+
+(** The negation of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_negate M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** The scalar multiplication of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_lact r M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_lact.
+  rhs_V nrapply (lm_inv (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
+  f_ap.
+Defined.
+
+(** The transpose of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_transpose M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite <- matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** The sum of two skew-symmetric matrices is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSkewSymmetric M} `{!IsSkewSymmetric N}
+  : IsSkewSymmetric (matrix_plus M N).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_plus.
+  rhs nrapply (grp_inv_op (G:=abgroup_matrix R n n)).
+  rhs_V nrapply (AbelianGroup.ab_comm (A:=abgroup_matrix R n n)).
+  f_ap.
+Defined.
+
+(** Skew-symmetric matrices degenerate to symmetric matrices in rings with characteristic 2. In odd characteristic the module of matrices can be decomposed into the direct sum of symmetric and skew-symmetric matrices. *)
+
 Section MatrixCat.
 
   (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
