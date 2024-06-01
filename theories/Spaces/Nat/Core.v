@@ -268,6 +268,20 @@ Proof.
   auto.
 Defined.
 
+Definition isinj_nat_add k : forall x y, k + x = k + y -> x = y.
+Proof.
+  simple_induction' k; simpl; auto.
+Defined.
+
+Definition isinj_nat_add' x y k (H : x + k = y + k) : x = y.
+Proof.
+  induction k as [|k IHk] in x, y, k, H |- *.
+  - by rewrite <- !add_n_O in H.
+  - rewrite <- !add_n_Sm in H.
+    apply path_nat_S in H. 
+    by apply IHk.
+Defined.
+
 (** Multiplication *)
 
 Local Definition ap011_mul := @ap011 _ _ _  mul.
