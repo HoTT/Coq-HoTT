@@ -859,6 +859,102 @@ Proof.
   - exact lower_triangular_identity.
 Defined.
 
+(** ** Symmetric Matrices *)
+
+(** A matrix is symmetric when it is equal to its transpose. *)
+Class IsSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_issymmetric : matrix_transpose M = M.
+
+Arguments matrix_transpose_issymmetric {R n} M {_}.
+
+(** The zero matrix is symmetric. *)
+Global Instance issymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSymmetric (matrix_zero R n n)
+  := matrix_transpose_zero.
+
+(** The identity matrix is symmetric. *)
+Global Instance issymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+  : IsSymmetric (identity_matrix R n)
+  := matrix_transpose_identity.
+
+(** The sum of two symmetric matrices is symmetric. *)
+Global Instance issymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSymmetric M} `{!IsSymmetric N}
+  : IsSymmetric (matrix_plus M N).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_plus.
+  f_ap.
+Defined.
+
+(** The negation of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_negate M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** The scalar multiplication of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_lact r M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_lact.
+  f_ap.
+Defined.
+
+(** The transpose of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_transpose M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_transpose.
+  by symmetry.
+Defined.
+
+(** A symmetric upper triangular matrix is diagonal. *)
+Global Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} {H : IsUpperTriangular M}
+  : IsDiagonal M.
+Proof.
+  exists (matrix_diag_vector M).
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite entry_Build_Matrix, entry_Build_Vector.
+  strip_truncations.
+  destruct (dec (i = j)) as [p|np].
+  { destruct p.
+    rewrite kronecker_delta_refl.
+    rewrite rng_mult_one_l.
+    f_ap; apply path_ishprop. }
+  apply diseq_implies_lt in np.
+  destruct np as [l | l].
+  - rewrite (kronecker_delta_lt l).
+    rewrite rng_mult_zero_l.
+    by rewrite H.
+  - rewrite (kronecker_delta_gt l).
+    rewrite rng_mult_zero_l.
+    rewrite <- (matrix_transpose_issymmetric M).
+    rewrite entry_Build_Matrix.
+    by rewrite H.
+Defined.
+
+(** A symmetric lower triangular matrix is diagonal. *)
+Global Instance isdiagonal_lower_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} `{!IsLowerTriangular M}
+  : IsDiagonal M.
+Proof.
+  rewrite <- (matrix_transpose_issymmetric M).
+  rapply isdiagonal_upper_triangular_issymmetric.
+Defined.
+
+(** Note that symmetric matrices do not form a subring (or subalgebra) but they do form a submodule of the module of matrices. *)
+
 Section MatrixCat.
 
   (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
