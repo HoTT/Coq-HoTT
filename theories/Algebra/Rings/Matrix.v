@@ -616,3 +616,217 @@ Proof.
   intros k l Hk Hl.
   by rewrite 4 entry_Build_Matrix.
 Defined.
+
+(** ** Triangular matrices *)
+
+(** A matrix is upper triangular if all the entries below the diagonal are zero. *)
+Class IsUpperTriangular {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular
+  : merely (forall i j (Hi : (i < n)%nat) (Hj : (j < n)%nat), (i < j)%nat -> entry M i j = 0).
+
+Global Instance ishprop_isuppertriangular {R : Ring} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsUpperTriangular M).
+Proof.
+  unfold IsUpperTriangular; exact _.
+Defined.
+
+(** A matrix is lower triangular if all the entries above the diagonal are zero. We define it as the transpose being upper triangular. *)
+Class IsLowerTriangular {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular_transpose :: IsUpperTriangular (matrix_transpose M).
+
+Global Instance ishprop_islowertriangular {R : Ring} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsLowerTriangular M).
+Proof.
+  unfold IsLowerTriangular; exact _.
+Defined.
+
+(** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)
+Global Instance lower_triangular_transpose {R : Ring} {n : nat} (M : Matrix R n n)
+  `{!IsUpperTriangular M}
+  : IsLowerTriangular (matrix_transpose M).
+Proof.
+  unfold IsLowerTriangular.
+  by rewrite matrix_transpose_transpose.
+Defined.
+
+(** The sum of two upper triangular matrices is upper triangular. *)
+Global Instance upper_triangular_plus {R : Ring} {n : nat} (M N : Matrix R n n)
+  {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_plus M N).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  specialize (H1 i j Hi Hj lt_i_j).
+  specialize (H2 i j Hi Hj lt_i_j).
+  rewrite entry_Build_Matrix.
+  change (Vector.entry (Vector.entry ?M ?i) ?j) with (entry M i j).
+  rewrite H1, H2.
+  by rewrite rng_plus_zero_l.
+Defined.
+
+(** The sum of two lower triangular matrices is lower triangular. *)
+Global Instance lower_triangular_plus {R : Ring} {n : nat} (M N : Matrix R n n)
+  `{!IsLowerTriangular M} `{!IsLowerTriangular N}
+  : IsLowerTriangular (matrix_plus M N).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_plus.
+  by apply upper_triangular_plus.
+Defined.
+
+(** The negation of an upper triangular matrix is upper triangular. *)
+Global Instance upper_triangular_negate {R : Ring} {n : nat} (M : Matrix R n n)
+  {H : IsUpperTriangular M}
+  : IsUpperTriangular (matrix_negate M).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  rewrite <- rng_negate_zero; f_ap.
+  by nrapply H.
+Defined.
+
+(** The negation of a lower triangular matrix is lower triangular. *)
+Global Instance lower_triangular_negate {R : Ring} {n : nat} (M : Matrix R n n)
+  `{!IsLowerTriangular M}
+  : IsLowerTriangular (matrix_negate M).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_negate.
+  exact _.
+Defined.
+
+(** The product of two upper triangular matrices is upper triangular. *)
+Global Instance upper_triangular_mult {R : Ring} {n : nat} (M N : Matrix R n n)
+  {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_mult M N).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  apply ab_sum_zero.
+  intros k Hk.
+  destruct (dec (k < i)%nat) as [lt_k_i|ge_k_i].
+  { rewrite H2.
+    1: by rewrite rng_mult_zero_r.
+    rapply lt_trans. }
+  apply not_lt_implies_geq in ge_k_i.
+  apply leq_split in ge_k_i.
+  destruct ge_k_i as [lt_i_k | p ].
+  { rewrite H1.
+    1: by rewrite rng_mult_zero_l.
+    assumption. }
+  rewrite H2.
+  1: by rewrite rng_mult_zero_r.
+  by destruct p.
+Defined.
+
+(** The product of two lower triangular matrices is lower triangular. *)
+Global Instance lower_triangular_mult {R : Ring} {n : nat} (M N : Matrix R n n)
+  {H1 : IsLowerTriangular M} {H2 : IsLowerTriangular N}
+  : IsLowerTriangular (matrix_mult M N).
+Proof.
+  (** Annoyingly, we cannot derive this from [upper_trianglar_mult] and [matrix_transpose_mult] because the latter requires a commutative ring. Therefore we have to repeat the proof with a few modifications. *)
+  unfold IsLowerTriangular, IsUpperTriangular in *.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite 2 entry_Build_Matrix.
+  apply ab_sum_zero.
+  intros k Hk.
+  destruct (dec (k < i)%nat) as [lt_k_i|ge_k_i].
+  { pose (p := H1 k j _ _ (lt_trans _ _)).
+    rewrite entry_Build_Matrix in p.
+    rewrite p.
+    by rewrite rng_mult_zero_l. }
+  apply not_lt_implies_geq in ge_k_i.
+  apply leq_split in ge_k_i.
+  destruct ge_k_i as [lt_i_k | q ].
+  { pose (p := H2 i k _ _ _).
+    rewrite entry_Build_Matrix in p.
+    rewrite p.
+    by rewrite rng_mult_zero_r. }
+  destruct q.
+  pose (p := H1 i j _ _ _).
+  rewrite entry_Build_Matrix in p.
+  rewrite p.
+  by rewrite rng_mult_zero_l.
+Defined.
+
+(** The zero matrix is upper triangular. *)
+Global Instance upper_triangular_zero {R : Ring} {n : nat}
+  : IsUpperTriangular (matrix_zero R n n).
+Proof.
+  apply tr.
+  by hnf; intros; rewrite entry_Build_Matrix.
+Defined.
+
+(** The zero matrix is lower triangular. *)
+Global Instance lower_triangular_zero {R : Ring} {n : nat}
+  : IsLowerTriangular (matrix_zero R n n).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_zero.
+  exact _.
+Defined.
+
+(** The identity matrix is upper triangular. *)
+Global Instance upper_triangular_identity {R : Ring} {n : nat}
+  : IsUpperTriangular (identity_matrix R n).
+Proof.
+  unfold IsUpperTriangular.
+  apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  by apply kronecker_delta_lt.
+Defined.
+
+(** The identity matrix is lower triangular. *)
+Global Instance lower_triangular_identity {R : Ring} {n : nat}
+  : IsLowerTriangular (identity_matrix R n).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_identity.
+  exact _.
+Defined.
+
+(** A diagonal matrix is upper triangular. *)
+Global Instance upper_triangular_diag {R : Ring} {n : nat} (v : Vector R n)
+  : IsUpperTriangular (matrix_diag v).
+Proof.
+  unfold IsUpperTriangular.
+  apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  rewrite kronecker_delta_lt.
+  1: by rewrite rng_mult_zero_l.
+  exact _.
+Defined.
+
+(** A diaganol matrix is lower triangular. *)
+Global Instance lower_triangular_diag {R : Ring} {n : nat} (v : Vector R n)
+  : IsLowerTriangular (matrix_diag v).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_diag.
+  apply upper_triangular_diag.
+Defined.
+
+(** Upper triangular matricies are a subring of the ring of matrices. *)
+Definition upper_triangular_matrix_ring (R : Ring) (n : nat)
+  : Subring (matrix_ring R n).
+Proof.
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M));
+    exact _.
+Defined.
+
+(** Lower triangular matricies are a subring of the ring of matrices. *)
+Definition lower_triangular_matrix_ring (R : Ring) (n : nat)
+  : Subring (matrix_ring R n).
+Proof.
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsLowerTriangular M));
+    exact _.
+Defined.
+
