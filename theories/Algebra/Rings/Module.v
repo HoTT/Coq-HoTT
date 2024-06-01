@@ -82,6 +82,16 @@ Section ModuleFacts.
      f_ap.
      apply grp_inv_l.
   Defined.
+ 
+  (** The action of [r] on the additive inverse of [m] is the additive inverse of the action of [r] on [m]. *)
+  Definition lm_inv : lact r (-m) = -(lact r m).
+  Proof.
+    apply grp_moveL_1V.
+    lhs_V nrapply lm_dist_l.
+    rhs_V nrapply lm_zero_r.
+    f_ap.
+    apply grp_inv_l.
+  Defined.
 
 End ModuleFacts.
 
