@@ -331,7 +331,7 @@ Record Subring (R : Ring) := {
   subring_issubring :: IsSubring subring_pred;
 }.
 
-Definition Build_Subring' {R : Ring} (S : Subgroup R)
+Definition Build_Subring'' {R : Ring} (S : Subgroup R)
   (H1 : forall x y, S x -> S y -> S (x * y))
   (H2 : S 1)
   : Subring R.
@@ -343,7 +343,7 @@ Proof.
   - exact H2.
 Defined.
 
-Definition Build_Subring'' {R : Ring} (S : R -> Type)
+Definition Build_Subring' {R : Ring} (S : R -> Type)
   (H : forall x, IsHProp (S x))
   (H1 : forall x y, S x -> S y -> S (x - y))
   (H2 : forall x y, S x -> S y -> S (x * y))
@@ -455,7 +455,7 @@ Defined.
 (** The image of a ring homomorphism *)
 Definition rng_image {R S : Ring} (f : R $-> S) : Subring S.
 Proof.
-  snrapply (Build_Subring' (grp_image f)).
+  snrapply (Build_Subring'' (grp_image f)).
   - simpl.
     intros x y p q.
     strip_truncations; apply tr.
