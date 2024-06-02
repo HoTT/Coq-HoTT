@@ -100,7 +100,11 @@ Definition matrix_plus {A : AbGroup} {m n}
   := @sg_op (abgroup_matrix A m n) _.
 
 Definition matrix_zero (A : AbGroup) m n : Matrix A m n
-  := @mon_unit (abgroup_matrix A m n) _. 
+  := @mon_unit (abgroup_matrix A m n) _.
+
+Definition matrix_negate {A : AbGroup} {m n}
+  : Matrix A m n -> Matrix A m n
+  := @negate (abgroup_matrix A m n) _.
 
 Global Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
   {R : Ring} `{IsLeftModule R A}
@@ -252,9 +256,18 @@ Proof.
 Defined.
 
 (** Transpose commutes with scalar multiplication. *)
-Definition matrix_transpose_scale {R : Ring} {m n} (r : R) (M : Matrix R m n)
+Definition matrix_transpose_lact {R : Ring} {m n} (r : R) (M : Matrix R m n)
   : matrix_transpose (matrix_lact r M)
     = matrix_lact r (matrix_transpose M).
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.
+Defined.
+
+(** The negation of a transposed matrix is the same as the transposed matrix of the negation. *)
+Definition matrix_transpose_negate {R : Ring} {m n} (M : Matrix R m n)
+  : matrix_transpose (matrix_negate M) = matrix_negate (matrix_transpose M).
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
@@ -274,6 +287,25 @@ Proof.
   intros k Hk.
   rewrite 2 entry_Build_Matrix.
   apply rng_mult_comm.
+Defined.
+
+(** The transpose of the zero matrix is the zero matrix. *)
+Definition matrix_transpose_zero {R : Ring} {m n}
+  : matrix_transpose (matrix_zero R m n) = matrix_zero R n m.
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  by rewrite !entry_Build_Matrix.
+Defined.
+
+(** The transpose of the identity matrix is the identity matrix. *)
+Definition matrix_transpose_identity {R : Ring} {n}
+  : matrix_transpose (identity_matrix R n) = identity_matrix R n.
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  rewrite 3 entry_Build_Matrix.
+  apply kronecker_delta_symm.
 Defined.
 
 (** ** Diagonal matrices *)
