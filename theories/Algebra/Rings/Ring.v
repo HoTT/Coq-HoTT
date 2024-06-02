@@ -2,6 +2,7 @@ Require Import WildCat.
 Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
+Require Import Algebra.Groups.Group Algebra.Groups.Subgroup.
 Require Export Algebra.AbGroups.
 Require Export Classes.theory.rings.
 Require Import Modalities.ReflectiveSubuniverse.
@@ -91,6 +92,7 @@ Section RingLaws.
   Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.
 
   Definition rng_negate_negate : - (- x) = x := groups.negate_involutive _.
+  Definition rng_negate_zero : - (0 : A) = 0 := groups.negate_mon_unit.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
   Definition rng_mult_one_r : x * 1 = x := right_identity _.
@@ -284,6 +286,94 @@ Proof.
     exact (isequiv_adjointify f g p q).
 Defined.
 
+(** ** Subrings *)
+
+(** TODO: factor out this definition as a submonoid *)
+(** A subring is a subgorup of the underlying abelian group of a ring that is closed under multiplication and contains [1]. *)
+Class IsSubring {R : Ring} (S : R -> Type) := {
+  issubring_issubgroup :: IsSubgroup S;
+  issubring_mult {x y} : S x -> S y -> S (x * y);
+  issubring_one : S 1;
+}.
+
+Definition issig_IsSubring {R : Ring} (S : R -> Type)
+  : _ <~> IsSubring S
+  := ltac:(issig).
+
+Global Instance ishprop_issubring `{Funext} {R : Ring} (S : R -> Type)
+  : IsHProp (IsSubring S).
+Proof.
+  exact (istrunc_equiv_istrunc _ (issig_IsSubring S)).
+Defined.
+
+(** Subring criterion. *)
+Definition Build_IsSubring' {R : Ring} (S : R -> Type)
+  (H : forall x, IsHProp (S x))
+  (H1 : forall x y, S x -> S y -> S (x - y))
+  (H2 : forall x y, S x -> S y -> S (x * y))
+  (H3 : S 1)
+  : IsSubring S.
+Proof.
+  snrapply Build_IsSubring.
+  - snrapply Build_IsSubgroup'.
+    + exact _.
+    + pose (p := H1 1 1 H3 H3).
+      rewrite rng_plus_negate_r in p.
+      exact p.
+    + exact H1.
+  - exact H2.
+  - exact H3.
+Defined.
+
+Record Subring (R : Ring) := {
+  #[reversible=no]
+  subring_pred :> R -> Type;
+  subring_issubring :: IsSubring subring_pred;
+}.
+
+Definition Build_Subring'' {R : Ring} (S : Subgroup R)
+  (H1 : forall x y, S x -> S y -> S (x * y))
+  (H2 : S 1)
+  : Subring R.
+Proof.
+  snrapply (Build_Subring _ S).
+  snrapply Build_IsSubring.
+  - exact _.
+  - exact H1.
+  - exact H2.
+Defined.
+
+Definition Build_Subring' {R : Ring} (S : R -> Type)
+  (H : forall x, IsHProp (S x))
+  (H1 : forall x y, S x -> S y -> S (x - y))
+  (H2 : forall x y, S x -> S y -> S (x * y))
+  (H3 : S 1)
+  : Subring R
+  := Build_Subring R S (Build_IsSubring' S H H1 H2 H3).
+
+(** The underlying subgroup of a subring. *)
+Coercion subgroup_subring {R} : Subring R -> Subgroup R
+  := fun S => Build_Subgroup R S _.
+
+(** The ring given by a subring. *)
+Coercion ring_subring {R : Ring} (S : Subring R) : Ring.
+Proof.
+  snrapply (Build_Ring (subgroup_subring S)).
+  5: repeat split.
+  { intros [r ?] [s ?].
+    exists (r * s).
+    by apply issubring_mult. }
+  { exists 1.
+    apply issubring_one. }
+  3: exact _.
+  all: hnf; intros; srapply path_sigma_hprop.
+  - snrapply rng_dist_l.
+  - snrapply rng_dist_r.
+  - snrapply rng_mult_assoc.
+  - snrapply rng_mult_one_l.
+  - snrapply rng_mult_one_r.
+Defined.
+
 (** ** Product ring *)
 
 Definition ring_product : Ring -> Ring -> Ring.
@@ -363,35 +453,23 @@ Defined.
 (** ** Image ring *)
 
 (** The image of a ring homomorphism *)
-Definition rng_image {R S : Ring} (f : R $-> S) : Ring.
+Definition rng_image {R S : Ring} (f : R $-> S) : Subring S.
 Proof.
-  snrapply (Build_Ring (abgroup_image f)).
-  { simpl.
-    intros [x p] [y q].
-    exists (x * y).
+  snrapply (Build_Subring'' (grp_image f)).
+  - simpl.
+    intros x y p q.
     strip_truncations; apply tr.
-    destruct p as [p p'], q as [q q'].
-    exists (p * q).
+    destruct p as [a p'], q as [b q'].
+    exists (a * b).
     refine (rng_homo_mult _ _ _ @ _).
-    f_ap. }
-  { exists 1.
-    apply tr.
+    f_ap.
+  - apply tr.
     exists 1.
-    exact (rng_homo_one f). }
-  (** Much of this proof is doing the same thing over, so we use some compact tactics. *)
-  all: repeat split.
-  3: exact _.
-  all: repeat intros [].
-  all: apply path_sigma_hprop; cbn.
-  1: apply distribute_l.
-  1: apply distribute_r.
-  1: apply associativity.
-  1: apply left_identity.
-  apply right_identity.
+    exact (rng_homo_one f).
 Defined.
 
 Lemma rng_homo_image_incl {R S} (f : RingHomomorphism R S)
-  : rng_image f $-> S.
+  : (rng_image f : Ring) $-> S.
 Proof.
   snrapply Build_RingHomomorphism.
   1: exact pr1.
@@ -400,7 +478,7 @@ Defined.
 
 (** Image of a surjective ring homomorphism *)
 Lemma rng_image_issurj {R S} (f : RingHomomorphism R S) {issurj : IsSurjection f}
-  : rng_image f ≅ S.
+  : (rng_image f : Ring) ≅ S.
 Proof.
   snrapply Build_RingIsomorphism.
   1: exact (rng_homo_image_incl f).
