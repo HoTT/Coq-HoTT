@@ -319,7 +319,8 @@ Proof.
 Defined.
 
 (** The trace of a matrix multiplication is the same as the trace of the reverse multiplication. This holds only in a commutative ring. *)
-Definition matrix_trace_mult {R : CRing} {n} (M N : Matrix R n n)
+Definition matrix_trace_mult {R : CRing} {m n : nat}
+  (M : Matrix R m n) (N : Matrix R n m)
   : matrix_trace (matrix_mult M N) = matrix_trace (matrix_mult N M).
 Proof.
   lhs nrapply path_ab_sum.
@@ -336,7 +337,8 @@ Proof.
 Defined.
 
 (** More generally, the trace of a matrix is invariant under cyclic permutations. This fails for other permutations. *)
-Definition matrix_trace_mult_triple {R : CRing} {n} (M N P : Matrix R n n)
+Definition matrix_trace_mult_triple {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p) (P : Matrix R p m)
   : matrix_trace (matrix_mult (matrix_mult M N) P)
     = matrix_trace (matrix_mult (matrix_mult P M) N).
 Proof.
