@@ -226,7 +226,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication on the right preserves scalar multiplication. *)
-Definition matrix_mult_lact_l {R : Ring} {m n p}
+Definition matrix_mult_lact_l {R : Ring} {m n p : nat}
   : HeteroAssociative (@matrix_lact R m p) (@matrix_mult R m n p)
       (@matrix_mult R m n p) (@matrix_lact R m n).
 Proof.
