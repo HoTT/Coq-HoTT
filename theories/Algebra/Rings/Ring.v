@@ -289,7 +289,7 @@ Defined.
 (** ** Subrings *)
 
 (** TODO: factor out this definition as a submonoid *)
-(** A subring is a subgorup of the underlying abelian group of a ring that is also closed undert the multiplication of the ring and contains [1]. *)
+(** A subring is a subgorup of the underlying abelian group of a ring that is closed under multiplication and contains [1]. *)
 Class IsSubring {R : Ring} (S : R -> Type) := {
   issubring_issubgroup :: IsSubgroup S;
   issubring_mult {x y} : S x -> S y -> S (x * y);
@@ -324,6 +324,7 @@ Proof.
   - exact H2.
   - exact H3.
 Defined.
+
 Record Subring (R : Ring) := {
   #[reversible=no]
   subring_pred :> R -> Type;
