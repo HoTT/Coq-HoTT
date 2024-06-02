@@ -298,7 +298,7 @@ Proof.
   by rewrite !entry_Build_Matrix.
 Defined.
 
-(** The transpose of the idenetity matrix is the identity matrix. *)
+(** The transpose of the identity matrix is the identity matrix. *)
 Definition matrix_transpose_identity {R : Ring} {n}
   : matrix_transpose (identity_matrix R n) = identity_matrix R n.
 Proof.
