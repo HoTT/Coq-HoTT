@@ -225,7 +225,7 @@ Proof.
   - exact (right_identity_matrix_mult R n n).
 Defined.
 
-(** Matrix multiplication on the right preserves scalar multiplication. *)
+(** Matrix multiplication on the right preserves scalar multiplication in the sense that [matrix_lact r (matrix_mult M N) = matrix_mult (matrix_lact r M) N] for [r] a ring element and [M] and [N] matrices of compatible sizes. *)
 Definition matrix_mult_lact_l {R : Ring} {m n p : nat}
   : HeteroAssociative (@matrix_lact R m p) (@matrix_mult R m n p)
       (@matrix_mult R m n p) (@matrix_lact R m n).
