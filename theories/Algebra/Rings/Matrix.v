@@ -212,7 +212,7 @@ Proof.
   nrapply rng_sum_kronecker_delta_r'.
 Defined.
 
-(** TODO: define this as an R-algebra *)
+(** TODO: define this as an R-algebra. What is an R-algebra over a non-commutative right however? (Here we have a bimodule which might be important) *)
 (** Matrices over a ring form a (generally) non-commutative ring. *)
 Definition matrix_ring (R : Ring@{i}) (n : nat) : Ring.
 Proof.
@@ -228,6 +228,24 @@ Proof.
   - exact (left_identity_matrix_mult R n n).
   - exact (right_identity_matrix_mult R n n).
 Defined.
+
+(** Matrix multiplication on the right preserves scalar multiplication in the sense that [matrix_lact r (matrix_mult M N) = matrix_mult (matrix_lact r M) N] for [r] a ring element and [M] and [N] matrices of compatible sizes. *)
+Definition matrix_mult_lact_l {R : Ring} {m n p : nat}
+  : HeteroAssociative (@matrix_lact R m p) (@matrix_mult R m n p)
+      (@matrix_mult R m n p) (@matrix_lact R m n).
+Proof.
+  intros r M N.
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite !entry_Build_Matrix, !entry_Build_Vector. 
+  lhs nrapply rng_sum_dist_l.
+  snrapply path_ab_sum.
+  intros k Hk; cbn.
+  rewrite !entry_Build_Matrix.
+  snrapply rng_mult_assoc.
+Defined.
+
+(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
 
 (** ** Transpose *)
 
