@@ -268,12 +268,12 @@ Proof.
   auto.
 Defined.
 
-Definition isinj_nat_add k : forall x y, k + x = k + y -> x = y.
+Definition isinj_nat_add_l k : forall x y, k + x = k + y -> x = y.
 Proof.
   simple_induction' k; simpl; auto.
 Defined.
 
-Definition isinj_nat_add' x y k (H : x + k = y + k) : x = y.
+Definition isinj_nat_add_r k x y (H : x + k = y + k) : x = y.
 Proof.
   induction k as [|k IHk] in x, y, k, H |- *.
   - by rewrite <- !add_n_O in H.
