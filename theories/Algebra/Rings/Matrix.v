@@ -328,16 +328,178 @@ Defined.
 
 (** ** Diagonal matrices *)
 
-(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. *)
-Definition diagonal_matrix {R : Ring@{i}} {n : nat} (v : list R) (p : length v = n)
+(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. Its entries are given by a vector. *)
+Definition matrix_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : Matrix R n n.
 Proof.
   snrapply Build_Matrix.
   intros i j H1 H2.
-  destruct (dec (i = j)).
-  - destruct p.
-    exact (nth' v i H1).
-  - exact 0.
+  exact (kronecker_delta i j * Vector.entry v i).
+Defined.
+
+(** Addition of diagonal matrices is the same as addition of the corresponding vectors. *)
+Definition matrix_diag_plus {R : Ring@{i}} {n : nat} (v w : Vector R n)
+  : matrix_plus (matrix_diag v) (matrix_diag w) = matrix_diag (vector_plus v w).
+Proof.
+  symmetry.
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix, 5 entry_Build_Vector.
+  nrapply rng_dist_l.
+Defined.
+
+(** Matrix multiplication of diagonal matrices is the same as multiplying the corresponding vectors pointwise. *)
+Definition matrix_diag_mult {R : Ring} {n : nat} (v w : Vector R n)
+  : matrix_mult (matrix_diag v) (matrix_diag w)
+    = matrix_diag (vector_map2 (.*.) v w).
+Proof.
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  lhs snrapply path_ab_sum.
+  { intros k Hk.
+    rewrite 2 entry_Build_Matrix.
+    rewrite rng_mult_assoc.
+    rewrite <- (rng_mult_assoc (kronecker_delta _ _)).
+    rewrite kronecker_delta_comm.
+    rewrite <- 2 rng_mult_assoc.
+    reflexivity. }
+  rewrite (rng_sum_kronecker_delta_l _ _ Hi).
+  by rewrite entry_Build_Vector.
+Defined.
+
+(** The transpose of a diagonal matrix is the same diagonal matrix. *)
+Definition matrix_transpose_diag {R : Ring} {n : nat} (v : Vector R n)
+  : matrix_transpose (matrix_diag v) = matrix_diag v.
+Proof.
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite 3 entry_Build_Matrix.
+  rewrite kronecker_delta_symm.
+  unfold kronecker_delta.
+  destruct (dec (i = j)) as [p|np].
+  1: f_ap; symmetry; by apply path_entry_vector.
+  by rewrite !rng_mult_zero_l.
+Defined.
+
+(** The diagonal matrix construction is injective. *)
+Global Instance isinj_matrix_diag {R : Ring} {n : nat}
+  : IsInjective (@matrix_diag R n).
+Proof.
+  intros v1 v2 p.
+  snrapply path_vector.
+  intros i Hi.
+  apply (ap (fun M => entry M i i)) in p.
+  rewrite 2 entry_Build_Matrix in p.
+  rewrite kronecker_delta_refl in p.
+  by rewrite 2 rng_mult_one_l in p.
+Defined.
+
+(** A matrix is diagonal if it is equal to a diagonal matrix. *)
+Class IsDiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n) : Type@{i} := {
+  isdiagonal_diag_vector : Vector R n;
+  isdiagonal_diag : M = matrix_diag isdiagonal_diag_vector;
+}.
+
+Arguments isdiagonal_diag_vector {R n} M {_}.
+Arguments isdiagonal_diag {R n} M {_}.
+
+Definition issig_IsDiagonal {R : Ring} {n : nat} {M : Matrix R n n}
+  : _ <~> IsDiagonal M
+  := ltac:(issig).
+
+(** A matrix is diagonal in a unique way. *)
+Global Instance ishprop_isdiagonal {R : Ring} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsDiagonal M).
+Proof.
+  snrapply hprop_allpath.
+  intros x y.
+  snrapply ((equiv_ap' issig_IsDiagonal^-1%equiv _ _ )^-1%equiv).
+  rapply path_sigma_hprop; cbn.
+  apply isinj_matrix_diag.
+  exact ((isdiagonal_diag M)^ @ isdiagonal_diag M).
+Defined.
+
+(** The zero matrix is diagonal. *)
+Global Instance isdiagonal_matrix_zero {R : Ring} {n : nat}
+  : IsDiagonal (matrix_zero R n n).
+Proof.
+  exists (vector_zero R n).
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix, entry_Build_Vector.
+  by rewrite rng_mult_zero_r.
+Defined.
+
+(** The identity matrix is diagonal. *)
+Global Instance isdiagonal_identity_matrix {R : Ring} {n : nat}
+  : IsDiagonal (identity_matrix R n).
+Proof.
+  exists (Build_Vector R n (fun _ _ => 1)).
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix, entry_Build_Vector.
+  by rewrite rng_mult_one_r.
+Defined.
+
+(** The sum of two diagonal matrices is diagonal. *)
+Global Instance isdiagonal_matrix_plus {R : Ring} {n : nat} (M N : Matrix R n n)
+  `{IsDiagonal R n M} `{IsDiagonal R n N}
+  : IsDiagonal (matrix_plus M N).
+Proof.
+  exists (vector_plus (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).
+  rewrite (isdiagonal_diag M), (isdiagonal_diag N).
+  apply matrix_diag_plus.
+Defined.
+
+(** The negative of a diagonal matrix is diagonal. *)
+Global Instance isdiagonal_matrix_negate {R : Ring} {n : nat} (M : Matrix R n n)
+  `{IsDiagonal R n M}
+  : IsDiagonal (matrix_negate M).
+Proof.
+  exists (vector_neg _ _ (isdiagonal_diag_vector M)).
+  rewrite (isdiagonal_diag M).
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.
+  by rewrite rng_mult_negate_r.
+Defined.
+
+(** The product of two diagonal matrices is diagonal. *)
+Global Instance isdiagonal_matrix_mult {R : Ring} {n : nat} (M N : Matrix R n n)
+  `{IsDiagonal R n M} `{IsDiagonal R n N}
+  : IsDiagonal (matrix_mult M N).
+Proof.
+  exists (vector_map2 (.*.) (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).
+  rewrite (isdiagonal_diag M), (isdiagonal_diag N).
+  apply matrix_diag_mult.
+Defined.
+
+(** The transpose of a diagonal matrix is diagonal. *)
+Global Instance isdiagonal_matrix_transpose {R : Ring} {n : nat} (M : Matrix R n n)
+  `{IsDiagonal R n M}
+  : IsDiagonal (matrix_transpose M).
+Proof.
+  exists (isdiagonal_diag_vector M).
+  rewrite (isdiagonal_diag M).
+  apply matrix_transpose_diag.
+Defined.
+
+(** Given a square matrix, we can extract the diagonal as a vector. *)
+Definition matrix_diag_vector {R : Ring} {n : nat} (M : Matrix R n n)
+  : Vector R n
+  := Build_Vector R n (fun i _ => entry M i i).
+
+(** Diagonal matrices form a subring of the ring of square matrices. *)
+Definition matrix_diag_ring (R : Ring) (n : nat) : Subring (matrix_ring R n).
+Proof.
+  snrapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M) _); hnf.
+  - intros; exact _.
+  - intros x y dx dy.
+    nrapply isdiagonal_matrix_plus; trivial.
+    by nrapply isdiagonal_matrix_negate.
+  - nrapply isdiagonal_matrix_mult.
+  - nrapply isdiagonal_identity_matrix.
 Defined.
 
 (** ** Trace *)
