@@ -814,7 +814,7 @@ Definition upper_triangular_matrix_ring (R : Ring) (n : nat)
   : Subring (matrix_ring R n).
 Proof.
   nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M));
-    exact _.
+    intros; exact _.
 Defined.
 
 (** Lower triangular matrices are a subring of the ring of matrices. *)
@@ -822,6 +822,6 @@ Definition lower_triangular_matrix_ring (R : Ring) (n : nat)
   : Subring (matrix_ring R n).
 Proof.
   nrapply (Build_Subring' (fun M : matrix_ring R n => IsLowerTriangular M));
-    exact _.
+    intros; exact _.
 Defined.
 
