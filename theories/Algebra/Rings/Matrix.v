@@ -247,6 +247,17 @@ Defined.
 
 (** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
 
+(** In a commutative ring, matrix multiplication over the ring and the opposite ring agree. *)
+Definition matrix_mult_rng_op {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_mult (R:=rng_op R) M N = matrix_mult M N.
+Proof.
+  apply path_matrix; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply path_ab_sum; intros k Hk.
+  apply rng_mult_comm.
+Defined.
+
 (** ** Transpose *)
 
 (** The transpose of a matrix is the matrix with the rows and columns swapped. *)
@@ -292,11 +303,11 @@ Proof.
   by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
-(** Transpose distributes over multiplication (in a commutative ring). *)
-Definition matrix_transpose_mult {R : CRing} {m n p}
+(** Transpose distributes over multiplication when you reverse the ring multiplication. *)
+Definition matrix_transpose_mult {R : Ring} {m n p}
   (M : Matrix R m n) (N : Matrix R n p)
   : matrix_transpose (matrix_mult M N)
-    = matrix_mult (matrix_transpose N) (matrix_transpose M).
+    = matrix_mult (R:=rng_op R) (matrix_transpose N) (matrix_transpose M).
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
@@ -304,7 +315,17 @@ Proof.
   apply path_ab_sum.
   intros k Hk.
   rewrite 2 entry_Build_Matrix.
-  apply rng_mult_comm.
+  reflexivity.
+Defined.
+
+(** When the ring is commutative, there is no need to reverse the multiplication. *)
+Definition matrix_transpose_mult_comm {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_transpose (matrix_mult M N)
+    = matrix_mult (matrix_transpose N) (matrix_transpose M).
+Proof.
+  lhs nrapply matrix_transpose_mult.
+  apply matrix_mult_rng_op.
 Defined.
 
 (** The transpose of the zero matrix is the zero matrix. *)
@@ -724,23 +745,9 @@ Global Instance lower_triangular_mult {R : Ring} {n : nat} (M N : Matrix R n n)
   {H1 : IsLowerTriangular M} {H2 : IsLowerTriangular N}
   : IsLowerTriangular (matrix_mult M N).
 Proof.
-  (** Annoyingly, we cannot derive this from [upper_trianglar_mult] and [matrix_transpose_mult] because the latter requires a commutative ring. Therefore we have to repeat the proof with a few modifications. *)
-  unfold IsLowerTriangular, IsUpperTriangular in *.
-  strip_truncations; apply tr.
-  intros i j Hi Hj lt_i_j.
-  rewrite 2 entry_Build_Matrix.
-  apply ab_sum_zero.
-  intros k Hk.
-  destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
-  { pose (p := H1 k j _ _ (mixed_trans1 _ _ _ _ _)).
-    rewrite entry_Build_Matrix in p.
-    rewrite p.
-    by rewrite rng_mult_zero_l. }
-  apply not_leq_implies_gt in gt_k_i.
-  pose (p := H2 i k _ _ _).
-  rewrite entry_Build_Matrix in p.
-  rewrite p.
-  by rewrite rng_mult_zero_r.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_mult.
+  nrapply (upper_triangular_mult (R:=rng_op R)); assumption.
 Defined.
 
 (** The zero matrix is upper triangular. *)
