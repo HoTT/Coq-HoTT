@@ -709,19 +709,14 @@ Proof.
   rewrite entry_Build_Matrix.
   apply ab_sum_zero.
   intros k Hk.
-  destruct (dec (k < i)%nat) as [lt_k_i|ge_k_i].
+  destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
   { rewrite H2.
     1: by rewrite rng_mult_zero_r.
-    rapply lt_trans. }
-  apply not_lt_implies_geq in ge_k_i.
-  apply leq_split in ge_k_i.
-  destruct ge_k_i as [lt_i_k | p ].
-  { rewrite H1.
-    1: by rewrite rng_mult_zero_l.
-    assumption. }
-  rewrite H2.
-  1: by rewrite rng_mult_zero_r.
-  by destruct p.
+    rapply mixed_trans1. }
+  apply not_leq_implies_gt in gt_k_i.
+  rewrite H1.
+  1: by rewrite rng_mult_zero_l.
+  assumption.
 Defined.
 
 (** The product of two lower triangular matrices is lower triangular. *)
@@ -736,23 +731,16 @@ Proof.
   rewrite 2 entry_Build_Matrix.
   apply ab_sum_zero.
   intros k Hk.
-  destruct (dec (k < i)%nat) as [lt_k_i|ge_k_i].
-  { pose (p := H1 k j _ _ (lt_trans _ _)).
+  destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
+  { pose (p := H1 k j _ _ (mixed_trans1 _ _ _ _ _)).
     rewrite entry_Build_Matrix in p.
     rewrite p.
     by rewrite rng_mult_zero_l. }
-  apply not_lt_implies_geq in ge_k_i.
-  apply leq_split in ge_k_i.
-  destruct ge_k_i as [lt_i_k | q ].
-  { pose (p := H2 i k _ _ _).
-    rewrite entry_Build_Matrix in p.
-    rewrite p.
-    by rewrite rng_mult_zero_r. }
-  destruct q.
-  pose (p := H1 i j _ _ _).
+  apply not_leq_implies_gt in gt_k_i.
+  pose (p := H2 i k _ _ _).
   rewrite entry_Build_Matrix in p.
   rewrite p.
-  by rewrite rng_mult_zero_l.
+  by rewrite rng_mult_zero_r.
 Defined.
 
 (** The zero matrix is upper triangular. *)
@@ -805,7 +793,7 @@ Proof.
   exact _.
 Defined.
 
-(** A diaganol matrix is lower triangular. *)
+(** A diagonal matrix is lower triangular. *)
 Global Instance lower_triangular_diag {R : Ring} {n : nat} (v : Vector R n)
   : IsLowerTriangular (matrix_diag v).
 Proof.
@@ -814,7 +802,7 @@ Proof.
   apply upper_triangular_diag.
 Defined.
 
-(** Upper triangular matricies are a subring of the ring of matrices. *)
+(** Upper triangular matrices are a subring of the ring of matrices. *)
 Definition upper_triangular_matrix_ring (R : Ring) (n : nat)
   : Subring (matrix_ring R n).
 Proof.
@@ -822,7 +810,7 @@ Proof.
     exact _.
 Defined.
 
-(** Lower triangular matricies are a subring of the ring of matrices. *)
+(** Lower triangular matrices are a subring of the ring of matrices. *)
 Definition lower_triangular_matrix_ring (R : Ring) (n : nat)
   : Subring (matrix_ring R n).
 Proof.
