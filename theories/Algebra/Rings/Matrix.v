@@ -310,7 +310,7 @@ Defined.
 
 (** ** Diagonal matrices *)
 
-(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. It's entries are given by a vector. *)
+(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. Its entries are given by a vector. *)
 Definition matrix_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : Matrix R n n.
 Proof.
@@ -319,20 +319,15 @@ Proof.
   exact (kronecker_delta i j * Vector.entry v i).
 Defined.
 
-(** Addition of matrices is the same as addition of the corresponding vectors. *)
+(** Addition of diagonal matrices is the same as addition of the corresponding vectors. *)
 Definition matrix_diag_plus {R : Ring@{i}} {n : nat} (v w : Vector R n)
   : matrix_plus (matrix_diag v) (matrix_diag w) = matrix_diag (vector_plus v w).
 Proof.
+  symmetry.
   snrapply path_matrix.
   intros i j Hi Hj.
-  rewrite 2 entry_Build_Matrix, 4 entry_Build_Vector.
-  cbv beta zeta; destruct (dec (i = j)) as [p | np].
-  - destruct p.
-    rewrite kronecker_delta_refl.
-    rewrite <- rng_dist_l.
-    by rewrite entry_Build_Vector.
-  - rewrite (kronecker_delta_neq np).
-    by rewrite 3 rng_mult_zero_l, rng_plus_zero_l.
+  rewrite 2 entry_Build_Matrix, 5 entry_Build_Vector.
+  nrapply rng_dist_l.
 Defined.
 
 (** Matrix multiplication of diagonal matrices is the same as multiplying the corresponding vectors pointwise. *)
@@ -347,7 +342,7 @@ Proof.
   { intros k Hk.
     rewrite 2 entry_Build_Matrix.
     rewrite rng_mult_assoc.
-    rewrite <- (rng_mult_assoc (kronecker_delta _ _ )).
+    rewrite <- (rng_mult_assoc (kronecker_delta _ _)).
     rewrite kronecker_delta_comm.
     rewrite <- 2 rng_mult_assoc.
     reflexivity. }
@@ -365,7 +360,7 @@ Proof.
   rewrite kronecker_delta_symm.
   unfold kronecker_delta.
   destruct (dec (i = j)) as [p|np].
-  1: destruct p; f_ap; f_ap; apply path_ishprop.
+  1: destruct p; f_ap; apply path_entry_vector.
   by rewrite !rng_mult_zero_l.
 Defined.
 

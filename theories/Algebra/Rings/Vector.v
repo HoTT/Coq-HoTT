@@ -61,6 +61,13 @@ Proof.
   1, 2: apply nth'_nth'.
 Defined.
 
+Definition path_entry_vector {A : Type} {n : nat} (v : Vector A n)
+  (i : nat) (Hi Hi' : (i < n)%nat)
+  : @entry _ _ v i Hi = @entry _ _ v i Hi'.
+Proof.
+  apply nth'_nth'.
+Defined.
+
 (** ** Operations *)
 
 Definition vector_map {A B : Type} {n} (f : A -> B)
