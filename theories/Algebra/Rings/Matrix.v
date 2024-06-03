@@ -508,17 +508,40 @@ Defined.
 Definition matrix_trace {R : Ring} {n} (M : Matrix R n n) : R
   := ab_sum n (fun i Hi => entry M i i).
 
-(** The trace of a matrix multiplication is the same as the trace of the reverse multiplication. *)
-Definition matrix_trace_mult {R : CRing} {n} (M N : Matrix R n n)
+(** The trace of a matrix preserves addition. *)
+Definition matrix_trace_plus {R : Ring} {n} (M N : Matrix R n n)
+  : matrix_trace (matrix_plus M N) = (matrix_trace M) + (matrix_trace N).
+Proof.
+  unfold matrix_trace.
+  lhs nrapply path_ab_sum.
+  { intros i Hi.
+    by rewrite entry_Build_Matrix. }
+  by rewrite ab_sum_plus.
+Defined.
+
+(** The trace of a matrix preserves scalar multiplication. *)
+Definition matrix_trace_lact {R : Ring} {n} (r : R) (M : Matrix R n n)
+  : matrix_trace (matrix_lact r M) = r * matrix_trace M.
+Proof.
+  unfold matrix_trace.
+  rewrite rng_sum_dist_l.
+  apply path_ab_sum.
+  intros i Hi.
+  by rewrite entry_Build_Matrix.
+Defined.
+
+(** The trace of a matrix multiplication is the same as the trace of the reverse multiplication. This holds only in a commutative ring. *)
+Definition matrix_trace_mult {R : CRing} {m n : nat}
+  (M : Matrix R m n) (N : Matrix R n m)
   : matrix_trace (matrix_mult M N) = matrix_trace (matrix_mult N M).
 Proof.
   lhs nrapply path_ab_sum.
   { intros i Hi.
     lhs nrapply entry_Build_Matrix.
     nrapply path_ab_sum.
-    { intros j Hj.
-      apply rng_mult_comm. } }
-  lhs nrapply ab_sum_sum. 
+    intros j Hj.
+    apply rng_mult_comm. }
+  lhs nrapply ab_sum_sum.
   apply path_ab_sum.
   intros i Hi.
   rhs nrapply entry_Build_Matrix.
