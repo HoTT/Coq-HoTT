@@ -336,30 +336,6 @@ Proof.
   reflexivity.
 Defined.
 
-(** More generally, the trace of a matrix is invariant under cyclic permutations. This fails for other permutations. *)
-Definition matrix_trace_mult_triple {R : CRing} {m n p}
-  (M : Matrix R m n) (N : Matrix R n p) (P : Matrix R p m)
-  : matrix_trace (matrix_mult (matrix_mult M N) P)
-    = matrix_trace (matrix_mult (matrix_mult P M) N).
-Proof.
-  nrefine (_ @ _ @ _^).
-  1,3: nrapply path_ab_sum.
-  1,2: intros i Hi.
-  1,2: cbn; rewrite entry_Build_Matrix.
-  1,2: nrapply path_ab_sum.
-  1,2: intros j Hj.
-  1,2: cbn; rewrite entry_Build_Matrix.
-  1,2: rewrite rng_sum_dist_r.
-  1,2: nrapply path_ab_sum.
-  1,2: intros k Hk.
-  2: rewrite <- rng_mult_assoc, rng_mult_comm.
-  1,2: reflexivity.
-  rewrite ab_sum_sum.
-  lhs snrapply path_ab_sum.
-  1: intros i Hi; by rewrite ab_sum_sum.
-  by rewrite ab_sum_sum.
-Defined.
-
 (** The trace of the transpose of a matrix is the same as the trace of the matrix. *)
 Definition trace_transpose {R : Ring} {n} (M : Matrix R n n)
   : matrix_trace (matrix_transpose M) = matrix_trace M.
