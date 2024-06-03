@@ -480,8 +480,13 @@ Definition matrix_diag_vector {R : Ring} {n : nat} (M : Matrix R n n)
 (** Diagonal matrices form a subring of the ring of square matrices. *)
 Definition matrix_diag_ring (R : Ring) (n : nat) : Subring (matrix_ring R n).
 Proof.
-  snrapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M));
-    cbn beta; exact _.
+  snrapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M) _); hnf.
+  - intros; exact _.
+  - intros x y dx dy.
+    nrapply isdiagonal_matrix_plus; trivial.
+    by nrapply isdiagonal_matrix_negate.
+  - nrapply isdiagonal_matrix_mult.
+  - nrapply isdiagonal_identity_matrix.
 Defined.
 
 (** ** Trace *)
