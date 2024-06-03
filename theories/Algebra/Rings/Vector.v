@@ -62,9 +62,10 @@ Proof.
 Defined.
 
 Definition path_entry_vector {A : Type} {n : nat} (v : Vector A n)
-  (i : nat) (Hi Hi' : (i < n)%nat)
-  : @entry _ _ v i Hi = @entry _ _ v i Hi'.
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat) (p : i = j)
+  : entry v i = entry v j.
 Proof.
+  destruct p.
   apply nth'_nth'.
 Defined.
 

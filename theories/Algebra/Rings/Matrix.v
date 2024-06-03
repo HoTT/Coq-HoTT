@@ -360,7 +360,7 @@ Proof.
   rewrite kronecker_delta_symm.
   unfold kronecker_delta.
   destruct (dec (i = j)) as [p|np].
-  1: destruct p; f_ap; apply path_entry_vector.
+  1: f_ap; symmetry; by apply path_entry_vector.
   by rewrite !rng_mult_zero_l.
 Defined.
 
