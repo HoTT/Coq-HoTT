@@ -29,7 +29,6 @@
         };
 
         devShells.default = makeDevShell "8_19";
-        devShells.coq_8_18 = makeDevShell "8_18";
 
         formatter = pkgs.nixpkgs-fmt;
       });
