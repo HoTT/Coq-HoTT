@@ -23,7 +23,7 @@
       in {
         packages.default = pkgs.coqPackages.mkCoqDerivation {
           pname = "hott";
-          version = "8.18";
+          version = "8.19";
           src = self;
           useDune = true;
         };
