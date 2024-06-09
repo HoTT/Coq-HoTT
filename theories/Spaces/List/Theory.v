@@ -17,7 +17,7 @@ Local Open Scope list_scope.
 (** ** Length *)
 
 (** A list of length zero must be the empty list. *)
-Definition length_0@{i|} {A : Type@{i}} (l : list A) (H : length l = 0%nat)
+Definition length_0 {A : Type} (l : list A) (H : length l = 0%nat)
   : l = nil.
 Proof.
   destruct l.
@@ -28,7 +28,7 @@ Defined.
 (** ** Concatenation *)
 
 (** Concatenating the empty list on the right is the identity. *)
-Definition app_nil@{i|} {A : Type@{i}} (l : list A)
+Definition app_nil {A : Type} (l : list A)
   : l ++ nil = l.
 Proof.
   induction l as [|a l IHl].
@@ -37,7 +37,7 @@ Proof.
 Defined.
 
 (** Associativity of list concatenation. *)
-Definition app_assoc@{i|} {A : Type@{i}} (x y z : list A)
+Definition app_assoc {A : Type} (x y z : list A)
   : app x (app y z) = app (app x y) z.
 Proof.
   induction x as [|a x IHx] in |- *.
@@ -46,7 +46,7 @@ Proof.
 Defined.
 
 (** The type of lists has a monoidal structure given by concatenation. *)
-Definition list_pentagon@{i|} {A : Type@{i}} (w x y z : list A)
+Definition list_pentagon {A : Type} (w x y z : list A)
   : app_assoc w x (y ++ z) @ app_assoc (w ++ x) y z
     = ap (fun l => w ++ l) (app_assoc x y z)
     @ app_assoc w (x ++ y) z
@@ -71,7 +71,7 @@ Proof.
 Defined.
 
 (** The length of a concatenated list is the sum of the lengths of the two lists. *)
-Definition length_app@{i|} {A : Type@{i}} (l l' : list A)
+Definition length_app {A : Type} (l l' : list A)
   : length (l ++ l') = (length l + length l')%nat.
 Proof.
   induction l as [|a l IHl] using list_ind.
@@ -81,7 +81,7 @@ Proof.
 Defined.
 
 (** An element of a concatenated list is equivalently either in the first list or in the second list. *)
-Definition equiv_inlist_app@{i|} {A : Type@{i}} (l l' : list A) (x : A)
+Definition equiv_inlist_app {A : Type} (l l' : list A) (x : A)
   : InList x l + InList x l' <~> InList x (l ++ l').
 Proof.
   induction l as [|a l IHl].
@@ -93,8 +93,7 @@ Defined.
 (** ** Folding *)
 
 (** A left fold over a concatenated list is equivalent to folding over the first followed by folding over the second. *)
-Lemma fold_left_app@{i j|} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B -> A) (l l' : list B) (i : A)
+Lemma fold_left_app {A B : Type} (f : A -> B -> A) (l l' : list B) (i : A)
   : fold_left f (l ++ l') i = fold_left f l' (fold_left f l i).
 Proof.
   induction l in i |- *.
@@ -103,8 +102,7 @@ Proof.
 Defined.
 
 (** A right fold over a concatenated list is equivalent to folding over the second followed by folding over the first. *)
-Lemma fold_right_app@{i j|} {A : Type@{i}} {B : Type@{j}}
-  (f : B -> A -> A) (i : A) (l l' : list B)
+Lemma fold_right_app {A B : Type} (f : B -> A -> A) (i : A) (l l' : list B)
   : fold_right f i (l ++ l') = fold_right f (fold_right f i l') l.
 Proof.
   induction l in i |- *.
@@ -115,8 +113,7 @@ Defined.
 (** ** Maps *)
 
 (** The length of a mapped list is the same as the length of the original list. *)
-Definition length_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B) (l : list A)
+Definition length_list_map {A B : Type} (f : A -> B) (l : list A)
   : length (list_map f l) = length l.
 Proof.
   induction l as [|x l IHl] using list_ind.
@@ -160,7 +157,7 @@ Proof.
 Defined.
 
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
-Lemma list_map_id@{i|} {A : Type@{i}} (f : A -> A) (l : list A)
+Lemma list_map_id {A : Type} (f : A -> A) (l : list A)
   (Hf : forall x, InList x l -> f x = x)
   :  list_map f l = l.
 Proof.
@@ -176,8 +173,7 @@ Proof.
 Defined.
 
 (** A [list_map] of a composition is the composition of the maps. *)
-Definition list_map_compose@{i j k|} {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
-  (f : A -> B) (g : B -> C) (l : list A)
+Definition list_map_compose {A B C} (f : A -> B) (g : B -> C) (l : list A)
   : list_map (fun x => g (f x)) l = list_map g (list_map f l).
 Proof.
   induction l as [|a l IHl].
@@ -228,9 +224,7 @@ Proof.
 Defined.
 
 (** [list_map2] is a [list_map] if the first list is a repeated value. *)
-Definition list_map2_repeat_l@{i j k|}
-  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
-  (f : A -> B -> C) (x : A) (l : list B) {defl defr}
+Definition list_map2_repeat_l {A B C} (f : A -> B -> C) (x : A) l {defl defr}
   : list_map2 f defl defr (repeat x (length l)) l = list_map (f x) l.
 Proof.
   induction l as [|y l IHl].
@@ -239,9 +233,7 @@ Proof.
 Defined.
 
 (** [list_map2] is a [list_map] if the second list is a repeated value. *)
-Definition list_map2_repeat_r@{i j k|}
-  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}} 
-  (f : A -> B -> C) (y : B) (l : list A) {defl defr}
+Definition list_map2_repeat_r {A B C} (f : A -> B -> C) (y : B) l {defl defr}
   : list_map2 f defl defr l (repeat y (length l)) = list_map (fun x => f x y) l.
 Proof.
   induction l as [|x l IHl].
@@ -262,7 +254,7 @@ Proof.
 Defined.
 
 (** The length of [reverse] is the same as the length of the original list. *)
-Definition length_reverse@{i|} {A : Type@{i}} (l : list A)
+Definition length_reverse {A : Type} (l : list A)
   : length (reverse l) = length l.
 Proof.
   rapply length_reverse_acc.
@@ -279,15 +271,14 @@ Proof.
 Defined.
 
 (** The [list_map] of a reversed list is the reversed [list_map]. *)
-Definition list_map_reverse@{i j | i <= j} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B) (l : list A)
+Definition list_map_reverse {A B} (f : A -> B) (l : list A)
   : list_map f (reverse l) = reverse (list_map f l).
 Proof.
   nrapply list_map_reverse_acc.
 Defined.
 
 (** [reverse_acc] is the same as concatenating the reversed list with the accumulator. *)
-Definition reverse_acc_cons@{i|} {A : Type@{i}} (l l' : list A)
+Definition reverse_acc_cons {A : Type} (l l' : list A)
   : reverse_acc l' l = reverse l ++ l'.
 Proof.
   induction l as [|a l IHl] in l' |- *.
@@ -299,7 +290,7 @@ Proof.
 Defined.
 
 (** The [reverse] of a [cons] is the concatenation of the [reverse] with the head. *) 
-Definition reverse_cons@{i|} {A : Type@{i}} (a : A) (l : list A)
+Definition reverse_cons {A : Type} (a : A) (l : list A)
   : reverse (a :: l) = reverse l ++ [a].
 Proof.
   induction l as [|b l IHl] in a |- *.
@@ -326,13 +317,11 @@ Proof.
 Defined.
 
 (** A variant of [nth] that always returns an element when we know that the index is in the list. *)
-Definition nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
-  (H : (n < length l)%nat) : A
+Definition nth' {A : Type} (l : list A) (n : nat) (H : (n < length l)%nat) : A
   := pr1 (nth_lt l n H).
 
 (** The [nth'] element doesn't depend on the proof that [n < length l]. *)
-Definition nth'_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
-  (H H' : (n < length l)%nat)
+Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : (n < length l)%nat)
   : nth' l n H = nth' l n H'.
 Proof.
   apply ap, path_ishprop.
@@ -352,15 +341,14 @@ Proof.
 Defined.
 
 (** The [nth'] element of a list is the same as the one given by [nth]. *)
-Definition nth_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
-  (H : (n < length l)%nat)
+Definition nth_nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat)
   : nth l n = Some (nth' l n H).
 Proof.
   exact (nth_lt l n H).2.
 Defined.
 
 (** The [nth'] element of a [cons] indexed at [n.+1] is the same as the [nth'] element of the tail indexed at [n]. *)
-Definition nth'_cons@{i|} {A : Type@{i}} (l : list A) (n : nat) (x : A)
+Definition nth'_cons {A : Type} (l : list A) (n : nat) (x : A)
   (H : (n < length l)%nat) (H' : (n.+1 < length (x :: l))%nat)
   : nth' (x :: l) n.+1 H' = nth' l n H.
 Proof.
@@ -496,8 +484,7 @@ Proof.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
-Definition nth_last@{i|} {A : Type@{i}} (l : list A) (i : nat)
-  (p : pred (length l) = i)
+Definition nth_last {A : Type} (l : list A) (i : nat) (p : pred (length l) = i)
   : nth l i = last l. 
 Proof.
   destruct p.
@@ -509,7 +496,7 @@ Proof.
 Defined.
 
 (** The last element of a list with an element appended is the appended element. *)
-Definition last_app@{i|} {A : Type@{i}} (l : list A) (x : A)
+Definition last_app {A : Type} (l : list A) (x : A)
   : last (l ++ [x]) = Some x.
 Proof.
   induction l as [|a l IHl] in x |- *.
@@ -526,21 +513,21 @@ Defined.
 (** *** Drop *)
 
 (** [drop n l] removes the first [n] elements of [l]. *)
-Fixpoint drop@{i|} {A : Type@{i}} (n : nat) (l : list A) : list A :=
+Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
   match l, n with
   | _ :: l, n.+1%nat => drop n l
   | _, _ => l
   end.
 
 (** A [drop] of zero elements is the identity. *)
-Definition drop_0@{i|} {A : Type@{i}} (l : list A)
+Definition drop_0 {A : Type} (l : list A)
   : drop 0 l = l.
 Proof.
   by destruct l.
 Defined.
 
 (** A [drop] of one element is the tail of the list. *)
-Definition drop_1@{i|} {A : Type@{i}} (l : list A)
+Definition drop_1 {A : Type} (l : list A)
   : drop 1 l = tail l.
 Proof.
   induction l.
@@ -549,7 +536,7 @@ Proof.
 Defined.
 
 (** A [drop] of the empty list is the empty list. *)
-Definition drop_nil@{i|} {A : Type@{i}} (n : nat)
+Definition drop_nil {A : Type} (n : nat)
   : drop n (@nil A) = nil.
 Proof.
   by destruct n.
@@ -595,20 +582,20 @@ Defined.
 (** *** Take *)
 
 (** [take n l] keeps the first [n] elements of [l] and returns [l] if [n >= length l]. *)
-Fixpoint take@{i|} {A : Type@{i}} (n : nat) (l : list A) : list A :=
+Fixpoint take {A : Type} (n : nat) (l : list A) : list A :=
   match l, n with
   | x :: l, n.+1%nat => x :: take n l
   | _, _ => nil
   end.
 
 (** A [take] of zero elements is the empty list. *)
-Definition take_0@{i|} {A : Type@{i}} (l : list A) : take 0 l = nil.
+Definition take_0 {A : Type} (l : list A) : take 0 l = nil.
 Proof.
   by destruct l.
 Defined.
 
 (** A [take] of the empty list is the empty list. *)
-Definition take_nil@{i|} {A : Type@{i}} (n : nat) : take n (@nil A) = nil.
+Definition take_nil {A : Type} (n : nat) : take n (@nil A) = nil.
 Proof.
   by destruct n.
 Defined.
@@ -657,18 +644,18 @@ Defined.
 (** *** Remove *)
 
 (** [remove n l] removes the [n]-th element of [l]. *)
-Definition remove@{i|} {A : Type@{i}} (n : nat) (l : list A) : list A
+Definition remove {A : Type} (n : nat) (l : list A) : list A
   := take n l ++ drop n.+1 l.
 
 (** Removing the first element of a list is the tail of the list. *)
-Definition remove_0@{i|} {A : Type@{i}} (l : list A) : remove 0 l = tail l.
+Definition remove_0 {A : Type} (l : list A) : remove 0 l = tail l.
 Proof.
   unfold remove.
   by rewrite take_0, drop_1.
 Defined.
 
 (** Removing the [n]-th element of a list with [length l <= n] is the original list. *)
-Definition remove_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
+Definition remove_length_leq {A : Type} (n : nat) (l : list A)
   (H : (length l <= n)%nat)
   : remove n l = l.
 Proof.
@@ -683,7 +670,7 @@ Defined.
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
   (H : (n < length l)%nat)
-  : length (remove@{i} n l) = pred (length@{i} l)%nat.
+  : length (remove n l) = pred (length l)%nat.
 Proof.
   unfold remove.
   rewrite length_app@{i}.
@@ -700,7 +687,7 @@ Proof.
 Defined. 
 
 (** An element of a [remove] is an element of the original list. *)
-Definition remove_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
+Definition remove_inlist {A : Type} (n : nat) (l : list A) (x : A)
   : InList x (remove n l) -> InList x l.
 Proof.
   unfold remove.
@@ -1036,7 +1023,7 @@ Proof.
 Defined.
 
 (** If a predicate [P] is decidable then so is [for_all P]. *)
-Global Instance decidable_for_all@{i j|} {A : Type@{i}} (P : A -> Type@{j})
+Global Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (for_all P l).
 Proof.
