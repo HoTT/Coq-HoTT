@@ -3,7 +3,8 @@ Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
 Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum Types.Option.
 Require Export Spaces.List.Core Spaces.Nat.Core Spaces.Nat.Arithmetic.
 
-Set Universe Minimization ToSet.
+Local Set Universe Minimization ToSet.
+Local Set Polymorphic Inductive Cumulativity.
 
 (** * Theory of Lists and List Operations *)
 

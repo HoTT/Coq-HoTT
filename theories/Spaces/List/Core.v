@@ -1,6 +1,8 @@
 Require Import Basics.Overture.
 
-Unset Elimination Schemes.
+Local Unset Elimination Schemes.
+Local Set Universe Minimization ToSet.
+Local Set Polymorphic Inductive Cumulativity.
 
 (** * Lists *)
 
