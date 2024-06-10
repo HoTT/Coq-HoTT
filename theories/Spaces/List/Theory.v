@@ -126,7 +126,7 @@ Defined.
 Definition inlist_map {A B : Type} (f : A -> B) (l : list A) (x : A)
   : InList x l -> InList (f x) (list_map f l).
 Proof.
-  induction l as [|y l IHl].
+  simple_list_induction l y l IHl.
   1: contradiction.
   intros [p | i].
   - left.  exact (ap f p).
@@ -252,7 +252,7 @@ Definition list_map_reverse_acc {A B : Type}
   (f : A -> B) (l l' : list A)
   : list_map f (reverse_acc l' l) = reverse_acc (list_map f l') (list_map f l).
 Proof.
-  induction l as [|a l IHl] in l' |- *.
+  revert l'; simple_list_induction l a l IHl; intro l'.
   1: reflexivity.
   apply IHl.
 Defined.
@@ -393,16 +393,16 @@ Proof.
 Defined.
 
 (** The [nth'] element of a [list_map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)
-Definition nth'_list_map2@{i j k u | i <= u, j <= u, k <= u}
-  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
+Definition nth'_list_map2 {A B C : Type}
   (f : A -> B -> C) (l1 : list A) (l2 : list B)
   (n : nat) defl defr (H : (n < length l1)%nat) (H' : (n < length l2)%nat)
   (H'' : (n < length (list_map2 f defl defr l1 l2))%nat)
   (p : length l1 = length l2)
   : f (nth' l1 n H) (nth' l2 n H') = nth' (list_map2 f defl defr l1 l2) n H''.
 Proof.
-  induction l1 as [|a l1 IHl1] in l2, n, defl, defr, H, H', H'', p |- *
-    using list_ind@{i u}.
+  revert l2 n defl defr H H' H'' p;
+    simple_list_induction l1 a l1 IHl1;
+    intros l2 n defl defr H H' H'' p.
   - destruct l2 as [|b l2].
     + destruct (not_leq_Sn_0 _ H).
     + inversion p.
@@ -856,8 +856,7 @@ Defined.
 Definition for_all_inlist {A : Type} (P : A -> Type) l
   : (forall x, InList x l -> P x) -> for_all P l.
 Proof.
-  intros H.
-  induction l as [|x l IHl] in H |- *; cbn; trivial; split.
+  simple_list_induction l h t IHl; intros H; cbn; trivial; split.
   - apply H.
     by left.
   - apply IHl.
@@ -871,7 +870,7 @@ Definition inlist_for_all {A : Type} {P : A -> Type}
   (l : list A)
   : for_all P l -> forall x, InList x l -> P x.
 Proof.
-  induction l as [|x l IHl].
+  simple_list_induction l x l IHl.
   - contradiction.
   - intros [Hx Hl] y [-> | i].
     + exact Hx.
@@ -885,7 +884,7 @@ Definition for_all_list_map {A B : Type} (P : A -> Type) (Q : B -> Type)
   (f : A -> B) (Hf : forall x, P x -> Q (f x))
   : forall l, for_all P l -> for_all Q (list_map f l).
 Proof.
-  intros l; induction l as [|x l IHl] using list_ind; simpl; trivial.
+  simple_list_induction l x l IHl; simpl; trivial.
   intros [Hx Hl].
   split; auto.
 Defined.
@@ -907,7 +906,9 @@ Lemma for_all_list_map2 {A B C : Type}
   : for_all P l1 -> for_all Q l2
     -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
-  induction l1 as [|x l1 IHl1] in l2 |- *.
+  revert l2;
+    simple_list_induction l1 x l1 IHl1;
+    intro l2.
   - destruct l2 as [|y l2]; cbn; auto.
   - simpl. destruct l2 as [|y l2]; intros [Hx Hl1];
       [intros _ | intros [Hy Hl2] ]; simpl; auto.
@@ -924,7 +925,9 @@ Definition for_all_list_map2' {A B C : Type}
   : for_all P l1 -> for_all Q l2
     -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
-  induction l1 as [|x l1 IHl1] in l2, p |- *.
+  revert l2 p;
+    simple_list_induction l1 x l1 IHl1;
+    intros l2 p.
   - destruct l2.
     + reflexivity.
     + discriminate.
@@ -941,7 +944,9 @@ Lemma fold_left_preserves {A B : Type}
   (acc : A) (Ha : P acc) (l : list B) (Hl : for_all Q l)
   : P (fold_left f l acc).
 Proof.
-  induction l as [|x l IHl] in acc, Ha, Hl |- *.
+  revert acc Ha Hl;
+    simple_list_induction l x l IHl;
+    intros acc Ha Hl.
   - exact Ha.
   - simpl.
     destruct Hl as [Qx Hl].
@@ -990,11 +995,10 @@ Proof.
 Defined.
 
 (** The length of a list of sigma types is the same as the original list. *)
-Definition length_list_sigma
-  {A : Type@{i}} {P : A -> Type@{j}} {l : list A} {p : for_all P l}
+Definition length_list_sigma {A : Type} {P : A -> Type} {l : list A} {p : for_all P l}
   : length (list_sigma P l p) = length l.
 Proof.
-  induction l as [|x l IHl] in p |- * using list_ind@{i j}.
+  revert p; simple_list_induction l x l IHl; intro p.
   1: reflexivity.
   destruct p as [Hx Hl].
   cbn; f_ap.

@@ -30,6 +30,13 @@ Scheme list_rect := Induction for list Sort Type.
 Scheme list_ind := Induction for list Sort Type.
 Scheme list_rec := Minimality for list Sort Type.
 
+(** A tactic for doing induction over a list that avoids spurious universes. *)
+Ltac simple_list_induction l h t IH :=
+  try generalize dependent l;
+  fix IH 1;
+  intros [| h t];
+  [ clear IH | specialize (IH t) ].
+
 (** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)
 Notation "[ x ]" := (x :: nil) : list_scope.
 Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.

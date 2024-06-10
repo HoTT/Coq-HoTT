@@ -38,11 +38,11 @@ Succeed Check fold_left_app@{_ _}.
 Succeed Check fold_right_app@{_ _}.
 Succeed Check length_list_map@{_ _}.
 Succeed Check inlist_map@{_ _}.
-Succeed Check inlist_map'@{_ _}.
+Succeed Check inlist_map'@{_ _ _}.
 Succeed Check list_map_id@{_}.
 Succeed Check list_map_compose@{_ _ _}.
 Succeed Check length_list_map2@{_ _ _}.
-Succeed Check inlist_map2@{_ _ _}.
+Succeed Check inlist_map2@{_ _ _ _}.
 Succeed Check list_map2_repeat_l@{_ _ _}.
 Succeed Check list_map2_repeat_r@{_ _ _}.
 Succeed Check length_reverse_acc@{_}.
@@ -101,11 +101,11 @@ Succeed Check length_repeat@{_}.
 Succeed Check inlist_repeat@{_}.
 Succeed Check for_all_inlist@{_ _}.
 Succeed Check inlist_for_all@{_ _}.
-Succeed Check for_all_list_map@{_ _ _ _ _}.
+Succeed Check for_all_list_map@{_ _ _ _}.
 Succeed Check for_all_list_map'@{_ _ _}.
-Succeed Check for_all_list_map2@{_ _ _ _ _ _ _}.
-Succeed Check for_all_list_map2'@{_ _ _ _ _ _ _}.
-Succeed Check fold_left_preserves@{_ _ _ _ _}.
+Succeed Check for_all_list_map2@{_ _ _ _ _ _}.
+Succeed Check for_all_list_map2'@{_ _ _ _ _ _}.
+Succeed Check fold_left_preserves@{_ _ _ _}.
 Succeed Check istrunc_for_all@{_ _}.
 Succeed Check istrunc_for_all'@{_ _}.
 Succeed Check for_all_repeat@{_ _}.
