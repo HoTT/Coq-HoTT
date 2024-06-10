@@ -123,37 +123,26 @@ Proof.
 Defined.
 
 (** A function applied to an element of a list is an element of the mapped list. *)
-Definition inlist_map@{i j | i <= j} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B) (l : list A) (x : A)
+Definition inlist_map {A B : Type} (f : A -> B) (l : list A) (x : A)
   : InList x l -> InList (f x) (list_map f l).
 Proof.
-  intros H.
-  induction l as [|y l IHl] in H |- * using list_ind@{i j}.
+  induction l as [|y l IHl].
   1: contradiction.
-  destruct H as [p | i].
-  - destruct p.
-    by left.
-  - right.
-    by apply IHl.
+  intros [p | i].
+  - left.  exact (ap f p).
+  - right. exact (IHl i).
 Defined.
 
 (** An element of a mapped list is equal to the function applied to some element of the original list. *)
-Definition inlist_map'@{i j} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B) (l : list A) (x : B)
-  : InList x (list_map f l) -> sig@{i j} (fun y => (x = f y) * InList y l ).
+Definition inlist_map' {A B : Type} (f : A -> B) (l : list A) (x : B)
+  : InList x (list_map f l) -> { y : A & (f y = x) * InList y l }.
 Proof.
-  intros H.
-  induction l as [|y l IHl] in H |- *.
+  induction l as [|y l IHl].
   1: contradiction.
-  destruct H as [p | i].
-  - destruct p.
-    exists y.
-    split; trivial.
-    by left.
+  intros [p | i].
+  - exact (y; (p, inl idpath)).
   - destruct (IHl i) as [y' [p i']].
-    exists y'.
-    split; trivial.
-    by right.
+    exact (y'; (p, inr i')).
 Defined.
 
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
@@ -199,18 +188,16 @@ Proof.
       by apply IHl1, path_nat_S.
 Defined.
 
-(** TODO: why are notations so problematic with the universe variables here. *)
 (** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
-Definition inlist_map2@{i j k | i <= k, j <= k}
+Definition inlist_map2@{i j k u | i <= u, j <= u, k <= u}
   {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
   (f : A -> B -> C) defl defr l1 l2 x
   : InList x (list_map2 f defl defr l1 l2) -> length l1 = length l2
-    -> sig@{i k} (fun y : A
-      => sig@{j k} (fun z : B
-        => prod@{k k} (paths@{k} (f y z) x) (InList y l1 * InList z l2))).
+    -> { y : A & { z : B &
+                        prod@{k u} ((f y z) = x) (InList y l1 * InList z l2) } }.
 Proof.
   intros H p.
-  induction l1 as [|y l1 IHl1] in l2, x, H, p |- * using list_ind@{i k}.
+  induction l1 as [|y l1 IHl1] in l2, x, H, p |- * using list_ind@{i u}.
   - destruct l2.
     1: contradiction.
     inversion p.
@@ -261,11 +248,11 @@ Proof.
 Defined.
 
 (** The [list_map] of a [reverse_acc] is the [reverse_acc] of the [list_map] of the two lists. *)
-Definition list_map_reverse_acc@{i j | i <= j} {A : Type@{i}} {B : Type@{j}}
+Definition list_map_reverse_acc {A B : Type}
   (f : A -> B) (l l' : list A)
   : list_map f (reverse_acc l' l) = reverse_acc (list_map f l') (list_map f l).
 Proof.
-  induction l as [|a l IHl] in l' |- * using list_ind@{i j}.
+  induction l as [|a l IHl] in l' |- *.
   1: reflexivity.
   apply IHl.
 Defined.
@@ -361,9 +348,7 @@ Defined.
 (** The index of an element in a list is the [n] such that the [nth'] element is the element. *)
 Definition index_of@{i|} {A : Type@{i}} (l : list A) (x : A)
   : InList x l
-    -> sig@{Set i} (fun n : nat
-      => sig (fun H : (n < length l)%nat
-        => nth' l n H = x)).
+    -> sig@{Set i} (fun n : nat => { H : (n < length l)%nat & nth' l n H = x }).
 Proof.
   induction l as [|a l IHl] using list_ind@{i i}.
   1: intros x'; destruct x'.
@@ -371,7 +356,7 @@ Proof.
   - revert a p.
     snrapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0%nat _).
-    snrefine (exist@{i i} _ _ idpath@{i}). 
+    snrefine (exist _ _ idpath).
     apply leq_S_n'.
     exact _.
   - destruct (IHl i) as [n [H H']].
@@ -408,7 +393,7 @@ Proof.
 Defined.
 
 (** The [nth'] element of a [list_map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)
-Definition nth'_list_map2@{i j k|i <= k, j <= k}
+Definition nth'_list_map2@{i j k u | i <= u, j <= u, k <= u}
   {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
   (f : A -> B -> C) (l1 : list A) (l2 : list B)
   (n : nat) defl defr (H : (n < length l1)%nat) (H' : (n < length l2)%nat)
@@ -417,7 +402,7 @@ Definition nth'_list_map2@{i j k|i <= k, j <= k}
   : f (nth' l1 n H) (nth' l2 n H') = nth' (list_map2 f defl defr l1 l2) n H''.
 Proof.
   induction l1 as [|a l1 IHl1] in l2, n, defl, defr, H, H', H'', p |- *
-    using list_ind@{i k}.
+    using list_ind@{i u}.
   - destruct l2 as [|b l2].
     + destruct (not_leq_Sn_0 _ H).
     + inversion p.
@@ -868,11 +853,11 @@ Defined.
 (** ** Forall *)
 
 (** If a predicate holds for all elements of a list, the the [for_all] predicate holds for the list. *)
-Definition for_all_inlist@{i j | i <= j} {A : Type@{i}} (P : A -> Type@{j}) l
+Definition for_all_inlist {A : Type} (P : A -> Type) l
   : (forall x, InList x l -> P x) -> for_all P l.
 Proof.
   intros H.
-  induction l as [|x l IHl] in H |- * using list_ind@{i j}; cbn; trivial; split.
+  induction l as [|x l IHl] in H |- *; cbn; trivial; split.
   - apply H.
     by left.
   - apply IHl.
@@ -882,7 +867,7 @@ Proof.
 Defined.
 
 (** Conversely, if [for_all P l] then each element of the list satisfies [P]. *)
-Definition inlist_for_all@{i j | i <= j} {A : Type@{i}} {P : A -> Type@{j}}
+Definition inlist_for_all {A : Type} {P : A -> Type}
   (l : list A)
   : for_all P l -> forall x, InList x l -> P x.
 Proof.
@@ -896,28 +881,25 @@ Proof.
 Defined.
 
 (** If a predicate [P] implies a predicate [Q] composed with a function [f], then [for_all P l] implies [for_all Q (list_map f l)]. *)
-Definition for_all_list_map@{i j k u v|k <= v, u <= v}
-  {A : Type@{i}} {B : Type@{j}} (P : A -> Type@{k}) (Q : B -> Type@{u})
+Definition for_all_list_map {A B : Type} (P : A -> Type) (Q : B -> Type)
   (f : A -> B) (Hf : forall x, P x -> Q (f x))
- : forall l, for_all P l -> for_all Q (list_map f l).
+  : forall l, for_all P l -> for_all Q (list_map f l).
 Proof.
-  intros l; induction l as [|x l IHl] using list_ind@{_ v}; simpl; trivial.
+  intros l; induction l as [|x l IHl] using list_ind; simpl; trivial.
   intros [Hx Hl].
   split; auto.
 Defined.
 
 (** A variant of [for_all_map P Q f] where [Q] is [P o f]. *)
-Definition for_all_list_map'@{i j k|} {A : Type@{i}} {B : Type@{j}}
-  (P : B -> Type@{k}) (f : A -> B) 
+Definition for_all_list_map' {A B : Type} (P : B -> Type) (f : A -> B)
   : forall l, for_all (P o f) l -> for_all P (list_map f l).
 Proof.
   by apply for_all_list_map.
 Defined.
 
 (** If a predicate [P] and a prediate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
-Lemma for_all_list_map2@{i j k u v w x}
-  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
-  (P : A -> Type@{u}) (Q : B -> Type@{v}) (R : C -> Type@{w})
+Lemma for_all_list_map2 {A B C : Type}
+  (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
   def_l (Hdefl : forall l1, for_all P l1 -> for_all R (def_l l1))
   def_r (Hdefr : forall l2, for_all Q l2 -> for_all R (def_r l2))
@@ -925,7 +907,7 @@ Lemma for_all_list_map2@{i j k u v w x}
   : for_all P l1 -> for_all Q l2
     -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
-  induction l1 as [|x l1 IHl1] in l2 |- * using list_ind@{j x}.
+  induction l1 as [|x l1 IHl1] in l2 |- *.
   - destruct l2 as [|y l2]; cbn; auto.
   - simpl. destruct l2 as [|y l2]; intros [Hx Hl1];
       [intros _ | intros [Hy Hl2] ]; simpl; auto.
@@ -934,16 +916,15 @@ Proof.
 Defined.
 
 (** A simpler variant of [for_all_map2] where both lists have the same length and the side conditions on the default elements can be avoided. *)
-Definition for_all_list_map2'@{i j k u v w x}
-  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
-  (P : A -> Type@{u}) (Q : B -> Type@{v}) (R : C -> Type@{w})
+Definition for_all_list_map2' {A B C : Type}
+  (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
   {def_l def_r} {l1 : list A} {l2 : list B}
   (p : length l1 = length l2)
   : for_all P l1 -> for_all Q l2
     -> for_all R (list_map2 f def_l def_r l1 l2).
 Proof.
-  induction l1 as [|x l1 IHl1] in l2, p |- * using list_ind@{_ x}. 
+  induction l1 as [|x l1 IHl1] in l2, p |- *.
   - destruct l2.
     + reflexivity.
     + discriminate.
@@ -954,13 +935,13 @@ Proof.
 Defined.
 
 (** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)
-Lemma fold_left_preserves@{i j u v x} {A : Type@{i}} {B : Type@{j}}
-  (P : A -> Type@{u}) (Q : B -> Type@{v}) (f : A -> B -> A)
+Lemma fold_left_preserves {A B : Type}
+  (P : A -> Type) (Q : B -> Type) (f : A -> B -> A)
   (Hf : forall x y, P x -> Q y -> P (f x y))
   (acc : A) (Ha : P acc) (l : list B) (Hl : for_all Q l)
   : P (fold_left f l acc).
 Proof.
-  induction l as [|x l IHl] in acc, Ha, Hl |- * using list_ind@{_ x}.
+  induction l as [|x l IHl] in acc, Ha, Hl |- *.
   - exact Ha.
   - simpl.
     destruct Hl as [Qx Hl].
@@ -968,8 +949,8 @@ Proof.
 Defined.
 
 (** [for_all] preserves the truncation predicate. *)
-Definition istrunc_for_all@{i j|} {A : Type@{i}}
-  {n : trunc_index} (P : A -> Type@{j}) (l : list A)
+Definition istrunc_for_all {A : Type}
+  {n : trunc_index} (P : A -> Type) (l : list A)
   : for_all (fun x => IsTrunc n (P x)) l -> IsTrunc n (for_all P l).
 Proof.
   induction l as [|x l IHl]; simpl.
@@ -979,8 +960,8 @@ Proof.
     exact _.
 Defined.
 
-Global Instance istrunc_for_all'@{i j | i <= j} {A : Type@{i}} {n : trunc_index}
-  (P : A -> Type@{j}) (l : list A)
+Global Instance istrunc_for_all' {A : Type} {n : trunc_index}
+  (P : A -> Type) (l : list A)
   `{forall x, IsTrunc n (P x)}
   : IsTrunc n (for_all P l).
 Proof.
@@ -988,8 +969,8 @@ Proof.
 Defined.
 
 (** If a predicate holds for an element, then it holds [for_all] the elements of the repeated list. *)
-Definition for_all_repeat@{i j|} {A : Type@{i}} {n : nat}
-  (P : A -> Type@{j}) (x : A)
+Definition for_all_repeat {A : Type} {n : nat}
+  (P : A -> Type) (x : A)
   : P x -> for_all P (repeat x n).
 Proof.
   intros H.
@@ -999,10 +980,8 @@ Proof.
 Defined.
 
 (** We can form a list of pairs of a sigma type given a list and a for_all predicate over it. *)
-Definition list_sigma@{i j k | i <= k, j <= k}
-  {A : Type@{i}} (P : A -> Type@{j}) (l : list A)
-  (p : for_all P l)
-  : list@{k} {x : A & P x}.
+Definition list_sigma {A : Type} (P : A -> Type) (l : list A) (p : for_all P l)
+  : list {x : A & P x}.
 Proof.
   induction l as [|x l IHl] in p |- *.
   1: exact nil.
@@ -1011,9 +990,9 @@ Proof.
 Defined.
 
 (** The length of a list of sigma types is the same as the original list. *)
-Definition length_list_sigma@{i j k | i <= k, j <= k}
+Definition length_list_sigma
   {A : Type@{i}} {P : A -> Type@{j}} {l : list A} {p : for_all P l}
-  : length (list_sigma@{i j k} P l p) = length l.
+  : length (list_sigma P l p) = length l.
 Proof.
   induction l as [|x l IHl] in p |- * using list_ind@{i j}.
   1: reflexivity.
