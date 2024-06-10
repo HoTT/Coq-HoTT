@@ -11,14 +11,15 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        makeDevShell = coqVersion:
+        makeDevShell = { coq ? pkgs.coq }:
+          let
+            coqPackages = pkgs.mkCoqPackages coq // {
+              __attrsFailEvaluation = true;
+            };
+          in { extraPackages ? [ coqPackages.coq-lsp ] }:
           pkgs.mkShell {
-            buildInputs = with pkgs."coqPackages_${coqVersion}"; [
-              pkgs.dune_3
-              pkgs.ocaml
-              coq
-              coq-lsp
-            ];
+            buildInputs = with coqPackages;
+              [ pkgs.dune_3 pkgs.ocaml ] ++ extraPackages ++ [ coq ];
           };
       in {
         packages.default = pkgs.coqPackages.mkCoqDerivation {
@@ -28,7 +29,11 @@
           useDune = true;
         };
 
-        devShells.default = makeDevShell "8_19";
+        devShells.default = makeDevShell { coq = pkgs.coq_8_19; };
+
+        # To use, pass --impure to nix develop
+        devShells.coq_master =
+          makeDevShell { coq = pkgs.coq.override { version = "master"; }; };
 
         formatter = pkgs.nixpkgs-fmt;
       });
