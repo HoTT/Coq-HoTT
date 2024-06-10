@@ -4,10 +4,6 @@
 
 (** ** Warnings *)
 
-(* TODO: remove this once we bump the minimal Coq version to 8.19 and merge #1862. *)
-(** Disable warning about argument scope delimiters. *)
-Global Set Warnings "-argument-scope-delimiter".
-
 (** ** Plugins *)
 
 (** Load the Ltac plugin. This is the tactic language we use for proofs. *)

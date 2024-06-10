@@ -594,9 +594,9 @@ Record BasepointPreservingFunctor (B C : Type)
     bp_pointed : bp_map (point B) $-> point C
   }.
 
-Arguments bp_pointed {B C}%type_scope {H H0 H1 H2 H3 H4} b.
-Arguments Build_BasepointPreservingFunctor {B C}%type_scope {H H0 H1 H2 H3 H4}
-  bp_map%function_scope {bp_is0functor} bp_pointed.
+Arguments bp_pointed {B C}%_type_scope {H H0 H1 H2 H3 H4} b.
+Arguments Build_BasepointPreservingFunctor {B C}%_type_scope {H H0 H1 H2 H3 H4}
+  bp_map%_function_scope {bp_is0functor} bp_pointed.
 
 Coercion bp_map : BasepointPreservingFunctor >-> Funclass.
 

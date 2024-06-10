@@ -79,10 +79,10 @@ Bind Scope object_scope with object.
 Bind Scope morphism_scope with morphism.
 
 (** We want eta-expanded primitive projections to [simpl] away. *)
-Arguments object !C%category / : rename.
-Arguments morphism !C%category / s d : rename.
-Arguments identity {!C%category} / x%object : rename.
-Arguments compose {!C%category} / {s d d'}%object (m1 m2)%morphism : rename.
+Arguments object !C%_category / : rename.
+Arguments morphism !C%_category / s d : rename.
+Arguments identity {!C%_category} / x%_object : rename.
+Arguments compose {!C%_category} / {s d d'}%_object (m1 m2)%_morphism : rename.
 
 Local Infix "o" := compose : morphism_scope.
 (** Perhaps we should consider making this notation more global. *)

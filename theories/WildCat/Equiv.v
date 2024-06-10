@@ -674,12 +674,12 @@ Class Cat_IsBiInv {A} `{Is1Cat A} {x y : A} (f : x $-> y) := {
   cat_eissect' : cat_equiv_inv' $o f $== Id x;
 }.
 
-Arguments cat_equiv_inv {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eisretr {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_equiv_inv' {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eissect' {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eisretr {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv' {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eissect' {A}%_type_scope { _ _ _ _ x y} f {_}.
 
-Arguments Build_Cat_IsBiInv {A}%type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
+Arguments Build_Cat_IsBiInv {A}%_type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
 
 Record Cat_BiInv A `{Is1Cat A} (x y : A) := {
   cat_equiv_fun :> x $-> y;
