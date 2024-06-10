@@ -283,8 +283,8 @@ Bind Scope adjunction_scope with AdjunctionUnit.
 Bind Scope adjunction_scope with AdjunctionCounit.
 Bind Scope adjunction_scope with AdjunctionUnitCounit.
 
-Arguments unit [C D]%category [F G]%functor _%adjunction / .
-Arguments counit [C D]%category [F G]%functor _%adjunction / .
-Arguments AdjunctionUnitCounit [C D]%category (F G)%functor.
-Arguments unit_counit_equation_1 [C D]%category [F G]%functor _%adjunction _%object.
-Arguments unit_counit_equation_2 [C D]%category [F G]%functor _%adjunction _%object.
+Arguments unit [C D]%_category [F G]%_functor _%_adjunction / .
+Arguments counit [C D]%_category [F G]%_functor _%_adjunction / .
+Arguments AdjunctionUnitCounit [C D]%_category (F G)%_functor.
+Arguments unit_counit_equation_1 [C D]%_category [F G]%_functor _%_adjunction _%_object.
+Arguments unit_counit_equation_2 [C D]%_category [F G]%_functor _%_adjunction _%_object.

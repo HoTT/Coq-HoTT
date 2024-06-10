@@ -102,7 +102,7 @@ Section Extensions.
       - size of C
       - size of result (>= A,B,C) *)
 
-  Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
+  Global Arguments ExtendableAlong n%_nat_scope {A B}%_type_scope (f C)%_function_scope.
 
   (** We can modify the universes, as with [ExtensionAlong]. *)
   Definition lift_extendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2}
@@ -324,7 +324,7 @@ Section Extensions.
     := forall n : nat, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
 
-  Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
+  Global Arguments ooExtendableAlong {A B}%_type_scope (f C)%_function_scope.
 
   (** Universe modification. *)
   Definition lift_ooextendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2}

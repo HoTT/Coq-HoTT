@@ -110,8 +110,8 @@ Definition to_int n := Decimal.Pos (to_uint n).
 
 Definition to_num_int n := Numeral.IntDec (to_int n).
 
-Arguments of_uint d%dec_uint_scope.
-Arguments of_int d%dec_int_scope.
+Arguments of_uint d%_dec_uint_scope.
+Arguments of_int d%_dec_int_scope.
 
 (* Parsing / printing of [nat] numbers *)
 Number Notation nat of_num_uint to_num_uint (abstract after 5001) : nat_scope.

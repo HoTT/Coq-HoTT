@@ -98,7 +98,7 @@ Section homomorphism_id.
 
 End homomorphism_id.
 
-Arguments homomorphism_id {σ} A%Algebra_scope , {σ} {A}.
+Arguments homomorphism_id {σ} A%_Algebra_scope , {σ} {A}.
 
 (** Composition of homomorphisms. *)
 

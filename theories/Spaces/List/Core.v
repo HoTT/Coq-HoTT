@@ -1,6 +1,8 @@
 Require Import Basics.Overture.
 
-Unset Elimination Schemes.
+Local Unset Elimination Schemes.
+Local Set Universe Minimization ToSet.
+Local Set Polymorphic Inductive Cumulativity.
 
 (** * Lists *)
 
@@ -10,7 +12,7 @@ Declare Scope list_scope.
 Local Open Scope list_scope.
 
 (** A list is a sequence of elements from a type [A]. This is a very useful datatype and has many applications ranging from programming to algebra. It can be thought of a free monoid. *)
-Inductive list@{i} (A : Type@{i}) : Type@{i} :=
+Inductive list@{i|} (A : Type@{i}) : Type@{i} :=
 | nil : list A
 | cons : A -> list A -> list A.
 
@@ -28,6 +30,13 @@ Scheme list_rect := Induction for list Sort Type.
 Scheme list_ind := Induction for list Sort Type.
 Scheme list_rec := Minimality for list Sort Type.
 
+(** A tactic for doing induction over a list that avoids spurious universes. *)
+Ltac simple_list_induction l h t IH :=
+  try generalize dependent l;
+  fix IH 1;
+  intros [| h t];
+  [ clear IH | specialize (IH t) ].
+
 (** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)
 Notation "[ x ]" := (x :: nil) : list_scope.
 Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.
@@ -37,7 +46,7 @@ Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.
 (** Notice that the definition of a list looks very similar to the definition of [nat]. It is as if each [S] constructor from [nat] has an element of [A] attached to it. We can discard this extra element and get a list invariant that we call [length]. *)
 
 (** The length (number of elements) of a list. *)
-Fixpoint length {A} (l : list A) :=
+Fixpoint length {A : Type} (l : list A) :=
   match l with
   | nil => O
   | _ :: l => S (length l)
@@ -60,10 +69,10 @@ Infix "++" := app : list_scope.
 (** Folding is a very important operation on lists. It is a way to reduce a list to a single value. The [fold_left] function starts from the left and the [fold_right] function starts from the right. *)
 
 (** [fold_left f l a0] computes [f (... (f (f a0 x1) x2) ...) xn] where [l = [x1; x2; ...; xn]]. *)
-Fixpoint fold_left {A B} (f : A -> B -> A) (l : list B) (a0 : A) : A :=
+Fixpoint fold_left {A B} (f : A -> B -> A) (l : list B) (default : A) : A :=
   match l with
-    | nil => a0
-    | cons b l => fold_left f l (f a0 b)
+    | nil => default
+    | cons b l => fold_left f l (f default b)
   end.
 
 (** [fold_right f a0 l] computes [f x1 (f x2 ... (f xn a0) ...)] where [l = [x1; x2; ...; xn]]. *)
@@ -76,16 +85,15 @@ Fixpoint fold_right {A B} (f : B -> A -> A) (default : A) (l : list B) : A :=
 (** ** Maps - Functoriality of Lists *)
 
 (** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)
-Fixpoint list_map {A B} (f : A -> B) (l : list A) :=
+Fixpoint list_map {A B : Type} (f : A -> B) (l : list A) :=
   match l with
   | nil => nil
   | x :: l => (f x) :: (list_map f l)
   end.
 
 (** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)
-Fixpoint list_map2 {A B C} (f : A -> B -> C)
-  (def_l : list A -> list C) (def_r : list B -> list C)
-  l1 l2 :=
+Fixpoint list_map2 {A B C : Type} (f : A -> B -> C)
+  (def_l : list A -> list C) (def_r : list B -> list C) l1 l2 :=
   match l1, l2 with
   | nil, nil => nil
   | nil, _ => def_r l2
@@ -96,51 +104,51 @@ Fixpoint list_map2 {A B C} (f : A -> B -> C)
 (** ** Reversal *)
 
 (** Tail-recursive list reversal. *)
-Fixpoint reverse_acc {A} (acc : list A) (l : list A) : list A :=
+Fixpoint reverse_acc {A : Type} (acc : list A) (l : list A) : list A :=
   match l with
   | nil => acc
   | x :: l => reverse_acc (x :: acc) l
   end.
 
 (** Reversing the order of a list. The list [ [a1; a2; ...; an] ] becomes [ [an; ...; a2; a1] ]. *)
-Definition reverse {A} (l : list A) : list A := reverse_acc nil l.
+Definition reverse {A : Type} (l : list A) : list A := reverse_acc nil l.
 
 (** ** Getting Elements *)
 
 (** The head of a list is its first element. Returns [None] If the list is empty. *)
-Definition head {A} (l : list A) : option A :=
+Definition head {A : Type} (l : list A) : option A :=
   match l with
   | nil => None
   | a :: _ => Some a
   end.
 
 (** The tail of a list is the list without its first element. *)
-Definition tail {A} (l : list A) : list A :=
+Definition tail {A : Type} (l : list A) : list A :=
   match l with
     | nil => nil
     | a :: m => m
   end.
 
 (** The last element of a list. If the list is empty, it returns [None]. *)
-Fixpoint last {A} (l : list A) : option A :=
+Fixpoint last {A : Type} (l : list A) : option A :=
   match l with
-  | nil => None 
+  | nil => None
   | a :: nil => Some a
   | _ :: l => last l
   end.
 
 (** The [n]-th element of a list. If the list is too short, it returns [None]. *)
-Fixpoint nth {A} (l : list A) (n : nat) : option A :=
+Fixpoint nth {A : Type} (l : list A) (n : nat) : option A :=
   match n, l with
   | O, x :: _ => Some x
-  | S n, _ :: l => nth l n 
+  | S n, _ :: l => nth l n
   | _, _ => None
   end.
 
 (** ** Removing Elements *)
 
 (** Remove the last element of a list and do nothing if it is empty. *)
-Fixpoint remove_last {A} (l : list A) : list A :=
+Fixpoint remove_last {A : Type} (l : list A) : list A :=
   match l with
   | nil => nil
   | _ :: nil => nil
@@ -162,7 +170,7 @@ Definition seq (n : nat) : list nat := reverse (seq_rev n).
 (** ** Repeat *)
 
 (** Repeat an element [n] times. *)
-Fixpoint repeat {A} (x : A) (n : nat) : list A :=
+Fixpoint repeat {A : Type} (x : A) (n : nat) : list A :=
   match n with
   | O => nil
   | S n => x :: repeat x n
@@ -171,16 +179,16 @@ Fixpoint repeat {A} (x : A) (n : nat) : list A :=
 (** ** Membership Predicate *)
 
 (** The "In list" predicate *)
-Fixpoint InList {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=
+Fixpoint InList@{i|} {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=
   match l with
-    | nil => Empty 
+    | nil => Empty
     | b :: m => (b = a) + InList a m
   end.
 
 (** ** Forall *)
 
 (** Apply a predicate to all elements of a list and take their conjunction. *)
-Fixpoint for_all {A} (P : A -> Type) l : Type :=
+Fixpoint for_all@{i j|} {A : Type@{i}} (P : A -> Type@{j}) l : Type@{j} :=
   match l with
   | nil => Unit
   | x :: l => P x /\ for_all P l
