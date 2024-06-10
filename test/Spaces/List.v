@@ -1,7 +1,7 @@
 From HoTT Require Import Basics.
 From HoTT.Spaces.List Require Import Core Theory.
 
-(** Here we check the universe levels of the lemmas from List.Core *)
+(** Here we check the number of universe variables for the definitions from List.Core *)
 Succeed Check list@{_}.
 Succeed Check nil@{_}.
 Succeed Check cons@{_}.
@@ -27,7 +27,7 @@ Succeed Check repeat@{_}.
 Succeed Check InList@{_}.
 Succeed Check for_all@{_ _}.
 
-(** Here we check the universe levels of the lemmas from List.Theory *)
+(** Here we check the number of universe variables for the definitions from List.Theory *)
 Succeed Check length_0@{_}.
 Succeed Check app_nil@{_}.
 Succeed Check app_assoc@{_}.
