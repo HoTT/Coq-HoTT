@@ -7,7 +7,8 @@ Require Import abstract_algebra.
 
 Local Open Scope mc_scope.
 
-Set Universe Minimization ToSet.
+Local Set Universe Minimization ToSet.
+Local Set Polymorphic Inductive Cumulativity.
 
 (** * Vectors *)
 
@@ -16,7 +17,7 @@ Set Universe Minimization ToSet.
 (** ** Definition *)
 
 Definition Vector@{i} (A : Type@{i}) (n : nat) : Type@{i}
- := { l : list@{i} A & length l = n }.
+ := sig@{i Set} (fun l : list@{i} A => length l = n).
 
 (** *** Constructors *)
 
@@ -31,7 +32,7 @@ Defined.
 
 (** *** Projections *)
 
-Definition entry {A : Type} {n} (v : Vector A n) i {Hi : (i < n)%nat} : A
+Definition entry {A : Type} {n : nat} (v : Vector A n) i {Hi : (i < n)%nat} : A
   := nth' (pr1 v) i ((pr2 v)^ # Hi).
 
 (** *** Basic properties *) 
@@ -47,15 +48,17 @@ Proof.
   rapply path_ishprop. 
 Defined.
 
-Global Instance istrunc_vector (A : Type) (n : nat) k `{IsTrunc k.+2 A}
-  : IsTrunc k.+2 (Vector A n)
-  := _. 
+Global Instance istrunc_vector@{i} (A : Type@{i}) (n : nat) k `{IsTrunc k.+2 A}
+  : IsTrunc k.+2 (Vector A n).
+Proof.
+  rapply istrunc_sigma@{i i i}.
+Defined.
 
-Definition path_vector (A : Type) {n : nat} (v1 v2 : Vector A n)
+Definition path_vector@{i} (A : Type@{i}) {n : nat} (v1 v2 : Vector@{i} A n)
   (H : forall i (H : (i < n)%nat), entry v1 i = entry v2 i)
   : v1 = v2.
 Proof.
-  rapply path_sigma_hprop.
+  rapply path_sigma_hprop@{i i i}.
   snrapply path_list_nth'.
   1: exact (pr2 v1 @ (pr2 v2)^).
   intros i Hi.
