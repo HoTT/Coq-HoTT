@@ -16,8 +16,8 @@ Local Set Polymorphic Inductive Cumulativity.
 
 (** ** Definition *)
 
-Definition Vector@{i} (A : Type@{i}) (n : nat) : Type@{i}
- := sig@{i Set} (fun l : list@{i} A => length l = n).
+Definition Vector@{i|} (A : Type@{i}) (n : nat) : Type@{i}
+  := { l : list A & length l = n }.
 
 (** *** Constructors *)
 
