@@ -1,6 +1,7 @@
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.AbGroups.
 Require Import Algebra.Rings.CRing.
+Require Import Algebra.Rings.Module.
 Require Import Spaces.BinInt Spaces.Pos.
 Require Import WildCat.Core.
 
@@ -254,3 +255,38 @@ Proof.
     apply ap.
     exact IHp.
 Defined.
+
+Section Lm_carrierIsEquiv.
+
+  (** lm_carrier is a 1-functor (LeftModule R) ->  AbGroup. *)
+  Global Instance lm_carrieris0fun {R} : Is0Functor (lm_carrier R).
+  Proof.
+    snrapply Build_Is0Functor.
+    intros a b f.
+    destruct f.
+    exact lm_homo_map.
+  Defined.
+
+  Global Instance lm_carrieris1fun {R} : Is1Functor (lm_carrier R).
+  Proof.
+    snrapply Build_Is1Functor.
+    - intros a b f g e. assumption.
+    - reflexivity.
+    - reflexivity.
+  Defined.
+  (* I think the above should be moved to Module.v, as it is not specifically a property of the integers. *)
+
+  (** Every abelian group admits a canonical left Z-module structure. *)
+  Definition can_Z : AbGroup -> (LeftModule cring_Z).
+  Proof.
+    intros A. snrapply Build_LeftModule.
+    - assumption.
+    - snrapply (Build_IsLeftModule _).
+      + intros n a. exact (ab_mul n a).
+      + unfold LeftHeteroDistribute. intros n. exact preserves_sg_op.
+      + unfold RightHeteroDistribute. intros m n a. destruct m, n; simpl.
+        -- 
+        (* This might be the wrong way to do this. On this path I need to prove that grp_pow respects addition of natural numbers. *)
+  Admitted.
+
+End Lm_carrierIsEquiv.
