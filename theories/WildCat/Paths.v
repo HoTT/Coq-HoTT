@@ -36,8 +36,7 @@ Local Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
   : Is0Functor (cat_postcomp a g).
 Proof.
   snrapply Build_Is0Functor.
-  intros f h p.
-  by destruct p.
+  exact (@ap _ _ (cat_postcomp a g)).
 Defined.
 
 (** Precomposition is a 0-functor when the 2-cells are paths. *)
@@ -46,8 +45,7 @@ Local Instance is0functor_cat_precomp_paths (A : Type) `{Is01Cat A}
   : Is0Functor (cat_precomp c f).
 Proof.
   snrapply Build_Is0Functor.
-  intros g h p.
-  by destruct p.
+  exact (@ap _ _ (cat_precomp c f)).
 Defined.
 
 (** Any type is a 1-category with n-morphisms given by paths. *)
@@ -58,24 +56,18 @@ Proof.
   - exact _.
   - exact _.
   - exact _.
-  - intros w x y z p q r.
-    exact (concat_p_pp p q r).
-  - intros w x y z p q r.
-    exact (concat_pp_p p q r).
-  - intros x y p.
-    exact (concat_p1 p).
-  - intros x y p.
-    exact (concat_1p p).
+  - exact (@concat_p_pp A).
+  - exact (@concat_pp_p A).
+  - exact (@concat_p1 A).
+  - exact (@concat_1p A).
 Defined.
 
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Local Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
   snrapply Build_Is1Gpd.
-  - intros x y p.
-    exact (concat_pV p).
-  - intros x y p.
-    exact (concat_Vp p).
+  - exact (@concat_pV A).
+  - exact (@concat_Vp A).
 Defined.
 
 (** Any type is a 2-category with higher morphhisms given by paths. *)
@@ -86,18 +78,18 @@ Proof.
   - exact _.
   - intros x y z p.
     snrapply Build_Is1Functor.
-    + intros a b q r h.
-      exact (ap (fun x => whiskerR x _) h).
+    + intros a b q r.
+      exact (ap (fun x => whiskerR x _)).
     + reflexivity.
-    + intros a b c q r.
-      exact (whiskerR_pp p q r).
+    + intros a b c.
+      exact (whiskerR_pp p).
   - intros x y z p.
     snrapply Build_Is1Functor.
-    + intros a b q r h.
-      exact (ap (whiskerL p) h).
+    + intros a b q r.
+      exact (ap (whiskerL p)).
     + reflexivity.
-    + intros a b c q r.
-      exact (whiskerL_pp p q r).
+    + intros a b c.
+      exact (whiskerL_pp p).
   - intros a b c q r s t h g.
     exact (concat_whisker q r s t h g)^.
   - intros a b c d q r.
