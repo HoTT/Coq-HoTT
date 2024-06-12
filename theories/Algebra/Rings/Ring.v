@@ -78,7 +78,7 @@ Section RingLaws.
 
   (** Many of these ring laws have already been proven. But we give them names here so that they are easy to find and use. *)
 
-  Context {A B : Ring} (f : RingHomomorphism A B) (x y z : A).
+  Context {A : Ring} (x y z : A).
 
   Definition rng_dist_l : x * (y + z) = x * y + x * z := simple_distribute_l _ _ _.
   Definition rng_dist_r : (x + y) * z = x * z + y * z := simple_distribute_r _ _ _.
@@ -103,6 +103,12 @@ Section RingLaws.
   Definition rng_mult_negate_l : -x * y = -(x * y) := inverse (negate_mult_distr_l _ _).
   Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).
 
+End RingLaws.
+
+Section RingHomoLaws.
+
+  Context {A B : Ring} (f : RingHomomorphism A B) (x y : A).
+
   Definition rng_homo_plus : f (x + y) = f x + f y := preserves_plus x y.
   Definition rng_homo_mult : f (x * y) = f x * f y := preserves_mult x y.
   Definition rng_homo_zero : f 0 = 0 := preserves_0.
@@ -112,7 +118,7 @@ Section RingLaws.
   Definition rng_homo_minus_one : f (-1) = -1
     := preserves_negate 1%mc @ ap negate preserves_1.
 
-End RingLaws.
+End RingHomoLaws.
 
 (** Isomorphisms of commutative rings *)
 Record RingIsomorphism (A B : Ring) := {

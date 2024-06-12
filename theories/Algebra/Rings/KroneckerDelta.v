@@ -2,6 +2,9 @@ Require Import Basics.Overture Basics.Decidable Spaces.Nat.
 Require Import Algebra.Rings.Ring.
 Require Import Classes.interfaces.abstract_algebra.
 
+Local Set Universe Minimization ToSet.
+Local Set Polymorphic Inductive Cumulativity.
+
 (** ** Kronecker Delta *)
 
 Section AssumeDecidable.
@@ -91,14 +94,15 @@ Definition rng_sum_kronecker_delta_l {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
   : ab_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.
 Proof.
-  induction n as [|n IHn] in i, Hi, f |- *.
+  revert i Hi f; simple_induction n n IHn; intros i Hi f.
   1: destruct (not_leq_Sn_0 _ Hi).
   destruct (dec (i = n)) as [p|p].
   - destruct p; simpl.
     rewrite kronecker_delta_refl.
     rewrite rng_mult_one_l.
     rewrite <- rng_plus_zero_r.
-    f_ap; [f_ap; rapply path_ishprop|].
+    apply ap11.
+    { apply (ap (fun h => plus (f i h))), path_ishprop. }
     nrapply ab_sum_zero.
     intros k Hk.
     rewrite (kronecker_delta_gt Hk).
@@ -111,7 +115,7 @@ Proof.
     + rewrite (kronecker_delta_neq p).
       rewrite rng_mult_zero_l.
       rewrite grp_unit_l.
-      f_ap; apply path_ishprop.
+      apply ap, path_ishprop.
 Defined.
 
 (** Variant of [rng_sum_kronecker_delta_l] where the indexing is swapped. *)
