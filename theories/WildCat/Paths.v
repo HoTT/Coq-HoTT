@@ -23,19 +23,12 @@ Definition is3graph_paths (A : Type) `{Is2Graph A} : Is3Graph A
 Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
 
 (** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
-Local Instance is01cat_paths (A : Type) : Is01Cat A.
-Proof.
-  snrapply Build_Is01Cat.
-  - exact (@idpath _).
-  - intros a b c q p; exact (p @ q).
-Defined.
+Local Instance is01cat_paths (A : Type) : Is01Cat A
+  := {| Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x |}.
 
 (** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
-Local Instance is0gpd_paths (A : Type) : Is0Gpd A.
-Proof.
-  snrapply Build_Is0Gpd.
-  intros x y p; exact p^.
-Defined.
+Local Instance is0gpd_paths (A : Type) : Is0Gpd A
+  := {| gpd_rev := @inverse _ |}.
 
 (** Postcomposition is a 0-functor when the 2-cells are paths. *)
 Local Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
