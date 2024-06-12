@@ -39,22 +39,22 @@ Defined.
 
 (** Postcomposition is a 0-functor when the 2-cells are paths. *)
 Local Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
-  : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g).
+  (a b c : A) (g : b $-> c)
+  : Is0Functor (cat_postcomp a g).
 Proof.
-  intros x y z p.
   snrapply Build_Is0Functor.
-  intros q r h.
-  by destruct h.
+  intros f h p.
+  by destruct p.
 Defined.
 
 (** Precomposition is a 0-functor when the 2-cells are paths. *)
 Local Instance is0functor_cat_precomp_paths (A : Type) `{Is01Cat A}
-  : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f).
+  (a b c : A) (f : a $-> b)
+  : Is0Functor (cat_precomp c f).
 Proof.
-  intros x y z p.
   snrapply Build_Is0Functor.
-  intros q r h.
-  by destruct h.
+  intros g h p.
+  by destruct p.
 Defined.
 
 (** Any type is a 1-category with n-morphisms given by paths. *)
