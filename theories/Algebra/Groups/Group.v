@@ -481,7 +481,7 @@ Definition grp_pow {G : Group} (g : G) (n : Int) : G
   := match n with
      | posS n => nat_iter n.+1%nat (g *.) mon_unit
      | zero => mon_unit
-     | negS n => nat_iter n.+1%nat (fun x => -x * g) mon_unit
+     | negS n => nat_iter n.+1%nat ((- g) *.) mon_unit
      end.
 
 (** Any homomorphism respects [grp_pow]. *)
@@ -499,12 +499,14 @@ Proof.
       assumption.
   - destruct n.
     + lhs snrapply grp_homo_op.
-      cbn; snrapply (ap (.* _)).
-      lhs nrapply grp_homo_inv; apply ap.
-      apply grp_homo_unit.
+      cbn. rewrite grp_homo_unit. 
+      (* I don't remember how to not use rewrite here 😩 *)
+      snrapply (ap (.* _)).
+      by lhs nrapply grp_homo_inv.
     + lhs nrapply grp_homo_op.
-      cbn; snrapply (ap (.* _)).
-      lhs nrapply grp_homo_inv; apply ap.
+      cbn. rewrite grp_homo_inv.
+      (* Same rewrite issue right here 😔 *)
+      snrapply (ap (_ *.)).
       assumption.
 Defined.
 
@@ -518,19 +520,60 @@ Proof.
   - destruct n.
     + lhs nrapply grp_unit_r.
       apply grp_inv_unit.
-    + lhs nrapply grp_unit_r.
-      rhs_V nrapply grp_inv_unit.
-      by snrapply ap.
+    + cbn in IHn |- *.
+      rewrite grp_inv_unit in IHn |- *. 
+      by lhs nrapply grp_unit_l.
 Defined.
 
 (** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
+
+(** Helper functions for [grp_pow_int_add] add *)
+Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.+1)%int = g * grp_pow g n.
+Proof.
+  induction n.
+  - reflexivity.
+  - destruct n.
+    + reflexivity.
+    + reflexivity.
+  - destruct n; cbn.
+    + rhs srapply simple_associativity.
+      rewrite grp_inv_r.
+      apply (grp_unit_l _)^.
+    + rhs srapply simple_associativity.
+      rewrite grp_inv_r. 
+      apply (grp_unit_l _)^.
+Defined.
+
+Definition grp_pow_int_sign_commute {G : Group} (n : Int) (g : G)
+  : grp_pow g (int_neg n) = grp_pow (- g) n.
+Proof.
+  induction n.
+  - reflexivity.
+  - destruct n; reflexivity.
+  - destruct n; cbn; rewrite grp_inv_inv; reflexivity.
+Defined.
 
 (** [grp_pow] satisfies a law of exponents. *)
 Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
   : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
 Proof.
-  (** TODO: *)
-Abort.
+  induction n; cbn.
+  - exact (grp_unit_l _)^.
+  - rewrite int_add_succ_l.
+    do 2 rewrite grp_pow_int_add_1.
+    rhs srapply (simple_associativity _ _ _)^.
+    snrapply (ap (_ *.)). exact IHn.
+  - rewrite <- int_neg_succ.
+    rewrite <- (int_neg_neg m) in IHn |- *.
+    rewrite <- int_neg_add in IHn |- *.
+    do 2 rewrite grp_pow_int_sign_commute in IHn |- *.
+    rewrite int_add_succ_l.
+    do 2 rewrite grp_pow_int_add_1.
+    rhs srapply (simple_associativity _ _ _)^.
+    snrapply (ap (_ *.)).
+    exact IHn.
+Defined.
 
 (** ** The category of Groups *)
 
