@@ -162,7 +162,7 @@ We recommend the following text editors for the development of `.v` files:
 
  * [Emacs][10] together with [Proof General][11].
  * [CoqIDE][12] part of the [Coq Proof Assistant][13].
- * [Visual Studio Code][14] together with [VSCoq][15].
+ * [Visual Studio Code][14] together with [coq-lsp][15].
 
 ## 4.1. Tags for Emacs
 
@@ -220,7 +220,7 @@ GitHub](https://github.com/HoTT/HoTT).
 [12]: https://coq.inria.fr/refman/practical-tools/coqide.html
 [13]: https://github.com/coq/coq
 [14]: https://code.visualstudio.com/
-[15]: https://github.com/coq-community/vscoq
+[15]: https://github.com/ejgallego/coq-lsp
 [16]: https://cygwin.com/install.html
 [17]: https://stackoverflow.com/a/54086635
 [18]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
