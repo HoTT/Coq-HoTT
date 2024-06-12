@@ -19,18 +19,18 @@ Definition is2graph_paths (A : Type) `{IsGraph A} : Is2Graph A
 Definition is3graph_paths (A : Type) `{Is2Graph A} : Is3Graph A
   := fun _ _ => is2graph_paths _.
 
-(** We assume these as indexes for the rest of the file with a low priority. *)
+(** We assume these as instances for the rest of the file with a low priority. *)
 Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
 
 (** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
 Local Instance is01cat_paths (A : Type) : Is01Cat A.
 Proof.
   snrapply Build_Is01Cat.
-  - intros a; exact idpath.
+  - exact (@idpath _).
   - intros a b c q p; exact (p @ q).
 Defined.
 
-(** Any type has a 0-groupoid strucutre with inverse morphisms given by path inversion. *)
+(** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
 Local Instance is0gpd_paths (A : Type) : Is0Gpd A.
 Proof.
   snrapply Build_Is0Gpd.
