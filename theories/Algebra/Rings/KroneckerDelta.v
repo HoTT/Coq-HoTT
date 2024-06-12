@@ -10,15 +10,16 @@ Local Set Polymorphic Inductive Cumulativity.
 Section AssumeDecidable.
   (** Throughout this section, we assume that we have a type [A] with decidable equality. This will be our indexing type and can be thought of as [nat] for reading purposes. *)
 
-  Context {A : Type} `{DecidablePaths A}.
+  Universes u v.
+  Context {A : Type@{u}} `{DecidablePaths@{u} A} {R : Ring@{v}}.
 
   (** The Kronecker delta function is a function of elements of [A] that is 1 when the two numbers are equal and 0 otherwise. It is useful for working with finite sums of ring elements. *)
-  Definition kronecker_delta {R : Ring} (i j : A) : R
+  Definition kronecker_delta@{} (i j : A) : R
     := if dec (i = j) then 1 else 0.
 
   (** Kronecker delta with the same index is 1. *)
-  Definition kronecker_delta_refl {R : Ring} (i : A)
-    : kronecker_delta (R:=R) i i = 1.
+  Definition kronecker_delta_refl@{} (i : A)
+    : kronecker_delta i i = 1.
   Proof.
     unfold kronecker_delta.
     generalize (dec (i = i)).
@@ -26,16 +27,16 @@ Section AssumeDecidable.
   Defined.
 
   (** Kronecker delta with differing indices is 0. *)
-  Definition kronecker_delta_neq {R : Ring} {i j : A} (p : i <> j)
-    : kronecker_delta (R:=R) i j = 0.
+  Definition kronecker_delta_neq@{} {i j : A} (p : i <> j)
+    : kronecker_delta i j = 0.
   Proof.
     unfold kronecker_delta.
     by decidable_false (dec (i = j)) p.
   Defined.
 
   (** Kronecker delta is symmetric in its arguments. *)
-  Definition kronecker_delta_symm {R : Ring} (i j : A)
-    : kronecker_delta (R:=R) i j = kronecker_delta j i.
+  Definition kronecker_delta_symm@{} (i j : A)
+    : kronecker_delta i j = kronecker_delta j i.
   Proof.
     unfold kronecker_delta.
     destruct (dec (i = j)) as [p|q].
@@ -44,9 +45,9 @@ Section AssumeDecidable.
   Defined.
 
   (** An injective endofunction on [A] preserves the Kronecker delta. *)
-  Definition kronecker_delta_map_inj {R : Ring} (i j : A) (f : A -> A)
+  Definition kronecker_delta_map_inj@{} (i j : A) (f : A -> A)
     `{!IsInjective f}
-    : kronecker_delta (R:=R) (f i) (f j) = kronecker_delta i j.
+    : kronecker_delta (f i) (f j) = kronecker_delta i j.
   Proof.
     unfold kronecker_delta.
     destruct (dec (i = j)) as [p|p].
@@ -58,8 +59,8 @@ Section AssumeDecidable.
   Defined.
 
   (** Kronecker delta commutes with any ring element. *)
-  Definition kronecker_delta_comm {R : Ring} (i j : A) (r : R)
-    :  r * kronecker_delta i j = kronecker_delta i j * r.
+  Definition kronecker_delta_comm@{} (i j : A) (r : R)
+    : r * kronecker_delta i j = kronecker_delta i j * r.
   Proof.
     unfold kronecker_delta.
     destruct (dec (i = j)).
