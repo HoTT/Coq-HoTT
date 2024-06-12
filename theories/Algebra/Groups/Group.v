@@ -17,7 +17,7 @@ Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, n
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Int.
 Require Import Truncations.Core.
 
 Local Set Polymorphic Inductive Cumulativity.
@@ -390,6 +390,9 @@ Section GroupEquations.
 
   (** Inverses distribute over the group operation. *)
   Definition grp_inv_op : - (x * y) = -y * -x := negate_sg_op x y.
+  
+  (** The inverse of the unit is the unit. *)
+  Definition grp_inv_unit : -mon_unit = mon_unit := negate_mon_unit (G :=G).
 
 End GroupEquations.
 
@@ -474,27 +477,60 @@ End GroupMovement.
 (** ** Power operation *)
 
 (** For a given [n : nat] we can define the [n]th power of a group element. *)
-Definition grp_pow {G : Group} (g : G) (n : nat) : G := nat_iter n (g *.) mon_unit.
+Definition grp_pow {G : Group} (g : G) (n : Int) : G
+  := match n with
+     | posS n => nat_iter n.+1%nat (g *.) mon_unit
+     | zero => mon_unit
+     | negS n => nat_iter n.+1%nat (fun x => -x * g) mon_unit
+     end.
 
 (** Any homomorphism respects [grp_pow]. *)
-Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H)
-  (n : nat) (g : G) : f (grp_pow g n) = grp_pow (f g) n.
+Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
+  : f (grp_pow g n) = grp_pow (f g) n.
 Proof.
   induction n.
-  + cbn. apply grp_homo_unit.
-  + cbn. refine ((grp_homo_op f g (grp_pow g n)) @ _).
-    exact (ap (fun m => f g + m) IHn).
+  - apply grp_homo_unit.
+  - destruct n.
+    + lhs nrapply grp_homo_op.
+      snrapply ap.
+      apply grp_homo_unit.
+    + lhs nrapply grp_homo_op.
+      snrapply ap.
+      assumption.
+  - destruct n.
+    + lhs snrapply grp_homo_op.
+      cbn; snrapply (ap (.* _)).
+      lhs nrapply grp_homo_inv; apply ap.
+      apply grp_homo_unit.
+    + lhs nrapply grp_homo_op.
+      cbn; snrapply (ap (.* _)).
+      lhs nrapply grp_homo_inv; apply ap.
+      assumption.
 Defined.
 
 (** All powers of the unit are the unit. *)
-Definition grp_pow_unit {G : Group} (n : nat)
+Definition grp_pow_unit {G : Group} (n : Int)
   : grp_pow (G:=G) mon_unit n = mon_unit.
 Proof.
   induction n.
-  1: reflexivity.
-  lhs rapply left_identity.
-  exact IHn.
+  - reflexivity.
+  - destruct n; by lhs nrapply grp_unit_l.
+  - destruct n.
+    + lhs nrapply grp_unit_r.
+      apply grp_inv_unit.
+    + lhs nrapply grp_unit_r.
+      rhs_V nrapply grp_inv_unit.
+      by snrapply ap.
 Defined.
+
+(** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
+
+(** [grp_pow] satisfies a law of exponents. *)
+Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
+Proof.
+  (** TODO: *)
+Abort.
 
 (** ** The category of Groups *)
 

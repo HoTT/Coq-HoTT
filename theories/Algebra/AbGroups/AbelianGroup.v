@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Int.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
@@ -228,26 +228,32 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
-(** Multiplication by [n : nat] defines an endomorphism of any abelian group [A]. *)
-Definition ab_mul_nat {A : AbGroup} (n : nat) : GroupHomomorphism A A.
+(** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
+Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
   induction n; cbn.
-  1: exact (grp_unit_l _)^.
-  refine (_ @ associativity _ _ _).
-  refine (_ @ ap _ (associativity _ _ _)^).
-  rewrite (commutativity (grp_pow a n) b).
-  refine (_ @ ap _ (associativity _ _ _)).
-  refine (_ @ (associativity _ _ _)^).
-  apply grp_cancelL.
-  assumption.
+  - exact (grp_unit_l _)^.
+  - destruct n.
+    + cbn; by rewrite !grp_unit_r.
+    + simpl in IHn |- *.
+      rewrite IHn.
+      rewrite !simple_associativity.
+      do 2 f_ap.
+      rewrite (commutativity a).
+      rewrite <- 2 simple_associativity.
+      rewrite (commutativity b).
+      by rewrite !simple_associativity.
+  - (** TODO *)
+    Axiom transparent_admit : Empty.
+    snrapply (Empty_rec transparent_admit).
 Defined.
 
-Definition ab_mul_nat_homo {A B : AbGroup}
-  (f : GroupHomomorphism A B) (n : nat)
-  : f o ab_mul_nat n == ab_mul_nat n o f
+Definition ab_mul_homo {A B : AbGroup}
+  (f : GroupHomomorphism A B) (n : Int)
+  : f o ab_mul n == ab_mul n o f
   := grp_pow_homo f n.
 
 (** The image of an inclusion is a normal subgroup. *)
@@ -297,9 +303,12 @@ Proof.
   induction n as [|n IHn] in f, p |- *.
   1: reflexivity.
   simpl; f_ap.
-  apply IHn.
-  intros k Hk.
-  apply p.
+  destruct n.
+  1: reflexivity.
+  rewrite IHn.
+  - reflexivity.
+  - intros k Hk.
+    apply p.
 Defined.
 
 (** If the function is zero in the range of a finite sum then the sum is zero. *)
