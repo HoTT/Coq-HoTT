@@ -672,18 +672,12 @@ Section MatrixCat.
     := is0gpd_paths _.
 
   Global Instance is0functor_postcomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : m $-> n)
-    : Is0Functor (@cat_postcomp (MatrixCat R) _ _ l m n P).
-  Proof.
-    constructor.
-    apply ap.
-  Defined.
-
+    : Is0Functor (@cat_postcomp (MatrixCat R) _ _ l m n P)
+    := is0functor_cat_postcomp_paths _ _ _ _ _.
+  
   Global Instance is0functor_precomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : l $-> m)
-    : Is0Functor (@cat_precomp (MatrixCat R) _ _ l m n P).
-  Proof.
-    constructor.
-    apply ap.
-  Defined.
+    : Is0Functor (@cat_precomp (MatrixCat R) _ _ l m n P)
+    := is0functor_cat_precomp_paths _ _ _ _ _.
 
   (** MatrixCat R forms a strong 1-category. *)
   Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
