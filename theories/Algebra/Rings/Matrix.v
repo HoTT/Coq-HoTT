@@ -695,10 +695,9 @@ Section MatrixCat.
   Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
     snrapply Build_Is1Cat_Strong.
-    - apply is01cat_matrixcat_hom.
-    - apply is0gpd_matrixcat_hom.
+    1,2,4: exact _.
+    (* I'm not sure why typeclass search doesn't find the next one.  Something must be slightly broken. *)
     - snrapply @is0functor_postcomp_matrixcat_hom.
-    - snrapply @is0functor_precomp_matrixcat_hom.
     - apply (associative_matrix_mult R).
     - intros k l m n M N P. apply inverse. apply (associative_matrix_mult R).
     - apply right_identity_matrix_mult.
