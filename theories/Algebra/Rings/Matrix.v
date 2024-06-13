@@ -5,7 +5,7 @@ Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
 Require Import WildCat.
-
+Require Import WildCat.Core.
 Set Universe Minimization ToSet.
 
 Local Open Scope mc_scope.
@@ -643,22 +643,16 @@ Defined.
 
 Section MatrixCatIs1Cat.
 
-  (** The wildcategory MatrixCat R of R-valued matrices. 
-  This category has natural numbers as objects, and m x n - dimensional matrices between m and n. *)
+  (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
   Definition MatrixCat (R : Ring) := nat.
 
-  Global Instance isgraph_matrixcat {R} : IsGraph (MatrixCat R).
-  Proof.
-    snrapply Build_IsGraph.
-    intros m n.
-    exact (Matrix R m n).
-  Defined.
+  Global Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
+    := {| Hom := Matrix R |}.
 
   Global Instance is01cat_matrixcat {R} : Is01Cat (MatrixCat R).
   Proof.
     snrapply Build_Is01Cat.
-    - intros a. 
-      exact (identity_matrix R a).
+    - exact (identity_matrix R).
     - intros a b c f g.
       exact (matrix_mult g f).
   Defined.
@@ -666,10 +660,9 @@ Section MatrixCatIs1Cat.
   Global Instance is2graph_matrixcat {R} : Is2Graph (MatrixCat R).
   Proof.
     unfold Is2Graph.
-    intros M N. 
+    intros m n. 
     snrapply Build_IsGraph.
-    intros A B.
-    exact (A = B).
+    exact paths.
   Defined.
 
   Global Instance isgraph_morphismmatrix {R} (m n : MatrixCat R) : IsGraph (m $-> n).
@@ -682,8 +675,7 @@ Section MatrixCatIs1Cat.
   Global Instance is01cat_morphismmatrix {R} (m n : MatrixCat R) : Is01Cat (m $-> n).
   Proof.
     snrapply Build_Is01Cat.
-    - intros a.
-      exact (idpath a).
+    - exact (@idpath _).
     - intros a b c A B.
       exact (B @ A).
   Defined.
@@ -691,9 +683,8 @@ Section MatrixCatIs1Cat.
   Global Instance is0gpd_morphismmatrix {R} (m n : MatrixCat R) : Is0Gpd (m $-> n).
   Proof.
     snrapply Build_Is0Gpd.
-    intros a b A.
-    destruct A.
-    exact (idpath _).
+    intros M N.
+    exact inverse.
   Defined.
 
   Global Instance is0functor_postcomp_morphismmatrix {R} {m n p : MatrixCat R} (h : n $-> p)
