@@ -4,6 +4,9 @@ Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
+Require Import WildCat.Core.
+Require Import WildCat.Paths.
+
 Require Import WildCat.
 Require Import WildCat.Core.
 Set Universe Minimization ToSet.
@@ -641,7 +644,7 @@ Proof.
   by rewrite 4 entry_Build_Matrix.
 Defined.
 
-Section MatrixCatIs1Cat.
+Section MatrixCat.
 
   (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
   Definition MatrixCat (R : Ring) := nat.
@@ -649,77 +652,59 @@ Section MatrixCatIs1Cat.
   Global Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
     := {| Hom := Matrix R |}.
 
-  Global Instance is01cat_matrixcat {R} : Is01Cat (MatrixCat R).
+  Global Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
   Proof.
     snrapply Build_Is01Cat.
-    - exact (identity_matrix R).
-    - intros a b c f g.
-      exact (matrix_mult g f).
+    - exact (@identity_matrix R).
+    - intros l m n M N.
+      exact (matrix_mult N M).
   Defined.
 
-  Global Instance is2graph_matrixcat {R} : Is2Graph (MatrixCat R).
+  Global Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R).
   Proof.
     unfold Is2Graph.
-    intros m n. 
-    snrapply Build_IsGraph.
-    exact paths.
+    intros.
+    apply isgraph_paths.
   Defined.
 
-  Global Instance isgraph_morphismmatrix {R} (m n : MatrixCat R) : IsGraph (m $-> n).
+  Global Instance is01cat_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is01Cat (m $-> n).
   Proof.
-    snrapply Build_IsGraph.
-    intros A B.
-    exact (A = B).
+    apply is01cat_paths.
   Defined.
 
-  Global Instance is01cat_morphismmatrix {R} (m n : MatrixCat R) : Is01Cat (m $-> n).
+  Global Instance is0gpd_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is0Gpd (m $-> n).
   Proof.
-    snrapply Build_Is01Cat.
-    - exact (@idpath _).
-    - intros a b c A B.
-      exact (B @ A).
+    apply is0gpd_paths.
   Defined.
 
-  Global Instance is0gpd_morphismmatrix {R} (m n : MatrixCat R) : Is0Gpd (m $-> n).
+  Global Instance is0functor_postcomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : m $-> n)
+    : Is0Functor (@cat_postcomp (MatrixCat R) _ _ l m n P).
   Proof.
-    snrapply Build_Is0Gpd.
-    intros M N.
-    exact inverse.
+    constructor.
+    apply ap.
   Defined.
 
-  Global Instance is0functor_postcomp_morphismmatrix {R} {m n p : MatrixCat R} (h : n $-> p)
-    : Is0Functor (@cat_postcomp (MatrixCat R) _ _ m n p h).
+  Global Instance is0functor_precomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : l $-> m)
+    : Is0Functor (@cat_precomp (MatrixCat R) _ _ l m n P).
   Proof.
-    snrapply Build_Is0Functor.
-    intros a b f.
-    destruct f.
-    exact (idpath _).
+    constructor.
+    apply ap.
   Defined.
-
-  Global Instance is0functor_precomp_morphismmatrix {R} {m n p : MatrixCat R} (h : m $-> n)
-    : Is0Functor (@cat_precomp (MatrixCat R) _ _ m n p h).
-  Proof.
-    snrapply Build_Is0Functor.
-    intros a b f.
-    destruct f.
-    exact (idpath _).
-  Defined.
-  (** I don't know if we can do something smart with these 3 functions, as they are constructed identically. *)
 
   (** MatrixCat R forms a strong 1-category. *)
-  Global Instance is1catstrong_matrixcat {R} : Is1Cat_Strong (MatrixCat R).
+  Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
     snrapply Build_Is1Cat_Strong.
-    - apply is01cat_morphismmatrix.
-    - apply is0gpd_morphismmatrix.
-    - intros m n p h. exact (is0functor_postcomp_morphismmatrix h).
-    - intros m n p h. exact (is0functor_precomp_morphismmatrix h).
+    - apply is01cat_matrixcat_hom.
+    - apply is0gpd_matrixcat_hom.
+    - snrapply @is0functor_postcomp_matrixcat_hom.
+    - snrapply @is0functor_precomp_matrixcat_hom.
     - apply (associative_matrix_mult R).
-    - intros m n p q A B C. apply inverse. apply (associative_matrix_mult R).
+    - intros k l m n M N P. apply inverse. apply (associative_matrix_mult R).
     - apply right_identity_matrix_mult.
     - apply left_identity_matrix_mult.
   Defined.
 
 (** TODO: Define HasEquivs for MatrixCat.  *)
 
-End MatrixCatIs1Cat.
+End MatrixCat.
