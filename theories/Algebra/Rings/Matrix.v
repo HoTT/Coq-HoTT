@@ -7,8 +7,6 @@ Require Import abstract_algebra.
 Require Import WildCat.Core.
 Require Import WildCat.Paths.
 
-Require Import WildCat.
-Require Import WildCat.Core.
 Set Universe Minimization ToSet.
 
 Local Open Scope mc_scope.
@@ -667,15 +665,11 @@ Section MatrixCat.
     apply isgraph_paths.
   Defined.
 
-  Global Instance is01cat_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is01Cat (m $-> n).
-  Proof.
-    apply is01cat_paths.
-  Defined.
+  Global Instance is01cat_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is01Cat (m $-> n)
+    := is01cat_paths _.
 
-  Global Instance is0gpd_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is0Gpd (m $-> n).
-  Proof.
-    apply is0gpd_paths.
-  Defined.
+  Global Instance is0gpd_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is0Gpd (m $-> n)
+    := is0gpd_paths _.
 
   Global Instance is0functor_postcomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : m $-> n)
     : Is0Functor (@cat_postcomp (MatrixCat R) _ _ l m n P).
