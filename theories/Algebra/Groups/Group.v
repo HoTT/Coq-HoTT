@@ -479,9 +479,9 @@ End GroupMovement.
 (** For a given [n : nat] we can define the [n]th power of a group element. *)
 Definition grp_pow {G : Group} (g : G) (n : Int) : G
   := match n with
-     | posS n => nat_iter n.+1%nat (g *.) mon_unit
+     | posS n => nat_iter n (g *.) g
      | zero => mon_unit
-     | negS n => nat_iter n.+1%nat ((- g) *.) mon_unit
+     | negS n => nat_iter n ((- g) *.) (- g)
      end.
 
 (** Any homomorphism respects [grp_pow]. *)
@@ -490,24 +490,17 @@ Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
 Proof.
   induction n.
   - apply grp_homo_unit.
-  - destruct n.
-    + lhs nrapply grp_homo_op.
-      snrapply ap.
-      apply grp_homo_unit.
-    + lhs nrapply grp_homo_op.
-      snrapply ap.
-      assumption.
-  - destruct n.
+  - destruct n; simpl in IHn |- *.
+    + reflexivity.
     + lhs snrapply grp_homo_op.
-      cbn. rewrite grp_homo_unit. 
-      (* I don't remember how to not use rewrite here 😩 *)
-      snrapply (ap (.* _)).
-      by lhs nrapply grp_homo_inv.
-    + lhs nrapply grp_homo_op.
-      cbn. rewrite grp_homo_inv.
-      (* Same rewrite issue right here 😔 *)
-      snrapply (ap (_ *.)).
-      assumption.
+      apply ap.
+      exact IHn.
+  - destruct n; simpl in IHn |- *.
+    + apply grp_homo_inv.
+    + lhs snrapply grp_homo_op.
+      apply ap011.
+      * apply grp_homo_inv.
+      * exact IHn.
 Defined.
 
 (** All powers of the unit are the unit. *)
@@ -516,12 +509,12 @@ Definition grp_pow_unit {G : Group} (n : Int)
 Proof.
   induction n.
   - reflexivity.
-  - destruct n; by lhs nrapply grp_unit_l.
-  - destruct n.
-    + lhs nrapply grp_unit_r.
-      apply grp_inv_unit.
-    + cbn in IHn |- *.
-      rewrite grp_inv_unit in IHn |- *. 
+  - destruct n; simpl. 
+    + reflexivity.
+    + by lhs nrapply grp_unit_l.
+  - destruct n; simpl in IHn |- *.
+    + apply grp_inv_unit.
+    + rewrite grp_inv_unit in IHn |- *. 
       by lhs nrapply grp_unit_l.
 Defined.
 
@@ -531,15 +524,13 @@ Defined.
 Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
   : grp_pow g (n.+1)%int = g * grp_pow g n.
 Proof.
-  induction n.
-  - reflexivity.
+  induction n; simpl.
+  - apply (grp_unit_r g)^.
   - destruct n.
     + reflexivity.
     + reflexivity.
-  - destruct n; cbn.
-    + rhs srapply simple_associativity.
-      rewrite grp_inv_r.
-      apply (grp_unit_l _)^.
+  - destruct n; simpl.
+    + apply (grp_inv_r g)^.
     + rhs srapply simple_associativity.
       rewrite grp_inv_r. 
       apply (grp_unit_l _)^.
@@ -551,7 +542,7 @@ Proof.
   induction n.
   - reflexivity.
   - destruct n; reflexivity.
-  - destruct n; cbn; rewrite grp_inv_inv; reflexivity.
+  - destruct n; simpl; rewrite grp_inv_inv; reflexivity.
 Defined.
 
 (** [grp_pow] satisfies a law of exponents. *)
@@ -561,16 +552,16 @@ Proof.
   induction n; cbn.
   - exact (grp_unit_l _)^.
   - rewrite int_add_succ_l.
-    do 2 rewrite grp_pow_int_add_1.
+    rewrite 2 grp_pow_int_add_1.
     rhs srapply (simple_associativity _ _ _)^.
     snrapply (ap (_ *.)). exact IHn.
   - rewrite <- int_neg_succ.
     rewrite <- (int_neg_neg m) in IHn |- *.
     rewrite <- int_neg_add in IHn |- *.
-    do 2 rewrite grp_pow_int_sign_commute in IHn |- *.
+    rewrite 2 grp_pow_int_sign_commute in IHn |- *.
     rewrite int_add_succ_l.
-    do 2 rewrite grp_pow_int_add_1.
-    rhs srapply (simple_associativity _ _ _)^.
+    rewrite 2 grp_pow_int_add_1.
+    rhs_V srapply simple_associativity.
     snrapply (ap (_ *.)).
     exact IHn.
 Defined.
