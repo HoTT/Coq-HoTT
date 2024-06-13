@@ -520,6 +520,16 @@ Defined.
 
 (** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
 
+Definition grp_pow_nat_add_1 {G : Group} (n : nat) (g : G) 
+  :  grp_pow g (n.+1)%nat = g * grp_pow g n.
+Proof.
+  induction n; simpl.
+  - apply (grp_unit_r g)^.
+  - destruct n.
+    + reflexivity.
+    + reflexivity.
+Defined.
+
 (** Helper functions for [grp_pow_int_add] add *)
 Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
   : grp_pow g (n.+1)%int = g * grp_pow g n.

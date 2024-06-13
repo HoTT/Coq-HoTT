@@ -237,18 +237,27 @@ Proof.
   induction n; cbn.
   - exact (grp_unit_l _)^.
   - destruct n.
-    + cbn; by rewrite !grp_unit_r.
+    + reflexivity.
     + simpl in IHn |- *.
-      rewrite IHn.
-      rewrite !simple_associativity.
-      do 2 f_ap.
-      rewrite (commutativity a).
-      rewrite <- 2 simple_associativity.
-      rewrite (commutativity b).
-      by rewrite !simple_associativity.
-  - (** TODO *)
-    Axiom transparent_admit : Empty.
-    snrapply (Empty_rec transparent_admit).
+      rewrite <- (simple_associativity a (nat_iter _ _ _)).
+      rewrite (simple_associativity (nat_iter n (sg_op a) a)).
+      rewrite (commutativity (nat_iter _ _ _) b).
+      rewrite <- (simple_associativity b (nat_iter _ _ _) (nat_iter _ _ _)).
+      rewrite (simple_associativity a).
+      f_ap.
+  - destruct n.
+    + simpl. 
+      rewrite (commutativity (- a)).
+      exact (grp_inv_op a b).
+    + simpl in IHn |- *.
+      rewrite <- (simple_associativity (- a)).
+      rewrite (simple_associativity (nat_iter _ _ _)).
+      rewrite (commutativity (nat_iter _ _ _) (-b)).
+      rewrite <- (simple_associativity (- b)).
+      rewrite (simple_associativity (-a) (-b)).
+      rewrite (commutativity (-a) (-b)).
+      rewrite <- (grp_inv_op a b).
+      f_ap.
 Defined.
 
 Definition ab_mul_homo {A B : AbGroup}
@@ -301,14 +310,12 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
   : ab_sum n f = grp_pow r n.
 Proof.
   induction n as [|n IHn] in f, p |- *.
-  1: reflexivity.
-  simpl; f_ap.
-  destruct n.
-  1: reflexivity.
-  rewrite IHn.
   - reflexivity.
-  - intros k Hk.
-    apply p.
+  - rewrite (grp_pow_nat_add_1 n r).
+    simpl. f_ap.
+    rewrite IHn.
+    + reflexivity.
+    + intros. apply p.
 Defined.
 
 (** If the function is zero in the range of a finite sum then the sum is zero. *)
