@@ -80,7 +80,7 @@ Notation "n .-1" := (int_pred n) : int_scope.
 
 (** [int_of_nat] is commutes with taking succesors *)
 
-Definition int_of_nat_succ_commute (n : nat) : S n = int_succ(n) :> Int.
+Definition int_of_nat_succ_commute (n : nat) : S n = int_succ n :> Int.
 Proof.
   destruct n; reflexivity.
 Defined.
