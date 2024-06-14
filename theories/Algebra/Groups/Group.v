@@ -514,38 +514,42 @@ Proof.
     + by lhs nrapply grp_unit_l.
   - destruct n; simpl in IHn |- *.
     + apply grp_inv_unit.
-    + rewrite grp_inv_unit in IHn |- *. 
-      by lhs nrapply grp_unit_l.
+    + destruct IHn^.
+      rhs apply (@grp_inv_unit G)^.
+      apply grp_unit_r.
 Defined.
 
 (** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
 
-Definition grp_pow_nat_add_1 {G : Group} (n : nat) (g : G) 
-  :  grp_pow g (n.+1)%nat = g * grp_pow g n.
-Proof.
-  induction n; simpl.
-  - apply (grp_unit_r g)^.
-  - destruct n.
-    + reflexivity.
-    + reflexivity.
-Defined.
+(** Helper functions for [grp_pow_int_add]. This is how we can unfold [grp_pow] once. *)
 
-(** Helper functions for [grp_pow_int_add] add *)
 Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
   : grp_pow g (n.+1)%int = g * grp_pow g n.
 Proof.
   induction n; simpl.
-  - apply (grp_unit_r g)^.
+  - exact (grp_unit_r g)^.
+  - destruct n; reflexivity.
   - destruct n.
-    + reflexivity.
-    + reflexivity.
-  - destruct n; simpl.
     + apply (grp_inv_r g)^.
     + rhs srapply simple_associativity.
       rewrite grp_inv_r. 
       apply (grp_unit_l _)^.
 Defined.
 
+Definition grp_pow_int_sub_1 {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.-1)%int = (- g) * grp_pow g n.
+Proof.
+  induction n; simpl.
+  - exact (grp_unit_r (-g))^.
+  - destruct n.
+    + apply (grp_inv_l g)^.
+    + rhs srapply simple_associativity.
+      rewrite grp_inv_l.
+      apply (grp_unit_l _)^.
+  - destruct n; reflexivity.
+Defined.
+
+(** [grp_pow] commutes negative exponents to powers of the inverse *)
 Definition grp_pow_int_sign_commute {G : Group} (n : Int) (g : G)
   : grp_pow g (int_neg n) = grp_pow (- g) n.
 Proof.
@@ -561,16 +565,11 @@ Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
 Proof.
   induction n; cbn.
   - exact (grp_unit_l _)^.
-  - rewrite int_add_succ_l.
-    rewrite 2 grp_pow_int_add_1.
+  - rewrite int_add_succ_l, 2 grp_pow_int_add_1.
     rhs srapply (simple_associativity _ _ _)^.
-    snrapply (ap (_ *.)). exact IHn.
-  - rewrite <- int_neg_succ.
-    rewrite <- (int_neg_neg m) in IHn |- *.
-    rewrite <- int_neg_add in IHn |- *.
-    rewrite 2 grp_pow_int_sign_commute in IHn |- *.
-    rewrite int_add_succ_l.
-    rewrite 2 grp_pow_int_add_1.
+    snrapply (ap (_ *.)). 
+    exact IHn.
+  - rewrite int_add_pred_l, 2 grp_pow_int_sub_1.
     rhs_V srapply simple_associativity.
     snrapply (ap (_ *.)).
     exact IHn.

@@ -239,26 +239,36 @@ Proof.
   - destruct n.
     + reflexivity.
     + simpl in IHn |- *.
-      rewrite <- (simple_associativity a (nat_iter _ _ _)).
-      rewrite (simple_associativity (nat_iter n (sg_op a) a)).
+      refine (_ @ associativity _ _ _).
+      refine (_ @ (ap _ (associativity _ _ _)^)).
       rewrite (commutativity (nat_iter _ _ _) b).
-      rewrite <- (simple_associativity b (nat_iter _ _ _) (nat_iter _ _ _)).
-      rewrite (simple_associativity a).
-      f_ap.
+      refine (_ @ (ap _ (associativity _ _ _))).
+      refine (_ @ (associativity _ _ _)^).
+      apply grp_cancelL.
+      exact IHn.
   - destruct n.
     + simpl. 
       rewrite (commutativity (- a)).
       exact (grp_inv_op a b).
     + simpl in IHn |- *.
-      rewrite <- (simple_associativity (- a)).
-      rewrite (simple_associativity (nat_iter _ _ _)).
+      refine (_ @ associativity _ _ _).
+      refine (_ @ ap _ (associativity _ _ _)^).
       rewrite (commutativity (nat_iter _ _ _) (-b)).
-      rewrite <- (simple_associativity (- b)).
-      rewrite (simple_associativity (-a) (-b)).
-      rewrite (commutativity (-a) (-b)).
-      rewrite <- (grp_inv_op a b).
-      f_ap.
+      refine (_ @ ap _ (associativity _ _ _)).
+      refine (_ @ (associativity _ _ _)^).
+      rewrite (commutativity (-a) (-b)), <- (grp_inv_op a b).
+      apply grp_cancelL.
+      exact IHn.
 Defined.
+
+  (* 1: exact (grp_unit_l _)^.
+  refine (_ @ associativity _ _ _).
+  refine (_ @ ap _ (associativity _ _ _)^).
+  rewrite (commutativity (grp_pow a n) b).
+  refine (_ @ ap _ (associativity _ _ _)).
+  refine (_ @ (associativity _ _ _)^).
+  apply grp_cancelL.
+  assumption. *)
 
 Definition ab_mul_homo {A B : AbGroup}
   (f : GroupHomomorphism A B) (n : Int)
@@ -311,7 +321,7 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
-  - rewrite (grp_pow_nat_add_1 n r).
+  - rewrite int_of_nat_succ_commute, grp_pow_int_add_1.
     simpl. f_ap.
     rewrite IHn.
     + reflexivity.
