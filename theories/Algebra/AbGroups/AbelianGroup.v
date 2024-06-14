@@ -261,15 +261,6 @@ Proof.
       exact IHn.
 Defined.
 
-  (* 1: exact (grp_unit_l _)^.
-  refine (_ @ associativity _ _ _).
-  refine (_ @ ap _ (associativity _ _ _)^).
-  rewrite (commutativity (grp_pow a n) b).
-  refine (_ @ ap _ (associativity _ _ _)).
-  refine (_ @ (associativity _ _ _)^).
-  apply grp_cancelL.
-  assumption. *)
-
 Definition ab_mul_homo {A B : AbGroup}
   (f : GroupHomomorphism A B) (n : Int)
   : f o ab_mul n == ab_mul n o f
