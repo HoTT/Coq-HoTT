@@ -653,7 +653,7 @@ Section MatrixCat.
   Global Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
   Proof.
     snrapply Build_Is01Cat.
-    - exact (@identity_matrix R).
+    - exact (identity_matrix R).
     - intros l m n M N.
       exact (matrix_mult N M).
   Defined.
