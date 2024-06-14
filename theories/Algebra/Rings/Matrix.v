@@ -4,8 +4,7 @@ Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
-Require Import WildCat.Core.
-Require Import WildCat.Paths.
+Require Import WildCat.Core WildCat.Paths.
 
 Set Universe Minimization ToSet.
 
@@ -658,34 +657,15 @@ Section MatrixCat.
       exact (matrix_mult N M).
   Defined.
 
-  Global Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R).
-  Proof.
-    unfold Is2Graph.
-    intros.
-    apply isgraph_paths.
-  Defined.
-
-  Global Instance is01cat_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is01Cat (m $-> n)
-    := is01cat_paths _.
-
-  Global Instance is0gpd_matrixcat_hom {R : Ring} (m n : MatrixCat R) : Is0Gpd (m $-> n)
-    := is0gpd_paths _.
-
-  Global Instance is0functor_postcomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : m $-> n)
-    : Is0Functor (@cat_postcomp (MatrixCat R) _ _ l m n P)
-    := is0functor_cat_postcomp_paths _ _ _ _ _.
-  
-  Global Instance is0functor_precomp_matrixcat_hom {R : Ring} {l m n : MatrixCat R} (P : l $-> m)
-    : Is0Functor (@cat_precomp (MatrixCat R) _ _ l m n P)
-    := is0functor_cat_precomp_paths _ _ _ _ _.
+  Global Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
+    := is2graph_paths _.
 
   (** MatrixCat R forms a strong 1-category. *)
   Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
     snrapply Build_Is1Cat_Strong.
-    1,2,4: exact _.
-    (* I'm not sure why typeclass search doesn't find the next one.  Something must be slightly broken. *)
-    - snrapply @is0functor_postcomp_matrixcat_hom.
+    (* Most of the structure comes from typeclasses in WildCat.Paths. *)
+    1-4: exact _.
     - apply (associative_matrix_mult R).
     - intros k l m n M N P. apply inverse. apply (associative_matrix_mult R).
     - apply right_identity_matrix_mult.

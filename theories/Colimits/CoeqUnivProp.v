@@ -16,10 +16,9 @@ Require Import WildCat.ZeroGroupoid.
 Section UnivProp.
   Context {B A : Type} (f g : B -> A) (P : Coeq f g -> Type).
 
-  (** This allows Coq to infer 0-groupoid structures of the form [@isgraph_forall C P (fun c => isgraph_paths (P c))] on any type of the form [forall c, P c]. *)
-  Local Existing Instances isgraph_forall is01cat_forall is0gpd_forall | 1.
-  Local Existing Instances isgraph_total is01cat_total is0gpd_total | 1.
-  Local Existing Instances isgraph_paths is01cat_paths is0gpd_paths | 2.
+  (** This allows Coq to infer 0-groupoid structures of the form [@isgraph_forall C P (fun c => isgraph_paths (P c))] on any type of the form [forall c, P c].  [isgraph_paths] is not a global instance.  [isgraph_total] is, but we need to adjust the priority.  The other needed ingredients are all global instances. *)
+  Local Existing Instances isgraph_total | 1.
+  Local Existing Instances isgraph_paths | 2.
 
   (** The codomain of the equivalence is a sigma-groupoid of this family. *)
   Definition Coeq_ind_data (h : forall a : A, P (coeq a))
