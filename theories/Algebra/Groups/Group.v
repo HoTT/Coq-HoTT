@@ -515,7 +515,7 @@ Proof.
   - destruct n; simpl in IHn |- *.
     + apply grp_inv_unit.
     + destruct IHn^.
-      rhs apply (@grp_inv_unit G)^.
+      rhs_V apply (@grp_inv_unit G).
       apply grp_unit_r.
 Defined.
 
@@ -531,7 +531,7 @@ Proof.
   - destruct n; reflexivity.
   - destruct n.
     + apply (grp_inv_r g)^.
-    + rhs srapply simple_associativity.
+    + rhs srapply associativity.
       rewrite grp_inv_r. 
       apply (grp_unit_l _)^.
 Defined.
@@ -543,7 +543,7 @@ Proof.
   - exact (grp_unit_r (-g))^.
   - destruct n.
     + apply (grp_inv_l g)^.
-    + rhs srapply simple_associativity.
+    + rhs srapply associativity.
       rewrite grp_inv_l.
       apply (grp_unit_l _)^.
   - destruct n; reflexivity.
@@ -564,15 +564,12 @@ Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
   : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
 Proof.
   induction n; cbn.
-  - exact (grp_unit_l _)^.
-  - rewrite int_add_succ_l, 2 grp_pow_int_add_1.
-    rhs srapply (simple_associativity _ _ _)^.
-    snrapply (ap (_ *.)). 
-    exact IHn.
-  - rewrite int_add_pred_l, 2 grp_pow_int_sub_1.
-    rhs_V srapply simple_associativity.
-    snrapply (ap (_ *.)).
-    exact IHn.
+  1: exact (grp_unit_l _)^.
+  1: rewrite int_add_succ_l, 2 grp_pow_int_add_1.
+  2: rewrite int_add_pred_l, 2 grp_pow_int_sub_1.
+  1,2: rhs_V srapply associativity; 
+       snrapply (ap (_ *.));
+       exact IHn.
 Defined.
 
 (** ** The category of Groups *)

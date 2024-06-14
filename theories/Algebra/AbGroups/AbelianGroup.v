@@ -238,24 +238,21 @@ Proof.
   - exact (grp_unit_l _)^.
   - destruct n.
     + reflexivity.
-    + simpl in IHn |- *.
-      refine (_ @ associativity _ _ _).
-      refine (_ @ (ap _ (associativity _ _ _)^)).
+    + rhs_V srapply (associativity a).
+      rhs srapply (ap _ (associativity _ b _)).
       rewrite (commutativity (nat_iter _ _ _) b).
-      refine (_ @ (ap _ (associativity _ _ _))).
-      refine (_ @ (associativity _ _ _)^).
+      rhs_V srapply (ap _ (associativity b _ _)).
+      rhs srapply (associativity a).
       apply grp_cancelL.
       exact IHn.
   - destruct n.
-    + simpl. 
-      rewrite (commutativity (- a)).
+    + rewrite (commutativity (-a)).
       exact (grp_inv_op a b).
-    + simpl in IHn |- *.
-      refine (_ @ associativity _ _ _).
-      refine (_ @ ap _ (associativity _ _ _)^).
+    + rhs_V srapply (associativity (-a)).
+      rhs srapply (ap _ (associativity _ (-b) _)).
       rewrite (commutativity (nat_iter _ _ _) (-b)).
-      refine (_ @ ap _ (associativity _ _ _)).
-      refine (_ @ (associativity _ _ _)^).
+      rhs_V srapply (ap _ (associativity (-b) _ _)).
+      rhs srapply (associativity (-a)).
       rewrite (commutativity (-a) (-b)), <- (grp_inv_op a b).
       apply grp_cancelL.
       exact IHn.
