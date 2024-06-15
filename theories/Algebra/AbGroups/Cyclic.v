@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
-  Groups.FreeGroup AbGroups.Z BinInt.Core.
+  Groups.FreeGroup AbGroups.Z BinInt.Core Spaces.Int.
 
 (** * Cyclic groups *)
 
@@ -44,7 +44,7 @@ Definition Z1_mul_nat `{Funext} (n : nat) : ab_Z1 $-> ab_Z1
   := Z1_rec (nat_to_Z1 n).
 
 Lemma Z1_mul_nat_beta {A : AbGroup} (a : A) (n : nat)
-  : Z1_rec a (nat_to_Z1 n) = ab_mul_nat n a.
+  : Z1_rec a (nat_to_Z1 n) = ab_mul n a.
 Proof.
   induction n as [|n H].
   1: easy.

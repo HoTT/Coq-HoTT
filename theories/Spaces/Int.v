@@ -78,6 +78,14 @@ Definition int_pred (n : Int) : Int :=
 
 Notation "n .-1" := (int_pred n) : int_scope.
 
+(** [int_of_nat] is commutes with taking succesors *)
+
+Definition int_of_nat_succ_commute (n : nat) 
+  : int_of_nat (S n) = (int_succ o int_of_nat) n :> Int.
+Proof.
+  destruct n; reflexivity.
+Defined.
+
 (** *** Negation *)
 
 Definition int_neg@{} (x : Int) : Int :=
