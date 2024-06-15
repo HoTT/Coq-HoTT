@@ -17,7 +17,7 @@ Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, n
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Int.
 Require Import Truncations.Core.
 
 Local Set Polymorphic Inductive Cumulativity.
@@ -390,6 +390,9 @@ Section GroupEquations.
 
   (** Inverses distribute over the group operation. *)
   Definition grp_inv_op : - (x * y) = -y * -x := negate_sg_op x y.
+  
+  (** The inverse of the unit is the unit. *)
+  Definition grp_inv_unit : -mon_unit = mon_unit := negate_mon_unit (G :=G).
 
 End GroupEquations.
 
@@ -474,26 +477,99 @@ End GroupMovement.
 (** ** Power operation *)
 
 (** For a given [n : nat] we can define the [n]th power of a group element. *)
-Definition grp_pow {G : Group} (g : G) (n : nat) : G := nat_iter n (g *.) mon_unit.
+Definition grp_pow {G : Group} (g : G) (n : Int) : G
+  := match n with
+     | posS n => nat_iter n (g *.) g
+     | zero => mon_unit
+     | negS n => nat_iter n ((- g) *.) (- g)
+     end.
 
 (** Any homomorphism respects [grp_pow]. *)
-Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H)
-  (n : nat) (g : G) : f (grp_pow g n) = grp_pow (f g) n.
+Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
+  : f (grp_pow g n) = grp_pow (f g) n.
 Proof.
   induction n.
-  + cbn. apply grp_homo_unit.
-  + cbn. refine ((grp_homo_op f g (grp_pow g n)) @ _).
-    exact (ap (fun m => f g + m) IHn).
+  - apply grp_homo_unit.
+  - destruct n; simpl in IHn |- *.
+    + reflexivity.
+    + lhs snrapply grp_homo_op.
+      apply ap.
+      exact IHn.
+  - destruct n; simpl in IHn |- *.
+    + apply grp_homo_inv.
+    + lhs snrapply grp_homo_op.
+      apply ap011.
+      * apply grp_homo_inv.
+      * exact IHn.
 Defined.
 
 (** All powers of the unit are the unit. *)
-Definition grp_pow_unit {G : Group} (n : nat)
+Definition grp_pow_unit {G : Group} (n : Int)
   : grp_pow (G:=G) mon_unit n = mon_unit.
 Proof.
   induction n.
-  1: reflexivity.
-  lhs rapply left_identity.
-  exact IHn.
+  - reflexivity.
+  - destruct n; simpl. 
+    + reflexivity.
+    + by lhs nrapply grp_unit_l.
+  - destruct n; simpl in IHn |- *.
+    + apply grp_inv_unit.
+    + destruct IHn^.
+      rhs_V apply (@grp_inv_unit G).
+      apply grp_unit_r.
+Defined.
+
+(** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
+
+(** Helper functions for [grp_pow_int_add]. This is how we can unfold [grp_pow] once. *)
+
+Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.+1)%int = g * grp_pow g n.
+Proof.
+  induction n; simpl.
+  - exact (grp_unit_r g)^.
+  - destruct n; reflexivity.
+  - destruct n.
+    + apply (grp_inv_r g)^.
+    + rhs srapply associativity.
+      rewrite grp_inv_r. 
+      apply (grp_unit_l _)^.
+Defined.
+
+Definition grp_pow_int_sub_1 {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.-1)%int = (- g) * grp_pow g n.
+Proof.
+  induction n; simpl.
+  - exact (grp_unit_r (-g))^.
+  - destruct n.
+    + apply (grp_inv_l g)^.
+    + rhs srapply associativity.
+      rewrite grp_inv_l.
+      apply (grp_unit_l _)^.
+  - destruct n; reflexivity.
+Defined.
+
+(** [grp_pow] commutes negative exponents to powers of the inverse *)
+Definition grp_pow_int_sign_commute {G : Group} (n : Int) (g : G)
+  : grp_pow g (int_neg n) = grp_pow (- g) n.
+Proof.
+  induction n.
+  - reflexivity.
+  - destruct n; reflexivity.
+  - destruct n; simpl; rewrite grp_inv_inv; reflexivity.
+Defined.
+
+(** [grp_pow] satisfies a law of exponents. *)
+Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
+Proof.
+  induction n; cbn.
+  1: exact (grp_unit_l _)^.
+  1: rewrite int_add_succ_l, 2 grp_pow_int_add_1.
+  2: rewrite int_add_pred_l, 2 grp_pow_int_sub_1.
+  1,2: rhs_V srapply associativity; 
+       snrapply (ap (_ *.));
+       exact IHn.
 Defined.
 
 (** ** The category of Groups *)
