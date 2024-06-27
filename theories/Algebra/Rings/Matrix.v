@@ -47,9 +47,9 @@ Proof.
   - by lhs nrapply length_list_sigma.
 Defined.
 
-Definition entries {R : Type} {m n} (M : Matrix R m n)
+Definition entries@{i|} {R : Type@{i}} {m n} (M : Matrix R m n)
   : list (list R)
-  := list_map pr1 (pr1 M).
+  := list_map@{i i} pr1 (pr1 M).
 
 (** The entry at row [i] and column [j] of a matrix [M]. *)
 Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
@@ -141,7 +141,7 @@ Definition identity_matrix (R : Ring@{i}) (n : nat) : Matrix R n n
   := Build_Matrix R n n (fun i j _ _ => kronecker_delta i j).
 
 (** This is the most general statement of associativity for matrix multiplication. *)
-Definition associative_matrix_mult (R : Ring@{i}) (m n p q : nat)
+Definition associative_matrix_mult (R : Ring) (m n p q : nat)
   : HeteroAssociative
       (@matrix_mult R m n q) (@matrix_mult R n p q)
       (@matrix_mult R m p q) (@matrix_mult R m n p).
@@ -164,7 +164,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the left. *)
-Definition left_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition left_distribute_matrix_mult (R : Ring) (m n p : nat)
   : LeftHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -178,7 +178,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the right. *)
-Definition right_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition right_distribute_matrix_mult (R : Ring) (m n p : nat)
   : RightHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -192,7 +192,7 @@ Proof.
 Defined.
 
 (** The identity matrix acts as a left identity for matrix multiplication. *)
-Definition left_identity_matrix_mult (R : Ring@{i}) (m n: nat)
+Definition left_identity_matrix_mult (R : Ring) (m n: nat)
   : LeftIdentity (@matrix_mult R m m n) (identity_matrix R m).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
@@ -203,7 +203,7 @@ Proof.
 Defined.
 
 (** The identity matrix acts as a right identity for matrix multiplication. *)
-Definition right_identity_matrix_mult (R : Ring@{i}) (m n : nat)
+Definition right_identity_matrix_mult (R : Ring) (m n : nat)
   : RightIdentity (@matrix_mult R m n n) (identity_matrix R n).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
