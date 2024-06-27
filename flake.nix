@@ -29,11 +29,11 @@
           useDune = true;
         };
 
-        devShells.default = makeDevShell { coq = pkgs.coq_8_19; };
+        devShells.default = makeDevShell { coq = pkgs.coq_8_19; } { };
 
         # To use, pass --impure to nix develop
         devShells.coq_master =
-          makeDevShell { coq = pkgs.coq.override { version = "master"; }; };
+          makeDevShell { coq = pkgs.coq.override { version = "master"; }; } { };
 
         formatter = pkgs.nixpkgs-fmt;
       });
