@@ -47,9 +47,9 @@ Proof.
   - by lhs nrapply length_list_sigma.
 Defined.
 
-Definition entries {R : Type} {m n} (M : Matrix R m n)
+Definition entries@{i|} {R : Type@{i}} {m n} (M : Matrix R m n)
   : list (list R)
-  := list_map pr1 (pr1 M).
+  := list_map@{i i} pr1 (pr1 M).
 
 (** The entry at row [i] and column [j] of a matrix [M]. *)
 Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
@@ -141,7 +141,7 @@ Definition identity_matrix (R : Ring@{i}) (n : nat) : Matrix R n n
   := Build_Matrix R n n (fun i j _ _ => kronecker_delta i j).
 
 (** This is the most general statement of associativity for matrix multiplication. *)
-Definition associative_matrix_mult (R : Ring@{i}) (m n p q : nat)
+Definition associative_matrix_mult@{i} (R : Ring@{i}) (m n p q : nat)
   : HeteroAssociative
       (@matrix_mult R m n q) (@matrix_mult R n p q)
       (@matrix_mult R m p q) (@matrix_mult R m n p).
@@ -152,7 +152,7 @@ Proof.
   { intros k Hk.
     rewrite entry_Build_Matrix.
     apply rng_sum_dist_l. }
-  lhs nrapply ab_sum_sum.
+  lhs nrapply ab_sum_sum@{i i}.
   rhs nrapply path_ab_sum.
   2: intros k Hk; by rewrite entry_Build_Matrix.
   nrapply path_ab_sum.
@@ -199,7 +199,7 @@ Proof.
   rewrite entry_Build_Matrix.
   lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_l.
+  nrapply rng_sum_kronecker_delta_l@{i i}.
 Defined.
 
 (** The identity matrix acts as a right identity for matrix multiplication. *)
@@ -210,7 +210,7 @@ Proof.
   rewrite entry_Build_Matrix.
   lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_r'.
+  nrapply rng_sum_kronecker_delta_r'@{i i}.
 Defined.
 
 (** TODO: define this as an R-algebra. What is an R-algebra over a non-commutative right however? (Here we have a bimodule which might be important) *)
