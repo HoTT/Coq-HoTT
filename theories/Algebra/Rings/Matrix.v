@@ -141,7 +141,7 @@ Definition identity_matrix (R : Ring@{i}) (n : nat) : Matrix R n n
   := Build_Matrix R n n (fun i j _ _ => kronecker_delta i j).
 
 (** This is the most general statement of associativity for matrix multiplication. *)
-Definition associative_matrix_mult@{i} (R : Ring@{i}) (m n p q : nat)
+Definition associative_matrix_mult (R : Ring) (m n p q : nat)
   : HeteroAssociative
       (@matrix_mult R m n q) (@matrix_mult R n p q)
       (@matrix_mult R m p q) (@matrix_mult R m n p).
@@ -152,7 +152,7 @@ Proof.
   { intros k Hk.
     rewrite entry_Build_Matrix.
     apply rng_sum_dist_l. }
-  lhs nrapply ab_sum_sum@{i i}.
+  lhs nrapply ab_sum_sum.
   rhs nrapply path_ab_sum.
   2: intros k Hk; by rewrite entry_Build_Matrix.
   nrapply path_ab_sum.
@@ -164,7 +164,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the left. *)
-Definition left_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition left_distribute_matrix_mult (R : Ring) (m n p : nat)
   : LeftHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -178,7 +178,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the right. *)
-Definition right_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition right_distribute_matrix_mult (R : Ring) (m n p : nat)
   : RightHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -192,25 +192,25 @@ Proof.
 Defined.
 
 (** The identity matrix acts as a left identity for matrix multiplication. *)
-Definition left_identity_matrix_mult (R : Ring@{i}) (m n: nat)
+Definition left_identity_matrix_mult (R : Ring) (m n: nat)
   : LeftIdentity (@matrix_mult R m m n) (identity_matrix R m).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
   lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_l@{i i}.
+  nrapply rng_sum_kronecker_delta_l.
 Defined.
 
 (** The identity matrix acts as a right identity for matrix multiplication. *)
-Definition right_identity_matrix_mult (R : Ring@{i}) (m n : nat)
+Definition right_identity_matrix_mult (R : Ring) (m n : nat)
   : RightIdentity (@matrix_mult R m n n) (identity_matrix R n).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
   lhs nrapply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_r'@{i i}.
+  nrapply rng_sum_kronecker_delta_r'.
 Defined.
 
 (** TODO: define this as an R-algebra. What is an R-algebra over a non-commutative right however? (Here we have a bimodule which might be important) *)
