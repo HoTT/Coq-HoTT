@@ -617,6 +617,39 @@ Proof.
     f_ap.
 Defined.
 
+(** This is a general lemma about commutativity of monoid units. Don't know what file this should belong to. *)
+Lemma inverse_commute_commute {A} (f : A -> A) `{!IsEquiv f} (g : A -> A) (p : g o f == f o g)
+  : g o f^-1 == f^-1 o g.
+Proof.
+  intros a.
+  lhs_V apply (eissect f ((g o f^-1) a)).
+  lhs_V apply (ap f^-1 (p (f^-1 a))).
+  lhs apply (ap (f^-1 o g) (eisretr f a)).
+  reflexivity.
+Defined.
+
+(** If the maps f and g commutes, then the order of application doesn't matter *)
+Definition int_iter_commute_function_application {A} (f : A -> A) `{!IsEquiv f} (g : A -> A) (p : g o f == f o g) (n : Int) (a : A)
+  : g (int_iter f n a) = int_iter f n (g a).
+Proof.
+  destruct n.
+  - induction n.
+    + simpl.
+      exact (inverse_commute_commute f g p a).
+    + simpl.
+      lhs apply (inverse_commute_commute f g p).
+      lhs apply (ap f^-1 IHn).
+      reflexivity.
+  - reflexivity.
+  - induction n.
+    + simpl.
+      exact (p a).
+    + simpl.
+      lhs apply p.
+      lhs apply (ap f IHn).
+      reflexivity.
+Defined.
+
 (** ** Exponentiation of loops *)
 
 Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)
