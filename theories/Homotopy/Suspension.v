@@ -205,36 +205,20 @@ Section UnivProp.
   (** Here is the domain of the equivalence: sections of [P] over [Susp X]. *)
   Definition Susp_ind_type := forall z:Susp X, P z.
 
+  (** [isgraph_paths] is not a global instance, so we define this by hand.  The fact that this is a 01cat and a 0gpd is obtained using global instances. *)
   Local Instance isgraph_Susp_ind_type : IsGraph Susp_ind_type.
   Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
-
-  Local Instance is01cat_Susp_ind_type : Is01Cat Susp_ind_type.
-  Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.
-
-  Local Instance is0gpd_Susp_ind_type : Is0Gpd Susp_ind_type.
-  Proof. apply is0gpd_forall; intros; apply is0gpd_paths. Defined.
 
   (** The codomain is a sigma-groupoid of this family, consisting of input data for [Susp_ind]. *)
   Definition Susp_ind_data' (NS : P North * P South)
     := forall x:X, DPath P (merid x) (fst NS) (snd NS).
 
+  (** Again, the rest of the wild category structure is obtained using global instances. *)
   Local Instance isgraph_Susp_ind_data' NS : IsGraph (Susp_ind_data' NS).
   Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
 
-  Local Instance is01cat_Susp_ind_data' NS : Is01Cat (Susp_ind_data' NS).
-  Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.
-
-  Local Instance is0gpd_Susp_ind_data' NS : Is0Gpd (Susp_ind_data' NS).
-  Proof. apply is0gpd_forall; intros; apply is0gpd_paths. Defined.
-
-  (** Here is the codomain itself. *)
+  (** Here is the codomain itself.  This is a 01cat and a 0gpd via global instances. *)
   Definition Susp_ind_data := sig Susp_ind_data'.
-
-  Local Instance is01cat_Susp_ind_data : Is01Cat Susp_ind_data.
-  Proof. rapply is01cat_sigma. Defined.
-
-  Local Instance is0gpd_Susp_ind_data : Is0Gpd Susp_ind_data.
-  Proof. rapply is0gpd_sigma. Defined.
 
   (** Here is the functor. *)
   Definition Susp_ind_inv : Susp_ind_type -> Susp_ind_data.
@@ -287,21 +271,16 @@ Section UnivPropNat.
   (** We will show that [Susp_ind_inv] for [X] and [Y] commute with precomposition with [f] and [functor_susp f]. *)
   Context {X Y : Type} (f : X -> Y) (P : Susp Y -> Type).
 
-  (** We recall all those instances from the previous section. *)
-  Local Existing Instances isgraph_Susp_ind_type is01cat_Susp_ind_type is0gpd_Susp_ind_type isgraph_Susp_ind_data' is01cat_Susp_ind_data' is0gpd_Susp_ind_data' is01cat_Susp_ind_data is0gpd_Susp_ind_data.
+  (** We recall these instances from the previous section. *)
+  Local Existing Instances isgraph_Susp_ind_type isgraph_Susp_ind_data'.
 
   (** Here is an intermediate family of groupoids that we have to use, since precomposition with [f] doesn't land in quite the right place. *)
   Definition Susp_ind_data'' (NS : P North * P South)
     := forall x:X, DPath P (merid (f x)) (fst NS) (snd NS).
 
+  (** This is a 01cat and a 0gpd via global instances. *)
   Local Instance isgraph_Susp_ind_data'' NS : IsGraph (Susp_ind_data'' NS).
   Proof. apply isgraph_forall; intros; apply isgraph_paths. Defined.
-
-  Local Instance is01cat_Susp_ind_data'' NS : Is01Cat (Susp_ind_data'' NS).
-  Proof. apply is01cat_forall; intros; apply is01cat_paths. Defined.
-
-  Local Instance is0gpd_Susp_ind_data'' NS : Is0Gpd (Susp_ind_data'' NS).
-  Proof. apply is0gpd_forall; intros; apply is0gpd_paths. Defined.
 
   (** We decompose "precomposition with [f]" into a functor_sigma of two fiberwise functors.  Here is the first. *)
   Definition functor_Susp_ind_data'' (NS : P North * P South)

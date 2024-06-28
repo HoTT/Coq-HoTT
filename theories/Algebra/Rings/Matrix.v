@@ -4,6 +4,7 @@ Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
+Require Import WildCat.Core WildCat.Paths.
 
 Set Universe Minimization ToSet.
 
@@ -848,3 +849,37 @@ Proof.
     intros; exact _.
 Defined.
 
+Section MatrixCat.
+
+  (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
+  Definition MatrixCat (R : Ring) := nat.
+
+  Global Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
+    := {| Hom := Matrix R |}.
+
+  Global Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
+  Proof.
+    snrapply Build_Is01Cat.
+    - exact (identity_matrix R).
+    - intros l m n M N.
+      exact (matrix_mult N M).
+  Defined.
+
+  Global Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
+    := is2graph_paths _.
+
+  (** MatrixCat R forms a strong 1-category. *)
+  Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
+  Proof.
+    snrapply Build_Is1Cat_Strong.
+    (* Most of the structure comes from typeclasses in WildCat.Paths. *)
+    1-4: exact _.
+    - apply (associative_matrix_mult R).
+    - intros k l m n M N P. apply inverse. apply (associative_matrix_mult R).
+    - apply right_identity_matrix_mult.
+    - apply left_identity_matrix_mult.
+  Defined.
+
+(** TODO: Define HasEquivs for MatrixCat.  *)
+
+End MatrixCat.

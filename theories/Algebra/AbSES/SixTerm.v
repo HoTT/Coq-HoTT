@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat HSet Pointed.Core Pointed.pTrunc Pointed.pEquiv
   Modalities.ReflectiveSubuniverse Truncations.Core Truncations.SeparatedTrunc
-  AbGroups Homotopy.ExactSequence
+  AbGroups Homotopy.ExactSequence Spaces.Int
   AbSES.Core AbSES.Pullback AbSES.Pushout BaerSum Ext PullbackFiberSequence.
 
 (** * The contravariant six-term sequence of Ext *)
@@ -194,7 +194,7 @@ Local Definition isexact_ext_cyclic_ab_iii@{u v w | u < v, v < w} `{Univalence}
 Local Definition ext_cyclic_exact@{u v w} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v v} (Tr (-1))
-      (ab_mul_nat (A:=A) n)
+      (ab_mul (A:=A) n)
       (abses_pushout_ext@{u w v} (abses_from_inclusion (Z1_mul_nat n))
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
@@ -211,7 +211,7 @@ Proof.
     apply moveR_equiv_V; symmetry.
     refine (ap f _ @ _).
     1: apply Z1_rec_beta.
-    exact (ab_mul_nat_homo f n Z1_gen).
+    exact (ab_mul_homo f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
     apply isexact_equiv_fiber.
     apply isexact_ext_cyclic_ab_iii.
@@ -220,12 +220,12 @@ Defined.
 (** The main result of this section. *)
 Theorem ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel@{v w} (ab_mul_nat (A:=A) n)
+  : ab_cokernel@{v w} (ab_mul (A:=A) n)
       $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
   pose (E := abses_from_inclusion (Z1_mul_nat n)).
-  snrefine (abses_cokernel_iso (ab_mul_nat n) _).
+  snrefine (abses_cokernel_iso (ab_mul n) _).
   - exact (grp_homo_compose
              (abses_pushout_ext E)
              (grp_iso_inverse (equiv_Z1_hom A))).
