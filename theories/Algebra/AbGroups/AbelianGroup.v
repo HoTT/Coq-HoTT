@@ -309,7 +309,8 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
-  - rewrite int_of_nat_succ_commute, grp_pow_int_add_1.
+  - rhs nrapply (ap@{Set _} _ (int_of_nat_succ_commute n)).
+    rhs nrapply grp_pow_int_add_1.
     simpl. f_ap.
     rewrite IHn.
     + reflexivity.
