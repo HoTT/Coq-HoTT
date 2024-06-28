@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Nat Basics.Tactics Basics.Decidable Basics.Equivalences.
+Require Import Basics.Overture Basics.Nat Basics.Tactics Basics.Decidable Basics.Equivalences Basics.PathGroupoids Types.Paths Types.Universe.
 Require Basics.Numerals.Decimal.
 Require Import Spaces.Nat.Core.
 
@@ -139,6 +139,11 @@ Defined.
 
 (** By Hedberg's theorem, we have that the integers are a set. *)
 Global Instance ishset_int@{} : IsHSet Int := _.
+
+(** *** Pointedness *)
+
+(** We sometimes want to treat the integers as a pointed type with basepoint given by 0. *)
+Global Instance ispointed_int : IsPointed Int := 0.
 
 (** ** Operations *)
 
@@ -525,4 +530,186 @@ Proof.
     rewrite int_dist_r.
     rewrite <- int_mul_neg_l.
     by rewrite IHx.
+Defined.
+
+(** ** Iteration of equivalences *)
+
+(** *** Iteration by arbitrary integers *)
+
+Definition int_iter {A} (f : A -> A) `{!IsEquiv f} (n : Int) : A -> A
+  := match n with
+      | negS n => fun x => nat_iter n.+1%nat f^-1 x
+      | zero => idmap
+      | posS n => fun x => nat_iter n.+1%nat f x
+     end.
+
+(** Iteration by arbitrary integers requires the endofunction to be an equivalence, so that we can define a negative iteration by using its inverse. *)
+
+Definition int_iter_succ_l {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
+  : int_iter f (int_succ n) a = f (int_iter f n a).
+Proof.
+  induction n as [|n|n].
+  - reflexivity.
+  - by destruct n.
+  - rewrite int_pred_succ. 
+    destruct n.
+    1: symmetry; apply eisretr.
+    by rhs nrapply eisretr.
+Defined.
+
+Definition int_iter_succ_r {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
+  : int_iter f (int_succ n) a = int_iter f n (f a).
+Proof.
+  induction n as [|n|n].
+  - reflexivity.
+  - destruct n.
+    1: reflexivity.
+    cbn; f_ap.
+  - destruct n.
+    1: symmetry; apply eissect.
+    rewrite int_pred_succ.
+    apply (ap f^-1).
+    rewrite <- int_neg_pred in IHn.
+    rhs_V nrapply IHn.
+    by destruct n.
+Defined.
+
+Definition int_iter_pred_l {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
+  : int_iter f (int_pred n) a = f^-1 (int_iter f n a).
+Proof.
+  induction n as [|n|n].
+  - reflexivity.
+  - rewrite int_succ_pred.
+    apply moveR_equiv_M in IHn.
+    lhs_V nrapply IHn.
+    destruct n.
+    1: exact (eisretr f _ @ (eissect f _)^).
+    destruct n; by rhs nrapply eissect.
+  - by destruct n.
+Defined.
+
+Definition int_iter_pred_r {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
+  : int_iter f (int_pred n) a = int_iter f n (f^-1 a).
+Proof.
+  induction n as [|n|n].
+  - reflexivity.
+  - rewrite int_succ_pred.
+    destruct n.
+    1: symmetry; nrapply eisretr.
+    cbn; f_ap.
+    by destruct n.
+  - destruct n.
+    1: reflexivity.
+    cbn; f_ap.
+Defined.
+
+Definition int_iter_add {A} (f : A -> A) `{IsEquiv _ _ f} (m n : Int)
+  : int_iter f (m + n) == int_iter f m o int_iter f n.
+Proof.
+  intros a.
+  induction m as [|m|m].
+  - reflexivity.
+  - rewrite int_add_succ_l.
+    rewrite 2 int_iter_succ_l.
+    f_ap.
+  - rewrite int_add_pred_l.
+    rewrite 2 int_iter_pred_l.
+    f_ap.
+Defined.
+
+(** ** Exponentiation of loops *)
+
+Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)
+  := int_iter (equiv_concat_r p x) z idpath.
+
+Definition loopexp_succ_r {A : Type} {x : A} (p : x = x) (z : Int)
+  : loopexp p z.+1 = loopexp p z @ p
+  := int_iter_succ_l _ _ _.
+
+Definition loopexp_pred_r {A : Type} {x : A} (p : x = x) (z : Int)
+  : loopexp p z.-1 = loopexp p z @ p^
+  := int_iter_pred_l _ _ _.
+
+Definition loopexp_succ_l {A : Type} {x : A} (p : x = x) (z : Int)
+  : loopexp p z.+1 = p @ loopexp p z.
+Proof.
+  rewrite loopexp_succ_r.
+  induction z as [|z|z].
+  - exact (concat_1p _ @ (concat_p1 _)^).
+  - rewrite loopexp_succ_r.
+    rhs nrapply concat_p_pp.
+    f_ap.
+  - rewrite loopexp_pred_r.
+    lhs nrapply concat_pV_p.
+    rhs nrapply concat_p_pp.
+    by apply moveL_pV.
+Defined.
+
+Definition loopexp_pred_l {A : Type} {x : A} (p : x = x) (z : Int)
+  : loopexp p z.-1 = p^ @ loopexp p z.
+Proof.
+  rewrite loopexp_pred_r.
+  induction z as [|z|z].
+  - exact (concat_1p _ @ (concat_p1 _)^).
+  - rewrite loopexp_succ_r.
+    lhs nrapply concat_pp_V.
+    rhs nrapply concat_p_pp.
+    by apply moveL_pM.
+  - rewrite loopexp_pred_r.
+    rhs nrapply concat_p_pp.
+    f_ap.
+Defined.
+
+Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : Int)
+  : ap f (loopexp p z) = loopexp (ap f p) z.
+Proof.
+  induction z as [|z|z].
+  - reflexivity.
+  - rewrite 2 loopexp_succ_l.
+    cbn; lhs nrapply ap_pp.
+    f_ap.
+  - rewrite 2 loopexp_pred_l.
+    cbn; lhs nrapply ap_pp.
+    f_ap.
+    apply ap_V.
+Defined.
+
+Definition loopexp_add {A : Type} {x : A} (p : x = x) a b
+  : loopexp p (a + b) = loopexp p a @ loopexp p b.
+Proof.
+  induction a as [|a|a].
+  - symmetry; apply concat_1p.
+  - rewrite int_add_succ_l.
+    rewrite 2 loopexp_succ_l.
+    by rewrite IHa, concat_p_pp.
+  - rewrite int_add_pred_l.
+    rewrite 2 loopexp_pred_l.
+    by rewrite IHa, concat_p_pp.
+Defined.
+
+(** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)
+
+Definition equiv_path_loopexp {A : Type} (p : A = A) (z : Int) (a : A)
+  : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.
+Proof.
+  induction z as [|z|z].
+  - reflexivity.
+  - rewrite loopexp_succ_r.
+    cbn; rewrite transport_pp.
+    rewrite int_iter_succ_l.
+    f_ap.
+  - rewrite loopexp_pred_r.
+    cbn; rewrite transport_pp.
+    rewrite int_iter_pred_l.
+    f_ap.
+Defined.
+
+Definition loopexp_path_universe `{Univalence} {A : Type} (f : A <~> A)
+  (z : Int) (a : A)
+  : transport idmap (loopexp (path_universe f) z) a = int_iter f z a.
+Proof.
+  revert f. equiv_intro (equiv_path A A) p.
+  refine (_ @ equiv_path_loopexp p z a).
+  refine (ap (fun q => equiv_path A A (loopexp q z) a) _).
+  apply eissect.
 Defined.
