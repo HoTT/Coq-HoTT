@@ -897,7 +897,7 @@ Proof.
   f_ap.
 Defined.
 
-(** The scalar multiplication of a symmetric matrix is symmetric. *)
+(** A scalar multiple of a symmetric matrix is symmetric. *)
 Global Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   (r : R) (M : Matrix R n n) `{!IsSymmetric M}
   : IsSymmetric (matrix_lact r M).
