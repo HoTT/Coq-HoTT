@@ -536,6 +536,8 @@ Defined.
 
 (** *** Iteration by arbitrary integers *)
 
+(** Iteration by arbitrary integers requires the endofunction to be an equivalence, so that we can define a negative iteration by using its inverse. *)
+
 Definition int_iter {A} (f : A -> A) `{!IsEquiv f} (n : Int) : A -> A
   := match n with
       | negS n => fun x => nat_iter n.+1%nat f^-1 x
@@ -543,7 +545,11 @@ Definition int_iter {A} (f : A -> A) `{!IsEquiv f} (n : Int) : A -> A
       | posS n => fun x => nat_iter n.+1%nat f x
      end.
 
-(** Iteration by arbitrary integers requires the endofunction to be an equivalence, so that we can define a negative iteration by using its inverse. *)
+Definition int_iter_neg {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
+  : int_iter f (- n) a = int_iter f^-1 n a.
+Proof.
+  by destruct n.
+Defined.
 
 Definition int_iter_succ_l {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
   : int_iter f (int_succ n) a = f (int_iter f n a).
@@ -553,8 +559,7 @@ Proof.
   - by destruct n.
   - rewrite int_pred_succ. 
     destruct n.
-    1: symmetry; apply eisretr.
-    by rhs nrapply eisretr.
+    all: symmetry; apply eisretr.
 Defined.
 
 Definition int_iter_succ_r {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
@@ -569,7 +574,6 @@ Proof.
     1: symmetry; apply eissect.
     rewrite int_pred_succ.
     apply (ap f^-1).
-    rewrite <- int_neg_pred in IHn.
     rhs_V nrapply IHn.
     by destruct n.
 Defined.
@@ -577,30 +581,23 @@ Defined.
 Definition int_iter_pred_l {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
   : int_iter f (int_pred n) a = f^-1 (int_iter f n a).
 Proof.
-  induction n as [|n|n].
-  - reflexivity.
-  - rewrite int_succ_pred.
-    apply moveR_equiv_M in IHn.
-    lhs_V nrapply IHn.
-    destruct n.
-    1: exact (eisretr f _ @ (eissect f _)^).
-    destruct n; by rhs nrapply eissect.
-  - by destruct n.
+  (* Convert the problem to be a problem about [f^-1] and [-n]. *)
+  lhs_V exact (int_iter_neg f^-1 (n.-1) a).
+  rhs_V exact (ap f^-1 (int_iter_neg f^-1 n a)).
+  (* Then [int_iter_succ_l] applies, after changing [- n.-1] to [(-n).+1]. *)
+  rewrite int_neg_pred.
+  apply int_iter_succ_l.
 Defined.
 
 Definition int_iter_pred_r {A} (f : A -> A) `{IsEquiv _ _ f} (n : Int) (a : A)
   : int_iter f (int_pred n) a = int_iter f n (f^-1 a).
 Proof.
-  induction n as [|n|n].
-  - reflexivity.
-  - rewrite int_succ_pred.
-    destruct n.
-    1: symmetry; nrapply eisretr.
-    cbn; f_ap.
-    by destruct n.
-  - destruct n.
-    1: reflexivity.
-    cbn; f_ap.
+  (* Convert the problem to be a problem about [f^-1] and [-n]. *)
+  lhs_V exact (int_iter_neg f^-1 (n.-1) a).
+  rhs_V exact (int_iter_neg f^-1 n (f^-1 a)).
+  (* Then [int_iter_succ_r] applies, after changing [- n.-1] to [(-n).+1]. *)
+  rewrite int_neg_pred.
+  apply int_iter_succ_r.
 Defined.
 
 Definition int_iter_add {A} (f : A -> A) `{IsEquiv _ _ f} (m n : Int)
@@ -617,7 +614,7 @@ Proof.
     f_ap.
 Defined.
 
-(** If the maps f and g commutes, then the order of application doesn't matter *)
+(** If the maps [f] and [g] commute, then the order of application doesn't matter *)
 Definition int_iter_commute_function_application {A} (f : A -> A) `{!IsEquiv f}
   (g : A -> A) (p : g o f == f o g) (n : Int) (a : A)
   : g (int_iter f n a) = int_iter f n (g a).
@@ -652,9 +649,9 @@ Definition loopexp_pred_r {A : Type} {x : A} (p : x = x) (z : Int)
 Definition loopexp_succ_l {A : Type} {x : A} (p : x = x) (z : Int)
   : loopexp p z.+1 = p @ loopexp p z.
 Proof.
-  rewrite loopexp_succ_r.
+  lhs nrapply loopexp_succ_r.
   induction z as [|z|z].
-  - exact (concat_1p _ @ (concat_p1 _)^).
+  - nrapply concat_1p_p1.
   - rewrite loopexp_succ_r.
     rhs nrapply concat_p_pp.
     f_ap.
@@ -693,17 +690,17 @@ Proof.
     apply ap_V.
 Defined.
 
-Definition loopexp_add {A : Type} {x : A} (p : x = x) a b
-  : loopexp p (a + b) = loopexp p a @ loopexp p b.
+Definition loopexp_add {A : Type} {x : A} (p : x = x) m n
+  : loopexp p (m + n) = loopexp p m @ loopexp p n.
 Proof.
-  induction a as [|a|a].
+  induction m as [|m|m].
   - symmetry; apply concat_1p.
   - rewrite int_add_succ_l.
     rewrite 2 loopexp_succ_l.
-    by rewrite IHa, concat_p_pp.
+    by rewrite IHm, concat_p_pp.
   - rewrite int_add_pred_l.
     rewrite 2 loopexp_pred_l.
-    by rewrite IHa, concat_p_pp.
+    by rewrite IHm, concat_p_pp.
 Defined.
 
 (** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)

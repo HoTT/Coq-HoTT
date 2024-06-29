@@ -24,7 +24,8 @@ Defined.
 
 Local Open Scope mc_scope.
 
-(** Multiplication of a ring element by an integer. *)
+(** Every ring has a unique ring map from the integers. *)
+(** TODO: rename? *)
 Definition rng_int_mult (R : Ring) (z : cring_Z) : R
   := int_iter (fun x => 1 + x) z 0.
 
