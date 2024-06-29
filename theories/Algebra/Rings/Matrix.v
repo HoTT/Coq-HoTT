@@ -839,16 +839,24 @@ Defined.
 Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring@{i} R n).
 Proof.
-  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M));
-    intros; exact _.
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
+  - exact _.
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+  - intros x y ? ?; exact (upper_triangular_plus x (-y)).
+  - exact upper_triangular_mult.
+  - exact upper_triangular_identity.
 Defined.
 
 (** Lower triangular matrices are a subring of the ring of matrices. *)
 Definition lower_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring R n).
 Proof.
-  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsLowerTriangular M));
-    intros; exact _.
+  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsLowerTriangular M)).
+  - exact _.
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+  - intros x y ? ?; exact (lower_triangular_plus x (-y)).
+  - exact lower_triangular_mult.
+  - exact lower_triangular_identity.
 Defined.
 
 Section MatrixCat.
