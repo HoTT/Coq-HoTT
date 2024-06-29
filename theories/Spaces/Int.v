@@ -614,10 +614,11 @@ Proof.
     f_ap.
 Defined.
 
-(** If the maps [f] and [g] commute, then the order of application doesn't matter *)
-Definition int_iter_commute_function_application {A} (f : A -> A) `{!IsEquiv f}
-  (g : A -> A) (p : g o f == f o g) (n : Int) (a : A)
-  : g (int_iter f n a) = int_iter f n (g a).
+(** If [g : A -> A'] commutes with automorphisms of [A] and [A'], then it commutes with iteration. *)
+Definition int_iter_commute_map {A A'} (f : A -> A) `{!IsEquiv f}
+  (f' : A' -> A') `{!IsEquiv f'}
+  (g : A -> A') (p : g o f == f' o g) (n : Int) (a : A)
+  : g (int_iter f n a) = int_iter f' n (g a).
 Proof.
   induction n as [|n IHn|n IHn] in a |- *.
   - reflexivity.
@@ -679,15 +680,8 @@ Defined.
 Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : Int)
   : ap f (loopexp p z) = loopexp (ap f p) z.
 Proof.
-  induction z as [|z|z].
-  - reflexivity.
-  - rewrite 2 loopexp_succ_l.
-    cbn; lhs nrapply ap_pp.
-    f_ap.
-  - rewrite 2 loopexp_pred_l.
-    cbn; lhs nrapply ap_pp.
-    f_ap.
-    apply ap_V.
+  nrapply int_iter_commute_map.
+  intro q; apply ap_pp.
 Defined.
 
 Definition loopexp_add {A : Type} {x : A} (p : x = x) m n
@@ -708,16 +702,9 @@ Defined.
 Definition equiv_path_loopexp {A : Type} (p : A = A) (z : Int) (a : A)
   : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.
 Proof.
-  induction z as [|z|z].
-  - reflexivity.
-  - rewrite loopexp_succ_r.
-    cbn; rewrite transport_pp.
-    rewrite int_iter_succ_l.
-    f_ap.
-  - rewrite loopexp_pred_r.
-    cbn; rewrite transport_pp.
-    rewrite int_iter_pred_l.
-    f_ap.
+  refine (int_iter_commute_map _ _ (fun p => equiv_path A A p a) _ _ _).
+  intro q; cbn.
+  nrapply transport_pp.
 Defined.
 
 Definition loopexp_path_universe `{Univalence} {A : Type} (f : A <~> A)
