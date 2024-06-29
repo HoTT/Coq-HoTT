@@ -26,12 +26,12 @@ Local Open Scope mc_scope.
 
 (** Every ring has a unique ring map from the integers. *)
 (** TODO: rename? *)
-Definition rng_int_mult (R : Ring) (z : cring_Z) : R
-  := int_iter (fun x => 1 + x) z 0.
+Definition rng_int_mult (R : Ring) (r : R) (z : cring_Z) : R
+  := int_iter (fun x => r + x) z 0.
 
 (** Preservation of + *)
 Global Instance issemigrouppreserving_plus_rng_int_mult (R : Ring)
-  : IsSemiGroupPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R).
+  : IsSemiGroupPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R 1).
 Proof.
   intros x y.
   induction x as [|x|x].
@@ -55,19 +55,23 @@ Proof.
     f_ap.
 Defined.
 
+Global Instance isunitpreserving_plus_rng_int_mult (R : Ring)
+  : IsUnitPreserving (Aunit:=zero) (Bunit:= canonical_names.zero) (rng_int_mult R 1)
+  := idpath.
+
+Global Instance ismonoidpreserving_plus_rng_int_mult (R : Ring)
+  : IsMonoidPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R 1)
+  := {}.
+
 Lemma rng_int_mult_neg {R} x
-  : rng_int_mult R (- x) = - rng_int_mult R x.
+  : rng_int_mult R 1 (- x) = - rng_int_mult R 1 x.
 Proof.
-  snrapply (groups.preserves_negate _).
-  1-6: typeclasses eauto.
-  snrapply Build_IsMonoidPreserving.
-  1: exact _.
-  split.
+  snrapply (groups.preserves_negate _); exact _.
 Defined.
 
 (** Preservation of * (multiplication) *)
 Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
-  : IsSemiGroupPreserving (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R).
+  : IsSemiGroupPreserving (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
   induction x as [|x|x].
@@ -98,7 +102,7 @@ Defined.
 Definition rng_homo_int (R : Ring) : (cring_Z : Ring) $-> R.
 Proof.
   snrapply Build_RingHomomorphism.
-  1: exact (rng_int_mult R).
+  1: exact (rng_int_mult R 1).
   repeat split.
   1,2: exact _.
   hnf.
