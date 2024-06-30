@@ -4,7 +4,7 @@ Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.Core.
 
-(** In this file we define the ring Z of integers. The underlying abelian group is already defined in Algebra.AbGroups.Z. Many of the ring axioms are proven and made opaque. Typically, everything inside IsCRing can be opaque since we will only ever rewrite along them and they are hprops. This also means we don't have to be too careful with how our proofs are structured. This allows us to freely use tactics such as rewrite. It would perhaps be possible to shorten many of the proofs here, but it would probably be unneeded due to the opacicty. *)
+(** * In this file we define the ring [cring_Z] of integers with underlying abelian group [abroup_Z] defined in Algebra.AbGroups.Z. We also define multiplication by an integer in a general ring, and show that [cring_Z] is initial. *)
 
 (** The ring of integers *)
 Definition cring_Z : CRing.
@@ -24,14 +24,13 @@ Defined.
 
 Local Open Scope mc_scope.
 
-(** Every ring has a unique ring map from the integers. *)
-(** TODO: rename? *)
+(** Every ring element can be multiplied by an integer. *)
 Definition rng_int_mult (R : Ring) (r : R) (z : cring_Z) : R
   := int_iter (fun x => r + x) z 0.
 
-(** Preservation of + *)
-Global Instance issemigrouppreserving_plus_rng_int_mult (R : Ring)
-  : IsSemiGroupPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R 1).
+(** [rng_int_mult R r] preserves addition. *)
+Global Instance issemigrouppreserving_plus_rng_int_mult (R : Ring) (r : R)
+  : IsSemiGroupPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R r).
 Proof.
   intros x y.
   induction x as [|x|x].
@@ -55,21 +54,24 @@ Proof.
     f_ap.
 Defined.
 
-Global Instance isunitpreserving_plus_rng_int_mult (R : Ring)
-  : IsUnitPreserving (Aunit:=zero) (Bunit:= canonical_names.zero) (rng_int_mult R 1)
+(** [rng_int_mult R r] sends [0 : Int] to [0 : R] definitionally. *)
+Global Instance isunitpreserving_plus_rng_int_mult (R : Ring) (r : R)
+  : IsUnitPreserving (Aunit:=zero) (Bunit:=canonical_names.zero) (rng_int_mult R r)
   := idpath.
 
-Global Instance ismonoidpreserving_plus_rng_int_mult (R : Ring)
-  : IsMonoidPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R 1)
+(** [rng_int_mult R r] preserves addition and zero. *)
+Global Instance ismonoidpreserving_plus_rng_int_mult (R : Ring) (r : R)
+  : IsMonoidPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R r)
   := {}.
 
-Lemma rng_int_mult_neg {R} x
-  : rng_int_mult R 1 (- x) = - rng_int_mult R 1 x.
+(** [rng_int_mult R r] commutes with negation. *)
+Lemma rng_int_mult_neg (R : Ring) (r : R) x
+  : rng_int_mult R r (- x) = - rng_int_mult R r x.
 Proof.
   snrapply (groups.preserves_negate _); exact _.
 Defined.
 
-(** Preservation of * (multiplication) *)
+(** [rng_int_mult R 1] preserves multiplication.  This requires that the specified ring element is the unit. *)
 Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
   : IsSemiGroupPreserving (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
@@ -98,7 +100,7 @@ Proof.
     symmetry; apply rng_mult_negate.
 Defined.
 
-(** This is a ring homomorphism *)
+(** [rng_int_mult R 1] is a ring homomorphism *)
 Definition rng_homo_int (R : Ring) : (cring_Z : Ring) $-> R.
 Proof.
   snrapply Build_RingHomomorphism.
