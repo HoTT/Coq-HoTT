@@ -24,56 +24,11 @@ Defined.
 
 Local Open Scope mc_scope.
 
-(** Every ring element can be multiplied by an integer. *)
-Definition rng_int_mult (R : Ring) (r : R) (z : cring_Z) : R
-  := int_iter (fun x => r + x) z 0.
-
-(** [rng_int_mult R r] preserves addition. *)
-Global Instance issemigrouppreserving_plus_rng_int_mult (R : Ring) (r : R)
-  : IsSemiGroupPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R r).
-Proof.
-  intros x y.
-  induction x as [|x|x].
-  - simpl.
-    rhs nrapply left_identity.
-    2: exact _.
-    reflexivity.
-  - cbn.
-    rewrite int_add_succ_l.
-    unfold rng_int_mult.
-    rewrite 2 int_iter_succ_l.
-    rhs_V nrapply simple_associativity.
-    2: exact _.
-    f_ap.
-  - cbn.
-    rewrite int_add_pred_l.
-    unfold rng_int_mult.
-    rewrite 2 int_iter_pred_l.
-    rhs_V nrapply simple_associativity.
-    2: exact _.
-    f_ap.
-Defined.
-
-(** [rng_int_mult R r] sends [0 : Int] to [0 : R] definitionally. *)
-Global Instance isunitpreserving_plus_rng_int_mult (R : Ring) (r : R)
-  : IsUnitPreserving (Aunit:=zero) (Bunit:=canonical_names.zero) (rng_int_mult R r)
-  := idpath.
-
-(** [rng_int_mult R r] preserves addition and zero. *)
-Global Instance ismonoidpreserving_plus_rng_int_mult (R : Ring) (r : R)
-  : IsMonoidPreserving (Aop:=(+)) (Bop:=(+)) (rng_int_mult R r)
-  := {}.
-
-(** [rng_int_mult R r] commutes with negation. *)
-Lemma rng_int_mult_neg (R : Ring) (r : R) x
-  : rng_int_mult R r (- x) = - rng_int_mult R r x.
-Proof.
-  snrapply (groups.preserves_negate _); exact _.
-Defined.
+Definition rng_int_mult (R : Ring) := abgroup_int_mult R. 
 
 (** [rng_int_mult R 1] preserves multiplication.  This requires that the specified ring element is the unit. *)
 Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
-  : IsSemiGroupPreserving (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
+  : IsSemiGroupPreserving (A:=cring_Z) (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
   induction x as [|x|x].
@@ -81,22 +36,24 @@ Proof.
     by rhs nrapply rng_mult_zero_l.
   - cbn.
     rewrite int_mul_succ_l.
-    rewrite issemigrouppreserving_plus_rng_int_mult.
     unfold rng_int_mult in *.
-    rewrite int_iter_succ_l.
+    rewrite issemigrouppreserving_plus_abgroup_int_mult.
+    unfold abgroup_int_mult in *.
+    rewrite grp_pow_int_add_1.
     rhs nrapply rng_dist_r.
     rewrite rng_mult_one_l.
     rewrite IHx.
     reflexivity.
   - cbn.
     rewrite int_mul_pred_l.
-    rewrite issemigrouppreserving_plus_rng_int_mult.
     unfold rng_int_mult in *.
-    rewrite int_iter_pred_l.
+    rewrite issemigrouppreserving_plus_abgroup_int_mult.
+    unfold abgroup_int_mult in *.
+    rewrite grp_pow_int_sub_1.
     rhs nrapply rng_dist_r.
     rewrite IHx.
     f_ap.
-    lhs rapply rng_int_mult_neg.
+    lhs rapply abgroup_int_mult_neg.
     symmetry; apply rng_mult_negate.
 Defined.
 
@@ -107,8 +64,6 @@ Proof.
   1: exact (rng_int_mult R 1).
   repeat split.
   1,2: exact _.
-  hnf.
-  apply rng_plus_zero_r.
 Defined.
 
 (** The integers are the initial commutative ring *)
@@ -121,13 +76,15 @@ Proof.
   induction x as [|x|x].
   - by rhs nrapply (grp_homo_unit g).
   - unfold rng_homo_int, rng_int_mult; cbn.
-    rewrite int_iter_succ_l.
+    unfold abgroup_int_mult.
+    rewrite grp_pow_int_add_1.
     change (x.+1%int) with (1 + x)%int.
     rewrite (rng_homo_plus g 1 x).
     rewrite rng_homo_one.
     f_ap.
   - unfold rng_homo_int, rng_int_mult in IHx |- *; cbn in IHx |- *.
-    rewrite int_iter_pred_l.
+    unfold abgroup_int_mult in *.
+    rewrite grp_pow_int_sub_1.
     cbn.
     rewrite IHx.
     clear IHx.
