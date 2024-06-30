@@ -184,7 +184,7 @@ Proof.
     exact (co_right_counit (A:=A^op) tensor unit (x:=x)).
 Defined.
 
-(** A cocoassociative cocomonoid object in [A^op] is a commutative monoid object in [A]. *)
+(** A cocommutative cocomonoid object in [A^op] is a commutative monoid object in [A]. *)
 Definition cmo_coco_op {A : Type} {tensor : A -> A -> A} {unit : A}
   `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
   `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit,
