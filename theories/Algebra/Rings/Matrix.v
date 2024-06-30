@@ -983,7 +983,7 @@ Proof.
   f_ap.
 Defined.
 
-(** The scalar multiplication of a skew-symmetric matrix is skew-symmetric. *)
+(** A scalar multiple of a skew-symmetric matrix is skew-symmetric. *)
 Global Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   (r : R) (M : Matrix R n n) `{!IsSkewSymmetric M}
   : IsSkewSymmetric (matrix_lact r M).
