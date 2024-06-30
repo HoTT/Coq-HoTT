@@ -1,0 +1,34 @@
+digraph HoTT_PropResizing_ImpredicativeTruncation {
+  graph [ratio=0.5]
+  node [style=filled]
+ImpredicativeTruncation_functor_merely_weak_sameuniv_weak [label="functor_merely_weak_sameuniv_weak", URL=<ImpredicativeTruncation.html#functor_merely_weak_sameuniv_weak>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_merely_weak_sameargs_weak [label="functor_merely_weak_sameargs_weak", URL=<ImpredicativeTruncation.html#functor_merely_weak_sameargs_weak>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_merely_weak [label="functor_merely_weak", URL=<ImpredicativeTruncation.html#functor_merely_weak>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_merely_rec_naive [label="merely_rec_naive", URL=<ImpredicativeTruncation.html#merely_rec_naive>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_merely_sameuniv [label="functor_merely_sameuniv", URL=<ImpredicativeTruncation.html#functor_merely_sameuniv>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_merely_sameargs [label="functor_merely_sameargs", URL=<ImpredicativeTruncation.html#functor_merely_sameargs>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_typeofid [label="typeofid", URL=<ImpredicativeTruncation.html#typeofid>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_merely [label="functor_merely", URL=<ImpredicativeTruncation.html#functor_merely>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_merely_rec [label="merely_rec", URL=<ImpredicativeTruncation.html#merely_rec>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_ishprop_merely [label="ishprop_merely", URL=<ImpredicativeTruncation.html#ishprop_merely>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_trm [label="trm", URL=<ImpredicativeTruncation.html#trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_merely [label="merely", URL=<ImpredicativeTruncation.html#merely>, fillcolor="#F070D1"] ;
+  ImpredicativeTruncation_functor_merely_weak_sameuniv_weak -> ImpredicativeTruncation_functor_merely_weak [] ;
+  ImpredicativeTruncation_functor_merely_weak_sameargs_weak -> ImpredicativeTruncation_functor_merely_weak [] ;
+  ImpredicativeTruncation_functor_merely_weak_sameargs_weak -> ImpredicativeTruncation_typeofid [] ;
+  ImpredicativeTruncation_functor_merely_weak -> ImpredicativeTruncation_merely_rec_naive [] ;
+  ImpredicativeTruncation_functor_merely_weak -> ImpredicativeTruncation_ishprop_merely [] ;
+  ImpredicativeTruncation_functor_merely_weak -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_merely_rec_naive -> ImpredicativeTruncation_merely [] ;
+  ImpredicativeTruncation_functor_merely_sameuniv -> ImpredicativeTruncation_functor_merely [] ;
+  ImpredicativeTruncation_functor_merely_sameargs -> ImpredicativeTruncation_typeofid [] ;
+  ImpredicativeTruncation_functor_merely_sameargs -> ImpredicativeTruncation_functor_merely [] ;
+  ImpredicativeTruncation_functor_merely -> ImpredicativeTruncation_merely_rec [] ;
+  ImpredicativeTruncation_functor_merely -> ImpredicativeTruncation_ishprop_merely [] ;
+  ImpredicativeTruncation_functor_merely -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_merely_rec -> ImpredicativeTruncation_merely [] ;
+  ImpredicativeTruncation_ishprop_merely -> ImpredicativeTruncation_merely [] ;
+  ImpredicativeTruncation_trm -> ImpredicativeTruncation_merely [] ;
+subgraph cluster_ImpredicativeTruncation { label="ImpredicativeTruncation"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ImpredicativeTruncation_merely; ImpredicativeTruncation_trm; ImpredicativeTruncation_ishprop_merely; ImpredicativeTruncation_merely_rec; ImpredicativeTruncation_functor_merely; ImpredicativeTruncation_typeofid; ImpredicativeTruncation_functor_merely_sameargs; ImpredicativeTruncation_functor_merely_sameuniv; ImpredicativeTruncation_merely_rec_naive; ImpredicativeTruncation_functor_merely_weak; ImpredicativeTruncation_functor_merely_weak_sameargs_weak; ImpredicativeTruncation_functor_merely_weak_sameuniv_weak; };
+} /* END */

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Metatheory.TruncImpliesFunext</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Metatheory.TruncImpliesFunext</h1>
+
+<div class="code">
+<span class="comment">(*&nbsp;-*-&nbsp;mode:&nbsp;coq;&nbsp;mode:&nbsp;visual-line&nbsp;-*-&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1139"></a><h1 class="section">Theorems about trunctions</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Truncations.html#"><span class="id" title="library">HoTT.Truncations</span></a> <a class="idref" href="HoTT.Types.Bool.html#"><span class="id" title="library">HoTT.Types.Bool</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Metatheory.Core.html#"><span class="id" title="library">Metatheory.Core</span></a> <a class="idref" href="HoTT.Metatheory.FunextVarieties.html#"><span class="id" title="library">Metatheory.FunextVarieties</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1140"></a><h2 class="section">We can construct an interval type as <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a></span> <span class="inlinecode">-1</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Definition</span> <a id="interval" class="idref" href="#interval"><span class="id" title="definition">interval</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> (-1) <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Definition</span> <a id="interval_rec" class="idref" href="#interval_rec"><span class="id" title="definition">interval_rec</span></a> (<a id="P:1" class="idref" href="#P:1"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) (<a id="a:2" class="idref" href="#a:2"><span class="id" title="binder">a</span></a> <a id="b:3" class="idref" href="#b:3"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#P:1"><span class="id" title="variable">P</span></a>) (<a id="p:4" class="idref" href="#p:4"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#a:2"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#b:3"><span class="id" title="variable">b</span></a>)<br/>
+: <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#interval"><span class="id" title="definition">interval</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#P:1"><span class="id" title="variable">P</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#interval"><span class="id" title="definition">interval</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cut</span> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="pt:5" class="idref" href="#pt:5"><span class="id" title="binder"><span id="pt:6" class="id">pt</span></span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#pt:5"><span class="id" title="variable">pt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">b</span> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#pr1"><span class="id" title="abbreviation">pr1</span></a>. }<br/>
+&nbsp;&nbsp;{ <span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="keyword">if</span> <span class="id" title="var">x</span> <span class="id" title="keyword">then</span> <span class="id" title="var">a</span> <span class="id" title="keyword">else</span> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>; (<span class="id" title="tactic">reflexivity</span> || <span class="id" title="tactic">assumption</span>). }<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Definition</span> <a id="seg" class="idref" href="#seg"><span class="id" title="definition">seg</span></a> : <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#interval"><span class="id" title="definition">interval</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1141"></a><h2 class="section">From an interval type, and thus from truncations, we can prove function extensionality.</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="funext_type_from_trunc" class="idref" href="#funext_type_from_trunc"><span class="id" title="definition">funext_type_from_trunc</span></a> : <a class="idref" href="HoTT.Metatheory.Core.html#Funext_type"><span class="id" title="definition">Funext_type</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Metatheory.FunextVarieties.html#WeakFunext_implies_Funext"><span class="id" title="lemma">WeakFunext_implies_Funext</span></a> (<a class="idref" href="HoTT.Metatheory.FunextVarieties.html#NaiveFunext_implies_WeakFunext"><span class="id" title="definition">NaiveFunext_implies_WeakFunext</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> <a id="P:8" class="idref" href="#P:8"><span class="id" title="binder">P</span></a> <a id="f:9" class="idref" href="#f:9"><span class="id" title="binder">f</span></a> <a id="g:10" class="idref" href="#g:10"><span class="id" title="binder">g</span></a> <a id="p:11" class="idref" href="#p:11"><span class="id" title="binder">p</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <a id="h:14" class="idref" href="#h:14"><span class="id" title="binder">h</span></a> := <span class="id" title="keyword">fun</span> (<a id="x:12" class="idref" href="#x:12"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#interval"><span class="id" title="definition">interval</span></a>) (<a id="a:13" class="idref" href="#a:13"><span class="id" title="binder">a</span></a>:<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#A:7"><span class="id" title="variable">A</span></a>) ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#interval_rec"><span class="id" title="definition">interval_rec</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#f:9"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#a:13"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#g:10"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#a:13"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#p:11"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#a:13"><span class="id" title="variable">a</span></a>) <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#x:12"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#h:14"><span class="id" title="variable">h</span></a> <a class="idref" href="HoTT.Metatheory.TruncImpliesFunext.html#seg"><span class="id" title="definition">seg</span></a>)).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

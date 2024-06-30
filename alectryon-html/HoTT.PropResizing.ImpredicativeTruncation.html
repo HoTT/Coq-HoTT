@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ImpredicativeTruncation.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="c">(* -*- mode: coq; mode: visual-line -*-  *)</span>
+<span class="sd">(** * Impredicative truncations. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk0"><span class="kn">Require Import</span> HoTT.Basics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> PropResizing.PropResizing.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Be careful about [Import]ing this file!  It defines truncations</span>
+<span class="c">with the same name as those constructed with HITs.  Probably you want</span>
+<span class="c">to use those instead, if you are using HITs. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">AssumePropResizing</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{PropResizing}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">merely</span>@{i j} (A : <span class="kt">Type</span>@{i}) : <span class="kt">Type</span>@{i}
+    := <span class="kr">forall</span> <span class="nv">P</span>:<span class="kt">Type</span>@{j}, IsHProp P -&gt; (A -&gt; P) -&gt; P.   <span class="c">(* requires j &lt; i *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">trm</span> {<span class="nv">A</span>} : A -&gt; merely A
+    := <span class="kr">fun</span> <span class="nv">a</span> <span class="nv">P</span> <span class="nv">HP</span> <span class="nv">f</span> =&gt; f a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk1"><span class="kn">Global Instance</span> <span class="nf">ishprop_merely</span> `{Funext} (A : <span class="kt">Type</span>) : IsHProp (merely A).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>PropResizing</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (merely A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>PropResizing</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (merely A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">merely_rec</span> {<span class="nv">A</span> : <span class="kt">Type</span>@{i}} {<span class="nv">P</span> : <span class="kt">Type</span>@{j}} `{IsHProp P} (f : A -&gt; P)
+    : merely A -&gt; P
+    := <span class="kr">fun</span> <span class="nv">ma</span> =&gt; (equiv_resize_hprop P)^-<span class="mi">1</span>
+                 (ma (resize_hprop P) _ (equiv_resize_hprop P o f)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk3"><span class="kn">Definition</span> <span class="nf">functor_merely</span> `{Funext} {A B : <span class="kt">Type</span>} (f : A -&gt; B)
+    : merely A -&gt; merely B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>PropResizing</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">merely A -&gt; merely B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>PropResizing</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">merely A -&gt; merely B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">srefine (merely_rec (trm o f)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* show what is gained by propositional resizing, without mentioning universe levels *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">typeofid</span> (<span class="nv">A</span> : <span class="kt">Type</span>) := A -&gt; A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">functor_merely_sameargs</span> `{Funext} {A : <span class="kt">Type</span>} (f : typeofid A)
+    : typeofid (merely A) := functor_merely f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* a more informative version using universe levels *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">functor_merely_sameuniv</span> `{Funext} {A B: <span class="kt">Type</span>@{i}} (f : A -&gt; B)
+    : merely@{j k} A -&gt; merely@{j k} B:= functor_merely f.    <span class="c">(* requires i &lt;= j &amp; k &lt; j *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">AssumePropResizing</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Here, we show what goes wrong without propositional resizing. *)</span>
+
+<span class="c">(* the naive definition *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">merely_rec_naive</span> {<span class="nv">A</span> : <span class="kt">Type</span>@{i}} {<span class="nv">P</span> : <span class="kt">Type</span>@{j}} {<span class="nv">p</span>:IsHProp@{j} P} (<span class="nv">f</span> : A -&gt; P)
+  : merely@{i j} A -&gt; P
+  := <span class="kr">fun</span> <span class="nv">ma</span> =&gt; ma P p f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* the too weak definition *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk5"><span class="kn">Local Definition</span> <span class="nf">functor_merely_weak</span> `{Funext} {A B : <span class="kt">Type</span>@{k}} (f : A -&gt; B)
+  : merely@{j k} A -&gt; merely@{k l} B. <span class="c">(* evidently, this requires k&lt;j and l&lt;k *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">merely A -&gt; merely B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">merely A -&gt; merely B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">srefine (merely_rec_naive (trm o f)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* impossible due to universe inconsistency: *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="impredicativetruncation-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="impredicativetruncation-v-chk7"><span class="kn">Fail</span> <span class="kn">Local Definition</span> <span class="nf">functor_merely_weak_sameargs</span> `{Funext} {A : <span class="kt">Type</span>} (f : typeofid A)
+  : typeofid(merely A) := functor_merely_weak f.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">The command has indeed failed <span class="kr">with</span> message:
+In environment
+H : Funext
+A : <span class="kt">Type</span>
+f : typeofid A
+The term <span class="s2">&quot;functor_merely_weak f&quot;</span> has type
+ <span class="s2">&quot;merely A -&gt; merely A&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type
+ <span class="s2">&quot;typeofid (merely A)&quot;</span>
+(universe inconsistency: Cannot enforce
+ImpredicativeTruncation.<span class="mi">249</span> &lt;=
+ImpredicativeTruncation.<span class="mi">251</span> because
+ImpredicativeTruncation.<span class="mi">251</span>
+&lt; ImpredicativeTruncation.<span class="mi">249</span>).</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* The following much weaker definition is possible: *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">functor_merely_weak_sameargs_weak</span> `{Funext} {A : <span class="kt">Type</span>} (f : typeofid A)
+  : merely A -&gt; merely A := functor_merely_weak f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* a more general (but still weak) and more informative version using universe levels *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Definition</span> <span class="nf">functor_merely_weak_sameuniv_weak</span> `{Funext} {A B: <span class="kt">Type</span>@{i}} (f : A -&gt; B)
+  : merely@{j k} A -&gt; merely@{k l} B:= functor_merely_weak f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="c">(* requires i &lt;= j &amp; l &lt; k &lt; j *)</span></span></pre>
+</div>
+</div></body>
+</html>

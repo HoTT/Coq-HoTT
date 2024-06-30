@@ -1,0 +1,17 @@
+N: 9 "DPathCube" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 1 "dc_fill_back" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 3 "dc_fill_bottom" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 2 "dc_fill_front" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 6 "dc_fill_left" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 5 "dc_fill_right" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 4 "dc_fill_top" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 7 "equiv_dc_const" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+N: 8 "equiv_dc_const'" [body=yes, kind=cnst, prop=no, path="DPathCube", ];
+E: 1 9 [weight=2, ];
+E: 2 9 [weight=2, ];
+E: 3 9 [weight=2, ];
+E: 4 9 [weight=2, ];
+E: 5 9 [weight=2, ];
+E: 6 9 [weight=2, ];
+E: 7 9 [weight=3, ];
+E: 8 9 [weight=3, ];

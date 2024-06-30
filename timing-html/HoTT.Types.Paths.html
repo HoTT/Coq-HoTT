@@ -1,0 +1,3391 @@
+<html>
+<head>
+<title>Paths.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Paths.v</h1>
+
+<div class="code" title="File: Paths.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(* -*- mode: coq; mode: visual-line -*- *)
+(** * Theorems about path spaces *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 3
+Time: 0.026s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B f x y z.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Path spaces *)
+
+(** The path spaces of a path space are not, of course, determined; they are just the
+    higher-dimensional structure of the original space. *)
+
+(** ** Transporting in path spaces.
+
+   There are potentially a lot of these lemmas, so we adopt a uniform naming scheme:
+
+   - `l` means the left endpoint varies
+   - `r` means the right endpoint varies
+   - `F` means application of a function to that (varying) endpoint.
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
+  : transport (fun x =&gt; x = y) p q = p^ @ q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
+  : transport (fun y =&gt; x = y) p q = q @ p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition transport_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1)
+  : transport (fun x =&gt; x = x) p q = p^ @ q @ p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition transport_paths_Fl {A B : Type} {f : A -&gt; B} {x1 x2 : A} {y : B}
+  (p : x1 = x2) (q : f x1 = y)
+  : transport (fun x =&gt; f x = y) p q = (ap f p)^ @ q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition transport_paths_Fr {A B : Type} {g : A -&gt; B} {y1 y2 : A} {x : B}
+  (p : y1 = y2) (q : x = g y1)
+  : transport (fun y =&gt; x = g y) p q = q @ (ap g p).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition transport_paths_FlFr {A B : Type} {f g : A -&gt; B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1)
+  : transport (fun x =&gt; f x = g x) p q = (ap f p)^ @ q @ (ap g p).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition transport_paths_FlFr_D {A : Type} {B : A -&gt; Type}
+  {f g : forall a, B a} {x1 x2 : A} (p : x1 = x2) (q : f x1 = g x1)
+: transport (fun x =&gt; f x = g x) p q
+  = (apD f p)^ @ ap (transport B p) q @ (apD g p).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((ap_idmap _)^ @ (concat_1p _)^ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition transport_paths_FFlr {A B : Type} {f : A -&gt; B} {g : B -&gt; A} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = x1)
+  : transport (fun x =&gt; g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition transport_paths_lFFr {A B : Type} {f : A -&gt; B} {g : B -&gt; A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = g (f x1))
+  : transport (fun x =&gt; x = g (f x)) p q = p^ @ q @ (ap g (ap f p)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition transport_paths_FlFr' {A B : Type} {f g : A -&gt; B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
+  (h : (ap f p) @ r = q @ (ap g p))
+  : transport (fun x =&gt; f x = g x) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport_paths_FlFr _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_pp_p _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact h^.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition transport_paths_FFlr' {A B : Type} {f : A -&gt; B} {g : B -&gt; A} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
+  (h : (ap g (ap f p)) @ r = q @ p)
+  : transport (fun x =&gt; g (f x) = x) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport_paths_FFlr _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_pp_p _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact h^.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition transport011_paths {A B X} (f : A -&gt; X) (g : B -&gt; X)
+  {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)
+  (r : f a1 = g b1)
+  : transport011 (fun a b =&gt; f a = g b) p q r = (ap f p)^ @ r @ ap g q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q; cbn.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply concat_p1.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transporting in 2-path types *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition transport_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+: transport (fun a =&gt; idpath a = idpath a) p q
+  =  (concat_Vp p)^
+    @ whiskerL p^ ((concat_1p p)^ @ whiskerR q p @ concat_1p p)
+    @ concat_Vp p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The tricky thing here is getting a sufficiently general statement that we can prove it by path induction. *)
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>assert (H : forall (p : x = x) (q : 1 = p),
+                (q @ (concat_p1 p)^) @ (concat_1p (p @ 1))^
+                = whiskerL (idpath x) (idpath 1 @ whiskerR q 1 @ idpath (p @ 1))).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p' q'.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct q'.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  transitivity (q @ (concat_p1 1)^ @ (concat_1p 1)^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; exact ((concat_p1 _)^ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (H 1 q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 139
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functorial action *)
+
+(** 'functor_path' is called [ap]. *)
+
+(** ** Equivalences between path spaces *)
+
+(** [isequiv_ap] and [equiv_ap] are in Equivalences.v  *)
+
+(** ** Path operations are equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isequiv_path_inverse {A : Type} (x y : A)
+  : IsEquiv (@inverse A x y) | 0.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_IsEquiv _ _ _ (@inverse A y x)
+                       (@inv_V A y x) (@inv_V A x y) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p; destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_inverse {A : Type} (x y : A)
+  : (x = y) &lt;~&gt; (y = x)
+  := Build_Equiv _ _ (@inverse A x y) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_concat_l {A : Type} `(p : x = y:&gt;A) (z : A)
+  : IsEquiv (@transitivity A _ _ x y z p) | 0.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_IsEquiv _ _ _ (concat p^)
+                       (concat_p_Vp p) (concat_V_pp p) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros q; destruct p; destruct q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
+  : (y = z) &lt;~&gt; (x = z)
+  := Build_Equiv _ _ (concat p) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
+  : IsEquiv (fun q:x=y =&gt; q @ p) | 0.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_IsEquiv _ _ (fun q =&gt; q @ p) (fun q =&gt; q @ p^)
+           (fun q =&gt; concat_pV_p q p) (fun q =&gt; concat_pp_V q p) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros q; destruct p; destruct q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
+  : (x = y) &lt;~&gt; (x = z)
+  := Build_Equiv _ _ (fun q =&gt; q @ p) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+  : IsEquiv (fun r:x=y =&gt; p @ r @ q) | 0
+  := @isequiv_compose _ _ (fun r =&gt; p @ r) _ _ (fun r =&gt; r @ q) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+  : (x = y) &lt;~&gt; (x' = y')
+  := Build_Equiv _ _ (fun r:x=y =&gt; p @ r @ q) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_p1_1q {A : Type} {x y : A} {p q : x = y}
+  : p = q &lt;~&gt; p @ 1 = 1 @ q
+  := equiv_concat_lr (concat_p1 p) (concat_1p q)^.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_1p_q1 {A : Type} {x y : A} {p q : x = y}
+  : p = q &lt;~&gt; 1 @ p = q @ 1
+  := equiv_concat_lr (concat_1p p) (concat_p1 q)^.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
+: IsEquiv (@whiskerL A x y z p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (isequiv_adjointify _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cancelL.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold cancelL.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 208
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+    rewrite !whiskerL_pp.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ @@ 1 @@ _) @ whiskerL_pVL p k).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 211
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold cancelL.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine ((_ @@ 1 @@ _) @ whiskerL_VpL p k).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 216
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_whiskerL {A} {x y z : A} (p : x = y) (q r : y = z)
+: (q = r) &lt;~&gt; (p @ q = p @ r)
+  := Build_Equiv _ _ (whiskerL p) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+: (p @ q = p @ r) &lt;~&gt; (q = r)
+  := equiv_inverse (equiv_whiskerL p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+  : IsEquiv (cancelL p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 229
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+  change (IsEquiv (equiv_cancelL p q r)); exact _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
+: IsEquiv (fun h =&gt; @whiskerR A x y z p q h r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (isequiv_adjointify _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cancelR.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold cancelR.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 238
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+    rewrite !whiskerR_pp.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ @@ 1 @@ _) @ whiskerR_VpR k r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> destruct p, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct q, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold cancelR.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ @@ 1 @@ _) @ whiskerR_pVR k r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct q, r; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 246
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 247
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_whiskerR {A} {x y z : A} (p q : x = y) (r : y = z)
+: (p = q) &lt;~&gt; (p @ r = q @ r)
+  := Build_Equiv _ _ (fun h =&gt; whiskerR h r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 251
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+: (p @ r = q @ r) &lt;~&gt; (p = q)
+  := equiv_inverse (equiv_whiskerR p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+  : IsEquiv (cancelR p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 259
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+  change (IsEquiv (equiv_cancelR p q r)); exact _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can use these to build up more complicated equivalences.
+
+In particular, all of the [move] family are equivalences.
+
+(Note: currently, some but not all of these [isequiv_] lemmas have corresponding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isequiv_moveR_Mp
+ {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: IsEquiv (moveR_Mp p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 274
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveR_Mp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (p = r^ @ q) &lt;~&gt; (r @ p = q)
+:= Build_Equiv _ _ (moveR_Mp p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: IsEquiv (moveR_pM p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveR_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (r = q @ p^) &lt;~&gt; (r @ p = q)
+:= Build_Equiv _ _ (moveR_pM p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
+: IsEquiv (moveR_Vp p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 300
+Time: 0.012s">
+<div class="time" style="width: 46.153846153846%"></div>
+<pre>
+
+Definition equiv_moveR_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
+: (p = r @ q) &lt;~&gt; (r^ @ p = q)
+:= Build_Equiv _ _ (moveR_Vp p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: IsEquiv (moveR_pV p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 313
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveR_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: (r = q @ p) &lt;~&gt; (r @ p^ = q)
+:= Build_Equiv _ _ (moveR_pV p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_Mp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: IsEquiv (moveL_Mp p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 326
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveL_Mp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (r^ @ q = p) &lt;~&gt; (q = r @ p)
+:= Build_Equiv _ _ (moveL_Mp p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveL_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: IsEquiv (moveL_pM p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveL_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
+  q @ p^ = r &lt;~&gt; q = r @ p
+  := Build_Equiv _ _ _ (isequiv_moveL_pM p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
+: IsEquiv (moveL_Vp p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 352
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveL_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
+: r @ q = p &lt;~&gt; q = r^ @ p
+:= Build_Equiv _ _ (moveL_Vp p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: IsEquiv (moveL_pV p q r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveL_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: q @ p = r &lt;~&gt; q = r @ p^
+:= Build_Equiv _ _ (moveL_pV p q r) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveL_1M {A : Type} {x y : A} (p q : x = y)
+: IsEquiv (moveL_1M p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveL_M1 {A : Type} {x y : A} (p q : x = y)
+: IsEquiv (moveL_M1 p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveL_1V {A : Type} {x y : A} (p : x = y) (q : y = x)
+: IsEquiv (moveL_1V p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x)
+: IsEquiv (moveL_V1 p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveR_M1 {A : Type} {x y : A} (p q : x = y)
+: IsEquiv (moveR_M1 p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+: IsEquiv (moveR_1M p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+  : (1 = q @ p^) &lt;~&gt; (p = q)
+  := Build_Equiv _ _ (moveR_1M p q) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x)
+: IsEquiv (moveR_1V p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_moveR_V1 {A : Type} {x y : A} (p : x = y) (q : y = x)
+: IsEquiv (moveR_V1 p q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_concat_r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Definition moveR_moveL_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : transport P p u = v)
+  : moveR_transport_p P p u v (moveL_transport_V P p u v q) = q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 430
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition moveL_moveR_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : u = transport P p^ v)
+  : moveL_transport_V P p u v (moveR_transport_p P p u v q) = q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: IsEquiv (moveR_transport_p P p u v).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveL_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveR_moveL_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveL_moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 447
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveR_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: u = transport P p^ v &lt;~&gt; transport P p u = v
+:= Build_Equiv _ _ (moveR_transport_p P p u v) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Definition moveR_moveL_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : transport P p^ u = v)
+  : moveR_transport_V P p u v (moveL_transport_p P p u v q) = q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition moveL_moveR_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : u = transport P p v)
+  : moveL_transport_p P p u v (moveR_transport_V P p u v q) = q.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: IsEquiv (moveR_transport_V P p u v).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveL_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveR_moveL_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveL_moveR_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 477
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveR_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: u = transport P p v &lt;~&gt; transport P p^ u = v
+:= Build_Equiv _ _ (moveR_transport_V P p u v) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: IsEquiv (moveL_transport_V P p u v).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveL_moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveR_moveL_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 492
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveL_transport_V {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: transport P p u = v &lt;~&gt; u = transport P p^ v
+:= Build_Equiv _ _ (moveL_transport_V P p u v) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: IsEquiv (moveL_transport_p P p u v).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveR_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveL_moveR_transport_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q; apply moveR_moveL_transport_p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 507
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition equiv_moveL_transport_p {A : Type} (P : A -&gt; Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: transport P p^ u = v &lt;~&gt; u = transport P p v
+:= Build_Equiv _ _ (moveL_transport_p P p u v) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveR_equiv_M A B f _ x y).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveR_equiv_M.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 517
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q =&gt; q @ eisretr f y) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (x = f^-1 y) &lt;~&gt; (f x = y)
+  := Build_Equiv _ _ (@moveR_equiv_M A B f _ x y) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveR_equiv_V A B f _ x y).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 528
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q =&gt; q @ eissect f y) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (x = f y) &lt;~&gt; (f^-1 x = y)
+  := Build_Equiv _ _ (@moveR_equiv_V A B f _ x y) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveL_equiv_M A B f _ x y).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveL_equiv_M.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 539
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q =&gt; (eisretr f y)^ @ q) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (f^-1 y = x) &lt;~&gt; (y = f x)
+  := Build_Equiv _ _ (@moveL_equiv_M A B f _ x y) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveL_equiv_V A B f _ x y).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 550
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q =&gt; (eissect f y)^ @ q) _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (f y = x) &lt;~&gt; (y = f^-1 x)
+  := Build_Equiv _ _ (@moveL_equiv_V A B f _ x y) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Dependent paths *)
+
+(** Usually, a dependent path over [p:x1=x2] in [P:A-&gt;Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a path space, these dependent paths have a more convenient description: rather than transporting the left side both forwards and backwards, we transport both sides of the equation forwards, forming a sort of "naturality square".
+
+   We use the same naming scheme as for the transport lemmas. *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition dpath_path_l {A : Type} {x1 x2 y : A}
+  (p : x1 = x2) (q : x1 = y) (r : x2 = y)
+  : q = p @ r
+  &lt;~&gt;
+  transport (fun x =&gt; x = y) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_concat_r (concat_1p r) q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition dpath_path_r {A : Type} {x y1 y2 : A}
+  (p : y1 = y2) (q : x = y1) (r : x = y2)
+  : q @ p = r
+  &lt;~&gt;
+  transport (fun y =&gt; x = y) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition dpath_path_lr {A : Type} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = x1) (r : x2 = x2)
+  : q @ p = p @ r
+  &lt;~&gt;
+  transport (fun x =&gt; x = x) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (q @ 1 = r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_1p r) (q @ 1)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition dpath_path_Fl {A B : Type} {f : A -&gt; B} {x1 x2 : A} {y : B}
+  (p : x1 = x2) (q : f x1 = y) (r : f x2 = y)
+  : q = ap f p @ r
+  &lt;~&gt;
+  transport (fun x =&gt; f x = y) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_concat_r (concat_1p r) q).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 603
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+
+Definition dpath_path_Fr {A B : Type} {g : A -&gt; B} {x : B} {y1 y2 : A}
+  (p : y1 = y2) (q : x = g y1) (r : x = g y2)
+  : q @ ap g p = r
+  &lt;~&gt;
+  transport (fun y =&gt; x = g y) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition dpath_path_FlFr {A B : Type} {f g : A -&gt; B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : f x2 = g x2)
+  : q @ ap g p = ap f p @ r
+  &lt;~&gt;
+  transport (fun x =&gt; f x = g x) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (q @ 1 = r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_1p r) (q @ 1)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 625
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition dpath_path_FFlr {A B : Type} {f : A -&gt; B} {g : B -&gt; A}
+  {x1 x2 : A} (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
+  : q @ p = ap g (ap f p) @ r
+  &lt;~&gt;
+  transport (fun x =&gt; g (f x) = x) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (q @ 1 = r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_1p r) (q @ 1)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 637
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition dpath_path_lFFr {A B : Type} {f : A -&gt; B} {g : B -&gt; A}
+  {x1 x2 : A} (p : x1 = x2) (q : x1 = g (f x1)) (r : x2 = g (f x2))
+  : q @ ap g (ap f p) = p @ r
+  &lt;~&gt;
+  transport (fun x =&gt; x = g (f x)) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (q @ 1 = r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_1p r) (q @ 1)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_p1 q)^ r).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 649
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition dpath_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+           (r : idpath y = idpath y)
+: (concat_1p p)^ @ whiskerR q p @ concat_1p p
+  = (concat_p1 p)^ @ whiskerL p r @ concat_p1 p
+  &lt;~&gt;
+  transport (fun a =&gt; idpath a = idpath a) p q = r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_whiskerR _ _ 1)^-1).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_whiskerL 1 _ _)^-1).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_lr _ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply whiskerR_p1_1.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply whiskerL_1p_1.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 664
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Universal mapping property *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
+  (P : forall x, (a = x) -&gt; Type)
+  : IsEquiv (paths_ind a P) | 0.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify (paths_ind a P) (fun f =&gt; f a 1) _ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall; intros x.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall; intros p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_paths_ind `{Funext} {A : Type} (a : A)
+  (P : forall x, (a = x) -&gt; Type)
+  : P a 1 &lt;~&gt; forall x p, P x p
+  := Build_Equiv _ _ (paths_ind a P) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance isequiv_paths_ind_r `{Funext} {A : Type} (a : A)
+  (P : forall x, (x = a) -&gt; Type)
+  : IsEquiv (paths_ind_r a P) | 0.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify (paths_ind_r a P) (fun f =&gt; f a 1) _ _).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall; intros x.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall; intros p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p; reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_paths_ind_r `{Funext} {A : Type} (a : A)
+  (P : forall x, (x = a) -&gt; Type)
+  : P a 1 &lt;~&gt; forall x p, P x p
+  := Build_Equiv _ _ (paths_ind_r a P) _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncation *)
+
+(** Paths reduce truncation level by one.  This is essentially the definition of [IsTrunc_internal]. *)
+
+</pre>
+</div>
+</body>
+</html>
+

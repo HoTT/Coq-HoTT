@@ -1,0 +1,1924 @@
+<html>
+<head>
+<title>CayleyDickson.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for CayleyDickson.v</h1>
+
+<div class="code" title="File: CayleyDickson.v
+Line: 1
+Time: 0.081s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Require Import Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 1
+Time: 0.007s">
+<div class="time" style="width: 1.440329218107%"></div>
+<pre>
+Require Import Cubical.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 2
+Time: 0.04s">
+<div class="time" style="width: 8.2304526748971%"></div>
+<pre>
+Require Import Pointed.Core Pointed.pSusp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+Require Import Homotopy.HSpace.Core.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Join.Core.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
+  --x=x   x**=x   1*=1    (-x)*=-x*   x(-y)=-(xy)   (xy)* = y* x*    x* x=1    *)</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 12
+Time: 0.004s">
+<div class="time" style="width: 0.82304526748971%"></div>
+<pre>Class CayleyDicksonSpheroid (X : pType) := {
+  cds_hspace : IsHSpace X;
+  cds_negate : Negate X;
+  cds_conjug : Conjugate X;
+  cds_negate_inv : Involutive cds_negate;
+  cds_conjug_inv : Involutive cds_conjug;
+  cds_conjug_unit_pres : IsUnitPreserving cds_conjug;
+  cds_conjug_left_inv : LeftInverse (.*.) cds_conjug mon_unit;
+  cds_conjug_distr : DistrOpp (.*.) cds_conjug;
+  cds_swapop : SwapOp (-) cds_conjug;
+  cds_factorneg_r : FactorNegRight (-) (.*.);
+}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Existing Instances
+  cds_hspace
+  cds_negate
+  cds_conjug
+  cds_negate_inv
+  cds_conjug_inv
+  cds_conjug_unit_pres
+  cds_conjug_left_inv
+  cds_conjug_distr
+  cds_swapop
+  cds_factorneg_r.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section CayleyDicksonSpheroid_Properties.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : pType} `(CayleyDicksonSpheroid X).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Instance cds_factorneg_l : FactorNegLeft (-) (.*.).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    transitivity (conj (conj (-x * y))).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: symmetry; apply involutive.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite distropp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite swapop.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite factorneg_r.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite swapop.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- distropp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite involutive.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Instance cds_conjug_right_inv
+    : RightInverse (.*.) cds_conjug mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (p := cds_conjug x).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (involutive x).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply left_inverse.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+
+End CayleyDicksonSpheroid_Properties.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance conjugate_susp (A : Type) `(Negate A)
+  : Conjugate (Susp A).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Susp_rec.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact North.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact South.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (merid a).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance negate_susp (A : Type) `(Negate A)
+  : Negate (Susp A).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Susp_rec.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact South.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact North.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (merid (-a))^.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 83
+Time: 0.003s">
+<div class="time" style="width: 0.61728395061728%"></div>
+<pre>
+
+Class CayleyDicksonImaginaroid (A : Type) := {
+  cdi_negate : Negate A;
+  cdi_negate_involutive : Involutive cdi_negate;
+  cdi_susp_hspace : IsHSpace (psusp A);
+  cdi_susp_factorneg_r : FactorNegRight (negate_susp A cdi_negate) hspace_op;
+  cdi_susp_conjug_left_inv : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
+  cdi_susp_conjug_distr : DistrOpp hspace_op (conjugate_susp A cdi_negate);
+}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Existing Instances
+  cdi_negate
+  cdi_negate_involutive
+  cdi_susp_hspace
+  cdi_susp_factorneg_r
+  cdi_susp_conjug_left_inv
+  cdi_susp_conjug_distr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance involutive_negate_susp {A} `(CayleyDicksonImaginaroid A)
+  : Involutive (negate_susp A cdi_negate).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 103
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+  srapply Susp_ind; try reflexivity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dp_paths_FFlr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 107
+Time: 0.003s">
+<div class="time" style="width: 0.61728395061728%"></div>
+<pre>
+  rewrite Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ap_V.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+  rewrite Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite inv_V.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  rewrite (involutive x).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 113
+Time: 0.004s">
+<div class="time" style="width: 0.82304526748971%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance involutive_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
+  : Involutive (conjugate_susp A cdi_negate).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  srapply Susp_ind; try reflexivity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dp_paths_FFlr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 122
+Time: 0.005s">
+<div class="time" style="width: 1.0288065843621%"></div>
+<pre>
+  rewrite 2 Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 124
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+
+Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance swapop_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
+  : SwapOp negate (conjugate_susp A cdi_negate).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 135
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+  srapply Susp_ind; try reflexivity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dp_paths_FlFr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ap_compose.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  rewrite (ap_compose negate).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 141
+Time: 0.004s">
+<div class="time" style="width: 0.82304526748971%"></div>
+<pre>
+  rewrite Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ap_V.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite inv_V.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 144
+Time: 0.008s">
+<div class="time" style="width: 1.6460905349794%"></div>
+<pre>
+  rewrite 3 Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_pV.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 146
+Time: 0.011s">
+<div class="time" style="width: 2.2633744855967%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 149
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
+  : CayleyDicksonSpheroid (psusp A) := {}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
+  : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  srapply cds_conjug_left_inv.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
+  : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  srapply cds_conjug_right_inv.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
+  : LeftIdentity hspace_op mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)
+  : RightIdentity hspace_op mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 174
+Time: 0.026s">
+<div class="time" style="width: 5.3497942386831%"></div>
+<pre>
+
+Global Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
+  : FactorNegLeft (negate_susp A cdi_negate) hspace_op.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+  srapply cds_factorneg_l.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to a H-space structure on the join of the suspension of A with itself. *)</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ImaginaroidHSpace.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Let A be a Cayley-Dickson imaginaroid with associative H-space multiplication on Susp A *)
+ </pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A} `(CayleyDicksonImaginaroid A)
+    `(!Associative hspace_op).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Declaring these as local instances so that they can be found *)
+ </pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance hspace_op' : SgOp (Susp A) := hspace_op.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Instance hspace_unit' : MonUnit (Susp A) := hspace_mon_unit.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** First we make some observations with the context we have. *)
+ </pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Lemmata.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context (a b c d : Susp A).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Local Definition f := (fun x =&gt; a * (c * -x)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Local Definition g := (fun y =&gt; c * (y * b)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma lemma1 : f (- mon_unit) = a * c.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold f; apply ap.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (hspace_right_identity c).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold f.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite 2 factorneg_r.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 209
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+      rewrite 3 simple_associativity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- distropp.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 211
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+      rewrite (right_inverse (a * c)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (left_identity d).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply factorneg_l.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 215
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma lemma3 : g mon_unit = c * b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold g; apply ap.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply left_identity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold g.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+      rewrite 2 simple_associativity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 228
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+      rewrite left_inverse.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite right_identity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+      rewrite 2 simple_associativity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite right_inverse.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply left_identity.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 234
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End Lemmata.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Arguments f {_ _}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Arguments g {_ _}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here is the multiplication map in algebraic form:
+      (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
+      the following is the spherical form. *)
+ </pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance cd_op
+    : SgOp (pjoin (psusp A) (psusp A)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold psusp, pjoin; cbn.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y; revert x.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Join_rec; hnf.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Join_rec; hnf.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (joinl (a * c)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro d.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (joinr (conj a * d)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Join_rec; hnf.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (joinr (c * b)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro d.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (joinl ((-d) * conj b)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        symmetry.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    srapply Join_ind.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 272
+Time: 0.082s">
+<div class="time" style="width: 16.872427983539%"></div>
+<pre>
+    1: intro; apply jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 273
+Time: 0.02s">
+<div class="time" style="width: 4.1152263374486%"></div>
+<pre>
+    1: intro; cbn; symmetry; apply jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c d.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 275
+Time: 0.005s">
+<div class="time" style="width: 1.0288065843621%"></div>
+<pre>
+    apply sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 276
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    refine (sq_ccGG _^ _^ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply Join_rec_beta_jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    change (PathSquare (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
+      (jglue (a * c) (conj a * d)) (jglue ((- d) * conj b) (c * b))^).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 280
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+    rewrite &lt;- (lemma1 a c), &lt;- (lemma2 a b c d),
+       &lt;- (lemma3 b c), &lt;- (lemma4 a b c d).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_GGGG _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2,4: apply ap.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 284
+Time: 0.006s">
+<div class="time" style="width: 1.2345679012346%"></div>
+<pre>
+    1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b =&gt; jglue (f a) (g b))).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cGcG _ _ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    1,2: exact (ap_V _ (jglue _ _ )).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
+      (jglue _ _) (jglue _ _)^ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    generalize (conj c * conj a * d * conj b).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear a b c d.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (forall s : Susp A,
+      Diamond (-mon_unit) s (mon_unit) s).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 293
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    srapply Susp_ind; hnf.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by apply diamond_v_sq.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by apply diamond_h_sq.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply diamond_twist.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 298
+Time: 0.015s">
+<div class="time" style="width: 3.0864197530864%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+
+  Global Instance cd_op_left_identity
+    : LeftIdentity cd_op pt.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 303
+Time: 0.002s">
+<div class="time" style="width: 0.41152263374486%"></div>
+<pre>
+    snrapply Join_ind_FFlr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 304
+Time: 0.003s">
+<div class="time" style="width: 0.61728395061728%"></div>
+<pre>
+    1,2: exact (fun _ =&gt; ap _ (hspace_left_identity _)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    lhs nrapply whiskerR.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs refine (ap _ (ap_idmap _)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 308
+Time: 0.009s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+      exact (Join_rec_beta_jglue
+        (fun c =&gt; joinl (pt * c))
+        (fun d =&gt; joinr (conj pt * d))
+        (fun x y =&gt; jglue (pt * x) (conj pt * y))
+        a b).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 313
+Time: 0.003s">
+<div class="time" style="width: 0.61728395061728%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 314
+Time: 0.486s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    apply join_natsq.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 315
+Time: 0.006s">
+<div class="time" style="width: 1.2345679012346%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+
+  Global Instance cd_op_right_identity
+    : RightIdentity cd_op pt.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 320
+Time: 0.017s">
+<div class="time" style="width: 3.4979423868313%"></div>
+<pre>
+    snrapply Join_ind_FFlr.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 321
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    1: exact (fun _ =&gt; ap joinl (hspace_right_identity _)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 322
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+    1: exact (fun _ =&gt; ap joinr (hspace_left_identity _)).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 324
+Time: 0.024s">
+<div class="time" style="width: 4.9382716049383%"></div>
+<pre>
+    refine (whiskerR _ _ @ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 326
+Time: 0.024s">
+<div class="time" style="width: 4.9382716049383%"></div>
+<pre> refine (ap _ (ap_idmap _) @ _).</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 326
+Time: 0.003s">
+<div class="time" style="width: 0.61728395061728%"></div>
+<pre>
+      simpl; rapply Join_rec_beta_jglue.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 327
+Time: 0.363s">
+<div class="time" style="width: 74.691358024691%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 328
+Time: 0.372s">
+<div class="time" style="width: 76.543209876543%"></div>
+<pre>
+    apply join_natsq.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 329
+Time: 0.476s">
+<div class="time" style="width: 97.942386831276%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 330
+Time: 0.001s">
+<div class="time" style="width: 0.20576131687243%"></div>
+<pre>
+
+  Global Instance hspace_cdi_susp_assoc
+    : IsHSpace (pjoin (psusp A) (psusp A))
+    := {}.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 334
+Time: 0.29s">
+<div class="time" style="width: 59.670781893004%"></div>
+<pre>
+
+End ImaginaroidHSpace.</pre>
+</div>
+<div class="code" title="File: CayleyDickson.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

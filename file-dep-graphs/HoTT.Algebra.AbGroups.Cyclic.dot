@@ -1,0 +1,38 @@
+digraph HoTT_Algebra_AbGroups_Cyclic {
+  graph [ratio=0.5]
+  node [style=filled]
+Cyclic_cyclic [label="cyclic", URL=<Cyclic.html#cyclic>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_Z1_to_Z [label="Z1_to_Z", URL=<Cyclic.html#Z1_to_Z>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_ab_Z1_projective [label="ab_Z1_projective", URL=<Cyclic.html#ab_Z1_projective>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_Z1_mul_nat_beta [label="Z1_mul_nat_beta", URL=<Cyclic.html#Z1_mul_nat_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_Z1_mul_nat [label="Z1_mul_nat", URL=<Cyclic.html#Z1_mul_nat>, fillcolor="#F070D1"] ;
+Cyclic_nat_to_Z1 [label="nat_to_Z1", URL=<Cyclic.html#nat_to_Z1>, fillcolor="#F070D1"] ;
+Cyclic_equiv_Z1_hom [label="equiv_Z1_hom", URL=<Cyclic.html#equiv_Z1_hom>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_ab_Z1 [label="ab_Z1", URL=<Cyclic.html#ab_Z1>, fillcolor="#F070D1"] ;
+Cyclic_Z1_commutative [label="Z1_commutative", URL=<Cyclic.html#Z1_commutative>, fillcolor="#F070D1"] ;
+Cyclic_Z1_rec_beta [label="Z1_rec_beta", URL=<Cyclic.html#Z1_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_Z1_rec [label="Z1_rec", URL=<Cyclic.html#Z1_rec>, fillcolor="#F070D1"] ;
+Cyclic_Z1_gen [label="Z1_gen", URL=<Cyclic.html#Z1_gen>, fillcolor="#F070D1"] ;
+Cyclic_Z1 [label="Z1", URL=<Cyclic.html#Z1>, fillcolor="#F070D1"] ;
+  Cyclic_cyclic -> Cyclic_Z1_mul_nat [] ;
+  Cyclic_Z1_to_Z -> Cyclic_ab_Z1 [] ;
+  Cyclic_Z1_to_Z -> Cyclic_Z1_rec [] ;
+  Cyclic_ab_Z1_projective -> Cyclic_ab_Z1 [] ;
+  Cyclic_ab_Z1_projective -> Cyclic_Z1_rec [] ;
+  Cyclic_ab_Z1_projective -> Cyclic_Z1_gen [] ;
+  Cyclic_Z1_mul_nat_beta -> Cyclic_nat_to_Z1 [] ;
+  Cyclic_Z1_mul_nat_beta -> Cyclic_Z1_rec [] ;
+  Cyclic_Z1_mul_nat -> Cyclic_nat_to_Z1 [] ;
+  Cyclic_Z1_mul_nat -> Cyclic_ab_Z1 [] ;
+  Cyclic_Z1_mul_nat -> Cyclic_Z1_rec [] ;
+  Cyclic_nat_to_Z1 -> Cyclic_Z1_gen [] ;
+  Cyclic_equiv_Z1_hom -> Cyclic_ab_Z1 [] ;
+  Cyclic_ab_Z1 -> Cyclic_Z1_commutative [] ;
+  Cyclic_Z1_commutative -> Cyclic_Z1 [] ;
+  Cyclic_Z1_rec_beta -> Cyclic_Z1_rec [] ;
+  Cyclic_Z1_rec_beta -> Cyclic_Z1_gen [] ;
+  Cyclic_Z1_rec -> Cyclic_Z1 [] ;
+  Cyclic_Z1_gen -> Cyclic_Z1 [] ;
+subgraph cluster_Cyclic { label="Cyclic"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Cyclic_Z1; Cyclic_Z1_gen; Cyclic_Z1_rec; Cyclic_Z1_rec_beta; Cyclic_Z1_commutative; Cyclic_ab_Z1; Cyclic_equiv_Z1_hom; Cyclic_nat_to_Z1; Cyclic_Z1_mul_nat; Cyclic_Z1_mul_nat_beta; Cyclic_ab_Z1_projective; Cyclic_Z1_to_Z; Cyclic_cyclic; };
+} /* END */

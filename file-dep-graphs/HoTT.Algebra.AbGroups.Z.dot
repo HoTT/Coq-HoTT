@@ -1,0 +1,7 @@
+digraph HoTT_Algebra_AbGroups_Z {
+  graph [ratio=0.5]
+  node [style=filled]
+Z_abgroup_Z [label="abgroup_Z", URL=<Z.html#abgroup_Z>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_Z { label="Z"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Z_abgroup_Z; };
+} /* END */

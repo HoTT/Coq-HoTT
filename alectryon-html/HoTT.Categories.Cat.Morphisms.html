@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Morphisms.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Morphisms in cat *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Lemmas relationship between transporting the action of functors on objects, and [idtoiso] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">iso_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">s</span> <span class="nv">d</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">m1</span> <span class="nv">m2</span> : morphism C s d.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">p</span> : m1 = m2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">Fs</span> <span class="nv">Fd</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Fm</span> : morphism C s d -&gt; Functor Fs Fd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk1"><span class="kn">Lemma</span> <span class="nf">transport_Fc_to_idtoiso</span>
+        <span class="nv">s&#39;</span> <span class="nv">d&#39;</span> <span class="nv">u</span>
+  : @transport _ (<span class="kr">fun</span> <span class="nv">m</span> =&gt; morphism _ (Fm m s&#39;) d&#39;) _ _ p u
+    = u o components_of (Category.Morphisms.idtoiso (_ -&gt; _) (ap Fm p) : morphism _ _ _)^-<span class="mi">1</span> s&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>m1 = m2</span></span></span><br><span><var>Fs, Fd</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Fm</var><span class="hyp-type"><b>: </b><span>(morphism C s d -&gt; Functor Fs Fd)%type</span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>Fs</span></span></span><br><span><var>d'</var><span class="hyp-type"><b>: </b><span>Fd</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>morphism Fd ((Fm m1) _0 s&#39;)%object d&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">m</span> : morphism C s d =&gt;
+   morphism Fd ((Fm m) _0 s&#39;)%object d&#39;) p u =
+u o (idtoiso (Fs -&gt; Fd) (ap Fm p))^-<span class="mi">1</span> s&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>m1 = m2</span></span></span><br><span><var>Fs, Fd</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Fm</var><span class="hyp-type"><b>: </b><span>(morphism C s d -&gt; Functor Fs Fd)%type</span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>Fs</span></span></span><br><span><var>d'</var><span class="hyp-type"><b>: </b><span>Fd</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>morphism Fd ((Fm m1) _0 s&#39;)%object d&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">m</span> : morphism C s d =&gt;
+   morphism Fd ((Fm m) _0 s&#39;)%object d&#39;) p u =
+u o (idtoiso (Fs -&gt; Fd) (ap Fm p))^-<span class="mi">1</span> s&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">case</span> p; <span class="nb">clear</span> p; <span class="nb">simpl</span>; <span class="nb">autorewrite with</span> morphism; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk3"><span class="kn">Lemma</span> <span class="nf">transport_cF_to_idtoiso</span>
+        <span class="nv">s&#39;</span> <span class="nv">d&#39;</span> <span class="nv">u</span>
+  : @transport _ (<span class="kr">fun</span> <span class="nv">m</span> =&gt; morphism _ s&#39; (Fm m d&#39;)) _ _ p u
+    = components_of (Category.Morphisms.idtoiso (_ -&gt; _) (ap Fm p) : morphism _ _ _) d&#39; o u.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>m1 = m2</span></span></span><br><span><var>Fs, Fd</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Fm</var><span class="hyp-type"><b>: </b><span>(morphism C s d -&gt; Functor Fs Fd)%type</span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>Fd</span></span></span><br><span><var>d'</var><span class="hyp-type"><b>: </b><span>Fs</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>morphism Fd s&#39; ((Fm m1) _0 d&#39;)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">m</span> : morphism C s d =&gt;
+   morphism Fd s&#39; ((Fm m) _0 d&#39;)%object) p u =
+(idtoiso (Fs -&gt; Fd) (ap Fm p)
+ :
+ morphism (Fs -&gt; Fd) (Fm m1) (Fm m2)) d&#39; o u</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>m1 = m2</span></span></span><br><span><var>Fs, Fd</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Fm</var><span class="hyp-type"><b>: </b><span>(morphism C s d -&gt; Functor Fs Fd)%type</span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>Fd</span></span></span><br><span><var>d'</var><span class="hyp-type"><b>: </b><span>Fs</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>morphism Fd s&#39; ((Fm m1) _0 d&#39;)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">m</span> : morphism C s d =&gt;
+   morphism Fd s&#39; ((Fm m) _0 d&#39;)%object) p u =
+(idtoiso (Fs -&gt; Fd) (ap Fm p)
+ :
+ morphism (Fs -&gt; Fd) (Fm m1) (Fm m2)) d&#39; o u</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">case</span> p; <span class="nb">clear</span> p; <span class="nb">simpl</span>; <span class="nb">autorewrite with</span> morphism; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">iso_lemmas</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

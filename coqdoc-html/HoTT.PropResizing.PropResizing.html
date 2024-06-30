@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.PropResizing.PropResizing</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.PropResizing.PropResizing</h1>
+
+<div class="code">
+<span class="comment">(*&nbsp;-*-&nbsp;mode:&nbsp;coq;&nbsp;mode:&nbsp;visual-line&nbsp;-*-&nbsp;&nbsp;*)</span><br/>
+</div>
+
+<div class="doc">
+<a id="lab1259"></a><h1 class="section">Propositional resizing</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+See the note by <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span> in Overture.v regarding classes for axioms 
+</div>
+<div class="code">
+<span class="id" title="keyword">Monomorphic Axiom</span> <a id="PropResizing" class="idref" href="#PropResizing"><span class="id" title="axiom">PropResizing</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a>.<br/>
+<span class="id" title="keyword">Existing Class</span> <a class="idref" href="HoTT.PropResizing.PropResizing.html#PropResizing"><span class="id" title="axiom">PropResizing</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mark this axiom as a "global axiom", which some of our tactics will automatically handle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global Instance</span> <a id="is_global_axiom_propresizing" class="idref" href="#is_global_axiom_propresizing"><span class="id" title="instance">is_global_axiom_propresizing</span></a> : <a class="idref" href="HoTT.Basics.Tactics.html#IsGlobalAxiom"><span class="id" title="class">IsGlobalAxiom</span></a> <a class="idref" href="HoTT.PropResizing.PropResizing.html#PropResizing"><span class="id" title="class">PropResizing</span></a> := {}.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="resize_hprop" class="idref" href="#resize_hprop"><span class="id" title="axiom">resize_hprop</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">`{</span></a><a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">PropResizing</span></a>} (<a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) `{<a id="IsHProp0:4" class="idref" href="#IsHProp0:4"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:4" class="idref" href="#IsHProp0:4"><span class="id" title="binder">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">},</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>}.<br/>
+<span class="id" title="keyword">Axiom</span> <a id="equiv_resize_hprop" class="idref" href="#equiv_resize_hprop"><span class="id" title="axiom">equiv_resize_hprop</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">`{</span></a><a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">PropResizing</span></a>} (<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) `{<a id="IsHProp0:8" class="idref" href="#IsHProp0:8"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:8" class="idref" href="#IsHProp0:8"><span class="id" title="binder">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">},</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.PropResizing.PropResizing.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.PropResizing.PropResizing.html#resize_hprop"><span class="id" title="axiom">resize_hprop</span></a> <a class="idref" href="HoTT.PropResizing.PropResizing.html#A:7"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global Instance</span> <a id="ishprop_resize_hprop" class="idref" href="#ishprop_resize_hprop"><span class="id" title="instance">ishprop_resize_hprop</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">PropResizing</span></a>} (<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:12" class="idref" href="#IsHProp0:12"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:12" class="idref" href="#IsHProp0:12"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.PropResizing.PropResizing.html#resize_hprop"><span class="id" title="axiom">resize_hprop</span></a> <a class="idref" href="HoTT.PropResizing.PropResizing.html#A:11"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">A</span> (<a class="idref" href="HoTT.PropResizing.PropResizing.html#equiv_resize_hprop"><span class="id" title="axiom">equiv_resize_hprop</span></a> <span class="id" title="var">A</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

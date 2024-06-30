@@ -1,0 +1,17 @@
+N: 4 "IsCongruence_ind" [body=yes, kind=cnst, prop=yes, path="Congruence", ];
+N: 3 "IsCongruence_rec" [body=yes, kind=cnst, prop=no, path="Congruence", ];
+N: 5 "IsCongruence_rect" [body=yes, kind=cnst, prop=no, path="Congruence", ];
+N: 2 "IsCongruence_sind" [body=yes, kind=cnst, prop=no, path="Congruence", ];
+N: 1 "iscong" [body=yes, kind=cnst, prop=no, path="Congruence", ];
+N: 7 "IsCongruence" [kind=inductive, prop=no, path="Congruence", ];
+N: 6 "Build_IsCongruence" [kind=construct, prop=no, path="Congruence", ];
+E: 1 7 [weight=2, ];
+E: 2 6 [weight=2, ];
+E: 2 7 [weight=4, ];
+E: 3 5 [weight=1, ];
+E: 3 6 [weight=1, ];
+E: 3 7 [weight=3, ];
+E: 4 6 [weight=2, ];
+E: 4 7 [weight=4, ];
+E: 5 6 [weight=2, ];
+E: 5 7 [weight=4, ];

@@ -1,0 +1,3041 @@
+<html>
+<head>
+<title>Module.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Module.v</h1>
+
+<div class="code" title="File: Module.v
+Line: 1
+Time: 0.093s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import WildCat.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 3
+Time: 0.025s">
+<div class="time" style="width: 26.881720430108%"></div>
+<pre>Require Import Classes.interfaces.canonical_names.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 3
+Time: 0.018s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+Require Import Algebra.Groups.Kernel Algebra.Groups.Image Algebra.Groups.QuotientGroup.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 4
+Time: 0.009s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 5
+Time: 0.036s">
+<div class="time" style="width: 38.709677419355%"></div>
+<pre>
+Require Import Rings.Ring.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope module_scope.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Left modules over a ring. *)
+
+(** TODO: Right modules? We can treat right modules as left modules over the opposite ring. *)
+
+(** ** Definition *)
+
+(** An abelian group [M] is a left [R]-module when equipped with the following data: *) </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 16
+Time: 0.007s">
+<div class="time" style="width: 7.5268817204301%"></div>
+<pre>Class IsLeftModule (R : Ring) (M : AbGroup) := {
+  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [lact r m : M]. *)
+  lact : R -&gt; M -&gt; M;
+  (** Actions distribute on the left over addition in the abelian group. That is [lact r (m + n) = lact r m + lact r n]. *)
+  lact_left_dist :: LeftHeteroDistribute lact (+) (+);
+  (** Actions distribute on the right over addition in the ring. That is [lact (r + s) m = lact r m + lact s m]. *)
+  lact_right_dist :: RightHeteroDistribute lact (+) (+);
+  (** Actions are associative. That is [lact (r * s) m = lact r (lact s m)]. *)
+  lact_assoc :: HeteroAssociative lact lact lact (.*.);
+  (** Actions preserve the multiplicative identity. That is [lact 1 m = m]. *)
+  lact_unit :: LeftIdentity lact 1;
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: notation for action. *)
+
+(** A left R-module is an abelian group equipped with a left R-module structure. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record LeftModule (R : Ring) := {
+  lm_carrier :&gt; AbGroup;
+  lm_lact :: IsLeftModule R lm_carrier;
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section ModuleAxioms.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {R : Ring} {M : LeftModule R} (r s : R) (m n : M).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Here we state the module axioms in a readable form for direct use. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition lm_dist_l : lact r (m + n) = lact r m + lact r n := lact_left_dist r m n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition lm_dist_r : lact (r + s) m = lact r m + lact s m := lact_right_dist r s m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition lm_assoc : lact r (lact s m) = lact (r * s) m := lact_assoc r s m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition lm_unit : lact 1 m = m := lact_unit m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+End ModuleAxioms.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Facts about left modules *)
+
+</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ModuleFacts.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {R : Ring} {M : LeftModule R} (r : R) (m : M).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** Here are some quick facts that hold in modules. *) 
+
+  (** The action of zero is zero. *) 
+ </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lm_zero_l : lact 0 m = 0.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    apply (grp_cancelL1 (z := lact 0 m)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    lhs_V nrapply lm_dist_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply rng_plus_zero_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** The action on zero is zero. *)
+ </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lm_zero_r : lact r (0 : M) = 0.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (grp_cancelL1 (z := lact r 0)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V nrapply lm_dist_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_unit_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The action of [-1] is the additive inverse. *)
+ </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition lm_minus_one : lact (-1) m = -m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     apply grp_moveL_1V.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     lhs nrapply (ap (_ +) (lm_unit m)^).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     lhs_V nrapply lm_dist_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     rhs_V nrapply lm_zero_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 77
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+     f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     apply grp_inv_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+ 
+  (** The action of [r] on the additive inverse of [m] is the additive inverse of the action of [r] on [m]. *)
+ </pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition lm_inv : lact r (-m) = -(lact r m).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_moveL_1V.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V nrapply lm_dist_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V nrapply lm_zero_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_inv_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 90
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+
+End ModuleFacts.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every ring [R] is a left [R]-module over itself. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isleftmodule_ring (R : Ring) : IsLeftModule R R.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 95
+Time: 0.011s">
+<div class="time" style="width: 11.827956989247%"></div>
+<pre>
+  rapply Build_IsLeftModule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Left Submodules *)
+
+(** A subgroup of a left R-module is a left submodule if it is closed under the action of R. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 101
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>Class IsLeftSubmodule {R : Ring} {M : LeftModule R} (N : M -&gt; Type) := {
+  ils_issubgroup :: IsSubgroup N;
+  is_left_submodule : forall r m, N m -&gt; N (lact r m);
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A left submodule is a subgroup of the abelian group closed under the action of R. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Record LeftSubmodule {R : Ring} (M : LeftModule R) := {
+  lsm_carrier :&gt; M -&gt; Type;
+  lsm_submodule :: IsLeftSubmodule lsm_carrier;
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_leftsubmodule {R : Ring} {M : LeftModule R}
+  : LeftSubmodule M -&gt; Subgroup M
+  := fun N =&gt; Build_Subgroup M N _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion subgroup_leftsubmodule : LeftSubmodule &gt;-&gt; Subgroup.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Submodules inherit the R-module structure of their parent. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isleftmodule_leftsubmodule {R : Ring}
+  {M : LeftModule R} (N : LeftSubmodule M)
+  : IsLeftModule R N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 119
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  snrapply Build_IsLeftModule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r [n n_in_N].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (lact r n).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply lsm_submodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 124
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre> intros r [n] [m]; apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lact_left_dist.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 126
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> intros r s [n]; apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lact_right_dist.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 128
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> intros r s [n]; apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lact_assoc.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> intros [n]; apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lact_unit.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 131
+Time: 0.036s">
+<div class="time" style="width: 38.709677419355%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any left submodule of a left R-module is a left R-module. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leftmodule_leftsubmodule {R : Ring}
+  {M : LeftModule R} (N : LeftSubmodule M)
+  : LeftModule R
+  := Build_LeftModule R N _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion leftmodule_leftsubmodule : LeftSubmodule &gt;-&gt; LeftModule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The submodule criterion. This is a convenient way to build submodules. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition Build_IsLeftSubmodule' {R : Ring} {M : LeftModule R} 
+  (H : M -&gt; Type) `{forall x, IsHProp (H x)}
+  (z : H zero)
+  (c : forall r n m, H n -&gt; H m -&gt; H (n + lact r m))
+  : IsLeftSubmodule H.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_IsLeftSubmodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_IsSubgroup'.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact z.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y hx hy.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (sg_op ?x ?y) with (x + y).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      pose proof (p := c (-1) x y hx hy).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite lm_minus_one in p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m hm.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_unit_l).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply c.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Definition Build_LeftSubmodule' {R : Ring} {M : LeftModule R}
+  (H : M -&gt; Type) `{forall x, IsHProp (H x)}
+  (z : H zero)
+  (c : forall r n m, H n -&gt; H m -&gt; H (n + lact r m))
+  : LeftSubmodule M.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (p := Build_IsLeftSubmodule' H z c).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftSubmodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: snrapply (Build_Subgroup _ H).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply ils_issubgroup.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Left R-module homomorphisms *)
+
+(** A left module homomorphism is a group homomorphism that commutes with the action of R. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 175
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>Record LeftModuleHomomorphism {R : Ring} (M N : LeftModule R) := {
+  lm_homo_map :&gt; GroupHomomorphism M N;
+  lm_homo_lact : forall r m, lm_homo_map (lact r m) = lact r (lm_homo_map m);
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_homo_id {R : Ring} (M : LeftModule R) : LeftModuleHomomorphism M M.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_homo_id.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_homo_compose {R : Ring} {M N L : LeftModule R}
+  : LeftModuleHomomorphism N L -&gt; LeftModuleHomomorphism M N
+  -&gt; LeftModuleHomomorphism M L.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_homo_compose f g).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V nrapply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap f).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Smart constructor for building left module homomorphisms from a map. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition Build_LeftModuleHomomorphism' {R : Ring} {M N : LeftModule R}
+  (f : M -&gt; N) (p : forall r x y, f (lact r x + y) = lact r (f x) + f y)
+  : LeftModuleHomomorphism M N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- (lm_unit (f x)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      set (lact 1 (f x)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- (lm_unit x).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_unit_r (lact r m)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V nrapply grp_unit_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_cancelL.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (p 1 0 0).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 lm_unit in p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (grp_cancelL1 (z := f 0)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V nrapply p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_unit_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 223
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Record LeftModuleIsomorphism {R : Ring} (M N : LeftModule R) := {
+  lm_iso_map :&gt; LeftModuleHomomorphism M N;
+  isequiv_lm_iso_map :: IsEquiv lm_iso_map;
+}.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Definition Build_LeftModuleIsomorphism' {R : Ring} (M N : LeftModule R)
+  (f : GroupIsomorphism M N) (p : forall r x, f (lact r x) = lact r (f x))
+  : LeftModuleIsomorphism M N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  snrapply Build_LeftModuleIsomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 236
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_iso_inverse {R : Ring} {M N : LeftModule R}
+  : LeftModuleIsomorphism M N -&gt; LeftModuleIsomorphism N M.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleIsomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_LeftModuleHomomorphism'.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f^-1.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+      rhs nrapply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+      f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply eisretr.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs nrapply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply eisretr.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 258
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 258
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Category of left R-modules *)
+
+(** TODO: define as a displayed category over Ring *)
+
+</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isgraph_leftmodule {R : Ring} : IsGraph (LeftModule R)
+  := Build_IsGraph _ LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance is01cat_leftmodule {R : Ring} : Is01Cat (LeftModule R)
+  := Build_Is01Cat _ _ lm_homo_id (@lm_homo_compose R).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
+  := fun M N =&gt; isgraph_induced (@lm_homo_map R M N).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance is1cat_leftmodule {R : Ring} : Is1Cat (LeftModule R).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 274
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  snrapply Build_Is1Cat'.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N; rapply is01cat_induced.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> intros M N; rapply is0gpd_induced.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N L h.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f g p m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap h (p m)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N L f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros g h p m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p (f m)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 288
+Time: 0.011s">
+<div class="time" style="width: 11.827956989247%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance hasequivs_leftmodule {R : Ring} : HasEquivs (LeftModule R).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 292
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  snrapply Build_HasEquivs.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact LeftModuleIsomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N; exact IsEquiv.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N f; exact f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 297
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre> simpl; exact _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Build_LeftModuleIsomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N; apply lm_iso_inverse.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> intros M N f; apply eissect.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N f; apply eisretr.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros M N f g fg gf.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (isequiv_adjointify f g fg gf).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Kernel of module homomorphism *)
+
+</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isleftsubmodule_grp_kernel {R : Ring}
+  {M N : LeftModule R} (f : M $-&gt; N)
+  : IsLeftSubmodule (grp_kernel f).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsLeftSubmodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r m n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V nrapply (lm_zero_r r).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 318
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Definition lm_kernel {R : Ring} {M N : LeftModule R} (f : M $-&gt; N)
+  : LeftSubmodule M
+  := Build_LeftSubmodule _ _ (grp_kernel f) _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image of module homomorphism *)
+
+</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isleftsubmodule_grp_image {R : Ring}
+  {M N : LeftModule R} (f : M $-&gt; N)
+  : IsLeftSubmodule (grp_image f).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsLeftSubmodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r m; apply Trunc_functor; intros [n p].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (lact r n).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 335
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Definition lm_image {R : Ring} {M N : LeftModule R} (f : M $-&gt; N)
+  : LeftSubmodule N
+  := Build_LeftSubmodule _ _ (grp_image f) _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Quotient Modules *)
+
+(** The quotient abelian group of a module and a submodule has a natural ring action. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isleftmodule_quotientabgroup {R : Ring}
+  (M : LeftModule R) (N : LeftSubmodule M)
+  : IsLeftModule R (QuotientAbGroup M N).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_IsLeftModule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply quotient_abgroup_rec.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (grp_quotient_map $o _).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+      snrapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (lact r).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply lm_dist_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n Nn; simpl.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply qglue.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply issubgroup_in_inv_op.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply is_left_submodule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m n; revert m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 360
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    snrapply Quotient_ind_hprop; [exact _ | intros m; revert n].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 361
+Time: 0.007s">
+<div class="time" style="width: 7.5268817204301%"></div>
+<pre>
+    snrapply Quotient_ind_hprop; [exact _ | intros n; simpl].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    rapply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lm_dist_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r s.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 365
+Time: 0.008s">
+<div class="time" style="width: 8.6021505376344%"></div>
+<pre>
+    snrapply Quotient_ind_hprop; [exact _| intros m; simpl].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 366
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    rapply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lm_dist_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r s.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 369
+Time: 0.007s">
+<div class="time" style="width: 7.5268817204301%"></div>
+<pre>
+    snrapply Quotient_ind_hprop; [exact _| intros m; simpl].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lm_assoc.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 373
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre> snrapply Quotient_ind_hprop; [exact _| intros m; simpl].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lm_unit.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 375
+Time: 0.022s">
+<div class="time" style="width: 23.655913978495%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can therefore form the quotient module of a module by its submodule. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition QuotientLeftModule {R : Ring} (M : LeftModule R) (N : LeftSubmodule M)
+  : LeftModule R
+  := Build_LeftModule R (QuotientAbGroup M N) _.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "/" := QuotientLeftModule : module_scope.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+(** ** First Isomorphism Theorem *)
+
+</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope module_scope.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 386
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+
+Definition rng_first_iso `{Funext} {R : Ring} {M N : LeftModule R} (f : M $-&gt; N)
+  : M / lm_kernel f ≅ lm_image f.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 390
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  snrapply Build_LeftModuleIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 391
+Time: 0.071s">
+<div class="time" style="width: 76.344086021505%"></div>
+<pre>
+  1: rapply abgroup_first_iso.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 393
+Time: 0.023s">
+<div class="time" style="width: 24.731182795699%"></div>
+<pre>
+  srapply Quotient_ind_hprop; intros m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 394
+Time: 0.004s">
+<div class="time" style="width: 4.3010752688172%"></div>
+<pre>
+  apply path_sigma_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 396
+Time: 0.005s">
+<div class="time" style="width: 5.3763440860215%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Direct products *)
+
+(** TODO: generalise to biproducts *)
+(** The direct product of modules *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lm_prod {R : Ring} : LeftModule R -&gt; LeftModule R -&gt; LeftModule R.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply (Build_LeftModule R (ab_biprod M N)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_IsLeftModule.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply functor_prod; exact (lact r).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 409
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    apply path_prod; apply lm_dist_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r m n.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 411
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    apply path_prod; apply lm_dist_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r s m.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod; apply lm_assoc.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod; apply lm_unit.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_prod_fst {R : Ring} {M N : LeftModule R} : lm_prod M N $-&gt; M.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_prod_pr1.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_prod_snd {R : Ring} {M N : LeftModule R} : lm_prod M N $-&gt; N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_prod_pr2.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lm_prod_corec {R : Ring} {M N : LeftModule R} (L : LeftModule R)
+  (f : L $-&gt; M) (g : L $-&gt; N)
+  : L $-&gt; lm_prod M N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_LeftModuleHomomorphism.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (grp_prod_corec f g).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod; apply lm_homo_lact.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance hasbinaryproducts_leftmodule {R : Ring}
+  : HasBinaryProducts (LeftModule R).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M N.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 446
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  snrapply Build_BinaryProduct.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (lm_prod M N).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lm_prod_fst.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lm_prod_snd.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lm_prod_corec.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros L f g p q a.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_prod' (p a) (q a)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 455
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Finite Sums *)
+
+(** Scalar multplication distributes over finite sums of left module elements. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 460
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition lm_sum_dist_l {R : Ring} (M : LeftModule R) (n : nat)
+  (f : forall k, (k &lt; n)%nat -&gt; M) (r : R)
+  : lact r (ab_sum n f) = ab_sum n (fun k Hk =&gt; lact r (f k Hk)).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply lm_zero_r.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 465
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  lhs nrapply lm_dist_l; simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 466
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left module elements distribute over finite sums of scalars. *)</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 469
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Definition lm_sum_dist_r {R : Ring} (M : LeftModule R) (n : nat)
+  (f : forall k, (k &lt; n)%nat -&gt; R) (x : M)
+  : lact (ab_sum n f) x = ab_sum n (fun k Hk =&gt; lact (f k Hk) x).</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply lm_zero_l.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 474
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  lhs nrapply lm_dist_r; simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 475
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Module.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
