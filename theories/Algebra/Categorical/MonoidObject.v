@@ -95,6 +95,37 @@ Section ComonoidObject.
   Definition co_counit {x : A} `{!IsComonoidObject x} : x $-> unit
     := mo_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x).
 
+  (** Coassociativity *)
+  Definition co_coassoc {x : A} `{!IsComonoidObject x}
+    : associator x x x $o fmap01 tensor x co_comult $o co_comult
+        $== fmap10 tensor co_comult x $o co_comult.
+  Proof.
+    refine (cat_assoc _ _ _ $@ _).
+    apply cate_moveR_Me.
+    symmetry.
+    exact (mo_assoc (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+  Defined.
+
+  (** Left counitality *)
+  Definition co_left_counit {x : A} `{!IsComonoidObject x}
+    : left_unitor x $o fmap10 tensor co_counit x $o co_comult $== Id x.
+  Proof.
+    refine (cat_assoc _ _ _ $@ _).
+    apply cate_moveR_Me.
+    refine (_ $@ (cat_idr _)^$).
+    exact (mo_left_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+  Defined.
+
+  (** Right counitality *)
+  Definition co_right_counit {x : A} `{!IsComonoidObject x}
+    : right_unitor x $o fmap01 tensor x co_counit $o co_comult $== Id x.
+  Proof.
+    refine (cat_assoc _ _ _ $@ _).
+    apply cate_moveR_Me.
+    refine (_ $@ (cat_idr _)^$).
+    exact (mo_right_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+  Defined.
+
   Context `{!Braiding tensor}.
 
   (** A cocommutative comonoid objects is a commutative monoid object in the opposite category. *)
@@ -115,7 +146,57 @@ Section ComonoidObject.
     - exact cco_cocomm.
   Defined.
 
+  Global Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
+    : IsComonoidObject x.
+  Proof.
+    apply cmo_mo.
+  Defined.
+
+  (** Cocommutativity *)
+  Definition cco_cocomm {x : A} `{!IsCocommutativeComonoidObject x}
+    : braid x x $o co_comult $== co_comult.
+  Proof.
+    exact (cmo_comm (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+  Defined.
+
 End ComonoidObject.
+
+(** A comonoid object in [A^op] is a monoid object in [A]. *)
+Definition mo_co_op {A : Type} {tensor : A -> A -> A} {unit : A}
+  `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
+  `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit}
+  {x : A} `{C : !IsComonoidObject (A:=A^op) tensor unit x}
+  : IsMonoidObject tensor unit x.
+Proof.
+  snrapply Build_IsMonoidObject.
+  - exact (co_comult (A:=A^op) tensor unit).
+  - exact (co_counit (A:=A^op) tensor unit).
+  - apply cate_moveR_eM.
+    symmetry.
+    exact (cat_assoc _ _ _ $@ co_coassoc (A:=A^op) tensor unit (x:=x)).
+  - simpl; nrefine (_ $@ cat_idl _).
+    apply cate_moveL_eM.
+    refine (cat_assoc _ _ _ $@ _).
+    exact (co_left_counit (A:=A^op) tensor unit (x:=x)).
+  - simpl; nrefine (_ $@ cat_idl _).
+    apply cate_moveL_eM.
+    refine (cat_assoc _ _ _ $@ _).
+    exact (co_right_counit (A:=A^op) tensor unit (x:=x)).
+Defined.
+
+(** A cocoassociative cocomonoid object in [A^op] is a commutative monoid object in [A]. *)
+Definition cmo_coco_op {A : Type} {tensor : A -> A -> A} {unit : A}
+  `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
+  `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit,
+    !Braiding tensor}
+  {x : A} `{C : !IsCocommutativeComonoidObject (A:=A^op) tensor unit x}
+  : IsCommutativeMonoidObject tensor unit x.
+Proof.
+  snrapply Build_IsCommutativeMonoidObject.
+  - nrapply mo_co_op.
+    rapply co_cco.
+  - exact (cco_cocomm (A:=A^op) tensor unit).
+Defined.
 
 (** ** Monoid enrichment *)
 
@@ -193,7 +274,3 @@ Section MonoidEnriched.
   Local Instance iscommutativemonoid_hom : IsCommutativeMonoid (x $-> y) := {}.
 
 End MonoidEnriched.
-
-
-
-
