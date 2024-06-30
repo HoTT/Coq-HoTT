@@ -10,7 +10,6 @@ Local Set Universe Minimization ToSet.
 
 Local Open Scope int_scope.
 
-(** TODO: switch to [Int] *)
 Definition abgroup_Z@{} : AbGroup@{Set}.
 Proof.
   snrapply Build_AbGroup.
