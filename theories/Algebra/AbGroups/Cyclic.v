@@ -48,7 +48,7 @@ Lemma Z1_mul_nat_beta {A : AbGroup} (a : A) (n : nat)
 Proof.
   induction n as [|n H].
   1: easy.
-  refine (grp_pow_homo _ _ _ @ _); simpl.
+  refine (grp_pow_natural _ _ _ @ _); simpl.
   by rewrite grp_unit_r.
 Defined.
 

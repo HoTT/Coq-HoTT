@@ -258,10 +258,11 @@ Proof.
       exact IHn.
 Defined.
 
-Definition ab_mul_homo {A B : AbGroup}
+(** [ab_mul n] is natural. *)
+Definition ab_mul_natural {A B : AbGroup}
   (f : GroupHomomorphism A B) (n : Int)
   : f o ab_mul n == ab_mul n o f
-  := grp_pow_homo f n.
+  := grp_pow_natural f n.
 
 (** The image of an inclusion is a normal subgroup. *)
 Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
@@ -303,17 +304,17 @@ Proof.
 Defined.
 
 (** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)
-Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
-  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = r)
-  : ab_sum n f = grp_pow r n.
+Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)
+  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = a)
+  : ab_sum n f = ab_mul n a.
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
-  - rewrite int_of_nat_succ_commute, grp_pow_int_add_1.
+  - rewrite int_of_nat_succ_commute.
+    rhs nrapply grp_pow_int_add_1.
     simpl. f_ap.
-    rewrite IHn.
-    + reflexivity.
-    + intros. apply p.
+    apply IHn.
+    intros. apply p.
 Defined.
 
 (** If the function is zero in the range of a finite sum then the sum is zero. *)

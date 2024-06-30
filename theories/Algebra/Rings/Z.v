@@ -24,36 +24,31 @@ Defined.
 
 Local Open Scope mc_scope.
 
-Definition rng_int_mult (R : Ring) := abgroup_int_mult R. 
+(** Given a ring element [r], we get a map [Int -> R] sending an integer to that multiple of [r]. *)
+Definition rng_int_mult (R : Ring) := grp_pow_homo : R -> Int -> R.
 
 (** [rng_int_mult R 1] preserves multiplication.  This requires that the specified ring element is the unit. *)
 Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
   : IsSemiGroupPreserving (A:=cring_Z) (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
+  cbn.
   induction x as [|x|x].
   - simpl.
     by rhs nrapply rng_mult_zero_l.
-  - cbn.
-    rewrite int_mul_succ_l.
-    unfold rng_int_mult in *.
-    rewrite issemigrouppreserving_plus_abgroup_int_mult.
-    unfold abgroup_int_mult in *.
+  - rewrite int_mul_succ_l.
+    rewrite grp_pow_int_add.
     rewrite grp_pow_int_add_1.
     rhs nrapply rng_dist_r.
     rewrite rng_mult_one_l.
-    rewrite IHx.
-    reflexivity.
-  - cbn.
-    rewrite int_mul_pred_l.
-    unfold rng_int_mult in *.
-    rewrite issemigrouppreserving_plus_abgroup_int_mult.
-    unfold abgroup_int_mult in *.
+    f_ap.
+  - rewrite int_mul_pred_l.
+    rewrite grp_pow_int_add.
     rewrite grp_pow_int_sub_1.
     rhs nrapply rng_dist_r.
     rewrite IHx.
     f_ap.
-    lhs rapply abgroup_int_mult_neg.
+    lhs rapply (grp_homo_inv (grp_pow_homo 1)).
     symmetry; apply rng_mult_negate.
 Defined.
 
@@ -73,19 +68,15 @@ Proof.
   intro R.
   exists (rng_homo_int R).
   intros g x.
+  unfold rng_homo_int, rng_int_mult; cbn.
   induction x as [|x|x].
   - by rhs nrapply (grp_homo_unit g).
-  - unfold rng_homo_int, rng_int_mult; cbn.
-    unfold abgroup_int_mult.
-    rewrite grp_pow_int_add_1.
+  - rewrite grp_pow_int_add_1.
     change (x.+1%int) with (1 + x)%int.
     rewrite (rng_homo_plus g 1 x).
     rewrite rng_homo_one.
     f_ap.
-  - unfold rng_homo_int, rng_int_mult in IHx |- *; cbn in IHx |- *.
-    unfold abgroup_int_mult in *.
-    rewrite grp_pow_int_sub_1.
-    cbn.
+  - rewrite grp_pow_int_sub_1.
     rewrite IHx.
     clear IHx.
     rewrite <- (rng_homo_one g).
