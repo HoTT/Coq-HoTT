@@ -2,7 +2,7 @@ Require Import Basics Types.
 Require Import WildCat.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Spaces.BinInt Spaces.Circle Spaces.Spheres.
+Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.HSpaceS1.

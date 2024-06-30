@@ -476,7 +476,7 @@ End GroupMovement.
 
 (** ** Power operation *)
 
-(** For a given [n : nat] we can define the [n]th power of a group element. *)
+(** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
 Definition grp_pow {G : Group} (g : G) (n : Int) : G
   := match n with
      | posS n => nat_iter n (g *.) g
@@ -484,8 +484,8 @@ Definition grp_pow {G : Group} (g : G) (n : Int) : G
      | negS n => nat_iter n ((- g) *.) (- g)
      end.
 
-(** Any homomorphism respects [grp_pow]. *)
-Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
+(** Any homomorphism respects [grp_pow]. In other words, [fun g => grp_pow g n] is natural. *)
+Lemma grp_pow_natural {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
   : f (grp_pow g n) = grp_pow (f g) n.
 Proof.
   induction n.
@@ -559,7 +559,7 @@ Proof.
   - destruct n; simpl; rewrite grp_inv_inv; reflexivity.
 Defined.
 
-(** [grp_pow] satisfies a law of exponents. *)
+(** [grp_pow] satisfies an additive law of exponents. *)
 Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
   : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
 Proof.

@@ -1,6 +1,6 @@
 Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
-  Groups.FreeGroup AbGroups.Z BinInt.Core Spaces.Int.
+  Groups.FreeGroup AbGroups.Z Spaces.Int.
 
 (** * Cyclic groups *)
 
@@ -48,7 +48,7 @@ Lemma Z1_mul_nat_beta {A : AbGroup} (a : A) (n : nat)
 Proof.
   induction n as [|n H].
   1: easy.
-  refine (grp_pow_homo _ _ _ @ _); simpl.
+  refine (grp_pow_natural _ _ _ @ _); simpl.
   by rewrite grp_unit_r.
 Defined.
 
@@ -71,7 +71,7 @@ Defined.
 
 (** The map sending the generator to [1 : Int]. *)
 Definition Z1_to_Z `{Funext} : ab_Z1 $-> abgroup_Z
-  := Z1_rec (G:=abgroup_Z) 1%binint.
+  := Z1_rec (G:=abgroup_Z) 1%int.
 
 (** TODO:  Prove that [Z1_to_Z] is a group isomorphism. *)
 

@@ -211,7 +211,7 @@ Proof.
     apply moveR_equiv_V; symmetry.
     refine (ap f _ @ _).
     1: apply Z1_rec_beta.
-    exact (ab_mul_homo f n Z1_gen).
+    exact (ab_mul_natural f n Z1_gen).
   - (* we get rid of [equiv_Z1_hom] *)
     apply isexact_equiv_fiber.
     apply isexact_ext_cyclic_ab_iii.
