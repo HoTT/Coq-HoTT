@@ -47,9 +47,9 @@ Proof.
   - by lhs nrapply length_list_sigma.
 Defined.
 
-Definition entries {R : Type} {m n} (M : Matrix R m n)
+Definition entries@{i|} {R : Type@{i}} {m n} (M : Matrix R m n)
   : list (list R)
-  := list_map pr1 (pr1 M).
+  := list_map@{i i} pr1 (pr1 M).
 
 (** The entry at row [i] and column [j] of a matrix [M]. *)
 Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
@@ -141,7 +141,7 @@ Definition identity_matrix (R : Ring@{i}) (n : nat) : Matrix R n n
   := Build_Matrix R n n (fun i j _ _ => kronecker_delta i j).
 
 (** This is the most general statement of associativity for matrix multiplication. *)
-Definition associative_matrix_mult (R : Ring@{i}) (m n p q : nat)
+Definition associative_matrix_mult (R : Ring) (m n p q : nat)
   : HeteroAssociative
       (@matrix_mult R m n q) (@matrix_mult R n p q)
       (@matrix_mult R m p q) (@matrix_mult R m n p).
@@ -164,7 +164,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the left. *)
-Definition left_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition left_distribute_matrix_mult (R : Ring) (m n p : nat)
   : LeftHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -178,7 +178,7 @@ Proof.
 Defined.
 
 (** Matrix multiplication distributes over addition of matrices on the right. *)
-Definition right_distribute_matrix_mult (R : Ring@{i}) (m n p : nat)
+Definition right_distribute_matrix_mult (R : Ring) (m n p : nat)
   : RightHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.
 Proof.
   intros M N P; apply path_matrix; intros i j Hi Hj.
@@ -192,7 +192,7 @@ Proof.
 Defined.
 
 (** The identity matrix acts as a left identity for matrix multiplication. *)
-Definition left_identity_matrix_mult (R : Ring@{i}) (m n: nat)
+Definition left_identity_matrix_mult (R : Ring) (m n: nat)
   : LeftIdentity (@matrix_mult R m m n) (identity_matrix R m).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
@@ -203,7 +203,7 @@ Proof.
 Defined.
 
 (** The identity matrix acts as a right identity for matrix multiplication. *)
-Definition right_identity_matrix_mult (R : Ring@{i}) (m n : nat)
+Definition right_identity_matrix_mult (R : Ring) (m n : nat)
   : RightIdentity (@matrix_mult R m n n) (identity_matrix R n).
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
@@ -247,6 +247,17 @@ Proof.
 Defined.
 
 (** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
+
+(** In a commutative ring, matrix multiplication over the ring and the opposite ring agree. *)
+Definition matrix_mult_rng_op {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_mult (R:=rng_op R) M N = matrix_mult M N.
+Proof.
+  apply path_matrix; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply path_ab_sum; intros k Hk.
+  apply rng_mult_comm.
+Defined.
 
 (** ** Transpose *)
 
@@ -293,11 +304,11 @@ Proof.
   by rewrite !entry_Build_Matrix, !entry_Build_Vector.
 Defined.
 
-(** Transpose distributes over multiplication (in a commutative ring). *)
-Definition matrix_transpose_mult {R : CRing} {m n p}
+(** Transpose distributes over multiplication when you reverse the ring multiplication. *)
+Definition matrix_transpose_mult {R : Ring} {m n p}
   (M : Matrix R m n) (N : Matrix R n p)
   : matrix_transpose (matrix_mult M N)
-    = matrix_mult (matrix_transpose N) (matrix_transpose M).
+    = matrix_mult (R:=rng_op R) (matrix_transpose N) (matrix_transpose M).
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
@@ -305,7 +316,17 @@ Proof.
   apply path_ab_sum.
   intros k Hk.
   rewrite 2 entry_Build_Matrix.
-  apply rng_mult_comm.
+  reflexivity.
+Defined.
+
+(** When the ring is commutative, there is no need to reverse the multiplication. *)
+Definition matrix_transpose_mult_comm {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_transpose (matrix_mult M N)
+    = matrix_mult (matrix_transpose N) (matrix_transpose M).
+Proof.
+  lhs nrapply matrix_transpose_mult.
+  apply matrix_mult_rng_op.
 Defined.
 
 (** The transpose of the zero matrix is the zero matrix. *)
@@ -318,7 +339,7 @@ Proof.
 Defined.
 
 (** The transpose of the identity matrix is the identity matrix. *)
-Definition matrix_transpose_identity {R : Ring} {n}
+Definition matrix_transpose_identity@{i} {R : Ring@{i}} {n}
   : matrix_transpose (identity_matrix R n) = identity_matrix R n.
 Proof.
   apply path_matrix.
@@ -370,7 +391,7 @@ Proof.
 Defined.
 
 (** The transpose of a diagonal matrix is the same diagonal matrix. *)
-Definition matrix_transpose_diag {R : Ring} {n : nat} (v : Vector R n)
+Definition matrix_transpose_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : matrix_transpose (matrix_diag v) = matrix_diag v.
 Proof.
   snrapply path_matrix.
@@ -384,7 +405,7 @@ Proof.
 Defined.
 
 (** The diagonal matrix construction is injective. *)
-Global Instance isinj_matrix_diag {R : Ring} {n : nat}
+Global Instance isinj_matrix_diag {R : Ring@{i}} {n : nat}
   : IsInjective (@matrix_diag R n).
 Proof.
   intros v1 v2 p.
@@ -397,7 +418,7 @@ Proof.
 Defined.
 
 (** A matrix is diagonal if it is equal to a diagonal matrix. *)
-Class IsDiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n) : Type@{i} := {
+Class IsDiagonal@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n) : Type@{i} := {
   isdiagonal_diag_vector : Vector R n;
   isdiagonal_diag : M = matrix_diag isdiagonal_diag_vector;
 }.
@@ -405,12 +426,12 @@ Class IsDiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n) : Type@{i} := {
 Arguments isdiagonal_diag_vector {R n} M {_}.
 Arguments isdiagonal_diag {R n} M {_}.
 
-Definition issig_IsDiagonal {R : Ring} {n : nat} {M : Matrix R n n}
+Definition issig_IsDiagonal {R : Ring@{i}} {n : nat} {M : Matrix R n n}
   : _ <~> IsDiagonal M
   := ltac:(issig).
 
 (** A matrix is diagonal in a unique way. *)
-Global Instance ishprop_isdiagonal {R : Ring} {n : nat} (M : Matrix R n n)
+Global Instance ishprop_isdiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsDiagonal M).
 Proof.
   snrapply hprop_allpath.
@@ -422,7 +443,7 @@ Proof.
 Defined.
 
 (** The zero matrix is diagonal. *)
-Global Instance isdiagonal_matrix_zero {R : Ring} {n : nat}
+Global Instance isdiagonal_matrix_zero {R : Ring@{i}} {n : nat}
   : IsDiagonal (matrix_zero R n n).
 Proof.
   exists (vector_zero R n).
@@ -433,7 +454,7 @@ Proof.
 Defined.
 
 (** The identity matrix is diagonal. *)
-Global Instance isdiagonal_identity_matrix {R : Ring} {n : nat}
+Global Instance isdiagonal_identity_matrix {R : Ring@{i}} {n : nat}
   : IsDiagonal (identity_matrix R n).
 Proof.
   exists (Build_Vector R n (fun _ _ => 1)).
@@ -444,8 +465,8 @@ Proof.
 Defined.
 
 (** The sum of two diagonal matrices is diagonal. *)
-Global Instance isdiagonal_matrix_plus {R : Ring} {n : nat} (M N : Matrix R n n)
-  `{IsDiagonal R n M} `{IsDiagonal R n N}
+Global Instance isdiagonal_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
   : IsDiagonal (matrix_plus M N).
 Proof.
   exists (vector_plus (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).
@@ -454,8 +475,8 @@ Proof.
 Defined.
 
 (** The negative of a diagonal matrix is diagonal. *)
-Global Instance isdiagonal_matrix_negate {R : Ring} {n : nat} (M : Matrix R n n)
-  `{IsDiagonal R n M}
+Global Instance isdiagonal_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{IsDiagonal R n M}
   : IsDiagonal (matrix_negate M).
 Proof.
   exists (vector_neg _ _ (isdiagonal_diag_vector M)).
@@ -467,8 +488,8 @@ Proof.
 Defined.
 
 (** The product of two diagonal matrices is diagonal. *)
-Global Instance isdiagonal_matrix_mult {R : Ring} {n : nat} (M N : Matrix R n n)
-  `{IsDiagonal R n M} `{IsDiagonal R n N}
+Global Instance isdiagonal_matrix_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
   : IsDiagonal (matrix_mult M N).
 Proof.
   exists (vector_map2 (.*.) (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).
@@ -477,8 +498,8 @@ Proof.
 Defined.
 
 (** The transpose of a diagonal matrix is diagonal. *)
-Global Instance isdiagonal_matrix_transpose {R : Ring} {n : nat} (M : Matrix R n n)
-  `{IsDiagonal R n M}
+Global Instance isdiagonal_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{IsDiagonal R n M}
   : IsDiagonal (matrix_transpose M).
 Proof.
   exists (isdiagonal_diag_vector M).
@@ -492,7 +513,8 @@ Definition matrix_diag_vector {R : Ring} {n : nat} (M : Matrix R n n)
   := Build_Vector R n (fun i _ => entry M i i).
 
 (** Diagonal matrices form a subring of the ring of square matrices. *)
-Definition matrix_diag_ring (R : Ring) (n : nat) : Subring (matrix_ring R n).
+Definition matrix_diag_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring R n).
 Proof.
   snrapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M) _); hnf.
   - intros; exact _.
@@ -640,6 +662,361 @@ Proof.
   intros k l Hk Hl.
   by rewrite 4 entry_Build_Matrix.
 Defined.
+
+(** ** Triangular matrices *)
+
+(** A matrix is upper triangular if all the entries below the diagonal are zero. *)
+Class IsUpperTriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular
+  : merely@{i} (forall i j (Hi : (i < n)%nat) (Hj : (j < n)%nat), (i < j)%nat -> entry M i j = 0).
+
+Global Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsUpperTriangular M).
+Proof.
+  apply istrunc_truncation@{i i}.
+Defined.
+
+(** A matrix is lower triangular if all the entries above the diagonal are zero. We define it as the transpose being upper triangular. *)
+Class IsLowerTriangular {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular_transpose :: IsUpperTriangular (matrix_transpose M).
+
+Global Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n)
+  : IsHProp (IsLowerTriangular M).
+Proof.
+  apply istrunc_truncation@{i i}.
+Defined.
+
+(** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)
+Global Instance lower_triangular_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsUpperTriangular M}
+  : IsLowerTriangular (matrix_transpose M).
+Proof.
+  unfold IsLowerTriangular.
+  by rewrite matrix_transpose_transpose.
+Defined.
+
+(** The sum of two upper triangular matrices is upper triangular. *)
+Global Instance upper_triangular_plus {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
+  {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_plus M N).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  specialize (H1 i j Hi Hj lt_i_j).
+  specialize (H2 i j Hi Hj lt_i_j).
+  rewrite entry_Build_Matrix.
+  change (Vector.entry (Vector.entry ?M ?i) ?j) with (entry M i j).
+  rewrite H1, H2.
+  by rewrite rng_plus_zero_l.
+Defined.
+
+(** The sum of two lower triangular matrices is lower triangular. *)
+Global Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsLowerTriangular M} `{!IsLowerTriangular N}
+  : IsLowerTriangular (matrix_plus M N).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_plus.
+  by apply upper_triangular_plus.
+Defined.
+
+(** The negation of an upper triangular matrix is upper triangular. *)
+Global Instance upper_triangular_negate {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+  {H : IsUpperTriangular M}
+  : IsUpperTriangular (matrix_negate M).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  rewrite <- rng_negate_zero; f_ap.
+  by nrapply H.
+Defined.
+
+(** The negation of a lower triangular matrix is lower triangular. *)
+Global Instance lower_triangular_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsLowerTriangular M}
+  : IsLowerTriangular (matrix_negate M).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_negate.
+  exact _.
+Defined.
+
+(** The product of two upper triangular matrices is upper triangular. *)
+Global Instance upper_triangular_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_mult M N).
+Proof.
+  unfold IsUpperTriangular.
+  strip_truncations; apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  apply ab_sum_zero.
+  intros k Hk.
+  destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
+  { rewrite H2.
+    1: by rewrite rng_mult_zero_r.
+    rapply mixed_trans1. }
+  apply not_leq_implies_gt in gt_k_i.
+  rewrite H1.
+  1: by rewrite rng_mult_zero_l.
+  assumption.
+Defined.
+
+(** The product of two lower triangular matrices is lower triangular. *)
+Global Instance lower_triangular_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) {H1 : IsLowerTriangular M} {H2 : IsLowerTriangular N}
+  : IsLowerTriangular (matrix_mult M N).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_mult.
+  nrapply (upper_triangular_mult (R:=rng_op R)); assumption.
+Defined.
+
+(** The zero matrix is upper triangular. *)
+Global Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
+  : IsUpperTriangular (matrix_zero R n n).
+Proof.
+  apply tr.
+  by hnf; intros; rewrite entry_Build_Matrix.
+Defined.
+
+(** The zero matrix is lower triangular. *)
+Global Instance lower_triangular_zero {R : Ring@{i}} {n : nat}
+  : IsLowerTriangular (matrix_zero R n n).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_zero.
+  exact _.
+Defined.
+
+(** The identity matrix is upper triangular. *)
+Global Instance upper_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+  : IsUpperTriangular (identity_matrix R n).
+Proof.
+  unfold IsUpperTriangular.
+  apply tr@{i}.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix@{i}.
+  by apply kronecker_delta_lt.
+Defined.
+
+(** The identity matrix is lower triangular. *)
+Global Instance lower_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+  : IsLowerTriangular (identity_matrix R n).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_identity.
+  exact _.
+Defined.
+
+(** A diagonal matrix is upper triangular. *)
+Global Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : IsUpperTriangular (matrix_diag v).
+Proof.
+  unfold IsUpperTriangular.
+  apply tr.
+  intros i j Hi Hj lt_i_j.
+  rewrite entry_Build_Matrix.
+  rewrite kronecker_delta_lt.
+  1: by rewrite rng_mult_zero_l.
+  exact _.
+Defined.
+
+(** A diagonal matrix is lower triangular. *)
+Global Instance lower_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : IsLowerTriangular (matrix_diag v).
+Proof.
+  unfold IsLowerTriangular.
+  rewrite matrix_transpose_diag.
+  apply upper_triangular_diag.
+Defined.
+
+(** Upper triangular matrices are a subring of the ring of matrices. *)
+Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring@{i} R n).
+Proof.
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
+  - exact _.
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+  - intros x y ? ?; exact (upper_triangular_plus x (-y)).
+  - exact upper_triangular_mult.
+  - exact upper_triangular_identity.
+Defined.
+
+(** Lower triangular matrices are a subring of the ring of matrices. *)
+Definition lower_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring R n).
+Proof.
+  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsLowerTriangular M)).
+  - exact _.
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+  - intros x y ? ?; exact (lower_triangular_plus x (-y)).
+  - exact lower_triangular_mult.
+  - exact lower_triangular_identity.
+Defined.
+
+(** ** Symmetric Matrices *)
+
+(** A matrix is symmetric when it is equal to its transpose. *)
+Class IsSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_issymmetric : matrix_transpose M = M.
+
+Arguments matrix_transpose_issymmetric {R n} M {_}.
+
+(** The zero matrix is symmetric. *)
+Global Instance issymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSymmetric (matrix_zero R n n)
+  := matrix_transpose_zero.
+
+(** The identity matrix is symmetric. *)
+Global Instance issymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+  : IsSymmetric (identity_matrix R n)
+  := matrix_transpose_identity.
+
+(** The sum of two symmetric matrices is symmetric. *)
+Global Instance issymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSymmetric M} `{!IsSymmetric N}
+  : IsSymmetric (matrix_plus M N).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_plus.
+  f_ap.
+Defined.
+
+(** The negation of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_negate M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** A scalar multiple of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_lact r M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_lact.
+  f_ap.
+Defined.
+
+(** The transpose of a symmetric matrix is symmetric. *)
+Global Instance issymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_transpose M).
+Proof.
+  unfold IsSymmetric.
+  rewrite matrix_transpose_transpose.
+  by symmetry.
+Defined.
+
+(** A symmetric upper triangular matrix is diagonal. *)
+Global Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} {H : IsUpperTriangular M}
+  : IsDiagonal M.
+Proof.
+  exists (matrix_diag_vector M).
+  snrapply path_matrix.
+  intros i j Hi Hj.
+  rewrite entry_Build_Matrix, entry_Build_Vector.
+  strip_truncations.
+  destruct (dec (i = j)) as [p|np].
+  { destruct p.
+    rewrite kronecker_delta_refl.
+    rewrite rng_mult_one_l.
+    f_ap; apply path_ishprop. }
+  apply diseq_implies_lt in np.
+  destruct np as [l | l].
+  - rewrite (kronecker_delta_lt l).
+    rewrite rng_mult_zero_l.
+    by rewrite H.
+  - rewrite (kronecker_delta_gt l).
+    rewrite rng_mult_zero_l.
+    rewrite <- (matrix_transpose_issymmetric M).
+    rewrite entry_Build_Matrix.
+    by rewrite H.
+Defined.
+
+(** A symmetric lower triangular matrix is diagonal. *)
+Global Instance isdiagonal_lower_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} `{!IsLowerTriangular M}
+  : IsDiagonal M.
+Proof.
+  rewrite <- (matrix_transpose_issymmetric M).
+  rapply isdiagonal_upper_triangular_issymmetric.
+Defined.
+
+(** Note that symmetric matrices do not form a subring (or subalgebra) but they do form a submodule of the module of matrices. *)
+
+(** ** Skew-symmetric Matrices *)
+
+(** A matrix is skew-symmetric when it is equal to the negation of its transpose. *)
+Class IsSkewSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_isskewsymmetric : matrix_transpose M = matrix_negate M.
+
+Arguments matrix_transpose_isskewsymmetric {R n} M {_}.
+
+(** The zero matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSkewSymmetric (matrix_zero R n n).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_zero.
+  symmetry.
+  nrapply (rng_negate_zero (A:=matrix_ring R n)).
+Defined.
+
+(** The negation of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_negate M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** A scalar multiple of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_lact r M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_lact.
+  rhs_V nrapply (lm_inv (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
+  f_ap.
+Defined.
+
+(** The transpose of a skew-symmetric matrix is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_transpose M).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite <- matrix_transpose_negate.
+  f_ap.
+Defined.
+
+(** The sum of two skew-symmetric matrices is skew-symmetric. *)
+Global Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSkewSymmetric M} `{!IsSkewSymmetric N}
+  : IsSkewSymmetric (matrix_plus M N).
+Proof.
+  unfold IsSkewSymmetric.
+  rewrite matrix_transpose_plus.
+  rhs nrapply (grp_inv_op (G:=abgroup_matrix R n n)).
+  rhs_V nrapply (AbelianGroup.ab_comm (A:=abgroup_matrix R n n)).
+  f_ap.
+Defined.
+
+(** Skew-symmetric matrices degenerate to symmetric matrices in rings with characteristic 2. In odd characteristic the module of matrices can be decomposed into the direct sum of symmetric and skew-symmetric matrices. *)
 
 Section MatrixCat.
 
