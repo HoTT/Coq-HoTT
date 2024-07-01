@@ -1025,7 +1025,7 @@ Definition exchange_matrix (R : Ring) n : Matrix R n n
   := Build_Matrix R n n (fun i j Hi Hj
       => kronecker_delta (R:=R) (i + j) (pred n))%nat.
 
-(** Multiplying a matrix by the exchange matrix on the left is equivalent to exchanging the rows. Similarly multiplying on the right exchanges the columns. *)
+(** Multiplying a matrix by the exchange matrix on the left reverses the order of the rows. Similarly multiplying on the right reverses the order of the columns. *)
 
 (** The exchange matrix is invariant under transpose. *)
 Definition exchange_matrix_transpose {R n}
