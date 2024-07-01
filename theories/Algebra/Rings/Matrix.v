@@ -1042,14 +1042,16 @@ Global Instance issymmetric_exchange {R : Ring} {n : nat}
   : IsSymmetric (exchange_matrix R n)
   := exchange_matrix_transpose.
 
-(** The exchange matrix has order 2. This proof is only long because of arithmetic. *)
-Definition exchange_matrix_square {R : Ring} {n : nat}
-  : matrix_mult (exchange_matrix R n) (exchange_matrix R n) = identity_matrix R n.
+Definition entry_matrix_mult_exchange {R : Ring} {n : nat} (M : Matrix R n n)
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+  : let Hi' := natpmswap1 _ _ _ (lt_implies_pred_geq _ _ _)
+      (leq_implies_pred_lt _ _ _ Hi (n_leq_add_n_k' n i)) in
+    entry (matrix_mult (exchange_matrix R n) M) i j
+      = entry M (pred n - i) j.
 Proof.
-  apply path_matrix.
-  intros i j Hi Hj.
+  cbn.
   assert (r : (i <= pred n)%nat) by auto with nat.
-  rewrite 2 entry_Build_Matrix.
+  lhs nrapply entry_Build_Matrix.
   lhs nrapply path_ab_sum.
   { intros k Hk.
     rewrite entry_Build_Matrix.
@@ -1057,19 +1059,25 @@ Proof.
     unshelve erewrite (kronecker_delta_map_inj _ _ (fun x => i + x)).
     2: reflexivity.
     intros x y H; exact (isinj_nat_add_l i x y H). }
-  unshelve erewrite rng_sum_kronecker_delta_l'.
-  { unfold Core.lt.
-    destruct n.
-    1: by apply not_lt_n_0 in Hi.
-    auto with nat. }
-   rewrite entry_Build_Matrix.
-   set (t := (pred n - i + j)%nat).
-   rewrite <- (natminuspluseq _ _ r).
-   unfold t; clear t.
-   unshelve erewrite (kronecker_delta_map_inj j i (fun x => pred n - i + x)%nat).
-   2: apply kronecker_delta_symm.
-   intros x y H.
-   exact (isinj_nat_add_l _ _ _ H).
+  nrapply rng_sum_kronecker_delta_l'.
+Defined.  
+
+(** The exchange matrix has order 2. This proof is only long because of arithmetic. *)
+Definition exchange_matrix_square {R : Ring} {n : nat}
+  : matrix_mult (exchange_matrix R n) (exchange_matrix R n) = identity_matrix R n.
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  lhs nrapply entry_matrix_mult_exchange.
+  rewrite 2 entry_Build_Matrix.
+  set (t := (pred n - i + j)%nat).
+  assert (r : (i <= pred n)%nat) by auto with nat.
+  rewrite <- (natminuspluseq _ _ r).
+  unfold t; clear t.
+  unshelve erewrite (kronecker_delta_map_inj j i (fun x => pred n - i + x)%nat).
+  2: apply kronecker_delta_symm.
+  intros x y H.
+  exact (isinj_nat_add_l _ _ _ H).
 Defined.
 
 (** ** Centrosymmetric matrices *)
@@ -1176,12 +1184,15 @@ Proof.
   lhs_V nrapply (rng_mult_assoc (A:=matrix_ring R n)); f_ap.
 Defined.
 
-(** Centrosymmetric rings form a subring of the matrix ring. *)
+(** Centrosymmetric matrices form a subring of the matrix ring. *)
 Definition centrosymmetric_matrix_ring (R : Ring@{i}) (n : nat)
   : Subring (matrix_ring R n).
 Proof.
-  nrapply (Build_Subring' (fun M : matrix_ring R n => IsCentrosymmetric M));
-    cbn beta; exact _.
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsCentrosymmetric M)).
+  - exact _.
+  - intros x y ? ?; exact (iscentrosymmetric_matrix_plus x (-y)).
+  - exact iscentrosymmetric_matrix_mult.
+  - exact iscentrosymmetric_matrix_identity.
 Defined.
 
 Section MatrixCat.
