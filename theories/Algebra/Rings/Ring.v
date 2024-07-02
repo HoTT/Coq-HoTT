@@ -678,34 +678,20 @@ Defined.
 Definition equiv_isinvertible_left_right_inverse {R : Ring} (x : R)
   : {inv : R & prod (inv * x = 1) (x * inv = 1)} <~> IsInvertible R x.
 Proof.
-  snrapply equiv_adjointify.
-  - intros [x' [p q]].
-    exact (Build_IsInvertible x x' p q).
-  - intros i.
-    exists (left_inverse_elem x); split.
-    + apply rng_inv_l.
-    + apply rng_inv_r.
-  - intros i.
-    unfold Build_IsInvertible; cbn.
-    apply (ap (Build_IsInvertible' R x _)).
-    apply (equiv_ap_inv (issig_IsLeftInvertible _)); cbn.
-    change (left_inverse_elem (R:=rng_op R) x) with (right_inverse_elem x).
-    rapply path_sigma_hprop; cbn.
-    apply path_left_inverse_elem_right_inverse_elem.
-  - simpl.
-    intros [x' pq].
-    rapply path_sigma_hprop.
-    reflexivity.
+  equiv_via { i : IsInvertible R x & right_inverse_elem x = left_inverse_elem x }.
+  1: make_equiv_contr_basedpaths.
+  apply equiv_sigma_contr; intro i.
+  rapply contr_inhabited_hprop.
+  symmetry; apply path_left_inverse_elem_right_inverse_elem.
 Defined.
 
 (** Being invertible is a proposition. *)
 Global Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).
 Proof.
-  snrapply hprop_allpath.
-  intros H1 H2.
-  apply (equiv_ap_inv (equiv_isinvertible_left_right_inverse x) H1 H2).
-  rapply path_sigma_hprop.
-  apply isinvertible_unique.
+  nrapply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).
+  snrapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].
+  rapply path_sigma_hprop; cbn.
+  exact (path_left_right_inverse x y z p1 q2).
 Defined.
 
 (** *** Closure of invertible elements under multiplication *)
