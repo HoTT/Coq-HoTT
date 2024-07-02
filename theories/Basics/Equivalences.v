@@ -577,7 +577,7 @@ Ltac ev_equiv :=
 (* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. The [hnf] is important, for example to unfold [IsUnitPreserving] to an equality, which the [lazymatch] then ignores. *)
 Ltac decomposing_intros :=
   let x := fresh in
-  intros x; hnf in x;
+  intros x; hnf in x; cbn in x;
   try lazymatch type of x with
   | ?a = ?b => idtac           (** Don't destruct paths *)
   | forall y:?A, ?B => idtac   (** Don't apply functions *)
@@ -750,7 +750,7 @@ Defined.
 (** We start with a version of [decomposing_intros] that is willing to destruct paths, though as a second choice. *)
 Ltac decomposing_intros_with_paths :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x; cbn in x;
   multimatch type of x with
   | _ =>
     try match type of x with
