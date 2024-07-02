@@ -503,16 +503,29 @@ Defined.
 (** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
 
 (** The next two results tell us how [grp_pow] unfolds. *)
-Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
+Definition grp_pow_succ {G : Group} (n : Int) (g : G)
   : grp_pow g (n.+1)%int = g * grp_pow g n
   := int_iter_succ_l _ _ _.
 
-Definition grp_pow_int_sub_1 {G : Group} (n : Int) (g : G)
+Definition grp_pow_pred {G : Group} (n : Int) (g : G)
   : grp_pow g (n.-1)%int = (- g) * grp_pow g n
   := int_iter_pred_l _ _ _.
 
+(** [grp_pow] satisfies an additive law of exponents. *)
+Definition grp_pow_add {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
+Proof.
+  lhs nrapply int_iter_add.
+  induction n; cbn.
+  1: exact (grp_unit_l _)^.
+  1: rewrite int_iter_succ_l, grp_pow_succ.
+  2: rewrite int_iter_pred_l, grp_pow_pred; cbn.
+  1,2 : rhs_V srapply associativity;
+        apply ap, IHn.
+Defined.
+
 (** [grp_pow] commutes negative exponents to powers of the inverse *)
-Definition grp_pow_int_sign_commute {G : Group} (n : Int) (g : G)
+Definition grp_pow_neg {G : Group} (n : Int) (g : G)
   : grp_pow g (int_neg n) = grp_pow (- g) n.
 Proof.
   lhs nrapply int_iter_neg.
@@ -520,19 +533,6 @@ Proof.
   - cbn. by rewrite grp_inv_inv.
   - reflexivity.
   - reflexivity.
-Defined.
-
-(** [grp_pow] satisfies an additive law of exponents. *)
-Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
-  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
-Proof.
-  lhs nrapply int_iter_add.
-  induction n; cbn.
-  1: exact (grp_unit_l _)^.
-  1: rewrite int_iter_succ_l, grp_pow_int_add_1.
-  2: rewrite int_iter_pred_l, grp_pow_int_sub_1; cbn.
-  1,2 : rhs_V srapply associativity;
-        apply ap, IHn.
 Defined.
 
 (** ** The category of Groups *)

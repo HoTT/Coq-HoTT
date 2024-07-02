@@ -37,14 +37,14 @@ Proof.
   - simpl.
     by rhs nrapply rng_mult_zero_l.
   - rewrite int_mul_succ_l.
-    rewrite grp_pow_int_add.
-    rewrite grp_pow_int_add_1.
+    rewrite grp_pow_add.
+    rewrite grp_pow_succ.
     rhs nrapply rng_dist_r.
     rewrite rng_mult_one_l.
     f_ap.
   - rewrite int_mul_pred_l.
-    rewrite grp_pow_int_add.
-    rewrite grp_pow_int_sub_1.
+    rewrite grp_pow_add.
+    rewrite grp_pow_pred.
     rhs nrapply rng_dist_r.
     rewrite IHx.
     f_ap.
@@ -72,12 +72,12 @@ Proof.
   unfold rng_homo_int, rng_int_mult; cbn.
   induction x as [|x|x].
   - by rhs nrapply (grp_homo_unit g).
-  - rewrite grp_pow_int_add_1.
+  - rewrite grp_pow_succ.
     change (x.+1%int) with (1 + x)%int.
     rewrite (rng_homo_plus g 1 x).
     rewrite rng_homo_one.
     f_ap.
-  - rewrite grp_pow_int_sub_1.
+  - rewrite grp_pow_pred.
     rewrite IHx.
     clear IHx.
     rewrite <- (rng_homo_one g).

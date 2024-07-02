@@ -250,9 +250,9 @@ Proof.
   intros a b.
   induction n; cbn.
   - exact (grp_unit_l _)^.
-  - rewrite 3 grp_pow_int_add_1.
+  - rewrite 3 grp_pow_succ.
     by apply ab_mul_helper.
-  - rewrite 3 grp_pow_int_sub_1.
+  - rewrite 3 grp_pow_pred.
     rewrite (grp_inv_op a b), (commutativity (-b) (-a)).
     by apply ab_mul_helper.
 Defined.
@@ -310,7 +310,7 @@ Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
   - rhs nrapply (ap@{Set _} _ (int_of_nat_succ_commute n)).
-    rhs nrapply grp_pow_int_add_1.
+    rhs nrapply grp_pow_succ.
     simpl. f_ap.
     apply IHn.
     intros. apply p.

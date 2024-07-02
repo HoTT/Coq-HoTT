@@ -30,7 +30,7 @@ Definition grp_pow_homo {G : Group} (g : G)
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (grp_pow g).
-  intros m n; apply grp_pow_int_add.
+  intros m n; apply grp_pow_add.
 Defined.
 
 (** The special case for an abelian group, which gives multiplication by an integer. *)
