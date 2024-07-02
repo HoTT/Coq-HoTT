@@ -634,6 +634,22 @@ Proof.
     apply eisretr.
 Defined.
 
+Definition int_iter_invariant (n : Int) {A} (f : A -> A) `{!IsEquiv f}
+  (P : A -> Type)
+  (Psucc : forall x, P x -> P (f x))
+  (Ppred : forall x, P x -> P (f^-1 x))
+  : forall x, P x -> P (int_iter f n x).
+Proof.
+  induction n as [|n IHn|n IHn]; intro x.
+  - exact idmap.
+  - intro H.
+    rewrite int_iter_succ_l.
+    apply Psucc, IHn, H.
+  - intro H.
+    rewrite int_iter_pred_l.
+    apply Ppred, IHn, H.
+Defined.
+
 (** ** Exponentiation of loops *)
 
 Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)

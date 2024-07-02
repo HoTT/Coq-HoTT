@@ -32,7 +32,7 @@ Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
   : IsSemiGroupPreserving (A:=cring_Z) (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
-  cbn.
+  cbn; unfold sg_op.
   induction x as [|x|x].
   - simpl.
     by rhs nrapply rng_mult_zero_l.
@@ -59,6 +59,7 @@ Proof.
   1: exact (rng_int_mult R 1).
   repeat split.
   1,2: exact _.
+  apply rng_plus_zero_r.
 Defined.
 
 (** The integers are the initial commutative ring *)

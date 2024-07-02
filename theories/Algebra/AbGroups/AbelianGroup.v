@@ -228,6 +228,20 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
+(** This goal comes up twice in the proof of [ab_mul], so we factor it out. *)
+Local Definition ab_mul_helper {A : AbGroup} (a b x y z : A)
+  (p : x = y + z)
+  : a + b + x = a + y + (b + z).
+Proof.
+  lhs_V srapply grp_assoc.
+  rhs_V srapply grp_assoc.
+  apply grp_cancelL.
+  rhs srapply grp_assoc.
+  rhs nrapply (ap (fun g => g + z) (ab_comm y b)).
+  rhs_V srapply grp_assoc.
+  apply grp_cancelL, p.
+Defined.
+
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
 Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
@@ -236,26 +250,11 @@ Proof.
   intros a b.
   induction n; cbn.
   - exact (grp_unit_l _)^.
-  - destruct n.
-    + reflexivity.
-    + rhs_V srapply (associativity a).
-      rhs srapply (ap _ (associativity _ b _)).
-      rewrite (commutativity (nat_iter _ _ _) b).
-      rhs_V srapply (ap _ (associativity b _ _)).
-      rhs srapply (associativity a).
-      apply grp_cancelL.
-      exact IHn.
-  - destruct n.
-    + rewrite (commutativity (-a)).
-      exact (grp_inv_op a b).
-    + rhs_V srapply (associativity (-a)).
-      rhs srapply (ap _ (associativity _ (-b) _)).
-      rewrite (commutativity (nat_iter _ _ _) (-b)).
-      rhs_V srapply (ap _ (associativity (-b) _ _)).
-      rhs srapply (associativity (-a)).
-      rewrite (commutativity (-a) (-b)), <- (grp_inv_op a b).
-      apply grp_cancelL.
-      exact IHn.
+  - rewrite 3 grp_pow_int_add_1.
+    by apply ab_mul_helper.
+  - rewrite 3 grp_pow_int_sub_1.
+    rewrite (grp_inv_op a b), (commutativity (-b) (-a)).
+    by apply ab_mul_helper.
 Defined.
 
 (** [ab_mul n] is natural. *)
