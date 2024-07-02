@@ -674,27 +674,26 @@ Proof.
   - apply rng_inv_r.
 Defined.
 
-(** We can show that being invertible is equivalent to having an inverse element that is similtaneously a left and right inverse. *)
+(** We can show that being invertible is equivalent to having an inverse element that is simultaneously a left and right inverse. *)
 Definition equiv_isinvertible_left_right_inverse {R : Ring} (x : R)
   : {inv : R & prod (inv * x = 1) (x * inv = 1)} <~> IsInvertible R x.
 Proof.
   snrapply equiv_adjointify.
   - intros [x' [p q]].
     exact (Build_IsInvertible x x' p q).
-  - intros H.
-    exists (inverse_elem x); split.
+  - intros i.
+    exists (left_inverse_elem x); split.
     + apply rng_inv_l.
     + apply rng_inv_r.
-  - intros [il ir].
-    destruct il as [l p], ir as [r q].
-    apply (equiv_ap_inv (issig_IsInvertible x) _ _).
-    snrapply path_sigma.
-    1: reflexivity.
-    apply (equiv_ap_inv (issig_IsLeftInvertible _)).
-    rapply path_sigma_hprop.
-    cbn; by snrapply (path_left_right_inverse x).
+  - intros i.
+    unfold Build_IsInvertible; cbn.
+    apply (ap (Build_IsInvertible' R x _)).
+    apply (equiv_ap_inv (issig_IsLeftInvertible _)); cbn.
+    change (left_inverse_elem (R:=rng_op R) x) with (right_inverse_elem x).
+    rapply path_sigma_hprop; cbn.
+    apply path_left_inverse_elem_right_inverse_elem.
   - simpl.
-    intros [x' [p q]].
+    intros [x' pq].
     rapply path_sigma_hprop.
     reflexivity.
 Defined.
@@ -802,15 +801,7 @@ Proof.
 Defined.
 
 (** [-1] is always invertible. *)
-Global Instance isinvertible_neg_one {R} : IsInvertible R (-1).
-Proof.
-  snrapply Build_IsInvertible.
-  - exact (-1).
-  - lhs nrapply rng_mult_negate_negate.
-    apply rng_mult_one_l.
-  - lhs nrapply rng_mult_negate_negate.
-    apply rng_mult_one_l.
-Defined.
+Global Instance isinvertible_neg_one {R} : IsInvertible R (-1) := _.
 
 (** *** Group of units *)
 
@@ -830,16 +821,12 @@ Proof.
     exact _.
   - repeat split.
     1: exact _.
-    1-3: hnf; intros; apply path_sigma_hprop.
+    1-5: hnf; intros; apply path_sigma_hprop.
     + rapply simple_associativity.
     + rapply left_identity.
     + rapply right_identity.
-    + intros [x p].
-      apply path_sigma_hprop.
-      apply rng_inv_l.
-    + intros [x p].
-      apply path_sigma_hprop.
-      apply rng_inv_r.
+    + apply rng_inv_l.
+    + apply rng_inv_r.
 Defined.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)
