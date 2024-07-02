@@ -567,6 +567,8 @@ Proof.
   snrapply cat_binprod_corec; exact (Id _).
 Defined.
 
+(** *** Lemmas about [cat_binprod_corec] *)
+
 Definition cat_binprod_fmap01_corec {A : Type}
   `{Is1Cat A, !HasBinaryProducts A} {w x y z : A}
   (f : w $-> z) (g : x $-> y) (h : w $-> x)

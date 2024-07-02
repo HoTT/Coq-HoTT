@@ -3,6 +3,8 @@ Require Import WildCat.
 Require Import HSet.
 Require Import AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.
+Require Import Algebra.Homological.Biproducts.
+Require Import Algebra.Homological.Additive.
 
 Local Open Scope mc_add_scope.
 
@@ -313,3 +315,30 @@ Proof.
   refine (abgroup_commutative _ _ _ @ _).
   exact (ap (fun a =>  a + snd x) (abgroup_commutative _ _ _)).
 Defined.
+
+(** ** AbGroup has binary biproducts *)
+
+Global Instance hasbinarybiproducts_ab : HasBinaryBiproducts AbGroup.
+Proof.
+  intros A B.
+  snrapply Build_BinaryBiproduct.
+  - exact (ab_biprod A B).
+  - exact ab_biprod_pr1.
+  - exact ab_biprod_pr2.
+  - exact (fun _ => ab_biprod_corec).
+  - exact (fun _ f _ => Id f).
+  - exact (fun _ _ g => Id g).
+  - exact (fun _ _ _ p q a => path_prod' (p a) (q a)).
+  - exact ab_biprod_inl.
+  - exact ab_biprod_inr.
+  - exact (fun _ => ab_biprod_rec).
+  - exact (fun _ => ab_biprod_rec_inl_beta).
+  - exact (fun _ => ab_biprod_rec_inr_beta).
+  - exact (fun _ => ab_biprod_corec_eta').
+  - cbn; reflexivity.
+  - cbn; reflexivity.
+  - cbn; reflexivity.
+  - cbn; reflexivity.
+Defined.
+
+Global Instance issemiadditive_ab `{Funext} : IsSemiAdditive AbGroup := {}.
