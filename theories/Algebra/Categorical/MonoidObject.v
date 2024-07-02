@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core WildCat.Equiv WildCat.Monoidal WildCat.Bifunctor
-  WildCat.NatTrans WildCat.Opposite WildCat.Products WildCat.Coproducts.
+  WildCat.NatTrans WildCat.Opposite WildCat.Products.
 Require Import abstract_algebra.
 
 (** * Monoids and Comonoids *)
@@ -47,7 +47,7 @@ Arguments IsMonoidObject {A} tensor unit {_ _ _ _ _ _ _ _ _ _} x.
 Arguments IsCommutativeMonoidObject {A} tensor unit {_ _ _ _ _ _ _ _ _ _ _} x.
 
 Section ComonoidObject.
-  Context {A : Type} {tensor : A -> A -> A} {unit : A}
+  Context {A : Type} (tensor : A -> A -> A) (unit : A)
     `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
     `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit}.
 
@@ -146,11 +146,12 @@ Section ComonoidObject.
     - exact cco_cocomm.
   Defined.
 
-  Global Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
+  Definition co_cco {x : A} `{!IsCocommutativeComonoidObject x}
     : IsComonoidObject x.
   Proof.
     apply cmo_mo.
   Defined.
+  Hint Immediate co_cco : typeclass_instances.
 
   (** Cocommutativity *)
   Definition cco_cocomm {x : A} `{!IsCocommutativeComonoidObject x}
