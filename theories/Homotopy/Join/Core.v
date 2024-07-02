@@ -92,8 +92,8 @@ Section Join.
 
 End Join.
 
-Arguments joinl {A B}%type_scope _ , [A] B _.
-Arguments joinr {A B}%type_scope _ , A [B] _.
+Arguments joinl {A B}%_type_scope _ , [A] B _.
+Arguments joinr {A B}%_type_scope _ , A [B] _.
 
 (** * [Join_rec] gives an equivalence of 0-groupoids
 
@@ -106,7 +106,7 @@ Record JoinRecData {A B P : Type} := {
   }.
 
 Arguments JoinRecData : clear implicits.
-Arguments Build_JoinRecData {A B P}%type_scope (jl jr jg)%function_scope.
+Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.
 
 (** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
 Definition join_rec {A B P : Type} (f : JoinRecData A B P)
@@ -627,7 +627,8 @@ Section JoinSym.
       1, 2: apply joinrecdata_sym.
       1, 2: apply joinrecdata_sym_inv.
     (* Naturality: *)
-    - intros P Q g f; simpl.
+    - snrapply Build_Is1Natural.
+      intros P Q g f; simpl.
       bundle_joinrecpath.
       intros b a; simpl.
       symmetry; apply ap_V.
@@ -836,7 +837,8 @@ Section JoinEmpty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_right.
-    - intros A B f.
+    - snrapply Build_Is1Natural.
+      intros A B f.
       cbn -[equiv_join_empty_right].
       snrapply Join_ind_FlFr.
       + intro a.
@@ -849,7 +851,8 @@ Section JoinEmpty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_left.
-    - intros A B f x.
+    - snrapply Build_Is1Natural.
+      intros A B f x.
       cbn -[equiv_join_empty_right].
       rhs_V rapply (isnat_natequiv join_right_unitor).
       cbn -[equiv_join_empty_right].

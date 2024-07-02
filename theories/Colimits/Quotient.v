@@ -322,8 +322,7 @@ Section Kernel.
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
   Proof.
     exists (Quotient R).
-    (* [exists (class_of R)] works, but the next line reduces the universe variables in a way that makes Coq 8.18 and 8.19 compatible. *)
-    refine (exist@{ar abr} _ (class_of R) _).
+    exists (class_of R).
     srefine (_;_).
     { refine (Quotient_ind R (fun _ => B) f _).
       intros x y p.
@@ -348,7 +347,7 @@ Section Kernel.
   (** We clean up the universe variables here, using only those declared in this Section. *)
   Definition quotient_kernel_factor_general@{|}
     := Eval unfold quotient_kernel_factor_internal in
-      quotient_kernel_factor_internal@{ar' ar abr abr ab}.
+      quotient_kernel_factor_internal@{ar' ar abr abr ab abr abr}.
 
 End Kernel.
 

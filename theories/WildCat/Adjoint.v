@@ -112,6 +112,7 @@ Section AdjunctionData.
   Proof.
     snrapply Build_NatEquiv.
     1: intros [x y]; exact (equiv_adjunction adj x y).
+    snrapply Build_Is1Natural.
     intros [a b] [a' b'] [f g] K.
     refine (_ @ ap (fun x : a $-> G b' => x $o f)
       (is1natural_equiv_adjunction_r adj a b b' g K)).
@@ -124,7 +125,7 @@ Section AdjunctionData.
     snrapply Build_NatTrans.
     { hnf. intros x.
       exact (equiv_adjunction adj x (F x) (Id _)). }
-    hnf.
+    snrapply Build_Is1Natural.
     intros x x' f.
     apply GpdHom_path.
     refine (_^ @ _ @ _).
@@ -142,7 +143,7 @@ Section AdjunctionData.
     snrapply Build_NatTrans.
     { hnf. intros y.
       exact ((equiv_adjunction adj (G y) y)^-1 (Id _)). }
-    hnf.
+    snrapply Build_Is1Natural.
     intros y y' f.
     apply GpdHom_path.
     refine (_^ @ _ @ _).
@@ -334,7 +335,8 @@ Proof.
   - snrapply Build_NatTrans.
     + intros K.
       exact (nattrans_prewhisker (adjunction_unit adj) K).
-    + intros K K' θ j.
+    + snrapply Build_Is1Natural.
+      intros K K' θ j.
       apply GpdHom_path.
       refine (_ @ is1natural_natequiv (natequiv_inverse
         (natequiv_adjunction_r adj _)) _ _ _ _).
@@ -346,7 +348,8 @@ Proof.
   - snrapply Build_NatTrans.
     + intros K.
       exact (nattrans_prewhisker (adjunction_counit adj) K).
-    + intros K K' θ j.
+    + snrapply Build_Is1Natural.
+      intros K K' θ j.
       apply GpdHom_path.
       refine (_ @ is1natural_natequiv
         (natequiv_adjunction_r adj _) _ _ _ _).

@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Int.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
@@ -228,26 +228,39 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
-(** Multiplication by [n : nat] defines an endomorphism of any abelian group [A]. *)
-Definition ab_mul_nat {A : AbGroup} (n : nat) : GroupHomomorphism A A.
+(** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
+Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
   induction n; cbn.
-  1: exact (grp_unit_l _)^.
-  refine (_ @ associativity _ _ _).
-  refine (_ @ ap _ (associativity _ _ _)^).
-  rewrite (commutativity (grp_pow a n) b).
-  refine (_ @ ap _ (associativity _ _ _)).
-  refine (_ @ (associativity _ _ _)^).
-  apply grp_cancelL.
-  assumption.
+  - exact (grp_unit_l _)^.
+  - destruct n.
+    + reflexivity.
+    + rhs_V srapply (associativity a).
+      rhs srapply (ap _ (associativity _ b _)).
+      rewrite (commutativity (nat_iter _ _ _) b).
+      rhs_V srapply (ap _ (associativity b _ _)).
+      rhs srapply (associativity a).
+      apply grp_cancelL.
+      exact IHn.
+  - destruct n.
+    + rewrite (commutativity (-a)).
+      exact (grp_inv_op a b).
+    + rhs_V srapply (associativity (-a)).
+      rhs srapply (ap _ (associativity _ (-b) _)).
+      rewrite (commutativity (nat_iter _ _ _) (-b)).
+      rhs_V srapply (ap _ (associativity (-b) _ _)).
+      rhs srapply (associativity (-a)).
+      rewrite (commutativity (-a) (-b)), <- (grp_inv_op a b).
+      apply grp_cancelL.
+      exact IHn.
 Defined.
 
-Definition ab_mul_nat_homo {A B : AbGroup}
-  (f : GroupHomomorphism A B) (n : nat)
-  : f o ab_mul_nat n == ab_mul_nat n o f
+Definition ab_mul_homo {A B : AbGroup}
+  (f : GroupHomomorphism A B) (n : Int)
+  : f o ab_mul n == ab_mul n o f
   := grp_pow_homo f n.
 
 (** The image of an inclusion is a normal subgroup. *)
@@ -295,11 +308,13 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
   : ab_sum n f = grp_pow r n.
 Proof.
   induction n as [|n IHn] in f, p |- *.
-  1: reflexivity.
-  simpl; f_ap.
-  apply IHn.
-  intros k Hk.
-  apply p.
+  - reflexivity.
+  - rhs nrapply (ap@{Set _} _ (int_of_nat_succ_commute n)).
+    rhs nrapply grp_pow_int_add_1.
+    simpl. f_ap.
+    rewrite IHn.
+    + reflexivity.
+    + intros. apply p.
 Defined.
 
 (** If the function is zero in the range of a finite sum then the sum is zero. *)

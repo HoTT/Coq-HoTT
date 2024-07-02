@@ -82,6 +82,16 @@ Section ModuleFacts.
      f_ap.
      apply grp_inv_l.
   Defined.
+ 
+  (** The action of [r] on the additive inverse of [m] is the additive inverse of the action of [r] on [m]. *)
+  Definition lm_inv : lact r (-m) = -(lact r m).
+  Proof.
+    apply grp_moveL_1V.
+    lhs_V nrapply lm_dist_l.
+    rhs_V nrapply lm_zero_r.
+    f_ap.
+    apply grp_inv_l.
+  Defined.
 
 End ModuleFacts.
 
@@ -462,4 +472,26 @@ Proof.
   - cbn; reflexivity.
   - intros L f g p q a.
     exact (path_prod' (p a) (q a)).
+Defined.
+
+(** ** Finite Sums *)
+
+(** Scalar multplication distributes over finite sums of left module elements. *)
+Definition lm_sum_dist_l {R : Ring} (M : LeftModule R) (n : nat)
+  (f : forall k, (k < n)%nat -> M) (r : R)
+  : lact r (ab_sum n f) = ab_sum n (fun k Hk => lact r (f k Hk)).
+Proof.
+  induction n as [|n IHn].
+  1: apply lm_zero_r.
+  lhs nrapply lm_dist_l; simpl; f_ap.
+Defined.
+
+(** Left module elements distribute over finite sums of scalars. *)
+Definition lm_sum_dist_r {R : Ring} (M : LeftModule R) (n : nat)
+  (f : forall k, (k < n)%nat -> R) (x : M)
+  : lact (ab_sum n f) x = ab_sum n (fun k Hk => lact (f k Hk) x).
+Proof.
+  induction n as [|n IHn].
+  1: apply lm_zero_l.
+  lhs nrapply lm_dist_r; simpl; f_ap.
 Defined.

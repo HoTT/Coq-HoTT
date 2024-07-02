@@ -8,7 +8,7 @@ concurrency:
 
 # We set the supported coq-version from here. In order to use this environment variable correctly, look at how they are used in the following jobs.
 env:
-  coq-version-supported: '8.18'
+  coq-version-supported: '8.19'
   ocaml-version: '4.14-flambda'
   deployment-branch: 'gh-pages'
 
@@ -36,7 +36,6 @@ jobs:
       matrix:
         coq-version-dummy:
         - 'supported'
-        - '8.18'
         - 'latest'
         - 'dev'
         os:
@@ -51,7 +50,7 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
 
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -82,7 +81,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -120,7 +119,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # We use the coq docker so we don't have to build coq
@@ -155,7 +154,7 @@ jobs:
   nix:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
       with:
         name: coq-hott
@@ -181,7 +180,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -229,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -273,7 +272,7 @@ jobs:
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
           ## Install coq-dpdgraph
-          opam install coq-dpdgraph.1.0+8.18 -y
+          opam install coq-dpdgraph.1.0+8.19 -y
 
           # For some reason, we get a stackoverflow. So we are lax
           # with making these.
@@ -317,7 +316,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -360,7 +359,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -417,7 +416,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -462,7 +461,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
@@ -508,7 +507,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     # Download alectryon artifact
     - uses: actions/download-artifact@v3
       with:

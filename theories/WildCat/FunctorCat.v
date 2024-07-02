@@ -37,9 +37,9 @@ Global Instance is01cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (F
 Proof.
   srapply Build_Is01Cat.
   - intros [F ?]; cbn.
-    exists (id_transformation F); exact _.
-  - intros [F ?] [G ?] [K ?] [gamma ?] [alpha ?]; cbn in *.
-    exists (trans_comp gamma alpha); exact _.
+    exact (nattrans_id F).
+  - intros F G K gamma alpha; cbn in *.
+    exact (nattrans_comp gamma alpha).
 Defined.
 
 Global Instance is2graph_fun01 (A B : Type) `{IsGraph A, Is1Cat B}
@@ -87,29 +87,14 @@ Global Instance hasequivs_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
   : HasEquivs (Fun01 A B).
 Proof.
   srapply Build_HasEquivs.
-  1:{ intros [F ?] [G ?]. exact (NatEquiv F G). }
-  1:{ intros [F ?] [G ?] [alpha ?]; cbn in *.
-      exact (forall a, CatIsEquiv (alpha a)). }
-  all:intros [F ?] [G ?] [alpha alnat]; cbn in *.
-  - exists (fun a => alpha a); assumption.
+  1: intros F G; exact (NatEquiv F G).
+  all: intros F G alpha; cbn in *.
+  - exact (forall a, CatIsEquiv (alpha a)).
+  - exact alpha.
   - intros a; exact _.
-  - intros ?.
-    snrapply Build_NatEquiv.
-    + intros a; exact (Build_CatEquiv (alpha a)).
-    + cbn. refine (is1natural_homotopic alpha _).
-      intros a; apply cate_buildequiv_fun.
+  - apply Build_NatEquiv'.
   - cbn; intros; apply cate_buildequiv_fun.
-  - exists (fun a => (alpha a)^-1$).
-    intros a b f.
-    refine ((cat_idr _)^$ $@ _).
-    refine ((_ $@L (cate_isretr (alpha a))^$) $@ _).
-    refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L (cat_assoc_opp _ _ _)) $@ _).
-    refine ((_ $@L ((isnat (fun a => alpha a) f)^$ $@R _)) $@ _).
-    refine ((_ $@L (cat_assoc _ _ _)) $@ _).
-    refine (cat_assoc_opp _ _ _ $@ _).
-    refine ((cate_issect (alpha b) $@R _) $@ _).
-    exact (cat_idl _).
+  - exact (natequiv_inverse alpha).
   - intros; apply cate_issect.
   - intros; apply cate_isretr.
   - intros [gamma ?] r s a; cbn in *.

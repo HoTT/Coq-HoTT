@@ -619,6 +619,17 @@ Proof.
     + apply nat_add_n_Sm.
 Defined.
 
+Definition isinj_nat_add_l k : forall x y, k + x = k + y -> x = y.
+Proof.
+  simple_induction' k; simpl; auto.
+Defined.
+
+Definition isinj_nat_add_r k x y (H : x + k = y + k) : x = y.
+Proof.
+  rewrite 2 (nat_add_comm _ k) in H.
+  exact (isinj_nat_add_l k _ _ H).
+Defined.
+
 Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
 Proof.
   induction x as [|x IHx] in y |- * using nat_rect@{Set}.

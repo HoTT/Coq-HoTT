@@ -172,11 +172,11 @@ Arguments sig_ind {_ _}.
 
 (** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
-Arguments exist {A}%type P%type _ _.
+Arguments exist {A}%_type P%_type _ _.
 Arguments proj1 {A P} _ / .
 Arguments proj2 {A P} _ / .
 
-Arguments sig (A P)%type.
+Arguments sig (A P)%_type.
 
 Notation "{ x | P }" := (sig (fun x => P)) : type_scope.
 Notation "{ x : A | P }" := (sig (A := A) (fun x => P)) : type_scope.
@@ -239,7 +239,7 @@ Global Instance iff_reflexive : Reflexive iff | 1
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
 
-Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
+Global Arguments composeD {A B C}%_type_scope (g f)%_function_scope x.
 
 #[export] Hint Unfold composeD : core.
 
@@ -369,7 +369,7 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   := match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
@@ -382,8 +382,8 @@ Proof. rewrite <- H. exact u. Defined.
 Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
 Proof. rewrite -> H. exact u. Defined.
 
-Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
-Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
+Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p.
+Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
 
@@ -392,7 +392,7 @@ Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
-Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope.
 
 Register ap as core.identity.congr.
 
@@ -426,7 +426,7 @@ Proof.
   intros ? ? p ?; symmetry; apply p.
 Defined.
 
-Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments pointwise_paths {A}%_type_scope {P} (f g)%_function_scope.
 Global Arguments reflexive_pointwise_paths /.
 Global Arguments transitive_pointwise_paths /.
 Global Arguments symmetric_pointwise_paths /.
@@ -440,12 +440,12 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
-Global Arguments apD10 {A%type_scope B} {f g}%function_scope h%path_scope _.
+Global Arguments apD10 {A%_type_scope B} {f g}%_function_scope h%_path_scope _.
 
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
 
-Global Arguments ap10 {A B}%type_scope {f g}%function_scope h%path_scope _.
+Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
@@ -455,7 +455,7 @@ Proof.
   case h, p; reflexivity.
 Defined.
 
-Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
+Global Arguments ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y} p%_path_scope.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
@@ -470,7 +470,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   match p with idpath => idpath end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomatch.
+Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
@@ -496,10 +496,10 @@ Class IsEquiv {A B : Type} (f : A -> B) := {
   eisadj : forall x : A, eisretr (f x) = ap f (eissect x) ;
 }.
 
-Arguments eisretr {A B}%type_scope f%function_scope {_} _.
-Arguments eissect {A B}%type_scope f%function_scope {_} _.
-Arguments eisadj {A B}%type_scope f%function_scope {_} _.
-Arguments IsEquiv {A B}%type_scope f%function_scope.
+Arguments eisretr {A B}%_type_scope f%_function_scope {_} _.
+Arguments eissect {A B}%_type_scope f%_function_scope {_} _.
+Arguments eisadj {A B}%_type_scope f%_function_scope {_} _.
+Arguments IsEquiv {A B}%_type_scope f%_function_scope.
 
 (** We mark [eisadj] as Opaque to deter Coq from unfolding it when simplifying. Since proofs of [eisadj] typically have larger proofs than the rest of the equivalence data, we gain some speed up as a result. *)
 Global Opaque eisadj.
@@ -566,7 +566,7 @@ Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
 Bind Scope trunc_scope with trunc_index.
-Arguments trunc_S _%trunc_scope.
+Arguments trunc_S _%_trunc_scope.
 
 (** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
@@ -679,7 +679,7 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
   :=
   (@apD10 A P f g)^-1.
 
-Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
+Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
 
 (** *** Tactics *)
 
@@ -719,7 +719,7 @@ Scheme nat_rec := Minimality for nat Sort Type.
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
-Arguments S _%nat.
+Arguments S _%_nat.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
@@ -790,4 +790,4 @@ Global Existing Instance ispointed_type.
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
-Global Arguments hfiber {A B}%type_scope f%function_scope y.
+Global Arguments hfiber {A B}%_type_scope f%_function_scope y.

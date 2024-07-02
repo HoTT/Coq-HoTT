@@ -154,11 +154,17 @@ Proof.
   - intros a b c f g h k p q x; cbn.
     symmetry.
     apply concat_Ap.
-  - intros a b c d f g h i p x; cbn.
+  - intros a b c d f g.
+    snrapply Build_Is1Natural.
+    intros h i p x; cbn.
     exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
-  - intros a b f g p x; cbn.
+  - intros a b.
+    snrapply Build_Is1Natural.
+    intros f g p x; cbn.
     exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
-  - intros a b f g p x; cbn.
+  - intros a b.
+    snrapply Build_Is1Natural.
+    intros f g p x; cbn.
     exact (concat_p1 _ @ (concat_1p _)^).
   - reflexivity.
   - reflexivity.

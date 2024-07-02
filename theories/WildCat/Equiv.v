@@ -484,6 +484,12 @@ Proof.
   exact (cate_buildequiv_fun _)^$.
 Defined.
 
+Definition emap_inv' {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+  {a b : A} (e : a $<~> b)
+  : cate_fun (emap F e)^-1$ $== fmap F e^-1$
+  := emap_inv F e $@ cate_buildequiv_fun _.
+
 (** When we have equivalences, we can define what it means for a category to be univalent. *)
 Definition cat_equiv_path {A : Type} `{HasEquivs A} (a b : A)
   : (a = b) -> (a $<~> b).
@@ -668,12 +674,12 @@ Class Cat_IsBiInv {A} `{Is1Cat A} {x y : A} (f : x $-> y) := {
   cat_eissect' : cat_equiv_inv' $o f $== Id x;
 }.
 
-Arguments cat_equiv_inv {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eisretr {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_equiv_inv' {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eissect' {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eisretr {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv' {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eissect' {A}%_type_scope { _ _ _ _ x y} f {_}.
 
-Arguments Build_Cat_IsBiInv {A}%type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
+Arguments Build_Cat_IsBiInv {A}%_type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
 
 Record Cat_BiInv A `{Is1Cat A} (x y : A) := {
   cat_equiv_fun :> x $-> y;

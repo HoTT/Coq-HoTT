@@ -18,7 +18,7 @@ Inductive BinInt : Type0 :=
   | zero : BinInt
   | pos : Pos -> BinInt.
 
-Arguments pos p%pos.
+Arguments pos p%_pos.
 
 Declare Scope binint_scope.
 Local Open Scope binint_scope.

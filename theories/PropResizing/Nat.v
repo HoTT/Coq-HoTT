@@ -375,9 +375,6 @@ Section AssumeStuff.
       apply path_N; reflexivity.
   Qed.
 
-  (** Sometimes we just need a bigger fish. *)
-  Universe large.
-
   (** A first application *)
   Definition N_neq_succ@{} (n : N) : n <> succ n.
   Proof.
@@ -794,7 +791,7 @@ Section AssumeStuff.
       - refine (_ oE equiv_inverse (equiv_sigma_assoc _ _)).
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
-      - refine (@istrunc_sigma@{nr nr large nr} _ _ _ _ _).
+      - refine (@istrunc_sigma@{nr nr nr} _ _ _ _ _).
         + srefine (Build_Contr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].
