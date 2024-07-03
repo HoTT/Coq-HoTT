@@ -30,9 +30,9 @@ Record Ring := Build_Ring' {
 }.
 
 
-Arguments ring_mult {_}.
-Arguments ring_one {_}.
-Arguments ring_isring {_}.
+Arguments ring_mult {R} : rename.
+Arguments ring_one {R} : rename.
+Arguments ring_isring {R} : rename.
 
 Definition issig_Ring : _ <~> Ring := ltac:(issig).
 
@@ -572,3 +572,240 @@ Proof.
   1: apply rng_mult_zero_l.
   lhs nrapply rng_dist_r; simpl; f_ap.
 Defined.
+
+(** ** Invertible elements *)
+
+(** An element [x] of a ring [R] is left invertible if there exists an element [y] such that [y * x = 1]. *)
+Class IsLeftInvertible (R : Ring) (x : R) := {
+  left_inverse_elem : R;
+  left_inverse_eq : left_inverse_elem * x = 1;
+}.
+
+Arguments left_inverse_elem {R} x {_}.
+Arguments left_inverse_eq {R} x {_}.
+
+Definition issig_IsLeftInvertible {R : Ring} (x : R)
+  : _ <~> IsLeftInvertible R x
+  := ltac:(issig).
+
+(** An element [x] of a ring [R] is right invertible if there exists an element [y] such that [x * y = 1]. We state this as a left invertible element of the opposite ring. *)
+Class IsRightInvertible (R : Ring) (x : R)
+  := isleftinvertible_rng_op :: IsLeftInvertible (rng_op R) x.
+
+Definition right_inverse_elem {R} x `{!IsRightInvertible R x} : R
+  := left_inverse_elem (R:=rng_op R) x.
+
+Definition right_inverse_eq {R} x `{!IsRightInvertible R x}
+  : x * right_inverse_elem x = 1
+  := left_inverse_eq (R:=rng_op R) x.
+
+(** An element [x] of a ring [R] is invertible if it is both left and right invertible. *)
+Class IsInvertible (R : Ring) (x : R) := Build_IsInvertible' {
+  isleftinvertible_isinvertible :: IsLeftInvertible R x;
+  isrightinvertible_isinvertible :: IsRightInvertible R x;
+}.
+
+(** We can show an element is invertible by providing an inverse element which is a left and right inverse similtaneously. We will later show that the two inverses of an invertible element must be equal anyway. *)
+Definition Build_IsInvertible {R : Ring} (x : R)
+  (inv : R) (inv_l : inv * x = 1) (inv_r : x * inv = 1)
+  : IsInvertible R x.
+Proof.
+  split.
+  - by exists inv.
+  - unfold IsRightInvertible.
+    by exists (inv : rng_op R).
+Defined.
+
+(** *** Uniqueness of inverses *)
+
+(** This general lemma will be used for uniqueness results. *)
+Definition path_left_right_inverse {R : Ring} (x x' x'' : R)
+  (p : x' * x = 1) (q : x * x'' = 1)
+  : x' = x''.
+Proof.
+  rhs_V nrapply rng_mult_one_l.
+  rewrite <- p. 
+  rewrite <- simple_associativity.
+  rewrite q.
+  symmetry.
+  apply rng_mult_one_r.
+Defined.
+
+(** The left and right inverse of an invertible element are necessarily equal. *)
+Definition path_left_inverse_elem_right_inverse_elem
+  {R : Ring} x `{!IsInvertible R x}
+  : left_inverse_elem x = right_inverse_elem x.
+Proof.
+  nrapply (path_left_right_inverse x).
+  - apply left_inverse_eq.
+  - apply right_inverse_eq.
+Defined.
+
+(** It is therefore well-defined to talk about the inverse of an invertible element. *)
+Definition inverse_elem {R : Ring} (x : R) `{IsInvertible R x} : R
+  := left_inverse_elem x.
+
+(** Left cancellation for an invertible element. *)
+Definition rng_inv_l {R : Ring} (x : R) `{IsInvertible R x}
+  : inverse_elem x * x = 1.
+Proof.
+  apply left_inverse_eq.
+Defined.
+
+(** Right cancellation for an invertible element. *)
+Definition rng_inv_r {R : Ring} (x : R) `{IsInvertible R x}
+  : x * inverse_elem x = 1.
+Proof.
+  rhs_V nrapply (right_inverse_eq x).
+  f_ap.
+  apply path_left_inverse_elem_right_inverse_elem.
+Defined.
+
+(** Furthermore, any two proofs of invertibility have the same inverse. *)
+Definition isinvertible_unique {R x} (H1 H2 : IsInvertible R x)
+  : @inverse_elem R x H1 = @inverse_elem R x H2.
+Proof.
+  snrapply (path_left_right_inverse x).
+  - apply rng_inv_l.
+  - apply rng_inv_r.
+Defined.
+
+(** We can show that being invertible is equivalent to having an inverse element that is simultaneously a left and right inverse. *)
+Definition equiv_isinvertible_left_right_inverse {R : Ring} (x : R)
+  : {inv : R & prod (inv * x = 1) (x * inv = 1)} <~> IsInvertible R x.
+Proof.
+  equiv_via { i : IsInvertible R x & right_inverse_elem x = left_inverse_elem x }.
+  1: make_equiv_contr_basedpaths.
+  apply equiv_sigma_contr; intro i.
+  rapply contr_inhabited_hprop.
+  symmetry; apply path_left_inverse_elem_right_inverse_elem.
+Defined.
+
+(** Being invertible is a proposition. *)
+Global Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).
+Proof.
+  nrapply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).
+  snrapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].
+  rapply path_sigma_hprop; cbn.
+  exact (path_left_right_inverse x y z p1 q2).
+Defined.
+
+(** *** Closure of invertible elements under multiplication *)
+
+(** Left invertible elements are closed under multiplication. *)
+Global Instance isleftinvertible_mult {R : Ring} (x y : R)
+  : IsLeftInvertible R x -> IsLeftInvertible R y -> IsLeftInvertible R (x * y).
+Proof.
+  intros [x' p] [y' q].
+  exists (y' * x').
+  rhs_V nrapply q.
+  lhs nrapply rng_mult_assoc.
+  f_ap.
+  rhs_V nrapply rng_mult_one_r.
+  lhs_V nrapply rng_mult_assoc.
+  f_ap.
+Defined.
+
+(** Right invertible elements are closed under multiplication. *)
+Global Instance isrightinvertible_mult {R : Ring} (x y : R)
+  : IsRightInvertible R x -> IsRightInvertible R y -> IsRightInvertible R (x * y).
+Proof.
+  change (x * y) with (ring_mult (R:=rng_op R) y x).
+  unfold IsRightInvertible.
+  exact _.
+Defined.
+
+(** Invertible elements are closed under multiplication. *)
+Global Instance isinvertible_mult {R : Ring} (x y : R)
+  : IsInvertible R x -> IsInvertible R y -> IsInvertible R (x * y)
+  := {}.
+
+(** Left invertible elements are closed under negation. *)
+Global Instance isleftinvertible_neg {R : Ring} (x : R)
+  : IsLeftInvertible R x -> IsLeftInvertible R (-x).
+Proof.
+  intros H.
+  exists (- left_inverse_elem x).
+  lhs nrapply rng_mult_negate_negate.
+  apply left_inverse_eq.
+Defined.
+
+(** Right invertible elements are closed under negation. *)
+Global Instance isrightinvertible_neg {R : Ring} (x : R)
+  : IsRightInvertible R x -> IsRightInvertible R (-x).
+Proof.
+  intros H.
+  rapply isleftinvertible_neg.
+Defined.
+
+(** Invertible elements are closed under negation. *)
+Global Instance isinvertible_neg {R : Ring} (x : R)
+  : IsInvertible R x -> IsInvertible R (-x)
+  := {}.
+
+(** Inverses of left invertible elements are themselves right invertible. *)
+Global Instance isrightinvertible_left_inverse_elem {R : Ring} (x : R)
+  `{IsLeftInvertible R x}
+  : IsRightInvertible R (left_inverse_elem x).
+Proof.
+  exists (x : rng_op R).
+  exact (left_inverse_eq x).
+Defined.
+
+(** Inverses of right invertible elements are themselves left invertible. *)
+Global Instance isleftinvertible_right_inverse_elem {R : Ring} (x : R)
+  `{IsRightInvertible R x}
+  : IsLeftInvertible R (right_inverse_elem x).
+Proof.
+  exists x.
+  exact (right_inverse_eq x).
+Defined.
+
+(** Inverses of invertible elements are themselves invertible. *)
+Global Instance isinvertible_inverse_elem {R : Ring} (x : R)
+  `{IsInvertible R x}
+  : IsInvertible R (inverse_elem x).
+Proof.
+  split.
+  - unfold inverse_elem.
+    rewrite (path_left_inverse_elem_right_inverse_elem x).
+    exact _.
+  - exact _.
+Defined.
+
+(** [1] is always invertible, and by the above [-1]. *)
+Global Instance isinvertible_one {R} : IsInvertible R 1.
+Proof.
+  snrapply Build_IsInvertible.
+  - exact one.
+  - apply rng_mult_one_l.
+  - apply rng_mult_one_l.
+Defined.
+
+(** *** Group of units *)
+
+(** Invertible elements are typically called "units" in ring theory and the collection of units forms a group under the ring multiplication. *)
+Definition rng_unit_group {R : Ring} : Group.
+Proof.
+  (** TODO: Use a generalised version of [Build_Subgroup] that works for subgroups of monoids. *)
+  snrapply Build_Group.
+  - exact {x : R & IsInvertible R x}.
+  - intros [x p] [y q].
+    exists (x * y).
+    exact _.
+  - exists 1.
+    exact _.
+  - intros [x p].
+    exists (inverse_elem x).
+    exact _.
+  - repeat split.
+    1: exact _.
+    1-5: hnf; intros; apply path_sigma_hprop.
+    + rapply simple_associativity.
+    + rapply left_identity.
+    + rapply right_identity.
+    + apply rng_inv_l.
+    + apply rng_inv_r.
+Defined.
+
+(** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)
