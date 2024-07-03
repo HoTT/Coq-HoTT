@@ -605,10 +605,6 @@ Class IsInvertible (R : Ring) (x : R) := Build_IsInvertible' {
   isrightinvertible_isinvertible :: IsRightInvertible R x;
 }.
 
-Definition issig_IsInvertible {R : Ring} (x : R)
-  : _ <~> IsInvertible R x
-  := ltac:(issig).
-
 (** We can show an element is invertible by providing an inverse element which is a left and right inverse similtaneously. We will later show that the two inverses of an invertible element must be equal anyway. *)
 Definition Build_IsInvertible {R : Ring} (x : R)
   (inv : R) (inv_l : inv * x = 1) (inv_r : x * inv = 1)
@@ -777,7 +773,7 @@ Proof.
   - exact _.
 Defined.
 
-(** [1] is always invertible. *)
+(** [1] is always invertible, and by the above [-1]. *)
 Global Instance isinvertible_one {R} : IsInvertible R 1.
 Proof.
   snrapply Build_IsInvertible.
@@ -785,9 +781,6 @@ Proof.
   - apply rng_mult_one_l.
   - apply rng_mult_one_l.
 Defined.
-
-(** [-1] is always invertible. *)
-Global Instance isinvertible_neg_one {R} : IsInvertible R (-1) := _.
 
 (** *** Group of units *)
 
