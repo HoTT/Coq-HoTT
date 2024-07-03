@@ -98,7 +98,7 @@ Section ComonoidObject.
   (** Coassociativity *)
   Definition co_coassoc {x : A} `{!IsComonoidObject x}
     : associator x x x $o fmap01 tensor x co_comult $o co_comult
-        $== fmap10 tensor co_comult x $o co_comult.
+      $== fmap10 tensor co_comult x $o co_comult.
   Proof.
     refine (cat_assoc _ _ _ $@ _).
     apply cate_moveR_Me.
@@ -146,11 +146,12 @@ Section ComonoidObject.
     - exact cco_cocomm.
   Defined.
 
-  Global Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
+  Definition co_cco {x : A} `{!IsCocommutativeComonoidObject x}
     : IsComonoidObject x.
   Proof.
     apply cmo_mo.
   Defined.
+  Hint Immediate co_cco : typeclass_instances.
 
   (** Cocommutativity *)
   Definition cco_cocomm {x : A} `{!IsCocommutativeComonoidObject x}
@@ -200,7 +201,7 @@ Defined.
 
 (** ** Monoid enrichment *)
 
-(** A hom [x $-> y] in a cartesian category where [y] is a monoid object has the structure of a monoid. Equivalently, a hom [x $-> y] in a cartesian category where [x] is a comonoid object has the structure of a monoid. *)
+(** A hom [x $-> y] in a cartesian category where [y] is a monoid object has the structure of a monoid. *)
 
 Section MonoidEnriched.
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}
@@ -210,28 +211,29 @@ Section MonoidEnriched.
   Section Monoid.
     Context `{!IsMonoidObject _ _ y}.
 
-    Local Instance sgop_hom : SgOp (x $-> y)
+    Local Instance sgop_hom_mo : SgOp (x $-> y)
       := fun f g => mo_mult $o cat_binprod_corec f g.
 
-    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit $o mor_terminal _ _.
+    Local Instance monunit_hom_mo : MonUnit (x $-> y)
+      := mo_unit $o mor_terminal _ _.
 
-    Local Instance associative_hom : Associative sgop_hom.
+    Local Instance associative_hom_mo : Associative sgop_hom_mo.
     Proof.
       intros f g h.
-      unfold sgop_hom.
+      unfold sgop_hom_mo.
       rapply path_hom.
       refine ((_ $@L cat_binprod_fmap01_corec _ _ _)^$ $@ _).
       nrefine (cat_assoc_opp _ _ _ $@ _).
-      refine ((mo_assoc $@R _)^$ $@ _).
       nrefine (_ $@ (_ $@L cat_binprod_fmap10_corec _ _ _)).
+      refine ((mo_assoc $@R _)^$ $@ _).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_assoc _ _ _).
       nrapply cat_binprod_associator_corec.
     Defined.
 
-    Local Instance leftidentity_hom : LeftIdentity sgop_hom mon_unit.
+    Local Instance leftidentity_hom_mo : LeftIdentity sgop_hom_mo mon_unit.
     Proof.
       intros f.
-      unfold sgop_hom, mon_unit.
+      unfold sgop_hom_mo, mon_unit.
       rapply path_hom.
       refine ((_ $@L (cat_binprod_fmap10_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
       nrefine (((mo_left_unit $@ _) $@R _) $@ _).
@@ -243,29 +245,30 @@ Section MonoidEnriched.
       nrapply cat_binprod_beta_pr2.
     Defined.
 
-    Local Instance rightidentity_hom : RightIdentity sgop_hom mon_unit.
+    Local Instance rightidentity_hom_mo : RightIdentity sgop_hom_mo mon_unit.
     Proof.
       intros f.
-      unfold sgop_hom, mon_unit.
+      unfold sgop_hom_mo, mon_unit.
       rapply path_hom.
-      refine ((_ $@L (cat_binprod_fmap01_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
+      refine ((_ $@L (cat_binprod_fmap01_corec _ _ _)^$)
+        $@ cat_assoc_opp _ _ _ $@ _).
       nrefine (((mo_right_unit $@ _) $@R _) $@ _).
       1: nrapply cate_buildequiv_fun.
       nrapply cat_binprod_beta_pr1.
     Defined.
 
-    Local Instance issemigroup_hom : IsSemiGroup (x $-> y) := {}.
-    Local Instance ismonoid_hom : IsMonoid (x $-> y) := {}.
+    Local Instance issemigroup_hom_mo : IsSemiGroup (x $-> y) := {}.
+    Local Instance ismonoid_hom_mo : IsMonoid (x $-> y) := {}.
 
   End Monoid.
 
   Context `{!IsCommutativeMonoidObject _ _ y}.
-  Local Existing Instances sgop_hom monunit_hom ismonoid_hom.
+  Local Existing Instances sgop_hom_mo monunit_hom_mo ismonoid_hom_mo.
 
-  Local Instance commutative_hom : Commutative sgop_hom.
+  Local Instance commutative_hom : Commutative sgop_hom_mo.
   Proof.
     intros f g.
-    unfold sgop_hom.
+    unfold sgop_hom_mo.
     rapply path_hom.
     refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _ $@ (cmo_comm $@R _)).
     nrapply cat_binprod_swap_corec. 
