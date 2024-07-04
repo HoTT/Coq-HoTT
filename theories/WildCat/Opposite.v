@@ -127,10 +127,10 @@ Proof.
   refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
 Defined.
 
-Global Instance isinitial_isterminal_op {A : Type} `{Is1Cat A} (x : A)
+Global Instance isinitial_op_isterminal {A : Type} `{Is1Cat A} (x : A)
   {t : IsTerminal x} : IsInitial (A := A^op) x
   := t.
 
-Global Instance isterminal_isinitial_op {A : Type} `{Is1Cat A} (x : A)
+Global Instance isterminal_op_isinitial {A : Type} `{Is1Cat A} (x : A)
   {i : IsInitial x} : IsTerminal (A := A^op) x
   := i.
