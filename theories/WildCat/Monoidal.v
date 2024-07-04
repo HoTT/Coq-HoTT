@@ -234,7 +234,7 @@ End LeftUnitor.
 Global Instance braiding_op {A : Type} `{HasEquivs A} {F : A -> A -> A}
   `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding F}
   : Braiding (A:=A^op) F
-  := (nattrans_op (nattrans_flip braid)).
+  := nattrans_op (nattrans_flip braid).
 
 Definition braiding_op' {A : Type} `{HasEquivs A} {F : A -> A -> A}
   `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding (A:=A^op) F}
