@@ -1042,6 +1042,9 @@ Global Instance issymmetric_exchange {R : Ring} {n : nat}
   : IsSymmetric (exchange_matrix R n)
   := exchange_matrix_transpose.
 
+(** This gets used in a couple of places below, so we add it to [typeclass_instances] to simplify the proofs. It says that [i < j -> i <= pred j]. *)
+#[local] Hint Immediate lt_implies_pred_geq : typeclass_instances.
+
 Definition entry_matrix_mult_exchange {R : Ring} {n : nat} (M : Matrix R n n)
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
   : let Hi' := natpmswap1 _ _ _ (lt_implies_pred_geq _ _ _)
@@ -1054,8 +1057,7 @@ Proof.
   lhs nrapply path_ab_sum.
   { intros k Hk.
     rewrite entry_Build_Matrix.
-    unshelve erewrite <- (nat_add_sub_eq (pred n) (k:=i) _).
-    1: auto with nat.
+    rewrite <- (nat_add_sub_eq (pred n) (k:=i) _).
     unshelve erewrite (kronecker_delta_map_inj _ _ (fun x => i + x)).
     2: reflexivity.
     intros x y H; exact (isinj_nat_add_l i x y H). }
@@ -1072,8 +1074,7 @@ Proof.
   rewrite 2 entry_Build_Matrix.
   (* We hide this [pred n] in [t] so that the rewrite below changes the other [pred n]. *)
   set (t := (pred n - i + j)%nat).
-  unshelve erewrite <- (natminuspluseq i (pred n) _).
-  1: auto with nat.
+  rewrite <- (natminuspluseq i (pred n) _).
   unfold t; clear t.
   unshelve erewrite (kronecker_delta_map_inj j i (fun x => pred n - i + x)%nat).
   2: apply kronecker_delta_symm.
