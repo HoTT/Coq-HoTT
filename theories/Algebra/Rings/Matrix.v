@@ -1025,8 +1025,6 @@ Definition exchange_matrix (R : Ring) n : Matrix R n n
   := Build_Matrix R n n (fun i j Hi Hj
       => kronecker_delta (R:=R) (i + j) (pred n))%nat.
 
-(** Multiplying a matrix by the exchange matrix on the left reverses the order of the rows. Similarly multiplying on the right reverses the order of the columns. *)
-
 (** The exchange matrix is invariant under transpose. *)
 Definition exchange_matrix_transpose {R n}
   : matrix_transpose (exchange_matrix R n) = exchange_matrix R n.
@@ -1045,24 +1043,54 @@ Global Instance issymmetric_exchange {R : Ring} {n : nat}
 (** This gets used in a couple of places below, so we add it to [typeclass_instances] to simplify the proofs. It says that [i < j -> i <= pred j]. *)
 #[local] Hint Immediate lt_implies_pred_geq : typeclass_instances.
 
+(** An alternate way to write the exchange matrix. *)
+Definition exchange_matrix_sub {R n}
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+  : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) i (pred n - j)%nat.
+Proof.
+  lhs nrapply entry_Build_Matrix.
+  rhs_V nrapply (kronecker_delta_map_inj _ _ (fun m => m + j)).
+  2: nrapply isinj_nat_add_r.
+  apply ap.
+  symmetry; rapply natminuspluseq.
+Defined.
+
+(** And another way to write the exchange matrix. *)
+Definition exchange_matrix_sub' {R n}
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+  : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) (pred n - i)%nat j.
+Proof.
+  rewrite <- exchange_matrix_transpose.
+  lhs nrapply entry_Build_Matrix.
+  lhs nrapply exchange_matrix_sub.
+  apply kronecker_delta_symm.
+Defined.
+
+(** A lemma that is needed to ensure that [pred n - i] is a valid matrix index.  The hypothesis [i < n] is only used to force that [0 < n], and matches what we have when we use this. *)
+Local Definition nat_pred_sub_lt (n i : nat) (Hi : (i < n)%nat) : (pred n - i < n)%nat.
+Proof.
+  (* We prove this using mixed transitivity: [pred n - i <= pred n < n]. *)
+  apply (mixed_trans1 _ (pred n) _).
+  1: apply sub_less.
+  by apply leq_implies_pred_lt with (i:=i).
+Defined.
+
+#[local] Hint Immediate nat_pred_sub_lt : typeclass_instances.
+
+(** Multiplying a matrix by the exchange matrix on the left reverses the order of the rows. Similarly multiplying on the right reverses the order of the columns, but we don't prove this. *)
 Definition entry_matrix_mult_exchange {R : Ring} {n : nat} (M : Matrix R n n)
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
-  : let Hi' := natpmswap1 _ _ _ (lt_implies_pred_geq _ _ _)
-      (leq_implies_pred_lt _ _ _ Hi (n_leq_add_n_k' n i)) in
-    entry (matrix_mult (exchange_matrix R n) M) i j
+  : entry (matrix_mult (exchange_matrix R n) M) i j
       = entry M (pred n - i) j.
 Proof.
   cbn.
   lhs nrapply entry_Build_Matrix.
-  lhs nrapply path_ab_sum.
-  { intros k Hk.
-    rewrite entry_Build_Matrix.
-    rewrite <- (nat_add_sub_eq (pred n) (k:=i) _).
-    unshelve erewrite (kronecker_delta_map_inj _ _ (fun x => i + x)).
-    2: reflexivity.
-    intros x y H; exact (isinj_nat_add_l i x y H). }
-  nrapply rng_sum_kronecker_delta_l'.
-Defined.  
+  lhs rapply (path_ab_sum (g:=fun k Hk => kronecker_delta (pred n - i)%nat k * entry M k j)).
+  2: nrapply rng_sum_kronecker_delta_l.
+  intros k Hk.
+  apply (ap (.* _)).
+  apply exchange_matrix_sub'.
+Defined.
 
 (** The exchange matrix has order 2. This proof is only long because of arithmetic. *)
 Definition exchange_matrix_square {R : Ring} {n : nat}
@@ -1071,15 +1099,15 @@ Proof.
   apply path_matrix.
   intros i j Hi Hj.
   lhs nrapply entry_matrix_mult_exchange.
-  rewrite 2 entry_Build_Matrix.
+  lhs nrapply entry_Build_Matrix.
+  rhs nrapply entry_Build_Matrix.
   (* We hide this [pred n] in [t] so that the rewrite below changes the other [pred n]. *)
-  set (t := (pred n - i + j)%nat).
-  rewrite <- (natminuspluseq i (pred n) _).
-  unfold t; clear t.
+  set (t := (pred n - i + j)%nat);
+    rewrite <- (natminuspluseq i (pred n) _);
+    unfold t; clear t.
   unshelve erewrite (kronecker_delta_map_inj j i (fun x => pred n - i + x)%nat).
   2: apply kronecker_delta_symm.
-  intros x y H.
-  exact (isinj_nat_add_l _ _ _ H).
+  nrapply isinj_nat_add_l.
 Defined.
 
 (** ** Centrosymmetric matrices *)
