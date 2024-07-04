@@ -355,6 +355,15 @@ Proof.
   exact _.
 Defined.
 
+Global Instance is1functor_uncurry_uncurry_left {A B C D E}
+  (F : A -> B -> C) (G : C -> D -> E)
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D, Is1Cat E,
+    !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
+  : Is1Functor (uncurry (uncurry (fun x y z => G (F x y) z))).
+Proof.
+  exact _.
+Defined.
+
 Global Instance is0functor_uncurry_uncurry_right {A B C D E}
   (F : A -> B -> D) (G : C -> D -> E)
   `{IsGraph A, IsGraph B, IsGraph C, IsGraph D, IsGraph E,
@@ -365,6 +374,21 @@ Proof.
   intros cab cab' [[h f] g].
   exact (fmap11 G h (fmap11 F f g)).
 Defined.
+
+Global Instance is1functor_uncurry_uncurry_right {A B C D E}
+  (F : A -> B -> D) (G : C -> D -> E)
+  `{Is1Cat A, Is1Cat B, Is1Cat C, Is1Cat D, Is1Cat E,
+    !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
+  : Is1Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
+Proof.
+  snrapply Build_Is1Functor.
+  - intros cab cab' [[h f] g] [[h' f'] g'] [[q p] r].
+    exact (fmap22 G q (fmap22 F p r)).
+  - intros cab.
+    exact (fmap12 G _ (fmap11_id F _ _) $@ fmap11_id G _ _).
+  - intros cab cab' cab'' [[h f] g] [[h' f'] g'].
+    exact (fmap12 G _ (fmap11_comp F _ _ _ _) $@ fmap11_comp G _ _ _ _).
+Defined.  
 
 Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
