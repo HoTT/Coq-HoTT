@@ -987,11 +987,11 @@ Section Associativity.
     nrapply cat_pr2_pr1_associator_binprod.
   Defined.
 
-  Global Instance ismonoidal_binprod
+  Global Instance ismonoidal_cat_binprod
     : IsMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
-  Global Instance issymmetricmonoidal_binprod
+  Global Instance issymmetricmonoidal_cat_binprod
     : IsSymmetricMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
