@@ -272,7 +272,7 @@ Definition hasbinarycoproducts_op_hasbinaryproducts {A : Type}
 Hint Immediate hasbinarycoproducts_op_hasbinaryproducts : typeclass_instances.
 
 Definition hasbinarycoproducts_hasbinaryproducts_op {A : Type}
-  `{HasEquivs A, hbp : !HasBinaryProducts A^op}
+  `{Is1Cat A, hbp : !HasBinaryProducts A^op}
   : HasBinaryCoproducts A
   := hbp.
 Hint Immediate hasbinarycoproducts_hasbinaryproducts_op : typeclass_instances.
@@ -284,14 +284,14 @@ Definition hasbinaryproducts_op_hasbinarycoproducts {A : Type}
 Hint Immediate hasbinarycoproducts_op_hasbinaryproducts : typeclass_instances.
 
 Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}
-  `{HasEquivs A, hbc : !HasBinaryCoproducts A^op}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A^op}
   : HasBinaryProducts A
   := hbc.
 Hint Immediate hasbinaryproducts_hasbinarycoproducts_op : typeclass_instances.
 
 (** *** Symmetry of coproducts *)
 
-Definition cat_bincoprod_swap {A : Type} `{HasEquivs A}
+Definition cat_bincoprod_swap {A : Type} `{Is1Cat A}
   {hbc : HasBinaryCoproducts A} (x y : A)
   : cat_bincoprod x y $-> cat_bincoprod y x.
 Proof.
@@ -328,7 +328,7 @@ Defined.
 (** *** Codiagonal *)
 
 Definition cat_bincoprod_codiag {A : Type}
-  `{HasEquivs A} (x : A) `{!BinaryCoproduct x x}
+  `{Is1Cat A} (x : A) `{!BinaryCoproduct x x}
   : cat_bincoprod x x $-> x
   := cat_binprod_diag (A:=A^op) x.
 

@@ -561,7 +561,7 @@ Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
 
 (** Annoyingly this doesn't follow directly from the general diagonal since [fun b => if b then x else x] is not definitionally equal to [fun _ => x]. *)
 Definition cat_binprod_diag {A : Type}
-  `{HasEquivs A} (x : A) `{!BinaryProduct x x}
+  `{Is1Cat A} (x : A) `{!BinaryProduct x x}
   : x $-> cat_binprod x x.
 Proof.
   snrapply cat_binprod_corec; exact (Id _).
