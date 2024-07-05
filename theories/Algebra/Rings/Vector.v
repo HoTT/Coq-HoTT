@@ -58,11 +58,11 @@ Proof.
   1, 2: apply nth'_nth'.
 Defined.
 
-Definition path_entry_vector {A : Type} {n : nat} (v : Vector A n)
-  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat) (p : i = j)
-  : entry v i = entry v j.
+Definition path_entry_vector {A : Type} {n : nat} {v v' : Vector A n} (p : v = v')
+  {i j : nat} {Hi : (i < n)%nat} {Hj : (j < n)%nat} (q : i = j)
+  : entry v i = entry v' j.
 Proof.
-  destruct p.
+  destruct p, q.
   apply nth'_nth'.
 Defined.
 
