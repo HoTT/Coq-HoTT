@@ -785,7 +785,7 @@ Section Associativity.
 
   Local Existing Instance symmetricbraiding_binprod.
 
-  Local Instance associator_binprod : Associator (fun x y => cat_binprod x y).
+  Local Instance associator_cat_binprod : Associator (fun x y => cat_binprod x y).
   Proof.
     snrapply associator_twist.
     - exact _.
@@ -795,7 +795,7 @@ Section Associativity.
   Defined.
 
   Definition cat_pr1_pr1_associator_binprod x y z
-    : cat_pr1 $o cat_pr1 $o associator_binprod x y z $== cat_pr1.
+    : cat_pr1 $o cat_pr1 $o associator_cat_binprod x y z $== cat_pr1.
   Proof.
     nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
@@ -806,7 +806,7 @@ Section Associativity.
   Defined.
 
   Definition cat_pr2_pr1_associator_binprod x y z
-    : cat_pr2 $o cat_pr1 $o associator_binprod x y z $== cat_pr1 $o cat_pr2.
+    : cat_pr2 $o cat_pr1 $o associator_cat_binprod x y z $== cat_pr1 $o cat_pr2.
   Proof.
     nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
@@ -818,7 +818,7 @@ Section Associativity.
   Defined.
 
   Definition cat_pr2_associator_binprod x y z
-    : cat_pr2 $o associator_binprod x y z $== cat_pr2 $o cat_pr2.
+    : cat_pr2 $o associator_cat_binprod x y z $== cat_pr2 $o cat_pr2.
   Proof.
     nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc_opp _ _ _ $@ (cat_binprod_beta_pr2 _ _ $@R _) $@ _).
@@ -829,7 +829,7 @@ Section Associativity.
   
   Definition cat_binprod_associator_corec {w x y z}
     (f : w $-> x) (g : w $-> y) (h : w $-> z)
-    : associator_binprod x y z $o cat_binprod_corec f (cat_binprod_corec g h)
+    : associator_cat_binprod x y z $o cat_binprod_corec f (cat_binprod_corec g h)
       $== cat_binprod_corec (cat_binprod_corec f g) h. 
   Proof.
     nrefine ((Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _ $@R _) $@ _).
@@ -987,11 +987,11 @@ Section Associativity.
     nrapply cat_pr2_pr1_associator_binprod.
   Defined.
 
-  Global Instance ismonoidal_binprod
+  Global Instance ismonoidal_cat_binprod
     : IsMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
-  Global Instance issymmetricmonoidal_binprod
+  Global Instance issymmetricmonoidal_cat_binprod
     : IsSymmetricMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
