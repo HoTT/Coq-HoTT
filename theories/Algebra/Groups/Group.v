@@ -476,100 +476,63 @@ End GroupMovement.
 
 (** ** Power operation *)
 
-(** For a given [n : nat] we can define the [n]th power of a group element. *)
+(** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
 Definition grp_pow {G : Group} (g : G) (n : Int) : G
-  := match n with
-     | posS n => nat_iter n (g *.) g
-     | zero => mon_unit
-     | negS n => nat_iter n ((- g) *.) (- g)
-     end.
+  := int_iter (g *.) n mon_unit.
 
-(** Any homomorphism respects [grp_pow]. *)
-Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
+(** Any homomorphism respects [grp_pow]. In other words, [fun g => grp_pow g n] is natural. *)
+Lemma grp_pow_natural {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
   : f (grp_pow g n) = grp_pow (f g) n.
 Proof.
-  induction n.
-  - apply grp_homo_unit.
-  - destruct n; simpl in IHn |- *.
-    + reflexivity.
-    + lhs snrapply grp_homo_op.
-      apply ap.
-      exact IHn.
-  - destruct n; simpl in IHn |- *.
-    + apply grp_homo_inv.
-    + lhs snrapply grp_homo_op.
-      apply ap011.
-      * apply grp_homo_inv.
-      * exact IHn.
+  lhs snrapply (int_iter_commute_map _ ((f g) *.)).
+  1: nrapply grp_homo_op.
+  apply (ap (int_iter _ n)), grp_homo_unit.
 Defined.
 
 (** All powers of the unit are the unit. *)
 Definition grp_pow_unit {G : Group} (n : Int)
   : grp_pow (G:=G) mon_unit n = mon_unit.
 Proof.
-  induction n.
+  snrapply (int_iter_invariant n _ (fun g => g = mon_unit)); cbn.
+  1, 2: apply paths_ind_r.
+  - apply grp_unit_r.
+  - lhs nrapply grp_unit_r. apply grp_inv_unit.
   - reflexivity.
-  - destruct n; simpl. 
-    + reflexivity.
-    + by lhs nrapply grp_unit_l.
-  - destruct n; simpl in IHn |- *.
-    + apply grp_inv_unit.
-    + destruct IHn^.
-      rhs_V apply (@grp_inv_unit G).
-      apply grp_unit_r.
 Defined.
 
 (** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
 
-(** Helper functions for [grp_pow_int_add]. This is how we can unfold [grp_pow] once. *)
+(** The next two results tell us how [grp_pow] unfolds. *)
+Definition grp_pow_succ {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.+1)%int = g * grp_pow g n
+  := int_iter_succ_l _ _ _.
 
-Definition grp_pow_int_add_1 {G : Group} (n : Int) (g : G)
-  : grp_pow g (n.+1)%int = g * grp_pow g n.
-Proof.
-  induction n; simpl.
-  - exact (grp_unit_r g)^.
-  - destruct n; reflexivity.
-  - destruct n.
-    + apply (grp_inv_r g)^.
-    + rhs srapply associativity.
-      rewrite grp_inv_r. 
-      apply (grp_unit_l _)^.
-Defined.
+Definition grp_pow_pred {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.-1)%int = (- g) * grp_pow g n
+  := int_iter_pred_l _ _ _.
 
-Definition grp_pow_int_sub_1 {G : Group} (n : Int) (g : G)
-  : grp_pow g (n.-1)%int = (- g) * grp_pow g n.
+(** [grp_pow] satisfies an additive law of exponents. *)
+Definition grp_pow_add {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
 Proof.
-  induction n; simpl.
-  - exact (grp_unit_r (-g))^.
-  - destruct n.
-    + apply (grp_inv_l g)^.
-    + rhs srapply associativity.
-      rewrite grp_inv_l.
-      apply (grp_unit_l _)^.
-  - destruct n; reflexivity.
+  lhs nrapply int_iter_add.
+  induction n; cbn.
+  1: exact (grp_unit_l _)^.
+  1: rewrite int_iter_succ_l, grp_pow_succ.
+  2: rewrite int_iter_pred_l, grp_pow_pred; cbn.
+  1,2 : rhs_V srapply associativity;
+        apply ap, IHn.
 Defined.
 
 (** [grp_pow] commutes negative exponents to powers of the inverse *)
-Definition grp_pow_int_sign_commute {G : Group} (n : Int) (g : G)
+Definition grp_pow_neg {G : Group} (n : Int) (g : G)
   : grp_pow g (int_neg n) = grp_pow (- g) n.
 Proof.
-  induction n.
+  lhs nrapply int_iter_neg.
+  destruct n.
+  - cbn. by rewrite grp_inv_inv.
   - reflexivity.
-  - destruct n; reflexivity.
-  - destruct n; simpl; rewrite grp_inv_inv; reflexivity.
-Defined.
-
-(** [grp_pow] satisfies a law of exponents. *)
-Definition grp_pow_int_add {G : Group} (m n : Int) (g : G)
-  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
-Proof.
-  induction n; cbn.
-  1: exact (grp_unit_l _)^.
-  1: rewrite int_add_succ_l, 2 grp_pow_int_add_1.
-  2: rewrite int_add_pred_l, 2 grp_pow_int_sub_1.
-  1,2: rhs_V srapply associativity; 
-       snrapply (ap (_ *.));
-       exact IHn.
+  - reflexivity.
 Defined.
 
 (** ** The category of Groups *)

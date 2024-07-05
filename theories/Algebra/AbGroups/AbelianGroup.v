@@ -228,6 +228,20 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
+(** This goal comes up twice in the proof of [ab_mul], so we factor it out. *)
+Local Definition ab_mul_helper {A : AbGroup} (a b x y z : A)
+  (p : x = y + z)
+  : a + b + x = a + y + (b + z).
+Proof.
+  lhs_V srapply grp_assoc.
+  rhs_V srapply grp_assoc.
+  apply grp_cancelL.
+  rhs srapply grp_assoc.
+  rhs nrapply (ap (fun g => g + z) (ab_comm y b)).
+  rhs_V srapply grp_assoc.
+  apply grp_cancelL, p.
+Defined.
+
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
 Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
@@ -236,32 +250,18 @@ Proof.
   intros a b.
   induction n; cbn.
   - exact (grp_unit_l _)^.
-  - destruct n.
-    + reflexivity.
-    + rhs_V srapply (associativity a).
-      rhs srapply (ap _ (associativity _ b _)).
-      rewrite (commutativity (nat_iter _ _ _) b).
-      rhs_V srapply (ap _ (associativity b _ _)).
-      rhs srapply (associativity a).
-      apply grp_cancelL.
-      exact IHn.
-  - destruct n.
-    + rewrite (commutativity (-a)).
-      exact (grp_inv_op a b).
-    + rhs_V srapply (associativity (-a)).
-      rhs srapply (ap _ (associativity _ (-b) _)).
-      rewrite (commutativity (nat_iter _ _ _) (-b)).
-      rhs_V srapply (ap _ (associativity (-b) _ _)).
-      rhs srapply (associativity (-a)).
-      rewrite (commutativity (-a) (-b)), <- (grp_inv_op a b).
-      apply grp_cancelL.
-      exact IHn.
+  - rewrite 3 grp_pow_succ.
+    by apply ab_mul_helper.
+  - rewrite 3 grp_pow_pred.
+    rewrite (grp_inv_op a b), (commutativity (-b) (-a)).
+    by apply ab_mul_helper.
 Defined.
 
-Definition ab_mul_homo {A B : AbGroup}
+(** [ab_mul n] is natural. *)
+Definition ab_mul_natural {A B : AbGroup}
   (f : GroupHomomorphism A B) (n : Int)
   : f o ab_mul n == ab_mul n o f
-  := grp_pow_homo f n.
+  := grp_pow_natural f n.
 
 (** The image of an inclusion is a normal subgroup. *)
 Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
@@ -303,18 +303,17 @@ Proof.
 Defined.
 
 (** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)
-Definition ab_sum_const {A : AbGroup} (n : nat) (r : A)
-  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = r)
-  : ab_sum n f = grp_pow r n.
+Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)
+  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = a)
+  : ab_sum n f = ab_mul n a.
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
   - rhs nrapply (ap@{Set _} _ (int_of_nat_succ_commute n)).
-    rhs nrapply grp_pow_int_add_1.
+    rhs nrapply grp_pow_succ.
     simpl. f_ap.
-    rewrite IHn.
-    + reflexivity.
-    + intros. apply p.
+    apply IHn.
+    intros. apply p.
 Defined.
 
 (** If the function is zero in the range of a finite sum then the sum is zero. *)
