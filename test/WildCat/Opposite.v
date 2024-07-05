@@ -68,5 +68,5 @@ Fail Definition test A `{HasEquivs A}
 (** Opposite braidings are definitionally involutive. *)
 Succeed Definition test A `{HasEquivs A}
   (F : A -> A -> A) `{!Is0Bifunctor F, !Is1Bifunctor F} (a : Braiding F)
-  : @braiding_op _ _ _ _ _ _ _ _ (@braiding_op _ _ _ _ _ _ _ _ a) = a
+  : @braiding_op _ _ _ _ _ _ _ _ _ (@braiding_op _ _ _ _ _ _ _ _ _ a) = a
   := 1.
