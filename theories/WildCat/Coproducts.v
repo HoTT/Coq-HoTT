@@ -371,7 +371,7 @@ Proof.
            f g h).
 Defined.
 
-Definition cat_bincoprod_swap_rec {A : Type} `{HasEquivs A}
+Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
   `{!HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
   : cat_bincoprod_rec f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec g f
   := @cat_binprod_swap_corec A^op _ _ _ _
