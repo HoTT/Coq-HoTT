@@ -312,7 +312,7 @@ Lemma cate_coprod_assoc {A : Type} `{HasEquivs A}
   : cat_bincoprod x (cat_bincoprod y z)
     $<~> cat_bincoprod (cat_bincoprod x y) z.
 Proof.
-  exact (@associator_binprod A^op _ _ _ _ _ hbc x y z)^-1$.
+  exact (@associator_cat_binprod A^op _ _ _ _ _ hbc x y z)^-1$.
 Defined.
 
 Definition associator_cat_bincoprod {A : Type} `{HasEquivs A}
@@ -322,7 +322,7 @@ Proof.
   unfold Associator.
   snrapply associator_op'.
   1: exact _.
-  nrapply associator_binprod.
+  nrapply associator_cat_binprod.
 Defined.
 
 (** *** Codiagonal *)
