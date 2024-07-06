@@ -312,7 +312,7 @@ Lemma cate_coprod_assoc {A : Type} `{HasEquivs A}
   : cat_bincoprod x (cat_bincoprod y z)
     $<~> cat_bincoprod (cat_bincoprod x y) z.
 Proof.
-  exact (@associator_binprod A^op _ _ _ _ _ hbc x y z)^-1$.
+  exact (@associator_cat_binprod A^op _ _ _ _ _ hbc x y z)^-1$.
 Defined.
 
 Definition associator_cat_bincoprod {A : Type} `{HasEquivs A}
@@ -322,7 +322,7 @@ Proof.
   unfold Associator.
   snrapply associator_op'.
   1: exact _.
-  nrapply associator_binprod.
+  nrapply associator_cat_binprod.
 Defined.
 
 (** *** Codiagonal *)
@@ -371,7 +371,7 @@ Proof.
            f g h).
 Defined.
 
-Definition cat_bincoprod_swap_rec {A : Type} `{HasEquivs A}
+Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
   `{!HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
   : cat_bincoprod_rec f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec g f
   := @cat_binprod_swap_corec A^op _ _ _ _
@@ -384,7 +384,7 @@ Global Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   : IsMonoidal A (fun x y => cat_bincoprod x y) zero.
 Proof.
   nrapply ismonoidal_op'.
-  nrapply (ismonoidal_binprod (A:=A^op) zero).
+  nrapply (ismonoidal_cat_binprod (A:=A^op) zero).
   by nrapply isterminal_op_isinitial.
 Defined.
 
@@ -393,7 +393,7 @@ Global Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero.
 Proof.
   nrapply issymmetricmonoidal_op'.
-  nrapply (issymmetricmonoidal_binprod (A :=A^op) zero).
+  nrapply (issymmetricmonoidal_cat_binprod (A :=A^op) zero).
   by nrapply isterminal_op_isinitial.
 Defined.
 
