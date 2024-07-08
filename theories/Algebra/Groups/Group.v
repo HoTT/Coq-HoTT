@@ -535,6 +535,35 @@ Proof.
   - reflexivity.
 Defined.
 
+(** [grp_pow g n] commutes with [h] if [g] commutes with [h]. *)
+Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
+  (p : g * h = h * g)
+  : (grp_pow g n) * h = h * (grp_pow g n).
+Proof.
+  induction n.
+  - exact (grp_unit_l _ @ (grp_unit_r _)^).
+  - rewrite grp_pow_succ.
+    rewrite <- simple_associativity.
+    rewrite IHn.
+    rewrite 2 simple_associativity.
+    f_ap.
+  - rewrite grp_pow_pred.
+    rewrite <- simple_associativity.
+    rewrite IHn.
+    rewrite 2 simple_associativity.
+    f_ap.
+    apply grp_moveL_gV.
+    rewrite <- simple_associativity.
+    by apply grp_moveR_Vg.
+Defined.
+
+(** [grp_pow g n] commutes with [g]. *)
+Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
+  : grp_pow g n * g = g * grp_pow g n.
+Proof.
+  by apply grp_pow_commutes.
+Defined.
+
 (** ** The category of Groups *)
 
 (** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
