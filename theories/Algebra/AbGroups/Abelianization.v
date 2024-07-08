@@ -23,6 +23,22 @@ Class IsAbelianization {G : Group} (G_ab : AbGroup)
       IsSurjInj (group_precomp A eta).
 Global Existing Instance issurjinj_isabel.
 
+Definition isequiv_group_precomp_isabelianization `{Funext}
+  {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)
+  `{!IsAbelianization G_ab eta} (A : AbGroup)
+  : IsEquiv (group_precomp A eta).
+Proof.
+  snrapply isequiv_adjointify.
+  - intros g.
+    rapply (surjinj_inv (group_precomp A eta) g).
+  - intros f.
+    snrapply equiv_path_grouphomomorphism.
+    exact (eisretr0gpd_inv (group_precomp A eta) f).
+  - intros f.
+    snrapply equiv_path_grouphomomorphism.
+    exact (eissect0gpd_inv (group_precomp A eta) f).
+Defined.
+
 (** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
 
 From this we can show that Abel G is an abelian group.
@@ -287,23 +303,29 @@ Proof.
   + exact _.
 Defined.
 
+Definition grp_homo_abel_rec {G : Group} {A : AbGroup} (f : G $-> A)
+  : abel G $-> A.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  { srapply (Abel_rec _ _ f).
+    intros x y z.
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+    apply (ap (_ *.)).
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
+    apply commutativity. }
+  intros y.
+  Abel_ind_hprop x; revert y.
+  Abel_ind_hprop y.
+  apply grp_homo_op.
+Defined.
+
 (** Finally we can prove that our construction abel is an abelianization. *)
 Global Instance isabelianization_abel {G : Group}
   : IsAbelianization (abel G) (abel_unit G).
 Proof.
   intros A. constructor.
-  { intros h. srefine (_;_).
-    { snrapply @Build_GroupHomomorphism.
-      { srapply (Abel_rec _ _ h).
-        intros x y z.
-        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-        apply (ap (_ *.)).
-        refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-        apply commutativity. }
-      intros y.
-      Abel_ind_hprop x; revert y.
-      Abel_ind_hprop y.
-      apply grp_homo_op. }
+  { intros h.
+    snrefine (grp_homo_abel_rec h; _).
     cbn. reflexivity. }
   intros g h p.
   Abel_ind_hprop x.
