@@ -3,6 +3,7 @@ Require Import Types.Sigma Types.Forall Types.Paths.
 Require Import WildCat.Core WildCat.EquivGpd.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Abelianization.
 Require Import Algebra.Groups.FreeGroup.
+Require Import Spaces.List.Core.
 
 (** * Free Abelian Groups *)
 
@@ -28,6 +29,9 @@ Global Instance isfreeabgroup_isfreeabgroupon (S : Type) (F_S : AbGroup) (i : S 
 (** The abelianization of the free group on a set is the free abelian group. *)
 Definition FreeAbGroup (S : Type) : AbGroup
   := abel (FreeGroup S).
+
+Definition freeabgroup_in {S : Type} : S -> FreeAbGroup S
+  := abel_unit _ o freegroup_in.
 
 (** The abelianization of a free group on a set is a free abelian group on that set. *)
 Global Instance isfreeabgroupon_isabelianization_isfreegroup `{Funext}

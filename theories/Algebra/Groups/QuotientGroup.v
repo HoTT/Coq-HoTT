@@ -158,7 +158,6 @@ Section QuotientGroup.
     - intro x.
       refine (Quotient_ind_hprop _ _ _).
       intro y. revert x.
-
       refine (Quotient_ind_hprop _ _ _).
       intro x; simpl.
       apply grp_homo_op.

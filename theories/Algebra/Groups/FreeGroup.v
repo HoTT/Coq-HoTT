@@ -357,6 +357,38 @@ Section Reduction.
   Defined.
 
   Coercion freegroup_in : A >-> group_type.
+  
+  Definition FreeGroup_ind_hprop' (P : FreeGroup -> Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : forall w, P (freegroup_eta w))
+    : forall x, P x.
+  Proof.
+    rapply Trunc_ind.
+    snrapply Coeq_ind.
+    - exact H1.
+    - intro; apply path_ishprop.
+  Defined.
+  
+  Definition FreeGroup_ind_hprop (P : FreeGroup -> Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : P mon_unit)
+    (Hin : forall x, P (freegroup_in x))
+    (Hinv : forall x, P x -> P (- x))
+    (Hop : forall x y, P x -> P y -> P (x * y))
+    (* (H1 : forall w, P (freegroup_eta w)) *)
+    : forall x, P x.
+  Proof.
+    rapply FreeGroup_ind_hprop'.
+    intros w.
+    induction w as [|a w IHw].
+    - exact H1.
+    - destruct a as [a|a].
+      + change (P ((freegroup_in a) * freegroup_eta w)).  
+        by apply Hop.
+      + change (P (-(freegroup_in a) * freegroup_eta w)).
+        apply Hop; trivial.
+        by apply Hinv.
+  Defined.
 
 End Reduction.
 

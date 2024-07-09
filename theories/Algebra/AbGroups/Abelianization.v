@@ -275,6 +275,19 @@ Section AbelGroup.
   Proof.
     by unfold IsSemiGroupPreserving.
   Defined.
+   
+  Global Instance ismonoidpreserving_ab : IsMonoidPreserving ab.
+  Proof.
+    split.
+    1: exact _.
+    reflexivity.
+  Defined.
+  
+  (** [ab] preserves negation *)
+  Definition ab_negate x : ab (-x) = - ab x.
+  Proof.
+    exact (preserves_negate (f:=ab) x).
+  Defined.
 
 End AbelGroup.
 
