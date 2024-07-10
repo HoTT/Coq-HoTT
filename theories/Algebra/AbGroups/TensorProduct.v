@@ -7,7 +7,8 @@ Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Algebra.AbGroups.AbHom Algebra.AbGroups.FreeAbelianGroup.
 Require Import Algebra.AbGroups.Abelianization Algebra Algebra.Groups.FreeGroup.
 Require Import Colimits.Quotient.
-Require Import Spaces.List.Core.
+Require Import Spaces.List.Core Spaces.Int.
+Require Import AbGroups.Z.
 Require Import Truncations.
 
 Local Open Scope mc_scope.
@@ -38,12 +39,19 @@ Proof.
     + exact (a, b2).
 Defined.
 
+(** The tesnor product [ab_tensor_prod A B] of two abelian groups [A] and [B] is defined to ba a quotient of the free abelian group on pairs of elements [A * B] by the subgroup of bilinear pairs. *)
 Definition ab_tensor_prod (A B : AbGroup) : AbGroup
   := QuotientAbGroup (FreeAbGroup (A * B)) subgroup_bilinear_pairs.
 
+(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as elementary tensors and name them [tensor]. *)
 Definition tensor {A B : AbGroup} : A -> B -> ab_tensor_prod A B
   := fun a b => grp_quotient_map (freeabgroup_in (a, b)).
 
+(** ** Properties of tensors *)
+
+(** The characterizing property of elementary tensors are that they are bilinear in their arguments. *)
+
+(** A [tensor] of a sum distributes over the sum on the left. *) 
 Definition tensor_dist_l {A B : AbGroup} (a : A) (b b' : B)
   : tensor a (b + b') = tensor a b + tensor a b'.
 Proof.
@@ -60,6 +68,7 @@ Proof.
   by exists a, b, b'.
 Defined.
 
+(** A [tensor] of a sum distributes over the sum on the right. *)
 Definition tensor_dist_r {A B : AbGroup} (a a' : A) (b : B)
   : tensor (a + a') b = tensor a b + tensor a' b.
 Proof.
@@ -76,16 +85,8 @@ Proof.
   by exists a, a', b.
 Defined.
 
-Definition grp_homo_tensor_l {A B : AbGroup} (b : B)
-  : A $-> ab_tensor_prod A B.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun a => tensor a b).
-  - intros a a'.
-    nrapply tensor_dist_r.
-Defined.
-
-Definition grp_homo_tensor_r {A B : AbGroup} (a : A)
+(** Tensoring on the left is a group homomorphism. *)
+Definition grp_homo_tensor_l {A B : AbGroup} (a : A)
   : B $-> ab_tensor_prod A B.
 Proof.
   snrapply Build_GroupHomomorphism.
@@ -94,40 +95,49 @@ Proof.
     nrapply tensor_dist_l.
 Defined. 
 
+(** Tensoring on the right is a group homomorphism. *)
+Definition grp_homo_tensor_r {A B : AbGroup} (b : B)
+  : A $-> ab_tensor_prod A B.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun a => tensor a b).
+  - intros a a'.
+    nrapply tensor_dist_r.
+Defined.
+
+(** Tensors preserve negation in the left argument. *)
 Definition tensor_neg_l {A B : AbGroup} (a : A) (b : B)
   : tensor (-a) b = - tensor a b.
 Proof.
-  change (grp_homo_tensor_l b (-a) = - tensor a b).
+  change (grp_homo_tensor_r b (-a) = - tensor a b).
   by rewrite grp_homo_inv.
 Defined.
 
+(** Tensors preserve negation in the right argument. *)
 Definition tensor_neg_r {A B : AbGroup} (a : A) (b : B)
   : tensor a (-b) = - tensor a b.
 Proof.
-  change (grp_homo_tensor_r a (-b) = - tensor a b).
+  change (grp_homo_tensor_l a (-b) = - tensor a b).
   by rewrite grp_homo_inv.
 Defined.
 
+(** Tensoring by zero on the left is zero. *)
 Definition tensor_zero_l {A B : AbGroup} (b : B)
   : tensor (A:=A) 0 b = 0.
 Proof.
-  change (grp_homo_tensor_l (A:=A) b 0 = 0).
+  change (grp_homo_tensor_r (A:=A) b 0 = 0).
   nrapply grp_homo_unit.
 Defined.
 
+(** Tensoring by zero on the right is zero. *)
 Definition tensor_zero_r {A B : AbGroup} (a : A)
   : tensor (B:=B) a 0 = 0.
 Proof.
-  change (grp_homo_tensor_r (B:=B) a 0 = 0).
+  change (grp_homo_tensor_l (B:=B) a 0 = 0).
   nrapply grp_homo_unit.
 Defined.
 
-Definition tensor_zero {A B : AbGroup}
-  : @tensor A B 0 0 = 0.
-Proof.
-  apply tensor_zero_l.
-Defined.
-
+(** The [tensor] map is bilinear and therefore can be written in a curried form using the internal abelian group hom. *)
 Definition grp_homo_tensor `{Funext} {A B : AbGroup}
   : A $-> ab_hom B (ab_tensor_prod A B). 
 Proof.
@@ -142,6 +152,11 @@ Proof.
     nrapply tensor_dist_r.
 Defined.
 
+(** ** Induction principles *)
+
+(** Here we write down some induction principles to help us prove lemmas about the tensor product. Some of these are quite specialised but are patterns that appear often in practice. *) 
+
+(** Our main recursion principle states that in order to build a map out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *) 
 Definition ab_tensor_prod_rec {A B C : AbGroup}
   (f : A * B -> C)
   (l : forall a b b', f (a, b + b') = f (a, b) + f (a, b'))
@@ -187,6 +202,7 @@ Proof.
       exact(H1 @ H2^).
 Defined.
 
+(** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on elementary tensors. Typically in an argument we want our recursor to act on elementary tensors without the extra [0] and this lemma makes sure of that. *)
 Definition ab_tensor_prod_rec_beta_tensor {A B C : AbGroup}
   (f : A * B -> C)
   (l : forall a b b', f (a, b + b') = f (a, b) + f (a, b'))
@@ -198,6 +214,11 @@ Proof.
   apply grp_unit_r.
 Defined.
 
+(** The induction principle is a little different to the recursor. In the recursor, which is the non-dependent case of the induction principle, we were landing in an abelian group hence the codomain came equipped with the group operations which we wish to presere with the binlinearity conditions.
+
+The induction principle will require these bilinearity conditions, but we have to postulate the data of a "dependent group" in the codomain in order to state these properly. In general, we don't have any use for a general induction principle into a hset and so we can drop these depedent bilinearity paths.
+
+The hprop induction principle therefore requires that the codomain is a hprop in addition to being closed under the various group operations of the domain. Most importantly we hypothsise that we can prove a property on an elementary tensor [tensor a b]. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
@@ -229,6 +250,7 @@ Proof.
     by apply H4.
 Defined.
 
+(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hyptoehsise anything else. *)
 Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   {f f' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
@@ -245,12 +267,14 @@ Proof.
     exact (ap011 (+) p q).
 Defined.
 
+(** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphism. In those cases, it is easier to give this specialised lemma. *) 
 Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
   {f f' f'' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b) + f'' (tensor a b))
   : forall x, f x = f' x + f'' x
   := ab_tensor_prod_ind_homotopy (f':=ab_homo_add f' f'') H.
 
+(** Here we give an induction principle for a triple tensor, a.k.a a dependent trilinear function. As before we need a "dependent group" as the codomain but we may now assume a "triple elmentary tensor" as a hypothesis. *)
 Definition ab_tensor_prod_ind_hprop_triple {A B C : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B C) -> Type)
   (H : forall x, IsHProp (P x))
@@ -276,6 +300,8 @@ Proof.
   - exact H4.
 Defined.
 
+(** Similar to before, we specialise the triple tensor induction principle for proving homotopies of trilinear functions. *)
+(* TODO: The proof is almost exactly the same as the bilinear case. Is there a way we can share the work? *)
 Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   {f f' : ab_tensor_prod A (ab_tensor_prod B C) $-> G}
   (H : forall a b c, f (tensor a (tensor b c)) = f' (tensor a (tensor b c)))
@@ -292,6 +318,7 @@ Proof.
     exact (ap011 (+) p q).
 Defined.
 
+(** As explained for the bilinear and trilinear cases, we also derive an induction principle for quadruple tensors giving us dependent quadrilinear maps. *) 
 Definition ab_tensor_prod_ind_hprop_quad {A B C D : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) -> Type)
   (H : forall x, IsHProp (P x))
@@ -317,6 +344,7 @@ Proof.
   - exact H4.
 Defined.
 
+(** To construct a homotopy between quadrilinear maps we need only check equality for the quadruple elementary tensor. *)
 Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
   {f f' : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) $-> G}
   (H : forall a b c d, f (tensor a (tensor b (tensor c d)))
@@ -334,6 +362,11 @@ Proof.
     exact (ap011 (+) p q).
 Defined.
 
+(** ** Functoriality of the Tensor Product *)
+
+(** The tensor product produces a bifunctor and we will later show that it gives a symmetric monoidal structure on the category of abelian groups. *)
+
+(** Given a pair of maps, we can produce a homomorphism between the pairwise tensor products of the domains and codomains. *) 
 Definition functor_ab_tensor_prod {A B A' B' : AbGroup}
   (f : A $-> A') (g : B $-> B')
   : ab_tensor_prod A B $-> ab_tensor_prod A' B'.
@@ -349,6 +382,7 @@ Proof.
     by rewrite tensor_dist_r.
 Defined.
 
+(** The tensor product functor acts on elementary tensors by mapping each component. *)
 Definition functor_ab_tensor_prod_beta_tensor {A B A' B' : AbGroup}
   (f : A $-> A') (g : B $-> B') (a : A) (b : B)
   : functor_ab_tensor_prod f g (tensor a b) = tensor (f a) (g b).
@@ -356,6 +390,7 @@ Proof.
   nrapply ab_tensor_prod_rec_beta_tensor.
 Defined.
 
+(** 2-functoriality of the tensor product. *)
 Definition functor2_ab_tensor_prod {A B A' B' : AbGroup}
   {f f' : A $-> A'} (p : f $== f') {g g' : B $-> B'} (q : g $== g')
   : functor_ab_tensor_prod f g $== functor_ab_tensor_prod f' g'.
@@ -366,6 +401,7 @@ Proof.
   exact (ap011 tensor (p _) (q _)).
 Defined.
 
+(** The tensor product functor preserves identity morphisms. *)
 Definition functor_ab_tensor_prod_id (A B : AbGroup)
   : functor_ab_tensor_prod (Id A) (Id B) $== Id (ab_tensor_prod A B).
 Proof.
@@ -374,6 +410,7 @@ Proof.
   apply functor_ab_tensor_prod_beta_tensor.
 Defined.
 
+(** The tensor product functor preserves composition. *)
 Definition functor_ab_tensor_prod_compose {A B C A' B' C' : AbGroup}
   (f : A $-> B) (g : B $-> C) (f' : A' $-> B') (g' : B' $-> C')
   : functor_ab_tensor_prod (g $o f) (g' $o f')
@@ -387,6 +424,7 @@ Proof.
   by rewrite 2 functor_ab_tensor_prod_beta_tensor.
 Defined.
 
+(** The tensor product functor is a 0-bifunctor. *)
 Global Instance is0bifunctor_ab_tensor_prod : Is0Bifunctor ab_tensor_prod.
 Proof.
   rapply Build_Is0Bifunctor'.
@@ -395,6 +433,7 @@ Proof.
   exact (functor_ab_tensor_prod f g).
 Defined.
 
+(** The tensor product functor is a bifunctor. *)
 Global Instance is1bifunctor_ab_tensor_prod : Is1Bifunctor ab_tensor_prod.
 Proof.
   rapply Build_Is1Bifunctor'.
@@ -407,6 +446,11 @@ Proof.
     exact (functor_ab_tensor_prod_compose f f' g g').
 Defined.
 
+(** ** Symmetry of the Tensor Product *)
+
+(** The tensor product is symmetric in that the order in which we take the tensor shouldn't matter upto isomorphism. *)
+
+(** We can define a swap map which swaps the order of elementary tensors. *)
 Definition ab_tensor_swap {A B} : ab_tensor_prod A B $-> ab_tensor_prod B A.
 Proof.
   snrapply ab_tensor_prod_rec. 
@@ -423,6 +467,7 @@ Proof.
   apply ab_tensor_prod_rec_beta_tensor.
 Defined. 
 
+(** [ab_tensor_swap] is involutive. *)
 Definition ab_tensor_swap_swap {A B}
   : ab_tensor_swap $o @ab_tensor_swap A B $== Id _. 
 Proof.
@@ -432,6 +477,7 @@ Proof.
   by rewrite 2 ab_tensor_swap_beta_tensor.
 Defined. 
 
+(** [ab_tensor_swap] is natural in both arguments. This means that it also acts on tensor functors. *)
 Definition ab_tensor_swap_natural {A B A' B'} (f : A $-> A') (g : B $-> B')
   : ab_tensor_swap $o functor_ab_tensor_prod f g
     $== functor_ab_tensor_prod g f $o ab_tensor_swap.
@@ -445,6 +491,7 @@ Proof.
   by rewrite functor_ab_tensor_prod_beta_tensor.
 Defined.
 
+(** The data of swap together gives us a symmetric braiding on the category of abelian groups. We will later show it is a full symmetric monoidal category. *)
 Global Instance symmetricbraiding_ab_tensor_prod : SymmetricBraiding ab_tensor_prod.
 Proof.
   snrapply Build_SymmetricBraiding.
@@ -455,6 +502,11 @@ Proof.
   - intros; nrapply ab_tensor_swap_swap.
 Defined. 
 
+(** ** Twisting Triple Tensors *)
+
+(** In order to construct the symmetric monoidal category, we will use what is termed the "Twist construction" in Monoidal.v. This simplifies the data of a symmetric monoidal category by constructing it from simpler parts. For instance, instead of having to prove full associativity [(A ⊗ B) ⊗ C $-> A ⊗ (B ⊗ C)], we can provide a twist map [A ⊗ (B ⊗ C) $-> B ⊗ (A ⊗ C)] and use the symmetric braiding we have so far to prove associativity. *)
+
+(** Given a triple tensor product, we have a twist map which permutes the first two components. *)
 Definition ab_tensor_prod_twist {A B C}
   : ab_tensor_prod A (ab_tensor_prod B C) $-> ab_tensor_prod B (ab_tensor_prod A C).
 Proof.
@@ -478,12 +530,14 @@ Proof.
     by rewrite tensor_dist_r, tensor_dist_l.
 Defined.
 
+(** The twist map acts in the expected way on elementary tensors. *)
 Definition ab_tensor_prod_twist_beta_tensor_tensor {A B C} a b c
   : @ab_tensor_prod_twist A B C (tensor a (tensor b c)) = tensor b (tensor a c).
 Proof.
   rapply ab_tensor_swap_beta_tensor.
 Defined.
 
+(** The twist map is involutive. *)
 Definition ab_tensor_prod_twist_twist {A B C}
   : ab_tensor_prod_twist $o @ab_tensor_prod_twist A B C $== Id _.
 Proof.
@@ -494,6 +548,7 @@ Proof.
   by rewrite 2 ab_tensor_prod_twist_beta_tensor_tensor.
 Defined.
 
+(** The twist map is natural in all 3 arguments. This means that the twist map acts on the triple tensor functor in the same way. *)
 Definition ab_tensor_prod_twist_natural {A B C A' B' C'}
   (f : A $-> A') (g : B $-> B') (h : C $-> C')
   : ab_tensor_prod_twist $o fmap11 ab_tensor_prod f (fmap11 ab_tensor_prod g h)
@@ -508,33 +563,62 @@ Proof.
   by rewrite 2 functor_ab_tensor_prod_beta_tensor.
 Defined.
 
-Require Import Spaces.Int.
-Require Import AbGroups.Z.
+(** ** Unitality of [abgroup_Z] *)
 
-Definition tensor_grp_pow {A B : AbGroup} (z : Int) (a : A) (b : B)
-  : tensor (grp_pow a z) b = tensor a (grp_pow b z).
+(** In the symmetric monoidal structure on abelian groups, [abgroup_Z] provides the role of a unit. We show that tensoring with [abgroup_Z] on the right is isomorphic to the original group. *)
+
+(** First we characterise the action of integers via [grp_pow] and their interaction on tensors. This is just a generalisation of the distributivity laws for tensors. *)
+
+(** Multiplication in the first factor can be factored out. *)
+Definition tensor_grp_pow_l {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor (grp_pow a z) b = grp_pow (tensor a b) z.
 Proof.
-  induction z.
-  - rhs nrapply tensor_zero_r.
-    nrapply tensor_zero_l.
+  induction z as [|z IHz|z IHz].
+  - nrapply tensor_zero_l.
   - rewrite 2 grp_pow_succ.
-    rewrite tensor_dist_r, tensor_dist_l.
+    lhs nrapply tensor_dist_r.
     nrapply ap.
     exact IHz.
   - rewrite 2 grp_pow_pred.
-    rewrite tensor_dist_r, tensor_dist_l.
+    lhs nrapply tensor_dist_r.
     snrapply ap011.
-    + rhs nrapply tensor_neg_r.
-      apply tensor_neg_l.
+    + nrapply tensor_neg_l.
     + exact IHz.
 Defined.
 
+(** Multiplilcation in the second factor can be factore out. *)
+Definition tensor_grp_pow_r {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor a (grp_pow b z) = grp_pow (tensor a b) z.
+Proof.
+  induction z as [|z IHz|z IHz].
+  - nrapply tensor_zero_r.
+  - rewrite 2 grp_pow_succ.
+    lhs nrapply tensor_dist_l.
+    nrapply ap.
+    exact IHz.
+  - rewrite 2 grp_pow_pred.
+    lhs nrapply tensor_dist_l.
+    snrapply ap011.
+    + nrapply tensor_neg_r.
+    + exact IHz.
+Defined.
+
+(** Multiplication can be transferred from one factor to the other. The tensor product of [R]-modules will include this as an extra axiom, but here we have [Z]-modules and we can prove it. *)
+Definition tensor_grp_pow {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor (grp_pow a z) b = tensor a (grp_pow b z).
+Proof.
+  rhs nrapply tensor_grp_pow_r.
+  nrapply tensor_grp_pow_l.
+Defined.
+
+(** [abgroup_Z] is a right identity for the tensor product. *) 
 Definition ab_tensor_prod_Z_r {A}
   : ab_tensor_prod A abgroup_Z $<~> A.
 Proof.
+  (** Checking the inverse map is a homomorphism is easier. *)
   symmetry.
   snrapply Build_GroupIsomorphism.
-  - nrapply grp_homo_tensor_l.
+  - nrapply grp_homo_tensor_r.
     exact 1%int.
   - snrapply isequiv_adjointify.
     + snrapply ab_tensor_prod_rec.
@@ -548,7 +632,7 @@ Proof.
         with (f $o g $== Id _).
       snrapply ab_tensor_prod_ind_homotopy.
       intros a z.
-      lhs nrapply (ap (grp_homo_tensor_l _)).
+      lhs nrapply (ap (grp_homo_tensor_r _)).
       1: apply ab_tensor_prod_rec_beta_tensor.
       change (tensor (B:=abgroup_Z) (grp_pow a z) 1%int = tensor a z).
       lhs nrapply tensor_grp_pow.
@@ -560,6 +644,7 @@ Proof.
       apply grp_unit_r.
 Defined.
 
+(** We have a right unitor for the tensor product given by unit [abgroup_Z]. Naturality of [ab_tensor_prod_Z_r] is straightforward to prove. *)
 Global Instance rightunitor_ab_tensor_prod
   : RightUnitor ab_tensor_prod abgroup_Z.
 Proof.
@@ -581,12 +666,16 @@ Proof.
     apply grp_pow_natural.
 Defined.
 
+(** Since we have symmetry of the tensor product, we get left unitality for free. *)
 Global Instance left_unitor_ab_tensor_prod
   : LeftUnitor ab_tensor_prod abgroup_Z.
 Proof.
   rapply left_unitor_twist.
 Defined.
 
+(** ** Symmetric Monoidal Strucutre of Tensor Product *)
+
+(** Using the twist construction we can derive an associator for the tensor product. In other words, we have associativity of the tensor product of abelian groups natural in each factor. *)
 Global Instance associator_ab_tensor_prod : Associator ab_tensor_prod.
 Proof.
   srapply associator_twist.
@@ -595,6 +684,7 @@ Proof.
   - intros; nrapply ab_tensor_prod_twist_natural.
 Defined.
 
+(** The triangle identity is straightforward to prove using the custom induction principles we proved earlier. *)
 Global Instance triangle_ab_tensor_prod
   : TriangleIdentity ab_tensor_prod abgroup_Z.
 Proof.
@@ -602,6 +692,8 @@ Proof.
   intros A B.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b z.
+  (** Here we have to get the goal into the correct form to be able to reduce the functions on the elementary tensors. *)
+  (** TODO: work out a way to reduce these change statements. *)
   change (functor_ab_tensor_prod (Id A) (rightunitor_ab_tensor_prod B) (tensor a (tensor b z))
    = ab_tensor_swap (functor_ab_tensor_prod (Id B)
     (rightunitor_ab_tensor_prod A) (ab_tensor_prod_twist (tensor a (tensor b z))))).
@@ -615,6 +707,7 @@ Proof.
   exact (tensor_grp_pow _ _ _)^.
 Defined.
 
+(** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the elementary tensors using our custom triple tensor induction principle. *)
 Global Instance hexagon_ab_tensor_prod : HexagonIdentity ab_tensor_prod.
 Proof.
   snrapply hexagon_twist.
@@ -634,6 +727,7 @@ Proof.
   reflexivity.
 Defined.
 
+(** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the elementary tensor redexes. *)
 Global Instance pentagon_ab_tensor_prod : PentagonIdentity ab_tensor_prod.
 Proof.
   snrapply pentagon_twist.
@@ -663,10 +757,14 @@ Proof.
   reflexivity.
 Defined.
 
+(** We therefore have all the data of a monoidal category. *)
 Global Instance ismonoidal_ab_tensor_prod
   : IsMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
 
+(** And furthermore, all the data of a symmetric monoidal category. *)
 Global Instance issymmmetricmonoidal_ab_tensor_prod
   : IsSymmetricMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
+
+(** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tesnor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
