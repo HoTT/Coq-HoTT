@@ -110,7 +110,7 @@ Defined.
 Class IsRightModule (R : Ring) (M : AbGroup)
   := isleftmodule_op_isrightmodule :: IsLeftModule (rng_op R) M.
   
-(** [ract] (right-action) that takes an element [m : M] and an element [r : R] and returns an element [ract r m : M]. *)
+(** [ract] (right-action) that takes an element [m : M] and an element [r : R] and returns an element [ract m r : M] which we also denote [m *R r]. *)
 Definition ract {R : Ring} {M : AbGroup} `{!IsRightModule R M}
   : M -> R -> M
   := fun m r => lact (R:=rng_op R) r m.
