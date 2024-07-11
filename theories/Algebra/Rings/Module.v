@@ -7,6 +7,7 @@ Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Rings.Ring.
 
 Declare Scope module_scope.
+Local Open Scope module_scope.
 
 (** * Modules over a ring. *)
 
@@ -16,17 +17,19 @@ Declare Scope module_scope.
 
 (** An abelian group [M] is a left [R]-module when equipped with the following data: *) 
 Class IsLeftModule (R : Ring) (M : AbGroup) := {
-  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [lact r m : M]. *)
+  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [r *L m : M]. *)
   lact : R -> M -> M;
-  (** Actions distribute on the left over addition in the abelian group. That is [lact r (m + n) = lact r m + lact r n]. *)
+  (** Actions distribute on the left over addition in the abelian group. That is [r *L (m + n) = r *L m + r *L n]. *)
   lact_left_dist :: LeftHeteroDistribute lact (+) (+);
-  (** Actions distribute on the right over addition in the ring. That is [lact (r + s) m = lact r m + lact s m]. *)
+  (** Actions distribute on the right over addition in the ring. That is [(r + s) *L m = r *L m + s *L m]. *)
   lact_right_dist :: RightHeteroDistribute lact (+) (+);
-  (** Actions are associative. That is [lact (r * s) m = lact r (lact s m)]. *)
+  (** Actions are associative. That is [(r * s) *L m = r *L (s *L m)]. *)
   lact_assoc :: HeteroAssociative lact lact lact (.*.);
-  (** Actions preserve the multiplicative identity. That is [lact 1 m = m]. *)
+  (** Actions preserve the multiplicative identity. That is [1 *L m = m]. *)
   lact_unit :: LeftIdentity lact 1;
 }.
+
+Infix "*L" := lact : module_scope.
 
 (** TODO: notation for action. *)
 
@@ -40,10 +43,10 @@ Section LeftModuleAxioms.
   Context {R : Ring} {M : LeftModule R} (r s : R) (m n : M).
   (** Here we state the module axioms in a readable form for direct use. *)
 
-  Definition lm_dist_l : lact r (m + n) = lact r m + lact r n := lact_left_dist r m n.
-  Definition lm_dist_r : lact (r + s) m = lact r m + lact s m := lact_right_dist r s m.
-  Definition lm_assoc : lact r (lact s m) = lact (r * s) m := lact_assoc r s m.
-  Definition lm_unit : lact 1 m = m := lact_unit m.
+  Definition lm_dist_l : r *L (m + n) = r *L m + r *L n := lact_left_dist r m n.
+  Definition lm_dist_r : (r + s) *L m = r *L m + s *L m := lact_right_dist r s m.
+  Definition lm_assoc : r *L (s *L m) = (r * s) *L m := lact_assoc r s m.
+  Definition lm_unit : 1 *L m = m := lact_unit m.
   
 End LeftModuleAxioms.
 
@@ -55,7 +58,7 @@ Section LeftModuleFacts.
   (** Here are some quick facts that hold in modules. *) 
 
   (** The left action of zero is zero. *) 
-  Definition lm_zero_l : lact 0 m = 0.
+  Definition lm_zero_l : 0 *L m = 0.
   Proof.
     apply (grp_cancelL1 (z := lact 0 m)).
     lhs_V nrapply lm_dist_r.
@@ -64,7 +67,7 @@ Section LeftModuleFacts.
   Defined.
   
   (** The left action on zero is zero. *)
-  Definition lm_zero_r : lact r (0 : M) = 0.
+  Definition lm_zero_r : r *L (0 : M) = 0.
   Proof.
     apply (grp_cancelL1 (z := lact r 0)).
     lhs_V nrapply lm_dist_l.
@@ -73,7 +76,7 @@ Section LeftModuleFacts.
   Defined.
 
   (** The left action of [-1] is the additive inverse. *)
-  Definition lm_minus_one : lact (-1) m = -m.
+  Definition lm_minus_one : -1 *L m = -m.
   Proof.
      apply grp_moveL_1V.
      lhs nrapply (ap (_ +) (lm_unit m)^).
@@ -84,7 +87,7 @@ Section LeftModuleFacts.
   Defined.
  
   (** The left action of [r] on the additive inverse of [m] is the additive inverse of the left action of [r] on [m]. *)
-  Definition lm_neg : lact r (-m) = -(lact r m).
+  Definition lm_neg : r *L -m = - (r *L m).
   Proof.
     apply grp_moveL_1V.
     lhs_V nrapply lm_dist_l.
@@ -107,10 +110,12 @@ Defined.
 Class IsRightModule (R : Ring) (M : AbGroup)
   := isleftmodule_op_isrightmodule :: IsLeftModule (rng_op R) M.
   
-(** [ract] (right-action) that takes an element [m : M] and an element [r : R] and returns an element [lact r m : M]. *)
+(** [ract] (right-action) that takes an element [m : M] and an element [r : R] and returns an element [ract r m : M]. *)
 Definition ract {R : Ring} {M : AbGroup} `{!IsRightModule R M}
   : M -> R -> M
   := fun m r => lact (R:=rng_op R) r m.
+
+Infix "*R" := ract.
 
 (** A right module is a left module over the opposite ring. *)
 Definition RightModule (R : Ring) := LeftModule (rng_op R).
@@ -123,13 +128,13 @@ Section RightModuleAxioms.
   Context {R : Ring} {M : RightModule R} (m n : M) (r s : R).
   (** Here we state the module axioms in a readable form for direct use. *)
 
-  Definition rm_dist_r : ract (m + n) r = ract m r + ract n r
+  Definition rm_dist_r : (m + n) *R r = m *R r + n *R r
     := lm_dist_l (R:=rng_op R) r m n.
-  Definition rm_dist_l : ract m (r + s) = ract m r + ract m s
+  Definition rm_dist_l : m *R (r + s) = m *R r + m *R s
     := lm_dist_r (R:=rng_op R) r s m.
-  Definition rm_assoc : ract (ract m r) s = ract m (r * s)
+  Definition rm_assoc : (m *R r) *R s = m *R (r * s)
     := lm_assoc (R:=rng_op R) s r m.
-  Definition rm_unit : lact 1 m = m
+  Definition rm_unit : m *R 1 = m
     := lm_unit (R:=rng_op R) m.
   
 End RightModuleAxioms.
@@ -140,19 +145,19 @@ Section RightModuleFacts.
   Context {R : Ring} {M : RightModule R} (m : M) (r : R).
 
   (** The right action on zero is zero. *)
-  Definition rm_zero_l : ract (0 : M) r = 0
+  Definition rm_zero_l : (0 : M) *R r = 0
     := lm_zero_r (R:=rng_op R) r.
 
   (** The right adtion of zero is zero. *)
-  Definition rm_zero_r : ract m 0 = 0
+  Definition rm_zero_r : m *R 0 = 0
     := lm_zero_l (R:=rng_op R) m.
 
   (** The right action of [-1] is the additive inverse. *)
-  Definition rm_minus_one : ract m (-1) = -m
+  Definition rm_minus_one : m *R -1 = -m
     := lm_minus_one (R:=rng_op R) m. 
 
   (** The right action of [r] on the additive inverse of [m] is the additive inverse of the right action of [r] on [m]. *)
-  Definition rm_neg : ract (-m) r = -(ract m r)
+  Definition rm_neg : -m *R r = - (m *R r)
     := lm_neg (R:=rng_op R) r m. 
 
 End RightModuleFacts.
@@ -166,7 +171,7 @@ Global Instance isrightmodule_ring (R : Ring) : IsRightModule R R
 (** A subgroup of a left R-module is a left submodule if it is closed under the action of R. *)
 Class IsLeftSubmodule {R : Ring} {M : LeftModule R} (N : M -> Type) := {
   ils_issubgroup :: IsSubgroup N;
-  is_left_submodule : forall r m, N m -> N (lact r m);
+  is_left_submodule : forall r m, N m -> N (r *L m);
 }.
 
 (** A subgroup of a right R-module is a right submodule if it is a left submodule over the opposite ring. *)
@@ -200,7 +205,7 @@ Global Instance isleftmodule_leftsubmodule {R : Ring}
 Proof.
   snrapply Build_IsLeftModule.
   - intros r [n n_in_N].
-    exists (lact r n).
+    exists (r *L n).
     by apply lsm_submodule.
   - intros r [n] [m]; apply path_sigma_hprop.
     apply lact_left_dist.
@@ -236,7 +241,7 @@ Coercion rightmodule_rightsubmodule : RightSubmodule >-> RightModule.
 Definition Build_IsLeftSubmodule' {R : Ring} {M : LeftModule R} 
   (H : M -> Type) `{forall x, IsHProp (H x)}
   (z : H zero)
-  (c : forall r n m, H n -> H m -> H (n + lact r m))
+  (c : forall r n m, H n -> H m -> H (n + r *L m))
   : IsLeftSubmodule H.
 Proof.
   snrapply Build_IsLeftSubmodule.
@@ -263,7 +268,7 @@ Definition Build_IsRightSubmodule' {R : Ring} {M : RightModule R}
 Definition Build_LeftSubmodule' {R : Ring} {M : LeftModule R}
   (H : M -> Type) `{forall x, IsHProp (H x)}
   (z : H zero)
-  (c : forall r n m, H n -> H m -> H (n + lact r m))
+  (c : forall r n m, H n -> H m -> H (n + r *L m))
   : LeftSubmodule M.
 Proof.
   pose (p := Build_IsLeftSubmodule' H z c).
@@ -276,7 +281,7 @@ Defined.
 Definition Build_RightSubmodule {R : Ring} {M : RightModule R}
   (H : M -> Type) `{forall x, IsHProp (H x)}
   (z : H zero)
-  (c : forall r n m, H n -> H m -> H (n + ract m r))
+  (c : forall r n m, H n -> H m -> H (n + m *R r))
   : RightSubmodule M
   := Build_LeftSubmodule' (R:=rng_op R) H z c.
 
@@ -285,7 +290,7 @@ Definition Build_RightSubmodule {R : Ring} {M : RightModule R}
 (** A left module homomorphism is a group homomorphism that commutes with the left action of R. *)
 Record LeftModuleHomomorphism {R : Ring} (M N : LeftModule R) := {
   lm_homo_map :> GroupHomomorphism M N;
-  lm_homo_lact : forall r m, lm_homo_map (lact r m) = lact r (lm_homo_map m);
+  lm_homo_lact : forall r m, lm_homo_map (r *L m) = r *L lm_homo_map m;
 }.
 
 Definition RightModuleHomomorphism {R : Ring} (M N : RightModule R)
@@ -331,7 +336,7 @@ Definition rm_homo_compose {R : Ring} {M N L : RightModule R}
 
 (** Smart constructor for building left module homomorphisms from a map. *)
 Definition Build_LeftModuleHomomorphism' {R : Ring} {M N : LeftModule R}
-  (f : M -> N) (p : forall r x y, f (lact r x + y) = lact r (f x) + f y)
+  (f : M -> N) (p : forall r x y, f (r *L x + y) = r *L f x + f y)
   : LeftModuleHomomorphism M N.
 Proof.
   snrapply Build_LeftModuleHomomorphism.
@@ -357,7 +362,7 @@ Proof.
 Defined.
 
 Definition Build_RightModuleHomomorphism' {R  :Ring} {M N : RightModule R}
-  (f : M -> N) (p : forall r x y, f (ract x r + y) = ract (f x) r + f y)
+  (f : M -> N) (p : forall r x y, f (x *R r + y) = f x *R r + f y)
   : RightModuleHomomorphism M N
   := Build_LeftModuleHomomorphism' (R:=rng_op R) f p.
 
@@ -370,7 +375,7 @@ Definition RightModuleIsomorphism {R : Ring} (M N : RightModule R)
   := LeftModuleIsomorphism (R:=rng_op R) M N.
 
 Definition Build_LeftModuleIsomorphism' {R : Ring} (M N : LeftModule R)
-  (f : GroupIsomorphism M N) (p : forall r x, f (lact r x) = lact r (f x))
+  (f : GroupIsomorphism M N) (p : forall r x, f (r *L x) = r *L f x)
   : LeftModuleIsomorphism M N.
 Proof.
   snrapply Build_LeftModuleIsomorphism.
@@ -509,7 +514,7 @@ Global Instance isleftsubmodule_grp_image {R : Ring}
 Proof.
   srapply Build_IsLeftSubmodule.
   intros r m; apply Trunc_functor; intros [n p].
-  exists (lact r n).
+  exists (r *L n).
   lhs nrapply lm_homo_lact.
   apply ap.
   exact p.
@@ -687,7 +692,7 @@ Global Instance hasbinaryproducts_rightmodule {R : Ring}
 (** Left scalar multplication distributes over finite sums of left module elements. *)
 Definition lm_sum_dist_l {R : Ring} (M : LeftModule R) (n : nat)
   (f : forall k, (k < n)%nat -> M) (r : R)
-  : lact r (ab_sum n f) = ab_sum n (fun k Hk => lact r (f k Hk)).
+  : r *L ab_sum n f = ab_sum n (fun k Hk => r *L f k Hk).
 Proof.
   induction n as [|n IHn].
   1: apply lm_zero_r.
@@ -697,13 +702,13 @@ Defined.
 (** Right scalar multiplication distributes over finite sums of right module elements. *)
 Definition rm_sum_dist_r {R : Ring} (M : RightModule R) (n : nat)
   (f : forall k, (k < n)%nat -> M) (r : R)
-  : ract (ab_sum n f) r = ab_sum n (fun k Hk => ract (f k Hk) r)
+  : ab_sum n f *R r = ab_sum n (fun k Hk => f k Hk *R r)
   := lm_sum_dist_l (R:=rng_op R) M n f r.
 
 (** Left module elements distribute over finite sums of scalars. *)
 Definition lm_sum_dist_r {R : Ring} (M : LeftModule R) (n : nat)
   (f : forall k, (k < n)%nat -> R) (x : M)
-  : lact (ab_sum n f) x = ab_sum n (fun k Hk => lact (f k Hk) x).
+  : ab_sum n f *L x = ab_sum n (fun k Hk => f k Hk *L x).
 Proof.
   induction n as [|n IHn].
   1: apply lm_zero_l.
@@ -713,5 +718,5 @@ Defined.
 (** Right module elements distribute over finite sums of scalar. *)
 Definition rm_sum_dist_l {R : Ring} (M : RightModule R) (n : nat)
   (f : forall k, (k < n)%nat -> R) (x : M)
-  : ract x (ab_sum n f) = ab_sum n (fun k Hk => ract x (f k Hk))
+  : x *R ab_sum n f = ab_sum n (fun k Hk => x *R f k Hk)
   := lm_sum_dist_r (R:=rng_op R) M n f x.
