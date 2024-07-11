@@ -17,7 +17,7 @@ Local Open Scope module_scope.
 
 (** An abelian group [M] is a left [R]-module when equipped with the following data: *) 
 Class IsLeftModule (R : Ring) (M : AbGroup) := {
-  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [r *L m : M]. *)
+  (** A function [lact] (left-action) that takes an element [r : R] and an element [m : M] and returns an element [lact r m : M], which we also denote [r *L m]. *)
   lact : R -> M -> M;
   (** Actions distribute on the left over addition in the abelian group. That is [r *L (m + n) = r *L m + r *L n]. *)
   lact_left_dist :: LeftHeteroDistribute lact (+) (+);
