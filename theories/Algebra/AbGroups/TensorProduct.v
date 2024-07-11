@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import Types.Forall.
+Require Import Types.Forall Types.Sigma.
 Require Import WildCat.Core WildCat.Equiv WildCat.Monoidal WildCat.Bifunctor.
 Require Import WildCat.NatTrans.
 Require Import Algebra.Groups.Group Algebra.Groups.QuotientGroup.
@@ -158,16 +158,16 @@ Defined.
 
 (** Our main recursion principle states that in order to build a map out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *) 
 Definition ab_tensor_prod_rec {A B C : AbGroup}
-  (f : A * B -> C)
-  (l : forall a b b', f (a, b + b') = f (a, b) + f (a, b'))
-  (r : forall a a' b, f (a + a', b) = f (a, b) + f (a', b)) 
+  (f : A -> B -> C)
+  (l : forall a b b', f a (b + b') = f a b + f a b')
+  (r : forall a a' b, f (a + a') b = f a b + f a' b) 
   : ab_tensor_prod A B $-> C.
 Proof.
   unfold ab_tensor_prod.
   snrapply grp_quotient_rec.
   - snrapply grp_homo_abel_rec.
     snrapply FreeGroup_rec.
-    exact f.
+    exact (uncurry f).
   - intros x H.
     strip_truncations.
     induction H as
@@ -204,13 +204,13 @@ Defined.
 
 (** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on elementary tensors. Typically in an argument we want our recursor to act on elementary tensors without the extra [0] and this lemma makes sure of that. *)
 Definition ab_tensor_prod_rec_beta_tensor {A B C : AbGroup}
-  (f : A * B -> C)
-  (l : forall a b b', f (a, b + b') = f (a, b) + f (a, b'))
-  (r : forall a a' b, f (a + a', b) = f (a, b) + f (a', b))
+  (f : A -> B -> C)
+  (l : forall a b b', f a (b + b') = f a b + f a b')
+  (r : forall a a' b, f (a + a') b = f a b + f a' b) 
   (a : A) (b : B)
-  : ab_tensor_prod_rec f l r (tensor a b) = f (a, b).
+  : ab_tensor_prod_rec f l r (tensor a b) = f a b.
 Proof.
-  change (f (a, b) + mon_unit = f (a, b)).
+  change (f a b + mon_unit = f a b).
   apply grp_unit_r.
 Defined.
 
@@ -362,6 +362,77 @@ Proof.
     exact (ap011 (+) p q).
 Defined.
 
+(** ** Universal Property of the Tensor Product *)
+
+(** A function of two variables is biadditive if it preserves the operation in each variable. *)
+Class IsBiadditive {A B C : Type} `{SgOp A, SgOp B, SgOp C} (f : A -> B -> C) := {
+  isbiadditive_l :: forall b, IsSemiGroupPreserving (flip f b);
+  isbiadditive_r :: forall a, IsSemiGroupPreserving (f a);  
+}.
+
+Definition issig_IsBiadditive {A B C : Type} `{SgOp A, SgOp B, SgOp C}
+  (f : A -> B -> C)
+  : _ <~> IsBiadditive f
+  := ltac:(issig).
+
+(** The truncation level of the [IsBiadditive f] predicate is determined by the truncation level of the codomain. This will almost always be a hset. *)
+Global Instance istrunc_isbiadditive `{Funext}
+  {A B C : Type} `{SgOp A, SgOp B, SgOp C}
+  (f : A -> B -> C) n `{IsTrunc n.+1 C}
+  : IsTrunc n (IsBiadditive f).
+Proof.
+  nrapply istrunc_equiv_istrunc.
+  1: rapply issig_IsBiadditive.
+  unfold IsSemiGroupPreserving.
+  exact _.
+Defined.
+
+(** The elementary tensor map is biadditive. *)
+Global Instance isbiadditive_tensor (A B : AbGroup)
+  : IsBiadditive (@tensor A B) := {|
+  isbiadditive_l := fun b a a' => tensor_dist_r a a' b;
+  isbiadditive_r := tensor_dist_l;
+|}.
+
+(** The type of biadditive maps. *)
+Record Biadditive (A B C : Type) `{SgOp A, SgOp B, SgOp C} := {
+  biadditive_fun :> A -> B -> C;
+  biadditive_isbiadditive :: IsBiadditive biadditive_fun;
+}.
+
+Definition issig_Biadditive {A B C : Type} `{SgOp A, SgOp B, SgOp C}
+  : _ <~> Biadditive A B C
+  := ltac:(issig).
+
+(** The universal property of the tensor product is that biadditive maps between abelian groups are in one-to-one corresondance with maps out of the tensor product. In this sense, the tensor product is the most perfect object describing biadditive maps between two abelian groups. *)
+Definition equiv_ab_tensor_prod_rec `{Funext} (A B C : AbGroup)
+  : Biadditive A B C <~> (ab_tensor_prod A B $-> C).
+Proof.
+  snrapply equiv_adjointify.
+  - intros [f [l r]].
+    exact (ab_tensor_prod_rec f r (fun a a' b => l b a a')).
+  - intros f.
+    exists (fun x y => f (tensor x y)).
+    snrapply Build_IsBiadditive.
+    + intros b a a'.
+      unfold flip.
+      rewrite tensor_dist_r.
+      nrapply grp_homo_op.
+    + intros a a' b.
+      rewrite tensor_dist_l.
+      nrapply grp_homo_op.
+  - intros f.
+    snrapply equiv_path_grouphomomorphism.
+    snrapply ab_tensor_prod_ind_homotopy.
+    intros a b.
+    nrapply ab_tensor_prod_rec_beta_tensor.
+  - intros [f [l r]].
+    snrapply (equiv_ap_inv' issig_Biadditive).
+    rapply path_sigma_hprop.
+    funext a b.
+    snrapply grp_unit_r.
+Defined.
+
 (** ** Functoriality of the Tensor Product *)
 
 (** The tensor product produces a bifunctor and we will later show that it gives a symmetric monoidal structure on the category of abelian groups. *)
@@ -372,7 +443,7 @@ Definition functor_ab_tensor_prod {A B A' B' : AbGroup}
   : ab_tensor_prod A B $-> ab_tensor_prod A' B'.
 Proof.
   snrapply ab_tensor_prod_rec.
-  - intros [a b].
+  - intros a b.
     exact (tensor (f a) (g b)).
   - intros a b b'; hnf.
     rewrite grp_homo_op.
@@ -454,7 +525,7 @@ Defined.
 Definition ab_tensor_swap {A B} : ab_tensor_prod A B $-> ab_tensor_prod B A.
 Proof.
   snrapply ab_tensor_prod_rec. 
-  - exact (uncurry (flip tensor)).
+  - exact (flip tensor).
   - intros a b b'.
     apply tensor_dist_r.
   - intros a a' b.
@@ -464,7 +535,7 @@ Defined.
 Definition ab_tensor_swap_beta_tensor {A B} a b
   : @ab_tensor_swap A B (tensor a b) = tensor b a.
 Proof.
-  apply ab_tensor_prod_rec_beta_tensor.
+  nrapply ab_tensor_prod_rec_beta_tensor.
 Defined. 
 
 (** [ab_tensor_swap] is involutive. *)
@@ -511,10 +582,9 @@ Definition ab_tensor_prod_twist {A B C}
   : ab_tensor_prod A (ab_tensor_prod B C) $-> ab_tensor_prod B (ab_tensor_prod A C).
 Proof.
   snrapply ab_tensor_prod_rec.
-  - apply prod_ind.
-    intros a.
+  - intros a.
     snrapply ab_tensor_prod_rec.
-    + intros [b c].
+    + intros b c.
       exact (tensor b (tensor a c)).
     + intros b c c'; hnf.
       lhs nrapply ap.
@@ -622,7 +692,7 @@ Proof.
     exact 1%int.
   - snrapply isequiv_adjointify.
     + snrapply ab_tensor_prod_rec.
-      * exact (uncurry grp_pow_homo).
+      * exact grp_pow_homo.
       * intros a z z'; cbn beta; unfold uncurry, fst, snd.
         nrapply grp_homo_op.
       * intros a a' z; cbn beta; unfold uncurry, fst, snd.
