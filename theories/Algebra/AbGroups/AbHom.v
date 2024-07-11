@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
-Require Import AbelianGroup Biproduct.
+Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
@@ -38,6 +38,47 @@ Proof.
   intros f g; cbn.
   apply equiv_path_grouphomomorphism; intro x; cbn.
   apply commutativity.
+Defined.
+
+(** ** Coequalizers *)
+
+(** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
+Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
+  := ab_cokernel (ab_homo_add g (negate_hom f)).
+
+Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
+Proof.
+  snrapply grp_quotient_map.
+Defined.
+
+Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
+  {C : AbGroup} (i : B $-> C) (p : i $o f $== i $o g) 
+  : ab_coeq f g $-> C.
+Proof.
+  snrapply (grp_quotient_rec _ _ i).
+  intros b H.
+  strip_truncations.
+  destruct H as [a q].
+  destruct q; simpl.
+  lhs nrapply grp_homo_op.
+  lhs nrapply ap.
+  1: apply grp_homo_inv.
+  apply grp_moveL_1M^-1.
+  exact (p a)^.
+Defined.
+
+Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-> B}
+  {C : AbGroup} (i : B $-> C) (p : i $o f $== i $o g)
+  : ab_coeq_rec i p $o ab_coeq_in $== i
+  := fun _ => 1.  
+
+Definition ab_coeq_ind_hprop {A B f g} (P : @ab_coeq A B f g -> Type)
+  `{forall x, IsHProp (P x)}
+  (i : forall b, P (ab_coeq_in b))
+  : forall x, P x.
+Proof.
+  rapply Quotient_ind_hprop.
+  exact i.
 Defined.
 
 (** ** The bifunctor [ab_hom] *)
