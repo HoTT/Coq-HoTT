@@ -35,30 +35,21 @@ Global Instance isfreeabgroupon_isabelianization_isfreegroup `{Funext}
   {H1 : IsAbelianization A g} {H2 : IsFreeGroupOn S G f}
   : IsFreeAbGroupOn S A (g o f).
 Proof.
-  unfold IsFreeAbGroup.
+  unfold IsFreeAbGroupOn.
   intros B h.
   specialize (H2 B h).
-  unfold FactorsThroughFreeGroup in H2.
-  unfold FactorsThroughFreeAbGroup.
   revert H2.
+  unfold FactorsThroughFreeGroup, FactorsThroughFreeAbGroup.
   snrapply contr_equiv'.
-  snrapply equiv_functor_sigma'.
-  - symmetry.
-    nrapply Build_Equiv. 
-    exact (isequiv_group_precomp_isabelianization g B).
-  - intros r.
-    snrapply equiv_functor_forall_id.
-    intros x.
-    apply equiv_concat_l.
-    exact (eisretr0gpd_inv (group_precomp B g) r (f x)).
+  symmetry.
+  exact (equiv_functor_sigma_pb (equiv_group_precomp_isabelianization g B)).
 Defined.
 
-(** As a sepcial case, the free abelian group is a free abelian group. *)
+(** As a special case, the free abelian group is a free abelian group. *)
 Global Instance isfreeabgroup_freeabgroup `{Funext} (S : Type)
   : IsFreeAbGroup (FreeAbGroup S).
 Proof.
   exists S.
   exists (abel_unit (FreeGroup S) o freegroup_in).
-  snrapply isfreeabgroupon_isabelianization_isfreegroup.
-  1,2: exact _.
+  srapply isfreeabgroupon_isabelianization_isfreegroup.
 Defined.

@@ -39,6 +39,12 @@ Proof.
     exact (eissect0gpd_inv (group_precomp A eta) f).
 Defined.
 
+Definition equiv_group_precomp_isabelianization `{Funext}
+  {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)
+  `{!IsAbelianization G_ab eta} (A : AbGroup)
+  : (G_ab $-> A) <~> (G $-> A)
+  := Build_Equiv _ _ _ (isequiv_group_precomp_isabelianization eta A).
+
 (** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
 
 From this we can show that Abel G is an abelian group.
