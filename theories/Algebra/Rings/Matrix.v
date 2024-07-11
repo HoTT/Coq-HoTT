@@ -990,7 +990,7 @@ Global Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
 Proof.
   unfold IsSkewSymmetric.
   rewrite matrix_transpose_lact.
-  rhs_V nrapply (lm_inv (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
+  rhs_V nrapply (lm_neg (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
   f_ap.
 Defined.
 
