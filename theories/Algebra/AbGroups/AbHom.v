@@ -2,8 +2,8 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
-Open Scope mc_scope.
-Open Scope mc_add_scope.
+Local Open Scope mc_scope.
+Local Open Scope mc_add_scope.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
