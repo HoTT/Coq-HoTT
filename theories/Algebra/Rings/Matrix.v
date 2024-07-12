@@ -1109,6 +1109,7 @@ Proof.
   apply exchange_matrix_sub'.
 Defined.
 
+(* TODO: if we keep this, clean it up like the _l version. *)
 Definition entry_matrix_mult_exchange_r {A : Ring} {n : nat} (M : Matrix A n n)
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
   : let Hj' := natpmswap1 _ _ _ (lt_implies_pred_geq _ _ _)
@@ -1149,7 +1150,7 @@ Defined.
 
 (** ** Centrosymmetric matrices *)
 
-(** A centrosymmetric matrix is symmetric about its center. We propositionally truncate this statement as to avoid funext. *)
+(** A centrosymmetric matrix is symmetric about its center. We propositionally truncate this statement to avoid funext. *)
 Class IsCentrosymmetric {A : Type@{i}} {n : nat} (M : Matrix@{i} A n n) : Type@{i}
   := iscentrosymmetric
     : merely (
@@ -1225,20 +1226,22 @@ Global Instance iscentrosymmetric_matrix_plus {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (matrix_plus M N).
 Proof.
   unfold IsCentrosymmetric.
-  lhs nrapply (rng_dist_l (A:=matrix_ring R n)).
-  rhs nrapply (rng_dist_r (A:=matrix_ring R n)).
-  cbn; by rewrite H1, H2.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap011.
+  - apply H1.
+  - apply H2.
 Defined.
-(*
+
 (** The negation of a centrosymmetric matrix is centrosymmetric. *)
 Global Instance iscentrosymmetric_matrix_negate {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) {H : IsCentrosymmetric M}
   : IsCentrosymmetric (matrix_negate M).
 Proof.
   unfold IsCentrosymmetric.
-  lhs nrapply (rng_mult_negate_r (A:=matrix_ring R n) _).
-  rhs nrapply (rng_mult_negate_l (A:=matrix_ring R n) _).
-  f_ap.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap, H.
 Defined.
 
 (** A scalar multiple of a centrosymmetric matrix is centrosymmetric. *)
@@ -1247,30 +1250,17 @@ Global Instance iscentrosymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (matrix_lact r M).
 Proof.
   unfold IsCentrosymmetric.
-  (** TODO: Need associative algebra structure. *)
-Abort.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap, H.
+Defined.
 
 (** A centrosymmetric matrix is also centrosymmetric when considered over the opposite ring. *)
 Global Instance iscentrosymmetric_rng_op {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   `{!IsCentrosymmetric M}
-  : IsCentrosymmetric (R := rng_op R) M.
+  : IsCentrosymmetric (A := rng_op R) M.
 Proof.
-  hnf.
-  apply path_matrix.
-  intros i j Hi Hj.
-  rewrite 2 entry_Build_Matrix.
-  pose (p := exchange_matrix_iscentrosymmetric).
-  apply (ap (fun x => entry x i j)) in p.
-  rewrite 2 entry_Build_Matrix in p.
-  refine (_ @ p @ _).
-  - apply path_ab_sum.
-    intros k Hk.
-    rewrite 2 entry_Build_Matrix.
-    rapply kronecker_delta_comm.
-  - apply path_ab_sum.
-    intros k Hk.
-    rewrite 2 entry_Build_Matrix.
-    rapply kronecker_delta_comm.
+  assumption.
 Defined.
 
 (** The transpose of a centrosymmetric matrix is centrosymmetric. *)
@@ -1278,22 +1268,10 @@ Global Instance iscentrosymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) {H : IsCentrosymmetric M}
   : IsCentrosymmetric (matrix_transpose M).
 Proof.
-  hnf.
-  apply path_matrix.
-  intros i j Hi Hj.
-  lhs nrapply entry_matrix_mult_exchange_l.
-  rhs nrapply entry_matrix_mult_exchange_r.
-  rewrite 2 entry_Build_Matrix.
-  
-
   unfold IsCentrosymmetric.
-  rewrite <- exchange_matrix_transpose.
-  lhs_V nrapply (matrix_transpose_mult (R:=rng_op R) M (exchange_matrix R n)).
-  rhs_V nrapply (matrix_transpose_mult (R:=rng_op R) (exchange_matrix R n) M).
-  pose (iscentrosymmetric_rng_op M).
-  f_ap.
-  symmetry.
-  rapply (exchange_matrix_iscentrosymmetric (R:=rng_op R)).
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply H.
 Defined.
 
 (** The product of two centrosymmetric matrices is centrosymmetric. *)
