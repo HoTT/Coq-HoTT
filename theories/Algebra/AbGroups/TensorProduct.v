@@ -222,7 +222,6 @@ The hprop induction principle therefore requires that the codomain is a hprop in
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
-  (H1 : P 0)
   (H2 : forall a b, P (tensor a b))
   (H3 : forall x, P x -> P (-x))
   (H4 : forall x y, P x -> P y -> P (x + y))
@@ -231,19 +230,17 @@ Proof.
   unfold ab_tensor_prod.
   srapply Quotient_ind_hprop.
   srapply Abel_ind_hprop.
-  srapply FreeGroup_ind_hprop.
-  - exact H1.
+  srapply FreeGroup_ind_hprop; cbn beta.
+  - exact (transport P (tensor_zero_l 0) (H2 0 0)).
   - intros [a b].
     apply H2.
-  - cbn beta.
-    intros w H5.
+  - intros w H5.
     rewrite ab_negate.
     change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (- ab w))).
     rewrite grp_homo_inv.
     apply H3.
     exact H5.
-  - cbn beta.
-    intros x y Hx Hy.
+  - intros x y Hx Hy.
     change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (ab (x + y)))).
     rewrite issemigrouppreserving_ab.
     rewrite grp_homo_op.
@@ -257,7 +254,6 @@ Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   : f $== f'.
 Proof.
   rapply (ab_tensor_prod_ind_hprop (fun _ => _)).
-  - by rewrite 2 grp_homo_unit.
   - exact H.
   - intros x p.
     rewrite 2 grp_homo_inv.
@@ -278,17 +274,14 @@ Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
 Definition ab_tensor_prod_ind_hprop_triple {A B C : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B C) -> Type)
   (H : forall x, IsHProp (P x))
-  (H1 : P 0)
   (H2 : forall a b c, P (tensor a (tensor b c)))
   (H3 : forall x, P x -> P (-x))
   (H4 : forall x y, P x -> P y -> P (x + y))
   : forall x, P x.
 Proof.
-  rapply (ab_tensor_prod_ind_hprop P H1).
+  rapply (ab_tensor_prod_ind_hprop P).
   - intros a.
     rapply (ab_tensor_prod_ind_hprop (fun x => P (tensor _ x))).
-    + rewrite tensor_zero_r.
-      exact H1.
     + nrapply H2.
     + intros x Hx.
       rewrite tensor_neg_r.
@@ -308,7 +301,6 @@ Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   : f $== f'.
 Proof.
   rapply (ab_tensor_prod_ind_hprop_triple (fun _ => _)).
-  - by rewrite 2 grp_homo_unit.
   - exact H.
   - intros x p.
     rewrite 2 grp_homo_inv.
@@ -322,17 +314,14 @@ Defined.
 Definition ab_tensor_prod_ind_hprop_quad {A B C D : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) -> Type)
   (H : forall x, IsHProp (P x))
-  (H1 : P 0)
   (H2 : forall a b c d, P (tensor a (tensor b (tensor c d))))
   (H3 : forall x, P x -> P (-x))
   (H4 : forall x y, P x -> P y -> P (x + y))
   : forall x, P x.
 Proof.
-  rapply (ab_tensor_prod_ind_hprop P H1).
+  rapply (ab_tensor_prod_ind_hprop P).
   - intros a.
     rapply (ab_tensor_prod_ind_hprop_triple (fun x => P (tensor _ x))).
-    + rewrite tensor_zero_r.
-      exact H1.
     + nrapply H2.
     + intros x Hx.
       rewrite tensor_neg_r.
@@ -352,7 +341,6 @@ Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
   : f $== f'.
 Proof.
   rapply (ab_tensor_prod_ind_hprop_quad (fun _ => _)).
-  - by rewrite 2 grp_homo_unit.
   - exact H.
   - intros x p.
     rewrite 2 grp_homo_inv.
