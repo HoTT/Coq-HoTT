@@ -214,11 +214,11 @@ Proof.
   apply grp_unit_r.
 Defined.
 
-(** The induction principle is a little different to the recursor. In the recursor, which is the non-dependent case of the induction principle, we were landing in an abelian group hence the codomain came equipped with the group operations which we wish to presere with the binlinearity conditions.
+(** The induction principle is a little different to the recursor. In the recursor, which is the non-dependent case of the induction principle, we were landing in an abelian group hence the codomain came equipped with the group operations which we wish to preserve with the bilinearity conditions.
 
-The induction principle will require these bilinearity conditions, but we have to postulate the data of a "dependent group" in the codomain in order to state these properly. In general, we don't have any use for a general induction principle into a hset and so we can drop these depedent bilinearity paths.
+The induction principle will require these bilinearity conditions, but we have to postulate the data of a "dependent group" in the codomain in order to state these properly. In general, we don't have any use for a general induction principle into a hset and so we can drop these dependent bilinearity paths.
 
-The hprop induction principle therefore requires that the codomain is a hprop in addition to being closed under the various group operations of the domain. Most importantly we hypothsise that we can prove a property on an elementary tensor [tensor a b]. *)
+The hprop induction principle therefore requires that the codomain is a hprop in addition to being closed under the various group operations of the domain. Most importantly we hypothesise that we can prove a property on an elementary tensor [tensor a b]. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
@@ -250,7 +250,7 @@ Proof.
     by apply H4.
 Defined.
 
-(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hyptoehsise anything else. *)
+(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hypthesise anything else. *)
 Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   {f f' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
@@ -267,7 +267,7 @@ Proof.
     exact (ap011 (+) p q).
 Defined.
 
-(** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphism. In those cases, it is easier to give this specialised lemma. *) 
+(** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphisms. In those cases, it is easier to give this specialised lemma. *)
 Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
   {f f' f'' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b) + f'' (tensor a b))
@@ -635,7 +635,7 @@ Defined.
 
 (** ** Unitality of [abgroup_Z] *)
 
-(** In the symmetric monoidal structure on abelian groups, [abgroup_Z] provides the role of a unit. We show that tensoring with [abgroup_Z] on the right is isomorphic to the original group. *)
+(** In the symmetric monoidal structure on abelian groups, [abgroup_Z] is the unit. We show that tensoring with [abgroup_Z] on the right is isomorphic to the original group. *)
 
 (** First we characterise the action of integers via [grp_pow] and their interaction on tensors. This is just a generalisation of the distributivity laws for tensors. *)
 
@@ -656,7 +656,7 @@ Proof.
     + exact IHz.
 Defined.
 
-(** Multiplilcation in the second factor can be factore out. *)
+(** Multiplication in the second factor can be factored out. *)
 Definition tensor_grp_pow_r {A B : AbGroup} (z : Int) (a : A) (b : B)
   : tensor a (grp_pow b z) = grp_pow (tensor a b) z.
 Proof.
@@ -743,7 +743,7 @@ Proof.
   rapply left_unitor_twist.
 Defined.
 
-(** ** Symmetric Monoidal Strucutre of Tensor Product *)
+(** ** Symmetric Monoidal Structure of Tensor Product *)
 
 (** Using the twist construction we can derive an associator for the tensor product. In other words, we have associativity of the tensor product of abelian groups natural in each factor. *)
 Global Instance associator_ab_tensor_prod : Associator ab_tensor_prod.
