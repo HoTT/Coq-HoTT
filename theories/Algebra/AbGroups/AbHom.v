@@ -2,6 +2,9 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
+Open Scope mc_scope.
+Open Scope mc_add_scope.
+
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
 (** We can add group homomorphisms. *)
@@ -56,6 +59,7 @@ Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
   : ab_coeq f g $-> C.
 Proof.
   snrapply (grp_quotient_rec _ _ i).
+  cbn.
   intros b H.
   strip_truncations.
   destruct H as [a q].
@@ -70,7 +74,7 @@ Defined.
 Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-> B}
   {C : AbGroup} (i : B $-> C) (p : i $o f $== i $o g)
   : ab_coeq_rec i p $o ab_coeq_in $== i
-  := fun _ => 1.  
+  := fun _ => idpath.
 
 Definition ab_coeq_ind_hprop {A B f g} (P : @ab_coeq A B f g -> Type)
   `{forall x, IsHProp (P x)}
