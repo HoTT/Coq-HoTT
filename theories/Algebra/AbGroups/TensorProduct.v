@@ -208,23 +208,23 @@ The hprop induction principle therefore requires that the codomain is a hprop in
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
-  (H2 : forall a b, P (tensor a b))
-  (H4 : forall x y, P x -> P y -> P (x + y))
+  (Hin : forall a b, P (tensor a b))
+  (Hop : forall x y, P x -> P y -> P (x + y))
   : forall x, P x.
 Proof.
-  assert (Hzero : P 0) by exact (transport P (tensor_zero_l 0) (H2 0 0)).
+  assert (Hzero : P 0) by exact (transport P (tensor_zero_l 0) (Hin 0 0)).
   unfold ab_tensor_prod.
   srapply grp_quotient_ind_hprop.
   srapply Abel_ind_hprop; cbn beta.
   srapply FreeGroup_ind_hprop; cbn beta.
   - exact Hzero.
   - intros [a b].
-    apply H2.
+    apply Hin.
   - intros x y Hx Hy.
     change (P (grp_quotient_map (abel_unit (-x + y)))).
     rewrite grp_homo_op, ab_comm, grp_homo_op.
     rewrite 2 grp_homo_inv.
-    apply H4; trivial.
+    apply Hop; trivial.
     clear y Hy.
     clear Hx.
     revert x.
@@ -237,17 +237,17 @@ Proof.
       * change (P (- grp_quotient_map (abel_unit (freegroup_in (a, b) + freegroup_eta w)))).
         rewrite 2 grp_homo_op.
         rewrite grp_inv_op.
-        apply H4; trivial.
+        apply Hop; trivial.
         change (P (- tensor a b)).
         rewrite <- tensor_neg_l.
-        apply H2.
+        apply Hin.
       * change (P (- grp_quotient_map (abel_unit (- freegroup_in (a, b) + freegroup_eta w)))).
         rewrite 2 grp_homo_op.
         rewrite 2 grp_homo_inv.
         rewrite grp_inv_op.
         rewrite grp_inv_inv.
-        apply H4; trivial.
-        apply H2.
+        apply Hop; trivial.
+        apply Hin.
 Defined.
 
 (** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hypthesise anything else. *)

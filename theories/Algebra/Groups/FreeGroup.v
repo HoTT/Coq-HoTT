@@ -368,7 +368,7 @@ Section Reduction.
     - exact H1.
     - intro; apply path_ishprop.
   Defined.
-  
+ 
   Definition FreeGroup_ind_hprop (P : FreeGroup -> Type)
     `{forall x, IsHProp (P x)}
     (H1 : P mon_unit)
