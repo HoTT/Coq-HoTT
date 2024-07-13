@@ -212,42 +212,25 @@ Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (Hop : forall x y, P x -> P y -> P (x + y))
   : forall x, P x.
 Proof.
-  assert (Hzero : P 0) by exact (transport P (tensor_zero_l 0) (Hin 0 0)).
   unfold ab_tensor_prod.
   srapply grp_quotient_ind_hprop.
   srapply Abel_ind_hprop; cbn beta.
-  srapply FreeGroup_ind_hprop; cbn beta.
-  - exact Hzero.
-  - intros [a b].
-    apply Hin.
-  - intros x y Hx Hy.
-    change (P (grp_quotient_map (abel_unit (-x + y)))).
-    rewrite grp_homo_op, ab_comm, grp_homo_op.
-    rewrite 2 grp_homo_inv.
-    apply Hop; trivial.
-    clear y Hy.
-    clear Hx.
-    revert x.
-    srapply FreeGroup_ind_hprop'; intros w; hnf.
-    induction w.
-    + rewrite grp_homo_unit.
-      rewrite grp_inv_unit.
-      exact Hzero.
-    + destruct a as [[a b]|[a b]].
-      * change (P (- grp_quotient_map (abel_unit (freegroup_in (a, b) + freegroup_eta w)))).
-        rewrite 2 grp_homo_op.
-        rewrite grp_inv_op.
-        apply Hop; trivial.
-        change (P (- tensor a b)).
-        rewrite <- tensor_neg_l.
-        apply Hin.
-      * change (P (- grp_quotient_map (abel_unit (- freegroup_in (a, b) + freegroup_eta w)))).
-        rewrite 2 grp_homo_op.
-        rewrite 2 grp_homo_inv.
-        rewrite grp_inv_op.
-        rewrite grp_inv_inv.
-        apply Hop; trivial.
-        apply Hin.
+  srapply FreeGroup_ind_hprop'; intros w; cbn beta.
+  induction w.
+  - exact (transport P (tensor_zero_l 0) (Hin 0 0)).
+  - destruct a as [[a b]|[a b]].
+    + change (P (grp_quotient_map (abel_unit (freegroup_in (a, b) + freegroup_eta w)))).
+      (* Both [rewrite]s are [reflexivity], but the Defined is slow if [change] is used instead. *)
+      rewrite 2 grp_homo_op.
+      apply Hop; trivial.
+      apply Hin.
+    + change (P (grp_quotient_map (abel_unit (- freegroup_in (a, b) + freegroup_eta w)))).
+      (* The [rewrite]s on the next two lines are all reflexivity. *)
+      rewrite 2 grp_homo_op.
+      rewrite 2 grp_homo_inv.
+      apply Hop; trivial.
+      rewrite <- tensor_neg_l.
+      apply Hin.
 Defined.
 
 (** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hypthesise anything else. *)
