@@ -283,13 +283,6 @@ Section AbelGroup.
   Proof.
     by unfold IsSemiGroupPreserving.
   Defined.
-   
-  Global Instance ismonoidpreserving_abel_in : IsMonoidPreserving abel_in.
-  Proof.
-    split.
-    1: exact _.
-    reflexivity.
-  Defined.
 
 End AbelGroup.
 
