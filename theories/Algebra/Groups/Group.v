@@ -951,3 +951,13 @@ Proof.
   refine (ap f _).
   apply C.
 Defined.
+
+(** If two group homomorphisms agree on two elements, then they agree on their product. *)
+Definition grp_homo_op_agree {G G' H : Group} (f : G $-> H) (f' : G' $-> H)
+  {x y : G} {x' y' : G'} (p : f x = f' x') (q : f y = f' y')
+  : f (x * y) = f' (x' * y').
+Proof.
+  lhs nrapply grp_homo_op.
+  rhs nrapply grp_homo_op.
+  exact (ap011 _ p q).
+Defined.

@@ -732,8 +732,8 @@ Proof.
     1: exact (grp_homo_unit _ @ (grp_homo_unit _)^).
     Local Notation "[ x ]" := (cons x nil).
     change (f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)).
-    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-    f_ap; clear IHw w.
+    nrapply grp_homo_op_agree.
+    2: apply IHw.
     destruct gh as [g' | h].
     + exact (p g').
     + exact (q h).

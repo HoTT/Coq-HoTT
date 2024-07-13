@@ -319,8 +319,7 @@ Proof.
   snrapply Build_GroupHomomorphism.
   { srapply (Abel_rec _ _ f).
     intros x y z.
-    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-    apply (ap (_ *.)).
+    nrapply grp_homo_op_agree; trivial.
     refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
     apply commutativity. }
   intros y.

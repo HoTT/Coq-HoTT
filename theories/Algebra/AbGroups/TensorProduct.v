@@ -235,11 +235,9 @@ Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
   : f $== f'.
 Proof.
-  rapply (ab_tensor_prod_ind_hprop (fun _ => _)).
+  rapply ab_tensor_prod_ind_hprop.
   - exact H.
-  - intros x y p q.
-    rewrite 2 grp_homo_op.
-    nrefine (ap011 (+) p q).
+  - intros x y; apply grp_homo_op_agree.
 Defined.
 
 (** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphisms. In those cases, it is easier to use this specialised lemma. *)
@@ -273,14 +271,9 @@ Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   (H : forall a b c, f (tensor a (tensor b c)) = f' (tensor a (tensor b c)))
   : f $== f'.
 Proof.
-  rapply ab_tensor_prod_ind_homotopy.
-  intros a.
-  rapply ab_tensor_prod_ind_hprop.
-  - exact (H a).
-  - intros x y p q.
-    rewrite tensor_dist_l.
-    rewrite 2 grp_homo_op.
-    exact (ap011 (+) p q).
+  rapply ab_tensor_prod_ind_hprop_triple.
+  - exact H.
+  - intros x y; apply grp_homo_op_agree.
 Defined.
 
 (** As explained for the bilinear and trilinear cases, we also derive an induction principle for quadruple tensors giving us dependent quadrilinear maps. *) 
@@ -310,9 +303,7 @@ Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
 Proof.
   rapply (ab_tensor_prod_ind_hprop_quad (fun _ => _)).
   - exact H.
-  - intros x y p q.
-    rewrite 2 grp_homo_op.
-    exact (ap011 (+) p q).
+  - intros x y; apply grp_homo_op_agree.
 Defined.
 
 (** ** Universal Property of the Tensor Product *)
