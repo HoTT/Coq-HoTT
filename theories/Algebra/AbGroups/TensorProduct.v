@@ -27,12 +27,12 @@ Proof.
   snrapply subgroup_generated.
   intros x.
   refine ((exists (a1 a2 : A) (b : B), _) + exists (a : A) (b1 b2 : B), _)%type. 
-  - refine (_ - _ - _ = x).
+  - refine (_ - (_ + _) = x).
     1-3: apply freeabgroup_in.
     + exact (a1 + a2, b).
     + exact (a1, b).
     + exact (a2, b).
-  - refine (_ - _ - _ = x).
+  - refine (_ - (_ + _) = x).
     1-3: apply freeabgroup_in.
     + exact (a, b1 + b2).
     + exact (a, b1).
@@ -56,13 +56,9 @@ Definition tensor_dist_l {A B : AbGroup} (a : A) (b b' : B)
   : tensor a (b + b') = tensor a b + tensor a b'.
 Proof.
   apply qglue, tr.
-  rewrite <- grp_inv_inv.
-  apply sgt_inv.
-  rewrite 2 grp_inv_op.
+  apply sgt_inv'.
+  rewrite ab_neg_op.
   rewrite grp_inv_inv.
-  rewrite (commutativity (- _)).
-  rewrite commutativity.
-  rewrite simple_associativity.
   apply sgt_in.
   right.
   by exists a, b, b'.
@@ -73,13 +69,9 @@ Definition tensor_dist_r {A B : AbGroup} (a a' : A) (b : B)
   : tensor (a + a') b = tensor a b + tensor a' b.
 Proof.
   apply qglue, tr.
-  rewrite <- grp_inv_inv.
-  apply sgt_inv.
-  rewrite 2 grp_inv_op.
+  apply sgt_inv'.
+  rewrite ab_neg_op.
   rewrite grp_inv_inv.
-  rewrite (commutativity (- _)).
-  rewrite commutativity.
-  rewrite simple_associativity.
   apply sgt_in.
   left.
   by exists a, a', b.
@@ -175,26 +167,20 @@ Proof.
       |
       | ? ? ? H1 ? H2 ].
     + destruct p.
-      rewrite 2 grp_homo_op.
-      rewrite 2 grp_homo_inv.
+      rewrite grp_homo_op.
+      rewrite grp_homo_inv.
       apply grp_moveL_1M^-1%equiv.
-      apply grp_moveL_gM^-1%equiv.
       unfold freeabgroup_in.
       change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-      simpl.
-      rewrite 3 grp_unit_r.
-      rhs rapply abgroup_commutative.
+      simpl; rewrite 2 grp_unit_r.
       apply r.
     + destruct p.
-      rewrite 2 grp_homo_op.
-      rewrite 2 grp_homo_inv.
+      rewrite grp_homo_op.
+      rewrite grp_homo_inv.
       apply grp_moveL_1M^-1%equiv.
-      apply grp_moveL_gM^-1%equiv.
       unfold freeabgroup_in.
       change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-      simpl.
-      rewrite 3 grp_unit_r.
-      rhs rapply abgroup_commutative.
+      simpl; rewrite 2 grp_unit_r.
       apply l.
     + nrapply grp_homo_unit.
     + rewrite grp_homo_op, grp_homo_inv.

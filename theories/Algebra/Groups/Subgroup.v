@@ -453,6 +453,14 @@ Proof.
   exact (sgt_op sgt_unit p).
 Defined.
 
+Definition sgt_inv' {G : Group} {X} {g : G}
+  : subgroup_generated_type X (- g) -> subgroup_generated_type X g.
+Proof.
+  intros p.
+  rewrite <- grp_inv_inv.
+  by apply sgt_inv.
+Defined.
+
 Definition sgt_op' {G : Group} {X} {g h : G}
   : subgroup_generated_type X g
     -> subgroup_generated_type X h
