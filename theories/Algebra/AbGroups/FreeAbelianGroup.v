@@ -31,7 +31,7 @@ Definition FreeAbGroup (S : Type) : AbGroup
   := abel (FreeGroup S).
 
 Definition freeabgroup_in {S : Type} : S -> FreeAbGroup S
-  := abel_unit _ o freegroup_in.
+  := abel_unit o freegroup_in.
 
 (** The abelianization of a free group on a set is a free abelian group on that set. *)
 Global Instance isfreeabgroupon_isabelianization_isfreegroup `{Funext}
@@ -54,6 +54,6 @@ Global Instance isfreeabgroup_freeabgroup `{Funext} (S : Type)
   : IsFreeAbGroup (FreeAbGroup S).
 Proof.
   exists S.
-  exists (abel_unit (FreeGroup S) o freegroup_in).
+  exists (abel_unit (G:=FreeGroup S) o freegroup_in).
   srapply isfreeabgroupon_isabelianization_isfreegroup.
 Defined.

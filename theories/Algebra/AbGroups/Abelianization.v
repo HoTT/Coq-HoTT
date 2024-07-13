@@ -316,8 +316,8 @@ Proof.
 Defined.
 
 (** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
-Definition abel_unit (X : Group)
-  : GroupHomomorphism X (abel X).
+Definition abel_unit {G : Group}
+  : GroupHomomorphism G (abel G).
 Proof.
   snrapply @Build_GroupHomomorphism.
   + exact abel_in.
@@ -342,7 +342,7 @@ Defined.
 
 (** Finally we can prove that our construction abel is an abelianization. *)
 Global Instance isabelianization_abel {G : Group}
-  : IsAbelianization (abel G) (abel_unit G).
+  : IsAbelianization (abel G) abel_unit.
 Proof.
   intros A. constructor.
   { intros h.
@@ -392,7 +392,7 @@ Global Instance issurj_isabelianization {G : Group}
   : IsAbelianization A eta -> IsSurjection eta.
 Proof.
   intros k.
-  pose (homotopic_isabelianization A (abel G) eta (abel_unit G)) as p.
+  pose (homotopic_isabelianization A (abel G) eta abel_unit) as p.
   refine (@cancelL_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
 Defined.

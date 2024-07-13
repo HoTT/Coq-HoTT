@@ -180,7 +180,7 @@ Proof.
       apply grp_moveL_1M^-1%equiv.
       apply grp_moveL_gM^-1%equiv.
       unfold freeabgroup_in.
-      change (grp_homo_abel_rec ?f (abel_unit ?G ?x)) with (f x).
+      change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
       simpl.
       rewrite 3 grp_unit_r.
       rhs rapply abgroup_commutative.
@@ -191,7 +191,7 @@ Proof.
       apply grp_moveL_1M^-1%equiv.
       apply grp_moveL_gM^-1%equiv.
       unfold freeabgroup_in.
-      change (grp_homo_abel_rec ?f (abel_unit ?G ?x)) with (f x).
+      change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
       simpl.
       rewrite 3 grp_unit_r.
       rhs rapply abgroup_commutative.
@@ -235,15 +235,15 @@ Proof.
   - intros [a b].
     apply H2.
   - intros w H5.
-    rewrite ab_negate.
-    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (- ab w))).
+    change (abel_in ?x) with (abel_unit x).
+    rewrite grp_homo_inv.
+    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (- abel_unit w))).
     rewrite grp_homo_inv.
     apply H3.
     exact H5.
   - intros x y Hx Hy.
-    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (ab (x + y)))).
-    rewrite issemigrouppreserving_ab.
-    rewrite grp_homo_op.
+    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (abel_unit (x + y)))).
+    rewrite 2 grp_homo_op.
     by apply H4.
 Defined.
 
