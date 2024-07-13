@@ -163,6 +163,15 @@ Section QuotientGroup.
       apply grp_homo_op.
   Defined.
 
+  Definition grp_quotient_ind_hprop (P : QuotientGroup -> Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : forall x, P (grp_quotient_map x))
+    : forall x, P x.
+  Proof.
+    srapply Quotient_ind_hprop.
+    exact H1.
+  Defined.
+
 End QuotientGroup.
 
 Arguments grp_quotient_map {_ _}.

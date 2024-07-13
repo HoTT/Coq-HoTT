@@ -223,27 +223,21 @@ Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
   (H2 : forall a b, P (tensor a b))
-  (H3 : forall x, P x -> P (-x))
-  (H4 : forall x y, P x -> P y -> P (x + y))
+  (H4 : forall x y, P x -> P y -> P (x - y))
   : forall x, P x.
 Proof.
+  assert (Hzero : P 0) by exact (transport P (tensor_zero_l 0) (H2 0 0)).
   unfold ab_tensor_prod.
-  srapply Quotient_ind_hprop.
-  srapply Abel_ind_hprop.
+  srapply grp_quotient_ind_hprop.
+  srapply Abel_ind_hprop; cbn beta.
   srapply FreeGroup_ind_hprop; cbn beta.
-  - exact (transport P (tensor_zero_l 0) (H2 0 0)).
+  - exact Hzero.
   - intros [a b].
     apply H2.
-  - intros w H5.
-    change (abel_in ?x) with (abel_unit x).
-    rewrite grp_homo_inv.
-    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (- abel_unit w))).
-    rewrite grp_homo_inv.
-    apply H3.
-    exact H5.
   - intros x y Hx Hy.
-    change (P (quotient_abgroup_map _ subgroup_bilinear_pairs (abel_unit (x + y)))).
-    rewrite 2 grp_homo_op.
+    change (P (grp_quotient_map (abel_unit (-x + y)))).
+    rewrite grp_homo_op, ab_comm, grp_homo_op.
+    rewrite 2 grp_homo_inv.
     by apply H4.
 Defined.
 
@@ -255,12 +249,12 @@ Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
 Proof.
   rapply (ab_tensor_prod_ind_hprop (fun _ => _)).
   - exact H.
-  - intros x p.
-    rewrite 2 grp_homo_inv.
-    exact (ap (-) p).
   - intros x y p q.
     rewrite 2 grp_homo_op.
-    exact (ap011 (+) p q).
+    nrefine (ap011 (+) p _).
+    rhs nrapply grp_homo_inv.
+    lhs nrapply grp_homo_inv.
+    exact (ap (-) q).
 Defined.
 
 (** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphisms. In those cases, it is easier to give this specialised lemma. *)
@@ -274,63 +268,56 @@ Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
 Definition ab_tensor_prod_ind_hprop_triple {A B C : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B C) -> Type)
   (H : forall x, IsHProp (P x))
-  (H2 : forall a b c, P (tensor a (tensor b c)))
-  (H3 : forall x, P x -> P (-x))
-  (H4 : forall x y, P x -> P y -> P (x + y))
+  (Hin : forall a b c, P (tensor a (tensor b c)))
+  (Hop : forall x y, P x -> P y -> P (x - y))
   : forall x, P x.
 Proof.
   rapply (ab_tensor_prod_ind_hprop P).
   - intros a.
     rapply (ab_tensor_prod_ind_hprop (fun x => P (tensor _ x))).
-    + nrapply H2.
-    + intros x Hx.
-      rewrite tensor_neg_r.
-      by apply H3.
+    + nrapply Hin.
     + intros x y Hx Hy.
       rewrite tensor_dist_l.
-      by apply H4.
-  - exact H3.
-  - exact H4.
+      rewrite tensor_neg_r.
+      by apply Hop.
+  - exact Hop.
 Defined.
 
 (** Similar to before, we specialise the triple tensor induction principle for proving homotopies of trilinear functions. *)
-(* TODO: The proof is almost exactly the same as the bilinear case. Is there a way we can share the work? *)
 Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   {f f' : ab_tensor_prod A (ab_tensor_prod B C) $-> G}
   (H : forall a b c, f (tensor a (tensor b c)) = f' (tensor a (tensor b c)))
   : f $== f'.
 Proof.
-  rapply (ab_tensor_prod_ind_hprop_triple (fun _ => _)).
-  - exact H.
-  - intros x p.
-    rewrite 2 grp_homo_inv.
-    exact (ap (-) p).
+  rapply ab_tensor_prod_ind_homotopy.
+  intros a.
+  rapply ab_tensor_prod_ind_hprop.
+  - exact (H a).
   - intros x y p q.
+    rewrite tensor_dist_l.
+    rewrite tensor_neg_r.
     rewrite 2 grp_homo_op.
-    exact (ap011 (+) p q).
+    rewrite 2 grp_homo_inv.
+    exact (ap011 (fun x y => x - y) p q).
 Defined.
 
 (** As explained for the bilinear and trilinear cases, we also derive an induction principle for quadruple tensors giving us dependent quadrilinear maps. *) 
 Definition ab_tensor_prod_ind_hprop_quad {A B C D : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) -> Type)
   (H : forall x, IsHProp (P x))
-  (H2 : forall a b c d, P (tensor a (tensor b (tensor c d))))
-  (H3 : forall x, P x -> P (-x))
-  (H4 : forall x y, P x -> P y -> P (x + y))
+  (Hin : forall a b c d, P (tensor a (tensor b (tensor c d))))
+  (Hop : forall x y, P x -> P y -> P (x - y))
   : forall x, P x.
 Proof.
   rapply (ab_tensor_prod_ind_hprop P).
   - intros a.
     rapply (ab_tensor_prod_ind_hprop_triple (fun x => P (tensor _ x))).
-    + nrapply H2.
-    + intros x Hx.
-      rewrite tensor_neg_r.
-      by apply H3.
+    + nrapply Hin.
     + intros x y Hx Hy.
       rewrite tensor_dist_l.
-      by apply H4.
-  - exact H3.
-  - exact H4.
+      rewrite tensor_neg_r.
+      by apply Hop.
+  - exact Hop.
 Defined.
 
 (** To construct a homotopy between quadrilinear maps we need only check equality for the quadruple elementary tensor. *)
@@ -342,12 +329,10 @@ Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
 Proof.
   rapply (ab_tensor_prod_ind_hprop_quad (fun _ => _)).
   - exact H.
-  - intros x p.
-    rewrite 2 grp_homo_inv.
-    exact (ap (-) p).
   - intros x y p q.
     rewrite 2 grp_homo_op.
-    exact (ap011 (+) p q).
+    rewrite 2 grp_homo_inv.
+    exact (ap011 (fun x y => x - y) p q).
 Defined.
 
 (** ** Universal Property of the Tensor Product *)

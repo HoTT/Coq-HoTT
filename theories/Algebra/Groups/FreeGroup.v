@@ -373,9 +373,7 @@ Section Reduction.
     `{forall x, IsHProp (P x)}
     (H1 : P mon_unit)
     (Hin : forall x, P (freegroup_in x))
-    (Hinv : forall x, P x -> P (- x))
-    (Hop : forall x y, P x -> P y -> P (x * y))
-    (* (H1 : forall w, P (freegroup_eta w)) *)
+    (Hop : forall x y, P x -> P y -> P (- x * y))
     : forall x, P x.
   Proof.
     rapply FreeGroup_ind_hprop'.
@@ -384,10 +382,13 @@ Section Reduction.
     - exact H1.
     - destruct a as [a|a].
       + change (P ((freegroup_in a) * freegroup_eta w)).  
-        by apply Hop.
+        rewrite <- (grp_inv_inv a).
+        apply Hop.
+        * rewrite <- grp_unit_r.
+          by apply Hop.
+        * assumption.
       + change (P (-(freegroup_in a) * freegroup_eta w)).
-        apply Hop; trivial.
-        by apply Hinv.
+        by apply Hop.
   Defined.
 
 End Reduction.
