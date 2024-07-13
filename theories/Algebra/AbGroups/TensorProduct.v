@@ -39,7 +39,7 @@ Proof.
     + exact (a, b2).
 Defined.
 
-(** The tesnor product [ab_tensor_prod A B] of two abelian groups [A] and [B] is defined to ba a quotient of the free abelian group on pairs of elements [A * B] by the subgroup of bilinear pairs. *)
+(** The tensor product [ab_tensor_prod A B] of two abelian groups [A] and [B] is defined to ba a quotient of the free abelian group on pairs of elements [A * B] by the subgroup of bilinear pairs. *)
 Definition ab_tensor_prod (A B : AbGroup) : AbGroup
   := QuotientAbGroup (FreeAbGroup (A * B)) subgroup_bilinear_pairs.
 
