@@ -43,13 +43,13 @@ Defined.
 Definition ab_tensor_prod (A B : AbGroup) : AbGroup
   := QuotientAbGroup (FreeAbGroup (A * B)) subgroup_bilinear_pairs.
 
-(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as elementary tensors and name them [tensor]. *)
+(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as simple tensors and name them [tensor]. *)
 Definition tensor {A B : AbGroup} : A -> B -> ab_tensor_prod A B
   := fun a b => grp_quotient_map (freeabgroup_in (a, b)).
 
 (** ** Properties of tensors *)
 
-(** The characterizing property of elementary tensors are that they are bilinear in their arguments. *)
+(** The characterizing property of simple tensors are that they are bilinear in their arguments. *)
 
 (** A [tensor] of a sum distributes over the sum on the left. *) 
 Definition tensor_dist_l {A B : AbGroup} (a : A) (b b' : B)
@@ -148,7 +148,7 @@ Defined.
 
 (** Here we write down some induction principles to help us prove lemmas about the tensor product. Some of these are quite specialised but are patterns that appear often in practice. *) 
 
-(** Our main recursion principle states that in order to build a map out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *) 
+(** Our main recursion principle states that in order to build a homomorphism out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *)
 Definition ab_tensor_prod_rec {A B C : AbGroup}
   (f : A -> B -> C)
   (l : forall a b b', f a (b + b') = f a b + f a b')
@@ -188,7 +188,7 @@ Proof.
       exact(H1 @ H2^).
 Defined.
 
-(** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on elementary tensors. Typically in an argument we want our recursor to act on elementary tensors without the extra [0] and this lemma makes sure of that. *)
+(** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on simple tensors. Typically in an argument we want our recursor to act on simple tensors without the extra [0] and this lemma makes sure of that. *)
 Definition ab_tensor_prod_rec_beta_tensor {A B C : AbGroup}
   (f : A -> B -> C)
   (l : forall a b b', f a (b + b') = f a b + f a b')
@@ -200,11 +200,7 @@ Proof.
   apply grp_unit_r.
 Defined.
 
-(** The induction principle is a little different to the recursor. In the recursor, which is the non-dependent case of the induction principle, we were landing in an abelian group hence the codomain came equipped with the group operations which we wish to preserve with the bilinearity conditions.
-
-The induction principle will require these bilinearity conditions, but we have to postulate the data of a "dependent group" in the codomain in order to state these properly. In general, we don't have any use for a general induction principle into a hset and so we can drop these dependent bilinearity paths.
-
-The hprop induction principle therefore requires that the codomain is a hprop in addition to being closed under the various group operations of the domain. Most importantly we hypothesise that we can prove a property on an elementary tensor [tensor a b]. *)
+(** We give an induction principle for an hprop-valued type family [P].  It may be surprising at first that we only require [P] to hold for the simple tensors [tensor a b] and be closed under addition.  It automatically follows that [P 0] holds (since [tensor 0 0 = 0]) and that [P] is closed under negation (since [tensor -a b = - tensor a b]). This induction principle says that the simple tensors generate the tensor product as a semigroup. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
   {H : forall x, IsHProp (P x)}
@@ -220,7 +216,7 @@ Proof.
   - exact (transport P (tensor_zero_l 0) (Hin 0 0)).
   - destruct a as [[a b]|[a b]].
     + change (P (grp_quotient_map (abel_unit (freegroup_in (a, b) + freegroup_eta w)))).
-      (* Both [rewrite]s are [reflexivity], but the Defined is slow if [change] is used instead. *)
+      (* Both [rewrite]s are [reflexivity], but the [Defined] is slow if [change] is used instead. *)
       rewrite 2 grp_homo_op.
       apply Hop; trivial.
       apply Hin.
@@ -233,7 +229,7 @@ Proof.
       apply Hin.
 Defined.
 
-(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing two group homomorphisms are homotopic. In order to do this, it suffices to show it only for elementary tensors. The homotopy is closed under all the group operations so we don't need to hypthesise anything else. *)
+(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing that two group homomorphisms out of the tensor product are homotopic. In order to do this, it suffices to show it only for simple tensors. The homotopy is closed under addition, so we don't need to hypothesise anything else. *)
 Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   {f f' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
@@ -246,14 +242,14 @@ Proof.
     nrefine (ap011 (+) p q).
 Defined.
 
-(** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphisms. In those cases, it is easier to give this specialised lemma. *)
+(** As an even more specialised case, we occasionally have the second homomorphism being a sum of abelian group homomorphisms. In those cases, it is easier to use this specialised lemma. *)
 Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
   {f f' f'' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b) + f'' (tensor a b))
   : forall x, f x = f' x + f'' x
   := ab_tensor_prod_ind_homotopy (f':=ab_homo_add f' f'') H.
 
-(** Here we give an induction principle for a triple tensor, a.k.a a dependent trilinear function. As before we need a "dependent group" as the codomain but we may now assume a "triple elmentary tensor" as a hypothesis. *)
+(** Here we give an induction principle for a triple tensor, a.k.a a dependent trilinear function. *)
 Definition ab_tensor_prod_ind_hprop_triple {A B C : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B C) -> Type)
   (H : forall x, IsHProp (P x))
@@ -305,7 +301,7 @@ Proof.
   - exact Hop.
 Defined.
 
-(** To construct a homotopy between quadrilinear maps we need only check equality for the quadruple elementary tensor. *)
+(** To construct a homotopy between quadrilinear maps we need only check equality for the quadruple simple tensors. *)
 Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
   {f f' : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) $-> G}
   (H : forall a b c d, f (tensor a (tensor b (tensor c d)))
@@ -344,7 +340,7 @@ Proof.
   exact _.
 Defined.
 
-(** The elementary tensor map is biadditive. *)
+(** The simple tensor map is biadditive. *)
 Global Instance isbiadditive_tensor (A B : AbGroup)
   : IsBiadditive (@tensor A B) := {|
   isbiadditive_l := fun b a a' => tensor_dist_r a a' b;
@@ -410,7 +406,7 @@ Proof.
     by rewrite tensor_dist_r.
 Defined.
 
-(** The tensor product functor acts on elementary tensors by mapping each component. *)
+(** The tensor product functor acts on simple tensors by mapping each component. *)
 Definition functor_ab_tensor_prod_beta_tensor {A B A' B' : AbGroup}
   (f : A $-> A') (g : B $-> B') (a : A) (b : B)
   : functor_ab_tensor_prod f g (tensor a b) = tensor (f a) (g b).
@@ -478,7 +474,7 @@ Defined.
 
 (** The tensor product is symmetric in that the order in which we take the tensor shouldn't matter upto isomorphism. *)
 
-(** We can define a swap map which swaps the order of elementary tensors. *)
+(** We can define a swap map which swaps the order of simple tensors. *)
 Definition ab_tensor_swap {A B} : ab_tensor_prod A B $-> ab_tensor_prod B A.
 Proof.
   snrapply ab_tensor_prod_rec. 
@@ -557,7 +553,7 @@ Proof.
     by rewrite tensor_dist_r, tensor_dist_l.
 Defined.
 
-(** The twist map acts in the expected way on elementary tensors. *)
+(** The twist map acts in the expected way on simple tensors. *)
 Definition ab_tensor_prod_twist_beta_tensor_tensor {A B C} a b c
   : @ab_tensor_prod_twist A B C (tensor a (tensor b c)) = tensor b (tensor a c).
 Proof.
@@ -719,7 +715,7 @@ Proof.
   intros A B.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b z.
-  (** Here we have to get the goal into the correct form to be able to reduce the functions on the elementary tensors. *)
+  (** Here we have to get the goal into the correct form to be able to reduce the functions on the simple tensors. *)
   (** TODO: work out a way to reduce these change statements. *)
   change (functor_ab_tensor_prod (Id A) (rightunitor_ab_tensor_prod B) (tensor a (tensor b z))
    = ab_tensor_swap (functor_ab_tensor_prod (Id B)
@@ -734,7 +730,7 @@ Proof.
   exact (tensor_grp_pow _ _ _)^.
 Defined.
 
-(** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the elementary tensors using our custom triple tensor induction principle. *)
+(** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
 Global Instance hexagon_ab_tensor_prod : HexagonIdentity ab_tensor_prod.
 Proof.
   snrapply hexagon_twist.
@@ -754,7 +750,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the elementary tensor redexes. *)
+(** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the simple tensor redexes. *)
 Global Instance pentagon_ab_tensor_prod : PentagonIdentity ab_tensor_prod.
 Proof.
   snrapply pentagon_twist.
