@@ -317,12 +317,8 @@ Defined.
 
 (** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
 Definition abel_unit {G : Group}
-  : GroupHomomorphism G (abel G).
-Proof.
-  snrapply @Build_GroupHomomorphism.
-  + exact abel_in.
-  + exact _.
-Defined.
+  : GroupHomomorphism G (abel G)
+  := @Build_GroupHomomorphism G (abel G) abel_in _.
 
 Definition grp_homo_abel_rec {G : Group} {A : AbGroup} (f : G $-> A)
   : abel G $-> A.
