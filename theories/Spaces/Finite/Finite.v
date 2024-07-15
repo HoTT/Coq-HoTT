@@ -646,7 +646,7 @@ Proof.
   induction n as [|n IHn].
   1: exact _.
   intros m g ?.
-  assert (i : isinj g) by (apply isinj_embedding; exact _).
+  assert (i : IsInjective g) by (apply isinj_embedding; exact _).
   destruct m as [|m].
   { elim (g (inr tt)). }
   pose (h := (fin_transpose_last_with m (g (inr tt)))^-1 o g).
