@@ -216,19 +216,14 @@ Proof.
 Defined.
 #[export] Hint Resolve nat_add_zero_r : core.
 
-Lemma nat_add_succ_r n m : n + m.+1 = (n + m).+1.
+Definition nat_add_succ_l n m : n.+1 + m = (n + m).+1
+  := idpath.
+
+Definition nat_add_succ_r n m : n + m.+1 = (n + m).+1.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve nat_add_succ_r: core.
-
-(** TODO: rename [nat_add_succ_l] *)
-(** TODO: reverse direction *)
-(** TODO: remove auto *)
-Lemma add_Sn_m : forall n m:nat, S n + m = S (n + m).
-Proof.
-  auto.
-Defined.
 
 (** Multiplication *)
 
@@ -630,6 +625,6 @@ Proof.
     refine (trunc_index_add_succ _ _ @ _).
     exact (ap trunc_S IH). }
   refine (_ @ ap nat_to_trunc_index _).
-  2: exact (nat_add_succ_r _ _ @ ap _ (add_Sn_m _ _))^.
+  2: exact (nat_add_succ_r _ _)^.
   reflexivity.
 Defined.
