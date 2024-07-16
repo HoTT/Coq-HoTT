@@ -76,6 +76,14 @@ Fixpoint nat_pow n m :=
   | S m' => n * (nat_pow n m')
   end.
 
+(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
+(** Exponentiation *)
+Fixpoint nat_exp (n m : nat) : nat
+  := match m with
+       | 0 => 1
+       | S m => nat_exp n m * n
+     end.
+
 (** *** Euclidean division *)
 
 (** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
@@ -573,14 +581,6 @@ Proof.
   - simpl; rewrite nat_add_comm, IHx.
     nrapply mul_n_Sm.
 Defined.
-
-(** ** Exponentiation *)
-
-Fixpoint nat_exp (n m : nat) : nat
-  := match m with
-       | 0 => 1
-       | S m => nat_exp n m * n
-     end.
 
 (** ** Factorials *)
 
