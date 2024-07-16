@@ -15,6 +15,8 @@ Local Open Scope nat_scope.
 
 (** ** Basic operations on naturals *)
 
+(** *** Iteration *)
+
 (** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
 Notation nat_iter n f x
   := ((fix F (m : nat)
@@ -22,6 +24,8 @@ Notation nat_iter n f x
         | 0 => x
         | m'.+1 => f (F m')
         end) n).
+
+(** *** Successor and Predecessor *)
 
 (** [nat_succ n] is the successor of a natural number [n]. *)
 Notation nat_succ := S (only parsing).
@@ -32,6 +36,8 @@ Definition nat_pred n : nat :=
   | 0 => n
   | S n' => n'
   end.
+
+(** *** Arithmetic Operations *)
 
 (** Addition of natural numbers *)
 Definition nat_add n m : nat
@@ -54,6 +60,20 @@ Fixpoint nat_sub n m : nat :=
 
 Notation "n - m" := (nat_sub n m) : nat_scope.
 
+(** Exponentiation of natural numbers. *)
+Definition nat_pow n m :=
+  nat_iter m (nat_mul n) 1.
+
+(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
+(** Exponentiation *)
+Fixpoint nat_exp (n m : nat) : nat
+  := match m with
+       | 0 => 1
+       | S m => nat_exp n m * n
+     end.
+
+(** *** Maximum and Minimum *)
+
 (** The maximum [nat_max n m] of two natural numbers [n] and [m]. *) 
 Fixpoint nat_max n m :=
   match n, m with
@@ -69,18 +89,6 @@ Fixpoint nat_min n m :=
   | S n' , 0 => 0
   | S n' , S m' => S (nat_min n' m')
   end.
-
-(** Exponentiation of natural numbers. *)
-Definition nat_pow n m :=
-  nat_iter m (nat_mul n) 1.
-
-(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
-(** Exponentiation *)
-Fixpoint nat_exp (n m : nat) : nat
-  := match m with
-       | 0 => 1
-       | S m => nat_exp n m * n
-     end.
 
 (** *** Euclidean division *)
 
@@ -121,7 +129,7 @@ Fixpoint gcd a b :=
   | S a' => gcd (b mod a'.+1) a'.+1
   end.
 
-(** *** Factorials *)
+(** *** Factorial *)
 
 Fixpoint factorial (n : nat) : nat
   := match n with
