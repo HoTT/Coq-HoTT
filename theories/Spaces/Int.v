@@ -109,11 +109,11 @@ Definition Int_ind@{i} (P : Int -> Type@{i})
   : forall x, P x.
 Proof.
   intros[x | | x].
-  - induction x as [|x IHx] using Core.nat_ind.
+  - induction x as [|x IHx].
     + apply (HN 0%nat), H0.
     + apply (HN x.+1%nat), IHx.
   - exact H0.
-  - induction x as [|x IHx] using Core.nat_ind.
+  - induction x as [|x IHx].
     * apply (HP 0%nat), H0.
     * apply (HP x.+1%nat), IHx.
 Defined.

@@ -6,10 +6,6 @@ Local Set Universe Minimization ToSet.
 
 Local Unset Elimination Schemes.
 
-Scheme nat_ind := Induction for nat Sort Type.
-Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
-
 (** * Theorems about the natural numbers *)
 
 (** Many of these definitions and proofs have been ported from the coq stdlib. *)
