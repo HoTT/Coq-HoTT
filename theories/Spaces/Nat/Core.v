@@ -119,33 +119,6 @@ Fixpoint gcd a b :=
 
 Definition square n : nat := n * n.
 
-(** *** Square root *)
-
-(** The following square root function is linear (and tail-recursive).
-  With Peano representation, we can't do better. For faster algorithm,
-  see Psqrt/Zsqrt/Nsqrt...
-
-  We search the square root of n = k + p^2 + (q - r)
-  with q = 2p and 0<=r<=q. We start with p=q=r=0, hence
-  looking for the square root of n = k. Then we progressively
-  decrease k and r. When k = S k' and r=0, it means we can use (S p)
-  as new sqrt candidate, since (S k')+p^2+2p = k'+(S p)^2.
-  When k reaches 0, we have found the biggest p^2 square contained
-  in n, hence the square root of n is p.
-*)
-
-Fixpoint sqrt_iter k p q r : nat :=
-  match k with
-  | O => p
-  | S k' =>
-    match r with
-    | O => sqrt_iter k' p.+1 q.+2 q.+2
-    | S r' => sqrt_iter k' p q r'
-    end
-  end.
-
-Definition sqrt n : nat := sqrt_iter n 0 0 0.
-
 (** ** Properties of Successors *)
 
 (** TODO: remove these *)
