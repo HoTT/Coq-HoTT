@@ -15,6 +15,14 @@ Local Open Scope nat_scope.
 
 (** ** Basic operations on naturals *)
 
+(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
+Notation nat_iter n f x
+  := ((fix F (m : nat)
+      := match m with
+        | 0 => x
+        | m'.+1 => f (F m')
+        end) n).
+
 (** [nat_succ n] is the successor of a natural number [n]. *)
 Notation nat_succ := S (only parsing).
 
@@ -26,20 +34,14 @@ Definition nat_pred n : nat :=
   end.
 
 (** Addition of natural numbers *)
-Fixpoint nat_add n m : nat :=
-  match n with
-  | 0 => m
-  | S n' => S (nat_add n' m)
-  end.
+Definition nat_add n m : nat
+  := nat_iter n nat_succ m.
 
 Notation "n + m" := (nat_add n m) : nat_scope.
 
 (** Multiplication of natural numbers *)
-Fixpoint nat_mul n m : nat :=
-  match n with
-  | 0 => 0
-  | S n' => m + (nat_mul n' m)
-  end.
+Definition nat_mul n m : nat
+  := nat_iter n (nat_add m) 0.
 
 Notation "n * m" := (nat_mul n m) : nat_scope.
 
@@ -68,13 +70,9 @@ Fixpoint nat_min n m :=
   | S n' , S m' => S (nat_min n' m')
   end.
 
-(** TODO: redefine in terms of nat_iter *)
 (** Exponentiation of natural numbers. *)
-Fixpoint nat_pow n m :=
-  match m with
-  | 0 => 1
-  | S m' => n * (nat_pow n m')
-  end.
+Definition nat_pow n m :=
+  nat_iter m (nat_mul n) 1.
 
 (** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
 (** Exponentiation *)
@@ -514,14 +512,6 @@ Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
 Proof.
   intros; rewrite nat_min_comm; by apply nat_min_l.
 Defined.
-
-(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
-Notation nat_iter n f x
-  := ((fix F (m : nat)
-      := match m with
-        | 0 => x
-        | m'.+1 => f (F m')
-        end) n).
 
 Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
   : nat_iter (S n) f x = nat_iter n f (f x).
