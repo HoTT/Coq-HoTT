@@ -248,19 +248,22 @@ Proof.
     exact IHn.
 Defined.
 
-(** Multiplication *)
+(** *** Properties of Multiplication *)
 
 (** TODO: remove? *)
 Local Definition ap011_mul := @ap011 _ _ _  nat_mul.
 #[export] Hint Resolve ap011_mul : core.
 
-(** TODO: rename [nat_mul_zero_r] *)
-(** TODO: reverse direction *)
-Lemma mul_n_O : forall n:nat, 0 = n * 0.
+(** Multiplication by [0] on the left is [0]. *)
+Definition nat_mul_zero_l n : 0 * n = 0
+  := idpath.
+
+(** Multiplicaiton by [0] on the right is [0]. *)
+Definition nat_mul_zero_r n : n * 0 = 0.
 Proof.
-  simple_induction' n; simpl; auto.
+  by induction n.
 Defined.
-#[export] Hint Resolve mul_n_O : core.
+#[export] Hint Resolve nat_mul_zero_r : core.
 
 (** TODO: rename [nat_mul_succ_r] *)
 (** TODO: reverse direction *)
@@ -275,7 +278,6 @@ Defined.
 (** Standard associated names *)
 
 (** TODO: remove? *)
-Notation mul_0_r_reverse := mul_n_O (only parsing).
 Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 
 (** ** Equality of natural numbers *)
@@ -579,7 +581,7 @@ Defined.
 Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
 Proof.
   induction x as [|x IHx] in y |- * using nat_rect@{Set}.
-  - apply mul_n_O.
+  - apply (nat_mul_zero_r _)^.
   - simpl; rewrite nat_add_comm, IHx.
     nrapply mul_n_Sm.
 Defined.
