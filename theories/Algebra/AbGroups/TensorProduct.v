@@ -587,52 +587,28 @@ Defined.
 (** First we characterise the action of integers via [grp_pow] and their interaction on tensors. This is just a generalisation of the distributivity laws for tensors. *)
 
 (** Multiplication in the first factor can be factored out. *)
-Definition tensor_grp_pow_l {A B : AbGroup} (z : Int) (a : A) (b : B)
-  : tensor (grp_pow a z) b = grp_pow (tensor a b) z.
-Proof.
-  induction z as [|z IHz|z IHz].
-  - nrapply tensor_zero_l.
-  - rewrite 2 grp_pow_succ.
-    lhs nrapply tensor_dist_r.
-    nrapply ap.
-    exact IHz.
-  - rewrite 2 grp_pow_pred.
-    lhs nrapply tensor_dist_r.
-    snrapply ap011.
-    + nrapply tensor_neg_l.
-    + exact IHz.
-Defined.
+Definition tensor_ab_mul_l {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor (ab_mul z a) b = ab_mul z (tensor a b)
+  := ab_mul_natural (grp_homo_tensor_r b) z a.
 
 (** Multiplication in the second factor can be factored out. *)
-Definition tensor_grp_pow_r {A B : AbGroup} (z : Int) (a : A) (b : B)
-  : tensor a (grp_pow b z) = grp_pow (tensor a b) z.
-Proof.
-  induction z as [|z IHz|z IHz].
-  - nrapply tensor_zero_r.
-  - rewrite 2 grp_pow_succ.
-    lhs nrapply tensor_dist_l.
-    nrapply ap.
-    exact IHz.
-  - rewrite 2 grp_pow_pred.
-    lhs nrapply tensor_dist_l.
-    snrapply ap011.
-    + nrapply tensor_neg_r.
-    + exact IHz.
-Defined.
+Definition tensor_ab_mul_r {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor a (ab_mul z b) = ab_mul z (tensor a b)
+  := ab_mul_natural (grp_homo_tensor_l a) z b.
 
 (** Multiplication can be transferred from one factor to the other. The tensor product of [R]-modules will include this as an extra axiom, but here we have [Z]-modules and we can prove it. *)
-Definition tensor_grp_pow {A B : AbGroup} (z : Int) (a : A) (b : B)
-  : tensor (grp_pow a z) b = tensor a (grp_pow b z).
+Definition tensor_ab_mul {A B : AbGroup} (z : Int) (a : A) (b : B)
+  : tensor (ab_mul z a) b = tensor a (ab_mul z b).
 Proof.
-  rhs nrapply tensor_grp_pow_r.
-  nrapply tensor_grp_pow_l.
+  rhs nrapply tensor_ab_mul_r.
+  nrapply tensor_ab_mul_l.
 Defined.
 
 (** [abgroup_Z] is a right identity for the tensor product. *) 
 Definition ab_tensor_prod_Z_r {A}
   : ab_tensor_prod A abgroup_Z $<~> A.
 Proof.
-  (** Checking the inverse map is a homomorphism is easier. *)
+  (** Checking that the inverse map is a homomorphism is easier. *)
   symmetry.
   snrapply Build_GroupIsomorphism.
   - nrapply grp_homo_tensor_r.
@@ -640,10 +616,10 @@ Proof.
   - snrapply isequiv_adjointify.
     + snrapply ab_tensor_prod_rec.
       * exact grp_pow_homo.
-      * intros a z z'; cbn beta; unfold uncurry, fst, snd.
+      * intros a z z'; cbn beta.
         nrapply grp_homo_op.
-      * intros a a' z; cbn beta; unfold uncurry, fst, snd.
-        nrapply grp_pow_plus.
+      * intros a a' z; cbn beta.
+        apply (grp_homo_op (ab_mul z)).
     + hnf.
       change (forall x : ?A, (grp_homo_map _ _ ?f) ((grp_homo_map _ _ ?g) x) = x)
         with (f $o g $== Id _).
@@ -652,9 +628,10 @@ Proof.
       lhs nrapply (ap (grp_homo_tensor_r _)).
       1: apply ab_tensor_prod_rec_beta_tensor.
       change (tensor (B:=abgroup_Z) (grp_pow a z) 1%int = tensor a z).
-      lhs nrapply tensor_grp_pow.
+      lhs nrapply tensor_ab_mul.
       nrapply ap.
-      apply abgroup_Z_grp_pow_1.
+      lhs nrapply abgroup_Z_ab_mul.
+      apply int_mul_1_r.
     + hnf.
       intros x.
       lhs nrapply ab_tensor_prod_rec_beta_tensor.
@@ -721,7 +698,7 @@ Proof.
   1: rapply ab_tensor_prod_rec_beta_tensor.
   rhs nrapply (ap (fun x => tensor x _)).
   2: rapply ab_tensor_prod_rec_beta_tensor.
-  exact (tensor_grp_pow _ _ _)^.
+  exact (tensor_ab_mul _ _ _)^.
 Defined.
 
 (** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)

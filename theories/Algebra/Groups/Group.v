@@ -474,6 +474,29 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** ** Commutation *)
+
+(** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)
+Definition grp_commutes_inv {G : Group} (g h : G) (p : g * h = h * g)
+  : g * (-h) = (-h) * g.
+Proof.
+  apply grp_moveR_gV.
+  rhs_V apply simple_associativity.
+  by apply grp_moveL_Vg.
+Defined.
+
+(** If [g] commutes with [h] and [h'], then [g] commutes with their product [h * h']. *)
+Definition grp_commutes_op {G : Group} (g h h' : G)
+  (p : g * h = h * g) (p' : g * h' = h' * g)
+  : g * (h * h') = (h * h') * g.
+Proof.
+  lhs apply simple_associativity.
+  lhs nrapply (ap (.* h') p).
+  lhs_V apply simple_associativity.
+  lhs nrapply (ap (h *.) p').
+  by apply simple_associativity.
+Defined.
+
 (** ** Power operation *)
 
 (** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
@@ -535,31 +558,24 @@ Proof.
   - reflexivity.
 Defined.
 
-(** [grp_pow g n] commutes with [h] if [g] commutes with [h]. *)
+(** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
 Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
-  (p : g * h = h * g)
-  : (grp_pow g n) * h = h * (grp_pow g n).
+  (p : h * g = g * h)
+  : h * (grp_pow g n) = (grp_pow g n) * h.
 Proof.
   induction n.
-  - exact (grp_unit_l _ @ (grp_unit_r _)^).
+  - exact (grp_unit_r _ @ (grp_unit_l _)^).
   - rewrite grp_pow_succ.
-    rewrite <- simple_associativity.
-    rewrite IHn.
-    rewrite 2 simple_associativity.
-    f_ap.
+    nrapply grp_commutes_op; assumption.
   - rewrite grp_pow_pred.
-    rewrite <- simple_associativity.
-    rewrite IHn.
-    rewrite 2 simple_associativity.
-    f_ap.
-    apply grp_moveL_gV.
-    rewrite <- simple_associativity.
-    by apply grp_moveR_Vg.
+    nrapply grp_commutes_op.
+    2: assumption.
+    apply grp_commutes_inv, p.
 Defined.
 
 (** [grp_pow g n] commutes with [g]. *)
 Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
-  : grp_pow g n * g = g * grp_pow g n.
+  : g * grp_pow g n = grp_pow g n * g.
 Proof.
   by apply grp_pow_commutes.
 Defined.

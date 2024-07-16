@@ -22,7 +22,7 @@ Proof.
   - exact int_add_comm.
 Defined.
 
-(** For every group [G] and element [g : G], the map sending an integer to that power of [g] is a homomorphism. *)
+(** For every group [G] and element [g : G], the map sending an integer to that power of [g] is a homomorphism.  See [ab_mul] for the homomorphism [G -> G] when [G] is abelian. *)
 Definition grp_pow_homo {G : Group} (g : G)
   : GroupHomomorphism abgroup_Z G.
 Proof.
@@ -33,39 +33,18 @@ Defined.
 
 Local Open Scope mc_add_scope.
 
-(** For every abelian group [A], [grp_pow] distributes over the group operation. *)
-Definition grp_pow_plus {A : AbGroup} (a a' : A) (z : Int)
-  : grp_pow (a + a') z = grp_pow a z + grp_pow a' z.
-Proof.
-  induction z.
-  - symmetry; apply grp_unit_l.
-  - rewrite 3 grp_pow_succ.
-    rewrite <- 2 grp_assoc.
-    nrapply (ap (a +)).
-    rewrite (ab_comm (grp_pow a n)).
-    rewrite <- grp_assoc.
-    nrapply (ap (a' +)).
-    rhs nrapply ab_comm.
-    exact IHz.
-  - rewrite 3 grp_pow_pred.
-    rewrite grp_inv_op.
-    rewrite (ab_comm (negate a')).
-    rewrite <- 2 grp_assoc.
-    nrapply (ap (_ +)).
-    rewrite grp_assoc.
-    rewrite (ab_comm (grp_pow _ _)).
-    rewrite <- grp_assoc.
-    nrapply (ap (_ +)).
-    exact IHz.
-Defined. 
-
-Definition abgroup_Z_grp_pow_1 (z : Int)
-  : grp_pow (G:=abgroup_Z) 1%int z = z.
+(** [ab_mul] (and [grp_pow]) give multiplication in [abgroup_Z]. *)
+Definition abgroup_Z_ab_mul (z z' : Int)
+  : ab_mul (A:=abgroup_Z) z z' = z * z'.
 Proof.
   induction z.
   - reflexivity.
-  - rewrite grp_pow_succ.
+  - cbn.
+    lhs nrapply (grp_pow_succ (G:=abgroup_Z)).
+    rhs nrapply int_mul_succ_l.
     f_ap.
-  - rewrite grp_pow_pred.
+  - cbn.
+    lhs nrapply (grp_pow_pred (G:=abgroup_Z)).
+    rhs nrapply int_mul_pred_l.
     f_ap.
 Defined.
