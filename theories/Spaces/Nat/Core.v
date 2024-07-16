@@ -25,15 +25,14 @@ Definition pred n : nat :=
   | S n' => n'
   end.
 
-(** TODO: rename to [nat_add]. *)
 (** Addition of natural numbers *)
-Fixpoint add n m : nat :=
+Fixpoint nat_add n m : nat :=
   match n with
   | 0 => m
-  | S n' => S (add n' m)
+  | S n' => S (nat_add n' m)
   end.
 
-Notation "n + m" := (add n m) : nat_scope.
+Notation "n + m" := (nat_add n m) : nat_scope.
 
 (** TODO: remove *)
 Definition double n : nat := n + n.
@@ -249,10 +248,10 @@ Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
 (** TODO: remove *)
-Local Definition ap011_add := @ap011 _ _ _ add.
-Local Definition ap011_nat := @ap011 nat nat.
-#[export] Hint Resolve ap011_add : core.
-#[export] Hint Resolve ap011_nat : core.
+(* Local Definition ap011_add := @ap011 _ _ _ add. *)
+(* Local Definition ap011_nat := @ap011 nat nat. *)
+(* #[export] Hint Resolve ap011_add : core. *)
+(* #[export] Hint Resolve ap011_nat : core. *)
 
 (** TODO: rename [nat_add_zero_r] *)
 (** TODO: reverse direction *)
@@ -647,12 +646,12 @@ Proof.
   by apply path_nat_S.
 Defined.
 
-Global Instance isinj_nat_add_l@{} k : IsInjective (add k).
+Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
 Proof.
   simple_induction k k Ik; exact _.
 Defined.
 
-Definition isinj_nat_add_r@{} k : IsInjective (fun x => add x k).
+Definition isinj_nat_add_r@{} k : IsInjective (fun x =>nat_add x k).
 Proof.
   intros x y H.
   rewrite 2 (nat_add_comm _ k) in H.

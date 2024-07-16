@@ -300,7 +300,7 @@ Proof.
     refine (fcard_sum _ _ @ _).
     simpl.
     refine (_ @ nat_add_comm _ _).
-    refine (ap011 add _ _).
+    refine (ap011 nat_add _ _).
     + apply IH.
     + apply fcard_equiv', prod_unit_l.
   Defined.

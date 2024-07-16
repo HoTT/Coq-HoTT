@@ -28,17 +28,17 @@ Defined.
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Nat.Core.add.
+Global Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
 
 Notation mul := Nat.Core.mul.
 
 Global Instance nat_mult: Mult@{N} nat := Nat.Core.mul.
 
 Ltac simpl_nat :=
-  change (@plus nat _) with Nat.Core.add;
+  change (@plus nat _) with Nat.Core.nat_add;
   change (@mult nat _) with Nat.Core.mul;
   simpl;
-  change Nat.Core.add with (@plus nat Nat.Core.add);
+  change Nat.Core.nat_add with (@plus nat Nat.Core.nat_add);
   change Nat.Core.mul with (@mult nat Nat.Core.mul).
 
 (** [0 + a =N= a] *)
