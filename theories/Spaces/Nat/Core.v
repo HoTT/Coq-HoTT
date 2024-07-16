@@ -287,6 +287,28 @@ Proof.
     exact IHm.
 Defined.
 
+(** Multiplication of natural numbers distributes over addition on the left. *)
+Definition nat_dist_l@{} n m k : n * (m + k) = n * m + n * k.
+Proof.
+  induction n as [|n IHn]; simpl.
+  - reflexivity.
+  - lhs_V nrapply nat_add_assoc.
+    rhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add m)).
+    lhs nrapply nat_add_comm.
+    rewrite IHn.
+    lhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add (n * m))).
+    nrapply nat_add_comm.
+Defined.
+
+(** Multiplication of natural numbers distributes over addition on the right. *)
+Definition nat_dist_r@{} n m k : (n + m) * k = n * k + m * k.
+Proof.
+  rewrite 3 (nat_mul_comm _ k).
+  nrapply nat_dist_l.
+Defined.
+
 (** ** Equality of natural numbers *)
 
 (** *** Boolean equality and its properties *)
