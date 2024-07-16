@@ -45,9 +45,9 @@ Definition int_to_number_int (n : Int) : Numeral.int :=
 Definition int_of_number_int (d : Numeral.int) :=
   match d with
   | Numeral.IntDec (Decimal.Pos d) => int_of_nat (Nat.of_uint d)
-  | Numeral.IntDec (Decimal.Neg d) => negS (pred (Nat.of_uint d))
+  | Numeral.IntDec (Decimal.Neg d) => negS (nat_pred (Nat.of_uint d))
   | Numeral.IntHex (Hexadecimal.Pos u) => int_of_nat (Nat.of_hex_uint u)
-  | Numeral.IntHex (Hexadecimal.Neg u) => negS (pred (Nat.of_hex_uint u))
+  | Numeral.IntHex (Hexadecimal.Neg u) => negS (nat_pred (Nat.of_hex_uint u))
   end.
 
 Number Notation Int int_of_number_int int_to_number_int : int_scope.

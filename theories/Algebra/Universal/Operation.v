@@ -33,7 +33,7 @@ Monomorphic Definition head_dom {σ} (A : Carriers σ) {n : nat}
     of an operation domain [a : forall i, A (ss i)]. *)
 
 Monomorphic Definition tail_dom' {σ} (A : Carriers σ) (n : nat)
-  : forall (ss : FinSeq n (Sort σ)) (a : forall i, A (ss i)) (i : Fin (pred n)),
+  : forall (ss : FinSeq n (Sort σ)) (a : forall i, A (ss i)) (i : Fin (nat_pred n)),
     A (fstail' n ss i)
   := match n with
      | 0 => fun ss _ i => Empty_rec i

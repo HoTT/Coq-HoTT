@@ -469,7 +469,7 @@ Proof.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
-Definition nth_last {A : Type} (l : list A) (i : nat) (p : pred (length l) = i)
+Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
   : nth l i = last l. 
 Proof.
   destruct p.
@@ -655,7 +655,7 @@ Defined.
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
   (H : (n < length l)%nat)
-  : length (remove n l) = pred (length l)%nat.
+  : length (remove n l) = nat_pred (length l)%nat.
 Proof.
   unfold remove.
   rewrite length_app@{i}.

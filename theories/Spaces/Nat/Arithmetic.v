@@ -577,21 +577,21 @@ Defined.
 
 #[export] Hint Resolve nat_add_sub_eq : nat.
 
-Proposition predeqminus1 { n : nat } : n - 1 = pred n.
+Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
 Proof.
   simple_induction' n.
   - reflexivity.
   - apply sub_n_0.
 Defined.
 
-Proposition predn_leq_n (n : nat) : pred n <= n.
+Proposition predn_leq_n (n : nat) : nat_pred n <= n.
 Proof.
   case n; [ apply leq_n | intro; apply leq_S; apply leq_n].
 Defined.
 
 #[export] Hint Resolve predn_leq_n : nat.
 
-Proposition S_predn (n i: nat) : (i < n) -> S(pred n) = n.
+Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
 Proof.
   simple_induction' n; intros l.
   - contradiction (not_lt_n_0 i).
@@ -604,20 +604,20 @@ Defined.
 #[export] Hint Resolve S_predn : nat.
 #[export] Hint Resolve leq_n_pred : nat.
 
-Proposition pred_equiv (k n : nat) : k < n -> k < S (pred n).
+Proposition pred_equiv (k n : nat) : k < n -> k < S (nat_pred n).
 Proof. 
   intro ineq; destruct n.
   - contradiction (not_lt_n_0 _ _).
   - assumption.
 Defined.
 
-Proposition n_leq_pred_Sn (n : nat) : n <= S (pred n).
+Proposition n_leq_pred_Sn (n : nat) : n <= S (nat_pred n).
 Proof. 
   destruct n; auto.
 Defined.
 
 Proposition leq_implies_pred_lt (i n k : nat)
-  : (n > i) -> n <= k -> pred n < k.
+  : (n > i) -> n <= k -> nat_pred n < k.
 Proof.
   intro ineq; destruct n.
   - contradiction (not_lt_n_0 i).
@@ -625,14 +625,14 @@ Proof.
 Defined.
   
 Proposition pred_lt_implies_leq (n k : nat)
-  : pred n < k -> n <= k.
+  : nat_pred n < k -> n <= k.
 Proof.
   intro l; destruct n.
   - apply leq_0_n.
   - assumption.
 Defined.
 
-Proposition lt_implies_pred_geq (i j : nat) : i < j -> i <= pred j.
+Proposition lt_implies_pred_geq (i j : nat) : i < j -> i <= nat_pred j.
 Proof.
   intro l; apply leq_n_pred in l; assumption.
 Defined.
@@ -640,7 +640,7 @@ Defined.
 #[export] Hint Resolve lt_implies_pred_geq : nat.
 
 Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
-  : i < j -> k.+1 <= j -> k <= pred j.
+  : i < j -> k.+1 <= j -> k <= nat_pred j.
 Proof.
   intros l ineq.
   destruct j.
@@ -651,11 +651,11 @@ Defined.
 #[export] Hint Resolve lt_implies_pred_geq : nat.
 
 Proposition pred_gt_implies_lt (i j : nat)
-  : i < pred j -> i.+1 < j.
+  : i < nat_pred j -> i.+1 < j.
 Proof.
   intros ineq.
   assert (H := leq_S_n' _ _ ineq). assert (i < j) as X. {
-    apply (@mixed_trans2 _ (pred j) _);
+    apply (@mixed_trans2 _ (nat_pred j) _);
       [assumption  | apply predn_leq_n].
   }
   destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.
@@ -663,7 +663,7 @@ Proof.
 Defined.
 
 Proposition pred_preserves_lt {i n: nat} (p : i < n) m
-  : (n < m) -> (pred n < pred m).
+  : (n < m) -> (nat_pred n < nat_pred m).
 Proof.
   intro l.
   apply leq_S_n. destruct (symmetric_paths _ _ (S_predn n i _)).
@@ -888,9 +888,9 @@ Proof.
     (destruct (nat_add_comm n 1)).
     destruct (symmetric_paths _ _ (subsubadd m n 1)). 
     destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
-      destruct (symmetric_paths _ _ (sub_n_0 (pred (m - n)))).
+      destruct (symmetric_paths _ _ (sub_n_0 (nat_pred (m - n)))).
     assert (0 < m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).
-    assert (pred (m - n) < m) as sh by
+    assert (nat_pred (m - n) < m) as sh by
         ( unfold "<";
           destruct (symmetric_paths _ _ (S_predn _ 0 _));
           exact sub_less).

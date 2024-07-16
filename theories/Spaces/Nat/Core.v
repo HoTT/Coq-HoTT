@@ -18,8 +18,8 @@ Local Open Scope nat_scope.
 (** [nat_succ n] is the successor of a natural number [n]. *)
 Notation nat_succ := S (only parsing).
 
-(** [pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
-Definition pred n : nat :=
+(** [nat_pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
+Definition nat_pred n : nat :=
   match n with
   | 0 => n
   | S n' => n'
@@ -189,7 +189,7 @@ Fixpoint log2_iter k p q r : nat :=
     end
   end.
 
-Definition log2 n : nat := log2_iter (pred n) 0 1 0.
+Definition log2 n : nat := log2_iter (nat_pred n) 0 1 0.
 
 (** ** Properties of Successors *)
 
@@ -200,13 +200,13 @@ Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_nat : core.
 
 (** TODO: remove, this is trivial/by definition *)
-Definition pred_Sn : forall n:nat, n = pred (S n).
+Definition pred_Sn : forall n:nat, n = nat_pred (S n).
 Proof.
   auto.
 Defined.
 
 (** Injectivity of successor *)
-Definition path_nat_S n m (H : S n = S m) : n = m := ap pred H.
+Definition path_nat_S n m (H : S n = S m) : n = m := ap nat_pred H.
 #[export] Hint Immediate path_nat_S : core.
 
 (** TODO: rename to [neq_S] *)
@@ -353,7 +353,7 @@ Defined.
 
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
-Lemma leq_n_pred n m : leq n m -> leq (pred n) (pred m).
+Lemma leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
 Proof.
   induction 1; auto.
   destruct m; simpl; auto.
