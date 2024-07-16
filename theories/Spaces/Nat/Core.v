@@ -43,15 +43,14 @@ Fixpoint nat_mul n m : nat :=
 
 Notation "n * m" := (nat_mul n m) : nat_scope.
 
-(** TODO: rename [nat_sub]. *)
 (** Truncated subtraction: [n - m] is [0] if [n <= m] *)
-Fixpoint sub n m : nat :=
+Fixpoint nat_sub n m : nat :=
   match n, m with
-  | S n' , S m' => sub n' m'
+  | S n' , S m' => nat_sub n' m'
   | _ , _ => n
   end.
 
-Notation "n - m" := (sub n m) : nat_scope.
+Notation "n - m" := (nat_sub n m) : nat_scope.
 
 (** TODO: rename [nat_max]. *)
 (** The [max n m] of two natural numbers [n] and [m]. *) 

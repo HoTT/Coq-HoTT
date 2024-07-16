@@ -672,7 +672,7 @@ intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.sub.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.nat_sub.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.
