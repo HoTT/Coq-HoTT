@@ -137,6 +137,31 @@ Fixpoint factorial (n : nat) : nat
        | S n => S n * factorial n
      end.
 
+(** ** Properties of [nat_iter]. *)
+
+Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
+  : nat_iter (S n) f x = nat_iter n f (f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  exact (ap f IHn).
+Defined.
+
+Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
+  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  exact (ap f IHn).
+Defined.
+
+(** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
+Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
+  : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  intros Hf x Hx.
+  apply Hf, IHn; trivial.
+Defined.
+
 (** ** Properties of Successors *)
 
 (** TODO: remove these *)
@@ -519,29 +544,6 @@ Defined.
 Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
 Proof.
   intros; rewrite nat_min_comm; by apply nat_min_l.
-Defined.
-
-Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
-  : nat_iter (S n) f x = nat_iter n f (f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  exact (ap f IHn).
-Defined.
-
-Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
-  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  exact (ap f IHn).
-Defined.
-
-(** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
-Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
-  : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  intros Hf x Hx.
-  apply Hf, IHn; trivial.
 Defined.
 
 (** ** Arithmetic *)
