@@ -30,16 +30,16 @@ Global Instance nat_1: One@{N} nat := 1%nat.
 
 Global Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
 
-Notation mul := Nat.Core.mul.
+Notation mul := Nat.Core.nat_mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.Core.mul.
+Global Instance nat_mult: Mult@{N} nat := Nat.Core.nat_mul.
 
 Ltac simpl_nat :=
   change (@plus nat _) with Nat.Core.nat_add;
-  change (@mult nat _) with Nat.Core.mul;
+  change (@mult nat _) with Nat.Core.nat_mul;
   simpl;
   change Nat.Core.nat_add with (@plus nat Nat.Core.nat_add);
-  change Nat.Core.mul with (@mult nat Nat.Core.mul).
+  change Nat.Core.nat_mul with (@mult nat Nat.Core.nat_mul).
 
 (** [0 + a =N= a] *)
 Local Instance add_0_l : LeftIdentity@{N N} (plus : Plus nat) 0 := fun _ => idpath.

@@ -37,14 +37,14 @@ Notation "n + m" := (nat_add n m) : nat_scope.
 (** TODO: remove *)
 Definition double n : nat := n + n.
 
-(** TODO: rename to [nat_mul]. *)
-Fixpoint mul n m : nat :=
+(** Multiplication of natural numbers *)
+Fixpoint nat_mul n m : nat :=
   match n with
   | 0 => 0
-  | S n' => m + (mul n' m)
+  | S n' => m + (nat_mul n' m)
   end.
 
-Notation "n * m" := (mul n m) : nat_scope.
+Notation "n * m" := (nat_mul n m) : nat_scope.
 
 (** TODO: rename [nat_sub]. *)
 (** Truncated subtraction: [n - m] is [0] if [n <= m] *)
@@ -286,7 +286,7 @@ Defined.
 (** Multiplication *)
 
 (** TODO: remove? *)
-Local Definition ap011_mul := @ap011 _ _ _  mul.
+Local Definition ap011_mul := @ap011 _ _ _  nat_mul.
 #[export] Hint Resolve ap011_mul : core.
 
 (** TODO: rename [nat_mul_zero_r] *)

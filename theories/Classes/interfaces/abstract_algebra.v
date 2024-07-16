@@ -203,7 +203,7 @@ Section upper_classes.
     := field_characteristic : forall n : nat,
         Nat.Core.lt 0 n ->
         iff@{j j j} (forall m : nat, not@{j} (paths@{Set} n
-                                                  (Nat.Core.mul k m)))
+                                                  (nat_mul k m)))
         (@apart A Aap (nat_iter n (1 +) 0) 0).
 
 End upper_classes.
