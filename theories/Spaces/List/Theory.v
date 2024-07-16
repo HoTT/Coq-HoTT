@@ -600,11 +600,11 @@ Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
 Definition length_take@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  : length (take n l) = min n (length l).
+  : length (take n l) = nat_min n (length l).
 Proof.
   induction l as [|a l IHl] in n |- * using list_ind@{i i}.
   { rewrite take_nil.
-    rewrite min_r.
+    rewrite nat_min_r.
     1: reflexivity.
     cbn; exact _. }
   destruct n.
@@ -661,7 +661,7 @@ Proof.
   rewrite length_app@{i}.
   rewrite length_take.
   rewrite length_drop.
-  rewrite min_l.
+  rewrite nat_min_l.
   - rewrite nataddsub_assoc.
     2: exact H.
     rewrite <- predeqminus1.

@@ -60,13 +60,12 @@ Fixpoint nat_max n m :=
   | S n' , S m' => (nat_max n' m').+1
   end.
 
-(** TODO: rename [nat_min]. *)
-(** The [min n m] of two natural numbers [n] and [m]. *)
-Fixpoint min n m :=
+(** The minimum [nat_min n m] of two natural numbers [n] and [m]. *)
+Fixpoint nat_min n m :=
   match n, m with
   | 0 , _ => 0
   | S n' , 0 => 0
-  | S n' , S m' => S (min n' m')
+  | S n' , S m' => S (nat_min n' m')
   end.
 
 (** TODO: rename to [nat_pow]. *)
@@ -568,12 +567,12 @@ Proof.
   intros; rewrite nat_max_comm; by apply nat_max_l.
 Defined.
 
-Lemma min_comm : forall n m, min n m = min m n.
+Lemma nat_min_comm : forall n m, nat_min n m = nat_min m n.
 Proof.
   simple_induction' n; destruct m; cbn; auto.
 Defined.
 
-Theorem min_l : forall n m : nat, n <= m -> min n m = n.
+Theorem nat_min_l : forall n m : nat, n <= m -> nat_min n m = n.
 Proof.
   simple_induction n n IHn; auto.
   intros [] p.
@@ -581,9 +580,9 @@ Proof.
   cbn; by apply (ap S), IHn, leq_S_n.
 Defined.
 
-Theorem min_r : forall n m : nat, m <= n -> min n m = m.
+Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
 Proof.
-  intros; rewrite min_comm; by apply min_l.
+  intros; rewrite nat_min_comm; by apply nat_min_l.
 Defined.
 
 (** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
