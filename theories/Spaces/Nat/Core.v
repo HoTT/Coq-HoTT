@@ -1,34 +1,31 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Export Basics.Nat.
-Require Import Basics.Classes.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes.
+Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
-
 Local Unset Elimination Schemes.
 
-(** * Theorems about the natural numbers *)
-
-(** Many of these definitions and proofs have been ported from the coq stdlib. *)
-
-(** Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
+(** * Natural Numbers *)
 
 (** We want to close the trunc_scope so that notations from there don't conflict here. *)
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
+
+(** TODO: Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
 
 (** ** Basic operations on naturals *)
 
 (** It is common to call [S] [succ] so we add it as a parsing only notation. *)
 Notation succ := S (only parsing).
 
-(** The predecessor of a natural number. *)
+(** [pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
 Definition pred n : nat :=
   match n with
   | 0 => n
   | S n' => n'
   end.
 
+(** TODO: rename to [nat_add]. *)
 (** Addition of natural numbers *)
 Fixpoint add n m : nat :=
   match n with
@@ -38,8 +35,10 @@ Fixpoint add n m : nat :=
 
 Notation "n + m" := (add n m) : nat_scope.
 
+(** TODO: remove *)
 Definition double n : nat := n + n.
 
+(** TODO: rename to [nat_mul]. *)
 Fixpoint mul n m : nat :=
   match n with
   | 0 => 0
@@ -48,6 +47,7 @@ Fixpoint mul n m : nat :=
 
 Notation "n * m" := (mul n m) : nat_scope.
 
+(** TODO: rename [nat_sub]. *)
 (** Truncated subtraction: [n - m] is [0] if [n <= m] *)
 Fixpoint sub n m : nat :=
   match n, m with
@@ -57,8 +57,8 @@ Fixpoint sub n m : nat :=
 
 Notation "n - m" := (sub n m) : nat_scope.
 
-(** ** Minimum, maximum *)
-
+(** TODO: rename [nat_max]. *)
+(** The [max n m] of two natural numbers [n] and [m]. *) 
 Fixpoint max n m :=
   match n, m with
   | 0 , _ => m
@@ -66,6 +66,8 @@ Fixpoint max n m :=
   | S n' , S m' => (max n' m').+1
   end.
 
+(** TODO: rename [nat_min]. *)
+(** The [min n m] of two natural numbers [n] and [m]. *)
 Fixpoint min n m :=
   match n, m with
   | 0 , _ => 0
@@ -73,15 +75,15 @@ Fixpoint min n m :=
   | S n' , S m' => S (min n' m')
   end.
 
-(** ** Power *)
-
+(** TODO: rename to [nat_pow]. *)
+(** Exponentiation of natural numbers. *)
 Fixpoint pow n m :=
   match m with
   | 0 => 1
   | S m' => n * (pow n m')
   end.
 
-(** ** Euclidean division *)
+(** *** Euclidean division *)
 
 (** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
 
@@ -110,7 +112,7 @@ Definition modulo x y : nat :=
 Infix "/" := div : nat_scope.
 Infix "mod" := modulo : nat_scope.
 
-(** ** Greatest common divisor *)
+(** *** Greatest common divisor *)
 
 (** We use Euclid algorithm, which is normally not structural, but Coq is now clever enough to accept this (behind modulo there is a subtraction, which now preserves being a subterm) *)
 
@@ -120,11 +122,11 @@ Fixpoint gcd a b :=
   | S a' => gcd (b mod a'.+1) a'.+1
   end.
 
-(** ** Square *)
+(** *** Square *)
 
 Definition square n : nat := n * n.
 
-(** ** Square root *)
+(** *** Square root *)
 
 (** The following square root function is linear (and tail-recursive).
   With Peano representation, we can't do better. For faster algorithm,
@@ -196,70 +198,87 @@ Fixpoint log2_iter k p q r : nat :=
 
 Definition log2 n : nat := log2_iter (pred n) 0 1 0.
 
+(** ** Properties of Successors *)
+
+(** TODO: remove these *)
 Local Definition ap_S := @ap _ _ S.
 Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
 #[export] Hint Resolve ap_nat : core.
 
-Theorem pred_Sn : forall n:nat, n = pred (S n).
+(** TODO: remove, this is trivial/by definition *)
+Definition pred_Sn : forall n:nat, n = pred (S n).
 Proof.
   auto.
 Defined.
 
 (** Injectivity of successor *)
-
 Definition path_nat_S n m (H : S n = S m) : n = m := ap pred H.
 #[export] Hint Immediate path_nat_S : core.
 
-Theorem not_eq_S : forall n m:nat, n <> m -> S n <> S m.
+(** TODO: rename to [neq_S] *)
+(** TODO: avoid auto in proof. *)
+Definition not_eq_S n m : n <> m -> S n <> S m.
 Proof.
   auto.
 Defined.
 #[export] Hint Resolve not_eq_S : core.
 
-(** TODO: keep or remove? *)
+(** TODO: remove *)
 Definition IsSucc (n: nat) : Type0 :=
   match n with
   | O => Empty
   | S p => Unit
   end.
 
+(** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
-
-Theorem not_eq_O_S : forall n:nat, 0 <> S n.
+Definition not_eq_O_S : forall n, 0 <> S n.
 Proof.
   discriminate.
 Defined.
 #[export] Hint Resolve not_eq_O_S : core.
 
+(** TODO: rename to [neq_n_Sn] *)
+(** TODO: prove above using this *)
+(** TODO: remove auto. *)
 Theorem not_eq_n_Sn : forall n:nat, n <> S n.
 Proof.
   simple_induction' n; auto.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
+(** TODO: remove *)
 Local Definition ap011_add := @ap011 _ _ _ add.
 Local Definition ap011_nat := @ap011 nat nat.
 #[export] Hint Resolve ap011_add : core.
 #[export] Hint Resolve ap011_nat : core.
 
+(** TODO: rename [nat_add_zero_r] *)
+(** TODO: reverse direction *)
 Lemma add_n_O : forall (n : nat), n = n + 0.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_O : core.
 
+(** TODO: rename [nat_add_zero_l] *)
 Lemma add_O_n : forall (n : nat), 0 + n = n.
 Proof.
   auto.
 Defined.
 
+(** TODO: rename [nat_add_succ_r] *)
+(** TODO: reverse direction *)
 Lemma add_n_Sm : forall n m:nat, S (n + m) = n + S m.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve add_n_Sm: core.
 
+(** TODO: rename [nat_add_succ_l] *)
+(** TODO: reverse direction *)
+(** TODO: remove auto *)
 Lemma add_Sn_m : forall n m:nat, S n + m = S (n + m).
 Proof.
   auto.
@@ -267,15 +286,20 @@ Defined.
 
 (** Multiplication *)
 
+(** TODO: remove? *)
 Local Definition ap011_mul := @ap011 _ _ _  mul.
 #[export] Hint Resolve ap011_mul : core.
 
+(** TODO: rename [nat_mul_zero_r] *)
+(** TODO: reverse direction *)
 Lemma mul_n_O : forall n:nat, 0 = n * 0.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve mul_n_O : core.
 
+(** TODO: rename [nat_mul_succ_r] *)
+(** TODO: reverse direction *)
 Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.
 Proof.
   intros; simple_induction n p H; simpl; auto.
@@ -286,6 +310,7 @@ Defined.
 
 (** Standard associated names *)
 
+(** TODO: remove? *)
 Notation mul_0_r_reverse := mul_n_O (only parsing).
 Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
 
@@ -541,7 +566,7 @@ Proof.
   intros n m; revert n; simple_induction m m IHm; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply ap_S, IHm, leq_S_n.
+  cbn; by apply (ap S), IHm, leq_S_n.
 Defined.
 
 Theorem max_r : forall n m : nat, n <= m -> max n m = m.
@@ -559,7 +584,7 @@ Proof.
   simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply ap_S, IHn, leq_S_n.
+  cbn; by apply (ap S), IHn, leq_S_n.
 Defined.
 
 Theorem min_r : forall n m : nat, m <= n -> min n m = m.
