@@ -15,8 +15,8 @@ Local Open Scope nat_scope.
 
 (** ** Basic operations on naturals *)
 
-(** It is common to call [S] [succ] so we add it as a parsing only notation. *)
-Notation succ := S (only parsing).
+(** [nat_succ n] is the successor of a natural number [n]. *)
+Notation nat_succ := S (only parsing).
 
 (** [pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
 Definition pred n : nat :=
