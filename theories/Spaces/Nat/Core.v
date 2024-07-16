@@ -309,6 +309,16 @@ Proof.
   nrapply nat_dist_l.
 Defined.
 
+(** Multiplication of natural numbers is associative. *)
+Definition nat_mul_assoc@{} n m k : n * (m * k) = n * m * k.
+Proof.
+  induction n as [|n IHn]; simpl.
+  - reflexivity.
+  - rhs nrapply nat_dist_r.
+    nrapply (ap (nat_add (m * k))).
+    exact IHn.
+Defined.
+
 (** ** Equality of natural numbers *)
 
 (** *** Boolean equality and its properties *)
