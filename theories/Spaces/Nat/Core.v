@@ -141,13 +141,6 @@ Proof.
 Defined.
 #[export] Hint Resolve not_eq_S : core.
 
-(** TODO: remove *)
-Definition IsSucc (n: nat) : Type0 :=
-  match n with
-  | O => Empty
-  | S p => Unit
-  end.
-
 (** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
 Definition not_eq_O_S : forall n, 0 <> S n.
