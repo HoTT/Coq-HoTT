@@ -793,7 +793,7 @@ Defined.
 #[export] Hint Immediate add_n_sub_n_eq' : nat.
 
 #[export] Hint Rewrite -> nat_add_zero_r : nat.
-#[export] Hint Rewrite -> add_O_n : nat.
+#[export] Hint Rewrite -> nat_add_zero_l : nat.
 #[export] Hint Rewrite -> add_n_sub_n_eq : nat.
 #[export] Hint Rewrite -> add_n_sub_n_eq' : nat.
 #[export] Hint Rewrite -> nataddsub_assoc : nat.

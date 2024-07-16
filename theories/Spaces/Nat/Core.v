@@ -204,6 +204,9 @@ Defined.
 
 (** *** Properties of Addition *)
 
+Definition nat_add_zero_l@{} n : 0 + n = n
+  := idpath.
+
 Definition nat_add_zero_r@{} n : n + 0 = n.
 Proof.
   induction n as [|n IHn].
@@ -212,12 +215,6 @@ Proof.
     exact IHn.
 Defined.
 #[export] Hint Resolve nat_add_zero_r : core.
-
-(** TODO: rename [nat_add_zero_l] *)
-Lemma add_O_n : forall (n : nat), 0 + n = n.
-Proof.
-  auto.
-Defined.
 
 (** TODO: rename [nat_add_succ_r] *)
 (** TODO: reverse direction *)
