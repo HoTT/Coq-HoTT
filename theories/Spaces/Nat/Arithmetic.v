@@ -201,7 +201,7 @@ Proof.
     + assumption.
   - simple_induction' n.
     + simpl. destruct (nat_add_zero_r m)^; reflexivity.
-    + simpl. destruct (add_n_Sm m n). assumption.
+    + simpl. destruct (nat_add_succ_r m n)^. assumption.
 Defined.
 
 Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.
@@ -531,9 +531,9 @@ Proposition nataddsub_comm_ineq (n m k : nat)
 Proof. 
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r (n - m))^; constructor.
-  - destruct (add_n_Sm n k).
+  - destruct (nat_add_succ_r n k)^.
     refine (leq_trans (nataddsub_comm_ineq_lemma (n+k) m) _).
-    destruct (add_n_Sm (n - m) k).
+    destruct (nat_add_succ_r (n - m) k)^.
     now apply leq_S_n'.
 Defined.
 
