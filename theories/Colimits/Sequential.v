@@ -208,6 +208,11 @@ Proof.
   destruct p; rewrite !concat_1p, concat_p1; reflexivity.
 Defined.
 
+Local Lemma add_n_O : forall (n : nat), n = n + 0.
+Proof.
+  simple_induction' n; simpl; auto.
+Defined.
+
 Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
   : IsEquiv (colim_shift_seq_to_colim_seq A n).
 Proof.

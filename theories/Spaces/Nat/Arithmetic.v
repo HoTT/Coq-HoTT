@@ -200,7 +200,7 @@ Proof.
     + reflexivity.
     + assumption.
   - simple_induction' n.
-    + simpl. destruct (add_n_O m); reflexivity.
+    + simpl. destruct (nat_add_zero_r m)^; reflexivity.
     + simpl. destruct (add_n_Sm m n). assumption.
 Defined.
 
@@ -328,7 +328,7 @@ Proposition natminuspluseq (n m : nat)
 Proof.
   revert m; simple_induction n n IHn.
   - intros. destruct m; [reflexivity |]. simpl.
-    apply (ap S), symmetric_paths, add_n_O.
+    apply (ap S), symmetric_paths, (nat_add_zero_r _)^.
   - intros m l. destruct m.
     + contradiction (not_leq_Sn_0 n).
     + simpl. apply leq_S_n, IHn in l.
@@ -391,7 +391,7 @@ Proposition nataddpreservesleq { n m k : nat }
 Proof.
   intro l.
   simple_induction k k IHk.
-  - destruct (add_n_O n), (add_n_O m); exact l.
+  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; exact l.
   - destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k);
       apply leq_S_n'; exact IHk.
 Defined.
@@ -415,7 +415,7 @@ Proof.
   change (n + k).+1 with (n.+1 + k).
   generalize (n.+1). intros n' l.
   simple_induction k k IHk.
-  - destruct (add_n_O n'), (add_n_O m); exact l.
+  - destruct (nat_add_zero_r n')^, (nat_add_zero_r m)^; exact l.
   - destruct (nat_add_n_Sm n' k), (nat_add_n_Sm m k);
       apply leq_S_n'; exact IHk.
 Defined.
@@ -432,7 +432,7 @@ Proposition nataddreflectslt { n m k : nat }
   : n + k < m + k -> n < m.
 Proof.
   simple_induction k k IHk.
-  - destruct (add_n_O n), (add_n_O m); trivial.
+  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
   - intro l. destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k) in l.
     apply leq_S_n, IHk in l; exact l.
 Defined.
@@ -530,7 +530,7 @@ Proposition nataddsub_comm_ineq (n m k : nat)
   : (n + k) - m <= (n - m) + k.
 Proof. 
   simple_induction k k IHk.
-  - destruct (add_n_O n), (add_n_O (n - m)); constructor.
+  - destruct (nat_add_zero_r n)^, (nat_add_zero_r (n - m))^; constructor.
   - destruct (add_n_Sm n k).
     refine (leq_trans (nataddsub_comm_ineq_lemma (n+k) m) _).
     destruct (add_n_Sm (n - m) k).
@@ -792,7 +792,7 @@ Defined.
 #[export] Hint Immediate add_n_sub_n_eq : nat.
 #[export] Hint Immediate add_n_sub_n_eq' : nat.
 
-#[export] Hint Rewrite <- add_n_O : nat.
+#[export] Hint Rewrite -> nat_add_zero_r : nat.
 #[export] Hint Rewrite -> add_O_n : nat.
 #[export] Hint Rewrite -> add_n_sub_n_eq : nat.
 #[export] Hint Rewrite -> add_n_sub_n_eq' : nat.

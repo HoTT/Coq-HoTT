@@ -170,16 +170,16 @@ Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
 #[export] Hint Resolve ap_nat : core.
 
-Definition nat_pred_succ n : nat_pred (nat_succ n) = n
+Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
 (** Injectivity of successor *)
-Definition path_nat_S n m (H : S n = S m) : n = m := ap nat_pred H.
+Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 #[export] Hint Immediate path_nat_S : core.
 
 (** TODO: rename to [neq_S] *)
 (** TODO: avoid auto in proof. *)
-Definition not_eq_S n m : n <> m -> S n <> S m.
+Definition not_eq_S@{} n m : n <> m -> S n <> S m.
 Proof.
   auto.
 Defined.
@@ -187,7 +187,7 @@ Defined.
 
 (** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
-Definition not_eq_O_S : forall n, 0 <> S n.
+Definition not_eq_O_S@{} : forall n, 0 <> S n.
 Proof.
   discriminate.
 Defined.
@@ -196,25 +196,22 @@ Defined.
 (** TODO: rename to [neq_n_Sn] *)
 (** TODO: prove above using this *)
 (** TODO: remove auto. *)
-Theorem not_eq_n_Sn : forall n:nat, n <> S n.
+Theorem not_eq_n_Sn@{} n : n <> S n.
 Proof.
   simple_induction' n; auto.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
-(** TODO: remove *)
-(* Local Definition ap011_add := @ap011 _ _ _ add. *)
-(* Local Definition ap011_nat := @ap011 nat nat. *)
-(* #[export] Hint Resolve ap011_add : core. *)
-(* #[export] Hint Resolve ap011_nat : core. *)
+(** *** Properties of Addition *)
 
-(** TODO: rename [nat_add_zero_r] *)
-(** TODO: reverse direction *)
-Lemma add_n_O : forall (n : nat), n = n + 0.
+Definition nat_add_zero_r@{} n : n + 0 = n.
 Proof.
-  simple_induction' n; simpl; auto.
+  induction n as [|n IHn].
+  - reflexivity.
+  - apply (ap nat_succ).
+    exact IHn.
 Defined.
-#[export] Hint Resolve add_n_O : core.
+#[export] Hint Resolve nat_add_zero_r : core.
 
 (** TODO: rename [nat_add_zero_l] *)
 Lemma add_O_n : forall (n : nat), 0 + n = n.
@@ -558,7 +555,7 @@ Defined.
 Definition nat_add_comm (n m : nat) : n + m = m + n.
 Proof.
   simple_induction n n IHn; simpl.
-  - exact (add_n_O m).
+  - exact (nat_add_zero_r m)^.
   - transitivity (m + n).+1.
     + apply ap, IHn.
     + apply nat_add_n_Sm.
