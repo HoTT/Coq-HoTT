@@ -250,10 +250,6 @@ Defined.
 
 (** *** Properties of Multiplication *)
 
-(** TODO: remove? *)
-Local Definition ap011_mul := @ap011 _ _ _  nat_mul.
-#[export] Hint Resolve ap011_mul : core.
-
 (** Multiplication by [0] on the left is [0]. *)
 Definition nat_mul_zero_l n : 0 * n = 0
   := idpath.
