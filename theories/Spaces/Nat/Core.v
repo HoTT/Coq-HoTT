@@ -52,13 +52,12 @@ Fixpoint nat_sub n m : nat :=
 
 Notation "n - m" := (nat_sub n m) : nat_scope.
 
-(** TODO: rename [nat_max]. *)
-(** The [max n m] of two natural numbers [n] and [m]. *) 
-Fixpoint max n m :=
+(** The maximum [nat_max n m] of two natural numbers [n] and [m]. *) 
+Fixpoint nat_max n m :=
   match n, m with
   | 0 , _ => m
   | S n' , 0 => n'.+1
-  | S n' , S m' => (max n' m').+1
+  | S n' , S m' => (nat_max n' m').+1
   end.
 
 (** TODO: rename [nat_min]. *)
@@ -527,36 +526,36 @@ Defined.
 
 (** Maximum and minimum : definitions and specifications *)
 
-Lemma max_n_n n : max n n = n.
+Lemma nat_max_n_n n : nat_max n n = n.
 Proof.
   simple_induction' n; cbn; auto.
 Defined.
-#[export] Hint Resolve max_n_n : core.
+#[export] Hint Resolve nat_max_n_n : core.
 
-Lemma max_Sn_n n : max (S n) n = S n.
+Lemma nat_max_Sn_n n : nat_max (S n) n = S n.
 Proof.
   simple_induction' n; cbn; auto.
 Defined.
-#[export] Hint Resolve max_Sn_n : core.
+#[export] Hint Resolve nat_max_Sn_n : core.
 
-Lemma max_comm n m : max n m = max m n.
+Lemma nat_max_comm n m : nat_max n m = nat_max m n.
 Proof.
   revert m; simple_induction' n; destruct m; cbn; auto.
 Defined.
 
-Lemma max_0_n n : max 0 n = n.
+Lemma nat_max_0_n n : nat_max 0 n = n.
 Proof.
   auto.
 Defined.
-#[export] Hint Resolve max_0_n : core.
+#[export] Hint Resolve nat_max_0_n : core.
 
-Lemma max_n_0 n : max n 0 = n.
+Lemma nat_max_n_0 n : nat_max n 0 = n.
 Proof.
-  by rewrite max_comm.
+  by rewrite nat_max_comm.
 Defined.
-#[export] Hint Resolve max_n_0 : core.
+#[export] Hint Resolve nat_max_n_0 : core.
 
-Theorem max_l : forall n m, m <= n -> max n m = n.
+Theorem nat_max_l : forall n m, m <= n -> nat_max n m = n.
 Proof.
   intros n m; revert n; simple_induction m m IHm; auto.
   intros [] p.
@@ -564,9 +563,9 @@ Proof.
   cbn; by apply (ap S), IHm, leq_S_n.
 Defined.
 
-Theorem max_r : forall n m : nat, n <= m -> max n m = m.
+Theorem nat_max_r : forall n m : nat, n <= m -> nat_max n m = m.
 Proof.
-  intros; rewrite max_comm; by apply max_l.
+  intros; rewrite nat_max_comm; by apply nat_max_l.
 Defined.
 
 Lemma min_comm : forall n m, min n m = min m n.

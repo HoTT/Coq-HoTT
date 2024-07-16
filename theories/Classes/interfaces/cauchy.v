@@ -53,7 +53,7 @@ Section cauchy.
       assert (lim_close := is_limit x (epsilon / 2));
         strip_truncations.
       destruct lim_close as [N isclose'].
-      set (n := Nat.Core.max (M (epsilon / 2)) N).
+      set (n := Nat.Core.nat_max (M (epsilon / 2)) N).
       assert (leNn := le_nat_max_r (M (epsilon / 2)) N : N ≤ n).
       assert (isclose := isclose' n leNn).
       clear isclose'.

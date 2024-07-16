@@ -574,7 +574,7 @@ Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
-Lemma le_nat_max_l n m : n <= Nat.Core.max n m.
+Lemma le_nat_max_l n m : n <= Nat.Core.nat_max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
@@ -582,7 +582,7 @@ Proof.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
-Lemma le_nat_max_r n m : m <= Nat.Core.max n m.
+Lemma le_nat_max_r n m : m <= Nat.Core.nat_max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
