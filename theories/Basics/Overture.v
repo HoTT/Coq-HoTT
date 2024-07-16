@@ -707,8 +707,6 @@ Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rect := Induction for nat Sort Type.
 Scheme nat_rec := Induction for nat Sort Type.
 
-Local Unset Elimination Schemes.
-
 (** These schemes are therefore defined in Spaces.Nat *)
 (*
 Scheme nat_ind := Induction for nat Sort Type.
