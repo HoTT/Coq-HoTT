@@ -138,8 +138,8 @@ Global Instance isunitpreserving_grp_homo {G H : Group}
 Proof.
   unfold IsUnitPreserving.
   apply (group_cancelL (f mon_unit)).
-  nrefine (_ @ (grp_unit_r _)^).
-  refine (_ @ ap _ (monoid_left_id _ mon_unit)).
+  rhs nrapply grp_unit_r.
+  rhs_V rapply (ap  _ (monoid_left_id _ mon_unit)).
   symmetry.
   nrapply issemigrouppreserving_grp_homo.
 Defined.
@@ -310,38 +310,37 @@ Global Instance transitive_groupisomorphism
 Definition equiv_path_group' {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (equiv_compose'
-    (B := sig (fun f : G <~> H => IsSemiGroupPreserving f)) _ _).
-  { revert G H; apply (equiv_path_issig_contr issig_group).
-    + intros [G [? [? [? ?]]]].
-      exists 1%equiv.
-      exact _.
-    + intros [G [op [unit [neg ax]]]]; cbn.
-      contr_sigsig G (equiv_idmap G).
-      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
-      1: assumption.
-      1: exact _.
-      intros [[op' [unit' [neg' ax']]] eq].
-      apply path_sigma_hprop; cbn.
-      refine (@ap _ _ (fun x : { oun :
-        { oo : SgOp G & { u : MonUnit G & Negate G}}
-        & @IsGroup G oun.1 oun.2.1 oun.2.2}
-        => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
-        ((op;unit;neg);ax) ((op';unit';neg');ax') _).
-      apply path_sigma_hprop; cbn.
-      srefine (path_sigma' _ _ _).
-      1: funext x y; apply eq.
-      rewrite transport_const.
-      pose (f := Build_GroupHomomorphism
-          (G:=Build_Group G op unit neg ax)
-          (H:=Build_Group G op' unit' neg' ax')
-          idmap eq).
-      srefine (path_sigma' _ _ _).
-      1: exact (grp_homo_unit f).
-      lhs nrapply transport_const.
-      funext x.
-      exact (grp_homo_inv f x). }
-  make_equiv.
+  equiv_via {f : G <~> H & IsSemiGroupPreserving f}.
+  1: make_equiv.
+  revert G H; apply (equiv_path_issig_contr issig_group).
+  - intros [G [? [? [? ?]]]].
+    exists 1%equiv.
+    exact _.
+  - intros [G [op [unit [neg ax]]]]; cbn.
+    contr_sigsig G (equiv_idmap G).
+    srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
+    1: assumption.
+    1: exact _.
+    intros [[op' [unit' [neg' ax']]] eq].
+    apply path_sigma_hprop; cbn.
+    refine (@ap _ _ (fun x : { oun :
+      { oo : SgOp G & { u : MonUnit G & Negate G}}
+      & @IsGroup G oun.1 oun.2.1 oun.2.2}
+      => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+      ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+    apply path_sigma_hprop; cbn.
+    srefine (path_sigma' _ _ _).
+    1: funext x y; apply eq.
+    rewrite transport_const.
+    pose (f := Build_GroupHomomorphism
+        (G:=Build_Group G op unit neg ax)
+        (H:=Build_Group G op' unit' neg' ax')
+        idmap eq).
+    srefine (path_sigma' _ _ _).
+    1: exact (grp_homo_unit f).
+    lhs nrapply transport_const.
+    funext x.
+    exact (grp_homo_inv f x).
 Defined.
 
 (** A version with nicer universe variables. *)
