@@ -202,7 +202,25 @@ Proof.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
-(** *** Properties of Addition *)
+(** ** Truncatedness of Natural Numbers *)
+
+(** [nat] has decidable paths. *)
+Global Instance decidable_paths_nat@{} : DecidablePaths nat.
+Proof.
+  intros n; simple_induction n n IHn;
+  intros m; destruct m.
+  - exact (inl idpath).
+  - exact (inr (not_eq_O_S m)).
+  - exact (inr (fun p => not_eq_O_S n p^)).
+  - destruct (IHn m) as [p|q].
+    + exact (inl (ap S p)).
+    + exact (inr (fun p => q (path_nat_S _ _ p))).
+Defined.
+
+(** [nat] is therefore a hset. *)
+Global Instance ishset_nat : IsHSet nat := _.
+
+(** ** Properties of Addition *)
 
 (** [0] is the left identity of addition. *)
 Definition nat_add_zero_l@{} n : 0 + n = n
@@ -248,7 +266,7 @@ Proof.
     exact IHn.
 Defined.
 
-(** *** Properties of Multiplication *)
+(** ** Properties of Multiplication *)
 
 (** Multiplication by [0] on the left is [0]. *)
 Definition nat_mul_zero_l@{} n : 0 * n = 0
@@ -318,26 +336,6 @@ Proof.
     nrapply (ap (nat_add (m * k))).
     exact IHn.
 Defined.
-
-(** ** Equality of natural numbers *)
-
-(** *** Boolean equality and its properties *)
-
-(** [nat] has decidable paths *)
-Global Instance decidable_paths_nat@{} : DecidablePaths nat.
-Proof.
-  intros n; simple_induction n n IHn;
-  intros m; destruct m.
-  - exact (inl idpath).
-  - exact (inr (not_eq_O_S m)).
-  - exact (inr (fun p => not_eq_O_S n p^)).
-  - destruct (IHn m) as [p|q].
-    + exact (inl (ap S p)).
-    + exact (inr (fun p => q (path_nat_S _ _ p))).
-Defined.
-
-(** And is therefore a HSet *)
-Global Instance hset_nat : IsHSet nat := _.
 
 (** ** Inequality of natural numbers *)
 
