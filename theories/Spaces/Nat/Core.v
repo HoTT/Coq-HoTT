@@ -123,6 +123,14 @@ Fixpoint gcd a b :=
   | S a' => gcd (b mod a'.+1) a'.+1
   end.
 
+(** *** Factorials *)
+
+Fixpoint factorial (n : nat) : nat
+  := match n with
+       | 0 => 1
+       | S n => S n * factorial n
+     end.
+
 (** ** Properties of Successors *)
 
 (** TODO: remove these *)
@@ -581,14 +589,6 @@ Proof.
   - simpl; rewrite nat_add_comm, IHx.
     nrapply mul_n_Sm.
 Defined.
-
-(** ** Factorials *)
-
-Fixpoint factorial (n : nat) : nat
-  := match n with
-       | 0 => 1
-       | S n => S n * factorial n
-     end.
 
 (** ** Natural number ordering *)
 
