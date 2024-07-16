@@ -115,10 +115,6 @@ Fixpoint gcd a b :=
   | S a' => gcd (b mod a'.+1) a'.+1
   end.
 
-(** *** Square *)
-
-Definition square n : nat := n * n.
-
 (** ** Properties of Successors *)
 
 (** TODO: remove these *)
