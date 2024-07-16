@@ -68,12 +68,12 @@ Fixpoint nat_min n m :=
   | S n' , S m' => S (nat_min n' m')
   end.
 
-(** TODO: rename to [nat_pow]. *)
+(** TODO: redefine in terms of nat_iter *)
 (** Exponentiation of natural numbers. *)
-Fixpoint pow n m :=
+Fixpoint nat_pow n m :=
   match m with
   | 0 => 1
-  | S m' => n * (pow n m')
+  | S m' => n * (nat_pow n m')
   end.
 
 (** *** Euclidean division *)
