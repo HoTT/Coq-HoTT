@@ -123,11 +123,8 @@ Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
 #[export] Hint Resolve ap_nat : core.
 
-(** TODO: remove, this is trivial/by definition *)
-Definition pred_Sn : forall n:nat, n = nat_pred (S n).
-Proof.
-  auto.
-Defined.
+Definition nat_pred_succ n : nat_pred (nat_succ n) = n
+  := idpath.
 
 (** Injectivity of successor *)
 Definition path_nat_S n m (H : S n = S m) : n = m := ap nat_pred H.

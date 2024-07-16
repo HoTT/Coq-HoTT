@@ -599,7 +599,7 @@ Proof.
 Defined.
 
 #[export] Hint Rewrite S_predn : nat.
-#[export] Hint Rewrite <- pred_Sn : nat.
+#[export] Hint Rewrite <- nat_pred_succ : nat.
 
 #[export] Hint Resolve S_predn : nat.
 #[export] Hint Resolve leq_n_pred : nat.
