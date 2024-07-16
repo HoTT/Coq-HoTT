@@ -34,9 +34,6 @@ Fixpoint nat_add n m : nat :=
 
 Notation "n + m" := (nat_add n m) : nat_scope.
 
-(** TODO: remove *)
-Definition double n : nat := n + n.
-
 (** Multiplication of natural numbers *)
 Fixpoint nat_mul n m : nat :=
   match n with
