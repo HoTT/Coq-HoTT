@@ -146,51 +146,6 @@ Fixpoint sqrt_iter k p q r : nat :=
 
 Definition sqrt n : nat := sqrt_iter n 0 0 0.
 
-(** ** Log2 *)
-
-(** This base-2 logarithm is linear and tail-recursive.
-
-  In [log2_iter], we maintain the logarithm [p] of the counter [q],
-  while [r] is the distance between [q] and the next power of 2,
-  more precisely [q + S r = 2^(S p)] and [r<2^p]. At each
-  recursive call, [q] goes up while [r] goes down. When [r]
-  is 0, we know that [q] has almost reached a power of 2,
-  and we increase [p] at the next call, while resetting [r]
-  to [q].
-
-  Graphically (numbers are [q], stars are [r]) :
-
-<<
-                    10
-                  9
-                8
-              7   *
-            6       *
-          5           ...
-        4
-      3   *
-    2       *
-  1   *       *
-0   *   *       *
->>
-
-  We stop when [k], the global downward counter reaches 0.
-  At that moment, [q] is the number we're considering (since
-  [k+q] is invariant), and [p] its logarithm.
-*)
-
-Fixpoint log2_iter k p q r : nat :=
-  match k with
-  | O    => p
-  | S k' =>
-    match r with
-    | O => log2_iter k' (S p) (S q) q
-    | S r' => log2_iter k' p (S q) r'
-    end
-  end.
-
-Definition log2 n : nat := log2_iter (nat_pred n) 0 1 0.
-
 (** ** Properties of Successors *)
 
 (** TODO: remove these *)
