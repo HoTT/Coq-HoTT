@@ -261,20 +261,20 @@ Proof.
 Defined.
 #[export] Hint Resolve nat_mul_zero_r : core.
 
-(** TODO: rename [nat_mul_succ_r] *)
-(** TODO: reverse direction *)
-Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.
+Definition nat_mul_succ_l n m : n.+1 * m = m + n * m
+  := idpath.
+
+Definition nat_mul_succ_r n m : n * m.+1 = n * m + n.
 Proof.
-  intros; simple_induction n p H; simpl; auto.
-  destruct H; rewrite nat_add_succ_r; apply ap.
-  pattern m at 1 3; elim m; simpl; auto.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rhs nrapply nat_add_succ_r.
+    nrapply (ap nat_succ).
+    rhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add m)).
+    exact IHn.
 Defined.
-#[export] Hint Resolve mul_n_Sm: core.
-
-(** Standard associated names *)
-
-(** TODO: remove? *)
-Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
+#[export] Hint Resolve nat_mul_succ_r : core.
 
 (** ** Equality of natural numbers *)
 
@@ -576,10 +576,10 @@ Defined.
 
 Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
 Proof.
-  induction x as [|x IHx] in y |- * using nat_rect@{Set}.
-  - apply (nat_mul_zero_r _)^.
-  - simpl; rewrite nat_add_comm, IHx.
-    nrapply mul_n_Sm.
+  induction y as [|y IHy].
+  - apply (nat_mul_zero_r _).
+  - simpl; rewrite nat_add_comm, <- IHy.
+    nrapply nat_mul_succ_r.
 Defined.
 
 (** ** Natural number ordering *)
