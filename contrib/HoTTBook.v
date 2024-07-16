@@ -345,7 +345,7 @@ Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).
 (* ================================================== thm:nat-set *)
 (** Example 3.1.4 *)
 
-Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.hset_nat.
+Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.ishset_nat.
 
 (* ================================================== thm:isset-prod *)
 (** Example 3.1.5 *)
