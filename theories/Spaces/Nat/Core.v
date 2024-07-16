@@ -216,14 +216,23 @@ Proof.
 Defined.
 #[export] Hint Resolve nat_add_zero_r : core.
 
-Definition nat_add_succ_l n m : n.+1 + m = (n + m).+1
+Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
   := idpath.
 
-Definition nat_add_succ_r n m : n + m.+1 = (n + m).+1.
+Definition nat_add_succ_r@{} n m : n + m.+1 = (n + m).+1.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve nat_add_succ_r: core.
+
+Definition nat_add_comm@{} n m : n + m = m + n.
+Proof.
+  induction n.
+  - exact (nat_add_zero_r m)^.
+  - rhs nrapply nat_add_succ_r.
+    apply (ap nat_succ).
+    exact IHn.
+Defined.
 
 (** Multiplication *)
 
@@ -534,22 +543,6 @@ Proof.
 Defined.
 
 (** ** Arithmetic *)
-
-Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
-Proof.
-  simple_induction' n; simpl.
-  - reflexivity.
-  - apply ap; assumption.
-Defined.
-
-Definition nat_add_comm (n m : nat) : n + m = m + n.
-Proof.
-  simple_induction n n IHn; simpl.
-  - exact (nat_add_zero_r m)^.
-  - transitivity (m + n).+1.
-    + apply ap, IHn.
-    + apply nat_add_n_Sm.
-Defined.
 
 Global Instance isinj_S : IsInjective S.
 Proof.

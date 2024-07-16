@@ -234,10 +234,11 @@ Defined.
 Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
   : length (reverse_acc acc l) = (length acc + length l)%nat.
 Proof.
+  symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
-  - symmetry; apply nat_add_zero_r.
-  - lhs nrapply IHl.
-    apply nat_add_n_Sm.
+  - apply nat_add_zero_r.
+  - rhs_V nrapply IHl.
+    apply nat_add_succ_r.
 Defined.
 
 (** The length of [reverse] is the same as the length of the original list. *)

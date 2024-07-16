@@ -42,12 +42,12 @@ Proof.
   revert m k; simple_induction n n IHn.
   - reflexivity.
   - intros m k. change (n.+1 + (m + k)) with (n + (m + k)).+1.
-    apply (transitive_paths _ _ _ (nat_add_n_Sm _ _)).
+    apply (transitive_paths _ _ _ (nat_add_succ_r _ _)^).
     change (m + k).+1 with (m.+1 + k);
     change (n.+1 + m) with (n + m).+1.
     apply (transitive_paths _ _ _ (IHn m.+1 k)).
     apply (ap (fun zz => zz + k)).
-    apply symmetric_paths, nat_add_n_Sm. 
+    apply symmetric_paths, (nat_add_succ_r _ _)^. 
 Defined.
 
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
@@ -332,7 +332,7 @@ Proof.
   - intros m l. destruct m.
     + contradiction (not_leq_Sn_0 n).
     + simpl. apply leq_S_n, IHn in l.
-      destruct (nat_add_n_Sm (m - n) n).
+      destruct (nat_add_succ_r (m - n) n)^.
       destruct (symmetric_paths _ _ l).
       reflexivity.
 Defined.
@@ -392,7 +392,7 @@ Proof.
   intro l.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; exact l.
-  - destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k);
+  - destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^;
       apply leq_S_n'; exact IHk.
 Defined.
 
@@ -416,7 +416,7 @@ Proof.
   generalize (n.+1). intros n' l.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n')^, (nat_add_zero_r m)^; exact l.
-  - destruct (nat_add_n_Sm n' k), (nat_add_n_Sm m k);
+  - destruct (nat_add_succ_r n' k)^, (nat_add_succ_r m k)^;
       apply leq_S_n'; exact IHk.
 Defined.
 
@@ -433,7 +433,7 @@ Proposition nataddreflectslt { n m k : nat }
 Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
-  - intro l. destruct (nat_add_n_Sm n k), (nat_add_n_Sm m k) in l.
+  - intro l. destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^ in l.
     apply leq_S_n, IHk in l; exact l.
 Defined.
 
@@ -499,7 +499,7 @@ Proof.
       | contradiction (not_lt_n_0 k _)
       | ].
     simpl "-". apply leq_S_n in l.
-    destruct (symmetric_paths _ _ (nat_add_n_Sm n (m - k))).
+    destruct (nat_add_succ_r n (m - k)).
     destruct  (nataddsub_assoc_lemma l).
     apply (IHn m.+1 k).
     apply leq_S.

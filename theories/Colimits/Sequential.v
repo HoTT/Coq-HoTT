@@ -213,6 +213,13 @@ Proof.
   simple_induction' n; simpl; auto.
 Defined.
 
+Local Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
+Proof.
+  simple_induction' n; simpl.
+  - reflexivity.
+  - apply ap; assumption.
+Defined.
+
 Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
   : IsEquiv (colim_shift_seq_to_colim_seq A n).
 Proof.
