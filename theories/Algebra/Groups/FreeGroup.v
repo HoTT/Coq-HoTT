@@ -428,7 +428,7 @@ Proof.
   intros k G g.
   specialize (k G).
   snrapply contr_equiv'.
-  1: exact (hfiber (fun f x => grp_homo_map F G f (i x)) g).
+  1: exact (hfiber (fun f x => grp_homo_map f (i x)) g).
   { rapply equiv_functor_sigma_id.
     intro y; symmetry.
     apply equiv_path_forall. }
@@ -478,7 +478,7 @@ Section FreeGroupGenerated.
     snrapply issurj_retr.
     - apply to_subgroup_generated.
     - apply ap10; cbn.
-      exact (ap (grp_homo_map F_S F_S) (is_retraction)).
+      exact (ap grp_homo_map is_retraction).
   Defined.
 
   (* Therefore, the inclusion map is an equivalence, since it is known to be an embedding. *)

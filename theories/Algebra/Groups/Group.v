@@ -123,14 +123,35 @@ Defined.
 (** Group homomorphisms are maps between groups that preserve the group operation. They allow us to compare groups and map their structure to one another. This is useful for determining if two groups are really the same, in which case we say they are "isomorphic". *)
 
 (** A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
-Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
+Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism {
   grp_homo_map :> group_type G -> group_type H;
-  grp_homo_ishomo :: IsMonoidPreserving grp_homo_map;
+  issemigrouppreserving_grp_homo :: IsSemiGroupPreserving grp_homo_map;
 }.
+
+Arguments grp_homo_map {G H}.
+Arguments Build_GroupHomomorphism {G H} _ _.
+
+(** Group homomorphisms are unit preserving *)
+Global Instance isunitpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsUnitPreserving f.
+Proof.
+  unfold IsUnitPreserving.
+  apply (group_cancelL (f mon_unit)).
+  nrefine (_ @ (grp_unit_r _)^).
+  refine (_ @ ap _ (monoid_left_id _ mon_unit)).
+  symmetry.
+  nrapply issemigrouppreserving_grp_homo.
+Defined.
+
+Global Instance ismonoidpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsMonoidPreserving f
+  := {}.
 
 (** Group homomorphisms are pointed maps. *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
-  := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
+  := Build_pMap G H f (isunitpreserving_grp_homo f).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
@@ -159,7 +180,7 @@ Defined.
 Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
   : f (mon_unit) = mon_unit.
 Proof.
-  apply monmor_unitmor.
+  nrapply isunitpreserving_grp_homo.
 Defined.
 #[export] Hint Immediate grp_homo_unit : group_db.
 
@@ -167,7 +188,7 @@ Defined.
 Definition grp_homo_op {G H} (f : GroupHomomorphism G H)
   : forall x y : G, f (x * y) = f x * f y.
 Proof.
-  apply monmor_sgmor.
+  nrapply issemigrouppreserving_grp_homo.
 Defined.
 #[export] Hint Immediate grp_homo_op : group_db.
 
@@ -185,25 +206,9 @@ Proof.
 Defined.
 #[export] Hint Immediate grp_homo_inv : group_db.
 
-(** When building a group homomorphism we only need that it preserves the group operation, since we can prove that the identity is preserved. *)
-Definition Build_GroupHomomorphism {G H : Group}
-  (f : G -> H) {h : IsSemiGroupPreserving f}
-  : GroupHomomorphism G H.
-Proof.
-  srapply (Build_GroupHomomorphism' _ _ f).
-  split.
-  1: exact h.
-  unfold IsUnitPreserving.
-  apply (group_cancelL (f mon_unit)).
-  refine (_ @ (grp_unit_r _)^).
-  refine (_ @ ap _ (monoid_left_id _ mon_unit)).
-  symmetry.
-  apply h.
-Defined.
-
 (** The identity map is a group homomorphism. *)
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G
-  := Build_GroupHomomorphism idmap.
+  := Build_GroupHomomorphism idmap _.
 
 (** The composition of the underlying functions of two group homomorphisms is also a group homomorphism. *)
 Definition grp_homo_compose {G H K : Group}
@@ -306,7 +311,7 @@ Definition equiv_path_group' {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
   refine (equiv_compose'
-    (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
+    (B := sig (fun f : G <~> H => IsSemiGroupPreserving f)) _ _).
   { revert G H; apply (equiv_path_issig_contr issig_group).
     + intros [G [? [? [? ?]]]].
       exists 1%equiv.
@@ -327,11 +332,15 @@ Proof.
       srefine (path_sigma' _ _ _).
       1: funext x y; apply eq.
       rewrite transport_const.
+      pose (f := Build_GroupHomomorphism
+          (G:=Build_Group G op unit neg ax)
+          (H:=Build_Group G op' unit' neg' ax')
+          idmap eq).
       srefine (path_sigma' _ _ _).
-      1: apply eq.
-      rewrite transport_const.
+      1: exact (grp_homo_unit f).
+      lhs nrapply transport_const.
       funext x.
-      exact (preserves_negate (f:=idmap) _). }
+      exact (grp_homo_inv f x). }
   make_equiv.
 Defined.
 
