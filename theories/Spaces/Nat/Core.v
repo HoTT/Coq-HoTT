@@ -240,7 +240,7 @@ Proof.
 Defined.
 
 (** Addition of natural numbers is associative. *)
-Definition nat_add_assoc n m k : n + (m + k) = (n + m) + k.
+Definition nat_add_assoc@{} n m k : n + (m + k) = (n + m) + k.
 Proof.
   induction n as [|n IHn].
   - reflexivity.
@@ -251,20 +251,20 @@ Defined.
 (** *** Properties of Multiplication *)
 
 (** Multiplication by [0] on the left is [0]. *)
-Definition nat_mul_zero_l n : 0 * n = 0
+Definition nat_mul_zero_l@{} n : 0 * n = 0
   := idpath.
 
 (** Multiplicaiton by [0] on the right is [0]. *)
-Definition nat_mul_zero_r n : n * 0 = 0.
+Definition nat_mul_zero_r@{} n : n * 0 = 0.
 Proof.
   by induction n.
 Defined.
 #[export] Hint Resolve nat_mul_zero_r : core.
 
-Definition nat_mul_succ_l n m : n.+1 * m = m + n * m
+Definition nat_mul_succ_l@{} n m : n.+1 * m = m + n * m
   := idpath.
 
-Definition nat_mul_succ_r n m : n * m.+1 = n * m + n.
+Definition nat_mul_succ_r@{} n m : n * m.+1 = n * m + n.
 Proof.
   induction n as [|n IHn].
   - reflexivity.
@@ -275,6 +275,17 @@ Proof.
     exact IHn.
 Defined.
 #[export] Hint Resolve nat_mul_succ_r : core.
+
+(** Multiplication of natural numbers is commutative. *)
+Definition nat_mul_comm@{} n m : n * m = m * n.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - nrapply nat_mul_zero_r.
+  - lhs nrapply nat_mul_succ_r.
+    lhs nrapply nat_add_comm.
+    snrapply (ap (nat_add n)).
+    exact IHm.
+Defined.
 
 (** ** Equality of natural numbers *)
 
@@ -572,14 +583,6 @@ Proof.
   intros x y H.
   rewrite 2 (nat_add_comm _ k) in H.
   exact (isinj_nat_add_l k _ _ H).
-Defined.
-
-Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
-Proof.
-  induction y as [|y IHy].
-  - apply (nat_mul_zero_r _).
-  - simpl; rewrite nat_add_comm, <- IHy.
-    nrapply nat_mul_succ_r.
 Defined.
 
 (** ** Natural number ordering *)
