@@ -36,20 +36,6 @@ Local Definition transitive_paths_nat (n m k : nat)
 #[export] Hint Resolve leq_trans : nat.
 #[export] Hint Resolve leq_antisym : nat.
 
-Proposition assoc_nat_add (n m k : nat)
-  : n + (m + k) = (n + m) + k.
-Proof.
-  revert m k; simple_induction n n IHn.
-  - reflexivity.
-  - intros m k. change (n.+1 + (m + k)) with (n + (m + k)).+1.
-    apply (transitive_paths _ _ _ (nat_add_succ_r _ _)^).
-    change (m + k).+1 with (m.+1 + k);
-    change (n.+1 + m) with (n + m).+1.
-    apply (transitive_paths _ _ _ (IHn m.+1 k)).
-    apply (ap (fun zz => zz + k)).
-    apply symmetric_paths, (nat_add_succ_r _ _)^. 
-Defined.
-
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
 Proof.
   intros not_lt.

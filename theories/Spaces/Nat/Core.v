@@ -204,9 +204,11 @@ Defined.
 
 (** *** Properties of Addition *)
 
+(** [0] is the left identity of addition. *)
 Definition nat_add_zero_l@{} n : 0 + n = n
   := idpath.
 
+(** [0] is the right identity of addition. *)
 Definition nat_add_zero_r@{} n : n + 0 = n.
 Proof.
   induction n as [|n IHn].
@@ -216,21 +218,33 @@ Proof.
 Defined.
 #[export] Hint Resolve nat_add_zero_r : core.
 
+(** Adding a successor on the left is the same as adding and then taking the successor. *)
 Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
   := idpath.
 
+(** Adding a successor on the right is the same as adding and then taking the successor. *)
 Definition nat_add_succ_r@{} n m : n + m.+1 = (n + m).+1.
 Proof.
   simple_induction' n; simpl; auto.
 Defined.
 #[export] Hint Resolve nat_add_succ_r: core.
 
+(** Addition of natural numbers is commutative. *)
 Definition nat_add_comm@{} n m : n + m = m + n.
 Proof.
   induction n.
   - exact (nat_add_zero_r m)^.
   - rhs nrapply nat_add_succ_r.
     apply (ap nat_succ).
+    exact IHn.
+Defined.
+
+(** Addition of natural numbers is associative. *)
+Definition nat_add_assoc n m k : n + (m + k) = (n + m) + k.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - nrapply (ap nat_succ).
     exact IHn.
 Defined.
 
