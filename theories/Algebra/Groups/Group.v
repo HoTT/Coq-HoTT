@@ -130,8 +130,17 @@ Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism {
 
 Arguments grp_homo_map {G H}.
 Arguments Build_GroupHomomorphism {G H} _ _.
+Arguments issemigrouppreserving_grp_homo {G H} f _ : rename.
 
-(** Group homomorphisms are unit preserving *)
+(** ** Basic properties of group homomorphisms *)
+
+(** Group homomorphisms preserve group operations. This is an alias for [issemigrouppreserving_grp_homo] with the identity written explicitly. *)
+Definition grp_homo_op
+  : forall {G H : Group} (f : GroupHomomorphism G H) (x y : G), f (x * y) = f x * f y
+  := @issemigrouppreserving_grp_homo.
+#[export] Hint Immediate grp_homo_op : group_db.
+
+(** Group homomorphisms are unit preserving. *)
 Global Instance isunitpreserving_grp_homo {G H : Group}
   (f : GroupHomomorphism G H)
   : IsUnitPreserving f.
@@ -144,6 +153,13 @@ Proof.
   nrapply issemigrouppreserving_grp_homo.
 Defined.
 
+(** Group homomorphisms preserve identities. This is an alias for the previous statement. *)
+Definition grp_homo_unit
+  : forall {G H : Group} (f : GroupHomomorphism G H), f mon_unit = mon_unit
+  := @isunitpreserving_grp_homo.
+#[export] Hint Immediate grp_homo_unit : group_db.
+
+(** Therefore, group homomorphisms are monoid homomorphisms. *)
 Global Instance ismonoidpreserving_grp_homo {G H : Group}
   (f : GroupHomomorphism G H)
   : IsMonoidPreserving f
@@ -173,24 +189,6 @@ Proof.
   apply istrunc_S.
   intros f g; apply (istrunc_equiv_istrunc _ equiv_path_grouphomomorphism).
 Defined.
-
-(** ** Basic properties of group homomorphisms *)
-
-(** Group homomorphisms preserve identities. *)
-Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
-  : f (mon_unit) = mon_unit.
-Proof.
-  nrapply isunitpreserving_grp_homo.
-Defined.
-#[export] Hint Immediate grp_homo_unit : group_db.
-
-(** Group homomorphisms preserve group operations. *)
-Definition grp_homo_op {G H} (f : GroupHomomorphism G H)
-  : forall x y : G, f (x * y) = f x * f y.
-Proof.
-  nrapply issemigrouppreserving_grp_homo.
-Defined.
-#[export] Hint Immediate grp_homo_op : group_db.
 
 (** Group homomorphisms preserve inverses. *)
 Definition grp_homo_inv {G H} (f : GroupHomomorphism G H)
