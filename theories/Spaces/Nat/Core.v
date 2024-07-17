@@ -1,14 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics.
 Require Export Basics.Nat.
+Require Import Basics.Classes.
 
 Local Set Universe Minimization ToSet.
 
 Local Unset Elimination Schemes.
-
-Scheme nat_ind := Induction for nat Sort Type.
-Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
 
 (** * Theorems about the natural numbers *)
 
@@ -619,13 +616,20 @@ Proof.
     + apply nat_add_n_Sm.
 Defined.
 
-Definition isinj_nat_add_l k : forall x y, k + x = k + y -> x = y.
+Global Instance isinj_S : IsInjective S.
 Proof.
-  simple_induction' k; simpl; auto.
+  intros x y p.
+  by apply path_nat_S.
 Defined.
 
-Definition isinj_nat_add_r k x y (H : x + k = y + k) : x = y.
+Global Instance isinj_nat_add_l@{} k : IsInjective (add k).
 Proof.
+  simple_induction k k Ik; exact _.
+Defined.
+
+Definition isinj_nat_add_r@{} k : IsInjective (fun x => add x k).
+Proof.
+  intros x y H.
   rewrite 2 (nat_add_comm _ k) in H.
   exact (isinj_nat_add_l k _ _ H).
 Defined.

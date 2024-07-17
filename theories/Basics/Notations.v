@@ -192,6 +192,10 @@ Reserved Infix "++" (right associativity, at level 60).
 Reserved Notation "[ u ]" (at level 0).
 Reserved Notation " [ u , v ] " (at level 0).
 
+(** Algebra *)
+Reserved Infix "*L" (at level 40).
+Reserved Infix "*R" (at level 40).
+
 (** Other / Not sorted yet *)
 
 Reserved Infix "<=>" (at level 70).

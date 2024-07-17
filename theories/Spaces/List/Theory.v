@@ -665,7 +665,7 @@ Proof.
   - rewrite nataddsub_assoc.
     2: exact H.
     rewrite <- predeqminus1.
-    induction n in |- * using nat_ind@{Set}.
+    induction n in |- *.
     1: reflexivity.
     cbn; assumption.
   - exact (leq_trans _ H).
@@ -690,7 +690,7 @@ Defined.
 Definition length_seq_rev@{} (n : nat)
   : length (seq_rev n) = n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
 Defined.
@@ -707,7 +707,7 @@ Defined.
 Definition seq_rev_cons@{} (n : nat)
   : seq_rev n.+1 = n :: seq_rev n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
 Defined.
@@ -728,7 +728,7 @@ Proof.
     snrapply (functor_sigma idmap).
     intros k H.
     exact (leq_S _ _ H). }
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: exact nil.
   nrefine ((n; _) :: list_map (f n) IHn).
   exact _.
@@ -742,7 +742,7 @@ Definition seq'@{} (n : nat) : list {k : nat & (k < n)%nat}
 Definition length_seq_rev'@{} (n : nat)
   : length (seq_rev' n) = n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
   lhs nrapply length_list_map.
@@ -761,7 +761,7 @@ Defined.
 Definition seq_rev_seq_rev'@{} (n : nat)
   : list_map pr1 (seq_rev' n) = seq_rev n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   simpl; f_ap.
   lhs_V nrapply list_map_compose.
@@ -781,11 +781,11 @@ Defined.
 Definition nth_seq_rev@{} {n i} (H : (i < n)%nat)
   : nth (seq_rev n) i = Some (n - i.+1)%nat.
 Proof.
-  induction i as [|i IHi] in n, H |- * using nat_ind@{Set}.
-  - induction n using nat_ind@{Set}.
+  induction i as [|i IHi] in n, H |- *.
+  - induction n.
     1: destruct (not_leq_Sn_0 _ H).
     cbn; by rewrite sub_n_0.
-  - induction n as [|n IHn] using nat_ind@{Set}.
+  - induction n as [|n IHn].
     1: destruct (not_leq_Sn_0 _ H).
     by apply IHi, leq_S_n.
 Defined.
@@ -794,7 +794,7 @@ Defined.
 Definition nth_seq@{} {n i} (H : (i < n)%nat)
   : nth (seq n) i = Some i.
 Proof.
-  induction n using nat_ind@{Set}.
+  induction n.
   1: destruct (not_leq_Sn_0 _ H).
   rewrite seq_succ.
   destruct (dec (i < n)%nat) as [H'|H'].

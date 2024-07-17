@@ -1,3 +1,4 @@
+Require Export Basics.Classes.
 Require Import Spaces.Nat.Core.
 Require Export HoTT.Classes.interfaces.canonical_names.
 Require Import Modalities.ReflectiveSubuniverse.
@@ -345,27 +346,6 @@ Section morphism_classes.
     latticemor_meet_mor.
   End latticemorphism_classes.
 End morphism_classes.
-
-Section jections.
-  Context {A B} (f : A -> B).
-
-  Class IsInjective := injective : forall x y, f x = f y -> x = y.
-
-  Lemma isinjective_ne `{!IsInjective} x y :
-    x <> y -> f x <> f y.
-  Proof.
-    intros E1 E2. apply E1.
-    apply injective.
-    assumption.
-  Qed.
-
-End jections.
-
-Global Instance isinj_idmap A : @IsInjective A A idmap
-  := fun x y => idmap.
-
-#[export]
-Hint Unfold IsInjective : typeclass_instances.
 
 #[export]
 Instance isinjective_mapinO_tr {A B : Type} (f : A -> B)

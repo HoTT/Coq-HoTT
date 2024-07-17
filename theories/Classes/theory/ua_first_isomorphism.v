@@ -246,7 +246,7 @@ End first_isomorphism_surjection.
 Section first_isomorphism_inj.
   Context
     `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
-    (f : ∀ s, A s → B s) `{!IsHomomorphism f} (inj : ∀ s, isinj (f s)).
+    (f : ∀ s, A s → B s) `{!IsHomomorphism f} (inj : ∀ s, IsInjective (f s)).
 
   Global Instance is_isomorphism_quotient_first_isomorphism_inj
     : IsIsomorphism (hom_quotient (cong_ker f)).

@@ -167,14 +167,14 @@ Section semiringmor_props.
   Context `{!IsInjective f}.
   Instance isinjective_ne_0 x : PropHolds (x <> 0) -> PropHolds (f x <> 0).
   Proof.
-  intros. rewrite <-preserves_0. apply (isinjective_ne f).
+  intros. rewrite <-preserves_0. apply (neq_isinj f).
   assumption.
   Qed.
 
   Lemma injective_ne_1 x : x <> 1 -> f x <> 1.
   Proof.
   intros. rewrite <-preserves_1.
-  apply (isinjective_ne f).
+  apply (neq_isinj f).
   assumption.
   Qed.
 End semiringmor_props.
