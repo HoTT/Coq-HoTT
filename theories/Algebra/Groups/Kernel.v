@@ -17,13 +17,13 @@ Proof.
     refine (grp_homo_op _ _ _ @ ap011 _ p _ @ _).
     1: apply grp_homo_inv.
     rewrite q; apply right_inverse.
-  - intros x y; cbn.
+  - intros x y; cbn; intros p.
     rewrite 2 grp_homo_op.
-    rewrite 2 grp_homo_inv.
-    refine (_^-1 oE grp_moveL_M1).
-    refine (_ oE equiv_path_inverse _ _).
-    apply grp_moveR_1M.
-  Defined.
+    rewrite grp_homo_inv.
+    apply grp_moveL_1M^-1.
+    rewrite p.
+    apply grp_unit_r.
+Defined.
 
 (** ** Corecursion principle for group kernels *)
 

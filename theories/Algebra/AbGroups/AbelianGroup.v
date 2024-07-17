@@ -74,11 +74,9 @@ Coercion abgroup_subgroup : Subgroup >-> AbGroup.
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
-  intros x y; unfold in_cosetL, in_cosetR.
-  refine (_ oE equiv_subgroup_inverse _ _).
-  rewrite negate_sg_op.
-  rewrite negate_involutive.
-  by rewrite (commutativity (-y) x).
+  intros x y; unfold in_cosetL, in_cosetR; intros h.
+  rewrite ab_comm, grp_assoc, grp_inv_l, grp_unit_l.
+  exact h.
 Defined.
 
 (** ** Quotients of abelian groups *)
