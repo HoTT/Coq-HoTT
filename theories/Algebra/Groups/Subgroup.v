@@ -165,9 +165,9 @@ Coercion subgroup_group : Subgroup >-> Group.
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
 Proof.
-  snrapply Build_GroupHomomorphism'.
+  snrapply Build_GroupHomomorphism.
   1: exact pr1.
-  repeat split.
+  hnf; reflexivity.
 Defined.
 
 Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
