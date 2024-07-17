@@ -621,7 +621,7 @@ Proof.
       * intros a a' z; cbn beta.
         apply (grp_homo_op (ab_mul z)).
     + hnf.
-      change (forall x : ?A, (grp_homo_map _ _ ?f) ((grp_homo_map _ _ ?g) x) = x)
+      change (forall x : ?A, (grp_homo_map ?f) ((grp_homo_map ?g) x) = x)
         with (f $o g $== Id _).
       snrapply ab_tensor_prod_ind_homotopy.
       intros a z.
