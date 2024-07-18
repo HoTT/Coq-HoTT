@@ -555,6 +555,8 @@ Proof.
     nrapply tensor_dist_r.
 Defined.
 
+Arguments ab_tensor_prod_twist_map {A B C} _ _ /.
+
 Local Definition ab_tensor_prod_twist_map_additive_r {A B C : AbGroup}
   (a : A) (b b' : ab_tensor_prod B C)
   : ab_tensor_prod_twist_map a (b + b')
