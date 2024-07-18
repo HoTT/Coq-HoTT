@@ -150,11 +150,10 @@ Section QuotientGroup.
     - srapply Quotient_rec.
       + exact f.
       + cbn; intros x y n.
-        symmetry.
-        apply grp_moveL_M1.
-        rewrite <- grp_homo_inv.
-        rewrite <- grp_homo_op.
-        apply h; assumption.
+        apply grp_moveR_M1.
+        rhs_V nrapply (ap (.* f y) (grp_homo_inv _ _)).
+        rhs_V nrapply grp_homo_op.
+        symmetry; apply h; assumption.
     - intro x.
       refine (Quotient_ind_hprop _ _ _).
       intro y. revert x.

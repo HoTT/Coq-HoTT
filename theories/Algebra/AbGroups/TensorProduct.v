@@ -152,6 +152,44 @@ Defined.
 (** Here we write down some induction principles to help us prove lemmas about the tensor product. Some of these are quite specialised but are patterns that appear often in practice. *) 
 
 (** Our main recursion principle states that in order to build a homomorphism out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *)
+
+(** We separate out the proof of this part, so we can make it opaque. *)
+Definition ab_tensor_prod_rec_helper {A B C : AbGroup}
+  (f : A -> B -> C)
+  (l : forall a b b', f a (b + b') = f a b + f a b')
+  (r : forall a a' b, f (a + a') b = f a b + f a' b)
+  (x : FreeAbGroup (A * B)) (insg : subgroup_biadditive_pairs x)
+  : grp_homo_abel_rec (FreeGroup_rec (A * B) C (uncurry f)) x = mon_unit.
+Proof.
+  strip_truncations.
+  induction insg as
+    [ x [ [ a [ a' [ b p ] ] ] | [ a [ b [ b' p ] ] ] ]
+    |
+    | ? ? ? H1 ? H2 ].
+  - destruct p.
+    rewrite grp_homo_op.
+    rewrite grp_homo_inv.
+    apply grp_moveL_1M^-1%equiv.
+    unfold freeabgroup_in.
+    change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
+    simpl; rewrite 2 grp_unit_r.
+    apply r.
+  - destruct p.
+    rewrite grp_homo_op.
+    rewrite grp_homo_inv.
+    apply grp_moveL_1M^-1%equiv.
+    unfold freeabgroup_in.
+    change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
+    simpl; rewrite 2 grp_unit_r.
+    apply l.
+  - nrapply grp_homo_unit.
+  - rewrite grp_homo_op, grp_homo_inv.
+    apply grp_moveL_1M^-1.
+    exact(H1 @ H2^).
+Defined.
+
+Opaque ab_tensor_prod_rec_helper.
+
 Definition ab_tensor_prod_rec {A B C : AbGroup}
   (f : A -> B -> C)
   (l : forall a b b', f a (b + b') = f a b + f a b')
@@ -163,32 +201,8 @@ Proof.
   - snrapply grp_homo_abel_rec.
     snrapply FreeGroup_rec.
     exact (uncurry f).
-  - intros x H.
-    strip_truncations.
-    induction H as
-      [ x [ [ a [ a' [ b p ] ] ] | [ a [ b [ b' p ] ] ] ]
-      |
-      | ? ? ? H1 ? H2 ].
-    + destruct p.
-      rewrite grp_homo_op.
-      rewrite grp_homo_inv.
-      apply grp_moveL_1M^-1%equiv.
-      unfold freeabgroup_in.
-      change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-      simpl; rewrite 2 grp_unit_r.
-      apply r.
-    + destruct p.
-      rewrite grp_homo_op.
-      rewrite grp_homo_inv.
-      apply grp_moveL_1M^-1%equiv.
-      unfold freeabgroup_in.
-      change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-      simpl; rewrite 2 grp_unit_r.
-      apply l.
-    + nrapply grp_homo_unit.
-    + rewrite grp_homo_op, grp_homo_inv.
-      apply grp_moveL_1M^-1.
-      exact(H1 @ H2^).
+  - unfold normalsubgroup_subgroup.
+    apply ab_tensor_prod_rec_helper; assumption.
 Defined.
 
 (** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on simple tensors. Typically in an argument we want our recursor to act on simple tensors without the extra [0] and this lemma makes sure of that. *)
