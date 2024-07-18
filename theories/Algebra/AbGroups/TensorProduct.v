@@ -538,27 +538,55 @@ Defined.
 
 (** In order to construct the symmetric monoidal category, we will use what is termed the "Twist construction" in Monoidal.v. This simplifies the data of a symmetric monoidal category by constructing it from simpler parts. For instance, instead of having to prove full associativity [(A ⊗ B) ⊗ C $-> A ⊗ (B ⊗ C)], we can provide a twist map [A ⊗ (B ⊗ C) $-> B ⊗ (A ⊗ C)] and use the symmetric braiding we have so far to prove associativity. *)
 
+(** In order to be more efficient whilst unfolding definitions, we break up the definition of a twist map into its components. *)
+
+Local Definition ab_tensor_prod_twist_map {A B C : AbGroup}
+  : A -> ab_tensor_prod B C -> ab_tensor_prod B (ab_tensor_prod A C).
+Proof.
+  intros a.
+  snrapply ab_tensor_prod_rec.
+  - intros b c.
+    exact (tensor b (tensor a c)).
+  - intros b c c'; hnf.
+    lhs nrapply ap.
+    1: nrapply tensor_dist_l.
+    nrapply tensor_dist_l.
+  - intros b b' c; hnf.
+    nrapply tensor_dist_r.
+Defined.
+
+Local Definition ab_tensor_prod_twist_map_additive_r {A B C : AbGroup}
+  (a : A) (b b' : ab_tensor_prod B C)
+  : ab_tensor_prod_twist_map a (b + b')
+    = ab_tensor_prod_twist_map a b + ab_tensor_prod_twist_map a b'.
+Proof.
+  intros; nrapply grp_homo_op.
+Defined.
+
+Local Definition ab_tensor_prod_twist_map_additive_l {A B C : AbGroup}
+  (a a' : A) (b : ab_tensor_prod B C)
+  : ab_tensor_prod_twist_map (a + a') b
+    = ab_tensor_prod_twist_map a b + ab_tensor_prod_twist_map a' b.
+Proof.  
+  revert b.
+  nrapply ab_tensor_prod_ind_homotopy_plus.
+  intros b c.
+  rhs nrapply (ap011 (+)).
+  2,3: nrapply ab_tensor_prod_rec_beta_tensor.
+  lhs nrapply ab_tensor_prod_rec_beta_tensor.
+  rhs_V nrapply tensor_dist_l.
+  snrapply (ap (tensor b)).
+  nrapply tensor_dist_r.
+Defined.
+
 (** Given a triple tensor product, we have a twist map which permutes the first two components. *)
 Definition ab_tensor_prod_twist {A B C}
   : ab_tensor_prod A (ab_tensor_prod B C) $-> ab_tensor_prod B (ab_tensor_prod A C).
 Proof.
   snrapply ab_tensor_prod_rec.
-  - intros a.
-    snrapply ab_tensor_prod_rec.
-    + intros b c.
-      exact (tensor b (tensor a c)).
-    + intros b c c'; hnf.
-      lhs nrapply ap.
-      1: nrapply tensor_dist_l.
-      nrapply tensor_dist_l.
-    + intros b b' c; hnf.
-      nrapply tensor_dist_r.
-  - intros; nrapply grp_homo_op.
-  - intros a a'; unfold prod_ind; hnf.
-    nrapply ab_tensor_prod_ind_homotopy_plus.
-    intros b c.
-    rewrite 3 ab_tensor_prod_rec_beta_tensor.
-    by rewrite tensor_dist_r, tensor_dist_l.
+  - exact ab_tensor_prod_twist_map. 
+  - exact ab_tensor_prod_twist_map_additive_r.
+  - exact ab_tensor_prod_twist_map_additive_l.
 Defined.
 
 (** The twist map acts in the expected way on simple tensors. *)
