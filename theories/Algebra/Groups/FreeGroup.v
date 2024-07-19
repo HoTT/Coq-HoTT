@@ -253,14 +253,14 @@ Section Reduction.
     - exact (- s x).
   Defined.
 
+  (** When we have a list of words we can recursively define a group element. The obvious choice would be to map [nil] to the identity and [x :: xs] to [x * words_rec xs]. This has the disadvantage that a single generating element gets mapped to [x * 1] instead of [x]. To fix this issue, we map [nil] to the identity, the singleton to the element we want, and do the rest recursively. *)
   Definition words_rec (G : Group) (s : A -> G) : Words -> G.
   Proof.
-    intro x.
-    induction x as [|x xs IHxs].
+    intro xs.
+    induction xs as [|x [|y xs] IHxs].
     - exact mon_unit.
-    - destruct xs.
-      + exact (word_rec G s x).
-      + exact (word_rec G s x * IHxs).
+    - exact (word_rec G s x).
+    - exact (word_rec G s x * IHxs).
   Defined.
 
   Definition words_rec_cons (G : Group) (s : A -> G) (x : A + A) (xs : Words)
@@ -304,7 +304,7 @@ Section Reduction.
     - nrapply grp_inv_l.
   Defined.
 
-  (** Given a group [G] we can construct a group homomorphism [FreeGroup A -> G] if we have a map [A -> G] *)
+  (** Given a group [G] we can construct a group homomorphism [FreeGroup A -> G] if we have a map [A -> G]. *)
   Definition FreeGroup_rec (G : Group) (s : A -> G)
     : GroupHomomorphism FreeGroup G.
   Proof.
