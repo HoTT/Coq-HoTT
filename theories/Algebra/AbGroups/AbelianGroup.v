@@ -106,6 +106,8 @@ Defined.
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
   := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).
 
+Arguments QuotientAbGroup G H : simpl never.
+
 Definition quotient_abgroup_map (G : AbGroup) (H : Subgroup G)
   : GroupHomomorphism G (QuotientAbGroup G H).
 Proof.

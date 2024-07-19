@@ -308,6 +308,8 @@ Proof.
   - exact _.
 Defined.
 
+Arguments abel G : simpl never.
+
 (** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
 Definition abel_unit {G : Group}
   : GroupHomomorphism G (abel G)

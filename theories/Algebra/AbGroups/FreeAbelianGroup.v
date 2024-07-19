@@ -30,6 +30,8 @@ Global Instance isfreeabgroup_isfreeabgroupon (S : Type) (F_S : AbGroup) (i : S 
 Definition FreeAbGroup (S : Type) : AbGroup
   := abel (FreeGroup S).
 
+Arguments FreeAbGroup S : simpl never.
+
 Definition freeabgroup_in {S : Type} : S -> FreeAbGroup S
   := abel_unit o freegroup_in.
 

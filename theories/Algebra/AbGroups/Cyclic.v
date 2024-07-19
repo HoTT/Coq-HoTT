@@ -48,8 +48,7 @@ Lemma Z1_mul_nat_beta {A : AbGroup} (a : A) (n : nat)
 Proof.
   induction n as [|n H].
   1: easy.
-  refine (grp_pow_natural _ _ _ @ _); simpl.
-  by rewrite grp_unit_r.
+  exact (grp_pow_natural _ _ _).
 Defined.
 
 (** [ab_Z1] is projective. *)
@@ -65,8 +64,7 @@ Proof.
   apply path_homomorphism_from_free_group.
   simpl.
   intros [].
-  refine (_ @ a.2).
-  exact (ap p (grp_unit_r _)).
+  exact a.2.
 Defined.
 
 (** The map sending the generator to [1 : Int]. *)

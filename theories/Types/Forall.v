@@ -366,6 +366,8 @@ Definition flip `{P : A -> B -> Type}
   : (forall a b, P a b) -> (forall b a, P a b)
   := fun f b a => f a b.
 
+Arguments flip {A B P} f b a /.
+
 Global Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P) | 0.
 Proof.

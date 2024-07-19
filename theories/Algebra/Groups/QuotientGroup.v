@@ -173,6 +173,7 @@ Section QuotientGroup.
 
 End QuotientGroup.
 
+Arguments QuotientGroup G N : simpl never.
 Arguments grp_quotient_map {_ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.

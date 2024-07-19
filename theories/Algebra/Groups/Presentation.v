@@ -3,7 +3,7 @@ Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.FreeGroup.
 Require Import Algebra.Groups.GroupCoeq.
-Require Import Spaces.Finite.
+Require Import Spaces.Finite Spaces.List.Core.
 Require Import WildCat.
 
 
@@ -92,21 +92,10 @@ Proof.
   intros f.
   srapply equiv_iff_hprop.
   { intros p.
-    hnf.
-    rapply Trunc_ind.
-    srapply Coeq.Coeq_ind.
-    2: intros; apply path_ishprop.
-    intros w; hnf.
-    induction w.
-    1: reflexivity.
-    simpl.
-    refine (_ @ _ @ _^).
-    1,3: exact (grp_homo_op (FreeGroup_rec _ _ _) _ _).
-    f_ap.
-    destruct a.
-    1: refine (p _ @ (grp_homo_unit _)^).
-    refine (grp_homo_inv _ _ @ ap _ _ @ (grp_homo_inv _ _)^).
-    refine (p _ @ (grp_homo_unit _)^). }
+    change (equiv_freegroup_rec H _ f $o FreeGroup_rec _ _ (gp_relators P)
+      $== equiv_freegroup_rec _ _ f $o FreeGroup_rec _ _ (fun _ => group_unit)).
+    rapply FreeGroup_ind_homotopy.
+    exact p. }
   intros p r.
   hnf in p.
   pose (p' := p o freegroup_eta).
@@ -115,9 +104,7 @@ Proof.
   refine (_ @ p').
   clear p'.
   symmetry.
-  refine (grp_homo_op _ _ _ @ _).
-  refine (_ @ right_identity _).
-  f_ap.
+  reflexivity.
 Defined.
 
 (** ** Constructors for finite presentations *)

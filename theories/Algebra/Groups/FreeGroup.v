@@ -260,40 +260,61 @@ Section Reduction.
   Proof.
     snrapply (Build_Group freegroup_type); repeat split; exact _.
   Defined.
+  
+  Definition word_rec (G : Group) (s : A -> G) : A + A -> G.
+  Proof.
+    intros [x|x].
+    - exact (s x).
+    - exact (- s x).
+  Defined.
 
   Definition words_rec (G : Group) (s : A -> G) : Words -> G.
   Proof.
     intro x.
-    induction x as [|x xs].
-    1: exact mon_unit.
-    refine (_ * IHxs).
-    destruct x as [x|x].
-    1: exact (s x).
-    exact (- s x).
+    induction x as [|x xs IHxs].
+    - exact mon_unit.
+    - destruct xs.
+      + exact (word_rec G s x).
+      + exact (word_rec G s x * IHxs).
+  Defined.
+
+  Definition words_rec_cons (G : Group) (s : A -> G) (x : A + A) (xs : Words)
+    : words_rec G s (x :: xs)%list = word_rec G s x * words_rec G s xs.
+  Proof.
+    induction xs in x |- *.
+    - symmetry; nrapply grp_unit_r.
+    - reflexivity.
   Defined.
 
   Lemma words_rec_pp (G : Group) (s : A -> G)  (x y : Words)
     : words_rec G s (x @ y) = words_rec G s x * words_rec G s y.
   Proof.
-    induction x.
-    1: symmetry; apply left_identity.
-    cbn; rewrite <- simple_associativity.
-    f_ap.
+    induction x as [|x xs IHxs] in y |- *.
+    - symmetry; nrapply grp_unit_l.
+    - change ((?x :: ?xs)%list @ y) with (x :: xs @ y)%list.
+      lhs nrapply words_rec_cons.
+      lhs nrapply ap.
+      1: nrapply IHxs.
+      lhs nrapply grp_assoc.
+      nrapply (ap (.* _)).
+      symmetry.
+      apply words_rec_cons.
   Defined.
 
   Lemma words_rec_coh (G : Group) (s : A -> G) (a : A + A) (b c : Words)
     : words_rec G s (map1 (b, a, c)) = words_rec G s (map2 (b, a, c)).
   Proof.
     unfold map1, map2.
-    refine (concat _ (words_rec_pp G s _ _)^).
-    refine (concat (words_rec_pp G s _ _) _); f_ap.
-    refine (concat _ (right_identity _)).
-    refine (concat (ap _ (word_concat_w_ww _ _ _)^) _).
-    refine (concat (words_rec_pp G s _ _) _); f_ap.
-    refine (concat (concat (simple_associativity _ _ _) _) (left_identity mon_unit)).
-    destruct a; simpl; f_ap.
-    + apply right_inverse.
-    + apply left_inverse.
+    rhs nrapply (words_rec_pp G s).
+    lhs nrapply words_rec_pp.
+    nrapply (ap (.* _)).
+    rewrite <- word_concat_w_ww.
+    lhs nrapply words_rec_pp.
+    rhs_V nrapply grp_unit_r.
+    nrapply (ap (_ *.)).
+    destruct a; simpl.
+    - nrapply grp_inv_r.
+    - nrapply grp_inv_l.
   Defined.
 
   (** Given a group [G] we can construct a group homomorphism [FreeGroup A -> G] if we have a map [A -> G] *)
@@ -313,48 +334,12 @@ Section Reduction.
     apply words_rec_pp.
   Defined.
 
-  (** Now we need to prove that the free group satisifes the unviersal property of the free group. *)
-  (** TODO: remove funext from here and universal property of free group *)
-  Global Instance isfreegroupon_freegroup `{Funext}
-    : IsFreeGroupOn A FreeGroup (freegroup_eta o word_sing o inl).
-  Proof.
-    intros G f.
-    snrapply Build_Contr.
-    { srefine (_;_); simpl.
-      1: apply FreeGroup_rec, f.
-      intro x; simpl.
-      apply right_identity. }
-    intros [g h].
-    nrapply path_sigma_hprop; [ exact _ |].
-    simpl.
-    apply equiv_path_grouphomomorphism.
-    intro x.
-    rewrite <- (path_forall _ _ h).
-    strip_truncations; revert x.
-    snrapply Coeq_ind; intro x; [|apply path_ishprop].
-    hnf; symmetry.
-    induction x.
-    1: apply (grp_homo_unit g).
-    refine (concat (grp_homo_op g (freegroup_eta [a]) (freegroup_eta x)) _).
-    simpl.
-    f_ap.
-    destruct a.
-    1: reflexivity.
-    exact (grp_homo_inv g (freegroup_eta [inl a])).
-  Defined.
-
-  (** Typeclass search can already find this but we leave it here as a definition for reference. *)
-  Definition isfreegroup_freegroup `{Funext} : IsFreeGroup FreeGroup := _.
-
   Definition freegroup_in : A -> FreeGroup
     := freegroup_eta o word_sing o inl.
 
-  Lemma FreeGroup_rec_beta {G : Group} (f : A -> G)
-    : FreeGroup_rec _ f o freegroup_in == f.
-  Proof.
-    intros x.
-    apply grp_unit_r.
-  Defined.
+  Definition FreeGroup_rec_beta {G : Group} (f : A -> G)
+    : FreeGroup_rec _ f o freegroup_in == f
+    := fun _ => idpath.
 
   Coercion freegroup_in : A >-> group_type.
   
@@ -390,6 +375,51 @@ Section Reduction.
       + change (P (-(freegroup_in a) * freegroup_eta w)).
         by apply Hop.
   Defined.
+  
+  Definition FreeGroup_ind_homotopy {G : Group} {f f' : FreeGroup $-> G}
+    (H : forall x, f (freegroup_in x) = f' (freegroup_in x))
+    : f $== f'.
+  Proof.
+    rapply FreeGroup_ind_hprop'.
+    induction w as [|[a|a] w IHw].
+    - rhs nrapply grp_homo_unit.
+      nrapply grp_homo_unit.
+    - change (f (freegroup_in a * freegroup_eta w)
+        = f' (freegroup_in a * freegroup_eta w)).
+      lhs nrapply grp_homo_op.
+      rhs nrapply grp_homo_op.
+      exact (ap011 (.*.) (H a) IHw).
+    - change (f (-freegroup_in a * freegroup_eta w)
+        = f' (- freegroup_in a * freegroup_eta w)).
+      lhs nrapply grp_homo_op.
+      rhs nrapply grp_homo_op.
+      nrefine (ap011 (.*.) _ IHw).
+      lhs nrapply grp_homo_inv.
+      rhs nrapply grp_homo_inv.
+      exact (ap (-) (H _)).
+  Defined.
+
+  (** Now we need to prove that the free group satisifes the unviersal property of the free group. *)
+  (** TODO: remove funext from here and universal property of free group *)
+  Global Instance isfreegroupon_freegroup `{Funext}
+    : IsFreeGroupOn A FreeGroup (freegroup_eta o word_sing o inl).
+  Proof.
+    intros G f.
+    snrapply Build_Contr.
+    { srefine (_;_); simpl.
+      1: apply FreeGroup_rec, f.
+      intro x; reflexivity. }
+    intros [g h].
+    nrapply path_sigma_hprop; [ exact _ |].
+    simpl.
+    apply equiv_path_grouphomomorphism.
+    symmetry.
+    snrapply FreeGroup_ind_homotopy.
+    exact h.
+  Defined.
+
+  (** Typeclass search can already find this but we leave it here as a definition for reference. *)
+  Definition isfreegroup_freegroup `{Funext} : IsFreeGroup FreeGroup := _.
 
 End Reduction.
 

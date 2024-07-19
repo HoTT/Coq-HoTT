@@ -46,6 +46,8 @@ Definition subgroup_biadditive_pairs {A B : AbGroup}
 Definition ab_tensor_prod (A B : AbGroup) : AbGroup
   := QuotientAbGroup (FreeAbGroup (A * B)) subgroup_biadditive_pairs.
 
+Arguments ab_tensor_prod A B : simpl never.
+
 (** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as simple tensors and name them [tensor]. *)
 Definition tensor {A B : AbGroup} : A -> B -> ab_tensor_prod A B
   := fun a b => grp_quotient_map (freeabgroup_in (a, b)).
@@ -170,18 +172,12 @@ Proof.
     rewrite grp_homo_op.
     rewrite grp_homo_inv.
     apply grp_moveL_1M^-1%equiv.
-    unfold freeabgroup_in.
-    change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-    simpl; rewrite 2 grp_unit_r.
-    apply r.
+    exact (r a a' b).
   - destruct p.
     rewrite grp_homo_op.
     rewrite grp_homo_inv.
     apply grp_moveL_1M^-1%equiv.
-    unfold freeabgroup_in.
-    change (grp_homo_abel_rec ?f (abel_unit ?x)) with (f x).
-    simpl; rewrite 2 grp_unit_r.
-    apply l.
+    exact (l a b b').
   - nrapply grp_homo_unit.
   - rewrite grp_homo_op, grp_homo_inv.
     apply grp_moveL_1M^-1.
@@ -205,17 +201,13 @@ Proof.
     apply ab_tensor_prod_rec_helper; assumption.
 Defined.
 
-(** Since we defined [ab_tensor_prod_rec] using the recursors of the underlying type, we get an annoying artifact of [x + 0] instead of [x] when acting on simple tensors. Typically in an argument we want our recursor to act on simple tensors without the extra [0] and this lemma makes sure of that. *)
 Definition ab_tensor_prod_rec_beta_tensor {A B C : AbGroup}
   (f : A -> B -> C)
   (l : forall a b b', f a (b + b') = f a b + f a b')
   (r : forall a a' b, f (a + a') b = f a b + f a' b) 
   (a : A) (b : B)
-  : ab_tensor_prod_rec f l r (tensor a b) = f a b.
-Proof.
-  change (f a b + mon_unit = f a b).
-  apply grp_unit_r.
-Defined.
+  : ab_tensor_prod_rec f l r (tensor a b) = f a b
+  := idpath.
 
 (** We give an induction principle for an hprop-valued type family [P].  It may be surprising at first that we only require [P] to hold for the simple tensors [tensor a b] and be closed under addition.  It automatically follows that [P 0] holds (since [tensor 0 0 = 0]) and that [P] is closed under negation (since [tensor -a b = - tensor a b]). This induction principle says that the simple tensors generate the tensor product as a semigroup. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
@@ -390,8 +382,7 @@ Proof.
   - intros [f [l r]].
     snrapply (equiv_ap_inv' issig_Biadditive).
     rapply path_sigma_hprop.
-    funext a b.
-    snrapply grp_unit_r.
+    reflexivity.
 Defined.
 
 (** ** Functoriality of the Tensor Product *)
@@ -504,9 +495,8 @@ Definition ab_tensor_swap_swap {A B}
   : ab_tensor_swap $o @ab_tensor_swap A B $== Id _. 
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b; hnf.
-  change (ab_tensor_swap (ab_tensor_swap (tensor a b)) = tensor a b).
-  by rewrite 2 ab_tensor_swap_beta_tensor.
+  intros a b; simpl.
+  reflexivity.
 Defined. 
 
 (** [ab_tensor_swap] is natural in both arguments. This means that it also acts on tensor functors. *)
@@ -515,12 +505,8 @@ Definition ab_tensor_swap_natural {A B A' B'} (f : A $-> A') (g : B $-> B')
     $== functor_ab_tensor_prod g f $o ab_tensor_swap.
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b.
-  change (ab_tensor_swap (functor_ab_tensor_prod f g (tensor a b))
-    = functor_ab_tensor_prod g f (ab_tensor_swap (tensor a b))).
-  rewrite functor_ab_tensor_prod_beta_tensor.
-  rewrite 2 ab_tensor_swap_beta_tensor.
-  by rewrite functor_ab_tensor_prod_beta_tensor.
+  intros a b; simpl.
+  reflexivity.
 Defined.
 
 (** The data of swap together gives us a symmetric braiding on the category of abelian groups. We will later show it is a full symmetric monoidal category. *)
@@ -604,9 +590,8 @@ Definition ab_tensor_prod_twist_twist {A B C}
 Proof.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b c.
-  change (ab_tensor_prod_twist (ab_tensor_prod_twist (tensor a (tensor b c)))
-    = tensor a (tensor b c)).
-  by rewrite 2 ab_tensor_prod_twist_beta_tensor_tensor.
+  change (tensor a (tensor b c) = tensor a (tensor b c)).
+  exact idpath.
 Defined.
 
 (** The twist map is natural in all 3 arguments. This means that the twist map acts on the triple tensor functor in the same way. *)
@@ -617,11 +602,8 @@ Definition ab_tensor_prod_twist_natural {A B C A' B' C'}
 Proof.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b c.
-  change (ab_tensor_prod_twist (functor_ab_tensor_prod f (functor_ab_tensor_prod g h) (tensor a (tensor b c)))
-    = functor_ab_tensor_prod g (functor_ab_tensor_prod f h) (ab_tensor_prod_twist (tensor a (tensor b c)))).
-  rewrite 2 functor_ab_tensor_prod_beta_tensor.
-  rewrite 2 ab_tensor_prod_twist_beta_tensor_tensor.
-  by rewrite 2 functor_ab_tensor_prod_beta_tensor.
+  change (tensor (g b) (tensor (f a) (h c)) = tensor (g b) (tensor (f a) (h c))).
+  exact idpath.
 Defined.
 
 (** ** Unitality of [abgroup_Z] *)
@@ -695,13 +677,8 @@ Proof.
     intros a z.
     rhs nrapply (ap f).
     2: nrapply ab_tensor_prod_rec_beta_tensor.
-    change (ab_tensor_prod_Z_r (fmap (flip ab_tensor_prod abgroup_Z) f (tensor a z))
-      = f (grp_pow_homo a z)).
-    lhs nrapply ap.
-    1: nrapply functor_ab_tensor_prod_beta_tensor.
-    lhs nrapply ab_tensor_prod_rec_beta_tensor.
-    symmetry.
-    apply grp_pow_natural.
+    simpl; symmetry.
+    nrapply grp_pow_natural.
 Defined.
 
 (** Since we have symmetry of the tensor product, we get left unitality for free. *)
@@ -730,18 +707,6 @@ Proof.
   intros A B.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b z.
-  (** Here we have to get the goal into the correct form to be able to reduce the functions on the simple tensors. *)
-  (** TODO: work out a way to reduce these change statements. *)
-  change (functor_ab_tensor_prod (Id A) (rightunitor_ab_tensor_prod B) (tensor a (tensor b z))
-   = ab_tensor_swap (functor_ab_tensor_prod (Id B)
-    (rightunitor_ab_tensor_prod A) (ab_tensor_prod_twist (tensor a (tensor b z))))).
-  rewrite ab_tensor_prod_twist_beta_tensor_tensor.
-  rewrite 2 functor_ab_tensor_prod_beta_tensor.
-  rewrite ab_tensor_swap_beta_tensor.
-  lhs nrapply ap.
-  1: rapply ab_tensor_prod_rec_beta_tensor.
-  rhs nrapply (ap (fun x => tensor x _)).
-  2: rapply ab_tensor_prod_rec_beta_tensor.
   exact (tensor_ab_mul _ _ _)^.
 Defined.
 
@@ -752,17 +717,8 @@ Proof.
   intros A B C.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros b a c.
-  change (functor_ab_tensor_prod (Id C) ab_tensor_swap (ab_tensor_prod_twist
-        (functor_ab_tensor_prod (Id B) ab_tensor_swap (tensor b (tensor a c))))
-    = ab_tensor_prod_twist (functor_ab_tensor_prod (Id A) ab_tensor_swap
-        (ab_tensor_prod_twist (tensor b (tensor a c))))).
-  rewrite functor_ab_tensor_prod_beta_tensor.
-  rewrite ab_tensor_swap_beta_tensor.
-  rewrite 2 ab_tensor_prod_twist_beta_tensor_tensor.
-  rewrite 2 functor_ab_tensor_prod_beta_tensor.
-  rewrite 2 ab_tensor_swap_beta_tensor.
-  rewrite ab_tensor_prod_twist_beta_tensor_tensor.
-  reflexivity.
+  change (tensor c (tensor a b) = tensor c (tensor a b)).
+  exact idpath.
 Defined.
 
 (** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the simple tensor redexes. *)
@@ -772,27 +728,8 @@ Proof.
   intros A B C D.
   snrapply ab_tensor_prod_ind_homotopy_quad.
   intros a b c d.
-  change (
-    functor_ab_tensor_prod (Id C) ab_tensor_swap
-      (ab_tensor_prod_twist
-      (ab_tensor_swap
-      (ab_tensor_prod_twist
-      (functor_ab_tensor_prod (Id A) ab_tensor_swap
-      (tensor a (tensor b (tensor c d)))))))
-    = functor_ab_tensor_prod (Id C) ab_tensor_prod_twist
-        (functor_ab_tensor_prod (Id C) (functor_ab_tensor_prod (Id A) (@ab_tensor_swap B D))
-        (ab_tensor_prod_twist
-        (functor_ab_tensor_prod (Id A) ab_tensor_prod_twist
-        (tensor a (tensor b (tensor c d))))))).
-  rewrite 2 functor_ab_tensor_prod_beta_tensor.
-  rewrite ab_tensor_swap_beta_tensor.
-  rewrite 3 ab_tensor_prod_twist_beta_tensor_tensor.
-  rewrite ab_tensor_swap_beta_tensor.
-  rewrite ab_tensor_prod_twist_beta_tensor_tensor.
-  rewrite 4 functor_ab_tensor_prod_beta_tensor.
-  rewrite 2 ab_tensor_swap_beta_tensor.
-  rewrite ab_tensor_prod_twist_beta_tensor_tensor.
-  reflexivity.
+  change (tensor c (tensor d (tensor a b)) = tensor c (tensor d (tensor a b))). 
+  exact idpath.
 Defined.
 
 (** We therefore have all the data of a monoidal category. *)
