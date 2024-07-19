@@ -98,13 +98,7 @@ Proof.
     exact p. }
   intros p r.
   hnf in p.
-  pose (p' := p o freegroup_eta).
-  clearbody p'; clear p.
-  specialize (p' (FreeGroup.word_sing _ (inl r))).
-  refine (_ @ p').
-  clear p'.
-  symmetry.
-  reflexivity.
+  exact (p (freegroup_in r)).
 Defined.
 
 (** ** Constructors for finite presentations *)

@@ -380,29 +380,19 @@ Section Reduction.
     (H : forall x, f (freegroup_in x) = f' (freegroup_in x))
     : f $== f'.
   Proof.
-    rapply FreeGroup_ind_hprop'.
-    induction w as [|[a|a] w IHw].
-    - rhs nrapply grp_homo_unit.
-      nrapply grp_homo_unit.
-    - change (f (freegroup_in a * freegroup_eta w)
-        = f' (freegroup_in a * freegroup_eta w)).
-      lhs nrapply grp_homo_op.
-      rhs nrapply grp_homo_op.
-      exact (ap011 (.*.) (H a) IHw).
-    - change (f (-freegroup_in a * freegroup_eta w)
-        = f' (- freegroup_in a * freegroup_eta w)).
-      lhs nrapply grp_homo_op.
-      rhs nrapply grp_homo_op.
-      nrefine (ap011 (.*.) _ IHw).
+    rapply FreeGroup_ind_hprop.
+    - exact (concat (grp_homo_unit f) (grp_homo_unit f')^).
+    - exact H.
+    - intros x y p q. refine (grp_homo_op_agree f f' _ q).
       lhs nrapply grp_homo_inv.
       rhs nrapply grp_homo_inv.
-      exact (ap (-) (H _)).
+      exact (ap _ p).
   Defined.
 
   (** Now we need to prove that the free group satisifes the unviersal property of the free group. *)
   (** TODO: remove funext from here and universal property of free group *)
   Global Instance isfreegroupon_freegroup `{Funext}
-    : IsFreeGroupOn A FreeGroup (freegroup_eta o word_sing o inl).
+    : IsFreeGroupOn A FreeGroup freegroup_in.
   Proof.
     intros G f.
     snrapply Build_Contr.

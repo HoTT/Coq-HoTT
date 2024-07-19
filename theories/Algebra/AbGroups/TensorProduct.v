@@ -495,7 +495,6 @@ Definition ab_tensor_swap_swap {A B}
   : ab_tensor_swap $o @ab_tensor_swap A B $== Id _. 
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b; simpl.
   reflexivity.
 Defined. 
 
@@ -505,7 +504,7 @@ Definition ab_tensor_swap_natural {A B A' B'} (f : A $-> A') (g : B $-> B')
     $== functor_ab_tensor_prod g f $o ab_tensor_swap.
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b; simpl.
+  simpl. (* This speeds up the [reflexivity] and the [Defined]. *)
   reflexivity.
 Defined.
 
@@ -589,9 +588,7 @@ Definition ab_tensor_prod_twist_twist {A B C}
   : ab_tensor_prod_twist $o @ab_tensor_prod_twist A B C $== Id _.
 Proof.
   snrapply ab_tensor_prod_ind_homotopy_triple.
-  intros a b c.
-  change (tensor a (tensor b c) = tensor a (tensor b c)).
-  exact idpath.
+  reflexivity.
 Defined.
 
 (** The twist map is natural in all 3 arguments. This means that the twist map acts on the triple tensor functor in the same way. *)
@@ -602,6 +599,7 @@ Definition ab_tensor_prod_twist_natural {A B C A' B' C'}
 Proof.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b c.
+  (* This [change] speeds up the [reflexivity].  [simpl] produces a goal that looks the same, but is still slow. *)
   change (tensor (g b) (tensor (f a) (h c)) = tensor (g b) (tensor (f a) (h c))).
   exact idpath.
 Defined.
