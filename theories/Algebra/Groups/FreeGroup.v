@@ -14,6 +14,8 @@ Section Reduction.
 
   Universe u.
   Context (A : Type@{u}).
+  
+  Local Open Scope list_scope.
 
   (** We define words (with inverses) on A to be lists of marked elements of A *)
   Local Definition Words : Type@{u} := list (A + A).
@@ -30,48 +32,30 @@ Section Reduction.
     by destruct a.
   Defined.
 
-  (** We can concatenate words using list concatenation *)
-  Local Definition word_concat : Words -> Words -> Words := @app _.
-
-  (** We introduce a local notation for word_concat. *)
-  Local Infix "@" := word_concat.
-
-  Local Definition word_concat_w_nil x : x @ nil = x.
-  Proof.
-    induction x; trivial.
-    cbn; f_ap.
-  Defined.
-
-  Local Definition word_concat_w_ww x y z : x @ (y @ z) = (x @ y) @ z.
-  Proof.
-    apply app_assoc.
-  Defined.
-
-  (** Singleton word *)
-  Local Definition word_sing (x : A + A) : Words := (cons x nil).
-
-  Local Notation "[ x ]" := (word_sing x).
-
   (** Now we wish to define the free group on A as the following HIT: 
 
     HIT N(A) : hSet
      | eta : Words -> N(A)
      | tau (x : Words) (a : A + A) (y : Words)
-         : eta (x @ [a] @ [a^] @ y) = eta (x @ y).
+         : eta (x ++ [a] ++ [a^] ++ y) = eta (x ++ y).
 
     Since we cannot write our HITs directly like this (without resorting to private inductive types), we will construct this HIT out of HITs we know. In fact, we can define N(A) as a coequalizer. *)
 
   Local Definition map1 : Words * (A + A) * Words -> Words.
   Proof.
     intros [[x a] y].
-    exact (x @ [a] @ [a^] @ y).
+    exact (x ++ [a] ++ [a^] ++ y).
   Defined.
+  
+  Arguments map1 _ /.
 
   Local Definition map2 : Words * (A + A) * Words -> Words.
   Proof.
     intros [[x a] y].
-    exact (x @ y).
+    exact (x ++ y).
   Defined.
+  
+  Arguments map2 _ /.
 
   (** Now we can define the underlying type of the free group as the 0-truncated coequalizer of these two maps *)
   Definition freegroup_type : Type := Tr 0 (Coeq map1 map2).
@@ -81,7 +65,7 @@ Section Reduction.
 
   (** This is the path constructor *)
   Definition freegroup_tau (x : Words) (a : A + A) (y : Words)
-    : freegroup_eta (x @ [a] @ [a^] @ y) = freegroup_eta (x @ y).
+    : freegroup_eta (x ++ [a] ++ [a^] ++ y) = freegroup_eta (x ++ y).
   Proof.
     apply path_Tr, tr.
     exact ((cglue (x, a, y))).
@@ -96,87 +80,89 @@ Section Reduction.
     { intros x; revert y.
       snrapply Coeq_rec.
       { intros y.
-        exact (freegroup_eta (x @ y)). }
-      intros [[y a] z]; cbn.
-      refine (concat (ap _ _) _).
-      { refine (concat (word_concat_w_ww _ _ _) _).
-        rapply (ap (fun t => t @ _)).
-        refine (concat (word_concat_w_ww _ _ _) _).
-        rapply (ap (fun t => t @ _)).
-        refine (word_concat_w_ww _ _ _). }
-      refine (concat _ (ap _ _^)).
-      2: apply word_concat_w_ww.
-      apply freegroup_tau. }
+        exact (freegroup_eta (x ++ y)). }
+      intros [[y a] z]; simpl.
+      change (freegroup_eta (x ++ y ++ ([a] ++ [a^] ++ z))
+        = freegroup_eta (x ++ y ++ z)).
+      rhs nrapply ap.
+      2: nrapply app_assoc.
+      lhs nrapply ap.
+      1: nrapply app_assoc.
+      nrapply (freegroup_tau _ a). }
     intros [[c b] d].
-    simpl.
     revert y.
     snrapply Coeq_ind.
-    { simpl.
-      intro a.
-      rewrite <- word_concat_w_ww.
-      rewrite <- (word_concat_w_ww _ _ a).
-      rapply (freegroup_tau c b (d @ a)). }
-    intro; rapply path_ishprop.
+    2: intro; rapply path_ishprop. 
+    intro a.
+    change (freegroup_eta ((c ++ [b] ++ [b^] ++ d) ++ a)
+      = freegroup_eta ((c ++ d) ++ a)).
+    lhs_V nrapply ap.
+    1: nrapply app_assoc.
+    lhs_V nrapply (ap (fun x => freegroup_eta (c ++ x))).
+    1: nrapply app_assoc.
+    lhs_V nrapply (ap (fun x => freegroup_eta (c ++ _ ++ x))).
+    1: nrapply app_assoc.
+    rhs_V nrapply ap.
+    2: nrapply app_assoc.
+    nrapply freegroup_tau.
   Defined.
 
   (** The unit of the free group is the empty word *)
-  Global Instance monunit_freegroup_type : MonUnit freegroup_type.
-  Proof.
-    apply freegroup_eta.
-    exact nil.
-  Defined.
+  Global Instance monunit_freegroup_type : MonUnit freegroup_type
+    := freegroup_eta nil.
 
   (** We can change the sign of all the elements in a word and reverse the order. This will be the inversion in the group *)
   Fixpoint word_change_sign (x : Words) : Words.
   Proof.
     destruct x as [|x xs].
-    1: exact nil.
-    exact (word_change_sign xs @ [change_sign x]).
+    - exact nil.
+    - exact (word_change_sign xs ++ [ change_sign x ]).
   Defined.
 
   (** Changing the sign changes the order of word concatenation *)
   Definition word_change_sign_ww (x y : Words)
-    : word_change_sign (x @ y) = word_change_sign y @ word_change_sign x.
+    : word_change_sign (x ++ y) = word_change_sign y ++ word_change_sign x.
   Proof.
-    induction x.
-    { symmetry.
-      apply word_concat_w_nil. }
-    simpl.
-    refine (concat _ (inverse (word_concat_w_ww _ _ _))).
-    f_ap.
+    induction x as [|x a IHx].
+    - symmetry; nrapply app_nil.
+    - simpl.
+      rhs nrapply app_assoc.
+      nrapply (ap (fun x => x ++ _)).
+      exact IHx.
   Defined.
 
   (** This is also involutive *)
   Lemma word_change_sign_inv x : word_change_sign (word_change_sign x) = x.
   Proof.
-    induction x.
+    induction x as [|x ? IHx].
     1: reflexivity.
     simpl.
-    rewrite word_change_sign_ww.
-    cbn; f_ap.
-    apply change_sign_inv.
+    lhs nrapply word_change_sign_ww.
+    simpl; nrapply ap011.
+    1: nrapply change_sign_inv.
+    exact IHx.
   Defined.
 
   (** Changing the sign gives us left inverses *)
-  Lemma word_concat_Vw x : freegroup_eta (word_change_sign x @ x) = mon_unit.
+  Lemma word_concat_Vw x : freegroup_eta (word_change_sign x ++ x) = mon_unit.
   Proof.
     induction x.
     1: reflexivity.
     simpl.
     set (a' := a^).
     rewrite <- (change_sign_inv a).
-    change (freegroup_eta ((word_change_sign x @ [a']) @ ([a'^] @ x)) = mon_unit).
-    rewrite word_concat_w_ww.
-    rewrite freegroup_tau.
+    change (freegroup_eta ((word_change_sign x ++ [a']) ++ ([a'^] ++ x)) = mon_unit).
+    rewrite <- app_assoc.
+    lhs nrapply freegroup_tau.
     apply IHx.
   Defined.
 
   (** And since changing the sign is involutive we get right inverses from left inverses *)
-  Lemma word_concat_wV x : freegroup_eta (x @ word_change_sign x) = mon_unit.
+  Lemma word_concat_wV x : freegroup_eta (x ++ word_change_sign x) = mon_unit.
   Proof.
     set (x' := word_change_sign x).
     rewrite <- (word_change_sign_inv x).
-    change (freegroup_eta (word_change_sign x' @ x') = mon_unit).
+    change (freegroup_eta (word_change_sign x' ++ x') = mon_unit).
     apply word_concat_Vw.
   Defined.
 
@@ -191,21 +177,20 @@ Section Reduction.
       exact (word_change_sign x). }
     intros [[b a] c].
     unfold map1, map2.
-    refine (concat _ (ap _ (inverse _))).
-    2: apply word_change_sign_ww.
-    refine (concat (ap _ _) _).
-    { refine (concat (word_change_sign_ww _ _) _).
-      apply ap.
-      refine (concat (ap _ (inverse (word_concat_w_ww _ _ _))) _).
-      refine (concat (word_change_sign_ww _ _) _).
-      rapply (ap (fun t => t @ word_change_sign b)).
-      apply word_change_sign_ww. }
-    refine (concat _ (freegroup_tau _ a _)).
-    apply ap.
-    refine (concat (word_concat_w_ww _ _ _) _); f_ap.
-    refine (concat (word_concat_w_ww _ _ _) _); f_ap.
-    f_ap; cbn; f_ap.
-    apply change_sign_inv.
+    lhs nrapply ap.
+    { lhs nrapply word_change_sign_ww.
+      nrapply (ap (fun x => x ++ _)). 
+      lhs nrapply word_change_sign_ww.
+      nrapply (ap (fun x => x ++ _)). 
+      lhs nrapply word_change_sign_ww.
+      nrapply (ap (fun x => _ ++ x)).
+      nrapply (word_change_sign_inv [a]). }
+    lhs_V nrapply ap.
+    1: rhs_V nrapply app_assoc.
+    1: nrapply app_assoc.
+    rhs nrapply ap.
+    2: nrapply word_change_sign_ww.
+    nrapply freegroup_tau.
   Defined.
 
   (** Now we can start to prove the group laws. Since these are hprops we can ignore what happens with the path constructor. *)
@@ -218,8 +203,8 @@ Section Reduction.
     revert x; snrapply Coeq_ind; intro x; [ | apply path_ishprop].
     revert y; snrapply Coeq_ind; intro y; [ | apply path_ishprop].
     revert z; snrapply Coeq_ind; intro z; [ | apply path_ishprop].
-    rapply (ap (tr o coeq)).
-    apply word_concat_w_ww.
+    nrapply (ap (tr o coeq)).
+    nrapply app_assoc.
   Defined.
 
   (** Left identity *)
@@ -236,7 +221,7 @@ Section Reduction.
     rapply Trunc_ind.
     srapply Coeq_ind; intro x; [ | apply path_ishprop].
     apply (ap tr), ap.
-    apply word_concat_w_nil.
+    nrapply app_nil.
   Defined.
 
   (** Left inverse *)
@@ -287,11 +272,11 @@ Section Reduction.
   Defined.
 
   Lemma words_rec_pp (G : Group) (s : A -> G)  (x y : Words)
-    : words_rec G s (x @ y) = words_rec G s x * words_rec G s y.
+    : words_rec G s (x ++ y) = words_rec G s x * words_rec G s y.
   Proof.
     induction x as [|x xs IHxs] in y |- *.
     - symmetry; nrapply grp_unit_l.
-    - change ((?x :: ?xs)%list @ y) with (x :: xs @ y)%list.
+    - change ((?x :: ?xs) ++ y) with (x :: xs ++ y).
       lhs nrapply words_rec_cons.
       lhs nrapply ap.
       1: nrapply IHxs.
@@ -307,11 +292,13 @@ Section Reduction.
     unfold map1, map2.
     rhs nrapply (words_rec_pp G s).
     lhs nrapply words_rec_pp.
-    nrapply (ap (.* _)).
-    rewrite <- word_concat_w_ww.
-    lhs nrapply words_rec_pp.
-    rhs_V nrapply grp_unit_r.
     nrapply (ap (_ *.)).
+    lhs nrapply words_rec_pp.
+    lhs nrapply ap.
+    1: nrapply words_rec_pp.
+    lhs nrapply grp_assoc.
+    rhs_V nrapply grp_unit_l.
+    nrapply (ap (.* _)).
     destruct a; simpl.
     - nrapply grp_inv_r.
     - nrapply grp_inv_l.
@@ -335,7 +322,7 @@ Section Reduction.
   Defined.
 
   Definition freegroup_in : A -> FreeGroup
-    := freegroup_eta o word_sing o inl.
+    := freegroup_eta o (fun x => [ x ]) o inl.
 
   Definition FreeGroup_rec_beta {G : Group} (f : A -> G)
     : FreeGroup_rec _ f o freegroup_in == f
