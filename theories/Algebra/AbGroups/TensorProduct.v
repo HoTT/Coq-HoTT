@@ -568,7 +568,7 @@ Proof.
   intros a b c.
   (* This [change] speeds up the [reflexivity].  [simpl] produces a goal that looks the same, but is still slow. *)
   change (tensor (g b) (tensor (f a) (h c)) = tensor (g b) (tensor (f a) (h c))).
-  exact idpath.
+  reflexivity.
 Defined.
 
 (** ** Unitality of [abgroup_Z] *)
@@ -676,7 +676,7 @@ Proof.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros b a c.
   change (tensor c (tensor a b) = tensor c (tensor a b)).
-  exact idpath.
+  reflexivity.
 Defined.
 
 (** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the simple tensor redexes. *)
@@ -687,7 +687,7 @@ Proof.
   snrapply ab_tensor_prod_ind_homotopy_quad.
   intros a b c d.
   change (tensor c (tensor d (tensor a b)) = tensor c (tensor d (tensor a b))). 
-  exact idpath.
+  reflexivity.
 Defined.
 
 (** We therefore have all the data of a monoidal category. *)
