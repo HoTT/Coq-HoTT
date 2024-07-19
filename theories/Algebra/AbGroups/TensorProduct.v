@@ -201,14 +201,6 @@ Proof.
     apply ab_tensor_prod_rec_helper; assumption.
 Defined.
 
-Definition ab_tensor_prod_rec_beta_tensor {A B C : AbGroup}
-  (f : A -> B -> C)
-  (l : forall a b b', f a (b + b') = f a b + f a b')
-  (r : forall a a' b, f (a + a') b = f a b + f a' b) 
-  (a : A) (b : B)
-  : ab_tensor_prod_rec f l r (tensor a b) = f a b
-  := idpath.
-
 (** We give an induction principle for an hprop-valued type family [P].  It may be surprising at first that we only require [P] to hold for the simple tensors [tensor a b] and be closed under addition.  It automatically follows that [P 0] holds (since [tensor 0 0 = 0]) and that [P] is closed under negation (since [tensor -a b = - tensor a b]). This induction principle says that the simple tensors generate the tensor product as a semigroup. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
@@ -367,21 +359,22 @@ Proof.
   - intros f.
     exists (fun x y => f (tensor x y)).
     snrapply Build_IsBiadditive.
-    + intros b a a'.
-      unfold flip.
-      rewrite tensor_dist_r.
+    + intros b a a'; simpl.
+      lhs nrapply (ap f).
+      1: nrapply tensor_dist_r.
       nrapply grp_homo_op.
-    + intros a a' b.
-      rewrite tensor_dist_l.
+    + intros a a' b; simpl.
+      lhs nrapply (ap f).
+      1: nrapply tensor_dist_l.
       nrapply grp_homo_op.
   - intros f.
     snrapply equiv_path_grouphomomorphism.
     snrapply ab_tensor_prod_ind_homotopy.
-    intros a b.
-    nrapply ab_tensor_prod_rec_beta_tensor.
+    intros a b; simpl.
+    reflexivity.
   - intros [f [l r]].
     snrapply (equiv_ap_inv' issig_Biadditive).
-    rapply path_sigma_hprop.
+    rapply path_sigma_hprop; simpl.
     reflexivity.
 Defined.
 
@@ -405,22 +398,13 @@ Proof.
     by rewrite tensor_dist_r.
 Defined.
 
-(** The tensor product functor acts on simple tensors by mapping each component. *)
-Definition functor_ab_tensor_prod_beta_tensor {A B A' B' : AbGroup}
-  (f : A $-> A') (g : B $-> B') (a : A) (b : B)
-  : functor_ab_tensor_prod f g (tensor a b) = tensor (f a) (g b).
-Proof.
-  nrapply ab_tensor_prod_rec_beta_tensor.
-Defined.
-
 (** 2-functoriality of the tensor product. *)
 Definition functor2_ab_tensor_prod {A B A' B' : AbGroup}
   {f f' : A $-> A'} (p : f $== f') {g g' : B $-> B'} (q : g $== g')
   : functor_ab_tensor_prod f g $== functor_ab_tensor_prod f' g'.
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b.
-  rewrite 2 functor_ab_tensor_prod_beta_tensor.
+  intros a b; simpl.
   exact (ap011 tensor (p _) (q _)).
 Defined.
 
@@ -429,8 +413,8 @@ Definition functor_ab_tensor_prod_id (A B : AbGroup)
   : functor_ab_tensor_prod (Id A) (Id B) $== Id (ab_tensor_prod A B).
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b.
-  apply functor_ab_tensor_prod_beta_tensor.
+  intros a b; simpl.
+  reflexivity.
 Defined.
 
 (** The tensor product functor preserves composition. *)
@@ -440,11 +424,8 @@ Definition functor_ab_tensor_prod_compose {A B C A' B' C' : AbGroup}
     $== functor_ab_tensor_prod g g' $o functor_ab_tensor_prod f f'.
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
-  intros a b; hnf.
-  lhs nrapply functor_ab_tensor_prod_beta_tensor.
-  change (tensor (g (f a)) (g' (f' b))
-    = functor_ab_tensor_prod g g' (functor_ab_tensor_prod f f' (tensor a b))).
-  by rewrite 2 functor_ab_tensor_prod_beta_tensor.
+  intros a b; simpl.
+  reflexivity.
 Defined.
 
 (** The tensor product functor is a 0-bifunctor. *)
@@ -483,12 +464,6 @@ Proof.
   - intros a a' b.
     apply tensor_dist_l.
 Defined.
-
-Definition ab_tensor_swap_beta_tensor {A B} a b
-  : @ab_tensor_swap A B (tensor a b) = tensor b a.
-Proof.
-  nrapply ab_tensor_prod_rec_beta_tensor.
-Defined. 
 
 (** [ab_tensor_swap] is involutive. *)
 Definition ab_tensor_swap_swap {A B}
@@ -558,11 +533,10 @@ Proof.
   revert b.
   nrapply ab_tensor_prod_ind_homotopy_plus.
   intros b c.
-  rhs nrapply (ap011 (+)).
-  2,3: nrapply ab_tensor_prod_rec_beta_tensor.
-  lhs nrapply ab_tensor_prod_rec_beta_tensor.
+  change (tensor b (tensor (a + a') c)
+    = tensor b (tensor a c) + tensor b (tensor a' c)). 
   rhs_V nrapply tensor_dist_l.
-  snrapply (ap (tensor b)).
+  nrapply (ap (tensor b)).
   nrapply tensor_dist_r.
 Defined.
 
@@ -574,13 +548,6 @@ Proof.
   - exact ab_tensor_prod_twist_map. 
   - exact ab_tensor_prod_twist_map_additive_r.
   - exact ab_tensor_prod_twist_map_additive_l.
-Defined.
-
-(** The twist map acts in the expected way on simple tensors. *)
-Definition ab_tensor_prod_twist_beta_tensor_tensor {A B C} a b c
-  : @ab_tensor_prod_twist A B C (tensor a (tensor b c)) = tensor b (tensor a c).
-Proof.
-  rapply ab_tensor_swap_beta_tensor.
 Defined.
 
 (** The twist map is involutive. *)
@@ -649,17 +616,12 @@ Proof.
         with (f $o g $== Id _).
       snrapply ab_tensor_prod_ind_homotopy.
       intros a z.
-      lhs nrapply (ap (grp_homo_tensor_r _)).
-      1: apply ab_tensor_prod_rec_beta_tensor.
       change (tensor (B:=abgroup_Z) (grp_pow a z) 1%int = tensor a z).
       lhs nrapply tensor_ab_mul.
       nrapply ap.
       lhs nrapply abgroup_Z_ab_mul.
       apply int_mul_1_r.
-    + hnf.
-      intros x.
-      lhs nrapply ab_tensor_prod_rec_beta_tensor.
-      apply grp_unit_r.
+    + exact grp_unit_r.
 Defined.
 
 (** We have a right unitor for the tensor product given by unit [abgroup_Z]. Naturality of [ab_tensor_prod_Z_r] is straightforward to prove. *)
@@ -673,10 +635,8 @@ Proof.
     intros A A' f.
     snrapply ab_tensor_prod_ind_homotopy.
     intros a z.
-    rhs nrapply (ap f).
-    2: nrapply ab_tensor_prod_rec_beta_tensor.
-    simpl; symmetry.
-    nrapply grp_pow_natural.
+    change (grp_pow (f a) z = f (grp_pow a z)).
+    exact (grp_pow_natural _ _ _)^.
 Defined.
 
 (** Since we have symmetry of the tensor product, we get left unitality for free. *)
