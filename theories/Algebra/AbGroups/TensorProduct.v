@@ -14,7 +14,13 @@ Require Import Truncations.
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
-(** * Tensor Product of Abelian Groups *)
+(** * The Tensor Product of Abelian Groups *)
+
+(** Various operations on abelian groups [A × B → C] are biadditive meaning that they are group homomorphisms when we fix the left or right argument.
+
+The tensor product of abelian groups is a special construction that produces a new abelian group [A ⊗ B] which provides the "best" possible way to create a biadditive function, meaning that any bilinear map [A × B → C] factors uniquely through the tensor product. This fully encapsulates all the ways [A] and [B] can interact biadditively.
+
+Biadditive functions appear in all sorts of contexts ranging from linear algebra to analysis. Therefore having a way to systematically study them is very useful. *)
 
 (** ** Construction *)
 
