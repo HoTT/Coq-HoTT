@@ -48,13 +48,13 @@ Definition subgroup_biadditive_pairs {A B : AbGroup}
   : Subgroup (FreeAbGroup (A * B))
   := subgroup_generated family_biadditive_pairs.
 
-(** The tensor product [ab_tensor_prod A B] of two abelian groups [A] and [B] is defined to ba a quotient of the free abelian group on pairs of elements [A * B] by the subgroup of biadditive pairs. *)
+(** The tensor product [ab_tensor_prod A B] of two abelian groups [A] and [B] is defined to be a quotient of the free abelian group on pairs of elements [A * B] by the subgroup of biadditive pairs. *)
 Definition ab_tensor_prod (A B : AbGroup) : AbGroup
   := QuotientAbGroup (FreeAbGroup (A * B)) subgroup_biadditive_pairs.
 
 Arguments ab_tensor_prod A B : simpl never.
 
-(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as simple tensors and name them [tensor]. *)
+(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as "simple tensors" and name them [tensor]. *)
 Definition tensor {A B : AbGroup} : A -> B -> ab_tensor_prod A B
   := fun a b => grp_quotient_map (freeabgroup_in (a, b)).
 
