@@ -112,35 +112,30 @@ Section Reduction.
     := freegroup_eta nil.
 
   (** We can change the sign of all the elements in a word and reverse the order. This will be the inversion in the group *)
-  Fixpoint word_change_sign (x : Words) : Words.
-  Proof.
-    destruct x as [|x xs].
-    - exact nil.
-    - exact (word_change_sign xs ++ [ change_sign x ]).
-  Defined.
+  Definition word_change_sign (x : Words) : Words
+    := reverse (list_map change_sign x).
 
   (** Changing the sign changes the order of word concatenation *)
   Definition word_change_sign_ww (x y : Words)
     : word_change_sign (x ++ y) = word_change_sign y ++ word_change_sign x.
   Proof.
-    induction x as [|x a IHx].
-    - symmetry; nrapply app_nil.
-    - simpl.
-      rhs nrapply app_assoc.
-      nrapply (ap (fun x => x ++ _)).
-      exact IHx.
+    unfold word_change_sign.
+    lhs nrapply (ap reverse).
+    1: nrapply list_map_app.
+    nrapply reverse_app.
   Defined.
 
   (** This is also involutive *)
   Lemma word_change_sign_inv x : word_change_sign (word_change_sign x) = x.
   Proof.
-    induction x as [|x ? IHx].
-    1: reflexivity.
-    simpl.
-    lhs nrapply word_change_sign_ww.
-    simpl; nrapply ap011.
-    1: nrapply change_sign_inv.
-    exact IHx.
+    unfold word_change_sign.
+    lhs_V nrapply list_map_reverse.
+    lhs nrapply ap.
+    1: nrapply reverse_reverse. 
+    lhs_V nrapply list_map_compose.
+    snrapply list_map_id.
+    intros a ?.
+    apply change_sign_inv.
   Defined.
 
   (** Changing the sign gives us left inverses *)
@@ -148,11 +143,14 @@ Section Reduction.
   Proof.
     induction x.
     1: reflexivity.
-    simpl.
+    lhs nrapply (ap (fun x => freegroup_eta (x ++ _))).
+    1: nrapply reverse_cons.
+    change (freegroup_eta ((word_change_sign x ++ [a^]) ++ [a] ++ x)
+      = mon_unit). 
+    lhs_V nrapply ap.
+    1: nrapply app_assoc.
     set (a' := a^).
     rewrite <- (change_sign_inv a).
-    change (freegroup_eta ((word_change_sign x ++ [a']) ++ ([a'^] ++ x)) = mon_unit).
-    rewrite <- app_assoc.
     lhs nrapply freegroup_tau.
     apply IHx.
   Defined.
