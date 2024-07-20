@@ -38,11 +38,6 @@ Section FreeProduct.
 
   Local Definition Words : Type := list (H + K).
 
-  Local Definition word_concat_w_ww (x y z : Words) : x ++ (y ++ z) = (x ++ y) ++ z.
-  Proof.
-    apply app_assoc.
-  Defined.
-
   Local Fixpoint word_inverse (x : Words) : Words.
   Proof.
     destruct x as [|x xs].
@@ -59,7 +54,7 @@ Section FreeProduct.
     induction x as [|x xs].
     1: symmetry; apply app_nil.
     simpl.
-    destruct x; refine (_ @ (word_concat_w_ww _ _ _)^); f_ap.
+    destruct x; rhs nrapply app_assoc; f_ap.
   Defined.
 
 
@@ -286,23 +281,23 @@ Section FreeProduct.
       1: exact (amal_eta (x ++ y)).
       { intros z h1 h2.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
-        1,3: apply word_concat_w_ww.
+        1,3: apply app_assoc.
         rapply amal_mu_H. }
       { intros z k1 k2.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
-        1,3: apply word_concat_w_ww.
+        1,3: apply app_assoc.
         rapply amal_mu_K. }
       { intros w z.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
-        1,3: apply word_concat_w_ww.
+        1,3: apply app_assoc.
         apply amal_tau. }
       { intros z.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
-        1,3: apply word_concat_w_ww.
+        1,3: apply app_assoc.
         apply amal_omega_H. }
       { intros z.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
-        1,3: apply word_concat_w_ww.
+        1,3: apply app_assoc.
         apply amal_omega_K. } }
     { intros r y h1 h2; revert r.
       rapply amal_type_ind_hprop.
@@ -310,9 +305,9 @@ Section FreeProduct.
       change (amal_eta ((x ++ ((inl h1 :: [inl h2]) ++ y)) ++ z)
         = amal_eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_mu_H. }
     { intros r y k1 k2; revert r.
       rapply amal_type_ind_hprop.
@@ -320,9 +315,9 @@ Section FreeProduct.
       change (amal_eta ((x ++ ((inr k1 :: [inr k2]) ++ y)) ++ z)
         = amal_eta ((x ++ [inr (k1 * k2)] ++ y) ++ z)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_mu_K. }
     { intros r y z; revert r.
       rapply amal_type_ind_hprop.
@@ -330,27 +325,27 @@ Section FreeProduct.
       change (amal_eta ((x ++ [inl (f z)] ++ y) ++ w)
         = amal_eta ((x ++ [inr (g z)] ++ y) ++ w)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       refine (ap amal_eta (ap (app x) _)^ @ _ @ ap amal_eta (ap (app x) _)).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_tau. }
     { intros r z; revert r.
       rapply amal_type_ind_hprop.
       intros w;
       change (amal_eta ((x ++ [inl mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       refine (ap amal_eta (ap (app x) _)^ @ _).
-      1: apply word_concat_w_ww.
+      1: apply app_assoc.
       apply amal_omega_H. }
     { intros r z; revert r.
       rapply amal_type_ind_hprop.
       intros w;
       change (amal_eta ((x ++ [inr mon_unit] ++ z) ++ w) = amal_eta ((x ++ z) ++ w)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       refine (ap amal_eta (ap (app x) _)^ @ _).
-      1: apply word_concat_w_ww.
+      1: apply app_assoc.
       apply amal_omega_K. }
   Defined.
 
@@ -376,7 +371,7 @@ Section FreeProduct.
         apply negate_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_mu_H. }
     { hnf; intros x y k1 k2.
       refine (ap amal_eta _ @ _ @ ap amal_eta _^).
@@ -389,7 +384,7 @@ Section FreeProduct.
         apply negate_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_mu_K. }
     { hnf; intros x y z.
       refine (ap amal_eta _ @ _ @ ap amal_eta _^).
@@ -399,7 +394,7 @@ Section FreeProduct.
       1,2: apply ap.
       1,2: symmetry; apply grp_homo_inv.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
-      1,3: apply word_concat_w_ww.
+      1,3: apply app_assoc.
       apply amal_tau. }
     { hnf; intros x z.
       refine (ap amal_eta _ @ _ @ ap amal_eta _^).
@@ -408,7 +403,7 @@ Section FreeProduct.
       { refine (ap (fun s => s ++ _) _).
         apply word_inverse_ww. }
       refine (ap amal_eta _^ @ _).
-      1: apply word_concat_w_ww.
+      1: apply app_assoc.
       simpl.
       rewrite negate_mon_unit.
       apply amal_omega_H. }
@@ -419,7 +414,7 @@ Section FreeProduct.
       { refine (ap (fun s => s ++ _) _).
         apply word_inverse_ww. }
       refine (ap amal_eta _^ @ _).
-      1: apply word_concat_w_ww.
+      1: apply app_assoc.
       simpl.
       rewrite negate_mon_unit.
       apply amal_omega_K. }
@@ -432,7 +427,7 @@ Section FreeProduct.
     rapply amal_type_ind_hprop; intro y; revert x.
     rapply amal_type_ind_hprop; intro x.
     nrapply (ap amal_eta).
-    rapply word_concat_w_ww.
+    rapply app_assoc.
   Defined.
 
   Global Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
@@ -455,14 +450,14 @@ Section FreeProduct.
     destruct x as [h|k].
     + change (amal_eta (word_inverse ([inl h] ++ xs) ++ [inl h] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
-      rewrite <- word_concat_w_ww.
+      rewrite <- app_assoc.
       refine (amal_mu_H _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_H.
       apply IHxs.
     + change (amal_eta (word_inverse ([inr k] ++ xs) ++ [inr k] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
-      rewrite <- word_concat_w_ww.
+      rewrite <- app_assoc.
       refine (amal_mu_K _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_K.
@@ -475,13 +470,13 @@ Section FreeProduct.
     1: reflexivity.
     destruct x as [h|k].
     + cbn.
-      rewrite word_concat_w_ww.
+      rewrite app_assoc.
       change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl (- h)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
       rewrite <- (app_nil (cons _ _)).
       change (amal_eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
-      rewrite <- word_concat_w_ww.
+      rewrite <- app_assoc.
       change (amal_eta (nil ++ [inl h] ++ [inl (- h)] ++ nil) = mon_unit).
       refine (amal_mu_H _ _ _ _ @ _).
       refine (_ @ _).
@@ -492,13 +487,13 @@ Section FreeProduct.
         apply right_inverse. }
       apply amal_omega_H.
     +  cbn.
-      rewrite word_concat_w_ww.
+      rewrite app_assoc.
       change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr (-k)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
       rewrite <- (app_nil (cons _ _)).
       change (amal_eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
-      rewrite <- word_concat_w_ww.
+      rewrite <- app_assoc.
       change (amal_eta (nil ++ [inr k] ++ [inr (- k)] ++ nil) = mon_unit).
       refine (amal_mu_K _ _ _ _ @ _).
       refine (_ @ _).
