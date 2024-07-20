@@ -1,3 +1,4 @@
+From HoTT Require Import Basics Spaces.Finite.Fin Spaces.Finite.FinSeq.
 From HoTT.Algebra.Groups Require Import Group Presentation.
 
 Local Open Scope mc_scope.
