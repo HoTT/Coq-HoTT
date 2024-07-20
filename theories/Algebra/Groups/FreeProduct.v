@@ -38,25 +38,9 @@ Section FreeProduct.
 
   Local Definition Words : Type := list (H + K).
 
-  Local Notation "[ x ]" := (cons x nil).
-
-  Local Definition word_concat_w_nil (x : Words) : x ++ nil = x.
-  Proof.
-    induction x; trivial.
-    cbn; f_ap.
-  Defined.
-
   Local Definition word_concat_w_ww (x y z : Words) : x ++ (y ++ z) = (x ++ y) ++ z.
   Proof.
-    revert x z.
-    induction y; intros x z.
-    { f_ap; symmetry.
-      apply word_concat_w_nil. }
-    simpl; revert z y IHy.
-    induction x; trivial.
-    intros z y IHy.
-    simpl; f_ap.
-    apply IHx, IHy.
+    apply app_assoc.
   Defined.
 
   Local Fixpoint word_inverse (x : Words) : Words.
@@ -73,8 +57,7 @@ Section FreeProduct.
     : word_inverse (x ++ y) = word_inverse y ++ word_inverse x.
   Proof.
     induction x as [|x xs].
-    { symmetry.
-      apply word_concat_w_nil. }
+    1: symmetry; apply app_nil.
     simpl.
     destruct x; refine (_ @ (word_concat_w_ww _ _ _)^); f_ap.
   Defined.
@@ -462,7 +445,7 @@ Section FreeProduct.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     nrapply (ap amal_eta).
-    apply word_concat_w_nil.
+    nrapply app_nil.
   Defined.
 
   Lemma amal_eta_word_concat_Vw (x : Words) : amal_eta (word_inverse x ++ x) = mon_unit.
@@ -496,7 +479,7 @@ Section FreeProduct.
       change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl (- h)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
-      rewrite <- (word_concat_w_nil (cons _ _)).
+      rewrite <- (app_nil (cons _ _)).
       change (amal_eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
       change (amal_eta (nil ++ [inl h] ++ [inl (- h)] ++ nil) = mon_unit).
@@ -513,7 +496,7 @@ Section FreeProduct.
       change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr (-k)]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
-      rewrite <- (word_concat_w_nil (cons _ _)).
+      rewrite <- (app_nil (cons _ _)).
       change (amal_eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
       rewrite <- word_concat_w_ww.
       change (amal_eta (nil ++ [inr k] ++ [inr (- k)] ++ nil) = mon_unit).
@@ -622,9 +605,9 @@ Section FreeProduct.
     { intro x.
       exact (amal_eta [inl x]). }
     intros x y.
-    rewrite <- (word_concat_w_nil [inl (x * y)]).
+    rewrite <- (app_nil [inl (x * y)]).
     rewrite <- (amal_mu_H nil nil x y).
-    rewrite word_concat_w_nil.
+    rewrite app_nil.
     reflexivity.
   Defined.
 
@@ -634,9 +617,9 @@ Section FreeProduct.
     { intro x.
       exact (amal_eta [inr x]). }
     intros x y.
-    rewrite <- (word_concat_w_nil [inr (x * y)]).
+    rewrite <- (app_nil [inr (x * y)]).
     rewrite <- (amal_mu_K nil nil x y).
-    rewrite word_concat_w_nil.
+    rewrite app_nil.
     reflexivity.
   Defined.
 
@@ -652,8 +635,8 @@ Section FreeProduct.
       intro x.
       apply (ap r).
       simpl.
-      rewrite <- (word_concat_w_nil [inl (f x)]).
-      rewrite <- (word_concat_w_nil [inr (g x)]).
+      rewrite <- (app_nil [inl (f x)]).
+      rewrite <- (app_nil [inr (g x)]).
       apply (amal_tau nil nil x). }
     { intros r.
       apply equiv_path_grouphomomorphism.
@@ -730,7 +713,6 @@ Proof.
     intros w.
     induction w as [|gh].
     1: exact (grp_homo_unit _ @ (grp_homo_unit _)^).
-    Local Notation "[ x ]" := (cons x nil).
     change (f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)).
     nrapply grp_homo_op_agree.
     2: apply IHw.
