@@ -220,7 +220,8 @@ Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
   : f $== f'.
 Proof.
-  rapply ab_tensor_prod_ind_hprop.
+  nrapply ab_tensor_prod_ind_hprop.
+  - exact _.
   - exact H.
   - intros x y; apply grp_homo_op_agree.
 Defined.
@@ -256,7 +257,8 @@ Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   (H : forall a b c, f (tensor a (tensor b c)) = f' (tensor a (tensor b c)))
   : f $== f'.
 Proof.
-  rapply ab_tensor_prod_ind_hprop_triple.
+  nrapply ab_tensor_prod_ind_hprop_triple.
+  - exact _.
   - exact H.
   - intros x y; apply grp_homo_op_agree.
 Defined.
@@ -271,7 +273,8 @@ Definition ab_tensor_prod_ind_hprop_quad {A B C D : AbGroup}
 Proof.
   rapply (ab_tensor_prod_ind_hprop P).
   - intros a.
-    rapply (ab_tensor_prod_ind_hprop_triple (fun x => P (tensor _ x))).
+    nrapply (ab_tensor_prod_ind_hprop_triple (fun x => P (tensor _ x))).
+    + intro x; apply H.
     + nrapply Hin.
     + intros x y Hx Hy.
       rewrite tensor_dist_l.
@@ -286,7 +289,8 @@ Definition ab_tensor_prod_ind_homotopy_quad {A B C D G : AbGroup}
     = f' (tensor a (tensor b (tensor c d))))
   : f $== f'.
 Proof.
-  rapply (ab_tensor_prod_ind_hprop_quad (fun _ => _)).
+  nrapply (ab_tensor_prod_ind_hprop_quad (fun _ => _)).
+  - exact _.
   - exact H.
   - intros x y; apply grp_homo_op_agree.
 Defined.
