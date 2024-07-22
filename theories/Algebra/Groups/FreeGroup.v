@@ -91,7 +91,7 @@ Section Reduction.
       nrapply (freegroup_tau _ a). }
     intros [[c b] d].
     revert y.
-    snrapply Coeq_ind.
+    snrapply Coeq_ind. (* TODO: create and use Coeq_ind_hprop *)
     2: intro; rapply path_ishprop. 
     intro a.
     change (freegroup_eta ((c ++ [b] ++ [b^] ++ d) ++ a)
