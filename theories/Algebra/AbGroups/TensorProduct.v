@@ -32,12 +32,12 @@ Definition family_biadditive_pairs {A B : AbGroup}
 Proof.
   intros x.
   refine ((exists (a1 a2 : A) (b : B), _) + exists (a : A) (b1 b2 : B), _)%type. 
-  - refine (_ - (_ + _) = x).
+  - refine (- _ + (_ + _) = x).
     1-3: apply freeabgroup_in.
     + exact (a1 + a2, b).
     + exact (a1, b).
     + exact (a2, b).
-  - refine (_ - (_ + _) = x).
+  - refine (- _ + (_ + _) = x).
     1-3: apply freeabgroup_in.
     + exact (a, b1 + b2).
     + exact (a, b1).
@@ -67,9 +67,6 @@ Definition tensor_dist_l {A B : AbGroup} (a : A) (b b' : B)
   : tensor a (b + b') = tensor a b + tensor a b'.
 Proof.
   apply qglue, tr.
-  apply sgt_inv'.
-  rewrite ab_neg_op.
-  rewrite grp_inv_inv.
   apply sgt_in.
   right.
   by exists a, b, b'.
@@ -80,9 +77,6 @@ Definition tensor_dist_r {A B : AbGroup} (a a' : A) (b : B)
   : tensor (a + a') b = tensor a b + tensor a' b.
 Proof.
   apply qglue, tr.
-  apply sgt_inv'.
-  rewrite ab_neg_op.
-  rewrite grp_inv_inv.
   apply sgt_in.
   left.
   by exists a, a', b.
@@ -110,35 +104,23 @@ Defined.
 
 (** Tensors preserve negation in the left argument. *)
 Definition tensor_neg_l {A B : AbGroup} (a : A) (b : B)
-  : tensor (-a) b = - tensor a b.
-Proof.
-  change (grp_homo_tensor_r b (-a) = - tensor a b).
-  by rewrite grp_homo_inv.
-Defined.
+  : tensor (-a) b = - tensor a b
+  := grp_homo_inv (grp_homo_tensor_r b) a.
 
 (** Tensors preserve negation in the right argument. *)
 Definition tensor_neg_r {A B : AbGroup} (a : A) (b : B)
-  : tensor a (-b) = - tensor a b.
-Proof.
-  change (grp_homo_tensor_l a (-b) = - tensor a b).
-  by rewrite grp_homo_inv.
-Defined.
+  : tensor a (-b) = - tensor a b
+  := grp_homo_inv (grp_homo_tensor_l a) b.
 
 (** Tensoring by zero on the left is zero. *)
 Definition tensor_zero_l {A B : AbGroup} (b : B)
-  : tensor (A:=A) 0 b = 0.
-Proof.
-  change (grp_homo_tensor_r (A:=A) b 0 = 0).
-  nrapply grp_homo_unit.
-Defined.
+  : tensor (A:=A) 0 b = 0
+  := grp_homo_unit (grp_homo_tensor_r b).
 
 (** Tensoring by zero on the right is zero. *)
 Definition tensor_zero_r {A B : AbGroup} (a : A)
-  : tensor (B:=B) a 0 = 0.
-Proof.
-  change (grp_homo_tensor_l (B:=B) a 0 = 0).
-  nrapply grp_homo_unit.
-Defined.
+  : tensor (B:=B) a 0 = 0
+  := grp_homo_unit (grp_homo_tensor_l a).
 
 (** The [tensor] map is bilinear and therefore can be written in a curried form using the internal abelian group hom. *)
 Definition grp_homo_tensor `{Funext} {A B : AbGroup}
@@ -169,25 +151,18 @@ Definition ab_tensor_prod_rec_helper {A B C : AbGroup}
   (x : FreeAbGroup (A * B)) (insg : subgroup_biadditive_pairs x)
   : grp_homo_abel_rec (FreeGroup_rec (A * B) C (uncurry f)) x = mon_unit.
 Proof.
+  set (abel_rec := grp_homo_abel_rec (FreeGroup_rec (A * B) C (uncurry f))).
   strip_truncations.
-  induction insg as
-    [ x [ [ a [ a' [ b p ] ] ] | [ a [ b [ b' p ] ] ] ]
-    |
-    | ? ? ? H1 ? H2 ].
-  - destruct p.
-    rewrite grp_homo_op.
-    rewrite grp_homo_inv.
-    apply grp_moveL_1M^-1%equiv.
-    exact (r a a' b).
-  - destruct p.
-    rewrite grp_homo_op.
-    rewrite grp_homo_inv.
-    apply grp_moveL_1M^-1%equiv.
-    exact (l a b b').
+  induction insg as [ x biad | | g h insg_g IHg insg_h IHh ].
+  - destruct biad as [ [ a [ a' [ b p ] ] ] | [ a [ b [ b' p ] ] ] ].
+    all: destruct p; simpl.
+    all: apply grp_moveL_M1^-1%equiv; symmetry.
+    1: apply r.
+    apply l.
   - nrapply grp_homo_unit.
   - rewrite grp_homo_op, grp_homo_inv.
     apply grp_moveL_1M^-1.
-    exact(H1 @ H2^).
+    exact (IHg @ IHh^).
 Defined.
 
 Opaque ab_tensor_prod_rec_helper.
@@ -218,19 +193,22 @@ Proof.
   unfold ab_tensor_prod.
   srapply grp_quotient_ind_hprop.
   srapply Abel_ind_hprop; cbn beta.
+  set (tensor_in := grp_quotient_map $o abel_unit : FreeGroup (A * B) $-> ab_tensor_prod A B).
+  change (forall x, P (tensor_in x)).
   srapply FreeGroup_ind_hprop'; intros w; cbn beta.
   induction w.
-  - exact (transport P (tensor_zero_l 0) (Hin 0 0)).
-  - destruct a as [[a b]|[a b]].
-    + change (P (grp_quotient_map (abel_unit (freegroup_in (a, b) + freegroup_eta w)))).
-      (* Both [rewrite]s are [reflexivity], but the [Defined] is slow if [change] is used instead. *)
-      rewrite 2 grp_homo_op.
+  - (* The goal here is [P 0], so we use [Hin 0 0 : P (tensor 0 0)]. *)
+    exact (transport P (tensor_zero_l 0) (Hin 0 0)).
+  - change (P (tensor_in (freegroup_eta [a]%list + freegroup_eta w))).
+    (* This [rewrite] is [reflexivity], but the [Defined] is slow if [change] is used instead. *)
+    rewrite grp_homo_op.
+    destruct a as [[a b]|[a b]].
+    + change (P (tensor_in (freegroup_in (a, b)) + tensor_in (freegroup_eta w))).
       apply Hop; trivial.
       apply Hin.
-    + change (P (grp_quotient_map (abel_unit (- freegroup_in (a, b) + freegroup_eta w)))).
-      (* The [rewrite]s on the next two lines are all reflexivity. *)
-      rewrite 2 grp_homo_op.
-      rewrite 2 grp_homo_inv.
+    + change (P (tensor_in (- freegroup_in (a, b)) + tensor_in (freegroup_eta w))).
+      (* This [rewrite] is also reflexivity. *)
+      rewrite grp_homo_inv.
       apply Hop; trivial.
       rewrite <- tensor_neg_l.
       apply Hin.
@@ -616,7 +594,7 @@ Proof.
       * intros a z z'; cbn beta.
         nrapply grp_homo_op.
       * intros a a' z; cbn beta.
-        apply (grp_homo_op (ab_mul z)).
+        nrapply (grp_homo_op (ab_mul z)).
     + hnf.
       change (forall x : ?A, (grp_homo_map ?f) ((grp_homo_map ?g) x) = x)
         with (f $o g $== Id _).
@@ -671,7 +649,7 @@ Proof.
   intros A B.
   snrapply ab_tensor_prod_ind_homotopy_triple.
   intros a b z.
-  exact (tensor_ab_mul _ _ _)^.
+  exact (tensor_ab_mul z a b)^.
 Defined.
 
 (** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
