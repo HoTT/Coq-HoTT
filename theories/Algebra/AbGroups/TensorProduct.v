@@ -471,7 +471,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** The data of swap together gives us a symmetric braiding on the category of abelian groups. We will later show it is a full symmetric monoidal category. *)
+(** The swap map gives us a symmetric braiding on the category of abelian groups. We will later show it is a full symmetric monoidal category. *)
 Global Instance symmetricbraiding_ab_tensor_prod : SymmetricBraiding ab_tensor_prod.
 Proof.
   snrapply Build_SymmetricBraiding.
