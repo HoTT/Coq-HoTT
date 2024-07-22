@@ -16,9 +16,9 @@ Local Open Scope mc_add_scope.
 
 (** * The Tensor Product of Abelian Groups *)
 
-(** Various maps [A * B → C] from the cartesian product of two abelian groups to another abelian group are "biadditive", meaning that they are group homomorphisms when we fix the left or right argument.
+(** Various maps [A * B → C] from the cartesian product of two abelian groups to another abelian group are "biadditive" (also called "bilinear"), meaning that they are group homomorphisms when we fix the left or right argument.
 
-The tensor product of abelian groups is a construction that produces an abelian group [A ⊗ B] along with a biadditive map [A * B -> A ⊗ B] which is initial among biadditive maps from [A * B].  This means that any bilinear map [A * B → C] factors uniquely through the tensor product via a group homomorphism [A ⊗ B -> C].
+The tensor product of abelian groups is a construction that produces an abelian group [A ⊗ B] along with a biadditive map [A * B -> A ⊗ B] which is initial among biadditive maps from [A * B].  This means that any biadditive map [A * B → C] factors uniquely through the tensor product via a group homomorphism [A ⊗ B -> C].
 
 Biadditive functions appear in all sorts of contexts ranging from linear algebra to analysis. Therefore having a way to systematically study them is very useful. *)
 
@@ -54,13 +54,13 @@ Definition ab_tensor_prod (A B : AbGroup) : AbGroup
 
 Arguments ab_tensor_prod A B : simpl never.
 
-(** The tensor product of [A] and [B] contains formal combinations of pairs of elements from [A] and [B]. We denote these pairs as "simple tensors" and name them [tensor]. *)
+(** The tensor product of [A] and [B] contains formal sums and differences of pairs of elements from [A] and [B]. We denote these pairs as "simple tensors" and name them [tensor]. *)
 Definition tensor {A B : AbGroup} : A -> B -> ab_tensor_prod A B
   := fun a b => grp_quotient_map (freeabgroup_in (a, b)).
 
 (** ** Properties of tensors *)
 
-(** The characterizing property of simple tensors are that they are bilinear in their arguments. *)
+(** The characterizing property of simple tensors are that they are biadditive in their arguments. *)
 
 (** A [tensor] of a sum distributes over the sum on the left. *) 
 Definition tensor_dist_l {A B : AbGroup} (a : A) (b b' : B)
@@ -122,7 +122,7 @@ Definition tensor_zero_r {A B : AbGroup} (a : A)
   : tensor (B:=B) a 0 = 0
   := grp_homo_unit (grp_homo_tensor_l a).
 
-(** The [tensor] map is bilinear and therefore can be written in a curried form using the internal abelian group hom. *)
+(** The [tensor] map is biadditive and therefore can be written in a curried form using the internal abelian group hom. *)
 Definition grp_homo_tensor `{Funext} {A B : AbGroup}
   : A $-> ab_hom B (ab_tensor_prod A B). 
 Proof.
@@ -141,7 +141,7 @@ Defined.
 
 (** Here we write down some induction principles to help us prove lemmas about the tensor product. Some of these are quite specialised but are patterns that appear often in practice. *) 
 
-(** Our main recursion principle states that in order to build a homomorphism out of the tensor product, it is sufficient to provide a map out of the direct product which is bilinear, that is, a map that preserves addition in both arguments of the product. *)
+(** Our main recursion principle states that in order to build a homomorphism out of the tensor product, it is sufficient to provide a map out of the direct product which is biadditive, that is, a map that preserves addition in each argument of the product. *)
 
 (** We separate out the proof of this part, so we can make it opaque. *)
 Definition ab_tensor_prod_rec_helper {A B C : AbGroup}
@@ -250,7 +250,7 @@ Proof.
   - exact Hop.
 Defined.
 
-(** Similar to before, we specialise the triple tensor induction principle for proving homotopies of trilinear functions. *)
+(** Similar to before, we specialise the triple tensor induction principle for proving homotopies of trilinear/triadditive functions. *)
 Definition ab_tensor_prod_ind_homotopy_triple {A B C G : AbGroup}
   {f f' : ab_tensor_prod A (ab_tensor_prod B C) $-> G}
   (H : forall a b c, f (tensor a (tensor b c)) = f' (tensor a (tensor b c)))
@@ -261,7 +261,7 @@ Proof.
   - intros x y; apply grp_homo_op_agree.
 Defined.
 
-(** As explained for the bilinear and trilinear cases, we also derive an induction principle for quadruple tensors giving us dependent quadrilinear maps. *) 
+(** As explained for the biadditive and triadditive cases, we also derive an induction principle for quadruple tensors giving us dependent quadrilinear maps. *)
 Definition ab_tensor_prod_ind_hprop_quad {A B C D : AbGroup}
   (P : ab_tensor_prod A (ab_tensor_prod B (ab_tensor_prod C D)) -> Type)
   (H : forall x, IsHProp (P x))
