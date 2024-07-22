@@ -42,7 +42,7 @@ Proof.
     simpl.
     destruct a as [a|a].
     1,2: refine (ap _ (grp_homo_op _ _ _) @ _).
-    1,2: refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^); f_ap.
+    1,2: nrapply grp_homo_op_agree; trivial.
     symmetry.
     apply p. }
   { intros [k p] x.
