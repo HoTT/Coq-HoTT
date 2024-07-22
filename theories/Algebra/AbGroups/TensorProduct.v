@@ -706,4 +706,4 @@ Global Instance issymmmetricmonoidal_ab_tensor_prod
   : IsSymmetricMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
 
-(** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tesnor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
+(** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tensor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
