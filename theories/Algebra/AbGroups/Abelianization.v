@@ -99,8 +99,8 @@ Section Abel.
 
   (** We can derive the induction principle from the ones for truncation and the coequalizer. *)
   Definition Abel_ind (P : Abel -> Type) `{forall x, IsHSet (P x)} 
-    (a : forall x, P (abel_in x)) (c : forall x y z, DPath P (abel_in_comm x y z)
-      (a (x * (y * z))) (a (x * (z * y))))
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
     : forall (x : Abel), P x.
   Proof.
     srapply Trunc_ind.
@@ -111,19 +111,28 @@ Section Abel.
     apply c.
   Defined.
 
-  (** The computation rule can also be proven. *)
-  Definition Abel_ind_beta_abel_in_comm (P : Abel -> Type)
-    `{forall x, IsHSet (P x)}(a : forall x, P (abel_in x))
-    (c : forall x y z, DPath P (abel_in_comm x y z)
-      (a (x * (y * z))) (a (x * (z * y))))
-    (x y z : G) : apD (Abel_ind P a c) (abel_in_comm x y z) = c x y z.
+  (** The computation rule on point constructors holds definitionally. *)
+  Definition Abel_ind_beta_abel_in (P : Abel -> Type) `{forall x, IsHSet (P x)}
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
+    (x : G)
+    : Abel_ind P a c (abel_in x) = a x
+    := idpath.
+
+  (** The computation rule on paths. *)
+  Definition Abel_ind_beta_abel_in_comm (P : Abel -> Type) `{forall x, IsHSet (P x)}
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
+    (x y z : G)
+    : apD (Abel_ind P a c) (abel_in_comm x y z) = c x y z.
   Proof.
     refine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).
     rapply Coeq_ind_beta_cglue.
   Defined.
 
   (** We also have a recursion princple. *)
-  Definition Abel_rec (P : Type) `{IsHSet P} (a : G -> P)
+  Definition Abel_rec (P : Type) `{IsHSet P}
+    (a : G -> P)
     (c : forall x y z, a (x * (y * z)) = a (x * (z * y)))
     : Abel -> P.
   Proof.
@@ -131,9 +140,10 @@ Section Abel.
     intros; apply dp_const, c.
   Defined.
 
-  (** Here is a simpler version of Abel_ind when our target is an HProp. This lets us discard all the higher paths. *)
+  (** Here is a simpler version of [Abel_ind] when our target is an [HProp]. This lets us discard all the higher paths. *)
   Definition Abel_ind_hprop (P : Abel -> Type) `{forall x, IsHProp (P x)} 
-    (a : forall x, P (abel_in x)) : forall (x : Abel), P x.
+    (a : forall x, P (abel_in x))
+    : forall (x : Abel), P x.
   Proof.
     srapply (Abel_ind _ a).
     intros; apply path_ishprop.
@@ -141,7 +151,8 @@ Section Abel.
 
   (** And its recursion version. *)
   Definition Abel_rec_hprop (P : Type) `{IsHProp P}
-    (a : G -> P) : Abel -> P.
+    (a : G -> P)
+    : Abel -> P.
   Proof.
     apply (Abel_rec _ a).
     intros; apply path_ishprop.
@@ -383,7 +394,7 @@ Global Instance issurj_isabelianization {G : Group}
 Proof.
   intros k.
   pose (homotopic_isabelianization A (abel G) eta abel_unit) as p.
-  refine (@cancelL_isequiv_conn_map _ _ _ _ _ _ _
+  exact (@cancelL_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
 Defined.
 
