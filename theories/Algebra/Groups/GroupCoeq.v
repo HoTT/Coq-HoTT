@@ -34,8 +34,7 @@ Proof.
     refine (p _ @ _).
     revert x.
     rapply Trunc_ind.
-    srapply Coeq_ind.
-    2: intros; apply path_ishprop.
+    srapply Coeq_ind_hprop.
     intros w. hnf.
     induction w.
     1: apply ap, grp_homo_unit.
