@@ -11,8 +11,6 @@ Local Open Scope module_scope.
 
 (** * Modules over a ring. *)
 
-(** TODO: Right modules? We can treat right modules as left modules over the opposite ring. *)
-
 (** ** Left Modules *)
 
 (** An abelian group [M] is a left [R]-module when equipped with the following data: *) 
@@ -30,8 +28,6 @@ Class IsLeftModule (R : Ring) (M : AbGroup) := {
 }.
 
 Infix "*L" := lact : module_scope.
-
-(** TODO: notation for action. *)
 
 (** A left R-module is an abelian group equipped with a left R-module structure. *)
 Record LeftModule (R : Ring) := {
