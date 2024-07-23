@@ -145,8 +145,9 @@ Section Abel.
     (a : forall x, P (abel_in x))
     : forall (x : Abel), P x.
   Proof.
-    srapply (Abel_ind _ a).
-    intros; apply path_ishprop.
+    srapply Trunc_ind.
+    srapply Coeq_ind_hprop.
+    exact a.
   Defined.
 
   (** And its recursion version. *)
