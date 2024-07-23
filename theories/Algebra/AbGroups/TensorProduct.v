@@ -688,4 +688,56 @@ Global Instance issymmmetricmonoidal_ab_tensor_prod
   : IsSymmetricMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
 
+(** ** Preservation of Coequalizers *)
+
+(** The tensor product of abelian groups preserves coequalizers, meaning that the coequalizer of two tensored groups is the tensor of the coequalizer. We show this is the case on the left and the right. *)
+
+(** Tensor products preserve coequalizers on the right. *)
+Definition grp_iso_ab_tensor_prod_coeq_l {A B C : AbGroup} (f g : B $-> C)
+  : ab_coeq (fmap01 ab_tensor_prod A f) (fmap01 ab_tensor_prod A g)
+    $<~> ab_tensor_prod A (ab_coeq f g).
+Proof.
+  snrapply cate_adjointify.
+  - snrapply ab_coeq_rec.
+    + rapply (fmap01 ab_tensor_prod A).
+      nrapply ab_coeq_in.
+    + refine (_^$ $@ fmap02 ab_tensor_prod _ _ $@ _).
+      1,3: rapply fmap01_comp.
+      nrapply ab_coeq_glue.
+  - snrapply ab_tensor_prod_rec.
+    + intros a.
+      snrapply functor_ab_coeq.
+      1,2: snrapply (grp_homo_tensor_l a).
+      1,2: hnf; reflexivity.
+    + intros a b b'.
+      snrapply grp_homo_op.
+    + intros a a'.
+      srapply ab_coeq_ind_hprop.
+      intros x.
+      exact (ap (ab_coeq_in
+        (f:=fmap01 ab_tensor_prod A f)
+        (g:=fmap01 ab_tensor_prod A g))
+        (tensor_dist_r a a' x)).
+  - snrapply ab_tensor_prod_ind_homotopy.
+    intros a.
+    srapply ab_coeq_ind_hprop.
+    intros c.
+    reflexivity.
+  - snrapply ab_coeq_ind_homotopy.
+    snrapply ab_tensor_prod_ind_homotopy.
+    reflexivity.
+Defined.
+
+(** Tensor products preserve coequalizers on the left. *)
+Definition grp_iso_ab_tensor_prod_coeq_r {A B C : AbGroup} (f g : A $-> B)
+  : ab_coeq (fmap10 ab_tensor_prod f C) (fmap10 ab_tensor_prod g C)
+    $<~> ab_tensor_prod (ab_coeq f g) C.
+Proof.
+  refine (Monoidal.braide _ _ $oE _).
+  nrefine (grp_iso_ab_tensor_prod_coeq_l f g $oE _).
+  snrapply grp_iso_ab_coeq.
+  1,2: rapply Monoidal.braide.
+  1,2: symmetry; nrapply ab_tensor_swap_natural.
+Defined.
+
 (** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tensor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
