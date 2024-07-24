@@ -182,6 +182,16 @@ Proof.
     apply ab_tensor_prod_rec_helper; assumption.
 Defined.
 
+(** A special case that arises. *)
+Definition ab_tensor_prod_rec' {A B C : AbGroup}
+  (f : A -> (B $-> C))
+  (l : forall a a' b, f (a + a') b = f a b + f a' b)
+  : ab_tensor_prod A B $-> C.
+Proof.
+  refine (ab_tensor_prod_rec f _ l).
+  intro a; apply grp_homo_op.
+Defined.
+
 (** We give an induction principle for an hprop-valued type family [P].  It may be surprising at first that we only require [P] to hold for the simple tensors [tensor a b] and be closed under addition.  It automatically follows that [P 0] holds (since [tensor 0 0 = 0]) and that [P] is closed under negation (since [tensor -a b = - tensor a b]). This induction principle says that the simple tensors generate the tensor product as a semigroup. *)
 Definition ab_tensor_prod_ind_hprop {A B : AbGroup}
   (P : ab_tensor_prod A B -> Type)
@@ -375,15 +385,12 @@ Definition functor_ab_tensor_prod {A B A' B' : AbGroup}
   (f : A $-> A') (g : B $-> B')
   : ab_tensor_prod A B $-> ab_tensor_prod A' B'.
 Proof.
-  snrapply ab_tensor_prod_rec.
-  - intros a b.
-    exact (tensor (f a) (g b)).
-  - intros a b b'; hnf.
-    rewrite grp_homo_op.
-    by rewrite tensor_dist_l.
+  snrapply ab_tensor_prod_rec'.
+  - intro a.
+    exact (grp_homo_tensor_l (f a) $o g).
   - intros a a' b; hnf.
     rewrite grp_homo_op.
-    by rewrite tensor_dist_r.
+    nrapply tensor_dist_r.
 Defined.
 
 (** 2-functoriality of the tensor product. *)
@@ -489,28 +496,14 @@ Defined.
 (** In order to be more efficient whilst unfolding definitions, we break up the definition of a twist map into its components. *)
 
 Local Definition ab_tensor_prod_twist_map {A B C : AbGroup}
-  : A -> ab_tensor_prod B C -> ab_tensor_prod B (ab_tensor_prod A C).
+  : A -> (ab_tensor_prod B C $-> ab_tensor_prod B (ab_tensor_prod A C)).
 Proof.
   intros a.
-  snrapply ab_tensor_prod_rec.
-  - intros b c.
-    exact (tensor b (tensor a c)).
-  - intros b c c'; hnf.
-    lhs nrapply ap.
-    1: nrapply tensor_dist_l.
-    nrapply tensor_dist_l.
+  snrapply ab_tensor_prod_rec'.
+  - intros b.
+    exact (grp_homo_tensor_l b $o grp_homo_tensor_l a).
   - intros b b' c; hnf.
     nrapply tensor_dist_r.
-Defined.
-
-Arguments ab_tensor_prod_twist_map {A B C} _ _ /.
-
-Local Definition ab_tensor_prod_twist_map_additive_r {A B C : AbGroup}
-  (a : A) (b b' : ab_tensor_prod B C)
-  : ab_tensor_prod_twist_map a (b + b')
-    = ab_tensor_prod_twist_map a b + ab_tensor_prod_twist_map a b'.
-Proof.
-  intros; nrapply grp_homo_op.
 Defined.
 
 Local Definition ab_tensor_prod_twist_map_additive_l {A B C : AbGroup}
@@ -532,9 +525,8 @@ Defined.
 Definition ab_tensor_prod_twist {A B C}
   : ab_tensor_prod A (ab_tensor_prod B C) $-> ab_tensor_prod B (ab_tensor_prod A C).
 Proof.
-  snrapply ab_tensor_prod_rec.
+  snrapply ab_tensor_prod_rec'.
   - exact ab_tensor_prod_twist_map. 
-  - exact ab_tensor_prod_twist_map_additive_r.
   - exact ab_tensor_prod_twist_map_additive_l.
 Defined.
 
@@ -593,10 +585,8 @@ Proof.
   - nrapply grp_homo_tensor_r.
     exact 1%int.
   - snrapply isequiv_adjointify.
-    + snrapply ab_tensor_prod_rec.
+    + snrapply ab_tensor_prod_rec'.
       * exact grp_pow_homo.
-      * intros a z z'; cbn beta.
-        nrapply grp_homo_op.
       * intros a a' z; cbn beta.
         nrapply (grp_homo_op (ab_mul z)).
     + hnf.
@@ -704,14 +694,12 @@ Proof.
     + refine (_^$ $@ fmap02 ab_tensor_prod _ _ $@ _).
       1,3: rapply fmap01_comp.
       nrapply ab_coeq_glue.
-  - snrapply ab_tensor_prod_rec.
+  - snrapply ab_tensor_prod_rec'.
     + intros a.
       snrapply functor_ab_coeq.
       1,2: snrapply (grp_homo_tensor_l a).
       1,2: hnf; reflexivity.
-    + intros a b b'.
-      snrapply grp_homo_op.
-    + intros a a'.
+    + intros a a'; cbn beta.
       srapply ab_coeq_ind_hprop.
       intros x.
       exact (ap (ab_coeq_in
