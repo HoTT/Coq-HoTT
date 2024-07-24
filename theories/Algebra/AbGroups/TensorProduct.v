@@ -721,10 +721,10 @@ Definition grp_iso_ab_tensor_prod_coeq_r {A B C : AbGroup} (f g : A $-> B)
   : ab_coeq (fmap10 ab_tensor_prod f C) (fmap10 ab_tensor_prod g C)
     $<~> ab_tensor_prod (ab_coeq f g) C.
 Proof.
-  refine (Monoidal.braide _ _ $oE _).
+  refine (braide _ _ $oE _).
   nrefine (grp_iso_ab_tensor_prod_coeq_l f g $oE _).
   snrapply grp_iso_ab_coeq.
-  1,2: rapply Monoidal.braide.
+  1,2: rapply braide.
   1,2: symmetry; nrapply ab_tensor_swap_natural.
 Defined.
 
