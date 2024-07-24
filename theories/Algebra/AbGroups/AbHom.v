@@ -47,7 +47,7 @@ Defined.
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
 Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
-  := ab_cokernel (ab_homo_add g (negate_hom f)).
+  := ab_cokernel (ab_homo_add (negate_hom f) g).
 
 Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
@@ -60,8 +60,7 @@ Proof.
   intros x.
   nrapply qglue.
   apply tr.
-  exists x.
-  apply ab_comm.
+  by exists x.
 Defined.
 
 Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
@@ -75,9 +74,9 @@ Proof.
   destruct H as [a q].
   destruct q; simpl.
   lhs nrapply grp_homo_op.
-  lhs nrapply ap.
+  lhs nrapply (ap (.* _)).
   1: apply grp_homo_inv.
-  apply grp_moveL_1M^-1.
+  apply grp_moveL_M1^-1.
   exact (p a)^.
 Defined.
 
