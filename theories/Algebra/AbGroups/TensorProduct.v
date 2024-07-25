@@ -716,8 +716,8 @@ Proof.
     reflexivity.
 Defined.
 
-(* TODO: comment and better name? *)
-Definition tensor_prod_coeq_l_comm_sq A {B C} (f g : B $-> C)
+(** The equivalence respects the natural maps from [ab_tensor_prod A C]. *)
+Definition ab_tensor_prod_coeq_l_triangle A {B C} (f g : B $-> C)
   : grp_iso_ab_tensor_prod_coeq_l A f g $o ab_coeq_in
     $== fmap01 ab_tensor_prod A ab_coeq_in.
 Proof.
@@ -737,8 +737,8 @@ Proof.
   1,2: symmetry; nrapply ab_tensor_swap_natural.
 Defined.
 
-(** TODO: comment and better name? *)
-Definition tensor_prod_coeq_r_comm_sq {A B} (f g : A $-> B) C
+(** The equivalence respects the natural maps from [ab_tensor_prod B C]. *)
+Definition ab_tensor_prod_coeq_r_triangle {A B} (f g : A $-> B) C
   : grp_iso_ab_tensor_prod_coeq_r f g C $o ab_coeq_in
     $== fmap10 ab_tensor_prod ab_coeq_in C.
 Proof.
