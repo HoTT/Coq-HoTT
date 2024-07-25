@@ -683,7 +683,7 @@ Global Instance issymmmetricmonoidal_ab_tensor_prod
 (** The tensor product of abelian groups preserves coequalizers, meaning that the coequalizer of two tensored groups is the tensor of the coequalizer. We show this is the case on the left and the right. *)
 
 (** Tensor products preserve coequalizers on the right. *)
-Definition grp_iso_ab_tensor_prod_coeq_l {A B C : AbGroup} (f g : B $-> C)
+Definition grp_iso_ab_tensor_prod_coeq_l A {B C} (f g : B $-> C)
   : ab_coeq (fmap01 ab_tensor_prod A f) (fmap01 ab_tensor_prod A g)
     $<~> ab_tensor_prod A (ab_coeq f g).
 Proof.
@@ -716,16 +716,34 @@ Proof.
     reflexivity.
 Defined.
 
+(* TODO: comment and better name? *)
+Definition tensor_prod_coeq_l_comm_sq A {B C} (f g : B $-> C)
+  : grp_iso_ab_tensor_prod_coeq_l A f g $o ab_coeq_in
+    $== fmap01 ab_tensor_prod A ab_coeq_in.
+Proof.
+  snrapply ab_tensor_prod_ind_homotopy.
+  reflexivity.
+Defined.
+
 (** Tensor products preserve coequalizers on the left. *)
-Definition grp_iso_ab_tensor_prod_coeq_r {A B C : AbGroup} (f g : A $-> B)
+Definition grp_iso_ab_tensor_prod_coeq_r {A B} (f g : A $-> B) C
   : ab_coeq (fmap10 ab_tensor_prod f C) (fmap10 ab_tensor_prod g C)
     $<~> ab_tensor_prod (ab_coeq f g) C.
 Proof.
   refine (braide _ _ $oE _).
-  nrefine (grp_iso_ab_tensor_prod_coeq_l f g $oE _).
+  nrefine (grp_iso_ab_tensor_prod_coeq_l _ f g $oE _).
   snrapply grp_iso_ab_coeq.
   1,2: rapply braide.
   1,2: symmetry; nrapply ab_tensor_swap_natural.
+Defined.
+
+(** TODO: comment and better name? *)
+Definition tensor_prod_coeq_r_comm_sq {A B} (f g : A $-> B) C
+  : grp_iso_ab_tensor_prod_coeq_r f g C $o ab_coeq_in
+    $== fmap10 ab_tensor_prod ab_coeq_in C.
+Proof.
+  snrapply ab_tensor_prod_ind_homotopy.
+  reflexivity.
 Defined.
 
 (** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tensor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
