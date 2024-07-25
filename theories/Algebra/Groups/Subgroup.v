@@ -348,40 +348,39 @@ Record NormalSubgroup (G : Group) := {
 
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
-  
-  
+
+(** A product [x * y] is in a normal subgroup if and only if [y * x] is. *)
+Definition symmetric_in_normalsubgroup {G : Group}
+  (N : NormalSubgroup G)
+  : forall x y, N (x * y) -> N (y * x).
+Proof.
+  intros x y n.
+  refine (transport N _ (isnormal (y:=y) n)).
+  lhs nrapply (ap (.* -y) (grp_assoc y x y)).
+  lhs_V nrapply grp_assoc.
+  lhs nrapply (ap _ (grp_inv_r y)).
+  apply grp_unit_r.
+Defined.
+
+Definition equiv_symmetric_in_normalsubgroup {G : Group}
+  (N : NormalSubgroup G)
+  : forall x y, N (x * y) <~> N (y * x).
+Proof.
+  intros x y.
+  rapply equiv_iff_hprop.
+  all: apply symmetric_in_normalsubgroup.
+Defined.
+
 (** Left and right cosets are equivalent in normal subgroups. *)
 Definition equiv_isnormalsubgroup_in_cosetL_in_cosetR {G : Group}
   (N : NormalSubgroup G)
   : forall x y, in_cosetL N x y <~> in_cosetR N x y.
 Proof.
   intros x y.
-  rapply equiv_iff_hprop; cbn.
-  - intros n.
-    nrefine (transport N (grp_unit_r _) _).
-    nrefine (transport (fun z => N (x * -y * z)) (grp_inv_r x) _).
-    nrefine (transport N (grp_assoc _ _ _) _).
-    nrefine (transport (fun z => N (x * z)) (grp_assoc _ _ _)^ _).
-    nrefine (transport N (grp_assoc _ _ _)^ _).
-    apply isnormal.
-    apply subgroup_in_inv'.
-    nrefine (transport N (grp_inv_op _ _)^ _).
-    nrefine (transport (fun z => N (- x * z)) (grp_inv_inv _)^ _).
-    exact n.
-  - intros n.
-    nrefine (transport N (grp_unit_r _) _).
-    nrefine (transport (fun z => N ((- x * y) * z)) (grp_inv_r (-x)) _).
-    nrefine (transport N (grp_assoc _ _ _) _).
-    nrefine (transport (fun z => N (- x * z)) (grp_assoc _ _ _)^ _).
-    nrefine (transport N (grp_assoc _ _ _)^ _).
-    apply isnormal.
-    apply subgroup_in_inv'.
-    nrefine (transport N (grp_inv_op _ _)^ _).
-    nrefine (transport (fun z => N (z * -y)) (grp_inv_inv _)^ _).
-    exact n.
+  exact (equiv_in_cosetR_symm _ _ oE equiv_symmetric_in_normalsubgroup _ _ _).
 Defined.
 
-(* Inverses are then respected *)
+(** Inverses are then respected *)
 Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G}
   : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
 Proof.

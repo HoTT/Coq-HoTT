@@ -74,7 +74,7 @@ Coercion abgroup_subgroup : Subgroup >-> AbGroup.
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
-  intros x y; unfold in_cosetL, in_cosetR; intros h.
+  intros x y h.
   rewrite ab_comm, grp_assoc, grp_inv_l, grp_unit_l.
   exact h.
 Defined.
