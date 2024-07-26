@@ -21,7 +21,6 @@ Generalizable Variables A B.
 
 Local Set Universe Minimization ToSet.
 
-
 Class Closeness@{i} (A : Type@{i}) := close : Q+ -> Relation@{i i} A.
 
 Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
@@ -299,8 +298,7 @@ Class Continuous@{UA UB}
 Arguments continuous {A _ B _} f {_} _ _.
 
 Definition BinaryDup@{i} {A : Type@{i} } : A -> A /\ A := fun x => (x, x).
-Definition uncurry {A B C} (f : A -> B -> C) : A /\ B -> C
-  := fun x => f (fst x) (snd x).
+
 Definition map2 {A B C D} (f : A -> C) (g : B -> D) : A /\ B -> C /\ D
   := fun x => (f (fst x), g (snd x)).
 
@@ -464,7 +462,7 @@ Global Instance uncurry_lipschitz (f : A -> B -> C) L1 L2
   : Lipschitz (uncurry f) (L1 + L2).
 Proof.
 intros e [u1 u2] [v1 v2] [xi1 xi2]. simpl in xi1,xi2.
-unfold uncurry;simpl.
+simpl.
 assert (Hrw : (L1 + L2) * e = L1 * e + L2 * e)
 by abstract (apply pos_eq;ring_tac.ring_with_nat);
 rewrite Hrw;clear Hrw.

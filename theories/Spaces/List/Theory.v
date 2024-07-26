@@ -145,6 +145,15 @@ Proof.
     exact (y'; (p, inr i')).
 Defined.
 
+(** Mapping a function over a concatenated list is the concatenation of the mapped lists. *)
+Definition list_map_app {A B : Type} (f : A -> B) (l l' : list A)
+  : list_map f (l ++ l') = list_map f l ++ list_map f l'.
+Proof.
+  induction l as [|a l IHl].
+  1: reflexivity.
+  simpl; f_ap.
+Defined.
+
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
 Lemma list_map_id {A : Type} (f : A -> A) (l : list A)
   (Hf : forall x, InList x l -> f x = x)
@@ -286,6 +295,33 @@ Proof.
   rewrite IHl.
   rewrite <- app_assoc.
   cbn; apply reverse_acc_cons.
+Defined.
+
+(** The [reverse] of a concatenated list is the concatenation of the reversed lists in reverse order. *)
+Definition reverse_app {A : Type} (l l' : list A)
+  : reverse (l ++ l') = reverse l' ++ reverse l.
+Proof.
+  induction l as [|a l IHl] in l' |- *.
+  1: symmetry; apply app_nil.
+  simpl.
+  lhs nrapply reverse_cons.
+  rhs nrapply ap.
+  2: nrapply reverse_cons.
+  rhs nrapply app_assoc.
+  nrapply (ap (fun l => l ++ [a])).
+  exact (IHl l').
+Defined.
+
+(** [reverse] is involutive. *)
+Definition reverse_reverse {A : Type} (l : list A)
+  : reverse (reverse l) = l.
+Proof.
+  induction l.
+  1: reflexivity.
+  lhs nrapply ap.
+  1: nrapply reverse_cons.
+  lhs nrapply reverse_app.
+  exact (ap _ IHl).
 Defined.
 
 (** ** Getting elements *)

@@ -38,6 +38,12 @@ Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
 Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
   := commutativity x y.
 
+Definition ab_neg_op {A : AbGroup} (x y : A) : - (x + y) = -x - y.
+Proof.
+  lhs nrapply grp_inv_op.
+  apply ab_comm.
+Defined.
+
 (** ** Paths between abelian groups *)
 
 Definition equiv_path_abgroup `{Univalence} {A B : AbGroup@{u}}
@@ -99,6 +105,8 @@ Defined.
 
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
   := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).
+
+Arguments QuotientAbGroup G H : simpl never.
 
 Definition quotient_abgroup_rec {G : AbGroup}
   (N : Subgroup G) (H : AbGroup)

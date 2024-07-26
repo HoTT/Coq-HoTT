@@ -480,6 +480,29 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** ** Commutation *)
+
+(** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)
+Definition grp_commutes_inv {G : Group} (g h : G) (p : g * h = h * g)
+  : g * (-h) = (-h) * g.
+Proof.
+  apply grp_moveR_gV.
+  rhs_V apply simple_associativity.
+  by apply grp_moveL_Vg.
+Defined.
+
+(** If [g] commutes with [h] and [h'], then [g] commutes with their product [h * h']. *)
+Definition grp_commutes_op {G : Group} (g h h' : G)
+  (p : g * h = h * g) (p' : g * h' = h' * g)
+  : g * (h * h') = (h * h') * g.
+Proof.
+  lhs apply simple_associativity.
+  lhs nrapply (ap (.* h') p).
+  lhs_V apply simple_associativity.
+  lhs nrapply (ap (h *.) p').
+  by apply simple_associativity.
+Defined.
+
 (** ** Power operation *)
 
 (** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
@@ -539,6 +562,28 @@ Proof.
   - cbn. by rewrite grp_inv_inv.
   - reflexivity.
   - reflexivity.
+Defined.
+
+(** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
+Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
+  (p : h * g = g * h)
+  : h * (grp_pow g n) = (grp_pow g n) * h.
+Proof.
+  induction n.
+  - exact (grp_unit_r _ @ (grp_unit_l _)^).
+  - rewrite grp_pow_succ.
+    nrapply grp_commutes_op; assumption.
+  - rewrite grp_pow_pred.
+    nrapply grp_commutes_op.
+    2: assumption.
+    apply grp_commutes_inv, p.
+Defined.
+
+(** [grp_pow g n] commutes with [g]. *)
+Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
+  : g * grp_pow g n = grp_pow g n * g.
+Proof.
+  by apply grp_pow_commutes.
 Defined.
 
 (** ** The category of Groups *)
@@ -927,4 +972,14 @@ Proof.
   refine ((preserves_sg_op _ _)^ @ _ @ (preserves_sg_op _ _)).
   refine (ap f _).
   apply C.
+Defined.
+
+(** If two group homomorphisms agree on two elements, then they agree on their product. *)
+Definition grp_homo_op_agree {G G' H : Group} (f : G $-> H) (f' : G' $-> H)
+  {x y : G} {x' y' : G'} (p : f x = f' x') (q : f y = f' y')
+  : f (x * y) = f' (x' * y').
+Proof.
+  lhs nrapply grp_homo_op.
+  rhs nrapply grp_homo_op.
+  exact (ap011 _ p q).
 Defined.

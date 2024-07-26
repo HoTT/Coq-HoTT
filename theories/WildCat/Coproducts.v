@@ -393,7 +393,7 @@ Global Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero.
 Proof.
   nrapply issymmetricmonoidal_op'.
-  nrapply (issymmetricmonoidal_cat_binprod (A :=A^op) zero).
+  nrapply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
   by nrapply isterminal_op_isinitial.
 Defined.
 
