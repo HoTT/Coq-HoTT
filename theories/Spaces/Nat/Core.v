@@ -164,26 +164,19 @@ Defined.
 
 (** ** Properties of successors *)
 
-(** TODO: remove these *)
-Local Definition ap_S := @ap _ _ S.
-Local Definition ap_nat := @ap nat.
-#[export] Hint Resolve ap_S : core.
-#[export] Hint Resolve ap_nat : core.
-
 Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
 (** Injectivity of successor *)
 Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
-#[export] Hint Immediate path_nat_S : core.
 
 (** TODO: rename to [neq_S] *)
-(** TODO: avoid auto in proof. *)
 Definition not_eq_S@{} n m : n <> m -> S n <> S m.
 Proof.
-  auto.
+  intros np q.
+  apply np.
+ exact (path_nat_S _ _ q).
 Defined.
-#[export] Hint Resolve not_eq_S : core.
 
 (** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
@@ -191,16 +184,14 @@ Definition not_eq_O_S@{} : forall n, 0 <> S n.
 Proof.
   discriminate.
 Defined.
-#[export] Hint Resolve not_eq_O_S : core.
 
 (** TODO: rename to [neq_n_Sn] *)
-(** TODO: prove above using this *)
-(** TODO: remove auto. *)
 Theorem not_eq_n_Sn@{} n : n <> S n.
 Proof.
-  simple_induction' n; auto.
+  simple_induction' n.
+  - apply not_eq_O_S.
+  - by apply not_eq_S.
 Defined.
-#[export] Hint Resolve not_eq_n_Sn : core.
 
 (** ** Truncatedness of natural numbers *)
 
@@ -234,7 +225,6 @@ Proof.
   - apply (ap nat_succ).
     exact IHn.
 Defined.
-#[export] Hint Resolve nat_add_zero_r : core.
 
 (** Adding a successor on the left is the same as adding and then taking the successor. *)
 Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
@@ -243,9 +233,10 @@ Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
 (** Adding a successor on the right is the same as adding and then taking the successor. *)
 Definition nat_add_succ_r@{} n m : n + m.+1 = (n + m).+1.
 Proof.
-  simple_induction' n; simpl; auto.
+  simple_induction' n; simpl.
+  1: reflexivity.
+  exact (ap S IH).
 Defined.
-#[export] Hint Resolve nat_add_succ_r: core.
 
 (** Addition of natural numbers is commutative. *)
 Definition nat_add_comm@{} n m : n + m = m + n.
@@ -277,7 +268,6 @@ Definition nat_mul_zero_r@{} n : n * 0 = 0.
 Proof.
   by induction n.
 Defined.
-#[export] Hint Resolve nat_mul_zero_r : core.
 
 Definition nat_mul_succ_l@{} n m : n.+1 * m = m + n * m
   := idpath.
@@ -292,7 +282,6 @@ Proof.
     nrapply (ap (nat_add m)).
     exact IHn.
 Defined.
-#[export] Hint Resolve nat_mul_succ_r : core.
 
 (** Multiplication of natural numbers is commutative. *)
 Definition nat_mul_comm@{} n m : n * m = m * n.
@@ -348,7 +337,6 @@ Scheme leq_rect := Induction for leq Sort Type.
 Scheme leq_rec := Minimality for leq Sort Type.
 
 Notation "n <= m" := (leq n m) : nat_scope.
-#[export] Hint Constructors leq : core.
 
 Existing Class leq.
 Global Existing Instances leq_n leq_S.
@@ -358,15 +346,15 @@ Global Instance reflexive_leq : Reflexive leq := leq_n.
 
 Lemma leq_trans {x y z} : x <= y -> y <= z -> x <= z.
 Proof.
-  induction 2; auto.
+  induction 2; exact _.
 Defined.
 
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
 Lemma leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
 Proof.
-  induction 1; auto.
-  destruct m; simpl; auto.
+  induction 1; try exact _.
+  destruct m; simpl; exact _.
 Defined.
 
 Lemma leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
@@ -377,7 +365,7 @@ Defined.
 
 Lemma leq_S_n' n m : n <= m -> n.+1 <= m.+1.
 Proof.
-  induction 1; auto.
+  induction 1; exact _.
 Defined.
 Global Existing Instance leq_S_n' | 100.
 
@@ -440,7 +428,7 @@ Defined.
 
 Global Instance leq_0_n n : 0 <= n | 10.
 Proof.
-  simple_induction' n; auto.
+  simple_induction' n; exact _.
 Defined.
 
 Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
@@ -482,7 +470,7 @@ Definition lt n m : Type0 := leq (S n) m.
 
 (** We declare it as an existing class so typeclass search is performed on its goals. *)
 Existing Class lt.
-#[export] Hint Unfold lt : core typeclass_instances.
+#[export] Hint Unfold lt : typeclass_instances.
 Infix "<" := lt : nat_scope.
 (** We add a typeclass instance for unfolding the definition so lemmas about [leq] can be used. *)
 Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
@@ -499,7 +487,7 @@ Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
 Definition ge n m := leq m n.
 Existing Class ge.
-#[export] Hint Unfold ge : core typeclass_instances.
+#[export] Hint Unfold ge : typeclass_instances.
 Infix ">=" := ge : nat_scope.
 Global Instance ge_is_leq n m : leq m n -> ge n m | 100 := idmap.
 
@@ -509,7 +497,7 @@ Global Instance decidable_ge n m : Decidable (ge n m) := _.
 
 Definition gt n m := lt m n.
 Existing Class gt.
-#[export] Hint Unfold gt : core typeclass_instances.
+#[export] Hint Unfold gt : typeclass_instances.
 Infix ">" := gt : nat_scope.
 Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
 
@@ -537,36 +525,42 @@ Defined.
 
 Lemma nat_max_n_n n : nat_max n n = n.
 Proof.
-  simple_induction' n; cbn; auto.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
 Defined.
-#[export] Hint Resolve nat_max_n_n : core.
 
 Lemma nat_max_Sn_n n : nat_max (S n) n = S n.
 Proof.
-  simple_induction' n; cbn; auto.
-Defined.
-#[export] Hint Resolve nat_max_Sn_n : core.
-
-Lemma nat_max_comm n m : nat_max n m = nat_max m n.
-Proof.
-  revert m; simple_induction' n; destruct m; cbn; auto.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
 Defined.
 
 Lemma nat_max_0_n n : nat_max 0 n = n.
 Proof.
-  auto.
+  reflexivity.
 Defined.
-#[export] Hint Resolve nat_max_0_n : core.
 
 Lemma nat_max_n_0 n : nat_max n 0 = n.
 Proof.
-  by rewrite nat_max_comm.
+  induction n as [|n IHn]; reflexivity.
 Defined.
-#[export] Hint Resolve nat_max_n_0 : core.
+
+Lemma nat_max_comm n m : nat_max n m = nat_max m n.
+Proof.
+  induction m as [|m IHm] in n |- *.
+  - nrapply nat_max_n_0.
+  - destruct n.
+    + reflexivity.
+    + exact (ap S (IHm n)).
+Defined.
 
 Theorem nat_max_l : forall n m, m <= n -> nat_max n m = n.
 Proof.
-  intros n m; revert n; simple_induction m m IHm; auto.
+  intros n m; revert n; simple_induction m m IHm.
+  { intros n H.
+    nrapply nat_max_n_0. }
   intros [] p.
   1: inversion p.
   cbn; by apply (ap S), IHm, leq_S_n.
@@ -579,7 +573,9 @@ Defined.
 
 Lemma nat_min_comm : forall n m, nat_min n m = nat_min m n.
 Proof.
-  simple_induction' n; destruct m; cbn; auto.
+  simple_induction' n; destruct m; cbn.
+  1-3: reflexivity.
+  exact (ap S (IH _)).
 Defined.
 
 Theorem nat_min_l : forall n m : nat, n <= m -> nat_min n m = n.
