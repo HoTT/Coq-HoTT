@@ -6,23 +6,6 @@ Local Set Universe Minimization ToSet.
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
-Ltac nat_absurd_trivial :=
-  unfold ">" in *; unfold "<" in *;
-  match goal with
-  | [ H : ?n.+1 <= 0 |- _ ] => contradiction (not_leq_Sn_0 n H)
-  | [ H : ?n.+1 <= ?n |- _ ] => contradiction (not_lt_n_n n H)
-  | [ H1 : ?k.+1 <= ?n |- _ ] =>
-      match goal with
-      | [ H2 : ?n <= ?k |- _] =>
-          contradiction (not_leq_Sn_n k (@leq_trans _ _ _ H1 H2))
-      end
-  end.
-
-#[export] Hint Resolve not_lt_n_n : nat.
-#[export] Hint Resolve not_lt_n_0 : nat.
-#[export] Hint Resolve not_leq_Sn_0 : nat.
-#[export] Hint Extern 2 => nat_absurd_trivial : nat.
-
 (** This is defined so that it can be added to the [nat] auto hint database. *)
 Local Definition symmetric_paths_nat (n m : nat)
   : n = m -> m = n := @symmetric_paths nat n m.
@@ -31,10 +14,7 @@ Local Definition transitive_paths_nat (n m k : nat)
   : n = m -> m = k -> n = k := @transitive_paths nat n m k.
 
 #[export] Hint Resolve symmetric_paths_nat | 5 : nat.
-#[export] Hint Resolve transitive_paths_nat : nat.
 #[export] Hint Resolve leq_0_n : nat.
-#[export] Hint Resolve leq_trans : nat.
-#[export] Hint Resolve leq_antisym : nat.
 
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
 Proof.
@@ -68,8 +48,6 @@ Ltac convert_to_positive :=
   | [|- ~ (?n <= ?m) ] => apply lt_implies_not_geq
   end.
 
-#[export] Hint Extern 2 => convert_to_positive : nat.
-
 (** Because of the inductive definition of [<=], one can destruct the proof of [n <= m] and get a judgemental identification between [n] and [m] rather than a propositional one, which may be preferable to the following lemma. *)
 Proposition leq_split {n m : nat} : (n <= m) -> sum (n < m) (n = m).
 Proof.
@@ -97,8 +75,6 @@ Proof.
   contradiction (not_lt_n_n m).
 Defined.
 
-#[export] Hint Resolve lt_implies_diseq : nat.
-
 (** This lemma is just for convenience in the case where the user forgets to unfold the definition of [<]. *)
 Proposition n_lt_Sn (n : nat) : n < n.+1.
 Proof.
@@ -111,20 +87,6 @@ Proof.
   now apply leq_S_n, leq_S.
 Defined.
 
-Ltac easy_eq_to_ineq :=
-  match goal with
-  | [ H : ?x = ?n    |- ?x <= ?n ] => destruct H; constructor
-  | [ H : ?x.+1 = ?n |- ?x <= ?n ] => rewrite <- H; constructor;
-                                      constructor
-  | [ H : ?x.+1 = ?n |- ?x < ?n  ] => rewrite <- H; apply leq_n
-  | [ H : ?x.+2 = ?n |- ?x <= ?n ] => rewrite <- H; apply leq_S';
-                                      apply leq_S'; apply leq_n
-  | [ H : ?x.+2 = ?n |- ?x < ?n ] => rewrite <- H; apply leq_S_n';
-                                      apply leq_S
-  end.
-
-#[export] Hint Extern 3 => easy_eq_to_ineq : nat.
-  
 Proposition mixed_trans1 (n m k : nat)
   : n <= m -> m < k -> n < k.
 Proof.
@@ -150,9 +112,6 @@ Proof.
   intros l j. apply (@leq_trans (n.+1) m k); trivial. 
 Defined.
 
-#[export] Hint Resolve mixed_trans1 : nat.
-#[export] Hint Resolve mixed_trans2 : nat.
-
 Proposition sub_n_n (n : nat) : n - n = 0.
 Proof.
   simple_induction n n IHn.
@@ -164,20 +123,6 @@ Proposition sub_n_0 (n : nat) : n - 0 = n.
 Proof.
  destruct n; reflexivity.
 Defined.
-
-Ltac rewrite_subn0 :=
-  match goal with
-  | [ |- context [ ?n - 0 ] ] => rewrite -> sub_n_0
-  end.
-
-Ltac rewrite_subnn :=
-  match goal with
-  | [ |- context [ ?n - ?n ] ] => rewrite -> sub_n_n
-  end.
-
-#[export] Hint Rewrite -> sub_n_0 : nat.
-#[export] Hint Rewrite -> sub_n_n : nat.
-#[export] Hint Resolve sub_n_0 : nat.
 
 Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.
 Proof.
@@ -339,9 +284,6 @@ Proof.
   apply natminuspluseq. assumption.
 Defined.
 
-#[export] Hint Rewrite -> natminuspluseq : nat.
-#[export] Hint Rewrite -> natminuspluseq' : nat.
-
 Lemma equiv_leq_add n m
   : leq n m <~> exists k, k + n = m.
 Proof.
@@ -360,18 +302,6 @@ Proof.
     apply leq_add.
 Defined.
 
-#[export] Hint Resolve leq_S_n' : nat.
-
-Ltac leq_S_n_in_hypotheses :=
-  match goal with
-  | [ H : ?n.+1 <= ?m.+1 |- _ ] => apply leq_S_n in H
-  | [ H : ?n < ?m.+1 |- _ ] => apply leq_S_n in H
-  | [ H : ?m.+1 > ?n |- _ ] => apply leq_S_n in H
-  | [ H : ?m.+1 >= ?n.+1 |- _ ] => apply leq_S_n in H
-  end.
-
-#[export] Hint Extern 4 => leq_S_n_in_hypotheses : nat.
-                                                     
 Proposition nataddpreservesleq { n m k : nat }
   : n <= m -> n + k <= m + k.
 Proof.
@@ -382,8 +312,6 @@ Proof.
       apply leq_S_n'; exact IHk.
 Defined.
 
-#[export] Hint Resolve nataddpreservesleq : nat.
-
 Proposition nataddpreservesleq' { n m k : nat }
   : n <= m -> k + n <= k + m.
 Proof.
@@ -391,8 +319,6 @@ Proof.
     (symmetric_paths _ _ (nat_add_comm k n)).
   exact nataddpreservesleq.
 Defined.
-
-#[export] Hint Resolve nataddpreservesleq' : nat.
 
 Proposition nataddpreserveslt { n m k : nat }
   : n < m -> n + k < m + k.
@@ -551,8 +477,6 @@ Proof.
   destruct (symmetric_paths _ _ (nataddsub_assoc n H)); done.
 Defined.
 
-#[export] Hint Resolve nataddsub_assoc_implication : nat.
-
 Proposition nat_add_sub_eq (n : nat) {k: nat}
   : (k <= n) -> k + (n - k) = n.
 Proof.
@@ -560,8 +484,6 @@ Proof.
   destruct (symmetric_paths _ _ (nataddsub_assoc k H));
   destruct (nat_add_comm n k); exact (add_n_sub_n_eq _ _).
 Defined.
-
-#[export] Hint Resolve nat_add_sub_eq : nat.
 
 Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
 Proof.
@@ -575,20 +497,12 @@ Proof.
   case n; [ apply leq_n | intro; apply leq_S; apply leq_n].
 Defined.
 
-#[export] Hint Resolve predn_leq_n : nat.
-
 Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
 Proof.
   simple_induction' n; intros l.
   - contradiction (not_lt_n_0 i).
   - reflexivity.
 Defined.
-
-#[export] Hint Rewrite S_predn : nat.
-#[export] Hint Rewrite <- nat_pred_succ : nat.
-
-#[export] Hint Resolve S_predn : nat.
-#[export] Hint Resolve leq_n_pred : nat.
 
 Proposition pred_equiv (k n : nat) : k < n -> k < S (nat_pred n).
 Proof. 
@@ -623,8 +537,6 @@ Proof.
   intro l; apply leq_n_pred in l; assumption.
 Defined.
 
-#[export] Hint Resolve lt_implies_pred_geq : nat.
-
 Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
   : i < j -> k.+1 <= j -> k <= nat_pred j.
 Proof.
@@ -633,8 +545,6 @@ Proof.
   - contradiction (not_lt_n_0 i).
   - now simpl; apply leq_S_n.
 Defined.
-
-#[export] Hint Resolve lt_implies_pred_geq : nat.
 
 Proposition pred_gt_implies_lt (i j : nat)
   : i < nat_pred j -> i.+1 < j.
@@ -673,8 +583,6 @@ Proof.
     apply leq_n_pred, IHk. exact l.
 Defined.
 
-#[export] Hint Resolve natsubpreservesleq : nat.
-
 Proposition sub_less { n k : nat } : n - k <= n.
 Proof.
   revert k.
@@ -685,9 +593,6 @@ Proof.
     + simpl; apply (@leq_trans _ n _);
         [ apply IHn | apply leq_S, leq_n].
 Defined.
-
-#[export] Hint Resolve sub_less : nat.
-#[export] Hint Resolve leq_S_n' : nat.
 
 Proposition sub_less_strict { n k : nat }
   : 0 < n -> 0 < k -> n - k < n.
@@ -710,8 +615,6 @@ Proof.
   exact (nataddreflectslt q').
 Defined.
 
-#[export] Hint Resolve natpmswap1 : nat.
-
 Proposition natpmswap2 (k m n : nat)
   : n <= k -> k - n <= m -> k <= n + m.
 Proof.
@@ -721,8 +624,6 @@ Proof.
   destruct (symmetric_paths _ _ (add_n_sub_n_eq' k n)) in q;
     assumption.
 Defined.
-
-#[export] Hint Resolve natpmswap2 : nat.
 
 Proposition natpmswap3 (k m n : nat)
   : k <= n -> m <= n - k -> k + m <= n.
@@ -734,8 +635,6 @@ Proof.
     assumption.
 Defined.
 
-#[export] Hint Resolve natpmswap3 : nat.
-
 Proposition natpmswap4 (k m n : nat)
   : k - n < m -> k < n + m.
 Proof.
@@ -744,8 +643,6 @@ Proof.
   now apply (mixed_trans1 k (k - n + n) (m + n)
                (nat_sub_add_ineq _ _)).
 Defined.
-
-#[export] Hint Resolve natpmswap4 : nat.
 
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
   : n <= m -> n <= m + k.
@@ -766,27 +663,6 @@ Proof.
       * exact l.
       * exact l'.
 Defined.
-
-#[export] Hint Resolve nat_add_bifunctor : nat.
-#[export] Hint Resolve nataddpreserveslt : nat.
-#[export] Hint Resolve nataddpreservesleq' : nat.
-#[export] Hint Resolve nataddpreserveslt' : nat.
-#[export] Hint Resolve natineq0eq0 : nat.
-#[export] Hint Resolve n_leq_add_n_k : nat.
-#[export] Hint Resolve n_leq_m_n_leq_plus_m_k : nat.
-
-#[export] Hint Immediate add_n_sub_n_eq : nat.
-#[export] Hint Immediate add_n_sub_n_eq' : nat.
-
-#[export] Hint Rewrite -> nat_add_zero_r : nat.
-#[export] Hint Rewrite -> nat_add_zero_l : nat.
-#[export] Hint Rewrite -> add_n_sub_n_eq : nat.
-#[export] Hint Rewrite -> add_n_sub_n_eq' : nat.
-#[export] Hint Rewrite -> nataddsub_assoc : nat.
-
-Ltac autorewrite_or_fail := progress ltac:(autorewrite with nat).
-
-#[export] Hint Extern 7 => autorewrite_or_fail : nat.
 
 Proposition strong_induction (P : nat -> Type)
   : (forall n : nat, (forall m : nat,  (m < n) -> P m) -> P n) ->
