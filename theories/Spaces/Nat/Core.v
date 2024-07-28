@@ -409,14 +409,15 @@ Proof.
   destruct m; exact _.
 Defined.
 
-(** TODO: is this needed? *)
-Lemma leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
+(** TODO: rename leq_S_n -> leq_succ' *)
+Definition leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
 Proof.
   intros n m.
   apply leq_pred.
 Defined.
 
 (** TODO: possibly rename to [leq_succ] depending on above. *)
+(** TODO: rename leq_S_n' -> leq_succ *)
 Lemma leq_S_n' n m : n <= m -> n.+1 <= m.+1.
 Proof.
   induction 1; exact _.
