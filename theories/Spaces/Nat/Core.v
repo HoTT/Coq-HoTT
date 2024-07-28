@@ -402,25 +402,22 @@ Defined.
 Global Existing Instance leq_zero | 10.
 
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
-Definition leq_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
+Definition leq_pred {n m} : leq n m -> leq (nat_pred n) (nat_pred m).
 Proof.
   intros H; induction H.
   1: exact _.
   destruct m; exact _.
 Defined.
 
-(** TODO: rename leq_S_n -> leq_succ' *)
-Definition leq_succ' : forall n m, n.+1 <= m.+1 -> n <= m.
-Proof.
-  intros n m.
-  apply leq_pred.
-Defined.
-
+(** A successor is less than or equal to a successor if the original numbers are less than or equal. *)
 Definition leq_succ {n m} : n <= m -> n.+1 <= m.+1.
 Proof.
   induction 1; exact _.
 Defined.
 Global Existing Instance leq_succ | 100.
+
+(** The converse to [leq_succ] also holds. *)
+Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
 
 (** TODO: use lemmas about negating predicate *)
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
