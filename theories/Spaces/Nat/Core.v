@@ -170,8 +170,8 @@ Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
 (** Injectivity of successor *)
 Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 
-(** TODO: rename to [neq_S] *)
-Definition not_eq_S@{} n m : n <> m -> S n <> S m.
+(** Inequality of sucessors is implied with inequality of the arguments. *)
+Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
 Proof.
   intros np q.
   apply np.
@@ -190,7 +190,7 @@ Theorem not_eq_n_Sn@{} n : n <> S n.
 Proof.
   simple_induction' n.
   - apply not_eq_O_S.
-  - by apply not_eq_S.
+  - by apply neq_nat_succ.
 Defined.
 
 (** ** Truncatedness of natural numbers *)
