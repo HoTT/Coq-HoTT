@@ -178,9 +178,8 @@ Proof.
   exact (path_nat_succ _ _ q).
 Defined.
 
-(** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
-Definition not_eq_O_S@{} : forall n, 0 <> S n.
+Definition neq_nat_zero_succ@{} n : 0 <> S n.
 Proof.
   discriminate.
 Defined.
@@ -189,7 +188,7 @@ Defined.
 Theorem not_eq_n_Sn@{} n : n <> S n.
 Proof.
   simple_induction' n.
-  - apply not_eq_O_S.
+  - apply neq_nat_zero_succ.
   - by apply neq_nat_succ.
 Defined.
 
@@ -201,8 +200,8 @@ Proof.
   intros n; simple_induction n n IHn;
   intros m; destruct m.
   - exact (inl idpath).
-  - exact (inr (not_eq_O_S m)).
-  - exact (inr (fun p => not_eq_O_S n p^)).
+  - exact (inr (neq_nat_zero_succ m)).
+  - exact (inr (fun p => neq_nat_zero_succ n p^)).
   - destruct (IHn m) as [p|q].
     + exact (inl (ap S p)).
     + exact (inr (fun p => q (path_nat_succ _ _ p))).

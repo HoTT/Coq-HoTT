@@ -199,7 +199,7 @@ Proof.
     apply leq_0_n. 
   - intros m eq. destruct m.
     + simpl in eq. apply symmetric_paths in eq.
-      contradiction (not_eq_O_S n eq).
+      contradiction (neq_nat_zero_succ n eq).
     + simpl in eq. apply leq_S_n', IHn, eq.
 Defined.
 
