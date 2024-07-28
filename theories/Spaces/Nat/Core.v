@@ -137,6 +137,59 @@ Fixpoint factorial (n : nat) : nat
        | S n => S n * factorial n
      end.
 
+(** ** Comparison Predicates *)
+
+(** *** Less Than or Equal To *)
+
+Inductive leq (n : nat) : nat -> Type0 :=
+| leq_n : leq n n
+| leq_S : forall m, leq n m -> leq n (S m).
+
+Scheme leq_ind := Induction for leq Sort Type.
+Scheme leq_rect := Induction for leq Sort Type.
+Scheme leq_rec := Minimality for leq Sort Type.
+
+Notation "n <= m" := (leq n m) : nat_scope.
+
+Existing Class leq.
+Global Existing Instances leq_n leq_S.
+
+Notation leq_refl := leq_n (only parsing).
+
+(** *** Less Than *)
+
+(** We define the less-than relation [lt] in terms of [leq] *)
+Definition lt n m : Type0 := leq (S n) m.
+
+(** We declare it as an existing class so typeclass search is performed on its goals. *)
+Existing Class lt.
+#[export] Hint Unfold lt : typeclass_instances.
+Infix "<" := lt : nat_scope.
+Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
+
+(*** Greater Than or Equal To *)
+
+Definition gt n m := lt m n.
+Existing Class gt.
+#[export] Hint Unfold gt : typeclass_instances.
+Infix ">" := gt : nat_scope.
+Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
+
+(** *** Greater Than *)
+
+Definition ge n m := leq m n.
+Existing Class ge.
+#[export] Hint Unfold ge : typeclass_instances.
+Infix ">=" := ge : nat_scope.
+Global Instance ge_is_leq n m : leq m n -> ge n m | 100 := idmap.
+
+(** *** Combined Comparison Predicates *)
+
+Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
+Notation "x <= y < z"  := (x <= y /\ y <  z) : nat_scope.
+Notation "x < y < z"   := (x <  y /\ y <  z) : nat_scope.
+Notation "x < y <= z"  := (x <  y /\ y <= z) : nat_scope.
+
 (** ** Properties of [nat_iter]. *)
 
 Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
@@ -327,20 +380,6 @@ Defined.
 
 (** ** Inequality of natural numbers *)
 
-Inductive leq (n : nat) : nat -> Type0 :=
-| leq_n : leq n n
-| leq_S : forall m, leq n m -> leq n (S m).
-
-Scheme leq_ind := Induction for leq Sort Type.
-Scheme leq_rect := Induction for leq Sort Type.
-Scheme leq_rec := Minimality for leq Sort Type.
-
-Notation "n <= m" := (leq n m) : nat_scope.
-
-Existing Class leq.
-Global Existing Instances leq_n leq_S.
-
-Notation leq_refl := leq_n (only parsing).
 Global Instance reflexive_leq : Reflexive leq := leq_n.
 
 Lemma leq_trans {x y z} : x <= y -> y <= z -> x <= z.
@@ -464,16 +503,6 @@ Proof.
   apply leq_S, leq_add.
 Defined.
 
-(** We define the less-than relation [lt] in terms of [leq] *)
-Definition lt n m : Type0 := leq (S n) m.
-
-(** We declare it as an existing class so typeclass search is performed on its goals. *)
-Existing Class lt.
-#[export] Hint Unfold lt : typeclass_instances.
-Infix "<" := lt : nat_scope.
-(** We add a typeclass instance for unfolding the definition so lemmas about [leq] can be used. *)
-Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
-
 (** We should also give them their various typeclass instances *)
 Global Instance transitive_lt : Transitive lt.
 Proof.
@@ -484,30 +513,13 @@ Defined.
 
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
-Definition ge n m := leq m n.
-Existing Class ge.
-#[export] Hint Unfold ge : typeclass_instances.
-Infix ">=" := ge : nat_scope.
-Global Instance ge_is_leq n m : leq m n -> ge n m | 100 := idmap.
-
 Global Instance reflexive_ge : Reflexive ge := leq_n.
 Global Instance transitive_ge : Transitive ge := fun x y z p q => leq_trans q p.
 Global Instance decidable_ge n m : Decidable (ge n m) := _.
 
-Definition gt n m := lt m n.
-Existing Class gt.
-#[export] Hint Unfold gt : typeclass_instances.
-Infix ">" := gt : nat_scope.
-Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
-
 Global Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
 Global Instance decidable_gt n m : Decidable (gt n m) := _.
-
-Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
-Notation "x <= y < z"  := (x <= y /\  y < z) : nat_scope.
-Notation "x < y < z"   := (x < y  /\  y < z) : nat_scope.
-Notation "x < y <= z"  := (x < y  /\ y <= z) : nat_scope.
 
 (** Principle of double induction *)
 
