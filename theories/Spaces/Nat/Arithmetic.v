@@ -13,9 +13,6 @@ Local Definition symmetric_paths_nat (n m : nat)
 Local Definition transitive_paths_nat (n m k : nat)
   : n = m -> m = k -> n = k := @transitive_paths nat n m k.
 
-#[export] Hint Resolve symmetric_paths_nat | 5 : nat.
-#[export] Hint Resolve leq_0_n : nat.
-
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
 Proof.
   intros not_lt.
@@ -94,18 +91,6 @@ Proof.
   apply (@leq_trans (n.+1) (m.+1) k); trivial. 
 Defined.
 
-Ltac leq_trans_resolve :=
-  match goal with
-  | [ H : ?n <= ?m |- ?n <= ?k ] => apply (leq_trans H)
-  | [ H : ?k <= ?m |- ?n <= ?k ] => refine (leq_trans _ H)
-  | [ H : ?n <= ?m |- ?n < ?k ] => apply (mixed_trans1 _ _ _ H)
-  | [ H : ?m <= ?k |- ?n < ?k ] => refine (leq_trans _ H)
-  | [ H : ?m <  ?k |- ?n < ?k ] => refine (mixed_trans1 _ _ _ _ H)
-  | [ H : ?n <  ?m |- ?n < ?k ] => apply (leq_trans H)
-  end.
-
-#[export] Hint Extern 2 => leq_trans_resolve : nat.
-
 Proposition mixed_trans2 (n m k : nat)
   : n < m -> m <= k -> n < k.
 Proof.
@@ -152,11 +137,11 @@ Proof.
   intro H. apply leq_S, leq_S_n in H; exact H.
 Defined.
 
-#[export] Hint Resolve n_lt_m_n_leq_m : nat.
-
 Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
 Proof.
-  eauto with nat.
+  intros H1 H2.
+  nrapply n_lt_m_n_leq_m.
+  exact (mixed_trans1 _ _ _ H1 H2).
 Defined.
 
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
@@ -194,12 +179,8 @@ Proof.
     + change (m.+1 + k) with (m + k).+1; apply IHn.
 Defined.
 
-#[export] Hint Resolve subsubadd : nat.
-
-Proposition subsubadd' (n m k : nat) : n - m - k = n - (m + k).
-Proof.
-  auto with nat.
-Defined.
+Definition subsubadd' (n m k : nat) : n - m - k = n - (m + k)
+  := (subsubadd n m k)^.
 
 Definition nleqSm_dichot {n m : nat}
   : (n <= m.+1) -> (n <= m) + (n = m.+1).
@@ -229,7 +210,8 @@ Defined.
 Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.
   revert m; simple_induction n n IHn.
-  - auto with nat.
+  - simpl. intros m eq.
+    apply leq_0_n. 
   - intros m eq. destruct m.
     + simpl in eq. apply symmetric_paths in eq.
       contradiction (not_eq_O_S n eq).
