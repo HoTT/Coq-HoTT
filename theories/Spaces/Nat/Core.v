@@ -147,7 +147,7 @@ Inductive leq (n : nat) : nat -> Type0 :=
 
 Scheme leq_ind := Induction for leq Sort Type.
 Scheme leq_rect := Induction for leq Sort Type.
-Scheme leq_rec := Minimality for leq Sort Type.
+Scheme leq_rec := Induction for leq Sort Type.
 
 Notation "n <= m" := (leq n m) : nat_scope.
 
@@ -584,6 +584,84 @@ Proof.
     by destruct IHl^.
 Defined.
 
+(** ** Properties of Maximum and Minimum *) 
+
+(** *** Properties of Maxima *)
+
+(** TODO: rename to [nat_max_idem] *)
+(** [nat_max] is idempotent. *)
+Definition nat_max_n_n@{} n : nat_max n n = n.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
+(** [nat_max] is commutative. *)
+Definition nat_max_comm@{} n m : nat_max n m = nat_max m n.
+Proof.
+  induction n as [|n IHn] in m |- *; destruct m; cbn.
+  1-3: reflexivity.
+  exact (ap S (IHn _)).
+Defined.
+
+(** TODO: rename to [nat_max_succ_l] *)
+Definition nat_max_Sn_n@{} n : nat_max (S n) n = S n.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
+(** TODO: rename to [nat_max_zero_l] *)
+(** [0] is the left identity of [nat_max]. *)
+Definition nat_max_0_n@{} n : nat_max 0 n = n := idpath.
+Notation nat_max_zero_l := nat_max_0_n.
+
+(** TODO: rename to [nat_max_zero_r] *)
+(** [0] is the right identity of [nat_max]. *)
+Definition nat_max_n_0@{} n : nat_max n 0 = n
+  := nat_max_comm _ _ @ nat_max_zero_l _.
+Notation nat_max_zero_r := nat_max_n_0.
+
+Definition nat_max_l@{} {n m} : m <= n -> nat_max n m = n.
+Proof.
+  intros H.
+  induction m as [|m IHm] in n, H |- *.
+  1: nrapply nat_max_n_0.
+  destruct n.
+  1: inversion H.
+  cbn; by apply (ap S), IHm, leq_S_n.
+Defined.
+
+Definition nat_max_r {n m} : n <= m -> nat_max n m = m
+  := fun _ => nat_max_comm _ _ @ nat_max_l _.
+
+(** Properties of Minima *)
+
+Definition nat_min_comm n m : nat_min n m = nat_min m n.
+Proof.
+  induction n as [|n IHn] in m |- *; destruct m; cbn.
+  1-3: reflexivity.
+  exact (ap S (IHn _)).
+Defined.
+
+Definition nat_min_zero_l n : nat_min 0 n = 0 := idpath.
+Definition nat_min_zero_r n : nat_min n 0 = 0:= 
+  nat_min_comm _ _ @ nat_min_zero_l _.
+
+Definition nat_min_l {n m} : n <= m -> nat_min n m = n.
+Proof.
+  revert n m.
+  simple_induction n n IHn; auto.
+  intros [] p.
+  1: inversion p.
+  cbn; by apply (ap S), IHn, leq_S_n.
+Defined.
+
+Definition nat_min_r {n m} : m <= n -> nat_min n m = m
+  := fun _ => nat_min_comm _ _ @ nat_min_l _.
+
 (** ** Inequality of natural numbers *)
 
 Fixpoint leq_add n m : n <= (m + n).
@@ -602,76 +680,6 @@ Theorem nat_double_ind (R : nat -> nat -> Type)
 Proof.
   simple_induction' n; auto.
   destruct m; auto.
-Defined.
-
-(** Maximum and minimum : definitions and specifications *)
-
-Lemma nat_max_n_n n : nat_max n n = n.
-Proof.
-  simple_induction' n; cbn.
-  1: reflexivity.
-  exact (ap S IH).
-Defined.
-
-Lemma nat_max_Sn_n n : nat_max (S n) n = S n.
-Proof.
-  simple_induction' n; cbn.
-  1: reflexivity.
-  exact (ap S IH).
-Defined.
-
-Lemma nat_max_0_n n : nat_max 0 n = n.
-Proof.
-  reflexivity.
-Defined.
-
-Lemma nat_max_n_0 n : nat_max n 0 = n.
-Proof.
-  induction n as [|n IHn]; reflexivity.
-Defined.
-
-Lemma nat_max_comm n m : nat_max n m = nat_max m n.
-Proof.
-  induction m as [|m IHm] in n |- *.
-  - nrapply nat_max_n_0.
-  - destruct n.
-    + reflexivity.
-    + exact (ap S (IHm n)).
-Defined.
-
-Theorem nat_max_l : forall n m, m <= n -> nat_max n m = n.
-Proof.
-  intros n m; revert n; simple_induction m m IHm.
-  { intros n H.
-    nrapply nat_max_n_0. }
-  intros [] p.
-  1: inversion p.
-  cbn; by apply (ap S), IHm, leq_S_n.
-Defined.
-
-Theorem nat_max_r : forall n m : nat, n <= m -> nat_max n m = m.
-Proof.
-  intros; rewrite nat_max_comm; by apply nat_max_l.
-Defined.
-
-Lemma nat_min_comm : forall n m, nat_min n m = nat_min m n.
-Proof.
-  simple_induction' n; destruct m; cbn.
-  1-3: reflexivity.
-  exact (ap S (IH _)).
-Defined.
-
-Theorem nat_min_l : forall n m : nat, n <= m -> nat_min n m = n.
-Proof.
-  simple_induction n n IHn; auto.
-  intros [] p.
-  1: inversion p.
-  cbn; by apply (ap S), IHn, leq_S_n.
-Defined.
-
-Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
-Proof.
-  intros; rewrite nat_min_comm; by apply nat_min_l.
 Defined.
 
 (** ** Arithmetic *)
