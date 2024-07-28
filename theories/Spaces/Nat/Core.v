@@ -407,17 +407,23 @@ Proof.
     + nrapply IHn.
 Defined. 
 
+(** The order in which two numbers are subtracted does not matter. *)
+Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
+Proof.
+  lhs_V nrapply nat_sub_add.
+  rewrite nat_add_comm.
+  nrapply nat_sub_add.
+Defined.
+
 (** Subtracting a larger number from a smaller number is [0]. *)
 Definition nat_sub_leq {n m} : n <= m -> n - m = 0.
 Proof.
   intro l; induction l.
   - exact (nat_sub_cancel n).
-  - change (m.+1) with (1 + m). destruct n.
-    + reflexivity.
-    + destruct (nat_add_comm m 1).
-      destruct (symmetric_paths _ _ (nat_sub_add n.+1 m 1)).
-      destruct (symmetric_paths _ _ IHl).
-      reflexivity.
+  - change (m.+1) with (1 + m). 
+    lhs nrapply nat_sub_add.
+    lhs nrapply nat_sub_comm_r.
+    by destruct IHl^.
 Defined.
 
 (** ** Inequality of natural numbers *)
