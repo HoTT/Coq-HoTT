@@ -436,6 +436,7 @@ Global Existing Instance leq_succ | 100.
 (** The converse to [leq_succ] also holds. *)
 Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
 
+(** TODO: rename *)
 (** TODO: use lemmas about negating predicate *)
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
 Proof.
@@ -446,6 +447,7 @@ Proof.
   by apply IHn, leq_succ'.
 Defined.
 
+(** TODO: rename *)
 Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
 Proof.
   intros p.
@@ -712,6 +714,7 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
+(** TODO: rename to [leq_add_r'] *)
 Fixpoint leq_add n m : n <= (m + n).
 Proof.
   destruct m.
@@ -732,13 +735,16 @@ Defined.
 
 Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 
+(** TODO: rename to [lt_irrefl] *)
 (** [<] is an irreflexive relation. *)
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
 Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
 
+(** TODO: rename *)
 (** [1] is less than or equal to the successor of any number. *)
 Definition leq_1_Sn {n} : 1 <= n.+1 := leq_succ (leq_zero _).
 
+(** TODO: rename *)
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
 Proof.
   simple_induction' m; simple_induction' n.
@@ -751,29 +757,34 @@ Proof.
     + right; apply leq_succ; assumption.
 Defined.
 
+(** TODO: rename *)
 Lemma not_lt_n_0 n : ~ (n < 0).
 Proof.
   apply not_leq_Sn_0.
 Defined.
 
+(** TODO: rename *)
 Definition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
 Proof.
   intros not_lt.
   destruct (@leq_dichot m n); [ assumption | contradiction].
 Defined.
 
+(** TODO: rename *)
 Definition not_leq_implies_gt {n m : nat} : ~(n <= m) -> m < n.
 Proof.
   intros not_leq. 
   destruct (@leq_dichot n m); [ contradiction | assumption].
 Defined.
 
+(** TODO: rename *)
 Definition lt_implies_not_geq {n m : nat} : (n < m) -> ~(m <= n).
 Proof.
   intros ineq1 ineq2.
   contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
 Defined.
 
+(** TODO: rename *)
 Definition leq_implies_not_gt {n m : nat} : (n <= m) -> ~(m < n).
 Proof.
   intros ineq1 ineq2.
