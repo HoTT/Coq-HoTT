@@ -6,13 +6,6 @@ Local Set Universe Minimization ToSet.
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
-(** This is defined so that it can be added to the [nat] auto hint database. *)
-Local Definition symmetric_paths_nat (n m : nat)
-  : n = m -> m = n := @symmetric_paths nat n m.
-
-Local Definition transitive_paths_nat (n m k : nat)
-  : n = m -> m = k -> n = k := @transitive_paths nat n m k.
-
 Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
 Proof.
   intros not_lt.
