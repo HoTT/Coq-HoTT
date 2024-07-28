@@ -635,6 +635,17 @@ Defined.
 Definition nat_max_r {n m} : n <= m -> nat_max n m = m
   := fun _ => nat_max_comm _ _ @ nat_max_l _.
 
+(** [nat_max n m] is associative. *)
+Definition nat_max_assoc@{} n m k
+  : nat_max n (nat_max m k) = nat_max (nat_max n m) k.
+Proof.
+  induction n as [|n IHn] in m, k |- *.
+  1: reflexivity.
+  destruct m, k.
+  1-3: reflexivity.
+  by apply (ap S), IHn.
+Defined.
+
 (** Properties of Minima *)
 
 (** [nat_min] is idempotent. *)
@@ -673,6 +684,17 @@ Defined.
 (** [nat_min n m] is [m] if [m <= n]. *)
 Definition nat_min_r {n m} : m <= n -> nat_min n m = m
   := fun _ => nat_min_comm _ _ @ nat_min_l _.
+
+(** [nat_min n m] is associative. *)
+Definition nat_min_assoc n m k
+  : nat_min n (nat_min m k) = nat_min (nat_min n m) k.
+Proof.
+  induction n as [|n IHn] in m, k |- *.
+  1: reflexivity.
+  destruct m, k.
+  1-3: reflexivity.
+  by apply (ap S), IHn.
+Defined.
 
 (** ** Inequality of natural numbers *)
 
