@@ -422,7 +422,7 @@ Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
 Proof.
   simple_induction' n.
   - reflexivity.
-  - apply sub_n_0.
+  - apply nat_sub_zero_r.
 Defined.
 
 Proposition predn_leq_n (n : nat) : nat_pred n <= n.
@@ -505,8 +505,8 @@ Proposition natsubpreservesleq { n m k : nat }
   : n <= m -> n - k <= m - k.
 Proof.
   simple_induction k k IHk.
-  - destruct (symmetric_paths _ _ (sub_n_0 n)),
-      (symmetric_paths _ _ (sub_n_0 m)); done.
+  - destruct (symmetric_paths _ _ (nat_sub_zero_r n)),
+      (symmetric_paths _ _ (nat_sub_zero_r m)); done.
   - intro l. change (k.+1) with (1 + k).
     destruct (nat_add_comm k 1).
     destruct (symmetric_paths _ _ (subsubadd n k 1)).
@@ -650,7 +650,7 @@ Lemma increasing_geq_minus (n k : nat)
   : increasing_geq n (n - k).
 Proof.
   simple_induction k k IHk.
-  - destruct (symmetric_paths _ _ (sub_n_0 n)); constructor.
+  - destruct (symmetric_paths _ _ (nat_sub_zero_r n)); constructor.
   - destruct (@leq_dichot n k) as [l | g].
     + destruct (symmetric_paths _ _ (sub_leq_0 _)) in IHk.
       apply leq_S in l.
@@ -676,14 +676,14 @@ Defined.
 Lemma ineq_sub (n m : nat) : n <= m -> m - (m - n) = n.
 Proof.
   revert m; simple_induction n n IHn.
-  - intros. destruct (symmetric_paths _ _ (sub_n_0 m)),
+  - intros. destruct (symmetric_paths _ _ (nat_sub_zero_r m)),
       (symmetric_paths _ _ (sub_n_n m));
       reflexivity.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).
     destruct (symmetric_paths _ _ (subsubadd m n 1)). 
     destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
-      destruct (symmetric_paths _ _ (sub_n_0 (nat_pred (m - n)))).
+      destruct (symmetric_paths _ _ (nat_sub_zero_r (nat_pred (m - n)))).
     assert (0 < m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).
     assert (nat_pred (m - n) < m) as sh by
         ( unfold "<";

@@ -821,7 +821,7 @@ Proof.
   induction i as [|i IHi] in n, H |- *.
   - induction n.
     1: destruct (not_leq_Sn_0 _ H).
-    cbn; by rewrite sub_n_0.
+    cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
     1: destruct (not_leq_Sn_0 _ H).
     by apply IHi, leq_S_n.
