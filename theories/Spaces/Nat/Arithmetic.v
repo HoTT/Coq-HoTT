@@ -82,17 +82,6 @@ Proof.
   intros l j. apply (@leq_trans (n.+1) m k); trivial. 
 Defined.
 
-Proposition sub_n_n (n : nat) : n - n = 0.
-Proof.
-  simple_induction n n IHn.
-  - reflexivity.
-  - simpl; exact IHn.
-Defined.
-
-Proposition sub_n_0 (n : nat) : n - 0 = n.
-Proof.
- destruct n; reflexivity.
-Defined.
 
 Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.
 Proof.
@@ -155,18 +144,6 @@ Proof.
   - intro. contradiction (not_leq_Sn_0 n).
 Defined.
 
-Proposition subsubadd (n m k : nat) : n - (m + k) = n - m - k.
-Proof.
-  revert m k; simple_induction n n IHn.
-  - reflexivity.
-  - intro m; destruct m; intro k.
-    + change (0 + k) with k; reflexivity.
-    + change (m.+1 + k) with (m + k).+1; apply IHn.
-Defined.
-
-Definition subsubadd' (n m k : nat) : n - m - k = n - (m + k)
-  := (subsubadd n m k)^.
-
 Definition nleqSm_dichot {n m : nat}
   : (n <= m.+1) -> (n <= m) + (n = m.+1).
 Proof.
@@ -180,17 +157,6 @@ Proof.
       * right. apply ap; exact b.
 Defined.
 
-Proposition sub_leq_0 (n m : nat) : n <= m -> n - m = 0.
-Proof.
-  intro l; induction l.
-  - exact (sub_n_n n).
-  - change (m.+1) with (1 + m). destruct n.
-    + reflexivity.
-    + destruct (nat_add_comm m 1).
-      destruct (symmetric_paths _ _ (subsubadd n.+1 m 1)).
-      destruct (symmetric_paths _ _ IHl).
-      reflexivity.
-Defined.
 
 Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.

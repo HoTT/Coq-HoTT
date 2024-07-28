@@ -378,6 +378,44 @@ Proof.
     exact IHn.
 Defined.
 
+(** ** Properties of Subtraction *)
+
+Proposition sub_n_0 (n : nat) : n - 0 = n.
+Proof.
+ destruct n; reflexivity.
+Defined.
+
+Proposition sub_n_n (n : nat) : n - n = 0.
+Proof.
+  simple_induction n n IHn.
+  - reflexivity.
+  - simpl; exact IHn.
+Defined.
+
+Proposition subsubadd (n m k : nat) : n - (m + k) = n - m - k.
+Proof.
+  revert m k; simple_induction n n IHn.
+  - reflexivity.
+  - intro m; destruct m; intro k.
+    + change (0 + k) with k; reflexivity.
+    + change (m.+1 + k) with (m + k).+1; apply IHn.
+Defined.
+
+Definition subsubadd' (n m k : nat) : n - m - k = n - (m + k)
+  := (subsubadd n m k)^.
+
+Proposition sub_leq_0 (n m : nat) : n <= m -> n - m = 0.
+Proof.
+  intro l; induction l.
+  - exact (sub_n_n n).
+  - change (m.+1) with (1 + m). destruct n.
+    + reflexivity.
+    + destruct (nat_add_comm m 1).
+      destruct (symmetric_paths _ _ (subsubadd n.+1 m 1)).
+      destruct (symmetric_paths _ _ IHl).
+      reflexivity.
+Defined.
+
 (** ** Inequality of natural numbers *)
 
 Global Instance reflexive_leq : Reflexive leq := leq_n.
