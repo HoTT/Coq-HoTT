@@ -194,7 +194,7 @@ Proof.
   - destruct l2.
     + inversion p.
     + cbn; f_ap.
-      by apply IHl1, path_nat_S.
+      by apply IHl1, path_nat_succ.
 Defined.
 
 (** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
@@ -215,7 +215,7 @@ Proof.
     destruct H as [q | i].
     1: exact (y; z; (q, (inl idpath, inl idpath))).
     destruct (IHl1 l2 x i) as [y' [z' [q [r s]]]].
-    1: apply path_nat_S, p.
+    1: apply path_nat_succ, p.
     exact (y'; z'; (q, (inr r, inr s))).
 Defined.
 
@@ -454,7 +454,7 @@ Proof.
         unshelve erewrite nth'_cons.
         1: apply leq_S_n, H''.
         apply IHl1.
-        by apply path_nat_S.
+        by apply path_nat_succ.
 Defined.
 
 (** The [nth'] element of a [repeat] is the repeated value. *)
@@ -485,7 +485,7 @@ Proof.
   f_ap.
   - exact (H 0%nat _).
   - snrapply IHl.
-    1: by apply path_nat_S.
+    1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
     1: apply leq_S_n', Hn.
@@ -974,7 +974,7 @@ Proof.
       split.
       * by apply Hf.
       * apply IHl1; trivial.
-        apply path_nat_S.
+        apply path_nat_succ.
         exact p.
 Defined.
 

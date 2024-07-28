@@ -168,14 +168,14 @@ Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
 (** Injectivity of successor *)
-Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
+Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 
 (** Inequality of sucessors is implied with inequality of the arguments. *)
 Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
 Proof.
   intros np q.
   apply np.
- exact (path_nat_S _ _ q).
+  exact (path_nat_succ _ _ q).
 Defined.
 
 (** TODO: rename to [neq_O_S] *)
@@ -205,7 +205,7 @@ Proof.
   - exact (inr (fun p => not_eq_O_S n p^)).
   - destruct (IHn m) as [p|q].
     + exact (inl (ap S p)).
-    + exact (inr (fun p => q (path_nat_S _ _ p))).
+    + exact (inr (fun p => q (path_nat_succ _ _ p))).
 Defined.
 
 (** [nat] is therefore a hset. *)
@@ -402,7 +402,7 @@ Proof.
     destruct r.
     contradiction (not_leq_Sn_n _ p).
   + intros m' q r.
-    pose (r' := path_nat_S _ _ r).
+    pose (r' := path_nat_succ _ _ r).
     destruct r'.
     assert (t : idpath = r) by apply path_ishprop.
     destruct t.
@@ -596,7 +596,7 @@ Defined.
 Global Instance isinj_S : IsInjective S.
 Proof.
   intros x y p.
-  by apply path_nat_S.
+  by apply path_nat_succ.
 Defined.
 
 Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
