@@ -397,9 +397,8 @@ Proof.
   - simpl; exact IHn.
 Defined.
 
-(** TODO: rename [nat_sub_add] *)
 (** Subtracting an addition is the same as subtracting the two numbers separately. *)
-Definition subsubadd n m k : n - (m + k) = n - m - k.
+Definition nat_sub_add n m k : n - (m + k) = n - m - k.
 Proof.
   revert m k; simple_induction n n IHn.
   - reflexivity.
@@ -410,7 +409,7 @@ Defined.
 
 (** TODO: remove *)
 Definition subsubadd' n m k : n - m - k = n - (m + k)
-  := (subsubadd n m k)^.
+  := (nat_sub_add n m k)^.
 
 (** TODO: rename [nat_sub_leq] *)
 (** Subtracting a larger number from a smaller number is [0]. *)
@@ -421,7 +420,7 @@ Proof.
   - change (m.+1) with (1 + m). destruct n.
     + reflexivity.
     + destruct (nat_add_comm m 1).
-      destruct (symmetric_paths _ _ (subsubadd n.+1 m 1)).
+      destruct (symmetric_paths _ _ (nat_sub_add n.+1 m 1)).
       destruct (symmetric_paths _ _ IHl).
       reflexivity.
 Defined.
