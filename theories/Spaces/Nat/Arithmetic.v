@@ -6,30 +6,6 @@ Local Set Universe Minimization ToSet.
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
-Proposition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
-Proof.
-  intros not_lt.
-  destruct (@leq_dichot m n); [ assumption | contradiction].
-Defined.
-
-Proposition not_leq_implies_gt {n m : nat} : ~(n <= m) -> m < n.
-Proof.
-  intros not_leq. 
-  destruct (@leq_dichot n m); [ contradiction | assumption].
-Defined.
-
-Proposition lt_implies_not_geq {n m : nat} : (n < m) -> ~(m <= n).
-Proof.
-  intros ineq1 ineq2.
-  contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
-Defined.
-
-Proposition leq_implies_not_gt {n m : nat} : (n <= m) -> ~(m < n).
-Proof.
-  intros ineq1 ineq2.
-  contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
-Defined.
-
 (** Because of the inductive definition of [<=], one can destruct the proof of [n <= m] and get a judgemental identification between [n] and [m] rather than a propositional one, which may be preferable to the following lemma. *)
 Proposition leq_split {n m : nat} : (n <= m) -> sum (n < m) (n = m).
 Proof.
