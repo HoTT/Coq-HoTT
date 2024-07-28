@@ -126,7 +126,7 @@ Defined.
 Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
 Proof.
   simple_induction n n IHn.
-  - apply leq_0_n.
+  - apply leq_zero.
   - simpl; apply leq_S_n', IHn.
 Defined.
 
@@ -148,7 +148,7 @@ Definition nleqSm_dichot {n m : nat}
   : (n <= m.+1) -> (n <= m) + (n = m.+1).
 Proof.
   revert m; simple_induction n n IHn.
-  - intro. left. exact (leq_0_n m).
+  - intro. left. exact (leq_zero m).
   - destruct m.
     + intro l. apply leq_S_n, natineq0eq0 in l.
       right; apply ap; exact l.
@@ -162,7 +162,7 @@ Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.
   revert m; simple_induction n n IHn.
   - simpl. intros m eq.
-    apply leq_0_n. 
+    apply leq_zero. 
   - intros m eq. destruct m.
     + simpl in eq. apply symmetric_paths in eq.
       contradiction (neq_nat_zero_succ n eq).
@@ -286,7 +286,7 @@ Proposition nataddreflectsleq { n m k : nat }
   : n + k <= m + k -> n <= m.
 Proof.
   destruct n.
-  - intros ?; apply leq_0_n.
+  - intros ?; apply leq_zero.
   - intro a. change (n.+1 + k) with (n + k).+1 in a.
     now apply (@nataddreflectslt n m k).
 Defined.
@@ -399,7 +399,7 @@ Proof.
   revert m i; simple_induction n n IHn.
   - intros m i l. simpl in l. contradiction (not_lt_n_0 _ _).
   - intros m i l. destruct m.
-    + apply leq_0_n.
+    + apply leq_zero.
     + apply leq_S_n'. simpl in l. apply (IHn m i l).
 Defined.
   
@@ -461,7 +461,7 @@ Proposition pred_lt_implies_leq (n k : nat)
   : nat_pred n < k -> n <= k.
 Proof.
   intro l; destruct n.
-  - apply leq_0_n.
+  - apply leq_zero.
   - assumption.
 Defined.
 
@@ -520,7 +520,7 @@ Proposition sub_less { n k : nat } : n - k <= n.
 Proof.
   revert k.
   simple_induction n n IHn.
-  - intros; apply leq_0_n.
+  - intros; apply leq_zero.
   - destruct k.
     + apply leq_n.
     + simpl; apply (@leq_trans _ n _);

@@ -394,13 +394,12 @@ Defined.
 (** [leq] is transtiive. *)
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
-(** TODO: rename to [leq_zero] *)
 (** [0] is less than or equal to any natural number. *)
-Definition leq_0_n n : 0 <= n.
+Definition leq_zero n : 0 <= n.
 Proof.
   simple_induction' n; exact _.
 Defined.
-Global Existing Instance leq_0_n | 10.
+Global Existing Instance leq_zero | 10.
 
 (** TODO: rename to [leq_pred] *)
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
@@ -438,7 +437,7 @@ Defined.
 Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
 Proof.
   intros p.
-  apply (fun x => leq_trans x (leq_0_n n)) in p.
+  apply (fun x => leq_trans x (leq_zero n)) in p.
   contradiction (not_leq_Sn_n _ p).
 Defined.
 
@@ -708,13 +707,13 @@ Defined.
 
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
 
-Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_0_n _).
+Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_zero _).
 
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
 Proof.
   simple_induction' m; simple_induction' n.
   - left; reflexivity.
-  - left; apply leq_0_n.
+  - left; apply leq_zero.
   - right; unfold lt; apply leq_1_Sn.
   - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
     destruct X as [leqmn|ltnm].
