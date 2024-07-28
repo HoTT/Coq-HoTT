@@ -380,19 +380,25 @@ Defined.
 
 (** ** Properties of Subtraction *)
 
-Proposition sub_n_0 (n : nat) : n - 0 = n.
+(** TODO: rename [nat_sub_zero_r] *)
+(** Subtracting [0] from a number is the number itself. *)
+Definition sub_n_0 (n : nat) : n - 0 = n.
 Proof.
- destruct n; reflexivity.
+  destruct n; reflexivity.
 Defined.
 
-Proposition sub_n_n (n : nat) : n - n = 0.
+(** TODO: rename [nat_sub_cancel_r] *)
+(** Subtracting a number from itself is [0]. *)
+Definition sub_n_n (n : nat) : n - n = 0.
 Proof.
   simple_induction n n IHn.
   - reflexivity.
   - simpl; exact IHn.
 Defined.
 
-Proposition subsubadd (n m k : nat) : n - (m + k) = n - m - k.
+(** TODO: rename [nat_sub_add] *)
+(** Subtracting an addition is the same as subtracting the two numbers separately. *)
+Definition subsubadd n m k : n - (m + k) = n - m - k.
 Proof.
   revert m k; simple_induction n n IHn.
   - reflexivity.
@@ -401,10 +407,13 @@ Proof.
     + change (m.+1 + k) with (m + k).+1; apply IHn.
 Defined.
 
-Definition subsubadd' (n m k : nat) : n - m - k = n - (m + k)
+(** TODO: remove *)
+Definition subsubadd' n m k : n - m - k = n - (m + k)
   := (subsubadd n m k)^.
 
-Proposition sub_leq_0 (n m : nat) : n <= m -> n - m = 0.
+(** TODO: rename [nat_sub_leq] *)
+(** Subtracting a larger number from a smaller number is [0]. *)
+Definition sub_leq_0 {n m} : n <= m -> n - m = 0.
 Proof.
   intro l; induction l.
   - exact (sub_n_n n).
