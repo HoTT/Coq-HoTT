@@ -633,6 +633,14 @@ Definition nat_max_r {n m} : n <= m -> nat_max n m = m
 
 (** Properties of Minima *)
 
+(** [nat_min] is idempotent. *)
+Definition nat_min_idem n : nat_min n n = n.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
 (** [nat_min] is commutative. *)
 Definition nat_min_comm n m : nat_min n m = nat_min m n.
 Proof.
