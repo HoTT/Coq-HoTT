@@ -480,7 +480,7 @@ Defined.
 
 Proposition n_leq_pred_Sn (n : nat) : n <= S (nat_pred n).
 Proof. 
-  destruct n; auto.
+  destruct n; exact _.
 Defined.
 
 Proposition leq_implies_pred_lt (i n k : nat)

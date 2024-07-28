@@ -971,7 +971,11 @@ Proof.
   - destruct l2 as [|y l2].
     + discriminate.
     + intros [Hx Hl1] [Hy Hl2].
-      split; auto.
+      split.
+      * by apply Hf.
+      * apply IHl1; trivial.
+        apply path_nat_S.
+        exact p.
 Defined.
 
 (** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)
