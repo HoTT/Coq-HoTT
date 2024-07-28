@@ -416,13 +416,11 @@ Proof.
   apply leq_pred.
 Defined.
 
-(** TODO: possibly rename to [leq_succ] depending on above. *)
-(** TODO: rename leq_S_n' -> leq_succ *)
-Lemma leq_S_n' n m : n <= m -> n.+1 <= m.+1.
+Definition leq_succ {n m} : n <= m -> n.+1 <= m.+1.
 Proof.
   induction 1; exact _.
 Defined.
-Global Existing Instance leq_S_n' | 100.
+Global Existing Instance leq_succ | 100.
 
 (** TODO: use lemmas about negating predicate *)
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
@@ -707,7 +705,7 @@ Defined.
 
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
 
-Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_zero _).
+Definition leq_1_Sn {n} : 1 <= n.+1 := leq_succ (leq_zero _).
 
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
 Proof.
@@ -717,8 +715,8 @@ Proof.
   - right; unfold lt; apply leq_1_Sn.
   - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
     destruct X as [leqmn|ltnm].
-    + left; apply leq_S_n'; assumption.
-    + right; apply leq_S_n'; assumption.
+    + left; apply leq_succ; assumption.
+    + right; apply leq_succ; assumption.
 Defined.
 
 Lemma not_lt_n_0 n : ~ (n < 0).

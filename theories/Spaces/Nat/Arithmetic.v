@@ -35,7 +35,7 @@ Proposition leq_split {n m : nat} : (n <= m) -> sum (n < m) (n = m).
 Proof.
   intro l. induction l.
   - now right.
-  - left. exact (leq_S_n' _ _ l).
+  - left. exact (leq_succ l).
 Defined.
 
 Proposition diseq_implies_lt (n m : nat)
@@ -47,7 +47,7 @@ Proof.
     [ | assumption].
   destruct n_leq_m;
     [ now contradiction diseq
-    | contradiction a; now apply leq_S_n'].
+    | contradiction a; now apply leq_succ].
 Defined.
 
 Proposition lt_implies_diseq (n m : nat)
@@ -72,7 +72,7 @@ Defined.
 Proposition mixed_trans1 (n m k : nat)
   : n <= m -> m < k -> n < k.
 Proof.
-  intros l j. apply leq_S_n' in l.
+  intros l j. apply leq_succ in l.
   apply (@leq_trans (n.+1) (m.+1) k); trivial. 
 Defined.
 
@@ -127,7 +127,7 @@ Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - apply leq_zero.
-  - simpl; apply leq_S_n', IHn.
+  - simpl; apply leq_succ, IHn.
 Defined.
 
 Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
@@ -153,7 +153,7 @@ Proof.
     + intro l. apply leq_S_n, natineq0eq0 in l.
       right; apply ap; exact l.
     + intro l. apply leq_S_n, IHn in l; destruct l as [a | b].
-      * left. apply leq_S_n'; exact a.
+      * left. apply leq_succ; exact a.
       * right. apply ap; exact b.
 Defined.
 
@@ -166,7 +166,7 @@ Proof.
   - intros m eq. destruct m.
     + simpl in eq. apply symmetric_paths in eq.
       contradiction (neq_nat_zero_succ n eq).
-    + simpl in eq. apply leq_S_n', IHn, eq.
+    + simpl in eq. apply leq_succ, IHn, eq.
 Defined.
 
 Proposition sub_gt_0_lt (n m : nat) : n - m > 0 -> m < n.
@@ -242,7 +242,7 @@ Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; exact l.
   - destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^;
-      apply leq_S_n'; exact IHk.
+      apply leq_succ; exact IHk.
 Defined.
 
 Proposition nataddpreservesleq' { n m k : nat }
@@ -262,7 +262,7 @@ Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n')^, (nat_add_zero_r m)^; exact l.
   - destruct (nat_add_succ_r n' k)^, (nat_add_succ_r m k)^;
-      apply leq_S_n'; exact IHk.
+      apply leq_succ; exact IHk.
 Defined.
 
 Proposition nataddpreserveslt' { n m k : nat }
@@ -379,7 +379,7 @@ Proof.
   - destruct (nat_add_succ_r n k)^.
     refine (leq_trans (nataddsub_comm_ineq_lemma (n+k) m) _).
     destruct (nat_add_succ_r (n - m) k)^.
-    now apply leq_S_n'.
+    now apply leq_succ.
 Defined.
 
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
@@ -400,7 +400,7 @@ Proof.
   - intros m i l. simpl in l. contradiction (not_lt_n_0 _ _).
   - intros m i l. destruct m.
     + apply leq_zero.
-    + apply leq_S_n'. simpl in l. apply (IHn m i l).
+    + apply leq_succ. simpl in l. apply (IHn m i l).
 Defined.
   
 Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
@@ -483,7 +483,7 @@ Proposition pred_gt_implies_lt (i j : nat)
   : i < nat_pred j -> i.+1 < j.
 Proof.
   intros ineq.
-  assert (H := leq_S_n' _ _ ineq). assert (i < j) as X. {
+  assert (H := leq_succ ineq). assert (i < j) as X. {
     apply (@mixed_trans2 _ (nat_pred j) _);
       [assumption  | apply predn_leq_n].
   }
@@ -534,7 +534,7 @@ Proof.
   unfold "<".
   destruct k, n;
   try (contradiction (not_lt_n_0 _ _)).
-  simpl; apply leq_S_n', sub_less.
+  simpl; apply leq_succ, sub_less.
 Defined.
 
 Proposition natpmswap1 (k m n : nat)
@@ -592,7 +592,7 @@ Proof.
   - intros n' m; destruct m.
     + intros. contradiction (not_leq_Sn_0 n).
     + intros m' l l'. apply leq_S_n in l. simpl.
-      apply leq_S_n', IHn.
+      apply leq_succ, IHn.
       * exact l.
       * exact l'.
 Defined.
@@ -608,7 +608,7 @@ Proof.
     - intros m l. apply leq_S_n in l.
       destruct l as [ | n].
       + apply a; intros ? ?; now apply IHn.
-      + now apply (IHn m), leq_S_n'.
+      + now apply (IHn m), leq_succ.
   }
   intro n. apply (X (n.+1) n), (leq_n n.+1).
 Defined.
@@ -724,6 +724,6 @@ Proof.
   destruct (@leq_dichot m n) as [m_leq_n | m_gt_n].
   - apply symmetry. destruct m_leq_n.
     + apply reflexivity.
-    + apply A. apply leq_S_n'. assumption.
+    + apply A. apply leq_succ. assumption.
   - apply A, m_gt_n.
 Defined.                             
