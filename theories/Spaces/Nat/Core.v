@@ -27,7 +27,7 @@ Notation nat_iter n f x
 
 (** *** Successor and predecessor *)
 
-(** [nat_succ n] is the successor of a natural number [n]. *)
+(** [nat_succ n] is the successor of a natural number [n]. We defined a notation [x.+1] for it in Overture.v. *)
 Notation nat_succ := S (only parsing).
 
 (** [nat_pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
