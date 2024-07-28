@@ -585,9 +585,8 @@ Defined.
 
 (** *** Properties of Maxima *)
 
-(** TODO: rename to [nat_max_idem] *)
 (** [nat_max] is idempotent. *)
-Definition nat_max_n_n@{} n : nat_max n n = n.
+Definition nat_max_idem@{} n : nat_max n n = n.
 Proof.
   simple_induction' n; cbn.
   1: reflexivity.
