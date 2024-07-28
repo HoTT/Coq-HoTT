@@ -36,7 +36,7 @@ Proof.
 Defined.
 
 Definition incl_finnat {n : nat} (u : FinNat n) : FinNat n.+1
-  := (u.1; leq_trans u.2 (leq_S n n (leq_refl n))).
+  := (u.1; leq_trans u.2 (leq_succ_r (leq_refl n))).
 
 Lemma path_incl_finnat (n : nat) (u : FinNat n) (h : u.1 < n.+1)
   : incl_finnat u = (u.1; h).
@@ -92,7 +92,7 @@ Proof.
   - destruct k as [k | []].
     + apply (@leq_trans _ n _).
       * apply IHn.
-      * by apply leq_S.
+      * by apply leq_succ_r.
     + apply leq_refl.
 Defined.
 
