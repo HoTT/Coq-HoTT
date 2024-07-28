@@ -36,7 +36,7 @@ Defined.
 (** This lemma is just for convenience in the case where the user forgets to unfold the definition of [<]. *)
 Proposition n_lt_Sn (n : nat) : n < n.+1.
 Proof.
-  exact (leq_n n.+1).
+  exact (leq_refl n.+1).
 Defined.
 
 Proposition leq_S' (n m : nat) : n.+1 <= m -> n <= m.
@@ -109,7 +109,7 @@ Defined.
 Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
 Proof.
   simple_induction' m.
-  - exact(leq_n n).
+  - exact(leq_refl n).
   - simpl. apply leq_S. assumption.
 Defined.
 
@@ -341,9 +341,9 @@ Proposition nataddsub_comm_ineq_lemma (n m : nat)
 Proof.
   revert m.
   simple_induction n n IHn.
-  - simple_induction m m IHm; [ apply leq_n | apply leq_S; apply leq_n ]. 
+  - simple_induction m m IHm; exact _. 
   - intro m; simple_induction m m IHm.
-    + apply leq_n.
+    + apply leq_refl.
     + apply IHn.
 Defined.
 
@@ -403,7 +403,7 @@ Defined.
 
 Proposition predn_leq_n (n : nat) : nat_pred n <= n.
 Proof.
-  case n; [ apply leq_n | intro; apply leq_S; apply leq_n].
+  destruct n; exact _.
 Defined.
 
 Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
@@ -498,9 +498,9 @@ Proof.
   simple_induction n n IHn.
   - intros; apply leq_zero.
   - destruct k.
-    + apply leq_n.
+    + apply leq_refl.
     + simpl; apply (@leq_trans _ n _);
-        [ apply IHn | apply leq_S, leq_n].
+        [ apply IHn | apply leq_S, leq_refl].
 Defined.
 
 Proposition sub_less_strict { n k : nat }
@@ -586,7 +586,7 @@ Proof.
       + apply a; intros ? ?; now apply IHn.
       + now apply (IHn m), leq_succ.
   }
-  intro n. apply (X (n.+1) n), (leq_n n.+1).
+  intro n. apply (X (n.+1) n), (leq_refl n.+1).
 Defined.
 
 (** This inductive type is defined because it lets you loop from [i = 0] up to [i = n] by structural induction on a proof of [increasing_geq n 0]. With the existing [leq] type and the inductive structure of [n], it is easier and more natural to loop downwards from [i = n] to [i = 0], but harder to find the least natural number in the interval $[0,n]$ satisfying a given property. *)

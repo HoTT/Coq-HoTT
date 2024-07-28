@@ -142,7 +142,7 @@ Fixpoint factorial (n : nat) : nat
 (** *** Less Than or Equal To *)
 
 Inductive leq (n : nat) : nat -> Type0 :=
-| leq_n : leq n n
+| leq_refl : leq n n
 | leq_S : forall m, leq n m -> leq n (S m).
 
 Scheme leq_ind := Induction for leq Sort Type.
@@ -152,9 +152,7 @@ Scheme leq_rec := Induction for leq Sort Type.
 Notation "n <= m" := (leq n m) : nat_scope.
 
 Existing Class leq.
-Global Existing Instances leq_n leq_S.
-
-Notation leq_refl := leq_n (only parsing).
+Global Existing Instances leq_refl leq_S.
 
 (** *** Less Than *)
 
@@ -400,7 +398,7 @@ Defined.
 (** *** Basic Properties of [leq] *)
 
 (** [leq] is reflexive by definition. *)
-Global Instance reflexive_leq : Reflexive leq := leq_n.
+Global Instance reflexive_leq : Reflexive leq := leq_refl.
 
 (** Being less than or equal to is a transitive relation. *)
 Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
@@ -454,7 +452,7 @@ Proof.
 Defined.
 
 (** A general form for injectivity of this constructor *)
-Definition leq_n_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_n n.
+Definition leq_refl_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_refl n.
 Proof.
   destruct p.
   + assert (c : idpath = r) by apply path_ishprop.
@@ -465,8 +463,8 @@ Proof.
 Defined.
 
 (** Which we specialise to this lemma *)
-Definition leq_n_inj n (p : n <= n) : p = leq_n n
-  := leq_n_inj_gen n n p idpath.
+Definition leq_refl_inj n (p : n <= n) : p = leq_refl n
+  := leq_refl_inj_gen n n p idpath.
 
 Fixpoint leq_S_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
   : p = r # leq_S n m q.
@@ -483,7 +481,7 @@ Proof.
     destruct t.
     cbn. apply ap.
     destruct q.
-    1:  apply leq_n_inj.
+    1:  apply leq_refl_inj.
     apply (leq_S_inj_gen n m _ p q idpath).
 Defined.
 
@@ -496,7 +494,7 @@ Proof.
   intros p q; revert p.
   induction q.
   + intros y.
-    rapply leq_n_inj.
+    rapply leq_refl_inj.
   + intros y.
     rapply leq_S_inj.
 Defined.
@@ -535,7 +533,7 @@ Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
 (** *** Basic Properties of [ge] *) 
 
-Global Instance reflexive_ge : Reflexive ge := leq_n.
+Global Instance reflexive_ge : Reflexive ge := leq_refl.
 Global Instance transitive_ge : Transitive ge := fun x y z p q => leq_trans q p.
 Global Instance ishprop_ge n m : IsHProp (ge n m) := _.
 Global Instance decidable_ge n m : Decidable (ge n m) := _.
@@ -715,7 +713,7 @@ Defined.
 Fixpoint leq_add n m : n <= (m + n).
 Proof.
   destruct m.
-  1: apply leq_n.
+  1: apply leq_refl.
   apply leq_S, leq_add.
 Defined.
 
