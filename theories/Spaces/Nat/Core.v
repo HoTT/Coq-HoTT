@@ -384,28 +384,28 @@ Defined.
 Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
 
 (** Subtracting [0] from a number is the number itself. *)
-Definition nat_sub_zero_r (n : nat) : n - 0 = n.
+Definition nat_sub_zero_r@{} (n : nat) : n - 0 = n.
 Proof.
   destruct n; reflexivity.
 Defined.
 
 (** Subtracting a number from itself is [0]. *)
-Definition nat_sub_cancel (n : nat) : n - n = 0.
+Definition nat_sub_cancel@{} (n : nat) : n - n = 0.
 Proof.
   simple_induction n n IHn.
   - reflexivity.
-  - simpl; exact IHn.
+  - exact IHn.
 Defined.
 
 (** Subtracting an addition is the same as subtracting the two numbers separately. *)
-Definition nat_sub_add n m k : n - (m + k) = n - m - k.
+Definition nat_sub_add@{} n m k : n - (m + k) = n - m - k.
 Proof.
-  revert m k; simple_induction n n IHn.
+  induction n as [|n IHn] in m, k |- *.
   - reflexivity.
-  - intro m; destruct m; intro k.
-    + change (0 + k) with k; reflexivity.
-    + change (m.+1 + k) with (m + k).+1; apply IHn.
-Defined.
+  - destruct m.
+    + reflexivity.
+    + nrapply IHn.
+Defined. 
 
 (** TODO: rename [nat_sub_leq] *)
 (** Subtracting a larger number from a smaller number is [0]. *)
