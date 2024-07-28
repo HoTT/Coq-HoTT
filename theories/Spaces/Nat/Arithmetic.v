@@ -509,8 +509,8 @@ Proof.
       (symmetric_paths _ _ (nat_sub_zero_r m)); done.
   - intro l. change (k.+1) with (1 + k).
     destruct (nat_add_comm k 1).
-    destruct (symmetric_paths _ _ (subsubadd n k 1)).
-    destruct (symmetric_paths _ _ (subsubadd m k 1)).
+    destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
+    destruct (symmetric_paths _ _ (nat_sub_add m k 1)).
     destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).
     destruct (symmetric_paths _ _ (@predeqminus1 (m -k))).
     apply leq_n_pred, IHk. exact l.
@@ -656,7 +656,7 @@ Proof.
       apply leq_S in l.
       destruct (symmetric_paths _ _ (sub_leq_0 _)). exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
-      destruct (symmetric_paths _ _ (subsubadd n k 1)).
+      destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
       apply increasing_geq_S.
       unfold ">", "<" in *.
@@ -681,7 +681,7 @@ Proof.
       reflexivity.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).
-    destruct (symmetric_paths _ _ (subsubadd m n 1)). 
+    destruct (symmetric_paths _ _ (nat_sub_add m n 1)). 
     destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
       destruct (symmetric_paths _ _ (nat_sub_zero_r (nat_pred (m - n)))).
     assert (0 < m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).
