@@ -372,7 +372,7 @@ Proof.
 Defined.
 
 (** Left and right cosets are equivalent in normal subgroups. *)
-Definition equiv_isnormalsubgroup_in_cosetL_in_cosetR {G : Group}
+Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
   (N : NormalSubgroup G)
   : forall x y, in_cosetL N x y <~> in_cosetR N x y.
 Proof.
@@ -385,7 +385,7 @@ Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G}
   : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
 Proof.
   intros x y.
-  refine (_ oE equiv_isnormalsubgroup_in_cosetL_in_cosetR _ _ _); cbn.
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite negate_involutive.
 Defined.
 
@@ -393,7 +393,7 @@ Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G}
   : forall x y : G, in_cosetR N (-x) (-y) <~> in_cosetR N x y.
 Proof.
   intros x y.
-  refine (_ oE equiv_isnormalsubgroup_in_cosetL_in_cosetR _ _ _); cbn.
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite grp_inv_inv.
 Defined.
 
@@ -407,11 +407,11 @@ Proof.
   rewrite negate_sg_op, <- simple_associativity.
   apply symmetric_in_cosetL; cbn.
   rewrite simple_associativity.
-  apply equiv_isnormalsubgroup_in_cosetL_in_cosetR; cbn.
+  apply equiv_in_cosetL_in_cosetR_normalsubgroup; cbn.
   rewrite <- simple_associativity.
   apply subgroup_in_op.
   1: assumption.
-  by apply equiv_isnormalsubgroup_in_cosetL_in_cosetR, symmetric_in_cosetL.
+  by apply equiv_in_cosetL_in_cosetR_normalsubgroup, symmetric_in_cosetL.
 Defined.
 
 Definition in_cosetR_cong  {G : Group} {N : NormalSubgroup G}
@@ -423,11 +423,11 @@ Proof.
   rewrite negate_sg_op, simple_associativity.
   apply symmetric_in_cosetR; cbn.
   rewrite <- simple_associativity.
-  apply equiv_isnormalsubgroup_in_cosetL_in_cosetR; cbn.
+  apply equiv_in_cosetL_in_cosetR_normalsubgroup; cbn.
   rewrite simple_associativity.
   apply subgroup_in_op.
   2: assumption.
-  by apply equiv_isnormalsubgroup_in_cosetL_in_cosetR, symmetric_in_cosetR.
+  by apply equiv_in_cosetL_in_cosetR_normalsubgroup, symmetric_in_cosetR.
 Defined.
 
 (** The property of being the trivial subgroup is useful. *)
