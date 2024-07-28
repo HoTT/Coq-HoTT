@@ -380,6 +380,9 @@ Defined.
 
 (** ** Properties of Subtraction *)
 
+(** Subtracting a number from [0] is [0]. *)
+Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
+
 (** TODO: rename [nat_sub_zero_r] *)
 (** Subtracting [0] from a number is the number itself. *)
 Definition sub_n_0 (n : nat) : n - 0 = n.
