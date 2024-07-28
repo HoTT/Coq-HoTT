@@ -677,7 +677,7 @@ Lemma ineq_sub (n m : nat) : n <= m -> m - (m - n) = n.
 Proof.
   revert m; simple_induction n n IHn.
   - intros. destruct (symmetric_paths _ _ (nat_sub_zero_r m)),
-      (symmetric_paths _ _ (sub_n_n m));
+      (symmetric_paths _ _ (nat_sub_cancel m));
       reflexivity.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).

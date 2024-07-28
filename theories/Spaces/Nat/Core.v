@@ -389,9 +389,8 @@ Proof.
   destruct n; reflexivity.
 Defined.
 
-(** TODO: rename [nat_sub_cancel_r] *)
 (** Subtracting a number from itself is [0]. *)
-Definition sub_n_n (n : nat) : n - n = 0.
+Definition nat_sub_cancel (n : nat) : n - n = 0.
 Proof.
   simple_induction n n IHn.
   - reflexivity.
@@ -418,7 +417,7 @@ Definition subsubadd' n m k : n - m - k = n - (m + k)
 Definition sub_leq_0 {n m} : n <= m -> n - m = 0.
 Proof.
   intro l; induction l.
-  - exact (sub_n_n n).
+  - exact (nat_sub_cancel n).
   - change (m.+1) with (1 + m). destruct n.
     + reflexivity.
     + destruct (nat_add_comm m 1).
