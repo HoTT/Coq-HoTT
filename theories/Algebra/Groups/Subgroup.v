@@ -339,7 +339,7 @@ Defined.
 
 (** A normal subgroup is a subgroup closed under conjugation. *)
 Class IsNormalSubgroup {G : Group} (N : Subgroup G)
-  := isnormal : forall {x y}, N x -> N (y * x * -y).
+  := isnormal : forall {x y}, N (x * y) -> N (y * x).
 
 Record NormalSubgroup (G : Group) := {
   normalsubgroup_subgroup : Subgroup G ;
@@ -349,50 +349,32 @@ Record NormalSubgroup (G : Group) := {
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
-(** A product [x * y] is in a normal subgroup if and only if [y * x] is. *)
-Definition symmetric_in_normalsubgroup {G : Group}
-  (N : NormalSubgroup G)
-  : forall x y, N (x * y) -> N (y * x).
-Proof.
-  intros x y n.
-  refine (transport N _ (isnormal (y:=y) n)).
-  lhs nrapply (ap (.* -y) (grp_assoc y x y)).
-  lhs_V nrapply grp_assoc.
-  lhs nrapply (ap _ (grp_inv_r y)).
-  apply grp_unit_r.
-Defined.
-
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
   (N : NormalSubgroup G)
   : forall x y, N (x * y) <~> N (y * x).
 Proof.
   intros x y.
   rapply equiv_iff_hprop.
-  all: apply symmetric_in_normalsubgroup.
+  all: apply isnormal.
 Defined.
 
 (** Left and right cosets are equivalent in normal subgroups. *)
 Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
-  (N : NormalSubgroup G)
-  : forall x y, in_cosetL N x y <~> in_cosetR N x y.
-Proof.
-  intros x y.
-  exact (equiv_in_cosetR_symm _ _ oE equiv_symmetric_in_normalsubgroup _ _ _).
-Defined.
+  (N : NormalSubgroup G) (x y : G)
+  : in_cosetL N x y <~> in_cosetR N x y
+  := equiv_in_cosetR_symm _ _ oE equiv_symmetric_in_normalsubgroup _ _ _.
 
 (** Inverses are then respected *)
-Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G}
-  : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
+Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetL N (-x) (-y) <~> in_cosetL N x y.
 Proof.
-  intros x y.
   refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite negate_involutive.
 Defined.
 
-Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G}
-  : forall x y : G, in_cosetR N (-x) (-y) <~> in_cosetR N x y.
+Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetR N (-x) (-y) <~> in_cosetR N x y.
 Proof.
-  intros x y.
   refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite grp_inv_inv.
 Defined.
@@ -405,13 +387,12 @@ Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
   rewrite negate_sg_op, <- simple_associativity.
-  apply symmetric_in_cosetL; cbn.
-  rewrite simple_associativity.
-  apply equiv_in_cosetL_in_cosetR_normalsubgroup; cbn.
-  rewrite <- simple_associativity.
+  apply isnormal.
+  rewrite simple_associativity, <- simple_associativity.
   apply subgroup_in_op.
-  1: assumption.
-  by apply equiv_in_cosetL_in_cosetR_normalsubgroup, symmetric_in_cosetL.
+  1: exact p.
+  apply isnormal.
+  exact q.
 Defined.
 
 Definition in_cosetR_cong  {G : Group} {N : NormalSubgroup G}
@@ -421,13 +402,12 @@ Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
   rewrite negate_sg_op, simple_associativity.
-  apply symmetric_in_cosetR; cbn.
-  rewrite <- simple_associativity.
-  apply equiv_in_cosetL_in_cosetR_normalsubgroup; cbn.
-  rewrite simple_associativity.
+  apply isnormal.
+  rewrite <- simple_associativity, simple_associativity.
   apply subgroup_in_op.
-  2: assumption.
-  by apply equiv_in_cosetL_in_cosetR_normalsubgroup, symmetric_in_cosetR.
+  2: exact q.
+  apply isnormal.
+  exact p.
 Defined.
 
 (** The property of being the trivial subgroup is useful. *)

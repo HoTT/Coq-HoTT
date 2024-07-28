@@ -14,15 +14,20 @@ Proof.
   - srapply (Build_Subgroup' (fun x => f x = group_unit)).
     1: apply grp_homo_unit.
     intros x y p q; cbn in p, q; cbn.
-    refine (grp_homo_op _ _ _ @ ap011 _ p _ @ _).
-    1: apply grp_homo_inv.
-    rewrite q; apply right_inverse.
+    lhs nrapply grp_homo_op.
+    rhs_V nrapply (grp_inv_r mon_unit).
+    nrapply (ap011 (.*.) p).
+    lhs nrapply grp_homo_inv.
+    nrapply (ap (-)).
+    exact q.
   - intros x y; cbn; intros p.
-    rewrite 2 grp_homo_op.
-    rewrite grp_homo_inv.
-    apply grp_moveL_1M^-1.
-    rewrite p.
-    apply grp_unit_r.
+    lhs nrapply grp_homo_op.
+    nrapply grp_moveR_Mg.
+    rhs nrapply grp_unit_r.
+    rhs_V nrapply grp_unit_l.
+    nrapply grp_moveL_gV.
+    lhs_V nrapply grp_homo_op.
+    exact p.
 Defined.
 
 (** ** Corecursion principle for group kernels *)

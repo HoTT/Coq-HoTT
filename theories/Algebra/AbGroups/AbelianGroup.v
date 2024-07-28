@@ -75,8 +75,7 @@ Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
   intros x y h.
-  rewrite ab_comm, grp_assoc, grp_inv_l, grp_unit_l.
-  exact h.
+  by rewrite ab_comm.
 Defined.
 
 (** ** Quotients of abelian groups *)
