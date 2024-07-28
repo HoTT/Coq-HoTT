@@ -66,7 +66,7 @@ Defined.
 Proposition leq_S' (n m : nat) : n.+1 <= m -> n <= m.
 Proof.
   intro l.
-  now apply leq_S_n, leq_S.
+  now apply leq_succ', leq_S.
 Defined.
 
 Proposition mixed_trans1 (n m k : nat)
@@ -108,7 +108,7 @@ Defined.
 
 Proposition n_lt_m_n_leq_m { n m : nat } : n < m -> n <= m.
 Proof.
-  intro H. apply leq_S, leq_S_n in H; exact H.
+  intro H. apply leq_S, leq_succ' in H; exact H.
 Defined.
 
 Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
@@ -150,9 +150,9 @@ Proof.
   revert m; simple_induction n n IHn.
   - intro. left. exact (leq_zero m).
   - destruct m.
-    + intro l. apply leq_S_n, natineq0eq0 in l.
+    + intro l. apply leq_succ', natineq0eq0 in l.
       right; apply ap; exact l.
-    + intro l. apply leq_S_n, IHn in l; destruct l as [a | b].
+    + intro l. apply leq_succ', IHn in l; destruct l as [a | b].
       * left. apply leq_succ; exact a.
       * right. apply ap; exact b.
 Defined.
@@ -183,7 +183,7 @@ Proof.
   - intros m ineq. contradiction (not_lt_n_0 m).
   - destruct m.
     + simpl. easy.
-    + simpl. intro ineq. apply leq_S_n in ineq.
+    + simpl. intro ineq. apply leq_succ' in ineq.
       now apply IHn in ineq.
 Defined.
 
@@ -195,7 +195,7 @@ Proof.
     apply (ap S), symmetric_paths, (nat_add_zero_r _)^.
   - intros m l. destruct m.
     + contradiction (not_leq_Sn_0 n).
-    + simpl. apply leq_S_n, IHn in l.
+    + simpl. apply leq_succ', IHn in l.
       destruct (nat_add_succ_r (m - n) n)^.
       destruct (symmetric_paths _ _ l).
       reflexivity.
@@ -279,7 +279,7 @@ Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
   - intro l. destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^ in l.
-    apply leq_S_n, IHk in l; exact l.
+    apply leq_succ', IHk in l; exact l.
 Defined.
 
 Proposition nataddreflectsleq { n m k : nat }
@@ -324,7 +324,7 @@ Proof.
   - intros m l; simpl. destruct m; reflexivity.
   - destruct m.
     + simpl; intro g; contradiction (not_leq_Sn_0 _ g).
-    + intro l; apply leq_S_n in l.
+    + intro l; apply leq_succ' in l.
       change (m.+2 - k.+1) with (m.+1 - k).
       change (m.+1 - k.+1) with (m - k).
       exact (IHk _ l).
@@ -343,7 +343,7 @@ Proof.
       | reflexivity
       | contradiction (not_lt_n_0 k _)
       | ].
-    simpl "-". apply leq_S_n in l.
+    simpl "-". apply leq_succ' in l.
     destruct (nat_add_succ_r n (m - k)).
     destruct  (nataddsub_assoc_lemma l).
     apply (IHn m.+1 k).
@@ -476,7 +476,7 @@ Proof.
   intros l ineq.
   destruct j.
   - contradiction (not_lt_n_0 i).
-  - now simpl; apply leq_S_n.
+  - now simpl; apply leq_succ'.
 Defined.
 
 Proposition pred_gt_implies_lt (i j : nat)
@@ -495,7 +495,7 @@ Proposition pred_preserves_lt {i n: nat} (p : i < n) m
   : (n < m) -> (nat_pred n < nat_pred m).
 Proof.
   intro l.
-  apply leq_S_n. destruct (symmetric_paths _ _ (S_predn n i _)).
+  apply leq_succ'. destruct (symmetric_paths _ _ (S_predn n i _)).
   set (k :=  transitive_lt i n m p l).
   destruct (symmetric_paths _ _ (S_predn m i _)).
   assumption.
@@ -591,7 +591,7 @@ Proof.
     apply (leq_trans l'). exact (n_leq_add_n_k' m' m).
   - intros n' m; destruct m.
     + intros. contradiction (not_leq_Sn_0 n).
-    + intros m' l l'. apply leq_S_n in l. simpl.
+    + intros m' l l'. apply leq_succ' in l. simpl.
       apply leq_succ, IHn.
       * exact l.
       * exact l'.
@@ -605,7 +605,7 @@ Proof.
   assert (forall n m: nat, m < n -> P m) as X. {
     simple_induction n n IHn.
     - intros m l. contradiction (not_lt_n_0 m).
-    - intros m l. apply leq_S_n in l.
+    - intros m l. apply leq_succ' in l.
       destruct l as [ | n].
       + apply a; intros ? ?; now apply IHn.
       + now apply (IHn m), leq_succ.
@@ -669,7 +669,7 @@ Proof.
   intro ineq.
   destruct n.
   - contradiction (not_lt_n_0 k).
-  - change (n.+1 - k.+1) with (n - k). apply leq_S_n in ineq.
+  - change (n.+1 - k.+1) with (n - k). apply leq_succ' in ineq.
     apply (nataddsub_assoc_lemma _).
 Defined.
   

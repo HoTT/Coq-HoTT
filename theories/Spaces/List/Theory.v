@@ -336,7 +336,7 @@ Proof.
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_S_n.
+  apply leq_succ'.
   exact H.
 Defined.
 
@@ -448,11 +448,11 @@ Proof.
     + destruct n.
       * reflexivity.
       * unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H.
+        1: apply leq_succ', H.
         unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H'.
+        1: apply leq_succ', H'.
         unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H''.
+        1: apply leq_succ', H''.
         apply IHl1.
         by apply path_nat_succ.
 Defined.
@@ -502,7 +502,7 @@ Proof.
   1: destruct (not_leq_Sn_0 _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_succ'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
@@ -574,7 +574,7 @@ Proof.
   destruct n.
   1: destruct (not_leq_Sn_0 _ H).
   cbn; apply IHl.
-  apply leq_S_n.
+  apply leq_succ'.
   exact H.
 Defined.
 
@@ -632,7 +632,7 @@ Proof.
   destruct n.
   1: destruct (not_leq_Sn_0 _ H).
   cbn; f_ap.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_succ'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
@@ -824,7 +824,7 @@ Proof.
     cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
     1: destruct (not_leq_Sn_0 _ H).
-    by apply IHi, leq_S_n.
+    by apply IHi, leq_succ'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
@@ -841,7 +841,7 @@ Proof.
   - apply not_lt_implies_geq in H'.
     destruct (leq_split H') as [H'' | H''].
     { apply lt_implies_not_geq in H''.
-      apply leq_S_n in H.
+      apply leq_succ' in H.
       contradiction. }
     destruct H''.
     lhs nrapply nth_last.
