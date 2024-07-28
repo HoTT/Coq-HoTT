@@ -378,83 +378,54 @@ Proof.
     exact IHn.
 Defined.
 
-(** ** Properties of Subtraction *)
+(** ** Basic Properties of Comparison Predicates *)
 
-(** Subtracting a number from [0] is [0]. *)
-Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
+(** *** Basic Properties of [leq] *)
 
-(** Subtracting [0] from a number is the number itself. *)
-Definition nat_sub_zero_r@{} (n : nat) : n - 0 = n.
-Proof.
-  destruct n; reflexivity.
-Defined.
-
-(** Subtracting a number from itself is [0]. *)
-Definition nat_sub_cancel@{} (n : nat) : n - n = 0.
-Proof.
-  simple_induction n n IHn.
-  - reflexivity.
-  - exact IHn.
-Defined.
-
-(** Subtracting an addition is the same as subtracting the two numbers separately. *)
-Definition nat_sub_add@{} n m k : n - (m + k) = n - m - k.
-Proof.
-  induction n as [|n IHn] in m, k |- *.
-  - reflexivity.
-  - destruct m.
-    + reflexivity.
-    + nrapply IHn.
-Defined. 
-
-(** The order in which two numbers are subtracted does not matter. *)
-Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
-Proof.
-  lhs_V nrapply nat_sub_add.
-  rewrite nat_add_comm.
-  nrapply nat_sub_add.
-Defined.
-
-(** Subtracting a larger number from a smaller number is [0]. *)
-Definition nat_sub_leq {n m} : n <= m -> n - m = 0.
-Proof.
-  intro l; induction l.
-  - exact (nat_sub_cancel n).
-  - change (m.+1) with (1 + m). 
-    lhs nrapply nat_sub_add.
-    lhs nrapply nat_sub_comm_r.
-    by destruct IHl^.
-Defined.
-
-(** ** Inequality of natural numbers *)
-
+(** [leq] is reflexive by definition. *)
 Global Instance reflexive_leq : Reflexive leq := leq_n.
 
-Lemma leq_trans {x y z} : x <= y -> y <= z -> x <= z.
+(** Being less than or equal to is a transitive relation. *)
+Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
 Proof.
-  induction 2; exact _.
+  intros H1 H2; induction H2; exact _.
 Defined.
 
+(** [leq] is transtiive. *)
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
-Lemma leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
+(** TODO: rename to [leq_zero] *)
+(** [0] is less than or equal to any natural number. *)
+Definition leq_0_n n : 0 <= n.
 Proof.
-  induction 1; try exact _.
-  destruct m; simpl; exact _.
+  simple_induction' n; exact _.
+Defined.
+Global Existing Instance leq_0_n | 10.
+
+(** TODO: rename to [leq_pred] *)
+(** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
+Definition leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
+Proof.
+  intros H; induction H.
+  1: exact _.
+  destruct m; exact _.
 Defined.
 
+(** TODO: is this needed? *)
 Lemma leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
 Proof.
   intros n m.
   apply leq_n_pred.
 Defined.
 
+(** TODO: possibly rename to [leq_succ] depending on above. *)
 Lemma leq_S_n' n m : n <= m -> n.+1 <= m.+1.
 Proof.
   induction 1; exact _.
 Defined.
 Global Existing Instance leq_S_n' | 100.
 
+(** TODO: use lemmas about negating predicate *)
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
 Proof.
   simple_induction n n IHn.
@@ -462,6 +433,13 @@ Proof.
     inversion p. }
   intros p.
   by apply IHn, leq_S_n.
+Defined.
+
+Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
+Proof.
+  intros p.
+  apply (fun x => leq_trans x (leq_0_n n)) in p.
+  contradiction (not_leq_Sn_n _ p).
 Defined.
 
 (** A general form for injectivity of this constructor *)
@@ -512,18 +490,6 @@ Proof.
     rapply leq_S_inj.
 Defined.
 
-Global Instance leq_0_n n : 0 <= n | 10.
-Proof.
-  simple_induction' n; exact _.
-Defined.
-
-Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
-Proof.
-  intros p.
-  apply (fun x => leq_trans x (leq_0_n n)) in p.
-  contradiction (not_leq_Sn_n _ p).
-Defined.
-
 Definition equiv_leq_S_n n m : n.+1 <= m.+1 <~> n <= m.
 Proof.
   srapply equiv_iff_hprop.
@@ -544,14 +510,8 @@ Proof.
       apply equiv_leq_S_n.
 Defined.
 
-Fixpoint leq_add n m : n <= (m + n).
-Proof.
-  destruct m.
-  1: apply leq_n.
-  apply leq_S, leq_add.
-Defined.
+(** *** Basic Properties of [lt] *)
 
-(** We should also give them their various typeclass instances *)
 Global Instance transitive_lt : Transitive lt.
 Proof.
   hnf; unfold lt in *.
@@ -559,15 +519,79 @@ Proof.
   rapply leq_trans.
 Defined.
 
+Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
+
+(** *** Basic Properties of [ge] *) 
 
 Global Instance reflexive_ge : Reflexive ge := leq_n.
 Global Instance transitive_ge : Transitive ge := fun x y z p q => leq_trans q p.
+Global Instance ishprop_ge n m : IsHProp (ge n m) := _.
 Global Instance decidable_ge n m : Decidable (ge n m) := _.
+
+(** *** Basic Properties of [gt] *)
 
 Global Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
+Global Instance ishprop_gt n m : IsHProp (gt n m) := _.
 Global Instance decidable_gt n m : Decidable (gt n m) := _.
+
+(** ** Properties of Subtraction *)
+
+(** Subtracting a number from [0] is [0]. *)
+Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
+
+(** Subtracting [0] from a number is the number itself. *)
+Definition nat_sub_zero_r@{} (n : nat) : n - 0 = n.
+Proof.
+  destruct n; reflexivity.
+Defined.
+
+(** Subtracting a number from itself is [0]. *)
+Definition nat_sub_cancel@{} (n : nat) : n - n = 0.
+Proof.
+  simple_induction n n IHn.
+  - reflexivity.
+  - exact IHn.
+Defined.
+
+(** Subtracting an addition is the same as subtracting the two numbers separately. *)
+Definition nat_sub_add@{} n m k : n - (m + k) = n - m - k.
+Proof.
+  induction n as [|n IHn] in m, k |- *.
+  - reflexivity.
+  - destruct m.
+    + reflexivity.
+    + nrapply IHn.
+Defined. 
+
+(** The order in which two numbers are subtracted does not matter. *)
+Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
+Proof.
+  lhs_V nrapply nat_sub_add.
+  rewrite nat_add_comm.
+  nrapply nat_sub_add.
+Defined.
+
+(** Subtracting a larger number from a smaller number is [0]. *)
+Definition nat_sub_leq {n m} : n <= m -> n - m = 0.
+Proof.
+  intro l; induction l.
+  - exact (nat_sub_cancel n).
+  - change (m.+1) with (1 + m). 
+    lhs nrapply nat_sub_add.
+    lhs nrapply nat_sub_comm_r.
+    by destruct IHl^.
+Defined.
+
+(** ** Inequality of natural numbers *)
+
+Fixpoint leq_add n m : n <= (m + n).
+Proof.
+  destruct m.
+  1: apply leq_n.
+  apply leq_S, leq_add.
+Defined.
 
 (** Principle of double induction *)
 
