@@ -339,7 +339,7 @@ Defined.
 
 (** ** Inequality of natural numbers *)
 
-Cumulative Inductive leq (n : nat) : nat -> Type0 :=
+Inductive leq (n : nat) : nat -> Type0 :=
 | leq_n : leq n n
 | leq_S : forall m, leq n m -> leq n (S m).
 
