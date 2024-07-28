@@ -394,12 +394,12 @@ Proof.
     snrapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0%nat _).
     snrefine (exist _ _ idpath).
-    apply leq_S_n'.
+    apply leq_succ.
     exact _.
   - destruct (IHl i) as [n [H H']].
     snrefine (exist@{i i} _ n.+1%nat _).
     snrefine (_; _); cbn.
-    1: apply leq_S_n', H.
+    1: apply leq_succ, H.
     refine (_ @ H').
     apply nth'_cons.
 Defined.
@@ -488,7 +488,7 @@ Proof.
     1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
-    1: apply leq_S_n', Hn.
+    1: apply leq_succ, Hn.
     lhs nrapply H.
     nrapply nth'_cons.
 Defined.

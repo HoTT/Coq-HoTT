@@ -676,7 +676,7 @@ Proof.
     { unfold h; apply moveR_equiv_V; symmetry.
       apply fin_transpose_last_with_last. }
     rewrite q; exact tt. }
-  apply leq_S_n'.
+  apply leq_succ.
   exact (IHn m (unfunctor_sum_l h Ha)
              (mapinO_unfunctor_sum_l (Tr (-1)) h Ha Hb)).
 Qed.

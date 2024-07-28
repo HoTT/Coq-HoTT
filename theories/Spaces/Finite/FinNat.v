@@ -18,7 +18,7 @@ Proof.
 Defined.
 
 Definition succ_finnat {n : nat} (u : FinNat n) : FinNat n.+1
-  := (u.1.+1; leq_S_n' u.1.+1 n u.2).
+  := (u.1.+1; leq_succ u.2).
 
 Lemma path_succ_finnat {n : nat} (u : FinNat n) (h : u.1.+1 < n.+1)
   : succ_finnat u = (u.1.+1; h).
@@ -78,9 +78,9 @@ Proof.
   refine
     (_ @ transport
           (fun p => transport _ p (s n u _) = s n u (finnat_ind P z s u))
-          (hset_path2 1 (path_succ_finnat u (leq_S_n' _ _ u.2))) 1).
+          (hset_path2 1 (path_succ_finnat u (leq_succ u.2))) 1).
   destruct u as [u1 u2].
-  assert (u2 = leq_S_n u1.+1 n (leq_S_n' u1.+1 n u2)) as p.
+  assert (u2 = leq_S_n u1.+1 n (leq_succ u2)) as p.
   - apply path_ishprop.
   - simpl. by induction p.
 Defined.
