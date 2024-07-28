@@ -407,10 +407,6 @@ Proof.
     + change (m.+1 + k) with (m + k).+1; apply IHn.
 Defined.
 
-(** TODO: remove *)
-Definition subsubadd' n m k : n - m - k = n - (m + k)
-  := (nat_sub_add n m k)^.
-
 (** TODO: rename [nat_sub_leq] *)
 (** Subtracting a larger number from a smaller number is [0]. *)
 Definition sub_leq_0 {n m} : n <= m -> n - m = 0.
