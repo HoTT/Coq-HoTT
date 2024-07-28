@@ -693,15 +693,6 @@ Proof.
   by apply (ap S), IHn.
 Defined.
 
-(** ** Inequality of natural numbers *)
-
-Fixpoint leq_add n m : n <= (m + n).
-Proof.
-  destruct m.
-  1: apply leq_n.
-  apply leq_S, leq_add.
-Defined.
-
 (** ** Arithmetic *)
 
 Global Instance isinj_S : IsInjective S.
@@ -723,6 +714,13 @@ Proof.
 Defined.
 
 (** ** More Theory of Comparison Predicates *)
+
+Fixpoint leq_add n m : n <= (m + n).
+Proof.
+  destruct m.
+  1: apply leq_n.
+  apply leq_S, leq_add.
+Defined.
 
 (** [<=] is an antisymmetric relation. *)
 Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
