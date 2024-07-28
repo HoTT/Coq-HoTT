@@ -167,21 +167,21 @@ Existing Class lt.
 Infix "<" := lt : nat_scope.
 Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
 
-(*** Greater Than or Equal To *)
+(** *** Greater Than or Equal To *)
+
+Definition geq n m := leq m n.
+Existing Class geq.
+#[export] Hint Unfold geq : typeclass_instances.
+Infix ">=" := geq : nat_scope.
+Global Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
+
+(*** Greater Than *)
 
 Definition gt n m := lt m n.
 Existing Class gt.
 #[export] Hint Unfold gt : typeclass_instances.
 Infix ">" := gt : nat_scope.
 Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
-
-(** *** Greater Than *)
-
-Definition ge n m := leq m n.
-Existing Class ge.
-#[export] Hint Unfold ge : typeclass_instances.
-Infix ">=" := ge : nat_scope.
-Global Instance ge_is_leq n m : leq m n -> ge n m | 100 := idmap.
 
 (** *** Combined Comparison Predicates *)
 
@@ -533,12 +533,12 @@ Defined.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
-(** *** Basic Properties of [ge] *) 
+(** *** Basic Properties of [geq] *) 
 
-Global Instance reflexive_ge : Reflexive ge := leq_refl.
-Global Instance transitive_ge : Transitive ge := fun x y z p q => leq_trans q p.
-Global Instance ishprop_ge n m : IsHProp (ge n m) := _.
-Global Instance decidable_ge n m : Decidable (ge n m) := _.
+Global Instance reflexive_geq : Reflexive geq := leq_refl.
+Global Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
+Global Instance ishprop_geq n m : IsHProp (geq n m) := _.
+Global Instance decidable_geq n m : Decidable (geq n m) := _.
 
 (** *** Basic Properties of [gt] *)
 
