@@ -410,7 +410,7 @@ Proof.
 Defined.
 
 (** TODO: rename leq_S_n -> leq_succ' *)
-Definition leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
+Definition leq_succ' : forall n m, n.+1 <= m.+1 -> n <= m.
 Proof.
   intros n m.
   apply leq_pred.
@@ -429,7 +429,7 @@ Proof.
   { intro p.
     inversion p. }
   intros p.
-  by apply IHn, leq_S_n.
+  by apply IHn, leq_succ'.
 Defined.
 
 Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
@@ -490,7 +490,7 @@ Defined.
 Definition equiv_leq_S_n n m : n.+1 <= m.+1 <~> n <= m.
 Proof.
   srapply equiv_iff_hprop.
-  apply leq_S_n.
+  apply leq_succ'.
 Defined.
 
 Global Instance decidable_leq n m : Decidable (n <= m).
@@ -628,7 +628,7 @@ Proof.
   1: nrapply nat_max_zero_r.
   destruct n.
   1: inversion H.
-  cbn; by apply (ap S), IHm, leq_S_n.
+  cbn; by apply (ap S), IHm, leq_succ'.
 Defined.
 
 (** [nat_max n m] is [m] if [n <= m]. *)
@@ -678,7 +678,7 @@ Proof.
   simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply (ap S), IHn, leq_S_n.
+  cbn; by apply (ap S), IHn, leq_succ'.
 Defined.
 
 (** [nat_min n m] is [m] if [m <= n]. *)
@@ -734,7 +734,7 @@ Proof.
   destruct p.
   1: reflexivity.
   destruct x; [inversion q|].
-  apply leq_S_n in q.
+  apply leq_succ' in q.
   contradiction (not_leq_Sn_n _ (leq_trans p q)).
 Defined.
 
