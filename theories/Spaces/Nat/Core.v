@@ -740,8 +740,11 @@ Defined.
 
 Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 
+(** [<] is an irreflexive relation. *)
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
+Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
 
+(** [1] is less than or equal to the successor of any number. *)
 Definition leq_1_Sn {n} : 1 <= n.+1 := leq_succ (leq_zero _).
 
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
