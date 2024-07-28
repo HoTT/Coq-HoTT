@@ -671,17 +671,6 @@ Proof.
   apply leq_S, leq_add.
 Defined.
 
-(** Principle of double induction *)
-
-Theorem nat_double_ind (R : nat -> nat -> Type)
-  (H1 : forall n, R 0 n) (H2 : forall n, R (S n) 0)
-  (H3 : forall n m, R n m -> R (S n) (S m))
-  : forall n m:nat, R n m.
-Proof.
-  simple_induction' n; auto.
-  destruct m; auto.
-Defined.
-
 (** ** Arithmetic *)
 
 Global Instance isinj_S : IsInjective S.
