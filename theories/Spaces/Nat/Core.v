@@ -222,6 +222,7 @@ Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
 
 (** Injectivity of successor. *)
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
+Global Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
 
 (** Inequality of sucessors is implied with inequality of the arguments. *)
 Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
@@ -307,6 +308,22 @@ Proof.
   - reflexivity.
   - nrapply (ap nat_succ).
     exact IHn.
+Defined.
+
+(** Addition on the left is injective. *)
+Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
+Proof.
+  simple_induction k k Ik; exact _.
+Defined.
+
+(** Addition on the right is injective. *)
+Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
+Proof.
+  intros x y H.
+  nrapply (isinj_nat_add_l k).
+  lhs nrapply nat_add_comm.
+  lhs nrapply H.
+  nrapply nat_add_comm.
 Defined.
 
 (** ** Properties of multiplication *)
@@ -691,26 +708,6 @@ Proof.
   destruct m, k.
   1-3: reflexivity.
   by apply (ap S), IHn.
-Defined.
-
-(** ** Arithmetic *)
-
-Global Instance isinj_S : IsInjective S.
-Proof.
-  intros x y p.
-  by apply path_nat_succ.
-Defined.
-
-Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
-Proof.
-  simple_induction k k Ik; exact _.
-Defined.
-
-Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
-Proof.
-  intros x y H.
-  rewrite 2 (nat_add_comm _ k) in H.
-  exact (isinj_nat_add_l k _ _ H).
 Defined.
 
 (** ** More Theory of Comparison Predicates *)
