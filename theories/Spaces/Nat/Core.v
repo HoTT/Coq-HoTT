@@ -612,17 +612,15 @@ Defined.
 (** [0] is the left identity of [nat_max]. *)
 Definition nat_max_zero_l@{} n : nat_max 0 n = n := idpath.
 
-(** TODO: rename to [nat_max_zero_r] *)
 (** [0] is the right identity of [nat_max]. *)
-Definition nat_max_n_0@{} n : nat_max n 0 = n
+Definition nat_max_zero_r@{} n : nat_max n 0 = n
   := nat_max_comm _ _ @ nat_max_zero_l _.
-Notation nat_max_zero_r := nat_max_n_0.
 
 Definition nat_max_l@{} {n m} : m <= n -> nat_max n m = n.
 Proof.
   intros H.
   induction m as [|m IHm] in n, H |- *.
-  1: nrapply nat_max_n_0.
+  1: nrapply nat_max_zero_r.
   destruct n.
   1: inversion H.
   cbn; by apply (ap S), IHm, leq_S_n.
