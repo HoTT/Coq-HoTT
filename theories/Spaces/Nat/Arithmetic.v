@@ -467,7 +467,7 @@ Defined.
 
 Proposition lt_implies_pred_geq (i j : nat) : i < j -> i <= nat_pred j.
 Proof.
-  intro l; apply leq_n_pred in l; assumption.
+  intro l; apply leq_pred in l; assumption.
 Defined.
 
 Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
@@ -513,7 +513,7 @@ Proof.
     destruct (symmetric_paths _ _ (nat_sub_add m k 1)).
     destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).
     destruct (symmetric_paths _ _ (@predeqminus1 (m -k))).
-    apply leq_n_pred, IHk. exact l.
+    apply leq_pred, IHk. exact l.
 Defined.
 
 Proposition sub_less { n k : nat } : n - k <= n.
