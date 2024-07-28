@@ -143,7 +143,9 @@ Fixpoint factorial (n : nat) : nat
 
 Inductive leq (n : nat) : nat -> Type0 :=
 | leq_refl : leq n n
-| leq_S : forall m, leq n m -> leq n (S m).
+| leq_succ_r m : leq n m -> leq n (S m).
+
+Arguments leq_succ_r {n m} _.
 
 Scheme leq_ind := Induction for leq Sort Type.
 Scheme leq_rect := Induction for leq Sort Type.
@@ -152,7 +154,7 @@ Scheme leq_rec := Induction for leq Sort Type.
 Notation "n <= m" := (leq n m) : nat_scope.
 
 Existing Class leq.
-Global Existing Instances leq_refl leq_S.
+Global Existing Instances leq_refl leq_succ_r.
 
 (** *** Less Than *)
 
@@ -466,8 +468,8 @@ Defined.
 Definition leq_refl_inj n (p : n <= n) : p = leq_refl n
   := leq_refl_inj_gen n n p idpath.
 
-Fixpoint leq_S_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
-  : p = r # leq_S n m q.
+Fixpoint leq_succ_r_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
+  : p = r # leq_succ_r q.
 Proof.
   revert m q r.
   destruct p.
@@ -482,11 +484,11 @@ Proof.
     cbn. apply ap.
     destruct q.
     1:  apply leq_refl_inj.
-    apply (leq_S_inj_gen n m _ p q idpath).
+    apply (leq_succ_r_inj_gen n m _ p q idpath).
 Defined.
 
-Definition leq_S_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_S n m q
-  := leq_S_inj_gen n m m.+1 p q idpath.
+Definition leq_succ_r_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_succ_r q
+  := leq_succ_r_inj_gen n m m.+1 p q idpath.
 
 Global Instance ishprop_leq n m : IsHProp (n <= m).
 Proof.
@@ -496,10 +498,10 @@ Proof.
   + intros y.
     rapply leq_refl_inj.
   + intros y.
-    rapply leq_S_inj.
+    rapply leq_succ_r_inj.
 Defined.
 
-Definition equiv_leq_S_n n m : n.+1 <= m.+1 <~> n <= m.
+Definition equiv_leq_succ n m : n.+1 <= m.+1 <~> n <= m.
 Proof.
   srapply equiv_iff_hprop.
   apply leq_succ'.
@@ -516,7 +518,7 @@ Proof.
     + left; exact _.
     + rapply decidable_equiv'.
       symmetry.
-      apply equiv_leq_S_n.
+      apply equiv_leq_succ.
 Defined.
 
 (** *** Basic Properties of [lt] *)
@@ -714,7 +716,7 @@ Fixpoint leq_add n m : n <= (m + n).
 Proof.
   destruct m.
   1: apply leq_refl.
-  apply leq_S, leq_add.
+  apply leq_succ_r, leq_add.
 Defined.
 
 (** [<=] is an antisymmetric relation. *)

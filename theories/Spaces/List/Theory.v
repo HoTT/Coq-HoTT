@@ -764,7 +764,7 @@ Proof.
   { intros m.
     snrapply (functor_sigma idmap).
     intros k H.
-    exact (leq_S _ _ H). }
+    exact (leq_succ_r H). }
   induction n as [|n IHn].
   1: exact nil.
   nrefine ((n; _) :: list_map (f n) IHn).

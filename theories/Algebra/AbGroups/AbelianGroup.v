@@ -303,7 +303,7 @@ Proof.
   - refine (f n _ + IHn _).
     intros k Hk.
     refine (f k _).
-    apply leq_S.
+    apply leq_succ_r.
     exact Hk.
 Defined.
 

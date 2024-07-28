@@ -130,7 +130,7 @@ Proof.
     + elim C.
   - intros [[] | C].
     + exact _.
-    + by apply leq_S, IHy.
+    + by apply leq_succ_r, IHy.
 Qed.
 
 Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=

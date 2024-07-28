@@ -41,8 +41,7 @@ Defined.
 
 Proposition leq_S' (n m : nat) : n.+1 <= m -> n <= m.
 Proof.
-  intro l.
-  now apply leq_succ', leq_S.
+  intro l; apply leq_succ'; exact _.
 Defined.
 
 Proposition mixed_trans1 (n m k : nat)
@@ -84,7 +83,7 @@ Defined.
 
 Proposition n_lt_m_n_leq_m { n m : nat } : n < m -> n <= m.
 Proof.
-  intro H. apply leq_S, leq_succ' in H; exact H.
+  intro H. apply leq_succ_r, leq_succ' in H; exact H.
 Defined.
 
 Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
@@ -110,7 +109,7 @@ Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
 Proof.
   simple_induction' m.
   - exact(leq_refl n).
-  - simpl. apply leq_S. assumption.
+  - simpl. apply leq_succ_r. assumption.
 Defined.
 
 Proposition natineq0eq0 {n : nat} : n <= 0 -> n = 0.
@@ -323,7 +322,7 @@ Proof.
     destruct (nat_add_succ_r n (m - k)).
     destruct  (nataddsub_assoc_lemma l).
     apply (IHn m.+1 k).
-    apply leq_S.
+    apply leq_succ_r.
     assumption.
 Defined.
 
@@ -500,7 +499,7 @@ Proof.
   - destruct k.
     + apply leq_refl.
     + simpl; apply (@leq_trans _ n _);
-        [ apply IHn | apply leq_S, leq_refl].
+        [ apply IHn | apply leq_succ_r, leq_refl].
 Defined.
 
 Proposition sub_less_strict { n k : nat }
@@ -629,7 +628,7 @@ Proof.
   - destruct (symmetric_paths _ _ (nat_sub_zero_r n)); constructor.
   - destruct (@leq_dichot n k) as [l | g].
     + destruct (symmetric_paths _ _ (nat_sub_leq _)) in IHk.
-      apply leq_S in l.
+      apply leq_succ_r in l.
       destruct (symmetric_paths _ _ (nat_sub_leq _)). exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
       destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
