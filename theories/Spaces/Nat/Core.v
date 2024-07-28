@@ -756,6 +756,30 @@ Proof.
   apply not_leq_Sn_0.
 Defined.
 
+Definition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
+Proof.
+  intros not_lt.
+  destruct (@leq_dichot m n); [ assumption | contradiction].
+Defined.
+
+Definition not_leq_implies_gt {n m : nat} : ~(n <= m) -> m < n.
+Proof.
+  intros not_leq. 
+  destruct (@leq_dichot n m); [ contradiction | assumption].
+Defined.
+
+Definition lt_implies_not_geq {n m : nat} : (n < m) -> ~(m <= n).
+Proof.
+  intros ineq1 ineq2.
+  contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
+Defined.
+
+Definition leq_implies_not_gt {n m : nat} : (n <= m) -> ~(m < n).
+Proof.
+  intros ineq1 ineq2.
+  contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
+Defined.
+
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
 
 Lemma trunc_index_add_nat_add (n : nat)
