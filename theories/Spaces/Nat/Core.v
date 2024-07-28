@@ -725,20 +725,20 @@ Proof.
   exact (isinj_nat_add_l k _ _ H).
 Defined.
 
-(** ** Natural number ordering *)
+(** ** More Theory of Comparison Predicates *)
 
-(** ** Theorems about natural number ordering *)
-
-Lemma leq_antisym {x y} : x <= y -> y <= x -> x = y.
+(** [<=] is an antisymmetric relation. *)
+Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
 Proof.
   intros p q.
   destruct p.
   1: reflexivity.
   destruct x; [inversion q|].
   apply leq_S_n in q.
-  pose (r := leq_trans p q).
-  by apply not_leq_Sn_n in r.
+  contradiction (not_leq_Sn_n _ (leq_trans p q)).
 Defined.
+
+Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
 
