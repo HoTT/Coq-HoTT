@@ -616,6 +616,7 @@ Definition nat_max_zero_l@{} n : nat_max 0 n = n := idpath.
 Definition nat_max_zero_r@{} n : nat_max n 0 = n
   := nat_max_comm _ _ @ nat_max_zero_l _.
 
+(** [nat_max n m] is [n] if [m <= n]. *) 
 Definition nat_max_l@{} {n m} : m <= n -> nat_max n m = n.
 Proof.
   intros H.
@@ -626,11 +627,13 @@ Proof.
   cbn; by apply (ap S), IHm, leq_S_n.
 Defined.
 
+(** [nat_max n m] is [m] if [n <= m]. *)
 Definition nat_max_r {n m} : n <= m -> nat_max n m = m
   := fun _ => nat_max_comm _ _ @ nat_max_l _.
 
 (** Properties of Minima *)
 
+(** [nat_min] is commutative. *)
 Definition nat_min_comm n m : nat_min n m = nat_min m n.
 Proof.
   induction n as [|n IHn] in m |- *; destruct m; cbn.
@@ -638,10 +641,14 @@ Proof.
   exact (ap S (IHn _)).
 Defined.
 
+(** [nat_min] of [0] and [n] is [0]. *)
 Definition nat_min_zero_l n : nat_min 0 n = 0 := idpath.
+
+(** [nat_min] of [n] and [0] is [0]. *)
 Definition nat_min_zero_r n : nat_min n 0 = 0:= 
   nat_min_comm _ _ @ nat_min_zero_l _.
 
+(** [nat_min n m] is [n] if [n <= m]. *)
 Definition nat_min_l {n m} : n <= m -> nat_min n m = n.
 Proof.
   revert n m.
@@ -651,6 +658,7 @@ Proof.
   cbn; by apply (ap S), IHn, leq_S_n.
 Defined.
 
+(** [nat_min n m] is [m] if [m <= n]. *)
 Definition nat_min_r {n m} : m <= n -> nat_min n m = m
   := fun _ => nat_min_comm _ _ @ nat_min_l _.
 
