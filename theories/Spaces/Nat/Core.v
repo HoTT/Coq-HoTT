@@ -167,7 +167,7 @@ Defined.
 Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
-(** Injectivity of successor *)
+(** Injectivity of successor. *)
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 
 (** Inequality of sucessors is implied with inequality of the arguments. *)
@@ -178,14 +178,14 @@ Proof.
   exact (path_nat_succ _ _ q).
 Defined.
 
-(** Zero is not the successor of a number *)
+(** Zero is not the successor of a number. *)
 Definition neq_nat_zero_succ@{} n : 0 <> S n.
 Proof.
   discriminate.
 Defined.
 
-(** TODO: rename to [neq_n_Sn] *)
-Theorem not_eq_n_Sn@{} n : n <> S n.
+(** A natural number cannot be equal to its own successor. *)
+Theorem neq_nat_succ'@{} n : n <> S n.
 Proof.
   simple_induction' n.
   - apply neq_nat_zero_succ.
