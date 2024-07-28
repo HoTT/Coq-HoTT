@@ -401,9 +401,8 @@ Proof.
 Defined.
 Global Existing Instance leq_zero | 10.
 
-(** TODO: rename to [leq_pred] *)
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
-Definition leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
+Definition leq_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
 Proof.
   intros H; induction H.
   1: exact _.
@@ -414,7 +413,7 @@ Defined.
 Lemma leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
 Proof.
   intros n m.
-  apply leq_n_pred.
+  apply leq_pred.
 Defined.
 
 (** TODO: possibly rename to [leq_succ] depending on above. *)
