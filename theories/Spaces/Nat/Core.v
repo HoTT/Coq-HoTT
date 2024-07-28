@@ -601,13 +601,17 @@ Proof.
   exact (ap S (IHn _)).
 Defined.
 
-(** TODO: rename to [nat_max_succ_l] *)
-Definition nat_max_Sn_n@{} n : nat_max (S n) n = S n.
+(** The maximum of [n.+1] and [n] is [n.+1]. *)
+Definition nat_max_succ_l@{} n : nat_max n.+1 n = n.+1.
 Proof.
   simple_induction' n; cbn.
   1: reflexivity.
   exact (ap S IH).
 Defined.
+
+(** The maximum of [n] and [n.+1] is [n.+1]. *)
+Definition nat_max_succ_r@{} n : nat_max n n.+1 = n.+1
+  := nat_max_comm _ _ @ nat_max_succ_l _.
 
 (** [0] is the left identity of [nat_max]. *)
 Definition nat_max_zero_l@{} n : nat_max 0 n = n := idpath.
