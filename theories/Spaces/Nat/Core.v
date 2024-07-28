@@ -609,10 +609,8 @@ Proof.
   exact (ap S IH).
 Defined.
 
-(** TODO: rename to [nat_max_zero_l] *)
 (** [0] is the left identity of [nat_max]. *)
-Definition nat_max_0_n@{} n : nat_max 0 n = n := idpath.
-Notation nat_max_zero_l := nat_max_0_n.
+Definition nat_max_zero_l@{} n : nat_max 0 n = n := idpath.
 
 (** TODO: rename to [nat_max_zero_r] *)
 (** [0] is the right identity of [nat_max]. *)
