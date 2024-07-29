@@ -8,14 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** TODO: move and rename *)
-Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.
-Proof.
-  destruct p.
-  symmetry.
-  apply nat_add_sub_cancel_r.
-Defined.
-
 (** TODO: unused, remove *)
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
 Proof.
