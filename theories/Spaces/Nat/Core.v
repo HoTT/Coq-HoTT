@@ -372,8 +372,9 @@ Defined.
 (** Multiplication of natural numbers distributes over addition on the right. *)
 Definition nat_dist_r@{} n m k : (n + m) * k = n * k + m * k.
 Proof.
-  rewrite 3 (nat_mul_comm _ k).
-  nrapply nat_dist_l.
+  lhs nrapply nat_mul_comm.
+  lhs nrapply nat_dist_l.
+  nrapply ap011; nrapply nat_mul_comm.
 Defined.
 
 (** Multiplication of natural numbers is associative. *)
@@ -385,6 +386,14 @@ Proof.
     nrapply (ap (nat_add (m * k))).
     exact IHn.
 Defined.
+
+(** Multiplication by [1] on the left is the identity. *)
+Definition nat_mul_one_l@{} n : 1 * n = n
+  := nat_add_zero_r _.
+  
+(** Multiplication by [1] on the right is the identity. *)
+Definition nat_mul_one_r@{} n : n * 1 = n
+  := nat_mul_comm _ _ @ nat_mul_one_l _.
 
 (** ** Basic Properties of Comparison Predicates *)
 
@@ -796,4 +805,68 @@ Proof.
   refine (_ @ ap nat_to_trunc_index _).
   2: exact (nat_add_succ_r _ _)^.
   reflexivity.
+Defined.
+
+(** ** Properties of Powers *)
+
+(** [0] to any power is [0] unless that power is [0] in which case it is [1]. *)
+Definition nat_pow_zero_l@{} n : nat_pow 0 n = if dec (n = 0) then 1 else 0.
+Proof.
+  destruct n; reflexivity.
+Defined.
+
+(** Any number to the power of [0] is [1]. *)
+Definition nat_pow_zero_r@{} n : nat_pow n 0 = 1
+  := idpath.
+
+(** [1] to any power is [1]. *)
+Definition nat_pow_one_l@{} n : nat_pow 1 n = 1.
+Proof.
+  induction n as [|n IHn]; simpl.
+  1: reflexivity.
+  lhs nrapply nat_add_zero_r.
+  exact IHn.
+Defined.
+
+(** Any number to the power of [1] is itself. *)
+Definition nat_pow_one_r@{} n : nat_pow n 1 = n
+  := nat_mul_one_r _.
+
+(** Exponentiation of natural numbers is distributive over addition on the left. *)
+Definition nat_pow_add_r@{} n m k
+  : nat_pow n (m + k) = nat_pow n m * nat_pow n k.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - symmetry.
+    apply nat_add_zero_r.
+  - rhs_V nrapply nat_mul_assoc. 
+    exact (ap _ IHm).
+Defined.
+
+(** Exponentiation of natural numbers is distributive over multiplication on the right. *)
+Definition nat_pow_mul_l@{} n m k
+  : nat_pow (n * m) k = nat_pow n k * nat_pow m k.
+Proof.
+  induction k as [|k IHk]; simpl.
+  1: reflexivity.
+  lhs_V nrapply nat_mul_assoc.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  rhs nrapply nat_mul_comm.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  rhs nrapply nat_mul_comm.
+  exact IHk.
+Defined.
+
+(** Exponentiation of natural numbers is distributive over multiplication on the left. *)
+Definition nat_pow_mul_r@{} n m k
+  : nat_pow n (m * k) = nat_pow (nat_pow n m) k.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - exact (nat_pow_one_l _)^.
+  - lhs nrapply nat_pow_add_r.
+    rhs nrapply nat_pow_mul_l.
+    nrapply ap.
+    exact IHm.
 Defined.
