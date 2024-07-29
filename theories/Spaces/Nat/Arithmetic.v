@@ -8,18 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** TODO: move, merge with converse as equiv *)
-Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
-Proof.
-  revert m; simple_induction n n IHn.
-  - simpl. intros m eq.
-    apply leq_zero. 
-  - intros m eq. destruct m.
-    + simpl in eq. apply symmetric_paths in eq.
-      contradiction (neq_nat_zero_succ n eq).
-    + simpl in eq. apply leq_succ, IHn, eq.
-Defined.
-
 (** TODO: move, rename *)
 Proposition sub_gt_0_lt (n m : nat) : n - m > 0 -> m < n.
 Proof.
