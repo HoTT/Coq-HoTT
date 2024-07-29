@@ -8,12 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** TODO: unused, remove *)
-Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
-Proof.
-  intros l a; contradiction (not_lt_n_n _ (lt_trans l a)).
-Defined.  
-
 (** TODO: move, rename *)
 Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
 Proof.
