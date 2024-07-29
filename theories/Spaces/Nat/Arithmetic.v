@@ -25,7 +25,7 @@ Proposition sub_gt_0_lt (n m : nat) : n - m > 0 -> m < n.
 Proof.
   intro ineq.
   destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].
-  apply nat_sub_leq in n_leq_m.
+  apply equiv_nat_sub_leq in n_leq_m.
   contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
 Defined.
 
@@ -61,7 +61,7 @@ Proof.
   - destruct (symmetric_paths _ _ (natminuspluseq _ _ l));
       constructor.
   - apply leq_lt in g.
-    now destruct (symmetric_paths _ _ (nat_sub_leq _)).
+    now destruct (equiv_nat_sub_leq _)^.
 Defined.
 
 Proposition natminuspluseq' (n m : nat)
@@ -243,7 +243,7 @@ Proof.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
   - apply leq_lt in gt.
-    destruct (symmetric_paths _ _ (nat_sub_leq _)).
+    destruct (equiv_nat_sub_leq _)^.
     assumption.
 Defined.
 
@@ -505,9 +505,9 @@ Proof.
   simple_induction k k IHk.
   - destruct (symmetric_paths _ _ (nat_sub_zero_r n)); constructor.
   - destruct (@leq_dichot n k) as [l | g].
-    + destruct (symmetric_paths _ _ (nat_sub_leq _)) in IHk.
+    + destruct (equiv_nat_sub_leq _)^ in IHk.
       apply leq_succ_r in l.
-      destruct (symmetric_paths _ _ (nat_sub_leq _)). exact IHk.
+      destruct (equiv_nat_sub_leq _)^. exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
       destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
