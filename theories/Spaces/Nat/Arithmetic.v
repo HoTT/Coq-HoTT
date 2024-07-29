@@ -9,18 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 
-Proposition diseq_implies_lt (n m : nat)
-  : n <> m -> (n < m) + (n > m).
-Proof.
-  intros diseq.
-  destruct (dec (n < m)) as [| a]; [ now left |].
-  right. destruct (@leq_dichot n m) as [n_leq_m | gt];
-    [ | assumption].
-  destruct n_leq_m;
-    [ now contradiction diseq
-    | contradiction a; now apply leq_succ].
-Defined.
-
 Proposition lt_implies_diseq (n m : nat)
   : n < m -> (n <> m).
 Proof.

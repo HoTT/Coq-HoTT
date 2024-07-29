@@ -798,7 +798,7 @@ Proof.
 Defined.
 
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
-Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> ((n < m) + (n = m))%type.
+Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> (n < m) + (n = m).
 Proof.
   snrapply equiv_adjointify.
   - intro l; induction l.
@@ -815,6 +815,21 @@ Proof.
       rapply path_ishprop.
     + by destruct p.
   - intro; rapply path_ishprop.
+Defined.
+
+(** TODO: rename diseq_implies_lt -> neq_iff_lt_or_gt *)
+Definition diseq_implies_lt {n m} : n <> m <-> (n < m) + (n > m).
+Proof.
+  split.
+  - intros diseq.
+    destruct (dec (n < m)) as [| a]; [ now left |].
+    apply not_lt_implies_geq in a.
+    apply equiv_leq_lt_or_eq in a.
+    destruct a as [lt | eq].
+    1: by right.
+    symmetry in eq.
+    contradiction.
+  - intros [H' | H'] nq; destruct nq; exact (not_lt_n_n _ H').
 Defined.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
