@@ -611,16 +611,17 @@ Proof.
     by destruct IHl^.
 Defined.
 
-(** TODO: rename add_n_sub_n_eq -> [nat_add_sub_cancel_r] *)
-Definition add_n_sub_n_eq m n : m + n - n = m.
+(** We can cancel a right summand when subtracting it from a sum. *)
+Definition nat_add_sub_cancel_r m n : m + n - n = m.
 Proof.
-  destruct m.
-  - simple_induction' n.
-    + reflexivity.
-    + assumption.
-  - simple_induction' n.
-    + simpl. destruct (nat_add_zero_r m)^; reflexivity.
-    + simpl. destruct (nat_add_succ_r m n)^. assumption.
+  induction n as [|n IHn].
+  - lhs nrapply nat_sub_zero_r.
+    nrapply nat_add_zero_r.
+  - destruct m.
+    + apply nat_sub_cancel.
+    + rhs_V nrapply IHn.
+      nrapply (ap (fun x => x - n)).
+      nrapply nat_add_succ_r.
 Defined.
 
 (** ** Properties of Maximum and Minimum *) 

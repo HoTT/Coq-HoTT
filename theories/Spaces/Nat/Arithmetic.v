@@ -11,7 +11,7 @@ Local Open Scope nat_scope.
 (** TODO: move and rename *)
 Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.
 Proof. 
-  destruct (nat_add_comm m n). exact (add_n_sub_n_eq m n).
+  destruct (nat_add_comm m n). exact (nat_add_sub_cancel_r m n).
 Defined.
  
 (** TODO: move and rename *)
@@ -19,7 +19,7 @@ Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.
 Proof.
   destruct p.
   symmetry.
-  apply add_n_sub_n_eq.
+  apply nat_add_sub_cancel_r.
 Defined.
 
 (** TODO: unused, remove *)
@@ -297,8 +297,8 @@ Defined.
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichot m n) as [l | gt].
-  - destruct (symmetric_paths _ _ (nataddsub_comm _ _ m l)).
-    destruct (symmetric_paths _ _ (add_n_sub_n_eq n m)).
+  - destruct (nataddsub_comm _ _ m l)^.
+    destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
   - apply leq_lt in gt.
     destruct (symmetric_paths _ _ (nat_sub_leq _)).
@@ -327,7 +327,7 @@ Proposition nat_add_sub_eq (n : nat) {k: nat}
 Proof.
   intro H.
   destruct (symmetric_paths _ _ (nataddsub_assoc k H));
-  destruct (nat_add_comm n k); exact (add_n_sub_n_eq _ _).
+  destruct (nat_add_comm n k); exact (nat_add_sub_cancel_r _ _).
 Defined.
 
 Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
