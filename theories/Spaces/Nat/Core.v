@@ -627,9 +627,9 @@ Proof.
   nrapply nat_add_comm.
 Defined.
 
-(** TODO: rename summand_is_sub -> nat_moveR_nV *)
-Definition summand_is_sub k m n (p : k + n = m) : k = m - n.
+Definition nat_moveL_nV k m n : k + n = m -> k = m - n.
 Proof.
+  intros p.
   destruct p.
   symmetry.
   apply nat_add_sub_cancel_r.
