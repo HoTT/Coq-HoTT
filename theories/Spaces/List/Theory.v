@@ -839,11 +839,8 @@ Proof.
     1: by rewrite length_seq.
     by apply IHn.
   - apply not_lt_implies_geq in H'.
-    destruct (leq_split H') as [H'' | H''].
-    { apply lt_implies_not_geq in H''.
-      apply leq_succ' in H.
-      contradiction. }
-    destruct H''.
+    apply leq_succ' in H.
+    destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.
       rewrite nat_add_comm.
