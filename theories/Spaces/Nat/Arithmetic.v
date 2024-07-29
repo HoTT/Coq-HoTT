@@ -42,7 +42,7 @@ Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
 Proof.
   intros H1 H2.
   nrapply n_lt_m_n_leq_m.
-  exact (mixed_trans1 H1 H2).
+  exact (leq_lt_trans H1 H2).
 Defined.
 
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
@@ -411,7 +411,7 @@ Proposition pred_gt_implies_lt (i j : nat)
 Proof.
   intros ineq.
   assert (H := leq_succ ineq). assert (i < j) as X. {
-    apply (@mixed_trans2 _ (nat_pred j) _);
+    apply (@lt_leq_trans _ (nat_pred j) _);
       [assumption  | apply predn_leq_n].
   }
   destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.
@@ -500,7 +500,7 @@ Proposition natpmswap4 (k m n : nat)
 Proof.
   intro l; apply (@nataddpreserveslt (k - n) m n) in l.
   destruct (nat_add_comm m n).
-  now rapply (mixed_trans1 (nat_sub_add_ineq _ _)).
+  now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
 Defined.
 
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
@@ -639,7 +639,7 @@ Proof.
   intro ineq.
   destruct (@leq_dichot n m) as [l | g].
   - exact l.
-  - contradiction (not_lt_n_n m (@mixed_trans2 _ _ _ g ineq)).
+  - contradiction (not_lt_n_n m (lt_leq_trans g ineq)).
 Defined.
 
 Proposition symmetric_rel_total_order (R : nat -> nat -> Type)
