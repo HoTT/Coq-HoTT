@@ -600,15 +600,24 @@ Proof.
   nrapply nat_sub_add.
 Defined.
 
+(** TODO: rename nat_sub_leq -> equiv_nat_sub_leq *)
 (** Subtracting a larger number from a smaller number is [0]. *)
-Definition nat_sub_leq {n m} : n <= m -> n - m = 0.
+Definition nat_sub_leq {n m} : n <= m <~> n - m = 0.
 Proof.
-  intro l; induction l.
-  - exact (nat_sub_cancel n).
-  - change (m.+1) with (1 + m). 
-    lhs nrapply nat_sub_add.
-    lhs nrapply nat_sub_comm_r.
-    by destruct IHl^.
+  srapply equiv_iff_hprop.
+  - intro l; induction l.
+    + exact (nat_sub_cancel n).
+    + change (m.+1) with (1 + m). 
+      lhs nrapply nat_sub_add.
+      lhs nrapply nat_sub_comm_r.
+      by destruct IHl^.
+  - induction n as [|n IHn] in m |- *.
+    1: intro; exact _.
+    destruct m.
+    + intros p; by destruct p.
+    + intros p.
+      apply leq_succ, IHn.
+      exact p.
 Defined.
 
 (** We can cancel a left summand when subtracting it from a sum. *)
