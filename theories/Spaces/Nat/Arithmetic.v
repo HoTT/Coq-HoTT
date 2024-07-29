@@ -657,7 +657,7 @@ Proof.
           exact sub_less).
     destruct (symmetric_paths _ _ (ineq_sub' _ _ _)).
     destruct (symmetric_paths _ _ (S_predn _ 0 _)).
-    apply (ap S), IHn, leq_S', ineq.
+    apply (ap S), IHn, leq_succ_l, ineq.
 Defined.                                 
   
 Proposition leq_equivalent (n m : nat)
@@ -670,7 +670,7 @@ Proof.
   - intro a.
     induction a.
     + constructor.
-    + exact (leq_S' _).
+    + exact (leq_succ_l _).
 Defined.
 
 (** This tautology accepts a (potentially opaqued or QED'ed) proof of [n <= m], and returns a transparent proof which can be computed with (i.e., one can loop from n to m) *) 

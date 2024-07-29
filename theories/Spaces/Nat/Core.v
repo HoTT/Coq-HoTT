@@ -714,9 +714,8 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
-(** TODO: rename leq_S' -> leq_succ_l *)
 (** [n.+1 <= m] implies [n <= m]. *)
-Definition leq_S' {n m} : n.+1 <= m -> n <= m.
+Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
 Proof.
   intro l; apply leq_succ'; exact _.
 Defined.
