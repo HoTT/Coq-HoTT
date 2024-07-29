@@ -52,6 +52,7 @@ Proof.
     now destruct (equiv_nat_sub_leq _)^.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natminuspluseq' (n m : nat)
   : n <= m -> n + (m - n) = m.
 Proof.
@@ -59,6 +60,7 @@ Proof.
   apply natminuspluseq. assumption.
 Defined.
 
+(** TODO: move, rename *)
 Lemma equiv_leq_add n m
   : leq n m <~> exists k, k + n = m.
 Proof.
@@ -77,6 +79,7 @@ Proof.
     apply leq_add_r.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddpreservesleq { n m k : nat }
   : n <= m -> n + k <= m + k.
 Proof.
@@ -87,6 +90,7 @@ Proof.
       apply leq_succ; exact IHk.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddpreservesleq' { n m k : nat }
   : n <= m -> k + n <= k + m.
 Proof.
@@ -95,6 +99,7 @@ Proof.
   exact nataddpreservesleq.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddpreserveslt { n m k : nat }
   : n < m -> n + k < m + k.
 Proof.
@@ -107,6 +112,7 @@ Proof.
       apply leq_succ; exact IHk.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddpreserveslt' { n m k : nat }
   : n < m -> k + n < k + m.
 Proof.
@@ -115,6 +121,7 @@ Proof.
     exact nataddpreserveslt.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddreflectslt { n m k : nat }
   : n + k < m + k -> n < m.
 Proof.
@@ -124,6 +131,7 @@ Proof.
     apply leq_succ', IHk in l; exact l.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddreflectsleq { n m k : nat }
   : n + k <= m + k -> n <= m.
 Proof.
@@ -133,6 +141,7 @@ Proof.
     now apply (@nataddreflectslt n m k).
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddreflectslt' { n m k : nat }
   : k + n < k + m -> n < m.
 Proof.
@@ -141,6 +150,7 @@ Proof.
     exact nataddreflectslt.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddreflectsleq' { n m k : nat }
   : k + n <= k + m -> n <= m.
 Proof.
@@ -149,6 +159,7 @@ Proof.
     exact nataddreflectsleq.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natsubreflectsleq { n m k : nat }
   : k <= m -> n - k <= m - k -> n <= m.
 Proof.
@@ -307,6 +318,7 @@ Proof.
   - assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition lt_implies_pred_geq (i j : nat) : i < j -> i <= nat_pred j.
 Proof.
   intro l; apply leq_pred in l; assumption.
@@ -321,6 +333,7 @@ Proof.
   - now simpl; apply leq_succ'.
 Defined.
 
+(** TODO: move, rename *)
 Proposition pred_gt_implies_lt (i j : nat)
   : i < nat_pred j -> i.+1 < j.
 Proof.
@@ -333,6 +346,7 @@ Proof.
   assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition pred_preserves_lt {i n: nat} (p : i < n) m
   : (n < m) -> (nat_pred n < nat_pred m).
 Proof.
@@ -343,6 +357,7 @@ Proof.
   assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natsubpreservesleq { n m k : nat }
   : n <= m -> n - k <= m - k.
 Proof.
@@ -358,6 +373,7 @@ Proof.
     apply leq_pred, IHk. exact l.
 Defined.
 
+(** TODO: move, rename *)
 Proposition sub_less { n k : nat } : n - k <= n.
 Proof.
   revert k.
@@ -369,6 +385,7 @@ Proof.
         [ apply IHn | apply leq_succ_r, leq_refl].
 Defined.
 
+(** TODO: move, rename *)
 Proposition sub_less_strict { n k : nat }
   : 0 < n -> 0 < k -> n - k < n.
 Proof.
@@ -379,6 +396,7 @@ Proof.
   simpl; apply leq_succ, sub_less.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natpmswap1 (k m n : nat)
   : n <= k -> k < n + m -> k - n < m.
 Proof.
@@ -390,6 +408,7 @@ Proof.
   exact (nataddreflectslt q').
 Defined.
 
+(** TODO: move, rename *)
 Proposition natpmswap2 (k m n : nat)
   : n <= k -> k - n <= m -> k <= n + m.
 Proof.
@@ -400,6 +419,7 @@ Proof.
     assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natpmswap3 (k m n : nat)
   : k <= n -> m <= n - k -> k + m <= n.
 Proof.
@@ -410,6 +430,7 @@ Proof.
     assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natpmswap4 (k m n : nat)
   : k - n < m -> k < n + m.
 Proof.
@@ -418,12 +439,14 @@ Proof.
   now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
 Defined.
 
+(** TODO: move, rename *)
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
   : n <= m -> n <= m + k.
 Proof.
   intro l; apply (leq_trans l); exact (leq_add_l m k).
 Defined.
 
+(** TODO: move, rename *)
 Proposition nat_add_bifunctor (n n' m m' : nat)
   : n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
@@ -438,6 +461,7 @@ Proof.
       * exact l'.
 Defined.
 
+(** TODO: move, rename *)
 Proposition strong_induction (P : nat -> Type)
   : (forall n : nat, (forall m : nat,  (m < n) -> P m) -> P n) ->
   forall n : nat, P n.
@@ -548,6 +572,7 @@ Proof.
     + exact (leq_succ_l _).
 Defined.
 
+(** TODO: remove *)
 (** This tautology accepts a (potentially opaqued or QED'ed) proof of [n <= m], and returns a transparent proof which can be computed with (i.e., one can loop from n to m) *) 
 Definition leq_wrapper {n m : nat} : n <= m -> n <= m.
 Proof.
