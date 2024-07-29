@@ -600,9 +600,8 @@ Proof.
   nrapply nat_sub_add.
 Defined.
 
-(** TODO: rename nat_sub_leq -> equiv_nat_sub_leq *)
 (** Subtracting a larger number from a smaller number is [0]. *)
-Definition nat_sub_leq {n m} : n <= m <~> n - m = 0.
+Definition equiv_nat_sub_leq {n m} : n <= m <~> n - m = 0.
 Proof.
   srapply equiv_iff_hprop.
   - intro l; induction l.
