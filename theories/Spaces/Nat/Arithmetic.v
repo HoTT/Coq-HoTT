@@ -8,14 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** TODO: move, rename *)
-Proposition natineq0eq0 {n : nat} : n <= 0 -> n = 0.
-Proof.
-  destruct n.
-  - reflexivity.
-  - intro. contradiction (not_leq_Sn_0 n).
-Defined.
-
 (** TODO: move, merge with converse as equiv *)
 Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.
