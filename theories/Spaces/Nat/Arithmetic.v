@@ -9,13 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 
-Proposition lt_implies_diseq (n m : nat)
-  : n < m -> (n <> m).
-Proof.
-  intros ineq eq. rewrite eq in ineq.
-  contradiction (not_lt_n_n m).
-Defined.
-
 Proposition mixed_trans1 (n m k : nat)
   : n <= m -> m < k -> n < k.
 Proof.
