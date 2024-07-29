@@ -33,18 +33,6 @@ Proof.
   apply add_n_sub_n_eq.
 Defined.
 
-Proposition n_lt_m_n_leq_m { n m : nat } : n < m -> n <= m.
-Proof.
-  intro H. apply leq_succ_r, leq_succ' in H; exact H.
-Defined.
-
-Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
-Proof.
-  intros H1 H2.
-  nrapply n_lt_m_n_leq_m.
-  exact (leq_lt_trans H1 H2).
-Defined.
-
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
 Proof.
   intros l a; contradiction (not_lt_n_n _ (lt_trans l a)).
@@ -133,7 +121,7 @@ Proof.
   destruct (@leq_dichot m n) as [l | g].
   - destruct (symmetric_paths _ _ (natminuspluseq _ _ l));
       constructor.
-  - apply n_lt_m_n_leq_m in g.
+  - apply leq_lt in g.
     now destruct (symmetric_paths _ _ (nat_sub_leq _)).
 Defined.
 
@@ -315,7 +303,7 @@ Proof.
   - destruct (symmetric_paths _ _ (nataddsub_comm _ _ m l)).
     destruct (symmetric_paths _ _ (add_n_sub_n_eq n m)).
     apply leq_refl; done.
-  - apply n_lt_m_n_leq_m in gt.
+  - apply leq_lt in gt.
     destruct (symmetric_paths _ _ (nat_sub_leq _)).
     assumption.
 Defined.
