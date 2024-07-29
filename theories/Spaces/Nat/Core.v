@@ -832,12 +832,10 @@ Proof.
   - intros [H' | H'] nq; destruct nq; exact (not_lt_n_n _ H').
 Defined.
 
-(** TODO: rename mixed_trans1 -> leq_lt_trans *)
-Definition mixed_trans1 {n m k} : n <= m -> m < k -> n < k
+Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
   := fun leq lt => leq_trans (leq_succ leq) lt.
 
-(** TODO: rename mixed_trans2 -> lt_leq_trans *)
-Definition mixed_trans2 {n m k} : n < m -> m <= k -> n < k
+Definition lt_leq_trans {n m k} : n < m -> m <= k -> n < k
   := fun lt leq => leq_trans lt leq.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
