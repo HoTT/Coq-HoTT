@@ -761,8 +761,8 @@ Defined.
 Definition leq_add_l n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
-  - apply leq_zero.
-  - simpl; apply leq_succ, IHn.
+  - exact (leq_zero m).
+  - exact (leq_succ IHn).
 Defined.
 
 (** The second summand is less than or equal to the sum. *)
