@@ -8,8 +8,7 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-
-
+(** TODO: move and rename *)
 Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.
 Proof.
   destruct m.
@@ -21,11 +20,13 @@ Proof.
     + simpl. destruct (nat_add_succ_r m n)^. assumption.
 Defined.
 
+(** TODO: move and rename *)
 Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.
 Proof. 
   destruct (nat_add_comm m n). exact (add_n_sub_n_eq m n).
 Defined.
  
+(** TODO: move and rename *)
 Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.
 Proof.
   destruct p.
@@ -33,11 +34,13 @@ Proof.
   apply add_n_sub_n_eq.
 Defined.
 
+(** TODO: unused, remove *)
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
 Proof.
   intros l a; contradiction (not_lt_n_n _ (lt_trans l a)).
 Defined.  
 
+(** TODO: move, rename *)
 Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
 Proof.
   simple_induction n n IHn.
@@ -45,6 +48,7 @@ Proof.
   - simpl; apply leq_succ, IHn.
 Defined.
 
+(** TODO: move, rename *)
 Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
 Proof.
   simple_induction' m.
@@ -52,6 +56,7 @@ Proof.
   - simpl. apply leq_succ_r. assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natineq0eq0 {n : nat} : n <= 0 -> n = 0.
 Proof.
   destruct n.
@@ -59,6 +64,7 @@ Proof.
   - intro. contradiction (not_leq_Sn_0 n).
 Defined.
 
+(** TODO: unused, remove *)
 Definition nleqSm_dichot {n m : nat}
   : (n <= m.+1) -> (n <= m) + (n = m.+1).
 Proof.
@@ -72,7 +78,7 @@ Proof.
       * right. apply ap; exact b.
 Defined.
 
-
+(** TODO: move, merge with converse as equiv *)
 Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.
   revert m; simple_induction n n IHn.
@@ -84,6 +90,7 @@ Proof.
     + simpl in eq. apply leq_succ, IHn, eq.
 Defined.
 
+(** TODO: move, rename *)
 Proposition sub_gt_0_lt (n m : nat) : n - m > 0 -> m < n.
 Proof.
   intro ineq.
@@ -92,6 +99,7 @@ Proof.
   contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
 Defined.
 
+(** TODO: move, rename *)
 Proposition lt_sub_gt_0 (n m : nat) : m < n -> 0 < n - m.
 Proof.
   revert m; simple_induction n n IHn.
@@ -102,6 +110,7 @@ Proof.
       now apply IHn in ineq.
 Defined.
 
+(** TODO: move, rename *)
 Proposition natminuspluseq (n m : nat)
   : n <= m -> (m - n) + n = m.
 Proof.
