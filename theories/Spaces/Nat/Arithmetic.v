@@ -459,8 +459,8 @@ Proposition natpmswap2 (k m n : nat)
 Proof.
   intros l q.
   apply (@nataddpreservesleq' (k - n) m n) in q.
-  destruct (symmetric_paths _ _ (nataddsub_assoc n l)) in q.
-  destruct (symmetric_paths _ _ (add_n_sub_n_eq' k n)) in q;
+  destruct (nataddsub_assoc n l)^ in q.
+  destruct (nat_add_sub_cancel_l k n)^ in q;
     assumption.
 Defined.
 
@@ -469,8 +469,8 @@ Proposition natpmswap3 (k m n : nat)
 Proof.
   intros ineq qe.
   apply (@nataddpreservesleq' m (n - k) k) in qe.
-  destruct (symmetric_paths _ _ (nataddsub_assoc k ineq)) in qe.
-  destruct (symmetric_paths _ _ (add_n_sub_n_eq' n k)) in qe;
+  destruct (nataddsub_assoc k ineq)^ in qe.
+  destruct (nat_add_sub_cancel_l n k)^ in qe;
     assumption.
 Defined.
 
