@@ -611,24 +611,20 @@ Proof.
     by destruct IHl^.
 Defined.
 
-(** We can cancel a right summand when subtracting it from a sum. *)
-Definition nat_add_sub_cancel_r m n : m + n - n = m.
-Proof.
-  induction n as [|n IHn].
-  - lhs nrapply nat_sub_zero_r.
-    nrapply nat_add_zero_r.
-  - destruct m.
-    + apply nat_sub_cancel.
-    + rhs_V nrapply IHn.
-      nrapply (ap (fun x => x - n)).
-      nrapply nat_add_succ_r.
-Defined.
-
 (** We can cancel a left summand when subtracting it from a sum. *)
 Definition nat_add_sub_cancel_l m n : n + m - n = m.
 Proof. 
-  destruct (nat_add_comm m n).
-  exact (nat_add_sub_cancel_r m n).
+  induction n as [|n IHn].
+  - nrapply nat_sub_zero_r.
+  - exact IHn.
+Defined.
+
+(** We can cancel a right summand when subtracting it from a sum. *)
+Definition nat_add_sub_cancel_r m n : m + n - n = m.
+Proof.
+  rhs_V nrapply (nat_add_sub_cancel_l m n).
+  nrapply (ap (fun x => x - n)).
+  nrapply nat_add_comm.
 Defined.
 
 (** ** Properties of Maximum and Minimum *) 
