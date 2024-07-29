@@ -6,6 +6,8 @@ Local Set Universe Minimization ToSet.
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
+(** TODO: The results in this file are in the process of being moved over to Core.v *)
+
 (** Because of the inductive definition of [<=], one can destruct the proof of [n <= m] and get a judgemental identification between [n] and [m] rather than a propositional one, which may be preferable to the following lemma. *)
 Proposition leq_split {n m : nat} : (n <= m) -> sum (n < m) (n = m).
 Proof.
@@ -31,12 +33,6 @@ Proposition lt_implies_diseq (n m : nat)
 Proof.
   intros ineq eq. rewrite eq in ineq.
   contradiction (not_lt_n_n m).
-Defined.
-
-(** This lemma is just for convenience in the case where the user forgets to unfold the definition of [<]. *)
-Proposition n_lt_Sn (n : nat) : n < n.+1.
-Proof.
-  exact (leq_refl n.+1).
 Defined.
 
 Proposition leq_S' (n m : nat) : n.+1 <= m -> n <= m.
