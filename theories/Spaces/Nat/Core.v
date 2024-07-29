@@ -611,6 +611,18 @@ Proof.
     by destruct IHl^.
 Defined.
 
+(** TODO: rename add_n_sub_n_eq -> [nat_add_sub_cancel_r] *)
+Definition add_n_sub_n_eq m n : m + n - n = m.
+Proof.
+  destruct m.
+  - simple_induction' n.
+    + reflexivity.
+    + assumption.
+  - simple_induction' n.
+    + simpl. destruct (nat_add_zero_r m)^; reflexivity.
+    + simpl. destruct (nat_add_succ_r m n)^. assumption.
+Defined.
+
 (** ** Properties of Maximum and Minimum *) 
 
 (** *** Properties of Maxima *)

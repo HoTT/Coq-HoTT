@@ -9,18 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move and rename *)
-Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.
-Proof.
-  destruct m.
-  - simple_induction' n.
-    + reflexivity.
-    + assumption.
-  - simple_induction' n.
-    + simpl. destruct (nat_add_zero_r m)^; reflexivity.
-    + simpl. destruct (nat_add_succ_r m n)^. assumption.
-Defined.
-
-(** TODO: move and rename *)
 Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.
 Proof. 
   destruct (nat_add_comm m n). exact (add_n_sub_n_eq m n).
