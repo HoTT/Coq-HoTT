@@ -108,7 +108,7 @@ Proof.
     apply natminuspluseq, p.
   - intros [k p].
     destruct p.
-    apply leq_add.
+    apply leq_add_r.
 Defined.
 
 Proposition nataddpreservesleq { n m k : nat }
