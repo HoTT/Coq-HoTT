@@ -121,7 +121,7 @@ Proof.
   srapply equiv_iff_hprop.
   - apply hprop_allpath.
     intros [x p] [y q].
-    pose (r := nat_moveR_nV x _ _ p @ (nat_moveR_nV y _ _ q)^).
+    pose (r := nat_moveL_nV _ p @ (nat_moveL_nV _ q)^).
     destruct r.
     apply ap.
     apply path_ishprop.

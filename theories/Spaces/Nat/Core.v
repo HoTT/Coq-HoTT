@@ -627,13 +627,18 @@ Proof.
   nrapply nat_add_comm.
 Defined.
 
-Definition nat_moveL_nV k m n : k + n = m -> k = m - n.
+(** We can move a subtracted number to the left-hand side of an equation. *)
+Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
 Proof.
   intros p.
   destruct p.
   symmetry.
   apply nat_add_sub_cancel_r.
 Defined.
+
+(** We can move a subtracted number to the right-hand side of an equation. *)
+Definition nat_moveR_nV {k m} n : k = n + m -> k - m = n
+  := fun p => (nat_moveL_nV _ p^)^.
 
 (** ** Properties of Maximum and Minimum *) 
 
