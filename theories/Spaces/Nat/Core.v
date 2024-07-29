@@ -797,9 +797,8 @@ Proof.
   contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
 Defined.
 
-(** TODO: rename [equiv_leq_lt_or_eq] *)
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
-Definition leq_split {n m : nat} : (n <= m) <~> ((n < m) + (n = m))%type.
+Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> ((n < m) + (n = m))%type.
 Proof.
   snrapply equiv_adjointify.
   - intro l; induction l.
