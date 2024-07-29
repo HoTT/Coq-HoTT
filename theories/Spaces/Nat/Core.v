@@ -624,8 +624,8 @@ Proof.
       nrapply nat_add_succ_r.
 Defined.
 
-(** TODO: rename add_n_sub_n_eq' -> nat_add_sub_cancel_l *)
-Definition add_n_sub_n_eq' m n : n + m - n = m.
+(** We can cancel a left summand when subtracting it from a sum. *)
+Definition nat_add_sub_cancel_l m n : n + m - n = m.
 Proof. 
   destruct (nat_add_comm m n).
   exact (nat_add_sub_cancel_r m n).
