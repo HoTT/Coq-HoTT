@@ -757,8 +757,8 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
-(** TODO: rename n_leq_add_n_k -> leq_add_l *)
-Definition n_leq_add_n_k n m : n <= n + m.
+(** The first summand is less than or equal to the sum. *)
+Definition leq_add_l n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - apply leq_zero.

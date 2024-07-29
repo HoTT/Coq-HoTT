@@ -455,7 +455,7 @@ Defined.
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
   : n <= m -> n <= m + k.
 Proof.
-  intro l; apply (leq_trans l); exact (n_leq_add_n_k m k).
+  intro l; apply (leq_trans l); exact (leq_add_l m k).
 Defined.
 
 Proposition nat_add_bifunctor (n n' m m' : nat)
