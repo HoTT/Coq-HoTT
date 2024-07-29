@@ -8,13 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** Because of the inductive definition of [<=], one can destruct the proof of [n <= m] and get a judgemental identification between [n] and [m] rather than a propositional one, which may be preferable to the following lemma. *)
-Proposition leq_split {n m : nat} : (n <= m) -> sum (n < m) (n = m).
-Proof.
-  intro l. induction l.
-  - now right.
-  - left. exact (leq_succ l).
-Defined.
 
 Proposition diseq_implies_lt (n m : nat)
   : n <> m -> (n < m) + (n > m).
