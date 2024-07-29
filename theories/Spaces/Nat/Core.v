@@ -773,14 +773,6 @@ Proof.
   - exact (leq_succ_r IH).
 Defined.
 
-(** TODO: remove *)
-Fixpoint leq_add n m : n <= (m + n).
-Proof.
-  destruct m.
-  1: apply leq_refl.
-  apply leq_succ_r, leq_add.
-Defined.
-
 (** [<=] is an antisymmetric relation. *)
 Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
 Proof.
