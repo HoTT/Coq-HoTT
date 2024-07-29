@@ -9,12 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move and rename *)
-Proposition add_n_sub_n_eq' (m n : nat) : n + m - n = m.
-Proof. 
-  destruct (nat_add_comm m n). exact (nat_add_sub_cancel_r m n).
-Defined.
- 
-(** TODO: move and rename *)
 Lemma summand_is_sub k m n (p : k + n = m) : k = m - n.
 Proof.
   destruct p.
