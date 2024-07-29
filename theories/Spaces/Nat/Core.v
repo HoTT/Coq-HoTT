@@ -523,15 +523,29 @@ Proof.
       apply equiv_leq_succ.
 Defined.
 
-(** *** Basic Properties of [lt] *)
-
-Global Instance transitive_lt : Transitive lt.
+(** [n.+1 <= m] implies [n <= m]. *)
+Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
 Proof.
-  hnf; unfold lt in *.
-  intros x y z p q.
-  rapply leq_trans.
+  intro l; apply leq_succ'; exact _.
 Defined.
 
+(** *** Basic Properties of [lt] *)
+
+(** [<=] and [<] imply [<] *)
+Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
+  := fun leq lt => leq_trans (leq_succ leq) lt.
+
+(** [<=] and [<] imply [<] *)
+Definition lt_leq_trans {n m k} : n < m -> m <= k -> n < k
+  := fun lt leq => leq_trans lt leq.
+
+Definition leq_lt {n m} : n < m -> n <= m
+  := leq_succ_l.
+
+Definition lt_trans {n m k} : n < m -> m < k -> n < k
+  := fun H1 H2 => leq_lt (leq_lt_trans H1 H2).
+
+Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
@@ -714,12 +728,6 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
-(** [n.+1 <= m] implies [n <= m]. *)
-Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
-Proof.
-  intro l; apply leq_succ'; exact _.
-Defined.
-
 (** TODO: rename to [leq_add_r'] *)
 Fixpoint leq_add n m : n <= (m + n).
 Proof.
@@ -831,12 +839,6 @@ Proof.
     contradiction.
   - intros [H' | H'] nq; destruct nq; exact (not_lt_n_n _ H').
 Defined.
-
-Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
-  := fun leq lt => leq_trans (leq_succ leq) lt.
-
-Definition lt_leq_trans {n m k} : n < m -> m <= k -> n < k
-  := fun lt leq => leq_trans lt leq.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
 
