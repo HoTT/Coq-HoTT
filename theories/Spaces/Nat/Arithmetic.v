@@ -9,19 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 
-Proposition mixed_trans1 (n m k : nat)
-  : n <= m -> m < k -> n < k.
-Proof.
-  intros l j. apply leq_succ in l.
-  apply (@leq_trans (n.+1) (m.+1) k); trivial. 
-Defined.
-
-Proposition mixed_trans2 (n m k : nat)
-  : n < m -> m <= k -> n < k.
-Proof.
-  intros l j. apply (@leq_trans (n.+1) m k); trivial. 
-Defined.
-
 
 Proposition add_n_sub_n_eq (m n : nat) : m + n - n = m.
 Proof.
@@ -55,7 +42,7 @@ Proposition lt_trans {n m k : nat} : n < m -> m < k -> n < k.
 Proof.
   intros H1 H2.
   nrapply n_lt_m_n_leq_m.
-  exact (mixed_trans1 _ _ _ H1 H2).
+  exact (mixed_trans1 H1 H2).
 Defined.
 
 Proposition not_both_less (n m : nat) : n < m -> ~(m < n).
@@ -513,8 +500,7 @@ Proposition natpmswap4 (k m n : nat)
 Proof.
   intro l; apply (@nataddpreserveslt (k - n) m n) in l.
   destruct (nat_add_comm m n).
-  now apply (mixed_trans1 k (k - n + n) (m + n)
-               (nat_sub_add_ineq _ _)).
+  now rapply (mixed_trans1 (nat_sub_add_ineq _ _)).
 Defined.
 
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
