@@ -817,8 +817,8 @@ Proof.
   - intro; rapply path_ishprop.
 Defined.
 
-(** TODO: rename diseq_implies_lt -> neq_iff_lt_or_gt *)
-Definition diseq_implies_lt {n m} : n <> m <-> (n < m) + (n > m).
+(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. *)
+Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
 Proof.
   split.
   - intros diseq.
