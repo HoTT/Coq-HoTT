@@ -61,16 +61,7 @@ Fixpoint nat_sub n m : nat :=
 Notation "n - m" := (nat_sub n m) : nat_scope.
 
 (** Powers or exponentiation of natural numbers. *)
-Definition nat_pow n m :=
-  nat_iter m (nat_mul n) 1.
-
-(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
-(** Exponentiation *)
-Fixpoint nat_exp (n m : nat) : nat
-  := match m with
-       | 0 => 1
-       | S m => nat_exp n m * n
-     end.
+Definition nat_pow n m := nat_iter m (nat_mul n) 1.
 
 (** *** Maximum and minimum *)
 
