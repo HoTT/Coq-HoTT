@@ -9,22 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
-Proof.
-  simple_induction n n IHn.
-  - apply leq_zero.
-  - simpl; apply leq_succ, IHn.
-Defined.
-
-(** TODO: move, rename *)
-Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
-Proof.
-  simple_induction' m.
-  - exact(leq_refl n).
-  - simpl. apply leq_succ_r. assumption.
-Defined.
-
-(** TODO: move, rename *)
 Proposition natineq0eq0 {n : nat} : n <= 0 -> n = 0.
 Proof.
   destruct n.

@@ -757,6 +757,22 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
+(** TODO: move, rename *)
+Proposition n_leq_add_n_k (n m : nat) : n <= n + m.
+Proof.
+  simple_induction n n IHn.
+  - apply leq_zero.
+  - simpl; apply leq_succ, IHn.
+Defined.
+
+(** TODO: move, rename *)
+Proposition n_leq_add_n_k' (n m : nat) : n <= m + n.
+Proof.
+  simple_induction' m.
+  - exact(leq_refl n).
+  - simpl. apply leq_succ_r. assumption.
+Defined.
+
 (** TODO: rename to [leq_add_r'] *)
 Fixpoint leq_add n m : n <= (m + n).
 Proof.
