@@ -35,11 +35,6 @@ Proof.
   contradiction (not_lt_n_n m).
 Defined.
 
-Proposition leq_S' (n m : nat) : n.+1 <= m -> n <= m.
-Proof.
-  intro l; apply leq_succ'; exact _.
-Defined.
-
 Proposition mixed_trans1 (n m k : nat)
   : n <= m -> m < k -> n < k.
 Proof.
@@ -675,7 +670,7 @@ Proof.
   - intro a.
     induction a.
     + constructor.
-    + exact (leq_S' _ _ _).
+    + exact (leq_S' _).
 Defined.
 
 (** This tautology accepts a (potentially opaqued or QED'ed) proof of [n <= m], and returns a transparent proof which can be computed with (i.e., one can loop from n to m) *) 
