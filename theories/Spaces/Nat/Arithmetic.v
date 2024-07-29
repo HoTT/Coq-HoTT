@@ -16,20 +16,6 @@ Proof.
   - intro. contradiction (not_leq_Sn_0 n).
 Defined.
 
-(** TODO: unused, remove *)
-Definition nleqSm_dichot {n m : nat}
-  : (n <= m.+1) -> (n <= m) + (n = m.+1).
-Proof.
-  revert m; simple_induction n n IHn.
-  - intro. left. exact (leq_zero m).
-  - destruct m.
-    + intro l. apply leq_succ', natineq0eq0 in l.
-      right; apply ap; exact l.
-    + intro l. apply leq_succ', IHn in l; destruct l as [a | b].
-      * left. apply leq_succ; exact a.
-      * right. apply ap; exact b.
-Defined.
-
 (** TODO: move, merge with converse as equiv *)
 Proposition sub_leq_0_converse (n m : nat) : n - m = 0 -> n <= m.
 Proof.
