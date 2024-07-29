@@ -765,8 +765,8 @@ Proof.
   - simpl; apply leq_succ, IHn.
 Defined.
 
-(** TODO: rename n_leq_add_n_k' -> leq_add_r *)
-Definition n_leq_add_n_k' n m : n <= m + n.
+(** The second summand is less than or equal to the sum. *)
+Definition leq_add_r n m : n <= m + n.
 Proof.
   simple_induction m m IH.
   - exact (leq_refl n).
