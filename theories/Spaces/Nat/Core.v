@@ -1009,8 +1009,7 @@ Proof.
 Defined.
 Hint Immediate nat_add_r_monotone : typeclass_instances.
 
-(** TODO: rename nat_add_bifunctor -> nat_add_monotone *)
-Definition nat_add_bifunctor {n n' m m'}
+Definition nat_add_monotone {n n' m m'}
   : n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
   revert n' m m'; simple_induction n n IHn.
