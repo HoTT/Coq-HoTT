@@ -904,29 +904,31 @@ Proof.
   apply not_leq_Sn_0.
 Defined.
 
-(** TODO: rename *)
-Definition not_lt_implies_geq {n m : nat} : ~(n < m) -> m <= n.
+(** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
+
+(** TODO: rename not_lt_implies_geq -> geq_not_lt *)
+Definition not_lt_implies_geq {n m} : ~(n < m) -> n >= m.
 Proof.
   intros not_lt.
   destruct (@leq_dichot m n); [ assumption | contradiction].
 Defined.
 
-(** TODO: rename *)
-Definition not_leq_implies_gt {n m : nat} : ~(n <= m) -> m < n.
+(** TODO: rename not_leq_implies_gt -> gt_not_leq *)
+Definition not_leq_implies_gt {n m} : ~(n <= m) -> n > m.
 Proof.
   intros not_leq. 
   destruct (@leq_dichot n m); [ contradiction | assumption].
 Defined.
 
-(** TODO: rename *)
-Definition lt_implies_not_geq {n m : nat} : (n < m) -> ~(m <= n).
+(** TODO: rename lt_implies_not_geq -> not_geq_lt *)
+Definition lt_implies_not_geq {n m} : (n < m) -> ~(n >= m).
 Proof.
   intros ineq1 ineq2.
   contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
 Defined.
 
-(** TODO: rename *)
-Definition leq_implies_not_gt {n m : nat} : (n <= m) -> ~(m < n).
+(** TODO: rename leq_implies_not_gt -> not_gt_leq *)
+Definition leq_implies_not_gt {n m} : (n <= m) -> ~(n > m).
 Proof.
   intros ineq1 ineq2.
   contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
