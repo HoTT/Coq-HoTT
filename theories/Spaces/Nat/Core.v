@@ -924,8 +924,7 @@ Proof.
   contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
 Defined.
 
-(** TODO: rename leq_implies_not_gt -> not_gt_leq *)
-Definition leq_implies_not_gt {n m} : (n <= m) -> ~(n > m).
+Definition not_gt_leq {n m} : (n <= m) -> ~(n > m).
 Proof.
   intros ineq1 ineq2.
   contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
