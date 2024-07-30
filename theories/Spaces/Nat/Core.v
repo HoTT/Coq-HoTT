@@ -420,7 +420,7 @@ Defined.
 Global Existing Instance leq_zero | 10.
 
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
-Definition leq_pred {n m} : leq n m -> leq (nat_pred n) (nat_pred m).
+Definition leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
 Proof.
   intros H; induction H.
   1: exact _.
@@ -1069,6 +1069,22 @@ Proof.
   intros H1 H2; induction H1.
   - exact _.
   - rapply leq_trans.
+Defined.
+
+(** *** Strict Monotonicity of Multiplication *)
+
+(** Multiplication on the left by a positive number is strictly monotone. *)
+Global Instance nat_mul_l_strictly_monotone {n m} k
+  : n < m -> k.+1 * n < k.+1 * m.
+Proof.
+  intros H; induction k as [|k IHk] in |- *; exact _.
+Defined.
+
+(** Multiplication on the right by a positive number is strictly monotone. *)
+Global Instance nat_mul_r_strictly_monotone {n m} k
+  : n < m -> n * k.+1 < m * k.+1.
+Proof.
+  intros H; rewrite 2 (nat_mul_comm _ k.+1); exact _.
 Defined.
 
 (** TODO: monotonicity of subtraction *)
