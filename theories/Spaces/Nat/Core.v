@@ -899,8 +899,7 @@ Defined.
 
 (** *** Negation Lemmas *)
 
-(** TODO: rename *)
-Lemma not_lt_n_0 n : ~ (n < 0).
+Definition not_lt_zero_r n : ~ (n < 0).
 Proof.
   apply not_leq_Sn_0.
 Defined.
@@ -992,7 +991,7 @@ Defined.
 Definition lt_sub_gt_0 n m : m < n -> 0 < n - m.
 Proof.
   revert m; simple_induction n n IHn.
-  - intros m ineq. contradiction (not_lt_n_0 m).
+  - intros m ineq. contradiction (not_lt_zero_r m).
   - destruct m.
     + simpl. easy.
     + simpl. intro ineq. apply leq_succ' in ineq.
@@ -1127,7 +1126,7 @@ Proof.
     destruct k, m;
       [ reflexivity
       | reflexivity
-      | contradiction (not_lt_n_0 k _)
+      | contradiction (not_lt_zero_r k _)
       | ].
     simpl "-". apply leq_succ' in l.
     destruct (nat_add_succ_r n (m - k)).
