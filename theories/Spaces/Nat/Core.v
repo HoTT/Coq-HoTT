@@ -906,8 +906,7 @@ Defined.
 
 (** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
 
-(** TODO: rename not_lt_implies_geq -> geq_not_lt *)
-Definition not_lt_implies_geq {n m} : ~(n < m) -> n >= m.
+Definition geq_not_lt {n m} : ~(n < m) -> n >= m.
 Proof.
   intros not_lt.
   destruct (@leq_dichot m n); [ assumption | contradiction].
@@ -942,7 +941,7 @@ Proof.
   split.
   - intros diseq.
     destruct (dec (n < m)) as [| a]; [ now left |].
-    apply not_lt_implies_geq in a.
+    apply geq_not_lt in a.
     apply equiv_leq_lt_or_eq in a.
     destruct a as [lt | eq].
     1: by right.
