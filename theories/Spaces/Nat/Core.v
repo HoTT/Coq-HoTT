@@ -635,6 +635,20 @@ Proof.
   nrapply nat_add_comm.
 Defined.
 
+(** TODO: rename natminuspluseq -> nat_sub_add_cancel_r, reprove *)
+Definition natminuspluseq {n m : nat} : n <= m -> (m - n) + n = m.
+Proof.
+  revert m; simple_induction n n IHn.
+  - intros. destruct m; [reflexivity |]. simpl.
+    apply (ap S), symmetric_paths, (nat_add_zero_r _)^.
+  - intros m l. destruct m.
+    + contradiction (not_leq_Sn_0 n).
+    + simpl. apply leq_succ', IHn in l.
+      destruct (nat_add_succ_r (m - n) n)^.
+      destruct (symmetric_paths _ _ l).
+      reflexivity.
+Defined.
+
 (** We can move a subtracted number to the left-hand side of an equation. *)
 Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
 Proof.
@@ -917,7 +931,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** *** Subtraction *)
+(** *** Movement Lemmas *)
 
 (** TODO: rename sub_gt_0_lt to lt_moveL_m (?) , reprove *)
 Definition sub_gt_0_lt n m : 0 < n - m -> m < n.
