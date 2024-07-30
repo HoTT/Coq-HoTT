@@ -832,8 +832,6 @@ Proof.
   - exact (leq_succ_r IH).
 Defined.
 
-(** TODO: monotonicity of addition *)
-
 (** Characterizations of [<=] *)
 
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
@@ -991,6 +989,52 @@ Proof.
     + simpl. easy.
     + simpl. intro ineq. apply leq_succ' in ineq.
       now apply IHn in ineq.
+Defined.
+
+(** *** Monotonicity of Addition *)
+
+(** TODO: use OrderPreserving from canonical_names *)
+
+(** TODO: rename nataddpreservesleq *)
+Proposition nataddpreservesleq { n m k : nat }
+  : n <= m -> n + k <= m + k.
+Proof.
+  intro l.
+  simple_induction k k IHk.
+  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; exact l.
+  - destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^;
+      apply leq_succ; exact IHk.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddpreservesleq' { n m k : nat }
+  : n <= m -> k + n <= k + m.
+Proof.
+  destruct (symmetric_paths _ _ (nat_add_comm k m)),
+    (symmetric_paths _ _ (nat_add_comm k n)).
+  exact nataddpreservesleq.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddpreserveslt { n m k : nat }
+  : n < m -> n + k < m + k.
+Proof.
+  unfold "<".
+  change (n + k).+1 with (n.+1 + k).
+  generalize (n.+1). intros n' l.
+  simple_induction k k IHk.
+  - destruct (nat_add_zero_r n')^, (nat_add_zero_r m)^; exact l.
+  - destruct (nat_add_succ_r n' k)^, (nat_add_succ_r m k)^;
+      apply leq_succ; exact IHk.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddpreserveslt' { n m k : nat }
+  : n < m -> k + n < k + m.
+Proof.
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddpreserveslt.
 Defined.
 
 (** ** Properties of Powers *)
