@@ -906,10 +906,13 @@ Defined.
 
 (** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
 
-Definition geq_not_lt {n m} : ~(n < m) -> n >= m.
+Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
 Proof.
-  intros not_lt.
-  destruct (@leq_dichot m n); [ assumption | contradiction].
+  split.
+  - intros not_lt.
+    destruct (@leq_dichot m n); [ assumption | contradiction].
+  - intros ineq1 ineq2.
+    contradiction (not_lt_n_n n); by refine (leq_trans _ ineq1).
 Defined.
 
 Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
@@ -921,12 +924,6 @@ Proof.
     contradiction (not_lt_n_n m). by apply (leq_trans ineq1).
 Defined.
 
-Definition not_gt_leq {n m} : (n <= m) -> ~(n > m).
-Proof.
-  intros ineq1 ineq2.
-  contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
-Defined.
-
 (** *** Dichotomy of [<>] *)
 
 (** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. Note that this is a negated version of antisymmetry of [<=]. *)
@@ -935,7 +932,7 @@ Proof.
   split.
   - intros diseq.
     destruct (dec (n < m)) as [| a]; [ now left |].
-    apply geq_not_lt in a.
+    apply geq_iff_not_lt in a.
     apply equiv_leq_lt_or_eq in a.
     destruct a as [lt | eq].
     1: by right.
