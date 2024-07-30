@@ -993,7 +993,7 @@ Proof.
       now apply IHn in ineq.
 Defined.
 
-(** *** Monotonicity *)
+(** *** Monotonicity of Addition *)
 
 (** TODO: use OrderPreserving from canonical_names *)
 
@@ -1014,6 +1014,8 @@ Proof.
     (symmetric_paths _ _ (nat_add_comm k n)).
   exact (nat_add_r_monotone _).
 Defined.
+
+(** *** Strict Monotonicity of Addition *)
 
 (** TODO: move, rename *)
 Proposition nataddpreserveslt { n m k : nat }
