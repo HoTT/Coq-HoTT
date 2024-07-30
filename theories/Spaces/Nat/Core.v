@@ -1009,6 +1009,21 @@ Proof.
 Defined.
 Hint Immediate nat_add_r_monotone : typeclass_instances.
 
+(** TODO: rename nat_add_bifunctor -> nat_add_monotone *)
+Definition nat_add_bifunctor {n n' m m'}
+  : n <= m -> n' <= m' -> n + n' <= m + m'.
+Proof.
+  revert n' m m'; simple_induction n n IHn.
+  - intros n' m m' l l'. simpl.
+    apply (leq_trans l'). exact (leq_add_r m' m).
+  - intros n' m; destruct m.
+    + intros. contradiction (not_leq_Sn_0 n).
+    + intros m' l l'. apply leq_succ' in l. simpl.
+      apply leq_succ, IHn.
+      * exact l.
+      * exact l'.
+Defined.
+
 (** *** Strict Monotonicity of Addition *)
 
 (** TODO: move, rename *)
