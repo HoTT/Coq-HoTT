@@ -1021,8 +1021,7 @@ Hint Immediate nat_add_monotone : typeclass_isntances.
 
 (** *** Strict Monotonicity of Addition *)
 
-(** TODO: move, rename *)
-Proposition nataddpreserveslt { n m k : nat }
+Definition nat_add_r_strictly_monotone {n m} k
   : n < m -> n + k < m + k.
 Proof.
   unfold "<".
@@ -1040,7 +1039,7 @@ Proposition nataddpreserveslt' { n m k : nat }
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
-    exact nataddpreserveslt.
+    exact (nat_add_r_strictly_monotone k).
 Defined.
 
 (** TODO: monotonicity of subtraction *)

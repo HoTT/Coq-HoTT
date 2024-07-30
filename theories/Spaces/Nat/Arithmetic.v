@@ -229,7 +229,7 @@ Defined.
 Proposition natpmswap4 (k m n : nat)
   : k - n < m -> k < n + m.
 Proof.
-  intro l; apply (@nataddpreserveslt (k - n) m n) in l.
+  intro l; apply (nat_add_r_strictly_monotone n) in l.
   destruct (nat_add_comm m n).
   now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
 Defined.
