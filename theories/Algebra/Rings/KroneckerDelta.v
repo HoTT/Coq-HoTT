@@ -112,7 +112,7 @@ Proof.
     + nrapply IHn.
       apply neq_iff_lt_or_gt in p.
       destruct p; [assumption|].
-      contradiction (lt_implies_not_geq Hi).
+      contradiction (not_geq_lt Hi).
     + rewrite (kronecker_delta_neq p).
       rewrite rng_mult_zero_l.
       rewrite grp_unit_l.
