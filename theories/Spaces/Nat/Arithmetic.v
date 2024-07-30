@@ -102,7 +102,7 @@ Proposition natsubreflectsleq { n m k : nat }
 Proof.
   intros ineq1 ineq2.
   apply (@nataddpreservesleq _ _ k) in ineq2.
-  apply (@leq_trans _ (n - k + k) _ (natminusplusineq _ _)).
+  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
   apply (@leq_trans _ (m - k + k)  _ _).
   destruct (nat_sub_add_cancel ineq1)^; easy.
 Defined.
