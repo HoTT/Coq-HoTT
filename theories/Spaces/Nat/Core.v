@@ -826,7 +826,7 @@ Defined.
 
 (** TODO: monotonicity of addition *)
 
-(** Characterization of [<=] *)
+(** Characterizations of [<=] *)
 
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
 Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> (n < m) + (n = m).
@@ -846,6 +846,24 @@ Proof.
       rapply path_ishprop.
     + by destruct p.
   - intro; rapply path_ishprop.
+Defined.
+
+(** Here is an alternative characterization of [<=] in terms of an existence predicate and addition. *)
+Definition equiv_leq_add n m : n <= m <~> exists k, k + n = m.
+Proof.
+  srapply equiv_iff_hprop.
+  - apply hprop_allpath.
+    intros [x p] [y q].
+    pose (r := nat_moveL_nV _ p @ (nat_moveL_nV _ q)^).
+    destruct r.
+    apply ap.
+    apply path_ishprop.
+  - intros p.
+    exists (m - n).
+    apply nat_sub_add_cancel, p.
+  - intros [k p].
+    destruct p.
+    apply leq_add_r.
 Defined.
 
 (** *** Dichotomy of [<=] *)
