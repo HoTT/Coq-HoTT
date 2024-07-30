@@ -9,14 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition natminuspluseq' (n m : nat)
-  : n <= m -> n + (m - n) = m.
-Proof.
-  intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
-  apply nat_add_sub_l_cancel. assumption.
-Defined.
-
-(** TODO: move, rename *)
 Proposition nataddpreservesleq { n m k : nat }
   : n <= m -> n + k <= m + k.
 Proof.

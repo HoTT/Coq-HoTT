@@ -650,6 +650,13 @@ Proof.
       reflexivity.
 Defined.
 
+(** TODO: rename natminuspluseq' -> nat_add_sub_r_cancel *)
+Definition natminuspluseq' {n m} : n <= m -> n + (m - n) = m.
+Proof.
+  intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
+  apply nat_add_sub_l_cancel. assumption.
+Defined.
+
 (** We can move a subtracted number to the left-hand side of an equation. *)
 Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
 Proof.
