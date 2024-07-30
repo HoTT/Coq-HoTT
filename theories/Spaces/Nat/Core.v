@@ -927,6 +927,17 @@ Proof.
   apply equiv_nat_sub_leq in n_leq_m.
   contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
 Defined.
+ 
+(** TODO: merge with above, reprove *)
+Definition lt_sub_gt_0 n m : m < n -> 0 < n - m.
+Proof.
+  revert m; simple_induction n n IHn.
+  - intros m ineq. contradiction (not_lt_n_0 m).
+  - destruct m.
+    + simpl. easy.
+    + simpl. intro ineq. apply leq_succ' in ineq.
+      now apply IHn in ineq.
+Defined.
 
 (** ** Properties of Powers *)
 
