@@ -918,8 +918,7 @@ Proof.
   destruct (@leq_dichot n m); [ contradiction | assumption].
 Defined.
 
-(** TODO: rename lt_implies_not_geq -> not_geq_lt *)
-Definition lt_implies_not_geq {n m} : (n < m) -> ~(n >= m).
+Definition not_geq_lt {n m} : (n < m) -> ~(n >= m).
 Proof.
   intros ineq1 ineq2.
   contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
