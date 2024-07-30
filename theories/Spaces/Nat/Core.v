@@ -1033,8 +1033,7 @@ Proof.
       apply leq_succ; exact IHk.
 Defined.
 
-(** TODO: move, rename *)
-Proposition nataddpreserveslt' { n m k : nat }
+Definition nat_add_l_strictly_monotone {n m} k
   : n < m -> k + n < k + m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
