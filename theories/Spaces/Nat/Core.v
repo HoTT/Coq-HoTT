@@ -912,16 +912,13 @@ Proof.
   destruct (@leq_dichot m n); [ assumption | contradiction].
 Defined.
 
-Definition gt_not_leq {n m} : ~(n <= m) -> n > m.
+Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
 Proof.
-  intros not_leq. 
-  destruct (@leq_dichot n m); [ contradiction | assumption].
-Defined.
-
-Definition not_geq_lt {n m} : (n < m) -> ~(n >= m).
-Proof.
-  intros ineq1 ineq2.
-  contradiction (not_lt_n_n n). by apply (leq_trans ineq1).
+  split.
+  - intros not_leq. 
+    destruct (@leq_dichot n m); [ contradiction | assumption].
+  - intros ineq1 ineq2.
+    contradiction (not_lt_n_n m). by apply (leq_trans ineq1).
 Defined.
 
 Definition not_gt_leq {n m} : (n <= m) -> ~(n > m).
