@@ -45,7 +45,7 @@ Proposition i_lt_n_sum_m (n m i : nat)
   : i < n - m -> m <= n.
 Proof.
   revert m i; simple_induction n n IHn.
-  - intros m i l. simpl in l. contradiction (not_lt_n_0 _ _).
+  - intros m i l. simpl in l. contradiction (not_lt_zero_r _ _).
   - intros m i l. destruct m.
     + apply leq_zero.
     + apply leq_succ. simpl in l. apply (IHn m i l).
@@ -81,14 +81,14 @@ Defined.
 Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
 Proof.
   simple_induction' n; intros l.
-  - contradiction (not_lt_n_0 i).
+  - contradiction (not_lt_zero_r i).
   - reflexivity.
 Defined.
 
 Proposition pred_equiv (k n : nat) : k < n -> k < S (nat_pred n).
 Proof. 
   intro ineq; destruct n.
-  - contradiction (not_lt_n_0 _ _).
+  - contradiction (not_lt_zero_r _ _).
   - assumption.
 Defined.
 
@@ -101,7 +101,7 @@ Proposition leq_implies_pred_lt (i n k : nat)
   : (n > i) -> n <= k -> nat_pred n < k.
 Proof.
   intro ineq; destruct n.
-  - contradiction (not_lt_n_0 i).
+  - contradiction (not_lt_zero_r i).
   - intro; assumption.
 Defined.
   
@@ -124,7 +124,7 @@ Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
 Proof.
   intros l ineq.
   destruct j.
-  - contradiction (not_lt_n_0 i).
+  - contradiction (not_lt_zero_r i).
   - now simpl; apply leq_succ'.
 Defined.
 
@@ -187,7 +187,7 @@ Proof.
   intros l l'.
   unfold "<".
   destruct k, n;
-  try (contradiction (not_lt_n_0 _ _)).
+  try (contradiction (not_lt_zero_r _ _)).
   simpl; apply leq_succ, sub_less.
 Defined.
 
@@ -264,7 +264,7 @@ Proof.
   intro a.
   assert (forall n m: nat, m < n -> P m) as X. {
     simple_induction n n IHn.
-    - intros m l. contradiction (not_lt_n_0 m).
+    - intros m l. contradiction (not_lt_zero_r m).
     - intros m l. apply leq_succ' in l.
       destruct l as [ | n].
       + apply a; intros ? ?; now apply IHn.
@@ -328,7 +328,7 @@ Lemma ineq_sub' (n k : nat) : k < n -> n - k = (n - k.+1).+1.
 Proof.
   intro ineq.
   destruct n.
-  - contradiction (not_lt_n_0 k).
+  - contradiction (not_lt_zero_r k).
   - change (n.+1 - k.+1) with (n - k). apply leq_succ' in ineq.
     apply (nataddsub_assoc_lemma _).
 Defined.

@@ -51,7 +51,7 @@ Definition finnat_ind (P : forall n : nat, FinNat n -> Type)
   : P n u.
 Proof.
   induction n as [| n IHn].
-  - elim (not_lt_n_0 u.1 u.2).
+  - elim (not_lt_zero_r u.1 u.2).
   - destruct u as [x h].
     destruct x as [| x].
     + exact (transport (P n.+1) (path_zero_finnat _ h) (z _)).
@@ -101,7 +101,7 @@ Monomorphic Definition fin_to_finnat {n} (k : Fin n) : FinNat n
 
 Monomorphic Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
   := match n with
-     | 0 => fun u => Empty_rec (not_lt_n_0 _ u.2)
+     | 0 => fun u => Empty_rec (not_lt_zero_r _ u.2)
      | n.+1 => fun u =>
         match u with
         | (0; _) => fin_zero
@@ -151,7 +151,7 @@ Lemma path_finnat_to_fin_incl {n : nat} (u : FinNat n)
   : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).
 Proof.
   induction n as [| n IHn].
-  - elim (not_lt_n_0 _ u.2).
+  - elim (not_lt_zero_r _ u.2).
   - destruct u as [x h].
     destruct x as [| x]; [reflexivity|].
     refine ((ap _ (ap _ (path_succ_finnat (x; leq_succ' h) h)))^ @ _).
@@ -171,7 +171,7 @@ Lemma path_finnat_to_fin_to_finnat {n : nat} (u : FinNat n)
   : fin_to_finnat (finnat_to_fin u) = u.
 Proof.
   induction n as [| n IHn].
-  - elim (not_lt_n_0 _ u.2).
+  - elim (not_lt_zero_r _ u.2).
   - destruct u as [x h].
     apply path_sigma_hprop.
     destruct x as [| x].
