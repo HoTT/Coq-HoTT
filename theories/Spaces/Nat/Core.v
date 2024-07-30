@@ -952,6 +952,18 @@ Proof.
   reflexivity.
 Defined.
 
+(** *** Subtraction *)
+
+(** TODO: rename natminusplusineq -> leq_sub_add *)
+Definition natminusplusineq n m : n <= n - m + m.
+Proof.
+  destruct (@leq_dichot m n) as [l | g].
+  - destruct (nat_sub_add_cancel l)^;
+      constructor.
+  - apply leq_lt in g.
+    now destruct (equiv_nat_sub_leq _)^.
+Defined.
+
 (** *** Movement Lemmas *)
 
 (** TODO: rename sub_gt_0_lt to lt_moveL_m (?) , reprove *)

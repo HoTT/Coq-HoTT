@@ -9,16 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition natminusplusineq (n m : nat) : n <= n - m + m.
-Proof.
-  destruct (@leq_dichot m n) as [l | g].
-  - destruct (nat_sub_add_cancel l)^;
-      constructor.
-  - apply leq_lt in g.
-    now destruct (equiv_nat_sub_leq _)^.
-Defined.
-
-(** TODO: move, rename *)
 Proposition natminuspluseq' (n m : nat)
   : n <= m -> n + (m - n) = m.
 Proof.
