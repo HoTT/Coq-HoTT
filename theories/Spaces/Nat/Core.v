@@ -407,6 +407,7 @@ Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
 Proof.
   intros H1 H2; induction H2; exact _.
 Defined.
+Hint Immediate leq_trans : typeclass_instances.
 
 (** [<=] is transtiive. *)
 Global Instance transitive_leq : Transitive leq := @leq_trans.
@@ -909,20 +910,22 @@ Defined.
 Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
 Proof.
   split.
-  - intros not_lt.
-    destruct (@leq_dichot m n); [ assumption | contradiction].
-  - intros ineq1 ineq2.
-    contradiction (not_lt_n_n n); by refine (leq_trans _ ineq1).
+  - intro; by destruct (leq_dichot m n).
+  - intros ? ?; contradiction (not_lt_n_n n); exact _.
 Defined.
 
 Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
 Proof.
   split.
-  - intros not_leq. 
-    destruct (@leq_dichot n m); [ contradiction | assumption].
-  - intros ineq1 ineq2.
-    contradiction (not_lt_n_n m). by apply (leq_trans ineq1).
+  - intro; by destruct (leq_dichot n m).
+  - intros ? ?; contradiction (not_lt_n_n m); exact _.
 Defined.
+
+Definition leq_iff_not_gt {n m} : ~(n > m) <-> n <= m
+  := geq_iff_not_lt.
+
+Definition lt_iff_not_geq {n m} : ~(n >= m) <-> n < m
+  := gt_iff_not_leq.
 
 (** *** Dichotomy of [<>] *)
 
