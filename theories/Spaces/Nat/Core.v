@@ -997,31 +997,27 @@ Defined.
 
 (** TODO: use OrderPreserving from canonical_names *)
 
+(** Addition on the left is monotone. *)
 Definition nat_add_l_monotone {n m} k : n <= m -> k + n <= k + m.
 Proof.
   intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
 Defined.
 Hint Immediate nat_add_l_monotone : typeclass_instances.
 
+(** Addition on the right is monotone. *)
 Definition nat_add_r_monotone {n m} k : n <= m -> n + k <= m + k.
 Proof.
   intros H; rewrite 2 (nat_add_comm _ k); exact _.
 Defined.
 Hint Immediate nat_add_r_monotone : typeclass_instances.
 
+(** Addition is monotone in both arguments. (This makes [+] a bifunctor when treating [nat] as a category (as a preorder)). *)
 Definition nat_add_monotone {n n' m m'}
   : n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
-  revert n' m m'; simple_induction n n IHn.
-  - intros n' m m' l l'. simpl.
-    apply (leq_trans l'). exact (leq_add_r m' m).
-  - intros n' m; destruct m.
-    + intros. contradiction (not_leq_Sn_0 n).
-    + intros m' l l'. apply leq_succ' in l. simpl.
-      apply leq_succ, IHn.
-      * exact l.
-      * exact l'.
+  intros H1 H2; induction H1; exact _.
 Defined.
+Hint Immediate nat_add_monotone : typeclass_isntances.
 
 (** *** Strict Monotonicity of Addition *)
 
