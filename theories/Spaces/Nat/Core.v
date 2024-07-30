@@ -912,8 +912,7 @@ Proof.
   destruct (@leq_dichot m n); [ assumption | contradiction].
 Defined.
 
-(** TODO: rename not_leq_implies_gt -> gt_not_leq *)
-Definition not_leq_implies_gt {n m} : ~(n <= m) -> n > m.
+Definition gt_not_leq {n m} : ~(n <= m) -> n > m.
 Proof.
   intros not_leq. 
   destruct (@leq_dichot n m); [ contradiction | assumption].
