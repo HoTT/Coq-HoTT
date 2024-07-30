@@ -165,9 +165,9 @@ Coercion subgroup_group : Subgroup >-> Group.
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
 Proof.
-  snrapply Build_GroupHomomorphism'.
+  snrapply Build_GroupHomomorphism.
   1: exact pr1.
-  repeat split.
+  hnf; reflexivity.
 Defined.
 
 Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
@@ -458,6 +458,14 @@ Proof.
   intros p.
   rewrite <- left_identity.
   exact (sgt_op sgt_unit p).
+Defined.
+
+Definition sgt_inv' {G : Group} {X} {g : G}
+  : subgroup_generated_type X (- g) -> subgroup_generated_type X g.
+Proof.
+  intros p.
+  rewrite <- grp_inv_inv.
+  by apply sgt_inv.
 Defined.
 
 Definition sgt_op' {G : Group} {X} {g h : G}

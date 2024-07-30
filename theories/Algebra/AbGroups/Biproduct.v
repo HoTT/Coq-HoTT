@@ -191,8 +191,7 @@ Proof.
   intros h k.
   intros [a b].
   refine (ap f (ab_biprod_decompose _ _) @ _ @ ap g (ab_biprod_decompose _ _)^).
-  refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-  exact (ap011 (+) (h a) (k b)).
+  exact (grp_homo_op_agree f g (h a) (k b)).
 Defined.
 
 (* Maps out of biproducts are determined on the two inclusions. *)

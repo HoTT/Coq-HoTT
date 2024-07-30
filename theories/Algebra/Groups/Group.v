@@ -123,14 +123,51 @@ Defined.
 (** Group homomorphisms are maps between groups that preserve the group operation. They allow us to compare groups and map their structure to one another. This is useful for determining if two groups are really the same, in which case we say they are "isomorphic". *)
 
 (** A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
-Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
+Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism {
   grp_homo_map :> group_type G -> group_type H;
-  grp_homo_ishomo :: IsMonoidPreserving grp_homo_map;
+  issemigrouppreserving_grp_homo :: IsSemiGroupPreserving grp_homo_map;
 }.
+
+Arguments grp_homo_map {G H}.
+Arguments Build_GroupHomomorphism {G H} _ _.
+Arguments issemigrouppreserving_grp_homo {G H} f _ : rename.
+
+(** ** Basic properties of group homomorphisms *)
+
+(** Group homomorphisms preserve group operations. This is an alias for [issemigrouppreserving_grp_homo] with the identity written explicitly. *)
+Definition grp_homo_op
+  : forall {G H : Group} (f : GroupHomomorphism G H) (x y : G), f (x * y) = f x * f y
+  := @issemigrouppreserving_grp_homo.
+#[export] Hint Immediate grp_homo_op : group_db.
+
+(** Group homomorphisms are unit preserving. *)
+Global Instance isunitpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsUnitPreserving f.
+Proof.
+  unfold IsUnitPreserving.
+  apply (group_cancelL (f mon_unit)).
+  rhs nrapply grp_unit_r.
+  rhs_V rapply (ap  _ (monoid_left_id _ mon_unit)).
+  symmetry.
+  nrapply issemigrouppreserving_grp_homo.
+Defined.
+
+(** Group homomorphisms preserve identities. This is an alias for the previous statement. *)
+Definition grp_homo_unit
+  : forall {G H : Group} (f : GroupHomomorphism G H), f mon_unit = mon_unit
+  := @isunitpreserving_grp_homo.
+#[export] Hint Immediate grp_homo_unit : group_db.
+
+(** Therefore, group homomorphisms are monoid homomorphisms. *)
+Global Instance ismonoidpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsMonoidPreserving f
+  := {}.
 
 (** Group homomorphisms are pointed maps. *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
-  := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
+  := Build_pMap G H f (isunitpreserving_grp_homo f).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
@@ -153,24 +190,6 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ equiv_path_grouphomomorphism).
 Defined.
 
-(** ** Basic properties of group homomorphisms *)
-
-(** Group homomorphisms preserve identities. *)
-Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
-  : f (mon_unit) = mon_unit.
-Proof.
-  apply monmor_unitmor.
-Defined.
-#[export] Hint Immediate grp_homo_unit : group_db.
-
-(** Group homomorphisms preserve group operations. *)
-Definition grp_homo_op {G H} (f : GroupHomomorphism G H)
-  : forall x y : G, f (x * y) = f x * f y.
-Proof.
-  apply monmor_sgmor.
-Defined.
-#[export] Hint Immediate grp_homo_op : group_db.
-
 (** Group homomorphisms preserve inverses. *)
 Definition grp_homo_inv {G H} (f : GroupHomomorphism G H)
   : forall x, f (- x) = -(f x).
@@ -185,25 +204,9 @@ Proof.
 Defined.
 #[export] Hint Immediate grp_homo_inv : group_db.
 
-(** When building a group homomorphism we only need that it preserves the group operation, since we can prove that the identity is preserved. *)
-Definition Build_GroupHomomorphism {G H : Group}
-  (f : G -> H) {h : IsSemiGroupPreserving f}
-  : GroupHomomorphism G H.
-Proof.
-  srapply (Build_GroupHomomorphism' _ _ f).
-  split.
-  1: exact h.
-  unfold IsUnitPreserving.
-  apply (group_cancelL (f mon_unit)).
-  refine (_ @ (grp_unit_r _)^).
-  refine (_ @ ap _ (monoid_left_id _ mon_unit)).
-  symmetry.
-  apply h.
-Defined.
-
 (** The identity map is a group homomorphism. *)
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G
-  := Build_GroupHomomorphism idmap.
+  := Build_GroupHomomorphism idmap _.
 
 (** The composition of the underlying functions of two group homomorphisms is also a group homomorphism. *)
 Definition grp_homo_compose {G H K : Group}
@@ -305,34 +308,37 @@ Global Instance transitive_groupisomorphism
 Definition equiv_path_group' {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (equiv_compose'
-    (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
-  { revert G H; apply (equiv_path_issig_contr issig_group).
-    + intros [G [? [? [? ?]]]].
-      exists 1%equiv.
-      exact _.
-    + intros [G [op [unit [neg ax]]]]; cbn.
-      contr_sigsig G (equiv_idmap G).
-      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
-      1: assumption.
-      1: exact _.
-      intros [[op' [unit' [neg' ax']]] eq].
-      apply path_sigma_hprop; cbn.
-      refine (@ap _ _ (fun x : { oun :
-        { oo : SgOp G & { u : MonUnit G & Negate G}}
-        & @IsGroup G oun.1 oun.2.1 oun.2.2}
-        => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
-        ((op;unit;neg);ax) ((op';unit';neg');ax') _).
-      apply path_sigma_hprop; cbn.
-      srefine (path_sigma' _ _ _).
-      1: funext x y; apply eq.
-      rewrite transport_const.
-      srefine (path_sigma' _ _ _).
-      1: apply eq.
-      rewrite transport_const.
-      funext x.
-      exact (preserves_negate (f:=idmap) _). }
-  make_equiv.
+  equiv_via {f : G <~> H & IsSemiGroupPreserving f}.
+  1: make_equiv.
+  revert G H; apply (equiv_path_issig_contr issig_group).
+  - intros [G [? [? [? ?]]]].
+    exists 1%equiv.
+    exact _.
+  - intros [G [op [unit [neg ax]]]]; cbn.
+    contr_sigsig G (equiv_idmap G).
+    srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
+    1: assumption.
+    1: exact _.
+    intros [[op' [unit' [neg' ax']]] eq].
+    apply path_sigma_hprop; cbn.
+    refine (@ap _ _ (fun x : { oun :
+      { oo : SgOp G & { u : MonUnit G & Negate G}}
+      & @IsGroup G oun.1 oun.2.1 oun.2.2}
+      => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+      ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+    apply path_sigma_hprop; cbn.
+    srefine (path_sigma' _ _ _).
+    1: funext x y; apply eq.
+    rewrite transport_const.
+    pose (f := Build_GroupHomomorphism
+        (G:=Build_Group G op unit neg ax)
+        (H:=Build_Group G op' unit' neg' ax')
+        idmap eq).
+    srefine (path_sigma' _ _ _).
+    1: exact (grp_homo_unit f).
+    lhs nrapply transport_const.
+    funext x.
+    exact (grp_homo_inv f x).
 Defined.
 
 (** A version with nicer universe variables. *)
@@ -474,6 +480,29 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** ** Commutation *)
+
+(** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)
+Definition grp_commutes_inv {G : Group} (g h : G) (p : g * h = h * g)
+  : g * (-h) = (-h) * g.
+Proof.
+  apply grp_moveR_gV.
+  rhs_V apply simple_associativity.
+  by apply grp_moveL_Vg.
+Defined.
+
+(** If [g] commutes with [h] and [h'], then [g] commutes with their product [h * h']. *)
+Definition grp_commutes_op {G : Group} (g h h' : G)
+  (p : g * h = h * g) (p' : g * h' = h' * g)
+  : g * (h * h') = (h * h') * g.
+Proof.
+  lhs apply simple_associativity.
+  lhs nrapply (ap (.* h') p).
+  lhs_V apply simple_associativity.
+  lhs nrapply (ap (h *.) p').
+  by apply simple_associativity.
+Defined.
+
 (** ** Power operation *)
 
 (** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
@@ -533,6 +562,28 @@ Proof.
   - cbn. by rewrite grp_inv_inv.
   - reflexivity.
   - reflexivity.
+Defined.
+
+(** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
+Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
+  (p : h * g = g * h)
+  : h * (grp_pow g n) = (grp_pow g n) * h.
+Proof.
+  induction n.
+  - exact (grp_unit_r _ @ (grp_unit_l _)^).
+  - rewrite grp_pow_succ.
+    nrapply grp_commutes_op; assumption.
+  - rewrite grp_pow_pred.
+    nrapply grp_commutes_op.
+    2: assumption.
+    apply grp_commutes_inv, p.
+Defined.
+
+(** [grp_pow g n] commutes with [g]. *)
+Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
+  : g * grp_pow g n = grp_pow g n * g.
+Proof.
+  by apply grp_pow_commutes.
 Defined.
 
 (** ** The category of Groups *)
@@ -921,6 +972,16 @@ Proof.
   refine ((preserves_sg_op _ _)^ @ _ @ (preserves_sg_op _ _)).
   refine (ap f _).
   apply C.
+Defined.
+
+(** If two group homomorphisms agree on two elements, then they agree on their product. *)
+Definition grp_homo_op_agree {G G' H : Group} (f : G $-> H) (f' : G' $-> H)
+  {x y : G} {x' y' : G'} (p : f x = f' x') (q : f y = f' y')
+  : f (x * y) = f' (x' * y').
+Proof.
+  lhs nrapply grp_homo_op.
+  rhs nrapply grp_homo_op.
+  exact (ap011 _ p q).
 Defined.
 
 (** The group movement lemmas can be extended to when there is a homomorphism involved.  For now, we only include these two. *)

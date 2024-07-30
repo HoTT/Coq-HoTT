@@ -176,7 +176,7 @@ Definition Build_RingHomomorphism' (A B : Ring) (map : GroupHomomorphism A B)
     (Aunit:=one) (Bunit:=one) map}
   : RingHomomorphism A B
   := Build_RingHomomorphism map
-      (Build_IsSemiRingPreserving _ (grp_homo_ishomo _ _ map) H).
+      (Build_IsSemiRingPreserving _ (ismonoidpreserving_grp_homo map) H).
 
 (** We can construct a ring isomorphism from a group isomorphism that preserves multiplication *)
 Definition Build_RingIsomorphism'' (A B : Ring) (e : GroupIsomorphism A B)
