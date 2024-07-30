@@ -765,6 +765,34 @@ Defined.
 
 (** ** More Theory of Comparison Predicates *)
 
+(** *** Antisymmetry of [<=] and [>=] *)
+
+(** [<=] is an antisymmetric relation. *)
+Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
+Proof.
+  intros p q.
+  destruct p.
+  1: reflexivity.
+  destruct x; [inversion q|].
+  apply leq_succ' in q.
+  contradiction (not_leq_Sn_n _ (leq_trans p q)).
+Defined.
+
+Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
+Global Instance antisymemtric_geq : AntiSymmetric geq
+  := fun _ _ p q => leq_antisym q p.
+
+(** *** Irreflexivity of [<] and [>] *)
+
+(** TODO: rename to [lt_irrefl] *)
+(** [<] is an irreflexive relation. *)
+Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
+
+Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
+Global Instance irreflexive_gt : Irreflexive gt := not_lt_n_n.
+
+(** *** Addition Lemmas *)
+
 (** The first summand is less than or equal to the sum. *)
 Definition leq_add_l n m : n <= n + m.
 Proof.
@@ -781,27 +809,29 @@ Proof.
   - exact (leq_succ_r IH).
 Defined.
 
-(** [<=] is an antisymmetric relation. *)
-Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
+(** Characterization of [<=] *)
+
+(** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
+Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> (n < m) + (n = m).
 Proof.
-  intros p q.
-  destruct p.
-  1: reflexivity.
-  destruct x; [inversion q|].
-  apply leq_succ' in q.
-  contradiction (not_leq_Sn_n _ (leq_trans p q)).
+  snrapply equiv_adjointify.
+  - intro l; induction l.
+    + now right.
+    + left; exact (leq_succ l).
+  - intros [l|p].
+    + exact (leq_succ_l l).
+    + destruct p.
+      exact (leq_refl _).
+  - intros [l|p].
+    + induction l.
+      1: reflexivity.
+      snrapply (ap (inl)).
+      rapply path_ishprop.
+    + by destruct p.
+  - intro; rapply path_ishprop.
 Defined.
 
-Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
-
-(** TODO: rename to [lt_irrefl] *)
-(** [<] is an irreflexive relation. *)
-Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
-Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
-
-(** TODO: rename *)
-(** [1] is less than or equal to the successor of any number. *)
-Definition leq_1_Sn {n} : 1 <= n.+1 := leq_succ (leq_zero _).
+(** *** Dichotomy of [<=] *)
 
 (** TODO: rename *)
 Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
@@ -809,12 +839,16 @@ Proof.
   simple_induction' m; simple_induction' n.
   - left; reflexivity.
   - left; apply leq_zero.
-  - right; unfold lt; apply leq_1_Sn.
+  - right; unfold lt; exact _.
   - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
     destruct X as [leqmn|ltnm].
     + left; apply leq_succ; assumption.
     + right; apply leq_succ; assumption.
 Defined.
+
+(** TODO: Trichotomy *)
+
+(** *** Negation Lemmas *)
 
 (** TODO: rename *)
 Lemma not_lt_n_0 n : ~ (n < 0).
@@ -850,27 +884,9 @@ Proof.
   contradiction (not_lt_n_n n); by refine (leq_trans _ ineq2).
 Defined.
 
-(** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
-Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> (n < m) + (n = m).
-Proof.
-  snrapply equiv_adjointify.
-  - intro l; induction l.
-    + now right.
-    + left; exact (leq_succ l).
-  - intros [l|p].
-    + exact (leq_succ_l l).
-    + destruct p.
-      exact (leq_refl _).
-  - intros [l|p].
-    + induction l.
-      1: reflexivity.
-      snrapply (ap (inl)).
-      rapply path_ishprop.
-    + by destruct p.
-  - intro; rapply path_ishprop.
-Defined.
+(** *** Dichotomy of [<>] *)
 
-(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. *)
+(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. Note that this is a negated version of antisymmetry of [<=]. *)
 Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
 Proof.
   split.

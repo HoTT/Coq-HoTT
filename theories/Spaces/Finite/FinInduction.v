@@ -33,7 +33,7 @@ Proof.
   intro p.
   destruct (hset_path2 1 p).
   cbn.
-  by destruct (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
+  by destruct (hset_path2 1 (path_zero_finnat n _)).
 Defined.
 
 Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
