@@ -11,23 +11,16 @@ Local Open Scope mc_mult_scope.
 Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : NormalSubgroup A.
 Proof.
   snrapply Build_NormalSubgroup.
-  - srapply (Build_Subgroup' (fun x => f x = group_unit)).
+  - srapply (Build_Subgroup' (fun x => f x = group_unit)); cbn beta.
     1: apply grp_homo_unit.
-    intros x y p q; cbn in p, q; cbn.
-    lhs nrapply grp_homo_op.
-    rhs_V nrapply (grp_inv_r mon_unit).
-    nrapply (ap011 (.*.) p).
-    lhs nrapply grp_homo_inv.
-    nrapply (ap (-)).
-    exact q.
+    intros x y p q.
+    apply (grp_homo_moveL_1M _ _ _)^-1.
+    exact (p @ q^).
   - intros x y; cbn; intros p.
-    lhs nrapply grp_homo_op.
-    nrapply grp_moveR_Mg.
-    rhs nrapply grp_unit_r.
-    rhs_V nrapply grp_unit_l.
-    nrapply grp_moveL_gV.
-    lhs_V nrapply grp_homo_op.
-    exact p.
+    apply (grp_homo_moveL_1V _ _ _)^-1.
+    lhs_V nrapply grp_inv_inv.
+    apply (ap (-)).
+    exact ((grp_homo_moveL_1V f x y) p)^.
 Defined.
 
 (** ** Corecursion principle for group kernels *)
