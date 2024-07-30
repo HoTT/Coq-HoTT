@@ -997,21 +997,17 @@ Defined.
 
 (** TODO: use OrderPreserving from canonical_names *)
 
-Definition nat_add_r_monotone {n m} k : n <= m -> n + k <= m + k.
-Proof.
-  intro l.
-  simple_induction k k IHk.
-  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; exact l.
-  - destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^;
-      apply leq_succ; exact IHk.
-Defined.
-
 Definition nat_add_l_monotone {n m} k : n <= m -> k + n <= k + m.
 Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k m)),
-    (symmetric_paths _ _ (nat_add_comm k n)).
-  exact (nat_add_r_monotone _).
+  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
 Defined.
+Hint Immediate nat_add_l_monotone : typeclass_instances.
+
+Definition nat_add_r_monotone {n m} k : n <= m -> n + k <= m + k.
+Proof.
+  intros H; rewrite 2 (nat_add_comm _ k); exact _.
+Defined.
+Hint Immediate nat_add_r_monotone : typeclass_instances.
 
 (** *** Strict Monotonicity of Addition *)
 
