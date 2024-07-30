@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes.
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes Types.Sum.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -875,7 +875,7 @@ Defined.
 (** *** Dichotomy of [<=] *)
 
 (** TODO: rename *)
-Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
+Fixpoint leq_dichot m n : (m <= n) + (m > n).
 Proof.
   simple_induction' m; simple_induction' n.
   - left; reflexivity.
@@ -887,7 +887,15 @@ Proof.
     + right; apply leq_succ; assumption.
 Defined.
 
-(** TODO: Trichotomy *)
+(** *** Trichotomy *)
+
+(** Every two natural numbers are either equal, less than, or greater than each other. *)
+Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
+Proof.
+  generalize (leq_dichot m n).
+  snrapply (functor_sum _ idmap).
+  snrapply equiv_leq_lt_or_eq.
+Defined.
 
 (** *** Negation Lemmas *)
 
