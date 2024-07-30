@@ -10,7 +10,7 @@ Local Open Scope nat_scope.
 Definition FinNat (n : nat) : Type0 := {x : nat | x < n}.
 
 Definition zero_finnat (n : nat) : FinNat n.+1
-  := (0; leq_1_Sn).
+  := (0; _ : 0 < n.+1).
 
 Lemma path_zero_finnat (n : nat) (h : 0 < n.+1) : zero_finnat n = (0; h).
 Proof.
@@ -65,7 +65,7 @@ Lemma compute_finnat_ind_zero (P : forall n : nat, FinNat n -> Type)
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  cbn. by induction (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
+  cbn. by induction (hset_path2 1 (path_zero_finnat n _)).
 Defined.
 
 Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
