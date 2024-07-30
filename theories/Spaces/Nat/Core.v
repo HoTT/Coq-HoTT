@@ -635,26 +635,27 @@ Proof.
   nrapply nat_add_comm.
 Defined.
 
-(** TODO: reprove *)
-(** We can cancel a right subtrahend when adding it to a subtraction if the subtrahend is less than the number being subtracted from. *)
+(** We can cancel a right subtrahend when adding it on the right to a subtraction if the subtrahend is less than the number being subtracted from. *)
 Definition nat_add_sub_l_cancel {n m} : n <= m -> (m - n) + n = m.
 Proof.
-  revert m; simple_induction n n IHn.
-  - intros. destruct m; [reflexivity |]. simpl.
-    apply (ap S), symmetric_paths, (nat_add_zero_r _)^.
-  - intros m l. destruct m.
-    + contradiction (not_leq_Sn_0 n).
-    + simpl. apply leq_succ', IHn in l.
-      destruct (nat_add_succ_r (m - n) n)^.
-      destruct (symmetric_paths _ _ l).
-      reflexivity.
+  intros H.
+  induction n as [|n IHn] in m, H |- *.
+  - lhs nrapply nat_add_zero_r.
+    nrapply nat_sub_zero_r.
+  - destruct m.
+    1: contradiction (not_leq_Sn_0 n).
+    lhs nrapply nat_add_succ_r.
+    nrapply (ap nat_succ).
+    nrapply IHn.
+    exact (leq_succ' H).
 Defined.
 
-(** TODO: rename natminuspluseq' -> nat_add_sub_r_cancel *)
-Definition natminuspluseq' {n m} : n <= m -> n + (m - n) = m.
+(** We can cancel a right subtrahend when adding it on the left to a subtraction if the subtrahend is less than the nubmer being subtracted from. *)
+Definition nat_add_sub_r_cancel {n m} : n <= m -> n + (m - n) = m.
 Proof.
-  intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
-  apply nat_add_sub_l_cancel. assumption.
+  intros H.
+  rhs_V nrapply (nat_add_sub_l_cancel H).
+  apply nat_add_comm.
 Defined.
 
 (** We can move a subtracted number to the left-hand side of an equation. *)
