@@ -8,49 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-Proposition nataddsub_assoc_lemma {k m : nat}
-  : (k <= m) -> m.+1 - k = (m - k).+1.
-Proof.
-  revert m; simple_induction k k IHk.
-  - intros m l; simpl. destruct m; reflexivity.
-  - destruct m.
-    + simpl; intro g; contradiction (not_leq_Sn_0 _ g).
-    + intro l; apply leq_succ' in l.
-      change (m.+2 - k.+1) with (m.+1 - k).
-      change (m.+1 - k.+1) with (m - k).
-      exact (IHk _ l).
-Defined.
-
-Proposition nataddsub_assoc (n : nat) {m k : nat}
-  : (k <= m) -> n + (m - k) = n + m - k.
-Proof.
-  revert m k. simple_induction n n IHn.
-  - reflexivity.
-  - intros m k l.
-    change (n.+1 + (m - k)) with (n + (m - k)).+1;
-      change (n.+1 + m) with (n +m).+1.
-    destruct k, m;
-      [ reflexivity
-      | reflexivity
-      | contradiction (not_lt_n_0 k _)
-      | ].
-    simpl "-". apply leq_succ' in l.
-    destruct (nat_add_succ_r n (m - k)).
-    destruct  (nataddsub_assoc_lemma l).
-    apply (IHn m.+1 k).
-    apply leq_succ_r.
-    assumption.
-Defined.
-
-Proposition nataddsub_comm (n m k : nat)
-  : m <= n -> (n - m) + k = (n + k) - m.
-Proof.
-  intro l.
-  destruct (nat_add_comm k n).
-  destruct (nataddsub_assoc k l).
-  apply nat_add_comm.
-Defined.
-
 Proposition nataddsub_comm_ineq_lemma (n m : nat)
   : n.+1 - m <= (n - m).+1.
 Proof.
