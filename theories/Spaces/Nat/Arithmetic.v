@@ -208,7 +208,7 @@ Proposition natpmswap2 (k m n : nat)
   : n <= k -> k - n <= m -> k <= n + m.
 Proof.
   intros l q.
-  apply (@nataddpreservesleq' (k - n) m n) in q.
+  apply (nat_add_l_monotone n) in q.
   destruct (nataddsub_assoc n l)^ in q.
   destruct (nat_add_sub_cancel_l k n)^ in q;
     assumption.
@@ -219,7 +219,7 @@ Proposition natpmswap3 (k m n : nat)
   : k <= n -> m <= n - k -> k + m <= n.
 Proof.
   intros ineq qe.
-  apply (@nataddpreservesleq' m (n - k) k) in qe.
+  apply (nat_add_l_monotone k) in qe.
   destruct (nataddsub_assoc k ineq)^ in qe.
   destruct (nat_add_sub_cancel_l n k)^ in qe;
     assumption.
