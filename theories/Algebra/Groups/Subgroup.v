@@ -346,6 +346,8 @@ Record NormalSubgroup (G : Group) := {
   normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_subgroup ;
 }.
 
+Arguments Build_NormalSubgroup G N _ : rename.
+
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
@@ -356,6 +358,49 @@ Proof.
   intros x y.
   rapply equiv_iff_hprop.
   all: apply isnormal.
+Defined.
+
+(** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
+Definition isnormal_conjugate {G : Group} (N : NormalSubgroup G) {x y : G}
+  : N x -> N (y * x * -y).
+Proof.
+  intros n.
+  apply isnormal.
+  nrefine (transport N (grp_assoc _ _ _)^ _).
+  nrefine (transport (fun y => N (y * x)) (grp_inv_l _)^ _).
+  nrefine (transport N (grp_unit_l _)^ _).
+  exact n.
+Defined.
+
+(** We can show a subgroup is normal if it is invariant under conjugation. *)
+Definition Build_IsNormalSubgroup' (G : Group) (N : Subgroup G)
+  (isnormal : forall x y, N x -> N (y * x * -y))
+  : IsNormalSubgroup N.
+Proof.
+  intros x y n.
+  nrefine (transport N (grp_unit_r _) _).
+  nrefine (transport (fun z => N (_ * z)) (grp_inv_r y) _).
+  nrefine (transport N (grp_assoc _ _ _)^ _).
+  nrefine (transport (fun z => N (z * _)) (grp_assoc _ _ _) _).
+  by apply isnormal.
+Defined.
+
+(** Under funext, being a normal subgroup is a hprop. *)
+Global Instance ishprop_isnormalsubgroup `{Funext} {G : Group} (N : Subgroup G)
+  : IsHProp (IsNormalSubgroup N).
+Proof. 
+  unfold IsNormalSubgroup; exact _.
+Defined.
+
+(** Our definition of normal subgroup and the usual definition are therefore equivalent. *)
+Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
+  : IsNormalSubgroup N <~> (forall x y, N x -> N (y * x * -y)).
+Proof.
+  rapply equiv_iff_hprop.
+  - intros is_normal x y.
+    exact (isnormal_conjugate (Build_NormalSubgroup G N is_normal)).
+  - intros is_normal'.
+    by snrapply Build_IsNormalSubgroup'.
 Defined.
 
 (** Left and right cosets are equivalent in normal subgroups. *)
