@@ -998,26 +998,25 @@ Defined.
 (** TODO: use OrderPreserving from canonical_names *)
 
 (** Addition on the left is monotone. *)
-Definition nat_add_l_monotone {n m} k : n <= m -> k + n <= k + m.
+Global Instance nat_add_l_monotone {n m} k
+  : n <= m -> k + n <= k + m.
 Proof.
   intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
 Defined.
-Hint Immediate nat_add_l_monotone : typeclass_instances.
 
 (** Addition on the right is monotone. *)
-Definition nat_add_r_monotone {n m} k : n <= m -> n + k <= m + k.
+Global Instance nat_add_r_monotone {n m} k
+  : n <= m -> n + k <= m + k.
 Proof.
   intros H; rewrite 2 (nat_add_comm _ k); exact _.
 Defined.
-Hint Immediate nat_add_r_monotone : typeclass_instances.
 
 (** Addition is monotone in both arguments. (This makes [+] a bifunctor when treating [nat] as a category (as a preorder)). *)
-Definition nat_add_monotone {n n' m m'}
+Global Instance nat_add_monotone {n n' m m'}
   : n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
   intros H1 H2; induction H1; exact _.
 Defined.
-Hint Immediate nat_add_monotone : typeclass_isntances.
 
 (** *** Strict Monotonicity of Addition *)
 
@@ -1027,31 +1026,52 @@ Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 Global Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
 
 (** Addition on the left is strictly monotone. *)
-Definition nat_add_l_strictly_monotone {n m} k
+Global Instance nat_add_l_strictly_monotone {n m} k
   : n < m -> k + n < k + m.
 Proof.
   intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
 Defined.
-Hint Immediate nat_add_l_strictly_monotone : typeclass_instances.
 
 (** Addition on the right is strictly monotone. *)
-Definition nat_add_r_strictly_monotone {n m} k
+Global Instance nat_add_r_strictly_monotone {n m} k
   : n < m -> n + k < m + k.
 Proof.
   intros H; rewrite 2 (nat_add_comm _ k); exact _.
 Defined.
-Hint Immediate nat_add_r_strictly_monotone : typeclass_instances.
 
 (** Addition is strictly monotone in both arguments. *)
-Definition nat_add_strictly_monotone {n n' m m'}
+Global Instance nat_add_strictly_monotone {n n' m m'}
   : n < m -> n' < m' -> n + n' < m + m'.
 Proof.
   intros H1 H2; induction H1; exact _.
 Defined.
-Hint Immediate nat_add_strictly_monotone : typeclass_instances.
+
+(** *** Monotonicity of Multiplication *)
+
+(** Multiplication on the left is monotone. *)
+Global Instance nat_mul_l_monotone {n m} k
+  : n <= m -> k * n <= k * m.
+Proof.
+  intros H; induction k as [|k IHk] in |- *; exact _.
+Defined.
+
+(** Multiplication on the right is monotone. *)
+Global Instance nat_mul_r_monotone {n m} k
+  : n <= m -> n * k <= m * k.
+Proof.
+  intros H; rewrite 2 (nat_mul_comm _ k); exact _.
+Defined.
+
+(** Multiplication is monotone in both arguments. *)
+Global Instance nat_mul_monotone {n n' m m'}
+  : n <= m -> n' <= m' -> n * n' <= m * m'.
+Proof.
+  intros H1 H2; induction H1.
+  - exact _.
+  - rapply leq_trans.
+Defined.
 
 (** TODO: monotonicity of subtraction *)
-(** TODO: monotonicity of multiplication *)
 
 (** *** Order-reflection *)
 
