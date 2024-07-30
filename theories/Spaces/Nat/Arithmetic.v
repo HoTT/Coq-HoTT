@@ -9,15 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition sub_gt_0_lt (n m : nat) : n - m > 0 -> m < n.
-Proof.
-  intro ineq.
-  destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].
-  apply equiv_nat_sub_leq in n_leq_m.
-  contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
-Defined.
-
-(** TODO: move, rename *)
 Proposition lt_sub_gt_0 (n m : nat) : m < n -> 0 < n - m.
 Proof.
   revert m; simple_induction n n IHn.
