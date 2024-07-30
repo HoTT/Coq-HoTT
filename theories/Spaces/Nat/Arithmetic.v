@@ -9,44 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition nataddreflectslt { n m k : nat }
-  : n + k < m + k -> n < m.
-Proof.
-  simple_induction k k IHk.
-  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
-  - intro l. destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^ in l.
-    apply leq_succ', IHk in l; exact l.
-Defined.
-
-(** TODO: move, rename *)
-Proposition nataddreflectsleq { n m k : nat }
-  : n + k <= m + k -> n <= m.
-Proof.
-  destruct n.
-  - intros ?; apply leq_zero.
-  - intro a. change (n.+1 + k) with (n + k).+1 in a.
-    now apply (@nataddreflectslt n m k).
-Defined.
-
-(** TODO: move, rename *)
-Proposition nataddreflectslt' { n m k : nat }
-  : k + n < k + m -> n < m.
-Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m));
-    exact nataddreflectslt.
-Defined.
-
-(** TODO: move, rename *)
-Proposition nataddreflectsleq' { n m k : nat }
-  : k + n <= k + m -> n <= m.
-Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m));
-    exact nataddreflectsleq.
-Defined.
-
-(** TODO: move, rename *)
 Proposition natsubreflectsleq { n m k : nat }
   : k <= m -> n - k <= m - k -> n <= m.
 Proof.
