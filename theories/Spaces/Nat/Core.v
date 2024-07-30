@@ -954,8 +954,7 @@ Defined.
 
 (** *** Subtraction *)
 
-(** TODO: rename natminusplusineq -> leq_sub_add *)
-Definition natminusplusineq n m : n <= n - m + m.
+Definition leq_sub_add n m : n <= n - m + m.
 Proof.
   destruct (@leq_dichot m n) as [l | g].
   - destruct (nat_sub_add_cancel l)^;
