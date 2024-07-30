@@ -833,10 +833,10 @@ Proof.
   - exact (leq_succ_r IH).
 Defined.
 
-(** Characterizations of [<=] *)
+(** Alternative Characterizations of [<=] *)
 
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
-Definition equiv_leq_lt_or_eq {n m : nat} : (n <= m) <~> (n < m) + (n = m).
+Definition equiv_leq_lt_or_eq {n m} : (n <= m) <~> (n < m) + (n = m).
 Proof.
   snrapply equiv_adjointify.
   - intro l; induction l.
