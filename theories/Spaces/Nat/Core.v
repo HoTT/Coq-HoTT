@@ -1021,25 +1021,34 @@ Hint Immediate nat_add_monotone : typeclass_isntances.
 
 (** *** Strict Monotonicity of Addition *)
 
-Definition nat_add_r_strictly_monotone {n m} k
-  : n < m -> n + k < m + k.
-Proof.
-  unfold "<".
-  change (n + k).+1 with (n.+1 + k).
-  generalize (n.+1). intros n' l.
-  simple_induction k k IHk.
-  - destruct (nat_add_zero_r n')^, (nat_add_zero_r m)^; exact l.
-  - destruct (nat_add_succ_r n' k)^, (nat_add_succ_r m k)^;
-      apply leq_succ; exact IHk.
-Defined.
+(** [nat_succ] is strictly monotone. *)
+Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 
+Global Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
+
+(** Addition on the left is strictly monotone. *)
 Definition nat_add_l_strictly_monotone {n m} k
   : n < m -> k + n < k + m.
 Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m));
-    exact (nat_add_r_strictly_monotone k).
+  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
 Defined.
+Hint Immediate nat_add_l_strictly_monotone : typeclass_instances.
+
+(** Addition on the right is strictly monotone. *)
+Definition nat_add_r_strictly_monotone {n m} k
+  : n < m -> n + k < m + k.
+Proof.
+  intros H; rewrite 2 (nat_add_comm _ k); exact _.
+Defined.
+Hint Immediate nat_add_r_strictly_monotone : typeclass_instances.
+
+(** Addition is strictly monotone in both arguments. *)
+Definition nat_add_strictly_monotone {n n' m m'}
+  : n < m -> n' < m' -> n + n' < m + m'.
+Proof.
+  intros H1 H2; induction H1; exact _.
+Defined.
+Hint Immediate nat_add_strictly_monotone : typeclass_instances.
 
 (** TODO: monotonicity of subtraction *)
 (** TODO: monotonicity of multiplication *)
