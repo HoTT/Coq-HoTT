@@ -917,6 +917,17 @@ Proof.
   reflexivity.
 Defined.
 
+(** *** Subtraction *)
+
+(** TODO: rename sub_gt_0_lt to lt_moveL_m (?) , reprove *)
+Definition sub_gt_0_lt n m : 0 < n - m -> m < n.
+Proof.
+  intro ineq.
+  destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].
+  apply equiv_nat_sub_leq in n_leq_m.
+  contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
+Defined.
+
 (** ** Properties of Powers *)
 
 (** [0] to any power is [0] unless that power is [0] in which case it is [1]. *)
