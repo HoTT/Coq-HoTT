@@ -838,7 +838,7 @@ Proof.
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
-  - apply geq_not_lt in H'.
+  - apply geq_iff_not_lt in H'.
     apply leq_succ' in H.
     destruct (leq_antisym H H').
     lhs nrapply nth_last.
