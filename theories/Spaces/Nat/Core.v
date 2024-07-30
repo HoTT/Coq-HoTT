@@ -635,8 +635,9 @@ Proof.
   nrapply nat_add_comm.
 Defined.
 
-(** TODO: rename natminuspluseq -> nat_sub_add_cancel_r, reprove *)
-Definition natminuspluseq {n m : nat} : n <= m -> (m - n) + n = m.
+(** TODO: reprove *)
+(** We can cancel a right subtrahend when adding it to a subtraction if the subtrahend is less than the number being subtracted from. *)
+Definition nat_sub_add_cancel {n m} : n <= m -> (m - n) + n = m.
 Proof.
   revert m; simple_induction n n IHn.
   - intros. destruct m; [reflexivity |]. simpl.

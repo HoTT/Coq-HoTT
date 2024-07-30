@@ -11,7 +11,7 @@ Local Open Scope nat_scope.
 Proposition natminusplusineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichot m n) as [l | g].
-  - destruct (natminuspluseq l)^;
+  - destruct (nat_sub_add_cancel l)^;
       constructor.
   - apply leq_lt in g.
     now destruct (equiv_nat_sub_leq _)^.
@@ -22,7 +22,7 @@ Proposition natminuspluseq' (n m : nat)
   : n <= m -> n + (m - n) = m.
 Proof.
   intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
-  apply natminuspluseq. assumption.
+  apply nat_sub_add_cancel. assumption.
 Defined.
 
 (** TODO: move, rename *)
@@ -38,7 +38,7 @@ Proof.
     apply path_ishprop.
   - intros p.
     exists (m - n).
-    apply natminuspluseq, p.
+    apply nat_sub_add_cancel, p.
   - intros [k p].
     destruct p.
     apply leq_add_r.
@@ -132,7 +132,7 @@ Proof.
   apply (@nataddpreservesleq _ _ k) in ineq2.
   apply (@leq_trans _ (n - k + k) _ (natminusplusineq _ _)).
   apply (@leq_trans _ (m - k + k)  _ _).
-  destruct (symmetric_paths _ _ (natminuspluseq ineq1)); easy.
+  destruct (nat_sub_add_cancel ineq1)^; easy.
 Defined.
 
 Proposition nataddsub_assoc_lemma {k m : nat}
@@ -367,7 +367,7 @@ Proposition natpmswap1 (k m n : nat)
 Proof.
   intros l q.
   assert (q' : k - n + n < m + n) by
-    (destruct (symmetric_paths _ _ (natminuspluseq l));
+    (destruct (nat_sub_add_cancel l)^;
      destruct (nat_add_comm n m);
      assumption).
   exact (nataddreflectslt q').
