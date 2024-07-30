@@ -8,17 +8,6 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
-(** TODO: move, rename *)
-Proposition natsubreflectsleq { n m k : nat }
-  : k <= m -> n - k <= m - k -> n <= m.
-Proof.
-  intros ineq1 ineq2.
-  apply (@nataddpreservesleq _ _ k) in ineq2.
-  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
-  apply (@leq_trans _ (m - k + k)  _ _).
-  destruct (nat_add_sub_l_cancel ineq1)^; easy.
-Defined.
-
 Proposition nataddsub_assoc_lemma {k m : nat}
   : (k <= m) -> m.+1 - k = (m - k).+1.
 Proof.

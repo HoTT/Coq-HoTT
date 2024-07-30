@@ -991,7 +991,7 @@ Proof.
       now apply IHn in ineq.
 Defined.
 
-(** *** Monotonicity of Addition *)
+(** *** Monotonicity *)
 
 (** TODO: use OrderPreserving from canonical_names *)
 
@@ -1037,7 +1037,10 @@ Proof.
     exact nataddpreserveslt.
 Defined.
 
-(** *** Order-reflection of Addition *)
+(** TODO: monotonicity of subtraction *)
+(** TODO: monotonicity of multiplication *)
+
+(** *** Order-reflection *)
 
 (** TODO: move, rename *)
 Proposition nataddreflectslt { n m k : nat }
@@ -1075,6 +1078,17 @@ Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
     exact nataddreflectsleq.
+Defined.
+
+(** TODO: move, rename *)
+Proposition natsubreflectsleq { n m k : nat }
+  : k <= m -> n - k <= m - k -> n <= m.
+Proof.
+  intros ineq1 ineq2.
+  apply (@nataddpreservesleq _ _ k) in ineq2.
+  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
+  apply (@leq_trans _ (m - k + k)  _ _).
+  destruct (nat_add_sub_l_cancel ineq1)^; easy.
 Defined.
 
 (** ** Properties of Powers *)
