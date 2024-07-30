@@ -997,9 +997,7 @@ Defined.
 
 (** TODO: use OrderPreserving from canonical_names *)
 
-(** TODO: rename nataddpreservesleq -> *)
-Proposition nataddpreservesleq { n m k : nat }
-  : n <= m -> n + k <= m + k.
+Definition nat_add_r_monotone {n m} k : n <= m -> n + k <= m + k.
 Proof.
   intro l.
   simple_induction k k IHk.
@@ -1014,7 +1012,7 @@ Proposition nataddpreservesleq' { n m k : nat }
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k m)),
     (symmetric_paths _ _ (nat_add_comm k n)).
-  exact nataddpreservesleq.
+  exact (nat_add_r_monotone _).
 Defined.
 
 (** TODO: move, rename *)
@@ -1087,7 +1085,7 @@ Proposition natsubreflectsleq { n m k : nat }
   : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
-  apply (@nataddpreservesleq _ _ k) in ineq2.
+  apply (nat_add_r_monotone k) in ineq2.
   apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
   apply (@leq_trans _ (m - k + k)  _ _).
   destruct (nat_add_sub_l_cancel ineq1)^; easy.
