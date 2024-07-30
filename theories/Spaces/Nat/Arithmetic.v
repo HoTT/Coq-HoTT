@@ -9,17 +9,6 @@ Local Open Scope nat_scope.
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
 (** TODO: move, rename *)
-Proposition lt_sub_gt_0 (n m : nat) : m < n -> 0 < n - m.
-Proof.
-  revert m; simple_induction n n IHn.
-  - intros m ineq. contradiction (not_lt_n_0 m).
-  - destruct m.
-    + simpl. easy.
-    + simpl. intro ineq. apply leq_succ' in ineq.
-      now apply IHn in ineq.
-Defined.
-
-(** TODO: move, rename *)
 Proposition natminuspluseq (n m : nat)
   : n <= m -> (m - n) + n = m.
 Proof.
