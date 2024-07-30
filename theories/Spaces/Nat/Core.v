@@ -130,7 +130,7 @@ Fixpoint factorial (n : nat) : nat
 
 (** ** Comparison Predicates *)
 
-(** *** Less Than or Equal To *)
+(** *** Less Than or Equal To [<=] *)
 
 Inductive leq (n : nat) : nat -> Type0 :=
 | leq_refl : leq n n
@@ -147,7 +147,7 @@ Notation "n <= m" := (leq n m) : nat_scope.
 Existing Class leq.
 Global Existing Instances leq_refl leq_succ_r.
 
-(** *** Less Than *)
+(** *** Less Than [<] *)
 
 (** We define the less-than relation [lt] in terms of [leq] *)
 Definition lt n m : Type0 := leq (S n) m.
@@ -158,7 +158,7 @@ Existing Class lt.
 Infix "<" := lt : nat_scope.
 Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
 
-(** *** Greater Than or Equal To *)
+(** *** Greater Than or Equal To [>=] *)
 
 Definition geq n m := leq m n.
 Existing Class geq.
@@ -166,7 +166,7 @@ Existing Class geq.
 Infix ">=" := geq : nat_scope.
 Global Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
 
-(*** Greater Than *)
+(*** Greater Than [>] *)
 
 Definition gt n m := lt m n.
 Existing Class gt.
@@ -397,9 +397,9 @@ Definition nat_mul_one_r@{} n : n * 1 = n
 
 (** ** Basic Properties of Comparison Predicates *)
 
-(** *** Basic Properties of [leq] *)
+(** *** Basic Properties of [<=] *)
 
-(** [leq] is reflexive by definition. *)
+(** [<=] is reflexive by definition. *)
 Global Instance reflexive_leq : Reflexive leq := leq_refl.
 
 (** Being less than or equal to is a transitive relation. *)
@@ -408,7 +408,7 @@ Proof.
   intros H1 H2; induction H2; exact _.
 Defined.
 
-(** [leq] is transtiive. *)
+(** [<=] is transtiive. *)
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
 (** [0] is less than or equal to any natural number. *)
@@ -529,7 +529,7 @@ Proof.
   intro l; apply leq_succ'; exact _.
 Defined.
 
-(** *** Basic Properties of [lt] *)
+(** *** Basic Properties of [<] *)
 
 (** [<=] and [<] imply [<] *)
 Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
@@ -549,14 +549,14 @@ Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
-(** *** Basic Properties of [geq] *) 
+(** *** Basic Properties of [>=] *) 
 
 Global Instance reflexive_geq : Reflexive geq := leq_refl.
 Global Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
 Global Instance ishprop_geq n m : IsHProp (geq n m) := _.
 Global Instance decidable_geq n m : Decidable (geq n m) := _.
 
-(** *** Basic Properties of [gt] *)
+(** *** Basic Properties of [>] *)
 
 Global Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
@@ -823,6 +823,8 @@ Proof.
   - exact (leq_refl n).
   - exact (leq_succ_r IH).
 Defined.
+
+(** TODO: monotonicity of addition *)
 
 (** Characterization of [<=] *)
 
