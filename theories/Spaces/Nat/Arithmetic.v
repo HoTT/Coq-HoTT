@@ -27,25 +27,6 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Lemma equiv_leq_add n m
-  : leq n m <~> exists k, k + n = m.
-Proof.
-  srapply equiv_iff_hprop.
-  - apply hprop_allpath.
-    intros [x p] [y q].
-    pose (r := nat_moveL_nV _ p @ (nat_moveL_nV _ q)^).
-    destruct r.
-    apply ap.
-    apply path_ishprop.
-  - intros p.
-    exists (m - n).
-    apply nat_sub_add_cancel, p.
-  - intros [k p].
-    destruct p.
-    apply leq_add_r.
-Defined.
-
-(** TODO: move, rename *)
 Proposition nataddpreservesleq { n m k : nat }
   : n <= m -> n + k <= m + k.
 Proof.
