@@ -13,7 +13,7 @@ Proposition natminuspluseq' (n m : nat)
   : n <= m -> n + (m - n) = m.
 Proof.
   intros. destruct (symmetric_paths _ _ (nat_add_comm n (m - n))).
-  apply nat_sub_add_cancel. assumption.
+  apply nat_add_sub_l_cancel. assumption.
 Defined.
 
 (** TODO: move, rename *)
@@ -104,7 +104,7 @@ Proof.
   apply (@nataddpreservesleq _ _ k) in ineq2.
   apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
   apply (@leq_trans _ (m - k + k)  _ _).
-  destruct (nat_sub_add_cancel ineq1)^; easy.
+  destruct (nat_add_sub_l_cancel ineq1)^; easy.
 Defined.
 
 Proposition nataddsub_assoc_lemma {k m : nat}
@@ -339,7 +339,7 @@ Proposition natpmswap1 (k m n : nat)
 Proof.
   intros l q.
   assert (q' : k - n + n < m + n) by
-    (destruct (nat_sub_add_cancel l)^;
+    (destruct (nat_add_sub_l_cancel l)^;
      destruct (nat_add_comm n m);
      assumption).
   exact (nataddreflectslt q').

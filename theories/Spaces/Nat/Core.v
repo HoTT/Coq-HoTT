@@ -637,7 +637,7 @@ Defined.
 
 (** TODO: reprove *)
 (** We can cancel a right subtrahend when adding it to a subtraction if the subtrahend is less than the number being subtracted from. *)
-Definition nat_sub_add_cancel {n m} : n <= m -> (m - n) + n = m.
+Definition nat_add_sub_l_cancel {n m} : n <= m -> (m - n) + n = m.
 Proof.
   revert m; simple_induction n n IHn.
   - intros. destruct m; [reflexivity |]. simpl.
@@ -860,7 +860,7 @@ Proof.
     apply path_ishprop.
   - intros p.
     exists (m - n).
-    apply nat_sub_add_cancel, p.
+    apply nat_add_sub_l_cancel, p.
   - intros [k p].
     destruct p.
     apply leq_add_r.
@@ -957,7 +957,7 @@ Defined.
 Definition leq_sub_add n m : n <= n - m + m.
 Proof.
   destruct (@leq_dichot m n) as [l | g].
-  - destruct (nat_sub_add_cancel l)^;
+  - destruct (nat_add_sub_l_cancel l)^;
       constructor.
   - apply leq_lt in g.
     now destruct (equiv_nat_sub_leq _)^.
