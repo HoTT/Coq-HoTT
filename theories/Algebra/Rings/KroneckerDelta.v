@@ -96,7 +96,7 @@ Definition rng_sum_kronecker_delta_l {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   : ab_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.
 Proof.
   revert i Hi f; simple_induction n n IHn; intros i Hi f.
-  1: destruct (not_leq_Sn_0 _ Hi).
+  1: destruct (not_lt_zero_r _ Hi).
   destruct (dec (i = n)) as [p|p].
   - destruct p; simpl.
     rewrite kronecker_delta_refl.
