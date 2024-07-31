@@ -47,7 +47,7 @@ Proof.
   revert m i; simple_induction n n IHn.
   - intros m i l. simpl in l. contradiction (not_lt_zero_r _ _).
   - intros m i l. destruct m.
-    + apply leq_zero.
+    + apply leq_zero_l.
     + apply leq_succ. simpl in l. apply (IHn m i l).
 Defined.
   
@@ -109,7 +109,7 @@ Proposition pred_lt_implies_leq (n k : nat)
   : nat_pred n < k -> n <= k.
 Proof.
   intro l; destruct n.
-  - apply leq_zero.
+  - apply leq_zero_l.
   - assumption.
 Defined.
 
@@ -173,7 +173,7 @@ Proposition sub_less { n k : nat } : n - k <= n.
 Proof.
   revert k.
   simple_induction n n IHn.
-  - intros; apply leq_zero.
+  - intros; apply leq_zero_l.
   - destruct k.
     + apply leq_refl.
     + simpl; apply (@leq_trans _ n _);
