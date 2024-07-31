@@ -65,7 +65,10 @@ Lemma compute_finnat_ind_zero (P : forall n : nat, FinNat n -> Type)
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  cbn. by induction (hset_path2 1 (path_zero_finnat n _)).
+  unshelve lhs snrapply transport2.
+  - reflexivity.
+  - rapply hset_path2.
+  - reflexivity.
 Defined.
 
 Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)

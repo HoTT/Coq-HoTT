@@ -809,7 +809,7 @@ Global Instance antisymemtric_geq : AntiSymmetric geq
 (** *** Addition Lemmas *)
 
 (** The first summand is less than or equal to the sum. *)
-Definition leq_add_l n m : n <= n + m.
+Global Instance leq_add_l n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - exact (leq_zero m).
@@ -817,7 +817,7 @@ Proof.
 Defined.
 
 (** The second summand is less than or equal to the sum. *)
-Definition leq_add_r n m : n <= m + n.
+Global Instance leq_add_r n m : n <= m + n.
 Proof.
   simple_induction m m IH.
   - exact (leq_refl n).
@@ -978,25 +978,28 @@ Defined.
 (** TODO: use OrderPreserving from canonical_names *)
 
 (** Addition on the left is monotone. *)
-Global Instance nat_add_l_monotone {n m} k
+Definition nat_add_l_monotone {n m} k
   : n <= m -> k + n <= k + m.
 Proof.
-  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
+  intros H; induction k; exact _.
 Defined.
+Hint Immediate nat_add_l_monotone : typeclass_instances.
 
 (** Addition on the right is monotone. *)
-Global Instance nat_add_r_monotone {n m} k
+Definition nat_add_r_monotone {n m} k
   : n <= m -> n + k <= m + k.
 Proof.
   intros H; rewrite 2 (nat_add_comm _ k); exact _.
 Defined.
+Hint Immediate nat_add_r_monotone : typeclass_instances.
 
 (** Addition is monotone in both arguments. (This makes [+] a bifunctor when treating [nat] as a category (as a preorder)). *)
-Global Instance nat_add_monotone {n n' m m'}
+Definition nat_add_monotone {n n' m m'}
   : n <= m -> n' <= m' -> n + n' <= m + m'.
 Proof.
   intros H1 H2; induction H1; exact _.
 Defined.
+Hint Immediate nat_add_monotone : typeclass_instances.
 
 (** *** Strict Monotonicity of Addition *)
 
@@ -1006,103 +1009,99 @@ Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 Global Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
 
 (** Addition on the left is strictly monotone. *)
-Global Instance nat_add_l_strictly_monotone {n m} k
+Definition nat_add_l_strictly_monotone {n m} k
   : n < m -> k + n < k + m.
 Proof.
-  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
+  intros H; induction k; exact _.
 Defined.
+Hint Immediate nat_add_l_strictly_monotone : typeclass_instances.
 
 (** Addition on the right is strictly monotone. *)
-Global Instance nat_add_r_strictly_monotone {n m} k
+Definition nat_add_r_strictly_monotone {n m} k
   : n < m -> n + k < m + k.
 Proof.
   intros H; rewrite 2 (nat_add_comm _ k); exact _.
 Defined.
+Hint Immediate nat_add_r_strictly_monotone : typeclass_instances.
 
 (** Addition is strictly monotone in both arguments. *)
-Global Instance nat_add_strictly_monotone {n n' m m'}
+Definition nat_add_strictly_monotone {n n' m m'}
   : n < m -> n' < m' -> n + n' < m + m'.
 Proof.
   intros H1 H2; induction H1; exact _.
 Defined.
+Hint Immediate nat_add_strictly_monotone : typeclass_instances.
 
 (** *** Monotonicity of Multiplication *)
 
 (** Multiplication on the left is monotone. *)
-Global Instance nat_mul_l_monotone {n m} k
+Definition nat_mul_l_monotone {n m} k
   : n <= m -> k * n <= k * m.
 Proof.
-  intros H; induction k as [|k IHk] in |- *; exact _.
+  intros H; induction k; exact _.
 Defined.
+Hint Immediate nat_mul_l_monotone : typeclass_instances.
 
 (** Multiplication on the right is monotone. *)
-Global Instance nat_mul_r_monotone {n m} k
+Definition nat_mul_r_monotone {n m} k
   : n <= m -> n * k <= m * k.
 Proof.
   intros H; rewrite 2 (nat_mul_comm _ k); exact _.
 Defined.
+Hint Immediate nat_mul_r_monotone : typeclass_instances.
 
 (** Multiplication is monotone in both arguments. *)
-Global Instance nat_mul_monotone {n n' m m'}
+Definition nat_mul_monotone {n n' m m'}
   : n <= m -> n' <= m' -> n * n' <= m * m'.
 Proof.
-  intros H1 H2; induction H1.
-  - exact _.
-  - rapply leq_trans.
+  intros H1 H2; induction H1; exact _.
 Defined.
+Hint Immediate nat_mul_monotone : typeclass_instances.
 
 (** *** Strict Monotonicity of Multiplication *)
 
 (** Multiplication on the left by a positive number is strictly monotone. *)
-Global Instance nat_mul_l_strictly_monotone {n m} k
+Definition nat_mul_l_strictly_monotone {n m} k
   : n < m -> k.+1 * n < k.+1 * m.
 Proof.
   intros H; induction k as [|k IHk] in |- *; exact _.
 Defined.
+Hint Immediate nat_mul_l_strictly_monotone : typeclass_instances.
 
 (** Multiplication on the right by a positive number is strictly monotone. *)
-Global Instance nat_mul_r_strictly_monotone {n m} k
+Definition nat_mul_r_strictly_monotone {n m} k
   : n < m -> n * k.+1 < m * k.+1.
 Proof.
   intros H; rewrite 2 (nat_mul_comm _ k.+1); exact _.
 Defined.
+Hint Immediate nat_mul_r_strictly_monotone : typeclass_instances.
 
 (** TODO: monotonicity of subtraction *)
 
 (** *** Order-reflection *)
 
-(** Addition on the right is strictly order-reflecting. *)
-Definition lt_reflects_add_r {n m k} : n + k < m + k -> n < m.
+(** Addition on the left is order-reflecting. *)
+Definition leq_reflects_add_l {n m k} : k + n <= k + m -> n <= m.
 Proof.
-  simple_induction k k IHk.
-  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
-  - intro l. destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^ in l.
-    apply leq_succ', IHk in l; exact l.
+  intros H; induction k; exact _.
 Defined.
 
 (** Addition on the right is order-reflecting. *)
 Definition leq_reflects_add_r {n m k} : n + k <= m + k -> n <= m.
 Proof.
-  destruct n.
-  - intros ?; apply leq_zero.
-  - intro a. change (n.+1 + k) with (n + k).+1 in a.
-    now apply (@lt_reflects_add_r n m k).
+  rewrite 2 (nat_add_comm _ k); nrapply leq_reflects_add_l.
 Defined.
 
-(** Addition on the lef is strictly order-reflecting. *)
+(** Addition on the left is strictly order-reflecting. *)
 Definition lt_reflects_add_l {n m k} : k + n < k + m -> n < m.
 Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m));
-    exact lt_reflects_add_r.
+  intros H; induction k; exact _.
 Defined.
 
-(** Addition on the left is order-reflecting. *)
-Definition leq_reflects_add_l {n m k} : k + n <= k + m -> n <= m.
+(** Addition on the right is strictly order-reflecting. *)
+Definition lt_reflects_add_r {n m k} : n + k < m + k -> n < m.
 Proof.
-  destruct (symmetric_paths _ _ (nat_add_comm k n)),
-    (symmetric_paths _ _ (nat_add_comm k m));
-    exact leq_reflects_add_r.
+  rewrite 2 (nat_add_comm _ k); nrapply lt_reflects_add_l.
 Defined.
 
 (** TODO: move, rename *)
