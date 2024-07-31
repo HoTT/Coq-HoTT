@@ -200,7 +200,7 @@ Proof.
     (destruct (nat_add_sub_l_cancel l)^;
      destruct (nat_add_comm n m);
      assumption).
-  exact (lt_reflects_add_r q').
+  exact (lt_reflects_add_r _ q').
 Defined.
 
 (** TODO: move, rename *)

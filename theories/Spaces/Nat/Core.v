@@ -211,6 +211,11 @@ Defined.
 Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
+Definition nat_succ_pred@{} n : 0 < n -> nat_succ (nat_pred n) = n.
+Proof.
+  by intros [].
+Defined.
+
 (** Injectivity of successor. *)
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 Global Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
@@ -671,6 +676,16 @@ Defined.
 (** We can move a subtracted number to the right-hand side of an equation. *)
 Definition nat_moveR_nV {k m} n : k = n + m -> k - m = n
   := fun p => (nat_moveL_nV _ p^)^.
+  
+(** Subtracting a successor is the predecessor of subtracting the original number. *)
+Definition nat_sub_succ_r n m : n - m.+1 = nat_pred (n - m).
+Proof.
+  induction n as [|n IHn] in m |- *.
+  1: reflexivity.
+  destruct m.
+  1: apply nat_sub_zero_r.
+  apply IHn.
+Defined.
 
 (** ** Properties of Maximum and Minimum *) 
 
@@ -1076,46 +1091,46 @@ Proof.
 Defined.
 Hint Immediate nat_mul_r_strictly_monotone : typeclass_instances.
 
-(** TODO: monotonicity of subtraction *)
-
 (** *** Order-reflection *)
 
 (** Addition on the left is order-reflecting. *)
-Definition leq_reflects_add_l {n m k} : k + n <= k + m -> n <= m.
+Definition leq_reflects_add_l {n m} k : k + n <= k + m -> n <= m.
 Proof.
   intros H; induction k; exact _.
 Defined.
 
 (** Addition on the right is order-reflecting. *)
-Definition leq_reflects_add_r {n m k} : n + k <= m + k -> n <= m.
+Definition leq_reflects_add_r {n m} k : n + k <= m + k -> n <= m.
 Proof.
   rewrite 2 (nat_add_comm _ k); nrapply leq_reflects_add_l.
 Defined.
 
 (** Addition on the left is strictly order-reflecting. *)
-Definition lt_reflects_add_l {n m k} : k + n < k + m -> n < m.
+Definition lt_reflects_add_l {n m} k : k + n < k + m -> n < m.
 Proof.
   intros H; induction k; exact _.
 Defined.
 
 (** Addition on the right is strictly order-reflecting. *)
-Definition lt_reflects_add_r {n m k} : n + k < m + k -> n < m.
+Definition lt_reflects_add_r {n m} k : n + k < m + k -> n < m.
 Proof.
   rewrite 2 (nat_add_comm _ k); nrapply lt_reflects_add_l.
 Defined.
 
-(** TODO: move, rename *)
-Definition natsubreflectsleq { n m k : nat }
-  : k <= m -> n - k <= m - k -> n <= m.
-Proof.
-  intros ineq1 ineq2.
-  apply (nat_add_r_monotone k) in ineq2.
-  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
-  apply (@leq_trans _ (m - k + k)  _ _).
-  destruct (nat_add_sub_l_cancel ineq1)^; easy.
-Defined.
-
 (** ** Further Properties of Subtraction *)
+
+(** Subtracting from a successor is the successor of subtracting from the original number, as long as the amount being subtracted is less than or equal to the original number. *)
+Definition nat_sub_succ_l n m : m <= n -> n.+1 - m = (n - m).+1.
+Proof.
+  intros H.
+  induction m as [|m IHm] in n, H |- *.
+  - by rewrite 2 nat_sub_zero_r.
+  - simpl.
+    rewrite nat_sub_succ_r.
+    symmetry.
+    apply nat_succ_pred.
+    by apply lt_sub_gt_0.
+Defined.
 
 (** TODO: rename *)
 Definition nataddsub_assoc_lemma {k m : nat}
@@ -1161,6 +1176,48 @@ Proof.
   destruct (nat_add_comm k n).
   destruct (nataddsub_assoc k l).
   apply nat_add_comm.
+Defined.
+
+(** *** Monotonicity of Subtraction *)
+
+(** Subtraction is monotone in the left argument. *)
+Definition nat_sub_monotone_l {n m} k : n <= m -> n - k <= m - k.
+Proof.
+  intros H.
+  destruct (leq_dichotomy k n) as [l|r].
+  - apply (leq_reflects_add_l k).
+    rewrite 2 nat_add_sub_r_cancel.
+    + exact H.
+    + rapply leq_trans.
+    + exact l.
+  - apply leq_succ_l in r.
+    apply equiv_nat_sub_leq in r.
+    destruct r^.
+    exact _.
+Defined.
+
+(** Subtraction is contravariantly monotone in the right argument. *)
+Definition nat_sub_monotone_r {n m} k : n <= m -> k - m <= k - n.
+Proof.
+  intros H.
+  induction k.
+  - by rewrite nat_sub_zero_l.
+  - destruct (leq_dichotomy m k) as [l|r].
+    + rewrite 2 nat_sub_succ_l; exact _.
+    + apply equiv_nat_sub_leq in r.
+      destruct r^.
+      exact _. 
+Defined.
+
+(** TODO: rename  natsubreflectsleq -> leq_reflects_sub_l *)
+Definition natsubreflectsleq { n m k : nat }
+  : k <= m -> n - k <= m - k -> n <= m.
+Proof.
+  intros ineq1 ineq2.
+  apply (nat_add_r_monotone k) in ineq2.
+  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
+  apply (@leq_trans _ (m - k + k) _ _).
+  by rewrite nat_add_sub_l_cancel.
 Defined.
 
 (** ** Properties of Powers *)
