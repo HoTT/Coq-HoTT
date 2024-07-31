@@ -1088,9 +1088,7 @@ Proof.
     now apply (@lt_reflects_add_r n m k).
 Defined.
 
-(** TODO: rename nataddreflectslt' -> lt_reflects_add_l *)
-Definition nataddreflectslt' { n m k : nat }
-  : k + n < k + m -> n < m.
+Definition lt_reflects_add_l {n m k} : k + n < k + m -> n < m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
