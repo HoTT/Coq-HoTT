@@ -1213,7 +1213,60 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
 (** *** Movement Lemmas *)
 
+(** TODO: rename *)
+Proposition natpmswap1 (k m n : nat)
+  : n <= k -> k < n + m -> k - n < m.
+Proof.
+  intros l q.
+  assert (q' : k - n + n < m + n) by
+    (destruct (nat_add_sub_l_cancel l)^;
+     destruct (nat_add_comm n m);
+     assumption).
+  exact (lt_reflects_add_r _ q').
+Defined.
 
+(** TODO: rename *)
+Proposition natpmswap2 (k m n : nat)
+  : n <= k -> k - n <= m -> k <= n + m.
+Proof.
+  intros l q.
+  apply (nat_add_l_monotone n) in q.
+  destruct (nataddsub_assoc n l)^ in q.
+  destruct (nat_add_sub_cancel_l k n)^ in q;
+    assumption.
+Defined.
+
+(** TODO: rename *)
+Proposition natpmswap3 (k m n : nat)
+  : k <= n -> m <= n - k -> k + m <= n.
+Proof.
+  intros ineq qe.
+  apply (nat_add_l_monotone k) in qe.
+  destruct (nataddsub_assoc k ineq)^ in qe.
+  destruct (nat_add_sub_cancel_l n k)^ in qe;
+    assumption.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
+Proof.
+  destruct (@leq_dichotomy m n) as [l | gt].
+  - destruct (nataddsub_comm _ _ m l)^.
+    destruct (nat_add_sub_cancel_r n m)^.
+    apply leq_refl; done.
+  - apply leq_lt in gt.
+    destruct (equiv_nat_sub_leq _)^.
+    assumption.
+Defined.
+
+(** TODO: rename *)
+Proposition natpmswap4 (k m n : nat)
+  : k - n < m -> k < n + m.
+Proof.
+  intro l; apply (nat_add_r_strictly_monotone n) in l.
+  destruct (nat_add_comm m n).
+  now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
+Defined.
 
 (** *** Order-reflection Lemmas *)
 
