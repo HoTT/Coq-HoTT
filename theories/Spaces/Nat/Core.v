@@ -1071,9 +1071,8 @@ Defined.
 
 (** *** Order-reflection *)
 
-(** TODO: rename nataddreflectslt -> lt_reflects_add_r *)
-Definition nataddreflectslt { n m k : nat }
-  : n + k < m + k -> n < m.
+(** Addition on the right is strictly order-reflecting. *)
+Definition lt_reflects_add_r {n m k} : n + k < m + k -> n < m.
 Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
@@ -1088,7 +1087,7 @@ Proof.
   destruct n.
   - intros ?; apply leq_zero.
   - intro a. change (n.+1 + k) with (n + k).+1 in a.
-    now apply (@nataddreflectslt n m k).
+    now apply (@lt_reflects_add_r n m k).
 Defined.
 
 (** TODO: rename nataddreflectslt' -> lt_reflects_add_l *)
@@ -1097,7 +1096,7 @@ Definition nataddreflectslt' { n m k : nat }
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
-    exact nataddreflectslt.
+    exact lt_reflects_add_r.
 Defined.
 
 (** TODO: rename nataddreflectsleq' -> leq_reflects_add_l *)
