@@ -418,11 +418,11 @@ Hint Immediate leq_trans : typeclass_instances.
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
 (** [0] is less than or equal to any natural number. *)
-Definition leq_zero n : 0 <= n.
+Definition leq_zero_l n : 0 <= n.
 Proof.
   simple_induction' n; exact _.
 Defined.
-Global Existing Instance leq_zero | 10.
+Global Existing Instance leq_zero_l | 10.
 
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
 Definition leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
@@ -827,7 +827,7 @@ Global Instance antisymemtric_geq : AntiSymmetric geq
 Global Instance leq_add_l n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
-  - exact (leq_zero m).
+  - exact (leq_zero_l m).
   - exact (leq_succ IHn).
 Defined.
 
