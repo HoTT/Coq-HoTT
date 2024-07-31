@@ -78,7 +78,7 @@ Definition kronecker_delta_lt {R : Ring} {i j : nat} (p : (i < j)%nat)
 Proof.
   apply kronecker_delta_neq.
   intros q; destruct q.
-  by apply not_lt_n_n in p.
+  by apply lt_irrefl in p.
 Defined.
 
 (** Kronecker delta where the first index is strictly greater than the second is 0. *)
@@ -87,7 +87,7 @@ Definition kronecker_delta_gt {R : Ring} {i j : nat} (p : (j < i)%nat)
 Proof.
   apply kronecker_delta_neq.
   intros q; destruct q.
-  by apply not_lt_n_n in p.
+  by apply lt_irrefl in p.
 Defined.
 
 (** Kronecker delta can be used to extract a single term from a finite sum. *)

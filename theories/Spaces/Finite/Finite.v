@@ -751,7 +751,7 @@ Section Enumeration.
   Proof.
     destruct (finite_enumeration_stage (fcard X).+1) as [p|?].
     - assert (q := leq_inj_finite (er (fcard X).+1) p); simpl in q.
-      elim (not_lt_n_n _ q).
+      elim (lt_irrefl _ q).
     - assumption.
   Defined.
 

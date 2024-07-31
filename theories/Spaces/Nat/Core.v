@@ -437,23 +437,23 @@ Global Existing Instance leq_succ | 100.
 (** The converse to [leq_succ] also holds. *)
 Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
 
-(** TODO: rename *)
-(** TODO: use lemmas about negating predicate *)
-Definition not_leq_Sn_n n : ~ (n.+1 <= n).
+(** [<] is an irreflexive relation. *)
+Definition lt_irrefl n : ~ (n < n).
 Proof.
-  simple_induction n n IHn.
-  { intro p.
-    inversion p. }
-  intros p.
-  by apply IHn, leq_succ'.
+  induction n as [|n IHn].
+  1: intro p; inversion p.
+  intros p; by apply IHn, leq_succ'.
 Defined.
+
+Global Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
+Global Instance irreflexive_gt : Irreflexive gt := lt_irrefl.
 
 (** TODO: rename *)
 Definition not_leq_Sn_0 n : ~ (n.+1 <= 0).
 Proof.
   intros p.
   apply (fun x => leq_trans x (leq_zero n)) in p.
-  contradiction (not_leq_Sn_n _ p).
+  contradiction (lt_irrefl _ p).
 Defined.
 
 (** A general form for injectivity of this constructor *)
@@ -464,7 +464,7 @@ Proof.
     destruct c.
     reflexivity.
   + destruct r^.
-    contradiction (not_leq_Sn_n _ p).
+    contradiction (lt_irrefl _ p).
 Defined.
 
 (** Which we specialise to this lemma *)
@@ -478,7 +478,7 @@ Proof.
   destruct p.
   + intros k p r.
     destruct r.
-    contradiction (not_leq_Sn_n _ p).
+    contradiction (lt_irrefl _ p).
   + intros m' q r.
     pose (r' := path_nat_succ _ _ r).
     destruct r'.
@@ -799,21 +799,12 @@ Proof.
   1: reflexivity.
   destruct x; [inversion q|].
   apply leq_succ' in q.
-  contradiction (not_leq_Sn_n _ (leq_trans p q)).
+  contradiction (lt_irrefl _ (leq_trans p q)).
 Defined.
 
 Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 Global Instance antisymemtric_geq : AntiSymmetric geq
   := fun _ _ p q => leq_antisym q p.
-
-(** *** Irreflexivity of [<] and [>] *)
-
-(** TODO: rename to [lt_irrefl] *)
-(** [<] is an irreflexive relation. *)
-Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
-
-Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
-Global Instance irreflexive_gt : Irreflexive gt := not_lt_n_n.
 
 (** *** Addition Lemmas *)
 
@@ -844,8 +835,8 @@ Proof.
     snrapply equiv_path_sum.
     destruct x as [l|p], y as [q|r].
     1,4: rapply path_ishprop.
-    + destruct r; contradiction (not_lt_n_n _ _).
-    + destruct p; contradiction (not_lt_n_n _ _).
+    + destruct r; contradiction (lt_irrefl _ _).
+    + destruct p; contradiction (lt_irrefl _ _).
   - intro l; induction l.
     + now right.
     + left; exact (leq_succ l).
@@ -909,14 +900,14 @@ Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
 Proof.
   split.
   - intro; by destruct (leq_dichotomy m n).
-  - intros ? ?; contradiction (not_lt_n_n n); exact _.
+  - intros ? ?; contradiction (lt_irrefl n); exact _.
 Defined.
 
 Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
 Proof.
   split.
   - intro; by destruct (leq_dichotomy n m).
-  - intros ? ?; contradiction (not_lt_n_n m); exact _.
+  - intros ? ?; contradiction (lt_irrefl m); exact _.
 Defined.
 
 Definition leq_iff_not_gt {n m} : ~(n > m) <-> n <= m
@@ -939,7 +930,7 @@ Proof.
     1: by right.
     symmetry in eq.
     contradiction.
-  - intros [H' | H'] nq; destruct nq; exact (not_lt_n_n _ H').
+  - intros [H' | H'] nq; destruct nq; exact (lt_irrefl _ H').
 Defined.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
@@ -973,7 +964,7 @@ Proof.
   intro ineq.
   destruct (@leq_dichotomy n m) as [n_leq_m |]; [ | assumption].
   apply equiv_nat_sub_leq in n_leq_m.
-  contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
+  contradiction (lt_irrefl 0). now rewrite n_leq_m in ineq.
 Defined.
  
 (** TODO: merge with above, reprove *)
