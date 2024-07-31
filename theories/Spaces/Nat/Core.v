@@ -1080,9 +1080,7 @@ Proof.
     apply leq_succ', IHk in l; exact l.
 Defined.
 
-(** TODO: rename nataddreflectsleq -> leq_reflects_add_r *)
-Definition nataddreflectsleq { n m k : nat }
-  : n + k <= m + k -> n <= m.
+Definition leq_reflects_add_r {n m k} : n + k <= m + k -> n <= m.
 Proof.
   destruct n.
   - intros ?; apply leq_zero.
@@ -1105,7 +1103,7 @@ Definition nataddreflectsleq' { n m k : nat }
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
-    exact nataddreflectsleq.
+    exact leq_reflects_add_r.
 Defined.
 
 (** TODO: move, rename *)
