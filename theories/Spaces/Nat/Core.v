@@ -448,12 +448,12 @@ Defined.
 Global Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
 Global Instance irreflexive_gt : Irreflexive gt := lt_irrefl.
 
-(** TODO: rename *)
-Definition not_leq_Sn_0 n : ~ (n.+1 <= 0).
+(** Nothing can be less than [0]. *)
+Definition not_lt_zero_r n : ~ (n < 0).
 Proof.
   intros p.
-  apply (fun x => leq_trans x (leq_zero n)) in p.
-  contradiction (lt_irrefl _ p).
+  apply (lt_irrefl n), (leq_trans p).
+  exact _.
 Defined.
 
 (** A general form for injectivity of this constructor *)
@@ -516,7 +516,7 @@ Proof.
   simple_induction' m; intros n.
   - destruct n.
     + left; exact _.
-    + right; apply not_leq_Sn_0.
+    + right; apply not_lt_zero_r.
   - destruct n.
     + left; exact _.
     + rapply decidable_equiv'.
@@ -644,7 +644,7 @@ Proof.
   - lhs nrapply nat_add_zero_r.
     nrapply nat_sub_zero_r.
   - destruct m.
-    1: contradiction (not_leq_Sn_0 n).
+    1: contradiction (not_lt_zero_r n).
     lhs nrapply nat_add_succ_r.
     nrapply (ap nat_succ).
     nrapply IHn.
@@ -889,11 +889,6 @@ Defined.
 
 (** *** Negation Lemmas *)
 
-Definition not_lt_zero_r n : ~ (n < 0).
-Proof.
-  apply not_leq_Sn_0.
-Defined.
-
 (** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
 
 Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
@@ -1134,7 +1129,7 @@ Proof.
   revert m; simple_induction k k IHk.
   - intros m l; simpl. destruct m; reflexivity.
   - destruct m.
-    + simpl; intro g; contradiction (not_leq_Sn_0 _ g).
+    + simpl; intro g; contradiction (not_lt_zero_r _ g).
     + intro l; apply leq_succ' in l.
       change (m.+2 - k.+1) with (m.+1 - k).
       change (m.+1 - k.+1) with (m - k).
