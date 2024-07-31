@@ -1071,7 +1071,7 @@ Defined.
 
 (** *** Order-reflection *)
 
-(** TODO: move, rename *)
+(** TODO: rename nataddreflectslt -> lt_reflects_add_r *)
 Definition nataddreflectslt { n m k : nat }
   : n + k < m + k -> n < m.
 Proof.
@@ -1081,7 +1081,7 @@ Proof.
     apply leq_succ', IHk in l; exact l.
 Defined.
 
-(** TODO: move, rename *)
+(** TODO: rename nataddreflectsleq -> leq_reflects_add_r *)
 Definition nataddreflectsleq { n m k : nat }
   : n + k <= m + k -> n <= m.
 Proof.
@@ -1091,7 +1091,7 @@ Proof.
     now apply (@nataddreflectslt n m k).
 Defined.
 
-(** TODO: move, rename *)
+(** TODO: rename nataddreflectslt' -> lt_reflects_add_l *)
 Definition nataddreflectslt' { n m k : nat }
   : k + n < k + m -> n < m.
 Proof.
@@ -1100,7 +1100,7 @@ Proof.
     exact nataddreflectslt.
 Defined.
 
-(** TODO: move, rename *)
+(** TODO: rename nataddreflectsleq' -> leq_reflects_add_l *)
 Definition nataddreflectsleq' { n m k : nat }
   : k + n <= k + m -> n <= m.
 Proof.
