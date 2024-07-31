@@ -875,17 +875,15 @@ Defined.
 
 (** *** Dichotomy of [<=] *)
 
-(** TODO: rename *)
-Fixpoint leq_dichot m n : (m <= n) + (m > n).
+Definition leq_dichot m n : (m <= n) + (m > n).
 Proof.
-  simple_induction' m; simple_induction' n.
-  - left; reflexivity.
-  - left; apply leq_zero.
-  - right; unfold lt; exact _.
-  - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
-    destruct X as [leqmn|ltnm].
-    + left; apply leq_succ; assumption.
-    + right; apply leq_succ; assumption.
+  induction m as [|m IHm] in n |- *.
+  1: left; exact _.
+  destruct n.
+  1: right; exact _.
+  destruct (IHm n).
+  1: left; exact _.
+  1: right; exact _.
 Defined.
 
 (** *** Trichotomy *)
