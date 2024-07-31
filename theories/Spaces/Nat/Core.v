@@ -946,18 +946,15 @@ Defined.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
 
-Lemma trunc_index_add_nat_add (n : nat)
+Definition trunc_index_add_nat_add {n : nat}
   : trunc_index_add n n = n.+1 + n.+1.
 Proof.
-  induction n as [|n IH]; only 1: reflexivity.
-  refine (trunc_index_add_succ _ _ @ _).
-  refine (ap trunc_S _ @ _).
-  { refine (trunc_index_add_comm _ _ @ _).
-    refine (trunc_index_add_succ _ _ @ _).
-    exact (ap trunc_S IH). }
-  refine (_ @ ap nat_to_trunc_index _).
-  2: exact (nat_add_succ_r _ _)^.
-  reflexivity.
+  induction n as [|n IHn].
+  1: reflexivity.
+  lhs nrapply trunc_index_add_succ.
+  rhs nrapply (ap nat_to_trunc_index).
+  2: nrapply nat_add_succ_r.
+  exact (ap (fun x => x.+2%trunc) IHn).
 Defined.
 
 (** *** Subtraction *)
