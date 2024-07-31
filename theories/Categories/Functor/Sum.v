@@ -89,7 +89,7 @@ Section swap_functor.
     transport_path_forall_hammer.
       by repeat match goal with
                   | [ H : Empty |- _ ] => destruct H
-                  | [ H : (_ + _)%type |- _ ] => destruct H
+                  | [ H : (_ + _) |- _ ] => destruct H
                   | _ => progress hnf in *
                 end.
   Qed.
