@@ -454,6 +454,27 @@ Defined.
 Global Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
 Global Instance irreflexive_gt : Irreflexive gt := lt_irrefl.
 
+(** [<=] is an antisymmetric relation. *)
+Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
+Proof.
+  intros p q.
+  destruct p.
+  1: reflexivity.
+  destruct x; [inversion q|].
+  apply leq_succ' in q.
+  contradiction (lt_irrefl _ (leq_trans p q)).
+Defined.
+
+Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
+Global Instance antisymemtric_geq : AntiSymmetric geq
+  := fun _ _ p q => leq_antisym q p.
+
+(** Being less than or equal to [0] implies being [0]. *)
+Definition path_zero_leq_zero_r n : n <= 0 -> n = 0.
+Proof.
+  intros H; rapply leq_antisym.
+Defined.
+
 (** Nothing can be less than [0]. *)
 Definition not_lt_zero_r n : ~ (n < 0).
 Proof.
@@ -803,23 +824,6 @@ Proof.
 Defined.
 
 (** ** More Theory of Comparison Predicates *)
-
-(** *** Antisymmetry of [<=] and [>=] *)
-
-(** [<=] is an antisymmetric relation. *)
-Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
-Proof.
-  intros p q.
-  destruct p.
-  1: reflexivity.
-  destruct x; [inversion q|].
-  apply leq_succ' in q.
-  contradiction (lt_irrefl _ (leq_trans p q)).
-Defined.
-
-Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
-Global Instance antisymemtric_geq : AntiSymmetric geq
-  := fun _ _ p q => leq_antisym q p.
 
 (** *** Addition Lemmas *)
 
@@ -1270,6 +1274,7 @@ Defined.
 
 (** *** Order-reflection Lemmas *)
 
+(** Subtraction reflects [<=] in the left argument. *)
 Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
@@ -1277,6 +1282,17 @@ Proof.
   apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
   apply (@leq_trans _ (m - k + k) _ _).
   by rewrite nat_add_sub_l_cancel.
+Defined.
+
+(** Subtraction reflects [<=] in the right argument contravariantly. *)
+Definition leq_reflects_sub_r {n m} k
+  : m <= k -> n <= k -> k - n <= k - m -> m <= n.
+Proof.
+  intros H1 H2 H3.
+  rapply (leq_reflects_add_r k).
+  rapply natpmswap3.
+  rewrite <- nataddsub_assoc; only 2: exact _.
+  rapply natpmswap2.
 Defined.
 
 (** ** Properties of Powers *)
