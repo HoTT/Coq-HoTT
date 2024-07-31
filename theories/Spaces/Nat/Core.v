@@ -1195,6 +1195,7 @@ Proof.
     destruct r^.
     exact _.
 Defined.
+Hint Immediate nat_sub_monotone_l : typeclass_instances.
 
 (** Subtraction is contravariantly monotone in the right argument. *)
 Definition nat_sub_monotone_r {n m} k : n <= m -> k - m <= k - n.
@@ -1208,6 +1209,13 @@ Proof.
       destruct r^.
       exact _. 
 Defined.
+Hint Immediate nat_sub_monotone_r : typeclass_instances.
+
+(** *** Movement Lemmas *)
+
+
+
+(** *** Order-reflection Lemmas *)
 
 Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
 Proof.
