@@ -192,49 +192,6 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition natpmswap1 (k m n : nat)
-  : n <= k -> k < n + m -> k - n < m.
-Proof.
-  intros l q.
-  assert (q' : k - n + n < m + n) by
-    (destruct (nat_add_sub_l_cancel l)^;
-     destruct (nat_add_comm n m);
-     assumption).
-  exact (lt_reflects_add_r _ q').
-Defined.
-
-(** TODO: move, rename *)
-Proposition natpmswap2 (k m n : nat)
-  : n <= k -> k - n <= m -> k <= n + m.
-Proof.
-  intros l q.
-  apply (nat_add_l_monotone n) in q.
-  destruct (nataddsub_assoc n l)^ in q.
-  destruct (nat_add_sub_cancel_l k n)^ in q;
-    assumption.
-Defined.
-
-(** TODO: move, rename *)
-Proposition natpmswap3 (k m n : nat)
-  : k <= n -> m <= n - k -> k + m <= n.
-Proof.
-  intros ineq qe.
-  apply (nat_add_l_monotone k) in qe.
-  destruct (nataddsub_assoc k ineq)^ in qe.
-  destruct (nat_add_sub_cancel_l n k)^ in qe;
-    assumption.
-Defined.
-
-(** TODO: move, rename *)
-Proposition natpmswap4 (k m n : nat)
-  : k - n < m -> k < n + m.
-Proof.
-  intro l; apply (nat_add_r_strictly_monotone n) in l.
-  destruct (nat_add_comm m n).
-  now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
-Defined.
-
-(** TODO: move, rename *)
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
   : n <= m -> n <= m + k.
 Proof.
