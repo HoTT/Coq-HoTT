@@ -242,8 +242,8 @@ Defined.
 (** [nat] has decidable paths. *)
 Global Instance decidable_paths_nat@{} : DecidablePaths nat.
 Proof.
-  intros n; simple_induction n n IHn;
-  intros m; destruct m.
+  intros n m.
+  induction n as [|n IHn] in m |- *; destruct m.
   - exact (inl idpath).
   - exact (inr (neq_nat_zero_succ m)).
   - exact (inr (fun p => neq_nat_zero_succ n p^)).
