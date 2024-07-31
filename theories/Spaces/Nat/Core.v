@@ -1095,9 +1095,7 @@ Proof.
     exact lt_reflects_add_r.
 Defined.
 
-(** TODO: rename nataddreflectsleq' -> leq_reflects_add_l *)
-Definition nataddreflectsleq' { n m k : nat }
-  : k + n <= k + m -> n <= m.
+Definition leq_reflects_add_l {n m k} : k + n <= k + m -> n <= m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
     (symmetric_paths _ _ (nat_add_comm k m));
