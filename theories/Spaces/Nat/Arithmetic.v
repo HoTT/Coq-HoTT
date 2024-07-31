@@ -359,7 +359,7 @@ Proof.
   intro ineq.
   destruct (@leq_dichotomy n m) as [l | g].
   - exact l.
-  - contradiction (not_lt_n_n m (lt_leq_trans g ineq)).
+  - contradiction (lt_irrefl m (lt_leq_trans g ineq)).
 Defined.
 
 Proposition symmetric_rel_total_order (R : nat -> nat -> Type)
