@@ -1080,6 +1080,7 @@ Proof.
     apply leq_succ', IHk in l; exact l.
 Defined.
 
+(** Addition on the right is order-reflecting. *)
 Definition leq_reflects_add_r {n m k} : n + k <= m + k -> n <= m.
 Proof.
   destruct n.
@@ -1088,6 +1089,7 @@ Proof.
     now apply (@lt_reflects_add_r n m k).
 Defined.
 
+(** Addition on the lef is strictly order-reflecting. *)
 Definition lt_reflects_add_l {n m k} : k + n < k + m -> n < m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
@@ -1095,6 +1097,7 @@ Proof.
     exact lt_reflects_add_r.
 Defined.
 
+(** Addition on the left is order-reflecting. *)
 Definition leq_reflects_add_l {n m k} : k + n <= k + m -> n <= m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
