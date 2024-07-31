@@ -183,14 +183,14 @@ Notation "x < y <= z"  := (x <  y /\ y <= z) : nat_scope.
 
 (** ** Properties of [nat_iter]. *)
 
-Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
+Definition nat_iter_succ_r n {A} (f : A -> A) (x : A)
   : nat_iter (S n) f x = nat_iter n f (f x).
 Proof.
   simple_induction n n IHn; simpl; trivial.
   exact (ap f IHn).
 Defined.
 
-Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
+Definition nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
   : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
 Proof.
   simple_induction n n IHn; simpl; trivial.
@@ -198,7 +198,7 @@ Proof.
 Defined.
 
 (** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
-Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
+Definition nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
   : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
 Proof.
   simple_induction n n IHn; simpl; trivial.
@@ -230,7 +230,7 @@ Proof.
 Defined.
 
 (** A natural number cannot be equal to its own successor. *)
-Theorem neq_nat_succ'@{} n : n <> S n.
+Definition neq_nat_succ'@{} n : n <> S n.
 Proof.
   simple_induction' n.
   - apply neq_nat_zero_succ.
@@ -439,7 +439,7 @@ Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
 
 (** TODO: rename *)
 (** TODO: use lemmas about negating predicate *)
-Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
+Definition not_leq_Sn_n n : ~ (n.+1 <= n).
 Proof.
   simple_induction n n IHn.
   { intro p.
@@ -449,7 +449,7 @@ Proof.
 Defined.
 
 (** TODO: rename *)
-Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
+Definition not_leq_Sn_0 n : ~ (n.+1 <= 0).
 Proof.
   intros p.
   apply (fun x => leq_trans x (leq_zero n)) in p.
@@ -1086,7 +1086,7 @@ Defined.
 (** *** Order-reflection *)
 
 (** TODO: move, rename *)
-Proposition nataddreflectslt { n m k : nat }
+Definition nataddreflectslt { n m k : nat }
   : n + k < m + k -> n < m.
 Proof.
   simple_induction k k IHk.
@@ -1096,7 +1096,7 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition nataddreflectsleq { n m k : nat }
+Definition nataddreflectsleq { n m k : nat }
   : n + k <= m + k -> n <= m.
 Proof.
   destruct n.
@@ -1106,7 +1106,7 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition nataddreflectslt' { n m k : nat }
+Definition nataddreflectslt' { n m k : nat }
   : k + n < k + m -> n < m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
@@ -1115,7 +1115,7 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition nataddreflectsleq' { n m k : nat }
+Definition nataddreflectsleq' { n m k : nat }
   : k + n <= k + m -> n <= m.
 Proof.
   destruct (symmetric_paths _ _ (nat_add_comm k n)),
@@ -1124,7 +1124,7 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition natsubreflectsleq { n m k : nat }
+Definition natsubreflectsleq { n m k : nat }
   : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
@@ -1137,7 +1137,7 @@ Defined.
 (** ** Further Properties of Subtraction *)
 
 (** TODO: rename *)
-Proposition nataddsub_assoc_lemma {k m : nat}
+Definition nataddsub_assoc_lemma {k m : nat}
   : (k <= m) -> m.+1 - k = (m - k).+1.
 Proof.
   revert m; simple_induction k k IHk.
@@ -1151,7 +1151,7 @@ Proof.
 Defined.
 
 (** TODO: rename *)
-Proposition nataddsub_assoc(n : nat) {m k : nat}
+Definition nataddsub_assoc(n : nat) {m k : nat}
   : (k <= m) -> n + (m - k) = n + m - k.
 Proof.
   revert m k. simple_induction n n IHn.
@@ -1173,7 +1173,7 @@ Proof.
 Defined.
 
 (** TODO: rename *)
-Proposition nataddsub_comm (n m k : nat)
+Definition nataddsub_comm (n m k : nat)
   : m <= n -> (n - m) + k = (n + k) - m.
 Proof.
   intro l.
