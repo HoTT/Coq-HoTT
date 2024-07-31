@@ -447,12 +447,7 @@ Proof.
     + inversion p.
     + destruct n.
       * reflexivity.
-      * unshelve erewrite nth'_cons.
-        1: apply leq_succ', H.
-        unshelve erewrite nth'_cons.
-        1: apply leq_succ', H'.
-        unshelve erewrite nth'_cons.
-        1: apply leq_succ', H''.
+      * erewrite 3 nth'_cons.
         apply IHl1.
         by apply path_nat_succ.
 Defined.

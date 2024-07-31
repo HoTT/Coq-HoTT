@@ -436,6 +436,7 @@ Global Existing Instance leq_succ | 100.
 
 (** The converse to [leq_succ] also holds. *)
 Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
+Hint Immediate leq_succ' : typeclass_instances.
 
 (** [<] is an irreflexive relation. *)
 Definition lt_irrefl n : ~ (n < n).
@@ -507,7 +508,6 @@ Defined.
 Definition equiv_leq_succ n m : n.+1 <= m.+1 <~> n <= m.
 Proof.
   srapply equiv_iff_hprop.
-  apply leq_succ'.
 Defined.
 
 Global Instance decidable_leq n m : Decidable (n <= m).
