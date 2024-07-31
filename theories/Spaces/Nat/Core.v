@@ -835,10 +835,17 @@ Defined.
 
 (** Alternative Characterizations of [<=] *)
 
-(** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
+(** [n <= m] is equivalent to [(n < m) + (n = m)]. This justifies the name "less than or equal to". Note that it is not immediately obvious that the latter type is a hprop. *)
 Definition equiv_leq_lt_or_eq {n m} : (n <= m) <~> (n < m) + (n = m).
 Proof.
-  snrapply equiv_adjointify.
+  srapply equiv_iff_hprop.
+  - srapply hprop_allpath.
+    intros x y.
+    snrapply equiv_path_sum.
+    destruct x as [l|p], y as [q|r].
+    1,4: rapply path_ishprop.
+    + destruct r; contradiction (not_lt_n_n _ _).
+    + destruct p; contradiction (not_lt_n_n _ _).
   - intro l; induction l.
     + now right.
     + left; exact (leq_succ l).
@@ -846,13 +853,6 @@ Proof.
     + exact (leq_succ_l l).
     + destruct p.
       exact (leq_refl _).
-  - intros [l|p].
-    + induction l.
-      1: reflexivity.
-      snrapply (ap (inl)).
-      rapply path_ishprop.
-    + by destruct p.
-  - intro; rapply path_ishprop.
 Defined.
 
 (** Here is an alternative characterization of [<=] in terms of an existence predicate and addition. *)
@@ -946,8 +946,7 @@ Defined.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
 
-Definition trunc_index_add_nat_add {n : nat}
-  : trunc_index_add n n = n.+1 + n.+1.
+Definition trunc_index_add_nat_add {n : nat}: trunc_index_add n n = n.+1 + n.+1.
 Proof.
   induction n as [|n IHn].
   1: reflexivity.
