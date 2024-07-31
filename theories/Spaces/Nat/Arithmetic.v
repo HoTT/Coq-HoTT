@@ -32,7 +32,7 @@ Defined.
 
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
-  destruct (@leq_dichot m n) as [l | gt].
+  destruct (@leq_dichotomy m n) as [l | gt].
   - destruct (nataddsub_comm _ _ m l)^.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
@@ -296,7 +296,7 @@ Lemma increasing_geq_minus (n k : nat)
 Proof.
   simple_induction k k IHk.
   - destruct (symmetric_paths _ _ (nat_sub_zero_r n)); constructor.
-  - destruct (@leq_dichot n k) as [l | g].
+  - destruct (@leq_dichotomy n k) as [l | g].
     + destruct (equiv_nat_sub_leq _)^ in IHk.
       apply leq_succ_r in l.
       destruct (equiv_nat_sub_leq _)^. exact IHk.
@@ -357,7 +357,7 @@ Defined.
 Definition leq_wrapper {n m : nat} : n <= m -> n <= m.
 Proof.
   intro ineq.
-  destruct (@leq_dichot n m) as [l | g].
+  destruct (@leq_dichotomy n m) as [l | g].
   - exact l.
   - contradiction (not_lt_n_n m (lt_leq_trans g ineq)).
 Defined.
@@ -367,7 +367,7 @@ Proposition symmetric_rel_total_order (R : nat -> nat -> Type)
   : (forall n m : nat, n < m -> R n m) -> (forall n m : nat, R n m).
 Proof.
   intros A n m.
-  destruct (@leq_dichot m n) as [m_leq_n | m_gt_n].
+  destruct (@leq_dichotomy m n) as [m_leq_n | m_gt_n].
   - apply symmetry. destruct m_leq_n.
     + apply reflexivity.
     + apply A. apply leq_succ. assumption.
