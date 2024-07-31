@@ -983,3 +983,16 @@ Proof.
   rhs nrapply grp_homo_op.
   exact (ap011 _ p q).
 Defined.
+
+(** The group movement lemmas can be extended to when there is a homomorphism involved.  For now, we only include these two. *)
+Definition grp_homo_moveL_1V {A B : Group} (f : GroupHomomorphism A B) (x y : A)
+  : f (x * y) = group_unit <~> (f x = - f y)
+  := grp_moveL_1V oE equiv_concat_l (grp_homo_op f x y)^ _.
+
+Definition grp_homo_moveL_1M  {A B : Group} (f : GroupHomomorphism A B) (x y : A)
+  : f (x * -y) = group_unit <~> (f x = f y).
+Proof.
+  refine (grp_moveL_1M oE equiv_concat_l _^ _).
+  lhs nrapply grp_homo_op.
+  apply ap, grp_homo_inv.
+Defined.
