@@ -875,7 +875,7 @@ Defined.
 
 (** *** Dichotomy of [<=] *)
 
-Definition leq_dichot m n : (m <= n) + (m > n).
+Definition leq_dichotomy m n : (m <= n) + (m > n).
 Proof.
   induction m as [|m IHm] in n |- *.
   1: left; exact _.
@@ -891,7 +891,7 @@ Defined.
 (** Every two natural numbers are either equal, less than, or greater than each other. *)
 Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
 Proof.
-  generalize (leq_dichot m n).
+  generalize (leq_dichotomy m n).
   snrapply (functor_sum _ idmap).
   snrapply equiv_leq_lt_or_eq.
 Defined.
@@ -908,14 +908,14 @@ Defined.
 Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
 Proof.
   split.
-  - intro; by destruct (leq_dichot m n).
+  - intro; by destruct (leq_dichotomy m n).
   - intros ? ?; contradiction (not_lt_n_n n); exact _.
 Defined.
 
 Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
 Proof.
   split.
-  - intro; by destruct (leq_dichot n m).
+  - intro; by destruct (leq_dichotomy n m).
   - intros ? ?; contradiction (not_lt_n_n m); exact _.
 Defined.
 
@@ -958,7 +958,7 @@ Defined.
 
 Definition leq_sub_add n m : n <= n - m + m.
 Proof.
-  destruct (@leq_dichot m n) as [l | g].
+  destruct (@leq_dichotomy m n) as [l | g].
   - destruct (nat_add_sub_l_cancel l)^;
       constructor.
   - apply leq_lt in g.
@@ -971,7 +971,7 @@ Defined.
 Definition sub_gt_0_lt n m : 0 < n - m -> m < n.
 Proof.
   intro ineq.
-  destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].
+  destruct (@leq_dichotomy n m) as [n_leq_m |]; [ | assumption].
   apply equiv_nat_sub_leq in n_leq_m.
   contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
 Defined.
