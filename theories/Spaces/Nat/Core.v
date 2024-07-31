@@ -1209,9 +1209,7 @@ Proof.
       exact _. 
 Defined.
 
-(** TODO: rename  natsubreflectsleq -> leq_reflects_sub_l *)
-Definition natsubreflectsleq { n m k : nat }
-  : k <= m -> n - k <= m - k -> n <= m.
+Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
   apply (nat_add_r_monotone k) in ineq2.
