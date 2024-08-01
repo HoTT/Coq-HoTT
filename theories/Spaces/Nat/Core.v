@@ -557,18 +557,19 @@ Defined.
 (** *** Basic Properties of [<] *)
 
 (** [<=] and [<] imply [<] *)
-Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
+Definition lt_leq_lt_trans {n m k} : n <= m -> m < k -> n < k
   := fun leq lt => leq_trans (leq_succ leq) lt.
 
 (** [<=] and [<] imply [<] *)
-Definition lt_leq_trans {n m k} : n < m -> m <= k -> n < k
+Definition lt_lt_leq_trans {n m k} : n < m -> m <= k -> n < k
   := fun lt leq => leq_trans lt leq.
 
 Definition leq_lt {n m} : n < m -> n <= m
   := leq_succ_l.
+Hint Immediate leq_lt : typeclass_instances.
 
 Definition lt_trans {n m k} : n < m -> m < k -> n < k
-  := fun H1 H2 => leq_lt (leq_lt_trans H1 H2).
+  := fun H1 H2 => leq_lt (lt_leq_lt_trans H1 H2).
 
 Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
@@ -959,12 +960,17 @@ Defined.
 
 (** *** Subtraction *)
 
-Global Instance leq_sub_add n m : n <= n - m + m.
+Global Instance leq_sub_add_l n m : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | g].
   - by rewrite nat_add_sub_l_cancel.
   - apply leq_lt in g.
     by destruct (equiv_nat_sub_leq _)^.
+Defined.
+
+Global Instance leq_sub_add_r n m : n <= m + (n - m).
+Proof.
+  rewrite nat_add_comm; exact _.
 Defined.
 
 (** A number being less than another is equivalent to their difference being greater than zero. *)
@@ -1198,55 +1204,6 @@ Proof.
 Defined.
 Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
-(** *** Movement Lemmas *)
-
-Definition leq_moveL_Mn {k m} n : k - n <= m -> k <= n + m.
-Proof.
-  intros H.
-  rewrite nat_add_comm.
-  apply (nat_add_r_monotone n) in H.
-  rapply leq_trans.
-Defined.
-
-Definition leq_moveL_nM {k m} n : k - n <= m -> k <= m + n.
-Proof.
-  rewrite nat_add_comm.
-  apply leq_moveL_Mn.
-Defined.
-
-Definition leq_moveR_Mn {m n} k : k <= n -> m <= n - k -> k + m <= n.
-Proof.
-  intros H1 H2.
-  apply (nat_add_l_monotone k) in H2.
-  rewrite <- nat_sub_l_add_r in H2; trivial.
-  by rewrite nat_add_sub_cancel_l in H2.
-Defined.
-
-(** TODO: leq_moveR_nM *)
-(** TODO: leq_moveL_nV *)
-(** TODO: leq_moveR_nV *)
-
-Definition lt_moveL_Mn {k m} n : k - n < m -> k < n + m.
-Proof.
-  intros H.
-  rewrite nat_add_comm.
-  apply (nat_add_r_strictly_monotone n) in H.
-  rapply leq_lt_trans.
-Defined.
-
-(** TODO: lt_moveL_nM *)
-(** TODO: lt_moveR_Mn *)
-(** TODO: lt_moveR_nM *)
-(** TODO: lt_moveL_nV *)
-
-Definition lt_moveR_nV {k m} n : n <= k -> k < n + m -> k - n < m.
-Proof.
-  intros H1 H2; unfold lt.
-  rewrite <- nat_sub_succ_l; only 2: exact _.
-  rewrite <- (nat_add_sub_cancel_l m n).
-  by apply nat_sub_monotone_l.
-Defined.
-
 (** *** Order-reflection Lemmas *)
 
 (** Subtraction reflects [<=] in the left argument. *)
@@ -1254,7 +1211,7 @@ Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
   apply (nat_add_r_monotone k) in ineq2.
-  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
+  apply (@leq_trans _ (n - k + k) _ (leq_sub_add_l _ _)).
   apply (@leq_trans _ (m - k + k) _ _).
   by rewrite nat_add_sub_l_cancel.
 Defined.
@@ -1266,6 +1223,91 @@ Proof.
   intros H1 H2 H3.
   apply (nat_sub_monotone_r k) in H3.
   rewrite 2 nat_sub_sub_cancel_r in H3; exact _.
+Defined.
+
+(** *** Movement lemmas *)
+
+(** Given an inequality [n < m] we can move around a summand or subtrahend [k] from either side. *)
+
+Definition leq_moveL_Mn {n m} k : n - k <= m -> n <= k + m.
+Proof.
+  intros H.
+  rewrite nat_add_comm.
+  apply (nat_add_r_monotone k) in H.
+  rapply leq_trans.
+Defined.
+
+Definition leq_moveL_nM {n m} k : n - k <= m -> n <= m + k.
+Proof.
+  rewrite nat_add_comm.
+  apply leq_moveL_Mn.
+Defined.
+
+Definition leq_moveR_Mn {n m} k : k <= m -> n <= m - k -> k + n <= m.
+Proof.
+  intros H1 H2.
+  rapply (leq_reflects_sub_l k).
+  by rewrite nat_add_sub_cancel_l.
+Defined.
+
+Definition leq_moveR_nM {n m} k : k <= m -> n <= m - k -> n + k <= m.
+Proof.
+  rewrite nat_add_comm.
+  apply leq_moveR_Mn.
+Defined.
+
+Definition leq_moveL_nV {n m} k : n + k <= m -> n <= m - k.
+Proof.
+  intros H.
+  apply (leq_reflects_add_r k).
+  rapply leq_trans.
+Defined.
+
+Definition leq_moveR_nV {n m} k : n <= m + k -> n - k <= m.
+Proof.
+  intros H.
+  apply (nat_sub_monotone_l k) in H.
+  by rewrite nat_add_sub_cancel_r in H.
+Defined.
+
+Definition lt_moveL_Mn {n m} k : n - k < m -> n < k + m.
+Proof.
+  intros H.
+  apply (nat_add_l_strictly_monotone k) in H.
+  rapply lt_leq_lt_trans.
+Defined.
+
+Definition lt_moveL_nM {n m} k : n - k < m -> n < m + k.
+Proof.
+  rewrite nat_add_comm.
+  apply lt_moveL_Mn.
+Defined.
+
+Definition lt_moveR_Mn {n m} k : k < m -> n < m - k -> k + n < m.
+Proof.
+  intros H1 H2.
+  rewrite nat_add_comm.
+  rapply (leq_moveR_nM (n:=n.+1) k).
+Defined.
+
+Definition lt_moveR_nM {n m} k : k < m -> n < m - k -> n + k < m.
+Proof.
+  rewrite nat_add_comm.
+  apply lt_moveR_Mn.
+Defined.
+
+Definition lt_moveL_nV {n m} k : n + k < m -> n < m - k.
+Proof.
+  intros H.
+  rapply leq_moveL_nV.
+Defined.
+
+Definition lt_moveR_nV {n m} k : k <= n -> n < k + m -> n - k < m.
+Proof.
+  intros H1 H2; unfold lt.
+  rewrite <- nat_sub_succ_l; only 2: exact _.
+  rewrite <- (nat_add_sub_cancel_l m k).
+  by apply nat_sub_monotone_l.
 Defined.
 
 (** ** Properties of Powers *)

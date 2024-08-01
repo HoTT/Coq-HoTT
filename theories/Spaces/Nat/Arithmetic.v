@@ -134,7 +134,7 @@ Proposition pred_gt_implies_lt (i j : nat)
 Proof.
   intros ineq.
   assert (H := leq_succ ineq). assert (i < j) as X. {
-    apply (@lt_leq_trans _ (nat_pred j) _);
+    apply (@lt_lt_leq_trans _ (nat_pred j) _);
       [assumption  | apply predn_leq_n].
   }
   destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.
@@ -300,7 +300,7 @@ Proof.
   intro ineq.
   destruct (@leq_dichotomy n m) as [l | g].
   - exact l.
-  - contradiction (lt_irrefl m (lt_leq_trans g ineq)).
+  - contradiction (lt_irrefl m (lt_lt_leq_trans g ineq)).
 Defined.
 
 Proposition symmetric_rel_total_order (R : nat -> nat -> Type)
