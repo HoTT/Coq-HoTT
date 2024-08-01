@@ -1233,11 +1233,10 @@ Defined.
 
 Definition leq_moveR_Mn {m n} k : k <= n -> m <= n - k -> k + m <= n.
 Proof.
-  intros ineq qe.
-  apply (nat_add_l_monotone k) in qe.
-  rewrite <- nat_sub_l_add_r in qe; trivial.
-  destruct (nat_add_sub_cancel_l n k)^ in qe;
-    assumption.
+  intros H1 H2.
+  apply (nat_add_l_monotone k) in H2.
+  rewrite <- nat_sub_l_add_r in H2; trivial.
+  by rewrite nat_add_sub_cancel_l in H2.
 Defined.
 
 (** TODO: rename, move *)
