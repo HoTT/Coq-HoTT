@@ -5,7 +5,7 @@ Export Basics.Nat.
 Local Set Universe Minimization ToSet.
 Local Unset Elimination Schemes.
 
-(** * Natural Numbers *)
+(** * Natural numbers *)
 
 (** We want to close the trunc_scope so that notations from there don't conflict here. *)
 Local Close Scope trunc_scope.
@@ -25,7 +25,7 @@ Notation nat_iter n f x
         | m'.+1 => f (F m')
         end) n).
 
-(** *** Successor and Predecessor *)
+(** *** Successor and predecessor *)
 
 (** [nat_succ n] is the successor of a natural number [n]. *)
 Notation nat_succ := S (only parsing).
@@ -37,7 +37,7 @@ Definition nat_pred n : nat :=
   | S n' => n'
   end.
 
-(** *** Arithmetic Operations *)
+(** *** Arithmetic operations *)
 
 (** Addition of natural numbers *)
 Definition nat_add n m : nat
@@ -72,7 +72,7 @@ Fixpoint nat_exp (n m : nat) : nat
        | S m => nat_exp n m * n
      end.
 
-(** *** Maximum and Minimum *)
+(** *** Maximum and minimum *)
 
 (** The maximum [nat_max n m] of two natural numbers [n] and [m]. *) 
 Fixpoint nat_max n m :=
@@ -162,7 +162,7 @@ Proof.
   apply Hf, IHn; trivial.
 Defined.
 
-(** ** Properties of Successors *)
+(** ** Properties of successors *)
 
 (** TODO: remove these *)
 Local Definition ap_S := @ap _ _ S.
@@ -202,7 +202,7 @@ Proof.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
-(** ** Truncatedness of Natural Numbers *)
+(** ** Truncatedness of natural numbers *)
 
 (** [nat] has decidable paths. *)
 Global Instance decidable_paths_nat@{} : DecidablePaths nat.
@@ -220,7 +220,7 @@ Defined.
 (** [nat] is therefore a hset. *)
 Global Instance ishset_nat : IsHSet nat := _.
 
-(** ** Properties of Addition *)
+(** ** Properties of addition *)
 
 (** [0] is the left identity of addition. *)
 Definition nat_add_zero_l@{} n : 0 + n = n
@@ -266,7 +266,7 @@ Proof.
     exact IHn.
 Defined.
 
-(** ** Properties of Multiplication *)
+(** ** Properties of multiplication *)
 
 (** Multiplication by [0] on the left is [0]. *)
 Definition nat_mul_zero_l@{} n : 0 * n = 0
