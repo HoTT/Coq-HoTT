@@ -1233,8 +1233,7 @@ Proof.
 Defined.
 
 (** TODO: rename natpmswap3 -> leq_moveR_Mn *)
-Proposition natpmswap3 (k m n : nat)
-  : k <= n -> m <= n - k -> k + m <= n.
+Definition leq_moveR_Mn {m n} k : k <= n -> m <= n - k -> k + m <= n.
 Proof.
   intros ineq qe.
   apply (nat_add_l_monotone k) in qe.
