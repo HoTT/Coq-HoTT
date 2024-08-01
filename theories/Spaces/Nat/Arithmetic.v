@@ -93,7 +93,7 @@ Proof.
 Defined.
 
 Proposition diseq_implies_lt (n m : nat)
-  : n <> m -> sum (n < m) (n > m).
+  : n <> m -> (n < m) + (n > m).
 Proof.
   intros diseq.
   destruct (dec (n < m)) as [| a]; [ now left |].
@@ -271,7 +271,7 @@ Proof.
 Defined.
 
 Definition nleqSm_dichot {n m : nat}
-  : (n <= m.+1) -> sum (n <= m) (n = m.+1).
+  : (n <= m.+1) -> (n <= m) + (n = m.+1).
 Proof.
   revert m; simple_induction n n IHn.
   - intro. left. exact (leq_0_n m).

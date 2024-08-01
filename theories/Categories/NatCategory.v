@@ -18,7 +18,7 @@ Module Export Core.
     match n with
       | 0 => Empty
       | 1 => Unit
-      | S n' => (CardinalityRepresentative n' + Unit)%type
+      | S n' => CardinalityRepresentative n' + Unit
     end.
 
   Coercion CardinalityRepresentative : nat >-> Sortclass.

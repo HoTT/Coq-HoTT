@@ -17,9 +17,9 @@ Section prod.
 
   Definition prod : PreCategory.
     refine (@Build_PreCategory
-              (C * D)%type
-              (fun s d => (morphism C (fst s) (fst d)
-                           * morphism D (snd s) (snd d))%type)
+              (C * D)
+              (fun s d => morphism C (fst s) (fst d)
+                          * morphism D (snd s) (snd d))
               (fun x => (identity (fst x), identity (snd x)))
               (fun s d d' m2 m1 => (fst m2 o fst m1, snd m2 o snd m1))
               _
