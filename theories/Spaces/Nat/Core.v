@@ -1311,10 +1311,8 @@ Definition leq_reflects_sub_r {n m} k
   : m <= k -> n <= k -> k - n <= k - m -> m <= n.
 Proof.
   intros H1 H2 H3.
-  rapply (leq_reflects_add_r k).
-  rapply natpmswap3.
-  rewrite <- nataddsub_assoc; only 2: exact _.
-  rapply natpmswap2.
+  apply (nat_sub_monotone_r k) in H3.
+  rewrite 2 nat_sub_sub_cancel_r in H3; exact _.
 Defined.
 
 (** ** Properties of Powers *)
