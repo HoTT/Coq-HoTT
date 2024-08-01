@@ -425,7 +425,7 @@ Defined.
 Global Existing Instance leq_zero_l | 10.
 
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
-Definition leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
+Global Instance leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
 Proof.
   intros H; induction H.
   1: exact _.
@@ -1134,6 +1134,19 @@ Proof.
     symmetry.
     apply nat_succ_pred.
     by apply lt_sub_gt_0.
+Defined.
+
+(** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
+Definition nat_sub_pred_r n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
+Proof.
+  intros H1 H2.
+  induction m as [|m IHm] in n, H1, H2 |- *.
+  1: contradiction (not_lt_zero_r _ H1).
+  rewrite nat_sub_succ_r.
+  rewrite nat_succ_pred.
+  1: reflexivity.
+  apply lt_sub_gt_0.
+  exact (lt_trans _ H2).
 Defined.
 
 (** TODO: rename *)
