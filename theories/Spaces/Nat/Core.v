@@ -1228,6 +1228,10 @@ Proof.
   by rewrite nat_add_sub_cancel_l in H2.
 Defined.
 
+(** TODO: leq_moveR_nM *)
+(** TODO: leq_moveL_nV *)
+(** TODO: leq_moveR_nV *)
+
 Definition lt_moveL_Mn {k m} n : k - n < m -> k < n + m.
 Proof.
   intros H.
@@ -1235,6 +1239,11 @@ Proof.
   apply (nat_add_r_strictly_monotone n) in H.
   rapply leq_lt_trans.
 Defined.
+
+(** TODO: lt_moveL_nM *)
+(** TODO: lt_moveR_Mn *)
+(** TODO: lt_moveR_nM *)
+(** TODO: lt_moveL_nV *)
 
 Definition lt_moveR_nV {k m} n : n <= k -> k < n + m -> k - n < m.
 Proof.
