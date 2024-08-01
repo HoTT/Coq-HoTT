@@ -1218,11 +1218,10 @@ Defined.
 
 Definition leq_moveL_Mn {k m} n : n <= k -> k - n <= m -> k <= n + m.
 Proof.
-  intros l q.
-  apply (nat_add_l_monotone n) in q.
-  rewrite <- nat_sub_l_add_r in q; trivial.
-  destruct (nat_add_sub_cancel_l k n)^ in q;
-    assumption.
+  intros H1 H2.
+  apply (nat_add_l_monotone n) in H2.
+  rewrite <- nat_sub_l_add_r in H2; only 2: exact _.
+  by rewrite nat_add_sub_cancel_l in H2.
 Defined.
 
 Definition leq_moveL_nM {k m n}
@@ -1232,7 +1231,6 @@ Proof.
   apply leq_moveL_Mn.
 Defined.
 
-(** TODO: rename natpmswap3 -> leq_moveR_Mn *)
 Definition leq_moveR_Mn {m n} k : k <= n -> m <= n - k -> k + m <= n.
 Proof.
   intros ineq qe.
