@@ -120,11 +120,11 @@ Fixpoint gcd a b :=
 
 (** *** Factorial *)
 
-Fixpoint factorial (n : nat) : nat
-  := match n with
-       | 0 => 1
-       | S n => S n * factorial n
-     end.
+Fixpoint factorial n := 
+  match n with
+  | 0 => 1
+  | S n => S n * factorial n
+  end.
 
 (** ** Comparison Predicates *)
 
