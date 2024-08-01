@@ -1262,7 +1262,13 @@ Proof.
     assumption.
 Defined.
 
-(** TODO: rename *)
+Definition leq_moveL_nM {k m n}
+  : n <= k -> k - n <= m -> k <= m + n.
+Proof.
+  rewrite nat_add_comm.
+  apply natpmswap2.
+Defined.
+
 Proposition natpmswap3 (k m n : nat)
   : k <= n -> m <= n - k -> k + m <= n.
 Proof.
