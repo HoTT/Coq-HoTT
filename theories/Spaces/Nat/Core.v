@@ -959,13 +959,12 @@ Defined.
 
 (** *** Subtraction *)
 
-Definition leq_sub_add n m : n <= n - m + m.
+Global Instance leq_sub_add n m : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | g].
-  - destruct (nat_add_sub_l_cancel l)^;
-      constructor.
+  - by rewrite nat_add_sub_l_cancel.
   - apply leq_lt in g.
-    now destruct (equiv_nat_sub_leq _)^.
+    by destruct (equiv_nat_sub_leq _)^.
 Defined.
 
 (** A number being less than another is equivalent to their difference being greater than zero. *)
@@ -1216,6 +1215,7 @@ Proof.
   exact H2.
 Defined.
 
+(** TODO: [n <= k] can be dropped *)
 Definition leq_moveL_Mn {k m} n : n <= k -> k - n <= m -> k <= n + m.
 Proof.
   intros H1 H2.
@@ -1238,24 +1238,12 @@ Proof.
   by rewrite nat_add_sub_cancel_l in H2.
 Defined.
 
-(** TODO: rename, move *)
-Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
-Proof.
-  destruct (@leq_dichotomy m n) as [l | gt].
-  - rewrite <- nat_sub_l_add_l; trivial. 
-    rewrite nat_add_sub_cancel_r.
-    destruct (nat_add_sub_cancel_r n m)^.
-    apply leq_refl; done.
-  - apply leq_lt in gt.
-    destruct (equiv_nat_sub_leq _)^.
-    assumption.
-Defined.
-
 Definition lt_moveL_Mn {k m} n : k - n < m -> k < n + m.
 Proof.
-  intro l; apply (nat_add_r_strictly_monotone n) in l.
-  destruct (nat_add_comm m n).
-  now rapply (leq_lt_trans (nat_sub_add_ineq _ _)).
+  intros H.
+  rewrite nat_add_comm.
+  apply (nat_add_r_strictly_monotone n) in H.
+  rapply leq_lt_trans.
 Defined.
 
 (** *** Order-reflection Lemmas *)
