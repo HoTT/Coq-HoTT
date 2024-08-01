@@ -33,7 +33,7 @@ Defined.
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
-  - destruct (nataddsub_comm _ _ m l)^.
+  - rewrite <- nataddsub_comm; trivial.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
   - apply leq_lt in gt.
@@ -55,14 +55,14 @@ Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
   : (k <= m) -> n + (m - k) = z -> n + m - k = z.
 Proof.
   intro H.
-  destruct (symmetric_paths _ _ (nat_sub_l_add_r n H)); done.
+  by rewrite nat_sub_l_add_r.
 Defined.
 
 Proposition nat_add_sub_eq (n : nat) {k: nat}
   : (k <= n) -> k + (n - k) = n.
 Proof.
   intro H.
-  destruct (nat_sub_l_add_r k H);
+  destruct (nat_sub_l_add_r _ k _ H);
   destruct (nat_add_comm n k); exact (nat_add_sub_cancel_r _ _).
 Defined.
 
@@ -161,8 +161,8 @@ Proof.
       (symmetric_paths _ _ (nat_sub_zero_r m)); done.
   - intro l. change (k.+1) with (1 + k).
     destruct (nat_add_comm k 1).
-    destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
-    destruct (symmetric_paths _ _ (nat_sub_add m k 1)).
+    destruct (symmetric_paths _ _ (nat_sub_r_add n k 1)).
+    destruct (symmetric_paths _ _ (nat_sub_r_add m k 1)).
     destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).
     destruct (symmetric_paths _ _ (@predeqminus1 (m -k))).
     apply leq_pred, IHk. exact l.
@@ -258,7 +258,7 @@ Proof.
       apply leq_succ_r in l.
       destruct (equiv_nat_sub_leq _)^. exact IHk.
     + change k.+1 with (1 + k). destruct (nat_add_comm k 1).
-      destruct (symmetric_paths _ _ (nat_sub_add n k 1)).
+      destruct (symmetric_paths _ _ (nat_sub_r_add n k 1)).
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
       apply increasing_geq_S.
       unfold ">", "<" in *.
@@ -283,7 +283,7 @@ Proof.
       reflexivity.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).
-    destruct (symmetric_paths _ _ (nat_sub_add m n 1)). 
+    destruct (symmetric_paths _ _ (nat_sub_r_add m n 1)). 
     destruct (S_predn (m - n) 0 (equiv_lt_lt_sub _ _ ineq)); simpl;
       destruct (symmetric_paths _ _ (nat_sub_zero_r (nat_pred (m - n)))).
     assert (0 < m - n) as dp by exact (equiv_lt_lt_sub _ _ ineq).
