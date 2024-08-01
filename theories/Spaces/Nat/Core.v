@@ -1216,9 +1216,7 @@ Proof.
   exact H2.
 Defined.
 
-(** TODO: rename natpmswap2 -> leq_moveL_Mn *)
-Proposition natpmswap2 (k m n : nat)
-  : n <= k -> k - n <= m -> k <= n + m.
+Definition leq_moveL_Mn {k m} n : n <= k -> k - n <= m -> k <= n + m.
 Proof.
   intros l q.
   apply (nat_add_l_monotone n) in q.
@@ -1231,7 +1229,7 @@ Definition leq_moveL_nM {k m n}
   : n <= k -> k - n <= m -> k <= m + n.
 Proof.
   rewrite nat_add_comm.
-  apply natpmswap2.
+  apply leq_moveL_Mn.
 Defined.
 
 (** TODO: rename natpmswap3 -> leq_moveR_Mn *)
