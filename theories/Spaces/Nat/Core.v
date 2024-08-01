@@ -970,17 +970,11 @@ Defined.
 (** A number being less than another is equivalent to their difference being greater than zero. *)
 Definition equiv_lt_lt_sub n m : m < n <~> 0 < n - m.
 Proof.
+  induction n as [|n IHn] in m |- *.
+  1: srapply equiv_iff_hprop; intro; contradiction (not_lt_zero_r _ _).
+  destruct m; only 1: reflexivity.
+  nrefine (IHn m oE _).
   srapply equiv_iff_hprop.
-  - revert m; simple_induction n n IHn.
-    + intros m ineq. contradiction (not_lt_zero_r m).
-    + destruct m.
-      * simpl. easy.
-      * simpl. intro ineq. apply leq_succ' in ineq.
-        now apply IHn in ineq.
-  - intro ineq.
-    destruct (@leq_dichotomy n m) as [n_leq_m |]; [ | assumption].
-    apply equiv_nat_sub_leq in n_leq_m.
-    contradiction (lt_irrefl 0). now rewrite n_leq_m in ineq.
 Defined.
 
 (** *** Monotonicity of Addition *)
