@@ -33,7 +33,7 @@ Defined.
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
-  - rewrite <- nataddsub_comm; trivial.
+  - rewrite <- nat_sub_l_add_l; trivial.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
   - apply leq_lt in gt.

@@ -1153,8 +1153,8 @@ Proof.
     exact _.
 Defined.
 
-(** TODO: rename nataddsub_comm -> nat_sub_l_add_r *)
-Definition nataddsub_comm n m k
+(** Subtraction and addition satisfy a special commutativity law. *)
+Definition nat_sub_l_add_l n m k
   : k <= n -> (n + m) - k = (n - k) + m.
 Proof.
   intro l.
@@ -1252,7 +1252,7 @@ Defined.
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
-  - rewrite <- nataddsub_comm; trivial. 
+  - rewrite <- nat_sub_l_add_l; trivial. 
     rewrite nat_add_sub_cancel_r.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
