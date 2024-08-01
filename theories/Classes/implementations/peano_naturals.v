@@ -28,18 +28,18 @@ Defined.
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Nat.Core.add.
+Global Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
 
-Notation mul := Nat.Core.mul.
+Notation mul := Nat.Core.nat_mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.Core.mul.
+Global Instance nat_mult: Mult@{N} nat := Nat.Core.nat_mul.
 
 Ltac simpl_nat :=
-  change (@plus nat _) with Nat.Core.add;
-  change (@mult nat _) with Nat.Core.mul;
+  change (@plus nat _) with Nat.Core.nat_add;
+  change (@mult nat _) with Nat.Core.nat_mul;
   simpl;
-  change Nat.Core.add with (@plus nat Nat.Core.add);
-  change Nat.Core.mul with (@mult nat Nat.Core.mul).
+  change Nat.Core.nat_add with (@plus nat Nat.Core.nat_add);
+  change Nat.Core.nat_mul with (@mult nat Nat.Core.nat_mul).
 
 (** [0 + a =N= a] *)
 Local Instance add_0_l : LeftIdentity@{N N} (plus : Plus nat) 0 := fun _ => idpath.
@@ -574,7 +574,7 @@ Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
 
-Lemma le_nat_max_l n m : n <= Nat.Core.max n m.
+Lemma le_nat_max_l n m : n <= Nat.Core.nat_max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
@@ -582,7 +582,7 @@ Proof.
   - apply zero_least.
   - apply le_S_S. exact (IHn m').
 Qed.
-Lemma le_nat_max_r n m : m <= Nat.Core.max n m.
+Lemma le_nat_max_r n m : m <= Nat.Core.nat_max n m.
 Proof.
   revert m.
   induction n as [|n' IHn];
@@ -672,7 +672,7 @@ intros;apply toR_unique, _.
 Qed.
 Global Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.sub.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.nat_sub.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.

@@ -300,7 +300,7 @@ Proof.
     refine (fcard_sum _ _ @ _).
     simpl.
     refine (_ @ nat_add_comm _ _).
-    refine (ap011 add _ _).
+    refine (ap011 nat_add _ _).
     + apply IH.
     + apply fcard_equiv', prod_unit_l.
   Defined.
@@ -344,7 +344,7 @@ Proof.
   - reflexivity.
   - refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) => Y))^-1 @ _).
     refine (fcard_prod _ _ @ _).
-    apply (ap011 mul).
+    apply (ap011 nat_mul).
     + assumption.
     + refine (fcard_equiv (@Unit_ind (fun (_:Unit) => Y))^-1).
 Defined.

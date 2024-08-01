@@ -208,6 +208,20 @@ Proof.
   destruct p; rewrite !concat_1p, concat_p1; reflexivity.
 Defined.
 
+(** TODO: The following lemmas exist in Nat/Core.v however the proofs in this file expect them to be proven in the following way. At some point we should revise the proof and adapt them to the new versions. *)
+
+Local Lemma add_n_O : forall (n : nat), n = n + 0.
+Proof.
+  simple_induction' n; simpl; auto.
+Defined.
+
+Local Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
+Proof.
+  simple_induction' n; simpl.
+  - reflexivity.
+  - apply ap; assumption.
+Defined.
+
 Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
   : IsEquiv (colim_shift_seq_to_colim_seq A n).
 Proof.

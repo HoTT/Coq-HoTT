@@ -1,87 +1,96 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
-Require Export Basics.Nat.
-Require Import Basics.Classes.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes.
+Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
-
 Local Unset Elimination Schemes.
 
-(** * Theorems about the natural numbers *)
-
-(** Many of these definitions and proofs have been ported from the coq stdlib. *)
-
-(** Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
+(** * Natural numbers *)
 
 (** We want to close the trunc_scope so that notations from there don't conflict here. *)
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
+(** TODO: Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
+
 (** ** Basic operations on naturals *)
 
-(** It is common to call [S] [succ] so we add it as a parsing only notation. *)
-Notation succ := S (only parsing).
+(** *** Iteration *)
 
-(** The predecessor of a natural number. *)
-Definition pred n : nat :=
+(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
+Notation nat_iter n f x
+  := ((fix F (m : nat)
+      := match m with
+        | 0 => x
+        | m'.+1 => f (F m')
+        end) n).
+
+(** *** Successor and predecessor *)
+
+(** [nat_succ n] is the successor of a natural number [n]. *)
+Notation nat_succ := S (only parsing).
+
+(** [nat_pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
+Definition nat_pred n : nat :=
   match n with
   | 0 => n
   | S n' => n'
   end.
 
+(** *** Arithmetic operations *)
+
 (** Addition of natural numbers *)
-Fixpoint add n m : nat :=
-  match n with
-  | 0 => m
-  | S n' => S (add n' m)
-  end.
+Definition nat_add n m : nat
+  := nat_iter n nat_succ m.
 
-Notation "n + m" := (add n m) : nat_scope.
+Notation "n + m" := (nat_add n m) : nat_scope.
 
-Definition double n : nat := n + n.
+(** Multiplication of natural numbers *)
+Definition nat_mul n m : nat
+  := nat_iter n (nat_add m) 0.
 
-Fixpoint mul n m : nat :=
-  match n with
-  | 0 => 0
-  | S n' => m + (mul n' m)
-  end.
-
-Notation "n * m" := (mul n m) : nat_scope.
+Notation "n * m" := (nat_mul n m) : nat_scope.
 
 (** Truncated subtraction: [n - m] is [0] if [n <= m] *)
-Fixpoint sub n m : nat :=
+Fixpoint nat_sub n m : nat :=
   match n, m with
-  | S n' , S m' => sub n' m'
+  | S n' , S m' => nat_sub n' m'
   | _ , _ => n
   end.
 
-Notation "n - m" := (sub n m) : nat_scope.
+Notation "n - m" := (nat_sub n m) : nat_scope.
 
-(** ** Minimum, maximum *)
+(** Powers or exponentiation of natural numbers. *)
+Definition nat_pow n m :=
+  nat_iter m (nat_mul n) 1.
 
-Fixpoint max n m :=
+(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
+(** Exponentiation *)
+Fixpoint nat_exp (n m : nat) : nat
+  := match m with
+       | 0 => 1
+       | S m => nat_exp n m * n
+     end.
+
+(** *** Maximum and minimum *)
+
+(** The maximum [nat_max n m] of two natural numbers [n] and [m]. *) 
+Fixpoint nat_max n m :=
   match n, m with
   | 0 , _ => m
   | S n' , 0 => n'.+1
-  | S n' , S m' => (max n' m').+1
+  | S n' , S m' => (nat_max n' m').+1
   end.
 
-Fixpoint min n m :=
+(** The minimum [nat_min n m] of two natural numbers [n] and [m]. *)
+Fixpoint nat_min n m :=
   match n, m with
   | 0 , _ => 0
   | S n' , 0 => 0
-  | S n' , S m' => S (min n' m')
+  | S n' , S m' => S (nat_min n' m')
   end.
 
-(** ** Power *)
-
-Fixpoint pow n m :=
-  match m with
-  | 0 => 1
-  | S m' => n * (pow n m')
-  end.
-
-(** ** Euclidean division *)
+(** *** Euclidean division *)
 
 (** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
 
@@ -110,7 +119,7 @@ Definition modulo x y : nat :=
 Infix "/" := div : nat_scope.
 Infix "mod" := modulo : nat_scope.
 
-(** ** Greatest common divisor *)
+(** *** Greatest common divisor *)
 
 (** We use Euclid algorithm, which is normally not structural, but Coq is now clever enough to accept this (behind modulo there is a subtraction, which now preserves being a subterm) *)
 
@@ -120,180 +129,82 @@ Fixpoint gcd a b :=
   | S a' => gcd (b mod a'.+1) a'.+1
   end.
 
-(** ** Square *)
+(** *** Factorial *)
 
-Definition square n : nat := n * n.
+Fixpoint factorial (n : nat) : nat
+  := match n with
+       | 0 => 1
+       | S n => S n * factorial n
+     end.
 
-(** ** Square root *)
+(** ** Properties of [nat_iter]. *)
 
-(** The following square root function is linear (and tail-recursive).
-  With Peano representation, we can't do better. For faster algorithm,
-  see Psqrt/Zsqrt/Nsqrt...
+Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
+  : nat_iter (S n) f x = nat_iter n f (f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  exact (ap f IHn).
+Defined.
 
-  We search the square root of n = k + p^2 + (q - r)
-  with q = 2p and 0<=r<=q. We start with p=q=r=0, hence
-  looking for the square root of n = k. Then we progressively
-  decrease k and r. When k = S k' and r=0, it means we can use (S p)
-  as new sqrt candidate, since (S k')+p^2+2p = k'+(S p)^2.
-  When k reaches 0, we have found the biggest p^2 square contained
-  in n, hence the square root of n is p.
-*)
+Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
+  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  exact (ap f IHn).
+Defined.
 
-Fixpoint sqrt_iter k p q r : nat :=
-  match k with
-  | O => p
-  | S k' =>
-    match r with
-    | O => sqrt_iter k' p.+1 q.+2 q.+2
-    | S r' => sqrt_iter k' p q r'
-    end
-  end.
+(** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
+Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
+  : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
+Proof.
+  simple_induction n n IHn; simpl; trivial.
+  intros Hf x Hx.
+  apply Hf, IHn; trivial.
+Defined.
 
-Definition sqrt n : nat := sqrt_iter n 0 0 0.
+(** ** Properties of successors *)
 
-(** ** Log2 *)
-
-(** This base-2 logarithm is linear and tail-recursive.
-
-  In [log2_iter], we maintain the logarithm [p] of the counter [q],
-  while [r] is the distance between [q] and the next power of 2,
-  more precisely [q + S r = 2^(S p)] and [r<2^p]. At each
-  recursive call, [q] goes up while [r] goes down. When [r]
-  is 0, we know that [q] has almost reached a power of 2,
-  and we increase [p] at the next call, while resetting [r]
-  to [q].
-
-  Graphically (numbers are [q], stars are [r]) :
-
-<<
-                    10
-                  9
-                8
-              7   *
-            6       *
-          5           ...
-        4
-      3   *
-    2       *
-  1   *       *
-0   *   *       *
->>
-
-  We stop when [k], the global downward counter reaches 0.
-  At that moment, [q] is the number we're considering (since
-  [k+q] is invariant), and [p] its logarithm.
-*)
-
-Fixpoint log2_iter k p q r : nat :=
-  match k with
-  | O    => p
-  | S k' =>
-    match r with
-    | O => log2_iter k' (S p) (S q) q
-    | S r' => log2_iter k' p (S q) r'
-    end
-  end.
-
-Definition log2 n : nat := log2_iter (pred n) 0 1 0.
-
+(** TODO: remove these *)
 Local Definition ap_S := @ap _ _ S.
 Local Definition ap_nat := @ap nat.
 #[export] Hint Resolve ap_S : core.
 #[export] Hint Resolve ap_nat : core.
 
-Theorem pred_Sn : forall n:nat, n = pred (S n).
-Proof.
-  auto.
-Defined.
+Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
+  := idpath.
 
 (** Injectivity of successor *)
-
-Definition path_nat_S n m (H : S n = S m) : n = m := ap pred H.
+Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 #[export] Hint Immediate path_nat_S : core.
 
-Theorem not_eq_S : forall n m:nat, n <> m -> S n <> S m.
+(** TODO: rename to [neq_S] *)
+(** TODO: avoid auto in proof. *)
+Definition not_eq_S@{} n m : n <> m -> S n <> S m.
 Proof.
   auto.
 Defined.
 #[export] Hint Resolve not_eq_S : core.
 
-(** TODO: keep or remove? *)
-Definition IsSucc (n: nat) : Type0 :=
-  match n with
-  | O => Empty
-  | S p => Unit
-  end.
-
+(** TODO: rename to [neq_O_S] *)
 (** Zero is not the successor of a number *)
-
-Theorem not_eq_O_S : forall n:nat, 0 <> S n.
+Definition not_eq_O_S@{} : forall n, 0 <> S n.
 Proof.
   discriminate.
 Defined.
 #[export] Hint Resolve not_eq_O_S : core.
 
-Theorem not_eq_n_Sn : forall n:nat, n <> S n.
+(** TODO: rename to [neq_n_Sn] *)
+(** TODO: prove above using this *)
+(** TODO: remove auto. *)
+Theorem not_eq_n_Sn@{} n : n <> S n.
 Proof.
   simple_induction' n; auto.
 Defined.
 #[export] Hint Resolve not_eq_n_Sn : core.
 
-Local Definition ap011_add := @ap011 _ _ _ add.
-Local Definition ap011_nat := @ap011 nat nat.
-#[export] Hint Resolve ap011_add : core.
-#[export] Hint Resolve ap011_nat : core.
+(** ** Truncatedness of natural numbers *)
 
-Lemma add_n_O : forall (n : nat), n = n + 0.
-Proof.
-  simple_induction' n; simpl; auto.
-Defined.
-#[export] Hint Resolve add_n_O : core.
-
-Lemma add_O_n : forall (n : nat), 0 + n = n.
-Proof.
-  auto.
-Defined.
-
-Lemma add_n_Sm : forall n m:nat, S (n + m) = n + S m.
-Proof.
-  simple_induction' n; simpl; auto.
-Defined.
-#[export] Hint Resolve add_n_Sm: core.
-
-Lemma add_Sn_m : forall n m:nat, S n + m = S (n + m).
-Proof.
-  auto.
-Defined.
-
-(** Multiplication *)
-
-Local Definition ap011_mul := @ap011 _ _ _  mul.
-#[export] Hint Resolve ap011_mul : core.
-
-Lemma mul_n_O : forall n:nat, 0 = n * 0.
-Proof.
-  simple_induction' n; simpl; auto.
-Defined.
-#[export] Hint Resolve mul_n_O : core.
-
-Lemma mul_n_Sm : forall n m:nat, n * m + n = n * S m.
-Proof.
-  intros; simple_induction n p H; simpl; auto.
-  destruct H; rewrite <- add_n_Sm; apply ap.
-  pattern m at 1 3; elim m; simpl; auto.
-Defined.
-#[export] Hint Resolve mul_n_Sm: core.
-
-(** Standard associated names *)
-
-Notation mul_0_r_reverse := mul_n_O (only parsing).
-Notation mul_succ_r_reverse := mul_n_Sm (only parsing).
-
-(** ** Equality of natural numbers *)
-
-(** *** Boolean equality and its properties *)
-
-(** [nat] has decidable paths *)
+(** [nat] has decidable paths. *)
 Global Instance decidable_paths_nat@{} : DecidablePaths nat.
 Proof.
   intros n; simple_induction n n IHn;
@@ -306,8 +217,125 @@ Proof.
     + exact (inr (fun p => q (path_nat_S _ _ p))).
 Defined.
 
-(** And is therefore a HSet *)
-Global Instance hset_nat : IsHSet nat := _.
+(** [nat] is therefore a hset. *)
+Global Instance ishset_nat : IsHSet nat := _.
+
+(** ** Properties of addition *)
+
+(** [0] is the left identity of addition. *)
+Definition nat_add_zero_l@{} n : 0 + n = n
+  := idpath.
+
+(** [0] is the right identity of addition. *)
+Definition nat_add_zero_r@{} n : n + 0 = n.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - apply (ap nat_succ).
+    exact IHn.
+Defined.
+#[export] Hint Resolve nat_add_zero_r : core.
+
+(** Adding a successor on the left is the same as adding and then taking the successor. *)
+Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
+  := idpath.
+
+(** Adding a successor on the right is the same as adding and then taking the successor. *)
+Definition nat_add_succ_r@{} n m : n + m.+1 = (n + m).+1.
+Proof.
+  simple_induction' n; simpl; auto.
+Defined.
+#[export] Hint Resolve nat_add_succ_r: core.
+
+(** Addition of natural numbers is commutative. *)
+Definition nat_add_comm@{} n m : n + m = m + n.
+Proof.
+  induction n.
+  - exact (nat_add_zero_r m)^.
+  - rhs nrapply nat_add_succ_r.
+    apply (ap nat_succ).
+    exact IHn.
+Defined.
+
+(** Addition of natural numbers is associative. *)
+Definition nat_add_assoc@{} n m k : n + (m + k) = (n + m) + k.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - nrapply (ap nat_succ).
+    exact IHn.
+Defined.
+
+(** ** Properties of multiplication *)
+
+(** Multiplication by [0] on the left is [0]. *)
+Definition nat_mul_zero_l@{} n : 0 * n = 0
+  := idpath.
+
+(** Multiplicaiton by [0] on the right is [0]. *)
+Definition nat_mul_zero_r@{} n : n * 0 = 0.
+Proof.
+  by induction n.
+Defined.
+#[export] Hint Resolve nat_mul_zero_r : core.
+
+Definition nat_mul_succ_l@{} n m : n.+1 * m = m + n * m
+  := idpath.
+
+Definition nat_mul_succ_r@{} n m : n * m.+1 = n * m + n.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rhs nrapply nat_add_succ_r.
+    nrapply (ap nat_succ).
+    rhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add m)).
+    exact IHn.
+Defined.
+#[export] Hint Resolve nat_mul_succ_r : core.
+
+(** Multiplication of natural numbers is commutative. *)
+Definition nat_mul_comm@{} n m : n * m = m * n.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - nrapply nat_mul_zero_r.
+  - lhs nrapply nat_mul_succ_r.
+    lhs nrapply nat_add_comm.
+    snrapply (ap (nat_add n)).
+    exact IHm.
+Defined.
+
+(** Multiplication of natural numbers distributes over addition on the left. *)
+Definition nat_dist_l@{} n m k : n * (m + k) = n * m + n * k.
+Proof.
+  induction n as [|n IHn]; simpl.
+  - reflexivity.
+  - lhs_V nrapply nat_add_assoc.
+    rhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add m)).
+    lhs nrapply nat_add_comm.
+    rewrite IHn.
+    lhs_V nrapply nat_add_assoc.
+    nrapply (ap (nat_add (n * m))).
+    nrapply nat_add_comm.
+Defined.
+
+(** Multiplication of natural numbers distributes over addition on the right. *)
+Definition nat_dist_r@{} n m k : (n + m) * k = n * k + m * k.
+Proof.
+  rewrite 3 (nat_mul_comm _ k).
+  nrapply nat_dist_l.
+Defined.
+
+(** Multiplication of natural numbers is associative. *)
+Definition nat_mul_assoc@{} n m k : n * (m * k) = n * m * k.
+Proof.
+  induction n as [|n IHn]; simpl.
+  - reflexivity.
+  - rhs nrapply nat_dist_r.
+    nrapply (ap (nat_add (m * k))).
+    exact IHn.
+Defined.
 
 (** ** Inequality of natural numbers *)
 
@@ -335,7 +363,7 @@ Defined.
 
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
-Lemma leq_n_pred n m : leq n m -> leq (pred n) (pred m).
+Lemma leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
 Proof.
   induction 1; auto.
   destruct m; simpl; auto.
@@ -507,114 +535,67 @@ Defined.
 
 (** Maximum and minimum : definitions and specifications *)
 
-Lemma max_n_n n : max n n = n.
+Lemma nat_max_n_n n : nat_max n n = n.
 Proof.
   simple_induction' n; cbn; auto.
 Defined.
-#[export] Hint Resolve max_n_n : core.
+#[export] Hint Resolve nat_max_n_n : core.
 
-Lemma max_Sn_n n : max (S n) n = S n.
+Lemma nat_max_Sn_n n : nat_max (S n) n = S n.
 Proof.
   simple_induction' n; cbn; auto.
 Defined.
-#[export] Hint Resolve max_Sn_n : core.
+#[export] Hint Resolve nat_max_Sn_n : core.
 
-Lemma max_comm n m : max n m = max m n.
+Lemma nat_max_comm n m : nat_max n m = nat_max m n.
 Proof.
   revert m; simple_induction' n; destruct m; cbn; auto.
 Defined.
 
-Lemma max_0_n n : max 0 n = n.
+Lemma nat_max_0_n n : nat_max 0 n = n.
 Proof.
   auto.
 Defined.
-#[export] Hint Resolve max_0_n : core.
+#[export] Hint Resolve nat_max_0_n : core.
 
-Lemma max_n_0 n : max n 0 = n.
+Lemma nat_max_n_0 n : nat_max n 0 = n.
 Proof.
-  by rewrite max_comm.
+  by rewrite nat_max_comm.
 Defined.
-#[export] Hint Resolve max_n_0 : core.
+#[export] Hint Resolve nat_max_n_0 : core.
 
-Theorem max_l : forall n m, m <= n -> max n m = n.
+Theorem nat_max_l : forall n m, m <= n -> nat_max n m = n.
 Proof.
   intros n m; revert n; simple_induction m m IHm; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply ap_S, IHm, leq_S_n.
+  cbn; by apply (ap S), IHm, leq_S_n.
 Defined.
 
-Theorem max_r : forall n m : nat, n <= m -> max n m = m.
+Theorem nat_max_r : forall n m : nat, n <= m -> nat_max n m = m.
 Proof.
-  intros; rewrite max_comm; by apply max_l.
+  intros; rewrite nat_max_comm; by apply nat_max_l.
 Defined.
 
-Lemma min_comm : forall n m, min n m = min m n.
+Lemma nat_min_comm : forall n m, nat_min n m = nat_min m n.
 Proof.
   simple_induction' n; destruct m; cbn; auto.
 Defined.
 
-Theorem min_l : forall n m : nat, n <= m -> min n m = n.
+Theorem nat_min_l : forall n m : nat, n <= m -> nat_min n m = n.
 Proof.
   simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply ap_S, IHn, leq_S_n.
+  cbn; by apply (ap S), IHn, leq_S_n.
 Defined.
 
-Theorem min_r : forall n m : nat, m <= n -> min n m = m.
+Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
 Proof.
-  intros; rewrite min_comm; by apply min_l.
-Defined.
-
-(** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
-Notation nat_iter n f x
-  := ((fix F (m : nat)
-      := match m with
-        | 0 => x
-        | m'.+1 => f (F m')
-        end) n).
-
-Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
-  : nat_iter (S n) f x = nat_iter n f (f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  exact (ap f IHn).
-Defined.
-
-Theorem nat_iter_add (n m : nat) {A} (f : A -> A) (x : A)
-  : nat_iter (n + m) f x = nat_iter n f (nat_iter m f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  exact (ap f IHn).
-Defined.
-
-(** Preservation of invariants : if [f : A -> A] preserves the invariant [P], then the iterates of [f] also preserve it. *)
-Theorem nat_iter_invariant (n : nat) {A} (f : A -> A) (P : A -> Type)
-  : (forall x, P x -> P (f x)) -> forall x, P x -> P (nat_iter n f x).
-Proof.
-  simple_induction n n IHn; simpl; trivial.
-  intros Hf x Hx.
-  apply Hf, IHn; trivial.
+  intros; rewrite nat_min_comm; by apply nat_min_l.
 Defined.
 
 (** ** Arithmetic *)
-
-Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
-Proof.
-  simple_induction' n; simpl.
-  - reflexivity.
-  - apply ap; assumption.
-Defined.
-
-Definition nat_add_comm (n m : nat) : n + m = m + n.
-Proof.
-  simple_induction n n IHn; simpl.
-  - exact (add_n_O m).
-  - transitivity (m + n).+1.
-    + apply ap, IHn.
-    + apply nat_add_n_Sm.
-Defined.
 
 Global Instance isinj_S : IsInjective S.
 Proof.
@@ -622,41 +603,17 @@ Proof.
   by apply path_nat_S.
 Defined.
 
-Global Instance isinj_nat_add_l@{} k : IsInjective (add k).
+Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
 Proof.
   simple_induction k k Ik; exact _.
 Defined.
 
-Definition isinj_nat_add_r@{} k : IsInjective (fun x => add x k).
+Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
 Proof.
   intros x y H.
   rewrite 2 (nat_add_comm _ k) in H.
   exact (isinj_nat_add_l k _ _ H).
 Defined.
-
-Definition nat_mul_comm@{} (x y : nat) : x * y = y * x.
-Proof.
-  induction x as [|x IHx] in y |- * using nat_rect@{Set}.
-  - apply mul_n_O.
-  - simpl; rewrite nat_add_comm, IHx.
-    nrapply mul_n_Sm.
-Defined.
-
-(** ** Exponentiation *)
-
-Fixpoint nat_exp (n m : nat) : nat
-  := match m with
-       | 0 => 1
-       | S m => nat_exp n m * n
-     end.
-
-(** ** Factorials *)
-
-Fixpoint factorial (n : nat) : nat
-  := match n with
-       | 0 => 1
-       | S n => S n * factorial n
-     end.
 
 (** ** Natural number ordering *)
 
@@ -706,6 +663,6 @@ Proof.
     refine (trunc_index_add_succ _ _ @ _).
     exact (ap trunc_S IH). }
   refine (_ @ ap nat_to_trunc_index _).
-  2: exact (ap _ (add_Sn_m _ _)^ @ add_n_Sm _ _).
+  2: exact (nat_add_succ_r _ _)^.
   reflexivity.
 Defined.

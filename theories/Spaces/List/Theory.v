@@ -243,10 +243,11 @@ Defined.
 Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
   : length (reverse_acc acc l) = (length acc + length l)%nat.
 Proof.
+  symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
-  - apply add_n_O.
-  - lhs nrapply IHl.
-    apply nat_add_n_Sm.
+  - apply nat_add_zero_r.
+  - rhs_V nrapply IHl.
+    apply nat_add_succ_r.
 Defined.
 
 (** The length of [reverse] is the same as the length of the original list. *)
@@ -505,7 +506,7 @@ Proof.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
-Definition nth_last {A : Type} (l : list A) (i : nat) (p : pred (length l) = i)
+Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
   : nth l i = last l. 
 Proof.
   destruct p.
@@ -636,11 +637,11 @@ Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
 Definition length_take@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  : length (take n l) = min n (length l).
+  : length (take n l) = nat_min n (length l).
 Proof.
   induction l as [|a l IHl] in n |- * using list_ind@{i i}.
   { rewrite take_nil.
-    rewrite min_r.
+    rewrite nat_min_r.
     1: reflexivity.
     cbn; exact _. }
   destruct n.
@@ -691,13 +692,13 @@ Defined.
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
   (H : (n < length l)%nat)
-  : length (remove n l) = pred (length l)%nat.
+  : length (remove n l) = nat_pred (length l)%nat.
 Proof.
   unfold remove.
   rewrite length_app@{i}.
   rewrite length_take.
   rewrite length_drop.
-  rewrite min_l.
+  rewrite nat_min_l.
   - rewrite nataddsub_assoc.
     2: exact H.
     rewrite <- predeqminus1.
