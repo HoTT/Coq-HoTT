@@ -32,8 +32,8 @@ Proof.
   induction (path_fin_to_finnat_fin_zero n)^.
   intro p.
   destruct (hset_path2 1 p).
-  cbn.
-  by destruct (hset_path2 1 (path_zero_finnat n leq_1_Sn)).
+  lhs nrapply transport_1.
+  nrapply compute_finnat_ind_zero.
 Defined.
 
 Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)

@@ -274,7 +274,7 @@ Global Instance nat_lt: Lt@{N N} nat := Nat.Core.lt.
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
 induction k.
-- apply Nat.Core.leq_n.
+- apply Nat.Core.leq_refl.
 - simpl_nat. constructor. assumption.
 Qed.
 

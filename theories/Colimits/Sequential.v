@@ -212,7 +212,9 @@ Defined.
 
 Local Lemma add_n_O : forall (n : nat), n = n + 0.
 Proof.
-  simple_induction' n; simpl; auto.
+  simple_induction' n; simpl.
+  1: reflexivity.
+  exact (ap S IH).
 Defined.
 
 Local Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.

@@ -40,7 +40,7 @@ Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A
 
 Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A
   := match n with
-     | 0 => fun N _ => Empty_rec (not_lt_n_0 _ N)
+     | 0 => fun N _ => Empty_rec (not_lt_zero_r _ N)
      | n'.+1 => fun _ v => v fin_zero
      end.
 
@@ -49,7 +49,7 @@ Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
 Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A)
   : fshead' n N (fscons' n a v) = a.
 Proof.
-  destruct n; [elim (not_lt_n_n _ N)|].
+  destruct n; [elim (lt_irrefl _ N)|].
   exact (apD10 (compute_fin_rec_fin_zero _ _ _ _) v).
 Defined.
 
