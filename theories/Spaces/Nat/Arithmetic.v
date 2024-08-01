@@ -262,7 +262,7 @@ Proof.
       destruct (symmetric_paths _ _ (@predeqminus1 (n - k))).
       apply increasing_geq_S.
       unfold ">", "<" in *.
-      apply lt_sub_gt_0 in g. 
+      apply equiv_lt_lt_sub in g. 
       now (destruct (symmetric_paths _ _ (S_predn (n - k) 0 _))).
 Defined.
 
@@ -284,9 +284,9 @@ Proof.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).
     destruct (symmetric_paths _ _ (nat_sub_add m n 1)). 
-    destruct (S_predn (m - n) 0 (lt_sub_gt_0 _ _ ineq)); simpl;
+    destruct (S_predn (m - n) 0 (equiv_lt_lt_sub _ _ ineq)); simpl;
       destruct (symmetric_paths _ _ (nat_sub_zero_r (nat_pred (m - n)))).
-    assert (0 < m - n) as dp by exact (lt_sub_gt_0 _ _ ineq).
+    assert (0 < m - n) as dp by exact (equiv_lt_lt_sub _ _ ineq).
     assert (nat_pred (m - n) < m) as sh by
         ( unfold "<";
           destruct (symmetric_paths _ _ (S_predn _ 0 _));
