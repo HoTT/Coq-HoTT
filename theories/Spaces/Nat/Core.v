@@ -1337,3 +1337,17 @@ Proof.
     nrapply ap.
     exact IHm.
 Defined.
+
+(** *** Monotonicity of powers *)
+
+Definition nat_pow_l_monotone {n m} k
+  : n <= m -> nat_pow k.+1 n <= nat_pow k.+1 m.
+Proof.
+  intros H; induction H; exact _.
+Defined.
+
+Definition nat_pow_r_monotone {n m} k
+  : n <= m -> nat_pow n k <= nat_pow m k.
+Proof.
+  intros H; induction k; exact _.
+Defined.

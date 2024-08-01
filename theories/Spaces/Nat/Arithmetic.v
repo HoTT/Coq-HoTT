@@ -21,7 +21,7 @@ Defined.
 
 Proposition nataddsub_comm_ineq (n m k : nat)
   : (n + k) - m <= (n - m) + k.
-Proof. 
+Proof.
   simple_induction k k IHk.
   - destruct (nat_add_zero_r n)^, (nat_add_zero_r (n - m))^; constructor.
   - destruct (nat_add_succ_r n k)^.
