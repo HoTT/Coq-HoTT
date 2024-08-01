@@ -1224,8 +1224,7 @@ Proof.
   by rewrite nat_add_sub_cancel_l in H2.
 Defined.
 
-Definition leq_moveL_nM {k m n}
-  : n <= k -> k - n <= m -> k <= m + n.
+Definition leq_moveL_nM {k m} n : n <= k -> k - n <= m -> k <= m + n.
 Proof.
   rewrite nat_add_comm.
   apply leq_moveL_Mn.
