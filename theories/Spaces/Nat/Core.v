@@ -1239,7 +1239,7 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
 (** *** Movement Lemmas *)
 
-(** TODO: rename *)
+(** TODO: rename natpmswap1 -> lt_moveR_nV *)
 Proposition natpmswap1 (k m n : nat)
   : n <= k -> k < n + m -> k - n < m.
 Proof.
@@ -1251,7 +1251,7 @@ Proof.
   exact (lt_reflects_add_r _ q').
 Defined.
 
-(** TODO: rename *)
+(** TODO: rename natpmswap2 -> leq_moveL_Mn *)
 Proposition natpmswap2 (k m n : nat)
   : n <= k -> k - n <= m -> k <= n + m.
 Proof.
@@ -1269,6 +1269,7 @@ Proof.
   apply natpmswap2.
 Defined.
 
+(** TODO: rename natpmswap3 -> leq_moveR_Mn *)
 Proposition natpmswap3 (k m n : nat)
   : k <= n -> m <= n - k -> k + m <= n.
 Proof.
@@ -1279,7 +1280,7 @@ Proof.
     assumption.
 Defined.
 
-(** TODO: move, rename *)
+(** TODO: rename, move *)
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
@@ -1291,7 +1292,7 @@ Proof.
     assumption.
 Defined.
 
-(** TODO: rename *)
+(** TODO: rename natpmswap4 -> lt_moveL_Mm *)
 Proposition natpmswap4 (k m n : nat)
   : k - n < m -> k < n + m.
 Proof.
