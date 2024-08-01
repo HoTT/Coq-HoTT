@@ -153,22 +153,6 @@ Proof.
 Defined.
 
 (** TODO: move, rename *)
-Proposition natsubpreservesleq { n m k : nat }
-  : n <= m -> n - k <= m - k.
-Proof.
-  simple_induction k k IHk.
-  - destruct (symmetric_paths _ _ (nat_sub_zero_r n)),
-      (symmetric_paths _ _ (nat_sub_zero_r m)); done.
-  - intro l. change (k.+1) with (1 + k).
-    destruct (nat_add_comm k 1).
-    destruct (symmetric_paths _ _ (nat_sub_r_add n k 1)).
-    destruct (symmetric_paths _ _ (nat_sub_r_add m k 1)).
-    destruct (symmetric_paths _ _ (@predeqminus1 (n -k))).
-    destruct (symmetric_paths _ _ (@predeqminus1 (m -k))).
-    apply leq_pred, IHk. exact l.
-Defined.
-
-(** TODO: move, rename *)
 Proposition sub_less { n k : nat } : n - k <= n.
 Proof.
   revert k.
