@@ -60,7 +60,7 @@ Fixpoint nat_sub n m : nat :=
 
 Notation "n - m" := (nat_sub n m) : nat_scope.
 
-(** Exponentiation of natural numbers. *)
+(** Powers or exponentiation of natural numbers. *)
 Definition nat_pow n m :=
   nat_iter m (nat_mul n) 1.
 
