@@ -1207,9 +1207,7 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
 (** *** Movement Lemmas *)
 
-(** TODO: rename natpmswap1 -> lt_moveR_nV *)
-Proposition natpmswap1 (k m n : nat)
-  : n <= k -> k < n + m -> k - n < m.
+Definition lt_moveR_nV {k m} n : n <= k -> k < n + m -> k - n < m.
 Proof.
   intros l q.
   assert (q' : k - n + n < m + n) by
