@@ -11,8 +11,6 @@ Local Unset Elimination Schemes.
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
-(** TODO: Some results are prefixed with [nat_] and some are not.  Should we be more consistent? *)
-
 (** ** Basic operations on naturals *)
 
 (** *** Iteration *)
