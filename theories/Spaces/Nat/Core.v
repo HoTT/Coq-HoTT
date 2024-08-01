@@ -1206,16 +1206,15 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
 (** *** Movement Lemmas *)
 
-(** TODO: [n <= k] can be dropped *)
-Definition leq_moveL_Mn {k m} n : n <= k -> k - n <= m -> k <= n + m.
+Definition leq_moveL_Mn {k m} n : k - n <= m -> k <= n + m.
 Proof.
-  intros H1 H2.
-  apply (nat_add_l_monotone n) in H2.
-  rewrite <- nat_sub_l_add_r in H2; only 2: exact _.
-  by rewrite nat_add_sub_cancel_l in H2.
+  intros H.
+  rewrite nat_add_comm.
+  apply (nat_add_r_monotone n) in H.
+  rapply leq_trans.
 Defined.
 
-Definition leq_moveL_nM {k m} n : n <= k -> k - n <= m -> k <= m + n.
+Definition leq_moveL_nM {k m} n : k - n <= m -> k <= m + n.
 Proof.
   rewrite nat_add_comm.
   apply leq_moveL_Mn.
@@ -1242,8 +1241,7 @@ Proof.
   intros H1 H2; unfold lt.
   rewrite <- nat_sub_succ_l; only 2: exact _.
   rewrite <- (nat_add_sub_cancel_l m n).
-  apply nat_sub_monotone_l.
-  exact H2.
+  by apply nat_sub_monotone_l.
 Defined.
 
 (** *** Order-reflection Lemmas *)
