@@ -1141,7 +1141,7 @@ Proof.
   exact (lt_trans _ H2).
 Defined.
 
-(** Subtraction and addition satisfy an associativity law. *)
+(** Subtracting from a sum is the sum of subtracting from the second summand. *)
 Definition nat_sub_l_add_r m n k
   : k <= m -> (n + m) - k = n + (m - k).
 Proof.
@@ -1153,7 +1153,7 @@ Proof.
     exact _.
 Defined.
 
-(** Subtraction and addition satisfy a special commutativity law. *)
+(** Subtracting from a sum is the sum of subtracting from the first summand. *)
 Definition nat_sub_l_add_l n m k
   : k <= n -> (n + m) - k = (n - k) + m.
 Proof.
