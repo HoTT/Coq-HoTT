@@ -272,7 +272,7 @@ Proof.
   destruct n.
   - contradiction (not_lt_zero_r k).
   - change (n.+1 - k.+1) with (n - k). apply leq_succ' in ineq.
-    apply (nataddsub_assoc_lemma _).
+    by apply nat_sub_succ_l.
 Defined.
   
 Lemma ineq_sub (n m : nat) : n <= m -> m - (m - n) = n.

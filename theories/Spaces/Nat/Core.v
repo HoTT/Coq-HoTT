@@ -1144,20 +1144,6 @@ Proof.
 Defined.
 
 (** TODO: rename *)
-Definition nataddsub_assoc_lemma {k m : nat}
-  : (k <= m) -> m.+1 - k = (m - k).+1.
-Proof.
-  revert m; simple_induction k k IHk.
-  - intros m l; simpl. destruct m; reflexivity.
-  - destruct m.
-    + simpl; intro g; contradiction (not_lt_zero_r _ g).
-    + intro l; apply leq_succ' in l.
-      change (m.+2 - k.+1) with (m.+1 - k).
-      change (m.+1 - k.+1) with (m - k).
-      exact (IHk _ l).
-Defined.
-
-(** TODO: rename *)
 Definition nataddsub_assoc {m k} n
   : k <= m -> n + (m - k) = n + m - k.
 Proof.
