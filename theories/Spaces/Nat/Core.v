@@ -1158,25 +1158,15 @@ Proof.
 Defined.
 
 (** TODO: rename *)
-Definition nataddsub_assoc(n : nat) {m k : nat}
-  : (k <= m) -> n + (m - k) = n + m - k.
+Definition nataddsub_assoc {m k} n
+  : k <= m -> n + (m - k) = n + m - k.
 Proof.
-  revert m k. simple_induction n n IHn.
+  intros H; induction n as [|n IHn] in |- *.
   - reflexivity.
-  - intros m k l.
-    change (n.+1 + (m - k)) with (n + (m - k)).+1;
-      change (n.+1 + m) with (n +m).+1.
-    destruct k, m;
-      [ reflexivity
-      | reflexivity
-      | contradiction (not_lt_zero_r k _)
-      | ].
-    simpl "-". apply leq_succ' in l.
-    destruct (nat_add_succ_r n (m - k)).
-    destruct  (nataddsub_assoc_lemma l).
-    apply (IHn m.+1 k).
-    apply leq_succ_r.
-    assumption.
+  - change (?n.+1 + ?m) with (n + m).+1.
+    rhs nrapply nat_sub_succ_l.
+    1: exact (ap nat_succ IHn). 
+    exact _.
 Defined.
 
 (** TODO: rename *)
