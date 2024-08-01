@@ -1251,9 +1251,7 @@ Proof.
     assumption.
 Defined.
 
-(** TODO: rename natpmswap4 -> lt_moveL_Mm *)
-Proposition natpmswap4 (k m n : nat)
-  : k - n < m -> k < n + m.
+Definition lt_moveL_Mn {k m} n : k - n < m -> k < n + m.
 Proof.
   intro l; apply (nat_add_r_strictly_monotone n) in l.
   destruct (nat_add_comm m n).
