@@ -608,7 +608,7 @@ Proof.
 Defined.
 
 (** Subtracting an addition is the same as subtracting the two numbers separately. *)
-Definition nat_sub_add@{} n m k : n - (m + k) = n - m - k.
+Definition nat_sub_r_add@{} n m k : n - (m + k) = n - m - k.
 Proof.
   induction n as [|n IHn] in m, k |- *.
   - reflexivity.
@@ -620,9 +620,9 @@ Defined.
 (** The order in which two numbers are subtracted does not matter. *)
 Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
 Proof.
-  lhs_V nrapply nat_sub_add.
+  lhs_V nrapply nat_sub_r_add.
   rewrite nat_add_comm.
-  nrapply nat_sub_add.
+  nrapply nat_sub_r_add.
 Defined.
 
 (** Subtracting a larger number from a smaller number is [0]. *)
@@ -632,7 +632,7 @@ Proof.
   - intro l; induction l.
     + exact (nat_sub_cancel n).
     + change (m.+1) with (1 + m). 
-      lhs nrapply nat_sub_add.
+      lhs nrapply nat_sub_r_add.
       lhs nrapply nat_sub_comm_r.
       by destruct IHl^.
   - induction n as [|n IHn] in m |- *.
@@ -1142,7 +1142,7 @@ Proof.
 Defined.
 
 (** Subtraction and addition satisfy an associativity law. *)
-Definition nat_sub_l_add_r {m k} n
+Definition nat_sub_l_add_r m n k
   : k <= m -> (n + m) - k = n + (m - k).
 Proof.
   intros H; induction n as [|n IHn] in |- *.
@@ -1153,13 +1153,13 @@ Proof.
     exact _.
 Defined.
 
-(** TODO: rename *)
-Definition nataddsub_comm (n m k : nat)
-  : m <= n -> (n - m) + k = (n + k) - m.
+(** TODO: rename nataddsub_comm -> nat_sub_l_add_r *)
+Definition nataddsub_comm n m k
+  : k <= n -> (n + m) - k = (n - k) + m.
 Proof.
   intro l.
-  destruct (nat_add_comm k n).
-  rewrite (nat_sub_l_add_r k l).
+  rewrite nat_add_comm.
+  lhs rapply nat_sub_l_add_r.
   apply nat_add_comm.
 Defined.
 
@@ -1225,7 +1225,7 @@ Proposition natpmswap2 (k m n : nat)
 Proof.
   intros l q.
   apply (nat_add_l_monotone n) in q.
-  destruct (nat_sub_l_add_r n l) in q.
+  rewrite <- nat_sub_l_add_r in q; trivial.
   destruct (nat_add_sub_cancel_l k n)^ in q;
     assumption.
 Defined.
@@ -1243,7 +1243,7 @@ Proposition natpmswap3 (k m n : nat)
 Proof.
   intros ineq qe.
   apply (nat_add_l_monotone k) in qe.
-  destruct (nat_sub_l_add_r k ineq) in qe.
+  rewrite <- nat_sub_l_add_r in qe; trivial.
   destruct (nat_add_sub_cancel_l n k)^ in qe;
     assumption.
 Defined.
@@ -1252,7 +1252,8 @@ Defined.
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
-  - destruct (nataddsub_comm _ _ m l)^.
+  - rewrite <- nataddsub_comm; trivial. 
+    rewrite nat_add_sub_cancel_r.
     destruct (nat_add_sub_cancel_r n m)^.
     apply leq_refl; done.
   - apply leq_lt in gt.
