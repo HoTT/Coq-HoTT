@@ -95,14 +95,14 @@ Fixpoint divmod x y q u : nat * nat :=
 
 Definition div x y : nat :=
   match y with
-    | 0 => y
-    | S y' => fst (divmod x y' 0 y')
+  | 0 => y
+  | S y' => fst (divmod x y' 0 y')
   end.
 
 Definition modulo x y : nat :=
   match y with
-    | 0 => y
-    | S y' => y' - snd (divmod x y' 0 y')
+  | 0 => y
+  | S y' => y' - snd (divmod x y' 0 y')
   end.
 
 Infix "/" := div : nat_scope.
