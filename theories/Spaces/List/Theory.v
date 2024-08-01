@@ -694,13 +694,12 @@ Proof.
   rewrite length_take.
   rewrite length_drop.
   rewrite nat_min_l.
-  - rewrite nataddsub_assoc.
-    2: exact H.
-    rewrite <- predeqminus1.
-    induction n in |- *.
-    1: reflexivity.
-    cbn; assumption.
-  - exact (leq_trans _ H).
+  2: exact (leq_trans _ H).
+  rewrite <- nat_sub_l_add_r.
+  2: exact _.
+  lhs nrapply nat_sub_succ_r.
+  apply ap.
+  apply nat_add_sub_cancel_l.
 Defined. 
 
 (** An element of a [remove] is an element of the original list. *)
