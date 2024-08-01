@@ -187,8 +187,8 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Local Definition J {X Y Z} {x1 x2 : X} {y} {I : forall x, Y x -> Z} (p : x1 = x2)
-  : I x2 y = I x1 (coe (ap Y p^) y).
+Local Definition J {X Y Z} {x1 x2 : X} {y} {I : forall x, Y x -> Z} (p : x2 = x1)
+  : I x2 y = I x1 (coe (ap Y p) y).
 Proof.
   destruct p; reflexivity.
 Defined.
@@ -199,27 +199,15 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Local Definition L {X Y Z} {x1 x2 : X} {y} {F G} {I : forall x, Y x -> Z} {p : x1 = x2}
+Local Definition L {X Y Z} {x1 x2 : X} {y} {F G} {I : forall x, Y x -> Z} {p : x2 = x1}
   (Q : forall x y, I (F x) (G x y) = I x y)
   : Q x2 y @ J p =
-    J (ap F p) @ (ap (I (F x1)) (K F G p^ @ ap10 (ap coe (ap (ap Y) (ap_V F p))) (G x2 y))^ @
-    Q x1 (coe (ap Y p^) y)).
+    J (ap F p) @ (ap (I (F x1)) (K F G p)^ @
+    Q x1 (coe (ap Y p) y)).
 Proof.
-  destruct p; rewrite !concat_1p, concat_p1; reflexivity.
-Defined.
-
-(** TODO: The following lemmas exist in Nat/Core.v however the proofs in this file expect them to be proven in the following way. At some point we should revise the proof and adapt them to the new versions. *)
-
-Local Lemma add_n_O : forall (n : nat), n = n + 0.
-Proof.
-  simple_induction' n; simpl; auto.
-Defined.
-
-Local Lemma nat_add_n_Sm (n m : nat) : (n + m).+1 = n + m.+1.
-Proof.
-  simple_induction' n; simpl.
-  - reflexivity.
-  - apply ap; assumption.
+  destruct p; cbn.
+  apply equiv_p1_1q.
+  symmetry; apply concat_1p.
 Defined.
 
 Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
@@ -228,23 +216,21 @@ Proof.
   induction n as [ | n e]; srapply isequiv_homotopic'.
   - srapply equiv_functor_colimit; srapply Build_diagram_equiv.
     + srapply Build_DiagramMap.
-      * exact (fun k => coe (ap A (add_n_O k)^)).
-      * intros k l p a; destruct p; srapply (K S (fun n a => a^+) (add_n_O k)^ @ _).
-        srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))).
+      * exact (fun k => coe (ap A (nat_add_zero_r k))).
+      * intros k l p a; destruct p. srapply (K S (fun n a => a^+) _).
     + exact _.
   - symmetry; srapply seq_colimit_uniq.
-    + intros k a; exact (J (add_n_O k)).
+    + intros k a; exact (J (nat_add_zero_r k)).
     + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
   - transitivity (Colimit (succ_seq (shift_seq A n))).
     + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
       * srapply Build_DiagramMap.
-        { exact (fun k => coe (ap A (nat_add_n_Sm k n)^)). }
-        { intros k l p a; destruct p; rapply (K S (fun n a => a^+) (nat_add_n_Sm k n)^ @ _).
-          srapply (ap10 (ap coe (ap (ap _) (ap_V _ _)))). }
+        { exact (fun k => coe (ap A (nat_add_succ_r k n))). }
+        { intros k l p a; destruct p; rapply (K S (fun n a => a^+) (nat_add_succ_r k n)). }
       * exact _.
     + srefine (transitivity (equiv_colim_succ_seq_to_colim_seq _) (Build_Equiv _ _ _ e)).
   - symmetry; srapply seq_colimit_uniq.
-    + intros k a; exact (J (nat_add_n_Sm k n)).
+    + intros k a; exact (J (nat_add_succ_r k n)).
     + intros k a; rewrite Colimit_rec_beta_colimp; simpl.
       rewrite 2(ap_compose' _ _ (glue _ k a)), Colimit_rec_beta_colimp, 2ap_pp.
       rewrite colim_succ_seq_to_colim_seq_ap_inj, colim_shift_seq_to_colim_seq_ap_inj.
