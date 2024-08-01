@@ -1209,12 +1209,11 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
 Definition lt_moveR_nV {k m} n : n <= k -> k < n + m -> k - n < m.
 Proof.
-  intros l q.
-  assert (q' : k - n + n < m + n) by
-    (destruct (nat_add_sub_l_cancel l)^;
-     destruct (nat_add_comm n m);
-     assumption).
-  exact (lt_reflects_add_r _ q').
+  intros H1 H2; unfold lt.
+  rewrite <- nat_sub_succ_l; only 2: exact _.
+  rewrite <- (nat_add_sub_cancel_l m n).
+  apply nat_sub_monotone_l.
+  exact H2.
 Defined.
 
 (** TODO: rename natpmswap2 -> leq_moveL_Mn *)
