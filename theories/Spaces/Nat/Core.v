@@ -608,7 +608,7 @@ Proof.
   simple_induction k k Ik; exact _.
 Defined.
 
-Definition isinj_nat_add_r@{} k : IsInjective (fun x =>nat_add x k).
+Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
 Proof.
   intros x y H.
   rewrite 2 (nat_add_comm _ k) in H.
