@@ -55,14 +55,14 @@ Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
   : (k <= m) -> n + (m - k) = z -> n + m - k = z.
 Proof.
   intro H.
-  destruct (symmetric_paths _ _ (nataddsub_assoc n H)); done.
+  destruct (symmetric_paths _ _ (nat_sub_l_add_r n H)); done.
 Defined.
 
 Proposition nat_add_sub_eq (n : nat) {k: nat}
   : (k <= n) -> k + (n - k) = n.
 Proof.
   intro H.
-  destruct (symmetric_paths _ _ (nataddsub_assoc k H));
+  destruct (nat_sub_l_add_r k H);
   destruct (nat_add_comm n k); exact (nat_add_sub_cancel_r _ _).
 Defined.
 

@@ -1141,15 +1141,15 @@ Proof.
   exact (lt_trans _ H2).
 Defined.
 
-(** TODO: rename *)
-Definition nataddsub_assoc {m k} n
-  : k <= m -> n + (m - k) = n + m - k.
+(** Subtraction and addition satisfy an associativity law. *)
+Definition nat_sub_l_add_r {m k} n
+  : k <= m -> (n + m) - k = n + (m - k).
 Proof.
   intros H; induction n as [|n IHn] in |- *.
   - reflexivity.
   - change (?n.+1 + ?m) with (n + m).+1.
-    rhs nrapply nat_sub_succ_l.
-    1: exact (ap nat_succ IHn). 
+    lhs nrapply nat_sub_succ_l.
+    2: exact (ap nat_succ IHn). 
     exact _.
 Defined.
 
@@ -1159,7 +1159,7 @@ Definition nataddsub_comm (n m k : nat)
 Proof.
   intro l.
   destruct (nat_add_comm k n).
-  destruct (nataddsub_assoc k l).
+  rewrite (nat_sub_l_add_r k l).
   apply nat_add_comm.
 Defined.
 
@@ -1225,7 +1225,7 @@ Proposition natpmswap2 (k m n : nat)
 Proof.
   intros l q.
   apply (nat_add_l_monotone n) in q.
-  destruct (nataddsub_assoc n l)^ in q.
+  destruct (nat_sub_l_add_r n l) in q.
   destruct (nat_add_sub_cancel_l k n)^ in q;
     assumption.
 Defined.
@@ -1243,7 +1243,7 @@ Proposition natpmswap3 (k m n : nat)
 Proof.
   intros ineq qe.
   apply (nat_add_l_monotone k) in qe.
-  destruct (nataddsub_assoc k ineq)^ in qe.
+  destruct (nat_sub_l_add_r k ineq) in qe.
   destruct (nat_add_sub_cancel_l n k)^ in qe;
     assumption.
 Defined.
