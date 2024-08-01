@@ -205,7 +205,9 @@ Local Definition L {X Y Z} {x1 x2 : X} {y} {F G} {I : forall x, Y x -> Z} {p : x
     J (ap F p) @ (ap (I (F x1)) (K F G p)^ @
     Q x1 (coe (ap Y p) y)).
 Proof.
-  destruct p; rewrite !concat_1p, concat_p1; reflexivity.
+  destruct p; cbn.
+  apply equiv_p1_1q.
+  symmetry; apply concat_1p.
 Defined.
 
 Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
