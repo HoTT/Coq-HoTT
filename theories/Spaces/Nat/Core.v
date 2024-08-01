@@ -970,26 +970,20 @@ Proof.
     now destruct (equiv_nat_sub_leq _)^.
 Defined.
 
-(** *** Movement Lemmas *)
-
-(** TODO: rename sub_gt_0_lt to lt_moveL_m (?) , reprove *)
-Definition sub_gt_0_lt n m : 0 < n - m -> m < n.
+(** A number being less than another is equivalent to their difference being greater than zero. *)
+Definition equiv_lt_lt_sub n m : m < n <~> 0 < n - m.
 Proof.
-  intro ineq.
-  destruct (@leq_dichotomy n m) as [n_leq_m |]; [ | assumption].
-  apply equiv_nat_sub_leq in n_leq_m.
-  contradiction (lt_irrefl 0). now rewrite n_leq_m in ineq.
-Defined.
- 
-(** TODO: merge with above, reprove *)
-Definition lt_sub_gt_0 n m : m < n -> 0 < n - m.
-Proof.
-  revert m; simple_induction n n IHn.
-  - intros m ineq. contradiction (not_lt_zero_r m).
-  - destruct m.
-    + simpl. easy.
-    + simpl. intro ineq. apply leq_succ' in ineq.
-      now apply IHn in ineq.
+  srapply equiv_iff_hprop.
+  - revert m; simple_induction n n IHn.
+    + intros m ineq. contradiction (not_lt_zero_r m).
+    + destruct m.
+      * simpl. easy.
+      * simpl. intro ineq. apply leq_succ' in ineq.
+        now apply IHn in ineq.
+  - intro ineq.
+    destruct (@leq_dichotomy n m) as [n_leq_m |]; [ | assumption].
+    apply equiv_nat_sub_leq in n_leq_m.
+    contradiction (lt_irrefl 0). now rewrite n_leq_m in ineq.
 Defined.
 
 (** *** Monotonicity of Addition *)
@@ -1133,7 +1127,7 @@ Proof.
     rewrite nat_sub_succ_r.
     symmetry.
     apply nat_succ_pred.
-    by apply lt_sub_gt_0.
+    by apply equiv_lt_lt_sub.
 Defined.
 
 (** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
@@ -1145,7 +1139,7 @@ Proof.
   rewrite nat_sub_succ_r.
   rewrite nat_succ_pred.
   1: reflexivity.
-  apply lt_sub_gt_0.
+  apply equiv_lt_lt_sub.
   exact (lt_trans _ H2).
 Defined.
 
