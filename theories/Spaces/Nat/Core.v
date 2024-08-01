@@ -1195,6 +1195,15 @@ Proof.
   apply nat_add_comm.
 Defined.
 
+(** Subtracting a subtraction is the subtrahend. *)
+Definition nat_sub_sub_cancel_r {n m} : n <= m -> m - (m - n) = n.
+Proof.
+  intros H; induction H.
+  - by rewrite nat_sub_cancel, nat_sub_zero_r.
+  - rewrite (nat_sub_succ_l m n); only 2: exact _.
+    exact IHleq.
+Defined.
+
 (** *** Monotonicity of Subtraction *)
 
 (** Subtraction is monotone in the left argument. *)
