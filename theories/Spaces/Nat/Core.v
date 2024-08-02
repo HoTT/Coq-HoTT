@@ -1391,7 +1391,7 @@ Defined.
 (** *** Strong induction *)
 
 (** TODO: rename nat_ind_strong *)
-Proposition strong_induction (P : nat -> Type)
+Proposition nat_ind_strong (P : nat -> Type)
   : (forall n : nat, (forall m : nat,  (m < n) -> P m) -> P n) ->
   forall n : nat, P n.
 Proof.
