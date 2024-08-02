@@ -1390,19 +1390,21 @@ Defined.
 
 (** *** Strong induction *)
 
-(** TODO: rename nat_ind_strong *)
-Proposition nat_ind_strong (P : nat -> Type)
-  : (forall n : nat, (forall m : nat,  (m < n) -> P m) -> P n) ->
-  forall n : nat, P n.
+Definition nat_ind_strong (P : nat -> Type)
+  (IH_strong : forall n, (forall m, m < n -> P m) -> P n) 
+  : forall n, P n.
 Proof.
-  intro a.
-  assert (forall n m: nat, m < n -> P m) as X. {
-    simple_induction n n IHn.
-    - intros m l. contradiction (not_lt_zero_r m).
-    - intros m l. apply leq_succ' in l.
-      destruct l as [ | n].
-      + apply a; intros ? ?; now apply IHn.
-      + now apply (IHn m), leq_succ.
-  }
-  intro n. apply (X (n.+1) n), (leq_refl n.+1).
+  intros n.
+  apply IH_strong.
+  intros m H.
+  induction n as [|n IHn] in m, H |- *.
+  1: contradiction (not_lt_zero_r m).
+  apply leq_succ' in H.
+  apply equiv_leq_lt_or_eq in H.
+  destruct H as [H|p].
+  - apply IHn.
+    exact H.
+  - destruct p.
+    apply IH_strong.
+    exact IHn.
 Defined.
