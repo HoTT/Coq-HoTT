@@ -54,15 +54,6 @@ Proof.
     + apply leq_zero_l.
     + apply leq_succ. simpl in l. apply (IHn m i l).
 Defined.
-  
-(** TODO: remove *)
-Proposition nat_add_sub_eq (n : nat) {k: nat}
-  : (k <= n) -> k + (n - k) = n.
-Proof.
-  intro H.
-  destruct (nat_sub_l_add_r _ k _ H);
-  destruct (nat_add_comm n k); exact (nat_add_sub_cancel_r _ _).
-Defined.
 
 (** TODO: move, rename *)
 Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
