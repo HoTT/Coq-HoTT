@@ -69,14 +69,6 @@ Proof.
   destruct n; exact _.
 Defined.
 
-(** TODO: remove *)
-Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
-Proof.
-  simple_induction' n; intros l.
-  - contradiction (not_lt_zero_r i).
-  - reflexivity.
-Defined.
-
 (** TODO: move, rename *)
 Proposition pred_equiv (k n : nat) : k < n -> k < S (nat_pred n).
 Proof. 
@@ -134,8 +126,7 @@ Proof.
     apply (@lt_lt_leq_trans _ (nat_pred j) _);
       [assumption  | apply predn_leq_n].
   }
-  destruct (symmetric_paths _ _ (S_predn _ _ X)) in H.
-  assumption.
+  by rewrite <- (nat_succ_pred' j i).
 Defined.
 
 (** TODO: move, rename *)
@@ -143,9 +134,9 @@ Proposition pred_preserves_lt {i n: nat} (p : i < n) m
   : (n < m) -> (nat_pred n < nat_pred m).
 Proof.
   intro l.
-  apply leq_succ'. destruct (symmetric_paths _ _ (S_predn n i _)).
+  apply leq_succ'. destruct (symmetric_paths _ _ (nat_succ_pred' n i _)).
   set (k :=  transitive_lt i n m p l).
-  destruct (symmetric_paths _ _ (S_predn m i _)).
+  destruct (symmetric_paths _ _ (nat_succ_pred' m i _)).
   assumption.
 Defined.
 
@@ -227,7 +218,7 @@ Proof.
       apply increasing_geq_S.
       unfold ">", "<" in *.
       apply equiv_lt_lt_sub in g. 
-      now (destruct (symmetric_paths _ _ (S_predn (n - k) 0 _))).
+      now (destruct (symmetric_paths _ _ (nat_succ_pred (n - k) _))).
 Defined.
 
 Lemma ineq_sub' (n k : nat) : k < n -> n - k = (n - k.+1).+1.
@@ -248,15 +239,15 @@ Proof.
   - intros m ineq. change (m - n.+1) with (m - (1 + n)).
     (destruct (nat_add_comm n 1)).
     destruct (symmetric_paths _ _ (nat_sub_r_add m n 1)). 
-    destruct (S_predn (m - n) 0 (equiv_lt_lt_sub _ _ ineq)); simpl;
+    destruct (nat_succ_pred (m - n) (equiv_lt_lt_sub _ _ ineq)); simpl;
       destruct (symmetric_paths _ _ (nat_sub_zero_r (nat_pred (m - n)))).
     assert (0 < m - n) as dp by exact (equiv_lt_lt_sub _ _ ineq).
     assert (nat_pred (m - n) < m) as sh by
         ( unfold "<";
-          destruct (symmetric_paths _ _ (S_predn _ 0 _));
+          destruct (symmetric_paths _ _ (nat_succ_pred _ _));
           exact sub_less).
     destruct (symmetric_paths _ _ (ineq_sub' _ _ _)).
-    destruct (symmetric_paths _ _ (S_predn _ 0 _)).
+    destruct (symmetric_paths _ _ (nat_succ_pred _ _)).
     apply (ap S), IHn, leq_succ_l, ineq.
 Defined.                                 
   

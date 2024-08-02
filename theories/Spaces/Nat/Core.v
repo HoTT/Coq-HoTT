@@ -206,13 +206,19 @@ Defined.
 
 (** ** Properties of successors *)
 
+(** The predecessor of a successor is the original number. *)
 Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
-Definition nat_succ_pred@{} n : 0 < n -> nat_succ (nat_pred n) = n.
+(** The successor of a predecessor is the original as long as there is a strict lower bound. *)
+Definition nat_succ_pred'@{} n i : i < n -> nat_succ (nat_pred n) = n.
 Proof.
   by intros [].
 Defined.
+
+(** The most common lower bound is to take [0]. *)
+Definition nat_succ_pred@{} n : 0 < n -> nat_succ (nat_pred n) = n
+  := nat_succ_pred' n 0.
 
 (** Injectivity of successor. *)
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
