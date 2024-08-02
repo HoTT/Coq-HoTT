@@ -1388,23 +1388,22 @@ Proof.
   intros H; induction k; exact _.
 Defined.
 
-(** *** Strong induction *)
+(** ** Strong induction *)
 
-Definition nat_ind_strong (P : nat -> Type)
+(** Sometimes using [nat_ind] is not sufficient to prove a statement as it may be difficult to prove [P n -> P n.+1]. We can strengthen the induction hypothesis by assuming that [P m] holds for all [m] less than [n]. This is known as strong induction. *)
+Definition nat_ind_strong@{u} (P : nat -> Type@{u})
   (IH_strong : forall n, (forall m, m < n -> P m) -> P n) 
   : forall n, P n.
 Proof.
   intros n.
   apply IH_strong.
-  intros m H.
-  induction n as [|n IHn] in m, H |- *.
+  simple_induction n n IHn; intros m H.
   1: contradiction (not_lt_zero_r m).
   apply leq_succ' in H.
   apply equiv_leq_lt_or_eq in H.
   destruct H as [H|p].
-  - apply IHn.
-    exact H.
+  - by apply IHn.
   - destruct p.
-    apply IH_strong.
-    exact IHn.
+    by apply IH_strong.
 Defined.
+
