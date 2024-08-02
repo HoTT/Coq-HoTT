@@ -56,14 +56,6 @@ Proof.
 Defined.
   
 (** TODO: remove *)
-Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
-  : (k <= m) -> n + (m - k) = z -> n + m - k = z.
-Proof.
-  intro H.
-  by rewrite nat_sub_l_add_r.
-Defined.
-
-(** TODO: remove *)
 Proposition nat_add_sub_eq (n : nat) {k: nat}
   : (k <= n) -> k + (n - k) = n.
 Proof.
