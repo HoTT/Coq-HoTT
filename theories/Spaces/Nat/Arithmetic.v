@@ -8,6 +8,7 @@ Local Open Scope nat_scope.
 
 (** TODO: The results in this file are in the process of being moved over to Core.v *)
 
+(** TODO: move, rename *)
 Proposition nataddsub_comm_ineq_lemma (n m : nat)
   : n.+1 - m <= (n - m).+1.
 Proof.
@@ -19,6 +20,7 @@ Proof.
     + apply IHn.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nataddsub_comm_ineq (n m k : nat)
   : (n + k) - m <= (n - m) + k.
 Proof.
@@ -30,6 +32,7 @@ Proof.
     now apply leq_succ.
 Defined.
 
+(** TODO: move, rename *)
 Proposition nat_sub_add_ineq (n m : nat) : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | gt].
@@ -41,6 +44,7 @@ Proof.
     assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition i_lt_n_sum_m (n m i : nat)
   : i < n - m -> m <= n.
 Proof.
@@ -51,6 +55,7 @@ Proof.
     + apply leq_succ. simpl in l. apply (IHn m i l).
 Defined.
   
+(** TODO: remove *)
 Proposition nataddsub_assoc_implication (n : nat) {m k z : nat}
   : (k <= m) -> n + (m - k) = z -> n + m - k = z.
 Proof.
@@ -58,6 +63,7 @@ Proof.
   by rewrite nat_sub_l_add_r.
 Defined.
 
+(** TODO: remove *)
 Proposition nat_add_sub_eq (n : nat) {k: nat}
   : (k <= n) -> k + (n - k) = n.
 Proof.
@@ -66,6 +72,7 @@ Proof.
   destruct (nat_add_comm n k); exact (nat_add_sub_cancel_r _ _).
 Defined.
 
+(** TODO: move, rename *)
 Proposition predeqminus1 { n : nat } : n - 1 = nat_pred n.
 Proof.
   simple_induction' n.
@@ -73,11 +80,13 @@ Proof.
   - apply nat_sub_zero_r.
 Defined.
 
+(** TODO: move, rename *)
 Proposition predn_leq_n (n : nat) : nat_pred n <= n.
 Proof.
   destruct n; exact _.
 Defined.
 
+(** TODO: remove *)
 Proposition S_predn (n i: nat) : (i < n) -> S(nat_pred n) = n.
 Proof.
   simple_induction' n; intros l.
@@ -85,6 +94,7 @@ Proof.
   - reflexivity.
 Defined.
 
+(** TODO: move, rename *)
 Proposition pred_equiv (k n : nat) : k < n -> k < S (nat_pred n).
 Proof. 
   intro ineq; destruct n.
@@ -92,11 +102,13 @@ Proof.
   - assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition n_leq_pred_Sn (n : nat) : n <= S (nat_pred n).
 Proof. 
   destruct n; exact _.
 Defined.
 
+(** TODO: move, rename *)
 Proposition leq_implies_pred_lt (i n k : nat)
   : (n > i) -> n <= k -> nat_pred n < k.
 Proof.
@@ -105,6 +117,7 @@ Proof.
   - intro; assumption.
 Defined.
   
+(** TODO: move, rename *)
 Proposition pred_lt_implies_leq (n k : nat)
   : nat_pred n < k -> n <= k.
 Proof.
@@ -119,6 +132,7 @@ Proof.
   intro l; apply leq_pred in l; assumption.
 Defined.
 
+(** TODO: move, rename *)
 Proposition j_geq_0_lt_implies_pred_geq (i j k : nat)
   : i < j -> k.+1 <= j -> k <= nat_pred j.
 Proof.
