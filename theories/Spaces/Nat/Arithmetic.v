@@ -182,23 +182,6 @@ Proof.
   intro l; apply (leq_trans l); exact (leq_add_l m k).
 Defined.
 
-(** TODO: move, rename *)
-Proposition strong_induction (P : nat -> Type)
-  : (forall n : nat, (forall m : nat,  (m < n) -> P m) -> P n) ->
-  forall n : nat, P n.
-Proof.
-  intro a.
-  assert (forall n m: nat, m < n -> P m) as X. {
-    simple_induction n n IHn.
-    - intros m l. contradiction (not_lt_zero_r m).
-    - intros m l. apply leq_succ' in l.
-      destruct l as [ | n].
-      + apply a; intros ? ?; now apply IHn.
-      + now apply (IHn m), leq_succ.
-  }
-  intro n. apply (X (n.+1) n), (leq_refl n.+1).
-Defined.
-
 (** This inductive type is defined because it lets you loop from [i = 0] up to [i = n] by structural induction on a proof of [increasing_geq n 0]. With the existing [leq] type and the inductive structure of [n], it is easier and more natural to loop downwards from [i = n] to [i = 0], but harder to find the least natural number in the interval $[0,n]$ satisfying a given property. *)
 
 Local Unset Elimination Schemes.
