@@ -333,20 +333,21 @@ Defined.
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
 
 Definition fcard_arrow `{Funext} X Y `{Finite X} `{Finite Y}
-: fcard (X -> Y) = nat_exp (fcard Y) (fcard X).
+: fcard (X -> Y) = nat_pow (fcard Y) (fcard X).
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
   refine (fcard_equiv (functor_arrow e idmap)^-1 @ _).
-  refine (_ @ ap (fun x => nat_exp (fcard Y) x) (fcard_equiv e)).
+  refine (_ @ ap (fun x => nat_pow (fcard Y) x) (fcard_equiv e)).
   generalize (fcard X); intros n.
   induction n as [|n IH].
   - reflexivity.
   - refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) => Y))^-1 @ _).
     refine (fcard_prod _ _ @ _).
+    lhs nrapply nat_mul_comm.
     apply (ap011 nat_mul).
-    + assumption.
     + refine (fcard_equiv (@Unit_ind (fun (_:Unit) => Y))^-1).
+    + assumption.
 Defined.
 
 (** [fcard] still computes, despite the funext: *)
@@ -487,7 +488,7 @@ Defined.
 
 (** The product of a finite constant family is the exponential by its cardinality. *)
 Definition finmult_const `{Funext} X `{Finite X} n
-: finmult (fun x:X => n) = nat_exp n (fcard X).
+: finmult (fun x:X => n) = nat_pow n (fcard X).
 Proof.
   refine (fcard_arrow X (Fin n)).
 Defined.
@@ -676,7 +677,7 @@ Proof.
     { unfold h; apply moveR_equiv_V; symmetry.
       apply fin_transpose_last_with_last. }
     rewrite q; exact tt. }
-  apply leq_S_n'.
+  apply leq_succ.
   exact (IHn m (unfunctor_sum_l h Ha)
              (mapinO_unfunctor_sum_l (Tr (-1)) h Ha Hb)).
 Qed.

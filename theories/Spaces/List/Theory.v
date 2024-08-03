@@ -194,7 +194,7 @@ Proof.
   - destruct l2.
     + inversion p.
     + cbn; f_ap.
-      by apply IHl1, path_nat_S.
+      by apply IHl1, path_nat_succ.
 Defined.
 
 (** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
@@ -215,7 +215,7 @@ Proof.
     destruct H as [q | i].
     1: exact (y; z; (q, (inl idpath, inl idpath))).
     destruct (IHl1 l2 x i) as [y' [z' [q [r s]]]].
-    1: apply path_nat_S, p.
+    1: apply path_nat_succ, p.
     exact (y'; z'; (q, (inr r, inr s))).
 Defined.
 
@@ -336,7 +336,7 @@ Proof.
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_S_n.
+  apply leq_succ'.
   exact H.
 Defined.
 
@@ -394,12 +394,12 @@ Proof.
     snrapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0%nat _).
     snrefine (exist _ _ idpath).
-    apply leq_S_n'.
+    apply leq_succ.
     exact _.
   - destruct (IHl i) as [n [H H']].
     snrefine (exist@{i i} _ n.+1%nat _).
     snrefine (_; _); cbn.
-    1: apply leq_S_n', H.
+    1: apply leq_succ, H.
     refine (_ @ H').
     apply nth'_cons.
 Defined.
@@ -448,13 +448,13 @@ Proof.
     + destruct n.
       * reflexivity.
       * unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H.
+        1: apply leq_succ', H.
         unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H'.
+        1: apply leq_succ', H'.
         unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H''.
+        1: apply leq_succ', H''.
         apply IHl1.
-        by apply path_nat_S.
+        by apply path_nat_succ.
 Defined.
 
 (** The [nth'] element of a [repeat] is the repeated value. *)
@@ -485,10 +485,10 @@ Proof.
   f_ap.
   - exact (H 0%nat _).
   - snrapply IHl.
-    1: by apply path_nat_S.
+    1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
-    1: apply leq_S_n', Hn.
+    1: apply leq_succ, Hn.
     lhs nrapply H.
     nrapply nth'_cons.
 Defined.
@@ -502,7 +502,7 @@ Proof.
   1: destruct (not_leq_Sn_0 _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_succ'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
@@ -574,7 +574,7 @@ Proof.
   destruct n.
   1: destruct (not_leq_Sn_0 _ H).
   cbn; apply IHl.
-  apply leq_S_n.
+  apply leq_succ'.
   exact H.
 Defined.
 
@@ -632,7 +632,7 @@ Proof.
   destruct n.
   1: destruct (not_leq_Sn_0 _ H).
   cbn; f_ap.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_succ'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
@@ -764,7 +764,7 @@ Proof.
   { intros m.
     snrapply (functor_sigma idmap).
     intros k H.
-    exact (leq_S _ _ H). }
+    exact (leq_succ_r H). }
   induction n as [|n IHn].
   1: exact nil.
   nrefine ((n; _) :: list_map (f n) IHn).
@@ -821,10 +821,10 @@ Proof.
   induction i as [|i IHi] in n, H |- *.
   - induction n.
     1: destruct (not_leq_Sn_0 _ H).
-    cbn; by rewrite sub_n_0.
+    cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
     1: destruct (not_leq_Sn_0 _ H).
-    by apply IHi, leq_S_n.
+    by apply IHi, leq_succ'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
@@ -838,12 +838,9 @@ Proof.
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
-  - apply not_lt_implies_geq in H'.
-    destruct (leq_split H') as [H'' | H''].
-    { apply lt_implies_not_geq in H''.
-      apply leq_S_n in H.
-      contradiction. }
-    destruct H''.
+  - apply geq_iff_not_lt in H'.
+    apply leq_succ' in H.
+    destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.
       rewrite nat_add_comm.
@@ -971,7 +968,11 @@ Proof.
   - destruct l2 as [|y l2].
     + discriminate.
     + intros [Hx Hl1] [Hy Hl2].
-      split; auto.
+      split.
+      * by apply Hf.
+      * apply IHl1; trivial.
+        apply path_nat_succ.
+        exact p.
 Defined.
 
 (** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)

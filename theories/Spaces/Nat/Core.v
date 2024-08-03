@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes.
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes Types.Sum.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -27,7 +27,7 @@ Notation nat_iter n f x
 
 (** *** Successor and predecessor *)
 
-(** [nat_succ n] is the successor of a natural number [n]. *)
+(** [nat_succ n] is the successor of a natural number [n]. We defined a notation [x.+1] for it in Overture.v. *)
 Notation nat_succ := S (only parsing).
 
 (** [nat_pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
@@ -61,16 +61,7 @@ Fixpoint nat_sub n m : nat :=
 Notation "n - m" := (nat_sub n m) : nat_scope.
 
 (** Powers or exponentiation of natural numbers. *)
-Definition nat_pow n m :=
-  nat_iter m (nat_mul n) 1.
-
-(** TODO: merge witth nat_pow (order of arguments needs adjusting). *)
-(** Exponentiation *)
-Fixpoint nat_exp (n m : nat) : nat
-  := match m with
-       | 0 => 1
-       | S m => nat_exp n m * n
-     end.
+Definition nat_pow n m := nat_iter m (nat_mul n) 1.
 
 (** *** Maximum and minimum *)
 
@@ -137,6 +128,59 @@ Fixpoint factorial (n : nat) : nat
        | S n => S n * factorial n
      end.
 
+(** ** Comparison Predicates *)
+
+(** *** Less Than or Equal To [<=] *)
+
+Inductive leq (n : nat) : nat -> Type0 :=
+| leq_refl : leq n n
+| leq_succ_r m : leq n m -> leq n (S m).
+
+Arguments leq_succ_r {n m} _.
+
+Scheme leq_ind := Induction for leq Sort Type.
+Scheme leq_rect := Induction for leq Sort Type.
+Scheme leq_rec := Induction for leq Sort Type.
+
+Notation "n <= m" := (leq n m) : nat_scope.
+
+Existing Class leq.
+Global Existing Instances leq_refl leq_succ_r.
+
+(** *** Less Than [<] *)
+
+(** We define the less-than relation [lt] in terms of [leq] *)
+Definition lt n m : Type0 := leq (S n) m.
+
+(** We declare it as an existing class so typeclass search is performed on its goals. *)
+Existing Class lt.
+#[export] Hint Unfold lt : typeclass_instances.
+Infix "<" := lt : nat_scope.
+Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
+
+(** *** Greater Than or Equal To [>=] *)
+
+Definition geq n m := leq m n.
+Existing Class geq.
+#[export] Hint Unfold geq : typeclass_instances.
+Infix ">=" := geq : nat_scope.
+Global Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
+
+(*** Greater Than [>] *)
+
+Definition gt n m := lt m n.
+Existing Class gt.
+#[export] Hint Unfold gt : typeclass_instances.
+Infix ">" := gt : nat_scope.
+Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
+
+(** *** Combined Comparison Predicates *)
+
+Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
+Notation "x <= y < z"  := (x <= y /\ y <  z) : nat_scope.
+Notation "x < y < z"   := (x <  y /\ y <  z) : nat_scope.
+Notation "x < y <= z"  := (x <  y /\ y <= z) : nat_scope.
+
 (** ** Properties of [nat_iter]. *)
 
 Lemma nat_iter_succ_r n {A} (f : A -> A) (x : A)
@@ -164,43 +208,34 @@ Defined.
 
 (** ** Properties of successors *)
 
-(** TODO: remove these *)
-Local Definition ap_S := @ap _ _ S.
-Local Definition ap_nat := @ap nat.
-#[export] Hint Resolve ap_S : core.
-#[export] Hint Resolve ap_nat : core.
-
 Definition nat_pred_succ@{} n : nat_pred (nat_succ n) = n
   := idpath.
 
-(** Injectivity of successor *)
-Definition path_nat_S@{} n m (H : S n = S m) : n = m := ap nat_pred H.
-#[export] Hint Immediate path_nat_S : core.
+(** Injectivity of successor. *)
+Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
+Global Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
 
-(** TODO: rename to [neq_S] *)
-(** TODO: avoid auto in proof. *)
-Definition not_eq_S@{} n m : n <> m -> S n <> S m.
+(** Inequality of sucessors is implied with inequality of the arguments. *)
+Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
 Proof.
-  auto.
+  intros np q.
+  apply np.
+  exact (path_nat_succ _ _ q).
 Defined.
-#[export] Hint Resolve not_eq_S : core.
 
-(** TODO: rename to [neq_O_S] *)
-(** Zero is not the successor of a number *)
-Definition not_eq_O_S@{} : forall n, 0 <> S n.
+(** Zero is not the successor of a number. *)
+Definition neq_nat_zero_succ@{} n : 0 <> S n.
 Proof.
   discriminate.
 Defined.
-#[export] Hint Resolve not_eq_O_S : core.
 
-(** TODO: rename to [neq_n_Sn] *)
-(** TODO: prove above using this *)
-(** TODO: remove auto. *)
-Theorem not_eq_n_Sn@{} n : n <> S n.
+(** A natural number cannot be equal to its own successor. *)
+Theorem neq_nat_succ'@{} n : n <> S n.
 Proof.
-  simple_induction' n; auto.
+  simple_induction' n.
+  - apply neq_nat_zero_succ.
+  - by apply neq_nat_succ.
 Defined.
-#[export] Hint Resolve not_eq_n_Sn : core.
 
 (** ** Truncatedness of natural numbers *)
 
@@ -210,11 +245,11 @@ Proof.
   intros n; simple_induction n n IHn;
   intros m; destruct m.
   - exact (inl idpath).
-  - exact (inr (not_eq_O_S m)).
-  - exact (inr (fun p => not_eq_O_S n p^)).
+  - exact (inr (neq_nat_zero_succ m)).
+  - exact (inr (fun p => neq_nat_zero_succ n p^)).
   - destruct (IHn m) as [p|q].
     + exact (inl (ap S p)).
-    + exact (inr (fun p => q (path_nat_S _ _ p))).
+    + exact (inr (fun p => q (path_nat_succ _ _ p))).
 Defined.
 
 (** [nat] is therefore a hset. *)
@@ -234,7 +269,6 @@ Proof.
   - apply (ap nat_succ).
     exact IHn.
 Defined.
-#[export] Hint Resolve nat_add_zero_r : core.
 
 (** Adding a successor on the left is the same as adding and then taking the successor. *)
 Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
@@ -243,9 +277,10 @@ Definition nat_add_succ_l@{} n m : n.+1 + m = (n + m).+1
 (** Adding a successor on the right is the same as adding and then taking the successor. *)
 Definition nat_add_succ_r@{} n m : n + m.+1 = (n + m).+1.
 Proof.
-  simple_induction' n; simpl; auto.
+  simple_induction' n; simpl.
+  1: reflexivity.
+  exact (ap S IH).
 Defined.
-#[export] Hint Resolve nat_add_succ_r: core.
 
 (** Addition of natural numbers is commutative. *)
 Definition nat_add_comm@{} n m : n + m = m + n.
@@ -266,6 +301,22 @@ Proof.
     exact IHn.
 Defined.
 
+(** Addition on the left is injective. *)
+Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
+Proof.
+  simple_induction k k Ik; exact _.
+Defined.
+
+(** Addition on the right is injective. *)
+Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
+Proof.
+  intros x y H.
+  nrapply (isinj_nat_add_l k).
+  lhs nrapply nat_add_comm.
+  lhs nrapply H.
+  nrapply nat_add_comm.
+Defined.
+
 (** ** Properties of multiplication *)
 
 (** Multiplication by [0] on the left is [0]. *)
@@ -277,7 +328,6 @@ Definition nat_mul_zero_r@{} n : n * 0 = 0.
 Proof.
   by induction n.
 Defined.
-#[export] Hint Resolve nat_mul_zero_r : core.
 
 Definition nat_mul_succ_l@{} n m : n.+1 * m = m + n * m
   := idpath.
@@ -292,7 +342,6 @@ Proof.
     nrapply (ap (nat_add m)).
     exact IHn.
 Defined.
-#[export] Hint Resolve nat_mul_succ_r : core.
 
 (** Multiplication of natural numbers is commutative. *)
 Definition nat_mul_comm@{} n m : n * m = m * n.
@@ -323,8 +372,9 @@ Defined.
 (** Multiplication of natural numbers distributes over addition on the right. *)
 Definition nat_dist_r@{} n m k : (n + m) * k = n * k + m * k.
 Proof.
-  rewrite 3 (nat_mul_comm _ k).
-  nrapply nat_dist_l.
+  lhs nrapply nat_mul_comm.
+  lhs nrapply nat_dist_l.
+  nrapply ap011; nrapply nat_mul_comm.
 Defined.
 
 (** Multiplication of natural numbers is associative. *)
@@ -337,61 +387,77 @@ Proof.
     exact IHn.
 Defined.
 
-(** ** Inequality of natural numbers *)
+(** Multiplication by [1] on the left is the identity. *)
+Definition nat_mul_one_l@{} n : 1 * n = n
+  := nat_add_zero_r _.
+  
+(** Multiplication by [1] on the right is the identity. *)
+Definition nat_mul_one_r@{} n : n * 1 = n
+  := nat_mul_comm _ _ @ nat_mul_one_l _.
 
-Cumulative Inductive leq (n : nat) : nat -> Type0 :=
-| leq_n : leq n n
-| leq_S : forall m, leq n m -> leq n (S m).
+(** ** Basic Properties of Comparison Predicates *)
 
-Scheme leq_ind := Induction for leq Sort Type.
-Scheme leq_rect := Induction for leq Sort Type.
-Scheme leq_rec := Minimality for leq Sort Type.
+(** *** Basic Properties of [<=] *)
 
-Notation "n <= m" := (leq n m) : nat_scope.
-#[export] Hint Constructors leq : core.
+(** [<=] is reflexive by definition. *)
+Global Instance reflexive_leq : Reflexive leq := leq_refl.
 
-Existing Class leq.
-Global Existing Instances leq_n leq_S.
-
-Notation leq_refl := leq_n (only parsing).
-Global Instance reflexive_leq : Reflexive leq := leq_n.
-
-Lemma leq_trans {x y z} : x <= y -> y <= z -> x <= z.
+(** Being less than or equal to is a transitive relation. *)
+Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
 Proof.
-  induction 2; auto.
+  intros H1 H2; induction H2; exact _.
 Defined.
+Hint Immediate leq_trans : typeclass_instances.
 
+(** [<=] is transtiive. *)
 Global Instance transitive_leq : Transitive leq := @leq_trans.
 
-Lemma leq_n_pred n m : leq n m -> leq (nat_pred n) (nat_pred m).
+(** [0] is less than or equal to any natural number. *)
+Definition leq_zero n : 0 <= n.
 Proof.
-  induction 1; auto.
-  destruct m; simpl; auto.
+  simple_induction' n; exact _.
+Defined.
+Global Existing Instance leq_zero | 10.
+
+(** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
+Definition leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
+Proof.
+  intros H; induction H.
+  1: exact _.
+  destruct m; exact _.
 Defined.
 
-Lemma leq_S_n : forall n m, n.+1 <= m.+1 -> n <= m.
+(** A successor is less than or equal to a successor if the original numbers are less than or equal. *)
+Definition leq_succ {n m} : n <= m -> n.+1 <= m.+1.
 Proof.
-  intros n m.
-  apply leq_n_pred.
+  induction 1; exact _.
 Defined.
+Global Existing Instance leq_succ | 100.
 
-Lemma leq_S_n' n m : n <= m -> n.+1 <= m.+1.
-Proof.
-  induction 1; auto.
-Defined.
-Global Existing Instance leq_S_n' | 100.
+(** The converse to [leq_succ] also holds. *)
+Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
 
+(** TODO: rename *)
+(** TODO: use lemmas about negating predicate *)
 Lemma not_leq_Sn_n n : ~ (n.+1 <= n).
 Proof.
   simple_induction n n IHn.
   { intro p.
     inversion p. }
   intros p.
-  by apply IHn, leq_S_n.
+  by apply IHn, leq_succ'.
+Defined.
+
+(** TODO: rename *)
+Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
+Proof.
+  intros p.
+  apply (fun x => leq_trans x (leq_zero n)) in p.
+  contradiction (not_leq_Sn_n _ p).
 Defined.
 
 (** A general form for injectivity of this constructor *)
-Definition leq_n_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_n n.
+Definition leq_refl_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_refl n.
 Proof.
   destruct p.
   + assert (c : idpath = r) by apply path_ishprop.
@@ -402,11 +468,11 @@ Proof.
 Defined.
 
 (** Which we specialise to this lemma *)
-Definition leq_n_inj n (p : n <= n) : p = leq_n n
-  := leq_n_inj_gen n n p idpath.
+Definition leq_refl_inj n (p : n <= n) : p = leq_refl n
+  := leq_refl_inj_gen n n p idpath.
 
-Fixpoint leq_S_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
-  : p = r # leq_S n m q.
+Fixpoint leq_succ_r_inj_gen n m k (p : n <= k) (q : n <= m) (r : m.+1 = k)
+  : p = r # leq_succ_r q.
 Proof.
   revert m q r.
   destruct p.
@@ -414,18 +480,18 @@ Proof.
     destruct r.
     contradiction (not_leq_Sn_n _ p).
   + intros m' q r.
-    pose (r' := path_nat_S _ _ r).
+    pose (r' := path_nat_succ _ _ r).
     destruct r'.
     assert (t : idpath = r) by apply path_ishprop.
     destruct t.
     cbn. apply ap.
     destruct q.
-    1:  apply leq_n_inj.
-    apply (leq_S_inj_gen n m _ p q idpath).
+    1:  apply leq_refl_inj.
+    apply (leq_succ_r_inj_gen n m _ p q idpath).
 Defined.
 
-Definition leq_S_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_S n m q
-  := leq_S_inj_gen n m m.+1 p q idpath.
+Definition leq_succ_r_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_succ_r q
+  := leq_succ_r_inj_gen n m m.+1 p q idpath.
 
 Global Instance ishprop_leq n m : IsHProp (n <= m).
 Proof.
@@ -433,27 +499,15 @@ Proof.
   intros p q; revert p.
   induction q.
   + intros y.
-    rapply leq_n_inj.
+    rapply leq_refl_inj.
   + intros y.
-    rapply leq_S_inj.
+    rapply leq_succ_r_inj.
 Defined.
 
-Global Instance leq_0_n n : 0 <= n | 10.
-Proof.
-  simple_induction' n; auto.
-Defined.
-
-Lemma not_leq_Sn_0 n : ~ (n.+1 <= 0).
-Proof.
-  intros p.
-  apply (fun x => leq_trans x (leq_0_n n)) in p.
-  contradiction (not_leq_Sn_n _ p).
-Defined.
-
-Definition equiv_leq_S_n n m : n.+1 <= m.+1 <~> n <= m.
+Definition equiv_leq_succ n m : n.+1 <= m.+1 <~> n <= m.
 Proof.
   srapply equiv_iff_hprop.
-  apply leq_S_n.
+  apply leq_succ'.
 Defined.
 
 Global Instance decidable_leq n m : Decidable (n <= m).
@@ -467,188 +521,427 @@ Proof.
     + left; exact _.
     + rapply decidable_equiv'.
       symmetry.
-      apply equiv_leq_S_n.
+      apply equiv_leq_succ.
 Defined.
 
-Fixpoint leq_add n m : n <= (m + n).
+(** [n.+1 <= m] implies [n <= m]. *)
+Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
 Proof.
-  destruct m.
-  1: apply leq_n.
-  apply leq_S, leq_add.
+  intro l; apply leq_succ'; exact _.
 Defined.
 
-(** We define the less-than relation [lt] in terms of [leq] *)
-Definition lt n m : Type0 := leq (S n) m.
+(** *** Basic Properties of [<] *)
 
-(** We declare it as an existing class so typeclass search is performed on its goals. *)
-Existing Class lt.
-#[export] Hint Unfold lt : core typeclass_instances.
-Infix "<" := lt : nat_scope.
-(** We add a typeclass instance for unfolding the definition so lemmas about [leq] can be used. *)
-Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
+(** [<=] and [<] imply [<] *)
+Definition leq_lt_trans {n m k} : n <= m -> m < k -> n < k
+  := fun leq lt => leq_trans (leq_succ leq) lt.
 
-(** We should also give them their various typeclass instances *)
-Global Instance transitive_lt : Transitive lt.
-Proof.
-  hnf; unfold lt in *.
-  intros x y z p q.
-  rapply leq_trans.
-Defined.
+(** [<=] and [<] imply [<] *)
+Definition lt_leq_trans {n m k} : n < m -> m <= k -> n < k
+  := fun lt leq => leq_trans lt leq.
 
+Definition leq_lt {n m} : n < m -> n <= m
+  := leq_succ_l.
+
+Definition lt_trans {n m k} : n < m -> m < k -> n < k
+  := fun H1 H2 => leq_lt (leq_lt_trans H1 H2).
+
+Global Instance transitive_lt : Transitive lt := @lt_trans.
+Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
-Definition ge n m := leq m n.
-Existing Class ge.
-#[export] Hint Unfold ge : core typeclass_instances.
-Infix ">=" := ge : nat_scope.
-Global Instance ge_is_leq n m : leq m n -> ge n m | 100 := idmap.
+(** *** Basic Properties of [>=] *) 
 
-Global Instance reflexive_ge : Reflexive ge := leq_n.
-Global Instance transitive_ge : Transitive ge := fun x y z p q => leq_trans q p.
-Global Instance decidable_ge n m : Decidable (ge n m) := _.
+Global Instance reflexive_geq : Reflexive geq := leq_refl.
+Global Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
+Global Instance ishprop_geq n m : IsHProp (geq n m) := _.
+Global Instance decidable_geq n m : Decidable (geq n m) := _.
 
-Definition gt n m := lt m n.
-Existing Class gt.
-#[export] Hint Unfold gt : core typeclass_instances.
-Infix ">" := gt : nat_scope.
-Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
+(** *** Basic Properties of [>] *)
 
 Global Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
+Global Instance ishprop_gt n m : IsHProp (gt n m) := _.
 Global Instance decidable_gt n m : Decidable (gt n m) := _.
 
-Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
-Notation "x <= y < z"  := (x <= y /\  y < z) : nat_scope.
-Notation "x < y < z"   := (x < y  /\  y < z) : nat_scope.
-Notation "x < y <= z"  := (x < y  /\ y <= z) : nat_scope.
+(** ** Properties of Subtraction *)
 
-(** Principle of double induction *)
+(** Subtracting a number from [0] is [0]. *)
+Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
 
-Theorem nat_double_ind (R : nat -> nat -> Type)
-  (H1 : forall n, R 0 n) (H2 : forall n, R (S n) 0)
-  (H3 : forall n m, R n m -> R (S n) (S m))
-  : forall n m:nat, R n m.
+(** Subtracting [0] from a number is the number itself. *)
+Definition nat_sub_zero_r@{} (n : nat) : n - 0 = n.
 Proof.
-  simple_induction' n; auto.
-  destruct m; auto.
+  destruct n; reflexivity.
 Defined.
 
-(** Maximum and minimum : definitions and specifications *)
-
-Lemma nat_max_n_n n : nat_max n n = n.
+(** Subtracting a number from itself is [0]. *)
+Definition nat_sub_cancel@{} (n : nat) : n - n = 0.
 Proof.
-  simple_induction' n; cbn; auto.
-Defined.
-#[export] Hint Resolve nat_max_n_n : core.
-
-Lemma nat_max_Sn_n n : nat_max (S n) n = S n.
-Proof.
-  simple_induction' n; cbn; auto.
-Defined.
-#[export] Hint Resolve nat_max_Sn_n : core.
-
-Lemma nat_max_comm n m : nat_max n m = nat_max m n.
-Proof.
-  revert m; simple_induction' n; destruct m; cbn; auto.
+  simple_induction n n IHn.
+  - reflexivity.
+  - exact IHn.
 Defined.
 
-Lemma nat_max_0_n n : nat_max 0 n = n.
+(** Subtracting an addition is the same as subtracting the two numbers separately. *)
+Definition nat_sub_add@{} n m k : n - (m + k) = n - m - k.
 Proof.
-  auto.
-Defined.
-#[export] Hint Resolve nat_max_0_n : core.
+  induction n as [|n IHn] in m, k |- *.
+  - reflexivity.
+  - destruct m.
+    + reflexivity.
+    + nrapply IHn.
+Defined. 
 
-Lemma nat_max_n_0 n : nat_max n 0 = n.
+(** The order in which two numbers are subtracted does not matter. *)
+Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
 Proof.
-  by rewrite nat_max_comm.
-Defined.
-#[export] Hint Resolve nat_max_n_0 : core.
-
-Theorem nat_max_l : forall n m, m <= n -> nat_max n m = n.
-Proof.
-  intros n m; revert n; simple_induction m m IHm; auto.
-  intros [] p.
-  1: inversion p.
-  cbn; by apply (ap S), IHm, leq_S_n.
+  lhs_V nrapply nat_sub_add.
+  rewrite nat_add_comm.
+  nrapply nat_sub_add.
 Defined.
 
-Theorem nat_max_r : forall n m : nat, n <= m -> nat_max n m = m.
+(** Subtracting a larger number from a smaller number is [0]. *)
+Definition equiv_nat_sub_leq {n m} : n <= m <~> n - m = 0.
 Proof.
-  intros; rewrite nat_max_comm; by apply nat_max_l.
+  srapply equiv_iff_hprop.
+  - intro l; induction l.
+    + exact (nat_sub_cancel n).
+    + change (m.+1) with (1 + m). 
+      lhs nrapply nat_sub_add.
+      lhs nrapply nat_sub_comm_r.
+      by destruct IHl^.
+  - induction n as [|n IHn] in m |- *.
+    1: intro; exact _.
+    destruct m.
+    + intros p; by destruct p.
+    + intros p.
+      apply leq_succ, IHn.
+      exact p.
 Defined.
 
-Lemma nat_min_comm : forall n m, nat_min n m = nat_min m n.
-Proof.
-  simple_induction' n; destruct m; cbn; auto.
+(** We can cancel a left summand when subtracting it from a sum. *)
+Definition nat_add_sub_cancel_l m n : n + m - n = m.
+Proof. 
+  induction n as [|n IHn].
+  - nrapply nat_sub_zero_r.
+  - exact IHn.
 Defined.
 
-Theorem nat_min_l : forall n m : nat, n <= m -> nat_min n m = n.
+(** We can cancel a right summand when subtracting it from a sum. *)
+Definition nat_add_sub_cancel_r m n : m + n - n = m.
 Proof.
+  rhs_V nrapply (nat_add_sub_cancel_l m n).
+  nrapply (ap (fun x => x - n)).
+  nrapply nat_add_comm.
+Defined.
+
+(** We can cancel a right subtrahend when adding it on the right to a subtraction if the subtrahend is less than the number being subtracted from. *)
+Definition nat_add_sub_l_cancel {n m} : n <= m -> (m - n) + n = m.
+Proof.
+  intros H.
+  induction n as [|n IHn] in m, H |- *.
+  - lhs nrapply nat_add_zero_r.
+    nrapply nat_sub_zero_r.
+  - destruct m.
+    1: contradiction (not_leq_Sn_0 n).
+    lhs nrapply nat_add_succ_r.
+    nrapply (ap nat_succ).
+    nrapply IHn.
+    exact (leq_succ' H).
+Defined.
+
+(** We can cancel a right subtrahend when adding it on the left to a subtraction if the subtrahend is less than the nubmer being subtracted from. *)
+Definition nat_add_sub_r_cancel {n m} : n <= m -> n + (m - n) = m.
+Proof.
+  intros H.
+  rhs_V nrapply (nat_add_sub_l_cancel H).
+  apply nat_add_comm.
+Defined.
+
+(** We can move a subtracted number to the left-hand side of an equation. *)
+Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
+Proof.
+  intros p.
+  destruct p.
+  symmetry.
+  apply nat_add_sub_cancel_r.
+Defined.
+
+(** We can move a subtracted number to the right-hand side of an equation. *)
+Definition nat_moveR_nV {k m} n : k = n + m -> k - m = n
+  := fun p => (nat_moveL_nV _ p^)^.
+
+(** ** Properties of Maximum and Minimum *) 
+
+(** *** Properties of Maxima *)
+
+(** [nat_max] is idempotent. *)
+Definition nat_max_idem@{} n : nat_max n n = n.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
+(** [nat_max] is commutative. *)
+Definition nat_max_comm@{} n m : nat_max n m = nat_max m n.
+Proof.
+  induction n as [|n IHn] in m |- *; destruct m; cbn.
+  1-3: reflexivity.
+  exact (ap S (IHn _)).
+Defined.
+
+(** The maximum of [n.+1] and [n] is [n.+1]. *)
+Definition nat_max_succ_l@{} n : nat_max n.+1 n = n.+1.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
+(** The maximum of [n] and [n.+1] is [n.+1]. *)
+Definition nat_max_succ_r@{} n : nat_max n n.+1 = n.+1
+  := nat_max_comm _ _ @ nat_max_succ_l _.
+
+(** [0] is the left identity of [nat_max]. *)
+Definition nat_max_zero_l@{} n : nat_max 0 n = n := idpath.
+
+(** [0] is the right identity of [nat_max]. *)
+Definition nat_max_zero_r@{} n : nat_max n 0 = n
+  := nat_max_comm _ _ @ nat_max_zero_l _.
+
+(** [nat_max n m] is [n] if [m <= n]. *) 
+Definition nat_max_l@{} {n m} : m <= n -> nat_max n m = n.
+Proof.
+  intros H.
+  induction m as [|m IHm] in n, H |- *.
+  1: nrapply nat_max_zero_r.
+  destruct n.
+  1: inversion H.
+  cbn; by apply (ap S), IHm, leq_succ'.
+Defined.
+
+(** [nat_max n m] is [m] if [n <= m]. *)
+Definition nat_max_r {n m} : n <= m -> nat_max n m = m
+  := fun _ => nat_max_comm _ _ @ nat_max_l _.
+
+(** [nat_max n m] is associative. *)
+Definition nat_max_assoc@{} n m k
+  : nat_max n (nat_max m k) = nat_max (nat_max n m) k.
+Proof.
+  induction n as [|n IHn] in m, k |- *.
+  1: reflexivity.
+  destruct m, k.
+  1-3: reflexivity.
+  by apply (ap S), IHn.
+Defined.
+
+(** Properties of Minima *)
+
+(** [nat_min] is idempotent. *)
+Definition nat_min_idem n : nat_min n n = n.
+Proof.
+  simple_induction' n; cbn.
+  1: reflexivity.
+  exact (ap S IH).
+Defined.
+
+(** [nat_min] is commutative. *)
+Definition nat_min_comm n m : nat_min n m = nat_min m n.
+Proof.
+  induction n as [|n IHn] in m |- *; destruct m; cbn.
+  1-3: reflexivity.
+  exact (ap S (IHn _)).
+Defined.
+
+(** [nat_min] of [0] and [n] is [0]. *)
+Definition nat_min_zero_l n : nat_min 0 n = 0 := idpath.
+
+(** [nat_min] of [n] and [0] is [0]. *)
+Definition nat_min_zero_r n : nat_min n 0 = 0:= 
+  nat_min_comm _ _ @ nat_min_zero_l _.
+
+(** [nat_min n m] is [n] if [n <= m]. *)
+Definition nat_min_l {n m} : n <= m -> nat_min n m = n.
+Proof.
+  revert n m.
   simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply (ap S), IHn, leq_S_n.
+  cbn; by apply (ap S), IHn, leq_succ'.
 Defined.
 
-Theorem nat_min_r : forall n m : nat, m <= n -> nat_min n m = m.
+(** [nat_min n m] is [m] if [m <= n]. *)
+Definition nat_min_r {n m} : m <= n -> nat_min n m = m
+  := fun _ => nat_min_comm _ _ @ nat_min_l _.
+
+(** [nat_min n m] is associative. *)
+Definition nat_min_assoc n m k
+  : nat_min n (nat_min m k) = nat_min (nat_min n m) k.
 Proof.
-  intros; rewrite nat_min_comm; by apply nat_min_l.
+  induction n as [|n IHn] in m, k |- *.
+  1: reflexivity.
+  destruct m, k.
+  1-3: reflexivity.
+  by apply (ap S), IHn.
 Defined.
 
-(** ** Arithmetic *)
+(** ** More Theory of Comparison Predicates *)
 
-Global Instance isinj_S : IsInjective S.
-Proof.
-  intros x y p.
-  by apply path_nat_S.
-Defined.
+(** *** Antisymmetry of [<=] and [>=] *)
 
-Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
-Proof.
-  simple_induction k k Ik; exact _.
-Defined.
-
-Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
-Proof.
-  intros x y H.
-  rewrite 2 (nat_add_comm _ k) in H.
-  exact (isinj_nat_add_l k _ _ H).
-Defined.
-
-(** ** Natural number ordering *)
-
-(** ** Theorems about natural number ordering *)
-
-Lemma leq_antisym {x y} : x <= y -> y <= x -> x = y.
+(** [<=] is an antisymmetric relation. *)
+Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
 Proof.
   intros p q.
   destruct p.
   1: reflexivity.
   destruct x; [inversion q|].
-  apply leq_S_n in q.
-  pose (r := leq_trans p q).
-  by apply not_leq_Sn_n in r.
+  apply leq_succ' in q.
+  contradiction (not_leq_Sn_n _ (leq_trans p q)).
 Defined.
 
+Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
+Global Instance antisymemtric_geq : AntiSymmetric geq
+  := fun _ _ p q => leq_antisym q p.
+
+(** *** Irreflexivity of [<] and [>] *)
+
+(** TODO: rename to [lt_irrefl] *)
+(** [<] is an irreflexive relation. *)
 Definition not_lt_n_n n : ~ (n < n) := not_leq_Sn_n n.
 
-Definition leq_1_Sn {n} : 1 <= n.+1 := leq_S_n' 0 n (leq_0_n _).
+Global Instance irreflexive_lt : Irreflexive lt := not_lt_n_n.
+Global Instance irreflexive_gt : Irreflexive gt := not_lt_n_n.
 
-Fixpoint leq_dichot {m} {n} : (m <= n) + (m > n).
+(** *** Addition Lemmas *)
+
+(** The first summand is less than or equal to the sum. *)
+Definition leq_add_l n m : n <= n + m.
+Proof.
+  simple_induction n n IHn.
+  - exact (leq_zero m).
+  - exact (leq_succ IHn).
+Defined.
+
+(** The second summand is less than or equal to the sum. *)
+Definition leq_add_r n m : n <= m + n.
+Proof.
+  simple_induction m m IH.
+  - exact (leq_refl n).
+  - exact (leq_succ_r IH).
+Defined.
+
+(** Alternative Characterizations of [<=] *)
+
+(** [n <= m] is equivalent to [(n < m) + (n = m)]. Note that it is not immediately obvious that the latter type is a hprop, hence we have to explicitly show the back and forth maps are inverses of eachother. This is possible and justifies the name "less than or equal to". *)
+Definition equiv_leq_lt_or_eq {n m} : (n <= m) <~> (n < m) + (n = m).
+Proof.
+  snrapply equiv_adjointify.
+  - intro l; induction l.
+    + now right.
+    + left; exact (leq_succ l).
+  - intros [l|p].
+    + exact (leq_succ_l l).
+    + destruct p.
+      exact (leq_refl _).
+  - intros [l|p].
+    + induction l.
+      1: reflexivity.
+      snrapply (ap (inl)).
+      rapply path_ishprop.
+    + by destruct p.
+  - intro; rapply path_ishprop.
+Defined.
+
+(** Here is an alternative characterization of [<=] in terms of an existence predicate and addition. *)
+Definition equiv_leq_add n m : n <= m <~> exists k, k + n = m.
+Proof.
+  srapply equiv_iff_hprop.
+  - apply hprop_allpath.
+    intros [x p] [y q].
+    pose (r := nat_moveL_nV _ p @ (nat_moveL_nV _ q)^).
+    destruct r.
+    apply ap.
+    apply path_ishprop.
+  - intros p.
+    exists (m - n).
+    apply nat_add_sub_l_cancel, p.
+  - intros [k p].
+    destruct p.
+    apply leq_add_r.
+Defined.
+
+(** *** Dichotomy of [<=] *)
+
+(** TODO: rename *)
+Fixpoint leq_dichot m n : (m <= n) + (m > n).
 Proof.
   simple_induction' m; simple_induction' n.
   - left; reflexivity.
-  - left; apply leq_0_n.
-  - right; unfold lt; apply leq_1_Sn.
+  - left; apply leq_zero.
+  - right; unfold lt; exact _.
   - assert ((m <= n) + (n < m)) as X by apply leq_dichot.
     destruct X as [leqmn|ltnm].
-    + left; apply leq_S_n'; assumption.
-    + right; apply leq_S_n'; assumption.
+    + left; apply leq_succ; assumption.
+    + right; apply leq_succ; assumption.
 Defined.
 
-Lemma not_lt_n_0 n : ~ (n < 0).
+(** *** Trichotomy *)
+
+(** Every two natural numbers are either equal, less than, or greater than each other. *)
+Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
+Proof.
+  generalize (leq_dichot m n).
+  snrapply (functor_sum _ idmap).
+  snrapply equiv_leq_lt_or_eq.
+Defined.
+
+(** *** Negation Lemmas *)
+
+Definition not_lt_zero_r n : ~ (n < 0).
 Proof.
   apply not_leq_Sn_0.
+Defined.
+
+(** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
+
+Definition geq_iff_not_lt {n m} : ~(n < m) <-> n >= m.
+Proof.
+  split.
+  - intro; by destruct (leq_dichot m n).
+  - intros ? ?; contradiction (not_lt_n_n n); exact _.
+Defined.
+
+Definition gt_iff_not_leq {n m} : ~(n <= m) <-> n > m.
+Proof.
+  split.
+  - intro; by destruct (leq_dichot n m).
+  - intros ? ?; contradiction (not_lt_n_n m); exact _.
+Defined.
+
+Definition leq_iff_not_gt {n m} : ~(n > m) <-> n <= m
+  := geq_iff_not_lt.
+
+Definition lt_iff_not_geq {n m} : ~(n >= m) <-> n < m
+  := gt_iff_not_leq.
+
+(** *** Dichotomy of [<>] *)
+
+(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. Note that this is a negated version of antisymmetry of [<=]. *)
+Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
+Proof.
+  split.
+  - intros diseq.
+    destruct (dec (n < m)) as [| a]; [ now left |].
+    apply geq_iff_not_lt in a.
+    apply equiv_leq_lt_or_eq in a.
+    destruct a as [lt | eq].
+    1: by right.
+    symmetry in eq.
+    contradiction.
+  - intros [H' | H'] nq; destruct nq; exact (not_lt_n_n _ H').
 Defined.
 
 (** ** Arithmetic relations between [trunc_index] and [nat]. *)
@@ -665,4 +958,296 @@ Proof.
   refine (_ @ ap nat_to_trunc_index _).
   2: exact (nat_add_succ_r _ _)^.
   reflexivity.
+Defined.
+
+(** *** Subtraction *)
+
+Definition leq_sub_add n m : n <= n - m + m.
+Proof.
+  destruct (@leq_dichot m n) as [l | g].
+  - destruct (nat_add_sub_l_cancel l)^;
+      constructor.
+  - apply leq_lt in g.
+    now destruct (equiv_nat_sub_leq _)^.
+Defined.
+
+(** *** Movement Lemmas *)
+
+(** TODO: rename sub_gt_0_lt to lt_moveL_m (?) , reprove *)
+Definition sub_gt_0_lt n m : 0 < n - m -> m < n.
+Proof.
+  intro ineq.
+  destruct (@leq_dichot n m) as [n_leq_m |]; [ | assumption].
+  apply equiv_nat_sub_leq in n_leq_m.
+  contradiction (not_lt_n_n 0). now rewrite n_leq_m in ineq.
+Defined.
+ 
+(** TODO: merge with above, reprove *)
+Definition lt_sub_gt_0 n m : m < n -> 0 < n - m.
+Proof.
+  revert m; simple_induction n n IHn.
+  - intros m ineq. contradiction (not_lt_zero_r m).
+  - destruct m.
+    + simpl. easy.
+    + simpl. intro ineq. apply leq_succ' in ineq.
+      now apply IHn in ineq.
+Defined.
+
+(** *** Monotonicity of Addition *)
+
+(** TODO: use OrderPreserving from canonical_names *)
+
+(** Addition on the left is monotone. *)
+Global Instance nat_add_l_monotone {n m} k
+  : n <= m -> k + n <= k + m.
+Proof.
+  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
+Defined.
+
+(** Addition on the right is monotone. *)
+Global Instance nat_add_r_monotone {n m} k
+  : n <= m -> n + k <= m + k.
+Proof.
+  intros H; rewrite 2 (nat_add_comm _ k); exact _.
+Defined.
+
+(** Addition is monotone in both arguments. (This makes [+] a bifunctor when treating [nat] as a category (as a preorder)). *)
+Global Instance nat_add_monotone {n n' m m'}
+  : n <= m -> n' <= m' -> n + n' <= m + m'.
+Proof.
+  intros H1 H2; induction H1; exact _.
+Defined.
+
+(** *** Strict Monotonicity of Addition *)
+
+(** [nat_succ] is strictly monotone. *)
+Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
+
+Global Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
+
+(** Addition on the left is strictly monotone. *)
+Global Instance nat_add_l_strictly_monotone {n m} k
+  : n < m -> k + n < k + m.
+Proof.
+  intros H; induction k as [|k IHk] in n, m, H |- *; exact _.
+Defined.
+
+(** Addition on the right is strictly monotone. *)
+Global Instance nat_add_r_strictly_monotone {n m} k
+  : n < m -> n + k < m + k.
+Proof.
+  intros H; rewrite 2 (nat_add_comm _ k); exact _.
+Defined.
+
+(** Addition is strictly monotone in both arguments. *)
+Global Instance nat_add_strictly_monotone {n n' m m'}
+  : n < m -> n' < m' -> n + n' < m + m'.
+Proof.
+  intros H1 H2; induction H1; exact _.
+Defined.
+
+(** *** Monotonicity of Multiplication *)
+
+(** Multiplication on the left is monotone. *)
+Global Instance nat_mul_l_monotone {n m} k
+  : n <= m -> k * n <= k * m.
+Proof.
+  intros H; induction k as [|k IHk] in |- *; exact _.
+Defined.
+
+(** Multiplication on the right is monotone. *)
+Global Instance nat_mul_r_monotone {n m} k
+  : n <= m -> n * k <= m * k.
+Proof.
+  intros H; rewrite 2 (nat_mul_comm _ k); exact _.
+Defined.
+
+(** Multiplication is monotone in both arguments. *)
+Global Instance nat_mul_monotone {n n' m m'}
+  : n <= m -> n' <= m' -> n * n' <= m * m'.
+Proof.
+  intros H1 H2; induction H1.
+  - exact _.
+  - rapply leq_trans.
+Defined.
+
+(** *** Strict Monotonicity of Multiplication *)
+
+(** Multiplication on the left by a positive number is strictly monotone. *)
+Global Instance nat_mul_l_strictly_monotone {n m} k
+  : n < m -> k.+1 * n < k.+1 * m.
+Proof.
+  intros H; induction k as [|k IHk] in |- *; exact _.
+Defined.
+
+(** Multiplication on the right by a positive number is strictly monotone. *)
+Global Instance nat_mul_r_strictly_monotone {n m} k
+  : n < m -> n * k.+1 < m * k.+1.
+Proof.
+  intros H; rewrite 2 (nat_mul_comm _ k.+1); exact _.
+Defined.
+
+(** TODO: monotonicity of subtraction *)
+
+(** *** Order-reflection *)
+
+(** TODO: move, rename *)
+Proposition nataddreflectslt { n m k : nat }
+  : n + k < m + k -> n < m.
+Proof.
+  simple_induction k k IHk.
+  - destruct (nat_add_zero_r n)^, (nat_add_zero_r m)^; trivial.
+  - intro l. destruct (nat_add_succ_r n k)^, (nat_add_succ_r m k)^ in l.
+    apply leq_succ', IHk in l; exact l.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddreflectsleq { n m k : nat }
+  : n + k <= m + k -> n <= m.
+Proof.
+  destruct n.
+  - intros ?; apply leq_zero.
+  - intro a. change (n.+1 + k) with (n + k).+1 in a.
+    now apply (@nataddreflectslt n m k).
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddreflectslt' { n m k : nat }
+  : k + n < k + m -> n < m.
+Proof.
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectslt.
+Defined.
+
+(** TODO: move, rename *)
+Proposition nataddreflectsleq' { n m k : nat }
+  : k + n <= k + m -> n <= m.
+Proof.
+  destruct (symmetric_paths _ _ (nat_add_comm k n)),
+    (symmetric_paths _ _ (nat_add_comm k m));
+    exact nataddreflectsleq.
+Defined.
+
+(** TODO: move, rename *)
+Proposition natsubreflectsleq { n m k : nat }
+  : k <= m -> n - k <= m - k -> n <= m.
+Proof.
+  intros ineq1 ineq2.
+  apply (nat_add_r_monotone k) in ineq2.
+  apply (@leq_trans _ (n - k + k) _ (leq_sub_add _ _)).
+  apply (@leq_trans _ (m - k + k)  _ _).
+  destruct (nat_add_sub_l_cancel ineq1)^; easy.
+Defined.
+
+(** ** Further Properties of Subtraction *)
+
+(** TODO: rename *)
+Proposition nataddsub_assoc_lemma {k m : nat}
+  : (k <= m) -> m.+1 - k = (m - k).+1.
+Proof.
+  revert m; simple_induction k k IHk.
+  - intros m l; simpl. destruct m; reflexivity.
+  - destruct m.
+    + simpl; intro g; contradiction (not_leq_Sn_0 _ g).
+    + intro l; apply leq_succ' in l.
+      change (m.+2 - k.+1) with (m.+1 - k).
+      change (m.+1 - k.+1) with (m - k).
+      exact (IHk _ l).
+Defined.
+
+(** TODO: rename *)
+Proposition nataddsub_assoc(n : nat) {m k : nat}
+  : (k <= m) -> n + (m - k) = n + m - k.
+Proof.
+  revert m k. simple_induction n n IHn.
+  - reflexivity.
+  - intros m k l.
+    change (n.+1 + (m - k)) with (n + (m - k)).+1;
+      change (n.+1 + m) with (n +m).+1.
+    destruct k, m;
+      [ reflexivity
+      | reflexivity
+      | contradiction (not_lt_zero_r k _)
+      | ].
+    simpl "-". apply leq_succ' in l.
+    destruct (nat_add_succ_r n (m - k)).
+    destruct  (nataddsub_assoc_lemma l).
+    apply (IHn m.+1 k).
+    apply leq_succ_r.
+    assumption.
+Defined.
+
+(** TODO: rename *)
+Proposition nataddsub_comm (n m k : nat)
+  : m <= n -> (n - m) + k = (n + k) - m.
+Proof.
+  intro l.
+  destruct (nat_add_comm k n).
+  destruct (nataddsub_assoc k l).
+  apply nat_add_comm.
+Defined.
+
+(** ** Properties of Powers *)
+
+(** [0] to any power is [0] unless that power is [0] in which case it is [1]. *)
+Definition nat_pow_zero_l@{} n : nat_pow 0 n = if dec (n = 0) then 1 else 0.
+Proof.
+  destruct n; reflexivity.
+Defined.
+
+(** Any number to the power of [0] is [1]. *)
+Definition nat_pow_zero_r@{} n : nat_pow n 0 = 1
+  := idpath.
+
+(** [1] to any power is [1]. *)
+Definition nat_pow_one_l@{} n : nat_pow 1 n = 1.
+Proof.
+  induction n as [|n IHn]; simpl.
+  1: reflexivity.
+  lhs nrapply nat_add_zero_r.
+  exact IHn.
+Defined.
+
+(** Any number to the power of [1] is itself. *)
+Definition nat_pow_one_r@{} n : nat_pow n 1 = n
+  := nat_mul_one_r _.
+
+(** Exponentiation of natural numbers is distributive over addition on the left. *)
+Definition nat_pow_add_r@{} n m k
+  : nat_pow n (m + k) = nat_pow n m * nat_pow n k.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - symmetry.
+    apply nat_add_zero_r.
+  - rhs_V nrapply nat_mul_assoc. 
+    exact (ap _ IHm).
+Defined.
+
+(** Exponentiation of natural numbers is distributive over multiplication on the right. *)
+Definition nat_pow_mul_l@{} n m k
+  : nat_pow (n * m) k = nat_pow n k * nat_pow m k.
+Proof.
+  induction k as [|k IHk]; simpl.
+  1: reflexivity.
+  lhs_V nrapply nat_mul_assoc.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  rhs nrapply nat_mul_comm.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  rhs nrapply nat_mul_comm.
+  exact IHk.
+Defined.
+
+(** Exponentiation of natural numbers is distributive over multiplication on the left. *)
+Definition nat_pow_mul_r@{} n m k
+  : nat_pow n (m * k) = nat_pow (nat_pow n m) k.
+Proof.
+  induction m as [|m IHm]; simpl.
+  - exact (nat_pow_one_l _)^.
+  - lhs nrapply nat_pow_add_r.
+    rhs nrapply nat_pow_mul_l.
+    nrapply ap.
+    exact IHm.
 Defined.

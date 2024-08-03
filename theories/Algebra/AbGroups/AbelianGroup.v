@@ -302,9 +302,7 @@ Proof.
   - exact zero.
   - refine (f n _ + IHn _).
     intros k Hk.
-    refine (f k _).
-    apply leq_S.
-    exact Hk.
+    exact (f k _).
 Defined.
 
 (** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)

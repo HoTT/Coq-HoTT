@@ -58,7 +58,7 @@ Section cauchy.
       assert (isclose := isclose' n leNn).
       clear isclose'.
       assert (leMn := le_nat_max_l (M (epsilon / 2)) N : M (epsilon / 2) ≤ n).
-      assert (leMM : M (epsilon / 2) ≤ M (epsilon / 2) ) by apply (Nat.Core.leq_n).
+      assert (leMM : M (epsilon / 2) ≤ M (epsilon / 2) ) by apply (Nat.Core.leq_refl).
       assert (x_close := cauchy_convergence x (epsilon/2) n (M (epsilon / 2)) leMn leMM).
       cbn in isclose, x_close.
       rewrite (@preserves_mult Q F _ _ _ _ _ _ _ _ _ _ _ _) in isclose, x_close.

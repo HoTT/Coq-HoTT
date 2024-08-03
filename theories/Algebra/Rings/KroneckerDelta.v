@@ -110,9 +110,10 @@ Proof.
     apply rng_mult_zero_l.
   - simpl; lhs nrapply ap.
     + nrapply IHn.
-      apply diseq_implies_lt in p.
+      apply neq_iff_lt_or_gt in p.
       destruct p; [assumption|].
-      contradiction (lt_implies_not_geq Hi).
+      apply gt_iff_not_leq in Hi.
+      contradiction Hi.
     + rewrite (kronecker_delta_neq p).
       rewrite rng_mult_zero_l.
       rewrite grp_unit_l.

@@ -1,7 +1,7 @@
 Require Import
   HoTT.Utf8Minimal
   HoTT.Spaces.List.Core
-  HoTT.Basics.Overture
+  HoTT.Basics.Overture Basics.Tactics
   HoTT.Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
@@ -124,11 +124,13 @@ Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
   leq (length (to_list x)) (length (to_list y)).
 Proof.
- induction y; cbn.
- - intros [[] | C].
-   + constructor.
-   + elim C.
- - intros [[] | C]; auto.
+  induction y; cbn.
+  - intros [[] | C].
+    + constructor.
+    + elim C.
+  - intros [[] | C].
+    + exact _.
+    + by apply leq_succ_r, IHy.
 Qed.
 
 Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
