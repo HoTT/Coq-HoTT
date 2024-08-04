@@ -854,8 +854,9 @@ Defined.
 Definition equiv_leq_lt_or_eq {n m} : (n <= m) <~> (n < m) + (n = m).
 Proof.
   srapply equiv_iff_hprop.
-  - rapply ishprop_sum.
-    intros H1 H2.
+  - nrapply ishprop_sum.
+    1,2: exact _.
+    intros H1 p; destruct p.
     contradiction (lt_irrefl _ _).
   - intro l; induction l.
     + now right.
