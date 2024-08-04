@@ -126,9 +126,9 @@ Fixpoint factorial n :=
   | S n => S n * factorial n
   end.
 
-(** ** Comparison Predicates *)
+(** ** Comparison predicates *)
 
-(** *** Less Than or Equal To [<=] *)
+(** *** Less than or equal To [<=] *)
 
 Inductive leq (n : nat) : nat -> Type0 :=
 | leq_refl : leq n n
@@ -145,7 +145,7 @@ Notation "n <= m" := (leq n m) : nat_scope.
 Existing Class leq.
 Global Existing Instances leq_refl leq_succ_r.
 
-(** *** Less Than [<] *)
+(** *** Less than [<] *)
 
 (** We define the less-than relation [lt] in terms of [leq] *)
 Definition lt n m : Type0 := leq (S n) m.
@@ -156,7 +156,7 @@ Existing Class lt.
 Infix "<" := lt : nat_scope.
 Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
 
-(** *** Greater Than or Equal To [>=] *)
+(** *** Greater than or equal To [>=] *)
 
 Definition geq n m := leq m n.
 Existing Class geq.
@@ -172,7 +172,7 @@ Existing Class gt.
 Infix ">" := gt : nat_scope.
 Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
 
-(** *** Combined Comparison Predicates *)
+(** *** Combined comparison predicates *)
 
 Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
 Notation "x <= y < z"  := (x <= y /\ y <  z) : nat_scope.
@@ -404,9 +404,9 @@ Definition nat_mul_one_l@{} n : 1 * n = n
 Definition nat_mul_one_r@{} n : n * 1 = n
   := nat_mul_comm _ _ @ nat_mul_one_l _.
 
-(** ** Basic Properties of Comparison Predicates *)
+(** ** Basic properties of comparison predicates *)
 
-(** *** Basic Properties of [<=] *)
+(** *** Basic properties of [<=] *)
 
 (** [<=] is reflexive by definition. *)
 Global Instance reflexive_leq : Reflexive leq := leq_refl.
@@ -560,7 +560,7 @@ Proof.
   intro l; apply leq_succ'; exact _.
 Defined.
 
-(** *** Basic Properties of [<] *)
+(** *** Basic properties of [<] *)
 
 (** [<=] and [<] imply [<] *)
 Definition lt_leq_lt_trans {n m k} : n <= m -> m < k -> n < k
@@ -581,21 +581,21 @@ Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
 Global Instance decidable_lt n m : Decidable (lt n m) := _.
 
-(** *** Basic Properties of [>=] *) 
+(** *** Basic properties of [>=] *) 
 
 Global Instance reflexive_geq : Reflexive geq := leq_refl.
 Global Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
 Global Instance ishprop_geq n m : IsHProp (geq n m) := _.
 Global Instance decidable_geq n m : Decidable (geq n m) := _.
 
-(** *** Basic Properties of [>] *)
+(** *** Basic properties of [>] *)
 
 Global Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
 Global Instance ishprop_gt n m : IsHProp (gt n m) := _.
 Global Instance decidable_gt n m : Decidable (gt n m) := _.
 
-(** ** Properties of Subtraction *)
+(** ** Properties of subtraction *)
 
 (** Subtracting a number from [0] is [0]. *)
 Definition nat_sub_zero_l@{} n : 0 - n = 0 := idpath.
@@ -713,9 +713,9 @@ Proof.
   apply IHn.
 Defined.
 
-(** ** Properties of Maximum and Minimum *) 
+(** ** Properties of maximum and minimum *) 
 
-(** *** Properties of Maxima *)
+(** *** Properties of maximum *)
 
 (** [nat_max] is idempotent. *)
 Definition nat_max_idem@{} n : nat_max n n = n.
@@ -828,9 +828,9 @@ Proof.
   by apply (ap S), IHn.
 Defined.
 
-(** ** More Theory of Comparison Predicates *)
+(** ** More theory of comparison predicates *)
 
-(** *** Addition Lemmas *)
+(** *** Addition lemmas *)
 
 (** The first summand is less than or equal to the sum. *)
 Global Instance leq_add_l n m : n <= n + m.
@@ -911,7 +911,7 @@ Proof.
   snrapply equiv_leq_lt_or_eq.
 Defined.
 
-(** *** Negation Lemmas *)
+(** *** Negation lemmas *)
 
 (** There are various lemmas we can state about negating the comparison operators on [nat]. To aid readability, we opt to keep the order of the variables in each statement consistent. *)
 
@@ -989,7 +989,7 @@ Proof.
   srapply equiv_iff_hprop.
 Defined.
 
-(** *** Monotonicity of Addition *)
+(** *** Monotonicity of addition *)
 
 (** TODO: use OrderPreserving from canonical_names *)
 
@@ -1017,7 +1017,7 @@ Proof.
 Defined.
 Hint Immediate nat_add_monotone : typeclass_instances.
 
-(** *** Strict Monotonicity of Addition *)
+(** *** Strict monotonicity of addition *)
 
 (** [nat_succ] is strictly monotone. *)
 Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
@@ -1048,7 +1048,7 @@ Proof.
 Defined.
 Hint Immediate nat_add_strictly_monotone : typeclass_instances.
 
-(** *** Monotonicity of Multiplication *)
+(** *** Monotonicity of multiplication *)
 
 (** Multiplication on the left is monotone. *)
 Definition nat_mul_l_monotone {n m} k
@@ -1074,7 +1074,7 @@ Proof.
 Defined.
 Hint Immediate nat_mul_monotone : typeclass_instances.
 
-(** *** Strict Monotonicity of Multiplication *)
+(** *** Strict monotonicity of multiplication *)
 
 (** Multiplication on the left by a positive number is strictly monotone. *)
 Definition nat_mul_l_strictly_monotone {n m} k
@@ -1118,7 +1118,7 @@ Proof.
   rewrite 2 (nat_add_comm _ k); nrapply lt_reflects_add_l.
 Defined.
 
-(** ** Further Properties of Subtraction *)
+(** ** Further properties of subtraction *)
 
 (** Subtracting from a successor is the successor of subtracting from the original number, as long as the amount being subtracted is less than or equal to the original number. *)
 Definition nat_sub_succ_l n m : m <= n -> n.+1 - m = (n - m).+1.
@@ -1177,7 +1177,7 @@ Proof.
     exact IHleq.
 Defined.
 
-(** *** Monotonicity of Subtraction *)
+(** *** Monotonicity of subtraction *)
 
 (** Subtraction is monotone in the left argument. *)
 Definition nat_sub_monotone_l {n m} k : n <= m -> n - k <= m - k.
@@ -1210,7 +1210,7 @@ Proof.
 Defined.
 Hint Immediate nat_sub_monotone_r : typeclass_instances.
 
-(** *** Order-reflection Lemmas *)
+(** *** Order-reflection lemmas *)
 
 (** Subtraction reflects [<=] in the left argument. *)
 Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
@@ -1316,7 +1316,7 @@ Proof.
   by apply nat_sub_monotone_l.
 Defined.
 
-(** ** Properties of Powers *)
+(** ** Properties of powers *)
 
 (** [0] to any power is [0] unless that power is [0] in which case it is [1]. *)
 Definition nat_pow_zero_l@{} n : nat_pow 0 n = if dec (n = 0) then 1 else 0.
