@@ -57,14 +57,14 @@ Section bounded_search.
         * left.
           refine (n.+1;(h,_,_)).
           -- intros m pm.
-             assert ((n.+1 <= m)+(n.+1>m)) as X by apply leq_dichot.
+             assert ((n.+1 <= m)+(n.+1>m)) as X by apply leq_dichotomy.
              destruct X as [leqSnm|ltmSn].
              ++ assumption.
              ++ unfold gt, lt in ltmSn.
-                assert (m <= n) as X by rapply leq_succ'.
+                assert (m <= n) as X by rapply leq_pred'.
                 destruct (n0 m X pm).
         * right. intros l q.
-          assert ((l <= n) + (l > n)) as X by apply leq_dichot.
+          assert ((l <= n) + (l > n)) as X by apply leq_dichotomy.
           destruct X as [h|h].
           -- exact (n0 l h).
           -- unfold lt in h.

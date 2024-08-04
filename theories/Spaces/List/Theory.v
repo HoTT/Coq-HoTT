@@ -332,11 +332,11 @@ Definition nth_lt@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : { x : A & nth l n = Some x }.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_succ'.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -357,7 +357,7 @@ Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : InList (nth' l n H) l.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by left.
   right.
@@ -423,7 +423,7 @@ Definition nth'_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
   : nth' (list_map f l) n H' = f (nth' l n H).
 Proof.
   induction l as [|a l IHl] in n, H, H' |- * using list_ind@{i j}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
   apply IHl.
@@ -441,18 +441,13 @@ Proof.
     simple_list_induction l1 a l1 IHl1;
     intros l2 n defl defr H H' H'' p.
   - destruct l2 as [|b l2].
-    + destruct (not_leq_Sn_0 _ H).
+    + destruct (not_lt_zero_r _ H).
     + inversion p.
   - destruct l2 as [|b l2].
     + inversion p.
     + destruct n.
       * reflexivity.
-      * unshelve erewrite nth'_cons.
-        1: apply leq_succ', H.
-        unshelve erewrite nth'_cons.
-        1: apply leq_succ', H'.
-        unshelve erewrite nth'_cons.
-        1: apply leq_succ', H''.
+      * erewrite 3 nth'_cons.
         apply IHl1.
         by apply path_nat_succ.
 Defined.
@@ -463,7 +458,7 @@ Definition nth'_repeat@{i|} {A : Type@{i}} (x : A) (i n : nat)
   : nth' (repeat x n) i H = x.
 Proof.
   induction n as [|n IHn] in i, H |- * using nat_ind@{i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct i.
   1: reflexivity.
   apply IHn.
@@ -499,10 +494,10 @@ Definition nth_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
   : nth (l ++ l') n = nth l n.
 Proof.
   induction l as [|a l IHl] in l', n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_succ'.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
@@ -572,9 +567,9 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply drop_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; apply IHl.
-  apply leq_succ'.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -630,9 +625,9 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply take_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; f_ap.
-  by apply IHl, leq_succ'.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
@@ -699,13 +694,12 @@ Proof.
   rewrite length_take.
   rewrite length_drop.
   rewrite nat_min_l.
-  - rewrite nataddsub_assoc.
-    2: exact H.
-    rewrite <- predeqminus1.
-    induction n in |- *.
-    1: reflexivity.
-    cbn; assumption.
-  - exact (leq_trans _ H).
+  2: exact (leq_trans _ H).
+  rewrite <- nat_sub_l_add_r.
+  2: exact _.
+  lhs nrapply nat_sub_succ_r.
+  apply ap.
+  apply nat_add_sub_cancel_l.
 Defined. 
 
 (** An element of a [remove] is an element of the original list. *)
@@ -820,11 +814,11 @@ Definition nth_seq_rev@{} {n i} (H : (i < n)%nat)
 Proof.
   induction i as [|i IHi] in n, H |- *.
   - induction n.
-    1: destruct (not_leq_Sn_0 _ H).
+    1: destruct (not_lt_zero_r _ H).
     cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
-    1: destruct (not_leq_Sn_0 _ H).
-    by apply IHi, leq_succ'.
+    1: destruct (not_lt_zero_r _ H).
+    by apply IHi, leq_pred'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
@@ -832,14 +826,14 @@ Definition nth_seq@{} {n i} (H : (i < n)%nat)
   : nth (seq n) i = Some i.
 Proof.
   induction n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   rewrite seq_succ.
   destruct (dec (i < n)%nat) as [H'|H'].
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
   - apply geq_iff_not_lt in H'.
-    apply leq_succ' in H.
+    apply leq_pred' in H.
     destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.

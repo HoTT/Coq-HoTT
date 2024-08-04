@@ -756,7 +756,7 @@ Proof.
   destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
   { rewrite H2.
     1: by rewrite rng_mult_zero_r.
-    rapply leq_lt_trans. }
+    rapply lt_leq_lt_trans. }
   apply gt_iff_not_leq in gt_k_i.
   rewrite H1.
   1: by rewrite rng_mult_zero_l.
