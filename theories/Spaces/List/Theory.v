@@ -336,7 +336,7 @@ Proof.
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_succ'.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -497,7 +497,7 @@ Proof.
   1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_succ'.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
@@ -569,7 +569,7 @@ Proof.
   destruct n.
   1: destruct (not_lt_zero_r _ H).
   cbn; apply IHl.
-  apply leq_succ'.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -627,7 +627,7 @@ Proof.
   destruct n.
   1: destruct (not_lt_zero_r _ H).
   cbn; f_ap.
-  by apply IHl, leq_succ'.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
@@ -818,7 +818,7 @@ Proof.
     cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
     1: destruct (not_lt_zero_r _ H).
-    by apply IHi, leq_succ'.
+    by apply IHi, leq_pred'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
@@ -833,7 +833,7 @@ Proof.
     1: by rewrite length_seq.
     by apply IHn.
   - apply geq_iff_not_lt in H'.
-    apply leq_succ' in H.
+    apply leq_pred' in H.
     destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.

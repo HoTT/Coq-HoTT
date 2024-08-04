@@ -55,7 +55,7 @@ Proof.
   - destruct u as [x h].
     destruct x as [| x].
     + exact (transport (P n.+1) (path_zero_finnat _ h) (z _)).
-    + refine (transport (P n.+1) (path_succ_finnat (x; leq_succ' h) _) _).
+    + refine (transport (P n.+1) (path_succ_finnat (x; leq_pred' h) _) _).
       apply s. apply IHn.
 Defined.
 
@@ -83,7 +83,7 @@ Proof.
           (fun p => transport _ p (s n u _) = s n u (finnat_ind P z s u))
           (hset_path2 1 (path_succ_finnat u (leq_succ u.2))) 1).
   destruct u as [u1 u2].
-  assert (u2 = leq_succ' (leq_succ u2)) as p by apply path_ishprop.
+  assert (u2 = leq_pred' (leq_succ u2)) as p by apply path_ishprop.
   simpl; by induction p.
 Defined.
 
@@ -108,7 +108,7 @@ Monomorphic Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
      | n.+1 => fun u =>
         match u with
         | (0; _) => fin_zero
-        | (x.+1; h) => fsucc (finnat_to_fin (x; leq_succ' h))
+        | (x.+1; h) => fsucc (finnat_to_fin (x; leq_pred' h))
         end
      end.
 
@@ -157,9 +157,9 @@ Proof.
   - elim (not_lt_zero_r _ u.2).
   - destruct u as [x h].
     destruct x as [| x]; [reflexivity|].
-    refine ((ap _ (ap _ (path_succ_finnat (x; leq_succ' h) h)))^ @ _).
-    refine (_ @ ap fsucc (IHn (x; leq_succ' h))).
-    by induction (path_finnat_to_fin_succ (incl_finnat (x; leq_succ' h))).
+    refine ((ap _ (ap _ (path_succ_finnat (x; leq_pred' h) h)))^ @ _).
+    refine (_ @ ap fsucc (IHn (x; leq_pred' h))).
+    by induction (path_finnat_to_fin_succ (incl_finnat (x; leq_pred' h))).
 Defined.
 
 Lemma path_finnat_to_fin_last (n : nat)
@@ -180,7 +180,7 @@ Proof.
     destruct x as [| x].
     + exact (ap pr1 (path_fin_to_finnat_fin_zero n)).
     + refine ((path_fin_to_finnat_fsucc _)..1 @ _).
-      exact (ap S (IHn (x; leq_succ' h))..1).
+      exact (ap S (IHn (x; leq_pred' h))..1).
 Defined.
 
 Lemma path_fin_to_finnat_to_fin {n : nat} (k : Fin n)

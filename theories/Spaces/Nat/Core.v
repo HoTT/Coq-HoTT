@@ -444,15 +444,15 @@ Defined.
 Global Existing Instance leq_succ | 100.
 
 (** The converse to [leq_succ] also holds. *)
-Definition leq_succ' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
-Hint Immediate leq_succ' : typeclass_instances.
+Definition leq_pred' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.
+Hint Immediate leq_pred' : typeclass_instances.
 
 (** [<] is an irreflexive relation. *)
 Definition lt_irrefl n : ~ (n < n).
 Proof.
   induction n as [|n IHn].
   1: intro p; inversion p.
-  intros p; by apply IHn, leq_succ'.
+  intros p; by apply IHn, leq_pred'.
 Defined.
 
 Global Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
@@ -465,7 +465,7 @@ Proof.
   destruct p.
   1: reflexivity.
   destruct x; [inversion q|].
-  apply leq_succ' in q.
+  apply leq_pred' in q.
   contradiction (lt_irrefl _ (leq_trans p q)).
 Defined.
 
@@ -557,7 +557,7 @@ Defined.
 (** [n.+1 <= m] implies [n <= m]. *)
 Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
 Proof.
-  intro l; apply leq_succ'; exact _.
+  intro l; apply leq_pred'; exact _.
 Defined.
 
 (** *** Basic properties of [<] *)
@@ -679,7 +679,7 @@ Proof.
     lhs nrapply nat_add_succ_r.
     nrapply (ap nat_succ).
     nrapply IHn.
-    exact (leq_succ' H).
+    exact (leq_pred' H).
 Defined.
 
 (** We can cancel a right subtrahend when adding it on the left to a subtraction if the subtrahend is less than the nubmer being subtracted from. *)
@@ -760,7 +760,7 @@ Proof.
   1: nrapply nat_max_zero_r.
   destruct n.
   1: inversion H.
-  cbn; by apply (ap S), IHm, leq_succ'.
+  cbn; by apply (ap S), IHm, leq_pred'.
 Defined.
 
 (** [nat_max n m] is [m] if [n <= m]. *)
@@ -810,7 +810,7 @@ Proof.
   simple_induction n n IHn; auto.
   intros [] p.
   1: inversion p.
-  cbn; by apply (ap S), IHn, leq_succ'.
+  cbn; by apply (ap S), IHn, leq_pred'.
 Defined.
 
 (** [nat_min n m] is [m] if [m <= n]. *)
@@ -1405,7 +1405,7 @@ Proof.
   apply IH_strong.
   simple_induction n n IHn; intros m H.
   1: contradiction (not_lt_zero_r m).
-  apply leq_succ' in H.
+  apply leq_pred' in H.
   apply equiv_leq_lt_or_eq in H.
   destruct H as [H|p].
   - by apply IHn.

@@ -114,7 +114,7 @@ Proof.
   intros l ineq.
   destruct j.
   - contradiction (not_lt_zero_r i).
-  - now simpl; apply leq_succ'.
+  - now simpl; apply leq_pred'.
 Defined.
 
 (** TODO: move, rename *)
@@ -134,7 +134,7 @@ Proposition pred_preserves_lt {i n: nat} (p : i < n) m
   : (n < m) -> (nat_pred n < nat_pred m).
 Proof.
   intro l.
-  apply leq_succ'. destruct (symmetric_paths _ _ (nat_succ_pred' n i _)).
+  apply leq_pred'. destruct (symmetric_paths _ _ (nat_succ_pred' n i _)).
   set (k :=  transitive_lt i n m p l).
   destruct (symmetric_paths _ _ (nat_succ_pred' m i _)).
   assumption.
@@ -226,7 +226,7 @@ Proof.
   intro ineq.
   destruct n.
   - contradiction (not_lt_zero_r k).
-  - change (n.+1 - k.+1) with (n - k). apply leq_succ' in ineq.
+  - change (n.+1 - k.+1) with (n - k). apply leq_pred' in ineq.
     by apply nat_sub_succ_l.
 Defined.
   

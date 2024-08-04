@@ -61,7 +61,7 @@ Section bounded_search.
              destruct X as [leqSnm|ltmSn].
              ++ assumption.
              ++ unfold gt, lt in ltmSn.
-                assert (m <= n) as X by rapply leq_succ'.
+                assert (m <= n) as X by rapply leq_pred'.
                 destruct (n0 m X pm).
         * right. intros l q.
           assert ((l <= n) + (l > n)) as X by apply leq_dichotomy.
