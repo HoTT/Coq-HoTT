@@ -903,7 +903,7 @@ Defined.
 
 (** *** Trichotomy *)
 
-(** Every two natural numbers are either equal, less than, or greater than each other. *)
+(** Any two natural numbers are either equal, less than, or greater than each other. *)
 Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
 Proof.
   generalize (leq_dichotomy m n).
