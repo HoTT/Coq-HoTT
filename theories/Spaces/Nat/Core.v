@@ -1174,6 +1174,33 @@ Proof.
     exact IHleq.
 Defined.
 
+(** Multiplication on the left distributes over subtraction. *)
+Definition nat_dist_sub_l n m k
+  : n * (m - k) = n * m - n * k.
+Proof.
+  induction n as [|n IHn] in m, k |- *.
+  1: reflexivity.
+  destruct (leq_dichotomy k m) as [l|r].
+  - simpl; rewrite IHn, <- nat_sub_l_add_r, <- nat_sub_l_add_l,
+      nat_sub_r_add; trivial; exact _.
+  - apply leq_lt in r.
+    apply equiv_nat_sub_leq in r.
+    rewrite r.
+    rewrite nat_mul_zero_r.
+    symmetry.
+    apply equiv_nat_sub_leq.
+    apply nat_mul_l_monotone.
+    by apply equiv_nat_sub_leq.
+Defined.
+
+(** Multiplication on the right distributes over subtraction. *)
+Definition nat_dist_sub_r n m k
+  : (n - m) * k = n * k - m * k.
+Proof.
+  rewrite 3 (nat_mul_comm _ k).
+  apply nat_dist_sub_l.
+Defined.
+
 (** *** Monotonicity of subtraction *)
 
 (** Subtraction is monotone in the left argument. *)
