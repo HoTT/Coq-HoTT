@@ -1,5 +1,10 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
+<<<<<<< HEAD
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes Types.Sum.
+=======
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
+  Types.Sum Types.Sigma Types.Prod Types.Paths.
+>>>>>>> 740b9439f (fixup divides)
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -1439,3 +1444,91 @@ Proof.
   - destruct p.
     by apply IH_strong.
 Defined.
+
+(** ** Divisibility *)
+
+(** We define divisibility as a relation between natural numbers. *)
+Class NatDivides (n m : nat) : Type0 := nat_divides : {k : nat & k * n = m}.
+
+Notation "( n | m )" := (NatDivides n m) (at level 0) : nat_scope.
+
+(** Any number divides [0]. *)
+Global Instance nat_divides_zero_r n : (n | 0)
+  := (0; idpath).
+
+(** [1] divides any number. *)
+Global Instance nat_divides_one_l n : (1 | n)
+  := (n; nat_mul_one_r _).
+
+(** Any number divides itself. Divisibility is a reflexive relation. *)
+Global Instance nat_divides_refl n : (n | n)
+  := (1; nat_mul_one_l _).
+
+Global Instance reflexive_nat_divides : Reflexive NatDivides := nat_divides_refl.
+
+(** Divisibility is transitive. *)
+Definition nat_divides_trans n m l : (n | m) -> (m | l) -> (n | l).
+Proof.
+  intros [x p] [y q].
+  exists (y * x).
+  lhs_V nrapply nat_mul_assoc.
+  lhs nrapply (ap _ p).
+  exact q.
+Defined.
+
+Global Instance transitive_nat_divides : Transitive NatDivides := nat_divides_trans.
+
+(** A left factor divides a product. *)
+Global Instance nat_divides_mul_l' n m : (n | n * m)
+  := (m; nat_mul_comm _ _).
+
+(** A right factor divides a product. *)
+Global Instance nat_divides_mul_r' n m : (m | n * m)
+  := (n; idpath).
+
+(** Divisibility of the product is implied by divisibility of the left factor. *)
+Global Instance nat_divides_mul_l n m l : (n | m) -> (n | m * l)
+  := fun H => nat_divides_trans _ _ _ _ _.
+
+(** Divisibility of the product is implied by divisibility of the right factor. *)
+Global Instance nat_divides_mul_r n m l : (n | m) -> (n | l * m)
+  := fun H => nat_divides_trans _ _ _ _ _.
+
+(** Divisibility of the sum is implied by divisibility of the summands. *)
+Global Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
+Proof.
+  intros [x p] [y q].
+  exists (x + y).
+  destruct p, q.
+  nrapply nat_dist_r.
+Defined.
+
+(** Divisibility of the difference is implied by divisibility of the minuend and subtrahend. *)
+Global Instance nat_divides_sub n m l : (n | m) -> (n | l) -> (n | m - l).
+Proof.
+  intros [x p] [y q].
+  exists (x - y).
+  destruct p, q.
+  nrapply nat_dist_sub_r.
+Defined.
+
+(** Divisibility implies that the divisor is less than or equal to the dividend. *)
+Definition leq_divides n m : 0 < m -> (n | m) -> n <= m.
+Proof.
+  intros H1 [x p].
+  destruct p, x.
+  1: contradiction (not_lt_zero_r _ H1).
+  rapply (leq_mul_l _ _ 0).
+Defined.
+
+(** Divisibility is antisymmetric *)
+Definition nat_divides_antisym n m : (n | m) -> (m | n) -> n = m.
+Proof.
+  intros H1 H2.
+  destruct m; only 1: exact (H2.2^ @ nat_mul_zero_r _).
+  destruct n; only 1: exact ((nat_mul_zero_r _)^ @ H1.2).
+  snrapply leq_antisym; nrapply leq_divides; exact _.
+Defined.
+
+Global Instance antisymmetric_divides : AntiSymmetric NatDivides
+  := nat_divides_antisym.
