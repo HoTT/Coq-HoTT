@@ -78,3 +78,7 @@ Definition Z1_to_Z `{Funext} : ab_Z1 $-> abgroup_Z
 (** The [n]-th cyclic group is the cokernel of [Z1_mul_nat n]. *)
 Definition cyclic@{u v | u < v} `{Funext} (n : nat) : AbGroup@{u}
   := ab_cokernel@{u v} (Z1_mul_nat n).
+
+(** The [n]-th cyclic group is the cokernel of [ab_mul n]. *)
+Definition cyclic'@{u v | u < v} `{Funext} (n : nat) : AbGroup@{u}
+  := ab_cokernel@{u v} (ab_mul (A:=abgroup_Z) n).
