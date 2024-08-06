@@ -840,21 +840,35 @@ Defined.
 
 (** *** Addition lemmas *)
 
+(** The second summand is less than or equal to the sum. *)
+Global Instance leq_add_l n m : n <= m + n.
+Proof.
+  simple_induction m m IH.
+  - exact (leq_refl n).
+  - exact (leq_succ_r IH).
+Defined.
+
 (** The first summand is less than or equal to the sum. *)
-Global Instance leq_add_l n m : n <= n + m.
+Global Instance leq_add_r n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - exact (leq_zero_l m).
   - exact (leq_succ IHn).
 Defined.
 
-(** The second summand is less than or equal to the sum. *)
-Global Instance leq_add_r n m : n <= m + n.
+(** *** Multiplication lemmas *)
+
+(** The second multiplicand is less than or equal to the product. *)
+Global Instance leq_mul_l n m l : l < m -> n <= m * n.
 Proof.
-  simple_induction m m IH.
-  - exact (leq_refl n).
-  - exact (leq_succ_r IH).
+  intros H; induction H; exact _.
 Defined.
+
+(** The first multiplicand is less than or equal to the product. *)
+Global Instance leq_mul_r n m l : l < m -> n <= n * m.
+Proof.
+  rewrite nat_mul_comm; exact _.
+Defined. 
 
 (** Alternative Characterizations of [<=] *)
 
@@ -890,7 +904,7 @@ Proof.
     apply nat_add_sub_l_cancel, p.
   - intros [k p].
     destruct p.
-    apply leq_add_r.
+    apply leq_add_l.
 Defined.
 
 (** *** Dichotomy of [<=] *)

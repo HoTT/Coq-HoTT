@@ -167,7 +167,7 @@ Defined.
 Proposition n_leq_m_n_leq_plus_m_k (n m k : nat)
   : n <= m -> n <= m + k.
 Proof.
-  intro l; apply (leq_trans l); exact (leq_add_l m k).
+  intro l; apply (leq_trans l); exact (leq_add_r m k).
 Defined.
 
 (** This inductive type is defined because it lets you loop from [i = 0] up to [i = n] by structural induction on a proof of [increasing_geq n 0]. With the existing [leq] type and the inductive structure of [n], it is easier and more natural to loop downwards from [i = n] to [i = 0], but harder to find the least natural number in the interval $[0,n]$ satisfying a given property. *)
