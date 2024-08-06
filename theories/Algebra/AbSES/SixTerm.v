@@ -220,7 +220,7 @@ Defined.
 (** The main result of this section. *)
 Theorem ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
-  : ab_cokernel@{v w} (ab_mul (A:=A) n)
+  : ab_cokernel@{v} (ab_mul (A:=A) n)
       $<~> ab_ext@{u v} (cyclic'@{u v} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
