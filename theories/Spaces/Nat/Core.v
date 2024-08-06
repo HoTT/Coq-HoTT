@@ -94,19 +94,18 @@ Fixpoint nat_divmod x y q u : nat * nat :=
     end
   end.
 
-Definition div x y : nat :=
+Definition nat_div x y : nat :=
   match y with
   | 0 => y
   | S y' => fst (nat_divmod x y' 0 y')
   end.
+Infix "/" := nat_div : nat_scope.
 
 Definition modulo x y : nat :=
   match y with
   | 0 => y
   | S y' => y' - snd (nat_divmod x y' 0 y')
   end.
-
-Infix "/" := div : nat_scope.
 Infix "mod" := modulo : nat_scope.
 
 (** *** Greatest common divisor *)
