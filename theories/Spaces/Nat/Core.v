@@ -101,12 +101,12 @@ Definition nat_div x y : nat :=
   end.
 Infix "/" := nat_div : nat_scope.
 
-Definition modulo x y : nat :=
+Definition nat_mod x y : nat :=
   match y with
   | 0 => y
   | S y' => y' - snd (nat_divmod x y' 0 y')
   end.
-Infix "mod" := modulo : nat_scope.
+Infix "mod" := nat_mod : nat_scope.
 
 (** *** Greatest common divisor *)
 
