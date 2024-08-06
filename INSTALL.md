@@ -89,8 +89,12 @@ After cloning the repository, you can install the library using `opam` by runnin
 We also have the current development versions of the library available via
 `opam`. For this however, you will need to add the dev coq-archive packages:
 ```shell
+$ opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
 $ opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
 ```
+
+This will make `coq.dev` the latest available version of `coq`. You can pin
+`coq` to a stable version by running `opam pin add coq.dev 8.19.1` for example.
 
 # 3. Setup for developers (using git)
 
