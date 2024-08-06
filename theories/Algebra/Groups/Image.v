@@ -11,7 +11,7 @@ Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
 (** The image of a group homomorphism between groups is a subgroup *)
-Definition grp_image {A B : Group} (f : GroupHomomorphism A B) : Subgroup B.
+Definition grp_image {A B : Group} (f : A $-> B) : Subgroup B.
 Proof.
   snrapply (Build_Subgroup' (fun b => hexists (fun a => f a = b))).
   - exact _.
