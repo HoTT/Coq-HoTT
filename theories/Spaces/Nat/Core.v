@@ -1461,7 +1461,7 @@ Defined.
 (** We define divisibility as a relation between natural numbers. *)
 Class NatDivides (n m : nat) : Type0 := nat_divides : {k : nat & k * n = m}.
 
-Notation "( n | m )" := (NatDivides n m) (at level 0) : nat_scope.
+Notation "( n | m )" := (NatDivides n m) : nat_scope.
 
 (** Any number divides [0]. *)
 Global Instance nat_divides_zero_r n : (n | 0)
