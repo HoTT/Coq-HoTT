@@ -1641,11 +1641,11 @@ Proof.
   exact (IHn k.+1).
 Defined.
 
-(** [0] modulo any positive number is [0]. *)
-Definition nat_mod_zero_l n : 0 < n -> 0 mod n = 0.
+(** [0] modulo any number is [0]. *)
+Definition nat_mod_zero_l n : 0 mod n = 0.
 Proof.
   induction n; trivial.
-  intro; apply nat_sub_cancel.
+  apply nat_sub_cancel.
 Defined.
 
 (** [n] modulo [1] is [0]. *)
