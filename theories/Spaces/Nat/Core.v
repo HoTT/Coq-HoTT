@@ -1653,3 +1653,5 @@ Definition nat_mod_one_r n : n mod 1 = 0.
 Proof.
   by induction n.
 Defined.
+
+(** TODO: [n] modulo [n] is [0]. *)
