@@ -1654,4 +1654,18 @@ Proof.
   by induction n.
 Defined.
 
-(** TODO: [n] modulo [n] is [0]. *)
+(** [n] modulo [n] is [0]. *)
+Definition nat_mod_cancel n : n mod n = 0.
+Proof.
+  destruct n; trivial.
+  apply nat_moveR_nV.
+  rhs nrapply nat_add_zero_r.
+  destruct n; trivial.
+  simpl; change n.+1 with (1 + n).
+  generalize 1; intros k.
+  induction n in k |- *.
+  1: by destruct k.
+  rewrite nat_add_succ_r.
+  destruct n; trivial.
+  exact (IHn k.+1).
+Defined.
