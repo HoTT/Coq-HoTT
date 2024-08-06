@@ -691,7 +691,7 @@ Proof.
 Defined.
 
 (** We can move a subtracted number to the left-hand side of an equation. *)
-Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
+Definition nat_moveL_nV {n m} k : n + k = m -> n = m - k.
 Proof.
   intros p.
   destruct p.
@@ -700,9 +700,12 @@ Proof.
 Defined.
 
 (** We can move a subtracted number to the right-hand side of an equation. *)
-Definition nat_moveR_nV {k m} n : k = n + m -> k - m = n
-  := fun p => (nat_moveL_nV _ p^)^.
-  
+Definition nat_moveR_nV {n m} k : n = k + m -> n - k = m.
+Proof.
+  rewrite nat_add_comm.
+  exact (fun p => (nat_moveL_nV _ p^)^).
+Defined.
+
 (** Subtracting a successor is the predecessor of subtracting the original number. *)
 Definition nat_sub_succ_r n m : n - m.+1 = nat_pred (n - m).
 Proof.
@@ -1436,4 +1439,3 @@ Proof.
   - destruct p.
     by apply IH_strong.
 Defined.
-
