@@ -1096,18 +1096,20 @@ Hint Immediate nat_mul_monotone : typeclass_instances.
 (** *** Strict monotonicity of multiplication *)
 
 (** Multiplication on the left by a positive number is strictly monotone. *)
-Definition nat_mul_l_strictly_monotone {n m} k
-  : n < m -> k.+1 * n < k.+1 * m.
+Definition nat_mul_l_strictly_monotone {n m l} k
+  : l < k -> n < m -> k * n < k * m.
 Proof.
-  intros H; induction k as [|k IHk] in |- *; exact _.
+  destruct k.
+  1: intro; contradiction (not_lt_zero_r _ H).
+  intros _ H; induction k as [|k IHk] in |- *; exact _.
 Defined.
 Hint Immediate nat_mul_l_strictly_monotone : typeclass_instances.
 
 (** Multiplication on the right by a positive number is strictly monotone. *)
-Definition nat_mul_r_strictly_monotone {n m} k
-  : n < m -> n * k.+1 < m * k.+1.
+Definition nat_mul_r_strictly_monotone {n m l} k
+  : l < k -> n < m -> n * k < m * k.
 Proof.
-  intros H; rewrite 2 (nat_mul_comm _ k.+1); exact _.
+  intros ? H; rewrite 2 (nat_mul_comm _ k); exact _.
 Defined.
 Hint Immediate nat_mul_r_strictly_monotone : typeclass_instances.
 
