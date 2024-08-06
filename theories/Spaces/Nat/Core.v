@@ -1628,6 +1628,19 @@ Proof.
   apply IHn.
 Defined.
 
+(** [n] divided by [n] is [1]. *)
+Definition nat_div_cancel n : 0 < n -> n / n = 1.
+Proof.
+  intros H; destruct n; trivial.
+  1: contradiction (not_lt_zero_r _ H).
+  clear H.
+  destruct n; trivial; cbn.
+  pose (k := 1); change (n.+1) with (k + n); clearbody k.
+  induction n in k |- *; trivial.
+  rewrite nat_add_succ_r.
+  exact (IHn k.+1).
+Defined.
+
 (** [0] modulo any positive number is [0]. *)
 Definition nat_mod_zero_l n : 0 < n -> 0 mod n = 0.
 Proof.
