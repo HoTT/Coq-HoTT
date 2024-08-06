@@ -1,10 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-<<<<<<< HEAD
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes Types.Sum.
-=======
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
-  Types.Sum Types.Sigma Types.Prod Types.Paths.
->>>>>>> 740b9439f (fixup divides)
+  Types.Sum Types.Prod Types.Paths.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -1548,3 +1544,66 @@ Defined.
 
 Global Instance antisymmetric_divides : AntiSymmetric NatDivides
   := nat_divides_antisym.
+
+(** ** Properties of division *)
+
+Local Definition divmod_unique_helper b q1 q2 r1 r2
+  : r1 < b -> r2 < b -> q1 < q2 -> r2 < r1 -> b * q1 + r1 = b * q2 + r2
+    -> q1 = q2 /\ r1 = r2.
+Proof.
+  intros H1 H2 H3 H4 p.
+  rewrite 2 (nat_add_comm (b * _)) in p.
+  apply nat_moveL_nV in p.
+  rewrite nat_sub_l_add_r in p.
+  - rewrite <- nat_dist_sub_l in p.
+    apply nat_moveR_nV in p.
+    symmetry in p.
+    assert (H5 : b <= r1 - r2).
+    { rewrite <- p.
+      snrapply (leq_mul_r _ _ 0).
+      by apply equiv_lt_lt_sub. }
+    apply leq_iff_not_gt in H5. 
+    contradiction H5.
+    rapply lt_moveR_nV.
+  - rapply nat_mul_l_monotone.
+Defined.
+
+(** Quotients and remainders are uniquely determined. *)
+Definition divmod_unique b q1 q2 r1 r2
+  : r1 < b -> r2 < b -> b * q1 + r1 = b * q2 + r2
+    -> q1 = q2 /\ r1 = r2.
+Proof.
+  intros H1 H2 p.
+  destruct (nat_trichotomy q1 q2) as [[q | q] | q];
+  destruct (nat_trichotomy r1 r2) as [[r | r] | r].
+  - apply (nat_mul_l_strictly_monotone b H1) in q.
+    pose (nat_add_strictly_monotone q r).
+    rewrite p in l.
+    contradiction (lt_irrefl _ l).
+  - destruct r.
+    split; trivial.
+    apply isinj_nat_add_r in p.
+    apply (nat_mul_l_strictly_monotone b H1) in q.
+    rewrite p in q.
+    contradiction (lt_irrefl _ q).
+  - by apply (divmod_unique_helper b).
+  - destruct q.
+    split; trivial.
+    by apply isinj_nat_add_l in p.
+  - by split.
+  - split; trivial.
+    destruct q.
+    by apply isinj_nat_add_l in p.
+  - rapply (equiv_functor_prod (f:=inverse) (g:=inverse)).
+    by apply (divmod_unique_helper b).
+  - destruct r.
+    split; trivial.
+    apply isinj_nat_add_r in p.
+    apply (nat_mul_l_strictly_monotone b H2) in q.
+    rewrite p in q.
+    contradiction (lt_irrefl _ q).
+  - apply (nat_mul_l_strictly_monotone b H2) in q.
+    pose (nat_add_strictly_monotone q r).
+    rewrite p in l.
+    contradiction (lt_irrefl _ l).
+Defined.
