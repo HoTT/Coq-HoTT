@@ -82,28 +82,28 @@ Fixpoint nat_min n m :=
 
 (** *** Euclidean division *)
 
-(** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
+(** This division is linear and tail-recursive. In [nat_divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
 
-Fixpoint divmod x y q u : nat * nat :=
+Fixpoint nat_divmod x y q u : nat * nat :=
   match x with
   | 0 => (q , u)
   | S x' =>
     match u with
-    | 0 => divmod x' y (S q) y
-    | S u' => divmod x' y q u'
+    | 0 => nat_divmod x' y (S q) y
+    | S u' => nat_divmod x' y q u'
     end
   end.
 
 Definition div x y : nat :=
   match y with
   | 0 => y
-  | S y' => fst (divmod x y' 0 y')
+  | S y' => fst (nat_divmod x y' 0 y')
   end.
 
 Definition modulo x y : nat :=
   match y with
   | 0 => y
-  | S y' => y' - snd (divmod x y' 0 y')
+  | S y' => y' - snd (nat_divmod x y' 0 y')
   end.
 
 Infix "/" := div : nat_scope.
