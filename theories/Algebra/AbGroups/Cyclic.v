@@ -13,7 +13,7 @@ Definition Z1 := FreeGroup Unit.
 Definition Z1_gen : Z1 := freegroup_in tt. (* The generator *)
 
 (** The recursion principle of [Z1] and its computation rule. *)
-Definition Z1_rec {G : Group@{u}} (g : G) : Z1 $-> G
+Definition Z1_rec {G : Group} (g : G) : Z1 $-> G
   := FreeGroup_rec Unit G (unit_name g).
 
 Definition Z1_rec_beta {G : Group} (g : G) : Z1_rec g Z1_gen = g
@@ -76,5 +76,11 @@ Definition Z1_to_Z `{Funext} : ab_Z1 $-> abgroup_Z
 (** * Finite cyclic groups *)
 
 (** The [n]-th cyclic group is the cokernel of [Z1_mul_nat n]. *)
-Definition cyclic@{u v | u < v} `{Funext} (n : nat) : AbGroup@{u}
-  := ab_cokernel@{u v} (Z1_mul_nat n).
+Definition cyclic `{Funext} (n : nat) : AbGroup
+  := ab_cokernel (Z1_mul_nat n).
+
+(** ** Alternative definition of cyclic group *)
+
+(** The [n]-th cyclic group is the cokernel of [ab_mul n]. *)
+Definition cyclic' (n : nat) : AbGroup
+  := ab_cokernel (ab_mul (A:=abgroup_Z) n).
