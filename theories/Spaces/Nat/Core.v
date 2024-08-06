@@ -1607,3 +1607,38 @@ Proof.
     rewrite p in l.
     contradiction (lt_irrefl _ l).
 Defined.
+
+(** [0] divided by any number is [0]. *)
+Definition nat_div_zero_l n : 0 / n = 0.
+Proof.
+  by induction n.
+Defined.
+
+(** [n] divided by [0] is [0] by convention. *)
+Definition nat_div_zero_r n : n / 0 = 0 := idpath.
+
+(** [n] divided by [1] is [n]. *)
+Definition nat_div_one_r n : n / 1 = n.
+Proof.
+  destruct n; trivial.
+  cbn; change n.+1 with (1 + n).
+  generalize 1; intros k.
+  induction n in k |- *. 
+  1: exact (nat_add_zero_r k)^.
+  rhs nrapply nat_add_succ_r.
+  apply IHn.
+Defined.
+
+(** [0] modulo any positive number is [0]. *)
+Definition nat_mod_zero_l n : 0 < n -> 0 mod n = 0.
+Proof.
+  induction n; trivial.
+  intro; apply nat_sub_cancel.
+Defined.
+
+(** [n] modulo [1] is [0]. *)
+Definition nat_mod_one_r n : n mod 1 = 0.
+Proof.
+  by induction n.
+Defined.
+
