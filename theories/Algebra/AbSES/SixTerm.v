@@ -218,7 +218,7 @@ Proof.
 Defined.
 
 (** The main result of this section. *)
-Theorem ext_cyclic_ab@{u v w | u < v, v < w} `{Univalence}
+Theorem ext_cyclic_ab@{u v| u < v} `{Univalence}
   (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : ab_cokernel@{v} (ab_mul (A:=A) n)
       $<~> ab_ext@{u v} (cyclic'@{u v} n) A.

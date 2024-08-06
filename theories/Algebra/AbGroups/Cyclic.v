@@ -2,6 +2,8 @@ Require Import Basics Types WildCat.Core Truncations.Core
   AbelianGroup AbHom Centralizer AbProjective
   Groups.FreeGroup AbGroups.Z Spaces.Int.
 
+Local Set Universe Minimization ToSet.
+
 (** * Cyclic groups *)
 
 (** ** The free group on one generator *)
@@ -13,7 +15,7 @@ Definition Z1 := FreeGroup Unit.
 Definition Z1_gen : Z1 := freegroup_in tt. (* The generator *)
 
 (** The recursion principle of [Z1] and its computation rule. *)
-Definition Z1_rec {G : Group@{u}} (g : G) : Z1 $-> G
+Definition Z1_rec {G : Group} (g : G) : Z1 $-> G
   := FreeGroup_rec Unit G (unit_name g).
 
 Definition Z1_rec_beta {G : Group} (g : G) : Z1_rec g Z1_gen = g
@@ -82,5 +84,5 @@ Definition cyclic@{u v | u < v} `{Funext} (n : nat) : AbGroup@{u}
 (** ** Alternative definition of cyclic group *)
 
 (** The [n]-th cyclic group is the cokernel of [ab_mul n]. *)
-Definition cyclic'@{u} (n : nat) : AbGroup@{u}
-  := ab_cokernel@{u} (ab_mul (A:=abgroup_Z) n).
+Definition cyclic'@{} (n : nat) : AbGroup
+  := ab_cokernel (ab_mul (A:=abgroup_Z) n).
