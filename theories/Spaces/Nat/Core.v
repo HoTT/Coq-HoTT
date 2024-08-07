@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
-  Types.Sum Types.Prod Types.Paths.
+  Types.Sum Types.Prod Types.Paths Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -1486,7 +1486,7 @@ Global Instance nat_divides_refl n : (n | n)
 Global Instance reflexive_nat_divides : Reflexive NatDivides := nat_divides_refl.
 
 (** Divisibility is transitive. *)
-Definition nat_divides_trans n m l : (n | m) -> (m | l) -> (n | l).
+Definition nat_divides_trans {n m l} : (n | m) -> (m | l) -> (n | l).
 Proof.
   intros [x p] [y q].
   exists (y * x).
@@ -1494,8 +1494,9 @@ Proof.
   lhs nrapply (ap _ p).
   exact q.
 Defined.
+Hint Immediate nat_divides_trans : typeclass_instances.
 
-Global Instance transitive_nat_divides : Transitive NatDivides := nat_divides_trans.
+Global Instance transitive_nat_divides : Transitive NatDivides := @nat_divides_trans.
 
 (** A left factor divides a product. *)
 Global Instance nat_divides_mul_l' n m : (n | n * m)
@@ -1506,12 +1507,12 @@ Global Instance nat_divides_mul_r' n m : (m | n * m)
   := (n; idpath).
 
 (** Divisibility of the product is implied by divisibility of the left factor. *)
-Global Instance nat_divides_mul_l n m l : (n | m) -> (n | m * l)
-  := fun H => nat_divides_trans _ _ _ _ _.
+Global Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
+  := fun H => nat_divides_trans _ _.
 
 (** Divisibility of the product is implied by divisibility of the right factor. *)
-Global Instance nat_divides_mul_r n m l : (n | m) -> (n | l * m)
-  := fun H => nat_divides_trans _ _ _ _ _.
+Global Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
+  := fun H => nat_divides_trans _ _.
 
 (** Divisibility of the sum is implied by divisibility of the summands. *)
 Global Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
@@ -1630,6 +1631,22 @@ Proof.
     pose (nat_add_strictly_monotone q r).
     rewrite p in l.
     contradiction (lt_irrefl _ l).
+Defined.
+
+(** Divisibility by a positive natural number is a hprop. *)
+Global Instance ishprop_nat_divides n m : 0 < n -> IsHProp (n | m).
+Proof.
+  intros H.
+  apply hprop_allpath.
+  intros [x p] [y q].
+  rapply path_sigma_hprop.
+  destruct H as [|n]; simpl.
+  1: exact ((nat_mul_one_r _)^ @ p @ q^ @ nat_mul_one_r _).
+  refine (fst (nat_divmod_unique n.+1 x y 0 0 _ _ _)).
+  lhs nrapply nat_add_zero_r.
+  rhs nrapply nat_add_zero_r.
+  rewrite 2 (nat_mul_comm n.+1).
+  exact (p @ q^).
 Defined.
 
 (** The quotient-remainder form is invariant under [nat_divmod]. *)
@@ -1784,7 +1801,7 @@ Proof.
 Defined.
 
 (** We can prove that the greatest common divisor of [n] and [m] divides both [n] and [m]. This proof requires strong induction. *)
-Definition divides_l_nat_gcd n m : (nat_gcd n m | n) /\ (nat_gcd n m | m).
+Definition nat_divides_l_gcd n m : (nat_gcd n m | n) /\ (nat_gcd n m | m).
 Proof.
   revert n m; snrapply nat_ind_strong; intros n IHn m.
   destruct n.
@@ -1798,15 +1815,15 @@ Proof.
 Defined.
 
 (** The greatest common divisor of [n] and [m] divides [n]. *)
-Global Instance divides_l_nat_gcd_l n m : (nat_gcd n m | n)
-  := fst (divides_l_nat_gcd n m).
+Global Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
+  := fst (nat_divides_l_gcd n m).
 
 (** The greatest common divisor of [n] and [m] divides [m]. *)
 Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
-  := snd (divides_l_nat_gcd n m).
+  := snd (nat_divides_l_gcd n m).
   
 (** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)
-Global Instance divides_r_nat_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
+Global Instance nat_divides_r_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
 Proof.
   revert n m p; snrapply nat_ind_strong; intros n IHn m p H1 H2.
   destruct n; only 1: exact _.
@@ -1814,6 +1831,12 @@ Proof.
   apply IHn; only 1,3: exact _.
   rewrite (nat_divmod_spec m n.+1) in H2.
   apply nat_divides_add_r in H2; exact _.
+Defined.
+
+Definition nat_divides_r_iff_divides_r_gcd n m p
+  : (p | n) * (p | m) <-> (p | nat_gcd n m).
+Proof.
+  split; [intros [H1 H2] | intros H; split]; exact _.
 Defined.
 
 (** If [p] is divisible by all common divisors of [n] and [m], and [p] is also a common divisor, then it must necesserily be equal to the greatest common divisor. *)
@@ -1829,4 +1852,14 @@ Defined.
 Definition nat_gcd_comm n m : nat_gcd n m = nat_gcd m n.
 Proof.
   rapply nat_gcd_unique.
+Defined.
+
+(** [nat_gcd] is associative. *)
+Definition nat_gcd_assoc n m k : nat_gcd n (nat_gcd m k) = nat_gcd (nat_gcd n m) k.
+Proof.
+  nrapply nat_gcd_unique.
+  - intros q H1 H2.
+    rapply nat_divides_r_gcd. 
+  - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
+  - apply nat_divides_r_gcd; rapply nat_divides_trans.
 Defined.
