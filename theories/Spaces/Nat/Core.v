@@ -1684,16 +1684,23 @@ Proof.
   apply nat_moveR_nV, nat_divmod_spec.
 Defined.
 
-Definition nat_mod_lt' n m r : r < m -> n mod m < m.
+Definition nat_mod_lt_r' n m r : r < m -> n mod m < m.
 Proof.
   intros H; destruct H; only 1: exact _.
   rapply (lt_leq_lt_trans (m:=m)).
 Defined.
-Hint Immediate nat_mod_lt' : typeclass_instances.
+Hint Immediate nat_mod_lt_r' : typeclass_instances.
 
 (** [n] modulo [m] is less than [m]. *)
-Global Instance nat_mod_lt n m : 0 < m -> n mod m < m
-  := nat_mod_lt' n m 0.
+Global Instance nat_mod_lt_r n m : 0 < m -> n mod m < m
+  := nat_mod_lt_r' n m 0.
+
+(** [n] modulo [m] is less than or equal to [m]. *)
+Global Instance nat_mod_leq_l n m : n mod m <= n.
+Proof.
+  rewrite <- nat_divmod_spec'.
+  rapply leq_moveR_nV.
+Defined.
 
 (** Division is unique. *)
 Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : q = x / y
@@ -1729,6 +1736,32 @@ Proof.
   nrapply nat_mul_one_r.
 Defined.
 
+(** [n * m] divided by [n] is [m]. *)
+Definition nat_div_mul_cancel_l n m : 0 < n -> (n * m) / n = m.
+Proof.
+  intros H.
+  symmetry.
+  nrapply (nat_div_unique _ _ _ _ H).
+  apply nat_add_zero_r.
+Defined.
+
+(** [n * m] divided by [n] is [m]. *)
+Definition nat_div_mul_cancel_r n m : 0 < m -> (n * m) / m = n.
+Proof.
+  rewrite nat_mul_comm.
+  apply nat_div_mul_cancel_l.
+Defined.
+
+(** When [d] divides [n] and [m], division distributes over addition. *)
+Definition nat_div_dist n m d
+  : 0 < d -> (d | n) -> (d | m) -> (n + m) / d = n / d + m / d.
+Proof.
+  intros H1 [x p] [y q].
+  destruct p, q.
+  rewrite <- nat_dist_r.
+  by rewrite 3 nat_div_mul_cancel_r.
+Defined.
+
 (** [0] modulo [n] is [0]. *)
 Definition nat_mod_zero_l n : 0 mod n = 0.
 Proof.
@@ -1754,6 +1787,19 @@ Defined.
 Definition nat_mod_one_r n : n mod 1 = 0.
 Proof.
   by induction n.
+Defined.
+
+(** If [m] divides [n], then [n mod m = 0]. *)
+Definition nat_mod_divides n m : 0 < m -> (m | n) -> n mod m = 0.
+Proof.
+  intros H [x p].
+  destruct p.
+  lhs_V nrapply nat_divmod_spec'.
+  pose (nat_div_cancel m H).
+  rewrite nat_div_mul_cancel_r; only 2: exact _.
+  apply nat_moveR_nV.
+  rhs nrapply nat_add_zero_r.
+  apply nat_mul_comm.
 Defined.
 
 (** [n] modulo [n] is [0]. *)
@@ -1862,4 +1908,44 @@ Proof.
     rapply nat_divides_r_gcd. 
   - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
   - apply nat_divides_r_gcd; rapply nat_divides_trans.
+Defined.
+
+(** If [nat_gcd n m] is [0], then [n] must also be [0]. *)
+Definition nat_gcd_is_zero_l n m : nat_gcd n m = 0 -> n = 0.
+Proof.
+  intros H.
+  generalize (nat_divides_l_gcd_l n m).
+  rewrite H.
+  intros [x p].
+  exact (p^ @ nat_mul_zero_r _).
+Defined.
+
+(** If [nat_gcd n m] is [0], then [m] must also be [0]. *)
+Definition nat_gcd_is_zero_r n m : nat_gcd n m = 0 -> m = 0.
+Proof.
+  rewrite nat_gcd_comm.
+  apply nat_gcd_is_zero_l.
+Defined.
+
+(** [nat_gcd n m] is [0] if and only if both [n] and [m] are [0]. *)
+Definition nat_gcd_zero_iff_zero n m : nat_gcd n m = 0 <-> n = 0 /\ m = 0.
+Proof.
+  split.
+  - split.
+    + by apply (nat_gcd_is_zero_l _ m).
+    + by apply (nat_gcd_is_zero_r n).
+  - intros [-> ->].
+    reflexivity.
+Defined.
+
+(** [nat_gcd] is positive for positive inputs. *)
+Global Instance nat_gcd_pos n m : 0 < n -> 0 < m -> 0 < nat_gcd n m.
+Proof.
+  intros H1 H2.
+  apply lt_iff_not_geq.
+  intros H3; hnf in H3.
+  apply path_zero_leq_zero_r in H3.
+  apply nat_gcd_zero_iff_zero in H3.
+  destruct H3 as [->].
+  contradiction (not_lt_zero_r _ H1).
 Defined.
