@@ -103,7 +103,7 @@ Infix "/" := nat_div : nat_scope.
 
 Definition nat_mod x y : nat :=
   match y with
-  | 0 => y
+  | 0 => x
   | S y' => y' - snd (nat_divmod x y' 0 y')
   end.
 Infix "mod" := nat_mod : nat_scope.
@@ -112,10 +112,10 @@ Infix "mod" := nat_mod : nat_scope.
 
 (** We use Euclid algorithm, which is normally not structural, but Coq is now clever enough to accept this (behind modulo there is a subtraction, which now preserves being a subterm) *)
 
-Fixpoint gcd a b :=
+Fixpoint nat_gcd a b :=
   match a with
   | O => b
-  | S a' => gcd (b mod a'.+1) a'.+1
+  | S a' => nat_gcd (b mod a'.+1) a'.+1
   end.
 
 (** *** Factorial *)
@@ -1136,6 +1136,14 @@ Defined.
 
 (** ** Further properties of subtraction *)
 
+Global Instance leq_sub_l n m : n - m <= n.
+Proof.
+  apply equiv_nat_sub_leq.
+  rewrite nat_sub_comm_r.
+  rewrite nat_sub_cancel.
+  apply nat_sub_zero_l.
+Defined.
+
 (** Subtracting from a successor is the successor of subtracting from the original number, as long as the amount being subtracted is less than or equal to the original number. *)
 Definition nat_sub_succ_l n m : m <= n -> n.+1 - m = (n - m).+1.
 Proof.
@@ -1514,6 +1522,23 @@ Proof.
   nrapply nat_dist_r.
 Defined.
 
+(** If [n] divides a sum and the left summand, then [n] divides the right summand. *)
+Definition nat_divides_add_r n m l : (n | m) -> (n | m + l) -> (n | l).
+Proof.
+  intros [x p] [y q].
+  exists (y - x).
+  lhs nrapply nat_dist_sub_r.
+  apply nat_moveR_nV.
+  lhs nrapply q.
+  exact (ap _ p^).
+Defined.
+
+(** If [n] divides a sum and the right summand, then [n] divides the left summand. *)
+Definition nat_divides_add_l n m l : (n | l) -> (n | m + l) -> (n | m).
+Proof.
+  rewrite nat_add_comm; apply nat_divides_add_r.
+Defined.
+
 (** Divisibility of the difference is implied by divisibility of the minuend and subtrahend. *)
 Global Instance nat_divides_sub n m l : (n | m) -> (n | l) -> (n | m - l).
 Proof.
@@ -1546,7 +1571,7 @@ Global Instance antisymmetric_divides : AntiSymmetric NatDivides
 
 (** ** Properties of division *)
 
-Local Definition divmod_unique_helper b q1 q2 r1 r2
+Local Definition nat_divmod_unique_helper b q1 q2 r1 r2
   : r1 < b -> r2 < b -> q1 < q2 -> r2 < r1 -> b * q1 + r1 = b * q2 + r2
     -> q1 = q2 /\ r1 = r2.
 Proof.
@@ -1568,24 +1593,24 @@ Proof.
 Defined.
 
 (** Quotients and remainders are uniquely determined. *)
-Definition divmod_unique b q1 q2 r1 r2
-  : r1 < b -> r2 < b -> b * q1 + r1 = b * q2 + r2
+Definition nat_divmod_unique d q1 q2 r1 r2
+  : r1 < d -> r2 < d -> d * q1 + r1 = d * q2 + r2
     -> q1 = q2 /\ r1 = r2.
 Proof.
   intros H1 H2 p.
   destruct (nat_trichotomy q1 q2) as [[q | q] | q];
   destruct (nat_trichotomy r1 r2) as [[r | r] | r].
-  - apply (nat_mul_l_strictly_monotone b H1) in q.
+  - apply (nat_mul_l_strictly_monotone d H1) in q.
     pose (nat_add_strictly_monotone q r).
     rewrite p in l.
     contradiction (lt_irrefl _ l).
   - destruct r.
     split; trivial.
     apply isinj_nat_add_r in p.
-    apply (nat_mul_l_strictly_monotone b H1) in q.
+    apply (nat_mul_l_strictly_monotone d H1) in q.
     rewrite p in q.
     contradiction (lt_irrefl _ q).
-  - by apply (divmod_unique_helper b).
+  - by apply (nat_divmod_unique_helper d).
   - destruct q.
     split; trivial.
     by apply isinj_nat_add_l in p.
@@ -1594,18 +1619,71 @@ Proof.
     destruct q.
     by apply isinj_nat_add_l in p.
   - rapply (equiv_functor_prod (f:=inverse) (g:=inverse)).
-    by apply (divmod_unique_helper b).
+    by apply (nat_divmod_unique_helper d).
   - destruct r.
     split; trivial.
     apply isinj_nat_add_r in p.
-    apply (nat_mul_l_strictly_monotone b H2) in q.
+    apply (nat_mul_l_strictly_monotone d H2) in q.
     rewrite p in q.
     contradiction (lt_irrefl _ q).
-  - apply (nat_mul_l_strictly_monotone b H2) in q.
+  - apply (nat_mul_l_strictly_monotone d H2) in q.
     pose (nat_add_strictly_monotone q r).
     rewrite p in l.
     contradiction (lt_irrefl _ l).
 Defined.
+
+(** The quotient-remainder form is invariant under [nat_divmod]. *)
+Definition nat_divmod_spec_helper x y q u (H : u <= y)
+  : let (q', u') := nat_divmod x y q u in
+     x + y.+1 * q + (y - u) = y.+1 * q' + (y - u') /\ u' <= y.
+Proof.
+  intros d r.
+  induction x as [|x IHx] in y, q, u, H, d, r |- *; only 1: by split.
+  destruct u as [|u].
+  - destruct (IHx y q.+1 y _) as [p H'].
+    split; trivial.
+    rewrite <- p, nat_sub_zero_r, nat_sub_cancel, nat_add_zero_r.
+    simpl.
+    by rewrite nat_add_succ_r, <- 2 nat_add_assoc, nat_mul_succ_r.
+  - destruct (IHx y q u _) as [p H'].
+    split; trivial.
+    rewrite <- p, 2 nat_add_succ_l, <- nat_add_succ_r.
+    snrapply ap.
+    rewrite nat_sub_succ_r.
+    apply nat_succ_pred.
+    rapply lt_moveL_nV.
+Defined.
+
+(** Division and modulo can be put in quotient-remainder form. *)
+Definition nat_divmod_spec x y : x = y * (x / y) + x mod y.
+Proof.
+  destruct y as [|y]; only 1: reflexivity.
+  pose proof (p := fst (nat_divmod_spec_helper x y 0 y _)).
+  by rewrite nat_mul_zero_r, nat_sub_cancel, 2 nat_add_zero_r in p.
+Defined.
+
+Definition nat_divmod_spec' x y : x - y * (x / y) = x mod y.
+Proof.
+  apply nat_moveR_nV, nat_divmod_spec.
+Defined.
+
+Global Instance nat_mod_lt' n m r : r < m -> n mod m < m.
+Proof.
+  intros H; destruct H; only 1: exact _.
+  rapply (lt_leq_lt_trans (m:=m)).
+Defined.
+
+(** [n] modulo [m] is less than [m]. *)
+Global Instance nat_mod_lt n m : 0 < m -> n mod m < m
+  := nat_mod_lt' n m 0.
+
+(** Division is unique. *)
+Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : q = x / y
+  := fst (nat_divmod_unique y q (x / y) r (x mod y) _ _ (p @ nat_divmod_spec x y)).
+
+(** Modulo is unique. *)
+Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x)  : r = x mod y
+  := snd (nat_divmod_unique y q (x / y) r (x mod y) _ _ (p @ nat_divmod_spec x y)).
 
 (** [0] divided by any number is [0]. *)
 Definition nat_div_zero_l n : 0 / n = 0.
@@ -1619,33 +1697,39 @@ Definition nat_div_zero_r n : n / 0 = 0 := idpath.
 (** [n] divided by [1] is [n]. *)
 Definition nat_div_one_r n : n / 1 = n.
 Proof.
-  destruct n; trivial.
-  cbn; change n.+1 with (1 + n).
-  generalize 1; intros k.
-  induction n in k |- *. 
-  1: exact (nat_add_zero_r k)^.
-  rhs nrapply nat_add_succ_r.
-  apply IHn.
+  lhs_V nrapply nat_mul_one_l.
+  lhs_V nrapply nat_add_zero_r.
+  symmetry; apply nat_divmod_spec.
 Defined.
 
 (** [n] divided by [n] is [1]. *)
 Definition nat_div_cancel n : 0 < n -> n / n = 1.
 Proof.
-  intros H; destruct n; trivial.
-  1: contradiction (not_lt_zero_r _ H).
-  clear H.
-  destruct n; trivial; cbn.
-  pose (k := 1); change (n.+1) with (k + n); clearbody k.
-  induction n in k |- *; trivial.
-  rewrite nat_add_succ_r.
-  exact (IHn k.+1).
+  intros [|m _]; trivial; symmetry.
+  nrapply (nat_div_unique _ _ _ 0); only 1: exact _.
+  lhs nrapply nat_add_zero_r.
+  nrapply nat_mul_one_r.
 Defined.
 
-(** [0] modulo any number is [0]. *)
+(** [0] modulo [n] is [0]. *)
 Definition nat_mod_zero_l n : 0 mod n = 0.
 Proof.
   induction n; trivial.
   apply nat_sub_cancel.
+Defined.
+
+(** [n] modulo [0] is [n]. *)
+Definition nat_mod_zero_r n : n mod 0 = n := idpath.
+
+(** TODO: generalise for all small n *)
+Definition nat_mod_one_l n : 1 < n -> 1 mod n = 1.
+Proof.
+  intros H.
+  destruct H; trivial.
+  destruct m.
+  1: contradiction (not_lt_zero_r _ H).
+  cbn; clear H.
+  by induction m.
 Defined.
 
 (** [n] modulo [1] is [0]. *)
@@ -1658,14 +1742,90 @@ Defined.
 Definition nat_mod_cancel n : n mod n = 0.
 Proof.
   destruct n; trivial.
-  apply nat_moveR_nV.
-  rhs nrapply nat_add_zero_r.
+  symmetry.
+  snrapply (nat_mod_unique _ _ 1); only 1: exact _.
+  lhs nrapply nat_add_zero_r.
+  nrapply nat_mul_one_r.
+Defined.
+
+(** ** Greatest Common Divisor *)
+
+(** The greatest common divisor of [0] and a number is the number itself. *)
+Definition nat_gcd_zero_l n : nat_gcd 0 n = n := idpath.
+
+(** The greatest common divisor of a number and [0] is the number itself. *)
+Definition nat_gcd_zero_r n : nat_gcd n 0 = n.
+Proof.
+  induction n; simpl; only 1: reflexivity.
+  by rewrite nat_sub_cancel.
+Defined.
+
+(** The greatest common divisor of [1] and any number is [1]. *)
+Definition nat_gcd_one_l n : nat_gcd 1 n = 1 := idpath.
+
+(** The greatest common divisor of any number and [1] is [1]. *)
+Definition nat_gcd_one_r n : nat_gcd n 1 = 1.
+Proof.
   destruct n; trivial.
-  simpl; change n.+1 with (1 + n).
-  generalize 1; intros k.
-  induction n in k |- *.
-  1: by destruct k.
-  rewrite nat_add_succ_r.
+  simpl.
   destruct n; trivial.
-  exact (IHn k.+1).
+  rewrite nat_sub_succ_l; only 2: exact _.
+  by rewrite nat_sub_cancel.
+Defined.
+
+(** Idempotency. *)
+Definition nat_gcd_idem n : nat_gcd n n = n.
+Proof.
+  induction n.
+  1: reflexivity.
+  unfold nat_gcd; fold nat_gcd.
+  by rewrite nat_mod_cancel.
+Defined.
+
+(** We can prove that the greatest common divisor of [n] and [m] divides both [n] and [m]. This proof requires strong induction. *)
+Definition divides_l_nat_gcd n m : (nat_gcd n m | n) /\ (nat_gcd n m | m).
+Proof.
+  revert n m; snrapply nat_ind_strong; intros n IHn m.
+  destruct n.
+  1: split; exact _.
+  destruct (IHn (m mod n.+1) _ n.+1) as [H1 H2].
+  unfold nat_gcd; fold nat_gcd.
+  set (n' := n.+1) in *.
+  split; only 1: exact H2.
+  set (r := m mod n'); rewrite (nat_divmod_spec m n'); unfold r; clear r.
+  exact _.
+Defined.
+
+(** The greatest common divisor of [n] and [m] divides [n]. *)
+Global Instance divides_l_nat_gcd_l n m : (nat_gcd n m | n)
+  := fst (divides_l_nat_gcd n m).
+
+(** The greatest common divisor of [n] and [m] divides [m]. *)
+Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
+  := snd (divides_l_nat_gcd n m).
+  
+(** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)
+Global Instance divides_r_nat_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
+Proof.
+  revert n m p; snrapply nat_ind_strong; intros n IHn m p H1 H2.
+  destruct n; only 1: exact _.
+  unfold nat_gcd; fold nat_gcd.
+  apply IHn; only 1,3: exact _.
+  rewrite (nat_divmod_spec m n.+1) in H2.
+  apply nat_divides_add_r in H2; exact _.
+Defined.
+
+(** If [p] is divisible by all common divisors of [n] and [m], and [p] is also a common divisor, then it must necesserily be equal to the greatest common divisor. *)
+Definition nat_gcd_unique n m p
+  (H : forall q, (q | n) -> (q | m) -> (q | p))
+  : (p | n) -> (p | m) -> nat_gcd n m = p.
+Proof.
+  intros H1 H2.
+  rapply nat_divides_antisym.
+Defined.
+
+(** As a corollary of uniquness, we get that the greatest common divisor operation is commutative. *)
+Definition nat_gcd_comm n m : nat_gcd n m = nat_gcd m n.
+Proof.
+  rapply nat_gcd_unique.
 Defined.
