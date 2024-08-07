@@ -1667,11 +1667,12 @@ Proof.
   apply nat_moveR_nV, nat_divmod_spec.
 Defined.
 
-Global Instance nat_mod_lt' n m r : r < m -> n mod m < m.
+Definition nat_mod_lt' n m r : r < m -> n mod m < m.
 Proof.
   intros H; destruct H; only 1: exact _.
   rapply (lt_leq_lt_trans (m:=m)).
 Defined.
+Hint Immediate nat_mod_lt' : typeclass_instances.
 
 (** [n] modulo [m] is less than [m]. *)
 Global Instance nat_mod_lt n m : 0 < m -> n mod m < m
