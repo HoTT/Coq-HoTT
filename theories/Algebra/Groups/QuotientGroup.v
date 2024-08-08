@@ -21,8 +21,7 @@ Section GroupCongruenceQuotient.
 
   (** A congruence on a group is a relation satisfying [R x x' -> R y y' -> R (x * y) (x' * y')].  Note that requiring [R] to be reflexive and symmetric imposes additional conditions when combined with the congruence condition, but that we don't need to assume that [R] is transitive. *)
   Context {G : Group} {R : Relation G}
-    `{!IsCongruence R,
-      !Reflexive R, !Symmetric R}.
+    `{!IsCongruence R, !Reflexive R, !Symmetric R}.
 
   (** The type underlying the quotient group is [Quotient R]. *)
   Definition CongruenceQuotient := G / R.
