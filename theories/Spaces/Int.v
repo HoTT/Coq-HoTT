@@ -19,7 +19,7 @@ Inductive Int : Type0 :=
 | zero : Int
 | posS : nat -> Int.
 
-(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. *)
+(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. Various operations on [nat] are preserved by this function. See the section on conversion functions starting with [int_nat_succ]. *)
 Definition int_of_nat (n : nat) :=
   match n with
   | O => zero
@@ -77,14 +77,6 @@ Definition int_pred (n : Int) : Int :=
   end.
 
 Notation "n .-1" := (int_pred n) : int_scope.
-
-(** [int_of_nat] is commutes with taking succesors *)
-
-Definition int_of_nat_succ_commute (n : nat) 
-  : int_of_nat (S n) = (int_succ o int_of_nat) n :> Int.
-Proof.
-  destruct n; reflexivity.
-Defined.
 
 (** *** Negation *)
 
@@ -735,12 +727,14 @@ Defined.
 
 (** ** Converting between integers and naturals *)
 
+(** [int_of_nat] preserves successors. *)
 Definition int_nat_succ (n : nat)
   : (n.+1)%int = (n.+1)%nat :> Int.
 Proof.
   by induction n.
 Defined.
 
+(** [int_of_nat] preserves addition. Hence is a monoid homomorphism. *)
 Definition int_nat_add (n m : nat)
   : (n + m)%int = (n + m)%nat :> Int.
 Proof.
@@ -751,6 +745,7 @@ Proof.
     exact (ap _ IHn).
 Defined.
 
+(** [int_of_nat] preserves subtraction when not truncated. *)
 Definition int_nat_sub (n m : nat)
   : (m <= n)%nat -> (n - m)%int = (n - m)%nat :> Int.
 Proof.
@@ -764,6 +759,7 @@ Proof.
     exact (ap _ IHn).
 Defined.
 
+(** [int_of_nat] preserves multiplication. This makes [int_of_nat] a semiring homomorphism. *)
 Definition int_nat_mul (n m : nat)
   :  (n * m)%int = (n * m)%nat :> Int.
 Proof.
