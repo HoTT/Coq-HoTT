@@ -133,7 +133,7 @@ jobs:
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           sudo apt-get -o Acquire::Retries=30 update -q
-          sudo apt-get -o Acquire::Retries=30 install python -y --allow-unauthenticated
+          sudo apt-get -o Acquire::Retries=30 install python3 python-is-python3 -y --allow-unauthenticated
           etc/coq-scripts/github/reportify-coq.sh --errors ${{ matrix.extra-gh-reportify }} make TIMED=1 -j2 --output-sync
 
     - name: Revert permissions
@@ -202,11 +202,16 @@ jobs:
         custom_script: |
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
-          sudo apt-get -o Acquire::Retries=30 install python3-pip autoconf -y --allow-unauthenticated
-          python3 -m pip install --user --upgrade pygments dominate beautifulsoup4 docutils==0.17.1
+          sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          # Create and activate a virtual environment
+          python3 -m venv myenv
+          source myenv/bin/activate
+          # Install the required Python packages in the virtual environment
+          python -m pip install --upgrade pip
+          python -m pip install pygments dominate beautifulsoup4 docutils==0.17.1
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
@@ -375,7 +380,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           sudo apt-get update
-          sudo apt-get install -y time python lua5.1
+          sudo apt-get install -y time python3 python-is-python3 lua5.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup

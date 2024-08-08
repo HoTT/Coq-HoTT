@@ -37,3 +37,9 @@ Proof.
   apply (injective (g o f)).
   exact (ap g p).
 Defined.
+
+(** ** Antisymmetric Relations *)
+
+Class AntiSymmetric {A : Type} (R : A -> A -> Type) : Type
+  := antisymmetry : forall x y, R x y -> R y x -> x = y.
+Arguments antisymmetry {A} R {AntiSymmetric} x y _ _.

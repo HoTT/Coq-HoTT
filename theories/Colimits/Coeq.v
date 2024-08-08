@@ -53,6 +53,17 @@ Proof.
   rapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
+Definition Coeq_ind_hprop {B A f g} (P : @Coeq B A f g -> Type)
+  `{forall x, IsHProp (P x)}
+  (i : forall a, P (coeq a))
+  : forall x, P x.
+Proof.
+  snrapply Coeq_ind.
+  1: exact i.
+  intros b.
+  rapply path_ishprop.
+Defined.
+
 (** ** Universal property *)
 (** See Colimits/CoeqUnivProp.v for a similar universal property without [Funext]. *)
 

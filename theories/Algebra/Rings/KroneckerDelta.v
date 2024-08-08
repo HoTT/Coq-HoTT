@@ -78,7 +78,7 @@ Definition kronecker_delta_lt {R : Ring} {i j : nat} (p : (i < j)%nat)
 Proof.
   apply kronecker_delta_neq.
   intros q; destruct q.
-  by apply not_lt_n_n in p.
+  by apply lt_irrefl in p.
 Defined.
 
 (** Kronecker delta where the first index is strictly greater than the second is 0. *)
@@ -87,7 +87,7 @@ Definition kronecker_delta_gt {R : Ring} {i j : nat} (p : (j < i)%nat)
 Proof.
   apply kronecker_delta_neq.
   intros q; destruct q.
-  by apply not_lt_n_n in p.
+  by apply lt_irrefl in p.
 Defined.
 
 (** Kronecker delta can be used to extract a single term from a finite sum. *)
@@ -96,7 +96,7 @@ Definition rng_sum_kronecker_delta_l {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   : ab_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.
 Proof.
   revert i Hi f; simple_induction n n IHn; intros i Hi f.
-  1: destruct (not_leq_Sn_0 _ Hi).
+  1: destruct (not_lt_zero_r _ Hi).
   destruct (dec (i = n)) as [p|p].
   - destruct p; simpl.
     rewrite kronecker_delta_refl.
@@ -110,9 +110,10 @@ Proof.
     apply rng_mult_zero_l.
   - simpl; lhs nrapply ap.
     + nrapply IHn.
-      apply diseq_implies_lt in p.
+      apply neq_iff_lt_or_gt in p.
       destruct p; [assumption|].
-      contradiction (lt_implies_not_geq Hi).
+      apply gt_iff_not_leq in Hi.
+      contradiction Hi.
     + rewrite (kronecker_delta_neq p).
       rewrite rng_mult_zero_l.
       rewrite grp_unit_l.

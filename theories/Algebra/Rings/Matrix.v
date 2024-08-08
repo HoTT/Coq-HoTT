@@ -596,17 +596,14 @@ Proof.
     contradiction (H' (leq_trans _ H)).
   - destruct p.
     contradiction (H (leq_trans _ H')).
-  - by apply path_nat_S.
+  - by apply path_nat_succ.
 Defined.
 
 Local Instance lt_n1_skip k i n (H : (i < n.+1)%nat) (H' : (k < n)%nat)
   : (skip i k < n.+1)%nat.
 Proof.
   unfold skip.
-  destruct (dec (k < i))%nat as [H''|H''].
-  - exact (transitive_lt _ _ _ H'' H) .
-  - apply leq_S_n'.
-    exact H'.
+  destruct (dec (k < i))%nat as [H''|H'']; exact _.
 Defined.
 
 Definition matrix_minor {R : Ring@{i}} {n : nat} (i j : nat)
@@ -759,8 +756,8 @@ Proof.
   destruct (dec (k <= i)%nat) as [leq_k_i|gt_k_i].
   { rewrite H2.
     1: by rewrite rng_mult_zero_r.
-    rapply mixed_trans1. }
-  apply not_leq_implies_gt in gt_k_i.
+    rapply lt_leq_lt_trans. }
+  apply gt_iff_not_leq in gt_k_i.
   rewrite H1.
   1: by rewrite rng_mult_zero_l.
   assumption.
@@ -932,7 +929,7 @@ Proof.
     rewrite kronecker_delta_refl.
     rewrite rng_mult_one_l.
     f_ap; apply path_ishprop. }
-  apply diseq_implies_lt in np.
+  apply neq_iff_lt_or_gt in np.
   destruct np as [l | l].
   - rewrite (kronecker_delta_lt l).
     rewrite rng_mult_zero_l.

@@ -194,7 +194,7 @@ Proof.
   - destruct l2.
     + inversion p.
     + cbn; f_ap.
-      by apply IHl1, path_nat_S.
+      by apply IHl1, path_nat_succ.
 Defined.
 
 (** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
@@ -215,7 +215,7 @@ Proof.
     destruct H as [q | i].
     1: exact (y; z; (q, (inl idpath, inl idpath))).
     destruct (IHl1 l2 x i) as [y' [z' [q [r s]]]].
-    1: apply path_nat_S, p.
+    1: apply path_nat_succ, p.
     exact (y'; z'; (q, (inr r, inr s))).
 Defined.
 
@@ -243,10 +243,11 @@ Defined.
 Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
   : length (reverse_acc acc l) = (length acc + length l)%nat.
 Proof.
+  symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
-  - apply add_n_O.
-  - lhs nrapply IHl.
-    apply nat_add_n_Sm.
+  - apply nat_add_zero_r.
+  - rhs_V nrapply IHl.
+    apply nat_add_succ_r.
 Defined.
 
 (** The length of [reverse] is the same as the length of the original list. *)
@@ -331,11 +332,11 @@ Definition nth_lt@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : { x : A & nth l n = Some x }.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_S_n.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -356,7 +357,7 @@ Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : InList (nth' l n H) l.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by left.
   right.
@@ -393,12 +394,12 @@ Proof.
     snrapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0%nat _).
     snrefine (exist _ _ idpath).
-    apply leq_S_n'.
+    apply leq_succ.
     exact _.
   - destruct (IHl i) as [n [H H']].
     snrefine (exist@{i i} _ n.+1%nat _).
     snrefine (_; _); cbn.
-    1: apply leq_S_n', H.
+    1: apply leq_succ, H.
     refine (_ @ H').
     apply nth'_cons.
 Defined.
@@ -422,7 +423,7 @@ Definition nth'_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
   : nth' (list_map f l) n H' = f (nth' l n H).
 Proof.
   induction l as [|a l IHl] in n, H, H' |- * using list_ind@{i j}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
   apply IHl.
@@ -440,20 +441,15 @@ Proof.
     simple_list_induction l1 a l1 IHl1;
     intros l2 n defl defr H H' H'' p.
   - destruct l2 as [|b l2].
-    + destruct (not_leq_Sn_0 _ H).
+    + destruct (not_lt_zero_r _ H).
     + inversion p.
   - destruct l2 as [|b l2].
     + inversion p.
     + destruct n.
       * reflexivity.
-      * unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H.
-        unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H'.
-        unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H''.
+      * erewrite 3 nth'_cons.
         apply IHl1.
-        by apply path_nat_S.
+        by apply path_nat_succ.
 Defined.
 
 (** The [nth'] element of a [repeat] is the repeated value. *)
@@ -462,7 +458,7 @@ Definition nth'_repeat@{i|} {A : Type@{i}} (x : A) (i n : nat)
   : nth' (repeat x n) i H = x.
 Proof.
   induction n as [|n IHn] in i, H |- * using nat_ind@{i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct i.
   1: reflexivity.
   apply IHn.
@@ -484,10 +480,10 @@ Proof.
   f_ap.
   - exact (H 0%nat _).
   - snrapply IHl.
-    1: by apply path_nat_S.
+    1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
-    1: apply leq_S_n', Hn.
+    1: apply leq_succ, Hn.
     lhs nrapply H.
     nrapply nth'_cons.
 Defined.
@@ -498,14 +494,14 @@ Definition nth_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
   : nth (l ++ l') n = nth l n.
 Proof.
   induction l as [|a l IHl] in l', n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
-Definition nth_last {A : Type} (l : list A) (i : nat) (p : pred (length l) = i)
+Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
   : nth l i = last l. 
 Proof.
   destruct p.
@@ -571,9 +567,9 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply drop_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; apply IHl.
-  apply leq_S_n.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -629,18 +625,18 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply take_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; f_ap.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
 Definition length_take@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  : length (take n l) = min n (length l).
+  : length (take n l) = nat_min n (length l).
 Proof.
   induction l as [|a l IHl] in n |- * using list_ind@{i i}.
   { rewrite take_nil.
-    rewrite min_r.
+    rewrite nat_min_r.
     1: reflexivity.
     cbn; exact _. }
   destruct n.
@@ -691,20 +687,19 @@ Defined.
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
   (H : (n < length l)%nat)
-  : length (remove n l) = pred (length l)%nat.
+  : length (remove n l) = nat_pred (length l)%nat.
 Proof.
   unfold remove.
   rewrite length_app@{i}.
   rewrite length_take.
   rewrite length_drop.
-  rewrite min_l.
-  - rewrite nataddsub_assoc.
-    2: exact H.
-    rewrite <- predeqminus1.
-    induction n in |- *.
-    1: reflexivity.
-    cbn; assumption.
-  - exact (leq_trans _ H).
+  rewrite nat_min_l.
+  2: exact (leq_trans _ H).
+  rewrite <- nat_sub_l_add_r.
+  2: exact _.
+  lhs nrapply nat_sub_succ_r.
+  apply ap.
+  apply nat_add_sub_cancel_l.
 Defined. 
 
 (** An element of a [remove] is an element of the original list. *)
@@ -763,7 +758,7 @@ Proof.
   { intros m.
     snrapply (functor_sigma idmap).
     intros k H.
-    exact (leq_S _ _ H). }
+    exact (leq_succ_r H). }
   induction n as [|n IHn].
   1: exact nil.
   nrefine ((n; _) :: list_map (f n) IHn).
@@ -819,11 +814,11 @@ Definition nth_seq_rev@{} {n i} (H : (i < n)%nat)
 Proof.
   induction i as [|i IHi] in n, H |- *.
   - induction n.
-    1: destruct (not_leq_Sn_0 _ H).
-    cbn; by rewrite sub_n_0.
+    1: destruct (not_lt_zero_r _ H).
+    cbn; by rewrite nat_sub_zero_r.
   - induction n as [|n IHn].
-    1: destruct (not_leq_Sn_0 _ H).
-    by apply IHi, leq_S_n.
+    1: destruct (not_lt_zero_r _ H).
+    by apply IHi, leq_pred'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
@@ -831,18 +826,15 @@ Definition nth_seq@{} {n i} (H : (i < n)%nat)
   : nth (seq n) i = Some i.
 Proof.
   induction n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   rewrite seq_succ.
   destruct (dec (i < n)%nat) as [H'|H'].
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
-  - apply not_lt_implies_geq in H'.
-    destruct (leq_split H') as [H'' | H''].
-    { apply lt_implies_not_geq in H''.
-      apply leq_S_n in H.
-      contradiction. }
-    destruct H''.
+  - apply geq_iff_not_lt in H'.
+    apply leq_pred' in H.
+    destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.
       rewrite nat_add_comm.
@@ -970,7 +962,11 @@ Proof.
   - destruct l2 as [|y l2].
     + discriminate.
     + intros [Hx Hl1] [Hy Hl2].
-      split; auto.
+      split.
+      * by apply Hf.
+      * apply IHl1; trivial.
+        apply path_nat_succ.
+        exact p.
 Defined.
 
 (** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)

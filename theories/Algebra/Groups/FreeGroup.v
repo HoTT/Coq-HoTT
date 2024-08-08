@@ -91,8 +91,7 @@ Section Reduction.
       nrapply (freegroup_tau _ a). }
     intros [[c b] d].
     revert y.
-    snrapply Coeq_ind. (* TODO: create and use Coeq_ind_hprop *)
-    2: intro; rapply path_ishprop. 
+    srapply Coeq_ind_hprop.
     intro a.
     change (freegroup_eta ((c ++ [b] ++ [b^] ++ d) ++ a)
       = freegroup_eta ((c ++ d) ++ a)).
@@ -198,9 +197,9 @@ Section Reduction.
   Proof.
     intros x y z.
     strip_truncations.
-    revert x; snrapply Coeq_ind; intro x; [ | apply path_ishprop].
-    revert y; snrapply Coeq_ind; intro y; [ | apply path_ishprop].
-    revert z; snrapply Coeq_ind; intro z; [ | apply path_ishprop].
+    revert x; srapply Coeq_ind_hprop; intro x.
+    revert y; srapply Coeq_ind_hprop; intro y.
+    revert z; srapply Coeq_ind_hprop; intro z.
     nrapply (ap (tr o coeq)).
     nrapply app_assoc.
   Defined.
@@ -209,7 +208,7 @@ Section Reduction.
   Global Instance leftidentity_freegroup_type : LeftIdentity sg_op mon_unit.
   Proof.
     rapply Trunc_ind.
-    srapply Coeq_ind; intro x; [ | apply path_ishprop].
+    srapply Coeq_ind_hprop; intros x.
     reflexivity.
   Defined.
 
@@ -217,7 +216,7 @@ Section Reduction.
   Global Instance rightidentity_freegroup_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply Trunc_ind.
-    srapply Coeq_ind; intro x; [ | apply path_ishprop].
+    srapply Coeq_ind_hprop; intros x.
     apply (ap tr), ap.
     nrapply app_nil.
   Defined.
@@ -226,7 +225,7 @@ Section Reduction.
   Global Instance leftinverse_freegroup_type : LeftInverse sg_op negate mon_unit.
   Proof.
     rapply Trunc_ind.
-    srapply Coeq_ind; intro x; [ | apply path_ishprop].
+    srapply Coeq_ind_hprop; intro x.
     apply word_concat_Vw.
   Defined.
 
@@ -234,7 +233,7 @@ Section Reduction.
   Global Instance rightinverse_freegroup_type : RightInverse sg_op negate mon_unit.
   Proof.
     rapply Trunc_ind.
-    srapply Coeq_ind; intro x; [ | apply path_ishprop].
+    srapply Coeq_ind_hprop; intro x.
     apply word_concat_wV.
   Defined.
 
@@ -313,8 +312,8 @@ Section Reduction.
       intros [[b a] c].
       apply words_rec_coh. }
     intros x y; strip_truncations.
-    revert x; snrapply Coeq_ind; hnf; intro x; [ | apply path_ishprop ].
-    revert y; snrapply Coeq_ind; hnf; intro y; [ | apply path_ishprop ].
+    revert x; srapply Coeq_ind_hprop; intro x.
+    revert y; srapply Coeq_ind_hprop; intro y. 
     simpl.
     apply words_rec_pp.
   Defined.
@@ -334,9 +333,8 @@ Section Reduction.
     : forall x, P x.
   Proof.
     rapply Trunc_ind.
-    snrapply Coeq_ind.
-    - exact H1.
-    - intro; apply path_ishprop.
+    srapply Coeq_ind_hprop.
+    exact H1.
   Defined.
  
   Definition FreeGroup_ind_hprop (P : FreeGroup -> Type)

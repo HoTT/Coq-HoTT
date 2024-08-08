@@ -49,7 +49,7 @@ Lemma path_forall_recr_beta' `{Funext} A B x0 P f g e Px
              g
              (@path_forall _ _ _ _ _ e)
              Px
-  = @transport ((forall a, B a) * B x0)%type
+  = @transport ((forall a, B a) * B x0)
                (fun x => P (fst x) (snd x))
                (f, f x0)
                (g, g x0)
@@ -140,7 +140,7 @@ Ltac transport_path_forall_hammer :=
 (** An example showing that it works *)
 Lemma path_forall_2_beta' `{Funext} A B x0 x1 P f g e Px
 : @transport (forall a : A, B a) (fun f => P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px
-  = @transport (B x0 * B x1)%type (fun x => P (fst x) (snd x)) (f x0, f x1) (g x0, g x1) (path_prod' (e x0) (e x1)) Px.
+  = @transport (B x0 * B x1) (fun x => P (fst x) (snd x)) (f x0, f x1) (g x0, g x1) (path_prod' (e x0) (e x1)) Px.
 Proof.
   transport_path_forall_hammer.
   repeat match goal with
