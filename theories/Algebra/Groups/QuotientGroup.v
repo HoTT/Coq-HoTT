@@ -19,9 +19,8 @@ Local Open Scope wc_iso_scope.
 
 Section GroupCongruenceQuotient.
 
-  (** A congruence on a group is a relation satisfying [R x x' -> R y y' -> R (x * y) (x' * y')].  Note that requiring [R] to be reflexive and symmetric imposes additional conditions when combined with the congruence condition, but that we don't need to assume that [R] is transitive. *)
-  Context {G : Group} {R : Relation G}
-    `{!IsCongruence R, !Reflexive R, !Symmetric R}.
+  (** A congruence on a group is a relation satisfying [R x x' -> R y y' -> R (x * y) (x' * y')].  Because we also require that [R] is reflexive, we also know that [R y y' -> R (x * y) (x * y')] for any [x], and similarly for multiplication on the right by [x].  We don't need to assume that [R] is symmetric or transitive. *)
+  Context {G : Group} {R : Relation G} `{!IsCongruence R, !Reflexive R}.
 
   (** The type underlying the quotient group is [Quotient R]. *)
   Definition CongruenceQuotient := G / R.
@@ -54,9 +53,10 @@ Section GroupCongruenceQuotient.
 
   Global Instance congquot_negate : Negate CongruenceQuotient.
   Proof.
-    srapply Quotient_functor.
-    1: apply negate.
-    intros x y p.
+    srapply Quotient_rec.
+    1: exact (class_of R o negate).
+    intros x y p; cbn.
+    symmetry.
     rewrite <- (left_identity (-x)).
     destruct (left_inverse y).
     set (-y * y * -x).
@@ -64,9 +64,10 @@ Section GroupCongruenceQuotient.
     destruct (right_inverse x).
     unfold g; clear g.
     rewrite <- simple_associativity.
+    apply qglue.
     apply iscong; try reflexivity.
     apply iscong; try reflexivity.
-    by symmetry.
+    exact p.
   Defined.
 
   Global Instance congquot_sgop_associative : Associative congquot_sgop.
