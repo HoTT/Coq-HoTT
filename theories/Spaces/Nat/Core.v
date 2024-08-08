@@ -82,7 +82,7 @@ Fixpoint nat_min n m :=
 
 (** *** Euclidean division *)
 
-(** This division is linear and tail-recursive. In [nat_divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
+(** This division takes time linear in `x` and is tail-recursive. In [nat_divmod x y q u], [x + y.+1 * q + (y - u)] is the quantity being divided and [y] is the predecessor of the divisor.  It will be called with [q] zero and [u] equal to [y], so that [x] is the quantity being divided.  The return value is a pair [(q', u')] with [x + y.+1 * q + (y - u) = y.+1 * q' + (y - u')], as least when [u <= y], as shown in [nat_divmod_spec_helper] below. *)
 
 Fixpoint nat_divmod x y q u : nat * nat :=
   match x with
