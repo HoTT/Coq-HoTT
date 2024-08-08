@@ -1,8 +1,9 @@
-Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
-  Types.Sum Types.Sigma Spaces.Nat.Core.
+Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
+  Basics.PathGroupoids Types.Sigma Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
+
+(** * Division of natural numbers *)
 
 (** ** Divisibility *)
 
@@ -459,4 +460,147 @@ Proof.
   apply nat_gcd_zero_iff_zero in H3.
   destruct H3 as [->].
   contradiction (not_lt_zero_r _ H1).
+Defined.
+
+Definition nat_gcd_l_add_r_mul n m k : nat_gcd (n + k * m) m = nat_gcd n m.
+Proof.
+  rapply nat_gcd_unique.
+  intros q H1 H2.
+  rapply nat_divides_r_gcd.
+  rapply (nat_divides_add_l _ _ (k * m)).
+Defined.
+
+Definition nat_gcd_r_add_r_mul n m k : nat_gcd n (m + k * n) = nat_gcd n m.
+Proof.
+  lhs nrapply nat_gcd_comm.
+  rhs nrapply nat_gcd_comm.
+  nrapply nat_gcd_l_add_r_mul.
+Defined.
+
+Definition nat_gcd_l_add_r n m : nat_gcd (n + m) m = nat_gcd n m.
+Proof.
+  rhs_V nrapply (nat_gcd_l_add_r_mul n m 1).
+  by rewrite nat_mul_one_l.
+Defined.
+
+Definition nat_gcd_r_add_r n m : nat_gcd n (m + n) = nat_gcd n m.
+Proof.
+  lhs nrapply nat_gcd_comm.
+  rhs nrapply nat_gcd_comm.
+  nrapply nat_gcd_l_add_r.
+Defined.
+
+Definition nat_gcd_l_sub n m : m <= n -> nat_gcd (n - m) m = nat_gcd n m.
+Proof.
+  intros H.
+  lhs_V nrapply nat_gcd_l_add_r.
+  by rewrite (nat_add_sub_l_cancel H).
+Defined.
+
+Definition nat_gcd_r_sub n m : n <= m -> nat_gcd n (m - n) = nat_gcd n m.
+Proof.
+  intros H.
+  lhs nrapply nat_gcd_comm.
+  rhs nrapply nat_gcd_comm.
+  rapply nat_gcd_l_sub.
+Defined.
+
+(** ** Bezout's Identity *)
+
+(** Bezout's identity states that for any two numbers [n] and [m], their greatest common divisor can be written as a linear combination of [n] and [m]. This is easy to state for the integers, however since we are working with the natural numbers, we need to be more careful. This is why we write the linear combination as [a * n = d + b * m] rather than the usual [a * n + b * m = d]. *)
+
+(** We define a predicate for triples of integers satisfying Bezout's identity. *)
+Definition NatBezout n m d : Type0
+  := exists a b, a * n = d + b * m.
+Existing Class NatBezout.
+
+Global Instance nat_bezout_refl_l n k : NatBezout n k n.
+Proof.
+  by exists 1, 0.
+Defined.
+
+(** If [a * n = 1 + b * m], then the gcd of [n] and [m] is [1]. *)
+Definition nat_bezout_coprime n m : NatBezout n m 1 -> nat_gcd n m = 1.
+Proof.
+  intros [a [b p]].
+  rapply nat_gcd_unique.
+  intros q H1 H2.
+  rapply (nat_divides_add_l _ _ (b * m)).
+  destruct p; exact _.
+Defined.
+
+Definition nat_bezout_comm n m d
+  : 0 < m -> NatBezout n m d -> NatBezout m n d.
+Proof.
+  intros H [a [b p]].
+  destruct (@equiv_leq_lt_or_eq 0 a _) as [|q].
+  - exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a). 
+    rewrite 2 nat_dist_sub_r.
+    apply nat_moveR_nV.
+    rewrite <- nat_add_comm, nat_add_assoc, <- (nat_add_comm d).
+    rewrite <- nat_sub_l_add_r.
+    2: { apply nat_mul_r_monotone.
+      rewrite 2 nat_mul_succ_r.
+      nrapply (leq_trans _ (leq_add_l _ _)).
+      rapply (leq_trans _ (leq_add_r _ _)). }
+    apply nat_moveL_nV.
+    rewrite nat_add_comm.
+    snrapply (ap011 nat_add p).
+    lhs nrapply nat_mul_comm.
+    rhs_V nrapply nat_mul_assoc.
+    rhs_V nrapply nat_mul_assoc.
+    snrapply ap.
+    lhs_V nrapply nat_mul_assoc.
+    rhs nrapply nat_mul_assoc.
+    apply nat_mul_comm.
+  - destruct q.
+    exists 0, 0.
+    rewrite 2 nat_mul_zero_l, nat_add_zero_r in *.
+    symmetry in p; symmetry.
+    apply equiv_nat_add_zero in p.
+    by destruct p.
+Defined.
+Hint Immediate nat_bezout_comm : typeclass_instances.
+
+Global Instance nat_bezout_pos_l n m : 0 < n -> NatBezout n m (nat_gcd n m).
+Proof.
+  pose (k := n + m); assert (p : n + m = k) by reflexivity; clearbody k.
+  revert k n m p; snrapply nat_ind_strong; hnf; intros k IHk n m q H.
+  (** Given a sum [n + m], we can always find another pair [n' + m'] equal to that sum such that [n' < m']. This extra hypothesis lets us prove the statement more directly. *)
+  assert (H' : forall n' m', n + m = n' + m' -> 0 < n' -> n' < m'
+    -> NatBezout n' m' (nat_gcd n' m')).
+  { intros n' m' p H1 H2; destruct q.
+    assert (m' < n + m) by (rewrite p; change (0 + m' < n' + m'); exact _).
+    destruct (IHk m' _ n' (m' - n') (nat_add_sub_r_cancel _) _) as [a [b r]].
+    exists (a + b), b.
+    rewrite nat_dist_r, r, nat_dist_sub_l, <- nat_add_assoc.
+    rewrite nat_add_sub_l_cancel; only 2: rapply nat_mul_l_monotone.
+    snrapply (ap (fun x => x + _)).
+    rapply nat_gcd_r_sub. }
+  destruct (nat_trichotomy n m) as [[l | p] | r].
+  - by apply H'.
+  - destruct p.
+    rewrite nat_gcd_idem; exact _.
+  - destruct (@equiv_leq_lt_or_eq 0 m _). 
+    + rewrite nat_gcd_comm.
+      rapply nat_bezout_comm.
+      rapply H'.
+      apply nat_add_comm.
+    + destruct p.
+      rewrite nat_gcd_zero_r; exact _.
+Defined.
+
+(** For strictly positive numbers, we have Bezout's identity in both directions. *)
+Definition nat_bezout_pos n m
+  : 0 < n -> 0 < m
+  -> NatBezout n m (nat_gcd n m) /\ NatBezout m n (nat_gcd n m).
+Proof.
+  intros H1 H2; split; [| apply nat_bezout_comm]; exact _.
+Defined.
+
+(** For arbitrary natural numbers, we have Bezout's identity in at least one direction. *)
+Definition nat_bezout n m
+  : NatBezout n m (nat_gcd n m) + NatBezout m n (nat_gcd n m).
+Proof.
+  destruct n; [ right | left ]; exact _.
 Defined.

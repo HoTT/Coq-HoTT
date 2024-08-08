@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
-  Types.Sum Types.Sigma.
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat
+  Basics.Classes Types.Prod Types.Sum Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -327,6 +327,17 @@ Proof.
   lhs nrapply nat_add_comm.
   lhs nrapply H.
   nrapply nat_add_comm.
+Defined.
+
+(** A sum being zero is equivalent to both summands being zero. *)
+Definition equiv_nat_add_zero n m : n = 0 /\ m = 0 <~> n + m = 0.
+Proof.
+  srapply equiv_iff_hprop.
+  - intros [-> ->]; reflexivity.
+  - destruct n.
+    + by split.
+    + intros H; symmetry in H.
+      by apply neq_nat_zero_succ in H.
 Defined.
 
 (** ** Properties of multiplication *)
