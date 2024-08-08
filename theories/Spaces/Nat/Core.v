@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes Types.Sum.
+  Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat
+  Basics.Classes Types.Prod Types.Sum Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -81,41 +82,43 @@ Fixpoint nat_min n m :=
 
 (** *** Euclidean division *)
 
-(** This division is linear and tail-recursive. In [divmod], [y] is the predecessor of the actual divisor, and [u] is [y] sub the real remainder. *)
+(** This division takes time linear in `x` and is tail-recursive. In [nat_div_mod x y q u], [x + y.+1 * q + (y - u)] is the quantity being divided and [y] is the predecessor of the divisor.  It will be called with [q] zero and [u] equal to [y], so that [x] is the quantity being divided.  The return value is a pair [(q', u')] with [x + y.+1 * q + (y - u) = y.+1 * q' + (y - u')], at least when [u <= y], as shown in [nat_div_mod_spec_helper] in Nat/Divison.v. *)
 
-Fixpoint divmod x y q u : nat * nat :=
+Fixpoint nat_div_mod x y q u : nat * nat :=
   match x with
   | 0 => (q , u)
   | S x' =>
     match u with
-    | 0 => divmod x' y (S q) y
-    | S u' => divmod x' y q u'
+    | 0 => nat_div_mod x' y (S q) y
+    | S u' => nat_div_mod x' y q u'
     end
   end.
 
-Definition div x y : nat :=
+Definition nat_div x y : nat :=
   match y with
   | 0 => y
-  | S y' => fst (divmod x y' 0 y')
+  | S y' => fst (nat_div_mod x y' 0 y')
   end.
+Infix "/" := nat_div : nat_scope.
 
-Definition modulo x y : nat :=
+(** [nat_mod x y] is the remainder when [x] is divided by [y].  When [y] is zero, it is defined to be [x]. See [nat_div_mod_spec] and related results below. *)
+Definition nat_mod x y : nat :=
   match y with
-  | 0 => y
-  | S y' => y' - snd (divmod x y' 0 y')
+  | 0 => x
+  | S y' => y' - snd (nat_div_mod x y' 0 y')
   end.
+Infix "mod" := nat_mod : nat_scope.
 
-Infix "/" := div : nat_scope.
-Infix "mod" := modulo : nat_scope.
+(** For results about division and modulo, see Nat/Division.v. *)
 
 (** *** Greatest common divisor *)
 
 (** We use Euclid algorithm, which is normally not structural, but Coq is now clever enough to accept this (behind modulo there is a subtraction, which now preserves being a subterm) *)
 
-Fixpoint gcd a b :=
+Fixpoint nat_gcd a b :=
   match a with
   | O => b
-  | S a' => gcd (b mod a'.+1) a'.+1
+  | S a' => nat_gcd (b mod a'.+1) a'.+1
   end.
 
 (** *** Factorial *)
@@ -324,6 +327,17 @@ Proof.
   lhs nrapply nat_add_comm.
   lhs nrapply H.
   nrapply nat_add_comm.
+Defined.
+
+(** A sum being zero is equivalent to both summands being zero. *)
+Definition equiv_nat_add_zero n m : n = 0 /\ m = 0 <~> n + m = 0.
+Proof.
+  srapply equiv_iff_hprop.
+  - intros [-> ->]; reflexivity.
+  - destruct n.
+    + by split.
+    + intros H; symmetry in H.
+      by apply neq_nat_zero_succ in H.
 Defined.
 
 (** ** Properties of multiplication *)
@@ -691,7 +705,7 @@ Proof.
 Defined.
 
 (** We can move a subtracted number to the left-hand side of an equation. *)
-Definition nat_moveL_nV {k m} n : k + n = m -> k = m - n.
+Definition nat_moveL_nV {n m} k : n + k = m -> n = m - k.
 Proof.
   intros p.
   destruct p.
@@ -700,9 +714,9 @@ Proof.
 Defined.
 
 (** We can move a subtracted number to the right-hand side of an equation. *)
-Definition nat_moveR_nV {k m} n : k = n + m -> k - m = n
+Definition nat_moveR_nV {n m} k : n = m + k -> n - k = m
   := fun p => (nat_moveL_nV _ p^)^.
-  
+
 (** Subtracting a successor is the predecessor of subtracting the original number. *)
 Definition nat_sub_succ_r n m : n - m.+1 = nat_pred (n - m).
 Proof.
@@ -832,21 +846,35 @@ Defined.
 
 (** *** Addition lemmas *)
 
+(** The second summand is less than or equal to the sum. *)
+Global Instance leq_add_l n m : n <= m + n.
+Proof.
+  simple_induction m m IH.
+  - exact (leq_refl n).
+  - exact (leq_succ_r IH).
+Defined.
+
 (** The first summand is less than or equal to the sum. *)
-Global Instance leq_add_l n m : n <= n + m.
+Global Instance leq_add_r n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - exact (leq_zero_l m).
   - exact (leq_succ IHn).
 Defined.
 
-(** The second summand is less than or equal to the sum. *)
-Global Instance leq_add_r n m : n <= m + n.
+(** *** Multiplication lemmas *)
+
+(** The second multiplicand is less than or equal to the product. *)
+Global Instance leq_mul_l n m l : l < m -> n <= m * n.
 Proof.
-  simple_induction m m IH.
-  - exact (leq_refl n).
-  - exact (leq_succ_r IH).
+  intros H; induction H; exact _.
 Defined.
+
+(** The first multiplicand is less than or equal to the product. *)
+Global Instance leq_mul_r n m l : l < m -> n <= n * m.
+Proof.
+  rewrite nat_mul_comm; exact _.
+Defined. 
 
 (** Alternative Characterizations of [<=] *)
 
@@ -882,7 +910,7 @@ Proof.
     apply nat_add_sub_l_cancel, p.
   - intros [k p].
     destruct p.
-    apply leq_add_r.
+    apply leq_add_l.
 Defined.
 
 (** *** Dichotomy of [<=] *)
@@ -1074,18 +1102,20 @@ Hint Immediate nat_mul_monotone : typeclass_instances.
 (** *** Strict monotonicity of multiplication *)
 
 (** Multiplication on the left by a positive number is strictly monotone. *)
-Definition nat_mul_l_strictly_monotone {n m} k
-  : n < m -> k.+1 * n < k.+1 * m.
+Definition nat_mul_l_strictly_monotone {n m l} k
+  : l < k -> n < m -> k * n < k * m.
 Proof.
-  intros H; induction k as [|k IHk] in |- *; exact _.
+  destruct k.
+  1: intro; contradiction (not_lt_zero_r _ H).
+  intros _ H; induction k as [|k IHk] in |- *; exact _.
 Defined.
 Hint Immediate nat_mul_l_strictly_monotone : typeclass_instances.
 
 (** Multiplication on the right by a positive number is strictly monotone. *)
-Definition nat_mul_r_strictly_monotone {n m} k
-  : n < m -> n * k.+1 < m * k.+1.
+Definition nat_mul_r_strictly_monotone {n m l} k
+  : l < k -> n < m -> n * k < m * k.
 Proof.
-  intros H; rewrite 2 (nat_mul_comm _ k.+1); exact _.
+  intros ? H; rewrite 2 (nat_mul_comm _ k); exact _.
 Defined.
 Hint Immediate nat_mul_r_strictly_monotone : typeclass_instances.
 
@@ -1116,6 +1146,14 @@ Proof.
 Defined.
 
 (** ** Further properties of subtraction *)
+
+Global Instance leq_sub_l n m : n - m <= n.
+Proof.
+  apply equiv_nat_sub_leq.
+  rewrite nat_sub_comm_r.
+  rewrite nat_sub_cancel.
+  apply nat_sub_zero_l.
+Defined.
 
 (** Subtracting from a successor is the successor of subtracting from the original number, as long as the amount being subtracted is less than or equal to the original number. *)
 Definition nat_sub_succ_l n m : m <= n -> n.+1 - m = (n - m).+1.
@@ -1436,4 +1474,3 @@ Proof.
   - destruct p.
     by apply IH_strong.
 Defined.
-
