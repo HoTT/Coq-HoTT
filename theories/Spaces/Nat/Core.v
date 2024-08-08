@@ -101,6 +101,7 @@ Definition nat_div x y : nat :=
   end.
 Infix "/" := nat_div : nat_scope.
 
+(** [nat_mod x y] is the remainder when [x] is divided by [y].  When [y] is zero, it is defined to be [x]. See [nat_div_mod_spec] and related results below. *)
 Definition nat_mod x y : nat :=
   match y with
   | 0 => x
