@@ -586,6 +586,47 @@ Proof.
   by apply grp_pow_commutes.
 Defined.
 
+(** [grp_pow] commutes with inverses. *)
+Definition grp_pow_inv {G : Group} (n : Int) (g : G)
+  : - grp_pow g n = grp_pow g (- n)%int.
+Proof.
+  induction n.
+  - apply grp_inv_unit.
+  - rewrite int_neg_succ.
+    rhs nrapply grp_pow_pred.
+    rewrite grp_pow_succ.
+    rewrite grp_inv_op.
+    rewrite IHn.
+    symmetry.
+    apply grp_pow_commutes.
+    exact (grp_inv_l _ @ (grp_inv_r _)^).
+  - rewrite <- int_neg_succ.
+    rewrite int_neg_neg in IHn |- *.
+    rewrite int_neg_succ.
+    rhs nrapply grp_pow_succ.
+    rewrite grp_pow_pred.
+    rewrite grp_inv_op, grp_inv_inv.
+    rhs nrapply grp_pow_commutes'.
+    exact (ap (.* g) IHn).
+Defined.
+
+(** [grp_pow] of a multiple is a power of a power. *)
+Definition grp_pow_mul {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n * m)%int = grp_pow (grp_pow g n) m.
+Proof.
+  rewrite int_mul_comm.
+  induction m as [|m IHm|m IHm]; only 1: reflexivity.
+  - rewrite int_mul_succ_l.
+    rewrite grp_pow_succ.
+    lhs nrapply grp_pow_add.
+    exact (ap _ IHm).
+  - rewrite int_mul_pred_l.
+    rewrite grp_pow_pred.
+    lhs nrapply grp_pow_add.
+    nrefine (ap011 _ _^ IHm).
+    nrapply grp_pow_inv.
+Defined.
+
 (** ** The category of Groups *)
 
 (** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
