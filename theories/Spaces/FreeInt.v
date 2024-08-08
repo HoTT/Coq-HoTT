@@ -5,7 +5,7 @@ Require Import Basics Types WildCat.Core Truncations.Core Spaces.Int
 
 (** We can define the integers as the free group on one generator, which we denote [Z1] below. Results from Centralizer.v and Groups.FreeGroup let us show that [Z1] is abelian. *)
 
-(** We define [Z] as the free group with a single generator. *)
+(** We define [Z1] as the free group with a single generator. *)
 Definition Z1 := FreeGroup Unit.
 Definition Z1_gen : Z1 := freegroup_in tt. (* The generator *)
 
