@@ -732,3 +732,46 @@ Proof.
   refine (ap (fun q => equiv_path A A (loopexp q z) a) _).
   apply eissect.
 Defined.
+
+(** ** Converting between integers and naturals *)
+
+Definition int_nat_succ (n : nat)
+  : (n.+1)%int = (n.+1)%nat :> Int.
+Proof.
+  by induction n.
+Defined.
+
+Definition int_nat_add (n m : nat)
+  : (n + m)%int = (n + m)%nat :> Int.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rewrite <- 2 int_nat_succ.
+    rewrite int_add_succ_l.
+    exact (ap _ IHn).
+Defined.
+
+Definition int_nat_sub (n m : nat)
+  : (m <= n)%nat -> (n - m)%int = (n - m)%nat :> Int.
+Proof.
+  intros H.
+  induction H as [|n H IHn].
+  - lhs nrapply int_add_neg_r.
+    by rewrite nat_sub_cancel.
+  - rewrite nat_sub_succ_l; only 2: exact _.
+    rewrite <- 2 int_nat_succ.
+    rewrite int_add_succ_l.
+    exact (ap _ IHn).
+Defined.
+
+Definition int_nat_mul (n m : nat)
+  :  (n * m)%int = (n * m)%nat :> Int.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rewrite <- int_nat_succ.
+    rewrite int_mul_succ_l.
+    rewrite nat_mul_succ_l.
+    rhs_V nrapply int_nat_add.
+    exact (ap _ IHn).
+Defined.
