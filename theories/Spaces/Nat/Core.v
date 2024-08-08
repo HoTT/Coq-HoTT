@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat Basics.Classes
-  Types.Sum Types.Prod Types.Paths Types.Sigma.
+  Types.Sum Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -82,22 +82,22 @@ Fixpoint nat_min n m :=
 
 (** *** Euclidean division *)
 
-(** This division takes time linear in `x` and is tail-recursive. In [nat_divmod x y q u], [x + y.+1 * q + (y - u)] is the quantity being divided and [y] is the predecessor of the divisor.  It will be called with [q] zero and [u] equal to [y], so that [x] is the quantity being divided.  The return value is a pair [(q', u')] with [x + y.+1 * q + (y - u) = y.+1 * q' + (y - u')], as least when [u <= y], as shown in [nat_divmod_spec_helper] below. *)
+(** This division takes time linear in `x` and is tail-recursive. In [nat_div_mod x y q u], [x + y.+1 * q + (y - u)] is the quantity being divided and [y] is the predecessor of the divisor.  It will be called with [q] zero and [u] equal to [y], so that [x] is the quantity being divided.  The return value is a pair [(q', u')] with [x + y.+1 * q + (y - u) = y.+1 * q' + (y - u')], as least when [u <= y], as shown in [nat_div_mod_spec_helper] below. *)
 
-Fixpoint nat_divmod x y q u : nat * nat :=
+Fixpoint nat_div_mod x y q u : nat * nat :=
   match x with
   | 0 => (q , u)
   | S x' =>
     match u with
-    | 0 => nat_divmod x' y (S q) y
-    | S u' => nat_divmod x' y q u'
+    | 0 => nat_div_mod x' y (S q) y
+    | S u' => nat_div_mod x' y q u'
     end
   end.
 
 Definition nat_div x y : nat :=
   match y with
   | 0 => y
-  | S y' => fst (nat_divmod x y' 0 y')
+  | S y' => fst (nat_div_mod x y' 0 y')
   end.
 Infix "/" := nat_div : nat_scope.
 
@@ -105,7 +105,7 @@ Infix "/" := nat_div : nat_scope.
 Definition nat_mod x y : nat :=
   match y with
   | 0 => x
-  | S y' => y' - snd (nat_divmod x y' 0 y')
+  | S y' => y' - snd (nat_div_mod x y' 0 y')
   end.
 Infix "mod" := nat_mod : nat_scope.
 
@@ -701,11 +701,8 @@ Proof.
 Defined.
 
 (** We can move a subtracted number to the right-hand side of an equation. *)
-Definition nat_moveR_nV {n m} k : n = k + m -> n - k = m.
-Proof.
-  rewrite nat_add_comm.
-  exact (fun p => (nat_moveL_nV _ p^)^).
-Defined.
+Definition nat_moveR_nV {n m} k : n = m + k -> n - k = m
+  := fun p => (nat_moveL_nV _ p^)^.
 
 (** Subtracting a successor is the predecessor of subtracting the original number. *)
 Definition nat_sub_succ_r n m : n - m.+1 = nat_pred (n - m).
@@ -1532,6 +1529,7 @@ Proof.
   lhs nrapply nat_dist_sub_r.
   apply nat_moveR_nV.
   lhs nrapply q.
+  lhs nrapply nat_add_comm.
   exact (ap _ p^).
 Defined.
 
@@ -1573,65 +1571,35 @@ Global Instance antisymmetric_divides : AntiSymmetric NatDivides
 
 (** ** Properties of division *)
 
-Local Definition nat_divmod_unique_helper b q1 q2 r1 r2
-  : r1 < b -> r2 < b -> q1 < q2 -> r2 < r1 -> b * q1 + r1 = b * q2 + r2
-    -> q1 = q2 /\ r1 = r2.
+Local Definition nat_div_mod_unique_helper b q1 q2 r1 r2
+  : r1 < b -> r2 < b -> q1 < q2 -> b * q1 + r1 <> b * q2 + r2.
 Proof.
-  intros H1 H2 H3 H4 p.
+  intros H1 H2 H3 p.
   rewrite 2 (nat_add_comm (b * _)) in p.
   apply nat_moveL_nV in p.
-  rewrite nat_sub_l_add_r in p.
-  - rewrite <- nat_dist_sub_l in p.
-    apply nat_moveR_nV in p.
-    symmetry in p.
-    assert (H5 : b <= r1 - r2).
-    { rewrite <- p.
-      snrapply (leq_mul_r _ _ 0).
-      by apply equiv_lt_lt_sub. }
-    apply leq_iff_not_gt in H5. 
-    contradiction H5.
-    rapply lt_moveR_nV.
-  - rapply nat_mul_l_monotone.
+  rewrite nat_sub_l_add_r in p; only 2: rapply nat_mul_l_monotone.
+  rewrite <- nat_dist_sub_l in p.
+  rewrite nat_add_comm in p.
+  apply nat_moveR_nV in p.
+  nrapply (snd (@leq_iff_not_gt b (r1 - r2))).
+  2: exact (lt_leq_lt_trans _ H1).
+  rewrite p.
+  snrapply (leq_mul_r _ _ 0).
+  by apply equiv_lt_lt_sub.
 Defined.
 
 (** Quotients and remainders are uniquely determined. *)
-Definition nat_divmod_unique d q1 q2 r1 r2
+Definition nat_div_mod_unique d q1 q2 r1 r2
   : r1 < d -> r2 < d -> d * q1 + r1 = d * q2 + r2
     -> q1 = q2 /\ r1 = r2.
 Proof.
   intros H1 H2 p.
-  destruct (nat_trichotomy q1 q2) as [[q | q] | q];
-  destruct (nat_trichotomy r1 r2) as [[r | r] | r].
-  - apply (nat_mul_l_strictly_monotone d H1) in q.
-    pose (nat_add_strictly_monotone q r).
-    rewrite p in l.
-    contradiction (lt_irrefl _ l).
-  - destruct r.
-    split; trivial.
-    apply isinj_nat_add_r in p.
-    apply (nat_mul_l_strictly_monotone d H1) in q.
-    rewrite p in q.
-    contradiction (lt_irrefl _ q).
-  - by apply (nat_divmod_unique_helper d).
-  - destruct q.
-    split; trivial.
-    by apply isinj_nat_add_l in p.
-  - by split.
+  destruct (nat_trichotomy q1 q2) as [[q | q] | q].
+  - contradiction (nat_div_mod_unique_helper d q1 q2 r1 r2).
   - split; trivial.
-    destruct q.
+    destruct q. 
     by apply isinj_nat_add_l in p.
-  - rapply (equiv_functor_prod (f:=inverse) (g:=inverse)).
-    by apply (nat_divmod_unique_helper d).
-  - destruct r.
-    split; trivial.
-    apply isinj_nat_add_r in p.
-    apply (nat_mul_l_strictly_monotone d H2) in q.
-    rewrite p in q.
-    contradiction (lt_irrefl _ q).
-  - apply (nat_mul_l_strictly_monotone d H2) in q.
-    pose (nat_add_strictly_monotone q r).
-    rewrite p in l.
-    contradiction (lt_irrefl _ l).
+  - by contradiction (nat_div_mod_unique_helper d q2 q1 r2 r1).
 Defined.
 
 (** Divisibility by a positive natural number is a hprop. *)
@@ -1643,16 +1611,16 @@ Proof.
   rapply path_sigma_hprop.
   destruct H as [|n]; simpl.
   1: exact ((nat_mul_one_r _)^ @ p @ q^ @ nat_mul_one_r _).
-  refine (fst (nat_divmod_unique n.+1 x y 0 0 _ _ _)).
+  refine (fst (nat_div_mod_unique n.+1 x y 0 0 _ _ _)).
   lhs nrapply nat_add_zero_r.
   rhs nrapply nat_add_zero_r.
   rewrite 2 (nat_mul_comm n.+1).
   exact (p @ q^).
 Defined.
 
-(** The quotient-remainder form is invariant under [nat_divmod]. *)
-Definition nat_divmod_spec_helper x y q u (H : u <= y)
-  : let (q', u') := nat_divmod x y q u in
+(** This specifies the behaviour of [nat_div_mod_helper] when [u <= y]. *)
+Definition nat_div_mod_helper_spec x y q u (H : u <= y)
+  : let (q', u') := nat_div_mod x y q u in
      x + y.+1 * q + (y - u) = y.+1 * q' + (y - u') /\ u' <= y.
 Proof.
   intros d r.
@@ -1673,16 +1641,18 @@ Proof.
 Defined.
 
 (** Division and modulo can be put in quotient-remainder form. *)
-Definition nat_divmod_spec x y : x = y * (x / y) + x mod y.
+Definition nat_div_mod_spec x y : x = y * (x / y) + x mod y.
 Proof.
   destruct y as [|y]; only 1: reflexivity.
-  pose proof (p := fst (nat_divmod_spec_helper x y 0 y _)).
+  pose proof (p := fst (nat_div_mod_helper_spec x y 0 y _)).
   by rewrite nat_mul_zero_r, nat_sub_cancel, 2 nat_add_zero_r in p.
 Defined.
 
-Definition nat_divmod_spec' x y : x - y * (x / y) = x mod y.
+Definition nat_div_mod_spec' x y : x - y * (x / y) = x mod y.
 Proof.
-  apply nat_moveR_nV, nat_divmod_spec.
+  apply nat_moveR_nV.
+  rhs nrapply nat_add_comm.
+  apply nat_div_mod_spec.
 Defined.
 
 Definition nat_mod_lt_r' n m r : r < m -> n mod m < m.
@@ -1699,17 +1669,17 @@ Global Instance nat_mod_lt_r n m : 0 < m -> n mod m < m
 (** [n] modulo [m] is less than or equal to [m]. *)
 Global Instance nat_mod_leq_l n m : n mod m <= n.
 Proof.
-  rewrite <- nat_divmod_spec'.
+  rewrite <- nat_div_mod_spec'.
   rapply leq_moveR_nV.
 Defined.
 
 (** Division is unique. *)
 Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : q = x / y
-  := fst (nat_divmod_unique y q (x / y) r (x mod y) _ _ (p @ nat_divmod_spec x y)).
+  := fst (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
 
 (** Modulo is unique. *)
 Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x)  : r = x mod y
-  := snd (nat_divmod_unique y q (x / y) r (x mod y) _ _ (p @ nat_divmod_spec x y)).
+  := snd (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
 
 (** [0] divided by any number is [0]. *)
 Definition nat_div_zero_l n : 0 / n = 0.
@@ -1725,7 +1695,7 @@ Definition nat_div_one_r n : n / 1 = n.
 Proof.
   lhs_V nrapply nat_mul_one_l.
   lhs_V nrapply nat_add_zero_r.
-  symmetry; apply nat_divmod_spec.
+  symmetry; apply nat_div_mod_spec.
 Defined.
 
 (** [n] divided by [n] is [1]. *)
@@ -1795,12 +1765,10 @@ Definition nat_mod_divides n m : 0 < m -> (m | n) -> n mod m = 0.
 Proof.
   intros H [x p].
   destruct p.
-  lhs_V nrapply nat_divmod_spec'.
+  lhs_V nrapply nat_div_mod_spec'.
   pose (nat_div_cancel m H).
   rewrite nat_div_mul_cancel_r; only 2: exact _.
-  apply nat_moveR_nV.
-  rhs nrapply nat_add_zero_r.
-  apply nat_mul_comm.
+  apply nat_moveR_nV, nat_mul_comm.
 Defined.
 
 (** [n] modulo [n] is [0]. *)
@@ -1857,7 +1825,7 @@ Proof.
   unfold nat_gcd; fold nat_gcd.
   set (n' := n.+1) in *.
   split; only 1: exact H2.
-  set (r := m mod n'); rewrite (nat_divmod_spec m n'); unfold r; clear r.
+  set (r := m mod n'); rewrite (nat_div_mod_spec m n'); unfold r; clear r.
   exact _.
 Defined.
 
@@ -1876,7 +1844,7 @@ Proof.
   destruct n; only 1: exact _.
   unfold nat_gcd; fold nat_gcd.
   apply IHn; only 1,3: exact _.
-  rewrite (nat_divmod_spec m n.+1) in H2.
+  rewrite (nat_div_mod_spec m n.+1) in H2.
   apply nat_divides_add_r in H2; exact _.
 Defined.
 
