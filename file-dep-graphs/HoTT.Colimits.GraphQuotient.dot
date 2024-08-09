@@ -1,0 +1,61 @@
+digraph HoTT_Colimits_GraphQuotient {
+  graph [ratio=0.5]
+  node [style=filled]
+GraphQuotient_GraphQuotient_GraphQuotient_ind_beta_gqglue [label="GraphQuotient_ind_beta_gqglue", URL=<GraphQuotient.html#GraphQuotient.GraphQuotient_ind_beta_gqglue>, fillcolor="#FACDEF"] ;
+GraphQuotient_GraphQuotient_GraphQuotient_ind [label="GraphQuotient_ind", URL=<GraphQuotient.html#GraphQuotient.GraphQuotient_ind>, fillcolor="#F070D1"] ;
+GraphQuotient_GraphQuotient_gqglue [label="gqglue", URL=<GraphQuotient.html#GraphQuotient.gqglue>, fillcolor="#FACDEF"] ;
+GraphQuotient_GraphQuotient_gq [label="gq", URL=<GraphQuotient.html#GraphQuotient.gq>, fillcolor="#7FAAFF"] ;
+GraphQuotient_GraphQuotient_GraphQuotient [label="GraphQuotient", URL=<GraphQuotient.html#GraphQuotient.GraphQuotient>, fillcolor="#E2CDFA"] ;
+GraphQuotient_equiv_functor_gq [label="equiv_functor_gq", URL=<GraphQuotient.html#equiv_functor_gq>, peripheries=3, fillcolor="#F070D1"] ;
+GraphQuotient_isequiv_functor_gq [label="isequiv_functor_gq", URL=<GraphQuotient.html#isequiv_functor_gq>, fillcolor="#F070D1"] ;
+GraphQuotient_functor2_gq [label="functor2_gq", URL=<GraphQuotient.html#functor2_gq>, fillcolor="#F070D1"] ;
+GraphQuotient_functor_gq_compose [label="functor_gq_compose", URL=<GraphQuotient.html#functor_gq_compose>, fillcolor="#F070D1"] ;
+GraphQuotient_functor_gq_idmap [label="functor_gq_idmap", URL=<GraphQuotient.html#functor_gq_idmap>, fillcolor="#F070D1"] ;
+GraphQuotient_functor_gq [label="functor_gq", URL=<GraphQuotient.html#functor_gq>, fillcolor="#F070D1"] ;
+GraphQuotient_equiv_gq_flatten [label="equiv_gq_flatten", URL=<GraphQuotient.html#equiv_gq_flatten>, peripheries=3, fillcolor="#F070D1"] ;
+GraphQuotient_flatten_rec_beta_gqglue [label="flatten_rec_beta_gqglue", URL=<GraphQuotient.html#flatten_rec_beta_gqglue>, fillcolor="#F070D1"] ;
+GraphQuotient_flatten_rec [label="flatten_rec", URL=<GraphQuotient.html#flatten_rec>, fillcolor="#F070D1"] ;
+GraphQuotient_flatten_ind [label="flatten_ind", URL=<GraphQuotient.html#flatten_ind>, fillcolor="#F070D1"] ;
+GraphQuotient_equiv_dp_dgraphquotient [label="equiv_dp_dgraphquotient", URL=<GraphQuotient.html#equiv_dp_dgraphquotient>, peripheries=3, fillcolor="#F070D1"] ;
+GraphQuotient_flatten_gqglue [label="flatten_gqglue", URL=<GraphQuotient.html#flatten_gqglue>, fillcolor="#F070D1"] ;
+GraphQuotient_flatten_gq [label="flatten_gq", URL=<GraphQuotient.html#flatten_gq>, fillcolor="#F070D1"] ;
+GraphQuotient_transport_DGraphQuotient [label="transport_DGraphQuotient", URL=<GraphQuotient.html#transport_DGraphQuotient>, fillcolor="#F070D1"] ;
+GraphQuotient_DGraphQuotient [label="DGraphQuotient", URL=<GraphQuotient.html#DGraphQuotient>, fillcolor="#F070D1"] ;
+GraphQuotient_GraphQuotient_rec_beta_gqglue [label="GraphQuotient_rec_beta_gqglue", URL=<GraphQuotient.html#GraphQuotient_rec_beta_gqglue>, fillcolor="#F070D1"] ;
+GraphQuotient_GraphQuotient_rec [label="GraphQuotient_rec", URL=<GraphQuotient.html#GraphQuotient_rec>, fillcolor="#F070D1"] ;
+  GraphQuotient_GraphQuotient_GraphQuotient_ind_beta_gqglue -> GraphQuotient_GraphQuotient_GraphQuotient_ind [] ;
+  GraphQuotient_GraphQuotient_GraphQuotient_ind -> GraphQuotient_GraphQuotient_gqglue [] ;
+  GraphQuotient_GraphQuotient_gqglue -> GraphQuotient_GraphQuotient_gq [] ;
+  GraphQuotient_GraphQuotient_gqglue -> GraphQuotient_GraphQuotient_GraphQuotient [] ;
+  GraphQuotient_equiv_functor_gq -> GraphQuotient_isequiv_functor_gq [] ;
+  GraphQuotient_isequiv_functor_gq -> GraphQuotient_functor2_gq [] ;
+  GraphQuotient_isequiv_functor_gq -> GraphQuotient_functor_gq_compose [] ;
+  GraphQuotient_isequiv_functor_gq -> GraphQuotient_functor_gq_idmap [] ;
+  GraphQuotient_functor2_gq -> GraphQuotient_functor_gq [] ;
+  GraphQuotient_functor2_gq -> GraphQuotient_GraphQuotient_rec_beta_gqglue [] ;
+  GraphQuotient_functor_gq_compose -> GraphQuotient_functor_gq [] ;
+  GraphQuotient_functor_gq_compose -> GraphQuotient_GraphQuotient_rec_beta_gqglue [] ;
+  GraphQuotient_functor_gq_idmap -> GraphQuotient_functor_gq [] ;
+  GraphQuotient_functor_gq_idmap -> GraphQuotient_GraphQuotient_rec_beta_gqglue [] ;
+  GraphQuotient_functor_gq -> GraphQuotient_GraphQuotient_rec [] ;
+  GraphQuotient_equiv_gq_flatten -> GraphQuotient_flatten_rec_beta_gqglue [] ;
+  GraphQuotient_equiv_gq_flatten -> GraphQuotient_flatten_ind [] ;
+  GraphQuotient_flatten_rec_beta_gqglue -> GraphQuotient_flatten_rec [] ;
+  GraphQuotient_flatten_rec_beta_gqglue -> GraphQuotient_flatten_gqglue [] ;
+  GraphQuotient_flatten_rec -> GraphQuotient_transport_DGraphQuotient [] ;
+  GraphQuotient_flatten_ind -> GraphQuotient_flatten_gqglue [] ;
+  GraphQuotient_equiv_dp_dgraphquotient -> GraphQuotient_transport_DGraphQuotient [] ;
+  GraphQuotient_flatten_gqglue -> GraphQuotient_flatten_gq [] ;
+  GraphQuotient_flatten_gqglue -> GraphQuotient_transport_DGraphQuotient [] ;
+  GraphQuotient_flatten_gq -> GraphQuotient_DGraphQuotient [] ;
+  GraphQuotient_transport_DGraphQuotient -> GraphQuotient_DGraphQuotient [] ;
+  GraphQuotient_transport_DGraphQuotient -> GraphQuotient_GraphQuotient_rec_beta_gqglue [] ;
+  GraphQuotient_DGraphQuotient -> GraphQuotient_GraphQuotient_rec [] ;
+  GraphQuotient_GraphQuotient_rec_beta_gqglue -> GraphQuotient_GraphQuotient_GraphQuotient_ind_beta_gqglue [] ;
+  GraphQuotient_GraphQuotient_rec_beta_gqglue -> GraphQuotient_GraphQuotient_rec [] ;
+  GraphQuotient_GraphQuotient_rec -> GraphQuotient_GraphQuotient_GraphQuotient_ind [] ;
+subgraph cluster_GraphQuotient { label="GraphQuotient"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_GraphQuotient_GraphQuotient { label="GraphQuotient"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+GraphQuotient_GraphQuotient_GraphQuotient; GraphQuotient_GraphQuotient_gq; GraphQuotient_GraphQuotient_gqglue; GraphQuotient_GraphQuotient_GraphQuotient_ind; GraphQuotient_GraphQuotient_GraphQuotient_ind_beta_gqglue; };
+GraphQuotient_GraphQuotient_rec; GraphQuotient_GraphQuotient_rec_beta_gqglue; GraphQuotient_DGraphQuotient; GraphQuotient_transport_DGraphQuotient; GraphQuotient_flatten_gq; GraphQuotient_flatten_gqglue; GraphQuotient_equiv_dp_dgraphquotient; GraphQuotient_flatten_ind; GraphQuotient_flatten_rec; GraphQuotient_flatten_rec_beta_gqglue; GraphQuotient_equiv_gq_flatten; GraphQuotient_functor_gq; GraphQuotient_functor_gq_idmap; GraphQuotient_functor_gq_compose; GraphQuotient_functor2_gq; GraphQuotient_isequiv_functor_gq; GraphQuotient_equiv_functor_gq; };
+} /* END */

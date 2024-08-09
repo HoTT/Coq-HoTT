@@ -1,0 +1,349 @@
+<html>
+<head>
+<title>ImpredicativeTruncation.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ImpredicativeTruncation.v</h1>
+
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(* -*- mode: coq; mode: visual-line -*-  *)
+(** * Impredicative truncations. *)
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 3
+Time: 0.026s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import PropResizing.PropResizing.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Be careful about [Import]ing this file!  It defines truncations
+with the same name as those constructed with HITs.  Probably you want
+to use those instead, if you are using HITs. *)
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PropResizing}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition merely@{i j} (A : Type@{i}) : Type@{i}
+    := forall P:Type@{j}, IsHProp P -&gt; (A -&gt; P) -&gt; P.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>   (* requires j &lt; i *)
+
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trm {A} : A -&gt; merely A
+    := fun a P HP f =&gt; f a.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Instance ishprop_merely `{Funext} (A : Type) : IsHProp (merely A).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Definition merely_rec {A : Type@{i}} {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+    : merely A -&gt; P
+    := fun ma =&gt; (equiv_resize_hprop P)^-1
+                 (ma (resize_hprop P) _ (equiv_resize_hprop P o f)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition functor_merely `{Funext} {A B : Type} (f : A -&gt; B)
+    : merely A -&gt; merely B.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srefine (merely_rec (trm o f)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* show what is gained by propositional resizing, without mentioning universe levels *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition typeofid (A : Type) := A -&gt; A.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   
+  Local Definition functor_merely_sameargs `{Funext} {A : Type} (f : typeofid A)
+    : typeofid (merely A) := functor_merely f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* a more informative version using universe levels *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition functor_merely_sameuniv `{Funext} {A B: Type@{i}} (f : A -&gt; B)
+    : merely@{j k} A -&gt; merely@{j k} B:= functor_merely f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>    (* requires i &lt;= j &amp; k &lt; j *)
+
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>End AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Here, we show what goes wrong without propositional resizing. *)
+
+(* the naive definition *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition merely_rec_naive {A : Type@{i}} {P : Type@{j}} {p:IsHProp@{j} P} (f : A -&gt; P)
+  : merely@{i j} A -&gt; P
+  := fun ma =&gt; ma P p f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* the too weak definition *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition functor_merely_weak `{Funext} {A B : Type@{k}} (f : A -&gt; B)
+  : merely@{j k} A -&gt; merely@{k l} B.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* evidently, this requires k&lt;j and l&lt;k *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (merely_rec_naive (trm o f)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* impossible due to universe inconsistency: *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fail Local Definition functor_merely_weak_sameargs `{Funext} {A : Type} (f : typeofid A)
+  : typeofid(merely A) := functor_merely_weak f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The following much weaker definition is possible: *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition functor_merely_weak_sameargs_weak `{Funext} {A : Type} (f : typeofid A)
+  : merely A -&gt; merely A := functor_merely_weak f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* a more general (but still weak) and more informative version using universe levels *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition functor_merely_weak_sameuniv_weak `{Funext} {A B: Type@{i}} (f : A -&gt; B)
+  : merely@{j k} A -&gt; merely@{k l} B:= functor_merely_weak f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* requires i &lt;= j &amp; l &lt; k &lt; j *)
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,28 @@
+digraph HoTT_Algebra_AbGroups_Centralizer {
+  graph [ratio=0.5]
+  node [style=filled]
+Centralizer_abgroup_cyclic_subgroup [label="abgroup_cyclic_subgroup", URL=<Centralizer.html#abgroup_cyclic_subgroup>, peripheries=3, fillcolor="#F070D1"] ;
+Centralizer_commutative_cyclic_subgroup [label="commutative_cyclic_subgroup", URL=<Centralizer.html#commutative_cyclic_subgroup>, fillcolor="#F070D1"] ;
+Centralizer_cyclic_subgroup [label="cyclic_subgroup", URL=<Centralizer.html#cyclic_subgroup>, fillcolor="#F070D1"] ;
+Centralizer_cyclic_subgroup_from_unit [label="cyclic_subgroup_from_unit", URL=<Centralizer.html#cyclic_subgroup_from_unit>, fillcolor="#F070D1"] ;
+Centralizer_centralizer_subgroup [label="centralizer_subgroup", URL=<Centralizer.html#centralizer_subgroup>, peripheries=3, fillcolor="#F070D1"] ;
+Centralizer_issubgroup_centralizer [label="issubgroup_centralizer", URL=<Centralizer.html#issubgroup_centralizer>, fillcolor="#F070D1"] ;
+Centralizer_centralizer_inverse [label="centralizer_inverse", URL=<Centralizer.html#centralizer_inverse>, fillcolor="#F070D1"] ;
+Centralizer_centralizer_sgop [label="centralizer_sgop", URL=<Centralizer.html#centralizer_sgop>, fillcolor="#F070D1"] ;
+Centralizer_centralizer_unit [label="centralizer_unit", URL=<Centralizer.html#centralizer_unit>, fillcolor="#F070D1"] ;
+Centralizer_centralizer [label="centralizer", URL=<Centralizer.html#centralizer>, fillcolor="#F070D1"] ;
+  Centralizer_abgroup_cyclic_subgroup -> Centralizer_commutative_cyclic_subgroup [] ;
+  Centralizer_abgroup_cyclic_subgroup -> Centralizer_cyclic_subgroup [] ;
+  Centralizer_commutative_cyclic_subgroup -> Centralizer_cyclic_subgroup_from_unit [] ;
+  Centralizer_commutative_cyclic_subgroup -> Centralizer_issubgroup_centralizer [] ;
+  Centralizer_cyclic_subgroup -> Centralizer_cyclic_subgroup_from_unit [] ;
+  Centralizer_centralizer_subgroup -> Centralizer_issubgroup_centralizer [] ;
+  Centralizer_issubgroup_centralizer -> Centralizer_centralizer_inverse [] ;
+  Centralizer_issubgroup_centralizer -> Centralizer_centralizer_sgop [] ;
+  Centralizer_issubgroup_centralizer -> Centralizer_centralizer_unit [] ;
+  Centralizer_centralizer_inverse -> Centralizer_centralizer [] ;
+  Centralizer_centralizer_sgop -> Centralizer_centralizer [] ;
+  Centralizer_centralizer_unit -> Centralizer_centralizer [] ;
+subgraph cluster_Centralizer { label="Centralizer"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Centralizer_centralizer; Centralizer_centralizer_unit; Centralizer_centralizer_sgop; Centralizer_centralizer_inverse; Centralizer_issubgroup_centralizer; Centralizer_centralizer_subgroup; Centralizer_cyclic_subgroup_from_unit; Centralizer_cyclic_subgroup; Centralizer_commutative_cyclic_subgroup; Centralizer_abgroup_cyclic_subgroup; };
+} /* END */

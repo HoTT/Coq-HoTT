@@ -1,0 +1,537 @@
+<html>
+<head>
+<title>Hexadecimal.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Hexadecimal.v</h1>
+
+<div class="code" title="File: Hexadecimal.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(************************************************************************)
+(*         *   The Coq Proof Assistant / The Coq Development Team       *)
+(*  v      *         Copyright INRIA, CNRS and contributors             *)
+(* &lt;O___,, * (see version control and CREDITS file for authors &amp; dates) *)
+(*   \VV/  **************************************************************)
+(*    //   *    This file is distributed under the terms of the         *)
+(*         *     GNU Lesser General Public License Version 2.1          *)
+(*         *     (see LICENSE file for the text of the license)         *)
+(************************************************************************)
+ 
+(************************************************************************)
+(* This file has been modified for use in the HoTT library              *)
+(************************************************************************)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 14
+Time: 0.02s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Numerals.Decimal.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Hexadecimal numbers *)
+
+(** These numbers coded in base 16 will be used for parsing and printing
+    other Coq numeral datatypes in an human-readable way.
+    See the [Numeral Notation] command.
+    We represent numbers in base 16 as lists of hexadecimal digits,
+    in big-endian order (most significant digit comes first). *)
+
+(** Unsigned integers are just lists of digits.
+    For instance, sixteen is (D1 (D0 Nil)) *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>Inductive uint : Type0 :=
+ | Nil
+ | D0 (_:uint)
+ | D1 (_:uint)
+ | D2 (_:uint)
+ | D3 (_:uint)
+ | D4 (_:uint)
+ | D5 (_:uint)
+ | D6 (_:uint)
+ | D7 (_:uint)
+ | D8 (_:uint)
+ | D9 (_:uint)
+ | Da (_:uint)
+ | Db (_:uint)
+ | Dc (_:uint)
+ | Dd (_:uint)
+ | De (_:uint)
+ | Df (_:uint).</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Nil] is the number terminator. Taken alone, it behaves as zero,
+    but rather use [D0 Nil] instead, since this form will be denoted
+    as [0], while [Nil] will be printed as [Nil]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation zero := (D0 Nil).</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For signed integers, we use two constructors [Pos] and [Neg]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Variant int : Type0 := Pos (d:uint) | Neg (d:uint).</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For decimal numbers, we use two constructors [Hexadecimal] and
+    [HexadecimalExp], depending on whether or not they are given with an
+    exponent (e.g., 0x1.a2p+01). [i] is the integral part while [f] is
+    the fractional part (beware that leading zeroes do matter). *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Variant hexadecimal : Type0 :=
+ | Hexadecimal (i:int) (f:uint)
+ | HexadecimalExp (i:int) (f:uint) (e:Decimal.int).</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope hex_uint_scope.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope hex_uint_scope with huint.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Bind Scope hex_uint_scope with uint.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope hex_int_scope.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope hex_int_scope with hint.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Bind Scope hex_int_scope with int.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Register uint as num.hexadecimal_uint.type.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Register int as num.hexadecimal_int.type.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Register hexadecimal as num.hexadecimal.type.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+
+Fixpoint nb_digits d :=
+  match d with
+  | Nil =&gt; O
+  | D0 d | D1 d | D2 d | D3 d | D4 d | D5 d | D6 d | D7 d | D8 d | D9 d
+  | Da d | Db d | Dc d | Dd d | De d | Df d =&gt;
+    S (nb_digits d)
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This representation favors simplicity over canonicity.
+    For normalizing numbers, we need to remove head zero digits,
+    and choose our canonical representation of 0 (here [D0 Nil]
+    for unsigned numbers and [Pos (D0 Nil)] for signed numbers). *)
+
+(** [nzhead] removes all head zero digits *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint nzhead d :=
+  match d with
+  | D0 d =&gt; nzhead d
+  | _ =&gt; d
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [unorm] : normalization of unsigned integers *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition unorm d :=
+  match nzhead d with
+  | Nil =&gt; zero
+  | d =&gt; d
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [norm] : normalization of signed integers *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition norm d :=
+  match d with
+  | Pos d =&gt; Pos (unorm d)
+  | Neg d =&gt;
+    match nzhead d with
+    | Nil =&gt; Pos zero
+    | d =&gt; Neg d
+    end
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A few easy operations. For more advanced computations, use the conversions
+    with other Coq numeral datatypes (e.g. Z) and the operations on them. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition opp (d:int) :=
+  match d with
+  | Pos d =&gt; Neg d
+  | Neg d =&gt; Pos d
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For conversions with binary numbers, it is easier to operate
+    on little-endian numbers. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>Fixpoint revapp (d d' : uint) :=
+  match d with
+  | Nil =&gt; d'
+  | D0 d =&gt; revapp d (D0 d')
+  | D1 d =&gt; revapp d (D1 d')
+  | D2 d =&gt; revapp d (D2 d')
+  | D3 d =&gt; revapp d (D3 d')
+  | D4 d =&gt; revapp d (D4 d')
+  | D5 d =&gt; revapp d (D5 d')
+  | D6 d =&gt; revapp d (D6 d')
+  | D7 d =&gt; revapp d (D7 d')
+  | D8 d =&gt; revapp d (D8 d')
+  | D9 d =&gt; revapp d (D9 d')
+  | Da d =&gt; revapp d (Da d')
+  | Db d =&gt; revapp d (Db d')
+  | Dc d =&gt; revapp d (Dc d')
+  | Dd d =&gt; revapp d (Dd d')
+  | De d =&gt; revapp d (De d')
+  | Df d =&gt; revapp d (Df d')
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rev d := revapp d Nil.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition app d d' := revapp (rev d) d'.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition app_int d1 d2 :=
+  match d1 with Pos d1 =&gt; Pos (app d1 d2) | Neg d1 =&gt; Neg (app d1 d2) end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nztail] removes all trailing zero digits and return both the
+    result and the number of removed digits. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>Definition nztail d :=
+  let fix aux d_rev :=
+    match d_rev with
+    | D0 d_rev =&gt; let (r, n) := aux d_rev in pair r (S n)
+    | _ =&gt; pair d_rev O
+    end in
+  let (r, n) := aux (rev d) in pair (rev r) n.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nztail_int d :=
+  match d with
+  | Pos d =&gt; let (r, n) := nztail d in pair (Pos r) n
+  | Neg d =&gt; let (r, n) := nztail d in pair (Neg r) n
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module Little.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Successor of little-endian numbers *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>Fixpoint succ d :=
+  match d with
+  | Nil =&gt; D1 Nil
+  | D0 d =&gt; D1 d
+  | D1 d =&gt; D2 d
+  | D2 d =&gt; D3 d
+  | D3 d =&gt; D4 d
+  | D4 d =&gt; D5 d
+  | D5 d =&gt; D6 d
+  | D6 d =&gt; D7 d
+  | D7 d =&gt; D8 d
+  | D8 d =&gt; D9 d
+  | D9 d =&gt; Da d
+  | Da d =&gt; Db d
+  | Db d =&gt; Dc d
+  | Dc d =&gt; Dd d
+  | Dd d =&gt; De d
+  | De d =&gt; Df d
+  | Df d =&gt; D0 (succ d)
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Doubling little-endian numbers *)
+
+</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 190
+Time: 0.003s">
+<div class="time" style="width: 15%"></div>
+<pre>Fixpoint double d :=
+  match d with
+  | Nil =&gt; Nil
+  | D0 d =&gt; D0 (double d)
+  | D1 d =&gt; D2 (double d)
+  | D2 d =&gt; D4 (double d)
+  | D3 d =&gt; D6 (double d)
+  | D4 d =&gt; D8 (double d)
+  | D5 d =&gt; Da (double d)
+  | D6 d =&gt; Dc (double d)
+  | D7 d =&gt; De (double d)
+  | D8 d =&gt; D0 (succ_double d)
+  | D9 d =&gt; D2 (succ_double d)
+  | Da d =&gt; D4 (succ_double d)
+  | Db d =&gt; D6 (succ_double d)
+  | Dc d =&gt; D8 (succ_double d)
+  | Dd d =&gt; Da (succ_double d)
+  | De d =&gt; Dc (succ_double d)
+  | Df d =&gt; De (succ_double d)
+  end
+
+with succ_double d :=
+  match d with
+  | Nil =&gt; D1 Nil
+  | D0 d =&gt; D1 (double d)
+  | D1 d =&gt; D3 (double d)
+  | D2 d =&gt; D5 (double d)
+  | D3 d =&gt; D7 (double d)
+  | D4 d =&gt; D9 (double d)
+  | D5 d =&gt; Db (double d)
+  | D6 d =&gt; Dd (double d)
+  | D7 d =&gt; Df (double d)
+  | D8 d =&gt; D1 (succ_double d)
+  | D9 d =&gt; D3 (succ_double d)
+  | Da d =&gt; D5 (succ_double d)
+  | Db d =&gt; D7 (succ_double d)
+  | Dc d =&gt; D9 (succ_double d)
+  | Dd d =&gt; Db (succ_double d)
+  | De d =&gt; Dd (succ_double d)
+  | Df d =&gt; Df (succ_double d)
+  end.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Little.</pre>
+</div>
+<div class="code" title="File: Hexadecimal.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

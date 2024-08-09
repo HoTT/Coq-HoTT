@@ -1,0 +1,3680 @@
+<html>
+<head>
+<title>Division.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Division.v</h1>
+
+<div class="code" title="File: Division.v
+Line: 1
+Time: 0.034s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
+  Basics.PathGroupoids Types.Sigma Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Division of natural numbers *)
+
+(** ** Divisibility *)
+
+(** We define divisibility as a relation between natural numbers. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class NatDivides (n m : nat) : Type0 := nat_divides : {k : nat &amp; k * n = m}.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "( n | m )" := (NatDivides n m) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any number divides [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_zero_r n : (n | 0)
+  := (0; idpath).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [1] divides any number. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_one_l n : (1 | n)
+  := (n; nat_mul_one_r _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any number divides itself. Divisibility is a reflexive relation. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_refl n : (n | n)
+  := (1; nat_mul_one_l _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance reflexive_nat_divides : Reflexive NatDivides := nat_divides_refl.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility is transitive. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_divides_trans {n m l} : (n | m) -&gt; (m | l) -&gt; (n | l).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (y * x).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V nrapply nat_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply (ap _ p).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate nat_divides_trans : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance transitive_nat_divides : Transitive NatDivides := @nat_divides_trans.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A left factor divides a product. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_mul_l' n m : (n | n * m)
+  := (m; nat_mul_comm _ _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A right factor divides a product. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_mul_r' n m : (m | n * m)
+  := (n; idpath).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility of the product is implied by divisibility of the left factor. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_mul_l {n m} l : (n | m) -&gt; (n | m * l)
+  := fun H =&gt; nat_divides_trans _ _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility of the product is implied by divisibility of the right factor. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_mul_r {n m} l : (n | m) -&gt; (n | l * m)
+  := fun H =&gt; nat_divides_trans _ _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility of the sum is implied by divisibility of the summands. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_add n m l : (n | m) -&gt; (n | l) -&gt; (n | m + l).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (x + y).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply nat_dist_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [n] divides a sum and the left summand, then [n] divides the right summand. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_divides_add_r n m l : (n | m) -&gt; (n | m + l) -&gt; (n | l).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (y - x).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply nat_dist_sub_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_moveR_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap _ p^).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [n] divides a sum and the right summand, then [n] divides the left summand. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_divides_add_l n m l : (n | l) -&gt; (n | m + l) -&gt; (n | m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_add_comm; apply nat_divides_add_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility of the difference is implied by divisibility of the minuend and subtrahend. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_sub n m l : (n | m) -&gt; (n | l) -&gt; (n | m - l).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (x - y).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply nat_dist_sub_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility implies that the divisor is less than or equal to the dividend. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leq_divides n m : 0 &lt; m -&gt; (n | m) -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 [x p].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, x.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: contradiction (not_lt_zero_r _ H1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 85
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  rapply (leq_mul_l _ _ 0).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility is antisymmetric *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_divides_antisym n m : (n | m) -&gt; (m | n) -&gt; n = m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m; only 1: exact (H2.2^ @ nat_mul_zero_r _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; only 1: exact ((nat_mul_zero_r _)^ @ H1.2).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 93
+Time: 0.006s">
+<div class="time" style="width: 17.647058823529%"></div>
+<pre>
+  snrapply leq_antisym; nrapply leq_divides; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance antisymmetric_divides : AntiSymmetric NatDivides
+  := nat_divides_antisym.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of division *)
+
+</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition nat_div_mod_unique_helper b q1 q2 r1 r2
+  : r1 &lt; b -&gt; r2 &lt; b -&gt; q1 &lt; q2 -&gt; b * q1 + r1 &lt;&gt; b * q2 + r2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2 H3 p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 (nat_add_comm (b * _)) in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_moveL_nV in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_sub_l_add_r in p; only 2: rapply nat_mul_l_monotone.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- nat_dist_sub_l in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_add_comm in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_moveR_nV in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply (snd (@leq_iff_not_gt b (r1 - r2))).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact (lt_leq_lt_trans _ H1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply (leq_mul_r _ _ 0).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply equiv_lt_lt_sub.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Quotients and remainders are uniquely determined. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_mod_unique d q1 q2 r1 r2
+  : r1 &lt; d -&gt; r2 &lt; d -&gt; d * q1 + r1 = d * q2 + r2
+    -&gt; q1 = q2 /\ r1 = r2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2 p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nat_trichotomy q1 q2) as [[q | q] | q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (nat_div_mod_unique_helper d q1 q2 r1 r2).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    by apply isinj_nat_add_l in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by contradiction (nat_div_mod_unique_helper d q2 q1 r2 r1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Divisibility by a positive natural number is a hprop. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance ishprop_nat_divides n m : 0 &lt; n -&gt; IsHProp (n | m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 135
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+  rapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H as [|n]; simpl.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact ((nat_mul_one_r _)^ @ p @ q^ @ nat_mul_one_r _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  refine (fst (nat_div_mod_unique n.+1 x y 0 0 _ _ _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs nrapply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 (nat_mul_comm n.+1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p @ q^).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This specifies the behaviour of [nat_div_mod_helper] when [u &lt;= y]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_mod_helper_spec x y q u (H : u &lt;= y)
+  : let (q', u') := nat_div_mod x y q u in
+     x + y.+1 * q + (y - u) = y.+1 * q' + (y - u') /\ u' &lt;= y.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros d r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction x as [|x IHx] in y, q, u, H, d, r |- *; only 1: by split.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct u as [|u].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (IHx y q.+1 y _) as [p H'].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- p, nat_sub_zero_r, nat_sub_cancel, nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite nat_add_succ_r, &lt;- 2 nat_add_assoc, nat_mul_succ_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre> destruct (IHx y q u _) as [p H'].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- p, 2 nat_add_succ_l, &lt;- nat_add_succ_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply ap.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_sub_succ_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nat_succ_pred.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply lt_moveL_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 164
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Division and modulo can be put in quotient-remainder form. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_mod_spec x y : x = y * (x / y) + x mod y.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct y as [|y]; only 1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (p := fst (nat_div_mod_helper_spec x y 0 y _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite nat_mul_zero_r, nat_sub_cancel, 2 nat_add_zero_r in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_div_mod_spec' x y : x - y * (x / y) = x mod y.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_moveR_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs nrapply nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_div_mod_spec.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_mod_lt_r' n m r : r &lt; m -&gt; n mod m &lt; m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 182
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+  intros H; destruct H; only 1: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 183
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  rapply (lt_leq_lt_trans (m:=m)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate nat_mod_lt_r' : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] modulo [m] is less than [m]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_mod_lt_r n m : 0 &lt; m -&gt; n mod m &lt; m
+  := nat_mod_lt_r' n m 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] modulo [m] is less than or equal to [m]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_mod_leq_l n m : n mod m &lt;= n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- nat_div_mod_spec'.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply leq_moveR_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Division is unique. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 197
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>Definition nat_div_unique x y q r (H : r &lt; y) (p : y * q + r = x) : q = x / y
+  := fst (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Modulo is unique. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 200
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>Definition nat_mod_unique x y q r (H : r &lt; y) (p : y * q + r = x)  : r = x mod y
+  := snd (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [0] divided by any number is [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_zero_l n : 0 / n = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by induction n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] divided by [0] is [0] by convention. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_zero_r n : n / 0 = 0 := idpath.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] divided by [1] is [n]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_one_r n : n / 1 = n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V nrapply nat_mul_one_l.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V nrapply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply nat_div_mod_spec.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] divided by [n] is [1]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_cancel n : 0 &lt; n -&gt; n / n = 1.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  intros [|m _]; trivial; symmetry.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 219
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+  nrapply (nat_div_unique _ _ _ 0); only 1: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply nat_mul_one_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n * m] divided by [n] is [m]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_mul_cancel_l n m : 0 &lt; n -&gt; (n * m) / n = m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply (nat_div_unique _ _ _ _ H).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n * m] divided by [n] is [m]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_mul_cancel_r n m : 0 &lt; m -&gt; (n * m) / m = n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_mul_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_div_mul_cancel_l.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When [d] divides [n] and [m], division distributes over addition. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_div_dist n m d
+  : 0 &lt; d -&gt; (d | n) -&gt; (d | m) -&gt; (n + m) / d = n / d + m / d.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- nat_dist_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 244
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  by rewrite 3 nat_div_mul_cancel_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [0] modulo [n] is [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_zero_l n : 0 mod n = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_sub_cancel.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] modulo [0] is [n]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_zero_r n : n mod 0 = n := idpath.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: generalise for all small n *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_one_l n : 1 &lt; n -&gt; 1 mod n = 1.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: contradiction (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; clear H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by induction m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] modulo [1] is [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_one_r n : n mod 1 = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by induction n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [m] divides [n], then [n mod m = 0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_divides n m : 0 &lt; m -&gt; (m | n) -&gt; n mod m = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H [x p].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V nrapply nat_div_mod_spec'.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (nat_div_cancel m H).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_div_mul_cancel_r; only 2: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_moveR_nV, nat_mul_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [n] modulo [n] is [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_mod_cancel n : n mod n = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 284
+Time: 0.019s">
+<div class="time" style="width: 55.882352941176%"></div>
+<pre>
+  snrapply (nat_mod_unique _ _ 1); only 1: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrapply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrapply nat_mul_one_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Greatest Common Divisor *)
+
+(** The greatest common divisor of [0] and a number is the number itself. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_zero_l n : nat_gcd 0 n = n := idpath.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The greatest common divisor of a number and [0] is the number itself. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_zero_r n : nat_gcd n 0 = n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n; simpl; only 1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite nat_sub_cancel.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The greatest common divisor of [1] and any number is [1]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_one_l n : nat_gcd 1 n = 1 := idpath.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The greatest common divisor of any number and [1] is [1]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_one_r n : nat_gcd n 1 = 1.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_sub_succ_l; only 2: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite nat_sub_cancel.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Idempotency. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_idem n : nat_gcd n n = n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold nat_gcd; fold nat_gcd.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite nat_mod_cancel.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can prove that the greatest common divisor of [n] and [m] divides both [n] and [m]. This proof requires strong induction. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_divides_l_gcd n m : (nat_gcd n m | n) /\ (nat_gcd n m | m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n m; snrapply nat_ind_strong; intros n IHn m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: split; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 323
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  destruct (IHn (m mod n.+1) _ n.+1) as [H1 H2].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold nat_gcd; fold nat_gcd.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (n' := n.+1) in *.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; only 1: exact H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (r := m mod n'); rewrite (nat_div_mod_spec m n'); unfold r; clear r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 329
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The greatest common divisor of [n] and [m] divides [n]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
+  := fst (nat_divides_l_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The greatest common divisor of [n] and [m] divides [m]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
+  := snd (nat_divides_l_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+(** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_divides_r_gcd n m p : (p | n) -&gt; (p | m) -&gt; (p | nat_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n m p; snrapply nat_ind_strong; intros n IHn m p H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; only 1: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold nat_gcd; fold nat_gcd.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 342
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  apply IHn; only 1,3: exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (nat_div_mod_spec m n.+1) in H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 344
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  apply nat_divides_add_r in H2; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_divides_r_iff_divides_r_gcd n m p
+  : (p | n) * (p | m) &lt;-&gt; (p | nat_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 350
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  split; [intros [H1 H2] | intros H; split]; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 351
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [p] is divisible by all common divisors of [n] and [m], and [p] is also a common divisor, then it must necesserily be equal to the greatest common divisor. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_unique n m p
+  (H : forall q, (q | n) -&gt; (q | m) -&gt; (q | p))
+  : (p | n) -&gt; (p | m) -&gt; nat_gcd n m = p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 358
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  rapply nat_divides_antisym.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a corollary of uniquness, we get that the greatest common divisor operation is commutative. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_comm n m : nat_gcd n m = nat_gcd m n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 363
+Time: 0.009s">
+<div class="time" style="width: 26.470588235294%"></div>
+<pre>
+  rapply nat_gcd_unique.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 364
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nat_gcd] is associative. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_assoc n m k : nat_gcd n (nat_gcd m k) = nat_gcd (nat_gcd n m) k.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 368
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  nrapply nat_gcd_unique.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 370
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+    rapply nat_divides_r_gcd.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 373
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre> apply nat_divides_r_gcd; rapply nat_divides_trans.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 373
+Time: 0.008s">
+<div class="time" style="width: 23.529411764706%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [nat_gcd n m] is [0], then [n] must also be [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_is_zero_l n m : nat_gcd n m = 0 -&gt; n = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (nat_divides_l_gcd_l n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p^ @ nat_mul_zero_r _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [nat_gcd n m] is [0], then [m] must also be [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_is_zero_r n m : nat_gcd n m = 0 -&gt; m = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 386
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  rewrite nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_gcd_is_zero_l.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 388
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nat_gcd n m] is [0] if and only if both [n] and [m] are [0]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_gcd_zero_iff_zero n m : nat_gcd n m = 0 &lt;-&gt; n = 0 /\ m = 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply (nat_gcd_is_zero_l _ m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply (nat_gcd_is_zero_r n).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [-&gt; -&gt;].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 398
+Time: 0.013s">
+<div class="time" style="width: 38.235294117647%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nat_gcd] is positive for positive inputs. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance nat_gcd_pos n m : 0 &lt; n -&gt; 0 &lt; m -&gt; 0 &lt; nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_not_geq.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H3; hnf in H3.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_zero_leq_zero_r in H3.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 406
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  apply nat_gcd_zero_iff_zero in H3.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H3 as [-&gt;].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (not_lt_zero_r _ H1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 409
+Time: 0.008s">
+<div class="time" style="width: 23.529411764706%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_l_add_r_mul n m k : nat_gcd (n + k * m) m = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 413
+Time: 0.012s">
+<div class="time" style="width: 35.294117647059%"></div>
+<pre>
+  rapply nat_gcd_unique.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros q H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 415
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  rapply nat_divides_r_gcd.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  rapply (nat_divides_add_l _ _ (k * m)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 417
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_r_add_r_mul n m k : nat_gcd n (m + k * n) = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 421
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  lhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 422
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  rhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 423
+Time: 0.006s">
+<div class="time" style="width: 17.647058823529%"></div>
+<pre>
+  nrapply nat_gcd_l_add_r_mul.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 424
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_l_add_r n m : nat_gcd (n + m) m = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 428
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  rhs_V nrapply (nat_gcd_l_add_r_mul n m 1).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite nat_mul_one_l.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 430
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_r_add_r n m : nat_gcd n (m + n) = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 434
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  lhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 435
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  rhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 436
+Time: 0.018s">
+<div class="time" style="width: 52.941176470588%"></div>
+<pre>
+  nrapply nat_gcd_l_add_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 437
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_l_sub n m : m &lt;= n -&gt; nat_gcd (n - m) m = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 442
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+  lhs_V nrapply nat_gcd_l_add_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite (nat_add_sub_l_cancel H).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 444
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_gcd_r_sub n m : n &lt;= m -&gt; nat_gcd n (m - n) = nat_gcd n m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 449
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  lhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 450
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  rhs nrapply nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 451
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+  rapply nat_gcd_l_sub.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 452
+Time: 0.005s">
+<div class="time" style="width: 14.705882352941%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Bezout's Identity *)
+
+(** Bezout's identity states that for any two numbers [n] and [m], their greatest common divisor can be written as a linear combination of [n] and [m]. This is easy to state for the integers, however since we are working with the natural numbers, we need to be more careful. This is why we write the linear combination as [a * n = d + b * m] rather than the usual [a * n + b * m = d]. *)
+
+(** We define a predicate for triples of integers satisfying Bezout's identity. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NatBezout n m d : Type0
+  := exists a b, a * n = d + b * m.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Class NatBezout.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance nat_bezout_refl_l n k : NatBezout n k n.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by exists 1, 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [a * n = 1 + b * m], then the gcd of [n] and [m] is [1]. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_bezout_coprime n m : NatBezout n m 1 -&gt; nat_gcd n m = 1.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a [b p]].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 470
+Time: 0.008s">
+<div class="time" style="width: 23.529411764706%"></div>
+<pre>
+  rapply nat_gcd_unique.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros q H1 H2.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 472
+Time: 0.003s">
+<div class="time" style="width: 8.8235294117647%"></div>
+<pre>
+  rapply (nat_divides_add_l _ _ (b * m)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 474
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_bezout_comm n m d
+  : 0 &lt; m -&gt; NatBezout n m d -&gt; NatBezout m n d.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H [a [b p]].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 480
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  destruct (@equiv_leq_lt_or_eq 0 a _) as [|q].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    rewrite 2 nat_dist_sub_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nat_moveR_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- nat_add_comm, nat_add_assoc, &lt;- (nat_add_comm d).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- nat_sub_l_add_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_mul_r_monotone.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 487
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+      rewrite 2 nat_mul_succ_r.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrapply (leq_trans _ (leq_add_l _ _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 489
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+      rapply (leq_trans _ (leq_add_r _ _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nat_moveL_nV.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply (ap011 nat_add p).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs nrapply nat_mul_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V nrapply nat_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V nrapply nat_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply ap.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V nrapply nat_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs nrapply nat_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nat_mul_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists 0, 0.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 nat_mul_zero_l, nat_add_zero_r in *.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry in p; symmetry.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_nat_add_zero in p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 506
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate nat_bezout_comm : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Instance nat_bezout_pos_l n m : 0 &lt; n -&gt; NatBezout n m (nat_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (k := n + m); assert (p : n + m = k) by reflexivity; clearbody k.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert k n m p; snrapply nat_ind_strong; hnf; intros k IHk n m q H.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Given a sum [n + m], we can always find another pair [n' + m'] equal to that sum such that [n' &lt; m']. This extra hypothesis lets us prove the statement more directly. *)
+ </pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (H' : forall n' m', n + m = n' + m' -&gt; 0 &lt; n' -&gt; n' &lt; m'
+    -&gt; NatBezout n' m' (nat_gcd n' m')).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n' m' p H1 H2; destruct q.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 517
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+    assert (m' &lt; n + m) by (rewrite p; change (0 + m' &lt; n' + m'); exact _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (IHk m' _ n' (m' - n') (nat_add_sub_r_cancel _) _) as [a [b r]].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (a + b), b.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_dist_r, r, nat_dist_sub_l, &lt;- nat_add_assoc.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_add_sub_l_cancel; only 2: rapply nat_mul_l_monotone.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply (ap (fun x =&gt; x + _)).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 523
+Time: 0.011s">
+<div class="time" style="width: 32.352941176471%"></div>
+<pre>
+    rapply nat_gcd_r_sub.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nat_trichotomy n m) as [[l | p] | r].</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply H'.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_gcd_idem; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 529
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre> destruct (@equiv_leq_lt_or_eq 0 m _).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    +</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 530
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre> rewrite nat_gcd_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 530
+Time: 0.015s">
+<div class="time" style="width: 44.117647058824%"></div>
+<pre>
+      rapply nat_bezout_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 531
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+      rapply H'.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite nat_gcd_zero_r; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 535
+Time: 0.02s">
+<div class="time" style="width: 58.823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For strictly positive numbers, we have Bezout's identity in both directions. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_bezout_pos n m
+  : 0 &lt; n -&gt; 0 &lt; m
+  -&gt; NatBezout n m (nat_gcd n m) /\ NatBezout m n (nat_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 541
+Time: 0.008s">
+<div class="time" style="width: 23.529411764706%"></div>
+<pre>
+  intros H1 H2; split; [| apply nat_bezout_comm]; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 542
+Time: 0.023s">
+<div class="time" style="width: 67.647058823529%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For arbitrary natural numbers, we have Bezout's identity in at least one direction. *)</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_bezout n m
+  : NatBezout n m (nat_gcd n m) + NatBezout m n (nat_gcd n m).</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 547
+Time: 0.012s">
+<div class="time" style="width: 35.294117647059%"></div>
+<pre>
+  destruct n; [ right | left ]; exact _.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 548
+Time: 0.016s">
+<div class="time" style="width: 47.058823529412%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Division.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

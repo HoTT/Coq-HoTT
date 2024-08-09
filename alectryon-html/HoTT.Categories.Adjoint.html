@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Adjoint.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Adjunctions *)</span>
+<span class="sd">(** ** Definitions *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="adjoint-v-chkd6" style="display: none" type="checkbox"><label class="alectryon-input" for="adjoint-v-chkd6"><span class="kn">Require</span> Adjoint.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** *** unit+UMP *)</span>
+<span class="sd">(** *** counit+UMP *)</span>
+<span class="sd">(** *** unit+counit+zig+zag *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.UnitCounit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** *** universal morphisms *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.UniversalMorphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** *** hom-set isomorphism *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Hom.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Coercions between various definitions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.UnitCounitCoercions.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.HomCoercions.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Opposite adjunctions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Path spaces of adjunctions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Composition *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Composition.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Pointwise adjunctions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Pointwise.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** ** Functoriality of any adjoint construction *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Functorial.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.UnitCounit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.UniversalMorphisms.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Hom.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.UnitCounitCoercions.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.HomCoercions.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Composition.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Pointwise.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Adjoint.Functorial.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Adjoint.Notations.</span></span></pre>
+</div>
+</div></body>
+</html>

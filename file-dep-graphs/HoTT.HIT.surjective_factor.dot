@@ -1,0 +1,13 @@
+digraph HoTT_HIT_surjective_factor {
+  graph [ratio=0.5]
+  node [style=filled]
+surjective_factor_surjective_factor_pr [label="surjective_factor_pr", URL=<surjective_factor.html#surjective_factor_pr>, peripheries=3, fillcolor="#F070D1"] ;
+surjective_factor_surjective_factor [label="surjective_factor", URL=<surjective_factor.html#surjective_factor>, fillcolor="#F070D1"] ;
+surjective_factor_surjective_factor_aux [label="surjective_factor_aux", URL=<surjective_factor.html#surjective_factor_aux>, fillcolor="#F070D1"] ;
+surjective_factor_ishprop_surjective_factor_aux [label="ishprop_surjective_factor_aux", URL=<surjective_factor.html#ishprop_surjective_factor_aux>, fillcolor="#F070D1"] ;
+  surjective_factor_surjective_factor_pr -> surjective_factor_surjective_factor [] ;
+  surjective_factor_surjective_factor -> surjective_factor_surjective_factor_aux [] ;
+  surjective_factor_surjective_factor_aux -> surjective_factor_ishprop_surjective_factor_aux [] ;
+subgraph cluster_surjective_factor { label="surjective_factor"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+surjective_factor_ishprop_surjective_factor_aux; surjective_factor_surjective_factor_aux; surjective_factor_surjective_factor; surjective_factor_surjective_factor_pr; };
+} /* END */
