@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
-  Basics.PathGroupoids Types.Sigma Spaces.Nat.Core.
+  Basics.PathGroupoids Basics.Equivalences Types.Sigma Spaces.Nat.Core
+  Basics.Decidable Types.Prod List.Theory Types.Sum.
 
 Local Open Scope nat_scope.
 
@@ -314,6 +315,36 @@ Proof.
   apply nat_moveR_nV, nat_mul_comm.
 Defined.
 
+(** [n mod m = 0] is equivalent to [m] dividing [n]. *)
+Definition equiv_nat_mod_divides n m : 0 < m -> n mod m = 0 <~> (m | n) .
+Proof.
+  intros H; srapply equiv_iff_hprop.
+  2: exact (nat_mod_divides _ _ H).
+  intros p.
+  exists (n / m).
+  rewrite nat_mul_comm.
+  lhs_V nrapply nat_add_zero_r.
+  rewrite <- p.
+  symmetry.
+  nrapply nat_div_mod_spec.
+Defined.
+
+(** Divisibility is therefore decidable. *)
+Global Instance decidable_nat_divides n m : Decidable (n | m).
+Proof.
+  destruct m.
+  1: left; exact _.
+  destruct n.
+  { right.
+    intros [x p].
+    apply (neq_nat_zero_succ m).
+    lhs_V nrapply nat_mul_zero_r.
+    exact p. }
+  nrapply decidable_equiv'.
+  1: rapply equiv_nat_mod_divides.
+  exact _.
+Defined.
+
 (** [n] modulo [n] is [0]. *)
 Definition nat_mod_cancel n : n mod n = 0.
 Proof.
@@ -604,3 +635,72 @@ Definition nat_bezout n m
 Proof.
   destruct n; [ right | left ]; exact _.
 Defined.
+
+(** ** Prime Numbers *)
+
+(** A prime number is a number greater than [1] that is only divisible by [1] and itself. *)
+Class IsPrime (n : nat) : Type0 := {
+  gt_one_isprime :: 1 < n;
+  is_prime : forall m, 0 < m -> (m | n) -> (m = 1) + (m = n);
+}.
+
+Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
+
+(** [0] is not a prime number. *)
+Definition not_isprime_zero : ~ IsPrime 0.
+Proof.
+  intros H.
+  rapply not_lt_zero_r.
+Defined.
+
+(** [1] is not a prime number. *)
+Definition not_isprime_one : ~ IsPrime 1.
+Proof.
+  intros H.
+  rapply (lt_irrefl 1).
+Defined.
+
+Global Instance decidable_isprime n : Decidable (IsPrime n).
+Proof.
+  destruct n.
+  1: right; apply not_isprime_zero.
+  destruct n.
+  1: right; apply not_isprime_one.
+  nrapply decidable_equiv'.
+  1: nrapply issig_IsPrime.
+  nrapply decidable_equiv'.
+  1: exact (equiv_sigma_prod0 _ _)^-1%equiv.
+  snrapply decidable_prod.
+  1: exact _.
+  pose (P := fun m => ((m = 1) + (m = n.+2))%type).
+  pose (l := list_filter (seq n.+3) (fun x => ((0 < x)%nat * (x | n.+2))%type) _).
+  snrapply decidable_iff.
+  - exact (for_all P l).
+  - intros Pl x H d.
+    apply inlist_for_all with l x in Pl.
+    1: exact Pl.
+    apply inlist_filter.
+    split; only 2: by split.
+    apply inlist_seq.
+    apply leq_divides in d.
+    1,2: exact _.
+  - intros H.
+    apply for_all_inlist.
+    intros x H'.
+    apply inlist_filter in H'.
+    destruct H' as [p [H' d]].
+    apply inlist_seq in p.
+    rapply H.
+  - exact _.
+Defined.
+
+Global Instance isprime_2 : IsPrime 2 := ltac:(decide).
+Global Instance isprime_3 : IsPrime 3 := ltac:(decide).
+Global Instance isprime_5 : IsPrime 5 := ltac:(decide).
+Global Instance isprime_7 : IsPrime 7 := ltac:(decide).
+Global Instance isprime_11 : IsPrime 11 := ltac:(decide).
+Global Instance isprime_13 : IsPrime 13 := ltac:(decide).
+Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
+Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
+
+Definition Primes : Type0 := {n : nat & IsPrime n}.
