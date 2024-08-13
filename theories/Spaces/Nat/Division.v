@@ -641,7 +641,7 @@ Defined.
 (** A prime number is a number greater than [1] that is only divisible by [1] and itself. *)
 Class IsPrime (n : nat) : Type0 := {
   gt_one_isprime :: 1 < n;
-  is_prime : forall m, 0 < m -> (m | n) -> (m = 1) + (m = n);
+  is_prime : forall m, (m | n) -> (m = 1) + (m = n);
 }.
 
 Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
@@ -660,27 +660,30 @@ Proof.
   rapply (lt_irrefl 1).
 Defined.
 
+(** Being prime is a decidable property. We give an inefficient procedure for determining primality. More efficient procedures can be given, but for proofs this suffices. *)
 Global Instance decidable_isprime n : Decidable (IsPrime n).
 Proof.
+  (** First we begin by discarding the [n = 0] case as we can easily prove that [0] is not prime. *)
   destruct n.
   1: right; apply not_isprime_zero.
-  destruct n.
-  1: right; apply not_isprime_one.
+  (** Next, we rewrite [IsPrime n.+1] as the equivalent sigma type. *)
   nrapply decidable_equiv'.
   1: nrapply issig_IsPrime.
+  (** The condition in the first component in [IsPrime] is clearly decidable, so we can proceed to the second component. *)
   nrapply decidable_equiv'.
   1: exact (equiv_sigma_prod0 _ _)^-1%equiv.
   snrapply decidable_prod.
   1: exact _.
-  pose (P := fun m => ((m = 1) + (m = n.+2))%type).
-  pose (l := list_filter (seq n.+3) (fun x => ((0 < x)%nat * (x | n.+2))%type) _).
+  (** In order to show that this [forall] is decidable, we will exhibit it as a [for_all] statement over a given list. The predicate will be the conclusion we wish to reach here, and the list will consist of all numbers with a condition equivalent to the divisibility condition. *)
+  pose (P := fun m => ((m = 1) + (m = n.+1))%type).
+  pose (l := list_filter (seq n.+2) (fun x => (x | n.+1)) _).
   snrapply decidable_iff.
   - exact (for_all P l).
-  - intros Pl x H d.
+  - intros Pl x d.
     apply inlist_for_all with l x in Pl.
     1: exact Pl.
     apply inlist_filter.
-    split; only 2: by split.
+    split; only 2: assumption.
     apply inlist_seq.
     apply leq_divides in d.
     1,2: exact _.
@@ -688,12 +691,13 @@ Proof.
     apply for_all_inlist.
     intros x H'.
     apply inlist_filter in H'.
-    destruct H' as [p [H' d]].
+    destruct H' as [p H'].
     apply inlist_seq in p.
     rapply H.
   - exact _.
 Defined.
 
+(** We can show that the first 8 primes are prime as expected. *)
 Global Instance isprime_2 : IsPrime 2 := ltac:(decide).
 Global Instance isprime_3 : IsPrime 3 := ltac:(decide).
 Global Instance isprime_5 : IsPrime 5 := ltac:(decide).
@@ -703,4 +707,7 @@ Global Instance isprime_13 : IsPrime 13 := ltac:(decide).
 Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
 Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
 
-Definition Primes : Type0 := {n : nat & IsPrime n}.
+(** We can define the type of prime numbers as a subtype of natural numbers. *)
+Definition Prime : Type0 := {n : nat & IsPrime n}.
+
+Coercion nat_of_prime (p : Prime) : nat := p.1.
