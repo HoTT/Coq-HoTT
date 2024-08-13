@@ -716,3 +716,4 @@ Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide_type (IsPrime 4)).
 Definition Prime : Type0 := {n : nat & IsPrime n}.
 
 Coercion nat_of_prime (p : Prime) : nat := p.1.
+Global Instance isprime_prime (p : Prime) : IsPrime p := p.2.
