@@ -2,6 +2,7 @@ Require Import Basics Types.
 Require Import Spaces.Nat.Core Spaces.Int.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
+Require Import Algebra.Congruence.
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
@@ -43,6 +44,9 @@ Proof.
   lhs nrapply grp_inv_op.
   apply ab_comm.
 Defined.
+
+Definition Build_AbGroup' (G : Type) `(H : IsAbGroup G) : AbGroup
+  := Build_AbGroup (Build_Group G _ _ _ _) _. 
 
 (** ** Paths between abelian groups *)
 
@@ -86,10 +90,11 @@ Defined.
 
 (** ** Quotients of abelian groups *)
 
-Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
-  : IsAbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)).
+Global Instance isabgroup_congruencequotient (G : AbGroup) (R : Relation G)
+  `{!IsCongruence R, !Reflexive R}
+  : IsAbGroup (CongruenceQuotient R).
 Proof.
-  nrapply Build_IsAbGroup.
+  snrapply Build_IsAbGroup.
   1: exact _.
   intro x.
   srapply Quotient_ind_hprop.
@@ -99,6 +104,9 @@ Proof.
   apply (ap (class_of _)).
   apply commutativity.
 Defined.
+
+Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
+  : IsAbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) := _.
 
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
   := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).

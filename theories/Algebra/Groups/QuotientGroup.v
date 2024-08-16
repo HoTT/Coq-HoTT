@@ -115,6 +115,8 @@ Section GroupCongruenceQuotient.
 
 End GroupCongruenceQuotient.
 
+Arguments CongruenceQuotient {G} R.
+
 (** Now we can define the quotient group by a normal subgroup. *)
 
 Section QuotientGroup.

@@ -46,29 +46,58 @@ Defined.
 (** ** Coequalizers *)
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
-Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
-  := ab_cokernel (ab_homo_add g (negate_hom f)).
+Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B) : AbGroup.
+Proof.
+  snrapply Build_AbGroup'.
+  1: exact (CongruenceQuotient (fun x y => exists z, f z + x = g z + y)).
+  4: snrapply isabgroup_congruencequotient.
+  - split; intros x x' y y' [z p] [z' q].
+    exists (z + z').
+    rewrite 2 grp_homo_op.
+    rewrite <- grp_assoc.
+    rewrite (ab_comm _ (x + y)). 
+    rewrite 2 grp_assoc, <- grp_assoc.
+    rewrite (ab_comm y).
+    rewrite p, q.
+    rewrite <- 2 grp_assoc.
+    apply ap.
+    rewrite 2 grp_assoc.
+    apply (ap (+ _)).
+    apply ab_comm.
+  - intros x.
+    exists 0.
+    apply (ap (+ _)).
+    exact (grp_homo_unit _ @ (grp_homo_unit _)^).
+Defined.
 
 Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
-  snrapply grp_quotient_map.
+  snrapply Build_GroupHomomorphism.
+  - exact (class_of _).
+  - intros x y.
+    apply qglue.
+    exists 0.
+    apply (ap (+ _)).
+    exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
 Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
   {C : AbGroup} (i : B $-> C) (p : i $o f $== i $o g) 
   : ab_coeq f g $-> C.
 Proof.
-  snrapply (grp_quotient_rec _ _ i).
-  cbn.
-  intros b H.
-  strip_truncations.
-  destruct H as [a q].
-  destruct q; simpl.
-  lhs nrapply grp_homo_op.
-  lhs nrapply ap.
-  1: apply grp_homo_inv.
-  apply grp_moveL_1M^-1.
-  exact (p a)^.
+  snrapply Build_GroupHomomorphism.
+  - srapply Quotient_rec.
+    + exact i.
+    + simpl.
+      intros x y[z q].
+      apply (ap i) in q.
+      rewrite 2 grp_homo_op in q.
+      specialize (p z); simpl in p.
+      rewrite p in q.
+      by apply grp_cancelL in q.
+  - intros x; rapply Quotient_ind_hprop; intros y; revert x.
+    rapply Quotient_ind_hprop; intros x.
+    apply grp_homo_op.
 Defined.
 
 Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-> B}
