@@ -718,7 +718,7 @@ Defined.
 
 (** *** Filter *)
 
-(** Filter out elements of a list that satisfy a predicate. *)
+(** Produce the list of elements of a list that satisfy a decidable predicate. *)
 Fixpoint list_filter {A : Type} (l : list A) (P : A -> Type)
   (dec : forall x, Decidable (P x))
   : list A
