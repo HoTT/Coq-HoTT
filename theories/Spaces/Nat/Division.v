@@ -318,7 +318,7 @@ Proof.
 Defined.
 
 (** [n mod m = 0] iff [m] divides [n]. *)
-Definition iff_nat_mod_divides n m : n mod m = 0 <-> (m | n) .
+Definition nat_mod_iff_divides n m : n mod m = 0 <-> (m | n) .
 Proof.
   split.
   2: exact (nat_mod_divides _ _).
@@ -331,18 +331,11 @@ Proof.
   nrapply nat_div_mod_spec.
 Defined.
 
-(** For [m > 0], [n mod m = 0] is equivalent to [m] dividing [n]. *)
-Definition equiv_nat_mod_divides n m : 0 < m -> n mod m = 0 <~> (m | n) .
-Proof.
-  intros H; srapply equiv_iff_hprop_uncurried.
-  apply iff_nat_mod_divides.
-Defined.
-
 (** Divisibility is therefore decidable. *)
 Global Instance decidable_nat_divides n m : Decidable (n | m).
 Proof.
   nrapply decidable_iff.
-  1, 2: apply iff_nat_mod_divides.
+  1, 2: apply nat_mod_iff_divides.
   exact _.
 Defined.
 
