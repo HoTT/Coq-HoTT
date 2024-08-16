@@ -1,6 +1,8 @@
 Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
-  Basics.PathGroupoids Types.Sigma Spaces.Nat.Core.
+  Basics.PathGroupoids Basics.Equivalences Types.Sigma Spaces.Nat.Core
+  Basics.Decidable Types.Prod List.Theory Types.Sum.
 
+Local Set Universe Minimization ToSet.
 Local Open Scope nat_scope.
 
 (** * Division of natural numbers *)
@@ -304,14 +306,37 @@ Proof.
 Defined.
 
 (** If [m] divides [n], then [n mod m = 0]. *)
-Definition nat_mod_divides n m : 0 < m -> (m | n) -> n mod m = 0.
+Definition nat_mod_divides n m : (m | n) -> n mod m = 0.
 Proof.
-  intros H [x p].
+  intros [x p].
   destruct p.
+  destruct m.
+  { simpl. apply nat_mul_zero_r. }
   lhs_V nrapply nat_div_mod_spec'.
-  pose (nat_div_cancel m H).
   rewrite nat_div_mul_cancel_r; only 2: exact _.
   apply nat_moveR_nV, nat_mul_comm.
+Defined.
+
+(** [n mod m = 0] iff [m] divides [n]. *)
+Definition nat_mod_iff_divides n m : n mod m = 0 <-> (m | n) .
+Proof.
+  split.
+  2: exact (nat_mod_divides _ _).
+  intros p.
+  exists (n / m).
+  rewrite nat_mul_comm.
+  lhs_V nrapply nat_add_zero_r.
+  rewrite <- p.
+  symmetry.
+  nrapply nat_div_mod_spec.
+Defined.
+
+(** Divisibility is therefore decidable. *)
+Global Instance decidable_nat_divides n m : Decidable (n | m).
+Proof.
+  nrapply decidable_iff.
+  1, 2: apply nat_mod_iff_divides.
+  exact _.
 Defined.
 
 (** [n] modulo [n] is [0]. *)
@@ -604,3 +629,85 @@ Definition nat_bezout n m
 Proof.
   destruct n; [ right | left ]; exact _.
 Defined.
+
+(** ** Prime Numbers *)
+
+(** A prime number is a number greater than [1] that is only divisible by [1] and itself. *)
+Class IsPrime (n : nat) : Type0 := {
+  gt_one_isprime :: 1 < n;
+  isprime : forall m, (m | n) -> (m = 1) + (m = n);
+}.
+
+Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
+
+(** [0] is not a prime number. *)
+Definition not_isprime_zero : ~ IsPrime 0.
+Proof.
+  intros H.
+  rapply not_lt_zero_r.
+Defined.
+
+(** [1] is not a prime number. *)
+Definition not_isprime_one : ~ IsPrime 1.
+Proof.
+  intros H.
+  rapply (lt_irrefl 1).
+Defined.
+
+(** Being prime is a decidable property. We give an inefficient procedure for determining primality. More efficient procedures can be given, but for proofs this suffices. *)
+Global Instance decidable_isprime n : Decidable (IsPrime n).
+Proof.
+  (** First we begin by discarding the [n = 0] case as we can easily prove that [0] is not prime. *)
+  destruct n.
+  1: right; apply not_isprime_zero.
+  (** Next, we rewrite [IsPrime n.+1] as the equivalent sigma type. *)
+  nrapply decidable_equiv'.
+  1: nrapply issig_IsPrime.
+  (** The condition in the first component in [IsPrime] is clearly decidable, so we can proceed to the second component. *)
+  nrapply decidable_equiv'.
+  1: exact (equiv_sigma_prod0 _ _)^-1%equiv.
+  snrapply decidable_prod.
+  1: exact _.
+  (** In order to show that this [forall] is decidable, we will exhibit it as a [for_all] statement over a given list. The predicate will be the conclusion we wish to reach here, and the list will consist of all numbers with a condition equivalent to the divisibility condition. *)
+  pose (P := fun m => ((m = 1) + (m = n.+1))%type).
+  pose (l := list_filter (seq n.+2) (fun x => (x | n.+1)) _).
+  snrapply decidable_iff.
+  - exact (for_all P l).
+  - intros Pl x d.
+    apply inlist_for_all with l x in Pl.
+    1: exact Pl.
+    apply inlist_filter.
+    split; only 2: assumption.
+    apply inlist_seq.
+    apply leq_divides in d.
+    1,2: exact _.
+  - intros H.
+    apply for_all_inlist.
+    intros x H'.
+    apply inlist_filter in H'.
+    destruct H' as [p H'].
+    apply inlist_seq in p.
+    rapply H.
+  - exact _.
+Defined.
+
+(** We can show that the first 8 primes are prime as expected. *)
+Global Instance isprime_2 : IsPrime 2 := ltac:(decide).
+Global Instance isprime_3 : IsPrime 3 := ltac:(decide).
+Global Instance isprime_5 : IsPrime 5 := ltac:(decide).
+Global Instance isprime_7 : IsPrime 7 := ltac:(decide).
+Global Instance isprime_11 : IsPrime 11 := ltac:(decide).
+Global Instance isprime_13 : IsPrime 13 := ltac:(decide).
+Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
+Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
+
+(** Similarly, we can see that other natural numbers are not prime. *)
+Definition not_isprime_0 : not (IsPrime 0) := ltac:(decide).
+Definition not_isprime_1 : not (IsPrime 1) := ltac:(decide).
+Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide).
+
+(** We can define the type of prime numbers as a subtype of natural numbers. *)
+Definition Prime : Type0 := {n : nat & IsPrime n}.
+
+Coercion nat_of_prime (p : Prime) : nat := p.1.
+Global Instance isprime_prime (p : Prime) : IsPrime p := p.2.

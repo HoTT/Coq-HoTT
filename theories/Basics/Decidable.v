@@ -27,8 +27,9 @@ Ltac decide_type A :=
   end.
 
 Ltac decide :=
-  match goal with
+  multimatch goal with
   | [|- ?A] => decide_type A
+  | [|- ~ ?A] => decide_type A
   end.
 
 Definition decidable_true {A : Type} `{Decidable A}
