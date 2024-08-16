@@ -641,7 +641,7 @@ Defined.
 (** A prime number is a number greater than [1] that is only divisible by [1] and itself. *)
 Class IsPrime (n : nat) : Type0 := {
   gt_one_isprime :: 1 < n;
-  is_prime : forall m, (m | n) -> (m = 1) + (m = n);
+  isprime : forall m, (m | n) -> (m = 1) + (m = n);
 }.
 
 Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
@@ -706,6 +706,11 @@ Global Instance isprime_11 : IsPrime 11 := ltac:(decide).
 Global Instance isprime_13 : IsPrime 13 := ltac:(decide).
 Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
 Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
+
+(** Similarly, we can see that other natural numbers are not prime. *)
+Definition not_isprime_0 : not (IsPrime 0) := ltac:(decide_type (IsPrime 0)).
+Definition not_isprime_1 : not (IsPrime 1) := ltac:(decide_type (IsPrime 1)).
+Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide_type (IsPrime 4)).
 
 (** We can define the type of prime numbers as a subtype of natural numbers. *)
 Definition Prime : Type0 := {n : nat & IsPrime n}.
