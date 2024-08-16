@@ -702,9 +702,9 @@ Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
 Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
 
 (** Similarly, we can see that other natural numbers are not prime. *)
-Definition not_isprime_0 : not (IsPrime 0) := ltac:(decide_type (IsPrime 0)).
-Definition not_isprime_1 : not (IsPrime 1) := ltac:(decide_type (IsPrime 1)).
-Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide_type (IsPrime 4)).
+Definition not_isprime_0 : not (IsPrime 0) := ltac:(decide).
+Definition not_isprime_1 : not (IsPrime 1) := ltac:(decide).
+Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide).
 
 (** We can define the type of prime numbers as a subtype of natural numbers. *)
 Definition Prime : Type0 := {n : nat & IsPrime n}.
