@@ -741,24 +741,22 @@ Proof.
   - simpl.
     etransitivity.
     2: { apply iff_equiv.
-      exact ((sum_distrib_r _ _ _)^-1%equiv). }
+         exact ((sum_distrib_r _ _ _)^-1%equiv). }
     destruct (dec a) as [p|p].
     + simpl.
       transitivity ((a = x) + InList x l * P x).
       1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
-      1: split; apply functor_sum; only 2,4: apply idmap.
+      split; apply functor_sum; only 2,4: apply idmap.
       * intros []; by split.
-      * intros [q _]; exact q.
+      * exact fst.
     + etransitivity.
       1: apply IHl.
       apply iff_equiv.
       nrefine (_ oE (sum_empty_l _)^-1%equiv).
       snrapply equiv_functor_sum'.
       2: reflexivity.
-      snrapply equiv_adjointify.
-      1: done.
-      1,2: by intros [[] r].
-      snrapply Empty_ind.
+      symmetry; apply equiv_to_empty.
+      by intros [[] r].
 Defined.
 
 Definition list_filter_app {A : Type} (l l' : list A) (P : A -> Type)
@@ -769,7 +767,7 @@ Proof.
   - reflexivity.
   - simpl; destruct (dec a); trivial.
     simpl; f_ap.
-  Defined.
+Defined.
 
 (** ** Sequences *)
 
@@ -916,13 +914,13 @@ Definition inlist_seq@{} (n : nat) x
   : InList x (seq n) <~> (x < n)%nat.
 Proof.
   simple_induction n n IHn.
-  { apply equiv_inverse.
-    apply equiv_to_empty.
+  { symmetry; apply equiv_to_empty.
     apply not_lt_zero_r. }
   refine (_ oE equiv_transport _ (seq_succ _)).
   nrefine (_ oE (equiv_inlist_app _ _ _)^-1).
-  nrefine (_ oE equiv_functor_sum' IHn _).
-  2: exact (equiv_path_inverse _ _ oE sum_empty_r@{Set Set Set} _).
+  nrefine (_ oE equiv_functor_sum' (B':=x = n) IHn _).
+  2: { simpl.
+       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set Set Set} _). }
   nrefine (_ oE equiv_leq_lt_or_eq^-1).
   rapply equiv_iff_hprop.
 Defined.
