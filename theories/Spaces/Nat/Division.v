@@ -2,6 +2,7 @@ Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
   Basics.PathGroupoids Basics.Equivalences Types.Sigma Spaces.Nat.Core
   Basics.Decidable Types.Prod List.Theory Types.Sum.
 
+Local Set Universe Minimization ToSet.
 Local Open Scope nat_scope.
 
 (** * Division of natural numbers *)
