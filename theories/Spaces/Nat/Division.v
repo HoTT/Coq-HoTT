@@ -305,21 +305,22 @@ Proof.
 Defined.
 
 (** If [m] divides [n], then [n mod m = 0]. *)
-Definition nat_mod_divides n m : 0 < m -> (m | n) -> n mod m = 0.
+Definition nat_mod_divides n m : (m | n) -> n mod m = 0.
 Proof.
-  intros H [x p].
+  intros [x p].
   destruct p.
+  destruct m.
+  { simpl. apply nat_mul_zero_r. }
   lhs_V nrapply nat_div_mod_spec'.
-  pose (nat_div_cancel m H).
   rewrite nat_div_mul_cancel_r; only 2: exact _.
   apply nat_moveR_nV, nat_mul_comm.
 Defined.
 
-(** [n mod m = 0] is equivalent to [m] dividing [n]. *)
-Definition equiv_nat_mod_divides n m : 0 < m -> n mod m = 0 <~> (m | n) .
+(** [n mod m = 0] iff [m] divides [n]. *)
+Definition iff_nat_mod_divides n m : n mod m = 0 <-> (m | n) .
 Proof.
-  intros H; srapply equiv_iff_hprop.
-  2: exact (nat_mod_divides _ _ H).
+  split.
+  2: exact (nat_mod_divides _ _).
   intros p.
   exists (n / m).
   rewrite nat_mul_comm.
@@ -329,19 +330,18 @@ Proof.
   nrapply nat_div_mod_spec.
 Defined.
 
+(** For [m > 0], [n mod m = 0] is equivalent to [m] dividing [n]. *)
+Definition equiv_nat_mod_divides n m : 0 < m -> n mod m = 0 <~> (m | n) .
+Proof.
+  intros H; srapply equiv_iff_hprop_uncurried.
+  apply iff_nat_mod_divides.
+Defined.
+
 (** Divisibility is therefore decidable. *)
 Global Instance decidable_nat_divides n m : Decidable (n | m).
 Proof.
-  destruct m.
-  1: left; exact _.
-  destruct n.
-  { right.
-    intros [x p].
-    apply (neq_nat_zero_succ m).
-    lhs_V nrapply nat_mul_zero_r.
-    exact p. }
-  nrapply decidable_equiv'.
-  1: rapply equiv_nat_mod_divides.
+  nrapply decidable_iff.
+  1, 2: apply iff_nat_mod_divides.
   exact _.
 Defined.
 
