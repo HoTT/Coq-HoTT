@@ -736,7 +736,7 @@ Proof.
     + destruct H1; contradiction.
 Defined.
 
-(** When a prime number divides a multiple, then we know the prime must divide one of the factors. *)
+(** When a prime number divides a multiple, then the prime must divide one of the factors. *)
 Definition nat_divides_prime_l (p : Prime) n m
   : (p | n * m) -> (p | n) + (p | m).
 Proof.
@@ -746,15 +746,15 @@ Proof.
   right.
   apply nat_coprime_iff_not_divides in H.
   destruct (nat_bezout_pos_l p n _) as [x [y q]].
+  destruct H^; clear H.
   destruct d as [d r].
   exists (x * m - y * d).
-  rewrite H in q.
-  rewrite nat_dist_sub_r.
+  lhs nrapply nat_dist_sub_r.
   rewrite <- 2 nat_mul_assoc.
   rewrite <- (nat_mul_comm p).
-  rewrite r.
+  destruct r^; clear r.
   rewrite 2 nat_mul_assoc.
-  rewrite <- nat_dist_sub_r.
+  lhs_V nrapply nat_dist_sub_r.
   rhs_V nrapply nat_mul_one_l.
   apply (ap (fun x => nat_mul x m)).
   apply nat_moveR_nV.
