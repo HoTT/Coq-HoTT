@@ -711,3 +711,52 @@ Definition Prime : Type0 := {n : nat & IsPrime n}.
 
 Coercion nat_of_prime (p : Prime) : nat := p.1.
 Global Instance isprime_prime (p : Prime) : IsPrime p := p.2.
+
+Global Instance lt_zero_prime (p : Prime) : 0 < p
+  := lt_trans _ gt_one_isprime.
+
+(** A prime [p] is coprime to a natural number [n] iff [p] does not divide [n]. *)
+Definition nat_coprime_iff_not_divides (p : Prime) n
+  : nat_gcd p n = 1 <-> ~ (p | n).
+Proof.
+  split.
+  - intros q [d r].
+    destruct r.
+    rewrite (nat_gcd_r_add_r_mul p 0) in q.
+    rewrite nat_gcd_zero_r in q.
+    apply (@neq_iff_lt_or_gt p 1).
+    1: right; exact _.
+    exact q.
+  - intros nd.
+    rapply nat_gcd_unique.
+    intros q H1 H2.
+    apply isprime in H1.
+    destruct H1 as [H1|H1].
+    + destruct H1; exact _.
+    + destruct H1; contradiction.
+Defined.
+
+(** When a prime number divides a multiple, then the prime must divide one of the factors. *)
+Definition nat_divides_prime_l (p : Prime) n m
+  : (p | n * m) -> (p | n) + (p | m).
+Proof.
+  intros d.
+  destruct (dec (p | n)) as [H|H].
+  1: by left.
+  right.
+  apply nat_coprime_iff_not_divides in H.
+  destruct (nat_bezout_pos_l p n _) as [x [y q]].
+  destruct H^; clear H.
+  destruct d as [d r].
+  exists (x * m - y * d).
+  lhs nrapply nat_dist_sub_r.
+  rewrite <- 2 nat_mul_assoc.
+  rewrite <- (nat_mul_comm p).
+  destruct r^; clear r.
+  rewrite 2 nat_mul_assoc.
+  lhs_V nrapply nat_dist_sub_r.
+  rhs_V nrapply nat_mul_one_l.
+  apply (ap (fun x => nat_mul x m)).
+  apply nat_moveR_nV.
+  exact q.
+Defined.
