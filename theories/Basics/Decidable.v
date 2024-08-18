@@ -85,6 +85,13 @@ Proof.
   exact (nnnp (fun np => np p)).
 Defined.
 
+Definition iff_stable P `(Stable P) : ~~P <-> P.
+Proof.
+  split.
+  - apply stable.
+  - exact (fun x f => f x).
+Defined.
+
 (**
   Because [vm_compute] evaluates terms in [PROP] eagerly
   and does not remove dead code we

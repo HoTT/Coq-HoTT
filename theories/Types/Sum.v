@@ -9,6 +9,8 @@ Require Import Types.Bool.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
+
 Generalizable Variables X A B f g n.
 
 Scheme sum_ind := Induction for sum Sort Type.
@@ -682,7 +684,8 @@ Definition equiv_unfunctor_sum {A A' B B' : Type}
 
 (* This is a special property of [sum], of course, not an instance of a general family of facts about types. *)
 
-Definition equiv_sum_symm (A B : Type) : A + B <~> B + A.
+Definition equiv_sum_symm@{u v k | u <= k, v <= k} (A : Type@{u}) (B : Type@{v})
+  : Equiv@{k k} (A + B) (B + A).
 Proof.
   apply (equiv_adjointify
            (fun ab => match ab with inl a => inr a | inr b => inl b end)
@@ -705,27 +708,17 @@ Defined.
 
 (** ** Identity *)
 
-Definition sum_empty_l (A : Type) : Empty + A <~> A.
+Definition sum_empty_l@{u|} (A : Type@{u}) : Equiv@{u u} (Empty + A) A.
 Proof.
-  refine (equiv_adjointify
-       (fun z => match z:Empty+A with
-                   | inl e => match e with end
-                   | inr a => a
-                 end)
-       inr (fun a => 1) _).
-  intros [e|z]; [ elim e | reflexivity ].
+  snrapply equiv_adjointify@{u u}.
+  - intros [e|a]; [ exact (Empty_rec@{u} e) | exact a ].
+  - intros a; exact (inr@{Set u} a).
+  - intro x; exact idpath@{u}.
+  - intros [e|z]; [ elim e | exact idpath@{u}].
 Defined.
 
-Definition sum_empty_r (A : Type) : A + Empty <~> A.
-Proof.
-  refine (equiv_adjointify
-       (fun z => match z : A + Empty with
-                   | inr e => match e with end
-                   | inl a => a
-                 end)
-       inl (fun a => 1) _).
-  intros [z|e]; [ reflexivity | elim e ].
-Defined.
+Definition sum_empty_r@{u} (A : Type@{u}) : Equiv@{u u} (A + Empty) A
+  := equiv_compose'@{u u u} (sum_empty_l A) (equiv_sum_symm@{u Set u} _ _).
 
 (** ** Distributivity *)
 
@@ -965,15 +958,15 @@ Defined.
 (** ** Decidability *)
 
 (** Sums preserve decidability *)
-Global Instance decidable_sum {A B : Type}
-       `{Decidable A} `{Decidable B}
-: Decidable (A + B).
+Global Instance decidable_sum@{u v k | u <= k, v <= k} {A : Type@{u}} {B : Type@{v}}
+  `{Decidable A} `{Decidable B}
+  : Decidable@{k} (A + B).
 Proof.
   destruct (dec A) as [x1|y1].
-  - exact (inl (inl x1)).
-  - destruct (dec B) as [x2|y2].
-    + exact (inl (inr x2)).
-    + apply inr; intros z.
+  - exact (inl@{k k} (inl x1)).
+  - destruct (dec@{v} B) as [x2|y2].
+    + exact (inl@{k k} (inr x2)).
+    + apply inr@{k k}; intros z.
       destruct z as [x1|x2].
       * exact (y1 x1).
       * exact (y2 x2).

@@ -6,6 +6,7 @@ Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable
 Require Import Types.Forall.
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
 
 Generalizable Variables A B C D f g n.
 
@@ -207,6 +208,13 @@ Definition functor_arrow `(f : B -> A) `(g : C -> D)
 Definition not_contrapositive `(f : B -> A)
   : not A -> not B
   := functor_arrow f idmap.
+
+Definition iff_not@{u v k | u <= k, v <= k}
+  (A : Type@{u}) (B : Type@{v})
+  : A <-> B -> iff@{u v k} (~A) (~B).
+Proof.
+  intros e; split; apply not_contrapositive@{_ k}, e.
+Defined.
 
 Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   (h h' : A -> C) (p : h == h')

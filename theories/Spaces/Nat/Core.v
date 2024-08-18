@@ -590,6 +590,7 @@ Hint Immediate leq_lt : typeclass_instances.
 
 Definition lt_trans {n m k} : n < m -> m < k -> n < k
   := fun H1 H2 => leq_lt (lt_leq_lt_trans H1 H2).
+Hint Immediate lt_trans : typeclass_instances.
 
 Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.

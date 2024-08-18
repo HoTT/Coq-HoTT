@@ -719,7 +719,7 @@ Defined.
 (** *** Filter *)
 
 (** Produce the list of elements of a list that satisfy a decidable predicate. *)
-Fixpoint list_filter {A : Type} (l : list A) (P : A -> Type)
+Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
   (dec : forall x, Decidable (P x))
   : list A
   := match l with
@@ -729,33 +729,37 @@ Fixpoint list_filter {A : Type} (l : list A) (P : A -> Type)
         else list_filter l P dec
     end.
 
-Definition inlist_filter {A : Type} (l : list A) (P : A -> Type)
-  (dec : forall x, Decidable (P x)) (x : A)
-  : InList x (list_filter l P dec) <-> InList x l /\ P x.
+Definition inlist_filter@{u v k | u <= k, v <= k} {A : Type@{u}} (l : list A)
+  (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
+  : iff@{k k k} (InList@{k} x (list_filter@{u v} l P dec)) (InList@{u} x l /\ P x).
 Proof.
   simple_list_induction l a l IHl.
   - simpl.
-    symmetry.
-    apply iff_equiv.
-    snrapply prod_empty_l.
+    apply iff_inverse@{k k k}.
+    apply iff_equiv@{k k k}.
+    snrapply prod_empty_l@{k k k}.
   - simpl.
-    etransitivity.
-    2: { apply iff_equiv.
-         exact ((sum_distrib_r _ _ _)^-1%equiv). }
+    nrapply iff_compose@{k k k k k k}.
+    2: { apply iff_inverse@{k k k}.
+         apply iff_equiv@{k k k}.
+         exact (sum_distrib_r@{k k k k k k k k} _ _ _). }
     destruct (dec a) as [p|p].
     + simpl.
-      transitivity ((a = x) + InList x l * P x).
-      1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
-      split; apply functor_sum; only 2,4: apply idmap.
-      * intros []; by split.
+      snrapply iff_compose@{k k k k k k}.
+      1: exact (sum@{k k} (a = x) (prod@{k k} (InList@{u} x l) (P x))).
+      1: split; apply functor_sum@{k k k k}; only 1,3: exact idmap; apply IHl.
+      split; apply functor_sum@{k k k k}; only 2,4: apply idmap.
+      * intros [].
+        exact (idpath, p).
       * exact fst.
-    + etransitivity.
+    + nrapply iff_compose@{k k k k k k}. 
       1: apply IHl.
-      apply iff_equiv.
-      nrefine (_ oE (sum_empty_l _)^-1%equiv).
-      snrapply equiv_functor_sum'.
-      2: reflexivity.
-      symmetry; apply equiv_to_empty.
+      apply iff_inverse@{k k k}.
+      apply iff_equiv@{k k k}.
+      nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
+      snrapply equiv_functor_sum'@{k k k k k k}.
+      2: exact (equiv_idmap@{k}).
+      apply equiv_to_empty@{k}.
       by intros [[] r].
 Defined.
 
@@ -920,7 +924,7 @@ Proof.
   nrefine (_ oE (equiv_inlist_app _ _ _)^-1).
   nrefine (_ oE equiv_functor_sum' (B':=x = n) IHn _).
   2: { simpl.
-       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set Set Set} _). }
+       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set} _). }
   nrefine (_ oE equiv_leq_lt_or_eq^-1).
   rapply equiv_iff_hprop.
 Defined.
@@ -1111,11 +1115,39 @@ Global Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (for_all P l).
 Proof.
-  induction l as [|x l IHl].
-  - exact (inl tt).
-  - destruct IHl as [Hl | Hl].
-    + destruct (dec (P x)) as [Hx | Hx].
-      * exact (inl (Hx, Hl)).
-      * exact (inr (fun H => Hx (fst H))).
-    + exact (inr (fun H => Hl (snd H))).
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+(** If a predicate [P] is decidable then so is [list_exists P]. *)
+Global Instance decidable_list_exists {A : Type} (P : A -> Type)
+  `{forall x, Decidable (P x)} (l : list A)
+  : Decidable (list_exists P l).
+Proof.
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+Definition inlist_list_exists {A : Type} (P : A -> Type) (l : list A)
+  : list_exists P l -> exists (x : A), InList x l /\ P x.
+Proof.
+  simple_list_induction l x l IHl.
+  1: done.
+  simpl.
+  intros [Px | ex].
+  - exists x.
+    by split; [left|].
+  - destruct (IHl ex) as [x' [H Px']].
+    exists x'.
+    by split; [right|].
+Defined.
+
+Definition list_exists_inlist {A : Type} (P : A -> Type) (l : list A)
+  : forall (x : A), InList x l -> P x -> list_exists P l.
+Proof.
+  simple_list_induction l x l IHl.
+  1: trivial.
+  simpl; intros y H p; revert H.
+  apply functor_sum.
+  - exact (fun r => r^ # p).
+  - intros H.
+    by apply (IHl y).
 Defined.
