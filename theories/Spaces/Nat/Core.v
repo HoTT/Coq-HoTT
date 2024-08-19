@@ -487,6 +487,14 @@ Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 Global Instance antisymemtric_geq : AntiSymmetric geq
   := fun _ _ p q => leq_antisym q p.
 
+(** Every natural number is zero or greater than zero. *)
+Definition nat_zero_or_gt_zero n : (0 = n) + (0 < n).
+Proof.
+  induction n as [|n IHn].
+  1: left; reflexivity.
+  right; exact _.
+Defined.
+
 (** Being less than or equal to [0] implies being [0]. *)
 Definition path_zero_leq_zero_r n : n <= 0 -> n = 0.
 Proof.

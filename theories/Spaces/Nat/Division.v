@@ -93,6 +93,20 @@ Proof.
   nrapply nat_dist_sub_r.
 Defined.
 
+(** The divisor is greater than zero when the divident is greater than zero. *)
+Definition gt_zero_divides n m (d : (n | m)) (gt0 : 0 < m)
+  : 0 < n.
+Proof.
+  destruct d as [d H].
+  destruct H.
+  destruct (nat_zero_or_gt_zero n) as [z | s].
+  2: exact s.
+  (* The remaining case is impossible. *)
+  destruct z; cbn in gt0.
+  rewrite nat_mul_zero_r in gt0.
+  exact gt0.
+Defined.
+
 (** Divisibility implies that the divisor is less than or equal to the dividend. *)
 Definition leq_divides n m : 0 < m -> (n | m) -> n <= m.
 Proof.
@@ -100,6 +114,17 @@ Proof.
   destruct p, x.
   1: contradiction (not_lt_zero_r _ H1).
   rapply (leq_mul_l _ _ 0).
+Defined.
+
+(** The divisor is strictly less than the dividend when the other factor is greater than one. *)
+Definition lt_divides n m (d : (n | m)) (gt0 : 0 < m) (gt1 : 1 < d.1)
+  : n < m.
+Proof.
+  rewrite <- d.2.
+  snrapply (lt_leq_lt_trans (m:=1*n)).
+  1: rapply (leq_mul_l _ _ 0).
+  srapply (nat_mul_r_strictly_monotone (l:=0)).
+  rapply (gt_zero_divides n m).
 Defined.
 
 (** Divisibility is antisymmetric *)
@@ -839,7 +864,7 @@ Proof.
       contradiction (not_lt_zero_r d).
 Defined.
 
-(** And since both predicates are decidable, we can show that being not prime is equivalent to being composite. *)
+(** And since [IsComposite] is decidable, we can show that being not prime is equivalent to being composite. *)
 Definition not_isprime_iff_iscomposite@{} n
   : 1 < n -> ~ IsPrime n <-> IsComposite n.
 Proof.
@@ -868,7 +893,7 @@ Proof.
   exact _.
 Defined.
 
-(** For any given natural number, we can write it as a product of primes. *)
+(** Any natural number can either be written as a product of primes or is zero. *)
 Definition prime_factorization@{} n
   : (exists (l : list Prime),
       n = fold_right (fun (p : Prime) n => nat_mul p n) 1 l)
@@ -877,49 +902,21 @@ Proof.
   revert n; snrapply nat_ind_strong; hnf; intros n IHn.
   destruct n.
   1: right; reflexivity.
-  destruct n.
-  { left.
-    exists nil.
-    reflexivity. }
   left.
-  destruct (exists_prime_divisor n.+2 _) as [p H].
-  destruct (dec (H.1 < n.+2)) as [l|l].
-  - destruct (IHn H.1 _) as [[f r]| ].
-    2: { destruct H.
-      simpl in *.
-      destruct p0^.
-      rewrite nat_mul_zero_l in proj2.
-      destruct proj2.
-      contradiction (not_lt_zero_r _ l). }
-    exists (p :: f)%list.
-    simpl; destruct r.
-    symmetry.
-    lhs nrapply nat_mul_comm.
-    exact H.2.
-  - pose proof (divides_divisor _ _ H) as H'.
-    apply leq_divides in H'.
-    2: exact _.
-    apply equiv_leq_lt_or_eq in H'.      
-    destruct H' as [H'|H'].
-    1: contradiction.
-    destruct H as [d r].
-    destruct (dec (0 < d)).
-    + destruct r.
-      simpl in *.
-      rewrite <- H' in l.
-      apply (ap (fun x => x / d)) in H'.
-      rewrite nat_div_cancel in H'.
-      2: exact _.
-      rewrite nat_div_mul_cancel_l in H'.
-      2: exact _.
-      destruct p; cbn in H'.
-      destruct H'.
-      contradiction not_isprime_1.
-    + apply geq_iff_not_lt in n0.
-      apply path_zero_leq_zero_r in n0.
-      destruct n0^.
-      simpl in *.
-      contradiction (neq_nat_zero_succ _ H').
+  destruct n.
+  1: exists nil; reflexivity.
+  destruct (exists_prime_divisor n.+2 _) as [p d].
+  pose proof (l := lt_divides d.1 n.+2 _ _ _).
+  destruct d as [k H].
+  destruct (IHn k l) as [[f r]| ].
+  2: { destruct p0^; clear p0; cbn in H.
+       destruct H.
+       contradiction (not_lt_zero_r _ l). }
+  exists (p :: f)%list.
+  simpl; destruct r.
+  symmetry.
+  lhs nrapply nat_mul_comm.
+  exact H.
 Defined.
 
-(** TODO: show that any two prime factorizations are unique upto permutation of the lists. *)
+(** TODO: show that any two prime factorizations are unique up to permutation of the lists. *)
