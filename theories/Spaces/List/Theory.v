@@ -737,29 +737,29 @@ Proof.
   - simpl.
     apply iff_inverse.
     apply iff_equiv.
-    snrapply prod_empty_l@{k}.
+    snrapply prod_empty_l@{v}.
   - simpl.
-    nrapply iff_compose@{k k k k k k}.
-    2: { apply iff_inverse@{k k k}.
-         apply iff_equiv@{k k k}.
-         exact (sum_distrib_r@{k k k k k k k k} _ _ _). }
+    nrapply iff_compose.
+    2: { apply iff_inverse.
+         apply iff_equiv.
+         exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _). }
     destruct (dec a) as [p|p].
     + simpl.
-      snrapply iff_compose@{k k k k k k}.
-      1: exact (sum@{k k} (a = x) (prod@{k k} (InList@{u} x l) (P x))).
-      1: split; apply functor_sum@{k k k k}; only 1,3: exact idmap; apply IHl.
+      snrapply iff_compose.
+      1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
+      1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
       split; apply functor_sum@{k k k k}; only 2,4: apply idmap.
       * intros [].
         exact (idpath, p).
       * exact fst.
-    + nrapply iff_compose@{k k k k k k}. 
+    + nrapply iff_compose.
       1: apply IHl.
-      apply iff_inverse@{k k k}.
-      apply iff_equiv@{k k k}.
+      apply iff_inverse.
+      apply iff_equiv.
       nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
       snrapply equiv_functor_sum'@{k k k k k k}.
-      2: exact (equiv_idmap@{k}).
-      apply equiv_to_empty@{k}.
+      2: exact equiv_idmap.
+      apply equiv_to_empty.
       by intros [[] r].
 Defined.
 
@@ -997,7 +997,7 @@ Proof.
   by apply for_all_list_map.
 Defined.
 
-(** If a predicate [P] and a prediate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
+(** If a predicate [P] and a predicate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
 Lemma for_all_list_map2 {A B C : Type}
   (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
