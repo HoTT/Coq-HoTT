@@ -393,13 +393,13 @@ Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
 
 Global Instance decidable_prod {A B : Type}
        `{Decidable A} `{Decidable B}
-: Decidable (A * B).
+: Decidable@{k} (A * B).
 Proof.
   destruct (dec A) as [x1|y1]; destruct (dec B) as [x2|y2].
-  - exact (inl (x1,x2)).
-  - apply inr; intros [_ x2]; exact (y2 x2).
-  - apply inr; intros [x1 _]; exact (y1 x1).
-  - apply inr; intros [x1 _]; exact (y1 x1).
+  - exact (inl@{k k} (x1,x2)).
+  - apply inr@{k k}; intros [_ x2]; exact (y2 x2).
+  - apply inr@{k k}; intros [x1 _]; exact (y1 x1).
+  - apply inr@{k k}; intros [x1 _]; exact (y1 x1).
 Defined.
 
 (** Interaction of ap and uncurry *)
