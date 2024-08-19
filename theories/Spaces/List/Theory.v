@@ -731,13 +731,13 @@ Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
 
 Definition inlist_filter@{u v k | u <= k, v <= k} {A : Type@{u}} (l : list A)
   (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
-  : iff@{k k k} (InList@{k} x (list_filter@{u v} l P dec)) (InList@{u} x l /\ P x).
+  : iff@{u k k} (InList x (list_filter l P dec)) (InList x l /\ P x).
 Proof.
   simple_list_induction l a l IHl.
   - simpl.
-    apply iff_inverse@{k k k}.
-    apply iff_equiv@{k k k}.
-    snrapply prod_empty_l@{k k k}.
+    apply iff_inverse.
+    apply iff_equiv.
+    snrapply prod_empty_l@{k}.
   - simpl.
     nrapply iff_compose@{k k k k k k}.
     2: { apply iff_inverse@{k k k}.

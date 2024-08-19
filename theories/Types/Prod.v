@@ -6,6 +6,8 @@ Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
 Require Import Types.Empty.
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
+
 Generalizable Variables X A B f g n.
 
 Scheme prod_ind := Induction for prod Sort Type.
@@ -300,11 +302,11 @@ Defined.
 
 (** ** Unit and annihilation *)
 
-Definition prod_empty_r X : X * Empty <~> Empty
-  := (Build_Equiv _ _ snd _).
+Definition prod_empty_r@{u} (X : Type@{u}) : X * Empty <~> Empty
+  := (Build_Equiv@{u u} _ _ snd _).
 
-Definition prod_empty_l X : Empty * X <~> Empty
-  := (Build_Equiv _ _ fst _).
+Definition prod_empty_l@{u} (X : Type@{u}) : Empty * X <~> Empty
+  := (Build_Equiv@{u u} _ _ fst _).
 
 Definition prod_unit_r X : X * Unit <~> X.
 Proof.
