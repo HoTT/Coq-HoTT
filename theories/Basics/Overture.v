@@ -536,6 +536,9 @@ Notation "f ^-1" := (@equiv_inv _ _ f _) : function_scope.
 Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
   := ap10 (ap equiv_fun h).
 
+Coercion iff_equiv {A B : Type} (f : A <~> B)
+  : A <-> B := (equiv_fun f, f^-1).
+
 (** ** Contractibility and truncation levels *)
 
 (** Truncation measures how complicated a type is.  In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
