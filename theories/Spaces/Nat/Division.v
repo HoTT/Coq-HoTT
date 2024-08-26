@@ -802,18 +802,10 @@ Class IsComposite n : Type0
 (** Being composite is a decidable property. *)
 Global Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
 Proof.
-  rapply (decidable_iff (A := list_exists (fun a => 1 < a < n /\ (a | n)) (seq n))).
-  split.
-  - intros x.
-    apply inlist_list_exists in x.
-    exists x.1.
-    exact (snd x.2).
-  - intros c.
-    snrapply list_exists_inlist.
-    + exact c.1.
-    + apply inlist_seq.
-      exact (snd (fst c.2)).
-    + exact c.2.
+  unfold IsComposite.
+  rapply (decidable_exists_nat n).
+  intros k c.
+  exact (snd (fst c)).
 Defined.
 
 (** For a number larger than [1], being prime is equivalent to not being composite. *)

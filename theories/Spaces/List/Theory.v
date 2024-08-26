@@ -1151,3 +1151,31 @@ Proof.
   - intros H.
     by apply (IHl y).
 Defined.
+
+Definition list_exists_seq {n : nat} (P : nat -> Type)
+  (H : forall k, P k -> (k < n)%nat)
+  : (exists k, P k) <-> list_exists P (seq n).
+Proof.
+  split.
+  - intros [k p].
+    snrapply (list_exists_inlist P _ k _ p).
+    apply inlist_seq, H.
+    exact p.
+  - intros H1.
+    apply inlist_list_exists in H1.
+    destruct H1 as [k [Hk p]].
+    exists k.
+    exact p.
+Defined.
+
+(** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)
+Definition decidable_exists_nat (n : nat) (P : nat -> Type)
+  (H1 : forall k, P k -> (k < n)%nat)
+  (H2 : forall k, Decidable (P k))
+  : Decidable (exists k, P k).
+Proof.
+  nrapply decidable_iff.
+  1: apply iff_inverse; nrapply list_exists_seq.
+  1: exact H1.
+  exact _.
+Defined.
