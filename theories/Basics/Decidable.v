@@ -129,21 +129,21 @@ Global Instance decidable_empty : Decidable Empty
 
 (** ** Transfer along equivalences *)
 
-Definition decidable_iff {A B} (f : A -> B) (f' : B -> A)
+Definition decidable_iff {A B} (f : A <-> B)
   : Decidable A -> Decidable B.
 Proof.
   intros [a|na].
-  - exact (inl (f a)).
-  - exact (inr (fun b => na (f' b))).
+  - exact (inl (fst f a)).
+  - exact (inr (fun b => na (snd f b))).
 Defined.
-
-Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
-  : Decidable A -> Decidable B
-  := decidable_iff f f^-1.
 
 Definition decidable_equiv' (A : Type) {B : Type} (f : A <~> B)
 : Decidable A -> Decidable B
-  := decidable_equiv A f.
+  := decidable_iff f.
+
+Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{!IsEquiv f}
+: Decidable A -> Decidable B
+  := decidable_equiv' _ (Build_Equiv _ _ f _).
 
 Definition decidablepaths_equiv
            (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}

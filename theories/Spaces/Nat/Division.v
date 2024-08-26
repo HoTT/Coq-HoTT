@@ -368,7 +368,7 @@ Defined.
 Global Instance decidable_nat_divides n m : Decidable (n | m).
 Proof.
   nrapply decidable_iff.
-  1, 2: apply nat_mod_iff_divides.
+  1: apply nat_mod_iff_divides.
   exact _.
 Defined.
 
@@ -704,8 +704,8 @@ Proof.
   (** In order to show that this [forall] is decidable, we will exhibit it as a [for_all] statement over a given list. The predicate will be the conclusion we wish to reach here, and the list will consist of all numbers with a condition equivalent to the divisibility condition. *)
   pose (P := fun m => ((m = 1) + (m = n.+1))%type : Type0).
   pose (l := list_filter (seq n.+2) (fun x => (x | n.+1)) _).
-  snrapply decidable_iff.
-  - exact (for_all P l).
+  rapply (decidable_iff (A := for_all P l)).
+  split.
   - intros Pl x d.
     apply inlist_for_all with l x in Pl.
     1: exact Pl.
@@ -721,7 +721,6 @@ Proof.
     destruct H' as [p H'].
     apply inlist_seq in p.
     rapply H.
-  - exact _.
 Defined.
 
 (** We can show that the first 8 primes are prime as expected. *)
@@ -803,8 +802,8 @@ Class IsComposite n : Type0
 (** Being composite is a decidable property. *)
 Global Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
 Proof.
-  snrapply decidable_iff.
-  - exact (list_exists (fun a => 1 < a < n /\ (a | n)) (seq n)).
+  rapply (decidable_iff (A := list_exists (fun a => 1 < a < n /\ (a | n)) (seq n))).
+  split.
   - intros x.
     apply inlist_list_exists in x.
     exists x.1.
@@ -815,7 +814,6 @@ Proof.
     + apply inlist_seq.
       exact (snd (fst c.2)).
     + exact c.2.
-  - exact _.
 Defined.
 
 (** For a number larger than [1], being prime is equivalent to not being composite. *)
