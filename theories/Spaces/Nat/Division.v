@@ -815,6 +815,13 @@ Defined.
 Class IsComposite n : Type0
   := iscomposite : exists a, 1 < a < n /\ (a | n).
 
+Definition gt_1_iscomposite@{} n : IsComposite n -> 1 < n.
+Proof.
+  intros [k [[H1 H2] H3]].
+  exact _.
+Defined.
+Hint Immediate gt_1_iscomposite : typeclass_instances.
+
 (** Being composite is a decidable property. *)
 Global Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
 Proof.
@@ -826,14 +833,15 @@ Defined.
 
 (** For a number larger than [1], being prime is equivalent to not being composite. *)
 Definition isprime_iff_not_iscomposite@{} n
-  : 1 < n -> IsPrime n <-> ~ IsComposite n.
+  : IsPrime n <-> 1 < n /\ ~ IsComposite n.
 Proof.
-  intros H1.
   split.
-  - intros H [a [[H2 H3] H4]].
+  - intros H.
+    split; only 1: exact _.
+    intros [a [[H2 H3] H4]].
     apply isprime in H4.
     destruct H4 as [H4|H4]; destruct H4; exact (lt_irrefl _ _).
-  - intros H.
+  - intros [H1 H].
     rapply Build_IsPrime.
     intros m d.
     destruct (dec (1 < d.1)) as [H2|H2].
@@ -872,14 +880,28 @@ Defined.
 
 (** And since [IsComposite] is decidable, we can show that being not prime is equivalent to being composite. *)
 Definition not_isprime_iff_iscomposite@{} n
-  : 1 < n -> ~ IsPrime n <-> IsComposite n.
+  : 1 < n /\ ~ IsPrime n <-> IsComposite n.
 Proof.
-  intros H.
   nrapply iff_compose.
-  2: rapply iff_stable.
-  nrapply iff_not.
-  apply isprime_iff_not_iscomposite.
-  exact H.
+  - nrapply iff_functor_prod.
+    1: nrapply iff_refl.
+    nrapply iff_compose.
+    + apply iff_not.
+      rapply isprime_iff_not_iscomposite.
+    + rapply iff_not_prod.
+  - nrapply iff_compose.
+    1: nrapply sum_distrib_l.
+    nrapply iff_compose.
+    + nrapply iff_functor_sum.
+      1: apply iff_contradiciton.
+      nrapply iff_functor_prod.
+      1: nrapply iff_refl.
+      rapply iff_stable.
+    + nrapply iff_compose.
+      1: rapply sum_empty_l.
+      split; only 1: exact snd.
+      intros H; split; only 2: exact H.
+      exact _.
 Defined.
 
 (** ** Fundamental theorem of arithmetic *)
@@ -891,9 +913,9 @@ Proof.
   revert n; snrapply nat_ind_strong; hnf; intros n IHn H.
   destruct (dec (IsPrime n)) as [x|x].
   1: exists (_; x); exact _.
-  apply not_isprime_iff_iscomposite in x.
-  2: exact _.
-  destruct x as [d [[H1 H2] H3]].
+  pose (r := (H, x)).
+  apply not_isprime_iff_iscomposite in r.
+  destruct r as [d [[H1 H2] H3]].
   destruct (IHn d _ _) as [p r].
   exists p.
   exact _.

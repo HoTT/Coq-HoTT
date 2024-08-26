@@ -239,8 +239,11 @@ Global Instance symmetric_iff : Symmetric iff | 1
   := @iff_inverse.
 
 (** And reflexivity of them *)
+Definition iff_refl {A} : A <-> A
+  := (idmap , idmap).
+
 Global Instance iff_reflexive : Reflexive iff | 1
-  := fun A => (idmap , idmap).
+  := @iff_refl.
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).

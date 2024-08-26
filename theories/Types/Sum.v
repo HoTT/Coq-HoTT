@@ -605,6 +605,10 @@ Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 : A + B <~> A' + B
   := f +E 1.
 
+Definition iff_functor_sum {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
+  : A + B <-> A' + B'
+  := (functor_sum (fst f) (fst g), functor_sum (snd f) (snd g)).
+
 (** ** Unfunctoriality on equivalences *)
 
 Global Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
@@ -725,17 +729,14 @@ Definition sum_empty_r@{u} (A : Type@{u}) : Equiv@{u u} (A + Empty) A
 Definition sum_distrib_l A B C
 : A * (B + C) <~> (A * B) + (A * C).
 Proof.
-  refine (Build_Equiv (A * (B + C)) ((A * B) + (A * C))
-            (fun abc => let (a,bc) := abc in
-                        match bc with
-                          | inl b => inl (a,b)
-                          | inr c => inr (a,c)
-                        end) _).
-  simple refine (Build_IsEquiv (A * (B + C)) ((A * B) + (A * C)) _
-            (fun ax => match ax with
-                         | inl (a,b) => (a,inl b)
-                         | inr (a,c) => (a,inr c)
-                       end) _ _ _).
+  snrapply Build_Equiv.
+  2: snrapply Build_IsEquiv.
+  - intros [a [b|c]].
+    + exact (inl@{u u} (a, b)).
+    + exact (inr@{u u} (a, c)).
+  - intros [[a b]|[a c]].
+    + exact (a, inl@{u u} b).
+    + exact (a, inr@{u u} c).
   - intros [[a b]|[a c]]; reflexivity.
   - intros [a [b|c]]; reflexivity.
   - intros [a [b|c]]; reflexivity.
@@ -1041,4 +1042,40 @@ Proof.
                          exact (@isequiv_sum_of_sig _ _)
                        | ].
   typeclasses eauto.
+Defined.
+
+(** ** De Morgan Laws *)
+
+Definition iff_not_sum A B : ~ (A + B) <-> ~ A * ~ B.
+Proof.
+  split.
+  - intros ns.
+    split.
+    + exact (ns o inl).
+    + exact (ns o inr).
+  - intros [na nb] [a|b].
+    + exact (na a).
+    + exact (nb b).
+Defined.
+
+Definition iff_not_prod A B `{Decidable A} `{Decidable B}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec A) as [a|na].
+    + destruct (dec B) as [b|nb].
+      * by contradiction np.
+      * by right.
+    + by left.
+  - intros [na|nb] [a b].
+    + exact (na a).
+    + exact (nb b).
+Defined.
+
+Definition iff_contradiciton A : A * ~A <-> Empty.
+Proof.
+  split.
+  - intros [a na]; exact (na a).
+  - intros e; exact (Empty_rec e).
 Defined.
