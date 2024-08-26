@@ -895,23 +895,20 @@ Defined.
 
 (** Any natural number can either be written as a product of primes or is zero. *)
 Definition prime_factorization@{} n
-  : (exists (l : list Prime),
-      n = fold_right (fun (p : Prime) n => nat_mul p n) 1 l)
-    + (n = 0).
+  : 0 < n
+    -> exists (l : list Prime),
+      n = fold_right (fun (p : Prime) n => nat_mul p n) 1 l.
 Proof.
-  revert n; snrapply nat_ind_strong; hnf; intros n IHn.
-  destruct n.
-  1: right; reflexivity.
-  left.
-  destruct n.
+  revert n; snrapply nat_ind_strong; hnf; intros n IHn H.
+  destruct H as [|n IH].
   1: exists nil; reflexivity.
-  destruct (exists_prime_divisor n.+2 _) as [p d].
-  pose proof (l := lt_divides d.1 n.+2 _ _ _).
+  destruct (exists_prime_divisor n.+1 _) as [p d].
+  pose proof (l := lt_divides d.1 n.+1 _ _ _).
   destruct d as [k H].
-  destruct (IHn k l) as [[f r]| ].
-  2: { destruct p0^; clear p0; cbn in H.
-       destruct H.
-       contradiction (not_lt_zero_r _ l). }
+  destruct (IHn k l) as [f r].
+  { destruct H, k.
+    1: contradiction (lt_irrefl 0).
+    exact _. }
   exists (p :: f)%list.
   simpl; destruct r.
   symmetry.
