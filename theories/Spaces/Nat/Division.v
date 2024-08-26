@@ -673,6 +673,22 @@ Class IsPrime (n : nat) : Type0 := {
 
 Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
 
+Global Instance ishprop_isprime `{Funext} n : IsHProp (IsPrime n).
+Proof.
+  nrapply istrunc_equiv_istrunc.
+  1: apply issig_IsPrime.
+  rapply istrunc_sigma.
+  intros H1.
+  snrapply istrunc_forall.
+  intros m.
+  snrapply istrunc_forall.
+  intros d.
+  rapply ishprop_sum.
+  intros p q.
+  nrapply (snd neq_iff_lt_or_gt _ (p^ @ q)).
+  by left.
+Defined.
+
 (** [0] is not a prime number. *)
 Definition not_isprime_zero : ~ IsPrime 0.
 Proof.
