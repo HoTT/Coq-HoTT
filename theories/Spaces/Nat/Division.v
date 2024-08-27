@@ -57,6 +57,22 @@ Global Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
 Global Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
   := fun H => nat_divides_trans _ _.
 
+(** Multipllication is monotone with respect to divisibility. *)
+Global Instance nat_divides_mul_monotone n m l p
+  : (n | m) -> (l | p) -> (n * l | m * p).
+Proof.
+  intros [x r] [y q].
+  exists (x * y).
+  destruct r, q.
+  lhs nrapply nat_mul_assoc.
+  rhs nrapply nat_mul_assoc.
+  nrapply (ap (fun x => nat_mul x _)).
+  lhs_V nrapply nat_mul_assoc.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  apply nat_mul_comm.
+Defined.
+
 (** Divisibility of the sum is implied by divisibility of the summands. *)
 Global Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
 Proof.
@@ -347,6 +363,34 @@ Proof.
   snrapply (nat_mod_unique _ _ 1); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
+Defined.
+
+(** ** Further Properties of Division *)
+
+(** We can cancel common factors on the left in a division. *)
+Definition nat_div_cancel_mul_l n m k
+  : 0 < k -> 0 < m -> (m | n) -> (k * n) / (k * m) = n / m.
+Proof.
+  intros H1 H2 H3.
+  symmetry.
+  rapply nat_div_unique.
+  rewrite nat_mul_zero_l.
+  lhs nrapply nat_add_zero_r.
+  lhs_V nrapply nat_mul_assoc.
+  apply ap.
+  lhs_V nrapply nat_add_zero_r.
+  symmetry.
+  rewrite <- (nat_mod_divides n m).
+  2: exact _.
+  apply nat_div_mod_spec.
+Defined.
+
+(** We can cancel common factors on the right in a division. *)
+Definition nat_div_cancel_mul_r n m k
+  : 0 < k -> 0 < m -> (m | n) -> (n * k) / (m * k) = n / m.
+Proof.
+  rewrite 2 (nat_mul_comm _ k).
+  apply nat_div_cancel_mul_l.
 Defined.
 
 (** ** Greatest Common Divisor *)
