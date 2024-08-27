@@ -268,12 +268,12 @@ Proof.
 Defined.
 
 (** Division is unique. *)
-Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : q = x / y
-  := fst (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
+Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : x / y = q
+  := fst (nat_div_mod_unique y (x / y) q (x mod y) r _ _ (p @ nat_div_mod_spec x y)^).
 
 (** Modulo is unique. *)
-Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x)  : r = x mod y
-  := snd (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
+Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x) : x mod y = r
+  := snd (nat_div_mod_unique y (x / y) q (x mod y) r _ _ (p @ nat_div_mod_spec x y)^).
 
 (** [0] divided by any number is [0]. *)
 Definition nat_div_zero_l n : 0 / n = 0.
@@ -295,17 +295,24 @@ Defined.
 (** [n] divided by [n] is [1]. *)
 Definition nat_div_cancel n : 0 < n -> n / n = 1.
 Proof.
-  intros [|m _]; trivial; symmetry.
+  intros [|m _]; trivial.
   nrapply (nat_div_unique _ _ _ 0); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
+Defined.
+
+(** A number divided by a larger number is 0. *)
+Definition nat_div_lt n m : n < m -> n / m = 0.
+Proof.
+  intros H.
+  snrapply (nat_div_unique _ _ _ _ H).
+  by rewrite nat_mul_zero_r, nat_add_zero_l.
 Defined.
 
 (** [n * m] divided by [n] is [m]. *)
 Definition nat_div_mul_cancel_l n m : 0 < n -> (n * m) / n = m.
 Proof.
   intros H.
-  symmetry.
   nrapply (nat_div_unique _ _ _ _ H).
   apply nat_add_zero_r.
 Defined.
@@ -392,13 +399,12 @@ Defined.
 Definition nat_mod_cancel n : n mod n = 0.
 Proof.
   destruct n; trivial.
-  symmetry.
   snrapply (nat_mod_unique _ _ 1); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
 Defined.
 
-(** ** Further Properties of Division and Modulo *)
+(** ** Further Properties of division and modulo *)
 
 (** We can cancel common factors on the left in a division. *)
 Definition nat_div_cancel_mul_l n m k
@@ -407,7 +413,7 @@ Proof.
   intro kp.
   destruct (nat_zero_or_gt_zero m) as [[] | mp].
   1: by rewrite nat_mul_zero_r.
-  symmetry; nrapply (nat_div_unique _ _ _ (k * (n mod m))).
+  nrapply (nat_div_unique _ _ _ (k * (n mod m))).
   1: rapply nat_mul_l_strictly_monotone.
   rewrite <- nat_mul_assoc.
   rewrite <- nat_dist_l.
@@ -423,6 +429,48 @@ Proof.
   nrapply nat_div_cancel_mul_l.
 Defined.
 
+(** We can swap the order of division and multiplication on the left under certain conditions. *)
+Definition nat_div_mul_l n m k : (m | n) -> k * (n / m) = (k * n) / m.
+Proof.
+  intros H.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: snrapply nat_mul_zero_r.
+  rapply (nat_div_unique _ _ _ 0 _ _)^.
+  lhs nrapply nat_add_zero_r.
+  lhs nrapply nat_mul_assoc.
+  lhs nrapply (ap (fun x => x * _)).
+  1: nrapply nat_mul_comm.
+  lhs_V nrapply nat_mul_assoc.
+  snrapply ap.
+  lhs_V nrapply nat_add_zero_r.
+  rhs nrapply (nat_div_mod_spec n m).
+  snrapply ap.
+  symmetry.
+  rapply nat_mod_divides.
+Defined.
+
+(** We can swap the order of division and multiplication on the right under certain conditions. *)
+Definition nat_div_mul_r n m k : (m | n) -> (n / m) * k = n * k / m.
+Proof.
+  rewrite 2 (nat_mul_comm _ k).
+  snrapply nat_div_mul_l.
+Defined.
+
+(** Dividing a quotient is the same as dividing by the product of the divisors. *)
+Definition nat_div_div_l n m k : (m * k | n) -> (n / m) / k = n / (m * k).
+Proof.
+  intros H.
+  destruct (nat_zero_or_gt_zero k) as [[] | kp].
+  1: by rewrite nat_mul_zero_r.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: snrapply nat_div_zero_l.
+  rapply (nat_div_unique _ _ _ 0).
+  lhs nrapply nat_add_zero_r.
+  lhs rapply nat_div_mul_l.
+  rewrite nat_mul_comm.
+  rapply nat_div_cancel_mul_r.
+Defined.
+
 (** We can cancel common factors on the left in a modulo. *)
 Definition nat_mod_mul_l n m k
   : (k * n) mod (k * m) = k * (n mod m).
@@ -431,7 +479,7 @@ Proof.
   1: reflexivity.
   destruct (nat_zero_or_gt_zero m) as [[] | mp].
   1: by rewrite nat_mul_zero_r.
-  symmetry; apply (nat_mod_unique _ _ (n / m)).
+  apply (nat_mod_unique _ _ (n / m)).
   1: rapply nat_mul_l_strictly_monotone.
   rewrite <- nat_mul_assoc.
   rewrite <- nat_dist_l.
