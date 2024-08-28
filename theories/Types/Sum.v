@@ -1043,33 +1043,3 @@ Proof.
                        | ].
   typeclasses eauto.
 Defined.
-
-(** ** De Morgan Laws *)
-
-Definition iff_not_sum A B : ~ (A + B) <-> ~ A * ~ B.
-Proof.
-  split.
-  - intros ns.
-    exact (ns o inl, ns o inr).
-  - nrapply sum_ind_uncurried.
-Defined.
-
-Definition iff_not_prod A B `{Decidable A} `{Decidable B}
-  : ~ (A * B) <-> ~ A + ~ B.
-Proof.
-  split.
-  - intros np.
-    destruct (dec A) as [a|na].
-    + exact (inr (fun b => np (a, b))).
-    + exact (inl na).
-  - intros [na|nb] [a b].
-    + exact (na a).
-    + exact (nb b).
-Defined.
-
-Definition iff_contradiction A : A * ~A <-> Empty.
-Proof.
-  split.
-  - intros [a na]; exact (na a).
-  - intros e; exact (Empty_rec e).
-Defined.
