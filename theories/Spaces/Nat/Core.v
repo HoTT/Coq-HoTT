@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat
-  Basics.Classes Types.Prod Types.Sum Types.Sigma.
+  Basics.Classes Basics.Iff Types.Prod Types.Sum Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.

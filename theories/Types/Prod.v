@@ -2,7 +2,7 @@
 (** * Theorems about cartesian products *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
-               Basics.Tactics Basics.Trunc Basics.Decidable.
+               Basics.Tactics Basics.Trunc Basics.Decidable Basics.Iff.
 Require Import Types.Empty.
 Local Open Scope path_scope.
 

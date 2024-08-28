@@ -3,7 +3,8 @@ Require Import
   Basics.Overture
   Basics.PathGroupoids
   Basics.Trunc
-  Basics.Tactics.
+  Basics.Tactics
+  Basics.Iff.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -267,4 +268,17 @@ Proof.
   - elim (nd' d).
   - elim (nd d').
   - apply ap, path_forall; intros p; elim (nd p).
+Defined.
+
+Definition iff_not_prod A B `{Decidable A} `{Decidable B}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec A) as [a|na].
+    + exact (inr (fun b => np (a, b))).
+    + exact (inl na).
+  - intros [na|nb] [a b].
+    + exact (na a).
+    + exact (nb b).
 Defined.
