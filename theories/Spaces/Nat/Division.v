@@ -817,7 +817,7 @@ Class IsComposite n : Type0
 
 Definition gt_1_iscomposite@{} n : IsComposite n -> 1 < n.
 Proof.
-  intros [k [[H1 H2] H3]].
+  intros [a [[H1 H2] H3]].
   exact _.
 Defined.
 Hint Immediate gt_1_iscomposite : typeclass_instances.
