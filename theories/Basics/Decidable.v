@@ -270,6 +270,11 @@ Proof.
   - apply ap, path_forall; intros p; elim (nd p).
 Defined.
 
+(** ** Logical Laws *)
+
+(** Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. *)
+
+(** Here we give the dual De Morgan Law which complements the one given in Iff.v *)
 Definition iff_not_prod A B `{Decidable A} `{Decidable B}
   : ~ (A * B) <-> ~ A + ~ B.
 Proof.

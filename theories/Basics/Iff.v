@@ -41,8 +41,9 @@ Global Instance transitive_iff : Transitive iff | 1
 Coercion iff_equiv {A B : Type} (f : A <~> B)
   : A <-> B := (equiv_fun f, f^-1).
 
-(** ** De Morgan Laws *)
+(** ** Logical Laws *)
 
+(** De Morgan Law, the dual statement about negating a product appears in Decidable.v due to decidability requirements. *)
 Definition iff_not_sum A B : ~ (A + B) <-> ~ A * ~ B.
 Proof.
   split.
