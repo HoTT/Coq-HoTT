@@ -1050,12 +1050,8 @@ Definition iff_not_sum A B : ~ (A + B) <-> ~ A * ~ B.
 Proof.
   split.
   - intros ns.
-    split.
-    + exact (ns o inl).
-    + exact (ns o inr).
-  - intros [na nb] [a|b].
-    + exact (na a).
-    + exact (nb b).
+    exact (ns o inl, ns o inr).
+  - nrapply sum_ind_uncurried.
 Defined.
 
 Definition iff_not_prod A B `{Decidable A} `{Decidable B}
@@ -1064,10 +1060,8 @@ Proof.
   split.
   - intros np.
     destruct (dec A) as [a|na].
-    + destruct (dec B) as [b|nb].
-      * by contradiction np.
-      * by right.
-    + by left.
+    + exact (inr (fun b => np (a, b))).
+    + exact (inl na).
   - intros [na|nb] [a b].
     + exact (na a).
     + exact (nb b).
