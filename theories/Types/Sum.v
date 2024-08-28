@@ -1073,7 +1073,7 @@ Proof.
     + exact (nb b).
 Defined.
 
-Definition iff_contradiciton A : A * ~A <-> Empty.
+Definition iff_contradiction A : A * ~A <-> Empty.
 Proof.
   split.
   - intros [a na]; exact (na a).

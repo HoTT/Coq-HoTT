@@ -893,7 +893,7 @@ Proof.
     1: nrapply sum_distrib_l.
     nrapply iff_compose.
     + nrapply iff_functor_sum.
-      1: apply iff_contradiciton.
+      1: apply iff_contradiction.
       nrapply iff_functor_prod.
       1: nrapply iff_refl.
       rapply iff_stable.
