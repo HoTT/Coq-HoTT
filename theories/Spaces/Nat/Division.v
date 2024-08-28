@@ -57,7 +57,7 @@ Global Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
 Global Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
   := fun H => nat_divides_trans _ _.
 
-(** Multipllication is monotone with respect to divisibility. *)
+(** Multiplication is monotone with respect to divisibility. *)
 Global Instance nat_divides_mul_monotone n m l p
   : (n | m) -> (l | p) -> (n * l | m * p).
 Proof.
