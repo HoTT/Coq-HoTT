@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
-  Basics.Equivalences Basics.Decidable.
+  Basics.Equivalences Basics.Decidable Basics.Iff.
 Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum
   Types.Empty Types.Option.
 Require Export Spaces.List.Core Spaces.Nat.Core.
@@ -719,7 +719,7 @@ Defined.
 (** *** Filter *)
 
 (** Produce the list of elements of a list that satisfy a decidable predicate. *)
-Fixpoint list_filter {A : Type} (l : list A) (P : A -> Type)
+Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
   (dec : forall x, Decidable (P x))
   : list A
   := match l with
@@ -729,33 +729,37 @@ Fixpoint list_filter {A : Type} (l : list A) (P : A -> Type)
         else list_filter l P dec
     end.
 
-Definition inlist_filter {A : Type} (l : list A) (P : A -> Type)
-  (dec : forall x, Decidable (P x)) (x : A)
-  : InList x (list_filter l P dec) <-> InList x l /\ P x.
+Definition inlist_filter@{u v k | u <= k, v <= k} {A : Type@{u}} (l : list A)
+  (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
+  : iff@{u k k} (InList x (list_filter l P dec)) (InList x l /\ P x).
 Proof.
   simple_list_induction l a l IHl.
   - simpl.
-    symmetry.
+    apply iff_inverse.
     apply iff_equiv.
-    snrapply prod_empty_l.
+    snrapply prod_empty_l@{v}.
   - simpl.
-    etransitivity.
-    2: { apply iff_equiv.
-         exact ((sum_distrib_r _ _ _)^-1%equiv). }
+    nrapply iff_compose.
+    2: { apply iff_inverse.
+         apply iff_equiv.
+         exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _). }
     destruct (dec a) as [p|p].
     + simpl.
-      transitivity ((a = x) + InList x l * P x).
+      snrapply iff_compose.
+      1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
       1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
-      split; apply functor_sum; only 2,4: apply idmap.
-      * intros []; by split.
+      split; apply functor_sum@{k k k k}; only 2,4: apply idmap.
+      * intros [].
+        exact (idpath, p).
       * exact fst.
-    + etransitivity.
+    + nrapply iff_compose.
       1: apply IHl.
+      apply iff_inverse.
       apply iff_equiv.
-      nrefine (_ oE (sum_empty_l _)^-1%equiv).
-      snrapply equiv_functor_sum'.
-      2: reflexivity.
-      symmetry; apply equiv_to_empty.
+      nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
+      snrapply equiv_functor_sum'@{k k k k k k}.
+      2: exact equiv_idmap.
+      apply equiv_to_empty.
       by intros [[] r].
 Defined.
 
@@ -920,7 +924,7 @@ Proof.
   nrefine (_ oE (equiv_inlist_app _ _ _)^-1).
   nrefine (_ oE equiv_functor_sum' (B':=x = n) IHn _).
   2: { simpl.
-       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set Set Set} _). }
+       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set} _). }
   nrefine (_ oE equiv_leq_lt_or_eq^-1).
   rapply equiv_iff_hprop.
 Defined.
@@ -993,7 +997,7 @@ Proof.
   by apply for_all_list_map.
 Defined.
 
-(** If a predicate [P] and a prediate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
+(** If a predicate [P] and a predicate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
 Lemma for_all_list_map2 {A B C : Type}
   (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
@@ -1111,11 +1115,67 @@ Global Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (for_all P l).
 Proof.
-  induction l as [|x l IHl].
-  - exact (inl tt).
-  - destruct IHl as [Hl | Hl].
-    + destruct (dec (P x)) as [Hx | Hx].
-      * exact (inl (Hx, Hl)).
-      * exact (inr (fun H => Hx (fst H))).
-    + exact (inr (fun H => Hl (snd H))).
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+(** If a predicate [P] is decidable then so is [list_exists P]. *)
+Global Instance decidable_list_exists {A : Type} (P : A -> Type)
+  `{forall x, Decidable (P x)} (l : list A)
+  : Decidable (list_exists P l).
+Proof.
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+Definition inlist_list_exists {A : Type} (P : A -> Type) (l : list A)
+  : list_exists P l -> exists (x : A), InList x l /\ P x.
+Proof.
+  simple_list_induction l x l IHl.
+  1: done.
+  simpl.
+  intros [Px | ex].
+  - exists x.
+    by split; [left|].
+  - destruct (IHl ex) as [x' [H Px']].
+    exists x'.
+    by split; [right|].
+Defined.
+
+Definition list_exists_inlist {A : Type} (P : A -> Type) (l : list A)
+  : forall (x : A), InList x l -> P x -> list_exists P l.
+Proof.
+  simple_list_induction l x l IHl.
+  1: trivial.
+  simpl; intros y H p; revert H.
+  apply functor_sum.
+  - exact (fun r => r^ # p).
+  - intros H.
+    by apply (IHl y).
+Defined.
+
+Definition list_exists_seq {n : nat} (P : nat -> Type)
+  (H : forall k, P k -> (k < n)%nat)
+  : (exists k, P k) <-> list_exists P (seq n).
+Proof.
+  split.
+  - intros [k p].
+    snrapply (list_exists_inlist P _ k _ p).
+    apply inlist_seq, H.
+    exact p.
+  - intros H1.
+    apply inlist_list_exists in H1.
+    destruct H1 as [k [Hk p]].
+    exists k.
+    exact p.
+Defined.
+
+(** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)
+Definition decidable_exists_nat (n : nat) (P : nat -> Type)
+  (H1 : forall k, P k -> (k < n)%nat)
+  (H2 : forall k, Decidable (P k))
+  : Decidable (exists k, P k).
+Proof.
+  nrapply decidable_iff.
+  1: apply iff_inverse; nrapply list_exists_seq.
+  1: exact H1.
+  exact _.
 Defined.

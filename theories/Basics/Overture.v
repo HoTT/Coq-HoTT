@@ -73,13 +73,6 @@ Notation conj := pair (only parsing).
 
 #[export] Hint Resolve pair inl inr : core.
 
-(** If and only if *)
-
-(** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
-Definition iff (A B : Type) := prod (A -> B) (B -> A).
-
-Notation "A <-> B" := (iff A B) : type_scope.
-
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -223,20 +216,6 @@ Notation "g 'o' f" := (compose g%function f%function) : function_scope.
 
 (** This definition helps guide typeclass inference. *)
 Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
-
-(** Composition of logical equivalences *)
-Global Instance iff_compose : Transitive iff | 1
-  := fun A B C f g => (fst g o fst f , snd f o snd g).
-Arguments iff_compose {A B C} f g : rename.
-
-(** While we're at it, inverses of logical equivalences *)
-Global Instance iff_inverse : Symmetric iff | 1
-  := fun A B f => (snd f , fst f).
-Arguments iff_inverse {A B} f : rename.
-
-(** And reflexivity of them *)
-Global Instance iff_reflexive : Reflexive iff | 1
-  := fun A => (idmap , idmap).
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).

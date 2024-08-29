@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
   Basics.Decidable Basics.Trunc Basics.Equivalences Basics.Nat
-  Basics.Classes Types.Prod Types.Sum Types.Sigma.
+  Basics.Classes Basics.Iff Types.Prod Types.Sum Types.Sigma.
 Export Basics.Nat.
 
 Local Set Universe Minimization ToSet.
@@ -487,6 +487,14 @@ Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
 Global Instance antisymemtric_geq : AntiSymmetric geq
   := fun _ _ p q => leq_antisym q p.
 
+(** Every natural number is zero or greater than zero. *)
+Definition nat_zero_or_gt_zero n : (0 = n) + (0 < n).
+Proof.
+  induction n as [|n IHn].
+  1: left; reflexivity.
+  right; exact _.
+Defined.
+
 (** Being less than or equal to [0] implies being [0]. *)
 Definition path_zero_leq_zero_r n : n <= 0 -> n = 0.
 Proof.
@@ -590,6 +598,7 @@ Hint Immediate leq_lt : typeclass_instances.
 
 Definition lt_trans {n m k} : n < m -> m < k -> n < k
   := fun H1 H2 => leq_lt (lt_leq_lt_trans H1 H2).
+Hint Immediate lt_trans : typeclass_instances.
 
 Global Instance transitive_lt : Transitive lt := @lt_trans.
 Global Instance ishprop_lt n m : IsHProp (n < m) := _.
