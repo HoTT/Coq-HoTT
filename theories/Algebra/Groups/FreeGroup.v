@@ -1,5 +1,5 @@
 Require Import Basics Types Group Subgroup
-  WildCat.Core Colimits.Coeq
+  WildCat.Core WildCat.Universe Colimits.Coeq
   Truncations.Core Truncations.SeparatedTrunc
   Spaces.List.Core Spaces.List.Theory.
 
@@ -535,3 +535,26 @@ Section FreeGroupGenerated.
   Defined.
 
 End FreeGroupGenerated.
+
+(** ** Functoriality *)
+
+Global Instance is0functor_freegroup : Is0Functor FreeGroup.
+Proof.
+  snrapply Build_Is0Functor.
+  intros X Y f.
+  snrapply FreeGroup_rec.
+  exact (freegroup_in o f).
+Defined.
+
+Global Instance is1functor_freegroup : Is1Functor FreeGroup.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros X Y f g p.
+    snrapply FreeGroup_ind_homotopy.
+    intros x.
+    exact (ap freegroup_in (p x)).
+  - intros X.
+    by snrapply FreeGroup_ind_homotopy.
+  - intros X Y Z f g.
+    by snrapply FreeGroup_ind_homotopy.
+Defined.
