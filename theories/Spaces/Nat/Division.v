@@ -57,6 +57,22 @@ Global Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
 Global Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
   := fun H => nat_divides_trans _ _.
 
+(** Multiplication is monotone with respect to divisibility. *)
+Global Instance nat_divides_mul_monotone n m l p
+  : (n | m) -> (l | p) -> (n * l | m * p).
+Proof.
+  intros [x r] [y q].
+  exists (x * y).
+  destruct r, q.
+  lhs nrapply nat_mul_assoc.
+  rhs nrapply nat_mul_assoc.
+  nrapply (ap (fun x => nat_mul x _)).
+  lhs_V nrapply nat_mul_assoc.
+  rhs_V nrapply nat_mul_assoc.
+  nrapply ap.
+  apply nat_mul_comm.
+Defined.
+
 (** Divisibility of the sum is implied by divisibility of the summands. *)
 Global Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
 Proof.
@@ -380,6 +396,55 @@ Proof.
   snrapply (nat_mod_unique _ _ 1); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
+Defined.
+
+(** ** Further Properties of Division and Modulo *)
+
+(** We can cancel common factors on the left in a division. *)
+Definition nat_div_cancel_mul_l n m k
+  : 0 < k -> (k * n) / (k * m) = n / m.
+Proof.
+  intro kp.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: by rewrite nat_mul_zero_r.
+  symmetry; nrapply (nat_div_unique _ _ _ (k * (n mod m))).
+  1: rapply nat_mul_l_strictly_monotone.
+  rewrite <- nat_mul_assoc.
+  rewrite <- nat_dist_l.
+  apply ap.
+  symmetry; apply nat_div_mod_spec.
+Defined.
+
+(** We can cancel common factors on the right in a division. *)
+Definition nat_div_cancel_mul_r n m k
+  : 0 < k -> (n * k) / (m * k) = n / m.
+Proof.
+  rewrite 2 (nat_mul_comm _ k).
+  nrapply nat_div_cancel_mul_l.
+Defined.
+
+(** We can cancel common factors on the left in a modulo. *)
+Definition nat_mod_mul_l n m k
+  : (k * n) mod (k * m) = k * (n mod m).
+Proof.
+  destruct (nat_zero_or_gt_zero k) as [[] | kp].
+  1: reflexivity.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: by rewrite nat_mul_zero_r.
+  symmetry; apply (nat_mod_unique _ _ (n / m)).
+  1: rapply nat_mul_l_strictly_monotone.
+  rewrite <- nat_mul_assoc.
+  rewrite <- nat_dist_l.
+  apply ap.
+  symmetry; apply nat_div_mod_spec.
+Defined.
+
+(** We can cancel common factors on the right in a modulo. *)
+Definition nat_mod_mul_r n m k
+  : (n * k) mod (m * k) = (n mod m) * k.
+Proof.
+  rewrite 3 (nat_mul_comm _ k).
+  nrapply nat_mod_mul_l.
 Defined.
 
 (** ** Greatest Common Divisor *)
