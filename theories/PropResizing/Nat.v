@@ -149,8 +149,7 @@ Section AssumeStuff.
     Qed.
 
     Definition graph_unsucc_equiv_vert@{} : vert A <~> vert B
-      := equiv_unfunctor_sum_l@{s s s s s  s Set Set Set Set}
-                              f Ha Hb.
+      := equiv_unfunctor_sum_l@{s s s s s s} f Ha Hb.
 
     Definition graph_unsucc_equiv_edge@{} (x y : vert A)
       : iff@{s s s} (edge A x y) (edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y)).

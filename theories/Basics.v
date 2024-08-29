@@ -8,6 +8,7 @@ Require Export Basics.Utf8.
 Require Export Basics.Notations.
 Require Export Basics.Tactics.
 Require Export Basics.Classes.
+Require Export Basics.Iff.
 
 Require Export Basics.Nat.
 Require Export Basics.Numeral.

@@ -415,3 +415,28 @@ Proof.
   - exact _.
   - symmetry; apply homotopic_isabelianization.
 Defined.
+
+(** ** Functoriality *)
+
+Global Instance is0functor_abel : Is0Functor abel.
+Proof.
+  snrapply Build_Is0Functor.
+  intros A B f.
+  snrapply grp_homo_abel_rec.
+  refine (_ $o f).
+  exact abel_unit.
+Defined.
+
+Global Instance is1functor_abel : Is1Functor abel.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros A B f g p.
+    unfold abel.
+    rapply Abel_ind_hprop.
+    intros x.
+    exact (ap abel_in (p x)).
+  - intros A.
+    by rapply Abel_ind_hprop.
+  - intros A B C f g.
+    by rapply Abel_ind_hprop.
+Defined.

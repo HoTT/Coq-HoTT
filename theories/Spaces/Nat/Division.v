@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Classes
   Basics.PathGroupoids Basics.Equivalences Types.Sigma Spaces.Nat.Core
-  Basics.Decidable Types.Prod List.Theory Types.Sum.
+  Basics.Decidable Basics.Iff Types.Prod List.Theory Types.Sum Types.Arrow.
 
 Local Set Universe Minimization ToSet.
 Local Open Scope nat_scope.
@@ -109,6 +109,20 @@ Proof.
   nrapply nat_dist_sub_r.
 Defined.
 
+(** The divisor is greater than zero when the divident is greater than zero. *)
+Definition gt_zero_divides n m (d : (n | m)) (gt0 : 0 < m)
+  : 0 < n.
+Proof.
+  destruct d as [d H].
+  destruct H.
+  destruct (nat_zero_or_gt_zero n) as [z | s].
+  2: exact s.
+  (* The remaining case is impossible. *)
+  destruct z; cbn in gt0.
+  rewrite nat_mul_zero_r in gt0.
+  exact gt0.
+Defined.
+
 (** Divisibility implies that the divisor is less than or equal to the dividend. *)
 Definition leq_divides n m : 0 < m -> (n | m) -> n <= m.
 Proof.
@@ -116,6 +130,17 @@ Proof.
   destruct p, x.
   1: contradiction (not_lt_zero_r _ H1).
   rapply (leq_mul_l _ _ 0).
+Defined.
+
+(** The divisor is strictly less than the dividend when the other factor is greater than one. *)
+Definition lt_divides n m (d : (n | m)) (gt0 : 0 < m) (gt1 : 1 < d.1)
+  : n < m.
+Proof.
+  rewrite <- d.2.
+  snrapply (lt_leq_lt_trans (m:=1*n)).
+  1: rapply (leq_mul_l _ _ 0).
+  srapply (nat_mul_r_strictly_monotone (l:=0)).
+  rapply (gt_zero_divides n m).
 Defined.
 
 (** Divisibility is antisymmetric *)
@@ -129,6 +154,14 @@ Defined.
 
 Global Instance antisymmetric_divides : AntiSymmetric NatDivides
   := nat_divides_antisym.
+
+(** If [n] divides [m], then the other factor also divides [m]. *)
+Global Instance divides_divisor n m (H : (n | m)) : (H.1 | m).
+Proof.
+  exists n.
+  lhs nrapply nat_mul_comm.
+  exact H.2.
+Defined.
 
 (** ** Properties of division *)
 
@@ -351,7 +384,7 @@ Defined.
 Global Instance decidable_nat_divides n m : Decidable (n | m).
 Proof.
   nrapply decidable_iff.
-  1, 2: apply nat_mod_iff_divides.
+  1: apply nat_mod_iff_divides.
   exact _.
 Defined.
 
@@ -684,6 +717,22 @@ Class IsPrime (n : nat) : Type0 := {
 
 Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
 
+Global Instance ishprop_isprime `{Funext} n : IsHProp (IsPrime n).
+Proof.
+  nrapply istrunc_equiv_istrunc.
+  1: apply issig_IsPrime.
+  rapply istrunc_sigma.
+  intros H1.
+  snrapply istrunc_forall.
+  intros m.
+  snrapply istrunc_forall.
+  intros d.
+  rapply ishprop_sum.
+  intros p q.
+  nrapply (snd neq_iff_lt_or_gt _ (p^ @ q)).
+  by left.
+Defined.
+
 (** [0] is not a prime number. *)
 Definition not_isprime_zero : ~ IsPrime 0.
 Proof.
@@ -699,7 +748,7 @@ Proof.
 Defined.
 
 (** Being prime is a decidable property. We give an inefficient procedure for determining primality. More efficient procedures can be given, but for proofs this suffices. *)
-Global Instance decidable_isprime n : Decidable (IsPrime n).
+Global Instance decidable_isprime@{} n : Decidable (IsPrime n).
 Proof.
   (** First we begin by discarding the [n = 0] case as we can easily prove that [0] is not prime. *)
   destruct n.
@@ -713,10 +762,10 @@ Proof.
   snrapply decidable_prod.
   1: exact _.
   (** In order to show that this [forall] is decidable, we will exhibit it as a [for_all] statement over a given list. The predicate will be the conclusion we wish to reach here, and the list will consist of all numbers with a condition equivalent to the divisibility condition. *)
-  pose (P := fun m => ((m = 1) + (m = n.+1))%type).
+  pose (P := fun m => ((m = 1) + (m = n.+1))%type : Type0).
   pose (l := list_filter (seq n.+2) (fun x => (x | n.+1)) _).
-  snrapply decidable_iff.
-  - exact (for_all P l).
+  rapply (decidable_iff (A := for_all P l)).
+  split.
   - intros Pl x d.
     apply inlist_for_all with l x in Pl.
     1: exact Pl.
@@ -732,7 +781,6 @@ Proof.
     destruct H' as [p H'].
     apply inlist_seq in p.
     rapply H.
-  - exact _.
 Defined.
 
 (** We can show that the first 8 primes are prime as expected. *)
@@ -804,3 +852,140 @@ Proof.
   apply nat_moveR_nV.
   exact q.
 Defined.
+
+(** ** Composite Numbers *)
+
+(** A natural number larger than [1] is composite if it has a divisor other than [1] and itself. *)
+Class IsComposite n : Type0
+  := iscomposite : exists a, 1 < a < n /\ (a | n).
+
+Definition gt_1_iscomposite@{} n : IsComposite n -> 1 < n.
+Proof.
+  intros [a [[H1 H2] H3]].
+  exact _.
+Defined.
+Hint Immediate gt_1_iscomposite : typeclass_instances.
+
+(** Being composite is a decidable property. *)
+Global Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
+Proof.
+  unfold IsComposite.
+  rapply (decidable_exists_nat n).
+  intros k c.
+  exact (snd (fst c)).
+Defined.
+
+(** For a number larger than [1], being prime is equivalent to not being composite. *)
+Definition isprime_iff_not_iscomposite@{} n
+  : IsPrime n <-> 1 < n /\ ~ IsComposite n.
+Proof.
+  split.
+  - intros H.
+    split; only 1: exact _.
+    intros [a [[H2 H3] H4]].
+    apply isprime in H4.
+    destruct H4 as [H4|H4]; destruct H4; exact (lt_irrefl _ _).
+  - intros [H1 H].
+    rapply Build_IsPrime.
+    intros m d.
+    destruct (dec (1 < d.1)) as [H2|H2].
+    + pose proof (divides_divisor _ _ d) as d'.
+      apply leq_divides in d'.
+      2: exact _.
+      apply equiv_leq_lt_or_eq in d'.
+      destruct d' as [d'|d'].
+      * assert (H' : IsComposite n).
+        { exists d.1.
+          split; only 1: split; exact _. }
+          contradiction H.
+      * destruct d as [d r].
+        simpl in *.
+        destruct d'.
+         left.
+         rewrite <- nat_div_cancel with d.
+         2: exact _.
+         rewrite <- nat_div_mul_cancel_l with d m.
+         2: exact _.
+         by apply (ap (fun x => x / d)).
+    + apply geq_iff_not_lt in H2.
+      destruct d as [d r].
+      simpl in *; hnf in H2.
+      destruct d.
+      { rewrite nat_mul_zero_l in r.
+        destruct n.
+        1: contradiction (not_lt_zero_r _ H1).
+        contradiction (neq_nat_zero_succ _ r). }
+      destruct d.
+      { rewrite nat_mul_one_l in r.
+        by right. }
+      apply leq_pred' in H2.
+      contradiction (not_lt_zero_r d).
+Defined.
+
+(** And since [IsComposite] is decidable, we can show that being not prime is equivalent to being composite. *)
+Definition not_isprime_iff_iscomposite@{} n
+  : 1 < n /\ ~ IsPrime n <-> IsComposite n.
+Proof.
+  nrapply iff_compose.
+  - nrapply iff_functor_prod.
+    1: nrapply iff_refl.
+    nrapply iff_compose.
+    + apply iff_not.
+      rapply isprime_iff_not_iscomposite.
+    + rapply iff_not_prod.
+  - nrapply iff_compose.
+    1: nrapply sum_distrib_l.
+    nrapply iff_compose.
+    + nrapply iff_functor_sum.
+      1: apply iff_contradiction.
+      nrapply iff_functor_prod.
+      1: nrapply iff_refl.
+      rapply iff_stable.
+    + nrapply iff_compose.
+      1: rapply sum_empty_l.
+      split; only 1: exact snd.
+      intros H; split; only 2: exact H.
+      exact _.
+Defined.
+
+(** ** Fundamental theorem of arithmetic *)
+
+(** Every natural number greater than [1] has a prime divisor. *)
+Definition exists_prime_divisor@{} n
+  : 1 < n -> exists (p : Prime), (p | n).
+Proof.
+  revert n; snrapply nat_ind_strong; hnf; intros n IHn H.
+  destruct (dec (IsPrime n)) as [x|x].
+  1: exists (_; x); exact _.
+  pose (r := (H, x)).
+  apply not_isprime_iff_iscomposite in r.
+  destruct r as [d [[H1 H2] H3]].
+  destruct (IHn d _ _) as [p r].
+  exists p.
+  exact _.
+Defined.
+
+(** Any natural number can either be written as a product of primes or is zero. *)
+Definition prime_factorization@{} n
+  : 0 < n
+    -> exists (l : list Prime),
+      n = fold_right (fun (p : Prime) n => nat_mul p n) 1 l.
+Proof.
+  revert n; snrapply nat_ind_strong; hnf; intros n IHn H.
+  destruct H as [|n IH].
+  1: exists nil; reflexivity.
+  destruct (exists_prime_divisor n.+1 _) as [p d].
+  pose proof (l := lt_divides d.1 n.+1 _ _ _).
+  destruct d as [k H].
+  destruct (IHn k l) as [f r].
+  { destruct H, k.
+    1: contradiction (lt_irrefl 0).
+    exact _. }
+  exists (p :: f)%list.
+  simpl; destruct r.
+  symmetry.
+  lhs nrapply nat_mul_comm.
+  exact H.
+Defined.
+
+(** TODO: show that any two prime factorizations are unique up to permutation of the lists. *)
