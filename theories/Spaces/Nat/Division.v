@@ -398,32 +398,53 @@ Proof.
   nrapply nat_mul_one_r.
 Defined.
 
-(** ** Further Properties of Division *)
+(** ** Further Properties of Division and Modulo *)
 
 (** We can cancel common factors on the left in a division. *)
 Definition nat_div_cancel_mul_l n m k
-  : 0 < k -> 0 < m -> (m | n) -> (k * n) / (k * m) = n / m.
+  : 0 < k -> (k * n) / (k * m) = n / m.
 Proof.
-  intros H1 H2 H3.
-  symmetry.
-  rapply nat_div_unique.
-  rewrite nat_mul_zero_l.
-  lhs nrapply nat_add_zero_r.
-  lhs_V nrapply nat_mul_assoc.
+  intro kp.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: by rewrite nat_mul_zero_r.
+  symmetry; nrapply (nat_div_unique _ _ _ (k * (n mod m))).
+  1: rapply nat_mul_l_strictly_monotone.
+  rewrite <- nat_mul_assoc.
+  rewrite <- nat_dist_l.
   apply ap.
-  lhs_V nrapply nat_add_zero_r.
-  symmetry.
-  rewrite <- (nat_mod_divides n m).
-  2: exact _.
-  apply nat_div_mod_spec.
+  symmetry; apply nat_div_mod_spec.
 Defined.
 
 (** We can cancel common factors on the right in a division. *)
 Definition nat_div_cancel_mul_r n m k
-  : 0 < k -> 0 < m -> (m | n) -> (n * k) / (m * k) = n / m.
+  : 0 < k -> (n * k) / (m * k) = n / m.
 Proof.
   rewrite 2 (nat_mul_comm _ k).
-  apply nat_div_cancel_mul_l.
+  nrapply nat_div_cancel_mul_l.
+Defined.
+
+(** We can cancel common factors on the left in a modulo. *)
+Definition nat_mod_mul_l n m k
+  : (k * n) mod (k * m) = k * (n mod m).
+Proof.
+  destruct (nat_zero_or_gt_zero k) as [[] | kp].
+  1: reflexivity.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: by rewrite nat_mul_zero_r.
+  symmetry; apply (nat_mod_unique _ _ (n / m)).
+  1: rapply nat_mul_l_strictly_monotone.
+  rewrite <- nat_mul_assoc.
+  rewrite <- nat_dist_l.
+  apply ap.
+  symmetry; apply nat_div_mod_spec.
+Defined.
+
+(** We can cancel common factors on the right in a modulo. *)
+Definition nat_mod_mul_r n m k
+  : (n * k) mod (m * k) = (n mod m) * k.
+Proof.
+  rewrite 3 (nat_mul_comm _ k).
+  nrapply nat_mod_mul_l.
 Defined.
 
 (** ** Greatest Common Divisor *)
