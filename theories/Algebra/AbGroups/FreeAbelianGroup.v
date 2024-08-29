@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import Types.Sigma Types.Forall Types.Paths.
-Require Import WildCat.Core WildCat.EquivGpd.
+Require Import WildCat.Core WildCat.EquivGpd WildCat.Universe.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Abelianization.
 Require Import Algebra.Groups.FreeGroup.
 Require Import Spaces.List.Core.
@@ -59,3 +59,7 @@ Proof.
   exists (abel_unit (G:=FreeGroup S) o freegroup_in).
   srapply isfreeabgroupon_isabelianization_isfreegroup.
 Defined.
+
+(** Functoriality follows from the functoriality of [abel] and [FreeGroup]. *)
+Global Instance is0functor_freeabgroup : Is0Functor FreeAbGroup := _.
+Global Instance is1functor_freeabgroup : Is1Functor FreeAbGroup := _.
