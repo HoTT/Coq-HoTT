@@ -43,7 +43,7 @@ Coercion iff_equiv {A B : Type} (f : A <~> B)
 
 (** ** Logical Laws *)
 
-(** De Morgan Law, the dual statement about negating a product appears in Decidable.v due to decidability requirements. *)
+(** One of De Morgan's Laws.  The dual statement about negating a product appears in Decidable.v due to decidability requirements. *)
 Definition iff_not_sum A B : ~ (A + B) <-> ~ A * ~ B.
 Proof.
   split.

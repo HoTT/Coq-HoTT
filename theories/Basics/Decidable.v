@@ -274,8 +274,15 @@ Defined.
 
 (** Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. *)
 
-(** Here we give the dual De Morgan Law which complements the one given in Iff.v *)
-Definition iff_not_prod A B `{Decidable A} `{Decidable B}
+(** Here we give the dual De Morgan's Law which complements the one given in Iff.v.  One direction requires that one of the two propositions be decidable, while the other direction needs no assumption.  We state the latter property first, to avoid duplication in the proof. *)
+Definition not_prod_sum_not A B : ~ A + ~ B -> ~ (A * B).
+Proof.
+  intros [na|nb] [a b].
+  - exact (na a).
+  - exact (nb b).
+Defined.
+
+Definition iff_not_prod A B `{Decidable A}
   : ~ (A * B) <-> ~ A + ~ B.
 Proof.
   split.
@@ -283,7 +290,16 @@ Proof.
     destruct (dec A) as [a|na].
     + exact (inr (fun b => np (a, b))).
     + exact (inl na).
-  - intros [na|nb] [a b].
-    + exact (na a).
-    + exact (nb b).
+  - apply not_prod_sum_not.
+Defined.
+
+Definition iff_not_prod' A B `{Decidable B}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec B) as [b|nb].
+    + exact (inl (fun a => np (a, b))).
+    + exact (inr nb).
+  - apply not_prod_sum_not.
 Defined.
