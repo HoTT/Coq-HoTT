@@ -3,7 +3,8 @@ Require Import
   Basics.Overture
   Basics.PathGroupoids
   Basics.Trunc
-  Basics.Tactics.
+  Basics.Tactics
+  Basics.Iff.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -27,8 +28,9 @@ Ltac decide_type A :=
   end.
 
 Ltac decide :=
-  match goal with
+  multimatch goal with
   | [|- ?A] => decide_type A
+  | [|- ~ ?A] => decide_type A
   end.
 
 Definition decidable_true {A : Type} `{Decidable A}
@@ -84,6 +86,13 @@ Proof.
   exact (nnnp (fun np => np p)).
 Defined.
 
+Definition iff_stable P `(Stable P) : ~~P <-> P.
+Proof.
+  split.
+  - apply stable.
+  - exact (fun x f => f x).
+Defined.
+
 (**
   Because [vm_compute] evaluates terms in [PROP] eagerly
   and does not remove dead code we
@@ -121,21 +130,21 @@ Global Instance decidable_empty : Decidable Empty
 
 (** ** Transfer along equivalences *)
 
-Definition decidable_iff {A B} (f : A -> B) (f' : B -> A)
+Definition decidable_iff {A B} (f : A <-> B)
   : Decidable A -> Decidable B.
 Proof.
   intros [a|na].
-  - exact (inl (f a)).
-  - exact (inr (fun b => na (f' b))).
+  - exact (inl (fst f a)).
+  - exact (inr (fun b => na (snd f b))).
 Defined.
-
-Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
-  : Decidable A -> Decidable B
-  := decidable_iff f f^-1.
 
 Definition decidable_equiv' (A : Type) {B : Type} (f : A <~> B)
 : Decidable A -> Decidable B
-  := decidable_equiv A f.
+  := decidable_iff f.
+
+Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{!IsEquiv f}
+: Decidable A -> Decidable B
+  := decidable_equiv' _ (Build_Equiv _ _ f _).
 
 Definition decidablepaths_equiv
            (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
@@ -259,4 +268,38 @@ Proof.
   - elim (nd' d).
   - elim (nd d').
   - apply ap, path_forall; intros p; elim (nd p).
+Defined.
+
+(** ** Logical Laws *)
+
+(** Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. *)
+
+(** Here we give the dual De Morgan's Law which complements the one given in Iff.v.  One direction requires that one of the two propositions be decidable, while the other direction needs no assumption.  We state the latter property first, to avoid duplication in the proof. *)
+Definition not_prod_sum_not A B : ~ A + ~ B -> ~ (A * B).
+Proof.
+  intros [na|nb] [a b].
+  - exact (na a).
+  - exact (nb b).
+Defined.
+
+Definition iff_not_prod A B `{Decidable A}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec A) as [a|na].
+    + exact (inr (fun b => np (a, b))).
+    + exact (inl na).
+  - apply not_prod_sum_not.
+Defined.
+
+Definition iff_not_prod' A B `{Decidable B}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec B) as [b|nb].
+    + exact (inl (fun a => np (a, b))).
+    + exact (inr nb).
+  - apply not_prod_sum_not.
 Defined.

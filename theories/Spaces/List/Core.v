@@ -193,3 +193,12 @@ Fixpoint for_all@{i j|} {A : Type@{i}} (P : A -> Type@{j}) l : Type@{j} :=
   | nil => Unit
   | x :: l => P x /\ for_all P l
   end.
+
+(** ** Exists *)
+
+(** Apply a predicate to all elements of a list and take their disjunction. *)
+Fixpoint list_exists@{i j|} {A : Type@{i}} (P : A -> Type@{j}) l : Type@{j} :=
+  match l with
+  | nil => Empty
+  | x :: l => P x + list_exists P l
+  end.
