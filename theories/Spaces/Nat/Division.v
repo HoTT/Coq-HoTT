@@ -450,7 +450,7 @@ Proof.
 Defined.
 
 (** We can swap the order of division and multiplication on the right under certain conditions. *)
-Definition nat_div_mul_r n m k : (m | n) -> (n / m) * k = n * k / m.
+Definition nat_div_mul_r n m k : (m | n) -> (n / m) * k = (n * k) / m.
 Proof.
   rewrite 2 (nat_mul_comm _ k).
   snrapply nat_div_mul_l.
