@@ -121,14 +121,6 @@ Fixpoint nat_gcd a b :=
   | S a' => nat_gcd (b mod a'.+1) a'.+1
   end.
 
-(** *** Factorial *)
-
-Fixpoint factorial n := 
-  match n with
-  | 0 => 1
-  | S n => S n * factorial n
-  end.
-
 (** ** Comparison predicates *)
 
 (** *** Less than or equal To [<=] *)

@@ -7,6 +7,14 @@ Local Open Scope nat_scope.
 
 (** * Factorials *)
 
+(** ** Definition *)
+
+Fixpoint factorial n := 
+  match n with
+  | 0 => 1
+  | S n => S n * factorial n
+  end.
+
 (** ** Properties *)
 
 (** The factorial of [0] is [1]. *)
