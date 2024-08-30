@@ -2,7 +2,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import HSet.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Nat.Factorial.
 Require Import HFiber.
 Require Import Factorization.
 Require Import Truncations.
