@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division.
+  Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division Tactics.EvalIn.
 
 Local Set Universe Minimization ToSet.
 Local Unset Elimination Schemes.
@@ -33,10 +33,12 @@ Defined.
 (** ** Divisibility *)
 
 (** Any number less than or equal to [n] divides [factorial n]. *)
-Global Instance nat_divides_facttorial_factor n m
+Global Instance nat_divides_factorial_factor n m
   : 0 < n -> n <= m -> (n | factorial m).
 Proof.
-  intros H1 H2; destruct H1; induction H2; exact _.
+  intros [] H2.
+  1: exact _.
+  induction H2; exact _.
 Defined.
 
 (** [factorial] is a monotone function from [nat] to [nat] with respect to [<=] and divides. *)
@@ -50,34 +52,29 @@ Defined.
 Global Instance nat_divides_factorial_mul_factorial_add n m
   : (factorial n * factorial m | factorial (n + m)).
 Proof.
-  set (k := n + m).
-  pose (p := (idpath : n + m = k)).
-  clearbody k p.
+  remember (n + m) as k eqn:p.
   revert k n m p; snrapply nat_ind_strong; hnf; intros k IH n m p.
   destruct k.
   { apply equiv_nat_add_zero in p.
     destruct p as [p q].
     destruct p^, q^.
     exact _. }
-  rewrite nat_factorial_succ.
+  rewrite_refl nat_factorial_succ.
   rewrite <- p.
   rewrite nat_dist_r.
-  nrapply nat_divides_add.
-  - destruct n; only 1: exact _.
+  assert (helper : forall n' m' (p' : n' + m' = k.+1), (factorial n' * factorial m' | n' * factorial k)).
+  - intros n' m' p'.
+    destruct n'; only 1: exact _.
     rewrite nat_factorial_succ.
     rewrite <- nat_mul_assoc.
     rapply nat_divides_mul_monotone.
     rapply IH.
-    exact (ap nat_pred p).
-  - destruct m; only 1: exact _.
-    rewrite nat_factorial_succ.
-    rewrite nat_mul_assoc.
-    rewrite (nat_mul_comm (factorial n)).
-    rewrite <- nat_mul_assoc.
-    rapply nat_divides_mul_monotone.
-    rapply IH.
-    rewrite nat_add_succ_r in p.
-    exact (ap nat_pred p).
+    exact (ap nat_pred p').
+  - nrapply nat_divides_add.
+    + apply helper, p.
+    + rewrite nat_mul_comm.
+      apply helper.
+      lhs nrapply nat_add_comm; exact p.
 Defined.
 
 (** Here is a variant of [nat_divides_factorial_mul_factorial_add] that is more suitable for binomial coefficients. *)
@@ -85,7 +82,6 @@ Global Instance nat_divides_factorial_mul_factorial_add' n m
   : m <= n -> (factorial m * factorial (n - m) | factorial n).
 Proof.
   intros H.
-  set (n - m) as q;
-  rewrite <- (@nat_add_sub_r_cancel m n);
-  unfold q; clear q; exact _. 
+  rewrite <- (ap factorial (nat_add_sub_r_cancel H)).
+  apply nat_divides_factorial_mul_factorial_add.
 Defined.
