@@ -47,11 +47,20 @@ Defined.
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
 Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
-  := ab_cokernel (ab_homo_add g (negate_hom f)).
+  := ab_cokernel (ab_homo_add (negate_hom f) g).
 
 Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
   snrapply grp_quotient_map.
+Defined.
+
+Definition ab_coeq_glue {A B} {f g : A $-> B}
+  : ab_coeq_in (f:=f) (g:=g) $o f $== ab_coeq_in $o g.
+Proof.
+  intros x.
+  nrapply qglue.
+  apply tr.
+  by exists x.
 Defined.
 
 Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
@@ -65,9 +74,9 @@ Proof.
   destruct H as [a q].
   destruct q; simpl.
   lhs nrapply grp_homo_op.
-  lhs nrapply ap.
+  lhs nrapply (ap (.* _)).
   1: apply grp_homo_inv.
-  apply grp_moveL_1M^-1.
+  apply grp_moveL_M1^-1.
   exact (p a)^.
 Defined.
 
@@ -83,6 +92,74 @@ Definition ab_coeq_ind_hprop {A B f g} (P : @ab_coeq A B f g -> Type)
 Proof.
   rapply Quotient_ind_hprop.
   exact i.
+Defined.
+
+Definition ab_coeq_ind_homotopy {A B C f g}
+  {l r : @ab_coeq A B f g $-> C}
+  (p : l $o ab_coeq_in $== r $o ab_coeq_in) 
+  : l $== r.
+Proof.
+  srapply ab_coeq_ind_hprop.
+  exact p.
+Defined.
+
+Definition functor_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+  (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $-> ab_coeq f' g'.
+Proof.
+  snrapply ab_coeq_rec.
+  1: exact (ab_coeq_in $o b).
+  refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
+  refine ((_ $@L p^$) $@ _ $@ (_ $@L q)).
+  refine (cat_assoc_opp _ _ _ $@ (_ $@R a) $@ cat_assoc _ _ _).
+  nrapply ab_coeq_glue.
+Defined.
+
+Definition functor2_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+  {a a' : A $-> A'} {b b' : B $-> B'}
+  (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  (p' : f' $o a' $== b' $o f) (q' : g' $o a' $== b' $o g)
+  (s : b $== b')
+  : functor_ab_coeq a b p q $== functor_ab_coeq a' b' p' q'.
+Proof.
+  snrapply ab_coeq_ind_homotopy.
+  intros x.
+  exact (ap ab_coeq_in (s x)).
+Defined.
+
+Definition functor_ab_coeq_compose {A B} {f g : A $-> B}
+  {A' B'} {f' g' : A' $-> B'} 
+  (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  {A'' B''} {f'' g'' : A'' $-> B''}
+  (a' : A' $-> A'') (b' : B' $-> B'')
+  (p' : f'' $o a' $== b' $o f') (q' : g'' $o a' $== b' $o g')
+  : functor_ab_coeq a' b' p' q' $o functor_ab_coeq a b p q
+  $== functor_ab_coeq (a' $o a) (b' $o b) (hconcat p p') (hconcat q q').
+Proof.
+  snrapply ab_coeq_ind_homotopy.
+  simpl; reflexivity.
+Defined.
+
+Definition functor_ab_coeq_id {A B} (f g : A $-> B)
+  : functor_ab_coeq (f:=f) (g:=g) (Id _) (Id _) (hrefl _) (hrefl _) $== Id _.
+Proof.
+  snrapply ab_coeq_ind_homotopy.
+  reflexivity.
+Defined.
+
+Definition grp_iso_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+  (a : A $<~> A') (b : B $<~> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $<~> ab_coeq f' g'.
+Proof.
+  snrapply cate_adjointify.
+  - exact (functor_ab_coeq a b p q).
+  - exact (functor_ab_coeq a^-1$ b^-1$ (hinverse _ _ p) (hinverse _ _ q)).
+  - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
+    rapply cate_isretr.
+  - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
+    rapply cate_issect.
 Defined.
 
 (** ** The bifunctor [ab_hom] *)

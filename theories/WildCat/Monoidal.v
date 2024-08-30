@@ -251,7 +251,7 @@ Section SymmetricBraid.
     := catie_adjointify (braid a b) (braid b a) (braid_braid a b) (braid_braid b a).
 
   (** [braide] is the bundled equivalence whose underlying map is [braid]. *)
-  Local Definition braide a b
+  Definition braide a b
     : F a b $<~> F b a
     := Build_CatEquiv (braid a b).
 
