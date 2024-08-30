@@ -1125,13 +1125,9 @@ Definition nat_mul_strictly_monotone {n n' m m'}
   : n < m -> n' < m' -> n * n' < m * m'.
 Proof.
   intros H1 H2.
-  induction H1.
-  2: exact _.
-  destruct n.
-  1: exact _.
-  nrapply (lt_trans (m:=n.+1 * m')).
-  2: rapply nat_mul_r_strictly_monotone.
-  rapply nat_mul_l_strictly_monotone.
+  nrapply (lt_leq_lt_trans (m:=n * m')).
+  1: rapply nat_mul_l_monotone.
+  rapply nat_mul_r_strictly_monotone.
 Defined.
 Hint Immediate nat_mul_strictly_monotone : typeclass_instances.
 
