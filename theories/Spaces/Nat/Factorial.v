@@ -2,7 +2,6 @@ Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
   Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division Tactics.EvalIn.
 
 Local Set Universe Minimization ToSet.
-Local Unset Elimination Schemes.
 
 Local Open Scope nat_scope.
 
