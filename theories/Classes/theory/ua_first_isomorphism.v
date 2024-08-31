@@ -4,7 +4,7 @@
     identification theorem [id_first_isomorphism] follows. *)
 
 Require Import
-  Basics.Overture
+  Basics.Notations
   HSet
   Colimits.Quotient
   Classes.interfaces.canonical_names
