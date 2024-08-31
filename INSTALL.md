@@ -5,6 +5,9 @@ library to use in your own project or to play around with.
 
 - [1. Installation using Coq Platform](#1-installation-using-coq-platform)
 - [2. Installation of HoTT library using opam](#2-installation-of-hott-library-using-opam)
+  - [Released Versions](#released-versions)
+  - [Source Versions](#source-versions)
+  - [Development Versions](#development-versions)
 - [3. Setup for developers (using git)](#3-setup-for-developers-using-git)
   - [3.1. Prequisites (Installing Coq)](#31-prequisites-installing-coq)
     - [3.1.1. Development in OSX and Windows](#311-development-in-osx-and-windows)
@@ -50,7 +53,17 @@ wish to import the entire library you can write:
 From HoTT Require Import HoTT.
 ```
 
+> ### Warning
+>
+> The versions of the HoTT library appearing in the Coq Platform are released
+> twice a year. This means that there is a good chance that the Coq Platform
+> version is lagging behind the latest version of the library. If you wish to
+> use the latest version of the library, you should install it using `opam` as
+> described in the next section.
+
 # 2. Installation of HoTT library using opam
+
+## Released Versions
 
 More advanced users may wish to install the HoTT library via `opam` ([See here
 for details on installing `opam`][3]). You need to add the released coq-archive
@@ -66,11 +79,23 @@ library is `coq-hott` inside the coq-archive.
 $ opam install coq-hott
 ```
 
+## Source Versions
+
+After cloning the repository, you can install the library using `opam` by running
+`opam install .` in the root of the repository.
+
+## Development Versions
+
 We also have the current development versions of the library available via
 `opam`. For this however, you will need to add the dev coq-archive packages:
 ```shell
+$ opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
 $ opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
 ```
+
+This will make `coq.dev` the latest available version of `coq`. You can pin
+`coq` to a stable version by running `opam pin add coq.dev 8.19.1` for example.
+Then install the library with `opam install coq-hott`, as for the released version.
 
 # 3. Setup for developers (using git)
 
