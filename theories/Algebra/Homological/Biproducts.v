@@ -587,38 +587,25 @@ Definition cat_binbiprod_codiag_fmap11 {A : Type}
   : f $o cat_binbiprod_codiag x
     $== cat_binbiprod_codiag y $o fmap11 (fun x y => cat_binbiprod x y) f f.
 Proof.
-  (* nrapply cat_binbiprod_in_eta.
+  nrapply cat_binbiprod_in_eta.
   - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
     1: nrapply cat_binbiprod_rec_beta_inl.
     refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-    2: { 
-      (* refine ((_ $@L _) $@ (cat_assoc _ _ _)^$). *)
-      refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      nrapply cat_binbiprod_rec_beta_inl. }
-    refine (_ $@ (_ $@L _)).
-    2: {
-       (* refine ((_ $@R _) $@ cat_assoc _ _ _). *)
-      refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      1: nrapply cat_binbiprod_rec_beta_inl.
-      nrapply cat_idr. }
-    refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: nrapply cat_binbiprod_rec_beta_inl.
-    nrapply cat_idl; exact _.
+    2: { refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
+         nrapply cat_binbiprod_rec_beta_inl. }
+    nrefine (_ $@ cat_assoc _ _ _).
+    refine ((_ $@R _) $@ _)^$.
+    1: nrapply cat_binbiprod_rec_beta_inl. 
+    nrapply cat_idl.
   - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
     1: nrapply cat_binbiprod_rec_beta_inr.
     refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-    2: { refine ((_ $@L _) $@ (cat_assoc _ _ _)^$).
-      refine ((_ $@ _)^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-      1: nrapply cat_binbiprod_rec_beta_inr. 
-      nrapply cat_idr. }
-    refine (_ $@ (_ $@L _)).
-    2: { refine ((_ $@R _) $@ _)^$.
-      1: rapply cat_binbiprod_corec_rec.
-      nrapply cat_binbiprod_rec_beta_inr. }
+    2: { refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
+         1: nrapply cat_binbiprod_rec_beta_inr. }
     refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
     2: nrapply cat_binbiprod_rec_beta_inr.
-    nrapply cat_idl; exact _. *)
-Admitted.
+    rapply cat_idl.
+  Defined.
 
 (** *** Symmetry *)
 
