@@ -31,9 +31,9 @@ Definition nat_choose_succ@{} n m
 (** The binomial coefficient is zero if [m] is greater than [n]. *)
 Definition nat_choose_lt@{} n m : n < m -> nat_choose n m = 0.
 Proof.
-  revert n m; snrapply nat_ind_strong; hnf; intros n IHn m H.
-  destruct H, n; only 1,3: reflexivity;
-  exact (ap011 nat_add (IHn _ _ _ _) (IHn _ _ _ _)).
+  revert m; induction n; hnf; intros m H; destruct H.
+  1, 2: reflexivity.
+  1, 2: exact (ap011 nat_add (IHn _ _) (IHn _ _)).
 Defined.
 
 (** There is only one way to choose [n] elements from [n] elements. *)
@@ -49,7 +49,7 @@ Defined.
 (** There are no ways to choose more than [0] elements from [0] elements. *)
 Definition nat_choose_zero_l@{} n : 0 < n -> nat_choose 0 n = 0.
 Proof.
-  intros H; destruct H; reflexivity.
+  apply nat_choose_lt.
 Defined.
 
 (** There is only one way to choose [0] elements from any number of elements. *)
