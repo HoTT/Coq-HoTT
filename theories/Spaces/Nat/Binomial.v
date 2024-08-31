@@ -140,6 +140,7 @@ Proof.
   exact _.
 Defined.
 
+(** The binomial coefficients are symmetric about the middle of the range [0 <= n]. *)
 Definition nat_choose_sub@{} n m
   : m <= n -> nat_choose n m = nat_choose n (n - m).
 Proof.
