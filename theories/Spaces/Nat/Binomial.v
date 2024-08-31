@@ -46,12 +46,6 @@ Proof.
   exact IHn.
 Defined.
 
-(** There are no ways to choose more than [0] elements from [0] elements. *)
-Definition nat_choose_zero_l@{} n : 0 < n -> nat_choose 0 n = 0.
-Proof.
-  apply nat_choose_lt.
-Defined.
-
 (** There is only one way to choose [0] elements from any number of elements. *)
 Definition nat_choose_zero_r@{} n : nat_choose n 0 = 1.
 Proof.
