@@ -249,6 +249,12 @@ Proof.
   apply nat_div_mod_spec.
 Defined.
 
+Definition nat_div_mod_spec'' x y : x - x mod y = y * (x / y).
+Proof.
+  apply nat_moveR_nV.
+  apply nat_div_mod_spec.
+Defined.
+
 Definition nat_mod_lt_r' n m r : r < m -> n mod m < m.
 Proof.
   intros H; destruct H; only 1: exact _.
@@ -404,6 +410,13 @@ Proof.
   nrapply nat_mul_one_r.
 Defined.
 
+(** A number can be corrected so that it is divisible by subtracting the modulo. *)
+Definition nat_divides_sub_mod n m : (n | m - m mod n).
+Proof.
+  rewrite nat_div_mod_spec''.
+  exact _.
+Defined.
+
 (** ** Further Properties of division and modulo *)
 
 (** We can cancel common factors on the left in a division. *)
@@ -457,18 +470,18 @@ Proof.
 Defined.
 
 (** Dividing a quotient is the same as dividing by the product of the divisors. *)
-Definition nat_div_div_l n m k : (m * k | n) -> (n / m) / k = n / (m * k).
+Definition nat_div_div_l n m k : (m | n) -> (n / m) / k = n / (m * k).
 Proof.
   intros H.
   destruct (nat_zero_or_gt_zero k) as [[] | kp].
   1: by rewrite nat_mul_zero_r.
   destruct (nat_zero_or_gt_zero m) as [[] | mp].
   1: snrapply nat_div_zero_l.
-  rapply (nat_div_unique _ _ _ 0).
-  lhs nrapply nat_add_zero_r.
+  rewrite <- (nat_div_cancel_mul_l _ _ m).
+  2: exact _.
+  snrapply (ap (fun x => x / (m * k))).
   lhs rapply nat_div_mul_l.
-  rewrite nat_mul_comm.
-  rapply nat_div_cancel_mul_r.
+  rapply nat_div_mul_cancel_l.
 Defined.
 
 (** We can cancel common factors on the left in a modulo. *)

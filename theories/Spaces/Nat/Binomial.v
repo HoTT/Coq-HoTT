@@ -134,10 +134,9 @@ Proof.
   2,3: exact _.
   rewrite nat_div_mul_l.
   2: exact _.
-  rewrite nat_div_div_l; rewrite (nat_mul_comm _ m.+1), nat_mul_assoc.
-  1: reflexivity.
-  change (factorial m.+1 * factorial (n.+1 - m.+1) | factorial n.+1).
-  exact _.
+  rewrite nat_div_div_l.
+  2: exact _.
+  by rewrite (nat_mul_comm _ m.+1), nat_mul_assoc.
 Defined.
 
 (** The binomial coefficients are symmetric about the middle of the range [0 <= n]. *)
