@@ -95,6 +95,7 @@ $ opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
 
 This will make `coq.dev` the latest available version of `coq`. You can pin
 `coq` to a stable version by running `opam pin add coq.dev 8.19.1` for example.
+Then install the library with `opam install coq-hott`, as for the released version.
 
 # 3. Setup for developers (using git)
 
