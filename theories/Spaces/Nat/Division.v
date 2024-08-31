@@ -411,7 +411,7 @@ Proof.
 Defined.
 
 (** A number can be corrected so that it is divisible by subtracting the modulo. *)
-Definition nat_divides_sub_mod n m : (n | m - m mod n).
+Global Instance nat_divides_sub_mod n m : (n | m - m mod n).
 Proof.
   rewrite nat_div_mod_spec''.
   exact _.
