@@ -1,3 +1,7 @@
+(** [type_scope] must be declared and bound early on so that later reserved notations register correctly. *)
+Declare Scope type_scope.
+Bind Scope type_scope with Sortclass.
+
 (** To reserve this notation, we must first bootstrap, and preserve the underlying [forall] notation *)
 Notation "'forall'  x .. y , P" := (forall x , .. (forall y, P) ..) (at level 200, x binder, y binder, right associativity).
 Reserved Notation "'exists' x .. y , p"
@@ -192,6 +196,10 @@ Reserved Infix "++" (right associativity, at level 60).
 Reserved Notation "[ u ]" (at level 0).
 Reserved Notation " [ u , v ] " (at level 0).
 
+(** Algebra *)
+Reserved Infix "*L" (at level 40).
+Reserved Infix "*R" (at level 40).
+
 (** Other / Not sorted yet *)
 
 Reserved Infix "<=>" (at level 70).
@@ -261,7 +269,6 @@ Reserved Infix ":::" (at level 60, right associativity).
 (** We define various scopes and open them in the order we expect to use them. *)
 Declare Scope core_scope.
 Declare Scope function_scope.
-Declare Scope type_scope.
 Declare Scope equiv_scope.
 Declare Scope path_scope.
 Declare Scope fibration_scope.
@@ -286,4 +293,3 @@ Global Open Scope type_scope.
 Global Open Scope core_scope.
 
 Bind Scope function_scope with Funclass.
-Bind Scope type_scope with Sortclass.

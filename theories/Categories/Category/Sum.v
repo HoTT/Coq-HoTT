@@ -43,7 +43,7 @@ End internals.
 Definition sum (C D : PreCategory) : PreCategory.
 Proof.
   refine (@Build_PreCategory
-            (C + D)%type
+            (C + D)
             (sum_morphism C D)
             (sum_identity C D)
             (sum_compose C D)

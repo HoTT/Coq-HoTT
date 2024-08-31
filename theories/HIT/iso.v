@@ -11,14 +11,12 @@ Section iso.
   Variables X Y : HSet.
   Variable f : X -> Y.
 
-  Lemma atmost1P_isinj (injf : isinj f)
+  Lemma atmost1P_isinj (injf : IsInjective f)
   : forall y : Y, atmost1P (fun x => f x = y).
   Proof.
-    unfold isinj, atmost1P in *.
-    intros.
-    apply injf.
-    path_induction.
-    reflexivity.
+    intros y x x' p q.
+    apply (injective f).
+    exact (p @ q^).
   Defined.
 
   Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)

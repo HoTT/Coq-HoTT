@@ -21,10 +21,10 @@ Ltac exp_laws_misc_t' :=
 Ltac exp_laws_simplify_types' :=
   idtac;
   match goal with
-    | [ H : (_ + _)%type |- _ ] => destruct H
+    | [ H : (_ + _) |- _ ] => destruct H
     | [ H : Unit |- _ ] => destruct H
     | [ H : Empty |- _ ] => destruct H
-    | [ H : (_ * _)%type |- _ ] => destruct H
+    | [ H : (_ * _) |- _ ] => destruct H
     | [ |- _ = _ :> Functor _ _ ] => progress path_functor
     | [ |- _ = _ :> NaturalTransformation _ _ ] => progress path_natural_transformation
     | [ |- _ = _ :> prod _ _ ] => apply path_prod

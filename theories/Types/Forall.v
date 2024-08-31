@@ -2,7 +2,7 @@
 (** * Theorems about dependent products *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
-               Basics.Tactics Basics.Contractible.
+               Basics.Tactics Basics.Contractible Basics.Iff.
 
 Require Export Basics.Trunc (istrunc_forall).
 
@@ -314,12 +314,9 @@ Defined.
 (** At least over a fixed base *)
 Definition iff_functor_forall {A : Type} {P Q : A -> Type}
            (f : forall a, P a <-> Q a)
-  : (forall a, P a) <-> (forall a, Q a).
-Proof.
-  split.
-  - intros g a; exact (fst (f a) (g a)).
-  - intros h a; exact (snd (f a) (h a)).
-Defined.
+  : (forall a, P a) <-> (forall a, Q a)
+  := (functor_forall idmap (fun a => fst (f a)),
+    functor_forall idmap (fun a => snd (f a))).
 
 (** ** Two variable versions for function extensionality. *)
 
@@ -365,6 +362,8 @@ Note: not sure if [P] will usually be deducible, or whether it would be better e
 Definition flip `{P : A -> B -> Type}
   : (forall a b, P a b) -> (forall b a, P a b)
   := fun f b a => f a b.
+
+Arguments flip {A B P} f b a /.
 
 Global Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P) | 0.

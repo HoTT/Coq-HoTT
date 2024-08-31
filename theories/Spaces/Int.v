@@ -19,7 +19,7 @@ Inductive Int : Type0 :=
 | zero : Int
 | posS : nat -> Int.
 
-(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. *)
+(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [posS n]. Various operations on [nat] are preserved by this function. See the section on conversion functions starting with [int_nat_succ]. *)
 Definition int_of_nat (n : nat) :=
   match n with
   | O => zero
@@ -45,9 +45,9 @@ Definition int_to_number_int (n : Int) : Numeral.int :=
 Definition int_of_number_int (d : Numeral.int) :=
   match d with
   | Numeral.IntDec (Decimal.Pos d) => int_of_nat (Nat.of_uint d)
-  | Numeral.IntDec (Decimal.Neg d) => negS (pred (Nat.of_uint d))
+  | Numeral.IntDec (Decimal.Neg d) => negS (nat_pred (Nat.of_uint d))
   | Numeral.IntHex (Hexadecimal.Pos u) => int_of_nat (Nat.of_hex_uint u)
-  | Numeral.IntHex (Hexadecimal.Neg u) => negS (pred (Nat.of_hex_uint u))
+  | Numeral.IntHex (Hexadecimal.Neg u) => negS (nat_pred (Nat.of_hex_uint u))
   end.
 
 Number Notation Int int_of_number_int int_to_number_int : int_scope.
@@ -78,14 +78,6 @@ Definition int_pred (n : Int) : Int :=
 
 Notation "n .-1" := (int_pred n) : int_scope.
 
-(** [int_of_nat] is commutes with taking succesors *)
-
-Definition int_of_nat_succ_commute (n : nat) 
-  : int_of_nat (S n) = (int_succ o int_of_nat) n :> Int.
-Proof.
-  destruct n; reflexivity.
-Defined.
-
 (** *** Negation *)
 
 Definition int_neg@{} (x : Int) : Int :=
@@ -109,11 +101,11 @@ Definition Int_ind@{i} (P : Int -> Type@{i})
   : forall x, P x.
 Proof.
   intros[x | | x].
-  - induction x as [|x IHx] using Core.nat_ind.
+  - induction x as [|x IHx].
     + apply (HN 0%nat), H0.
     + apply (HN x.+1%nat), IHx.
   - exact H0.
-  - induction x as [|x IHx] using Core.nat_ind.
+  - induction x as [|x IHx].
     * apply (HP 0%nat), H0.
     * apply (HP x.+1%nat), IHx.
 Defined.
@@ -132,8 +124,9 @@ Proof.
   2-4,6-8: right; intros; discriminate.
   2: by left.
   1,2: nrapply decidable_iff.
-  1,4: nrapply ap.
-  1,3: intros H; by injection H.
+  1,3: split.
+  1,3: nrapply ap.
+  1,2: intros H; by injection H.
   1,2: exact _.
 Defined.
 
@@ -731,4 +724,51 @@ Proof.
   refine (_ @ equiv_path_loopexp p z a).
   refine (ap (fun q => equiv_path A A (loopexp q z) a) _).
   apply eissect.
+Defined.
+
+(** ** Converting between integers and naturals *)
+
+(** [int_of_nat] preserves successors. *)
+Definition int_nat_succ (n : nat)
+  : (n.+1)%int = (n.+1)%nat :> Int.
+Proof.
+  by induction n.
+Defined.
+
+(** [int_of_nat] preserves addition. Hence is a monoid homomorphism. *)
+Definition int_nat_add (n m : nat)
+  : (n + m)%int = (n + m)%nat :> Int.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rewrite <- 2 int_nat_succ.
+    rewrite int_add_succ_l.
+    exact (ap _ IHn).
+Defined.
+
+(** [int_of_nat] preserves subtraction when not truncated. *)
+Definition int_nat_sub (n m : nat)
+  : (m <= n)%nat -> (n - m)%int = (n - m)%nat :> Int.
+Proof.
+  intros H.
+  induction H as [|n H IHn].
+  - lhs nrapply int_add_neg_r.
+    by rewrite nat_sub_cancel.
+  - rewrite nat_sub_succ_l; only 2: exact _.
+    rewrite <- 2 int_nat_succ.
+    rewrite int_add_succ_l.
+    exact (ap _ IHn).
+Defined.
+
+(** [int_of_nat] preserves multiplication. This makes [int_of_nat] a semiring homomorphism. *)
+Definition int_nat_mul (n m : nat)
+  :  (n * m)%int = (n * m)%nat :> Int.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - rewrite <- int_nat_succ.
+    rewrite int_mul_succ_l.
+    rewrite nat_mul_succ_l.
+    rhs_V nrapply int_nat_add.
+    exact (ap _ IHn).
 Defined.

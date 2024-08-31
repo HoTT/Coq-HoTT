@@ -2,7 +2,7 @@
 Require Import Category.Core Category.Univalent Category.Morphisms.
 Require Import Structure.Core.
 Require Import Types.Sigma Trunc Equivalences.
-Require Import Basics.Tactics.
+Require Import Basics.Iff Basics.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

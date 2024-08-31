@@ -720,7 +720,7 @@ Local Ltac unify_with_projections term u :=
   (unify_first_evar_with term u;
    tryif has_evar term then fail 0 term "has evars remaining" else idtac).
 
-(* Completely destroys v into it's pieces and trys to put pieces in sigma. *)
+(* Completely destroys v into its pieces and trys to put pieces in sigma. *)
 Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=
   ((destruct v; shelve) +
    (snrefine (_ ; _);

@@ -420,8 +420,8 @@ Definition pos_to_nat : Pos -> nat.
 Proof.
   intro p. induction p.
   + exact (S O).
-  + exact (add IHp IHp).
-  + exact (S (add IHp IHp)).
+  + exact (nat_add IHp IHp).
+  + exact (S (nat_add IHp IHp)).
 Defined.
 
 Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.

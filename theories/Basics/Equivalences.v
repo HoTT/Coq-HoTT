@@ -80,9 +80,6 @@ Ltac change_apply_equiv_compose :=
     change ((f oE g) x) with (f (g x))
   end.
 
-Definition iff_equiv {A B : Type} (f : A <~> B)
-  : A <-> B := (equiv_fun f, f^-1).
-
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 

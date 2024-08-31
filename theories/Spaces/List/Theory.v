@@ -1,7 +1,8 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
-  Basics.Equivalences Basics.Decidable.
-Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum Types.Option.
-Require Export Spaces.List.Core Spaces.Nat.Core Spaces.Nat.Arithmetic.
+  Basics.Equivalences Basics.Decidable Basics.Iff.
+Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum
+  Types.Empty Types.Option.
+Require Export Spaces.List.Core Spaces.Nat.Core.
 
 Local Set Universe Minimization ToSet.
 Local Set Polymorphic Inductive Cumulativity.
@@ -145,6 +146,15 @@ Proof.
     exact (y'; (p, inr i')).
 Defined.
 
+(** Mapping a function over a concatenated list is the concatenation of the mapped lists. *)
+Definition list_map_app {A B : Type} (f : A -> B) (l l' : list A)
+  : list_map f (l ++ l') = list_map f l ++ list_map f l'.
+Proof.
+  induction l as [|a l IHl].
+  1: reflexivity.
+  simpl; f_ap.
+Defined.
+
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
 Lemma list_map_id {A : Type} (f : A -> A) (l : list A)
   (Hf : forall x, InList x l -> f x = x)
@@ -185,7 +195,7 @@ Proof.
   - destruct l2.
     + inversion p.
     + cbn; f_ap.
-      by apply IHl1, path_nat_S.
+      by apply IHl1, path_nat_succ.
 Defined.
 
 (** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)
@@ -206,7 +216,7 @@ Proof.
     destruct H as [q | i].
     1: exact (y; z; (q, (inl idpath, inl idpath))).
     destruct (IHl1 l2 x i) as [y' [z' [q [r s]]]].
-    1: apply path_nat_S, p.
+    1: apply path_nat_succ, p.
     exact (y'; z'; (q, (inr r, inr s))).
 Defined.
 
@@ -234,10 +244,11 @@ Defined.
 Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
   : length (reverse_acc acc l) = (length acc + length l)%nat.
 Proof.
+  symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
-  - apply add_n_O.
-  - lhs nrapply IHl.
-    apply nat_add_n_Sm.
+  - apply nat_add_zero_r.
+  - rhs_V nrapply IHl.
+    apply nat_add_succ_r.
 Defined.
 
 (** The length of [reverse] is the same as the length of the original list. *)
@@ -287,6 +298,33 @@ Proof.
   cbn; apply reverse_acc_cons.
 Defined.
 
+(** The [reverse] of a concatenated list is the concatenation of the reversed lists in reverse order. *)
+Definition reverse_app {A : Type} (l l' : list A)
+  : reverse (l ++ l') = reverse l' ++ reverse l.
+Proof.
+  induction l as [|a l IHl] in l' |- *.
+  1: symmetry; apply app_nil.
+  simpl.
+  lhs nrapply reverse_cons.
+  rhs nrapply ap.
+  2: nrapply reverse_cons.
+  rhs nrapply app_assoc.
+  nrapply (ap (fun l => l ++ [a])).
+  exact (IHl l').
+Defined.
+
+(** [reverse] is involutive. *)
+Definition reverse_reverse {A : Type} (l : list A)
+  : reverse (reverse l) = l.
+Proof.
+  induction l.
+  1: reflexivity.
+  lhs nrapply ap.
+  1: nrapply reverse_cons.
+  lhs nrapply reverse_app.
+  exact (ap _ IHl).
+Defined.
+
 (** ** Getting elements *)
 
 (** A variant of [nth] that returns an element of the list and a proof that it is the [n]-th element. *)
@@ -295,11 +333,11 @@ Definition nth_lt@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : { x : A & nth l n = Some x }.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by exists a.
   apply IHa.
-  apply leq_S_n.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -320,7 +358,7 @@ Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
   : InList (nth' l n H) l.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: by left.
   right.
@@ -357,12 +395,12 @@ Proof.
     snrapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0%nat _).
     snrefine (exist _ _ idpath).
-    apply leq_S_n'.
+    apply leq_succ.
     exact _.
   - destruct (IHl i) as [n [H H']].
     snrefine (exist@{i i} _ n.+1%nat _).
     snrefine (_; _); cbn.
-    1: apply leq_S_n', H.
+    1: apply leq_succ, H.
     refine (_ @ H').
     apply nth'_cons.
 Defined.
@@ -386,7 +424,7 @@ Definition nth'_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
   : nth' (list_map f l) n H' = f (nth' l n H).
 Proof.
   induction l as [|a l IHl] in n, H, H' |- * using list_ind@{i j}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
   apply IHl.
@@ -404,20 +442,15 @@ Proof.
     simple_list_induction l1 a l1 IHl1;
     intros l2 n defl defr H H' H'' p.
   - destruct l2 as [|b l2].
-    + destruct (not_leq_Sn_0 _ H).
+    + destruct (not_lt_zero_r _ H).
     + inversion p.
   - destruct l2 as [|b l2].
     + inversion p.
     + destruct n.
       * reflexivity.
-      * unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H.
-        unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H'.
-        unshelve erewrite nth'_cons.
-        1: apply leq_S_n, H''.
+      * erewrite 3 nth'_cons.
         apply IHl1.
-        by apply path_nat_S.
+        by apply path_nat_succ.
 Defined.
 
 (** The [nth'] element of a [repeat] is the repeated value. *)
@@ -426,7 +459,7 @@ Definition nth'_repeat@{i|} {A : Type@{i}} (x : A) (i n : nat)
   : nth' (repeat x n) i H = x.
 Proof.
   induction n as [|n IHn] in i, H |- * using nat_ind@{i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct i.
   1: reflexivity.
   apply IHn.
@@ -448,10 +481,10 @@ Proof.
   f_ap.
   - exact (H 0%nat _).
   - snrapply IHl.
-    1: by apply path_nat_S.
+    1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
-    1: apply leq_S_n', Hn.
+    1: apply leq_succ, Hn.
     lhs nrapply H.
     nrapply nth'_cons.
 Defined.
@@ -462,14 +495,14 @@ Definition nth_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
   : nth (l ++ l') n = nth l n.
 Proof.
   induction l as [|a l IHl] in l', n, H |- * using list_ind@{i i}.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   destruct n.
   1: reflexivity.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
-Definition nth_last {A : Type} (l : list A) (i : nat) (p : pred (length l) = i)
+Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
   : nth l i = last l. 
 Proof.
   destruct p.
@@ -535,9 +568,9 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply drop_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; apply IHl.
-  apply leq_S_n.
+  apply leq_pred'.
   exact H.
 Defined.
 
@@ -593,18 +626,18 @@ Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
   1: apply take_nil.
   destruct n.
-  1: destruct (not_leq_Sn_0 _ H).
+  1: destruct (not_lt_zero_r _ H).
   cbn; f_ap.
-  by apply IHl, leq_S_n.
+  by apply IHl, leq_pred'.
 Defined.
 
 (** The length of a [take n] is the minimum of [n] and the length of the original list. *)
 Definition length_take@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  : length (take n l) = min n (length l).
+  : length (take n l) = nat_min n (length l).
 Proof.
   induction l as [|a l IHl] in n |- * using list_ind@{i i}.
   { rewrite take_nil.
-    rewrite min_r.
+    rewrite nat_min_r.
     1: reflexivity.
     cbn; exact _. }
   destruct n.
@@ -655,20 +688,19 @@ Defined.
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
   (H : (n < length l)%nat)
-  : length (remove n l) = pred (length l)%nat.
+  : length (remove n l) = nat_pred (length l)%nat.
 Proof.
   unfold remove.
   rewrite length_app@{i}.
   rewrite length_take.
   rewrite length_drop.
-  rewrite min_l.
-  - rewrite nataddsub_assoc.
-    2: exact H.
-    rewrite <- predeqminus1.
-    induction n in |- * using nat_ind@{Set}.
-    1: reflexivity.
-    cbn; assumption.
-  - exact (leq_trans _ H).
+  rewrite nat_min_l.
+  2: exact (leq_trans _ H).
+  rewrite <- nat_sub_l_add_r.
+  2: exact _.
+  lhs nrapply nat_sub_succ_r.
+  apply ap.
+  apply nat_add_sub_cancel_l.
 Defined. 
 
 (** An element of a [remove] is an element of the original list. *)
@@ -684,13 +716,70 @@ Proof.
   - apply drop_inlist.
 Defined.
 
+(** *** Filter *)
+
+(** Produce the list of elements of a list that satisfy a decidable predicate. *)
+Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
+  (dec : forall x, Decidable (P x))
+  : list A
+  := match l with
+    | nil => nil
+    | x :: l =>
+      if dec x then x :: list_filter l P dec
+        else list_filter l P dec
+    end.
+
+Definition inlist_filter@{u v k | u <= k, v <= k} {A : Type@{u}} (l : list A)
+  (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
+  : iff@{u k k} (InList x (list_filter l P dec)) (InList x l /\ P x).
+Proof.
+  simple_list_induction l a l IHl.
+  - simpl.
+    apply iff_inverse.
+    apply iff_equiv.
+    snrapply prod_empty_l@{v}.
+  - simpl.
+    nrapply iff_compose.
+    2: { apply iff_inverse.
+         apply iff_equiv.
+         exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _). }
+    destruct (dec a) as [p|p].
+    + simpl.
+      snrapply iff_compose.
+      1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
+      1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
+      split; apply functor_sum@{k k k k}; only 2,4: apply idmap.
+      * intros [].
+        exact (idpath, p).
+      * exact fst.
+    + nrapply iff_compose.
+      1: apply IHl.
+      apply iff_inverse.
+      apply iff_equiv.
+      nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
+      snrapply equiv_functor_sum'@{k k k k k k}.
+      2: exact equiv_idmap.
+      apply equiv_to_empty.
+      by intros [[] r].
+Defined.
+
+Definition list_filter_app {A : Type} (l l' : list A) (P : A -> Type)
+  (dec : forall x, Decidable (P x))
+  : list_filter (l ++ l') P dec = list_filter l P dec ++ list_filter l' P dec.
+Proof.
+  simple_list_induction l a l IHl.
+  - reflexivity.
+  - simpl; destruct (dec a); trivial.
+    simpl; f_ap.
+Defined.
+
 (** ** Sequences *)
 
 (** The length of a reverse sequence of [n] numbers is [n]. *)
 Definition length_seq_rev@{} (n : nat)
   : length (seq_rev n) = n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
 Defined.
@@ -707,7 +796,7 @@ Defined.
 Definition seq_rev_cons@{} (n : nat)
   : seq_rev n.+1 = n :: seq_rev n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
 Defined.
@@ -727,8 +816,8 @@ Proof.
   { intros m.
     snrapply (functor_sigma idmap).
     intros k H.
-    exact (leq_S _ _ H). }
-  induction n as [|n IHn] using nat_ind@{Set}.
+    exact (leq_succ_r H). }
+  induction n as [|n IHn].
   1: exact nil.
   nrefine ((n; _) :: list_map (f n) IHn).
   exact _.
@@ -742,7 +831,7 @@ Definition seq'@{} (n : nat) : list {k : nat & (k < n)%nat}
 Definition length_seq_rev'@{} (n : nat)
   : length (seq_rev' n) = n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
   lhs nrapply length_list_map.
@@ -761,7 +850,7 @@ Defined.
 Definition seq_rev_seq_rev'@{} (n : nat)
   : list_map pr1 (seq_rev' n) = seq_rev n.
 Proof.
-  induction n as [|n IHn] using nat_ind@{Set}.
+  induction n as [|n IHn].
   1: reflexivity.
   simpl; f_ap.
   lhs_V nrapply list_map_compose.
@@ -781,32 +870,29 @@ Defined.
 Definition nth_seq_rev@{} {n i} (H : (i < n)%nat)
   : nth (seq_rev n) i = Some (n - i.+1)%nat.
 Proof.
-  induction i as [|i IHi] in n, H |- * using nat_ind@{Set}.
-  - induction n using nat_ind@{Set}.
-    1: destruct (not_leq_Sn_0 _ H).
-    cbn; by rewrite sub_n_0.
-  - induction n as [|n IHn] using nat_ind@{Set}.
-    1: destruct (not_leq_Sn_0 _ H).
-    by apply IHi, leq_S_n.
+  induction i as [|i IHi] in n, H |- *.
+  - induction n.
+    1: destruct (not_lt_zero_r _ H).
+    cbn; by rewrite nat_sub_zero_r.
+  - induction n as [|n IHn].
+    1: destruct (not_lt_zero_r _ H).
+    by apply IHi, leq_pred'.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
 Definition nth_seq@{} {n i} (H : (i < n)%nat)
   : nth (seq n) i = Some i.
 Proof.
-  induction n using nat_ind@{Set}.
-  1: destruct (not_leq_Sn_0 _ H).
+  induction n.
+  1: destruct (not_lt_zero_r _ H).
   rewrite seq_succ.
   destruct (dec (i < n)%nat) as [H'|H'].
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
-  - apply not_lt_implies_geq in H'.
-    destruct (leq_split H') as [H'' | H''].
-    { apply lt_implies_not_geq in H''.
-      apply leq_S_n in H.
-      contradiction. }
-    destruct H''.
+  - apply geq_iff_not_lt in H'.
+    apply leq_pred' in H.
+    destruct (leq_antisym H H').
     lhs nrapply nth_last.
     { rewrite length_app.
       rewrite nat_add_comm.
@@ -826,6 +912,21 @@ Proof.
   lhs_V nrapply nth_nth'.
   apply nth_seq.
   by rewrite length_seq' in H.
+Defined.
+
+Definition inlist_seq@{} (n : nat) x
+  : InList x (seq n) <~> (x < n)%nat.
+Proof.
+  simple_induction n n IHn.
+  { symmetry; apply equiv_to_empty.
+    apply not_lt_zero_r. }
+  refine (_ oE equiv_transport _ (seq_succ _)).
+  nrefine (_ oE (equiv_inlist_app _ _ _)^-1).
+  nrefine (_ oE equiv_functor_sum' (B':=x = n) IHn _).
+  2: { simpl.
+       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set} _). }
+  nrefine (_ oE equiv_leq_lt_or_eq^-1).
+  rapply equiv_iff_hprop.
 Defined.
 
 (** ** Repeat *)
@@ -896,7 +997,7 @@ Proof.
   by apply for_all_list_map.
 Defined.
 
-(** If a predicate [P] and a prediate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
+(** If a predicate [P] and a predicate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)
 Lemma for_all_list_map2 {A B C : Type}
   (P : A -> Type) (Q : B -> Type) (R : C -> Type)
   (f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
@@ -934,7 +1035,11 @@ Proof.
   - destruct l2 as [|y l2].
     + discriminate.
     + intros [Hx Hl1] [Hy Hl2].
-      split; auto.
+      split.
+      * by apply Hf.
+      * apply IHl1; trivial.
+        apply path_nat_succ.
+        exact p.
 Defined.
 
 (** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)
@@ -1010,11 +1115,67 @@ Global Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (for_all P l).
 Proof.
-  induction l as [|x l IHl].
-  - exact (inl tt).
-  - destruct IHl as [Hl | Hl].
-    + destruct (dec (P x)) as [Hx | Hx].
-      * exact (inl (Hx, Hl)).
-      * exact (inr (fun H => Hx (fst H))).
-    + exact (inr (fun H => Hl (snd H))).
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+(** If a predicate [P] is decidable then so is [list_exists P]. *)
+Global Instance decidable_list_exists {A : Type} (P : A -> Type)
+  `{forall x, Decidable (P x)} (l : list A)
+  : Decidable (list_exists P l).
+Proof.
+  simple_list_induction l x l IHl; exact _.
+Defined.
+
+Definition inlist_list_exists {A : Type} (P : A -> Type) (l : list A)
+  : list_exists P l -> exists (x : A), InList x l /\ P x.
+Proof.
+  simple_list_induction l x l IHl.
+  1: done.
+  simpl.
+  intros [Px | ex].
+  - exists x.
+    by split; [left|].
+  - destruct (IHl ex) as [x' [H Px']].
+    exists x'.
+    by split; [right|].
+Defined.
+
+Definition list_exists_inlist {A : Type} (P : A -> Type) (l : list A)
+  : forall (x : A), InList x l -> P x -> list_exists P l.
+Proof.
+  simple_list_induction l x l IHl.
+  1: trivial.
+  simpl; intros y H p; revert H.
+  apply functor_sum.
+  - exact (fun r => r^ # p).
+  - intros H.
+    by apply (IHl y).
+Defined.
+
+Definition list_exists_seq {n : nat} (P : nat -> Type)
+  (H : forall k, P k -> (k < n)%nat)
+  : (exists k, P k) <-> list_exists P (seq n).
+Proof.
+  split.
+  - intros [k p].
+    snrapply (list_exists_inlist P _ k _ p).
+    apply inlist_seq, H.
+    exact p.
+  - intros H1.
+    apply inlist_list_exists in H1.
+    destruct H1 as [k [Hk p]].
+    exists k.
+    exact p.
+Defined.
+
+(** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)
+Definition decidable_exists_nat (n : nat) (P : nat -> Type)
+  (H1 : forall k, P k -> (k < n)%nat)
+  (H2 : forall k, Decidable (P k))
+  : Decidable (exists k, P k).
+Proof.
+  nrapply decidable_iff.
+  1: apply iff_inverse; nrapply list_exists_seq.
+  1: exact H1.
+  exact _.
 Defined.

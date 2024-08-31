@@ -10,7 +10,7 @@ Require Import Homotopy.Hopf.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import WildCat.
 
-(* Formalisation of Eilenberg-MacLane spaces *)
+(** * Eilenberg-Mac Lane spaces *)
 
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.
@@ -57,7 +57,7 @@ Section EilenbergMacLane.
 
   Local Open Scope trunc_scope.
 
-  (* This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
+  (** This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
   Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
     : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
@@ -91,7 +91,7 @@ Section EilenbergMacLane.
       exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).
   Defined.
 
-  (* For positive indices, we in fact get a group isomorphism. *)
+  (** For positive indices, we in fact get a group isomorphism. *)
   Definition equiv_g_pi_n_em (G : AbGroup) (n : nat)
     : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).
   Proof.
@@ -108,6 +108,41 @@ Section EilenbergMacLane.
     nrapply iscohhspace_equiv_cohhspace.
     2: apply pequiv_loops_em_em.
     apply iscohhspace_loops.
+  Defined.
+
+  (** If [G] and [G'] are isomorphic, then [K(G,n)] and [K(G',n)] are equivalent.  TODO:  We should show that [K(-,n)] is a functor, which implies this. *)
+  Definition pequiv_em_group_iso {G G' : Group} (n : nat)
+    (e : G $<~> G')
+    : K(G, n) <~>* K(G', n).
+  Proof.
+    by destruct (equiv_path_group e).
+  Defined.
+
+  (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
+  Definition pequiv_em_connected_truncated (X : pType)
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : K(Pi n.+1 X, n.+1) <~>* X.
+  Proof.
+    generalize dependent X; induction n; intros X isC isT.
+    1: rapply pequiv_pclassifyingspace_pi1.
+    (* The equivalence will be the composite
+<<
+      K( (Pi n.+2 X) n.+2)
+   <~>* K( (Pi n.+1 (loops X)), n.+2)
+   = pTr n.+2 (psusp K( (Pi n.+1 (loops X)), n.+1))  [by definition]
+   <~>* pTr n.+2 (psusp (loops X))
+   <~>* pTr n.+2 X
+   <~>* X
+>>
+    and we'll work from right to left.
+*)
+    refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
+    refine (pequiv_ptr_psusp_loops X n o*E _).
+    change (K(?G, n.+2)) with (pTr n.+2 (psusp K( G, n.+1 ))).
+    refine (emap (pTr n.+2 o psusp) _).
+    refine ((IHn (loops X) _ _) o*E _).
+    apply pequiv_em_group_iso.
+    apply groupiso_pi_loops.
   Defined.
 
 End EilenbergMacLane.

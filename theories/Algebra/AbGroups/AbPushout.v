@@ -28,7 +28,7 @@ Proof.
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
     refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
-    unfold uncurry; cbn.
+    cbn.
     refine (ap011 sg_op (preserves_negate _) (p a)^ @ _).
     exact (left_inverse _).
 Defined.

@@ -38,6 +38,12 @@ Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
 Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
   := commutativity x y.
 
+Definition ab_neg_op {A : AbGroup} (x y : A) : - (x + y) = -x - y.
+Proof.
+  lhs nrapply grp_inv_op.
+  apply ab_comm.
+Defined.
+
 (** ** Paths between abelian groups *)
 
 Definition equiv_path_abgroup `{Univalence} {A B : AbGroup@{u}}
@@ -74,11 +80,8 @@ Coercion abgroup_subgroup : Subgroup >-> AbGroup.
 Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
-  intros x y; unfold in_cosetL, in_cosetR.
-  refine (_ oE equiv_subgroup_inverse _ _).
-  rewrite negate_sg_op.
-  rewrite negate_involutive.
-  by rewrite (commutativity (-y) x).
+  intros x y h.
+  by rewrite ab_comm.
 Defined.
 
 (** ** Quotients of abelian groups *)
@@ -99,6 +102,8 @@ Defined.
 
 Definition QuotientAbGroup (G : AbGroup) (H : Subgroup G) : AbGroup
   := (Build_AbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)) _).
+
+Arguments QuotientAbGroup G H : simpl never.
 
 Definition quotient_abgroup_rec {G : AbGroup}
   (N : Subgroup G) (H : AbGroup)
@@ -297,9 +302,7 @@ Proof.
   - exact zero.
   - refine (f n _ + IHn _).
     intros k Hk.
-    refine (f k _).
-    apply leq_S.
-    exact Hk.
+    exact (f k _).
 Defined.
 
 (** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)
@@ -309,7 +312,7 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
-  - rhs nrapply (ap@{Set _} _ (int_of_nat_succ_commute n)).
+  - rhs_V nrapply (ap@{Set _} _ (int_nat_succ n)).
     rhs nrapply grp_pow_succ.
     simpl. f_ap.
     apply IHn.

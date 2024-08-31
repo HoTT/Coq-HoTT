@@ -1169,7 +1169,7 @@ End Book_4_5.
 Section Book_4_6_i.
 
   Definition is_qinv {A B : Type} (f : A -> B)
-    := { g : B -> A & ((f o g == idmap) * (g o f == idmap))%type }.
+    := { g : B -> A & (f o g == idmap) * (g o f == idmap) }.
   Definition qinv (A B : Type)
     := { f : A -> B & is_qinv f }.
   Definition qinv_id A : qinv A A

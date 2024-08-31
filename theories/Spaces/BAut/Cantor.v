@@ -20,7 +20,7 @@ Section Assumptions.
   Proof.
     intros Z.
     (** Here is the important part of this definition. *)
-    exists (Z + Cantor)%type.
+    exists (Z + Cantor).
     (** The rest is just a proof that [Z+Cantor] is again equivalent to [Cantor], using [cantor_fold] and the assumption that [Z] is equivalent to [Cantor]. *)
     pose (e := Z.2); simpl in e; clearbody e.
     strip_truncations.

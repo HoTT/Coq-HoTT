@@ -1,5 +1,4 @@
-Require Export HoTT.Basics.Utf8.
-Require Import HoTT.Basics.Overture.
+Require Export Basics.Utf8 Basics.Overture Basics.Iff.
 
 (** * Just enough Utf8/unicode for the Classes library to build, without depending on everything that HoTT.Utf8 depends on. *)
 

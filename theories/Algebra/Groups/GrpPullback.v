@@ -16,9 +16,7 @@ Section GrpPullback.
   Proof.
     intros [b [c p]] [d [e q]].
     refine (b * d; c * e; _).
-    refine (grp_homo_op f b d @ (_ @ _) @ (grp_homo_op g c e)^).
-    - exact (ap (fun y:A => f b * y) q).
-    - exact (ap (fun x:A => x * g e) p).
+    exact (grp_homo_op_agree _ _ p q).
   Defined.
 
   Local Instance grp_pullback_sgop_associative

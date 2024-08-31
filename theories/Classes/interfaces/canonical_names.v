@@ -271,10 +271,6 @@ Class CoTransitive `(R : Relation A) : Type := cotransitive
   : forall x y, R x y -> forall z, hor (R x z) (R z y).
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
-Class AntiSymmetric `(R : Relation A) : Type
-  := antisymmetry: forall x y, R x y -> R y x -> x = y.
-Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
-
 Class EquivRel `(R : Relation A) : Type := Build_EquivRel
   { EquivRel_Reflexive : Reflexive R ;
     EquivRel_Symmetric : Symmetric R ;

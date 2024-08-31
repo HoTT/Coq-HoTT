@@ -176,3 +176,15 @@ Proof.
     + nrapply (isconnected_equiv' _ _ (pequiv_pfiber_loops_susp_counit_join X)^-1).
       nrapply isconnected_join; exact _.
 Defined.
+
+(** In particular, we get the following result.  All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
+Definition pequiv_ptr_psusp_loops `{Univalence} (X : pType) (n : nat) `{IsConnected n.+1 X}
+  : pTr n.+2 (psusp (loops X)) <~>* pTr n.+2 X.
+Proof.
+  snrapply Build_pEquiv.
+  1: rapply (fmap (pTr _) (loop_susp_counit _)).
+  nrapply O_inverts_conn_map.
+  nrapply (isconnmap_pred_add n.-2).
+  rewrite 2 trunc_index_add_succ.
+  rapply (conn_map_loop_susp_counit X).
+Defined.
