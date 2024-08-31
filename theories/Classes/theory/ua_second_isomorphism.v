@@ -1,6 +1,7 @@
 (** The second isomorphism theorem [isomorphic_second_isomorphism]. *)
 
 Require Import
+  Basics.Overture
   HSet
   Colimits.Quotient
   Classes.interfaces.canonical_names

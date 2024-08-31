@@ -50,7 +50,7 @@ Reserved Notation "x < y <= z" (at level 70, y at next level).
 Reserved Notation "x + y" (at level 50, left associativity).
 Reserved Notation "x - y" (at level 50, left associativity).
 Reserved Notation "x * y" (at level 40, left associativity).
-Reserved Notation "x / y" (at level 40, left associativity).
+Reserved Notation "x / y" (at level 40, no associativity).
 Reserved Notation "- x" (at level 35, right associativity).
 Reserved Notation "/ x" (at level 35, right associativity).
 Reserved Notation "x ^ y" (at level 30, right associativity).
