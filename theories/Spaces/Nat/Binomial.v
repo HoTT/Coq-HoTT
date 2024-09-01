@@ -107,17 +107,9 @@ Proof.
   rewrite <- nat_factorial_pred.
   2: rapply equiv_lt_lt_sub.
   lhs_V nrapply nat_div_dist.
-  - change (n - m) with (n.+1 - m.+1).
-    rewrite nat_dist_sub_r.
-    rapply nat_divides_sub.
-    change (n.+1 - m.+1) with (n - m).
-    rewrite nat_factorial_succ.
-    rewrite <- nat_mul_assoc.
-    exact _.
   - rewrite nat_factorial_succ.
     rewrite <- nat_mul_assoc.
     exact _.
-  - rapply lt_lt_leq_trans.
   - rewrite <- nat_dist_r.
     rewrite nat_add_succ_l.
     rewrite nat_add_sub_r_cancel.
@@ -135,7 +127,6 @@ Proof.
   rewrite nat_div_mul_l.
   2: exact _.
   rewrite nat_div_div_l.
-  2: exact _.
   by rewrite (nat_mul_comm _ m.+1), nat_mul_assoc.
 Defined.
 
