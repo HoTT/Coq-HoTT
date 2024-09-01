@@ -85,23 +85,22 @@ Defined.
 Definition nat_choose_factorial@{} n m
   : m <= n -> nat_choose n m = factorial n / (factorial m * factorial (n - m)).
 Proof.
-  revert n m; snrapply nat_ind_strong; hnf; intros n IHn m H.
-  destruct H as [|n H].
+  revert n m; apply nat_double_induction_leq; intro n.
+  (* The case when [m = 0]. *)
+  { rewrite nat_mul_one_l.
+    rewrite nat_sub_zero_r.
+    symmetry; rapply nat_div_cancel. }
+  (* The case when [m = n]. *)
   { rewrite nat_sub_cancel.
     rewrite nat_mul_one_r.
     rewrite nat_div_cancel.
     1: nrapply nat_choose_diag.
     exact _. }
-  destruct m.
-  { rewrite nat_choose_zero_r.
-    rewrite nat_sub_zero_r.
-    rewrite nat_mul_one_l.
-    symmetry.
-    apply nat_div_cancel.
-    exact _. }
+  (* The case with [n.+1] and [m.+1] with [m < n] and an induction hypothesis. *)
+  intros m H IHn.
   rewrite nat_choose_succ.
   rewrite 2 IHn.
-  2-5: exact _.
+  2,3: exact _.
   rewrite <- (nat_div_cancel_mul_l _ _ m.+1). 
   2: exact _.
   rewrite nat_mul_assoc.

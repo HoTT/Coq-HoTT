@@ -1486,3 +1486,22 @@ Proof.
   - destruct p.
     by apply IH_strong.
 Defined.
+
+(** ** An induction principle for two variables with a constraint. *)
+Definition nat_double_induction_leq (P : nat -> nat -> Type)
+  (Hn0 : forall n, P n 0)
+  (Hnn : forall n, P n n)
+  (IH : forall n m, m < n -> (forall m', m' <= n -> P n m') -> P n.+1 m.+1)
+  : forall n m, m <= n -> P n m.
+Proof.
+  intro n; induction n; intros m H.
+  - destruct (path_zero_leq_zero_r m H)^; clear H.
+    apply Hn0.
+  - destruct m.
+    + apply Hn0.
+    + apply equiv_leq_lt_or_eq in H.
+      destruct H as [H | []].
+      2: apply Hnn.
+      rapply IH.
+      rapply IHn.
+Defined.
