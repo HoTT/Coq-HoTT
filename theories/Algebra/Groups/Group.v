@@ -88,7 +88,7 @@ End GroupLaws.
 (** TODO: improve this tactic so that it also rewrites and is able to solve basic group lemmas. *)
 Tactic Notation "grp_auto" := hnf; intros; eauto with group_db.
 
-(** * Some basic properties of groups *)
+(** ** Some basic properties of groups *)
 
 (** Groups are pointed sets with point the identity. *)
 Global Instance ispointed_group (G : Group)
@@ -676,7 +676,7 @@ Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $->
   : Is0Functor (@cat_postcomp Group _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (ap h (p a)).
+  intros f g p a ; exact (ap h (p a)).
 Defined.
 
 Global Instance is0functor_precomp_grouphomomorphism
