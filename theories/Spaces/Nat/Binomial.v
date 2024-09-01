@@ -98,7 +98,7 @@ Proof.
     exact _. }
   (* The case with [n.+1] and [m.+1] with [m < n] and an induction hypothesis. *)
   intros m H IHn.
-  rewrite nat_choose_succ.
+  rewrite_refl nat_choose_succ.
   rewrite 2 IHn.
   2,3: exact _.
   rewrite <- (nat_div_cancel_mul_l _ _ m.+1). 
