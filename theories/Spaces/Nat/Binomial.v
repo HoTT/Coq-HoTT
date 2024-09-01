@@ -126,10 +126,14 @@ Proof.
     reflexivity.
 Defined.
 
+(** Another recursive property of the binomial coefficients.  To choose [m+1] elements from a set of size [n+1], one has [n+1] choices for the first element and then can make the remaining [m] choices from the remaining [n] elements.  This overcounts by a factor of [m+1], since there are [m+1] elements that could have been called the "first" element. *)
 Definition nat_choose_succ_mul@{} n m
-  : m <= n -> nat_choose n.+1 m.+1 = (n.+1 * nat_choose n m) / m.+1. 
+  : nat_choose n.+1 m.+1 = (n.+1 * nat_choose n m) / m.+1.
 Proof.
-  intros H.
+  destruct (leq_dichotomy m n) as [H | H].
+  2: { rewrite 2 nat_choose_lt; only 2, 3: exact _.
+       rewrite nat_mul_zero_r.
+       symmetry; apply nat_div_zero_l. }
   rewrite 2 nat_choose_factorial.
   2,3: exact _.
   rewrite nat_div_mul_l.
