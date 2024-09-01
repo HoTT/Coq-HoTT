@@ -23,7 +23,7 @@ Fixpoint nat_choose_step n f :=
 Fixpoint nat_choose (n m : nat) {struct m} : nat
   := match m with
     | 0 => 1
-    | S m' => nat_choose_step n (fun n=> nat_choose n m')
+    | S m' => nat_choose_step n (fun n => nat_choose n m')
     end.
 
 (** ** Properties *)
@@ -101,7 +101,7 @@ Proof.
   rewrite_refl nat_choose_succ.
   rewrite 2 IHn.
   2,3: exact _.
-  rewrite <- (nat_div_cancel_mul_l _ _ m.+1). 
+  rewrite <- (nat_div_cancel_mul_l _ _ m.+1).
   2: exact _.
   rewrite nat_mul_assoc.
   rewrite <- nat_factorial_succ.

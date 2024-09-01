@@ -191,7 +191,7 @@ Proof.
   destruct (nat_trichotomy q1 q2) as [[q | q] | q].
   - contradiction (nat_div_mod_unique_helper d q1 q2 r1 r2).
   - split; trivial.
-    destruct q. 
+    destruct q.
     by apply isinj_nat_add_l in p.
   - by contradiction (nat_div_mod_unique_helper d q2 q1 r2 r1).
 Defined.
@@ -658,7 +658,7 @@ Global Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
 (** The greatest common divisor of [n] and [m] divides [m]. *)
 Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
   := snd (nat_divides_l_gcd n m).
-  
+
 (** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)
 Global Instance nat_divides_r_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
 Proof.
@@ -696,7 +696,7 @@ Definition nat_gcd_assoc n m k : nat_gcd n (nat_gcd m k) = nat_gcd (nat_gcd n m)
 Proof.
   nrapply nat_gcd_unique.
   - intros q H1 H2.
-    rapply nat_divides_r_gcd. 
+    rapply nat_divides_r_gcd.
   - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
   - apply nat_divides_r_gcd; rapply nat_divides_trans.
 Defined.
@@ -813,7 +813,7 @@ Definition nat_bezout_comm n m d
 Proof.
   intros H [a [b p]].
   destruct (@equiv_leq_lt_or_eq 0 a _) as [|q].
-  - exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a). 
+  - exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a).
     rewrite 2 nat_dist_sub_r.
     apply nat_moveR_nV.
     rewrite <- nat_add_comm, nat_add_assoc, <- (nat_add_comm d).
@@ -860,7 +860,7 @@ Proof.
   - by apply H'.
   - destruct p.
     rewrite nat_gcd_idem; exact _.
-  - destruct (@equiv_leq_lt_or_eq 0 m _). 
+  - destruct (@equiv_leq_lt_or_eq 0 m _).
     + rewrite nat_gcd_comm.
       rapply nat_bezout_comm.
       rapply H'.
