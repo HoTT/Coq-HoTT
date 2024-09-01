@@ -1,7 +1,7 @@
 (** This file proves the third isomorphism theorem,
     [isomorphic_third_isomorphism]. *)
 Require Import
-  Basics.Overture
+  Basics.Notations
   Colimits.Quotient
   Classes.interfaces.canonical_names
   Classes.theory.ua_quotient_algebra
