@@ -26,6 +26,9 @@ Fixpoint nat_choose (n m : nat) {struct m} : nat
     | S m' => nat_choose_step n (fun n => nat_choose n m')
     end.
 
+(** We make sure we never unfold binomial coefficients with [simpl] or [cbn] since the terms do not look good. Instead, we should use lemmas we prove about it to make proofs clearer to read. *)
+Arguments nat_choose n m : simpl never.
+
 (** ** Properties *)
 
 (** The three defining properties of [nat_choose] hold definitionally. *)
