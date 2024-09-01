@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids
-  Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division Spaces.Nat.Factorial.
+  Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division Spaces.Nat.Factorial
+  Tactics.EvalIn.
 
 Local Set Universe Minimization ToSet.
 Local Unset Elimination Schemes.
@@ -10,22 +11,36 @@ Local Open Scope nat_scope.
 
 (** ** Definition *)
 
-(** The binomial coefficient [nat_choose n m] is the number of ways to choose [m] elements from a set of [n] elements. We define them recursively using Pascal's identity. *)
-Fixpoint nat_choose n m :=
-  match m with
-  | 0 => 1
-  | S m =>
-    match n with
-    | 0 => 0
-    | S n => nat_choose n m + nat_choose n m.+1
-    end
+(** The binomial coefficient [nat_choose n m] is the number of ways to choose [m] elements from a set of [n] elements. We define it recursively using Pascal's identity. We use nested [Fixpoint]s in order to get a function that computes definitionally on the edge cases as well as the inductive case. *)
+
+(** We separate out this helper result to prevent Coq from unfolding things into a larger term. This computes [n] choose [m.+1] given a function [f] that computes [n] choose [m]. *)
+Fixpoint nat_choose_step n f :=
+  match n with
+  | 0 => 0
+  | S n' => f n' + nat_choose_step n' f
   end.
 
+Fixpoint nat_choose (n m : nat) {struct m} : nat
+  := match m with
+    | 0 => 1
+    | S m' => nat_choose_step n (fun n=> nat_choose n m')
+    end.
+
 (** ** Properties *)
+
+(** The three defining properties of [nat_choose] hold definitionally. *)
 
 (** By definition, we have Pascal's identity. *)
 Definition nat_choose_succ@{} n m
   : nat_choose n.+1 m.+1 = nat_choose n m + nat_choose n m.+1
+  := idpath.
+
+(** There is only one way to choose [0] elements from any number of elements. *)
+Definition nat_choose_zero_r@{} n : nat_choose n 0 = 1
+  := idpath.
+
+(** There are no ways to choose a non-zero number of elements from [0] elements. *)
+Definition nat_choose_zero_l@{} m : nat_choose 0 m.+1 = 0
   := idpath.
 
 (** The binomial coefficient is zero if [m] is greater than [n]. *)
@@ -33,44 +48,37 @@ Definition nat_choose_lt@{} n m : n < m -> nat_choose n m = 0.
 Proof.
   revert m; induction n; hnf; intros m H; destruct H.
   1, 2: reflexivity.
-  1, 2: exact (ap011 nat_add (IHn _ _) (IHn _ _)).
+  1, 2: rewrite_refl nat_choose_succ; exact (ap011 nat_add (IHn _ _) (IHn _ _)).
 Defined.
 
 (** There is only one way to choose [n] elements from [n] elements. *)
 Definition nat_choose_diag@{} n : nat_choose n n = 1.
 Proof.
   induction n as [|n IHn]; only 1: reflexivity.
-  simpl; lhs nrapply ap.
-  1: rapply nat_choose_lt.
-  lhs nrapply nat_add_zero_r.
-  exact IHn.
-Defined.
-
-(** There is only one way to choose [0] elements from any number of elements. *)
-Definition nat_choose_zero_r@{} n : nat_choose n 0 = 1.
-Proof.
-  by destruct n.
+  rewrite_refl nat_choose_succ.
+  rhs_V nrapply nat_add_zero_r.
+  nrapply ap011.
+  - exact IHn.
+  - rapply nat_choose_lt.
 Defined.
 
 (** There are [n] ways to choose [1] element from [n] elements. *)
 Definition nat_choose_one_r@{} n : nat_choose n 1 = n.
 Proof.
-  induction n as [|n IHn].
-  1: reflexivity.
-  simpl.
-  lhs nrapply (ap (fun x => x + _)).
-  1: apply nat_choose_zero_r.
+  induction n as [|n IHn]; only 1: reflexivity.
+  rewrite_refl nat_choose_succ.
   exact (ap nat_succ IHn).
 Defined.
 
 (** There are [n.+1] ways to choose [n] elements from [n.+1] elements. *)
 Definition nat_choose_succ_l_diag@{} n : nat_choose n.+1 n = n.+1.
 Proof.
-  induction n as [|n IHn].
-  1: reflexivity.
-  lhs nrapply nat_choose_succ.
-  rewrite IHn, nat_choose_diag.
-  apply nat_add_comm.
+  induction n as [|n IHn]; only 1: reflexivity.
+  rewrite_refl nat_choose_succ.
+  rhs_V nrapply (nat_add_comm _ 1).
+  nrapply ap011.
+  - exact IHn.
+  - apply nat_choose_diag.
 Defined.
 
 (** The binomial coefficients can be written as a quotient of factorials. This is typically used as a definition of the binomial coefficients. *)
