@@ -191,7 +191,7 @@ Proof.
   destruct (nat_trichotomy q1 q2) as [[q | q] | q].
   - contradiction (nat_div_mod_unique_helper d q1 q2 r1 r2).
   - split; trivial.
-    destruct q. 
+    destruct q.
     by apply isinj_nat_add_l in p.
   - by contradiction (nat_div_mod_unique_helper d q2 q1 r2 r1).
 Defined.
@@ -249,6 +249,12 @@ Proof.
   apply nat_div_mod_spec.
 Defined.
 
+Definition nat_div_mod_spec'' x y : x - x mod y = y * (x / y).
+Proof.
+  apply nat_moveR_nV.
+  apply nat_div_mod_spec.
+Defined.
+
 Definition nat_mod_lt_r' n m r : r < m -> n mod m < m.
 Proof.
   intros H; destruct H; only 1: exact _.
@@ -268,12 +274,12 @@ Proof.
 Defined.
 
 (** Division is unique. *)
-Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : q = x / y
-  := fst (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
+Definition nat_div_unique x y q r (H : r < y) (p : y * q + r = x) : x / y = q
+  := fst (nat_div_mod_unique y (x / y) q (x mod y) r _ _ (p @ nat_div_mod_spec x y)^).
 
 (** Modulo is unique. *)
-Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x)  : r = x mod y
-  := snd (nat_div_mod_unique y q (x / y) r (x mod y) _ _ (p @ nat_div_mod_spec x y)).
+Definition nat_mod_unique x y q r (H : r < y) (p : y * q + r = x) : x mod y = r
+  := snd (nat_div_mod_unique y (x / y) q (x mod y) r _ _ (p @ nat_div_mod_spec x y)^).
 
 (** [0] divided by any number is [0]. *)
 Definition nat_div_zero_l n : 0 / n = 0.
@@ -295,17 +301,24 @@ Defined.
 (** [n] divided by [n] is [1]. *)
 Definition nat_div_cancel n : 0 < n -> n / n = 1.
 Proof.
-  intros [|m _]; trivial; symmetry.
+  intros [|m _]; trivial.
   nrapply (nat_div_unique _ _ _ 0); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
+Defined.
+
+(** A number divided by a larger number is 0. *)
+Definition nat_div_lt n m : n < m -> n / m = 0.
+Proof.
+  intros H.
+  snrapply (nat_div_unique _ _ _ _ H).
+  by rewrite nat_mul_zero_r, nat_add_zero_l.
 Defined.
 
 (** [n * m] divided by [n] is [m]. *)
 Definition nat_div_mul_cancel_l n m : 0 < n -> (n * m) / n = m.
 Proof.
   intros H.
-  symmetry.
   nrapply (nat_div_unique _ _ _ _ H).
   apply nat_add_zero_r.
 Defined.
@@ -317,14 +330,101 @@ Proof.
   apply nat_div_mul_cancel_l.
 Defined.
 
-(** When [d] divides [n] and [m], division distributes over addition. *)
-Definition nat_div_dist n m d
-  : 0 < d -> (d | n) -> (d | m) -> (n + m) / d = n / d + m / d.
+(** More generally, [n * m + k] divided by [n] is [m + k / n]. *)
+Definition nat_div_mul_add_cancel_l n m k : 0 < n -> (n * m + k) / n = m + k / n.
 Proof.
-  intros H1 [x p] [y q].
-  destruct p, q.
-  rewrite <- nat_dist_r.
-  by rewrite 3 nat_div_mul_cancel_r.
+  intros H.
+  rapply (nat_div_unique _ _ _ (k mod n) _).
+  rewrite nat_dist_l.
+  lhs_V nrapply nat_add_assoc.
+  f_ap.
+  symmetry; apply nat_div_mod_spec.
+Defined.
+
+Definition nat_div_mul_add_cancel_r n m k : 0 < m -> (n * m + k) / m = n + k / m.
+Proof.
+  rewrite nat_mul_comm.
+  apply nat_div_mul_add_cancel_l.
+Defined.
+
+(** If [k] is positive, then multiplication on the left is injective; that is, if [k * m = k * n], then [m = n]. *)
+Definition isinj_nat_mul_l k : 0 < k -> IsInjective (nat_mul k).
+Proof.
+  intros kp m n p.
+  lhs_V rapply (nat_div_mul_cancel_l k).
+  rhs_V rapply (nat_div_mul_cancel_l k).
+  exact (ap (fun x => x / k) p).
+Defined.
+
+(** If [k] is positive, then multiplication on the right is injective; that is, if [m * k = n * k], then [m = n]. *)
+Definition isinj_nat_mul_r k : 0 < k -> IsInjective (fun n => nat_mul n k).
+Proof.
+  intros kp m n p.
+  lhs_V rapply (nat_div_mul_cancel_r _ k).
+  rhs_V rapply (nat_div_mul_cancel_r _ k).
+  exact (ap (fun x => x / k) p).
+Defined.
+
+(** When [d] divides one of the summands, division distributes over addition. *)
+Definition nat_div_dist n m d
+  : (d | n) -> (n + m) / d = n / d + m / d.
+Proof.
+  destruct d.
+  1: reflexivity.
+  intros [x []].
+  rewrite nat_div_mul_cancel_r. 2: exact _.
+  rapply nat_div_mul_add_cancel_r.
+Defined.
+
+Definition nat_div_dist' n m d
+  : (d | m) -> (n + m) / d = n / d + m / d.
+Proof.
+  intros H.
+  rewrite (nat_add_comm n m).
+  rhs_V nrapply nat_add_comm.
+  rapply nat_div_dist.
+Defined.
+
+(** In general, [n * (m / n)] is less than or equal to [m]. *)
+Definition nat_leq_mul_div_l n m
+  : n * (m / n) <= m.
+Proof.
+  set (tmp := n * (m / n));
+    rewrite (nat_div_mod_spec m n);
+    unfold tmp; clear tmp.
+  exact _.
+Defined.
+
+(** When [n] divides [m], they are equal. *)
+Definition nat_mul_div_cancel_r n m
+  : (n | m) -> (m / n) * n = m.
+Proof.
+  destruct n.
+  { intros [k []]. cbn. symmetry; apply nat_mul_zero_r. }
+  intros [k []].
+  f_ap.
+  rapply nat_div_mul_cancel_r.
+Defined.
+
+Definition nat_mul_div_cancel_l n m
+  : (n | m) -> n * (m / n) = m.
+Proof.
+  rewrite nat_mul_comm.
+  apply nat_mul_div_cancel_r.
+Defined.
+
+(** Division by non-zero [k] is strictly monotone if [k] divides the larger number. *)
+Definition nat_div_strictly_monotone_r {n m l} k
+  : l < k -> n < m -> (k | m) -> n / k < m / k.
+Proof.
+  intros lk nm km.
+  apply gt_iff_not_leq.
+  intro mknk.
+  apply (@gt_iff_not_leq m n); only 1: apply nm.
+  rewrite <- (nat_mul_div_cancel_l k m km).
+  nrapply (leq_trans (y:=k * (n / k))).
+  - rapply nat_mul_l_monotone.
+  - apply nat_leq_mul_div_l.
 Defined.
 
 (** [0] modulo [n] is [0]. *)
@@ -392,13 +492,19 @@ Defined.
 Definition nat_mod_cancel n : n mod n = 0.
 Proof.
   destruct n; trivial.
-  symmetry.
   snrapply (nat_mod_unique _ _ 1); only 1: exact _.
   lhs nrapply nat_add_zero_r.
   nrapply nat_mul_one_r.
 Defined.
 
-(** ** Further Properties of Division and Modulo *)
+(** A number can be corrected so that it is divisible by subtracting the modulo. *)
+Global Instance nat_divides_sub_mod n m : (n | m - m mod n).
+Proof.
+  rewrite nat_div_mod_spec''.
+  exact _.
+Defined.
+
+(** ** Further Properties of division and modulo *)
 
 (** We can cancel common factors on the left in a division. *)
 Definition nat_div_cancel_mul_l n m k
@@ -407,7 +513,7 @@ Proof.
   intro kp.
   destruct (nat_zero_or_gt_zero m) as [[] | mp].
   1: by rewrite nat_mul_zero_r.
-  symmetry; nrapply (nat_div_unique _ _ _ (k * (n mod m))).
+  nrapply (nat_div_unique _ _ _ (k * (n mod m))).
   1: rapply nat_mul_l_strictly_monotone.
   rewrite <- nat_mul_assoc.
   rewrite <- nat_dist_l.
@@ -423,6 +529,56 @@ Proof.
   nrapply nat_div_cancel_mul_l.
 Defined.
 
+(** We can swap the order of division and multiplication on the left under certain conditions. *)
+Definition nat_div_mul_l n m k : (m | n) -> k * (n / m) = (k * n) / m.
+Proof.
+  intros H.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: snrapply nat_mul_zero_r.
+  rapply (nat_div_unique _ _ _ 0 _ _)^.
+  lhs nrapply nat_add_zero_r.
+  lhs nrapply nat_mul_assoc.
+  lhs nrapply (ap (fun x => x * _)).
+  1: nrapply nat_mul_comm.
+  lhs_V nrapply nat_mul_assoc.
+  snrapply ap.
+  lhs_V nrapply nat_add_zero_r.
+  rhs nrapply (nat_div_mod_spec n m).
+  snrapply ap.
+  symmetry.
+  rapply nat_mod_divides.
+Defined.
+
+(** We can swap the order of division and multiplication on the right under certain conditions. *)
+Definition nat_div_mul_r n m k : (m | n) -> (n / m) * k = (n * k) / m.
+Proof.
+  rewrite 2 (nat_mul_comm _ k).
+  snrapply nat_div_mul_l.
+Defined.
+
+(** Dividing a quotient is the same as dividing by the product of the divisors. *)
+Definition nat_div_div_l n m k : (n / m) / k = n / (m * k).
+Proof.
+  destruct (nat_zero_or_gt_zero k) as [[] | kp].
+  1: by rewrite nat_mul_zero_r.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: snrapply nat_div_zero_l.
+  apply nat_div_unique with (r := (n mod (m * k)) / m).
+  { apply (lt_lt_leq_trans (m:=(m * k)/m)).
+    - rapply nat_div_strictly_monotone_r.
+      nrapply (nat_mod_lt_r' _ _ 0 _).
+      exact (nat_mul_strictly_monotone mp kp).
+    - by rewrite nat_div_mul_cancel_l. }
+  transitivity ((m * (k * (n / (m * k)))) / m + (n mod (m * k)) / m).
+  - f_ap.
+    symmetry; rapply nat_div_mul_cancel_l.
+  - rewrite nat_mul_assoc.
+    lhs_V nrapply nat_div_dist.
+    1: exact _.
+    apply (ap (fun x => x / m)).
+    symmetry; apply nat_div_mod_spec.
+Defined.
+
 (** We can cancel common factors on the left in a modulo. *)
 Definition nat_mod_mul_l n m k
   : (k * n) mod (k * m) = k * (n mod m).
@@ -431,7 +587,7 @@ Proof.
   1: reflexivity.
   destruct (nat_zero_or_gt_zero m) as [[] | mp].
   1: by rewrite nat_mul_zero_r.
-  symmetry; apply (nat_mod_unique _ _ (n / m)).
+  apply (nat_mod_unique _ _ (n / m)).
   1: rapply nat_mul_l_strictly_monotone.
   rewrite <- nat_mul_assoc.
   rewrite <- nat_dist_l.
@@ -502,7 +658,7 @@ Global Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
 (** The greatest common divisor of [n] and [m] divides [m]. *)
 Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
   := snd (nat_divides_l_gcd n m).
-  
+
 (** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)
 Global Instance nat_divides_r_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
 Proof.
@@ -540,7 +696,7 @@ Definition nat_gcd_assoc n m k : nat_gcd n (nat_gcd m k) = nat_gcd (nat_gcd n m)
 Proof.
   nrapply nat_gcd_unique.
   - intros q H1 H2.
-    rapply nat_divides_r_gcd. 
+    rapply nat_divides_r_gcd.
   - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
   - apply nat_divides_r_gcd; rapply nat_divides_trans.
 Defined.
@@ -657,7 +813,7 @@ Definition nat_bezout_comm n m d
 Proof.
   intros H [a [b p]].
   destruct (@equiv_leq_lt_or_eq 0 a _) as [|q].
-  - exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a). 
+  - exists (n * a.+1 * b.+1 - b), (m * a.+1 * b.+1 - a).
     rewrite 2 nat_dist_sub_r.
     apply nat_moveR_nV.
     rewrite <- nat_add_comm, nat_add_assoc, <- (nat_add_comm d).
@@ -704,7 +860,7 @@ Proof.
   - by apply H'.
   - destruct p.
     rewrite nat_gcd_idem; exact _.
-  - destruct (@equiv_leq_lt_or_eq 0 m _). 
+  - destruct (@equiv_leq_lt_or_eq 0 m _).
     + rewrite nat_gcd_comm.
       rapply nat_bezout_comm.
       rapply H'.
