@@ -1488,7 +1488,7 @@ Proof.
 Defined.
 
 (** ** An induction principle for two variables with a constraint. *)
-Definition nat_double_induction_leq@{u} (P : nat -> nat -> Type@{u})
+Definition nat_double_ind_leq@{u} (P : nat -> nat -> Type@{u})
   (Hn0 : forall n, P n 0)
   (Hnn : forall n, P n n)
   (IH : forall n m, m < n -> (forall m', m' <= n -> P n m') -> P n.+1 m.+1)

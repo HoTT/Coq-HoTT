@@ -88,7 +88,7 @@ Defined.
 Definition nat_choose_factorial@{} n m
   : m <= n -> nat_choose n m = factorial n / (factorial m * factorial (n - m)).
 Proof.
-  revert n m; apply nat_double_induction_leq; intro n.
+  revert n m; apply nat_double_ind_leq; intro n.
   (* The case when [m = 0]. *)
   { rewrite nat_mul_one_l.
     rewrite nat_sub_zero_r.
