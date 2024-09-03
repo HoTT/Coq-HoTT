@@ -579,6 +579,19 @@ Proof.
     symmetry; apply nat_div_mod_spec.
 Defined.
 
+(** Dividing a number by a quotient is the same as dividing the product of the number with the divisor of the quotient by the divdend of the quotient. *)
+Definition nat_div_div_r n m k : (k | m) -> n / (m / k) = (n * k) / m.
+Proof. 
+  intros [d r].
+  destruct (nat_zero_or_gt_zero k) as [[] | kp].
+  1: by rewrite nat_mul_zero_r, nat_div_zero_l.
+  destruct r.
+  rhs nrapply nat_div_cancel_mul_r.
+  2: exact _.
+  apply ap.
+  rapply nat_div_mul_cancel_r.
+Defined.
+
 (** We can cancel common factors on the left in a modulo. *)
 Definition nat_mod_mul_l n m k
   : (k * n) mod (k * m) = k * (n mod m).
