@@ -184,7 +184,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -237,7 +237,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -325,7 +325,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -368,7 +368,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -425,7 +425,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -470,7 +470,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -514,23 +514,23 @@ jobs:
     # Checkout branch
     - uses: actions/checkout@v4
     # Download alectryon artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: alectryon-html
     # Download dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: dep-graphs
     # Download file dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: file-dep-graphs
     # Download coqdoc artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: coqdoc-html
     # Download timing artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: timing-html
     # Unpack Tar files
