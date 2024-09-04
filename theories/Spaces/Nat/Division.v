@@ -556,6 +556,15 @@ Proof.
   snrapply nat_div_mul_l.
 Defined.
 
+Definition nat_div_sub_mod n m : n / m = (n - n mod m) / m.
+Proof.
+  destruct (nat_zero_or_gt_zero m) as [[] | mp].
+  1: reflexivity.
+  symmetry.
+  rewrite nat_div_mod_spec''.
+  rapply nat_div_mul_cancel_l.
+Defined.
+
 (** Dividing a quotient is the same as dividing by the product of the divisors. *)
 Definition nat_div_div_l n m k : (n / m) / k = n / (m * k).
 Proof.
@@ -590,6 +599,13 @@ Proof.
   2: exact _.
   apply ap.
   rapply nat_div_mul_cancel_r.
+Defined.
+
+(** A variant of [nat_div_div_r] without the divisibility assumption, by modifying [m] to become divisible. *)
+Definition nat_div_div_r' n m k : n / (m / k) = (n * k) / (m - m mod k).
+Proof.
+  rewrite (nat_div_sub_mod m k).
+  rapply nat_div_div_r.
 Defined.
 
 (** We can cancel common factors on the left in a modulo. *)
