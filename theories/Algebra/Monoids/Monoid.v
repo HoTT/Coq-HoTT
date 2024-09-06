@@ -14,7 +14,6 @@ Require Export Classes.interfaces.abstract_algebra (IsSemiGroup(..), sg_set, sg_
     IsMonoid(..), monoid_left_id, monoid_right_id, monoid_semigroup,
     IsMonoidPreserving(..), monmor_unitmor, monmor_sgmor,
     IsSemiGroupPreserving, preserves_sg_op, IsUnitPreserving, preserves_mon_unit).
-Require Import Classes.theory.groups.
 
 Local Set Polymorphic Inductive Cumulativity.
 Local Set Universe Minimization ToSet.
