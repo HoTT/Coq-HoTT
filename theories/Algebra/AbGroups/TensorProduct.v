@@ -175,8 +175,7 @@ Definition ab_tensor_prod_rec {A B C : AbGroup}
 Proof.
   unfold ab_tensor_prod.
   snrapply grp_quotient_rec.
-  - snrapply grp_homo_abel_rec.
-    snrapply FreeGroup_rec.
+  - snrapply FreeAbGroup_rec.
     exact (uncurry f).
   - unfold normalsubgroup_subgroup.
     apply ab_tensor_prod_rec_helper; assumption.
@@ -347,6 +346,22 @@ Definition issig_Biadditive {A B C : Type} `{SgOp A, SgOp B, SgOp C}
   : _ <~> Biadditive A B C
   := ltac:(issig).
 
+Definition biadditive_ab_tensor_prod {A B C : AbGroup}
+  : (ab_tensor_prod A B $-> C) -> Biadditive A B C.
+Proof.
+  intros f.
+  exists (fun x y => f (tensor x y)).
+  snrapply Build_IsBiadditive.
+  - intros b a a'; simpl.
+    lhs nrapply (ap f).
+    1: nrapply tensor_dist_r.
+    nrapply grp_homo_op.
+  - intros a a' b; simpl.
+    lhs nrapply (ap f).
+    1: nrapply tensor_dist_l.
+    nrapply grp_homo_op.
+Defined.
+
 (** The universal property of the tensor product is that biadditive maps between abelian groups are in one-to-one corresondance with maps out of the tensor product. In this sense, the tensor product is the most perfect object describing biadditive maps between two abelian groups. *)
 Definition equiv_ab_tensor_prod_rec `{Funext} (A B C : AbGroup)
   : Biadditive A B C <~> (ab_tensor_prod A B $-> C).
@@ -354,17 +369,7 @@ Proof.
   snrapply equiv_adjointify.
   - intros [f [l r]].
     exact (ab_tensor_prod_rec f r (fun a a' b => l b a a')).
-  - intros f.
-    exists (fun x y => f (tensor x y)).
-    snrapply Build_IsBiadditive.
-    + intros b a a'; simpl.
-      lhs nrapply (ap f).
-      1: nrapply tensor_dist_r.
-      nrapply grp_homo_op.
-    + intros a a' b; simpl.
-      lhs nrapply (ap f).
-      1: nrapply tensor_dist_l.
-      nrapply grp_homo_op.
+  - snrapply biadditive_ab_tensor_prod.
   - intros f.
     snrapply equiv_path_grouphomomorphism.
     snrapply ab_tensor_prod_ind_homotopy.
@@ -744,6 +749,62 @@ Definition ab_tensor_prod_coeq_r_triangle {A B} (f g : A $-> B) C
 Proof.
   snrapply ab_tensor_prod_ind_homotopy.
   reflexivity.
+Defined.
+
+(** ** Tensor Product of Free Abelian Groups *)
+
+Definition equiv_ab_tensor_prod_freeabgroup X Y
+  : FreeAbGroup (X * Y) $<~> ab_tensor_prod (FreeAbGroup X) (FreeAbGroup Y).
+Proof.
+  srefine (let f:=_ in let g:=_ in cate_adjointify f g _ _).
+  - snrapply FreeAbGroup_rec.
+    intros [x y].
+    exact (tensor (freeabgroup_in x) (freeabgroup_in y)).
+  - snrapply ab_tensor_prod_rec.
+    + intros x.
+      snrapply FreeAbGroup_rec.
+      intros y; revert x.
+      unfold FreeAbGroup.
+      snrapply FreeAbGroup_rec.
+      intros x.
+      apply abel_unit.
+      apply freegroup_in.
+      exact (x, y).
+    + intros x y y'.
+      snrapply grp_homo_op.
+    + intros x x'.
+      rapply Abel_ind_hprop.
+      snrapply (FreeGroup_ind_homotopy _ (f' := ab_homo_add _ _)).
+      intros y.
+      lhs nrapply FreeGroup_rec_beta.
+      lhs nrapply grp_homo_op.
+      snrapply (ap011 (+) _^ _^).
+      1,2: nrapply FreeGroup_rec_beta.
+  - snrapply ab_tensor_prod_ind_homotopy.
+    intros x.
+    change (f $o g $o grp_homo_tensor_l x $== grp_homo_tensor_l x).
+    rapply Abel_ind_hprop.
+    change (@abel_in ?G) with (grp_homo_map (@abel_unit G)).
+    repeat change (cat_comp (A:=AbGroup) ?f ?g) with (cat_comp (A:=Group) f g).
+    change (forall y, grp_homo_map ?f (abel_unit y) = grp_homo_map ?g (abel_unit y))
+      with (cat_comp (A:=Group) f abel_unit $== cat_comp (A:=Group) g abel_unit).
+    rapply FreeGroup_ind_homotopy.
+    intros y; revert x.
+    change (f $o g $o grp_homo_tensor_r (freeabgroup_in y) $== grp_homo_tensor_r (freeabgroup_in y)).
+    rapply Abel_ind_hprop.
+    change (@abel_in ?G) with (grp_homo_map (@abel_unit G)).
+    repeat change (cat_comp (A:=AbGroup) ?f ?g) with (cat_comp (A:=Group) f g).
+    change (forall y, grp_homo_map ?f (abel_unit y) = grp_homo_map ?g (abel_unit y))
+      with (cat_comp (A:=Group) f abel_unit $== cat_comp (A:=Group) g abel_unit).
+    rapply FreeGroup_ind_homotopy.
+    intros x.
+    reflexivity.
+  - rapply Abel_ind_hprop.
+    change (GpdHom (A:=Hom(A:=Group) (FreeGroup (X * Y)) _)
+      (cat_comp (A:=Group) (g $o f) (@abel_unit (FreeGroup (X * Y))))
+      (@abel_unit (FreeGroup (X * Y)))).
+    snrapply FreeGroup_ind_homotopy.
+    reflexivity.
 Defined.
 
 (** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tensor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
