@@ -757,26 +757,25 @@ Defined.
 Definition equiv_ab_tensor_prod_freeabgroup X Y
   : FreeAbGroup (X * Y) $<~> ab_tensor_prod (FreeAbGroup X) (FreeAbGroup Y).
 Proof.
-  transparent assert (f : (FreeAbGroup (X * Y) $-> ab_tensor_prod (FreeAbGroup X) (FreeAbGroup Y))).
-  { snrapply grp_homo_abel_rec.
+  srefine (let f:=_ in let g:=_ in cate_adjointify f g _ _).
+  - snrapply grp_homo_abel_rec.
     snrapply FreeGroup_rec.
     intros [x y].
-    exact (tensor (freeabgroup_in x) (freeabgroup_in y)). }
-  transparent assert (g : (ab_tensor_prod (FreeAbGroup X) (FreeAbGroup Y) $-> FreeAbGroup (X * Y))).
-  { snrapply ab_tensor_prod_rec.
+    exact (tensor (freeabgroup_in x) (freeabgroup_in y)).
+  - snrapply ab_tensor_prod_rec.
     + intros x.
       snrapply grp_homo_abel_rec.
       snrapply FreeGroup_rec.
       intros y; revert x.
       unfold FreeAbGroup.
-      snrapply grp_homo_abel_rec.    
+      snrapply grp_homo_abel_rec.
       snrapply FreeGroup_rec.
       intros x.
       apply abel_unit.
       apply freegroup_in.
       exact (x, y).
     + intros x y y'.
-      snrapply grp_homo_op.    
+      snrapply grp_homo_op.
     + intros x x'.
       rapply Abel_ind_hprop.
       snrapply (FreeGroup_ind_homotopy _ (f' := ab_homo_add _ _)).
@@ -784,8 +783,7 @@ Proof.
       lhs nrapply FreeGroup_rec_beta.
       lhs nrapply grp_homo_op.
       snrapply (ap011 (+) _^ _^).
-      1,2: nrapply FreeGroup_rec_beta. }
-  snrapply (cate_adjointify f g).
+      1,2: nrapply FreeGroup_rec_beta.
   - snrapply ab_tensor_prod_ind_homotopy.
     intros x.
     change (f $o g $o grp_homo_tensor_l x $== grp_homo_tensor_l x).

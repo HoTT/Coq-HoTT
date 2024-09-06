@@ -423,7 +423,7 @@ Proof.
   snrapply Build_Is0Functor.
   intros A B f.
   snrapply grp_homo_abel_rec.
-  refine (abel_unit $o f).
+  exact (abel_unit $o f).
 Defined.
 
 Global Instance is1functor_abel : Is1Functor abel.
