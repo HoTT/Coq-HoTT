@@ -10,8 +10,7 @@ Require Export Classes.interfaces.canonical_names (SgOp, sg_op, One, one,
     Negate, negate, Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
 Export canonical_names.BinOpNotations.
-Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, negate_l, negate_r,
-    IsSemiGroup(..), sg_set, sg_ass,
+Require Export Classes.interfaces.abstract_algebra (IsSemiGroup(..), sg_set, sg_ass,
     IsMonoid(..), monoid_left_id, monoid_right_id, monoid_semigroup,
     IsMonoidPreserving(..), monmor_unitmor, monmor_sgmor,
     IsSemiGroupPreserving, preserves_sg_op, IsUnitPreserving, preserves_mon_unit).
@@ -81,7 +80,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-Global Instance ishset_grouphomomorphism `{Funext} {M N : Monoid}
+Global Instance ishset_monoidhomomorphism `{Funext} {M N : Monoid}
   : IsHSet (MonoidHomomorphism M N).
 Proof.
   apply istrunc_S.
