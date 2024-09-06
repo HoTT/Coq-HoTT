@@ -588,7 +588,7 @@ Proof.
     symmetry; apply nat_div_mod_spec.
 Defined.
 
-(** Dividing a number by a quotient is the same as dividing the product of the number with the denominator the quotient by the numerator of the quotient. *)
+(** Dividing a number by a quotient is the same as dividing the product of the number with the denominator of the quotient by the numerator of the quotient. *)
 Definition nat_div_div_r n m k : (k | m) -> n / (m / k) = (n * k) / m.
 Proof. 
   intros [d r].
