@@ -175,8 +175,7 @@ Definition ab_tensor_prod_rec {A B C : AbGroup}
 Proof.
   unfold ab_tensor_prod.
   snrapply grp_quotient_rec.
-  - snrapply grp_homo_abel_rec.
-    snrapply FreeGroup_rec.
+  - snrapply FreeAbGroup_rec.
     exact (uncurry f).
   - unfold normalsubgroup_subgroup.
     apply ab_tensor_prod_rec_helper; assumption.
@@ -758,18 +757,15 @@ Definition equiv_ab_tensor_prod_freeabgroup X Y
   : FreeAbGroup (X * Y) $<~> ab_tensor_prod (FreeAbGroup X) (FreeAbGroup Y).
 Proof.
   srefine (let f:=_ in let g:=_ in cate_adjointify f g _ _).
-  - snrapply grp_homo_abel_rec.
-    snrapply FreeGroup_rec.
+  - snrapply FreeAbGroup_rec.
     intros [x y].
     exact (tensor (freeabgroup_in x) (freeabgroup_in y)).
   - snrapply ab_tensor_prod_rec.
     + intros x.
-      snrapply grp_homo_abel_rec.
-      snrapply FreeGroup_rec.
+      snrapply FreeAbGroup_rec.
       intros y; revert x.
       unfold FreeAbGroup.
-      snrapply grp_homo_abel_rec.
-      snrapply FreeGroup_rec.
+      snrapply FreeAbGroup_rec.
       intros x.
       apply abel_unit.
       apply freegroup_in.
