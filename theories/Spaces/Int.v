@@ -634,6 +634,17 @@ Proof.
     apply eisretr.
 Defined.
 
+(** In particular, homotopic maps have homotopic iterations. *)
+Definition int_iter_homotopic (n : Int) {A} (f f' : A -> A) `{!IsEquiv f} `{!IsEquiv f'}
+  (h : f == f')
+  : int_iter f n == int_iter f' n
+  := int_iter_commute_map f f' idmap h n.
+
+(** [int_iter f n x] doesn't depend on the proof that [f] is an equivalence. *)
+Definition int_iter_agree (n : Int) {A} (f : A -> A) {ief ief' : IsEquiv f}
+  : forall x, @int_iter A f ief n x = @int_iter A f ief' n x
+  := int_iter_homotopic n f f (fun _ => idpath).
+
 Definition int_iter_invariant (n : Int) {A} (f : A -> A) `{!IsEquiv f}
   (P : A -> Type)
   (Psucc : forall x, P x -> P (f x))
