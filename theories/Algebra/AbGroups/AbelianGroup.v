@@ -233,33 +233,13 @@ Proof.
     1-2: exact negate_involutive.
 Defined.
 
-(** This goal comes up twice in the proof of [ab_mul], so we factor it out. *)
-Local Definition ab_mul_helper {A : AbGroup} (a b x y z : A)
-  (p : x = y + z)
-  : a + b + x = a + y + (b + z).
-Proof.
-  lhs_V srapply grp_assoc.
-  rhs_V srapply grp_assoc.
-  apply grp_cancelL.
-  rhs srapply grp_assoc.
-  rhs nrapply (ap (fun g => g + z) (ab_comm y b)).
-  rhs_V srapply grp_assoc.
-  apply grp_cancelL, p.
-Defined.
-
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
 Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
-  induction n; cbn.
-  - exact (grp_unit_l _)^.
-  - rewrite 3 grp_pow_succ.
-    by apply ab_mul_helper.
-  - rewrite 3 grp_pow_pred.
-    rewrite (grp_inv_op a b), (commutativity (-b) (-a)).
-    by apply ab_mul_helper.
+  apply grp_pow_mul, ab_comm.
 Defined.
 
 (** [ab_mul n] is natural. *)

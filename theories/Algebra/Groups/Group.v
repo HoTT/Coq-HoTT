@@ -558,10 +558,42 @@ Definition grp_pow_neg {G : Group} (n : Int) (g : G)
   : grp_pow g (int_neg n) = grp_pow (- g) n.
 Proof.
   lhs nrapply int_iter_neg.
-  destruct n.
-  - cbn. by rewrite grp_inv_inv.
-  - reflexivity.
-  - reflexivity.
+  cbn; unfold grp_pow.
+  (* These agree, except for the proofs that [sg_op (-g)] is an equivalence. *)
+  apply int_iter_agree.
+Defined.
+
+(** Using a negative power in [grp_pow] is the same as first using a positive power and then inverting the result. *)
+Definition grp_pow_neg_inv {G: Group} (m : Int) (g : G) : grp_pow g (- m)%int = - grp_pow g m.
+Proof.
+  apply grp_moveL_1V.
+  lhs_V nrapply grp_pow_add.
+  by rewrite int_add_neg_l.
+Defined.
+
+(** Combining the two previous results gives that a power of an inverse is the inverse of the power. *)
+Definition grp_pow_neg_inv' {G: Group} (n: Int) (g : G) : grp_pow (- g) n = - grp_pow g n.
+Proof.
+  lhs_V nrapply grp_pow_neg.
+  apply grp_pow_neg_inv.
+Defined.
+
+(** [grp_pow] satisfies a multiplicative law of exponents. *)
+Definition grp_pow_int_mul {G : Group} (m n : Int) (g : G)
+  : grp_pow g (m * n)%int = grp_pow (grp_pow g m) n.
+Proof.
+  induction n.
+  - simpl.
+    by rewrite int_mul_0_r.
+  - rewrite int_mul_succ_r.
+    rewrite grp_pow_add.
+    rewrite grp_pow_succ.
+    apply grp_cancelL, IHn.
+  - rewrite int_mul_pred_r.
+    rewrite grp_pow_add.
+    rewrite grp_pow_neg_inv.
+    rewrite grp_pow_pred.
+    apply grp_cancelL, IHn.
 Defined.
 
 (** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
@@ -584,6 +616,35 @@ Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
   : g * grp_pow g n = grp_pow g n * g.
 Proof.
   by apply grp_pow_commutes.
+Defined.
+
+(** If [g] and [h] commute, then [grp_pow (g * h) n] = (grp_pow g n) * (grp_pow h n)]. *)
+Definition grp_pow_mul {G : Group} (n : Int) (g h : G)
+  (c : g * h = h * g)
+  : grp_pow (g * h) n = (grp_pow g n) * (grp_pow h n).
+Proof.
+  induction n.
+  - simpl.
+    symmetry; nrapply grp_unit_r.
+  - rewrite 3 grp_pow_succ.
+    rewrite IHn.
+    rewrite 2 grp_assoc.
+    apply grp_cancelR.
+    rewrite <- 2 grp_assoc.
+    apply grp_cancelL.
+    apply grp_pow_commutes.
+    exact c^.
+  - simpl.
+    rewrite 3 grp_pow_pred.
+    rewrite IHn.
+    rewrite 2 grp_assoc.
+    apply grp_cancelR.
+    rewrite c.
+    rewrite grp_inv_op.
+    rewrite <- 2 grp_assoc.
+    apply grp_cancelL.
+    apply grp_pow_commutes.
+    symmetry; apply grp_commutes_inv, c.
 Defined.
 
 (** ** The category of Groups *)
