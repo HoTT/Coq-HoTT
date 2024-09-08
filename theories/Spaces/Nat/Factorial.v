@@ -37,6 +37,24 @@ Proof.
   induction n; exact _.
 Defined.
 
+(** Except for [factorial 0 = factorial 1], the [factorial] function is strictly monotone.  We separate out the successor case since it is used twice in the proof of the general result. *)
+Definition nat_factorial_strictly_monotone_succ n
+  : 0 < n -> factorial n < factorial n.+1.
+Proof.
+  intro H.
+  rewrite <- (nat_mul_one_l (factorial n)).
+  rapply (nat_mul_r_strictly_monotone _).
+Defined.
+
+Global Instance nat_factorial_strictly_monotone n m
+  : 0 < n -> n < m -> factorial n < factorial m.
+Proof.
+  intros H1 H2; induction H2.
+  - rapply nat_factorial_strictly_monotone_succ.
+  - apply (lt_trans IHleq).
+    rapply nat_factorial_strictly_monotone_succ.
+Defined.
+
 (** ** Divisibility *)
 
 (** Any number less than or equal to [n] divides [factorial n]. *)
