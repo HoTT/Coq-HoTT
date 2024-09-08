@@ -4,7 +4,7 @@ Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.Core.
 
-(** * In this file we define the ring [cring_Z] of integers with underlying abelian group [abroup_Z] defined in Algebra.AbGroups.Z. We also define multiplication by an integer in a general ring, and show that [cring_Z] is initial. *)
+(** * In this file we define the ring [cring_Z] of integers with underlying abelian group [abgroup_Z] defined in Algebra.AbGroups.Z. We also define multiplication by an integer in a general ring, and show that [cring_Z] is initial. *)
 
 (** The ring of integers *)
 Definition cring_Z : CRing.
@@ -27,29 +27,32 @@ Local Open Scope mc_scope.
 (** Given a ring element [r], we get a map [Int -> R] sending an integer to that multiple of [r]. *)
 Definition rng_int_mult (R : Ring) := grp_pow_homo : R -> Int -> R.
 
+(** Multiplying a ring element [r] by an integer [n] is equivalent to first multiplying the unit [1] of the ring by [n], and then multiplying the result by [r].  This is distributivity of right multiplication by [r] over the sum. *)
+Definition rng_int_mult_dist_r {R : Ring} (r : R) (n : cring_Z)
+  : rng_int_mult R r n = (rng_int_mult R 1 n) * r.
+Proof.
+  cbn.
+  rhs nrapply (grp_pow_natural (grp_homo_rng_right_mult r)); cbn.
+  by rewrite rng_mult_one_l.
+Defined.
+
+(** Similarly, there is a left-distributive law. *)
+Definition rng_int_mult_dist_l {R : Ring} (r : R) (n : cring_Z)
+  : rng_int_mult R r n = r * (rng_int_mult R 1 n).
+Proof.
+  cbn.
+  rhs nrapply (grp_pow_natural (grp_homo_rng_left_mult r)); cbn.
+  by rewrite rng_mult_one_r.
+Defined.
+
 (** [rng_int_mult R 1] preserves multiplication.  This requires that the specified ring element is the unit. *)
 Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
   : IsSemiGroupPreserving (A:=cring_Z) (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
   cbn; unfold sg_op.
-  induction x as [|x|x].
-  - simpl.
-    by rhs nrapply rng_mult_zero_l.
-  - rewrite int_mul_succ_l.
-    rewrite grp_pow_add.
-    rewrite grp_pow_succ.
-    rhs nrapply rng_dist_r.
-    rewrite rng_mult_one_l.
-    f_ap.
-  - rewrite int_mul_pred_l.
-    rewrite grp_pow_add.
-    rewrite grp_pow_pred.
-    rhs nrapply rng_dist_r.
-    rewrite IHx.
-    f_ap.
-    lhs rapply (grp_homo_inv (grp_pow_homo 1)).
-    symmetry; apply rng_mult_negate.
+  lhs nrapply grp_pow_int_mul.
+  nrapply rng_int_mult_dist_l.
 Defined.
 
 (** [rng_int_mult R 1] is a ring homomorphism *)
