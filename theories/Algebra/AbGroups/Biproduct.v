@@ -25,7 +25,6 @@ Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
 Definition ab_biprod_ind_hprop {A B : AbGroup}
   (P : ab_biprod A B -> Type)
-  (H : forall x, IsHProp (P x))
   (Hinl : forall a, P (ab_biprod_inl a))
   (Hinr : forall b, P (ab_biprod_inr b))
   (Hop : forall x y, P x -> P y -> P (x + y))
@@ -224,17 +223,6 @@ Defined.
 
 (** *** Lemmas for working with biproducts *)
 
-Lemma ab_biprod_corec_eta' {A B X : AbGroup} (f g : ab_biprod A B $-> X)
-  : (f $o ab_biprod_inl $== g $o ab_biprod_inl)
-  -> (f $o ab_biprod_inr $== g $o ab_biprod_inr)
-  -> f $== g.
-Proof.
-  intros h k.
-  intros [a b].
-  refine (ap f (grp_prod_decompose _ _) @ _ @ ap g (grp_prod_decompose _ _)^).
-  exact (grp_homo_op_agree f g (h a) (k b)).
-Defined.
-
 (* Maps out of biproducts are determined on the two inclusions. *)
 Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
   : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
@@ -242,7 +230,7 @@ Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A
 Proof.
   apply equiv_iff_hprop.
   - intros [h k].
-    apply ab_biprod_corec_eta'; assumption.
+    apply ab_biprod_ind_homotopy; assumption.
   - intro h.
     exact (fun a => h _, fun b => h _).
 Defined.
