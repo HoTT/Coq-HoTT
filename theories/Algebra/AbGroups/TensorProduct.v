@@ -813,13 +813,13 @@ Definition ab_tensor_prod_dist_l {A B C : AbGroup}
   : ab_tensor_prod A (ab_biprod B C)
     $<~> ab_biprod (ab_tensor_prod A B) (ab_tensor_prod A C).
 Proof.
-  snrapply cate_adjointify.
+  srapply (let f := _ in let g := _ in cate_adjointify f g _ _).
   - snrapply ab_tensor_prod_rec.
-    + intros a [b c].
-      exact (tensor a b, tensor a c).
-    + intros a [b c] [b' c'].
-      snrapply path_prod; snrapply tensor_dist_l.
-    + intros a a' [b c].
+    + intros a bc.
+      exact (tensor a (fst bc), tensor a (snd bc)).
+    + intros a bc bc'.
+      snrapply path_prod'; snrapply tensor_dist_l.
+    + intros a a' bc.
       snrapply path_prod; snrapply tensor_dist_r.
   - snrapply ab_biprod_rec.
     + exact (fmap01 ab_tensor_prod A ab_biprod_inl).
@@ -829,19 +829,19 @@ Proof.
       1: snrapply ab_biprod_rec_beta_inl.
       snrapply ab_tensor_prod_ind_homotopy.
       intros a b.
-      snrapply path_prod.
+      snrapply path_prod; simpl.
       * reflexivity.
       * snrapply tensor_zero_r.
     + refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
       1: snrapply ab_biprod_rec_beta_inr.
       snrapply ab_tensor_prod_ind_homotopy.
       intros a b.
-      snrapply path_prod.
+      snrapply path_prod; simpl.
       * snrapply tensor_zero_r.
       * reflexivity.
   - snrapply ab_tensor_prod_ind_homotopy.
     intros a [b c].
-    lhs_V nrapply tensor_dist_l.
+    lhs_V nrapply tensor_dist_l; simpl.
     snrapply ap.
     symmetry; apply grp_prod_decompose.
 Defined.
