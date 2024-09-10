@@ -52,6 +52,17 @@ Proof.
     f_ap.
 Defined.
 
+(* Maps out of biproducts are determined on the two inclusions. *)
+Definition equiv_ab_biprod_ind_homotopy `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
+  : (phi $o ab_biprod_inl == psi $o ab_biprod_inl)
+    * (phi $o ab_biprod_inr == psi $o ab_biprod_inr)
+  <~> phi == psi.
+Proof.
+  apply equiv_iff_hprop.
+  - exact (uncurry ab_biprod_ind_homotopy).
+  - exact (fun h => (fun a => h _, fun b => h _)).
+Defined.
+
 (** Recursion principle *)
 Proposition ab_biprod_rec {A B Y : AbGroup}
             (f : A $-> Y) (g : B $-> Y)
@@ -222,18 +233,6 @@ Proof.
 Defined.
 
 (** *** Lemmas for working with biproducts *)
-
-(* Maps out of biproducts are determined on the two inclusions. *)
-Lemma equiv_ab_biprod_ind_homotopy `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
-  : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
-      <~> phi == psi.
-Proof.
-  apply equiv_iff_hprop.
-  - intros [h k].
-    apply ab_biprod_ind_homotopy; assumption.
-  - intro h.
-    exact (fun a => h _, fun b => h _).
-Defined.
 
 (** The swap isomorphism of the biproduct of two groups. *)
 Definition direct_sum_swap {A B : AbGroup}
