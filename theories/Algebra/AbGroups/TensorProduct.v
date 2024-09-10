@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import Types.Forall Types.Sigma.
+Require Import Types.Forall Types.Sigma Types.Prod.
 Require Import WildCat.Core WildCat.Equiv WildCat.Monoidal WildCat.Bifunctor.
 Require Import WildCat.NatTrans.
 Require Import Algebra.Groups.Group Algebra.Groups.QuotientGroup.
@@ -805,6 +805,54 @@ Proof.
       (@abel_unit (FreeGroup (X * Y)))).
     snrapply FreeGroup_ind_homotopy.
     reflexivity.
+Defined.
+
+(** ** Tensor products distribute over direct sums *)
+
+Definition ab_tensor_prod_dist_l {A B C : AbGroup}
+  : ab_tensor_prod A (ab_biprod B C)
+    $<~> ab_biprod (ab_tensor_prod A B) (ab_tensor_prod A C).
+Proof.
+  srapply (let f := _ in let g := _ in cate_adjointify f g _ _).
+  - snrapply ab_tensor_prod_rec.
+    + intros a bc.
+      exact (tensor a (fst bc), tensor a (snd bc)).
+    + intros a bc bc'; cbn beta.
+      snrapply path_prod'; snrapply tensor_dist_l.
+    + intros a a' bc; cbn beta.
+      snrapply path_prod; snrapply tensor_dist_r.
+  - snrapply ab_biprod_rec.
+    + exact (fmap01 ab_tensor_prod A ab_biprod_inl).
+    + exact (fmap01 ab_tensor_prod A ab_biprod_inr).
+  - snrapply ab_biprod_ind_homotopy.
+    + refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _). 
+      1: snrapply ab_biprod_rec_beta_inl.
+      snrapply ab_tensor_prod_ind_homotopy.
+      intros a b.
+      snrapply path_prod; simpl.
+      * reflexivity.
+      * snrapply tensor_zero_r.
+    + refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
+      1: snrapply ab_biprod_rec_beta_inr.
+      snrapply ab_tensor_prod_ind_homotopy.
+      intros a b.
+      snrapply path_prod; simpl.
+      * snrapply tensor_zero_r.
+      * reflexivity.
+  - snrapply ab_tensor_prod_ind_homotopy.
+    intros a [b c].
+    lhs_V nrapply tensor_dist_l; simpl.
+    snrapply ap.
+    symmetry; apply grp_prod_decompose.
+Defined.
+
+Definition ab_tensor_prod_dist_r {A B C : AbGroup}
+  : ab_tensor_prod (ab_biprod A B) C
+    $<~> ab_biprod (ab_tensor_prod A C) (ab_tensor_prod B C).
+Proof.
+  refine (emap11 ab_biprod (braide _ _) (braide _ _)
+    $oE _ $oE braide _ _).
+  snrapply ab_tensor_prod_dist_l.
 Defined.
 
 (** TODO: Show that the category of abelian groups is symmetric closed and therefore we have adjoint pair with the tensor and internal hom. This should allow us to prove lemmas such as tensors distributing over coproducts. *)
