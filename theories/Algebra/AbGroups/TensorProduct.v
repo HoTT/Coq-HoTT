@@ -843,7 +843,7 @@ Proof.
     intros a [b c].
     lhs_V nrapply tensor_dist_l.
     snrapply ap.
-    symmetry; apply ab_biprod_decompose.
+    symmetry; apply grp_prod_decompose.
 Defined.
 
 Definition ab_tensor_prod_dist_r {A B C : AbGroup}

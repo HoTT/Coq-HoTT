@@ -23,15 +23,6 @@ Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
 Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
 Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
-(** Pairs in biproducts can be decomposed *)
-Definition ab_biprod_decompose {A B : AbGroup} (a : A) (b : B)
-  : (a, b) = ((a, group_unit) : ab_biprod A B) + (group_unit, b).
-Proof.
-  snrapply path_prod; symmetry.
-  - snrapply grp_unit_r.
-  - snrapply grp_unit_l.
-Defined.
-
 Definition ab_biprod_ind_hprop {A B : AbGroup}
   (P : ab_biprod A B -> Type)
   (H : forall x, IsHProp (P x))
@@ -41,7 +32,7 @@ Definition ab_biprod_ind_hprop {A B : AbGroup}
   : forall x, P x.
 Proof.
   intros [a b].
-  snrapply ((ab_biprod_decompose a b)^ # _).
+  snrapply ((grp_prod_decompose a b)^ # _).
   apply Hop.
   - exact (Hinl a).
   - exact (Hinr b).
@@ -240,7 +231,7 @@ Lemma ab_biprod_corec_eta' {A B X : AbGroup} (f g : ab_biprod A B $-> X)
 Proof.
   intros h k.
   intros [a b].
-  refine (ap f (ab_biprod_decompose _ _) @ _ @ ap g (ab_biprod_decompose _ _)^).
+  refine (ap f (grp_prod_decompose _ _) @ _ @ ap g (grp_prod_decompose _ _)^).
   exact (grp_homo_op_agree f g (h a) (k b)).
 Defined.
 
