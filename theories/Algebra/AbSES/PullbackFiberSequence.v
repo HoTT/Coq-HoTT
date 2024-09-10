@@ -266,7 +266,7 @@ Proof.
   refine (cat_assoc _ _ _ $@ _).
   apply gpd_moveR_Vh.
   apply gpd_moveL_hM.
-  apply equiv_path_biprod_corec.
+  apply equiv_ab_biprod_ind_homotopy.
   split; apply equiv_path_pullback_rec_hset; split; cbn.
   - intro a.
     exact (ap (class_of _ o pullback_pr1) (fst p^$.2 a)).

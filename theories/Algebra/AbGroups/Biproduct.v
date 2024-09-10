@@ -224,7 +224,7 @@ Defined.
 (** *** Lemmas for working with biproducts *)
 
 (* Maps out of biproducts are determined on the two inclusions. *)
-Lemma equiv_path_biprod_corec `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
+Lemma equiv_ab_biprod_ind_homotopy `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-> X)
   : ((phi $o ab_biprod_inl == psi $o ab_biprod_inl) * (phi $o ab_biprod_inr == psi $o ab_biprod_inr))
       <~> phi == psi.
 Proof.
