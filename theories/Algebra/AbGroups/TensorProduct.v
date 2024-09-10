@@ -817,9 +817,9 @@ Proof.
   - snrapply ab_tensor_prod_rec.
     + intros a bc.
       exact (tensor a (fst bc), tensor a (snd bc)).
-    + intros a bc bc'.
+    + intros a bc bc'; cbn beta.
       snrapply path_prod'; snrapply tensor_dist_l.
-    + intros a a' bc.
+    + intros a a' bc; cbn beta.
       snrapply path_prod; snrapply tensor_dist_r.
   - snrapply ab_biprod_rec.
     + exact (fmap01 ab_tensor_prod A ab_biprod_inl).
