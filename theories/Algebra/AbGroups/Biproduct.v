@@ -23,7 +23,7 @@ Definition ab_biprod_inr {A B : AbGroup} : B $-> ab_biprod A B := grp_prod_inr.
 Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-> A := grp_prod_pr1.
 Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-> B := grp_prod_pr2.
 
-Definition ab_biprod_ind_hprop {A B : AbGroup}
+Definition ab_biprod_ind {A B : AbGroup}
   (P : ab_biprod A B -> Type)
   (Hinl : forall a, P (ab_biprod_inl a))
   (Hinr : forall b, P (ab_biprod_inr b))
@@ -43,7 +43,7 @@ Definition ab_biprod_ind_homotopy {A B C : AbGroup}
   (Hinr : f $o ab_biprod_inr $== g $o ab_biprod_inr)
   : f $== g.
 Proof.
-  rapply ab_biprod_ind_hprop. 
+  rapply ab_biprod_ind.
   - exact Hinl.
   - exact Hinr.
   - intros x y p q.
