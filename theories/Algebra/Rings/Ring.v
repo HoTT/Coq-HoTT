@@ -93,6 +93,7 @@ Section RingLaws.
 
   Definition rng_negate_negate : - (- x) = x := groups.negate_involutive _.
   Definition rng_negate_zero : - (0 : A) = 0 := groups.negate_mon_unit.
+  Definition rng_negate_plus : - (x + y) = - x - y := negate_plus_distr _ _.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
   Definition rng_mult_one_r : x * 1 = x := right_identity _.
@@ -104,6 +105,22 @@ Section RingLaws.
   Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).
 
 End RingLaws.
+
+Definition rng_dist_l_negate {A : Ring} (x y z : A)
+  : x * (y - z) = x * y - x * z.
+Proof.
+  lhs nrapply rng_dist_l.
+  nrapply ap.
+  nrapply rng_mult_negate_r.
+Defined.
+
+Definition rng_dist_r_negate {A : Ring} (x y z : A)
+  : (x - y) * z = x * z - y * z.
+Proof.
+  lhs nrapply rng_dist_r.
+  nrapply ap.
+  nrapply rng_mult_negate_l.
+Defined.
 
 Section RingHomoLaws.
 
@@ -785,7 +802,7 @@ Defined.
 (** *** Group of units *)
 
 (** Invertible elements are typically called "units" in ring theory and the collection of units forms a group under the ring multiplication. *)
-Definition rng_unit_group {R : Ring} : Group.
+Definition rng_unit_group (R : Ring) : Group.
 Proof.
   (** TODO: Use a generalised version of [Build_Subgroup] that works for subgroups of monoids. *)
   snrapply Build_Group.
@@ -807,5 +824,53 @@ Proof.
     + apply rng_inv_l.
     + apply rng_inv_r.
 Defined.
+
+(** *** Invertible element movement lemmas *)
+
+Global Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (x *.).
+Proof.
+  snrapply isequiv_adjointify.
+  1: exact (inverse_elem x *.).
+  1,2: intros y.
+  1,2: lhs nrapply rng_mult_assoc.
+  1,2: rhs_V nrapply rng_mult_one_l.
+  1,2: snrapply (ap (.* y)).
+  - nrapply rng_inv_r.
+  - nrapply rng_inv_l.
+Defined.
+
+Global Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (.* x).
+Proof.
+  snrapply isequiv_adjointify.
+  1: exact (.* inverse_elem x).
+  1,2: intros y.
+  1,2: lhs_V nrapply rng_mult_assoc.
+  1,2: rhs_V nrapply rng_mult_one_r.
+  1,2: snrapply (ap (y *.)).
+  - nrapply rng_inv_l.
+  - nrapply rng_inv_r.
+Defined.
+
+(** ** These cannot be proven using the corresponding group laws in the group of units since not all elements involved are invertible. *)
+
+Definition rng_inv_moveL_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : y * x = z <~> x = inverse_elem y * z
+  := equiv_moveL_equiv_V (f := (y *.)) z x.
+
+Definition rng_inv_moveL_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x * y = z <~> x = z * inverse_elem y
+  := equiv_moveL_equiv_V (f := (.* y)) z x.
+
+Definition rng_inv_moveR_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = y * z <~> inverse_elem y * x = z
+  := equiv_moveR_equiv_V (f := (y *.)) x z.
+
+Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = z * y <~> x * inverse_elem y = z
+  := equiv_moveR_equiv_V (f := (.* y)) x z.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)

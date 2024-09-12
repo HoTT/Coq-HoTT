@@ -56,6 +56,19 @@ Proof.
   f_ap.
 Defined.
 
+Definition rng_mult_move_left_assoc {R : CRing} (x y z : R)
+  : x * y * z = y * x * z.
+Proof.
+  f_ap; apply rng_mult_comm.
+Defined.
+
+Definition rng_mult_move_right_assoc {R : CRing} (x y z : R)
+  : x * (y * z) = y * (x * z).
+Proof.
+  refine (rng_mult_assoc _ _ _ @ _ @ (rng_mult_assoc _ _ _)^).
+  apply rng_mult_move_left_assoc.
+Defined.
+
 (** ** Ideals in commutative rings *)
   
 Section IdealCRing.
