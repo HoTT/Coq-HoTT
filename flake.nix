@@ -29,7 +29,7 @@
           useDune = true;
         };
 
-        devShells.default = makeDevShell { coq = pkgs.coq_8_19; } { };
+        devShells.default = makeDevShell { coq = pkgs.coq_8_20; } { };
 
         # To use, pass --impure to nix develop
         devShells.coq_master =
