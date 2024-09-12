@@ -880,9 +880,9 @@ Defined.
 (** ** Eliminating positive assumptions *)
 
 (** Sometimes we want to prove a predicate which assumes that [0 < x]. In that case, it suffices to prove it for [x.+1] instead. *)
-Definition lt_zero_ind (P : forall x, 0 < x -> Type)
-  (H : forall x l, P x.+1 l)
-  : forall x l, P x l.
+Definition gt_zero_ind (P : nat -> Type)
+  (H : forall x, P x.+1)
+  : forall x (l : 0 < x), P x.
 Proof.
   intros x l.
   destruct x.
@@ -1196,13 +1196,13 @@ Defined.
 (** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
 Definition nat_sub_pred_r n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
 Proof.
-  revert m; snrapply lt_zero_ind.
-  intros m H1 H2.
+  revert m; snrapply gt_zero_ind.
+  intros m H1.
   rewrite nat_sub_succ_r.
   rewrite nat_succ_pred.
   1: reflexivity.
   apply equiv_lt_lt_sub.
-  exact (lt_trans _ H2).
+  exact (lt_trans _ H1).
 Defined.
 
 (** Subtracting from a sum is the sum of subtracting from the second summand. *)
