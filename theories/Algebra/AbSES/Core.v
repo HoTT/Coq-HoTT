@@ -625,11 +625,17 @@ Proposition projection_split_beta {B A : AbGroup} (E : AbSES B A)
   : projection_split_iso E h o (inclusion _) == ab_biprod_inl.
 Proof.
   intro a.
-  refine (ap _ (ab_corec_eta _ _ _ _) @ _).
-  refine (ab_biprod_functor_beta _ _ _ _ _ @ _).
+  (* The next two lines might help the reader, but both are definitional equalities:
+  lhs nrapply (ap _ (grp_prod_corec_natural _ _ _ _)).
+  lhs nrapply ab_biprod_functor_beta.
+  *)
   nrapply path_prod'.
   2: rapply cx_isexact.
-  refine (ap _ (projection_split_to_kernel_beta E h a) @ _).
+  (* The LHS of the remaining goal is definitionally equal to
+       (grp_iso_inverse (grp_iso_cxfib (isexact_inclusion_projection E)) $o
+         (projection_split_to_kernel E h $o inclusion E)) a
+     allowing us to do: *)
+  lhs nrapply (ap _ (projection_split_to_kernel_beta E h a)).
   apply eissect.
 Defined.
 

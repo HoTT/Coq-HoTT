@@ -831,20 +831,24 @@ Proof.
 Defined.
 
 (** Maps into the direct product can be built by mapping separately into each factor. *)
-Proposition grp_prod_corec {G H K : Group}
-            (f : GroupHomomorphism K G)
-            (g : GroupHomomorphism K H)
-  : GroupHomomorphism K (grp_prod G H).
+Proposition grp_prod_corec {G H K : Group} (f : K $-> G) (g : K $-> H)
+  : K $-> (grp_prod G H).
 Proof.
   snrapply Build_GroupHomomorphism.
-  - exact (fun x:K => (f x, g x)).
+  - exact (fun x : K => (f x, g x)).
   - intros x y.
-    refine (path_prod' _ _ ); try apply grp_homo_op.
+    apply path_prod'; apply grp_homo_op.
 Defined.
+
+(** [grp_prod_corec] satisfies a definitional naturality property. *)
+Definition grp_prod_corec_natural {X Y A B : Group}
+  (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
+  : grp_prod_corec g0 g1 $o f $== grp_prod_corec (g0 $o f) (g1 $o f)
+  := fun _ => idpath.
 
 (** The left factor injects into the direct product. *)
 Definition grp_prod_inl {H K : Group}
-  : GroupHomomorphism H (grp_prod H K)
+  : H $-> (grp_prod H K)
   := grp_prod_corec grp_homo_id grp_homo_const.
 
 (** The left injection is an embedding. *)
@@ -858,7 +862,7 @@ Defined.
 
 (** The right factor injects into the direct product. *)
 Definition grp_prod_inr {H K : Group}
-  : GroupHomomorphism K (grp_prod H K)
+  : K $-> (grp_prod H K)
   := grp_prod_corec grp_homo_const grp_homo_id.
 
 (** The right injection is an embedding. *)
