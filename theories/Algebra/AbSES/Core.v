@@ -471,11 +471,11 @@ Proof.
     apply path_sigma_hprop; cbn.
     rapply equiv_path_grouphomomorphism; intros [a b]; cbn.
     apply path_prod; cbn.
-    + rewrite (ab_biprod_decompose a b).
+    + rewrite (grp_prod_decompose a b).
       refine (_ @ (grp_homo_op (ab_biprod_pr1 $o phi) _ _)^).
       apply grp_cancelR; symmetry.
       exact (ap fst (p a)).
-    + rewrite (ab_biprod_decompose a b).
+    + rewrite (grp_prod_decompose a b).
       refine (_ @ (grp_homo_op (ab_biprod_pr2 $o phi) _ _)^); cbn; symmetry.
       exact (ap011 _ (ap snd (p a)) (q (group_unit, b))^).
 Defined.

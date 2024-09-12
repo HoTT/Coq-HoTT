@@ -1,11 +1,11 @@
-Require Export Basics.Classes.
+Require Export Basics.Classes Basics.Overture.
 Require Import Spaces.Nat.Core.
 Require Export HoTT.Classes.interfaces.canonical_names.
 Require Import Modalities.ReflectiveSubuniverse.
 
 Local Set Polymorphic Inductive Cumulativity.
 
-Generalizable Variables A B f g x y.
+Generalizable Variables A B C f g x y.
 
 (* 
 For various structures we omit declaration of substructures. For example, if we 
@@ -346,6 +346,107 @@ Section morphism_classes.
     latticemor_meet_mor.
   End latticemorphism_classes.
 End morphism_classes.
+
+Section id_mor.
+  Context `{SgOp A} `{MonUnit A}.
+
+  Global Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
+  Proof.
+    split.
+  Defined.
+
+  Global Instance id_monoid_morphism : IsMonoidPreserving (@id A).
+  Proof.
+    split; split.
+  Defined.
+End id_mor.
+
+Section compose_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    `{SgOp C} `{MonUnit C}
+    (f : A -> B) (g : B -> C).
+
+  (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)
+  Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
+    IsSemiGroupPreserving (g ∘ f).
+  Proof.
+    red; intros fp gp x y.
+    unfold Compose.
+    refine ((ap g _) @ _).
+    - apply fp.
+    - apply gp.
+  Defined.
+
+  Local Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
+    IsMonoidPreserving (g ∘ f).
+  Proof.
+    intros;split.
+    - apply _.
+    - red;unfold Compose.
+      etransitivity;[|apply (preserves_mon_unit (f:=g))].
+      apply ap,preserves_mon_unit.
+  Defined.
+
+End compose_mor.
+
+Section invert_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    (f : A -> B).
+
+  Local Instance invert_sg_morphism
+    : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
+      IsSemiGroupPreserving (f^-1).
+  Proof.
+    red; intros E fp x y.
+    apply (equiv_inj f).
+    refine (_ @ _ @ _ @ _)^.
+    - apply fp.
+    (* We could use [apply ap2; apply eisretr] here, but it is convenient
+       to have things in terms of ap. *)
+    - refine (ap (fun z => sg_op z _) _); apply eisretr.
+    - refine (ap (fun z => sg_op _ z) _); apply eisretr.
+    - symmetry; apply eisretr.
+  Defined.
+
+  Local Instance invert_monoid_morphism :
+    forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
+  Proof.
+    intros;split.
+    - apply _.
+    - apply (equiv_inj f).
+      refine (_ @ _).
+      + apply eisretr.
+      + symmetry; apply preserves_mon_unit.
+  Defined.
+
+End invert_mor.
+
+#[export]
+Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_ ∘ _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+#[export]
+Hint Extern 4 (IsSemiGroupPreserving (_ o _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_ o _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+#[export]
+Hint Extern 4 (IsSemiGroupPreserving (_^-1)) =>
+  class_apply @invert_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_^-1)) =>
+  class_apply @invert_monoid_morphism : typeclass_instances.
 
 #[export]
 Instance isinjective_mapinO_tr {A B : Type} (f : A -> B)

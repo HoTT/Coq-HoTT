@@ -145,7 +145,7 @@ jobs:
       run: tar -cf workspace.tar .
     # We upload build artifacts for use by documentation
     - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
         path: workspace.tar
@@ -184,7 +184,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -221,7 +221,7 @@ jobs:
     - name: tar alectryon artifact
       run: tar -cf alectryon-html.tar alectryon-html
     - name: upload alectryon artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: alectryon-html
         path: alectryon-html.tar
@@ -237,7 +237,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -304,12 +304,12 @@ jobs:
         tar -cf file-dep-graphs.tar file-dep-graphs
     # We upload the artifacts
     - name: 'Upload Artifact dep-graphs.tar'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dep-graphs
         path: dep-graphs.tar
     - name: 'Upload Artifact file-dep-graphs.tar'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: file-dep-graphs
         path: file-dep-graphs.tar
@@ -325,7 +325,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -352,7 +352,7 @@ jobs:
       run: tar -cf coqdoc-html.tar coqdoc-html
     # Upload coqdoc-html artifact
     - name: 'Upload coqdoc-html Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coqdoc-html
         path: coqdoc-html.tar
@@ -368,7 +368,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -396,7 +396,7 @@ jobs:
       run: tar -cf timing-html.tar timing-html
     # Upload timing-html artifact
     - name: 'Upload timing-html Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: timing-html
         path: timing-html.tar
@@ -425,7 +425,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -470,7 +470,7 @@ jobs:
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -514,23 +514,23 @@ jobs:
     # Checkout branch
     - uses: actions/checkout@v4
     # Download alectryon artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: alectryon-html
     # Download dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: dep-graphs
     # Download file dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: file-dep-graphs
     # Download coqdoc artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: coqdoc-html
     # Download timing artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: timing-html
     # Unpack Tar files

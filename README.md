@@ -47,14 +47,9 @@ your `_CoqProject` file:
 
 For more advanced use such as contribution see [INSTALL.md](/INSTALL.md).
 
-We recommend the following text editors:
-
- * [Emacs][16] together with [Proof General][17].
- * [CoqIDE][18] part of the [Coq Proof Assistant][19].
- * [Visual Studio Code][20] together with [VSCoq][21].
-
-Other methods of developing in `coq` will work as long as the correct arguments
-are passed.
+For **recommended text editors** see [our recommended editors
+list](./INSTALL.md#4-editors). Other methods of developing in `coq` will work as
+long as the correct arguments are passed.
 
 # Contributing
 
@@ -91,12 +86,5 @@ More information can be found in the [Wiki][22].
 [13]: http://cpp2017.mpi-sws.org/
 [14]: https://github.com/HoTT/HoTT/wiki/Publications-based-on-the-HoTT-library
 [15]: https://github.com/coq/platform/releases
-
-[16]: http://www.gnu.org/software/emacs/
-[17]: http://proofgeneral.inf.ed.ac.uk
-[18]: https://coq.inria.fr/refman/practical-tools/coqide.html
-[19]: https://github.com/coq/coq
-[20]: https://code.visualstudio.com/
-[21]: https://github.com/coq-community/vscoq
 
 [22]: https://github.com/HoTT/HoTT/wiki

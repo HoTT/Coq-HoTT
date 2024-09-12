@@ -35,6 +35,14 @@ Arguments FreeAbGroup S : simpl never.
 Definition freeabgroup_in {S : Type} : S -> FreeAbGroup S
   := abel_unit o freegroup_in.
 
+Definition FreeAbGroup_rec {S : Type} {A : AbGroup} (f : S -> A)
+  : FreeAbGroup S $-> A
+  := grp_homo_abel_rec (FreeGroup_rec _ _ f).
+
+Definition FreeAbGroup_rec_beta_in {S : Type} {A : AbGroup} (f : S -> A)
+  : FreeAbGroup_rec f o freeabgroup_in == f
+  := fun _ => idpath.
+
 (** The abelianization of a free group on a set is a free abelian group on that set. *)
 Global Instance isfreeabgroupon_isabelianization_isfreegroup `{Funext}
   {S : Type} {G : Group} {A : AbGroup} (f : S -> G) (g : G $-> A)
@@ -55,8 +63,7 @@ Defined.
 Global Instance isfreeabgroup_freeabgroup `{Funext} (S : Type)
   : IsFreeAbGroup (FreeAbGroup S).
 Proof.
-  exists S.
-  exists (abel_unit (G:=FreeGroup S) o freegroup_in).
+  exists S, freeabgroup_in.
   srapply isfreeabgroupon_isabelianization_isfreegroup.
 Defined.
 

@@ -1,3 +1,4 @@
+Require Import Basics.Notations.
 Require Export HoTT.Classes.interfaces.ua_congruence.
 
 Require Import
