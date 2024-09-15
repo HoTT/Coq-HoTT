@@ -887,7 +887,7 @@ constructed using smaller pieces like `ap` and `concat` which we can
 understand.
 
 Here are some acceptable tactics to use in transparent definitions
-(this is probably not an exhaustive list):
+(this is not an exhaustive list):
 
 - `intros`, `revert`, `generalize`, `generalize dependent`
 - `pose`, `assert`, `set`, `cut`
@@ -897,6 +897,7 @@ Here are some acceptable tactics to use in transparent definitions
 - `apply`, `eapply`, `assumption`, `eassumption`, `exact`
 - `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
 - `rapply`, `nrapply`, `srapply`, `snrapply` (see below)
+- `lhs`, `lhs_V`, `rhs`, `rhs_V`
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
 
@@ -1154,6 +1155,7 @@ where they are defined.
 - `nrefine`, `srefine`, `snrefine`:
   Defined in `Basics/Overture`, these are shorthands for
   `notypeclasses refine`, `simple refine`, and `simple notypeclasses refine`.
+  It's good to avoid typeclass search if it isn't needed.
 
 - `rapply`, `nrapply`, `srapply`, `snrapply`:
   Defined in `Basics/Overture`, these tactics use `refine`,
@@ -1165,13 +1167,17 @@ where they are defined.
  
   Here are some tips:
   - If `apply` fails with a unification error you think it shouldn't
-    have, try `rapply`.
-  - If `rapply` loops on typeclass resolution, try `rapply'` or
-    `nrapply'`. The former starts with as many arguments as possible
-    and tries decreasing the number. The latter will stop Coq from doing
-    a typeclass search.  Similarly, if `refine` loops, try `nrefine`.
+    have, try `nrapply`.
+  - If you want to use type class resolution as well, try `rapply`.
+    But it's better to use `nrapply` if it works.
+  - You could add a prime to the tactic, to try with many arguments
+    first, decreasing the number on each try.
   - If you don't want Coq to create evars for certain subgoals,
     add an `s` to the tactic name to make it use `simple refine`.
+
+- `lhs`, `lhs_V`, `rhs`, `rhs_V`:  Defined in `Basics/Tactics`.
+  These are tacticals that apply a specified tactic to one side
+  of an equality.  E.g. `lhs nrapply concat_1p.`
 
 - `transparent assert`: Defined in `Basics/Overture`, this tactic is
   like `assert` but produces a transparent subterm rather than an
