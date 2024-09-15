@@ -10,6 +10,7 @@
     - [1.1.1. The Core library](#111-the-core-library)
     - [1.1.2. Non-core files](#112-non-core-files)
     - [1.1.3. Tests](#113-tests)
+    - [1.1.4. Dependencies](#114-dependencies)
   - [1.2. Naming Conventions](#12-naming-conventions)
     - [1.2.1. General principles](#121-general-principles)
     - [1.2.2. Capitalization and spacing](#122-capitalization-and-spacing)
@@ -68,28 +69,33 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+<!-- TODO: Should we get rid of the leading "1." for all numbering?  There is only one top-level section... -->
+
 # 1. Conventions And Style Guide #
 
 ## 1.1. Organization ##
 
 ### 1.1.1. The Core library ###
 
-The Coq files of the HoTT library live in the theories/ directory.
-They are currently in several groups:
+We do not use the Coq standard library, instead working from scratch.
+We do not use the Coq universes `Prop` and `SProp`.
+
+The Coq files of the HoTT library live in the `theories/` directory.
+Many are in subdirectories, and a subdirectory `Foo/` often has a
+corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - `Basics/*`: These files contain basic definitions that underlie
   everything else.  Nothing in the Basics directory should depend on
   anything outside the Basics directory.  The file `Basics` in the
   root imports everything from the directory `Basics/`, so most other
-  files in the library start with `Require Import HoTT.Basics.` (see
-  remarks below on qualified imports).
+  files in the library start with `Require Import HoTT.Basics.` (See
+  remarks below on qualified imports.)
 
 - `Types/*`: This subdirectory contains a file corresponding to each
   basic type former (e.g. sigma-types, pi-types, etc.), which proves
   the "computational" rules for the path-types, transport, functorial
-  action, etc. of that type former.  It also contains `Types/Record`,
-  which provides tactics for proving records equivalent to iterated
-  sigma-types, and `Types/Equiv`, which proves that being an
+  action, etc. of that type former.  It also `Types/Equiv`,
+  which proves that being an
   equivalence is an hprop.  The univalence axiom is introduced, as a
   typeclass (see below) in `Types/Universe`.  Function extensionality
   is introduced in `Basics/Overture` for dependency reasons, but
@@ -99,21 +105,59 @@ They are currently in several groups:
   studied further in their `Types/` file.  Files in `Types/` should
   not depend on anything except `Basics` and other `Types/` files.
 
-- Other files in the root `theories/` directory, such as `Trunc`,
-  `TruncType`, `HProp`, `HSet`, `EquivalenceVarieties`,
-  `FunextVarieties`, `ObjectClassifier`, `ReflectiveSubuniverse`,
-  `Modality`: These contain more advanced facts and theories which may
-  depend on files in `Types/`.  The file `Misc` can be used to help resolve
-  potentially circular dependencies, although it should be avoided
-  whenever possible.  Note that `make clean; make` will produce an
-  error if there is a dependency loop (ordinary `make` may not).
+- There are many other files in the root `theories/` directory,
+  including `TruncType`, `HProp`, `DProp`, `HSet`, `HFiber`,
+  `ObjectClassifier`, `Extensions`, `NullHomotopy`, `PathAny`,
+  `Projective`, `Idempotents`, `Constant`, etc.  These contain more
+  advanced facts and theories which may depend on files in `Types/`.
+  We try to limit the number of files in the top-level folder, and
+  would like to reduce the number.
+
+- `WildCat/*`: Files related to wild categories.  They are used
+  extensively in the library, so we try to minimize the files they
+  depend on.
+
+- `Modalities/*`: Files involving modalities.  The most important files
+  here are `Modalities/ReflectiveSubuniverse` and `Modalities/Modality`.
+
+- `Basics/Trunc`, `TruncType`, `Truncations/*`: Files involving truncations.
+  There are interdepencies between the files in `Truncations/` and some
+  of the `Modalities/*` files.
+
+- `Equiv/*`: Files showing that various definitions of equivalence agree.
+
+- `Pointed/*`: Files related to pointed types.
 
 - `HIT/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
-  on defining HITs, below).  Since the definition of a HIT involves
-  axioms added to the core theory, we isolate them in this directory.
-  In particular, nothing in the root directory should depend on
-  anything in `HIT/` (except, of course, for `HoTT` and `Tests`, below).
+  on defining HITs, below).  These are only lightly used in the rest
+  of the library.  See `Colimits/*` for the HIT that is most commonly used.
+
+- `Diagrams/*`: Files involving graphs and diagrams, used for colimits and limits.
+
+- `Colimits/*`: Files involving colimits.  `Colimits/GraphQuotient`
+  defines graph quotients as a HIT, and other constructions are
+  built from this.
+
+- `Limits/*`: Files involving limits.
+
+- `Cubical/*`: Files involving cubical methods in HoTT.
+
+- `Algebra/*`: Files related to algebra.
+
+- `Analysis/*`: Files related to analysis.
+
+- `Sets/*`: Files related to set theory.
+
+- `Spaces/*`: Files involving various spaces, including `Spaces/Nat/*`,
+  `Spaces/Pos/*`, `Spaces/Int/*`, `Spaces/Finite/*`, `Spaces/List/*`,
+  `Spaces/Circle`, `Spaces/Torus/*`, `Spaces/Universe`, `Spaces/BAut/*`
+  and `Spaces/No/*` (the surreal numbers),
+
+- `Homotopy/*`: Files related to synthetic homotopy theory.
+
+- `Spectra/*': Files related to spectra in the sense of stable
+  homotopy theory.
 
 - `Tactics, Tactics/*`: some more advanced tactics.
 
@@ -122,26 +166,26 @@ They are currently in several groups:
   the HoTT library, you can say simply `Require Import HoTT` to pull
   in everything (but don't do this for files in the core itself).
 
-- `Tests`: Test suites for the rest of the library.  Currently nearly
-  empty.
+- `PropResizing/*`: Files related to propositional resizing.  Only
+  `PropResizing/PropResizing` is exported by `HoTT`.
 
-- `Utf8`: optional Unicode notations for the basic definitions
-  (we avoid Unicode in the core libary).  Not exported by `HoTT`.
-
-- `FunextAxiom, UnivalenceAxiom`: You can import these files to assume
-  the axioms globally (in the core, we track them with typeclasses).
-  Two additional related files are `UnivalenceImpliesFunext` and
-  `HIT/IntervalImpliesFunext`; see below.  None of these are exported
-  by `HoTT`.
-
-A dependency graph of all the files in the library can be found on the
-[wiki][wiki]; this may be helpful in avoiding circular dependencies.
-It is updated automatically by Travis (see below) on every push to the
-master branch.
-
-[wiki]: https://github.com/HoTT/HoTT/wiki
+- `theories/Classes/*`: The math classes library.  While we don't
+  regard this as part of the core library, and don't explicitly
+  export the contents in `HoTT`, some files in the classes library
+  are used by files in the core library.
 
 ### 1.1.2. Non-core files ###
+
+- `theories/Axioms/`: Contains `FunextAxiom` and `UnivalenceAxiom`:
+  You can import these files to assume the axioms globally (in the
+  core, we track them with typeclasses).
+
+- `theories/Metatheory/*`: Contains `UnivalenceImpliesFunext`,
+  `IntervalImpliesFunext` and other meta-theoretic results.
+
+- `theories/Utf8` and `theories/Utf8Minimal`: optional Unicode
+  notations for the basic definitions (we avoid Unicode in the core
+  libary).
 
 - `theories/Categories/*`: The categories library, which is not
   considered part of the core (e.g. it uses unicode), but nevertheless
@@ -165,8 +209,17 @@ master branch.
 
 ### 1.1.3. Tests ###
 
-- `tests/*`: Tests of the library.  See the file `tests/README.md` for more
+- `test/*`: Tests of the library.  See the file `test/README.md` for more
   information.
+
+### 1.1.4.  Dependencies ###
+
+A dependency graph of all the files in the library can be found on the
+[wiki][wiki]; this may be helpful in avoiding circular dependencies.
+It is updated automatically by Travis (see below) on every push to the
+master branch.
+
+[wiki]: https://github.com/HoTT/HoTT/wiki
 
 ## 1.2. Naming Conventions ##
 
@@ -291,9 +344,9 @@ than a function which happens to be an equivalence.
 ## 1.3. Records, Structures, Typeclasses ##
 
 We use Coq Records when appropriate for important definitions.  For
-instance, contractibility (`Contr`) and equivalences (`Equiv`) are
+instance, being an equivalence (`IsEquiv`) and equivalences (`Equiv`) are
 both Record types (in fact, the former is a typeclass).  The file
-`Types/Record` contains some tactics for proving semiautomatically
+`Basics/Tactics` contains a tactic `issig` for proving semiautomatically
 that record types are equivalent to the corresponding sigma-types, so
 that the relevant general theorems can be applied to them.
 
@@ -314,15 +367,13 @@ Typeclasses are particularly convenient for h-properties of objects.
 Here are some of the typeclasses we are using:
 
 - equivalences: `IsEquiv`
-- truncation levels: `Contr`, `IsTrunc`
+- truncation levels: `IsTrunc` (a notation for `IsTrunc_internal`)
 - axioms (see below): `Funext`, `Univalence`
 - subuniverses: `In`, `Replete`, `MapIn`, `IsConnected`, `IsConnMap`
 
 `IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
-`IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
-defined recursively with contractibility as the base case, there is a
-bit of magic involving a definition called `Contr_internal`; see the
-comments in `Overture.v`.
+`IsTrunc -1`, and `IsTrunc -2` respectively.  See the comments in
+`Overture.v` for more details.
 
 ### 1.3.3. When to declare instances ###
 
@@ -391,7 +442,7 @@ familiar with.)
 
 Unfortunately, it is not currently possible to write `_` in a
 `refine`d term for an inhabitant of a typeclass and have Coq generate
-a subgoal if it can't find an instance; Coq will die if it can't
+a subgoal if it can't find an instance; Coq will fail if it can't
 resolve a typeclass variable from the context.  You have to `assert`
 or `pose` such an inhabitant first, or give an explicit term for it.
 
@@ -421,12 +472,14 @@ The conventions for the typeclass `IsTrunc` are:
   `IsTrunc n (A * B)` gets transformed to `IsTrunc n A` and `IsTrunc n B`,
   as a goal.
 * Due to the desire to use `IsTrunc` rather than `Contr`, we have
-  `Contr` as a notation for `IsTrunc minus_two`, which bottoms out at
-  `Contr_internal`, which is its own typeclass.  Due to a
+  `Contr` as a notation for `IsTrunc minus_two`.
+<!-- I don't think this applies anymore:
+   Due to a
   [bug in coq](https://coq.inria.fr/bugs/show_bug.cgi?id=3100), we
   need to iota-expand some explicit instances of `Contr`, such as
   `Instance foo : Contr bar := let x := {| center := ... |} in x.`
   rather than `Instance foo : Contr bar := { center := ... }.`
+-->
 
 ### 1.3.7. Coercions and Existing Instances ###
 
@@ -438,18 +491,14 @@ without needing to manually apply the projection `equiv_fun`.
 Coercions can make code easier to read and write, but when used
 carelessly they can have the opposite effect.
 
-When defining a record, Coq allows you to declare a field as a
-coercion by writing its type with `:>` instead of `:`.  Please do
-_not_ do this in the core: instead, give an explicit `Coercion`
-declaration after defining the record.  There are two reasons for
-this.  Firstly, the syntax `:>` is very short and easy to miss when
-reading the code, while coercions are important to be aware of.
-Secondly, it is potentially confusing because the same syntax `:>`
-when defining a typeclass (i.e. a `Class` instead of a `Record`) has a
+When defining a `Record`, Coq allows you to declare a field as a
+coercion by writing its type with `:>` instead of `:`.
+When defining a `Class`, the `:>` notation  has a
 different meaning: it declares a field as an `Existing Instance`.
-Please do not use it in that case either; declare your `Existing
-Instance`s explicitly as well.
 
+(In addition, the `:>` notation is used when needed for path types
+to indicate the type in which the paths are taken:  `x = y :> A`
+for `x, y : A`.)
 
 ## 1.4. Axioms ##
 
@@ -482,7 +531,8 @@ Section UsesUnivalence.
 
 Now everything defined and proven in this section can use univalence
 without saying so explicitly, and at the end of the section it will be
-implicitly generalized if necessary.  The backquote syntax
+implicitly generalized if necessary.  (Results that don't use univalence
+won't get an univalence argument.)  The backquote syntax
 ``{Univalence}` allows us to avoid giving a name to the hypothesis.
 (Backquote syntax is also used for implicit generalization of
 variables, but that is not needed for univalence and funext.)
@@ -490,18 +540,16 @@ variables, but that is not needed for univalence and funext.)
 ### 1.4.2. Higher inductive types ###
 
 Every higher inductive type technically assumes some `Axioms`.  These
-axioms are asserted globally by the corresponding `HIT/` file, since
-there's not much point to assuming a HIT without the axioms that make
-it work.
+axioms are asserted globally by the corresponding `HIT/` file or
+`Colimits/GraphQuotient`, since there's not much point to assuming a
+HIT without the axioms that make it work.
 
 ### 1.4.3. Relationships between axioms ###
 
 The file `UnivalenceImpliesFunext` shows, as its name implies, that
-univalence implies funext.  Thus, if you import this file, then
-whenever you have assumed univalence, then funext is also true
-automatically and doesn't need to be assumed separately.  (This is
-usually good, to simplify your hypotheses, unless you are working in
-part of the core that `UnivalenceImpliesFunext` depends on.)
+univalence implies funext.  However, this file is not needed in
+practice, since in `Types/Universe` we assert axiomatically that
+univalence implies funext.
 
 Similarly, the file `HIT/IntervalImpliesFunext` proves funext from the
 interval type assumed in `HIT/Interval`, so if you import this file
@@ -548,8 +596,9 @@ convention.  For another example, see `ExcludedMiddle.v`.
 
 ## 1.5. Higher Inductive Types ##
 
-At present, higher inductive types are restricted to the `HIT/`
-directory, and are all defined using [Dan Licata's "private inductive
+Most higher inductive types are defined in the `HIT/`
+directory, but `Colimits/GraphQuotient` also uses a HIT.
+All are defined using [Dan Licata's "private inductive
 types" hack][hit-hack] which was [implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf) by Yves Bertot.
 This means the procedure for defining a HIT is:
 
@@ -586,6 +635,9 @@ This means the procedure for defining a HIT is:
 
 Look at some of the existing files in `HIT/*` for examples.
 
+Going forward, we try to use `Colimits/GraphQuotient` to define further
+higher inductive types.
+
 [hit-hack]: http://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
 
 ### 1.5.1. Case analysis on private inductive ###
@@ -601,7 +653,7 @@ the inductive principle) or making related definitions opaque.
 
 ## 1.6. Universe Polymorphism ##
 
-We have Coq's new "universe polymorphism" feature turned on throughout
+We have Coq's "universe polymorphism" feature turned on throughout
 the library.  Thus, all definitions are universe polymorphic by
 default, i.e. they can be applied to types that live in any universe
 level.
@@ -674,21 +726,18 @@ define `foo` using a universe `i`, and then define `bar` which uses
 coincide with `i` in `foo`, you must annotate the occurrences of `foo`
 in `bar` appropriately.
 
-(It is possible to explicitly declare and name universes globally with
-the `Universe` command, but we are not using that in the HoTT
-library.  Universes declared with `Universe` will be discharged on each 
-section definition independently.)
+It is also possible to explicitly declare and name universes globally
+with the `Universe` command, usually within a section.  Universes
+declared with `Universe` will be discharged on each section definition
+independently.
 
-Unfortunately it is not currently possible to declare the universe
-parameters of a definition; Coq simply decides after you make a
-definition how many universe parameters it ends up with (and what the
-constraints on them are).  The best we can do is to document the
-result.  A sort of "checked documentation" is possible by writing
-`Check foo@{a b c}.` after the definition; this will fail with an
-`Error` unless `foo` takes exactly three universe parameters.  In
-general `Check` is discouraged outside of test suites, so use this
-sparingly; currently it is mainly restricted to the fields of module
-types (see `ReflectiveSubuniverse` for details).
+The universe variables of a definition can be declared and their
+constraints can be chosen by hand.  This is good practice for
+delicate situations, as it serves to both document the expected
+constraints and to cause an error if a future change causes the
+universe variables or constraints to change.  We also use `Check`
+commands, mostly in `test/*`, to verify that universe variables
+before as expected.
 
 There are several uses for universe annotations.  One is to force a
 definition to have fewer universe parameters than it would otherwise.
@@ -721,6 +770,13 @@ situations, Coq seems to make a default guess that doesn't work
 then complains without trying anything else; an annotation can point
 it in the right direction.
 
+In Coq, the bottom universe is denoted `Set`, but this does not
+mean that its elements 0-truncated.  In `Basics/Overture`, we
+define a notation `Type0` for this universe.
+
+Coq also has universes `Prop` and `SProp` which we do not use in
+the library.
+
 ### 1.6.3. Unexpected universes ###
 
 If you ever need to pay close attention to universes, it is useful to
@@ -736,7 +792,7 @@ argument (e.g. a type or a type family), the resulting definition will
 pick up an extra universe parameter that's strictly larger than the
 argument in question.  One way to avoid this is to instead use a
 `Fixpoint` definition, or the tactic `fix`, along with `destruct`.
-There is a tactic `simple_induction` defined in `Overture` whose
+There is a tactic `simple_induction` defined in `Basics/Tactics` whose
 interface is almost the same as `induction` but does this internally,
 although it only works for induction over `nat` and `trunc_index`.
 
@@ -836,13 +892,15 @@ Here are some acceptable tactics to use in transparent definitions
 - `intros`, `revert`, `generalize`, `generalize dependent`
 - `pose`, `assert`, `set`, `cut`
 - `transparent assert` (see below)
-- `fold`, `unfold`, `simpl`, `cbn`, `hnf`
+- `fold`, `unfold`, `simpl`, `cbn`, `hnf`, `change`
 - `case`, `elim`, `destruct`, `induction`
-- `apply`, `eapply`, `assumption`, `eassumption`, `refine`, `exact`
+- `apply`, `eapply`, `assumption`, `eassumption`, `exact`
+- `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
+- `rapply`, `nrapply`, `srapply`, `snrapply` (see below)
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
 
-Conversely, if you want to use `rewrite`, that is fine, but you should
+Conversely, if you want to use `rewrite`, that is fine, but you might
 then make the thing you are defining opaque.  If it turns out later
 that you need it to be transparent, then you should go back and prove
 it without using `rewrite`.
@@ -1015,7 +1073,7 @@ explicitly mark which arguments are implicit.  If necessary, you can
 use the `Arguments` command to adjust implicitness of arguments after
 a function is defined, but braces are preferable when possible.
 
-Warning: if you want to use `Arguments` to make *all* the arguments of
+If you want to use `Arguments` to make *all* the arguments of
 a function explicit, the obvious-looking syntax `Arguments foo a b`
 does not work: you have to write `Arguments foo : clear implicits`
 instead.
@@ -1061,22 +1119,22 @@ to finding it is to guess what file it should live in and look there;
 for instance, theorems about sigma-types are often in `Types/Sigma.v`,
 and so on.
 
-Another approach is to use Coq's command `SearchAbout` to display all
-the theorems that relate to a particular definition.  This has the
-[disadvantage](https://coq.inria.fr/bugs/show_bug.cgi?id=3904) that it
-doesn't "look through" definitions and notations.  For instance,
-`IsHProp` is a `Notation` for `IsTrunc -1`, but `SearchAbout IsHProp`
-won't show you theorems about `IsTrunc`.  So if you can't find
-something at first using `SearchAbout`, think about ways that your
-desired theorem might be generalized and search for those instead.
+Another approach is to use Coq's command `Search` to display all the
+theorems that relate to a particular definition.  For example, `Search
+(IsHProp ?A)` will show all results in which the expression `IsHProp
+A` appears for some `A`, and `Search "ishprop"` will show all results
+having "ishprop" in the name.  However, some results about `HProp` are
+true for any truncation level, so you may want to expand your search
+to include `IsTrunc`.  In general, if you can't find something at
+first using `Search`, think about ways that your desired theorem might
+be generalized and search for those instead.
 
 Generalizing from a particular truncation level (like `IsHProp`) to
 all truncation levels is a good example.  Another one that it's
 important to be aware of is a generalization from truncation
 (`IsTrunc` and `Trunc`) to all reflective subuniverses or modalities;
 many many theorems about truncation are actually proven more generally
-in the latter situations.  (To obtain those theorems for the special
-case of truncation, you'll generally need to `Import TrM`.)
+in the latter situations.
 
 ### 1.11.4. Simpl nomatch ###
 
@@ -1092,26 +1150,6 @@ related tactics never to simplify it if doing so would result in a
 Here are some tactics defined in the core that you may find useful.
 They are described more fully, usually with examples, in the files
 where they are defined.
-
-- `transparent assert`: Defined in `Basics/Overture`, this tactic is
-  like `assert` but produces a transparent subterm rather than an
-  opaque one.  Due to restrictions of tactic notations, you have to
-  write `transparent assert (foo : (bar baz))` rather than
-  `transparent assert (foo : bar baz)`.
-
-- `simpl rewrite`: Defined in `Tactics`, this tactic applies `simpl`
-  to the type of a lemma, and to the goal, before rewriting the goal
-  with the lemma.  In particular, this is useful for rewriting with
-  lemmas containing definitions like `compose` that appear unfolded in
-  the goal: if the operation has `Arguments ... / .` as above then
-  `simpl` will unfold it.
-
-- `binder apply`: Defined in `Tactics/BinderApply`, this tactic
-  applies a lemma inside of a lambda abstraction, in the goal or in a
-  hypothesis.
-
-- `issig`: Defined in `Types/Record`, this tactic proves automatically
-  that a record type is equivalent to a nested sigma-type.
 
 - `nrefine`, `srefine`, `snrefine`:
   Defined in `Basics/Overture`, these are shorthands for
@@ -1135,6 +1173,37 @@ where they are defined.
   - If you don't want Coq to create evars for certain subgoals,
     add an `s` to the tactic name to make it use `simple refine`.
 
+- `transparent assert`: Defined in `Basics/Overture`, this tactic is
+  like `assert` but produces a transparent subterm rather than an
+  opaque one.  Due to restrictions of tactic notations, you have to
+  write `transparent assert (foo : (bar baz))` rather than
+  `transparent assert (foo : bar baz)`.
+
+- `issig`: Defined in `Basics/Tactics`, this tactic proves automatically
+  that a record type is equivalent to a nested sigma-type.
+
+- `make_equiv`: Defined in `Basics/Equvialences`, this tactic can prove
+  two types are equivalent if the proof involves juggling components.
+  See also `make_equiv_contr_basedpaths`.
+
+- `pointed_reduce`: Defined in `Pointed/Core`, this tactic lets you
+  assume that functions are strictly pointed.  See related tactics there.
+
+- `strip_truncations`, `strip_modalities` and `strip_reflections`: These
+  let you lift an element from `O X` to `X` when the goal is `O`-local,
+  for various `O`.
+
+- `simpl rewrite`: Defined in `Tactics`, this tactic applies `simpl`
+  to the type of a lemma, and to the goal, before rewriting the goal
+  with the lemma.  In particular, this is useful for rewriting with
+  lemmas containing definitions like `compose` that appear unfolded in
+  the goal: if the operation has `Arguments ... / .` as above then
+  `simpl` will unfold it.
+
+- `binder apply`: Defined in `Tactics/BinderApply`, this tactic
+  applies a lemma inside of a lambda abstraction, in the goal or in a
+  hypothesis.
+
   
 ## 1.12. Contributing to the library ##
 
@@ -1143,9 +1212,8 @@ where they are defined.
 We mainly work by the "Fork & Pull" model.  Briefly: to contribute,
 [create your own fork][fork] of the repository, do your main work
 there, and [issue pull requests][pull] when work is ready to be
-brought into the main library.  Direct pushes to the library should be
-restricted to minor edits, in roughly [the sense of Wikipedia][minor]:
-improvements to documentation, typo corrections, etc.
+brought into the main library.  Direct pushes to the library should
+never be made.
 
 There are various reasons for preferring the fork/pull workflow.
 Firstly, it helps maintain code consistency.  Secondly, it makes it
@@ -1154,7 +1222,7 @@ survey changes grouped into pull requests than in individual commits.
 Thirdly, it means we can make our work in progress as messy and
 uncertain as we want, while keeping the main library clean and tidy.
 
-It is suggested that you submit your pull request not from the master
+Submit your pull request not from the master
 branch of your fork, but from another branch created specially for
 that purpose.  Among other things, this allows you to continue
 developing on your fork without changing the pull request, since a
@@ -1171,7 +1239,7 @@ on each other.
 
 ### 1.12.2. Approval of pull requests ###
 
-Before being merged, pull requests must be approved by one or two of
+Before being merged, pull requests must be approved by one of
 the core developers, not counting whoever submitted it.  An approval
 can be an official "Approving review" through the GitHub UI, or just a
 comment such as LGTM ("Looks Good To Me").  Currently the rules are:
@@ -1180,29 +1248,28 @@ comment such as LGTM ("Looks Good To Me").  Currently the rules are:
   merging (which doesn't always mean making the changes, but a
   discussion must be had and resolved).
 
-- In general, a pull request should not be merged unless Travis CI
-  confirms that it builds successfully.  Exceptions to this rule
-  sometimes have to be made if the Travis configuration is broken for
+- In general, a pull request should not be merged unless the CI tests
+  confirm that it builds successfully.  Exceptions to this rule
+  sometimes have to be made if the CI configuration is broken for
   some unrelated reason, but in that case it is better if the
   person(s) approving the pull request confirms locally that it builds
   successfully.
 
-  Note also that Travis doesn't automatically restart itself on a pull
+  Note also that the CI doesn't automatically restart itself on a pull
   request when the master branch changes.  Thus, if other pull
   requests have been merged in the interval since a given pull request
   was first submitted, it may be necessary to rebase that pull request
   against the new master, to make
   sure before merging it that it won't break the master branch.
 
-- In the absence of objections, two approvals suffice for a pull
-  request to be merged.  Thus, instead of giving a second approval one
-  may just merge the pull request.
+- In the absence of objections, one approval suffices for a pull
+  request to be merged.
 
-- In the absence of objections but with only one approval, a pull
-  request may be merged if at least 48 hours have passed after its
-  submission.
+- In the absence of objections, a minor pull request may be merged
+  if at least 48 hours have passed after its submission.  In some
+  cases, this can be done immediately.
 
-If a pull request is lacking even one approval and hasn't received any
+If a pull request is lacking approval and hasn't received any
 discussion, feel free to bump it back to attention with a comment.
 
 ### 1.12.3. Commit messages ###
@@ -1217,7 +1284,7 @@ Some good examples, showing what kind of change was made (additions,
 updates, fixes), and what material it was on:
 
 - "adapt to the new version of coqtop by disabling the native compiler"
-- "Resolved universe inconsistency in Freudenthal."
+- "resolved universe inconsistency in Freudenthal"
 - "epis are surjective"
 
 Some bad examples:
@@ -1316,14 +1383,14 @@ More often than we would like, we run across bugs in Coq.  A sure sign
 of a bug in Coq is when you get a message about an "Anomaly", but a
 bug can also be unjustifiable behavior.  If you aren't sure whether
 something is a bug in Coq, feel free to [open an issue][new issue]
-about it on the HoTT GitHub project.
+about it on the Coq-HoTT GitHub project.
 
 [new issue]: https://github.com/HoTT/HoTT/issues/new
 
 ### 1.13.1. Reporting bugs ###
 
 Bugs in Coq should be reported on the [Coq bug tracker][bugs].  You
-should probably search the tracker first to see whether your bug has
+should search the tracker first to see whether your bug has
 already been reported.
 
 After reporting a bug, you may need to add a temporary workaround to
