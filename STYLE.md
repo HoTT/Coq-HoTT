@@ -1428,13 +1428,12 @@ You will need to pass the bug-finder several arguments to tell it to
 use the HoTT version of Coq and where to find the rest of the library;
 a common invocation would be something like
 
-    $ /path/to/find-bug.py --coqc ../hoqc --coqtop ../hoqtop -R . HoTT Path/To/Buggy.v bug_minimized.v
+    $ /path/to/find-bug.py --coqc .../coqc --coqtop .../coqtop -R . HoTT Path/To/Buggy.v bug_minimized.v
 
 When it exits, the minimized code producing the bug will be in
 `bug_minimized.v`.
 
-There are a few "gotchas" to be aware of when using the bug-finder
-script with the HoTT library.  One is that sometimes `coqc` and
+Note that sometimes `coqc` and
 `coqtop` can exhibit different behavior, and one may produce a bug
 while the other doesn't.  (One reason for this is that they give
 different names to universe parameters, `Top.1` versus `Filename.1`,
@@ -1446,55 +1445,6 @@ June 2015 it has not yet been fixed.)  The bug-finder normally uses
 both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
 `coqtop` by passing the argument `--coqc-as-coqtop` instead of
 `--coqc`.
-
-Another "gotcha" is that with the above invocation, the minimized file
-will produce the bug with the `hoq*` scripts, but not necessarily with
-the ordinary `coq*` executables, because the HoTT standard library is
-modified.  Before submitting a bug report, you should check whether
-the minimized file gives the bug with the ordinary Coq executables
-(which can be found in `coq-HoTT/bin`).  If not, you may need to add a
-bit to it.  Often it is enough to add at the top some of the flags
-that the HoTT standard library turns on, such as
-
-```coq
-Global Set Universe Polymorphism.
-Global Set Asymmetric Patterns.
-Global Set Primitive Projections.
-Global Set Nonrecursive Elimination Schemes.
-```
-
-If this isn't good enough, then you can try pasting in more of the
-HoTT standard library.  For instance, you may need to redefine `sig`
-after setting universe polymorphism on.  A solution that almost always
-works is to insert
-
-```coq
-Module Import Coq.
-Module Import Init.
-Module Import Notations.
-(* paste contents of coq/theories/Init/Notations.v here *)
-End Notations.
-Module Import Logic.
-(* paste contents of coq/theories/Init/Logic.v here *)
-End Logic.
-Module Import Datatypes.
-(* paste contents of coq/theories/Init/Datatypes.v here *)
-End Datatypes.
-Module Import Specif.
-(* paste contents of coq/theories/Init/Specif.v here *)
-End Specif.
-End Init.
-End Coq.
-```
-
-and then replace all `Require Import`s in the pasted files with simply
-`Import`, remove the definition of `nat` (because there's no way to
-get special syntax for it), and possibly remove dependent choice.  You
-can then run the bug-finder on this file again to remove the parts of
-the pasted stdlib that aren't needed, telling it to use the unmodified
-Coq executables, e.g.
-
-    $ /path/to/find-bug.py --coqc ../coq-HoTT/bin/coqc --coqtop ../coq-HoTT/bin/coqtop bug_minimized.v bug_minimized_2.v
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
 
