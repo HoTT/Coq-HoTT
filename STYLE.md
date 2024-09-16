@@ -131,7 +131,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   on defining HITs, below).  These are only lightly used in the rest
   of the library.  See `Colimits/*` for the HIT that is most commonly used.
 
-- `Diagrams/*`: Files involving graphs and diagrams, used for colimits and limits.
+- `Diagrams/*`: Files involving graphs and diagrams, used for colimits and
+  limits.
 
 - `Colimits/*`: Files involving colimits.  `Colimits/GraphQuotient`
   defines graph quotients as a HIT, and other constructions are
@@ -452,13 +453,21 @@ names `H`, your name will result in a conflict.  Conversely, we
 sometimes give a hypothesis a name that won't be used, to preempt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
 
-One gotcha about typeclass arguments is that they cannot be inferred automatically when preceded by non-implicit arguments.  So for instance if we write
+One gotcha about typeclass arguments is that they cannot be inferred
+automatically when preceded by non-implicit arguments.  So for instance
+if we write
 
 ```coq
 Definition foo (A : Type) `{Funext}
 ```
 
-then the `Funext` argument will not generally be inferable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
+then the `Funext` argument will not generally be inferable.  Thus,
+typeclass arguments should generally come first if possible.  In
+addition, note that when section variables are generalized at the
+close of a section, they appear first.  Thus, if anything in a section
+requires `Funext` or `Univalence`, those hypotheses should go in the
+`Context` at the top of the section in order that they'll come first
+in the eventual argument lists.
 
 ### 3.6. Truncation ###
 
@@ -597,8 +606,9 @@ convention.  For another example, see `ExcludedMiddle.v`.
 Most higher inductive types are defined in the `HIT/`
 directory, but `Colimits/GraphQuotient` also uses a HIT.
 All are defined using [Dan Licata's "private inductive
-types" hack][hit-hack] which was [implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf) by Yves Bertot.
-This means the procedure for defining a HIT is:
+types" hack][hit-hack] which was
+[implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf)
+by Yves Bertot.  This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
    to export to the rest of the file containing the definition.
@@ -643,8 +653,8 @@ higher inductive types.
 You may get this error at `Qed`/`Defined` if unification unfolded
 the induction principle and used its value to produce the proof term.
 
-To fix this, you need to identify which tactic produced the problematic term, then
-either avoid unification by annotating more (e.g. `apply (@foo bla)`
+To fix this, you need to identify which tactic produced the problematic term,
+then either avoid unification by annotating more (e.g. `apply (@foo bla)`
 instead of `apply foo`), or guide unification by manipulating the goal
 (e.g. using `rewrite` with the lemma witnessing the computation rule of
 the inductive principle) or making related definitions opaque.
@@ -912,8 +922,8 @@ necessary.
 
 Note that it *is* acceptable for the definition of a transparent
 theorem to invoke other theorems which are opaque.  For instance,
-the `isequiv_adjointify` lemma itself is actually transparent, but it invokes
-an opaque sublemma that computes the triangle identity (using
+the `isequiv_adjointify` lemma itself is actually transparent, but it
+invokes an opaque sublemma that computes the triangle identity (using
 `rewrite`).  Making the main lemma transparent is necessary so that
 the other parts of an equivalence -- the inverse function and
 homotopies -- will compute.  Thus, a transparent definition will not
@@ -932,9 +942,14 @@ latter defined in `Basics/Overture`; see "Available tactics", below).
 
 ## 8. Imports/exports ##
 
-Most `Require` commands should be just `Require Import`: imports should not be re-exported, by default.
+Most `Require` commands should be just `Require Import` rather than
+`Require Export`: imports should not be re-exported, by default.
 
-However, if you can't imagine making practical use of file `Foo` without file `Bar`, then `Bar` may export `Foo` via `Require Export Foo`. For instance, `Modality` exports `ReflectiveSubuniverse` because so many of the theorems about modalities are actually theorems about reflective subuniverses.
+However, if you can't imagine making practical use of file `Foo`
+without file `Bar`, then `Bar` may export `Foo` via `Require Export
+Foo`. For instance, `Modality` exports `ReflectiveSubuniverse` because
+so many of the theorems about modalities are actually theorems about
+reflective subuniverses.
 
 ## 9. Formatting ##
 
@@ -970,8 +985,9 @@ not much more than 70 characters.  Remember that when Coq code is
 often edited in split-screen so that the screen width is cut in half,
 and that not everyone's screen is as wide as yours.
 
-[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used to produce
-a browsable [view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
+[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used
+to produce a browsable
+[view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
 coqdoc treats comments specially, so comments should follow the
 conventions described on the coqdoc page.  The most important ones are
 that Coq expressions within comments are surrounded by square brackets,
@@ -1304,8 +1320,8 @@ Some bad examples:
 
 ### 12.4. Creating new files ###
 
-If you create a new file, `make` will only compile it if it is being tracked by
-`git`, so you will need to `git add` it.
+If you create a new file, `make` will only compile it if it is being
+tracked by `git`, so you will need to `git add` it.
 
 You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
