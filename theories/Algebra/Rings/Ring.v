@@ -825,7 +825,7 @@ Proof.
     + apply rng_inv_r.
 Defined.
 
-(** *** Invertible element movement lemmas *)
+(** *** Multiplication by an invertible element is an equivalence *)
 
 Global Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
   `{IsInvertible R x}
@@ -855,7 +855,9 @@ Proof.
   - nrapply rng_inv_r.
 Defined.
 
-(** ** These cannot be proven using the corresponding group laws in the group of units since not all elements involved are invertible. *)
+(** *** Invertible element movement lemmas *)
+
+(** These cannot be proven using the corresponding group laws in the group of units since not all elements involved are invertible. *)
 
 Definition rng_inv_moveL_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
   : y * x = z <~> x = inverse_elem y * z
