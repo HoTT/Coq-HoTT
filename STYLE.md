@@ -119,7 +119,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   here are `Modalities/ReflectiveSubuniverse` and `Modalities/Modality`.
 
 - `Basics/Trunc`, `TruncType`, `Truncations/*`: Files involving truncations.
-  There are interdepencies between the files in `Truncations/` and some
+  There are interdependencies between the files in `Truncations/` and some
   of the `Modalities/*` files.
 
 - `Equiv/*`: Files showing that various definitions of equivalence agree.
@@ -154,7 +154,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - `Homotopy/*`: Files related to synthetic homotopy theory.
 
-- `Spectra/*': Files related to spectra in the sense of stable
+- `Spectra/*`: Files related to spectra in the sense of stable
   homotopy theory.
 
 - `Tactics, Tactics/*`: some more advanced tactics.
@@ -183,7 +183,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - `theories/Utf8` and `theories/Utf8Minimal`: optional Unicode
   notations for the basic definitions (we avoid Unicode in the core
-  libary).
+  library).
 
 - `theories/Categories/*`: The categories library, which is not
   considered part of the core (e.g. it uses unicode), but nevertheless
@@ -449,16 +449,16 @@ Note that when you don't give a name to a variable, Coq often names it
 avoid using `H` for your own explicitly named variables, since if you
 do and later on someone introduces a new unnamed hypothesis that Coq
 names `H`, your name will result in a conflict.  Conversely, we
-sometimes give a hypothesis a name that won't be used, to pre-empt
+sometimes give a hypothesis a name that won't be used, to preempt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
 
-One gotcha about typeclass arguments is that they cannot be inferred automatically when preceeded by non-implicit arguments.  So for instance if we write
+One gotcha about typeclass arguments is that they cannot be inferred automatically when preceded by non-implicit arguments.  So for instance if we write
 
 ```coq
 Definition foo (A : Type) `{Funext}
 ```
 
-then the `Funext` argument will not generally be inferrable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
+then the `Funext` argument will not generally be inferable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
 
 ### 3.6. Truncation ###
 
@@ -860,7 +860,7 @@ you doubt this, try making some of it opaque and you will find that
 the "higher coherences" such as `pentagon` and `eckmann_hilton` will
 fail to typecheck.
 
-In general, it is okay to contruct something transparent using
+In general, it is okay to construct something transparent using
 tactics; it's often a matter of aesthetics whether an explicit proof
 term or a tactic proof is more readable or elegant, and personal
 aesthetics may differ.  Consider, for example, the explicit proof term
@@ -1186,7 +1186,7 @@ where they are defined.
 - `issig`: Defined in `Basics/Tactics`, this tactic proves automatically
   that a record type is equivalent to a nested sigma-type.
 
-- `make_equiv`: Defined in `Basics/Equvialences`, this tactic can prove
+- `make_equiv`: Defined in `Basics/Equivalences`, this tactic can prove
   two types are equivalent if the proof involves juggling components.
   See also `make_equiv_contr_basedpaths`.
 
@@ -1293,7 +1293,7 @@ updates, fixes), and what material it was on:
 
 Some bad examples:
 
-- "further progess"  Progress in what files?
+- "further progress"  Progress in what files?
 - "Bug in [Equivalences.v]."  Was the bug fixed, or just noticed and
   flagged in comments, or what?
 - "asdfjkl"
