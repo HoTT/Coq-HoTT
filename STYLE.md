@@ -1315,7 +1315,7 @@ for some other reason.
 
 We use the [Travis Continuous Integration Platform][travis] to check
 that pull requests do not break anything, and also to automatically
-update various things (such as the documentation, proviola, and
+update various things (such as the documentation and
 dependency graph linked on the [project wiki][wiki]).  Normally you
 shouldn't need to know anything about this; Travis automatically
 checks every pull request made to the central repository.
