@@ -633,6 +633,15 @@ Proof.
     by exists (inv : rng_op R).
 Defined.
 
+(** The invertible elements in [R] and [rng_op R] agree, by swapping the proofs of left and right invertibility. *)
+Definition isinvertible_rng_op (R : Ring) (x : R) `{!IsInvertible R x}
+  : IsInvertible (rng_op R) x.
+Proof.
+  split.
+  - exact (isrightinvertible_isinvertible).
+  - exact (isleftinvertible_isinvertible).
+Defined.
+
 (** *** Uniqueness of inverses *)
 
 (** This general lemma will be used for uniqueness results. *)
@@ -841,6 +850,7 @@ Proof.
   - nrapply rng_inv_l.
 Defined.
 
+(** This can be proved by combining [isequiv_rng_inv_mult_l (R:=rng_op R)] with [isinvertible_rng_op], but then the inverse map is given by multiplying by [right_inverse_elem x] not [inverse_elem x], which complicates calculations. *)
 Global Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
   `{IsInvertible R x}
   : IsEquiv (.* x).
