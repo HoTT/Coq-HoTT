@@ -625,7 +625,7 @@ Section Localization.
       exact (rng_mult_assoc _ _ _)^.
   Defined.
   
-  (** As a special case, any denominator of a fraction must necesserily be invertible. *)
+  (** As a special case, any denominator of a fraction must necessarily be invertible. *)
   Global Instance isinvertible_denominator (f : Fraction)
     : IsInvertible rng_localization (loc_in (denominator f)).
   Proof.
