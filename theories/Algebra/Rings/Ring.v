@@ -788,7 +788,7 @@ Proof.
   exact (right_inverse_eq x).
 Defined.
 
-(** Inverses of invertible elements are themselves invertible. *)
+(** Inverses of invertible elements are themselves invertible.  We take both inverses of [inverse_elem x] to be [x]. *)
 Global Instance isinvertible_inverse_elem {R : Ring} (x : R)
   `{IsInvertible R x}
   : IsInvertible R (inverse_elem x).
@@ -796,6 +796,16 @@ Proof.
   split.
   - exists x; apply rng_inv_r.
   - apply isrightinvertible_left_inverse_elem.
+Defined.
+
+(** Since [inverse_elem (inverse_elem x) = x], we get the following equivalence. *)
+Definition equiv_path_inverse_elem {R : Ring} {x y : R}
+  `{IsInvertible R x, IsInvertible R y}
+  : x = y <~> inverse_elem x = inverse_elem y.
+Proof.
+  srapply equiv_iff_hprop.
+  - exact (isinvertible_unique x y).
+  - exact (isinvertible_unique (inverse_elem x) (inverse_elem y)).
 Defined.
 
 (** [1] is always invertible, and by the above [-1]. *)
@@ -897,22 +907,5 @@ Definition rng_inv_moveR_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
 Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
   : x = z * y <~> x * inverse_elem y = z
   := equiv_moveR_equiv_V (f := (.* y)) x z.
-
-(** TODO: The next two results should probably go after isinvertible_inverse_elem.
-    But maybe the first one should be dropped, since it is now definitional? *)
-
-Definition inverse_elem_inverse_elem {R : Ring} (x : R)
-  `{IsInvertible R x}
-  : inverse_elem (inverse_elem x) = x
-  := idpath.
-
-Definition equiv_path_inverse_elem {R : Ring} {x y : R}
-  `{IsInvertible R x, IsInvertible R y}
-  : x = y <~> inverse_elem x = inverse_elem y.
-Proof.
-  srapply equiv_iff_hprop.
-  - exact (isinvertible_unique x y).
-  - exact (isinvertible_unique (inverse_elem x) (inverse_elem y)).
-Defined.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)
