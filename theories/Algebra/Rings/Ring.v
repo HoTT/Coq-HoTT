@@ -808,6 +808,20 @@ Proof.
   - apply rng_mult_one_l.
 Defined.
 
+(** Ring homomorphisms preserve invertible elements. *)
+Global Instance isinvertible_rng_homo {R S} (f : R $-> S)
+  : forall x, IsInvertible R x -> IsInvertible S (f x).
+Proof.
+  intros x H.
+  snrapply Build_IsInvertible.
+  1: exact (f (inverse_elem x)).
+  1,2: lhs_V nrapply rng_homo_mult.
+  1,2: rhs_V nrapply (rng_homo_one f).
+  1,2: nrapply (ap f).
+  - exact (rng_inv_l x).
+  - exact (rng_inv_r x).
+Defined.
+
 (** *** Group of units *)
 
 (** Invertible elements are typically called "units" in ring theory and the collection of units forms a group under the ring multiplication. *)
@@ -884,5 +898,29 @@ Definition rng_inv_moveR_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
 Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
   : x = z * y <~> x * inverse_elem y = z
   := equiv_moveR_equiv_V (f := (.* y)) x z.
+
+Definition inverse_elem_inverse_elem {R : Ring} (x : R)
+  `{IsInvertible R x}
+  : inverse_elem (inverse_elem x) = x.
+Proof.
+  lhs_V nrapply rng_mult_one_r.
+  apply rng_inv_moveR_Vr.
+  exact (rng_inv_l x)^.
+Defined.
+
+Definition equiv_path_inverse_elem {R : Ring} {x y : R}
+  `{IsInvertible R x, IsInvertible R y}
+  : x = y <~> inverse_elem x = inverse_elem y.
+Proof.
+  srapply equiv_iff_hprop.
+  - intros p.
+    snrapply (ap011D inverse_elem p).
+    apply path_ishprop.
+  - intros p.
+    lhs_V nrapply inverse_elem_inverse_elem.
+    rhs_V nrapply inverse_elem_inverse_elem.
+    snrapply (ap011D inverse_elem p).
+    apply path_ishprop.
+Defined.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)

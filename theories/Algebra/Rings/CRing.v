@@ -69,6 +69,17 @@ Proof.
   apply rng_mult_move_left_assoc.
 Defined.
 
+Definition isinvertible_cring (R : CRing) (x : R)
+  (inv : R) (inv_l : inv * x = 1)
+  : IsInvertible R x.
+Proof.
+  snrapply Build_IsInvertible.
+  - exact inv.
+  - exact inv_l.
+  - lhs nrapply rng_mult_comm.
+    exact inv_l.
+Defined.
+
 (** ** Ideals in commutative rings *)
   
 Section IdealCRing.

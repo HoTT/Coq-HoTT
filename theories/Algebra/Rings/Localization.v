@@ -614,6 +614,75 @@ Section Localization.
     Defined.
   
   End Rec.
+  
+  (** Elements belonging to the multiplicative subset [S] of [R] become invertible in [rng_localization R S]. *)
+  Global Instance isinvertible_rng_localization (x : R) (Sx : S x)
+    : IsInvertible rng_localization (loc_in x).
+  Proof.
+    snrapply isinvertible_cring.
+    - exact (loc_frac (Build_Fraction 1 x Sx)).
+    - apply loc_frac_eq, fraction_eq_simple.
+      exact (rng_mult_assoc _ _ _)^.
+  Defined.
+  
+  (** As a special case, any denominator of a fraction must necesserily be invertible. *)
+  Global Instance isinvertible_denominator (f : Fraction)
+    : IsInvertible rng_localization (loc_in (denominator f)).
+  Proof.
+    snrapply isinvertible_rng_localization.
+    exact (in_mult_subset_denominator f).
+  Defined.
+  
+  (** We can factor any fraction as the multiplication of the numerator and the inverse of the denominator. *)
+  Definition fraction_decompose (f : Fraction)
+    : loc_frac f
+      = loc_in (numerator f) * inverse_elem (loc_in (denominator f)).
+  Proof.
+    apply loc_frac_eq, fraction_eq_simple.
+    nrapply rng_mult_assoc.
+  Defined.
+
+  Section Ind.
+  
+    Context (P : rng_localization -> Type)
+      (H : forall x, IsHProp (P x))
+      (Hin : forall x, P (loc_in x))
+      (Hinv : forall x (H : IsInvertible rng_localization x),
+        P x -> P (inverse_elem x))
+      (Hmul : forall x y, P x -> P y -> P (x * y)) 
+      .
+
+    Definition rng_localization_ind
+      : forall x, P x.
+    Proof.
+      srapply Localization_type_ind.
+      - intros f.
+        refine (transport P (fraction_decompose f)^ _).
+        apply Hmul.
+        + apply Hin.
+        + apply Hinv, Hin.
+      - intros f1 f2 p.
+        apply path_ishprop.
+    Defined.
+
+  End Ind.
+  
+  Definition rng_localization_ind_homotopy {T : CRing}
+    {f g : rng_localization $-> T}
+    (p : f $o loc_in $== g $o loc_in)
+    : f $== g.
+  Proof.
+    srapply rng_localization_ind.
+    - exact p.
+    - hnf; intros x H q.
+      change (inverse_elem (f x) = inverse_elem (g x)).
+      apply equiv_path_inverse_elem.
+      exact q.
+    - hnf; intros x y q r.
+      lhs nrapply rng_homo_mult.
+      rhs nrapply rng_homo_mult.
+      f_ap.
+  Defined.
 
 End Localization.
 
