@@ -687,10 +687,11 @@ Proof.
   apply path_left_inverse_elem_right_inverse_elem.
 Defined.
 
-(** Furthermore, any two proofs of invertibility have the same inverse. *)
-Definition isinvertible_unique {R x} (H1 H2 : IsInvertible R x)
-  : @inverse_elem R x H1 = @inverse_elem R x H2.
+(** Equal elements have equal inverses.  Note that we don't require that the proofs of invertibility are equal (over [p]).  It follows that the inverse of an invertible element [x] depends only on [x]. *)
+Definition isinvertible_unique {R : Ring} (x y : R) `{IsInvertible R x} `{IsInvertible R y} (p : x = y)
+  : inverse_elem x = inverse_elem y.
 Proof.
+  destruct p.
   snrapply (path_left_right_inverse x).
   - apply rng_inv_l.
   - apply rng_inv_r.
@@ -793,10 +794,8 @@ Global Instance isinvertible_inverse_elem {R : Ring} (x : R)
   : IsInvertible R (inverse_elem x).
 Proof.
   split.
-  - unfold inverse_elem.
-    rewrite (path_left_inverse_elem_right_inverse_elem x).
-    exact _.
-  - exact _.
+  - exists x; apply rng_inv_r.
+  - apply isrightinvertible_left_inverse_elem.
 Defined.
 
 (** [1] is always invertible, and by the above [-1]. *)
@@ -899,28 +898,21 @@ Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
   : x = z * y <~> x * inverse_elem y = z
   := equiv_moveR_equiv_V (f := (.* y)) x z.
 
+(** TODO: The next two results should probably go after isinvertible_inverse_elem.
+    But maybe the first one should be dropped, since it is now definitional? *)
+
 Definition inverse_elem_inverse_elem {R : Ring} (x : R)
   `{IsInvertible R x}
-  : inverse_elem (inverse_elem x) = x.
-Proof.
-  lhs_V nrapply rng_mult_one_r.
-  apply rng_inv_moveR_Vr.
-  exact (rng_inv_l x)^.
-Defined.
+  : inverse_elem (inverse_elem x) = x
+  := idpath.
 
 Definition equiv_path_inverse_elem {R : Ring} {x y : R}
   `{IsInvertible R x, IsInvertible R y}
   : x = y <~> inverse_elem x = inverse_elem y.
 Proof.
   srapply equiv_iff_hprop.
-  - intros p.
-    snrapply (ap011D inverse_elem p).
-    apply path_ishprop.
-  - intros p.
-    lhs_V nrapply inverse_elem_inverse_elem.
-    rhs_V nrapply inverse_elem_inverse_elem.
-    snrapply (ap011D inverse_elem p).
-    apply path_ishprop.
+  - exact (isinvertible_unique x y).
+  - exact (isinvertible_unique (inverse_elem x) (inverse_elem y)).
 Defined.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)
