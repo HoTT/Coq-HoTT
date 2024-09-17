@@ -119,7 +119,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   here are `Modalities/ReflectiveSubuniverse` and `Modalities/Modality`.
 
 - `Basics/Trunc`, `TruncType`, `Truncations/*`: Files involving truncations.
-  There are interdepencies between the files in `Truncations/` and some
+  There are interdependencies between the files in `Truncations/` and some
   of the `Modalities/*` files.
 
 - `Equiv/*`: Files showing that various definitions of equivalence agree.
@@ -131,7 +131,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   on defining HITs, below).  These are only lightly used in the rest
   of the library.  See `Colimits/*` for the HIT that is most commonly used.
 
-- `Diagrams/*`: Files involving graphs and diagrams, used for colimits and limits.
+- `Diagrams/*`: Files involving graphs and diagrams, used for colimits and
+  limits.
 
 - `Colimits/*`: Files involving colimits.  `Colimits/GraphQuotient`
   defines graph quotients as a HIT, and other constructions are
@@ -154,7 +155,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - `Homotopy/*`: Files related to synthetic homotopy theory.
 
-- `Spectra/*': Files related to spectra in the sense of stable
+- `Spectra/*`: Files related to spectra in the sense of stable
   homotopy theory.
 
 - `Tactics, Tactics/*`: some more advanced tactics.
@@ -183,7 +184,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - `theories/Utf8` and `theories/Utf8Minimal`: optional Unicode
   notations for the basic definitions (we avoid Unicode in the core
-  libary).
+  library).
 
 - `theories/Categories/*`: The categories library, which is not
   considered part of the core (e.g. it uses unicode), but nevertheless
@@ -449,16 +450,24 @@ Note that when you don't give a name to a variable, Coq often names it
 avoid using `H` for your own explicitly named variables, since if you
 do and later on someone introduces a new unnamed hypothesis that Coq
 names `H`, your name will result in a conflict.  Conversely, we
-sometimes give a hypothesis a name that won't be used, to pre-empt
+sometimes give a hypothesis a name that won't be used, to preempt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
 
-One gotcha about typeclass arguments is that they cannot be inferred automatically when preceeded by non-implicit arguments.  So for instance if we write
+One gotcha about typeclass arguments is that they cannot be inferred
+automatically when preceded by non-implicit arguments.  So for instance
+if we write
 
 ```coq
 Definition foo (A : Type) `{Funext}
 ```
 
-then the `Funext` argument will not generally be inferrable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
+then the `Funext` argument will not generally be inferable.  Thus,
+typeclass arguments should generally come first if possible.  In
+addition, note that when section variables are generalized at the
+close of a section, they appear first.  Thus, if anything in a section
+requires `Funext` or `Univalence`, those hypotheses should go in the
+`Context` at the top of the section in order that they'll come first
+in the eventual argument lists.
 
 ### 3.6. Truncation ###
 
@@ -597,8 +606,9 @@ convention.  For another example, see `ExcludedMiddle.v`.
 Most higher inductive types are defined in the `HIT/`
 directory, but `Colimits/GraphQuotient` also uses a HIT.
 All are defined using [Dan Licata's "private inductive
-types" hack][hit-hack] which was [implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf) by Yves Bertot.
-This means the procedure for defining a HIT is:
+types" hack][hit-hack] which was
+[implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf)
+by Yves Bertot.  This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
    to export to the rest of the file containing the definition.
@@ -643,8 +653,8 @@ higher inductive types.
 You may get this error at `Qed`/`Defined` if unification unfolded
 the induction principle and used its value to produce the proof term.
 
-To fix this, you need to identify which tactic produced the problematic term, then
-either avoid unification by annotating more (e.g. `apply (@foo bla)`
+To fix this, you need to identify which tactic produced the problematic term,
+then either avoid unification by annotating more (e.g. `apply (@foo bla)`
 instead of `apply foo`), or guide unification by manipulating the goal
 (e.g. using `rewrite` with the lemma witnessing the computation rule of
 the inductive principle) or making related definitions opaque.
@@ -860,7 +870,7 @@ you doubt this, try making some of it opaque and you will find that
 the "higher coherences" such as `pentagon` and `eckmann_hilton` will
 fail to typecheck.
 
-In general, it is okay to contruct something transparent using
+In general, it is okay to construct something transparent using
 tactics; it's often a matter of aesthetics whether an explicit proof
 term or a tactic proof is more readable or elegant, and personal
 aesthetics may differ.  Consider, for example, the explicit proof term
@@ -912,8 +922,8 @@ necessary.
 
 Note that it *is* acceptable for the definition of a transparent
 theorem to invoke other theorems which are opaque.  For instance,
-the `isequiv_adjointify` lemma itself is actually transparent, but it invokes
-an opaque sublemma that computes the triangle identity (using
+the `isequiv_adjointify` lemma itself is actually transparent, but it
+invokes an opaque sublemma that computes the triangle identity (using
 `rewrite`).  Making the main lemma transparent is necessary so that
 the other parts of an equivalence -- the inverse function and
 homotopies -- will compute.  Thus, a transparent definition will not
@@ -932,9 +942,14 @@ latter defined in `Basics/Overture`; see "Available tactics", below).
 
 ## 8. Imports/exports ##
 
-Most `Require` commands should be just `Require Import`: imports should not be re-exported, by default.
+Most `Require` commands should be just `Require Import` rather than
+`Require Export`: imports should not be re-exported, by default.
 
-However, if you can't imagine making practical use of file `Foo` without file `Bar`, then `Bar` may export `Foo` via `Require Export Foo`. For instance, `Modality` exports `ReflectiveSubuniverse` because so many of the theorems about modalities are actually theorems about reflective subuniverses.
+However, if you can't imagine making practical use of file `Foo`
+without file `Bar`, then `Bar` may export `Foo` via `Require Export
+Foo`. For instance, `Modality` exports `ReflectiveSubuniverse` because
+so many of the theorems about modalities are actually theorems about
+reflective subuniverses.
 
 ## 9. Formatting ##
 
@@ -970,8 +985,9 @@ not much more than 70 characters.  Remember that when Coq code is
 often edited in split-screen so that the screen width is cut in half,
 and that not everyone's screen is as wide as yours.
 
-[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used to produce
-a browsable [view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
+[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used
+to produce a browsable
+[view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
 coqdoc treats comments specially, so comments should follow the
 conventions described on the coqdoc page.  The most important ones are
 that Coq expressions within comments are surrounded by square brackets,
@@ -1186,7 +1202,7 @@ where they are defined.
 - `issig`: Defined in `Basics/Tactics`, this tactic proves automatically
   that a record type is equivalent to a nested sigma-type.
 
-- `make_equiv`: Defined in `Basics/Equvialences`, this tactic can prove
+- `make_equiv`: Defined in `Basics/Equivalences`, this tactic can prove
   two types are equivalent if the proof involves juggling components.
   See also `make_equiv_contr_basedpaths`.
 
@@ -1293,7 +1309,7 @@ updates, fixes), and what material it was on:
 
 Some bad examples:
 
-- "further progess"  Progress in what files?
+- "further progress"  Progress in what files?
 - "Bug in [Equivalences.v]."  Was the bug fixed, or just noticed and
   flagged in comments, or what?
 - "asdfjkl"
@@ -1304,8 +1320,8 @@ Some bad examples:
 
 ### 12.4. Creating new files ###
 
-If you create a new file, `make` will only compile it if it is being tracked by
-`git`, so you will need to `git add` it.
+If you create a new file, `make` will only compile it if it is being
+tracked by `git`, so you will need to `git add` it.
 
 You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
@@ -1315,7 +1331,7 @@ for some other reason.
 
 We use the [Travis Continuous Integration Platform][travis] to check
 that pull requests do not break anything, and also to automatically
-update various things (such as the documentation, proviola, and
+update various things (such as the documentation and
 dependency graph linked on the [project wiki][wiki]).  Normally you
 shouldn't need to know anything about this; Travis automatically
 checks every pull request made to the central repository.
@@ -1425,16 +1441,15 @@ available in his [coq-tools][coq-tools] repository.  To use it:
    it as much as possible.
 
 You will need to pass the bug-finder several arguments to tell it to
-use the HoTT version of Coq and where to find the rest of the library;
+pass the right flags and where to find the rest of the library;
 a common invocation would be something like
 
-    $ /path/to/find-bug.py --coqc ../hoqc --coqtop ../hoqtop -R . HoTT Path/To/Buggy.v bug_minimized.v
+    $ /path/to/find-bug.py --arg -noinit --arg -indices-matter -R . HoTT Path/To/Buggy.v bug_minimized.v
 
 When it exits, the minimized code producing the bug will be in
 `bug_minimized.v`.
 
-There are a few "gotchas" to be aware of when using the bug-finder
-script with the HoTT library.  One is that sometimes `coqc` and
+Note that sometimes `coqc` and
 `coqtop` can exhibit different behavior, and one may produce a bug
 while the other doesn't.  (One reason for this is that they give
 different names to universe parameters, `Top.1` versus `Filename.1`,
@@ -1446,55 +1461,6 @@ June 2015 it has not yet been fixed.)  The bug-finder normally uses
 both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
 `coqtop` by passing the argument `--coqc-as-coqtop` instead of
 `--coqc`.
-
-Another "gotcha" is that with the above invocation, the minimized file
-will produce the bug with the `hoq*` scripts, but not necessarily with
-the ordinary `coq*` executables, because the HoTT standard library is
-modified.  Before submitting a bug report, you should check whether
-the minimized file gives the bug with the ordinary Coq executables
-(which can be found in `coq-HoTT/bin`).  If not, you may need to add a
-bit to it.  Often it is enough to add at the top some of the flags
-that the HoTT standard library turns on, such as
-
-```coq
-Global Set Universe Polymorphism.
-Global Set Asymmetric Patterns.
-Global Set Primitive Projections.
-Global Set Nonrecursive Elimination Schemes.
-```
-
-If this isn't good enough, then you can try pasting in more of the
-HoTT standard library.  For instance, you may need to redefine `sig`
-after setting universe polymorphism on.  A solution that almost always
-works is to insert
-
-```coq
-Module Import Coq.
-Module Import Init.
-Module Import Notations.
-(* paste contents of coq/theories/Init/Notations.v here *)
-End Notations.
-Module Import Logic.
-(* paste contents of coq/theories/Init/Logic.v here *)
-End Logic.
-Module Import Datatypes.
-(* paste contents of coq/theories/Init/Datatypes.v here *)
-End Datatypes.
-Module Import Specif.
-(* paste contents of coq/theories/Init/Specif.v here *)
-End Specif.
-End Init.
-End Coq.
-```
-
-and then replace all `Require Import`s in the pasted files with simply
-`Import`, remove the definition of `nat` (because there's no way to
-get special syntax for it), and possibly remove dependent choice.  You
-can then run the bug-finder on this file again to remove the parts of
-the pasted stdlib that aren't needed, telling it to use the unmodified
-Coq executables, e.g.
-
-    $ /path/to/find-bug.py --coqc ../coq-HoTT/bin/coqc --coqtop ../coq-HoTT/bin/coqtop bug_minimized.v bug_minimized_2.v
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
 
