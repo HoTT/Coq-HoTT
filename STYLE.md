@@ -1441,10 +1441,10 @@ available in his [coq-tools][coq-tools] repository.  To use it:
    it as much as possible.
 
 You will need to pass the bug-finder several arguments to tell it to
-use the HoTT version of Coq and where to find the rest of the library;
+pass the right flags and where to find the rest of the library;
 a common invocation would be something like
 
-    $ /path/to/find-bug.py --coqc .../coqc --coqtop .../coqtop -R . HoTT Path/To/Buggy.v bug_minimized.v
+    $ /path/to/find-bug.py --arg -noinit --arg -indices-matter -R . HoTT Path/To/Buggy.v bug_minimized.v
 
 When it exits, the minimized code producing the bug will be in
 `bug_minimized.v`.
