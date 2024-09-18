@@ -30,7 +30,7 @@ Arguments mss_mult {R _ _ _ _}.
 Global Instance ismultiplicative_powers (R : CRing) (x : R)
   : IsMultiplicativeSubset (fun r => exists n, rng_power x n = r).
 Proof.
-  srapply Build_IsMultiplicativeSubset.
+  srapply Build_IsMultiplicativeSubset; cbn beta.
   1: by exists 0%nat.
   intros a b np mq.
   destruct np as [n p], mq as [m q].
@@ -209,18 +209,14 @@ Section Localization.
   (** The addition operation on the localization is induced from the addition operation for fractions. *)
   Instance plus_localization_type : Plus Localization_type.
   Proof.
-    intros x; srapply Localization_type_rec.
-    { intros f2; revert x.
-      srapply Localization_type_rec.
-      { intros f1.
-        apply loc_frac.
-        exact (frac_add f1 f2). }
-      intros f1 f1' p.
-      by apply loc_frac_eq, frac_add_wd_l. }
-    intros f2 f2' p; revert x; cbn.
-    srapply Localization_type_ind_hprop.
-    intros f1.
-    by apply loc_frac_eq, frac_add_wd_r.
+    srapply Quotient_rec2.
+    1: rapply fraction_eq_refl.
+    { cbn.
+      intros f1 f2.
+      exact (loc_frac (frac_add f1 f2)). }
+    cbn beta.
+    intros f1 f1' p f2 f2' q.
+    by apply loc_frac_eq, frac_add_wd.
   Defined.
 
   (** *** Multiplication operation *)
