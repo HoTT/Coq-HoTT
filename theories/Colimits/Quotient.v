@@ -99,12 +99,10 @@ Section Equiv.
   (* The proposition of being in a given class in a quotient. *)
   Definition in_class : A / R -> A -> HProp.
   Proof.
-    srapply Quotient_ind.
-    { intros a b.
-      exact (Build_HProp (R a b)). }
-    intros x y p.
-    refine (transport_const _ _ @ _).
-    funext z.
+    intros a b; revert a.
+    srapply Quotient_rec.
+    1: intro a; exact (Build_HProp (R a b)).
+    intros x y p; cbn beta.
     apply path_hprop.
     srapply equiv_iff_hprop; cbn.
     1: apply (transitivity (symmetry _ _ p)).
@@ -134,7 +132,7 @@ Section Equiv.
   Proof.
     srapply Quotient_ind.
     { intros x y p.
-      apply (qglue p). }
+      exact (qglue p). }
     intros x y p.
     funext ? ?.
     apply hset_path2.
@@ -159,19 +157,24 @@ Section Equiv.
     - apply related_quotient_paths.
   Defined.
 
-  Definition Quotient_rec2 `{Funext} {B : HSet} {dclass : A -> A -> B}
+  Definition Quotient_rec2 {B : HSet} {dclass : A -> A -> B}
     {dequiv : forall x x', R x x' -> forall y y',
       R y y' -> dclass x y = dclass x' y'}
     : A / R -> A / R -> B.
   Proof.
+    clear H. (* Ensure that we don't use Univalence. *)
+    intro a.
     srapply Quotient_rec.
-    { intro a.
+    { intro a'.
+      revert a.
       srapply Quotient_rec.
-      { revert a.
-        assumption. }
-      by apply (dequiv a a). }
+      { intro a.  exact (dclass a a'). }
+      cbn beta.
+      intros x y p.
+      by apply (dequiv x y p a' a'). }
+    cbn beta.
     intros x y p.
-    apply path_forall.
+    revert a.
     srapply Quotient_ind.
     { cbn; intro a.
       by apply dequiv. }
