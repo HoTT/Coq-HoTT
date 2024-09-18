@@ -56,6 +56,14 @@ Proof.
   f_ap.
 Defined.
 
+Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
+  : x * y * z = x * z * y.
+Proof.
+  lhs_V nrapply rng_mult_assoc.
+  rhs_V nrapply rng_mult_assoc.
+  apply ap, rng_mult_comm.
+Defined.
+
 Definition rng_mult_move_left_assoc {R : CRing} (x y z : R)
   : x * y * z = y * x * z.
 Proof.

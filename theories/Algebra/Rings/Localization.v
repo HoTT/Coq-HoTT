@@ -80,7 +80,7 @@ Section Localization.
   Proof.
     intros [n1 d1 ?] [n2 d2 ?].
     refine (exists (x : R), S x /\ _).
-    exact (x * (n1 * d2 - n2 * d1) = 0).
+    exact (x * n1 * d2 = x * n2 * d1).
   Defined.
 
   (** It is convenient to produce elements of this relation specalized to when the scaling factor is [1]. *)
@@ -90,8 +90,9 @@ Section Localization.
   Proof.
     exists 1.
     refine (mss_one, _).
-    refine (rng_mult_one_l _ @ _).
-    by apply rng_moveL_0M^-1.
+    lhs_V nrapply rng_mult_assoc.
+    rhs_V nrapply rng_mult_assoc.
+    exact (ap (1 *.) p).
   Defined.
 
   Definition fraction_eq_refl f1 : fraction_eq f1 f1.
@@ -155,42 +156,25 @@ Section Localization.
       p as [x [sx p]], q as [y [sy q]].
     refine (x * y ; (mss_mult sx sy, _)).
     simpl.
-    rewrite rng_dist_l_negate.
-    rewrite 2 rng_dist_r.
-    rewrite 2 rng_dist_l.
-    rewrite <- rng_plus_assoc.
-    rewrite (rng_plus_comm _ (- _)).
-    rewrite rng_negate_plus.
-    rewrite 2 rng_plus_assoc.
-    rewrite <- (rng_plus_assoc _ (- _)).
-    rewrite (rng_plus_comm (- _)).
-    rewrite <- 2 rng_dist_l_negate.
-    rewrite <- ? rng_mult_assoc.
-    rewrite 2 (rng_mult_move_right_assoc a').
-    rewrite (rng_mult_comm a' t).
-    rewrite (rng_mult_move_right_assoc s).
-    rewrite (rng_mult_comm s a').
-    rewrite (rng_mult_move_right_assoc t).
-    rewrite (rng_mult_comm t t').
-    rewrite <- 2 (rng_mult_move_right_assoc t').
-    rewrite <- (rng_dist_l_negate t').
-    rewrite (rng_mult_comm _ t).
-    rewrite (rng_mult_move_right_assoc _ t).
-    rewrite <- (rng_dist_l_negate t).
-    rewrite <- 2 (rng_mult_move_right_assoc t').
-    rewrite <- 2 (rng_mult_move_right_assoc t).
-    rewrite (rng_mult_move_right_assoc x).
-    rewrite p.
-    rewrite 3 rng_mult_zero_r.
-    rewrite rng_plus_zero_l.
-    rewrite 2 (rng_mult_move_right_assoc b).
-    rewrite 2 (rng_mult_move_right_assoc b').
-    rewrite (rng_mult_move_right_assoc s).
-    rewrite <- 2 rng_dist_l_negate.
-    rewrite 2 (rng_mult_move_right_assoc y).
-    rewrite q.
-    by rewrite 3 rng_mult_zero_r.
-  Qed.
+    rewrite 2 rng_dist_l, 2 rng_dist_r.
+    snrapply (ap011 (+)). 
+    - rewrite 4 rng_mult_assoc.
+      rewrite 8 (rng_mult_permute_2_3 _ y).
+      apply (ap (.* y)).
+      rewrite 2 (rng_mult_permute_2_3 _ t).
+      apply (ap (.* t)).
+      rewrite (rng_mult_permute_2_3 _ t').
+      f_ap.
+    - do 2 lhs_V nrapply rng_mult_assoc.
+      do 2 rhs_V nrapply rng_mult_assoc.
+      f_ap.
+      rewrite 6 rng_mult_assoc.
+      rewrite 2 (rng_mult_permute_2_3 _ _ t').
+      rewrite 2 (rng_mult_permute_2_3 _ _ t).
+      lhs_V nrapply rng_mult_assoc.
+      rhs_V nrapply rng_mult_assoc.
+      f_ap; apply rng_mult_comm.
+  Defined.
 
   Definition frac_add_wd_l (f1 f1' f2 : Fraction) (p : fraction_eq f1 f1')
     : fraction_eq (frac_add f1 f2) (frac_add f1' f2).
@@ -210,13 +194,13 @@ Section Localization.
   Instance plus_localization_type : Plus Localization_type.
   Proof.
     srapply Quotient_rec2.
-    1: rapply fraction_eq_refl.
-    { cbn.
+    - rapply fraction_eq_refl.
+    - cbn.
       intros f1 f2.
-      exact (loc_frac (frac_add f1 f2)). }
-    cbn beta.
-    intros f1 f1' p f2 f2' q.
-    by apply loc_frac_eq, frac_add_wd.
+      exact (loc_frac (frac_add f1 f2)).
+    - cbn beta.
+      intros f1 f1' p f2 f2' q.
+      by apply loc_frac_eq, frac_add_wd.
   Defined.
 
   (** *** Multiplication operation *)
@@ -230,21 +214,11 @@ Section Localization.
   Proof.
     destruct p as [x [s p]].
     refine (x; (s, _)); simpl.
-    rewrite rng_dist_l.
-    rewrite rng_dist_l in p.
-    rewrite rng_mult_negate_r.
-    rewrite rng_mult_negate_r in p.
-    apply rng_moveL_0M in p.
-    apply rng_moveL_0M^-1.
-    rewrite 2 (rng_mult_comm _ (numerator f2)).
-    rewrite 2 (rng_mult_comm _ (denominator f2)).
-    rewrite <- 2 (rng_mult_assoc (numerator f2)).
-    rewrite 2 (rng_mult_comm (numerator _) (denominator f2 * _)).
-    rewrite ? (rng_mult_assoc (numerator f2)).
-    rewrite <- ? (rng_mult_assoc (numerator f2 * denominator f2)).
-    rewrite 2 (rng_mult_comm (denominator _) (numerator _)).
-    rewrite 2 (rng_mult_comm (numerator f2 * denominator f2)).
-    rewrite 2 (rng_mult_assoc x (numerator _ * denominator _)).
+    rewrite 4 rng_mult_assoc.
+    rewrite (rng_mult_permute_2_3 _ _ (denominator f1')).
+    rewrite (rng_mult_permute_2_3 _ _ (denominator f1)).
+    lhs_V nrapply rng_mult_assoc.
+    rhs_V nrapply rng_mult_assoc.
     f_ap.
   Defined.
 
@@ -253,73 +227,64 @@ Section Localization.
   Proof.
     destruct p as [x [s p]].
     refine (x; (s, _)); simpl.
-    rewrite rng_dist_l.
-    rewrite rng_dist_l in p.
-    rewrite rng_mult_negate_r.
-    rewrite rng_mult_negate_r in p.
-    apply rng_moveL_0M in p.
-    apply rng_moveL_0M^-1.
-    rewrite 2 (rng_mult_comm (numerator f1)).
-    rewrite <- 2 rng_mult_assoc.
-    rewrite 2 (rng_mult_comm (numerator f1)).
-    rewrite <- ? rng_mult_assoc.
-    rewrite 2 (rng_mult_move_right_assoc (denominator f1)).
-    rewrite ? rng_mult_assoc.
-    rewrite ? rng_mult_assoc in p.
-    do 2 f_ap.
+    rewrite 4 rng_mult_assoc.
+    rewrite (rng_mult_permute_2_3 _ _ (numerator f2)).
+    rewrite 2 (rng_mult_permute_2_3 _ _ (denominator f2')).
+    rewrite (rng_mult_permute_2_3 _ _ (numerator f2')).
+    rewrite 2 (rng_mult_permute_2_3 _ _ (denominator f2)).
+    lhs_V nrapply rng_mult_assoc.
+    rhs_V nrapply rng_mult_assoc.
+    f_ap.
   Defined.
 
   Instance mult_localization_type : Mult Localization_type.
   Proof.
     intros x; srapply Localization_type_rec.
-    { intros f2; revert x.
+    - intros f2; revert x.
       srapply Localization_type_rec.
-      { intros f1.
+      + intros f1.
         apply loc_frac.
-        exact (frac_mult f1 f2). }
-      intros f1 f1' p.
-      by apply loc_frac_eq, frac_mult_wd_l. }
-    intros f2 f2' p; revert x.
-    srapply Localization_type_ind_hprop.
-    intros f1.
-    by apply loc_frac_eq, frac_mult_wd_r.
+        exact (frac_mult f1 f2).
+      + intros f1 f1' p.
+        by apply loc_frac_eq, frac_mult_wd_l.
+    - intros f2 f2' p; revert x.
+      srapply Localization_type_ind_hprop.
+      intros f1.
+      by apply loc_frac_eq, frac_mult_wd_r.
   Defined.
 
   (** *** Zero element *)
 
-  Instance zero_localization_type : Zero Localization_type :=
-    loc_frac (Build_Fraction 0 1 mss_one).
+  Instance zero_localization_type : Zero Localization_type
+    := loc_frac (Build_Fraction 0 1 mss_one).
 
   (** *** One element *)
 
-  Instance one_localization_type : One Localization_type :=
-    loc_frac (Build_Fraction 1 1 mss_one).
+  Instance one_localization_type : One Localization_type
+    := loc_frac (Build_Fraction 1 1 mss_one).
 
   (** *** Negation operation *)
 
-  Definition frac_negate : Fraction -> Fraction :=
-    fun '(Build_Fraction n d p) => Build_Fraction (- n) d p.
+  Definition frac_negate : Fraction -> Fraction
+    :=  fun '(Build_Fraction n d p) => Build_Fraction (- n) d p.
 
   Definition frac_negate_wd f1 f2 (p : fraction_eq f1 f2)
     : fraction_eq (frac_negate f1) (frac_negate f2).
   Proof.
     destruct p as [x [s p]].
     refine (x; (s,_)); simpl.
-    rewrite 2 rng_mult_negate_l.
-    rewrite <- rng_negate_plus.
-    rewrite rng_mult_negate_r.
-    rewrite p.
-    apply rng_negate_zero.
+    rewrite 2 rng_mult_negate_r, 2 rng_mult_negate_l.
+    f_ap.
   Defined.
 
   Instance negate_localization_type : Negate Localization_type.
   Proof.
     srapply Localization_type_rec.
-    { intros f.
+    - intros f.
       apply loc_frac.
-      exact (frac_negate f). }
-    intros f1 f2 p.
-    by apply loc_frac_eq, frac_negate_wd.
+      exact (frac_negate f).
+    - intros f1 f2 p.
+      by apply loc_frac_eq, frac_negate_wd.
   Defined.
 
   (** *** Ring laws *)
@@ -503,22 +468,14 @@ Section Localization.
     - snrapply Build_IsMonoidPreserving.
       + intros x y.
         snrapply loc_frac_eq.
-        exists 1; split.
-        1: exact mss_one.
-        simpl.
-        rewrite 5 rng_mult_one_r.
-        lhs nrapply rng_mult_one_l.
-        apply rng_plus_negate_r.
+        apply fraction_eq_simple.
+        by simpl; rewrite 5 rng_mult_one_r.
       + reflexivity.
     - snrapply Build_IsMonoidPreserving.
       + intros x y.
         snrapply loc_frac_eq.
-        exists 1; split.
-        1: exact mss_one.
-        simpl.
-        rewrite 3 rng_mult_one_r.
-        lhs nrapply rng_mult_one_l.
-        nrapply rng_plus_negate_r.
+        apply fraction_eq_simple.
+        by simpl; rewrite 3 rng_mult_one_r.
       + reflexivity.
   Defined.
   
@@ -537,17 +494,16 @@ Section Localization.
         rhs_V nrapply rng_mult_move_left_assoc.
         rhs_V nrapply rng_mult_assoc.
         apply rng_inv_moveL_Vr.
-        lhs nrapply rng_mult_comm.
         lhs_V nrapply rng_homo_mult.
         rhs_V nrapply rng_homo_mult.
-        apply rng_moveL_0M.
-        lhs_V nrapply ap.
-        1: nrapply rng_homo_negate.
-        lhs_V nrapply rng_homo_plus.
         apply (equiv_ap (f z.1 *.)).
         lhs_V nrapply rng_homo_mult.
-        rhs nrapply rng_mult_zero_r.
-        rhs_V nrapply (rng_homo_zero f).
+        rhs_V nrapply rng_homo_mult.
+        lhs nrapply ap.
+        1: lhs nrapply rng_mult_assoc.
+        1: nrapply rng_mult_permute_2_3.
+        rhs nrapply ap.
+        2: nrapply rng_mult_assoc.
         exact (ap f (snd z.2)).
     Defined.
 
