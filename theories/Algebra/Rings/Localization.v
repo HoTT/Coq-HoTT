@@ -3,9 +3,9 @@ Require Import Basics.Overture Basics.Trunc Basics.Tactics WildCat.Core
 
 Local Open Scope mc_scope.
 
-(** * Localizaiton of commutative rings *)
+(** * Localization of commutative rings *)
 
-(** ** Localization is a way to make elements in a commutative ring invertible by adding inverses, in the most minimal way possible. It generalizes the familar operation of a field of fractions. *)
+(** Localization is a way to make elements in a commutative ring invertible by adding inverses, in the most minimal way possible. It generalizes the familiar operation of a field of fractions. *)
 
 (** ** Multiplicative subsets *)
 
@@ -26,7 +26,7 @@ Arguments mss_mult {R _ _ _ _}.
 
 (** *** Examples *)
 
-(** The multplicative subset of powers of a ring element. *)
+(** The multiplicative subset of powers of a ring element. *)
 Global Instance ismultiplicative_powers (R : CRing) (x : R)
   : IsMultiplicativeSubset (fun r => exists n, rng_power x n = r).
 Proof.
@@ -45,7 +45,7 @@ Global Instance ismultiplicative_isinvertible (R : CRing)
 
 (** TODO: Property of being a localization. *)
 
-(** ** Construction of localization. *)
+(** ** Construction of localization *)
 
 Section Localization.
 
@@ -60,8 +60,9 @@ Section Localization.
       : loc_frac n1 d1 p1 = loc_frac n2 d2 p2
   .
   >>>
-  
-  We will implement this HIT by writing it as a quotient.
+  along with the condition that this HIT be a set.
+
+  We will implement this HIT by writing it as a set quotient.
   *)
 
   Context (R : CRing) (S : R -> Type) `{!IsMultiplicativeSubset S}.
@@ -82,13 +83,13 @@ Section Localization.
     exact (x * (n1 * d2 - n2 * d1) = 0).
   Defined.
 
-  (** It is convenient to produce elements of this relation specalized to when the scaling factor is 1 *)
+  (** It is convenient to produce elements of this relation specalized to when the scaling factor is [1]. *)
   Definition fraction_eq_simple f1 f2
     (p : numerator f1 * denominator f2 = numerator f2 * denominator f1)
     : fraction_eq f1 f2.
   Proof.
     exists 1.
-    refine (mss_one ,_).
+    refine (mss_one, _).
     refine (rng_mult_one_l _ @ _).
     by apply rng_moveL_0M^-1.
   Defined.
@@ -137,14 +138,14 @@ Section Localization.
 
   (** *** Addition operation *)
 
-  (** Fraction addition *)
+  (** Fraction addition is the usual addition of fractions. *)
   Definition frac_add : Fraction -> Fraction -> Fraction :=
     fun '(Build_Fraction n1 d1 p1) '(Build_Fraction n2 d2 p2)
       => Build_Fraction (n1 * d2 + n2 * d1) (d1 * d2) (mss_mult p1 p2).
 
   (** Fraction addition is well-defined upto equality of fractions. *)
 
-  (** It is easier to prove well-definedness of both arguments at once. *)
+  (** It is easier to prove well-definedness as a function of both arguments at once. *)
   Definition frac_add_wd (f1 f1' f2 f2' : Fraction)
     (p : fraction_eq f1 f1') (q : fraction_eq f2 f2')
     : fraction_eq (frac_add f1 f2) (frac_add f1' f2').
@@ -205,7 +206,7 @@ Section Localization.
     by apply frac_add_wd.
   Defined.
 
-  (** The addition operation for fractions is the usual fraction addition. Most of the work is spent showing that this is well-defined. *)
+  (** The addition operation on the localization is induced from the addition operation for fractions. *)
   Instance plus_localization_type : Plus Localization_type.
   Proof.
     intros x; srapply Localization_type_rec.
