@@ -639,30 +639,24 @@ Section Localization.
     nrapply rng_mult_assoc.
   Defined.
 
-  Section Ind.
-  
-    Context (P : rng_localization -> Type)
-      (H : forall x, IsHProp (P x))
-      (Hin : forall x, P (loc_in x))
-      (Hinv : forall x (H : IsInvertible rng_localization x),
-        P x -> P (inverse_elem x))
-      (Hmul : forall x y, P x -> P y -> P (x * y)) 
-      .
-
-    Definition rng_localization_ind
-      : forall x, P x.
-    Proof.
-      srapply Localization_type_ind.
-      - intros f.
-        refine (transport P (fraction_decompose f)^ _).
-        apply Hmul.
-        + apply Hin.
-        + apply Hinv, Hin.
-      - intros f1 f2 p.
-        apply path_ishprop.
-    Defined.
-
-  End Ind.
+  Definition rng_localization_ind
+    (P : rng_localization -> Type)
+    (H : forall x, IsHProp (P x))
+    (Hin : forall x, P (loc_in x))
+    (Hinv : forall x (H : IsInvertible rng_localization x),
+      P x -> P (inverse_elem x))
+    (Hmul : forall x y, P x -> P y -> P (x * y))
+    : forall x, P x.
+  Proof.
+    srapply Localization_type_ind.
+    - intros f.
+      refine (transport P (fraction_decompose f)^ _).
+      apply Hmul.
+      + apply Hin.
+      + apply Hinv, Hin.
+    - intros f1 f2 p.
+      apply path_ishprop.
+  Defined.
   
   Definition rng_localization_ind_homotopy {T : CRing}
     {f g : rng_localization $-> T}
