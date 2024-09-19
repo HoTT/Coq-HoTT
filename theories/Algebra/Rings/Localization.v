@@ -478,7 +478,7 @@ Section Localization.
           1,2: symmetry.
           * apply rng_inv_l.
           * apply rng_inv_r. 
-        + hnf; simpl; rewrite rng_homo_zero.
+        + hnf; simpl. rewrite rng_homo_zero.
           nrapply rng_mult_zero_l.
       - snrapply Build_IsMonoidPreserving.
         + intros x; rapply Localization_type_ind_hprop.
@@ -576,7 +576,7 @@ Section Localization.
     - exact p.
     - hnf; intros x H q.
       change (inverse_elem (f x) = inverse_elem (g x)).
-      apply equiv_path_inverse_elem.
+      apply isinvertible_unique.
       exact q.
     - hnf; intros x y q r.
       lhs nrapply rng_homo_mult.
