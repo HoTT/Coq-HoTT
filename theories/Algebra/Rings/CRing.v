@@ -2,7 +2,7 @@ Require Import WildCat.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
-Require Export Algebra.Rings.Ring Algebra.Rings.Ideal.
+Require Export Algebra.Rings.Ring Algebra.Rings.Ideal Algebra.Rings.QuotientRing.
 
 (** * Commutative Rings *)
 
@@ -259,3 +259,23 @@ Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
 Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
 Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
 Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
+
+(** ** Quotient rings *)
+
+Global Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
+  : Commutative (A:=QuotientRing R I) (.*.).
+Proof.
+  intros x; srapply QuotientRing_ind_hprop; intros y; revert x.
+  srapply QuotientRing_ind_hprop; intros x; hnf.
+  lhs_V nrapply rng_homo_mult.
+  rhs_V nrapply rng_homo_mult.
+  snrapply ap.
+  apply commutativity.
+Defined.
+
+Definition cring_quotient (R : CRing) (I : Ideal R) : CRing
+  := Build_CRing (QuotientRing R I) _.
+
+Definition cring_quotient_map {R : CRing} (I : Ideal R)
+  : R $-> cring_quotient R I
+  := rng_quotient_map I.
