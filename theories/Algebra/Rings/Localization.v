@@ -433,29 +433,24 @@ Section Localization.
   Instance isring_localization_type : IsRing Localization_type
     := ltac:(repeat split; exact _).
 
-  Definition abgroup_localization : AbGroup.
-  Proof.
-    snrapply Build_AbGroup.
-    - snrapply Build_Group.
-      + exact Localization_type.
-      + exact plus_localization_type.
-      + exact zero_localization_type.
-      + exact negate_localization_type.
-      + exact _.
-    - exact _.
-  Defined.
-
   Definition rng_localization : CRing.
   Proof.
     snrapply Build_CRing.
-    - snrapply Build_Ring.
-      + exact abgroup_localization.
-      + exact mult_localization_type.
-      + exact one_localization_type.
-      + exact leftdistribute_localization_type.
-      + exact rightdistribute_localization_type.
-      + exact _.
-    - exact _.
+    { snrapply Build_Ring.
+      - snrapply Build_AbGroup.
+        + snrapply Build_Group.
+          * exact Localization_type.
+          * exact plus_localization_type.
+          * exact zero_localization_type.
+          * exact negate_localization_type.
+          * exact _.
+        + exact _.
+      - exact mult_localization_type.
+      - exact one_localization_type.
+      - exact leftdistribute_localization_type.
+      - exact rightdistribute_localization_type.
+      - exact _. }
+    exact _.
   Defined.
 
   Definition loc_in : R $-> rng_localization.
