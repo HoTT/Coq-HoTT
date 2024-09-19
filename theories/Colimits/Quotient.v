@@ -91,6 +91,37 @@ Arguments Quotient_rec_beta_qglue : simpl never.
 
 Notation "A / R" := (Quotient (A:=A) R).
 
+(* Quotient induction into a hprop. *)
+Definition Quotient_ind_hprop {A : Type@{i}} (R : Relation@{i j} A)
+  (P : A / R -> Type) `{forall x, IsHProp (P x)}
+  (dclass : forall x, P (class_of R x)) : forall q, P q.
+Proof.
+  srapply (Quotient_ind R P dclass).
+  all: try (intro; apply trunc_succ).
+  intros x y p.
+  apply path_ishprop.
+Defined.
+
+Definition Quotient_ind2_hprop {A : Type@{i}} (R : Relation@{i j} A)
+  (P : A / R -> A / R -> Type) `{forall x y, IsHProp (P x y)}
+  (dclass : forall x y, P (class_of R x) (class_of R y))
+  : forall x y, P x y.
+Proof.
+  intros x; srapply Quotient_ind_hprop; intros y.
+  revert x; srapply Quotient_ind_hprop; intros x.
+  exact (dclass x y).
+Defined.
+
+Definition Quotient_ind3_hprop {A : Type@{i}} (R : Relation@{i j} A)
+  (P : A / R -> A / R -> A / R -> Type) `{forall x y z, IsHProp (P x y z)}
+  (dclass : forall x y z, P (class_of R x) (class_of R y) (class_of R z))
+  : forall x y z, P x y z.
+Proof.
+  intros x; srapply Quotient_ind2_hprop; intros y z.
+  revert x; srapply Quotient_ind_hprop; intros x.
+  exact (dclass x y z).
+Defined.
+
 Section Equiv.
 
   Context `{Univalence} {A : Type} (R : Relation A) `{is_mere_relation _ R}
@@ -107,17 +138,6 @@ Section Equiv.
     srapply equiv_iff_hprop; cbn.
     1: apply (transitivity (symmetry _ _ p)).
     apply (transitivity p).
-  Defined.
-
-  (* Quotient induction into a hprop. *)
-  Definition Quotient_ind_hprop
-    (P : A / R -> Type) `{forall x, IsHProp (P x)}
-    (dclass : forall x, P (class_of R x)) : forall q, P q.
-  Proof.
-    srapply (Quotient_ind R P dclass).
-    all: try (intro; apply trunc_succ).
-    intros x y p.
-    apply path_ishprop.
   Defined.
 
   (* Being in a class is decidable if the Relation is decidable. *)
