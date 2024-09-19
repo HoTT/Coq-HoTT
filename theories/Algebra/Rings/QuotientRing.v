@@ -138,6 +138,25 @@ Definition QuotientRing_ind_hprop {R : Ring} {I : Ideal R} (P : R / I -> Type)
   : forall (r : R / I), P r
   := Quotient_ind_hprop _ P c.
 
+Definition QuotientRing_ind2_hprop {R : Ring} {I : Ideal R} (P : R / I -> R / I -> Type)
+  `{forall x y, IsHProp (P x y)}
+  (c : forall (x y : R), P (rng_quotient_map I x) (rng_quotient_map I y))
+  : forall (r s : R / I), P r s
+  := Quotient_ind2_hprop _ P c.
+
+Definition QuotientRing_rec {R : Ring} {I : Ideal R} (S : Ring)
+  (f : R $-> S) (H : forall x, I x -> f x = 0) 
+  : R / I $-> S.
+Proof.
+  snrapply Build_RingHomomorphism'.
+  - snrapply (grp_quotient_rec _ _ f).
+    exact H.
+  - split.
+    + srapply QuotientRing_ind2_hprop.
+      nrapply rng_homo_mult.
+    + nrapply rng_homo_one.
+Defined.
+
 (** ** Quotient thoery *)
 
 (** First isomorphism theorem for commutative rings *)
