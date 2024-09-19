@@ -530,6 +530,11 @@ Section Localization.
     exact (in_mult_subset_denominator f).
   Defined.
   
+  (** Elements that were invertible in the original ring [R], continue to be invertible in [rng_localization R S]. Since [loc_in] is a ring homomorphism this is automatic. *)
+  Definition isinvertible_rng_localization_preserved (x : R)
+    : IsInvertible R x -> IsInvertible rng_localization (loc_in x)
+    := _.
+  
   (** We can factor any fraction as the multiplication of the numerator and the inverse of the denominator. *)
   Definition fraction_decompose (f : Fraction)
     : loc_frac f
