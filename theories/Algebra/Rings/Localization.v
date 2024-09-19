@@ -1,5 +1,6 @@
-Require Import Basics.Overture Basics.Trunc Basics.Tactics WildCat.Core
-  abstract_algebra Rings.CRing Truncations.Core Nat.Core.
+Require Import Basics.Overture Basics.Trunc Basics.Tactics Colimits.Quotient
+  abstract_algebra Rings.CRing Truncations.Core Nat.Core
+  Rings.QuotientRing WildCat.Core WildCat.Equiv.
 
 Local Open Scope mc_scope.
 
@@ -52,7 +53,7 @@ Section Localization.
   (** We now construct the localization of a ring at a multiplicative subset as the following HIT:
 
   <<<
-  HIT Localization_type (R : CRing) (S : R -> Type)
+  HIT (Quotient fraction_eq) (R : CRing) (S : R -> Type)
     `{IsMultiplicativeSubset R} :=
   | loc_frac (n d : R) (p : S d) : Localization R S
   | loc_frac_eq (n1 d1 n2 d2 : R) (p1 : S d1) (p2 : S d2)
@@ -103,36 +104,15 @@ Section Localization.
     reflexivity.
   Defined.
 
-  (** The underlying type of the localization of a commutative ring is the quotient of the type of fractions by fraction equality. *)
-  Definition Localization_type : Type := Quotient fraction_eq.
 
   (** Given any fraction, we have an obvious inclusion into the localization type. *)
-  Definition loc_frac : Fraction -> Localization_type
+  Definition loc_frac : Fraction -> Quotient fraction_eq 
     := class_of fraction_eq.
 
   (** In order to give an equality of included fractions, it suffices to show that the fractions are equal under fraction equality. *)
   Definition loc_frac_eq {f1 f2 : Fraction} (p : fraction_eq f1 f2)
     : loc_frac f1 = loc_frac f2
     := qglue p.
-
-  (** We can give an induction principle for the localization type. *)
-  Definition Localization_type_ind (Q : Localization_type -> Type)
-    `{forall x, IsHSet (Q x)}
-    (frac : forall f, Q (loc_frac f))
-    (eq : forall f1 f2 p, loc_frac_eq p # frac f1 = frac f2)
-    : forall x, Q x
-    := Quotient_ind _ Q frac eq.
-
-  Definition Localization_type_ind_hprop (Q : Localization_type -> Type)
-    `{forall x, IsHProp (Q x)} (f : forall f, Q (loc_frac f))
-    : forall x, Q x
-    := Quotient_ind_hprop _ Q f.
-
-  Definition Localization_type_rec (Q : Type) `{IsHSet Q}
-    (f : Fraction -> Q)
-    (t : forall f1 f2, fraction_eq f1 f2 -> f f1 = f f2)
-    : Localization_type -> Q
-    := Quotient_rec _ Q f t.
 
   Arguments loc_frac : simpl never.
   Arguments loc_frac_eq : simpl never.
@@ -197,7 +177,7 @@ Section Localization.
   Defined.
 
   (** The addition operation on the localization is induced from the addition operation for fractions. *)
-  Instance plus_localization_type : Plus Localization_type.
+  Instance plus_rng_localization : Plus (Quotient fraction_eq).
   Proof.
     srapply Quotient_rec2.
     - rapply fraction_eq_refl.
@@ -243,7 +223,7 @@ Section Localization.
     f_ap.
   Defined.
 
-  Instance mult_localization_type : Mult Localization_type.
+  Instance mult_rng_localization: Mult (Quotient fraction_eq).
   Proof.
     srapply Quotient_rec2.
     - rapply fraction_eq_refl.
@@ -259,12 +239,12 @@ Section Localization.
 
   (** *** Zero element *)
 
-  Instance zero_localization_type : Zero Localization_type
+  Instance zero_rng_localization : Zero (Quotient fraction_eq)
     := loc_frac (Build_Fraction 0 1 mss_one).
 
   (** *** One element *)
 
-  Instance one_localization_type : One Localization_type
+  Instance one_rng_localization : One (Quotient fraction_eq)
     := loc_frac (Build_Fraction 1 1 mss_one).
 
   (** *** Negation operation *)
@@ -281,9 +261,9 @@ Section Localization.
     f_ap.
   Defined.
 
-  Instance negate_localization_type : Negate Localization_type.
+  Instance negate_rng_localization : Negate (Quotient fraction_eq).
   Proof.
-    srapply Localization_type_rec.
+    srapply Quotient_rec.
     - intros f.
       apply loc_frac.
       exact (frac_negate f).
@@ -294,21 +274,20 @@ Section Localization.
   (** *** Ring laws *)
   
   (** Commutativity of addition *)
-  Instance commutative_plus_localization_type
-    : Commutative plus_localization_type.
+  Instance commutative_plus_rng_localization
+    : Commutative plus_rng_localization.
   Proof.
-    intros x; srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
+    srapply Quotient_ind2_hprop; intros x y.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     rewrite (rng_mult_comm (denominator y) (denominator x)).
     f_ap; apply rng_plus_comm.
   Defined.
 
   (** Left additive identity *)
-  Instance leftidentity_plus_localization_type
-    : LeftIdentity plus_localization_type zero_localization_type.
+  Instance leftidentity_plus_rng_localization
+    : LeftIdentity plus_rng_localization zero_rng_localization.
   Proof.
-    srapply Localization_type_ind_hprop; intros f.
+    srapply Quotient_ind_hprop; intros f.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     f_ap.
     - rewrite rng_mult_zero_l.
@@ -318,10 +297,10 @@ Section Localization.
       apply rng_mult_one_l.
   Defined.
 
-  Instance leftinverse_plus_localization_type
-    : LeftInverse plus_localization_type negate_localization_type zero_localization_type.
+  Instance leftinverse_plus_rng_localization
+    : LeftInverse plus_rng_localization negate_rng_localization zero_rng_localization.
   Proof.
-    srapply Localization_type_ind_hprop; intros f.
+    srapply Quotient_ind_hprop; intros f.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     refine (rng_mult_one_r _ @ _).
     refine (_ @ (rng_mult_zero_l _)^).
@@ -329,12 +308,10 @@ Section Localization.
     apply rng_plus_negate_l.
   Defined.
 
-  Instance associative_plus_localization_type
-    : Associative plus_localization_type.
+  Instance associative_plus_rng_localization
+    : Associative plus_rng_localization.
   Proof.
-    intros x y; srapply Localization_type_ind_hprop; intros z; revert y.
-    srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
+    srapply Quotient_ind3_hprop; intros x y z.
     apply loc_frac_eq, fraction_eq_simple.
     simpl.
     rewrite ? rng_dist_r.
@@ -348,39 +325,34 @@ Section Localization.
     apply rng_mult_comm.
   Defined.
 
-  Instance leftidentity_mult_localization_type
-    : LeftIdentity mult_localization_type one_localization_type.
+  Instance leftidentity_mult_rng_localization
+    : LeftIdentity mult_rng_localization one_rng_localization.
   Proof.
-    srapply Localization_type_ind_hprop; intros f.
+    srapply Quotient_ind_hprop; intros f.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     f_ap; [|symmetry]; apply rng_mult_one_l.
   Defined.
 
-  Instance associative_mult_localization_type
-    : Associative mult_localization_type.
+  Instance associative_mult_rng_localization
+    : Associative mult_rng_localization.
   Proof.
-    intros x y; srapply Localization_type_ind_hprop; intros z; revert y.
-    srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
+    srapply Quotient_ind3_hprop; intros x y z.
     apply loc_frac_eq, fraction_eq_simple.
     f_ap; [|symmetry]; apply rng_mult_assoc.
   Defined.
 
-  Instance commutative_mult_localization_type
-    : Commutative mult_localization_type.
+  Instance commutative_mult_rng_localization
+    : Commutative mult_rng_localization.
   Proof.
-    intros x; srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
+    srapply Quotient_ind2_hprop; intros x y.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     f_ap; rapply rng_mult_comm.
   Defined.
 
-  Instance leftdistribute_localization_type
-    : LeftDistribute mult_localization_type plus_localization_type.
+  Instance leftdistribute_rng_localization
+    : LeftDistribute mult_rng_localization plus_rng_localization.
   Proof.
-    intros x y; srapply Localization_type_ind_hprop; intros z; revert y.
-    srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
+    srapply Quotient_ind3_hprop; intros x y z.
     apply loc_frac_eq, fraction_eq_simple.
     simpl.
     rewrite ? rng_dist_l, ? rng_dist_r.
@@ -400,7 +372,7 @@ Section Localization.
   Definition rng_localization : CRing.
   Proof.
     snrapply Build_CRing'.
-    1: rapply (Build_AbGroup' Localization_type).
+    1: rapply (Build_AbGroup' (Quotient fraction_eq)).
     all: exact _.
   Defined.
 
@@ -430,7 +402,7 @@ Section Localization.
 
     Definition rng_localization_rec_map : rng_localization -> T.
     Proof.
-      srapply Localization_type_rec.
+      srapply Quotient_rec.
       - intros [n d sd].
         refine (f n * inverse_elem (f d)).
         exact (H d sd).
@@ -460,9 +432,8 @@ Section Localization.
     Proof.
       snrapply Build_IsSemiRingPreserving.
       - snrapply Build_IsMonoidPreserving.
-        + intros x; rapply Localization_type_ind_hprop.
-          intros y; revert x; rapply Localization_type_ind_hprop; intros x.
-          simpl.
+        + srapply Quotient_ind2_hprop.
+          intros x y; simpl.
           apply rng_inv_moveR_rV.
           rhs nrapply rng_dist_r.
           rewrite rng_homo_plus.
@@ -481,9 +452,8 @@ Section Localization.
         + hnf; simpl. rewrite rng_homo_zero.
           nrapply rng_mult_zero_l.
       - snrapply Build_IsMonoidPreserving.
-        + intros x; rapply Localization_type_ind_hprop.
-          intros y; revert x; rapply Localization_type_ind_hprop; intros x.
-          simpl.
+        + srapply Quotient_ind2_hprop.
+          intros x y; simpl.
           apply rng_inv_moveR_rV.
           lhs nrapply rng_homo_mult.
           rhs_V nrapply rng_mult_assoc.
@@ -557,7 +527,7 @@ Section Localization.
     (Hmul : forall x y, P x -> P y -> P (x * y))
     : forall x, P x.
   Proof.
-    srapply Localization_type_ind.
+    srapply Quotient_ind.
     - intros f.
       refine (transport P (fraction_decompose f)^ _).
       apply Hmul.
