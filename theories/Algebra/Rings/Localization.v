@@ -286,6 +286,17 @@ Section Localization.
   Defined.
 
   (** *** Ring laws *)
+  
+  (** Commutativity of addition *)
+  Instance commutative_plus_localization_type
+    : Commutative plus_localization_type.
+  Proof.
+    intros x; srapply Localization_type_ind_hprop; intros y; revert x.
+    srapply Localization_type_ind_hprop; intros x.
+    apply loc_frac_eq, fraction_eq_simple; simpl.
+    rewrite (rng_mult_comm (denominator y) (denominator x)).
+    f_ap; apply rng_plus_comm.
+  Defined.
 
   (** Left additive identity *)
   Instance leftidentity_plus_localization_type
@@ -301,19 +312,6 @@ Section Localization.
       apply rng_mult_one_l.
   Defined.
 
-  Instance rightidentity_plus_localization_type
-    : RightIdentity plus_localization_type zero_localization_type.
-  Proof.
-    srapply Localization_type_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
-    f_ap.
-    - rewrite rng_mult_zero_l.
-      rewrite rng_plus_zero_r.
-      apply rng_mult_one_r.
-    - symmetry.
-      apply rng_mult_one_r.
-  Defined.
-
   Instance leftinverse_plus_localization_type
     : LeftInverse plus_localization_type negate_localization_type zero_localization_type.
   Proof.
@@ -323,17 +321,6 @@ Section Localization.
     refine (_ @ (rng_mult_zero_l _)^).
     rewrite rng_mult_negate_l.
     apply rng_plus_negate_l.
-  Defined.
-
-  Instance rightinverse_plus_localization_type
-    : RightInverse plus_localization_type negate_localization_type zero_localization_type.
-  Proof.
-    srapply Localization_type_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
-    refine (rng_mult_one_r _ @ _).
-    refine (_ @ (rng_mult_zero_l _)^).
-    rewrite rng_mult_negate_l.
-    apply rng_plus_negate_r.
   Defined.
 
   Instance associative_plus_localization_type
@@ -355,30 +342,12 @@ Section Localization.
     apply rng_mult_comm.
   Defined.
 
-  Instance commutative_plus_localization_type
-    : Commutative plus_localization_type.
-  Proof.
-    intros x; srapply Localization_type_ind_hprop; intros y; revert x.
-    srapply Localization_type_ind_hprop; intros x.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
-    rewrite (rng_mult_comm (denominator y) (denominator x)).
-    f_ap; apply rng_plus_comm.
-  Defined.
-
   Instance leftidentity_mult_localization_type
     : LeftIdentity mult_localization_type one_localization_type.
   Proof.
     srapply Localization_type_ind_hprop; intros f.
     apply loc_frac_eq, fraction_eq_simple; simpl.
     f_ap; [|symmetry]; apply rng_mult_one_l.
-  Defined.
-
-  Instance rightidentity_mult_localization_type
-    : RightIdentity mult_localization_type one_localization_type.
-  Proof.
-    srapply Localization_type_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
-    f_ap; [|symmetry]; apply rng_mult_one_r.
   Defined.
 
   Instance associative_mult_localization_type
@@ -422,35 +391,11 @@ Section Localization.
     all: f_ap.
   Defined.
 
-  Instance rightdistribute_localization_type
-    : RightDistribute mult_localization_type plus_localization_type.
-  Proof.
-    intros x y z.
-    rewrite 3 (commutative_mult_localization_type _ z).
-    snrapply leftdistribute_localization_type.
-  Defined.
-
-  Instance isring_localization_type : IsRing Localization_type
-    := ltac:(repeat split; exact _).
-
   Definition rng_localization : CRing.
   Proof.
-    snrapply Build_CRing.
-    { snrapply Build_Ring.
-      - snrapply Build_AbGroup.
-        + snrapply Build_Group.
-          * exact Localization_type.
-          * exact plus_localization_type.
-          * exact zero_localization_type.
-          * exact negate_localization_type.
-          * exact _.
-        + exact _.
-      - exact mult_localization_type.
-      - exact one_localization_type.
-      - exact leftdistribute_localization_type.
-      - exact rightdistribute_localization_type.
-      - exact _. }
-    exact _.
+    snrapply Build_CRing'.
+    1: rapply (Build_AbGroup' Localization_type).
+    all: exact _.
   Defined.
 
   Definition loc_in : R $-> rng_localization.

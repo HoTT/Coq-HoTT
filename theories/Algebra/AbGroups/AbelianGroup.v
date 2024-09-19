@@ -29,6 +29,28 @@ Proof.
   split; exact _.
 Defined.
 
+(** Easier way to build abelian groups without redundant information. *)
+Definition Build_AbGroup' (G : Type)
+  `{Zero G, Negate G, Plus G, IsHSet G}
+  (comm : Commutative (A:=G) (+))
+  (assoc : Associative (A:=G) (+))
+  (unit_l : LeftIdentity (A:=G) (+) 0)
+  (inv_l : LeftInverse (A:=G) (+) (-) 0)
+  : AbGroup.
+Proof.
+  snrapply Build_AbGroup.
+  - (* TODO: introduce smart constructor for [Build_Group] *)
+    rapply (Build_Group G).
+    repeat split; only 1-3, 5: exact _.
+    + intros x.
+      lhs nrapply comm.
+      exact (unit_l x).
+    + intros x.
+      lhs nrapply comm.
+      exact (inv_l x).
+  - exact comm.
+Defined.
+
 Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
 
 Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.

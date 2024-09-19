@@ -23,17 +23,21 @@ Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
 Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
 Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
 
-Definition Build_CRing' (R : AbGroup)
-  `(!One R, !Mult R, !Commutative (.*.), !LeftDistribute (.*.) (+), @IsMonoid R (.*.) 1)
+Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
+  (comm : Commutative (.*.)) (assoc : Associative (.*.))
+  (dist_l : LeftDistribute (.*.) (+)) (unit_l : LeftIdentity (.*.) 1)
   : CRing.
 Proof.
   snrapply Build_CRing.
-  - snrapply (Build_Ring R).
-    1-3,5: exact _.
-    intros x y z.
-    lhs rapply commutativity.
-    lhs rapply simple_distribute_l.
-    f_ap.
+  - rapply (Build_Ring R); only 1: exact _.
+    2: repeat split; only 1-3: exact _.
+    + intros x y z.
+      lhs nrapply comm.
+      lhs rapply dist_l.
+      f_ap.
+    + intros x.
+      lhs rapply comm.
+      apply unit_l.
   - exact _.
 Defined.
 

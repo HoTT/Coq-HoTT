@@ -12,14 +12,16 @@ Local Open Scope int_scope.
 
 Definition abgroup_Z@{} : AbGroup@{Set}.
 Proof.
-  snrapply Build_AbGroup.
-  - refine (Build_Group Int int_add 0 int_neg _); repeat split.
-    + exact _.
-    + exact int_add_assoc.
-    + exact int_add_0_r.
-    + exact int_add_neg_l.
-    + exact int_add_neg_r.
+  snrapply Build_AbGroup'.
+  - exact Int.
+  - exact 0.
+  - exact int_neg.
+  - exact int_add.
+  - exact _.
   - exact int_add_comm.
+  - exact int_add_assoc.
+  - exact int_add_0_l.
+  - exact int_add_neg_l.
 Defined.
 
 (** For every group [G] and element [g : G], the map sending an integer to that power of [g] is a homomorphism.  See [ab_mul] for the homomorphism [G -> G] when [G] is abelian. *)
