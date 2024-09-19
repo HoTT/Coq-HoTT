@@ -76,6 +76,7 @@ Section Localization.
     in_mult_subset_denominator : S denominator ;
   }.
 
+  (** We consider two fractions to be equal if we can rearrange the fractions as products and ask for equality upto some scaling factor from the multiplicative subset [S]. *)
   Definition fraction_eq : Relation Fraction.
   Proof.
     intros [n1 d1 ?] [n2 d2 ?].
@@ -95,21 +96,26 @@ Section Localization.
     exact (ap (1 *.) p).
   Defined.
 
+  (** Fraction equality is a reflexive relation. *)
   Definition fraction_eq_refl f1 : fraction_eq f1 f1.
   Proof.
     apply fraction_eq_simple.
     reflexivity.
   Defined.
 
+  (** The underlying type of the localization of a commutative ring is the quotient of the type of fractions by fraction equality. *)
   Definition Localization_type : Type := Quotient fraction_eq.
 
+  (** Given any fraction, we have an obvious inclusion into the localization type. *)
   Definition loc_frac : Fraction -> Localization_type
     := class_of fraction_eq.
 
+  (** In order to give an equality of included fractions, it suffices to show that the fractions are equal under fraction equality. *)
   Definition loc_frac_eq {f1 f2 : Fraction} (p : fraction_eq f1 f2)
     : loc_frac f1 = loc_frac f2
     := qglue p.
 
+  (** We can give an induction principle for the localization type. *)
   Definition Localization_type_ind (Q : Localization_type -> Type)
     `{forall x, IsHSet (Q x)}
     (frac : forall f, Q (loc_frac f))
