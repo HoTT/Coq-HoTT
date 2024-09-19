@@ -63,8 +63,7 @@ Section Localization.
   >>>
   along with the condition that this HIT be a set.
 
-  We will implement this HIT by writing it as a set quotient.
-  *)
+  We will implement this HIT by writing it as a set quotient. From now onwards, [loc_frac] will be implemented as [class_of fraction_eq] and [loc_frac_eq] will be implemented as [qglue]. *)
 
   Context (R : CRing) (S : R -> Type) `{!IsMultiplicativeSubset S}.
 
