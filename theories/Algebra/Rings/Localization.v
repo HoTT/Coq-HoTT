@@ -239,18 +239,16 @@ Section Localization.
 
   Instance mult_localization_type : Mult Localization_type.
   Proof.
-    intros x; srapply Localization_type_rec.
-    - intros f2; revert x.
-      srapply Localization_type_rec.
-      + intros f1.
-        apply loc_frac.
-        exact (frac_mult f1 f2).
-      + intros f1 f1' p.
-        by apply loc_frac_eq, frac_mult_wd_l.
-    - intros f2 f2' p; revert x.
-      srapply Localization_type_ind_hprop.
-      intros f1.
-      by apply loc_frac_eq, frac_mult_wd_r.
+    srapply Quotient_rec2.
+    - rapply fraction_eq_refl.
+    - cbn.
+      intros f1 f2.
+      exact (loc_frac (frac_mult f1 f2)).
+    - cbn beta.
+      intros f1 f1' p f2 f2' q.
+      transitivity (loc_frac (frac_mult f1' f2)).
+      + by apply loc_frac_eq, frac_mult_wd_l.
+      + by apply loc_frac_eq, frac_mult_wd_r.
   Defined.
 
   (** *** Zero element *)
