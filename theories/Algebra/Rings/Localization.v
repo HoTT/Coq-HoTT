@@ -426,12 +426,14 @@ Section Localization.
   Section Rec.
 
     Context (T : CRing) (f : R $-> T)
-      (H : forall x, IsInvertible T (f x)).
+      (H : forall x, S x -> IsInvertible T (f x)).
 
     Definition rng_localization_rec_map : rng_localization -> T.
     Proof.
       srapply Localization_type_rec.
-      - exact (fun x => f (numerator x) * inverse_elem (f (denominator x))).
+      - intros [n d sd].
+        refine (f n * inverse_elem (f d)).
+        exact (H d sd).
       - simpl.
         intros x y z.
         apply rng_inv_moveR_rV.
@@ -440,7 +442,9 @@ Section Localization.
         apply rng_inv_moveL_Vr.
         lhs_V nrapply rng_homo_mult.
         rhs_V nrapply rng_homo_mult.
-        apply (equiv_ap (f z.1 *.)).
+        nrapply (equiv_inj (f z.1 *.)).
+        { nrapply isequiv_rng_inv_mult_l.
+          exact (H _ (fst z.2)). }
         lhs_V nrapply rng_homo_mult.
         rhs_V nrapply rng_homo_mult.
         lhs nrapply ap.
