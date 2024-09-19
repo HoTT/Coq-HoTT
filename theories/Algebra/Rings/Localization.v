@@ -104,19 +104,6 @@ Section Localization.
     reflexivity.
   Defined.
 
-
-  (** Given any fraction, we have an obvious inclusion into the localization type. *)
-  Definition loc_frac : Fraction -> Quotient fraction_eq 
-    := class_of fraction_eq.
-
-  (** In order to give an equality of included fractions, it suffices to show that the fractions are equal under fraction equality. *)
-  Definition loc_frac_eq {f1 f2 : Fraction} (p : fraction_eq f1 f2)
-    : loc_frac f1 = loc_frac f2
-    := qglue p.
-
-  Arguments loc_frac : simpl never.
-  Arguments loc_frac_eq : simpl never.
-
   (** Elements of [R] can be considered fractions. *)
   Definition frac_in : R -> Fraction
     := fun r => Build_Fraction r 1 mss_one.
@@ -183,10 +170,10 @@ Section Localization.
     - rapply fraction_eq_refl.
     - cbn.
       intros f1 f2.
-      exact (loc_frac (frac_add f1 f2)).
+      exact (class_of _ (frac_add f1 f2)).
     - cbn beta.
       intros f1 f1' p f2 f2' q.
-      by apply loc_frac_eq, frac_add_wd.
+      by apply qglue, frac_add_wd.
   Defined.
 
   (** *** Multiplication operation *)
@@ -229,23 +216,23 @@ Section Localization.
     - rapply fraction_eq_refl.
     - cbn.
       intros f1 f2.
-      exact (loc_frac (frac_mult f1 f2)).
+      exact (class_of _ (frac_mult f1 f2)).
     - cbn beta.
       intros f1 f1' p f2 f2' q.
-      transitivity (loc_frac (frac_mult f1' f2)).
-      + by apply loc_frac_eq, frac_mult_wd_l.
-      + by apply loc_frac_eq, frac_mult_wd_r.
+      transitivity (class_of fraction_eq (frac_mult f1' f2)).
+      + by apply qglue, frac_mult_wd_l.
+      + by apply qglue, frac_mult_wd_r.
   Defined.
 
   (** *** Zero element *)
 
   Instance zero_rng_localization : Zero (Quotient fraction_eq)
-    := loc_frac (Build_Fraction 0 1 mss_one).
+    := class_of _ (Build_Fraction 0 1 mss_one).
 
   (** *** One element *)
 
   Instance one_rng_localization : One (Quotient fraction_eq)
-    := loc_frac (Build_Fraction 1 1 mss_one).
+    := class_of _(Build_Fraction 1 1 mss_one).
 
   (** *** Negation operation *)
 
@@ -265,10 +252,10 @@ Section Localization.
   Proof.
     srapply Quotient_rec.
     - intros f.
-      apply loc_frac.
+      apply class_of.
       exact (frac_negate f).
     - intros f1 f2 p.
-      by apply loc_frac_eq, frac_negate_wd.
+      by apply qglue, frac_negate_wd.
   Defined.
 
   (** *** Ring laws *)
@@ -278,7 +265,7 @@ Section Localization.
     : Commutative plus_rng_localization.
   Proof.
     srapply Quotient_ind2_hprop; intros x y.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
+    apply qglue, fraction_eq_simple; simpl.
     rewrite (rng_mult_comm (denominator y) (denominator x)).
     f_ap; apply rng_plus_comm.
   Defined.
@@ -288,7 +275,7 @@ Section Localization.
     : LeftIdentity plus_rng_localization zero_rng_localization.
   Proof.
     srapply Quotient_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
+    apply qglue, fraction_eq_simple; simpl.
     f_ap.
     - rewrite rng_mult_zero_l.
       rewrite rng_plus_zero_l.
@@ -301,7 +288,7 @@ Section Localization.
     : LeftInverse plus_rng_localization negate_rng_localization zero_rng_localization.
   Proof.
     srapply Quotient_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
+    apply qglue, fraction_eq_simple; simpl.
     refine (rng_mult_one_r _ @ _).
     refine (_ @ (rng_mult_zero_l _)^).
     rewrite rng_mult_negate_l.
@@ -312,7 +299,7 @@ Section Localization.
     : Associative plus_rng_localization.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
-    apply loc_frac_eq, fraction_eq_simple.
+    apply qglue, fraction_eq_simple.
     simpl.
     rewrite ? rng_dist_r.
     rewrite ? rng_mult_assoc.
@@ -329,7 +316,7 @@ Section Localization.
     : LeftIdentity mult_rng_localization one_rng_localization.
   Proof.
     srapply Quotient_ind_hprop; intros f.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
+    apply qglue, fraction_eq_simple; simpl.
     f_ap; [|symmetry]; apply rng_mult_one_l.
   Defined.
 
@@ -337,7 +324,7 @@ Section Localization.
     : Associative mult_rng_localization.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
-    apply loc_frac_eq, fraction_eq_simple.
+    apply qglue, fraction_eq_simple.
     f_ap; [|symmetry]; apply rng_mult_assoc.
   Defined.
 
@@ -345,7 +332,7 @@ Section Localization.
     : Commutative mult_rng_localization.
   Proof.
     srapply Quotient_ind2_hprop; intros x y.
-    apply loc_frac_eq, fraction_eq_simple; simpl.
+    apply qglue, fraction_eq_simple; simpl.
     f_ap; rapply rng_mult_comm.
   Defined.
 
@@ -353,7 +340,7 @@ Section Localization.
     : LeftDistribute mult_rng_localization plus_rng_localization.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
-    apply loc_frac_eq, fraction_eq_simple.
+    apply qglue, fraction_eq_simple.
     simpl.
     rewrite ? rng_dist_l, ? rng_dist_r.
     rewrite ? rng_mult_assoc.
@@ -379,17 +366,17 @@ Section Localization.
   Definition loc_in : R $-> rng_localization.
   Proof.
     snrapply Build_RingHomomorphism.
-    1: exact (loc_frac o frac_in).
+    1: exact (class_of _ o frac_in).
     snrapply Build_IsSemiRingPreserving.
     - snrapply Build_IsMonoidPreserving.
       + intros x y.
-        snrapply loc_frac_eq.
+        snrapply qglue.
         apply fraction_eq_simple.
         by simpl; rewrite 5 rng_mult_one_r.
       + reflexivity.
     - snrapply Build_IsMonoidPreserving.
       + intros x y.
-        snrapply loc_frac_eq.
+        snrapply qglue.
         apply fraction_eq_simple.
         by simpl; rewrite 3 rng_mult_one_r.
       + reflexivity.
@@ -491,8 +478,8 @@ Section Localization.
     : IsInvertible rng_localization (loc_in x).
   Proof.
     snrapply isinvertible_cring.
-    - exact (loc_frac (Build_Fraction 1 x Sx)).
-    - apply loc_frac_eq, fraction_eq_simple.
+    - exact (class_of _ (Build_Fraction 1 x Sx)).
+    - apply qglue, fraction_eq_simple.
       exact (rng_mult_assoc _ _ _)^.
   Defined.
   
@@ -511,10 +498,10 @@ Section Localization.
   
   (** We can factor any fraction as the multiplication of the numerator and the inverse of the denominator. *)
   Definition fraction_decompose (f : Fraction)
-    : loc_frac f
+    : class_of fraction_eq f
       = loc_in (numerator f) * inverse_elem (loc_in (denominator f)).
   Proof.
-    apply loc_frac_eq, fraction_eq_simple.
+    apply qglue, fraction_eq_simple.
     nrapply rng_mult_assoc.
   Defined.
 
