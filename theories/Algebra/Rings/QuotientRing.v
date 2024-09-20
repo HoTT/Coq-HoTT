@@ -40,23 +40,11 @@ Section QuotientRing.
 
   Instance mult_quotient_group : Mult (QuotientAbGroup R I).
   Proof.
-    intro x.
-    srapply Quotient_rec.
-    { intro y; revert x.
-      srapply Quotient_rec.
-      { intro x.
-        apply class_of.
-        exact (x * y). }
-      intros x x' p.
+    srapply Quotient_rec2.
+    - exact (fun x y => class_of _ (x * y)).
+    - intros x x' p y y' q; simpl.
       apply qglue.
-      by rapply iscong. }
-    intros y y' q.
-    revert x.
-    srapply Quotient_ind_hprop.
-    intro x.
-    simpl.
-    apply qglue.
-    by rapply iscong.
+      by rapply iscong.
   Defined.
 
   Instance one_quotient_abgroup : One (QuotientAbGroup R I) := class_of _ one.
@@ -68,10 +56,7 @@ Section QuotientRing.
     1: repeat split.
     1: exact _.
     (** Associativity follows from the underlying operation *)
-    { intros x y.
-      snrapply Quotient_ind_hprop; [exact _ | intro z; revert y].
-      snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
-      snrapply Quotient_ind_hprop; [exact _ | intro x ].
+    { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
       apply ap.
       apply associativity. }
@@ -82,18 +67,12 @@ Section QuotientRing.
     1: apply left_identity.
     1: apply right_identity.
     (** Finally distributivity also follows *)
-    { intros x y.
-      snrapply Quotient_ind_hprop; [exact _ | intro z; revert y].
-      snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
-      snrapply Quotient_ind_hprop; [exact _ | intro x ].
+    { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
       apply ap.
       apply simple_distribute_l. }
-    { intros x y.
-      snrapply Quotient_ind_hprop; [exact _ | intro z; revert y].
-      snrapply Quotient_ind_hprop; [exact _ | intro y; revert x].
-      snrapply Quotient_ind_hprop; [exact _ | intro x ].
+    { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
       apply ap.
@@ -166,9 +145,7 @@ Proof.
   snrapply Build_RingIsomorphism''.
   1: rapply abgroup_first_iso.
   split.
-  { intros x y.
-    revert y; srapply QuotientRing_ind_hprop; intros y.
-    revert x; srapply QuotientRing_ind_hprop; intros x.
+  { srapply QuotientRing_ind2_hprop; intros x y.
     srapply path_sigma_hprop.
     exact (rng_homo_mult _ _ _). }
   srapply path_sigma_hprop.
@@ -185,11 +162,7 @@ Proof.
     intros x y; cbn.
     apply p. }
   repeat split.
-  1,2: intros x; simpl.
-  1,2: srapply QuotientRing_ind_hprop.
-  1,2: intros y; revert x.
-  1,2: srapply QuotientRing_ind_hprop.
-  1,2: intros x; rapply qglue.
+  1,2: srapply Quotient_ind2_hprop; intros x y; rapply qglue.
   1: change (J ( - (x + y) + (x + y))).
   2: change (J (- ( x * y) + (x * y))).
   1,2: rewrite rng_plus_negate_l.

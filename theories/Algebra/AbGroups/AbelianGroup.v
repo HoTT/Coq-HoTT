@@ -113,11 +113,7 @@ Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
 Proof.
   nrapply Build_IsAbGroup.
   1: exact _.
-  intro x.
-  srapply Quotient_ind_hprop.
-  intro y; revert x.
-  srapply Quotient_ind_hprop.
-  intro x.
+  srapply Quotient_ind2_hprop; intros x y.
   apply (ap (class_of _)).
   apply commutativity.
 Defined.
