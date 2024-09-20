@@ -157,7 +157,7 @@ Proof.
     + nrapply rng_homo_one.
 Defined.
 
-(** ** Quotient thoery *)
+(** ** Quotient theory *)
 
 (** First isomorphism theorem for commutative rings *)
 Definition rng_first_iso `{Funext} {A B : Ring} (f : A $-> B)
