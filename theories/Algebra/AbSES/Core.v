@@ -737,8 +737,7 @@ Proof.
   - apply isequiv_surj_emb.
     1: rapply cancelR_conn_map.
     apply isembedding_isinj_hset.
-    srapply Quotient_ind_hprop; intro x.
-    srapply Quotient_ind_hprop; intro y.
+    srapply Quotient_ind2_hprop; intros x y.
     intro p.
     apply qglue; cbn.
     refine (isexact_preimage (Tr (-1)) _ _ (-x + y) _).

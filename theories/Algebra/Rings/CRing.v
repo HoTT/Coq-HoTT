@@ -2,7 +2,7 @@ Require Import WildCat.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.
-Require Export Algebra.Rings.Ring Algebra.Rings.Ideal.
+Require Export Algebra.Rings.Ring Algebra.Rings.Ideal Algebra.Rings.QuotientRing.
 
 (** * Commutative Rings *)
 
@@ -23,17 +23,21 @@ Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
 Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
 Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
 
-Definition Build_CRing' (R : AbGroup)
-  `(!One R, !Mult R, !Commutative (.*.), !LeftDistribute (.*.) (+), @IsMonoid R (.*.) 1)
+Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
+  (comm : Commutative (.*.)) (assoc : Associative (.*.))
+  (dist_l : LeftDistribute (.*.) (+)) (unit_l : LeftIdentity (.*.) 1)
   : CRing.
 Proof.
   snrapply Build_CRing.
-  - snrapply (Build_Ring R).
-    1-3,5: exact _.
-    intros x y z.
-    lhs rapply commutativity.
-    lhs rapply simple_distribute_l.
-    f_ap.
+  - rapply (Build_Ring R); only 1: exact _.
+    2: repeat split; only 1-3: exact _.
+    + intros x y z.
+      lhs nrapply comm.
+      lhs rapply dist_l.
+      f_ap.
+    + intros x.
+      lhs rapply comm.
+      apply unit_l.
   - exact _.
 Defined.
 
@@ -54,6 +58,38 @@ Proof.
   rewrite rng_mult_assoc.
   rewrite <- (rng_mult_assoc _ (rng_power (R:=R) x n)).
   f_ap.
+Defined.
+
+Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
+  : x * y * z = x * z * y.
+Proof.
+  lhs_V nrapply rng_mult_assoc.
+  rhs_V nrapply rng_mult_assoc.
+  apply ap, rng_mult_comm.
+Defined.
+
+Definition rng_mult_move_left_assoc {R : CRing} (x y z : R)
+  : x * y * z = y * x * z.
+Proof.
+  f_ap; apply rng_mult_comm.
+Defined.
+
+Definition rng_mult_move_right_assoc {R : CRing} (x y z : R)
+  : x * (y * z) = y * (x * z).
+Proof.
+  refine (rng_mult_assoc _ _ _ @ _ @ (rng_mult_assoc _ _ _)^).
+  apply rng_mult_move_left_assoc.
+Defined.
+
+Definition isinvertible_cring (R : CRing) (x : R)
+  (inv : R) (inv_l : inv * x = 1)
+  : IsInvertible R x.
+Proof.
+  snrapply Build_IsInvertible.
+  - exact inv.
+  - exact inv_l.
+  - lhs nrapply rng_mult_comm.
+    exact inv_l.
 Defined.
 
 (** ** Ideals in commutative rings *)
@@ -223,3 +259,23 @@ Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
 Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
 Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
 Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
+
+(** ** Quotient rings *)
+
+Global Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
+  : Commutative (A:=QuotientRing R I) (.*.).
+Proof.
+  intros x; srapply QuotientRing_ind_hprop; intros y; revert x.
+  srapply QuotientRing_ind_hprop; intros x; hnf.
+  lhs_V nrapply rng_homo_mult.
+  rhs_V nrapply rng_homo_mult.
+  snrapply ap.
+  apply commutativity.
+Defined.
+
+Definition cring_quotient (R : CRing) (I : Ideal R) : CRing
+  := Build_CRing (QuotientRing R I) _.
+
+Definition cring_quotient_map {R : CRing} (I : Ideal R)
+  : R $-> cring_quotient R I
+  := rng_quotient_map I.

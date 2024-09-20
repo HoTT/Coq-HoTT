@@ -10,16 +10,13 @@ Require Import WildCat.Core.
 Definition cring_Z : CRing.
 Proof.
   snrapply Build_CRing'.
-  6: repeat split.
   - exact abgroup_Z.
   - exact 1%int.
   - exact int_mul.
   - exact int_mul_comm.
-  - exact int_dist_l.
-  - exact _.
   - exact int_mul_assoc.
+  - exact int_dist_l.
   - exact int_mul_1_l.
-  - exact int_mul_1_r.
 Defined.
 
 Local Open Scope mc_scope.

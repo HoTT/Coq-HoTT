@@ -93,6 +93,7 @@ Section RingLaws.
 
   Definition rng_negate_negate : - (- x) = x := groups.negate_involutive _.
   Definition rng_negate_zero : - (0 : A) = 0 := groups.negate_mon_unit.
+  Definition rng_negate_plus : - (x + y) = - x - y := negate_plus_distr _ _.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
   Definition rng_mult_one_r : x * 1 = x := right_identity _.
@@ -104,6 +105,22 @@ Section RingLaws.
   Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).
 
 End RingLaws.
+
+Definition rng_dist_l_negate {A : Ring} (x y z : A)
+  : x * (y - z) = x * y - x * z.
+Proof.
+  lhs nrapply rng_dist_l.
+  nrapply ap.
+  nrapply rng_mult_negate_r.
+Defined.
+
+Definition rng_dist_r_negate {A : Ring} (x y z : A)
+  : (x - y) * z = x * z - y * z.
+Proof.
+  lhs nrapply rng_dist_r.
+  nrapply ap.
+  nrapply rng_mult_negate_l.
+Defined.
 
 Section RingHomoLaws.
 
@@ -616,6 +633,15 @@ Proof.
     by exists (inv : rng_op R).
 Defined.
 
+(** The invertible elements in [R] and [rng_op R] agree, by swapping the proofs of left and right invertibility. *)
+Definition isinvertible_rng_op (R : Ring) (x : R) `{!IsInvertible R x}
+  : IsInvertible (rng_op R) x.
+Proof.
+  split.
+  - exact (isrightinvertible_isinvertible).
+  - exact (isleftinvertible_isinvertible).
+Defined.
+
 (** *** Uniqueness of inverses *)
 
 (** This general lemma will be used for uniqueness results. *)
@@ -661,10 +687,11 @@ Proof.
   apply path_left_inverse_elem_right_inverse_elem.
 Defined.
 
-(** Furthermore, any two proofs of invertibility have the same inverse. *)
-Definition isinvertible_unique {R x} (H1 H2 : IsInvertible R x)
-  : @inverse_elem R x H1 = @inverse_elem R x H2.
+(** Equal elements have equal inverses.  Note that we don't require that the proofs of invertibility are equal (over [p]).  It follows that the inverse of an invertible element [x] depends only on [x]. *)
+Definition isinvertible_unique {R : Ring} (x y : R) `{IsInvertible R x} `{IsInvertible R y} (p : x = y)
+  : inverse_elem x = inverse_elem y.
 Proof.
+  destruct p.
   snrapply (path_left_right_inverse x).
   - apply rng_inv_l.
   - apply rng_inv_r.
@@ -761,16 +788,24 @@ Proof.
   exact (right_inverse_eq x).
 Defined.
 
-(** Inverses of invertible elements are themselves invertible. *)
+(** Inverses of invertible elements are themselves invertible.  We take both inverses of [inverse_elem x] to be [x]. *)
 Global Instance isinvertible_inverse_elem {R : Ring} (x : R)
   `{IsInvertible R x}
   : IsInvertible R (inverse_elem x).
 Proof.
   split.
-  - unfold inverse_elem.
-    rewrite (path_left_inverse_elem_right_inverse_elem x).
-    exact _.
-  - exact _.
+  - exists x; apply rng_inv_r.
+  - apply isrightinvertible_left_inverse_elem.
+Defined.
+
+(** Since [inverse_elem (inverse_elem x) = x], we get the following equivalence. *)
+Definition equiv_path_inverse_elem {R : Ring} {x y : R}
+  `{IsInvertible R x, IsInvertible R y}
+  : x = y <~> inverse_elem x = inverse_elem y.
+Proof.
+  srapply equiv_iff_hprop.
+  - exact (isinvertible_unique x y).
+  - exact (isinvertible_unique (inverse_elem x) (inverse_elem y)).
 Defined.
 
 (** [1] is always invertible, and by the above [-1]. *)
@@ -782,10 +817,24 @@ Proof.
   - apply rng_mult_one_l.
 Defined.
 
+(** Ring homomorphisms preserve invertible elements. *)
+Global Instance isinvertible_rng_homo {R S} (f : R $-> S)
+  : forall x, IsInvertible R x -> IsInvertible S (f x).
+Proof.
+  intros x H.
+  snrapply Build_IsInvertible.
+  1: exact (f (inverse_elem x)).
+  1,2: lhs_V nrapply rng_homo_mult.
+  1,2: rhs_V nrapply (rng_homo_one f).
+  1,2: nrapply (ap f).
+  - exact (rng_inv_l x).
+  - exact (rng_inv_r x).
+Defined.
+
 (** *** Group of units *)
 
 (** Invertible elements are typically called "units" in ring theory and the collection of units forms a group under the ring multiplication. *)
-Definition rng_unit_group {R : Ring} : Group.
+Definition rng_unit_group (R : Ring) : Group.
 Proof.
   (** TODO: Use a generalised version of [Build_Subgroup] that works for subgroups of monoids. *)
   snrapply Build_Group.
@@ -807,5 +856,56 @@ Proof.
     + apply rng_inv_l.
     + apply rng_inv_r.
 Defined.
+
+(** *** Multiplication by an invertible element is an equivalence *)
+
+Global Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (x *.).
+Proof.
+  snrapply isequiv_adjointify.
+  1: exact (inverse_elem x *.).
+  1,2: intros y.
+  1,2: lhs nrapply rng_mult_assoc.
+  1,2: rhs_V nrapply rng_mult_one_l.
+  1,2: snrapply (ap (.* y)).
+  - nrapply rng_inv_r.
+  - nrapply rng_inv_l.
+Defined.
+
+(** This can be proved by combining [isequiv_rng_inv_mult_l (R:=rng_op R)] with [isinvertible_rng_op], but then the inverse map is given by multiplying by [right_inverse_elem x] not [inverse_elem x], which complicates calculations. *)
+Global Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (.* x).
+Proof.
+  snrapply isequiv_adjointify.
+  1: exact (.* inverse_elem x).
+  1,2: intros y.
+  1,2: lhs_V nrapply rng_mult_assoc.
+  1,2: rhs_V nrapply rng_mult_one_r.
+  1,2: snrapply (ap (y *.)).
+  - nrapply rng_inv_l.
+  - nrapply rng_inv_r.
+Defined.
+
+(** *** Invertible element movement lemmas *)
+
+(** These cannot be proven using the corresponding group laws in the group of units since not all elements involved are invertible. *)
+
+Definition rng_inv_moveL_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : y * x = z <~> x = inverse_elem y * z
+  := equiv_moveL_equiv_V (f := (y *.)) z x.
+
+Definition rng_inv_moveL_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x * y = z <~> x = z * inverse_elem y
+  := equiv_moveL_equiv_V (f := (.* y)) z x.
+
+Definition rng_inv_moveR_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = y * z <~> inverse_elem y * x = z
+  := equiv_moveR_equiv_V (f := (y *.)) x z.
+
+Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = z * y <~> x * inverse_elem y = z
+  := equiv_moveR_equiv_V (f := (.* y)) x z.
 
 (** TODO: The group of units construction is a functor from [Ring -> Group] and is right adjoint to the group ring construction. *)
