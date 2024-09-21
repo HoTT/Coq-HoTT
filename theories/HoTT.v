@@ -27,7 +27,7 @@ Require Export HoTT.PathAny.
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 Require Export HoTT.Constant.
-Require Export HoTT.ObjectClassifier.
+Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.TruncType.
 
 Require Export HoTT.DProp.
