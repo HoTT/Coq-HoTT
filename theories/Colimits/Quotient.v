@@ -125,11 +125,11 @@ Proof.
   exact (dclass a b c).
 Defined.
 
-Definition Quotient_rec2 {A : Type} (R : Relation A) `{Reflexive _ R}
+Definition Quotient_rec2 {A : Type} (R : Relation A)
   {B : Type} `{IsHSet B}
   {dclass : A -> A -> B}
-  {dequiv : forall a a', R a a' -> forall b b',
-    R b b' -> dclass a b = dclass a' b'}
+  {dequiv_l : forall a a' b, R a a' -> dclass a b = dclass a' b}
+  {dequiv_r : forall a b b', R b b' -> dclass a b = dclass a b'}
   : A / R -> A / R -> B.
 Proof.
   intro x.
@@ -141,15 +141,12 @@ Proof.
       exact (dclass a b).
     + cbn beta.
       intros a a' p.
-      by apply (dequiv a a' p b b).
+      by apply dequiv_l.
   - cbn beta.
     intros b b' p.
     revert x.
-    srapply Quotient_ind.
-    + cbn; intro a.
-      by apply dequiv.
-    + intros a a' q.
-      apply path_ishprop.
+    srapply Quotient_ind_hprop; simpl.
+    intro a; by apply dequiv_r.
 Defined.
 
 Section Equiv.

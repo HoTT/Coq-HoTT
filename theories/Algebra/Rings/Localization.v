@@ -166,13 +166,11 @@ Section Localization.
   Instance plus_rng_localization : Plus (Quotient fraction_eq).
   Proof.
     srapply Quotient_rec2.
-    - rapply fraction_eq_refl.
     - cbn.
       intros f1 f2.
       exact (class_of _ (frac_add f1 f2)).
-    - cbn beta.
-      intros f1 f1' p f2 f2' q.
-      by apply qglue, frac_add_wd.
+    - intros f1 f1' f2 p.  by apply qglue, frac_add_wd_l.
+    - intros f1 f2 f2' q.  by apply qglue, frac_add_wd_r.
   Defined.
 
   (** *** Multiplication operation *)
@@ -212,15 +210,13 @@ Section Localization.
   Instance mult_rng_localization: Mult (Quotient fraction_eq).
   Proof.
     srapply Quotient_rec2.
-    - rapply fraction_eq_refl.
     - cbn.
       intros f1 f2.
       exact (class_of _ (frac_mult f1 f2)).
-    - cbn beta.
-      intros f1 f1' p f2 f2' q.
-      transitivity (class_of fraction_eq (frac_mult f1' f2)).
-      + by apply qglue, frac_mult_wd_l.
-      + by apply qglue, frac_mult_wd_r.
+    - intros f1 f1' f2 p; cbn beta.
+      by apply qglue, frac_mult_wd_l.
+    - intros f1 f2 f2' q; cbn beta.
+      by apply qglue, frac_mult_wd_r.
   Defined.
 
   (** *** Zero element *)

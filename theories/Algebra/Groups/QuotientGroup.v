@@ -30,9 +30,8 @@ Section GroupCongruenceQuotient.
     srapply Quotient_rec2.
     - intros x y.
       exact (class_of _ (x * y)).
-    - intros x x' p y y' q.
-      apply qglue.
-      by apply iscong.
+    - intros x x' y p. apply qglue. by apply iscong.
+    - intros x y y' q. apply qglue. by apply iscong.
   Defined.
 
   Global Instance congquot_mon_unit : MonUnit CongruenceQuotient.
