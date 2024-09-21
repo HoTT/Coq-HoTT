@@ -1000,7 +1000,7 @@ Definition Book_7_1_9 := @HoTT.Basics.Trunc.istrunc_forall.
 (* ================================================== thm:hleveln-of-hlevelSn *)
 (** Theorem 7.1.11 *)
 
-Definition Book7_1_11 := @HoTT.TruncType.istrunc_trunctype.
+Definition Book7_1_11 := @HoTT.Universes.TruncType.istrunc_trunctype.
 
 (* ================================================== thm:h-set-uip-K *)
 (** Theorem 7.2.1 *)
