@@ -30,6 +30,7 @@ COQPROJECT_HEADER=\
 
 -arg -noinit
 -arg -indices-matter
+-arg -allow-rewrite-rules
 -arg -native-compiler -arg no
 "
 
