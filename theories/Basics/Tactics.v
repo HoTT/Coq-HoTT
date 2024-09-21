@@ -6,6 +6,10 @@ Require Import Basics.Overture.
 
 (** This module implements various tactics used in the library. *)
 
+(** If the goal is [x = z], [path_via y] will replace this with two goals, [x = y] and [y = z]. *)
+Ltac path_via mid :=
+  apply @concat with (y := mid); auto with path_hints.
+
 (** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. It works if [n] is in the context or in the goal. *)
 Ltac simple_induction n n' IH :=
   try generalize dependent n;
