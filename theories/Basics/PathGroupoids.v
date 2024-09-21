@@ -485,7 +485,7 @@ Definition apD_homotopic {A : Type} {B : A -> Type} {f g : forall x, B x}
   : apD f q = ap (transport B q) (p x) @ apD g q @ (p y)^.
 Proof.
   apply moveL_pV.
-  destruct q; unfold apD, transport.
+  destruct q; unfold transport.
   symmetry.
   exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
 Defined.
@@ -774,32 +774,32 @@ Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a 
 Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
   : f x y = f x' y'.
 Proof.
-  destruct p.
-  apply ap.
-  exact q.
+  destruct q.
+  apply (ap (fun x => f x _)).
+  exact p.
 Defined.
 
 Definition ap011_V {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
   : ap011 f p^ q^ = (ap011 f p q)^.
 Proof.
-  destruct p.
-  apply ap_V.
+  destruct q.
+  rapply ap_V.
 Defined.
 
 Definition ap011_pp {A B C} (f : A -> B -> C) {x x' x'' y y' y''}
   (p : x = x') (p' : x' = x'') (q : y = y') (q' : y' = y'')
   : ap011 f (p @ p') (q @ q') = ap011 f p q @ ap011 f p' q'.
 Proof.
-  destruct p, p'.
-  apply ap_pp.
+  destruct q, q'.
+  rapply ap_pp.
 Defined.
 
 Definition ap011_compose {A B C D} (f : A -> B -> C) (g : C -> D) {x x' y y'}
   (p : x = x') (q : y = y')
   : ap011 (fun x y => g (f x y)) p q = ap g (ap011 f p q).
 Proof.
-  destruct p; simpl.
-  apply ap_compose.
+  destruct q; simpl.
+  rapply ap_compose.
 Defined.
 
 Definition ap011_compose' {A B C D E} (f : A -> B -> C) (g : D -> A) (h : E -> B)
@@ -807,16 +807,16 @@ Definition ap011_compose' {A B C D E} (f : A -> B -> C) (g : D -> A) (h : E -> B
   (p : x = x') (q : y = y')
   : ap011 (fun x y => f (g x) (h y)) p q = ap011 f (ap g p) (ap h q).
 Proof.
-  destruct p; simpl.
-  apply ap_compose.
+  destruct q; simpl.
+  rapply ap_compose.
 Defined.
 
 Definition ap011_is_ap {A B C} (f : A -> B -> C) {x x' : A} {y y' : B} (p : x = x') (q : y = y')
   : ap011 f p q = ap (fun x => f x y) p @ ap (fun y => f x' y) q.
 Proof.
-  destruct p.
+  destruct q.
   symmetry.
-  apply concat_1p.
+  rapply concat_p1.
 Defined.
 
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
@@ -1391,9 +1391,9 @@ Definition ap022 {A B C} (f : A -> B -> C) {x x' y y'}
   {p p' : x = x'} (r : p = p') {q q' : y = y'} (s : q = q')
   : ap011 f p q = ap011 f p' q'.
 Proof.
-  destruct r, p.
-  apply ap02.
-  exact s.
+  destruct s, q.
+  cbn; apply ap.
+  exact r.
 Defined.
 
 (** These lemmas need better names. *)

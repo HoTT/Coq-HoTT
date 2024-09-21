@@ -247,7 +247,8 @@ Proof.
                       end)).
   intros [x y].
   rewrite <- ap_compose.
-  symmetry; apply ap_const.
+  symmetry.
+  nrapply ap_const.
 Defined.
 
 Definition equiv_pr1 {A : Type} (P : A -> Type) `{forall x, Contr (P x)}

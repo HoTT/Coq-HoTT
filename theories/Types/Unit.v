@@ -81,7 +81,7 @@ Global Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
 Proof.
   refine (isequiv_adjointify _ (fun f : Unit -> _ => f tt) _ _).
   - intros f; apply path_forall@{i i j}; intros x.
-    apply ap@{i i}, path_unit.
+    apply ap, path_unit.
   - intros a; reflexivity.
 Defined.
 

@@ -370,8 +370,19 @@ Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
-Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
-  := match p with idpath => idpath end.
+(* Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+  := match p with idpath => idpath end. *)
+
+Unset Universe Polymorphism.
+Symbol ap@{u v} : forall {A : Type@{u}}{B : Type@{v}} (f : A -> B) {x y : A}
+  (p : x = y), f x = f y.
+Rewrite Rule ap_comp :=
+| @ap ?A ?P ?f _ _ (@idpath@{u} _ ?a) => @idpath ?P (?f ?a).
+Symbol apD@{u v} : forall {A : Type@{u}} {P : A -> Type@{v}}
+  (f : forall x, P x) {x y : A} (p : x = y), p # f x = f y.
+Rewrite Rule apD_comp :=
+| @apD ?A ?P ?f _ _ (@idpath _ ?a) => @idpath (?P ?a) (?f ?a).
+Set Universe Polymorphism.
 
 Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope.
 
@@ -445,13 +456,13 @@ Arguments ap {A B} f {x y} p : simpl nomatch.
 
   The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
 
-Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+(* Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   p # (f x) = f y
   :=
-  match p with idpath => idpath end.
+  match p with idpath => idpath end. *)
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
+Arguments apD {A%_type_scope P} f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 

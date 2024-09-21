@@ -117,7 +117,7 @@ Proof.
   refine (concat_p1 _ @ _).
   refine (inv_pp _ _ @ ap _ _).
   refine ((ap_V _ _)^ @ ap _ _^).
-  apply concat_p1.
+  cbn; apply concat_p1.
 Defined.
 
 (** ** The 3x3 lemma for fibrations *)

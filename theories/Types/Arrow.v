@@ -174,8 +174,10 @@ Defined.
 
 (** The action of maps given by application. *)
 Definition ap_apply_l {A B : Type} {x y : A -> B} (p : x = y) (z : A) :
-  ap (fun f => f z) p = ap10 p z
-:= 1.
+  ap (fun f => f z) p = ap10 p z.
+Proof.
+  by destruct p.
+Defined.
 
 Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B) :
   ap (fun a => (M a) z) p = ap10 (ap M p) z

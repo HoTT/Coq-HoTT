@@ -2,7 +2,7 @@
 
 (** * Varieties of function extensionality *)
 
-Require Import HoTT.Basics HoTT.Types.
+Require Import Basics HoTT.Types.
 Require Import Metatheory.Core.
 Local Open Scope path_scope.
 
@@ -152,10 +152,10 @@ Definition NaiveNondepFunext_implies_Funext@{i j max}
 (** ** Functional extensionality is downward closed *)
 
 (** If universe [U_i] is functionally extensional, then so are universes [U_i'] for [i' ≤ i]. *)
-Lemma Funext_downward_closed@{i j max i' j' max' | i <= max, j <= max, i' <= max', j' <= max', i' <= i, j' <= j}
+(* Lemma Funext_downward_closed@{i j max i' j' max' | i <= max, j <= max, i' <= max', j' <= max', i' <= i, j' <= j}
   `{H : Funext_type@{i j max}} : Funext_type@{i' j' max'}.
 Proof.
   hnf in *.
   (* Here we make use of cumulativity. *)
   exact (fun A P => H A P).
-Defined.
+Defined. *)

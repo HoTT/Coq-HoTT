@@ -4,6 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.
 
+Unset Universe Checking.
 Local Open Scope path_scope.
 
 Generalizable Variables A B f.
