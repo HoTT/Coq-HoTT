@@ -12,7 +12,6 @@ Require Export HoTT.Truncations.
 
 Require Export HoTT.HFiber.
 Require Export HoTT.Projective.
-Require Export HoTT.HSet.
 Require Export HoTT.EquivGroupoids.
 
 Require Export HoTT.Equiv.BiInv.
@@ -31,6 +30,7 @@ Require Export HoTT.TruncType.
 Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.Universes.DProp.
 Require Export HoTT.Universes.HProp.
+Require Export HoTT.Universes.HSet.
 
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.

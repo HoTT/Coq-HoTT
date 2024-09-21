@@ -1712,7 +1712,7 @@ End Book_6_9.
 Section Book_7_1.
   Lemma Book_7_1_part_i (H : forall A, merely A -> A) A : IsHSet A.
   Proof.
-    apply (@HoTT.HSet.ishset_hrel_subpaths
+    apply (@HoTT.Universes.HSet.ishset_hrel_subpaths
              A (fun x y => merely (x = y)));
     try typeclasses eauto.
     - intros ?.

@@ -13,7 +13,7 @@
 Require Export HoTT.Algebra.Universal.Algebra.
 
 Require Import
-  HoTT.HSet
+  HoTT.Universes.HSet
   HoTT.Classes.interfaces.canonical_names
   HoTT.Algebra.Universal.Homomorphism
   HoTT.Algebra.Universal.Congruence.
