@@ -42,9 +42,8 @@ Section QuotientRing.
   Proof.
     srapply Quotient_rec2.
     - exact (fun x y => class_of _ (x * y)).
-    - intros x x' p y y' q; simpl.
-      apply qglue.
-      by rapply iscong.
+    - intros x x' y p. apply qglue. by apply iscong.
+    - intros x y y' q. apply qglue. by apply iscong.
   Defined.
 
   Instance one_quotient_abgroup : One (QuotientAbGroup R I) := class_of _ one.

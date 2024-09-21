@@ -339,6 +339,11 @@ The inverse function can then be referred to as `foo ^-1`.  Avoid
 using `equiv_foo` unless you really do need an `Equiv` object, rather
 than a function which happens to be an equivalence.
 
+On the other hand, sometimes it is easier to define an equivalence
+by composing together existing equivalences, in which case one goes
+immediately to the last step, defining `equiv_foo`.  If the equivalence
+is used frequently as an ordinary function, one might also define `foo`
+as the underlying function of `equiv_foo`; see `path_equiv`, as an example.
 
 ## 3. Records, Structures, Typeclasses ##
 
