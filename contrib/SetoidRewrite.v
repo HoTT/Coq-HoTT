@@ -10,9 +10,11 @@ All files that import WildCat/SetoidRewrite.v will also recursively import the e
 
 (** Because of this, this file needs to be the *first* file Require'd in any file that uses it.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on. In the long term it would be good if this could be avoided.*)
 
+#[warnings="-deprecated-from-Coq"]
 From Coq Require Init.Tactics.
 From HoTT Require Import Basics.Overture Basics.Tactics.
 From HoTT Require Import Types.Forall.
+#[warnings="-deprecated-from-Coq"]
 From Coq Require Setoids.Setoid.
 Import CMorphisms.ProperNotations.
 From HoTT Require Import WildCat.Core
