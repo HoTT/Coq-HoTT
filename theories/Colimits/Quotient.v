@@ -8,7 +8,7 @@ Require Import PropResizing.
 
 Local Open Scope path_scope.
 
-(** * The set-quotient of a type by an hprop-valued relation
+(** * The set-quotient of a type by a relation
 
 We aim to model:
 <<
@@ -19,7 +19,10 @@ Inductive Quotient R : Type :=
 >>
 We do this by defining the quotient as a 0-truncated graph quotient. 
 
-Throughout this file [a], [b] and [c] are elements of [A], [R] is a relation on [A], [x], [y] and [z] are elements of [Quotient R], [p] is a proof of [R a b]. *)
+Some results require additional assumptions, for example, that the relation be hprop-valued, or that the relation be reflexive, transitive or symmetric.
+
+Throughout this file [a], [b] and [c] are elements of [A], [R] is a relation on [A], [x], [y] and [z] are elements of [Quotient R], [p] is a proof of [R a b].
+*)
 
 Definition Quotient@{i j k} {A : Type@{i}} (R : Relation@{i j} A) : Type@{k}
   := Trunc@{k} 0 (GraphQuotient@{i j k} R).
@@ -92,7 +95,7 @@ Arguments Quotient_rec_beta_qglue : simpl never.
 
 Notation "A / R" := (Quotient (A:=A) R).
 
-(* Quotient induction into a hprop. *)
+(** Quotient induction into an hprop. *)
 Definition Quotient_ind_hprop {A : Type@{i}} (R : Relation@{i j} A)
   (P : A / R -> Type) `{forall x, IsHProp (P x)}
   (dclass : forall a, P (class_of R a))
@@ -122,12 +125,39 @@ Proof.
   exact (dclass a b c).
 Defined.
 
+Definition Quotient_rec2 {A : Type} (R : Relation A) `{Reflexive _ R}
+  {B : Type} `{IsHSet B}
+  {dclass : A -> A -> B}
+  {dequiv : forall a a', R a a' -> forall b b',
+    R b b' -> dclass a b = dclass a' b'}
+  : A / R -> A / R -> B.
+Proof.
+  intro x.
+  srapply Quotient_rec.
+  - intro b.
+    revert x.
+    srapply Quotient_rec.
+    + intro a.
+      exact (dclass a b).
+    + cbn beta.
+      intros a a' p.
+      by apply (dequiv a a' p b b).
+  - cbn beta.
+    intros b b' p.
+    revert x.
+    srapply Quotient_ind.
+    + cbn; intro a.
+      by apply dequiv.
+    + intros a a' q.
+      apply path_ishprop.
+Defined.
+
 Section Equiv.
 
   Context `{Univalence} {A : Type} (R : Relation A) `{is_mere_relation _ R}
     `{Transitive _ R} `{Symmetric _ R} `{Reflexive _ R}.
 
-  (* The proposition of being in a given class in a quotient. *)
+  (** The proposition of being in a given class in a quotient. This requires [Univalence] so that we know that [HProp] is a set. *)
   Definition in_class : A / R -> A -> HProp.
   Proof.
     intros x b; revert x.
@@ -140,20 +170,20 @@ Section Equiv.
     apply (transitivity p).
   Defined.
 
-  (* Being in a class is decidable if the Relation is decidable. *)
+  (** Being in a class is decidable if the relation is decidable. *)
   Global Instance decidable_in_class `{forall a b, Decidable (R a b)}
   : forall x a, Decidable (in_class x a).
   Proof.
     by srapply Quotient_ind_hprop.
   Defined.
 
-  (* if x is in a class q, then the class of x is equal to q. *)
+  (** If [a] is in a class [x], then the class of [a] is equal to [x]. *)
   Lemma path_in_class_of : forall x a, in_class x a -> x = class_of R a.
   Proof.
     srapply Quotient_ind.
-    { intros x y p.
+    { intros a b p.
       exact (qglue p). }
-    intros x y p.
+    intros a b p.
     funext ? ?.
     apply hset_path2.
   Defined.
@@ -167,7 +197,7 @@ Section Equiv.
     cbv; reflexivity.
   Defined.
 
-  (** Thm 10.1.8 *)
+  (** Theorem 10.1.8. *)
   Theorem path_quotient (a b : A)
     : R a b <~> (class_of R a = class_of R b).
   Proof.
@@ -176,33 +206,7 @@ Section Equiv.
     - apply related_quotient_paths.
   Defined.
 
-  Definition Quotient_rec2 {B : Type} `{IsHSet B} {dclass : A -> A -> B}
-    {dequiv : forall a a', R a a' -> forall b b',
-      R b b' -> dclass a b = dclass a' b'}
-    : A / R -> A / R -> B.
-  Proof.
-    clear H. (* Ensure that we don't use Univalence. *)
-    intro x.
-    srapply Quotient_rec.
-    - intro b.
-      revert x.
-      srapply Quotient_rec.
-      + intro a.
-        exact (dclass a b).
-      + cbn beta.
-        intros a a' p.
-        by apply (dequiv a a' p b b).
-    - cbn beta.
-      intros b b' p.
-      revert x.
-      srapply Quotient_ind.
-      + cbn; intro a.
-        by apply dequiv.
-      + intros a a' q.
-        apply path_ishprop.
-  Defined.
-
-  (** The map class_of : A -> A/R is a surjection. *)
+  (** The map [class_of : A -> A/R] is a surjection. *)
   Global Instance issurj_class_of : IsSurjection (class_of R).
   Proof.
     apply BuildIsSurjection.
@@ -212,8 +216,7 @@ Section Equiv.
     by exists a.
   Defined.
 
-  (* Universal property of quotient *)
-  (* Lemma 6.10.3 *)
+  (** The universal property of the quotient.  This is Lemma 6.10.3. *)
   Theorem equiv_quotient_ump (B : Type) `{IsHSet B}
     : (A / R -> B) <~> {f : A -> B & forall a b, R a b -> f a = f b}.
   Proof.
