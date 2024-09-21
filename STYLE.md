@@ -103,13 +103,19 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   studied further in their `Types/` file.  Files in `Types/` should
   not depend on anything except `Basics` and other `Types/` files.
 
-- There are many other files in the root `theories/` directory,
-  including `TruncType`, `HProp`, `DProp`, `HSet`, `HFiber`,
-  `ObjectClassifier`, `Extensions`, `NullHomotopy`, `PathAny`,
-  `Projective`, `Idempotents`, `Constant`, etc.  These contain more
-  advanced facts and theories which may depend on files in `Types/`.
-  We try to limit the number of files in the top-level folder, and
-  would like to reduce the number.
+- `Universe/*`: Files related to universe levels, classifying maps, or
+  to particular subuniverses, including `UniverseLevel`, `Smallness`,
+  `ObjectClassifier`, `HProp`, `HSet`, `DProp`, and `TruncType`.  The
+  files here can depend on files in `Types/`, and occasionally on some
+  files mentioned below.
+
+- There are files in the root `theories/` directory, including
+  `EquivGroupoids`, `ExcludedMiddle`, `Factorization`, `HFiber`,
+  `Extensions`, `NullHomotopy`, `PathAny`, `Projective`,
+  `Idempotents`, `Constant`, `BoundedSearch`, etc.  These contain more
+  advanced results which may depend on files in the whole library.  We
+  try to limit the number of files in the top-level folder, and would
+  like to reduce the number.
 
 - `WildCat/*`: Files related to wild categories.  They are used
   extensively in the library, so we try to minimize the files they
@@ -828,14 +834,18 @@ See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### 6.4. Lifting and lowering ###
 
-The file `Basics/UniverseLevel` contains an operation `Lift` which
+The file `Universes/UniverseLevel` contains an operation `Lift` which
 lifts a type from one universe to a larger one, with maps `lift` and
-`lower` relating the two types and forming an equivalence.  This is
-occasionally useful when universe wrangling; for instance, using a
-lifted version of a type rather than a type itself can prevent
-collapse of two universes that ought to remain distinct.  There are
+`lower` relating the two types and forming an equivalence.  There are
 primed versions `Lift'`, `lift'`, and `lower'` which allow the two
 universe levels to possibly be the same.
+
+In the past, `Lift` was used to force universe levels to be distinct,
+but now that Coq supports constraints between universe variables,
+this is no longer needed in practice.
+
+The file `Universes/Smallness` contains results allowing us to show
+that a type lives in a certain universe.
 
 ### 6.5. Universes and HITs ###
 
