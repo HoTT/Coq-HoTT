@@ -125,18 +125,19 @@ Proof.
   exact (dclass a b c).
 Defined.
 
-Definition Quotient_rec2 {A : Type} (R : Relation A)
-  {B : Type} `{IsHSet B}
-  {dclass : A -> A -> B}
-  {dequiv_l : forall a a' b, R a a' -> dclass a b = dclass a' b}
-  {dequiv_r : forall a b b', R b b' -> dclass a b = dclass a b'}
-  : A / R -> A / R -> B.
+Definition Quotient_ind2 {A : Type} (R : Relation A)
+  (P : A / R -> A / R -> Type) `{forall x y, IsHSet (P x y)}
+  (dclass : forall a b, P (class_of R a) (class_of R b))
+  (dequiv_l : forall a a' b (p : R a a'),
+    transport (fun x => P x _) (qglue p) (dclass a b) = dclass a' b)
+  (dequiv_r : forall a b b' (p : R b b'), qglue p # dclass a b = dclass a b')
+  : forall x y, P x y.
 Proof.
   intro x.
-  srapply Quotient_rec.
+  srapply Quotient_ind.
   - intro b.
     revert x.
-    srapply Quotient_rec.
+    srapply Quotient_ind.
     + intro a.
       exact (dclass a b).
     + cbn beta.
@@ -147,6 +148,20 @@ Proof.
     revert x.
     srapply Quotient_ind_hprop; simpl.
     intro a; by apply dequiv_r.
+Defined.
+
+Definition Quotient_rec2 {A : Type} (R : Relation A) (B : Type) `{IsHSet B}
+  (dclass : A -> A -> B)
+  (dequiv_l : forall a a' b, R a a' -> dclass a b = dclass a' b)
+  (dequiv_r : forall a b b', R b b' -> dclass a b = dclass a b')
+  : A / R -> A / R -> B.
+Proof.
+  srapply Quotient_ind2.
+  - exact dclass.
+  - intros; lhs nrapply transport_const.
+    by apply dequiv_l.
+  - intros; lhs nrapply transport_const.
+    by apply dequiv_r.
 Defined.
 
 Section Equiv.
