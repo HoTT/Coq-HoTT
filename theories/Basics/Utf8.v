@@ -23,8 +23,10 @@ Reserved Notation "A 'ᵒᵖ'" (at level 1).
 Reserved Notation "A × B" (at level 40, left associativity).
 Reserved Notation "a ≤ b" (at level 70, no associativity).
 Reserved Notation "A ≃ B" (at level 85).
-Reserved Notation "a ⇓ 'CAT'" (at level 1, left associativity).
-Reserved Notation "a ⇑ 'CAT'" (at level 1, left associativity).
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a ⇓ 'CAT'" (at level 40, left associativity).
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a ⇑ 'CAT'" (at level 40, left associativity).
 Reserved Notation "a ≤_{ x } b" (at level 70, no associativity).
 Reserved Notation "C ↓ a" (at level 70, no associativity).
 Reserved Notation "'CAT' ⇓ a" (at level 40, left associativity).
@@ -41,7 +43,8 @@ Reserved Notation "g ∘ᴱ f" (at level 40, left associativity).
 Reserved Notation "m ≤ n" (at level 70, no associativity).
 Reserved Notation "p • q" (at level 20).
 Reserved Notation "p •' q" (at level 21, left associativity, format "'[v' p '/' '•''  q ']'").
-Reserved Notation "x ₁" (at level 1).
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "x ₁" (at level 10).
 Reserved Notation "x ₂" (at level 1).
 Reserved Notation "¬ x" (at level 35, right associativity).
 Reserved Notation "x ⇓ F" (at level 40, left associativity).

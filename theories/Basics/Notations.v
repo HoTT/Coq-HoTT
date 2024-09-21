@@ -53,7 +53,6 @@ Reserved Notation "x * y" (at level 40, left associativity).
 Reserved Notation "x / y" (at level 40, no associativity).
 Reserved Notation "- x" (at level 35, right associativity).
 Reserved Notation "/ x" (at level 35, right associativity).
-Reserved Notation "x ^ y" (at level 30, right associativity).
 
 (** Notations for booleans *)
 
@@ -135,8 +134,10 @@ Reserved Notation "f +E g" (at level 50, left associativity).
 (** Categories *)
 Reserved Infix "-|" (at level 60, right associativity).
 Reserved Infix "<~=~>" (at level 70, no associativity).
-Reserved Notation "a // 'CAT'" (at level 1, left associativity).
-Reserved Notation "a \\ 'CAT'" (at level 1, left associativity).
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a // 'CAT'" (at level 40, left associativity).
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a \\ 'CAT'" (at level 40, left associativity).
 Reserved Notation "'CAT' // a" (at level 40, left associativity).
 Reserved Notation "'CAT' \\ a" (at level 40, left associativity).
 Reserved Notation "C ^op" (at level 1, format "C '^op'").
@@ -231,7 +232,8 @@ Reserved Notation "u ~~ v" (at level 30).
 Reserved Notation "! x" (at level 3, format "'!' x").
 Reserved Notation "x \\ F" (at level 40, left associativity).
 Reserved Notation "x // F" (at level 40, left associativity).
-Reserved Notation "{ { xL | xR // xcut } }" (at level 0, xR at level 39, format "{ {  xL  |  xR  //  xcut  } }").
+Reserved Notation "{ { xL | xR // xcut } }" (at level 0, xR at level 39, format "{ {  xL  |  xR // xcut  } }").
+
 Reserved Notation "x \ F" (at level 40, left associativity).
 Reserved Notation "x <> y" (at level 70, no associativity).
 Reserved Notation "x ->> y" (at level 99, right associativity, y at level 200).
