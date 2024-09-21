@@ -390,7 +390,7 @@ Definition Book_3_3_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-1) A.
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
 
-Definition Book_3_3_2 := @HoTT.HProp.if_hprop_then_equiv_Unit.
+Definition Book_3_3_2 := @HoTT.Universes.HProp.if_hprop_then_equiv_Unit.
 
 (* ================================================== lem:equiv-iff-hprop *)
 (** Lemma 3.3.3 *)

@@ -803,7 +803,7 @@ Defined.
 (* ================================================== ex:prop-inhabcontr *)
 (** Exercise 3.5 *)
 
-Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
+Definition Book_3_5_solution_1 := @HoTT.Universes.HProp.equiv_hprop_inhabited_contr.
 
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
