@@ -119,8 +119,10 @@ Defined.
 
 (** The action of maps given by application. *)
 Definition ap_apply_lD {A} {B : A -> Type} {f g : forall x, B x} (p : f = g) (z : A)
-  : ap (fun f => f z) p = apD10 p z
-:= 1.
+  : ap (fun f => f z) p = apD10 p z.
+Proof.
+  by destruct p.
+Defined.
 
 Definition ap_apply_lD2 {A} {B : A -> Type} { C : forall x, B x -> Type}
            {f g : forall x y, C x y} (p : f = g) (z1 : A) (z2 : B z1)
@@ -230,8 +232,10 @@ Definition functor_forall_equiv_pb_beta {A B : Type} {P : B -> Type} (f : A -> B
   `{!IsEquiv f} (h : forall a, P (f a))
   : forall a, functor_forall_equiv_pb f h (f a) = h a.
 Proof.
-  intro a; srapply (_ @ apD h (eissect f a)); srapply (_ @ (transport_compose _ _ _ _)^).
-  srapply ap10; apply ap; apply eisadj.
+  intro a; srapply (_ @ apD h (eissect f a)).
+  rhs nrapply (transport_compose P).
+  apply transport2.
+  apply eisadj.
 Defined.
 
 (** ** Equivalences *)

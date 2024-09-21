@@ -366,7 +366,7 @@ Proof.
   refine (_ oE (equiv_concat_l (concat_pp_p _ _ _) _)^-1).
   refine (_ oE equiv_moveL_Mp _ _ _).
   refine (_ oE sq_path).
-  exact (sq_ccGG (ap_fst_path_prod _ _) (ap_snd_path_prod _ _)).
+  exact (sq_ccGG (ap_fst_path_prod' _ _) (ap_snd_path_prod' _ _)).
 Defined.
 
 Notation sq_dp_prod := equiv_sq_dp_prod.

@@ -74,7 +74,7 @@
     --utf8
     --no-externals
     --parse-comments)
-   (flags -noinit -indices-matter -color on)))
+   (flags -noinit -indices-matter -color on -allow-rewrite-rules)))
  (_
   (coq
    (coqdoc_flags
@@ -83,7 +83,7 @@
     --utf8
     --no-externals
     --parse-comments)
-   (flags -noinit -indices-matter))))
+   (flags -noinit -indices-matter -allow-rewrite-rules))))
 
 ; Bench
 
