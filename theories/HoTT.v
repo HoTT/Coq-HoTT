@@ -27,10 +27,11 @@ Require Export HoTT.PathAny.
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 Require Export HoTT.Constant.
-Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.TruncType.
 
-Require Export HoTT.DProp.
+Require Export HoTT.Universes.ObjectClassifier.
+Require Export HoTT.Universes.DProp.
+
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
 Require Export HoTT.ExcludedMiddle.
