@@ -58,7 +58,7 @@
 *)
 
 From HoTT Require Import Basics Truncations.
-From HoTT Require Idempotents Spaces.Spheres Spaces.No.
+From HoTT Require Idempotents Spaces.No Spaces.Nat.
 From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.
 From HoTT Require Categories.
 From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.
@@ -309,7 +309,7 @@ Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.
 (* ================================================== thm:path-nat *)
 (** Theorem 2.13.1 *)
 
-Definition Book_2_13_1 := @HoTT.Spaces.Nat.Core.equiv_path_nat.
+Definition Book_2_13_1 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.
 
 (* ================================================== thm:prod-ump *)
 (** Theorem 2.15.2 *)
@@ -345,7 +345,7 @@ Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).
 (* ================================================== thm:nat-set *)
 (** Example 3.1.4 *)
 
-Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.hset_nat.
+Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.ishset_nat.
 
 (* ================================================== thm:isset-prod *)
 (** Example 3.1.5 *)

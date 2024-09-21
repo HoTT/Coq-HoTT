@@ -1,5 +1,6 @@
 (** * Unicode notations for comma categories *)
 Local Set Warnings Append "-notation-overridden".
+Require Import Basics.Notations.
 Require Import Comma.Core.
 Require Export Comma.Notations.
 Require Import Basics.Utf8.

@@ -268,17 +268,24 @@ Infix "*" := pos_mul : positive_scope.
 Definition pos_iter {A : Type} (f : A -> A)
   : Pos -> A -> A.
 Proof.
-  apply (pos_peano_ind (fun _ => A -> A) f).
+  apply (pos_peano_rec (A -> A) f).
   intros n g.
   exact (f o g).
 Defined.
 
+(** ** Iteration of a two-variable function, with nesting reflecting the bits *)
+
+Definition pos_iter_op {A} (op : A -> A -> A)
+  := fix p_iter (p : Pos) (a : A) : A
+    := match p with
+        | 1 => a
+        | p~0 => p_iter p (op a a)
+        | p~1 => op a (p_iter p (op a a))
+       end.
+
 (** ** Power *)
 
 Definition pos_pow (x : Pos) := pos_iter (pos_mul x) 1.
-
-(* We cannot use this notation because it is reserved for path inverse. *)
-(* Infix "^" := pos_pow : positive_scope. *)
 
 (** ** Square *)
 
@@ -327,13 +334,9 @@ Fixpoint pos_size p :=
 
 (** ** From binary positive numbers to Peano natural numbers *)
 
-Definition pos_iter_op {A} (op : A -> A -> A)
-  := fix pos_iter (p : Pos) (a : A) : A
-    := match p with
-        | 1 => a
-        | p~0 => pos_iter p (op a a)
-        | p~1 => op a (pos_iter p (op a a))
-       end.
+(** Sends [n] to [n], missing [0]. *)
+Definition nat_of_pos (p : Pos) : nat
+  := pos_iter S p 0%nat.
 
 (** ** From Peano natural numbers to binary positive numbers *)
 
@@ -417,8 +420,8 @@ Definition pos_to_nat : Pos -> nat.
 Proof.
   intro p. induction p.
   + exact (S O).
-  + exact (add IHp IHp).
-  + exact (S (add IHp IHp)).
+  + exact (nat_add IHp IHp).
+  + exact (S (nat_add IHp IHp)).
 Defined.
 
 Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.

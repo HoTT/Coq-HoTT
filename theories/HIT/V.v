@@ -389,7 +389,7 @@ Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -> V),
 Proof.
   apply V_ind_hprop.
   - intros A f _.
-    destruct (quotient_kernel_factor f (ker_bisim f) (ker_bisim_is_ker f))
+    destruct (quotient_kernel_factor_general f (ker_bisim f) (ker_bisim_is_ker f))
       as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
     exists Au, mu. split;[exact (hset_Au, mono_mu)|].
     apply setext'; split.

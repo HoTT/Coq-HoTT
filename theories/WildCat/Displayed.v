@@ -47,13 +47,17 @@ Definition dgpd_comp {A : Type} {D : A -> Type} `{IsD0Gpd A D} {a b c : A}
 
 Notation "p '$@'' q" := (dgpd_comp p q).
 
+Definition DHom_path {A : Type} {D : A -> Type} `{IsD01Cat A D} {a b : A}
+  (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
+  : DHom (Hom_path p) a' b'.
+Proof.
+  destruct p, p'; apply DId.
+Defined.
+
 Definition DGpdHom_path {A : Type} {D : A -> Type} `{IsD0Gpd A D} {a b : A}
   (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
-  : DGpdHom (GpdHom_path p) a' b'.
-Proof.
-  destruct p, p'.
-  apply DId.
-Defined.
+  : DGpdHom (GpdHom_path p) a' b'
+  := DHom_path p p'.
 
 Global Instance reflexive_DHom {A} {D : A -> Type} `{IsD01Cat A D} {a : A}
   : Reflexive (DHom (Id a))
@@ -102,6 +106,11 @@ Class IsD1Cat {A : Type} `{Is1Cat A}
                (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
                DHom (cat_assoc f g h) ((h' $o' g') $o' f')
                (h' $o' (g' $o' f'));
+  dcat_assoc_opp : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
+               {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+               (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+               DHom (cat_assoc_opp f g h) (h' $o' (g' $o' f'))
+               ((h' $o' g') $o' f');
   dcat_idl : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
              (f' : DHom f a' b'), DHom (cat_idl f) (DId b' $o' f') f';
   dcat_idr : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
@@ -112,13 +121,6 @@ Global Existing Instance isd01cat_hom.
 Global Existing Instance isd0gpd_hom.
 Global Existing Instance isd0functor_postcomp.
 Global Existing Instance isd0functor_precomp.
-
-Definition dcat_assoc_opp {A : Type} {D : A -> Type} `{IsD1Cat A D}
-  {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
-  {a' : D a} {b' : D b} {c' : D c} {d' : D d}
-  (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d')
-  : DHom (cat_assoc_opp f g h) (h' $o' (g' $o' f')) ((h' $o' g') $o' f')
-  := (dcat_assoc f' g' h')^$'.
 
 Definition dcat_postwhisker {A : Type} {D : A -> Type} `{IsD1Cat A D}
   {a b c : A} {f g : a $-> b} {h : b $-> c} {p : f $== g}
@@ -162,7 +164,7 @@ Definition DEpic {A} {D : A -> Type} `{IsD1Cat A D} {a b : A}
       (g' : DHom g b' c') (h' : DHom h b' c'),
       DGpdHom p (g' $o' f') (h' $o' f') -> DGpdHom (epi c g h p) g' h'.
 
-Global Instance isgraph_sigma {A : Type} (D : A -> Type) `{IsDGraph A D}
+Global Instance isgraph_total {A : Type} (D : A -> Type) `{IsDGraph A D}
   : IsGraph (sig D).
 Proof.
   srapply Build_IsGraph.
@@ -170,7 +172,7 @@ Proof.
   exact {f : a $-> b & DHom f a' b'}.
 Defined.
 
-Global Instance is01cat_sigma {A : Type} (D : A -> Type) `{IsD01Cat A D}
+Global Instance is01cat_total {A : Type} (D : A -> Type) `{IsD01Cat A D}
   : Is01Cat (sig D).
 Proof.
   srapply Build_Is01Cat.
@@ -180,7 +182,7 @@ Proof.
     exact (g $o f; g' $o' f').
 Defined.
 
-Global Instance is0gpd_sigma {A : Type} (D : A -> Type) `{IsD0Gpd A D}
+Global Instance is0gpd_total {A : Type} (D : A -> Type) `{IsD0Gpd A D}
   : Is0Gpd (sig D).
 Proof.
   srapply Build_Is0Gpd.
@@ -188,7 +190,7 @@ Proof.
   exact (f^$; dgpd_rev f').
 Defined.
 
-Global Instance is0functor_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
+Global Instance is0functor_total_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
   : Is0Functor (pr1 : sig D -> A).
 Proof.
   srapply Build_Is0Functor.
@@ -196,7 +198,7 @@ Proof.
   exact f.
 Defined.
 
-Global Instance is2graph_sigma {A : Type} (D : A -> Type) `{IsD2Graph A D}
+Global Instance is2graph_total {A : Type} (D : A -> Type) `{IsD2Graph A D}
   : Is2Graph (sig D).
 Proof.
   intros [a a'] [b b'].
@@ -205,7 +207,7 @@ Proof.
   exact ({p : f $-> g & DHom p f' g'}).
 Defined.
 
-Global Instance is0functor_sigma {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
+Global Instance is0functor_total {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
   {B : Type} (DB : B -> Type) `{IsD01Cat B DB} (F : A -> B) `{!Is0Functor F}
   (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F'}
   : Is0Functor (functor_sigma F F').
@@ -216,7 +218,7 @@ Proof.
   exact (fmap F f; dfmap F F' f').
 Defined.
 
-Global Instance is1cat_sigma {A : Type} (D : A -> Type) `{IsD1Cat A D}
+Global Instance is1cat_total {A : Type} (D : A -> Type) `{IsD1Cat A D}
   : Is1Cat (sig D).
 Proof.
   srapply Build_Is1Cat.
@@ -230,6 +232,8 @@ Proof.
     exact (p $@R f; p' $@R' f').
   - intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].
     exact (cat_assoc f g h; dcat_assoc f' g' h').
+  - intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].
+    exact (cat_assoc_opp f g h; dcat_assoc_opp f' g' h').
   - intros [a a'] [b b'] [f f'].
     exact (cat_idl f; dcat_idl f').
   - intros [a a'] [b b'] [f f'].
@@ -271,6 +275,11 @@ Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
                       (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
                       (transport (fun k => DHom k a' d') (cat_assoc_strong f g h)
                       ((h' $o' g') $o' f')) = h' $o' (g' $o' f');
+  dcat_assoc_opp_strong : forall {a b c d : A} {f : a $-> b} {g : b $-> c} {h : c $-> d}
+                      {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+                      (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+                      (transport (fun k => DHom k a' d') (cat_assoc_opp_strong f g h)
+                      (h' $o' (g' $o' f'))) = (h' $o' g') $o' f';
   dcat_idl_strong : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
                     (f' : DHom f a' b'),
                     (transport (fun k => DHom k a' b') (cat_idl_strong f)
@@ -286,6 +295,7 @@ Global Existing Instance isd0gpd_hom_strong.
 Global Existing Instance isd0functor_postcomp_strong.
 Global Existing Instance isd0functor_precomp_strong.
 
+(* If in the future we make a [Build_Is1Cat_Strong'] that lets the user omit the second proof of associativity, this shows how it can be recovered from the original proof:
 Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{IsD1Cat_Strong A D}
   {a b c d : A}  {f : a $-> b} {g : b $-> c} {h : c $-> d}
   {a' : D a} {b' : D b} {c' : D c} {d' : D d}
@@ -296,20 +306,23 @@ Proof.
   apply (moveR_transport_V (fun k => DHom k a' d') (cat_assoc_strong f g h) _ _).
   exact ((dcat_assoc_strong f' g' h')^).
 Defined.
+*)
 
 Global Instance isd1cat_isd1catstrong {A : Type} (D : A -> Type)
   `{IsD1Cat_Strong A D} : IsD1Cat D.
 Proof.
   srapply Build_IsD1Cat.
   - intros a b c d f g h a' b' c' d' f' g' h'.
-    exact (DGpdHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+    exact (DHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+  - intros a b c d f g h a' b' c' d' f' g' h'.
+    exact (DHom_path (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).
   - intros a b f a' b' f'.
-    exact (DGpdHom_path (cat_idl_strong f) (dcat_idl_strong f')).
+    exact (DHom_path (cat_idl_strong f) (dcat_idl_strong f')).
   - intros a b f a' b' f'.
-    exact (DGpdHom_path (cat_idr_strong f) (dcat_idr_strong f')).
+    exact (DHom_path (cat_idr_strong f) (dcat_idr_strong f')).
 Defined.
 
-Global Instance is1catstrong_sigma {A : Type}
+Global Instance is1catstrong_total {A : Type}
   (D : A -> Type) `{IsD1Cat_Strong A D}
   : Is1Cat_Strong (sig D).
 Proof.
@@ -317,6 +330,9 @@ Proof.
   - intros aa' bb' cc' dd' [f f'] [g g'] [h h'].
     exact (path_sigma' _
             (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).
+  - intros aa' bb' cc' dd' [f f'] [g g'] [h h'].
+    exact (path_sigma' _
+            (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).
   - intros aa' bb' [f f'].
     exact (path_sigma' _ (cat_idl_strong f) (dcat_idl_strong f')).
   - intros aa' bb' [f f'].
@@ -346,7 +362,7 @@ Arguments dfmap_id {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
 Arguments dfmap_comp {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
   F {_ _} F' {_ _ a b c f g a' b' c'} f' g'.
 
-Global Instance is1functor_sigma {A B : Type} (DA : A -> Type) (DB : B -> Type)
+Global Instance is1functor_total {A B : Type} (DA : A -> Type) (DB : B -> Type)
   (F : A -> B) (F' : forall (a : A), DA a -> DB (F a)) `{IsD1Functor A B DA DB F F'}
   : Is1Functor (functor_sigma F F').
 Proof.
@@ -502,6 +518,9 @@ Proof.
   - intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.
     intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].
     exact (dcat_assoc f1' f2' f3', dcat_assoc g1' g2' g3').
+  - intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.
+    intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].
+    exact (dcat_assoc_opp f1' f2' f3', dcat_assoc_opp g1' g2' g3').
   - intros ab1 ab2 fg ab1' ab2' [f' g'].
     exact (dcat_idl f', dcat_idl g').
   - intros ab1 ab2 fg ab1' ab2' [f' g'].

@@ -23,8 +23,6 @@ Section AssumeUnivalence.
     : IsConnected 0 (Bouquet S).
   Proof.
     rapply isconnected_susp.
-    rapply contr_inhabited_hprop.
-    exact (tr pt).
   Defined.
 
   (** We can directly prove that it satisfies the desired equivalence together with naturality in the second argument. *)
@@ -38,7 +36,7 @@ Section AssumeUnivalence.
     1: refine (natequiv_prewhisker (natequiv_pointify_r S) ptype_group).
     (** Post-compose with [pequiv_loops_bg_g] *)
     nrefine (natequiv_compose _ _).
-1: rapply (natequiv_postwhisker _ (natequiv_inverse natequiv_g_loops_bg)).
+    1: rapply (natequiv_postwhisker _ (natequiv_inverse natequiv_g_loops_bg)).
     (** Loop-susp adjoint *)
     nrefine (natequiv_compose _ _).
     1: refine (natequiv_prewhisker

@@ -100,10 +100,12 @@ Require Export HoTT.Modalities.Meet.
 Require Export HoTT.Modalities.CoreflectiveSubuniverse.
 
 Require Export HoTT.Spaces.Nat.
-Require Export HoTT.Spaces.Int.
+Require Export HoTT.Spaces.BinInt.
 Require Export HoTT.Spaces.Pos.
 
-Require Export HoTT.Spaces.List.
+Require Export HoTT.Spaces.List.Core.
+Require Export HoTT.Spaces.List.Theory.
+Require Export HoTT.Spaces.List.Paths.
 
 Require Export HoTT.Spaces.Cantor.
 

@@ -98,7 +98,7 @@ Section homomorphism_id.
 
 End homomorphism_id.
 
-Arguments homomorphism_id {σ} A%Algebra_scope , {σ} {A}.
+Arguments homomorphism_id {σ} A%_Algebra_scope , {σ} {A}.
 
 (** Composition of homomorphisms. *)
 
@@ -190,6 +190,7 @@ Global Instance is1cat_strong_algebra `{Funext} (σ : Signature)
 Proof.
   rapply Build_Is1Cat_Strong.
   - intros. apply assoc_homomorphism_compose.
+  - intros. symmetry; apply assoc_homomorphism_compose.
   - intros. apply left_id_homomorphism_compose.
   - intros. apply right_id_homomorphism_compose.
 Defined.

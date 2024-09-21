@@ -2,10 +2,9 @@
 Require Import Basics Types.
 Require Import Pointed.Core Pointed.Loops Pointed.pEquiv.
 Require Import HSet.
-Require Import Spaces.Pos Spaces.Int.
+Require Import Spaces.Int.
 Require Import Colimits.Coeq.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Cubical.DPath.
 
 (** * Theorems about the [Circle]. *)
 
@@ -126,52 +125,26 @@ Section EncodeDecode.
     refine (transport_arrow _ _ _ @ _).
     refine (transport_paths_r loop _ @ _).
     rewrite transport_Circle_code_loopV.
-    destruct z as [n| |n].
-    2: apply concat_Vp.
-    { rewrite <- int_neg_pos_succ.
-      unfold loopexp, loopexp_pos.
-      rewrite pos_peano_ind_beta_pos_succ.
-      apply concat_pV_p. }
-    induction n as [|n nH] using pos_peano_ind.
-    1: apply concat_1p.
-    rewrite <- pos_add_1_r.
-    change (pos (n + 1)%pos)
-      with (int_succ (pos n)).
-    rewrite int_pred_succ.
-    cbn; rewrite pos_add_1_r.
-    unfold loopexp_pos.
-    rewrite pos_peano_ind_beta_pos_succ.
-    reflexivity.
+    rewrite loopexp_pred_r.
+    apply concat_pV_p.
   Defined.
 
   (** The non-trivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over [base]. *)
-  Definition Circle_encode_loopexp (z:Int)
+  Definition Circle_encode_loopexp (z : Int)
     : Circle_encode base (loopexp loop z) = z.
   Proof.
-    destruct z as [n | | n]; unfold Circle_encode.
-    - induction n using pos_peano_ind; simpl in *.
-      + refine (moveR_transport_V _ loop _ _ _).
-        by symmetry; apply transport_Circle_code_loop.
-      + unfold loopexp_pos.
-        rewrite pos_peano_ind_beta_pos_succ.
-        rewrite transport_pp.
-        refine (moveR_transport_V _ loop _ _ _).
-        refine (_ @ (transport_Circle_code_loop _)^).
-        refine (IHn @ _^).
-        rewrite int_neg_pos_succ.
-        by rewrite int_succ_pred.
+    induction z as [|n | n].
     - reflexivity.
-    - induction n using pos_peano_ind; simpl in *.
-      + by apply transport_Circle_code_loop.
-      + unfold loopexp_pos.
-        rewrite pos_peano_ind_beta_pos_succ.
-        rewrite transport_pp.
-        refine (moveR_transport_p _ loop _ _ _).
-        refine (_ @ (transport_Circle_code_loopV _)^).
-        refine (IHn @ _^).
-        rewrite <- pos_add_1_r.
-        change (int_pred (int_succ (pos n)) = pos n).
-        apply int_pred_succ.
+    - rewrite loopexp_succ_r.
+      unfold Circle_encode in IHz |- *.
+      rewrite transport_pp.
+      rewrite IHz.
+      apply transport_Circle_code_loop.
+    - rewrite loopexp_pred_r.
+      unfold Circle_encode in IHz |- *.
+      rewrite transport_pp.
+      rewrite IHz.
+      apply transport_Circle_code_loopV.
   Defined.
 
   (** Now we put it together. *)
@@ -234,18 +207,6 @@ Proof.
   rewrite ap_loopexp.
   refine (ap (fun p => loopexp p n) _).
   apply Circle_rec_beta_loop.
-Defined.
-
-(** An alternative induction principle for Circle that produces a DPath. *)
-Definition Circle_ind_dp (P : Circle -> Type) (b : P base)
-  (bl : DPath P loop b b) (x : Circle) : P x
-  := Circle_ind P b (dp_path_transport^-1 bl) x.
-
-Definition Circle_ind_dp_beta_loop (P : Circle -> Type) (b : P base)
-  (bl : DPath P loop b b) : dp_apD (Circle_ind_dp P b bl) loop = bl.
-Proof.
-  apply dp_apD_path_transport.
-  exact (Circle_ind_beta_loop _ _ _).
 Defined.
 
 (** The universal property of the circle (Lemma 6.2.9 in the Book).  We could deduce this from [isequiv_Coeq_rec], but it's nice to see a direct proof too. *)

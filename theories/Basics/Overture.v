@@ -2,50 +2,81 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
-Require Export Basics.Notations Basics.Datatypes Basics.Logic.
-
-Declare ML Module "number_string_notation_plugin".
-
-(** Keywords for blacklisting from search function *)
-Add Search Blacklist "_admitted" "_subproof" "Private_".
-
-Create HintDb rewrite discriminated.
-#[export] Hint Variables Opaque : rewrite.
-Create HintDb typeclass_instances discriminated.
+Require Export Basics.Settings Basics.Notations.
 
 Local Set Polymorphic Inductive Cumulativity.
 
-(** Disable warning about argument scope delimiters. TODO: remove this once we bump the minimal Coq version to 8.19 and merge #1862. *)
-Global Set Warnings "-argument-scope-delimiter".
+(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
+Local Unset Elimination Schemes.
+
+(** ** Datatypes *)
+
+(** *** Functions *)
+
+(** Notation for non-dependent function types *)
+Notation "A -> B" := (forall (_ : A), B) : type_scope.
+
+(** *** Option type *)
+
+(** [option A] is the extension of [A] with an extra element [None] *)
+Inductive option (A : Type) : Type :=
+  | Some : A -> option A
+  | None : option A.
+
+Scheme option_rect := Induction for option Sort Type.
+
+Arguments Some {A} a.
+Arguments None {A}.
+
+Register option as core.option.type.
+
+(** *** Sum type *)
+
+(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+Inductive sum (A B : Type) : Type :=
+  | inl : A -> sum A B
+  | inr : B -> sum A B.
+
+Scheme sum_rect := Induction for sum Sort Type.
+Scheme sum_ind := Induction for sum Sort Type.
+Arguments sum_ind {A B} P f g : rename.
+
+Notation "x + y" := (sum x y) : type_scope.
+
+Arguments inl {A B} _ , [A] B _.
+Arguments inr {A B} _ , A [B] _.
+
+(* A notation for coproduct that's less overloaded than [+] *)
+Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
+
+(** *** Product type *)
+
+(** [prod A B], written [A * B], is the product of [A] and [B];
+    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
+Record prod (A B : Type) := pair { fst : A ; snd : B }.
+
+Scheme prod_rect := Induction for prod Sort Type.
+Scheme prod_ind := Induction for prod Sort Type.
+Arguments prod_ind {A B} P _. 
+
+Arguments pair {A B} _ _.
+Arguments fst {A B} _ / .
+Arguments snd {A B} _ / .
+
+Add Printing Let prod.
+
+Notation "x * y" := (prod x y) : type_scope.
+Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
+Notation and := prod (only parsing).
+Notation conj := pair (only parsing).
+
+#[export] Hint Resolve pair inl inr : core.
 
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
-
-(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
-Local Unset Elimination Schemes.
-
-(** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)
-Global Set Keyed Unification.
-
-(** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
-Global Unset Strict Universe Declaration.
-
-(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
-Global Unset Universe Minimization ToSet.
-
-(** Force to use bullets in proofs. *)
-Global Set Default Goal Selector "!".
-
-(** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)
-Global Set Printing Primitive Projection Parameters.
-
-(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
-Global Set Loose Hint Behavior "Strict".
-
-(** Apply using the same opacity information as typeclass proof search. *)
-Ltac class_apply c := autoapply c with typeclass_instances.
 
 Definition Relation (A : Type) := A -> A -> Type.
 
@@ -134,11 +165,11 @@ Arguments sig_ind {_ _}.
 
 (** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
-Arguments exist {A}%type P%type _ _.
+Arguments exist {A}%_type P%_type _ _.
 Arguments proj1 {A P} _ / .
 Arguments proj2 {A P} _ / .
 
-Arguments sig (A P)%type.
+Arguments sig (A P)%_type.
 
 Notation "{ x | P }" := (sig (fun x => P)) : type_scope.
 Notation "{ x : A | P }" := (sig (A := A) (fun x => P)) : type_scope.
@@ -147,6 +178,12 @@ Notation "{ x : A  & P }" := (sig (fun x:A => P)) : type_scope.
 
 (** This lets us pattern match sigma types in let expressions *)
 Add Printing Let sig.
+  
+Register sig as core.sigT.type.
+Register exist as core.sigT.intro.
+Register sig_rect as core.sigT.rect.
+Register proj1 as core.sigT.proj1.
+Register proj2 as core.sigT.proj2.
 
 #[export] Hint Resolve exist : core.
 
@@ -165,6 +202,8 @@ Notation "x .2" := (pr2 x) : fibration_scope.
 
 Definition uncurry {A B C} (f : A -> B -> C) (p : A * B) : C := f (fst p) (snd p).
 
+Arguments uncurry {A B C} f%_function_scope p /. 
+
 (** Composition of functions. *)
 
 Notation compose := (fun g f x => g (f x)).
@@ -178,24 +217,10 @@ Notation "g 'o' f" := (compose g%function f%function) : function_scope.
 (** This definition helps guide typeclass inference. *)
 Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
-(** Composition of logical equivalences *)
-Global Instance iff_compose : Transitive iff | 1
-  := fun A B C f g => (fst g o fst f , snd f o snd g).
-Arguments iff_compose {A B C} f g : rename.
-
-(** While we're at it, inverses of logical equivalences *)
-Global Instance iff_inverse : Symmetric iff | 1
-  := fun A B f => (snd f , fst f).
-Arguments iff_inverse {A B} f : rename.
-
-(** And reflexivity of them *)
-Global Instance iff_reflexive : Reflexive iff | 1
-  := fun A => (idmap , idmap).
-
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
 
-Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
+Global Arguments composeD {A B C}%_type_scope (g f)%_function_scope x.
 
 #[export] Hint Unfold composeD : core.
 
@@ -325,7 +350,7 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   := match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
@@ -338,8 +363,8 @@ Proof. rewrite <- H. exact u. Defined.
 Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
 Proof. rewrite -> H. exact u. Defined.
 
-Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
-Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
+Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p.
+Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
 
@@ -348,7 +373,7 @@ Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
-Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope.
 
 Register ap as core.identity.congr.
 
@@ -382,7 +407,7 @@ Proof.
   intros ? ? p ?; symmetry; apply p.
 Defined.
 
-Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments pointwise_paths {A}%_type_scope {P} (f g)%_function_scope.
 Global Arguments reflexive_pointwise_paths /.
 Global Arguments transitive_pointwise_paths /.
 Global Arguments symmetric_pointwise_paths /.
@@ -396,12 +421,12 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
-Global Arguments apD10 {A%type_scope B} {f g}%function_scope h%path_scope _.
+Global Arguments apD10 {A%_type_scope B} {f g}%_function_scope h%_path_scope _.
 
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
 
-Global Arguments ap10 {A B}%type_scope {f g}%function_scope h%path_scope _.
+Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
@@ -411,7 +436,7 @@ Proof.
   case h, p; reflexivity.
 Defined.
 
-Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
+Global Arguments ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y} p%_path_scope.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
@@ -426,7 +451,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   match p with idpath => idpath end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomatch.
+Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
@@ -452,10 +477,10 @@ Class IsEquiv {A B : Type} (f : A -> B) := {
   eisadj : forall x : A, eisretr (f x) = ap f (eissect x) ;
 }.
 
-Arguments eisretr {A B}%type_scope f%function_scope {_} _.
-Arguments eissect {A B}%type_scope f%function_scope {_} _.
-Arguments eisadj {A B}%type_scope f%function_scope {_} _.
-Arguments IsEquiv {A B}%type_scope f%function_scope.
+Arguments eisretr {A B}%_type_scope f%_function_scope {_} _.
+Arguments eissect {A B}%_type_scope f%_function_scope {_} _.
+Arguments eisadj {A B}%_type_scope f%_function_scope {_} _.
+Arguments IsEquiv {A B}%_type_scope f%_function_scope.
 
 (** We mark [eisadj] as Opaque to deter Coq from unfolding it when simplifying. Since proofs of [eisadj] typically have larger proofs than the rest of the equivalence data, we gain some speed up as a result. *)
 Global Opaque eisadj.
@@ -522,7 +547,7 @@ Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
 Bind Scope trunc_scope with trunc_index.
-Arguments trunc_S _%trunc_scope.
+Arguments trunc_S _%_trunc_scope.
 
 (** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
@@ -635,7 +660,7 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
   :=
   (@apD10 A P f g)^-1.
 
-Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
+Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
 
 (** *** Tactics *)
 
@@ -654,16 +679,14 @@ Ltac path_via mid :=
 
 (** ** Natural numbers *)
 
-(** Unfortunately due to a bug in coq #10766 the induction tactic fails to work properly. We therefore have to use the autogenerated induction schemes and define the ones we want to use ourselves. *)
-
-Local Set Elimination Schemes.
-
 (**  Natural numbers. *)
 Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
 
-Local Unset Elimination Schemes.
+Scheme nat_ind := Induction for nat Sort Type.
+Scheme nat_rect := Induction for nat Sort Type.
+Scheme nat_rec := Induction for nat Sort Type.
 
 (** These schemes are therefore defined in Spaces.Nat *)
 (*
@@ -675,7 +698,7 @@ Scheme nat_rec := Minimality for nat Sort Type.
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
-Arguments S _%nat.
+Arguments S _%_nat.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
@@ -746,27 +769,4 @@ Global Existing Instance ispointed_type.
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
-Global Arguments hfiber {A B}%type_scope f%function_scope y.
-
-(** *** More tactics *)
-
-Ltac easy :=
-  let rec use_hyp H :=
-    match type of H with
-    | _ => try solve [inversion H]
-    end
-  with do_intro := let H := fresh in intro H; use_hyp H
-  with destruct_hyp H := case H; clear H; do_intro; do_intro in
-  let rec use_hyps :=
-    match goal with
-    | H : _ |- _ => solve [inversion H]
-    | _ => idtac
-    end in
-  let rec do_atom :=
-    solve [reflexivity | symmetry; trivial] ||
-    contradiction ||
-    (split; do_atom)
-  with do_ccl := trivial; repeat do_intro; do_atom in
-  (use_hyps; do_ccl) || fail "Cannot solve this goal".
-
-Tactic Notation "now" tactic(t) := t; easy.
+Global Arguments hfiber {A B}%_type_scope f%_function_scope y.

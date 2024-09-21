@@ -5,7 +5,7 @@ Class AlmostNegate A := almost_negate : A -> A.
 
 Class AlmostRing A {Aplus : Plus A} {Amult : Mult A}
   {Azero : Zero A} {Aone : One A} {Anegate : AlmostNegate A} :=
-  { almost_ring_semiring : IsSemiRing A
+  { almost_ring_semiring : IsSemiCRing A
   ; almost_ring_neg_pr : forall x : A, almost_negate x = (almost_negate 1) * x }.
 
 Section almostring_mor.

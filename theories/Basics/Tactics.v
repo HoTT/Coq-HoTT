@@ -239,7 +239,7 @@ Ltac bang :=
   match goal with
     | |- ?x =>
       match x with
-        | context [False_rect _ ?p] => elim p
+        | context [Empty_rect _ ?p] => elim p
       end
   end.
 
@@ -459,6 +459,30 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
+Ltac easy :=
+  let rec use_hyp H :=
+    match type of H with
+    | _ => try solve [inversion H]
+    end
+  with do_intro := let H := fresh in intro H; use_hyp H
+  with destruct_hyp H := case H; clear H; do_intro; do_intro in
+  let rec use_hyps :=
+    match goal with
+    | H : _ |- _ => solve [inversion H]
+    | _ => idtac
+    end in
+  let rec do_atom :=
+    solve [reflexivity | symmetry; trivial] ||
+    contradiction ||
+    (split; do_atom)
+  with do_ccl := trivial; repeat do_intro; do_atom in
+  (use_hyps; do_ccl) || fail "Cannot solve this goal".
+
+Tactic Notation "now" tactic(t) := t; easy.
+
+(** Apply using the same opacity information as typeclass proof search. *)
+Ltac class_apply c := autoapply c with typeclass_instances.
+
 (** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
   intros;
@@ -471,7 +495,6 @@ Ltac by_extensionality x :=
     end;
     simpl; auto with path_hints
   end.
-
 
 (** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)
 (** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)
@@ -561,7 +584,7 @@ Ltac get_constructor_head T :=
                              let x' := (eval cbv delta [x'] in x') in
                              let x' := head x' in
                              unify h x';
-                             exact I)) in
+                             exact tt)) in
   h.
 
 (* A version of econstructor that doesn't resolve typeclasses. *)
@@ -697,7 +720,7 @@ Local Ltac unify_with_projections term u :=
   (unify_first_evar_with term u;
    tryif has_evar term then fail 0 term "has evars remaining" else idtac).
 
-(* Completely destroys v into it's pieces and trys to put pieces in sigma. *)
+(* Completely destroys v into its pieces and trys to put pieces in sigma. *)
 Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=
   ((destruct v; shelve) +
    (snrefine (_ ; _);

@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Nat.Core.
-Require Import Spaces.Int.Core.
+Require Import Spaces.Int.
 Require Import Spaces.Finite.Fin.
 Require Import WildCat.Core.
 
@@ -27,13 +27,13 @@ Arguments ss_succ {_} _.
 Notation "x .+1" := (ss_succ x) : succ_scope.
 
 (** Successor structure of naturals *)
-Definition NatSucc : SuccStr := Build_SuccStr nat Nat.Core.succ.
+Definition NatSucc : SuccStr := Build_SuccStr nat nat_succ.
 
 (** Successor structure of integers *)
-Definition IntSucc : SuccStr := Build_SuccStr Int int_succ.
+Definition BinIntSucc : SuccStr := Build_SuccStr Int int_succ.
 
 Notation "'+N'" := NatSucc : succ_scope.
-Notation "'+Z'" := IntSucc : succ_scope.
+Notation "'+Z'" := BinIntSucc : succ_scope.
 
 (** Stratified successor structures *)
 
@@ -217,7 +217,8 @@ Defined.
 
 Global Instance is1cat_ss : Is1Cat SuccStr.
 Proof.
-  srapply Build_Is1Cat.
+  snrapply Build_Is1Cat'.
+  1,2: exact _.
   - intros X Y Z g.
     snrapply Build_Is0Functor.
     intros f h p.

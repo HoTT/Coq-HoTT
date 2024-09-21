@@ -107,7 +107,7 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
                      (O_functor O2 (to O1 (Pullback f (to O2 B)))
                                 ((O_rec (f^* (to O2 B)))^-1 c)));
         [ apply ap11; repeat apply ap
-        | transitivity (O_functor O2 (O_rec (to O2 B^*' f))
+        | transitivity (O_functor O2 (O_rec ((to O2 B)^*' f))
                           (O_functor O2 (to O1 (Pullback f (to O2 B)))
                                      ((O_rec (f^* (to O2 B)))^-1 c))) ].
       + refine (pr1_path_sigma_uncurried _ @ eisretr pr1 _).

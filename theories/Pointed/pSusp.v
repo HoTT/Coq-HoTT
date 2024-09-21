@@ -91,10 +91,7 @@ Module Book_Loop_Susp_Adjunction.
     refine (_ oE (equiv_sigma_contr
                    (A := {p : B & A -> point B = p})
                    (fun pm => { q : point B = pm.1 & pm.2 (point A) = q }))^-1).
-    transitivity {bp : {b:B & point B = b} & {f : A -> point B = bp.1 & f (point A) = bp.2} }.
-    1:make_equiv.
-    refine (_ oE equiv_contr_sigma _); simpl.
-    refine (issig_pmap A (loops B)).
+    make_equiv_contr_basedpaths.
   Defined.
 
   (** Unfortunately, with this definition it seems to be quite hard to prove that the isomorphism is natural on pointed maps.  The following proof gets partway there, but ends with a pretty intractable goal.  It's also quite slow, so we don't want to compile it all the time. *)
@@ -295,6 +292,7 @@ Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.
+  snrapply Build_Is1Natural.
   intros B B' g f.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).

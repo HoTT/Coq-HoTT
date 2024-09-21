@@ -613,7 +613,7 @@ Global Instance istrunc_sigma `{P : A -> Type}
 : IsTrunc n (sig P) | 100.
 Proof.
   generalize dependent A.
-  induction n; simpl; intros A P ac Pc.
+  simple_induction' n; simpl; intros A P ac Pc.
   { apply (Build_Contr _ (center A; center (P (center A)))).
     intros [a ?].
     refine (path_sigma' P (contr a) (path_contr _ _)). }

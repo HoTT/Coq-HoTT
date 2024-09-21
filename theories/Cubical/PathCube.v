@@ -358,8 +358,8 @@ Definition equiv_dp_cu {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -> B}
   {f1 : PathSquare (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
   {f2 : PathSquare (px0 x2) (px1 x2) (p0x x2) (p1x x2)}
   {p : x1 = x2}
-  : PathCube f1 f2 (sq_dp (dp_apD px0 p)) (sq_dp (dp_apD px1 p))
-     (sq_dp (dp_apD p0x p)) (sq_dp (dp_apD p1x p))
+  : PathCube f1 f2 (sq_dp (apD px0 p)) (sq_dp (apD px1 p))
+     (sq_dp (apD p0x p)) (sq_dp (apD p1x p))
   <~> DPath (fun x => PathSquare (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.
 Proof.
   destruct p; symmetry; exact cu_G11.

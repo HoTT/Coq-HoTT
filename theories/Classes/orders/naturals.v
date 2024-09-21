@@ -77,7 +77,7 @@ as [E | E].
 Qed.
 
 Section another_ring.
-  Context `{IsRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
     `{!IsSemiRingPreserving (f : N -> R)}.
 
   Lemma negate_to_ring_nonpos n : -f n ≤ 0.

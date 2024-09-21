@@ -1,6 +1,6 @@
 Require Import Basics Types HProp HFiber HSet.
 Require Import PathAny.
-Require Import (notations) Classes.interfaces.abstract_algebra.
+Require Import (notations) Classes.interfaces.canonical_names.
 Require Export (hints) Classes.interfaces.abstract_algebra.
 Require Export (hints) Classes.interfaces.canonical_names.
 (** We only export the parts of these that will be most useful to users of this file. *)
@@ -17,7 +17,7 @@ Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, n
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Import WildCat.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Int.
 Require Import Truncations.Core.
 
 Local Set Polymorphic Inductive Cumulativity.
@@ -26,21 +26,23 @@ Generalizable Variables G H A B C f g.
 
 Declare Scope group_scope.
 
-(** ** Groups *)
+(** * Groups *)
+
+(** A group is an abstraction of several common situations in mathematics. For example, consider the symmetries of an object.  Two symmetries can be combined; there is a symmetry that does nothing; and any symmetry can be reversed. Such situations arise in geometry, algebra and, importantly for us, homotopy theory. *)
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope wc_iso_scope.
 
-(** * Definition of Group *)
+(** ** Definition of a Group *)
 
 (** A group consists of a type, an operation on that type, a unit and an inverse that satisfy the group axioms in [IsGroup]. *)
 Record Group := {
-  group_type : Type;
-  group_sgop : SgOp group_type;
-  group_unit : MonUnit group_type;
-  group_inverse : Negate group_type;
-  group_isgroup : IsGroup group_type;
+  group_type :> Type;
+  group_sgop :: SgOp group_type;
+  group_unit :: MonUnit group_type;
+  group_inverse :: Negate group_type;
+  group_isgroup :: IsGroup group_type;
 }.
 
 Arguments group_sgop {_}.
@@ -50,15 +52,11 @@ Arguments group_isgroup {_}.
 (** We should never need to unfold the proof that something is a group. *)
 Global Opaque group_isgroup.
 
-(** We coerce groups back to types. *)
-Coercion group_type : Group >-> Sortclass.
-Global Existing Instances group_sgop group_unit group_inverse group_isgroup.
-
 Definition issig_group : _ <~> Group
   := ltac:(issig).
 
-(** * Proof automation *)
-(** Many times in group theoretic proofs we want some form of automation for obvious identities. Here we implement such a behaviour. *)
+(** ** Proof automation *)
+(** Many times in group theoretic proofs we want some form of automation for obvious identities. Here we implement such a behavior. *)
 
 (** We create a database of hints for the group theory library *)
 Create HintDb group_db.
@@ -90,16 +88,16 @@ End GroupLaws.
 (** TODO: improve this tactic so that it also rewrites and is able to solve basic group lemmas. *)
 Tactic Notation "grp_auto" := hnf; intros; eauto with group_db.
 
+(** ** Some basic properties of groups *)
+
 (** Groups are pointed sets with point the identity. *)
 Global Instance ispointed_group (G : Group)
   : IsPointed G := @mon_unit G _.
 
 Definition ptype_group : Group -> pType
   := fun G => [G, _].
+
 Coercion ptype_group : Group >-> pType.
-
-(** * Some basic properties of groups *)
-
 (** An element acting like the identity is unique. *)
 Definition identity_unique {A : Type} {Aop : SgOp A}
   (x y : A) {p : LeftIdentity Aop x} {q : RightIdentity Aop y}
@@ -122,24 +120,60 @@ Defined.
 
 (** ** Group homomorphisms *)
 
-(* A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
-Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
-  grp_homo_map : G -> H;
-  grp_homo_ishomo :> IsMonoidPreserving grp_homo_map;
+(** Group homomorphisms are maps between groups that preserve the group operation. They allow us to compare groups and map their structure to one another. This is useful for determining if two groups are really the same, in which case we say they are "isomorphic". *)
+
+(** A group homomorphism consists of a map between groups and a proof that the map preserves the group operation. *)
+Record GroupHomomorphism (G H : Group) := Build_GroupHomomorphism {
+  grp_homo_map :> group_type G -> group_type H;
+  issemigrouppreserving_grp_homo :: IsSemiGroupPreserving grp_homo_map;
 }.
 
-(* We coerce a homomorphism to its underlying map. *)
-Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
-Global Existing Instance grp_homo_ishomo.
+Arguments grp_homo_map {G H}.
+Arguments Build_GroupHomomorphism {G H} _ _.
+Arguments issemigrouppreserving_grp_homo {G H} f _ : rename.
 
-(* Group homomorphisms are pointed maps *)
+(** ** Basic properties of group homomorphisms *)
+
+(** Group homomorphisms preserve group operations. This is an alias for [issemigrouppreserving_grp_homo] with the identity written explicitly. *)
+Definition grp_homo_op
+  : forall {G H : Group} (f : GroupHomomorphism G H) (x y : G), f (x * y) = f x * f y
+  := @issemigrouppreserving_grp_homo.
+#[export] Hint Immediate grp_homo_op : group_db.
+
+(** Group homomorphisms are unit preserving. *)
+Global Instance isunitpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsUnitPreserving f.
+Proof.
+  unfold IsUnitPreserving.
+  apply (group_cancelL (f mon_unit)).
+  rhs nrapply grp_unit_r.
+  rhs_V rapply (ap  _ (monoid_left_id _ mon_unit)).
+  symmetry.
+  nrapply issemigrouppreserving_grp_homo.
+Defined.
+
+(** Group homomorphisms preserve identities. This is an alias for the previous statement. *)
+Definition grp_homo_unit
+  : forall {G H : Group} (f : GroupHomomorphism G H), f mon_unit = mon_unit
+  := @isunitpreserving_grp_homo.
+#[export] Hint Immediate grp_homo_unit : group_db.
+
+(** Therefore, group homomorphisms are monoid homomorphisms. *)
+Global Instance ismonoidpreserving_grp_homo {G H : Group}
+  (f : GroupHomomorphism G H)
+  : IsMonoidPreserving f
+  := {}.
+
+(** Group homomorphisms are pointed maps. *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
-  := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
+  := Build_pMap G H f (isunitpreserving_grp_homo f).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).
 
+(** Function extensionality for group homomorphisms. *)
 Definition equiv_path_grouphomomorphism {F : Funext} {G H : Group}
   {g h : GroupHomomorphism G H} : g == h <~> g = h.
 Proof.
@@ -148,6 +182,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
+(** Group homomorphisms are sets, in the presence of funext. *)
 Global Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
   : IsHSet (GroupHomomorphism G H).
 Proof.
@@ -155,25 +190,7 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ equiv_path_grouphomomorphism).
 Defined.
 
-(** * Some basic properties of group homomorphisms *)
-
-(** Group homomorphisms preserve identities *)
-Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
-  : f (mon_unit) = mon_unit.
-Proof.
-  apply monmor_unitmor.
-Defined.
-#[export] Hint Immediate grp_homo_unit : group_db.
-
-(** Group homomorphisms preserve group operations *)
-Definition grp_homo_op {G H} (f : GroupHomomorphism G H)
-  : forall x y : G, f (x * y) = f x * f y.
-Proof.
-  apply monmor_sgmor.
-Defined.
-#[export] Hint Immediate grp_homo_op : group_db.
-
-(** Group homomorphisms preserve inverses *)
+(** Group homomorphisms preserve inverses. *)
 Definition grp_homo_inv {G H} (f : GroupHomomorphism G H)
   : forall x, f (- x) = -(f x).
 Proof.
@@ -187,25 +204,11 @@ Proof.
 Defined.
 #[export] Hint Immediate grp_homo_inv : group_db.
 
-(** When building a group homomorphism we only need that it preserves the group operation, since we can prove that the identity is preserved. *)
-Definition Build_GroupHomomorphism {G H : Group}
-  (f : G -> H) {h : IsSemiGroupPreserving f}
-  : GroupHomomorphism G H.
-Proof.
-  srapply (Build_GroupHomomorphism' _ _ f).
-  split.
-  1: exact h.
-  unfold IsUnitPreserving.
-  apply (group_cancelL (f mon_unit)).
-  refine (_ @ (grp_unit_r _)^).
-  refine (_ @ ap _ (monoid_left_id _ mon_unit)).
-  symmetry.
-  apply h.
-Defined.
-
+(** The identity map is a group homomorphism. *)
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G
-  := Build_GroupHomomorphism idmap.
+  := Build_GroupHomomorphism idmap _.
 
+(** The composition of the underlying functions of two group homomorphisms is also a group homomorphism. *)
 Definition grp_homo_compose {G H K : Group}
   : GroupHomomorphism H K -> GroupHomomorphism G H -> GroupHomomorphism G K.
 Proof.
@@ -213,21 +216,17 @@ Proof.
   srapply (Build_GroupHomomorphism (f o g)).
 Defined.
 
-Definition grp_homo_const {G H : Group} : GroupHomomorphism G H.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun _ => mon_unit).
-  - intros x y.
-    exact (grp_unit_l mon_unit)^.
-Defined.
+(** ** Group Isomorphisms *)
 
-(* An isomorphism of groups is a group homomorphism that is an equivalence. *)
+(** Group isomorphsims are group homomorphisms whose underlying map happens to be an equivalence. They allow us to consider two groups to be the "same". They can be inverted and composed just like equivalences. *)
+
+(** An isomorphism of groups is defined as group homomorphism that is an equivalence. *)
 Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
-  grp_iso_homo : GroupHomomorphism G H;
-  isequiv_group_iso : IsEquiv grp_iso_homo;
+  grp_iso_homo :> GroupHomomorphism G H;
+  isequiv_group_iso :: IsEquiv grp_iso_homo;
 }.
 
-(* We can build an isomorphism from an operation preserving equivalence. *)
+(** We can build an isomorphism from an operation-preserving equivalence. *)
 Definition Build_GroupIsomorphism' {G H : Group}
   (f : G <~> H) (h : IsSemiGroupPreserving f)
   : GroupIsomorphism G H.
@@ -237,23 +236,22 @@ Proof.
   exact _.
 Defined.
 
-Coercion grp_iso_homo : GroupIsomorphism >-> GroupHomomorphism.
-Global Existing Instance isequiv_group_iso.
-
 Definition issig_GroupIsomorphism (G H : Group)
   : _ <~> GroupIsomorphism G H := ltac:(issig).
 
+(** The underlying equivalence of a group isomorphism. *)
 Definition equiv_groupisomorphism {G H : Group}
   : GroupIsomorphism G H -> G <~> H
   := fun f => Build_Equiv G H f _.
+Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
 
+(** The underlying pointed equivalence of a group isomorphism. *)
 Definition pequiv_groupisomorphism {A B : Group}
   : GroupIsomorphism A B -> (A <~>* B)
   := fun f => Build_pEquiv _ _ f _.
-
-Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
 Coercion pequiv_groupisomorphism : GroupIsomorphism >-> pEquiv.
 
+(** Funext for group isomorphisms. *)
 Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
   (f g : GroupIsomorphism G H)
   : f == g <~> f = g.
@@ -263,6 +261,7 @@ Proof.
   apply equiv_path_grouphomomorphism.
 Defined.
 
+(** Group isomorphisms form a set. *)
 Definition ishset_groupisomorphism `{F : Funext} {G H : Group}
   : IsHSet (GroupIsomorphism G H).
 Proof.
@@ -270,14 +269,17 @@ Proof.
   intros f g; apply (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
 Defined.
 
+(** The identity map is an equivalence and therefore a group isomorphism. *)
 Definition grp_iso_id {G : Group} : GroupIsomorphism G G
   := Build_GroupIsomorphism _ _ grp_homo_id _.
 
+(** Group isomorphisms can be composed by composing the underlying group homomorphism. *)
 Definition grp_iso_compose {G H K : Group}
   (g : GroupIsomorphism H K) (f : GroupIsomorphism G H)
   : GroupIsomorphism G K
   := Build_GroupIsomorphism _ _ (grp_homo_compose g f) _.
 
+(** Group isomorphisms can be inverted. The inverse map of the underlying equivalence also preserves the group operation and unit. *)
 Definition grp_iso_inverse {G H : Group}
   : GroupIsomorphism G H -> GroupIsomorphism H G.
 Proof.
@@ -287,64 +289,56 @@ Proof.
   - exact _.
 Defined.
 
-(** Group Isomorphisms are a reflexive relation *)
+(** Group isomorphism is a reflexive relation. *)
 Global Instance reflexive_groupisomorphism
   : Reflexive GroupIsomorphism
   := fun G => grp_iso_id.
 
-(** Group Isomorphisms are a symmetric relation *)
+(** Group isomorphism is a symmetric relation. *)
 Global Instance symmetric_groupisomorphism
   : Symmetric GroupIsomorphism
   := fun G H => grp_iso_inverse.
 
+(** Group isomorphism is a transitive relation. *)
 Global Instance transitive_groupisomorphism
   : Transitive GroupIsomorphism
   := fun G H K f g => grp_iso_compose g f.
 
-(** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
+(** Under univalence, equality of groups is equivalent to isomorphism of groups. This is the structure identity principle for groups. *)
 Definition equiv_path_group' {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (equiv_compose'
-    (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
-  { revert G H; apply (equiv_path_issig_contr issig_group).
-    + intros [G [? [? [? ?]]]].
-      exists 1%equiv.
-      exact _.
-    + intros [G [op [unit [neg ax]]]]; cbn.
-      contr_sigsig G (equiv_idmap G).
-      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
-      1: assumption.
-      1: exact _.
-      intros [[op' [unit' [neg' ax']]] eq].
-      apply path_sigma_hprop; cbn.
-      refine (@ap _ _ (fun x : { oun :
-        { oo : SgOp G & { u : MonUnit G & Negate G}}
-        & @IsGroup G oun.1 oun.2.1 oun.2.2}
-        => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
-        ((op;unit;neg);ax) ((op';unit';neg');ax') _).
-      apply path_sigma_hprop; cbn.
-      srefine (path_sigma' _ _ _).
-      1: funext x y; apply eq.
-      rewrite transport_const.
-      srefine (path_sigma' _ _ _).
-      1: apply eq.
-      rewrite transport_const.
-      funext x.
-      exact (preserves_negate (f:=idmap) _). }
-  refine (_ oE (issig_GroupIsomorphism G H)^-1).
-  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
-    (fun f => 1%equiv))^-1).
-  refine (equiv_functor_sigma' (issig_equiv G H) (fun f => 1%equiv) oE _).
-  cbn.
-  refine (
-    equiv_adjointify
-      (fun f => (exist (IsMonoidPreserving o pr1)
-        (exist IsEquiv f.1.1 f.2) f.1.2))
-      (fun f => (exist (IsEquiv o pr1)
-        (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
-       _ _).
-  all: intros [[]]; reflexivity.
+  equiv_via {f : G <~> H & IsSemiGroupPreserving f}.
+  1: make_equiv.
+  revert G H; apply (equiv_path_issig_contr issig_group).
+  - intros [G [? [? [? ?]]]].
+    exists 1%equiv.
+    exact _.
+  - intros [G [op [unit [neg ax]]]]; cbn.
+    contr_sigsig G (equiv_idmap G).
+    srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
+    1: assumption.
+    1: exact _.
+    intros [[op' [unit' [neg' ax']]] eq].
+    apply path_sigma_hprop; cbn.
+    refine (@ap _ _ (fun x : { oun :
+      { oo : SgOp G & { u : MonUnit G & Negate G}}
+      & @IsGroup G oun.1 oun.2.1 oun.2.2}
+      => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+      ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+    apply path_sigma_hprop; cbn.
+    srefine (path_sigma' _ _ _).
+    1: funext x y; apply eq.
+    rewrite transport_const.
+    pose (f := Build_GroupHomomorphism
+        (G:=Build_Group G op unit neg ax)
+        (H:=Build_Group G op' unit' neg' ax')
+        idmap eq).
+    srefine (path_sigma' _ _ _).
+    1: exact (grp_homo_unit f).
+    lhs nrapply transport_const.
+    funext x.
+    exact (grp_homo_inv f x).
 Defined.
 
 (** A version with nicer universe variables. *)
@@ -352,9 +346,9 @@ Definition equiv_path_group@{u v | u < v} {U : Univalence} {G H : Group@{u}}
   : GroupIsomorphism G H <~> (paths@{v} G H)
   := equiv_path_group'.
 
-(** * Simple group equivalences *)
+(** ** Simple group equivalences *)
 
-(** Left multiplication is an equivalence *)
+(** Left multiplication is an equivalence. *)
 Global Instance isequiv_group_left_op {G : Group}
   : forall (x : G), IsEquiv (x *.).
 Proof.
@@ -368,7 +362,7 @@ Proof.
   apply grp_inv_l.
 Defined.
 
-(** Right multiplication is an equivalence *)
+(** Right multiplication is an equivalence. *)
 Global Instance isequiv_group_right_op (G : Group)
   : forall (x : G), IsEquiv (fun y => y * x).
 Proof.
@@ -382,6 +376,7 @@ Proof.
   apply grp_inv_r.
 Defined.
 
+(** The operation inverting group elements is an equivalence. Note that, since the order of the operation will change after inversion, this isn't a group homomorphism. *)
 Global Instance isequiv_group_inverse {G : Group}
   : IsEquiv ((-) : G -> G).
 Proof.
@@ -390,21 +385,24 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
-(** ** Working with equations in groups *)
+(** ** Reasoning with equations in groups. *)
 
 Section GroupEquations.
 
   Context {G : Group} (x y z : G).
 
-  (** Inverses are involutive *)
+  (** Inverses are involutive. *)
   Definition grp_inv_inv : --x = x := negate_involutive x.
 
-  (** Inverses distribute over the group operation *)
+  (** Inverses distribute over the group operation. *)
   Definition grp_inv_op : - (x * y) = -y * -x := negate_sg_op x y.
+  
+  (** The inverse of the unit is the unit. *)
+  Definition grp_inv_unit : -mon_unit = mon_unit := negate_mon_unit (G :=G).
 
 End GroupEquations.
 
-(** ** Cancelation *)
+(** ** Cancelation lemmas *)
 
 (** Group elements can be cancelled both on the left and the right. *)
 Definition grp_cancelL {G : Group} {x y : G} z : x = y <~> z * x = z * y
@@ -459,6 +457,9 @@ Section GroupMovement.
 
   Definition grp_moveL_1M : x * -y = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
+  
+  Definition grp_moveL_1V : x * y = mon_unit <~> x = -y
+    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
 
   Definition grp_moveL_M1 : -y * x = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.
@@ -479,44 +480,203 @@ Section GroupMovement.
 
 End GroupMovement.
 
-(** Power operation *)
+(** ** Commutation *)
 
-Definition grp_pow {G : Group} (g : G) (n : nat) : G := nat_iter n (g *.) mon_unit.
-
-(** Any homomorphism respects [grp_pow]. *)
-Lemma grp_pow_homo {G H : Group} (f : GroupHomomorphism G H)
-  (n : nat) (g : G) : f (grp_pow g n) = grp_pow (f g) n.
+(** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)
+Definition grp_commutes_inv {G : Group} (g h : G) (p : g * h = h * g)
+  : g * (-h) = (-h) * g.
 Proof.
-  induction n.
-  + cbn. apply grp_homo_unit.
-  + cbn. refine ((grp_homo_op f g (grp_pow g n)) @ _).
-    exact (ap (fun m => f g + m) IHn).
+  apply grp_moveR_gV.
+  rhs_V apply simple_associativity.
+  by apply grp_moveL_Vg.
 Defined.
 
-(** The wild cat of Groups *)
+(** If [g] commutes with [h] and [h'], then [g] commutes with their product [h * h']. *)
+Definition grp_commutes_op {G : Group} (g h h' : G)
+  (p : g * h = h * g) (p' : g * h' = h' * g)
+  : g * (h * h') = (h * h') * g.
+Proof.
+  lhs apply simple_associativity.
+  lhs nrapply (ap (.* h') p).
+  lhs_V apply simple_associativity.
+  lhs nrapply (ap (h *.) p').
+  by apply simple_associativity.
+Defined.
+
+(** ** Power operation *)
+
+(** For a given [g : G] we can define the function [Int -> G] sending an integer to that power of [g]. *)
+Definition grp_pow {G : Group} (g : G) (n : Int) : G
+  := int_iter (g *.) n mon_unit.
+
+(** Any homomorphism respects [grp_pow]. In other words, [fun g => grp_pow g n] is natural. *)
+Lemma grp_pow_natural {G H : Group} (f : GroupHomomorphism G H) (n : Int) (g : G)
+  : f (grp_pow g n) = grp_pow (f g) n.
+Proof.
+  lhs snrapply (int_iter_commute_map _ ((f g) *.)).
+  1: nrapply grp_homo_op.
+  apply (ap (int_iter _ n)), grp_homo_unit.
+Defined.
+
+(** All powers of the unit are the unit. *)
+Definition grp_pow_unit {G : Group} (n : Int)
+  : grp_pow (G:=G) mon_unit n = mon_unit.
+Proof.
+  snrapply (int_iter_invariant n _ (fun g => g = mon_unit)); cbn.
+  1, 2: apply paths_ind_r.
+  - apply grp_unit_r.
+  - lhs nrapply grp_unit_r. apply grp_inv_unit.
+  - reflexivity.
+Defined.
+
+(** Note that powers don't preserve the group operation as it is not commutative. This does hold in an abelian group so such a result will appear later. *)
+
+(** The next two results tell us how [grp_pow] unfolds. *)
+Definition grp_pow_succ {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.+1)%int = g * grp_pow g n
+  := int_iter_succ_l _ _ _.
+
+Definition grp_pow_pred {G : Group} (n : Int) (g : G)
+  : grp_pow g (n.-1)%int = (- g) * grp_pow g n
+  := int_iter_pred_l _ _ _.
+
+(** [grp_pow] satisfies an additive law of exponents. *)
+Definition grp_pow_add {G : Group} (m n : Int) (g : G)
+  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
+Proof.
+  lhs nrapply int_iter_add.
+  induction n; cbn.
+  1: exact (grp_unit_l _)^.
+  1: rewrite int_iter_succ_l, grp_pow_succ.
+  2: rewrite int_iter_pred_l, grp_pow_pred; cbn.
+  1,2 : rhs_V srapply associativity;
+        apply ap, IHn.
+Defined.
+
+(** [grp_pow] commutes negative exponents to powers of the inverse *)
+Definition grp_pow_neg {G : Group} (n : Int) (g : G)
+  : grp_pow g (int_neg n) = grp_pow (- g) n.
+Proof.
+  lhs nrapply int_iter_neg.
+  cbn; unfold grp_pow.
+  (* These agree, except for the proofs that [sg_op (-g)] is an equivalence. *)
+  apply int_iter_agree.
+Defined.
+
+(** Using a negative power in [grp_pow] is the same as first using a positive power and then inverting the result. *)
+Definition grp_pow_neg_inv {G: Group} (m : Int) (g : G) : grp_pow g (- m)%int = - grp_pow g m.
+Proof.
+  apply grp_moveL_1V.
+  lhs_V nrapply grp_pow_add.
+  by rewrite int_add_neg_l.
+Defined.
+
+(** Combining the two previous results gives that a power of an inverse is the inverse of the power. *)
+Definition grp_pow_neg_inv' {G: Group} (n: Int) (g : G) : grp_pow (- g) n = - grp_pow g n.
+Proof.
+  lhs_V nrapply grp_pow_neg.
+  apply grp_pow_neg_inv.
+Defined.
+
+(** [grp_pow] satisfies a multiplicative law of exponents. *)
+Definition grp_pow_int_mul {G : Group} (m n : Int) (g : G)
+  : grp_pow g (m * n)%int = grp_pow (grp_pow g m) n.
+Proof.
+  induction n.
+  - simpl.
+    by rewrite int_mul_0_r.
+  - rewrite int_mul_succ_r.
+    rewrite grp_pow_add.
+    rewrite grp_pow_succ.
+    apply grp_cancelL, IHn.
+  - rewrite int_mul_pred_r.
+    rewrite grp_pow_add.
+    rewrite grp_pow_neg_inv.
+    rewrite grp_pow_pred.
+    apply grp_cancelL, IHn.
+Defined.
+
+(** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
+Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
+  (p : h * g = g * h)
+  : h * (grp_pow g n) = (grp_pow g n) * h.
+Proof.
+  induction n.
+  - exact (grp_unit_r _ @ (grp_unit_l _)^).
+  - rewrite grp_pow_succ.
+    nrapply grp_commutes_op; assumption.
+  - rewrite grp_pow_pred.
+    nrapply grp_commutes_op.
+    2: assumption.
+    apply grp_commutes_inv, p.
+Defined.
+
+(** [grp_pow g n] commutes with [g]. *)
+Definition grp_pow_commutes' {G : Group} (n : Int) (g : G)
+  : g * grp_pow g n = grp_pow g n * g.
+Proof.
+  by apply grp_pow_commutes.
+Defined.
+
+(** If [g] and [h] commute, then [grp_pow (g * h) n] = (grp_pow g n) * (grp_pow h n)]. *)
+Definition grp_pow_mul {G : Group} (n : Int) (g h : G)
+  (c : g * h = h * g)
+  : grp_pow (g * h) n = (grp_pow g n) * (grp_pow h n).
+Proof.
+  induction n.
+  - simpl.
+    symmetry; nrapply grp_unit_r.
+  - rewrite 3 grp_pow_succ.
+    rewrite IHn.
+    rewrite 2 grp_assoc.
+    apply grp_cancelR.
+    rewrite <- 2 grp_assoc.
+    apply grp_cancelL.
+    apply grp_pow_commutes.
+    exact c^.
+  - simpl.
+    rewrite 3 grp_pow_pred.
+    rewrite IHn.
+    rewrite 2 grp_assoc.
+    apply grp_cancelR.
+    rewrite c.
+    rewrite grp_inv_op.
+    rewrite <- 2 grp_assoc.
+    apply grp_cancelL.
+    apply grp_pow_commutes.
+    symmetry; apply grp_commutes_inv, c.
+Defined.
+
+(** ** The category of Groups *)
+
+(** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
+
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
 Global Instance is01cat_group : Is01Cat Group :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
+(** Helper notation so that the wildcat instances can easily be inferred. *)
+Local Notation grp_homo_map' A B := (@grp_homo_map A B : _ -> (group_type A $-> _)).
+
 Global Instance is2graph_group : Is2Graph Group
-  := fun A B => isgraph_induced (@grp_homo_map A B).
+  := fun A B => isgraph_induced (grp_homo_map' A B).
 
 Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
-  := isgraph_induced (@grp_homo_map A B).
+  := isgraph_induced (grp_homo_map' A B).
 
 Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
-  := is01cat_induced (@grp_homo_map A B).
+  := is01cat_induced (grp_homo_map' A B).
 
 Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
-  := is0gpd_induced (@grp_homo_map A B).
+  := is0gpd_induced (grp_homo_map' A B).
 
 Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
   : Is0Functor (@cat_postcomp Group _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
-  intros [f ?] [g ?] p a ; exact (ap h (p a)).
+  intros f g p a ; exact (ap h (p a)).
 Defined.
 
 Global Instance is0functor_precomp_grouphomomorphism
@@ -533,6 +693,7 @@ Proof.
   by rapply Build_Is1Cat.
 Defined.
 
+(** Under [Funext], the category of groups has morphism extensionality. *)
 Global Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
   srapply Build_HasMorExt.
@@ -543,6 +704,7 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
+(** Group isomorphisms become equivalences in the category of groups. *)
 Global Instance hasequivs_group
   : HasEquivs Group.
 Proof.
@@ -566,11 +728,20 @@ Proof.
   all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
 Defined.
 
+(** The [group_type] map is a 1-functor. *)
+
 Global Instance is0functor_type_group : Is0Functor group_type.
 Proof.
   apply Build_Is0Functor.
   rapply @grp_homo_map.
 Defined.
+
+Global Instance is1functor_type_group : Is1Functor group_type.
+Proof.
+  by apply Build_Is1Functor.
+Defined.
+
+(** The [ptype_group] map is a 1-functor. *)
 
 Global Instance is0functor_ptype_group : Is0Functor ptype_group.
 Proof.
@@ -580,9 +751,7 @@ Defined.
 
 Global Instance is1functor_ptype_group : Is1Functor ptype_group.
 Proof.
-  apply Build_Is1Functor; intros; apply phomotopy_homotopy_hset.
-  1: assumption.
-  1, 2: reflexivity.
+  apply Build_Is1Functor; intros; by apply phomotopy_homotopy_hset.
 Defined.
 
 (** Given a group element [a0 : A] over [b : B], multiplication by [a] establishes an equivalence between the kernel and the fiber over [b]. *)
@@ -607,7 +776,7 @@ Proof.
   repeat split; try exact _; by intros [].
 Defined.
 
-(** Map out of trivial group *)
+(** Map out of trivial group. *)
 Definition grp_trivial_rec (G : Group) : GroupHomomorphism grp_trivial G.
 Proof.
   snrapply Build_GroupHomomorphism.
@@ -615,7 +784,7 @@ Proof.
   intros ??; symmetry; apply grp_unit_l.
 Defined.
 
-(** Map into trivial group *)
+(** Map into trivial group. *)
 Definition grp_trivial_corec (G : Group) : GroupHomomorphism G grp_trivial.
 Proof.
   snrapply Build_GroupHomomorphism.
@@ -623,8 +792,27 @@ Proof.
   intros ??; symmetry; exact (grp_unit_l _).
 Defined.
 
-(** * Direct product of group *)
+(** Group is a pointed category. *)
+Global Instance ispointedcat_group : IsPointedCat Group.
+Proof.
+  snrapply Build_IsPointedCat.
+  - exact grp_trivial.
+  - intro G.
+    exists (grp_trivial_rec G).
+    intros g []; cbn.
+    exact (grp_homo_unit g)^.
+  - intro G.
+    exists (grp_trivial_corec G).
+    intros g x; cbn.
+    apply path_unit.
+Defined.
 
+Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
+  := zero_morphism.
+
+(** ** The direct product of groups *)
+
+(** The cartesian product of the underlying sets of two groups has a natural group structure. We call this the direct product of groups. *)
 Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
@@ -642,25 +830,51 @@ Proof.
   all: grp_auto.
 Defined.
 
-Proposition grp_prod_corec {G H K : Group}
-            (f : GroupHomomorphism K G)
-            (g : GroupHomomorphism K H)
-  : GroupHomomorphism K (grp_prod G H).
+(** Maps into the direct product can be built by mapping separately into each factor. *)
+Proposition grp_prod_corec {G H K : Group} (f : K $-> G) (g : K $-> H)
+  : K $-> (grp_prod G H).
 Proof.
   snrapply Build_GroupHomomorphism.
-  - exact (fun x:K => (f x, g x)).
+  - exact (fun x : K => (f x, g x)).
   - intros x y.
-    refine (path_prod' _ _ ); try apply grp_homo_op.
+    apply path_prod'; apply grp_homo_op.
 Defined.
 
+(** [grp_prod_corec] satisfies a definitional naturality property. *)
+Definition grp_prod_corec_natural {X Y A B : Group}
+  (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
+  : grp_prod_corec g0 g1 $o f $== grp_prod_corec (g0 $o f) (g1 $o f)
+  := fun _ => idpath.
+
+(** The left factor injects into the direct product. *)
 Definition grp_prod_inl {H K : Group}
-  : GroupHomomorphism H (grp_prod H K)
+  : H $-> (grp_prod H K)
   := grp_prod_corec grp_homo_id grp_homo_const.
 
+(** The left injection is an embedding. *)
+Global Instance isembedding_grp_prod_inl {H K : Group}
+  : IsEmbedding (@grp_prod_inl H K).
+Proof.
+  apply isembedding_isinj_hset.
+  intros h0 h1 p; cbn in p.
+  exact (fst ((equiv_path_prod _ _)^-1 p)).
+Defined.
+
+(** The right factor injects into the direct product. *)
 Definition grp_prod_inr {H K : Group}
-  : GroupHomomorphism K (grp_prod H K)
+  : K $-> (grp_prod H K)
   := grp_prod_corec grp_homo_const grp_homo_id.
 
+(** The right injection is an embedding. *)
+Global Instance isembedding_grp_prod_inr {H K : Group}
+  : IsEmbedding (@grp_prod_inr H K).
+Proof.
+  apply isembedding_isinj_hset.
+  intros k0 k1 q; cbn in q.
+  exact (snd ((equiv_path_prod _ _)^-1 q)).
+Defined.
+
+(** Given two pairs of isomorphic groups, their pairwise direct products are isomorphic. *)
 Definition grp_iso_prod {A B C D : Group}
   : A ≅ B -> C ≅ D -> (grp_prod A C) ≅ (grp_prod B D).
 Proof.
@@ -674,22 +888,7 @@ Proof.
   1,2: apply grp_homo_op.
 Defined.
 
-Global Instance isembedding_grp_prod_inl {H K : Group}
-  : IsEmbedding (@grp_prod_inl H K).
-Proof.
-  apply isembedding_isinj_hset.
-  intros h0 h1 p; cbn in p.
-  exact (fst ((equiv_path_prod _ _)^-1 p)).
-Defined.
-
-Global Instance isembedding_grp_prod_inr {H K : Group}
-  : IsEmbedding (@grp_prod_inr H K).
-Proof.
-  apply isembedding_isinj_hset.
-  intros k0 k1 q; cbn in q.
-  exact (snd ((equiv_path_prod _ _)^-1 q)).
-Defined.
-
+(** The first projection of the direct product. *)
 Definition grp_prod_pr1 {G H : Group}
   : GroupHomomorphism (grp_prod G H) G.
 Proof.
@@ -698,6 +897,12 @@ Proof.
   intros ? ?; reflexivity.
 Defined.
 
+(** The first projection is a surjection. *)
+Global Instance issurj_grp_prod_pr1 {G H : Group}
+  : IsSurjection (@grp_prod_pr1 G H)
+  := issurj_retr grp_prod_inl (fun _ => idpath).
+
+(** The second projection of the direct product. *)
 Definition grp_prod_pr2 {G H : Group}
   : GroupHomomorphism (grp_prod G H) H.
 Proof.
@@ -706,14 +911,21 @@ Proof.
   intros ? ?; reflexivity.
 Defined.
 
-Global Instance issurj_grp_prod_pr1 {G H : Group}
-  : IsSurjection (@grp_prod_pr1 G H)
-  := issurj_retr grp_prod_inl (fun _ => idpath).
+(** Pairs in direct products can be decomposed *)
+Definition grp_prod_decompose {G H : Group} (g : G) (h : H)
+  : (g, h) = ((g, group_unit) : grp_prod G H) * (group_unit, h).
+Proof.
+  snrapply path_prod; symmetry.
+  - snrapply grp_unit_r.
+  - snrapply grp_unit_l.
+Defined.
 
+(** The second projection is a surjection. *)
 Global Instance issurj_grp_prod_pr2 {G H : Group}
   : IsSurjection (@grp_prod_pr2 G H)
   := issurj_retr grp_prod_inr (fun _ => idpath).
 
+(** [Group] is a category with binary products given by the direct product. *)
 Global Instance hasbinaryproducts_group : HasBinaryProducts Group.
 Proof.
   intros G H.
@@ -792,7 +1004,7 @@ Class IsFreeGroupOn (S : Type) (F_S : Group) (i : S -> F_S)
       Contr (FactorsThroughFreeGroup S F_S i A g).
 Global Existing Instance contr_isfreegroupon.
 
-(** A group is free if there exists a generating type on which it is a free group *)
+(** A group is free if there exists a generating type on which it is a free group. *)
 Class IsFreeGroup (F_S : Group)
   := isfreegroup : {S : _ & {i : _ & IsFreeGroupOn S F_S i}}.
 
@@ -800,6 +1012,9 @@ Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S
   {H : IsFreeGroupOn S F_S i}
   : IsFreeGroup F_S
   := (S; i; H).
+
+
+(** ** Further properties of group homomorphisms. *)
 
 (** Characterisation of injective group homomorphisms. *)
 Lemma isembedding_grouphomomorphism {A B : Group} (f : A $-> B)
@@ -831,4 +1046,27 @@ Proof.
   refine ((preserves_sg_op _ _)^ @ _ @ (preserves_sg_op _ _)).
   refine (ap f _).
   apply C.
+Defined.
+
+(** If two group homomorphisms agree on two elements, then they agree on their product. *)
+Definition grp_homo_op_agree {G G' H : Group} (f : G $-> H) (f' : G' $-> H)
+  {x y : G} {x' y' : G'} (p : f x = f' x') (q : f y = f' y')
+  : f (x * y) = f' (x' * y').
+Proof.
+  lhs nrapply grp_homo_op.
+  rhs nrapply grp_homo_op.
+  exact (ap011 _ p q).
+Defined.
+
+(** The group movement lemmas can be extended to when there is a homomorphism involved.  For now, we only include these two. *)
+Definition grp_homo_moveL_1V {A B : Group} (f : GroupHomomorphism A B) (x y : A)
+  : f (x * y) = group_unit <~> (f x = - f y)
+  := grp_moveL_1V oE equiv_concat_l (grp_homo_op f x y)^ _.
+
+Definition grp_homo_moveL_1M  {A B : Group} (f : GroupHomomorphism A B) (x y : A)
+  : f (x * -y) = group_unit <~> (f x = f y).
+Proof.
+  refine (grp_moveL_1M oE equiv_concat_l _^ _).
+  lhs nrapply grp_homo_op.
+  apply ap, grp_homo_inv.
 Defined.

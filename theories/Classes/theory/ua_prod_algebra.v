@@ -1,6 +1,5 @@
 Require Import
   HoTT.Types.Bool
-  HoTT.Types.Forall
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.

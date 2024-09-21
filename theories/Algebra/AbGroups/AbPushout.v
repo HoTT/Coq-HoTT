@@ -1,4 +1,4 @@
-Require Import Basics Types Truncations.Core Modalities.ReflectiveSubuniverse.
+Require Import Basics Types Truncations.Core.
 Require Import WildCat.Core HSet.
 Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
@@ -28,7 +28,7 @@ Proof.
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
     refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
-    unfold uncurry; cbn.
+    cbn.
     refine (ap011 sg_op (preserves_negate _) (p a)^ @ _).
     exact (left_inverse _).
 Defined.
@@ -71,7 +71,7 @@ Proof.
   srapply path_sigma_hprop.
   refine (grp_quotient_rec_beta _ Y _ _ @ _).
   apply equiv_path_grouphomomorphism; intro bc.
-  exact (ab_biprod_rec_beta' (phi $o grp_quotient_map) bc).
+  exact (ab_biprod_rec_eta (phi $o grp_quotient_map) bc).
 Defined.
 
 (** Restricting [ab_pushout_rec] along [ab_pushout_inl] recovers the left inducing map. *)

@@ -595,6 +595,9 @@ Notation sq_dp := equiv_sq_dp.
 Definition sq_ap011 {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
   : PathSquare (ap (fun x => f x b) p) (ap (fun x => f x b') p)
-    (ap (f a) q) (ap (f a') q)
-  := sq_dp (dp_apD (fun y => ap (fun x => f x y) _) _).
+    (ap (f a) q) (ap (f a') q).
+Proof.
+  apply sq_dp.
+  exact (apD (fun y => ap (fun x => f x y) p) q).
+Defined.
 

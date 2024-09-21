@@ -3,7 +3,8 @@ Require Import
   Basics.Overture
   Basics.PathGroupoids
   Basics.Trunc
-  Basics.Tactics.
+  Basics.Tactics
+  Basics.Iff.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -27,9 +28,44 @@ Ltac decide_type A :=
   end.
 
 Ltac decide :=
-  match goal with
+  multimatch goal with
   | [|- ?A] => decide_type A
+  | [|- ~ ?A] => decide_type A
   end.
+
+Definition decidable_true {A : Type} `{Decidable A}
+  (a : A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall x, P (inl x))
+  : forall p, P p.
+Proof.
+  intros [x|n].
+  - apply p.
+  - contradiction n.
+Defined.
+
+(** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)
+Ltac decidable_true p a :=
+  generalize p;
+  rapply (decidable_true a);
+  try intro.
+
+Definition decidable_false {A : Type} `{Decidable A}
+  (n : not A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall n', P (inr n'))
+  : forall p, P p.
+Proof.
+  intros [x|n'].
+  - contradiction n.
+  - apply p.
+Defined.
+
+(** Replace a term [p] of the form [Decidable A] with [inr na] if we have a term [n : not A] showing that [A] is false. *)
+Ltac decidable_false p n :=
+  generalize p;
+  rapply (decidable_false n);
+  try intro.
 
 Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
@@ -48,6 +84,13 @@ Global Instance stable_negation P : Stable (~ P).
 Proof.
   intros nnnp p.
   exact (nnnp (fun np => np p)).
+Defined.
+
+Definition iff_stable P `(Stable P) : ~~P <-> P.
+Proof.
+  split.
+  - apply stable.
+  - exact (fun x f => f x).
 Defined.
 
 (**
@@ -87,17 +130,21 @@ Global Instance decidable_empty : Decidable Empty
 
 (** ** Transfer along equivalences *)
 
-Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
-: Decidable A -> Decidable B.
+Definition decidable_iff {A B} (f : A <-> B)
+  : Decidable A -> Decidable B.
 Proof.
   intros [a|na].
-  - exact (inl (f a)).
-  - exact (inr (fun b => na (f^-1 b))).
+  - exact (inl (fst f a)).
+  - exact (inr (fun b => na (snd f b))).
 Defined.
 
 Definition decidable_equiv' (A : Type) {B : Type} (f : A <~> B)
 : Decidable A -> Decidable B
-  := decidable_equiv A f.
+  := decidable_iff f.
+
+Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{!IsEquiv f}
+: Decidable A -> Decidable B
+  := decidable_equiv' _ (Build_Equiv _ _ f _).
 
 Definition decidablepaths_equiv
            (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}
@@ -181,10 +228,25 @@ Proof.
   intros x y; apply collapsible_hprop; exact _.
 Defined.
 
+(** Hedberg's Theorem *)
 Corollary hset_decpaths (A : Type) `{DecidablePaths A}
 : IsHSet A.
 Proof.
   exact _.
+Defined.
+
+(** We can use Hedberg's Theorem to simplify a goal of the form [forall (d : Decidable (x = x :> A)), P d] when [A] has decidable paths. *)
+Definition decidable_paths_refl (A : Type) `{DecidablePaths A}
+  (x : A)
+  (P : forall (d : Decidable (x = x)), Type)
+  (Px : P (inl idpath))
+  : forall d, P d.
+Proof.
+  rapply (decidable_true idpath).
+  intro p.
+  (** We cannot eliminate [p : x = x] with path induction, but we can use Hedberg's theorem to replace this with [idpath]. *)
+  assert (r : (idpath = p)) by apply path_ishprop.
+  by destruct r.
 Defined.
 
 (** ** Truncation *)
@@ -206,4 +268,38 @@ Proof.
   - elim (nd' d).
   - elim (nd d').
   - apply ap, path_forall; intros p; elim (nd p).
+Defined.
+
+(** ** Logical Laws *)
+
+(** Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. *)
+
+(** Here we give the dual De Morgan's Law which complements the one given in Iff.v.  One direction requires that one of the two propositions be decidable, while the other direction needs no assumption.  We state the latter property first, to avoid duplication in the proof. *)
+Definition not_prod_sum_not A B : ~ A + ~ B -> ~ (A * B).
+Proof.
+  intros [na|nb] [a b].
+  - exact (na a).
+  - exact (nb b).
+Defined.
+
+Definition iff_not_prod A B `{Decidable A}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec A) as [a|na].
+    + exact (inr (fun b => np (a, b))).
+    + exact (inl na).
+  - apply not_prod_sum_not.
+Defined.
+
+Definition iff_not_prod' A B `{Decidable B}
+  : ~ (A * B) <-> ~ A + ~ B.
+Proof.
+  split.
+  - intros np.
+    destruct (dec B) as [b|nb].
+    + exact (inl (fun a => np (a, b))).
+    + exact (inr nb).
+  - apply not_prod_sum_not.
 Defined.

@@ -51,12 +51,19 @@ Proof.
   apply abses_pushout_pullback_reorder'.
 Defined.
 
-Global Instance isbifunctor_abses' `{Univalence}
-  : IsBifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
+Global Instance is0bifunctor_abses' `{Univalence}
+  : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  eapply Build_IsBifunctor.
+  rapply Build_Is0Bifunctor''.
+Defined.
+
+Global Instance is1bifunctor_abses' `{Univalence}
+  : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
+Proof.
+  snrapply Build_Is1Bifunctor''.
+  1,2: exact _.
   intros ? ? g ? ? f E; cbn.
-  apply abses_pushout_pullback_reorder.
+  exact (abses_pushout_pullback_reorder E f g).
 Defined.
 
 (** Given a short exact sequence [A -> E -> B] and maps [f : A -> A'], [g : B' -> B], we can change the order of pushing out along [f] and pulling back along [g]. *)
@@ -222,10 +229,17 @@ Proof.
   - intro; apply baer_sum_unit_r.
 Defined.
 
-Global Instance isbifunctor_abses `{Univalence}
-  : IsBifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
+Global Instance is0bifunctor_abses `{Univalence}
+  : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  econstructor.
+  rapply Build_Is0Bifunctor''.
+Defined.
+
+Global Instance is1bifunctor_abses `{Univalence}
+  : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
+Proof.
+  snrapply Build_Is1Bifunctor''.
+  1,2: exact _.
   intros ? ? f ? ? g.
   rapply hspace_phomotopy_from_homotopy.
   1: apply ishspace_abses.

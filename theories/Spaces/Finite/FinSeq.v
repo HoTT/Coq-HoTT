@@ -27,9 +27,9 @@ Defined.
 
 (** Add an element in the end of a finite sequence, [fscons'] and [fscons]. *)
 
-Definition fscons' {A : Type} (n : nat) (a : A) (v : FinSeq (pred n) A)
+Definition fscons' {A : Type} (n : nat) (a : A) (v : FinSeq (nat_pred n) A)
   : FinSeq n A
-  := fun i =>  fin_rec (fun n => FinSeq (pred n) A -> A)
+  := fun i =>  fin_rec (fun n => FinSeq (nat_pred n) A -> A)
                        (fun _ _ => a) (fun n' i _ v => v i) i v.
 
 Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A
@@ -40,16 +40,16 @@ Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A
 
 Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A
   := match n with
-     | 0 => fun N _ => Empty_rec (not_lt_n_0 _ N)
+     | 0 => fun N _ => Empty_rec (not_lt_zero_r _ N)
      | n'.+1 => fun _ v => v fin_zero
      end.
 
 Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
 
-Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (pred n) A)
+Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A)
   : fshead' n N (fscons' n a v) = a.
 Proof.
-  destruct n; [elim (not_lt_n_n _ N)|].
+  destruct n; [elim (lt_irrefl _ N)|].
   exact (apD10 (compute_fin_rec_fin_zero _ _ _ _) v).
 Defined.
 
@@ -61,7 +61,7 @@ Defined.
 
 (** If the sequence is non-empty, then remove the first element. *)
 
-Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (pred n) A
+Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (nat_pred n) A
   := match n with
      | 0 => fun _ => Empty_rec
      | n'.+1 => fun v i => v (fsucc i)
@@ -71,7 +71,7 @@ Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (pred n) A
 
 Definition fstail {A} {n : nat} : FinSeq n.+1 A -> FinSeq n A := fstail' n.+1.
 
-Definition compute_fstail' {A} n (a : A) (v : FinSeq (pred n) A)
+Definition compute_fstail' {A} n (a : A) (v : FinSeq (nat_pred n) A)
   : fstail' n (fscons' n a v) == v.
 Proof.
   intro i.
@@ -109,7 +109,7 @@ Defined.
     a path between [fscons] finite sequences. They cooperate nicely with
     [path_expand_fscons'] and [path_expand_fscons]. *)
 
-Definition path_fscons' {A} n {a1 a2 : A} {v1 v2 : FinSeq (pred n) A}
+Definition path_fscons' {A} n {a1 a2 : A} {v1 v2 : FinSeq (nat_pred n) A}
   (p : a1 = a2) (q : forall i, v1 i = v2 i) (i : Fin n)
   : fscons' n a1 v1 i = fscons' n a2 v2 i.
 Proof.
@@ -120,7 +120,7 @@ Proof.
 Defined.
 
 Definition compute_path_fscons' {A} (n : nat)
-    (a : A) (v : FinSeq (pred n) A) (i : Fin n)
+    (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)
     : path_fscons' n (idpath a) (fun j => idpath (v j)) i = idpath.
 Proof.
   induction i using fin_ind; unfold path_fscons'.
@@ -153,7 +153,7 @@ Defined.
     [path_expand_fscons] with [path_fscons]. *)
 
 Lemma path_expand_fscons_fscons' {A : Type} (n : nat)
-  (N : n > 0) (a : A) (v : FinSeq (pred n) A) (i : Fin n)
+  (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)
   : path_expand_fscons' n i N (fscons' n a v) =
     path_fscons' n (compute_fshead' n N a v) (compute_fstail' n a v) i.
 Proof.

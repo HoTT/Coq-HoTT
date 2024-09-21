@@ -7,34 +7,35 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
+        makeDevShell = { coq ? pkgs.coq }:
+          let
+            coqPackages = pkgs.mkCoqPackages coq // {
+              __attrsFailEvaluation = true;
+            };
+          in { extraPackages ? [ coqPackages.coq-lsp ] }:
+          pkgs.mkShell {
+            buildInputs = with coqPackages;
+              [ pkgs.dune_3 pkgs.ocaml ] ++ extraPackages ++ [ coq ];
+          };
+      in {
         packages.default = pkgs.coqPackages.mkCoqDerivation {
           pname = "hott";
-          version = "8.18";
+          version = "8.19";
           src = self;
           useDune = true;
         };
 
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs.coqPackages_8_19; [
-            pkgs.dune_3
-            pkgs.ocaml
-            coq
-            coq-lsp
-          ];
-        };
+        devShells.default = makeDevShell { coq = pkgs.coq_8_20; } { };
+        devShells.coq_8_19 = makeDevShell { coq = pkgs.coq_8_19; } { };
+
+        # To use, pass --impure to nix develop
+        devShells.coq_master =
+          makeDevShell { coq = pkgs.coq.override { version = "master"; }; } { };
 
         formatter = pkgs.nixpkgs-fmt;
-      }
-    );
+      });
 }

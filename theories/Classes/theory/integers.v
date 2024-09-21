@@ -15,14 +15,14 @@ Require Export
 Import NatPair.Instances.
 Generalizable Variables N Z R f.
 
-Lemma to_ring_unique `{Integers Z} `{IsRing R} (f: Z -> R)
+Lemma to_ring_unique `{Integers Z} `{IsCRing R} (f: Z -> R)
   {h: IsSemiRingPreserving f} x
   : f x = integers_to_ring Z R x.
 Proof.
 symmetry. apply integers_initial.
 Qed.
 
-Lemma to_ring_unique_alt `{Integers Z} `{IsRing R} (f g: Z -> R)
+Lemma to_ring_unique_alt `{Integers Z} `{IsCRing R} (f g: Z -> R)
   `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x :
   f x = g x.
 Proof.
@@ -36,11 +36,11 @@ change (Compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
 apply to_ring_unique_alt;apply _.
 Qed.
 
-Lemma morphisms_involutive `{Integers Z} `{IsRing R} (f: R -> Z) (g: Z -> R)
+Lemma morphisms_involutive `{Integers Z} `{IsCRing R} (f: R -> Z) (g: Z -> R)
   `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x : f (g x) = x.
 Proof. exact (to_ring_unique_alt (f ∘ g) id _). Qed.
 
-Lemma to_ring_twice `{Integers Z} `{IsRing R1} `{IsRing R2}
+Lemma to_ring_twice `{Integers Z} `{IsCRing R1} `{IsCRing R2}
   (f : R1 -> R2) (g : Z -> R1) (h : Z -> R2)
   `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} `{!IsSemiRingPreserving h} x
   : f (g x) = h x.
@@ -51,7 +51,7 @@ Proof. exact (to_ring_unique_alt f id _). Qed.
 
 (* A ring morphism from integers to another ring is injective
    if there's an injection in the other direction: *)
-Lemma to_ring_injective `{Integers Z} `{IsRing R} (f: R -> Z) (g: Z -> R)
+Lemma to_ring_injective `{Integers Z} `{IsCRing R} (f: R -> Z) (g: Z -> R)
   `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g}
   : IsInjective g.
 Proof.
@@ -80,7 +80,7 @@ Qed.
 
 Section retract_is_int.
   Context `{Funext}.
-  Context `{Integers Z} `{IsRing Z2}
+  Context `{Integers Z} `{IsCRing Z2}
     {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
   Context (f : Z -> Z2) `{!IsEquiv f} `{!IsSemiRingPreserving f}
     `{!IsSemiRingPreserving (f^-1)}.
@@ -90,7 +90,7 @@ Section retract_is_int.
     integers_to_ring Z Z2 ∘ f^-1.
 
   Section for_another_ring.
-    Context `{IsRing R}.
+    Context `{IsCRing R}.
 
     Instance: IsSemiRingPreserving (integers_to_ring Z R ∘ f^-1) := {}.
     Context (h :  Z2 -> R) `{!IsSemiRingPreserving h}.

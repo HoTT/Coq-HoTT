@@ -1,5 +1,7 @@
-Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod.
+Require Import Basics.Overture Basics.Tactics
+               Basics.PathGroupoids.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
+               WildCat.Forall.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -9,7 +11,7 @@ Record ZeroGpd := {
   carrier :> Type;
   isgraph_carrier : IsGraph carrier;
   is01cat_carrier : Is01Cat carrier;
-  is0gpd_carrier : Is0Gpd carrier;  
+  is0gpd_carrier : Is0Gpd carrier;
 }.
 
 Global Existing Instance isgraph_carrier.
@@ -70,6 +72,7 @@ Proof.
     cbn.
     exact (p (f x)).
   - reflexivity. (* Associativity. *)
+  - reflexivity. (* Associativity in opposite direction. *)
   - reflexivity. (* Left identity. *)
   - reflexivity. (* Right identity. *)
 Defined.
@@ -139,18 +142,71 @@ Proof.
     apply e0.
 Defined.
 
-Definition prod_0gpd (G H : ZeroGpd) : ZeroGpd.
+(** [I]-indexed products for an [I]-indexed family of 0-groupoids. *)
+Definition prod_0gpd (I : Type) (G : I -> ZeroGpd) : ZeroGpd.
 Proof.
-  rapply (Build_ZeroGpd (G * H)).
+  rapply (Build_ZeroGpd (forall i, G i)).
 Defined.
 
-Definition prod_0gpd_corec {G H K : ZeroGpd} (f : G $-> H) (g : G $-> K)
-  : G $-> prod_0gpd H K.
+(** The [i]-th projection from the [I]-indexed product of 0-groupoids. *)
+Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
+  : forall i, prod_0gpd I G $-> G i.
 Proof.
+  intros i.
   snrapply Build_Morphism_0Gpd.
-  1: exact (fun x => (f x, g x)).
+  1: exact (fun f => f i).
   snrapply Build_Is0Functor; cbn beta.
-  intros x y p; simpl; split.
-  - apply (fmap f p).
-  - apply (fmap g p).
+  intros f g p.
+  exact (p i).
+Defined.
+
+(** The universal property of the product of 0-groupoids holds almost definitionally. *)
+Definition equiv_prod_0gpd_corec {I : Type} {G : ZeroGpd} {H : I -> ZeroGpd}
+  : (forall i, G $-> H i) <~> (G $-> prod_0gpd I H).
+Proof.
+  snrapply Build_Equiv.
+  { intro f.
+    snrapply Build_Morphism_0Gpd.
+    1: exact (fun x i => f i x).
+    snrapply Build_Is0Functor; cbn beta.
+    intros x y p i; simpl.
+    exact (fmap (f i) p). }
+  snrapply Build_IsEquiv.
+  - intro f.
+    intros i.
+    exact (prod_0gpd_pr i $o f).
+  - intro f.
+    reflexivity.
+  - intro f.
+    reflexivity.
+  - reflexivity.
+Defined.
+
+(** Indexed products of groupoids with equivalent indices and fiberwise equivalent factors are equivalent. *)
+Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
+  (G : I -> ZeroGpd) (H : J -> ZeroGpd)
+  (f : forall (i : I), G i $<~> H (ie i))
+  : prod_0gpd I G $<~> prod_0gpd J H.
+Proof.
+  snrapply cate_adjointify.
+  - snrapply Build_Morphism_0Gpd.
+    + intros h j.
+      exact (transport H (eisretr ie j) (cate_fun (f (ie^-1 j)) (h _))).
+    + nrapply Build_Is0Functor.
+      intros g h p j.
+      destruct (eisretr ie j).
+      refine (_ $o Hom_path (transport_1 _ _)).
+      apply Build_Morphism_0Gpd.
+      exact (p _).
+  - exact (equiv_prod_0gpd_corec (fun i => (f i)^-1$ $o prod_0gpd_pr (ie i))).
+  - intros h j.
+    cbn.
+    destruct (eisretr ie j).
+    exact (cate_isretr (f _) _).
+  - intros g i.
+    cbn.
+    refine (_ $o Hom_path
+            (ap (cate_fun (f i)^-1$) (transport2 _ (eisadj ie i) _))).
+    destruct (eissect ie i).
+    exact (cate_issect (f _) _).
 Defined.

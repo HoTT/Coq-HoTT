@@ -11,9 +11,9 @@ Set Asymmetric Patterns.
 Local Open Scope natural_transformation_scope.
 Local Open Scope functor_scope.
 
-Local Notation fst_type := Basics.Datatypes.fst.
-Local Notation snd_type := Basics.Datatypes.snd.
-Local Notation pair_type := Basics.Datatypes.pair.
+Local Notation fst_type := Basics.Overture.fst.
+Local Notation snd_type := Basics.Overture.snd.
+Local Notation pair_type := Basics.Overture.pair.
 
 Section law3.
   Context `{Funext}.
