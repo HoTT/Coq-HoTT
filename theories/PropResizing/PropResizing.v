@@ -1,5 +1,8 @@
-Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences.
+Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences
+  Types.Universe Nat.Core.
 Require Import Smallness.
+
+Set Universe Minimization ToSet.
 
 (** * Propositional resizing *)
 
@@ -30,3 +33,44 @@ Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}
   : IsHProp (resize_hprop A)
   := istrunc_equiv_istrunc A (equiv_resize_hprop A).
+
+(** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
+Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}
+  (X : Type@{j})
+  (isX : X -> IsSmall@{i j} X)
+  : IsSmall@{i j} X.
+Proof.
+  (* Since IsSmall@{i j} lives in a universe larger than [i] and we're not assuming [i <= j], we have to pass through universe [k], which we think of as max(i+1,j). *)
+  (* Now the goal is IsSmall@{i k} X. *)
+  apply (issmall_codomain_fibers_small@{i k} isX).
+  - nrefine (issmall_hprop@{i k} _ _).
+    nrapply ishprop_issmall@{i k k}.
+  - intro sX.
+    apply sigma_closed_issmall@{i k}.
+    1: exact sX.
+    intro x.
+    nrapply issmall_contr@{i k}.
+    nrapply istrunc_paths@{k}.
+    nrapply ishprop_issmall@{i k k}.
+Defined.
+
+(** Sends a trunc_index [n] to the natural number [n+2]. *)
+Fixpoint trunc_index_to_nat (n : trunc_index) : nat
+  := match n with
+    | minus_two => 0%nat
+    | n'.+1 => (trunc_index_to_nat n').+1
+    end.
+
+Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
+
+(** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
+Definition islocally_small_trunc@{i j k | i < k, j <= k} `{PropResizing}
+  (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
+  : IsLocallySmall@{i j k} n..+2 X.
+Proof.
+  revert n X T.
+  simple_induction n n IHn; cbn.
+  - nrapply issmall_hprop@{i j}.
+  - intros X T x y.
+    rapply IHn.
+Defined.

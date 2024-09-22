@@ -86,24 +86,6 @@ Proof.
   apply issmall_in@{i i}.
 Defined.
 
-(** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
-(* Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}
-  (X : Type@{j})
-  (isX : X -> IsSmall@{i j} X)
-  : IsSmall@{i j} X.
-Proof.
-  (* Since IsSmall@{i j} lives in a universe larger than [i] and we're not assuming [i <= j], we have to pass through universe [k], which we think of as max(i+1,j). *)
-  apply lower_issmall@{i j k}.
-  (* Now the goal is IsSmall@{i k} X. *)
-  apply (issmall_codomain_fibers_small isX).
-  - rapply issmall_hprop.
-  - intro sX.
-    apply sigma_closed_issmall.
-    1: apply (lift_issmall _ sX).
-    intro x.
-    rapply issmall_contr.
-Defined. *)
-
 (** * Locally small types *)
 
 (** We say that a type [X] is 0-locally small if it is small, and (n+1)-locally small if its identity types are n-locally small. *)
@@ -200,24 +182,3 @@ Proof.
   - exact (equiv_fibration_replacement f)^-1%equiv.
   - apply sigma_closed_islocally_small; assumption.
 Defined.
-
-(** Sends a trunc_index [n] to the natural number [n+2]. *)
-Fixpoint trunc_index_to_nat (n : trunc_index) : nat
-  := match n with
-    | minus_two => 0
-    | n'.+1 => (trunc_index_to_nat n').+1
-    end.
-
-Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
-
-(** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-(* Definition islocally_small_trunc@{i j k | i < k, j <= k} `{PropResizing}
-  (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
-  : IsLocallySmall@{i j k} n..+2 X.
-Proof.
-  revert n X T.
-  simple_induction n n IHn; cbn.
-  - nrapply issmall_hprop.
-  - intros X T x y.
-    rapply IHn.
-Defined. *)
