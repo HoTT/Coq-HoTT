@@ -182,7 +182,6 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
   :=
   match p with idpath => 1 end.
 
-
 (** *** Theorems for moving things around in equations. *)
 
 Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
@@ -369,7 +368,6 @@ Definition moveL_transport_p_V {A : Type} (P : A -> Type) {x y : A}
 Proof.
   destruct p; reflexivity.
 Defined.
-
 
 (** *** Functoriality of functions *)
 
@@ -972,7 +970,6 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-
 (** *** Transporting in particular fibrations. *)
 
 (** One frequently needs lemmas showing that transport in a certain dependent type is equal to some more explicitly defined operation, defined according to the structure of that dependent type.  For most dependent types, we prove these lemmas in the appropriate file in the types/ subdirectory.  Here we consider only the most basic cases. *)
@@ -1429,42 +1426,41 @@ Hint Resolve
   inverse
   concat_1p concat_p1 concat_p_pp
   inv_pp inv_V
- : path_hints.
+  : path_hints.
 
-(* First try at a paths db
-We want the RHS of the equation to become strictly simpler *)
+(* First try at a paths db.  We want the RHS of the equation to become strictly simpler. *)
 #[export]
 Hint Rewrite
-@concat_p1
-@concat_1p
-@concat_p_pp (* there is a choice here !*)
-@concat_pV
-@concat_Vp
-@concat_V_pp
-@concat_p_Vp
-@concat_pp_V
-@concat_pV_p
-(*@inv_pp*) (* I am not sure about this one *)
-@inv_V
-@moveR_Mp
-@moveR_pM
-@moveL_Mp
-@moveL_pM
-@moveL_1M
-@moveL_M1
-@moveR_M1
-@moveR_1M
-@ap_1
-(* @ap_pp
-@ap_p_pp ?*)
-@inverse_ap
-@ap_idmap
-(* @ap_compose
-@ap_compose'*)
-@ap_const
-(* Unsure about naturality of [ap], was absent in the old implementation*)
-@apD10_1
-:paths.
+  @concat_p1
+  @concat_1p
+  @concat_p_pp (* there is a choice here !*)
+  @concat_pV
+  @concat_Vp
+  @concat_V_pp
+  @concat_p_Vp
+  @concat_pp_V
+  @concat_pV_p
+  (*@inv_pp*) (* I am not sure about this one *)
+  @inv_V
+  @moveR_Mp
+  @moveR_pM
+  @moveL_Mp
+  @moveL_pM
+  @moveL_1M
+  @moveL_M1
+  @moveR_M1
+  @moveR_1M
+  @ap_1
+  (* @ap_pp
+  @ap_p_pp ?*)
+  @inverse_ap
+  @ap_idmap
+  (* @ap_compose
+  @ap_compose'*)
+  @ap_const
+  (* Unsure about naturality of [ap], was absent in the old implementation. *)
+  @apD10_1
+  : paths.
 
 Ltac hott_simpl :=
   autorewrite with paths in * |- * ; auto with path_hints.
