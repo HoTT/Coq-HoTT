@@ -21,10 +21,10 @@ We include universe annotations when they clarify the meaning (e.g. in [IsSmall]
 
 (** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected. *)
 #[universes(cumulative)]
-Record IsSmall@{i j | } (X : Type@{j}) :=
-  { smalltype : Type@{i} ;
-    equiv_smalltype : smalltype <~> X
-  }.
+Record IsSmall@{i j | } (X : Type@{j}) := {
+  smalltype : Type@{i} ;
+  equiv_smalltype : smalltype <~> X ;
+}.
 Arguments smalltype {X} _.
 Arguments equiv_smalltype {X} _.
 
