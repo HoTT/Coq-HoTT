@@ -381,6 +381,18 @@ Register ap as core.identity.congr.
 
 Notation ap01 := ap (only parsing).
 
+(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
+
+  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
+
+Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+  p # (f x) = f y
+  :=
+  match p with idpath => idpath end.
+
+(** See above for the meaning of [simpl nomatch]. *)
+Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
+
 Definition pointwise_paths A (P : A -> Type) (f g : forall x, P x)
   := forall x, f x = g x.
 
@@ -440,18 +452,6 @@ Global Arguments ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
-
-(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
-
-  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
-
-Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
-  p # (f x) = f y
-  :=
-  match p with idpath => idpath end.
-
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
