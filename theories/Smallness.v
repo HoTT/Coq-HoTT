@@ -1,6 +1,5 @@
 Require Import Basics Types.Unit Types.Sigma Types.Universe Types.Equiv.
 Require Import HFiber Truncations Pointed.Core Pointed.Loops.
-(* Require Import PropResizing. *)
 
 (** * Facts about "small" types  *)
 
@@ -8,8 +7,6 @@ Require Import HFiber Truncations Pointed.Core Pointed.Loops.
 
 (* TODO: be consistent about "issmall" vs "small", "islocally" vs "locally".
    Also, should it be "islocally_small" or "islocallysmall"? *)
-(* Require Import Conn. *)
-(* Require Import misc. *)
 
 Open Scope trunc_scope.
 
