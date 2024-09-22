@@ -40,8 +40,7 @@ Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{U
   (isX : X -> IsSmall@{i j} X)
   : IsSmall@{i j} X.
 Proof.
-  (* Since IsSmall@{i j} lives in a universe larger than [i] and we're not assuming [i <= j], we have to pass through universe [k], which we think of as max(i+1,j). *)
-  (* Now the goal is IsSmall@{i k} X. *)
+  (* Since [IsSmall] is cumulative, it suffices to prove [IsSmall@{i k} X] for [k] the universe that [IsSmall@{i j}] lives in.  We think of [k] as max(i+1,j). *)
   apply (issmall_codomain_issmall_fibers@{i k} isX).
   - nrefine (issmall_hprop@{i k} _ _).
     nrapply ishprop_issmall@{i k k}.
