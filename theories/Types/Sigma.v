@@ -14,16 +14,6 @@ From such a [P] we can build a total space over the base space [A] so that the f
 
 The base and fiber components of a point in the total space are extracted with the two projections [pr1] and [pr2]. *)
 
-(** ** Unpacking *)
-
-(** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(pr1 u ; pr2 u)]. This is accomplished by [sig_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
-
-Definition unpack_sigma `{P : A -> Type} (Q : sig P -> Type) (u : sig P)
-: Q (u.1; u.2) -> Q u
-  := idmap.
-
-Arguments unpack_sigma / .
-
 (** ** Eta conversion *)
 
 Definition eta_sigma `{P : A -> Type} (u : sig P)
