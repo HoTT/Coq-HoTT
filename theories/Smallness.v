@@ -20,26 +20,13 @@ Summary of the most common situation:  [i < k < u, j <= k], where [i] is for the
 We include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables. *)
 
 (** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected. *)
+#[universes(cumulative)]
 Record IsSmall@{i j | } (X : Type@{j}) :=
   { smalltype : Type@{i} ;
     equiv_smalltype : smalltype <~> X
   }.
 Arguments smalltype {X} _.
 Arguments equiv_smalltype {X} _.
-
-(** Note: making [IsSmall] Cumulative makes the following two not necessary, but also means that Coq can't guess universe variables as well in other spots in the file. *)
-(* TODO: try cumulativity again? *)
-Definition lift_issmall@{i j1 j2 | j1 <= j2}
-  (X : Type@{j1})
-  (sX : IsSmall@{i j1} X)
-  : IsSmall@{i j2} X
-  := Build_IsSmall X (smalltype sX) (equiv_smalltype sX).
-
-Definition lower_issmall@{i j1 j2 | j1 <= j2}
-  (X : Type@{j1})
-  (sX : IsSmall@{i j2} X)
-  : IsSmall@{i j1} X
-  := Build_IsSmall X (smalltype sX) (equiv_smalltype sX).
 
 Global Instance ishprop_issmall@{i j k | i < k, j <= k} `{Univalence} (X : Type@{j})
   : IsHProp (IsSmall@{i j} X).
@@ -94,7 +81,7 @@ Defined.
 Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X): IsSmall@{i j} X.
 Proof.
   refine (issmall_equiv_issmall (equiv_contr_unit)^-1 _).
-  apply issmall_in.
+  apply issmall_in@{i i}.
 Defined.
 
 (** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)

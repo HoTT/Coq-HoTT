@@ -17,14 +17,14 @@ Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
   (T : IsHProp X), IsSmall@{i j} X.
 
 (** TODO: inline and remove *)
-Definition resize_hprop `{PropResizing} (A : Type@{j}) `{IsHProp A}
+Definition resize_hprop@{j i | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
   : Type@{i}
-  := smalltype@{i j} (issmall_hprop A _).
+  := smalltype@{i j} (issmall_hprop@{i j} A _).
 
 (** TODO: inline and remove *)
-Definition equiv_resize_hprop `{PropResizing} (A : Type@{j}) `{IsHProp A}
+Definition equiv_resize_hprop@{j i | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
   : A <~> resize_hprop A
-  := (equiv_smalltype@{i j} (issmall_hprop A _))^-1%equiv.
+  := (equiv_smalltype@{i j} (issmall_hprop@{i j} A _))^-1%equiv.
 
 Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}
