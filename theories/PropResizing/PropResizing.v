@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences
   Types.Universe Nat.Core.
-Require Import Smallness.
+Require Import Universes.Smallness.
 
 Set Universe Minimization ToSet.
 
@@ -42,7 +42,7 @@ Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{U
 Proof.
   (* Since IsSmall@{i j} lives in a universe larger than [i] and we're not assuming [i <= j], we have to pass through universe [k], which we think of as max(i+1,j). *)
   (* Now the goal is IsSmall@{i k} X. *)
-  apply (issmall_codomain_fibers_small@{i k} isX).
+  apply (issmall_codomain_issmall_fibers@{i k} isX).
   - nrefine (issmall_hprop@{i k} _ _).
     nrapply ishprop_issmall@{i k k}.
   - intro sX.
@@ -64,7 +64,7 @@ Fixpoint trunc_index_to_nat (n : trunc_index) : nat
 Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
 
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-Definition islocally_small_trunc@{i j k | i < k, j <= k} `{PropResizing}
+Definition islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
   (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
   : IsLocallySmall@{i j k} n..+2 X.
 Proof.

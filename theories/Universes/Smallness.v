@@ -5,9 +5,6 @@ Require Import HFiber Truncations Pointed.Core Pointed.Loops.
 
 (** This closely follows Section 2 of the paper "Non-accessible localizations", by Dan Christensen, https://arxiv.org/abs/2109.06670 *)
 
-(* TODO: be consistent about "issmall" vs "small", "islocally" vs "locally".
-   Also, should it be "islocally_small" or "islocallysmall"? *)
-
 Open Scope trunc_scope.
 
 (** Universe variables:  we most often use a subset of [i j k u].  We think of [Type@{i}] as containing the "small" types and [Type@{j}] the "large" types.  In some early results, there are no constraints between [i] and [j], and in others we require that [i <= j], as expected.  While the case [i = j] isn't particularly interesting, we put some effort into ensuring that it is permitted as well, as there is no semantic reason to exclude it.  The universe variable [k] should be thought of as max(i+1,j), and it is generally required to satisfy [i < k] and [j <= k].  If we assume that [i < j], then we can take [k = j], but we include [k] so that we also allow the case [i = j].  The universe variable [u] is only present because we occasionally use Univalence in [Type@{k}], so the equality types need a larger universe to live in.  Because of this, most results require [k < u].
@@ -64,7 +61,7 @@ Proof.
 Defined.
 
 (** If a map has small codomain and fibers, then the domain is small. *)
-Definition issmall_codomain_fibers_small@{i j | } {X Y : Type@{j}}
+Definition issmall_codomain_issmall_fibers@{i j | } {X Y : Type@{j}}
   (f : X -> Y)
   (sY : IsSmall@{i j} Y)
   (sF : forall y : Y, IsSmall@{i j} (hfiber f y))
@@ -86,14 +83,14 @@ Defined.
 (** * Locally small types *)
 
 (** We say that a type [X] is 0-locally small if it is small, and (n+1)-locally small if its identity types are n-locally small. *)
-(* TODO: Can I make this an inductive type and avoid the extra universe variable [k]? *)
+(* TODO: Can we make this an inductive type and avoid the extra universe variable [k]? *)
 Fixpoint IsLocallySmall@{i j k | i < k, j <= k} (n : nat) (X : Type@{j}) : Type@{k}
   := match n with
     | 0%nat => IsSmall@{i j} X
     | S m => forall x y : X, IsLocallySmall m (x = y)
     end.
 
-Global Instance ishprop_islocally_small@{i j k | i < k, j <= k} `{Univalence}
+Global Instance ishprop_islocallysmall@{i j k | i < k, j <= k} `{Univalence}
   (n : nat) (X : Type@{j})
   : IsHProp@{k} (IsLocallySmall@{i j k} n X).
 Proof.
@@ -102,7 +99,7 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all [n]. *)
-Definition islocally_small_in@{i j k | i <= j, j <= k, i < k}
+Definition islocallysmall_in@{i j k | i <= j, j <= k, i < k}
   (n : nat) (X : Type@{i})
   : IsLocallySmall@{i j k} n X.
 Proof.
@@ -114,7 +111,7 @@ Proof.
 Defined.
 
 (** The n-locally small types are closed under equivalence. *)
-Definition islocally_small_equiv_islocally_small
+Definition islocallysmall_equiv_islocallysmall
   @{i j1 j2 k | i < k, j1 <= k, j2 <= k}
   (n : nat) {A : Type@{j1}} {B : Type@{j2}}
   (e : A <~> B) (lsA : IsLocallySmall@{i j1 k} n A)
@@ -130,28 +127,28 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all n. *)
-Definition islocally_small_small@{i j k | i < k, j <= k} (n : nat)
+Definition islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (sX : IsSmall@{i j} X)
   : IsLocallySmall@{i j k} n X.
 Proof.
-  apply (islocally_small_equiv_islocally_small n (equiv_smalltype sX)).
-  apply islocally_small_in.
+  apply (islocallysmall_equiv_islocallysmall n (equiv_smalltype sX)).
+  apply islocallysmall_in.
 Defined.
 
 (** If a type is n-locally small, then it is (n+1)-locally small. *)
-Definition islocally_small_succ@{i j k | i < k, j <= k} (n : nat)
+Definition islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (lsX : IsLocallySmall@{i j k} n X)
   : IsLocallySmall@{i j k} n.+1 X.
 Proof.
   revert X lsX; simple_induction n n IHn; intros X.
-  - apply islocally_small_small.
+  - apply islocallysmall_issmall.
   - intro lsX.
     intros x y.
     apply IHn, lsX.
 Defined.
 
 (** The n-locally small types are closed under dependent sums. *)
-Definition sigma_closed_islocally_small@{i j k | i < k, j <= k}
+Definition sigma_closed_islocallysmall@{i j k | i < k, j <= k}
   (n : nat) {A : Type@{j}} (B : A -> Type@{j})
   (lsA : IsLocallySmall@{i j k} n A)
   (lsB : forall a, IsLocallySmall@{i j k} n (B a))
@@ -161,7 +158,7 @@ Proof.
   simple_induction n n IHn.
   - exact @sigma_closed_issmall.
   - intros A B lsA lsB x y.
-    apply (islocally_small_equiv_islocally_small n (equiv_path_sigma _ x y)).
+    apply (islocallysmall_equiv_islocallysmall n (equiv_path_sigma _ x y)).
     apply IHn.
     * apply lsA.
     * intro p.
@@ -169,13 +166,13 @@ Proof.
 Defined.
 
 (** If a map has n-locally small codomain and fibers, then the domain is n-locally small. *)
-Definition islocally_small_codomain_fibers_locally_small@{i j k | i < k, j <= k}
+Definition islocallysmall_codomain_islocallysmall_fibers@{i j k | i < k, j <= k}
   (n : nat) {X Y : Type@{j}} (f : X -> Y)
   (sY : IsLocallySmall@{i j k} n Y)
   (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))
   : IsLocallySmall@{i j k} n X.
 Proof.
-  nrapply islocally_small_equiv_islocally_small.
+  nrapply islocallysmall_equiv_islocallysmall.
   - exact (equiv_fibration_replacement f)^-1%equiv.
-  - apply sigma_closed_islocally_small; assumption.
+  - apply sigma_closed_islocallysmall; assumption.
 Defined.
