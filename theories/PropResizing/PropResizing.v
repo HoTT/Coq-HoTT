@@ -1,7 +1,7 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-(** * Propositional resizing *)
+Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences.
+Require Import Smallness.
 
-Require Import Basics.Overture Basics.Tactics Basics.Trunc.
+(** * Propositional resizing *)
 
 Local Open Scope path_scope.
 
@@ -12,9 +12,19 @@ Existing Class PropResizing.
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
 Global Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.
 
-Axiom resize_hprop : forall `{PropResizing} (A : Type@{i}) `{IsHProp A}, Type@{j}.
-Axiom equiv_resize_hprop : forall `{PropResizing} (A : Type@{i}) `{IsHProp A},
-    A <~> resize_hprop A.
+(** Propositional resizing says that every (-1)-truncated type is small. *)
+Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
+  (T : IsHProp X), IsSmall@{i j} X.
+
+(** TODO: inline and remove *)
+Definition resize_hprop `{PropResizing} (A : Type@{j}) `{IsHProp A}
+  : Type@{i}
+  := smalltype@{i j} (issmall_hprop A _).
+
+(** TODO: inline and remove *)
+Definition equiv_resize_hprop `{PropResizing} (A : Type@{j}) `{IsHProp A}
+  : A <~> resize_hprop A
+  := (equiv_smalltype@{i j} (issmall_hprop A _))^-1%equiv.
 
 Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}

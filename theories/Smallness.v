@@ -1,6 +1,6 @@
 Require Import Basics Types.Unit Types.Sigma Types.Universe Types.Equiv.
 Require Import HFiber Truncations Pointed.Core Pointed.Loops.
-Require Import PropResizing.
+(* Require Import PropResizing. *)
 
 (** * Facts about "small" types  *)
 
@@ -90,14 +90,6 @@ Proof.
   - apply sigma_closed_issmall; assumption.
 Defined.
 
-(** Propositional resizing says that every (-1)-truncated type is small. *)
-Definition issmall_hprop@{i j | } `{PropResizing} (X : Type@{j}) (T : IsTrunc (-1) X)
-  : IsSmall@{i j} X.
-Proof.
-  exists (resize_hprop@{j i} X).
-  apply (equiv_resize_hprop X)^-1%equiv.
-Defined.
-
 (** Every contractible type is small. *)
 Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X): IsSmall@{i j} X.
 Proof.
@@ -106,7 +98,7 @@ Proof.
 Defined.
 
 (** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
-Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}
+(* Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}
   (X : Type@{j})
   (isX : X -> IsSmall@{i j} X)
   : IsSmall@{i j} X.
@@ -121,7 +113,7 @@ Proof.
     1: apply (lift_issmall _ sX).
     intro x.
     rapply issmall_contr.
-Defined.
+Defined. *)
 
 (** * Locally small types *)
 
@@ -228,7 +220,7 @@ Fixpoint trunc_index_to_nat (n : trunc_index) : nat
 Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
 
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-Definition islocally_small_trunc@{i j k | i < k, j <= k} `{PropResizing}
+(* Definition islocally_small_trunc@{i j k | i < k, j <= k} `{PropResizing}
   (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
   : IsLocallySmall@{i j k} n..+2 X.
 Proof.
@@ -237,4 +229,4 @@ Proof.
   - nrapply issmall_hprop.
   - intros X T x y.
     rapply IHn.
-Defined.
+Defined. *)

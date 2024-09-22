@@ -544,7 +544,7 @@ Proof.
       }
       apply (injective f).
       cbn. unfold initial_segment_property. cbn.
-      rewrite eissect.
+      rewrite eisretr.
       exact (snd (simulation_is_minimal f (simulation_is_hom f x_a)).2).
   - cbn. intros [x x_a] [y y_a]; cbn. split.
     + apply (simulation_is_hom f).
@@ -665,7 +665,7 @@ Proof.
       exact (bound HC).
     + cbn. intros [C HC]. apply path_sigma_hprop; cbn.
       symmetry. apply bound_property.
-    + cbn. intros x. rewrite eissect. reflexivity.
+    + cbn. intros x. rewrite eisretr. reflexivity.
   - cbn. intros b b'. apply isembedding_initial_segment.
 Qed.
 
