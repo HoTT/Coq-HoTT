@@ -16,10 +16,10 @@ Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
-(** Notation for truncation-levels. *)
+(** ** Notation for truncation-levels *)
 Open Scope trunc_scope.
 
-(* Increase a truncation index by a natural number. *)
+(** Increase a truncation index by a natural number. *)
 Fixpoint trunc_index_inc@{} (k : trunc_index) (n : nat)
   : trunc_index
   := match n with
@@ -27,7 +27,7 @@ Fixpoint trunc_index_inc@{} (k : trunc_index) (n : nat)
       | S m => (trunc_index_inc k m).+1
     end.
 
-(* This is a variation that inserts the successor operations in the other order.  This is sometimes convenient. *)
+(** This is a variation that inserts the successor operations in the other order.  This is sometimes convenient. *)
 Fixpoint trunc_index_inc'@{} (k : trunc_index) (n : nat)
   : trunc_index
   := match n with
@@ -102,6 +102,7 @@ Definition trunc_index_to_int@{} n :=
 Definition trunc_index_to_num_int@{} n :=
   Numeral.IntDec (trunc_index_to_int n).
 
+(** This allows us to use notation like (-2) and 42 for a [trunc_index]. *)
 Number Notation trunc_index num_int_to_trunc_index trunc_index_to_num_int
   : trunc_scope.
 
