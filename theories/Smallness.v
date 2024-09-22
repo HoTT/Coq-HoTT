@@ -28,7 +28,8 @@ Record IsSmall@{i j | } (X : Type@{j}) :=
 Arguments smalltype {X} _.
 Arguments equiv_smalltype {X} _.
 
-Global Instance ishprop_issmall@{i j k | i < k, j <= k} `{Univalence} (X : Type@{j})
+Global Instance ishprop_issmall@{i j k | i < k, j <= k}
+  `{Univalence} (X : Type@{j})
   : IsHProp (IsSmall@{i j} X).
 Proof.
   apply hprop_inhabited_contr.
@@ -78,7 +79,8 @@ Proof.
 Defined.
 
 (** Every contractible type is small. *)
-Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X): IsSmall@{i j} X.
+Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X)
+  : IsSmall@{i j} X.
 Proof.
   refine (issmall_equiv_issmall (equiv_contr_unit)^-1 _).
   apply issmall_in@{i i}.
@@ -121,7 +123,8 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all [n]. *)
-Definition islocally_small_in@{i j k | i <= j, j <= k, i < k} (n : nat) (X : Type@{i})
+Definition islocally_small_in@{i j k | i <= j, j <= k, i < k}
+  (n : nat) (X : Type@{i})
   : IsLocallySmall@{i j k} n X.
 Proof.
   revert X.
@@ -132,7 +135,8 @@ Proof.
 Defined.
 
 (** The n-locally small types are closed under equivalence. *)
-Definition islocally_small_equiv_islocally_small@{i j1 j2 k | i < k, j1 <= k, j2 <= k}
+Definition islocally_small_equiv_islocally_small
+  @{i j1 j2 k | i < k, j1 <= k, j2 <= k}
   (n : nat) {A : Type@{j1}} {B : Type@{j2}}
   (e : A <~> B) (lsA : IsLocallySmall@{i j1 k} n A)
   : IsLocallySmall@{i j2 k} n B.
