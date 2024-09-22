@@ -655,10 +655,9 @@ Existing Class Funext.
 Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
 Global Existing Instance isequiv_apD10.
 
-Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
-  f == g -> f = g
-  :=
-  (@apD10 A P f g)^-1.
+Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
+  : f == g -> f = g
+  := (@apD10 A P f g)^-1.
 
 Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
 
@@ -674,9 +673,6 @@ Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
 #[export] Hint Resolve idpath inverse : path_hints.
 #[export] Hint Resolve idpath : core.
 
-Ltac path_via mid :=
-  apply @concat with (y := mid); auto with path_hints.
-
 (** ** Natural numbers *)
 
 (**  Natural numbers. *)
@@ -687,13 +683,6 @@ Inductive nat : Type0 :=
 Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rect := Induction for nat Sort Type.
 Scheme nat_rec := Induction for nat Sort Type.
-
-(** These schemes are therefore defined in Spaces.Nat *)
-(*
-Scheme nat_ind := Induction for nat Sort Type.
-Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
- *)
 
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
