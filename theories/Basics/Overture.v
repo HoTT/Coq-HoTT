@@ -657,17 +657,6 @@ Coercion istrunc_fun : IsTrunc >-> Funclass.
 (** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
 Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
 
-(** *** Tactics *)
-
-(** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
-
-   A specific [Hint Resolve] database [db] can be used with [auto with db].
-
-   The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
-
-(** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
-#[export] Hint Resolve idpath inverse : path_hints.
-
 (** ** Natural numbers *)
 
 Inductive nat : Type0 :=
