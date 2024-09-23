@@ -3,7 +3,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import HProp.
-Require Import PropResizing.PropResizing.
+Require Import PropResizing.PropResizing Smallness.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  Usually you want to use the standard [Nat] instead. *)

@@ -1,10 +1,8 @@
-Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences.
+Require Import Basics.Overture Basics.Tactics.
 
 Set Universe Minimization ToSet.
 
 (** * Propositional resizing *)
-
-Local Open Scope path_scope.
 
 (** See the note by [Funext] in Overture.v regarding classes for axioms *)
 Monomorphic Axiom PropResizing : Type0.
@@ -17,8 +15,3 @@ Global Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.
 Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
   (T : IsHProp X), IsSmall@{i j} X.
 Existing Instance issmall_hprop.
-
-Global Instance ishprop_resize_hprop
-       `{PropResizing} (A : Type) `{IsHProp A}
-  : IsHProp (smalltype A)
-  := istrunc_equiv_istrunc A (equiv_smalltype A)^-1%equiv.

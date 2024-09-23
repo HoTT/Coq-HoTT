@@ -1,8 +1,9 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import PropResizing.PropResizing Smallness.
 From HoTT Require Import Colimits.Quotient.
 From HoTT Require Import HSet.
 
+Local Close Scope trunc_scope.
 Local Open Scope hprop_scope.
 
 (** This file contains a definition of ordinals and some fundamental results,

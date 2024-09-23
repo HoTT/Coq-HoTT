@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import PropResizing.PropResizing Smallness.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 From HoTT Require Import Equiv.BiInv.
 From HoTT Require Import HIT.unique_choice.
@@ -7,6 +7,7 @@ From HoTT Require Import HIT.unique_choice.
 From HoTT.Sets Require Import Ordinals Hartogs Powers GCH AC.
 
 Open Scope type.
+Close Scope trunc_scope.
 
 (* The proof of Sierpinski's results that GCH implies AC given in this file consists of two ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).

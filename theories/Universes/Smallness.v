@@ -95,6 +95,12 @@ Proof.
     nrapply ishprop_issmall@{i k k}.
 Defined.
 
+(** If a type [X] is truncated, then so is [smalltype X]. *)
+Global Instance istrunc_smalltype@{i j | } (X : Type@{j}) (n : trunc_index)
+  `{IsSmall@{i j} X, IsTrunc n X}
+  : IsTrunc n (smalltype X)
+  := istrunc_equiv_istrunc X (equiv_smalltype@{i j} X)^-1%equiv.
+
 (** * Locally small types *)
 
 (** We say that a type [X] is 0-locally small if it is small, and (n+1)-locally small if its identity types are n-locally small. *)

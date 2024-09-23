@@ -1,8 +1,10 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra HSet.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import PropResizing.PropResizing Smallness.
 From HoTT Require Import Spaces.Card.
 
 From HoTT.Sets Require Import Ordinals Powers.
+
+Close Scope trunc_scope.
 
 (** This file contains a construction of the Hartogs number. *)
 

@@ -2,6 +2,7 @@
 (** * Impredicative truncations. *)
 
 Require Import HoTT.Basics.
+Require Import Smallness.
 Require Import PropResizing.PropResizing.
 Local Open Scope path_scope.
 
