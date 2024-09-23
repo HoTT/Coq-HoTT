@@ -427,7 +427,7 @@ Definition initial_segment `{PropResizing}
            {A : Type} {R : Lt A} `{IsOrdinal A R} (a : A)
   : Ordinal.
 Proof.
-  srefine {| ordinal_carrier := {b : A & resize_hprop (b < a)}
+  srefine {| ordinal_carrier := {b : A & smalltype (b < a)}
            ; ordinal_relation := fun x y => x.1 < y.1
            |};
     try exact _.
@@ -734,7 +734,7 @@ Proof.
       * apply equiv_smalltype in Ha. destruct Ha.
     + intros [[a | []] Ha].
       * unfold in_. cbn. f_ap.
-        assert (IsHProp (resize_hprop Unit)) by exact _.
+        assert (IsHProp (smalltype Unit)) by exact _.
         apply path_ishprop.
       * destruct (equiv_smalltype _ Ha).
     + intros a. reflexivity.
@@ -769,7 +769,7 @@ Proof.
   set (f := fun x : {i : X & F i} => ↓x.2).
   set (carrier := image f : Type@{i}).
   set (relation := fun A B : carrier =>
-                     resize_hprop (factor2 f A < factor2 f B)
+                     smalltype (factor2 f A < factor2 f B)
                      : Type@{i}).
   exists carrier relation.
   snrapply (isordinal_simulation (factor2 f)).
@@ -807,13 +807,13 @@ Proof.
   exists (fun u => factor1 f (x; u)).
   split.
   - intros u v u_v.
-    change (resize_hprop (f (x; u) < f (x; v))).
+    change (smalltype (f (x; u) < f (x; v))).
     apply equiv_smalltype.
     apply isembedding_initial_segment. exact u_v.
   - intros u.
     nrefine (image_ind_prop f _ _). 1: exact _.
     intros a a_u.
-    change (resize_hprop (f a < f (x; u))) in a_u.
+    change (smalltype (f a < f (x; u))) in a_u.
     apply equiv_smalltype in a_u.
     apply tr. exists (out (bound a_u)). split.
     + apply initial_segment_property.
@@ -830,7 +830,7 @@ Qed.
 Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
   : Ordinal@{j _}.
 Proof.
-  exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
+  exists C (fun c1 c2 : C => smalltype (g c1 < g c2)).
   snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
   - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
   - constructor.

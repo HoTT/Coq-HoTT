@@ -6,6 +6,8 @@ Require Import Colimits.GraphQuotient.
 Require Import Truncations.Core.
 Require Import PropResizing.
 
+Set Universe Minimization ToSet.
+
 Local Open Scope path_scope.
 
 (** * The set-quotient of a type by a relation
@@ -395,7 +397,9 @@ Definition quotient_kernel_factor_small@{a a' b ab | a < a', a <= ab, b <= ab}
   : exists (C : Type@{a}) (e : A -> C) (m : C -> B),
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
-  exact (quotient_kernel_factor_general@{a a a a' b ab ab}
-           f (fun a b => resize_hprop@{a b} (f a = f b))
+  nrefine (quotient_kernel_factor_general@{a a a a' b ab ab}
+           f (fun a b => smalltype@{a b} (f a = f b))
            (fun x y => (equiv_smalltype _)^-1%equiv)).
+  - exact _.
+  - rapply issmall_hprop@{a b}.
 Defined.

@@ -15,7 +15,7 @@ Lemma Injection_power {PR : PropResizing} X
   : IsHSet X -> Injection X (X -> HProp).
 Proof.
   intros HX.
-  set (f (x : X) := fun y => Build_HProp (resize_hprop (x = y))).
+  set (f (x : X) := fun y => Build_HProp (smalltype (x = y))).
   exists f. intros x x' H.
   eapply equiv_smalltype. change (f x x').
   rewrite H. cbn. apply equiv_smalltype. reflexivity.

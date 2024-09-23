@@ -18,11 +18,7 @@ Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
   (T : IsHProp X), IsSmall@{i j} X.
 Existing Instance issmall_hprop.
 
-Definition resize_hprop@{i j | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
-  : Type@{i}
-  := @smalltype@{i j} _ (issmall_hprop@{i j} A _).
-
 Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}
-  : IsHProp (resize_hprop A)
+  : IsHProp (smalltype A)
   := istrunc_equiv_istrunc A (equiv_smalltype A)^-1%equiv.

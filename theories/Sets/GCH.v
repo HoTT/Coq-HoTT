@@ -20,7 +20,7 @@ Definition GCH :=
 Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
   ~ Injection (X -> HProp) X.
 Proof.
-  intros [i HI]. pose (p n := Build_HProp (resize_hprop (forall q, i q = n -> ~ q n))).
+  intros [i HI]. pose (p n := Build_HProp (smalltype (forall q, i q = n -> ~ q n))).
   enough (Hp : p (i p) <-> ~ p (i p)).
   { apply Hp; apply Hp; intros H; now apply Hp. }
   unfold p at 1. split.
@@ -69,7 +69,7 @@ Section LEM.
   Lemma Cantor_sing (i : (X -> HProp) -> (X -> HProp)) :
     IsInjective i -> exists p, ~ sing (i p).
   Proof.
-    intros HI. pose (p n := Build_HProp (resize_hprop (forall q, i q = hpaths n -> ~ q n))).
+    intros HI. pose (p n := Build_HProp (smalltype (forall q, i q = hpaths n -> ~ q n))).
     exists p. intros [n HN]. enough (Hp : p n <-> ~ p n).
     { apply Hp; apply Hp; intros H; now apply Hp. }
     unfold p at 1. split.

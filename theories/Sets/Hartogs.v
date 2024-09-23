@@ -11,16 +11,16 @@ From HoTT.Sets Require Import Ordinals Powers.
 Definition power_inj `{PropResizing} {C : Type@{i}} (p : C -> HProp@{j})
   : C -> HProp@{k}.
 Proof.
-  exact (fun a => Build_HProp (resize_hprop@{k j} (p a))).
+  exact (fun a => Build_HProp (smalltype@{k j} (p a))).
 Defined.
 
 Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})
   : IsInjective (@power_inj _ C).
 Proof.
   intros p p'. unfold power_inj. intros q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
-  - eapply equiv_smalltype. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
+  - eapply equiv_smalltype. change ((fun a => Build_HProp (smalltype (p' a))) a).
     rewrite <- q. apply equiv_smalltype. apply Ha.
-  - eapply equiv_smalltype. change ((fun a => Build_HProp (resize_hprop (p a))) a).
+  - eapply equiv_smalltype. change ((fun a => Build_HProp (smalltype (p a))) a).
     rewrite q. apply equiv_smalltype. apply Ha.
 Qed.
 
@@ -28,7 +28,7 @@ Qed.
 Definition power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B)
   : (C -> HProp) -> (B -> HProp).
 Proof.
-  intros p b. exact (Build_HProp (resize_hprop (forall a, f a = b -> p a))).
+  intros p b. exact (Build_HProp (smalltype (forall a, f a = b -> p a))).
 Defined.
 
 Definition injective_power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -> B)
@@ -213,7 +213,7 @@ Section Hartogs_Number.
   (* We can therefore resize the Hartogs number of A to the same universe level as A. *)
 
   Definition hartogs_number_carrier : Type@{A}
-    := {X : 𝒫 (𝒫 (𝒫 A)) | resize_hprop (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
+    := {X : 𝒫 (𝒫 (𝒫 A)) | smalltype (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.
 
   Lemma hartogs_equiv : hartogs_number_carrier <~> hartogs_number'.
   Proof.

@@ -185,7 +185,7 @@ Qed.
 Lemma Cantor_rel X (R : X -> (X -> HProp) -> HProp) :
   (forall x p p', R x p -> R x p' -> merely (p = p')) -> { p | forall x, ~ R x p }.
 Proof.
-  intros HR. pose (pc x := Build_HProp (resize_hprop (forall p : X -> HProp, R x p -> ~ p x))).
+  intros HR. pose (pc x := Build_HProp (smalltype (forall p : X -> HProp, R x p -> ~ p x))).
   exists pc. intros x H. enough (Hpc : pc x <-> ~ pc x). 2: split.
   { apply Hpc; apply Hpc; intros H'; now apply Hpc. }
   - intros Hx. apply equiv_smalltype in Hx. now apply Hx.

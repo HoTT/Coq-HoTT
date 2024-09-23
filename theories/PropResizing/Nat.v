@@ -291,7 +291,7 @@ Section AssumeStuff.
   Proof.
     intros P' PH' P0' Ps'.
     srefine ((equiv_smalltype (P' n))
-             (nrec (fun A => resize_hprop (P' A)) _ _ _));
+             (nrec (fun A => smalltype (P' A)) _ _ _));
       try exact _; cbn.
     - exact ((equiv_smalltype (P' graph_zero))^-1 P0').
     - intros A P'A.
