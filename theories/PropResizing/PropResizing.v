@@ -17,12 +17,10 @@ Global Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.
 Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
   (T : IsHProp X), IsSmall@{i j} X.
 
-(** TODO: inline and remove *)
 Definition resize_hprop@{i j | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
   : Type@{i}
   := smalltype@{i j} (issmall_hprop@{i j} A _).
 
-(** TODO: inline and remove *)
 Definition equiv_resize_hprop@{i j | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
   : A <~> resize_hprop A
   := (equiv_smalltype@{i j} (issmall_hprop@{i j} A _))^-1%equiv.
