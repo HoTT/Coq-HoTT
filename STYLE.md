@@ -27,7 +27,7 @@
     - [3.6. Truncation](#36-truncation)
     - [3.7. Coercions and Existing Instances](#37-coercions-and-existing-instances)
   - [4. Axioms](#4-axioms)
-    - [4.1. Univalence and function extensionality](#41-univalence-and-function-extensionality)
+    - [4.1. Univalence, function extensionality and propsitional resizing](#41-univalence-function-extensionality-and-propsitional-resizing)
     - [4.2. Higher inductive types](#42-higher-inductive-types)
     - [4.3. Relationships between axioms](#43-relationships-between-axioms)
     - [4.4. Assuming axioms](#44-assuming-axioms)
@@ -171,8 +171,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   the HoTT library, you can say simply `Require Import HoTT` to pull
   in everything (but don't do this for files in the core itself).
 
-- `PropResizing/*`: Files related to propositional resizing.  Only
-  `PropResizing/PropResizing` is exported by `HoTT`.
+- `PropResizing/*`: Files related to propositional resizing. The
+  axiom itself can be found in Overture.v.
 
 - `theories/Classes/*`: The math classes library.  While we don't
   regard this as part of the core library, and don't explicitly
@@ -520,15 +520,17 @@ for `x, y : A`.)
 
 ## 4. Axioms ##
 
-### 4.1. Univalence and function extensionality ###
+### 4.1. Univalence, function extensionality and propsitional resizing ###
 
-The "axioms" of `Univalence` and `Funext` (function extensionality)
-are typeclasses rather than Coq `Axiom`s.  (But see the technical note
-below on universe polymorphism.)  In the core, we use these
-typeclasses to keep track of which theorems depend on the axioms and
-which don't.  This means that any theorem which depends on one or the
-other must take an argument of the appropriate type.  It is simple to
-write this using typeclass magic as follows:
+The "axioms" of `Univalence`, `Funext` (function extensionality) and
+`PropResizing` (propositional resizing) are typeclasses rather than
+Coq `Axiom`s.  (But see the technical note below on universe
+polymorphism.)  In the core, we use these typeclasses to keep track
+of which theorems depend on the axioms and which don't.
+
+This means that any theorem which depends on one or the other must
+take an argument of the appropriate type.  It is simple to write
+this using typeclass magic as follows:
 
 ```coq
 Theorem uses_univalence `{Univalence} (A : Type) ...
