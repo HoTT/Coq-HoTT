@@ -190,6 +190,7 @@ Proof.
   - apply sigma_closed_islocallysmall; assumption.
 Defined.
 
+(** TODO: move? *)
 (** Sends a trunc_index [n] to the natural number [n+2]. *)
 Fixpoint trunc_index_to_nat (n : trunc_index) : nat
   := match n with
@@ -197,6 +198,7 @@ Fixpoint trunc_index_to_nat (n : trunc_index) : nat
     | n'.+1 => (trunc_index_to_nat n').+1
     end.
 
+(** TODO: move? *)
 Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
 
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
