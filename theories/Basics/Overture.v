@@ -759,3 +759,14 @@ Global Existing Instance ispointed_type.
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
 Global Arguments hfiber {A B}%_type_scope f%_function_scope y.
+
+(** *** Smallness *)
+
+
+(* TODO: comment *)
+Record IsSmall@{i j | } (X : Type@{j}) := {
+  smalltype : Type@{i} ;
+  equiv_smalltype : smalltype <~> X ;
+}.
+Arguments smalltype {X} _.
+Arguments equiv_smalltype {X} _.
