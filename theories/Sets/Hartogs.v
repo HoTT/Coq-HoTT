@@ -11,7 +11,7 @@ From HoTT.Sets Require Import Ordinals Powers.
 Definition power_inj `{PropResizing} {C : Type@{i}} (p : C -> HProp@{j})
   : C -> HProp@{k}.
 Proof.
-  exact (fun a => Build_HProp (resize_hprop@{j k} (p a))).
+  exact (fun a => Build_HProp (resize_hprop@{k j} (p a))).
 Defined.
 
 Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})

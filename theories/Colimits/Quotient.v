@@ -396,5 +396,5 @@ Definition quotient_kernel_factor_small@{a a' b ab | a < a', a <= ab, b <= ab}
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
   exact (quotient_kernel_factor_general@{a a a a' b ab ab}
-           f (fun a b => resize_hprop@{b a} (f a = f b)) (fun x y => equiv_resize_hprop _)).
+           f (fun a b => resize_hprop@{a b} (f a = f b)) (fun x y => equiv_resize_hprop _)).
 Defined.
