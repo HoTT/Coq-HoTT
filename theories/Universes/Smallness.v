@@ -2,6 +2,8 @@ Require Import Basics.Overture Basics.Equivalences Basics.Trunc Basics.Tactics
   Basics.Nat Types.Unit Types.Sigma Types.Universe Types.Equiv HFiber
   PropResizing.
 
+Set Universe Minimization ToSet.
+
 (** * Facts about "small" types  *)
 
 (** This closely follows Section 2 of the paper "Non-accessible localizations", by Dan Christensen, https://arxiv.org/abs/2109.06670 *)
@@ -40,8 +42,8 @@ Definition issmall_equiv_issmall@{i j1 j2 | } {A : Type@{j1}} {B : Type@{j2}}
   (e : A <~> B) (sA : IsSmall@{i j1} A)
   : IsSmall@{i j2} B.
 Proof.
-  exists (smalltype sA).
-  exact (e oE (equiv_smalltype sA)).
+  exists (smalltype A).
+  exact (e oE (equiv_smalltype A)).
 Defined.
 
 (** The small types are closed under dependent sums. *)
@@ -50,7 +52,7 @@ Definition sigma_closed_issmall@{i j | } {A : Type@{j}}
   (sB : forall a, IsSmall@{i j} (B a))
   : IsSmall@{i j} { a : A & B a }.
 Proof.
-  exists { a : (smalltype sA) & (smalltype (sB (equiv_smalltype sA a))) }.
+  exists { a : (smalltype A) & (smalltype (B (equiv_smalltype A a))) }.
   snrapply equiv_functor_sigma'; intros; apply equiv_smalltype.
 Defined.
 
@@ -144,7 +146,7 @@ Definition islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (sX : IsSmall@{i j} X)
   : IsLocallySmall@{i j k} n X.
 Proof.
-  apply (islocallysmall_equiv_islocallysmall n (equiv_smalltype sX)).
+  apply (islocallysmall_equiv_islocallysmall n (equiv_smalltype X)).
   apply islocallysmall_in.
 Defined.
 

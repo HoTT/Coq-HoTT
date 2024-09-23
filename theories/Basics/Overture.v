@@ -764,9 +764,9 @@ Global Arguments hfiber {A B}%_type_scope f%_function_scope y.
 
 
 (* TODO: comment *)
-Record IsSmall@{i j | } (X : Type@{j}) := {
+Class IsSmall@{i j | } (X : Type@{j}) := {
   smalltype : Type@{i} ;
   equiv_smalltype : smalltype <~> X ;
 }.
-Arguments smalltype {X} _.
-Arguments equiv_smalltype {X} _.
+Arguments smalltype X {_}.
+Arguments equiv_smalltype X {_}.
