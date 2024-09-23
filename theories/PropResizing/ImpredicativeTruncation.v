@@ -3,7 +3,6 @@
 
 Require Import HoTT.Basics.
 Require Import Smallness.
-Require Import PropResizing.PropResizing.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  It defines truncations

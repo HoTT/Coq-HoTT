@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types TruncType.
-From HoTT Require Import PropResizing Universes.Smallness.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Card Spaces.Nat.Core.
 
 (** * Definition of Power types *)

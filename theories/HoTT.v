@@ -37,9 +37,6 @@ Require Export HoTT.Idempotents.
 Require Export HoTT.ExcludedMiddle.
 Require Export HoTT.BoundedSearch.
 
-Require Export HoTT.PropResizing.PropResizing.
-(* Don't export the rest of [PropResizing] *)
-
 Require Export HoTT.HIT.Interval.
 Require Export HoTT.HIT.Flattening.
 Require Export HoTT.HIT.FreeIntQuotient.

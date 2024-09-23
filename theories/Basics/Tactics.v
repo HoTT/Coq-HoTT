@@ -404,6 +404,9 @@ Global Hint Mode IsGlobalAxiom + : typeclass_instances.
 (** We add [Funext] to the list here, and will later add [Univalence]. *)
 Global Instance is_global_axiom_funext : IsGlobalAxiom Funext := {}.
 
+(** Add [PropResizing] to the list of global axioms. *)
+Global Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.
+
 Ltac is_global_axiom A := let _ := constr:(_ : IsGlobalAxiom A) in idtac.
 
 Ltac global_axiom := try match goal with

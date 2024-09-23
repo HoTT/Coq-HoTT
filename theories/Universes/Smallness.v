@@ -1,6 +1,5 @@
 Require Import Basics.Overture Basics.Equivalences Basics.Trunc Basics.Tactics
-  Basics.Nat Types.Unit Types.Sigma Types.Universe Types.Equiv HFiber
-  PropResizing.
+  Basics.Nat Types.Unit Types.Sigma Types.Universe Types.Equiv HFiber.
 
 Set Universe Minimization ToSet.
 

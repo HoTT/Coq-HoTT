@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing Smallness.
+From HoTT Require Import Smallness.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 From HoTT Require Import Equiv.BiInv.
 From HoTT Require Import HIT.unique_choice.

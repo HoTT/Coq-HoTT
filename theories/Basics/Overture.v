@@ -770,3 +770,14 @@ Class IsSmall@{i j | } (X : Type@{j}) := {
 }.
 Arguments smalltype X {_}.
 Arguments equiv_smalltype X {_}.
+
+(** ** Propositional resizing *)
+
+(** See the note by [Funext] above regarding classes for axioms. *)
+Monomorphic Axiom PropResizing : Type0.
+Existing Class PropResizing.
+
+(** Propositional resizing says that every (-1)-truncated type is small. *)
+Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
+  (T : IsHProp X), IsSmall@{i j} X.
+Existing Instance issmall_hprop.

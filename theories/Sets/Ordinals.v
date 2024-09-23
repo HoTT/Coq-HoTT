@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing Smallness.
+From HoTT Require Import Smallness.
 From HoTT Require Import Colimits.Quotient.
 From HoTT Require Import HSet.
 

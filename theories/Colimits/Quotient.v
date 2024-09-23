@@ -4,7 +4,6 @@ Require Import HSet.
 Require Import TruncType.
 Require Import Colimits.GraphQuotient.
 Require Import Truncations.Core.
-Require Import PropResizing.
 
 Set Universe Minimization ToSet.
 
