@@ -18,10 +18,10 @@ Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})
   : IsInjective (@power_inj _ C).
 Proof.
   intros p p'. unfold power_inj. intros q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
-  - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
-    rewrite <- q. apply equiv_resize_hprop. apply Ha.
-  - eapply equiv_resize_hprop. change ((fun a => Build_HProp (resize_hprop (p a))) a).
-    rewrite q. apply equiv_resize_hprop. apply Ha.
+  - eapply equiv_smalltype. change ((fun a => Build_HProp (resize_hprop (p' a))) a).
+    rewrite <- q. apply equiv_smalltype. apply Ha.
+  - eapply equiv_smalltype. change ((fun a => Build_HProp (resize_hprop (p a))) a).
+    rewrite q. apply equiv_smalltype. apply Ha.
 Qed.
 
 (* TODO: Could factor this as something keeping the [HProp] universe the same, followed by [power_inj]. *)
@@ -36,11 +36,11 @@ Definition injective_power_morph `{PropResizing} {ua : Univalence} {C B : Type@{
 Proof.
   intros Hf p p' q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
   - enough (Hp : power_morph f p (f a)).
-    + rewrite q in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
-    + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
+    + rewrite q in Hp. apply equiv_smalltype in Hp. apply Hp. reflexivity.
+    + apply equiv_smalltype. intros a' -> % Hf. apply Ha.
   - enough (Hp : power_morph f p' (f a)).
-    + rewrite <- q in Hp. apply equiv_resize_hprop in Hp. apply Hp. reflexivity.
-    + apply equiv_resize_hprop. intros a' -> % Hf. apply Ha.
+    + rewrite <- q in Hp. apply equiv_smalltype in Hp. apply Hp. reflexivity.
+    + apply equiv_smalltype. intros a' -> % Hf. apply Ha.
 Qed.
 
 (** We'll also need this result. *)
@@ -219,10 +219,10 @@ Section Hartogs_Number.
   Proof.
     apply equiv_inverse. unshelve eexists.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
-      apply equiv_resize_hprop, tr. exists a. reflexivity.
+      apply equiv_smalltype, tr. exists a. reflexivity.
     - snrapply isequiv_surj_emb.
       + apply BuildIsSurjection. intros [X HX]. eapply merely_destruct.
-        * eapply equiv_resize_hprop, HX.
+        * eapply equiv_smalltype, HX.
         * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply path_ishprop.
       + apply isembedding_isinj_hset. intros a b. intros H % pr1_path. cbn in H.
         specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
@@ -256,13 +256,13 @@ Section Hartogs_Number.
       eapply transitive_Isomorphism. 1: exact X.
       unshelve eexists.
       + srapply equiv_adjointify.
-        * intros [a Ha % equiv_resize_hprop]. unshelve eexists.
+        * intros [a Ha % equiv_smalltype]. unshelve eexists.
           -- exists a. transitivity (card hartogs_number).
              ++ nrapply le_Cardinal_lt_Ordinal; apply Ha.
              ++ apply HN.
-          -- apply equiv_resize_hprop. cbn. exact Ha.
-        * intros [[a Ha] H % equiv_resize_hprop]. exists a.
-          apply equiv_resize_hprop. apply H.
+          -- apply equiv_smalltype. cbn. exact Ha.
+        * intros [[a Ha] H % equiv_smalltype]. exists a.
+          apply equiv_smalltype. apply H.
         * intro a. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
         * intro a. apply path_sigma_hprop. reflexivity.
       + reflexivity.

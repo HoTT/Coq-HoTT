@@ -24,8 +24,8 @@ Proof.
   enough (Hp : p (i p) <-> ~ p (i p)).
   { apply Hp; apply Hp; intros H; now apply Hp. }
   unfold p at 1. split.
-  - intros H. apply equiv_resize_hprop in H. apply H. reflexivity.
-  - intros H. apply equiv_resize_hprop. intros q -> % HI. apply H.
+  - intros H. apply equiv_smalltype in H. apply H. reflexivity.
+  - intros H. apply equiv_smalltype. intros q -> % HI. apply H.
 Qed.
 
 (* The concluding disjunction of GCH is excluse since otherwise we'd obtain an injection of P(X) into X. *)
@@ -73,8 +73,8 @@ Section LEM.
     exists p. intros [n HN]. enough (Hp : p n <-> ~ p n).
     { apply Hp; apply Hp; intros H; now apply Hp. }
     unfold p at 1. split.
-    - intros H. apply equiv_resize_hprop in H. apply H, HN.
-    - intros H. apply equiv_resize_hprop. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
+    - intros H. apply equiv_smalltype in H. apply H, HN.
+    - intros H. apply equiv_smalltype. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
   Qed.
 
   Lemma injective_proj1 {Z} (r : Z -> HProp) :

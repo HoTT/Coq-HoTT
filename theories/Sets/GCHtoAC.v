@@ -188,8 +188,8 @@ Proof.
   intros HR. pose (pc x := Build_HProp (resize_hprop (forall p : X -> HProp, R x p -> ~ p x))).
   exists pc. intros x H. enough (Hpc : pc x <-> ~ pc x). 2: split.
   { apply Hpc; apply Hpc; intros H'; now apply Hpc. }
-  - intros Hx. apply equiv_resize_hprop in Hx. now apply Hx.
-  - intros Hx. apply equiv_resize_hprop. intros p Hp.
+  - intros Hx. apply equiv_smalltype in Hx. now apply Hx.
+  - intros Hx. apply equiv_smalltype. intros p Hp.
     eapply merely_destruct; try apply (HR _ _ _ Hp H). now intros ->.
 Qed.
 

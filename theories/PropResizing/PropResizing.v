@@ -22,11 +22,7 @@ Definition resize_hprop@{i j | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
   : Type@{i}
   := @smalltype@{i j} _ (issmall_hprop@{i j} A _).
 
-Definition equiv_resize_hprop@{i j | } `{PropResizing} (A : Type@{j}) `{IsHProp A}
-  : A <~> resize_hprop@{i j} A
-  := (equiv_smalltype A)^-1%equiv.
-
 Global Instance ishprop_resize_hprop
        `{PropResizing} (A : Type) `{IsHProp A}
   : IsHProp (resize_hprop A)
-  := istrunc_equiv_istrunc A (equiv_resize_hprop A).
+  := istrunc_equiv_istrunc A (equiv_smalltype A)^-1%equiv.

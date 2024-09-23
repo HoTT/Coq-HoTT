@@ -25,8 +25,8 @@ Section AssumePropResizing.
 
   Definition merely_rec {A : Type@{i}} {P : Type@{j}} `{IsHProp P} (f : A -> P)
     : merely A -> P
-    := fun ma => (equiv_resize_hprop P)^-1
-                 (ma (resize_hprop P) _ (equiv_resize_hprop P o f)).
+    := fun ma => (equiv_smalltype P)
+                 (ma (resize_hprop P) _ ((equiv_smalltype P)^-1 o f)).
 
   Definition functor_merely `{Funext} {A B : Type} (f : A -> B)
     : merely A -> merely B.
