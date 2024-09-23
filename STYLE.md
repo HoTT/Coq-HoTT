@@ -27,7 +27,7 @@
     - [3.6. Truncation](#36-truncation)
     - [3.7. Coercions and Existing Instances](#37-coercions-and-existing-instances)
   - [4. Axioms](#4-axioms)
-    - [4.1. Univalence, function extensionality and propsitional resizing](#41-univalence-function-extensionality-and-propsitional-resizing)
+    - [4.1. Univalence, function extensionality and propositional resizing](#41-univalence-function-extensionality-and-propositional-resizing)
     - [4.2. Higher inductive types](#42-higher-inductive-types)
     - [4.3. Relationships between axioms](#43-relationships-between-axioms)
     - [4.4. Assuming axioms](#44-assuming-axioms)
@@ -520,7 +520,7 @@ for `x, y : A`.)
 
 ## 4. Axioms ##
 
-### 4.1. Univalence, function extensionality and propsitional resizing ###
+### 4.1. Univalence, function extensionality and propositional resizing ###
 
 The "axioms" of `Univalence`, `Funext` (function extensionality) and
 `PropResizing` (propositional resizing) are typeclasses rather than
