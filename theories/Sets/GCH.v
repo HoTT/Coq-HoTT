@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType abstract_algebra.
-From HoTT Require Import Smallness.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 
 Local Open Scope type.
