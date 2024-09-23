@@ -104,6 +104,8 @@ Fixpoint IsLocallySmall@{i j k | i < k, j <= k} (n : nat) (X : Type@{j}) : Type@
     | 0%nat => IsSmall@{i j} X
     | S m => forall x y : X, IsLocallySmall m (x = y)
     end.
+Existing Class IsLocallySmall.
+Hint Unfold IsLocallySmall : typeclass_instances.
 
 Global Instance ishprop_islocallysmall@{i j k | i < k, j <= k} `{Univalence}
   (n : nat) (X : Type@{j})
@@ -114,7 +116,7 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all [n]. *)
-Definition islocallysmall_in@{i j k | i <= j, j <= k, i < k}
+Global Instance islocallysmall_in@{i j k | i <= j, j <= k, i < k}
   (n : nat) (X : Type@{i})
   : IsLocallySmall@{i j k} n X.
 Proof.
@@ -142,16 +144,13 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all n. *)
-Definition islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
+Global Instance islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (sX : IsSmall@{i j} X)
-  : IsLocallySmall@{i j k} n X.
-Proof.
-  apply (islocallysmall_equiv_islocallysmall n (equiv_smalltype X)).
-  apply islocallysmall_in.
-Defined.
+  : IsLocallySmall@{i j k} n X
+  := islocallysmall_equiv_islocallysmall n (equiv_smalltype X) _.
 
 (** If a type is n-locally small, then it is (n+1)-locally small. *)
-Definition islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)
+Global Instance islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (lsX : IsLocallySmall@{i j k} n X)
   : IsLocallySmall@{i j k} n.+1 X.
 Proof.
@@ -163,7 +162,7 @@ Proof.
 Defined.
 
 (** The n-locally small types are closed under dependent sums. *)
-Definition sigma_closed_islocallysmall@{i j k | i < k, j <= k}
+Global Instance sigma_closed_islocallysmall@{i j k | i < k, j <= k}
   (n : nat) {A : Type@{j}} (B : A -> Type@{j})
   (lsA : IsLocallySmall@{i j k} n A)
   (lsB : forall a, IsLocallySmall@{i j k} n (B a))
@@ -193,7 +192,7 @@ Proof.
 Defined.
 
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-Definition islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
+Global Instance islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
   (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
   : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
 Proof.
