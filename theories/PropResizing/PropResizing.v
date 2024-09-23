@@ -1,5 +1,4 @@
-Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences
-  Types.Universe Nat.Core.
+Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.Equivalences.
 
 Set Universe Minimization ToSet.
 
