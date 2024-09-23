@@ -1,6 +1,6 @@
-Require Import Basics Types.Unit Types.Sigma Types.Universe Types.Equiv.
-Require Import HFiber Truncations Pointed.Core Pointed.Loops.
-Require Import PropResizing.
+Require Import Basics.Overture Basics.Equivalences Basics.Trunc Basics.Tactics
+  Basics.Nat Types.Unit Types.Sigma Types.Universe Types.Equiv HFiber
+  PropResizing.
 
 (** * Facts about "small" types  *)
 
@@ -190,21 +190,10 @@ Proof.
   - apply sigma_closed_islocallysmall; assumption.
 Defined.
 
-(** TODO: move? *)
-(** Sends a trunc_index [n] to the natural number [n+2]. *)
-Fixpoint trunc_index_to_nat (n : trunc_index) : nat
-  := match n with
-    | minus_two => 0%nat
-    | n'.+1 => (trunc_index_to_nat n').+1
-    end.
-
-(** TODO: move? *)
-Notation "n ..+2" := (trunc_index_to_nat n) (at level 2) : trunc_scope.
-
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
 Definition islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
   (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
-  : IsLocallySmall@{i j k} n..+2 X.
+  : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
 Proof.
   revert n X T.
   simple_induction n n IHn; cbn.
