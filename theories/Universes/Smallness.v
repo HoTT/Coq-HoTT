@@ -7,15 +7,13 @@ Set Universe Minimization ToSet.
 
 (** This closely follows Section 2 of the paper "Non-accessible localizations", by Dan Christensen, https://arxiv.org/abs/2109.06670 *)
 
-Open Scope trunc_scope.
-
 (** Universe variables:  we most often use a subset of [i j k u].  We think of [Type@{i}] as containing the "small" types and [Type@{j}] the "large" types.  In some early results, there are no constraints between [i] and [j], and in others we require that [i <= j], as expected.  While the case [i = j] isn't particularly interesting, we put some effort into ensuring that it is permitted as well, as there is no semantic reason to exclude it.  The universe variable [k] should be thought of as max(i+1,j), and it is generally required to satisfy [i < k] and [j <= k].  If we assume that [i < j], then we can take [k = j], but we include [k] so that we also allow the case [i = j].  The universe variable [u] is only present because we occasionally use Univalence in [Type@{k}], so the equality types need a larger universe to live in.  Because of this, most results require [k < u].
 
 Summary of the most common situation:  [i < k < u, j <= k], where [i] is for the small types, [j] is for the large types, [k = max(i+1,j)] and [u] is an ambient universe for Univalence.
 
-We include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables. *)
+We include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables.
 
-(** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected. *)
+Note that [IsSmall] is defined in Overture.v. *)
 
 Global Instance ishprop_issmall@{i j k | i < k, j <= k}
   `{Univalence} (X : Type@{j})
@@ -32,8 +30,8 @@ Proof.
   exact (equiv_functor_postcompose_equiv Y e).
 Defined.
 
-(** A type in [Type@{i}] is clearly small.  Make this a Global Instance? *)
-Definition issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X
+(** A type in [Type@{i}] is clearly small. *)
+Global Instance issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X | 10
   := Build_IsSmall X X equiv_idmap.
 
 (** The small types are closed under equivalence. *)
@@ -69,11 +67,8 @@ Defined.
 
 (** Every contractible type is small. *)
 Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X)
-  : IsSmall@{i j} X.
-Proof.
-  refine (issmall_equiv_issmall (equiv_contr_unit)^-1 _).
-  apply issmall_in@{i i}.
-Defined.
+  : IsSmall@{i j} X
+  := issmall_equiv_issmall (equiv_contr_unit)^-1 _.
 
 (** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
 Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}

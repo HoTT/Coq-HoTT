@@ -760,10 +760,9 @@ Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
 Global Arguments hfiber {A B}%_type_scope f%_function_scope y.
 
-(** *** Smallness *)
+(** ** Smallness *)
 
-
-(* TODO: comment *)
+(** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected. *)
 Class IsSmall@{i j | } (X : Type@{j}) := {
   smalltype : Type@{i} ;
   equiv_smalltype : smalltype <~> X ;
@@ -771,7 +770,7 @@ Class IsSmall@{i j | } (X : Type@{j}) := {
 Arguments smalltype X {_}.
 Arguments equiv_smalltype X {_}.
 
-(** ** Propositional resizing *)
+(** *** Propositional resizing *)
 
 (** See the note by [Funext] above regarding classes for axioms. *)
 Monomorphic Axiom PropResizing : Type0.
