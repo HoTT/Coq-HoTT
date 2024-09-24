@@ -167,21 +167,13 @@ Section AssumeFunext.
 
   Definition equiv_functor_precompose_equiv@{i j k u v | i <= u, j <= v, k <= u, k <= v}
     `{Funext} {X : Type@{i}} {Y : Type@{j}} (Z : Type@{k}) (e : X <~> Y)
-    : Equiv@{v u} (Y <~> Z) (X <~> Z).
-  Proof.
-    apply equiv_functor_equiv.
-    - exact e^-1%equiv.
-    - exact 1%equiv.
-  Defined.
+    : Equiv@{v u} (Y <~> Z) (X <~> Z)
+    := equiv_functor_equiv e^-1%equiv 1%equiv.
 
   Definition equiv_functor_postcompose_equiv@{i j k u v | i <= u, j <= v, k <= u, k <= v}
     `{Funext} {X : Type@{i}} {Y : Type@{j}} (Z : Type@{k}) (e : X <~> Y)
-    : Equiv@{u v} (Z <~> X) (Z <~> Y).
-  Proof.
-    apply equiv_functor_equiv.
-    - exact 1%equiv.
-    - exact e.
-  Defined.
+    : Equiv@{u v} (Z <~> X) (Z <~> Y)
+    := equiv_functor_equiv 1%equiv e.
 
   (** Reversing equivalences is an equivalence *)
   Global Instance isequiv_equiv_inverse {A B}

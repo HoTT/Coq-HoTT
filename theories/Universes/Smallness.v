@@ -66,11 +66,11 @@ Proof.
 Defined.
 
 (** Every contractible type is small. *)
-Definition issmall_contr@{i j| } (X : Type@{j}) (T : IsTrunc (-2) X)
+Definition issmall_contr@{i j| } (X : Type@{j}) (T : Contr X)
   : IsSmall@{i j} X
   := issmall_equiv_issmall (equiv_contr_unit)^-1 _.
 
-(** If we can show that [X] is small when it is inhabited, then it is in fact small. This isn't yet in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
+(** If we can show that [X] is small when it is inhabited, then it is in fact small. This is Remark 2.9 in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)
 Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}
   (X : Type@{j})
   (isX : X -> IsSmall@{i j} X)
