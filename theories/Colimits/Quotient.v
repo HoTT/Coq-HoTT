@@ -396,9 +396,7 @@ Definition quotient_kernel_factor_small@{a a' b ab | a < a', a <= ab, b <= ab}
   : exists (C : Type@{a}) (e : A -> C) (m : C -> B),
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
-  nrefine (quotient_kernel_factor_general@{a a a a' b ab ab}
+  exact (quotient_kernel_factor_general@{a a a a' b ab ab}
            f (fun a b => smalltype@{a b} (f a = f b))
            (fun x y => (equiv_smalltype _)^-1%equiv)).
-  - exact _.
-  - rapply issmall_hprop@{a b}.
 Defined.

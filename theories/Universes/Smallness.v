@@ -35,9 +35,9 @@ Global Instance issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X | 10
   := Build_IsSmall X X equiv_idmap.
 
 (** The small types are closed under equivalence. *)
-Definition issmall_equiv_issmall@{i j1 j2 | } {A : Type@{j1}} {B : Type@{j2}}
-  (e : A <~> B) (sA : IsSmall@{i j1} A)
-  : IsSmall@{i j2} B.
+Definition issmall_equiv_issmall@{i1 j1 i2 j2 | i1 <= i2} {A : Type@{j1}} {B : Type@{j2}}
+  (e : A <~> B) (sA : IsSmall@{i1 j1} A)
+  : IsSmall@{i2 j2} B.
 Proof.
   exists (smalltype A).
   exact (e oE (equiv_smalltype A)).
@@ -76,17 +76,10 @@ Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{U
   (isX : X -> IsSmall@{i j} X)
   : IsSmall@{i j} X.
 Proof.
-  (* Since [IsSmall] is cumulative, it suffices to prove [IsSmall@{i k} X] for [k] the universe that [IsSmall@{i j}] lives in.  We think of [k] as max(i+1,j). *)
-  apply (issmall_codomain_issmall_fibers@{i k} isX).
-  - nrefine (issmall_hprop@{i k} _ _).
-    nrapply ishprop_issmall@{i k k}.
-  - intro sX.
-    apply sigma_closed_issmall@{i k}.
-    1: exact sX.
-    intro x.
-    nrapply issmall_contr@{i k}.
-    nrapply istrunc_paths@{k}.
-    nrapply ishprop_issmall@{i k k}.
+  (* Since [IsSmall] is cumulative in the universe [j], it suffices to prove [IsSmall@{i k} X] for [k] the universe that [IsSmall@{i j}] lives in.  We think of [k] as max(i+1,j). *)
+  rapply (issmall_codomain_issmall_fibers@{i k} isX).
+  intro sX.
+  rapply sigma_closed_issmall.
 Defined.
 
 (** If a type [X] is truncated, then so is [smalltype X]. *)
