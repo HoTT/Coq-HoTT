@@ -32,6 +32,7 @@ Require Export HoTT.Universes.DProp.
 Require Export HoTT.Universes.HProp.
 Require Export HoTT.Universes.HSet.
 Require Export HoTT.Universes.Universe.
+Require Export HoTT.Universes.BAut.
 
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
@@ -112,7 +113,6 @@ Require Export HoTT.Spaces.Circle.
 Require Export HoTT.Spaces.TwoSphere.
 Require Export HoTT.Spaces.Spheres.
 
-Require Export HoTT.Spaces.BAut.
 Require Export HoTT.Spaces.BAut.Cantor.
 Require Export HoTT.Spaces.BAut.Bool.
 Require Export HoTT.Spaces.BAut.Bool.IncoherentIdempotent.

@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber.
 Require Import Truncations.
-Require Import Spaces.BAut.
+Require Import Universes.BAut.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
