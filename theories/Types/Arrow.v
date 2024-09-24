@@ -49,7 +49,7 @@ Definition path_arrow_1 {A B : Type} (f : A -> B)
   := eta_path_arrow f f 1.
 
 Definition equiv_ap10 {A B : Type} f g
-: (f = g) <~> (f == g)
+  : (f = g) <~> (f == g)
   := Build_Equiv _ _ (@ap10 A B f g) _.
 
 Global Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
@@ -83,9 +83,9 @@ Defined.
 (** ** Path algebra *)
 
 Definition path_arrow_pp {A B : Type} (f g h : A -> B)
-           (p : f == g) (q : g == h)
-: path_arrow f h (fun x => p x @ q x) = path_arrow f g p @ path_arrow g h q
-:= path_forall_pp f g h p q.
+  (p : f == g) (q : g == h)
+  : path_arrow f h (fun x => p x @ q x) = path_arrow f g p @ path_arrow g h q
+  := path_forall_pp f g h p q.
 
 (** ** Transport *)
 
@@ -133,13 +133,12 @@ Defined.
 Definition ap_transport_arrow_toconst {A : Type} {B : A -> Type} {C : Type}
   {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C) {y1 y2 : B x2} (q : y1 = y2)
   : ap (transport (fun x => B x -> C) p f) q
-    @ transport_arrow_toconst p f y2
+      @ transport_arrow_toconst p f y2
     = transport_arrow_toconst p f y1
-    @ ap (fun y => f (p^ # y)) q.
+        @ ap (fun y => f (p^ # y)) q.
 Proof.
   destruct p, q; reflexivity.
 Defined.
-
 
 (** ** Dependent paths *)
 
@@ -149,22 +148,21 @@ Definition dpath_arrow
   {A:Type} (B C : A -> Type) {x1 x2:A} (p:x1=x2)
   (f : B x1 -> C x1) (g : B x2 -> C x2)
   : (forall (y1:B x1), transport C p (f y1) = g (transport B p y1))
-  <~>
-  (transport (fun x => B x -> C x) p f = g).
+      <~> (transport (fun x => B x -> C x) p f = g).
 Proof.
   destruct p.
   apply equiv_path_arrow.
 Defined.
 
 Definition ap10_dpath_arrow
-  {A:Type} (B C : A -> Type) {x1 x2:A} (p:x1=x2)
+  {A : Type} (B C : A -> Type) {x1 x2 : A} (p : x1 = x2)
   (f : B x1 -> C x1) (g : B x2 -> C x2)
-  (h : forall (y1:B x1), transport C p (f y1) = g (transport B p y1))
+  (h : forall (y1 : B x1), transport C p (f y1) = g (transport B p y1))
   (u : B x1)
   : ap10 (dpath_arrow B C p f g h) (p # u)
-  = transport_arrow p f (p # u)
-  @ ap (fun x => p # (f x)) (transport_Vp B p u)
-  @ h u.
+    = transport_arrow p f (p # u)
+        @ ap (fun x => p # (f x)) (transport_Vp B p u)
+        @ h u.
 Proof.
   destruct p; simpl; unfold ap10.
   exact (apD10_path_forall f g h u @ (concat_1p _)^).
@@ -173,26 +171,26 @@ Defined.
 (** ** Maps on paths *)
 
 (** The action of maps given by application. *)
-Definition ap_apply_l {A B : Type} {x y : A -> B} (p : x = y) (z : A) :
-  ap (fun f => f z) p = ap10 p z
-:= 1.
+Definition ap_apply_l {A B : Type} {x y : A -> B} (p : x = y) (z : A)
+  : ap (fun f => f z) p = ap10 p z
+  := 1.
 
-Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B) :
-  ap (fun a => (M a) z) p = ap10 (ap M p) z
-:= match p with 1 => 1 end.
+Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B)
+  : ap (fun a => (M a) z) p = ap10 (ap M p) z
+  := match p with 1 => 1 end.
 
-Definition ap_apply_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B) :
-  ap (fun a => z (N a)) p = ap01 z (ap N p)
-:= (ap_compose N _ _).
+Definition ap_apply_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B)
+  : ap (fun a => z (N a)) p = ap01 z (ap N p)
+  := (ap_compose N _ _).
 
-Definition ap_apply_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B) :
-  ap (fun a => (M a) (N a)) p = ap11 (ap M p) (ap N p)
-:= match p with 1 => 1 end.
+Definition ap_apply_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B)
+  : ap (fun a => (M a) (N a)) p = ap11 (ap M p) (ap N p)
+  := match p with 1 => 1 end.
 
 (** The action of maps given by lambda. *)
-Definition ap_lambda {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) :
-  ap (fun a b => M a b) p =
-  path_arrow _ _ (fun b => ap (fun a => M a b) p).
+Definition ap_lambda {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C)
+  : ap (fun a b => M a b) p
+    = path_arrow _ _ (fun b => ap (fun a => M a b) p).
 Proof.
   destruct p;
   symmetry;
@@ -219,9 +217,9 @@ Defined.
 Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   (h h' : A -> C) (p : h == h')
   : ap (functor_arrow f g) (path_arrow _ _ p)
-  = path_arrow _ _ (fun b => ap g (p (f b)))
+    = path_arrow _ _ (fun b => ap g (p (f b)))
   := @ap_functor_forall _ A (fun _ => C) B (fun _ => D)
-  f (fun _ => g) h h' p.
+      f (fun _ => g) h h' p.
 
 (** ** Truncatedness: functions into an n-type is an n-type *)
 
@@ -255,17 +253,15 @@ Global Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
 Definition equiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
   : (A -> C) <~> (B -> D)
   := @equiv_functor_forall _ A (fun _ => C) B (fun _ => D)
-  f _ (fun _ => g) _.
+      f _ (fun _ => g) _.
 
 Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
   : (A -> C) <~> (B -> D)
   := @equiv_functor_forall' _ A (fun _ => C) B (fun _ => D)
-  f (fun _ => g).
+      f (fun _ => g).
 
 (* We could do something like this notation, but it's not clear that it would be that useful, and might be confusing. *)
 (* Notation "f -> g" := (equiv_functor_arrow' f g) : equiv_scope. *)
-
-(** What remains is really identical to that in [Forall].  *)
 
 End AssumeFunext.
 
@@ -273,8 +269,8 @@ End AssumeFunext.
 
 (** This doesn't require funext *)
 Global Instance decidable_arrow {A B : Type}
-       `{Decidable A} `{Decidable B}
-: Decidable (A -> B).
+  `{Decidable A} `{Decidable B}
+  : Decidable (A -> B).
 Proof.
   destruct (dec B) as [x2|y2].
   - exact (inl (fun _ => x2)).

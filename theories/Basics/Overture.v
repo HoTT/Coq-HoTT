@@ -1,7 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
-(** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
+(** * Basic definitions of homotopy type theory *)
+
+(** This file defines some of the most basic types and type formers, such as sums, products, Sigma types and path types.  It defines the action of functions on paths [ap], transport, equivalences, and function extensionality.  It also defines truncatedness, and a number of other fundamental definitions used throughout the library. *)
+
+(** Import the file of reserved notations so we maintain consistent level notations throughout the library. *)
 Require Export Basics.Settings Basics.Notations.
 
 Local Set Polymorphic Inductive Cumulativity.
@@ -20,8 +23,8 @@ Notation "A -> B" := (forall (_ : A), B) : type_scope.
 
 (** [option A] is the extension of [A] with an extra element [None] *)
 Inductive option (A : Type) : Type :=
-  | Some : A -> option A
-  | None : option A.
+| Some : A -> option A
+| None : option A.
 
 Scheme option_rect := Induction for option Sort Type.
 
@@ -34,8 +37,8 @@ Register option as core.option.type.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 Inductive sum (A B : Type) : Type :=
-  | inl : A -> sum A B
-  | inr : B -> sum A B.
+| inl : A -> sum A B
+| inr : B -> sum A B.
 
 Scheme sum_rect := Induction for sum Sort Type.
 Scheme sum_ind := Induction for sum Sort Type.
@@ -236,22 +239,22 @@ Inductive paths {A : Type} (a : A) : A -> Type :=
 
 Arguments idpath {A a} , [A] a.
 
+#[export] Hint Resolve idpath : core.
+
 Scheme paths_ind := Induction for paths Sort Type.
 Arguments paths_ind [A] a P f y p : rename.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p : rename.
 
-Register idpath as core.identity.refl.
-
 (* See comment above about the tactic [induction]. *)
 Definition paths_rect := paths_ind.
 
+Register paths as core.identity.type.
+Register idpath as core.identity.refl.
 Register paths_rect as core.identity.ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
-
-Register paths as core.identity.type.
 
 Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
@@ -353,7 +356,7 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
 Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
-Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
+Notation "p # u" := (transport _ p u) (only parsing) : path_scope.
 
 (** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
 (** TODO: If Coq PR#18299 is merged (possibly in Coq 8.20), then we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)
@@ -370,16 +373,29 @@ Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
-Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+Definition ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
   := match p with idpath => idpath end.
 
-Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope.
+Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 Register ap as core.identity.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
-
 Notation ap01 := ap (only parsing).
+
+(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
+
+  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
+
+Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+  p # (f x) = f y
+  :=
+  match p with idpath => idpath end.
+
+(** See above for the meaning of [simpl nomatch]. *)
+Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
+
+(** *** Homotopies between functions *)
 
 Definition pointwise_paths A (P : A -> Type) (f g : forall x, P x)
   := forall x, f x = g x.
@@ -417,13 +433,13 @@ Hint Unfold pointwise_paths : typeclass_instances.
 
 Notation "f == g" := (pointwise_paths f g) : type_scope.
 
-Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
+Definition apD10 {A} {B : A -> Type} {f g : forall x, B x} (h : f = g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
 Global Arguments apD10 {A%_type_scope B} {f g}%_function_scope h%_path_scope _.
 
-Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
+Definition ap10 {A B} {f g : A -> B} (h : f = g) : f == g
   := apD10 h.
 
 Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
@@ -431,27 +447,12 @@ Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
 
-Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
+Definition ap11 {A B} {f g : A -> B} (h : f = g) {x y : A} (p : x = y) : f x = g y.
 Proof.
   case h, p; reflexivity.
 Defined.
 
 Global Arguments ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y} p%_path_scope.
-
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments ap {A B} f {x y} p : simpl nomatch.
-
-(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
-
-  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
-
-Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
-  p # (f x) = f y
-  :=
-  match p with idpath => idpath end.
-
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
@@ -506,23 +507,35 @@ Notation "A <~> B" := (Equiv A B) : type_scope.
 
 Notation "f ^-1" := (@equiv_inv _ _ f _) : function_scope.
 
-(** ** Applying paths between equivalences like functions *)
+(** A shorthand for applying paths between equivalences like functions. *)
 
 Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
   := ap10 (ap equiv_fun h).
 
+(** ** Function extensionality *)
+
+(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
+
+(** We use a dummy class and an axiom to get universe polymorphism of [Funext] while still tracking its uses.  Coq's universe polymorphism is parametric; in all definitions, all universes are quantified over before any other variables.  It's impossible to state a theorem like [(forall i : Level, P i) -> Q] (e.g., "if [C] has all limits of all sizes, then [C] is a preorder" isn't statable)*.  By making [isequiv_apD10] an [Axiom] rather than a per-theorem hypothesis, we can use it at multiple incompatible universe levels.  By only allowing use of the axiom when we have a [Funext] in the context, we can still track what theorems depend on it (because their type will mention [Funext]).
+
+    By giving [Funext] a field whose type is an axiom, we guarantee that we cannot construct a fresh instance of [Funext] without [admit]; there's no term of type [dummy_funext_type] floating around.  If we did not give [Funext] any fields, then we could accidentally manifest a [Funext] using, e.g., [constructor], and then we wouldn't have a tag on the theorem that did this.
+
+    As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
+
+    * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
+
+Monomorphic Axiom Funext : Type0.
+Existing Class Funext.
+Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+Global Existing Instance isequiv_apD10.
+
+Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
+  : f == g -> f = g
+  := (@apD10 A P f g)^-1.
+
+Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
+
 (** ** Contractibility and truncation levels *)
-
-(** Truncation measures how complicated a type is.  In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
-
-In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
-
-- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
-
-- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
-*)
-
-(** *** Contractibility and truncation levels *)
 
 (** Truncation measures how complicated a type is in terms of higher path types. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial.  More precisely, a type [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].
 
@@ -531,6 +544,14 @@ In order to achieve moderate coverage and speedy resolution, we currently follow
    Thus, (-1)-truncated means "the type of paths between any two points is contractible". Such a type is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated types are truth values.  We call such types "propositions" or "h-propositions".
 
    Next, 0-truncated means "the type of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a type may have many points but it is discrete in the sense that all paths are trivial. We call such types "sets" or "h-sets".
+
+    In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
+
+In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
+
+- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
+
+- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
 
    We begin by defining the type that indexes the truncation levels.
 *)
@@ -545,12 +566,10 @@ Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
 (* See comment above about the tactic [induction]. *)
 Definition trunc_index_rect := trunc_index_ind.
 
-(** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
+(** We will use [Notation] for [trunc_index]es, so define a scope for them here. Numeral notation for [trunc_index]es is set up in Basics/Trunc.v. *)
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%_trunc_scope.
 
-(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
-(** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
 Notation "n .+1" := (trunc_S n) : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
 Notation "n .+3" := (n.+1.+2)%trunc : trunc_scope.
@@ -640,42 +659,8 @@ Coercion istrunc_fun : IsTrunc >-> Funclass.
 (** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
 Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
 
-(** *** Function extensionality *)
-
-(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
-(** We use a dummy class and an axiom to get universe polymorphism of [Funext] while still tracking its uses.  Coq's universe polymorphism is parametric; in all definitions, all universes are quantified over before any other variables.  It's impossible to state a theorem like [(forall i : Level, P i) -> Q] (e.g., "if [C] has all limits of all sizes, then [C] is a preorder" isn't statable).*  By making [isequiv_apD10] an [Axiom] rather than a per-theorem hypothesis, we can use it at multiple incompatible universe levels.  By only allowing use of the axiom when we have a [Funext] in the context, we can still track what theorems depend on it (because their type will mention [Funext]).
-
-    By giving [Funext] a field who's type is an axiom, we guarantee that we cannot construct a fresh instance of [Funext] without [admit]; there's no term of type [dummy_funext_type] floating around.  If we did not give [Funext] and fields, then we could accidentally manifest a [Funext] using, e.g., [constructor], and then we wouldn't have a tag on the theorem that did this.
-
-    As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
-
-    * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
-Monomorphic Axiom Funext : Type0.
-Existing Class Funext.
-Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
-Global Existing Instance isequiv_apD10.
-
-Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
-  : f == g -> f = g
-  := (@apD10 A P f g)^-1.
-
-Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
-
-(** *** Tactics *)
-
-(** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
-
-   A specific [Hint Resolve] database [db] can be used with [auto with db].
-
-   The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
-
-(** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
-#[export] Hint Resolve idpath inverse : path_hints.
-#[export] Hint Resolve idpath : core.
-
 (** ** Natural numbers *)
 
-(**  Natural numbers. *)
 Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
@@ -688,6 +673,8 @@ Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
 Arguments S _%_nat.
+
+(** ** Misc *)
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
