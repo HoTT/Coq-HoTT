@@ -31,7 +31,7 @@ Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.Universes.DProp.
 Require Export HoTT.Universes.HProp.
 Require Export HoTT.Universes.HSet.
-Require Export HoTT.Universes.Universe.
+Require Export HoTT.Universes.Automorphisms.
 Require Export HoTT.Universes.BAut.
 
 Require Export HoTT.NullHomotopy.
