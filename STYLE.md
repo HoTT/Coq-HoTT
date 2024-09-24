@@ -103,10 +103,10 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   studied further in their `Types/` file.  Files in `Types/` should
   not depend on anything except `Basics` and other `Types/` files.
 
-- `Universe/*`: Files related to universe levels, classifying maps, or
+- `Universes/*`: Files related to universe levels, classifying maps, or
   to particular subuniverses, including `UniverseLevel`, `Smallness`,
-  `ObjectClassifier`, `HProp`, `HSet`, `DProp`, and `TruncType`.  The
-  files here can depend on files in `Types/`, and occasionally on some
+  `ObjectClassifier`, `BAut`, `HProp`, `HSet`, `DProp`, and `TruncType`.
+  The files here depend on files in `Types/`, and occasionally on some
   files mentioned below.
 
 - There are files in the root `theories/` directory, including
@@ -171,9 +171,6 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   the HoTT library, you can say simply `Require Import HoTT` to pull
   in everything (but don't do this for files in the core itself).
 
-- `PropResizing/*`: Files related to propositional resizing. The
-  axiom itself can be found in Overture.v.
-
 - `theories/Classes/*`: The math classes library.  While we don't
   regard this as part of the core library, and don't explicitly
   export the contents in `HoTT`, some files in the classes library
@@ -186,7 +183,9 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   core, we track them with typeclasses).
 
 - `theories/Metatheory/*`: Contains `UnivalenceImpliesFunext`,
-  `IntervalImpliesFunext` and other meta-theoretic results.
+  `IntervalImpliesFunext`, `ImpredicativeTruncation`, `PropTrunc`,
+  `Nat` (a definition of the natural numbers using univalence and
+  propositional resizing), and other meta-theoretic results.
 
 - `theories/Utf8` and `theories/Utf8Minimal`: optional Unicode
   notations for the basic definitions (we avoid Unicode in the core
@@ -867,7 +866,6 @@ doesn't take them into account.
 We have not yet formulated a general method for resolving this.  In
 the few cases when it arises, it should be solvable with universe
 annotations, but we have not yet implemented such a fix; see bug #565.
-
 
 ## 7. Transparency and Opacity ##
 
