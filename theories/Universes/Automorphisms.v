@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Basics Types.
 Require Import HoTT.Truncations.
-Require Import Universes.BAut Spaces.BAut.Rigid.
+Require Import Universes.BAut Universes.Rigid.
 Require Import ExcludedMiddle.
 
 Local Open Scope trunc_scope.
