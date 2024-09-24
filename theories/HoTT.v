@@ -31,6 +31,7 @@ Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.Universes.DProp.
 Require Export HoTT.Universes.HProp.
 Require Export HoTT.Universes.HSet.
+Require Export HoTT.Universes.Universe.
 
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
@@ -122,7 +123,6 @@ Require Export HoTT.Spaces.Finite.
 Require Export HoTT.Spaces.Card.
 
 Require Export HoTT.Spaces.No.
-Require Export HoTT.Spaces.Universe.
 
 Require Export HoTT.Spaces.Torus.Torus.
 Require Export HoTT.Spaces.Torus.TorusEquivCircles.
