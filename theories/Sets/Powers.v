@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types TruncType.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Card Spaces.Nat.Core.
 
 (** * Definition of Power types *)
@@ -15,10 +15,10 @@ Lemma Injection_power {PR : PropResizing} X
   : IsHSet X -> Injection X (X -> HProp).
 Proof.
   intros HX.
-  set (f (x : X) := fun y => Build_HProp (resize_hprop (x = y))).
+  set (f (x : X) := fun y => Build_HProp (smalltype (x = y))).
   exists f. intros x x' H.
-  eapply (equiv_resize_hprop _)^-1. change (f x x').
-  rewrite H. cbn. apply equiv_resize_hprop. reflexivity.
+  eapply equiv_smalltype. change (f x x').
+  rewrite H. cbn. apply equiv_smalltype. reflexivity.
 Qed.
 
 Definition power_iterated X n := nat_iter n power_type X.

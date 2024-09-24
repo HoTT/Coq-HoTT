@@ -8,7 +8,7 @@ Require Export
 
 Require Import
   HoTT.Types
-  HoTT.HSet
+  HoTT.Universes.HSet
   HoTT.Spaces.List.Core.
 
 Import ne_list.notations.

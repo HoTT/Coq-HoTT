@@ -27,7 +27,7 @@
     - [3.6. Truncation](#36-truncation)
     - [3.7. Coercions and Existing Instances](#37-coercions-and-existing-instances)
   - [4. Axioms](#4-axioms)
-    - [4.1. Univalence and function extensionality](#41-univalence-and-function-extensionality)
+    - [4.1. Univalence, function extensionality and propositional resizing](#41-univalence-function-extensionality-and-propositional-resizing)
     - [4.2. Higher inductive types](#42-higher-inductive-types)
     - [4.3. Relationships between axioms](#43-relationships-between-axioms)
     - [4.4. Assuming axioms](#44-assuming-axioms)
@@ -103,13 +103,19 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   studied further in their `Types/` file.  Files in `Types/` should
   not depend on anything except `Basics` and other `Types/` files.
 
-- There are many other files in the root `theories/` directory,
-  including `TruncType`, `HProp`, `DProp`, `HSet`, `HFiber`,
-  `ObjectClassifier`, `Extensions`, `NullHomotopy`, `PathAny`,
-  `Projective`, `Idempotents`, `Constant`, etc.  These contain more
-  advanced facts and theories which may depend on files in `Types/`.
-  We try to limit the number of files in the top-level folder, and
-  would like to reduce the number.
+- `Universes/*`: Files related to universe levels, classifying maps, or
+  to particular subuniverses, including `UniverseLevel`, `Smallness`,
+  `ObjectClassifier`, `BAut`, `HProp`, `HSet`, `DProp`, and `TruncType`.
+  The files here depend on files in `Types/`, and occasionally on some
+  files mentioned below.
+
+- There are files in the root `theories/` directory, including
+  `EquivGroupoids`, `ExcludedMiddle`, `Factorization`, `HFiber`,
+  `Extensions`, `NullHomotopy`, `PathAny`, `Projective`,
+  `Idempotents`, `Constant`, `BoundedSearch`, etc.  These contain more
+  advanced results which may depend on files in the whole library.  We
+  try to limit the number of files in the top-level folder, and would
+  like to reduce the number.
 
 - `WildCat/*`: Files related to wild categories.  They are used
   extensively in the library, so we try to minimize the files they
@@ -165,9 +171,6 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   the HoTT library, you can say simply `Require Import HoTT` to pull
   in everything (but don't do this for files in the core itself).
 
-- `PropResizing/*`: Files related to propositional resizing.  Only
-  `PropResizing/PropResizing` is exported by `HoTT`.
-
 - `theories/Classes/*`: The math classes library.  While we don't
   regard this as part of the core library, and don't explicitly
   export the contents in `HoTT`, some files in the classes library
@@ -180,7 +183,9 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   core, we track them with typeclasses).
 
 - `theories/Metatheory/*`: Contains `UnivalenceImpliesFunext`,
-  `IntervalImpliesFunext` and other meta-theoretic results.
+  `IntervalImpliesFunext`, `ImpredicativeTruncation`, `PropTrunc`,
+  `Nat` (a definition of the natural numbers using univalence and
+  propositional resizing), and other meta-theoretic results.
 
 - `theories/Utf8` and `theories/Utf8Minimal`: optional Unicode
   notations for the basic definitions (we avoid Unicode in the core
@@ -514,15 +519,17 @@ for `x, y : A`.)
 
 ## 4. Axioms ##
 
-### 4.1. Univalence and function extensionality ###
+### 4.1. Univalence, function extensionality and propositional resizing ###
 
-The "axioms" of `Univalence` and `Funext` (function extensionality)
-are typeclasses rather than Coq `Axiom`s.  (But see the technical note
-below on universe polymorphism.)  In the core, we use these
-typeclasses to keep track of which theorems depend on the axioms and
-which don't.  This means that any theorem which depends on one or the
-other must take an argument of the appropriate type.  It is simple to
-write this using typeclass magic as follows:
+The "axioms" of `Univalence`, `Funext` (function extensionality) and
+`PropResizing` (propositional resizing) are typeclasses rather than
+Coq `Axiom`s.  (But see the technical note below on universe
+polymorphism.)  In the core, we use these typeclasses to keep track
+of which theorems depend on the axioms and which don't.
+
+This means that any theorem which depends on one or the other must
+take an argument of the appropriate type.  It is simple to write
+this using typeclass magic as follows:
 
 ```coq
 Theorem uses_univalence `{Univalence} (A : Type) ...
@@ -833,14 +840,18 @@ See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### 6.4. Lifting and lowering ###
 
-The file `Basics/UniverseLevel` contains an operation `Lift` which
+The file `Universes/UniverseLevel` contains an operation `Lift` which
 lifts a type from one universe to a larger one, with maps `lift` and
-`lower` relating the two types and forming an equivalence.  This is
-occasionally useful when universe wrangling; for instance, using a
-lifted version of a type rather than a type itself can prevent
-collapse of two universes that ought to remain distinct.  There are
+`lower` relating the two types and forming an equivalence.  There are
 primed versions `Lift'`, `lift'`, and `lower'` which allow the two
 universe levels to possibly be the same.
+
+In the past, `Lift` was used to force universe levels to be distinct,
+but now that Coq supports constraints between universe variables,
+this is no longer needed in practice.
+
+The file `Universes/Smallness` contains results allowing us to show
+that a type lives in a certain universe.
 
 ### 6.5. Universes and HITs ###
 
@@ -855,7 +866,6 @@ doesn't take them into account.
 We have not yet formulated a general method for resolving this.  In
 the few cases when it arises, it should be solvable with universe
 annotations, but we have not yet implemented such a fix; see bug #565.
-
 
 ## 7. Transparency and Opacity ##
 

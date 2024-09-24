@@ -1,7 +1,7 @@
 Require Import
   HoTT.Basics
   HoTT.Types
-  HoTT.HSet
+  HoTT.Universes.HSet
   HoTT.Truncations.Core
   HoTT.Colimits.Quotient
   HoTT.Projective.

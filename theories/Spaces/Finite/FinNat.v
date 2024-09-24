@@ -1,7 +1,7 @@
 Require Import
   HoTT.Basics
   HoTT.Types
-  HoTT.HSet
+  HoTT.Universes.HSet
   HoTT.Spaces.Nat.Core
   HoTT.Spaces.Finite.Fin.
 

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Representation of cardinals, see Chapter 10 of the HoTT book. *)
-Require Import HoTT.TruncType.
+Require Import HoTT.Universes.TruncType.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 (** This speeds things up considerably *)

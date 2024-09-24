@@ -3,7 +3,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import HProp.
-Require Import PropResizing.PropResizing.
+Require Import Universes.Smallness.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  Usually you want to use the standard [Nat] instead. *)
@@ -290,13 +290,13 @@ Section AssumeStuff.
     : in_N@{p1} n.
   Proof.
     intros P' PH' P0' Ps'.
-    srefine ((equiv_resize_hprop (P' n))^-1
-             (nrec (fun A => resize_hprop (P' A)) _ _ _));
+    srefine ((equiv_smalltype (P' n))
+             (nrec (fun A => smalltype (P' A)) _ _ _));
       try exact _; cbn.
-    - exact (equiv_resize_hprop (P' graph_zero) P0').
+    - exact ((equiv_smalltype (P' graph_zero))^-1 P0').
     - intros A P'A.
-      exact (equiv_resize_hprop (P' (graph_succ A))
-                                (Ps' A ((equiv_resize_hprop (P' A))^-1 P'A))).
+      exact ((equiv_smalltype (P' (graph_succ A)))^-1
+                                (Ps' A ((equiv_smalltype (P' A)) P'A))).
   Qed.
 
   Local Instance ishprop_graph_zero_or_succ@{} : forall n : Graph,

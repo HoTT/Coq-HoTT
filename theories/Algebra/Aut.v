@@ -2,7 +2,7 @@
 Require Import Basics.
 Require Import Truncations.
 Require Import Algebra.ooGroup.
-Require Import Spaces.BAut.
+Require Import Universes.BAut.
 Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.

@@ -746,3 +746,24 @@ Global Existing Instance ispointed_type.
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
 Global Arguments hfiber {A B}%_type_scope f%_function_scope y.
+
+(** ** Smallness *)
+
+(** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected.  We mark the [i] variable as being invariant, so that Coq is better at guessing universe variables when this is used. *)
+Class IsSmall@{=i j | } (X : Type@{j}) := {
+  smalltype : Type@{i} ;
+  equiv_smalltype : smalltype <~> X ;
+}.
+Arguments smalltype X {_}.
+Arguments equiv_smalltype X {_}.
+
+(** *** Propositional resizing *)
+
+(** See the note by [Funext] above regarding classes for axioms. *)
+Monomorphic Axiom PropResizing : Type0.
+Existing Class PropResizing.
+
+(** Propositional resizing says that every (-1)-truncated type is small. *)
+Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
+  (T : IsHProp X), IsSmall@{i j} X.
+Existing Instance issmall_hprop.
