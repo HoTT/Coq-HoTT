@@ -1,7 +1,9 @@
 From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Colimits.Quotient.
+From HoTT Require Import HSet.
 
+Local Close Scope trunc_scope.
 Local Open Scope hprop_scope.
 
 (** This file contains a definition of ordinals and some fundamental results,
@@ -426,7 +428,7 @@ Definition initial_segment `{PropResizing}
            {A : Type} {R : Lt A} `{IsOrdinal A R} (a : A)
   : Ordinal.
 Proof.
-  srefine {| ordinal_carrier := {b : A & resize_hprop (b < a)}
+  srefine {| ordinal_carrier := {b : A & smalltype (b < a)}
            ; ordinal_relation := fun x y => x.1 < y.1
            |};
     try exact _.
@@ -438,11 +440,11 @@ Proof.
     + intros x y x_y. exact x_y.
     + intros b a' a'_b; cbn in *. apply tr.
       assert (b_a : b.1 < a). {
-        exact ((equiv_resize_hprop _)^-1 b.2).
+        exact ((equiv_smalltype _) b.2).
       }
       srapply exist. {
         exists a'.
-        apply equiv_resize_hprop. exact (transitivity a'_b b_a).
+        apply equiv_smalltype. exact (transitivity a'_b b_a).
       }
       cbn. split.
       * exact a'_b.
@@ -460,7 +462,7 @@ Definition in_
            {A : Ordinal} {a : A}
            (x : A) (H : x < a)
   : ↓a
-  := (x; equiv_resize_hprop _ H).
+  := (x; (equiv_smalltype _)^-1 H).
 
 Definition out
            `{PropResizing}
@@ -472,7 +474,7 @@ Definition initial_segment_property `{PropResizing}
   {A : Ordinal} {a : A}
   : forall x : ↓a, out x < a.
 Proof.
-  intros x. exact ((equiv_resize_hprop _)^-1 (proj2 x)).
+  intros x. exact (equiv_smalltype _ (proj2 x)).
 Defined.
 
 
@@ -524,26 +526,26 @@ Proof.
   apply isomorphism_inverse.
   srapply exist.
   - srapply equiv_adjointify.
-    + intros x. exists (f x.1). apply equiv_resize_hprop.
-      rapply simulation_is_hom. apply (equiv_resize_hprop _)^-1. exact x.2.
+    + intros x. exists (f x.1). apply (equiv_smalltype _)^-1.
+      rapply simulation_is_hom. apply (equiv_smalltype _). exact x.2.
     + intros x.
       assert (x_fa : x.1 < f a). {
-        exact ((equiv_resize_hprop _)^-1 x.2).
+        exact ((equiv_smalltype _) x.2).
       }
       destruct (simulation_is_minimal f x_fa) as (a' & a'_a & _).
-      exact (a'; equiv_resize_hprop _ a'_a).
+      exact (a'; (equiv_smalltype _)^-1 a'_a).
     + cbn. intros x. apply path_sigma_hprop; cbn.
       transparent assert (x_fa : (x.1 < f a)). {
-        exact ((equiv_resize_hprop _)^-1 x.2).
+        exact (equiv_smalltype _ x.2).
       }
       exact (snd (simulation_is_minimal f x_fa).2).
     + cbn. intros x. apply path_sigma_hprop; cbn.
       transparent assert (x_a : (x.1 < a)). {
-        exact ((equiv_resize_hprop _)^-1 x.2).
+        exact (equiv_smalltype _ x.2).
       }
       apply (injective f).
       cbn. unfold initial_segment_property. cbn.
-      rewrite eissect.
+      rewrite eisretr.
       exact (snd (simulation_is_minimal f (simulation_is_hom f x_a)).2).
   - cbn. intros [x x_a] [y y_a]; cbn. split.
     + apply (simulation_is_hom f).
@@ -658,13 +660,13 @@ Proof.
   srapply exist.
   - srapply equiv_adjointify.
     + intros b. exists ↓b.
-      apply equiv_resize_hprop.
+      apply equiv_smalltype.
       exists b. reflexivity.
-    + intros [C HC]. eapply (equiv_resize_hprop _)^-1 in HC.
+    + intros [C HC]. eapply equiv_smalltype in HC.
       exact (bound HC).
     + cbn. intros [C HC]. apply path_sigma_hprop; cbn.
       symmetry. apply bound_property.
-    + cbn. intros x. rewrite eissect. reflexivity.
+    + cbn. intros x. rewrite eisretr. reflexivity.
   - cbn. intros b b'. apply isembedding_initial_segment.
 Qed.
 
@@ -730,53 +732,37 @@ Proof.
       * exact tt.
     + intros [[a | []] Ha]; cbn in *.
       * exact a.
-      * apply equiv_resize_hprop in Ha. destruct Ha.
+      * apply equiv_smalltype in Ha. destruct Ha.
     + intros [[a | []] Ha].
       * unfold in_. cbn. f_ap.
-        assert (IsHProp (resize_hprop Unit)) by exact _.
+        assert (IsHProp (smalltype Unit)) by exact _.
         apply path_ishprop.
-      * destruct ((equiv_resize_hprop _)^-1 Ha).
+      * destruct (equiv_smalltype _ Ha).
     + intros a. reflexivity.
   - cbn. intros a a'. reflexivity.
 Qed.
 
 (** * Ordinal limit *)
 
-Definition image@{i j} {A : Type@{i}} {B : HSet@{j}} (f : A -> B) : Type@{i}
-  := Quotient (fun a a' : A => f a = f a').
+Section Image.
 
-Definition factor1 {A} {B : HSet} (f : A -> B)
-  : A -> image f
-  := Quotient.class_of _.
+  Universes i j.
+  (** In the following, there are no constraints between [i] and [j]. *)
+  Context `{PropResizing} `{Funext} {A : Type@{i}} {B : HSet@{j}} (f : A -> B).
 
-Lemma image_ind_prop {A} {B : HSet} (f : A -> B)
-  (P : image f -> Type) `{forall x, IsHProp (P x)}
-  : (forall a : A, P (factor1 f a))
-    -> forall x : image f, P x.
-Proof.
-  intros step.
-  srefine (Quotient_ind_hprop _ _ _); intros a; cbn.
-  apply step.
-Qed.
+  Local Definition qkfs := quotient_kernel_factor_small f.
+  Local Definition image : Type@{i} := qkfs.1.
+  Local Definition factor1 : A -> image := qkfs.2.1.
+  Local Definition factor2 : image -> B := qkfs.2.2.1.
+  Local Definition isinjective_factor2 : IsInjective factor2
+    := isinj_embedding _ (snd (fst qkfs.2.2.2)).
+  Local Definition image_ind_prop (P : image -> Type@{k}) `{forall x, IsHProp (P x)}
+    (step : forall a : A, P (factor1 a))
+    : forall x : image, P x
+    := Quotient_ind_hprop _ P step.
+  (** [factor2 o factor1 == f] is definitional, so we don't state that. *)
 
-Definition image_rec {A} {B : HSet} (f : A -> B)
-      {C : HSet} (step : A -> C)
-  : (forall a a', f a = f a' -> step a = step a')
-    -> image f -> C
-  := Quotient_rec _ _ step.
-
-Definition factor2 {A} {B : HSet} (f : A -> B)
-  : image f -> B
-  := Quotient_rec _ _ f (fun a a' fa_fa' => fa_fa').
-
-Global Instance isinjective_factor2 `{Funext} {A} {B : HSet} (f : A -> B)
-  : IsInjective (factor2 f).
-Proof.
-  unfold IsInjective, image.
-  refine (Quotient_ind_hprop _ _ _); intros x; cbn.
-  refine (Quotient_ind_hprop _ _ _); intros y; cbn.
-  rapply qglue.
-Qed.
+End Image.
 
 Definition limit `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal) : Ordinal.
@@ -784,25 +770,29 @@ Proof.
   set (f := fun x : {i : X & F i} => ↓x.2).
   set (carrier := image f : Type@{i}).
   set (relation := fun A B : carrier =>
-                     resize_hprop (factor2 f A < factor2 f B)
+                     smalltype (factor2 f A < factor2 f B)
                      : Type@{i}).
   exists carrier relation.
-  srapply (isordinal_simulation (factor2 f)).
-  - exact _.
-  - exact _.
-  - constructor; cbn.
+  snrapply (isordinal_simulation (factor2 f)).
+  1-4: exact _.
+  - apply isinjective_factor2.
+  - constructor.
     + intros x x' x_x'.
-      unfold lt, relation. apply equiv_resize_hprop in x_x'. exact x_x'.
-    + rapply image_ind_prop; intros a. cbn.
+      unfold lt, relation. apply equiv_smalltype in x_x'. exact x_x'.
+    + nrefine (image_ind_prop f _ _). 1: exact _.
+      intros a.
+      change (factor2 f (class_of _ a)) with (f a).
       intros B B_fa. apply tr.
-      exists (factor1 f (a.1; out (bound B_fa))). cbn.
-      unfold lt, relation, f; simpl.
+      exists (factor1 f (a.1; out (bound B_fa))).
+      unfold lt, relation.
+      change (factor2 f (factor1 f ?A)) with (f A).
+      unfold f.
       assert (↓(out (bound B_fa)) = B) as ->. {
         rewrite (path_initial_segment_simulation out).
         symmetry. apply bound_property.
       }
       split.
-      * apply equiv_resize_hprop. exact B_fa.
+      * apply equiv_smalltype. exact B_fa.
       * reflexivity.
 Defined.
 
@@ -813,17 +803,24 @@ Definition limit_is_upper_bound `{Univalence} `{PropResizing}
            {X : Type} (F : X -> Ordinal)
   : forall x, F x <= limit F.
 Proof.
-  unfold le_on_Ordinal.
-  intros x. unfold le.
-  exists (fun u => factor1 _ (x; u)).
+  set (f := fun x : {i : X & F i} => ↓x.2).
+  intros x. unfold le, le_on_Ordinal.
+  exists (fun u => factor1 f (x; u)).
   split.
-  - intros u v u_v. unfold lt; cbn. apply equiv_resize_hprop.
+  - intros u v u_v.
+    change (smalltype (f (x; u) < f (x; v))).
+    apply equiv_smalltype.
     apply isembedding_initial_segment. exact u_v.
-  - intros u. rapply image_ind_prop; intros a.
-    intros a_u. apply equiv_resize_hprop in a_u. cbn in a_u.
+  - intros u.
+    nrefine (image_ind_prop f _ _). 1: exact _.
+    intros a a_u.
+    change (smalltype (f a < f (x; u))) in a_u.
+    apply equiv_smalltype in a_u.
     apply tr. exists (out (bound a_u)). split.
     + apply initial_segment_property.
-    + apply (injective (factor2 _)); simpl.
+    + apply (isinjective_factor2 f); simpl.
+      change (factor2 f (factor1 f ?A)) with (f A).
+      unfold f.
       rewrite (path_initial_segment_simulation out).
       symmetry. apply bound_property.
 Qed.
@@ -834,18 +831,18 @@ Qed.
 Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
   : Ordinal@{j _}.
 Proof.
-  exists C (fun c1 c2 : C => resize_hprop (g c1 < g c2)).
+  exists C (fun c1 c2 : C => smalltype (g c1 < g c2)).
   snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
   - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
   - constructor.
-    + intros a a' a_a'. apply (equiv_resize_hprop _)^-1. exact a_a'.
+    + intros a a' a_a'. apply (equiv_smalltype _). exact a_a'.
     + intros a b b_fa. apply tr. exists (g^-1 b). split.
-      * apply equiv_resize_hprop. rewrite eisretr. exact b_fa.
+      * apply equiv_smalltype. rewrite eisretr. exact b_fa.
       * apply eisretr.
 Defined.
 
 Lemma resize_ordinal_iso@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
   : Isomorphism (resize_ordinal B C g) B.
 Proof.
-  exists g. intros a a'. cbn. split; apply equiv_resize_hprop.
+  exists g. intros a a'. cbn. split; apply equiv_smalltype.
 Qed.

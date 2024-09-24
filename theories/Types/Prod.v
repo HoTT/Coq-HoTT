@@ -2,9 +2,11 @@
 (** * Theorems about cartesian products *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
-               Basics.Tactics Basics.Trunc Basics.Decidable.
+               Basics.Tactics Basics.Trunc Basics.Decidable Basics.Iff.
 Require Import Types.Empty.
 Local Open Scope path_scope.
+
+Local Set Universe Minimization ToSet.
 
 Generalizable Variables X A B f g n.
 
@@ -300,11 +302,11 @@ Defined.
 
 (** ** Unit and annihilation *)
 
-Definition prod_empty_r X : X * Empty <~> Empty
-  := (Build_Equiv _ _ snd _).
+Definition prod_empty_r@{u} (X : Type@{u}) : X * Empty <~> Empty
+  := (Build_Equiv@{u u} _ _ snd _).
 
-Definition prod_empty_l X : Empty * X <~> Empty
-  := (Build_Equiv _ _ fst _).
+Definition prod_empty_l@{u} (X : Type@{u}) : Empty * X <~> Empty
+  := (Build_Equiv@{u u} _ _ fst _).
 
 Definition prod_unit_r X : X * Unit <~> X.
 Proof.
@@ -391,13 +393,13 @@ Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
 
 Global Instance decidable_prod {A B : Type}
        `{Decidable A} `{Decidable B}
-: Decidable (A * B).
+: Decidable@{k} (A * B).
 Proof.
   destruct (dec A) as [x1|y1]; destruct (dec B) as [x2|y2].
-  - exact (inl (x1,x2)).
-  - apply inr; intros [_ x2]; exact (y2 x2).
-  - apply inr; intros [x1 _]; exact (y1 x1).
-  - apply inr; intros [x1 _]; exact (y1 x1).
+  - exact (inl@{k k} (x1,x2)).
+  - apply inr@{k k}; intros [_ x2]; exact (y2 x2).
+  - apply inr@{k k}; intros [x1 _]; exact (y1 x1).
+  - apply inr@{k k}; intros [x1 _]; exact (y1 x1).
 Defined.
 
 (** Interaction of ap and uncurry *)

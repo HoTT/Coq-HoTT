@@ -1,11 +1,13 @@
-Require Import Basics.
-Require Import Pointed.Core.
-Require Import Types.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics Basics.Equivalences.
+Require Import Types.Sum Types.Bool Types.Paths Types.Forall.
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Equiv.
 Require Import Colimits.Pushout.
-Require Import Cubical.
+Require Import Cubical.DPath.
+Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope dpath_scope.
+Local Open Scope path_scope.
 
 (* Definition of smash product *)
 
@@ -15,8 +17,8 @@ Definition sum_to_prod (X Y : pType) : X + Y -> X * Y
 Definition sum_to_bool X Y : X + Y -> Bool
   := sum_ind _ (fun _ => false) (fun _ => true).
 
-Definition Smash (X Y : pType) : pType
-  := [Pushout (sum_to_prod X Y) (sum_to_bool X Y), pushl (point X, point Y)].
+Definition Smash@{u v w | u <= w, v <= w} (X : pType@{u}) (Y : pType@{v}) : pType@{w}
+  := [Pushout@{w w w w} (sum_to_prod@{w w w} X Y) (sum_to_bool@{u v w} X Y), pushl (point X, point Y)].
 
 Section Smash.
 
@@ -81,7 +83,7 @@ Section Smash.
     + intros [a b].
       apply Psm.
     + apply (Bool_ind _ Pr Pl).
-    + srapply sum_ind; intro; apply dp_path_transport^-1.
+    + srapply sum_ind.
       - apply Pgl.
       - apply Pgr.
   Defined.
@@ -90,124 +92,350 @@ Section Smash.
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
-  Proof.
-    apply dp_apD_path_transport.
-    refine (Pushout_ind_beta_pglue P _ _ _ (inl a) @ _).
-    unfold sum_ind.
-    by apply ap.
-  Qed.
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a
+    := Pushout_ind_beta_pglue P _ _ _ (inl a).
 
   Definition Smash_ind_beta_gluer {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
-  Proof.
-    apply dp_apD_path_transport.
-    refine (Pushout_ind_beta_pglue P _ _ _ (inr b) @ _).
-    unfold sum_ind.
-    by apply ap.
-  Qed.
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b
+    := Pushout_ind_beta_pglue P _ _ _ (inr b).
 
   Definition Smash_ind_beta_gluel' {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : X)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
     = (Pgl a) @Dp ((Pgl b)^D).
   Proof.
-    unfold gluel'.
-    rewrite dp_apD_pp, dp_apD_V.
-    by rewrite 2 Smash_ind_beta_gluel.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    1: apply Smash_ind_beta_gluel.
+    lhs nrapply dp_apD_V.
+    apply ap.
+    apply Smash_ind_beta_gluel.
+  Defined.
 
   Definition Smash_ind_beta_gluer' {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
     = (Pgr a) @Dp ((Pgr b)^D).
   Proof.
-    unfold gluer'.
-    rewrite dp_apD_pp, dp_apD_V.
-    by rewrite 2 Smash_ind_beta_gluer.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    1: apply Smash_ind_beta_gluer.
+    lhs nrapply dp_apD_V.
+    apply ap.
+    apply Smash_ind_beta_gluer.
+  Defined.
 
   Definition Smash_ind_beta_glue {P : Smash X Y -> Type}
     {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
     (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X) (b : Y)
-    : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @Dp ((Pgl pt)^D)) @Dp ((Pgr pt) @Dp ((Pgr b)^D)).
   Proof.
-    by rewrite dp_apD_pp, Smash_ind_beta_gluel', Smash_ind_beta_gluer'.
-  Qed.
+    lhs nrapply dp_apD_pp.
+    apply ap011.
+    - apply Smash_ind_beta_gluel'.
+    - apply Smash_ind_beta_gluer'.
+  Defined.
 
   Definition Smash_rec {P : Type} (Psm : X -> Y -> P) (Pl Pr : P)
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr)
-    : Smash X Y -> P := Smash_ind Psm Pl Pr
-      (fun x => dp_const (Pgl x)) (fun x => dp_const (Pgr x)).
-
-  Local Open Scope path_scope.
+    : Smash X Y -> P
+    := Smash_ind Psm Pl Pr (fun x => dp_const (Pgl x)) (fun x => dp_const (Pgr x)).
 
   (* Version of smash_rec that forces (Pgl pt) and (Pgr pt) to be idpath *)
   Definition Smash_rec' {P : Type} {Psm : X -> Y -> P}
     (Pgl : forall a, Psm a pt = Psm pt pt) (Pgr : forall b, Psm pt b = Psm pt pt)
     (ql : Pgl pt = 1) (qr : Pgr pt = 1)
-    : Smash X Y -> P := Smash_rec Psm (Psm pt pt) (Psm pt pt) Pgl Pgr.
+    : Smash X Y -> P
+    := Smash_rec Psm (Psm pt pt) (Psm pt pt) Pgl Pgr.
 
   Definition Smash_rec_beta_gluel {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
   Proof.
-    refine (_ @ eissect dp_const (Pgl a)).
+    rhs_V nrapply (eissect dp_const).
     apply moveL_equiv_V.
-    unfold Smash_rec.
-    refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
-      (fun x : Y => dp_const (Pgr x))) (gluel a))^ @ _).
-    rapply Smash_ind_beta_gluel.
-  Qed.
+    lhs_V nrapply dp_apD_const.
+    nrapply Smash_ind_beta_gluel.
+  Defined.
 
-  Definition smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
+  Definition Smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
-    refine (_ @ eissect dp_const (Pgr b)).
+    rhs_V nrapply (eissect dp_const).
     apply moveL_equiv_V.
-    unfold Smash_rec.
-    refine ((dp_apD_const (Smash_ind Psm Pl Pr (fun x : X => dp_const (Pgl x))
-      (fun x : Y => dp_const (Pgr x))) (gluer b))^ @ _).
-    rapply Smash_ind_beta_gluer.
-  Qed.
+    lhs_V nrapply dp_apD_const.
+    nrapply Smash_ind_beta_gluer.
+  Defined.
 
   Definition Smash_rec_beta_gluel' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel' a b) = Pgl a @ (Pgl b)^.
   Proof.
-    rewrite ap_pp, ap_V.
-    by rewrite 2 Smash_rec_beta_gluel.
-  Qed.
+    lhs nrapply ap_pp.
+    f_ap.
+    1: apply Smash_rec_beta_gluel.
+    lhs nrapply ap_V.
+    apply inverse2.
+    apply Smash_rec_beta_gluel.
+  Defined.
 
   Definition Smash_rec_beta_gluer' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.
   Proof.
-    rewrite ap_pp, ap_V.
-    by rewrite 2 smash_rec_beta_gluer.
-  Qed.
+    lhs nrapply ap_pp.
+    f_ap.
+    1: apply Smash_rec_beta_gluer.
+    lhs nrapply ap_V.
+    apply inverse2.
+    apply Smash_rec_beta_gluer.
+  Defined.
 
-  Definition smash_rec_beta_glue {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
+  Definition Smash_rec_beta_glue {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
     (b : Y) : ap (Smash_rec Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @ (Pgl pt)^) @ (Pgr pt @ (Pgr b)^).
   Proof.
-    by rewrite ap_pp, Smash_rec_beta_gluel', Smash_rec_beta_gluer'.
+    lhs nrapply ap_pp.
+    f_ap.
+    - apply Smash_rec_beta_gluel'.
+    - apply Smash_rec_beta_gluer'.
   Defined.
 
-  Arguments sm : simpl never.
-  Arguments auxl : simpl never.
-  Arguments gluel : simpl never.
-  Arguments gluer : simpl never.
-
 End Smash.
+
+Arguments sm : simpl never.
+Arguments auxl : simpl never.
+Arguments gluel : simpl never.
+Arguments gluer : simpl never.
+
+(** ** Miscellaneous lemmas about Smash *)
+
+(** A version of [Smash_ind] specifically for proving that two functions from a [Smash] are homotopic. *)
+Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
+  (Hsm : forall a b, f (sm a b) = g (sm a b))
+  (Hl : f auxl = g auxl) (Hr : f auxr = g auxr)
+  (Hgluel : forall a, ap f (gluel a) @ Hl = Hsm a pt @ ap g (gluel a))
+  (Hgluer : forall b, ap f (gluer b) @ Hr = Hsm pt b @ ap g (gluer b))
+  : f == g.
+Proof.
+  snrapply (Smash_ind Hsm Hl Hr).
+  - intros a.
+    nrapply transport_paths_FlFr'.
+    exact (Hgluel a).
+  - intros b.
+    nrapply transport_paths_FlFr'.
+    exact (Hgluer b).
+Defined.
+
+(** A version of [Smash_ind]j specifically for proving that the composition of two functions is the identity map. *)
+Definition Smash_ind_FFlr {A B : pType} {P : Type}
+  (f : Smash A B -> P) (g : P -> Smash A B)
+  (Hsm : forall a b, g (f (sm a b)) = sm a b)
+  (Hl : g (f auxl) = auxl) (Hr : g (f auxr) = auxr)
+  (Hgluel : forall a, ap g (ap f (gluel a)) @ Hl = Hsm a pt @ gluel a)
+  (Hgluer : forall b, ap g (ap f (gluer b)) @ Hr = Hsm pt b @ gluer b)
+  : g o f == idmap.
+Proof.
+  snrapply (Smash_ind Hsm Hl Hr).
+  - intros a.
+    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+    exact (Hgluel a).
+  - intros b.
+    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+    exact (Hgluer b).
+Defined.
+
+(** ** Functoriality of the smash product *)
+
+Definition functor_smash {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
+  : Smash A B $-> Smash X Y.
+Proof.
+  srapply Build_pMap.
+  - snrapply (Smash_rec (fun a b => sm (f a) (g b)) auxl auxr).
+    + intro a; cbn beta.
+      rhs_V nrapply (gluel (f a)).
+      exact (ap011 _ 1 (point_eq g)).
+    + intro b; cbn beta.
+      rhs_V nrapply (gluer (g b)).
+      exact (ap011 _ (point_eq f) 1).
+  - exact (ap011 _ (point_eq f) (point_eq g)).
+Defined.
+
+Definition functor_smash_idmap (X Y : pType)
+  : functor_smash (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind_FlFr.
+    1-3: reflexivity.
+    - intros x.
+      apply equiv_p1_1q.
+      rhs nrapply ap_idmap.
+      lhs nrapply Smash_rec_beta_gluel.
+      apply concat_1p.
+    - intros y.
+      apply equiv_p1_1q.
+      rhs nrapply ap_idmap.
+      lhs nrapply Smash_rec_beta_gluer.
+      apply concat_1p. }
+  reflexivity.
+Defined.
+
+Definition functor_smash_compose {X Y A B C D : pType}
+  (f : X $-> A) (g : Y $-> B) (h : A $-> C) (k : B $-> D)
+  : functor_smash (h $o f) (k $o g) $== functor_smash h k $o functor_smash f g.
+Proof.
+  pointed_reduce.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind_FlFr.
+    1-3: reflexivity.
+    - intros x.
+      apply equiv_p1_1q.
+      lhs nrapply Smash_rec_beta_gluel.
+      symmetry.
+      lhs nrapply (ap_compose (functor_smash _ _) _ (gluel x)).
+      lhs nrapply ap.
+      2: nrapply Smash_rec_beta_gluel.
+      lhs nrapply Smash_rec_beta_gluel.
+      apply concat_1p.
+    - intros y.
+      apply equiv_p1_1q.
+      lhs nrapply Smash_rec_beta_gluer.
+      symmetry.
+      lhs nrapply (ap_compose (functor_smash _ _) _ (gluer y)).
+      lhs nrapply ap.
+      2: nrapply Smash_rec_beta_gluer.
+      lhs nrapply Smash_rec_beta_gluer.
+      apply concat_1p. }
+  reflexivity.
+Defined.
+
+Definition functor_smash_homotopic {X Y A B : pType}
+  {f h : X $-> A} {g k : Y $-> B}
+  (p : f $== h) (q : g $== k)
+  : functor_smash f g $== functor_smash h k.
+Proof.
+  pointed_reduce.
+  snrapply Build_pHomotopy.
+  { snrapply Smash_ind_FlFr.
+    1: exact (fun x y => ap011 _ (p x) (q y)).
+    1,2: reflexivity.
+    - intros x.
+      lhs nrapply concat_p1.
+      lhs nrapply Smash_rec_beta_gluel.
+      rhs nrapply whiskerL.
+      2: nrapply Smash_rec_beta_gluel.
+      simpl; induction (p x); simpl.
+      rhs_V nrapply concat_pp_p.
+      apply whiskerR.
+      nrapply ap_pp.
+    - intros y.
+      lhs nrapply concat_p1.
+      lhs nrapply Smash_rec_beta_gluer.
+      rhs nrapply whiskerL.
+      2: nrapply Smash_rec_beta_gluer.
+      simpl; induction (q y); simpl.
+      rhs_V nrapply concat_pp_p.
+      apply whiskerR.
+      nrapply (ap011_pp _ _ _ 1 1). }
+  exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).
+Defined.
+
+Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
+Proof.
+  snrapply Build_Is0Bifunctor'.
+  1,2: exact _.
+  nrapply Build_Is0Functor.
+  intros [X Y] [A B] [f g].
+  exact (functor_smash f g).
+Defined.
+
+Global Instance is1bifunctor_smash : Is1Bifunctor Smash.
+Proof.
+  snrapply Build_Is1Bifunctor'.
+  snrapply Build_Is1Functor.
+  - intros [X Y] [A B] [f g] [h i] [p q].
+    exact (functor_smash_homotopic p q).
+  - intros [X Y].
+    exact (functor_smash_idmap X Y).
+  - intros [X Y] [A B] [C D] [f g] [h i].
+    exact (functor_smash_compose f g h i).
+Defined.
+
+(** ** Symmetry of the smash product *)
+
+Definition pswap (X Y : pType) : Smash X Y $-> Smash Y X
+  := Build_pMap _ _ (Smash_rec (flip sm) auxr auxl gluer gluel) 1.
+
+Definition pswap_pswap {X Y : pType}
+  : pswap X Y $o pswap Y X $== pmap_idmap.
+Proof.
+  snrapply Build_pHomotopy.
+  - snrapply Smash_ind_FFlr.
+    1-3: reflexivity.
+    + intros y.
+      apply equiv_p1_1q.
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluel.
+      nrapply Smash_rec_beta_gluer.
+    + intros x.
+      apply equiv_p1_1q.
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluer.
+      nrapply Smash_rec_beta_gluel.
+  - reflexivity.
+Defined.
+
+Definition pequiv_pswap {X Y : pType} : Smash X Y $<~> Smash Y X.
+Proof.
+  snrapply cate_adjointify.
+  1,2: exact (pswap _ _).
+  1,2: exact pswap_pswap.
+Defined.
+
+Definition pswap_natural {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
+  : pswap X Y $o functor_smash f g $== functor_smash g f $o pswap A B.
+Proof.
+  pointed_reduce.
+  snrapply Build_pHomotopy.
+  - snrapply Smash_ind_FlFr.
+    1-3: reflexivity.
+    + intros a.
+      apply equiv_p1_1q.
+      rhs nrapply (ap_compose (pswap _ _) _ (gluel a)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluel.
+      rhs nrapply Smash_rec_beta_gluer.
+      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluel a)).
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluel.
+      simpl.
+      lhs nrapply ap.
+      1: apply concat_1p.
+      rhs nrapply concat_1p.
+      nrapply Smash_rec_beta_gluel.
+    + intros b.
+      apply equiv_p1_1q.
+      rhs nrapply (ap_compose (pswap _ _) (functor_smash _ _) (gluer b)).
+      rhs nrapply ap.
+      2: apply Smash_rec_beta_gluer.
+      rhs nrapply Smash_rec_beta_gluel.
+      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluer b)).
+      lhs nrapply ap.
+      1: apply Smash_rec_beta_gluer.
+      lhs nrapply ap.
+      1: apply concat_1p.
+      rhs nrapply concat_1p.
+      nrapply Smash_rec_beta_gluer.
+  - reflexivity.
+Defined.

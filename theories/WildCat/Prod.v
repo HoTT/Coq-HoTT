@@ -21,16 +21,9 @@ Proof.
     exact (f1 $o f2 , g1 $o g2).
 Defined.
 
-(** To avoid having to define a separate notion of "two-variable functor", we define two-variable functors in uncurried form.  The following definition applies such a two-variable functor, with a currying built in. *)
-Definition fmap11 {A B C : Type} `{IsGraph A} `{IsGraph B} `{IsGraph C}
-  (F : A -> B -> C) {H2 : Is0Functor (uncurry F)}
-  {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2)
-  : F a1 b1 $-> F a2 b2
-  := @fmap _ _ _ _ (uncurry F) H2 (a1, b1) (a2, b2) (f1, f2).
-
 Global Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
  : Is0Gpd (A * B).
-Proof. 
+Proof.
   srapply Build_Is0Gpd.
   intros [x1 x2] [y1 y2] [f1 f2].
   cbn in *.
@@ -47,26 +40,28 @@ Defined.
 Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
-  srapply (Build_Is1Cat).
+  srapply Build_Is1Cat.
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
-    srapply Build_Is0Functor.  
-    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
+    srapply Build_Is0Functor.
+    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *.
     exact ( h1 $@L p1 , h2 $@L p2 ).
   - intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].
-    srapply Build_Is0Functor.  
-    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *. 
+    srapply Build_Is0Functor.
+    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *.
     exact ( p1 $@R h1 , p2 $@R h2 ).
   - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
     cbn in *.
     exact(cat_assoc f1 g1 h1, cat_assoc f2 g2 h2).
+  - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
+    cbn in *.
+    exact(cat_assoc_opp f1 g1 h1, cat_assoc_opp f2 g2 h2).
   - intros [a1 a2] [b1 b2] [f1 f2].
     cbn in *.
     exact (cat_idl _, cat_idl _).
   - intros [a1 a2] [b1 b2] [g1 g2].
     cbn in *.
-    exact (cat_idr _, cat_idr _). 
+    exact (cat_idr _, cat_idr _).
 Defined.
-
 
 (** Product categories inherit equivalences *)
 
@@ -96,27 +91,6 @@ Global Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
        {a1 a2 : A} {b1 b2 : B} {f : a1 $-> a2} {g : b1 $-> b2}
        {ef : CatIsEquiv f} {eg : CatIsEquiv g}
   : @CatIsEquiv (A*B) _ _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
-
-(** More coherent two-variable functors. *)
-
-Definition fmap22 {A B C : Type} `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
-  (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
-  {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2) (g1 : a1 $-> a2) (g2 : b1 $-> b2)
-  (alpha : f1 $== g1) (beta : f2 $== g2)
-  : (fmap11 F f1 f2) $== (fmap11 F g1 g2)
-  := @fmap2 _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2) (g1, g2) (alpha, beta).
-
-Global Instance iemap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
-           (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
-           {a1 a2 : A} {b1 b2 : B} (f1 : a1 $<~> a2) (f2 : b1 $<~> b2)
-  : CatIsEquiv (fmap11 F f1 f2)
-  := @iemap _ _ _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (f1, f2).
-
-Definition emap11 {A B C : Type} `{HasEquivs A} `{HasEquivs B} `{HasEquivs C}
-           (F : A -> B -> C) `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
-           {a1 a2 : A} {b1 b2 : B} (fe1 : a1 $<~> a2)
-           (fe2 : b1 $<~> b2) : (F a1 b1) $<~> (F a2 b2)
-  := @emap _ _ _ _ _ _ _ _ _ _ _ _ (uncurry F) _ _ (a1, b1) (a2, b2) (fe1, fe2).
 
 (** ** Product functors *)
 
@@ -177,3 +151,139 @@ Proof.
   - reflexivity.
 Defined.
 
+(** Inclusions into a product category are functorial. *)
+
+Global Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B}
+  (b : B)
+  : Is0Functor (fun a : A => (a, b)).
+Proof.
+  nrapply Build_Is0Functor.
+  intros a c f.
+  exact (f, Id b).
+Defined.
+
+Global Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B}
+  (b : B)
+  : Is1Functor (fun a : A => (a, b)).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros a c f g p.
+    exact (p, Id _).
+  - intros a; reflexivity.
+  - intros a c d f g.
+    exact (Id _, (cat_idl _)^$).
+Defined.
+
+Global Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B}
+  (a : A)
+  : Is0Functor (fun b : B => (a, b)).
+Proof.
+  nrapply Build_Is0Functor.
+  intros b c f.
+  exact (Id a, f).
+Defined.
+
+Global Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B}
+  (a : A)
+  : Is1Functor (fun b : B => (a, b)).
+Proof.
+  nrapply Build_Is1Functor.
+  - intros b c f g p.
+    exact (Id _, p).
+  - intros b; reflexivity.
+  - intros b c d f g.
+    exact ((cat_idl _)^$, Id _).
+Defined.
+
+(** Functors from a product category are functorial in each argument *)
+
+Global Instance is0functor_functor_uncurried01 {A B C : Type}
+  `{Is01Cat A, IsGraph B, IsGraph C}
+  (F : A * B -> C) `{!Is0Functor F} (a : A)
+  : Is0Functor (fun b => F (a, b))
+  := is0functor_compose (fun b => (a, b)) F.
+
+Global Instance is1functor_functor_uncurried01 {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
+  : Is1Functor (fun b => F (a, b))
+  := is1functor_compose (fun b => (a, b)) F.
+
+Global Instance is0functor_functor_uncurried10 {A B C : Type}
+  `{IsGraph A, Is01Cat B, IsGraph C}
+  (F : A * B -> C) `{!Is0Functor F} (b : B)
+  : Is0Functor (fun a => F (a, b))
+  := is0functor_compose (fun a => (a, b)) F.
+
+Global Instance is1functor_functor_uncurried10 {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (b : B)
+  : Is1Functor (fun a => F (a, b))
+  := is1functor_compose (fun a => (a, b)) F.
+
+(** Conversely, if [F : A * B -> C] is a 0-functor in each variable, then it is a 0-functor. *)
+Definition is0functor_prod_is0functor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A * B -> C)
+  `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
+  : Is0Functor F.
+Proof.
+  snrapply Build_Is0Functor.
+  intros [a b] [a' b'] [f g].
+  exact (fmap (fun a0 => F (a0,b')) f $o fmap (fun b0 => F (a,b0)) g).
+Defined.
+(** TODO: If we make this an instance, will it cause typeclass search to spin? *)
+Hint Immediate is0functor_prod_is0functor : typeclass_instances.
+
+(** And if [F : A * B -> C] is a 1-functor in each variable and satisfies a coherence, then it is a 1-functor. *)
+Definition is1functor_prod_is1functor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A * B -> C)
+  `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
+  `{!forall a, Is1Functor (fun b => F (a,b)), !forall b, Is1Functor (fun a => F (a,b))}
+  (bifunctor_coh : forall a0 a1 (f : a0 $-> a1) b0 b1 (g : b0 $-> b1),
+    fmap (fun b => F (a1,b)) g $o fmap (fun a => F (a,b0)) f
+      $== fmap (fun a => F(a,b1)) f $o fmap (fun b => F (a0,b)) g)
+  : Is1Functor F.
+Proof.
+  snrapply Build_Is1Functor.
+  - intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
+    exact (fmap2 (fun b0 => F (a,b0)) p' $@@ fmap2 (fun a0 => F (a0,b')) p).
+  - intros [a b].
+    exact ((fmap_id (fun b0 => F (a,b0)) b $@@ fmap_id (fun a0 => F (a0,b)) _) $@ cat_idr _).
+  - intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- .
+    refine ((fmap_comp (fun b0 => F (a,b0)) g g' $@@ fmap_comp (fun a0 => F (a0,b'')) f f') $@ _).
+    nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
+    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
+    nrapply bifunctor_coh.
+Defined.
+Hint Immediate is1functor_prod_is1functor : typeclass_instances.
+
+(** Applies a two variable functor via uncurrying. Note that the precondition on [C] is slightly weaker than that of [Bifunctor.fmap11]. *)
+Definition fmap11_uncurry {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
+  (F : A -> B -> C) {H2 : Is0Functor (uncurry F)}
+  {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)
+  : F a0 b0 $-> F a1 b1
+  := @fmap _ _ _ _ (uncurry F) H2 (a0, b0) (a1, b1) (f, g).
+
+Definition fmap_pair {A B C : Type}  
+  `{IsGraph A, IsGraph B, IsGraph C}  
+  (F : A * B -> C) `{!Is0Functor F}  
+  {a0 a1 : A} (f : a0 $-> a1) {b0 b1 : B} (g : b0 $-> b1)  
+  : F (a0, b0) $-> F (a1, b1)  
+  := fmap (a := (a0, b0)) (b := (a1, b1)) F (f, g).  
+
+Definition fmap_pair_comp {A B C : Type}  
+  `{Is1Cat A, Is1Cat B, Is1Cat C}  
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F}  
+  {a0 a1 a2 : A} {b0 b1 b2 : B}
+  (f : a0 $-> a1) (h : b0 $-> b1) (g : a1 $-> a2) (i : b1 $-> b2)  
+  : fmap_pair F (g $o f) (i $o h)
+    $== fmap_pair F g i $o fmap_pair F f h
+  := fmap_comp (a := (a0, b0)) (b := (a1, b1)) (c := (a2, b2)) F (f, h) (g, i).
+
+Definition fmap2_pair {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -> C) `{!Is0Functor F, !Is1Functor F}
+  {a0 a1 : A} {f f' : a0 $-> a1} (p : f $== f')
+  {b0 b1 : B} {g g' : b0 $-> b1} (q : g $== g')
+  : fmap_pair F f g $== fmap_pair F f' g'
+  := fmap2 F (a := (a0, b0)) (b := (a1, b1)) (f := (f, g)) (g := (f' ,g')) (p, q).

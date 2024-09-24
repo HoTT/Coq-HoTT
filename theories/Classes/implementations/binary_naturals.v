@@ -1,5 +1,5 @@
 Require Import
-        HoTT.Spaces.Nat.
+        HoTT.Spaces.Nat.Core.
 Require Import
         HoTT.Tactics.
 Require Import
@@ -275,7 +275,7 @@ Section semiring_laws.
     apply (istrunc_isequiv_istrunc nat binary).
   Qed.
 
-  Global Instance binnat_semiring : IsSemiRing binnat.
+  Global Instance binnat_semiring : IsSemiCRing binnat.
   Proof.
     split; try split; try split; try split; hnf; intros.
     1, 5: apply istrunc_S; intros x y; exact (binnat_set x y).
@@ -363,7 +363,7 @@ Section naturals.
 
   Section for_another_semiring.
     Universe U.
-    Context {R:Type} `{IsSemiRing R}.
+    Context {R:Type} `{IsSemiCRing R}.
 
     Notation toR := (naturals_to_semiring binnat R).
     Notation toR_fromnat := (naturals_to_semiring nat R).

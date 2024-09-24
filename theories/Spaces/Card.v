@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Representation of cardinals, see Chapter 10 of the HoTT book. *)
-Require Import HoTT.TruncType.
+Require Import HoTT.Universes.TruncType.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 (** This speeds things up considerably *)
@@ -86,7 +86,7 @@ Section contents.
   Instance leftabsorb_card : LeftAbsorb mult_card zero_card.
   Proof. reduce. apply prod_empty_l. Defined.
 
-  Global Instance issemiring_card : IsSemiRing Card.
+  Global Instance issemiring_card : IsSemiCRing Card.
   Proof.
     repeat split; try apply _.
     - repeat intro. simpl_ops.

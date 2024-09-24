@@ -275,7 +275,7 @@ Global Instance is2graph_abses
 Global Instance is1cat_abses {A B : AbGroup@{u}}
   : Is1Cat (AbSES B A).
 Proof.
-  snrapply Build_Is1Cat.
+  snrapply Build_Is1Cat'.
   1: intros ? ?; apply is01cat_abses_path_data.
   1: intros ? ?; apply is0gpd_abses_path_data.
   3-5: cbn; reflexivity.
@@ -471,11 +471,11 @@ Proof.
     apply path_sigma_hprop; cbn.
     rapply equiv_path_grouphomomorphism; intros [a b]; cbn.
     apply path_prod; cbn.
-    + rewrite (ab_biprod_decompose a b).
+    + rewrite (grp_prod_decompose a b).
       refine (_ @ (grp_homo_op (ab_biprod_pr1 $o phi) _ _)^).
       apply grp_cancelR; symmetry.
       exact (ap fst (p a)).
-    + rewrite (ab_biprod_decompose a b).
+    + rewrite (grp_prod_decompose a b).
       refine (_ @ (grp_homo_op (ab_biprod_pr2 $o phi) _ _)^); cbn; symmetry.
       exact (ap011 _ (ap snd (p a)) (q (group_unit, b))^).
 Defined.
@@ -625,11 +625,17 @@ Proposition projection_split_beta {B A : AbGroup} (E : AbSES B A)
   : projection_split_iso E h o (inclusion _) == ab_biprod_inl.
 Proof.
   intro a.
-  refine (ap _ (ab_corec_beta _ _ _ _) @ _).
-  refine (ab_biprod_functor_beta _ _ _ _ _ @ _).
+  (* The next two lines might help the reader, but both are definitional equalities:
+  lhs nrapply (ap _ (grp_prod_corec_natural _ _ _ _)).
+  lhs nrapply ab_biprod_functor_beta.
+  *)
   nrapply path_prod'.
   2: rapply cx_isexact.
-  refine (ap _ (projection_split_to_kernel_beta E h a) @ _).
+  (* The LHS of the remaining goal is definitionally equal to
+       (grp_iso_inverse (grp_iso_cxfib (isexact_inclusion_projection E)) $o
+         (projection_split_to_kernel E h $o inclusion E)) a
+     allowing us to do: *)
+  lhs nrapply (ap _ (projection_split_to_kernel_beta E h a)).
   apply eissect.
 Defined.
 
@@ -731,8 +737,7 @@ Proof.
   - apply isequiv_surj_emb.
     1: rapply cancelR_conn_map.
     apply isembedding_isinj_hset.
-    srapply Quotient_ind_hprop; intro x.
-    srapply Quotient_ind_hprop; intro y.
+    srapply Quotient_ind2_hprop; intros x y.
     intro p.
     apply qglue; cbn.
     refine (isexact_preimage (Tr (-1)) _ _ (-x + y) _).

@@ -50,7 +50,7 @@ Section onmorphisms.
   Variable A : PreCategory.
   Variable Pmor : forall s d, morphism A s d -> Type.
 
-  Local Notation mor s d := { m : _ | Pmor s d m }%type.
+  Local Notation mor s d := { m : _ | Pmor s d m }.
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -148,11 +148,11 @@ Section on_both.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := { x : _ | Pobj x }%type (only parsing).
+  Local Notation obj := { x : _ | Pobj x } (only parsing).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := { m : _ | Pmor s d m }%type (only parsing).
+  Local Notation mor s d := { m : _ | Pmor s d m } (only parsing).
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -283,7 +283,7 @@ Section on_both.
 
   Local Definition equiv_iso_A'_eisretr_helper {s d}
         (x : {e : @Isomorphic A s.1 d.1
-             | Pmor_iso_T s d e e^-1 (@left_inverse _ _ _ e e) right_inverse }%type)
+             | Pmor_iso_T s d e e^-1 (@left_inverse _ _ _ e e) right_inverse })
   : transport
       (fun e : @Isomorphic A s.1 d.1 =>
          Pmor_iso_T s d e e^-1 left_inverse right_inverse)

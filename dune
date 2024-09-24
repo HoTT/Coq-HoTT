@@ -62,3 +62,70 @@
    (glob_files_rec contrib/*.v)))
  (action
   (run etc/emacs/run-etags.sh %{vfile})))
+
+; Common flags for Coq
+
+(env
+ (dev
+  (coq
+   (coqdoc_flags
+    :standard
+    --interpolate
+    --utf8
+    --no-externals
+    --parse-comments)
+   (flags -noinit -indices-matter -color on)))
+ (_
+  (coq
+   (coqdoc_flags
+    :standard
+    --interpolate
+    --utf8
+    --no-externals
+    --parse-comments)
+   (flags -noinit -indices-matter))))
+
+; Bench
+
+; The following rule allows you to bench the running time of a file using
+; "hyperfine". For this to work you must make a file called "file_to_bench"
+; which contains the path to the file you want to bench (with brackets around
+; it). For instance, if we wanted to bench the file
+; "theories/WildCat/Products.v", we would make a file called "file_to_bench" with
+; the following content:
+;
+; (theories/WildCat/Products.v)
+;
+; Afterwards you run "dune build @bench" and it will output the report.
+
+(rule
+ (alias bench)
+ (deps
+  (alias bench-hint)
+  (universe)
+  (sandbox always)
+  (glob_files_rec ./*.vo)
+  (:file
+   (include file_to_bench)))
+ (target bench_report)
+ (action
+  (progn
+   (with-outputs-to
+    %{target}
+    (progn
+     (copy %{file} benched_file.v)
+     (run
+      %{bin:hyperfine}
+      "%{bin:coqc} -R %{project_root}/theories HoTT -noinit -indices-matter benched_file.v")))
+   (echo "Bench finished, report at %{target}:\n\n")
+   (cat %{target}))))
+
+(rule
+ (alias bench-hint)
+ (deps
+  (universe)
+  (glob_files_rec ./*.vo)
+  %{bin:hyperfine}
+  (file file_to_bench))
+ (action
+  (run echo "Starting bench. This may take a while.")))

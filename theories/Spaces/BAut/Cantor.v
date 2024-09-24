@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Idempotents.
-Require Import HoTT.Truncations.Core Spaces.BAut Spaces.Cantor.
+Require Import HoTT.Truncations.Core Universes.BAut Spaces.Cantor.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -20,7 +20,7 @@ Section Assumptions.
   Proof.
     intros Z.
     (** Here is the important part of this definition. *)
-    exists (Z + Cantor)%type.
+    exists (Z + Cantor).
     (** The rest is just a proof that [Z+Cantor] is again equivalent to [Cantor], using [cantor_fold] and the assumption that [Z] is equivalent to [Cantor]. *)
     pose (e := Z.2); simpl in e; clearbody e.
     strip_truncations.

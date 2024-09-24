@@ -8,7 +8,7 @@ concurrency:
 
 # We set the supported coq-version from here. In order to use this environment variable correctly, look at how they are used in the following jobs.
 env:
-  coq-version-supported: '8.17'
+  coq-version-supported: '8.19'
   ocaml-version: '4.14-flambda'
   deployment-branch: 'gh-pages'
 
@@ -36,7 +36,6 @@ jobs:
       matrix:
         coq-version-dummy:
         - 'supported'
-        - '8.17'
         - 'latest'
         - 'dev'
         os:
@@ -51,7 +50,7 @@ jobs:
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
 
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -82,7 +81,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build HoTT
       uses: coq-community/docker-coq-action@v1
       with:
@@ -120,7 +119,7 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # We use the coq docker so we don't have to build coq
@@ -134,7 +133,7 @@ jobs:
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           sudo apt-get -o Acquire::Retries=30 update -q
-          sudo apt-get -o Acquire::Retries=30 install python -y --allow-unauthenticated
+          sudo apt-get -o Acquire::Retries=30 install python3 python-is-python3 -y --allow-unauthenticated
           etc/coq-scripts/github/reportify-coq.sh --errors ${{ matrix.extra-gh-reportify }} make TIMED=1 -j2 --output-sync
 
     - name: Revert permissions
@@ -146,7 +145,7 @@ jobs:
       run: tar -cf workspace.tar .
     # We upload build artifacts for use by documentation
     - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
         path: workspace.tar
@@ -155,7 +154,7 @@ jobs:
   nix:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
       with:
         name: coq-hott
@@ -181,11 +180,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -203,11 +202,16 @@ jobs:
         custom_script: |
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
-          sudo apt-get -o Acquire::Retries=30 install python3-pip autoconf -y --allow-unauthenticated
-          python3 -m pip install --user --upgrade pygments dominate beautifulsoup4 docutils==0.17.1
+          sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
+          # Create and activate a virtual environment
+          python3 -m venv myenv
+          source myenv/bin/activate
+          # Install the required Python packages in the virtual environment
+          python -m pip install --upgrade pip
+          python -m pip install pygments dominate beautifulsoup4 docutils==0.17.1
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make alectryon ALECTRYON_EXTRAFLAGS=--traceback
     - name: Revert permissions
@@ -217,7 +221,7 @@ jobs:
     - name: tar alectryon artifact
       run: tar -cf alectryon-html.tar alectryon-html
     - name: upload alectryon artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: alectryon-html
         path: alectryon-html.tar
@@ -229,11 +233,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -273,7 +277,7 @@ jobs:
           mv HoTT.svg HoTTCore.svg dep-graphs/
 
           ## Install coq-dpdgraph
-          opam install coq-dpdgraph.1.0+8.17 -y
+          opam install coq-dpdgraph.1.0+8.19 -y
 
           # For some reason, we get a stackoverflow. So we are lax
           # with making these.
@@ -300,12 +304,12 @@ jobs:
         tar -cf file-dep-graphs.tar file-dep-graphs
     # We upload the artifacts
     - name: 'Upload Artifact dep-graphs.tar'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dep-graphs
         path: dep-graphs.tar
     - name: 'Upload Artifact file-dep-graphs.tar'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: file-dep-graphs
         path: file-dep-graphs.tar
@@ -317,11 +321,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -348,7 +352,7 @@ jobs:
       run: tar -cf coqdoc-html.tar coqdoc-html
     # Upload coqdoc-html artifact
     - name: 'Upload coqdoc-html Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coqdoc-html
         path: coqdoc-html.tar
@@ -360,11 +364,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version-supported }}
     # Unpack Tar
@@ -376,7 +380,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           sudo apt-get update
-          sudo apt-get install -y time python lua5.1
+          sudo apt-get install -y time python3 python-is-python3 lua5.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R coq:coq .
           endGroup
@@ -392,7 +396,7 @@ jobs:
       run: tar -cf timing-html.tar timing-html
     # Upload timing-html artifact
     - name: 'Upload timing-html Artifact'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: timing-html
         path: timing-html.tar
@@ -417,11 +421,11 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -462,11 +466,11 @@ jobs:
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     # Download artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: workspace-${{ env.coq-version }}
     # Unpack Tar
@@ -508,25 +512,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout branch
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     # Download alectryon artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: alectryon-html
     # Download dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: dep-graphs
     # Download file dependency graph artifacts
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: file-dep-graphs
     # Download coqdoc artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: coqdoc-html
     # Download timing artifact
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: timing-html
     # Unpack Tar files
@@ -562,28 +566,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Delete workspace artifacts
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-${{ env.coq-version-supported }}
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-latest
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-dev
     # Delete documentation artifacts
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: dep-graphs
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: file-dep-graphs
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: alectryon-html
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: coqdoc-html
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: timing-html

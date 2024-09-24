@@ -52,6 +52,7 @@ Proof.
     intros f g p a.
     exact (p a $@R h a).
   + intros w x y z f g h a; apply cat_assoc.
+  + intros w x y z f g h a; apply cat_assoc_opp.
   + intros x y f a; apply cat_idl.
   + intros x y f a; apply cat_idr.
 Defined.

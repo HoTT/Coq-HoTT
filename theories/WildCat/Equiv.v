@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics.Utf8 Basics.Overture Basics.Tactics.
+Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import WildCat.Core.
+Require Import WildCat.Opposite.
 
 (** We declare a scope for printing [CatEquiv] as [≅] *)
 Declare Scope wc_iso_scope.
@@ -85,7 +86,29 @@ Defined.
 
 Notation "f ^-1$" := (cate_inv f).
 
-Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b) 
+(** * Opposite categories preserve having equivalences. *)
+Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+Proof.
+  snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
+  - exact (b $<~> a).
+  - apply CatIsEquiv.
+  - apply cate_fun'.
+  - apply cate_isequiv'.
+  - apply cate_buildequiv'.
+  - rapply cate_buildequiv_fun'.
+  - apply cate_inv'.
+  - rapply cate_isretr'.
+  - rapply cate_issect'.
+  - intros f g s t.
+    exact (catie_adjointify f g t s).
+Defined.
+
+Global Instance isequiv_op {A : Type} `{HasEquivs A}
+       {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
+  : @CatIsEquiv A^op _ _ _ _ _ b a f
+  := ief.
+
+Definition cate_issect {A} `{HasEquivs A} {a b} (f : a $<~> b)
   : f^-1$ $o f $== Id a.
 Proof.
   refine (_ $@ cate_issect' a b f).
@@ -94,12 +117,8 @@ Proof.
 Defined.
 
 Definition cate_isretr {A} `{HasEquivs A} {a b} (f : a $<~> b)
-  : f $o f^-1$ $== Id b.
-Proof.
-  refine (_ $@ cate_isretr' a b f).
-  refine (f $@L _).
-  apply cate_buildequiv_fun'.
-Defined.
+  : f $o f^-1$ $== Id b
+  := cate_issect (A:=A^op) (b:=a) (a:=b) f.
 
 (** If [g] is a section of an equivalence, then it is the inverse. *)
 Definition cate_inverse_sect {A} `{HasEquivs A} {a b} (f : a $<~> b)
@@ -116,14 +135,8 @@ Defined.
 (** If [g] is a retraction of an equivalence, then it is the inverse. *)
 Definition cate_inverse_retr {A} `{HasEquivs A} {a b} (f : a $<~> b)
   (g : b $-> a) (p : g $o f $== Id a)
-  : cate_fun f^-1$ $== g.
-Proof.
-  refine ((cat_idl _)^$ $@ _).
-  refine ((p^$ $@R _) $@ _).
-  refine (cat_assoc _ _ _ $@ _).
-  refine (_ $@L cate_isretr f $@ _).
-  apply cat_idr.
-Defined.
+  : cate_fun f^-1$ $== g
+  := cate_inverse_sect (A:=A^op) (a:=b) (b:=a) f g p.
 
 (** It follows that the inverse of the equivalence you get by adjointification is homotopic to the inverse [g] provided. *)
 Definition cate_inv_adjointify {A} `{HasEquivs A} {a b : A}
@@ -137,7 +150,7 @@ Defined.
 (** The identity morphism is an equivalence *)
 Global Instance catie_id {A} `{HasEquivs A} (a : A)
   : CatIsEquiv (Id a)
-  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idl (Id a)).
+  := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idr (Id a)).
 
 Definition id_cate {A} `{HasEquivs A} (a : A)
   : a $<~> a
@@ -151,23 +164,52 @@ Global Instance symmetric_cate {A} `{HasEquivs A}
   : Symmetric (@CatEquiv A _ _ _ _ _)
   := fun a b f => cate_inv f.
 
-(** Equivalences can be composed. *)
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
+Definition catie_homotopic {A} `{HasEquivs A} {a b : A}
+  (f : a $-> b) `{!CatIsEquiv f} {g : a $-> b} (p : f $== g)
+  : CatIsEquiv g.
+Proof.
+  snrapply catie_adjointify.
+  - exact (Build_CatEquiv f)^-1$.
+  - refine (p^$ $@R _ $@ _).
+    refine ((cate_buildequiv_fun f)^$ $@R _ $@ _).
+    apply cate_isretr.
+  - refine (_ $@L p^$ $@ _).
+    refine (_ $@L (cate_buildequiv_fun f)^$ $@ _).
+    apply cate_issect.
+Defined.
+
+(** Equivalences can be composed.  In order to make use of duality, we factor out parts of the proof as two lemmas. *)
+
+Definition compose_catie_isretr {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : g $o f $o (f^-1$ $o g^-1$) $== Id c.
+Proof.
+  refine (cat_assoc _ _ _ $@ _).
+  refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
+  refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
+  refine ((_ $@L cat_idl _) $@ _).
+  apply cate_isretr.
+Defined.
+
+Definition compose_catie_issect {A} `{HasEquivs A} {a b c : A}
+  (g : b $<~> c) (f : a $<~> b)
+  : (f^-1$ $o g^-1$ $o (g $o f) $== Id a)
+  := compose_catie_isretr (A:=A^op) (a:=c) (b:=b) (c:=a) f g.
+
 Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b)
   : CatIsEquiv (g $o f).
 Proof.
   refine (catie_adjointify _ (f^-1$ $o g^-1$) _ _).
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_isretr _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
-    apply cate_isretr.
-  - refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
-    refine ((_ $@L (cate_issect _ $@R _)) $@ _).
-    refine ((_ $@L cat_idl _) $@ _).
-    apply cate_issect.
+  - apply compose_catie_isretr.
+  - apply compose_catie_issect.
 Defined.
+
+Global Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
+  (g : b $-> c) `{!CatIsEquiv g} (f : a $-> b) `{!CatIsEquiv f}
+  : CatIsEquiv (g $o f)
+  := catie_homotopic _ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
 
 Definition compose_cate {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b) : a $<~> c
@@ -190,7 +232,7 @@ Proof.
   apply cate_buildequiv_fun.
 Defined.
 
-Definition id_cate_fun {A} `{HasEquivs A} (a : A) 
+Definition id_cate_fun {A} `{HasEquivs A} (a : A)
   : cate_fun (id_cate a) $== Id a.
 Proof.
   apply cate_buildequiv_fun.
@@ -206,6 +248,16 @@ Proof.
   - refine (_ $@L compose_cate_funinv g f).
 Defined.
 
+Definition compose_cate_assoc_opp {A} `{HasEquivs A}
+           {a b c d : A} (f : a $<~> b) (g : b $<~> c) (h : c $<~> d)
+  : cate_fun (h $oE (g $oE f)) $== cate_fun ((h $oE g) $oE f).
+Proof.
+  Opaque compose_catie_isretr.
+  (* We use [exact_no_check] just to save a small amount of time. *)
+  exact_no_check (compose_cate_assoc (A:=A^op) (a:=d) (b:=c) (c:=b) (d:=a) h g f).
+Defined.
+Transparent compose_catie_isretr.
+
 Definition compose_cate_idl {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
   : cate_fun (id_cate b $oE f) $== cate_fun f.
@@ -216,11 +268,8 @@ Defined.
 
 Definition compose_cate_idr {A} `{HasEquivs A}
            {a b : A} (f : a $<~> b)
-  : cate_fun (f $oE id_cate a) $== cate_fun f.
-Proof.
-  refine (compose_cate_fun f _ $@ _ $@ cat_idr f).
-  refine (_ $@L cate_buildequiv_fun _).
-Defined.
+  : cate_fun (f $oE id_cate a) $== cate_fun f
+  := compose_cate_idl (A:=A^op) (a:=b) (b:=a) f.
 
 Global Instance transitive_cate {A} `{HasEquivs A}
   : Transitive (@CatEquiv A _ _ _ _ _)
@@ -230,11 +279,11 @@ Global Instance transitive_cate {A} `{HasEquivs A}
 
 Definition compose_V_hh {A} `{HasEquivs A} {a b c : A} (f : b $<~> c) (g : a $-> b) :
   f^-1$ $o (f $o g) $== g :=
-  (cat_assoc _ _ _)^$ $@ (cate_issect f $@R g) $@ cat_idl g.
+  (cat_assoc_opp _ _ _) $@ (cate_issect f $@R g) $@ cat_idl g.
 
 Definition compose_h_Vh {A} `{HasEquivs A} {a b c : A} (f : c $<~> b) (g : a $-> b) :
   f $o (f^-1$ $o g) $== g :=
-  (cat_assoc _ _ _)^$ $@ (cate_isretr f $@R g) $@ cat_idl g.
+  (cat_assoc_opp _ _ _) $@ (cate_isretr f $@R g) $@ cat_idl g.
 
 Definition compose_hh_V {A} `{HasEquivs A} {a b c : A} (f : b $-> c) (g : a $<~> b) :
   (f $o g) $o g^-1$ $== f :=
@@ -255,30 +304,72 @@ Proof.
 Defined.
 
 Definition cate_epic_equiv {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
-  : Epic e.
+  : Epic e
+  := cate_monic_equiv (A:=A^op) (a:=b) (b:=a) e.
+
+(** ** Movement Lemmas *)
+
+(** These lemmas can be used to move equivalences around in an equation. *)
+
+Definition cate_moveL_eM {A} `{HasEquivs A} {a b c : A}
+  (e : a $<~> b) (f : a $-> c) (g : b $-> c)
+  (p : f $o e^-1$ $== g)
+  : f $== g $o e.
 Proof.
-  intros c f g p.
-  refine ((compose_hh_V _ e)^$ $@ _ $@ compose_hh_V _ e).
-  exact (p $@R _).
+  apply (cate_epic_equiv e^-1$).
+  exact (p $@ (compose_hh_V _ _)^$).
 Defined.
-
-(** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v.  More could be added. *)
-
-Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : a $<~> c)
-  (p : cate_fun g $== f $o e^-1$)
-  : g $o e $== f.
+  
+Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> a) (f : a $-> c) (g : b $-> c)
+  (p : f $== g $o e^-1$)
+  : f $o e $== g.
 Proof.
   apply (cate_epic_equiv e^-1$).
   exact (compose_hh_V _ _ $@ p).
 Defined.
 
-Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A} (e : b $<~> a) (f : b $<~> c) (g : c $<~> a)
-  (p : cate_fun e $== g $o f)
-  : g^-1$ $o e $== f.
+Definition cate_moveL_Me {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> c) (g : a $-> b)
+  (p : e^-1$ $o f $== g)
+  : f $== e $o g
+  := cate_moveL_eM (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
+
+Definition cate_moveR_Me {A} `{HasEquivs A} {a b c : A}
+  (e : c $<~> b) (f : a $-> c) (g : a $-> b)
+  (p : f $== e^-1$ $o g)
+  : e $o f $== g
+  := cate_moveR_eM (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
+
+Definition cate_moveL_eV {A} `{HasEquivs A} {a b c : A}
+  (e : a $<~> b) (f : b $-> c) (g : a $-> c)
+  (p : f $o e $== g)
+  : f $== g $o e^-1$.
 Proof.
-  apply (cate_monic_equiv g).
-  exact (compose_h_Vh _ _ $@ p).
+  apply (cate_epic_equiv e).
+  exact (p $@ (compose_hV_h _ _)^$).
 Defined.
+
+Definition cate_moveR_eV {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> a) (f : b $-> c) (g : a $-> c)
+  (p : f $== g $o e)
+  : f $o e^-1$ $== g.
+Proof.
+  apply (cate_epic_equiv e).
+  exact (compose_hV_h _ _ $@ p).
+Defined.
+
+Definition cate_moveL_Ve {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> b) (g : a $-> c)
+  (p : e $o f $== g)
+  : f $== e^-1$ $o g
+  := cate_moveL_eV (A:=A^op) (a:=c) (b:=b) (c:=a) e f g p.
+
+Definition cate_moveR_Ve {A} `{HasEquivs A} {a b c : A}
+  (e : b $<~> c) (f : a $-> c) (g : a $-> b)
+  (p : f $== e $o g)
+  : e^-1$ $o f $== g
+  := cate_moveR_eV (A:=A^op) (a:=b) (b:=c) (c:=a) e f g p.
 
 Definition cate_moveL_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : e $o f $== Id _)
@@ -290,11 +381,8 @@ Defined.
 
 Definition cate_moveL_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : f $o e $== Id _)
-  : f $== cate_fun e^-1$.
-Proof.
-  apply (cate_epic_equiv e).
-  exact (p $@ (cate_issect e)^$).
-Defined.
+  : f $== cate_fun e^-1$
+  := cate_moveL_V1 (A:=A^op) (a:=b) (b:=a) f p.
 
 Definition cate_moveR_V1 {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : Id _ $== e $o f)
@@ -306,11 +394,8 @@ Defined.
 
 Definition cate_moveR_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> a)
   (p : Id _ $== f $o e)
-  : cate_fun e^-1$ $== f.
-Proof.
-  apply (cate_epic_equiv e).
-  exact (cate_issect e $@ p).
-Defined.
+  : cate_fun e^-1$ $== f
+  := cate_moveR_V1 (A:=A^op) (a:=b) (b:=a) f p.
 
 (** Lemmas about the underlying map of an equivalence. *)
 
@@ -326,6 +411,13 @@ Definition cate_inv_compose {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : b
 Proof.
   refine (_ $@ (compose_cate_fun _ _)^$).
   apply cate_inv_adjointify.
+Defined.
+
+Definition cate_inv_compose' {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : b $<~> c)
+  : cate_fun (f $oE e)^-1$ $== e^-1$ $o f^-1$.
+Proof.
+  nrefine (_ $@ cate_buildequiv_fun _).
+  nrapply cate_inv_compose.
 Defined.
 
 Definition cate_inv_V {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
@@ -391,6 +483,12 @@ Proof.
   refine (cate_inv_adjointify _ _ _ _ $@ _).
   exact (cate_buildequiv_fun _)^$.
 Defined.
+
+Definition emap_inv' {A B : Type} `{HasEquivs A} `{HasEquivs B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F}
+  {a b : A} (e : a $<~> b)
+  : cate_fun (emap F e)^-1$ $== fmap F e^-1$
+  := emap_inv F e $@ cate_buildequiv_fun _.
 
 (** When we have equivalences, we can define what it means for a category to be univalent. *)
 Definition cat_equiv_path {A : Type} `{HasEquivs A} (a b : A)
@@ -481,6 +579,7 @@ Global Instance is1cat_core {A : Type} `{HasEquivs A}
 Proof.
   rapply Build_Is1Cat.
   - intros; apply compose_cate_assoc.
+  - intros; apply compose_cate_assoc_opp.
   - intros; apply compose_cate_idl.
   - intros; apply compose_cate_idr.
 Defined.
@@ -522,6 +621,18 @@ Proof.
   - exact tt.
 Defined.
 
+Global Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
+  `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)} 
+  : HasMorExt (core A).
+Proof.
+  snrapply Build_HasMorExt.
+  intros X Y f g; cbn in *.
+  snrapply isequiv_homotopic.
+  - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
+  - rapply isequiv_compose.
+  - intro p; by induction p.
+Defined.
+
 (** * Initial objects and terminal objects are all respectively equivalent. *)
 
 Lemma cate_isinitial A `{HasEquivs A} (x y : A)
@@ -533,14 +644,9 @@ Proof.
   1: exact (((inx _).2 _)^$ $@ (inx _).2 _).
 Defined.
 
-Lemma cate_isterminal A `{HasEquivs A} (x y : A)
-  : IsTerminal x -> IsTerminal y -> x $<~> y.
-Proof.
-  intros tex tey.
-  srapply (cate_adjointify (tey x).1 (tex y).1).
-  1: exact (((tey _).2 _)^$ $@ (tey _).2 _).
-  1: exact (((tex _).2 _)^$ $@ (tex _).2 _).
-Defined.
+Definition cate_isterminal A `{HasEquivs A} (x y : A)
+  : IsTerminal x -> IsTerminal y -> y $<~> x
+  := cate_isinitial A^op x y.
 
 Lemma isinitial_cate A `{HasEquivs A} (x y : A)
   : x $<~> y -> IsInitial x -> IsInitial y.
@@ -553,16 +659,9 @@ Proof.
   exact ((inx z).2 _).
 Defined.
 
-Lemma isterminal_cate A `{HasEquivs A} (x y : A)
-  : x $<~> y -> IsTerminal x -> IsTerminal y.
-Proof.
-  intros f tex z.
-  exists (f $o (tex z).1).
-  intros g.
-  refine (_ $@ compose_h_Vh f _).
-  refine (_ $@L _).
-  exact ((tex z).2 _).
-Defined.
+Definition isterminal_cate A `{HasEquivs A} (x y : A)
+  : y $<~> x -> IsTerminal x -> IsTerminal y
+  := isinitial_cate A^op x y.
 
 (** * There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
 
@@ -575,12 +674,12 @@ Class Cat_IsBiInv {A} `{Is1Cat A} {x y : A} (f : x $-> y) := {
   cat_eissect' : cat_equiv_inv' $o f $== Id x;
 }.
 
-Arguments cat_equiv_inv {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eisretr {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_equiv_inv' {A}%type_scope { _ _ _ _ x y} f {_}.
-Arguments cat_eissect' {A}%type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eisretr {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_equiv_inv' {A}%_type_scope { _ _ _ _ x y} f {_}.
+Arguments cat_eissect' {A}%_type_scope { _ _ _ _ x y} f {_}.
 
-Arguments Build_Cat_IsBiInv {A}%type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
+Arguments Build_Cat_IsBiInv {A}%_type_scope {_ _ _ _ x y f} cat_equiv_inv cat_eisretr cat_equiv_inv' cat_eissect'.
 
 Record Cat_BiInv A `{Is1Cat A} (x y : A) := {
   cat_equiv_fun :> x $-> y;

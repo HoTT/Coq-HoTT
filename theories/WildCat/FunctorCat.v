@@ -2,6 +2,7 @@
 
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
+Require Import WildCat.Opposite.
 Require Import WildCat.Equiv.
 Require Import WildCat.Induced.
 Require Import WildCat.NatTrans.
@@ -36,9 +37,9 @@ Global Instance is01cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (F
 Proof.
   srapply Build_Is01Cat.
   - intros [F ?]; cbn.
-    exists (id_transformation F); exact _.
-  - intros [F ?] [G ?] [K ?] [gamma ?] [alpha ?]; cbn in *.
-    exists (trans_comp gamma alpha); exact _.
+    exact (nattrans_id F).
+  - intros F G K gamma alpha; cbn in *.
+    exact (nattrans_comp gamma alpha).
 Defined.
 
 Global Instance is2graph_fun01 (A B : Type) `{IsGraph A, Is1Cat B}
@@ -72,6 +73,8 @@ Proof.
     exact (f a $@R alpha a).
   - intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
     srapply cat_assoc.
+  - intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
+    srapply cat_assoc_opp.
   - intros [F ?] [G ?] [alpha ?] a; cbn.
     srapply cat_idl.
   - intros [F ?] [G ?] [alpha ?] a; cbn.
@@ -84,33 +87,26 @@ Global Instance hasequivs_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
   : HasEquivs (Fun01 A B).
 Proof.
   srapply Build_HasEquivs.
-  1:{ intros [F ?] [G ?]. exact (NatEquiv F G). }
-  1:{ intros [F ?] [G ?] [alpha ?]; cbn in *.
-      exact (forall a, CatIsEquiv (alpha a)). }
-  all:intros [F ?] [G ?] [alpha alnat]; cbn in *.
-  - exists (fun a => alpha a); assumption.
+  1: intros F G; exact (NatEquiv F G).
+  all: intros F G alpha; cbn in *.
+  - exact (forall a, CatIsEquiv (alpha a)).
+  - exact alpha.
   - intros a; exact _.
-  - intros ?.
-    snrapply Build_NatEquiv.
-    + intros a; exact (Build_CatEquiv (alpha a)).
-    + cbn. refine (is1natural_homotopic alpha _).
-      intros a; apply cate_buildequiv_fun.
+  - apply Build_NatEquiv'.
   - cbn; intros; apply cate_buildequiv_fun.
-  - exists (fun a => (alpha a)^-1$).
-    intros a b f.
-    refine ((cat_idr _)^$ $@ _).
-    refine ((_ $@L (cate_isretr (alpha a))^$) $@ _).
-    refine (cat_assoc _ _ _ $@ _).
-    refine ((_ $@L (cat_assoc_opp _ _ _)) $@ _).
-    refine ((_ $@L ((isnat (fun a => alpha a) f)^$ $@R _)) $@ _).
-    refine ((_ $@L (cat_assoc _ _ _)) $@ _).
-    refine (cat_assoc_opp _ _ _ $@ _).
-    refine ((cate_issect (alpha b) $@R _) $@ _).
-    exact (cat_idl _).
+  - exact (natequiv_inverse alpha).
   - intros; apply cate_issect.
   - intros; apply cate_isretr.
   - intros [gamma ?] r s a; cbn in *.
     refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
+Defined.
+
+(** Bundled opposite functors *)
+Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
+  : Fun01 A B -> Fun01 A^op B^op.
+Proof.
+  intros F.
+  rapply (Build_Fun01 A^op B^op F).
 Defined.
 
 (** ** Categories of 1-coherent 1-functors *)

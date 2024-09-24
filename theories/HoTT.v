@@ -11,9 +11,7 @@ Require Export HoTT.Pointed.
 Require Export HoTT.Truncations.
 
 Require Export HoTT.HFiber.
-Require Export HoTT.HProp.
 Require Export HoTT.Projective.
-Require Export HoTT.HSet.
 Require Export HoTT.EquivGroupoids.
 
 Require Export HoTT.Equiv.BiInv.
@@ -27,17 +25,20 @@ Require Export HoTT.PathAny.
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 Require Export HoTT.Constant.
-Require Export HoTT.ObjectClassifier.
-Require Export HoTT.TruncType.
 
-Require Export HoTT.DProp.
+Require Export HoTT.Universes.TruncType.
+Require Export HoTT.Universes.ObjectClassifier.
+Require Export HoTT.Universes.DProp.
+Require Export HoTT.Universes.HProp.
+Require Export HoTT.Universes.HSet.
+Require Export HoTT.Universes.Automorphisms.
+Require Export HoTT.Universes.BAut.
+Require Export HoTT.Universes.Rigid.
+
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
 Require Export HoTT.ExcludedMiddle.
 Require Export HoTT.BoundedSearch.
-
-Require Export HoTT.PropResizing.PropResizing.
-(* Don't export the rest of [PropResizing] *)
 
 Require Export HoTT.HIT.Interval.
 Require Export HoTT.HIT.Flattening.
@@ -100,10 +101,12 @@ Require Export HoTT.Modalities.Meet.
 Require Export HoTT.Modalities.CoreflectiveSubuniverse.
 
 Require Export HoTT.Spaces.Nat.
-Require Export HoTT.Spaces.Int.
+Require Export HoTT.Spaces.BinInt.
 Require Export HoTT.Spaces.Pos.
 
-Require Export HoTT.Spaces.List.
+Require Export HoTT.Spaces.List.Core.
+Require Export HoTT.Spaces.List.Theory.
+Require Export HoTT.Spaces.List.Paths.
 
 Require Export HoTT.Spaces.Cantor.
 
@@ -111,18 +114,15 @@ Require Export HoTT.Spaces.Circle.
 Require Export HoTT.Spaces.TwoSphere.
 Require Export HoTT.Spaces.Spheres.
 
-Require Export HoTT.Spaces.BAut.
 Require Export HoTT.Spaces.BAut.Cantor.
 Require Export HoTT.Spaces.BAut.Bool.
 Require Export HoTT.Spaces.BAut.Bool.IncoherentIdempotent.
-Require Export HoTT.Spaces.BAut.Rigid.
 
 Require Export HoTT.Spaces.Finite.
 
 Require Export HoTT.Spaces.Card.
 
 Require Export HoTT.Spaces.No.
-Require Export HoTT.Spaces.Universe.
 
 Require Export HoTT.Spaces.Torus.Torus.
 Require Export HoTT.Spaces.Torus.TorusEquivCircles.

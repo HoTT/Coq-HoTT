@@ -12,9 +12,6 @@ Local Open Scope mc_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 
-Declare Scope bg_scope.
-Local Open Scope bg_scope.
-
 (** * We define the Classifying space of a group to be the following HIT:
 
   HIT ClassifyingSpace (G : Group) : 1-Type
@@ -74,7 +71,7 @@ Module Export ClassifyingSpace.
       (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
         (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1)
       (x : G)
-      : dp_apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
+      : apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
     Proof. Admitted.
 
   End ClassifyingSpace_ind.
@@ -123,8 +120,8 @@ Section Eliminators.
   Proof.
     refine (ClassifyingSpace_ind P bbase' bloop' _).
     intros.
-    apply ds_G1, dp_path_transport.
-    srapply path_ishprop.
+    apply ds_G1. 
+    apply path_ishprop.
   Defined.
 
   Definition ClassifyingSpace_rec_hset
@@ -318,12 +315,16 @@ Section EncodeDecode.
 
   (* We also record this fact. *)
   Definition grp_homo_loops {X Y : pType} `{IsTrunc 1 X} `{IsTrunc 1 Y}
-             (f : X ->* Y)
-    : LoopGroup X $-> LoopGroup Y.
+    : (X ->** Y) ->* [LoopGroup X $-> LoopGroup Y, grp_homo_const].
   Proof.
-    snrapply Build_GroupHomomorphism.
-    - exact (fmap loops f).
-    - nrapply fmap_loops_pp.
+    snrapply Build_pMap.
+    - intro f.
+      snrapply Build_GroupHomomorphism.
+      + exact (fmap loops f).
+      + nrapply fmap_loops_pp.
+    - cbn beta.
+      apply equiv_path_grouphomomorphism.
+      exact (pointed_htpy fmap_loops_pconst).
   Defined.
 
 End EncodeDecode.
@@ -373,8 +374,9 @@ Section HSpace_bg.
     snrapply ClassifyingSpace_ind_hprop.
     1: exact _.
     simpl.
-    apply sq_dp^-1, sq_1G.
-    refine (_ @ (ap_idmap _)^).
+    nrapply (transport_paths_FFlr' (g := idmap)).
+    apply equiv_p1_1q.
+    lhs nrapply ap_idmap.
     nrapply ClassifyingSpace_rec_beta_bloop.
   Defined.
 
@@ -430,6 +432,7 @@ Definition natequiv_g_loops_bg `{Univalence}
 Proof.
   snrapply Build_NatEquiv.
   1: intros G; rapply pequiv_g_loops_bg.
+  snrapply Build_Is1Natural.
   intros X Y f.
   symmetry.
   apply pbloop_natural.
@@ -531,6 +534,7 @@ Defined.
 Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
   : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).
 Proof.
+  snrapply Build_Is1Natural.
   intros K H f h.
   apply path_hom.
   rapply (fmap_comp B h f).

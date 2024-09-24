@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 
 Local Open Scope type.
@@ -20,12 +20,12 @@ Definition GCH :=
 Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
   ~ Injection (X -> HProp) X.
 Proof.
-  intros [i HI]. pose (p n := Build_HProp (resize_hprop (forall q, i q = n -> ~ q n))).
+  intros [i HI]. pose (p n := Build_HProp (smalltype (forall q, i q = n -> ~ q n))).
   enough (Hp : p (i p) <-> ~ p (i p)).
   { apply Hp; apply Hp; intros H; now apply Hp. }
   unfold p at 1. split.
-  - intros H. apply equiv_resize_hprop in H. apply H. reflexivity.
-  - intros H. apply equiv_resize_hprop. intros q -> % HI. apply H.
+  - intros H. apply equiv_smalltype in H. apply H. reflexivity.
+  - intros H. apply equiv_smalltype. intros q -> % HI. apply H.
 Qed.
 
 (* The concluding disjunction of GCH is excluse since otherwise we'd obtain an injection of P(X) into X. *)
@@ -69,12 +69,12 @@ Section LEM.
   Lemma Cantor_sing (i : (X -> HProp) -> (X -> HProp)) :
     IsInjective i -> exists p, ~ sing (i p).
   Proof.
-    intros HI. pose (p n := Build_HProp (resize_hprop (forall q, i q = hpaths n -> ~ q n))).
+    intros HI. pose (p n := Build_HProp (smalltype (forall q, i q = hpaths n -> ~ q n))).
     exists p. intros [n HN]. enough (Hp : p n <-> ~ p n).
     { apply Hp; apply Hp; intros H; now apply Hp. }
     unfold p at 1. split.
-    - intros H. apply equiv_resize_hprop in H. apply H, HN.
-    - intros H. apply equiv_resize_hprop. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
+    - intros H. apply equiv_smalltype in H. apply H, HN.
+    - intros H. apply equiv_smalltype. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
   Qed.
 
   Lemma injective_proj1 {Z} (r : Z -> HProp) :

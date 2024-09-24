@@ -74,7 +74,7 @@ Section strong_cancellation.
 End strong_cancellation.
 
 Section semiring_props.
-  Context `{IsSemiRing R}.
+  Context `{IsSemiCRing R}.
 (*   Add Ring SR : (stdlib_semiring_theory R). *)
 
   Instance mult_ne_0 `{!NoZeroDivisors R} x y
@@ -167,14 +167,14 @@ Section semiringmor_props.
   Context `{!IsInjective f}.
   Instance isinjective_ne_0 x : PropHolds (x <> 0) -> PropHolds (f x <> 0).
   Proof.
-  intros. rewrite <-preserves_0. apply (isinjective_ne f).
+  intros. rewrite <-preserves_0. apply (neq_isinj f).
   assumption.
   Qed.
 
   Lemma injective_ne_1 x : x <> 1 -> f x <> 1.
   Proof.
   intros. rewrite <-preserves_1.
-  apply (isinjective_ne f).
+  apply (neq_isinj f).
   assumption.
   Qed.
 End semiringmor_props.
@@ -189,12 +189,9 @@ Hint Extern 12 (PropHolds (_ _ <> 0)) =>
 Proof.
 Qed.
 *)
-
-Section ring_props.
-  Context `{IsRing R}.
-
-(*   Add Ring R: (stdlib_ring_theory R). *)
-
+Section cring_props.
+  Context `{IsCRing R}.
+  
   Instance: LeftAbsorb (.*.) 0.
   Proof.
   intro.
@@ -206,10 +203,36 @@ Section ring_props.
   - apply ap. apply right_identity.
   Qed.
 
-  Global Instance Ring_Semi: IsSemiRing R.
+  Global Instance CRing_Semi: IsSemiCRing R.
   Proof.
   repeat (constructor; try apply _).
   Qed.
+
+End cring_props.
+
+
+Section ring_props.
+  Context `{IsRing R}.
+
+  Global Instance mult_left_absorb : LeftAbsorb (.*.) 0.
+  Proof.
+    intro y.
+    rapply (right_cancellation (+) (0 * y)).
+    lhs_V rapply simple_distribute_r.
+    rhs rapply left_identity.
+    nrapply (ap (.* y)).
+    apply left_identity.
+  Defined.
+
+  Global Instance mult_right_absorb : RightAbsorb (.*.) 0.
+  Proof.
+    intro x.
+    rapply (right_cancellation (+) (x * 0)).
+    lhs_V rapply simple_distribute_l.
+    rhs rapply left_identity.
+    nrapply (ap (x *.)).
+    apply left_identity.
+  Defined.
 
   Definition negate_involutive x : - - x = x := groups.negate_involutive x.
   (* alias for convenience *)
@@ -236,7 +259,7 @@ Section ring_props.
   Lemma negate_plus_distr : forall x y, -(x + y) = -x + -y.
   Proof. exact groups.negate_sg_op_distr. Qed.
 
-  Lemma negate_mult x : -x = - 1 * x.
+  Lemma negate_mult_l x : -x = - 1 * x.
   Proof.
   apply (left_cancellation (+) x).
   path_via 0.
@@ -249,18 +272,37 @@ Section ring_props.
       apply left_identity.
   Qed.
 
+  Lemma negate_mult_r x : -x = x * -1.
+  Proof.
+    apply (right_cancellation (+) x).
+    transitivity (x * -1 + x * 1).
+    - lhs apply left_inverse.
+      rhs_V rapply simple_distribute_l.
+      lhs_V rapply (right_absorb x).
+      apply (ap (x *.)).
+      symmetry.
+      apply left_inverse.
+    - f_ap.
+      apply right_identity.
+  Defined.
+
   Lemma negate_mult_distr_l x y : -(x * y) = -x * y.
   Proof.
-  rewrite negate_mult,(negate_mult x).
-  apply associativity.
-  Qed.
+    lhs nrapply negate_mult_l.
+    lhs rapply (simple_associativity (f := (.*.)) (-1) x y).
+    apply (ap (.* y)).
+    symmetry.
+    apply negate_mult_l.
+  Defined.
 
   Lemma negate_mult_distr_r x y : -(x * y) = x * -y.
   Proof.
-  rewrite negate_mult,(negate_mult y).
-  rewrite simple_associativity,(commutativity (- 1)).
-  apply symmetry,associativity.
-  Qed.
+    lhs nrapply negate_mult_r.
+    lhs_V rapply (simple_associativity (f := (.*.)) x y).
+    apply (ap (x *.)).
+    symmetry.
+    apply negate_mult_r.
+  Defined.
 
   Lemma negate_mult_negate x y : -x * -y = x * y.
   Proof.
@@ -273,13 +315,15 @@ Section ring_props.
 
   Global Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
   Proof.
-  intro x; rewrite negate_0; apply plus_0_r.
+  intro x; rewrite negate_0. apply right_identity.
   Qed.
 
   Lemma equal_by_zero_sum x y : x - y = 0 <-> x = y.
   Proof.
   split; intros E.
-  - rewrite <- (plus_0_l y). rewrite <- E.
+  - rewrite <- (left_identity y).
+    change (sg_op ?x ?y) with (0 + y).
+    rewrite <- E.
     rewrite <-simple_associativity.
     rewrite left_inverse.
     apply symmetry,right_identity.
@@ -318,9 +362,18 @@ Section ring_props.
 
   Lemma negate_zero_prod_r x y : x * -y = 0 <-> x * y = 0.
   Proof.
-  rewrite (commutativity (f:=(.*.)) x (-y)), (commutativity (f:=(.*.)) x y).
-  apply negate_zero_prod_l.
-  Qed.
+    etransitivity.
+    2: apply negate_zero_prod_l.
+    split.
+    - intros E.
+      lhs_V nrapply negate_mult_distr_l. 
+      lhs nrapply negate_mult_distr_r.
+      exact E.
+    - intros E.
+      lhs_V nrapply negate_mult_distr_r.
+      lhs nrapply negate_mult_distr_l.
+      exact E.
+  Defined.
 
   Context `{!NoZeroDivisors R} `{forall x y:R, Stable (x = y)}.
 
@@ -334,26 +387,46 @@ Section ring_props.
   - intro. apply U. apply equal_by_zero_sum. trivial.
   - rewrite distribute_l, E.
     rewrite <-simple_distribute_l,right_inverse.
-    apply mult_0_r.
+    apply right_absorb.
   Qed.
 
-  Global Instance mult_right_cancel: forall z, PropHolds (z <> 0) ->
+  Instance mult_ne_0' `{!NoZeroDivisors R} x y
+    : PropHolds (x <> 0) -> PropHolds (y <> 0) -> PropHolds (x * y <> 0).
+  Proof.
+  intros Ex Ey Exy.
+  unfold PropHolds in *.
+  apply (no_zero_divisors x); split; eauto.
+  Qed.
+
+  Global Instance mult_right_cancel : forall z, PropHolds (z <> 0) ->
     RightCancellation (.*.) z.
   Proof.
-  intros ? ?.
-  apply (right_cancel_from_left (.*.)).
-  Qed.
+    intros z ? x y p.
+    apply stable.
+    intro U.
+    nrapply (mult_ne_0' (x - y) z).
+    - exact _.
+    - intros r.
+      apply U, equal_by_zero_sum, r.
+    - exact _.
+    - lhs rapply ring_dist_right.
+      rewrite <- negate_mult_distr_l.
+      apply equal_by_zero_sum in p.
+      exact p.
+  Defined.
 
   Lemma plus_conjugate x y : x = y + x - y.
   Proof.
-  rewrite plus_comm, plus_assoc, plus_negate_l, plus_0_l.
-  reflexivity.
+    rewrite (commutativity (f := (+)) y x),
+      <- (simple_associativity (f := (+)) x y (-y)),
+      right_inverse, right_identity.
+    reflexivity.
   Qed.
 
   Lemma plus_conjugate_alt x y : x = y + (x - y).
   Proof.
-  rewrite plus_comm, <-plus_assoc, plus_negate_l, plus_0_r.
-  reflexivity.
+    rewrite (simple_associativity (f := (+))).
+    apply plus_conjugate.
   Qed.
 End ring_props.
 
@@ -390,19 +463,19 @@ Section ringmor_props.
   apply equal_by_zero_sum.
   apply E1.
   rewrite preserves_minus, E.
-  apply plus_negate_r.
+  apply right_inverse.
   Qed.
 End ringmor_props.
 
 Section from_another_ring.
-  Context `{IsRing A} `{IsHSet B}
+  Context `{IsCRing A} `{IsHSet B}
    `{Bplus : Plus B} `{Zero B} `{Bmult : Mult B} `{One B} `{Bnegate : Negate B}
     (f : B -> A) `{!IsInjective f}
     (plus_correct : forall x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
     (mult_correct : forall x y, f (x * y) = f x * f y) (one_correct : f 1 = 1)
     (negate_correct : forall x, f (-x) = -f x).
 
-  Lemma projected_ring: IsRing B.
+  Lemma projected_ring: IsCRing B.
   Proof.
   split.
   - apply (groups.projected_ab_group f);assumption.
@@ -448,7 +521,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Global Instance id_sr_morphism `{IsSemiRing A}: IsSemiRingPreserving (@id A) := {}.
+Global Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}

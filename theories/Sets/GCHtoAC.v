@@ -1,5 +1,5 @@
 From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.
-From HoTT Require Import PropResizing.PropResizing.
+From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Nat.Core Spaces.Card.
 From HoTT Require Import Equiv.BiInv.
 From HoTT Require Import HIT.unique_choice.
@@ -7,6 +7,7 @@ From HoTT Require Import HIT.unique_choice.
 From HoTT.Sets Require Import Ordinals Hartogs Powers GCH AC.
 
 Open Scope type.
+Close Scope trunc_scope.
 
 (* The proof of Sierpinski's results that GCH implies AC given in this file consists of two ingredients:
    1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
@@ -185,11 +186,11 @@ Qed.
 Lemma Cantor_rel X (R : X -> (X -> HProp) -> HProp) :
   (forall x p p', R x p -> R x p' -> merely (p = p')) -> { p | forall x, ~ R x p }.
 Proof.
-  intros HR. pose (pc x := Build_HProp (resize_hprop (forall p : X -> HProp, R x p -> ~ p x))).
+  intros HR. pose (pc x := Build_HProp (smalltype (forall p : X -> HProp, R x p -> ~ p x))).
   exists pc. intros x H. enough (Hpc : pc x <-> ~ pc x). 2: split.
   { apply Hpc; apply Hpc; intros H'; now apply Hpc. }
-  - intros Hx. apply equiv_resize_hprop in Hx. now apply Hx.
-  - intros Hx. apply equiv_resize_hprop. intros p Hp.
+  - intros Hx. apply equiv_smalltype in Hx. now apply Hx.
+  - intros Hx. apply equiv_smalltype. intros p Hp.
     eapply merely_destruct; try apply (HR _ _ _ Hp H). now intros ->.
 Qed.
 

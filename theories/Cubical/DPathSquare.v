@@ -71,7 +71,7 @@ Notation ds_dpath := equiv_ds_dpath.
 (* We have an apD for DPathSquares *)
 Definition ds_apD {A} {B : A -> Type} (f : forall a, B a) {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x p1x} (s : PathSquare px0 px1 p0x p1x)
-  : DPathSquare B s (dp_apD f px0) (dp_apD f px1) (dp_apD f p0x) (dp_apD f p1x).
+  : DPathSquare B s (apD f px0) (apD f px1) (apD f p0x) (apD f p1x).
 Proof.
   by destruct s.
 Defined.
@@ -110,7 +110,7 @@ Notation ds_const' := equiv_ds_const'.
 (* dp_apD fits into a natural square *)
 Definition dp_apD_nat {A} {P : A -> Type} {f g : forall x, P x} {x y : A}
   (q : f == g) (p : x = y)
-  : DPathSquare P (sq_refl_h _) (dp_apD f p) (dp_apD g p) (q x) (q y).
+  : DPathSquare P (sq_refl_h _) (apD f p) (apD g p) (q x) (q y).
 Proof.
   destruct p.
   by apply sq_1G.
@@ -133,7 +133,7 @@ Notation ds_G1 := equiv_ds_G1.
 Definition equiv_ds_dp {A : Type} {B : A -> Type} (f g : forall a : A, B a)
   {x1 x2 : A} (p : x1 = x2) (q1 : f x1 = g x1) (q2 : f x2 = g x2)
   : DPath (fun x : A => f x = g x) p q1 q2
-    <~> DPathSquare B (sq_refl_h p) (dp_apD f p) (dp_apD g p) q1 q2.
+    <~> DPathSquare B (sq_refl_h p) (apD f p) (apD g p) q1 q2.
 Proof.
   destruct p.
   exact sq_1G.

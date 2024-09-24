@@ -66,6 +66,9 @@ Local Open Scope path_scope.
 
 (** ** The 1-dimensional groupoid structure. *)
 
+(** [concat], with arguments flipped. Useful mainly in the idiom [apply (concatR (expression))]. Given as a notation not a definition so that the resultant terms are literally instances of [concat], with no unfolding required. *)
+Notation concatR := (fun p q => concat q p).
+
 (** The identity path is a right unit. *)
 Definition concat_p1 {A : Type} {x y : A} (p : x = y) :
   p @ 1 = p
@@ -178,7 +181,6 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
   p^^ = p
   :=
   match p with idpath => 1 end.
-
 
 (** *** Theorems for moving things around in equations. *)
 
@@ -366,7 +368,6 @@ Definition moveL_transport_p_V {A : Type} (P : A -> Type) {x y : A}
 Proof.
   destruct p; reflexivity.
 Defined.
-
 
 (** *** Functoriality of functions *)
 
@@ -774,8 +775,49 @@ Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a 
 Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
   : f x y = f x' y'.
 Proof.
-  destruct p, q.
-  reflexivity.
+  destruct p.
+  apply ap.
+  exact q.
+Defined.
+
+Definition ap011_V {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
+  : ap011 f p^ q^ = (ap011 f p q)^.
+Proof.
+  destruct p.
+  apply ap_V.
+Defined.
+
+Definition ap011_pp {A B C} (f : A -> B -> C) {x x' x'' y y' y''}
+  (p : x = x') (p' : x' = x'') (q : y = y') (q' : y' = y'')
+  : ap011 f (p @ p') (q @ q') = ap011 f p q @ ap011 f p' q'.
+Proof.
+  destruct p, p'.
+  apply ap_pp.
+Defined.
+
+Definition ap011_compose {A B C D} (f : A -> B -> C) (g : C -> D) {x x' y y'}
+  (p : x = x') (q : y = y')
+  : ap011 (fun x y => g (f x y)) p q = ap g (ap011 f p q).
+Proof.
+  destruct p; simpl.
+  apply ap_compose.
+Defined.
+
+Definition ap011_compose' {A B C D E} (f : A -> B -> C) (g : D -> A) (h : E -> B)
+  {x x' y y'}
+  (p : x = x') (q : y = y')
+  : ap011 (fun x y => f (g x) (h y)) p q = ap011 f (ap g p) (ap h q).
+Proof.
+  destruct p; simpl.
+  apply ap_compose.
+Defined.
+
+Definition ap011_is_ap {A B C} (f : A -> B -> C) {x x' : A} {y y' : B} (p : x = x') (q : y = y')
+  : ap011 f p q = ap (fun x => f x y) p @ ap (fun y => f x' y) q.
+Proof.
+  destruct p.
+  symmetry.
+  apply concat_1p.
 Defined.
 
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
@@ -927,7 +969,6 @@ Definition apD_V {A} {P : A -> Type} (f : forall x, P x)
 Proof.
   destruct p; reflexivity.
 Defined.
-
 
 (** *** Transporting in particular fibrations. *)
 
@@ -1223,6 +1264,33 @@ Proof.
   destruct p, r, q. reflexivity.
 Defined.
 
+(** Naturality of [concat_p_pp] in left-most argument. *)
+Definition concat_p_pp_nat_l {A} {w x y z : A}
+  {p p' : w = x} (h : p = p') (q : x = y) (r : y = z)
+  : whiskerR h (q @ r) @ concat_p_pp p' q r
+    = concat_p_pp p q r @ whiskerR (whiskerR h q) r.
+Proof.
+  by destruct h, p, q, r.
+Defined.
+
+(** Naturality of [concat_p_pp] in middle argument. *)
+Definition concat_p_pp_nat_m {A} {w x y z : A}
+  (p : w = x) {q q' : x = y} (h : q = q') (r : y = z)
+  : whiskerL p (whiskerR h r) @ concat_p_pp p q' r
+    = concat_p_pp p q r @ whiskerR (whiskerL p h) r.
+Proof.
+  by destruct h, p, q, r.
+Defined.
+
+(** Naturality of [concat_p_pp] in right-most argument. *)
+Definition concat_p_pp_nat_r {A} {w x y z : A}
+  (p : w = x) (q : x = y) {r r' : y = z} (h : r = r')
+  : whiskerL p (whiskerL q h) @ concat_p_pp p q r'
+    = concat_p_pp p q r @ whiskerL (p @ q) h.
+Proof.
+  by destruct h, p, q, r.
+Defined.
+
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
   (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q'') :
@@ -1319,6 +1387,15 @@ Proof.
   destruct r1, r2. destruct p1. reflexivity.
 Defined.
 
+Definition ap022 {A B C} (f : A -> B -> C) {x x' y y'}
+  {p p' : x = x'} (r : p = p') {q q' : y = y'} (s : q = q')
+  : ap011 f p q = ap011 f p' q'.
+Proof.
+  destruct r, p.
+  apply ap02.
+  exact s.
+Defined.
+
 (** These lemmas need better names. *)
 Definition ap_transport_Vp_idmap {A B} (p q : A = B) (r : q = p) (z : A)
 : ap (transport idmap q^) (ap (fun s => transport idmap s z) r)
@@ -1338,51 +1415,52 @@ Proof.
   by path_induction.
 Defined.
 
-(** ** Tactics, hints, and aliases *)
+(** ** Hints *)
 
-(** [concat], with arguments flipped. Useful mainly in the idiom [apply (concatR (expression))]. Given as a notation not a definition so that the resultant terms are literally instances of [concat], with no unfolding required. *)
-Notation concatR := (fun p q => concat q p).
+(** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.  A specific [Hint Resolve] database [db] can be used with [auto with db].
+
+    The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as possible. *)
 
 #[export]
 Hint Resolve
+  inverse
   concat_1p concat_p1 concat_p_pp
   inv_pp inv_V
- : path_hints.
+  : path_hints.
 
-(* First try at a paths db
-We want the RHS of the equation to become strictly simpler *)
+(* First try at a paths db.  We want the RHS of the equation to become strictly simpler. *)
 #[export]
 Hint Rewrite
-@concat_p1
-@concat_1p
-@concat_p_pp (* there is a choice here !*)
-@concat_pV
-@concat_Vp
-@concat_V_pp
-@concat_p_Vp
-@concat_pp_V
-@concat_pV_p
-(*@inv_pp*) (* I am not sure about this one *)
-@inv_V
-@moveR_Mp
-@moveR_pM
-@moveL_Mp
-@moveL_pM
-@moveL_1M
-@moveL_M1
-@moveR_M1
-@moveR_1M
-@ap_1
-(* @ap_pp
-@ap_p_pp ?*)
-@inverse_ap
-@ap_idmap
-(* @ap_compose
-@ap_compose'*)
-@ap_const
-(* Unsure about naturality of [ap], was absent in the old implementation*)
-@apD10_1
-:paths.
+  @concat_p1
+  @concat_1p
+  @concat_p_pp (* there is a choice here !*)
+  @concat_pV
+  @concat_Vp
+  @concat_V_pp
+  @concat_p_Vp
+  @concat_pp_V
+  @concat_pV_p
+  (*@inv_pp*) (* I am not sure about this one *)
+  @inv_V
+  @moveR_Mp
+  @moveR_pM
+  @moveL_Mp
+  @moveL_pM
+  @moveL_1M
+  @moveL_M1
+  @moveR_M1
+  @moveR_1M
+  @ap_1
+  (* @ap_pp
+  @ap_p_pp ?*)
+  @inverse_ap
+  @ap_idmap
+  (* @ap_compose
+  @ap_compose'*)
+  @ap_const
+  (* Unsure about naturality of [ap], was absent in the old implementation. *)
+  @apD10_1
+  : paths.
 
 Ltac hott_simpl :=
   autorewrite with paths in * |- * ; auto with path_hints.

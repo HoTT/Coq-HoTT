@@ -7,8 +7,7 @@ Local Unset Elimination Schemes.
 Require Export HoTT.Basics.
 
 Require Import
-  HoTT.Types
-  HoTT.HSet.
+  HoTT.Types.
 
 Declare Scope Algebra_scope.
 Delimit Scope Algebra_scope with Algebra.
@@ -117,7 +116,7 @@ Proof.
   exact q.
 Defined.
 
-Arguments path_algebra {_} {_} (A B)%Algebra_scope (p q)%path_scope.
+Arguments path_algebra {_} {_} (A B)%_Algebra_scope (p q)%_path_scope.
 
 Lemma path_ap_carriers_path_algebra `{Funext} {σ} (A B : Algebra σ)
   (p : carriers A = carriers B)
@@ -132,7 +131,7 @@ Proof.
   now destruct (center (ha = hb)).
 Defined.
 
-Arguments path_ap_carriers_path_algebra {_} {_} (A B)%Algebra_scope (p q)%path_scope.
+Arguments path_ap_carriers_path_algebra {_} {_} (A B)%_Algebra_scope (p q)%_path_scope.
 
 Lemma path_path_algebra_issig {σ : Signature} {A B : Algebra σ} (p q : A = B)
   (r : ap (issig_algebra σ)^-1 p = ap (issig_algebra σ)^-1 q)
@@ -142,7 +141,7 @@ Proof.
   by apply (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).
 Defined.
 
-Arguments path_path_algebra_issig {_} {A B}%Algebra_scope (p q r)%path_scope.
+Arguments path_path_algebra_issig {_} {A B}%_Algebra_scope (p q r)%_path_scope.
 
 Lemma path_path_algebra `{Funext} {σ} {A B : Algebra σ}
   (p q : A = B) (r : ap carriers p = ap carriers q)
@@ -155,6 +154,6 @@ Proof.
   - apply path_ishprop.
 Defined.
 
-Arguments path_path_algebra {_} {σ} {A B}%Algebra_scope (p q r)%path_scope.
+Arguments path_path_algebra {_} {σ} {A B}%_Algebra_scope (p q r)%_path_scope.
 
 Global Notation "u .# A" := (operations A u) : Algebra_scope.

@@ -74,11 +74,13 @@ Global Instance symmetric_GpdHom' {A} `{Is0Gpd A}
   : Symmetric Hom
   := fun a b f => f^$.
 
-Definition GpdHom_path {A} `{Is0Gpd A} {a b : A} (p : a = b)
-  : a $== b.
+Definition Hom_path {A : Type} `{Is01Cat A} {a b : A} (p : a = b) : (a $-> b).
 Proof.
   destruct p; apply Id.
 Defined.
+
+Definition GpdHom_path {A} `{Is0Gpd A} {a b : A} (p : a = b) : a $== b
+  := Hom_path p.
 
 (** A 0-functor acts on morphisms, but satisfies no axioms. *)
 Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
@@ -100,6 +102,8 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $== h $o (g $o f);
+  cat_assoc_opp : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    h $o (g $o f) $== (h $o g) $o f;
   cat_idl : forall (a b : A) (f : a $-> b), Id b $o f $== f;
   cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
@@ -109,13 +113,23 @@ Global Existing Instance is0gpd_hom.
 Global Existing Instance is0functor_postcomp.
 Global Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _ _ _} f.
 
-Definition cat_assoc_opp {A : Type} `{Is1Cat A}
-           {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
-  : h $o (g $o f) $== (h $o g) $o f
-  := (cat_assoc f g h)^$.
+(** An alternate constructor that doesn't require the proof of [cat_assoc_opp].  This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
+Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
+  (is01cat_hom : forall a b : A, Is01Cat (a $-> b))
+  (is0gpd_hom : forall a b : A, Is0Gpd (a $-> b))
+  (is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g))
+  (is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f))
+  (cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
+      h $o g $o f $== h $o (g $o f))
+  (cat_idl : forall (a b : A) (f : a $-> b), Id b $o f $== f)
+  (cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f)
+  : Is1Cat A
+  := Build_Is1Cat A _ _ _ is01cat_hom is0gpd_hom is0functor_postcomp is0functor_precomp
+      cat_assoc (fun a b c d f g h => (cat_assoc a b c d f g h)^$) cat_idl cat_idr.
 
 (** Whiskering and horizontal composition of 2-cells. *)
 
@@ -162,7 +176,7 @@ Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
   }.
 
 (** Often, the coherences are actually equalities rather than homotopies. *)
-Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} := 
+Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
   is01cat_hom_strong : forall (a b : A), Is01Cat (a $-> b) ;
   is0gpd_hom_strong : forall (a b : A), Is0Gpd (a $-> b) ;
@@ -173,18 +187,17 @@ Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   cat_assoc_strong : forall (a b c d : A)
     (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f = h $o (g $o f) ;
+  cat_assoc_opp_strong : forall (a b c d : A)
+    (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    h $o (g $o f) = (h $o g) $o f ;
   cat_idl_strong : forall (a b : A) (f : a $-> b), Id b $o f = f ;
   cat_idr_strong : forall (a b : A) (f : a $-> b), f $o Id a = f ;
 }.
 
 Arguments cat_assoc_strong {_ _ _ _ _ _ _ _ _} f g h.
+Arguments cat_assoc_opp_strong {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl_strong {_ _ _ _ _ _ _} f.
 Arguments cat_idr_strong {_ _ _ _ _ _ _} f.
-
-Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
-           {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d)
-  : h $o (g $o f) = (h $o g) $o f
-  := (cat_assoc_strong f g h)^.
 
 Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
   : Is1Cat A | 1000.
@@ -196,6 +209,7 @@ Proof.
   - apply is0functor_postcomp_strong.
   - apply is0functor_precomp_strong.
   - intros; apply GpdHom_path, cat_assoc_strong.
+  - intros; apply GpdHom_path, cat_assoc_opp_strong.
   - intros; apply GpdHom_path, cat_idl_strong.
   - intros; apply GpdHom_path, cat_idr_strong.
 Defined.
@@ -245,6 +259,7 @@ Global Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
 Proof.
   rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
   + apply cat_assoc.
+  + apply cat_assoc_opp.
   + apply cat_idl.
   + apply cat_idr.
 Defined.
@@ -329,7 +344,7 @@ End ConstantFunctor.
 
 Global Instance is0functor_compose {A B C : Type}
   `{IsGraph A, IsGraph B, IsGraph C}
-  (F : A -> B) (G : B -> C) `{!Is0Functor F, !Is0Functor G}
+  (F : A -> B) `{!Is0Functor F} (G : B -> C) `{!Is0Functor G}
   : Is0Functor (G o F).
 Proof.
   srapply Build_Is0Functor.
@@ -365,26 +380,26 @@ Arguments is1functor_compose {A B C}
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
-{ 
+{
   gpd_issect : forall {a b : A} (f : a $-> b), f^$ $o f $== Id a ;
   gpd_isretr : forall {a b : A} (f : a $-> b), f $o f^$ $== Id b ;
 }.
 
 (** Some more convenient equalities for morphisms in a 1-groupoid. The naming scheme is similar to [PathGroupoids.v].*)
 
-Definition gpd_V_hh {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+Definition gpd_V_hh {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b)
   : f^$ $o (f $o g) $== g :=
   (cat_assoc _ _ _)^$ $@ (gpd_issect f $@R g) $@ cat_idl g.
 
-Definition gpd_h_Vh {A} `{Is1Gpd A} {a b c : A} (f : c $-> b) (g : a $-> b) 
+Definition gpd_h_Vh {A} `{Is1Gpd A} {a b c : A} (f : c $-> b) (g : a $-> b)
   : f $o (f^$ $o g) $== g :=
   (cat_assoc _ _ _)^$ $@ (gpd_isretr f $@R g) $@ cat_idl g.
 
-Definition gpd_hh_V {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+Definition gpd_hh_V {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b)
   : (f $o g) $o g^$ $== f :=
   cat_assoc _ _ _ $@ (f $@L gpd_isretr g) $@ cat_idr f.
 
-Definition gpd_hV_h {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : b $-> a) 
+Definition gpd_hV_h {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : b $-> a)
   : (f $o g^$) $o g $== f :=
   cat_assoc _ _ _ $@ (f $@L gpd_issect g) $@ cat_idr f.
 
@@ -426,13 +441,13 @@ Proof.
 Defined.
 
 Definition gpd_moveR_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
-  {q : x $-> y} {r : x $-> z} (s : r $== p $o q) 
-  : r $o q^$ $== p 
+  {q : x $-> y} {r : x $-> z} (s : r $== p $o q)
+  : r $o q^$ $== p
   := (s $@R q^$) $@ gpd_hh_V _ _.
 
 Definition gpd_moveR_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
-  {q : x $-> y} {r : x $-> z} (s : r $== p $o q) 
-  : p^$ $o r $== q 
+  {q : x $-> y} {r : x $-> z} (s : r $== p $o q)
+  : p^$ $o r $== q
   := (p^$ $@L s) $@ gpd_V_hh _ _.
 
 Definition gpd_moveL_hM {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
@@ -440,8 +455,8 @@ Definition gpd_moveL_hM {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   : r $== p $o q := ((gpd_hV_h _ _)^$ $@ (s $@R _)).
 
 Definition gpd_moveL_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
-  {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
-  : p $== r $o q^$ 
+  {q : x $-> y} {r : x $-> z} (s : p $o q $== r)
+  : p $== r $o q^$
   := (gpd_moveR_hV s^$)^$.
 
 Definition gpd_moveL_Mh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
@@ -449,8 +464,8 @@ Definition gpd_moveL_Mh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
   : r $== p $o q := ((gpd_h_Vh _ _)^$ $@ (p $@L s)).
 
 Definition gpd_moveL_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
-  {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
-  : q $== p^$ $o r 
+  {q : x $-> y} {r : x $-> z} (s : p $o q $== r)
+  : q $== p^$ $o r
   := (gpd_moveR_Vh s^$)^$.
 
 Definition gpd_rev2 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
@@ -461,7 +476,7 @@ Proof.
   exact (cat_idl q $@ r^$).
 Defined.
 
-Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b)
   : (f $o g)^$ $== g^$ $o f^$.
 Proof.
   apply gpd_moveR_V1.
@@ -579,9 +594,9 @@ Record BasepointPreservingFunctor (B C : Type)
     bp_pointed : bp_map (point B) $-> point C
   }.
 
-Arguments bp_pointed {B C}%type_scope {H H0 H1 H2 H3 H4} b.
-Arguments Build_BasepointPreservingFunctor {B C}%type_scope {H H0 H1 H2 H3 H4}
-  bp_map%function_scope {bp_is0functor} bp_pointed.
+Arguments bp_pointed {B C}%_type_scope {H H0 H1 H2 H3 H4} b.
+Arguments Build_BasepointPreservingFunctor {B C}%_type_scope {H H0 H1 H2 H3 H4}
+  bp_map%_function_scope {bp_is0functor} bp_pointed.
 
 Coercion bp_map : BasepointPreservingFunctor >-> Funclass.
 

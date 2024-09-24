@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Equiv.BiInv Idempotents.
-Require Import Spaces.BAut Spaces.BAut.Bool.
+Require Import Universes.BAut Spaces.BAut.Bool.
 
 Local Open Scope path_scope.
 

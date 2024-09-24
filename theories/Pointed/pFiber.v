@@ -20,12 +20,10 @@ Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
   : pfiber (pfib f) <~>* loops B.
 Proof.
+  pointed_reduce_pmap f.
   snrapply Build_pEquiv'.
-  { transitivity (f (point A) = point B).
-    1: make_equiv_contr_basedpaths.
-    apply equiv_concat_l.
-    symmetry; apply point_eq. }
-  cbn; apply concat_Vp.
+  1: make_equiv_contr_basedpaths.
+  reflexivity.
 Defined.
 
 Definition pfiber_fmap_loops {A B : pType} (f : A ->* B)

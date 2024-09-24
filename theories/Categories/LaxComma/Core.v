@@ -175,7 +175,7 @@ Module Export LaxCommaCoreNotations.
   (** We play some games to get nice notations for lax comma categories. *)
   Section tc_notation_boiler_plate.
     Local Open Scope type_scope.
-    Class LCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := lcc_builder_dummy : True.
+    Class LCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := lcc_builder_dummy : Unit.
     Definition get_LCC `{@LCC_Builder A B C x y z} : C := z.
 
     Global Arguments get_LCC / {A B C} x y {z} {_}.
@@ -184,33 +184,33 @@ Module Export LaxCommaCoreNotations.
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            {_ : forall a b, IsHSet (Functor (S a) (T b))}
     : LCC_Builder S T (lax_comma_category S T) | 1000
-      := I.
+      := tt.
 
     Global Instance LCC_slice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor (F a0) x)}
     : LCC_Builder F x (lax_slice_category x F) | 100
-      := I.
+      := tt.
 
     Global Instance LCC_coslice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor x (F a0))}
     : LCC_Builder x F (lax_coslice_category x F) | 100
-      := I.
+      := tt.
 
     Global Instance LCC_slice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}
     : LCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10
-      := I.
+      := tt.
 
     Global Instance LCC_coslice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}
     : LCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | 10
-      := I.
+      := tt.
 
-    Class OLCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := olcc_builder_dummy : True.
+    Class OLCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := olcc_builder_dummy : Unit.
 
     Definition get_OLCC `{@OLCC_Builder A B C x y z} : C := z.
 
@@ -220,31 +220,31 @@ Module Export LaxCommaCoreNotations.
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            {_ : forall a b, IsHSet (Functor (S a) (T b))}
     : OLCC_Builder S T (lax_comma_category S T) | 1000
-      := I.
+      := tt.
 
     Global Instance OLCC_slice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor (F a0) x)}
     : OLCC_Builder F x (lax_slice_category x F) | 100
-      := I.
+      := tt.
 
     Global Instance OLCC_coslice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor x (F a0))}
     : OLCC_Builder x F (lax_coslice_category x F) | 100
-      := I.
+      := tt.
 
     Global Instance OLCC_slice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}
     : OLCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10
-      := I.
+      := tt.
 
     Global Instance OLCC_coslice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}
     : OLCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | 10
-      := I.
+      := tt.
   End tc_notation_boiler_plate.
 
   (** We really want to use infix [⇓] and [⇑] for lax comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [⇓] and [\\] for [⇑]. *)

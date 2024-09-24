@@ -87,7 +87,7 @@ Proof.
   - refine (_ oE _).
     + do 5 (rapply equiv_functor_sigma_id; intro).
       apply equiv_path_sigma.
-    + make_equiv_contr_basedpaths.
+    + cbn; make_equiv_contr_basedpaths.
   - refine (_ oE _).
     2: { do 5 (rapply equiv_functor_sigma_id; intro).
          exact (equiv_path_inverse _ _ oE equiv_moveL_equiv_M _ _). }

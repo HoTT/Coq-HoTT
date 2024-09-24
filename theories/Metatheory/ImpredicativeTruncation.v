@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Impredicative truncations. *)
 
-Require Import HoTT.Basics HoTT.Types.
-Require Import PropResizing.PropResizing.
+Require Import HoTT.Basics.
+Require Import Universes.Smallness.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  It defines truncations
@@ -25,8 +25,8 @@ Section AssumePropResizing.
 
   Definition merely_rec {A : Type@{i}} {P : Type@{j}} `{IsHProp P} (f : A -> P)
     : merely A -> P
-    := fun ma => (equiv_resize_hprop P)^-1
-                 (ma (resize_hprop P) _ (equiv_resize_hprop P o f)).
+    := fun ma => (equiv_smalltype P)
+                 (ma (smalltype P) _ ((equiv_smalltype P)^-1 o f)).
 
   Definition functor_merely `{Funext} {A B : Type} (f : A -> B)
     : merely A -> merely B.

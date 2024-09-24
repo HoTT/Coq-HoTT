@@ -8,8 +8,8 @@ Require Export
 
 Require Import
   HoTT.Types
-  HoTT.HSet
-  HoTT.Classes.implementations.list.
+  HoTT.Universes.HSet
+  HoTT.Spaces.List.Core.
 
 Import ne_list.notations.
 

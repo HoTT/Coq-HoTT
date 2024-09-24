@@ -1,10 +1,11 @@
+Require Export Basics.Classes Basics.Overture.
 Require Import Spaces.Nat.Core.
 Require Export HoTT.Classes.interfaces.canonical_names.
 Require Import Modalities.ReflectiveSubuniverse.
 
 Local Set Polymorphic Inductive Cumulativity.
 
-Generalizable Variables A B f g x y.
+Generalizable Variables A B C f g x y.
 
 (* 
 For various structures we omit declaration of substructures. For example, if we 
@@ -134,7 +135,7 @@ Section upper_classes.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 
-  Class IsSemiRing :=
+  Class IsSemiCRing :=
     { semiplus_monoid : @IsCommutativeMonoid plus_is_sg_op zero_is_mon_unit
     ; semimult_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
     ; semiring_distr : LeftDistribute (.*.) (+)
@@ -143,17 +144,32 @@ Section upper_classes.
 
   Context {Anegate : Negate A}.
 
-  Class IsRing :=
-    { ring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
-    ; ring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
-    ; ring_dist : LeftDistribute (.*.) (+) }.
-  #[export] Existing Instances ring_group ring_monoid ring_dist.
+  Class IsRing := {
+    ring_abgroup :: @IsAbGroup plus_is_sg_op zero_is_mon_unit _;
+    ring_monoid :: @IsMonoid mult_is_sg_op one_is_mon_unit;
+    ring_dist_left :: LeftDistribute (.*.) (+);
+    ring_dist_right :: RightDistribute (.*.) (+);
+  }.
 
-  (* For now, we follow CoRN/ring_theory's example in having Ring and SemiRing
-    require commutative multiplication. *)
+  Class IsCRing :=
+    { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
+    ; cring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
+    ; cring_dist : LeftDistribute (.*.) (+) }.
 
+  #[export] Existing Instances cring_group cring_monoid cring_dist.
+  
+  Global Instance isring_iscring : IsCRing -> IsRing.
+  Proof.
+    intros H.
+    econstructor; try exact _.
+    intros a b c.
+    lhs rapply commutativity.
+    lhs rapply distribute_l.
+    f_ap; apply commutativity.
+  Defined.
+  
   Class IsIntegralDomain :=
-    { intdom_ring : IsRing
+    { intdom_ring : IsCRing
     ; intdom_nontrivial : PropHolds (not (1 = 0))
     ; intdom_nozeroes : NoZeroDivisors A }.
   #[export] Existing Instances intdom_nozeroes.
@@ -161,7 +177,7 @@ Section upper_classes.
   (* We do not include strong extensionality for (-) and (/)
     because it can de derived *)
   Class IsField {Aap: Apart A} {Arecip: Recip A} :=
-    { field_ring : IsRing
+    { field_ring : IsCRing
     ; field_apart : IsApart A
     ; field_plus_ext : StrongBinaryExtensionality (+)
     ; field_mult_ext : StrongBinaryExtensionality (.*.)
@@ -177,7 +193,7 @@ Section upper_classes.
     f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
     hold without any additional assumptions *)
   Class IsDecField {Adec_recip : DecRecip A} :=
-    { decfield_ring : IsRing
+    { decfield_ring : IsCRing
     ; decfield_nontrivial : PropHolds (1 <> 0)
     ; dec_recip_0 : /0 = 0
     ; dec_recip_inverse : forall x, x <> 0 -> x / x = 1 }.
@@ -187,7 +203,7 @@ Section upper_classes.
     := field_characteristic : forall n : nat,
         Nat.Core.lt 0 n ->
         iff@{j j j} (forall m : nat, not@{j} (paths@{Set} n
-                                                  (Nat.Core.mul k m)))
+                                                  (nat_mul k m)))
         (@apart A Aap (nat_iter n (1 +) 0) 0).
 
 End upper_classes.
@@ -204,13 +220,13 @@ Hint Extern 5 (PropHolds (1 <> 0)) =>
   eapply @decfield_nontrivial : typeclass_instances.
 
 (* 
-For a strange reason IsRing instances of Integers are sometimes obtained by
+For a strange reason IsCRing instances of Integers are sometimes obtained by
 Integers -> IntegralDomain -> Ring and sometimes directly. Making this an
-instance with a low priority instead of using intdom_ring:> IsRing forces Coq to
+instance with a low priority instead of using intdom_ring:> IsCRing forces Coq to
 take the right way 
 *)
 #[export]
-Hint Extern 10 (IsRing _) => apply @intdom_ring : typeclass_instances.
+Hint Extern 10 (IsCRing _) => apply @intdom_ring : typeclass_instances.
 
 Arguments recip_inverse {A Aplus Amult Azero Aone Anegate Aap Arecip IsField} _.
 Arguments dec_recip_inverse
@@ -331,26 +347,106 @@ Section morphism_classes.
   End latticemorphism_classes.
 End morphism_classes.
 
-Section jections.
-  Context {A B} (f : A -> B).
+Section id_mor.
+  Context `{SgOp A} `{MonUnit A}.
 
-  Class IsInjective := injective : forall x y, f x = f y -> x = y.
-
-  Lemma isinjective_ne `{!IsInjective} x y :
-    x <> y -> f x <> f y.
+  Global Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
   Proof.
-    intros E1 E2. apply E1.
-    apply injective.
-    assumption.
-  Qed.
+    split.
+  Defined.
 
-End jections.
+  Global Instance id_monoid_morphism : IsMonoidPreserving (@id A).
+  Proof.
+    split; split.
+  Defined.
+End id_mor.
 
-Global Instance isinj_idmap A : @IsInjective A A idmap
-  := fun x y => idmap.
+Section compose_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    `{SgOp C} `{MonUnit C}
+    (f : A -> B) (g : B -> C).
+
+  (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)
+  Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
+    IsSemiGroupPreserving (g ∘ f).
+  Proof.
+    red; intros fp gp x y.
+    unfold Compose.
+    refine ((ap g _) @ _).
+    - apply fp.
+    - apply gp.
+  Defined.
+
+  Local Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
+    IsMonoidPreserving (g ∘ f).
+  Proof.
+    intros;split.
+    - apply _.
+    - red;unfold Compose.
+      etransitivity;[|apply (preserves_mon_unit (f:=g))].
+      apply ap,preserves_mon_unit.
+  Defined.
+
+End compose_mor.
+
+Section invert_mor.
+
+  Context
+    `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    (f : A -> B).
+
+  Local Instance invert_sg_morphism
+    : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
+      IsSemiGroupPreserving (f^-1).
+  Proof.
+    red; intros E fp x y.
+    apply (equiv_inj f).
+    refine (_ @ _ @ _ @ _)^.
+    - apply fp.
+    (* We could use [apply ap2; apply eisretr] here, but it is convenient
+       to have things in terms of ap. *)
+    - refine (ap (fun z => sg_op z _) _); apply eisretr.
+    - refine (ap (fun z => sg_op _ z) _); apply eisretr.
+    - symmetry; apply eisretr.
+  Defined.
+
+  Local Instance invert_monoid_morphism :
+    forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
+  Proof.
+    intros;split.
+    - apply _.
+    - apply (equiv_inj f).
+      refine (_ @ _).
+      + apply eisretr.
+      + symmetry; apply preserves_mon_unit.
+  Defined.
+
+End invert_mor.
 
 #[export]
-Hint Unfold IsInjective : typeclass_instances.
+Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_ ∘ _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+#[export]
+Hint Extern 4 (IsSemiGroupPreserving (_ o _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_ o _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+#[export]
+Hint Extern 4 (IsSemiGroupPreserving (_^-1)) =>
+  class_apply @invert_sg_morphism : typeclass_instances.
+#[export]
+Hint Extern 4 (IsMonoidPreserving (_^-1)) =>
+  class_apply @invert_monoid_morphism : typeclass_instances.
 
 #[export]
 Instance isinjective_mapinO_tr {A B : Type} (f : A -> B)

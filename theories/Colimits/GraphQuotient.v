@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Equivalences.
-Require Import Types.Universe Types.Paths Types.Arrow Types.Sigma Types.Forall Cubical.DPath.
+Require Import Types.Universe Types.Paths Types.Arrow Types.Sigma Cubical.DPath.
 
 (** * Quotient of a graph *)
 
@@ -12,35 +12,40 @@ We use graph quotients to build up all our other non-recursive HITs. Their simpl
 Local Unset Elimination Schemes.
 
 Module Export GraphQuotient.
+ Section GraphQuotient.
 
-  Private Inductive GraphQuotient@{i j u}
-    {A : Type@{i}} (R : A -> A -> Type@{j}) : Type@{u} :=
+  Universes i j u.
+  Constraint i <= u, j <= u.
+  Context {A : Type@{i}}.
+
+  Private Inductive GraphQuotient (R : A -> A -> Type@{j}) : Type@{u} :=
   | gq : A -> GraphQuotient R.
 
-  Arguments gq {A R} a.
+  Arguments gq {R} a.
 
-  Axiom gqglue@{i j u}
-    : forall {A : Type@{i}} {R : A -> A -> Type@{j}} {a b : A},
-    R a b -> paths@{u} (@gq A R a) (gq b).
+  Context {R : A -> A -> Type@{j}}.
 
-  Definition GraphQuotient_ind@{i j u k} {A : Type@{i}} {R : A -> A -> Type@{j}}
-    (P : GraphQuotient@{i j u} R -> Type@{k})
-    (gq' : forall a, P (gq@{i j u} a))
-    (gqglue' : forall a b (s : R a b), gqglue@{i j u} s # gq' a = gq' b)
+  Axiom gqglue : forall {a b : A},
+    R a b -> paths (@gq R a) (gq b).
+
+  Definition GraphQuotient_ind
+    (P : GraphQuotient R -> Type@{k})
+    (gq' : forall a, P (gq a))
+    (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
     : forall x, P x := fun x =>
     match x with
     | gq a => fun _ => gq' a
     end gqglue'.
   (** Above we did a match with output type a function, and then outside of the match we provided the argument [gqglue'].  If we instead end with [| gq a => gq' a end.], the definition will not depend on [gqglue'], which would be incorrect.  This is the idiom referred to in ../../test/bugs/github1758.v and github1759.v. *)
 
-  Axiom GraphQuotient_ind_beta_gqglue@{i j u k}
-  : forall  {A : Type@{i}} {R : A -> A -> Type@{j}}
-    (P : GraphQuotient@{i j u} R -> Type@{k})
+  Axiom GraphQuotient_ind_beta_gqglue
+  : forall (P : GraphQuotient R -> Type@{k})
     (gq' : forall a, P (gq a))
     (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
     (a b: A) (s : R a b),
     apD (GraphQuotient_ind P gq' gqglue') (gqglue s) = gqglue' a b s.
 
+ End GraphQuotient.
 End GraphQuotient.
 
 Arguments gq {A R} a.
@@ -111,7 +116,6 @@ Section Flattening.
   Lemma equiv_dp_dgraphquotient (x y : A) (s : R x y) (a : F x) (b : F y)
     : DPath DGraphQuotient (gqglue s) a b <~> (e x y s a = b).
   Proof.
-    refine (_ oE dp_path_transport^-1).
     refine (equiv_concat_l _^ _).
     apply transport_DGraphQuotient.
   Defined.
@@ -127,21 +131,17 @@ Section Flattening.
     snrapply GraphQuotient_ind.
     1: exact Qgq.
     intros a b s.
-    apply equiv_dp_path_transport.
     apply dp_forall.
     intros x y.
     srapply (equiv_ind (equiv_dp_dgraphquotient a b s x y)^-1).
     intros q.
     destruct q.
-    apply equiv_dp_path_transport.
     refine (transport2 _ _ _ @ Qgqglue a b s x).
     refine (ap (path_sigma_uncurried DGraphQuotient _ _) _).
     snrapply path_sigma.
     1: reflexivity.
-    apply moveR_equiv_V.
-    simpl; f_ap.
-    lhs rapply concat_p1.
-    rapply inv_V.
+    lhs nrapply concat_p1.
+    apply inv_V.
   Defined.
 
   (** Rather than use [flatten_ind] to define [flatten_rec] we reprove this simple case. This means we can later reason about it and derive the computation rules easily. The full computation rule for [flatten_ind] takes some work to derive and is not actually needed. *)

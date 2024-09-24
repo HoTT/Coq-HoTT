@@ -1,4 +1,4 @@
-Require Import Classes.interfaces.abstract_algebra.
+Require Import Classes.interfaces.canonical_names.
 
 (* We say that a relation is a congruence if it respects the operation.
   This is technically incorrect since we are not enforcing the relation to be an equivalence relation.

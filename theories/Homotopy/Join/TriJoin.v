@@ -156,10 +156,10 @@ Record TriJoinRecData {A B C P : Type} := {
   }.
 
 Arguments TriJoinRecData : clear implicits.
-Arguments Build_TriJoinRecData {A B C P}%type_scope (j1 j2 j3 j12 j13 j23 j123)%function_scope.
+Arguments Build_TriJoinRecData {A B C P}%_type_scope (j1 j2 j3 j12 j13 j23 j123)%_function_scope.
 
 Definition trijoin_rec {A B C P : Type} (f : TriJoinRecData A B C P)
-  : TriJoin A B C -> P.
+  : TriJoin A B C $-> P.
 Proof.
   snrapply Join_rec.
   - exact (j1 f).
@@ -297,8 +297,8 @@ Record TriJoinRecData' {A B C P : Type} {j1' : A -> P} {j2' : B -> P} {j3' : C -
   }.
 
 Arguments TriJoinRecData' {A B C P} j1' j2' j3'.
-Arguments Build_TriJoinRecData' {A B C P}%type_scope
-  (j1' j2' j3' j12' j13' j23' j123')%function_scope.
+Arguments Build_TriJoinRecData' {A B C P}%_type_scope
+  (j1' j2' j3' j12' j13' j23' j123')%_function_scope.
 
 Definition prism' {P : Type} {a b c : P}
   {ab : a = b} {ac : a = c} {bc : b = c} (abc : ab @ bc = ac)

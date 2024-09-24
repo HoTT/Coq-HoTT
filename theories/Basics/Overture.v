@@ -1,48 +1,85 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
-(** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
-Require Export Basics.Notations Basics.Datatypes Basics.Logic.
+(** * Basic definitions of homotopy type theory *)
 
-Declare ML Module "number_string_notation_plugin".
+(** This file defines some of the most basic types and type formers, such as sums, products, Sigma types and path types.  It defines the action of functions on paths [ap], transport, equivalences, and function extensionality.  It also defines truncatedness, and a number of other fundamental definitions used throughout the library. *)
 
-(** Keywords for blacklisting from search function *)
-Add Search Blacklist "_admitted" "_subproof" "Private_".
-
-Create HintDb rewrite discriminated.
-#[export] Hint Variables Opaque : rewrite.
-Create HintDb typeclass_instances discriminated.
+(** Import the file of reserved notations so we maintain consistent level notations throughout the library. *)
+Require Export Basics.Settings Basics.Notations.
 
 Local Set Polymorphic Inductive Cumulativity.
+
+(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
+Local Unset Elimination Schemes.
+
+(** ** Datatypes *)
+
+(** *** Functions *)
+
+(** Notation for non-dependent function types *)
+Notation "A -> B" := (forall (_ : A), B) : type_scope.
+
+(** *** Option type *)
+
+(** [option A] is the extension of [A] with an extra element [None] *)
+Inductive option (A : Type) : Type :=
+| Some : A -> option A
+| None : option A.
+
+Scheme option_rect := Induction for option Sort Type.
+
+Arguments Some {A} a.
+Arguments None {A}.
+
+Register option as core.option.type.
+
+(** *** Sum type *)
+
+(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+Inductive sum (A B : Type) : Type :=
+| inl : A -> sum A B
+| inr : B -> sum A B.
+
+Scheme sum_rect := Induction for sum Sort Type.
+Scheme sum_ind := Induction for sum Sort Type.
+Arguments sum_ind {A B} P f g : rename.
+
+Notation "x + y" := (sum x y) : type_scope.
+
+Arguments inl {A B} _ , [A] B _.
+Arguments inr {A B} _ , A [B] _.
+
+(* A notation for coproduct that's less overloaded than [+] *)
+Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
+
+(** *** Product type *)
+
+(** [prod A B], written [A * B], is the product of [A] and [B];
+    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
+Record prod (A B : Type) := pair { fst : A ; snd : B }.
+
+Scheme prod_rect := Induction for prod Sort Type.
+Scheme prod_ind := Induction for prod Sort Type.
+Arguments prod_ind {A B} P _. 
+
+Arguments pair {A B} _ _.
+Arguments fst {A B} _ / .
+Arguments snd {A B} _ / .
+
+Add Printing Let prod.
+
+Notation "x * y" := (prod x y) : type_scope.
+Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
+Notation and := prod (only parsing).
+Notation conj := pair (only parsing).
+
+#[export] Hint Resolve pair inl inr : core.
 
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
-
-(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
-Local Unset Elimination Schemes.
-
-(** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)
-Global Set Keyed Unification.
-
-(** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
-Global Unset Strict Universe Declaration.
-
-(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
-Global Unset Universe Minimization ToSet.
-
-(** Force to use bullets in proofs. *)
-Global Set Default Goal Selector "!".
-
-(** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)
-Global Set Printing Primitive Projection Parameters.
-
-(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
-Global Set Loose Hint Behavior "Strict".
-
-(** Apply using the same opacity information as typeclass proof search. *)
-Ltac class_apply c := autoapply c with typeclass_instances.
 
 Definition Relation (A : Type) := A -> A -> Type.
 
@@ -131,11 +168,11 @@ Arguments sig_ind {_ _}.
 
 (** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
-Arguments exist {A}%type P%type _ _.
+Arguments exist {A}%_type P%_type _ _.
 Arguments proj1 {A P} _ / .
 Arguments proj2 {A P} _ / .
 
-Arguments sig (A P)%type.
+Arguments sig (A P)%_type.
 
 Notation "{ x | P }" := (sig (fun x => P)) : type_scope.
 Notation "{ x : A | P }" := (sig (A := A) (fun x => P)) : type_scope.
@@ -144,6 +181,12 @@ Notation "{ x : A  & P }" := (sig (fun x:A => P)) : type_scope.
 
 (** This lets us pattern match sigma types in let expressions *)
 Add Printing Let sig.
+  
+Register sig as core.sigT.type.
+Register exist as core.sigT.intro.
+Register sig_rect as core.sigT.rect.
+Register proj1 as core.sigT.proj1.
+Register proj2 as core.sigT.proj2.
 
 #[export] Hint Resolve exist : core.
 
@@ -162,6 +205,8 @@ Notation "x .2" := (pr2 x) : fibration_scope.
 
 Definition uncurry {A B C} (f : A -> B -> C) (p : A * B) : C := f (fst p) (snd p).
 
+Arguments uncurry {A B C} f%_function_scope p /. 
+
 (** Composition of functions. *)
 
 Notation compose := (fun g f x => g (f x)).
@@ -175,24 +220,10 @@ Notation "g 'o' f" := (compose g%function f%function) : function_scope.
 (** This definition helps guide typeclass inference. *)
 Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
-(** Composition of logical equivalences *)
-Global Instance iff_compose : Transitive iff | 1
-  := fun A B C f g => (fst g o fst f , snd f o snd g).
-Arguments iff_compose {A B C} f g : rename.
-
-(** While we're at it, inverses of logical equivalences *)
-Global Instance iff_inverse : Symmetric iff | 1
-  := fun A B f => (snd f , fst f).
-Arguments iff_inverse {A B} f : rename.
-
-(** And reflexivity of them *)
-Global Instance iff_reflexive : Reflexive iff | 1
-  := fun A => (idmap , idmap).
-
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
 
-Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
+Global Arguments composeD {A B C}%_type_scope (g f)%_function_scope x.
 
 #[export] Hint Unfold composeD : core.
 
@@ -208,22 +239,22 @@ Inductive paths {A : Type} (a : A) : A -> Type :=
 
 Arguments idpath {A a} , [A] a.
 
+#[export] Hint Resolve idpath : core.
+
 Scheme paths_ind := Induction for paths Sort Type.
 Arguments paths_ind [A] a P f y p : rename.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p : rename.
 
-Register idpath as core.identity.refl.
-
 (* See comment above about the tactic [induction]. *)
 Definition paths_rect := paths_ind.
 
+Register paths as core.identity.type.
+Register idpath as core.identity.refl.
 Register paths_rect as core.identity.ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
-
-Register paths as core.identity.type.
 
 Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
@@ -322,10 +353,10 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   := match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
-Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
+Notation "p # u" := (transport _ p u) (only parsing) : path_scope.
 
 (** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
 (** TODO: If Coq PR#18299 is merged (possibly in Coq 8.20), then we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)
@@ -335,23 +366,36 @@ Proof. rewrite <- H. exact u. Defined.
 Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
 Proof. rewrite -> H. exact u. Defined.
 
-Arguments internal_paths_rew {A%type_scope} {a} P%function_scope f {a0} p.
-Arguments internal_paths_rew_r {A%type_scope} {a y} P%function_scope HC X.
+Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p.
+Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
-Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+Definition ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
   := match p with idpath => idpath end.
 
-Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : simpl nomatch.
 
 Register ap as core.identity.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
-
 Notation ap01 := ap (only parsing).
+
+(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
+
+  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
+
+Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+  p # (f x) = f y
+  :=
+  match p with idpath => idpath end.
+
+(** See above for the meaning of [simpl nomatch]. *)
+Arguments apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : simpl nomatch.
+
+(** *** Homotopies between functions *)
 
 Definition pointwise_paths A (P : A -> Type) (f g : forall x, P x)
   := forall x, f x = g x.
@@ -379,7 +423,7 @@ Proof.
   intros ? ? p ?; symmetry; apply p.
 Defined.
 
-Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments pointwise_paths {A}%_type_scope {P} (f g)%_function_scope.
 Global Arguments reflexive_pointwise_paths /.
 Global Arguments transitive_pointwise_paths /.
 Global Arguments symmetric_pointwise_paths /.
@@ -389,41 +433,26 @@ Hint Unfold pointwise_paths : typeclass_instances.
 
 Notation "f == g" := (pointwise_paths f g) : type_scope.
 
-Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
+Definition apD10 {A} {B : A -> Type} {f g : forall x, B x} (h : f = g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
-Global Arguments apD10 {A%type_scope B} {f g}%function_scope h%path_scope _.
+Global Arguments apD10 {A%_type_scope B} {f g}%_function_scope h%_path_scope _.
 
-Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
+Definition ap10 {A B} {f g : A -> B} (h : f = g) : f == g
   := apD10 h.
 
-Global Arguments ap10 {A B}%type_scope {f g}%function_scope h%path_scope _.
+Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
 
-Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
+Definition ap11 {A B} {f g : A -> B} (h : f = g) {x y : A} (p : x = y) : f x = g y.
 Proof.
   case h, p; reflexivity.
 Defined.
 
-Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
-
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments ap {A B} f {x y} p : simpl nomatch.
-
-(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
-
-  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
-
-Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
-  p # (f x) = f y
-  :=
-  match p with idpath => idpath end.
-
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomatch.
+Global Arguments ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y} p%_path_scope.
 
 (** ** Equivalences *)
 
@@ -449,10 +478,10 @@ Class IsEquiv {A B : Type} (f : A -> B) := {
   eisadj : forall x : A, eisretr (f x) = ap f (eissect x) ;
 }.
 
-Arguments eisretr {A B}%type_scope f%function_scope {_} _.
-Arguments eissect {A B}%type_scope f%function_scope {_} _.
-Arguments eisadj {A B}%type_scope f%function_scope {_} _.
-Arguments IsEquiv {A B}%type_scope f%function_scope.
+Arguments eisretr {A B}%_type_scope f%_function_scope {_} _.
+Arguments eissect {A B}%_type_scope f%_function_scope {_} _.
+Arguments eisadj {A B}%_type_scope f%_function_scope {_} _.
+Arguments IsEquiv {A B}%_type_scope f%_function_scope.
 
 (** We mark [eisadj] as Opaque to deter Coq from unfolding it when simplifying. Since proofs of [eisadj] typically have larger proofs than the rest of the equivalence data, we gain some speed up as a result. *)
 Global Opaque eisadj.
@@ -478,23 +507,35 @@ Notation "A <~> B" := (Equiv A B) : type_scope.
 
 Notation "f ^-1" := (@equiv_inv _ _ f _) : function_scope.
 
-(** ** Applying paths between equivalences like functions *)
+(** A shorthand for applying paths between equivalences like functions. *)
 
 Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
   := ap10 (ap equiv_fun h).
 
+(** ** Function extensionality *)
+
+(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
+
+(** We use a dummy class and an axiom to get universe polymorphism of [Funext] while still tracking its uses.  Coq's universe polymorphism is parametric; in all definitions, all universes are quantified over before any other variables.  It's impossible to state a theorem like [(forall i : Level, P i) -> Q] (e.g., "if [C] has all limits of all sizes, then [C] is a preorder" isn't statable)*.  By making [isequiv_apD10] an [Axiom] rather than a per-theorem hypothesis, we can use it at multiple incompatible universe levels.  By only allowing use of the axiom when we have a [Funext] in the context, we can still track what theorems depend on it (because their type will mention [Funext]).
+
+    By giving [Funext] a field whose type is an axiom, we guarantee that we cannot construct a fresh instance of [Funext] without [admit]; there's no term of type [dummy_funext_type] floating around.  If we did not give [Funext] any fields, then we could accidentally manifest a [Funext] using, e.g., [constructor], and then we wouldn't have a tag on the theorem that did this.
+
+    As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
+
+    * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
+
+Monomorphic Axiom Funext : Type0.
+Existing Class Funext.
+Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+Global Existing Instance isequiv_apD10.
+
+Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
+  : f == g -> f = g
+  := (@apD10 A P f g)^-1.
+
+Global Arguments path_forall {_ A%_type_scope P} (f g)%_function_scope _.
+
 (** ** Contractibility and truncation levels *)
-
-(** Truncation measures how complicated a type is.  In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
-
-In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
-
-- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
-
-- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
-*)
-
-(** *** Contractibility and truncation levels *)
 
 (** Truncation measures how complicated a type is in terms of higher path types. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial.  More precisely, a type [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].
 
@@ -503,6 +544,14 @@ In order to achieve moderate coverage and speedy resolution, we currently follow
    Thus, (-1)-truncated means "the type of paths between any two points is contractible". Such a type is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated types are truth values.  We call such types "propositions" or "h-propositions".
 
    Next, 0-truncated means "the type of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a type may have many points but it is discrete in the sense that all paths are trivial. We call such types "sets" or "h-sets".
+
+    In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you're very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.
+
+In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.
+
+- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].
+
+- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don't often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.
 
    We begin by defining the type that indexes the truncation levels.
 *)
@@ -517,12 +566,10 @@ Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
 (* See comment above about the tactic [induction]. *)
 Definition trunc_index_rect := trunc_index_ind.
 
-(** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
+(** We will use [Notation] for [trunc_index]es, so define a scope for them here. Numeral notation for [trunc_index]es is set up in Basics/Trunc.v. *)
 Bind Scope trunc_scope with trunc_index.
-Arguments trunc_S _%trunc_scope.
+Arguments trunc_S _%_trunc_scope.
 
-(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
-(** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
 Notation "n .+1" := (trunc_S n) : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
 Notation "n .+3" := (n.+1.+2)%trunc : trunc_scope.
@@ -604,9 +651,7 @@ Proof.
 Defined.
 
 (** We add this as a coercion. *)
-(** TODO: Once Coq 8.18 is the minimum, prefix the next line with
 #[warning="-uniform-inheritance"] 
-*)
 Coercion istrunc_fun : IsTrunc >-> Funclass.
 
 (** *** Truncated relations  *)
@@ -614,67 +659,22 @@ Coercion istrunc_fun : IsTrunc >-> Funclass.
 (** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
 Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
 
-(** *** Function extensionality *)
-
-(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
-(** We use a dummy class and an axiom to get universe polymorphism of [Funext] while still tracking its uses.  Coq's universe polymorphism is parametric; in all definitions, all universes are quantified over before any other variables.  It's impossible to state a theorem like [(forall i : Level, P i) -> Q] (e.g., "if [C] has all limits of all sizes, then [C] is a preorder" isn't statable).*  By making [isequiv_apD10] an [Axiom] rather than a per-theorem hypothesis, we can use it at multiple incompatible universe levels.  By only allowing use of the axiom when we have a [Funext] in the context, we can still track what theorems depend on it (because their type will mention [Funext]).
-
-    By giving [Funext] a field who's type is an axiom, we guarantee that we cannot construct a fresh instance of [Funext] without [admit]; there's no term of type [dummy_funext_type] floating around.  If we did not give [Funext] and fields, then we could accidentally manifest a [Funext] using, e.g., [constructor], and then we wouldn't have a tag on the theorem that did this.
-
-    As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
-
-    * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
-Monomorphic Axiom Funext : Type0.
-Existing Class Funext.
-Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
-Global Existing Instance isequiv_apD10.
-
-Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
-  f == g -> f = g
-  :=
-  (@apD10 A P f g)^-1.
-
-Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
-
-(** *** Tactics *)
-
-(** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
-
-   A specific [Hint Resolve] database [db] can be used with [auto with db].
-
-   The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
-
-(** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
-#[export] Hint Resolve idpath inverse : path_hints.
-#[export] Hint Resolve idpath : core.
-
-Ltac path_via mid :=
-  apply @concat with (y := mid); auto with path_hints.
-
 (** ** Natural numbers *)
 
-(** Unfortunately due to a bug in coq #10766 the induction tactic fails to work properly. We therefore have to use the autogenerated induction schemes and define the ones we want to use ourselves. *)
-
-Local Set Elimination Schemes.
-
-(**  Natural numbers. *)
 Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
 
-Local Unset Elimination Schemes.
-
-(** These schemes are therefore defined in Spaces.Nat *)
-(*
 Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rect := Induction for nat Sort Type.
-Scheme nat_rec := Minimality for nat Sort Type.
- *)
+Scheme nat_rec := Induction for nat Sort Type.
 
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
-Arguments S _%nat.
+Arguments S _%_nat.
+
+(** ** Misc *)
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type0 := .
@@ -745,27 +745,25 @@ Global Existing Instance ispointed_type.
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 
-Global Arguments hfiber {A B}%type_scope f%function_scope y.
+Global Arguments hfiber {A B}%_type_scope f%_function_scope y.
 
-(** *** More tactics *)
+(** ** Smallness *)
 
-Ltac easy :=
-  let rec use_hyp H :=
-    match type of H with
-    | _ => try solve [inversion H]
-    end
-  with do_intro := let H := fresh in intro H; use_hyp H
-  with destruct_hyp H := case H; clear H; do_intro; do_intro in
-  let rec use_hyps :=
-    match goal with
-    | H : _ |- _ => solve [inversion H]
-    | _ => idtac
-    end in
-  let rec do_atom :=
-    solve [reflexivity | symmetry; trivial] ||
-    contradiction ||
-    (split; do_atom)
-  with do_ccl := trivial; repeat do_intro; do_atom in
-  (use_hyps; do_ccl) || fail "Cannot solve this goal".
+(** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected.  We mark the [i] variable as being invariant, so that Coq is better at guessing universe variables when this is used. *)
+Class IsSmall@{=i j | } (X : Type@{j}) := {
+  smalltype : Type@{i} ;
+  equiv_smalltype : smalltype <~> X ;
+}.
+Arguments smalltype X {_}.
+Arguments equiv_smalltype X {_}.
 
-Tactic Notation "now" tactic(t) := t; easy.
+(** *** Propositional resizing *)
+
+(** See the note by [Funext] above regarding classes for axioms. *)
+Monomorphic Axiom PropResizing : Type0.
+Existing Class PropResizing.
+
+(** Propositional resizing says that every (-1)-truncated type is small. *)
+Axiom issmall_hprop@{i j | } : forall `{PropResizing} (X : Type@{j})
+  (T : IsHProp X), IsSmall@{i j} X.
+Existing Instance issmall_hprop.

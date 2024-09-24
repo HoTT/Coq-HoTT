@@ -19,8 +19,8 @@ Section Law3.
   Variables C1 C2 D : PreCategory.
 
   Lemma helper (c : Functor D C1 * Functor D C2)
-  : ((fst o (Datatypes.fst c * Datatypes.snd c))%functor,
-     (snd o (Datatypes.fst c * Datatypes.snd c))%functor)%core = c.
+  : ((fst o (Basics.Overture.fst c * Basics.Overture.snd c))%functor,
+     (snd o (Basics.Overture.fst c * Basics.Overture.snd c))%functor)%core = c.
   Proof.
     apply path_prod;
     [ apply compose_fst_prod

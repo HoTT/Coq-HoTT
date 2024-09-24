@@ -19,31 +19,19 @@ Local Open Scope wc_iso_scope.
 
 Section GroupCongruenceQuotient.
 
-  Context {G : Group} {R : Relation G}
-    `{is_mere_relation _ R, !IsCongruence R,
-      !Reflexive R, !Symmetric R, !Transitive R}.
+  (** A congruence on a group is a relation satisfying [R x x' -> R y y' -> R (x * y) (x' * y')].  Because we also require that [R] is reflexive, we also know that [R y y' -> R (x * y) (x * y')] for any [x], and similarly for multiplication on the right by [x].  We don't need to assume that [R] is symmetric or transitive. *)
+  Context {G : Group} {R : Relation G} `{!IsCongruence R, !Reflexive R}.
 
+  (** The type underlying the quotient group is [Quotient R]. *)
   Definition CongruenceQuotient := G / R.
 
   Global Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
-    intros x.
-    srapply Quotient_rec.
-    { intro y; revert x.
-      srapply Quotient_rec.
-      { intros x.
-        apply class_of.
-        exact (x * y). }
-      intros a b r.
-      cbn.
-      apply qglue.
-      by apply iscong. }
-    intros a b r.
-    revert x.
-    srapply Quotient_ind_hprop.
-    intro x.
-    apply qglue.
-    by apply iscong.
+    srapply Quotient_rec2.
+    - intros x y.
+      exact (class_of _ (x * y)).
+    - intros x x' y p. apply qglue. by apply iscong.
+    - intros x y y' q. apply qglue. by apply iscong.
   Defined.
 
   Global Instance congquot_mon_unit : MonUnit CongruenceQuotient.
@@ -53,9 +41,10 @@ Section GroupCongruenceQuotient.
 
   Global Instance congquot_negate : Negate CongruenceQuotient.
   Proof.
-    srapply Quotient_functor.
-    1: apply negate.
-    intros x y p.
+    srapply Quotient_rec.
+    1: exact (class_of R o negate).
+    intros x y p; cbn.
+    symmetry.
     rewrite <- (left_identity (-x)).
     destruct (left_inverse y).
     set (-y * y * -x).
@@ -63,17 +52,15 @@ Section GroupCongruenceQuotient.
     destruct (right_inverse x).
     unfold g; clear g.
     rewrite <- simple_associativity.
+    apply qglue.
     apply iscong; try reflexivity.
     apply iscong; try reflexivity.
-    by symmetry.
+    exact p.
   Defined.
 
   Global Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
-    intros x y.
-    srapply Quotient_ind_hprop; intro a; revert y.
-    srapply Quotient_ind_hprop; intro b; revert x.
-    srapply Quotient_ind_hprop; intro c.
+    srapply Quotient_ind3_hprop; intros x y z.
     simpl; by rewrite associativity.
   Qed.
 
@@ -150,22 +137,30 @@ Section QuotientGroup.
     - srapply Quotient_rec.
       + exact f.
       + cbn; intros x y n.
-        symmetry.
-        apply grp_moveL_M1.
-        rewrite <- grp_homo_inv.
-        rewrite <- grp_homo_op.
-        apply h; assumption.
+        apply grp_moveR_M1.
+        rhs_V nrapply (ap (.* f y) (grp_homo_inv _ _)).
+        rhs_V nrapply grp_homo_op.
+        symmetry; apply h; assumption.
     - intro x.
       refine (Quotient_ind_hprop _ _ _).
       intro y. revert x.
-
       refine (Quotient_ind_hprop _ _ _).
       intro x; simpl.
       apply grp_homo_op.
   Defined.
 
+  Definition grp_quotient_ind_hprop (P : QuotientGroup -> Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : forall x, P (grp_quotient_map x))
+    : forall x, P x.
+  Proof.
+    srapply Quotient_ind_hprop.
+    exact H1.
+  Defined.
+
 End QuotientGroup.
 
+Arguments QuotientGroup G N : simpl never.
 Arguments grp_quotient_map {_ _}.
 
 Notation "G / N" := (QuotientGroup G N) : group_scope.

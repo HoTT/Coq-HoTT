@@ -9,7 +9,7 @@ Require Export
 Generalizable Variables R Rle Rlt R1le R1lt.
 
 Section from_ring_order.
-  Context `{IsRing R} `{!PartialOrder Rle}
+  Context `{IsCRing R} `{!PartialOrder Rle}
     (plus_spec : forall z, OrderPreserving (z +))
     (mult_spec : forall x y, PropHolds (0 ≤ x) -> PropHolds (0 ≤ y) ->
       PropHolds (0 ≤ x * y)).
@@ -28,7 +28,7 @@ Section from_ring_order.
 End from_ring_order.
 
 Section from_strict_ring_order.
-  Context `{IsRing R} `{!StrictOrder Rlt}
+  Context `{IsCRing R} `{!StrictOrder Rlt}
     (plus_spec : forall z, StrictlyOrderPreserving (z +))
     (mult_spec : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
       PropHolds (0 < x * y)).
@@ -47,7 +47,7 @@ Section from_strict_ring_order.
 End from_strict_ring_order.
 
 Section from_pseudo_ring_order.
-  Context `{IsRing R} `{Apart R} `{!PseudoOrder Rlt}
+  Context `{IsCRing R} `{Apart R} `{!PseudoOrder Rlt}
     (plus_spec : forall z, StrictlyOrderPreserving (z +))
     (mult_ext : StrongBinaryExtensionality (.*.))
     (mult_spec : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
@@ -68,7 +68,7 @@ Section from_pseudo_ring_order.
 End from_pseudo_ring_order.
 
 Section from_full_pseudo_ring_order.
-  Context `{IsRing R} `{Apart R} `{!FullPseudoOrder Rle Rlt}
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoOrder Rle Rlt}
     (plus_spec : forall z, StrictlyOrderPreserving (z +))
     (mult_ext : StrongBinaryExtensionality (.*.))
     (mult_spec : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
@@ -84,7 +84,7 @@ Section from_full_pseudo_ring_order.
 End from_full_pseudo_ring_order.
 
 Section ring_order.
-  Context `{IsRing R} `{!SemiRingOrder Rle}.
+  Context `{IsCRing R} `{!SemiRingOrder Rle}.
 (*   Add Ring R : (stdlib_ring_theory R). *)
 
   Lemma flip_le_negate x y : -y ≤ -x <-> x ≤ y.
@@ -170,7 +170,7 @@ Section ring_order.
 End ring_order.
 
 Section strict_ring_order.
-  Context `{IsRing R} `{!StrictSemiRingOrder Rlt}.
+  Context `{IsCRing R} `{!StrictSemiRingOrder Rlt}.
 (*   Add Ring Rs : (stdlib_ring_theory R). *)
 
   Lemma flip_lt_negate x y : -y < -x <-> x < y.
@@ -282,7 +282,7 @@ Section strict_ring_apart.
 End strict_ring_apart.
 
 Section another_ring_order.
-  Context `{IsRing R1} `{!SemiRingOrder R1le} `{IsRing R2} `{R2le : Le R2}
+  Context `{IsCRing R1} `{!SemiRingOrder R1le} `{IsCRing R2} `{R2le : Le R2}
     `{is_mere_relation R2 R2le}.
 
   Lemma projected_ring_order (f : R2 -> R1) `{!IsSemiRingPreserving f} `{!IsInjective f}
@@ -317,7 +317,7 @@ Section another_ring_order.
 End another_ring_order.
 
 Section another_strict_ring_order.
-  Context `{IsRing R1} `{!StrictSemiRingOrder R1lt} `{IsRing R2} `{R2lt : Lt R2}
+  Context `{IsCRing R1} `{!StrictSemiRingOrder R1lt} `{IsCRing R2} `{R2lt : Lt R2}
     `{is_mere_relation R2 lt}.
 
   Lemma projected_strict_ring_order (f : R2 -> R1) `{!IsSemiRingPreserving f} :
@@ -335,8 +335,8 @@ Section another_strict_ring_order.
 End another_strict_ring_order.
 
 Section another_pseudo_ring_order.
-  Context `{IsRing R1} `{Apart R1} `{!PseudoSemiRingOrder R1lt}
-    `{IsRing R2} `{IsApart R2} `{R2lt : Lt R2}
+  Context `{IsCRing R1} `{Apart R1} `{!PseudoSemiRingOrder R1lt}
+    `{IsCRing R2} `{IsApart R2} `{R2lt : Lt R2}
     `{is_mere_relation R2 lt}.
 
   Lemma projected_pseudo_ring_order (f : R2 -> R1) `{!IsSemiRingPreserving f}
@@ -360,8 +360,8 @@ Section another_pseudo_ring_order.
 End another_pseudo_ring_order.
 
 Section another_full_pseudo_ring_order.
-  Context `{IsRing R1} `{Apart R1} `{!FullPseudoSemiRingOrder R1le R1lt}
-    `{IsRing R2} `{IsApart R2} `{R2le : Le R2} `{R2lt : Lt R2}
+  Context `{IsCRing R1} `{Apart R1} `{!FullPseudoSemiRingOrder R1le R1lt}
+    `{IsCRing R2} `{IsApart R2} `{R2le : Le R2} `{R2lt : Lt R2}
     `{is_mere_relation R2 le} `{is_mere_relation R2 lt}.
 
   Lemma projected_full_pseudo_ring_order (f : R2 -> R1) `{!IsSemiRingPreserving f}

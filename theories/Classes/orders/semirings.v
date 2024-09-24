@@ -10,7 +10,7 @@ Require Export
 Generalizable Variables R Rlt f.
 
 Section semiring_order.
-  Context `{SemiRingOrder R} `{!IsSemiRing R}.
+  Context `{SemiRingOrder R} `{!IsSemiCRing R}.
 (*   Add Ring R : (stdlib_semiring_theory R). *)
 
   Global Instance plus_le_embed_l : forall (z : R), OrderEmbedding (+z).
@@ -186,7 +186,7 @@ Hint Extern 7 (PropHolds (0 ≤ _ + _)) =>
   eapply @nonneg_plus_compat : typeclass_instances.
 
 Section strict_semiring_order.
-  Context `{IsSemiRing R} `{!StrictSemiRingOrder Rlt}.
+  Context `{IsSemiCRing R} `{!StrictSemiRingOrder Rlt}.
 (*   Add Ring Rs : (stdlib_semiring_theory R). *)
 
   Global Instance plus_lt_embed : forall (z : R), StrictOrderEmbedding (+z).
@@ -350,7 +350,7 @@ Hint Extern 7 (PropHolds (0 < _ + _)) =>
   eapply @pos_plus_compat : typeclass_instances.
 
 Section pseudo_semiring_order.
-  Context `{PseudoSemiRingOrder R} `{!IsSemiRing R}.
+  Context `{PseudoSemiRingOrder R} `{!IsSemiCRing R}.
 (*   Add Ring Rp : (stdlib_semiring_theory R). *)
 
   Local Existing Instance pseudo_order_apart.
@@ -570,7 +570,7 @@ Hint Extern 7 (PropHolds (0 < 4)) => eapply @lt_0_4 : typeclass_instances.
 Hint Extern 7 (PropHolds (2 ≶ 0)) => eapply @apart_0_2 : typeclass_instances.
 
 Section full_pseudo_semiring_order.
-  Context `{FullPseudoSemiRingOrder R} `{!IsSemiRing R}.
+  Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}.
 
 (*   Add Ring Rf : (stdlib_semiring_theory R). *)
 
@@ -848,7 +848,7 @@ End dec_semiring_order.
 Section another_semiring.
   Context `{SemiRingOrder R1}.
 
-  Lemma projected_srorder `{IsSemiRing R2} `{R2le : Le R2}
+  Lemma projected_srorder `{IsSemiCRing R2} `{R2le : Le R2}
     `{is_mere_relation R2 R2le} (f : R2 -> R1)
     `{!IsSemiRingPreserving f} `{!IsInjective f}
     : (forall x y, x ≤ y <-> f x ≤ f y) -> (forall x y : R2, x ≤ y -> exists z, y = x + z) ->
@@ -865,7 +865,7 @@ Section another_semiring.
     apply nonneg_mult_compat; rewrite <-(preserves_0 (f:=f)); apply P;trivial.
   Qed.
 
- Context `{!IsSemiRing R1} `{SemiRingOrder R2} `{!IsSemiRing R2}
+ Context `{!IsSemiCRing R1} `{SemiRingOrder R2} `{!IsSemiCRing R2}
    `{!IsSemiRingPreserving (f : R1 -> R2)}.
 
   (* If a morphism agrees on the positive cone then it is order preserving *)
@@ -904,7 +904,7 @@ End another_semiring.
 
 Section another_semiring_strict.
   Context `{StrictSemiRingOrder R1} `{StrictSemiRingOrder R2}
-    `{!IsSemiRing R1} `{!IsSemiRing R2}
+    `{!IsSemiCRing R1} `{!IsSemiCRing R2}
     `{!IsSemiRingPreserving (f : R1 -> R2)}.
 
   Lemma strictly_preserving_preserves_pos

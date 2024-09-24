@@ -4,10 +4,12 @@
 Require Import HoTT.Basics.
 Require Import Types.Empty Types.Unit Types.Prod Types.Sigma.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
-Require Import Types.Bool Types.Forall.
+Require Import Types.Bool.
 
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
+
+Local Set Universe Minimization ToSet.
 
 Generalizable Variables X A B f g n.
 
@@ -31,16 +33,19 @@ Definition eta_sum `(z : A + B) : match z with
 
 (** ** Paths *)
 
-Definition path_sum {A B : Type} (z z' : A + B)
-           (pq : match z, z' with
-                   | inl z0, inl z'0 => z0 = z'0
-                   | inr z0, inr z'0 => z0 = z'0
-                   | _, _ => Empty
-                 end)
-: z = z'.
+Definition code_sum {A B} (z z' : A + B) : Type
+  := match z, z' with
+    | inl a, inl a' => a = a'
+    | inr b, inr b' => b = b'
+    | _, _ => Empty end.
+
+Definition path_sum {A B : Type} {z z' : A + B} (c : code_sum z z') : z = z'.
+Proof.
   destruct z, z'.
-  all:try apply ap, pq.
-  all:elim pq.
+  - apply ap, c.
+  - elim c.
+  - elim c.
+  - apply ap, c.
 Defined.
 
 Definition path_sum_inv {A B : Type} {z z' : A + B}
@@ -77,12 +82,12 @@ Definition path_sum_inr (A : Type) {B : Type} {x x' : B}
 (** This lets us identify the path space of a sum type, up to equivalence. *)
 
 Definition eisretr_path_sum {A B} {z z' : A + B}
-: (path_sum z z') o (@path_sum_inv _ _ z z') == idmap
+  : path_sum o (@path_sum_inv _ _ z z') == idmap
   := fun p => match p as p in (_ = z') return
-                    path_sum z z' (path_sum_inv p) = p
+                    path_sum (path_sum_inv p) = p
               with
                 | 1 => match z as z return
-                             path_sum z z (path_sum_inv 1) = 1
+                             (@path_sum _ _ z z) (path_sum_inv 1) = 1
                        with
                          | inl _ => 1
                          | inr _ => 1
@@ -90,24 +95,20 @@ Definition eisretr_path_sum {A B} {z z' : A + B}
               end.
 
 Definition eissect_path_sum {A B} {z z' : A + B}
-: (@path_sum_inv _ _ z z') o (path_sum z z') == idmap.
+  : path_sum_inv o (@path_sum _ _ z z') == idmap.
 Proof.
   intro p.
   destruct z, z', p; exact idpath.
 Defined.
 
 Global Instance isequiv_path_sum {A B : Type} {z z' : A + B}
-: IsEquiv (path_sum z z') | 0.
+: IsEquiv (@path_sum _ _ z z') | 0.
 Proof.
-  refine (Build_IsEquiv _ _
-                       (path_sum z z')
-                       (@path_sum_inv _ _ z z')
-                       (@eisretr_path_sum A B z z')
-                       (@eissect_path_sum A B z z')
-                       _).
+  refine (Build_IsEquiv _ _ path_sum path_sum_inv
+    eisretr_path_sum eissect_path_sum _).
   destruct z, z';
-    intros [];
-    exact idpath.
+  intros [];
+  exact idpath.
 Defined.
 
 Definition equiv_path_sum {A B : Type} (z z' : A + B)
@@ -357,6 +358,26 @@ Section FunctorSum.
   Definition functor_sum : A + B -> A' + B'
     := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
 
+  Definition functor_code_sum {z z' : A + B} (c : code_sum z z')
+    : code_sum (functor_sum z) (functor_sum z').
+  Proof.
+    destruct z, z'.
+    - destruct c. reflexivity.
+    - elim c.
+    - elim c.
+    - destruct c. reflexivity.
+  Defined.
+
+  Definition ap_functor_sum {z z' : A + B} (c : code_sum z z')
+    : ap functor_sum (path_sum c) = path_sum (functor_code_sum c).
+  Proof.
+    destruct z, z'.
+    - destruct c. reflexivity.
+    - elim c.
+    - elim c.
+    - destruct c. reflexivity.
+  Defined.
+
   (** The fibers of [functor_sum] are those of [f] and [g]. *)
   Definition hfiber_functor_sum_l (a' : A')
   : hfiber functor_sum (inl a') <~> hfiber f a'.
@@ -584,6 +605,10 @@ Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 : A + B <~> A' + B
   := f +E 1.
 
+Definition iff_functor_sum {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
+  : A + B <-> A' + B'
+  := (functor_sum (fst f) (fst g), functor_sum (snd f) (snd g)).
+
 (** ** Unfunctoriality on equivalences *)
 
 Global Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
@@ -663,7 +688,8 @@ Definition equiv_unfunctor_sum {A A' B B' : Type}
 
 (* This is a special property of [sum], of course, not an instance of a general family of facts about types. *)
 
-Definition equiv_sum_symm (A B : Type) : A + B <~> B + A.
+Definition equiv_sum_symm@{u v k | u <= k, v <= k} (A : Type@{u}) (B : Type@{v})
+  : Equiv@{k k} (A + B) (B + A).
 Proof.
   apply (equiv_adjointify
            (fun ab => match ab with inl a => inr a | inr b => inl b end)
@@ -686,44 +712,31 @@ Defined.
 
 (** ** Identity *)
 
-Definition sum_empty_l (A : Type) : Empty + A <~> A.
+Definition sum_empty_l@{u|} (A : Type@{u}) : Equiv@{u u} (Empty + A) A.
 Proof.
-  refine (equiv_adjointify
-       (fun z => match z:Empty+A with
-                   | inl e => match e with end
-                   | inr a => a
-                 end)
-       inr (fun a => 1) _).
-  intros [e|z]; [ elim e | reflexivity ].
+  snrapply equiv_adjointify@{u u}.
+  - intros [e|a]; [ exact (Empty_rec@{u} e) | exact a ].
+  - intros a; exact (inr@{Set u} a).
+  - intro x; exact idpath@{u}.
+  - intros [e|z]; [ elim e | exact idpath@{u}].
 Defined.
 
-Definition sum_empty_r (A : Type) : A + Empty <~> A.
-Proof.
-  refine (equiv_adjointify
-       (fun z => match z : A + Empty with
-                   | inr e => match e with end
-                   | inl a => a
-                 end)
-       inl (fun a => 1) _).
-  intros [z|e]; [ reflexivity | elim e ].
-Defined.
+Definition sum_empty_r@{u} (A : Type@{u}) : Equiv@{u u} (A + Empty) A
+  := equiv_compose'@{u u u} (sum_empty_l A) (equiv_sum_symm@{u Set u} _ _).
 
 (** ** Distributivity *)
 
 Definition sum_distrib_l A B C
 : A * (B + C) <~> (A * B) + (A * C).
 Proof.
-  refine (Build_Equiv (A * (B + C)) ((A * B) + (A * C))
-            (fun abc => let (a,bc) := abc in
-                        match bc with
-                          | inl b => inl (a,b)
-                          | inr c => inr (a,c)
-                        end) _).
-  simple refine (Build_IsEquiv (A * (B + C)) ((A * B) + (A * C)) _
-            (fun ax => match ax with
-                         | inl (a,b) => (a,inl b)
-                         | inr (a,c) => (a,inr c)
-                       end) _ _ _).
+  snrapply Build_Equiv.
+  2: snrapply Build_IsEquiv.
+  - intros [a [b|c]].
+    + exact (inl@{u u} (a, b)).
+    + exact (inr@{u u} (a, c)).
+  - intros [[a b]|[a c]].
+    + exact (a, inl@{u u} b).
+    + exact (a, inr@{u u} c).
   - intros [[a b]|[a c]]; reflexivity.
   - intros [a [b|c]]; reflexivity.
   - intros [a [b|c]]; reflexivity.
@@ -946,15 +959,15 @@ Defined.
 (** ** Decidability *)
 
 (** Sums preserve decidability *)
-Global Instance decidable_sum {A B : Type}
-       `{Decidable A} `{Decidable B}
-: Decidable (A + B).
+Global Instance decidable_sum@{u v k | u <= k, v <= k} {A : Type@{u}} {B : Type@{v}}
+  `{Decidable A} `{Decidable B}
+  : Decidable@{k} (A + B).
 Proof.
   destruct (dec A) as [x1|y1].
-  - exact (inl (inl x1)).
-  - destruct (dec B) as [x2|y2].
-    + exact (inl (inr x2)).
-    + apply inr; intros z.
+  - exact (inl@{k k} (inl x1)).
+  - destruct (dec@{v} B) as [x2|y2].
+    + exact (inl@{k k} (inr x2)).
+    + apply inr@{k k}; intros z.
       destruct z as [x1|x2].
       * exact (y1 x1).
       * exact (y2 x2).
@@ -969,13 +982,13 @@ Proof.
   - destruct (dec_paths a1 a2) as [p|np].
     + exact (inl (ap inl p)).
     + apply inr; intros p.
-      exact (np ((path_sum _ _)^-1 p)).
-  - exact (inr (path_sum _ _)^-1).
-  - exact (inr (path_sum _ _)^-1).
+      exact (np (path_sum^-1 p)).
+  - exact (inr path_sum^-1).
+  - exact (inr path_sum^-1).
   - destruct (dec_paths b1 b2) as [p|np].
     + exact (inl (ap inr p)).
     + apply inr; intros p.
-      exact (np ((path_sum _ _)^-1 p)).
+      exact (np (path_sum^-1 p)).
 Defined.
 
 (** Because of [ishprop_sum], decidability of an hprop is again an hprop. *)

@@ -13,19 +13,16 @@ Local Open Scope mc_mult_scope.
 (** The image of a group homomorphism between groups is a subgroup *)
 Definition grp_image {A B : Group} (f : A $-> B) : Subgroup B.
 Proof.
-  snrapply (Build_Subgroup _ (fun b => hexists (fun a => f a = b))).
-  repeat split.
-  1: exact _.
-  1: apply tr; exists mon_unit; apply grp_homo_unit.
-  { intros x y p q; strip_truncations; apply tr.
-    destruct p as [a []], q as [b []].
-    exists (a * b).
-    apply grp_homo_op. }
-  intros b p.
-  strip_truncations.
-  destruct p as [a []].
-  apply tr; exists (- a).
-  apply grp_homo_inv.
+  snrapply (Build_Subgroup' (fun b => hexists (fun a => f a = b))).
+  - exact _.
+  - apply tr.
+    exists mon_unit.
+    apply grp_homo_unit.
+  - intros x y p q; strip_truncations; apply tr.
+    destruct p as [a p], q as [b q].
+    exists (a * -b).
+    lhs nrapply grp_homo_op; f_ap.
+    lhs nrapply grp_homo_inv; f_ap.
 Defined.
 
 Definition grp_image_in {A B : Group} (f : A $-> B) : A $-> grp_image f.

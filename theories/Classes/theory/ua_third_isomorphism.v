@@ -1,11 +1,13 @@
 (** This file proves the third isomorphism theorem,
     [isomorphic_third_isomorphism]. *)
 Require Import
+  Basics.Notations
   Colimits.Quotient
   Classes.interfaces.canonical_names
   Classes.theory.ua_quotient_algebra
   Classes.theory.ua_isomorphic
-  Classes.theory.ua_first_isomorphism.
+  Classes.theory.ua_first_isomorphism
+  Spaces.List.Core.
 
 Import algebra_notations quotient_algebra_notations isomorphic_notations.
 

@@ -26,7 +26,7 @@
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
      BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
-     Metatheory.Core Metatheory.FunextVarieties.
+     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -53,8 +53,8 @@ Section Book_1_2_prod.
   Variable A B : Type.
 
   (** Recursor with projection functions instead of pattern-matching. *)
-  Let prod_rec_proj C (g : A -> B -> C) (p : A * B) : C :=
-    g (fst p) (snd p).
+  Let prod_rec_proj C (g : A -> B -> C) (p : A * B) : C
+    := g (fst p) (snd p).
   Definition Book_1_2_prod := prod_rec_proj.
 
   Proposition Book_1_2_prod_fst : fst = prod_rec_proj A (fun a b => a).
@@ -75,8 +75,8 @@ Section Book_1_2_sig.
   Variable B : A -> Type.
 
   (** Non-dependent recursor with projection functions instead of pattern matching. *)
-  Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C :=
-    g (pr1 p) (pr2 p).
+  Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C
+    := g (pr1 p) (pr2 p).
   Definition Book_1_2_sig := @sig_rec_proj.
 
   Proposition Book_1_2_sig_fst : @pr1 A B = sig_rec_proj A (fun a => fun b => a).
@@ -98,8 +98,8 @@ Definition Book_1_3_prod_lib := @HoTT.Types.Prod.prod_ind.
 Section Book_1_3_prod.
   Variable A B : Type.
 
-  Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x :=
-    transport C (HoTT.Types.Prod.eta_prod x) (g (fst x) (snd x)).
+  Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x
+    := transport C (HoTT.Types.Prod.eta_prod x) (g (fst x) (snd x)).
   Definition Book_1_3_prod := prod_ind_eta.
 
   Proposition Book_1_3_prod_refl : forall C g a b, prod_ind_eta C g (a, b) = g a b.
@@ -115,8 +115,8 @@ Section Book_1_3_sig.
 
   Let sig_ind_eta (C : (exists (a : A), B a) -> Type)
                           (g : forall (a : A) (b : B a), C (a; b))
-                          (x : exists (a : A), B a) : C x :=
-    transport C (HoTT.Types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
+                          (x : exists (a : A), B a) : C x
+    := transport C (HoTT.Types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
   Definition Book_1_3_sig := sig_ind_eta.
 
   Proposition Book_1_3_sig_refl : forall C g a b, sig_ind_eta C g (a; b) = g a b.
@@ -128,7 +128,37 @@ End Book_1_3_sig.
 (* ================================================== ex:iterator *)
 (** Exercise 1.4 *)
 
+Section Book_1_4.
+  Fixpoint Book_1_4_iter (C : Type) (c0 : C) (cs : C -> C) (n : nat) : C
+    := match n with
+      | O => c0
+      | S m => cs (Book_1_4_iter C c0 cs m)
+      end.
 
+  Definition Book_1_4_rec' (C : Type) (c0 : C) (cs : nat -> C -> C) : nat -> nat * C
+    := Book_1_4_iter (nat * C) (O, c0) (fun x => (S (fst x), cs (fst x) (snd x))).
+  
+  Definition Book_1_4_rec (C : Type) (c0 : C) (cs : nat -> C -> C) (n : nat) : C
+    := snd (Book_1_4_rec' C c0 cs n).
+
+  Lemma Book_1_4_aux : forall C c0 cs n, fst (Book_1_4_rec' C c0 cs n) = n.
+  Proof.
+    intros C c0 cs n. induction n as [| m IH].
+    - simpl. reflexivity.
+    - cbn. exact (ap S IH).
+  Qed.
+
+  Proposition Book_1_4_eq
+    : forall C c0 cs n, Book_1_4_rec C c0 cs n = nat_rect (fun _ => C) c0 cs n.
+  Proof. 
+    intros C c0 cs n. induction n as [| m IH].
+    - simpl. reflexivity.
+    - change (cs (fst (Book_1_4_rec' C c0 cs m)) (Book_1_4_rec C c0 cs m)
+              = cs m (nat_rect (fun _ => C) c0 cs m)).
+      lhs rapply (ap (fun x => cs x _) (Book_1_4_aux _ _ _ _)).
+      exact (ap (cs m) IH).
+  Qed.
+End Book_1_4.
 
 (* ================================================== ex:sum-via-bool *)
 (** Exercise 1.5 *)
@@ -157,57 +187,124 @@ End Book_1_5.
 (* ================================================== ex:prod-via-bool *)
 (** Exercise 1.6 *)
 
+Section Book_1_6.
+  Context `{Funext}.
 
+  Definition Book_1_6_prod (A B : Type) := forall x : Bool, (if x then A else B).
+
+  Definition Book_1_6_mk_pair {A B : Type} (a : A) (b : B) : Book_1_6_prod A B
+    := fun x => match x with
+              | true => a
+              | false => b
+              end.
+
+  Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
+  Notation "'pr1' p" := (p true) (at level 0).
+  Notation "'pr2' p" := (p false) (at level 0).
+
+  Definition Book_1_6_eq {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) == p
+    := fun x => match x with
+              | true => 1
+              | false => 1
+              end.
+
+  Theorem Book_1_6_id {A B : Type} (a : A) (b : B) : Book_1_6_eq (a, b) = (fun x => 1).
+  Proof.
+    apply path_forall. intros x. destruct x; reflexivity.
+  Qed.
+
+  Definition Book_1_6_eta {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) = p
+    := path_forall (pr1 p, pr2 p) p (Book_1_6_eq p).
+
+  Definition Book_1_6_ind {A B : Type} (C : Book_1_6_prod A B -> Type) (f : forall a b, C (a, b))
+    (p : Book_1_6_prod A B) : C p
+    := transport C (Book_1_6_eta p) (f (pr1 p) (pr2 p)).
+
+  Theorem Book_1_6_red {A B : Type} (C : Book_1_6_prod A B -> Type) f a b
+    : Book_1_6_ind C f (a, b) = f a b.
+  Proof.
+    unfold Book_1_6_ind, Book_1_6_eta. simpl.
+    rewrite Book_1_6_id, path_forall_1.
+    reflexivity.
+  Qed.
+End Book_1_6.
 
 (* ================================================== ex:pm-to-ml *)
 (** Exercise 1.7 *)
 
+Section Book_1_7.
+  Definition Book_1_7_id {A : Type}
+    : forall {x y : A} (p : x = y), (x; 1) = (y; p) :> { a : A & x = a }
+    := paths_ind' (fun (x y : A) (p : x = y) => (x; 1) = (y; p)) (fun x => 1).
 
+  Definition Book_1_7_transport {A : Type} (P : A -> Type)
+    : forall {x y : A} (p : x = y), P x -> P y
+    := paths_ind' (fun (x y : A) (p : x = y) => P x -> P y) (fun x => idmap).
+
+  Definition Book_1_7_ind' {A : Type} (a : A) (C : forall x, (a = x) -> Type)
+    (c : C a 1) (x : A) (p : a = x)
+    : C x p
+    := Book_1_7_transport (fun r => C (pr1 r) (pr2 r)) (Book_1_7_id p) c.
+
+  Definition Book_1_7_eq {A : Type} (a : A) (C : forall x, (a = x) -> Type) (c : C a 1)
+    : Book_1_7_ind' a C c a 1 = c
+    := 1.
+End Book_1_7.
 
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
 
-Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
-  match n with
-    O => c0
-  | S m => cs m (rec_nat' C c0 cs m)
-  end.
+Section Book_1_8.
+  Fixpoint Book_1_8_rec_nat (C : Type) c0 cs (n : nat) : C
+    := match n with
+      | O => c0
+      | S m => cs m (Book_1_8_rec_nat C c0 cs m)
+      end.
 
-Definition add : nat -> nat -> nat :=
-  rec_nat' (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+  Definition Book_1_8_add : nat -> nat -> nat
+    := Book_1_8_rec_nat (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
 
-Definition mult : nat -> nat -> nat  :=
-  rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
+  Definition Book_1_8_mult : nat -> nat -> nat
+    := Book_1_8_rec_nat (nat -> nat) (fun m => 0) (fun n g m => Book_1_8_add m (g m)).
 
-(* rec_nat' gives back a function with the wrong argument order, so we flip the
-   order of the arguments p and q *)
-Definition exp : nat -> nat -> nat  :=
-  fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
+  (* [Book_1_8_rec_nat] gives back a function with the wrong argument order, so we flip the order of the arguments [p] and [q]. *)
+  Definition Book_1_8_exp : nat -> nat -> nat
+    := fun p q =>
+        (Book_1_8_rec_nat (nat -> nat) (fun m => (S 0)) (fun n g m => Book_1_8_mult m (g m))) q p.
 
-Example add_example: add 32 17 = 49. Proof. reflexivity. Defined.
-Example mult_example: mult 20 5 = 100. Proof. reflexivity. Defined.
-Example exp_example: exp 2 10 = 1024. Proof. reflexivity. Defined.
+  Example add_example: Book_1_8_add 32 17 = 49 := 1.
+  Example mult_example: Book_1_8_mult 20 5 = 100 := 1.
+  Example exp_example: Book_1_8_exp 2 10 = 1024 := 1.
 
-(* To do: proof that these form a semiring *)
+  Definition Book_1_8_semiring := HoTT.Classes.implementations.peano_naturals.nat_semiring.
+End Book_1_8.
 
 (* ================================================== ex:fin *)
 (** Exercise 1.9 *)
 
+Section Book_1_9.
+  Fixpoint Book_1_9_Fin (n : nat) : Type
+    := match n with
+      | O => Empty
+      | S m => (Book_1_9_Fin m) + Unit
+      end.
 
+  Definition Book_1_9_fmax (n : nat) : Book_1_9_Fin (S n) := inr tt.
+End Book_1_9.
 
 (* ================================================== ex:ackermann *)
 (** Exercise 1.10 *)
 
-Fixpoint ack (n m : nat) : nat :=
-  match n with
-  | O => S m
-  | S p => let fix ackn (m : nat) :=
-               match m with
-                 | O => ack p 1
-                 | S q => ack p (ackn q)
-               end
-           in ackn m
-  end.
+Fixpoint ack (n m : nat) : nat 
+  := match n with
+    | O => S m
+    | S p => let fix ackn (m : nat)
+              := match m with
+                | O => ack p 1
+                | S q => ack p (ackn q)
+                end
+            in ackn m
+    end.
 
 Definition Book_1_10 := ack.
 
@@ -275,17 +372,19 @@ End Book_1_13.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-
+(** There is no adequate type family C : Pi_{x, y, p} U  such that C(x, x, p) is p = refl x definitionally. *)
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
 
-(* concat_A1p? *)
+Definition Book_1_15_paths_rec {A : Type} {C : A -> Type} {x y : A} (p : x = y) : C x -> C y 
+  := match p with 1 => idmap end.
+(** This is exactly the definition of [transport] from Basics.Overture. *)
 
 (* ================================================== ex:add-nat-commutative *)
 (** Exercise 1.16 *)
 
-
+Definition Book_1_16 := HoTT.Spaces.Nat.Core.nat_add_comm.
 
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
@@ -495,7 +594,7 @@ End Book_2_7.
 (* ================================================== ex:ap-coprod *)
 (** Exercise 2.8 *)
 
-
+Definition Book_2_8 := @HoTT.Types.Sum.ap_functor_sum.
 
 (* ================================================== ex:coprod-ump *)
 (** Exercise 2.9 *)
@@ -510,7 +609,7 @@ Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
 (* To create a function on the direct sum from functions on the summands, work
    by cases *)
 Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
-  prod_rect (fun _ => A + B -> X) (fun f g => sum_rect (fun _ => X) f g).
+  prod_ind (fun _ => A + B -> X) (fun f g => sum_ind (fun _ => X) f g).
 
 Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
   apply (equiv_adjointify coprod_ump2 coprod_ump1).
@@ -558,12 +657,20 @@ End TwoTen.
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
+(** The definition of commutative squares in HoTT.Limits.Pullback is slightly different, using a homotopy between the composites instead of a path. *)
 
+Definition Book_2_11 `{H : Funext} {X A B C} (f : A -> C) (g : B -> C)
+  : (X -> HoTT.Limits.Pullback.Pullback f g)
+    <~> HoTT.Limits.Pullback.Pullback (fun h : X -> A => f o h) (fun k : X -> B => g o k)
+  := HoTT.Limits.Pullback.equiv_ispullback_commsq f g
+    oE (HoTT.Limits.Pullback.equiv_pullback_corec f g)^-1.
 
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
 
+Definition Book_2_12_i := @HoTT.Limits.Pullback.ispullback_pasting_left.
 
+Definition Book_2_12_ii := @HoTT.Limits.Pullback.ispullback_pasting_outer.
 
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
@@ -696,7 +803,7 @@ Defined.
 (* ================================================== ex:prop-inhabcontr *)
 (** Exercise 3.5 *)
 
-Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
+Definition Book_3_5_solution_1 := @HoTT.Universes.HProp.equiv_hprop_inhabited_contr.
 
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
@@ -981,6 +1088,11 @@ Definition Book_3_19 := @HoTT.BoundedSearch.minimal_n.
 
 
 
+(* ================================================== ex:n-set *)
+(** Exercise 3.24 *)
+
+
+
 (* ================================================== ex:two-sided-adjoint-equivalences *)
 (** Exercise 4.1 *)
 
@@ -1057,7 +1169,7 @@ End Book_4_5.
 Section Book_4_6_i.
 
   Definition is_qinv {A B : Type} (f : A -> B)
-    := { g : B -> A & ((f o g == idmap) * (g o f == idmap))%type }.
+    := { g : B -> A & (f o g == idmap) * (g o f == idmap) }.
   Definition qinv (A B : Type)
     := { f : A -> B & is_qinv f }.
   Definition qinv_id A : qinv A A
@@ -1436,7 +1548,6 @@ Definition Book_6_1_ii := @HoTT.Cubical.DPath.dp_apD_pp.
 
 Definition Book_6_3 := @HoTT.Spaces.Torus.TorusEquivCircles.equiv_torus_prod_Circle.
 
-
 (* ================================================== ex:nspheres *)
 (** Exercise 6.4 *)
 
@@ -1601,7 +1712,7 @@ End Book_6_9.
 Section Book_7_1.
   Lemma Book_7_1_part_i (H : forall A, merely A -> A) A : IsHSet A.
   Proof.
-    apply (@HoTT.HSet.ishset_hrel_subpaths
+    apply (@HoTT.Universes.HSet.ishset_hrel_subpaths
              A (fun x y => merely (x = y)));
     try typeclasses eauto.
     - intros ?.

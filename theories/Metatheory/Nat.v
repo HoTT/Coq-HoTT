@@ -3,7 +3,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import HProp.
-Require Import PropResizing.PropResizing.
+Require Import Universes.Smallness.
 Local Open Scope path_scope.
 
 (* Be careful about [Import]ing this file!  Usually you want to use the standard [Nat] instead. *)
@@ -149,8 +149,7 @@ Section AssumeStuff.
     Qed.
 
     Definition graph_unsucc_equiv_vert@{} : vert A <~> vert B
-      := equiv_unfunctor_sum_l@{s s s s s  s Set Set Set Set}
-                              f Ha Hb.
+      := equiv_unfunctor_sum_l@{s s s s s s} f Ha Hb.
 
     Definition graph_unsucc_equiv_edge@{} (x y : vert A)
       : iff@{s s s} (edge A x y) (edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y)).
@@ -291,13 +290,13 @@ Section AssumeStuff.
     : in_N@{p1} n.
   Proof.
     intros P' PH' P0' Ps'.
-    srefine ((equiv_resize_hprop (P' n))^-1
-             (nrec (fun A => resize_hprop (P' A)) _ _ _));
+    srefine ((equiv_smalltype (P' n))
+             (nrec (fun A => smalltype (P' A)) _ _ _));
       try exact _; cbn.
-    - exact (equiv_resize_hprop (P' graph_zero) P0').
+    - exact ((equiv_smalltype (P' graph_zero))^-1 P0').
     - intros A P'A.
-      exact (equiv_resize_hprop (P' (graph_succ A))
-                                (Ps' A ((equiv_resize_hprop (P' A))^-1 P'A))).
+      exact ((equiv_smalltype (P' (graph_succ A)))^-1
+                                (Ps' A ((equiv_smalltype (P' A)) P'A))).
   Qed.
 
   Local Instance ishprop_graph_zero_or_succ@{} : forall n : Graph,
@@ -364,8 +363,7 @@ Section AssumeStuff.
   Proof.
     intros [n nrec].
     pose (Q := fun m:Graph => forall (mrec : in_N m), P (m;mrec)).
-    (* The try clause below is only needed for Coq <= 8.11 *)
-    refine (resize_nrec n nrec Q _ _ _ nrec);clear n nrec; try (intros A; apply trunc_forall).
+    refine (resize_nrec n nrec Q _ _ _ nrec); clear n nrec.
     - intros zrec.
       refine (transport P _ P0).
       apply ap.
@@ -375,9 +373,6 @@ Section AssumeStuff.
       refine (transport P _ (Ps m (QA (pred_in_N A Asrec)))).
       apply path_N; reflexivity.
   Qed.
-
-  (** Sometimes we just need a bigger fish. *)
-  Universe large.
 
   (** A first application *)
   Definition N_neq_succ@{} (n : N) : n <> succ n.
@@ -795,7 +790,7 @@ Section AssumeStuff.
       - refine (_ oE equiv_inverse (equiv_sigma_assoc _ _)).
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
-      - refine (@istrunc_sigma@{nr nr large nr} _ _ _ _ _).
+      - refine (@istrunc_sigma@{nr nr nr} _ _ _ _ _).
         + srefine (Build_Contr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].

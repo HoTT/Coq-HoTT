@@ -1,4 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
+
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.
@@ -43,7 +44,7 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (Build_Equiv _ _ f feq).
 
-Global Arguments path_universe {A B}%type_scope f%function_scope {feq}.
+Global Arguments path_universe {A B}%_type_scope f%_function_scope {feq}.
 
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
@@ -55,11 +56,10 @@ Definition eta_path_universe_uncurried {A B : Type} (p : A = B)
 
 Definition isequiv_path_universe {A B : Type}
   : IsEquiv (@path_universe_uncurried A B)
- := _.
+  := _.
 
 Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := Build_Equiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
-
 
 Definition equiv_equiv_path  (A B : Type) : (A = B) <~> (A <~> B)
   := (equiv_path_universe A B)^-1%equiv.
@@ -94,16 +94,16 @@ Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A <~> B)
 
 (* We explicitly assume [Funext] here, since this result doesn't use [Univalence]. *)
 Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
-: equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
+  : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
   apply path_equiv, path_arrow.
   nrapply transport_pp.
 Defined.
 
 Definition path_universe_compose_uncurried {A B C : Type}
-           (f : A <~> B) (g : B <~> C)
-: path_universe_uncurried (equiv_compose g f)
-= path_universe_uncurried f @ path_universe_uncurried g.
+  (f : A <~> B) (g : B <~> C)
+  : path_universe_uncurried (equiv_compose g f)
+    = path_universe_uncurried f @ path_universe_uncurried g.
 Proof.
   revert f. equiv_intro (equiv_path A B) f.
   revert g. equiv_intro (equiv_path B C) g.
@@ -113,7 +113,7 @@ Proof.
 Defined.
 
 Definition path_universe_compose {A B C : Type}
-           (f : A <~> B) (g : B <~> C)
+  (f : A <~> B) (g : B <~> C)
   : path_universe (g o f) = path_universe f @ path_universe g
   := path_universe_compose_uncurried f g.
 
@@ -140,7 +140,7 @@ Definition path_universe_V `(f : A -> B) `{IsEquiv A B f}
 
 (** [ap (Equiv A)] behaves like postcomposition. *)
 Definition ap_equiv_path_universe A {B C} (f : B <~> C)
-: equiv_path (A <~> B) (A <~> C) (ap (Equiv A) (path_universe f))
+  : equiv_path (A <~> B) (A <~> C) (ap (Equiv A) (path_universe f))
   = equiv_functor_equiv (equiv_idmap A) f.
 Proof.
   revert f. equiv_intro (equiv_path B C) f.
@@ -177,7 +177,7 @@ Defined.
 
 (** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_ind] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)
 Definition transport_path_universe_uncurried
-           {A B : Type} (f : A <~> B) (z : A)
+  {A B : Type} (f : A <~> B) (z : A)
   : transport (fun X:Type => X) (path_universe_uncurried f) z = f z.
 Proof.
   revert f.  equiv_intro (equiv_path A B) p.
@@ -186,15 +186,15 @@ Defined.
 (* Alternatively, [apply ap10, transport_idmap_path_universe_uncurried.], but then some later proofs would have to change. *)
 
 Definition transport_path_universe
-           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+  {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
   : transport (fun X:Type => X) (path_universe f) z = f z
   := transport_path_universe_uncurried (Build_Equiv A B f feq) z.
 (* Alternatively, [ap10_equiv (eisretr (equiv_path A B) (Build_Equiv _ _ f feq)) z]. *)
 
 Definition transport_path_universe_equiv_path
-           {A B : Type} (p : A = B) (z : A)
+  {A B : Type} (p : A = B) (z : A)
   : transport_path_universe (equiv_path A B p) z =
-    (ap (fun s => transport idmap s z) (eissect _ p))
+      (ap (fun s => transport idmap s z) (eissect _ p))
   := equiv_ind_comp _ _ _.
 
 (* This somewhat fancier version is useful when working with HITs. *)
@@ -203,13 +203,13 @@ Definition transport_path_universe'
   (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
   : transport P p u = f u
   := transport_compose idmap P p u
-   @ ap10 (ap (transport idmap) q) u
-   @ transport_path_universe f u.
+      @ ap10 (ap (transport idmap) q) u
+      @ transport_path_universe f u.
 
 (** And a version for transporting backwards. *)
 
 Definition transport_path_universe_V_uncurried
-           {A B : Type} (f : A <~> B) (z : B)
+  {A B : Type} (f : A <~> B) (z : B)
   : transport (fun X:Type => X) (path_universe_uncurried f)^ z = f^-1 z.
 Proof.
   revert f. equiv_intro (equiv_path A B) p.
@@ -217,25 +217,25 @@ Proof.
 Defined.
 
 Definition transport_path_universe_V
-           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
+  {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
   : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
   := transport_path_universe_V_uncurried (Build_Equiv _ _ f feq) z.
 (* Alternatively, [(transport2 idmap (path_universe_V f) z)^ @ (transport_path_universe (f^-1) z)]. *)
 
 Definition transport_path_universe_V_equiv_path
-           {A B : Type} (p : A = B) (z : B)
-  : transport_path_universe_V (equiv_path A B p) z =
-    ap (fun s => transport idmap s z) (inverse2 (eissect _ p))
+  {A B : Type} (p : A = B) (z : B)
+  : transport_path_universe_V (equiv_path A B p) z
+    = ap (fun s => transport idmap s z) (inverse2 (eissect _ p))
   := equiv_ind_comp _ _ _.
 
 (** And some coherence for it. *)
 
 Definition transport_path_universe_Vp_uncurried
-           {A B : Type} (f : A <~> B) (z : A)
-: ap (transport idmap (path_universe f)^) (transport_path_universe f z)
-  @ transport_path_universe_V f (f z)
-  @ eissect f z
-  = transport_Vp idmap (path_universe f) z.
+  {A B : Type} (f : A <~> B) (z : A)
+  : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+      @ transport_path_universe_V f (f z)
+      @ eissect f z
+    = transport_Vp idmap (path_universe f) z.
 Proof.
   pattern f.
   refine (equiv_ind (equiv_path A B) _ _ _); intros p.
@@ -248,11 +248,11 @@ Proof.
 Defined.
 
 Definition transport_path_universe_Vp
-           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
-: ap (transport idmap (path_universe f)^) (transport_path_universe f z)
-  @ transport_path_universe_V f (f z)
-  @ eissect f z
-  = transport_Vp idmap (path_universe f) z
+  {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+  : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+      @ transport_path_universe_V f (f z)
+      @ eissect f z
+    = transport_Vp idmap (path_universe f) z
   := transport_path_universe_Vp_uncurried (Build_Equiv A B f feq) z.
 
 (** *** Transporting in particular type families *)
@@ -269,8 +269,8 @@ Defined.
 (** ** 2-paths *)
 
 Definition equiv_path2_universe
-           {A B : Type} (f g : A <~> B)
-: (f == g) <~> (path_universe f = path_universe g).
+  {A B : Type} (f g : A <~> B)
+  : (f == g) <~> (path_universe f = path_universe g).
 Proof.
   refine (_ oE equiv_path_arrow f g).
   refine (_ oE equiv_path_equiv f g).
@@ -278,13 +278,13 @@ Proof.
 Defined.
 
 Definition path2_universe
-           {A B : Type} {f g : A <~> B}
-: (f == g) -> (path_universe f = path_universe g)
+  {A B : Type} {f g : A <~> B}
+  : (f == g) -> (path_universe f = path_universe g)
   := equiv_path2_universe f g.
 
 Definition equiv_path2_universe_1
-           {A B : Type} (f : A <~> B)
-: equiv_path2_universe f f (fun x => 1) = 1.
+  {A B : Type} (f : A <~> B)
+  : equiv_path2_universe f f (fun x => 1) = 1.
 Proof.
   simpl.
   rewrite concat_1p, concat_p1, path_forall_1, path_sigma_hprop_1.
@@ -292,8 +292,8 @@ Proof.
 Qed.
 
 Definition path2_universe_1
-           {A B : Type} (f : A <~> B)
-: @path2_universe _ _ f f (fun x => 1) = 1
+  {A B : Type} (f : A <~> B)
+  : @path2_universe _ _ f f (fun x => 1) = 1
   := equiv_path2_universe_1 f.
 
 (** There ought to be a lemma which says something like this:
@@ -331,15 +331,15 @@ Section PathEquivSimplNever.
   Local Arguments equiv_path_equiv : simpl never.
 
   Definition path2_universe_postcompose_idmap
-             {A C : Type} (p : forall a:A, a = a)
-             (g : A <~> C)
-  : equiv_path2_universe g g (fun a => ap g (p a))
-    = (concat_1p _)^
-      @ whiskerR (path_universe_1)^ (path_universe g)
-      @ whiskerR (equiv_path2_universe (equiv_idmap A) (equiv_idmap A) p)
-        (path_universe g)
-      @ whiskerR path_universe_1 (path_universe g)
-      @ concat_1p _.
+    {A C : Type} (p : forall a:A, a = a)
+    (g : A <~> C)
+    : equiv_path2_universe g g (fun a => ap g (p a))
+      = (concat_1p _)^
+        @ whiskerR (path_universe_1)^ (path_universe g)
+        @ whiskerR (equiv_path2_universe (equiv_idmap A) (equiv_idmap A) p)
+          (path_universe g)
+        @ whiskerR path_universe_1 (path_universe g)
+        @ concat_1p _.
   Proof.
     transitivity ((eta_path_universe (path_universe g))^
                   @ equiv_path2_universe
@@ -367,38 +367,38 @@ Section PathEquivSimplNever.
   Defined.
 
   Definition path2_universe_precompose_idmap
-             {A B : Type} (p : forall b:B, b = b)
-             (g : A <~> B)
-  : equiv_path2_universe g g (fun a => (p (g a)))
-    = (concat_p1 _)^
-      @ whiskerL (path_universe g) (path_universe_1)^
-      @ whiskerL (path_universe g)
-          (equiv_path2_universe (equiv_idmap B) (equiv_idmap B) p)
-      @ whiskerL (path_universe g) (path_universe_1)
-      @ concat_p1 _.
+    {A B : Type} (p : forall b:B, b = b)
+    (g : A <~> B)
+    : equiv_path2_universe g g (fun a => (p (g a)))
+      = (concat_p1 _)^
+        @ whiskerL (path_universe g) (path_universe_1)^
+        @ whiskerL (path_universe g)
+            (equiv_path2_universe (equiv_idmap B) (equiv_idmap B) p)
+        @ whiskerL (path_universe g) (path_universe_1)
+        @ concat_p1 _.
   Proof.
-  transitivity ((eta_path_universe (path_universe g))^
-                @ equiv_path2_universe
-                  (equiv_path A B (path_universe g))
-                  (equiv_path A B (path_universe g))
-                  (fun a => p (equiv_path A B (path_universe g) a))
-                @ eta_path_universe (path_universe g)).
-  - refine ((apD (fun g' => equiv_path2_universe g' g'
-                              (fun a => p (g' a)))
-              (eisretr (equiv_path A B) g))^ @ _).
-    refine (transport_paths_FlFr (eisretr (equiv_path A B) g) _ @ _).
-    apply concat2.
-    + apply whiskerR.
-      apply inverse2, symmetry.
-      refine (eisadj (equiv_path A B)^-1 g).
-    + symmetry; refine (eisadj (equiv_path A B)^-1 g).
-  - generalize (path_universe g).
-    intros h. destruct h. cbn.
-    rewrite !concat_p1.
-    refine (_ @ (((concat_1p (whiskerL 1 path_universe_1^))^ @@ 1) @@ 1)).
-    refine (_ @ whiskerR (whiskerL_pp 1 path_universe_1^ _) _).
-    refine (_ @ whiskerL_pp 1 _ path_universe_1).
-    exact ((whiskerL_1p_1 _)^).
+    transitivity ((eta_path_universe (path_universe g))^
+                  @ equiv_path2_universe
+                    (equiv_path A B (path_universe g))
+                    (equiv_path A B (path_universe g))
+                    (fun a => p (equiv_path A B (path_universe g) a))
+                  @ eta_path_universe (path_universe g)).
+    - refine ((apD (fun g' => equiv_path2_universe g' g'
+                                (fun a => p (g' a)))
+                (eisretr (equiv_path A B) g))^ @ _).
+      refine (transport_paths_FlFr (eisretr (equiv_path A B) g) _ @ _).
+      apply concat2.
+      + apply whiskerR.
+        apply inverse2, symmetry.
+        refine (eisadj (equiv_path A B)^-1 g).
+      + symmetry; refine (eisadj (equiv_path A B)^-1 g).
+    - generalize (path_universe g).
+      intros h. destruct h. cbn.
+      rewrite !concat_p1.
+      refine (_ @ (((concat_1p (whiskerL 1 path_universe_1^))^ @@ 1) @@ 1)).
+      refine (_ @ whiskerR (whiskerL_pp 1 path_universe_1^ _) _).
+      refine (_ @ whiskerL_pp 1 _ path_universe_1).
+      exact ((whiskerL_1p_1 _)^).
   Defined.
 
 End PathEquivSimplNever.
@@ -406,8 +406,8 @@ End PathEquivSimplNever.
 (** ** 3-paths *)
 
 Definition equiv_path3_universe
-           {A B : Type} {f g : A <~> B} (p q : f == g)
-: (p == q) <~> (path2_universe p = path2_universe q).
+  {A B : Type} {f g : A <~> B} (p q : f == g)
+  : (p == q) <~> (path2_universe p = path2_universe q).
 Proof.
   refine (_ oE equiv_path_forall p q).
   refine (_ oE equiv_ap (equiv_path_arrow f g) p q).
@@ -417,16 +417,16 @@ Proof.
 Defined.
 
 Definition path3_universe
-           {A B : Type} {f g : A <~> B} {p q : f == g}
-: (p == q) -> (path2_universe p = path2_universe q)
+  {A B : Type} {f g : A <~> B} {p q : f == g}
+  : (p == q) -> (path2_universe p = path2_universe q)
   := equiv_path3_universe p q.
 
 Definition transport_path_universe_pV_uncurried
-           {A B : Type} (f : A <~> B) (z : B)
-: transport_path_universe f (transport idmap (path_universe f)^ z)
-  @ ap f (transport_path_universe_V f z)
-  @ eisretr f z
-  = transport_pV idmap (path_universe f) z.
+  {A B : Type} (f : A <~> B) (z : B)
+  : transport_path_universe f (transport idmap (path_universe f)^ z)
+      @ ap f (transport_path_universe_V f z)
+      @ eisretr f z
+    = transport_pV idmap (path_universe f) z.
 Proof.
   pattern f.
   refine (equiv_ind (equiv_path A B) _ _ _); intros p.
@@ -442,18 +442,18 @@ Proof.
 Defined.
 
 Definition transport_path_universe_pV
-           {A B : Type} (f : A -> B) {feq : IsEquiv f } (z : B)
-: transport_path_universe f (transport idmap (path_universe f)^ z)
-  @ ap f (transport_path_universe_V f z)
-  @ eisretr f z
-  = transport_pV idmap (path_universe f) z
-:= transport_path_universe_pV_uncurried (Build_Equiv A B f feq) z.
+  {A B : Type} (f : A -> B) {feq : IsEquiv f } (z : B)
+  : transport_path_universe f (transport idmap (path_universe f)^ z)
+      @ ap f (transport_path_universe_V f z)
+      @ eisretr f z
+    = transport_pV idmap (path_universe f) z
+  := transport_path_universe_pV_uncurried (Build_Equiv A B f feq) z.
 
 (** ** Equivalence induction *)
 
 (** Paulin-Mohring style *)
-Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
-  (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
+Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type)
+  : (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
 Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path U V)).
@@ -466,8 +466,8 @@ Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
   := (equiv_ind_comp (P U) _ 1).
 
 (** Martin-Lof style *)
-Theorem equiv_induction' (P : forall U V, U <~> V -> Type) :
-  (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
+Theorem equiv_induction' (P : forall U V, U <~> V -> Type)
+  : (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
   intros H0 U V w.
   apply (equiv_ind (equiv_path U V)).
@@ -479,8 +479,8 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
 
-Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type) :
-  (P U (equiv_idmap U)) -> (forall V (w : V <~> U), P V w).
+Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type)
+  : (P U (equiv_idmap U)) -> (forall V (w : V <~> U), P V w).
 Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path V U)).
@@ -496,7 +496,7 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 (** ** Based equivalence types *)
 
 Global Instance contr_basedequiv@{u +} {X : Type@{u}}
-: Contr {Y : Type@{u} & X <~> Y}.
+  : Contr {Y : Type@{u} & X <~> Y}.
 Proof.
   apply (Build_Contr _ (X; equiv_idmap)).
   intros [Y f]; revert Y f.
@@ -504,7 +504,7 @@ Proof.
 Defined.
 
 Global Instance contr_basedequiv'@{u +} {X : Type@{u}}
-: Contr {Y : Type@{u} & Y <~> X}.
+  : Contr {Y : Type@{u} & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
   srapply Build_Contr.
@@ -517,8 +517,8 @@ Defined.
 
 (** Truncatedness of the universe is a subtle question, but with univalence we can conclude things about truncations of certain of its path-spaces. *)
 Global Instance istrunc_paths_Type
-       {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
-: IsTrunc n.+1 (A = B).
+  {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
+  : IsTrunc n.+1 (A = B).
 Proof.
   refine (istrunc_isequiv_istrunc _ path_universe_uncurried).
 Defined.

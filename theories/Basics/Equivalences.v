@@ -80,9 +80,6 @@ Ltac change_apply_equiv_compose :=
     change ((f oE g) x) with (f (g x))
   end.
 
-Definition iff_equiv {A B : Type} (f : A <~> B)
-  : A <-> B := (equiv_fun f, f^-1).
-
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 
@@ -133,8 +130,8 @@ Section Adjointify.
 
 End Adjointify.
 
-Arguments isequiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
-Arguments equiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
+Arguments isequiv_adjointify {A B}%_type_scope (f g)%_function_scope isretr issect.
+Arguments equiv_adjointify {A B}%_type_scope (f g)%_function_scope isretr issect.
 
 (** Anything homotopic to an equivalence is an equivalence. This should not be an instance; it can cause the unifier to spin forever searching for functions to be homotopic to. *)
 Definition isequiv_homotopic {A B : Type} (f : A -> B) {g : A -> B}
@@ -283,7 +280,7 @@ Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := Build_Equiv _ _ (ap f) _.
 
-Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
+Global Arguments equiv_ap (A B)%_type_scope f%_function_scope _ _ _.
 
 Definition equiv_ap' `(f : A <~> B) (x y : A)
   : (x = y) <~> (f x = f y)
@@ -574,10 +571,10 @@ Ltac ev_equiv :=
 
 (** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
 
-(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. *)
+(* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. The [hnf] is important, for example to unfold [IsUnitPreserving] to an equality, which the [lazymatch] then ignores. *)
 Ltac decomposing_intros :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x; cbn in x;
   try lazymatch type of x with
   | ?a = ?b => idtac           (** Don't destruct paths *)
   | forall y:?A, ?B => idtac   (** Don't apply functions *)
@@ -750,7 +747,7 @@ Defined.
 (** We start with a version of [decomposing_intros] that is willing to destruct paths, though as a second choice. *)
 Ltac decomposing_intros_with_paths :=
   let x := fresh in
-  intros x; cbn in x;
+  intros x; hnf in x; cbn in x;
   multimatch type of x with
   | _ =>
     try match type of x with

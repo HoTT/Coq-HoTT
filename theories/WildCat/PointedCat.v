@@ -1,5 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
-Require Import WildCat.Core.
+Require Import WildCat.Core WildCat.Opposite.
 Require Import WildCat.Equiv.
 
 (** A wild category is pointed if the initial and terminal object are the same. *)
@@ -65,7 +65,7 @@ Class IsPointedFunctor {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
 }.
 Global Existing Instances preservesinitial_pfunctor preservesterminal_pfunctor.
 
-(** Here is an alternative construct using preservation of the zero object. This requires more structure on the categories however. *)
+(** Here is an alternative constructor using preservation of the zero object. This requires more structure on the categories however. *)
 Definition Build_IsPointedFunctor' {A B : Type} (F : A -> B)
   `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}
   `{!IsPointedCat A, !IsPointedCat B, !HasEquivs A, !HasEquivs B}
@@ -81,7 +81,6 @@ Proof.
     rapply cate_isinitial.
   + intros x tex.
     rapply isterminal_cate.
-    symmetry.
     refine (p $oE _).
     rapply (emap F _).
     rapply cate_isterminal.
@@ -109,4 +108,12 @@ Proof.
   1: nrapply fmap_terminal; [exact _].
   rapply cat_zero_m.
   rapply pfunctor_zero.
+Defined.
+
+(** Opposite category of a pointed category is also pointed. *)
+Global Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
+Proof.
+  snrapply Build_IsPointedCat.
+  1: unfold op; exact zero_object.
+  1,2: exact _.
 Defined.

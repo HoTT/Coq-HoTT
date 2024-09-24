@@ -165,9 +165,9 @@ Coercion subgroup_group : Subgroup >-> Group.
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
 Proof.
-  snrapply Build_GroupHomomorphism'.
+  snrapply Build_GroupHomomorphism.
   1: exact pr1.
-  repeat split.
+  hnf; reflexivity.
 Defined.
 
 Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
@@ -337,37 +337,91 @@ Proof.
   all: by intro.
 Defined.
 
-(** A subgroup is normal if being in a left coset is equivalent to being in a right coset represented by the same element. *)
+(** A normal subgroup is a subgroup closed under conjugation. *)
 Class IsNormalSubgroup {G : Group} (N : Subgroup G)
-  := isnormal : forall {x y}, in_cosetL N x y <~> in_cosetR N x y.
+  := isnormal : forall {x y}, N (x * y) -> N (y * x).
 
 Record NormalSubgroup (G : Group) := {
   normalsubgroup_subgroup : Subgroup G ;
   normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_subgroup ;
 }.
 
+Arguments Build_NormalSubgroup G N _ : rename.
+
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
-(* Inverses are then respected *)
-Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G}
-  : forall x y : G, in_cosetL N (-x) (-y) <~> in_cosetL N x y.
+Definition equiv_symmetric_in_normalsubgroup {G : Group}
+  (N : NormalSubgroup G)
+  : forall x y, N (x * y) <~> N (y * x).
 Proof.
   intros x y.
-  unfold in_cosetL.
-  rewrite negate_involutive.
-  symmetry; apply isnormal.
+  rapply equiv_iff_hprop.
+  all: apply isnormal.
 Defined.
 
-Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G}
-  : forall x y : G, in_cosetR N (-x) (-y) <~> in_cosetR N x y.
+(** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
+Definition isnormal_conjugate {G : Group} (N : NormalSubgroup G) {x y : G}
+  : N x -> N (y * x * -y).
 Proof.
-  intros x y.
-  refine (_ oE (in_cosetR_unit _ _)^-1).
-  refine (_ oE isnormal^-1).
-  refine (_ oE in_cosetL_unit _ _).
-  refine (_ oE isnormal).
+  intros n.
+  apply isnormal.
+  nrefine (transport N (grp_assoc _ _ _)^ _).
+  nrefine (transport (fun y => N (y * x)) (grp_inv_l _)^ _).
+  nrefine (transport N (grp_unit_l _)^ _).
+  exact n.
+Defined.
+
+(** We can show a subgroup is normal if it is invariant under conjugation. *)
+Definition Build_IsNormalSubgroup' (G : Group) (N : Subgroup G)
+  (isnormal : forall x y, N x -> N (y * x * -y))
+  : IsNormalSubgroup N.
+Proof.
+  intros x y n.
+  nrefine (transport N (grp_unit_r _) _).
+  nrefine (transport (fun z => N (_ * z)) (grp_inv_r y) _).
+  nrefine (transport N (grp_assoc _ _ _)^ _).
+  nrefine (transport (fun z => N (z * _)) (grp_assoc _ _ _) _).
+  by apply isnormal.
+Defined.
+
+(** Under funext, being a normal subgroup is a hprop. *)
+Global Instance ishprop_isnormalsubgroup `{Funext} {G : Group} (N : Subgroup G)
+  : IsHProp (IsNormalSubgroup N).
+Proof. 
+  unfold IsNormalSubgroup; exact _.
+Defined.
+
+(** Our definition of normal subgroup and the usual definition are therefore equivalent. *)
+Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
+  : IsNormalSubgroup N <~> (forall x y, N x -> N (y * x * -y)).
+Proof.
+  rapply equiv_iff_hprop.
+  - intros is_normal x y.
+    exact (isnormal_conjugate (Build_NormalSubgroup G N is_normal)).
+  - intros is_normal'.
+    by snrapply Build_IsNormalSubgroup'.
+Defined.
+
+(** Left and right cosets are equivalent in normal subgroups. *)
+Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
+  (N : NormalSubgroup G) (x y : G)
+  : in_cosetL N x y <~> in_cosetR N x y
+  := equiv_in_cosetR_symm _ _ oE equiv_symmetric_in_normalsubgroup _ _ _.
+
+(** Inverses are then respected *)
+Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetL N (-x) (-y) <~> in_cosetL N x y.
+Proof.
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite negate_involutive.
+Defined.
+
+Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetR N (-x) (-y) <~> in_cosetR N x y.
+Proof.
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
+  by rewrite grp_inv_inv.
 Defined.
 
 (** This lets us prove that left and right coset relations are congruences. *)
@@ -378,13 +432,12 @@ Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
   rewrite negate_sg_op, <- simple_associativity.
-  apply symmetric_in_cosetL; cbn.
-  rewrite simple_associativity.
-  apply isnormal; cbn.
-  rewrite <- simple_associativity.
+  apply isnormal.
+  rewrite simple_associativity, <- simple_associativity.
   apply subgroup_in_op.
-  1: assumption.
-  by apply isnormal, symmetric_in_cosetL.
+  1: exact p.
+  apply isnormal.
+  exact q.
 Defined.
 
 Definition in_cosetR_cong  {G : Group} {N : NormalSubgroup G}
@@ -394,13 +447,12 @@ Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
   rewrite negate_sg_op, simple_associativity.
-  apply symmetric_in_cosetR; cbn.
-  rewrite <- simple_associativity.
-  apply isnormal; cbn.
-  rewrite simple_associativity.
+  apply isnormal.
+  rewrite <- simple_associativity, simple_associativity.
   apply subgroup_in_op.
-  2: assumption.
-  by apply isnormal, symmetric_in_cosetR.
+  2: exact q.
+  apply isnormal.
+  exact p.
 Defined.
 
 (** The property of being the trivial subgroup is useful. *)
@@ -453,6 +505,14 @@ Proof.
   exact (sgt_op sgt_unit p).
 Defined.
 
+Definition sgt_inv' {G : Group} {X} {g : G}
+  : subgroup_generated_type X (- g) -> subgroup_generated_type X g.
+Proof.
+  intros p.
+  rewrite <- grp_inv_inv.
+  by apply sgt_inv.
+Defined.
+
 Definition sgt_op' {G : Group} {X} {g h : G}
   : subgroup_generated_type X g
     -> subgroup_generated_type X h
@@ -476,6 +536,22 @@ Defined.
 Definition subgroup_generated_gen_incl {G : Group} {X : G -> Type} (g : G) (H : X g)
   : subgroup_generated X
   := (g; tr (sgt_in H)).
+
+(** If [f : G $-> H] is a group homomorphism and [X] and [Y] are subsets of [G] and [H] such that [f] maps [X] into [Y], then [f] sends the subgroup generated by [X] into the subgroup generated by [Y]. *)
+Definition functor_subgroup_generated {G H : Group} (X : G -> Type) (Y : H -> Type)
+  (f : G $-> H) (preserves : forall g, X g -> Y (f g))
+  : forall g, subgroup_generated X g -> subgroup_generated Y (f g).
+Proof.
+  intro g.
+  apply Trunc_functor.
+  intro p.
+  induction p as [g i | | g h p1 IHp1 p2 IHp2].
+  - apply sgt_in, preserves, i.
+  - rewrite grp_homo_unit.
+    apply sgt_unit.
+  - rewrite grp_homo_op, grp_homo_inv.
+    by apply sgt_op.
+Defined.
 
 (** The product of two subgroups. *)
 Definition subgroup_product {G : Group} (H K : Subgroup G) : Subgroup G

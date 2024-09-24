@@ -1,4 +1,4 @@
-Require Import Basics Types ReflectiveSubuniverse Pointed.Core Pointed.pEquiv.
+Require Import Basics Types ReflectiveSubuniverse Pointed.Core.
 
 Local Open Scope pointed_scope.
 

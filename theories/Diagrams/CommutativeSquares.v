@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.PathGroupoids.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.
 
 (** * Comutative squares *)
 

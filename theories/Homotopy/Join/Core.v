@@ -42,27 +42,6 @@ Section Join.
     : apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b
     := Pushout_ind_beta_pglue _ _ _ _ _.
 
-  (** A version of [Join_ind] that uses dependant paths. *)
-  Definition Join_ind_dp {A B : Type} (P : Join A B -> Type)
-    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
-    : forall (x : Join A B), P x.
-  Proof.
-    refine (Join_ind P P_A P_B _).
-    intros a b.
-    apply dp_path_transport^-1.
-    exact (P_g a b).
-  Defined.
-
-  Definition Join_ind_dp_beta_jglue {A B : Type} (P : Join A B -> Type)
-    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b)) a b
-    : dp_apD (Join_ind_dp P P_A P_B P_g) (jglue a b) = P_g a b.
-  Proof.
-    apply dp_apD_path_transport.
-    snrapply Join_ind_beta_jglue.
-  Defined.
-
   (** A version of [Join_ind] specifically for proving that two functions defined on a [Join] are homotopic. *)
   Definition Join_ind_FlFr {A B P : Type} (f g : Join A B -> P)
     (Hl : forall a, f (joinl a) = g (joinl a))
@@ -113,8 +92,8 @@ Section Join.
 
 End Join.
 
-Arguments joinl {A B}%type_scope _ , [A] B _.
-Arguments joinr {A B}%type_scope _ , A [B] _.
+Arguments joinl {A B}%_type_scope _ , [A] B _.
+Arguments joinr {A B}%_type_scope _ , A [B] _.
 
 (** * [Join_rec] gives an equivalence of 0-groupoids
 
@@ -127,11 +106,11 @@ Record JoinRecData {A B P : Type} := {
   }.
 
 Arguments JoinRecData : clear implicits.
-Arguments Build_JoinRecData {A B P}%type_scope (jl jr jg)%function_scope.
+Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.
 
 (** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
 Definition join_rec {A B P : Type} (f : JoinRecData A B P)
-  : Join A B -> P
+  : Join A B $-> P
   := Join_rec (jl f) (jr f) (jg f).
 
 Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)
@@ -581,16 +560,24 @@ Section FunctorJoin.
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
     : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
-  Global Instance isbifunctor_join : IsBifunctor Join.
+  Global Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
-    snrapply Build_IsBifunctor.
-    - intro A; snrapply Build_Is0Functor; intros B D g.
-      exact (functor_join idmap g).
-    - intro B; snrapply Build_Is0Functor; intros A C f.
-      exact (functor_join f idmap).
-    - intros A C f B D g x.
-      lhs_V nrapply functor_join_compose.
-      nrapply functor_join_compose.
+    snrapply Build_Is0Bifunctor'.
+    1,2: exact _.
+    apply Build_Is0Functor.
+    intros A B [f g].
+    exact (functor_join f g).
+  Defined.
+
+  Global Instance is1bifunctor_join : Is1Bifunctor Join.
+  Proof.
+    snrapply Build_Is1Bifunctor'.
+    nrapply Build_Is1Functor.
+    - intros A B f g [p q].
+      exact (functor2_join p q).
+    - intros A; exact functor_join_idmap.
+    - intros A B C [f g] [h k].
+      exact (functor_join_compose f g h k).
   Defined.
 
 End FunctorJoin.
@@ -640,7 +627,8 @@ Section JoinSym.
       1, 2: apply joinrecdata_sym.
       1, 2: apply joinrecdata_sym_inv.
     (* Naturality: *)
-    - intros P Q g f; simpl.
+    - snrapply Build_Is1Natural.
+      intros P Q g f; simpl.
       bundle_joinrecpath.
       intros b a; simpl.
       symmetry; apply ap_V.
@@ -845,11 +833,12 @@ Section JoinEmpty.
   Definition equiv_join_empty_left A : Join Empty A <~> A
     := equiv_join_empty_right _ oE equiv_join_sym _ _.
 
-  Global Instance join_right_unitor : RightUnitor Type Join Empty.
+  Global Instance join_right_unitor : RightUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_right.
-    - intros A B f.
+    - snrapply Build_Is1Natural.
+      intros A B f.
       cbn -[equiv_join_empty_right].
       snrapply Join_ind_FlFr.
       + intro a.
@@ -858,11 +847,12 @@ Section JoinEmpty.
       + intros a [].
   Defined.
 
-  Global Instance join_left_unitor : LeftUnitor Type Join Empty.
+  Global Instance join_left_unitor : LeftUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_left.
-    - intros A B f x.
+    - snrapply Build_Is1Natural.
+      intros A B f x.
       cbn -[equiv_join_empty_right].
       rhs_V rapply (isnat_natequiv join_right_unitor).
       cbn -[equiv_join_empty_right].

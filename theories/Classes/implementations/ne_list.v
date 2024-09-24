@@ -1,8 +1,8 @@
 Require Import
   HoTT.Utf8Minimal
-  HoTT.Classes.implementations.list
-  HoTT.Basics.Overture
-  HoTT.Spaces.Nat.
+  HoTT.Spaces.List.Core
+  HoTT.Basics.Overture Basics.Tactics
+  HoTT.Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -56,7 +56,7 @@ Section with_type.
   Fixpoint from_list (x: T) (xs: list T): ne_list :=
     match xs with
     | nil => one x
-    | Datatypes.cons h t => cons x (from_list h t)
+    | List.Core.cons h t => cons x (from_list h t)
     end.
 
   Definition tail (l: ne_list): list T
@@ -107,8 +107,8 @@ Section with_type.
      + intro. apply Pmore; intros; apply IHl.
   Qed.
 
-  Lemma tl_length (l: ne_list)
-    : S (length (tl (to_list l))) = length (to_list l).
+  Lemma tail_length (l: ne_list)
+    : S (length (List.Core.tail (to_list l))) = length (to_list l).
   Proof. destruct l; reflexivity. Qed.
 End with_type.
 
@@ -123,12 +123,14 @@ Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=
 Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
   leq (length (to_list x)) (length (to_list y)).
-Proof with auto.
- induction y; cbn.
- - intros [[] | C].
-   + constructor.
-   + elim C.
- - intros [[] | C]...
+Proof.
+  induction y; cbn.
+  - intros [[] | C].
+    + constructor.
+    + elim C.
+  - intros [[] | C].
+    + exact _.
+    + by apply leq_succ_r, IHy.
 Qed.
 
 Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
@@ -138,7 +140,7 @@ Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
   end.
 
 Lemma list_map {A B} (f: A → B) (l: ne_list A)
-  : to_list (map f l) = list.map f (to_list l).
+  : to_list (map f l) = List.Core.list_map f (to_list l).
 Proof.
   induction l.
   - reflexivity.

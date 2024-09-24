@@ -298,7 +298,7 @@ Section Addition.
     refine (path_No_easy _ _ _ _ eL eR _ _ _ _);
     intros;
     repeat match goal with
-           | [ H : (?A + ?B)%type |- _ ] => destruct H
+           | [ H : (?A + ?B) |- _ ] => destruct H
            end;
     repeat match goal with
            | [ |- context[@equiv_fun ?A ?B ?e ?v] ]

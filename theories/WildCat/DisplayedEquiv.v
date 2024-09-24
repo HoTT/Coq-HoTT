@@ -136,7 +136,7 @@ Proof.
 Defined.
 
 (** If the base category has equivalences and the displayed category has displayed equivalences, then the total category has equivalences. *)
-Global Instance hasequivs_sigma {A} (D : A -> Type) `{DHasEquivs A D}
+Global Instance hasequivs_total {A} (D : A -> Type) `{DHasEquivs A D}
   : HasEquivs (sig D).
 Proof.
   snrapply Build_HasEquivs.
@@ -160,7 +160,7 @@ Defined.
 Global Instance dcatie_id {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
   : DCatIsEquiv (DId a')
-  := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idl (DId a')).
+  := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idr (DId a')).
 
 Definition did_cate {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
@@ -170,6 +170,27 @@ Definition did_cate {A} {D : A -> Type} `{DHasEquivs A D}
 Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   : Reflexive (DCatEquiv (id_cate a))
   := did_cate.
+
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)
+Definition dcatie_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
+  {f : a $-> b} `{!CatIsEquiv f} {g : a $-> b} {p : f $== g} {a' : D a}
+  {b' : D b} (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'} {g' : DHom g a' b'}
+  (p' : DGpdHom p f' g')
+  : DCatIsEquiv (fe:=catie_homotopic f p) g'.
+Proof.
+  snrapply dcatie_adjointify.
+  - exact (Build_DCatEquiv (fe':=fe') f')^-1$'.
+  - refine (p'^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    refine ((dcate_buildequiv_fun f')^$' $@R' _ $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_isretr.
+  - refine (_ $@L' p'^$' $@' _).
+    1: exact isd0gpd_hom.
+    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).
+    1: exact isd0gpd_hom.
+    apply dcate_issect.
+Defined.
 
 (** Equivalences can be composed. *)
 Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
@@ -184,11 +205,24 @@ Proof.
     refine (_ $@L' (dcate_isretr _ $@R' _) $@' _).
     refine (_ $@L' dcat_idl _ $@' _).
     apply dcate_isretr.
-  - refine (dcat_assoc _ _ _ $@' _).
-    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
-    refine (_ $@L' (dcate_issect _ $@R' _) $@' _).
-    refine (_ $@L' dcat_idl _ $@' _).
+  - refine (dcat_assoc_opp _ _ _ $@' _).
+    refine (dcat_assoc _ _ _ $@R' _ $@' _).
+    refine (((_ $@L' dcate_issect _) $@R' _) $@' _).
+    refine ((dcat_idr _ $@R' _) $@' _).
     apply dcate_issect.
+Defined.
+
+Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $-> c} `{!CatIsEquiv g} {f : a $-> b} `{!CatIsEquiv f}
+  {a' : D a} {b' : D b} {c' : D c}
+  (g' : DHom g b' c') `{ge' : !DCatIsEquiv g'}
+  (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'}
+  : DCatIsEquiv (fe:=compose_catie' g f) (g' $o' f').
+Proof.
+  pose (ff:=Build_DCatEquiv (fe':=fe') f').
+  pose (gg:=Build_DCatEquiv (fe':=ge') g').
+  nrefine (dcatie_homotopic (fe':=dcompose_catie gg ff) _ _).
+  exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).
 Defined.
 
 Definition dcompose_cate {A} {D : A -> Type} `{DHasEquivs A D}
@@ -250,7 +284,7 @@ Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun f').
 Proof.
   refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
-  apply (_ $@L' dcate_buildequiv_fun _).
+  rapply (_ $@L' dcate_buildequiv_fun _).
 Defined.
 
 (** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)
@@ -259,13 +293,13 @@ Definition dcompose_V_hh {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : b $<~> c} {g : a $-> b} {a' : D a} {b' : D b} {c' : D c}
   (f' : DCatEquiv f b' c') (g' : DHom g a' b')
   : DGpdHom (compose_V_hh f g) (dcate_fun f'^-1$' $o' (dcate_fun f' $o' g')) g'
-  := (dcat_assoc _ _ _)^$' $@' (dcate_issect f' $@R' g') $@' dcat_idl g'.
+  := (dcat_assoc_opp _ _ _) $@' (dcate_issect f' $@R' g') $@' dcat_idl g'.
 
 Definition dcompose_h_Vh {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : c $<~> b} {g : a $-> b} {a' : D a} {b' : D b} {c' : D c}
   (f' : DCatEquiv f c' b') (g' : DHom g a' b')
   : DGpdHom (compose_h_Vh f g) (dcate_fun f' $o' (dcate_fun f'^-1$' $o' g')) g'
-  := (dcat_assoc _ _ _)^$' $@' (dcate_isretr f' $@R' g') $@' dcat_idl g'.
+  := (dcat_assoc_opp _ _ _) $@' (dcate_isretr f' $@R' g') $@' dcat_idl g'.
 
 Definition dcompose_hh_V {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {f : b $-> c} {g : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
@@ -304,24 +338,24 @@ Defined.
 (** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v. *)
 
 Definition dcate_moveR_eM {A} {D : A -> Type} `{DHasEquivs A D}
-  {a b c : A} {e : b $<~> a} {f : b $<~> c} {g : a $<~> c}
-  {p : cate_fun g $== f $o e^-1$} {a' : D a} {b' : D b} {c' : D c}
-  (e' : DCatEquiv e b' a') (f' : DCatEquiv f b' c') (g' : DCatEquiv g a' c')
-  (p' : DGpdHom p (dcate_fun g') (dcate_fun f' $o' e'^-1$'))
-  : DGpdHom (cate_moveR_eM e f g p) (dcate_fun g' $o' e') (dcate_fun f').
+  {a b c : A} {e : b $<~> a} {f : a $-> c} {g : b $-> c}
+  {p : f $== g $o e^-1$} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' a') (f' : DHom f a' c') (g' : DHom g b' c')
+  (p' : DGpdHom p f' (g' $o' e'^-1$'))
+  : DGpdHom (cate_moveR_eM e f g p) (f' $o' e') g'.
 Proof.
   apply (dcate_epic_equiv e'^-1$').
   exact (dcompose_hh_V _ _ $@' p').
 Defined.
 
 Definition dcate_moveR_Ve {A} {D : A -> Type} `{DHasEquivs A D}
-  {a b c : A} {e : b $<~> a} {f : b $<~> c} {g : c $<~> a}
-  {p : cate_fun e $== g $o f} {a' : D a} {b' : D b} {c' : D c}
-  (e' : DCatEquiv e b' a') (f' : DCatEquiv f b' c') (g' : DCatEquiv g c' a')
-  (p' : DGpdHom p (dcate_fun e') (dcate_fun g' $o' f'))
-  : DGpdHom (cate_moveR_Ve e f g p) (dcate_fun g'^-1$' $o' e') (dcate_fun f').
+  {a b c : A} {e : b $<~> c} {f : a $-> c} {g : a $-> b}
+  {p : f $== e $o g} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' c') (f' : DHom f a' c') (g' : DHom g a' b')
+  (p' : DGpdHom p f' (dcate_fun e' $o' g'))
+  : DGpdHom (cate_moveR_Ve e f g p) (dcate_fun e'^-1$' $o' f') g'.
 Proof.
-  apply (dcate_monic_equiv g').
+  apply (dcate_monic_equiv e').
   exact (dcompose_h_Vh _ _ $@' p').
 Defined.
 
@@ -445,7 +479,7 @@ Defined.
 Definition demap_compose {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
-  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', isd1f : !IsD1Functor F F'}
   {a b c : A} {f : a $<~> b} {g : b $<~> c} {a' : DA a} {b' : DA b} {c' : DA c}
   (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
   : DGpdHom (emap_compose F f g) (dcate_fun (demap F F' (g' $oE' f')))
@@ -453,7 +487,7 @@ Definition demap_compose {A B : Type}
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
   refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
-  rapply dfmap_comp.
+  nrapply dfmap_comp; exact isd1f.
 Defined.
 
 (** A variant. *)
@@ -506,13 +540,13 @@ Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   := (dcat_equiv_path p a' b')^-1.
 
 (** If [IsUnivalent1Cat A] and [IsDUnivalent1Cat D], then this is an equivalence by [isequiv_functor_sigma]. *)
-Definition dcat_equiv_path_sigma {A} {D : A -> Type} `{DHasEquivs A D}
+Definition dcat_equiv_path_total {A} {D : A -> Type} `{DHasEquivs A D}
   {a b : A} (a' : D a) (b' : D b)
   : {p : a = b & p # a' = b'} -> {e : a $<~> b & DCatEquiv e a' b'}
   := functor_sigma (cat_equiv_path a b) (fun p => dcat_equiv_path p a' b').
 
 (** If the base category and the displayed category are both univalent, then the total category is univalent. *)
-Global Instance isunivalent1cat_sigma {A} `{IsUnivalent1Cat A} (D : A -> Type)
+Global Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D, !DHasEquivs D}
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).
@@ -520,6 +554,6 @@ Proof.
   snrapply Build_IsUnivalent1Cat.
   intros aa' bb'.
   apply (isequiv_homotopic
-          (dcat_equiv_path_sigma _ _ o (path_sigma_uncurried D aa' bb')^-1)).
+          (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).
   intros []; reflexivity.
 Defined.

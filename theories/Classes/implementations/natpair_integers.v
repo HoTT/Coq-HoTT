@@ -1,5 +1,5 @@
 Require Import HoTT.HIT.quotient
-  HoTT.TruncType HoTT.Basics.Trunc.
+  HoTT.Universes.TruncType.
 Require Import
   HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
@@ -257,7 +257,7 @@ trivial;apply symmetry;trivial.
 Qed.
 
 Section to_ring.
-Context {B : Type@{UNalt} } `{IsRing@{UNalt} B}.
+Context {B : Type@{UNalt} } `{IsCRing@{UNalt} B}.
 
 Definition to_ring@{} : T N -> B.
 Proof.
@@ -312,7 +312,7 @@ Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
 
 Definition related_path {x y} : Z_of_pair x = Z_of_pair y -> PairT.equiv x y
-  := classes_eq_related@{UN UN Ularge Uhuge} _ _ _.
+  := classes_eq_related@{UN UN Ularge UN Ularge} _ _ _.
 
 Definition Z_rect@{i} (P : Z -> Type@{i}) {sP : forall x, IsHSet (P x)}
   (dclass : forall x : PairT.T N, P (' x))
@@ -368,7 +368,7 @@ Definition Z_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   (dequiv : forall x1 x2, PairT.equiv x1 x2 -> forall y1 y2, PairT.equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   Z -> Z -> T
-  := @quotient_rec2@{UN UN j i} _ _ _ _ _ (Build_HSet _).
+  := @quotient_rec2@{UN UN UN j i} _ _ _ _ _ (Build_HSet _).
 
 Definition Z_rec2_compute {T sT} dclass dequiv x y
   : @Z_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
@@ -426,7 +426,7 @@ Defined.
 Definition Z_negate_compute q : - (' q) = ' (PairT.opp _ q)
   := 1.
 
-Lemma Z_ring@{} : IsRing Z.
+Lemma Z_ring@{} : IsCRing Z.
 Proof.
   repeat split.
   1,8: exact _.
@@ -862,7 +862,7 @@ eapply Z_rec.
 apply (PairT.to_ring_respects N).
 Defined.
 
-Lemma Z_to_ring_morphism' `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B).
+Lemma Z_to_ring_morphism' `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B).
 Proof.
 split;split;red.
 - change (@sg_op B _) with (@plus B _);
@@ -899,11 +899,11 @@ split;split;red.
   rewrite negate_0,plus_0_r;trivial.
 Qed.
 
-Instance Z_to_ring_morphism@{} `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B)
+Instance Z_to_ring_morphism@{} `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B)
   := ltac:(first [exact Z_to_ring_morphism'@{Ularge}|
                   exact Z_to_ring_morphism'@{}]).
 
-Lemma Z_to_ring_unique@{} `{IsRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
+Lemma Z_to_ring_unique@{} `{IsCRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
   : forall x : Z, integers_to_ring Z B x = h x.
 Proof.
 pose proof Z_ring.

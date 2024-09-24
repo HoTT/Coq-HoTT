@@ -58,7 +58,7 @@
 *)
 
 From HoTT Require Import Basics Truncations.
-From HoTT Require Idempotents Spaces.Spheres Spaces.No.
+From HoTT Require Idempotents Spaces.No Spaces.Nat.
 From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.
 From HoTT Require Categories.
 From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.
@@ -309,7 +309,7 @@ Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.
 (* ================================================== thm:path-nat *)
 (** Theorem 2.13.1 *)
 
-Definition Book_2_13_1 := @HoTT.Spaces.Nat.Core.equiv_path_nat.
+Definition Book_2_13_1 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.
 
 (* ================================================== thm:prod-ump *)
 (** Theorem 2.15.2 *)
@@ -345,7 +345,7 @@ Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).
 (* ================================================== thm:nat-set *)
 (** Example 3.1.4 *)
 
-Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.hset_nat.
+Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.ishset_nat.
 
 (* ================================================== thm:isset-prod *)
 (** Example 3.1.5 *)
@@ -390,7 +390,7 @@ Definition Book_3_3_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-1) A.
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
 
-Definition Book_3_3_2 := @HoTT.HProp.if_hprop_then_equiv_Unit.
+Definition Book_3_3_2 := @HoTT.Universes.HProp.if_hprop_then_equiv_Unit.
 
 (* ================================================== lem:equiv-iff-hprop *)
 (** Lemma 3.3.3 *)
@@ -694,12 +694,12 @@ Definition Book_4_8_2 := @HoTT.HFiber.equiv_fibration_replacement.
 (* ================================================== thm:nobject-classifier-appetizer *)
 (** Theorem 4.8.3 *)
 
-Definition Book_4_8_3 := @HoTT.ObjectClassifier.equiv_sigma_fibration.
+Definition Book_4_8_3 := @HoTT.Universes.ObjectClassifier.equiv_sigma_fibration.
 
 (* ================================================== thm:object-classifier *)
 (** Theorem 4.8.4 *)
 
-Definition Book_4_8_4 := @HoTT.ObjectClassifier.ispullback_objectclassifier_square.
+Definition Book_4_8_4 := @HoTT.Universes.ObjectClassifier.ispullback_objectclassifier_square.
 
 (* ================================================== weakfunext *)
 (** Definition 4.9.1 *)
@@ -1000,7 +1000,7 @@ Definition Book_7_1_9 := @HoTT.Basics.Trunc.istrunc_forall.
 (* ================================================== thm:hleveln-of-hlevelSn *)
 (** Theorem 7.1.11 *)
 
-Definition Book7_1_11 := @HoTT.TruncType.istrunc_trunctype.
+Definition Book7_1_11 := @HoTT.Universes.TruncType.istrunc_trunctype.
 
 (* ================================================== thm:h-set-uip-K *)
 (** Theorem 7.2.1 *)
@@ -1010,7 +1010,7 @@ Definition Book7_1_11 := @HoTT.TruncType.istrunc_trunctype.
 (* ================================================== thm:h-set-refrel-in-paths-sets *)
 (** Theorem 7.2.2 *)
 
-Definition Book_7_2_2 := @HoTT.HSet.ishset_hrel_subpaths.
+Definition Book_7_2_2 := @HoTT.Universes.HSet.ishset_hrel_subpaths.
 
 (* ================================================== notnotstable-equality-to-set *)
 (** Corollary 7.2.3 *)

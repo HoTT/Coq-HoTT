@@ -165,6 +165,15 @@ Proof.
     apply point_eq.
 Defined.
 
+Definition pproduct_proj {A : Type} {F : A -> pType} (a : A)
+  : pproduct F ->* F a.
+Proof.
+  snrapply Build_pMap.
+  - intros x.
+    exact (x a).
+  - reflexivity.
+Defined.
+
 (** The projections from a pointed product are pointed maps. *)
 Definition pfst {A B : pType} : A * B ->* A
   := Build_pMap (A * B) A fst idpath.
@@ -561,7 +570,8 @@ Defined.
 (** pType is a 1-coherent 1-category *)
 Global Instance is1cat_ptype : Is1Cat pType.
 Proof.
-  econstructor.
+  snrapply Build_Is1Cat'.
+  1, 2: exact _.
   - intros A B C h; rapply Build_Is0Functor.
     intros f g p; cbn.
     apply pmap_postwhisker; assumption.
@@ -593,7 +603,8 @@ Definition path_zero_morphism_pconst (A B : pType)
 (** pForall is a 1-category *)
 Global Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
-  econstructor.
+  snrapply Build_Is1Cat'.
+  1, 2: exact _.
   - intros f g h p; rapply Build_Is0Functor.
     intros q r s. exact (phomotopy_postwhisker s p).
   - intros f g h p; rapply Build_Is0Functor.
@@ -644,23 +655,38 @@ Proof.
       srapply Build_pHomotopy.
       1: reflexivity.
       by pelim f p q i g h.
-  - intros A B C D f g r1 r2 s1.
+  - intros A B C f g h k p q.
+    snrapply Build_pHomotopy.
+    + intros x.
+      exact (concat_Ap q _)^.
+    + by pelim p f g q h k.
+  - intros A B C D f g.
+    snrapply Build_Is1Natural.
+    intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f g s1 r1 r2.
-  - intros A B C D f g r1 r2 s1.
+  - intros A B C D f g.
+    snrapply Build_Is1Natural.
+    intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f s1 r1 r2 g.
-  - intros A B C D f g r1 r2 s1.
+  - intros A B C D f g.
+    snrapply Build_Is1Natural.
+    intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
     by pelim s1 r1 r2 f g.
-  - intros A B r1 r2 s1.
+  - intros A B.
+    snrapply Build_Is1Natural.
+    intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
     by pelim s1 r1 r2.
-  - intros A B r1 r2 s1.
+  - intros A B.
+    snrapply Build_Is1Natural.
+    intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     simpl; by pelim s1 r1 r2.
@@ -709,6 +735,34 @@ Proof.
       - exact (q a). }
     simpl.
     by pelim p q f g.
+Defined.
+
+(** pType has I-indexed product. *)
+Global Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
+Proof.
+  intros I x.
+  snrapply Build_Product.
+  - exact (pproduct x).
+  - exact pproduct_proj. 
+  - exact (pproduct_corec x).
+  - intros Z f i.
+    snrapply Build_pHomotopy.
+    1: reflexivity.
+    apply moveL_pV.
+    apply equiv_1p_q1.
+    exact (apD10_path_forall _ _ (fun a => point_eq (f a)) i)^.
+  - intros Z f g p.
+    snrapply Build_pHomotopy.
+    1: intros z; funext i; apply p.
+    cbn; apply moveR_equiv_V.
+    funext i.
+    rhs nrapply ap_pp.
+    lhs nrapply (dpoint_eq (p i)).
+    cbn; f_ap.
+    + apply concat_p1.
+    + rhs nrapply (ap_V _ (dpoint_eq g)).
+      apply inverse2.
+      apply concat_p1.
 Defined.
 
 (** Some higher homotopies *)
@@ -876,12 +930,12 @@ Proof.
 Defined.
 
 (** Univalence for pointed types *)
-Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
+Definition equiv_path_ptype `{Univalence} (A B : pType@{u}) : A <~>* B <~> A = B.
 Proof.
   refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
-  nrapply (contr_equiv' { X : Type & { f : A <~> X & {x : X & f pt = x} }}).
+  nrapply (contr_equiv' { X : Type@{u} & { f : A <~> X & {x : X & f pt = x} }}).
   1: make_equiv.
-  rapply (contr_equiv' { X : Type &  A <~> X }).
+  rapply (contr_equiv' { X : Type@{u} &  A <~> X }).
   nrapply equiv_functor_sigma_id; intro X; symmetry.
   rapply equiv_sigma_contr.
   (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
@@ -958,14 +1012,11 @@ Defined.
 
 Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
 Proof.
-  snrapply Build_HasMorExt.
-  intros a b f g.
-  unfold GpdHom_path.
-  cbn in f, g.
-  (* [GpdHom_path] and the inverse of [equiv_path_pequiv] are not definitionally equal, but they compute to definitionally equal things on [idpath]. *)
-  apply (isequiv_homotopic (equiv_path_pequiv f g)^-1%equiv).
-  intro p; induction p; cbn.
-  reflexivity.
+  rapply hasmorext_core.
+  intros A B f g.
+  snrapply isequiv_homotopic'.
+  1: exact (equiv_path_pequiv' f g)^-1%equiv.
+  by intros [].
 Defined.
 
 (** pType is a univalent 1-coherent 1-category *)
@@ -1018,5 +1069,25 @@ Lemma natequiv_pointify_r `{Funext} (A : Type)
 Proof.
   snrapply Build_NatEquiv.
   1: rapply equiv_pointify_map.
+  snrapply Build_Is1Natural.
   cbv; reflexivity.
+Defined.
+
+(** * Pointed categories give rise to pointed structures *)
+
+(** Pointed categories have pointed hom sets *)
+Definition pHom {A : Type} `{IsPointedCat A} (a1 a2 : A)
+  := [Hom a1 a2, zero_morphism].
+
+(** Pointed functors give pointed maps on morphisms *)
+Definition pfmap {A B : Type} (F : A -> B)
+  `{IsPointedCat A, IsPointedCat B, !HasEquivs B, !HasMorExt B}
+  `{!Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
+  {a1 a2 : A}
+  : pHom a1 a2 ->* pHom (F a1) (F a2).
+Proof.
+  snrapply Build_pMap.
+  - exact (fmap F).
+  - apply path_hom.
+    snrapply fmap_zero_morphism; assumption.
 Defined.
