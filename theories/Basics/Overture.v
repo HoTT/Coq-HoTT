@@ -1,6 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types *)
+(** * Basic definitions of homotopy type theory *)
+
+(** This file defines some of the most basic types and type formers, such as sums, products, Sigma types and path types.  It defines the action of functions on paths [ap], transport, equivalences, and function extensionality.  It also defines truncatedness, and a number of other fundamental definitions used throughout the library. *)
 
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library. *)
 Require Export Basics.Settings Basics.Notations.
@@ -21,8 +23,8 @@ Notation "A -> B" := (forall (_ : A), B) : type_scope.
 
 (** [option A] is the extension of [A] with an extra element [None] *)
 Inductive option (A : Type) : Type :=
-  | Some : A -> option A
-  | None : option A.
+| Some : A -> option A
+| None : option A.
 
 Scheme option_rect := Induction for option Sort Type.
 
@@ -35,8 +37,8 @@ Register option as core.option.type.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 Inductive sum (A B : Type) : Type :=
-  | inl : A -> sum A B
-  | inr : B -> sum A B.
+| inl : A -> sum A B
+| inr : B -> sum A B.
 
 Scheme sum_rect := Induction for sum Sort Type.
 Scheme sum_ind := Induction for sum Sort Type.
@@ -578,8 +580,8 @@ Local Open Scope trunc_scope.
 (** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inherence works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
 
 Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
-  | Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two
-  | istrunc_S : forall {n:trunc_index}, (forall x y:A, IsTrunc_internal (x = y) n) -> IsTrunc_internal A (trunc_S n).
+| Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two
+| istrunc_S : forall {n:trunc_index}, (forall x y:A, IsTrunc_internal (x = y) n) -> IsTrunc_internal A (trunc_S n).
 
 Existing Class IsTrunc_internal.
 
