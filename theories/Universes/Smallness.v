@@ -54,7 +54,7 @@ Proof.
 Defined.
 
 (** If a map has small codomain and fibers, then the domain is small. *)
-Definition issmall_codomain_issmall_fibers@{i j | } {X Y : Type@{j}}
+Definition issmall_issmall_codomain_fibers@{i j | } {X Y : Type@{j}}
   (f : X -> Y)
   (sY : IsSmall@{i j} Y)
   (sF : forall y : Y, IsSmall@{i j} (hfiber f y))
@@ -77,7 +77,7 @@ Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{U
   : IsSmall@{i j} X.
 Proof.
   (* Since [IsSmall] is cumulative in the universe [j], it suffices to prove [IsSmall@{i k} X] for [k] the universe that [IsSmall@{i j}] lives in.  We think of [k] as max(i+1,j). *)
-  rapply (issmall_codomain_issmall_fibers@{i k} isX).
+  rapply (issmall_issmall_codomain_fibers@{i k} isX).
   intro sX.
   rapply sigma_closed_issmall.
 Defined.
@@ -173,7 +173,7 @@ Proof.
 Defined.
 
 (** If a map has n-locally small codomain and fibers, then the domain is n-locally small. *)
-Definition islocallysmall_codomain_islocallysmall_fibers@{i j k | i < k, j <= k}
+Definition islocallysmall_islocallysmall_codomain_fibers@{i j k | i < k, j <= k}
   (n : nat) {X Y : Type@{j}} (f : X -> Y)
   (sY : IsLocallySmall@{i j k} n Y)
   (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))
