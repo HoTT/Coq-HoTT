@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Localization *)
 
 Require Import HoTT.Basics HoTT.Types.

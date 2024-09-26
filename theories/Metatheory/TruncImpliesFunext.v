@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Theorems about trunctions *)
 
 Require Import HoTT.Basics HoTT.Truncations HoTT.Types.Bool.

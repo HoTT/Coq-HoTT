@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Equivalences *)
 
 Require Import

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
 Require Import Basics.Overture Basics.PathGroupoids Basics.Decidable

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Defining the natural numbers from univalence and propresizing. *)
 Require Import Basics.
 Require Import Types.

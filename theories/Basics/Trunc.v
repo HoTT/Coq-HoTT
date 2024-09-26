@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 (** * Truncatedness *)
 
 Require Import

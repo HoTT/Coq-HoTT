@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types HoTT.Cubical.DPath.
 Require Import HFiber Extensions Factorization Limits.Pullback.
 Require Import Modality Accessible Descent.

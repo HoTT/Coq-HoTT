@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Equiv.BiInv Idempotents.
 Require Import Universes.BAut Spaces.BAut.Bool.

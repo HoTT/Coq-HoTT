@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.

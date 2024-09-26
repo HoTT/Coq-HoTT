@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 Require Import Basics Types.
 Require Import TruncType.
 Require Import Truncations.Core Modalities.Modality Modalities.Descent.

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Extensions Limits.Pullback.
 Require Import Modality Accessible Modalities.Localization.

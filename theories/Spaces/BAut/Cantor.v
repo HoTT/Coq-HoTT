@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Idempotents.
 Require Import HoTT.Truncations.Core Universes.BAut Spaces.Cantor.

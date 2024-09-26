@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Contractibility *)
 
 Require Import Overture PathGroupoids.

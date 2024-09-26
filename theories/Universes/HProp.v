@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * HPropositions *)
 
 Require Import HoTT.Basics HoTT.Types.

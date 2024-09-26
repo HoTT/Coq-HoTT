@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Basics Types.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.

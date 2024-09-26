@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics Types.Unit.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core.

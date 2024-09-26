@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Spectra *)
 
 Require Import HoTT.Basics HoTT.Types.

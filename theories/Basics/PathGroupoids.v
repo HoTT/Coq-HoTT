@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 (** * The groupid structure of paths *)
 
 Require Import Basics.Overture Basics.Tactics.

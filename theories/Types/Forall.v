@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about dependent products *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids

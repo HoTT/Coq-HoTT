@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Contractible Basics.Equivalences.
 Require Import Types.Prod Types.Forall.
 Require Export Tactics.BinderApply.
