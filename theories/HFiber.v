@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types Diagrams.CommutativeSquares HSet.
 
 Local Open Scope equiv_scope.

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Basics Types.
 Require Import HoTT.Truncations.
 Require Import Universes.BAut Universes.Rigid.

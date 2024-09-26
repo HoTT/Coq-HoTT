@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Impredicative truncations. *)
 
 Require Import HoTT.Basics.

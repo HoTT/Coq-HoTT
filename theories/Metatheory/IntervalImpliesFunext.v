@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Theorems about the homotopical interval. *)
 
 Require Import HoTT.Basics.

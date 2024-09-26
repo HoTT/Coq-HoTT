@@ -1025,9 +1025,9 @@ window that is narrower than the width to which you filled it.  If
 editing in Emacs, turn off `auto-fill-mode` and turn on
 `visual-line-mode`; then you'll be able to read comment paragraphs
 without scrolling horizontally, no matter how narrow your window is.
-Some files contain `(* -*- mode: coq; mode: visual-line -*- *)` at the
-top, which does this automatically; feel free to add it to files that
-are missing it.
+The repository contains a file .dir-locals.el in the top-level directory
+which turns on `visual-line-mode` when emacs visits any file in the
+repository.
 
 Unfortunately, when viewing source code on Github, these long comment
 lines are not wrapped, making them hard to read.  If you use the

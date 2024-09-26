@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the empty type *)
 
 Require Import Basics.Overture Basics.Equivalences Basics.Trunc.

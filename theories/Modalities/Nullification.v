@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Nullification *)
 
 Require Import HoTT.Basics HoTT.Types.

@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 

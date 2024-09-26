@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths.
 

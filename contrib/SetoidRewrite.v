@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 (* Typeclass instances to allow rewriting in categories. Examples are given later in the file. *)
 
 (* Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database. It must be imported before Basics.Overture. *)

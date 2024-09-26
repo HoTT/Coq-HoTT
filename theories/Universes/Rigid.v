@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber.
 Require Import Truncations.

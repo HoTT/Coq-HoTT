@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Theorems about Sigma-types (dependent sums) *)
 
 Require Import HoTT.Basics.

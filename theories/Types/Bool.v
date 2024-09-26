@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.

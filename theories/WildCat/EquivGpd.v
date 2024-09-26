@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 Require Import Basics.Overture Basics.Tactics Basics.Iff.
 Require Import WildCat.Core.
 Require Import WildCat.NatTrans.
