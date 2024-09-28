@@ -109,8 +109,11 @@ Arguments JoinRecData : clear implicits.
 Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.
 
 (** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
-Definition join_rec {A B P : Type} (f : JoinRecData A B P)
-  : Join A B $-> P
+Definition join_rec
+  @{a b ab p abp big | a <= ab, b <= ab, ab <= abp, p <= abp, abp < big}
+  {A : Type@{a}} {B : Type@{b}} {P : Type@{p}}
+  (f : JoinRecData@{a b p} A B P)
+  : Hom (A:=Type@{abp}) (Join@{a b ab} A B) P
   := Join_rec (jl f) (jr f) (jg f).
 
 Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)
@@ -481,6 +484,9 @@ Proof.
   apply diamond_symm.
 Defined.
 
+(* Unset Printing Notations. *)
+Set Printing Universes.
+
 (** * Functoriality of Join. *)
 Section FunctorJoin.
 
@@ -489,18 +495,29 @@ Section FunctorJoin.
     : JoinRecData A B (Join C D)
     := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
 
-  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
-    : Join A B -> Join C D
-    := join_rec (functor_join_recdata f g).
+  Definition functor_join
+    @{a b c d ab cd abcd big | a <= ab, b <= ab, c <= cd, d <= cd, ab <= abcd,
+      cd <= abcd, abcd < big}
+    {A : Type@{a}} {B : Type@{b}} {C : Type@{c}} {D : Type@{d}}
+    (f : A -> C) (g : B -> D)
+    : Join@{a b ab} A B -> Join@{c d cd} C D
+    := join_rec@{a b ab cd abcd big} (functor_join_recdata f g).
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
     := join_rec_beta_jg _ a b.
 
-  Definition functor_join_compose {A B C D E F}
-    (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
-    : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
+  Definition functor_join_compose
+    @{a b c d e f ab cd ef abcd cdef abef abcdef s
+    | a <= ab, b <= ab, c <= cd, d <= cd, e <= ef, f <= ef,
+      ab <= abcd, cd <= abcd, cd <= cdef, ef <= cdef, ab <= abef, ef <= abef,
+      abcd < s, cdef < s, abef < s}
+    {A : Type@{a}} {B : Type@{b}} {C : Type@{c}} {D : Type@{d}} {E : Type@{e}}
+    {F : Type@{f}} (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
+    : functor_join@{a b e f ab ef abef s} (h o f) (i o g)
+      == functor_join@{c d e f cd ef cdef s} h i
+        o functor_join@{a b c d ab cd abcd s} f g.
   Proof.
     snrapply Join_ind_FlFr.
     1,2: reflexivity.
@@ -513,8 +530,9 @@ Section FunctorJoin.
     apply functor_join_beta_jglue.
   Defined.
 
-  Definition functor_join_idmap {A B}
-    : functor_join idmap idmap == (idmap : Join A B -> Join A B).
+  Definition functor_join_idmap@{a b ab s} {A : Type@{a}} {B : Type@{b}}
+    : functor_join@{a b a b ab ab ab s} idmap idmap
+      == (idmap : Join A B -> Join A B).
   Proof.
     snrapply Join_ind_FlFr.
     1,2: reflexivity.
@@ -525,9 +543,12 @@ Section FunctorJoin.
     symmetry; apply ap_idmap.
   Defined.
 
-  Definition functor2_join {A B C D} {f f' : A -> C} {g g' : B -> D}
+  Definition functor2_join@{a b c d ab cd abcd s}
+    {A : Type@{a}} {B : Type@{b}} {C : Type@{c}} {D : Type@{d}}
+    {f f' : A -> C} {g g' : B -> D}
     (h : f == f') (k : g == g')
-    : functor_join f g == functor_join f' g'.
+    : functor_join@{a b c d ab cd abcd s} f g
+      == functor_join@{a b c d ab cd abcd s} f' g'.
   Proof.
     srapply Join_ind_FlFr.
     - simpl; intros; apply ap, h.
@@ -539,26 +560,37 @@ Section FunctorJoin.
       apply join_natsq.
   Defined.
 
-  Global Instance isequiv_functor_join {A B C D}
-    (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
-    : IsEquiv (functor_join f g).
+  Global Instance isequiv_functor_join
+    @{a b c d ab cd abcd s | a <= ab, b <= ab, c <= cd, d <= cd, ab <= abcd,
+      cd <= abcd, abcd < s}
+    {A : Type@{a}} {B : Type@{b}} {C : Type@{c}} {D : Type@{d}}
+    (f : A -> C) `{!IsEquiv@{a c} f} (g : B -> D) `{!IsEquiv@{b d} g}
+    : IsEquiv@{ab cd} (functor_join@{a b c d ab cd abcd s} f g).
   Proof.
-    snrapply isequiv_adjointify.
-    - apply (functor_join f^-1 g^-1).
-    - etransitivity.
-      1: symmetry; apply functor_join_compose.
-      etransitivity.
-      1: exact (functor2_join (eisretr f) (eisretr g)).
-      apply functor_join_idmap.
-    - etransitivity.
-      1: symmetry; apply functor_join_compose.
-      etransitivity.
-      1: exact (functor2_join (eissect f) (eissect g)).
-      apply functor_join_idmap.
+    snrapply isequiv_adjointify@{ab cd}.
+    - exact (functor_join@{c d a b cd ab abcd s}
+        (equiv_inv@{a c} (f:=f)) (equiv_inv@{b d} (f:=g))).
+    - nrapply transitive_pointwise_paths@{s s s}.
+      1: snrapply symmetric_pointwise_paths@{s s s}.
+      1: snrapply functor_join_compose@{c d a b c d cd ab cd abcd abcd abcd abcd s}.
+      nrapply transitive_pointwise_paths@{s s s}.
+      1: exact (functor2_join@{c d c d cd cd cd s} (eisretr@{a c} f) (eisretr@{b d} g)).
+      rapply functor_join_idmap@{c d cd s}.
+    - nrapply transitive_pointwise_paths@{s s s}.
+      1: snrapply symmetric_pointwise_paths@{s s s}.
+      1: rapply functor_join_compose@{a b c d a b ab cd ab abcd abcd abcd abcd s}.
+      nrapply transitive_pointwise_paths@{s s s}.
+      1: exact (functor2_join@{a b a b ab ab ab s} (eissect@{a c} f) (eissect@{b d} g)).
+      apply functor_join_idmap@{a b ab s}.
   Defined.
 
-  Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
-    : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
+  Definition equiv_functor_join
+    @{a b c d ab cd abcd s | a <= ab, b <= ab, c <= cd, d <= cd, ab <= abcd,
+      cd <= abcd, abcd < s}
+    {A : Type@{a}} {B : Type@{b}} {C : Type@{c}} {D : Type@{d}}
+    (f : Equiv@{a c} A C) (g : Equiv@{b d} B D)
+    : Equiv@{ab cd} (Join@{a b ab} A B) (Join@{c d cd} C D)
+    := Build_Equiv@{ab cd} _ _ (functor_join@{a b c d ab cd abcd s} f g) _.
 
   Global Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
