@@ -2,6 +2,9 @@ Require Import Basics Types.
 Require Import Limits.Pullback Colimits.Pushout Diagrams.Diagram Diagrams.Sequence Colimits.Colimit Colimits.Sequential.
 Require Import Join.Core.
 Require Import NullHomotopy.
+Require Import Universes.Smallness.
+
+Local Set Printing Universes.
 
 (** * The Join Construction *)
 
@@ -97,7 +100,7 @@ Definition himage@{i j} {A : Type@{i}} {B : Type@{j}} (f : A -> B) : Type@{j}
   := {y : B & merely@{j j} (hfiber f y)}.
 
 (** ** Essentially Small and Locally Small Types *)
-
+(* 
 (** A type in a universe [v] is essentially small, with respect to a strictly smaller universe [u], if there is a type in the universe [u] that is equivalent to it. *)
 Definition IsEssentiallySmall@{u v | u < v} (A : Type@{v})
   := {B : Type@{u} & A <~> B}.
@@ -121,17 +124,17 @@ Proof.
     rewrite transport_const.
     rewrite transport_path_universe.
     apply ap, eissect.
-Defined.
+Defined. *)
 
 (** Therefore, so is being locally small. *)
-Global Instance ishprop_islocallysmall@{u v} `{Univalence} (A : Type@{v})
-  : IsHProp (IsEssentiallySmall@{u v} A) := _.
+(* Global Instance ishprop_islocallysmall@{u v} `{Univalence} (A : Type@{v})
+  : IsHProp (IsEssentiallySmall@{u v} A) := _. *)
 
 (** A sigma type is essentially small if both of its types are essentially small. *)
-Definition isessentiallysmall_sigma@{u v k | u <= v, v < k}
+(* Definition isessentiallysmall_sigma@{u v k | u <= v, v < k}
   `{Funext} (A : Type@{u}) (P : A -> Type@{v})
-  (ies_A : IsEssentiallySmall@{u k} A)
-  (ies_P : forall x, IsEssentiallySmall@{v k} (P x))
+  (ies_A : IsSmall@{u k} A)
+  (ies_P : forall x, Ismall@{v k} (P x))
   : IsEssentiallySmall@{v k} {x : A & P x}.
 Proof.
   eexists.
@@ -144,73 +147,100 @@ Proof.
     symmetry.
     apply eisretr. }
   exact (ies_P ((ies_A.2)^-1%equiv x)).2.
-Defined.
+Defined. *)
 
 (** Every small type is trivially essentially small *)
-Definition isessentiallysmall_small@{u v} (A : Type@{u})
+(* Definition isessentiallysmall_small@{u v} (A : Type@{u})
   : IsEssentiallySmall@{u v} A.
 Proof.
   exists A.
   exact equiv_idmap.
-Defined.
+Defined. *)
 
-(** The join of two essentially small types is essentially small. *)
-Definition isessentiallysmall_join@{u1 u2 v k} (A : Type@{u1}) (B : Type@{u2})
-  (ies_A : IsEssentiallySmall@{v k} A) (ies_B : IsEssentiallySmall@{v k} B)
-  : IsEssentiallySmall@{v k} (Join@{u1 u2 v} A B).
-Proof.
-  exists (Join@{u1 u2 v} ies_A.1 ies_B.1).
-  apply equiv_functor_join.
-  - apply ies_A.2.
-  - apply ies_B.2.
-Defined.
+(** The join of two small types is small. *)
+Global Instance issmall_join@{u k l big | l < big, u <= l, k <= l}
+  (A : Type@{k}) (B : Type@{k})
+  (sA : IsSmall@{u k} A) (sB : IsSmall@{u k} B)
+  : IsSmall@{u k} (Join@{k k k} A B)
+  := Build_IsSmall@{u k}
+      (Join@{k k k} A B)
+      (Join@{u u u} (smalltype@{u k} A) (smalltype@{u k} B))
+      (equiv_functor_join@{u u k k u k l big}
+        (equiv_smalltype@{u k} A)
+        (equiv_smalltype@{u k} B)).
 
-(** And by induction, the iterated join of an essentially small type is essentially small. *)
-Definition isessentiallysmall_iterated_join@{u v k} (A : Type@{u})
-  (ies_A : IsEssentiallySmall@{v k} A) (n : nat)
-  : IsEssentiallySmall@{v k} (iterated_join A n).
+(** And by induction, the iterated join of a small type is small. *)
+Definition issmall_iterated_join@{v k vk big | v <= vk, k <= vk, vk < big}
+  (A : Type@{k}) (sA : IsSmall@{v k} A) (n : nat)
+  : IsSmall@{v k} (iterated_join@{k} A n).
 Proof.
-  induction n.
-  1: exact ies_A.
-  exact (isessentiallysmall_join A (iterated_join A n) ies_A IHn).
+  simple_induction' n.
+  - exact sA.
+  - by nrapply issmall_join@{v k vk big}.
 Defined.
 
 (** A sequential colimit of essentially small types is essentially small. *)
-Definition isessentiallysmall_seq_colimit@{u v k} `{Funext} (s : Sequence@{v v v})
-  (is : forall n, IsEssentiallySmall@{u k} (s n))
-  : IsEssentiallySmall@{v k} (Colimit s).
+Definition issmall_seq_colimit@{u k uk | u <= uk, k <= uk} `{Funext} (s : Sequence@{k k k})
+  (ss : forall n, IsSmall@{u k} (s n))
+  : IsSmall@{u k} (Colimit@{k k k k k k k} s).
 Proof.
   (** First we build a sequence in the universe [u] from a sequence [s] by replacing each type with a type in the universe [v] with the small version. *)
-  transparent assert (s' : Sequence@{u u u}).
-  { snrapply Build_Sequence.
+  snrefine (let s' : Sequence@{u u u} := _ in _).
+  { snrapply Build_Sequence@{u u u}.
     - intros n.
-      exact (is n).1.
+      exact (smalltype@{u k} (s n)).
     - hnf; intros n.
-      nrefine ((is n.+1%nat).2 o _ o (is n).2^-1%equiv).
-      apply arr; reflexivity. }
+      intros x.
+      refine (equiv_inv@{u k}
+        (f := @equiv_smalltype@{u k} _ (ss n.+1%nat)) _).
+      snrapply (sequence_arr s n).
+      exact (equiv_fun@{u k} (equiv_smalltype@{u k} _) x). }
+  exists (Colimit@{u u u u u u u} s').
+  snrapply (equiv_functor_colimit (D1 := s) (D2 := s')).
+  - snrapply Build_diagram_equiv.
+    + snrapply Build_SequenceMap.
+      * intros n.
+        exact (equiv_smalltype@{u k} (s n))^-1.
+      * intros n f.
+        simpl.
+        f_ap; f_ap; symmetry.
+        apply eisretr.
+    + exact _.
+  - exact _.
+  - exact _.
+Admitted.
+
+(*
   (** We also need a lifted version of [s'] since the record types involved are not cumulative. *)
-  transparent assert (s'' : Sequence@{v v v}).
-  { snrapply Build_Sequence.
-    - intros n.
-      exact (s' n).
-    - hnf; intros n.
-      apply (arr (G:=sequence_graph) s').
-      reflexivity. }
-  exists (Colimit s').
-  snrefine (equiv_functor_colimit (G:=sequence_graph) (D1 := s) (D2 := s'') _ _ _).
+  snrefine (let s'' : Sequence@{uk uk uk} := _ in _).
+  { snrapply Build_Sequence@{uk uk uk}.
+    - exact s'.
+    - snrapply (sequence_arr@{uk uk uk} s'). }
+  exists (Colimit@{u u u u u u u} s').
+  About equiv_functor_colimit
+    @{u0 u1 u u u u u u7 u8 u9
+      u10 u11 u12 u13 u14 u15 u16 u17 u18 u19
+      u20 u21 u22 u23 u24 u25 u26 u27 u28 u29}.
+  snrefine (equiv_functor_colimit
+    @{u0 u1 u2 u3 u4 u5 u6 u7 u8 u9
+      u10 u11 u12 u13 u14 u15 u16 u17 u18 u19
+      u20 u21 u22 u23 u24 u25 u26 u27 u28 u29}
+    (G:=sequence_graph) (D1 := s'') (D2 := s') _ _ _).
   { snrapply Build_diagram_equiv.
     { snrapply Build_DiagramMap.
       - intros n.
-        exact (is n).2.
+        exact (equiv_smalltype@{u k} (s' n))^-1.
       - intros n ? p; destruct p; intros x; simpl.
         simpl.
-        f_ap; f_ap.
-        apply eissect. }
+        f_ap; f_ap. }
     exact _. }
-  1,2: exact _.
+  (* 1: snrapply iscolimit_colimit. *)
+  1: exact _.
+  1: exact _.
 Defined.
+*)
 
-(** ** Fiber-wise Joins of Maps *)
+(** ** Fiber-wise joins of maps *)
 
 (** The fiber-wise join of two maps is the generalization of the join of two spaces, which can be thought of as the fiber-wise join of maps [A -> 1] and [B -> 1]. The fiber-wise join of two maps [f : A -> X] and [g : B -> X] is the pushout of the projections of the pullback of [f] and [g]. *)
 Definition FiberwiseJoin@{a b x k}
@@ -303,22 +333,9 @@ Proof.
 Defined.
 
 (** Here is our main theorem, it says that for any map [f : A -> X] from a small type [A] into a locally small type [X], image is an essentially small type. *)
-Theorem isessentiallysmall_infinite_fiberwise_join_power@{u v k | u <= v, v < k}
+Definition isessentiallysmall_infinite_fiberwise_join_power
+  @{u v k | u <= v, v < k}
   `{Funext} {A : Type@{u}} {X : Type@{v}} (f : A -> X)
-  (ils_X : IsLocallySmall@{v k} X)
-  : IsEssentiallySmall@{v k} (himage@{u v} f).
-Proof.
-  apply isessentiallysmall_sigma.
-  1: apply isessentiallysmall_small.
-  intros a.
-  unfold merely.
-  apply isessentiallysmall_seq_colimit.
-  simpl.
-  intros n.
-  unfold hfiber.
-  apply isessentiallysmall_iterated_join.
-  apply isessentiallysmall_sigma.
-  1: apply isessentiallysmall_small.
-  intros x.
-  apply ils_X.
-Defined.
+  (ils_X : IsLocallySmall@{u v k} 1 X)
+  : IsSmall@{v k} (himage@{u v} f)
+  := _.
