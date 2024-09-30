@@ -42,9 +42,9 @@ Proof.
 Defined.
 
 (** If [e] is idempotent, then it is also an idempotent element of the opposite ring. *)
-Global Instance isidempotent_op (R : Ring) (e : R) `{IsIdempotent R e}
+Global Instance isidempotent_op (R : Ring) (e : R) `{i : IsIdempotent R e}
   : IsIdempotent (rng_op R) e
-  := rng_idem (R:=R).
+  := i.
 
 (** Any positive power of an idempotent element [e] is [e]. *)
 Definition rng_power_idem {R : Ring} (e : R) `{IsIdempotent R e} (n : nat)
