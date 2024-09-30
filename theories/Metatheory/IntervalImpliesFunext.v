@@ -1,10 +1,8 @@
-(** * Theorems about the homotopical interval *)
+(** * An interval type implies function extensionality *)
 
 Require Import HoTT.Basics.
 Require Import HIT.Interval.
 Require Import Metatheory.Core Metatheory.FunextVarieties.
-
-(** ** An interval type implies function extensionality *)
 
 (** From an interval type with definitional computation rules on the end points, we can prove function extensionality. *)
 
