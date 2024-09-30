@@ -27,7 +27,7 @@ Global Instance isidempotent_one (R : Ring) : IsIdempotent R 1
   := rng_mult_one_r 1.
 
 (** If [e] is idempotent, then [1 - e] is idempotent. *)
-Global Instance isidempotent_compliment (R : Ring) (e : R) `{IsIdempotent R e}
+Global Instance isidempotent_complement (R : Ring) (e : R) `{IsIdempotent R e}
   : IsIdempotent R (1 - e).
 Proof.
   unfold IsIdempotent.
