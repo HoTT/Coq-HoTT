@@ -697,7 +697,11 @@ Global Instance upper_triangular_plus {R : Ring@{i}} {n : nat} (M N : Matrix R n
   : IsUpperTriangular (matrix_plus M N).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  revert_opaque H1.
+  refine (@Trunc_ind _ _ _ (fun _ => istrunc_truncation _ _) _).
+  intro H1.
+  revert_opaque H2; refine (Trunc_ind@{i i} _ _); intro H2.
+  apply tr.
   intros i j Hi Hj lt_i_j.
   specialize (H1 i j Hi Hj lt_i_j).
   specialize (H2 i j Hi Hj lt_i_j).
@@ -706,6 +710,7 @@ Proof.
   rewrite H1, H2.
   by rewrite rng_plus_zero_l.
 Defined.
+
 
 (** The sum of two lower triangular matrices is lower triangular. *)
 Global Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
@@ -723,7 +728,10 @@ Global Instance upper_triangular_negate {R : Ring@{i}} {n : nat} (M : Matrix R n
   : IsUpperTriangular (matrix_negate M).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  revert_opaque H.
+  refine (@Trunc_ind@{i i} _ _ _ (fun _ => istrunc_truncation _ _) _).
+  intro H.
+  apply tr.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   rewrite <- rng_negate_zero; f_ap.
@@ -746,7 +754,11 @@ Global Instance upper_triangular_mult {R : Ring@{i}} {n : nat}
   : IsUpperTriangular (matrix_mult M N).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  revert_opaque H1.
+  refine (@Trunc_ind _ _ _ (fun _ => istrunc_truncation _ _) _).
+  intro H1.
+  revert_opaque H2; refine (Trunc_ind@{i i} _ _); intro H2.
+  apply tr.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   apply ab_sum_zero.
@@ -775,7 +787,7 @@ Defined.
 Global Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
   : IsUpperTriangular (matrix_zero R n n).
 Proof.
-  apply tr.
+  apply tr@{i}.
   by hnf; intros; rewrite entry_Build_Matrix.
 Defined.
 
@@ -813,7 +825,7 @@ Global Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : IsUpperTriangular (matrix_diag v).
 Proof.
   unfold IsUpperTriangular.
-  apply tr.
+  apply tr@{i}.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   rewrite kronecker_delta_lt.
@@ -834,12 +846,12 @@ Defined.
 Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring@{i} R n).
 Proof.
-  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
+  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsUpperTriangular M)).
   - exact _.
   (* These can all be found by typeclass search, but being explicit makes this faster. *)
-  - intros x y ? ?; exact (upper_triangular_plus x (-y)).
-  - exact upper_triangular_mult.
-  - exact upper_triangular_identity.
+  - intros x y ? ?; exact (upper_triangular_plus@{i} x (-y)).
+  - exact upper_triangular_mult@{i}.
+  - exact upper_triangular_identity@{i}.
 Defined.
 
 (** Lower triangular matrices are a subring of the ring of matrices. *)
