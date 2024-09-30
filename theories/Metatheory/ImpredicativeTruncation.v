@@ -1,74 +1,49 @@
-(** * Impredicative truncations. *)
+(** * Impredicative truncations *)
+
+(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the proposition truncation in any universe except the bottom universe.  We use primes when necessary to distinguish these from the constructions made using HITs. *)
 
 Require Import HoTT.Basics.
 Require Import Universes.Smallness.
 Local Open Scope path_scope.
 
-(* Be careful about [Import]ing this file!  It defines truncations
-with the same name as those constructed with HITs.  Probably you want
-to use those instead, if you are using HITs. *)
+(** Using only function extensionality, we can define a "propositional truncation" [merely' A] of a type [A] in universe [i].  However, if we want it to land in the same universe [i], then we must restrict ourselves to quantifying over propositions [P] in a strictly smaller universe [j]. *)
+Definition merely'@{i j | j < i} (A : Type@{i}) : Type@{i}
+  := forall P:Type@{j}, IsHProp P -> (A -> P) -> P.
+
+Definition trm@{i j | j < i} {A : Type@{i}} : A -> merely'@{i j} A
+  := fun a P HP f => f a.
+
+Global Instance ishprop_merely@{i j | j < i} `{Funext} (A : Type@{i})
+  : IsHProp (merely'@{i j} A)
+  := _.
+
+(** Because of this, it will only eliminate into propositions in that smaller universe [j]. *)
+Definition merely_rec_naive@{i j | j < i} {A : Type@{i}}
+  {P : Type@{j}} {p : IsHProp@{j} P} (f : A -> P)
+  : merely'@{i j} A -> P
+  := fun ma => ma P p f.
+
+(** And then the functoriality will also impose a universe constraint [i' <= j < i]. *)
+Definition functor_merely_naive@{i j i' j' | j < i, j' < i', i' <= j} `{Funext}
+  {A : Type@{i}} {A' : Type@{i'}} (f : A -> A')
+  : merely'@{i j} A -> merely'@{i' j'} A'
+  := merely_rec_naive (trm o f).
+
+(** These problems go away if we assume propositional resizing. *)
 
 Section AssumePropResizing.
   Context `{PropResizing}.
 
-  Definition merely@{i j} (A : Type@{i}) : Type@{i}
-    := forall P:Type@{j}, IsHProp P -> (A -> P) -> P.   (* requires j < i *)
+  (** Here we use propositional resizing to resize a arbitrary proposition [P] from an arbitrary universe [k] to universe [j], so there is no constraint on the universe [k].  In particular, we can take [k = i], which shows that [merely'] is a reflective subuniverse of [Type@{i}], since any two maps into a proposition agree. *)
+  Definition merely_rec'@{i j k | j < i} {A : Type@{i}}
+    {P : Type@{k}} `{IsHProp P} (f : A -> P)
+    : merely'@{i j} A -> P
+    := fun ma => (equiv_smalltype@{j k} P)
+                 (ma (smalltype@{j k} P) _ ((equiv_smalltype@{j k} P)^-1 o f)).
 
-  Definition trm {A} : A -> merely A
-    := fun a P HP f => f a.
-
-  Global Instance ishprop_merely `{Funext} (A : Type) : IsHProp (merely A).
-  Proof.
-    exact _.
-  Defined.
-
-  Definition merely_rec {A : Type@{i}} {P : Type@{j}} `{IsHProp P} (f : A -> P)
-    : merely A -> P
-    := fun ma => (equiv_smalltype P)
-                 (ma (smalltype P) _ ((equiv_smalltype P)^-1 o f)).
-
-  Definition functor_merely `{Funext} {A B : Type} (f : A -> B)
-    : merely A -> merely B.
-  Proof.
-    srefine (merely_rec (trm o f)).
-  Defined.
-
-(* show what is gained by propositional resizing, without mentioning universe levels *)
-  Local Definition typeofid (A : Type) := A -> A.
-   
-  Local Definition functor_merely_sameargs `{Funext} {A : Type} (f : typeofid A)
-    : typeofid (merely A) := functor_merely f.
-
-(* a more informative version using universe levels *)
-  Local Definition functor_merely_sameuniv `{Funext} {A B: Type@{i}} (f : A -> B)
-    : merely@{j k} A -> merely@{j k} B:= functor_merely f.    (* requires i <= j & k < j *)
-
+  (** Similarly, there are no constraints between [i] and [i'] in the next definition, so they could be taken to be equal. *)
+  Definition functor_merely@{i j i' j' | j < i, j' < i'} `{Funext} {A : Type@{i}} {A' : Type@{i'}} (f : A -> A')
+    : merely'@{i j} A -> merely'@{i' j'} A'
+    := merely_rec' (trm o f).
 
 End AssumePropResizing.
-
-(* Here, we show what goes wrong without propositional resizing. *)
-
-(* the naive definition *)
-Local Definition merely_rec_naive {A : Type@{i}} {P : Type@{j}} {p:IsHProp@{j} P} (f : A -> P)
-  : merely@{i j} A -> P
-  := fun ma => ma P p f.
-
-(* the too weak definition *)
-Local Definition functor_merely_weak `{Funext} {A B : Type@{k}} (f : A -> B)
-  : merely@{j k} A -> merely@{k l} B. (* evidently, this requires k<j and l<k *)
-Proof.
-  srefine (merely_rec_naive (trm o f)).
-Defined.
-
-(* impossible due to universe inconsistency: *)
-Fail Local Definition functor_merely_weak_sameargs `{Funext} {A : Type} (f : typeofid A)
-  : typeofid(merely A) := functor_merely_weak f.
-
-(* The following much weaker definition is possible: *)
-Local Definition functor_merely_weak_sameargs_weak `{Funext} {A : Type} (f : typeofid A)
-  : merely A -> merely A := functor_merely_weak f.
-
-(* a more general (but still weak) and more informative version using universe levels *)
-Local Definition functor_merely_weak_sameuniv_weak `{Funext} {A B: Type@{i}} (f : A -> B)
-  : merely@{j k} A -> merely@{k l} B:= functor_merely_weak f.
-(* requires i <= j & l < k < j *)
