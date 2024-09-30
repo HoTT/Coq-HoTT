@@ -93,6 +93,7 @@ Definition isorthogonal_swap (R : Ring) (e f : R) `{IsOrthogonal R e f}
   : IsOrthogonal R f e
   := {| rng_idem_orth := rng_idem_orth' ; rng_idem_orth' := rng_idem_orth |}.
 Hint Immediate isorthogonal_swap : typeclass_instances.
+
 (** If [e] and [f] are orthogonal idempotents, then they are also orthogonal idempotents in the opposite ring. *)
 Global Instance isorthogonal_op {R : Ring} (e f : R) `{r : IsOrthogonal R e f}
   : IsOrthogonal (rng_op R) e f.
