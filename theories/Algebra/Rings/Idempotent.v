@@ -116,7 +116,7 @@ Proof.
 Defined.
 
 (** An idempotent element [e] is orthogonal to its complement [1 - e]. *)
-Global Instance isorthogonal_compliment {R : Ring} (e : R) `{IsIdempotent R e}
+Global Instance isorthogonal_complement {R : Ring} (e : R) `{IsIdempotent R e}
   : IsOrthogonal R e (1 - e).
 Proof.
   snrapply Build_IsOrthogonal.
