@@ -83,10 +83,8 @@ Proof.
   unfold pointwise_paths.
   nrapply (Coeq_ind _ (fun _ => 1)).
   intros b.
-  lhs nrapply transport_paths_FlFr.
-  lhs nrapply (whiskerL _ (Coeq_rec_beta_cglue _ _ _ _)).
-  lhs nrapply (whiskerR (concat_p1 _)).
-  nrapply concat_Vp.
+  apply transport_paths_FlFr', equiv_p1_1q.
+  symmetry; nrapply Coeq_rec_beta_cglue.
 Defined.
 
 Definition Coeq_eta `{Funext}

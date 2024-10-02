@@ -141,7 +141,7 @@ Section UnivPropNat.
     exact (dp_compose coeq P (q b)^ (apD m (q b)^)).
   Defined.
 
-  (* Action of (Coeq_ind _ _ _ o functor_coeq) on the path (cglue b). *)
+  (** Action of (Coeq_ind _ _ _ o functor_coeq) on the path (cglue b). *)
   Definition Coeq_ind_functor_coeq_beta_cglue {b m r}
     : apD (fun x => Coeq_ind P m r (functor_coeq h k p q x)) (cglue b)
       = (dp_compose' (functor_coeq h k p q) P (functor_coeq_beta_cglue h k p q b))^-1
