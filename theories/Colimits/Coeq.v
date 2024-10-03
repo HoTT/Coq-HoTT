@@ -64,7 +64,7 @@ Proof.
   rapply path_ishprop.
 Defined.
 
-Definition Coeq_eta_homot {B A f g} {P : @Coeq B A f g -> Type}
+Definition Coeq_ind_eta_homotopic {B A f g} {P : @Coeq B A f g -> Type}
   (h : forall w : Coeq f g, P w)
   : h == Coeq_ind P (h o coeq) (fun b => apD h (cglue b)).
 Proof.
@@ -77,7 +77,7 @@ Proof.
   nrapply concat_Vp.
 Defined.
 
-Definition Coeq_rec_eta_homot {B A f g} {P : Type} (h : @Coeq B A f g -> P)
+Definition Coeq_rec_eta_homotopic {B A f g} {P : Type} (h : @Coeq B A f g -> P)
   : h == Coeq_rec P (h o coeq) (fun b => ap h (cglue b)).
 Proof.
   unfold pointwise_paths.
@@ -90,12 +90,12 @@ Defined.
 Definition Coeq_eta `{Funext}
   {B A f g} {P : @Coeq B A f g -> Type} (h : forall w : Coeq f g, P w)
   : h = Coeq_ind P (h o coeq) (fun b => apD h (cglue b))
-  := path_forall _ _ (Coeq_eta_homot h).
+  := path_forall _ _ (Coeq_ind_eta_homotopic h).
 
 Definition Coeq_rec_eta `{Funext}
   {B A f g} {P : Type} (h : @Coeq B A f g -> P)
   : h = Coeq_rec P (h o coeq) (fun b => ap h (cglue b))
-  := path_forall _ _ (Coeq_rec_eta_homot h).
+  := path_forall _ _ (Coeq_rec_eta_homotopic h).
 
 Definition Coeq_ind_homotopy {B A f g} (P : @Coeq B A f g -> Type)
   {m n : forall a, P (coeq a)} (u : m == n)

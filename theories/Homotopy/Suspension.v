@@ -86,7 +86,7 @@ Defined.
 (** ** Eta-rule. *)
 
 (** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_ind] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
-Definition Susp_eta_homot {X : Type} {P : Susp X -> Type} (f : forall y, P y)
+Definition Susp_ind_eta_homotopic {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f == Susp_ind P (f North) (f South) (fun x => apD f (merid x)).
 Proof.
   unfold pointwise_paths. refine (Susp_ind _ 1 1 _).
@@ -99,7 +99,7 @@ Proof.
   apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
 
-Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
+Definition Susp_rec_eta_homotopic {X Y : Type} (f : Susp X -> Y)
   : f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
 Proof.
   snrapply Susp_ind_FlFr.
@@ -109,14 +109,14 @@ Proof.
   exact (Susp_rec_beta_merid _)^.
 Defined.
 
-Definition Susp_eta `{Funext}
+Definition Susp_ind_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_ind P (f North) (f South) (fun x => apD f (merid x))
-  := path_forall _ _ (Susp_eta_homot f).
+  := path_forall _ _ (Susp_ind_eta_homotopic f).
 
 Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
   : f = Susp_rec (f North) (f South) (fun x => ap f (merid x))
-  := path_forall _ _ (Susp_rec_eta_homot f).
+  := path_forall _ _ (Susp_rec_eta_homotopic f).
 
 (** ** Functoriality *)
 
