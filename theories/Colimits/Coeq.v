@@ -87,7 +87,7 @@ Proof.
   symmetry; nrapply Coeq_rec_beta_cglue.
 Defined.
 
-Definition Coeq_eta `{Funext}
+Definition Coeq_ind_eta `{Funext}
   {B A f g} {P : @Coeq B A f g -> Type} (h : forall w : Coeq f g, P w)
   : h = Coeq_ind P (h o coeq) (fun b => apD h (cglue b))
   := path_forall _ _ (Coeq_ind_eta_homotopic h).
