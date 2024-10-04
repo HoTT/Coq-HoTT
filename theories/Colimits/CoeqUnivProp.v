@@ -181,7 +181,7 @@ Section UnivPropNat.
     exact (dp_apD_nat (Coeq_ind_homotopy P u v o _) (cglue b)).
   Defined.
 
-  (** Recall the domain of this functor is the type of dependent maps [forall z : Coeq f' g', P z]. By precomposing with [functor_coeq h k p q : Coeq f g -> Coeq f' g'] we get a dependent map [forall z : Coeq f g, (P o functor_coeq h k p q)]. *)
+  (** Recall the domain of this functor is the type of dependent maps [forall z : Coeq f' g', P z]. By precomposing with [functor_coeq h k p q : Coeq f g -> Coeq f' g'] we get a dependent map [forall z : Coeq f g, (P (functor_coeq h k p q z))]. *)
   Definition functor_Coeq_ind_type
     : Coeq_ind_type f' g' P -> Coeq_ind_type f g (P o functor_coeq h k p q)
     := fun x => x o functor_coeq h k p q.
