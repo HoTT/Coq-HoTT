@@ -195,7 +195,7 @@ Section UnivPropNat.
   Defined.
 
   (** We now have two different ways of mappping from [Coeq_ind_type f' g' P] to [sig (Coeq_ind_data f g (P o functor_coeq h k p q))]. Here we construct a transformation between these two maps.
-
+<<
   Coeq_ind_type f' g' P ---------functor_Coeq_ind_type---> Coeq_ind_type f g (P o functor_coeq h k p q)
         |                                                                   |
         |                                                                   |
@@ -204,7 +204,7 @@ Section UnivPropNat.
         |                                                                   |
         V                                                                   V
   sig (Coeq_ind_data f' g' P) ---functor_Coeq_ind_data---> sig (Coeq_ind_data f g (P o functor_coeq h k p q))
-  *)
+>> *)
   Definition Coeq_ind_inv_nat
     : Coeq_ind_inv f g (P o functor_coeq h k p q) o functor_Coeq_ind_type
       $=> functor_Coeq_ind_data o (Coeq_ind_inv f' g' P).
