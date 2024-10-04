@@ -204,7 +204,8 @@ Section UnivPropNat.
         |                                                                   |
         V                                                                   V
   sig (Coeq_ind_data f' g' P) ---functor_Coeq_ind_data---> sig (Coeq_ind_data f g (P o functor_coeq h k p q))
->> *)
+>>
+  *)
   Definition Coeq_ind_inv_nat
     : Coeq_ind_inv f g (P o functor_coeq h k p q) o functor_Coeq_ind_type
       $=> functor_Coeq_ind_data o (Coeq_ind_inv f' g' P).
