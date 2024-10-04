@@ -52,7 +52,7 @@ Section Localization.
 
   (** We now construct the localization of a ring at a multiplicative subset as the following HIT:
 
-  <<<
+<<
   HIT (Quotient fraction_eq) (R : CRing) (S : R -> Type)
     `{IsMultiplicativeSubset R} :=
   | loc_frac (n d : R) (p : S d) : Localization R S
@@ -60,7 +60,8 @@ Section Localization.
       (x : R) (q : S x) (r : x * (d2 * n1 - n2 * d1) = 0)
       : loc_frac n1 d1 p1 = loc_frac n2 d2 p2
   .
-  >>>
+>>
+
   along with the condition that this HIT be a set.
 
   We will implement this HIT by writing it as a set quotient. From now onwards, [loc_frac] will be implemented as [class_of fraction_eq] and [loc_frac_eq] will be implemented as [qglue]. *)
