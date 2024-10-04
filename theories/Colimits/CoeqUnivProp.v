@@ -22,6 +22,9 @@ Section UnivProp.
   Local Existing Instances isgraph_total | 1.
   Local Existing Instances isgraph_paths | 2.
 
+  (** The domain of the equivalence: sections of [P] over [Coeq f g]. Coq correctly infers the 0-groupoid structure [@isgraph_forall (Coeq f g) P (fun z : Coeq f g => isgraph_paths (P z))]. *)
+  Definition Coeq_ind_type := forall z : Coeq f g, P z.
+
   (** The codomain of the equivalence is a sigma-groupoid of this family. *)
   Definition Coeq_ind_data (h : forall a : A, P (coeq a))
     := forall b : B, DPath P (cglue b) (h (f b)) (h (g b)).
@@ -58,7 +61,7 @@ Section UnivProp.
   Defined.
 
   (** Here is the functor. The domain is the fully-applied type of [Coeq_ind]: sections of [P] over [Coeq f g]. The codomain consists of input data for [Coeq_ind] given a 0-groupoid structure via [is0gpd_total]. *)
-  Definition Coeq_ind_inv : (forall z : Coeq f g, P z) -> sig Coeq_ind_data.
+  Definition Coeq_ind_inv : Coeq_ind_type -> sig Coeq_ind_data.
   Proof.
     intros h.
     exists (h o coeq).
@@ -100,7 +103,7 @@ Section UnivProp.
   Defined.
 
   Definition equiv_0gpd_Coeq_ind
-    : Build_ZeroGpd (forall z : Coeq f g, P z) _ _ _
+    : Build_ZeroGpd Coeq_ind_type _ _ _
       $<~> Build_ZeroGpd (sig Coeq_ind_data) _ _ _.
   Proof.
     snrapply Build_CatEquiv.
@@ -173,7 +176,7 @@ Section UnivPropNat.
   Defined.
 
   Definition functor_Coeq_ind_type
-    : (forall z : Coeq f' g', P z) -> forall z : Coeq f g, P (functor_coeq h k p q z)
+    : Coeq_ind_type f' g' P -> Coeq_ind_type f g (P o functor_coeq h k p q)
     := fun x => x o functor_coeq h k p q.
 
   Local Instance is0functor_functor_Coeq_ind_type
