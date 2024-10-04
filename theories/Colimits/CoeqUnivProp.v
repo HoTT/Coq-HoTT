@@ -113,6 +113,7 @@ Section UnivProp.
 
 End UnivProp.
 
+(** Here we prove that the zero-groupoid universal property established in the previous section is natural with respect to [functor_coeq]. More precisely, we show that [Coeq_ind_inv] commutes with precomposition with [k] and [functor_coeq h k p q]. *)
 Section UnivPropNat.
   Context {B A : Type} (f g : B -> A) {B' A' : Type} (f' g' : B' -> A')
     (h : B -> B') (k : A -> A') (p : k o f == f' o h) (q : k o g == g' o h)
@@ -120,32 +121,37 @@ Section UnivPropNat.
 
   Local Open Scope dpath_scope.
 
+  (** We recall these instances to allow Coq to infer the same 0-groupoid structures as in the previous section. *)
   Local Existing Instances isgraph_total | 1.
   Local Existing Instances isgraph_paths | 2.
   Local Existing Instances isdgraph_Coeq_ind_data.
 
+  (** Help Coq find the same graph structure for the sigma-groupoid of [Coeq_ind_data] when precomposing with [functor_coeq]. *)
   Local Instance isgraph_Coeq_ind_data_total
     : IsGraph (sig (Coeq_ind_data f g (P o functor_coeq h k p q))).
   Proof.
     rapply isgraph_total.
   Defined.
 
+  (** Given a map out of [A'] that coequalizes the parallel pair [f'] and [g'], we construct a map out of [A] that coequalizes [f] and [g]. Precomposing with [k] yields a dependent map [forall a : A, P (coeq (k a))], and [functor_coeq_beta_cglue] gives us a way to relate the paths. *)
   Definition functor_Coeq_ind_data
     : sig (Coeq_ind_data f' g' P)
       -> sig (Coeq_ind_data f g (P o functor_coeq h k p q)).
   Proof.
-    unfold Coeq_ind_data in *.
     intros [m r].
     exists (m o k).
     intros b.
+    unfold Coeq_ind_data in r.
     apply (dp_compose' _ _ (functor_coeq_beta_cglue h k p q b)).
     nrefine (_ @Dp r (h b) @Dp _).
     1: exact (dp_compose coeq P (p b) (apD m (p b))).
     exact (dp_compose coeq P (q b)^ (apD m (q b)^)).
   Defined.
 
-  (** Action of (Coeq_ind _ _ _ o functor_coeq) on the path (cglue b). *)
-  Definition Coeq_ind_functor_coeq_beta_cglue {b m r}
+  (** A helper lemma for proving functoriality of [functor_Coeq_ind_data]. This is the action of [Coeq_ind _ _ _ o functor_coeq h k p q] on the path [cglue b]. *)
+  Local Lemma Coeq_ind_functor_coeq_beta_cglue {b : B}
+    {m : forall a' : A', P (coeq a')}
+    {r : forall b' : B', DPath P (cglue b') (m (f' b')) (m (g' b'))}
     : apD (fun x => Coeq_ind P m r (functor_coeq h k p q x)) (cglue b)
       = (dp_compose' (functor_coeq h k p q) P (functor_coeq_beta_cglue h k p q b))^-1
           ((dp_compose coeq P (p b) (apD m (p b)) @Dp r (h b)) @Dp
@@ -175,6 +181,7 @@ Section UnivPropNat.
     exact (dp_apD_nat (Coeq_ind_homotopy P u v o _) (cglue b)).
   Defined.
 
+  (** Recall the domain of this functor is the type of dependent maps [forall z : Coeq f' g', P z]. By precomposing with [functor_coeq h k p q : Coeq f g -> Coeq f' g'] we get a dependent map [forall z : Coeq f g, (P o functor_coeq h k p q)]. *)
   Definition functor_Coeq_ind_type
     : Coeq_ind_type f' g' P -> Coeq_ind_type f g (P o functor_coeq h k p q)
     := fun x => x o functor_coeq h k p q.
@@ -187,6 +194,17 @@ Section UnivPropNat.
     exact (r o functor_coeq h k p q).
   Defined.
 
+  (** We now have two different ways of mappping from [Coeq_ind_type f' g' P] to [sig (Coeq_ind_data f g (P o functor_coeq h k p q))]. Here we construct a transformation between these two maps.
+
+  Coeq_ind_type f' g' P ---------functor_Coeq_ind_type---> Coeq_ind_type f g (P o functor_coeq h k p q)
+        |                                                                   |
+        |                                                                   |
+  Coeq_ind_inv f' g' P                                      Coeq_ind_inv f g (P o functor_coeq h k p q)
+        |                                                                   |
+        |                                                                   |
+        V                                                                   V
+  sig (Coeq_ind_data f' g' P) ---functor_Coeq_ind_data---> sig (Coeq_ind_data f g (P o functor_coeq h k p q))
+  *)
   Definition Coeq_ind_inv_nat
     : Coeq_ind_inv f g (P o functor_coeq h k p q) o functor_Coeq_ind_type
       $=> functor_Coeq_ind_data o (Coeq_ind_inv f' g' P).
