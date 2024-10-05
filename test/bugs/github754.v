@@ -1,4 +1,4 @@
-From HoTT Require Import Basics Types DProp Tactics.EquivalenceInduction.
+From HoTT Require Import Basics Types Universes.DProp Tactics.EquivalenceInduction.
 
 Local Open Scope nat_scope.
 

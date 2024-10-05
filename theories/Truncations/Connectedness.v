@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 Require Import Basics.
 Require Import Types.

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics.
 Require Import Types.
 Require Import Cubical.

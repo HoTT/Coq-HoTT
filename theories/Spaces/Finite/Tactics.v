@@ -1,4 +1,3 @@
-
 Require Import HoTT.Basics Fin.
 
 (** ** Tactics *)

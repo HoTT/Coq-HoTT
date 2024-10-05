@@ -647,9 +647,10 @@ Section TwistConstruction.
   Local Infix "⊗R" := (fmap01 cat_tensor) (at level 40) : monoidal_scope.
   Local Infix "⊗L" := (fmap10 cat_tensor) (at level 40) : monoidal_scope.
   Local Notation "f ∘ g" := (f $o g) (at level 61, left associativity, format "f  '/' '∘'  g") : monoidal_scope.
-  Local Notation "f $== g :> A" := (GpdHom (A := A) f g)
-    (at level 80, format "'[v' '[v' f ']' '/'  $== '/'  '[v' g ']'  '/' :>  '[' A ']' ']'")
-    : long_path_scope.
+  (** TODO: in 8.19 this notation causes issues, when updating to 8.20 we should uncomment this. *)
+  (* Local Notation "f $== g :> A" := (GpdHom (A := A) f g)
+    (at level 70, format "'[v' '[v' f ']' '/'  $== '/'  '[v' g ']'  '/' :>  '[' A ']' ']'")
+    : long_path_scope. *)
   Local Open Scope monoidal_scope.
 
   (** [twist] is an equivalence which we will call [twiste]. *)

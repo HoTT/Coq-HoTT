@@ -208,8 +208,6 @@ Definition binint_pow x y :=
     | neg _ => 0
   end.
 
-Infix "^" := binint_pow : binint_scope.
-
 (** ** Square *)
 
 Definition binint_square x :=

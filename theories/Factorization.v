@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Factorizations and factorization systems. *)
 
 Require Import HoTT.Basics HoTT.Types.

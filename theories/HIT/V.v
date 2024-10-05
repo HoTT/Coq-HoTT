@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * The cumulative hierarchy [V]. *)
 
 Require Import HoTT.Basics HoTT.Types.

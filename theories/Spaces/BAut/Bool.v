@@ -1,8 +1,7 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Constant.
 Require Import HoTT.Truncations.Core HoTT.Truncations.Connectedness.
-Require Import Spaces.BAut.
+Require Import Universes.BAut.
 Require Import Pointed.Core.
 
 Local Open Scope trunc_scope.

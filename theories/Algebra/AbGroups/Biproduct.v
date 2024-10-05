@@ -138,10 +138,6 @@ Definition ab_biprod_corec {A B X : AbGroup} (f : X $-> A) (g : X $-> B)
   : X $-> ab_biprod A B
   := grp_prod_corec f g.
 
-Definition ab_corec_eta {X Y A B : AbGroup} (f : X $-> Y) (g0 : Y $-> A) (g1 : Y $-> B)
-  : ab_biprod_corec g0 g1 $o f $== ab_biprod_corec (g0 $o f) (g1 $o f)
-  := fun _ => idpath.
-
 (** *** Functoriality of [ab_biprod] *)
 
 Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-> A') (g: B $-> B')

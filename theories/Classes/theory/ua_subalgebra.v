@@ -1,5 +1,5 @@
 Require Import
-  HoTT.HProp
+  HoTT.Universes.HProp
   HoTT.Types
   HoTT.Classes.theory.ua_homomorphism.
 

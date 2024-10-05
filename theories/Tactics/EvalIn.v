@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 (** * Evaluating tactics on terms *)
 Require Import Basics.Overture Basics.PathGroupoids.
 

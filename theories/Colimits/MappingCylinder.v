@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Mapping Cylinders *)
 
 Require Import HoTT.Basics Cubical.DPath Cubical.PathSquare.

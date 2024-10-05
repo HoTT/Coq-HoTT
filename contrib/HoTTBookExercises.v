@@ -803,7 +803,7 @@ Defined.
 (* ================================================== ex:prop-inhabcontr *)
 (** Exercise 3.5 *)
 
-Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
+Definition Book_3_5_solution_1 := @HoTT.Universes.HProp.equiv_hprop_inhabited_contr.
 
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
@@ -1712,7 +1712,7 @@ End Book_6_9.
 Section Book_7_1.
   Lemma Book_7_1_part_i (H : forall A, merely A -> A) A : IsHSet A.
   Proof.
-    apply (@HoTT.HSet.ishset_hrel_subpaths
+    apply (@HoTT.Universes.HSet.ishset_hrel_subpaths
              A (fun x y => merely (x = y)));
     try typeclasses eauto.
     - intros ?.

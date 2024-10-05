@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
-
 (** * Decidable propositions *)
 
 Require Import HoTT.Basics HoTT.Types.

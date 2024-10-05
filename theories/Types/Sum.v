@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about disjoint unions *)
 
 Require Import HoTT.Basics.

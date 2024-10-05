@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics Types.
 Require Import WildCat.Equiv.
 Require Import NullHomotopy.

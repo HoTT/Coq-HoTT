@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * The flattening lemma. *)
 
 Require Import HoTT.Basics.

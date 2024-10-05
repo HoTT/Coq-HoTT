@@ -877,6 +877,19 @@ Proof.
   rewrite nat_mul_comm; exact _.
 Defined.
 
+(** ** Eliminating positive assumptions *)
+
+(** Sometimes we want to prove a predicate which assumes that [0 < x]. In that case, it suffices to prove it for [x.+1] instead. *)
+Definition gt_zero_ind (P : nat -> Type)
+  (H : forall x, P x.+1)
+  : forall x (l : 0 < x), P x.
+Proof.
+  intros x l.
+  destruct x.
+  1: contradiction (lt_irrefl _ l).
+  apply H.
+Defined.
+
 (** Alternative Characterizations of [<=] *)
 
 (** [n <= m] is equivalent to [(n < m) + (n = m)]. This justifies the name "less than or equal to". Note that it is not immediately obvious that the latter type is a hprop. *)
@@ -1183,14 +1196,13 @@ Defined.
 (** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
 Definition nat_sub_pred_r n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
 Proof.
-  intros H1 H2.
-  induction m as [|m IHm] in n, H1, H2 |- *.
-  1: contradiction (not_lt_zero_r _ H1).
+  revert m; snrapply gt_zero_ind.
+  intros m H1.
   rewrite nat_sub_succ_r.
   rewrite nat_succ_pred.
   1: reflexivity.
   apply equiv_lt_lt_sub.
-  exact (lt_trans _ H2).
+  exact (lt_trans _ H1).
 Defined.
 
 (** Subtracting from a sum is the sum of subtracting from the second summand. *)

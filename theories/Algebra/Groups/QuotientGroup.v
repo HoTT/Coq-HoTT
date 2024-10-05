@@ -27,23 +27,11 @@ Section GroupCongruenceQuotient.
 
   Global Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
-    intros x.
-    srapply Quotient_rec.
-    { intro y; revert x.
-      srapply Quotient_rec.
-      { intros x.
-        apply class_of.
-        exact (x * y). }
-      intros a b r.
-      cbn.
-      apply qglue.
-      by apply iscong. }
-    intros a b r.
-    revert x.
-    srapply Quotient_ind_hprop.
-    intro x.
-    apply qglue.
-    by apply iscong.
+    srapply Quotient_rec2.
+    - intros x y.
+      exact (class_of _ (x * y)).
+    - intros x x' y p. apply qglue. by apply iscong.
+    - intros x y y' q. apply qglue. by apply iscong.
   Defined.
 
   Global Instance congquot_mon_unit : MonUnit CongruenceQuotient.
@@ -72,10 +60,7 @@ Section GroupCongruenceQuotient.
 
   Global Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
-    intros x y.
-    srapply Quotient_ind_hprop; intro a; revert y.
-    srapply Quotient_ind_hprop; intro b; revert x.
-    srapply Quotient_ind_hprop; intro c.
+    srapply Quotient_ind3_hprop; intros x y z.
     simpl; by rewrite associativity.
   Qed.
 

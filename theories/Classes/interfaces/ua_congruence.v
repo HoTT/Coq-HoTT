@@ -1,5 +1,5 @@
 Require Import
-  HoTT.HProp
+  HoTT.Universes.HProp
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.interfaces.ua_algebra.
 

@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import Basics.
 Require Import Types.Paths Types.Arrow Types.Sigma Types.Sum Types.Universe.
 Require Export Colimits.Coeq.

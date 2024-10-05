@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Export Basics.Nat.
-Require Export HoTT.DProp.
+Require Export HoTT.Universes.DProp.
 
 (** * Characterization of the path types of [nat] *)
 

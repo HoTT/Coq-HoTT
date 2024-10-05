@@ -1,4 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
 Require Import HoTT.Spaces.No.Core.
 

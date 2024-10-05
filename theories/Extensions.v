@@ -1,5 +1,3 @@
-(* -*- mode: coq; mode: visual-line -*- *)
-
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.

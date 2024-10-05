@@ -1,10 +1,9 @@
-(* -*- mode: coq; mode: visual-line -*-  *)
 (** * Nullification *)
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions.
 Require Import Modality Accessible.
-Require Export Localization.    (** Nullification is a special case of localization *)
+Require Export Modalities.Localization.    (** Nullification is a special case of localization *)
 
 Local Open Scope path_scope.
 
