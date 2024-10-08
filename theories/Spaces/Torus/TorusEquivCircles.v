@@ -1,5 +1,6 @@
 Require Import Basics Types.
-Require Import Cubical.
+Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare
+  Cubical.PathCube Cubical.DPathCube.
 Require Import Spaces.Circle Spaces.Torus.Torus.
 
 (** In this file we prove that the torus is equivalent to the product of two circles. *)

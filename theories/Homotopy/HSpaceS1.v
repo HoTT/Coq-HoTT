@@ -1,5 +1,5 @@
 Require Import Classes.interfaces.canonical_names.
-Require Import Cubical.
+Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.HSpace.Coherent.

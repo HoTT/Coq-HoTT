@@ -1,5 +1,6 @@
 Require Import Basics Types.
-Require Import Pointed Cubical WildCat.
+Require Import Pointed WildCat.
+Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
 Require Import Algebra.AbGroups.
 Require Import Homotopy.HSpace.Core.
 Require Import TruncType.

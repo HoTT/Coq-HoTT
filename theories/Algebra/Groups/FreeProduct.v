@@ -1,5 +1,5 @@
 Require Import Basics Types.
-Require Import Cubical.
+Require Import Cubical.DPath.
 Require Import Spaces.List.Core Spaces.List.Theory.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
