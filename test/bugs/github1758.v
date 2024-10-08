@@ -1,5 +1,5 @@
 From HoTT Require Import Basics.Overture HIT.Interval HIT.Flattening Colimits.GraphQuotient
-          Spaces.Torus.Torus Cubical.
+          Spaces.Torus.Torus Cubical.DPath.
 
 (* Test that various higher inductive types are defined correctly.  If they are defined in the most naive way, two uses of the induction principle that are definitionally equal on the point constructors will be considered definitionally equal, which is inconsistent.  There is an idiom that must be used in order to force Coq to regard the supplementary data as being required as well.  See, for example, Colimits/GraphQuotient.v for the idiom. *)
 

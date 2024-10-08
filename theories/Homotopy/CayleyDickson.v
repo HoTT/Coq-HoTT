@@ -1,5 +1,5 @@
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Cubical.
+Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.

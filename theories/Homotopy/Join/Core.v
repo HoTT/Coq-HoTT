@@ -1,4 +1,5 @@
-Require Import Basics Types Cubical.
+Require Import Basics Types.
+Require Import Cubical.DPath Cubical.PathSquare.
 Require Import NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.

@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Types.
-Require Import Cubical.
+Require Import Cubical.DPath Cubical.DPathSquare.
 Require Import WildCat.
 Require Import Colimits.Pushout.
 Require Import NullHomotopy.

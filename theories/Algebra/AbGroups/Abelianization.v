@@ -1,5 +1,5 @@
 Require Import Basics Types Truncations.Core.
-Require Import Cubical WildCat.
+Require Import Cubical.DPath WildCat.
 Require Import Colimits.Coeq.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.
