@@ -1,0 +1,21 @@
+digraph HoTT_Algebra_Rings_ChineseRemainder {
+  graph [ratio=0.5]
+  node [style=filled]
+ChineseRemainder_chinese_remainder_prod [label="chinese_remainder_prod", URL=<ChineseRemainder.html#chinese_remainder_prod>, peripheries=3, fillcolor="#F070D1"] ;
+ChineseRemainder_chinese_remainder [label="chinese_remainder", URL=<ChineseRemainder.html#chinese_remainder>, fillcolor="#F070D1"] ;
+ChineseRemainder_issurjection_rng_homo_crt [label="issurjection_rng_homo_crt", URL=<ChineseRemainder.html#issurjection_rng_homo_crt>, fillcolor="#F070D1"] ;
+ChineseRemainder_rng_homo_crt_beta_right [label="rng_homo_crt_beta_right", URL=<ChineseRemainder.html#rng_homo_crt_beta_right>, fillcolor="#F070D1"] ;
+ChineseRemainder_rng_homo_crt_beta_left [label="rng_homo_crt_beta_left", URL=<ChineseRemainder.html#rng_homo_crt_beta_left>, fillcolor="#F070D1"] ;
+ChineseRemainder_issurjection_rng_homo_crt_ [label="issurjection_rng_homo_crt'", URL=<ChineseRemainder.html#issurjection_rng_homo_crt'>, fillcolor="#F070D1"] ;
+ChineseRemainder_rng_homo_crt [label="rng_homo_crt", URL=<ChineseRemainder.html#rng_homo_crt>, fillcolor="#F070D1"] ;
+  ChineseRemainder_chinese_remainder_prod -> ChineseRemainder_chinese_remainder [] ;
+  ChineseRemainder_chinese_remainder -> ChineseRemainder_issurjection_rng_homo_crt [] ;
+  ChineseRemainder_issurjection_rng_homo_crt -> ChineseRemainder_rng_homo_crt_beta_right [] ;
+  ChineseRemainder_issurjection_rng_homo_crt -> ChineseRemainder_rng_homo_crt_beta_left [] ;
+  ChineseRemainder_issurjection_rng_homo_crt -> ChineseRemainder_issurjection_rng_homo_crt_ [] ;
+  ChineseRemainder_rng_homo_crt_beta_right -> ChineseRemainder_rng_homo_crt [] ;
+  ChineseRemainder_rng_homo_crt_beta_left -> ChineseRemainder_rng_homo_crt [] ;
+  ChineseRemainder_issurjection_rng_homo_crt_ -> ChineseRemainder_rng_homo_crt [] ;
+subgraph cluster_ChineseRemainder { label="ChineseRemainder"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ChineseRemainder_rng_homo_crt; ChineseRemainder_issurjection_rng_homo_crt_; ChineseRemainder_rng_homo_crt_beta_left; ChineseRemainder_rng_homo_crt_beta_right; ChineseRemainder_issurjection_rng_homo_crt; ChineseRemainder_chinese_remainder; ChineseRemainder_chinese_remainder_prod; };
+} /* END */

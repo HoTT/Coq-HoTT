@@ -1,0 +1,53 @@
+digraph HoTT_Spectra_Spectrum {
+  graph [ratio=0.5]
+  node [style=filled]
+Spectrum_strunc [label="strunc", URL=<Spectrum.html#strunc>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_to_is_spectrum [label="to_is_spectrum", URL=<Spectrum.html#to_is_spectrum>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_to_prespectrum [label="to_prespectrum", URL=<Spectrum.html#to_prespectrum>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Spectrum_sind [label="Spectrum_sind", URL=<Spectrum.html#Spectrum_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Spectrum_rec [label="Spectrum_rec", URL=<Spectrum.html#Spectrum_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Spectrum_ind [label="Spectrum_ind", URL=<Spectrum.html#Spectrum_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Spectrum_Spectrum_rect [label="Spectrum_rect", URL=<Spectrum.html#Spectrum_rect>, fillcolor="#F070D1"] ;
+Spectrum_Build_Spectrum [label="Build_Spectrum", URL=<Spectrum.html#Build_Spectrum>, fillcolor="#7FAAFF"] ;
+Spectrum_Spectrum [label="Spectrum", URL=<Spectrum.html#Spectrum>, fillcolor="#E2CDFA"] ;
+Spectrum_equiv_glue [label="equiv_glue", URL=<Spectrum.html#equiv_glue>, fillcolor="#F070D1"] ;
+Spectrum_is_equiv_glue [label="is_equiv_glue", URL=<Spectrum.html#is_equiv_glue>, fillcolor="#F070D1"] ;
+Spectrum_IsSpectrum [label="IsSpectrum", URL=<Spectrum.html#IsSpectrum>, fillcolor="#F070D1"] ;
+Spectrum_glue [label="glue", URL=<Spectrum.html#glue>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_deloop [label="deloop", URL=<Spectrum.html#deloop>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Prespectrum_sind [label="Prespectrum_sind", URL=<Spectrum.html#Prespectrum_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Prespectrum_rec [label="Prespectrum_rec", URL=<Spectrum.html#Prespectrum_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Spectrum_Prespectrum_ind [label="Prespectrum_ind", URL=<Spectrum.html#Prespectrum_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Spectrum_Prespectrum_rect [label="Prespectrum_rect", URL=<Spectrum.html#Prespectrum_rect>, fillcolor="#F070D1"] ;
+Spectrum_Build_Prespectrum [label="Build_Prespectrum", URL=<Spectrum.html#Build_Prespectrum>, fillcolor="#7FAAFF"] ;
+Spectrum_Prespectrum [label="Prespectrum", URL=<Spectrum.html#Prespectrum>, fillcolor="#E2CDFA"] ;
+  Spectrum_strunc -> Spectrum_Build_Spectrum [] ;
+  Spectrum_strunc -> Spectrum_Spectrum [] ;
+  Spectrum_strunc -> Spectrum_equiv_glue [] ;
+  Spectrum_strunc -> Spectrum_Build_Prespectrum [] ;
+  Spectrum_to_is_spectrum -> Spectrum_Spectrum [] ;
+  Spectrum_to_prespectrum -> Spectrum_Spectrum [] ;
+  Spectrum_Spectrum_sind -> Spectrum_Build_Spectrum [] ;
+  Spectrum_Spectrum_sind -> Spectrum_Spectrum [] ;
+  Spectrum_Spectrum_rec -> Spectrum_Spectrum_rect [] ;
+  Spectrum_Spectrum_ind -> Spectrum_Build_Spectrum [] ;
+  Spectrum_Spectrum_ind -> Spectrum_Spectrum [] ;
+  Spectrum_Spectrum_rect -> Spectrum_Build_Spectrum [] ;
+  Spectrum_Spectrum_rect -> Spectrum_Spectrum [] ;
+  Spectrum_Build_Spectrum -> Spectrum_IsSpectrum [] ;
+  Spectrum_Spectrum -> Spectrum_IsSpectrum [] ;
+  Spectrum_equiv_glue -> Spectrum_is_equiv_glue [] ;
+  Spectrum_is_equiv_glue -> Spectrum_IsSpectrum [] ;
+  Spectrum_IsSpectrum -> Spectrum_Prespectrum [] ;
+  Spectrum_glue -> Spectrum_Prespectrum [] ;
+  Spectrum_deloop -> Spectrum_Prespectrum [] ;
+  Spectrum_Prespectrum_sind -> Spectrum_Build_Prespectrum [] ;
+  Spectrum_Prespectrum_sind -> Spectrum_Prespectrum [] ;
+  Spectrum_Prespectrum_rec -> Spectrum_Prespectrum_rect [] ;
+  Spectrum_Prespectrum_ind -> Spectrum_Build_Prespectrum [] ;
+  Spectrum_Prespectrum_ind -> Spectrum_Prespectrum [] ;
+  Spectrum_Prespectrum_rect -> Spectrum_Build_Prespectrum [] ;
+  Spectrum_Prespectrum_rect -> Spectrum_Prespectrum [] ;
+subgraph cluster_Spectrum { label="Spectrum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Spectrum_Prespectrum; Spectrum_Build_Prespectrum; Spectrum_Prespectrum_rect; Spectrum_Prespectrum_ind; Spectrum_Prespectrum_rec; Spectrum_Prespectrum_sind; Spectrum_deloop; Spectrum_glue; Spectrum_IsSpectrum; Spectrum_is_equiv_glue; Spectrum_equiv_glue; Spectrum_Spectrum; Spectrum_Build_Spectrum; Spectrum_Spectrum_rect; Spectrum_Spectrum_ind; Spectrum_Spectrum_rec; Spectrum_Spectrum_sind; Spectrum_to_prespectrum; Spectrum_to_is_spectrum; Spectrum_strunc; };
+} /* END */

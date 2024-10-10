@@ -1,0 +1,742 @@
+<html>
+<head>
+<title>CoeqUnivProp.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for CoeqUnivProp.v</h1>
+
+<div class="code" title="File: CoeqUnivProp.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+Require Import Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import Types.Paths.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 4
+Time: 0.01s">
+<div class="time" style="width: 50%"></div>
+<pre>
+Require Import Colimits.Coeq.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 7
+Time: 0.006s">
+<div class="time" style="width: 30%"></div>
+<pre>
+Require Import WildCat.Displayed.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 9
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import WildCat.EquivGpd.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Forall.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+Require Import WildCat.Paths.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.ZeroGroupoid.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Using wild 0-groupoids, the universal property can be proven without funext. A simple equivalence of 0-groupoids between [Coeq f g -&gt; P] and [{ h : A -&gt; P &amp; h o f == h o g }] would not carry all the higher-dimensional information, but if we generalize it to dependent functions, then it does suffice. *)</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UnivProp.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {B A : Type} (f g : B -&gt; A) (P : Coeq f g -&gt; Type).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This allows Coq to infer 0-groupoid structures of the form [@isgraph_forall C P (fun c =&gt; isgraph_paths (P c))] on any type of the form [forall c, P c].  [isgraph_paths] is not a global instance.  [isgraph_total] is, but we need to adjust the priority.  The other needed ingredients are all global instances. *)
+ </pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Existing Instances isgraph_total | 1.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Existing Instances isgraph_paths | 2.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The codomain of the equivalence is a sigma-groupoid of this family. *)
+ </pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Coeq_ind_data (h : forall a : A, P (coeq a))
+    := forall b : B, DPath P (cglue b) (h (f b)) (h (g b)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We consider [Coeq_ind_data] to be a displayed 0-groupoid, where objects over [h : forall a : A, P (coeq a)] are dependent paths as defined above and morphisms over [p : h == k] are witnesses that p commutes with the homotopies over [h] and [k]. *)
+ </pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance isdgraph_Coeq_ind_data : IsDGraph Coeq_ind_data.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros h k p r s.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    exact (forall b, ap (transport P (cglue b)) (p (f b)) @ s b = r b @ p (g b)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+
+  Local Instance isd01cat_Coeq_ind_data : IsD01Cat Coeq_ind_data.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    nrapply Build_IsD01Cat.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h h' b; exact (concat_1p_p1 _).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h k j p q h' k' j' p' q' b.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+      lhs nrapply ap_pp_p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply (whiskerL _ (p' b)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply (whiskerR (q' b)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrapply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 42
+Time: 0.005s">
+<div class="time" style="width: 25%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+  Local Instance isd0gpd_Coeq_ind_data : IsD0Gpd Coeq_ind_data.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros h k p r s p' b.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    lhs nrapply (whiskerR (ap_V _ _)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    nrapply moveL_pV.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    lhs nrapply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    lhs nrapply (whiskerL _ (p' b)^).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    lhs nrapply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    lhs nrapply (whiskerR (concat_Vp _)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrapply concat_1p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 54
+Time: 0.007s">
+<div class="time" style="width: 35%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here is the functor. The domain is the fully-applied type of [Coeq_ind]: sections of [P] over [Coeq f g]. The codomain consists of input data for [Coeq_ind] given a 0-groupoid structure via [is0gpd_total]. *)
+ </pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Coeq_ind_inv : (forall z : Coeq f g, P z) -&gt; sig Coeq_ind_data.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros h.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (h o coeq).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (apD h (cglue b)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Use [Set Printing Implicit] to see the 0-groupoid structures described above. *)
+ </pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance is0functor_Coeq_ind_inv : Is0Functor Coeq_ind_inv.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros h k p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (p o coeq).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    nrapply moveL_pM.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((apD_homotopic p (cglue b))^).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 75
+Time: 0.003s">
+<div class="time" style="width: 15%"></div>
+<pre>
+
+  Local Instance issurjinj_Coeq_ind_inv : IsSurjInj Coeq_ind_inv.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 78
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+    nrapply Build_IsSurjInj.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [h r].</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists (Coeq_ind P h r).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists (fun a =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (concat_1p _ @ _ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrapply Coeq_ind_beta_cglue.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h k [p p'].</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snrapply Coeq_ind.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b; specialize (p' b).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply transport_paths_FlFr_D.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply (whiskerL _ p').</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+      lhs nrapply (whiskerR (concat_Vp _)).</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrapply concat_1p.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 96
+Time: 0.009s">
+<div class="time" style="width: 45%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 97
+Time: 0.003s">
+<div class="time" style="width: 15%"></div>
+<pre>
+
+  Definition equiv_0gpd_Coeq_ind
+    : Build_ZeroGpd (forall z : Coeq f g, P z) _ _ _
+      $&lt;~&gt; Build_ZeroGpd (sig Coeq_ind_data) _ _ _.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    snrapply Build_CatEquiv.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: rapply Build_Morphism_0Gpd.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    rapply isequiv_0gpd_issurjinj.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 105
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 106
+Time: 0.009s">
+<div class="time" style="width: 45%"></div>
+<pre>
+
+End UnivProp.</pre>
+</div>
+<div class="code" title="File: CoeqUnivProp.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

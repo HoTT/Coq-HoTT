@@ -1,0 +1,12 @@
+digraph HoTT_PathAny {
+  graph [ratio=0.5]
+  node [style=filled]
+PathAny_contr_sigma_sigma [label="contr_sigma_sigma", URL=<PathAny.html#contr_sigma_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+PathAny_equiv_path_issig_contr [label="equiv_path_issig_contr", URL=<PathAny.html#equiv_path_issig_contr>, peripheries=3, fillcolor="#F070D1"] ;
+PathAny_equiv_path_along_equiv [label="equiv_path_along_equiv", URL=<PathAny.html#equiv_path_along_equiv>, fillcolor="#F070D1"] ;
+PathAny_equiv_path_from_contr [label="equiv_path_from_contr", URL=<PathAny.html#equiv_path_from_contr>, fillcolor="#F070D1"] ;
+  PathAny_equiv_path_issig_contr -> PathAny_equiv_path_along_equiv [] ;
+  PathAny_equiv_path_issig_contr -> PathAny_equiv_path_from_contr [] ;
+subgraph cluster_PathAny { label="PathAny"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PathAny_equiv_path_from_contr; PathAny_equiv_path_along_equiv; PathAny_equiv_path_issig_contr; PathAny_contr_sigma_sigma; };
+} /* END */
