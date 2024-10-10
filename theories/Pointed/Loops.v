@@ -163,7 +163,7 @@ Proof.
 Defined.
 
 Definition isconnected_iterated_fmap_loops `{Univalence}
-  (k : nat) (A B : pType) (f : A ->* B) (n : trunc_index)
+  (n : trunc_index) (k : nat) (A B : pType) (f : A ->* B)
   (C : IsConnMap (trunc_index_inc' n k) f)
   : IsConnMap n (fmap (iterated_loops k) f).
 Proof.
