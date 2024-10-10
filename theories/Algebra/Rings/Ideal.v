@@ -904,12 +904,37 @@ Section IdealLemmas.
     + by apply ideal_in_plus_negate.
   Defined.
 
-  (** TODO: *)
   (** The product of ideals is an associative operation. *)
-  (* Lemma ideal_product_assoc (I J K : Ideal R) : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
+  Lemma ideal_product_assoc (I J K : Ideal R) : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
   Proof.
-    intros r; split; exact Trunc_functor.
-  Abort. *)
+    snapply ideal_subset_antisymm.
+    - intros x.
+      apply Trunc_rec. 
+      intros p; induction p as [g [y z p q] | | g h p1 IHp1 p2 IHp2].
+      + strip_truncations.
+        induction q as [t [z w r s] | | t k p1 IHp1 p2 IHp2].
+        * rewrite rng_mult_assoc.
+          by apply tr, sgt_in, ipn_in; [ apply tr, sgt_in, ipn_in | ].
+        * rewrite rng_mult_zero_r.
+          apply ideal_in_zero.
+        * rewrite rng_dist_l_negate.
+          by apply ideal_in_plus_negate.
+      + apply ideal_in_zero.
+      + by apply ideal_in_plus_negate.
+    - intros x.
+      apply Trunc_rec.
+      intros p; induction p as [g [y z p q] | | g h p1 IHp1 p2 IHp2].
+      + strip_truncations.
+        induction p as [t [y w r s] | | t k p1 IHp1 p2 IHp2].
+        * rewrite <- rng_mult_assoc.
+          by apply tr, sgt_in, ipn_in; [ | apply tr, sgt_in, ipn_in ].
+        * rewrite rng_mult_zero_l.
+          apply ideal_in_zero.
+        * rewrite rng_dist_r_negate.
+          by apply ideal_in_plus_negate.
+      + apply ideal_in_zero.
+      + by apply ideal_in_plus_negate.
+  Defined.
 
   (** Products of ideals are subsets of their intersection. *)
   Lemma ideal_product_subset_intersection (I J : Ideal R) : I ⋅ J ⊆ I ∩ J.
