@@ -43,6 +43,16 @@ Definition FreeAbGroup_rec_beta_in {S : Type} {A : AbGroup} (f : S -> A)
   : FreeAbGroup_rec f o freeabgroup_in == f
   := fun _ => idpath.
 
+Definition FreeAbGroup_ind_homotopy {X : Type} {A : AbGroup}
+  {f f' : FreeAbGroup X $-> A}
+  (p : forall x, f (freeabgroup_in x) = f' (freeabgroup_in x))
+  : f $== f'.
+Proof.
+  snrapply abel_ind_homotopy.
+  snrapply FreeGroup_ind_homotopy.
+  snrapply p.
+Defined.
+
 (** The abelianization of a free group on a set is a free abelian group on that set. *)
 Global Instance isfreeabgroupon_isabelianization_isfreegroup `{Funext}
   {S : Type} {G : Group} {A : AbGroup} (f : S -> G) (g : G $-> A)
