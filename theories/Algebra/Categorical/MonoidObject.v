@@ -274,3 +274,43 @@ Section MonoidEnriched.
   Local Instance iscommutativemonoid_hom : IsCommutativeMonoid (x $-> y) := {}.
 
 End MonoidEnriched.
+
+(** ** Preservation of monoid objects by lax monoidal functors *)
+
+Definition mo_preserved {A B : Type}
+  {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B} 
+  (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F} (x : A)
+  : IsMonoidObject tensorA IA x -> IsMonoidObject tensorB IB (F x).
+Proof.
+  intros mo_x.
+  snrapply Build_IsMonoidObject.
+  - exact (fmap F mo_mult $o fmap_tensor F (x, x)).
+  - exact (fmap F mo_unit $o fmap_unit).
+  - refine (((_ $@L (fmap10_comp tensorB _ _ _)) $@R _)
+      $@ _ $@ (_ $@L (fmap01_comp tensorB _ _ _)^$)).
+    refine (_ $@ (((_ $@L _^$) $@ cat_assoc_opp _ _ _) $@R _)
+      $@ cat_assoc _ _ _).
+    2: snrapply fmap_tensor_nat_r.
+    refine (_ $@ ((fmap2 _ mo_assoc $@ fmap_comp _ _ _) $@R _)
+      $@ cat_assoc_opp _ _ _ $@ (cat_assoc _ _ _ $@R _)).
+    refine (_ $@ ((fmap_comp _ _ _ $@ (fmap_comp _ _ _ $@R _))^$ $@R _)).
+    nrefine (cat_assoc _ _ _ $@ cat_assoc _ _ _ $@ (_ $@L _)
+      $@ cat_assoc_opp _ _ _ $@ cat_assoc_opp _ _ _).
+    refine (_ $@ (_ $@L (_^$ $@ cat_assoc _ _ _))).
+    2: snrapply fmap_tensor_assoc.
+    nrefine (cat_assoc_opp _ _ _ $@ (cat_assoc_opp _ _ _ $@R _)
+      $@ (((_ $@R _) $@ cat_assoc _ _ _) $@R _) $@ cat_assoc _ _ _).
+    snrapply fmap_tensor_nat_l.
+  - refine ((_ $@L fmap10_comp _ _ _ _) $@ cat_assoc _ _ _
+      $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
+    1: snrapply fmap_tensor_nat_l.
+    refine (cat_assoc_opp _ _ _ $@ ((cat_assoc_opp _ _ _ $@
+      (((fmap_comp _ _ _)^$ $@ fmap2 _ mo_left_unit) $@R _)) $@R _) $@ _^$).
+    snrapply fmap_tensor_left_unitor.
+  - refine ((_ $@L fmap01_comp _ _ _ _) $@ cat_assoc _ _ _
+      $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
+    1: snrapply fmap_tensor_nat_r.
+    refine (cat_assoc_opp _ _ _ $@ ((cat_assoc_opp _ _ _ $@
+      (((fmap_comp _ _ _)^$ $@ fmap2 _ mo_right_unit) $@R _)) $@R _) $@ _^$).
+    snrapply fmap_tensor_right_unitor.
+Defined.
