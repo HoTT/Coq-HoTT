@@ -64,6 +64,56 @@ Proof.
   rapply path_ishprop.
 Defined.
 
+Definition Coeq_ind_eta_homotopic {B A f g} {P : @Coeq B A f g -> Type}
+  (h : forall w : Coeq f g, P w)
+  : h == Coeq_ind P (h o coeq) (fun b => apD h (cglue b)).
+Proof.
+  unfold pointwise_paths.
+  nrapply (Coeq_ind _ (fun _ => 1)).
+  intros b.
+  lhs nrapply transport_paths_FlFr_D.
+  lhs nrapply (whiskerL _ (Coeq_ind_beta_cglue _ _ _ _)).
+  lhs nrapply (whiskerR (concat_p1 _)).
+  nrapply concat_Vp.
+Defined.
+
+Definition Coeq_rec_eta_homotopic {B A f g} {P : Type} (h : @Coeq B A f g -> P)
+  : h == Coeq_rec P (h o coeq) (fun b => ap h (cglue b)).
+Proof.
+  unfold pointwise_paths.
+  nrapply (Coeq_ind _ (fun _ => 1)).
+  intros b.
+  apply transport_paths_FlFr', equiv_p1_1q.
+  symmetry; nrapply Coeq_rec_beta_cglue.
+Defined.
+
+Definition Coeq_ind_eta `{Funext}
+  {B A f g} {P : @Coeq B A f g -> Type} (h : forall w : Coeq f g, P w)
+  : h = Coeq_ind P (h o coeq) (fun b => apD h (cglue b))
+  := path_forall _ _ (Coeq_ind_eta_homotopic h).
+
+Definition Coeq_rec_eta `{Funext}
+  {B A f g} {P : Type} (h : @Coeq B A f g -> P)
+  : h = Coeq_rec P (h o coeq) (fun b => ap h (cglue b))
+  := path_forall _ _ (Coeq_rec_eta_homotopic h).
+
+Definition Coeq_ind_homotopy {B A f g} (P : @Coeq B A f g -> Type)
+  {m n : forall a, P (coeq a)} (u : m == n)
+  {r : forall b, (cglue b) # (m (f b)) = m (g b)}
+  {s : forall b, (cglue b) # (n (f b)) = n (g b)}
+  (p : forall b, ap (transport P (cglue b)) (u (f b)) @ (s b) = r b @ u (g b))
+  : Coeq_ind P m r == Coeq_ind P n s.
+Proof.
+  unfold pointwise_paths.
+  nrapply Coeq_ind; intros b.
+  lhs nrapply (transport_paths_FlFr_D (f:=Coeq_ind P m r) (g:=Coeq_ind P n s)).
+  lhs nrapply (whiskerL _ (Coeq_ind_beta_cglue P n s b)).
+  lhs nrapply (whiskerR (whiskerR (ap inverse (Coeq_ind_beta_cglue P m r b)) _)).
+  lhs nrapply concat_pp_p; nrapply moveR_Mp.
+  rhs nrapply (whiskerR (inv_V _)).
+  exact (p b).
+Defined.
+
 (** ** Universal property *)
 (** See Colimits/CoeqUnivProp.v for a similar universal property without [Funext]. *)
 
