@@ -78,8 +78,8 @@ Section QuotientRing.
       apply simple_distribute_r. }
   Defined.
 
-  Definition QuotientRing : Ring 
-    := Build_Ring (QuotientAbGroup R I) _ _ _ _ _.
+  Definition QuotientRing : Ring
+    := Build_Ring (QuotientAbGroup R I) _ _ _ _ _ _ _.
 
 End QuotientRing.
 
