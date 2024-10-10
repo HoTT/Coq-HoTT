@@ -163,11 +163,11 @@ Proof.
 Defined.
 
 Definition isconnected_iterated_fmap_loops `{Univalence}
-  (k : nat) (A B : pType) (f : A ->* B)
-  : forall n : trunc_index, IsConnMap (trunc_index_inc' n k) f
-                       -> IsConnMap n (fmap (iterated_loops k) f).
+  (n : trunc_index) (k : nat) (A B : pType) (f : A ->* B)
+  (C : IsConnMap (trunc_index_inc' n k) f)
+  : IsConnMap n (fmap (iterated_loops k) f).
 Proof.
-  induction k; intros n C.
+  induction k in n, C |- *.
   - exact C.
   - apply isconnected_fmap_loops.
     apply IHk.
@@ -351,18 +351,16 @@ Proof.
 Defined.
 
 (* Loops neutralise sigmas when truncated *)
-Lemma loops_psigma_trunc (n : nat) : forall (Aa : pType)
-  (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (trunc_index_inc minus_two n) Pp),
-  iterated_loops n (psigma Pp)
-  <~>* iterated_loops n Aa.
+Lemma loops_psigma_trunc (n : nat) (Aa : pType)
+  (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (trunc_index_inc minus_two n) Pp)
+  : iterated_loops n (psigma Pp) <~>* iterated_loops n Aa.
 Proof.
-  induction n.
-  { intros A P p.
-    snrapply Build_pEquiv'.
-    1: refine (@equiv_sigma_contr _ _ p).
+  induction n in Aa, Pp, istrunc_Pp |- *.
+  { snrapply Build_pEquiv'.
+    1: refine (@equiv_sigma_contr _ _ istrunc_Pp).
     reflexivity. }
-  intros A P p.
-  refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _ o*E unfold_iterated_loops' _ _).
+  refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _
+    o*E unfold_iterated_loops' _ _).
   refine (IHn _ _ _ o*E _).
   rapply (emap (iterated_loops _)).
   apply loops_psigma_commute.
@@ -404,10 +402,10 @@ Proof.
 Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
-Theorem equiv_istrunc_contr_iterated_loops `{Funext} (n : nat)
-  : forall A, IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
+Theorem equiv_istrunc_contr_iterated_loops `{Funext} (n : nat) (A : Type)
+  : IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
 Proof.
-  induction n; intro A.
+  induction n in A |- *.
   { cbn. exact equiv_hprop_inhabited_contr. }
   refine (_ oE equiv_istrunc_istrunc_loops n.-2 _).
   srapply equiv_functor_forall_id.
