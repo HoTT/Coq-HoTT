@@ -188,6 +188,22 @@ Proof.
   apply negate_mon_unit.
 Defined.
 
+(** The preimage of a subgroup under a group homomorphism is a subgroup. *)
+Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
+  : Subgroup G.
+Proof.
+  snrapply Build_Subgroup'.
+  - exact (S o f).
+  - hnf; exact _.
+  - nrefine (transport S (grp_homo_unit f)^ _).
+    apply subgroup_in_unit.
+  - hnf; intros x y Sfx Sfy.
+    nrefine (transport S (grp_homo_op f _ _)^ _).
+    nrapply subgroup_in_op; only 1: assumption.
+    nrefine (transport S (grp_homo_inv f _)^ _).
+    by apply subgroup_in_inv.
+Defined.
+
 (** Every group is a (maximal) subgroup of itself *)
 Definition maximal_subgroup {G} : Subgroup G.
 Proof.
