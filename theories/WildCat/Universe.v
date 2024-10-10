@@ -83,7 +83,7 @@ Defined.
 #[export]
 Hint Immediate catie_isequiv : typeclass_instances.
 
-Global Instance isinitial_zero : IsInitial Empty.
+Global Instance isinitial_zero : IsInitial (A:=Type) Empty.
 Proof.
   intro A.
   exists (Empty_rec _).
@@ -91,7 +91,7 @@ Proof.
   rapply Empty_ind.
 Defined.
 
-Global Instance isterminal_unit : IsTerminal Unit.
+Global Instance isterminal_unit : IsTerminal (A:=Type) Unit.
 Proof.
   intros A.
   exists (fun _ => tt).
