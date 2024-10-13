@@ -47,13 +47,6 @@ Ltac show_hyps :=
 Ltac on_last_hyp tac :=
   match goal with [ H : _ |- _ ] => first [ tac H | fail 1 ] end.
 
-(** Destructs one pair, without care regarding naming. *)
-
-Ltac destruct_one_pair :=
- match goal with
-   | [H : prod _ _ |- _] => destruct H
- end.
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
