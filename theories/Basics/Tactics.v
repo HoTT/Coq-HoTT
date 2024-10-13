@@ -171,16 +171,6 @@ Ltac autoinjections := repeat (clear_dups ; ltac:(inject)).
 
 Ltac destruct_nondep H := let H0 := fresh "H" in assert(H0 := H); destruct H0.
 
-(** If bang appears in the goal, it means that we have a proof of False and the goal is solved. *)
-
-Ltac bang :=
-  match goal with
-    | |- ?x =>
-      match x with
-        | context [Empty_rect _ ?p] => elim p
-      end
-  end.
-
 (** A tactic to show contradiction by first asserting an automatically provable hypothesis. *)
 Tactic Notation "contradiction" "by" constr(t) :=
   let H := fresh in assert t as H by auto with * ; contradiction.
