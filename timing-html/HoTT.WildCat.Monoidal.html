@@ -1,0 +1,5341 @@
+<html>
+<head>
+<title>Monoidal.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Monoidal.v</h1>
+
+<div class="code" title="File: Monoidal.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Types.Forall.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1
+Time: 0.012s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+Require Import WildCat.NatTrans WildCat.Square WildCat.Opposite.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Monoidal Categories *)
+
+(** In this file we define monoidal categories and symmetric monoidal categories. *)
+
+(** ** Typeclasses for common diagrams *)
+
+(** TODO: These should eventually be moved to a separate file in WildCat and used in other places. They can be thought of as a wildcat generalization of the classes in canonical_names.v *)
+
+(** *** Associators *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 14
+Time: 0.009s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>Class Associator {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  := associator_uncurried
+    : NatEquiv (fun '(a, b, c) =&gt; F a (F b c)) (fun '(a, b, c) =&gt; F (F a b) c).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments associator_uncurried {A _ _ _ _ _ F _ _ _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 19
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+
+Definition associator {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F}
+  : forall a b c, F a (F b c) $&lt;~&gt; F (F a b) c
+  := fun a b c =&gt; associator_uncurried (a, b, c).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion associator : Associator &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 25
+Time: 0.011s">
+<div class="time" style="width: 14.102564102564%"></div>
+<pre>
+
+Definition Build_Associator {A : Type} `{HasEquivs A} (F : A -&gt; A -&gt; A)
+  `{!Is0Bifunctor F, !Is1Bifunctor F}
+  (associator : forall a b c, F a (F b c) $&lt;~&gt; F (F a b) c)
+  (isnat_assoc : Is1Natural
+    (fun '(a, b, c) =&gt; F a (F b c))
+    (fun '(a, b, c) =&gt; F (F a b) c)
+    (fun '(a, b, c) =&gt; associator a b c))
+  : Associator F.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 35
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  snrapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[a b] c].</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (associator a b c).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact isnat_assoc.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+(** *** Unitors *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Class LeftUnitor {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F} (unit : A)
+  (** A natural isomorphism [left_unitor] witnessing the left unit law of [F]. *)
+  := left_unitor : NatEquiv (F unit) idmap.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion left_unitor : LeftUnitor &gt;-&gt; NatEquiv.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments left_unitor {A _ _ _ _ _ F _ _ unit _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 48
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Class RightUnitor {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F} (unit : A)
+  (** A natural isomorphism [right_unitor] witnessing the right unit law of [F]. *)
+  := right_unitor : NatEquiv (flip F unit) idmap.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion right_unitor : RightUnitor &gt;-&gt; NatEquiv.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments right_unitor {A _ _ _ _ _ F _ _ unit _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Triangle and Pentagon identities *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 58
+Time: 0.013s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Class TriangleIdentity {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F}
+  (unit : A) `{!LeftUnitor F unit, !RightUnitor F unit}
+  (** The triangle identity for an associator and unitors. *)
+  := triangle_identity a b
+    : fmap01 F a (left_unitor b)
+    $== fmap10 F (right_unitor a) b $o (associator (F := F) a unit b).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion triangle_identity : TriangleIdentity &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments triangle_identity {A _ _ _ _ _} F {_ _ _} unit {_}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 66
+Time: 0.014s">
+<div class="time" style="width: 17.948717948718%"></div>
+<pre>
+
+Class PentagonIdentity {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F}
+  (** The pentagon identity for an associator. *)
+  := pentagon_identity a b c d
+    : associator (F a b) c d $o associator a b (F c d)
+      $== fmap10 F (associator a b c) d $o associator a (F b c) d
+        $o fmap01 F a (associator b c d).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion pentagon_identity : PentagonIdentity &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments pentagon_identity {A _ _ _ _ _} F {_ _ _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Braiding *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 79
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>Class Braiding {A : Type} `{Is1Cat A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  := braid_uncurried : NatTrans (uncurry F) (uncurry (flip F)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments braid_uncurried {A _ _ _ _ F _ _ _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 83
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    
+Definition braid {A : Type} `{Is1Cat A} {F : A -&gt; A -&gt; A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Braiding F}
+  : forall a b, F a b $-&gt; F b a
+  := fun a b =&gt; braid_uncurried (a, b).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion braid : Braiding &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 89
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+
+Class SymmetricBraiding {A : Type} `{Is1Cat A}
+  (F : A -&gt; A -&gt; A) `{!Is0Bifunctor F, !Is1Bifunctor F} := {
+  braiding_symmetricbraiding :: Braiding F;
+  braid_braid : forall a b, braid a b $o braid b a $== Id (F b a);
+}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** We could have used [::&gt;] in [braiding_symmetricbraiding] instead however due to bug https://github.com/coq/coq/issues/18971 the coercion isn't registered, so we have to register it manually instead. *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion braiding_symmetricbraiding : SymmetricBraiding &gt;-&gt; Braiding.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments braid_braid {A _ _ _ _ F _ _ _} a b.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Hexagon identity *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 100
+Time: 0.013s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Class HexagonIdentity {A : Type} `{HasEquivs A}
+  (F : A -&gt; A -&gt; A)
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F, !Braiding F}
+  (** The hexagon identity for an associator and a braiding. *)
+  := hexagon_identity a b c
+    : fmap10 F (braid b a) c $o associator b a c $o fmap01 F b (braid c a)
+      $== associator a b c $o braid (F b c) a $o associator b c a.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion hexagon_identity : HexagonIdentity &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments hexagon_identity {A _ _ _ _ _} F {_ _}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Monoidal Categories *)
+
+(** A monoidal 1-category is a 1-category with equivalences together with the following: *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 112
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>Class IsMonoidal (A : Type) `{HasEquivs A}
+  (** It has a binary operation [cat_tensor] called the tensor product. *)
+  (cat_tensor : A -&gt; A -&gt; A)
+  (** It has a unit object [cat_tensor_unit] called the tensor unit. *)
+  (cat_tensor_unit : A)
+  (** These all satisfy the following properties: *)
+  := {
+  (** A [cat_tensor] is a 1-bifunctor. *)
+  is0bifunctor_cat_tensor : Is0Bifunctor cat_tensor;
+  is1bifunctor_cat_tensor : Is1Bifunctor cat_tensor;
+  (** A natural isomorphism [associator] witnessing the associativity of the tensor product. *)
+  cat_tensor_associator :: Associator cat_tensor;
+  (** A natural isomorphism [left_unitor] witnessing the left unit law. *)
+  cat_tensor_left_unitor :: LeftUnitor cat_tensor cat_tensor_unit;
+  (** A natural isomorphism [right_unitor] witnessing the right unit law. *)
+  cat_tensor_right_unitor :: RightUnitor cat_tensor cat_tensor_unit;
+  (** The triangle identity. *)
+  cat_tensor_triangle_identity :: TriangleIdentity cat_tensor cat_tensor_unit;
+  (** The pentagon identity. *)
+  cat_tensor_pentagon_identity :: PentagonIdentity cat_tensor;
+}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Existing Instance is0bifunctor_cat_tensor | 10.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Instance is1bifunctor_cat_tensor | 10.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: Braided monoidal categories *)
+
+(** ** Symmetric Monoidal Categories *)
+
+(** A symmetric monoidal 1-category is a 1-category with equivalences together with the following: *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 141
+Time: 0.019s">
+<div class="time" style="width: 24.358974358974%"></div>
+<pre>Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
+  (** A binary operation [cat_tensor] called the tensor product. *)
+  (cat_tensor : A -&gt; A -&gt; A)
+  (** A unit object [cat_tensor_unit] called the tensor unit. *)
+  (cat_tensor_unit : A)
+  := {
+  (** A monoidal structure with [cat_tensor] and [cat_tensor_unit]. *)
+  issymmetricmonoidal_ismonoidal :: IsMonoidal A cat_tensor cat_tensor_unit;
+  (** A natural transformation [braid] witnessing the symmetry of the tensor product such that [braid] is its own inverse. *)
+  cat_symm_tensor_braiding :: SymmetricBraiding cat_tensor;
+  (** The hexagon identity. *)
+  cat_symm_tensor_hexagon :: HexagonIdentity cat_tensor;
+}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Theory about [Associator] *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Associator.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Context {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A}
+    `{!Is0Bifunctor F, !Is1Bifunctor F, assoc : !Associator F}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 158
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+
+  Local Definition associator_nat {x x' y y' z z'}
+    (f : x $-&gt; x') (g : y $-&gt; y') (h : z $-&gt; z')
+    : associator x' y' z' $o fmap11 F f (fmap11 F g h)
+      $== fmap11 F (fmap11 F f g) h $o associator x y z.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    destruct assoc as [asso nat].</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (nat (x, y, z) (x', y', z') (f, g, h)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 167
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition associator_nat_l {x x' : A} (f : x $-&gt; x') (y z : A)
+    : associator x' y z $o fmap10 F f (F y z)
+      $== fmap10 F (fmap10 F f y) z $o associator x y z.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: rapply (associator_nat f (Id _) (Id _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 175
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> exact (fmap12 _ _ (fmap11_id _ _ _) $@ fmap10_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 176
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> exact (fmap21 _ (fmap10_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 177
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition associator_nat_m (x : A) {y y' : A} (g : y $-&gt; y') (z : A)
+    : associator x y' z $o fmap01 F x (fmap10 F g z)
+      $== fmap10 F (fmap01 F x g) z $o associator x y z.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: nrapply (associator_nat (Id _) g (Id _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 185
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> exact (fmap12 _ _ (fmap10_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 186
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> exact (fmap21 _ (fmap01_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 187
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition associator_nat_r (x y : A) {z z' : A} (h : z $-&gt; z')
+    : associator x y z' $o fmap01 F x (fmap01 F y h)
+      $== fmap01 F (F x y) h $o associator x y z.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: nrapply (associator_nat (Id _) (Id _) h).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 195
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> exact (fmap12 _ _ (fmap01_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 196
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre> exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 197
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Global Instance associator_op : Associator (A:=A^op) F
+    := natequiv_inverse (natequiv_op assoc).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 200
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+End Associator.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 202
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+Definition associator_op' {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, assoc : !Associator (A:=A^op) F}
+  : Associator F
+  := associator_op (A:=A^op) (assoc := assoc).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Theory about [LeftUnitor] and [RightUnitor] *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section LeftUnitor.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Context {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A} (unit : A)
+    `{!Is0Bifunctor F, !Is1Bifunctor F, !LeftUnitor F unit, !RightUnitor F unit}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 212
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Global Instance left_unitor_op : LeftUnitor (A:=A^op) F unit
+    := natequiv_inverse (natequiv_op left_unitor).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 215
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  
+  Global Instance right_unitor_op : RightUnitor (A:=A^op) F unit
+    := natequiv_inverse (natequiv_op right_unitor).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End LeftUnitor.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Theory about [Braiding] *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 223
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>Global Instance braiding_op {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding F}
+  : Braiding (A:=A^op) F
+  := nattrans_op (nattrans_flip braid).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 226
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+Definition braiding_op' {A : Type} `{HasEquivs A} {F : A -&gt; A -&gt; A}
+  `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding (A:=A^op) F}
+  : Braiding F
+  := braiding_op (A:=A^op) (braid := braid).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Theory about [SymmetricBraid] *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SymmetricBraid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type} {F : A -&gt; A -&gt; A} `{SymmetricBraiding A F, !HasEquivs A}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [braid] is its own inverse and therefore an equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Local Instance catie_braid a b : CatIsEquiv (braid a b)
+    := catie_adjointify (braid a b) (braid b a) (braid_braid a b) (braid_braid b a).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [braide] is the bundled equivalence whose underlying map is [braid]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Definition braide a b
+    : F a b $&lt;~&gt; F b a
+    := Build_CatEquiv (braid a b).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 244
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveL_braidL a b c f (g : c $-&gt; _)
+    : braid a b $o f $== g -&gt; f $== braid b a $o g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cate_monic_equiv (braide a b)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cate_buildequiv_fun _ $@R _) $@ p $@ _ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 251
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cat_idl _)^$ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((cate_buildequiv_fun _ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 255
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveL_braidR a b c f (g : _ $-&gt; c)
+    : f $o braid a b $== g -&gt; f $== g $o braid b a.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cate_epic_equiv (braide a b)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 261
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (_ $@L ((_ $@L cate_buildequiv_fun _) $@ _)^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _) $@ _ $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 268
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition moveR_braidL a b c f (g : c $-&gt; _)
+    : f $== braid b a $o g -&gt; braid a b $o f $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 272
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_braidL; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 274
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveR_braidR a b c f (g : _ $-&gt; c)
+    : f $== g $o braid b a -&gt; f $o braid a b $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_braidR; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 280
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_braidL a b c d f (g : d $-&gt; _)
+    : fmap01 F a (braid b c) $o f $== g
+      -&gt; f $== fmap01 F a (braid c b) $o g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (cate_monic_equiv (emap01 F a (braide b c))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> refine (_ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 291
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+      refine ((fmap_id _ _)^$ $@ fmap2 _ _ $@ fmap_comp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 292
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      refine ((_ $@R _) $@ _)^$.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 295
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine ((_ $@R _) $@ p $@ (cat_idl _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 296
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine (_ $@ fmap2 _ _);
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 298
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 299
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_braidR a b c d f (g : _ $-&gt; d)
+    :  f $o fmap01 F a (braid b c) $== g
+      -&gt; f $== g $o fmap01 F a (braid c b).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (cate_epic_equiv (emap01 F a (braide b c))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> refine (_^$ $@ (_ $@L _^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 310
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+      refine ((fmap_comp _ _ _)^$ $@ fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 314
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _) $@ p $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 315
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ fmap2 _ _);
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 317
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 318
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_braidL a b c d f (g : d $-&gt; _)
+    : f $== fmap01 F a (braid c b) $o g
+      -&gt; fmap01 F a (braid b c) $o f $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_braidL; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 325
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_braidR a b c d f (g : _ $-&gt; d)
+    : f $== g $o fmap01 F a (braid c b)
+      -&gt; f $o fmap01 F a (braid b c) $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 330
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_braidR; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 332
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_fmap01_braidL a b c d e f (g : e $-&gt; _)
+    : fmap01 F a (fmap01 F b (braid c d)) $o f $== g
+      -&gt; f $== fmap01 F a (fmap01 F b (braid d c)) $o g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (cate_monic_equiv (emap01 F a (emap01 F b (braide c d)))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> refine (_ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 343
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+      refine ((fmap_id _ _)^$ $@ fmap2 _ _ $@ fmap_comp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 344
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      refine (_ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 346
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+      refine ((fmap_id _ _)^$ $@ fmap2 _ _ $@ fmap_comp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      refine ((_ $@R _) $@ _)^$.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 350
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@R _) $@ p $@ (cat_idl _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 351
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 352
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 354
+Time: 0.014s">
+<div class="time" style="width: 17.948717948718%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 355
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_fmap01_braidR a b c d e f (g : _ $-&gt; e)
+    : f $o fmap01 F a (fmap01 F b (braid c d)) $== g
+      -&gt; f $== g $o fmap01 F a (fmap01 F b (braid d c)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 361
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    apply (cate_epic_equiv (emap01 F a (emap01 F b (braide c d)))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 362
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 365
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (_^$ $@ (_ $@L _^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 366
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+      refine ((fmap_comp _ _ _)^$ $@ fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 369
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+      refine ((fmap_comp _ _ _)^$ $@ fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 373
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine ((_ $@L _) $@ p $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 374
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 375
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 377
+Time: 0.01s">
+<div class="time" style="width: 12.820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 378
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_fmap01_braidL a b c d e f (g : e $-&gt; _)
+    : f $== fmap01 F a (fmap01 F b (braid d c)) $o g
+      -&gt; fmap01 F a (fmap01 F b (braid c d)) $o f $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_fmap01_braidL; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 384
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 385
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_fmap01_braidR a b c d e f (g : _ $-&gt; e)
+    : f $== g $o fmap01 F a (fmap01 F b (braid d c))
+      -&gt; f $o fmap01 F a (fmap01 F b (braid c d)) $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 390
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_fmap01_braidR; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 392
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition braid_nat {a b c d} (f : a $-&gt; c) (g : b $-&gt; d)
+    : braid c d $o fmap11 F f g $== fmap11 F g f $o braid a b.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 396
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+    exact (isnat braid_uncurried (a := (a, b)) (a' := (c, d)) (f, g)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 398
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Local Definition braid_nat_l {a b c} (f : a $-&gt; b)
+    : braid b c $o fmap10 F f c $== fmap01 F c f $o braid a c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 402
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    refine ((_ $@L (fmap10_is_fmap11 _ _ _)^$) $@ _ $@ (fmap01_is_fmap11 _ _ _ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 403
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+    exact (isnat braid_uncurried (a := (a, c)) (a' := (b, c)) (f, Id _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is just the inverse of above. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 408
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>Local Definition braid_nat_r {a b c} (g : b $-&gt; c)
+    : braid a c $o fmap01 F a g $== fmap10 F g a $o braid a b.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 410
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    refine ((_ $@L (fmap01_is_fmap11 _ _ _)^$) $@ _ $@ (fmap10_is_fmap11 _ _ _ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 411
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+    exact (isnat braid_uncurried (a := (a, b)) (a' := (a, c)) (Id _ , g)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 413
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  
+  Global Instance symmetricbraiding_op : SymmetricBraiding (A:=A^op) F.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    snrapply Build_SymmetricBraiding.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 419
+Time: 0.011s">
+<div class="time" style="width: 14.102564102564%"></div>
+<pre>
+      rapply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 421
+Time: 0.012s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+
+End SymmetricBraid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 423
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+
+Definition symmetricbraiding_op' {A : Type} {F : A -&gt; A -&gt; A}
+  `{HasEquivs A, !Is0Bifunctor F, !Is1Bifunctor F,
+    H' : !SymmetricBraiding (A:=A^op) F}
+  : SymmetricBraiding F
+  := symmetricbraiding_op (A:=A^op) (F := F).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Opposite Monoidal Categories *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 432
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Global Instance ismonoidal_op {A : Type} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{IsMonoidal A tensor unit}
+  : IsMonoidal A^op tensor unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 435
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  snrapply Build_IsMonoidal.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 436
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  1-5: exact _.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> intros a b; unfold op in a, b; simpl.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_^$ $@ _ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 439
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    1,3: exact (emap_inv _ _ $@ cate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 440
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    nrefine (cate_inv2 _ $@ cate_inv_compose' _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 441
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ _ $@ ((cate_buildequiv_fun _)^$ $@R _)
+      $@ (cate_buildequiv_fun _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 443
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    rapply cat_tensor_triangle_identity.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 445
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> intros a b c d; unfold op in a, b, c, d; simpl.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ ((_ $@L _) $@@ _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 446
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+    2,3: exact (emap_inv _ _ $@ cate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 447
+Time: 0.009s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+    refine ((cate_inv_compose' _ _)^$ $@ cate_inv2 _ $@ cate_inv_compose' _ _
+      $@ (_ $@L cate_inv_compose' _ _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 449
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> 
+    refine (cate_buildequiv_fun _ $@ _ $@ ((cate_buildequiv_fun _)^$ $@R _)
+      $@ (cate_buildequiv_fun _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 451
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (cate_buildequiv_fun _ $@@ (cate_buildequiv_fun _ $@R _))^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 452
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    rapply cat_tensor_pentagon_identity.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 453
+Time: 0.037s">
+<div class="time" style="width: 47.435897435897%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 454
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition ismonoidal_op' {A : Type} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{HasEquivs A} `{!IsMonoidal A^op tensor unit}
+  : IsMonoidal A tensor unit
+  := ismonoidal_op (A:=A^op) tensor unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 459
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+Global Instance issymmetricmonoidal_op {A : Type} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{IsSymmetricMonoidal A tensor unit}
+  : IsSymmetricMonoidal A^op tensor unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 464
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  snrapply Build_IsSymmetricMonoidal.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 466
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> rapply ismonoidal_op.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 467
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre> rapply symmetricbraiding_op.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 468
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre> intros a b c; unfold op in a, b, c; simpl.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 468
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    snrefine (_ $@ (_ $@L (_ $@R _))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 469
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    2: exact ((braide _ _)^-1$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrapply cate_moveR_V1.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine ((_ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: nrapply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 474
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      rapply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 475
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    snrefine ((_ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 477
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (emap _ _)^-1$.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 477
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      rapply braide.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 479
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 480
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      nrapply cate_inv_adjointify.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 481
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    snrefine ((_ $@L (_ $@L _)) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 483
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (emap (flip tensor c) _)^-1$.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 483
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      rapply braide.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 485
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 486
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      nrapply cate_inv_adjointify.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 487
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine ((_ $@L _)^$ $@ _^$ $@ cate_inv2 _ $@ _ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 488
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+    1,2,4,5: rapply cate_inv_compose'.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 489
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (_ $@@ _) $@ _ $@ (_ $@R _)^$ $@ _^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 490
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+    1-3,5-6: rapply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 491
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+    refine ((fmap02 _ _ _ $@@ ((_ $@ fmap20 _ _ _) $@R _)) $@ cat_symm_tensor_hexagon a b c $@ ((_ $@L _^$) $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 492
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    1-4: nrapply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 493
+Time: 0.046s">
+<div class="time" style="width: 58.974358974359%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 494
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition issymmetricmonoidal_op' {A : Type} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{HasEquivs A} `{H' : !IsSymmetricMonoidal A^op tensor unit}
+  : IsSymmetricMonoidal A tensor unit
+  := issymmetricmonoidal_op (A:=A^op) tensor unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Further Coherence Conditions *)
+(** In MacLane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
+
+(** The left unitor of a tensor can be decomposed as an associator and a functorial action of the tensor on a left unitor. *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 504
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>Definition left_unitor_associator {A} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{IsMonoidal A tensor unit} (x y : A)
+  : (left_unitor (tensor x y) : _ $-&gt; _)
+    $== fmap10 tensor (left_unitor x) y $o associator unit x y.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 508
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv left_unitor _))^$
+    $@ ((_ $@L _) $@R _) $@ cate_moveR_eV _ _ _ (isnat_natequiv left_unitor _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 510
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  refine (_ $@ (fmap01_comp _ _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 511
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (_ $@ (cate_moveR_Ve _ _ _ (associator_nat_m _  _ _)^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (fmap (tensor ?x) ?f) with (fmap01 tensor x f).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 514
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  change (cate_fun' _ _ (cat_tensor_left_unitor ?x))
+    with (cate_fun (cat_tensor_left_unitor x)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cate_moveL_Ve.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 517
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  refine ((_ $@L triangle_identity _ _ _ _ _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 518
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 519
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  refine (_ $@ ((fmap20 _ (triangle_identity _ _ _ _ _ _) _
+    $@ fmap10_comp _ _ _ _)^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 522
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine (_ $@ (_ $@L (pentagon_identity _ _ _ _ _ _ $@ cat_assoc _ _ _))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((_ $@R _) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (associator_nat_l _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 525
+Time: 0.017s">
+<div class="time" style="width: 21.794871794872%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right unitor of a tensor can be decomposed as an inverted associator and a functorial action of the tensor on a right unitor. *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 528
+Time: 0.01s">
+<div class="time" style="width: 12.820512820513%"></div>
+<pre>Definition right_unitor_associator {A} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{IsMonoidal A tensor unit} (x y : A)
+  : (fmap01 tensor x (right_unitor y) : _ $-&gt; _)
+    $== right_unitor (tensor x y) $o associator x y unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 532
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv right_unitor _))^$
+    $@ ((_ $@L _) $@R _) $@ cate_moveR_eV _ _ _ (isnat_natequiv right_unitor _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 534
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  refine (_ $@ (fmap10_comp tensor _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 535
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine ((cate_moveR_eV _ _ _ (associator_nat_m _ _ _))^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 536
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  refine (_ $@ (cate_moveR_eV _ _ _ (triangle_identity _ _ _ _ _ _) $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cate_moveR_eV.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 538
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  refine ((_ $@L
+    (fmap02 _ _ (cate_moveR_eV _ _ _ (triangle_identity _ _ _ _ _ _))^$
+    $@ fmap01_comp _ _ _ _)) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cat_assoc_opp _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 542
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  nrefine ((associator_nat_r _ _ _ $@R _) $@ cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 543
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  do 2 nrefine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 545
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  refine ((_ $@L (emap_inv' _ _)^$) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cate_moveR_eV.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 547
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  refine (_ $@ (_ $@L cate_buildequiv_fun _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cate_moveL_Ve.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 550
+Time: 0.018s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+  rapply pentagon_identity.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 551
+Time: 0.029s">
+<div class="time" style="width: 37.179487179487%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left unitor at the unit is the right unitor at the unit. *)</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 554
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>Definition left_unitor_unit_right_unitor_unit {A} (tensor : A -&gt; A -&gt; A) (unit : A)
+  `{IsMonoidal A tensor unit}
+  : (left_unitor unit : tensor unit unit $-&gt; _) $== right_unitor unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 557
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  refine ((cate_moveR_eV _ _ _ (isnat_natequiv left_unitor (left_unitor unit)))^$
+    $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cate_moveR_eV.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 560
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  refine (_ $@ (_ $@L left_unitor_associator _ _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 561
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  nrefine (_ $@ (_ $@R _) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 562
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> 
+  2: rapply (isnat_natequiv right_unitor _)^$.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine ((_ $@L _) $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 564
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  refine (triangle_identity _ _ _ _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ $@R _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 566
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  nrapply cate_monic_equiv.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  exact (isnat_natequiv right_unitor (right_unitor unit)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 568
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: Kelly also shows that there are redundant coherence conditions for symmetric monoidal categories also, but we leave these out for now. *)
+
+(** ** Building Symmetric Monoidal Categories *)
+
+(** The following construction is what we call the "twist construction". It is a way to build a symmetric monoidal category from simpler pieces than the axioms ask for.
+
+The core observation is that the associator can be broken up into a [braid] and what we call a [twist] map. The twist map takes a right associated triple [(A, (B, C))] and swaps the first two factors [(B, (A, C)]. Together with functoriality of the tensor and the braiding, here termed [braid] we can simplify the axioms we ask for.
+
+For instance, the hexagon identity is about associators, but if we unfold the definition and simplify the diagram, we get a diagram about only twists and braids.
+
+This means in practice, you can show a category has a symmetric monoidal structure by proving some simpler axioms. This idea has been used in TriJoin.v to show the associativity of join for example. *)
+
+</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section TwistConstruction.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The aim of this section is to build a symmetric monoidal category. We do this piecewise so that the separate steps are useful in and of themselves.
+
+  Our basic starting assumption is that we have a category with equivalences, a bifunctor called the tensor product, and a unit object.*)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 586
+Time: 0.043s">
+<div class="time" style="width: 55.128205128205%"></div>
+<pre>Context (A : Type) `{HasEquivs A}
+    (cat_tensor : A -&gt; A -&gt; A) (cat_tensor_unit : A)
+    `{!Is0Bifunctor cat_tensor, !Is1Bifunctor cat_tensor}
+
+    (** Next we postulate the existence of a [braid] map. This takes a tensor pair and swaps the factors. We also postulate that [braid] is natural in both factors and self-inverse. *)
+    (braid : SymmetricBraiding cat_tensor)
+
+    (** We postulate the existence of a [twist] map. This takes a right associated triple [(A, (B, C))] and swaps the first two factors [(B, (A, C)]. We also postulate that [twist] is natural in all three factors and self-inverse. *)
+    (twist : forall a b c, cat_tensor a (cat_tensor b c) $-&gt; cat_tensor b (cat_tensor a c))
+    (twist_twist : forall a b c, twist a b c $o twist b a c $== Id _)
+    (twist_nat : forall a a' b b' c c' (f : a $-&gt; a') (g : b $-&gt; b') (h : c $-&gt; c'),
+      twist a' b' c' $o fmap11 cat_tensor f (fmap11 cat_tensor g h)
+      $== fmap11 cat_tensor g (fmap11 cat_tensor f h) $o twist a b c)
+
+    (** We assume that there is a natural isomorphism [right_unitor] witnessing the right unit law. The left unit law will be derived from this one. We also assume a coherence called [twist_unitor] which determines how the right_unitor interacts with [braid] and [twist]. This is the basis of the triangle axiom. *)
+    (right_unitor : RightUnitor cat_tensor cat_tensor_unit)
+    (twist_unitor : forall a b, fmap01 cat_tensor a (right_unitor b)
+      $== braid b a $o fmap01 cat_tensor b (right_unitor a) $o twist a b cat_tensor_unit)
+
+    (** The hexagon identity is about the interaction of associators and braids. We will derive this axiom from an analogous one for twists and braids. *)
+    (twist_hexagon : forall a b c,
+      fmap01 cat_tensor c (braid b a) $o twist b c a $o fmap01 cat_tensor b (braid a c)
+      $== twist a c b $o fmap01 cat_tensor a (braid b c) $o twist b a c)
+
+    (** The 9-gon identity. TODO: explain this *)
+    (twist_9_gon : forall a b c d,
+        fmap01 cat_tensor c (braid (cat_tensor a b) d)
+        $o twist (cat_tensor a b) c d
+        $o braid (cat_tensor c d) (cat_tensor a b)
+        $o twist a (cat_tensor c d) b
+        $o fmap01 cat_tensor a (braid b (cat_tensor c d))
+      $== fmap01 cat_tensor c (twist a d b)
+        $o fmap01 cat_tensor c (fmap01 cat_tensor a (braid b d))
+        $o twist a c (cat_tensor b d)
+        $o fmap01 cat_tensor a (twist b c d))
+  .</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Setup *)
+
+  (** Before starting the proofs, we need to setup some useful definitions and helpful lemmas for working with diagrams. *)
+
+  (** We give notations and abbreviations to the morphisms that will appear in diagrams. This helps us read the goal and understand what is happening, otherwise it is too verbose. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Declare Scope monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Infix "⊗" := cat_tensor (at level 40) : monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Infix "⊗R" := (fmap01 cat_tensor) (at level 40) : monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Infix "⊗L" := (fmap10 cat_tensor) (at level 40) : monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Notation "f ∘ g" := (f $o g) (at level 61, left associativity, format "f  '/' '∘'  g") : monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** TODO: in 8.19 this notation causes issues, when updating to 8.20 we should uncomment this. *)
+  (* Local Notation "f $== g :&gt; A" := (GpdHom (A := A) f g)
+    (at level 70, format "'[v' '[v' f ']' '/'  $== '/'  '[v' g ']'  '/' :&gt;  '[' A ']' ']'")
+    : long_path_scope. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope monoidal_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [twist] is an equivalence which we will call [twiste]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 640
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Local Definition twiste a b c
+    : cat_tensor a (cat_tensor b c) $&lt;~&gt; cat_tensor b (cat_tensor a c)
+    := cate_adjointify (twist a b c) (twist b a c)
+        (twist_twist a b c) (twist_twist b a c).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Finer naturality *)
+
+  (** The naturality postulates we have for [twist] are natural in all their arguments similtaneously. We show the finer naturality of [twist] in each argument separately as this becomes more useful in practice. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 649
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Local Definition twist_nat_l {a a'} (f : a $-&gt; a') b c
+    : twist a' b c $o fmap10 cat_tensor f (cat_tensor b c)
+      $== fmap01 cat_tensor b (fmap10 cat_tensor f c) $o twist a b c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 652
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ twist_nat a a' b b c c f (Id _) (Id _) $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 654
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap10_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 654
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      rapply fmap11_id.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 656
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 656
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      rapply fmap10_is_fmap11.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 657
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 658
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Local Definition twist_nat_m a {b b'} (g : b $-&gt; b') c
+    : twist a b' c $o fmap01 cat_tensor a (fmap10 cat_tensor g c)
+      $== fmap10 cat_tensor g (cat_tensor a c) $o twist a b c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 663
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ twist_nat a a b b' c c (Id _) g (Id _) $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 665
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 665
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      rapply fmap10_is_fmap11.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 667
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap10_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 667
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      rapply fmap11_id.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 668
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 669
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition twist_nat_r a b {c c'} (h : c $-&gt; c')
+    : twist a b c' $o fmap01 cat_tensor a (fmap01 cat_tensor b h)
+      $== fmap01 cat_tensor b (fmap01 cat_tensor a h) $o twist a b c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 674
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _^$) $@ twist_nat a a b b c c' (Id _) (Id _) h $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 676
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 676
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      rapply fmap01_is_fmap11.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 678
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> refine (fmap12 _ _ _ $@ fmap01_is_fmap11 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 678
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      rapply fmap01_is_fmap11.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 679
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Movement lemmas *)
+
+  (** Here we collect lemmas about moving morphisms around in a diagram. We could have created [cate_moveL_eM]-style lemmas for [CatIsEquiv] but this leads to a lot of unnecessary unfolding and duplication. It is typically easier to use a hand crafted lemma for each situation. *)
+
+  (** TODO: A lot of these proofs are copy and pasted between lemmas. We need to work out an efficient way of proving them. *)
+
+  (** **** Moving [twist] *)
+
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 690
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Local Definition moveL_twistL a b c d f (g : d $-&gt; _)
+    : twist a b c $o f $== g -&gt; f $== twist b a c $o g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cate_monic_equiv (twiste a b c)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 694
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    nrefine ((cate_buildequiv_fun _ $@R _) $@ p $@ _ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 695
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine ((cat_idl _)^$ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 696
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cate_buildequiv_fun _ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply twist_twist.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 698
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 699
+Time: 0.017s">
+<div class="time" style="width: 21.794871794872%"></div>
+<pre>
+
+  Local Definition moveL_twistR a b c d f (g : _ $-&gt; d)
+    : f $o twist a b c $== g -&gt; f $== g $o twist b a c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cate_epic_equiv (twiste a b c)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 705
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 706
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine (_ $@ (_ $@L ((_ $@L cate_buildequiv_fun _) $@ _)^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply twist_twist.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 708
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine ((_ $@L _) $@ _ $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 711
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 712
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Local Definition moveR_twistL a b c d f (g : d $-&gt; _)
+    : f $== twist b a c $o g -&gt; twist a b c $o f $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 716
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_twistL; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 718
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Local Definition moveR_twistR a b c d f (g : _ $-&gt; d)
+    : f $== g $o twist b a c -&gt; f $o twist a b c $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 722
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_twistR; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 724
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_twistL a b c d e f (g : e $-&gt; _)
+    : fmap01 cat_tensor a (twist b c d) $o f $== g
+      -&gt; f $== fmap01 cat_tensor a (twist c b d) $o g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 730
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (cate_monic_equiv (emap01 cat_tensor a (twiste b c d))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 734
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> refine (_ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 735
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+      refine ((fmap_id _ _)^$ $@ fmap2 _ _ $@ fmap_comp _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 736
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      refine (_^$ $@ (_^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply twist_twist.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 739
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@R _) $@ p $@ (cat_idl _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 740
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 742
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 743
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveL_fmap01_twistR a b c d e f (g : _ $-&gt; e)
+    : f $o fmap01 cat_tensor a (twist b c d) $== g
+      -&gt; f $== g $o fmap01 cat_tensor a (twist c b d).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 749
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (cate_epic_equiv (emap01 cat_tensor a (twiste b c d))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 750
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 753
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> refine (_^$ $@ (_ $@L _^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 754
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      refine ((fmap_comp _ _ _)^$ $@ fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply twist_twist.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 758
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((_ $@L _) $@ p $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 759
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap02 _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 761
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 762
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_twistL a b c d e f (g : e $-&gt; _)
+    : f $== fmap01 cat_tensor a (twist c b d) $o g
+      -&gt; fmap01 cat_tensor a (twist b c d) $o f $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 767
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_twistL; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 769
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Local Definition moveR_fmap01_twistR a b c d e f (g : _ $-&gt; e)
+    : f $== g $o fmap01 cat_tensor a (twist c b d)
+      -&gt; f $o fmap01 cat_tensor a (twist b c d) $== g.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 774
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    intros p; symmetry; apply moveL_fmap01_twistR; symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** The associator *)
+
+  (** Using [braide] and [twiste] we can build an associator. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition associator_twist' a b c
+    : cat_tensor a (cat_tensor b c) $&lt;~&gt; cat_tensor (cat_tensor a b) c.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We can build the associator out of [braide] and [twiste]. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (braide _ _ $oE _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (twiste _ _ _ $oE _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 786
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    exact (emap01 cat_tensor a (braide _ _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We would like to be able to unfold [associator_twist'] to the underlying morphisms. We use this lemma to make that process easier. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 791
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Local Definition associator_twist'_unfold a b c
+    : cate_fun (associator_twist' a b c)
+    $== braid c (cat_tensor a b) $o (twist a c b $o fmap01 cat_tensor a (braid b c)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 794
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ (_ $@@ cate_buildequiv_fun _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 795
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    nrefine (cate_buildequiv_fun _ $@ (_ $@@ cate_buildequiv_fun _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 796
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cate_buildequiv_fun _ $@ fmap2 _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 798
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we can use [associator_twist'] and show that it is a natural equivalence in each variable. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance associator_twist : Associator cat_tensor.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 803
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    snrapply Build_Associator.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact associator_twist'.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 806
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      simpl; intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** To prove naturality it will be easier to reason about squares. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>change (?w $o ?x $== ?y $o ?z) with (Square z w x y).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** First we remove all the equivalences from the equation. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 811
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>nrapply hconcatL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply associator_twist'_unfold.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 812
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      nrapply hconcatR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply associator_twist'_unfold.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** The first square involving [braid] on its own is a naturality square. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 816
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>nrapply vconcat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 816
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+      2: rapply braid_nat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** The second square is just the naturality of twist. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 819
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>nrapply vconcat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply twist_nat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 820
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      nrapply hconcatL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 821
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      2: nrapply hconcatR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 822
+Time: 0.018s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+      1,3: symmetry; rapply fmap01_is_fmap11.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Leaving us with a square with a functor application. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 825
+Time: 0.031s">
+<div class="time" style="width: 39.74358974359%"></div>
+<pre>rapply fmap11_square.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: rapply vrefl.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** We are finally left with the naturality of braid. *)
+     </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply braid_nat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 828
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We abbreviate the associator to [α] for the remainder of the section. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation α := associator_twist.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Unitors *)
+
+  (** Since we assume the [right_unitor] exists, we can derive the [left_unitor] from it together with [braid]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance left_unitor_twist : LeftUnitor cat_tensor cat_tensor_unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrapply Build_NatEquiv'.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 841
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> exact (fun a =&gt; right_unitor a $o braid cat_tensor_unit a).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros a b f.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        change (?w $o ?x $== ?y $o ?z) with (Square z w x y).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 844
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+        nrapply vconcat.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 845
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+        2: rapply (isnat right_unitor f).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 846
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+        rapply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 848
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+      rapply compose_catie'.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 849
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+      rapply catie_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 850
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Triangle *)
+
+  (** The triangle identity can easily be proven by rearranging the diagram, cancelling and using naturality of [braid]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 856
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Local Instance triangle_twist : TriangleIdentity cat_tensor cat_tensor_unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 858
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply associator_twist'_unfold.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 860
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (fmap02 _ a (cate_buildequiv_fun _) $@ _); cbn.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 861
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (fmap01_comp _ _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 862
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 2 refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 863
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((twist_unitor _ _ $@ (_ $@R _)) $@R _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 864
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 865
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Pentagon *)
+
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 870
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  Local Instance pentagon_twist : PentagonIdentity cat_tensor.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear twist_unitor right_unitor cat_tensor_unit.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b c d.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 875
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+    refine ((_ $@@ _) $@ _ $@ ((fmap02 _ _ _ $@ _)^$ $@@ (_ $@@ (fmap20 _ _ _ $@ _))^$)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2,4,6,7: apply associator_twist'_unfold.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 877
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    2: refine (fmap01_comp _ _ _ _ $@ (_ $@L (fmap01_comp _ _ _ _))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 878
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    2: refine (fmap10_comp _ _ _ _ $@ (_ $@L (fmap10_comp _ _ _ _))).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We use a notation defined above that shows the base type of the groupoid hom and formats the equation in a way that is easier to read. *)
+    (** Normalize brackets on LHS *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@L (cat_assoc _ _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 883
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+    do 4 refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Normalize brackets on RHS *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 886
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>refine (_ $@ (((cat_assoc _ _ _) $@R _) $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 886
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 2 refine (_ $@ ((cat_assoc _ _ _) $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 887
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 2 refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Cancel two braids next to eachother. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 890
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>apply moveL_fmap01_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 890
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 891
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 892
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ ((_ $@L _) $@ cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 893
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    2: refine ((fmap01_comp _ _ _ _)^$ $@ fmap02 _ _ _ $@ fmap01_id _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 895
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveL_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 897
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 901
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply moveL_fmap01_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 902
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ (_ $@L _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Putting things back. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveR_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 911
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply moveR_fmap01_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 912
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 913
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** There are two braids on the RHS of the LHS that can be swapped. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 917
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    1: refine ((fmap01_comp _ _ _ _)^$ $@ fmap02 _ _ _ $@ fmap01_comp _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply braid_nat_r.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 919
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Naturality of twist on the RHS of the LHS. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply twist_nat_m.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 925
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Moving some things to the RHS so that we can braid and cancel on the LHS. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveR_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply braid_nat_l.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 931
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 932
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 934
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((_ $@L _) $@ cat_idr _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 935
+Time: 0.011s">
+<div class="time" style="width: 14.102564102564%"></div>
+<pre>
+    1: refine ((fmap01_comp _ _ _ _)^$ $@ fmap02 _ _ _ $@ fmap01_id _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 938
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 939
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 940
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We are almost at the desired 9-gon. Now we cancel the inner braid on the LHS. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 942
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>do 4 refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 942
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 3 refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_twistL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 945
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    do 4 refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 946
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Now we move terms around in order to get a homotopy in [a ⊗ (b ⊗ (d ⊗ c)) $-&gt; d ⊗ (c ⊗ (a ⊗ b))]. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveL_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 950
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    do 2 refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 951
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 3 refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_twistL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 954
+Time: 0.005s">
+<div class="time" style="width: 6.4102564102564%"></div>
+<pre>
+    do 4 refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_fmap01_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 957
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    do 3 refine (_ $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 958
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 2 refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_fmap01_braidL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 960
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    do 2 refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 961
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    do 3 refine ((cat_assoc _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** And finally, this is the 9-gon we asked for. *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 964
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply twist_9_gon.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 964
+Time: 0.078s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Close Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 967
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Hexagon *)
+
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 971
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Local Instance hexagon_twist : HexagonIdentity cat_tensor.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 971
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 972
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b c; simpl.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 973
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (((_ $@L _) $@R _) $@ _ $@ (_ $@@ (_ $@R _))^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 974
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,3,4: apply associator_twist'_unfold.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 975
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    do 2 refine (((cat_assoc _ _ _)^$ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 976
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 977
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 978
+Time: 0.008s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre> refine ((fmap_comp _ _ _)^$ $@ fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_idr _ $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 980
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 981
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    refine (_ $@ ((cat_assoc _ _ _)^$ $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 982
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (((cat_idr _)^$ $@ (_ $@L _^$)) $@R _)).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 983
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply braid_braid.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 984
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (((braid_nat_r _)^$ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 985
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 986
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 987
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_fmap01_braidR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 988
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply twist_hexagon.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 989
+Time: 0.011s">
+<div class="time" style="width: 14.102564102564%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 990
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Conclusion *)
+
+  (** In conclusion, we have proven the following: *)
+
+  (** There is a monoidal structure on [A]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 997
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Local Instance ismonoidal_twist
+    : IsMonoidal A cat_tensor cat_tensor_unit
+    := {}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 999
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** There is a symmetric monoidal category on [A]. *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1002
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Local Instance issymmetricmonoidal_twist
+    : IsSymmetricMonoidal A cat_tensor cat_tensor_unit
+    := {}.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1004
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** TODO: WIP *)
+
+  (** Here is a hexagon involving only twist *)
+ </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1009
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Definition twist_hex' a b c d
+    : fmap01 cat_tensor c (twist a b d)
+      $o twist a c (cat_tensor b d)
+      $o fmap01 cat_tensor a (twist b c d)
+    $== twist b c (cat_tensor a d)
+      $o fmap01 cat_tensor b (twist a c d)
+      $o twist a b (cat_tensor c d).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1015
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1016
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (twist_hexagon c a d $@ cat_assoc _ _ _) as p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1017
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_twistL in p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1018
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_fmap01_braidL in p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1019
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply (fmap02 cat_tensor b) in p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1020
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ ((_ $@L p) $@R _)); clear p.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1021
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_twistR.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1022
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_twistL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1023
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    refine (_ $@ (fmap01_comp _ _ _ _)^$).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1024
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** TODO simplify *)
+   </pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1026
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveR_twistL.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1026
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1027
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Abort.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1028
+Time: 0.061s">
+<div class="time" style="width: 78.205128205128%"></div>
+<pre>
+
+End TwistConstruction.</pre>
+</div>
+<div class="code" title="File: Monoidal.v
+Line: 1031
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

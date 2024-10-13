@@ -1,0 +1,13 @@
+digraph HoTT_Algebra_Groups_Kernel {
+  graph [ratio=0.5]
+  node [style=filled]
+Kernel_equiv_kernel_isembedding [label="equiv_kernel_isembedding", URL=<Kernel.html#equiv_kernel_isembedding>, peripheries=3, fillcolor="#F070D1"] ;
+Kernel_equiv_grp_kernel_corec [label="equiv_grp_kernel_corec", URL=<Kernel.html#equiv_grp_kernel_corec>, peripheries=3, fillcolor="#F070D1"] ;
+Kernel_grp_kernel_corec [label="grp_kernel_corec", URL=<Kernel.html#grp_kernel_corec>, fillcolor="#F070D1"] ;
+Kernel_grp_kernel [label="grp_kernel", URL=<Kernel.html#grp_kernel>, fillcolor="#F070D1"] ;
+  Kernel_equiv_kernel_isembedding -> Kernel_grp_kernel [] ;
+  Kernel_equiv_grp_kernel_corec -> Kernel_grp_kernel_corec [] ;
+  Kernel_grp_kernel_corec -> Kernel_grp_kernel [] ;
+subgraph cluster_Kernel { label="Kernel"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Kernel_grp_kernel; Kernel_grp_kernel_corec; Kernel_equiv_grp_kernel_corec; Kernel_equiv_kernel_isembedding; };
+} /* END */
