@@ -149,15 +149,6 @@ Section Abel.
     srapply Coeq_ind_hprop.
     exact a.
   Defined.
-  
-  (** And its recursion version. *)
-  Definition Abel_rec_hprop (P : Type) `{IsHProp P}
-    (a : G -> P)
-    : Abel -> P.
-  Proof.
-    apply (Abel_rec _ a).
-    intros; apply path_ishprop.
-  Defined.
 
 End Abel.
 
