@@ -163,14 +163,9 @@ Ltac destruct_all_rec_calls :=
 
 (** Try to inject any potential constructor equality hypothesis. *)
 
-Ltac autoinjection tac := idtac.
-  (* match goal with *)
-  (*   | [ H : ?f ?a = ?f' ?a' |- _ ] => tac H *)
-  (* end. *)
-
 Ltac inject H := progress (inversion H ; clear_dups) ; clear H.
 
-Ltac autoinjections := repeat (clear_dups ; autoinjection ltac:(inject)).
+Ltac autoinjections := repeat (clear_dups ; ltac:(inject)).
 
 (** Destruct an hypothesis by first copying it to avoid dependencies. *)
 
