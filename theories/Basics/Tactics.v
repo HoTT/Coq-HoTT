@@ -70,10 +70,6 @@ Ltac destruct_one_ex :=
 
 Ltac destruct_exists := repeat (destruct_one_ex).
 
-(** Repeateadly destruct conjunctions and existentials. *)
-
-Ltac destruct_conjs := repeat (destruct_one_pair || destruct_one_ex).
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
