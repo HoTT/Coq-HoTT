@@ -91,14 +91,6 @@ Tactic Notation "destruct" "exist" ident(t) ident(Ht) := destruct t as [t Ht].
 
 Tactic Notation "destruct" "or" ident(H) := destruct H as [H|H].
 
-(** Discriminate that also work on a [x <> x] hypothesis. *)
-
-Ltac discriminates :=
-  match goal with
-    (* | [ H : ?x <> ?x |- _ ] => elim H ; reflexivity *)
-    | _ => discriminate
-  end.
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
@@ -290,8 +282,8 @@ Ltac refine_hyp c :=
 
 Ltac program_simplify :=
 simpl; intros ; destruct_all_rec_calls ; repeat (destruct_conjs; simpl proj1 in * );
-  subst*; autoinjections ; try discriminates ;
-    try (solve [ red ; intros ; destruct_conjs ; autoinjections ; discriminates ]).
+  subst*; autoinjections ; try discriminate;
+    try (solve [ red ; intros ; destruct_conjs ; autoinjections ; discriminate ]).
 
 (** Restrict automation to propositional obligations. *)
 
