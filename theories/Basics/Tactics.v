@@ -276,32 +276,6 @@ Ltac refine_hyp c :=
       | ?H _ _ _ _ _ _ _ _ => tac H
     end.
 
-(** The default simplification tactic used by Program is defined by [program_simpl], sometimes [auto]
-   is not enough, better rebind using [Obligation Tactic := tac] in this case,
-   possibly using [program_simplify] to use standard goal-cleaning tactics. *)
-
-Ltac program_simplify :=
-simpl; intros ; destruct_all_rec_calls ; repeat (destruct_conjs; simpl proj1 in * );
-  subst*; autoinjections ; try discriminate;
-    try (solve [ red ; intros ; destruct_conjs ; autoinjections ; discriminate ]).
-
-(** Restrict automation to propositional obligations. *)
-
-Ltac program_solve_wf :=
-  match goal with
-    (* | |- well_founded _ => auto with * *)
-    | |- ?T => match type of T with Prop => auto end
-  end.
-
-Create HintDb program discriminated.
-
-Ltac program_simpl := program_simplify ; try typeclasses eauto with program ; try program_solve_wf.
-
-#[global] Obligation Tactic := program_simpl.
-
-Definition obligation (A : Type) {a : A} := a.
-
-
 (** TODO: From here comes from Overture.v *)
 
 (** Clear a hypothesis and also its dependencies.  Taken from Coq stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)
