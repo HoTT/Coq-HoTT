@@ -218,14 +218,12 @@ Defined.
 Definition matrix_ring (R : Ring@{i}) (n : nat) : Ring.
 Proof.
   snrapply Build_Ring.
-  6: repeat split.
   - exact (abgroup_matrix R n n).
   - exact matrix_mult.
   - exact (identity_matrix R n).
+  - exact (associative_matrix_mult R n n n n).
   - exact (left_distribute_matrix_mult R n n n).
   - exact (right_distribute_matrix_mult R n n n).
-  - exact _.
-  - exact (associative_matrix_mult R n n n n).
   - exact (left_identity_matrix_mult R n n).
   - exact (right_identity_matrix_mult R n n).
 Defined.

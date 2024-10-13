@@ -29,8 +29,7 @@ Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
   : CRing.
 Proof.
   snrapply Build_CRing.
-  - rapply (Build_Ring R); only 1: exact _.
-    2: repeat split; only 1-3: exact _.
+  - rapply (Build_Ring R); only 1,2,4: exact _.
     + intros x y z.
       lhs nrapply comm.
       lhs rapply dist_l.
