@@ -79,10 +79,6 @@ Ltac destruct_conjs := repeat (destruct_one_pair || destruct_one_ex).
 
 Tactic Notation "destruct" "exist" ident(t) ident(Ht) := destruct t as [t Ht].
 
-(** Destruct a disjunction keeping its name in both subgoals. *)
-
-Tactic Notation "destruct" "or" ident(H) := destruct H as [H|H].
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
