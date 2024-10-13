@@ -74,11 +74,6 @@ Ltac destruct_exists := repeat (destruct_one_ex).
 
 Ltac destruct_conjs := repeat (destruct_one_pair || destruct_one_ex).
 
-(** Destruct an existential hypothesis [t] keeping its name for the first component
-   and using [Ht] for the second *)
-
-Tactic Notation "destruct" "exist" ident(t) ident(Ht) := destruct t as [t Ht].
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
