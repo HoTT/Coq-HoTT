@@ -54,10 +54,6 @@ Ltac destruct_one_pair :=
    | [H : prod _ _ |- _] => destruct H
  end.
 
-(** Repeateadly destruct pairs. *)
-
-Ltac destruct_pairs := repeat (destruct_one_pair).
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
