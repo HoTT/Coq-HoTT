@@ -150,15 +150,6 @@ Section Abel.
     exact a.
   Defined.
 
-  (** And its recursion version. *)
-  Definition Abel_rec_hprop (P : Type) `{IsHProp P}
-    (a : G -> P)
-    : Abel -> P.
-  Proof.
-    apply (Abel_rec _ a).
-    intros; apply path_ishprop.
-  Defined.
-
 End Abel.
 
 (** The [IsHProp] argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but [srapply] is slow, so we use this tactic instead. *)
@@ -340,6 +331,14 @@ Proof.
   Abel_ind_hprop x; revert y.
   Abel_ind_hprop y.
   apply grp_homo_op.
+Defined.
+
+Definition abel_ind_homotopy {G H : Group} {f g : Hom (A:=Group) (abel G) H}
+  (p : f $o abel_unit $== g $o abel_unit)
+  : f $== g.
+Proof.
+  rapply Abel_ind_hprop.
+  rapply p.
 Defined.
 
 (** Finally we can prove that our construction abel is an abelianization. *)
