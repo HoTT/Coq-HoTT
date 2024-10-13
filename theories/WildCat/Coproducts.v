@@ -381,7 +381,7 @@ Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
 
 Global Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
-  : IsMonoidal A (fun x y => cat_bincoprod x y) zero.
+  : IsMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
 Proof.
   nrapply ismonoidal_op'.
   nrapply (ismonoidal_cat_binprod (A:=A^op) zero).
@@ -390,7 +390,7 @@ Defined.
 
 Global Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
-  : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero.
+  : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
 Proof.
   nrapply issymmetricmonoidal_op'.
   nrapply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
