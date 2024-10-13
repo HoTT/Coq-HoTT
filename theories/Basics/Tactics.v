@@ -42,14 +42,6 @@ Ltac show_hyps :=
         | [ H : ?T |- _ ] => show_hyp H ; fail
       end.
 
-(** The [do] tactic but using a Coq-side nat. *)
-
-Ltac do_nat n tac :=
-  match n with
-    | O => idtac
-    | S ?n' => tac ; do_nat n' tac
-  end.
-
 (** Do something on the last hypothesis, or fail *)
 
 Ltac on_last_hyp tac :=
