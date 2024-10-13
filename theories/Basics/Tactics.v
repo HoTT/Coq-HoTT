@@ -58,14 +58,6 @@ Ltac destruct_one_pair :=
 
 Ltac destruct_pairs := repeat (destruct_one_pair).
 
-(** Destruct one existential package, keeping the name of the hypothesis for the first component. *)
-
-Ltac destruct_one_ex :=
-  let tacT H := let ph := fresh "X" in (destruct H as [H ph]) in
-    match goal with
-      | [H : (sig ?P) |- _ ] => tacT H
-    end.
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
