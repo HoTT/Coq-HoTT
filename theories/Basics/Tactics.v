@@ -66,10 +66,6 @@ Ltac destruct_one_ex :=
       | [H : (sig ?P) |- _ ] => tacT H
     end.
 
-(** Repeateadly destruct existentials. *)
-
-Ltac destruct_exists := repeat (destruct_one_ex).
-
 (** Revert the last hypothesis. *)
 
 Ltac revert_last :=
