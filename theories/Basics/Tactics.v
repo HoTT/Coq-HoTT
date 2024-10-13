@@ -129,15 +129,6 @@ Ltac clear_except hyp :=
            end
          end.
 
-(** A non-failing subst that substitutes as much as possible. *)
-
-Ltac subst_no_fail := idtac.
-  (* repeat (match goal with *)
-  (*           [ H : ?X = ?Y |- _ ] => subst X || subst Y *)
-  (*         end). *)
-
-Tactic Notation "subst" "*" := subst_no_fail.
-
 Ltac on_application f tac T :=
   match T with
     | context [f ?x ?y ?z ?w ?v ?u ?a ?b ?c] => tac (f x y z w v u a b c)
@@ -213,7 +204,7 @@ Ltac autoinjection tac := idtac.
   (*   | [ H : ?f ?a = ?f' ?a' |- _ ] => tac H *)
   (* end. *)
 
-Ltac inject H := progress (inversion H ; subst*; clear_dups) ; clear H.
+Ltac inject H := progress (inversion H ; clear_dups) ; clear H.
 
 Ltac autoinjections := repeat (clear_dups ; autoinjection ltac:(inject)).
 
