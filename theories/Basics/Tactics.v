@@ -466,27 +466,6 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
-Ltac easy :=
-  let rec use_hyp H :=
-    match type of H with
-    | _ => try solve [inversion H]
-    end
-  with do_intro := let H := fresh in intro H; use_hyp H
-  with destruct_hyp H := case H; clear H; do_intro; do_intro in
-  let rec use_hyps :=
-    match goal with
-    | H : _ |- _ => solve [inversion H]
-    | _ => idtac
-    end in
-  let rec do_atom :=
-    solve [reflexivity | symmetry; trivial] ||
-    contradiction ||
-    (split; do_atom)
-  with do_ccl := trivial; repeat do_intro; do_atom in
-  (use_hyps; do_ccl) || fail "Cannot solve this goal".
-
-Tactic Notation "now" tactic(t) := t; easy.
-
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c with typeclass_instances.
 

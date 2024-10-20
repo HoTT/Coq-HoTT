@@ -128,7 +128,7 @@ Proof.
   destruct p, q.
   unfold path_algebra, path_sigma_hprop, path_sigma_uncurried.
   cbn -[center].
-  now destruct (center (ha = hb)).
+  by destruct (center (ha = hb)).
 Defined.
 
 Arguments path_ap_carriers_path_algebra {_} {_} (A B)%_Algebra_scope (p q)%_path_scope.

@@ -145,7 +145,6 @@ Section contents.
 End contents.
 
 
-
 (** * Cardinality comparisons *)
 
 (* We also work with cardinality comparisons directly to avoid unnecessary type truncations via cardinals. *)
@@ -156,14 +155,14 @@ Definition Injection X Y :=
 Global Instance Injection_refl :
   Reflexive Injection.
 Proof.
-  intros X. exists (fun x => x). intros x x'. easy.
+  intros X. exists (fun x => x). intros x x'. done.
 Qed.
 
 Lemma Injection_trans X Y Z :
   Injection X Y -> Injection Y Z -> Injection X Z.
 Proof.
   intros [f Hf] [g Hg]. exists (fun x => g (f x)).
-  intros x x' H. now apply Hf, Hg.
+  intros x x' H. by apply Hf, Hg.
 Qed.
 
 Definition InjectsInto X Y :=
@@ -182,7 +181,7 @@ Proof.
   eapply merely_destruct; try apply H1. intros [f Hf].
   eapply merely_destruct; try apply H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
-  intros x x' H. now apply Hf, Hg.
+  intros x x' H. by apply Hf, Hg.
 Qed.
 
 

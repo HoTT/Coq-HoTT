@@ -901,7 +901,7 @@ Proof.
     intros H1 p; destruct p.
     contradiction (lt_irrefl _ _).
   - intro l; induction l.
-    + now right.
+    + by right.
     + left; exact (leq_succ l).
   - intros [l|p].
     + exact (leq_succ_l l).
@@ -981,7 +981,7 @@ Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
 Proof.
   split.
   - intros diseq.
-    destruct (dec (n < m)) as [| a]; [ now left |].
+    destruct (dec (n < m)) as [| a]; [ by left |].
     apply geq_iff_not_lt in a.
     apply equiv_leq_lt_or_eq in a.
     destruct a as [lt | eq].

@@ -218,7 +218,7 @@ Proof with auto.
     apply (is_ne_0 1).
    reflexivity.
   intros.
-  rewrite commutativity. now apply dec_recip_inverse.
+  rewrite commutativity. by apply dec_recip_inverse.
 Qed. *)
 
 (* Section from_stdlib_field_theory.
