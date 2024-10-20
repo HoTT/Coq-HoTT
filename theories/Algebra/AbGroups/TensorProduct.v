@@ -1,7 +1,7 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import Types.Forall Types.Sigma Types.Prod.
 Require Import WildCat.Core WildCat.Equiv WildCat.Monoidal WildCat.Bifunctor.
-Require Import WildCat.NatTrans.
+Require Import WildCat.NatTrans WildCat.MonoidalTwistConstruction.
 Require Import Algebra.Groups.Group Algebra.Groups.QuotientGroup.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Algebra.AbGroups.AbHom Algebra.AbGroups.FreeAbelianGroup.
