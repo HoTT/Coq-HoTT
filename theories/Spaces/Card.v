@@ -145,7 +145,6 @@ Section contents.
 End contents.
 
 
-
 (** * Cardinality comparisons *)
 
 (* We also work with cardinality comparisons directly to avoid unnecessary type truncations via cardinals. *)
@@ -156,7 +155,7 @@ Definition Injection X Y :=
 Global Instance Injection_refl :
   Reflexive Injection.
 Proof.
-  intros X. exists (fun x => x). intros x x'. easy.
+  intros X. exists (fun x => x). intros x x'. done.
 Qed.
 
 Lemma Injection_trans X Y Z :

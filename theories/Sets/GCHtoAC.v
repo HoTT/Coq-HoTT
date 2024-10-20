@@ -74,10 +74,10 @@ Proof.
   - exact (fun b : Bool => if b then merely Unit else merely Empty).
   - intros []; destruct LEM as [H|H]; auto.
     + destruct (H (tr tt)).
-    + apply (@merely_destruct Empty); try easy. exact _.
+    + apply (@merely_destruct Empty); try done. exact _.
   - intros P. destruct LEM as [H|H]; apply equiv_path_iff_hprop.
     + split; auto. intros _. apply tr. exact tt.
-    + split; try easy. intros HE. apply (@merely_destruct Empty); try easy. exact _.
+    + split; try done. intros HE. apply (@merely_destruct Empty); try done. exact _.
 Qed.
 
 Lemma path_bool_subsingleton :

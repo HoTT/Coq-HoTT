@@ -466,8 +466,6 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
-Ltac easy := done.
-
 Tactic Notation "now" tactic(t) := by t.
 
 (** Apply using the same opacity information as typeclass proof search. *)
