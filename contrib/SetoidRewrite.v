@@ -55,7 +55,7 @@ Defined.
          CRelationClasses.arrow) (GpdHom a).
 Proof.
   intros x y eq_xy eq_ax.
-  now transitivity x.
+  by transitivity x.
 Defined.
 
 (* forall a : A, x $== y -> a $== y -> a $== x *)

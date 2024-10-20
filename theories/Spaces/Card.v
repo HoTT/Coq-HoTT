@@ -162,7 +162,7 @@ Lemma Injection_trans X Y Z :
   Injection X Y -> Injection Y Z -> Injection X Z.
 Proof.
   intros [f Hf] [g Hg]. exists (fun x => g (f x)).
-  intros x x' H. now apply Hf, Hg.
+  intros x x' H. by apply Hf, Hg.
 Qed.
 
 Definition InjectsInto X Y :=
@@ -181,7 +181,7 @@ Proof.
   eapply merely_destruct; try apply H1. intros [f Hf].
   eapply merely_destruct; try apply H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
-  intros x x' H. now apply Hf, Hg.
+  intros x x' H. by apply Hf, Hg.
 Qed.
 
 

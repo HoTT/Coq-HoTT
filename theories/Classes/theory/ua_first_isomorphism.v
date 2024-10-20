@@ -121,7 +121,7 @@ Section first_isomorphism.
   Proof.
     refine (Quotient_rec (cong_ker f s) _ (λ x, (f s x; tr (x; idpath))) _).
     intros x y p.
-    now apply path_sigma_hprop.
+    by apply path_sigma_hprop.
   Defined.
 
   Lemma oppreserving_first_isomorphism {w : SymbolType σ}
@@ -179,7 +179,7 @@ Section first_isomorphism.
     refine (Trunc_rec _ M). intros [y Y].
     apply tr.
     exists (class_of _ y).
-    now apply path_sigma_hprop.
+    by apply path_sigma_hprop.
   Qed.
 
   Global Instance is_isomorphism_first_isomorphism

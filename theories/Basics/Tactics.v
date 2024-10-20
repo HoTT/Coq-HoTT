@@ -466,8 +466,6 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
-Tactic Notation "now" tactic(t) := by t.
-
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c with typeclass_instances.
 

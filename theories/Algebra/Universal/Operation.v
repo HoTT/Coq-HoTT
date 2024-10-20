@@ -199,7 +199,7 @@ Proof.
   rewrite compute_fin_ind_fin_zero.
   refine (ap (operation_uncurry A (fstail ss) t (a x)) _).
   funext i'.
-  now rewrite compute_fin_ind_fsucc.
+  by rewrite compute_fin_ind_fsucc.
 Qed.
 
 Global Instance isequiv_operation_curry `{Funext} {σ} (A : Carriers σ)
