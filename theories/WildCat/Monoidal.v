@@ -1060,7 +1060,7 @@ Class IsMonoidalFunctor {A B : Type}
         (uncurry (fun a b => tensorB (F a) (F b)))
         (uncurry (fun a b => F (tensorA a b)));
 
-  (** A morhpism [fmap_unit] relating the two unit objects. *)
+  (** A morphism [fmap_unit] relating the two unit objects. *)
   fmap_unit : IB $-> F (IA);
 
   (** Such that the following coherence conditions hold: 
