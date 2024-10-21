@@ -1045,3 +1045,86 @@ Section TwistConstruction.
   Abort.
 
 End TwistConstruction.
+
+(** ** Monoidal functors *)
+
+(** A (lax) monoidal functor [F] between two monoidal categories [A] and [B] is a functor [F : A -> B] together with: *)
+Class IsMonoidalFunctor {A B : Type}
+  {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B}
+  `{IsMonoidal A tensorA IA, IsMonoidal B tensorB IB}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F} := {
+
+  (** A natural transformation [fmap_tensor] from [F a ⊗ F b] to [F (a ⊗ b)]. *)
+  fmap_tensor
+    : NatTrans
+        (uncurry (fun a b => tensorB (F a) (F b)))
+        (uncurry (fun a b => F (tensorA a b)));
+
+  (** A morphism [fmap_unit] relating the two unit objects. *)
+  fmap_unit : IB $-> F (IA);
+
+  (** Such that the following coherence conditions hold: 
+  
+  [F] preserves the [associator]s in a suitable way. *)
+  fmap_tensor_assoc a b c
+    : fmap F (associator a b c)
+        $o fmap_tensor (a, tensorA b c)
+        $o fmap01 tensorB (F a) (fmap_tensor (b, c))
+      $== fmap_tensor (tensorA a b, c)
+        $o fmap10 tensorB (fmap_tensor (a, b)) (F c)
+        $o associator (F a) (F b) (F c);
+  
+  (** [F] preserves the [left_unitor]s in a suitable way. *)
+  fmap_tensor_left_unitor a
+    : trans_nattrans left_unitor (F a)
+      $== fmap F (left_unitor a)
+        $o fmap_tensor (IA, a)
+        $o fmap10 tensorB fmap_unit (F a);
+
+  (** [F] preserves the [right_unitors]s in a suitable way. *)
+  fmap_tensor_right_unitor a
+    : trans_nattrans right_unitor (F a)
+      $== fmap F (right_unitor a)
+        $o fmap_tensor (a, IA)
+        $o fmap01 tensorB (F a) fmap_unit;
+}.
+
+Arguments fmap_tensor {A B tensorA tensorB IA IB _ _ _ _ _ _ _ _ _ _ _ _}
+  F {_ _ _}.
+
+Definition fmap_tensor_nat {A B : Type}
+  {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B}
+  (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F}
+  {x x' y y': A} (f : x $-> x') (g : y $-> y')
+  : fmap_tensor F (x', y') $o fmap11 tensorB (fmap F f) (fmap F g)
+    $== fmap F (fmap11 tensorA f g) $o fmap_tensor F (x, y).
+Proof.
+  destruct (fmap_tensor F) as [fmap_tensor_F nat].
+  exact (nat (x, y) (x', y') (f, g)).
+Defined.
+
+Definition fmap_tensor_nat_l {A B : Type}
+  {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B}
+  (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F}
+  {x x' y : A} (f : x $-> x')
+  : fmap_tensor F (x', y) $o fmap10 tensorB (fmap F f) (F y)
+    $== fmap F (fmap10 tensorA f y) $o fmap_tensor F (x, y).
+Proof.
+  refine ((_ $@L (fmap12 tensorB _ (fmap_id _ _)
+    $@ fmap10_is_fmap11 _ _ _)^$) $@ _). 
+  refine (_ $@ (fmap2 F (fmap10_is_fmap11 _ _ _) $@R _)).
+  snrapply fmap_tensor_nat.
+Defined.
+
+Definition fmap_tensor_nat_r {A B : Type}
+  {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B}
+  (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F}
+  {x y y' : A} (g : y $-> y')
+  : fmap_tensor F (x, y') $o fmap01 tensorB (F x) (fmap F g)
+    $== fmap F (fmap01 tensorA x g) $o fmap_tensor F (x, y).
+Proof.
+  refine ((_ $@L (fmap21 tensorB (fmap_id _ _) _
+    $@ fmap01_is_fmap11 _ _ _)^$) $@ _).
+  refine (_ $@ (fmap2 F (fmap01_is_fmap11 _ _ _) $@R _)).
+  snrapply fmap_tensor_nat.
+Defined.
