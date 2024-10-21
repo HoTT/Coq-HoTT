@@ -1,0 +1,44 @@
+digraph HoTT_Spaces_Torus_Torus {
+  graph [ratio=0.5]
+  node [style=filled]
+Torus_Torus_Torus_ind_beta_surf [label="Torus_ind_beta_surf", URL=<Torus.html#Torus.Torus_ind_beta_surf>, peripheries=3, fillcolor="#FACDEF"] ;
+Torus_Torus_Torus_ind_beta_loop_b [label="Torus_ind_beta_loop_b", URL=<Torus.html#Torus.Torus_ind_beta_loop_b>, fillcolor="#FACDEF"] ;
+Torus_Torus_Torus_ind_beta_loop_a [label="Torus_ind_beta_loop_a", URL=<Torus.html#Torus.Torus_ind_beta_loop_a>, fillcolor="#FACDEF"] ;
+Torus_Torus_Torus_ind [label="Torus_ind", URL=<Torus.html#Torus.Torus_ind>, fillcolor="#F070D1"] ;
+Torus_Torus_surf [label="surf", URL=<Torus.html#Torus.surf>, fillcolor="#FACDEF"] ;
+Torus_Torus_loop_b [label="loop_b", URL=<Torus.html#Torus.loop_b>, fillcolor="#FACDEF"] ;
+Torus_Torus_loop_a [label="loop_a", URL=<Torus.html#Torus.loop_a>, fillcolor="#FACDEF"] ;
+Torus_Torus_tbase [label="tbase", URL=<Torus.html#Torus.tbase>, fillcolor="#7FAAFF"] ;
+Torus_Torus_Torus [label="Torus", URL=<Torus.html#Torus.Torus>, fillcolor="#E2CDFA"] ;
+Torus_loops_commute_torus [label="loops_commute_torus", URL=<Torus.html#loops_commute_torus>, peripheries=3, fillcolor="#F070D1"] ;
+Torus_ispointed_torus [label="ispointed_torus", URL=<Torus.html#ispointed_torus>, peripheries=3, fillcolor="#F070D1"] ;
+Torus_Torus_rec_beta_surf [label="Torus_rec_beta_surf", URL=<Torus.html#Torus_rec_beta_surf>, peripheries=3, fillcolor="#FACDEF"] ;
+Torus_Torus_rec_beta_loop_b [label="Torus_rec_beta_loop_b", URL=<Torus.html#Torus_rec_beta_loop_b>, fillcolor="#F070D1"] ;
+Torus_Torus_rec_beta_loop_a [label="Torus_rec_beta_loop_a", URL=<Torus.html#Torus_rec_beta_loop_a>, fillcolor="#F070D1"] ;
+Torus_Torus_rec [label="Torus_rec", URL=<Torus.html#Torus_rec>, fillcolor="#F070D1"] ;
+  Torus_Torus_Torus_ind_beta_surf -> Torus_Torus_Torus_ind_beta_loop_b [] ;
+  Torus_Torus_Torus_ind_beta_surf -> Torus_Torus_Torus_ind_beta_loop_a [] ;
+  Torus_Torus_Torus_ind_beta_loop_b -> Torus_Torus_Torus_ind [] ;
+  Torus_Torus_Torus_ind_beta_loop_a -> Torus_Torus_Torus_ind [] ;
+  Torus_Torus_Torus_ind -> Torus_Torus_surf [] ;
+  Torus_Torus_surf -> Torus_Torus_loop_b [] ;
+  Torus_Torus_surf -> Torus_Torus_loop_a [] ;
+  Torus_Torus_loop_b -> Torus_Torus_tbase [] ;
+  Torus_Torus_loop_b -> Torus_Torus_Torus [] ;
+  Torus_Torus_loop_a -> Torus_Torus_tbase [] ;
+  Torus_Torus_loop_a -> Torus_Torus_Torus [] ;
+  Torus_loops_commute_torus -> Torus_Torus_surf [] ;
+  Torus_ispointed_torus -> Torus_Torus_tbase [] ;
+  Torus_ispointed_torus -> Torus_Torus_Torus [] ;
+  Torus_Torus_rec_beta_surf -> Torus_Torus_rec_beta_loop_b [] ;
+  Torus_Torus_rec_beta_surf -> Torus_Torus_rec_beta_loop_a [] ;
+  Torus_Torus_rec_beta_loop_b -> Torus_Torus_Torus_ind_beta_loop_b [] ;
+  Torus_Torus_rec_beta_loop_b -> Torus_Torus_rec [] ;
+  Torus_Torus_rec_beta_loop_a -> Torus_Torus_Torus_ind_beta_loop_a [] ;
+  Torus_Torus_rec_beta_loop_a -> Torus_Torus_rec [] ;
+  Torus_Torus_rec -> Torus_Torus_Torus_ind [] ;
+subgraph cluster_Torus { label="Torus"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Torus_Torus { label="Torus"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Torus_Torus_Torus; Torus_Torus_tbase; Torus_Torus_loop_a; Torus_Torus_loop_b; Torus_Torus_surf; Torus_Torus_Torus_ind; Torus_Torus_Torus_ind_beta_loop_a; Torus_Torus_Torus_ind_beta_loop_b; Torus_Torus_Torus_ind_beta_surf; };
+Torus_Torus_rec; Torus_Torus_rec_beta_loop_a; Torus_Torus_rec_beta_loop_b; Torus_Torus_rec_beta_surf; Torus_ispointed_torus; Torus_loops_commute_torus; };
+} /* END */

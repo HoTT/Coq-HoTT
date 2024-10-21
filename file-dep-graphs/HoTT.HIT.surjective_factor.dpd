@@ -1,0 +1,8 @@
+N: 4 "ishprop_surjective_factor_aux" [body=yes, kind=cnst, prop=no, path="surjective_factor", ];
+N: 2 "surjective_factor" [body=yes, kind=cnst, prop=no, path="surjective_factor", ];
+N: 3 "surjective_factor_aux" [body=yes, kind=cnst, prop=no, path="surjective_factor", ];
+N: 1 "surjective_factor_pr" [body=yes, kind=cnst, prop=no, path="surjective_factor", ];
+E: 1 2 [weight=2, ];
+E: 1 3 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 3 4 [weight=1, ];
