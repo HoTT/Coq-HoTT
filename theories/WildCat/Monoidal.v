@@ -599,7 +599,7 @@ This means in practice, you can show a category has a symmetric monoidal structu
 Section TwistConstruction.
   (** The aim of this section is to build a symmetric monoidal category. We do this piecewise so that the separate steps are useful in and of themselves.
 
-  Our basic starting assumption is that we have a category with equivalences, a bifunctor called the tensor product, and a unit object.*)
+  Our basic starting assumption is that we have a category with equivalences, a bifunctor called the tensor product, and a unit object. *)
   Context (A : Type) `{HasEquivs A}
     (cat_tensor : A -> A -> A) (cat_tensor_unit : A)
     `{!Is0Bifunctor cat_tensor, !Is1Bifunctor cat_tensor}
