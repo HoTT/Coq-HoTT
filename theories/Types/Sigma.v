@@ -381,6 +381,7 @@ Defined.
 
 (** ** Equivalences *)
 
+(** The converse to [isequiv_functor_sigma] when [f] is [idmap] is [isequiv_from_functor_sigma] in Types/Equiv.v, which also contains Theorem 4.7.7 *)
 Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : IsEquiv (functor_sigma f g) | 1000.
@@ -730,7 +731,6 @@ Proof.
            (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
 Defined.
 
-(** The converse and Theorem 4.7.7 can be found in Types/Equiv.v *)
 Definition istruncmap_from_functor_sigma n {A P Q}
   (g : forall a : A, P a -> Q a)
   `{!IsTruncMap n (functor_sigma idmap g)}
