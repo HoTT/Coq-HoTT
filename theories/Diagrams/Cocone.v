@@ -27,7 +27,7 @@ Definition issig_Cocone {G : Graph} (D : Diagram G) (X : Type)
 Section Cocone.
   Context `{Funext} {G : Graph} {D : Diagram G} {X : Type}.
 
-  (** [path_cocone] says when two cocones are equals (up to funext). *)
+  (** [path_cocone] says when two cocones are equal (up to funext). *)
 
   Definition path_cocone_naive {C1 C2 : Cocone D X}
     (P := fun q' => forall (i j : G) (g : G i j) (x : D i),
@@ -78,7 +78,7 @@ Section Cocone.
 
   (** ** Universality of a cocone. *)
 
-  (** A colimit will be the extremity of an universal cocone. *)
+  (** A colimit will be the extremity of a universal cocone. *)
 
   (** A cocone [C] over [D] to [X] is said universal when for all [Y] the map [cocone_postcompose] is an equivalence. In particular, given another cocone [C'] over [D] to [X'] the inverse of the map allows to recover a map [h] : [X] -> [X'] such that [C'] is [C] postcomposed with [h]. The fact that [cocone_postcompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
 
