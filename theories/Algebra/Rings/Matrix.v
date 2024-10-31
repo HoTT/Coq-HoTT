@@ -711,7 +711,6 @@ Proof.
   by rewrite rng_plus_zero_l.
 Defined.
 
-
 (** The sum of two lower triangular matrices is lower triangular. *)
 Global Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{!IsLowerTriangular M} `{!IsLowerTriangular N}
@@ -787,7 +786,7 @@ Defined.
 Global Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
   : IsUpperTriangular (matrix_zero R n n).
 Proof.
-  apply tr@{i}.
+  apply tr.
   by hnf; intros; rewrite entry_Build_Matrix.
 Defined.
 
@@ -825,7 +824,7 @@ Global Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : IsUpperTriangular (matrix_diag v).
 Proof.
   unfold IsUpperTriangular.
-  apply tr@{i}.
+  apply tr.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   rewrite kronecker_delta_lt.
@@ -846,12 +845,12 @@ Defined.
 Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring@{i} R n).
 Proof.
-  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsUpperTriangular M)).
+  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
   - exact _.
   (* These can all be found by typeclass search, but being explicit makes this faster. *)
-  - intros x y ? ?; exact (upper_triangular_plus@{i} x (-y)).
-  - exact upper_triangular_mult@{i}.
-  - exact upper_triangular_identity@{i}.
+  - intros x y ? ?; exact (upper_triangular_plus x (-y)).
+  - exact upper_triangular_mult.
+  - exact upper_triangular_identity.
 Defined.
 
 (** Lower triangular matrices are a subring of the ring of matrices. *)
