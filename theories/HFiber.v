@@ -262,6 +262,13 @@ Proof.
   exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
 Defined.
 
+(** It follows from [isembedding_isequiv_ap] and [isequiv_ap_equiv_fun] that [equiv_fun] is an embedding. *)
+Global Instance isembedding_equiv_fun `{Funext} {A B : Type}
+  : IsEmbedding (@equiv_fun A B).
+Proof.
+  rapply isembedding_isequiv_ap.
+Defined.
+
 Lemma ap_isinj_embedding_beta {X Y : Type} (f : X -> Y) {I : IsEmbedding f} {x0 x1 : X}
   : forall (p : f x0 = f x1), ap f (isinj_embedding f I x0 x1 p) = p.
 Proof.
