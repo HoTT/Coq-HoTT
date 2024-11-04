@@ -200,6 +200,17 @@ Section UnstableOctahedral.
 
 End UnstableOctahedral.
 
+(** We characterize the fibers of [functor_forall], but only in the special case where the base map is [idmap]. This doesn't dependn on anything else in this file, but can't be put in Types/Forall.v, because it requires results from Types/Sigma.v. *)
+Definition hfiber_functor_forall_id `{Funext} {A : Type} {P Q : A -> Type}
+  (h : forall a, P a -> Q a) (g : forall a, Q a)
+  : hfiber (functor_forall_id h) g <~> (forall a, hfiber (h a) (g a)).
+Proof.
+  unfold hfiber, functor_forall_id, functor_forall.
+  nrefine (equiv_sig_coind _ _ oE _).
+  apply equiv_functor_sigma_id; intro f.
+  apply equiv_apD10.
+Defined.
+
 (** ** Fibers of constant functions *)
 Definition hfiber_const A {B} (y y' : B)
   : hfiber (fun _ : A => y) y' <~> A * (y = y')

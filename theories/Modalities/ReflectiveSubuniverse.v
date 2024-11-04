@@ -1585,6 +1585,15 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
   Defined.
 
+  (** Given a family of maps [f : forall a, P a -> Q a] which are in [O], the induced map on Pi types is also in [O]. *)
+  Definition mapinO_functor_forall_id `{Funext}
+    {A : Type} {P Q : A -> Type} (f : forall a, P a -> Q a) `{forall a, MapIn O (f a)}
+    : MapIn O (functor_forall_id f).
+  Proof.
+    intro g.
+    rapply (inO_equiv_inO _ (hfiber_functor_forall_id f g)^-1%equiv).
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)
