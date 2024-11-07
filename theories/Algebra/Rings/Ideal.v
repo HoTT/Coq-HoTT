@@ -456,7 +456,7 @@ Proof.
     nrapply igt_mul_r.
 Defined. 
 
-(** *** Finitely gnerated ideal. *)
+(** *** Finitely generated ideal *)
 
 (** Finitely generated ideals *)
 Definition ideal_generated_finite {R : Ring} {n : nat} (X : Fin n -> R) : Ideal R.

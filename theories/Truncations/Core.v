@@ -1,9 +1,9 @@
 Require Import Basics Types WildCat.Core WildCat.Universe HFiber.
 Require Import Modalities.Modality.
-(* Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
+(** Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
 Require Export (coercions) Modalities.Modality.
 
-(** * Truncations of types, in all dimensions *)
+(** * Truncations of types *)
 
 Local Open Scope path_scope.
 Generalizable Variables A X n.
@@ -12,7 +12,7 @@ Generalizable Variables A X n.
 
 (** The definition of [Trunc n], the n-truncation of a type.
 
-If Coq supported higher inductive types natively, we would construct this as somthing like:
+If Coq supported higher inductive types natively, we would construct this as something like:
 
    Inductive Trunc n (A : Type) : Type :=
    | tr : A -> Trunc n A
@@ -30,15 +30,15 @@ Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
 Bind Scope trunc_scope with Trunc.
 Arguments tr {n A} a.
 
-(** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
-: IsTrunc@{j} n (Trunc@{i} n A).
-Admitted.
+  (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
+  Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+    : IsTrunc@{j} n (Trunc@{i} n A).
+  Admitted.
 
-Definition Trunc_ind {n A}
-  (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
-  : (forall a, P (tr a)) -> (forall aa, P aa)
-:= (fun f aa => match aa with tr a => fun _ => f a end Pt).
+  Definition Trunc_ind {n A}
+    (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
+    : (forall a, P (tr a)) -> (forall aa, P aa)
+    := fun f aa => match aa with tr a => fun _ => f a end Pt.
 
 End Trunc.
 
@@ -46,7 +46,7 @@ End Trunc.
 
 Definition Trunc_rec {n A X} `{IsTrunc n X}
   : (A -> X) -> (Trunc n A -> X)
-:= Trunc_ind (fun _ => X).
+  := Trunc_ind (fun _ => X).
 
 Definition Trunc_rec_tr n {A : Type}
   : Trunc_rec (A:=A) (tr (n:=n)) == idmap
