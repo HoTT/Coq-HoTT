@@ -39,7 +39,7 @@ Definition equiv_empty_rec@{u} `{Funext} (A : Type@{u})
 
 Global Instance istrunc_Empty@{} (n : trunc_index) : IsTrunc n.+1 Empty.
 Proof.
-  refine (@istrunc_leq (-1)%trunc n.+1 tt _ _).
+  refine (@istrunc_leq (-1) n.+1 tt _ _).
   apply istrunc_S.
   intros [].
 Defined.

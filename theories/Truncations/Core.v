@@ -91,7 +91,7 @@ Section TruncationModality.
   (** ** Functoriality *)
 
   (** Since a modality lives on a single universe, by default if we simply define [Trunc_functor] to be [O_functor] then it would force [X] and [Y] to live in the same universe.  But since we defined [Trunc] as a cumulative inductive, if we add universe annotations we can make [Trunc_functor] more universe-polymorphic than [O_functor] is.  This is sometimes useful.  *)
-  Definition Trunc_functor@{i j k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
+  Definition Trunc_functor@{i j k | i <= k, j <= k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
     : Tr@{i} n X -> Tr@{j} n Y
     := O_functor@{k k k} (Tr n) f.
 
