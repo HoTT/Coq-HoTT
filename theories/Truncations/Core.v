@@ -23,12 +23,10 @@ However, while we are faking our higher-inductives anyway, we can take some shor
 *)
 
 Module Export Trunc.
-Delimit Scope trunc_scope with trunc.
 
-Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
-  tr : A -> Trunc n A.
-Bind Scope trunc_scope with Trunc.
-Arguments tr {n A} a.
+  Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
+    tr : A -> Trunc n A.
+  Arguments tr {n A} a.
 
   (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
   Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
