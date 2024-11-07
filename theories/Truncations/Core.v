@@ -117,10 +117,6 @@ Section TruncationModality.
     : @Trunc_functor X X idmap == idmap
     := O_functor_idmap (Tr n) X.
 
-  Definition isequiv_Trunc_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
-    : IsEquiv (Trunc_functor f)
-    := isequiv_O_functor (Tr n) f.
-
   Definition equiv_Trunc_prod_cmp {X Y}
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp (Tr n) X Y.
