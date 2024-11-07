@@ -25,11 +25,11 @@ Section UnivProp.
   (** The domain of the equivalence: sections of [P] over [Coeq f g]. Coq correctly infers the 0-groupoid structure [@isgraph_forall (Coeq f g) P (fun z : Coeq f g => isgraph_paths (P z))]. *)
   Definition Coeq_ind_type := forall z : Coeq f g, P z.
 
-  (** The codomain of the equivalence is a sigma-groupoid of this family. *)
+  (** The codomain of the equivalence is a sigma-groupoid of this family: *)
   Definition Coeq_ind_data (h : forall a : A, P (coeq a))
     := forall b : B, DPath P (cglue b) (h (f b)) (h (g b)).
 
-  (** We consider [Coeq_ind_data] to be a displayed 0-groupoid, where objects over [h : forall a : A, P (coeq a)] are dependent paths as defined above and morphisms over [p : h == k] are witnesses that p commutes with the homotopies over [h] and [k]. *)
+  (** We consider [Coeq_ind_data] to be a displayed 0-groupoid, where objects over [h : forall a : A, P (coeq a)] are dependent paths as defined above and morphisms over [p : h == k] are witnesses that [p] commutes with the homotopies over [h] and [k]. *)
   Local Instance isdgraph_Coeq_ind_data : IsDGraph Coeq_ind_data.
   Proof.
     intros h k p r s.
@@ -87,7 +87,7 @@ Section UnivProp.
       exists (Coeq_ind P h r).
       exists (fun a => idpath).
       intros b.
-      nrefine (concat_1p _ @ _ @ (concat_p1 _)^).
+      apply equiv_1p_q1.
       symmetry.
       nrapply Coeq_ind_beta_cglue.
     - intros h k [p p'].
@@ -113,7 +113,7 @@ Section UnivProp.
 
 End UnivProp.
 
-(** Here we prove that the zero-groupoid universal property established in the previous section is natural with respect to [functor_coeq]. More precisely, we show that [Coeq_ind_inv] commutes with precomposition with [k] and [functor_coeq h k p q]. *)
+(** Here we prove that the 0-groupoid universal property established in the previous section is natural with respect to [functor_coeq]. More precisely, we show that [Coeq_ind_inv] commutes with precomposition with [k] and [functor_coeq h k p q]. *)
 Section UnivPropNat.
   Context {B A : Type} (f g : B -> A) {B' A' : Type} (f' g' : B' -> A')
     (h : B -> B') (k : A -> A') (p : k o f == f' o h) (q : k o g == g' o h)
