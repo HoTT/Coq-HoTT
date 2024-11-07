@@ -436,9 +436,7 @@ Section TwistConstruction.
     : IsSymmetricMonoidal A cat_tensor cat_tensor_unit
     := {}.
 
-  (** TODO: WIP *)
-
-  (** Here is a hexagon involving only twist *)
+  (** Here is a hexagon involving only twist. It might be eaiser to view this proof by opening [long_path_scope] using the notation above for [$==]. *)
   Definition twist_hex' a b c d
     : fmap01 cat_tensor c (twist a b d)
       $o twist a c (cat_tensor b d)
@@ -447,17 +445,93 @@ Section TwistConstruction.
       $o fmap01 cat_tensor b (twist a c d)
       $o twist a b (cat_tensor c d).
   Proof.
-    pose proof (twist_hexagon c a d $@ cat_assoc _ _ _) as p.
-    apply moveR_twistL in p.
-    apply moveR_fmap01_braidL in p.
-    apply (fmap02 cat_tensor b) in p.
-    refine (_ $@ ((_ $@L p) $@R _)); clear p.
+    (** First we rewrite one of the twists using our twist construction hexagon. *)
+    assert (p : twist a b (cat_tensor c d)
+      $== fmap01 cat_tensor b (braid (cat_tensor c d) a)
+        $o twist (cat_tensor c d) b a
+        $o fmap01 cat_tensor (cat_tensor c d) (braid a b)
+        $o twist a (cat_tensor c d) b
+        $o fmap01 cat_tensor a (braid b (cat_tensor c d))).
+    { apply moveL_fmap01_braidR.
+      apply moveL_twistR.
+      symmetry.
+      apply twist_hexagon. }
+    refine (_ $@ (_ $@L p^$)); clear p.
+    (** Next, we rewrite the edge on the opposite edge using the twist construction hexagon. *)
+    assert (p : fmap01 cat_tensor c (twist a b d)
+      $== fmap01 cat_tensor c (fmap01 cat_tensor b (braid d a))
+        $o fmap01 cat_tensor c (twist d b a)
+        $o (fmap01 cat_tensor c (fmap01 cat_tensor d (braid a b))
+          $o fmap01 cat_tensor c (twist a d b)
+          $o fmap01 cat_tensor c (fmap01 cat_tensor a (braid b d)))). 
+    { refine (_ $@ (_ $@L (fmap01_comp cat_tensor c _ _ $@R _))). 
+      refine (_ $@ (fmap01_comp cat_tensor c _ _ $@R _)). 
+      refine (_ $@ (_ $@L fmap01_comp cat_tensor c _ _)).
+      refine (fmap02 cat_tensor _ _ $@ fmap01_comp cat_tensor c _ _).
+      nrefine (_ $@ cat_assoc_opp _ _ _).
+      apply moveL_fmap01_braidL.
+      nrefine (_ $@ cat_assoc _ _ _).
+      apply moveL_fmap01_braidR.
+      nrefine (_ $@ cat_assoc _ _ _).
+      apply twist_hexagon. }
+    nrefine (((p $@R _) $@R _) $@ _); clear p.
+    (** Now we rearrange the terms to get a symmetric 14-gon. *)
+    do 3 nrefine (cat_assoc _ _ _ $@ _).
+    apply moveR_fmap01_fmap01_braidL.
+    apply moveR_fmap01_twistL.
+    nrefine (cat_assoc_opp _ _ _ $@ _).
+    do 3 nrefine (_ $@ cat_assoc _ _ _).
+    apply moveL_fmap01_braidR.
+    nrefine (_ $@ cat_assoc _ _ _).
     apply moveL_twistR.
-    apply moveL_twistL.
-    refine (_ $@ (fmap01_comp _ _ _ _)^$).
-    (** TODO simplify *)
-    apply moveR_twistL.
-    refine (_ $@ cat_assoc _ _ _).
-  Abort.
+    nrefine (_ $@ cat_assoc _ _ _).
+    apply moveL_fmap01_braidR.
+    nrefine (_ $@ cat_assoc _ _ _).
+    apply moveL_twistR.
+    apply moveL_fmap01_braidR.
+    nrefine (_ $@ cat_assoc _ _ _).
+    apply moveR_fmap01_braidR.
+    apply moveR_twistR.
+    apply moveR_fmap01_braidR.
+    do 5 nrefine (cat_assoc _ _ _ $@ _).
+    do 4 refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
+    (** We can use the 9-gon to rewrite the LHS *)
+    assert (p : fmap01 cat_tensor c (twist a d b)
+        $o fmap01 cat_tensor c (fmap01 cat_tensor a (braid b d))
+        $o twist a c (cat_tensor b d)
+        $o fmap01 cat_tensor a (twist b c d)
+        $o fmap01 cat_tensor a (braid (cat_tensor c d) b)
+        $o twist (cat_tensor c d) a b
+      $== fmap01 cat_tensor c (braid (cat_tensor a b) d)
+        $o twist (cat_tensor a b) c d
+        $o braid (cat_tensor c d) (cat_tensor a b)).
+    { symmetry. 
+      apply moveL_twistR.
+      apply moveL_fmap01_braidR.
+      apply twist_9_gon. }
+    nrefine ((_ $@L p) $@ _); clear p.
+    (** We can use the 9-gon to rewrite the RHS *)
+    assert (p : fmap01 cat_tensor c (braid (cat_tensor b a) d)
+        $o twist (cat_tensor b a) c d
+        $o braid (cat_tensor c d) (cat_tensor b a)
+      $== fmap01 cat_tensor c (twist b d a)
+        $o fmap01 cat_tensor c (fmap01 cat_tensor b (braid a d))
+        $o twist b c (cat_tensor a d)
+        $o fmap01 cat_tensor b (twist a c d)
+        $o fmap01 cat_tensor b (braid (cat_tensor c d) a)
+        $o twist (cat_tensor c d) b a). 
+    { apply moveL_twistR.
+      apply moveL_fmap01_braidR.
+      apply twist_9_gon. }
+    nrefine (_ $@ (p $@R _)); clear p.
+    (** This gives us an octagon composed of 3 naturality squares. *)
+    change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
+    napply hconcat.
+    1: apply transpose, braid_nat_r.
+    napply hconcat.
+    1: apply transpose, twist_nat_l.
+    rapply fmap01_square.
+    apply transpose, braid_nat_l.
+  Defined.
 
 End TwistConstruction.
