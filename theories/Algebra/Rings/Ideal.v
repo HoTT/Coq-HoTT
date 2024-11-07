@@ -74,6 +74,12 @@ Definition ideal_op (R : Ring) : Ideal R -> Ideal (rng_op R)
   := fun I => Build_Ideal (rng_op R) I _.
 Coercion ideal_op : Ideal >-> Ideal.
 
+Definition rightideal_op (R : Ring) : LeftIdeal R -> RightIdeal (rng_op R)
+  := fun I => Build_RightIdeal (rng_op R) I _.
+
+Definition leftideal_op (R : Ring) : RightIdeal R -> LeftIdeal (rng_op R)
+  := fun I => Build_LeftIdeal (rng_op R) I _.
+
 (** *** Truncatedness properties *)
 
 Section IdealTrunc.
@@ -136,6 +142,80 @@ Section IdealElements.
   Definition ideal_in_plus_l : I (a + b) -> I b -> I a := subgroup_in_op_l I a b.
   Definition ideal_in_plus_r : I (a + b) -> I a -> I b := subgroup_in_op_r I a b.
 End IdealElements.
+
+(** *** Ideal equality *)
+
+(** Classically, set based equality suffices for ideals. Since we are talking about predicates, we use pointwise iffs. This can of course be shown to be equivalent to the identity type. *)
+Definition ideal_eq {R : Ring} (I J : Subgroup R) := forall x, I x <-> J x.
+
+(** With univalence we can characterize equality of ideals. *)
+Lemma equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R} : ideal_eq I J <~> I = J.
+Proof.
+  refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  rapply equiv_path_subgroup'.
+Defined.
+
+(** Under funext, ideal equality is a proposition. *)
+Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
+  : IsHProp (ideal_eq I J) := _.
+
+(** Ideal equality is reflexive. *)
+Instance reflexive_ideal_eq {R : Ring} : Reflexive (@ideal_eq R).
+Proof.
+  intros I x; by split.
+Defined.
+
+(** Ideal equality is symmetric. *)
+Instance symmetric_ideal_eq {R : Ring} : Symmetric (@ideal_eq R).
+Proof.
+  intros I J p x; specialize (p x); by symmetry.
+Defined.
+
+(** Ideal equality is transitive. *)
+Instance transitive_ideal_eq {R : Ring} : Transitive (@ideal_eq R).
+Proof.
+  intros I J K p q x; specialize (p x); specialize (q x); by transitivity (J x).
+Defined.
+
+(** *** Subset relation on ideals *)
+
+(** We define the subset relation on ideals in the usual way: *)
+Definition ideal_subset {R : Ring} (I J : Subgroup R) := (forall x, I x -> J x).
+
+(** The subset relation is reflexive. *)
+Instance reflexive_ideal_subset {R : Ring} : Reflexive (@ideal_subset R)
+  := fun _ _ => idmap.
+
+(** The subset relation is transitive. *)
+Instance transitive_ideal_subset {R : Ring} : Transitive (@ideal_subset R).
+Proof.
+  intros x y z p q a.
+  exact (q a o p a).
+Defined.
+
+(** We can coerce equality to the subset relation, since equality is defined to be the subset relation in each direction. *)
+Coercion ideal_eq_subset {R : Ring} {I J : Subgroup R} : ideal_eq I J -> ideal_subset I J.
+Proof.
+  intros f x; apply f.
+Defined.
+
+(** *** Left and right ideals are invariant under ideal equality *)
+
+(** Left ideals are invariant under ideal equality. *)
+Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : ideal_eq I J)
+  : IsLeftIdeal I -> IsLeftIdeal J.
+Proof.
+  intros i r x j.
+  apply p in j.
+  apply p.
+  by apply i.
+Defined.
+
+(** Right ideals are invariant under ideal equality. *)
+Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : ideal_eq I J)
+  : IsRightIdeal I -> IsRightIdeal J
+  := isleftideal_eq (R := rng_op R) I J p.
 
 (** ** Constructions of ideals *)
 
@@ -293,6 +373,13 @@ Inductive ideal_product_naive_type {R : Ring} (I J : Subgroup R) : R -> Type :=
 Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
   := subgroup_generated (G := R) (ideal_product_naive_type I J). 
 
+(** The product ideal swapped is just the product ideal of the opposite ring. *)
+Definition ideal_product_type_op {R : Ring} (I J : Subgroup R)
+  : ideal_eq (ideal_product_type (R:=R) I J) (ideal_product_type (R:=rng_op R) J I).
+Proof.
+  intros x; split; tapply (functor_subgroup_generated _ _ (Id _)); intros r []; by napply ipn_in.
+Defined.
+
 (** The product of left ideals is a left ideal. *)
 Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
@@ -311,12 +398,9 @@ Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (ideal_product_type I J).
 Proof.
-  intro r.
-  napply (functor_subgroup_generated _ _ (grp_homo_rng_right_mult (R:=R) r)).
-  intros s [s1 s2 p1 p2]; cbn.
-  rewrite <- simple_associativity.
-  nrefine (ipn_in I J s1 (s2 * r) p1 _).
-  by apply isrightideal.
+  napply isrightideal_eq.
+  1: symmetry; rapply ideal_product_type_op.
+  by apply isleftideal_ideal_product_type.
 Defined.
 
 (** The product of ideals is an ideal. *)
@@ -334,6 +418,16 @@ Definition leftideal_product {R : Ring}
 Definition rightideal_product {R : Ring}
   : RightIdeal R -> RightIdeal R -> RightIdeal R
   := leftideal_product.
+
+Definition leftideal_product_op {R : Ring} (I J : RightIdeal R)
+  : leftideal_product (leftideal_op R I) (leftideal_op R J)
+    = rightideal_product I J
+  := idpath.
+
+Definition rightideal_product_op {R : Ring} (I J : LeftIdeal R)
+  : rightideal_product (rightideal_op R I) (rightideal_op R J)
+    = leftideal_product I J
+  := idpath.
 
 (** Product of ideals. *)
 Definition ideal_product {R : Ring}
@@ -468,63 +562,6 @@ Defined.
 (** A principal ideal is an ideal generated by a single element. *)
 Definition ideal_principal {R : Ring} (x : R) : Ideal R
   := ideal_generated (fun r => x = r).
-
-(** *** Ideal equality *)
-
-(** Classically, set based equality suffices for ideals. Since we are talking about predicates, we use pointwise iffs. This can of course be shown to be equivalent to the identity type. *)
-Definition ideal_eq {R : Ring} (I J : Subgroup R) := forall x, I x <-> J x.
-
-(** With univalence we can characterize equality of ideals. *)
-Lemma equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R} : ideal_eq I J <~> I = J.
-Proof.
-  refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).
-  refine (equiv_path_sigma_hprop _ _ oE _).
-  rapply equiv_path_subgroup'.
-Defined.
-
-(** Under funext, ideal equality is a proposition. *)
-Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
-  : IsHProp (ideal_eq I J) := _.
-
-(** Ideal equality is reflexive. *)
-Instance reflexive_ideal_eq {R : Ring} : Reflexive (@ideal_eq R).
-Proof.
-  intros I x; by split.
-Defined.
-
-(** Ideal equality is symmetric. *)
-Instance symmetric_ideal_eq {R : Ring} : Symmetric (@ideal_eq R).
-Proof.
-  intros I J p x; specialize (p x); by symmetry.
-Defined.
-
-(** Ideal equality is transitive. *)
-Instance transitive_ideal_eq {R : Ring} : Transitive (@ideal_eq R).
-Proof.
-  intros I J K p q x; specialize (p x); specialize (q x); by transitivity (J x).
-Defined.
-
-(** *** Subset relation on ideals *)
-
-(** We define the subset relation on ideals in the usual way: *)
-Definition ideal_subset {R : Ring} (I J : Subgroup R) := (forall x, I x -> J x).
-
-(** The subset relation is reflexive. *)
-Instance reflexive_ideal_subset {R : Ring} : Reflexive (@ideal_subset R)
-  := fun _ _ => idmap.
-
-(** The subset relation is transitive. *)
-Instance transitive_ideal_subset {R : Ring} : Transitive (@ideal_subset R).
-Proof.
-  intros x y z p q a.
-  exact (q a o p a).
-Defined.
-
-(** We can coerce equality to the subset relation, since equality is defined to be the subset relation in each direction. *)
-Coercion ideal_eq_subset {R : Ring} {I J : Subgroup R} : ideal_eq I J -> ideal_subset I J.
-Proof.
-  intros f x; apply f.
-Defined.
 
 (** *** Quotient (a.k.a colon) ideals *)
 
@@ -903,12 +940,21 @@ Proof.
   + by apply ideal_in_plus_negate.
 Defined.
 
+(** The product of opposite ideals is the opposite of the reversed product. *)
+Definition ideal_product_op {R : Ring} (I J : Ideal R)
+  : (ideal_op R I) ⋅ (ideal_op R J)
+    ↔ ideal_op R (J ⋅ I).
+Proof.
+  rapply ideal_product_type_op.
+Defined.
+
 (** The product of ideals is an associative operation. *)
 Lemma ideal_product_assoc {R : Ring} (I J K : Ideal R)
   : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
 Proof.
-  snapply ideal_subset_antisymm.
-  - intros x.
+  assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).
+  - clear R I J K; intros R I J K.
+    intros x.
     apply Trunc_rec. 
     intros p; induction p as [g [y z p q] | | g h p1 IHp1 p2 IHp2].
     + strip_truncations.
@@ -921,19 +967,16 @@ Proof.
         by apply ideal_in_plus_negate.
     + apply ideal_in_zero.
     + by apply ideal_in_plus_negate.
-  - intros x.
-    apply Trunc_rec.
-    intros p; induction p as [g [y z p q] | | g h p1 IHp1 p2 IHp2].
-    + strip_truncations.
-      induction p as [t [y w r s] | | t k p1 IHp1 p2 IHp2].
-      * rewrite <- rng_mult_assoc.
-        by apply tr, sgt_in, ipn_in; [ | apply tr, sgt_in, ipn_in ].
-      * rewrite rng_mult_zero_l.
-        apply ideal_in_zero.
-      * rewrite rng_dist_r_negate.
-        by apply ideal_in_plus_negate.
-    + apply ideal_in_zero.
-    + by apply ideal_in_plus_negate.
+  - apply ideal_subset_antisymm; only 1: apply f.
+    intros x i.
+    apply ideal_product_op.
+    napply (ideal_product_subset_pres_l (R:=rng_op R)).
+    1: napply ideal_product_op.
+    apply f.
+    apply (ideal_product_op (R:=rng_op R)).
+    napply (ideal_product_subset_pres_l (R:=R)).
+    1: napply (ideal_product_op (R:=rng_op R)).
+    exact i.
 Defined.
 
 (** Products of ideals are subsets of their intersection. *)
@@ -957,7 +1000,8 @@ Proof.
 Defined.
 
 (** Ideals absorb themselves under sum. *)
-Lemma ideal_sum_self {R : Ring} (I : Ideal R) : I + I ↔ I.
+Lemma ideal_sum_self {R : Ring} (I : Ideal R)
+  : I + I ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: by rapply ideal_sum_smallest.
