@@ -42,62 +42,10 @@ Ltac show_hyps :=
         | [ H : ?T |- _ ] => show_hyp H ; fail
       end.
 
-(** The [do] tactic but using a Coq-side nat. *)
-
-Ltac do_nat n tac :=
-  match n with
-    | O => idtac
-    | S ?n' => tac ; do_nat n' tac
-  end.
-
 (** Do something on the last hypothesis, or fail *)
 
 Ltac on_last_hyp tac :=
   match goal with [ H : _ |- _ ] => first [ tac H | fail 1 ] end.
-
-(** Destructs one pair, without care regarding naming. *)
-
-Ltac destruct_one_pair :=
- match goal with
-   | [H : prod _ _ |- _] => destruct H
- end.
-
-(** Repeateadly destruct pairs. *)
-
-Ltac destruct_pairs := repeat (destruct_one_pair).
-
-(** Destruct one existential package, keeping the name of the hypothesis for the first component. *)
-
-Ltac destruct_one_ex :=
-  let tacT H := let ph := fresh "X" in (destruct H as [H ph]) in
-    match goal with
-      | [H : (sig ?P) |- _ ] => tacT H
-    end.
-
-(** Repeateadly destruct existentials. *)
-
-Ltac destruct_exists := repeat (destruct_one_ex).
-
-(** Repeateadly destruct conjunctions and existentials. *)
-
-Ltac destruct_conjs := repeat (destruct_one_pair || destruct_one_ex).
-
-(** Destruct an existential hypothesis [t] keeping its name for the first component
-   and using [Ht] for the second *)
-
-Tactic Notation "destruct" "exist" ident(t) ident(Ht) := destruct t as [t Ht].
-
-(** Destruct a disjunction keeping its name in both subgoals. *)
-
-Tactic Notation "destruct" "or" ident(H) := destruct H as [H|H].
-
-(** Discriminate that also work on a [x <> x] hypothesis. *)
-
-Ltac discriminates :=
-  match goal with
-    (* | [ H : ?x <> ?x |- _ ] => elim H ; reflexivity *)
-    | _ => discriminate
-  end.
 
 (** Revert the last hypothesis. *)
 
@@ -144,15 +92,6 @@ Ltac clear_except hyp :=
              | _ => clear H
            end
          end.
-
-(** A non-failing subst that substitutes as much as possible. *)
-
-Ltac subst_no_fail := idtac.
-  (* repeat (match goal with *)
-  (*           [ H : ?X = ?Y |- _ ] => subst X || subst Y *)
-  (*         end). *)
-
-Tactic Notation "subst" "*" := subst_no_fail.
 
 Ltac on_application f tac T :=
   match T with
@@ -224,28 +163,13 @@ Ltac destruct_all_rec_calls :=
 
 (** Try to inject any potential constructor equality hypothesis. *)
 
-Ltac autoinjection tac := idtac.
-  (* match goal with *)
-  (*   | [ H : ?f ?a = ?f' ?a' |- _ ] => tac H *)
-  (* end. *)
+Ltac inject H := progress (inversion H ; clear_dups) ; clear H.
 
-Ltac inject H := progress (inversion H ; subst*; clear_dups) ; clear H.
-
-Ltac autoinjections := repeat (clear_dups ; autoinjection ltac:(inject)).
+Ltac autoinjections := repeat (clear_dups ; ltac:(inject)).
 
 (** Destruct an hypothesis by first copying it to avoid dependencies. *)
 
 Ltac destruct_nondep H := let H0 := fresh "H" in assert(H0 := H); destruct H0.
-
-(** If bang appears in the goal, it means that we have a proof of False and the goal is solved. *)
-
-Ltac bang :=
-  match goal with
-    | |- ?x =>
-      match x with
-        | context [Empty_rect _ ?p] => elim p
-      end
-  end.
 
 (** A tactic to show contradiction by first asserting an automatically provable hypothesis. *)
 Tactic Notation "contradiction" "by" constr(t) :=
@@ -283,32 +207,6 @@ Ltac refine_hyp c :=
       | ?H _ _ _ _ _ _ _ => tac H
       | ?H _ _ _ _ _ _ _ _ => tac H
     end.
-
-(** The default simplification tactic used by Program is defined by [program_simpl], sometimes [auto]
-   is not enough, better rebind using [Obligation Tactic := tac] in this case,
-   possibly using [program_simplify] to use standard goal-cleaning tactics. *)
-
-Ltac program_simplify :=
-simpl; intros ; destruct_all_rec_calls ; repeat (destruct_conjs; simpl proj1 in * );
-  subst*; autoinjections ; try discriminates ;
-    try (solve [ red ; intros ; destruct_conjs ; autoinjections ; discriminates ]).
-
-(** Restrict automation to propositional obligations. *)
-
-Ltac program_solve_wf :=
-  match goal with
-    (* | |- well_founded _ => auto with * *)
-    | |- ?T => match type of T with Prop => auto end
-  end.
-
-Create HintDb program discriminated.
-
-Ltac program_simpl := program_simplify ; try typeclasses eauto with program ; try program_solve_wf.
-
-#[global] Obligation Tactic := program_simpl.
-
-Definition obligation (A : Type) {a : A} := a.
-
 
 (** TODO: From here comes from Overture.v *)
 
