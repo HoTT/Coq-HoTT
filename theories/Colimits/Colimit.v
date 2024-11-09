@@ -182,7 +182,45 @@ Defined.
 Global Instance iscolimit_colimit `{Funext} {G : Graph} (D : Diagram G)
   : IsColimit D (Colimit D) := Build_IsColimit _ (unicocone_colimit D).
 
-(** * Functoriality of colimits *)
+(** ** Functoriality of concrete colimits *)
+
+(** We will capitalize [Colimit] to indicate that these definitions relate to the concrete colimit defined above.  Below, we will also get functoriality for abstract colimits, without the capital C.  However, to apply those results to the concrete colimit uses [iscolimit_colimit], which requires [Funext], so it is also useful to give direct proofs of some facts. *)
+
+Definition functor_Colimit {G : Graph} {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
+  : Colimit D1 -> Colimit D2.
+Proof.
+  apply Colimit_rec.
+  refine (cocone_precompose m (cocone_colimit D2)).
+Defined.
+
+Definition functor_Colimit_homotopy {G : Graph} {D1 D2 : Diagram G}
+  {m1 m2 : DiagramMap D1 D2} (h_obj : forall i, m1 i == m2 i)
+  (h_comm : forall i j (g : G i j) x,
+      DiagramMap_comm m1 g x @ h_obj j (D1 _f g x)
+      = ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m2 g x)
+  : functor_Colimit m1 == functor_Colimit m2.
+Proof.
+  (* The proof is very similar to the proof of [functor_coeq_homotopy], but it's not clear if we can easily reuse that here. We'd have to redefine [functor_Colimit] using [functor_coeq], and that is more awkward. *)
+  snrapply Colimit_ind.
+  - intros i x; simpl.
+    apply ap, h_obj.
+  - intros i j g x; simpl.
+    Open Scope long_path_scope.
+    nrapply (transport_paths_FlFr' (colimp i j g x)); simpl.
+    rewrite 2 Colimit_rec_beta_colimp; simpl.
+    rewrite ap_V.
+    lhs nrapply concat_pp_p.
+    apply moveR_Vp.
+    rewrite ! concat_p_pp.
+    rewrite <- 2 ap_pp.
+    rewrite h_comm.
+    rewrite concat_pp_V.
+    rewrite <- ap_compose.
+    exact (concat_Ap (colimp i j g) (h_obj i x))^.
+    Close Scope long_path_scope.
+Qed.
+
+(** ** Functoriality of abstract colimits *)
 
 Section FunctorialityColimit.
 
