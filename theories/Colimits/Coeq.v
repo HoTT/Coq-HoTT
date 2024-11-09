@@ -212,18 +212,20 @@ Definition functor_coeq_homotopy {B A f g B' A' f' g'}
 : functor_coeq h k p q == functor_coeq h' k' p' q'.
 Proof.
   refine (Coeq_ind _ (fun a => ap coeq (s a)) _); cbn; intros b.
-  refine (transport_paths_FlFr (cglue b) _ @ _).
-  rewrite concat_pp_p; apply moveR_Vp.
+  apply transport_paths_FlFr'.
   rewrite !functor_coeq_beta_cglue.
   Open Scope long_path_scope.
+  rewrite 2 ap_V.
   rewrite !concat_p_pp.
+  apply moveL_pV.
   rewrite <- (ap_pp (@coeq _ _ f' g') (s (f b)) (p' b)).
-  rewrite u, ap_pp, !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
-  rewrite ap_V; apply moveR_pV.
-  rewrite !concat_pp_p, <- (ap_pp (@coeq _ _ f' g') (s (g b)) (q' b)).
-  rewrite v, ap_pp, ap_V, concat_V_pp.
-  rewrite <- !ap_compose.
-  exact (concat_Ap (@cglue _ _ f' g') (r b)).
+  rewrite u, ap_pp.
+  rewrite !concat_pp_p; apply whiskerL.
+  rewrite <- (ap_pp (@coeq _ _ f' g') (s (g b)) (q' b)).
+  rewrite v, ap_pp.
+  rewrite concat_V_pp.
+  rewrite <- 2 ap_compose.
+  exact (concat_Ap (@cglue _ _ f' g') (r b))^.
   Close Scope long_path_scope.
 Qed.
 
