@@ -7,6 +7,8 @@ Require Import
 
 Local Open Scope nat_scope.
 
+Set Universe Minimization ToSet.
+
 Definition FinNat (n : nat) : Type0 := {x : nat | x < n}.
 
 Definition zero_finnat (n : nat) : FinNat n.+1
