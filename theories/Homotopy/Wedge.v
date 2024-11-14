@@ -210,7 +210,7 @@ Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
 Proof.
   snrapply Build_pMap.
   - snrapply Pushout_rec.
-    + apply (sig_rec _ _ _ f).
+    + apply (sig_rec f).
     + exact pconst.
     + intros i.
       exact (point_eq (f i)).
