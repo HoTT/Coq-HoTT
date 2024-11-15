@@ -83,11 +83,7 @@ Definition is_bounded_fin_to_nat {n} (k : Fin n)
 Proof.
   induction n as [| n IHn].
   - elim k.
-  - destruct k as [k | []].
-    + apply (@leq_trans _ n _).
-      * apply IHn.
-      * by apply leq_succ_r.
-    + apply leq_refl.
+  - destruct k as [k | []]; exact _.
 Defined.
 
 Definition fin_to_finnat {n} (k : Fin n) : FinNat n
