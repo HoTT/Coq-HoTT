@@ -144,13 +144,13 @@ Defined.
 Lemma path_finnat_to_fin_incl {n : nat} (u : FinNat n)
   : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).
 Proof.
-  induction n as [| n IHn].
-  - elim (not_lt_zero_r _ u.2).
-  - destruct u as [x h].
-    destruct x as [| x]; [reflexivity|].
-    refine ((ap _ (ap _ (path_succ_finnat x h)))^ @ _).
-    refine (_ @ ap fsucc (IHn (x; leq_pred' h))).
-    by induction (path_finnat_to_fin_succ (incl_finnat (x; leq_pred' h))).
+  revert n u.
+  snrapply finnat_ind.
+  1: reflexivity.
+  intros n u; cbn beta; intros p.
+  lhs nrapply (path_finnat_to_fin_succ (incl_finnat u)).
+  lhs nrapply (ap fsucc p).
+  exact (ap fin_incl (path_finnat_to_fin_succ _))^.
 Defined.
 
 Lemma path_finnat_to_fin_last (n : nat)
