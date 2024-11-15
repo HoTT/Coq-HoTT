@@ -1,9 +1,8 @@
-Require Import
-  HoTT.Basics
-  HoTT.Types
-  HoTT.Universes.HSet
-  HoTT.Spaces.Nat.Core
-  HoTT.Spaces.Finite.Fin.
+Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.PathGroupoids
+  Basics.Equivalences Basics.Decidable Basics.Classes.
+Require Import Types.Empty Types.Sigma Types.Sum Types.Prod Types.Equiv.
+Require Import Spaces.Nat.Core.
+Require Import Finite.Fin.
 
 Local Open Scope nat_scope.
 
@@ -63,7 +62,7 @@ Lemma compute_finnat_ind_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
   snrapply (transport2 _ (q:=1)).
-  apply hset_path2.
+  rapply path_ishprop.
 Defined.
 
 Lemma compute_finnat_ind_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
@@ -76,7 +75,7 @@ Proof.
   destruct u as [u1 u2]; simpl; unfold path_succ_finnat.
   destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).
   refine (transport2 _ (q:=1) _ _).
-  apply hset_path2.
+  rapply path_ishprop.
 Defined.
 
 Definition is_bounded_fin_to_nat {n} (k : Fin n)
