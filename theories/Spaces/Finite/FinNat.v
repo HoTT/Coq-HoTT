@@ -41,13 +41,13 @@ Proof.
   by apply path_sigma_hprop.
 Defined.
 
-Definition finnat_ind (P : forall n : nat, FinNat n -> Type)
+Definition finnat_ind@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))
   {n : nat} (u : FinNat n)
   : P n u.
 Proof.
-  induction n as [| n IHn].
+  simple_induction n n IHn; intro u.
   - elim (not_lt_zero_r u.1 u.2).
   - destruct u as [x h].
     destruct x as [| x].
@@ -56,7 +56,7 @@ Proof.
       apply s. apply IHn.
 Defined.
 
-Lemma compute_finnat_ind_zero (P : forall n : nat, FinNat n -> Type)
+Lemma compute_finnat_ind_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))
   (n : nat)
@@ -66,7 +66,7 @@ Proof.
   apply hset_path2.
 Defined.
 
-Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
+Lemma compute_finnat_ind_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n),
        P n u -> P n.+1 (succ_finnat u))
@@ -187,7 +187,7 @@ Proof.
     + apply path_finnat_to_fin_last.
 Defined.
 
-Definition equiv_fin_finnat (n : nat) : Fin n <~> FinNat n
+Definition equiv_fin_finnat@{} (n : nat) : Fin n <~> FinNat n
   := equiv_adjointify fin_to_finnat finnat_to_fin
       path_finnat_to_fin_to_finnat
       path_fin_to_finnat_to_fin.
