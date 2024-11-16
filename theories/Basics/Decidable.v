@@ -32,7 +32,7 @@ Ltac decide :=
   | [|- ~ ?A] => decide_type A
   end.
 
-Definition decidable_true {A : Type} `{Decidable A}
+Definition decidable_true {A : Type}
   (a : A)
   (P : forall (p : Decidable A), Type)
   (p : forall x, P (inl x))
@@ -49,7 +49,7 @@ Ltac decidable_true p a :=
   rapply (decidable_true a);
   try intro.
 
-Definition decidable_false {A : Type} `{Decidable A}
+Definition decidable_false {A : Type}
   (n : not A)
   (P : forall (p : Decidable A), Type)
   (p : forall n', P (inr n'))
@@ -259,7 +259,7 @@ Proof.
   assert (IsHSet A) by exact _.
   apply (Build_Contr _ d).
   intros d'.
-  apply path_forall; intros x; apply path_forall; intros y.
+  funext x y.
   generalize (d x y); clear d; intros d.
   generalize (d' x y); clear d'; intros d'.
   destruct d as [d|nd]; destruct d' as [d'|nd'].
