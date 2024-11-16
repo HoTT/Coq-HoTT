@@ -437,15 +437,14 @@ Defined.
 (** [n] modulo [0] is [n]. *)
 Definition nat_mod_zero_r n : n mod 0 = n := idpath.
 
-(** TODO: generalise for all small n *)
-Definition nat_mod_one_l n : 1 < n -> 1 mod n = 1.
+Definition nat_mod_lt n k : k < n -> k mod n = k.
 Proof.
   intros H.
-  destruct H; trivial.
-  destruct m.
-  1: contradiction (not_lt_zero_r _ H).
-  cbn; clear H.
-  by induction m.
+  lhs_V nrapply nat_div_mod_spec'.
+  rewrite nat_div_lt.
+  - rewrite nat_mul_zero_r.
+    apply nat_sub_zero_r.
+  - exact H.
 Defined.
 
 (** [n] modulo [1] is [0]. *)
