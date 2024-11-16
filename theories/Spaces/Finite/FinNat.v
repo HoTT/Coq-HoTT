@@ -79,7 +79,7 @@ Proof.
   apply hset_path2.
 Defined.
 
-Monomorphic Definition is_bounded_fin_to_nat {n} (k : Fin n)
+Definition is_bounded_fin_to_nat {n} (k : Fin n)
   : fin_to_nat k < n.
 Proof.
   induction n as [| n IHn].
@@ -91,10 +91,10 @@ Proof.
     + apply leq_refl.
 Defined.
 
-Monomorphic Definition fin_to_finnat {n} (k : Fin n) : FinNat n
+Definition fin_to_finnat {n} (k : Fin n) : FinNat n
   := (fin_to_nat k; is_bounded_fin_to_nat k).
 
-Monomorphic Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
+Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
   := match n with
      | 0 => fun u => Empty_rec (not_lt_zero_r _ u.2)
      | n.+1 => fun u =>
