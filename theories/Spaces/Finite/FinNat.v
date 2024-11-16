@@ -11,31 +11,26 @@ Set Universe Minimization ToSet.
 
 Definition FinNat (n : nat) : Type0 := {x : nat | x < n}.
 
-Definition zero_finnat (n : nat) : FinNat n.+1
-  := (0; _ : 0 < n.+1).
-
-Lemma path_zero_finnat (n : nat) (h : 0 < n.+1) : zero_finnat n = (0; h).
+Definition path_finnat {n : nat} (x : nat) (h1 h2 : x < n)
+  : (x; h1) = (x; h2) :> FinNat n.
 Proof.
   by apply path_sigma_hprop.
 Defined.
+
+Definition zero_finnat (n : nat) : FinNat n.+1
+  := (0; _ : 0 < n.+1).
 
 Definition succ_finnat {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1.+1; leq_succ u.2).
 
-Lemma path_succ_finnat {n : nat} (u : FinNat n) (h : u.1.+1 < n.+1)
-  : succ_finnat u = (u.1.+1; h).
+Lemma path_succ_finnat {n : nat} (x : nat) (h : x.+1 < n.+1)
+  : succ_finnat (x; leq_pred' h) = (x.+1; h).
 Proof.
-  by apply path_sigma_hprop.
+  by apply path_finnat.
 Defined.
 
 Definition last_finnat (n : nat) : FinNat n.+1
   := exist (fun x => x < n.+1) n (leq_refl n.+1).
-
-Lemma path_last_finnat (n : nat) (h : n < n.+1)
-  : last_finnat n = (n; h).
-Proof.
-  by apply path_sigma_hprop.
-Defined.
 
 Definition incl_finnat {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1; leq_trans u.2 (leq_succ_r (leq_refl n))).
@@ -56,8 +51,8 @@ Proof.
   - elim (not_lt_zero_r u.1 u.2).
   - destruct u as [x h].
     destruct x as [| x].
-    + exact (transport (P n.+1) (path_zero_finnat _ h) (z _)).
-    + refine (transport (P n.+1) (path_succ_finnat (x; leq_pred' h) _) _).
+    + exact (transport (P n.+1) (path_finnat _ _ h) (z _)).
+    + refine (transport (P n.+1) (path_succ_finnat x h) _).
       apply s. apply IHn.
 Defined.
 
@@ -67,10 +62,8 @@ Lemma compute_finnat_ind_zero (P : forall n : nat, FinNat n -> Type)
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  unshelve lhs snrapply transport2.
-  - reflexivity.
-  - rapply hset_path2.
-  - reflexivity.
+  snrapply (transport2 _ (q:=1)).
+  apply hset_path2.
 Defined.
 
 Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
@@ -80,13 +73,10 @@ Lemma compute_finnat_ind_succ (P : forall n : nat, FinNat n -> Type)
   {n : nat} (u : FinNat n)
   : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).
 Proof.
-  refine
-    (_ @ transport
-          (fun p => transport _ p (s n u _) = s n u (finnat_ind P z s u))
-          (hset_path2 1 (path_succ_finnat u (leq_succ u.2))) 1).
-  destruct u as [u1 u2].
-  assert (u2 = leq_pred' (leq_succ u2)) as p by apply path_ishprop.
-  simpl; by induction p.
+  destruct u as [u1 u2]; simpl; unfold path_succ_finnat.
+  destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).
+  refine (transport2 _ (q:=1) _ _).
+  apply hset_path2.
 Defined.
 
 Monomorphic Definition is_bounded_fin_to_nat {n} (k : Fin n)
@@ -159,7 +149,7 @@ Proof.
   - elim (not_lt_zero_r _ u.2).
   - destruct u as [x h].
     destruct x as [| x]; [reflexivity|].
-    refine ((ap _ (ap _ (path_succ_finnat (x; leq_pred' h) h)))^ @ _).
+    refine ((ap _ (ap _ (path_succ_finnat x h)))^ @ _).
     refine (_ @ ap fsucc (IHn (x; leq_pred' h))).
     by induction (path_finnat_to_fin_succ (incl_finnat (x; leq_pred' h))).
 Defined.
