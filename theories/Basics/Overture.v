@@ -163,6 +163,7 @@ Scheme sig_ind := Induction for sig Sort Type.
 Scheme sig_rec := Minimality for sig Sort Type.
 
 Arguments sig_ind {_ _}.
+Arguments sig_rec {_ _ _}.
 
 (** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 

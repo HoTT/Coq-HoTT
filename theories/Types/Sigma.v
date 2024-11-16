@@ -290,7 +290,7 @@ Defined.
 Definition ap_sig_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
   (x1 x2 : A) (p : x1 = x2) (y1 : P x1) (y2 : P x2) (q : p # y1 = y2)
   (d : forall a, P a -> Q)
-  : ap (sig_rec _ _ Q d) (path_sigma' P p q)
+  : ap (sig_rec d) (path_sigma' P p q)
     = (transport_const p _)^
         @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
           @ (transport_arrow p _ _)^
