@@ -505,8 +505,7 @@ Proof.
   exact (apD df (eissect f x)).
 Defined.
 
-(** Using [equiv_ind], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
-
+(** Using [equiv_ind], we define a handy little tactic which introduces a variable [x] and simultaneously substitutes it along an equivalence [E]. *)
 Ltac equiv_intro E x :=
   match goal with
     | |- forall y, @?Q y =>
