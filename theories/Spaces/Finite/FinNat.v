@@ -8,18 +8,18 @@ Local Open Scope nat_scope.
 
 Set Universe Minimization ToSet.
 
-Definition FinNat (n : nat) : Type0 := {x : nat | x < n}.
+Definition FinNat@{} (n : nat) : Type0 := {x : nat | x < n}.
 
-Definition zero_finnat (n : nat) : FinNat n.+1
+Definition zero_finnat@{} (n : nat) : FinNat n.+1
   := (0; _ : 0 < n.+1).
 
-Definition succ_finnat {n : nat} (u : FinNat n) : FinNat n.+1
+Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1.+1; leq_succ u.2).
 
-Definition last_finnat (n : nat) : FinNat n.+1
+Definition last_finnat@{} (n : nat) : FinNat n.+1
   := exist (fun x => x < n.+1) n (leq_refl n.+1).
 
-Definition incl_finnat {n : nat} (u : FinNat n) : FinNat n.+1
+Definition incl_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1; leq_trans u.2 (leq_succ_r (leq_refl n))).
 
 Definition finnat_ind@{u} (P : forall n : nat, FinNat n -> Type@{u})
@@ -38,7 +38,7 @@ Proof.
       by apply path_sigma_hprop.
 Defined.
 
-Lemma compute_finnat_ind_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
+Definition compute_finnat_ind_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))
   (n : nat)
@@ -48,7 +48,7 @@ Proof.
   rapply path_ishprop.
 Defined.
 
-Lemma compute_finnat_ind_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
+Definition compute_finnat_ind_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n),
        P n u -> P n.+1 (succ_finnat u))
@@ -61,7 +61,7 @@ Proof.
   rapply path_ishprop.
 Defined.
 
-Definition is_bounded_fin_to_nat {n} (k : Fin n)
+Definition is_bounded_fin_to_nat@{} {n} (k : Fin n)
   : fin_to_nat k < n.
 Proof.
   induction n as [| n IHn].
@@ -72,7 +72,7 @@ Defined.
 Definition fin_to_finnat {n} (k : Fin n) : FinNat n
   := (fin_to_nat k; is_bounded_fin_to_nat k).
 
-Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
+Fixpoint finnat_to_fin@{} {n : nat} : FinNat n -> Fin n
   := match n with
      | 0 => fun u => Empty_rec (not_lt_zero_r _ u.2)
      | n.+1 => fun u =>
@@ -82,27 +82,27 @@ Fixpoint finnat_to_fin {n : nat} : FinNat n -> Fin n
         end
      end.
 
-Lemma path_fin_to_finnat_fsucc {n : nat} (k : Fin n)
+Definition path_fin_to_finnat_fsucc@{} {n : nat} (k : Fin n)
   : fin_to_finnat (fsucc k) = succ_finnat (fin_to_finnat k).
 Proof.
   apply path_sigma_hprop.
   apply path_nat_fsucc.
 Defined.
 
-Lemma path_fin_to_finnat_fin_zero (n : nat)
+Definition path_fin_to_finnat_fin_zero@{} (n : nat)
   : fin_to_finnat (@fin_zero n) = zero_finnat n.
 Proof.
   apply path_sigma_hprop.
   apply path_nat_fin_zero.
 Defined.
 
-Lemma path_finnat_to_fin_succ {n : nat} (u : FinNat n)
+Definition path_finnat_to_fin_succ@{} {n : nat} (u : FinNat n)
   : finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u).
 Proof.
   cbn. do 2 f_ap. by apply path_sigma_hprop.
 Defined.
 
-Lemma path_finnat_to_fin_incl {n : nat} (u : FinNat n)
+Definition path_finnat_to_fin_incl@{} {n : nat} (u : FinNat n)
   : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).
 Proof.
   revert n u.
@@ -114,7 +114,7 @@ Proof.
   exact (ap fin_incl (path_finnat_to_fin_succ _))^.
 Defined.
 
-Lemma path_finnat_to_fin_last (n : nat)
+Definition path_finnat_to_fin_last@{} (n : nat)
   : finnat_to_fin (last_finnat n) = fin_last.
 Proof.
   induction n as [| n IHn].
@@ -122,7 +122,7 @@ Proof.
   - exact (ap fsucc IHn).
 Defined.
 
-Lemma path_finnat_to_fin_to_finnat {n : nat} (u : FinNat n)
+Definition path_finnat_to_fin_to_finnat@{} {n : nat} (u : FinNat n)
   : fin_to_finnat (finnat_to_fin u) = u.
 Proof.
   induction n as [| n IHn].
@@ -135,7 +135,7 @@ Proof.
       exact (ap S (IHn (x; leq_pred' h))..1).
 Defined.
 
-Lemma path_fin_to_finnat_to_fin {n : nat} (k : Fin n)
+Definition path_fin_to_finnat_to_fin@{} {n : nat} (k : Fin n)
   : finnat_to_fin (fin_to_finnat k) = k.
 Proof.
   induction n as [| n IHn].
@@ -151,4 +151,3 @@ Definition equiv_fin_finnat@{} (n : nat) : Fin n <~> FinNat n
   := equiv_adjointify fin_to_finnat finnat_to_fin
       path_finnat_to_fin_to_finnat
       path_fin_to_finnat_to_fin.
-
