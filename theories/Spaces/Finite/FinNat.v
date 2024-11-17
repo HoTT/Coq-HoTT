@@ -15,10 +15,10 @@ Definition zero_finnat@{} (n : nat) : FinNat n.+1
 
 Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1.+1; leq_succ u.2).
-  
-Definition path_succ_finnat@{} {n : nat} (u : FinNat n) (h : u.1.+1 < n.+1)
-  : succ_finnat u = (u.1.+1; h).
-Proof.
+
+Definition path_succ_finnat {n : nat} (x : nat) (h : x.+1 < n.+1)	
+  : succ_finnat (x; leq_pred' h) = (x.+1; h).	
+Proof.	
   by apply path_sigma_hprop.
 Defined.
 
@@ -40,7 +40,7 @@ Proof.
     destruct x as [| x].
     + nrefine (transport (P n.+1) _ (z _)).
       by apply path_sigma_hprop.
-    + refine (transport (P n.+1) (path_succ_finnat (x; leq_pred' h) _) _).
+    + refine (transport (P n.+1) (path_succ_finnat _ _) _).
       apply s. apply IHn.
 Defined.
 
@@ -61,7 +61,7 @@ Definition finnat_ind_beta_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
   {n : nat} (u : FinNat n)
   : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).
 Proof.
-  destruct u as [u1 u2]; simpl.
+  destruct u as [u1 u2]; simpl; unfold path_succ_finnat.
   destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).
   refine (transport2 _ (q:=idpath@{Set}) _ _).
   rapply path_ishprop.
