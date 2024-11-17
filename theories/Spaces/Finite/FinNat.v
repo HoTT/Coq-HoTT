@@ -38,7 +38,7 @@ Proof.
       by apply path_sigma_hprop.
 Defined.
 
-Definition compute_finnat_ind_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
+Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))
   (n : nat)
@@ -48,7 +48,7 @@ Proof.
   rapply path_ishprop.
 Defined.
 
-Definition compute_finnat_ind_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
+Definition finnat_ind_beta_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (z : forall n : nat, P n.+1 (zero_finnat n))
   (s : forall (n : nat) (u : FinNat n),
        P n u -> P n.+1 (succ_finnat u))

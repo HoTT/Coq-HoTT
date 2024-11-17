@@ -22,7 +22,7 @@ Proof.
     by apply s.
 Defined.
 
-Lemma compute_fin_ind_fin_zero (P : forall n : nat, Fin n -> Type)
+Lemma fin_ind_beta_zero (P : forall n : nat, Fin n -> Type)
   (z : forall n : nat, P n.+1 fin_zero)
   (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k)) (n : nat)
   : fin_ind P z s fin_zero = z n.
@@ -33,10 +33,10 @@ Proof.
   intro p.
   destruct (hset_path2 1 p).
   lhs nrapply transport_1.
-  nrapply compute_finnat_ind_zero.
+  nrapply finnat_ind_beta_zero.
 Defined.
 
-Lemma compute_fin_ind_fsucc (P : forall n : nat, Fin n -> Type)
+Lemma fin_ind_beta_fsucc (P : forall n : nat, Fin n -> Type)
   (z : forall n : nat, P n.+1 fin_zero)
   (s : forall (n : nat) (k : Fin n), P n k -> P n.+1 (fsucc k))
   {n : nat} (k : Fin n)
@@ -46,7 +46,7 @@ Proof.
   generalize (path_fin_to_finnat_to_fin (fsucc k)).
   induction (path_fin_to_finnat_fsucc k)^.
   intro p.
-  refine (ap (transport (P n.+1) p) (compute_finnat_ind_succ _ _ _ _) @ _).
+  refine (ap (transport (P n.+1) p) (finnat_ind_beta_succ _ _ _ _) @ _).
   generalize dependent p.
   induction (path_fin_to_finnat_to_fin k).
   induction (path_fin_to_finnat_to_fin k)^.
@@ -60,20 +60,20 @@ Definition fin_rec (B : nat -> Type)
     forall {n : nat}, Fin n -> B n
   := fin_ind (fun n _ => B n).
 
-Lemma compute_fin_rec_fin_zero (B : nat -> Type)
+Lemma fin_rec_beta_zero (B : nat -> Type)
   (z : forall n : nat, B n.+1)
   (s : forall (n : nat) (k : Fin n), B n -> B n.+1) (n : nat)
   : fin_rec B z s fin_zero = z n.
 Proof.
-  apply (compute_fin_ind_fin_zero (fun n _ => B n)).
+  apply (fin_ind_beta_zero (fun n _ => B n)).
 Defined.
 
-Lemma compute_fin_rec_fsucc (B : nat -> Type)
+Lemma fin_rec_beta_fsucc (B : nat -> Type)
   (z : forall n : nat, B n.+1)
   (s : forall (n : nat) (k : Fin n), B n -> B n.+1)
   {n : nat} (k : Fin n)
   : fin_rec B z s (fsucc k) = s n k (fin_rec B z s k).
 Proof.
-  apply (compute_fin_ind_fsucc (fun n _ => B n)).
+  apply (fin_ind_beta_fsucc (fun n _ => B n)).
 Defined.
 
