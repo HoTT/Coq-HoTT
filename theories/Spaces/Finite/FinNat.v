@@ -15,6 +15,12 @@ Definition zero_finnat@{} (n : nat) : FinNat n.+1
 
 Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1.+1; leq_succ u.2).
+  
+Definition path_succ_finnat@{} {n : nat} (u : FinNat n) (h : u.1.+1 < n.+1)
+  : succ_finnat u = (u.1.+1; h).
+Proof.
+  by apply path_sigma_hprop.
+Defined.
 
 Definition last_finnat@{} (n : nat) : FinNat n.+1
   := exist (fun x => x < n.+1) n (leq_refl n.+1).
@@ -34,8 +40,8 @@ Proof.
     destruct x as [| x].
     + nrefine (transport (P n.+1) _ (z _)).
       by apply path_sigma_hprop.
-    + refine (transport (P n.+1) _ (s _ _ (IHn (x; leq_pred' _)))).
-      by apply path_sigma_hprop.
+    + refine (transport (P n.+1) (path_succ_finnat (x; leq_pred' h) _) _).
+      apply s. apply IHn.
 Defined.
 
 Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
