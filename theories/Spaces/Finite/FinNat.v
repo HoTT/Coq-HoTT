@@ -16,9 +16,9 @@ Definition zero_finnat@{} (n : nat) : FinNat n.+1
 Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
   := (u.1.+1; leq_succ u.2).
 
-Definition path_succ_finnat {n : nat} (x : nat) (h : x.+1 < n.+1)	
-  : succ_finnat (x; leq_pred' h) = (x.+1; h).	
-Proof.	
+Definition path_succ_finnat {n : nat} (x : nat) (h : x.+1 < n.+1)
+  : succ_finnat (x; leq_pred' h) = (x.+1; h).
+Proof.
   by apply path_sigma_hprop.
 Defined.
 
