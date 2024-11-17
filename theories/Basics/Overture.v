@@ -513,15 +513,11 @@ Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
 
 (** ** Function extensionality *)
 
-(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
+(** Function extensionality is stated as the axiom [isequiv_apD10].  In order to track where it is used, we create an empty type [Funext] and require a term of that type in order to apply [isequiv_apD10].  Since there are no terms of that type, any definition that uses function extensionality (directly or indirectly) must have [Funext] as a hypothesis.  This is done by adding [`{Funext}] to the argument list.  You can also assume it for an entire Section with [Context `{Funext}].  Since [Funext] is a [Class], the provided argument will be found by typeclass search.
 
-(** We use a dummy class and an axiom to get universe polymorphism of [Funext] while still tracking its uses.  Coq's universe polymorphism is parametric; in all definitions, all universes are quantified over before any other variables.  It's impossible to state a theorem like [(forall i : Level, P i) -> Q] (e.g., "if [C] has all limits of all sizes, then [C] is a preorder" isn't statable)*.  By making [isequiv_apD10] an [Axiom] rather than a per-theorem hypothesis, we can use it at multiple incompatible universe levels.  By only allowing use of the axiom when we have a [Funext] in the context, we can still track what theorems depend on it (because their type will mention [Funext]).
+    This approach also has the advantage that it lets us use [isequiv_apD10] at multiple universe levels, with a single assumption.
 
-    By giving [Funext] a field whose type is an axiom, we guarantee that we cannot construct a fresh instance of [Funext] without [admit]; there's no term of type [dummy_funext_type] floating around.  If we did not give [Funext] any fields, then we could accidentally manifest a [Funext] using, e.g., [constructor], and then we wouldn't have a tag on the theorem that did this.
-
-    As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
-
-    * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
+    To get rid of unneeded universe variables, we put [Funext] in [Type0] and make it [Monomorphic]. *)
 
 Monomorphic Axiom Funext : Type0.
 Existing Class Funext.
