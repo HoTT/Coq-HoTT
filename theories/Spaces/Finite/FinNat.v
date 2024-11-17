@@ -44,7 +44,7 @@ Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  snrapply (transport2 _ (q:=1)).
+  snrapply (transport2 _ (q:=idpath@{Set})).
   rapply path_ishprop.
 Defined.
 
@@ -57,7 +57,7 @@ Definition finnat_ind_beta_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})
 Proof.
   destruct u as [u1 u2]; simpl.
   destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).
-  refine (transport2 _ (q:=1) _ _).
+  refine (transport2 _ (q:=idpath@{Set}) _ _).
   rapply path_ishprop.
 Defined.
 
