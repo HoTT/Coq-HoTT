@@ -149,7 +149,7 @@ End IdealElements.
 Definition ideal_eq {R : Ring} (I J : Subgroup R) := forall x, I x <-> J x.
 
 (** With univalence we can characterize equality of ideals. *)
-Lemma equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R} : ideal_eq I J <~> I = J.
+Definition equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R} : ideal_eq I J <~> I = J.
 Proof.
   refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).
   refine (equiv_path_sigma_hprop _ _ oE _).
@@ -757,7 +757,7 @@ Proof.
     exact _.
 Defined.
 
-Lemma equiv_coprime_sum `{Funext} {R : Ring} (I J : Ideal R)
+Definition equiv_coprime_sum `{Funext} {R : Ring} (I J : Ideal R)
   : Coprime I J
   <~> hexists (fun '(((i ; p) , (j ; q)) : sig I * sig J)
       => i + j = ring_one).
@@ -828,48 +828,48 @@ Module Import Notation.
   Notation Ann := ideal_annihilator.
 End Notation.
 
-(** *** Ideal lemmas *)
+(** *** Ideal Lemmas *)
 
 (** Subset relation is antisymmetric. *)
-Lemma ideal_subset_antisymm {R : Ring} (I J : Subgroup R)
+Definition ideal_subset_antisymm {R : Ring} (I J : Subgroup R)
   : I ⊆ J -> J ⊆ I -> I ↔ J.
 Proof.
   intros p q x; split; by revert x.
 Defined.
 
 (** The zero ideal is contained in all ideals. *)
-Lemma ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I.
+Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I.
 Proof.
   intros x p; rewrite p; apply ideal_in_zero.
 Defined.
 
 (** The unit ideal contains all ideals. *)
-Lemma ideal_unit_subset {R : Ring} (I : Subgroup R) : I ⊆ ideal_unit R.
+Definition ideal_unit_subset {R : Ring} (I : Subgroup R) : I ⊆ ideal_unit R.
 Proof.
   hnf; cbn; trivial.
 Defined.
 
 (** Intersection includes into the left *)
-Lemma ideal_intersection_subset_l {R : Ring} (I J : Ideal R) : I ∩ J ⊆ I.
+Definition ideal_intersection_subset_l {R : Ring} (I J : Ideal R) : I ∩ J ⊆ I.
 Proof.
   intro; exact fst.
 Defined.
 
 (** Intersection includes into the right *)
-Lemma ideal_intersection_subset_r {R : Ring} (I J : Ideal R) : I ∩ J ⊆ J.
+Definition ideal_intersection_subset_r {R : Ring} (I J : Ideal R) : I ∩ J ⊆ J.
 Proof.
   intro; exact snd.
 Defined.
 
 (** Subsets of intersections *)
-Lemma ideal_intersection_subset {R : Ring} (I J K : Ideal R)
+Definition ideal_intersection_subset {R : Ring} (I J K : Ideal R)
   : K ⊆ I -> K ⊆ J -> K ⊆ I ∩ J.
 Proof.
   intros p q x r; specialize (p x r); specialize (q x r); by split.
 Defined.
 
 (** Ideals include into their sum on the left *)
-Lemma ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J).
+Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J).
 Proof.
   intros x p.
   apply tr, sgt_in.
@@ -877,7 +877,7 @@ Proof.
 Defined.
 
 (** Ideals include into their sum on the right *)
-Lemma ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J).
+Definition ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J).
 Proof.
   intros x p.
   apply tr, sgt_in.
@@ -887,7 +887,7 @@ Defined.
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
 
 (** Products of ideals are included in their left factor *)
-Lemma ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.
+Definition ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.
 Proof.
   intros r p.
   strip_truncations.
@@ -899,7 +899,7 @@ Proof.
 Defined.
 
 (** Products of ideals are included in their right factor. *)
-Lemma ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.
+Definition ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.
 Proof.
   intros r p.
   strip_truncations.
@@ -911,7 +911,7 @@ Proof.
 Defined.
 
 (** Products of ideals preserve subsets on the left *)
-Lemma ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
+Definition ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> I ⋅ K ⊆ J ⋅ K.
 Proof.
   intros p r q.
@@ -926,7 +926,7 @@ Proof.
 Defined.
 
 (** Products of ideals preserve subsets on the right *)
-Lemma ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
+Definition ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> K ⋅ I ⊆ K ⋅ J.
 Proof.
   intros p r q.
@@ -949,7 +949,7 @@ Proof.
 Defined.
 
 (** The product of ideals is an associative operation. *)
-Lemma ideal_product_assoc {R : Ring} (I J K : Ideal R)
+Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
   : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
 Proof.
   assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).
@@ -980,7 +980,7 @@ Proof.
 Defined.
 
 (** Products of ideals are subsets of their intersection. *)
-Lemma ideal_product_subset_intersection {R : Ring} (I J : Ideal R)
+Definition ideal_product_subset_intersection {R : Ring} (I J : Ideal R)
   : I ⋅ J ⊆ I ∩ J.
 Proof.
   apply ideal_intersection_subset.
@@ -989,7 +989,7 @@ Proof.
 Defined.
 
 (** Sums of ideals are the smallest ideal containing the summands. *)
-Lemma ideal_sum_smallest {R : Ring} (I J K : Ideal R)
+Definition ideal_sum_smallest {R : Ring} (I J K : Ideal R)
   : I ⊆ K -> J ⊆ K -> (I + J) ⊆ K.
 Proof.
   intros p q.
@@ -1000,7 +1000,7 @@ Proof.
 Defined.
 
 (** Ideals absorb themselves under sum. *)
-Lemma ideal_sum_self {R : Ring} (I : Ideal R)
+Definition ideal_sum_self {R : Ring} (I : Ideal R)
   : I + I ↔ I.
 Proof.
   apply ideal_subset_antisymm.
@@ -1009,7 +1009,7 @@ Proof.
 Defined.
 
 (** Sums preserve inclusions in the left summand. *)
-Lemma ideal_sum_subset_pres_l {R : Ring} (I J K : Ideal R)
+Definition ideal_sum_subset_pres_l {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> (I + K) ⊆ (J + K).
 Proof.
   intros p.
@@ -1021,7 +1021,7 @@ Proof.
 Defined.
 
 (** Sums preserve inclusions in the right summand. *)
-Lemma ideal_sum_subset_pres_r {R : Ring} (I J K : Ideal R)
+Definition ideal_sum_subset_pres_r {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> (K + I) ⊆ (K + J).
 Proof.
   intros p.
@@ -1034,7 +1034,7 @@ Defined.
 
 (** Products left distribute over sums *)
 (** Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
-Lemma ideal_dist_l {R : Ring} (I J K : Ideal R)
+Definition ideal_dist_l {R : Ring} (I J K : Ideal R)
   : I ⋅ (J + K) ↔ I ⋅ J + I ⋅ K.
 Proof.
   (** We split into two directions. *)
@@ -1058,7 +1058,7 @@ Proof.
         by apply ideal_in_plus_negate.
     - apply ideal_in_zero.
     - by apply ideal_in_plus_negate. }
-  (** This is the easy direction which can use previous lemmas. *)
+  (** This is the easy direction which can use previous Definitions. *)
   apply ideal_sum_smallest.
   1,2: apply ideal_product_subset_pres_r.
   1: apply ideal_sum_subset_l.
@@ -1067,7 +1067,7 @@ Defined.
 
 (** Products distribute over sums on the right. *)
 (** The proof is very similar to the left version *)
-Lemma ideal_dist_r {R : Ring} (I J K : Ideal R) : (I + J) ⋅ K ↔ I ⋅ K + J ⋅ K.
+Definition ideal_dist_r {R : Ring} (I J K : Ideal R) : (I + J) ⋅ K ↔ I ⋅ K + J ⋅ K.
 Proof.
   apply ideal_subset_antisymm.
   { intros r p.
@@ -1095,7 +1095,7 @@ Proof.
 Defined.
 
 (** Ideal sums are commutative *)
-Lemma ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I.
+Definition ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I.
 Proof.
   apply ideal_subset_antisymm; apply ideal_sum_smallest.
   1,3: apply ideal_sum_subset_r.
@@ -1103,7 +1103,7 @@ Proof.
 Defined.
 
 (** Zero ideal is left additive identity. *) 
-Lemma ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I.
+Definition ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_sum_smallest.
@@ -1113,7 +1113,7 @@ Proof.
 Defined.
 
 (** Zero ideal is right additive identity. *)
-Lemma ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I.
+Definition ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_sum_smallest.
@@ -1123,7 +1123,7 @@ Proof.
 Defined.
 
 (** Unit ideal is left multiplicative identity. *)
-Lemma ideal_product_unit_l {R : Ring} I : ideal_unit R ⋅ I ↔ I.
+Definition ideal_product_unit_l {R : Ring} I : ideal_unit R ⋅ I ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_product_subset_r.
@@ -1133,7 +1133,7 @@ Proof.
 Defined.
 
 (** Unit ideal is right multiplicative identity. *)
-Lemma ideal_product_unit_r {R : Ring} I : I ⋅ ideal_unit R ↔ I.
+Definition ideal_product_unit_r {R : Ring} I : I ⋅ ideal_unit R ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_product_subset_l.
@@ -1143,7 +1143,7 @@ Proof.
 Defined.
 
 (** Intersecting with unit ideal on the left does nothing. *)
-Lemma ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I.
+Definition ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_intersection_subset_r.
@@ -1153,7 +1153,7 @@ Proof.
 Defined.
 
 (** Intersecting with unit ideal on right does nothing. *)
-Lemma ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I.
+Definition ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I.
 Proof.
   apply ideal_subset_antisymm.
   1: apply ideal_intersection_subset_l.
@@ -1163,7 +1163,7 @@ Proof.
 Defined.
 
 (** Product of intersection and sum is subset of sum of products *)
-Lemma ideal_product_intersection_sum_subset {R : Ring} (I J : Ideal R)
+Definition ideal_product_intersection_sum_subset {R : Ring} (I J : Ideal R)
   : (I ∩ J) ⋅ (I + J) ⊆ (I ⋅ J + J ⋅ I).
 Proof.
   etransitivity.
@@ -1180,7 +1180,7 @@ Proof.
 Defined.
 
 (** Ideals are subsets of their ideal quotients *)
-Lemma ideal_quotient_subset {R : Ring} (I J : Ideal R) : I ⊆ (I :: J).
+Definition ideal_quotient_subset {R : Ring} (I J : Ideal R) : I ⊆ (I :: J).
 Proof.
   intros x i; split; apply tr; intros r j; cbn.
   - by rapply isrightideal.
@@ -1188,7 +1188,7 @@ Proof.
 Defined.
 
 (** If J divides I then the ideal quotient of J by I is trivial. *)
-Lemma ideal_quotient_trivial {R : Ring} (I J : Ideal R)
+Definition ideal_quotient_trivial {R : Ring} (I J : Ideal R)
   : I ⊆ J -> J :: I ↔ ideal_unit R.
 Proof.
   intros p.
@@ -1201,7 +1201,7 @@ Proof.
 Defined.
 
 (** The ideal quotient of I by unit is I. *)
-Lemma ideal_quotient_unit_bottom {R : Ring} (I : Ideal R)
+Definition ideal_quotient_unit_bottom {R : Ring} (I : Ideal R)
   : (I :: ideal_unit R) ↔ I.
 Proof.
   apply ideal_subset_antisymm.
@@ -1213,7 +1213,7 @@ Proof.
 Defined.
 
 (** The ideal quotient of unit by I is unit. *)
-Lemma ideal_quotient_unit_top {R : Ring} (I : Ideal R)
+Definition ideal_quotient_unit_top {R : Ring} (I : Ideal R)
   : (ideal_unit R :: I) ↔ ideal_unit R.
 Proof.
   split.
@@ -1223,7 +1223,7 @@ Proof.
 Defined.
 
 (** The ideal quotient by a sum is an intersection of ideal quotients. *)
-Lemma ideal_quotient_sum {R : Ring} (I J K : Ideal R)
+Definition ideal_quotient_sum {R : Ring} (I J K : Ideal R)
   : (I :: (J + K)) ↔ (I :: J) ∩ (I :: K).
 Proof.
   apply ideal_subset_antisymm.
@@ -1252,7 +1252,7 @@ Proof.
 Defined.
 
 (** Ideal quotients distribute over intersections. *)
-Lemma ideal_quotient_intersection {R : Ring} (I J K : Ideal R)
+Definition ideal_quotient_intersection {R : Ring} (I J K : Ideal R)
   : (I ∩ J :: K) ↔ (I :: K) ∩ (J :: K).
 Proof.
   apply ideal_subset_antisymm.
@@ -1268,7 +1268,7 @@ Proof.
 Defined.
 
 (** Annihilators reverse the order of inclusion. *)
-Lemma ideal_annihilator_subset {R : Ring} (I J : Ideal R)
+Definition ideal_annihilator_subset {R : Ring} (I J : Ideal R)
   : I ⊆ J -> Ann J ⊆ Ann I.
 Proof.
   intros p x [q q']; hnf in q, q'; strip_truncations;
@@ -1278,7 +1278,7 @@ Proof.
 Defined.
 
 (** The annihilator of an ideal is equal to a quotient of zero. *)
-Lemma ideal_annihilator_zero_quotient {R : Ring} (I : Ideal R)
+Definition ideal_annihilator_zero_quotient {R : Ring} (I : Ideal R)
   : Ann I ↔ ideal_zero R :: I.
 Proof.
   intros x; split.
