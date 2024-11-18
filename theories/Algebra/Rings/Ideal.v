@@ -75,10 +75,10 @@ Definition ideal_op (R : Ring) : Ideal R -> Ideal (rng_op R)
 Coercion ideal_op : Ideal >-> Ideal.
 
 Definition rightideal_op (R : Ring) : LeftIdeal R -> RightIdeal (rng_op R)
-  := fun I => Build_RightIdeal (rng_op R) I _.
+  := idmap.
 
 Definition leftideal_op (R : Ring) : RightIdeal R -> LeftIdeal (rng_op R)
-  := fun I => Build_LeftIdeal (rng_op R) I _.
+  := idmap.
 
 (** *** Truncatedness properties *)
 
