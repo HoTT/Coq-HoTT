@@ -156,7 +156,7 @@ Proof.
   rapply equiv_path_subgroup'.
 Defined.
 
-(** Under funext, ideal equiality is a proposition. *)
+(** Under funext, ideal equality is a proposition. *)
 Global Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
   : IsHProp (ideal_eq I J) := _.
 
