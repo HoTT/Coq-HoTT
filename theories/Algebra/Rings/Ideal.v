@@ -1019,8 +1019,30 @@ Proof.
   apply ideal_sum_subset_r.
 Defined.
 
-(** Products left distribute over sums *)
-(** Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
+(** Sums preserve inclusions in both summands. *)
+Definition ideal_sum_subset_pres {R : Ring} (I J K L : Ideal R)
+  : I ⊆ J -> K ⊆ L -> (I + K) ⊆ (J + L).
+Proof.
+  intros p q.
+  transitivity (J + K).
+  1: by apply ideal_sum_subset_pres_l.
+  by apply ideal_sum_subset_pres_r.
+Defined.
+
+(** Sums preserve ideal equality in both summands. *)
+Definition ideal_sum_eq {R : Ring} (I J K L : Ideal R)
+  : I ↔ J -> K ↔ L -> (I + K) ↔ (J + L).
+Proof.
+  intros p q.
+  by apply ideal_subset_antisymm; apply ideal_sum_subset_pres; apply ideal_eq_subset.
+Defined.
+
+(** The sum of two opposite ideals is the opposite of their sum. *)
+Definition ideal_sum_op {R : Ring} (I J : Ideal R)
+  : ideal_op R I + ideal_op R J ↔ ideal_op R (I + J)
+  := reflexive_ideal_eq _.
+
+(** Products left distribute over sums. Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
 Definition ideal_dist_l {R : Ring} (I J K : Ideal R)
   : I ⋅ (J + K) ↔ I ⋅ J + I ⋅ K.
 Proof.
@@ -1053,32 +1075,19 @@ Proof.
 Defined.
 
 (** Products distribute over sums on the right. *)
-(** The proof is very similar to the left version *)
-Definition ideal_dist_r {R : Ring} (I J K : Ideal R) : (I + J) ⋅ K ↔ I ⋅ K + J ⋅ K.
+Definition ideal_dist_r {R : Ring} (I J K : Ideal R)
+  : (I + J) ⋅ K ↔ I ⋅ K + J ⋅ K.
 Proof.
-  apply ideal_subset_antisymm.
-  { intros r p.
-    strip_truncations.
-    induction p as [ r i | | r s p1 IHp1 p2 IHp2].
-    - destruct i as [r s p q].
-      strip_truncations.
-      induction p as [ t k | | t k p1 IHp1 p2 IHp2 ].
-      + apply tr, sgt_in.
-        destruct k as [j | k].
-        * left; by apply tr, sgt_in, ipn_in.
-        * right; by apply tr, sgt_in, ipn_in.
-      + apply tr, sgt_in; left.
-        rewrite rng_mult_zero_l.
-        apply ideal_in_zero.
-      + rewrite rng_dist_r.
-        rewrite rng_mult_negate_l.
-        by apply ideal_in_plus_negate.
-    - apply ideal_in_zero.
-    - by apply ideal_in_plus_negate. }
-  apply ideal_sum_smallest.
-  1,2: apply ideal_product_subset_pres_l.
-  1: apply ideal_sum_subset_l.
-  apply ideal_sum_subset_r.
+  change I with (ideal_op _ (ideal_op R I)).
+  change J with (ideal_op _ (ideal_op R J)).
+  change K with (ideal_op _ (ideal_op R K)).
+  etransitivity.
+  2: rapply ideal_sum_eq; symmetry; apply (ideal_product_op (R:=rng_op R)).
+  etransitivity.
+  2: apply (ideal_dist_l (R:=rng_op R)).
+  etransitivity.
+  2: apply (ideal_product_op (R:=rng_op R)).
+  reflexivity.
 Defined.
 
 (** Ideal sums are commutative *)
