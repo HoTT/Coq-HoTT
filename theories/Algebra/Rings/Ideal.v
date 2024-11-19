@@ -934,6 +934,17 @@ Proof.
   rapply ideal_product_type_op.
 Defined.
 
+Definition ideal_product_op_triple {R : Ring} (I J K : Ideal R)
+  : ideal_op R ((K ⋅ J) ⋅ I)
+      ⊆ (ideal_op R I) ⋅ ((ideal_op R J) ⋅ (ideal_op R K)).
+Proof.
+  intros x i.
+  apply (ideal_product_op (R:=rng_op R)).
+  nrapply (ideal_product_subset_pres_l (R:=R)).
+  1: nrapply (ideal_product_op (R:=rng_op R)).
+  apply i.
+Defined.
+
 (** The product of ideals is an associative operation. *)
 Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
   : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
@@ -949,13 +960,9 @@ Proof.
     by apply ipn_in; [ apply tr, sgt_in, ipn_in | ].
   - apply ideal_subset_antisymm; only 1: apply f.
     intros x i.
-    apply ideal_product_op.
-    nrapply (ideal_product_subset_pres_l (R:=rng_op R)).
-    1: rapply ideal_product_op.
-    apply f.
-    apply (ideal_product_op (R:=rng_op R)).
-    nrapply (ideal_product_subset_pres_l (R:=R)).
-    1: rapply (ideal_product_op (R:=rng_op R)).
+    apply (ideal_product_op_triple (R:=rng_op R) I J K).
+    nrapply f.
+    apply ideal_product_op_triple.
     exact i.
 Defined.
 
