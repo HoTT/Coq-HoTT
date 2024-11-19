@@ -889,55 +889,41 @@ Defined.
 (** Products of ideals are included in their left factor *)
 Definition ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.
 Proof.
-  intros r p.
-  strip_truncations.
-  induction p as [r i | | r s p1 IHp1 p2 IHp2 ].
-  + destruct i as [s t].
-    by rapply isrightideal.
-  + rapply ideal_in_zero.
-  + by rapply ideal_in_plus_negate.
+  nrapply subgroup_generated_subset_subgroup.
+  intros _ [].
+  by rapply isrightideal.
 Defined.
 
 (** Products of ideals are included in their right factor. *)
 Definition ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.
 Proof.
-  intros r p.
-  strip_truncations.
-  induction p as [r i | | r s p1 IHp1 p2 IHp2 ].
-  + destruct i as [s t].
-    by apply isleftideal.
-  + rapply ideal_in_zero.
-  + by rapply ideal_in_plus_negate.
+  nrapply subgroup_generated_subset_subgroup.
+  intros _ [].
+  by rapply isleftideal.
 Defined.
 
 (** Products of ideals preserve subsets on the left *)
 Definition ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> I ⋅ K ⊆ J ⋅ K.
 Proof.
-  intros p r q.
-  strip_truncations.
-  induction q as [r i | | r s ].
-  + destruct i.
-    apply tr, sgt_in, ipn_in.
-    1: apply p.
-    1,2: assumption.
-  + apply ideal_in_zero.
-  + by apply ideal_in_plus_negate.
+  intros p.
+  rapply (functor_subgroup_generated _ _ (Id _)).
+  intros _ [].
+  apply ipn_in.
+  1: apply p.
+  1,2: assumption.
 Defined.
 
 (** Products of ideals preserve subsets on the right *)
 Definition ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> K ⋅ I ⊆ K ⋅ J.
 Proof.
-  intros p r q.
-  strip_truncations.
-  induction q as [r i | | r s ].
-  + destruct i.
-    apply tr, sgt_in, ipn_in.
-    2: apply p.
-    1,2: assumption.
-  + apply ideal_in_zero.
-  + by apply ideal_in_plus_negate.
+  intros p.
+  rapply (functor_subgroup_generated _ _ (Id _)).
+  intros _ [].
+  apply ipn_in.
+  2: apply p.
+  1,2: assumption.
 Defined.
 
 (** The product of opposite ideals is the opposite of the reversed product. *)
@@ -954,19 +940,13 @@ Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
 Proof.
   assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).
   - clear R I J K; intros R I J K.
-    intros x.
-    apply Trunc_rec. 
-    intros p; induction p as [g [y z p q] | | g h p1 IHp1 p2 IHp2].
-    + strip_truncations.
-      induction q as [t [z w r s] | | t k p1 IHp1 p2 IHp2].
-      * rewrite rng_mult_assoc.
-        by apply tr, sgt_in, ipn_in; [ apply tr, sgt_in, ipn_in | ].
-      * rewrite rng_mult_zero_r.
-        apply ideal_in_zero.
-      * rewrite rng_dist_l_negate.
-        by apply ideal_in_plus_negate.
-    + apply ideal_in_zero.
-    + by apply ideal_in_plus_negate.
+    nrapply subgroup_generated_subset_subgroup.
+    intros _ [r s IHr IHs].
+    revert IHs.
+    rapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)); clear s.
+    intros _ [s t IHs IHt]; cbn.
+    rewrite rng_mult_assoc.
+    by apply ipn_in; [ apply tr, sgt_in, ipn_in | ].
   - apply ideal_subset_antisymm; only 1: apply f.
     intros x i.
     apply ideal_product_op.
