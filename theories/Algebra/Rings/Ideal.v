@@ -889,7 +889,7 @@ Defined.
 (** Products of ideals are included in their left factor *)
 Definition ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.
 Proof.
-  nrapply subgroup_generated_subset_subgroup.
+  napply subgroup_generated_rec.
   intros _ [].
   by rapply isrightideal.
 Defined.
@@ -897,7 +897,7 @@ Defined.
 (** Products of ideals are included in their right factor. *)
 Definition ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.
 Proof.
-  nrapply subgroup_generated_subset_subgroup.
+  napply subgroup_generated_rec.
   intros _ [].
   by rapply isleftideal.
 Defined.
@@ -907,7 +907,7 @@ Definition ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> I ⋅ K ⊆ J ⋅ K.
 Proof.
   intros p.
-  rapply (functor_subgroup_generated _ _ (Id _)).
+  tapply (functor_subgroup_generated _ _ (Id _)).
   intros _ [].
   apply ipn_in.
   1: apply p.
@@ -919,7 +919,7 @@ Definition ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> K ⋅ I ⊆ K ⋅ J.
 Proof.
   intros p.
-  rapply (functor_subgroup_generated _ _ (Id _)).
+  tapply (functor_subgroup_generated _ _ (Id _)).
   intros _ [].
   apply ipn_in.
   2: apply p.
@@ -934,13 +934,24 @@ Proof.
   rapply ideal_product_type_op.
 Defined.
 
+Definition ideal_product_op_triple {R : Ring} (I J K : Ideal R)
+  : ideal_op R ((K ⋅ J) ⋅ I)
+      ⊆ (ideal_op R I) ⋅ ((ideal_op R J) ⋅ (ideal_op R K)).
+Proof.
+  intros x i.
+  apply (ideal_product_op (R:=rng_op R)).
+  napply (ideal_product_subset_pres_l (R:=R)).
+  1: napply (ideal_product_op (R:=rng_op R)).
+  apply i.
+Defined.
+
 (** The product of ideals is an associative operation. *)
 Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
   : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.
 Proof.
   assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).
   - clear R I J K; intros R I J K.
-    nrapply subgroup_generated_subset_subgroup.
+    napply subgroup_generated_rec.
     intros _ [r s IHr IHs].
     revert IHs.
     rapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)); clear s.
@@ -949,13 +960,9 @@ Proof.
     by apply ipn_in; [ apply tr, sgt_in, ipn_in | ].
   - apply ideal_subset_antisymm; only 1: apply f.
     intros x i.
-    apply ideal_product_op.
-    napply (ideal_product_subset_pres_l (R:=rng_op R)).
-    1: napply ideal_product_op.
-    apply f.
-    apply (ideal_product_op (R:=rng_op R)).
-    napply (ideal_product_subset_pres_l (R:=R)).
-    1: napply (ideal_product_op (R:=rng_op R)).
+    apply (ideal_product_op_triple (R:=rng_op R) I J K).
+    napply f.
+    apply ideal_product_op_triple.
     exact i.
 Defined.
 
