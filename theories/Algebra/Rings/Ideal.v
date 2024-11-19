@@ -1045,7 +1045,7 @@ Proof.
         by apply ideal_in_plus_negate.
     - apply ideal_in_zero.
     - by apply ideal_in_plus_negate. }
-  (** This is the easy direction which can use previous Definitions. *)
+  (** This is the easy direction which can use previous lemmas. *)
   apply ideal_sum_smallest.
   1,2: apply ideal_product_subset_pres_r.
   1: apply ideal_sum_subset_l.
