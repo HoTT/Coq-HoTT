@@ -1,4 +1,5 @@
 Require Import Basics Types.
+Require Import HoTT.Tactics.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 
@@ -79,3 +80,94 @@ Ltac contr_sigsig a c :=
 
 (** For examples of the use of this tactic, see for instance [Factorization] and [Idempotents]. *)
 
+(** Given that some type family [R] is fiber-wise equivalent to identity types based at [a], then the total space [sig R] is contractible. This is Theorem 5.8.2 (iii) => (iv). *)
+Definition contr_sigma_refl_rel {A : Type}
+  (a : A) (R : A -> Type) (r0 : R a)
+  (f : forall b, (a = b) <~> R b)
+  : Contr (sig R).
+Proof.
+  rapply contr_equiv'.
+  1: exact (equiv_functor_sigma_id f).
+  apply contr_basedpaths.
+Defined.
+
+(** A pointed type family is an identity system if it satisfies the J-rule. *)
+Class IsIdentitySystem {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0)
+  := 
+  { IdentitySystem_ind (D : forall a : A, R a -> Type) (d : D a0 r0) (a : A) (r : R a) 
+      : D a r;
+    
+    IdentitySystem_ind_beta (D : forall a : A, R a -> Type) (d : D a0 r0) 
+      : IdentitySystem_ind D d a0 r0 = d
+  }.
+
+(** Given an identity system, transporting the point [r0] induces a fiber-wise equivalence between the based path type on [a0] and [R]. This is Theorem 5.8.2 (i) => (iii) from the Book. *)
+Global Instance isequiv_transport_IsIdentitySystem {A : Type} {a0 : A} 
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} 
+  (a : A) : IsEquiv (fun p : a0 = a => transport R p r0).
+Proof.
+  pose (f := IdentitySystem_ind (fun a _ => a0 = a) (idpath _)).
+  pose (f_beta := IdentitySystem_ind_beta (fun a _ => a0 = a) (idpath _)).
+  snrapply isequiv_adjointify.
+  - exact (f a).
+  - exact ((IdentitySystem_ind 
+      (fun (a' : A) (r' : R a') => transport R (f a' r') r0 = r') 
+      (ap (fun x => transport R x r0) f_beta)) 
+      a).
+  - by intros [].
+Defined.
+
+Definition equiv_transport_IsIdentitySystem {A : Type} {a0 : A} 
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} 
+  (a : A) : (a0 = a) <~> R a 
+  := Build_Equiv _ _ (fun p => transport R p r0) _.
+
+(** I could use pointed maps, but this will introduce more dependencies. It might be wise to factor out this part of lemma 5.8.2. and relocate it, so that this file can depend on less, and add the full statement into contrib. Notice that we also need funext to make this work, so it isn't as nice as i) <=> iii) <=> iv) *)
+Definition pfammap {A : Type} {a0 : A} (R S : A -> Type) (r0 : R a0) (s0 : S a0) : Type
+  := {f : forall a : A, R a -> S a & f a0 r0 = s0}.
+
+(** Personally, it does not spark joy that this little guy depends on function extensionality. I hope I'm wrong, otherwise we should cut him from the rest of the band. (i) => (ii) *)
+Definition contr_pfammap_identitysystem `{Funext} {A : Type} {a0 : A} 
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem R r0} (S : A -> Type) (s0 : S a0) 
+  : Contr (pfammap R S r0 s0).
+Proof.
+  pose (f := IdentitySystem_ind (fun a _ => S a) s0).
+  pose (f0 := IdentitySystem_ind_beta (fun a _ => S a) s0).
+  snrapply Build_Contr.
+  - exact (f; f0).
+  - intro g; cbn.
+    pose (h := IdentitySystem_ind (fun (a : A) (r : R a) => f a r = pr1 g a r) (f0 @ (pr2 g)^)).
+    pose (h0 := IdentitySystem_ind_beta (fun (a : A) (r : R a) => f a r = pr1 g a r) (f0 @ (pr2 g)^)).
+    snrapply path_sigma.
+    + exact (path_forall _ _ (fun a => path_forall _ _ (h a))).
+    + cbn.
+      transport_path_forall_hammer.
+      lhs nrapply transport_paths_l.
+      nrapply moveR_Vp.
+      nrapply moveL_pM.
+      exact h0^.
+Defined.
+
+(** (ii) => (iii). I literally hate this. *)
+Global Instance equiv_path_contr_pfammap {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0) 
+  (H : forall S : A -> Type, forall s0 : S a0, Contr (pfammap R S r0 s0))
+  (a : A) : IsEquiv (fun p : a0 = a => transport R p r0).
+Proof.
+  snrapply isequiv_adjointify.
+  - exact (pr1 (@center (pfammap _ _ _ _) (H (fun a => a0 = a) 1)) a).
+  - intro r.
+    pose (c := @center (pfammap _ _ _ _) (H R r0)).
+    srefine (_ @ _).
+    + exact (pr1 c a r).
+    + symmetry.
+      pose (inv := fun a r => transport R (pr1 (@center (pfammap _ _ _ _) (H (fun a => a0 = a) 1)) a r) r0).
+      pose (inv0 := (ap (fun x => transport R x r0) (pr2 (@center (pfammap _ _ _ _) (H (fun a => a0 = a) 1))))).
+      revert r; apply apD10.
+      revert a; apply apD10.
+      exact (ap pr1 (contr (@exist (forall a : A, R a -> R a) (fun f => f a0 r0 = r0) inv inv0))).
+    + revert r; apply apD10.
+      revert a; apply apD10.
+      exact (ap pr1 (contr (@exist (forall a : A, R a -> R a) (fun f => f a0 r0 = r0) (fun a r => r) 1))).
+  - intros []; cbn.
+    exact ((pr2 (@center (pfammap _ _ _ _) (H (fun a => a0 = a) 1)))).
+Defined.

@@ -769,7 +769,19 @@ Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Fun
 (* ================================================== thm:identity-systems *)
 (** Theorem 5.8.2 *)
 
+Definition Book_5_8_2_i_implies_iii := @HoTT.PathAny.equiv_transport_IsIdentitySystem.
+Definition Book_5_8_2_iii_implies_i {A} {a0 : A} {X : A -> Type} (x0 : X a0)
+   (e : forall (a : A), IsEquiv (fun p : a0 = a => transport X p x0))
+   (P : forall (b : A), X b -> Type)
+   (r : P a0 x0)
+   := @HoTT.Basics.Equivalences.equiv_path_ind A a0 X 
+      (fun a => @Build_Equiv _ _ _ (e a)) P r.
+
+Definition Book_5_8_2_iii_implies_iv := @HoTT.PathAny.contr_sigma_refl_rel.
 Definition Book_5_8_2_iv_implies_iii := @HoTT.PathAny.equiv_path_from_contr.
+
+Definition Book_5_8_2_i_implies_ii := @HoTT.PathAny.contr_pfammap_identitysystem.
+Definition Book_5_8_2_ii_implies_iii := @HoTT.PathAny.equiv_path_contr_pfammap.
 
 (* ================================================== thm:ML-identity-systems *)
 (** Theorem 5.8.4 *)
