@@ -769,7 +769,7 @@ Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Fun
 (* ================================================== thm:identity-systems *)
 (** Theorem 5.8.2 *)
 
-Definition Book_5_8_2_iv_implies_iii := @HoTT.PathAny.equiv_path_from_contr.
+Definition Book_5_8_2 := @HoTT.PathAny.FundamentalThmIdentitySystems.
 
 (* ================================================== thm:ML-identity-systems *)
 (** Theorem 5.8.4 *)
