@@ -94,8 +94,8 @@ Defined.
 (** A pointed type family is an identity system if it satisfies the J-rule. *)
 Class IsIdentitySystem {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0)
   := 
-  { IdentitySystem_ind (D : forall a : A, R a -> Type) (d : D a0 r0) (a : A) (r : R a) 
-      : D a r;
+  { IdentitySystem_ind (D : forall a : A, R a -> Type) (d : D a0 r0) 
+    (a : A) (r : R a) : D a r;
     
     IdentitySystem_ind_beta (D : forall a : A, R a -> Type) (d : D a0 r0) 
       : IdentitySystem_ind D d a0 r0 = d
@@ -146,26 +146,21 @@ Proof.
   snrapply IdentitySystem_ind_beta.
 Defined.
 
-(** (ii) => (iii). I literally hate this. *)
-Global Instance equiv_path_contr_pfamMap {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0) 
-  (H : forall S : A -> Type, forall s0 : S a0, Contr (pfamMap R S r0 s0))
+(** A strong form of (ii) => (iii) *)
+Definition equiv_path_homocontr_pfamMap {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0)
+  (H : forall S : A -> Type, forall s0 : S a0, exists f : pfamMap R S r0 s0, forall g, path_pfamMap f g)
   (a : A) : IsEquiv (fun p : a0 = a => transport R p r0).
 Proof.
-  snrapply isequiv_adjointify.
-  - exact (pr1 (@center (pfamMap _ _ _ _) (H (fun a => a0 = a) 1)) a).
+  pose (inv (a : A) := (pr1 o pr1) (H (fun a => a0 = a) 1) a).
+  pose proof (inv_beta := (pr2 o pr1) (H (fun a => a0 = a) 1)); cbn in inv_beta.
+  snrapply (isequiv_adjointify _ (inv a)); cbn.
   - intro r.
-    pose (c := @center (pfamMap _ _ _ _) (H R r0)).
-    srefine (_ @ _).
-    + exact (pr1 c a r).
+    snrefine (_ @ _).
+    + exact ((pr1 o pr1) (H R r0) a r).
     + symmetry.
-      pose (inv := fun a r => transport R (pr1 (@center (pfamMap _ _ _ _) (H (fun a => a0 = a) 1)) a r) r0).
-      pose (inv0 := (ap (fun x => transport R x r0) (pr2 (@center (pfamMap _ _ _ _) (H (fun a => a0 = a) 1))))).
-      revert r; apply apD10.
-      revert a; apply apD10.
-      exact (ap pr1 (contr (@exist (forall a : A, R a -> R a) (fun f => f a0 r0 = r0) inv inv0))).
-    + revert r; apply apD10.
-      revert a; apply apD10.
-      exact (ap pr1 (contr (@exist (forall a : A, R a -> R a) (fun f => f a0 r0 = r0) (fun a r => r) 1))).
-  - intros []; cbn.
-    exact ((pr2 (@center (pfamMap _ _ _ _) (H (fun a => a0 = a) 1)))).
+      exact ((pr1 (pr2 (H R r0) (fun a r => transport R (inv a r) r0; 
+        ((ap (fun x => transport R x r0) inv_beta))))) a r).
+    + exact ((pr1 (pr2 (H R r0) (fun a r => r; 
+        (idpath r0)))) a r).
+  - by intros [].
 Defined.
