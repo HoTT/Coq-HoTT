@@ -15,8 +15,8 @@ Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 (** [coe] is [transport idmap : (A = B) -> (A -> B)], but is described as the underlying map of an equivalence so that Coq knows that it is an equivalence. *)
-Notation coe := (fun p => equiv_fun (equiv_path _ _ p)).
-Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
+Local Notation coe := (fun p => equiv_fun (equiv_path _ _ p)).
+Local Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
 (** Mapping spaces into hprops from colimits of sequences can be characterized. *)
 Lemma equiv_colim_seq_rec `{Funext} (A : Sequence) (P : Type) `{IsHProp P}
@@ -273,7 +273,7 @@ Coercion fibSequence : FibSequence  >-> Funclass.
 Arguments fibSequence {A}.
 Arguments fibSequenceArr {A}.
 
-Notation "b ^+f" := (fibSequenceArr _ _ b).
+Local Notation "b ^+f" := (fibSequenceArr _ _ b).
 
 (** The Sigma of a fibered type sequence; Definition 4.3. *)
 Definition sig_seq {A} (B : FibSequence A) : Sequence.
