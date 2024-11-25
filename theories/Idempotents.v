@@ -1,7 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Constant.
 Require Import Truncations.Core Modalities.Modality.
-Require Import PathAny.
+Require Import Homotopy.IdentitySystems.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

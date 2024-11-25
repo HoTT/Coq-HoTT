@@ -1,5 +1,5 @@
 Require Import Basics Types HProp HFiber HSet.
-Require Import PathAny.
+Require Import Homotopy.IdentitySystems.
 Require Import (notations) Classes.interfaces.canonical_names.
 Require Export (hints) Classes.interfaces.abstract_algebra.
 Require Export (hints) Classes.interfaces.canonical_names.

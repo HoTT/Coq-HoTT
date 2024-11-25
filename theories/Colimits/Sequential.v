@@ -9,7 +9,7 @@ Require Import Diagrams.Sequence.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
 Require Import Spaces.Nat.Core.
-Require Import PathAny.
+Require Import Homotopy.IdentitySystems.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.

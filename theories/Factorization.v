@@ -1,7 +1,7 @@
 (** * Factorizations and factorization systems. *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions PathAny.
+Require Import Extensions Homotopy.IdentitySystems.
 Local Open Scope path_scope.
 
 
