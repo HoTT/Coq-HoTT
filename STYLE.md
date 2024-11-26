@@ -160,6 +160,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   and `Spaces/No/*` (the surreal numbers),
 
 - `Homotopy/*`: Files related to synthetic homotopy theory.
+  Also contains `Homotopy/IdentitySystems` and `Homotopy/EncodeDecode`,
+  which give results for computing path types.
 
 - `Spectra/*`: Files related to spectra in the sense of stable
   homotopy theory.
