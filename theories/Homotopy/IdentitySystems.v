@@ -1,5 +1,6 @@
 Require Import Basics. 
-Require Import Types.Sigma Types.Equiv.
+Require Import Types.Sigma Types.Equiv Types.Paths.
+Require Import HoTT.Tactics.
 
 (** * Characterization of identity types by identity systems *)
 
@@ -79,6 +80,46 @@ Proof.
              (path_contr (a0; r0) (a; r)) d0).
   - intros D d0; cbn; unfold path_contr.
     nrapply (transport2 _ (concat_Vp _)).
+Defined.
+
+(** Assuming function extensionality, pointed homotopy contractible fiberwise mapping spaces of pointed type families are contractible. We thus obtain the proper statement of Theorem 5.8.2. *)
+Definition contr_pfammap_homocontr `{Funext} {A : Type} {a0 : A} 
+  (R : A -> Type) (r0 : R a0) 
+  (S : A -> Type) (s0 : S a0)
+  (fH : exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g)
+  : Contr (pfamMap R S r0 s0).
+Proof.
+  snrapply Build_Contr.
+  - exact fH.1.
+  - intro g.
+    snrapply path_sigma; cbn.
+    + nrapply (path_forall _ _ _).
+      intro a.
+      nrapply (path_forall _ _ _).
+      exact ((fH.2 g).1 a).
+    + transport_path_forall_hammer.
+      lhs nrapply transport_paths_l.
+      nrapply moveR_Vp.
+      nrapply moveL_pM.
+      symmetry.
+      exact (fH.2 g).2.
+Defined.
+
+(** The fiberwise mapping spaces of pointed type families are pointed homotopy contractible if they are contractible. *)
+Definition homocontr_pfammap_contr {A : Type} {a0 : A}
+  (R : A -> Type) (r0 : R a0)
+  (S : A -> Type) (s0 : S a0)
+  (cp : Contr (pfamMap R S r0 s0))
+  : exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g.
+Proof.
+  snrefine (_;_).
+  - exact (@center _ cp).
+  - intro g.
+    destruct (@contr _ cp g).
+    snrefine (_;_).
+    + exact (fun _ _ => idpath).
+    + cbn; symmetry.
+      exact (concat_pV _).
 Defined.
 
 (** The fundamental theorem of identity systems is now proven. It is useful to write down some of the composite implications. Given an identity system [(R; r0)], transporting the point [r0] induces a fiberwise equivalence between the based path type [a0 = x] and [R x]. This is Theorem 5.8.2 (i) implies (iii). *)
