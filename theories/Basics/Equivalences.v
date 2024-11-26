@@ -93,6 +93,33 @@ Section EquivTransport.
 
 End EquivTransport.
 
+(** Doubly dependent transport is an equivalence *)
+Section EquivTransportD.
+
+    Context {A : Type} (P : A -> Type) (Q : forall a : A, P a -> Type) 
+      {x y : A} (p : x = y) {px : P x}.
+
+    Global Instance isequiv_transportD : IsEquiv (transportD P Q p px).
+    Proof.
+      snrapply Build_IsEquiv.
+      { refine (_ o transportD P Q p^ (transport P p px)).
+        exact (transport (Q x) (transport_Vp _ p px)). }
+      all: by destruct p.
+    Defined.
+
+    Definition equiv_transportD : Q x px <~> Q y (transport P p px)
+      := Build_Equiv _ _ (transportD P Q p px) _.
+
+    Context {py : P y} (q : transport P p px = py).
+
+    Global Instance isequiv_transportDD : IsEquiv (transportDD P Q p q)
+     := isequiv_compose.
+
+    Definition equiv_transportDD : Q x px <~> Q y py
+      := Build_Equiv _ _ (transportDD P Q p q) _.
+
+  End EquivTransportD.
+
 (** In all the above cases, we were able to directly construct all the structure of an equivalence.  However, as is evident, sometimes it is quite difficult to prove the adjoint law.
 
    The following adjointification theorem allows us to be lazy about this if we wish.  It says that if we have all the data of an (adjoint) equivalence except the triangle identity, then we can always obtain the triangle identity by modifying the datum [equiv_is_section] (or [equiv_is_retraction]).  The proof is the same as the standard categorical argument that any equivalence can be improved to an adjoint equivalence.
