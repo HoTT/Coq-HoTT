@@ -1,0 +1,1538 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>GroupCoeq.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk0"><span class="kn">Require Import</span> Basics Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Truncations.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Algebra.Groups.Group.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Colimits.Coeq.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Algebra.Groups.FreeProduct.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> mc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> mc_mult_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Coequalizers of group homomorphisms *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1"><span class="kn">Definition</span> <span class="nf">GroupCoeq</span> {<span class="nv">A</span> <span class="nv">B</span> : Group} (<span class="nv">f</span> <span class="nv">g</span> : A $-&gt; B) : Group.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Group</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Group</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3">rapply (AmalgamatedFreeProduct (FreeProduct A A) A B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism (FreeProduct A A) A</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk4"><hr></label><div class="goal-conclusion">GroupHomomorphism (FreeProduct A A) B</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk5"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">apply</span> FreeProduct_rec.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism A A</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk6" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk6"><hr></label><div class="goal-conclusion">GroupHomomorphism A A</div></blockquote><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk7" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk7"><hr></label><div class="goal-conclusion">GroupHomomorphism A B</div></blockquote><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk8" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk8"><hr></label><div class="goal-conclusion">GroupHomomorphism A B</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk9">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism A A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> grp_homo_id.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chka">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism A A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> grp_homo_id.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chkb">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism A B</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chkc">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A $-&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">GroupHomomorphism A B</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> g.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chkd"><span class="kn">Definition</span> <span class="nf">equiv_groupcoeq_rec</span> `{Funext} {A B C : Group} (f g : GroupHomomorphism A B)
+  : {h : B $-&gt; C &amp; h o f == h o g} &lt;~&gt; (GroupCoeq f g $-&gt; C).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h : B $-&gt; C &amp; h o f == h o g} &lt;~&gt;
+(GroupCoeq f g $-&gt; C)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chke"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h : B $-&gt; C &amp; h o f == h o g} &lt;~&gt;
+(GroupCoeq f g $-&gt; C)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chkf"><span class="nb">refine</span> (equiv_amalgamatedfreeproduct_rec _ _ _ _ _ _ oE _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h : B $-&gt; C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))} &lt;~&gt;
+{h : GroupHomomorphism A C &amp;
+{k : GroupHomomorphism B C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k (FreeProduct_rec A A B f g x))}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk10"><span class="nb">refine</span> (equiv_sigma_symm _ oE _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h : B $-&gt; C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))} &lt;~&gt;
+{a : GroupHomomorphism B C &amp;
+{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ a (FreeProduct_rec A A B f g x))}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk11"><span class="nb">apply</span> equiv_functor_sigma_id.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> : B $-&gt; C,
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; a (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; a (g x)) &lt;~&gt;
+{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ a (FreeProduct_rec A A B f g x))}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk12"><span class="nb">intros</span> h.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) &lt;~&gt;
+{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk13">snrapply equiv_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) -&gt;
+{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk14" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk14"><hr></label><div class="goal-conclusion">{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))} -&gt;
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</div></blockquote><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk15" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk15"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk16" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk16"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> o <span class="nl">?f</span> == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk17">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) -&gt;
+{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk18"><span class="nb">intros</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk19"><span class="kr">exists</span> (<span class="nv">grp_homo_compose</span> <span class="nv">h</span> <span class="nv">f</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ grp_homo_compose h f
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1a"><span class="nb">hnf</span>; <span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>FreeProduct A A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f
+  (FreeProduct_rec A A A grp_homo_id grp_homo_id x) =
+h (FreeProduct_rec A A B f g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1b"><span class="nb">refine</span> (p _ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>FreeProduct A A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) =
+h (FreeProduct_rec A A B f g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1c"><span class="nb">revert</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : FreeProduct A A,
+h
+  (g (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) =
+h (FreeProduct_rec A A B f g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1d">rapply Trunc_ind.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">a</span> : Coeq
+      (FreeProduct.map1 grp_trivial A A
+         (grp_trivial_rec A))
+      (FreeProduct.map2 grp_trivial A A
+         (grp_trivial_rec A)),
+h
+  (g
+     (FreeProduct_rec A A A grp_homo_id grp_homo_id
+        (tr a))) =
+h (FreeProduct_rec A A B f g (tr a))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1e">srapply Coeq_ind_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> : FreeProduct.Words A A,
+(<span class="kr">fun</span>
+   <span class="nv">x</span> : Coeq
+         (FreeProduct.map1 grp_trivial A A
+            (grp_trivial_rec A))
+         (FreeProduct.map2 grp_trivial A A
+            (grp_trivial_rec A)) =&gt;
+ h
+   (g
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id
+         (tr x))) =
+ h (FreeProduct_rec A A B f g (tr x))) (coeq a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk1f"><span class="nb">intros</span> w.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>FreeProduct.Words A A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">x</span> : Coeq
+         (FreeProduct.map1 grp_trivial A A
+            (grp_trivial_rec A))
+         (FreeProduct.map2 grp_trivial A A
+            (grp_trivial_rec A)) =&gt;
+ h
+   (g
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id
+         (tr x))) =
+ h (FreeProduct_rec A A B f g (tr x))) (coeq w)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk20"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>FreeProduct.Words A A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g
+     (FreeProduct_rec A A A grp_homo_id grp_homo_id
+        (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk21"><span class="nb">induction</span> w.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g
+     (FreeProduct_rec A A A grp_homo_id grp_homo_id
+        (tr (coeq Core.nil)))) =
+h (FreeProduct_rec A A B f g (tr (coeq Core.nil)))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk22" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>(A + A)%type</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk22"><hr></label><div class="goal-conclusion">h
+  (g
+     (FreeProduct_rec A A A grp_homo_id grp_homo_id
+        (tr (coeq (Core.cons a w))))) =
+h
+  (FreeProduct_rec A A B f g
+     (tr (coeq (Core.cons a w))))</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk23"><span class="mi">1</span>: <span class="nb">apply</span> ap, grp_homo_unit.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>(A + A)%type</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g
+     (FreeProduct_rec A A A grp_homo_id grp_homo_id
+        (tr (coeq (Core.cons a w))))) =
+h
+  (FreeProduct_rec A A B f g
+     (tr (coeq (Core.cons a w))))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk24"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>(A + A)%type</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g
+     (<span class="kr">match</span> a <span class="kr">with</span>
+      | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+      <span class="kr">end</span>
+        (Core.fold_right
+           (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+            <span class="kr">match</span> X0 <span class="kr">with</span>
+            | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+            <span class="kr">end</span>) mon_unit w))) =
+h
+  (<span class="kr">match</span> a <span class="kr">with</span>
+   | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+   | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+   <span class="kr">end</span>
+     (Core.fold_right
+        (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+         <span class="kr">match</span> X0 <span class="kr">with</span>
+         | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+         | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+         <span class="kr">end</span>) mon_unit w))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk25"><span class="nb">destruct</span> a <span class="kr">as</span> [a|a].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g
+     (a *
+      Core.fold_right
+        (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+         <span class="kr">match</span> X0 <span class="kr">with</span>
+         | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+         <span class="kr">end</span>) mon_unit w)) =
+h
+  (f a *
+   Core.fold_right
+     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+      <span class="kr">match</span> X0 <span class="kr">with</span>
+      | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+      | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+      <span class="kr">end</span>) mon_unit w)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk26" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk26"><hr></label><div class="goal-conclusion">h
+  (g
+     (a *
+      Core.fold_right
+        (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+         <span class="kr">match</span> X0 <span class="kr">with</span>
+         | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+         <span class="kr">end</span>) mon_unit w)) =
+h
+  (g a *
+   Core.fold_right
+     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+      <span class="kr">match</span> X0 <span class="kr">with</span>
+      | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+      | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+      <span class="kr">end</span>) mon_unit w)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk27"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">refine</span> (ap _ (grp_homo_op _ _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h
+  (g a *
+   g
+     (Core.fold_right
+        (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+         <span class="kr">match</span> X0 <span class="kr">with</span>
+         | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+         <span class="kr">end</span>) mon_unit w)) =
+h
+  (f a *
+   Core.fold_right
+     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+      <span class="kr">match</span> X0 <span class="kr">with</span>
+      | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+      | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+      <span class="kr">end</span>) mon_unit w)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk28" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk28"><hr></label><div class="goal-conclusion">h
+  (g a *
+   g
+     (Core.fold_right
+        (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+         <span class="kr">match</span> X0 <span class="kr">with</span>
+         | inl g | inr g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g * x
+         <span class="kr">end</span>) mon_unit w)) =
+h
+  (g a *
+   Core.fold_right
+     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+      <span class="kr">match</span> X0 <span class="kr">with</span>
+      | inl g =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; f g * x
+      | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x</span> : B =&gt; g g0 * x
+      <span class="kr">end</span>) mon_unit w)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk29"><span class="mi">1</span>,<span class="mi">2</span>: nrapply grp_homo_op_agree; <span class="nb">trivial</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (g a) = h (f a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk2a"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>Core.list (A + A)</span></span></span><br><span><var>IHw</var><span class="hyp-type"><b>: </b><span>h (g (FreeProduct_rec A A A grp_homo_id grp_homo_id (tr (coeq w)))) =
+h (FreeProduct_rec A A B f g (tr (coeq w)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f a) = h (g a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> p.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk2b">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))} -&gt;
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk2c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk2c"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+       (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+ (grp_homo_compose h f;
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  p (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+  Trunc_ind
+    (<span class="kr">fun</span>
+       <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+              (Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A))) =&gt;
+     h
+       (g
+          (FreeProduct_rec A A A grp_homo_id
+             grp_homo_id aa)) =
+     h (FreeProduct_rec A A B f g aa))
+    (Coeq_ind_hprop
+       (<span class="kr">fun</span>
+          <span class="nv">x0</span> : Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A)) =&gt;
+        h
+          (g
+             (FreeProduct_rec A A A grp_homo_id
+                grp_homo_id (tr x0))) =
+        h (FreeProduct_rec A A B f g (tr x0)))
+       (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+        Core.list_rect (A + A)
+          (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr (...)))) =
+           h
+             (FreeProduct_rec A A B f g (tr (coeq w0))))
+          (ap h (grp_homo_unit g))
+          (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+             (<span class="nv">IHw</span> : h
+                      (g
+                         (FreeProduct_rec A A A
+                            grp_homo_id grp_homo_id
+                            (...))) =
+                    h
+                      (FreeProduct_rec A A B f g
+                         (tr (...)))) =&gt;
+           <span class="kr">match</span>
+             a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+           <span class="kr">with</span>
+           | inl g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h (...)^ IHw) g0
+           | inr g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+           <span class="kr">end</span>
+           :
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr ...))) =
+           h
+             (FreeProduct_rec A A B f g
+                (tr (coeq ...)))) w
+        :
+        (<span class="kr">fun</span>
+           <span class="nv">x0</span> : Coeq
+                  (FreeProduct.map1 grp_trivial A A
+                     (grp_trivial_rec A))
+                  (FreeProduct.map2 grp_trivial A A
+                     (grp_trivial_rec A)) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr x0))) =
+         h (FreeProduct_rec A A B f g (tr x0)))
+          (coeq w))) x)
+ :
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  grp_homo_compose h f
+    (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  h (FreeProduct_rec A A B f g x)))) o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk2d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk2d"><hr></label><div class="goal-conclusion"><span class="nl">?g</span>
+o (<span class="kr">fun</span>
+     <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+   (grp_homo_compose h f;
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    p
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+    Trunc_ind
+      (<span class="kr">fun</span>
+         <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+                (Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A))) =&gt;
+       h
+         (g
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id aa)) =
+       h (FreeProduct_rec A A B f g aa))
+      (Coeq_ind_hprop
+         (<span class="kr">fun</span>
+            <span class="nv">x0</span> : Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A)) =&gt;
+          h
+            (g
+               (FreeProduct_rec A A A grp_homo_id
+                  grp_homo_id (tr x0))) =
+          h (FreeProduct_rec A A B f g (tr x0)))
+         (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+          Core.list_rect (A + A)
+            (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr (...)))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq w0))))
+            (ap h (grp_homo_unit g))
+            (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+               (<span class="nv">IHw</span> : h
+                        (g
+                           (FreeProduct_rec A A A
+                              grp_homo_id grp_homo_id
+                              (...))) =
+                      h
+                        (FreeProduct_rec A A B f g
+                           (tr (...)))) =&gt;
+             <span class="kr">match</span>
+               a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+             <span class="kr">with</span>
+             | inl g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h (...)^ IHw) g0
+             | inr g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+             <span class="kr">end</span>
+             :
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr ...))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq ...)))) w
+          :
+          (<span class="kr">fun</span>
+             <span class="nv">x0</span> : Coeq
+                    (FreeProduct.map1 grp_trivial A A
+                       (grp_trivial_rec A))
+                    (FreeProduct.map2 grp_trivial A A
+                       (grp_trivial_rec A)) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr x0))) =
+           h (FreeProduct_rec A A B f g (tr x0)))
+            (coeq w))) x)
+   :
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    grp_homo_compose h f
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    h (FreeProduct_rec A A B f g x)))) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk2e">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{b : GroupHomomorphism A C &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ b (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))} -&gt;
+(<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk2f"><span class="nb">intros</span> [k p] x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f x) = h (g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk30"><span class="nb">assert</span> (q1 := p (freeproduct_inl x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) (freeproduct_inl x) =
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))
+  (freeproduct_inl x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f x) = h (g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk31"><span class="nb">assert</span> (q2 := p (freeproduct_inr x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) (freeproduct_inl x) =
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))
+  (freeproduct_inl x)</span></span></span><br><span><var>q2</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) (freeproduct_inr x) =
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))
+  (freeproduct_inr x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f x) = h (g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk32"><span class="nb">simpl</span> <span class="kr">in</span> q1, q2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span class="hyp-type"><b>: </b><span>k (x * mon_unit) = h (f x * mon_unit)</span></span></span><br><span><var>q2</var><span class="hyp-type"><b>: </b><span>k (x * mon_unit) = h (g x * mon_unit)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f x) = h (g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk33"><span class="nb">rewrite</span> <span class="mi">2</span> right_identity <span class="kr">in</span> q1, q2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span class="hyp-type"><b>: </b><span>k x = h (f x)</span></span></span><br><span><var>q2</var><span class="hyp-type"><b>: </b><span>k x = h (g x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h (f x) = h (g x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (q1^ @ q2).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk34">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+       (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+ (grp_homo_compose h f;
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  p (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+  Trunc_ind
+    (<span class="kr">fun</span>
+       <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+              (Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A))) =&gt;
+     h
+       (g
+          (FreeProduct_rec A A A grp_homo_id
+             grp_homo_id aa)) =
+     h (FreeProduct_rec A A B f g aa))
+    (Coeq_ind_hprop
+       (<span class="kr">fun</span>
+          <span class="nv">x0</span> : Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A)) =&gt;
+        h
+          (g
+             (FreeProduct_rec A A A grp_homo_id
+                grp_homo_id (tr x0))) =
+        h (FreeProduct_rec A A B f g (tr x0)))
+       (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+        Core.list_rect (A + A)
+          (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr (...)))) =
+           h
+             (FreeProduct_rec A A B f g (tr (coeq w0))))
+          (ap h (grp_homo_unit g))
+          (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+             (<span class="nv">IHw</span> : h
+                      (g
+                         (FreeProduct_rec A A A
+                            grp_homo_id grp_homo_id
+                            (...))) =
+                    h
+                      (FreeProduct_rec A A B f g
+                         (tr (...)))) =&gt;
+           <span class="kr">match</span>
+             a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+           <span class="kr">with</span>
+           | inl g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h (...)^ IHw) g0
+           | inr g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+           <span class="kr">end</span>
+           :
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr ...))) =
+           h
+             (FreeProduct_rec A A B f g
+                (tr (coeq ...)))) w
+        :
+        (<span class="kr">fun</span>
+           <span class="nv">x0</span> : Coeq
+                  (FreeProduct.map1 grp_trivial A A
+                     (grp_trivial_rec A))
+                  (FreeProduct.map2 grp_trivial A A
+                     (grp_trivial_rec A)) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr x0))) =
+         h (FreeProduct_rec A A B f g (tr x0)))
+          (coeq w))) x)
+ :
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  grp_homo_compose h f
+    (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  h (FreeProduct_rec A A B f g x))))
+o (<span class="kr">fun</span>
+     <span class="nv">X</span> : {b : GroupHomomorphism A C &amp;
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          b
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          h (FreeProduct_rec A A B f g x))} =&gt;
+   (<span class="kr">fun</span> (<span class="nv">k</span> : GroupHomomorphism A C)
+      (<span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+            k
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id x)) ==
+           (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+            h (FreeProduct_rec A A B f g x))) =&gt;
+    (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
+     <span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q3</span> :=
+       internal_paths_rew
+         (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (f x * mon_unit)) q1
+         (right_identity x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q4</span> :=
+       internal_paths_rew
+         (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt; k g0 = h (g x * mon_unit)) q2
+         (right_identity x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q5</span> :=
+       internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q3
+         (right_identity (f x)) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q6</span> :=
+       internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q4
+         (right_identity (g x)) <span class="kr">in</span>
+     q5^ @ q6)
+    :
+    (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)))
+     X.<span class="mi">1</span> X.<span class="mi">2</span>) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="groupcoeq-v-chk35" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><label class="goal-separator" for="groupcoeq-v-chk35"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">X</span> : {b : GroupHomomorphism A C &amp;
+       (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+        b
+          (FreeProduct_rec A A A grp_homo_id
+             grp_homo_id x)) ==
+       (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+        h (FreeProduct_rec A A B f g x))} =&gt;
+ (<span class="kr">fun</span> (<span class="nv">k</span> : GroupHomomorphism A C)
+    (<span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          k
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          h (FreeProduct_rec A A B f g x))) =&gt;
+  (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
+   <span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q3</span> :=
+     internal_paths_rew
+       (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (f x * mon_unit)) q1
+       (right_identity x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q4</span> :=
+     internal_paths_rew
+       (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt; k g0 = h (g x * mon_unit)) q2
+       (right_identity x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q5</span> :=
+     internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q3
+       (right_identity (f x)) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q6</span> :=
+     internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q4
+       (right_identity (g x)) <span class="kr">in</span>
+   q5^ @ q6)
+  :
+  (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)))
+   X.<span class="mi">1</span> X.<span class="mi">2</span>)
+o (<span class="kr">fun</span>
+     <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+   (grp_homo_compose h f;
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    p
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+    Trunc_ind
+      (<span class="kr">fun</span>
+         <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+                (Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A))) =&gt;
+       h
+         (g
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id aa)) =
+       h (FreeProduct_rec A A B f g aa))
+      (Coeq_ind_hprop
+         (<span class="kr">fun</span>
+            <span class="nv">x0</span> : Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A)) =&gt;
+          h
+            (g
+               (FreeProduct_rec A A A grp_homo_id
+                  grp_homo_id (tr x0))) =
+          h (FreeProduct_rec A A B f g (tr x0)))
+         (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+          Core.list_rect (A + A)
+            (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr (...)))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq w0))))
+            (ap h (grp_homo_unit g))
+            (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+               (<span class="nv">IHw</span> : h
+                        (g
+                           (FreeProduct_rec A A A
+                              grp_homo_id grp_homo_id
+                              (...))) =
+                      h
+                        (FreeProduct_rec A A B f g
+                           (tr (...)))) =&gt;
+             <span class="kr">match</span>
+               a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+             <span class="kr">with</span>
+             | inl g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h (...)^ IHw) g0
+             | inr g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+             <span class="kr">end</span>
+             :
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr ...))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq ...)))) w
+          :
+          (<span class="kr">fun</span>
+             <span class="nv">x0</span> : Coeq
+                    (FreeProduct.map1 grp_trivial A A
+                       (grp_trivial_rec A))
+                    (FreeProduct.map2 grp_trivial A A
+                       (grp_trivial_rec A)) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr x0))) =
+           h (FreeProduct_rec A A B f g (tr x0)))
+            (coeq w))) x)
+   :
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    grp_homo_compose h f
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    h (FreeProduct_rec A A B f g x)))) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk36">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+       (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+ (grp_homo_compose h f;
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  p (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+  Trunc_ind
+    (<span class="kr">fun</span>
+       <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+              (Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A))) =&gt;
+     h
+       (g
+          (FreeProduct_rec A A A grp_homo_id
+             grp_homo_id aa)) =
+     h (FreeProduct_rec A A B f g aa))
+    (Coeq_ind_hprop
+       (<span class="kr">fun</span>
+          <span class="nv">x0</span> : Coeq
+                 (FreeProduct.map1 grp_trivial A A
+                    (grp_trivial_rec A))
+                 (FreeProduct.map2 grp_trivial A A
+                    (grp_trivial_rec A)) =&gt;
+        h
+          (g
+             (FreeProduct_rec A A A grp_homo_id
+                grp_homo_id (tr x0))) =
+        h (FreeProduct_rec A A B f g (tr x0)))
+       (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+        Core.list_rect (A + A)
+          (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr (...)))) =
+           h
+             (FreeProduct_rec A A B f g (tr (coeq w0))))
+          (ap h (grp_homo_unit g))
+          (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+             (<span class="nv">IHw</span> : h
+                      (g
+                         (FreeProduct_rec A A A
+                            grp_homo_id grp_homo_id
+                            (...))) =
+                    h
+                      (FreeProduct_rec A A B f g
+                         (tr (...)))) =&gt;
+           <span class="kr">match</span>
+             a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+           <span class="kr">with</span>
+           | inl g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h (...)^ IHw) g0
+           | inr g0 =&gt;
+               (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                ap h (...) @
+                grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+           <span class="kr">end</span>
+           :
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr ...))) =
+           h
+             (FreeProduct_rec A A B f g
+                (tr (coeq ...)))) w
+        :
+        (<span class="kr">fun</span>
+           <span class="nv">x0</span> : Coeq
+                  (FreeProduct.map1 grp_trivial A A
+                     (grp_trivial_rec A))
+                  (FreeProduct.map2 grp_trivial A A
+                     (grp_trivial_rec A)) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr x0))) =
+         h (FreeProduct_rec A A B f g (tr x0)))
+          (coeq w))) x)
+ :
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  grp_homo_compose h f
+    (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+ (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+  h (FreeProduct_rec A A B f g x))))
+o (<span class="kr">fun</span>
+     <span class="nv">X</span> : {b : GroupHomomorphism A C &amp;
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          b
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          h (FreeProduct_rec A A B f g x))} =&gt;
+   (<span class="kr">fun</span> (<span class="nv">k</span> : GroupHomomorphism A C)
+      (<span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+            k
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id x)) ==
+           (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+            h (FreeProduct_rec A A B f g x))) =&gt;
+    (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
+     <span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q3</span> :=
+       internal_paths_rew
+         (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (f x * mon_unit)) q1
+         (right_identity x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q4</span> :=
+       internal_paths_rew
+         (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt; k g0 = h (g x * mon_unit)) q2
+         (right_identity x) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q5</span> :=
+       internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q3
+         (right_identity (f x)) <span class="kr">in</span>
+     <span class="kr">let</span> <span class="nv">q6</span> :=
+       internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q4
+         (right_identity (g x)) <span class="kr">in</span>
+     q5^ @ q6)
+    :
+    (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)))
+     X.<span class="mi">1</span> X.<span class="mi">2</span>) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk37"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">x</span> : {b : GroupHomomorphism A C &amp;
+    (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+     b
+       (FreeProduct_rec A A A grp_homo_id grp_homo_id
+          x)) ==
+    (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+     h (FreeProduct_rec A A B f g x))},
+(grp_homo_compose h f;
+<span class="kr">fun</span> <span class="nv">x0</span> : FreeProduct A A =&gt;
+(<span class="kr">let</span> <span class="nv">q1</span> :=
+   x.<span class="mi">2</span>
+     (freeproduct_inl
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q2</span> :=
+   x.<span class="mi">2</span>
+     (freeproduct_inr
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q3</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt;
+      x.<span class="mi">1</span> g =
+      h
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x0) * mon_unit)) q1
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q4</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt;
+      x.<span class="mi">1</span> g0 =
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x0) * mon_unit)) q2
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q5</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      x.<span class="mi">1</span>
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0) = h g) q3
+     (right_identity
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x0))) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q6</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      x.<span class="mi">1</span>
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x0) = h g) q4
+     (right_identity
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x0))) <span class="kr">in</span>
+ q5^ @ q6) @
+Trunc_ind
+  (<span class="kr">fun</span>
+     <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+            (Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A))) =&gt;
+   h
+     (g
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           aa)) = h (FreeProduct_rec A A B f g aa))
+  (Coeq_ind_hprop
+     (<span class="kr">fun</span>
+        <span class="nv">x1</span> : Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A)) =&gt;
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id (tr x1))) =
+      h (FreeProduct_rec A A B f g (tr x1)))
+     (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+      Core.list_rect (A + A)
+        (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr (coeq w0)))) =
+         h (FreeProduct_rec A A B f g (tr (coeq w0))))
+        (ap h (grp_homo_unit g))
+        (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+           (<span class="nv">IHw</span> : h
+                    (g
+                       (FreeProduct_rec A A A
+                          grp_homo_id grp_homo_id
+                          (tr (coeq w0)))) =
+                  h
+                    (FreeProduct_rec A A B f g
+                       (tr (coeq w0)))) =&gt;
+         <span class="kr">match</span>
+           a <span class="kr">as</span> s
+           <span class="kr">return</span>
+             (h
+                (g
+                   (<span class="kr">match</span> ... <span class="kr">with</span>
+                    | ... | ... =&gt; ... =&gt; ...
+                    <span class="kr">end</span>
+                      (Core.fold_right (...) mon_unit
+                         w0))) =
+              h
+                (<span class="kr">match</span> s <span class="kr">with</span>
+                 | inl g =&gt; <span class="kr">fun</span> <span class="nv">x1</span> : B =&gt; f g * x1
+                 | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x1</span> : B =&gt; g g0 * x1
+                 <span class="kr">end</span>
+                   (Core.fold_right
+                      (<span class="kr">fun</span> ... =&gt; ...
+                                  ...
+                                  ...
+                                  <span class="kr">end</span>) mon_unit w0)))
+         <span class="kr">with</span>
+         | inl g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> ... =&gt; g * x1
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h
+               (<span class="kr">let</span> <span class="nv">q1</span> := x.<span class="mi">2</span> (freeproduct_inl g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q2</span> := x.<span class="mi">2</span> (freeproduct_inr g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q3</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; x.<span class="mi">1</span> g = h ...) q1
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q4</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> ... =&gt; ... = ...) q2
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q5</span> :=
+                  internal_paths_rew (... =&gt; ...) q3
+                    (right_identity ...) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q6</span> :=
+                  internal_paths_rew (...) q4 (...) <span class="kr">in</span>
+                q5^ @ q6)^ IHw
+         | inr g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> ... =&gt; g * x1
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h <span class="mi">1</span> IHw
+         <span class="kr">end</span>) w)) x0) = x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk38"><span class="nb">intros</span> [k p].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(grp_homo_compose h f;
+<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+(<span class="kr">let</span> <span class="nv">q1</span> :=
+   p
+     (freeproduct_inl
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q2</span> :=
+   p
+     (freeproduct_inr
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q3</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt;
+      k g =
+      h
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x) * mon_unit)) q1
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q4</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt;
+      k g0 =
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x) * mon_unit)) q2
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q5</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      k
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x) = h g) q3
+     (right_identity
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x))) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q6</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      k
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x) = h g) q4
+     (right_identity
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x))) <span class="kr">in</span>
+ q5^ @ q6) @
+Trunc_ind
+  (<span class="kr">fun</span>
+     <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+            (Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A))) =&gt;
+   h
+     (g
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           aa)) = h (FreeProduct_rec A A B f g aa))
+  (Coeq_ind_hprop
+     (<span class="kr">fun</span>
+        <span class="nv">x0</span> : Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A)) =&gt;
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id (tr x0))) =
+      h (FreeProduct_rec A A B f g (tr x0)))
+     (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+      Core.list_rect (A + A)
+        (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr (coeq w0)))) =
+         h (FreeProduct_rec A A B f g (tr (coeq w0))))
+        (ap h (grp_homo_unit g))
+        (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+           (<span class="nv">IHw</span> : h
+                    (g
+                       (FreeProduct_rec A A A
+                          grp_homo_id grp_homo_id
+                          (tr (coeq w0)))) =
+                  h
+                    (FreeProduct_rec A A B f g
+                       (tr (coeq w0)))) =&gt;
+         <span class="kr">match</span>
+           a <span class="kr">as</span> s
+           <span class="kr">return</span>
+             (h
+                (g
+                   (<span class="kr">match</span> s <span class="kr">with</span>
+                    | inl g | inr g =&gt;
+                        <span class="kr">fun</span> ... =&gt; g * x0
+                    <span class="kr">end</span>
+                      (Core.fold_right (... =&gt; ...)
+                         mon_unit w0))) =
+              h
+                (<span class="kr">match</span> s <span class="kr">with</span>
+                 | inl g =&gt; <span class="kr">fun</span> <span class="nv">x0</span> : B =&gt; f g * x0
+                 | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x0</span> : B =&gt; g g0 * x0
+                 <span class="kr">end</span>
+                   (Core.fold_right
+                      (<span class="kr">fun</span> <span class="nv">X0</span> : ... =&gt;
+                       <span class="kr">match</span> ... <span class="kr">with</span>
+                       | ... ...
+                       | ... ...
+                       <span class="kr">end</span>) mon_unit w0)))
+         <span class="kr">with</span>
+         | inl g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> <span class="nv">x0</span> : A =&gt; g * x0
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h
+               (<span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q3</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (...)) q1
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q4</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> <span class="nv">g1</span> : A =&gt; k g1 = h ...) q2
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q5</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> ... =&gt; ... = ...) q3
+                    (right_identity (...)) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q6</span> :=
+                  internal_paths_rew (... =&gt; ...) q4
+                    (right_identity ...) <span class="kr">in</span>
+                q5^ @ q6)^ IHw
+         | inr g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> <span class="nv">x0</span> : A =&gt; g * x0
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h <span class="mi">1</span> IHw
+         <span class="kr">end</span>) w)) x) = (k; p)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk39"><span class="nb">apply</span> path_sigma_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(grp_homo_compose h f;
+<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+(<span class="kr">let</span> <span class="nv">q1</span> :=
+   p
+     (freeproduct_inl
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q2</span> :=
+   p
+     (freeproduct_inr
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q3</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt;
+      k g =
+      h
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x) * mon_unit)) q1
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q4</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt;
+      k g0 =
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x) * mon_unit)) q2
+     (right_identity
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x)) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q5</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      k
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x) = h g) q3
+     (right_identity
+        (f
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x))) <span class="kr">in</span>
+ <span class="kr">let</span> <span class="nv">q6</span> :=
+   internal_paths_rew
+     (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt;
+      k
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           x) = h g) q4
+     (right_identity
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id x))) <span class="kr">in</span>
+ q5^ @ q6) @
+Trunc_ind
+  (<span class="kr">fun</span>
+     <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+            (Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A))) =&gt;
+   h
+     (g
+        (FreeProduct_rec A A A grp_homo_id grp_homo_id
+           aa)) = h (FreeProduct_rec A A B f g aa))
+  (Coeq_ind_hprop
+     (<span class="kr">fun</span>
+        <span class="nv">x0</span> : Coeq
+               (FreeProduct.map1 grp_trivial A A
+                  (grp_trivial_rec A))
+               (FreeProduct.map2 grp_trivial A A
+                  (grp_trivial_rec A)) =&gt;
+      h
+        (g
+           (FreeProduct_rec A A A grp_homo_id
+              grp_homo_id (tr x0))) =
+      h (FreeProduct_rec A A B f g (tr x0)))
+     (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+      Core.list_rect (A + A)
+        (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+         h
+           (g
+              (FreeProduct_rec A A A grp_homo_id
+                 grp_homo_id (tr (coeq w0)))) =
+         h (FreeProduct_rec A A B f g (tr (coeq w0))))
+        (ap h (grp_homo_unit g))
+        (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+           (<span class="nv">IHw</span> : h
+                    (g
+                       (FreeProduct_rec A A A
+                          grp_homo_id grp_homo_id
+                          (tr (coeq w0)))) =
+                  h
+                    (FreeProduct_rec A A B f g
+                       (tr (coeq w0)))) =&gt;
+         <span class="kr">match</span>
+           a <span class="kr">as</span> s
+           <span class="kr">return</span>
+             (h
+                (g
+                   (<span class="kr">match</span> s <span class="kr">with</span>
+                    | inl g | inr g =&gt;
+                        <span class="kr">fun</span> ... =&gt; g * x0
+                    <span class="kr">end</span>
+                      (Core.fold_right (... =&gt; ...)
+                         mon_unit w0))) =
+              h
+                (<span class="kr">match</span> s <span class="kr">with</span>
+                 | inl g =&gt; <span class="kr">fun</span> <span class="nv">x0</span> : B =&gt; f g * x0
+                 | inr g0 =&gt; <span class="kr">fun</span> <span class="nv">x0</span> : B =&gt; g g0 * x0
+                 <span class="kr">end</span>
+                   (Core.fold_right
+                      (<span class="kr">fun</span> <span class="nv">X0</span> : ... =&gt;
+                       <span class="kr">match</span> ... <span class="kr">with</span>
+                       | ... ...
+                       | ... ...
+                       <span class="kr">end</span>) mon_unit w0)))
+         <span class="kr">with</span>
+         | inl g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> <span class="nv">x0</span> : A =&gt; g * x0
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h
+               (<span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q3</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (...)) q1
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q4</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> <span class="nv">g1</span> : A =&gt; k g1 = h ...) q2
+                    (right_identity g0) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q5</span> :=
+                  internal_paths_rew
+                    (<span class="kr">fun</span> ... =&gt; ... = ...) q3
+                    (right_identity (...)) <span class="kr">in</span>
+                <span class="kr">let</span> <span class="nv">q6</span> :=
+                  internal_paths_rew (... =&gt; ...) q4
+                    (right_identity ...) <span class="kr">in</span>
+                q5^ @ q6)^ IHw
+         | inr g0 =&gt;
+             ap h
+               (grp_homo_op g g0
+                  (Core.fold_right
+                     (<span class="kr">fun</span> <span class="nv">X0</span> : A + A =&gt;
+                      <span class="kr">match</span> X0 <span class="kr">with</span>
+                      | inl g | inr g =&gt;
+                          <span class="kr">fun</span> <span class="nv">x0</span> : A =&gt; g * x0
+                      <span class="kr">end</span>) mon_unit w0)) @
+             grp_homo_op_agree h h <span class="mi">1</span> IHw
+         <span class="kr">end</span>) w)) x).<span class="mi">1</span> = (k; p).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3a"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f = k</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3b" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3b"><span class="nb">apply</span> equiv_path_grouphomomorphism.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f == k</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3c" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3c"><span class="nb">intro</span> y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f y = k y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3d"><span class="nb">pose</span> (q1 := p (freeproduct_inl y)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span><span class="hyp-body"><b>:= </b><span>p (freeproduct_inl y)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) (freeproduct_inl y) =
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))
+  (freeproduct_inl y)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f y = k y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3e"><span class="nb">simpl</span> <span class="kr">in</span> q1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span><span class="hyp-body"><b>:= </b><span>p (amal_eta (Core.cons (inl y) Core.nil))</span></span><span class="hyp-type"><b>: </b><span>k (y * mon_unit) = h (f y * mon_unit)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f y = k y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk3f"><span class="nb">rewrite</span> <span class="mi">2</span> right_identity <span class="kr">in</span> q1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A C</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ k
+   (FreeProduct_rec A A A grp_homo_id grp_homo_id
+      x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+ h (FreeProduct_rec A A B f g x))</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>q1</var><span class="hyp-type"><b>: </b><span>k y = h (f y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">grp_homo_compose h f y = k y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> q1^.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="groupcoeq-v-chk40" style="display: none" type="checkbox"><label class="alectryon-input" for="groupcoeq-v-chk40">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>Group</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>GroupHomomorphism A B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>B $-&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">X</span> : {b : GroupHomomorphism A C &amp;
+       (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+        b
+          (FreeProduct_rec A A A grp_homo_id
+             grp_homo_id x)) ==
+       (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+        h (FreeProduct_rec A A B f g x))} =&gt;
+ (<span class="kr">fun</span> (<span class="nv">k</span> : GroupHomomorphism A C)
+    (<span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          k
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+          h (FreeProduct_rec A A B f g x))) =&gt;
+  (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
+   <span class="kr">let</span> <span class="nv">q1</span> := p (freeproduct_inl x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q2</span> := p (freeproduct_inr x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q3</span> :=
+     internal_paths_rew
+       (<span class="kr">fun</span> <span class="nv">g</span> : A =&gt; k g = h (f x * mon_unit)) q1
+       (right_identity x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q4</span> :=
+     internal_paths_rew
+       (<span class="kr">fun</span> <span class="nv">g0</span> : A =&gt; k g0 = h (g x * mon_unit)) q2
+       (right_identity x) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q5</span> :=
+     internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q3
+       (right_identity (f x)) <span class="kr">in</span>
+   <span class="kr">let</span> <span class="nv">q6</span> :=
+     internal_paths_rew (<span class="kr">fun</span> <span class="nv">g</span> : B =&gt; k x = h g) q4
+       (right_identity (g x)) <span class="kr">in</span>
+   q5^ @ q6)
+  :
+  (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) == (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)))
+   X.<span class="mi">1</span> X.<span class="mi">2</span>)
+o (<span class="kr">fun</span>
+     <span class="nv">p</span> : (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (f x)) ==
+         (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; h (g x)) =&gt;
+   (grp_homo_compose h f;
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    p
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x) @
+    Trunc_ind
+      (<span class="kr">fun</span>
+         <span class="nv">aa</span> : Trunc <span class="mi">0</span>
+                (Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A))) =&gt;
+       h
+         (g
+            (FreeProduct_rec A A A grp_homo_id
+               grp_homo_id aa)) =
+       h (FreeProduct_rec A A B f g aa))
+      (Coeq_ind_hprop
+         (<span class="kr">fun</span>
+            <span class="nv">x0</span> : Coeq
+                   (FreeProduct.map1 grp_trivial A A
+                      (grp_trivial_rec A))
+                   (FreeProduct.map2 grp_trivial A A
+                      (grp_trivial_rec A)) =&gt;
+          h
+            (g
+               (FreeProduct_rec A A A grp_homo_id
+                  grp_homo_id (tr x0))) =
+          h (FreeProduct_rec A A B f g (tr x0)))
+         (<span class="kr">fun</span> <span class="nv">w</span> : FreeProduct.Words A A =&gt;
+          Core.list_rect (A + A)
+            (<span class="kr">fun</span> <span class="nv">w0</span> : Core.list (A + A) =&gt;
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr (...)))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq w0))))
+            (ap h (grp_homo_unit g))
+            (<span class="kr">fun</span> (<span class="nv">a</span> : A + A) (<span class="nv">w0</span> : Core.list (A + A))
+               (<span class="nv">IHw</span> : h
+                        (g
+                           (FreeProduct_rec A A A
+                              grp_homo_id grp_homo_id
+                              (...))) =
+                      h
+                        (FreeProduct_rec A A B f g
+                           (tr (...)))) =&gt;
+             <span class="kr">match</span>
+               a <span class="kr">as</span> s <span class="kr">return</span> (h (...) = h (...))
+             <span class="kr">with</span>
+             | inl g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h (...)^ IHw) g0
+             | inr g0 =&gt;
+                 (<span class="kr">fun</span> <span class="nv">a0</span> : A =&gt;
+                  ap h (...) @
+                  grp_homo_op_agree h h <span class="mi">1</span> IHw) g0
+             <span class="kr">end</span>
+             :
+             h
+               (g
+                  (FreeProduct_rec A A A grp_homo_id
+                     grp_homo_id (tr ...))) =
+             h
+               (FreeProduct_rec A A B f g
+                  (tr (coeq ...)))) w
+          :
+          (<span class="kr">fun</span>
+             <span class="nv">x0</span> : Coeq
+                    (FreeProduct.map1 grp_trivial A A
+                       (grp_trivial_rec A))
+                    (FreeProduct.map2 grp_trivial A A
+                       (grp_trivial_rec A)) =&gt;
+           h
+             (g
+                (FreeProduct_rec A A A grp_homo_id
+                   grp_homo_id (tr x0))) =
+           h (FreeProduct_rec A A B f g (tr x0)))
+            (coeq w))) x)
+   :
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    grp_homo_compose h f
+      (FreeProduct_rec A A A grp_homo_id grp_homo_id x)) ==
+   (<span class="kr">fun</span> <span class="nv">x</span> : FreeProduct A A =&gt;
+    h (FreeProduct_rec A A B f g x)))) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">hnf</span>; <span class="nb">intros</span>; <span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

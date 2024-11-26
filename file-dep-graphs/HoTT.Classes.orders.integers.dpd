@@ -1,0 +1,7 @@
+N: 2 "Biinduction_instance_0" [body=yes, kind=cnst, prop=no, path="integers", ];
+N: 4 "induction" [body=yes, kind=cnst, prop=no, path="integers", ];
+N: 3 "induction_nonneg" [body=yes, kind=cnst, prop=no, path="integers", ];
+N: 1 "slow_int_le_dec" [body=yes, kind=cnst, prop=no, path="integers", ];
+E: 1 2 [weight=2, ];
+E: 2 4 [weight=1, ];
+E: 3 4 [weight=1, ];

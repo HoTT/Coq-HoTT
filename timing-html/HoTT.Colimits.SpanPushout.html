@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>SpanPushout.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for SpanPushout.v</h1>
+
+<div class="code" title="File: SpanPushout.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pushouts of "dependent spans". *)
+
+</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SpanPushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {X Y : Type} (Q : X -&gt; Y -&gt; Type).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Definition SPushout := @Pushout@{up _ _ up} (sig@{up _} (fun (xy : X * Y) =&gt; Q (fst xy) (snd xy))) X Y
+                                  (fst o pr1) (snd o pr1).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition spushl : X -&gt; SPushout := pushl.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition spushr : Y -&gt; SPushout := pushr.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Definition spglue {x:X} {y:Y} : Q x y -&gt; spushl x = spushr y
+    := fun q =&gt; pglue ((x,y) ; q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition SPushout_rec (R : Type)
+             (spushl' : X -&gt; R) (spushr' : Y -&gt; R)
+             (sglue' : forall x y (q : Q x y), spushl' x = spushr' y)
+    : SPushout -&gt; R.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 18
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    srapply (@Pushout_rec {xy:X * Y &amp; Q (fst xy) (snd xy)} X Y
+                          (fst o pr1) (snd o pr1) R spushl' spushr').</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[x y] q]; cbn in *.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sglue'; assumption.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition SPushout_ind (R : SPushout -&gt; Type)
+             (spushl' : forall x, R (spushl x))
+             (spushr' : forall y, R (spushr y))
+             (sglue' : forall x y (q : Q x y), 
+                 transport R (spglue q) (spushl' x) = (spushr' y))
+    : forall p, R p.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 31
+Time: 0.003s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+    srapply (@Pushout_ind {xy:X * Y &amp; Q (fst xy) (snd xy)} X Y
+                          (fst o pr1) (snd o pr1) R spushl' spushr').</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 33
+Time: 0.003s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+    intros [[x y] q]; cbn in *.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    apply sglue'; assumption.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 35
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 36
+Time: 0.005s">
+<div class="time" style="width: 12.820512820513%"></div>
+<pre>
+
+  Definition spushout_ind_beta_sglue (R : SPushout -&gt; Type)
+             (spushl' : forall x, R (spushl x))
+             (spushr' : forall y, R (spushr y))
+             (spglue' : forall x y (q : Q x y), 
+                 transport R (spglue q) (spushl' x) = (spushr' y))
+             (x:X) (y:Y) (q:Q x y)
+    : apD (SPushout_ind R spushl' spushr' spglue') (spglue q) = spglue'  x y q
+    := Pushout_ind_beta_pglue _ _ _ _ ((x,y);q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+End SpanPushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

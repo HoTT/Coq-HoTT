@@ -1,0 +1,63 @@
+digraph HoTT_Classes_theory_ua_subalgebra {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_subalgebra_path_subalgebra_iff [label="path_subalgebra_iff", URL=<ua_subalgebra.html#path_subalgebra_iff>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_path_subalgebra [label="path_subalgebra", URL=<ua_subalgebra.html#path_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_is_isomorphism_inc_improper_subalgebra [label="is_isomorphism_inc_improper_subalgebra", URL=<ua_subalgebra.html#is_isomorphism_inc_improper_subalgebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_hom_inc_subalgebra [label="hom_inc_subalgebra", URL=<ua_subalgebra.html#hom_inc_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_is_homomorphism_inc_subalgebra [label="is_homomorphism_inc_subalgebra", URL=<ua_subalgebra.html#is_homomorphism_inc_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_oppreserving_inc_subalgebra [label="oppreserving_inc_subalgebra", URL=<ua_subalgebra.html#oppreserving_inc_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_def_inc_subalgebra [label="def_inc_subalgebra", URL=<ua_subalgebra.html#def_inc_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_trunc_subalgebra [label="trunc_subalgebra", URL=<ua_subalgebra.html#trunc_subalgebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_Subalgebra [label="Subalgebra", URL=<ua_subalgebra.html#Subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_ops_subalgebra [label="ops_subalgebra", URL=<ua_subalgebra.html#ops_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_op_subalgebra [label="op_subalgebra", URL=<ua_subalgebra.html#op_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_carriers_subalgebra [label="carriers_subalgebra", URL=<ua_subalgebra.html#carriers_subalgebra>, fillcolor="#F070D1"] ;
+ua_subalgebra_hprop_is_subalgebra_predicate [label="hprop_is_subalgebra_predicate", URL=<ua_subalgebra.html#hprop_is_subalgebra_predicate>, fillcolor="#F070D1"] ;
+ua_subalgebra_is_closed_under_ops_subalgebra_predicate [label="is_closed_under_ops_subalgebra_predicate", URL=<ua_subalgebra.html#is_closed_under_ops_subalgebra_predicate>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_hprop_subalgebra_predicate [label="hprop_subalgebra_predicate", URL=<ua_subalgebra.html#hprop_subalgebra_predicate>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_IsSubalgebraPredicate_sind [label="IsSubalgebraPredicate_sind", URL=<ua_subalgebra.html#IsSubalgebraPredicate_sind>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_IsSubalgebraPredicate_rec [label="IsSubalgebraPredicate_rec", URL=<ua_subalgebra.html#IsSubalgebraPredicate_rec>, peripheries=3, fillcolor="#F070D1"] ;
+ua_subalgebra_IsSubalgebraPredicate_ind [label="IsSubalgebraPredicate_ind", URL=<ua_subalgebra.html#IsSubalgebraPredicate_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+ua_subalgebra_IsSubalgebraPredicate_rect [label="IsSubalgebraPredicate_rect", URL=<ua_subalgebra.html#IsSubalgebraPredicate_rect>, fillcolor="#F070D1"] ;
+ua_subalgebra_BuildIsSubalgebraPredicate [label="BuildIsSubalgebraPredicate", URL=<ua_subalgebra.html#BuildIsSubalgebraPredicate>, fillcolor="#7FAAFF"] ;
+ua_subalgebra_IsSubalgebraPredicate [label="IsSubalgebraPredicate", URL=<ua_subalgebra.html#IsSubalgebraPredicate>, fillcolor="#E2CDFA"] ;
+ua_subalgebra_trunc_is_closed_under_ops [label="trunc_is_closed_under_ops", URL=<ua_subalgebra.html#trunc_is_closed_under_ops>, fillcolor="#F070D1"] ;
+ua_subalgebra_IsClosedUnderOps [label="IsClosedUnderOps", URL=<ua_subalgebra.html#IsClosedUnderOps>, fillcolor="#F070D1"] ;
+ua_subalgebra_trunc_closed_under_op [label="trunc_closed_under_op", URL=<ua_subalgebra.html#trunc_closed_under_op>, fillcolor="#F070D1"] ;
+ua_subalgebra_ClosedUnderOp [label="ClosedUnderOp", URL=<ua_subalgebra.html#ClosedUnderOp>, fillcolor="#F070D1"] ;
+  ua_subalgebra_path_subalgebra_iff -> ua_subalgebra_path_subalgebra [] ;
+  ua_subalgebra_path_subalgebra -> ua_subalgebra_Subalgebra [] ;
+  ua_subalgebra_path_subalgebra -> ua_subalgebra_hprop_is_subalgebra_predicate [] ;
+  ua_subalgebra_is_isomorphism_inc_improper_subalgebra -> ua_subalgebra_hom_inc_subalgebra [] ;
+  ua_subalgebra_hom_inc_subalgebra -> ua_subalgebra_is_homomorphism_inc_subalgebra [] ;
+  ua_subalgebra_is_homomorphism_inc_subalgebra -> ua_subalgebra_oppreserving_inc_subalgebra [] ;
+  ua_subalgebra_oppreserving_inc_subalgebra -> ua_subalgebra_def_inc_subalgebra [] ;
+  ua_subalgebra_def_inc_subalgebra -> ua_subalgebra_Subalgebra [] ;
+  ua_subalgebra_trunc_subalgebra -> ua_subalgebra_Subalgebra [] ;
+  ua_subalgebra_Subalgebra -> ua_subalgebra_ops_subalgebra [] ;
+  ua_subalgebra_ops_subalgebra -> ua_subalgebra_op_subalgebra [] ;
+  ua_subalgebra_ops_subalgebra -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_op_subalgebra -> ua_subalgebra_carriers_subalgebra [] ;
+  ua_subalgebra_op_subalgebra -> ua_subalgebra_ClosedUnderOp [] ;
+  ua_subalgebra_hprop_is_subalgebra_predicate -> ua_subalgebra_BuildIsSubalgebraPredicate [] ;
+  ua_subalgebra_hprop_is_subalgebra_predicate -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_hprop_is_subalgebra_predicate -> ua_subalgebra_trunc_is_closed_under_ops [] ;
+  ua_subalgebra_is_closed_under_ops_subalgebra_predicate -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_hprop_subalgebra_predicate -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_sind -> ua_subalgebra_BuildIsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_sind -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_rec -> ua_subalgebra_IsSubalgebraPredicate_rect [] ;
+  ua_subalgebra_IsSubalgebraPredicate_ind -> ua_subalgebra_BuildIsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_ind -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_rect -> ua_subalgebra_BuildIsSubalgebraPredicate [] ;
+  ua_subalgebra_IsSubalgebraPredicate_rect -> ua_subalgebra_IsSubalgebraPredicate [] ;
+  ua_subalgebra_BuildIsSubalgebraPredicate -> ua_subalgebra_IsClosedUnderOps [] ;
+  ua_subalgebra_IsSubalgebraPredicate -> ua_subalgebra_IsClosedUnderOps [] ;
+  ua_subalgebra_trunc_is_closed_under_ops -> ua_subalgebra_IsClosedUnderOps [] ;
+  ua_subalgebra_trunc_is_closed_under_ops -> ua_subalgebra_trunc_closed_under_op [] ;
+  ua_subalgebra_IsClosedUnderOps -> ua_subalgebra_ClosedUnderOp [] ;
+  ua_subalgebra_trunc_closed_under_op -> ua_subalgebra_ClosedUnderOp [] ;
+subgraph cluster_ua_subalgebra { label="ua_subalgebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_subalgebra_ClosedUnderOp; ua_subalgebra_trunc_closed_under_op; ua_subalgebra_IsClosedUnderOps; ua_subalgebra_trunc_is_closed_under_ops; ua_subalgebra_IsSubalgebraPredicate; ua_subalgebra_BuildIsSubalgebraPredicate; ua_subalgebra_IsSubalgebraPredicate_rect; ua_subalgebra_IsSubalgebraPredicate_ind; ua_subalgebra_IsSubalgebraPredicate_rec; ua_subalgebra_IsSubalgebraPredicate_sind; ua_subalgebra_hprop_subalgebra_predicate; ua_subalgebra_is_closed_under_ops_subalgebra_predicate; ua_subalgebra_hprop_is_subalgebra_predicate; ua_subalgebra_carriers_subalgebra; ua_subalgebra_op_subalgebra; ua_subalgebra_ops_subalgebra; ua_subalgebra_Subalgebra; ua_subalgebra_trunc_subalgebra; ua_subalgebra_def_inc_subalgebra; ua_subalgebra_oppreserving_inc_subalgebra; ua_subalgebra_is_homomorphism_inc_subalgebra; ua_subalgebra_hom_inc_subalgebra; ua_subalgebra_is_isomorphism_inc_improper_subalgebra; ua_subalgebra_path_subalgebra; ua_subalgebra_path_subalgebra_iff; };
+} /* END */

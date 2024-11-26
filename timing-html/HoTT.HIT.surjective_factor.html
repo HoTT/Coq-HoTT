@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>surjective_factor.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for surjective_factor.v</h1>
+
+<div class="code" title="File: surjective_factor.v
+Line: 1
+Time: 0.057s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+        HoTT.Basics
+        HoTT.Truncations.Core Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Definition by factoring through a surjection. *)
+
+</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section surjective_factor.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B C} `{IsHSet C} `(f : A -&gt; C) `(g : A -&gt; B) {Esurj : IsSurjection g}.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable (Eg : forall x y, g x = g y -&gt; f x = f y).</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma ishprop_surjective_factor_aux : forall b, IsHProp (exists c : C, forall a, g a = b -&gt; f a = c).</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 13
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre> apply Sigma.ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c1 c2 E1 E2.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+    generalize (@center _ (Esurj b)); apply (Trunc_ind _).</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p];destruct p.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    path_via (f a).</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+  Definition surjective_factor_aux :=
+    @conn_map_elim
+      _ _ _ _ Esurj (fun b =&gt; exists c : C, forall a, g a = b -&gt; f a = c)
+      ishprop_surjective_factor_aux
+      (fun a =&gt; exist (fun c =&gt; forall a, _ -&gt; _ = c) (f a) (fun a' =&gt; Eg a' a)).</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition surjective_factor : B -&gt; C
+    := fun b =&gt; (surjective_factor_aux b).1.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma surjective_factor_pr : f == compose surjective_factor g.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (surjective_factor_aux (g a)).2.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End surjective_factor.</pre>
+</div>
+<div class="code" title="File: surjective_factor.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

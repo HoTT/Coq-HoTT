@@ -1,0 +1,13 @@
+digraph HoTT_WildCat_Sigma {
+  graph [ratio=0.5]
+  node [style=filled]
+Sigma_is0functor_sigma [label="is0functor_sigma", URL=<Sigma.html#is0functor_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+Sigma_is0gpd_sigma [label="is0gpd_sigma", URL=<Sigma.html#is0gpd_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+Sigma_is01cat_sigma [label="is01cat_sigma", URL=<Sigma.html#is01cat_sigma>, fillcolor="#F070D1"] ;
+Sigma_isgraph_sigma [label="isgraph_sigma", URL=<Sigma.html#isgraph_sigma>, fillcolor="#F070D1"] ;
+  Sigma_is0functor_sigma -> Sigma_isgraph_sigma [] ;
+  Sigma_is0gpd_sigma -> Sigma_is01cat_sigma [] ;
+  Sigma_is01cat_sigma -> Sigma_isgraph_sigma [] ;
+subgraph cluster_Sigma { label="Sigma"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Sigma_isgraph_sigma; Sigma_is01cat_sigma; Sigma_is0gpd_sigma; Sigma_is0functor_sigma; };
+} /* END */

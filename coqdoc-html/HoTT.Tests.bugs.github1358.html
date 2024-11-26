@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.bugs.github1358</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.bugs.github1358</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="A" class="idref" href="#A"><span class="id" title="axiom">A@</span></a>{<span class="id" title="var">i</span>} : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="foo" class="idref" href="#foo"><span class="id" title="axiom">foo@</span></a>{<span class="id" title="var">i</span>} : <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="bar" class="idref" href="#bar"><span class="id" title="definition">bar@</span></a>{<span class="id" title="var">i</span>} : <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="bar'" class="idref" href="#bar'"><span class="id" title="definition">bar'@</span></a>{<span class="id" title="var">i</span>} : <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">A@</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">{</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">i</span></a><a class="idref" href="HoTT.Tests.bugs.github1358.html#A"><span class="id" title="axiom">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Equivalences.html#equiv_idmap"><span class="id" title="definition">equiv_idmap</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

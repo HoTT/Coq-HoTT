@@ -1,0 +1,11 @@
+digraph HoTT_Algebra_Groups_Lagrange {
+  graph [ratio=0.5]
+  node [style=filled]
+Lagrange_lagrange_normal [label="lagrange_normal", URL=<Lagrange.html#lagrange_normal>, peripheries=3, fillcolor="#F070D1"] ;
+Lagrange_lagrange [label="lagrange", URL=<Lagrange.html#lagrange>, fillcolor="#F070D1"] ;
+Lagrange_subgroup_index [label="subgroup_index", URL=<Lagrange.html#subgroup_index>, fillcolor="#F070D1"] ;
+  Lagrange_lagrange_normal -> Lagrange_lagrange [] ;
+  Lagrange_lagrange -> Lagrange_subgroup_index [] ;
+subgraph cluster_Lagrange { label="Lagrange"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Lagrange_subgroup_index; Lagrange_lagrange; Lagrange_lagrange_normal; };
+} /* END */
