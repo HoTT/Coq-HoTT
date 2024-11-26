@@ -23,6 +23,17 @@ Definition pfammap_homotopy {A : Type} {a0 : A} {R S : A -> Type} {r0 : R a0} {s
   (f g : pfamMap R S r0 s0)
   := { p : forall a : A, pr1 f a == pr1 g a & p a0 r0 = pr2 f @ (pr2 g)^}.
 
+Global Instance reflexive_pfammap_homotopy {A : Type} {a0 : A}
+  {R S : A -> Type} {r0 : R a0} {s0 : S a0}
+  : Reflexive (pfammap_homotopy (r0:=r0) (s0:=s0)).
+Proof.
+  intro g.
+  snrefine (_;_).
+  - exact (fun _ _ => idpath).
+  - cbn; symmetry.
+    exact (concat_pV _).
+Defined.
+
 (** We weaken part (ii) of Theorem 5.8.2. Instead of requiring that the mapping space is contractible, we will only require it to be homotopy contractible, i.e. it is inhabited and there is a homotopy between every map and the chosen map. This allows us to avoid function extensionality. Given that a pointed type family [(R; r0)] is an identity system, then the mapping space of pointed type families from [(R; r0)] to any [(S; s0)] is homotopy contractible. This is a weak form of Theorem 5.8.2, (i) implies (ii). *)
 Definition homocontr_pfammap_identitysystem {A : Type} {a0 : A}
   (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem R r0}
@@ -60,7 +71,7 @@ Proof.
 Defined.
 
 (** Given that some type family [R] is fiberwise equivalent to identity types based at [a0], then the total space [sig R] is contractible. This is a stronger form of Theorem 5.8.2, (iii) implies (iv). *)
-Definition contr_sigma_refl_rel {A : Type} {a0 : A}
+Definition contr_sigma_equiv_path {A : Type} {a0 : A}
   (R : A -> Type) (f : forall a, (a0 = a) <~> R a)
   : Contr (sig R).
 Proof.
@@ -93,9 +104,8 @@ Proof.
   - exact fH.1.
   - intro g.
     snrapply path_sigma; cbn.
-    + nrapply (path_forall _ _ _).
-      intro a.
-      nrapply (path_forall _ _ _).
+    + funext a.
+      nrapply path_forall.
       exact ((fH.2 g).1 a).
     + transport_path_forall_hammer.
       lhs nrapply transport_paths_l.
@@ -115,11 +125,7 @@ Proof.
   snrefine (_;_).
   - exact (@center _ cp).
   - intro g.
-    destruct (@contr _ cp g).
-    snrefine (_;_).
-    + exact (fun _ _ => idpath).
-    + cbn; symmetry.
-      exact (concat_pV _).
+    by destruct (@contr _ cp g).
 Defined.
 
 (** The fundamental theorem of identity systems is now proven. It is useful to write down some of the composite implications. Given an identity system [(R; r0)], transporting the point [r0] induces a fiberwise equivalence between the based path type [a0 = x] and [R x]. This is Theorem 5.8.2 (i) implies (iii). *)
@@ -159,7 +165,7 @@ Definition equiv_path_along_equiv {A B : Type} {P : A -> A -> Type}
   : forall a0 a1 : A, P a0 a1 <~> a0 = a1.
 Proof.
   equiv_intros e b0 b1.
-  refine (_ oE K b0 b1).
+  nrefine (_ oE K b0 b1).
   apply equiv_ap'.
 Defined.
 
