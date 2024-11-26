@@ -1,4 +1,4 @@
-Require Import Basics. 
+Require Import Basics.
 Require Import Types.Sigma Types.Equiv Types.Paths.
 Require Import HoTT.Tactics.
 
@@ -10,7 +10,7 @@ Require Import HoTT.Tactics.
 Class IsIdentitySystem {A : Type} {a0 : A} (R : A -> Type) (r0 : R a0) := {
     idsys_ind (D : forall a : A, R a -> Type) (d : D a0 r0) (a : A) (r : R a)
       : D a r;
-    idsys_ind_beta (D : forall a : A, R a -> Type) (d : D a0 r0) 
+    idsys_ind_beta (D : forall a : A, R a -> Type) (d : D a0 r0)
       : idsys_ind D d a0 r0 = d
   }.
 
@@ -24,9 +24,9 @@ Definition pfammap_homotopy {A : Type} {a0 : A} {R S : A -> Type} {r0 : R a0} {s
   := { p : forall a : A, pr1 f a == pr1 g a & p a0 r0 = pr2 f @ (pr2 g)^}.
 
 (** We weaken part (ii) of Theorem 5.8.2. Instead of requiring that the mapping space is contractible, we will only require it to be homotopy contractible, i.e. it is inhabited and there is a homotopy between every map and the chosen map. This allows us to avoid function extensionality. Given that a pointed type family [(R; r0)] is an identity system, then the mapping space of pointed type families from [(R; r0)] to any [(S; s0)] is homotopy contractible. This is a weak form of Theorem 5.8.2, (i) implies (ii). *)
-Definition homocontr_pfammap_identitysystem {A : Type} {a0 : A} 
-  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem R r0} 
-  (S : A -> Type) (s0 : S a0) 
+Definition homocontr_pfammap_identitysystem {A : Type} {a0 : A}
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem R r0}
+  (S : A -> Type) (s0 : S a0)
   : exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g.
 Proof.
   pose (to_S := idsys_ind (fun a _ => S a) s0).
@@ -38,10 +38,10 @@ Proof.
 Defined.
 
 (** If a pointed type family [(R; r0)] has homotopy contractible mapping spaces in the sense above, then [fun p => transport R p r0] is a fiberwise equivalence. This is a strong form of Theorem 5.8.2, (ii) implies (iii). *)
-Definition equiv_path_homocontr_pfammap {A : Type} {a0 : A} 
+Definition equiv_path_homocontr_pfammap {A : Type} {a0 : A}
   (R : A -> Type) (r0 : R a0)
-  (H : forall S : A -> Type, forall s0 : S a0, 
-    exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g) 
+  (H : forall S : A -> Type, forall s0 : S a0,
+    exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g)
   (a : A)
   : IsEquiv (fun p : a0 = a => transport R p r0).
 Proof.
@@ -60,7 +60,7 @@ Proof.
 Defined.
 
 (** Given that some type family [R] is fiberwise equivalent to identity types based at [a0], then the total space [sig R] is contractible. This is a stronger form of Theorem 5.8.2, (iii) implies (iv). *)
-Definition contr_sigma_refl_rel {A : Type} {a0 : A} 
+Definition contr_sigma_refl_rel {A : Type} {a0 : A}
   (R : A -> Type) (f : forall a, (a0 = a) <~> R a)
   : Contr (sig R).
 Proof.
@@ -70,8 +70,8 @@ Proof.
 Defined.
 
 (** Any pointed type family [(R; r0)] with contractible total space is an identity system. This is Theorem 5.8.2, (iv) implies (i). *)
-Definition identitysystem_contr_sigma {A : Type} {a0 : A} (R : A -> Type) 
-  (r0 : R a0) {C : Contr (sig R)} 
+Definition identitysystem_contr_sigma {A : Type} {a0 : A} (R : A -> Type)
+  (r0 : R a0) {C : Contr (sig R)}
   : IsIdentitySystem R r0.
 Proof.
   snrapply Build_IsIdentitySystem.
@@ -83,8 +83,8 @@ Proof.
 Defined.
 
 (** Assuming function extensionality, pointed homotopy contractible fiberwise mapping spaces of pointed type families are contractible. We thus obtain the proper statement of Theorem 5.8.2. *)
-Definition contr_pfammap_homocontr `{Funext} {A : Type} {a0 : A} 
-  (R : A -> Type) (r0 : R a0) 
+Definition contr_pfammap_homocontr `{Funext} {A : Type} {a0 : A}
+  (R : A -> Type) (r0 : R a0)
   (S : A -> Type) (s0 : S a0)
   (fH : exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g)
   : Contr (pfamMap R S r0 s0).
@@ -123,17 +123,17 @@ Proof.
 Defined.
 
 (** The fundamental theorem of identity systems is now proven. It is useful to write down some of the composite implications. Given an identity system [(R; r0)], transporting the point [r0] induces a fiberwise equivalence between the based path type [a0 = x] and [R x]. This is Theorem 5.8.2 (i) implies (iii). *)
-Global Instance isequiv_transport_identitysystem {A : Type} {a0 : A} 
-  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A) 
+Global Instance isequiv_transport_identitysystem {A : Type} {a0 : A}
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A)
   : IsEquiv (fun p : a0 = a => transport R p r0).
 Proof.
   nrapply equiv_path_homocontr_pfammap.
   by nrapply homocontr_pfammap_identitysystem.
 Defined.
 
-Definition equiv_transport_identitysystem {A : Type} {a0 : A} 
-  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A) 
-  : (a0 = a) <~> R a 
+Definition equiv_transport_identitysystem {A : Type} {a0 : A}
+  (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A)
+  : (a0 = a) <~> R a
   := Build_Equiv _ _ (fun p => transport R p r0) _.
 
 (** A more general version of Theorem 5.8.2 (iii) implies (i) is proven in Basics/Equivalences.v as [equiv_path_ind]. The original statement is recovered if [e] is assumed to be [fun p => transport R p r0]. *)
