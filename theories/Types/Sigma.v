@@ -270,7 +270,8 @@ Definition transportDD_is_transport {A : Type} (B : A -> Type) (C : forall a : A
   {a1 a2 : A} (pA : a1 = a2)
   {b1 : B a1} {b2 : B a2} (pB : transport B pA b1 = b2)
   (c1 : C a1 b1)
-  : transportDD B C pA pB c1 = transport (fun (ab : sig B) => C ab.1 ab.2) (path_sigma _ (a1; b1) (a2; b2) pA pB) c1.
+  : transportDD B C pA pB c1
+    = transport (fun (ab : sig B) => C ab.1 ab.2) (path_sigma' B pA pB) c1.
 Proof.
   by destruct pB, pA.
 Defined.
