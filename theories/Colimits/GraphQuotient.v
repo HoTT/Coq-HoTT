@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Equivalences.
 Require Import Types.Universe Types.Paths Types.Forall Types.Arrow Types.Sigma Cubical.DPath.
+Require Import Homotopy.IdentitySystems.
 
 (** * Quotient of a graph *)
 
@@ -299,6 +300,39 @@ Section Flattening.
   Defined.
 
 End Flattening.
+
+(** ** Characterization of path spaces*)
+
+(** A pointed type family over a graph quotient has an identity system structure precisely when its associated descent data satisfies Kraus and von Raumer's induction principle, https://arxiv.org/pdf/1901.06022. *)
+
+Section Paths.
+
+  (** Let [A] and [R] be a graph, with a distinguished point [a0 : A]. Let [Pe : gqDescent R] be descent data over [A] and [R] with a distinguished point [p0 : gqd_fam Pe a0]. Assume that any dependent descent data [Qe : gqDepDescent Pe] with a distinguished point [q0 : gqdd_fam Qe a0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
+  Context `{Univalence} {A : Type} {R : A -> A -> Type} (a0 : A)
+    (Pe : gqDescent R) (p0 : gqd_fam Pe a0)
+    (based_gqdescent_ind : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqDescentSection Qe)
+    (based_gqdescent_ind_beta : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqds_sect (based_gqdescent_ind Qe q0) a0 p0 = q0).
+
+  (** Under these hypotheses, we get an identity system structure on [Dgqd Pe]. *)
+  Local Instance idsys_flatten_gqdescent
+    : @IsIdentitySystem _ (gq a0) (Dgqd Pe) p0.
+  Proof.
+    snrapply Build_IsIdentitySystem.
+    - intros Q q0 x p.
+      snrapply gqdescent_ind.
+      by apply based_gqdescent_ind.
+    - intros Q q0; cbn.
+      nrapply (based_gqdescent_ind_beta (gqdepdescent_fam Q)).
+  Defined.
+
+  (** It follows that the fibers [Dgqd Pe x] are equivalent to path spaces [(gq a0) = x]. *)
+  Definition Dgqd_equiv_path (x : GraphQuotient R)
+    : (gq a0) = x <~> Dgqd Pe x
+    := @equiv_transport_identitysystem _ (gq a0) (Dgqd Pe) p0 _ x.
+
+End Paths.
 
 (** ** Functoriality of graph quotients *)
 

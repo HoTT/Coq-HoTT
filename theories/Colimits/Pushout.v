@@ -1,6 +1,7 @@
 Require Import Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Sigma Types.Sum Types.Universe.
 Require Export Colimits.Coeq.
+Require Import Homotopy.IdentitySystems.
 
 Local Open Scope path_scope.
 
@@ -785,3 +786,36 @@ Section Flattening.
   Defined.
 
 End Flattening.
+
+(** ** Characterization of path spaces *)
+
+(** A pointed type family over a pushout has an identity system structure precisely when its associated descent data satisfies Kraus and von Raumer's induction principle, https://arxiv.org/pdf/1901.06022. *)
+
+Section Paths.
+
+  (** Let [f : A -> B] and [g : A -> C] be a span, with a distinguished point [b0 : B]. We could let the distinguished point be in [C], but this is symmetric by exchanging the roles of [f] and [g]. Let [Pe : poDescent f g] be descent data over [f g] with a distinguished point [p0 : pod_faml Pe b0]. Assume that any dependent descent data [Qe : poDepDescent Pe] with a distinguished point [q0 : podd_faml Qe b0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
+  Context `{Univalence} {A B C : Type} {f : A -> B} {g : A -> C} (b0 : B)
+    (Pe : poDescent f g) (p0 : pod_faml Pe b0)
+    (based_podescent_ind : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
+      poDescentSection Qe)
+    (based_podescent_ind_beta : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
+      pods_sectl (based_podescent_ind Qe q0) b0 p0 = q0).
+
+  (** Under these hypotheses, we get an identity system structure on [Dpod Pe]. *)
+  Local Instance idsys_flatten_podescent
+    : @IsIdentitySystem _ (pushl b0) (Dpod Pe) p0.
+  Proof.
+    snrapply Build_IsIdentitySystem.
+    - intros Q q0 x px.
+      snrapply podescent_ind.
+      by apply based_podescent_ind.
+    - intros Q q0; cbn.
+      nrapply (based_podescent_ind_beta (podepdescent_fam Q)).
+  Defined.
+
+  (** It follows that the fibers [Dpod Pe x] are equivalent to path spaces [(pushl a0) = x]. *)
+  Definition Dpod_equiv_path (x : Pushout f g)
+    : (pushl b0) = x <~> Dpod Pe x
+    := @equiv_transport_identitysystem _ (pushl b0) (Dpod Pe) p0 _ x.
+
+End Paths.

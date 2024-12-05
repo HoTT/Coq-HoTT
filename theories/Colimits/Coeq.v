@@ -1,6 +1,7 @@
 Require Import Basics.
 Require Import Types.Paths Types.Arrow Types.Sigma Types.Forall Types.Universe Types.Prod.
 Require Import Colimits.GraphQuotient.
+Require Import Homotopy.IdentitySystems.
 
 Local Open Scope path_scope.
 
@@ -687,3 +688,36 @@ Section Flattening.
   Defined.
 
 End Flattening.
+
+(** ** Characterization of path spaces *)
+
+(** A pointed type family over a coequalizer has an identity system structure precisely when its associated descent data satisfies Kraus and von Raumer's induction principle, https://arxiv.org/pdf/1901.06022. *)
+
+Section Paths.
+
+  (** Let [f g : B -> A] be a parallel pair, with a distinguished point [a0 : A]. Let [Pe : cDescent f g] be descent data over [f g] with a distinguished point [p0 : cd_fam Pe a0]. Assume that any dependent descent data [Qe : cDepDescent Pe] with a distinguished point [q0 : cdd_fam Qe a0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
+  Context `{Univalence} {A B: Type} {f g : B -> A} (a0 : A)
+    (Pe : cDescent f g) (p0 : cd_fam Pe a0)
+    (based_cdescent_ind : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
+      cDescentSection Qe)
+    (based_cdescent_ind_beta : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
+      cds_sect (based_cdescent_ind Qe q0) a0 p0 = q0).
+
+  (** Under these hypotheses, we get an identity system structure on [Dcd Pe]. *)
+  Local Instance idsys_flatten_cdescent
+    : @IsIdentitySystem _ (coeq a0) (Dcd Pe) p0.
+  Proof.
+    snrapply Build_IsIdentitySystem.
+    - intros Q q0 x p.
+      snrapply cdescent_ind.
+      by apply based_cdescent_ind.
+    - intros Q q0; cbn.
+      nrapply (based_cdescent_ind_beta (cdepdescent_fam Q)).
+  Defined.
+
+  (** It follows that the fibers [Dcd Pe x] are equivalent to path spaces [(coeq a0) = x]. *)
+  Definition Dcd_equiv_path (x : Coeq f g)
+    : (coeq a0) = x <~> Dcd Pe x
+    := @equiv_transport_identitysystem _ (coeq a0) (Dcd Pe) p0 _ x.
+
+End Paths.
