@@ -460,7 +460,9 @@ Defined.
 
 (** ** Descent *)
 
-(** We study "equifibrant" type families over a parallel pair [f, g: B -> A]. By univalence, the descent property tells us that these type families correspond to type families over the coequalizer. We obtain induction and recursion principles for such type families, but only with a partial computation rule for the induction principle. *)
+(** We study "equifibrant" type families over a parallel pair [f, g: B -> A]. By univalence, the descent property tells us that these type families correspond to type families over the coequalizer, and we obtain an induction principle for such type families. Then we consider dependent descent data over some particular descent data. This resembles the first case, but there is an extra level of dependence. In this case we obtain an induction and recursion principle, but only with a partial computation rule for the induction principle.
+
+It's possible to prove the results in the Descent, Flattening and Paths Sections without univalence, by replacing all equivalences with paths, but in practice these results will be used with equivalences as input, making the form below more convenient.  See https://github.com/HoTT/Coq-HoTT/pull/2147#issuecomment-2521570830 for further information *)
 
 Section Descent.
 
@@ -480,7 +482,7 @@ Section Descent.
   Context {A B : Type} {f g : B -> A}.
 
   (** Descent data decends to a type family over [Coeq f g]. *)
-  Definition Dcd (Pe : cDescent f g)
+  Definition induced_fam_cd (Pe : cDescent f g)
     : Coeq f g -> Type.
   Proof.
     snrapply (Coeq_rec _ (cd_fam Pe)).
@@ -488,14 +490,37 @@ Section Descent.
     exact (path_universe_uncurried (cd_e Pe b)).
   Defined.
 
-  (** Transporting over [Dcd] along [cglue b] is given by [cd_e]. *)
-  Definition transport_Dcd_cglue
+  (** Transporting over [induced_fam_cd] along [cglue b] is given by [cd_e]. *)
+  Definition transport_induced_fam_cd_cglue
     (Pe : cDescent f g) (b : B) (pf : cd_fam Pe (f b))
-    : transport (Dcd Pe) (cglue b) pf = cd_e Pe b pf.
+    : transport (induced_fam_cd Pe) (cglue b) pf = cd_e Pe b pf.
   Proof.
     nrapply transport_path_universe'.
     nrapply Coeq_rec_beta_cglue.
   Defined.
+
+  (** A section on the descent data is a fiberwise section that respects the equivalence. *)
+  Record cDescentSection (Pe : cDescent f g) := {
+    cds_sect (a : A) : cd_fam Pe a;
+    cds_e (b : B)
+      : cd_e Pe b (cds_sect (f b)) = cds_sect (g b)
+  }.
+
+  (** A descent section induces a genuine section of [induced_fam_cd Pe]. *)
+  Definition cdescent_ind {Pe : cDescent f g}
+    (s : cDescentSection Pe)
+    : forall (x : Coeq f g), induced_fam_cd Pe x.
+  Proof.
+    snrapply (Coeq_ind _ (cds_sect _ s)).
+    intro b.
+    refine (transport_induced_fam_cd_cglue Pe b _ @ cds_e _ s b).
+  Defined.
+
+  (** We record its computation rule *)
+  Definition cdescent_ind_beta_cglue {Pe : cDescent f g}
+    (s : cDescentSection Pe) (b : B)
+    : apD (cdescent_ind s) (cglue b) = transport_induced_fam_cd_cglue Pe b _ @ cds_e _ s b
+    := Coeq_ind_beta_cglue _ (cds_sect _ s) _ _.
 
   (** Dependent descent data over descent data [Pe : cDescent f g] consists of a type family [cdd_fam : forall a : A, cd_fam Pe a -> Type] together with coherences [cdd_e b pf]. *)
   Record cDepDescent (Pe : cDescent f g) := {
@@ -508,101 +533,101 @@ Section Descent.
   Global Arguments cdd_fam {Pe} Qe a pa : rename.
   Global Arguments cdd_e {Pe} Qe b pf : rename.
 
-  (** A dependent type family over [Dcd Pe] induces dependent descent data over [Pe]. *)
-  Definition cdepdescent_fam {Pe : cDescent f g}
-    (Q : forall x : Coeq f g, (Dcd Pe) x -> Type)
+  (** A dependent type family over [induced_fam_cd Pe] induces dependent descent data over [Pe]. *)
+  Definition induced_fam_cdd {Pe : cDescent f g}
+    (Q : forall x : Coeq f g, (induced_fam_cd Pe) x -> Type)
     : cDepDescent Pe.
   Proof.
     snrapply Build_cDepDescent.
     - intro a; cbn.
       exact (Q (coeq a)).
     - intros b pf.
-      exact (equiv_transportDD (Dcd Pe) Q
-               (cglue b) (transport_Dcd_cglue Pe b pf)).
+      exact (equiv_transportDD (induced_fam_cd Pe) Q
+               (cglue b) (transport_induced_fam_cd_cglue Pe b pf)).
   Defined.
 
-  (** A section of dependent descent data [Qe : cDepDescent Pe] is a fiberwise section [cds_sect], together with coherences [cds_e]. *)
-  Record cDescentSection {Pe : cDescent f g} (Qe : cDepDescent Pe) := {
-    cds_sect (a : A) (pa : cd_fam Pe a) : cdd_fam Qe a pa;
-    cds_e (b : B) (pf : cd_fam Pe (f b))
-      : cdd_e Qe b pf (cds_sect (f b) pf) = cds_sect (g b) (cd_e Pe b pf)
+  (** A section of dependent descent data [Qe : cDepDescent Pe] is a fiberwise section [cdds_sect], together with coherences [cdds_e]. *)
+  Record cDepDescentSection {Pe : cDescent f g} (Qe : cDepDescent Pe) := {
+    cdds_sect (a : A) (pa : cd_fam Pe a) : cdd_fam Qe a pa;
+    cdds_e (b : B) (pf : cd_fam Pe (f b))
+      : cdd_e Qe b pf (cdds_sect (f b) pf) = cdds_sect (g b) (cd_e Pe b pf)
   }.
 
-  Global Arguments Build_cDescentSection {Pe Qe} cds_sect cds_e.
-  Global Arguments cds_sect {Pe Qe} s a pa : rename.
-  Global Arguments cds_e {Pe Qe} s b pf : rename.
+  Global Arguments Build_cDepDescentSection {Pe Qe} cdds_sect cdds_e.
+  Global Arguments cdds_sect {Pe Qe} s a pa : rename.
+  Global Arguments cdds_e {Pe Qe} s b pf : rename.
 
-  (** Transporting [cds_sect s (f b)] over [Q] along [cglue b] is [cds_sect s (g b)]. *)
-  Definition transport_cds_cglue {Pe : cDescent f g}
-    {Q : forall (x : Coeq f g), (Dcd Pe) x -> Type}
-    (s : cDescentSection (cdepdescent_fam Q))
+  (** Transporting [cdds_sect s (f b)] over [Q] along [cglue b] is [cdds_sect s (g b)]. *)
+  Definition transport_cdds_cglue {Pe : cDescent f g}
+    {Q : forall (x : Coeq f g), (induced_fam_cd Pe) x -> Type}
+    (s : cDepDescentSection (induced_fam_cdd Q))
     (b : B)
-    : transport (fun (x : Coeq f g) => forall (px : Dcd Pe x), Q x px)
-        (cglue b) (cds_sect s (f b)) = cds_sect s (g b).
+    : transport (fun (x : Coeq f g) => forall (px : induced_fam_cd Pe x), Q x px)
+        (cglue b) (cdds_sect s (f b)) = cdds_sect s (g b).
   Proof.
     apply dpath_forall.
     intro pf.
-    apply (equiv_inj (transport (Q (coeq (g b))) (transport_Dcd_cglue Pe b pf))).
-    rhs nrapply (apD (cds_sect s (g b)) (transport_Dcd_cglue Pe b pf)).
-    exact (cds_e s b pf).
+    apply (equiv_inj (transport (Q (coeq (g b))) (transport_induced_fam_cd_cglue Pe b pf))).
+    rhs nrapply (apD (cdds_sect s (g b)) (transport_induced_fam_cd_cglue Pe b pf)).
+    exact (cdds_e s b pf).
   Defined.
 
-  (** A dependent descent section induces a genuine section of the descended type family [Dcd Pe]. *)
-  Definition cdescent_ind {Pe : cDescent f g}
-    {Q : forall (x : Coeq f g), (Dcd Pe) x -> Type}
-    (s : cDescentSection (cdepdescent_fam Q))
-    : forall (x : Coeq f g) (px : Dcd Pe x), Q x px
-    := Coeq_ind _ (cds_sect s) (transport_cds_cglue s).
+  (** A dependent descent section induces a genuine section of the descended type family [induced_fam_cd Pe]. *)
+  Definition cdepdescent_ind {Pe : cDescent f g}
+    {Q : forall (x : Coeq f g), (induced_fam_cd Pe) x -> Type}
+    (s : cDepDescentSection (induced_fam_cdd Q))
+    : forall (x : Coeq f g) (px : induced_fam_cd Pe x), Q x px
+    := Coeq_ind _ (cdds_sect s) (transport_cdds_cglue s).
 
   (** This is a partial computation rule, which only handles paths in the base. *)
-  Definition cdescent_ind_beta_cglue {Pe : cDescent f g}
-    {Q : forall (x : Coeq f g), Dcd Pe x -> Type}
-    (s : cDescentSection (cdepdescent_fam Q))
+  Definition cdepdescent_ind_beta_cglue {Pe : cDescent f g}
+    {Q : forall (x : Coeq f g), induced_fam_cd Pe x -> Type}
+    (s : cDepDescentSection (induced_fam_cdd Q))
     (b : B)
-    : apD (cdescent_ind s) (cglue b) = transport_cds_cglue s b
-    := Coeq_ind_beta_cglue _ (cds_sect s) (transport_cds_cglue s) b.
+    : apD (cdepdescent_ind s) (cglue b) = transport_cdds_cglue s b
+    := Coeq_ind_beta_cglue _ (cdds_sect s) (transport_cdds_cglue s) b.
 
   (** The data for a section into a constant type family. *)
-  Record cDescentConstSection (Pe : cDescent f g) (Q : Type) := {
-    cdcs_sect (a : A) : cd_fam Pe a -> Q;
-    cdcs_e (b : B) (pf : cd_fam Pe (f b))
-      : cdcs_sect (f b) pf = cdcs_sect (g b) (cd_e Pe b pf)
+  Record cDepDescentConstSection (Pe : cDescent f g) (Q : Type) := {
+    cddcs_sect (a : A) : cd_fam Pe a -> Q;
+    cddcs_e (b : B) (pf : cd_fam Pe (f b))
+      : cddcs_sect (f b) pf = cddcs_sect (g b) (cd_e Pe b pf)
   }.
 
-  Global Arguments Build_cDescentConstSection {Pe Q} cdcs_sect cdcs_e.
-  Global Arguments cdcs_sect {Pe Q} s a pa : rename.
-  Global Arguments cdcs_e {Pe Q} s b pf : rename.
+  Global Arguments Build_cDepDescentConstSection {Pe Q} cddcs_sect cddcs_e.
+  Global Arguments cddcs_sect {Pe Q} s a pa : rename.
+  Global Arguments cddcs_e {Pe Q} s b pf : rename.
 
-  (** Transporting [cdcs_sect s (f b)] over [Q] along [cglue b] is [cdcs_sect s (g b)]. *)
-  Definition transport_cdcs_cglue {Pe : cDescent f g} {Q : Type}
-    (s : cDescentConstSection Pe Q)
+  (** Transporting [cddcs_sect s (f b)] over [Q] along [cglue b] is [cddcs_sect s (g b)]. *)
+  Definition transport_cddcs_cglue {Pe : cDescent f g} {Q : Type}
+    (s : cDepDescentConstSection Pe Q)
     (b : B)
-    : transport (fun x : Coeq f g => Dcd Pe x -> Q) (cglue b) (cdcs_sect s (f b))
-      = cdcs_sect s (g b).
+    : transport (fun x : Coeq f g => induced_fam_cd Pe x -> Q) (cglue b) (cddcs_sect s (f b))
+      = cddcs_sect s (g b).
   Proof.
     nrapply dpath_arrow.
     intro pf.
     lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_Dcd_cglue Pe b pf)).
-    exact (cdcs_e s b pf).
+    rhs nrapply (ap _ (transport_induced_fam_cd_cglue Pe b pf)).
+    exact (cddcs_e s b pf).
   Defined.
 
-  (** The data for a section of a constant family induces a section over the total space of [Dcd Pe]. *)
-  Definition cdescent_rec {Pe : cDescent f g} {Q : Type}
-    (s : cDescentConstSection Pe Q)
-    : forall (x : Coeq f g), Dcd Pe x -> Q.
+  (** The data for a section of a constant family induces a section over the total space of [induced_fam_cd Pe]. *)
+  Definition cdepdescent_rec {Pe : cDescent f g} {Q : Type}
+    (s : cDepDescentConstSection Pe Q)
+    : forall (x : Coeq f g), induced_fam_cd Pe x -> Q.
   Proof.
     snrapply Coeq_ind; cbn.
-    - nrapply (cdcs_sect s).
-    - nrapply transport_cdcs_cglue.
+    - nrapply (cddcs_sect s).
+    - nrapply transport_cddcs_cglue.
   Defined.
 
   (** In this case, we state a full computation rule. *)
-  Definition cdescent_rec_beta_cglue {Pe : cDescent f g} {Q : Type}
-    (s : cDescentConstSection Pe Q)
+  Definition cdepdescent_rec_beta_cglue {Pe : cDescent f g} {Q : Type}
+    (s : cDepDescentConstSection Pe Q)
     (b : B) {pf : cd_fam Pe (f b)} {pg : cd_fam Pe (g b)} (pb : cd_e Pe b pf = pg)
-    : ap (sig_rec (cdescent_rec s)) (path_sigma _ (coeq (f b); pf) (coeq (g b); pg) (cglue b) (transport_Dcd_cglue Pe b pf @ pb))
-      = cdcs_e s b pf @ ap (cdcs_sect s (g b)) pb.
+    : ap (sig_rec (cdepdescent_rec s)) (path_sigma _ (coeq (f b); pf) (coeq (g b); pg) (cglue b) (transport_induced_fam_cd_cglue Pe b pf @ pb))
+      = cddcs_e s b pf @ ap (cddcs_sect s (g b)) pb.
   Proof.
     Open Scope long_path_scope.
     destruct pb.
@@ -613,7 +638,7 @@ Section Descent.
     do 3 lhs nrapply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (Dcd Pe) (fun _ => Q) (cglue b)).
+    1: nrapply (ap10_dpath_arrow (induced_fam_cd Pe) (fun _ => Q) (cglue b)).
     lhs nrefine (1 @@ _).
     { lhs nrapply (1 @@ concat_pp_p _ _ _).
       lhs nrapply (1 @@ concat_pp_p _ _ _).
@@ -629,14 +654,16 @@ End Descent.
 
 (** ** The flattening lemma *)
 
-(** We saw above that given descent data [Pe] over a parallel pair [f g : B -> A], we obtained a type family [Dcd Pe] over the coequalizer. The flattening lemma describes the total space [sig (Dcd Pe)] of this type family as a coequalizer of [sig (cd_fam Pe)] by a certain parallel pair. This follows from the work above, which shows that [sig (Dcd Pe)] has the same universal property as this coequalizer. *)
+(** We saw above that given descent data [Pe] over a parallel pair [f g : B -> A], we obtained a type family [induced_fam_cd Pe] over the coequalizer. The flattening lemma describes the total space [sig (induced_fam_cd Pe)] of this type family as a coequalizer of [sig (cd_fam Pe)] by a certain parallel pair. This follows from the work above, which shows that [sig (induced_fam_cd Pe)] has the same universal property as this coequalizer.
+
+The flattening lemma here also follows from the flattening lemma for GraphQuotients, avoiding the need for the material in Section Descent. However, that material is likely useful in general, so we have given an independent proof of the flattening lemma. See versions of the library before December 5, 2024 for the proof using the flattening lemma for GraphQuotients. *)
 
 Section Flattening.
 
   Context `{Univalence} {A B : Type} {f g : B -> A} (Pe : cDescent f g).
 
   (** We mimic the constructors of [Coeq] for the total space. Here is the point constructor, in curried form. *)
-  Definition flatten_cd {a : A} (pa : cd_fam Pe a) : sig (Dcd Pe)
+  Definition flatten_cd {a : A} (pa : cd_fam Pe a) : sig (induced_fam_cd Pe)
     := (coeq a; pa).
 
   (** And here is the path constructor. *)
@@ -646,18 +673,18 @@ Section Flattening.
   Proof.
     snrapply path_sigma.
     - by apply cglue.
-    - lhs nrapply transport_Dcd_cglue.
+    - lhs nrapply transport_induced_fam_cd_cglue.
       exact pb.
   Defined.
 
-  (** Now that we've shown that [Dcd Pe] acts like a [Coeq] of [sig (cd_fam Pe)] by an appropriate parallel pair, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
-  Lemma equiv_cd_flatten : sig (Dcd Pe) <~>
+  (** Now that we've shown that [induced_fam_cd Pe] acts like a [Coeq] of [sig (cd_fam Pe)] by an appropriate parallel pair, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
+  Lemma equiv_cd_flatten : sig (induced_fam_cd Pe) <~>
     Coeq (functor_sigma f (fun _ => idmap)) (functor_sigma g (cd_e Pe)).
   Proof.
     snrapply equiv_adjointify.
     - snrapply sig_rec.
-      snrapply cdescent_rec.
-      snrapply Build_cDescentConstSection.
+      snrapply cdepdescent_rec.
+      snrapply Build_cDepDescentConstSection.
       + exact (fun a x => coeq (a; x)).
       + intros b pf.
       cbn.
@@ -672,17 +699,17 @@ Section Flattening.
       intros [b pf]; cbn.
       nrapply transport_paths_FFlr'; apply equiv_p1_1q.
       rewrite Coeq_rec_beta_cglue.
-      lhs nrapply cdescent_rec_beta_cglue.
+      lhs nrapply cdepdescent_rec_beta_cglue.
       nrapply concat_p1.
     - intros [x px]; revert x px.
-      snrapply cdescent_ind.
-      snrapply Build_cDescentSection.
+      snrapply cdepdescent_ind.
+      snrapply Build_cDepDescentSection.
       + by intros a pa.
       + intros b pf; cbn.
         lhs nrapply transportDD_is_transport.
         nrapply transport_paths_FFlr'; apply equiv_p1_1q.
-        rewrite <- (concat_p1 (transport_Dcd_cglue _ _ _)).
-        rewrite cdescent_rec_beta_cglue. (* This needs to be in the form [transport_Dcd_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
+        rewrite <- (concat_p1 (transport_induced_fam_cd_cglue _ _ _)).
+        rewrite cdepdescent_rec_beta_cglue. (* This needs to be in the form [transport_induced_fam_cd_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
         nrapply (Coeq_rec_beta_cglue _ _ _ (b; pf)).
   Defined.
@@ -698,26 +725,26 @@ Section Paths.
   (** Let [f g : B -> A] be a parallel pair, with a distinguished point [a0 : A]. Let [Pe : cDescent f g] be descent data over [f g] with a distinguished point [p0 : cd_fam Pe a0]. Assume that any dependent descent data [Qe : cDepDescent Pe] with a distinguished point [q0 : cdd_fam Qe a0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
   Context `{Univalence} {A B: Type} {f g : B -> A} (a0 : A)
     (Pe : cDescent f g) (p0 : cd_fam Pe a0)
-    (based_cdescent_ind : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
-      cDescentSection Qe)
-    (based_cdescent_ind_beta : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
-      cds_sect (based_cdescent_ind Qe q0) a0 p0 = q0).
+    (based_cdepdescent_ind : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
+      cDepDescentSection Qe)
+    (based_cdepdescent_ind_beta : forall (Qe : cDepDescent Pe) (q0 : cdd_fam Qe a0 p0),
+      cdds_sect (based_cdepdescent_ind Qe q0) a0 p0 = q0).
 
-  (** Under these hypotheses, we get an identity system structure on [Dcd Pe]. *)
+  (** Under these hypotheses, we get an identity system structure on [induced_fam_cd Pe]. *)
   Local Instance idsys_flatten_cdescent
-    : @IsIdentitySystem _ (coeq a0) (Dcd Pe) p0.
+    : @IsIdentitySystem _ (coeq a0) (induced_fam_cd Pe) p0.
   Proof.
     snrapply Build_IsIdentitySystem.
     - intros Q q0 x p.
-      snrapply cdescent_ind.
-      by apply based_cdescent_ind.
+      snrapply cdepdescent_ind.
+      by apply based_cdepdescent_ind.
     - intros Q q0; cbn.
-      nrapply (based_cdescent_ind_beta (cdepdescent_fam Q)).
+      nrapply (based_cdepdescent_ind_beta (induced_fam_cdd Q)).
   Defined.
 
-  (** It follows that the fibers [Dcd Pe x] are equivalent to path spaces [(coeq a0) = x]. *)
-  Definition Dcd_equiv_path (x : Coeq f g)
-    : (coeq a0) = x <~> Dcd Pe x
-    := @equiv_transport_identitysystem _ (coeq a0) (Dcd Pe) p0 _ x.
+  (** It follows that the fibers [induced_fam_cd Pe x] are equivalent to path spaces [(coeq a0) = x]. *)
+  Definition induced_fam_cd_equiv_path (x : Coeq f g)
+    : (coeq a0) = x <~> induced_fam_cd Pe x
+    := @equiv_transport_identitysystem _ (coeq a0) (induced_fam_cd Pe) p0 _ x.
 
 End Paths.

@@ -994,19 +994,18 @@ Definition transport2_const {A B : Type} {x1 x2 : A} {p q : x1 = x2}
   : transport_const p y = transport2 (fun _ => B) r y @ transport_const q y
   := match r with idpath => (concat_1p _)^ end.
 
-(** We need a better naming scheme for transportD_const, as there are several places where you can have a constant type family. *)
-Definition transportD_const' {A B : Type} (C : A -> B -> Type) {x1 x2 : A}
-  (p : x1 = x2) {y : B} (z : C x1 y)
-  : transportD (fun x => B) C p y z
-    = transport (fun x => C x (transport (fun _ => B) p y)) p
-      (transport (C x1) (transport_const p y)^ z).
+Definition transportD_const_fiber {A : Type} (B : A -> Type) (C : Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C)
+  : transportD B (fun _ _ => C) p y z = z.
 Proof.
   by destruct p.
 Defined.
 
-Definition transportD_const {A : Type} (B : A -> Type) (C : Type)
-  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C)
-  : transportD B (fun _ _ => C) p y z = z.
+Definition transportD_const_base {A B : Type} (C : A -> B -> Type) {x1 x2 : A}
+  (p : x1 = x2) {y : B} (z : C x1 y)
+  : transportD (fun x => B) C p y z
+    = transport (fun x => C x (transport (fun _ => B) p y)) p
+      (transport (C x1) (transport_const p y)^ z).
 Proof.
   by destruct p.
 Defined.

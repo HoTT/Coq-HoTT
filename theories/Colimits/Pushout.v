@@ -541,7 +541,9 @@ Defined.
 
 (** ** Descent *)
 
-(** We study "equifibrant" type families over a span [f : A -> B] and [g : A -> C]. By univalence, the descent property tells us that these type families correspond to type families over the pushout. We obtain induction and recursion principles for such type families, but only with a partial computation rule for the induction principle. *)
+(** We study "equifibrant" type families over a span [f : A -> B] and [g : A -> C]. By univalence, the descent property tells us that these type families correspond to type families over the pushout, and we obtain an induction principle for such type families. Then we consider dependent descent data over some particular descent data. This resembles the first case, but there is an extra level of dependence. In this case we obtain an induction and recursion principle, but only with a partial computation rule for the induction principle.
+
+It's possible to prove the results in the Descent, Flattening and Paths Sections without univalence, by replacing all equivalences with paths, but in practice these results will be used with equivalences as input, making the form below more convenient.  See https://github.com/HoTT/Coq-HoTT/pull/2147#issuecomment-2521570830 for further information. *)
 
 Section Descent.
 
@@ -563,7 +565,7 @@ Section Descent.
   Context {A B C : Type} {f : A -> B} {g : A -> C}.
 
   (** Descent data descends to a type family over [Pushout f g]. *)
-  Definition Dpod (Pe : poDescent f g)
+  Definition induced_fam_pod (Pe : poDescent f g)
     : Pushout f g -> Type.
   Proof.
     snrapply (Pushout_rec _ (pod_faml Pe) (pod_famr Pe)).
@@ -571,14 +573,38 @@ Section Descent.
     exact (path_universe_uncurried (pod_e Pe a)).
   Defined.
 
-  (** Transporting over [Dpod] along [pglue a] is given by [pod_e]. *)
-  Definition transport_Dpod_pglue
+  (** Transporting over [induced_fam_pod] along [pglue a] is given by [pod_e]. *)
+  Definition transport_induced_fam_pod_pglue
     (Pe : poDescent f g) (a : A) (pf : pod_faml Pe (f a))
-    : transport (Dpod Pe) (pglue a) pf = pod_e Pe a pf.
+    : transport (induced_fam_pod Pe) (pglue a) pf = pod_e Pe a pf.
   Proof.
     nrapply transport_path_universe'.
     nrapply Pushout_rec_beta_pglue.
   Defined.
+
+    (** A section on the descent data is a fiberwise section that respects the equivalence. *)
+  Record poDescentSection (Pe : poDescent f g) := {
+    pods_sectl (b : B) : pod_faml Pe b;
+    pods_sectr (c : C) : pod_famr Pe c;
+    pods_e (a : A)
+      : pod_e Pe a (pods_sectl (f a)) = pods_sectr (g a)
+  }.
+
+  (** A descent section induces a genuine section of [induced_fam_cd Pe]. *)
+  Definition podescent_ind {Pe : poDescent f g}
+    (s : poDescentSection Pe)
+    : forall (x : Pushout f g), induced_fam_pod Pe x.
+  Proof.
+    snrapply (Pushout_ind _ (pods_sectl _ s) (pods_sectr _ s)).
+    intro a.
+    refine (transport_induced_fam_pod_pglue Pe a _ @ pods_e _ s a).
+  Defined.
+
+  (** We record its computation rule *)
+  Definition podescent_ind_beta_pglue {Pe : poDescent f g}
+    (s : poDescentSection Pe) (a : A)
+    : apD (podescent_ind s) (pglue a) = transport_induced_fam_pod_pglue Pe a _ @ pods_e _ s a
+    := Pushout_ind_beta_pglue _ (pods_sectl _ s) (pods_sectr _ s) _ _.
 
   (** Dependent descent data over descent data [Pe : poDescent f g] consists of a type families [podd_faml : forall b : B, pod_faml Pe b -> Type] and [podd_famr : forall c : C, pod_famr Pe c -> Type] together with coherences [podd_e a pf]. *)
   Record poDepDescent (Pe : poDescent f g) := {
@@ -593,9 +619,9 @@ Section Descent.
   Global Arguments podd_famr {Pe} Qe c pc : rename.
   Global Arguments podd_e {Pe} Qe a pf : rename.
 
-  (** A dependent type family over [Dpod Pe] induces dependent descent data over [Pe]. *)
+  (** A dependent type family over [induced_fam_pod Pe] induces dependent descent data over [Pe]. *)
   Definition podepdescent_fam {Pe : poDescent f g}
-    (Q : forall x : Pushout f g, (Dpod Pe) x -> Type)
+    (Q : forall x : Pushout f g, (induced_fam_pod Pe) x -> Type)
     : poDepDescent Pe.
   Proof.
     snrapply Build_poDepDescent.
@@ -604,97 +630,97 @@ Section Descent.
     - intros c; cbn.
       exact (Q (pushr c)).
     - intros a pf.
-      exact (equiv_transportDD (Dpod Pe) Q
-               (pglue a) (transport_Dpod_pglue Pe a pf)).
+      exact (equiv_transportDD (induced_fam_pod Pe) Q
+               (pglue a) (transport_induced_fam_pod_pglue Pe a pf)).
   Defined.
 
-  (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [pods_sectl] and [pods_sectr], together with coherences [pods_e]. *)
-  Record poDescentSection {Pe : poDescent f g} (Qe : poDepDescent Pe) := {
-    pods_sectl (b : B) (pb : pod_faml Pe b) : podd_faml Qe b pb;
-    pods_sectr (c : C) (pc : pod_famr Pe c) : podd_famr Qe c pc;
-    pods_e (a : A) (pf : pod_faml Pe (f a))
-      : podd_e Qe a pf (pods_sectl (f a) pf) = pods_sectr (g a) (pod_e Pe a pf)
+  (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [podds_sectl] and [podds_sectr], together with coherences [pods_e]. *)
+  Record poDepDescentSection {Pe : poDescent f g} (Qe : poDepDescent Pe) := {
+    podds_sectl (b : B) (pb : pod_faml Pe b) : podd_faml Qe b pb;
+    podds_sectr (c : C) (pc : pod_famr Pe c) : podd_famr Qe c pc;
+    podds_e (a : A) (pf : pod_faml Pe (f a))
+      : podd_e Qe a pf (podds_sectl (f a) pf) = podds_sectr (g a) (pod_e Pe a pf)
   }.
 
-  Global Arguments Build_poDescentSection {Pe Qe} pods_sectl pods_sectr pods_e.
-  Global Arguments pods_sectl {Pe Qe} s b pb : rename.
-  Global Arguments pods_sectr {Pe Qe} s c pc : rename.
-  Global Arguments pods_e {Pe Qe} s a pf : rename.
+  Global Arguments Build_poDepDescentSection {Pe Qe} podds_sectl podds_sectr podds_e.
+  Global Arguments podds_sectl {Pe Qe} s b pb : rename.
+  Global Arguments podds_sectr {Pe Qe} s c pc : rename.
+  Global Arguments podds_e {Pe Qe} s a pf : rename.
 
-  (** Transporting [pods_sectl s (f a)] over [Q] along [pglue a] is [pods_sectr s (g a)]. *)
-  Definition transport_pods_pglue {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), (Dpod Pe) x -> Type}
-    (s : poDescentSection (podepdescent_fam Q))
+  (** Transporting [podds_sectl s (f a)] over [Q] along [pglue a] is [podds_sectr s (g a)]. *)
+  Definition transport_podds_pglue {Pe : poDescent f g}
+    {Q : forall (x : Pushout f g), (induced_fam_pod Pe) x -> Type}
+    (s : poDepDescentSection (podepdescent_fam Q))
     (a : A)
-    : transport (fun (x : Pushout f g) => forall (px : Dpod Pe x), Q x px)
-        (pglue a) (pods_sectl s (f a)) = pods_sectr s (g a).
+    : transport (fun (x : Pushout f g) => forall (px : induced_fam_pod Pe x), Q x px)
+        (pglue a) (podds_sectl s (f a)) = podds_sectr s (g a).
   Proof.
     apply dpath_forall.
     intro pf.
-    apply (equiv_inj (transport (Q (pushr (g a))) (transport_Dpod_pglue Pe a pf))).
-    rhs nrapply (apD (pods_sectr s (g a)) (transport_Dpod_pglue Pe a pf)).
-    exact (pods_e s a pf).
+    apply (equiv_inj (transport (Q (pushr (g a))) (transport_induced_fam_pod_pglue Pe a pf))).
+    rhs nrapply (apD (podds_sectr s (g a)) (transport_induced_fam_pod_pglue Pe a pf)).
+    exact (podds_e s a pf).
   Defined.
 
-  (** A dependent descent section induces a genuine section of the descended type family [Dpod Pe]. *)
-  Definition podescent_ind {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), (Dpod Pe) x -> Type}
-    (s : poDescentSection (podepdescent_fam Q))
-    : forall (x : Pushout f g) (px : Dpod Pe x), Q x px
-    := Pushout_ind _ (pods_sectl s) (pods_sectr s) (transport_pods_pglue s).
+  (** A dependent descent section induces a genuine section of the descended type family [induced_fam_pod Pe]. *)
+  Definition podepdescent_ind {Pe : poDescent f g}
+    {Q : forall (x : Pushout f g), (induced_fam_pod Pe) x -> Type}
+    (s : poDepDescentSection (podepdescent_fam Q))
+    : forall (x : Pushout f g) (px : induced_fam_pod Pe x), Q x px
+    := Pushout_ind _ (podds_sectl s) (podds_sectr s) (transport_podds_pglue s).
 
   (** This is a partial computation rule, which only handles paths in the base. *)
-  Definition podescent_ind_beta_pglue {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), Dpod Pe x -> Type}
-    (s : poDescentSection (podepdescent_fam Q))
+  Definition podepdescent_ind_beta_pglue {Pe : poDescent f g}
+    {Q : forall (x : Pushout f g), induced_fam_pod Pe x -> Type}
+    (s : poDepDescentSection (podepdescent_fam Q))
     (a : A)
-    : apD (podescent_ind s) (pglue a) = transport_pods_pglue s a
-    := Pushout_ind_beta_pglue _ (pods_sectl s) (pods_sectr s) (transport_pods_pglue s) a.
+    : apD (podepdescent_ind s) (pglue a) = transport_podds_pglue s a
+    := Pushout_ind_beta_pglue _ (podds_sectl s) (podds_sectr s) (transport_podds_pglue s) a.
 
   (** The data for a section into a constant type family. *)
-  Record poDescentConstSection (Pe : poDescent f g) (Q : Type) := {
-    podcs_sectl (b : B) : pod_faml Pe b -> Q;
-    podcs_sectr (c : C) : pod_famr Pe c -> Q;
-    podcs_e (a : A) (pf : pod_faml Pe (f a))
-      : podcs_sectl (f a) pf = podcs_sectr (g a) (pod_e Pe a pf)
+  Record poDepDescentConstSection (Pe : poDescent f g) (Q : Type) := {
+    poddcs_sectl (b : B) : pod_faml Pe b -> Q;
+    poddcs_sectr (c : C) : pod_famr Pe c -> Q;
+    poddcs_e (a : A) (pf : pod_faml Pe (f a))
+      : poddcs_sectl (f a) pf = poddcs_sectr (g a) (pod_e Pe a pf)
   }.
 
-  Global Arguments Build_poDescentConstSection {Pe Q} podcs_sectl podcs_sectr podcs_e.
-  Global Arguments podcs_sectl {Pe Q} s b pb : rename.
-  Global Arguments podcs_sectr {Pe Q} s c pc : rename.
-  Global Arguments podcs_e {Pe Q} s a pf : rename.
+  Global Arguments Build_poDepDescentConstSection {Pe Q} poddcs_sectl poddcs_sectr poddcs_e.
+  Global Arguments poddcs_sectl {Pe Q} s b pb : rename.
+  Global Arguments poddcs_sectr {Pe Q} s c pc : rename.
+  Global Arguments poddcs_e {Pe Q} s a pf : rename.
 
-  (** Transporting [podcs_sectl s (f a)] over [Q] along [pglue a] is [podcs_sectr s (g a)]. *)
-  Definition transport_podcs_pglue {Pe : poDescent f g} {Q : Type}
-    (s : poDescentConstSection Pe Q)
+  (** Transporting [poddcs_sectl s (f a)] over [Q] along [pglue a] is [poddcs_sectr s (g a)]. *)
+  Definition transport_poddcs_pglue {Pe : poDescent f g} {Q : Type}
+    (s : poDepDescentConstSection Pe Q)
     (a : A)
-    : transport (fun x : Pushout f g => Dpod Pe x -> Q) (pglue a) (podcs_sectl s (f a))
-      = podcs_sectr s (g a).
+    : transport (fun x : Pushout f g => induced_fam_pod Pe x -> Q) (pglue a) (poddcs_sectl s (f a))
+      = poddcs_sectr s (g a).
   Proof.
     nrapply dpath_arrow.
     intro pf.
     lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_Dpod_pglue Pe a pf)).
-    exact (podcs_e s a pf).
+    rhs nrapply (ap _ (transport_induced_fam_pod_pglue Pe a pf)).
+    exact (poddcs_e s a pf).
   Defined.
 
-  (** The data for a section of a constant family induces a section over the total space [Dpod Pe]. *)
-  Definition podescent_rec {Pe : poDescent f g} {Q : Type}
-    (s : poDescentConstSection Pe Q)
-    : forall (x : Pushout f g), Dpod Pe x -> Q.
+  (** The data for a section of a constant family induces a section over the total space [induced_fam_pod Pe]. *)
+  Definition podepdescent_rec {Pe : poDescent f g} {Q : Type}
+    (s : poDepDescentConstSection Pe Q)
+    : forall (x : Pushout f g), induced_fam_pod Pe x -> Q.
   Proof.
     snrapply Pushout_ind; cbn.
-    - nrapply (podcs_sectl s).
-    - nrapply (podcs_sectr s).
-    - nrapply transport_podcs_pglue.
+    - nrapply (poddcs_sectl s).
+    - nrapply (poddcs_sectr s).
+    - nrapply transport_poddcs_pglue.
   Defined.
 
   (** In this case, we state a full computation rule. *)
-  Definition podescent_rec_beta_pglue {Pe : poDescent f g} {Q : Type}
-    (s : poDescentConstSection Pe Q)
+  Definition podepdescent_rec_beta_pglue {Pe : poDescent f g} {Q : Type}
+    (s : poDepDescentConstSection Pe Q)
     (a : A) {pf : pod_faml Pe (f a)} {pg : pod_famr Pe (g a)} (pa : pod_e Pe a pf = pg)
-    : ap (sig_rec (podescent_rec s)) (path_sigma _ (pushl (f a); pf) (pushr (g a); pg) (pglue a) (transport_Dpod_pglue Pe a pf @ pa))
-      = podcs_e s a pf @ ap (podcs_sectr s (g a)) pa.
+    : ap (sig_rec (podepdescent_rec s)) (path_sigma _ (pushl (f a); pf) (pushr (g a); pg) (pglue a) (transport_induced_fam_pod_pglue Pe a pf @ pa))
+      = poddcs_e s a pf @ ap (poddcs_sectr s (g a)) pa.
   Proof.
     Open Scope long_path_scope.
     destruct pa.
@@ -705,7 +731,7 @@ Section Descent.
     do 3 lhs nrapply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (Dpod Pe) (fun _ => Q) (pglue a)).
+    1: nrapply (ap10_dpath_arrow (induced_fam_pod Pe) (fun _ => Q) (pglue a)).
     lhs nrefine (1 @@ _).
     { lhs nrapply (1 @@ concat_pp_p _ _ _).
       lhs nrapply (1 @@ concat_pp_p _ _ _).
@@ -721,17 +747,17 @@ End Descent.
 
 (** ** The flattening lemma *)
 
-(** We saw above that given descent data [Pe] over a span [f : A -> B] and [g : A -> C], we obtained a type family [Dpod Pe] over the pushout. The flattening lemma describes the total space [sig (Dpod Pe)] of this type family as a pushout of [sig (pod_faml Pe)] and [sig (pod_famr Oe)] by a certain span. This follows from the work above, which shows that [sig (Dpod Pe)] has the same universal property as this pushout. *)
+(** We saw above that given descent data [Pe] over a span [f : A -> B] and [g : A -> C], we obtained a type family [induced_fam_pod Pe] over the pushout. The flattening lemma describes the total space [sig (induced_fam_pod Pe)] of this type family as a pushout of [sig (pod_faml Pe)] and [sig (pod_famr Oe)] by a certain span. This follows from the work above, which shows that [sig (induced_fam_pod Pe)] has the same universal property as this pushout. *)
 
 Section Flattening.
 
   Context `{Univalence} {A B C : Type} {f : A -> B} {g : A -> C} (Pe : poDescent f g).
 
   (** We mimic the constructors of [Pushout] for the total space. Here are the point constructors, in curried form. *)
-  Definition flatten_podl {b : B} (pb : pod_faml Pe b) : sig (Dpod Pe)
+  Definition flatten_podl {b : B} (pb : pod_faml Pe b) : sig (induced_fam_pod Pe)
     := (pushl b; pb).
 
-  Definition flatten_podr {c : C} (pc : pod_famr Pe c) : sig (Dpod Pe)
+  Definition flatten_podr {c : C} (pc : pod_famr Pe c) : sig (induced_fam_pod Pe)
     := (pushr c; pc).
 
   (** And here is the path constructor. *)
@@ -741,18 +767,18 @@ Section Flattening.
   Proof.
     snrapply path_sigma.
     - by apply pglue.
-    - lhs nrapply transport_Dpod_pglue.
+    - lhs nrapply transport_induced_fam_pod_pglue.
       exact pa.
   Defined.
 
-  (** Now that we've shown that [Dpod Pe] acts like a [Pushout] of [sig (pod_faml Pe)] and [sig (pod_famr Pe)] by an appropriate span, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
-  Lemma equiv_pod_flatten : sig (Dpod Pe) <~>
+  (** Now that we've shown that [induced_fam_pod Pe] acts like a [Pushout] of [sig (pod_faml Pe)] and [sig (pod_famr Pe)] by an appropriate span, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
+  Lemma equiv_pod_flatten : sig (induced_fam_pod Pe) <~>
     Pushout (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)).
   Proof.
     snrapply equiv_adjointify.
     - snrapply sig_rec.
-      snrapply podescent_rec.
-      snrapply Build_poDescentConstSection.
+      snrapply podepdescent_rec.
+      snrapply Build_poDepDescentConstSection.
       + exact (fun b pb => pushl (b; pb)).
       + exact (fun c pc => pushr (c; pc)).
       + intros a pf.
@@ -769,18 +795,18 @@ Section Flattening.
       intros [a pf]; cbn.
       nrapply transport_paths_FFlr'; apply equiv_p1_1q.
       rewrite Pushout_rec_beta_pglue.
-      lhs nrapply podescent_rec_beta_pglue.
+      lhs nrapply podepdescent_rec_beta_pglue.
       nrapply concat_p1.
     - intros [x px]; revert x px.
-      snrapply podescent_ind.
-      snrapply Build_poDescentSection.
+      snrapply podepdescent_ind.
+      snrapply Build_poDepDescentSection.
       + by intros b pb.
       + by intros c pc.
       + intros a pf; cbn.
         lhs nrapply transportDD_is_transport.
         nrapply transport_paths_FFlr'; apply equiv_p1_1q.
-        rewrite <- (concat_p1 (transport_Dpod_pglue _ _ _)).
-        rewrite podescent_rec_beta_pglue. (* This needs to be in the form [transport_Dgqd_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
+        rewrite <- (concat_p1 (transport_induced_fam_pod_pglue _ _ _)).
+        rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_Dgqd_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
         nrapply (Pushout_rec_beta_pglue _ _ _ _ (a; pf)).
   Defined.
@@ -796,26 +822,26 @@ Section Paths.
   (** Let [f : A -> B] and [g : A -> C] be a span, with a distinguished point [b0 : B]. We could let the distinguished point be in [C], but this is symmetric by exchanging the roles of [f] and [g]. Let [Pe : poDescent f g] be descent data over [f g] with a distinguished point [p0 : pod_faml Pe b0]. Assume that any dependent descent data [Qe : poDepDescent Pe] with a distinguished point [q0 : podd_faml Qe b0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
   Context `{Univalence} {A B C : Type} {f : A -> B} {g : A -> C} (b0 : B)
     (Pe : poDescent f g) (p0 : pod_faml Pe b0)
-    (based_podescent_ind : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
-      poDescentSection Qe)
-    (based_podescent_ind_beta : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
-      pods_sectl (based_podescent_ind Qe q0) b0 p0 = q0).
+    (based_podepdescent_ind : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
+      poDepDescentSection Qe)
+    (based_podepdescent_ind_beta : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
+      podds_sectl (based_podepdescent_ind Qe q0) b0 p0 = q0).
 
-  (** Under these hypotheses, we get an identity system structure on [Dpod Pe]. *)
+  (** Under these hypotheses, we get an identity system structure on [induced_fam_pod Pe]. *)
   Local Instance idsys_flatten_podescent
-    : @IsIdentitySystem _ (pushl b0) (Dpod Pe) p0.
+    : @IsIdentitySystem _ (pushl b0) (induced_fam_pod Pe) p0.
   Proof.
     snrapply Build_IsIdentitySystem.
     - intros Q q0 x px.
-      snrapply podescent_ind.
-      by apply based_podescent_ind.
+      snrapply podepdescent_ind.
+      by apply based_podepdescent_ind.
     - intros Q q0; cbn.
-      nrapply (based_podescent_ind_beta (podepdescent_fam Q)).
+      nrapply (based_podepdescent_ind_beta (podepdescent_fam Q)).
   Defined.
 
-  (** It follows that the fibers [Dpod Pe x] are equivalent to path spaces [(pushl a0) = x]. *)
-  Definition Dpod_equiv_path (x : Pushout f g)
-    : (pushl b0) = x <~> Dpod Pe x
-    := @equiv_transport_identitysystem _ (pushl b0) (Dpod Pe) p0 _ x.
+  (** It follows that the fibers [induced_fam_pod Pe x] are equivalent to path spaces [(pushl a0) = x]. *)
+  Definition induced_fam_pod_equiv_path (x : Pushout f g)
+    : (pushl b0) = x <~> induced_fam_pod Pe x
+    := @equiv_transport_identitysystem _ (pushl b0) (induced_fam_pod Pe) p0 _ x.
 
 End Paths.
