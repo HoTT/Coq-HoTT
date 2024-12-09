@@ -59,12 +59,36 @@ Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
   (Hmerid : forall x, ap f (merid x) @ HS = HN @ ap g (merid x))
   : f == g.
 Proof.
-  snrapply Susp_ind.
-  - exact HN.
-  - exact HS.
-  - intro x.
-    nrapply transport_paths_FlFr'.
-    apply Hmerid.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  nrapply transport_paths_FlFr'.
+  exact (Hmerid x).
+Defined.
+
+(** A version of [Susp_ind] specifically for proving that the composition of two functions to and from a suspension are homotopic to the identity map. *)
+Definition Susp_ind_FFlr {X Y : Type} (f : Susp X -> Y) (g : Y -> Susp X)
+  (HN : g (f North) = North)
+  (HS : g (f South) = South)
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ merid x)
+  : g o f == idmap.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlr' (f:=f) (g:=g)).
+  exact (Hmerid x).
+Defined.
+
+(** A version of [Susp_ind] specifically for proving a composition square from a suspension. *)
+Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
+  (f : Susp X -> Y) (f' : Susp X -> Y') (g : Y -> Z) (g' : Y' -> Z)
+  (HN : g (f North) = g' (f' North)) (HS : g (f South) = g' (f' South))
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap g' (ap f' (merid x)))
+  : g o f == g' o f'.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlFFr' (f:=f) (f':=f') (g:=g) (g':=g')).
+  exact (Hmerid x).
 Defined.
 
 (* ** Non-dependent eliminator. *)
