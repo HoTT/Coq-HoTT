@@ -1,0 +1,264 @@
+<html>
+<head>
+<title>iso.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for iso.v</h1>
+
+<div class="code" title="File: iso.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 86.666666666667%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+Require Import Types.Universe.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 3
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import HIT.epi HIT.unique_choice.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We prove that [epi + mono &lt;-&gt; IsEquiv] *)</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section iso.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variables X Y : HSet.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable f : X -&gt; Y.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma atmost1P_isinj (injf : IsInjective f)
+  : forall y : Y, atmost1P (fun x =&gt; f x = y).</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y x x' p q.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (injective f).</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p @ q^).</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (@isepi_issurj _ _ _ f epif) as surjf.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (isinj_ismono _ monof) as injf.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    pose proof (unique_choice
+                  (fun y x =&gt; f x = y)
+                  _
+                  (fun y =&gt; (@center _ (surjf y), atmost1P_isinj injf y)))
+      as H_unique_choice.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (isequiv_adjointify _ H_unique_choice.1).</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply H_unique_choice.2.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply injf.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply H_unique_choice.2.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End iso.</pre>
+</div>
+<div class="code" title="File: iso.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

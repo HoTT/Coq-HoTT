@@ -1,0 +1,15 @@
+N: 8 "NullHomotopy" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 3 "cancelL_nullhomotopy_equiv" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 2 "cancelR_nullhomotopy_equiv" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 7 "istrunc_nullhomotopy" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 1 "nullhomotopy_ap" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 4 "nullhomotopy_composeL" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 5 "nullhomotopy_composeR" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+N: 6 "nullhomotopy_homotopic" [body=yes, kind=cnst, prop=no, path="NullHomotopy", ];
+E: 1 8 [weight=3, ];
+E: 2 8 [weight=3, ];
+E: 3 8 [weight=3, ];
+E: 4 8 [weight=3, ];
+E: 5 8 [weight=3, ];
+E: 6 8 [weight=3, ];
+E: 7 8 [weight=1, ];
