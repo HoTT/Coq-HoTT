@@ -86,6 +86,33 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_FFlFr {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : A -> C} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = h x1)
+  : transport (fun x => g (f x) = h x) p q = (ap g (ap f p))^ @ q @ (ap h p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FlFFr {A B C : Type}
+  {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g (h x1))
+  : transport (fun x => f x = g (h x)) p q = (ap f p)^ @ q @ (ap g (ap h p)).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFlFFr {A B B' C : Type}
+  {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
+  : transport (fun x => g (f x) = g' (f' x)) p q = (ap g (ap f p))^ @ q @ (ap g' (ap f' p)).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 (** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)
 Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
@@ -105,6 +132,42 @@ Definition transport_paths_FFlr' {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 :
 Proof.
   refine (transport_paths_FFlr _ _ @ _).
   refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  exact h^.
+Defined.
+
+Definition transport_paths_FFlFr' {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : A -> C} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = h x1) (r : g (f x2) = h x2)
+  (h' : (ap g (ap f p)) @ r = q @ (ap h p))
+  : transport (fun x => g (f x) = h x) p q = r.
+Proof.
+  lhs nrapply (transport_paths_FFlFr p q).
+  lhs nrapply concat_pp_p.
+  apply moveR_Vp.
+  exact h'^.
+Defined.
+
+Definition transport_paths_FlFFr' {A B C : Type}
+  {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g (h x1)) (r : f x2 = g (h x2))
+  (h' : (ap f p) @ r = q @ (ap g (ap h p)))
+  : transport (fun x => f x = g (h x)) p q = r.
+Proof.
+  lhs nrapply (transport_paths_FlFFr p q).
+  lhs nrapply concat_pp_p.
+  apply moveR_Vp.
+  exact h'^.
+Defined.
+
+Definition transport_paths_FFlFFr' {A B B' C : Type}
+  {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
+  (h : ap g (ap f p) @ r = q @ ap g' (ap f' p))
+  : transport (fun x => g (f x) = g' (f' x)) p q = r.
+Proof.
+  lhs nrapply (transport_paths_FFlFFr p q r).
+  lhs nrapply concat_pp_p.
   apply moveR_Vp.
   exact h^.
 Defined.
