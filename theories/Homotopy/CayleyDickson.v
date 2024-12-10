@@ -88,57 +88,35 @@ Global Instance conjugate_susp (A : Type) `(Negate A)
 
 Global Instance negate_susp (A : Type) `(Negate A)
   : Negate (Susp A)
-  := Susp_rec South North (fun a => (merid (-a))^).
-
-Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
-  : Involutive (negate_susp A (-)).
-Proof.
-  snrapply Susp_ind_FFlr.
-  1,2: reflexivity.
-  intro x.
-  lhs nrapply concat_p1.
-  rhs nrapply concat_1p.
-  lhs nrapply ap.
-  1: nrapply Susp_rec_beta_merid.
-  lhs nrapply (ap_V (negate_susp A negate) (merid (-x))).
-  lhs nrapply ap.
-  1: nrapply Susp_rec_beta_merid.
-  lhs nrapply inv_V.
-  nrapply ap.
-  rapply (involutive x).
-Defined.
+  := susp_neg _ o conjugate_susp A (-).
 
 Global Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (conjugate_susp A (-)).
 Proof.
-  snrapply Susp_ind_FFlr.
-  1,2: reflexivity.
-  intro x.
-  lhs nrapply concat_p1.
-  rhs nrapply concat_1p.
-  lhs nrapply ap.
-  1: nrapply functor_susp_beta_merid.
-  lhs nrapply functor_susp_beta_merid.
-  nrapply ap.
-  rapply (involutive x).
+  intros x.
+  lhs_V nrapply functor_susp_compose.
+  rhs_V nrapply functor_susp_idmap.
+  nrapply functor2_susp.
+  rapply involutive.
+Defined.
+
+Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
+  : Involutive (negate_susp A (-)).
+Proof.
+  intros x.
+  unfold negate_susp.
+  lhs_V nrapply ap.
+  1: nrapply susp_neg_natural. 
+  lhs rapply susp_neg_inv.
+  rapply involutive.
 Defined.
 
 Global Instance swapop_conjugate_susp {A} `(Negate A)
   : SwapOp negate (conjugate_susp A (-)).
 Proof.
-  snrapply Susp_ind_FFlFFr.
-  1,2: reflexivity.
   intros x.
-  lhs nrapply concat_p1.
-  rhs nrapply concat_1p.
-  rhs nrapply ap.
-  2: nrapply functor_susp_beta_merid.
-  rhs nrapply Susp_rec_beta_merid.
-  lhs nrapply ap.
-  1: nrapply Susp_rec_beta_merid.
-  lhs nrapply (ap_V _ (merid (-x))).
-  apply ap.
-  nrapply functor_susp_beta_merid.
+  symmetry.
+  nrapply susp_neg_natural.
 Defined.
 
 (** ** Cayley-Dickson imaginaroids *)
