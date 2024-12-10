@@ -232,9 +232,7 @@ Section ImaginaroidHSpace.
   Arguments f {_ _}.
   Arguments g {_ _}.
 
-  (** Here is the multiplication map in algebraic form:
-      (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
-      the following is the spherical form. *)
+  (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)] the following is the spherical form. *)
   Global Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
     snrapply Join_rec2.
