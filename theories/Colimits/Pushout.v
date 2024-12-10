@@ -575,6 +575,16 @@ Section Descent.
     exact (path_universe_uncurried (pod_e Pe a)).
   Defined.
 
+  (** A type family over [Pushout f g] induces descent data. *)
+  Definition podescent_fam (P : Pushout f g -> Type) : poDescent f g.
+  Proof.
+    snrapply Build_poDescent.
+    - exact (P o pushl).
+    - exact (P o pushr).
+    - intro a.
+      exact (equiv_transport P (pglue a)).
+  Defined.
+
   (** Transporting over [fam_podescent] along [pglue a] is given by [pod_e]. *)
   Definition transport_fam_podescent_pglue
     (Pe : poDescent f g) (a : A) (pf : pod_faml Pe (f a))
@@ -634,6 +644,23 @@ Section Descent.
     - intros a pf.
       exact (equiv_transportDD (fam_podescent Pe) Q
                (pglue a) (transport_fam_podescent_pglue Pe a pf)).
+  Defined.
+
+  (** Dependent descent data over [Pe] induces a dependent type family over [fam_podescent Pe]. *)
+  Definition fam_podepdescent {Pe : poDescent f g} (Qe : poDepDescent Pe)
+    : forall (x : Pushout f g), (fam_podescent Pe x) -> Type.
+  Proof.
+    snrapply Pushout_ind.
+    - exact (podd_faml Qe).
+    - exact (podd_famr Qe).
+    - intro a.
+      nrapply (moveR_transport_p _ (pglue a)).
+      funext pf.
+      rhs nrapply transport_arrow_toconst.
+      rhs nrefine (ap (podd_famr _ _) _).
+      + exact (path_universe (podd_e _ _ _)).
+      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (pglue _))).
+        nrapply (transport_fam_podescent_pglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [podds_sectl] and [podds_sectr], together with coherences [pods_e]. *)

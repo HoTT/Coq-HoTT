@@ -105,6 +105,15 @@ Section Descent.
     exact (path_universe_uncurried (gqd_e Pe r)).
   Defined.
 
+  (** A type family over [GraphQuotient R] induces descent data. *)
+  Definition gqdescent_fam (P : GraphQuotient R -> Type) : gqDescent R.
+  Proof.
+    snrapply Build_gqDescent.
+    - exact (P o gq).
+    - intros a b r.
+      exact (equiv_transport P (gqglue r)).
+  Defined.
+
   (** Transporting over [fam_gqdescent] along [gqglue r] is given by [gqd_e]. *)
   Definition transport_fam_gqdescent_gqglue
     (Pe : gqDescent R) {a b : A} (r : R a b) (pa : gqd_fam Pe a)
@@ -159,6 +168,22 @@ Section Descent.
     - intros a b r pa.
       exact (equiv_transportDD (fam_gqdescent Pe) Q
                (gqglue r) (transport_fam_gqdescent_gqglue Pe r pa)).
+  Defined.
+
+  (** Dependent descent data over [Pe] induces a dependent type family over [fam_gqdescent Pe]. *)
+  Definition fam_gqdepdescent {Pe : gqDescent R} (Qe : gqDepDescent Pe)
+    : forall (x : GraphQuotient R), (fam_gqdescent Pe x) -> Type.
+  Proof.
+    snrapply GraphQuotient_ind.
+    - exact (gqdd_fam Qe).
+    - intros a b r.
+      nrapply (moveR_transport_p _ (gqglue r)).
+      funext pa.
+      rhs nrapply transport_arrow_toconst.
+      rhs nrefine (ap (gqdd_fam Qe b) _).
+      + exact (path_universe (gqdd_e Qe r pa)).
+      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (gqglue r))).
+        nrapply (transport_fam_gqdescent_gqglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : gqDepDescent Pe] is a fiberwise section [gqdds_sect], together with coherences [gqdd_e]. *)

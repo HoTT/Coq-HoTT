@@ -492,6 +492,15 @@ Section Descent.
     exact (path_universe_uncurried (cd_e Pe b)).
   Defined.
 
+  (** A type family over [Coeq f g] induces descent data. *)
+  Definition cdescent_fam (P : Coeq f g -> Type) : cDescent f g.
+  Proof.
+    snrapply Build_cDescent.
+    - exact (P o coeq).
+    - intro b.
+      exact (equiv_transport P (cglue b)).
+  Defined.
+
   (** Transporting over [fam_cdescent] along [cglue b] is given by [cd_e]. *)
   Definition transport_fam_cdescent_cglue
     (Pe : cDescent f g) (b : B) (pf : cd_fam Pe (f b))
@@ -546,6 +555,22 @@ Section Descent.
     - intros b pf.
       exact (equiv_transportDD (fam_cdescent Pe) Q
                (cglue b) (transport_fam_cdescent_cglue Pe b pf)).
+  Defined.
+
+  (** Dependent descent data over [Pe] induces a dependent type family over [fam_cdescent Pe]. *)
+  Definition fam_cdepdescent {Pe : cDescent f g} (Qe : cDepDescent Pe)
+    : forall (x : Coeq f g), (fam_cdescent Pe x) -> Type.
+  Proof.
+    snrapply Coeq_ind.
+    - exact (cdd_fam Qe).
+    - intro b.
+      nrapply (moveR_transport_p _ (cglue b)).
+      funext pa.
+      rhs nrapply transport_arrow_toconst.
+      rhs nrefine (ap (cdd_fam _ _) _).
+      + exact (path_universe (cdd_e _ _ _)).
+      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (cglue _))).
+        nrapply (transport_fam_cdescent_cglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : cDepDescent Pe] is a fiberwise section [cdds_sect], together with coherences [cdds_e]. *)
