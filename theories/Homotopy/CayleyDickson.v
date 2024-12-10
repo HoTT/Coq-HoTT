@@ -9,8 +9,25 @@ Require Import Homotopy.Join.Core.
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
-(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
-  --x=x   x**=x   1*=1    (-x)*=-x*   x(-y)=-(xy)   (xy)* = y* x*    x* x=1    *)
+(** The Cayley-Dickson Construction *)
+
+(** They Cayley-Dickson construction in homotopy type theory due to Buchholtz and Rijke https://arxiv.org/abs/1610.01134 is a method to construct an H-space strucure on the join of two suspensions of a type [A]. As a special case, this gives a way to construct an H-space structure on [S^3] leading to the quarternionic hopf fibration.
+
+The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can product the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore this construction here attempts to axiomatize the properties of the units of those algebras instead.
+
+This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An further open problem is that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)
+
+(** ** Cayley-Dickson spheroids *)
+
+(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws:
+  1. [--x = x]
+  2. [x** = x]
+  3. [1* = 1]
+  4. [(-x)* = -x*]
+  5. [x(-y) = -(xy)]
+  6. [(xy)* = y* x*]
+  7. [x* x = 1]
+Note that the above laws are written in pseudocode since we cannot define multiplication by juxtaposition in Coq. *)
 Class CayleyDicksonSpheroid (X : pType) := {
   cds_hspace : IsHSpace X;
   cds_negate : Negate X;
@@ -62,6 +79,8 @@ Section CayleyDicksonSpheroid_Properties.
   Defined.
 
 End CayleyDicksonSpheroid_Properties.
+
+(** ** Negation and conjugation on suspensions *)
 
 Global Instance conjugate_susp (A : Type) `(Negate A)
   : Conjugate (Susp A)
@@ -122,6 +141,8 @@ Proof.
   nrapply Susp_rec_beta_merid.
 Defined.
 
+(** ** Cayley-Dickson imaginaroids *)
+
 Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_negate : Negate A;
   cdi_negate_involutive : Involutive cdi_negate;
@@ -174,7 +195,7 @@ Proof.
   srapply cds_factorneg_l.
 Defined.
 
-(** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to a H-space structure on the join of the suspension of A with itself. *)
+(** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to an H-space structure on the join of the suspension of A with itself. *)
 Section ImaginaroidHSpace.
 
   (* Let A be a Cayley-Dickson imaginaroid with associative H-space multiplication on Susp A *)
