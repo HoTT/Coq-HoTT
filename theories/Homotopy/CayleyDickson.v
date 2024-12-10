@@ -90,6 +90,16 @@ Global Instance negate_susp (A : Type) `(Negate A)
   : Negate (Susp A)
   := susp_neg _ o conjugate_susp A (-).
 
+(** [conjugate_susp A] and [negate_susp A] commute. *)
+Global Instance swapop_conjugate_susp {A} `(Negate A)
+  : SwapOp (negate_susp A (-)) (conjugate_susp A (-)).
+Proof.
+  intros x.
+  symmetry.
+  nrapply susp_neg_natural.
+Defined.
+
+(** [conjugate_susp A] is involutive, since any functor applied to an involution gives an involution. *)
 Global Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (conjugate_susp A (-)).
 Proof.
@@ -100,23 +110,16 @@ Proof.
   rapply involutive.
 Defined.
 
+(** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
 Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (negate_susp A (-)).
 Proof.
   intros x.
   unfold negate_susp.
-  lhs_V nrapply ap.
-  1: nrapply susp_neg_natural. 
+  lhs nrapply ap.
+  1: nrapply swapop_conjugate_susp.
   lhs rapply susp_neg_inv.
   rapply involutive.
-Defined.
-
-Global Instance swapop_conjugate_susp {A} `(Negate A)
-  : SwapOp negate (conjugate_susp A (-)).
-Proof.
-  intros x.
-  symmetry.
-  nrapply susp_neg_natural.
 Defined.
 
 (** ** Cayley-Dickson imaginaroids *)
