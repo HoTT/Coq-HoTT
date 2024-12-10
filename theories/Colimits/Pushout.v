@@ -541,7 +541,9 @@ Defined.
 
 (** ** Descent *)
 
-(** We study "equifibrant" type families over a span [f : A -> B] and [g : A -> C]. By univalence, the descent property tells us that these type families correspond to type families over the pushout, and we obtain an induction principle for such type families. Then we consider dependent descent data over some particular descent data. This resembles the first case, but there is an extra level of dependence. In this case we obtain an induction and recursion principle, but only with a partial computation rule for the induction principle.
+(** We study "equifibrant" type families over a span [f : A -> B] and [g : A -> C].  By univalence, the descent property tells us that these type families correspond to type families over the pushout, and we obtain an induction principle for such type families. Dependent descent data over some particular descent data are "equifibrant" type families over this descent data.  The "equifibrancy" is only taken over the span [f : A -> B] and [g : A -> C], but there is an extra level of dependency coming from the descent data.  In this case, we obtain an induction and recursion principle, but only with a partial computation rule for the induction principle.
+
+The theory of descent is interesting to consider in itself.  However, we will use it as a means to structure the code, and to obtain induction and recursion principles that are valuable in proving the flattening lemma, and characterizing path spaces.  Thus we will gloss over the bigger picture, and not consider equivalences of descent data, nor homotopies of their sections.  We will also not elaborate on uniqueness of the induced families.
 
 It's possible to prove the results in the Descent, Flattening and Paths Sections without univalence, by replacing all equivalences with paths, but in practice these results will be used with equivalences as input, making the form below more convenient.  See https://github.com/HoTT/Coq-HoTT/pull/2147#issuecomment-2521570830 for further information. *)
 
@@ -549,7 +551,7 @@ Section Descent.
 
   Context `{Univalence}.
 
-  (** Descent data over [f : A -> B] and [g : A -> C] are "equifibrant" or "cartesian" type families [pod_faml : B -> Type] and [pod_famr : C -> Type]. This means that if [a : A], then the fibers [pod_faml (f a)] and [pod_famr (g a)] are equivalent, witnessed by [pod_e]. *)
+  (** Descent data over [f : A -> B] and [g : A -> C] are "equifibrant" or "cartesian" type families [pod_faml : B -> Type] and [pod_famr : C -> Type].  This means that if [a : A], then the fibers [pod_faml (f a)] and [pod_famr (g a)] are equivalent, witnessed by [pod_e]. *)
   Record poDescent {A B C : Type} (f : A -> B) (g : A -> C) := {
     pod_faml : B -> Type;
     pod_famr : C -> Type;
@@ -564,8 +566,8 @@ Section Descent.
   (** Let [A], [B], and [C] be types, with a morphisms [f : A -> B] and [g : A -> C].  *)
   Context {A B C : Type} {f : A -> B} {g : A -> C}.
 
-  (** Descent data descends to a type family over [Pushout f g]. *)
-  Definition induced_fam_pod (Pe : poDescent f g)
+  (** Descent data induces a type family over [Pushout f g]. *)
+  Definition fam_podescent (Pe : poDescent f g)
     : Pushout f g -> Type.
   Proof.
     snrapply (Pushout_rec _ (pod_faml Pe) (pod_famr Pe)).
@@ -573,16 +575,16 @@ Section Descent.
     exact (path_universe_uncurried (pod_e Pe a)).
   Defined.
 
-  (** Transporting over [induced_fam_pod] along [pglue a] is given by [pod_e]. *)
-  Definition transport_induced_fam_pod_pglue
+  (** Transporting over [fam_podescent] along [pglue a] is given by [pod_e]. *)
+  Definition transport_fam_podescent_pglue
     (Pe : poDescent f g) (a : A) (pf : pod_faml Pe (f a))
-    : transport (induced_fam_pod Pe) (pglue a) pf = pod_e Pe a pf.
+    : transport (fam_podescent Pe) (pglue a) pf = pod_e Pe a pf.
   Proof.
     nrapply transport_path_universe'.
     nrapply Pushout_rec_beta_pglue.
   Defined.
 
-    (** A section on the descent data is a fiberwise section that respects the equivalence. *)
+  (** A section on the descent data are fiberwise sections that respects the equivalences. *)
   Record poDescentSection (Pe : poDescent f g) := {
     pods_sectl (b : B) : pod_faml Pe b;
     pods_sectr (c : C) : pod_famr Pe c;
@@ -590,20 +592,20 @@ Section Descent.
       : pod_e Pe a (pods_sectl (f a)) = pods_sectr (g a)
   }.
 
-  (** A descent section induces a genuine section of [induced_fam_cd Pe]. *)
+  (** A descent section induces a genuine section of [fam_cdescent Pe]. *)
   Definition podescent_ind {Pe : poDescent f g}
     (s : poDescentSection Pe)
-    : forall (x : Pushout f g), induced_fam_pod Pe x.
+    : forall (x : Pushout f g), fam_podescent Pe x.
   Proof.
     snrapply (Pushout_ind _ (pods_sectl _ s) (pods_sectr _ s)).
     intro a.
-    refine (transport_induced_fam_pod_pglue Pe a _ @ pods_e _ s a).
+    refine (transport_fam_podescent_pglue Pe a _ @ pods_e _ s a).
   Defined.
 
   (** We record its computation rule *)
   Definition podescent_ind_beta_pglue {Pe : poDescent f g}
     (s : poDescentSection Pe) (a : A)
-    : apD (podescent_ind s) (pglue a) = transport_induced_fam_pod_pglue Pe a _ @ pods_e _ s a
+    : apD (podescent_ind s) (pglue a) = transport_fam_podescent_pglue Pe a _ @ pods_e _ s a
     := Pushout_ind_beta_pglue _ (pods_sectl _ s) (pods_sectr _ s) _ _.
 
   (** Dependent descent data over descent data [Pe : poDescent f g] consists of a type families [podd_faml : forall b : B, pod_faml Pe b -> Type] and [podd_famr : forall c : C, pod_famr Pe c -> Type] together with coherences [podd_e a pf]. *)
@@ -619,9 +621,9 @@ Section Descent.
   Global Arguments podd_famr {Pe} Qe c pc : rename.
   Global Arguments podd_e {Pe} Qe a pf : rename.
 
-  (** A dependent type family over [induced_fam_pod Pe] induces dependent descent data over [Pe]. *)
+  (** A dependent type family over [fam_podescent Pe] induces dependent descent data over [Pe]. *)
   Definition podepdescent_fam {Pe : poDescent f g}
-    (Q : forall x : Pushout f g, (induced_fam_pod Pe) x -> Type)
+    (Q : forall x : Pushout f g, (fam_podescent Pe) x -> Type)
     : poDepDescent Pe.
   Proof.
     snrapply Build_poDepDescent.
@@ -630,8 +632,8 @@ Section Descent.
     - intros c; cbn.
       exact (Q (pushr c)).
     - intros a pf.
-      exact (equiv_transportDD (induced_fam_pod Pe) Q
-               (pglue a) (transport_induced_fam_pod_pglue Pe a pf)).
+      exact (equiv_transportDD (fam_podescent Pe) Q
+               (pglue a) (transport_fam_podescent_pglue Pe a pf)).
   Defined.
 
   (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [podds_sectl] and [podds_sectr], together with coherences [pods_e]. *)
@@ -648,34 +650,34 @@ Section Descent.
   Global Arguments podds_e {Pe Qe} s a pf : rename.
 
   (** Transporting [podds_sectl s (f a)] over [Q] along [pglue a] is [podds_sectr s (g a)]. *)
-  Definition transport_podds_pglue {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), (induced_fam_pod Pe) x -> Type}
+  Definition transport_fam_pglue_podds_sectl {Pe : poDescent f g}
+    {Q : forall (x : Pushout f g), (fam_podescent Pe) x -> Type}
     (s : poDepDescentSection (podepdescent_fam Q))
     (a : A)
-    : transport (fun (x : Pushout f g) => forall (px : induced_fam_pod Pe x), Q x px)
+    : transport (fun (x : Pushout f g) => forall (px : fam_podescent Pe x), Q x px)
         (pglue a) (podds_sectl s (f a)) = podds_sectr s (g a).
   Proof.
     apply dpath_forall.
     intro pf.
-    apply (equiv_inj (transport (Q (pushr (g a))) (transport_induced_fam_pod_pglue Pe a pf))).
-    rhs nrapply (apD (podds_sectr s (g a)) (transport_induced_fam_pod_pglue Pe a pf)).
+    apply (equiv_inj (transport (Q (pushr (g a))) (transport_fam_podescent_pglue Pe a pf))).
+    rhs nrapply (apD (podds_sectr s (g a)) (transport_fam_podescent_pglue Pe a pf)).
     exact (podds_e s a pf).
   Defined.
 
   (** A dependent descent section induces a genuine section of the descended type family [induced_fam_pod Pe]. *)
   Definition podepdescent_ind {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), (induced_fam_pod Pe) x -> Type}
+    {Q : forall (x : Pushout f g), (fam_podescent Pe) x -> Type}
     (s : poDepDescentSection (podepdescent_fam Q))
-    : forall (x : Pushout f g) (px : induced_fam_pod Pe x), Q x px
-    := Pushout_ind _ (podds_sectl s) (podds_sectr s) (transport_podds_pglue s).
+    : forall (x : Pushout f g) (px : fam_podescent Pe x), Q x px
+    := Pushout_ind _ (podds_sectl s) (podds_sectr s) (transport_fam_pglue_podds_sectl s).
 
   (** This is a partial computation rule, which only handles paths in the base. *)
   Definition podepdescent_ind_beta_pglue {Pe : poDescent f g}
-    {Q : forall (x : Pushout f g), induced_fam_pod Pe x -> Type}
+    {Q : forall (x : Pushout f g), fam_podescent Pe x -> Type}
     (s : poDepDescentSection (podepdescent_fam Q))
     (a : A)
-    : apD (podepdescent_ind s) (pglue a) = transport_podds_pglue s a
-    := Pushout_ind_beta_pglue _ (podds_sectl s) (podds_sectr s) (transport_podds_pglue s) a.
+    : apD (podepdescent_ind s) (pglue a) = transport_fam_pglue_podds_sectl s a
+    := Pushout_ind_beta_pglue _ (podds_sectl s) (podds_sectr s) (transport_fam_pglue_podds_sectl s) a.
 
   (** The data for a section into a constant type family. *)
   Record poDepDescentConstSection (Pe : poDescent f g) (Q : Type) := {
@@ -691,35 +693,35 @@ Section Descent.
   Global Arguments poddcs_e {Pe Q} s a pf : rename.
 
   (** Transporting [poddcs_sectl s (f a)] over [Q] along [pglue a] is [poddcs_sectr s (g a)]. *)
-  Definition transport_poddcs_pglue {Pe : poDescent f g} {Q : Type}
+  Definition transport_fam_pglue_poddcs_sectl {Pe : poDescent f g} {Q : Type}
     (s : poDepDescentConstSection Pe Q)
     (a : A)
-    : transport (fun x : Pushout f g => induced_fam_pod Pe x -> Q) (pglue a) (poddcs_sectl s (f a))
+    : transport (fun x : Pushout f g => fam_podescent Pe x -> Q) (pglue a) (poddcs_sectl s (f a))
       = poddcs_sectr s (g a).
   Proof.
     nrapply dpath_arrow.
     intro pf.
     lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_induced_fam_pod_pglue Pe a pf)).
+    rhs nrapply (ap _ (transport_fam_podescent_pglue Pe a pf)).
     exact (poddcs_e s a pf).
   Defined.
 
-  (** The data for a section of a constant family induces a section over the total space [induced_fam_pod Pe]. *)
+  (** The data for a section of a constant family induces a section over the total space [fam_podescent Pe]. *)
   Definition podepdescent_rec {Pe : poDescent f g} {Q : Type}
     (s : poDepDescentConstSection Pe Q)
-    : forall (x : Pushout f g), induced_fam_pod Pe x -> Q.
+    : forall (x : Pushout f g), fam_podescent Pe x -> Q.
   Proof.
     snrapply Pushout_ind; cbn.
     - nrapply (poddcs_sectl s).
     - nrapply (poddcs_sectr s).
-    - nrapply transport_poddcs_pglue.
+    - nrapply transport_fam_pglue_poddcs_sectl.
   Defined.
 
   (** In this case, we state a full computation rule. *)
   Definition podepdescent_rec_beta_pglue {Pe : poDescent f g} {Q : Type}
     (s : poDepDescentConstSection Pe Q)
     (a : A) {pf : pod_faml Pe (f a)} {pg : pod_famr Pe (g a)} (pa : pod_e Pe a pf = pg)
-    : ap (sig_rec (podepdescent_rec s)) (path_sigma _ (pushl (f a); pf) (pushr (g a); pg) (pglue a) (transport_induced_fam_pod_pglue Pe a pf @ pa))
+    : ap (sig_rec (podepdescent_rec s)) (path_sigma _ (pushl (f a); pf) (pushr (g a); pg) (pglue a) (transport_fam_podescent_pglue Pe a pf @ pa))
       = poddcs_e s a pf @ ap (poddcs_sectr s (g a)) pa.
   Proof.
     Open Scope long_path_scope.
@@ -731,7 +733,7 @@ Section Descent.
     do 3 lhs nrapply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (induced_fam_pod Pe) (fun _ => Q) (pglue a)).
+    1: nrapply (ap10_dpath_arrow (fam_podescent Pe) (fun _ => Q) (pglue a)).
     lhs nrefine (1 @@ _).
     { lhs nrapply (1 @@ concat_pp_p _ _ _).
       lhs nrapply (1 @@ concat_pp_p _ _ _).
@@ -747,17 +749,17 @@ End Descent.
 
 (** ** The flattening lemma *)
 
-(** We saw above that given descent data [Pe] over a span [f : A -> B] and [g : A -> C], we obtained a type family [induced_fam_pod Pe] over the pushout. The flattening lemma describes the total space [sig (induced_fam_pod Pe)] of this type family as a pushout of [sig (pod_faml Pe)] and [sig (pod_famr Oe)] by a certain span. This follows from the work above, which shows that [sig (induced_fam_pod Pe)] has the same universal property as this pushout. *)
+(** We saw above that given descent data [Pe] over a span [f : A -> B] and [g : A -> C], we obtained a type family [fam_podescent Pe] over the pushout.  The flattening lemma describes the total space [sig (fam_podescent Pe)] of this type family as a pushout of [sig (pod_faml Pe)] and [sig (pod_famr Pe)] by a certain span.  This follows from the work above, which shows that [sig (fam_podescent Pe)] has the same universal property as this pushout. *)
 
 Section Flattening.
 
   Context `{Univalence} {A B C : Type} {f : A -> B} {g : A -> C} (Pe : poDescent f g).
 
-  (** We mimic the constructors of [Pushout] for the total space. Here are the point constructors, in curried form. *)
-  Definition flatten_podl {b : B} (pb : pod_faml Pe b) : sig (induced_fam_pod Pe)
+  (** We mimic the constructors of [Pushout] for the total space.  Here are the point constructors, in curried form. *)
+  Definition flatten_podl {b : B} (pb : pod_faml Pe b) : sig (fam_podescent Pe)
     := (pushl b; pb).
 
-  Definition flatten_podr {c : C} (pc : pod_famr Pe c) : sig (induced_fam_pod Pe)
+  Definition flatten_podr {c : C} (pc : pod_famr Pe c) : sig (fam_podescent Pe)
     := (pushr c; pc).
 
   (** And here is the path constructor. *)
@@ -767,12 +769,12 @@ Section Flattening.
   Proof.
     snrapply path_sigma.
     - by apply pglue.
-    - lhs nrapply transport_induced_fam_pod_pglue.
+    - lhs nrapply transport_fam_podescent_pglue.
       exact pa.
   Defined.
 
-  (** Now that we've shown that [induced_fam_pod Pe] acts like a [Pushout] of [sig (pod_faml Pe)] and [sig (pod_famr Pe)] by an appropriate span, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
-  Lemma equiv_pod_flatten : sig (induced_fam_pod Pe) <~>
+  (** Now that we've shown that [fam_podescent Pe] acts like a [Pushout] of [sig (pod_faml Pe)] and [sig (pod_famr Pe)] by an appropriate span, we can use this to prove the flattening lemma.  The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
+  Lemma equiv_pod_flatten : sig (fam_podescent Pe) <~>
     Pushout (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)).
   Proof.
     snrapply equiv_adjointify.
@@ -805,8 +807,8 @@ Section Flattening.
       + intros a pf; cbn.
         lhs nrapply transportDD_is_transport.
         nrapply transport_paths_FFlr'; apply equiv_p1_1q.
-        rewrite <- (concat_p1 (transport_induced_fam_pod_pglue _ _ _)).
-        rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_Dgqd_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
+        rewrite <- (concat_p1 (transport_fam_podescent_pglue _ _ _)).
+        rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_fam_podescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
         nrapply (Pushout_rec_beta_pglue _ _ _ _ (a; pf)).
   Defined.
@@ -819,7 +821,7 @@ End Flattening.
 
 Section Paths.
 
-  (** Let [f : A -> B] and [g : A -> C] be a span, with a distinguished point [b0 : B]. We could let the distinguished point be in [C], but this is symmetric by exchanging the roles of [f] and [g]. Let [Pe : poDescent f g] be descent data over [f g] with a distinguished point [p0 : pod_faml Pe b0]. Assume that any dependent descent data [Qe : poDepDescent Pe] with a distinguished point [q0 : podd_faml Qe b0 p0] has a section that respects the distinguished points. This is the Kraus-von Raumer induction principle. *)
+  (** Let [f : A -> B] and [g : A -> C] be a span, with a distinguished point [b0 : B].  We could let the distinguished point be in [C], but this is symmetric by exchanging the roles of [f] and [g].  Let [Pe : poDescent f g] be descent data over [f g] with a distinguished point [p0 : pod_faml Pe b0].  Assume that any dependent descent data [Qe : poDepDescent Pe] with a distinguished point [q0 : podd_faml Qe b0 p0] has a section that respects the distinguished points.  This is the induction principle provided by Kraus and von Raumer. *)
   Context `{Univalence} {A B C : Type} {f : A -> B} {g : A -> C} (b0 : B)
     (Pe : poDescent f g) (p0 : pod_faml Pe b0)
     (based_podepdescent_ind : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
@@ -827,9 +829,9 @@ Section Paths.
     (based_podepdescent_ind_beta : forall (Qe : poDepDescent Pe) (q0 : podd_faml Qe b0 p0),
       podds_sectl (based_podepdescent_ind Qe q0) b0 p0 = q0).
 
-  (** Under these hypotheses, we get an identity system structure on [induced_fam_pod Pe]. *)
+  (** Under these hypotheses, we get an identity system structure on [fam_podescent Pe]. *)
   Local Instance idsys_flatten_podescent
-    : @IsIdentitySystem _ (pushl b0) (induced_fam_pod Pe) p0.
+    : @IsIdentitySystem _ (pushl b0) (fam_podescent Pe) p0.
   Proof.
     snrapply Build_IsIdentitySystem.
     - intros Q q0 x px.
@@ -839,9 +841,9 @@ Section Paths.
       nrapply (based_podepdescent_ind_beta (podepdescent_fam Q)).
   Defined.
 
-  (** It follows that the fibers [induced_fam_pod Pe x] are equivalent to path spaces [(pushl a0) = x]. *)
-  Definition induced_fam_pod_equiv_path (x : Pushout f g)
-    : (pushl b0) = x <~> induced_fam_pod Pe x
-    := @equiv_transport_identitysystem _ (pushl b0) (induced_fam_pod Pe) p0 _ x.
+  (** It follows that the fibers [fam_podescent Pe x] are equivalent to path spaces [(pushl a0) = x]. *)
+  Definition fam_podescent_equiv_path (x : Pushout f g)
+    : (pushl b0) = x <~> fam_podescent Pe x
+    := @equiv_transport_identitysystem _ (pushl b0) (fam_podescent Pe) p0 _ x.
 
 End Paths.

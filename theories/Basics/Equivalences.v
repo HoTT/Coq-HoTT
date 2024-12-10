@@ -84,7 +84,7 @@ Section EquivTransport.
 
   Context {A : Type} (P : A -> Type) {x y : A} (p : x = y).
 
-  (** The inverse and the homotopies of transport is defined explictly. This allows us to reason about the map when the input is not [idpath]. *)
+  (** The inverse and the homotopies of transport are defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
   Global Instance isequiv_transport : IsEquiv (transport P p) | 0
     := Build_IsEquiv (P x) (P y) (transport P p) (transport P p^)
     (transport_pV P p) (transport_Vp P p) (transport_pVp P p).
@@ -94,13 +94,13 @@ Section EquivTransport.
 
 End EquivTransport.
 
-(** Doubly dependent transport is an equivalence *)
+(** Doubly dependent transport is an equivalence. *)
 Section EquivTransportD.
 
     Context {A : Type} (P : A -> Type) (Q : forall a : A, P a -> Type)
       {x y : A} (p : x = y) {px : P x}.
 
-    (** The inverse of transportD is defined explictly. This allows us to reason about the map when the input is not [idpath]. *)
+    (** The inverse of transportD is defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
     Global Instance isequiv_transportD : IsEquiv (transportD P Q p px).
     Proof.
       snrapply Build_IsEquiv.
