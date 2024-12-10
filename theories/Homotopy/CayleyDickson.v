@@ -11,15 +11,15 @@ Local Open Scope mc_mult_scope.
 
 (** The Cayley-Dickson Construction *)
 
-(** They Cayley-Dickson construction in homotopy type theory due to Buchholtz and Rijke https://arxiv.org/abs/1610.01134 is a method to construct an H-space strucure on the join of two suspensions of a type [A]. As a special case, this gives a way to construct an H-space structure on [S^3] leading to the quarternionic hopf fibration.
+(** The Cayley-Dickson construction in homotopy type theory due to Buchholtz and Rijke https://arxiv.org/abs/1610.01134 is a method to construct an H-space strucure on the join of two suspensions of a type [A]. As a special case, this gives a way to construct an H-space structure on [S^3] leading to the quarternionic hopf fibration.
 
-The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can product the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore this construction here attempts to axiomatize the properties of the units of those algebras instead.
+The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can produce the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore the construction here attempts to axiomatize the properties of the units of those algebras instead.
 
-This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An further open problem is that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)
+This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An open problem is to show that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)
 
 (** ** Cayley-Dickson spheroids *)
 
-(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws:
+(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the following seven laws:
   1. [--x = x]
   2. [x** = x]
   3. [1* = 1]
@@ -27,7 +27,7 @@ This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on
   5. [x(-y) = -(xy)]
   6. [(xy)* = y* x*]
   7. [x* x = 1]
-Note that the above laws are written in pseudocode since we cannot define multiplication by juxtaposition in Coq. *)
+Note that the above laws are written in pseudocode since we cannot define multiplication by juxtaposition in Coq, and * is used to denote conjugation. *)
 Class CayleyDicksonSpheroid (X : pType) := {
   cds_hspace : IsHSpace X;
   cds_negate : Negate X;
@@ -138,10 +138,8 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_distr.
 
 Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate).
-Proof.
-  reflexivity.
-Defined.
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)
+  := idpath.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
 Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
@@ -173,12 +171,11 @@ Proof.
   srapply cds_factorneg_l.
 Defined.
 
-(** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to an H-space structure on the join of the suspension of A with itself. *)
+(** A Cayley-Dickson imaginaroid [A] whose multiplciation on the suspension is associative gives rise to an H-space structure on the join of the suspension of [A] with itself. *)
 Section ImaginaroidHSpace.
 
-  (* Let A be a Cayley-Dickson imaginaroid with associative H-space multiplication on Susp A *)
-  Context {A} `(CayleyDicksonImaginaroid A)
-    `(!Associative hspace_op).
+  (** Let [A] be a Cayley-Dickson imaginaroid with associative H-space multiplication on [Susp A]. *)
+  Context {A} `(CayleyDicksonImaginaroid A) `(!Associative hspace_op).
 
   (** Declaring these as local instances so that they can be found *)
   Local Instance hspace_op' : SgOp (Susp A) := hspace_op.
