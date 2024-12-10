@@ -78,6 +78,19 @@ Proof.
   exact (Hmerid x).
 Defined.
 
+Definition Susp_ind_FFlFr {X Y Z : Type}
+  (f : Susp X -> Y) (g : Y -> Z) (h : Susp X -> Z)
+  (HN : g (f North) = h North)
+  (HS : g (f South) = h South)
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap h (merid x))
+  : g o f == h.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlFr' (f:=f) (g:=g) (h:=h)).
+  exact (Hmerid x).
+Defined.
+
 (** A version of [Susp_ind] specifically for proving a composition square from a suspension. *)
 Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
   (f : Susp X -> Y) (f' : Susp X -> Y') (g : Y -> Z) (g' : Y' -> Z)
@@ -536,4 +549,76 @@ Proof.
   apply (concat (transport_paths_Fl _ _)).
   apply (concat (concat_p1 _)).
   apply ap, allpath_p0.
+Defined.
+
+(** ** Negation map *)
+
+(** The negation map on the suspension is defined by sending [North] to [South] and vice versa, and acting by flipping on the meridians. *)
+Definition susp_neg (A : Type) : Susp A -> Susp A
+  := Susp_rec South North (fun a => (merid a)^).
+
+(** The negation map is an involution. *)
+Definition susp_neg_inv (A : Type) : susp_neg A o susp_neg A == idmap.
+Proof.
+  snrapply Susp_ind_FFlr.
+  1, 2: reflexivity.
+  intro a.
+  apply equiv_p1_1q.
+  lhs nrapply ap.
+  1: snrapply Susp_rec_beta_merid.
+  lhs nrapply (ap_V _ (merid a)).
+  lhs nrapply ap.
+  1: snrapply Susp_rec_beta_merid.
+  nrapply inv_V.
+Defined.
+
+Global Instance isequiv_susp_neg (A : Type) : IsEquiv (susp_neg A)
+  := isequiv_involution (susp_neg A) (susp_neg_inv A).
+
+Definition equiv_susp_neg (A : Type) : Susp A <~> Susp A
+  := Build_Equiv _ _ (susp_neg A) _.
+
+(** By using the suspension functor, we can also define another negation map on [Susp (Susp A))]. It turns out these are homotopic. *)
+Definition susp_neg_stable (A : Type)
+  : functor_susp (susp_neg A) == susp_neg (Susp A).
+Proof.
+  snrapply Susp_ind_FlFr; simpl.
+  - exact (merid North).
+  - exact (merid South)^.
+  - intro x.
+    lhs nrapply whiskerR.
+    1: nrapply functor_susp_beta_merid.
+    rhs nrapply whiskerL.
+    2: nrapply Susp_rec_beta_merid.
+    revert x; snrapply Susp_ind_FlFr; simpl.
+    + exact (concat_pV _ @ (concat_pV _)^).
+    + reflexivity.
+    + intro a.
+      lhs nrapply concat_p1.
+      lhs nrapply (ap_compose _ (fun y => merid y @ _) (merid a)).
+      lhs nrapply ap.
+      1: nrapply Susp_rec_beta_merid.
+      simpl.
+      generalize (merid a) as p.
+      generalize (@South A) as s.
+      intros s p; destruct p.
+      simpl.
+      symmetry.
+      lhs nrapply concat_p1.
+      apply concat_pV.
+Defined.
+
+(** [susp_neg] is a natural equivalence on the suspension functor. *)
+Definition susp_neg_natural {A B : Type} (f : A -> B)
+  : susp_neg B o functor_susp f == functor_susp f o susp_neg A.
+Proof.
+  snrapply Susp_ind_FFlFFr.
+  1, 2: reflexivity.
+  intro a.
+  apply equiv_p1_1q.
+  lhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  rhs nrapply (ap_V _ (merid a)).
+  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  nrapply Susp_rec_beta_merid.
 Defined.
