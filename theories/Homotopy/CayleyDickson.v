@@ -84,7 +84,7 @@ End CayleyDicksonSpheroid_Properties.
 
 Global Instance conjugate_susp (A : Type) `(Negate A)
   : Conjugate (Susp A)
-  := Susp_rec North South (fun a => merid (-a)).
+  := functor_susp (-).
 
 Global Instance negate_susp (A : Type) `(Negate A)
   : Negate (Susp A)
@@ -117,8 +117,8 @@ Proof.
   lhs nrapply concat_p1.
   rhs nrapply concat_1p.
   lhs nrapply ap.
-  1: nrapply Susp_rec_beta_merid.
-  lhs nrapply Susp_rec_beta_merid.
+  1: nrapply functor_susp_beta_merid.
+  lhs nrapply functor_susp_beta_merid.
   nrapply ap.
   rapply (involutive x).
 Defined.
@@ -132,13 +132,13 @@ Proof.
   lhs nrapply concat_p1.
   rhs nrapply concat_1p.
   rhs nrapply ap.
-  2: nrapply Susp_rec_beta_merid.
+  2: nrapply functor_susp_beta_merid.
   rhs nrapply Susp_rec_beta_merid.
   lhs nrapply ap.
   1: nrapply Susp_rec_beta_merid.
   lhs nrapply (ap_V _ (merid (-x))).
   apply ap.
-  nrapply Susp_rec_beta_merid.
+  nrapply functor_susp_beta_merid.
 Defined.
 
 (** ** Cayley-Dickson imaginaroids *)
