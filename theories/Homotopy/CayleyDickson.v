@@ -82,12 +82,10 @@ End CayleyDicksonSpheroid_Properties.
 
 (** ** Negation and conjugation on suspensions *)
 
-Global Instance conjugate_susp (A : Type) `(Negate A)
-  : Conjugate (Susp A)
+Global Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)
   := functor_susp (-).
 
-Global Instance negate_susp (A : Type) `(Negate A)
-  : Negate (Susp A)
+Global Instance negate_susp (A : Type) `(Negate A) : Negate (Susp A)
   := susp_neg _ o conjugate_susp A (-).
 
 (** [conjugate_susp A] and [negate_susp A] commute. *)
