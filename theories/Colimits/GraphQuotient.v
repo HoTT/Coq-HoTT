@@ -237,7 +237,7 @@ Section Descent.
     exact (gqddcs_e f r pa).
   Defined.
 
-  (** In this case, we state a full computation rule. *)
+  (** Here is the computation rule on paths. *)
   Definition gqdepdescent_rec_beta_gqglue {Pe : gqDescent R} {Q : Type}
     (f : gqDepDescentConstSection Pe Q)
     {a b : A} {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (r : R a b) (pr : gqd_e Pe r pa = pb)

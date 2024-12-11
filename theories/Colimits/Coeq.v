@@ -624,7 +624,7 @@ Section Descent.
     exact (cddcs_e s b pf).
   Defined.
 
-  (** In this case, we state a full computation rule. *)
+  (** Here is the computation rule on paths. *)
   Definition cdepdescent_rec_beta_cglue {Pe : cDescent f g} {Q : Type}
     (s : cDepDescentConstSection Pe Q)
     (b : B) {pf : cd_fam Pe (f b)} {pg : cd_fam Pe (g b)} (pb : cd_e Pe b pf = pg)

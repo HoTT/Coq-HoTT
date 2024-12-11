@@ -718,7 +718,7 @@ Section Descent.
     exact (poddcs_e s a pf).
   Defined.
 
-  (** In this case, we state a full computation rule. *)
+  (** Here is the computation rule on paths. *)
   Definition podepdescent_rec_beta_pglue {Pe : poDescent f g} {Q : Type}
     (s : poDepDescentConstSection Pe Q)
     (a : A) {pf : pod_faml Pe (f a)} {pg : pod_famr Pe (g a)} (pa : pod_e Pe a pf = pg)
