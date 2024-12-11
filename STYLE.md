@@ -111,7 +111,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - There are files in the root `theories/` directory, including
   `EquivGroupoids`, `ExcludedMiddle`, `Factorization`, `HFiber`,
-  `Extensions`, `NullHomotopy`, `PathAny`, `Projective`,
+  `Extensions`, `NullHomotopy`, `Projective`,
   `Idempotents`, `Constant`, `BoundedSearch`, etc.  These contain more
   advanced results which may depend on files in the whole library.  We
   try to limit the number of files in the top-level folder, and would
@@ -160,6 +160,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   and `Spaces/No/*` (the surreal numbers),
 
 - `Homotopy/*`: Files related to synthetic homotopy theory.
+  Also contains `Homotopy/IdentitySystems` and `Homotopy/EncodeDecode`,
+  which give results for computing path types.
 
 - `Spectra/*`: Files related to spectra in the sense of stable
   homotopy theory.

@@ -26,7 +26,6 @@ Require Export HoTT.Equiv.Relational.
 
 Require Export HoTT.Extensions.
 Require Export HoTT.Misc.
-Require Export HoTT.PathAny.
 
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
@@ -168,6 +167,7 @@ Require Export HoTT.Homotopy.Bouquet.
 Require Export HoTT.Homotopy.EncodeDecode.
 Require Export HoTT.Homotopy.Syllepsis.
 Require Export HoTT.Homotopy.Hopf.
+Require Export HoTT.Homotopy.IdentitySystems.
 
 Require Export HoTT.Spectra.Spectrum.
 

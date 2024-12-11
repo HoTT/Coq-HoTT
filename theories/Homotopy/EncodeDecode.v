@@ -3,7 +3,7 @@ Require Import Truncations.Core.
 
 (** ** Encode-decode method of characterizing identity types *)
 
-(** See PathAny.v for a related characterization of identity types. *)
+(** See Homotopy/IdentitySystems.v for a related characterization of identity types. *)
 
 Definition encode_decode
   (A : Type) (a0 : A) (code : A -> Type)
