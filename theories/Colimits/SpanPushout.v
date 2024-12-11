@@ -15,36 +15,36 @@ Section SpanPushout.
 
   Definition SPushout_rec (R : Type)
              (spushl' : X -> R) (spushr' : Y -> R)
-             (sglue' : forall x y (q : Q x y), spushl' x = spushr' y)
+             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
     : SPushout -> R.
   Proof.
     srapply (@Pushout_rec {xy:X * Y & Q (fst xy) (snd xy)} X Y
                           (fst o pr1) (snd o pr1) R spushl' spushr').
     intros [[x y] q]; cbn in *.
-    apply sglue'; assumption.
+    apply spglue'; assumption.
   Defined.
   
-  Definition spushout_rec_beta_sglue (R : Type)
+  Definition spushout_rec_beta_spglue (R : Type)
              (spushl' : X -> R) (spushr' : Y -> R)
-             (sglue' : forall x y (q : Q x y), spushl' x = spushr' y)
+             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
              (x:X) (y:Y) (q:Q x y)
-    : ap (SPushout_rec R spushl' spushr' sglue') (spglue q) = sglue' x y q
+    : ap (SPushout_rec R spushl' spushr' spglue') (spglue q) = spglue' x y q
     := Pushout_rec_beta_pglue _ _ _ _ ((x, y); q).
 
   Definition SPushout_ind (R : SPushout -> Type)
              (spushl' : forall x, R (spushl x))
              (spushr' : forall y, R (spushr y))
-             (sglue' : forall x y (q : Q x y), 
+             (spglue' : forall x y (q : Q x y), 
                  transport R (spglue q) (spushl' x) = (spushr' y))
     : forall p, R p.
   Proof.
     srapply (@Pushout_ind {xy:X * Y & Q (fst xy) (snd xy)} X Y
                           (fst o pr1) (snd o pr1) R spushl' spushr').
     intros [[x y] q]; cbn in *.
-    apply sglue'; assumption.
+    apply spglue'; assumption.
   Defined.
 
-  Definition spushout_ind_beta_sglue (R : SPushout -> Type)
+  Definition spushout_ind_beta_spglue (R : SPushout -> Type)
              (spushl' : forall x, R (spushl x))
              (spushr' : forall y, R (spushr y))
              (spglue' : forall x y (q : Q x y), 
@@ -80,10 +80,10 @@ Proof.
   snrapply transport_paths_FFlFr'.
   apply equiv_p1_1q.
   lhs nrapply ap.
-  1: nrapply spushout_rec_beta_sglue.
-  lhs nrapply spushout_rec_beta_sglue.
+  1: nrapply spushout_rec_beta_spglue.
+  lhs nrapply spushout_rec_beta_spglue.
   symmetry.
-  nrapply (spushout_rec_beta_sglue Q).
+  nrapply (spushout_rec_beta_spglue Q).
 Defined.
 
 Definition functor_spushout_idmap {X Y : Type} {Q : X -> Y -> Type}
@@ -94,7 +94,7 @@ Proof.
   intros x y q; cbn.
   snrapply transport_paths_Flr'.
   apply equiv_p1_1q.
-  nrapply spushout_rec_beta_sglue.
+  nrapply spushout_rec_beta_spglue.
 Defined.
 
 Definition functor_spushout_homotopic {X Y Z W : Type}
@@ -116,8 +116,8 @@ Proof.
   - intros x y q.
     snrapply transport_paths_FlFr'.
     lhs nrapply whiskerR.
-    1: apply spushout_rec_beta_sglue.
+    1: apply spushout_rec_beta_spglue.
     rhs nrapply whiskerL.
-    2: apply spushout_rec_beta_sglue.
+    2: apply spushout_rec_beta_spglue.
     apply H.
 Defined.
