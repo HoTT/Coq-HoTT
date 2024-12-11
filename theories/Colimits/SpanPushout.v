@@ -81,8 +81,8 @@ Proof.
   apply equiv_p1_1q.
   lhs nrapply ap.
   1: nrapply spushout_rec_beta_sglue.
+  lhs nrapply spushout_rec_beta_sglue.
   symmetry.
-  rhs nrapply spushout_rec_beta_sglue.
   nrapply (spushout_rec_beta_sglue Q).
 Defined.
 
