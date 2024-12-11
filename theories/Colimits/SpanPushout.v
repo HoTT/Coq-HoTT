@@ -91,10 +91,9 @@ Definition functor_spushout_idmap {X Y : Type} {Q : X -> Y -> Type}
 Proof.
   snrapply SPushout_ind.
   1,2: reflexivity.
-  intros x y q.
-  snrapply transport_paths_FlFr'.
+  intros x y q; cbn.
+  snrapply transport_paths_Flr'.
   apply equiv_p1_1q.
-  rhs nrapply ap_idmap.
   nrapply spushout_rec_beta_sglue.
 Defined.
 
