@@ -13,7 +13,7 @@ Section SpanPushout.
   Definition spglue {x:X} {y:Y} : Q x y -> spushl x = spushr y
     := fun q => pglue ((x,y) ; q).
 
-  Definition SPushout_rec (R : Type)
+  Definition spushout_rec (R : Type)
              (spushl' : X -> R) (spushr' : Y -> R)
              (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
     : SPushout -> R.
@@ -28,10 +28,10 @@ Section SpanPushout.
              (spushl' : X -> R) (spushr' : Y -> R)
              (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
              (x:X) (y:Y) (q:Q x y)
-    : ap (SPushout_rec R spushl' spushr' spglue') (spglue q) = spglue' x y q
+    : ap (spushout_rec R spushl' spushr' spglue') (spglue q) = spglue' x y q
     := Pushout_rec_beta_pglue _ _ _ _ ((x, y); q).
 
-  Definition SPushout_ind (R : SPushout -> Type)
+  Definition spushout_ind (R : SPushout -> Type)
              (spushl' : forall x, R (spushl x))
              (spushr' : forall y, R (spushr y))
              (spglue' : forall x y (q : Q x y), 
@@ -50,7 +50,7 @@ Section SpanPushout.
              (spglue' : forall x y (q : Q x y), 
                  transport R (spglue q) (spushl' x) = (spushr' y))
              (x:X) (y:Y) (q:Q x y)
-    : apD (SPushout_ind R spushl' spushr' spglue') (spglue q) = spglue'  x y q
+    : apD (spushout_ind R spushl' spushr' spglue') (spglue q) = spglue'  x y q
     := Pushout_ind_beta_pglue _ _ _ _ ((x,y);q).
 
 End SpanPushout.
@@ -60,7 +60,7 @@ Definition functor_spushout {X Y Z W : Type}
   (f : X -> Z) (g : Y -> W) (h : forall x y, Q x y -> Q' (f x) (g y))
   : SPushout Q -> SPushout Q'.
 Proof.
-  snrapply SPushout_rec.
+  snrapply spushout_rec.
   - exact (fun x => spushl Q' (f x)).
   - exact (fun y => spushr Q' (g y)).
   - intros x y q. apply spglue. exact (h x y q).
@@ -74,7 +74,7 @@ Definition functor_spushout_compose {X Y X' Y' X'' Y'' : Type}
   : functor_spushout f' g' h' o functor_spushout f g h
     == functor_spushout (f' o f) (g' o g) (fun x y => h' _ _ o h x y).
 Proof.
-  snrapply SPushout_ind.
+  snrapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn beta.
   snrapply transport_paths_FFlFr'.
@@ -89,7 +89,7 @@ Defined.
 Definition functor_spushout_idmap {X Y : Type} {Q : X -> Y -> Type}
   : functor_spushout idmap idmap (fun x y (q : Q x y) => q) == idmap.
 Proof.
-  snrapply SPushout_ind.
+  snrapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn.
   snrapply transport_paths_Flr'.
@@ -108,7 +108,7 @@ Definition functor_spushout_homotopic {X Y Z W : Type}
       = ap (spushl Q') (h x) @ spglue Q' (m x y q))
   : functor_spushout f i l == functor_spushout g j m.
 Proof.
-  snrapply SPushout_ind.
+  snrapply spushout_ind.
   - intros x; cbn.
     exact (ap (spushl Q') (h x)).
   - intros y; cbn.

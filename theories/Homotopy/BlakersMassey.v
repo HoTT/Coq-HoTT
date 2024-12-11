@@ -419,7 +419,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
     (** Here's the final definition of [code]. *)
 
     Definition code (p : P) (r : left x0 = p) : Type
-        := SPushout_ind Q (fun p => left x0 = p -> Type)
+        := spushout_ind Q (fun p => left x0 = p -> Type)
                         (@codeleft x0) (@coderight x0)
                         ap_code_glue p r.
 
