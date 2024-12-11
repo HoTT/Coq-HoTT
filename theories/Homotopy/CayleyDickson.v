@@ -1,3 +1,4 @@
+Require Import Types.Paths.
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Pointed.Core Pointed.pSusp.
@@ -8,8 +9,25 @@ Require Import Homotopy.Join.Core.
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 
-(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
-  --x=x   x**=x   1*=1    (-x)*=-x*   x(-y)=-(xy)   (xy)* = y* x*    x* x=1    *)
+(** The Cayley-Dickson Construction *)
+
+(** The Cayley-Dickson construction in homotopy type theory due to Buchholtz and Rijke https://arxiv.org/abs/1610.01134 is a method to construct an H-space strucure on the join of two suspensions of a type [A]. As a special case, this gives a way to construct an H-space structure on [S^3] leading to the quarternionic hopf fibration.
+
+The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can produce the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore the construction here attempts to axiomatize the properties of the units of those algebras instead.
+
+This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An open problem is to show that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)
+
+(** ** Cayley-Dickson spheroids *)
+
+(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the following seven laws:
+  1. [--x = x]
+  2. [x** = x]
+  3. [1* = 1]
+  4. [(-x)* = -x*]
+  5. [x(-y) = -(xy)]
+  6. [(xy)* = y* x*]
+  7. [x* x = 1]
+Note that the above laws are written in pseudocode since we cannot define multiplication by juxtaposition in Coq, and * is used to denote conjugation. *)
 Class CayleyDicksonSpheroid (X : pType) := {
   cds_hspace : IsHSpace X;
   cds_negate : Negate X;
@@ -38,50 +56,71 @@ Section CayleyDicksonSpheroid_Properties.
 
   Context {X : pType} `(CayleyDicksonSpheroid X).
 
+  Local Instance isequiv_cds_conjug : IsEquiv cds_conjug
+    := isequiv_adjointify cds_conjug cds_conjug cds_conjug_inv cds_conjug_inv.
+
   Global Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
   Proof.
     intros x y.
-    transitivity (conj (conj (-x * y))).
-    1: symmetry; apply involutive.
-    rewrite distropp.
-    rewrite swapop.
-    rewrite factorneg_r.
-    rewrite swapop.
-    rewrite <- distropp.
-    rewrite involutive.
-    reflexivity.
+    rapply (equiv_inj conj).
+    lhs rapply distropp.
+    rhs rapply swapop.
+    rhs rapply (ap _ (distropp _ _)).
+    rhs_V rapply factorneg_r.
+    nrapply ap.
+    apply swapop.
   Defined.
 
-  Global Instance cds_conjug_right_inv
-    : RightInverse (.*.) cds_conjug mon_unit.
+  Global Instance cds_conjug_right_inv : RightInverse (.*.) cds_conjug mon_unit.
   Proof.
     intro x.
-    set (p := cds_conjug x).
-    rewrite <- (involutive x).
-    apply left_inverse.
+    lhs_V rapply (ap (.* conj x) (involutive x)).
+    rapply left_inverse.
   Defined.
 
 End CayleyDicksonSpheroid_Properties.
 
-Global Instance conjugate_susp (A : Type) `(Negate A)
-  : Conjugate (Susp A).
+(** ** Negation and conjugation on suspensions *)
+
+Global Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)
+  := functor_susp (-).
+
+Global Instance negate_susp (A : Type) `(Negate A) : Negate (Susp A)
+  := susp_neg _ o conjugate_susp A (-).
+
+(** [conjugate_susp A] and [negate_susp A] commute. *)
+Global Instance swapop_conjugate_susp {A} `(Negate A)
+  : SwapOp (negate_susp A (-)) (conjugate_susp A (-)).
 Proof.
-  srapply Susp_rec.
-  + exact North.
-  + exact South.
-  + intro a.
-    exact (merid a).
+  intros x.
+  symmetry.
+  nrapply susp_neg_natural.
 Defined.
 
-Global Instance negate_susp (A : Type) `(Negate A)
-  : Negate (Susp A).
+(** [conjugate_susp A] is involutive, since any functor applied to an involution gives an involution. *)
+Global Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
+  : Involutive (conjugate_susp A (-)).
 Proof.
-  srapply Susp_rec.
-  + exact South.
-  + exact North.
-  + intro a.
-    exact (merid (-a))^.
+  intros x.
+  lhs_V nrapply functor_susp_compose.
+  rhs_V nrapply functor_susp_idmap.
+  nrapply functor2_susp.
+  rapply involutive.
 Defined.
+
+(** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
+Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
+  : Involutive (negate_susp A (-)).
+Proof.
+  intros x.
+  unfold negate_susp.
+  lhs nrapply ap.
+  1: nrapply swapop_conjugate_susp.
+  lhs rapply susp_neg_inv.
+  rapply involutive.
+Defined.
+
+(** ** Cayley-Dickson imaginaroids *)
 
 Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_negate : Negate A;
@@ -99,53 +138,9 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_left_inv
   cdi_susp_conjug_distr.
 
-Global Instance involutive_negate_susp {A} `(CayleyDicksonImaginaroid A)
-  : Involutive (negate_susp A cdi_negate).
-Proof.
-  srapply Susp_ind; try reflexivity.
-  intro x.
-  apply dp_paths_FFlr.
-  rewrite concat_p1.
-  rewrite Susp_rec_beta_merid.
-  rewrite ap_V.
-  rewrite Susp_rec_beta_merid.
-  rewrite inv_V.
-  rewrite (involutive x).
-  apply concat_Vp.
-Defined.
-
-Global Instance involutive_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : Involutive (conjugate_susp A cdi_negate).
-Proof.
-  srapply Susp_ind; try reflexivity.
-  intro x.
-  apply dp_paths_FFlr.
-  rewrite concat_p1.
-  rewrite 2 Susp_rec_beta_merid.
-  apply concat_Vp.
-Defined.
-
 Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate).
-Proof.
-  reflexivity.
-Defined.
-
-Global Instance swapop_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : SwapOp negate (conjugate_susp A cdi_negate).
-Proof.
-  srapply Susp_ind; try reflexivity.
-  intro x.
-  apply dp_paths_FlFr.
-  rewrite concat_p1.
-  rewrite ap_compose.
-  rewrite (ap_compose negate).
-  rewrite Susp_rec_beta_merid.
-  rewrite ap_V.
-  rewrite inv_V.
-  rewrite 3 Susp_rec_beta_merid.
-  apply concat_pV.
-Defined.
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)
+  := idpath.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
 Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
@@ -164,16 +159,12 @@ Proof.
 Defined.
 
 Global Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
-  : LeftIdentity hspace_op mon_unit.
-Proof.
-  exact _.
-Defined.
+  : LeftIdentity hspace_op mon_unit
+  := _.
 
 Global Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)
-  : RightIdentity hspace_op mon_unit.
-Proof.
-  exact _.
-Defined.
+  : RightIdentity hspace_op mon_unit
+  := _.
 
 Global Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
   : FactorNegLeft (negate_susp A cdi_negate) hspace_op.
@@ -181,12 +172,11 @@ Proof.
   srapply cds_factorneg_l.
 Defined.
 
-(** A Cayley-Dickson imaginaroid A whose multiplciation on the suspension is associative gives rise to a H-space structure on the join of the suspension of A with itself. *)
+(** A Cayley-Dickson imaginaroid [A] whose multiplciation on the suspension is associative gives rise to an H-space structure on the join of the suspension of [A] with itself. *)
 Section ImaginaroidHSpace.
 
-  (* Let A be a Cayley-Dickson imaginaroid with associative H-space multiplication on Susp A *)
-  Context {A} `(CayleyDicksonImaginaroid A)
-    `(!Associative hspace_op).
+  (** Let [A] be a Cayley-Dickson imaginaroid with associative H-space multiplication on [Susp A]. *)
+  Context {A} `(CayleyDicksonImaginaroid A) `(!Associative hspace_op).
 
   (** Declaring these as local instances so that they can be found *)
   Local Instance hspace_op' : SgOp (Susp A) := hspace_op.
@@ -242,78 +232,56 @@ Section ImaginaroidHSpace.
   Arguments f {_ _}.
   Arguments g {_ _}.
 
-  (** Here is the multiplication map in algebraic form:
-      (a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)
-      the following is the spherical form. *)
-  Global Instance cd_op
-    : SgOp (pjoin (psusp A) (psusp A)).
+  (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
+  Global Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
-    unfold psusp, pjoin; cbn.
-    intros x y; revert x.
-    srapply Join_rec; hnf.
-    { intro a.
-      revert y.
-      srapply Join_rec; hnf.
-      - intro c.
-        exact (joinl (a * c)).
-      - intro d.
-        exact (joinr (conj a * d)).
-      - intros x y.
-        apply jglue. }
-    { intro b.
-      revert y.
-      srapply Join_rec; hnf.
-      - intro c.
-        exact (joinr (c * b)).
-      - intro d.
-        exact (joinl ((-d) * conj b)).
-      - intros x y.
-        symmetry.
-        apply jglue. }
-    intros a b.
-    revert y.
-    srapply Join_ind.
-    1: intro; apply jglue.
-    1: intro; cbn; symmetry; apply jglue.
-    intros c d.
-    apply sq_dp^-1.
-    refine (sq_ccGG _^ _^ _).
-    1,2: apply Join_rec_beta_jglue.
-    change (PathSquare (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
-      (jglue (a * c) (conj a * d)) (jglue ((- d) * conj b) (c * b))^).
-    rewrite <- (lemma1 a c), <- (lemma2 a b c d),
-       <- (lemma3 b c), <- (lemma4 a b c d).
-    refine (sq_GGGG _ _ _ _ _).
-    2,4: apply ap.
-    1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
-    refine (sq_cGcG _ _ _).
-    1,2: exact (ap_V _ (jglue _ _ )).
-    refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
-      (jglue _ _) (jglue _ _)^ _).
-    generalize (conj c * conj a * d * conj b).
-    clear a b c d.
-    change (forall s : Susp A,
-      Diamond (-mon_unit) s (mon_unit) s).
-    srapply Susp_ind; hnf.
-    1: by apply diamond_v_sq.
-    1: by apply diamond_h_sq.
-    intro a.
-    apply diamond_twist.
+    snrapply Join_rec2.
+    - exact (fun a b => joinl (a * b)).
+    - exact (fun a b => joinr (conj a * b)).
+    - exact (fun a b => joinr (b * a)).
+    - exact (fun a b => joinl ((- b) * conj a)).
+    - intros; apply jglue.
+    - intros; symmetry; apply jglue.
+    - intros; apply jglue.
+    - intros; symmetry; apply jglue.
+    - intros a b c d; cbn beta.
+      symmetry.
+      apply sq_path.
+      rewrite <- (lemma1 a c).
+      rewrite <- (lemma2 a b c d).
+      rewrite <- (lemma3 b c).
+      rewrite <- (lemma4 a b c d).
+      refine (sq_GGGG _ _ _ _ _).
+      2,4: apply ap.
+      1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
+      refine (sq_cGcG _ _ _).
+      1,2: exact (ap_V _ (jglue _ _ )).
+      refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
+        (jglue _ _) (jglue _ _)^ _).
+      change (PathSquare
+        (jglue (- mon_unit) mon_unit)
+        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^
+        (jglue (- mon_unit) (conj c * conj a * d * conj b))
+        (jglue (conj c * conj a * d * conj b) mon_unit)^).
+      generalize (conj c * conj a * d * conj b).
+      clear a b c d.
+      change (forall s : Susp A,
+        Diamond (-mon_unit) s (mon_unit) s).
+      srapply Susp_ind; hnf.
+      1: by apply diamond_v_sq.
+      1: by apply diamond_h_sq.
+      intro a.
+      apply diamond_twist.
   Defined.
 
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    snrapply Join_ind_FFlr.
+    snrapply Join_ind_Flr.
     1,2: exact (fun _ => ap _ (hspace_left_identity _)).
     intros a b.
     lhs nrapply whiskerR.
-    { lhs refine (ap _ (ap_idmap _)).
-      exact (Join_rec_beta_jglue
-        (fun c => joinl (pt * c))
-        (fun d => joinr (conj pt * d))
-        (fun x y => jglue (pt * x) (conj pt * y))
-        a b). }
+    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
     symmetry.
     apply join_natsq.
   Defined.
@@ -321,14 +289,13 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    snrapply Join_ind_FFlr.
+    snrapply Join_ind_Flr.
     1: exact (fun _ => ap joinl (hspace_right_identity _)).
     1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
-    refine (whiskerR _ _ @ _).
-    { refine (ap _ (ap_idmap _) @ _).
-      simpl; rapply Join_rec_beta_jglue. }
-    symmetry.
+    lhs nrapply whiskerR.
+    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
+    simpl; symmetry.
     apply join_natsq.
   Defined.
 

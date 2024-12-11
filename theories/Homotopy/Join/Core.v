@@ -58,6 +58,19 @@ Section Join.
       apply Hglue.
   Defined.
 
+  Definition Join_ind_Flr {A B : Type} (f : Join A B -> Join A B)
+    (Hl : forall a, f (joinl a) = joinl a)
+    (Hr : forall b, f (joinr b) = joinr b)
+    (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ jglue a b)
+    : forall x, f x = x.
+  Proof.
+    snrapply (Join_ind_FlFr _ _ Hl Hr).
+    intros a b.
+    lhs nrapply Hglue.
+    apply ap; symmetry.
+    apply ap_idmap.
+  Defined.
+
   (** And a version for showing that a composite is homotopic to the identity. *)
   Definition Join_ind_FFlr {A B P : Type} (f : Join A B -> P) (g : P -> Join A B)
     (Hl : forall a, g (f (joinl a)) = joinl a)
