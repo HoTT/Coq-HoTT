@@ -76,16 +76,13 @@ Definition functor_spushout_compose {X Y X' Y' X'' Y'' : Type}
 Proof.
   snrapply SPushout_ind.
   1,2: reflexivity.
-  intros x y q.
-  snrapply transport_paths_FlFr'.
-  lhs nrapply concat_p1.
-  rhs nrapply concat_1p.
-  lhs nrapply (ap_compose _ (functor_spushout f' g' h') (spglue Q q)).
+  intros x y q; cbn beta.
+  snrapply transport_paths_FFlFr'.
+  apply equiv_p1_1q.
   lhs nrapply ap.
   1: nrapply spushout_rec_beta_sglue.
   symmetry.
   rhs nrapply spushout_rec_beta_sglue.
-  unfold functor_spushout.
   nrapply (spushout_rec_beta_sglue Q).
 Defined.
 
@@ -96,8 +93,7 @@ Proof.
   1,2: reflexivity.
   intros x y q.
   snrapply transport_paths_FlFr'.
-  lhs nrapply concat_p1.
-  rhs nrapply concat_1p.
+  apply equiv_p1_1q.
   rhs nrapply ap_idmap.
   nrapply spushout_rec_beta_sglue.
 Defined.
