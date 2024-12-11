@@ -73,7 +73,7 @@ Defined.
 
 (** ** Descent *)
 
-(** We study "equifibrant" type families over a graph [A], with edges indexed by [R].  By univalence, the descent property tells us that these type families correspond to type families over the graph quotient, and we obtain an induction principle for such type families.  Dependent descent data over some particular descent data are "equifibrant" type families over this descent data.  The "equifibrancy" is only taken over the graph [A] and [R], but there is an extra level of dependency coming from the descent data.  In this case, we obtain an induction and recursion principle, but only with a partial computation rule for the induction principle.
+(** We study "equifibrant" type families over a graph [A], with edges indexed by [R].  By univalence, the descent property tells us that these type families correspond to type families over the graph quotient, and we obtain an induction principle for such type families.  Dependent descent data over some particular descent data are "equifibrant" type families over this descent data.  The "equifibrancy" is only taken over the graph [A] and [R], but there is an extra level of dependency coming from the descent data.  In this case, we obtain an induction and recursion principle, but only with a computation rule for the recursion principle.
 
 The theory of descent is interesting to consider in itself.  However, we will use it as a means to structure the code, and to obtain induction and recursion principles that are valuable in proving the flattening lemma, and characterizing path spaces.  Thus we will gloss over the bigger picture, and not consider equivalences of descent data, nor homotopies of their sections.  We will also not elaborate on uniqueness of the induced families.
 
@@ -197,35 +197,20 @@ Section Descent.
   Global Arguments gqdds_sect {Pe Qe} f a pa : rename.
   Global Arguments gqdds_e {Pe Qe} f {a b} r pa : rename.
 
-  (** Transporting [gqdds_sect f a] over [Q] along [gqglue r] is [gqdds_sect f b]. *)
-  Definition transport_fam_gqglue_gqdds_sect {Pe : gqDescent R}
-    {Q : forall x : GraphQuotient R, (fam_gqdescent Pe) x -> Type}
-    (f : gqDepDescentSection (gqdepdescent_fam Q))
-    (a b : A) (r : R a b)
-    : transport (fun x : GraphQuotient R => forall px : fam_gqdescent Pe x, Q x px)
-        (gqglue r) (gqdds_sect f a) = gqdds_sect f b.
-  Proof.
-    apply dpath_forall.
-    intro pa.
-    apply (equiv_inj (transport (Q (gq b)) (transport_fam_gqdescent_gqglue Pe r pa))).
-    rhs nrapply (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).
-    exact (gqdds_e f r pa).
-  Defined.
-
-  (** A dependent descent section induces a genuine section on the total space of [fam_gqdescent Pe]. *)
+  (** A dependent descent section induces a genuine section over the total space of [fam_gqdescent Pe]. *)
   Definition gqdepdescent_ind {Pe : gqDescent R}
     {Q : forall x : GraphQuotient R, (fam_gqdescent Pe) x -> Type}
     (f : gqDepDescentSection (gqdepdescent_fam Q))
-    : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px
-    := GraphQuotient_ind _ (gqdds_sect f) (transport_fam_gqglue_gqdds_sect f).
-
-  (** This is a partial computation rule, which only handles paths in the base. *)
-  Definition gqdepdescent_ind_beta_gqglue {Pe : gqDescent R}
-    {Q : forall x, (fam_gqdescent Pe) x -> Type}
-    (f : gqDepDescentSection (gqdepdescent_fam Q))
-    {a b : A} (r : R a b)
-    : apD (gqdepdescent_ind f) (gqglue r) = transport_fam_gqglue_gqdds_sect f a b r
-    := GraphQuotient_ind_beta_gqglue _ (gqdds_sect f) (transport_fam_gqglue_gqdds_sect f) a b r.
+    : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px.
+    Proof.
+      nrapply (GraphQuotient_ind _ (gqdds_sect f) _).
+      intros a b r.
+      apply dpath_forall.
+      intro pa.
+      apply (equiv_inj (transport (Q (gq b)) (transport_fam_gqdescent_gqglue Pe r pa))).
+      rhs nrapply (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).
+      exact (gqdds_e f r pa).
+    Defined.
 
   (** The data for a section into a constant type family. *)
   Record gqDepDescentConstSection (Pe : gqDescent R) (Q : Type) := {
@@ -238,28 +223,18 @@ Section Descent.
   Global Arguments gqddcs_sect {Pe Q} f a pa : rename.
   Global Arguments gqddcs_e {Pe Q} f {a b} r pa : rename.
 
-  (** Transporting [gqddcs_sect f a] over [Q] along [gqglue r] is [gddcs_sect f b]. *)
-  Definition transport_fam_gqglue_gqddcs_sect {Pe : gqDescent R} {Q : Type}
-    (f : gqDepDescentConstSection Pe Q)
-    {a b : A} (r : R a b)
-    : transport (fun x : GraphQuotient R => fam_gqdescent Pe x -> Q) (gqglue r) (gqddcs_sect f a)
-      = gqddcs_sect f b.
-  Proof.
-    nrapply dpath_arrow.
-    intro pa.
-    lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).
-    exact (gqddcs_e f r pa).
-  Defined.
-
   (** The data for a section of a constant family induces a section over the total space of [fam_gqdescent Pe]. *)
   Definition gqdepdescent_rec {Pe : gqDescent R} {Q : Type}
     (f : gqDepDescentConstSection Pe Q)
     : forall (x : GraphQuotient R), fam_gqdescent Pe x -> Q.
   Proof.
-    snrapply GraphQuotient_ind; cbn.
-    - nrapply (gqddcs_sect f).
-    - nrapply transport_fam_gqglue_gqddcs_sect.
+    snrapply (GraphQuotient_ind _ (gqddcs_sect f)).
+    intros a b r.
+    nrapply dpath_arrow.
+    intro pa.
+    lhs nrapply transport_const.
+    rhs nrapply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).
+    exact (gqddcs_e f r pa).
   Defined.
 
   (** In this case, we state a full computation rule. *)
