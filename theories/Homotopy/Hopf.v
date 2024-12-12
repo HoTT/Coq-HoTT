@@ -32,9 +32,10 @@ Definition pequiv_hopf_total_join `{Univalence} (X : pType)
   : psigma (hopf_construction X) <~>* pjoin X X.
 Proof.
   snrapply Build_pEquiv'.
-  { refine (_ oE equiv_pushout_flatten (f := const_tt X) (g := const_tt X)
-      (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
-      (fun x => Build_Equiv _ _ (x *.) (H1 x))).
+  { refine (_ oE equiv_pod_flatten (f := const_tt X) (g := const_tt X)
+    (@Build_poDescent _ _ _ (const_tt X) (const_tt X)
+    (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
+    (fun x => Build_Equiv _ _ (x *.) (H1 x)))).
     snrapply equiv_pushout.
     (* The equivalence [{x : X & X} <~> X * X] that we need sends [(x; y) to (y, x*y)]. *)
     { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
@@ -44,7 +45,7 @@ Proof.
     1,2: rapply (equiv_contr_sigma (Unit_ind (pointed_type X))).
     1,2: reflexivity. }
   reflexivity.
-Defined. 
+Defined.
 
 (** ** Miscellaneous lemmas and corollaries about the Hopf construction *)
 

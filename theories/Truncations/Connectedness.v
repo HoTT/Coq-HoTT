@@ -162,7 +162,7 @@ Definition is0connected_merely_allpath `{Univalence}
   : IsConnected 0 A.
 Proof.
   strip_truncations.
-  apply (contr_inhabited_hprop).
+  apply contr_inhabited_hprop.
   - apply hprop_allpath; intros z w.
     strip_truncations.
     exact (equiv_path_Tr z w (p z w)).

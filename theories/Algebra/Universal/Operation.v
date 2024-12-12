@@ -157,10 +157,10 @@ Proof.
   intro i.
   induction i using fin_ind; intros ss N a.
   - unfold cons_dom'.
-    rewrite compute_fin_ind_fin_zero.
+    rewrite fin_ind_beta_zero.
     reflexivity.
   - unfold cons_dom'.
-    by rewrite compute_fin_ind_fsucc.
+    by rewrite fin_ind_beta_fsucc.
 Qed.
 
 Lemma expand_cons_dom `{Funext} {σ} (A : Carriers σ)
@@ -196,10 +196,10 @@ Proof.
   funext a'.
   simpl.
   unfold cons_dom, cons_dom'.
-  rewrite compute_fin_ind_fin_zero.
+  rewrite fin_ind_beta_zero.
   refine (ap (operation_uncurry A (fstail ss) t (a x)) _).
   funext i'.
-  by rewrite compute_fin_ind_fsucc.
+  by rewrite fin_ind_beta_fsucc.
 Qed.
 
 Global Instance isequiv_operation_curry `{Funext} {σ} (A : Carriers σ)

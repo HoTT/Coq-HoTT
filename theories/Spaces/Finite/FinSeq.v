@@ -46,17 +46,17 @@ Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A
 
 Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.
 
-Definition compute_fshead' {A} n (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A)
+Definition fshead'_beta_fscons' {A} n (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A)
   : fshead' n N (fscons' n a v) = a.
 Proof.
   destruct n; [elim (lt_irrefl _ N)|].
-  exact (apD10 (compute_fin_rec_fin_zero _ _ _ _) v).
+  exact (apD10 (fin_rec_beta_zero _ _ _ _) v).
 Defined.
 
-Definition compute_fshead {A} {n} (a : A) (v : FinSeq n A)
+Definition fshead_beta_fscons {A} {n} (a : A) (v : FinSeq n A)
   : fshead (fscons a v) = a.
 Proof.
-  apply compute_fshead'.
+  apply fshead'_beta_fscons'.
 Defined.
 
 (** If the sequence is non-empty, then remove the first element. *)
@@ -71,19 +71,19 @@ Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (nat_pred n) A
 
 Definition fstail {A} {n : nat} : FinSeq n.+1 A -> FinSeq n A := fstail' n.+1.
 
-Definition compute_fstail' {A} n (a : A) (v : FinSeq (nat_pred n) A)
+Definition fstail'_beta_fscons' {A} n (a : A) (v : FinSeq (nat_pred n) A)
   : fstail' n (fscons' n a v) == v.
 Proof.
   intro i.
   destruct n; [elim i|].
-  exact (apD10 (compute_fin_rec_fsucc _ _ _ _) v).
+  exact (apD10 (fin_rec_beta_fsucc _ _ _ _) v).
 Defined.
 
-Definition compute_fstail `{Funext} {A} {n} (a : A) (v : FinSeq n A)
+Definition fstail_beta_fscons `{Funext} {A} {n} (a : A) (v : FinSeq n A)
   : fstail (fscons a v) = v.
 Proof.
   funext i.
-  apply compute_fstail'.
+  apply fstail'_beta_fscons'.
 Defined.
 
 (** A non-empty finite sequence is equal to [fscons] of head and tail,
@@ -94,8 +94,8 @@ Lemma path_expand_fscons' {A : Type} (n : nat)
   : fscons' n (fshead' n N v) (fstail' n v) i = v i.
 Proof.
   induction i using fin_ind.
-  - apply compute_fshead.
-  - apply (compute_fstail' n.+1 (fshead v) (fstail v)).
+  - apply fshead_beta_fscons.
+  - apply (fstail'_beta_fscons' n.+1 (fshead v) (fstail v)).
 Defined.
 
 Lemma path_expand_fscons `{Funext} {A} {n} (v : FinSeq n.+1 A)
@@ -114,20 +114,20 @@ Definition path_fscons' {A} n {a1 a2 : A} {v1 v2 : FinSeq (nat_pred n) A}
   : fscons' n a1 v1 i = fscons' n a2 v2 i.
 Proof.
   induction i using fin_ind.
-  - exact (compute_fshead _ _ @ p @ (compute_fshead _ _)^).
-  - refine (_ @ (compute_fstail' n.+1 a2 v2 i)^).
-    exact (compute_fstail' n.+1 a1 v1 i @ q i).
+  - exact (fshead_beta_fscons _ _ @ p @ (fshead_beta_fscons _ _)^).
+  - refine (_ @ (fstail'_beta_fscons' n.+1 a2 v2 i)^).
+    exact (fstail'_beta_fscons' n.+1 a1 v1 i @ q i).
 Defined.
 
-Definition compute_path_fscons' {A} (n : nat)
+Definition path_fscons'_beta {A} (n : nat)
     (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)
     : path_fscons' n (idpath a) (fun j => idpath (v j)) i = idpath.
 Proof.
   induction i using fin_ind; unfold path_fscons'.
-  - rewrite compute_fin_ind_fin_zero.
+  - rewrite fin_ind_beta_zero.
     refine (ap (fun p => p @ _) (concat_p1 _) @ _).
     apply concat_pV.
-  - rewrite compute_fin_ind_fsucc.
+  - rewrite fin_ind_beta_fsucc.
     refine (ap (fun p => p @ _) (concat_p1 _) @ _).
     apply concat_pV.
 Qed.
@@ -141,11 +141,11 @@ Proof.
   - intro j. exact (apD10 q j).
 Defined.
 
-Lemma compute_path_fscons `{Funext} {A} {n} (a : A) (v : FinSeq n A)
+Lemma path_fscons_beta `{Funext} {A} {n} (a : A) (v : FinSeq n A)
   : path_fscons (idpath a) (idpath v) = idpath.
 Proof.
   refine (ap (path_forall _ _) _ @ eta_path_forall _ _ _).
-  funext i. exact (compute_path_fscons' n.+1 a v i).
+  funext i. exact (path_fscons'_beta n.+1 a v i).
 Defined.
 
 (** The lemmas [path_expand_fscons_fscons'] and [path_expand_fscons_fscons]
@@ -155,14 +155,14 @@ Defined.
 Lemma path_expand_fscons_fscons' {A : Type} (n : nat)
   (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)
   : path_expand_fscons' n i N (fscons' n a v) =
-    path_fscons' n (compute_fshead' n N a v) (compute_fstail' n a v) i.
+    path_fscons' n (fshead'_beta_fscons' n N a v) (fstail'_beta_fscons' n a v) i.
 Proof.
   induction i using fin_ind; unfold path_fscons', path_expand_fscons'.
-  - do 2 rewrite compute_fin_ind_fin_zero.
+  - do 2 rewrite fin_ind_beta_zero.
     refine (_ @ concat_p_pp _ _ _).
     refine (_ @ (ap (fun p => _ @ p) (concat_pV _))^).
     exact (concat_p1 _)^.
-  - do 2 rewrite compute_fin_ind_fsucc.
+  - do 2 rewrite fin_ind_beta_fsucc.
     refine (_ @ concat_p_pp _ _ _).
     refine (_ @ (ap (fun p => _ @ p) (concat_pV _))^).
     exact (concat_p1 _)^.
@@ -171,11 +171,11 @@ Qed.
 Lemma path_expand_fscons_fscons `{Funext}
   {A : Type} {n : nat} (a : A) (v : FinSeq n A)
   : path_expand_fscons (fscons a v) =
-    path_fscons (compute_fshead a v) (compute_fstail a v).
+    path_fscons (fshead_beta_fscons a v) (fstail_beta_fscons a v).
 Proof.
   refine (ap (path_forall _ _) _).
   funext i.
-  pose (p := eisretr apD10 (compute_fstail' n.+1 a v)).
+  pose (p := eisretr apD10 (fstail'_beta_fscons' n.+1 a v)).
   refine (_ @ (ap (fun f => _ f i) p)^).
   exact (path_expand_fscons_fscons' n.+1 _ a v i).
 Defined.
@@ -194,7 +194,7 @@ Proof.
     apply s. apply IHn.
 Defined.
 
-Lemma compute_finseq_ind_fsnil `{Funext} {A : Type}
+Lemma finseq_ind_beta_fsnil `{Funext} {A : Type}
   (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)
   (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
   : finseq_ind P z s fsnil = z.
@@ -202,7 +202,7 @@ Proof.
   exact (ap (fun x => _ x z) (hset_path2 1 (path_fsnil fsnil)))^.
 Defined.
 
-Lemma compute_finseq_ind_fscons `{Funext} {A : Type}
+Lemma finseq_ind_beta_fscons `{Funext} {A : Type}
   (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)
   (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))
   {n : nat} (a : A) (v : FinSeq n A)
@@ -210,9 +210,9 @@ Lemma compute_finseq_ind_fscons `{Funext} {A : Type}
 Proof.
   simpl.
   induction (path_expand_fscons_fscons a v)^.
-  set (p1 := compute_fshead a v).
-  set (p2 := compute_fstail a v).
+  set (p1 := fshead_beta_fscons a v).
+  set (p2 := fstail_beta_fscons a v).
   induction p1, p2.
-  exact (ap (fun p => transport _ p _) (compute_path_fscons _ _)).
+  exact (ap (fun p => transport _ p _) (path_fscons_beta _ _)).
 Defined.
 

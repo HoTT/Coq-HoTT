@@ -97,7 +97,7 @@ Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f 
 : set f = set g.
 Proof.
   pose (R := fun a b => Build_HProp (f a = g b)).
-  pose (h := SPushout_rec R V f g (fun _ _ r => r)).
+  pose (h := spushout_rec R V f g (fun _ _ r => r)).
   exact (setext R eq_img h).
 Defined.
 
