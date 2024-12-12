@@ -471,14 +471,11 @@ Section Descent.
   Context `{Univalence}.
 
   (** Descent data over [f g : B -> A] is an "equifibrant" or "cartesian" type family [cd_fam : A -> Type].  This means that if [b : B], then the fibers [cd_fam (f b)] and [cd_fam (g b)] are equivalent, witnessed by [cd_e]. *)
-  Record cDescent {A B : Type} (f g : B -> A) := {
-    cd_fam : A -> Type;
+  Record cDescent {A B : Type} {f g : B -> A} := {
+    cd_fam (a : A) : Type;
     cd_e (b : B) : cd_fam (f b) <~> cd_fam (g b)
   }.
-
-  Global Arguments Build_cDescent {A B f g} cd_fam cd_e.
-  Global Arguments cd_fam {A B f g} Pe a : rename.
-  Global Arguments cd_e {A B f g} Pe b : rename.
+  Global Arguments cDescent {A B} f g.
 
   (** Let [A] and [B] be types, with a parallel pair [f g : B -> A]. *)
   Context {A B : Type} {f g : B -> A}.
@@ -511,38 +508,37 @@ Section Descent.
   Defined.
 
   (** A section on the descent data is a fiberwise section that respects the equivalences. *)
-  Record cDescentSection (Pe : cDescent f g) := {
+  Record cDescentSection {Pe : cDescent f g} := {
     cds_sect (a : A) : cd_fam Pe a;
-    cds_e (b : B)
-      : cd_e Pe b (cds_sect (f b)) = cds_sect (g b)
+    cds_e (b : B) : cd_e Pe b (cds_sect (f b)) = cds_sect (g b)
   }.
+
+  Global Arguments cDescentSection Pe : clear implicits.
 
   (** A descent section induces a genuine section of [fam_cdescent Pe]. *)
   Definition cdescent_ind {Pe : cDescent f g}
     (s : cDescentSection Pe)
     : forall (x : Coeq f g), fam_cdescent Pe x.
   Proof.
-    snrapply (Coeq_ind _ (cds_sect _ s)).
+    snrapply (Coeq_ind _ (cds_sect s)).
     intro b.
-    refine (transport_fam_cdescent_cglue Pe b _ @ cds_e _ s b).
+    exact (transport_fam_cdescent_cglue Pe b _ @ cds_e s b).
   Defined.
 
   (** We record its computation rule *)
   Definition cdescent_ind_beta_cglue {Pe : cDescent f g}
     (s : cDescentSection Pe) (b : B)
-    : apD (cdescent_ind s) (cglue b) = transport_fam_cdescent_cglue Pe b _ @ cds_e _ s b
-    := Coeq_ind_beta_cglue _ (cds_sect _ s) _ _.
+    : apD (cdescent_ind s) (cglue b) = transport_fam_cdescent_cglue Pe b _ @ cds_e s b
+    := Coeq_ind_beta_cglue _ (cds_sect s) _ _.
 
   (** Dependent descent data over descent data [Pe : cDescent f g] consists of a type family [cdd_fam : forall a : A, cd_fam Pe a -> Type] together with coherences [cdd_e b pf]. *)
-  Record cDepDescent (Pe : cDescent f g) := {
-    cdd_fam (a : A) : cd_fam Pe a -> Type;
+  Record cDepDescent {Pe : cDescent f g} := {
+    cdd_fam (a : A) (pa : cd_fam Pe a) : Type;
     cdd_e (b : B) (pf : cd_fam Pe (f b))
       : cdd_fam (f b) pf <~> cdd_fam (g b) (cd_e Pe b pf)
   }.
 
-  Global Arguments Build_cDepDescent {Pe} cdd_fam cdd_e.
-  Global Arguments cdd_fam {Pe} Qe a pa : rename.
-  Global Arguments cdd_e {Pe} Qe b pf : rename.
+  Global Arguments cDepDescent Pe : clear implicits.
 
   (** A dependent type family over [fam_cdescent Pe] induces dependent descent data over [Pe]. *)
   Definition cdepdescent_fam {Pe : cDescent f g}
@@ -574,15 +570,13 @@ Section Descent.
   Defined.
 
   (** A section of dependent descent data [Qe : cDepDescent Pe] is a fiberwise section [cdds_sect], together with coherences [cdds_e]. *)
-  Record cDepDescentSection {Pe : cDescent f g} (Qe : cDepDescent Pe) := {
+  Record cDepDescentSection {Pe : cDescent f g} {Qe : cDepDescent Pe} := {
     cdds_sect (a : A) (pa : cd_fam Pe a) : cdd_fam Qe a pa;
     cdds_e (b : B) (pf : cd_fam Pe (f b))
       : cdd_e Qe b pf (cdds_sect (f b) pf) = cdds_sect (g b) (cd_e Pe b pf)
   }.
 
-  Global Arguments Build_cDepDescentSection {Pe Qe} cdds_sect cdds_e.
-  Global Arguments cdds_sect {Pe Qe} s a pa : rename.
-  Global Arguments cdds_e {Pe Qe} s b pf : rename.
+  Global Arguments cDepDescentSection {Pe} Qe.
 
   (** A dependent descent section induces a genuine section over the total space of [fam_cdescent Pe]. *)
   Definition cdepdescent_ind {Pe : cDescent f g}
@@ -600,15 +594,13 @@ Section Descent.
     Defined.
 
   (** The data for a section into a constant type family. *)
-  Record cDepDescentConstSection (Pe : cDescent f g) (Q : Type) := {
-    cddcs_sect (a : A) : cd_fam Pe a -> Q;
+  Record cDepDescentConstSection {Pe : cDescent f g} {Q : Type} := {
+    cddcs_sect (a : A) (pa : cd_fam Pe a) : Q;
     cddcs_e (b : B) (pf : cd_fam Pe (f b))
       : cddcs_sect (f b) pf = cddcs_sect (g b) (cd_e Pe b pf)
   }.
 
-  Global Arguments Build_cDepDescentConstSection {Pe Q} cddcs_sect cddcs_e.
-  Global Arguments cddcs_sect {Pe Q} s a pa : rename.
-  Global Arguments cddcs_e {Pe Q} s b pf : rename.
+  Global Arguments cDepDescentConstSection Pe Q : clear implicits.
 
   (** The data for a section of a constant family induces a section over the total space of [fam_cdescent Pe]. *)
   Definition cdepdescent_rec {Pe : cDescent f g} {Q : Type}

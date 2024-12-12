@@ -552,16 +552,13 @@ Section Descent.
   Context `{Univalence}.
 
   (** Descent data over [f : A -> B] and [g : A -> C] are "equifibrant" or "cartesian" type families [pod_faml : B -> Type] and [pod_famr : C -> Type].  This means that if [a : A], then the fibers [pod_faml (f a)] and [pod_famr (g a)] are equivalent, witnessed by [pod_e]. *)
-  Record poDescent {A B C : Type} (f : A -> B) (g : A -> C) := {
-    pod_faml : B -> Type;
-    pod_famr : C -> Type;
+  Record poDescent {A B C : Type} {f : A -> B} {g : A -> C} := {
+    pod_faml (b : B) : Type;
+    pod_famr (c : C) : Type;
     pod_e (a : A) : pod_faml (f a) <~> pod_famr (g a)
   }.
 
-  Global Arguments Build_poDescent {A B C f g} pod_faml pod_famr pod_e.
-  Global Arguments pod_faml {A B C f g} Pe b : rename.
-  Global Arguments pod_famr {A B C f g} Pe c : rename.
-  Global Arguments pod_e {A B C f g} Pe a : rename.
+  Global Arguments poDescent {A B C} f g.
 
   (** Let [A], [B], and [C] be types, with a morphisms [f : A -> B] and [g : A -> C].  *)
   Context {A B C : Type} {f : A -> B} {g : A -> C}.
@@ -595,45 +592,44 @@ Section Descent.
   Defined.
 
   (** A section on the descent data are fiberwise sections that respects the equivalences. *)
-  Record poDescentSection (Pe : poDescent f g) := {
+  Record poDescentSection {Pe : poDescent f g} := {
     pods_sectl (b : B) : pod_faml Pe b;
     pods_sectr (c : C) : pod_famr Pe c;
     pods_e (a : A)
       : pod_e Pe a (pods_sectl (f a)) = pods_sectr (g a)
   }.
 
+  Global Arguments poDescentSection Pe : clear implicits.
+
   (** A descent section induces a genuine section of [fam_cdescent Pe]. *)
   Definition podescent_ind {Pe : poDescent f g}
     (s : poDescentSection Pe)
     : forall (x : Pushout f g), fam_podescent Pe x.
   Proof.
-    snrapply (Pushout_ind _ (pods_sectl _ s) (pods_sectr _ s)).
+    snrapply (Pushout_ind _ (pods_sectl s) (pods_sectr s)).
     intro a.
-    refine (transport_fam_podescent_pglue Pe a _ @ pods_e _ s a).
+    exact (transport_fam_podescent_pglue Pe a _ @ pods_e s a).
   Defined.
 
   (** We record its computation rule *)
   Definition podescent_ind_beta_pglue {Pe : poDescent f g}
     (s : poDescentSection Pe) (a : A)
-    : apD (podescent_ind s) (pglue a) = transport_fam_podescent_pglue Pe a _ @ pods_e _ s a
-    := Pushout_ind_beta_pglue _ (pods_sectl _ s) (pods_sectr _ s) _ _.
+    : apD (podescent_ind s) (pglue a) = transport_fam_podescent_pglue Pe a _ @ pods_e s a
+    := Pushout_ind_beta_pglue _ (pods_sectl s) (pods_sectr s) _ _.
 
-  (** Dependent descent data over descent data [Pe : poDescent f g] consists of a type families [podd_faml : forall b : B, pod_faml Pe b -> Type] and [podd_famr : forall c : C, pod_famr Pe c -> Type] together with coherences [podd_e a pf]. *)
-  Record poDepDescent (Pe : poDescent f g) := {
-    podd_faml (b : B) : pod_faml Pe b -> Type;
-    podd_famr (c : C) : pod_famr Pe c -> Type;
+  (** Dependent descent data over descent data [Pe : poDescent f g] consists of a type families [podd_faml : forall (b : B), pod_faml Pe b -> Type] and [podd_famr : forall (c : C), pod_famr Pe c -> Type] together with coherences [podd_e a pf]. *)
+  Record poDepDescent {Pe : poDescent f g} := {
+    podd_faml (b : B) (pb : pod_faml Pe b) : Type;
+    podd_famr (c : C) (pc : pod_famr Pe c) : Type;
     podd_e (a : A) (pf : pod_faml Pe (f a))
       : podd_faml (f a) pf <~> podd_famr (g a) (pod_e Pe a pf)
   }.
 
-  Global Arguments Build_poDepDescent {Pe} podd_faml podd_famr podd_e.
-  Global Arguments podd_faml {Pe} Qe b pb : rename.
-  Global Arguments podd_famr {Pe} Qe c pc : rename.
-  Global Arguments podd_e {Pe} Qe a pf : rename.
+  Global Arguments poDepDescent Pe : clear implicits.
 
   (** A dependent type family over [fam_podescent Pe] induces dependent descent data over [Pe]. *)
   Definition podepdescent_fam {Pe : poDescent f g}
-    (Q : forall x : Pushout f g, (fam_podescent Pe) x -> Type)
+    (Q : forall (x : Pushout f g), (fam_podescent Pe) x -> Type)
     : poDepDescent Pe.
   Proof.
     snrapply Build_poDepDescent.
@@ -664,17 +660,14 @@ Section Descent.
   Defined.
 
   (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [podds_sectl] and [podds_sectr], together with coherences [pods_e]. *)
-  Record poDepDescentSection {Pe : poDescent f g} (Qe : poDepDescent Pe) := {
+  Record poDepDescentSection {Pe : poDescent f g} {Qe : poDepDescent Pe} := {
     podds_sectl (b : B) (pb : pod_faml Pe b) : podd_faml Qe b pb;
     podds_sectr (c : C) (pc : pod_famr Pe c) : podd_famr Qe c pc;
     podds_e (a : A) (pf : pod_faml Pe (f a))
       : podd_e Qe a pf (podds_sectl (f a) pf) = podds_sectr (g a) (pod_e Pe a pf)
   }.
 
-  Global Arguments Build_poDepDescentSection {Pe Qe} podds_sectl podds_sectr podds_e.
-  Global Arguments podds_sectl {Pe Qe} s b pb : rename.
-  Global Arguments podds_sectr {Pe Qe} s c pc : rename.
-  Global Arguments podds_e {Pe Qe} s a pf : rename.
+  Global Arguments poDepDescentSection {Pe} Qe.
 
   (** A dependent descent section induces a genuine section over the total space of [induced_fam_pod Pe]. *)
   Definition podepdescent_ind {Pe : poDescent f g}
@@ -692,17 +685,14 @@ Section Descent.
     Defined.
 
   (** The data for a section into a constant type family. *)
-  Record poDepDescentConstSection (Pe : poDescent f g) (Q : Type) := {
-    poddcs_sectl (b : B) : pod_faml Pe b -> Q;
-    poddcs_sectr (c : C) : pod_famr Pe c -> Q;
+  Record poDepDescentConstSection {Pe : poDescent f g} {Q : Type} := {
+    poddcs_sectl (b : B) (pb : pod_faml Pe b) : Q;
+    poddcs_sectr (c : C) (pc : pod_famr Pe c) : Q;
     poddcs_e (a : A) (pf : pod_faml Pe (f a))
       : poddcs_sectl (f a) pf = poddcs_sectr (g a) (pod_e Pe a pf)
   }.
 
-  Global Arguments Build_poDepDescentConstSection {Pe Q} poddcs_sectl poddcs_sectr poddcs_e.
-  Global Arguments poddcs_sectl {Pe Q} s b pb : rename.
-  Global Arguments poddcs_sectr {Pe Q} s c pc : rename.
-  Global Arguments poddcs_e {Pe Q} s a pf : rename.
+  Global Arguments poDepDescentConstSection Pe Q : clear implicits.
 
   (** The data for a section of a constant family induces a section over the total space of [fam_podescent Pe]. *)
   Definition podepdescent_rec {Pe : poDescent f g} {Q : Type}

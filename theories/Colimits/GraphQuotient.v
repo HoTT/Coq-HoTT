@@ -84,14 +84,12 @@ Section Descent.
   Context `{Univalence}.
 
   (** Descent data over a graph [A] and [R] is an "equifibrant" or "cartesian" type family [gqd_fam : A -> Type].  If [a b : A] are related by [r : R a b], then the fibers [gqd_fam a] and [gqd_fam b] are equivalent, witnessed by [gqd_e]. *)
-  Record gqDescent {A : Type} (R : A -> A -> Type) := {
-    gqd_fam : A -> Type;
-    gqd_e {a b : A} : R a b -> gqd_fam a <~> gqd_fam b
+  Record gqDescent {A : Type} {R : A -> A -> Type} := {
+    gqd_fam (a : A) : Type;
+    gqd_e {a b : A} (r : R a b) : gqd_fam a <~> gqd_fam b
   }.
 
-  Global Arguments Build_gqDescent {A R} gqd_fam gqd_e.
-  Global Arguments gqd_fam {A R} Pe a : rename.
-  Global Arguments gqd_e {A R} Pe {a b} r : rename.
+  Global Arguments gqDescent {A} R.
 
   (** Let [A] and [R] be a graph. *)
   Context {A : Type} {R : A -> A -> Type}.
@@ -124,42 +122,42 @@ Section Descent.
   Defined.
 
   (** A section on the descent data is a fiberwise section that respects the equivalences. *)
-  Record gqDescentSection (Pe : gqDescent R) := {
+  Record gqDescentSection {Pe : gqDescent R} := {
     gqds_sect (a : A) : gqd_fam Pe a;
     gqds_e {a b : A} (r : R a b)
       : gqd_e Pe r (gqds_sect a) = gqds_sect b
   }.
+
+  Global Arguments gqDescentSection Pe : clear implicits.
 
   (** A descent section induces a genuine section of [fam_gqdescent Pe]. *)
   Definition gqdescent_ind {Pe : gqDescent R}
     (f : gqDescentSection Pe)
     : forall (x : GraphQuotient R), fam_gqdescent Pe x.
   Proof.
-    snrapply (GraphQuotient_ind _ (gqds_sect _ f)).
+    snrapply (GraphQuotient_ind _ (gqds_sect f)).
     intros a b r.
-    refine (transport_fam_gqdescent_gqglue Pe r _ @ gqds_e _ f r).
+    exact (transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r).
   Defined.
 
   (** We record its computation rule *)
   Definition gqdescent_ind_beta_gqglue {Pe : gqDescent R}
     (f : gqDescentSection Pe) {a b : A} (r : R a b)
-    : apD (gqdescent_ind f) (gqglue r) = transport_fam_gqdescent_gqglue Pe r _ @ gqds_e _ f r
-    := GraphQuotient_ind_beta_gqglue _ (gqds_sect _ f) _ _ _ _.
+    : apD (gqdescent_ind f) (gqglue r) = transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r
+    := GraphQuotient_ind_beta_gqglue _ (gqds_sect f) _ _ _ _.
 
-  (** Dependent descent data over descent data [Pe : gqDescent R] consists of a type family [gqdd_fam : forall a : A, gqd_fam Pe a -> Type] together with coherences [gqdd_e r pa]. *)
-  Record gqDepDescent (Pe : gqDescent R) := {
-    gqdd_fam (a : A) : gqd_fam Pe a -> Type;
+  (** Dependent descent data over descent data [Pe : gqDescent R] consists of a type family [gqdd_fam : forall (a : A), gqd_fam Pe a -> Type] together with coherences [gqdd_e r pa]. *)
+  Record gqDepDescent {Pe : gqDescent R} := {
+    gqdd_fam (a : A) (pa : gqd_fam Pe a) : Type;
     gqdd_e {a b : A} (r :  R a b) (pa : gqd_fam Pe a)
       : gqdd_fam a pa <~> gqdd_fam b (gqd_e Pe r pa)
   }.
 
-  Global Arguments Build_gqDepDescent {Pe} gqdd_fam gqdd_e.
-  Global Arguments gqdd_fam {Pe} Qe a pa : rename.
-  Global Arguments gqdd_e {Pe} Qe {a b} r pa : rename.
+  Global Arguments gqDepDescent Pe : clear implicits.
 
   (** A dependent type family over [fam_gqdescent Pe] induces dependent descent data over [Pe]. *)
   Definition gqdepdescent_fam {Pe : gqDescent R}
-    (Q : forall x : GraphQuotient R, (fam_gqdescent Pe) x -> Type)
+    (Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -> Type)
     : gqDepDescent Pe.
   Proof.
     snrapply Build_gqDepDescent.
@@ -187,19 +185,17 @@ Section Descent.
   Defined.
 
   (** A section of dependent descent data [Qe : gqDepDescent Pe] is a fiberwise section [gqdds_sect], together with coherences [gqdd_e]. *)
-  Record gqDepDescentSection {Pe : gqDescent R} (Qe : gqDepDescent Pe) := {
+  Record gqDepDescentSection {Pe : gqDescent R} {Qe : gqDepDescent Pe} := {
     gqdds_sect (a : A) (pa : gqd_fam Pe a) : gqdd_fam Qe a pa;
     gqdds_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
       : gqdd_e Qe r pa (gqdds_sect a pa) = gqdds_sect b (gqd_e Pe r pa)
   }.
 
-  Global Arguments Build_gqDepDescentSection {Pe Qe} gqdds_sect gqdds_e.
-  Global Arguments gqdds_sect {Pe Qe} f a pa : rename.
-  Global Arguments gqdds_e {Pe Qe} f {a b} r pa : rename.
+  Global Arguments gqDepDescentSection {Pe} Qe.
 
   (** A dependent descent section induces a genuine section over the total space of [fam_gqdescent Pe]. *)
   Definition gqdepdescent_ind {Pe : gqDescent R}
-    {Q : forall x : GraphQuotient R, (fam_gqdescent Pe) x -> Type}
+    {Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -> Type}
     (f : gqDepDescentSection (gqdepdescent_fam Q))
     : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px.
     Proof.
@@ -213,15 +209,13 @@ Section Descent.
     Defined.
 
   (** The data for a section into a constant type family. *)
-  Record gqDepDescentConstSection (Pe : gqDescent R) (Q : Type) := {
-    gqddcs_sect (a : A) : gqd_fam Pe a -> Q;
+  Record gqDepDescentConstSection {Pe : gqDescent R} {Q : Type} := {
+    gqddcs_sect (a : A) (pa : gqd_fam Pe a) : Q;
     gqddcs_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
       : gqddcs_sect a pa = gqddcs_sect b (gqd_e Pe r pa)
   }.
 
-  Global Arguments Build_gqDepDescentConstSection {Pe Q} gqddcs_sect gqddcs_e.
-  Global Arguments gqddcs_sect {Pe Q} f a pa : rename.
-  Global Arguments gqddcs_e {Pe Q} f {a b} r pa : rename.
+  Global Arguments gqDepDescentConstSection Pe Q : clear implicits.
 
   (** The data for a section of a constant family induces a section over the total space of [fam_gqdescent Pe]. *)
   Definition gqdepdescent_rec {Pe : gqDescent R} {Q : Type}
