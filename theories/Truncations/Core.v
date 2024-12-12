@@ -170,6 +170,19 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
+(** ** A few special things about the (-2)-truncation *)
+
+(** The type of contractible types is contractible. *)
+Definition contr_tr_minus_2@{u su | u < su} `{Univalence}
+  : Contr (Type_@{u su} (Tr (-2))).
+Proof.
+  apply (Build_Contr _ (exist@{su su} _ (Unit : Type@{u}) (inO_tr_istrunc _))).
+  intros [C ContrC].
+  apply equiv_path_sigma_hprop.
+  apply path_universe_uncurried.
+  symmetry; apply equiv_contr_unit.
+Defined.
+
 (** ** A few special things about the (-1)-truncation *)
 
 Local Open Scope trunc_scope.
@@ -253,6 +266,14 @@ Proof.
 Defined.
 
 (** ** Embeddings *)
+
+(** For any point in the image of an embedding, the fibers are contractable. *)
+Global Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
+  `{IsEmbedding f}
+  : Contr (hfiber f (f a)).
+Proof.
+  srapply contr_inhabited_hprop. exact (a; idpath (f a)).
+Defined.
 
 (** Since embeddings are the (-1)-truncated maps, a map that is both a surjection and an embedding is an equivalence. *)
 Definition isequiv_surj_emb {A B} (f : A -> B)
