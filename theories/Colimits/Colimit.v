@@ -3,6 +3,7 @@ Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
 Require Import Diagrams.ConstantDiagram.
+Require Import Diagrams.CommutativeSquares.
 Require Import Colimits.Coeq.
 
 Local Open Scope path_scope.
@@ -67,6 +68,28 @@ Definition colim {G : Graph} {D : Diagram G} (i : G) (x : D i) : Colimit D :=
 Definition colimp {G : Graph} {D : Diagram G} (i j : G) (f : G i j) (x : D i)
   : colim j (D _f f x) = colim i x
   := (cglue ((i; x); j; f))^.
+
+(** The two ways of getting a path [colim ((D _f f) x) = colim ((D _f f) y)] from an path [x = y] are equivalent. *)
+Definition ap_colim {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y) 
+  : (colimp i j f x) @ (ap (colim i) p) @ (colimp i j f y)^ 
+    = (ap (colim j) (ap (D _f f) p)).
+Proof.
+  rhs apply (ap_compose (D _f f) (colim j) p)^.
+  by rhs apply (ap_homotopic (colimp i j f) p).
+Defined.
+
+(** The two ways of getting a path [colim i x = colim i y] from a path [x = y] are equivalent. *)
+Definition ap_colim' {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
+  : (colimp i j f x)^ @ (ap (colim j) (ap (D _f f) p)) @ (colimp i j f y) = (ap (colim i) p).
+Proof.
+  snrapply (cancelL (colimp i j f x) _ _).
+  lhs nrapply concat_p_pp.
+  lhs nrapply ((concat_p_pp _ _ _) @@ 1).
+  lhs nrapply ((concat_pV _) @@ 1 @@ 1).
+  lhs nrapply ((concat_1p _) @@ 1).
+  lhs nrapply ((ap_compose (D _f f) (colim j) p)^ @@ 1).
+  nrapply (concat_Ap (fun z => colimp i j f z) p).
+Defined.
 
 Definition Colimit_ind {G : Graph} {D : Diagram G} (P : Colimit D -> Type)
 (q : forall i x, P (colim i x))
@@ -203,14 +226,17 @@ Proof.
   refine (cocone_precompose m HQ).
 Defined.
 
+Definition functor_Colimit_half_beta_colimp {G : Graph} {D1 D2 : Diagram G} (m : DiagramMap D1 D2) {Q} (HQ : Cocone D2 Q) (i j : G) (g : G i j) (x : D1 i)
+  : (ap (functor_Colimit_half m HQ) (colimp i j g x)) = legs_comm (cocone_precompose m HQ) i j g x
+  := Colimit_rec_beta_colimp _ _ _ _ _ _.
+
 (** Homotopic diagram maps induce homotopic maps. *)
 Definition functor_Colimit_half_homotopy {G : Graph} {D1 D2 : Diagram G}
-  {m1 m2 : DiagramMap D1 D2} {Q} (HQ : Cocone D2 Q) (h_obj : forall i, m1 i == m2 i)
-  (h_comm : forall i j (g : G i j) x,
-      DiagramMap_comm m1 g x @ h_obj j (D1 _f g x)
-      = ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m2 g x)
+  {m1 m2 : DiagramMap D1 D2} (h : DiagramMap_homotopy m1 m2) 
+  {Q} (HQ : Cocone D2 Q)
   : functor_Colimit_half m1 HQ == functor_Colimit_half m2 HQ.
 Proof.
+  destruct h as [h_obj h_comm].
   snrapply Colimit_rec_homotopy'.
   - intros i x; cbn. apply ap, h_obj.
   - intros i j g x; simpl.
@@ -235,12 +261,36 @@ Definition functor_Colimit {G : Graph} {D1 D2 : Diagram G} (m : DiagramMap D1 D2
 
 (** A homotopy between diagram maps [m1, m2 : D1 => D2] gives a homotopy between the induced maps. *)
 Definition functor_Colimit_homotopy {G : Graph} {D1 D2 : Diagram G}
-  {m1 m2 : DiagramMap D1 D2} (h_obj : forall i, m1 i == m2 i)
-  (h_comm : forall i j (g : G i j) x,
-      DiagramMap_comm m1 g x @ h_obj j (D1 _f g x)
-      = ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m2 g x)
+  {m1 m2 : DiagramMap D1 D2} (h : DiagramMap_homotopy m1 m2)
   : functor_Colimit m1 == functor_Colimit m2
-  := functor_Colimit_half_homotopy _ h_obj h_comm.
+  := functor_Colimit_half_homotopy h _.
+
+(** Composition of diagram maps commutes with [functor_Colimit_half], provided the first map uses [functor_Colimit]. *)
+Definition functor_Colimit_half_compose {G : Graph} {A B C : Diagram G} (f : DiagramMap A B) (g : DiagramMap B C) {Q} (HQ : Cocone C Q)
+  : functor_Colimit_half (diagram_comp g f) HQ == (functor_Colimit_half g HQ) o (functor_Colimit f).
+Proof.
+  snrapply Colimit_rec_homotopy.
+  - intro i.
+    reflexivity.
+  - intros i j k x; cbn.
+    lhs refine (concat_p1 _).
+    rhs refine (concat_1p _).
+    unfold comm_square_comp.
+    Open Scope long_path_scope.
+    lhs nrapply ((ap_V _ _) @@ 1).
+    lhs nrapply ((inverse2 (ap_pp (HQ j) _ _)) @@ 1).
+    lhs nrapply ((inv_pp _ _) @@ 1).
+    rhs nrapply (ap_compose (Colimit_rec (Colimit B) (cocone_precompose f (cocone_colimit B))) (Colimit_rec Q (cocone_precompose g HQ)) (colimp i j k x)).
+    rhs nrapply (ap _ (Colimit_rec_beta_colimp (Colimit B) (cocone_precompose f (cocone_colimit B)) _ _ _ _)).
+    rhs nrapply ap_pp.
+    rhs nrapply (1 @@ (Colimit_rec_beta_colimp Q (cocone_precompose g HQ) _ _ _ _)).
+    simpl.
+    rhs nrapply concat_p_pp.
+    rhs nrapply ((ap_compose (colim j) _ _)^ @@ 1 @@ 1).
+    rhs nrapply ((ap_V _ (DiagramMap_comm f k x))  @@ (ap_V (HQ j) _) @@ 1).
+    by rhs nrapply ((inverse2 (ap_compose (g j) (HQ j) _)) @@ 1 @@ 1).
+    Close Scope long_path_scope.
+Defined.
 
 (** ** Functoriality of abstract colimits *)
 
@@ -282,7 +332,48 @@ Section FunctorialityColimit.
       = cocone_postcompose HQ1 (functor_colimit m HQ1 HQ2)
     := (eisretr (cocone_postcompose HQ1) _)^.
 
-  (** Equivalent diagrams have equivalent colimits. *)
+  (** Additional coherence with postcompose and precompose *)
+
+  Definition cocone_precompose_postcompose_comp {D1 D2 : Diagram G}
+    (m : DiagramMap D1 D2) {Q1 Q2 : Type} (HQ1 : IsColimit D1 Q1)
+    (HQ2 : IsColimit D2 Q2) {T : Type} (t : Q2 -> T)
+    : cocone_postcompose HQ1 (t o (functor_colimit m HQ1 HQ2))
+      = cocone_precompose m (cocone_postcompose HQ2 t).
+    Proof.
+      lhs nrapply cocone_postcompose_comp.
+      lhs_V exact (ap (fun x => cocone_postcompose x t) 
+        (functor_colimit_commute m HQ1 HQ2)).
+      nrapply cocone_precompose_postcompose.
+    Defined.
+
+  (** Functoriality of colimits *)
+
+  Definition postcompose_functor_colimit_compose {D1 D2 D3 : Diagram G} 
+    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3) 
+    {Q1 Q2 Q3} (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2)
+    (HQ3 : IsColimit D3 Q3)
+    : cocone_postcompose HQ1 ((functor_colimit n HQ2 HQ3) o (functor_colimit m HQ1 HQ2))
+      = cocone_postcompose HQ1 (functor_colimit (diagram_comp n m) HQ1 HQ3).
+  Proof.
+    lhs nrapply cocone_precompose_postcompose_comp.
+    lhs_V nrapply (ap _ (functor_colimit_commute n HQ2 HQ3)).
+    lhs nrapply cocone_precompose_comp.
+    nrapply functor_colimit_commute.
+  Defined.
+
+  Definition functor_colimit_compose {D1 D2 D3 : Diagram G} 
+    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3) 
+    {Q1 Q2 Q3} (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2)
+    (HQ3 : IsColimit D3 Q3)
+    : (functor_colimit n HQ2 HQ3) o (functor_colimit m HQ1 HQ2)
+      = (functor_colimit (diagram_comp n m) HQ1 HQ3) 
+    := @equiv_inj _ _ 
+      (cocone_postcompose HQ1) (iscolimit_unicocone HQ1 Q3) _ _ 
+      (postcompose_functor_colimit_compose m n HQ1 HQ2 HQ3).
+
+  (** ** Colimits of equivalent diagrams *)
+
+  (** Now we have that two equivalent diagrams have equivalent colimits. *)
 
   Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
     (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2).
@@ -350,4 +441,3 @@ Proof.
   refine (equiv_colimit_rec C oE _).
   apply equiv_diagram_const_cocone.
 Defined.
-
