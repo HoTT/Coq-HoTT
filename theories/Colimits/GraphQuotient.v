@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Equivalences.
-Require Import Types.Universe Types.Paths Types.Arrow Types.Sigma Cubical.DPath.
+Require Import Types.Universe Types.Paths Types.Forall Types.Arrow Types.Sigma Cubical.DPath.
+Require Import Homotopy.IdentitySystems.
 
 (** * Quotient of a graph *)
 
@@ -70,168 +71,289 @@ Proof.
   rapply GraphQuotient_ind_beta_gqglue.
 Defined.
 
-(** ** The flattening lemma *)
+(** ** Descent *)
 
-(** Univalence tells us that type families over a colimit correspond to cartesian families over the indexing diagram.  The flattening lemma gives an explicit description of the family over a colimit that corresponds to a given cartesian family, again using univalence.  Together, these are known as descent, a fundamental result in higher topos theory which has many implications. *)
+(** We study "equifibrant" type families over a graph [A], with edges indexed by [R].  By univalence, the descent property tells us that these type families correspond to type families over the graph quotient, and we obtain an induction principle for such type families.  Dependent descent data over some particular descent data are "equifibrant" type families over this descent data.  The "equifibrancy" is only taken over the graph [A] and [R], but there is an extra level of dependency coming from the descent data.  In this case, we obtain an induction and recursion principle, but only with a computation rule for the recursion principle.
 
-Section Flattening.
-  
-  Context `{Univalence} {A : Type} {R : A -> A -> Type}.
-  (** We consider a type family over [A] which is "equifibrant" or "cartesian": the fibers are equivalent when the base points are related by [R]. *)
-  Context (F : A -> Type) (e : forall x y, R x y -> F x <~> F y).
+The theory of descent is interesting to consider in itself.  However, we will use it as a means to structure the code, and to obtain induction and recursion principles that are valuable in proving the flattening lemma, and characterizing path spaces.  Thus we will gloss over the bigger picture, and not consider equivalences of descent data, nor homotopies of their sections.  We will also not elaborate on uniqueness of the induced families.
 
-  (** By univalence, the equivalences give equalities, which means that [F] induces a map on the quotient. *)
-  Definition DGraphQuotient : GraphQuotient R -> Type
-    := GraphQuotient_rec F (fun x y s => path_universe (e x y s)).
+It's possible to prove the results in the Descent, Flattening and Paths Sections without univalence, by replacing all equivalences with paths, but in practice these results will be used with equivalences as input, making the form below more convenient.  See https://github.com/HoTT/Coq-HoTT/pull/2147#issuecomment-2521570830 for further information. *)
 
-  (** The transport of [DGraphQuotient] along [gqglue] equals the equivalence [e] applied to the original point. This lemma is required a few times in the following proofs. *)
-  Definition transport_DGraphQuotient {x y} (s : R x y) (a : F x)
-    : transport DGraphQuotient (gqglue s) a = e x y s a.
+Section Descent.
+
+  Context `{Univalence}.
+
+  (** Descent data over a graph [A] and [R] is an "equifibrant" or "cartesian" type family [gqd_fam : A -> Type].  If [a b : A] are related by [r : R a b], then the fibers [gqd_fam a] and [gqd_fam b] are equivalent, witnessed by [gqd_e]. *)
+  Record gqDescent {A : Type} {R : A -> A -> Type} := {
+    gqd_fam (a : A) : Type;
+    gqd_e {a b : A} (r : R a b) : gqd_fam a <~> gqd_fam b
+  }.
+
+  Global Arguments gqDescent {A} R.
+
+  (** Let [A] and [R] be a graph. *)
+  Context {A : Type} {R : A -> A -> Type}.
+
+  (** Descent data induces a type family over [GraphQuotient R]. *)
+  Definition fam_gqdescent (Pe : gqDescent R)
+    : GraphQuotient R -> Type.
   Proof.
-    lhs nrapply transport_idmap_ap.
-    lhs nrapply (transport2 idmap).
-    1: apply GraphQuotient_rec_beta_gqglue.
-    rapply transport_path_universe.
+    snrapply (GraphQuotient_rec (gqd_fam Pe)).
+    intros a b r.
+    exact (path_universe_uncurried (gqd_e Pe r)).
   Defined.
 
-  (** The family [DGraphQuotient] we have defined over [GraphQuotient R] has a total space which we will describe as a [GraphQuotient] of [sig F] by an appropriate relation. *)
-
-  (** We mimic the constructors of [GraphQuotient] for the total space. Here is the point constructor. *)
-  Definition flatten_gq {x} : F x -> sig DGraphQuotient.
+  (** A type family over [GraphQuotient R] induces descent data. *)
+  Definition gqdescent_fam (P : GraphQuotient R -> Type) : gqDescent R.
   Proof.
-    intros p.
-    exact (gq x; p).
-  Defined.
-  
-  (** And here is the path constructor. *)
-  Definition flatten_gqglue {x y} (s : R x y) (a : F x)
-    : flatten_gq a = flatten_gq (e x y s a).
-  Proof.
-    snrapply path_sigma'.
-    - by apply gqglue.
-    - apply transport_DGraphQuotient.
+    snrapply Build_gqDescent.
+    - exact (P o gq).
+    - intros a b r.
+      exact (equiv_transport P (gqglue r)).
   Defined.
 
-  (** This lemma is the same as [transport_DGraphQuotient] but adapted instead for [DPath]. The use of [DPath] will be apparent there. *)
-  Lemma equiv_dp_dgraphquotient (x y : A) (s : R x y) (a : F x) (b : F y)
-    : DPath DGraphQuotient (gqglue s) a b <~> (e x y s a = b).
+  (** Transporting over [fam_gqdescent] along [gqglue r] is given by [gqd_e]. *)
+  Definition transport_fam_gqdescent_gqglue
+    (Pe : gqDescent R) {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+    : transport (fam_gqdescent Pe) (gqglue r) pa = gqd_e Pe r pa.
   Proof.
-    refine (equiv_concat_l _^ _).
-    apply transport_DGraphQuotient.
+    nrapply transport_path_universe'.
+    nrapply GraphQuotient_rec_beta_gqglue.
   Defined.
 
-  (** We can also prove an induction principle for [sig DGraphQuotient]. We won't show that it satisfies the relevant computation rules as these will not be needed. Instead we will prove the non-dependent eliminator directly so that we can better reason about it. In order to get through the path algebra here, we have opted to use dependent paths. This makes the reasoning slightly easier, but it should not matter too much. *)
-  Definition flatten_ind {Q : sig DGraphQuotient -> Type}
-    (Qgq : forall a (x : F a), Q (flatten_gq x))
-    (Qgqglue : forall a b (s : R a b) (x : F a),
-      flatten_gqglue s x # Qgq _ x = Qgq _ (e _ _ _ x))
-    : forall x, Q x.
+  (** A section on the descent data is a fiberwise section that respects the equivalences. *)
+  Record gqDescentSection {Pe : gqDescent R} := {
+    gqds_sect (a : A) : gqd_fam Pe a;
+    gqds_e {a b : A} (r : R a b)
+      : gqd_e Pe r (gqds_sect a) = gqds_sect b
+  }.
+
+  Global Arguments gqDescentSection Pe : clear implicits.
+
+  (** A descent section induces a genuine section of [fam_gqdescent Pe]. *)
+  Definition gqdescent_ind {Pe : gqDescent R}
+    (f : gqDescentSection Pe)
+    : forall (x : GraphQuotient R), fam_gqdescent Pe x.
   Proof.
-    apply sig_ind.
+    snrapply (GraphQuotient_ind _ (gqds_sect f)).
+    intros a b r.
+    exact (transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r).
+  Defined.
+
+  (** We record its computation rule *)
+  Definition gqdescent_ind_beta_gqglue {Pe : gqDescent R}
+    (f : gqDescentSection Pe) {a b : A} (r : R a b)
+    : apD (gqdescent_ind f) (gqglue r) = transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r
+    := GraphQuotient_ind_beta_gqglue _ (gqds_sect f) _ _ _ _.
+
+  (** Dependent descent data over descent data [Pe : gqDescent R] consists of a type family [gqdd_fam : forall (a : A), gqd_fam Pe a -> Type] together with coherences [gqdd_e r pa]. *)
+  Record gqDepDescent {Pe : gqDescent R} := {
+    gqdd_fam (a : A) (pa : gqd_fam Pe a) : Type;
+    gqdd_e {a b : A} (r :  R a b) (pa : gqd_fam Pe a)
+      : gqdd_fam a pa <~> gqdd_fam b (gqd_e Pe r pa)
+  }.
+
+  Global Arguments gqDepDescent Pe : clear implicits.
+
+  (** A dependent type family over [fam_gqdescent Pe] induces dependent descent data over [Pe]. *)
+  Definition gqdepdescent_fam {Pe : gqDescent R}
+    (Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -> Type)
+    : gqDepDescent Pe.
+  Proof.
+    snrapply Build_gqDepDescent.
+    - intro a; cbn.
+      exact (Q (gq a)).
+    - intros a b r pa.
+      exact (equiv_transportDD (fam_gqdescent Pe) Q
+               (gqglue r) (transport_fam_gqdescent_gqglue Pe r pa)).
+  Defined.
+
+  (** Dependent descent data over [Pe] induces a dependent type family over [fam_gqdescent Pe]. *)
+  Definition fam_gqdepdescent {Pe : gqDescent R} (Qe : gqDepDescent Pe)
+    : forall (x : GraphQuotient R), (fam_gqdescent Pe x) -> Type.
+  Proof.
     snrapply GraphQuotient_ind.
-    1: exact Qgq.
-    intros a b s.
-    apply dp_forall.
-    intros x y.
-    srapply (equiv_ind (equiv_dp_dgraphquotient a b s x y)^-1).
-    intros q.
-    destruct q.
-    refine (transport2 _ _ _ @ Qgqglue a b s x).
-    refine (ap (path_sigma_uncurried DGraphQuotient _ _) _).
-    snrapply path_sigma.
-    1: reflexivity.
-    lhs nrapply concat_p1.
-    apply inv_V.
+    - exact (gqdd_fam Qe).
+    - intros a b r.
+      nrapply (moveR_transport_p _ (gqglue r)).
+      funext pa.
+      rhs nrapply transport_arrow_toconst.
+      rhs nrefine (ap (gqdd_fam Qe b) _).
+      + exact (path_universe (gqdd_e Qe r pa)).
+      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (gqglue r))).
+        nrapply (transport_fam_gqdescent_gqglue _ _ _).
   Defined.
 
-  (** Rather than use [flatten_ind] to define [flatten_rec] we reprove this simple case. This means we can later reason about it and derive the computation rules easily. The full computation rule for [flatten_ind] takes some work to derive and is not actually needed. *)
-  Definition flatten_rec {Q : Type} (Qgq : forall a, F a -> Q)
-    (Qgqglue : forall a b (s : R a b) (x : F a), Qgq a x = Qgq b (e _ _ s x))
-    : sig DGraphQuotient -> Q.
+  (** A section of dependent descent data [Qe : gqDepDescent Pe] is a fiberwise section [gqdds_sect], together with coherences [gqdd_e]. *)
+  Record gqDepDescentSection {Pe : gqDescent R} {Qe : gqDepDescent Pe} := {
+    gqdds_sect (a : A) (pa : gqd_fam Pe a) : gqdd_fam Qe a pa;
+    gqdds_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+      : gqdd_e Qe r pa (gqdds_sect a pa) = gqdds_sect b (gqd_e Pe r pa)
+  }.
+
+  Global Arguments gqDepDescentSection {Pe} Qe.
+
+  (** A dependent descent section induces a genuine section over the total space of [fam_gqdescent Pe]. *)
+  Definition gqdepdescent_ind {Pe : gqDescent R}
+    {Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -> Type}
+    (f : gqDepDescentSection (gqdepdescent_fam Q))
+    : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px.
+    Proof.
+      nrapply (GraphQuotient_ind _ (gqdds_sect f) _).
+      intros a b r.
+      apply dpath_forall.
+      intro pa.
+      apply (equiv_inj (transport (Q (gq b)) (transport_fam_gqdescent_gqglue Pe r pa))).
+      rhs nrapply (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).
+      exact (gqdds_e f r pa).
+    Defined.
+
+  (** The data for a section into a constant type family. *)
+  Record gqDepDescentConstSection {Pe : gqDescent R} {Q : Type} := {
+    gqddcs_sect (a : A) (pa : gqd_fam Pe a) : Q;
+    gqddcs_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+      : gqddcs_sect a pa = gqddcs_sect b (gqd_e Pe r pa)
+  }.
+
+  Global Arguments gqDepDescentConstSection Pe Q : clear implicits.
+
+  (** The data for a section of a constant family induces a section over the total space of [fam_gqdescent Pe]. *)
+  Definition gqdepdescent_rec {Pe : gqDescent R} {Q : Type}
+    (f : gqDepDescentConstSection Pe Q)
+    : forall (x : GraphQuotient R), fam_gqdescent Pe x -> Q.
   Proof.
-    apply sig_rec.
-    snrapply GraphQuotient_ind.
-    1: exact Qgq.
-    intros a b s.
+    snrapply (GraphQuotient_ind _ (gqddcs_sect f)).
+    intros a b r.
     nrapply dpath_arrow.
-    intros y.
+    intro pa.
     lhs nrapply transport_const.
-    lhs nrapply (Qgqglue a b s).
-    f_ap; symmetry.
-    apply transport_DGraphQuotient.
+    rhs nrapply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).
+    exact (gqddcs_e f r pa).
   Defined.
 
-  (** The non-dependent eliminator computes as expected on our "path constructor". *) 
-  Definition flatten_rec_beta_gqglue {Q : Type} (Qgq : forall a, F a -> Q)
-    (Qgqglue : forall a b (r : R a b) (x : F a), Qgq a x = Qgq b (e _ _ r x))
-    (a b : A) (s : R a b) (x : F a)
-    : ap (flatten_rec Qgq Qgqglue) (flatten_gqglue s x) = Qgqglue a b s x.
+  (** Here is the computation rule on paths. *)
+  Definition gqdepdescent_rec_beta_gqglue {Pe : gqDescent R} {Q : Type}
+    (f : gqDepDescentConstSection Pe Q)
+    {a b : A} {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (r : R a b) (pr : gqd_e Pe r pa = pb)
+    : ap (sig_rec (gqdepdescent_rec f)) (path_sigma _ (gq a; pa) (gq b; pb) (gqglue r) (transport_fam_gqdescent_gqglue Pe r pa @ pr))
+      = gqddcs_e f r pa @ ap (gqddcs_sect f b) pr.
   Proof.
-    lhs nrapply ap_sig_rec_path_sigma; cbn.
-    lhs nrapply (ap (fun x => x @ _)).
-    { nrapply ap.
-      nrapply (ap01 (fun x => ap10 x _)).
-      nrapply GraphQuotient_ind_beta_gqglue. }
-    apply moveR_pM.
-    apply moveL_pM.
+    Open Scope long_path_scope.
+    destruct pr.
+    rhs nrapply concat_p1.
+    lhs nrapply ap_sig_rec_path_sigma.
+    lhs nrapply (ap (fun x => _ (ap10 x _) @ _)).
+    1: nrapply GraphQuotient_ind_beta_gqglue.
     do 3 lhs nrapply concat_pp_p.
     apply moveR_Vp.
-    lhs refine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow DGraphQuotient (fun _ => Q) (gqglue s)).
-    lhs refine (1 @@ (1 @@ _)).
-    { lhs nrapply concat_pp_p.
-      nrapply concat_pp_p. }
-    lhs nrapply (1 @@ concat_V_pp _ _).
-    lhs nrapply concat_V_pp.
-    lhs nrapply concat_pp_p.
-    f_ap.
-    lhs nrapply concat_pp_p.
-    apply moveR_Mp.
-    rhs nrapply concat_Vp.
-    apply moveR_pV.
-    rhs nrapply concat_1p.
-    nrapply ap_V.
+    lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
+    1: nrapply (ap10_dpath_arrow (fam_gqdescent Pe) (fun _ => Q) (gqglue r)).
+    lhs nrefine (1 @@ _).
+    { lhs nrapply (1 @@ concat_pp_p _ _ _).
+      lhs nrapply (1 @@ concat_pp_p _ _ _).
+      lhs nrapply concat_V_pp.
+      lhs nrapply (1 @@ concat_pp_p _ _ _).
+      rewrite concat_p1.
+      nrapply (1 @@ (1 @@ concat_pV_p _ _)). }
+    nrapply concat_V_pp.
+    Close Scope long_path_scope.
   Defined.
 
-  (** Now that we've shown that [sig DGraphQuotient] acts like a [GraphQuotient] of [sig F] by an appropriate relation, we can use this to prove the flattening lemma. The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *) 
-  Lemma equiv_gq_flatten
-    : sig DGraphQuotient
-    <~> GraphQuotient (fun a b => {r : R a.1 b.1 & e _ _ r a.2 = b.2}).
+End Descent.
+
+(** ** The flattening lemma *)
+
+(** We saw above that given descent data [Pe] over a graph [A] and [R] we obtained a type family [fam_gqdescent Pe] over the graph quotient.  The flattening lemma describes the total space [sig (fam_gqdescent Pe)] of this type family as a graph quotient of [sig (gqd_fam Pe)] by a certain relation.  This follows from the work above, which shows that [sig (fam_gqdescent Pe)] has the same universal property as this graph quotient. *)
+
+Section Flattening.
+
+  Context `{Univalence} {A : Type} {R : A -> A -> Type} (Pe : gqDescent R).
+
+  (** We mimic the constructors of [GraphQuotient] for the total space.  Here is the point constructor, in curried form. *)
+  Definition flatten_gqd {a : A} (pa : gqd_fam Pe a) : sig (fam_gqdescent Pe)
+    := (gq a; pa).
+
+  (** And here is the path constructor. *)
+  Definition flatten_gqd_glue {a b : A} (r : R a b)
+    {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (pr : gqd_e Pe r pa = pb)
+    : flatten_gqd pa = flatten_gqd pb.
+  Proof.
+    snrapply path_sigma.
+    - by apply gqglue.
+    - lhs nrapply transport_fam_gqdescent_gqglue.
+      exact pr.
+  Defined.
+
+  (** Now that we've shown that [fam_gqdescent Pe] acts like a [GraphQuotient] of [sig (gqd_fam Pe)] by an appropriate relation, we can use this to prove the flattening lemma.  The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
+  Lemma equiv_gqd_flatten : sig (fam_gqdescent Pe) <~>
+    GraphQuotient (fun a b => {r : R a.1 b.1 & gqd_e Pe r a.2 = b.2}).
   Proof.
     snrapply equiv_adjointify.
-    - snrapply flatten_rec.
+    - snrapply sig_rec.
+      snrapply gqdepdescent_rec.
+      snrapply Build_gqDepDescentConstSection.
       + exact (fun a x => gq (a; x)).
-      + intros a b r x.
-        apply gqglue.
-        exists r.
-        reflexivity.
+      + intros a b r pa.
+      apply gqglue; exact (r; 1).
     - snrapply GraphQuotient_rec.
       + exact (fun '(a; x) => (gq a; x)).
-      + intros [a x] [b y] [r p].
-        simpl in p, r.
-        destruct p.
-        apply flatten_gqglue.
+      + intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
+        apply (flatten_gqd_glue r pr).
     - snrapply GraphQuotient_ind.
       1: reflexivity.
-      intros [a x] [b y] [r p].
-      simpl in p, r.
-      destruct p.
-      simpl.
-      lhs nrapply transport_paths_FFlr.
+      intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
+      destruct pr.
+      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
       rewrite GraphQuotient_rec_beta_gqglue.
-      refine ((_ @@ 1) @ concat_Vp _).
-      lhs nrapply concat_p1.
-      apply inverse2.
-      nrapply flatten_rec_beta_gqglue.
-    - snrapply flatten_ind.
-      1: reflexivity.
-      intros a b r x.
-      nrapply (transport_paths_FFlr' (g := GraphQuotient_rec _ _)); apply equiv_p1_1q.
-      rewrite flatten_rec_beta_gqglue.
-      exact (GraphQuotient_rec_beta_gqglue _ _ (a; x) (b; e a b r x) (r; 1)).
+      lhs nrapply gqdepdescent_rec_beta_gqglue.
+      nrapply concat_p1.
+    - intros [x px]; revert x px.
+      snrapply gqdepdescent_ind.
+      snrapply Build_gqDepDescentSection.
+      + by intros a pa.
+      + intros a b r pa; cbn.
+        lhs nrapply transportDD_is_transport.
+        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        rewrite <- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).
+        rewrite gqdepdescent_rec_beta_gqglue. (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
+        lhs nrapply (ap _ (concat_p1 _)).
+        nrapply (GraphQuotient_rec_beta_gqglue _ _ (a; pa) (b; _) (r; 1)).
   Defined.
 
 End Flattening.
+
+(** ** Characterization of path spaces*)
+
+(** A pointed type family over a graph quotient has an identity system structure precisely when its associated descent data satisfies Kraus and von Raumer's induction principle, https://arxiv.org/pdf/1901.06022. *)
+
+Section Paths.
+
+  (** Let [A] and [R] be a graph, with a distinguished point [a0 : A].  Let [Pe : gqDescent R] be descent data over [A] and [R] with a distinguished point [p0 : gqd_fam Pe a0].  Assume that any dependent descent data [Qe : gqDepDescent Pe] with a distinguished point [q0 : gqdd_fam Qe a0 p0] has a section that respects the distinguished points.  This is the induction principle provided by Kraus and von Raumer. *)
+  Context `{Univalence} {A : Type} {R : A -> A -> Type} (a0 : A)
+    (Pe : gqDescent R) (p0 : gqd_fam Pe a0)
+    (based_gqdepdescent_ind : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqDepDescentSection Qe)
+    (based_gqdepdescent_ind_beta : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqdds_sect (based_gqdepdescent_ind Qe q0) a0 p0 = q0).
+
+  (** Under these hypotheses, we get an identity system structure on [fam_gqdescent Pe]. *)
+  Local Instance idsys_flatten_gqdescent
+    : @IsIdentitySystem _ (gq a0) (fam_gqdescent Pe) p0.
+  Proof.
+    snrapply Build_IsIdentitySystem.
+    - intros Q q0 x p.
+      snrapply gqdepdescent_ind.
+      by apply based_gqdepdescent_ind.
+    - intros Q q0; cbn.
+      nrapply (based_gqdepdescent_ind_beta (gqdepdescent_fam Q)).
+  Defined.
+
+  (** It follows that the fibers [fam_gqdescent Pe x] are equivalent to path spaces [(gq a0) = x]. *)
+  Definition fam_gqdescent_equiv_path (x : GraphQuotient R)
+    : (gq a0) = x <~> fam_gqdescent Pe x
+    := @equiv_transport_identitysystem _ (gq a0) (fam_gqdescent Pe) p0 _ x.
+
+End Paths.
 
 (** ** Functoriality of graph quotients *)
 
@@ -288,7 +410,7 @@ Proof.
     apply ap.
     apply p.
   - intros a b s.
-    nrapply (transport_paths_FlFr' (gqglue s)).  
+    nrapply (transport_paths_FlFr' (gqglue s)).
     rhs nrefine (1 @@ _).
     2: apply GraphQuotient_rec_beta_gqglue.
     lhs nrefine (_ @@ 1).

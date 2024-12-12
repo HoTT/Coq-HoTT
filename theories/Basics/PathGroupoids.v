@@ -756,17 +756,27 @@ Defined.
 
 (** Dependent transport in doubly dependent types and more. *)
 
+(** Singly dependent transport over doubly dependent types. *)
 Definition transportD {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
   {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y)
   : C x2 (p # y)
   :=
   match p with idpath => z end.
 
+(** Singly dependent transport over doubly dependent types of 2 variables. *)
 Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a -> Type)
   {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1) (w : D x1 y z)
   : D x2 (p # y) (p # z)
   :=
   match p with idpath => w end.
+
+(** Doubly dependent transport over doubly dependent types.  *)
+Definition transportDD {A : Type} (B : A -> Type) (C : forall a : A, B a -> Type)
+  {a1 a2 : A} (pA : a1 = a2)
+  {b1 : B a1} {b2 : B a2} (pB : transport B pA b1 = b2)
+  (c1 : C a1 b1)
+  : C a2 b2
+  := transport (C a2) pB (transportD B C pA b1 c1).
 
 (** *** [ap] for curried two variable functions *)
 
@@ -865,7 +875,7 @@ Defined.
 
 (** Naturality of [transport011]. *)
 Definition ap_transport011{A B} {P Q : A -> B -> Type}
-  {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)  
+  {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)
   (f : forall {a b}, P a b -> Q a b) (x : P a1 b1)
   : f (transport011 P p q x) = transport011 Q p q (f x).
 Proof.
@@ -983,6 +993,31 @@ Definition transport2_const {A B : Type} {x1 x2 : A} {p q : x1 = x2}
   (r : p = q) (y : B)
   : transport_const p y = transport2 (fun _ => B) r y @ transport_const q y
   := match r with idpath => (concat_1p _)^ end.
+
+Definition transportD_const_fiber {A : Type} (B : A -> Type) (C : Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C)
+  : transportD B (fun _ _ => C) p y z = z.
+Proof.
+  by destruct p.
+Defined.
+
+Definition transportD_const_base {A B : Type} (C : A -> B -> Type) {x1 x2 : A}
+  (p : x1 = x2) {y : B} (z : C x1 y)
+  : transportD (fun x => B) C p y z
+    = transport (fun x => C x (transport (fun _ => B) p y)) p
+      (transport (C x1) (transport_const p y)^ z).
+Proof.
+  by destruct p.
+Defined.
+
+Definition transportDD_const {A : Type} (B : A -> Type) (C : Type)
+  {a1 a2 : A} (pA : a1 = a2)
+  {b1 : B a1} {b2 : B a2} (pB : transport B pA b1 = b2)
+  (c1 : C)
+  : transportDD B (fun _ _ => C) pA pB c1 = c1.
+Proof.
+  by destruct pB, pA.
+Defined.
 
 (** Transporting in a pulled back fibration. *)
 Lemma transport_compose {A B} {x y : A} (P : B -> Type) (f : A -> B)
