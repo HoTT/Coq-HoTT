@@ -1,6 +1,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Equiv.BiInv Extensions HProp HFiber NullHomotopy Limits.Pullback.
-Require Import PathAny.
+Require Import Homotopy.IdentitySystems.
 Require Import Colimits.Pushout.
 
 Local Open Scope nat_scope.

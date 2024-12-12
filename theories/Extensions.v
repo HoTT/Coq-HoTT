@@ -1,7 +1,7 @@
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Equiv.PathSplit PathAny.
+Require Import Equiv.PathSplit Homotopy.IdentitySystems.
 Require Import Cubical.DPath Cubical.DPathSquare.
 Require Import Colimits.Coeq Colimits.MappingCylinder.
 

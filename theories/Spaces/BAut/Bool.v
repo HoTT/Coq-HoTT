@@ -95,7 +95,7 @@ Section AssumeUnivalence.
   : IsConnected (-1) Z.
   Proof.
     baut_reduce.
-    apply contr_inhabited_hprop; try exact _.
+    rapply contr_inhabited_hprop.
     exact (tr true).
   Defined.
 

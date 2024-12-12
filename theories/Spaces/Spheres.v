@@ -206,7 +206,7 @@ Defined.
 Definition issect_S2_to_TwoSphere : TwoSphere_to_S2 o S2_to_TwoSphere == idmap.
 Proof.
   intro x.
-  refine ((Susp_rec_eta_homot (TwoSphere_to_S2 o S2_to_TwoSphere) x) @ _). symmetry.
+  refine ((Susp_rec_eta_homotopic (TwoSphere_to_S2 o S2_to_TwoSphere) x) @ _). symmetry.
   generalize dependent x.
   refine (Susp_ind _ 1 (merid North)^ _).
   intro x.
